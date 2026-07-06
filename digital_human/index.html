@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>丁启利 AI 数字人项目主页</title>
+  <style>
+    :root {
+      --ink: #182420;
+      --muted: #60716b;
+      --line: #d6dfda;
+      --paper: #f5f8f6;
+      --white: #ffffff;
+      --forest: #123b34;
+      --teal: #0f766e;
+      --copper: #b96f37;
+      --plum: #6e3f5f;
+      --red: #a84132;
+      --shadow: 0 20px 55px rgba(18, 59, 52, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.62;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 13px clamp(18px, 4vw, 56px);
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 210px;
+      color: var(--forest);
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      background: var(--forest);
+      border: 2px solid var(--copper);
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav a {
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      color: var(--teal);
+    }
+
+    .hero {
+      min-height: calc(100vh - 61px);
+      display: grid;
+      align-items: end;
+      padding: clamp(30px, 5vw, 70px) clamp(18px, 4vw, 56px) clamp(24px, 4vw, 48px);
+      color: var(--white);
+      background-image:
+        linear-gradient(90deg, rgba(18, 36, 32, 0.96) 0%, rgba(18, 59, 52, 0.9) 48%, rgba(18, 59, 52, 0.24) 100%),
+        url("ding-qili-ai-avatar.png");
+      background-size: cover, min(52vw, 620px) auto;
+      background-position: center, right bottom;
+      background-repeat: no-repeat;
+    }
+
+    .hero-grid {
+      width: min(1220px, 100%);
+      display: grid;
+      grid-template-columns: minmax(0, 0.88fr) minmax(360px, 0.72fr);
+      gap: clamp(22px, 4vw, 54px);
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      max-width: 100%;
+      color: #bde8df;
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 14px;
+      font-size: clamp(46px, 7vw, 96px);
+      line-height: 1.03;
+      letter-spacing: 0;
+    }
+
+    .hero-title {
+      max-width: 790px;
+    }
+
+    .lead {
+      max-width: 790px;
+      margin-bottom: 24px;
+      color: #eef7f3;
+      font-size: clamp(17px, 2vw, 23px);
+    }
+
+    .hero-tags,
+    .quick-tags,
+    .role-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .hero-tags li,
+    .role-tags li {
+      min-height: 34px;
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 6px 10px;
+      color: #ecf6f2;
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      color: var(--white);
+      text-decoration: none;
+      font-weight: 800;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .button.primary {
+      color: #17231e;
+      background: #f0b860;
+      border-color: #f0b860;
+    }
+
+    .assistant-panel {
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.13);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .panel-head {
+      padding: 15px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+      color: #f6fbf8;
+      font-weight: 850;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      color: #d7ebe4;
+      font-weight: 800;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 108px;
+      resize: vertical;
+      border: 1px solid rgba(255, 255, 255, 0.36);
+      padding: 12px;
+      color: var(--white);
+      background: rgba(8, 26, 22, 0.52);
+      font: inherit;
+      outline: none;
+    }
+
+    textarea::placeholder {
+      color: rgba(255, 255, 255, 0.72);
+    }
+
+    .topic-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
+    }
+
+    .topic-control {
+      min-height: 34px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 7px 10px;
+      color: var(--white);
+      background: rgba(255, 255, 255, 0.09);
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .topic-control:hover,
+    .topic-control.active {
+      color: #17231e;
+      background: #f0b860;
+      border-color: #f0b860;
+    }
+
+    .answer {
+      min-height: 212px;
+      padding: 14px;
+      color: #ecf7f3;
+      background: rgba(8, 26, 22, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      white-space: pre-wrap;
+    }
+
+    .section {
+      padding: clamp(40px, 6vw, 78px) clamp(18px, 4vw, 56px);
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section.alt {
+      background: #eef5f2;
+    }
+
+    .section-inner {
+      width: min(1220px, 100%);
+      margin: 0 auto;
+    }
+
+    .section-head {
+      max-width: 920px;
+      margin-bottom: 24px;
+    }
+
+    .section h2 {
+      margin-bottom: 10px;
+      color: var(--forest);
+      font-size: clamp(27px, 3vw, 42px);
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      min-height: 128px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: var(--white);
+      border-top: 4px solid var(--teal);
+    }
+
+    .metric:nth-child(2n) {
+      border-top-color: var(--copper);
+    }
+
+    .metric:nth-child(3n) {
+      border-top-color: var(--plum);
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--forest);
+      font-size: clamp(22px, 2vw, 32px);
+      line-height: 1.18;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .capability-grid,
+    .fit-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .capability,
+    .fit-card,
+    .project,
+    .timeline,
+    .credential {
+      border: 1px solid var(--line);
+      background: var(--white);
+    }
+
+    .capability,
+    .fit-card {
+      min-height: 238px;
+      padding: 20px;
+    }
+
+    .tagline {
+      margin-bottom: 8px;
+      color: var(--teal);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    .capability h3,
+    .fit-card h3,
+    .project h3,
+    .timeline h3 {
+      margin-bottom: 10px;
+      color: var(--forest);
+      font-size: 19px;
+      line-height: 1.34;
+    }
+
+    .capability p,
+    .fit-card p,
+    .project p,
+    .timeline p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .timeline-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .timeline {
+      padding: 20px;
+    }
+
+    .timeline small,
+    .project small {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--copper);
+      font-weight: 850;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .project {
+      min-height: 250px;
+      padding: 20px;
+    }
+
+    .project-result {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      color: var(--red);
+      font-weight: 850;
+    }
+
+    .fit-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .fit-card {
+      border-top: 4px solid var(--plum);
+    }
+
+    .fit-card:nth-child(2) {
+      border-top-color: var(--teal);
+    }
+
+    .fit-card:nth-child(3) {
+      border-top-color: var(--copper);
+    }
+
+    .certificate-wrap {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.45fr) minmax(0, 0.55fr);
+      gap: clamp(18px, 4vw, 42px);
+      align-items: center;
+    }
+
+    .certificate-img {
+      border: 1px solid var(--line);
+      background: var(--white);
+      padding: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .credential-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .credential {
+      padding: 16px;
+    }
+
+    .credential strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--forest);
+    }
+
+    .contact-strip {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding: 22px;
+      color: var(--white);
+      background: var(--forest);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .contact-strip p {
+      margin-bottom: 0;
+      color: #d9eee8;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .footer {
+      padding: 24px clamp(18px, 4vw, 56px);
+      color: #d6e5df;
+      background: #101916;
+    }
+
+    .footer-inner {
+      width: min(1220px, 100%);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1040px) {
+      .hero-grid,
+      .certificate-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        background-size: cover, min(76vw, 560px) auto;
+        background-position: center, right bottom;
+      }
+
+      .assistant-panel {
+        max-width: 720px;
+      }
+
+      .metrics,
+      .capability-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        position: static;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        min-height: auto;
+        background-image:
+          linear-gradient(180deg, rgba(18, 36, 32, 0.96) 0%, rgba(18, 59, 52, 0.88) 58%, rgba(18, 59, 52, 0.72) 100%),
+          url("ding-qili-ai-avatar.png");
+        background-size: cover, min(98vw, 480px) auto;
+        background-position: center, right bottom;
+        padding-bottom: 28px;
+      }
+
+      h1 {
+        font-size: clamp(42px, 16vw, 68px);
+      }
+
+      .metrics,
+      .capability-grid,
+      .timeline-grid,
+      .project-grid,
+      .fit-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .contact-links {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">DQ</div>
+      <span>丁启利 AI 数字人</span>
+    </div>
+    <nav class="nav" aria-label="页面导航">
+      <a href="#capabilities">能力画像</a>
+      <a href="#experience">履历主线</a>
+      <a href="#projects">代表项目</a>
+      <a href="#fit">岗位匹配</a>
+      <a href="#ai">AI 与精益</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-grid">
+        <div class="hero-title">
+          <span class="eyebrow">精益经理 / 工程部经理 / 改善负责人</span>
+          <h1>丁启利</h1>
+          <p class="lead">制造运营改善与工程技术管理专家。20 年制造业工程技术、精益改善与咨询交付经验，覆盖 PCBA、SMT、汽车电子、电气、新能源、半导体、小家电等场景，擅长围绕 PQCD 把现场问题转化为可验证、可复制、可固化的改善项目。</p>
+          <ul class="hero-tags" aria-label="职业关键词">
+            <li>VSM 价值流</li>
+            <li>IE-PE-NPI</li>
+            <li>单件流/小批流</li>
+            <li>SMED</li>
+            <li>数智化工厂</li>
+            <li>退役军人</li>
+          </ul>
+          <div class="hero-actions">
+            <a class="button primary" href="#assistant">启动数字人问答</a>
+            <a class="button" href="mailto:dinghunter623@outlook.com">邮件联系</a>
+          </div>
+        </div>
+
+        <section class="assistant-panel" id="assistant" aria-label="数字人问答">
+          <div class="panel-head">丁启利职业能力 AI 数字人</div>
+          <div class="panel-body">
+            <label for="question">问题</label>
+            <textarea id="question">请用一分钟介绍丁启利的职业能力。</textarea>
+            <div class="topic-controls" aria-label="常用主题">
+              <button class="topic-control active" data-topic="intro">一分钟介绍</button>
+              <button class="topic-control" data-topic="vsm">VSM 改善</button>
+              <button class="topic-control" data-topic="flow">单件流</button>
+              <button class="topic-control" data-topic="smed">SMED 案例</button>
+              <button class="topic-control" data-topic="fit">岗位匹配</button>
+              <button class="topic-control" data-topic="ai">AI 与精益</button>
+            </div>
+            <div class="answer" id="answer"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>关键成果速览</h2>
+          <p>简历版本：2026-07-06。成果口径来自最新简历中的项目改善数据、阶段结果与职业价值概述。</p>
+        </div>
+        <div class="metrics">
+          <div class="metric"><strong>20 年</strong><span>制造工程、精益改善与项目交付经验</span></div>
+          <div class="metric"><strong>>=85%</strong><span>关键产品 OEE 提升至</span></div>
+          <div class="metric"><strong>约 30%</strong><span>Delivery Lead Time 平均缩短</span></div>
+          <div class="metric"><strong>15%-25%</strong><span>SMED 后单线产能提升</span></div>
+          <div class="metric"><strong>超千万元</strong><span>累计改善收益，项目改善口径</span></div>
+          <div class="metric"><strong>1200+副</strong><span>模具/库位二维码与可追溯管理</span></div>
+          <div class="metric"><strong>500+亩</strong><span>多区域新工厂/产线 Layout 规划覆盖</span></div>
+          <div class="metric"><strong>10+名</strong><span>工程骨干培养及组织机制建设</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="capabilities">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>核心能力画像</h2>
+          <p>从 Gemba 诊断、VSM 现状价值流、5M2E 要因分析、5W2H/PDCA 推进，到 Pilot 验证、横向复制和机制固化，形成面向 PQCD 的端到端改善闭环。</p>
+        </div>
+        <div class="capability-grid">
+          <article class="capability">
+            <div class="tagline">P/D 效率与交付</div>
+            <h3>把交付断点变成改善路径</h3>
+            <p>识别交付周期偏长、WIP 堆积、Takt 瓶颈、Line Balancing 和换线换模损失，输出 VSM 改善路径、标准工时、标准产能、节拍控制和单件流/小批流试运行机制。</p>
+          </article>
+          <article class="capability">
+            <div class="tagline">Q 质量与良率</div>
+            <h3>用过程控制稳住质量波动</h3>
+            <p>结合 8D、5W2H/PDCA、Pareto、Process Window 和 Poka-Yoke，围绕人机料法环测定位要因，降低不良率并提升 FPY/直通率。</p>
+          </article>
+          <article class="capability">
+            <div class="tagline">C 成本与资源</div>
+            <h3>降低寻找、等待和搬运浪费</h3>
+            <p>通过工装治具改善、Factory Layout、库位编码、Visual Management、包装/仓储布局优化与物流路径改善，提升人效、设备效率和库存周转。</p>
+          </article>
+          <article class="capability">
+            <div class="tagline">规划与项目</div>
+            <h3>让改善从项目变成机制</h3>
+            <p>熟悉 EVT/DVT/PVT/MP 阶段门、ECN/ECR 评审和 PMO 机制，能对接经营层及工程、生产、品质、PMC、物控、设备等跨职能团队。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="experience">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>履历主线</h2>
+          <p>从一线 IE/TE 工程师，到工程部部长，再到精益管理咨询顾问和数智化工厂推进，兼具企业内部管理与外部顾问双视角。</p>
+        </div>
+        <div class="timeline-grid">
+          <article class="timeline">
+            <small>2025.11-至今</small>
+            <h3>天星电子有限公司 · 精益顾问 / 数智化工厂推进</h3>
+            <p>服务汽车座椅开关、线束、注塑、装配、SMT/波峰焊等汽车电子制造场景，推进精益生产体系、VSM、IE 标准工时/标准产能、6S 稽查、目视化管理、SMED、车间布局与 ERP/MES 基础数据改善。</p>
+          </article>
+          <article class="timeline">
+            <small>2019.07-2025.08</small>
+            <h3>广东精工智能系统 / 广东高胜互联科技 · Lean 项目交付负责人</h3>
+            <p>负责客户 Gemba 诊断、VSM/5M2E 分析、改善蓝图设计、5W2H/PDCA 推进、Pilot 验证、横向复制与机制固化，推动 Lean 改善升级为运营管理系统。</p>
+          </article>
+          <article class="timeline">
+            <small>2015.07-2019.06</small>
+            <h3>深圳万润科技 / 广东恒润光电 · 工程部部长</h3>
+            <p>管理 PE/IE/ME/TE 工程团队，覆盖 NPI 导入、工艺工程、设备工装、测试工程与 ECN/ECR，建立 EVT/DVT/PVT/MP 阶段门与跨部门评审机制。</p>
+          </article>
+          <article class="timeline">
+            <small>2006.07-2015.06</small>
+            <h3>东莞库柏电子 / 珠海伟创力制造 · IE、TE 工程师</h3>
+            <p>沉淀 Standard Time、动作分析、Line Balancing、产能评估、工艺参数优化、治具改善、Yield/FPY 提升和 5W2H 不良分析闭环能力。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>代表项目</h2>
+          <p>案例按“现场问题、关键动作、量化或阶段结果、机制沉淀”组织，适合用于面试沟通、项目复盘和主页展示。</p>
+        </div>
+        <div class="project-grid">
+          <article class="project">
+            <small>2025.11-2026.07</small>
+            <h3>天星电子第一阶段精益体系、VSM、单件流与 SMED 标准化建设</h3>
+            <p>围绕“精益体系搭建 + 主流产品族改善验证”双主线，建立精益组织职责、推进总纲、DMS、6S 稽核、红线管控与改善表单；以汽车座椅开关总成为切入，开展 VSM 价值流分析，结合 5M2E 与 5W2H/PDCA 编制单件流/小批流试运行程序及装配总成快速换型、注塑件快速换模 SMED 程序文件。</p>
+            <div class="project-result">形成公司级精益运行框架、主流产品族 VSM 改善路径、单件流/小批流试运行文件及 SMED 作业标准，支撑节拍验证、WIP 压缩、线边配送优化、ERP/MES 数据完善、交付周期压缩与横向推广。</div>
+          </article>
+          <article class="project">
+            <small>2024.04-2024.06</small>
+            <h3>3.5T 大型模具 SMED 快速换模</h3>
+            <p>针对 300T 冲压机大型模具换模周期长、等待浪费高的问题，开展全过程作业分解与 Time Study，结合 5M2E 分析换模损失要因，拆分内部作业与外部作业，并导入快速锁模、预装工位、工具定置、换模检查清单和安全点检标准。</p>
+            <div class="project-result">换模时间由约 14 小时缩短至 7 小时，降幅 50%；释放设备有效稼动时间，单机月增产值约 50 万元。</div>
+          </article>
+          <article class="project">
+            <small>2021.03-2021.12</small>
+            <h3>智能模具库与可追溯管理</h3>
+            <p>规划 180 平方米智能模具立体库，建立模具编号、库位编码及模具本体/库位二维码关联机制，规范领用、归还、保养、维修、报废全流程，并通过台账、标识和流程标准化提升取放、盘点与追溯效率。</p>
+            <div class="project-result">1200+副模具实现标准化管理，取放时间缩短至 1-5 分钟，综合年创效约 300 万元。</div>
+          </article>
+          <article class="project">
+            <small>2014.05-2014.08</small>
+            <h3>玻璃管保险丝切口工艺改良</h3>
+            <p>建立断裂不良数据采集口径并开展 Pareto 分析，结合 5M2E 识别刀具、速度、压力、夹持、定位及首件确认等关键制程要因，按 5W2H 制定烧口工艺导入计划。</p>
+            <div class="project-result">断裂率由约 12% 降至小于 1%，年创效约 50 万元，并固化 SOP/SWI、首件确认与巡检频次。</div>
+          </article>
+          <article class="project">
+            <small>2009.10-2009.12</small>
+            <h3>真空熔炉程序与沾银陶瓷管工艺优化</h3>
+            <p>结合 5M2E 分析设备程序、工艺参数、材料状态、作业方法、检测标准与环境因素，优化真空熔炉升温、保温、冷却曲线与节拍，改进沾银陶瓷管工艺并导入镀铜方案。</p>
+            <div class="project-result">直通率提升至 96%+，年创效约 100 万元，沉淀 Process Window 与检验标准。</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="fit">
+      <div class="section-inner">
+        <div class="section-head">
+          <h2>岗位匹配</h2>
+          <p>求职定位来自最新版简历：精益经理、工程部经理、改善负责人；城市意向为温州及长三角，珠三角亦可，薪资面议并匹配岗位职责与业绩目标。</p>
+        </div>
+        <div class="fit-grid">
+          <article class="fit-card">
+            <div class="tagline">精益经理</div>
+            <h3>体系搭建 + 现场改善</h3>
+            <p>适合需要从 6S、DMS、VSM、标准工时、线平衡、单件流/小批流、SMED 到项目收益固化的制造企业改善岗位。</p>
+          </article>
+          <article class="fit-card">
+            <div class="tagline">工程部经理</div>
+            <h3>PE/IE/ME/TE/NPI 协同</h3>
+            <p>适合负责 NPI 导入、工艺工程、设备工装、测试工程、ECN/ECR、阶段门评审和工程团队建设的管理岗位。</p>
+          </article>
+          <article class="fit-card">
+            <div class="tagline">改善负责人</div>
+            <h3>Pilot 验证 + 横向复制</h3>
+            <p>适合跨部门推进 PQCD 改善、数智化工厂落地、Factory Layout、物流优化、目视化项目交付和运营改善的项目型岗位。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ai">
+      <div class="section-inner">
+        <div class="certificate-wrap">
+          <div class="certificate-img">
+            <img src="chatgpt-lean-certificate-web.jpg" alt="ChatGPT 应用与精益生产实践学习成果纪念证书">
+          </div>
+          <div>
+            <div class="section-head">
+              <h2>AI 应用与精益生产融合</h2>
+              <p>熟练运用 ChatGPT、Grok 等 AI 工具辅助文档编制、数据分析、方案输出与管理效率提升，将 AI 作为制造现场改善的效率工具，而不是替代现场判断。</p>
+            </div>
+            <div class="credential-list">
+              <div class="credential"><strong>证书编号</strong>GPT-LE-2025-0422</div>
+              <div class="credential"><strong>颁发日期</strong>2025 年 4 月 22 日</div>
+              <div class="credential"><strong>应用方向</strong>流程优化、效率提升、数据分析、问题改善、标准文件编制、项目复盘与知识库沉淀。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="section-inner">
+        <div class="contact-strip">
+          <div>
+            <h2>面向制造企业的精益改善与工程管理沟通</h2>
+            <p>电话：13450014003 · 邮箱：dinghunter623@outlook.com · 意向城市：温州及长三角、珠三角亦可</p>
+          </div>
+          <div class="contact-links">
+            <a class="button primary" href="mailto:dinghunter623@outlook.com">发送邮件</a>
+            <a class="button" href="#assistant">返回问答</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>丁启利 | PQCD 改善、数智化工厂、目视化项目交付、精益体系建设</span>
+      <span>最新简历内容更新：2026-07-06</span>
+    </div>
+  </footer>
+
+  <script>
+    const answers = {
+      intro: `您好，我是丁启利职业能力 AI 数字人。丁启利本人具有 20 年制造业工程技术、精益改善与咨询交付经验，覆盖 PCBA、SMT、汽车电子、电气、新能源、半导体、小家电等制造场景。\n\n他的核心优势是把现场问题转化为可执行项目：先用 VSM 识别信息流、物料流、WIP、等待、换型和交付周期断点，再结合 5M2E 做瓶颈要因分析，通过 5W2H/PDCA 推进线平衡、单件流/小批流、SMED、SOP/SWI、Factory Layout 和项目闭环。代表成果包括关键产品 OEE 提升至 85% 以上、交付周期平均缩短约 30%、SMED 后单线产能提升 15%-25%、累计改善收益超千万元。`,
+      vsm: `丁启利开展 VSM 价值流分析时，会先回到客户需求、订单节奏、信息流、物料流、WIP、等待、搬运、换型和交付周期这些现场事实，再判断哪些断点真正影响 PQCD。\n\n在天星电子第一阶段项目中，他围绕汽车座椅开关总成装配开展 VSM，结合 IE 标准工时/标准产能、线平衡、ERP/MES 基础数据和 5M2E 要因分析，形成单件流/小批流试运行、线边配送、SMED、目视化和数据沉淀的改善路径。`,
+      flow: `单件流/小批流不是简单把批量变小，而是要先确认产品族、SKU 波动、工序节拍、检测确认、线边配送、人员配置和异常响应是否具备试运行条件。\n\n在汽车座椅开关总成项目中，丁启利基于 VSM、IE 标准工时/标准产能、线平衡和 ERP/MES 数据沉淀，按 5M2E 分析多 SKU、小批量、多工序装配及检测确认要因，再用 5W2H/PDCA 编制试运行程序文件，明确节拍控制、WIP 限制、工序衔接、异常响应、品质确认与人力配置要求。`,
+      smed: `SMED 方面有两个典型层次。第一是天星电子第一阶段标准化建设，围绕装配总成快速换型、注塑件快速换模，明确角色分工、内外部作业清单、工装准备、品质确认和安全点检要求。\n\n第二是 300T 冲压机 3.5T 大型模具快速换模。项目先开展全过程作业分解与 Time Study，结合 5M2E 分析换模损失，把内外部作业拆开，再导入快速锁模、预装工位、工具定置、换模检查清单和安全点检标准。结果是换模时间由约 14 小时缩短至 7 小时，降幅 50%，单机月增产值约 50 万元。`,
+      fit: `丁启利更适合精益经理、工程部经理、改善负责人、数智化工厂落地或运营改善类岗位。\n\n匹配点有三类：第一，他有一线 IE/TE 和工程管理基础，懂标准工时、制程优化、NPI、ECN/ECR 和异常闭环；第二，他做过外部咨询和 Lean 项目交付，能够对接经营层以及工程、生产、品质、PMC、设备、仓储等跨职能团队；第三，他能把改善从诊断、蓝图、Pilot 验证推进到横向复制和机制固化。`,
+      ai: `丁启利熟练使用 ChatGPT、Grok 等 AI 工具辅助文档编制、数据分析、方案输出与管理效率提升。主页中的 AI 数字人定位，是把简历事实、项目案例和回答风格沉淀为可复用的职业能力分身。\n\n在制造改善场景里，AI 更适合作为效率工具：辅助整理标准作业、复盘 8D/5W2H、生成项目计划、分析异常数据、制作汇报材料和沉淀知识库；最终判断仍要回到现场数据、工艺约束和跨部门验证。`
+    };
+
+    const prompts = {
+      intro: "请用一分钟介绍丁启利的职业能力。",
+      vsm: "丁启利如何开展 VSM 价值流分析改善？",
+      flow: "丁启利如何推动汽车座椅开关总成单件流/小批流落地？",
+      smed: "请复盘一个丁启利的 SMED 快速换模案例。",
+      fit: "丁启利适合什么岗位，为什么？",
+      ai: "丁启利如何把 AI 工具与精益生产结合？"
+    };
+
+    const question = document.getElementById("question");
+    const answer = document.getElementById("answer");
+    const controls = Array.from(document.querySelectorAll(".topic-control"));
+
+    function setTopic(topic, updatePrompt = true) {
+      const selected = answers[topic] ? topic : "intro";
+      answer.textContent = answers[selected];
+      controls.forEach((control) => control.classList.toggle("active", control.dataset.topic === selected));
+      if (updatePrompt) {
+        question.value = prompts[selected];
+      }
+    }
+
+    function inferTopic(text) {
+      if (/VSM|价值流|信息流|物料流|WIP|交付周期/i.test(text)) return "vsm";
+      if (/单件流|小批流|一件流|连续流|节拍|线边配送/i.test(text)) return "flow";
+      if (/SMED|换模|换线|快速换型/i.test(text)) return "smed";
+      if (/岗位|匹配|适合|求职|精益经理|工程部经理|改善负责人/i.test(text)) return "fit";
+      if (/AI|ChatGPT|Grok|人工智能|数字人/i.test(text)) return "ai";
+      return "intro";
+    }
+
+    controls.forEach((control) => {
+      control.addEventListener("click", () => setTopic(control.dataset.topic));
+    });
+
+    question.addEventListener("input", () => {
+      setTopic(inferTopic(question.value), false);
+    });
+
+    setTopic("intro");
+  </script>
+</body>
+</html>
