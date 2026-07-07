@@ -69,11 +69,29 @@
     try{ if(navigator.share){await navigator.share(item); toast('已调起系统分享');} else {await copyText(item.title+'\n'+item.url); toast('链接已复制，可粘贴转发');} }
     catch(e){ try{await copyText(item.title+'\n'+item.url); toast('链接已复制，可粘贴转发');} catch(err){toast('请手动复制地址栏链接');} }
   }
+  function roundedRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.lineTo(x+w-r,y);
+    ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+    ctx.lineTo(x+w,y+h-r);
+    ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+    ctx.lineTo(x+r,y+h);
+    ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+    ctx.lineTo(x,y+r);
+    ctx.quadraticCurveTo(x,y,x+r,y);
+    ctx.closePath();
+  }
   function drawQr(){
     const c=document.getElementById('wxQrCanvas'); if(!c) return;
     const px=8; c.width=QR_SIZE*px; c.height=QR_SIZE*px; const ctx=c.getContext('2d');
     ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height); ctx.fillStyle='#000';
     for(let y=0;y<QR_SIZE;y++){for(let x=0;x<QR_SIZE;x++){if(QR_BITS[y*QR_SIZE+x]==='1') ctx.fillRect(x*px,y*px,px,px);}}
+    const boxW=112, boxH=44, boxX=(c.width-boxW)/2, boxY=(c.height-boxH)/2;
+    ctx.fillStyle='#fff'; roundedRect(ctx,boxX,boxY,boxW,boxH,10); ctx.fill();
+    ctx.strokeStyle='#0f4b5a'; ctx.lineWidth=2; roundedRect(ctx,boxX,boxY,boxW,boxH,10); ctx.stroke();
+    ctx.fillStyle='#0f4b5a'; ctx.font='bold 22px Arial, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(WECHAT_ID,c.width/2,c.height/2+1);
   }
   function runAction(action,mask){
     if(action==='home'){ if(isHomePage()) window.scrollTo({top:0,behavior:'smooth'}); else location.href=HOME_PAGE; }
