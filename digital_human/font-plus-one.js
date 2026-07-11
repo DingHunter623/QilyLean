@@ -9,8 +9,10 @@
     load('terminology-v2.js?v=term2','terminologyV2Script');
     load('homepage-depth.js?v=depth3','homepageDepthScript');
     load('content-restore.js?v=restore-entries3','contentRestoreScript');
+    load('experience-lock-v3.js?v=lock3','experienceLockV3Script');
     load('career-resume-full.js?v=career-full1','careerResumeFullScript');
     load('dialogue-knowledge-pro.js?v=dialogue-pro1','dialogueKnowledgeProScript');
+    load('dialogue-soul-v1.js?v=soul1','dialogueSoulV1Script');
     load('hero-veteran-tag.js?v=veteran1','heroVeteranTagScript');
     load('wechat-qr-official.js?v=official-full1','wechatQrOfficialScript');
   }
