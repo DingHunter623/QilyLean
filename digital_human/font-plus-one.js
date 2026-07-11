@@ -18,7 +18,6 @@
     load('wechat-qr-official.js?v=official-full1','wechatQrOfficialScript');
     load('public-copy-polish.js?v=public1','publicCopyPolishScript');
     load('public-boundary-fix.js?v=boundary1','publicBoundaryFixScript');
-    load('public-note-share-fix.js?v=note-share1','publicNoteShareFixScript');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
