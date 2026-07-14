@@ -1,0 +1,10 @@
+(function(){
+'use strict';
+if(!/daily-insights\.html$/i.test(location.pathname)||document.getElementById('2026-07-15'))return;
+var archive=document.querySelector('.archive');if(!archive)return;
+var article=document.createElement('article');article.className='post';article.id='2026-07-15';
+article.innerHTML='<div class="visual"><img src="assets/daily-2026-07-15.svg" alt="计划不是填满产能而是保护交付节奏"></div><div class="content"><div class="date">2026-07-15｜PMC / APS <span class="dayno">DAY008</span></div><h2>计划不是填满产能，而是保护交付节奏</h2><p>很多排程表看起来每天都排得满满当当，但真正进入现场后，却不断出现缺料、插单、换线、等待和尾单积压。计划表越满，不代表交付能力越强；当排程没有考虑物料齐套、标准工时、瓶颈工序和异常缓冲时，所谓满负荷往往只是把风险提前写进计划。</p><div class="quote">好的计划，不是把每一分钟全部塞满，而是让订单优先级、物料、工时和产能保持同一节奏。</div><p>PMC排程首先要确认订单优先级和物料齐套，再依据真实标准工时、工位能力和设备负荷判断可执行产能。对瓶颈工序应保留必要缓冲，对插单和异常建立明确规则，而不是每天依靠人工临时协调。</p><p>APS能够提升计算速度，但前提仍是基础数据可信、约束条件清楚、生产实绩能够及时反馈。计划可执行，现场才有节奏；数据可信，交付才有保障。</p><div class="tags"><span class="tag">PMC排程</span><span class="tag">APS</span><span class="tag">产能负荷</span><span class="tag">交付管理</span></div><button class="share" data-title="计划不是填满产能，而是保护交付节奏">分享本条</button><span class="status"></span></div>';
+archive.insertBefore(article,archive.firstElementChild);
+var latest=document.querySelector('.nav a[href^="#2026-"]');if(latest)latest.setAttribute('href','#2026-07-15');
+var btn=article.querySelector('.share');btn.addEventListener('click',async function(){var url=location.href.split('#')[0]+'#2026-07-15';var title=btn.dataset.title;var status=article.querySelector('.status');try{if(navigator.share)await navigator.share({title:title,text:title,url:url});else if(navigator.clipboard)await navigator.clipboard.writeText(title+'\n'+url);if(status)status.textContent='链接已复制';}catch(e){if(navigator.clipboard)await navigator.clipboard.writeText(title+'\n'+url);if(status)status.textContent='链接已复制';}setTimeout(function(){if(status)status.textContent='';},2200);});
+})();
