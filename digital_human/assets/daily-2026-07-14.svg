@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-labelledby="title desc">
+<title id="title">制造改善执行闭环</title>
+<desc id="desc">以PDCA为主线，展示目标、执行、检查、改善和知识沉淀</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop stop-color="#0f4b5a"/>
+    <stop offset="1" stop-color="#177f87"/>
+  </linearGradient>
+  <filter id="shadow"><feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#082f39" flood-opacity=".22"/></filter>
+</defs>
+<rect width="1000" height="1000" rx="42" fill="url(#bg)"/>
+<text x="70" y="80" fill="#ffe39b" font-size="32" font-weight="800">2026-07-14｜DAY007</text>
+<text x="70" y="160" fill="#fff" font-size="56" font-weight="900">改善不是“做完”</text>
+<text x="70" y="225" fill="#fff" font-size="56" font-weight="900">而是形成执行闭环</text>
+<text x="70" y="275" fill="#d8efeb" font-size="25">目标明确 · 过程受控 · 结果验证 · 方法沉淀</text>
+
+<g filter="url(#shadow)">
+  <rect x="90" y="340" width="370" height="210" rx="28" fill="#fff"/>
+  <circle cx="155" cy="405" r="42" fill="#caa15f"/>
+  <text x="155" y="419" text-anchor="middle" fill="#173c45" font-size="42" font-weight="900">P</text>
+  <text x="220" y="395" fill="#0f4b5a" font-size="34" font-weight="900">PLAN</text>
+  <text x="220" y="435" fill="#177f87" font-size="25" font-weight="800">计划</text>
+  <text x="125" y="500" fill="#344845" font-size="24">定目标 · 定计划 · 定标准</text>
+
+  <rect x="540" y="340" width="370" height="210" rx="28" fill="#fff"/>
+  <circle cx="605" cy="405" r="42" fill="#7d4a70"/>
+  <text x="605" y="419" text-anchor="middle" fill="#fff" font-size="42" font-weight="900">D</text>
+  <text x="670" y="395" fill="#0f4b5a" font-size="34" font-weight="900">DO</text>
+  <text x="670" y="435" fill="#177f87" font-size="25" font-weight="800">执行</text>
+  <text x="575" y="500" fill="#344845" font-size="24">现场试行 · 数据记录 · 暴露问题</text>
+
+  <rect x="90" y="600" width="370" height="210" rx="28" fill="#fff"/>
+  <circle cx="155" cy="665" r="42" fill="#177f87"/>
+  <text x="155" y="679" text-anchor="middle" fill="#fff" font-size="42" font-weight="900">C</text>
+  <text x="220" y="655" fill="#0f4b5a" font-size="34" font-weight="900">CHECK</text>
+  <text x="220" y="695" fill="#177f87" font-size="25" font-weight="800">检查</text>
+  <text x="125" y="760" fill="#344845" font-size="24">PQCD · OEE · UPPH · 稽查验证</text>
+
+  <rect x="540" y="600" width="370" height="210" rx="28" fill="#fff"/>
+  <circle cx="605" cy="665" r="42" fill="#caa15f"/>
+  <text x="605" y="679" text-anchor="middle" fill="#173c45" font-size="42" font-weight="900">A</text>
+  <text x="670" y="655" fill="#0f4b5a" font-size="34" font-weight="900">ACT</text>
+  <text x="670" y="695" fill="#177f87" font-size="25" font-weight="800">改善</text>
+  <text x="575" y="760" fill="#344845" font-size="24">5W2H · 5M2E · ECRS · 标准固化</text>
+</g>
+
+<path d="M460 445h80" stroke="#ffe39b" stroke-width="10" stroke-linecap="round"/>
+<path d="M725 550v50" stroke="#ffe39b" stroke-width="10" stroke-linecap="round"/>
+<path d="M540 705h-80" stroke="#ffe39b" stroke-width="10" stroke-linecap="round"/>
+<path d="M275 600v-50" stroke="#ffe39b" stroke-width="10" stroke-linecap="round"/>
+
+<rect x="140" y="855" width="720" height="72" rx="36" fill="rgba(255,255,255,.12)" stroke="#ffe39b" stroke-width="2"/>
+<text x="500" y="900" text-anchor="middle" fill="#fff" font-size="28" font-weight="850">让每一次改善，都形成标准、数据与可复制的方法</text>
+<text x="500" y="965" text-anchor="middle" fill="#d8efeb" font-size="22">每日工程版简报</text>
+</svg>
