@@ -1,0 +1,62 @@
+name: Add QilyLean AI home entry
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/add-qilylean-ai-home-entry.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  update-home:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Add AI links to homepage
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path('digital_human/home.html')
+          text = path.read_text(encoding='utf-8')
+
+          old_nav = '<a href="#fit">岗位匹配</a><a href="#ai">AI与精益</a>'
+          new_nav = '<a href="#fit">岗位匹配</a><a href="#ai">AI与精益</a><a href="/ai.html">QilyLean AI</a>'
+
+          old_actions = '<div class="actions"><a class="button primary" href="#assistant">与丁启利对话</a><a class="button" href="papers.html">查看改善经验</a><a class="button" href="#projects">代表项目</a></div>'
+          new_actions = '<div class="actions"><a class="button primary" href="/ai.html">进入 QilyLean AI</a><a class="button" href="#assistant">职业能力问答</a><a class="button" href="papers.html">查看改善经验</a><a class="button" href="#projects">代表项目</a></div>'
+
+          changed = False
+          if '/ai.html">QilyLean AI</a>' not in text:
+              if old_nav not in text:
+                  raise SystemExit('Navigation target not found')
+              text = text.replace(old_nav, new_nav, 1)
+              changed = True
+
+          if 'class="button primary" href="/ai.html">进入 QilyLean AI</a>' not in text:
+              if old_actions not in text:
+                  raise SystemExit('Hero actions target not found')
+              text = text.replace(old_actions, new_actions, 1)
+              changed = True
+
+          if changed:
+              path.write_text(text, encoding='utf-8')
+              print('Homepage AI entry added.')
+          else:
+              print('Homepage AI entry already exists.')
+
+      - name: Commit homepage update
+        run: |
+          if git diff --quiet; then
+            echo "No changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add digital_human/home.html
+          git commit -m "Add QilyLean AI entry to homepage"
+          git push
