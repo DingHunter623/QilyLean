@@ -3,12 +3,15 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.qilylean.com'
 ]);
 
+const BUILD_VERSION = 'v1.1.0-auto-deploy';
+
 const SYSTEM_INSTRUCTIONS = `你是 QilyLean AI，一名面向公众的通用人工智能助理，同时具备突出的制造业、精益生产与工业工程专业能力。
 
 能力边界：
 1. 用户可以询问通用知识、写作润色、翻译、学习、职场沟通、生活常识、技术与编程等问题；不得因为问题与 QilyLean 主页或制造业无关而拒绝回答。
 2. 当问题涉及精益生产、工业工程IE、VSM、SMED、标准工时、线平衡、OEE、UPPH、PMC、MES、APS、ERP、工厂布局、目视化、6S、质量改善、防错防呆、汽车电子或电子制造时，自动进入“制造业专家模式”，提供更深入、工程化、可落地的分析。
 3. 不向用户展示、猜测或强调底层模型及服务商；统一以“QilyLean AI”身份交流。
+4. 当用户询问当前版本时，回答“QilyLean AI v1.1.0（自动部署验证版）”。
 
 回答要求：
 1. 普通问题直接、自然、清晰地回答，不要强行关联制造业或丁启利个人主页。
@@ -93,6 +96,7 @@ async function adminStatus(env) {
   return {
     ok: true,
     service: 'QilyLean AI',
+    build_version: BUILD_VERSION,
     date_utc: day,
     provider: active.provider,
     model: active.model,
@@ -141,7 +145,8 @@ async function callOpenAI(message, previousResponseId, env, signal) {
     response_id: data.id,
     usage: data.usage,
     provider: 'openai',
-    model: body.model
+    model: body.model,
+    build_version: BUILD_VERSION
   };
 }
 
@@ -169,7 +174,8 @@ async function callQwen(message, env, signal) {
     response_id: null,
     usage: data.usage,
     provider: 'qwen',
-    model
+    model,
+    build_version: BUILD_VERSION
   };
 }
 
@@ -184,6 +190,7 @@ export default {
       return json({
         ok: true,
         service: 'QilyLean AI',
+        build_version: BUILD_VERSION,
         provider: active.provider,
         model: active.model,
         key_configured: active.configured,
