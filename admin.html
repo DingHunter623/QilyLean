@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QilyLean 运维管理后台</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--ink:#163c45;--muted:#667879;--line:#d5e4e3;--paper:#eef7f5;--white:#fff;--forest:#0f4b5a;--teal:#177f87;--gold:#caa15f;--red:#a04732;--green:#18724b}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--paper);color:var(--ink)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:16px clamp(18px,5vw,60px);background:#fff;border-bottom:1px solid var(--line)}.top strong{font-size:20px}.top a{color:var(--muted);text-decoration:none}
+main{width:min(1120px,calc(100% - 32px));margin:28px auto 50px}.hero{padding:26px;background:linear-gradient(125deg,#0f4b5a,#177f87);color:#fff}.hero h1{margin:0 0 8px}.hero p{margin:0;color:#e7f4f1;line-height:1.7}
+.login,.panel{margin-top:18px;padding:20px;background:#fff;border:1px solid var(--line)}.login{display:grid;grid-template-columns:1fr auto;gap:12px}.login input{min-height:46px;padding:10px 13px;border:1px solid var(--line);font:inherit}.btn{min-height:46px;border:0;padding:10px 18px;background:var(--forest);color:#fff;font-weight:800;cursor:pointer}.btn.secondary{background:#fff;color:var(--forest);border:1px solid var(--line)}
+.statusline{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}.badge{display:inline-flex;padding:5px 10px;border-radius:999px;background:#edf4f2;color:var(--muted);font-size:13px;font-weight:800}.badge.ok{background:#e6f5ed;color:var(--green)}.badge.bad{background:#f9ebe7;color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}.card{padding:18px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--teal)}.card:nth-child(2n){border-top-color:var(--gold)}.card strong{display:block;font-size:28px;color:var(--forest)}.card span{display:block;margin-top:6px;color:var(--muted)}
+.table{width:100%;border-collapse:collapse;margin-top:14px}.table th,.table td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}.table th{color:var(--muted);font-size:14px}.note{margin-top:16px;padding:14px;background:#fff9e8;border:1px solid #ead9a4;color:#6a5724;line-height:1.7}.hidden{display:none}
+@media(max-width:760px){.grid{grid-template-columns:1fr 1fr}.login{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}}@media(max-width:480px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="top"><strong>QilyLean 运维管理后台</strong><nav><a href="/">返回主页</a>　<a href="/ai.html">进入 AI</a></nav></header>
+<main>
+<section class="hero"><h1>运行状态与用量控制</h1><p>用于查看服务状态、模型、调用统计、错误与限流。管理口令只保存在当前浏览器会话中，不写入网站代码。</p></section>
+<section class="login" id="loginBox"><input id="token" type="password" autocomplete="current-password" placeholder="请输入 Cloudflare ADMIN_TOKEN"><button class="btn" id="connect">连接后台</button></section>
+<section class="panel hidden" id="dashboard">
+<div class="statusline"><div><strong>服务状态</strong> <span class="badge" id="serviceBadge">检测中</span></div><div><button class="btn secondary" id="refresh">刷新</button> <button class="btn secondary" id="logout">退出</button></div></div>
+<div class="grid">
+<div class="card"><strong id="todayRequests">0</strong><span>今日请求</span></div>
+<div class="card"><strong id="todaySuccess">0</strong><span>今日成功</span></div>
+<div class="card"><strong id="todayErrors">0</strong><span>今日错误</span></div>
+<div class="card"><strong id="todayLimited">0</strong><span>今日限流</span></div>
+</div>
+<table class="table"><tbody>
+<tr><th>当前模型</th><td id="model">—</td></tr>
+<tr><th>单用户每日上限</th><td id="limit">—</td></tr>
+<tr><th>最大输出 Tokens</th><td id="maxTokens">—</td></tr>
+<tr><th>OpenAI 密钥</th><td id="keyState">—</td></tr>
+<tr><th>统计存储</th><td id="storage">—</td></tr>
+<tr><th>累计请求 / 成功 / 错误</th><td id="allTime">—</td></tr>
+<tr><th>统计日期（UTC）</th><td id="dateUtc">—</td></tr>
+</tbody></table>
+<div class="note">OpenAI 官方余额与美元消耗仍以 Platform 的 Billing / Usage 为准。本后台统计的是 QilyLean Worker 实际收到的请求、成功、错误与限流次数。</div>
+</section>
+</main>
+<script src="/qily-admin.js?v=1"></script>
+</body>
+</html>
