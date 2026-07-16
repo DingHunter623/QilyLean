@@ -1,0 +1,11 @@
+{
+  "name": "QilyLean 制造改善实践平台",
+  "short_name": "QilyLean",
+  "description": "聚焦精益生产、工业工程、数智化工厂、MES、ERP、VSM、SMED与制造改善实践。",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#eef7f5",
+  "theme_color": "#0f4b5a",
+  "lang": "zh-CN"
+}
