@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>QilyLean 正在加载</title>
+  <style>html,body{margin:0;min-height:100%;background:#f3faf9;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}.loading{min-height:100vh;display:grid;place-items:center;color:#0f4b5a;font-weight:800}</style>
+</head>
+<body>
+  <div class="loading">正在加载 QilyLean 最新主页…</div>
+  <script>
+  (async function(){
+    try{
+      const response=await fetch('home.html?build=20260717-project-images',{cache:'no-store'});
+      if(!response.ok)throw new Error('主页载入失败');
+      let html=await response.text();
+      html=html.replace('<script src="floating-service.js"></'+'script>','<script src="floating-service.js?v=20260717-project-images"></'+'script>');
+      document.open();
+      document.write(html);
+      document.close();
+    }catch(error){
+      document.body.innerHTML='<div class="loading">主页暂时加载失败，请刷新重试。</div>';
+    }
+  })();
+  </script>
+</body>
+</html>
