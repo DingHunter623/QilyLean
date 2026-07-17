@@ -34,7 +34,7 @@ function addDigitalFactory(){
   if(!card)return;
   var old=card.querySelector('#digitalFactoryProjectImageV2');if(old)old.remove();
   var f=document.createElement('figure');f.id='digitalFactoryProjectImageV2';f.className='project-media-v2';
-  f.innerHTML='<img src="/shuzhihua.png?v=20260718-5" alt="数智化工厂数据地基与制造运营协同"><figcaption>数智化工厂｜数据地基：ERP、MES、APS与IE基础数据协同</figcaption>';
+  f.innerHTML='<img src="https://raw.githubusercontent.com/DingHunter623/QilyLean/main/shuzhihua.png?raw=1&v=20260718-6" alt="数智化工厂数据地基与制造运营协同"><figcaption>数智化工厂｜数据地基：ERP、MES、APS与IE基础数据协同</figcaption>';
   card.insertBefore(f,card.firstChild);
 }
 function run(){addStyle();addFuse();addMold();addDigitalFactory();}
