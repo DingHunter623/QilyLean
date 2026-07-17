@@ -1,5 +1,27 @@
 (function(){
 'use strict';
+
+function patchFuseProject(){
+  if(!/(?:home|home-live)\.html$/i.test(location.pathname))return;
+  var gallery=document.getElementById('fuseCuttingProjectImages');
+  if(!gallery){setTimeout(patchFuseProject,120);return;}
+  var card=gallery.closest('.project');
+  if(card){var h3=card.querySelector('h3');if(h3)h3.textContent='玻璃管保险丝切口断裂率改善';}
+  var imgs=gallery.querySelectorAll('img');
+  var labels=gallery.querySelectorAll('.fuse-photo-grid span');
+  if(imgs[0]){imgs[0].src='fuse-finished-product.svg?v=20260717-1';imgs[0].alt='玻璃管保险丝切口改善后成品';}
+  if(imgs[1]){imgs[1].src='fuse-semi-finished.svg?v=20260717-1';imgs[1].alt='玻璃管保险丝切口改善后半成品';}
+  if(labels[0])labels[0].textContent='改善后成品';
+  if(labels[1])labels[1].textContent='改善后半成品';
+  var caption=gallery.querySelector('figcaption');
+  if(caption)caption.textContent='玻璃管保险丝切口断裂率改善｜改善后成品与半成品实物';
+}
+
+if(/(?:home|home-live)\.html$/i.test(location.pathname)){
+  patchFuseProject();
+  return;
+}
+
 if(!/daily-insights\.html$/i.test(location.pathname)||document.getElementById('2026-07-17'))return;
 var archive=document.querySelector('.archive');if(!archive)return;
 var article=document.createElement('article');article.className='post';article.id='2026-07-17';
