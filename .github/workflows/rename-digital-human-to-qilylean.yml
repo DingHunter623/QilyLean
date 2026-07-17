@@ -1,0 +1,71 @@
+name: Rename digital_human to qilylean
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rename-digital-human-to-qilylean.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rename-directory:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rename directory and update references
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -d "digital_human" ] && [ ! -d "qilylean" ]; then
+            git mv digital_human qilylean
+          elif [ -d "digital_human" ] && [ -d "qilylean" ]; then
+            echo "Both digital_human and qilylean exist; stopping to avoid data loss."
+            exit 1
+          elif [ ! -d "qilylean" ]; then
+            echo "Neither digital_human nor qilylean exists."
+            exit 1
+          fi
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          root = Path('.')
+          changed = []
+          for path in root.rglob('*'):
+              if not path.is_file() or '.git' in path.parts:
+                  continue
+              try:
+                  data = path.read_text(encoding='utf-8')
+              except (UnicodeDecodeError, OSError):
+                  continue
+              updated = data.replace('digital_human', 'qilylean')
+              if updated != data:
+                  path.write_text(updated, encoding='utf-8')
+                  changed.append(str(path))
+
+          print(f'Updated references in {len(changed)} text files.')
+          for item in changed:
+              print(item)
+          PY
+
+      - name: Commit migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Rename digital_human directory to qilylean"
+          git push origin HEAD:main
