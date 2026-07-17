@@ -11,10 +11,24 @@
   <script>
   (async function(){
     try{
-      const response=await fetch('home.html?build=20260717-project-images',{cache:'no-store'});
+      const response=await fetch('home.html?build=20260717-project-images-v3',{cache:'no-store'});
       if(!response.ok)throw new Error('主页载入失败');
       let html=await response.text();
-      html=html.replace('<script src="floating-service.js"></'+'script>','<script src="floating-service.js?v=20260717-project-images"></'+'script>');
+
+      const mediaStyle='<style id="projectMediaDirectStyle">.project-media{margin:-22px -22px 18px;overflow:hidden;border-bottom:1px solid var(--line);background:#e8f1ef}.project-media img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center 48%}.project-media figcaption{padding:10px 14px;color:var(--muted);background:#f8fbfa;font-size:14px;line-height:1.55;font-weight:750}.fuse-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}.fuse-photo-grid>div{position:relative;overflow:hidden;background:#eef3f5}.fuse-photo-grid img{width:100%;height:250px;object-fit:contain;background:#eef3f5}.fuse-photo-grid span{position:absolute;left:10px;bottom:10px;padding:4px 9px;color:#fff;background:rgba(15,75,90,.88);font-size:13px;font-weight:900}@media(max-width:760px){.project-media img{aspect-ratio:4/3}.fuse-photo-grid{grid-template-columns:1fr}.fuse-photo-grid img{height:220px}}</style>';
+      html=html.replace('</head>',mediaStyle+'</head>');
+
+      html=html.replace(
+        '<article class="project"><small>2021.03-2021.12｜智能模具库</small><h3>智能模具库与可追溯管理</h3>',
+        '<article class="project"><figure class="project-media"><img src="/mold-smart-warehouse.png?v=20260717v3" alt="1200+副模具标准化与二维码追溯智能模具立体库"><figcaption>1200+副模具标准化与二维码追溯｜智能模具立体库现场</figcaption></figure><small>2021.03-2021.12｜智能模具库</small><h3>智能模具库与可追溯管理</h3>'
+      );
+
+      html=html.replace(
+        '<article class="project"><small>2014.05-2014.08｜玻璃管保险丝</small><h3>切口工艺改良</h3>',
+        '<article class="project"><figure class="project-media"><div class="fuse-photo-grid"><div><img src="/%E5%89%AA%E6%96%AD%E4%BF%9D%E9%99%A9%E4%B8%9D%E4%B9%8B%E5%89%8D.jpg?v=20260717v3" alt="玻璃管保险丝切口改善前状态"><span>改善前</span></div><div><img src="/%E5%89%AA%E6%96%AD%E4%BF%9D%E9%99%A9%E4%B8%9D%E5%90%8E.jpg?v=20260717v3" alt="玻璃管保险丝切口改善后状态"><span>改善后</span></div></div><figcaption>玻璃管保险丝切口断裂率改善｜改善前后实物对比</figcaption></figure><small>2014.05-2014.08｜玻璃管保险丝</small><h3>玻璃管保险丝切口断裂率改善</h3>'
+      );
+
+      html=html.replace('<script src="floating-service.js"></'+'script>','<script src="floating-service.js?v=20260717-project-images-v3"></'+'script>');
       document.open();
       document.write(html);
       document.close();
