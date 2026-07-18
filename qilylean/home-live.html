@@ -54,12 +54,12 @@
 
       var mold=findCard(doc,['智能模具库与可追溯管理','1200+副模具标准化与二维码追溯','1200副模具立体库']);
       if(mold){
-        mountFigure(doc,mold,'moldProjectImagesStable','<div class="project-media-grid-3"><div class="main"><img src="/mold-after1.png?v=20260718-r2" alt="智能模具库现场实景"><span>现场实景</span></div><div><img src="/mold-after2.jpg?v=20260718-r2" alt="智能模具库改善后"><span>改善后</span></div><div><img src="/mold-before.jpg?v=20260718-r2" alt="智能模具库改善前"><span>改善前</span></div></div><figcaption>智能模具库｜库位与追溯管理｜1200+副模具标准化与二维码追溯</figcaption>');
+        mountFigure(doc,mold,'moldProjectImagesStable','<div class="project-media-grid-3"><div class="main"><img src="/mold-before.jpg?v=20260718-r4" alt="立体库Layout规划设计"><span>立体库Layout规划设计</span></div><div><img src="/mold-after1.png?v=20260718-r4" alt="立体库雏形"><span>立体库雏形</span></div><div><img src="/mold-after2.jpg?v=20260718-r4" alt="智能立体库操作系统"><span>智能立体库操作系统</span></div></div><figcaption>智能模具库｜库位与追溯管理｜1200+副模具标准化与二维码追溯</figcaption>');
         if(!mold.querySelector('#moldWarehouseProjectVideo')){
           var videoBox=doc.createElement('section');
           videoBox.id='moldWarehouseProjectVideo';
           videoBox.className='project-video-stable';
-          videoBox.innerHTML='<h4>项目现场视频｜智能模具库运行实录</h4><video controls preload="metadata" playsinline poster="/mold-after1.png?v=20260718-r2"><source src="/zhinengmujuku.mp4?v=20260718-r2" type="video/mp4">您的浏览器暂不支持视频播放。</video><p>1200+副模具立体库｜库位管理、存取运行与数字化追溯现场记录</p>';
+          videoBox.innerHTML='<h4>项目现场视频｜智能模具库运行实录</h4><video controls preload="metadata" playsinline poster="/mold-after1.png?v=20260718-r4"><source src="/zhinengmujuku.mp4?v=20260718-r4" type="video/mp4">您的浏览器暂不支持视频播放。</video><p>1200+副模具立体库｜库位管理、存取运行与数字化追溯现场记录</p>';
           var figure=mold.querySelector('#moldProjectImagesStable');
           if(figure)figure.insertAdjacentElement('afterend',videoBox);else mold.insertBefore(videoBox,mold.firstChild);
         }
