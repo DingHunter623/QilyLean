@@ -26,10 +26,7 @@ jobs:
             exit 1
           fi
 
-          # 避免旧的半成品目录干扰
           rm -rf qilylean
-
-          # 完整复制，包括图片、视频、HTML、JS、JSON等文件
           cp -a digital_human qilylean
 
           python3 - <<'PY'
@@ -42,8 +39,16 @@ jobs:
               if not path.is_file():
                   continue
 
-              # 保留旧目录原样，作为临时备用入口
-              if ".git" in path.parts or "digital_human" in path.parts:
+              # 不处理 Git 内部文件
+              if ".git" in path.parts:
+                  continue
+
+              # 不修改任何 GitHub Actions 工作流，避免权限拦截
+              if ".github" in path.parts:
+                  continue
+
+              # 保留旧目录作为备用入口，不改旧目录内部内容
+              if "digital_human" in path.parts:
                   continue
 
               try:
@@ -73,14 +78,29 @@ jobs:
         run: |
           set -euo pipefail
 
-          if git diff --quiet && git diff --cached --quiet; then
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # 只提交新目录
+          git add qilylean
+
+          # 提交根目录普通站点文件，但绝不提交 .github/workflows
+          find . -maxdepth 1 -type f \
+            \( -name "*.html" \
+            -o -name "*.js" \
+            -o -name "*.json" \
+            -o -name "*.xml" \
+            -o -name "*.md" \
+            -o -name "*.toml" \
+            -o -name "CNAME" \
+            -o -name "robots.txt" \
+            \) \
+            -print0 | xargs -0 -r git add --
+
+          if git diff --cached --quiet; then
             echo "No changes detected."
             exit 0
           fi
 
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add -A
           git commit -m "Copy digital_human to qilylean and switch active references"
           git push origin HEAD:main
