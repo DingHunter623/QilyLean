@@ -10,41 +10,80 @@
   </style>
 </head>
 <body>
-  <iframe id="homeFrame" src="home.html?build=20260717-project-images-v4" title="QilyLean 制造改善与项目实践主页"></iframe>
+  <iframe id="homeFrame" src="home.html?build=20260718-project-media-repair" title="QilyLean 制造改善与项目实践主页"></iframe>
   <script>
   (function(){
-    const frame=document.getElementById('homeFrame');
+    'use strict';
+    var frame=document.getElementById('homeFrame');
+
+    function findCard(doc,words){
+      return Array.prototype.slice.call(doc.querySelectorAll('#projects .project')).find(function(card){
+        var h=card.querySelector('h3');
+        if(!h)return false;
+        return words.some(function(word){return h.textContent.indexOf(word)>-1;});
+      });
+    }
+
+    function mountFigure(doc,card,id,html){
+      if(!card)return;
+      var old=card.querySelector('#'+id);
+      if(old)old.remove();
+      var figure=doc.createElement('figure');
+      figure.id=id;
+      figure.className='project-media-stable';
+      figure.innerHTML=html;
+      card.insertBefore(figure,card.firstChild);
+    }
+
+    function repairProjectMedia(doc){
+      if(!doc||!doc.head||!doc.body)return;
+
+      if(!doc.getElementById('projectMediaStableStyle')){
+        var style=doc.createElement('style');
+        style.id='projectMediaStableStyle';
+        style.textContent='.project-media-stable{margin:-22px -22px 18px;border-bottom:1px solid var(--line);background:#eef3f5;overflow:hidden}.project-media-stable img{display:block;width:100%;height:auto;object-fit:contain;background:#eef3f5}.project-media-stable figcaption{padding:10px 14px;color:var(--muted);background:#f8fbfa;font-size:14px;line-height:1.55;font-weight:750}.project-media-grid-2,.project-media-grid-3{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}.project-media-grid-3 .main{grid-column:1/-1}.project-media-grid-2>div,.project-media-grid-3>div{position:relative;background:#eef3f5}.project-media-stable span{position:absolute;left:10px;bottom:10px;padding:4px 9px;color:#fff;background:rgba(15,75,90,.88);font-size:13px;font-weight:900}.project-video-stable{margin:14px -22px 18px;padding:14px 22px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#f7fbfa}.project-video-stable h4{margin:0 0 10px;color:#0f4b5a;font-size:16px}.project-video-stable video{display:block;width:100%;max-height:560px;border-radius:10px;background:#0b1113}.project-video-stable p{margin:9px 2px 0;color:#607474;font-size:13px;line-height:1.6}@media(max-width:760px){.project-media-grid-2,.project-media-grid-3{grid-template-columns:1fr}.project-media-grid-3 .main{grid-column:auto}.project-video-stable video{max-height:420px}}';
+        doc.head.appendChild(style);
+      }
+
+      var fuse=findCard(doc,['玻璃管保险丝切口断裂率改善','保险丝制程','切口工艺改良']);
+      if(fuse){
+        var fuseTitle=fuse.querySelector('h3');
+        if(fuseTitle)fuseTitle.textContent='玻璃管保险丝切口断裂率改善';
+        mountFigure(doc,fuse,'fuseProjectImagesStable','<div class="project-media-grid-2"><div><img src="/fuse-cutting-before.jpg?v=20260718-r2" alt="玻璃管保险丝切口改善前状态"><span>改善前</span></div><div><img src="/fuse-cutting-after.jpg?v=20260718-r2" alt="玻璃管保险丝切口改善后状态"><span>改善后</span></div></div><figcaption>保险丝制程｜质量与工艺改善｜切口断裂率改善前后实物对比</figcaption>');
+      }
+
+      var mold=findCard(doc,['智能模具库与可追溯管理','1200+副模具标准化与二维码追溯','1200副模具立体库']);
+      if(mold){
+        mountFigure(doc,mold,'moldProjectImagesStable','<div class="project-media-grid-3"><div class="main"><img src="/mold-after1.png?v=20260718-r2" alt="智能模具库现场实景"><span>现场实景</span></div><div><img src="/mold-after2.jpg?v=20260718-r2" alt="智能模具库改善后"><span>改善后</span></div><div><img src="/mold-before.jpg?v=20260718-r2" alt="智能模具库改善前"><span>改善前</span></div></div><figcaption>智能模具库｜库位与追溯管理｜1200+副模具标准化与二维码追溯</figcaption>');
+        if(!mold.querySelector('#moldWarehouseProjectVideo')){
+          var videoBox=doc.createElement('section');
+          videoBox.id='moldWarehouseProjectVideo';
+          videoBox.className='project-video-stable';
+          videoBox.innerHTML='<h4>项目现场视频｜智能模具库运行实录</h4><video controls preload="metadata" playsinline poster="/mold-after1.png?v=20260718-r2"><source src="/zhinengmujuku.mp4?v=20260718-r2" type="video/mp4">您的浏览器暂不支持视频播放。</video><p>1200+副模具立体库｜库位管理、存取运行与数字化追溯现场记录</p>';
+          var figure=mold.querySelector('#moldProjectImagesStable');
+          if(figure)figure.insertAdjacentElement('afterend',videoBox);else mold.insertBefore(videoBox,mold.firstChild);
+        }
+      }
+
+      var digital=findCard(doc,['ERP/MES/APS协同与IE基础数据治理','数智化工厂｜数据地基']);
+      if(digital){
+        mountFigure(doc,digital,'digitalFactoryProjectImageStable','<img src="/shuzhihua.png?v=20260718-r2" alt="数智化工厂数据地基与制造运营协同"><figcaption>数智化工厂｜数据地基：ERP、MES、APS与IE基础数据协同</figcaption>');
+      }
+
+      var factory=findCard(doc,['新工厂/新产线','Factory Layout','设计规划']);
+      if(factory){
+        mountFigure(doc,factory,'factoryLayoutProjectImageStable','<img src="/factory-layout.png?v=20260718-r2" alt="Factory Layout新工厂新产线设计规划"><figcaption>新工厂/新产线｜Factory Layout、精益物流与扩展边界规划</figcaption>');
+      }
+    }
+
     frame.addEventListener('load',function(){
       try{
-        const doc=frame.contentDocument;
-        if(!doc)return;
-        if(!doc.getElementById('projectMediaStableStyle')){
-          const style=doc.createElement('style');
-          style.id='projectMediaStableStyle';
-          style.textContent='.project-media{margin:-22px -22px 18px;overflow:hidden;border-bottom:1px solid var(--line);background:#e8f1ef}.project-media img{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;object-position:center 48%}.project-media figcaption{padding:10px 14px;color:var(--muted);background:#f8fbfa;font-size:14px;line-height:1.55;font-weight:750}.fuse-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}.fuse-photo-grid>div{position:relative;overflow:hidden;background:#eef3f5}.fuse-photo-grid img{width:100%;height:250px;object-fit:contain;background:#eef3f5}.fuse-photo-grid span{position:absolute;left:10px;bottom:10px;padding:4px 9px;color:#fff;background:rgba(15,75,90,.88);font-size:13px;font-weight:900}@media(max-width:760px){.project-media img{aspect-ratio:4/3}.fuse-photo-grid{grid-template-columns:1fr}.fuse-photo-grid img{height:220px}}';
-          doc.head.appendChild(style);
-        }
-        const cards=[...doc.querySelectorAll('#projects .project')];
-        const mold=cards.find(card=>{const h=card.querySelector('h3');return h&&h.textContent.includes('智能模具库与可追溯管理');});
-        if(mold&&!mold.querySelector('.project-media')){
-          const fig=doc.createElement('figure');
-          fig.className='project-media';
-          fig.innerHTML='<img src="/mold-smart-warehouse.png?v=20260717v4" alt="1200+副模具标准化与二维码追溯智能模具立体库"><figcaption>1200+副模具标准化与二维码追溯｜智能模具立体库现场</figcaption>';
-          mold.insertBefore(fig,mold.firstChild);
-        }
-        const fuse=cards.find(card=>{const h=card.querySelector('h3');return h&&(h.textContent.includes('切口工艺改良')||h.textContent.includes('玻璃管保险丝切口断裂率改善'));});
-        if(fuse&&!fuse.querySelector('.project-media')){
-          const h=fuse.querySelector('h3');if(h)h.textContent='玻璃管保险丝切口断裂率改善';
-          const fig=doc.createElement('figure');
-          fig.className='project-media';
-          fig.innerHTML='<div class="fuse-photo-grid"><div><img src="/%E5%89%AA%E6%96%AD%E4%BF%9D%E9%99%A9%E4%B8%9D%E4%B9%8B%E5%89%8D.jpg?v=20260717v4" alt="玻璃管保险丝切口改善前状态"><span>改善前</span></div><div><img src="/%E5%89%AA%E6%96%AD%E4%BF%9D%E9%99%A9%E4%B8%9D%E5%90%8E.jpg?v=20260717v4" alt="玻璃管保险丝切口改善后状态"><span>改善后</span></div></div><figcaption>玻璃管保险丝切口断裂率改善｜改善前后实物对比</figcaption>';
-          fuse.insertBefore(fig,fuse.firstChild);
-        }
-        if(location.hash==='#projects'){
-          const target=doc.getElementById('projects');
-          if(target)setTimeout(()=>target.scrollIntoView({block:'start'}),100);
-        }
-      }catch(e){console.error(e);}
+        var doc=frame.contentDocument;
+        repairProjectMedia(doc);
+        setTimeout(function(){repairProjectMedia(doc);},500);
+        setTimeout(function(){repairProjectMedia(doc);},1500);
+        if(location.hash&&frame.contentWindow)frame.contentWindow.location.hash=location.hash;
+      }catch(error){console.error(error);}
     });
   })();
   </script>
