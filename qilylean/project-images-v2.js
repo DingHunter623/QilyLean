@@ -38,6 +38,23 @@ function addMold(){
 }
 function run(){addStyle();addFuse();addMold();addDigitalFactory();addFactoryLayout();}
 function addFactoryLayout(){
+  function addFactoryLayout(){
+  var card=findProject(['新工厂/新产线','Factory Layout、精益物流与扩展边界规划']);
+  if(!card)return;
+
+  var old=card.querySelector('#factoryLayoutProjectImageV2');
+  if(old)old.remove();
+
+  var f=document.createElement('figure');
+  f.id='factoryLayoutProjectImageV2';
+  f.className='project-media-v2';
+
+  f.innerHTML=
+  '<img src="/factory-layout.png?v=20260718" alt="Factory Layout新工厂新产线设计规划">'+
+  '<figcaption>Factory Layout、精益物流与扩展边界规划｜新工厂设计从“画图”升级为“制造系统设计”</figcaption>';
+
+  card.insertBefore(f,card.firstChild);
+}
   var card=findProject(['新工厂/新产线','Factory Layout、精益物流与扩展边界规划']);
   if(!card)return;
   var old=card.querySelector('#factoryLayoutProjectImageV2');
