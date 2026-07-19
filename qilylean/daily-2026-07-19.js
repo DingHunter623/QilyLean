@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-if(!/daily-insights\.html$/i.test(location.pathname)||document.getElementById('2026-07-19'))return;
+if(document.getElementById('2026-07-19'))return;
 var archive=document.querySelector('.archive');if(!archive)return;
 
 var article=document.createElement('article');
