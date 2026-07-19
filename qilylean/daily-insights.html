@@ -11,7 +11,7 @@
 </style>
 </head>
 <body>
-<header class="top"><div class="brand">制造改善知识分享</div><nav class="nav"><a href="home.html">返回主页</a><a href="lean-knowledge.html">知识分享</a><a href="#2026-07-14">最新简报</a></nav></header>
+<header class="top"><div class="brand">制造改善知识分享</div><nav class="nav"><a href="home.html">返回主页</a><a href="lean-knowledge.html">知识分享</a><a href="#2026-07-19">最新简报</a></nav></header>
 <section class="hero"><div class="inner"><div>DAILY ENGINEERING BRIEF</div><h1>每日工程版简报</h1><p>持续分享制造改善实践、精益方法与数智化工厂思考。</p></div></section>
 <section class="section"><div class="inner archive">
 <article class="post" id="2026-07-14">
@@ -48,9 +48,11 @@
 function copyText(t){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(t);var a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.left='-9999px';document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();return Promise.resolve();}
 document.querySelectorAll('.share').forEach(function(btn){btn.addEventListener('click',async function(){var article=btn.closest('.post');var url=location.href.split('#')[0]+'#'+article.id;var title=btn.dataset.title||document.title;var status=article.querySelector('.status');try{if(navigator.share)await navigator.share({title:title,text:title,url:url});else{await copyText(title+'\n'+url);if(status)status.textContent='链接已复制';}}catch(e){await copyText(title+'\n'+url);if(status)status.textContent='链接已复制';}setTimeout(function(){if(status)status.textContent='';},2200);});});
 </script>
-  <script src="daily-2026-07-15.js"></script>
+<script src="daily-2026-07-15.js"></script>
 <script src="daily-2026-07-16.js"></script>
-<script src="daily-202
+<script src="daily-2026-07-17.js"></script>
+<script src="daily-2026-07-18.js"></script>
+<script src="daily-2026-07-19.js"></script>
 <script src="floating-service.js"></script>
 </body>
 </html>
