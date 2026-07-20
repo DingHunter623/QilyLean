@@ -24,13 +24,9 @@
 
   <nav class="nav" aria-label="改善项目导航">
     <a href="#capabilities">能力画像</a>
+    <a href="#experience">履历主线</a>
     <a href="#projects">代表项目</a>
-    <a href="papers.html#vsm">VSM</a>
-    <a href="papers.html#standard-time">标准工时</a>
-    <a href="papers.html#smed">SMED</a>
-    <a href="papers.html#visual">目视化</a>
-    <a href="papers.html#visual">系统协同</a>
-    <a href="#projects">IE基础数据</a>
+    <a href="papers.html">改善经验</a>
     <a href="/ai.html">QilyLean AI</a>
   </nav>
 </header>
@@ -55,7 +51,9 @@ controls.forEach(c=>c.addEventListener('click',()=>setTopic(c.dataset.topic)));
 question.addEventListener('input',()=>setTopic(inferTopic(question.value),false));
 setTopic('intro');
   </script>
+  <script src="experience-lock-v3.js"></script>
   <script src="floating-service.js"></script>
   <script src="font-plus-one.js"></script>
 </body>
 </html>
+
