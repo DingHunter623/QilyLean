@@ -10,7 +10,7 @@
   </style>
 </head>
 <body>
-  <iframe id="homeFrame" src="home.html?build=20260720-300t-project-cover" title="QilyLean 制造改善与项目实践主页"></iframe>
+  <iframe id="homeFrame" src="home.html?build=20260720-300t-project-image-r3" title="QilyLean 制造改善与项目实践主页"></iframe>
   <script>
   (function(){
     'use strict';
@@ -27,12 +27,13 @@
     function mountFigure(doc,card,id,html){
       if(!card)return;
       var old=card.querySelector('#'+id);
-      if(old)old.remove();
+      if(old)return old;
       var figure=doc.createElement('figure');
       figure.id=id;
       figure.className='project-media-stable';
       figure.innerHTML=html;
       card.insertBefore(figure,card.firstChild);
+      return figure;
     }
 
     function repairProjectMedia(doc){
@@ -48,6 +49,13 @@
       var automotive=findCard(doc,['精益体系、VSM、单件流与SMED标准化','第一阶段精益体系','VSM、单件流与SMED']);
       if(automotive){
         mountFigure(doc,automotive,'automotiveLeanProjectImageStable','<img src="/VSM%26SMED.png?v=20260719-r1" alt="汽车电子企业第一阶段精益体系建设"><figcaption>汽车电子｜第一阶段精益体系建设｜精益体系、VSM、单件流与SMED标准化</figcaption>');
+      }
+
+      var smed=findCard(doc,['300T冲压机3.5T大型模具换模改善','300T冲压机SMED快速换模改善','3.5T大型模具SMED快速换模','大型模具｜SMED快速换型']);
+      if(smed){
+        var legacySmed=smed.querySelector('.project-cover,.project-media-v2');
+        if(legacySmed)legacySmed.remove();
+        mountFigure(doc,smed,'smed300TProjectImageStable','<img src="/300T.png?v=20260720-r3" alt="300T冲压机3.5T大型模具SMED快速换模改善项目" loading="eager">');
       }
 
       var fuse=findCard(doc,['玻璃管保险丝切口断裂率改善','保险丝制程','切口工艺改良']);
@@ -87,6 +95,15 @@
         repairProjectMedia(doc);
         setTimeout(function(){repairProjectMedia(doc);},500);
         setTimeout(function(){repairProjectMedia(doc);},1500);
+        var projects=doc.getElementById('projects')||doc.body;
+        var queued=false;
+        var observer=new frame.contentWindow.MutationObserver(function(){
+          if(queued)return;
+          queued=true;
+          frame.contentWindow.requestAnimationFrame(function(){queued=false;repairProjectMedia(doc);});
+        });
+        observer.observe(projects,{childList:true,subtree:true});
+        setTimeout(function(){observer.disconnect();repairProjectMedia(doc);},5000);
         if(location.hash&&frame.contentWindow)frame.contentWindow.location.hash=location.hash;
       }catch(error){console.error(error);}
     });
