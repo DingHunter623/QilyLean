@@ -177,9 +177,27 @@
     var moduleFrame = null;
     var htmlOverflow = document.documentElement.style.overflow;
     var bodyOverflow = document.body.style.overflow;
+    var prefetchedDocuments = Object.create(null);
 
     function urlPath(url) {
       return url.pathname + url.search + url.hash;
+    }
+
+    function prefetchDocument(url) {
+      if (url.origin !== shellUrl.origin || url.hash || prefetchedDocuments[url.href]) return;
+      prefetchedDocuments[url.href] = true;
+      var link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.as = 'document';
+      link.href = url.href;
+      document.head.appendChild(link);
+    }
+
+    function handleNavigationIntent(event, doc) {
+      var target = event.target;
+      var link = target && target.closest ? target.closest('a[href]') : null;
+      if (!link) return;
+      try { prefetchDocument(new URL(link.href, doc.defaultView.location.href)); } catch (error) {}
     }
 
     function sameDocument(a, b) {
@@ -193,8 +211,25 @@
         path === '/qilylean/home.html' || path === '/qilylean/home-live.html';
     }
 
+    function isProjectsUrl(url) {
+      if (url.origin !== shellUrl.origin) return false;
+      var path = url.pathname.replace(/\/+$/, '') || '/';
+      return path === '/projects' || path === '/projects/index.html';
+    }
+
     function restoresShellHome(url) {
       return isHomeUrl(shellUrl) && isHomeUrl(url);
+    }
+
+    function restoresShellProjects(url) {
+      return isHomeUrl(shellUrl) && isProjectsUrl(url);
+    }
+
+    function shellScrollTarget(url) {
+      if (!restoresShellProjects(url)) return url;
+      var target = new URL(shellUrl.href);
+      target.hash = 'projects';
+      return target;
     }
 
     function scrollDocument(doc, url) {
@@ -251,7 +286,7 @@
       if (pushHistory) {
         try { history.pushState(shellState(), '', urlPath(url)); } catch (error) {}
       }
-      scrollDocument(document, url);
+      scrollDocument(document, shellScrollTarget(url));
     }
 
     function ensureModuleFrame() {
@@ -274,7 +309,7 @@
     }
 
     function openModule(url, pushHistory) {
-      if (sameDocument(url, shellUrl) || restoresShellHome(url)) {
+      if (sameDocument(url, shellUrl) || restoresShellHome(url) || restoresShellProjects(url)) {
         closeModule(url, pushHistory);
         return;
       }
@@ -349,6 +384,8 @@
       doc.__qilyLeanPersistentBound = true;
       doc.addEventListener('click', function (event) { handleLink(event, doc); }, true);
       doc.addEventListener('pointerup', handleFloatingHome, true);
+      doc.addEventListener('pointerover', function (event) { handleNavigationIntent(event, doc); }, { capture: true, passive: true });
+      doc.addEventListener('touchstart', function (event) { handleNavigationIntent(event, doc); }, { capture: true, passive: true });
       Array.prototype.forEach.call(doc.querySelectorAll('iframe'), bindIframe);
 
       try {
@@ -380,6 +417,14 @@
     };
 
     bindDocument(document);
+
+    var warmModules = function () {
+      ['/ai.html', '/knowledge.html', '/projects/'].forEach(function (href) {
+        prefetchDocument(new URL(href, shellUrl.origin));
+      });
+    };
+    if ('requestIdleCallback' in window) window.requestIdleCallback(warmModules, { timeout: 1800 });
+    else window.setTimeout(warmModules, 900);
   }
 
   document.addEventListener('pointerdown', resumeAfterFirstGesture, { once: true, capture: true });
