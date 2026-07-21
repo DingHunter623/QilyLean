@@ -40,6 +40,7 @@
     <a href="https://qilylean.com/projects/" target="_top">代表项目</a>
     <a href="https://qilylean.com/#papers" target="_top">改善经验</a>
     <a href="https://qilylean.com/ai.html" target="_top">QilyLean AI</a>
+    <a href="https://qilylean.com/knowledge.html" target="_top">知识分享</a>
   </nav>
 </header>
   <main>
@@ -62,6 +63,28 @@ function inferTopic(text){if(/OEE|稼动率|设备效率|可用率|性能效率|
 controls.forEach(c=>c.addEventListener('click',()=>setTopic(c.dataset.topic)));
 question.addEventListener('input',()=>setTopic(inferTopic(question.value),false));
 setTopic('intro');
+  </script>
+  <script id="papersAnchorOffsetFix">
+  (function(){
+    'use strict';
+    var OFFSET_PX=76; // 2 cm at the standard 96 CSS px/in
+    var adjusted=false;
+    function adjustPapersAnchor(){
+      if(location.hash!=='#papers'||adjusted)return;
+      adjusted=true;
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          window.scrollTo(0,window.pageYOffset+OFFSET_PX);
+        });
+      });
+    }
+    window.addEventListener('hashchange',function(){
+      adjusted=false;
+      adjustPapersAnchor();
+    });
+    window.addEventListener('load',adjustPapersAnchor,{once:true});
+    adjustPapersAnchor();
+  })();
   </script>
   <script src="experience-lock-v3.js"></script>
   <script src="floating-service.js?v=20260721-home-nav-fix-v1"></script>
