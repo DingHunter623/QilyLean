@@ -35,6 +35,12 @@
     .group-number{color:var(--copper);font-size:13px;font-weight:900;letter-spacing:.1em}
     h2{margin:5px 0 8px;color:var(--forest);font-size:26px}
     .gallery-group p{margin:0;color:var(--muted);font-size:16px}
+    .travel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}
+    .travel-card{overflow:hidden;margin:0;border:1px solid var(--line);background:#f7fbfa}
+    .travel-card img{display:block;width:100%;height:auto;background:#e9f1ef}
+    .travel-card figcaption{padding:12px 13px}
+    .travel-card strong{display:block;color:var(--forest);font-size:16px;line-height:1.4}
+    .travel-card span{display:block;margin-top:5px;color:var(--muted);font-size:14px;line-height:1.6}
     .empty{min-height:120px;display:grid;place-items:center;margin-top:22px;border:1px dashed #b8ceca;background:linear-gradient(135deg,#f5fbfa,#edf5f3);color:#78908d;text-align:center}
     .empty strong{display:block;color:var(--forest);font-size:17px}
     .empty span{display:block;margin-top:4px;font-size:14px}
@@ -43,6 +49,7 @@
     @media(max-width:760px){
       .topbar{align-items:flex-start}
       .gallery-groups{grid-template-columns:1fr}
+      .travel-grid{grid-template-columns:1fr}
       .gallery-group{min-height:240px}
     }
   </style>
@@ -85,7 +92,44 @@
           <div class="group-number">03 · JOURNEY</div>
           <h2>出差足迹</h2>
           <p>跨区域项目、客户走访、工厂考察与沿途城市记录。</p>
-          <div class="empty"><div><strong>照片待上传</strong><span>后续在此呈现出差打卡影像</span></div></div>
+          <div class="travel-grid">
+            <figure class="travel-card">
+              <img src="guangzhou.jpg" alt="广州出差足迹" loading="lazy" decoding="async">
+              <figcaption><strong>广州足迹</strong><span>出差途中驻足广州，记录岭南城市的行走片段。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <img src="guofu.jpg" alt="国父纪念场景" loading="lazy" decoding="async">
+              <figcaption><strong>国父纪念地</strong><span>走近孙中山先生相关历史纪念场景，感受时代印记。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <img src="nanjing.jpg" alt="南京出差足迹" loading="lazy" decoding="async">
+              <figcaption><strong>南京足迹</strong><span>出差南京期间的城市打卡，留下六朝古都的旅途记忆。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <img src="neimengqiuji.jpg" alt="内蒙古秋季出差足迹" loading="lazy" decoding="async">
+              <figcaption><strong>内蒙古秋景</strong><span>项目出差途中遇见北方秋色，记录辽阔而沉静的季节景致。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <img src="neimenxiaji.jpg" alt="内蒙古夏季出差足迹" loading="lazy" decoding="async">
+              <figcaption><strong>内蒙古夏季</strong><span>夏季出差内蒙古，感受北方大地的清朗与开阔。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <img src="shenzhen.jpg" alt="深圳出差足迹" loading="lazy" decoding="async">
+              <figcaption><strong>深圳足迹</strong><span>出差深圳期间的城市记录，感受创新之城的速度与活力。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <img src="shenzhen2.jpg" alt="深圳第二组出差足迹" loading="lazy" decoding="async">
+              <figcaption><strong>深圳足迹（二）</strong><span>深圳出差的另一组影像，记录工作之外的城市片段。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <img src="zhongshanling.jpg" alt="南京中山陵出差足迹" loading="lazy" decoding="async">
+              <figcaption><strong>南京中山陵</strong><span>出差南京期间到访中山陵，记录庄严建筑与历史人文。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <img src="zongtonghu.jpg" alt="南京总统府出差足迹" loading="lazy" decoding="async">
+              <figcaption><strong>南京总统府</strong><span>走访南京总统府，感受近代历史建筑与城市记忆。</span></figcaption>
+            </figure>
+          </div>
         </section>
         <section class="gallery-group" id="life" data-gallery="life">
           <div class="group-number">04 · LIFE</div>
