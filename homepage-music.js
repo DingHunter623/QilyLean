@@ -186,6 +186,17 @@
       return a.origin === b.origin && a.pathname === b.pathname && a.search === b.search;
     }
 
+    function isHomeUrl(url) {
+      if (url.origin !== shellUrl.origin) return false;
+      var path = url.pathname.replace(/\/+$/, '') || '/';
+      return path === '/' || path === '/index.html' ||
+        path === '/qilylean/home.html' || path === '/qilylean/home-live.html';
+    }
+
+    function restoresShellHome(url) {
+      return isHomeUrl(shellUrl) && isHomeUrl(url);
+    }
+
     function scrollDocument(doc, url) {
       var view = doc.defaultView;
       view.requestAnimationFrame(function () {
@@ -263,7 +274,7 @@
     }
 
     function openModule(url, pushHistory) {
-      if (sameDocument(url, shellUrl)) {
+      if (sameDocument(url, shellUrl) || restoresShellHome(url)) {
         closeModule(url, pushHistory);
         return;
       }
