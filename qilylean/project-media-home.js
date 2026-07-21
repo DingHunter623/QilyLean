@@ -45,23 +45,23 @@
     mountFigure(
       findCard(['精益体系、VSM、单件流与SMED标准化', '第一阶段精益体系', 'VSM、单件流与SMED']),
       'automotiveLeanProjectImageStable',
-      '<img src="/VSM%26SMED.png?v=20260719-r1" alt="汽车电子企业第一阶段精益体系建设" loading="lazy">' +
+      '<img src="/media/projects/vsm-smed.webp?v=20260721-speed-v1" alt="汽车电子企业第一阶段精益体系建设" width="1400" height="933" loading="eager" decoding="async" fetchpriority="high">' +
       '<figcaption>汽车电子｜第一阶段精益体系建设｜精益体系、VSM、单件流与SMED标准化</figcaption>'
     );
 
     mountFigure(
       findCard(['300T冲压机3.5T大型模具换模改善', '300T冲压机SMED快速换模改善', '3.5T大型模具SMED快速换模']),
       'smed300TProjectImageStable',
-      '<img src="/300T.png?v=20260720-r3" alt="300T冲压机3.5T大型模具SMED快速换模改善项目" loading="lazy">'
+      '<img src="/media/projects/300t.webp?v=20260721-speed-v1" alt="300T冲压机3.5T大型模具SMED快速换模改善项目" width="1194" height="1317" loading="eager" decoding="async" fetchpriority="high">'
     );
 
     mountFigure(
       findCard(['智能模具库与可追溯管理', '1200+副模具标准化与二维码追溯', '1200副模具立体库']),
       'moldProjectImagesStable',
       '<div class="project-media-grid-3">' +
-      '<div class="main"><img src="/mold-before.jpg?v=20260718-r4" alt="立体库Layout规划设计" loading="lazy"><span>立体库Layout规划设计</span></div>' +
-      '<div><img src="/mold-after1.png?v=20260718-r4" alt="立体库雏形" loading="lazy"><span>立体库雏形</span></div>' +
-      '<div><img src="/mold-after2.jpg?v=20260718-r4" alt="智能立体库操作系统" loading="lazy"><span>智能立体库操作系统</span></div>' +
+      '<div class="main"><img src="/media/projects/mold-before.webp?v=20260721-speed-v1" alt="立体库Layout规划设计" width="1400" height="1008" loading="eager" decoding="async" fetchpriority="low"><span>立体库Layout规划设计</span></div>' +
+      '<div><img src="/media/projects/mold-after1.webp?v=20260721-speed-v1" alt="立体库雏形" width="900" height="1200" loading="eager" decoding="async" fetchpriority="low"><span>立体库雏形</span></div>' +
+      '<div><img src="/media/projects/mold-after2.webp?v=20260721-speed-v1" alt="智能立体库操作系统" width="900" height="505" loading="eager" decoding="async" fetchpriority="low"><span>智能立体库操作系统</span></div>' +
       '</div><figcaption>智能模具库｜库位与追溯管理｜1200+副模具标准化与二维码追溯</figcaption>'
     );
 
@@ -69,22 +69,22 @@
       findCard(['玻璃管保险丝切口断裂率改善', '保险丝制程', '切口工艺改良']),
       'fuseProjectImagesStable',
       '<div class="project-media-grid-2">' +
-      '<div><img src="/fuse-cutting-before.jpg?v=20260718-r3" alt="玻璃管保险丝改善后半成品" loading="lazy"><span>改善后半成品</span></div>' +
-      '<div><img src="/fuse-cutting-after.jpg?v=20260718-r3" alt="玻璃管保险丝改善后成品" loading="lazy"><span>改善后成品</span></div>' +
+      '<div><img src="/media/projects/fuse-before.webp?v=20260721-speed-v1" alt="玻璃管保险丝改善后半成品" width="900" height="494" loading="eager" decoding="async" fetchpriority="low"><span>改善后半成品</span></div>' +
+      '<div><img src="/media/projects/fuse-after.webp?v=20260721-speed-v1" alt="玻璃管保险丝改善后成品" width="816" height="1200" loading="eager" decoding="async" fetchpriority="low"><span>改善后成品</span></div>' +
       '</div><figcaption>保险丝制程｜质量与工艺改善｜改善后半成品与成品实物对比</figcaption>'
     );
 
     mountFigure(
       findCard(['Factory Layout、精益物流与扩展边界规划', '新工厂/新产线', '设计规划']),
       'factoryLayoutProjectImageStable',
-      '<img src="/factory-layout.png?v=20260718-r2" alt="Factory Layout新工厂新产线设计规划" loading="lazy">' +
+      '<img src="/media/projects/factory-layout.webp?v=20260721-speed-v1" alt="Factory Layout新工厂新产线设计规划" width="1333" height="1180" loading="eager" decoding="async" fetchpriority="low">' +
       '<figcaption>新工厂/新产线｜Factory Layout、精益物流与扩展边界规划</figcaption>'
     );
 
     mountFigure(
       findCard(['ERP/MES/APS协同与IE基础数据治理', '数智化工厂｜数据地基']),
       'digitalFactoryProjectImageStable',
-      '<img src="/shuzhihua.png?v=20260718-r2" alt="数智化工厂数据地基与制造运营协同" loading="lazy">' +
+      '<img src="/media/projects/shuzhihua.webp?v=20260721-speed-v1" alt="数智化工厂数据地基与制造运营协同" width="1400" height="1120" loading="eager" decoding="async" fetchpriority="low">' +
       '<figcaption>数智化工厂｜数据地基：ERP、MES、APS与IE基础数据协同</figcaption>'
     );
   }
