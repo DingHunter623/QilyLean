@@ -20,18 +20,18 @@ function fixNavigation(){
   primary.setAttribute('target','_top');
   links.slice(1).forEach(function(link){link.remove();});
 }
-function makeReferenceCard(id,title,summary,url){
+function makeReferenceCard(id,title,summary,methodUrl,previewUrl){
   var card=document.createElement('article');
   card.className='paper-card';card.id=id;
-  card.innerHTML='<small>参考资料</small><h3>'+title+'</h3><p>'+summary+'</p><div class="actions"><a class="button" href="'+url+'" target="_top">在线预览</a></div>';
+  card.innerHTML='<small>参考资料</small><h3>'+title+'</h3><p>'+summary+'</p><div class="knowledge-actions"><a class="button" href="'+methodUrl+'" target="_top">方法解读</a><a class="button secondary" href="'+previewUrl+'" target="_top" rel="noopener">在线预览</a></div>';
   return card;
 }
 function addReferenceCards(){
   var papers=document.getElementById('papers');
   if(!papers)return;
   var grid=papers.querySelector('.grid-3');if(!grid)return;
-  if(!document.getElementById('referenceAuditCard'))grid.appendChild(makeReferenceCard('referenceAuditCard','客户验厂常查程序文件清单与审核重点','围绕体系文件、生产控制、质量保证、供应链、EHS、人事及数据管理，梳理客户验厂高频审核点、常见不符合与证据链准备方法。','/qilylean/reference-audit-documents.html?build=20260722-publish-v1'));
-  if(!document.getElementById('referenceIatfCard'))grid.appendChild(makeReferenceCard('referenceIatfCard','IATF16949六大核心工具简介及官方原著链接','系统说明APQP、Control Plan、PPAP、FMEA、MSA、SPC的职责分工与逻辑链，面向汽车电子NPI、量产策划与质量体系培训。','/qilylean/reference-iatf16949-core-tools.html?build=20260722-publish-v1'));
+  if(!document.getElementById('referenceAuditCard'))grid.appendChild(makeReferenceCard('referenceAuditCard','客户验厂常查程序文件清单与审核重点','围绕体系文件、生产控制、质量保证、供应链、EHS、人事及数据管理，梳理客户验厂高频审核点、常见不符合与证据链准备方法。','/knowledge/customer-audit-document-control.html','/qilylean/reference-audit-documents.html?build=20260722-hd-v2'));
+  if(!document.getElementById('referenceIatfCard'))grid.appendChild(makeReferenceCard('referenceIatfCard','IATF16949六大核心工具简介及官方原著链接','系统说明APQP、Control Plan、FMEA、MSA、SPC、PPAP的职责分工与逻辑链，面向汽车电子NPI、量产策划与质量体系培训。','/knowledge/iatf16949-core-tools.html','/qilylean/reference-iatf16949-core-tools.html?build=20260722-hd-v2'));
   var intro=papers.querySelector('.head p');
   if(intro&&intro.textContent.indexOf('客户验厂')<0)intro.textContent='围绕VSM、标准工时、SMED、ERP/MES、IE数据底座、目视化管理、单件流、客户验厂与IATF16949核心工具等主题，持续沉淀制造改善方法与标准化参考资料。';
 }
