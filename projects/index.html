@@ -13,24 +13,25 @@
   <meta property="og:url" content="https://qilylean.com/projects/">
   <meta property="og:image" content="https://qilylean.com/300T.png">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" as="image" href="/media/projects/vsm-smed.webp?v=20260721-speed-v1" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="/media/projects/300t.webp?v=20260721-speed-v1" type="image/webp" fetchpriority="high">
   <style>
     html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f3faf9}
     #projectsFrame{display:block;width:100%;height:100%;border:0;background:#f3faf9}
   </style>
 </head>
 <body>
-  <iframe id="projectsFrame" src="/qilylean/home-live.html?build=20260721-gapless-media-v3#projects" title="QilyLean代表项目矩阵"></iframe>
+  <iframe id="projectsFrame" src="/qilylean/home.html?build=20260721-speed-v1#projects" title="QilyLean代表项目矩阵"></iframe>
   <script>
   (function(){
     'use strict';
     var frame=document.getElementById('projectsFrame');
     function lockProjects(){
       try{
-        var liveWindow=frame.contentWindow;
-        var homeFrame=liveWindow&&liveWindow.document.getElementById('homeFrame');
-        if(!homeFrame||!homeFrame.contentWindow)return;
-        if(homeFrame.contentWindow.location.hash!=='#projects')homeFrame.contentWindow.location.hash='projects';
-        var section=homeFrame.contentDocument&&homeFrame.contentDocument.getElementById('projects');
+        var homeWindow=frame.contentWindow;
+        if(!homeWindow)return;
+        if(homeWindow.location.hash!=='#projects')homeWindow.location.hash='projects';
+        var section=frame.contentDocument&&frame.contentDocument.getElementById('projects');
         if(section)section.scrollIntoView({block:'start'});
       }catch(error){console.error(error);}
     }
@@ -41,6 +42,6 @@
     });
   })();
   </script>
-  <script src="/homepage-music.js?v=20260721-gapless-v3"></script>
+  <script src="/homepage-music.js?v=20260721-speed-v5"></script>
 </body>
 </html>
