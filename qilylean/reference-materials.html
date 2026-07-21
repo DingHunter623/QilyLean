@@ -2,25 +2,25 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>参考资料｜SMED汽车座椅开关注塑件快速换模程序文件</title>
   <style>
     :root{--forest:#0f4b5a;--teal:#178b94;--ink:#182420;--muted:#607474;--line:#cbdcda;--paper:#e9f1ef;--white:#fff;--gold:#ffe39b;--shadow:0 18px 48px rgba(15,75,90,.16)}
     *{box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
     html{scroll-behavior:smooth;background:var(--paper)}
     body{margin:0;color:var(--ink);background:linear-gradient(180deg,#edf5f3,#dfeae7);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
-    img{display:block;width:100%;height:auto;pointer-events:none;-webkit-user-drag:none}
+    canvas{display:block;width:100%;height:auto;pointer-events:none}
     .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,4vw,48px);color:#fff;background:rgba(7,60,71,.96);border-bottom:1px solid rgba(255,255,255,.14);backdrop-filter:blur(14px)}
     .brand{font-weight:900}.back{display:inline-flex;align-items:center;min-height:40px;padding:7px 16px;border:1px solid rgba(255,227,155,.58);border-radius:999px;color:#fff;text-decoration:none;font-weight:850}
-    .hero{padding:34px 18px 26px;color:#fff;background:linear-gradient(125deg,#0f4b5a,#178b94)}
-    .hero-inner,.viewer{width:min(900px,100%);margin:auto}.eyebrow{color:var(--gold);font-size:14px;font-weight:900;letter-spacing:.04em}.hero h1{margin:8px 0 12px;font-size:clamp(28px,4vw,42px);line-height:1.25}.hero p{margin:0;color:#e6f4ef;font-size:17px}.notice{display:grid;grid-template-columns:auto 1fr;gap:12px;margin-top:18px;padding:14px 16px;border:1px solid rgba(255,227,155,.42);background:rgba(255,255,255,.08)}.notice strong{color:var(--gold)}
-    .viewer{padding:26px 18px 60px}.viewer-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;color:var(--muted);font-size:14px;font-weight:800}.page{position:relative;margin:0 auto 24px;overflow:hidden;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow)}.page figcaption{padding:9px 14px;color:var(--muted);background:#f8fbfa;border-top:1px solid var(--line);font-size:13px;font-weight:850;text-align:center}.page-guard{position:absolute;inset:0 0 43px;z-index:2;background:transparent;touch-action:pan-y}
+    .hero{padding:34px 18px 28px;color:#fff;background:linear-gradient(125deg,#0f4b5a,#178b94)}
+    .hero-inner,.viewer{width:min(1120px,100%);margin:auto}.eyebrow{color:var(--gold);font-size:14px;font-weight:900;letter-spacing:.04em}.hero h1{margin:8px 0 12px;font-size:clamp(28px,4vw,44px);line-height:1.25}.hero p{max-width:940px;margin:0;color:#e6f4ef;font-size:18px}.summary{display:grid;grid-template-columns:auto 1fr;gap:12px;margin-top:18px;padding:14px 16px;border:1px solid rgba(255,227,155,.42);background:rgba(255,255,255,.08)}.summary strong{color:var(--gold)}
+    .viewer{padding:26px 18px 60px}.viewer-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;color:var(--muted);font-size:14px;font-weight:800}.page{position:relative;max-width:1000px;margin:0 auto 24px;overflow:hidden;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow)}.page figcaption{padding:9px 14px;color:var(--muted);background:#f8fbfa;border-top:1px solid var(--line);font-size:13px;font-weight:850;text-align:center}.page-guard{position:absolute;inset:0 0 43px;z-index:2;background:transparent;touch-action:pan-y pinch-zoom}.page-loading{position:absolute;inset:0 0 43px;display:grid;place-items:center;color:var(--muted);background:#fff;font-weight:800}
     .footer{padding:22px 18px;color:#d7e8e2;background:#101916;text-align:center;font-size:14px}
-    @media(max-width:640px){.topbar{align-items:flex-start;flex-direction:column}.back{width:100%;justify-content:center}.hero{padding-top:26px}.viewer{padding-left:10px;padding-right:10px}.page{margin-bottom:16px}.notice{grid-template-columns:1fr}}
-    @media print{html,body{background:#fff!important}body>*{display:none!important}body::before{display:block!important;padding:40px;color:#111;content:"本资料仅供在线受控预览，禁止打印。";font-size:22px;font-weight:900;text-align:center}}
+    @media(max-width:640px){.topbar{align-items:flex-start;flex-direction:column}.back{width:100%;justify-content:center}.hero{padding-top:26px}.viewer{padding-left:8px;padding-right:8px}.page{margin-bottom:16px}.summary{grid-template-columns:1fr}}
+    @media print{html,body{background:#fff!important}body>*{display:none!important}body::before{display:block!important;padding:40px;color:#111;content:"本页面不提供打印输出。";font-size:22px;font-weight:900;text-align:center}}
   </style>
 </head>
 <body oncontextmenu="return false">
@@ -31,39 +31,58 @@
   <main>
     <section class="hero">
       <div class="hero-inner">
-        <span class="eyebrow">CONTROLLED ONLINE PREVIEW</span>
-        <h1>SMED汽车座椅开关注塑件快速换模程序文件</h1>
-        <p>共13页｜受控低清预览｜不提供PDF原文件、下载、复制、另存或在线打印功能</p>
-        <div class="notice"><strong>使用说明</strong><span>页面仅加载经过低清、模糊与水印处理的预览图层。请勿翻拍、截取、传播或用于未经授权的用途。</span></div>
+        <span class="eyebrow">SMED STANDARD WORK</span>
+        <h1>汽车座椅开关注塑件快速换模程序文件</h1>
+        <p>围绕计划冻结、外部准备、停机换模、首件确认、品质放行与复盘固化，系统呈现汽车座椅开关注塑件快速换模的标准化实施路径。</p>
+        <div class="summary"><strong>内容提要</strong><span>从角色职责、换模流程、工具准备、过程确认到异常复盘，为现场培训、换模协同与标准化建设提供完整参考。</span></div>
       </div>
     </section>
-    <section class="viewer" aria-label="受控文档预览">
-      <div class="viewer-head"><span>参考资料 · SMED标准作业程序</span><span>1 / 13 - 13 / 13</span></div>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-01.jpg" alt="SMED快速换模程序文件第1页低清预览" draggable="false"><figcaption>第 1 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-02.jpg" alt="SMED快速换模程序文件第2页低清预览" draggable="false" loading="lazy"><figcaption>第 2 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-03.jpg" alt="SMED快速换模程序文件第3页低清预览" draggable="false" loading="lazy"><figcaption>第 3 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-04.jpg" alt="SMED快速换模程序文件第4页低清预览" draggable="false" loading="lazy"><figcaption>第 4 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-05.jpg" alt="SMED快速换模程序文件第5页低清预览" draggable="false" loading="lazy"><figcaption>第 5 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-06.jpg" alt="SMED快速换模程序文件第6页低清预览" draggable="false" loading="lazy"><figcaption>第 6 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-07.jpg" alt="SMED快速换模程序文件第7页低清预览" draggable="false" loading="lazy"><figcaption>第 7 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-08.jpg" alt="SMED快速换模程序文件第8页低清预览" draggable="false" loading="lazy"><figcaption>第 8 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-09.jpg" alt="SMED快速换模程序文件第9页低清预览" draggable="false" loading="lazy"><figcaption>第 9 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-10.jpg" alt="SMED快速换模程序文件第10页低清预览" draggable="false" loading="lazy"><figcaption>第 10 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-11.jpg" alt="SMED快速换模程序文件第11页低清预览" draggable="false" loading="lazy"><figcaption>第 11 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-12.jpg" alt="SMED快速换模程序文件第12页低清预览" draggable="false" loading="lazy"><figcaption>第 12 页 / 共 13 页</figcaption></figure>
-      <figure class="page"><div class="page-guard" aria-hidden="true"></div><img src="reference/smed-injection-mold/page-13.jpg" alt="SMED快速换模程序文件第13页低清预览" draggable="false" loading="lazy"><figcaption>第 13 页 / 共 13 页</figcaption></figure>
+    <section class="viewer" aria-label="文档在线预览">
+      <div class="viewer-head"><span>SMED标准作业程序</span><span>共 13 页</span></div>
+      <figure class="page"><div class="page-loading">正在加载第 1 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-01.qly" aria-label="SMED快速换模程序文件第1页"></canvas><figcaption>第 1 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 2 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-02.qly" aria-label="SMED快速换模程序文件第2页"></canvas><figcaption>第 2 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 3 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-03.qly" aria-label="SMED快速换模程序文件第3页"></canvas><figcaption>第 3 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 4 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-04.qly" aria-label="SMED快速换模程序文件第4页"></canvas><figcaption>第 4 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 5 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-05.qly" aria-label="SMED快速换模程序文件第5页"></canvas><figcaption>第 5 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 6 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-06.qly" aria-label="SMED快速换模程序文件第6页"></canvas><figcaption>第 6 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 7 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-07.qly" aria-label="SMED快速换模程序文件第7页"></canvas><figcaption>第 7 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 8 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-08.qly" aria-label="SMED快速换模程序文件第8页"></canvas><figcaption>第 8 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 9 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-09.qly" aria-label="SMED快速换模程序文件第9页"></canvas><figcaption>第 9 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 10 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-10.qly" aria-label="SMED快速换模程序文件第10页"></canvas><figcaption>第 10 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 11 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-11.qly" aria-label="SMED快速换模程序文件第11页"></canvas><figcaption>第 11 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 12 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-12.qly" aria-label="SMED快速换模程序文件第12页"></canvas><figcaption>第 12 页 / 共 13 页</figcaption></figure>
+      <figure class="page"><div class="page-loading">正在加载第 13 页…</div><div class="page-guard" aria-hidden="true"></div><canvas width="1600" height="2263" data-src="reference/smed-injection-mold/page-13.qly" aria-label="SMED快速换模程序文件第13页"></canvas><figcaption>第 13 页 / 共 13 页</figcaption></figure>
     </section>
   </main>
-  <footer class="footer">QilyLean｜精益生产 · SMED快速换模 · 制造改善参考资料</footer>
+  <footer class="footer">QilyLean｜SMED快速换模 · 标准作业 · 制造改善</footer>
   <script>
   (function(){
     'use strict';
+    var key=new TextEncoder().encode('QilyLeanPreview2026');
+    function decode(buffer){var bytes=new Uint8Array(buffer);for(var i=0;i<bytes.length;i++)bytes[i]^=key[i%key.length];return bytes;}
+    async function loadPage(canvas){
+      if(canvas.dataset.loaded==='1'||canvas.dataset.loading==='1')return;
+      canvas.dataset.loading='1';
+      var figure=canvas.closest('.page'),loading=figure.querySelector('.page-loading');
+      try{
+        var response=await fetch(canvas.dataset.src,{cache:'force-cache',credentials:'same-origin',referrerPolicy:'no-referrer'});
+        if(!response.ok)throw new Error('page');
+        var blob=new Blob([decode(await response.arrayBuffer())],{type:'image/jpeg'});
+        var bitmap=await createImageBitmap(blob);
+        canvas.width=bitmap.width;canvas.height=bitmap.height;
+        canvas.getContext('2d',{alpha:false}).drawImage(bitmap,0,0);
+        bitmap.close();canvas.dataset.loaded='1';loading.remove();
+      }catch(error){loading.textContent='本页加载失败，请刷新后重试。';}
+      canvas.dataset.loading='0';
+    }
+    var pages=Array.from(document.querySelectorAll('canvas[data-src]'));
+    if('IntersectionObserver' in window){
+      var observer=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){loadPage(entry.target);observer.unobserve(entry.target);}});},{rootMargin:'1200px 0px'});
+      pages.forEach(function(page){observer.observe(page);});
+    }else pages.forEach(loadPage);
     var block=function(event){event.preventDefault();event.stopPropagation();return false;};
     ['contextmenu','dragstart','selectstart','copy','cut'].forEach(function(name){document.addEventListener(name,block,true);});
-    document.addEventListener('keydown',function(event){
-      var key=(event.key||'').toLowerCase();
-      if(event.key==='F12'||((event.ctrlKey||event.metaKey)&&['s','p','u','c','a'].indexOf(key)>-1))block(event);
-    },true);
+    document.addEventListener('keydown',function(event){var k=(event.key||'').toLowerCase();if(event.key==='F12'||((event.ctrlKey||event.metaKey)&&['s','p','u','c','a'].indexOf(k)>-1))block(event);},true);
     try{window.print=function(){return false;};}catch(error){}
   })();
   </script>
