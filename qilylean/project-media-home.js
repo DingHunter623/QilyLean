@@ -69,7 +69,7 @@
       findCard(['玻璃管保险丝切口断裂率改善', '保险丝制程', '切口工艺改良']),
       'fuseProjectImagesStable',
       '<div class="project-media-grid-2">' +
-      '<div><img src="/media/projects/fuse-before.webp?v=20260721-speed-v1" alt="玻璃管保险丝改善后半成品" width="900" height="494" loading="eager" decoding="async" fetchpriority="low"><span>改善后半成品</span></div>' +
+      '<div><img src="/media/projects/fuse-before.webp?v=20260721-speed-v2" alt="玻璃管保险丝改善后半成品" width="900" height="494" loading="eager" decoding="async" fetchpriority="low"><span>改善后半成品</span></div>' +
       '<div><img src="/media/projects/fuse-after.webp?v=20260721-speed-v1" alt="玻璃管保险丝改善后成品" width="816" height="1200" loading="eager" decoding="async" fetchpriority="low"><span>改善后成品</span></div>' +
       '</div><figcaption>保险丝制程｜质量与工艺改善｜改善后半成品与成品实物对比</figcaption>'
     );
