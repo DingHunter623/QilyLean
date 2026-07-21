@@ -1,6 +1,7 @@
 (function () {
   'use strict';
 
+  if (window.top !== window.self) return;
   if (document.getElementById('siteBackgroundMusic')) return;
 
   var DEFAULT_VOLUME = 0.36;
@@ -21,6 +22,8 @@
     '.site-music-toggle:active{cursor:grabbing}' +
     '.site-music-toggle:focus-visible{outline:2px solid #178b94;outline-offset:2px}' +
     '.site-music-toggle svg{width:23px;height:23px;display:block;pointer-events:none}' +
+    '.qilylean-module-frame{position:fixed;inset:0;width:100%;height:100%;border:0;background:#f3faf9;' +
+    'z-index:2147482000;display:block}' +
     '@media(max-width:760px){.site-music-toggle{left:max(10px,env(safe-area-inset-left));top:max(10px,env(safe-area-inset-top));width:36px;height:36px}}';
   document.head.appendChild(style);
 
@@ -168,6 +171,206 @@
     if (audio.paused) tryPlay();
   }
 
+  function installPersistentNavigation() {
+    var shellUrl = new URL(window.location.href);
+    var shellTitle = document.title;
+    var moduleFrame = null;
+    var htmlOverflow = document.documentElement.style.overflow;
+    var bodyOverflow = document.body.style.overflow;
+
+    function urlPath(url) {
+      return url.pathname + url.search + url.hash;
+    }
+
+    function sameDocument(a, b) {
+      return a.origin === b.origin && a.pathname === b.pathname && a.search === b.search;
+    }
+
+    function scrollDocument(doc, url) {
+      var view = doc.defaultView;
+      view.requestAnimationFrame(function () {
+        if (url.hash) {
+          var id = url.hash.slice(1);
+          try { id = decodeURIComponent(id); } catch (error) {}
+          var target = doc.getElementById(id);
+          if (target) target.scrollIntoView({ block: 'start' });
+        } else {
+          view.scrollTo(0, 0);
+        }
+      });
+    }
+
+    function shellState() {
+      return { qilyLeanShell: true, qilyLeanShellUrl: shellUrl.href };
+    }
+
+    function moduleState(url) {
+      return {
+        qilyLeanShell: true,
+        qilyLeanShellUrl: shellUrl.href,
+        qilyLeanModuleUrl: url.href
+      };
+    }
+
+    try {
+      var initialState = Object.assign({}, history.state || {}, shellState());
+      history.replaceState(initialState, '', urlPath(shellUrl));
+    } catch (error) {}
+
+    function bindIframe(iframe) {
+      if (!iframe || iframe.__qilyLeanPersistentBound) return;
+      iframe.__qilyLeanPersistentBound = true;
+
+      function bindContents() {
+        try { bindDocument(iframe.contentDocument); } catch (error) {}
+      }
+
+      iframe.addEventListener('load', bindContents);
+      bindContents();
+    }
+
+    function closeModule(url, pushHistory) {
+      if (moduleFrame) {
+        moduleFrame.remove();
+        moduleFrame = null;
+      }
+      document.documentElement.style.overflow = htmlOverflow;
+      document.body.style.overflow = bodyOverflow;
+      document.title = shellTitle;
+      if (pushHistory) {
+        try { history.pushState(shellState(), '', urlPath(url)); } catch (error) {}
+      }
+      scrollDocument(document, url);
+    }
+
+    function ensureModuleFrame() {
+      if (moduleFrame) return moduleFrame;
+      moduleFrame = document.createElement('iframe');
+      moduleFrame.id = 'qilyLeanModuleFrame';
+      moduleFrame.className = 'qilylean-module-frame';
+      moduleFrame.title = 'QilyLean 模块内容';
+      moduleFrame.setAttribute('aria-label', 'QilyLean 模块内容');
+      moduleFrame.addEventListener('load', function () {
+        try {
+          bindDocument(moduleFrame.contentDocument);
+          if (moduleFrame.contentDocument.title) document.title = moduleFrame.contentDocument.title;
+        } catch (error) {}
+      });
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      document.body.appendChild(moduleFrame);
+      return moduleFrame;
+    }
+
+    function openModule(url, pushHistory) {
+      if (sameDocument(url, shellUrl)) {
+        closeModule(url, pushHistory);
+        return;
+      }
+
+      var frame = ensureModuleFrame();
+      if (pushHistory) {
+        try { history.pushState(moduleState(url), '', urlPath(url)); } catch (error) {}
+      }
+      frame.src = url.href;
+    }
+
+    function handleSameDocument(doc, url, pushHistory) {
+      var view = doc.defaultView;
+      if (doc === document) {
+        if (pushHistory) {
+          try { history.pushState(shellState(), '', urlPath(url)); } catch (error) {}
+        }
+        scrollDocument(doc, url);
+        return;
+      }
+
+      try {
+        if (url.hash) view.history.pushState(null, '', urlPath(url));
+        scrollDocument(doc, url);
+        if (pushHistory) history.pushState(moduleState(url), '', urlPath(url));
+      } catch (error) {}
+    }
+
+    function handleLink(event, doc) {
+      if (event.defaultPrevented || event.button > 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      var target = event.target;
+      var link = target && target.closest ? target.closest('a[href]') : null;
+      if (!link || link.hasAttribute('download')) return;
+      if ((link.getAttribute('target') || '').toLowerCase() === '_blank') return;
+
+      var view = doc.defaultView;
+      var url;
+      var current;
+      try {
+        url = new URL(link.href, view.location.href);
+        current = doc === document && !moduleFrame ? shellUrl : new URL(view.location.href);
+      } catch (error) {
+        return;
+      }
+      if (url.origin !== shellUrl.origin || !/^https?:$/.test(url.protocol)) return;
+
+      var same = sameDocument(url, current);
+      var targetsTop = (link.getAttribute('target') || '').toLowerCase() === '_top';
+      if (same && doc !== document && !targetsTop) return;
+
+      event.preventDefault();
+      event.stopImmediatePropagation();
+
+      if (same) {
+        handleSameDocument(doc, url, true);
+      } else {
+        openModule(url, true);
+      }
+    }
+
+    function handleFloatingHome(event) {
+      var target = event.target;
+      var button = target && target.closest ? target.closest('.float-home,[data-a="home"]') : null;
+      if (!button) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      openModule(new URL('/', shellUrl.origin), true);
+    }
+
+    function bindDocument(doc) {
+      if (!doc || !doc.documentElement || doc.__qilyLeanPersistentBound) return;
+      doc.__qilyLeanPersistentBound = true;
+      doc.addEventListener('click', function (event) { handleLink(event, doc); }, true);
+      doc.addEventListener('pointerup', handleFloatingHome, true);
+      Array.prototype.forEach.call(doc.querySelectorAll('iframe'), bindIframe);
+
+      try {
+        var Observer = doc.defaultView.MutationObserver;
+        var observer = new Observer(function (records) {
+          records.forEach(function (record) {
+            Array.prototype.forEach.call(record.addedNodes, function (node) {
+              if (!node || node.nodeType !== 1) return;
+              if (node.tagName === 'IFRAME') bindIframe(node);
+              Array.prototype.forEach.call(node.querySelectorAll ? node.querySelectorAll('iframe') : [], bindIframe);
+            });
+          });
+        });
+        observer.observe(doc.documentElement, { childList: true, subtree: true });
+      } catch (error) {}
+    }
+
+    window.addEventListener('popstate', function (event) {
+      var state = event.state || {};
+      if (state.qilyLeanModuleUrl) {
+        try { openModule(new URL(state.qilyLeanModuleUrl), false); } catch (error) {}
+      } else {
+        closeModule(new URL(window.location.href), false);
+      }
+    });
+
+    window.QilyLeanNavigate = function (href) {
+      try { openModule(new URL(href, shellUrl.origin), true); } catch (error) {}
+    };
+
+    bindDocument(document);
+  }
+
   document.addEventListener('pointerdown', resumeAfterFirstGesture, { once: true, capture: true });
   document.addEventListener('touchstart', resumeAfterFirstGesture, { once: true, capture: true });
   document.addEventListener('keydown', resumeAfterFirstGesture, { once: true, capture: true });
@@ -186,6 +389,7 @@
   window.addEventListener('pagehide', writeState);
   window.setInterval(writeState, 1000);
 
+  installPersistentNavigation();
   render();
   restorePlaybackPosition();
   tryPlay();

@@ -8,6 +8,7 @@
   function boot(){
     load('terminology-v2.js?v=term2','terminologyV2Script');
     load('homepage-depth.js?v=depth3','homepageDepthScript');
+    load('project-media-home.js?v=20260721-complete-v1','projectMediaHomeScript');
     load('content-restore.js?v=20260721-nav-position-fix-v1','contentRestoreScript');
     load('daily-insights-card.js?v=daily1','dailyInsightsCardScript');
     load('gbt2828-card.js?v=gbt2828-1','gbt2828CardScript');
