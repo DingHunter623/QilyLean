@@ -43,7 +43,12 @@
     let sec=document.getElementById('knowledge');
     if(!sec){sec=document.createElement('section');sec.className='section';sec.id='knowledge';const papers=document.getElementById('papers')||document.getElementById('paper-list');if(papers&&papers.parentNode)papers.parentNode.insertBefore(sec,papers.nextSibling);else document.querySelector('main')&&document.querySelector('main').appendChild(sec);}
     sec.innerHTML=`<div class="inner"><div class="head"><h2>精益知识分享</h2><p>恢复微博知识分享入口。这里按“理念—工具—体系—案例”整理精益生产、IE方法、现场改善工具、IATF16949核心工具、数智化工厂与项目交付经验，服务制造改善实践交流与长期知识资产建设。</p></div><div class="knowledge-grid">${KNOW.map(knowledgeCard).join('')}</div><div class="knowledge-note">当前保留7条微博精选入口；后续新增内容继续按主题、适用场景、核心观点、可落地动作和原文链接沉淀。</div></div>`;
-    const nav=document.querySelector('.nav');if(nav&&!nav.querySelector('a[href="#knowledge"]')){const a=document.createElement('a');a.href='#knowledge';a.textContent='知识分享';nav.appendChild(a);}
+    const nav=document.querySelector('.nav');
+    if(nav){
+      const knowledgeLinks=Array.from(nav.querySelectorAll('a')).filter(a=>(a.textContent||'').trim()==='知识分享');
+      knowledgeLinks.slice(1).forEach(a=>a.remove());
+      if(!knowledgeLinks.length){const a=document.createElement('a');a.href='#knowledge';a.textContent='知识分享';nav.appendChild(a);}
+    }
   }
   function removeBadTags(){document.querySelectorAll('.tag,.tags li,li,span').forEach(el=>{if((el.textContent||'').trim()==='退役军人')el.remove();});}
   function apply(){css();restorePapers();restoreKnowledge();removeBadTags();}
