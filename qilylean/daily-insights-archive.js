@@ -13,6 +13,10 @@ document.head.appendChild(style);
 function posts(){
   return Array.prototype.filter.call(archive.children,function(node){return node.classList&&node.classList.contains('post')&&/^\d{4}-\d{2}-\d{2}$/.test(node.id);});
 }
+function alignArchive(){
+  if(location.hash!=='#all-briefs')return;
+  requestAnimationFrame(function(){archive.scrollIntoView({block:'start',behavior:'auto'});});
+}
 function sortAndSummarize(){
   var list=posts().sort(function(a,b){return b.id.localeCompare(a.id);});
   if(!list.length)return;
@@ -26,6 +30,7 @@ function sortAndSummarize(){
   var summary=document.getElementById('dailyArchiveSummary');
   if(!summary){summary=document.createElement('div');summary.id='dailyArchiveSummary';summary.className='archive-summary';archive.insertBefore(summary,archive.firstChild);}
   summary.innerHTML='全部简报：'+list.length+'期 <span>｜'+earliest.id+'—'+latest.id+'｜按最新至最早排列</span>';
+  alignArchive();
 }
 var timer=0;
 function schedule(){clearTimeout(timer);timer=setTimeout(sortAndSummarize,80);}
@@ -48,6 +53,7 @@ document.addEventListener('click',function(event){
   if(navigator.share)navigator.share({title:title,text:title,url:url}).catch(function(){copyText(title+'\n'+url).then(done);});
   else copyText(title+'\n'+url).then(done);
 },true);
+window.addEventListener('hashchange',alignArchive);
 
 schedule();
 window.addEventListener('load',function(){schedule();setTimeout(schedule,350);setTimeout(schedule,1200);setTimeout(schedule,2600);});
