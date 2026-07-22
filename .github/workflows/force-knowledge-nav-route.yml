@@ -1,0 +1,47 @@
+name: Force homepage knowledge navigation route
+
+on:
+  push:
+    paths:
+      - '.github/workflows/force-knowledge-nav-route.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Patch homepage navigation and cache version
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          target='https://qilylean.com/knowledge/?entry=homepage-nav-v4'
+          inline='onclick="window.top.location.assign(\'https://qilylean.com/knowledge/?entry=homepage-nav-v4\');return false;"'
+          script='<script src="knowledge-nav-hard-route.js?v=20260722-nav-v4"></script>'
+
+          for name in ['index.html','qilylean/home.html']:
+              path=Path(name)
+              text=path.read_text(encoding='utf-8')
+              text=re.sub(r'<a\s+href="[^"]*(?:knowledge(?:/|\.html)|lean-knowledge\.html)[^"]*"\s+target="_top"(?:\s+onclick="[^"]*")?>知识分享</a>',
+                          f'<a href="{target}" target="_top" {inline}>知识分享</a>',text)
+              text=text.replace('font-plus-one.js?v=20260722-dedupe-howdo-v3','font-plus-one.js?v=20260722-nav-v4')
+              text=text.replace('font-plus-one.js?v=20260722-reference-hd-v2','font-plus-one.js?v=20260722-nav-v4')
+              if script not in text:
+                  text=text.replace('<script src="font-plus-one.js?v=20260722-nav-v4"></script>',
+                                    '<script src="font-plus-one.js?v=20260722-nav-v4"></script>\n  '+script)
+              path.write_text(text,encoding='utf-8')
+              print(name)
+          PY
+      - name: Commit route fix
+        run: |
+          git config user.name 'QilyLean Publisher'
+          git config user.email 'actions@users.noreply.github.com'
+          git add index.html qilylean/home.html
+          git commit -m '强制首页知识分享导航进入独立网址'
+          git push
