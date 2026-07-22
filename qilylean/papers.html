@@ -7,7 +7,7 @@
   <meta name="description" content="丁启利制造改善实践论文合集，覆盖VSM价值流、标准工时、SMED快速换模、ERP/MES协同、IE基础数据和目视化管理。">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://qilylean.com/qilylean/papers.html">
-  <link rel="stylesheet" href="/site-shell.css?v=20260722-modules-v3">
+  <link rel="stylesheet" href="/site-shell.css?v=20260722-modules-v4">
   <style>
     :root{--ink:#182420;--muted:#5f7474;--line:#d5e4e3;--paper:#f3faf9;--white:#fff;--forest:#0f4b5a;--teal:#178b94;--copper:#caa15f;--plum:#6e3f5f;--shadow:0 20px 55px rgba(15,75,90,.16)}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--paper);font-size:16.5px;line-height:1.72}a{color:inherit}.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:13px clamp(18px,4vw,56px);background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.brand{display:flex;align-items:center;gap:10px;color:var(--forest);font-weight:850}.brand-mark{display:none}.nav{display:flex;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:14px}.nav a{text-decoration:none}.nav a:hover{color:var(--teal)}
@@ -47,7 +47,7 @@
     shareButtons.forEach((button) => { button.addEventListener('click', async () => { const title = button.dataset.title || document.title; const target = button.dataset.target || ''; const url = `${pagePath}#${target}`; const status = button.parentElement.querySelector('.share-status'); const shareText = `${title}\n${url}`; try { if (navigator.share) { await navigator.share({ title, text: title, url }); if (status) status.textContent = '已调起系统转发'; } else { await copyToClipboard(shareText); if (status) status.textContent = '链接已复制，可粘贴转发'; } } catch (error) { await copyToClipboard(shareText); if (status) status.textContent = '链接已复制，可粘贴转发'; } window.setTimeout(() => { if (status) status.textContent = ''; }, 3600); }); });
   </script>
   <script src="floating-service.js?v=20260721-home-nav-fix-v1"></script>
-  <script src="/site-navigation.js?v=20260722-modules-v3"></script>
+  <script src="/site-navigation.js?v=20260722-modules-v4"></script>
   <script src="/homepage-music.js?v=20260722-recovery-v1"></script>
 
   <script id="articleHashOffsetFix">

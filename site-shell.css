@@ -108,7 +108,10 @@
   border: 0;
   border-radius: 50%;
   color: #fff;
-  background: var(--qily-forest);
+  background: rgba(15, 75, 90, .64);
+  border: 1px solid rgba(255, 255, 255, .72);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   box-shadow: 0 10px 24px rgba(15, 75, 90, .28);
   cursor: ns-resize;
   font: inherit;
@@ -116,7 +119,8 @@
   font-weight: 950;
   line-height: 1.16;
   text-align: center;
-  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .42);
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease, background-color .16s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -130,11 +134,11 @@
 }
 
 .qily-float-btn:active { transform: scale(.96); }
-.qily-float-home { background: #0f6671; }
-.qily-float-back { background: #177f87; }
-.qily-float-current { background: var(--qily-plum); }
-.qily-float-share { background: #8e4774; }
-.qily-float-contact { color: #17322d; background: #f5c861; }
+.qily-float-home { background: rgba(15, 102, 113, .64); }
+.qily-float-back { background: rgba(23, 127, 135, .64); }
+.qily-float-current { background: rgba(110, 63, 95, .64); }
+.qily-float-share { background: rgba(142, 71, 116, .64); }
+.qily-float-contact { color: #17322d; background: rgba(245, 200, 97, .68); text-shadow: 0 1px 1px rgba(255, 255, 255, .4); }
 
 .qily-modal-mask {
   position: fixed;
@@ -458,8 +462,9 @@
   .qily-global-header { min-height: 52px; padding: 7px 8px !important; }
   .qily-global-header > .qily-brand,
   .qily-global-header > .brand { display: none; }
-  .qily-global-nav { width: 100%; max-width: 100%; gap: 3px !important; }
-  .qily-global-nav a { flex: 0 0 auto; min-height: 36px; padding: 6px 8px; font-size: 12.5px; }
+  .qily-global-nav { width: 100%; max-width: 100%; gap: 1px !important; overflow-x: hidden; scrollbar-width: none; }
+  .qily-global-nav::-webkit-scrollbar { display: none; }
+  .qily-global-nav a { flex: 0 0 auto; min-height: 32px; padding: 4px 5px; border-radius: 8px; font-size: 10.75px; line-height: 1.1; letter-spacing: -.1px; }
   .qily-float-dock { gap: 6px; }
   .qily-float-btn { width: 50px; height: 50px; font-size: 11.5px; }
   .qily-modal-panel { padding: 22px 18px; }

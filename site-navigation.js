@@ -1,11 +1,11 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanSiteNavigationV3) return;
-  window.__qilyLeanSiteNavigationV3 = true;
+  if (window.__qilyLeanSiteNavigationV4) return;
+  window.__qilyLeanSiteNavigationV4 = true;
 
   var HOME_URL = 'https://qilylean.com/';
-  var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v3';
+  var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
   var routes = [
     ['首页', '/'],
@@ -43,12 +43,12 @@
   function addStylesheet() {
     var current = document.querySelector('link[href^="/site-shell.css"]');
     if (current) {
-      current.href = '/site-shell.css?v=20260722-modules-v3';
+      current.href = '/site-shell.css?v=20260722-modules-v4';
       return;
     }
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/site-shell.css?v=20260722-modules-v3';
+    link.href = '/site-shell.css?v=20260722-modules-v4';
     document.head.appendChild(link);
   }
 
@@ -118,11 +118,33 @@
     return copyText(title + '\n' + url).then(function () { showToast(successMessage); });
   }
 
+  function isMobileDevice() {
+    if (navigator.userAgentData && typeof navigator.userAgentData.mobile === 'boolean') {
+      return navigator.userAgentData.mobile;
+    }
+    if (/Android|webOS|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || '')) return true;
+    return !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches && window.innerWidth <= 820);
+  }
+
+  function shareCurrentPage() {
+    var title = document.title || 'QilyLean';
+    var url = location.href;
+    if (isMobileDevice() && navigator.share) {
+      return navigator.share({ title: title, text: title, url: url }).then(function () {
+        showToast('已调起系统分享');
+      }).catch(function (error) {
+        if (error && error.name === 'AbortError') return;
+        return copyText(url).then(function () { showToast('当前页网址已复制'); });
+      });
+    }
+    return copyText(url).then(function () { showToast('当前页网址已复制'); });
+  }
+
   function loadWeChatQr() {
     if (document.getElementById('qilyWechatQrOfficialScript') || document.getElementById('wechatQrOfficialScript')) return;
     var script = document.createElement('script');
     script.id = 'qilyWechatQrOfficialScript';
-    script.src = '/qilylean/wechat-qr-official.js?v=20260722-navigation-v3';
+    script.src = '/qilylean/wechat-qr-official.js?v=20260722-navigation-v4';
     document.body.appendChild(script);
   }
 
@@ -170,7 +192,7 @@
     function runAction(action) {
       if (action === 'home') location.href = '/';
       else if (action === 'back') location.href = backUrl;
-      else if (action === 'current') shareUrl(document.title || 'QilyLean', location.href, '当前页网址已复制');
+      else if (action === 'current') shareCurrentPage();
       else if (action === 'share') shareMask.classList.add('show');
       else if (action === 'contact') contactMask.classList.add('show');
     }
