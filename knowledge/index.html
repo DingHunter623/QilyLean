@@ -20,7 +20,7 @@
   </style>
 </head>
 <body>
-  <iframe id="knowledgeFrame" src="/qilylean/home.html?build=20260722-knowledge-share-v1#knowledge" title="QilyLean精益知识分享"></iframe>
+  <iframe id="knowledgeFrame" src="/qilylean/home.html?build=20260722-knowledge-share-v2#knowledge" title="QilyLean精益知识分享"></iframe>
   <script>
   (function(){
     'use strict';
@@ -39,10 +39,10 @@
           var title=card.querySelector('h3');
           var intro=card.querySelector('p');
           var button=card.querySelector('.knowledge-actions .button');
-          if(small)small.textContent='每日工程简报';
+          if(small)small.textContent='每日工程简报｜最新：2026-07-22';
           if(title)title.textContent='每日工程版简报';
-          if(intro)intro.textContent='聚焦精益生产、IE、PMC、ERP/MES、数智化工厂、AI工具、汽车电子与半导体制造，按日期沉淀工程视角的行业洞察、管理启发与行动建议。';
-          if(button){button.textContent='查看简报目录';button.href='/qilylean/daily-insights.html';button.target='_top';}
+          if(intro)intro.textContent='最新简报：5W2H不是要因分析，而是把问题和行动说清楚。目录完整关联2025-12-19以来全部简报，并按最新至最早自动排列。';
+          if(button){button.textContent='查看全部简报';button.href='/qilylean/daily-insights.html?view=all#all-briefs';button.target='_top';}
         }
       }catch(error){}
     }
