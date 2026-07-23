@@ -48,12 +48,12 @@
   function addStylesheet() {
     var current = document.querySelector('link[href^="/site-shell.css"]');
     if (current) {
-      current.href = '/site-shell.css?v=20260723-nav-layout-v1';
+      current.href = '/site-shell.css?v=20260723-card-layout-v2';
       return;
     }
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/site-shell.css?v=20260723-nav-layout-v1';
+    link.href = '/site-shell.css?v=20260723-card-layout-v2';
     document.head.appendChild(link);
   }
 
