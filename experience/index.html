@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>履历主线（加密）｜QilyLean</title>
-  <meta name="description" content="丁启利制造工程、工程管理、精益咨询与数智化工厂推进履历主线。详细内容需输入访问口令。">
+  <meta name="description" content="丁启利制造工程、工程管理、精益咨询与数智化工厂推进履历主线。详细内容与高清履历附件需输入访问口令。">
   <meta name="robots" content="noindex,follow">
   <link rel="canonical" href="https://qilylean.com/experience/">
   <link rel="stylesheet" href="/site-shell.css?v=20260722-modules-v4">
@@ -30,7 +30,7 @@
       <div class="module-inner">
         <span class="module-eyebrow">Career Path / Engineering / Lean Delivery</span>
         <h1>履历主线（加密）</h1>
-        <p class="module-lead">本页只承载履历主线。详细职责、项目方法、关键成果与能力递进默认不下载、不渲染，输入访问口令后再单独加载；其他模块仅保留为导航链接。</p>
+        <p class="module-lead">本页只承载履历主线。详细职责、项目方法、关键成果、能力递进与高清履历附件默认不下载、不渲染，输入访问口令后再单独加载；其他模块仅保留为导航链接。</p>
       </div>
     </section>
 
@@ -38,7 +38,7 @@
       <div class="module-inner">
         <div class="experience-lock" id="experienceLock">
           <h2>访问履历主线</h2>
-          <p>完整履历包含各阶段职责范围、项目方法、关键成果与能力递进。请输入访问口令后查看。</p>
+          <p>完整履历包含各阶段职责范围、项目方法、关键成果、能力递进及高清原版附件。请输入访问口令后查看。</p>
           <div class="experience-lock-form">
             <input id="experiencePassword" type="password" inputmode="numeric" autocomplete="current-password" aria-label="履历访问口令" placeholder="请输入访问密码">
             <button id="experienceUnlock" type="button">查看完整履历主线</button>
@@ -49,7 +49,7 @@
     </section>
   </main>
 
-  <footer class="module-footer"><div class="module-inner"><span>丁启利｜履历主线</span><span>详细内容已加密保护</span></div></footer>
+  <footer class="module-footer"><div class="module-inner"><span>丁启利｜履历主线</span><span>详细内容与高清履历附件已加密保护</span></div></footer>
   <script>
     (function () {
       'use strict';
@@ -58,6 +58,18 @@
       var button = document.getElementById('experienceUnlock');
       var message = document.getElementById('experienceMessage');
       var loading = false;
+
+      function loadResumeDocument() {
+        if (document.getElementById('experienceResumeDocumentScript')) return;
+        var documentScript = document.createElement('script');
+        documentScript.id = 'experienceResumeDocumentScript';
+        documentScript.src = '/qilylean/career-resume-document.js?v=20260723-resume-v1';
+        documentScript.onerror = function () {
+          message.textContent = '高清履历附件模块暂未加载成功，请稍后刷新重试。';
+          documentScript.remove();
+        };
+        document.body.appendChild(documentScript);
+      }
 
       function loadResume() {
         if (loading || document.getElementById('experienceResumeContentScript')) return;
@@ -68,7 +80,10 @@
         var script = document.createElement('script');
         script.id = 'experienceResumeContentScript';
         script.src = '/qilylean/career-resume-full.js?v=20260722-on-demand-v1';
-        script.onload = function () { loading = false; };
+        script.onload = function () {
+          loading = false;
+          loadResumeDocument();
+        };
         script.onerror = function () {
           loading = false;
           message.textContent = '履历内容暂未加载成功，请稍后重试。';
