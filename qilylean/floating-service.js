@@ -3,7 +3,8 @@
 var HOME_URL='https://qilylean.com/';
 var HOME_QR_SRC='/qilylean/qilylean-home-qr.svg?v=20260720-floating-contact-share-v1';
 var PHONE_NUMBERS=['13450014003','15168120722','17681788259'];
-function load(src,id){if(document.getElementById(id))return;var s=document.createElement('script');s.id=id;s.src=src;document.body.appendChild(s);}
+var ASSET_BASE=window.__qilyLeanFloatingAssetBase||'';
+function load(src,id){if(document.getElementById(id))return;var s=document.createElement('script');s.id=id;s.src=ASSET_BASE&&src.charAt(0)!=='/'&&!/^[a-z][a-z0-9+.-]*:/i.test(src)?ASSET_BASE+src:src;document.body.appendChild(s);}
 function isHomePage(){return /(?:home|home-live)\.html$|digital_human\/?$/i.test(location.pathname);}
 function mergeStandardTime(){var a=document.getElementById('standard-time');if(!a)return;var p=[].slice.call(a.querySelectorAll('p'));for(var i=0;i<p.length-1;i++){var x=p[i].textContent.trim(),y=p[i+1].textContent.trim();if(x.indexOf('第一，用于产能测算')>-1&&x.indexOf('第三，用于线平衡改善')>-1&&y.indexOf('第四，用于ERP/MES基础数据')>-1&&y.indexOf('第五，用于经营改善分析')>-1){p[i].textContent=(x+' '+y).replace(/\s+/g,' ');p[i+1].remove();break;}}}
 function mergeVisualPrinciples(){var a=document.getElementById('visual');if(!a||a.dataset.visualPrinciplesMerged==='1')return;var p=[].slice.call(a.querySelectorAll('p'));for(var i=0;i<p.length-1;i++){var x=(p[i].textContent||'').trim(),y=(p[i+1].textContent||'').trim();if(x.indexOf('第一，少而准')===0&&x.indexOf('第二，统一')>-1&&y.indexOf('第三，可维护')===0&&y.indexOf('第四，能闭环')>-1){p[i].textContent=(x+' '+y).replace(/\s+/g,' ').trim();p[i+1].remove();a.dataset.visualPrinciplesMerged='1';break;}}}
