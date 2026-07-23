@@ -1,7 +1,7 @@
 {
-  "name": "QilyLean 制造改善实践平台",
-  "short_name": "QilyLean",
-  "description": "聚焦精益生产、工业工程、数智化工厂、MES、ERP、VSM、SMED与制造改善实践。",
+  "name": "QilyLean 启力精益",
+  "short_name": "启力精益",
+  "description": "启精益之智，聚企业之力。聚焦精益生产、工程改善、工业工程、数智化工厂、新工厂规划与目视化项目交付。",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
