@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>精益改善如何与ERP/MES系统协同｜QilyLean 改善经验</title>
+  <meta name="description" content="把精益现场改善成果转化为系统可使用的数据、规则、参数和经营反馈闭环。">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://qilylean.com/improvements/erp-mes/">
+  <link rel="stylesheet" href="/site-shell.css?v=20260722-modules-v4">
+  <style>
+    :root{--ink:#182420;--muted:#5f7474;--line:#d5e4e3;--paper:#f3faf9;--white:#fff;--forest:#0f4b5a;--teal:#178b94;--copper:#caa15f;--plum:#6e3f5f;--shadow:0 20px 55px rgba(15,75,90,.16)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--paper);font-size:16.5px;line-height:1.72}a{color:inherit}.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:13px clamp(18px,4vw,56px);background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.brand{display:flex;align-items:center;gap:10px;color:var(--forest);font-weight:850}.brand-mark{display:none}.nav{display:flex;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:14px}.nav a{text-decoration:none}.nav a:hover{color:var(--teal)}
+    .hero{padding:clamp(42px,6vw,78px) clamp(18px,4vw,68px);color:#fff;background:linear-gradient(120deg,rgba(14,76,91,.98),rgba(25,123,130,.94) 54%,rgba(43,103,118,.96)),radial-gradient(circle at 82% 12%,rgba(210,236,230,.34),transparent 34%)}.hero-inner{width:min(1180px,100%);margin:auto}.eyebrow{color:#ffe8ad;font-size:14px;font-weight:850}.hero h1{margin:10px 0 14px;font-size:clamp(36px,4.8vw,66px);line-height:1.05}.lead{max-width:960px;color:#fff3df;font-size:clamp(18px,1.5vw,22px)}
+    .section{padding:clamp(42px,6vw,76px) clamp(18px,4vw,56px);background:#fff;border-bottom:1px solid var(--line)}.section.alt{background:#eef5f2}.section-inner{width:min(1180px,100%);margin:auto}.section-head{max-width:920px;margin-bottom:24px}.section h2{margin:0 0 10px;color:var(--forest);font-size:clamp(27px,3vw,42px);line-height:1.18}.section-head p{margin:0;color:var(--muted)}
+    .paper-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.paper-card{display:flex;flex-direction:column;min-height:260px;padding:20px;border:1px solid var(--line);background:#fff;border-top:4px solid var(--teal);box-shadow:var(--shadow)}.paper-card:nth-child(2n){border-top-color:var(--copper)}.paper-card:nth-child(3n){border-top-color:var(--plum)}.paper-card small{color:var(--copper);font-weight:850}.paper-card h3{margin:8px 0 10px;color:var(--forest);font-size:19px;line-height:1.36}.paper-card p{margin:0 0 16px;color:var(--muted)}.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}.tag{display:inline-flex;padding:4px 9px;border:1px solid var(--line);background:#f7fbf7;color:#46615f;font-size:13px}.button,.share-button{display:inline-flex;align-items:center;justify-content:center;width:max-content;min-height:40px;margin-top:16px;padding:8px 15px;border:1px solid rgba(23,139,148,.35);border-radius:999px;color:#fff;background:var(--forest);text-decoration:none;font-weight:850;font:inherit;cursor:pointer}.button:hover,.share-button:hover{background:var(--teal)}
+    .article{padding:34px 0;border-top:1px solid var(--line)}.article:first-child{border-top:0}.article[id]{scroll-margin-top:96px}.article h2{color:var(--forest);font-size:clamp(26px,3vw,40px)}.subtitle{margin:-4px 0 14px;color:var(--teal);font-weight:850}.meta{margin-bottom:14px;color:var(--muted);font-size:14px}.share-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 22px}.share-row .share-button{margin-top:0;color:#17443b;background:#ffe39b;border-color:#f5c861}.share-row .share-button:hover{background:#f5c861}.share-status{color:var(--teal);font-size:14px;font-weight:800}.article h3{margin:28px 0 9px;color:#17443b;font-size:22px}.article p{margin:0 0 13px;color:#344845}.toc{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}.toc a{padding:7px 11px;border:1px solid rgba(255,232,173,.5);color:#fff8ea;background:rgba(255,255,255,.08);text-decoration:none;font-size:14px;font-weight:800}.footer{padding:24px clamp(18px,4vw,56px);color:#d6e5df;background:#101916}.footer-inner{width:min(1180px,100%);margin:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    @media(max-width:980px){.paper-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{align-items:flex-start;flex-direction:column}}@media(max-width:700px){.paper-grid{grid-template-columns:1fr}.button,.share-button{width:100%}.hero{padding-top:34px}.topbar{position:static}.share-row{align-items:stretch;flex-direction:column}.share-status{min-height:20px}}
+  
+    .article-hub{padding:30px clamp(18px,4vw,56px);color:#fff;background:linear-gradient(120deg,rgba(14,76,91,.98),rgba(25,123,130,.94) 54%,rgba(43,103,118,.96))}
+    .article-hub-inner{width:min(1180px,100%);margin:auto}
+    .article-hub .hub-back{display:inline-flex;margin-bottom:8px;color:#ffe8ad;text-decoration:none;font-size:14px;font-weight:850}
+    .article-hub h1{margin:2px 0 8px;font-size:clamp(30px,3.6vw,48px);line-height:1.12}
+    .article-hub .hub-lead{margin:0;color:#fff3df;font-size:clamp(17px,1.35vw,20px)}
+    .article-links{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+    .article-links a{display:inline-flex;align-items:center;min-height:38px;padding:7px 11px;border:1px solid rgba(255,232,173,.5);color:#fff8ea;background:rgba(255,255,255,.08);text-decoration:none;font-size:14px;font-weight:800;transition:transform .16s ease,background-color .16s ease,color .16s ease}
+    .article-links a:hover,.article-links a:focus-visible,.article-links a[aria-current="page"]{color:#17322d;background:#ffe39b;outline:none;transform:translateY(-1px)}
+    .article-page-content .article{padding-top:0}
+    @media(max-width:700px){.article-links{display:grid;grid-template-columns:1fr 1fr}.article-links a{justify-content:center;text-align:center}.article-hub{padding-top:24px}}
+
+  </style>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="/"><span>制造改善与项目实践主页</span></a><nav class="nav" aria-label="网站导航"><a href="/">首页</a><a href="/capabilities/">能力画像</a><a href="/experience/">履历主线</a><a href="/projects/">代表项目</a><a href="/improvements/" aria-current="page">改善经验</a><a href="/ai.html">QilyLean AI</a><a href="/knowledge/">知识分享</a><a href="/moments.html">行走印记</a></nav></header>
+  <main>
+    <section class="article-hub">
+      <div class="article-hub-inner">
+        <a class="hub-back" href="/improvements/">← 返回改善经验清单</a>
+        <h1>改善经验</h1>
+        <p class="hub-lead">精益改善如何与ERP/MES系统协同</p>
+        <nav class="article-links" aria-label="改善经验六大模块"><a href="/improvements/vsm/">01 VSM价值流</a><a href="/improvements/standard-time/">02 标准工时</a><a href="/improvements/smed/">03 SMED换模</a><a href="/improvements/erp-mes/" aria-current="page">04 ERP/MES协同</a><a href="/improvements/ie-data/">05 IE数据底座</a><a href="/improvements/visual/">06 目视化语言</a></nav>
+      </div>
+    </section>
+    <section class="section article-page-content">
+      <div class="section-inner">
+        <article class="article" id="erp-mes"><h2>精益改善如何与ERP/MES系统协同</h2><div class="subtitle">从现场问题到系统数据闭环的实施逻辑</div><div class="meta">撰写：丁启利｜栏目：制造改善实践</div><div class="share-row"><button class="share-button" data-title="精益改善如何与ERP/MES系统协同" data-target="erp-mes">转发本文</button><span class="share-status" aria-live="polite"></span></div><h3>一、常见矛盾：系统上线了，现场问题并没有自动消失</h3><p>许多企业以为ERP/MES上线后，计划、库存、生产和交付问题会自然解决。但系统只是把流程数字化，如果流程本身混乱、数据本身不准、责任本身不清，系统会把这些问题更快、更集中地暴露出来。</p><p>典型现象包括：BOM和工艺路线不完整，标准工时缺失，库存账实不符，按单领料困难，倒冲逻辑与现场消耗不一致，生产计划频繁变更，实绩录入滞后，异常原因无法分类统计。这些问题看似是系统问题，本质上是现场管理基础和数据治理问题。</p><h3>二、协同原则：精益解决流程真实，系统承载数据真实</h3><p>精益改善关注价值流、浪费识别、标准作业、线平衡、6S、SMED、TPM和持续改善。ERP/MES关注订单、BOM、库存、工艺路线、计划、领料、报工、质量和追溯。二者如果割裂，精益改善停留在现场动作，系统运行停留在数据录入。</p><p>协同的关键，是让精益改善成果转化为系统可使用的数据和规则。例如，IE标准工时转化为ERP工序工时，VSM分析结果转化为计划冻结和物料齐套规则，SMED结果转化为换型时间参数，6S和目视化转化为现场执行标准，异常闭环转化为系统原因代码和改善项目。</p><h3>三、基础数据：ERP/MES有效运行的前提</h3><p>基础数据至少包括物料编码、BOM、工艺路线、工序、工作中心、设备、人员、标准工时、标准产能、仓库库位、批次规则和质量检验标准。任何一个基础数据不准确，都会影响系统输出。</p><p>以标准工时为例，如果工时不准，排产就不准；排产不准，交期承诺就不稳；交期不稳，现场就会频繁插单；插单频繁，物料和人员配置又会失控。数据问题最终会转化为现场问题，现场问题又会反过来破坏数据可信度。</p><h3>四、计划协同：从经验排产走向数据排产</h3><p>PMC排程是ERP/MES协同中的关键节点。计划若只依赖经验，系统数据很难发挥价值。较稳妥的做法，是先建立日计划和周计划冻结机制，明确计划变更边界，再用标准工时、标准产能、人员配置和瓶颈工序约束计划。</p><p>在多品种、小批量、交付紧的环境中，计划不应只看订单数量，还要看工序负荷、物料齐套、换型损失、设备能力和品质放行节奏。精益工具如VSM和线平衡，可以帮助识别计划执行中的真实阻塞点；ERP/MES则用于记录、反馈和追踪这些阻塞点。</p><h3>五、现场执行：实绩录入不是文员工作，而是经营反馈</h3><p>生产实绩包括开工、完工、良品、不良、返工、停线、缺料、换型、异常和人员工时等信息。若实绩录入只是事后补账，系统就无法支持现场管理。真正有效的实绩数据，应尽量贴近现场发生时间，并与工单、工序、人员、设备和物料关联。</p><p>现场员工不愿意录入复杂数据，通常不是态度问题，而是系统设计与现场节奏不匹配。因此，企业需要通过扫码、看板、简化字段、异常代码标准化和班组长确认机制，降低录入成本，提高数据可信度。</p><h3>六、改善闭环：让系统数据反哺精益项目</h3><p>ERP/MES的价值不只是记录，更要反哺改善。通过系统数据可以分析订单延误原因、缺料频次、换型损失、工序瓶颈、不良分布、返工比例、设备停机和产能波动。精益团队据此选择改善项目，形成问题清单、责任矩阵、措施计划和复盘机制。</p><p>需要注意的是，数据分析不能代替现场确认。系统显示异常只是线索，真正原因仍需到现场通过5Why、5M2E、ECRS和PDCA进行验证。数据与现场结合，才能形成可靠改善。</p><h3>七、结论：精益是系统成功的地基，系统是精益持续的载体</h3><p>精益改善与ERP/MES协同，不是先后关系，而是互为支撑。没有精益基础，系统会承载混乱流程；没有系统数据，精益改善难以持续量化和复制。</p><p>企业推进数智化工厂时，应先把流程、标准、工时、物料、计划和现场执行规则梳理清楚，再把这些规则固化到ERP/MES中。这样，系统才不会成为负担，而会成为制造运营改善的基础设施。</p></article>
+      </div>
+    </section>
+  </main>
+  <footer class="footer"><div class="footer-inner"><span>丁启利 | 制造改善实践论文、精益生产、IE标准工时、数智化工厂规划</span><span><a href="/">返回主页</a></span></div></footer>
+  <script>
+    const shareButtons = Array.from(document.querySelectorAll('.share-button'));
+    const pagePath = window.location.origin + window.location.pathname;
+    async function copyToClipboard(text) { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return; } const textarea = document.createElement('textarea'); textarea.value = text; textarea.setAttribute('readonly', ''); textarea.style.position = 'fixed'; textarea.style.left = '-9999px'; document.body.appendChild(textarea); textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea); }
+    shareButtons.forEach((button) => { button.addEventListener('click', async () => { const title = button.dataset.title || document.title; const target = button.dataset.target || ''; const url = `${pagePath}#${target}`; const status = button.parentElement.querySelector('.share-status'); const shareText = `${title}\n${url}`; try { if (navigator.share) { await navigator.share({ title, text: title, url }); if (status) status.textContent = '已调起系统转发'; } else { await copyToClipboard(shareText); if (status) status.textContent = '链接已复制，可粘贴转发'; } } catch (error) { await copyToClipboard(shareText); if (status) status.textContent = '链接已复制，可粘贴转发'; } window.setTimeout(() => { if (status) status.textContent = ''; }, 3600); }); });
+  </script>
+  <script src="/qilylean/floating-service.js?v=20260721-home-nav-fix-v1"></script>
+  <script src="/site-navigation.js?v=20260722-modules-v4"></script>
+  <script src="/homepage-music.js?v=20260722-continuous-v3"></script>
+
+  <script id="articleHashOffsetFix">
+  (function(){
+    function alignArticleHash(){
+      if(!location.hash)return;
+      var id=location.hash.slice(1);
+      try{id=decodeURIComponent(id);}catch(error){}
+      var target=document.getElementById(id);
+      if(!target)return;
+      var header=document.querySelector('.topbar');
+      var offset=(header?header.getBoundingClientRect().height:0)+24;
+      var top=target.getBoundingClientRect().top+window.scrollY-offset;
+      window.scrollTo({top:Math.max(0,top),left:0,behavior:'auto'});
+    }
+    window.addEventListener('hashchange',function(){requestAnimationFrame(alignArticleHash);});
+    window.addEventListener('load',function(){requestAnimationFrame(alignArticleHash);setTimeout(alignArticleHash,180);});
+    requestAnimationFrame(alignArticleHash);
+    setTimeout(alignArticleHash,420);
+  })();
+  </script>
+</body>
+</html>
