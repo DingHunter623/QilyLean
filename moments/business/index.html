@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  出差足迹｜行走印记 · QilyLean
+  <meta name="description" content="跨区域项目、客户走访、工厂考察与沿途城市记录。">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://qilylean.com/moments/business/">
+  <style>
+    :root{--ink:#182420;--muted:#5f7474;--line:#d5e4e3;--paper:#f3faf9;--white:#fff;--forest:#0f4b5a;--teal:#178b94;--copper:#caa15f;--gold:#ffe39b;--shadow:0 20px 55px rgba(15,75,90,.14)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;color:var(--ink);background:var(--paper);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.72}
+    a{color:inherit}
+    .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:12px clamp(18px,4vw,56px);background:rgba(255,255,255,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}
+    .brand{color:var(--forest);font-size:18px;font-weight:900;white-space:nowrap}
+    .site-nav{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:7px}
+    .site-nav a{padding:8px 10px;border:1px solid transparent;border-radius:10px;color:var(--muted);font-size:14px;font-weight:800;text-decoration:none;transition:transform .16s ease,color .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease}
+    .site-nav a:hover,.site-nav a:focus-visible{color:var(--forest);background:#eaf6f3;border-color:#b9d9d4;box-shadow:0 7px 18px rgba(15,75,90,.14);transform:translateY(-2px);outline:none}
+    .hero{padding:clamp(48px,8vw,96px) clamp(18px,5vw,72px);color:#fff;background:linear-gradient(125deg,#0f4b5a,#177f87 58%,#296776)}
+    .hero-inner,.main-inner{width:min(1180px,100%);margin:auto}
+    .eyebrow{color:var(--gold);font-size:14px;font-weight:900;letter-spacing:.08em}
+    h1{margin:10px 0 14px;font-size:clamp(40px,6vw,72px);line-height:1.08}
+    .lead{max-width:820px;margin:0;color:#e9f7f3;font-size:clamp(18px,2vw,23px)}
+    .category-nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+    .category-nav a{padding:8px 14px;border:1px solid rgba(255,227,155,.52);border-radius:999px;color:#fff7e8;background:rgba(255,255,255,.08);font-size:15px;font-weight:850;text-decoration:none;transition:transform .16s ease,background .16s ease,box-shadow .16s ease}
+    .category-nav a:hover,.category-nav a:focus-visible{transform:translateY(-2px);background:rgba(255,255,255,.18);box-shadow:0 8px 18px rgba(7,60,71,.24);outline:none}
+    .main{padding:clamp(38px,6vw,72px) clamp(18px,4vw,56px)}
+    .intro{max-width:840px;margin:0 0 30px;color:var(--muted);font-size:18px}
+    .gallery-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .gallery-group{min-height:280px;padding:26px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow);scroll-margin-top:78px}
+    .gallery-group:nth-child(2){border-top:4px solid var(--copper)}
+    .gallery-group:nth-child(3){border-top:4px solid #6e3f5f}
+    .gallery-group:nth-child(4){border-top:4px solid #9e4a34}
+    .gallery-group:first-child{border-top:4px solid var(--teal)}
+    .group-number{color:var(--copper);font-size:13px;font-weight:900;letter-spacing:.1em}
+    h2{margin:5px 0 8px;color:var(--forest);font-size:26px}
+    .gallery-group p{margin:0;color:var(--muted);font-size:16px}
+    .travel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:22px}
+    .travel-card{overflow:hidden;margin:0;border:1px solid var(--line);background:#f7fbfa}
+    .travel-card picture{display:block}
+    .travel-card img{display:block;width:100%;height:auto;background:#e9f1ef}
+    .travel-card figcaption{padding:12px 13px}
+    .travel-card strong{display:block;color:var(--forest);font-size:16px;line-height:1.4}
+    .travel-card span{display:block;margin-top:5px;color:var(--muted);font-size:14px;line-height:1.6}
+    .empty{min-height:120px;display:grid;place-items:center;margin-top:22px;border:1px dashed #b8ceca;background:linear-gradient(135deg,#f5fbfa,#edf5f3);color:#78908d;text-align:center}
+    .empty strong{display:block;color:var(--forest);font-size:17px}
+    .empty span{display:block;margin-top:4px;font-size:14px}
+    .footer{padding:24px clamp(18px,4vw,56px);color:#d6e5df;background:#101916}
+    .footer-inner{width:min(1180px,100%);margin:auto}
+    @media(max-width:900px){.topbar{position:static;align-items:flex-start;flex-direction:column}.site-nav{justify-content:flex-start}}
+    @media(max-width:760px){.gallery-groups{grid-template-columns:1fr}.travel-grid{grid-template-columns:1fr}.travel-spacer{display:none}.gallery-group{min-height:240px}}
+  
+    .category-nav a[aria-current="page"]{color:#17322d;background:var(--gold);border-color:var(--gold)}
+    .moment-directory{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .moment-directory-card{display:flex;flex-direction:column;min-height:240px;padding:26px;border:1px solid var(--line);border-top:4px solid var(--teal);background:#fff;box-shadow:var(--shadow)}
+    .moment-directory-card:nth-child(2){border-top-color:var(--copper)}
+    .moment-directory-card:nth-child(3){border-top-color:#6e3f5f}
+    .moment-directory-card:nth-child(4){border-top-color:#9e4a34}
+    .moment-directory-card h2{margin:6px 0 9px}
+    .moment-directory-card p{margin:0;color:var(--muted);font-size:16px}
+    .moment-count{margin-top:auto;padding-top:20px;color:var(--copper);font-size:14px;font-weight:850}
+    .moment-link,.moment-back{display:inline-flex;align-items:center;justify-content:center;width:max-content;min-height:42px;margin-top:12px;padding:8px 15px;border-radius:999px;color:#fff;background:var(--forest);font-weight:850;text-decoration:none}
+    .moment-link:hover,.moment-link:focus-visible,.moment-back:hover,.moment-back:focus-visible{background:var(--teal);outline:none;transform:translateY(-1px)}
+    .single-group{grid-template-columns:1fr}
+    .single-group .gallery-group{min-height:0}
+    .single-group .gallery-group[data-gallery="team"]{border-top-color:var(--copper)}
+    .single-group .gallery-group[data-gallery="business"]{border-top-color:#6e3f5f}
+    .single-group .gallery-group[data-gallery="life"]{border-top-color:#9e4a34}
+    .detail-intro{display:flex;align-items:center;justify-content:space-between;gap:18px;max-width:none}
+    @media(max-width:760px){.moment-directory{grid-template-columns:1fr}.detail-intro{align-items:flex-start;flex-direction:column}.moment-link,.moment-back{width:100%}}
+
+  </style>
+  <link rel="stylesheet" href="/site-shell.css?v=20260722-modules-v4">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">QilyLean · 行走印记</div>
+    <nav class="site-nav" aria-label="网站导航">
+      <a href="/">首页</a>
+      <a href="/capabilities/">能力画像</a>
+      <a href="/experience/">履历主线</a>
+      <a href="/projects/">代表项目</a>
+      <a href="/improvements/">改善经验</a>
+      <a href="/ai.html">QilyLean AI</a>
+      <a href="/knowledge/">知识分享</a>
+      <a href="/moments/" aria-current="page">行走印记</a>
+
+    </nav>
+  </header>
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="eyebrow">WORK · TEAM · JOURNEY · LIFE</div>
+      <h1>行走印记</h1>
+      <p class="lead"><strong>出差足迹</strong>｜跨区域项目、客户走访、工厂考察与沿途城市记录。</p>
+      <nav class="category-nav" aria-label="影像分类">
+          <a href="/moments/work/">工作现场</a>
+          <a href="/moments/team/">团队同行</a>
+          <a href="/moments/business/" aria-current="page">出差足迹</a>
+          <a href="/moments/life/">生活远方</a>
+      </nav>
+    </div>
+  </section>
+  <main class="main">
+    <div class="main-inner">
+      <p class="intro detail-intro"><span>本页仅展示“出差足迹”模块内容，其他分类可通过上方链接切换。</span><a class="moment-back" href="/moments/">返回行走印记清单</a></p>
+      <div class="gallery-groups single-group">
+        <section class="gallery-group" id="business" data-gallery="business">
+          <div class="group-number">03 · JOURNEY</div>
+          <h2>出差足迹</h2>
+          <p>跨区域项目、客户走访、工厂考察与沿途城市记录。</p>
+          <div class="travel-grid">
+            <figure class="travel-card">
+              <picture>
+                <source srcset="/shenzhen.webp" type="image/webp">
+                <img src="/shenzhen.jpg" alt="深圳第一组出差足迹" width="2448" height="3264" loading="lazy" decoding="async" fetchpriority="low">
+              </picture>
+              <figcaption><strong>深圳足迹（一）</strong><span>出差深圳期间的城市记录，感受创新之城的速度与活力。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <picture>
+                <source srcset="/shenzhen2.webp" type="image/webp">
+                <img src="/shenzhen2.jpg" alt="深圳第二组出差足迹" width="2256" height="4000" loading="lazy" decoding="async" fetchpriority="low">
+              </picture>
+              <figcaption><strong>深圳足迹（二）</strong><span>深圳出差的另一组影像，记录工作之外的城市片段。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <picture>
+                <source srcset="/guangzhou.webp" type="image/webp">
+                <img src="/guangzhou.jpg" alt="广州出差足迹" width="6528" height="4896" loading="lazy" decoding="async" fetchpriority="low">
+              </picture>
+              <figcaption><strong>广州足迹</strong><span>出差途中驻足广州，记录岭南城市的行走片段。</span></figcaption>
+            </figure>
+            <div class="travel-spacer" aria-hidden="true"></div>
+            <figure class="travel-card">
+              <picture>
+                <source srcset="/neimengqiuji.webp" type="image/webp">
+                <img src="/neimengqiuji.jpg" alt="内蒙古秋季出差足迹" width="4032" height="3024" loading="lazy" decoding="async" fetchpriority="low">
+              </picture>
+              <figcaption><strong>内蒙古秋景</strong><span>项目出差途中遇见北方秋色，记录辽阔而沉静的季节景致。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <picture>
+                <source srcset="/neimenxiaji.webp" type="image/webp">
+                <img src="/neimenxiaji.jpg" alt="内蒙古夏季出差足迹" width="3264" height="2448" loading="lazy" decoding="async" fetchpriority="low">
+              </picture>
+              <figcaption><strong>内蒙古夏季</strong><span>夏季出差内蒙古，感受北方大地的清朗与开阔。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <picture>
+                <source srcset="/zhongshanling.webp" type="image/webp">
+                <img src="/zhongshanling.jpg" alt="南京中山陵出差足迹" width="3672" height="6528" loading="lazy" decoding="async" fetchpriority="low">
+              </picture>
+              <figcaption><strong>南京中山陵</strong><span>出差南京期间到访中山陵，记录庄严建筑与历史人文。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <picture>
+                <source srcset="/guofu.webp" type="image/webp">
+                <img src="/guofu.jpg" alt="国父纪念场景" width="2256" height="4000" loading="lazy" decoding="async" fetchpriority="low">
+              </picture>
+              <figcaption><strong>国父纪念地</strong><span>走近孙中山先生相关历史纪念场景，感受时代印记。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <picture>
+                <source srcset="/zongtonghu.webp" type="image/webp">
+                <img src="/zongtonghu.jpg" alt="南京总统府出差足迹" width="3672" height="6528" loading="lazy" decoding="async" fetchpriority="low">
+              </picture>
+              <figcaption><strong>南京总统府</strong><span>走访南京总统府，感受近代历史建筑与城市记忆。</span></figcaption>
+            </figure>
+            <figure class="travel-card">
+              <picture>
+                <source srcset="/nanjing.webp" type="image/webp">
+                <img src="/nanjing.jpg" alt="南京出差足迹" width="3672" height="6528" loading="lazy" decoding="async" fetchpriority="low">
+              </picture>
+              <figcaption><strong>南京足迹</strong><span>出差南京期间的城市打卡，留下六朝古都的旅途记忆。</span></figcaption>
+            </figure>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+  <footer class="footer"><div class="footer-inner">丁启利｜工作与生活影像记录</div></footer>
+  <script src="/site-navigation.js?v=20260723-moments-routes-v1"></script>
+  <script src="/homepage-music.js?v=20260722-continuous-v3"></script>
+</body>
+</html>
