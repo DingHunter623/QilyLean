@@ -24,8 +24,8 @@ jobs:
           path = Path('digital_human/home.html')
           text = path.read_text(encoding='utf-8')
 
-          old_nav = '<a href="#fit">岗位匹配</a><a href="#ai">AI与精益</a>'
-          new_nav = '<a href="#fit">岗位匹配</a><a href="#ai">AI与精益</a><a href="/ai.html">QilyLean AI</a>'
+          old_nav = '<a href="#fit">能力协同</a><a href="#ai">AI与精益</a>'
+          new_nav = '<a href="#fit">能力协同</a><a href="#ai">AI与精益</a><a href="/ai.html">QilyLean AI</a>'
 
           old_actions = '<div class="actions"><a class="button primary" href="#assistant">与丁启利对话</a><a class="button" href="papers.html">查看改善经验</a><a class="button" href="#projects">代表项目</a></div>'
           new_actions = '<div class="actions"><a class="button primary" href="/ai.html">进入 QilyLean AI</a><a class="button" href="#assistant">职业能力问答</a><a class="button" href="papers.html">查看改善经验</a><a class="button" href="#projects">代表项目</a></div>'
