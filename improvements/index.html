@@ -2,16 +2,72 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>改善经验｜QilyLean</title>
-  <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://qilylean.com/qilylean/papers.html">
-  <script>
-    location.replace('/qilylean/papers.html' + location.search + location.hash);
+  <meta name="description" content="QilyLean制造改善经验清单，覆盖VSM价值流、标准工时、SMED快速换模、ERP/MES协同、IE基础数据与目视化管理。">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://qilylean.com/improvements/">
+  <link rel="stylesheet" href="/site-shell.css?v=20260722-modules-v4">
+  <style>
+    :root{--ink:#182420;--muted:#5f7474;--line:#d5e4e3;--paper:#f3faf9;--white:#fff;--forest:#0f4b5a;--teal:#178b94;--copper:#caa15f;--plum:#6e3f5f;--shadow:0 20px 55px rgba(15,75,90,.16)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink);background:var(--paper);font-size:16.5px;line-height:1.72}a{color:inherit}.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:13px clamp(18px,4vw,56px);background:rgba(255,255,255,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.brand{display:flex;align-items:center;gap:10px;color:var(--forest);font-weight:850}.brand-mark{display:none}.nav{display:flex;flex-wrap:wrap;gap:16px;color:var(--muted);font-size:14px}.nav a{text-decoration:none}.nav a:hover{color:var(--teal)}
+    .hero{padding:clamp(42px,6vw,78px) clamp(18px,4vw,68px);color:#fff;background:linear-gradient(120deg,rgba(14,76,91,.98),rgba(25,123,130,.94) 54%,rgba(43,103,118,.96)),radial-gradient(circle at 82% 12%,rgba(210,236,230,.34),transparent 34%)}.hero-inner{width:min(1180px,100%);margin:auto}.eyebrow{color:#ffe8ad;font-size:14px;font-weight:850}.hero h1{margin:10px 0 14px;font-size:clamp(36px,4.8vw,66px);line-height:1.05}.lead{max-width:960px;color:#fff3df;font-size:clamp(18px,1.5vw,22px)}
+    .section{padding:clamp(42px,6vw,76px) clamp(18px,4vw,56px);background:#fff;border-bottom:1px solid var(--line)}.section.alt{background:#eef5f2}.section-inner{width:min(1180px,100%);margin:auto}.section-head{max-width:920px;margin-bottom:24px}.section h2{margin:0 0 10px;color:var(--forest);font-size:clamp(27px,3vw,42px);line-height:1.18}.section-head p{margin:0;color:var(--muted)}
+    .paper-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.paper-card{display:flex;flex-direction:column;min-height:260px;padding:20px;border:1px solid var(--line);background:#fff;border-top:4px solid var(--teal);box-shadow:var(--shadow)}.paper-card:nth-child(2n){border-top-color:var(--copper)}.paper-card:nth-child(3n){border-top-color:var(--plum)}.paper-card small{color:var(--copper);font-weight:850}.paper-card h3{margin:8px 0 10px;color:var(--forest);font-size:19px;line-height:1.36}.paper-card p{margin:0 0 16px;color:var(--muted)}.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto}.tag{display:inline-flex;padding:4px 9px;border:1px solid var(--line);background:#f7fbf7;color:#46615f;font-size:13px}.button,.share-button{display:inline-flex;align-items:center;justify-content:center;width:max-content;min-height:40px;margin-top:16px;padding:8px 15px;border:1px solid rgba(23,139,148,.35);border-radius:999px;color:#fff;background:var(--forest);text-decoration:none;font-weight:850;font:inherit;cursor:pointer}.button:hover,.share-button:hover{background:var(--teal)}
+    .article{padding:34px 0;border-top:1px solid var(--line)}.article:first-child{border-top:0}.article[id]{scroll-margin-top:96px}.article h2{color:var(--forest);font-size:clamp(26px,3vw,40px)}.subtitle{margin:-4px 0 14px;color:var(--teal);font-weight:850}.meta{margin-bottom:14px;color:var(--muted);font-size:14px}.share-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 22px}.share-row .share-button{margin-top:0;color:#17443b;background:#ffe39b;border-color:#f5c861}.share-row .share-button:hover{background:#f5c861}.share-status{color:var(--teal);font-size:14px;font-weight:800}.article h3{margin:28px 0 9px;color:#17443b;font-size:22px}.article p{margin:0 0 13px;color:#344845}.toc{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}.toc a{padding:7px 11px;border:1px solid rgba(255,232,173,.5);color:#fff8ea;background:rgba(255,255,255,.08);text-decoration:none;font-size:14px;font-weight:800}.footer{padding:24px clamp(18px,4vw,56px);color:#d6e5df;background:#101916}.footer-inner{width:min(1180px,100%);margin:auto;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+    @media(max-width:980px){.paper-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{align-items:flex-start;flex-direction:column}}@media(max-width:700px){.paper-grid{grid-template-columns:1fr}.button,.share-button{width:100%}.hero{padding-top:34px}.topbar{position:static}.share-row{align-items:stretch;flex-direction:column}.share-status{min-height:20px}}
+  </style>
+  <script id="legacyImprovementHashRouter">
+    (function(){
+      var routes={"vsm":"/improvements/vsm/","standard-time":"/improvements/standard-time/","smed":"/improvements/smed/","erp-mes":"/improvements/erp-mes/","ie-data":"/improvements/ie-data/","visual":"/improvements/visual/"};
+      var key=(location.hash||'').slice(1);
+      if(routes[key]) location.replace(routes[key]+location.search);
+    })();
   </script>
 </head>
 <body>
-  <p>正在进入改善经验独立页面……</p>
-  <p><a href="/qilylean/papers.html">立即进入</a></p>
+ <header class="topbar"><a class="brand" href="/"><span>制造改善与项目实践主页</span></a><nav class="nav" aria-label="网站导航"><a href="/">首页</a><a href="/capabilities/">能力画像</a><a href="/experience/">履历主线</a><a href="/projects/">代表项目</a><a href="/improvements/" aria-current="page">改善经验</a><a href="/ai.html">QilyLean AI</a><a href="/knowledge/">知识分享</a><a href="/moments.html">行走印记</a></nav></header>
+  <main>
+    <section class="hero"><div class="hero-inner"><span class="eyebrow">AI 辅助制造改善知识库 / 方法论文章 / 项目实践沉淀</span><h1>制造改善实践论文合集</h1><p class="lead">本栏目用于沉淀精益生产、IE 标准工时、VSM 价值流、SMED 快速换模、ERP/MES 协同、数智化工厂规划与现场目视化管理等方向的实践方法。它既是个人主页的专业内容区，也是后续案例库、论文库、模板库和 AI 数字人知识库的基础入口。</p><div class="toc"><a href="/improvements/vsm/">01 VSM价值流</a><a href="/improvements/standard-time/">02 标准工时</a><a href="/improvements/smed/">03 SMED换模</a><a href="/improvements/erp-mes/">04 ERP/MES协同</a><a href="/improvements/ie-data/">05 IE数据底座</a><a href="/improvements/visual/">06 目视化语言</a></div></div></section>
+    <section class="section alt" id="paper-list"><div class="section-inner"><div class="section-head"><h2>论文目录</h2><p>以网页文章方式沉淀制造改善方法，后续可扩展案例图片、表单模板、项目复盘附件与下载资料。</p></div><div class="paper-grid">
+      <article class="paper-card"><small>01</small><h3>汽车电子装配行业VSM价值流分析的落地方法</h3><p>从订单信息流、物料流、WIP、等待和交付周期结构出发，把VSM从图形工具转化为跨部门改善路径。</p><div class="tags"><span class="tag">VSM</span><span class="tag">汽车电子</span><span class="tag">交付周期</span></div><a class="button" href="/improvements/vsm/">阅读全文</a></article>
+      <article class="paper-card"><small>02</small><h3>标准工时不是考核工具，而是制造运营数据底座</h3><p>说明标准工时如何支撑标准产能、UPPH、PMC排程、ERP/MES基础数据和经营改善分析。</p><div class="tags"><span class="tag">IE</span><span class="tag">标准工时</span><span class="tag">产能模型</span></div><a class="button" href="/improvements/standard-time/">阅读全文</a></article>
+      <article class="paper-card"><small>03</small><h3>SMED快速换模在注塑车间的实施路径</h3><p>从真实换模测时、内外部作业分离、角色分工、工具接口标准化到程序文件固化。</p><div class="tags"><span class="tag">SMED</span><span class="tag">注塑</span><span class="tag">换模程序</span></div><a class="button" href="/improvements/smed/">阅读全文</a></article>
+      <article class="paper-card"><small>04</small><h3>精益改善如何与ERP/MES系统协同</h3><p>把精益现场改善成果转化为系统可使用的数据、规则、参数和经营反馈闭环。</p><div class="tags"><span class="tag">ERP</span><span class="tag">MES</span><span class="tag">数据闭环</span></div><a class="button" href="/improvements/erp-mes/">阅读全文</a></article>
+      <article class="paper-card"><small>05</small><h3>数智化工厂第一阶段为什么必须先做IE基础数据</h3><p>阐明标准工时、工艺路线、资源能力和现场实绩规则为何是数智化工厂的地基工程。</p><div class="tags"><span class="tag">数智化工厂</span><span class="tag">IE数据</span><span class="tag">数据治理</span></div><a class="button" href="/improvements/ie-data/">阅读全文</a></article>
+      <article class="paper-card"><small>06</small><h3>目视化不是贴标识，而是现场管理语言的统一</h3><p>从6S标识、看板、通道、安全警示、仓储和工位管理，说明目视化如何成为现场协同语言。</p><div class="tags"><span class="tag">目视化</span><span class="tag">6S</span><span class="tag">现场管理</span></div><a class="button" href="/improvements/visual/">阅读全文</a></article>
+    </div></div></section>
+
+  </main>
+  <footer class="footer"><div class="footer-inner"><span>丁启利 | 制造改善实践论文、精益生产、IE标准工时、数智化工厂规划</span><span><a href="/">返回主页</a></span></div></footer>
+  <script>
+    const shareButtons = Array.from(document.querySelectorAll('.share-button'));
+    const pagePath = window.location.origin + window.location.pathname;
+    async function copyToClipboard(text) { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); return; } const textarea = document.createElement('textarea'); textarea.value = text; textarea.setAttribute('readonly', ''); textarea.style.position = 'fixed'; textarea.style.left = '-9999px'; document.body.appendChild(textarea); textarea.select(); document.execCommand('copy'); document.body.removeChild(textarea); }
+    shareButtons.forEach((button) => { button.addEventListener('click', async () => { const title = button.dataset.title || document.title; const target = button.dataset.target || ''; const url = `${pagePath}#${target}`; const status = button.parentElement.querySelector('.share-status'); const shareText = `${title}\n${url}`; try { if (navigator.share) { await navigator.share({ title, text: title, url }); if (status) status.textContent = '已调起系统转发'; } else { await copyToClipboard(shareText); if (status) status.textContent = '链接已复制，可粘贴转发'; } } catch (error) { await copyToClipboard(shareText); if (status) status.textContent = '链接已复制，可粘贴转发'; } window.setTimeout(() => { if (status) status.textContent = ''; }, 3600); }); });
+  </script>
+  <script src="/qilylean/floating-service.js?v=20260721-home-nav-fix-v1"></script>
+  <script src="/site-navigation.js?v=20260722-modules-v4"></script>
+  <script src="/homepage-music.js?v=20260722-continuous-v3"></script>
+
+  <script id="articleHashOffsetFix">
+  (function(){
+    function alignArticleHash(){
+      if(!location.hash)return;
+      var id=location.hash.slice(1);
+      try{id=decodeURIComponent(id);}catch(error){}
+      var target=document.getElementById(id);
+      if(!target)return;
+      var header=document.querySelector('.topbar');
+      var offset=(header?header.getBoundingClientRect().height:0)+24;
+      var top=target.getBoundingClientRect().top+window.scrollY-offset;
+      window.scrollTo({top:Math.max(0,top),left:0,behavior:'auto'});
+    }
+    window.addEventListener('hashchange',function(){requestAnimationFrame(alignArticleHash);});
+    window.addEventListener('load',function(){requestAnimationFrame(alignArticleHash);setTimeout(alignArticleHash,180);});
+    requestAnimationFrame(alignArticleHash);
+    setTimeout(alignArticleHash,420);
+  })();
+  </script>
 </body>
 </html>
