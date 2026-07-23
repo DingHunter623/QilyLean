@@ -1,6 +1,7 @@
 (function(){
 'use strict';
 var ORIGIN='https://qilylean.com';
+var BRAND='QilyLean 启力精益';
 var map={'home.html':'/','daily-insights.html':'/qilylean/daily-insights.html','papers.html':'/qilylean/papers.html','lean-tools.html':'/qilylean/lean-tools.html','lean-knowledge.html':'/qilylean/lean-knowledge.html','execution-loop.html':'/qilylean/execution-loop.html','gbt2828.html':'/qilylean/gbt2828.html'};
 var name=(location.pathname.split('/').pop()||'home.html').toLowerCase();
 var canonical=ORIGIN+(map[name]||('/'+name));
@@ -14,11 +15,11 @@ function fixSmedAnchorView(){
   style.textContent='.article#smed{border-top:0!important}';
   document.head.appendChild(style);
 }
-var title=document.title||'QilyLean';
-var desc=(document.head.querySelector('meta[name="description"]')||{}).content||'QilyLean 制造改善实践平台，聚焦精益生产、工业工程、数智化工厂、MES、ERP、VSM与SMED。';
+var title=document.title||BRAND;
+var desc=(document.head.querySelector('meta[name="description"]')||{}).content||'QilyLean启力精益制造改善实践平台，聚焦精益生产、工程改善、工业工程、数智化工厂、MES、ERP、VSM与SMED。';
 link('canonical',canonical);
 link('manifest','/site.webmanifest');
-meta('property','og:site_name','QilyLean');
+meta('property','og:site_name',BRAND);
 meta('property','og:type','website');
 meta('property','og:title',title);
 meta('property','og:description',desc);
@@ -26,6 +27,8 @@ meta('property','og:url',canonical);
 meta('name','twitter:card','summary');
 meta('name','twitter:title',title);
 meta('name','twitter:description',desc);
+meta('name','application-name',BRAND);
+meta('name','apple-mobile-web-app-title','启力精益');
 meta('name','theme-color','#0f4b5a');
 fixSmedAnchorView();
 if(/(?:home|home-live|home-fixed)\.html$|qilylean\/?$/i.test(location.pathname))load('project-mold-video.js?v=20260718','moldWarehouseVideoScript');
