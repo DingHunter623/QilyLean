@@ -1,12 +1,12 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanSiteNavigationV6) return;
-  window.__qilyLeanSiteNavigationV6 = true;
+  if (window.__qilyLeanSiteNavigationV7) return;
+  window.__qilyLeanSiteNavigationV7 = true;
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260723-speed-v4';
+  var SHARED_ASSET_VERSION = '20260723-site-search-v1';
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
   var routes = [
     ['首页', '/'],
@@ -179,8 +179,25 @@
     document.body.appendChild(script);
   }
 
+  function loadSiteSearch(callback) {
+    if (window.QilySiteSearch) {
+      if (callback) callback();
+      return;
+    }
+    var existing = document.getElementById('qilySiteSearchScript');
+    if (existing) {
+      if (callback) existing.addEventListener('load', callback, { once: true });
+      return;
+    }
+    var script = document.createElement('script');
+    script.id = 'qilySiteSearchScript';
+    script.src = '/site-search.js?v=20260723-site-search-v1';
+    if (callback) script.addEventListener('load', callback, { once: true });
+    document.body.appendChild(script);
+  }
+
   function buildDock() {
-    ['floatDock', 'wxMask', 'shareMask', 'qilyDockToast'].forEach(function (id) {
+    ['floatDock', 'wxMask', 'shareMask', 'qilySearchMask', 'qilyDockToast'].forEach(function (id) {
       var old = document.getElementById(id);
       if (old) old.remove();
     });
@@ -193,6 +210,7 @@
     dock.setAttribute('aria-label', '快捷服务');
     dock.innerHTML = [
       '<button class="qily-float-btn qily-float-home" data-action="home" type="button">首页</button>',
+      '<button class="qily-float-btn qily-float-search" data-action="search" type="button">本站<br>搜索</button>',
       '<button class="qily-float-btn qily-float-back" data-action="back" type="button">返回<br>上一层</button>',
       '<button class="qily-float-btn qily-float-current" data-action="current" type="button">分享<br>当前页</button>',
       '<button class="qily-float-btn qily-float-share" data-action="share" type="button">分享</button>',
@@ -218,10 +236,17 @@
     toast.setAttribute('role', 'status');
     document.body.appendChild(toast);
     loadWeChatQr();
+    loadSiteSearch();
 
-    function closeMask(mask) { mask.classList.remove('show'); }
+    function closeMask(mask) { if (mask) mask.classList.remove('show'); }
     function runAction(action) {
       if (action === 'home') location.href = '/';
+      else if (action === 'search') {
+        loadSiteSearch(function () {
+          if (window.QilySiteSearch) window.QilySiteSearch.open();
+          else showToast('本站搜索加载失败，请稍后重试');
+        });
+      }
       else if (action === 'back') location.href = backUrl;
       else if (action === 'current') shareCurrentPage();
       else if (action === 'share') shareMask.classList.add('show');
@@ -311,6 +336,7 @@
       if (event.key !== 'Escape') return;
       closeMask(shareMask);
       closeMask(contactMask);
+      closeMask(document.getElementById('qilySearchMask'));
     });
   }
 
