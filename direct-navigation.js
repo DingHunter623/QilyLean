@@ -11,7 +11,7 @@
   if (!document.getElementById('qilyLeanBrandIdentityScript')) {
     var brandScript = document.createElement('script');
     brandScript.id = 'qilyLeanBrandIdentityScript';
-    brandScript.src = '/brand-identity.js?v=20260723-qilylean-brand-v1';
+    brandScript.src = '/brand-identity.js?v=20260723-qilylean-brand-v2';
     document.body.appendChild(brandScript);
   }
 })();
