@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-labelledby="title desc">
+<title id="title">从行动计划到实绩验证的改善闭环</title><desc id="desc">基准、执行、验证、固化四个阶段形成可追溯的制造改善闭环</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b3f4b"/><stop offset="1" stop-color="#177f87"/></linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe39b"/><stop offset="1" stop-color="#caa15f"/></linearGradient>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#062a32" flood-opacity=".26"/></filter>
+  <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0l12 6-12 6z" fill="#ffe39b"/></marker>
+</defs>
+<rect width="800" height="800" rx="40" fill="url(#bg)"/>
+<rect x="205" y="58" width="390" height="48" rx="24" fill="#ffffff" fill-opacity=".12" stroke="#ffffff" stroke-opacity=".34"/>
+<text x="400" y="90" text-anchor="middle" fill="#d8efeb" font-size="21" font-weight="800" letter-spacing="2">CLOSED-LOOP MANAGEMENT</text>
+<text x="400" y="155" text-anchor="middle" fill="#fff" font-size="43" font-weight="900">改善完成 ≠ 行动做完</text>
+<text x="400" y="195" text-anchor="middle" fill="#ffe39b" font-size="25" font-weight="700">从行动计划走向数据验证</text>
+<path d="M400 236C520 236 610 325 610 420" fill="none" stroke="#ffe39b" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M610 446C610 560 520 628 425 628" fill="none" stroke="#ffe39b" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M375 628C270 628 190 555 190 460" fill="none" stroke="#ffe39b" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow)"/>
+<path d="M190 416C190 315 275 236 375 236" fill="none" stroke="#ffe39b" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow)"/>
+<g filter="url(#shadow)">
+  <rect x="250" y="215" width="300" height="112" rx="25" fill="#f6fbfa"/>
+  <rect x="500" y="350" width="210" height="150" rx="25" fill="#f6fbfa"/>
+  <rect x="250" y="550" width="300" height="112" rx="25" fill="#f6fbfa"/>
+  <rect x="90" y="350" width="210" height="150" rx="25" fill="#f6fbfa"/>
+</g>
+<g fill="#caa15f" font-size="20" font-weight="900">
+  <text x="275" y="250">01</text><text x="525" y="386">02</text><text x="275" y="587">03</text><text x="115" y="386">04</text>
+</g>
+<g fill="#0f4b5a" font-weight="900" text-anchor="middle">
+  <text x="400" y="270" font-size="34">基准状态</text><text x="400" y="304" font-size="19">问题 · 目标 · 判定口径</text>
+  <text x="605" y="420" font-size="34">执行记录</text><text x="605" y="455" font-size="19">责任 · 时间 · 措施</text>
+  <text x="400" y="608" font-size="34">结果验证</text><text x="400" y="640" font-size="19">计划 · 实绩 · 复发</text>
+  <text x="195" y="420" font-size="34">标准固化</text><text x="195" y="455" font-size="19">标准 · 点检 · 复制</text>
+</g>
+<circle cx="400" cy="425" r="88" fill="url(#gold)" filter="url(#shadow)"/>
+<path d="M360 426l27 27 58-67" fill="none" stroke="#17322d" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="400" y="528" text-anchor="middle" fill="#d8efeb" font-size="21" font-weight="800">PDCA × 5W2H × DATA</text>
+<rect x="106" y="700" width="588" height="54" rx="27" fill="#062f38" fill-opacity=".58"/>
+<text x="400" y="735" text-anchor="middle" fill="#fff" font-size="25" font-weight="800">用实绩证明结果 · 用标准防止复发</text>
+</svg>
