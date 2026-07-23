@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanSiteNavigationV5) return;
-  window.__qilyLeanSiteNavigationV5 = true;
+  if (window.__qilyLeanSiteNavigationV6) return;
+  window.__qilyLeanSiteNavigationV6 = true;
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
@@ -14,7 +14,8 @@
     ['履历主线', '/experience/'],
     ['改善经验', '/improvements/'],
     ['知识分享', '/knowledge/'],
-    ['行走印记', '/moments/']
+    ['行走印记', '/moments/'],
+    ['项目合作', '/cooperation/']
   ];
 
   function normalizedPath(path) {
@@ -30,6 +31,7 @@
     if (path.indexOf('/improvements/') === 0 || /\/qilylean\/papers\.html$/.test(path)) return '/improvements/';
     if (path.indexOf('/knowledge/') === 0 || path.indexOf('/qilylean/daily/') === 0 || /\/qilylean\/(?:lean-knowledge|daily-insights|lean-tools|execution-loop|reference-|gbt2828)/.test(path)) return '/knowledge/';
     if (path.indexOf('/moments/') === 0 || /\/moments\.html$/.test(path)) return '/moments/';
+    if (path.indexOf('/cooperation/') === 0) return '/cooperation/';
     return '';
   }
 
