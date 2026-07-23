@@ -7,7 +7,7 @@
   var BRAND = 'QilyLean｜启力精益';
   var BRAND_PLAIN = 'QilyLean 启力精益';
   var TITLE = 'QilyLean｜启力精益｜精益生产、工程改善与数智工厂';
-  var DESCRIPTION = 'QilyLean启力精益是丁启利发起的制造改善与创业项目窗口，聚焦精益生产、工程改善、工业工程、数智化工厂、新工厂规划与目视化项目交付。';
+  var DESCRIPTION = 'QilyLean启力精益是丁启利发起的制造改善与精益赋能窗口，聚焦精益生产、工程改善、工业工程、数智化工厂、新工厂规划与目视化项目交付。';
   var SLOGAN = '让改善形成体系，让精益产生力量';
   var POSITIONING = '精益生产 · 工程改善 · 数智工厂';
   var HOME_URL = 'https://qilylean.com/';
@@ -69,7 +69,7 @@
     setText(document.querySelector('.hero h1'), BRAND);
     setText(
       document.querySelector('.hero .lead'),
-      '启精益之智，聚企业之力。' + BRAND_PLAIN + '是由丁启利发起的制造改善与创业项目窗口，依托20年制造业工程技术、精益改善与咨询交付经验，聚焦PQCD改善、数智化工厂落地、目视化项目交付与精益体系建设。' + SLOGAN + '。'
+      '启精益之智，聚企业之力。' + BRAND_PLAIN + '是由丁启利发起的制造改善与精益赋能窗口，依托20年制造业工程技术、精益改善与咨询交付经验，聚焦PQCD改善、数智化工厂落地、目视化项目交付与精益体系建设。' + SLOGAN + '。'
     );
     setText(document.querySelector('.assistant-panel .panel-head'), '启力精益 AI 能力问答');
 
