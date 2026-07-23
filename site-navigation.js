@@ -48,12 +48,12 @@
   function addStylesheet() {
     var current = document.querySelector('link[href^="/site-shell.css"]');
     if (current) {
-      current.href = '/site-shell.css?v=20260722-modules-v4';
+      current.href = '/site-shell.css?v=20260723-nav-layout-v1';
       return;
     }
     var link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = '/site-shell.css?v=20260722-modules-v4';
+    link.href = '/site-shell.css?v=20260723-nav-layout-v1';
     document.head.appendChild(link);
   }
 
