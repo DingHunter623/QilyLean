@@ -475,12 +475,17 @@
   .module-media { margin: -20px -20px 18px; }
 }
 
-.capability-map > .module-card {
+.module-grid > .module-card {
   display: flex;
   flex-direction: column;
 }
 
-.capability-map > .module-card > .module-result { margin-top: auto; }
+.module-grid > .module-card > .module-actions {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.module-grid > .module-card > .module-result:last-child { margin-top: auto; }
 
 @media (min-width: 621px) {
   .qily-global-nav { gap: 1px !important; }
