@@ -141,7 +141,7 @@
                 <button class="topic-control" type="button" data-topic="digital">数智化工厂</button>
                 <button class="topic-control" type="button" data-topic="factory">新工厂规划</button>
                 <button class="topic-control" type="button" data-topic="visual">目视化交付</button>
-                <button class="topic-control" type="button" data-topic="fit">岗位匹配</button>
+                <button class="topic-control" type="button" data-topic="fit">能力协同</button>
               </div>
               <div class="answer" id="answer" aria-live="polite"></div>
             </div>
@@ -242,13 +242,13 @@
 【专业化】将目视化与6S、安全、质量、设备、物流、仓储、工位和DMS结合，建立区域线、通道线、库位编码、状态牌、点检表、安灯/异常标识、标准作业、看板层级及颜色语义；同时考虑观看距离、字体尺寸、安装高度、材质耐久、更新频率和现场环境，确保“看得见、看得懂、用得上”。
 
 【标准化】统一VI规范、编号规则、模板、尺寸、材料、安装、验收、维护和变更机制，明确看板Owner与更新周期，并通过稽查验证实际使用效果。目视化最终要成为现场协同和异常闭环的基础设施，而不是一次性广告工程。`,
-      fit:`丁启利适合精益经理、工程部经理、改善负责人、制造工程管理、数智化工厂推进及运营改善类岗位，尤其适合需要“从混乱现状建立体系，并把改善项目真正落地”的制造企业。
+      fit:`丁启利的工程与精益能力可协同精益生产、工程改善、制造运营、数智化工厂、新工厂规划与目视化交付等场景，重点支持从现场问题识别、方案设计到验证固化的全过程。
 
 【简单化能力】能够快速进入现场，把高层目标转化为车间听得懂、部门做得到的流程、数据、责任和行动，减少空泛方案与反复沟通。
 
 【专业化能力】具备IE/PE/ME/TE/NPI协同、VSM、标准工时、OEE、SMED、线平衡、质量改善、Factory Layout、ERP/MES/APS基础数据及项目管理的复合能力，可以同时理解技术、生产、质量、PMC和经营语言。
 
-【标准化能力】擅长把项目成果沉淀为制度、SOP/SWI、数据标准、看板机制、审核规则和团队能力，形成可复制的组织方法。其职业价值可以概括为：体系搭建、项目攻坚、跨部门协同、数字化转化和机制固化。`
+【标准化能力】擅长把项目成果沉淀为制度、SOP/SWI、数据标准、看板机制、审核规则和团队能力，形成可复制的组织方法。其专业价值可以概括为：体系搭建、项目攻坚、跨部门协同、数字化转化和机制固化。`
     };
     const prompts={
       intro:'请用一分钟介绍丁启利的职业能力。',
@@ -258,7 +258,7 @@
       digital:'丁启利如何推进数智化工厂建设？',
       factory:'丁启利如何开展新工厂规划？',
       visual:'丁启利如何推进目视化项目交付？',
-      fit:'丁启利适合什么岗位，为什么？'
+      fit:'丁启利的能力适合协同哪些制造改善场景？'
     };
     const question=document.getElementById('question');
     const answer=document.getElementById('answer');
@@ -276,7 +276,7 @@
       if(/新工厂|Layout|布局|物流动线|产线规划/i.test(text))return'factory';
       if(/目视化|标识|标牌|看板|6S|通道|库位/i.test(text))return'visual';
       if(/数智化|数字化工厂|智能工厂|ERP|MES|APS|标准工时/i.test(text))return'digital';
-      if(/岗位|匹配|求职|精益经理|工程部经理|改善负责人/i.test(text))return'fit';
+      if(/能力协同|场景适配|项目协同|精益赋能|制造改善/i.test(text))return'fit';
       return'intro';
     }
     controls.forEach(control=>control.addEventListener('click',()=>setTopic(control.dataset.topic)));
