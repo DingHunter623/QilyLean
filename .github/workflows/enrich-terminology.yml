@@ -1,0 +1,56 @@
+name: Enrich terminology dictionary
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/enrich-terminology.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: enrich-terminology-main
+  cancel-in-progress: false
+
+jobs:
+  enrich:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enrich terminology dictionary
+        run: node scripts/enrich-terminology.js
+
+      - name: Validate terminology additions
+        shell: bash
+        run: |
+          grep -q '<div class="term-code">8S</div>' knowledge/terminology.html
+          grep -q '<div class="term-code">TPS</div>' knowledge/terminology.html
+          grep -q '<div class="term-code">FMEA</div>' knowledge/terminology.html
+          grep -q '<div class="term-code">品质三检</div>' knowledge/terminology.html
+          grep -q 'Cp＝(USL−LSL)/(6σ)' knowledge/terminology.html
+          grep -q 'Cpk＜1.00' knowledge/terminology.html
+          grep -q 'cards.length' knowledge/terminology.html
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Terminology dictionary is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add knowledge/terminology.html knowledge/index.html
+          git commit -m "feat: enrich manufacturing and quality terminology [skip ci]"
+          git push
