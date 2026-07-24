@@ -7,6 +7,7 @@
     '/',
     '/ai.html',
     '/capabilities/',
+    '/tools/times26001/',
     '/projects/',
     '/experience/',
     '/improvements/',
@@ -84,7 +85,7 @@
 
   function loadUrlList() {
     if (state.urls) return Promise.resolve(state.urls);
-    return fetch('/sitemap.xml?v=20260724-site-search-v2', {
+    return fetch('/sitemap.xml?v=20260724-site-search-v3', {
       credentials: 'same-origin',
       cache: 'force-cache',
       headers: { Accept: 'application/xml,text/xml;q=0.9,*/*;q=0.8' }
