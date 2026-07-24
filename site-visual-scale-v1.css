@@ -1,0 +1,119 @@
+/* QilyLean 2026-07-24：全站阅读尺度与首页首屏平衡补丁 */
+
+/* ---------- 全站导航与文字尺度 ---------- */
+.module-page{
+  font-size:19px!important;
+  line-height:1.8!important;
+}
+.qily-brand{font-size:19px!important}
+.qily-site-header .site-nav{font-size:15.5px!important}
+.module-eyebrow{font-size:16px!important}
+.module-hero h1{font-size:clamp(42px,5.1vw,70px)!important;line-height:1.06!important}
+.module-lead{font-size:clamp(21px,1.75vw,26px)!important;line-height:1.78!important}
+.module-subnav a,.module-action{font-size:17.5px!important}
+.module-heading h2,.module-page .head h2{font-size:clamp(32px,3.6vw,48px)!important}
+.module-heading p,.module-page .head p{font-size:20px!important;line-height:1.76!important}
+.module-card{padding:26px!important}
+.module-card small{font-size:16px!important}
+.module-card h2,.module-card h3{font-size:24px!important;line-height:1.36!important}
+.module-card h4{font-size:19px!important}
+.module-card p,.module-card li{font-size:19.5px!important;line-height:1.8!important}
+.module-result{font-size:18.5px!important;line-height:1.72!important}
+.module-media{margin:-26px -26px 19px!important}
+.module-media figcaption{font-size:15px!important}
+.module-actions a{font-size:17.5px!important}
+.module-note{font-size:18.5px!important;line-height:1.72!important}
+.module-footer{font-size:18px!important}
+.experience-lock p{font-size:20px!important}
+.career-overview strong{font-size:21px!important}
+.career-overview span{font-size:19.5px!important}
+.project-list-content h3{font-size:22px!important}
+.project-list-content>p{font-size:17px!important;line-height:1.7!important}
+.project-card-brief span{font-size:15.5px!important;line-height:1.62!important}
+.project-story p,.project-story li{font-size:18.5px!important;line-height:1.76!important}
+.project-result-panel p{font-size:18.5px!important;line-height:1.76!important}
+
+@media(min-width:621px){
+  .qily-global-nav a{font-size:17.5px!important;padding:7px 8px!important}
+}
+
+/* ---------- 首页首屏：文字、头像、问答模块重新建立统一版心 ---------- */
+.qily-home-balanced{
+  font-size:19px!important;
+  line-height:1.8!important;
+}
+.qily-home-balanced .topbar{padding:11px clamp(18px,4vw,56px)!important}
+.qily-home-balanced .brand{font-size:19px!important}
+.qily-home-balanced .nav{font-size:16px!important}
+.qily-home-balanced .hero{padding:clamp(34px,4.5vw,58px) clamp(18px,4vw,58px)!important}
+.qily-home-balanced .hero-grid{
+  width:min(1220px,100%)!important;
+  grid-template-columns:minmax(0,1fr) minmax(280px,320px)!important;
+  gap:clamp(24px,3vw,42px)!important;
+  align-items:start!important;
+}
+.qily-home-balanced .hero-grid>div:first-child{min-width:0}
+.qily-home-balanced .hero-grid>aside{
+  width:100%;
+  max-width:320px;
+  justify-self:end;
+}
+.qily-home-balanced .eyebrow{font-size:16px!important}
+.qily-home-balanced h1{font-size:clamp(46px,4.9vw,74px)!important;line-height:1.04!important}
+.qily-home-balanced .lead{font-size:clamp(21px,1.62vw,25px)!important;line-height:1.76!important}
+.qily-home-balanced .group-label{font-size:15.5px!important}
+.qily-home-balanced .tags{gap:10px!important}
+.qily-home-balanced .tags li{font-size:16px!important;padding:8px 13px!important}
+.qily-home-balanced .button{font-size:17px!important;min-height:46px!important}
+.qily-home-balanced .portrait-frame{
+  width:min(300px,100%)!important;
+  margin:0 0 0 auto!important;
+}
+.qily-home-balanced .portrait-frame img{width:100%!important;height:auto!important}
+.qily-home-balanced .portrait-badge div{padding:10px 11px!important}
+.qily-home-balanced .portrait-badge strong{font-size:18.5px!important}
+.qily-home-balanced .portrait-badge span{font-size:13.5px!important;line-height:1.45!important}
+.qily-home-balanced .hero-grid>.assistant-panel{
+  grid-column:1/-1!important;
+  width:100%!important;
+  margin-top:0!important;
+}
+.qily-home-balanced .panel-head{font-size:23px!important;padding:15px 20px!important}
+.qily-home-balanced .panel-body{padding:18px 22px 22px!important}
+.qily-home-balanced label{font-size:16px!important}
+.qily-home-balanced textarea{font-size:20px!important;min-height:82px!important}
+.qily-home-balanced .topic-control{font-size:15.5px!important}
+.qily-home-balanced .answer{font-size:21px!important;line-height:1.84!important;padding:20px!important}
+.qily-home-balanced .inner{width:min(1220px,100%)!important}
+.qily-home-balanced .section h2{font-size:clamp(33px,3.2vw,47px)!important}
+.qily-home-balanced .head p{font-size:20px!important;line-height:1.76!important}
+.qily-home-balanced .metric{padding:22px!important}
+.qily-home-balanced .metric span{font-size:17.5px!important;line-height:1.68!important}
+.qily-home-balanced .metric em{font-size:16px!important;line-height:1.62!important}
+.qily-home-balanced .footer{font-size:18px!important}
+
+@media(max-width:1120px){
+  .qily-home-balanced .hero-grid{
+    width:min(900px,100%)!important;
+    grid-template-columns:1fr!important;
+  }
+  .qily-home-balanced .hero-grid>aside{
+    max-width:300px;
+    justify-self:center;
+  }
+  .qily-home-balanced .hero-grid>.assistant-panel{grid-column:1!important}
+}
+
+@media(max-width:620px){
+  .module-page{font-size:18px!important}
+  .qily-site-header .site-nav a{font-size:11px!important}
+  .module-card{padding:21px!important}
+  .module-media{margin:-21px -21px 18px!important}
+  .module-card p,.module-card li{font-size:18px!important}
+  .module-heading p,.module-page .head p{font-size:18.5px!important}
+  .qily-home-balanced{font-size:18px!important}
+  .qily-home-balanced .nav{font-size:14px!important}
+  .qily-home-balanced .portrait-frame{width:min(280px,100%)!important;margin:auto!important}
+  .qily-home-balanced .answer{font-size:19px!important}
+  .qily-home-balanced .panel-body{padding:16px!important}
+}
