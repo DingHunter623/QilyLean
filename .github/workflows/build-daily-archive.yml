@@ -33,6 +33,21 @@ jobs:
       - name: Rebuild archive, adjacent links and sitemap
         run: node scripts/build-daily-archive.js
 
+      - name: Unify Daily Engineering Brief brand
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          files = [Path('qilylean/daily-insights.html'), *Path('qilylean/daily').glob('*.html')]
+          old = '>制造改善知识分享<'
+          new = '>QilyLean｜启力精益<'
+          for file in files:
+              text = file.read_text(encoding='utf-8')
+              if old in text:
+                  file.write_text(text.replace(old, new), encoding='utf-8')
+          PY
+
       - name: Validate generated archive
         shell: bash
         run: |
@@ -44,6 +59,10 @@ jobs:
           }
           grep -q "2026-07-24" qilylean/daily-insights.html || {
             echo "Latest daily brief is missing from daily-insights.html"
+            exit 1
+          }
+          grep -q "QilyLean｜启力精益" qilylean/daily-insights.html || {
+            echo "Daily Engineering Brief brand is not unified"
             exit 1
           }
 
