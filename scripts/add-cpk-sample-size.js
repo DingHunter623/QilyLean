@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+// One-time targeted update: add minimum and recommended Cpk sample-size guidance.
 const fs = require('fs');
 const path = require('path');
 
