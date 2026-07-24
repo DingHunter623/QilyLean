@@ -7,6 +7,7 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const origin = 'https://qilylean.com';
 const today = '2026-07-24';
+// One source of truth for public-route completeness, global navigation and discoverability.
 
 const projectRoutes = [
   '/projects/automotive-lean/',
