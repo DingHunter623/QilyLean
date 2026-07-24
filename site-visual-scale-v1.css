@@ -32,6 +32,7 @@
 .project-card-brief span{font-size:15.5px!important;line-height:1.62!important}
 .project-story p,.project-story li{font-size:18.5px!important;line-height:1.76!important}
 .project-result-panel p{font-size:18.5px!important;line-height:1.76!important}
+.project-fact-timeline strong{font-size:16px!important;white-space:nowrap;letter-spacing:-.25px}
 
 @media(min-width:621px){
   .qily-global-nav a{font-size:17.5px!important;padding:7px 8px!important}
@@ -73,6 +74,8 @@
 .qily-home-balanced .portrait-badge div{padding:10px 11px!important}
 .qily-home-balanced .portrait-badge strong{font-size:18.5px!important}
 .qily-home-balanced .portrait-badge span{font-size:13.5px!important;line-height:1.45!important}
+.qily-home-balanced .portrait-badge div:nth-child(2){padding-left:8px!important;padding-right:8px!important}
+.qily-home-balanced .portrait-badge div:nth-child(2) span{font-size:12.25px!important;white-space:nowrap!important;letter-spacing:-.25px!important}
 .qily-home-balanced .hero-grid>.assistant-panel{
   grid-column:1/-1!important;
   width:100%!important;
@@ -111,6 +114,7 @@
   .module-media{margin:-21px -21px 18px!important}
   .module-card p,.module-card li{font-size:18px!important}
   .module-heading p,.module-page .head p{font-size:18.5px!important}
+  .project-fact-timeline strong{font-size:15px!important;white-space:normal}
   .qily-home-balanced{font-size:18px!important}
   .qily-home-balanced .nav{font-size:14px!important}
   .qily-home-balanced .portrait-frame{width:min(280px,100%)!important;margin:auto!important}
