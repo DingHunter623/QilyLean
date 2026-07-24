@@ -69,7 +69,7 @@
     setText(document.querySelector('.hero h1'), BRAND);
     setText(
       document.querySelector('.hero .lead'),
-      '“启精益之智，聚企业之力。”' + BRAND_PLAIN + '是由丁启利发起的制造改善与精益赋能窗口，依托20年制造业工程技术、精益改善与咨询交付经验，聚焦PQCD改善、数智化工厂规划、目视化项目交付与精益体系建设。' + SLOGAN + '。'
+      '“启精益之智，聚企业之力。”' + BRAND_PLAIN + '是由丁启利发起的制造改善与精益赋能窗口。依托20年制造业工程技术与精益改善履历，其中9年任职欧美企业、4年担任上市公司工程部长，先后累计6年从事咨询交付；聚焦PQCD改善、数智化工厂规划、目视化项目交付与精益体系建设。' + SLOGAN + '。'
     );
     setText(document.querySelector('.assistant-panel .panel-head'), '启力精益 AI 能力问答');
 
