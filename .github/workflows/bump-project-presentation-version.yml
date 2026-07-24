@@ -1,0 +1,53 @@
+name: Refresh project presentation version
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/bump-project-presentation-version.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: project-presentation-version-main
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Refresh project stylesheet version
+        run: node scripts/bump-project-presentation-version.js
+
+      - name: Validate project presentation standard
+        shell: bash
+        run: |
+          count=$(grep -R -l "project-presentation-v3" projects/*/index.html projects/index.html | wc -l)
+          test "$count" -ge 7
+          grep -q "project-list-thumb" projects/project-pages.css
+          grep -q "project-detail-page .module-hero h1" projects/project-pages.css
+
+      - name: Commit refreshed project pages
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Project pages already reference the latest presentation standard."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add projects/index.html projects/*/index.html
+          git commit -m "style: refresh project presentation standard [skip ci]"
+          git push
