@@ -32,7 +32,7 @@
   if (!document.getElementById('qilyLeanBrandIdentityScript')) {
     var brandScript = document.createElement('script');
     brandScript.id = 'qilyLeanBrandIdentityScript';
-    brandScript.src = '/brand-identity.js?v=20260723-home-copy-v3';
+    brandScript.src = '/brand-identity.js?v=20260724-career-v1';
     document.body.appendChild(brandScript);
   }
 
