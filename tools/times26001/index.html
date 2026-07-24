@@ -4,16 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Times26001｜思大时间管理与IE分段计时工具</title>
-<meta name="description" content="Times26001是一款面向日常时间管理与IE现场测时的移动端工具，集成北京时间、万年历、闹钟提醒、秒表分段、总时长复制、倒计时、黄历与节气信息。">
+<meta name="description" content="Times26001是一款面向日常时间管理与IE现场测时的移动端工具，集成北京时间、万年历、闹钟提醒、秒表分段、总时长复制、倒计时、黄历与节气信息，Android版现已开放直接下载。">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://qilylean.com/tools/times26001/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="QilyLean">
 <meta property="og:title" content="Times26001｜思大时间管理与IE分段计时工具">
-<meta property="og:description" content="北京时间、万年历、闹钟提醒、秒表分段、总时长复制、倒计时与黄历节气，一套兼顾日常使用和IE测时的移动端时间工具。">
+<meta property="og:description" content="北京时间、万年历、闹钟提醒、秒表分段、总时长复制、倒计时与黄历节气，一套兼顾日常使用和IE测时的移动端时间工具，Android版可直接下载。">
 <meta property="og:url" content="https://qilylean.com/tools/times26001/">
 <meta property="og:image" content="https://qilylean.com/assets/tools/times26001-overview.svg">
-<link rel="stylesheet" href="/site-shell.css?v=20260724-times26001-v1">
+<link rel="stylesheet" href="/site-shell.css?v=20260724-times26001-v2">
 <style>
 :root{--tool-red:#ef4e47;--tool-soft:#fff3ef;--tool-deep:#0f4b5a;--tool-teal:#178b94;--tool-gold:#caa15f;--tool-line:#d5e4e3;--tool-muted:#5f7474}
 .tool-hero{padding:clamp(52px,7vw,92px) clamp(18px,5vw,72px);color:#fff;background:linear-gradient(125deg,#0b4553,#177f87 58%,#2c6875)}
@@ -25,11 +25,12 @@
 .tool-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:24px}
 .tool-actions a,.tool-actions button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 18px;border:1px solid rgba(255,227,155,.56);border-radius:999px;color:#fff;background:rgba(255,255,255,.08);font:inherit;font-weight:900;text-decoration:none;cursor:pointer}
 .tool-actions .primary{color:#17231e;background:linear-gradient(135deg,#ffe39b,#f5b64b)}
+.tool-actions .download{color:#fff;border-color:#ff817a;background:linear-gradient(135deg,#ef4e47,#c93836);box-shadow:0 12px 28px rgba(80,16,18,.24)}
 .tool-visual{overflow:hidden;border:1px solid rgba(255,255,255,.32);border-radius:26px;background:#fff;box-shadow:0 24px 70px rgba(6,42,50,.28)}
 .tool-visual img{display:block;width:100%;height:auto}
 .tool-section{padding:clamp(48px,6vw,82px) clamp(18px,5vw,72px);background:#fff;border-bottom:1px solid var(--tool-line)}
 .tool-section.alt{background:#eef7f5}
-.tool-heading{max-width:980px;margin-bottom:28px}
+.tool-heading{max-width:1080px;margin-bottom:28px}
 .tool-heading h2{margin:0 0 11px;color:var(--tool-deep);font-size:clamp(33px,3.6vw,48px)}
 .tool-heading p{margin:0;color:var(--tool-muted);font-size:20px;line-height:1.76}
 .tool-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
@@ -43,19 +44,23 @@
 .scenario-card{padding:26px;border:1px solid var(--tool-line);background:#fff}
 .scenario-card h3{margin:0 0 10px;color:var(--tool-deep);font-size:27px}
 .scenario-card li{margin:8px 0;color:var(--tool-muted);font-size:18px;line-height:1.7}
+.download-panel{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center;padding:28px;border:1px solid #efc5c1;border-left:7px solid var(--tool-red);background:linear-gradient(135deg,#fff,#fff5f2)}
+.download-panel h3{margin:0 0 8px;color:var(--tool-deep);font-size:27px}
+.download-panel p{margin:0;color:#526969;font-size:18.5px;line-height:1.76}
+.download-panel a{display:inline-flex;align-items:center;justify-content:center;min-height:52px;padding:11px 22px;border-radius:999px;color:#fff;background:linear-gradient(135deg,#ef4e47,#c93836);font-weight:950;text-decoration:none;white-space:nowrap;box-shadow:0 12px 28px rgba(113,30,31,.2)}
 .share-copy{padding:26px;border-left:6px solid var(--tool-gold);background:#fff}
 .share-copy h3{margin:0 0 10px;color:var(--tool-deep);font-size:25px}
 .share-copy p{margin:0;color:#355;line-height:1.8;font-size:19px}
 .tool-note{margin-top:18px;padding:18px 20px;border:1px solid #ecd9ae;background:#fff8e4;color:#60491c;line-height:1.72}
 .status{display:inline-block;margin-left:10px;color:#1f714f;font-weight:900}
-@media(max-width:900px){.tool-hero-grid,.tool-grid,.tool-scenario{grid-template-columns:1fr}.tool-visual{max-width:720px;margin:auto}}
-@media(max-width:620px){.tool-hero h1{font-size:42px}.tool-actions a,.tool-actions button{width:100%}.tool-card,.scenario-card,.share-copy{padding:21px}.tool-heading p{font-size:18.5px}}
+@media(max-width:900px){.tool-hero-grid,.tool-grid,.tool-scenario{grid-template-columns:1fr}.tool-visual{max-width:720px;margin:auto}.download-panel{grid-template-columns:1fr}.download-panel a{justify-self:start}}
+@media(max-width:620px){.tool-hero h1{font-size:42px}.tool-actions a,.tool-actions button,.download-panel a{width:100%}.tool-card,.scenario-card,.share-copy,.download-panel{padding:21px}.tool-heading p{font-size:18.5px}}
 </style>
 </head>
 <body class="module-page">
 <header class="qily-site-header"><a class="qily-brand" href="/">QilyLean｜启力精益</a><nav class="site-nav" aria-label="网站导航"><a href="/">首页</a><a href="/ai.html">QilyLean AI</a><a href="/capabilities/">能力画像</a><a href="/experience/">履历主线</a><a href="/improvements/">改善经验</a><a href="/knowledge/">知识分享</a><a href="/moments/">行走印记</a><a href="/cooperation/">项目合作</a></nav></header>
 <main>
-<section class="tool-hero"><div class="tool-inner tool-hero-grid"><div><span class="tool-eyebrow">DIGITAL TOOL / TIME / CALENDAR / IE MEASUREMENT</span><h1>Times26001</h1><p class="tool-lead">思大时间管理是一款兼顾日常时间规划与工业工程现场测时的移动端工具。把北京时间、万年历、闹钟提醒、秒表分段、倒计时、黄历节气及数据复制整合在一个APP中。</p><div class="tool-actions"><a class="primary" href="#features">查看核心功能</a><button id="copyIntro" type="button">复制分享简介</button><button id="copyUrl" type="button">复制本页网址</button><span class="status" id="copyStatus"></span></div></div><figure class="tool-visual"><img src="/assets/tools/times26001-overview.svg?v=20260724-times26001-v1" alt="Times26001思大时间管理应用功能概览" width="1200" height="720"></figure></div></section>
+<section class="tool-hero"><div class="tool-inner tool-hero-grid"><div><span class="tool-eyebrow">DIGITAL TOOL / TIME / CALENDAR / IE MEASUREMENT</span><h1>Times26001</h1><p class="tool-lead">思大时间管理是一款兼顾日常时间规划与工业工程现场测时的移动端工具。把北京时间、万年历、闹钟提醒、秒表分段、倒计时、黄历节气及数据复制整合在一个APP中。</p><div class="tool-actions"><a class="download" href="/Times26001-Android-v1.1.1-IE-Stopwatch.apk" download>Android直接下载 v1.1.1</a><a class="primary" href="#features">查看核心功能</a><button id="copyIntro" type="button">复制分享简介</button><button id="copyUrl" type="button">复制本页网址</button><span class="status" id="copyStatus"></span></div></div><figure class="tool-visual"><img src="/assets/tools/times26001-overview.svg?v=20260724-times26001-v1" alt="Times26001思大时间管理应用功能概览" width="1200" height="720"></figure></div></section>
 
 <section class="tool-section" id="features"><div class="tool-inner"><div class="tool-heading"><h2>核心功能</h2><p>既服务普通用户的时间安排，也为IE工程师、工程管理者和现场改善人员提供可复制的测时记录。</p></div><div class="tool-grid">
 <article class="tool-card"><small>01｜时钟与万年历</small><h3>北京时间与多历法信息</h3><p>大字号24小时制时钟，同屏查看阳历、农历、生肖、周次、节假日、二十四节气与传统时辰。</p></article>
@@ -68,7 +73,9 @@
 
 <section class="tool-section alt"><div class="tool-inner"><div class="tool-heading"><h2>典型应用场景</h2><p>Times26001不是只显示时间的普通时钟，而是把“提醒、记录、测量、复制”组合成可直接使用的时间工作台。</p></div><div class="tool-scenario"><article class="scenario-card"><h3>制造现场与IE分析</h3><ul><li>记录工序总时间及多段作业时间，辅助标准工时和线平衡分析。</li><li>对比改善前后CT、换型、等待或异常处理时间。</li><li>复制分段记录到Excel、聊天工具或工程报告，减少二次抄录。</li><li>为设备点检、首件确认、会议及定时作业设置提醒。</li></ul></article><article class="scenario-card"><h3>日常时间管理</h3><ul><li>统一查看北京时间、日期、农历、节气、节日及周次。</li><li>设置工作日、周末或自定义周期闹钟。</li><li>使用倒计时管理学习、运动、会议和专注时段。</li><li>通过大字号和深浅主题提升不同环境下的可读性。</li></ul></article></div></div></section>
 
-<section class="tool-section"><div class="tool-inner"><div class="tool-heading"><h2>对外分享简介</h2><p>以下文字可直接复制给同事、工程师、企业管理者或朋友。</p></div><div class="share-copy"><h3>Times26001｜思大时间管理</h3><p id="shareText">Times26001是一款兼顾日常时间管理与IE现场测时的移动端APP，集成北京时间、万年历、闹钟提醒、秒表分段、总时长汇总、倒计时、黄历与节气信息。分段记录支持复制，适合标准工时测量、工序分析、改善前后对比，也适用于会议、学习、运动和日常提醒。</p></div><div class="tool-note"><strong>体验说明：</strong>当前版本以测试与持续迭代为主。Android测试安装包及iPhone体验方式可通过微信 <strong>Qily259</strong> 沟通获取，后续公开下载入口将在本页更新。</div></div></section>
+<section class="tool-section"><div class="tool-inner"><div class="tool-heading"><h2>公开下载</h2><p>Android正式使用版本已开放直接下载，无须添加微信或单独索取安装包。</p></div><div class="download-panel"><div><h3>Times26001 Android v1.1.1</h3><p>适用于Android手机和平板，包含时间管理、万年历、闹钟提醒、IE秒表分段、累计总时长、文本复制及倒计时等功能。安装包文件名：Times26001-Android-v1.1.1-IE-Stopwatch.apk。</p></div><a href="/Times26001-Android-v1.1.1-IE-Stopwatch.apk" download>立即下载安装包</a></div><div class="tool-note"><strong>安装提示：</strong>下载完成后点击APK安装。部分Android手机首次安装时会提示“允许安装未知应用”，按系统提示授权当前浏览器或文件管理器即可。该版本已由多位用户实际使用；后续新版本将在本页持续更新。iPhone版本待完成正式分发后另行开放。</div></div></section>
+
+<section class="tool-section alt"><div class="tool-inner"><div class="tool-heading"><h2>对外分享简介</h2><p>以下文字可直接复制给同事、工程师、企业管理者或朋友。</p></div><div class="share-copy"><h3>Times26001｜思大时间管理</h3><p id="shareText">Times26001是一款兼顾日常时间管理与IE现场测时的移动端APP，集成北京时间、万年历、闹钟提醒、秒表分段、总时长汇总、倒计时、黄历与节气信息。分段记录支持复制，适合标准工时测量、工序分析、改善前后对比，也适用于会议、学习、运动和日常提醒。Android v1.1.1现已开放官网直接下载。</p></div></div></section>
 </main>
 <footer class="module-footer"><div class="module-inner"><span>Times26001｜思大时间管理</span><span>时间 · 提醒 · 测时 · 复制</span></div></footer>
 <script>
@@ -80,7 +87,7 @@
   document.getElementById('copyUrl').addEventListener('click',function(){copy(document.title+'\n'+location.href).then(function(){done('标题及网址已复制');});});
 })();
 </script>
-<script src="/site-navigation.js?v=20260724-times26001-v1"></script>
+<script src="/site-navigation.js?v=20260724-times26001-v2"></script>
 <script src="/homepage-music.js?v=20260722-continuous-v3"></script>
 </body>
 </html>
