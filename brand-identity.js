@@ -83,8 +83,8 @@
     if (!panel) return;
 
     setText(panel.querySelector('.qily-modal-brand, .share-brand'), BRAND);
-    setText(panel.querySelector('#qilyShareTitle, h3'), '分享启力精益官网');
-    setText(panel.querySelector('.qily-modal-note'), '扫码或复制官网地址访问 ' + BRAND_PLAIN + '。');
+    setText(panel.querySelector('#qilyShareTitle, h3'), '分享“启力精益”官网');
+    setText(panel.querySelector('.qily-modal-note'), '扫码或复制官网地址访问 “' + BRAND_PLAIN + '”');
 
     var image = panel.querySelector('.qily-share-qr');
     if (image) image.alt = BRAND_PLAIN + '官网二维码';
