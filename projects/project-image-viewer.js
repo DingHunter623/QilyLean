@@ -4,7 +4,7 @@
   if(window.__qilyProjectImageViewerReady)return;
   window.__qilyProjectImageViewerReady=true;
 
-  var images=Array.prototype.slice.call(document.querySelectorAll('.project-list-page main img,.project-detail-page main img')).filter(function(img){
+  var images=Array.prototype.slice.call(document.querySelectorAll('.project-detail-page main img')).filter(function(img){
     return !img.closest('.project-lightbox');
   });
   if(!images.length)return;
@@ -47,115 +47,21 @@
   function imageCaption(img){
     var figure=img.closest('figure');
     var figcaption=figure&&figure.querySelector('figcaption');
-    var card=img.closest('.project-list-card');
-    var heading=card&&card.querySelector('h3');
-    return (figcaption&&figcaption.textContent.trim())||(heading&&heading.textContent.trim())||img.alt||'代表项目图片';
+    return (figcaption&&figcaption.textContent.trim())||img.alt||'代表项目图片';
   }
 
-  function sourceOf(img){
-    return img.currentSrc||img.getAttribute('src')||'';
-  }
+  function sourceOf(img){return img.currentSrc||img.getAttribute('src')||'';}
+  function calculateBaseWidth(){if(!viewer.naturalWidth||!viewer.naturalHeight)return;var maxWidth=Math.max(280,window.innerWidth-(window.innerWidth<620?24:120));var maxHeight=Math.max(240,window.innerHeight-(window.innerWidth<620?150:175));var fit=Math.min(maxWidth/viewer.naturalWidth,maxHeight/viewer.naturalHeight,1);baseWidth=Math.max(1,Math.floor(viewer.naturalWidth*fit));renderZoom();}
+  function renderZoom(){if(!baseWidth)return;viewer.style.width=Math.round(baseWidth*zoom)+'px';viewer.style.maxWidth='none';viewer.style.height='auto';stage.scrollTop=0;stage.scrollLeft=0;}
+  function setZoom(value){zoom=Math.min(4,Math.max(.75,value));renderZoom();}
+  function show(index){activeIndex=(index+images.length)%images.length;var source=images[activeIndex];zoom=1;baseWidth=0;viewer.removeAttribute('style');viewer.alt=source.alt||'代表项目图片';caption.textContent=imageCaption(source);counter.textContent=(activeIndex+1)+' / '+images.length;prevButton.hidden=images.length<2;nextButton.hidden=images.length<2;viewer.src=sourceOf(source);viewer.onload=calculateBaseWidth;}
+  function open(index,trigger){previousFocus=trigger||document.activeElement;show(index);lightbox.classList.add('show');lightbox.setAttribute('aria-hidden','false');document.body.classList.add('project-lightbox-open');lightbox.querySelector('[data-image-action="close"]').focus();}
+  function close(){lightbox.classList.remove('show');lightbox.setAttribute('aria-hidden','true');document.body.classList.remove('project-lightbox-open');viewer.removeAttribute('src');if(previousFocus&&typeof previousFocus.focus==='function')previousFocus.focus();}
 
-  function calculateBaseWidth(){
-    if(!viewer.naturalWidth||!viewer.naturalHeight)return;
-    var maxWidth=Math.max(280,window.innerWidth-(window.innerWidth<620?24:120));
-    var maxHeight=Math.max(240,window.innerHeight-(window.innerWidth<620?150:175));
-    var fit=Math.min(maxWidth/viewer.naturalWidth,maxHeight/viewer.naturalHeight,1);
-    baseWidth=Math.max(1,Math.floor(viewer.naturalWidth*fit));
-    renderZoom();
-  }
-
-  function renderZoom(){
-    if(!baseWidth)return;
-    viewer.style.width=Math.round(baseWidth*zoom)+'px';
-    viewer.style.maxWidth='none';
-    viewer.style.height='auto';
-    stage.scrollTop=0;
-    stage.scrollLeft=0;
-  }
-
-  function setZoom(value){
-    zoom=Math.min(4,Math.max(0.75,value));
-    renderZoom();
-  }
-
-  function show(index){
-    activeIndex=(index+images.length)%images.length;
-    var source=images[activeIndex];
-    var src=sourceOf(source);
-    zoom=1;
-    baseWidth=0;
-    viewer.removeAttribute('style');
-    viewer.alt=source.alt||'代表项目图片';
-    caption.textContent=imageCaption(source);
-    counter.textContent=(activeIndex+1)+' / '+images.length;
-    prevButton.hidden=images.length<2;
-    nextButton.hidden=images.length<2;
-    viewer.src=src;
-    viewer.onload=calculateBaseWidth;
-  }
-
-  function open(index,trigger){
-    previousFocus=trigger||document.activeElement;
-    show(index);
-    lightbox.classList.add('show');
-    lightbox.setAttribute('aria-hidden','false');
-    document.body.classList.add('project-lightbox-open');
-    lightbox.querySelector('[data-image-action="close"]').focus();
-  }
-
-  function close(){
-    lightbox.classList.remove('show');
-    lightbox.setAttribute('aria-hidden','true');
-    document.body.classList.remove('project-lightbox-open');
-    viewer.removeAttribute('src');
-    if(previousFocus&&typeof previousFocus.focus==='function')previousFocus.focus();
-  }
-
-  images.forEach(function(img,index){
-    img.classList.add('project-zoomable');
-    img.setAttribute('tabindex','0');
-    img.setAttribute('role','button');
-    img.setAttribute('title','点击放大查看');
-    img.setAttribute('aria-label','放大查看：'+imageCaption(img));
-    img.addEventListener('click',function(){open(index,img);});
-    img.addEventListener('keydown',function(event){
-      if(event.key==='Enter'||event.key===' '){event.preventDefault();open(index,img);}
-    });
-  });
-
-  lightbox.addEventListener('click',function(event){
-    var action=event.target.closest('[data-image-action]');
-    if(action){
-      var name=action.getAttribute('data-image-action');
-      if(name==='close')close();
-      else if(name==='prev')show(activeIndex-1);
-      else if(name==='next')show(activeIndex+1);
-      else if(name==='zoom-in')setZoom(zoom+0.25);
-      else if(name==='zoom-out')setZoom(zoom-0.25);
-      else if(name==='reset')setZoom(1);
-      else if(name==='original')window.open(sourceOf(images[activeIndex]),'_blank','noopener');
-      return;
-    }
-    if(event.target===lightbox)close();
-  });
-
+  images.forEach(function(img,index){img.classList.add('project-zoomable');img.setAttribute('tabindex','0');img.setAttribute('role','button');img.setAttribute('title','点击放大查看');img.setAttribute('aria-label','放大查看：'+imageCaption(img));img.addEventListener('click',function(){open(index,img);});img.addEventListener('keydown',function(event){if(event.key==='Enter'||event.key===' '){event.preventDefault();open(index,img);}});});
+  lightbox.addEventListener('click',function(event){var action=event.target.closest('[data-image-action]');if(action){var name=action.getAttribute('data-image-action');if(name==='close')close();else if(name==='prev')show(activeIndex-1);else if(name==='next')show(activeIndex+1);else if(name==='zoom-in')setZoom(zoom+.25);else if(name==='zoom-out')setZoom(zoom-.25);else if(name==='reset')setZoom(1);else if(name==='original')window.open(sourceOf(images[activeIndex]),'_blank','noopener');return;}if(event.target===lightbox)close();});
   viewer.addEventListener('dblclick',function(){setZoom(zoom===1?2:1);});
-  viewer.addEventListener('wheel',function(event){
-    if(!lightbox.classList.contains('show'))return;
-    event.preventDefault();
-    setZoom(zoom+(event.deltaY<0?0.15:-0.15));
-  },{passive:false});
-
-  document.addEventListener('keydown',function(event){
-    if(!lightbox.classList.contains('show'))return;
-    if(event.key==='Escape')close();
-    else if(event.key==='ArrowLeft'&&images.length>1)show(activeIndex-1);
-    else if(event.key==='ArrowRight'&&images.length>1)show(activeIndex+1);
-    else if(event.key==='+'||event.key==='=')setZoom(zoom+0.25);
-    else if(event.key==='-')setZoom(zoom-0.25);
-    else if(event.key==='0')setZoom(1);
-  });
-
+  viewer.addEventListener('wheel',function(event){if(!lightbox.classList.contains('show'))return;event.preventDefault();setZoom(zoom+(event.deltaY<0?.15:-.15));},{passive:false});
+  document.addEventListener('keydown',function(event){if(!lightbox.classList.contains('show'))return;if(event.key==='Escape')close();else if(event.key==='ArrowLeft'&&images.length>1)show(activeIndex-1);else if(event.key==='ArrowRight'&&images.length>1)show(activeIndex+1);else if(event.key==='+'||event.key==='=')setZoom(zoom+.25);else if(event.key==='-')setZoom(zoom-.25);else if(event.key==='0')setZoom(1);});
   window.addEventListener('resize',function(){if(lightbox.classList.contains('show'))calculateBaseWidth();},{passive:true});
 })();
