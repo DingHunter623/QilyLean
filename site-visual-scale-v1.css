@@ -1,4 +1,23 @@
-/* QilyLean 2026-07-24：全站阅读尺度与首页首屏平衡补丁 */
+/* QilyLean 2026-07-24：全站阅读尺度、首页首屏与品牌LOGO规范 */
+
+/* ---------- 全站LOGO ---------- */
+.qily-brand,.topbar>.brand,.top>.brand{
+  display:block!important;
+  width:clamp(178px,15vw,244px)!important;
+  height:34px!important;
+  overflow:hidden!important;
+  text-indent:-9999px!important;
+  white-space:nowrap!important;
+  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-v1') left center/contain no-repeat!important;
+}
+.qily-modal-brand{
+  width:min(310px,78vw)!important;
+  height:42px!important;
+  margin:0 auto 8px!important;
+  overflow:hidden!important;
+  text-indent:-9999px!important;
+  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-v1') center/contain no-repeat!important;
+}
 
 /* ---------- 全站导航与文字尺度 ---------- */
 .module-page{
@@ -108,6 +127,7 @@
 }
 
 @media(max-width:620px){
+  .qily-brand,.topbar>.brand,.top>.brand{width:158px!important;height:24px!important}
   .module-page{font-size:18px!important}
   .qily-site-header .site-nav a{font-size:11px!important}
   .module-card{padding:21px!important}
