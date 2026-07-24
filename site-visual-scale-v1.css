@@ -8,7 +8,7 @@
   overflow:hidden!important;
   text-indent:-9999px!important;
   white-space:nowrap!important;
-  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-v3') left center/contain no-repeat!important;
+  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-tricolor-v4') left center/contain no-repeat!important;
 }
 .qily-modal-brand{
   width:min(286px,74vw)!important;
@@ -16,7 +16,7 @@
   margin:0 auto 8px!important;
   overflow:hidden!important;
   text-indent:-9999px!important;
-  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-v3') center/contain no-repeat!important;
+  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-tricolor-v4') center/contain no-repeat!important;
 }
 
 /* ---------- 加密导航模块：与公开模块明显区分 ---------- */

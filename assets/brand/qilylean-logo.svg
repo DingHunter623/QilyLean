@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1090 196" role="img" aria-labelledby="title desc">
   <title id="title">QilyLean｜启力精益</title>
-  <desc id="desc">QilyLean启力精益全站品牌标志，字母i圆点与分隔线为金色，英文和中文采用约2毫米等距排列。</desc>
+  <desc id="desc">QilyLean启力精益全站三色品牌标志，字母i的红色圆点位于字杆正上方，分隔线为金色。</desc>
   <defs>
     <mask id="qily-i-dot-mask">
       <rect width="1090" height="196" fill="#fff"/>
@@ -11,7 +11,7 @@
     <text x="6" y="150" textLength="660" lengthAdjust="spacingAndGlyphs" font-family="Arial Rounded MT Bold,Avenir Next,Segoe UI,sans-serif" font-size="150" font-weight="800" mask="url(#qily-i-dot-mask)">QilyLean</text>
     <text x="712" y="145" textLength="360" lengthAdjust="spacingAndGlyphs" font-family="PingFang SC,Microsoft YaHei,Noto Sans SC,Noto Sans SC Thin,Noto Sans CJK SC,Segoe UI,sans-serif" font-size="108" font-weight="800">启力精益</text>
   </g>
-  <circle cx="144" cy="48" r="12.5" fill="#caa15f"/>
+  <circle cx="146.625" cy="48" r="14.5" fill="#d33f36"/>
   <rect x="686" y="24" width="5" height="138" rx="2.5" fill="#caa15f"/>
   <path d="M22 146c18 8 38 10 58 5" fill="none" stroke="#0b4e60" stroke-width="6" stroke-linecap="round"/>
 </svg>

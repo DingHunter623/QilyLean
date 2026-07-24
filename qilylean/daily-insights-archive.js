@@ -48,7 +48,7 @@ function ensureLatest(){
   if(document.getElementById('daily20260722ForceScript'))return;
   var script=document.createElement('script');
   script.id='daily20260722ForceScript';
-  script.src='daily-2026-07-22.js?v=20260722-howdo-v4';
+  script.src='daily-2026-07-22.js?v=20260724-howmuch-v5';
   script.onload=function(){schedule();setTimeout(schedule,180);};
   document.body.appendChild(script);
 }

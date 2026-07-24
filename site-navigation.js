@@ -7,7 +7,7 @@
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
   var SHARED_ASSET_VERSION = '20260724-share-lock-v2';
-  var VISUAL_SCALE_VERSION = '20260724-logo-copy-v3';
+  var VISUAL_SCALE_VERSION = '20260724-logo-tricolor-v4';
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
   var routes = [
     ['首页', '/'],

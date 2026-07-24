@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-function loadNextDaily(){if(document.getElementById('daily20260722Script'))return;var s=document.createElement('script');s.id='daily20260722Script';s.src='daily-2026-07-22.js?v=1';document.body.appendChild(s);}
+function loadNextDaily(){if(document.getElementById('daily20260722Script'))return;var s=document.createElement('script');s.id='daily20260722Script';s.src='daily-2026-07-22.js?v=20260724-howmuch-v5';document.body.appendChild(s);}
 loadNextDaily();
 if(document.getElementById('2026-07-21'))return;
 var archive=document.querySelector('.archive');if(!archive)return;
