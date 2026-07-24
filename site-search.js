@@ -22,7 +22,6 @@
     '/moments/team/',
     '/moments/business/',
     '/moments/life/',
-    '/cooperation/',
     '/qilylean/daily-insights.html',
     '/qilylean/papers.html',
     '/qilylean/lean-tools.html',
@@ -72,7 +71,7 @@
 
   function prioritizeUrls(urls) {
     var fallback = uniqueUrls(FALLBACK_URLS);
-    var all = uniqueUrls(fallback.concat(urls));
+    var all = uniqueUrls(fallback.concat(urls)).filter(function (url) { return url !== '/cooperation/'; });
     var fixed = [];
     var daily = [];
     all.forEach(function (url) {
@@ -85,7 +84,7 @@
 
   function loadUrlList() {
     if (state.urls) return Promise.resolve(state.urls);
-    return fetch('/sitemap.xml?v=20260723-site-search-v1', {
+    return fetch('/sitemap.xml?v=20260724-site-search-v2', {
       credentials: 'same-origin',
       cache: 'force-cache',
       headers: { Accept: 'application/xml,text/xml;q=0.9,*/*;q=0.8' }
