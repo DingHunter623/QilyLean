@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "scripts/add-cpk-sample-size.js"
+      - ".github/workflows/add-cpk-sample-size.yml"
   workflow_dispatch:
 
 permissions:
