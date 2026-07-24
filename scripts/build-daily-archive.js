@@ -103,21 +103,21 @@ function pageHeader(title, description, canonical, ogType = 'article') {
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:url" content="${canonical}">
-  <link rel="stylesheet" href="/site-shell.css?v=20260722-modules-v4">
+  <link rel="stylesheet" href="/site-shell.css?v=20260724-brand-v1">
   <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260722-daily-v2">
 </head>`;
 }
 
 function siteHeader() {
   return `<header class="qily-site-header">
-  <a class="qily-brand" href="/knowledge/">制造改善知识分享</a>
+  <a class="qily-brand" href="/">QilyLean｜启力精益</a>
   <nav class="site-nav" aria-label="网站导航"><a href="/">首页</a><a href="/knowledge/">知识分享</a></nav>
 </header>`;
 }
 
 function pageScripts() {
-  return `<script src="/site-navigation.js?v=20260722-daily-v5"></script>
-<script src="/homepage-music.js?v=20260722-recovery-v1"></script>`;
+  return `<script src="/site-navigation.js?v=20260724-brand-v1"></script>
+<script src="/homepage-music.js?v=20260722-continuous-v3"></script>`;
 }
 
 function buildIndex(briefs) {
