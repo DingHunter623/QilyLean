@@ -29,7 +29,7 @@
     if(document.getElementById('times26001HomeCardScript'))return;
     var script=document.createElement('script');
     script.id='times26001HomeCardScript';
-    script.src='/times26001-home-card.js?v=20260724-times26001-v1';
+    script.src='/times26001-home-card.js?v=20260724-times26001-v2';
     document.body.appendChild(script);
   }
 
