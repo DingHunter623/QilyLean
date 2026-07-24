@@ -7,7 +7,7 @@
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
   var SHARED_ASSET_VERSION = '20260724-share-lock-v2';
-  var VISUAL_SCALE_VERSION = '20260724-share-lock-v2';
+  var VISUAL_SCALE_VERSION = '20260724-logo-copy-v3';
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
   var routes = [
     ['首页', '/'],
@@ -291,7 +291,7 @@
     var shareMask = document.createElement('div');
     shareMask.id = 'shareMask';
     shareMask.className = 'qily-modal-mask';
-    shareMask.innerHTML = '<div class="qily-modal-panel" role="dialog" aria-modal="true" aria-labelledby="qilyShareTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><div class="qily-modal-brand">QilyLean</div><h3 id="qilyShareTitle">分享官网</h3><img class="qily-share-qr" src="' + HOME_QR_SRC + '" alt="QilyLean官网二维码" loading="eager"><span class="qily-share-url">' + HOME_URL + '</span><div class="qily-modal-actions"><button type="button" data-share="system">系统分享</button><button type="button" data-share="copy">复制网址</button></div><p class="qily-modal-note">扫码或复制官网地址访问 QilyLean。</p></div>';
+    shareMask.innerHTML = '<div class="qily-modal-panel" role="dialog" aria-modal="true" aria-labelledby="qilyShareTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><div class="qily-modal-brand">QilyLean</div><h3 id="qilyShareTitle">分享“启力精益”官网</h3><img class="qily-share-qr" src="' + HOME_QR_SRC + '" alt="QilyLean官网二维码" loading="eager"><span class="qily-share-url">' + HOME_URL + '</span><div class="qily-modal-actions"><button type="button" data-share="system">系统分享</button><button type="button" data-share="copy">复制网址</button></div><p class="qily-modal-note">扫码或复制官网地址访问 “QilyLean 启力精益”</p></div>';
     document.body.appendChild(shareMask);
 
     var contactMask = document.createElement('div');
