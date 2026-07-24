@@ -1,22 +1,62 @@
-/* QilyLean 2026-07-24：全站阅读尺度、首页首屏与品牌LOGO规范 */
+/* QilyLean 2026-07-24：全站阅读尺度、首页首屏、品牌LOGO与移动导航规范 */
 
 /* ---------- 全站LOGO ---------- */
 .qily-brand,.topbar>.brand,.top>.brand{
   display:block!important;
-  width:clamp(178px,15vw,244px)!important;
+  width:clamp(168px,14vw,226px)!important;
   height:34px!important;
   overflow:hidden!important;
   text-indent:-9999px!important;
   white-space:nowrap!important;
-  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-v1') left center/contain no-repeat!important;
+  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-v2') left center/contain no-repeat!important;
 }
 .qily-modal-brand{
-  width:min(310px,78vw)!important;
+  width:min(286px,74vw)!important;
   height:42px!important;
   margin:0 auto 8px!important;
   overflow:hidden!important;
   text-indent:-9999px!important;
-  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-v1') center/contain no-repeat!important;
+  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-v2') center/contain no-repeat!important;
+}
+
+/* ---------- 加密导航模块：与公开模块明显区分 ---------- */
+.qily-global-nav a[href="/experience/"],
+.qily-global-nav a[href="/cooperation/"],
+.site-nav a[href="/experience/"],
+.site-nav a[href="/cooperation/"]{
+  color:#624810!important;
+  border-color:#d5a84f!important;
+  background:linear-gradient(135deg,#fff5d5,#ffe39b)!important;
+  box-shadow:inset 0 0 0 1px rgba(202,161,95,.18),0 4px 12px rgba(110,78,26,.09)!important;
+}
+.qily-global-nav a[href="/experience/"]::before,
+.qily-global-nav a[href="/cooperation/"]::before,
+.site-nav a[href="/experience/"]::before,
+.site-nav a[href="/cooperation/"]::before{
+  content:'🔒';
+  margin-right:4px;
+  font-size:.78em;
+  line-height:1;
+}
+.qily-global-nav a[href="/experience/"]:hover,
+.qily-global-nav a[href="/experience/"]:focus-visible,
+.qily-global-nav a[href="/cooperation/"]:hover,
+.qily-global-nav a[href="/cooperation/"]:focus-visible,
+.site-nav a[href="/experience/"]:hover,
+.site-nav a[href="/experience/"]:focus-visible,
+.site-nav a[href="/cooperation/"]:hover,
+.site-nav a[href="/cooperation/"]:focus-visible{
+  color:#fff!important;
+  border-color:#6e3f5f!important;
+  background:#6e3f5f!important;
+}
+.qily-global-nav a[href="/experience/"][aria-current="page"],
+.qily-global-nav a[href="/cooperation/"][aria-current="page"],
+.site-nav a[href="/experience/"][aria-current="page"],
+.site-nav a[href="/cooperation/"][aria-current="page"]{
+  color:#fff!important;
+  border-color:#8d641f!important;
+  background:linear-gradient(135deg,#9a6f25,#caa15f)!important;
 }
 
 /* ---------- 全站导航与文字尺度 ---------- */
@@ -53,7 +93,7 @@
 .project-result-panel p{font-size:18.5px!important;line-height:1.76!important}
 .project-fact-timeline strong{font-size:14.5px!important;white-space:nowrap;letter-spacing:-.35px}
 
-@media(min-width:621px){
+@media(min-width:901px){
   .qily-global-nav a{font-size:17.5px!important;padding:7px 8px!important}
 }
 
@@ -126,10 +166,88 @@
   .qily-home-balanced .hero-grid>.assistant-panel{grid-column:1!important}
 }
 
+/* ---------- 手机／平板导航：LOGO独立一行，导航横向滑动 ---------- */
+@keyframes qilyNavSwipeHint{
+  0%,100%{transform:translateX(0)}
+  50%{transform:translateX(4px)}
+}
+@media(max-width:900px){
+  .qily-global-header{
+    position:sticky!important;
+    top:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    justify-content:flex-start!important;
+    gap:4px!important;
+    min-height:auto!important;
+    padding:7px 9px 8px!important;
+  }
+  .qily-global-header>.qily-brand,
+  .qily-global-header>.brand{
+    display:block!important;
+    width:142px!important;
+    height:27px!important;
+    margin:0!important;
+  }
+  .qily-global-header::after{
+    content:'← 左右滑动查看更多 →';
+    position:absolute;
+    top:10px;
+    right:10px;
+    z-index:3;
+    padding:4px 8px;
+    border:1px solid #c9dedb;
+    border-radius:999px;
+    color:#0f4b5a;
+    background:rgba(238,248,246,.96);
+    box-shadow:0 4px 12px rgba(15,75,90,.1);
+    font-size:11px;
+    font-weight:900;
+    line-height:1.2;
+    pointer-events:none;
+    animation:qilyNavSwipeHint 1.8s ease-in-out infinite;
+  }
+  .qily-global-nav{
+    display:flex!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin:0!important;
+    padding:2px 48px 4px 0!important;
+    gap:5px!important;
+    justify-content:flex-start!important;
+    flex-wrap:nowrap!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    white-space:nowrap!important;
+    scroll-snap-type:x proximity;
+    scroll-padding-inline:4px;
+    scrollbar-width:thin!important;
+    scrollbar-color:#9abebb transparent;
+    touch-action:pan-x!important;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(90deg,#000 0,#000 90%,transparent 100%);
+    mask-image:linear-gradient(90deg,#000 0,#000 90%,transparent 100%);
+  }
+  .qily-global-nav::-webkit-scrollbar{height:3px!important;display:block!important}
+  .qily-global-nav::-webkit-scrollbar-thumb{background:#9abebb;border-radius:999px}
+  .qily-global-nav::-webkit-scrollbar-track{background:transparent}
+  .qily-global-nav a{
+    flex:0 0 auto!important;
+    min-height:34px!important;
+    padding:5px 9px!important;
+    border-radius:9px!important;
+    font-size:12.5px!important;
+    line-height:1.12!important;
+    scroll-snap-align:start;
+  }
+}
+
 @media(max-width:620px){
-  .qily-brand,.topbar>.brand,.top>.brand{width:158px!important;height:24px!important}
+  .qily-brand,.topbar>.brand,.top>.brand{width:130px!important;height:24px!important}
   .module-page{font-size:18px!important}
-  .qily-site-header .site-nav a{font-size:11px!important}
+  .qily-site-header .site-nav a{font-size:12px!important}
   .module-card{padding:21px!important}
   .module-media{margin:-21px -21px 18px!important}
   .module-card p,.module-card li{font-size:18px!important}
@@ -140,4 +258,19 @@
   .qily-home-balanced .portrait-frame{width:min(280px,100%)!important;margin:auto!important}
   .qily-home-balanced .answer{font-size:19px!important}
   .qily-home-balanced .panel-body{padding:16px!important}
+  .qily-global-header>.qily-brand,
+  .qily-global-header>.brand{display:block!important;width:126px!important;height:23px!important}
+  .qily-global-header::after{content:'左右滑动查看更多 →';font-size:10.5px;top:9px;right:8px}
+  .qily-global-nav{padding-right:42px!important}
+  .qily-global-nav a{font-size:11.5px!important;padding:5px 7px!important}
+}
+
+@media(max-width:380px){
+  .qily-global-header>.qily-brand,
+  .qily-global-header>.brand{width:112px!important;height:21px!important}
+  .qily-global-header::after{content:'左右滑动 →';font-size:10px;padding:3px 7px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .qily-global-header::after{animation:none!important}
 }
