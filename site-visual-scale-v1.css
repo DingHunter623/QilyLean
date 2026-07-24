@@ -1,4 +1,4 @@
-/* QilyLean 2026-07-24：全站阅读尺度、首页首屏、品牌LOGO与移动导航规范 */
+/* QilyLean 2026-07-24：全站阅读尺度、统一宽版内容窗口、首页首屏、品牌LOGO与移动导航规范 */
 
 /* ---------- 全站LOGO ---------- */
 .qily-brand,.topbar>.brand,.top>.brand{
@@ -59,6 +59,24 @@
   background:linear-gradient(135deg,#9a6f25,#caa15f)!important;
 }
 
+/* ---------- 全站统一宽版内容窗口 ---------- */
+.module-inner,
+.module-page .inner{
+  width:min(1320px,100%)!important;
+}
+.module-lead{
+  width:100%!important;
+  max-width:1180px!important;
+}
+.module-heading,
+.module-page .head{
+  width:100%!important;
+  max-width:1160px!important;
+}
+.module-subnav{
+  max-width:1240px!important;
+}
+
 /* ---------- 全站导航与文字尺度 ---------- */
 .module-page{
   font-size:19px!important;
@@ -97,7 +115,7 @@
   .qily-global-nav a{font-size:17.5px!important;padding:7px 8px!important}
 }
 
-/* ---------- 首页首屏：文字、头像、问答模块重新建立统一版心 ---------- */
+/* ---------- 首页首屏：降低品牌标题占用，扩大有效内容窗口 ---------- */
 .qily-home-balanced{
   font-size:19px!important;
   line-height:1.8!important;
@@ -107,26 +125,36 @@
 .qily-home-balanced .nav{font-size:16px!important}
 .qily-home-balanced .hero{padding:clamp(34px,4.5vw,58px) clamp(18px,4vw,58px)!important}
 .qily-home-balanced .hero-grid{
-  width:min(1220px,100%)!important;
-  grid-template-columns:minmax(0,1fr) minmax(280px,320px)!important;
-  gap:clamp(24px,3vw,42px)!important;
+  width:min(1280px,100%)!important;
+  grid-template-columns:minmax(0,1fr) minmax(270px,310px)!important;
+  gap:clamp(24px,3vw,40px)!important;
   align-items:start!important;
 }
 .qily-home-balanced .hero-grid>div:first-child{min-width:0}
 .qily-home-balanced .hero-grid>aside{
   width:100%;
-  max-width:320px;
+  max-width:310px;
   justify-self:end;
 }
 .qily-home-balanced .eyebrow{font-size:16px!important}
-.qily-home-balanced h1{font-size:clamp(46px,4.9vw,74px)!important;line-height:1.04!important}
-.qily-home-balanced .lead{font-size:clamp(21px,1.62vw,25px)!important;line-height:1.76!important}
+.qily-home-balanced h1{
+  max-width:860px!important;
+  font-size:clamp(43px,4.35vw,66px)!important;
+  line-height:1.05!important;
+  letter-spacing:-.02em!important;
+}
+.qily-home-balanced .lead{
+  width:100%!important;
+  max-width:900px!important;
+  font-size:clamp(21px,1.62vw,25px)!important;
+  line-height:1.76!important;
+}
 .qily-home-balanced .group-label{font-size:15.5px!important}
 .qily-home-balanced .tags{gap:10px!important}
 .qily-home-balanced .tags li{font-size:16px!important;padding:8px 13px!important}
 .qily-home-balanced .button{font-size:17px!important;min-height:46px!important}
 .qily-home-balanced .portrait-frame{
-  width:min(300px,100%)!important;
+  width:min(292px,100%)!important;
   margin:0 0 0 auto!important;
 }
 .qily-home-balanced .portrait-frame img{width:100%!important;height:auto!important}
@@ -146,7 +174,8 @@
 .qily-home-balanced textarea{font-size:20px!important;min-height:82px!important}
 .qily-home-balanced .topic-control{font-size:15.5px!important}
 .qily-home-balanced .answer{font-size:21px!important;line-height:1.84!important;padding:20px!important}
-.qily-home-balanced .inner{width:min(1220px,100%)!important}
+.qily-home-balanced .inner{width:min(1280px,100%)!important}
+.qily-home-balanced .section .head{max-width:1120px!important}
 .qily-home-balanced .section h2{font-size:clamp(33px,3.2vw,47px)!important}
 .qily-home-balanced .head p{font-size:20px!important;line-height:1.76!important}
 .qily-home-balanced .metric{padding:22px!important}
@@ -156,14 +185,16 @@
 
 @media(max-width:1120px){
   .qily-home-balanced .hero-grid{
-    width:min(900px,100%)!important;
+    width:min(940px,100%)!important;
     grid-template-columns:1fr!important;
   }
   .qily-home-balanced .hero-grid>aside{
-    max-width:300px;
+    max-width:286px;
     justify-self:center;
   }
   .qily-home-balanced .hero-grid>.assistant-panel{grid-column:1!important}
+  .qily-home-balanced h1{max-width:820px!important;font-size:clamp(42px,5.8vw,58px)!important}
+  .qily-home-balanced .lead{max-width:900px!important}
 }
 
 /* ---------- 手机／平板导航：LOGO独立一行，导航横向滑动 ---------- */
@@ -248,6 +279,8 @@
   .qily-brand,.topbar>.brand,.top>.brand{width:130px!important;height:24px!important}
   .module-page{font-size:18px!important}
   .qily-site-header .site-nav a{font-size:12px!important}
+  .module-inner,.module-page .inner{width:100%!important}
+  .module-lead,.module-heading,.module-page .head{max-width:100%!important}
   .module-card{padding:21px!important}
   .module-media{margin:-21px -21px 18px!important}
   .module-card p,.module-card li{font-size:18px!important}
@@ -255,7 +288,14 @@
   .project-fact-timeline strong{font-size:15px!important;white-space:normal}
   .qily-home-balanced{font-size:18px!important}
   .qily-home-balanced .nav{font-size:14px!important}
-  .qily-home-balanced .portrait-frame{width:min(280px,100%)!important;margin:auto!important}
+  .qily-home-balanced h1{
+    max-width:100%!important;
+    font-size:clamp(38px,10.5vw,43px)!important;
+    line-height:1.06!important;
+    letter-spacing:-.025em!important;
+  }
+  .qily-home-balanced .lead{max-width:100%!important;font-size:20px!important;line-height:1.7!important}
+  .qily-home-balanced .portrait-frame{width:min(270px,100%)!important;margin:auto!important}
   .qily-home-balanced .answer{font-size:19px!important}
   .qily-home-balanced .panel-body{padding:16px!important}
   .qily-global-header>.qily-brand,
@@ -269,6 +309,7 @@
   .qily-global-header>.qily-brand,
   .qily-global-header>.brand{width:112px!important;height:21px!important}
   .qily-global-header::after{content:'左右滑动 →';font-size:10px;padding:3px 7px}
+  .qily-home-balanced h1{font-size:37px!important}
 }
 
 @media(prefers-reduced-motion:reduce){
