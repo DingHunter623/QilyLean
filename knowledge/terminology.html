@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>全站术语词典｜中文诠释与应用场景｜QilyLean</title>
-<meta name="description" content="QilyLean全站制造管理与工程专业术语词典：161项英文、字母代码及标准编号的中文诠释与实际应用场景。">
+<meta name="description" content="QilyLean全站制造管理与工程专业术语词典：160项英文、字母代码及标准编号的中文诠释与实际应用场景。">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://qilylean.com/knowledge/terminology.html">
 <link rel="stylesheet" href="/site-shell.css?v=20260724-terminology-v2">
@@ -41,7 +41,7 @@
 <div class="term-toolbar">
 <label for="termSearch"><strong>快速查找术语</strong></label>
 <input class="term-search" id="termSearch" type="search" placeholder="输入英文、代码或中文，例如：VSM、标准工时、抽样检验" autocomplete="off">
-<div class="term-count" id="termCount">共收录 161 项术语</div>
+<div class="term-count" id="termCount">共收录 160 项术语</div>
 </div>
 <div class="term-empty" id="termEmpty">未找到对应术语，请尝试更短的代码或中文关键词。</div>
 </div></section>
@@ -585,16 +585,22 @@
   <p><strong>应用场景：</strong>用于从项目立项到量产分阶段管理客户要求、风险、验证与交付物。</p>
 </article>
 <article class="term-card" data-term-card>
+  <div class="term-code">DFMEA</div>
+  <div class="term-en">Design Failure Mode and Effects Analysis</div>
+  <h3>设计失效模式及后果分析</h3>
+  <p><strong>应用场景：</strong>用于产品设计阶段识别功能、结构、材料、接口及使用条件中的潜在失效模式，分析失效后果与原因，并通过设计预防、验证和改进降低风险。</p>
+</article>
+<article class="term-card" data-term-card>
+  <div class="term-code">PFMEA</div>
+  <div class="term-en">Process Failure Mode and Effects Analysis</div>
+  <h3>过程失效模式及后果分析</h3>
+  <p><strong>应用场景：</strong>用于制造过程策划和量产前识别人、机、料、法、测、环及工序衔接中的潜在失效，明确预防控制、探测控制与改进措施，并为控制计划提供风险输入。</p>
+</article>
+<article class="term-card" data-term-card>
   <div class="term-code">CP</div>
   <div class="term-en">Control Plan</div>
   <h3>控制计划</h3>
-  <p><strong>应用场景：</strong>用于定义产品和过程特性、控制方法、频次、样本量、责任与反应计划。</p>
-</article>
-<article class="term-card" data-term-card>
-  <div class="term-code">FMEA</div>
-  <div class="term-en">Failure Mode and Effects Analysis</div>
-  <h3>失效模式及后果分析</h3>
-  <p><strong>应用场景：</strong>用于在设计或过程实施前识别潜在失效、后果、原因与预防控制。</p>
+  <p><strong>应用场景：</strong>用于承接DFMEA／PFMEA识别的关键风险，定义产品与过程特性、控制方法、频次、样本量、责任和反应计划，把风险预防要求落实到现场执行。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">MSA</div>
@@ -679,18 +685,6 @@
   <div class="term-en">Design of Experiments</div>
   <h3>试验设计</h3>
   <p><strong>应用场景：</strong>用于多因素、多水平试验，识别主效应、交互作用和最佳工艺窗口。</p>
-</article>
-<article class="term-card" data-term-card>
-  <div class="term-code">DFMEA</div>
-  <div class="term-en">Design Failure Mode and Effects Analysis</div>
-  <h3>设计失效模式及后果分析</h3>
-  <p><strong>应用场景：</strong>用于产品设计阶段识别潜在失效、影响、原因和预防／探测控制。</p>
-</article>
-<article class="term-card" data-term-card>
-  <div class="term-code">PFMEA</div>
-  <div class="term-en">Process Failure Mode and Effects Analysis</div>
-  <h3>过程失效模式及后果分析</h3>
-  <p><strong>应用场景：</strong>用于制造过程设计阶段识别工序失效、原因、风险和过程控制措施。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">RPN</div>
@@ -1076,7 +1070,7 @@
       card.hidden=!matched;
       if(matched)visible+=1;
     });
-    count.textContent=query?'找到 '+visible+' 项术语':'共收录 161 项术语';
+    count.textContent=query?'找到 '+visible+' 项术语':'共收录 160 项术语';
     empty.style.display=visible?'none':'block';
   }
   input.addEventListener('input',filter,{passive:true});
