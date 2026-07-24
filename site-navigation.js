@@ -1,13 +1,13 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanSiteNavigationV7) return;
-  window.__qilyLeanSiteNavigationV7 = true;
+  if (window.__qilyLeanSiteNavigationV8) return;
+  window.__qilyLeanSiteNavigationV8 = true;
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260724-global-type-v1';
-  var VISUAL_SCALE_VERSION = '20260724-global-type-v1';
+  var SHARED_ASSET_VERSION = '20260724-share-lock-v2';
+  var VISUAL_SCALE_VERSION = '20260724-share-lock-v2';
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
   var routes = [
     ['首页', '/'],
@@ -114,6 +114,7 @@
         var target;
         try { target = new URL(link.href, location.href); } catch (error) { return; }
         if (target.origin !== location.origin || normalizedPath(target.pathname) === normalizedPath(location.pathname)) return;
+        if (normalizedPath(target.pathname) === '/cooperation/') return;
         done = true;
         target.hash = '';
         var hint = document.createElement('link');
@@ -174,15 +175,70 @@
   function shareCurrentPage() {
     var title = document.title || 'QilyLean';
     var url = location.href;
+    var shareText = title + '\n' + url;
     if (isMobileDevice() && navigator.share) {
       return navigator.share({ title: title, text: title, url: url }).then(function () {
         showToast('已调起系统分享');
       }).catch(function (error) {
         if (error && error.name === 'AbortError') return;
-        return copyText(url).then(function () { showToast('当前页网址已复制'); });
+        return copyText(shareText).then(function () { showToast('网页标题及网址已复制'); });
       });
     }
-    return copyText(url).then(function () { showToast('当前页网址已复制'); });
+    return copyText(shareText).then(function () { showToast('网页标题及网址已复制'); });
+  }
+
+  function protectCooperationPage() {
+    var path = normalizedPath(location.pathname);
+    if (path.indexOf('/cooperation/') !== 0) return;
+
+    try {
+      if (sessionStorage.getItem('cooperationUnlocked') === '1') return;
+    } catch (error) {}
+
+    var main = document.querySelector('main');
+    if (!main || document.getElementById('cooperationAccessGate')) return;
+    var footer = document.querySelector('footer.module-footer,footer');
+    main.hidden = true;
+    if (footer) footer.hidden = true;
+
+    var robots = document.head.querySelector('meta[name="robots"]');
+    if (!robots) {
+      robots = document.createElement('meta');
+      robots.name = 'robots';
+      document.head.appendChild(robots);
+    }
+    robots.content = 'noindex,nofollow,noarchive';
+
+    var style = document.createElement('style');
+    style.id = 'cooperationLockStyle';
+    style.textContent = '.cooperation-access-gate{min-height:calc(100vh - 72px)}.cooperation-lock-card{max-width:760px;margin:0 auto;padding:30px;border:1px solid var(--qily-line,#d5e4e3);background:#fff;box-shadow:0 14px 36px rgba(15,75,90,.1)}.cooperation-lock-card h2{margin:0 0 12px;color:var(--qily-deep,#0f4b5a)}.cooperation-lock-card p{margin:0 0 18px;color:var(--qily-muted,#5f7474);font-size:19px;line-height:1.76}.cooperation-lock-form{display:flex;gap:10px;flex-wrap:wrap}.cooperation-lock-input{flex:1;min-width:220px;padding:12px 14px;border:1px solid var(--qily-line,#d5e4e3);font:inherit}.cooperation-lock-btn{padding:12px 18px;border:0;background:var(--qily-deep,#0f4b5a);color:#fff;font:inherit;font-weight:900;cursor:pointer}.cooperation-lock-msg{min-height:28px;margin-top:10px;color:#9e4a34;font-weight:850}@media(max-width:620px){.cooperation-lock-card{padding:22px}.cooperation-lock-input,.cooperation-lock-btn{width:100%;min-width:0}}';
+    document.head.appendChild(style);
+
+    var gate = document.createElement('main');
+    gate.id = 'cooperationAccessGate';
+    gate.className = 'cooperation-access-gate';
+    gate.innerHTML = '<section class="module-hero"><div class="module-inner"><span class="module-eyebrow">Controlled Access / Project Cooperation</span><h1>项目合作（加密）</h1><p class="module-lead">项目合作内容暂为受控访问，输入与履历主线相同的访问口令后查看。</p></div></section><section class="module-section alt"><div class="module-inner"><div class="cooperation-lock-card"><h2>访问项目合作</h2><p>本页包含企业问题初筛、合作范围、服务边界、项目交付方式及联系入口。请输入访问口令后查看完整内容。</p><div class="cooperation-lock-form"><input id="cooperationPassword" class="cooperation-lock-input" type="password" inputmode="numeric" autocomplete="current-password" aria-label="项目合作访问口令" placeholder="请输入访问密码"><button id="cooperationUnlock" class="cooperation-lock-btn" type="button">查看项目合作</button></div><div id="cooperationLockMessage" class="cooperation-lock-msg" aria-live="polite"></div></div></div></section>';
+    main.parentNode.insertBefore(gate, main);
+
+    var input = document.getElementById('cooperationPassword');
+    var button = document.getElementById('cooperationUnlock');
+    var message = document.getElementById('cooperationLockMessage');
+
+    function unlock() {
+      if ((input.value || '').trim() !== '259') {
+        message.textContent = '密码不正确，请重新输入。';
+        input.select();
+        return;
+      }
+      try { sessionStorage.setItem('cooperationUnlocked', '1'); } catch (error) {}
+      gate.remove();
+      main.hidden = false;
+      if (footer) footer.hidden = false;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    button.addEventListener('click', unlock);
+    input.addEventListener('keydown', function (event) { if (event.key === 'Enter') unlock(); });
   }
 
   function loadWeChatQr() {
@@ -205,7 +261,7 @@
     }
     var script = document.createElement('script');
     script.id = 'qilySiteSearchScript';
-    script.src = '/site-search.js?v=20260723-site-search-v1';
+    script.src = '/site-search.js?v=20260724-site-search-v2';
     if (callback) script.addEventListener('load', callback, { once: true });
     document.body.appendChild(script);
   }
@@ -358,6 +414,7 @@
     addStylesheet();
     addVisualScaleStylesheet();
     buildNavigation();
+    protectCooperationPage();
     enableNavigationPrefetch();
     buildDock();
   }
