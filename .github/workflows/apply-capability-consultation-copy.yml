@@ -1,0 +1,59 @@
+name: Apply capability and consultation copy fixes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/apply-capability-consultation-copy.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: capability-consultation-copy-main
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Apply targeted copy and navigation updates
+        run: node scripts/apply-capability-consultation-copy.js
+
+      - name: Validate requested changes
+        shell: bash
+        run: |
+          ! grep -R "15分钟问题初筛\|预约15分钟问题初筛\|15分钟初筛" cooperation/index.html projects/index.html
+          grep -q "60分钟问题初筛" cooperation/index.html
+          grep -q "60分钟问题初筛" projects/index.html
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('capabilities/index.html').read_text(encoding='utf-8')
+          expected = '<a href="#mechanism">项目机制</a>\n          <a href="/projects/">代表项目</a>'
+          if expected not in text:
+              raise SystemExit('代表项目未按要求添加在项目机制右侧')
+          PY
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Requested changes are already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cooperation/index.html projects/index.html capabilities/index.html
+          git commit -m "fix: update consultation duration and capability project link [skip ci]"
+          git push
