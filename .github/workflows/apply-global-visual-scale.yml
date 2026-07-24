@@ -1,0 +1,51 @@
+name: Apply global visual scale
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/apply-global-visual-scale.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: global-visual-scale-main
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Load visual scale stylesheet globally
+        run: node scripts/apply-global-visual-scale.js
+
+      - name: Validate stylesheet loader
+        shell: bash
+        run: |
+          grep -q "site-visual-scale-v1.css" site-navigation.js
+          grep -q "addVisualScaleStylesheet" site-navigation.js
+
+      - name: Commit changes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Global visual scale loader is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site-navigation.js
+          git commit -m "style: load global typography and layout scale [skip ci]"
+          git push
