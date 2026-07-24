@@ -1,17 +1,18 @@
 /*
  * QilyLean 代表项目统一展示规范
  * 1. 项目详情保留完整内容与高清原图，不因清单简化而删减项目深度。
- * 2. 项目清单仅使用统一尺寸缩略图，完整图文进入独立项目网址后展示。
+ * 2. 项目清单统一采用“左侧缩略图＋右侧完整概述”，便于快速定位和高效浏览。
  * 3. 所有项目详情页统一采用适度标题、加宽概述和清晰信息层级。
+ * 4. 代表项目清单及详情页全部图片均支持全屏放大、缩放及查看原图。
  */
 .project-list-page .module-hero{padding-top:clamp(40px,5vw,66px);padding-bottom:clamp(36px,4.5vw,58px)}
 .project-list-page .module-lead{max-width:1040px!important}
 .project-list-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch}
-.project-list-card{display:flex!important;flex-direction:column;min-height:0;padding:0!important;overflow:hidden;content-visibility:auto;contain-intrinsic-size:auto 430px}
-.project-list-thumb{width:100%;height:148px;min-height:148px;margin:0!important;border:0!important;border-bottom:1px solid var(--qily-line)!important;background:#e8f0ef;overflow:hidden}
-.project-list-thumb img{display:block;width:100%;height:148px;min-height:148px;object-fit:contain;object-position:center;background:#edf4f2;transition:transform .25s ease}
+.project-list-card{display:grid!important;grid-template-columns:180px minmax(0,1fr);min-height:300px;padding:0!important;overflow:hidden;align-items:stretch;content-visibility:auto;contain-intrinsic-size:auto 320px}
+.project-list-thumb{position:relative;width:180px;height:100%;min-height:300px;margin:0!important;border:0!important;border-right:1px solid var(--qily-line)!important;background:#edf4f2;overflow:hidden}
+.project-list-thumb img{display:block;width:100%;height:100%;min-height:300px;object-fit:contain;object-position:center;background:#edf4f2;transition:transform .25s ease}
 .project-list-card:hover .project-list-thumb img{transform:scale(1.025)}
-.project-list-content{display:flex;flex:1;flex-direction:column;padding:19px 20px 17px;min-width:0}
+.project-list-content{display:flex;flex-direction:column;padding:19px 20px 17px;min-width:0}
 .project-list-content small{margin-bottom:5px!important}
 .project-list-content h3{margin-bottom:9px!important;font-size:21px!important}
 .project-list-content>p{margin:0 0 10px!important;font-size:16px!important;line-height:1.66!important}
@@ -44,13 +45,40 @@
 .project-detail-page .module-section.alt .module-subnav a[aria-current="page"]{color:#17322d!important;background:#ffe39b;border-color:#caa15f}
 .project-detail-page .module-section.alt .module-subnav a:hover,.project-detail-page .module-section.alt .module-subnav a:focus-visible{color:#17322d!important;background:#ffe39b;border-color:#caa15f}
 
+/* 项目图片统一支持放大查看。 */
+.project-zoomable{cursor:zoom-in}
+.project-zoomable:focus-visible{outline:4px solid #ffe39b;outline-offset:4px}
+body.project-lightbox-open{overflow:hidden}
+.project-lightbox{position:fixed;inset:0;z-index:100000;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(3,21,26,.92);backdrop-filter:blur(8px)}
+.project-lightbox.show{display:flex}
+.project-lightbox-panel{position:relative;display:grid;grid-template-rows:auto minmax(0,1fr) auto;width:min(96vw,1600px);height:min(94vh,1000px);overflow:hidden;border:1px solid rgba(255,255,255,.24);background:#071b20;box-shadow:0 28px 90px rgba(0,0,0,.46)}
+.project-lightbox-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:54px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.16);color:#fff;background:#0c343d}
+.project-lightbox-toolbar button,.project-lightbox-nav{min-height:38px;border:1px solid rgba(255,255,255,.28);border-radius:999px;color:#fff;background:rgba(255,255,255,.08);cursor:pointer;font:inherit;font-size:15px;font-weight:850}
+.project-lightbox-toolbar button{padding:7px 13px}
+.project-lightbox-toolbar>[data-image-action="close"]{width:40px;padding:0;font-size:27px;line-height:1}
+.project-lightbox-counter{font-size:15px;font-weight:850;white-space:nowrap}
+.project-lightbox-tools{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap}
+.project-lightbox-stage{display:flex;align-items:flex-start;justify-content:flex-start;min-height:0;overflow:auto;padding:16px;overscroll-behavior:contain;background:#02080a}
+.project-lightbox-stage img{display:block;flex:0 0 auto;max-width:none;margin:auto;box-shadow:0 14px 48px rgba(0,0,0,.36);cursor:zoom-in;user-select:none;-webkit-user-drag:none}
+.project-lightbox-caption{padding:11px 18px;color:#e9f5f2;background:#0c343d;text-align:center;font-size:16px;line-height:1.55}
+.project-lightbox-nav{position:absolute;top:50%;z-index:3;width:48px;height:48px;padding:0;transform:translateY(-50%);font-size:35px;line-height:1}
+.project-lightbox-nav.prev{left:14px}
+.project-lightbox-nav.next{right:14px}
+.project-lightbox-nav[hidden]{display:none}
+.project-lightbox button:hover,.project-lightbox button:focus-visible{color:#17322d;background:#ffe39b;border-color:#ffe39b;outline:none}
+
 @media(max-width:1100px){
   .project-list-grid{grid-template-columns:1fr}
+  .project-list-card{grid-template-columns:210px minmax(0,1fr);min-height:270px}
+  .project-list-thumb{width:210px;min-height:270px}
+  .project-list-thumb img{min-height:270px}
   .project-fact-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .project-detail-page .module-hero h1{font-size:clamp(35px,5.4vw,52px)!important}
 }
 @media(max-width:720px){
-  .project-list-thumb,.project-list-thumb img{height:132px;min-height:132px}
+  .project-list-card{grid-template-columns:138px minmax(0,1fr);min-height:250px}
+  .project-list-thumb{width:138px;min-height:250px}
+  .project-list-thumb img{min-height:250px}
   .project-list-content{padding:16px}
   .project-list-content h3{font-size:19px!important}
   .project-list-content>p{font-size:15.5px!important}
@@ -59,9 +87,21 @@
   .project-story.wide{grid-column:auto}
   .project-detail-page .module-hero h1{font-size:clamp(33px,8.8vw,44px)!important;letter-spacing:-.25px}
   .project-detail-page .module-hero .module-lead{font-size:19px!important}
+  .project-lightbox{padding:8px}
+  .project-lightbox-panel{width:100%;height:96vh}
+  .project-lightbox-toolbar{align-items:flex-start}
+  .project-lightbox-tools{gap:5px}
+  .project-lightbox-toolbar button{padding:6px 9px;font-size:13px}
+  .project-lightbox-nav{width:42px;height:42px}
+  .project-lightbox-nav.prev{left:7px}
+  .project-lightbox-nav.next{right:7px}
 }
-@media(max-width:520px){.project-fact-grid{grid-template-columns:1fr}}
-@media(max-width:460px){
-  .project-list-thumb,.project-list-thumb img{height:118px;min-height:118px}
-  .project-list-content .module-actions a{width:100%}
+@media(max-width:520px){
+  .project-fact-grid{grid-template-columns:1fr}
+  .project-list-card{grid-template-columns:1fr;min-height:0}
+  .project-list-thumb{width:100%;height:142px;min-height:142px;border-right:0!important;border-bottom:1px solid var(--qily-line)!important}
+  .project-list-thumb img{height:142px;min-height:142px}
+  .project-lightbox-counter{display:none}
+  .project-lightbox-caption{font-size:14px}
 }
+@media(max-width:460px){.project-list-content .module-actions a{width:100%}}
