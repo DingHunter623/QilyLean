@@ -17,6 +17,14 @@
     document.head.appendChild(link);
   }
 
+  function alignHomepageMetrics(){
+    if(document.getElementById('qilyMetricBottomAlignStyle'))return;
+    var style=document.createElement('style');
+    style.id='qilyMetricBottomAlignStyle';
+    style.textContent='.qily-home-balanced .metrics{align-items:stretch!important}.qily-home-balanced .metric{display:flex!important;flex-direction:column!important;height:100%!important}.qily-home-balanced .metric>em{margin-top:auto!important;padding-top:12px!important}';
+    document.head.appendChild(style);
+  }
+
   function balanceHomepageHero(){
     var path=(location.pathname||'/').replace(/\/index\.html$/,'/');
     if(path!=='/'&&path!=='/qilylean/home.html'&&path!=='/qilylean/home-live.html')return;
@@ -25,6 +33,7 @@
     if(!grid||!panel)return;
     if(panel.parentElement!==grid)grid.appendChild(panel);
     document.body.classList.add('qily-home-balanced');
+    alignHomepageMetrics();
   }
 
   loadVisualScale();
