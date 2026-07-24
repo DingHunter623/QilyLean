@@ -1119,7 +1119,7 @@
 <script>
 (function(){var legacy=(location.hash||'').slice(1);if(/^\d{4}-\d{2}-\d{2}$/.test(legacy)){location.replace('/qilylean/daily/'+legacy+'.html');return;}function copy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();return Promise.resolve();}function mobile(){return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'')||!!(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches&&innerWidth<=820);}document.addEventListener('click',function(event){var button=event.target.closest&&event.target.closest('[data-brief-url]');if(!button)return;var url=button.getAttribute('data-brief-url');var title=button.getAttribute('data-brief-title')||document.title;var status=button.parentNode.querySelector('.brief-share-status');function done(text){if(status)status.textContent=text;setTimeout(function(){if(status)status.textContent='';},2200);}if(mobile()&&navigator.share){navigator.share({title:title,text:title,url:url}).then(function(){done('已调起分享');}).catch(function(error){if(error&&error.name==='AbortError')return;copy(url).then(function(){done('网址已复制');});});}else copy(url).then(function(){done('网址已复制');});});})();
 </script>
-<script src="/site-navigation.js?v=20260724-logo-tricolor-v4"></script>
+<script src="/site-navigation.js?v=20260724-brand-v1"></script>
 <script src="/homepage-music.js?v=20260722-continuous-v3"></script>
 </body>
 </html>
