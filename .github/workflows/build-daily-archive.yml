@@ -1,0 +1,61 @@
+name: Build daily engineering brief archive
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "qilylean/daily/*.html"
+      - "qilylean/assets/daily-*.svg"
+      - "scripts/build-daily-archive.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-archive-main
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Rebuild archive, adjacent links and sitemap
+        run: node scripts/build-daily-archive.js
+
+      - name: Validate generated archive
+        shell: bash
+        run: |
+          test -f qilylean/daily-insights.html
+          test -f qilylean/daily/index.json
+          grep -q "qilylean/daily/2026-07-24.html" sitemap.xml || {
+            echo "Latest daily brief is missing from sitemap.xml"
+            exit 1
+          }
+          grep -q "2026-07-24" qilylean/daily-insights.html || {
+            echo "Latest daily brief is missing from daily-insights.html"
+            exit 1
+          }
+
+      - name: Commit generated files
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Generated archive is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qilylean/daily-insights.html qilylean/daily/index.json qilylean/daily/*.html sitemap.xml
+          git commit -m "build: publish latest daily engineering brief archive [skip ci]"
+          git push
