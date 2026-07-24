@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+// One-time publication index update for the Times26001 app landing page.
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
