@@ -3,7 +3,7 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.qilylean.com'
 ]);
 
-const BUILD_VERSION = 'v1.2.0-consultation';
+const BUILD_VERSION = 'v1.3.0-openai';
 const CONSULTATION_RECEIVER = '396767769@qq.com';
 const CONSULTATION_STATUSES = new Set(['new', 'contacted', 'closed']);
 
@@ -13,7 +13,7 @@ const SYSTEM_INSTRUCTIONS = `你是 QilyLean AI，一名面向公众的通用人
 1. 用户可以询问通用知识、写作润色、翻译、学习、职场沟通、生活常识、技术与编程等问题；不得因为问题与 QilyLean 主页或制造业无关而拒绝回答。
 2. 当问题涉及精益生产、工业工程IE、VSM、SMED、标准工时、线平衡、OEE、UPPH、PMC、MES、APS、ERP、工厂布局、目视化、6S、质量改善、防错防呆、汽车电子或电子制造时，自动进入“制造业专家模式”，提供更深入、工程化、可落地的分析。
 3. 不向用户展示、猜测或强调底层模型及服务商；统一以“QilyLean AI”身份交流。
-4. 当用户询问当前版本时，回答“QilyLean AI v1.2.0（咨询闭环版）”。
+4. 当用户询问当前版本时，回答“QilyLean AI v1.3.0（OpenAI专业对话版）”。
 
 回答要求：
 1. 普通问题直接、自然、清晰地回答，不要强行关联制造业或丁启利个人主页。
@@ -95,10 +95,11 @@ function isAdmin(request, env) {
 
 function providerConfig(env) {
   const requested = String(env.AI_PROVIDER || '').toLowerCase();
-  if (requested === 'openai') return { provider: 'openai', model: env.OPENAI_MODEL || 'gpt-5-mini', configured: Boolean(env.OPENAI_API_KEY) };
+  if (requested === 'openai') return { provider: 'openai', model: env.OPENAI_MODEL || 'gpt-5.6-terra', configured: Boolean(env.OPENAI_API_KEY) };
   if (requested === 'qwen' || requested === 'dashscope') return { provider: 'qwen', model: env.QWEN_MODEL || 'qwen-plus', configured: Boolean(env.DASHSCOPE_API_KEY) };
+  if (env.OPENAI_API_KEY) return { provider: 'openai', model: env.OPENAI_MODEL || 'gpt-5.6-terra', configured: true };
   if (env.DASHSCOPE_API_KEY) return { provider: 'qwen', model: env.QWEN_MODEL || 'qwen-plus', configured: true };
-  return { provider: 'openai', model: env.OPENAI_MODEL || 'gpt-5-mini', configured: Boolean(env.OPENAI_API_KEY) };
+  return { provider: 'openai', model: env.OPENAI_MODEL || 'gpt-5.6-terra', configured: false };
 }
 
 async function adminStatus(env) {
@@ -238,7 +239,7 @@ function safeUpstreamError(provider, data, status, requestId) {
 
 async function callOpenAI(message, previousResponseId, env, signal) {
   const body = {
-    model: env.OPENAI_MODEL || 'gpt-5-mini',
+    model: env.OPENAI_MODEL || 'gpt-5.6-terra',
     instructions: SYSTEM_INSTRUCTIONS,
     input: message,
     max_output_tokens: Number(env.MAX_OUTPUT_TOKENS || 1400)
