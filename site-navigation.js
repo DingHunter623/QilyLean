@@ -1,13 +1,13 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanSiteNavigationV8) return;
-  window.__qilyLeanSiteNavigationV8 = true;
+  if (window.__qilyLeanSiteNavigationV9) return;
+  window.__qilyLeanSiteNavigationV9 = true;
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260724-share-lock-v2';
-  var VISUAL_SCALE_VERSION = '20260724-logo-red-dot-v5';
+  var SHARED_ASSET_VERSION = '20260725-global-header-v3';
+  var VISUAL_SCALE_VERSION = '20260725-global-header-v3';
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
   var routes = [
     ['首页', '/'],
@@ -72,18 +72,42 @@
     document.head.appendChild(link);
   }
 
+  function addGlobalHeaderStyles() {
+    if (document.getElementById('qilyGlobalHeaderStandard')) return;
+    var style = document.createElement('style');
+    style.id = 'qilyGlobalHeaderStandard';
+    style.textContent = [
+      '.qily-site-header.qily-global-header{position:sticky!important;top:0!important;z-index:8000!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;gap:20px!important;min-height:70px!important;padding:10px clamp(18px,3.8vw,54px) 10px max(70px,env(safe-area-inset-left))!important;color:#182420!important;background:rgba(255,255,255,.98)!important;border-bottom:1px solid #d5e4e3!important;box-shadow:0 6px 20px rgba(15,75,90,.06)!important;backdrop-filter:blur(14px)!important;-webkit-backdrop-filter:blur(14px)!important}',
+      '.qily-global-header>.qily-brand{display:block!important;flex:0 0 auto!important;width:clamp(168px,14vw,226px)!important;height:34px!important;margin:0!important;padding:0!important;overflow:hidden!important;color:transparent!important;background:url("/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5") left center/contain no-repeat!important;text-indent:-9999px!important;white-space:nowrap!important;text-decoration:none!important}',
+      '.qily-global-header>.qily-global-nav{display:flex!important;flex:0 1 auto!important;align-items:center!important;justify-content:flex-end!important;gap:6px!important;max-width:calc(100vw - 330px)!important;margin-left:auto!important;padding:0!important;overflow-x:auto!important;overflow-y:hidden!important;color:#182420!important;white-space:nowrap!important;scrollbar-width:thin!important;-webkit-overflow-scrolling:touch!important}',
+      '.qily-global-header>.qily-global-nav a{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;min-height:42px!important;padding:7px 10px!important;border:1px solid transparent!important;border-radius:10px!important;color:#182420!important;background:transparent!important;box-shadow:none!important;font-size:17.5px!important;font-weight:850!important;line-height:1.2!important;text-decoration:none!important;transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease!important}',
+      '.qily-global-header>.qily-global-nav a:hover,.qily-global-header>.qily-global-nav a:focus-visible{color:#fff!important;background:#0f4b5a!important;border-color:#0f4b5a!important;box-shadow:0 8px 18px rgba(15,75,90,.22)!important;outline:none!important;transform:translateY(-2px)!important}',
+      '.qily-global-header>.qily-global-nav a[aria-current="page"]{color:#0f4b5a!important;background:#e4f2ef!important;border-color:#b8d9d4!important}',
+      '.qily-global-header>.qily-global-nav a[href="/experience/"],.qily-global-header>.qily-global-nav a[href="/cooperation/"]{color:#624810!important;border-color:#d5a84f!important;background:linear-gradient(135deg,#fff5d5,#ffe39b)!important;box-shadow:inset 0 0 0 1px rgba(202,161,95,.18),0 4px 12px rgba(110,78,26,.09)!important}',
+      '.qily-global-header>.qily-global-nav a[href="/experience/"]::before,.qily-global-header>.qily-global-nav a[href="/cooperation/"]::before{content:"🔒";margin-right:4px;font-size:.78em;line-height:1}',
+      '.qily-global-header>.qily-global-nav a[href="/experience/"]:hover,.qily-global-header>.qily-global-nav a[href="/experience/"]:focus-visible,.qily-global-header>.qily-global-nav a[href="/cooperation/"]:hover,.qily-global-header>.qily-global-nav a[href="/cooperation/"]:focus-visible{color:#fff!important;border-color:#6e3f5f!important;background:#6e3f5f!important}',
+      '@media(max-width:900px){.qily-site-header.qily-global-header{flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:5px!important;min-height:auto!important;padding:7px 9px 8px!important}.qily-global-header>.qily-brand{width:142px!important;height:27px!important;margin-left:42px!important}.qily-global-header>.qily-global-nav{width:100%!important;max-width:100%!important;margin:0!important;justify-content:flex-start!important;gap:5px!important;overflow-x:auto!important}.qily-global-header>.qily-global-nav a{min-height:34px!important;padding:5px 9px!important;font-size:12.5px!important;border-radius:9px!important}}',
+      '@media(max-width:620px){.qily-global-header>.qily-brand{width:126px!important;height:23px!important}.qily-global-header>.qily-global-nav a{font-size:11.5px!important;padding:5px 7px!important}}'
+    ].join('');
+    document.head.appendChild(style);
+  }
+
   function buildNavigation() {
     var header = document.querySelector('header.qily-site-header,header.topbar,header.top');
     if (!header) {
       header = document.createElement('header');
-      header.className = 'qily-site-header';
-      header.innerHTML = '<a class="qily-brand" href="/">QilyLean</a>';
       document.body.insertBefore(header, document.body.firstChild);
     }
 
     var path = normalizedPath(location.pathname);
     var modulePath = currentModule(path);
-    var oldNav = header.querySelector(':scope > nav.nav,:scope > nav.site-nav');
+    var brand = document.createElement('a');
+    brand.className = 'qily-brand';
+    brand.href = '/';
+    brand.textContent = 'QilyLean｜启力精益';
+    brand.setAttribute('aria-label', '返回QilyLean首页');
+    brand.setAttribute('title', '返回首页');
+
     var nav = document.createElement('nav');
     nav.className = 'site-nav qily-global-nav';
     nav.setAttribute('aria-label', '网站导航');
@@ -97,10 +121,8 @@
     });
 
     document.querySelectorAll('.qily-back-link').forEach(function (item) { item.remove(); });
-    header.classList.remove('qily-has-back');
-    header.classList.add('qily-global-header');
-    if (oldNav && oldNav.isConnected) oldNav.replaceWith(nav);
-    else header.appendChild(nav);
+    header.className = 'qily-site-header qily-global-header';
+    header.replaceChildren(brand, nav);
   }
 
   function enableNavigationPrefetch() {
@@ -413,6 +435,7 @@
   function boot() {
     addStylesheet();
     addVisualScaleStylesheet();
+    addGlobalHeaderStyles();
     buildNavigation();
     protectCooperationPage();
     enableNavigationPrefetch();
