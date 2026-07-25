@@ -11,10 +11,57 @@
     :root{--forest:#0f4b5a;--teal:#178b94;--ink:#182420;--muted:#607474;--line:#cbdcda;--paper:#e9f1ef;--gold:#ffe39b;--shadow:0 18px 48px rgba(15,75,90,.16)}*{box-sizing:border-box;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}html{scroll-behavior:smooth;background:var(--paper)}body{margin:0;color:var(--ink);background:linear-gradient(180deg,#edf5f3,#dfeae7);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}canvas{display:block;width:100%;height:auto;pointer-events:none}.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,4vw,48px);color:#fff;background:rgba(7,60,71,.96);border-bottom:1px solid rgba(255,255,255,.14);backdrop-filter:blur(14px)}.brand{font-weight:900}.back{display:inline-flex;align-items:center;min-height:40px;padding:7px 16px;border:1px solid rgba(255,227,155,.58);border-radius:999px;color:#fff;text-decoration:none;font-weight:850}.hero{padding:34px 18px 28px;color:#fff;background:linear-gradient(125deg,#0f4b5a,#178b94)}.hero-inner,.viewer{width:min(1120px,100%);margin:auto}.eyebrow{color:var(--gold);font-size:14px;font-weight:900;letter-spacing:.04em}.hero h1{margin:8px 0 12px;font-size:clamp(28px,4vw,44px);line-height:1.25}.hero p{max-width:980px;margin:0;color:#e6f4ef;font-size:18px}.summary{display:grid;grid-template-columns:auto 1fr;gap:12px;margin-top:18px;padding:14px 16px;border:1px solid rgba(255,227,155,.42);background:rgba(255,255,255,.08)}.summary strong{color:var(--gold)}.viewer{padding:26px 12px 60px}.viewer-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;color:var(--muted);font-size:14px;font-weight:800}.page{position:relative;max-width:1000px;margin:0 auto 24px;overflow:hidden;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow)}.page figcaption{padding:9px 14px;color:var(--muted);background:#f8fbfa;border-top:1px solid var(--line);font-size:13px;font-weight:850;text-align:center}.page-guard{position:absolute;inset:0 0 43px;z-index:2;background:transparent;touch-action:pan-y pinch-zoom}.page-loading{position:absolute;inset:0 0 43px;display:grid;place-items:center;color:var(--muted);background:#fff;font-weight:800}.footer{padding:22px 18px;color:#d7e8e2;background:#101916;text-align:center;font-size:14px}@media(max-width:640px){.topbar{align-items:flex-start;flex-direction:column}.back{width:100%;justify-content:center}.hero{padding-top:26px}.viewer{padding-left:6px;padding-right:6px}.page{margin-bottom:16px}.summary{grid-template-columns:1fr}}@media print{html,body{background:#fff!important}body>*{display:none!important}}
     /* Keep the injected global navigation readable on the dark preview header. */
     .topbar .qily-global-nav a{color:#fff!important}
+  
+    /* QilyLean preview header alignment 2026-07-25:
+       official homepage logo, music-control clearance and readable nav spacing. */
+    .topbar.qily-global-header > .brand.preview-home-logo{
+      display:block!important;
+      width:clamp(206px,14vw,238px)!important;
+      height:44px!important;
+      margin-left:54px!important;
+      padding:5px 9px!important;
+      overflow:hidden!important;
+      border-radius:10px;
+      background-color:rgba(255,255,255,.98)!important;
+      background-image:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5')!important;
+      background-position:center!important;
+      background-repeat:no-repeat!important;
+      background-size:calc(100% - 18px) auto!important;
+      box-shadow:0 6px 16px rgba(0,0,0,.14);
+      text-indent:-9999px!important;
+      text-decoration:none;
+    }
+    .topbar.qily-global-header .qily-global-nav{gap:8px!important}
+    .topbar.qily-global-header .qily-global-nav a{
+      padding-left:10px!important;
+      padding-right:10px!important;
+    }
+    @media(max-width:1350px) and (min-width:901px){
+      .topbar.qily-global-header{flex-wrap:wrap!important}
+      .topbar.qily-global-header .qily-global-nav{
+        width:100%!important;
+        max-width:100%!important;
+        margin-left:0!important;
+        justify-content:center!important;
+      }
+    }
+    @media(max-width:900px){
+      .topbar.qily-global-header > .brand.preview-home-logo{
+        width:150px!important;
+        height:31px!important;
+        margin-left:42px!important;
+        padding:3px 6px!important;
+      }
+      .topbar.qily-global-header .qily-global-nav{gap:5px!important}
+      .topbar.qily-global-header .qily-global-nav a{
+        padding-left:9px!important;
+        padding-right:9px!important;
+      }
+    }
   </style>
 </head>
 <body oncontextmenu="return false">
-  <header class="topbar"><div class="brand">QilyLean｜参考资料</div><a class="back" href="/knowledge/#documents" target="_top" rel="noopener">返回知识分享</a></header>
+  <header class="topbar"><a class="brand preview-home-logo" href="/" target="_top" aria-label="返回QilyLean首页" title="返回首页">QilyLean｜启力精益</a><a class="back" href="/knowledge/#documents" target="_top" rel="noopener">返回知识分享</a></header>
   <main>
     <section class="hero"><div class="hero-inner"><span class="eyebrow">IATF 16949 / AIAG CORE TOOLS / NPI</span><h1>IATF16949六大工具简介及官方原著链接</h1><p>面向汽车电子制造、IATF16949体系培训及NPI转量产质量策划，说明六大核心工具的职责定位、相互关系与原著资料入口。</p><div class="summary"><strong>主旨概述</strong><span>APQP管项目策划，FMEA管风险识别，Control Plan管现场控制，MSA管测量可信，SPC管过程稳定，PPAP管客户批准。</span></div></div></section>
     <section class="viewer" aria-label="文档在线预览">
