@@ -112,7 +112,7 @@ function speak(text,button){
   var utterance=new SpeechSynthesisUtterance(clean);
   utterance.lang='zh-CN';
   utterance.rate=Number(settings.rate)||1;
-  utterance.pitch=settings.gender==='male'?.72:1.06;
+  utterance.pitch=settings.gender==='male' ? 0.72 : 1.06;
   utterance.volume=1;
   var voice=chooseVoice(settings.gender);
   if(voice)utterance.voice=voice;
