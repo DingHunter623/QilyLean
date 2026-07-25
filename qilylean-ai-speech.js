@@ -7,6 +7,7 @@ var synth=window.speechSynthesis;
 var supported=Boolean(synth&&window.SpeechSynthesisUtterance);
 var activeButton=null;
 var settings={gender:'female',rate:'1'};
+var INTRO_TEXT='您好，我是 QilyLean AI 智能解惑顾问。这里不仅解答工作中的疑难问题，也面向生活、学习、兴趣爱好及其他各类困惑。您可以直接提问，或上传文件、图片、视频及语音，我会结合实际需求提供清晰、专业、可执行的分析与建议。';
 
 try{
   var saved=JSON.parse(localStorage.getItem('qilylean_ai_speech_settings')||'null');
@@ -18,6 +19,20 @@ try{
 
 function saveSettings(){
   try{localStorage.setItem('qilylean_ai_speech_settings',JSON.stringify(settings));}catch(_e){}
+}
+
+function updateIntro(){
+  var first=messages.querySelector('.msg.assistant:not(.thinking) .bubble');
+  if(!first)return;
+  var text=(first.innerText||first.textContent||'').trim();
+  if(text.indexOf('您好，我是 QilyLean 制造改善 AI 顾问')!==0)return;
+  first.innerHTML='';
+  var content=document.createElement('div');
+  content.className='answer-content';
+  var paragraph=document.createElement('p');
+  paragraph.textContent=INTRO_TEXT;
+  content.appendChild(paragraph);
+  first.appendChild(content);
 }
 
 function resetActive(){
@@ -83,7 +98,14 @@ function speak(text,button){
 
 function syncMenus(){
   messages.querySelectorAll('.speech-gender').forEach(function(select){select.value=settings.gender;});
-  messages.querySelectorAll('.speech-rate').forEach(function(select){select.value=settings.rate;});
+  messages.querySelectorAll('.speech-rate,.speech-quick-rate').forEach(function(select){select.value=settings.rate;});
+}
+
+function applyRate(value){
+  settings.rate=String(value);
+  saveSettings();
+  syncMenus();
+  stopSpeech();
 }
 
 function closeOtherMenus(current){
@@ -130,7 +152,7 @@ function decorate(row){
   genderLabel.appendChild(gender);
 
   var rateLabel=document.createElement('label');
-  rateLabel.textContent='语速';
+  rateLabel.textContent='播放速度';
   var rate=document.createElement('select');
   rate.className='speech-rate';
   rate.innerHTML='<option value="0.8">较慢 0.8×</option><option value="1">标准 1.0×</option><option value="1.2">稍快 1.2×</option><option value="1.5">快速 1.5×</option>';
@@ -154,13 +176,24 @@ function decorate(row){
   panel.appendChild(rateLabel);
   panel.appendChild(save);
   details.appendChild(panel);
+
+  var quickRate=document.createElement('select');
+  quickRate.className='speech-quick-rate';
+  quickRate.setAttribute('aria-label','播放速度');
+  quickRate.innerHTML='<option value="0.8">播放速度 0.8×</option><option value="1">播放速度 1.0×</option><option value="1.2">播放速度 1.2×</option><option value="1.5">播放速度 1.5×</option>';
+  quickRate.value=settings.rate;
+  quickRate.addEventListener('change',function(){applyRate(quickRate.value);});
+
   tools.appendChild(play);
   tools.appendChild(details);
+  tools.appendChild(quickRate);
   wrap.insertBefore(tools,meta||null);
 }
 
 function decorateAll(){
+  updateIntro();
   messages.querySelectorAll('.msg.assistant').forEach(decorate);
+  syncMenus();
 }
 
 decorateAll();
