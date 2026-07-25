@@ -1,0 +1,13 @@
+# Local environment secrets
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+
+# Cloudflare Wrangler local state
+.wrangler/
+
+# Node dependencies and logs
+node_modules/
+npm-debug.log*
