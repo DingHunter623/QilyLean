@@ -3,9 +3,14 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.qilylean.com'
 ]);
 
-const BUILD_VERSION = 'v1.2.0-consultation';
+const BUILD_VERSION = 'v1.3.0-material-analysis';
 const CONSULTATION_RECEIVER = '396767769@qq.com';
 const CONSULTATION_STATUSES = new Set(['new', 'contacted', 'closed']);
+const MAX_ATTACHMENT_BYTES = 6 * 1024 * 1024;
+const DOCUMENT_EXTENSIONS = new Set(['pdf', 'docx', 'xlsx', 'txt', 'md', 'csv', 'json', 'epub', 'mobi']);
+const IMAGE_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/bmp']);
+const VIDEO_MIME_TYPES = new Set(['video/mp4', 'video/quicktime', 'video/webm', 'video/x-msvideo']);
+const AUDIO_MIME_TYPES = new Set(['audio/mpeg', 'audio/mp3', 'audio/wav', 'audio/x-wav', 'audio/mp4', 'audio/aac', 'audio/ogg']);
 
 const SYSTEM_INSTRUCTIONS = `你是 QilyLean AI，一名面向公众的通用人工智能助理，同时具备突出的制造业、精益生产与工业工程专业能力。
 
@@ -21,7 +26,7 @@ const SYSTEM_INSTRUCTIONS = `你是 QilyLean AI，一名面向公众的通用人
 3. 缺少现场数据时，明确列出需要补充的数据，不得虚构企业事实、法规、数据或改善结果。
 4. 区分试运行、基准测时、正式标准和KPI考核；短期改善以试运行、问题暴露、培训沟通和复盘固化为主，不用KPI压现场。
 5. 涉及安全、法律、医疗、财务、投资或法规时，提供一般性信息并提示必要的专业复核。
-6. 默认使用清晰中文；根据用户语言自然切换。专业术语可附英文缩写。避免空泛口号、机械拒绝和过度承诺。`;
+6. 默认使用清晰中文；根据用户语言自然切换。专业术语可附英文缩写。避免空泛口号、机械拒绝和过度承诺。\n7. 输出采用简洁、专业、易扫描的版式：结论先行，通常控制为3至6个要点；标题简短、段落精炼、层级不超过两级。\n8. 除非对比数据确有必要，不使用复杂表格；不使用装饰性分隔线、连续符号、花哨表情或过度加粗。\n9. 不展示内部思考过程、推理链或底层服务信息，只给出可核查的判断依据、结论与建议。\n10. 分析上传素材时，先说明识别到的素材类型与有效信息，再给出重点发现、问题判断、建议动作；无法确认的内容必须明确标注。`;
 
 function cors(origin) {
   const allow = ALLOWED_ORIGINS.has(origin) ? origin : 'https://qilylean.com';
@@ -48,6 +53,56 @@ function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   })[character]);
+}
+
+function extensionOf(name) {
+  const parts = String(name || '').toLowerCase().split('.');
+  return parts.length > 1 ? parts.pop() : '';
+}
+
+function validateAttachment(value) {
+  if (!value) return { attachment: null };
+  if (typeof value !== 'object') return { error: 'Invalid attachment', status: 400 };
+
+  const name = clean(value.name, 180);
+  const declaredType = clean(value.type, 100).toLowerCase();
+  const data = String(value.data || '');
+  const matched = data.match(/^data:([^;,]*)(?:;[^,]*)?;base64,(.+)$/);
+  if (!name || !matched) return { error: 'Invalid attachment data', status: 400 };
+
+  const mime = (matched[1] || declaredType || 'application/octet-stream').toLowerCase();
+  const base64 = matched[2];
+  const padding = base64.endsWith('==') ? 2 : base64.endsWith('=') ? 1 : 0;
+  const bytes = Math.max(0, Math.floor(base64.length * 3 / 4) - padding);
+  if (bytes > MAX_ATTACHMENT_BYTES) return { error: 'Attachment is too large', status: 413 };
+
+  const extension = extensionOf(name);
+  let kind = '';
+  if (DOCUMENT_EXTENSIONS.has(extension)) kind = 'document';
+  else if (IMAGE_MIME_TYPES.has(mime)) kind = 'image';
+  else if (VIDEO_MIME_TYPES.has(mime)) kind = 'video';
+  else if (AUDIO_MIME_TYPES.has(mime)) kind = 'audio';
+  if (!kind) return { error: 'Unsupported attachment type', status: 415 };
+
+  return {
+    attachment: { name, mime, extension, kind, data, base64, bytes }
+  };
+}
+
+function qwenHeaders(env) {
+  return { 'Authorization': `Bearer ${env.DASHSCOPE_API_KEY}` };
+}
+
+function parseJsonText(text) {
+  try { return JSON.parse(text); } catch { return {}; }
+}
+
+function qwenError(provider, status, data, requestId) {
+  return { provider, status, data, requestId };
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 async function readNumber(kv, key) {
@@ -262,11 +317,11 @@ async function callOpenAI(message, previousResponseId, env, signal) {
   };
 }
 
-async function callQwen(message, env, signal) {
+async function callQwenText(message, env, signal) {
   const model = env.QWEN_MODEL || 'qwen-plus';
   const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Authorization': `Bearer ${env.DASHSCOPE_API_KEY}`, 'Content-Type': 'application/json' },
+    headers: { ...qwenHeaders(env), 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model,
       messages: [
@@ -280,7 +335,7 @@ async function callQwen(message, env, signal) {
   });
   const data = await response.json();
   const requestId = response.headers.get('x-request-id') || data.request_id || '';
-  if (!response.ok) throw { provider: 'qwen', status: response.status, data, requestId };
+  if (!response.ok) throw qwenError('qwen', response.status, data, requestId);
   return {
     answer: data.choices?.[0]?.message?.content || '暂未生成有效回答。',
     response_id: null,
@@ -289,6 +344,173 @@ async function callQwen(message, env, signal) {
     model,
     build_version: BUILD_VERSION
   };
+}
+
+function mediaPart(attachment) {
+  if (attachment.kind === 'image') {
+    return { type: 'image_url', image_url: { url: attachment.data } };
+  }
+  if (attachment.kind === 'video') {
+    return { type: 'video_url', video_url: { url: attachment.data }, fps: 1 };
+  }
+  const format = attachment.extension === 'm4a' ? 'mp4' : (attachment.extension || 'mp3');
+  return { type: 'input_audio', input_audio: { data: attachment.data, format } };
+}
+
+function extractStreamAnswer(raw) {
+  const parts = [];
+  let usage = null;
+  for (const line of String(raw || '').split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed.startsWith('data:')) continue;
+    const payload = trimmed.slice(5).trim();
+    if (!payload || payload === '[DONE]') continue;
+    const item = parseJsonText(payload);
+    if (item.usage) usage = item.usage;
+    const value = item.choices?.[0]?.delta?.content;
+    if (typeof value === 'string') parts.push(value);
+    else if (Array.isArray(value)) {
+      for (const block of value) if (typeof block?.text === 'string') parts.push(block.text);
+    }
+  }
+  if (!parts.length) {
+    const data = parseJsonText(raw);
+    const value = data.choices?.[0]?.message?.content;
+    if (typeof value === 'string') parts.push(value);
+    else if (Array.isArray(value)) {
+      for (const block of value) if (typeof block?.text === 'string') parts.push(block.text);
+    }
+    usage = usage || data.usage || null;
+  }
+  return { answer: parts.join('').trim(), usage };
+}
+
+async function callQwenMedia(message, attachment, env, signal) {
+  const model = env.QWEN_MULTIMODAL_MODEL || 'qwen3.5-omni-plus';
+  const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
+    method: 'POST',
+    headers: { ...qwenHeaders(env), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model,
+      messages: [{
+        role: 'user',
+        content: [
+          mediaPart(attachment),
+          { type: 'text', text: `${SYSTEM_INSTRUCTIONS}\n\n用户的分析要求：${message}` }
+        ]
+      }],
+      modalities: ['text'],
+      stream: true,
+      stream_options: { include_usage: true },
+      max_tokens: Number(env.MAX_OUTPUT_TOKENS || 1400)
+    }),
+    signal
+  });
+  const raw = await response.text();
+  const requestId = response.headers.get('x-request-id') || '';
+  if (!response.ok) throw qwenError('qwen', response.status, parseJsonText(raw), requestId);
+  const parsed = extractStreamAnswer(raw);
+  return {
+    answer: parsed.answer || '暂未生成有效回答。',
+    response_id: null,
+    usage: parsed.usage,
+    provider: 'qwen',
+    model,
+    build_version: BUILD_VERSION
+  };
+}
+
+async function uploadQwenDocument(attachment, env, signal) {
+  const binary = atob(attachment.base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  const form = new FormData();
+  form.append('file', new Blob([bytes], { type: attachment.mime }), attachment.name);
+  form.append('purpose', 'file-extract');
+  const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/files', {
+    method: 'POST',
+    headers: qwenHeaders(env),
+    body: form,
+    signal
+  });
+  const data = await response.json();
+  const requestId = response.headers.get('x-request-id') || data.request_id || '';
+  if (!response.ok) throw qwenError('qwen', response.status, data, requestId);
+  const fileId = data.id || data.data?.uploaded_files?.[0]?.file_id;
+  if (!fileId) throw qwenError('qwen', 502, data, requestId);
+  return { fileId, status: data.status || 'uploaded' };
+}
+
+async function waitForQwenDocument(fileId, initialStatus, env, signal) {
+  let current = initialStatus;
+  for (let attempt = 0; attempt < 6 && current !== 'processed'; attempt += 1) {
+    if (signal.aborted) throw new DOMException('Aborted', 'AbortError');
+    await delay(900 + attempt * 300);
+    const response = await fetch(`https://dashscope.aliyuncs.com/compatible-mode/v1/files/${encodeURIComponent(fileId)}`, {
+      headers: qwenHeaders(env),
+      signal
+    });
+    const data = await response.json();
+    if (!response.ok) throw qwenError('qwen', response.status, data, response.headers.get('x-request-id') || '');
+    current = data.status || current;
+    if (current === 'error') throw qwenError('qwen', 422, data, data.request_id || '');
+  }
+  return current;
+}
+
+async function deleteQwenDocument(fileId, env) {
+  try {
+    await fetch(`https://dashscope.aliyuncs.com/compatible-mode/v1/files/${encodeURIComponent(fileId)}`, {
+      method: 'DELETE',
+      headers: qwenHeaders(env)
+    });
+  } catch (error) {
+    console.error('temporary document cleanup failed', error && error.message ? error.message : String(error));
+  }
+}
+
+async function callQwenDocument(message, attachment, env, signal) {
+  const model = env.QWEN_DOCUMENT_MODEL || 'qwen-long';
+  let fileId = '';
+  try {
+    const uploaded = await uploadQwenDocument(attachment, env, signal);
+    fileId = uploaded.fileId;
+    await waitForQwenDocument(fileId, uploaded.status, env, signal);
+    const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
+      method: 'POST',
+      headers: { ...qwenHeaders(env), 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model,
+        messages: [
+          { role: 'system', content: SYSTEM_INSTRUCTIONS },
+          { role: 'system', content: `fileid://${fileId}` },
+          { role: 'user', content: message }
+        ],
+        max_tokens: Number(env.MAX_OUTPUT_TOKENS || 1400),
+        temperature: 0.25
+      }),
+      signal
+    });
+    const data = await response.json();
+    const requestId = response.headers.get('x-request-id') || data.request_id || '';
+    if (!response.ok) throw qwenError('qwen', response.status, data, requestId);
+    return {
+      answer: data.choices?.[0]?.message?.content || '暂未生成有效回答。',
+      response_id: null,
+      usage: data.usage,
+      provider: 'qwen',
+      model,
+      build_version: BUILD_VERSION
+    };
+  } finally {
+    if (fileId) await deleteQwenDocument(fileId, env);
+  }
+}
+
+async function callQwen(message, attachment, env, signal) {
+  if (!attachment) return callQwenText(message, env, signal);
+  if (attachment.kind === 'document') return callQwenDocument(message, attachment, env, signal);
+  return callQwenMedia(message, attachment, env, signal);
 }
 
 export default {
@@ -378,14 +600,18 @@ export default {
 
     const message = String(payload.message || '').trim();
     const previousResponseId = payload.previous_response_id ? String(payload.previous_response_id) : undefined;
+    const checkedAttachment = validateAttachment(payload.attachment);
+    if (checkedAttachment.error) return json({ error: checkedAttachment.error }, checkedAttachment.status, origin);
+    const attachment = checkedAttachment.attachment;
     if (!message) return json({ error: 'Message is required' }, 400, origin);
     if (message.length > 3000) return json({ error: 'Message is too long' }, 413, origin);
+    if (attachment && !env.DASHSCOPE_API_KEY) return json({ error: 'Attachment analysis is unavailable' }, 503, origin);
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 45000);
+    const timeout = setTimeout(() => controller.abort(), attachment ? 90000 : 45000);
     try {
-      const result = active.provider === 'qwen'
-        ? await callQwen(message, env, controller.signal)
+      const result = attachment || active.provider === 'qwen'
+        ? await callQwen(message, attachment, env, controller.signal)
         : await callOpenAI(message, previousResponseId, env, controller.signal);
       await recordMetric(env, 'success');
       return json({ ...result, rate_limit: { used: rate.used, limit: rate.limit } }, 200, origin);
