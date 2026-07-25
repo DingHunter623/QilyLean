@@ -18,6 +18,7 @@
 .site-nav a {
   display: inline-flex;
   align-items: center;
+  color: inherit;
   min-height: 38px;
   padding: 7px 11px;
   border: 1px solid transparent;
