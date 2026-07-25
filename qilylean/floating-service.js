@@ -200,7 +200,7 @@
     addFuseCuttingProjectImages();
     forceArticleShortShare();
     normalizeLegacyBrand();
-    load('/site-navigation.js?v=20260724-unified-dock-v1', 'qilySiteNavigationScript');
+    load('/site-navigation.js?v=20260725-compact-hero-v1', 'qilySiteNavigationScript');
   }
 
   if (document.readyState === 'loading') {

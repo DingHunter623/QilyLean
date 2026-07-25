@@ -2,7 +2,7 @@
   --qily-ink: #182420;
   --qily-muted: #5f7474;
   --qily-line: #d5e4e3;
-  --qily-paper: #f3faf9;
+  --qily-paper: #eef7f5;
   --qily-white: #fff;
   --qily-forest: #0f4b5a;
   --qily-deep: #073c47;
@@ -244,6 +244,12 @@
 .module-page img { display: block; max-width: 100%; }
 .module-page a { color: inherit; }
 
+body:has(.module-hero),
+body:has(.daily-hero),
+body:has(.hero:not(:has(.hero-grid))) {
+  background: var(--qily-paper) !important;
+}
+
 .qily-site-header {
   position: sticky;
   top: 0;
@@ -279,27 +285,84 @@
 }
 
 .module-hero {
-  padding: clamp(44px, 7vw, 90px) clamp(18px, 4vw, 58px);
+  padding: 36px clamp(18px, 6vw, 80px);
   color: #fff;
-  background:
-    radial-gradient(circle at 86% 14%, rgba(255, 227, 155, .18), transparent 28%),
-    linear-gradient(120deg, rgba(7, 60, 71, .99), rgba(23, 139, 148, .95) 56%, rgba(43, 103, 118, .97));
+  background: linear-gradient(125deg, #0f4b5a, #177f87);
 }
 
 .module-inner { width: min(1220px, 100%); margin: 0 auto; }
+.module-hero > .module-inner { width: min(1080px, 100%); }
 .module-page .inner { width: min(1220px, 100%); margin: 0 auto; }
 .module-page .head { max-width: 980px; margin-bottom: 28px; }
 .module-page .head h2 { margin: 0 0 12px; color: var(--qily-forest); font-size: clamp(30px, 3.5vw, 46px); line-height: 1.16; }
 .module-page .head p { margin: 0; color: var(--qily-muted); font-size: 19px; }
 .module-eyebrow { color: var(--qily-gold); font-size: 15px; font-weight: 950; }
-.module-hero h1 { margin: 10px 0 14px; font-size: clamp(38px, 5vw, 66px); line-height: 1.06; }
-.module-lead { max-width: 980px; margin: 0; color: #fff3df; font-size: clamp(20px, 1.7vw, 25px); line-height: 1.78; }
+.module-hero h1 { margin: 8px 0; font-size: clamp(34px, 5vw, 56px); line-height: 1.08; }
+.module-lead { max-width: 1080px; margin: 0; color: #e8f6f3; font-size: 18px; line-height: 1.7; }
+
+/*
+ * Global hero standard
+ * Mirrors the compact QilyLean AI title band across legacy content pages.
+ * The homepage portrait hero uses .hero-grid and is intentionally excluded.
+ */
+.hero:not(:has(.hero-grid)):has(> .inner),
+.hero:has(> .hero-inner) {
+  padding: 36px clamp(18px, 6vw, 80px) !important;
+  color: #fff !important;
+  background: linear-gradient(125deg, #0f4b5a, #177f87) !important;
+}
+
+.hero:not(:has(.hero-grid)) > .inner,
+.hero > .hero-inner {
+  width: min(1080px, 100%) !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+.hero:not(:has(.hero-grid)) h1 {
+  margin: 8px 0 !important;
+  font-size: clamp(34px, 5vw, 56px) !important;
+  line-height: 1.08 !important;
+}
+
+.hero:not(:has(.hero-grid)) p,
+.hero:not(:has(.hero-grid)) .lead {
+  max-width: 1080px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  color: #e8f6f3 !important;
+  font-size: 18px !important;
+  line-height: 1.7 !important;
+}
+
+.daily-hero {
+  padding: 36px clamp(18px, 6vw, 80px) !important;
+  color: #fff !important;
+  background: linear-gradient(125deg, #0f4b5a, #177f87) !important;
+}
+
+.daily-hero > .daily-inner {
+  width: min(1080px, 100%) !important;
+}
+
+.daily-hero h1 {
+  margin: 8px 0 !important;
+  font-size: clamp(34px, 5vw, 56px) !important;
+  line-height: 1.08 !important;
+}
+
+.daily-hero p {
+  max-width: 1080px !important;
+  color: #e8f6f3 !important;
+  font-size: 18px !important;
+  line-height: 1.7 !important;
+}
 
 .module-subnav {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 24px;
+  margin-top: 16px;
 }
 
 .module-subnav a,
@@ -307,8 +370,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 9px 16px;
+  min-height: 40px;
+  padding: 7px 14px;
   border: 1px solid rgba(255, 227, 155, .62);
   border-radius: 999px;
   color: #fff !important;

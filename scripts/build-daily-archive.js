@@ -103,7 +103,7 @@ function pageHeader(title, description, canonical, ogType = 'article') {
   <meta property="og:title" content="${escapeHtml(title)}">
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:url" content="${canonical}">
-  <link rel="stylesheet" href="/site-shell.css?v=20260725-global-header-v3">
+  <link rel="stylesheet" href="/site-shell.css?v=20260725-compact-hero-v1">
   <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260722-daily-v2">
 </head>`;
 }
@@ -116,7 +116,7 @@ function siteHeader() {
 }
 
 function pageScripts() {
-  return `<script src="/site-navigation.js?v=20260725-global-header-v3"></script>
+  return `<script src="/site-navigation.js?v=20260725-compact-hero-v1"></script>
 <script src="/homepage-music.js?v=20260722-continuous-v3"></script>`;
 }
 
