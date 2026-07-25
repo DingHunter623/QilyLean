@@ -1,0 +1,104 @@
+name: QilyLean AI 定向修整
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/qilylean-ai-hotfix.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  apply-hotfix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 定向修改上传限制与提问窗口宽度
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(path, old, new):
+              file = Path(path)
+              text = file.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected 1 match, found {count}: {old}')
+              file.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          replace_once('qilylean-ai.js',
+                       'var MAX_FILE_SIZE=6*1024*1024;',
+                       'var MAX_FILE_SIZE=25*1024*1024;')
+          replace_once('qilylean-ai.js',
+                       '单个素材不能超过 6MB，请压缩后重新上传。',
+                       '单个素材不能超过 25MB，请压缩后重新上传。')
+
+          replace_once('ai.html',
+                       '.user .bubble{max-width:min(78%,680px);',
+                       '.user .bubble{max-width:min(92%,880px);')
+          replace_once('ai.html',
+                       '.user .bubble{max-width:92%}',
+                       '.user .bubble{max-width:96%}')
+          replace_once('ai.html',
+                       '单个素材不超过 6MB。',
+                       '单个素材不超过 25MB。')
+          replace_once('ai.html',
+                       '/qilylean-ai.js?v=20260725-material-v1',
+                       '/qilylean-ai.js?v=20260725-material-v2')
+
+          replace_once('cloudflare-worker/worker.js',
+                       "const MAX_ATTACHMENT_BYTES = 6 * 1024 * 1024;",
+                       "const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;")
+          PY
+
+      - name: 校验修整结果
+        shell: bash
+        run: |
+          grep -q "MAX_FILE_SIZE=25\*1024\*1024" qilylean-ai.js
+          grep -q "单个素材不能超过 25MB" qilylean-ai.js
+          grep -q "max-width:min(92%,880px)" ai.html
+          grep -q "user .bubble{max-width:96%}" ai.html
+          grep -q "单个素材不超过 25MB" ai.html
+          grep -q "MAX_ATTACHMENT_BYTES = 25 \* 1024 \* 1024" cloudflare-worker/worker.js
+          node --check qilylean-ai.js
+          node --check cloudflare-worker/worker.js
+
+      - name: 提交修整
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qilylean-ai.js ai.html cloudflare-worker/worker.js
+          git commit -m "fix: widen user messages and allow 25MB uploads"
+          git push origin main
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: 安装依赖
+        run: npm install
+
+      - name: 校验 Cloudflare 账户 ID
+        shell: bash
+        env:
+          RAW_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          ACCOUNT_ID="$(printf '%s' "$RAW_CLOUDFLARE_ACCOUNT_ID" | grep -oE '[0-9a-fA-F]{32}' | head -n 1)"
+          if [ "${#ACCOUNT_ID}" -ne 32 ]; then
+            echo "Cloudflare 账户 ID 无效：应为 32 位十六进制字符串。"
+            exit 1
+          fi
+          echo "CLOUDFLARE_ACCOUNT_ID=$ACCOUNT_ID" >> "$GITHUB_ENV"
+
+      - name: 部署更新后的 Worker
+        run: npm run deploy:worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
