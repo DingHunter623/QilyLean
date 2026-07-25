@@ -1,7 +1,7 @@
 (function(){
 'use strict';
 var API='https://qilylean-ai.dinghunter623.workers.dev/chat';
-var MAX_FILE_SIZE=6*1024*1024;
+var MAX_FILE_SIZE=25*1024*1024;
 var messages=document.getElementById('messages');
 var form=document.getElementById('chatForm');
 var q=document.getElementById('question');
@@ -269,7 +269,7 @@ async function selectAttachment(file){
   }
   if(file.size>MAX_FILE_SIZE){
     clearAttachment();
-    setStatus('素材过大','单个素材不能超过 6MB，请压缩后重新上传。','!');
+    setStatus('素材过大','单个素材不能超过 25MB，请压缩后重新上传。','!');
     return;
   }
   setStatus('正在读取素材','请稍候，读取完成后即可发送。','…');
