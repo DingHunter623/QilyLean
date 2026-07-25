@@ -21,6 +21,8 @@
     .footer{padding:22px 18px;color:#d7e8e2;background:#101916;text-align:center;font-size:14px}
     @media(max-width:640px){.topbar{align-items:flex-start;flex-direction:column}.back{width:100%;justify-content:center}.hero{padding-top:26px}.viewer{padding-left:8px;padding-right:8px}.page{margin-bottom:16px}.summary{grid-template-columns:1fr}}
     @media print{html,body{background:#fff!important}body>*{display:none!important}body::before{display:block!important;padding:40px;color:#111;content:"本页面不提供打印输出。";font-size:22px;font-weight:900;text-align:center}}
+    /* Keep the injected global navigation readable on the dark preview header. */
+    .topbar .qily-global-nav a{color:#fff!important}
   </style>
 </head>
 <body oncontextmenu="return false">
