@@ -5,6 +5,14 @@ var bar=document.querySelector('.chat .bar');
 var clearButton=document.getElementById('clearBtn');
 if(!messages||!bar||!clearButton)return;
 
+function injectStyles(){
+  if(document.getElementById('qilyleanExportStyles'))return;
+  var style=document.createElement('style');
+  style.id='qilyleanExportStyles';
+  style.textContent='.export-tools{display:flex;align-items:center;gap:7px;padding:0 8px}.export-btn{min-height:32px;padding:6px 10px;border:1px solid #b9d9d4;border-radius:8px;background:#f5faf9;color:var(--forest);font:inherit;font-size:12px;font-weight:850;cursor:pointer;white-space:nowrap}.export-btn:hover,.export-btn:focus-visible{background:#e8f6f3;border-color:var(--teal);box-shadow:0 5px 14px rgba(15,75,90,.12);outline:none}.export-excel{border-color:#c8d9b5;background:#f7faef}.export-word{border-color:#b9d9d4}@media(max-width:720px){.bar{flex-wrap:wrap}.export-tools{order:3;width:100%;justify-content:flex-end;padding:7px 10px;border-top:1px solid var(--line)}.clear{margin-left:auto}}';
+  document.head.appendChild(style);
+}
+
 function esc(value){
   return String(value==null?'':value).replace(/[&<>"']/g,function(character){
     return({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[character];
@@ -114,10 +122,11 @@ function feedback(text){
   var icon=document.getElementById('statusIcon');
   if(!title||!detail||!icon)return;
   title.textContent=text;
-  detail.textContent='文件已生成，可在浏览器下载记录中查看并另存。';
+  detail.textContent='文件已按简单化、专业化、标准化逻辑整理，可在下载记录中查看并另存。';
   icon.textContent='✓';
 }
 
+injectStyles();
 var tools=document.createElement('div');
 tools.className='export-tools';
 var word=document.createElement('button');
