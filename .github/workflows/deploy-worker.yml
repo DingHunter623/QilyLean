@@ -81,5 +81,19 @@ jobs:
           if (!chat.ok || !String(data.answer || '').trim()) {
             throw new Error('AI answer smoke test failed: ' + chat.status);
           }
-          console.log('QilyLean AI health and answer checks passed.');
+          const speech = await fetch(base + '/tts', {
+            method: 'POST',
+            headers: {
+              Origin: 'https://qilylean.com',
+              'Content-Type': 'text/plain;charset=UTF-8'
+            },
+            body: JSON.stringify({ text: 'QilyLean AI 男声发布验证。', gender: 'male' })
+          });
+          const speechType = speech.headers.get('content-type') || '';
+          const speechVoice = speech.headers.get('x-qilylean-voice') || '';
+          const speechBytes = new Uint8Array(await speech.arrayBuffer());
+          if (!speech.ok || !speechType.startsWith('audio/') || speechVoice !== 'Neil' || speechBytes.length < 1000) {
+            throw new Error('AI male voice smoke test failed: ' + speech.status);
+          }
+          console.log('QilyLean AI health, answer and male voice checks passed.');
           NODE
