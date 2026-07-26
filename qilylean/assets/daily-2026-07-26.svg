@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-labelledby="title desc">
+<title id="title">审核偏差进入异常反应闭环</title><desc id="desc">偏差确认、临时遏制、原因对策、效果复验和标准更新形成持续改进闭环</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b3f4b"/><stop offset="1" stop-color="#177f87"/></linearGradient>
+  <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffe39b"/><stop offset="1" stop-color="#caa15f"/></linearGradient>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#062a32" flood-opacity=".28"/></filter>
+  <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M0 0l12 6-12 6z" fill="#ffe39b"/></marker>
+</defs>
+<rect width="800" height="800" rx="40" fill="url(#bg)"/>
+<rect x="195" y="55" width="410" height="48" rx="24" fill="#fff" fill-opacity=".12" stroke="#fff" stroke-opacity=".34"/>
+<text x="400" y="87" text-anchor="middle" fill="#d8efeb" font-size="21" font-weight="800" letter-spacing="2">ABNORMAL REACTION LOOP</text>
+<text x="400" y="150" text-anchor="middle" fill="#fff" font-size="40" font-weight="900">发现偏差 ≠ 问题关闭</text>
+<text x="400" y="191" text-anchor="middle" fill="#ffe39b" font-size="25" font-weight="800">审核结果必须进入反应计划</text>
+<circle cx="400" cy="435" r="196" fill="#062f38" fill-opacity=".25" stroke="#8fcac5" stroke-width="3" stroke-dasharray="8 12"/>
+<g fill="none" stroke="#ffe39b" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow)">
+  <path d="M400 265c92 0 166 74 166 166"/>
+  <path d="M566 447c0 92-74 166-166 166"/>
+  <path d="M384 613c-92 0-166-74-166-166"/>
+  <path d="M218 431c0-92 74-166 166-166"/>
+</g>
+<g filter="url(#shadow)" font-weight="900">
+  <rect x="300" y="225" width="200" height="78" rx="20" fill="#f6fbfa"/><text x="400" y="274" text-anchor="middle" fill="#0f4b5a" font-size="25">01 偏差确认</text>
+  <rect x="520" y="360" width="210" height="78" rx="20" fill="#e6f3f0"/><text x="625" y="409" text-anchor="middle" fill="#0f4b5a" font-size="25">02 临时遏制</text>
+  <rect x="470" y="570" width="225" height="78" rx="20" fill="#f6fbfa"/><text x="582" y="619" text-anchor="middle" fill="#0f4b5a" font-size="25">03 原因 / 对策</text>
+  <rect x="105" y="570" width="225" height="78" rx="20" fill="#e6f3f0"/><text x="217" y="619" text-anchor="middle" fill="#0f4b5a" font-size="25">04 效果复验</text>
+  <rect x="70" y="360" width="210" height="78" rx="20" fill="#f6fbfa"/><text x="175" y="409" text-anchor="middle" fill="#0f4b5a" font-size="25">05 标准更新</text>
+</g>
+<circle cx="400" cy="435" r="88" fill="url(#gold)" filter="url(#shadow)"/>
+<text x="400" y="424" text-anchor="middle" fill="#17322d" font-size="27" font-weight="900">风险降低</text>
+<text x="400" y="461" text-anchor="middle" fill="#17322d" font-size="23" font-weight="850">防止复发</text>
+<rect x="92" y="700" width="616" height="62" rx="31" fill="#062f38" fill-opacity=".62"/>
+<text x="400" y="738" text-anchor="middle" fill="#fff" font-size="22" font-weight="800">遏制 → 分析 → 对策 → 复验 → PFMEA / 标准更新</text>
+</svg>
