@@ -126,7 +126,7 @@ function resolveApiBase(){
         remaining-=1;
         if(!remaining&&!settled){
           settled=true;
-          preferredApiBase=API_BASES[0];
+          preferredApiBase=API_BASES[API_BASES.length-1];
           resolve(preferredApiBase);
         }
       });
@@ -134,7 +134,7 @@ function resolveApiBase(){
     window.setTimeout(function(){
       if(settled)return;
       settled=true;
-      preferredApiBase=API_BASES[0];
+      preferredApiBase=API_BASES[API_BASES.length-1];
       resolve(preferredApiBase);
     },API_PROBE_TIMEOUT+300);
   });
@@ -174,7 +174,8 @@ async function requestTts(text,gender){
   try{
     return await requestTtsOnce(base,text,gender);
   }catch(error){
-    if(error&&String(error.message||'').indexOf('speech_http_')===0)throw error;
+    var message=String(error&&error.message||'');
+    if(message.indexOf('speech_http_')===0&&!/speech_http_50[234]/.test(message))throw error;
     var alternate=alternateApiBase(base);
     var data=await requestTtsOnce(alternate,text,gender);
     preferredApiBase=alternate;
