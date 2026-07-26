@@ -3,7 +3,7 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.qilylean.com'
 ]);
 
-const BUILD_VERSION = 'v1.3.0-material-analysis';
+const BUILD_VERSION = 'v1.3.1-mobile-reliability';
 const CONSULTATION_RECEIVER = '396767769@qq.com';
 const CONSULTATION_STATUSES = new Set(['new', 'contacted', 'closed']);
 const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
