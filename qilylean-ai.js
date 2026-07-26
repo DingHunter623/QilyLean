@@ -333,7 +333,7 @@ function resolveApiBase(){
         remaining-=1;
         if(!remaining&&!settled){
           settled=true;
-          preferredApiBase=API_BASES[0];
+          preferredApiBase=API_BASES[API_BASES.length-1];
           resolve(preferredApiBase);
         }
       });
@@ -341,7 +341,7 @@ function resolveApiBase(){
     window.setTimeout(function(){
       if(settled)return;
       settled=true;
-      preferredApiBase=API_BASES[0];
+      preferredApiBase=API_BASES[API_BASES.length-1];
       resolve(preferredApiBase);
     },API_PROBE_TIMEOUT+300);
   });
@@ -372,9 +372,12 @@ async function requestAnswer(payload,hasAttachment){
   try{
     var first=await requestOnce(payload,hasAttachment,false,base);
     if(!hasAttachment&&(first.status===502||first.status===503||first.status===504)){
-      setStatus('AI 服务波动，正在自动重试','首次生成未完成，系统正在重新请求一次。','↻');
+      var gatewayAlternate=alternateApiBase(base);
+      setStatus('主链路暂时不可用，正在切换备用链路','系统正在自动切换接口，您无需重复提问。','↻');
       await wait(RETRY_DELAY);
-      return requestOnce(payload,false,true,base);
+      var gatewayResponse=await requestOnce(payload,false,true,gatewayAlternate);
+      preferredApiBase=gatewayAlternate;
+      return gatewayResponse;
     }
     return first;
   }catch(error){
