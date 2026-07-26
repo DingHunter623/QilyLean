@@ -35,3 +35,5 @@ QilyLean 是丁启利围绕制造业工程管理、精益改善与数智化工�
 ---
 
 **QilyLean** · Lean Manufacturing · IE · Smart Factory · VSM · SMED · MES · ERP · AI for Manufacturing
+
+GitHub连接测试
