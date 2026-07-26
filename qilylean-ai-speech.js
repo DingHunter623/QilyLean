@@ -6,7 +6,10 @@ if(!messages)return;
 var synth=window.speechSynthesis;
 var supported=Boolean(synth&&window.SpeechSynthesisUtterance);
 var activeButton=null;
+var activeUtterance=null;
+var speechPaused=false;
 var speechRequestId=0;
+var decorateFrame=0;
 var settings={gender:'female',rate:'1'};
 var INTRO_TEXT='您好，我是 QilyLean AI 智能解惑顾问。这里不仅解答工作中的疑难问题，也面向生活、学习、兴趣爱好及其他各类困惑。您可以直接提问，或上传文件、图片、视频及语音，我会结合实际需求提供清晰、专业、可执行的分析与建议。';
 
@@ -14,7 +17,7 @@ function injectStyles(){
   if(document.getElementById('qilyleanSpeechStyles'))return;
   var style=document.createElement('style');
   style.id='qilyleanSpeechStyles';
-  style.textContent='.speech-tools{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important;margin:8px 4px 0!important;position:relative}.speech-play{flex:0 0 auto}.speech-settings-bar{display:flex;align-items:center;flex-wrap:wrap;gap:7px;min-height:34px;padding:5px 8px;border:1px solid #c9dfdc;border-radius:9px;background:#f8fbfa;color:var(--forest);font-size:12px;font-weight:800}.speech-field{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.speech-field-name{color:var(--muted);font-weight:800}.speech-gender,.speech-rate{min-height:28px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink);font:inherit;font-weight:800}.speech-gender{width:148px;padding:3px 6px}.speech-rate{width:58px;padding:3px 5px;text-align:center}.speech-gender:focus,.speech-rate:focus{border-color:var(--teal);outline:2px solid rgba(23,127,135,.12)}.speech-save-state{display:inline-flex;align-items:center;min-height:24px;padding:2px 7px;border-radius:999px;background:#e8f6f3;color:var(--teal);font-size:11px;font-weight:900;white-space:nowrap}.speech-save-state.warning{background:#fff5dc;color:#8a661a}.speech-save-state.error{background:#fdecea;color:#9b3f35}@media(max-width:640px){.speech-tools{align-items:stretch!important}.speech-play{min-height:36px}.speech-settings-bar{width:100%;align-items:flex-start}.speech-field{flex:1 1 150px}.speech-gender{width:100%;min-width:132px}.speech-save-state{flex-basis:100%;width:max-content}}';
+  style.textContent='.speech-tools{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important;margin:8px 4px 0!important;position:relative}.speech-play,.speech-settings summary,.speech-save{min-height:34px;border:1px solid #b9d9d4;border-radius:8px;background:#f5faf9;color:var(--forest);font:inherit;font-size:12px;font-weight:850;cursor:pointer}.speech-play{padding:6px 11px}.speech-play:hover,.speech-play:focus-visible,.speech-settings summary:hover,.speech-settings summary:focus-visible{background:#e8f6f3;border-color:var(--teal);outline:none}.speech-play.playing{background:var(--forest);border-color:var(--forest);color:#fff}.speech-play.paused{background:#fff5dc;border-color:#d7b66c;color:#745511}.speech-settings{position:relative}.speech-settings summary{list-style:none;padding:6px 10px;white-space:nowrap}.speech-settings summary::-webkit-details-marker{display:none}.speech-settings summary::after{content:"⌄";margin-left:5px}.speech-settings[open] summary::after{content:"⌃"}.speech-panel{position:absolute;left:0;top:40px;z-index:30;display:grid;gap:10px;width:230px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:0 12px 28px rgba(15,75,90,.18)}.speech-panel label{display:grid;grid-template-columns:54px 1fr;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-weight:800}.speech-panel select,.speech-panel input{width:100%;min-height:35px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);padding:5px 7px;font:inherit}.speech-panel select:focus,.speech-panel input:focus{border-color:var(--teal);outline:2px solid rgba(23,127,135,.12)}.speech-rate-note{margin:-3px 0 0 62px;color:var(--muted);font-size:11px;line-height:1.4}.speech-save{padding:6px 10px;background:var(--forest);border-color:var(--forest);color:#fff}.speech-save:hover,.speech-save:focus-visible{opacity:.9;outline:none}@media(max-width:640px){.speech-tools{align-items:stretch!important}.speech-play{min-height:38px}.speech-panel{position:fixed;left:14px;right:14px;top:auto;bottom:18px;width:auto;z-index:2147483200}.speech-settings summary{min-height:38px}}';
   document.head.appendChild(style);
 }
 
@@ -22,7 +25,7 @@ function normaliseRate(value){
   var number=Number(value);
   if(!Number.isFinite(number))number=1;
   number=Math.min(3,Math.max(.5,number));
-  return String(Math.round(number*10)/10);
+  return String(Math.round(number*100)/100);
 }
 
 try{
@@ -39,7 +42,8 @@ function saveSettings(){
 
 function updateIntro(){
   var first=messages.querySelector('.msg.assistant:not(.thinking) .bubble');
-  if(!first)return;
+  if(!first||first.dataset.qilyIntroReady==='1')return;
+  first.dataset.qilyIntroReady='1';
   var text=(first.innerText||first.textContent||'').trim();
   if(text.indexOf('您好，我是 QilyLean 制造改善 AI 顾问')!==0)return;
   first.innerHTML='';
@@ -53,11 +57,13 @@ function updateIntro(){
 
 function resetActive(){
   if(activeButton){
-    activeButton.classList.remove('playing');
+    activeButton.classList.remove('playing','paused');
     activeButton.textContent='🔊 语音播报';
     activeButton.setAttribute('aria-pressed','false');
     activeButton=null;
   }
+  activeUtterance=null;
+  speechPaused=false;
 }
 
 function stopSpeech(){
@@ -119,35 +125,8 @@ function chooseVoice(gender){
   return voice?{voice:voice,matched:detectVoiceGender(voice)===gender}:null;
 }
 
-function updateSettingState(savedNow){
-  var choice=chooseVoice(settings.gender);
-  messages.querySelectorAll('.speech-save-state').forEach(function(state){
-    state.classList.remove('warning','error');
-    state.removeAttribute('title');
-    if(!supported){
-      state.textContent='浏览器不支持语音';
-      state.classList.add('error');
-      return;
-    }
-    if(settings.gender==='male'){
-      if(choice&&choice.matched){
-        state.textContent=savedNow?'✓ 男声已保存':'✓ 男声已启用';
-        state.title='当前男声：'+(choice.voice.name||'系统中文男声');
-      }else{
-        state.textContent=savedNow?'✓ 已保存 · 低沉模式':'⚠ 未检测到中文男声';
-        state.classList.add('warning');
-        state.title='当前设备未提供可识别的中文男声，将使用中文语音的低沉音调模式。';
-      }
-    }else{
-      state.textContent=savedNow?'✓ 女声已保存':'自动保存';
-      if(choice&&choice.voice)state.title='当前女声：'+(choice.voice.name||'系统中文女声');
-    }
-  });
-}
-
 function ensureVoices(callback){
-  if(!supported){callback();return;}
-  if(availableVoices().length){callback();return;}
+  if(!supported||availableVoices().length){callback();return;}
   var finished=false;
   var finish=function(){
     if(finished)return;
@@ -156,7 +135,26 @@ function ensureVoices(callback){
     callback();
   };
   synth.addEventListener&&synth.addEventListener('voiceschanged',finish,{once:true});
-  window.setTimeout(finish,650);
+  window.setTimeout(finish,500);
+}
+
+function pauseSpeech(button){
+  if(!supported||activeButton!==button||speechPaused)return;
+  synth.pause();
+  speechPaused=true;
+  button.classList.remove('playing');
+  button.classList.add('paused');
+  button.textContent='▶ 继续播报';
+  button.setAttribute('aria-pressed','true');
+}
+
+function resumeSpeech(button){
+  if(!supported||activeButton!==button||!speechPaused)return;
+  synth.resume();
+  speechPaused=false;
+  button.classList.remove('paused');
+  button.classList.add('playing');
+  button.textContent='⏸ 暂停播报';
 }
 
 function speak(text,button){
@@ -166,7 +164,8 @@ function speak(text,button){
     return;
   }
   if(activeButton===button){
-    stopSpeech();
+    if(speechPaused)resumeSpeech(button);
+    else pauseSpeech(button);
     return;
   }
   stopSpeech();
@@ -182,62 +181,24 @@ function speak(text,button){
     if(requestId!==speechRequestId||activeButton!==button)return;
     var utterance=new SpeechSynthesisUtterance(clean);
     var choice=chooseVoice(settings.gender);
+    activeUtterance=utterance;
     utterance.lang='zh-CN';
     utterance.rate=Number(settings.rate)||1;
     utterance.volume=1;
     if(choice&&choice.voice)utterance.voice=choice.voice;
-    if(settings.gender==='male')utterance.pitch=choice&&choice.matched ? .88 : .58;
+    if(settings.gender==='male')utterance.pitch=(choice&&choice.matched)?0.88:0.58;
     else utterance.pitch=1.04;
-    button.textContent='■ 停止播报';
-    utterance.onend=resetActive;
-    utterance.onerror=function(){
-      resetActive();
-      updateSettingState(false);
-    };
+    button.textContent='⏸ 暂停播报';
+    utterance.onend=function(){if(activeUtterance===utterance)resetActive();};
+    utterance.onerror=function(){if(activeUtterance===utterance)resetActive();};
     synth.cancel();
     synth.speak(utterance);
-    updateSettingState(false);
-  });
-}
-
-function syncMenus(){
-  messages.querySelectorAll('.speech-gender').forEach(function(select){select.value=settings.gender;});
-  messages.querySelectorAll('.speech-rate').forEach(function(input){input.value=settings.rate;});
-}
-
-function applyGender(value){
-  settings.gender=value==='male'?'male':'female';
-  saveSettings();
-  syncMenus();
-  stopSpeech();
-  updateSettingState(true);
-}
-
-function applyRate(value){
-  settings.rate=normaliseRate(value);
-  saveSettings();
-  syncMenus();
-  stopSpeech();
-  updateSettingState(true);
-}
-
-function bindRateInput(input){
-  input.addEventListener('change',function(){applyRate(input.value);});
-  input.addEventListener('blur',function(){applyRate(input.value);});
-  input.addEventListener('keydown',function(event){
-    if(event.key==='Enter'){
-      event.preventDefault();
-      applyRate(input.value);
-      input.blur();
-    }
   });
 }
 
 function createField(name,control){
   var label=document.createElement('label');
-  label.className='speech-field';
   var title=document.createElement('span');
-  title.className='speech-field-name';
   title.textContent=name;
   label.appendChild(title);
   label.appendChild(control);
@@ -245,13 +206,14 @@ function createField(name,control){
 }
 
 function decorate(row){
-  if(!row||row.classList.contains('thinking')||row.querySelector('.speech-tools'))return;
+  if(!row||row.classList.contains('thinking')||row.dataset.speechReady==='1')return;
   var bubble=row.querySelector('.bubble');
   if(!bubble)return;
   var wrap=bubble.parentElement;
   var meta=wrap.querySelector('.meta');
   var text=(bubble.innerText||bubble.textContent||'').trim();
   if(!text)return;
+  row.dataset.speechReady='1';
 
   var tools=document.createElement('div');
   tools.className='speech-tools';
@@ -263,64 +225,83 @@ function decorate(row){
   play.setAttribute('aria-pressed','false');
   play.addEventListener('click',function(){speak(text,play);});
 
-  var settingsBar=document.createElement('div');
-  settingsBar.className='speech-settings-bar';
-  settingsBar.setAttribute('aria-label','语音播报设置，修改后自动保存');
+  var details=document.createElement('details');
+  details.className='speech-settings';
+  var summary=document.createElement('summary');
+  summary.textContent='播音设置';
+  var panel=document.createElement('div');
+  panel.className='speech-panel';
 
   var gender=document.createElement('select');
-  gender.className='speech-gender';
-  gender.innerHTML='<option value="female">女播音员</option><option value="male">男播音员（庄重有力）</option>';
+  gender.innerHTML='<option value="female">女声</option><option value="male">男声</option>';
   gender.value=settings.gender;
-  gender.setAttribute('aria-label','播音员');
-  gender.addEventListener('change',function(){applyGender(gender.value);});
+  gender.setAttribute('aria-label','声音');
 
   var rate=document.createElement('input');
   rate.type='number';
   rate.min='.5';
   rate.max='3';
-  rate.step='.1';
+  rate.step='.05';
   rate.inputMode='decimal';
-  rate.className='speech-rate';
   rate.value=settings.rate;
-  rate.setAttribute('aria-label','播放速度倍率');
-  bindRateInput(rate);
-  var rateWrap=document.createElement('span');
-  rateWrap.style.display='inline-flex';
-  rateWrap.style.alignItems='center';
-  rateWrap.style.gap='4px';
-  rateWrap.appendChild(rate);
-  var rateUnit=document.createElement('span');
-  rateUnit.textContent='×';
-  rateWrap.appendChild(rateUnit);
+  rate.setAttribute('aria-label','自定义播放速度');
 
-  var state=document.createElement('span');
-  state.className='speech-save-state';
-  state.textContent='自动保存';
+  var note=document.createElement('p');
+  note.className='speech-rate-note';
+  note.textContent='可输入 0.50～3.00';
 
-  settingsBar.appendChild(createField('播音员',gender));
-  settingsBar.appendChild(createField('速度',rateWrap));
-  settingsBar.appendChild(state);
+  var save=document.createElement('button');
+  save.type='button';
+  save.className='speech-save';
+  save.textContent='保存设置';
+  save.addEventListener('click',function(){
+    settings.gender=gender.value==='male'?'male':'female';
+    settings.rate=normaliseRate(rate.value);
+    saveSettings();
+    stopSpeech();
+    details.open=false;
+  });
 
+  details.addEventListener('toggle',function(){
+    if(!details.open)return;
+    gender.value=settings.gender;
+    rate.value=settings.rate;
+  });
+
+  panel.appendChild(createField('声音',gender));
+  panel.appendChild(createField('速度',rate));
+  panel.appendChild(note);
+  panel.appendChild(save);
+  details.appendChild(summary);
+  details.appendChild(panel);
   tools.appendChild(play);
-  tools.appendChild(settingsBar);
+  tools.appendChild(details);
   wrap.insertBefore(tools,meta||null);
 }
 
-function decorateAll(){
+function decorateNewRows(){
+  decorateFrame=0;
   updateIntro();
-  messages.querySelectorAll('.msg.assistant').forEach(decorate);
-  syncMenus();
-  updateSettingState(false);
+  messages.querySelectorAll('.msg.assistant:not(.thinking):not([data-speech-ready="1"])').forEach(decorate);
+}
+
+function scheduleDecorate(){
+  if(decorateFrame)return;
+  decorateFrame=requestAnimationFrame(decorateNewRows);
 }
 
 injectStyles();
-decorateAll();
-new MutationObserver(function(){decorateAll();}).observe(messages,{childList:true,subtree:true});
+decorateNewRows();
+new MutationObserver(function(records){
+  var hasNewRows=records.some(function(record){
+    return Array.prototype.some.call(record.addedNodes,function(node){
+      return node.nodeType===1&&node.classList&&node.classList.contains('msg');
+    });
+  });
+  if(hasNewRows)scheduleDecorate();
+}).observe(messages,{childList:true});
+
 window.addEventListener('beforeunload',stopSpeech);
 var clearButton=document.getElementById('clearBtn');
 if(clearButton)clearButton.addEventListener('click',stopSpeech);
-if(supported){
-  var refreshVoices=function(){updateSettingState(false);};
-  synth.addEventListener?synth.addEventListener('voiceschanged',refreshVoices):synth.onvoiceschanged=refreshVoices;
-}
 })();
