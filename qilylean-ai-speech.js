@@ -3,13 +3,20 @@
 var messages=document.getElementById('messages');
 if(!messages)return;
 
-var synth=window.speechSynthesis;
-var supported=Boolean(synth&&window.SpeechSynthesisUtterance);
+var API_BASES=['https://api.qilylean.com','https://qilylean-ai.dinghunter623.workers.dev'];
+var API_PROBE_TIMEOUT=6000;
+var TTS_TIMEOUT=38000;
 var activeButton=null;
-var activeUtterance=null;
+var audioContext=null;
+var audioSource=null;
+var audioController=null;
+var speechChunks=[];
+var speechIndex=0;
 var speechPaused=false;
 var speechRequestId=0;
 var decorateFrame=0;
+var preferredApiBase='';
+var apiProbe=null;
 var settings={gender:'female',rate:'1'};
 var INTRO_TEXT='您好，我是 QilyLean AI 智能解惑顾问。这里不仅解答工作中的疑难问题，也面向生活、学习、兴趣爱好及其他各类困惑。您可以直接提问，或上传文件、图片、视频及语音，我会结合实际需求提供清晰、专业、可执行的分析与建议。';
 
@@ -55,145 +62,255 @@ function updateIntro(){
   first.appendChild(content);
 }
 
-function resetActive(){
-  if(activeButton){
-    activeButton.classList.remove('playing','paused');
-    activeButton.textContent='🔊 语音播报';
-    activeButton.setAttribute('aria-pressed','false');
-    activeButton=null;
+function restoreButton(button){
+  if(!button)return;
+  button.classList.remove('playing','paused');
+  button.textContent='🔊 语音播报';
+  button.setAttribute('aria-pressed','false');
+}
+
+function closeAudioContext(){
+  if(audioSource){
+    try{audioSource.onended=null;audioSource.stop();}catch(_e){}
+    try{audioSource.disconnect();}catch(_e){}
   }
-  activeUtterance=null;
+  audioSource=null;
+  if(audioController)audioController.abort();
+  audioController=null;
+  if(audioContext&&audioContext.state!=='closed'){
+    try{audioContext.close();}catch(_e){}
+  }
+  audioContext=null;
+}
+
+function resetActive(){
+  restoreButton(activeButton);
+  activeButton=null;
+  speechChunks=[];
+  speechIndex=0;
   speechPaused=false;
+  closeAudioContext();
 }
 
 function stopSpeech(){
   speechRequestId+=1;
-  if(supported)synth.cancel();
   resetActive();
 }
 
-function voiceText(voice){
-  return ((voice&&voice.name)||'')+' '+((voice&&voice.voiceURI)||'');
+function probeApiBase(base){
+  var controller=new AbortController();
+  var timeout=setTimeout(function(){controller.abort();},API_PROBE_TIMEOUT);
+  return fetch(base+'/health',{
+    method:'GET',
+    mode:'cors',
+    credentials:'omit',
+    cache:'no-store',
+    signal:controller.signal
+  }).then(function(response){return response.ok;}).catch(function(){return false;}).finally(function(){clearTimeout(timeout);});
 }
 
-function normaliseVoiceName(voice){
-  return voiceText(voice).toLowerCase().replace(/[\s_]+/g,'-');
+function resolveApiBase(){
+  if(preferredApiBase)return Promise.resolve(preferredApiBase);
+  if(apiProbe)return apiProbe;
+  apiProbe=new Promise(function(resolve){
+    var settled=false;
+    var remaining=API_BASES.length;
+    API_BASES.forEach(function(base){
+      probeApiBase(base).then(function(ok){
+        if(ok&&!settled){
+          settled=true;
+          preferredApiBase=base;
+          resolve(base);
+          return;
+        }
+        remaining-=1;
+        if(!remaining&&!settled){
+          settled=true;
+          preferredApiBase=API_BASES[0];
+          resolve(preferredApiBase);
+        }
+      });
+    });
+    window.setTimeout(function(){
+      if(settled)return;
+      settled=true;
+      preferredApiBase=API_BASES[0];
+      resolve(preferredApiBase);
+    },API_PROBE_TIMEOUT+300);
+  });
+  return apiProbe;
 }
 
-function detectVoiceGender(voice){
-  var name=normaliseVoiceName(voice);
-  var male=/yun(?:xi|yang|jian|feng|hao|ze|xia|song|fan)|li-?mu|kangkang|zhiwei|danny|liang|male|\bman\b|男声|男播音|reed|rocko|eddy|gordon|aaron/.test(name);
-  var female=/xiaoxiao|xiaoyi|xiaomo|xiaohan|xiaorui|xiaoshuang|xiaomei|huihui|yaoyao|ting-?ting|tian-?tian|mei-?jia|sin-?ji|meijia|lili|female|woman|女声|女播音/.test(name);
-  if(male&&!female)return 'male';
-  if(female&&!male)return 'female';
-  return '';
+function alternateApiBase(current){
+  return API_BASES.filter(function(base){return base!==current;})[0]||current;
 }
 
-function availableVoices(){
-  if(!supported)return [];
-  return synth.getVoices()||[];
-}
-
-function availableChineseVoices(){
-  return availableVoices().filter(function(voice){
-    return /^zh/i.test(voice.lang||'')||/chinese|mandarin|中文|普通话|国语/i.test(voiceText(voice));
+function requestTtsOnce(base,text,gender){
+  var controller=new AbortController();
+  audioController=controller;
+  var timeout=setTimeout(function(){controller.abort();},TTS_TIMEOUT);
+  return fetch(base+'/tts',{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=UTF-8','Accept':'audio/wav,audio/*'},
+    body:JSON.stringify({text:text,gender:gender}),
+    mode:'cors',
+    credentials:'omit',
+    cache:'no-store',
+    signal:controller.signal
+  }).then(async function(response){
+    if(!response.ok)throw new Error('speech_http_'+response.status);
+    var expected=gender==='male'?'Neil':'Cherry';
+    var actual=response.headers.get('X-QilyLean-Voice')||'';
+    if(actual&&actual!==expected)throw new Error('speech_voice_mismatch');
+    return response.arrayBuffer();
+  }).finally(function(){
+    clearTimeout(timeout);
+    if(audioController===controller)audioController=null;
   });
 }
 
-function scoreVoice(voice,gender){
-  var name=normaliseVoiceName(voice);
-  var detected=detectVoiceGender(voice);
-  var score=0;
-  if(/^zh-cn/i.test(voice.lang||''))score+=40;
-  else if(/^zh/i.test(voice.lang||''))score+=24;
-  if(voice.localService)score+=3;
-  if(detected===gender)score+=120;
-  else if(detected&&detected!==gender)score-=140;
-  if(gender==='male'){
-    if(/yunyang|yunjian|yunfeng|yunhao|yunxi|li-?mu|kangkang|zhiwei/.test(name))score+=25;
-    if(/narrator|news|anchor|documentary|广播|播音|新闻/.test(name))score+=7;
-  }else if(/xiaoxiao|xiaoyi|ting-?ting|mei-?jia|xiaorui|huihui/.test(name))score+=25;
-  return score;
+async function requestTts(text,gender){
+  var base=await resolveApiBase();
+  try{
+    return await requestTtsOnce(base,text,gender);
+  }catch(error){
+    if(error&&String(error.message||'').indexOf('speech_http_')===0)throw error;
+    var alternate=alternateApiBase(base);
+    var data=await requestTtsOnce(alternate,text,gender);
+    preferredApiBase=alternate;
+    return data;
+  }
 }
 
-function chooseVoice(gender){
-  var voices=availableChineseVoices();
-  if(!voices.length)return null;
-  var exact=voices.filter(function(voice){return detectVoiceGender(voice)===gender;});
-  var pool=exact.length?exact:voices;
-  var voice=pool.slice().sort(function(a,b){return scoreVoice(b,gender)-scoreVoice(a,gender);})[0]||null;
-  return voice?{voice:voice,matched:detectVoiceGender(voice)===gender}:null;
+function splitSpeechText(value){
+  var clean=String(value||'').replace(/\s+/g,' ').trim();
+  if(!clean)return [];
+  var sentences=clean.match(/[^。！？；.!?;]+[。！？；.!?;]?/g)||[clean];
+  var chunks=[];
+  var current='';
+  sentences.forEach(function(sentence){
+    var part=sentence.trim();
+    if(!part)return;
+    while(part.length>360){
+      if(current){chunks.push(current);current='';}
+      chunks.push(part.slice(0,360));
+      part=part.slice(360);
+    }
+    if(!part)return;
+    if(current&&(current.length+part.length)>360){
+      chunks.push(current);
+      current=part;
+    }else current+=part;
+  });
+  if(current)chunks.push(current);
+  return chunks;
 }
 
-function ensureVoices(callback){
-  if(!supported||availableVoices().length){callback();return;}
-  var finished=false;
-  var finish=function(){
-    if(finished)return;
-    finished=true;
-    synth.removeEventListener&&synth.removeEventListener('voiceschanged',finish);
-    callback();
-  };
-  synth.addEventListener&&synth.addEventListener('voiceschanged',finish,{once:true});
-  window.setTimeout(finish,500);
+function ensureAudioContext(){
+  var AudioContextClass=window.AudioContext||window.webkitAudioContext;
+  if(!AudioContextClass)throw new Error('audio_context_unsupported');
+  if(!audioContext||audioContext.state==='closed')audioContext=new AudioContextClass();
+  return audioContext.resume();
 }
 
-function pauseSpeech(button){
-  if(!supported||activeButton!==button||speechPaused)return;
-  synth.pause();
-  speechPaused=true;
+function buttonPlaying(button){
+  button.classList.remove('paused');
+  button.classList.add('playing');
+  button.textContent='⏸ 暂停播报';
+  button.setAttribute('aria-pressed','true');
+}
+
+function buttonPaused(button){
   button.classList.remove('playing');
   button.classList.add('paused');
   button.textContent='▶ 继续播报';
   button.setAttribute('aria-pressed','true');
 }
 
-function resumeSpeech(button){
-  if(!supported||activeButton!==button||!speechPaused)return;
-  synth.resume();
-  speechPaused=false;
-  button.classList.remove('paused');
+function playBuffer(buffer,requestId,button){
+  if(requestId!==speechRequestId||activeButton!==button)return;
+  var source=audioContext.createBufferSource();
+  audioSource=source;
+  source.buffer=buffer;
+  source.playbackRate.value=Number(settings.rate)||1;
+  source.connect(audioContext.destination);
+  source.onended=function(){
+    if(requestId!==speechRequestId||audioSource!==source)return;
+    audioSource=null;
+    speechIndex+=1;
+    if(speechIndex>=speechChunks.length){
+      resetActive();
+      return;
+    }
+    playNext(requestId,button);
+  };
+  if(speechPaused)buttonPaused(button);else buttonPlaying(button);
+  source.start(0);
+}
+
+async function playNext(requestId,button){
+  if(requestId!==speechRequestId||activeButton!==button)return;
   button.classList.add('playing');
-  button.textContent='⏸ 暂停播报';
+  button.textContent='正在准备语音…';
+  try{
+    var bytes=await requestTts(speechChunks[speechIndex],settings.gender);
+    if(requestId!==speechRequestId||activeButton!==button)return;
+    var buffer=await audioContext.decodeAudioData(bytes.slice(0));
+    playBuffer(buffer,requestId,button);
+  }catch(error){
+    if(requestId!==speechRequestId||activeButton!==button)return;
+    closeAudioContext();
+    button.classList.remove('playing','paused');
+    button.textContent='语音服务暂时不可用';
+    activeButton=null;
+    window.setTimeout(function(){restoreButton(button);},2400);
+  }
+}
+
+function pauseSpeech(button){
+  if(activeButton!==button||speechPaused)return;
+  speechPaused=true;
+  if(audioContext&&audioContext.state==='running')audioContext.suspend();
+  buttonPaused(button);
+}
+
+function resumeSpeech(button){
+  if(activeButton!==button||!speechPaused)return;
+  speechPaused=false;
+  if(audioContext)audioContext.resume();
+  buttonPlaying(button);
 }
 
 function speak(text,button){
-  if(!supported){
-    button.textContent='浏览器不支持播报';
-    button.disabled=true;
-    return;
-  }
   if(activeButton===button){
-    if(speechPaused)resumeSpeech(button);
-    else pauseSpeech(button);
+    if(speechPaused)resumeSpeech(button);else pauseSpeech(button);
     return;
   }
   stopSpeech();
-  var clean=String(text||'').replace(/\s+/g,' ').trim();
-  if(!clean)return;
-  var requestId=speechRequestId;
+  speechChunks=splitSpeechText(text);
+  if(!speechChunks.length)return;
   activeButton=button;
+  speechIndex=0;
+  speechPaused=false;
+  var requestId=speechRequestId;
   button.classList.add('playing');
   button.textContent='正在准备语音…';
   button.setAttribute('aria-pressed','true');
-
-  ensureVoices(function(){
-    if(requestId!==speechRequestId||activeButton!==button)return;
-    var utterance=new SpeechSynthesisUtterance(clean);
-    var choice=chooseVoice(settings.gender);
-    activeUtterance=utterance;
-    utterance.lang='zh-CN';
-    utterance.rate=Number(settings.rate)||1;
-    utterance.volume=1;
-    if(choice&&choice.voice)utterance.voice=choice.voice;
-    if(settings.gender==='male')utterance.pitch=(choice&&choice.matched)?0.88:0.58;
-    else utterance.pitch=1.04;
-    button.textContent='⏸ 暂停播报';
-    utterance.onend=function(){if(activeUtterance===utterance)resetActive();};
-    utterance.onerror=function(){if(activeUtterance===utterance)resetActive();};
-    synth.cancel();
-    synth.speak(utterance);
-  });
+  try{
+    ensureAudioContext().then(function(){
+      if(requestId===speechRequestId&&activeButton===button)playNext(requestId,button);
+    }).catch(function(){
+      if(activeButton===button){
+        activeButton=null;
+        button.textContent='浏览器不支持播报';
+        button.disabled=true;
+      }
+    });
+  }catch(_error){
+    activeButton=null;
+    button.textContent='浏览器不支持播报';
+    button.disabled=true;
+  }
 }
 
 function createField(name,control){
@@ -292,6 +409,7 @@ function scheduleDecorate(){
 
 injectStyles();
 decorateNewRows();
+resolveApiBase();
 new MutationObserver(function(records){
   var hasNewRows=records.some(function(record){
     return Array.prototype.some.call(record.addedNodes,function(node){
