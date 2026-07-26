@@ -3,7 +3,7 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.qilylean.com'
 ]);
 
-const BUILD_VERSION = 'v1.3.1-mobile-reliability';
+const BUILD_VERSION = 'v1.4.0-custom-domain-tts';
 const CONSULTATION_RECEIVER = '396767769@qq.com';
 const CONSULTATION_STATUSES = new Set(['new', 'contacted', 'closed']);
 const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
@@ -139,6 +139,15 @@ async function checkConsultationRateLimit(request, env) {
   const limit = Math.max(1, Number(env.CONSULTATION_DAILY_IP_LIMIT || 5));
   if (!env.QILY_STATS) return { allowed: true, used: 0, limit, storage: false };
   const key = `consultation-limit:${todayUTC()}:${clientId(request)}`;
+  const used = await readNumber(env.QILY_STATS, key);
+  if (used >= limit) return { allowed: false, used, limit, storage: true };
+  return { allowed: true, used: await increment(env.QILY_STATS, key, 60 * 60 * 48), limit, storage: true };
+}
+
+async function checkTtsRateLimit(request, env) {
+  const limit = Math.max(1, Number(env.DAILY_TTS_LIMIT || 60));
+  if (!env.QILY_STATS) return { allowed: true, used: 0, limit, storage: false };
+  const key = `tts-limit:${todayUTC()}:${clientId(request)}`;
   const used = await readNumber(env.QILY_STATS, key);
   if (used >= limit) return { allowed: false, used, limit, storage: true };
   return { allowed: true, used: await increment(env.QILY_STATS, key, 60 * 60 * 48), limit, storage: true };
@@ -344,6 +353,52 @@ async function callQwenText(message, env, signal) {
     model,
     build_version: BUILD_VERSION
   };
+}
+
+async function callQwenTts(text, gender, env, signal) {
+  const voice = gender === 'male' ? 'Neil' : 'Cherry';
+  const model = env.QWEN_TTS_MODEL || 'qwen3-tts-flash';
+  const response = await fetch('https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation', {
+    method: 'POST',
+    headers: { ...qwenHeaders(env), 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model,
+      input: { text, voice, language_type: 'Chinese' }
+    }),
+    signal
+  });
+  const data = await response.json();
+  const requestId = response.headers.get('x-request-id') || data.request_id || '';
+  if (!response.ok || data.code) throw qwenError('qwen-tts', response.status || 502, data, requestId);
+  const audio = data.output && data.output.audio ? data.output.audio : {};
+  if (audio.data) {
+    const raw = atob(String(audio.data).replace(/^data:[^,]+,/, ''));
+    const bytes = new Uint8Array(raw.length);
+    for (let index = 0; index < raw.length; index += 1) bytes[index] = raw.charCodeAt(index);
+    return { bytes, contentType: 'audio/wav', voice, model };
+  }
+  if (!audio.url) throw qwenError('qwen-tts', 502, data, requestId);
+  const audioResponse = await fetch(audio.url, { signal });
+  if (!audioResponse.ok) throw qwenError('qwen-tts-audio', audioResponse.status, {}, requestId);
+  return {
+    bytes: await audioResponse.arrayBuffer(),
+    contentType: audioResponse.headers.get('Content-Type') || 'audio/wav',
+    voice,
+    model
+  };
+}
+
+function audio(body, contentType, origin, voice) {
+  return new Response(body, {
+    status: 200,
+    headers: {
+      ...cors(origin),
+      'Content-Type': contentType || 'audio/wav',
+      'Content-Disposition': 'inline',
+      'Cache-Control': 'private, max-age=300',
+      'X-QilyLean-Voice': voice || ''
+    }
+  });
 }
 
 function mediaPart(attachment) {
@@ -575,6 +630,33 @@ export default {
       } catch (error) {
         console.error('consultation save failed', error && error.message ? error.message : String(error));
         return json({ error: 'Consultation service unavailable', diagnostic: error && error.message ? error.message : 'unknown' }, 503, origin);
+      }
+    }
+
+    if (request.method === 'POST' && url.pathname === '/tts') {
+      if (!ALLOWED_ORIGINS.has(origin)) return json({ error: 'Origin not allowed' }, 403, origin);
+      if (!env.DASHSCOPE_API_KEY) return json({ error: 'Speech service is not configured' }, 503, origin);
+      const rate = await checkTtsRateLimit(request, env);
+      if (!rate.allowed) return json({ error: 'Daily speech limit reached', limit: rate.limit }, 429, origin);
+      let payload;
+      try { payload = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400, origin); }
+      const text = clean(payload.text, 420);
+      const gender = payload.gender === 'male' ? 'male' : 'female';
+      if (!text) return json({ error: 'Text is required' }, 400, origin);
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 35000);
+      try {
+        const result = await callQwenTts(text, gender, env, controller.signal);
+        return audio(result.bytes, result.contentType, origin, result.voice);
+      } catch (error) {
+        if (error && typeof error.status === 'number') {
+          console.error('qwen tts error', JSON.stringify({ status: error.status, request_id: error.requestId || '' }));
+          return json(safeUpstreamError(error.provider, error.data, error.status, error.requestId), 502, origin);
+        }
+        const message = error && error.name === 'AbortError' ? 'Speech request timed out' : 'Speech service unavailable';
+        return json({ error: message }, 504, origin);
+      } finally {
+        clearTimeout(timeout);
       }
     }
 
