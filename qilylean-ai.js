@@ -1,7 +1,8 @@
 (function(){
 'use strict';
-var API='https://qilylean-ai.dinghunter623.workers.dev/chat';
-var TEXT_REQUEST_TIMEOUT=24000;
+var API_BASES=['https://api.qilylean.com','https://qilylean-ai.dinghunter623.workers.dev'];
+var TEXT_REQUEST_TIMEOUT=56000;
+var API_PROBE_TIMEOUT=6000;
 var MATERIAL_REQUEST_TIMEOUT=88000;
 var RETRY_DELAY=650;
 var MAX_FILE_SIZE=25*1024*1024;
@@ -25,6 +26,8 @@ var removeFile=document.getElementById('removeFile');
 var selected=null;
 var phaseTimer=null;
 var state={previousResponseId:null,items:[]};
+var preferredApiBase='';
+var apiProbe=null;
 
 try{
   var saved=JSON.parse(localStorage.getItem('qilylean_ai_session')||'null');
@@ -301,10 +304,58 @@ function isNetworkFailure(error){
   return name==='AbortError'||/load failed|failed to fetch|networkerror|network request failed|timed out/i.test(message);
 }
 
-function requestOnce(payload,hasAttachment,isRetry){
+function probeApiBase(base){
+  var controller=new AbortController();
+  var timeout=setTimeout(function(){controller.abort();},API_PROBE_TIMEOUT);
+  return fetch(base+'/health',{
+    method:'GET',
+    mode:'cors',
+    credentials:'omit',
+    cache:'no-store',
+    signal:controller.signal
+  }).then(function(response){return response.ok;}).catch(function(){return false;}).finally(function(){clearTimeout(timeout);});
+}
+
+function resolveApiBase(){
+  if(preferredApiBase)return Promise.resolve(preferredApiBase);
+  if(apiProbe)return apiProbe;
+  apiProbe=new Promise(function(resolve){
+    var settled=false;
+    var remaining=API_BASES.length;
+    API_BASES.forEach(function(base){
+      probeApiBase(base).then(function(ok){
+        if(ok&&!settled){
+          settled=true;
+          preferredApiBase=base;
+          resolve(base);
+          return;
+        }
+        remaining-=1;
+        if(!remaining&&!settled){
+          settled=true;
+          preferredApiBase=API_BASES[0];
+          resolve(preferredApiBase);
+        }
+      });
+    });
+    window.setTimeout(function(){
+      if(settled)return;
+      settled=true;
+      preferredApiBase=API_BASES[0];
+      resolve(preferredApiBase);
+    },API_PROBE_TIMEOUT+300);
+  });
+  return apiProbe;
+}
+
+function alternateApiBase(current){
+  return API_BASES.filter(function(base){return base!==current;})[0]||current;
+}
+
+function requestOnce(payload,hasAttachment,isRetry,base){
   var controller=new AbortController();
   var timeout=setTimeout(function(){controller.abort();},hasAttachment?MATERIAL_REQUEST_TIMEOUT:TEXT_REQUEST_TIMEOUT);
-  var url=API+(isRetry?'?retry=1&t='+Date.now():'');
+  var url=base+'/chat'+(isRetry?'?retry=1&t='+Date.now():'');
   return fetch(url,{
     method:'POST',
     headers:{'Content-Type':'text/plain;charset=UTF-8','Accept':'application/json'},
@@ -317,29 +368,32 @@ function requestOnce(payload,hasAttachment,isRetry){
 }
 
 async function requestAnswer(payload,hasAttachment){
+  var base=await resolveApiBase();
   try{
-    var first=await requestOnce(payload,hasAttachment,false);
+    var first=await requestOnce(payload,hasAttachment,false,base);
     if(!hasAttachment&&(first.status===502||first.status===503||first.status===504)){
-      setStatus('连接波动，正在自动重试','首次请求未完成，系统正在重新连接 AI 服务。','↻');
+      setStatus('AI 服务波动，正在自动重试','首次生成未完成，系统正在重新请求一次。','↻');
       await wait(RETRY_DELAY);
-      return requestOnce(payload,false,true);
+      return requestOnce(payload,false,true,base);
     }
     return first;
   }catch(error){
-    if(hasAttachment||!isNetworkFailure(error))throw error;
-    setStatus('连接波动，正在自动重试','首次连接未完成，系统正在重新连接 AI 服务。','↻');
-    await wait(RETRY_DELAY);
-    return requestOnce(payload,false,true);
+    if(hasAttachment||error&&error.name==='AbortError'||!isNetworkFailure(error))throw error;
+    var alternate=alternateApiBase(base);
+    setStatus('主链路未连接，正在切换备用链路','系统正在自动切换接口，您无需重复提问。','↻');
+    var response=await requestOnce(payload,false,true,alternate);
+    preferredApiBase=alternate;
+    return response;
   }
 }
 
 function clientErrorMessage(error){
   var message=String(error&&error.message||'');
   if((error&&error.name==='AbortError')||/timed out/i.test(message)){
-    return '本次连接超时，系统自动重试后仍未完成。请点击发送再次提交；若使用4G，可切换至Wi-Fi后重试。';
+    return '本次回答等待超过约55秒，系统已停止等待且没有重复提交。请点击发送再次提交；若使用4G，可切换至Wi-Fi后重试。';
   }
   if(/load failed|failed to fetch|networkerror|network request failed/i.test(message)){
-    return 'AI 服务连接中断，系统自动重试后仍未恢复。请点击发送再次提交；若使用4G，可切换至Wi-Fi后重试。';
+    return '主链路与备用链路均未能连接。请点击发送再次提交；若使用4G，可切换至Wi-Fi后重试。';
   }
   return message||'AI 服务暂时未能完成回答，请稍后重试。';
 }
@@ -435,4 +489,5 @@ clear.addEventListener('click',function(){
 });
 
 render();
+resolveApiBase();
 })();
