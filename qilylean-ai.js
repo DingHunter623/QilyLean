@@ -1,6 +1,9 @@
 (function(){
 'use strict';
 var API='https://qilylean-ai.dinghunter623.workers.dev/chat';
+var TEXT_REQUEST_TIMEOUT=24000;
+var MATERIAL_REQUEST_TIMEOUT=88000;
+var RETRY_DELAY=650;
 var MAX_FILE_SIZE=25*1024*1024;
 var messages=document.getElementById('messages');
 var form=document.getElementById('chatForm');
@@ -288,6 +291,59 @@ async function selectAttachment(file){
   }
 }
 
+function wait(ms){
+  return new Promise(function(resolve){setTimeout(resolve,ms);});
+}
+
+function isNetworkFailure(error){
+  var name=String(error&&error.name||'');
+  var message=String(error&&error.message||'');
+  return name==='AbortError'||/load failed|failed to fetch|networkerror|network request failed|timed out/i.test(message);
+}
+
+function requestOnce(payload,hasAttachment,isRetry){
+  var controller=new AbortController();
+  var timeout=setTimeout(function(){controller.abort();},hasAttachment?MATERIAL_REQUEST_TIMEOUT:TEXT_REQUEST_TIMEOUT);
+  var url=API+(isRetry?'?retry=1&t='+Date.now():'');
+  return fetch(url,{
+    method:'POST',
+    headers:{'Content-Type':'text/plain;charset=UTF-8','Accept':'application/json'},
+    body:JSON.stringify(payload),
+    mode:'cors',
+    credentials:'omit',
+    cache:'no-store',
+    signal:controller.signal
+  }).finally(function(){clearTimeout(timeout);});
+}
+
+async function requestAnswer(payload,hasAttachment){
+  try{
+    var first=await requestOnce(payload,hasAttachment,false);
+    if(!hasAttachment&&(first.status===502||first.status===503||first.status===504)){
+      setStatus('连接波动，正在自动重试','首次请求未完成，系统正在重新连接 AI 服务。','↻');
+      await wait(RETRY_DELAY);
+      return requestOnce(payload,false,true);
+    }
+    return first;
+  }catch(error){
+    if(hasAttachment||!isNetworkFailure(error))throw error;
+    setStatus('连接波动，正在自动重试','首次连接未完成，系统正在重新连接 AI 服务。','↻');
+    await wait(RETRY_DELAY);
+    return requestOnce(payload,false,true);
+  }
+}
+
+function clientErrorMessage(error){
+  var message=String(error&&error.message||'');
+  if((error&&error.name==='AbortError')||/timed out/i.test(message)){
+    return '本次连接超时，系统自动重试后仍未完成。请点击发送再次提交；若使用4G，可切换至Wi-Fi后重试。';
+  }
+  if(/load failed|failed to fetch|networkerror|network request failed/i.test(message)){
+    return 'AI 服务连接中断，系统自动重试后仍未恢复。请点击发送再次提交；若使用4G，可切换至Wi-Fi后重试。';
+  }
+  return message||'AI 服务暂时未能完成回答，请稍后重试。';
+}
+
 function friendlyError(response,data){
   if(response.status===413)return '素材超过处理限制，请压缩后重新上传。';
   if(response.status===415)return '该素材格式暂不支持，请更换页面列出的格式。';
@@ -309,7 +365,7 @@ async function ask(text){
     if(current){
       payload.attachment={name:current.name,type:current.type,size:current.size,kind:current.kind,data:current.data};
     }
-    var response=await fetch(API,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    var response=await requestAnswer(payload,Boolean(current));
     var data=await response.json().catch(function(){return{};});
     if(!response.ok)throw new Error(friendlyError(response,data));
     state.previousResponseId=data.response_id||null;
@@ -320,7 +376,7 @@ async function ask(text){
     setStatus('回答完成','您可以继续追问，或上传新的素材。','✓');
   }catch(error){
     removeThinking();
-    add('assistant',error.message||'AI 服务暂时未能完成回答，请稍后重试。');
+    add('assistant',clientErrorMessage(error));
     busy(false);
     setStatus('本次回答未完成','请稍后重试；如上传了素材，也可压缩后再次提交。','!');
   }finally{
