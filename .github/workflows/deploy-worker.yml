@@ -61,3 +61,25 @@ jobs:
         run: npm run deploy:worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+      - name: 验证 AI 健康状态与真实回答
+        shell: bash
+        run: |
+          node <<'NODE'
+          const base = 'https://qilylean-ai.dinghunter623.workers.dev';
+          const health = await fetch(base + '/health');
+          if (!health.ok) throw new Error('AI health check failed: ' + health.status);
+          const chat = await fetch(base + '/chat', {
+            method: 'POST',
+            headers: {
+              Origin: 'https://qilylean.com',
+              'Content-Type': 'text/plain;charset=UTF-8'
+            },
+            body: JSON.stringify({ message: '健康检查：请仅回复OK。' })
+          });
+          const data = await chat.json();
+          if (!chat.ok || !String(data.answer || '').trim()) {
+            throw new Error('AI answer smoke test failed: ' + chat.status);
+          }
+          console.log('QilyLean AI health and answer checks passed.');
+          NODE
