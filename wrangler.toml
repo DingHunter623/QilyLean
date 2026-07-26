@@ -4,8 +4,8 @@ compatibility_date = "2026-07-16"
 workers_dev = true
 
 [[routes]]
-pattern = "api.qilylean.com"
-custom_domain = true
+pattern = "api.qilylean.com/*"
+zone_name = "qilylean.com"
 
 [observability]
 enabled = true
