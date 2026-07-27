@@ -3,9 +3,11 @@
 var API_BASES=['https://api.qilylean.com','https://qilylean-ai.dinghunter623.workers.dev'];
 var TEXT_REQUEST_TIMEOUT=56000;
 var API_PROBE_TIMEOUT=6000;
-var MATERIAL_REQUEST_TIMEOUT=88000;
+var MATERIAL_REQUEST_TIMEOUT=125000;
 var RETRY_DELAY=650;
 var MAX_FILE_SIZE=25*1024*1024;
+var MAX_TOTAL_SIZE=25*1024*1024;
+var MAX_ATTACHMENT_COUNT=5;
 var messages=document.getElementById('messages');
 var form=document.getElementById('chatForm');
 var q=document.getElementById('question');
@@ -19,11 +21,9 @@ var quick=document.getElementById('quick');
 var fileInput=document.getElementById('materialInput');
 var uploadBtn=document.getElementById('uploadBtn');
 var attachmentPreview=document.getElementById('attachmentPreview');
-var attachmentKind=document.getElementById('attachmentKind');
-var attachmentName=document.getElementById('attachmentName');
-var attachmentSize=document.getElementById('attachmentSize');
+var attachmentList=document.getElementById('attachmentList');
 var removeFile=document.getElementById('removeFile');
-var selected=null;
+var selected=[];
 var phaseTimer=null;
 var state={previousResponseId:null,items:[]};
 var preferredApiBase='';
@@ -140,7 +140,12 @@ function attachmentLabel(meta){
   return '文件';
 }
 
-function add(role,text,persist,attachment){
+function normalizeAttachments(attachments){
+  if(!attachments)return [];
+  return Array.isArray(attachments)?attachments:[attachments];
+}
+
+function add(role,text,persist,attachments){
   var row=document.createElement('div');
   row.className='msg '+role;
   var wrap=document.createElement('div');
@@ -151,7 +156,7 @@ function add(role,text,persist,attachment){
     var userText=document.createElement('div');
     userText.textContent=text;
     bubble.appendChild(userText);
-    if(attachment){
+    normalizeAttachments(attachments).forEach(function(attachment){
       var chip=document.createElement('div');
       chip.className='attachment-chip';
       var kind=document.createElement('strong');
@@ -161,7 +166,7 @@ function add(role,text,persist,attachment){
       chip.appendChild(kind);
       chip.appendChild(name);
       bubble.appendChild(chip);
-    }
+    });
   }
   var meta=document.createElement('div');
   meta.className='meta';
@@ -172,7 +177,7 @@ function add(role,text,persist,attachment){
   messages.appendChild(row);
   messages.scrollTop=messages.scrollHeight;
   if(persist!==false){
-    state.items.push({role:role,text:text,attachment:attachment||null});
+    state.items.push({role:role,text:text,attachments:normalizeAttachments(attachments)});
     if(state.items.length>30)state.items=state.items.slice(-30);
     save();
   }
@@ -183,7 +188,7 @@ function render(){
   if(!state.items.length){
     add('assistant','您好，我是 QilyLean 制造改善 AI 顾问。您可以直接描述问题，也可以上传文件、图片、视频或语音，我会按工程化逻辑协助分析。',false);
   }else{
-    state.items.forEach(function(item){add(item.role,item.text,false,item.attachment||null);});
+    state.items.forEach(function(item){add(item.role,item.text,false,item.attachments||item.attachment||null);});
   }
 }
 
@@ -257,39 +262,99 @@ function readDataUrl(file){
   });
 }
 
-function clearAttachment(){
-  selected=null;
-  fileInput.value='';
-  attachmentPreview.classList.remove('show');
-  attachmentName.textContent='';
-  attachmentSize.textContent='';
+function selectedBytes(){
+  return selected.reduce(function(total,item){return total+(item.size||0);},0);
 }
 
-async function selectAttachment(file){
-  if(!file)return;
-  var kind=fileKind(file);
-  if(!kind){
-    clearAttachment();
-    setStatus('格式暂不支持','请上传页面列出的文件、图片、视频或语音格式。','!');
+function renderAttachments(){
+  attachmentList.innerHTML='';
+  selected.forEach(function(item,index){
+    var row=document.createElement('li');
+    row.className='attachment-item';
+    var kind=document.createElement('span');
+    kind.className='attachment-kind';
+    kind.textContent=attachmentLabel(item);
+    var info=document.createElement('span');
+    info.className='attachment-info';
+    var name=document.createElement('strong');
+    name.className='attachment-name';
+    name.textContent=item.name;
+    var size=document.createElement('span');
+    size.className='attachment-size';
+    size.textContent=formatBytes(item.size)+' · 已就绪';
+    var remove=document.createElement('button');
+    remove.className='remove-one';
+    remove.type='button';
+    remove.setAttribute('data-attachment-index',String(index));
+    remove.setAttribute('aria-label','移除 '+item.name);
+    remove.textContent='移除';
+    info.appendChild(name);
+    info.appendChild(size);
+    row.appendChild(kind);
+    row.appendChild(info);
+    row.appendChild(remove);
+    attachmentList.appendChild(row);
+  });
+  attachmentPreview.classList.toggle('show',selected.length>0);
+}
+
+function clearAttachments(){
+  selected=[];
+  fileInput.value='';
+  renderAttachments();
+}
+
+async function selectAttachments(fileList){
+  var files=Array.prototype.slice.call(fileList||[]);
+  fileInput.value='';
+  if(!files.length)return;
+  if(selected.length>=MAX_ATTACHMENT_COUNT){
+    setStatus('素材数量已达上限','一次最多添加 '+MAX_ATTACHMENT_COUNT+' 件素材；请移除后再添加。','!');
     return;
   }
-  if(file.size>MAX_FILE_SIZE){
-    clearAttachment();
-    setStatus('素材过大','单个素材不能超过 25MB，请压缩后重新上传。','!');
+  files=files.slice(0,MAX_ATTACHMENT_COUNT-selected.length);
+  var invalid=files.find(function(file){return !fileKind(file);});
+  if(invalid){
+    setStatus('格式暂不支持','“'+invalid.name+'”不是当前支持的文件、图片、视频或语音格式。','!');
     return;
   }
-  setStatus('正在读取素材','请稍候，读取完成后即可发送。','…');
+  var tooLarge=files.find(function(file){return file.size>MAX_FILE_SIZE;});
+  if(tooLarge){
+    setStatus('素材过大','“'+tooLarge.name+'”超过 25MB，请压缩后重新添加。','!');
+    return;
+  }
+  var unique=files.filter(function(file){
+    return !selected.some(function(item){
+      return item.name===file.name&&item.size===file.size&&item.lastModified===file.lastModified;
+    });
+  });
+  var nextTotal=selectedBytes()+unique.reduce(function(total,file){return total+file.size;},0);
+  if(nextTotal>MAX_TOTAL_SIZE){
+    setStatus('素材合计过大','本次全部素材合计不能超过 25MB，请减少或压缩后重试。','!');
+    return;
+  }
+  if(!unique.length){
+    setStatus('素材已添加','所选素材已在列表中，无需重复添加。','✓');
+    return;
+  }
+  setStatus('正在读取素材','正在读取 '+unique.length+' 件素材，请稍候。','…');
   try{
-    var data=await readDataUrl(file);
-    selected={file:file,data:data,kind:kind,name:file.name,type:file.type||'',size:file.size};
-    attachmentKind.textContent=attachmentLabel(selected);
-    attachmentName.textContent=file.name;
-    attachmentSize.textContent=formatBytes(file.size)+' · 已就绪';
-    attachmentPreview.classList.add('show');
-    setStatus('素材已就绪','请填写分析要求，或直接点击发送。','✓');
+    var loaded=await Promise.all(unique.map(async function(file){
+      return {
+        file:file,
+        data:await readDataUrl(file),
+        kind:fileKind(file),
+        name:file.name,
+        type:file.type||'',
+        size:file.size,
+        lastModified:file.lastModified||0
+      };
+    }));
+    selected=selected.concat(loaded);
+    renderAttachments();
+    setStatus('素材已就绪','已添加 '+selected.length+' 件素材，可继续添加或直接发送。','✓');
     q.focus();
   }catch(error){
-    clearAttachment();
     setStatus('素材读取失败',error.message,'!');
   }
 }
@@ -411,18 +476,20 @@ function friendlyError(response,data){
 }
 
 async function ask(text){
-  var current=selected;
-  var attachmentMeta=current?{name:current.name,size:current.size,kind:current.kind}:null;
-  var shownText=text||'请分析这份素材，提炼关键信息、问题判断与可执行建议。';
+  var current=selected.slice();
+  var attachmentMeta=current.map(function(item){return{name:item.name,size:item.size,kind:item.kind};});
+  var shownText=text||'请综合分析这些素材，提炼关键信息、问题判断与可执行建议。';
   add('user',shownText,true,attachmentMeta);
-  busy(true,current&&current.kind);
-  showThinking(current&&current.kind);
+  busy(true,current.length&&(current.every(function(item){return item.kind==='document';})?'document':'material'));
+  showThinking(current.length?'material':'');
   try{
     var payload={message:shownText,previous_response_id:state.previousResponseId};
-    if(current){
-      payload.attachment={name:current.name,type:current.type,size:current.size,kind:current.kind,data:current.data};
+    if(current.length){
+      payload.attachments=current.map(function(item){
+        return{name:item.name,type:item.type,size:item.size,kind:item.kind,data:item.data};
+      });
     }
-    var response=await requestAnswer(payload,Boolean(current));
+    var response=await requestAnswer(payload,current.length>0);
     var data=await response.json().catch(function(){return{};});
     if(!response.ok)throw new Error(friendlyError(response,data));
     state.previousResponseId=data.response_id||null;
@@ -437,7 +504,7 @@ async function ask(text){
     busy(false);
     setStatus('本次回答未完成','请稍后重试；如上传了素材，也可压缩后再次提交。','!');
   }finally{
-    clearAttachment();
+    clearAttachments();
     q.focus();
   }
 }
@@ -445,7 +512,7 @@ async function ask(text){
 form.addEventListener('submit',function(event){
   event.preventDefault();
   var text=q.value.trim();
-  if(!text&&!selected){
+  if(!text&&!selected.length){
     setStatus('请输入问题或上传素材','两者至少选择一项后再发送。','!');
     q.focus();
     return;
@@ -468,7 +535,7 @@ quick.addEventListener('click',function(event){
   }
 });
 
-fileInput.addEventListener('change',function(){selectAttachment(fileInput.files&&fileInput.files[0]);});
+fileInput.addEventListener('change',function(){selectAttachments(fileInput.files);});
 uploadBtn.addEventListener('keydown',function(event){
   if((event.key==='Enter'||event.key===' ')&&!fileInput.disabled){
     event.preventDefault();
@@ -476,14 +543,23 @@ uploadBtn.addEventListener('keydown',function(event){
   }
 });
 removeFile.addEventListener('click',function(){
-  clearAttachment();
-  setStatus('素材已移除','可重新选择素材，或直接输入问题。','✓');
+  clearAttachments();
+  setStatus('素材已全部移除','可重新添加素材，或直接输入问题。','✓');
+});
+attachmentList.addEventListener('click',function(event){
+  var button=event.target.closest&&event.target.closest('[data-attachment-index]');
+  if(!button)return;
+  var index=Number(button.getAttribute('data-attachment-index'));
+  if(!Number.isInteger(index)||index<0||index>=selected.length)return;
+  var removed=selected.splice(index,1)[0];
+  renderAttachments();
+  setStatus('素材已移除','已移除“'+removed.name+'”，剩余 '+selected.length+' 件。','✓');
 });
 
 clear.addEventListener('click',function(){
   state={previousResponseId:null,items:[]};
   save();
-  clearAttachment();
+  clearAttachments();
   removeThinking();
   busy(false);
   render();

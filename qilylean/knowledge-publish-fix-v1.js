@@ -68,7 +68,10 @@ function addDailyInsights(){
   if(document.getElementById('daily-insights'))return;
   var directory=document.querySelector('main .section.alt');
   var section=document.createElement('section');section.className='section';section.id='daily-insights';
-  section.innerHTML='<div class="inner"><div class="head"><h2>每日工程版简报</h2><p>围绕精益生产、IE、PMC、ERP/MES、数智化工厂、AI工具、汽车电子与半导体制造，持续发布可用于工作决策、行业观察和个人知识沉淀的工程版内容。</p></div><article class="article"><small>2026-07-25｜分层过程审核 / 标准维持</small><h2>标准复制出去以后，还要靠分层审核守住执行</h2><ul class="tag-row"><li>分层过程审核</li><li>LPA</li><li>标准维持</li><li>防止回弹</li></ul><p>横向展开把有效做法带到更多场景，但标准发布、培训完成并不代表执行稳定。通过作业者、班组长、主管、职能部门和管理层的分层过程审核，持续确认PFMEA、控制计划、防错与关键参数，才能防止标准随人员、设备和订单变化而回弹。</p><div class="actions"><a class="button" href="/qilylean/daily/2026-07-25.html" target="_top">查看今日简报</a><a class="button secondary" href="/qilylean/daily-insights.html" target="_top">查看简报目录</a><a class="button secondary" href="/qilylean/lean-tools.html" target="_top">进入精益工具库</a></div></article></div>';
+  section.innerHTML='<div class="inner"><div class="head"><h2>每日工程版简报</h2><p>围绕精益生产、IE、PMC、ERP/MES、数智化工厂、AI工具、汽车电子与半导体制造，持续发布可用于工作决策、行业观察和个人知识沉淀的工程版内容。</p></div><article class="article" data-latest-brief-card><small data-latest-brief-meta>2026-07-27｜IE七大手法</small><h2 data-latest-brief-title>IE七大手法简介与应用</h2><ul class="tag-row"><li>防呆法</li><li>动改法</li><li>流程法</li><li>工作抽样</li></ul><p data-latest-brief-summary>系统阐述防呆法、动改法、双手法、人机法、五五法、流程法和抽样法的应用场景、分析步骤与组合路径。</p><div class="actions"><a class="button" data-latest-brief-link href="/qilylean/daily/2026-07-27.html" target="_top">查看最新简报</a><a class="button secondary" href="/qilylean/daily-insights.html" target="_top">查看简报目录</a><a class="button secondary" href="/qilylean/lean-tools.html" target="_top">进入精益工具库</a></div></article></div>';
+  if(!document.getElementById('latestBriefScript')){
+    var script=document.createElement('script');script.id='latestBriefScript';script.src='/qilylean/latest-brief.js?v=20260727-latest-v1';document.head.appendChild(script);
+  }
   if(directory&&directory.nextSibling)directory.parentNode.insertBefore(section,directory.nextSibling);else main.appendChild(section);
 }
 function boot(){fixNavigation();addReferenceCards();addDailyInsights();}
