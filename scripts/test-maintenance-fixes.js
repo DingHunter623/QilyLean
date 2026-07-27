@@ -98,7 +98,7 @@ async function validateOfficePackages() {
 import sys, zipfile
 import xml.etree.ElementTree as ET
 required = {
-  '.docx': {'[Content_Types].xml', 'word/document.xml', 'word/styles.xml'},
+  '.docx': {'[Content_Types].xml', 'word/document.xml', 'word/styles.xml', 'word/settings.xml', 'word/header1.xml', 'word/footer1.xml'},
   '.xlsx': {'[Content_Types].xml', 'xl/workbook.xml', 'xl/worksheets/sheet1.xml', 'xl/styles.xml'},
 }
 for filename in sys.argv[1:]:
@@ -108,8 +108,18 @@ for filename in sys.argv[1:]:
         assert required[next(key for key in required if filename.endswith(key))] <= names
         if filename.endswith('.docx'):
             document = archive.read('word/document.xml').decode('utf-8')
+            styles = archive.read('word/styles.xml').decode('utf-8')
+            relationships = archive.read('word/_rels/document.xml.rels').decode('utf-8')
             assert '<w:pgMar w:top="907" w:right="907" w:bottom="907" w:left="907"' in document
             assert '<w:tblW w:w="10092" w:type="dxa"/>' in document
+            assert '<w:gridCol w:w="3500"/><w:gridCol w:w="6592"/>' in document
+            assert '<w:noWrap/>' in document
+            assert '微信：Qily259　手机：13450014003 / 15168120722 / 17681788259' in document
+            assert '<w:headerReference w:type="default" r:id="rId3"/>' in document
+            assert '<w:footerReference w:type="default" r:id="rId4"/>' in document
+            assert all(style in styles for style in ('QLTitle', 'QLHeading1', 'QLSectionHeading', 'QLProcedureBody'))
+            assert all(target in relationships for target in ('Target="styles.xml"', 'Target="settings.xml"', 'Target="header1.xml"', 'Target="footer1.xml"'))
+            assert 'FFFDF7' not in document and 'EDF6F4' not in document
         for name in names:
             if name.endswith('.xml') or name.endswith('.rels'):
                 ET.fromstring(archive.read(name))
@@ -125,6 +135,8 @@ async function main() {
   const aiClient = read('qilylean-ai.js');
   const worker = read('cloudflare-worker/worker.js');
   const exportCode = read('qilylean-ai-export.js');
+  const navigation = read('site-navigation.js');
+  const visualScale = read('site-visual-scale-v1.css');
   const knowledge = read('knowledge/index.html');
   const latest = read('qilylean/latest-brief.js');
   const brief = read('qilylean/daily/2026-07-27.html');
@@ -141,6 +153,17 @@ async function main() {
   assert(/--forest:var\(--qily-forest,#0f4b5a\)/.test(homePage), 'Homepage is not bound to the global forest color');
   assert(/--forest:var\(--qily-forest,#0f4b5a\)/.test(aiPage), 'AI page is not bound to the global forest color');
   assert(/\.user \.bubble\{[^}]*background:var\(--qily-forest,#0f4b5a\)/.test(aiPage), 'User message background is not using the global homepage color');
+  assert(/word-procedure-v3/.test(aiPage), 'AI page is not loading the revised procedure-style Word exporter');
+  assert(/ACCESS_PASSWORD = '259'/.test(navigation), 'Controlled modules are not using the existing access password');
+  assert(/CONTROLLED_ROUTE_PATHS = \['\/', '\/experience\/', '\/moments\/', '\/cooperation\/'\]/.test(navigation), 'Controlled navigation route list is incomplete');
+  assert(/key: 'homeUnlocked'/.test(navigation) && /key: 'momentsUnlocked'/.test(navigation), 'Home or moments session access gate is missing');
+  assert(/protectControlledPage\(\)/.test(navigation), 'Controlled page gate is not bootstrapped');
+  assert(/data-controlled-access/.test(navigation), 'Global navigation does not mark encrypted modules');
+  assert(/a\[href="\/"\]::before/.test(visualScale), 'Home navigation lock icon styling is missing');
+  assert(/a\[href="\/moments\/"\]::before/.test(visualScale), 'Moments navigation lock icon styling is missing');
+  ['index.html','moments/index.html','moments/work/index.html','moments/team/index.html','moments/business/index.html','moments/life/index.html'].forEach((file) => {
+    assert(/site-navigation\.js\?v=20260727-controlled-home-moments-v2/.test(read(file)), `Controlled-access navigation cache version is missing: ${file}`);
+  });
   assert(/data-latest-brief-card/.test(knowledge) && /daily\/index\.json/.test(latest), 'Knowledge page is not bound to the latest brief index');
   assert(index[0].date === '2026-07-27', 'Daily brief index is not newest-first');
   ['防呆法','动改法','双手法','人机法','五五法','流程法','抽样法'].forEach((method) => {

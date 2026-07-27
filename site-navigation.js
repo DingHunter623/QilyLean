@@ -1,13 +1,15 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanSiteNavigationV10) return;
-  window.__qilyLeanSiteNavigationV10 = true;
+  if (window.__qilyLeanSiteNavigationV11) return;
+  window.__qilyLeanSiteNavigationV11 = true;
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260725-compact-hero-v1';
-  var VISUAL_SCALE_VERSION = '20260725-compact-hero-v1';
+  var SHARED_ASSET_VERSION = '20260727-controlled-home-moments-v2';
+  var VISUAL_SCALE_VERSION = '20260727-controlled-home-moments-v2';
+  var ACCESS_PASSWORD = '259';
+  var CONTROLLED_ROUTE_PATHS = ['/', '/experience/', '/moments/', '/cooperation/'];
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
   var routes = [
     ['首页', '/'],
@@ -83,9 +85,10 @@
       '.qily-global-header>.qily-global-nav a{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;min-height:42px!important;padding:7px 10px!important;border:1px solid transparent!important;border-radius:10px!important;color:#182420!important;background:transparent!important;box-shadow:none!important;font-size:17.5px!important;font-weight:850!important;line-height:1.2!important;text-decoration:none!important;transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease!important}',
       '.qily-global-header>.qily-global-nav a:hover,.qily-global-header>.qily-global-nav a:focus-visible{color:#fff!important;background:#0f4b5a!important;border-color:#0f4b5a!important;box-shadow:0 8px 18px rgba(15,75,90,.22)!important;outline:none!important;transform:translateY(-2px)!important}',
       '.qily-global-header>.qily-global-nav a[aria-current="page"]{color:#0f4b5a!important;background:#e4f2ef!important;border-color:#b8d9d4!important}',
-      '.qily-global-header>.qily-global-nav a[href="/experience/"],.qily-global-header>.qily-global-nav a[href="/cooperation/"]{color:#624810!important;border-color:#d5a84f!important;background:linear-gradient(135deg,#fff5d5,#ffe39b)!important;box-shadow:inset 0 0 0 1px rgba(202,161,95,.18),0 4px 12px rgba(110,78,26,.09)!important}',
-      '.qily-global-header>.qily-global-nav a[href="/experience/"]::before,.qily-global-header>.qily-global-nav a[href="/cooperation/"]::before{content:"🔒";margin-right:4px;font-size:.78em;line-height:1}',
-      '.qily-global-header>.qily-global-nav a[href="/experience/"]:hover,.qily-global-header>.qily-global-nav a[href="/experience/"]:focus-visible,.qily-global-header>.qily-global-nav a[href="/cooperation/"]:hover,.qily-global-header>.qily-global-nav a[href="/cooperation/"]:focus-visible{color:#fff!important;border-color:#6e3f5f!important;background:#6e3f5f!important}',
+      '.qily-global-header>.qily-global-nav a[data-controlled-access="true"]{color:#624810!important;border-color:#d5a84f!important;background:linear-gradient(135deg,#fff5d5,#ffe39b)!important;box-shadow:inset 0 0 0 1px rgba(202,161,95,.18),0 4px 12px rgba(110,78,26,.09)!important}',
+      '.qily-global-header>.qily-global-nav a[data-controlled-access="true"]::before{content:"🔒";margin-right:4px;font-size:.78em;line-height:1}',
+      '.qily-global-header>.qily-global-nav a[data-controlled-access="true"]:hover,.qily-global-header>.qily-global-nav a[data-controlled-access="true"]:focus-visible{color:#fff!important;border-color:#6e3f5f!important;background:#6e3f5f!important}',
+      '.qily-global-header>.qily-global-nav a[data-controlled-access="true"][aria-current="page"]{color:#fff!important;border-color:#8d641f!important;background:linear-gradient(135deg,#9a6f25,#caa15f)!important}',
       '@media(max-width:900px){.qily-site-header.qily-global-header{flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:5px!important;min-height:auto!important;padding:7px 9px 8px!important}.qily-global-header>.qily-brand{width:142px!important;height:27px!important;margin-left:42px!important}.qily-global-header>.qily-global-nav{width:100%!important;max-width:100%!important;margin:0!important;justify-content:flex-start!important;gap:5px!important;overflow-x:auto!important}.qily-global-header>.qily-global-nav a{min-height:34px!important;padding:5px 9px!important;font-size:12.5px!important;border-radius:9px!important}}',
       '@media(max-width:620px){.qily-global-header>.qily-brand{width:126px!important;height:23px!important}.qily-global-header>.qily-global-nav a{font-size:11.5px!important;padding:5px 7px!important}}'
     ].join('');
@@ -116,6 +119,11 @@
       var link = document.createElement('a');
       link.textContent = route[0];
       link.href = route[1];
+      if (CONTROLLED_ROUTE_PATHS.indexOf(route[1]) !== -1) {
+        link.dataset.controlledAccess = 'true';
+        link.title = route[0] + '（加密访问）';
+        link.setAttribute('aria-label', route[0] + '，加密访问');
+      }
       if (modulePath === route[1]) link.setAttribute('aria-current', 'page');
       nav.appendChild(link);
     });
@@ -136,7 +144,7 @@
         var target;
         try { target = new URL(link.href, location.href); } catch (error) { return; }
         if (target.origin !== location.origin || normalizedPath(target.pathname) === normalizedPath(location.pathname)) return;
-        if (normalizedPath(target.pathname) === '/cooperation/') return;
+        if (CONTROLLED_ROUTE_PATHS.indexOf(currentModule(normalizedPath(target.pathname))) !== -1) return;
         done = true;
         target.hash = '';
         var hint = document.createElement('link');
@@ -209,19 +217,58 @@
     return copyText(shareText).then(function () { showToast('网页标题及网址已复制'); });
   }
 
-  function protectCooperationPage() {
+  function controlledPageConfig(path) {
+    if (path === '/') {
+      return {
+        key: 'homeUnlocked',
+        title: '首页（加密）',
+        eyebrow: 'Controlled Access / QilyLean Home',
+        lead: '首页内容已设置为受控访问，请输入与履历主线相同的访问口令后查看。',
+        heading: '访问首页',
+        description: '本页包含个人定位、职业能力、代表数据、合作入口及 QilyLean AI 快捷问答。请输入访问口令后查看完整内容。',
+        button: '查看首页',
+        selectors: 'main,footer'
+      };
+    }
+    if (path.indexOf('/moments/') === 0 || /\/moments\.html$/.test(path)) {
+      return {
+        key: 'momentsUnlocked',
+        title: '行走印记（加密）',
+        eyebrow: 'Controlled Access / Work & Life Moments',
+        lead: '行走印记内容已设置为受控访问，请输入与履历主线相同的访问口令后查看。',
+        heading: '访问行走印记',
+        description: '本模块包含工作现场、团队同行、出差足迹与生活远方等影像记录。请输入访问口令后查看完整内容。',
+        button: '查看行走印记',
+        selectors: 'section.hero,main,footer'
+      };
+    }
+    if (path.indexOf('/cooperation/') === 0) {
+      return {
+        key: 'cooperationUnlocked',
+        title: '项目合作（加密）',
+        eyebrow: 'Controlled Access / Project Cooperation',
+        lead: '项目合作内容暂为受控访问，请输入与履历主线相同的访问口令后查看。',
+        heading: '访问项目合作',
+        description: '本页包含企业问题初筛、合作范围、服务边界、项目交付方式及联系入口。请输入访问口令后查看完整内容。',
+        button: '查看项目合作',
+        selectors: 'main,footer'
+      };
+    }
+    return null;
+  }
+
+  function protectControlledPage() {
     var path = normalizedPath(location.pathname);
-    if (path.indexOf('/cooperation/') !== 0) return;
+    var config = controlledPageConfig(path);
+    if (!config) return;
 
     try {
-      if (sessionStorage.getItem('cooperationUnlocked') === '1') return;
+      if (sessionStorage.getItem(config.key) === '1') return;
     } catch (error) {}
 
-    var main = document.querySelector('main');
-    if (!main || document.getElementById('cooperationAccessGate')) return;
-    var footer = document.querySelector('footer.module-footer,footer');
-    main.hidden = true;
-    if (footer) footer.hidden = true;
+    var protectedNodes = Array.from(document.querySelectorAll(config.selectors));
+    if (!protectedNodes.length || document.getElementById('qilyControlledAccessGate')) return;
+    protectedNodes.forEach(function (node) { node.hidden = true; });
 
     var robots = document.head.querySelector('meta[name="robots"]');
     if (!robots) {
@@ -232,35 +279,35 @@
     robots.content = 'noindex,nofollow,noarchive';
 
     var style = document.createElement('style');
-    style.id = 'cooperationLockStyle';
-    style.textContent = '.cooperation-access-gate{min-height:calc(100vh - 72px)}.cooperation-lock-card{max-width:760px;margin:0 auto;padding:30px;border:1px solid var(--qily-line,#d5e4e3);background:#fff;box-shadow:0 14px 36px rgba(15,75,90,.1)}.cooperation-lock-card h2{margin:0 0 12px;color:var(--qily-deep,#0f4b5a)}.cooperation-lock-card p{margin:0 0 18px;color:var(--qily-muted,#5f7474);font-size:19px;line-height:1.76}.cooperation-lock-form{display:flex;gap:10px;flex-wrap:wrap}.cooperation-lock-input{flex:1;min-width:220px;padding:12px 14px;border:1px solid var(--qily-line,#d5e4e3);font:inherit}.cooperation-lock-btn{padding:12px 18px;border:0;background:var(--qily-deep,#0f4b5a);color:#fff;font:inherit;font-weight:900;cursor:pointer}.cooperation-lock-msg{min-height:28px;margin-top:10px;color:#9e4a34;font-weight:850}@media(max-width:620px){.cooperation-lock-card{padding:22px}.cooperation-lock-input,.cooperation-lock-btn{width:100%;min-width:0}}';
+    style.id = 'qilyControlledAccessStyle';
+    style.textContent = '.qily-controlled-access-gate{min-height:calc(100vh - 72px)}.qily-lock-card{max-width:760px;margin:0 auto;padding:30px;border:1px solid var(--qily-line,#d5e4e3);background:#fff;box-shadow:0 14px 36px rgba(15,75,90,.1)}.qily-lock-card h2{margin:0 0 12px;color:var(--qily-deep,#0f4b5a)}.qily-lock-card p{margin:0 0 18px;color:var(--qily-muted,#5f7474);font-size:19px;line-height:1.76}.qily-lock-form{display:flex;gap:10px;flex-wrap:wrap}.qily-lock-input{flex:1;min-width:220px;padding:12px 14px;border:1px solid var(--qily-line,#d5e4e3);font:inherit}.qily-lock-btn{padding:12px 18px;border:0;background:var(--qily-deep,#0f4b5a);color:#fff;font:inherit;font-weight:900;cursor:pointer}.qily-lock-msg{min-height:28px;margin-top:10px;color:#9e4a34;font-weight:850}@media(max-width:620px){.qily-lock-card{padding:22px}.qily-lock-input,.qily-lock-btn{width:100%;min-width:0}}';
     document.head.appendChild(style);
 
     var gate = document.createElement('main');
-    gate.id = 'cooperationAccessGate';
-    gate.className = 'cooperation-access-gate';
-    gate.innerHTML = '<section class="module-hero"><div class="module-inner"><span class="module-eyebrow">Controlled Access / Project Cooperation</span><h1>项目合作（加密）</h1><p class="module-lead">项目合作内容暂为受控访问，输入与履历主线相同的访问口令后查看。</p></div></section><section class="module-section alt"><div class="module-inner"><div class="cooperation-lock-card"><h2>访问项目合作</h2><p>本页包含企业问题初筛、合作范围、服务边界、项目交付方式及联系入口。请输入访问口令后查看完整内容。</p><div class="cooperation-lock-form"><input id="cooperationPassword" class="cooperation-lock-input" type="password" inputmode="numeric" autocomplete="current-password" aria-label="项目合作访问口令" placeholder="请输入访问密码"><button id="cooperationUnlock" class="cooperation-lock-btn" type="button">查看项目合作</button></div><div id="cooperationLockMessage" class="cooperation-lock-msg" aria-live="polite"></div></div></div></section>';
-    main.parentNode.insertBefore(gate, main);
+    gate.id = 'qilyControlledAccessGate';
+    gate.className = 'qily-controlled-access-gate';
+    gate.innerHTML = '<section class="module-hero"><div class="module-inner"><span class="module-eyebrow">'+config.eyebrow+'</span><h1>'+config.title+'</h1><p class="module-lead">'+config.lead+'</p></div></section><section class="module-section alt"><div class="module-inner"><div class="qily-lock-card"><h2>'+config.heading+'</h2><p>'+config.description+'</p><div class="qily-lock-form"><input id="qilyControlledPassword" class="qily-lock-input" type="password" inputmode="numeric" autocomplete="current-password" aria-label="'+config.heading+'口令" placeholder="请输入访问密码"><button id="qilyControlledUnlock" class="qily-lock-btn" type="button">'+config.button+'</button></div><div id="qilyControlledMessage" class="qily-lock-msg" aria-live="polite"></div></div></div></section>';
+    protectedNodes[0].parentNode.insertBefore(gate, protectedNodes[0]);
 
-    var input = document.getElementById('cooperationPassword');
-    var button = document.getElementById('cooperationUnlock');
-    var message = document.getElementById('cooperationLockMessage');
+    var input = document.getElementById('qilyControlledPassword');
+    var button = document.getElementById('qilyControlledUnlock');
+    var message = document.getElementById('qilyControlledMessage');
 
     function unlock() {
-      if ((input.value || '').trim() !== '259') {
+      if ((input.value || '').trim() !== ACCESS_PASSWORD) {
         message.textContent = '密码不正确，请重新输入。';
         input.select();
         return;
       }
-      try { sessionStorage.setItem('cooperationUnlocked', '1'); } catch (error) {}
+      try { sessionStorage.setItem(config.key, '1'); } catch (error) {}
       gate.remove();
-      main.hidden = false;
-      if (footer) footer.hidden = false;
+      protectedNodes.forEach(function (node) { node.hidden = false; });
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     button.addEventListener('click', unlock);
     input.addEventListener('keydown', function (event) { if (event.key === 'Enter') unlock(); });
+    setTimeout(function () { input.focus(); }, 0);
   }
 
   function loadWeChatQr() {
@@ -437,7 +484,7 @@
     addVisualScaleStylesheet();
     addGlobalHeaderStyles();
     buildNavigation();
-    protectCooperationPage();
+    protectControlledPage();
     enableNavigationPrefetch();
     buildDock();
   }
