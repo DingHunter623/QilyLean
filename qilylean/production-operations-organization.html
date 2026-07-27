@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>生产运营组织架构与人力编制KPI方案｜QilyLean知识分享</title>
+  <meta name="description" content="适用于1000～2000人传统实业制造公司的生产运营组织架构、人力编制、岗位职责、关键KPI与RACI方案，支持PPT与Excel在线预览和下载。">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://qilylean.com/qilylean/production-operations-organization.html">
+  <meta property="og:title" content="生产运营组织架构与人力编制KPI方案">
+  <meta property="og:description" content="八大职能＋经营管理，提供1000、1500、2000人三档编制、122类岗位、部门KPI与RACI矩阵。">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://qilylean.com/qilylean/production-operations-organization.html">
+  <meta property="og:image" content="https://qilylean.com/assets/knowledge/production-operations-organization/slides/slide-01.webp">
+  <link rel="stylesheet" href="/site-shell.css?v=20260725-compact-hero-v1">
+  <style>
+    :root{--forest:#0f4b5a;--teal:#177f87;--ink:#17202a;--muted:#5f7474;--line:#d5e4e3;--paper:#eef7f5;--white:#fff;--blue:#3d8dff;--gold:#caa15f;--shadow:0 16px 46px rgba(15,75,90,.12)}
+    *{box-sizing:border-box}
+    body{margin:0;color:var(--ink);background:#f4faf8;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
+    a{color:inherit}
+    .document-hero{padding:clamp(42px,6vw,78px) clamp(18px,5vw,64px);color:#fff;background:linear-gradient(128deg,#0f4b5a 0%,#177f87 66%,#2c7b75 100%)}
+    .document-inner{width:min(1240px,100%);margin:auto}
+    .hero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:34px;align-items:center}
+    .eyebrow{display:block;margin-bottom:12px;color:#ffe39b;font-size:15px;font-weight:900;letter-spacing:.06em}
+    .document-hero h1{max-width:820px;margin:0 0 18px;font-size:clamp(38px,5.5vw,66px);line-height:1.12}
+    .document-hero .lead{max-width:850px;margin:0;color:#e7f5f2;font-size:clamp(19px,2vw,24px)}
+    .hero-tags{display:flex;flex-wrap:wrap;gap:9px;margin:24px 0 0;padding:0;list-style:none}
+    .hero-tags li{padding:7px 11px;border:1px solid rgba(255,255,255,.25);border-radius:999px;background:rgba(255,255,255,.09);font-size:14px;font-weight:850}
+    .hero-cover{overflow:hidden;margin:0;border:1px solid rgba(255,255,255,.28);border-radius:18px;background:#fff;box-shadow:0 24px 66px rgba(0,0,0,.22)}
+    .hero-cover img{display:block;width:100%;height:auto}
+    .hero-cover figcaption{padding:11px 14px;color:#dcecea;background:rgba(7,60,71,.95);font-size:14px;font-weight:800;text-align:center}
+    .section{padding:clamp(42px,6vw,76px) clamp(18px,5vw,64px);border-bottom:1px solid var(--line);background:#fff}
+    .section.alt{background:var(--paper)}
+    .section-head{display:flex;align-items:end;justify-content:space-between;gap:18px;margin-bottom:24px}
+    .section h2{margin:0;color:var(--forest);font-size:clamp(30px,4vw,46px);line-height:1.2}
+    .section-head p{max-width:720px;margin:0;color:var(--muted);font-size:18px}
+    .summary-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:24px}
+    .summary-panel,.contact-panel{padding:clamp(22px,3vw,32px);border:1px solid var(--line);background:#fff;box-shadow:var(--shadow)}
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:24px}
+    .metric{padding:18px;background:#f4f8fa;border-top:4px solid var(--blue)}
+    .metric strong{display:block;color:var(--forest);font-size:30px;line-height:1.1}
+    .metric span{display:block;margin-top:6px;color:var(--muted);font-size:14px}
+    .summary-panel h3,.contact-panel h3{margin:0 0 12px;color:var(--forest);font-size:24px}
+    .summary-panel ul{margin:0;padding-left:1.2em;color:var(--muted);font-size:17px}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px}
+    .button{display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:11px 18px;border:1px solid var(--forest);border-radius:8px;color:#fff;background:var(--forest);text-decoration:none;font-weight:900;box-shadow:0 8px 22px rgba(15,75,90,.16)}
+    .button.secondary{border-color:var(--teal);background:var(--teal)}
+    .button.light{color:var(--forest);background:#fff}
+    .qr-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .qr-card{padding:14px;border:1px solid var(--line);background:#f8fbfa;text-align:center}
+    .qr-card img{display:block;width:100%;max-width:210px;height:auto;margin:auto;background:#fff}
+    .qr-card strong{display:block;margin-top:8px;color:var(--forest)}
+    .qr-card span{display:block;color:var(--muted);font-size:14px}
+    .preview-note{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:15px;font-weight:750}
+    .preview-note::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 5px rgba(23,127,135,.12)}
+    .preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+    .preview-card{overflow:hidden;margin:0;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:0 10px 30px rgba(15,75,90,.08)}
+    .preview-open{display:block;width:100%;padding:0;border:0;background:#eef4f3;cursor:zoom-in}
+    .preview-open img{display:block;width:100%;height:auto}
+    .preview-card figcaption{display:flex;justify-content:space-between;gap:12px;padding:10px 14px;color:var(--muted);font-size:14px;font-weight:800}
+    .preview-card figcaption strong{color:var(--forest)}
+    .sheet-grid{grid-template-columns:1fr}
+    .download-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .download-card{padding:26px;border:1px solid var(--line);border-top:6px solid var(--teal);background:#fff;box-shadow:var(--shadow)}
+    .download-card:nth-child(2){border-top-color:var(--blue)}
+    .download-card small{color:var(--muted);font-weight:800}
+    .download-card h3{margin:7px 0 10px;color:var(--forest);font-size:26px}
+    .download-card p{margin:0;color:var(--muted)}
+    .download-card .actions{margin-top:18px}
+    .method-note{margin-top:22px;padding:18px 20px;border-left:6px solid var(--gold);background:#fff6da;color:#604a20;font-weight:750}
+    .document-footer{padding:26px 18px;color:#d7e8e2;background:#101916}
+    .document-footer .document-inner{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+    .lightbox{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(5,18,22,.92)}
+    .lightbox.show{display:flex}
+    .lightbox img{display:block;max-width:min(96vw,1500px);max-height:91vh;border:1px solid rgba(255,255,255,.3);background:#fff;box-shadow:0 22px 70px rgba(0,0,0,.45)}
+    .lightbox-close{position:fixed;top:16px;right:18px;width:46px;height:46px;border:1px solid rgba(255,255,255,.45);border-radius:50%;color:#fff;background:rgba(0,0,0,.42);font-size:28px;cursor:pointer}
+    @media(max-width:920px){.hero-grid,.summary-grid{grid-template-columns:1fr}.hero-cover{max-width:760px}.metrics{grid-template-columns:repeat(2,1fr)}.preview-grid,.download-grid{grid-template-columns:1fr}.section-head{align-items:flex-start;flex-direction:column}}
+    @media(max-width:560px){.metrics,.qr-grid{grid-template-columns:1fr}.document-hero h1{font-size:38px}.button{width:100%}.preview-card figcaption{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body class="module-page">
+  <header class="qily-site-header">
+    <a class="qily-brand" href="/">QilyLean｜启力精益</a>
+  </header>
+
+  <main>
+    <section class="document-hero">
+      <div class="document-inner hero-grid">
+        <div>
+          <span class="eyebrow">ORGANIZATION DESIGN · STAFFING · KPI</span>
+          <h1>生产运营组织架构与人力编制KPI方案</h1>
+          <p class="lead">面向1000～2000人传统实业制造公司，系统梳理营销、财务、研发、物控、工程、质量、制造及人事行政八大职能，并配套岗位职责、三档编制、关键KPI与RACI责任矩阵。</p>
+          <ul class="hero-tags">
+            <li>1000／1500／2000人三档</li>
+            <li>122类岗位</li>
+            <li>21页管理汇报版</li>
+            <li>8张可编辑工作表</li>
+          </ul>
+          <div class="actions">
+            <a class="button" href="#ppt-preview">在线预览PPT</a>
+            <a class="button secondary" href="#excel-preview">在线预览Excel</a>
+            <a class="button light" href="#downloads">下载附件</a>
+          </div>
+        </div>
+        <figure class="hero-cover">
+          <img src="/assets/knowledge/production-operations-organization/slides/slide-01.webp" alt="生产运营组织架构与人力编制KPI方案封面" width="1280" height="720" loading="eager" decoding="async" fetchpriority="high">
+          <figcaption>QilyLean｜启力精益 · 生产运营组织设计与定编方案</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section alt">
+      <div class="document-inner summary-grid">
+        <article class="summary-panel">
+          <div class="metrics">
+            <div class="metric"><strong>1500人</strong><span>建议基准型</span></div>
+            <div class="metric"><strong>1025人</strong><span>制造直接人力</span></div>
+            <div class="metric"><strong>68.3%</strong><span>直接人力占比</span></div>
+            <div class="metric"><strong>8＋1</strong><span>八大职能＋经营管理</span></div>
+          </div>
+          <h3>内容构成</h3>
+          <ul>
+            <li>一级组织架构、二级专业单元与管理层级责任边界；</li>
+            <li>1000、1500、2000人三档编制及1500人岗位明细；</li>
+            <li>营销、研发、供应链、工程、质量、制造等部门职责与KPI；</li>
+            <li>跨部门RACI矩阵、定编方法与12周组织落地路线。</li>
+          </ul>
+        </article>
+        <aside class="contact-panel">
+          <h3>官网与项目交流</h3>
+          <div class="qr-grid">
+            <div class="qr-card"><img src="/assets/knowledge/production-operations-organization/qilylean-home-qr.png" alt="QilyLean官网二维码" width="720" height="720"><strong>QilyLean官网</strong><span>qilylean.com</span></div>
+            <div class="qr-card"><img src="/assets/knowledge/production-operations-organization/qilylean-wechat-qr.png" alt="QilyLean交流微信二维码" width="720" height="720"><strong>项目交流</strong><span>微信号：Qily259</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="ppt-preview">
+      <div class="document-inner">
+        <div class="section-head">
+          <div><span class="eyebrow" style="color:var(--teal)">POWERPOINT PREVIEW</span><h2>管理汇报版在线预览</h2></div>
+          <p class="preview-note">共21页，点击任一页面可放大查看；正式附件保留可编辑图表、文本和二维码。</p>
+        </div>
+        <div class="preview-grid" id="slideGallery">
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-01.webp" alt="生产运营组织架构PPT第1页" loading="lazy"></button><figcaption><strong>方案封面</strong><span>第1页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-02.webp" alt="生产运营组织架构PPT第2页" loading="lazy"></button><figcaption><strong>管理摘要</strong><span>第2页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-03.webp" alt="生产运营组织架构PPT第3页" loading="lazy"></button><figcaption><strong>设计原则</strong><span>第3页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-04.webp" alt="生产运营组织架构PPT第4页" loading="lazy"></button><figcaption><strong>一级组织架构</strong><span>第4页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-05.webp" alt="生产运营组织架构PPT第5页" loading="lazy"></button><figcaption><strong>二级专业单元</strong><span>第5页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-06.webp" alt="生产运营组织架构PPT第6页" loading="lazy"></button><figcaption><strong>三档人力编制</strong><span>第6页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-07.webp" alt="生产运营组织架构PPT第7页" loading="lazy"></button><figcaption><strong>1500人配置</strong><span>第7页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-08.webp" alt="生产运营组织架构PPT第8页" loading="lazy"></button><figcaption><strong>营销中心</strong><span>第8页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-09.webp" alt="生产运营组织架构PPT第9页" loading="lazy"></button><figcaption><strong>财务中心</strong><span>第9页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-10.webp" alt="生产运营组织架构PPT第10页" loading="lazy"></button><figcaption><strong>研发中心</strong><span>第10页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-11.webp" alt="生产运营组织架构PPT第11页" loading="lazy"></button><figcaption><strong>物控部</strong><span>第11页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-12.webp" alt="生产运营组织架构PPT第12页" loading="lazy"></button><figcaption><strong>工程部</strong><span>第12页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-13.webp" alt="生产运营组织架构PPT第13页" loading="lazy"></button><figcaption><strong>质量部</strong><span>第13页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-14.webp" alt="生产运营组织架构PPT第14页" loading="lazy"></button><figcaption><strong>制造部</strong><span>第14页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-15.webp" alt="生产运营组织架构PPT第15页" loading="lazy"></button><figcaption><strong>人事行政部</strong><span>第15页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-16.webp" alt="生产运营组织架构PPT第16页" loading="lazy"></button><figcaption><strong>总经理办公室</strong><span>第16页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-17.webp" alt="生产运营组织架构PPT第17页" loading="lazy"></button><figcaption><strong>管理层级职责</strong><span>第17页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-18.webp" alt="生产运营组织架构PPT第18页" loading="lazy"></button><figcaption><strong>KPI绩效机制</strong><span>第18页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-19.webp" alt="生产运营组织架构PPT第19页" loading="lazy"></button><figcaption><strong>岗位定编方法</strong><span>第19页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-20.webp" alt="生产运营组织架构PPT第20页" loading="lazy"></button><figcaption><strong>12周落地路线</strong><span>第20页 / 21页</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/slides/slide-21.webp" alt="生产运营组织架构PPT第21页" loading="lazy"></button><figcaption><strong>决策建议与二维码</strong><span>第21页 / 21页</span></figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="excel-preview">
+      <div class="document-inner">
+        <div class="section-head">
+          <div><span class="eyebrow" style="color:var(--teal)">EXCEL PREVIEW</span><h2>岗位编制与KPI工作簿预览</h2></div>
+          <p class="preview-note">工作簿包含公式、筛选、图表、KPI词典、RACI矩阵、定编方法及品牌化打印页眉页脚。</p>
+        </div>
+        <div class="preview-grid sheet-grid">
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/sheets/sheet-01.webp" alt="工作簿使用说明预览" loading="lazy"></button><figcaption><strong>使用说明</strong><span>设计口径与使用建议</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/sheets/sheet-02.webp" alt="人力编制总览预览" loading="lazy"></button><figcaption><strong>编制总览</strong><span>1000／1500／2000人三档方案</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/sheets/sheet-03.webp" alt="岗位编制明细前段预览" loading="lazy"></button><figcaption><strong>岗位编制明细</strong><span>岗位职责与代表性KPI</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/sheets/sheet-04.webp" alt="岗位编制明细后段预览" loading="lazy"></button><figcaption><strong>岗位编制明细</strong><span>122类岗位、合计1500人</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/sheets/sheet-05.webp" alt="部门KPI词典前段预览" loading="lazy"></button><figcaption><strong>部门KPI词典</strong><span>公式、目标、权重与数据源</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/sheets/sheet-06.webp" alt="部门KPI词典后段预览" loading="lazy"></button><figcaption><strong>部门KPI词典</strong><span>部门指标口径示例</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/sheets/sheet-07.webp" alt="RACI职责矩阵预览" loading="lazy"></button><figcaption><strong>RACI职责矩阵</strong><span>跨部门流程权责</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/sheets/sheet-08.webp" alt="定编方法预览" loading="lazy"></button><figcaption><strong>定编方法</strong><span>工时、负荷、服务比与管理跨度</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/sheets/sheet-09.webp" alt="管理层级职责预览" loading="lazy"></button><figcaption><strong>管理层级职责</strong><span>结果、过程、标准与执行边界</span></figcaption></figure>
+          <figure class="preview-card"><button class="preview-open" type="button"><img src="/assets/knowledge/production-operations-organization/sheets/sheet-10.webp" alt="QilyLean官网与交流二维码工作表预览" loading="lazy"></button><figcaption><strong>官网与交流</strong><span>二维码与品牌化页眉页脚</span></figcaption></figure>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="downloads">
+      <div class="document-inner">
+        <div class="section-head">
+          <div><span class="eyebrow" style="color:var(--teal)">DOWNLOADS</span><h2>附件下载</h2></div>
+          <p>两份附件均已加入“QilyLean｜启力精益”品牌页眉页脚、官网二维码及交流二维码。</p>
+        </div>
+        <div class="download-grid">
+          <article class="download-card">
+            <small>PowerPoint｜21页</small>
+            <h3>生产运营组织架构与人力编制KPI方案</h3>
+            <p>适合管理层汇报、组织评审、定岗定编宣贯与项目启动。</p>
+            <div class="actions"><a class="button" href="/downloads/production-operations-organization/QilyLean-Production-Operations-Organization-1000-2000.pptx" download="生产运营组织架构与人力编制KPI方案_1000-2000人.pptx">下载PPT</a></div>
+          </article>
+          <article class="download-card">
+            <small>Excel｜8张工作表</small>
+            <h3>岗位职责、KPI与人力编制工作簿</h3>
+            <p>适合逐岗位校准、部门编制评审、KPI口径固化及RACI协同。</p>
+            <div class="actions"><a class="button secondary" href="/downloads/production-operations-organization/QilyLean-Production-Operations-Staffing-KPI-1000-2000.xlsx" download="生产运营组织架构_岗位职责KPI与人力编制表_1000-2000人.xlsx">下载Excel</a></div>
+          </article>
+        </div>
+        <div class="method-note">编制属于建议基准。正式冻结前，应结合产品组合、订单量、标准工时、班次模式、自动化程度、检验控制点、仓储吞吐量及外包边界，用连续4～8周真实负荷进行复核。</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="document-footer">
+    <div class="document-inner"><span>QilyLean｜启力精益</span><span>生产运营组织设计 · 人力编制 · 岗位职责 · 关键KPI</span></div>
+  </footer>
+
+  <div class="lightbox" id="previewLightbox" role="dialog" aria-modal="true" aria-label="预览大图">
+    <button class="lightbox-close" type="button" aria-label="关闭预览">×</button>
+    <img alt="">
+  </div>
+  <script>
+    (function(){
+      'use strict';
+      var lightbox=document.getElementById('previewLightbox');
+      var target=lightbox.querySelector('img');
+      function close(){lightbox.classList.remove('show');target.removeAttribute('src');}
+      document.querySelectorAll('.preview-open img').forEach(function(image){
+        image.closest('button').addEventListener('click',function(){
+          target.src=image.currentSrc||image.src;
+          target.alt=image.alt;
+          lightbox.classList.add('show');
+        });
+      });
+      lightbox.querySelector('.lightbox-close').addEventListener('click',close);
+      lightbox.addEventListener('click',function(event){if(event.target===lightbox)close();});
+      document.addEventListener('keydown',function(event){if(event.key==='Escape')close();});
+    })();
+  </script>
+  <script src="/site-navigation.js?v=20260727-production-org-v1"></script>
+  <script src="/homepage-music.js?v=20260722-continuous-v3"></script>
+</body>
+</html>

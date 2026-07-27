@@ -129,6 +129,30 @@ for filename in sys.argv[1:]:
   assert(result.status === 0, `Office package validation failed: ${result.stderr || result.stdout}`);
 }
 
+function validateProductionOrganizationResource() {
+  const page = read('qilylean/production-operations-organization.html');
+  const knowledge = read('knowledge/index.html');
+  const pptx = path.join(root, 'downloads/production-operations-organization/QilyLean-Production-Operations-Organization-1000-2000.pptx');
+  const xlsx = path.join(root, 'downloads/production-operations-organization/QilyLean-Production-Operations-Staffing-KPI-1000-2000.xlsx');
+
+  assert(page.includes('QilyLean｜启力精益'), 'Organization resource page is missing QilyLean branding');
+  assert(page.includes('qilylean-home-qr.png') && page.includes('qilylean-wechat-qr.png'), 'Organization resource QR assets are missing');
+  assert(new Set(page.match(/slides\/slide-\d{2}\.webp/g) || []).size === 21, 'Organization resource does not expose all 21 slide previews');
+  assert(new Set(page.match(/sheets\/sheet-\d{2}\.webp/g) || []).size === 10, 'Organization resource does not expose all 10 workbook previews');
+  assert(page.includes('QilyLean-Production-Operations-Organization-1000-2000.pptx'), 'Organization PPT download is missing');
+  assert(page.includes('QilyLean-Production-Operations-Staffing-KPI-1000-2000.xlsx'), 'Organization workbook download is missing');
+  assert(knowledge.includes('/qilylean/production-operations-organization.html'), 'Knowledge hub entry for the organization resource is missing');
+  assert(fs.statSync(pptx).size > 100000, 'Organization PPT package is unexpectedly small');
+  assert(fs.statSync(xlsx).size > 50000, 'Organization workbook package is unexpectedly small');
+
+  for (let i = 1; i <= 21; i += 1) {
+    assert(fs.existsSync(path.join(root, `assets/knowledge/production-operations-organization/slides/slide-${String(i).padStart(2, '0')}.webp`)), `Slide preview ${i} is missing`);
+  }
+  for (let i = 1; i <= 10; i += 1) {
+    assert(fs.existsSync(path.join(root, `assets/knowledge/production-operations-organization/sheets/sheet-${String(i).padStart(2, '0')}.webp`)), `Workbook preview ${i} is missing`);
+  }
+}
+
 async function main() {
   const homePage = read('index.html');
   const aiPage = read('ai.html');
@@ -173,6 +197,7 @@ async function main() {
   assert(/How do？/.test(brief) && /How much？/.test(brief), 'The two H questions are not standardized');
   assert(brief.length > 6000, 'The July 27 IE article is still too shallow');
 
+  validateProductionOrganizationResource();
   await validateOfficePackages();
   process.stdout.write('QilyLean maintenance validation passed.\n');
 }

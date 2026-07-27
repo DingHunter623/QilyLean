@@ -6,7 +6,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const origin = 'https://qilylean.com';
-const today = '2026-07-24';
+const today = '2026-07-27';
 // One source of truth for public-route completeness, global navigation and discoverability.
 
 const projectRoutes = [
@@ -16,6 +16,11 @@ const projectRoutes = [
   '/projects/fuse-improvement/',
   '/projects/factory-layout/',
   '/projects/digital-factory/'
+];
+
+const knowledgeResourceRoutes = [
+  '/qilylean/gbt2828.html',
+  '/qilylean/production-operations-organization.html'
 ];
 
 const expectedRoutes = [
@@ -33,7 +38,7 @@ const expectedRoutes = [
   '/improvements/ie-data/',
   '/improvements/visual/',
   '/knowledge/',
-  '/qilylean/gbt2828.html',
+  ...knowledgeResourceRoutes,
   '/moments/',
   '/moments/work/',
   '/moments/team/',
@@ -41,7 +46,7 @@ const expectedRoutes = [
   '/moments/life/',
   '/cooperation/',
   '/qilylean/daily-insights.html',
-  '/qilylean/daily/2026-07-24.html'
+  '/qilylean/daily/2026-07-27.html'
 ];
 
 function routeFile(route) {
@@ -59,7 +64,10 @@ function read(route) {
 function ensureSitemapEntries() {
   const sitemapFile = path.join(root, 'sitemap.xml');
   let sitemap = fs.readFileSync(sitemapFile, 'utf8');
-  const entries = projectRoutes.map((route) => ({ route, priority: '0.8' }));
+  const entries = [
+    ...projectRoutes.map((route) => ({ route, priority: '0.8' })),
+    ...knowledgeResourceRoutes.map((route) => ({ route, priority: '0.8' }))
+  ];
 
   entries.forEach(({ route }) => {
     const escaped = `${origin}${route}`.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -121,7 +129,8 @@ function validateProjects() {
 function validateKnowledgeDiscovery() {
   const html = read('/knowledge/');
   if (!html.includes('/qilylean/gbt2828.html')) throw new Error('GB/T 2828 entry missing from knowledge hub');
-  if (!html.includes('/qilylean/daily/2026-07-24.html')) throw new Error('2026-07-24 brief missing from knowledge hub');
+  if (!html.includes('/qilylean/production-operations-organization.html')) throw new Error('Production operations organization entry missing from knowledge hub');
+  if (!html.includes('/qilylean/daily/2026-07-27.html')) throw new Error('2026-07-27 brief missing from knowledge hub');
 }
 
 function main() {

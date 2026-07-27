@@ -14,8 +14,11 @@ on:
       - "experience/**"
       - "cooperation/**"
       - "qilylean/gbt2828.html"
+      - "qilylean/production-operations-organization.html"
+      - "assets/knowledge/production-operations-organization/**"
+      - "downloads/production-operations-organization/**"
       - "qilylean/daily-insights.html"
-      - "qilylean/daily/2026-07-24.html"
+      - "qilylean/daily/2026-07-27.html"
   workflow_dispatch:
 
 permissions:
