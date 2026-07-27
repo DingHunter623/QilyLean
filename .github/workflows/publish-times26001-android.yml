@@ -1,0 +1,53 @@
+name: 发布 Times26001 Android 安装包
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/publish-times26001-android.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-times26001-android
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: 发布 Android v1.1.2
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      ARTIFACT_URL: "https://sdmntprwestcentralus.oaiusercontent.com/files/00000000-9c70-81fb-810a-4500ce7c78c0/raw?se=2026-07-27T15:10:01Z&sp=r&sv=2026-02-06&sr=b&scid=569252eb-668e-9470-b8db-4e5241abdcd0&skoid=18c14e53-ea0c-429b-8d09-d22d66ca7169&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-07-27T12:58:20Z&ske=2026-07-29T12:58:20Z&sks=b&skv=2026-02-06&sig=nsbN2H2ik0VW/QkwlSniM11QkDz0dXi//MIHQhA2%2BM8%3D"
+      ZIP_SHA256: "34bdc37b578029c88f270d413875fbc22c7648b840c836b6836016f6c1c6cd25"
+      APK_SHA256: "498d9c3b8870540e7adde777abbda954a822baeb37a9fcc2a4ab3a63c66fd498"
+      APK_PATH: "Times26001-Android-v1.1.2-IE-Stopwatch.apk"
+
+    steps:
+      - name: 检出主页仓库
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 下载并校验安装包
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 --silent --show-error "$ARTIFACT_URL" -o /tmp/times26001-android.zip
+          echo "$ZIP_SHA256  /tmp/times26001-android.zip" | sha256sum --check -
+          unzip -p /tmp/times26001-android.zip app-debug.apk > "$APK_PATH"
+          echo "$APK_SHA256  $APK_PATH" | sha256sum --check -
+
+      - name: 提交安装包并清理一次性工作流
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm ".github/workflows/publish-times26001-android.yml"
+          git add --all -- "$APK_PATH" ".github/workflows/publish-times26001-android.yml"
+          git commit -m "release: publish Times26001 Android v1.1.2 [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main
