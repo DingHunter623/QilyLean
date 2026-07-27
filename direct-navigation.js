@@ -25,14 +25,6 @@
     document.head.appendChild(style);
   }
 
-  function loadTimes26001Module(){
-    if(document.getElementById('times26001HomeCardScript'))return;
-    var script=document.createElement('script');
-    script.id='times26001HomeCardScript';
-    script.src='/times26001-home-card.js?v=20260724-times26001-v2';
-    document.body.appendChild(script);
-  }
-
   function balanceHomepageHero(){
     var path=(location.pathname||'/').replace(/\/index\.html$/,'/');
     if(path!=='/'&&path!=='/qilylean/home.html'&&path!=='/qilylean/home-live.html')return;
@@ -42,7 +34,6 @@
     if(panel.parentElement!==grid)grid.appendChild(panel);
     document.body.classList.add('qily-home-balanced');
     alignHomepageMetrics();
-    loadTimes26001Module();
   }
 
   loadVisualScale();
