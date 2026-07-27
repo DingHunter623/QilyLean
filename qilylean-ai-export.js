@@ -210,10 +210,11 @@ function downloadBlob(blob,filename){
   setTimeout(function(){URL.revokeObjectURL(url);},2000);
 }
 
-function wordRuns(text){
+function wordRuns(text,runProperties){
   var lines=String(text||'').replace(/\r/g,'').split('\n');
+  var properties=runProperties&&runProperties.length?'<w:rPr>'+runProperties.join('')+'</w:rPr>':'';
   return lines.map(function(line,index){
-    return (index?'<w:r><w:br/></w:r>':'')+'<w:r><w:t xml:space="preserve">'+xml(line)+'</w:t></w:r>';
+    return (index?'<w:r><w:br/></w:r>':'')+'<w:r>'+properties+'<w:t xml:space="preserve">'+xml(line)+'</w:t></w:r>';
   }).join('');
 }
 
@@ -221,22 +222,25 @@ function wordParagraph(text,options){
   options=options||{};
   var properties=[];
   var runProperties=[];
+  if(options.style)properties.push('<w:pStyle w:val="'+xml(options.style)+'"/>');
   if(options.keep)properties.push('<w:keepNext/>');
+  if(options.keepLines)properties.push('<w:keepLines/>');
   if(options.align)properties.push('<w:jc w:val="'+options.align+'"/>');
-  if(options.before||options.after)properties.push('<w:spacing w:before="'+(options.before||0)+'" w:after="'+(options.after||0)+'"/>');
+  if(options.before!=null||options.after!=null||options.line)properties.push('<w:spacing w:before="'+(options.before||0)+'" w:after="'+(options.after||0)+'"'+(options.line?' w:line="'+options.line+'" w:lineRule="auto"':'')+'/>');
+  if(options.left!=null||options.right!=null||options.firstLine!=null)properties.push('<w:ind w:left="'+(options.left||0)+'" w:right="'+(options.right||0)+'"'+(options.firstLine?' w:firstLine="'+options.firstLine+'"':'')+'/>');
   if(options.shade)properties.push('<w:shd w:fill="'+options.shade+'"/>');
   if(options.leftBorder)properties.push('<w:pBdr><w:left w:val="single" w:sz="18" w:space="8" w:color="'+options.leftBorder+'"/></w:pBdr>');
+  if(options.bottomBorder)properties.push('<w:pBdr><w:bottom w:val="single" w:sz="6" w:space="4" w:color="'+options.bottomBorder+'"/></w:pBdr>');
   if(options.bold)runProperties.push('<w:b/>');
   if(options.color)runProperties.push('<w:color w:val="'+options.color+'"/>');
   if(options.size)runProperties.push('<w:sz w:val="'+options.size+'"/><w:szCs w:val="'+options.size+'"/>');
-  var runs=wordRuns(text);
-  if(runProperties.length)runs='<w:r><w:rPr>'+runProperties.join('')+'</w:rPr><w:t xml:space="preserve">'+xml(text)+'</w:t></w:r>';
+  var runs=wordRuns(text,runProperties);
   return '<w:p>'+(properties.length?'<w:pPr>'+properties.join('')+'</w:pPr>':'')+runs+'</w:p>';
 }
 
 function wordDrawing(relationshipId,documentId,name){
-  var size=810000;
-  return '<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0">'+
+  var size=720000;
+  return '<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="20" w:after="40"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0">'+
     '<wp:extent cx="'+size+'" cy="'+size+'"/><wp:docPr id="'+documentId+'" name="'+xml(name)+'"/><wp:cNvGraphicFramePr/>'+
     '<a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic>'+
     '<pic:nvPicPr><pic:cNvPr id="0" name="'+xml(name)+'"/><pic:cNvPicPr/></pic:nvPicPr>'+
@@ -245,21 +249,74 @@ function wordDrawing(relationshipId,documentId,name){
     '</pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>';
 }
 
-function wordContactCell(title,drawing,lines){
-  return '<w:tc><w:tcPr><w:tcW w:w="5046" w:type="dxa"/><w:shd w:fill="F8FBFA"/><w:vAlign w:val="center"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tcMar></w:tcPr>'+
-    wordParagraph(title,{bold:true,color:'0F4B5A',size:24,align:'center',after:60})+
+function wordContactCell(width,title,drawing,line){
+  return '<w:tc><w:tcPr><w:tcW w:w="'+width+'" w:type="dxa"/><w:shd w:fill="F8FBFA"/><w:noWrap/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr>'+
+    wordParagraph(title,{style:'QLContactTitle',keep:true})+
     (drawing||wordParagraph('二维码暂未载入',{align:'center',color:'6A7777'}))+
-    wordParagraph(lines,{align:'center',size:17,color:'35636C'})+'</w:tc>';
+    wordParagraph(line,{style:'QLContactLine'})+'</w:tc>';
+}
+
+function wordMetadataCell(width,text,label){
+  return '<w:tc><w:tcPr><w:tcW w:w="'+width+'" w:type="dxa"/><w:shd w:fill="'+(label?'F2F4F7':'FFFFFF')+'"/><w:tcMar><w:top w:w="80" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="80" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tcMar><w:vAlign w:val="center"/></w:tcPr>'+
+    wordParagraph(text,{style:label?'QLMetaLabel':'QLMetaValue'})+'</w:tc>';
+}
+
+function wordMetadataTable(time,questionCount){
+  var borders='<w:tblBorders><w:top w:val="single" w:sz="6" w:color="AEBBBC"/><w:left w:val="single" w:sz="6" w:color="AEBBBC"/><w:bottom w:val="single" w:sz="6" w:color="AEBBBC"/><w:right w:val="single" w:sz="6" w:color="AEBBBC"/><w:insideH w:val="single" w:sz="6" w:color="D5DDDE"/><w:insideV w:val="single" w:sz="6" w:color="D5DDDE"/></w:tblBorders>';
+  return '<w:tbl><w:tblPr><w:tblW w:w="10092" w:type="dxa"/><w:tblInd w:w="0" w:type="dxa"/>'+borders+'<w:tblLayout w:type="fixed"/></w:tblPr>'+
+    '<w:tblGrid><w:gridCol w:w="1450"/><w:gridCol w:w="3300"/><w:gridCol w:w="1450"/><w:gridCol w:w="3892"/></w:tblGrid>'+
+    '<w:tr><w:trPr><w:cantSplit/></w:trPr>'+
+      wordMetadataCell(1450,'文件名称',true)+wordMetadataCell(3300,'QilyLean AI 对话记录',false)+
+      wordMetadataCell(1450,'导出时间',true)+wordMetadataCell(3892,time.display,false)+
+    '</w:tr>'+
+    '<w:tr><w:trPr><w:cantSplit/></w:trPr>'+
+      wordMetadataCell(1450,'文档类型',true)+wordMetadataCell(3300,'AI 对话记录',false)+
+      wordMetadataCell(1450,'对话轮次',true)+wordMetadataCell(3892,questionCount+' 轮',false)+
+    '</w:tr></w:tbl>';
+}
+
+function wordStyles(){
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'+
+    '<w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Arial" w:eastAsia="Microsoft YaHei" w:hAnsi="Arial" w:cs="Arial"/><w:sz w:val="21"/><w:szCs w:val="21"/><w:color w:val="222222"/><w:lang w:val="zh-CN" w:eastAsia="zh-CN"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="320" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults>'+
+    '<w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/><w:qFormat/><w:pPr><w:spacing w:after="120" w:line="320" w:lineRule="auto"/></w:pPr><w:rPr><w:rFonts w:ascii="Arial" w:eastAsia="Microsoft YaHei" w:hAnsi="Arial"/><w:sz w:val="21"/><w:szCs w:val="21"/><w:color w:val="222222"/></w:rPr></w:style>'+
+    '<w:style w:type="paragraph" w:styleId="QLTitle"><w:name w:val="QilyLean Document Title"/><w:basedOn w:val="Normal"/><w:next w:val="QLSubtitle"/><w:qFormat/><w:pPr><w:keepNext/><w:jc w:val="center"/><w:spacing w:before="120" w:after="60" w:line="420" w:lineRule="auto"/></w:pPr><w:rPr><w:b/><w:color w:val="173B44"/><w:sz w:val="38"/><w:szCs w:val="38"/></w:rPr></w:style>'+
+    '<w:style w:type="paragraph" w:styleId="QLSubtitle"><w:name w:val="QilyLean Document Subtitle"/><w:basedOn w:val="Normal"/><w:next w:val="Normal"/><w:pPr><w:keepNext/><w:jc w:val="center"/><w:spacing w:before="0" w:after="180" w:line="260" w:lineRule="auto"/></w:pPr><w:rPr><w:color w:val="5F7474"/><w:sz w:val="19"/><w:szCs w:val="19"/></w:rPr></w:style>'+
+    '<w:style w:type="paragraph" w:styleId="QLHeading1"><w:name w:val="QilyLean Heading 1"/><w:basedOn w:val="Normal"/><w:next w:val="QLSectionHeading"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:before="260" w:after="100"/><w:pBdr><w:bottom w:val="single" w:sz="8" w:space="5" w:color="7B9395"/></w:pBdr><w:outlineLvl w:val="0"/></w:pPr><w:rPr><w:b/><w:color w:val="173B44"/><w:sz w:val="28"/><w:szCs w:val="28"/></w:rPr></w:style>'+
+    '<w:style w:type="paragraph" w:styleId="QLSectionHeading"><w:name w:val="QilyLean Section Heading"/><w:basedOn w:val="Normal"/><w:next w:val="QLProcedureBody"/><w:qFormat/><w:pPr><w:keepNext/><w:spacing w:before="140" w:after="70" w:line="280" w:lineRule="auto"/><w:shd w:fill="F2F4F5"/><w:outlineLvl w:val="1"/></w:pPr><w:rPr><w:b/><w:color w:val="263F45"/><w:sz w:val="22"/><w:szCs w:val="22"/></w:rPr></w:style>'+
+    '<w:style w:type="paragraph" w:styleId="QLProcedureBody"><w:name w:val="QilyLean Procedure Body"/><w:basedOn w:val="Normal"/><w:next w:val="QLSectionHeading"/><w:pPr><w:widowControl/><w:spacing w:before="0" w:after="180" w:line="320" w:lineRule="auto"/><w:ind w:left="240" w:right="120"/></w:pPr><w:rPr><w:color w:val="222222"/><w:sz w:val="21"/><w:szCs w:val="21"/></w:rPr></w:style>'+
+    '<w:style w:type="paragraph" w:styleId="QLMetaLabel"><w:name w:val="QilyLean Metadata Label"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="0" w:line="240" w:lineRule="auto"/></w:pPr><w:rPr><w:b/><w:color w:val="44585C"/><w:sz w:val="18"/><w:szCs w:val="18"/></w:rPr></w:style>'+
+    '<w:style w:type="paragraph" w:styleId="QLMetaValue"><w:name w:val="QilyLean Metadata Value"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="0" w:after="0" w:line="240" w:lineRule="auto"/></w:pPr><w:rPr><w:color w:val="263F45"/><w:sz w:val="18"/><w:szCs w:val="18"/></w:rPr></w:style>'+
+    '<w:style w:type="paragraph" w:styleId="QLContactTitle"><w:name w:val="QilyLean Contact Title"/><w:basedOn w:val="Normal"/><w:pPr><w:keepNext/><w:jc w:val="center"/><w:spacing w:before="0" w:after="40" w:line="240" w:lineRule="auto"/></w:pPr><w:rPr><w:b/><w:color w:val="173B44"/><w:sz w:val="21"/><w:szCs w:val="21"/></w:rPr></w:style>'+
+    '<w:style w:type="paragraph" w:styleId="QLContactLine"><w:name w:val="QilyLean Contact Line"/><w:basedOn w:val="Normal"/><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="0" w:line="220" w:lineRule="auto"/></w:pPr><w:rPr><w:color w:val="35636C"/><w:sz w:val="15"/><w:szCs w:val="15"/></w:rPr></w:style>'+
+    '<w:style w:type="paragraph" w:styleId="QLNote"><w:name w:val="QilyLean Note"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="100" w:after="0" w:line="240" w:lineRule="auto"/></w:pPr><w:rPr><w:color w:val="6A7777"/><w:sz w:val="16"/><w:szCs w:val="16"/></w:rPr></w:style>'+
+    '</w:styles>';
+}
+
+function wordHeader(){
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:hdr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:p><w:pPr><w:tabs><w:tab w:val="right" w:pos="10092"/></w:tabs><w:spacing w:after="0"/></w:pPr><w:r><w:rPr><w:b/><w:color w:val="177F87"/><w:sz w:val="18"/></w:rPr><w:t>QilyLean｜启力精益</w:t></w:r><w:r><w:tab/></w:r><w:r><w:rPr><w:color w:val="6A7777"/><w:sz w:val="16"/></w:rPr><w:t>AI 对话记录</w:t></w:r></w:p></w:hdr>';
+}
+
+function wordFooter(){
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:ftr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:p><w:pPr><w:tabs><w:tab w:val="right" w:pos="10092"/></w:tabs><w:spacing w:before="40" w:after="0"/><w:pBdr><w:top w:val="single" w:sz="4" w:space="4" w:color="C8D3D4"/></w:pBdr></w:pPr><w:r><w:rPr><w:color w:val="6A7777"/><w:sz w:val="15"/></w:rPr><w:t>QilyLean AI 对话记录</w:t></w:r><w:r><w:tab/></w:r><w:r><w:rPr><w:color w:val="6A7777"/><w:sz w:val="15"/></w:rPr><w:t>第 </w:t></w:r><w:fldSimple w:instr=" PAGE "><w:r><w:rPr><w:color w:val="6A7777"/><w:sz w:val="15"/></w:rPr><w:t>1</w:t></w:r></w:fldSimple><w:r><w:rPr><w:color w:val="6A7777"/><w:sz w:val="15"/></w:rPr><w:t> 页 / 共 </w:t></w:r><w:fldSimple w:instr=" NUMPAGES "><w:r><w:rPr><w:color w:val="6A7777"/><w:sz w:val="15"/></w:rPr><w:t>1</w:t></w:r></w:fldSimple><w:r><w:rPr><w:color w:val="6A7777"/><w:sz w:val="15"/></w:rPr><w:t> 页</w:t></w:r></w:p></w:ftr>';
+}
+
+function wordSettings(){
+  return '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:zoom w:percent="100"/><w:defaultTabStop w:val="420"/><w:compat><w:compatSetting w:name="compatibilityMode" w:uri="http://schemas.microsoft.com/office/word" w:val="15"/></w:compat></w:settings>';
 }
 
 function buildDocx(items,assets,time){
   var homeBytes=dataUrlBytes(assets.homeQr);
   var contactBytes=dataUrlBytes(assets.contactQr);
-  var relationships=[];
+  var relationships=[
+    '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>',
+    '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>',
+    '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/header" Target="header1.xml"/>',
+    '<Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>'
+  ];
   var media={};
   var homeDrawing='';
   var contactDrawing='';
-  var nextId=1;
+  var nextId=5;
   if(homeBytes){
     relationships.push('<Relationship Id="rId'+nextId+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/home-qr.png"/>');
     media['word/media/home-qr.png']=homeBytes;
@@ -273,36 +330,39 @@ function buildDocx(items,assets,time){
   }
 
   var questionNo=0;
-  var body=wordParagraph('QilyLean｜启力精益',{bold:true,color:'177F87',size:24,keep:true,after:120})+
-    wordParagraph('QilyLean AI 对话记录',{bold:true,color:'0F4B5A',size:42,keep:true,after:100})+
-    wordParagraph('导出时间：'+time.display+'　｜　简单化 · 专业化 · 标准化',{color:'5F7474',size:19,after:320});
+  var questionCount=items.reduce(function(total,item){return total+(item.role==='user'?1:0);},0);
+  var body=wordParagraph('QilyLean AI 对话记录',{style:'QLTitle',keep:true})+
+    wordParagraph('对话内容导出文件',{style:'QLSubtitle',keep:true})+
+    wordMetadataTable(time,questionCount)+
+    wordParagraph('一、对话记录',{style:'QLHeading1',keep:true});
   items.forEach(function(item){
     if(item.role==='user'){
       questionNo+=1;
-      body+=wordParagraph('问题 '+questionNo,{bold:true,color:'6A5724',size:25,shade:'FFF8E8',leftBorder:'CAA15F',keep:true,before:120,after:80});
+      body+=wordParagraph(questionNo+'.1　用户提问',{style:'QLSectionHeading',keep:true});
     }else{
-      body+=wordParagraph(questionNo?'QilyLean AI 回答 '+questionNo:'QilyLean AI 使用说明',{bold:true,color:'0F4B5A',size:25,shade:'EDF6F4',leftBorder:'177F87',keep:true,before:120,after:80});
+      body+=wordParagraph(questionNo?questionNo+'.2　QilyLean AI 回复':'QilyLean AI 使用说明',{style:'QLSectionHeading',keep:true});
     }
-    body+=wordParagraph(item.text,item.role==='user'
-      ?{size:21,color:'173B44',shade:'FFFDF7',leftBorder:'CAA15F',after:240}
-      :{size:21,color:'173B44',shade:'F8FBFA',leftBorder:'177F87',after:240});
+    body+=wordParagraph(item.text,{style:'QLProcedureBody'});
   });
-  body+=wordParagraph('联系与分享',{bold:true,color:'0F4B5A',size:28,keep:true,before:140,after:80})+
-    '<w:tbl><w:tblPr><w:tblW w:w="10092" w:type="dxa"/><w:tblInd w:w="0" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="D5E4E3"/><w:left w:val="single" w:sz="6" w:color="D5E4E3"/><w:bottom w:val="single" w:sz="6" w:color="D5E4E3"/><w:right w:val="single" w:sz="6" w:color="D5E4E3"/><w:insideH w:val="single" w:sz="6" w:color="D5E4E3"/><w:insideV w:val="single" w:sz="6" w:color="D5E4E3"/></w:tblBorders></w:tblPr>'+
-    '<w:tblGrid><w:gridCol w:w="5046"/><w:gridCol w:w="5046"/></w:tblGrid><w:tr><w:trPr><w:cantSplit/></w:trPr>'+
-    wordContactCell('分享“启力精益”官网',homeDrawing,HOME_URL)+
-    wordContactCell('交流',contactDrawing,'微信号：'+WECHAT_ID+'\n手机：'+PHONE_NUMBERS.join(' / '))+
+  body+=wordParagraph('二、联系与分享',{style:'QLHeading1',keep:true})+
+    '<w:tbl><w:tblPr><w:tblW w:w="10092" w:type="dxa"/><w:tblInd w:w="0" w:type="dxa"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="D5E4E3"/><w:left w:val="single" w:sz="6" w:color="D5E4E3"/><w:bottom w:val="single" w:sz="6" w:color="D5E4E3"/><w:right w:val="single" w:sz="6" w:color="D5E4E3"/><w:insideH w:val="single" w:sz="6" w:color="D5E4E3"/><w:insideV w:val="single" w:sz="6" w:color="D5E4E3"/></w:tblBorders><w:tblLayout w:type="fixed"/></w:tblPr>'+
+    '<w:tblGrid><w:gridCol w:w="3500"/><w:gridCol w:w="6592"/></w:tblGrid><w:tr><w:trPr><w:cantSplit/></w:trPr>'+
+    wordContactCell(3500,'官网',homeDrawing,'qilylean.com')+
+    wordContactCell(6592,'交流',contactDrawing,'微信：'+WECHAT_ID+'　手机：'+PHONE_NUMBERS.join(' / '))+
     '</w:tr></w:tbl>'+
-    wordParagraph('本文件由 QilyLean AI 根据当前对话自动整理。重要结论请结合现场数据、专业标准与实际决策要求复核。',{size:16,color:'6A7777',before:80});
+    wordParagraph('说明：本文件由 QilyLean AI 根据当前对话自动整理。重要结论请结合现场数据、专业标准与实际决策要求复核。',{style:'QLNote'});
 
   var entries={
-    '[Content_Types].xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>',
+    '[Content_Types].xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/header1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.header+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>',
     '_rels/.rels':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>',
     'docProps/core.xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>QilyLean AI 对话记录</dc:title><dc:creator>QilyLean AI</dc:creator><cp:lastModifiedBy>QilyLean AI</cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">'+xml(time.iso)+'</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">'+xml(time.iso)+'</dcterms:modified></cp:coreProperties>',
     'docProps/app.xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>QilyLean AI</Application><AppVersion>1.0</AppVersion></Properties>',
-    'word/styles.xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Microsoft YaHei" w:eastAsia="Microsoft YaHei" w:hAnsi="Microsoft YaHei"/><w:sz w:val="21"/><w:szCs w:val="21"/><w:color w:val="173B44"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="100" w:line="340" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults></w:styles>',
+    'word/styles.xml':wordStyles(),
+    'word/settings.xml':wordSettings(),
+    'word/header1.xml':wordHeader(),
+    'word/footer1.xml':wordFooter(),
     'word/_rels/document.xml.rels':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+relationships.join('')+'</Relationships>',
-    'word/document.xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>'+body+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="907" w:right="907" w:bottom="907" w:left="907" w:header="454" w:footer="454" w:gutter="0"/></w:sectPr></w:body></w:document>'
+    'word/document.xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>'+body+'<w:sectPr><w:headerReference w:type="default" r:id="rId3"/><w:footerReference w:type="default" r:id="rId4"/><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="907" w:right="907" w:bottom="907" w:left="907" w:header="454" w:footer="454" w:gutter="0"/></w:sectPr></w:body></w:document>'
   };
   Object.keys(media).forEach(function(path){entries[path]=media[path];});
   return zipBlob(entries,WORD_MIME);

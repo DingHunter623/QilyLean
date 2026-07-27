@@ -116,7 +116,7 @@ function siteHeader() {
 }
 
 function pageScripts() {
-  return `<script src="/site-navigation.js?v=20260725-compact-hero-v1"></script>
+  return `<script src="/site-navigation.js?v=20260727-controlled-home-moments-v2"></script>
 <script src="/homepage-music.js?v=20260722-continuous-v3"></script>`;
 }
 
