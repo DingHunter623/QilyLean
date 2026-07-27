@@ -6,7 +6,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const origin = 'https://qilylean.com';
-const today = '2026-07-27';
+const today = '2026-07-28';
 // One source of truth for public-route completeness, global navigation and discoverability.
 
 const projectRoutes = [
@@ -46,7 +46,7 @@ const expectedRoutes = [
   '/moments/life/',
   '/cooperation/',
   '/qilylean/daily-insights.html',
-  '/qilylean/daily/2026-07-27.html'
+  '/qilylean/daily/2026-07-28.html'
 ];
 
 function routeFile(route) {
