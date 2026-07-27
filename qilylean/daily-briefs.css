@@ -27,12 +27,15 @@
 .brief-share-status{color:var(--daily-teal);font-size:14px;font-weight:800}
 .brief-index-card h2 a:hover,.brief-index-card h2 a:focus-visible{color:var(--daily-teal);outline:none}
 .daily-single-section .post{display:grid;grid-template-columns:.95fr 1.05fr;overflow:hidden;border:1px solid var(--daily-line);background:#fff;box-shadow:0 16px 44px rgba(15,75,90,.12)}
+.daily-single-section .post.detailed{grid-template-columns:1fr}
+.daily-single-section .post.detailed .visual{min-height:260px}
 .daily-single-section .visual{display:flex;align-items:center;justify-content:center;min-height:420px;padding:28px;background:#0f4b5a}
 .daily-single-section .visual img,.daily-single-section .visual svg{display:block;width:100%;height:auto}
 .daily-single-section .content{padding:30px}
 .daily-single-section .date{color:var(--daily-gold);font-size:16px;font-weight:900}
 .daily-single-section .dayno{display:inline-block;margin-left:8px;padding:2px 8px;border:1px solid var(--daily-gold);border-radius:999px;color:var(--daily-forest);background:#fff8e6;font-size:14px}
 .daily-single-section h2{margin:8px 0 14px;color:var(--daily-forest);font-size:clamp(30px,3vw,38px);line-height:1.25}
+.daily-single-section .content h3{margin:28px 0 8px;padding:10px 14px;border-left:4px solid var(--daily-teal);color:var(--daily-forest);background:#f3f9f7;font-size:clamp(21px,2vw,27px);line-height:1.4}
 .daily-single-section .content p{color:#344845;font-size:19px;line-height:1.82}
 .daily-single-section .quote{margin:20px 0;padding:18px 20px;border-left:5px solid var(--daily-gold);color:#17443b;background:#eef8f6;font-weight:850}
 .daily-single-section .tags{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}

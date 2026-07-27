@@ -60,7 +60,7 @@ function collectRecentBriefs() {
   return fs.readdirSync(dailyDir).filter((name) => /^\d{4}-\d{2}-\d{2}\.html$/.test(name) && name.slice(0, 10) >= '2026-07-08').map((name) => {
     const page = fs.readFileSync(path.join(dailyDir, name), 'utf8');
     const date = name.replace('.html', '');
-    const article = capture(page, /(<article class="post"[\s\S]*?<\/article>)/, `${date} article`);
+    const article = capture(page, /(<article class="post(?: [^"]*)?"[\s\S]*?<\/article>)/, `${date} article`);
     const dateLine = textFromHtml(capture(article, /<div class="date">([\s\S]*?)<\/div>/, `${date} date line`));
     const title = textFromHtml(capture(article, /<h2>([\s\S]*?)<\/h2>/, `${date} title`));
     const summary = textFromHtml(capture(article, /<p>([\s\S]*?)<\/p>/, `${date} summary`));
@@ -194,6 +194,16 @@ function updateSitemap(briefs) {
   fs.writeFileSync(file, sitemap);
 }
 
+function updateKnowledgeLatest(latest) {
+  const file = path.join(root, 'knowledge', 'index.html');
+  let page = fs.readFileSync(file, 'utf8');
+  const card = `<article class="module-card" data-latest-brief-card><small data-latest-brief-meta>最新：${latest.date}｜${escapeHtml(latest.theme)}</small><h3 data-latest-brief-title>${escapeHtml(latest.title)}</h3><p data-latest-brief-summary>${escapeHtml(latest.summary)}</p><div class="module-actions"><a href="/qilylean/daily-insights.html">查看简报目录</a><a class="secondary" data-latest-brief-link href="/qilylean/daily/${latest.date}.html">查看最新简报</a></div></article>`;
+  const pattern = /<article class="module-card" data-latest-brief-card>[\s\S]*?<\/article>/;
+  if (!pattern.test(page)) throw new Error('Knowledge latest brief card marker is missing');
+  page = page.replace(pattern, card);
+  fs.writeFileSync(file, page);
+}
+
 function main() {
   const recent = collectRecentBriefs();
   const backfill = collectBackfillBriefs();
@@ -205,6 +215,7 @@ function main() {
   briefs.forEach((brief, index) => fs.writeFileSync(path.join(dailyDir, `${brief.date}.html`), buildBriefPage(brief, briefs, index)));
   fs.writeFileSync(path.join(dailyDir, 'index.json'), `${JSON.stringify(briefs.map(({ date, title, summary, dayNo, theme }) => ({ date, title, summary, dayNo, theme })), null, 2)}\n`);
   updateSitemap(briefs);
+  updateKnowledgeLatest(briefs[0]);
   process.stdout.write(`Built ${briefs.length} independent daily brief pages.\n`);
 }
 

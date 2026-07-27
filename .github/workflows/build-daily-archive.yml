@@ -53,12 +53,18 @@ jobs:
         run: |
           test -f qilylean/daily-insights.html
           test -f qilylean/daily/index.json
-          grep -q "qilylean/daily/2026-07-24.html" sitemap.xml || {
+          LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
+          grep -q "qilylean/daily/$LATEST_DATE.html" sitemap.xml || {
             echo "Latest daily brief is missing from sitemap.xml"
             exit 1
           }
-          grep -q "2026-07-24" qilylean/daily-insights.html || {
+          grep -q "$LATEST_DATE" qilylean/daily-insights.html || {
             echo "Latest daily brief is missing from daily-insights.html"
+            exit 1
+          }
+          grep -q "data-latest-brief-card" knowledge/index.html
+          grep -q "$LATEST_DATE" knowledge/index.html || {
+            echo "Knowledge sharing page is not showing the latest daily brief"
             exit 1
           }
           grep -q "QilyLean｜启力精益" qilylean/daily-insights.html || {
@@ -75,6 +81,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add qilylean/daily-insights.html qilylean/daily/index.json qilylean/daily/*.html sitemap.xml
+          git add knowledge/index.html qilylean/daily-insights.html qilylean/daily/index.json qilylean/daily/*.html sitemap.xml
           git commit -m "build: publish latest daily engineering brief archive [skip ci]"
           git push

@@ -2,7 +2,8 @@
   "name": "qilylean",
   "private": true,
   "scripts": {
-    "deploy:worker": "wrangler deploy"
+    "deploy:worker": "wrangler deploy",
+    "test:maintenance": "node scripts/test-maintenance-fixes.js"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

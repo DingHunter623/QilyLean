@@ -3,10 +3,12 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.qilylean.com'
 ]);
 
-const BUILD_VERSION = 'v1.4.0-custom-domain-tts';
+const BUILD_VERSION = 'v1.5.0-multi-material';
 const CONSULTATION_RECEIVER = '396767769@qq.com';
 const CONSULTATION_STATUSES = new Set(['new', 'contacted', 'closed']);
 const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
+const MAX_ATTACHMENT_TOTAL_BYTES = 25 * 1024 * 1024;
+const MAX_ATTACHMENT_COUNT = 5;
 const DOCUMENT_EXTENSIONS = new Set(['pdf', 'docx', 'xlsx', 'txt', 'md', 'csv', 'json', 'epub', 'mobi']);
 const IMAGE_MIME_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/bmp']);
 const VIDEO_MIME_TYPES = new Set(['video/mp4', 'video/quicktime', 'video/webm', 'video/x-msvideo']);
@@ -87,6 +89,28 @@ function validateAttachment(value) {
   return {
     attachment: { name, mime, extension, kind, data, base64, bytes }
   };
+}
+
+function validateAttachments(values, legacyValue) {
+  const list = values == null
+    ? (legacyValue ? [legacyValue] : [])
+    : values;
+  if (!Array.isArray(list)) return { error: 'Invalid attachments', status: 400 };
+  if (list.length > MAX_ATTACHMENT_COUNT) return { error: 'Too many attachments', status: 413 };
+
+  const attachments = [];
+  let totalBytes = 0;
+  for (const value of list) {
+    const checked = validateAttachment(value);
+    if (checked.error) return checked;
+    if (!checked.attachment) continue;
+    totalBytes += checked.attachment.bytes;
+    if (totalBytes > MAX_ATTACHMENT_TOTAL_BYTES) {
+      return { error: 'Attachments are too large', status: 413 };
+    }
+    attachments.push(checked.attachment);
+  }
+  return { attachments };
 }
 
 function qwenHeaders(env) {
@@ -440,7 +464,7 @@ function extractStreamAnswer(raw) {
   return { answer: parts.join('').trim(), usage };
 }
 
-async function callQwenMedia(message, attachment, env, signal) {
+async function callQwenMedia(message, attachments, env, signal) {
   const model = env.QWEN_MULTIMODAL_MODEL || 'qwen3.5-omni-plus';
   const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
     method: 'POST',
@@ -450,7 +474,7 @@ async function callQwenMedia(message, attachment, env, signal) {
       messages: [{
         role: 'user',
         content: [
-          mediaPart(attachment),
+          ...attachments.map(mediaPart),
           { type: 'text', text: `${SYSTEM_INSTRUCTIONS}\n\n用户的分析要求：${message}` }
         ]
       }],
@@ -524,13 +548,15 @@ async function deleteQwenDocument(fileId, env) {
   }
 }
 
-async function callQwenDocument(message, attachment, env, signal) {
+async function callQwenDocument(message, attachments, env, signal) {
   const model = env.QWEN_DOCUMENT_MODEL || 'qwen-long';
-  let fileId = '';
+  const fileIds = [];
   try {
-    const uploaded = await uploadQwenDocument(attachment, env, signal);
-    fileId = uploaded.fileId;
-    await waitForQwenDocument(fileId, uploaded.status, env, signal);
+    for (const attachment of attachments) {
+      const uploaded = await uploadQwenDocument(attachment, env, signal);
+      fileIds.push(uploaded.fileId);
+      await waitForQwenDocument(uploaded.fileId, uploaded.status, env, signal);
+    }
     const response = await fetch('https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions', {
       method: 'POST',
       headers: { ...qwenHeaders(env), 'Content-Type': 'application/json' },
@@ -538,7 +564,7 @@ async function callQwenDocument(message, attachment, env, signal) {
         model,
         messages: [
           { role: 'system', content: SYSTEM_INSTRUCTIONS },
-          { role: 'system', content: `fileid://${fileId}` },
+          ...fileIds.map((fileId) => ({ role: 'system', content: `fileid://${fileId}` })),
           { role: 'user', content: message }
         ],
         max_tokens: Number(env.MAX_OUTPUT_TOKENS || 1400),
@@ -558,14 +584,35 @@ async function callQwenDocument(message, attachment, env, signal) {
       build_version: BUILD_VERSION
     };
   } finally {
-    if (fileId) await deleteQwenDocument(fileId, env);
+    await Promise.all(fileIds.map((fileId) => deleteQwenDocument(fileId, env)));
   }
 }
 
-async function callQwen(message, attachment, env, signal) {
-  if (!attachment) return callQwenText(message, env, signal);
-  if (attachment.kind === 'document') return callQwenDocument(message, attachment, env, signal);
-  return callQwenMedia(message, attachment, env, signal);
+async function callQwenMixed(message, documents, media, env, signal) {
+  const [documentResult, mediaResult] = await Promise.all([
+    callQwenDocument(`请分析文档素材，并围绕用户要求给出结论：${message}`, documents, env, signal),
+    callQwenMedia(`请分析图片、视频或语音素材，并围绕用户要求给出结论：${message}`, media, env, signal)
+  ]);
+  const synthesis = await callQwenText(
+    `请综合以下两组素材分析结果，直接回答用户要求。需要指出素材之间的一致、互补或冲突信息，并给出可执行建议。\n\n用户要求：${message}\n\n文档素材分析：\n${documentResult.answer}\n\n多媒体素材分析：\n${mediaResult.answer}`,
+    env,
+    signal
+  );
+  return {
+    ...synthesis,
+    provider: 'qwen',
+    model: `${documentResult.model}+${mediaResult.model}+${synthesis.model}`,
+    build_version: BUILD_VERSION
+  };
+}
+
+async function callQwen(message, attachments, env, signal) {
+  if (!attachments.length) return callQwenText(message, env, signal);
+  const documents = attachments.filter((attachment) => attachment.kind === 'document');
+  const media = attachments.filter((attachment) => attachment.kind !== 'document');
+  if (documents.length && media.length) return callQwenMixed(message, documents, media, env, signal);
+  if (documents.length) return callQwenDocument(message, documents, env, signal);
+  return callQwenMedia(message, media, env, signal);
 }
 
 export default {
@@ -682,18 +729,18 @@ export default {
 
     const message = String(payload.message || '').trim();
     const previousResponseId = payload.previous_response_id ? String(payload.previous_response_id) : undefined;
-    const checkedAttachment = validateAttachment(payload.attachment);
-    if (checkedAttachment.error) return json({ error: checkedAttachment.error }, checkedAttachment.status, origin);
-    const attachment = checkedAttachment.attachment;
+    const checkedAttachments = validateAttachments(payload.attachments, payload.attachment);
+    if (checkedAttachments.error) return json({ error: checkedAttachments.error }, checkedAttachments.status, origin);
+    const attachments = checkedAttachments.attachments;
     if (!message) return json({ error: 'Message is required' }, 400, origin);
     if (message.length > 3000) return json({ error: 'Message is too long' }, 413, origin);
-    if (attachment && !env.DASHSCOPE_API_KEY) return json({ error: 'Attachment analysis is unavailable' }, 503, origin);
+    if (attachments.length && !env.DASHSCOPE_API_KEY) return json({ error: 'Attachment analysis is unavailable' }, 503, origin);
 
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), attachment ? 90000 : 45000);
+    const timeout = setTimeout(() => controller.abort(), attachments.length ? 118000 : 45000);
     try {
-      const result = attachment || active.provider === 'qwen'
-        ? await callQwen(message, attachment, env, controller.signal)
+      const result = attachments.length || active.provider === 'qwen'
+        ? await callQwen(message, attachments, env, controller.signal)
         : await callOpenAI(message, previousResponseId, env, controller.signal);
       await recordMetric(env, 'success');
       return json({ ...result, rate_limit: { used: rate.used, limit: rate.limit } }, 200, origin);
