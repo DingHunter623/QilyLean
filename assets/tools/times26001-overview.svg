@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
   <title id="title">Times26001 思大时间管理应用概览</title>
-  <desc id="desc">展示北京时间、万年历、闹钟提醒、秒表计时、倒计时和黄历功能的移动应用宣传图。</desc>
+  <desc id="desc">展示Times26001 Android v1.1.2的北京时间、万年历、闹钟响铃、秒表计时、按秒倒计时和黄历功能。</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff7f5"/><stop offset="1" stop-color="#eef8f6"/></linearGradient>
     <linearGradient id="red" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ff6b62"/><stop offset="1" stop-color="#e6403b"/></linearGradient>
@@ -50,7 +50,7 @@
     </g>
     <g transform="translate(0 328)">
       <rect width="540" height="70" rx="18" fill="url(#teal)"/>
-      <text x="270" y="44" text-anchor="middle" fill="#fff" font-size="21" font-weight="900">Android / iOS · Vue 3 + Capacitor</text>
+      <text x="270" y="44" text-anchor="middle" fill="#fff" font-size="21" font-weight="900">Android v1.1.2 · Vue 3 + Capacitor</text>
     </g>
   </g>
 </svg>
