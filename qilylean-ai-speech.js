@@ -17,14 +17,16 @@ var speechRequestId=0;
 var decorateFrame=0;
 var preferredApiBase='';
 var apiProbe=null;
-var settings={gender:'female',rate:'1'};
+var DEFAULT_RATE='1.2';
+var SETTINGS_VERSION='20260727-click-start-v1';
+var settings={gender:'female',rate:DEFAULT_RATE,version:SETTINGS_VERSION};
 var INTRO_TEXT='您好，我是 QilyLean AI 智能解惑顾问。这里不仅解答工作中的疑难问题，也面向生活、学习、兴趣爱好及其他各类困惑。您可以直接提问，或上传文件、图片、视频及语音，我会结合实际需求提供清晰、专业、可执行的分析与建议。';
 
 function injectStyles(){
   if(document.getElementById('qilyleanSpeechStyles'))return;
   var style=document.createElement('style');
   style.id='qilyleanSpeechStyles';
-  style.textContent='.speech-tools{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important;margin:8px 4px 0!important;position:relative}.speech-play,.speech-settings summary,.speech-save{min-height:34px;border:1px solid #b9d9d4;border-radius:8px;background:#f5faf9;color:var(--forest);font:inherit;font-size:12px;font-weight:850;cursor:pointer}.speech-play{padding:6px 11px}.speech-play:hover,.speech-play:focus-visible,.speech-settings summary:hover,.speech-settings summary:focus-visible{background:#e8f6f3;border-color:var(--teal);outline:none}.speech-play.playing{background:var(--forest);border-color:var(--forest);color:#fff}.speech-play.paused{background:#fff5dc;border-color:#d7b66c;color:#745511}.speech-settings{position:relative}.speech-settings summary{list-style:none;padding:6px 10px;white-space:nowrap}.speech-settings summary::-webkit-details-marker{display:none}.speech-settings summary::after{content:"⌄";margin-left:5px}.speech-settings[open] summary::after{content:"⌃"}.speech-panel{position:absolute;left:0;top:40px;z-index:30;display:grid;gap:10px;width:230px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:0 12px 28px rgba(15,75,90,.18)}.speech-panel label{display:grid;grid-template-columns:54px 1fr;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-weight:800}.speech-panel select,.speech-panel input{width:100%;min-height:35px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);padding:5px 7px;font:inherit}.speech-panel select:focus,.speech-panel input:focus{border-color:var(--teal);outline:2px solid rgba(23,127,135,.12)}.speech-rate-note{margin:-3px 0 0 62px;color:var(--muted);font-size:11px;line-height:1.4}.speech-save{padding:6px 10px;background:var(--forest);border-color:var(--forest);color:#fff}.speech-save:hover,.speech-save:focus-visible{opacity:.9;outline:none}@media(max-width:640px){.speech-tools{align-items:stretch!important}.speech-play{min-height:38px}.speech-panel{position:fixed;left:14px;right:14px;top:auto;bottom:18px;width:auto;z-index:2147483200}.speech-settings summary{min-height:38px}}';
+  style.textContent='.speech-tools{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important;margin:8px 4px 0!important;position:relative}.assistant .bubble{cursor:text}.assistant .bubble .speech-start{border-radius:4px;background:#fff0bd;box-shadow:0 0 0 3px #fff0bd}.speech-click-hint{color:var(--muted);font-size:11px;font-weight:750;line-height:1.45}.speech-play,.speech-settings summary,.speech-save{min-height:34px;border:1px solid #b9d9d4;border-radius:8px;background:#f5faf9;color:var(--forest);font:inherit;font-size:12px;font-weight:850;cursor:pointer}.speech-play{padding:6px 11px}.speech-play:hover,.speech-play:focus-visible,.speech-settings summary:hover,.speech-settings summary:focus-visible{background:#e8f6f3;border-color:var(--teal);outline:none}.speech-play.playing{background:var(--forest);border-color:var(--forest);color:#fff}.speech-play.paused{background:#fff5dc;border-color:#d7b66c;color:#745511}.speech-settings{position:relative}.speech-settings summary{list-style:none;padding:6px 10px;white-space:nowrap}.speech-settings summary::-webkit-details-marker{display:none}.speech-settings summary::after{content:"⌄";margin-left:5px}.speech-settings[open] summary::after{content:"⌃"}.speech-panel{position:absolute;left:0;top:40px;z-index:30;display:grid;gap:10px;width:230px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;box-shadow:0 12px 28px rgba(15,75,90,.18)}.speech-panel label{display:grid;grid-template-columns:54px 1fr;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-weight:800}.speech-panel select,.speech-panel input{width:100%;min-height:35px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);padding:5px 7px;font:inherit}.speech-panel select:focus,.speech-panel input:focus{border-color:var(--teal);outline:2px solid rgba(23,127,135,.12)}.speech-rate-note{margin:-3px 0 0 62px;color:var(--muted);font-size:11px;line-height:1.4}.speech-save{padding:6px 10px;background:var(--forest);border-color:var(--forest);color:#fff}.speech-save:hover,.speech-save:focus-visible{opacity:.9;outline:none}@media(max-width:640px){.speech-tools{align-items:stretch!important}.speech-play{min-height:38px}.speech-panel{position:fixed;left:14px;right:14px;top:auto;bottom:18px;width:auto;z-index:2147483200}.speech-settings summary{min-height:38px}}';
   document.head.appendChild(style);
 }
 
@@ -39,7 +41,8 @@ try{
   var saved=JSON.parse(localStorage.getItem('qilylean_ai_speech_settings')||'null');
   if(saved){
     if(saved.gender==='male'||saved.gender==='female')settings.gender=saved.gender;
-    settings.rate=normaliseRate(saved.rate);
+    var savedRate=normaliseRate(saved.rate);
+    settings.rate=(saved.version===SETTINGS_VERSION||Number(savedRate)!==1)?savedRate:DEFAULT_RATE;
   }
 }catch(_e){}
 
@@ -207,6 +210,62 @@ function splitSpeechText(value){
   return chunks;
 }
 
+function speechTextFromClick(bubble,event){
+  var node=null;
+  var offset=0;
+  if(document.caretRangeFromPoint){
+    var caretRange=document.caretRangeFromPoint(event.clientX,event.clientY);
+    if(caretRange){node=caretRange.startContainer;offset=caretRange.startOffset;}
+  }else if(document.caretPositionFromPoint){
+    var caretPosition=document.caretPositionFromPoint(event.clientX,event.clientY);
+    if(caretPosition){node=caretPosition.offsetNode;offset=caretPosition.offset;}
+  }
+  var container=node&&(node.nodeType===3?node.parentNode:node);
+  if(node&&container&&bubble.contains(container)){
+    try{
+      var range=document.createRange();
+      range.selectNodeContents(bubble);
+      var maxOffset=node.nodeType===3?node.nodeValue.length:node.childNodes.length;
+      range.setStart(node,Math.min(offset,maxOffset));
+      var exact=(range.toString()||'').replace(/\s+/g,' ').trim();
+      if(exact)return exact;
+    }catch(_e){}
+  }
+  var target=event.target&&event.target.closest?event.target.closest('h2,h3,h4,p,li,th,td,pre,code'):null;
+  if(target&&bubble.contains(target)){
+    try{
+      var fallbackRange=document.createRange();
+      fallbackRange.selectNodeContents(bubble);
+      fallbackRange.setStartBefore(target);
+      var fallback=(fallbackRange.toString()||'').replace(/\s+/g,' ').trim();
+      if(fallback)return fallback;
+    }catch(_e){}
+  }
+  return (bubble.innerText||bubble.textContent||'').trim();
+}
+
+function markSpeechStart(target,bubble){
+  messages.querySelectorAll('.speech-start').forEach(function(node){node.classList.remove('speech-start');});
+  var segment=target&&target.closest?target.closest('h2,h3,h4,p,li,th,td,pre,code'):null;
+  if(!segment||!bubble.contains(segment))segment=bubble;
+  segment.classList.add('speech-start');
+  window.setTimeout(function(){segment.classList.remove('speech-start');},1600);
+}
+
+function speakFromBubble(event){
+  if(!event.target||!event.target.closest)return;
+  if(event.target.closest('a,button,input,textarea,select,summary,details'))return;
+  var bubble=event.target.closest('.msg.assistant:not(.thinking) .bubble');
+  if(!bubble||!messages.contains(bubble))return;
+  var row=bubble.closest('.msg.assistant');
+  var button=row&&row.querySelector('.speech-play');
+  if(!button)return;
+  var text=speechTextFromClick(bubble,event);
+  if(!text)return;
+  markSpeechStart(event.target,bubble);
+  speak(text,button,true);
+}
+
 function ensureAudioContext(){
   var AudioContextClass=window.AudioContext||window.webkitAudioContext;
   if(!AudioContextClass)throw new Error('audio_context_unsupported');
@@ -282,8 +341,8 @@ function resumeSpeech(button){
   buttonPlaying(button);
 }
 
-function speak(text,button){
-  if(activeButton===button){
+function speak(text,button,restart){
+  if(activeButton===button&&!restart){
     if(speechPaused)resumeSpeech(button);else pauseSpeech(button);
     return;
   }
@@ -392,8 +451,12 @@ function decorate(row){
   panel.appendChild(save);
   details.appendChild(summary);
   details.appendChild(panel);
+  var hint=document.createElement('span');
+  hint.className='speech-click-hint';
+  hint.textContent='点击回答任意文字，可从该处开始播放';
   tools.appendChild(play);
   tools.appendChild(details);
+  tools.appendChild(hint);
   wrap.insertBefore(tools,meta||null);
 }
 
@@ -410,6 +473,7 @@ function scheduleDecorate(){
 
 injectStyles();
 decorateNewRows();
+messages.addEventListener('click',speakFromBubble);
 resolveApiBase();
 new MutationObserver(function(records){
   var hasNewRows=records.some(function(record){
