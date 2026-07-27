@@ -18,7 +18,7 @@ function injectStyles(){
   if(document.getElementById('qilyleanExportStyles'))return;
   var style=document.createElement('style');
   style.id='qilyleanExportStyles';
-  style.textContent='.export-tools{display:flex;align-items:center;gap:7px;padding:0 8px}.export-btn{min-height:32px;padding:6px 10px;border:1px solid #b9d9d4;border-radius:8px;background:#f5faf9;color:var(--forest);font:inherit;font-size:12px;font-weight:850;cursor:pointer;white-space:nowrap}.export-btn:hover,.export-btn:focus-visible{background:#e8f6f3;border-color:var(--teal);box-shadow:0 5px 14px rgba(15,75,90,.12);outline:none}.export-btn:disabled{opacity:.55;cursor:wait}.export-excel{border-color:#c8d9b5;background:#f7faef}.export-word{border-color:#b9d9d4}@media(max-width:720px){.bar{flex-wrap:wrap}.export-tools{order:3;width:100%;justify-content:flex-end;padding:7px 10px;border-top:1px solid var(--line)}.clear{margin-left:auto}}';
+  style.textContent='.export-tools{display:flex;align-items:center;gap:7px;padding:0 8px}.export-btn{min-height:32px;padding:6px 10px;border:1px solid #b9d9d4;border-radius:8px;background:#f5faf9;color:var(--forest);font:inherit;font-size:12px;font-weight:850;cursor:pointer;white-space:nowrap}.export-btn:hover,.export-btn:focus-visible{background:#e8f6f3;border-color:var(--teal);box-shadow:0 5px 14px rgba(15,75,90,.12);outline:none}.export-btn:disabled{opacity:.55;cursor:wait}.export-word{border-color:#b9d9d4}@media(max-width:720px){.bar{flex-wrap:wrap}.export-tools{order:3;width:100%;justify-content:flex-end;padding:7px 10px;border-top:1px solid var(--line)}.clear{margin-left:auto}}';
   document.head.appendChild(style);
 }
 
@@ -235,7 +235,7 @@ function wordParagraph(text,options){
 }
 
 function wordDrawing(relationshipId,documentId,name){
-  var size=1050000;
+  var size=810000;
   return '<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:drawing><wp:inline distT="0" distB="0" distL="0" distR="0">'+
     '<wp:extent cx="'+size+'" cy="'+size+'"/><wp:docPr id="'+documentId+'" name="'+xml(name)+'"/><wp:cNvGraphicFramePr/>'+
     '<a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic>'+
@@ -246,10 +246,10 @@ function wordDrawing(relationshipId,documentId,name){
 }
 
 function wordContactCell(title,drawing,lines){
-  return '<w:tc><w:tcPr><w:tcW w:w="4810" w:type="dxa"/><w:shd w:fill="F8FBFA"/><w:tcMar><w:top w:w="120" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="120" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tcMar></w:tcPr>'+
-    wordParagraph(title,{bold:true,color:'0F4B5A',size:26,align:'center',after:100})+
+  return '<w:tc><w:tcPr><w:tcW w:w="5046" w:type="dxa"/><w:shd w:fill="F8FBFA"/><w:vAlign w:val="center"/><w:tcMar><w:top w:w="100" w:type="dxa"/><w:left w:w="120" w:type="dxa"/><w:bottom w:w="100" w:type="dxa"/><w:right w:w="120" w:type="dxa"/></w:tcMar></w:tcPr>'+
+    wordParagraph(title,{bold:true,color:'0F4B5A',size:24,align:'center',after:60})+
     (drawing||wordParagraph('二维码暂未载入',{align:'center',color:'6A7777'}))+
-    wordParagraph(lines,{align:'center',size:18,color:'35636C'})+'</w:tc>';
+    wordParagraph(lines,{align:'center',size:17,color:'35636C'})+'</w:tc>';
 }
 
 function buildDocx(items,assets,time){
@@ -283,15 +283,17 @@ function buildDocx(items,assets,time){
     }else{
       body+=wordParagraph(questionNo?'QilyLean AI 回答 '+questionNo:'QilyLean AI 使用说明',{bold:true,color:'0F4B5A',size:25,shade:'EDF6F4',leftBorder:'177F87',keep:true,before:120,after:80});
     }
-    body+=wordParagraph(item.text,{size:21,color:'173B44',after:220});
+    body+=wordParagraph(item.text,item.role==='user'
+      ?{size:21,color:'173B44',shade:'FFFDF7',leftBorder:'CAA15F',after:240}
+      :{size:21,color:'173B44',shade:'F8FBFA',leftBorder:'177F87',after:240});
   });
-  body+=wordParagraph('联系与分享',{bold:true,color:'0F4B5A',size:28,keep:true,before:220,after:120})+
-    '<w:tbl><w:tblPr><w:tblW w:w="9620" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="D5E4E3"/><w:left w:val="single" w:sz="6" w:color="D5E4E3"/><w:bottom w:val="single" w:sz="6" w:color="D5E4E3"/><w:right w:val="single" w:sz="6" w:color="D5E4E3"/><w:insideH w:val="single" w:sz="6" w:color="D5E4E3"/><w:insideV w:val="single" w:sz="6" w:color="D5E4E3"/></w:tblBorders></w:tblPr>'+
-    '<w:tblGrid><w:gridCol w:w="4810"/><w:gridCol w:w="4810"/></w:tblGrid><w:tr>'+
+  body+=wordParagraph('联系与分享',{bold:true,color:'0F4B5A',size:28,keep:true,before:140,after:80})+
+    '<w:tbl><w:tblPr><w:tblW w:w="10092" w:type="dxa"/><w:tblInd w:w="0" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblBorders><w:top w:val="single" w:sz="6" w:color="D5E4E3"/><w:left w:val="single" w:sz="6" w:color="D5E4E3"/><w:bottom w:val="single" w:sz="6" w:color="D5E4E3"/><w:right w:val="single" w:sz="6" w:color="D5E4E3"/><w:insideH w:val="single" w:sz="6" w:color="D5E4E3"/><w:insideV w:val="single" w:sz="6" w:color="D5E4E3"/></w:tblBorders></w:tblPr>'+
+    '<w:tblGrid><w:gridCol w:w="5046"/><w:gridCol w:w="5046"/></w:tblGrid><w:tr><w:trPr><w:cantSplit/></w:trPr>'+
     wordContactCell('分享“启力精益”官网',homeDrawing,HOME_URL)+
     wordContactCell('交流',contactDrawing,'微信号：'+WECHAT_ID+'\n手机：'+PHONE_NUMBERS.join(' / '))+
     '</w:tr></w:tbl>'+
-    wordParagraph('本文件由 QilyLean AI 根据当前对话自动整理。重要结论请结合现场数据、专业标准与实际决策要求复核。',{size:17,color:'6A7777',before:260});
+    wordParagraph('本文件由 QilyLean AI 根据当前对话自动整理。重要结论请结合现场数据、专业标准与实际决策要求复核。',{size:16,color:'6A7777',before:80});
 
   var entries={
     '[Content_Types].xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>',
@@ -300,7 +302,7 @@ function buildDocx(items,assets,time){
     'docProps/app.xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>QilyLean AI</Application><AppVersion>1.0</AppVersion></Properties>',
     'word/styles.xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:styles xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docDefaults><w:rPrDefault><w:rPr><w:rFonts w:ascii="Microsoft YaHei" w:eastAsia="Microsoft YaHei" w:hAnsi="Microsoft YaHei"/><w:sz w:val="21"/><w:szCs w:val="21"/><w:color w:val="173B44"/></w:rPr></w:rPrDefault><w:pPrDefault><w:pPr><w:spacing w:after="100" w:line="340" w:lineRule="auto"/></w:pPr></w:pPrDefault></w:docDefaults></w:styles>',
     'word/_rels/document.xml.rels':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+relationships.join('')+'</Relationships>',
-    'word/document.xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>'+body+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134" w:header="568" w:footer="568" w:gutter="0"/></w:sectPr></w:body></w:document>'
+    'word/document.xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body>'+body+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="907" w:right="907" w:bottom="907" w:left="907" w:header="454" w:footer="454" w:gutter="0"/></w:sectPr></w:body></w:document>'
   };
   Object.keys(media).forEach(function(path){entries[path]=media[path];});
   return zipBlob(entries,WORD_MIME);
@@ -400,7 +402,7 @@ function feedback(titleText,detailText,iconText){
   var icon=document.getElementById('statusIcon');
   if(!title||!detail||!icon)return;
   title.textContent=titleText;
-  detail.textContent=detailText||'文件已按标准 Office 格式生成，可直接打开、保存与打印。';
+  detail.textContent=detailText||'文件已按标准 Word 格式生成，可直接打开、保存与打印。';
   icon.textContent=iconText||'✓';
 }
 
@@ -413,28 +415,10 @@ async function exportWord(){
     var assets=await exportAssets();
     var time=stamp();
     downloadBlob(buildDocx(items,assets,time),'QilyLean_AI_对话记录_'+time.file+'.docx');
-    feedback('Word已导出','标准 DOCX 已生成；二维码已缩小并限制在 A4 页边距内。','✓');
+    feedback('Word已导出','标准 DOCX 已生成；A4 四边页边距均为 1.6cm，可直接打印。','✓');
   }catch(error){
     console.error('DOCX export failed',error);
     feedback('Word导出未完成','标准 DOCX 生成失败，请刷新页面后重试。','!');
-  }finally{
-    setExportBusy(false);
-  }
-}
-
-async function exportExcel(){
-  var items=conversation();
-  if(!items.length)return;
-  setExportBusy(true);
-  feedback('正在生成 Excel','正在创建标准 XLSX 文件并设置 A4 横向打印。','…');
-  try{
-    var assets=await exportAssets();
-    var time=stamp();
-    downloadBlob(buildXlsx(items,assets,time),'QilyLean_AI_对话记录_'+time.file+'.xlsx');
-    feedback('Excel已导出','标准 XLSX 已生成；已设置 A4 横向、单页宽度打印。','✓');
-  }catch(error){
-    console.error('XLSX export failed',error);
-    feedback('Excel导出未完成','标准 XLSX 生成失败，请刷新页面后重试。','!');
   }finally{
     setExportBusy(false);
   }
@@ -449,13 +433,6 @@ word.className='export-btn export-word';
 word.textContent='导出 Word';
 word.title='将当前对话导出为标准 DOCX 文件';
 word.addEventListener('click',exportWord);
-var excel=document.createElement('button');
-excel.type='button';
-excel.className='export-btn export-excel';
-excel.textContent='导出 Excel';
-excel.title='将当前对话导出为标准 XLSX 文件';
-excel.addEventListener('click',exportExcel);
 tools.appendChild(word);
-tools.appendChild(excel);
 bar.insertBefore(tools,clearButton);
 })();
