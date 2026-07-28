@@ -1,0 +1,188 @@
+/* QilyLean 2026-07-28：全站一阶、二阶、三阶菜单与正文层级统一规范 */
+:root{
+  --qily-font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
+  --qily-type-nav-1:17px;
+  --qily-type-nav-2:16px;
+  --qily-type-nav-3:15px;
+  --qily-type-h1:clamp(42px,4.6vw,68px);
+  --qily-type-h2:clamp(31px,3vw,46px);
+  --qily-type-h3:clamp(22px,1.7vw,27px);
+  --qily-type-h4:19px;
+  --qily-type-body:18.5px;
+  --qily-type-note:16px;
+  --qily-type-small:14.5px;
+  --qily-line-body:1.78;
+  --qily-line-heading:1.24;
+}
+
+html,body,button,input,textarea,select{
+  font-family:var(--qily-font-sans)!important;
+}
+
+/* 一阶菜单：全站主导航 */
+.qily-site-header.qily-global-header>.qily-global-nav a,
+.qily-site-header .site-nav>a,
+.topbar .nav>a,
+.top .nav>a{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-nav-1)!important;
+  font-weight:850!important;
+  line-height:1.2!important;
+}
+
+/* 二阶菜单：模块内导航、页签、主题切换 */
+.module-subnav>a,
+.subnav>a,
+.tabs>a,
+.tabs>button,
+.topic-controls .topic-control,
+.module-action,
+.section-nav>a,
+.category-nav>a{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-nav-2)!important;
+  font-weight:850!important;
+  line-height:1.3!important;
+}
+
+/* 三阶菜单：目录、筛选、卡片内操作与细分入口 */
+.toc a,
+.table-of-contents a,
+.filter-bar button,
+.filter-bar a,
+.filters button,
+.filters a,
+.module-actions a,
+.card-actions a,
+.project-card-brief,
+.module-card small,
+.module-eyebrow,
+.eyebrow{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-nav-3)!important;
+  line-height:1.5!important;
+}
+
+/* 正文标题层级：H1—H4全站统一 */
+.module-hero h1,
+.hero:not(:has(.hero-grid)) h1,
+.daily-hero h1,
+.qily-home-balanced h1,
+main>h1,
+article>h1{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-h1)!important;
+  font-weight:950!important;
+  line-height:1.08!important;
+  letter-spacing:-.025em!important;
+}
+
+.module-heading h2,
+.module-page .head h2,
+.section .head h2,
+.module-card>h2,
+main section>h2,
+article>h2{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-h2)!important;
+  font-weight:930!important;
+  line-height:var(--qily-line-heading)!important;
+  letter-spacing:-.012em!important;
+}
+
+.module-card h3,
+.project-story h3,
+.project-result-panel h3,
+article h3,
+section h3{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-h3)!important;
+  font-weight:900!important;
+  line-height:1.34!important;
+}
+
+.module-card h4,
+article h4,
+section h4{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-h4)!important;
+  font-weight:880!important;
+  line-height:1.42!important;
+}
+
+/* 正文、概述、列表、说明统一阅读尺度 */
+.module-page,
+.module-card p,
+.module-card li,
+.project-story p,
+.project-story li,
+.project-result-panel p,
+article p,
+article li,
+section p,
+section li{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-body)!important;
+  line-height:var(--qily-line-body)!important;
+}
+
+.module-lead,
+.hero:not(:has(.hero-grid)) .lead,
+.daily-hero p,
+.qily-home-balanced .lead{
+  font-family:var(--qily-font-sans)!important;
+  font-size:clamp(20px,1.45vw,24px)!important;
+  line-height:1.72!important;
+}
+
+.module-result,
+.module-note,
+figcaption,
+.caption,
+.note,
+.meta,
+.module-footer{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-note)!important;
+  line-height:1.68!important;
+}
+
+small,
+.module-card small,
+.project-fact small{
+  font-size:var(--qily-type-small)!important;
+}
+
+/* 卡片内层级间距统一，避免各页面标题跳动 */
+.module-heading,
+.module-page .head,
+.section .head{
+  margin-bottom:28px!important;
+}
+.module-card h2,.module-card h3{margin-top:0!important;margin-bottom:12px!important}
+.module-card h4{margin-top:18px!important;margin-bottom:7px!important}
+.module-card p{margin-top:0!important;margin-bottom:12px!important}
+
+@media(max-width:900px){
+  :root{
+    --qily-type-nav-1:13px;
+    --qily-type-nav-2:14px;
+    --qily-type-nav-3:13.5px;
+    --qily-type-h3:22px;
+    --qily-type-body:18px;
+  }
+}
+
+@media(max-width:620px){
+  :root{
+    --qily-type-nav-1:12px;
+    --qily-type-nav-2:13.5px;
+    --qily-type-nav-3:13px;
+    --qily-type-h1:clamp(36px,10vw,43px);
+    --qily-type-h2:clamp(29px,8vw,36px);
+    --qily-type-h3:21px;
+    --qily-type-h4:18px;
+    --qily-type-body:17.5px;
+    --qily-type-note:15px;
+  }
+}
