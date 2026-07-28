@@ -10,6 +10,7 @@ const visualScaleFile = path.join(root, 'site-visual-scale-v1.css');
 const experienceFile = path.join(root, 'experience', 'index.html');
 const PUBLIC_NAV_VERSION = '20260728-public-access-v2';
 const PUBLIC_ASSET_VERSION = '20260728-public-access-v2';
+const PUBLIC_RESUME_VERSION = '20260728-public-access-v2';
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
@@ -94,13 +95,16 @@ function publishExperience() {
     )
     .replace(
       /  <script>\s*\(function \(\) \{[\s\S]*?<\/script>\s*<script src="\/site-navigation\.js\?v=[^"]+"><\/script>/,
-      `  <script>\n    (function () {\n      'use strict';\n      var message = document.getElementById('experienceMessage');\n      var contentScript = document.createElement('script');\n      contentScript.id = 'experienceResumeContentScript';\n      contentScript.src = '/qilylean/career-resume-full.js?v=20260728-public-access-v1';\n      contentScript.onload = function () {\n        if (message) message.textContent = '';\n        var documentScript = document.createElement('script');\n        documentScript.id = 'experienceResumeDocumentScript';\n        documentScript.src = '/qilylean/career-resume-document.js?v=20260728-public-access-v1';\n        documentScript.onerror = function () { if (message) message.textContent = '高清履历附件暂未加载成功，请刷新重试。'; };\n        document.body.appendChild(documentScript);\n      };\n      contentScript.onerror = function () { if (message) message.textContent = '履历内容暂未加载成功，请刷新重试。'; };\n      document.body.appendChild(contentScript);\n    })();\n  </script>\n  <script src="/site-navigation.js?v=${PUBLIC_NAV_VERSION}"></script>`
+      `  <script>\n    (function () {\n      'use strict';\n      var message = document.getElementById('experienceMessage');\n      try { sessionStorage.setItem('experienceUnlocked', '1'); } catch (error) {}\n      var contentScript = document.createElement('script');\n      contentScript.id = 'experienceResumeContentScript';\n      contentScript.src = '/qilylean/career-resume-full.js?v=${PUBLIC_RESUME_VERSION}';\n      contentScript.onload = function () {\n        var section = document.getElementById('experience');\n        if (message && section && section.dataset.fullResume === '1') message.textContent = '';\n        var documentScript = document.createElement('script');\n        documentScript.id = 'experienceResumeDocumentScript';\n        documentScript.src = '/qilylean/career-resume-document.js?v=${PUBLIC_RESUME_VERSION}';\n        documentScript.onerror = function () { if (message) message.textContent = '高清履历附件暂未加载成功，请刷新重试。'; };\n        document.body.appendChild(documentScript);\n      };\n      contentScript.onerror = function () { if (message) message.textContent = '履历内容暂未加载成功，请刷新重试。'; };\n      document.body.appendChild(contentScript);\n    })();\n  </script>\n  <script src="/site-navigation.js?v=${PUBLIC_NAV_VERSION}"></script>`
     );
 
   if (/访问履历主线|experiencePassword|密码不正确|履历主线（加密）/.test(page)) {
     throw new Error('Legacy experience password gate remains');
   }
-  if (!/career-resume-full\.js\?v=20260728-public-access-v1/.test(page)) {
+  if (!page.includes("sessionStorage.setItem('experienceUnlocked', '1')")) {
+    throw new Error('Public resume compatibility state was not installed');
+  }
+  if (!page.includes(`career-resume-full.js?v=${PUBLIC_RESUME_VERSION}`)) {
     throw new Error('Public resume loader was not installed');
   }
 
@@ -135,7 +139,7 @@ function main() {
   removeLegacyLockStyles();
   publishExperience();
   const refreshed = refreshNavigationReferences();
-  process.stdout.write(`Public access enabled; legacy lock icons removed; public assets cache-refreshed; updated ${refreshed} HTML files.\n`);
+  process.stdout.write(`Public access enabled; resume rendering restored; legacy lock icons removed; updated ${refreshed} HTML files.\n`);
 }
 
 main();
