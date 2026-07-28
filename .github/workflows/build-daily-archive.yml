@@ -43,9 +43,6 @@ jobs:
       - name: Deepen archive content and external visuals
         run: node scripts/enhance-daily-archive.js
 
-      - name: Restructure terminology for training
-        run: node scripts/enhance-terminology-training.js
-
       - name: Pin responsive daily stylesheet version
         run: node scripts/bump-daily-css-version.js
 
@@ -98,14 +95,6 @@ jobs:
           }
           grep -q 'img src="/qilylean/assets/daily-2019-07-10.svg"' qilylean/daily/2019-07-10.html || {
             echo "Daily brief external visual was not generated"
-            exit 1
-          }
-          grep -q "Inventory Turnover" knowledge/terminology.html || {
-            echo "Inventory turnover terminology is missing"
-            exit 1
-          }
-          grep -q "库存周转率＝期间销售成本" knowledge/terminology.html || {
-            echo "Inventory turnover formula is missing"
             exit 1
           }
           grep -q "daily-continuity-v4" qilylean/daily-briefs.css || {
