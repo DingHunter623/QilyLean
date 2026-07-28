@@ -6,6 +6,7 @@ const path = require('path');
 const {
   archiveStart,
   archiveEnd,
+  careerTimeline,
   collectArchiveBriefs
 } = require('./daily-engineering-archive');
 
@@ -47,11 +48,34 @@ function visual(theme, index) {
   return `<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(theme.title)}"><rect width="800" height="800" rx="36" fill="${c1}"/>${shape}<text x="400" y="675" fill="#fff" font-size="46" font-weight="850" text-anchor="middle">${escapeHtml(theme.cat)}</text><text x="400" y="727" fill="#d8efeb" font-size="26" text-anchor="middle">制造改善 · 方法沉淀 · 现场实践</text></svg>`;
 }
 
+const productNeutralReplacements = [
+  [/汽车座椅开关总成/g, '高可靠控制组件'],
+  [/汽车座椅开关/g, '高可靠控制组件'],
+  [/游戏机手柄/g, '多部件电子产品'],
+  [/新能源负极材料/g, '新能源材料'],
+  [/负极材料/g, '新能源材料'],
+  [/电子烟/g, '短周期电子产品'],
+  [/电磁阀/g, '机电部件'],
+  [/逆变器/g, '功率电子产品'],
+  [/汽车电子/g, '高可靠电子'],
+  [/整流器/g, '功率器件'],
+  [/继电器/g, '机电器件'],
+  [/座椅开关/g, '控制组件'],
+  [/小家电/g, '多品种消费产品']
+];
+
+function neutralizeProductTerms(value) {
+  return productNeutralReplacements.reduce(
+    (text, [expression, replacement]) => text.replace(expression, replacement),
+    String(value)
+  );
+}
+
 function collectPublishedBriefs() {
   return fs.readdirSync(dailyDir).filter((name) => /^\d{4}-\d{2}-\d{2}\.html$/.test(name) && name.slice(0, 10) > archiveEnd).map((name) => {
     const page = fs.readFileSync(path.join(dailyDir, name), 'utf8');
     const date = name.replace('.html', '');
-    const article = capture(page, /(<article class="post(?: [^"]*)?"[\s\S]*?<\/article>)/, `${date} article`);
+    const article = neutralizeProductTerms(capture(page, /(<article class="post(?: [^"]*)?"[\s\S]*?<\/article>)/, `${date} article`));
     const dateLine = textFromHtml(capture(article, /<div class="date">([\s\S]*?)<\/div>/, `${date} date line`));
     const title = textFromHtml(capture(article, /<h2>([\s\S]*?)<\/h2>/, `${date} title`));
     const summary = textFromHtml(capture(article, /<p>([\s\S]*?)<\/p>/, `${date} summary`));
@@ -59,6 +83,15 @@ function collectPublishedBriefs() {
     const theme = dateLine.replace(date, '').replace(dayNo, '').replace(/[｜|]/g, '').trim();
     return { date, article, title, summary, dayNo, theme, archive: false };
   });
+}
+
+function buildCareerTimeline() {
+  const rows = careerTimeline.map((item) => `<tr><td>${escapeHtml(item.year)}年</td><td>${escapeHtml(item.field)}</td></tr>`).join('');
+  return `<section class="engineering-checklist career-track" aria-labelledby="careerTrackTitle">
+  <h2 id="careerTrackTitle">工程项目履历主线</h2>
+  <p>以下按年度汇总制造项目领域；每日简报聚焦可复用的工程方法、现场判断和项目交付闭环。</p>
+  <table class="rule-table"><thead><tr><th>年份</th><th>主要制造项目</th></tr></thead><tbody>${rows}</tbody></table>
+</section>`;
 }
 
 function pageHeader(title, description, canonical, ogType = 'article') {
@@ -126,6 +159,7 @@ ${siteHeader()}
   <section class="daily-hero"><div class="daily-inner"><span>DAILY ENGINEERING BRIEF</span><h1>每日工程版简报</h1><p>自2019年7月10日起，以现场事实、工程方法、数据闭环和项目交付持续沉淀；每一天对应一个独立网址，可单独打开、连续翻阅与直接分享。</p></div></section>
   <section class="daily-index-section"><div class="daily-inner">
     <div class="daily-index-heading"><div><h2>简报目录</h2><p>${earliest.date}—${latest.date}｜共${briefs.length}期｜按月份收纳、最新优先</p></div><a href="/qilylean/daily/${latest.date}.html">打开最新简报</a></div>
+    ${buildCareerTimeline()}
     <div class="brief-directory-tools">
       <label><span>搜索日期、主题或关键词</span><input type="search" id="briefSearch" placeholder="例如：标准工时、NPI、2021-05" autocomplete="off"></label>
       <div class="brief-year-filters" aria-label="按年份筛选">${yearFilters}</div>
