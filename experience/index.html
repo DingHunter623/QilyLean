@@ -47,10 +47,20 @@
       contentScript.src = '/qilylean/career-resume-full.js?v=20260728-public-access-v2';
       contentScript.onload = function () {
         var section = document.getElementById('experience');
-        if (message && section && section.dataset.fullResume === '1') message.textContent = '';
+        if (section && section.dataset.fullResume === '1') {
+          var innerHeading = section.querySelector('.head h2');
+          if (innerHeading) innerHeading.textContent = '履历主线';
+          if (message) message.textContent = '';
+        } else if (message) {
+          message.textContent = '履历内容尚未完成渲染，请刷新页面重试。';
+        }
         var documentScript = document.createElement('script');
         documentScript.id = 'experienceResumeDocumentScript';
         documentScript.src = '/qilylean/career-resume-document.js?v=20260728-public-access-v2';
+        documentScript.onload = function () {
+          var note = document.querySelector('.career-document-note');
+          if (note) note.textContent = '公开访问说明：履历主线及高清原版PDF均可直接在线预览或下载，无需输入访问密码。';
+        };
         documentScript.onerror = function () { if (message) message.textContent = '高清履历附件暂未加载成功，请刷新重试。'; };
         document.body.appendChild(documentScript);
       };
