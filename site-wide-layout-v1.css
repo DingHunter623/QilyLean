@@ -1,24 +1,30 @@
-/* QilyLean 2026-07-28：全站标题区、正文区、卡片区与页脚统一宽版对齐 */
+/* QilyLean 2026-07-28：全站首屏、正文、卡片、工具区与页脚统一宽版对齐 */
 :root{
   --qily-wide-content:1480px;
   --qily-wide-gutter:clamp(18px,3.2vw,64px);
 }
 
-/* 同一层级统一水平安全边距 */
+html,body{max-width:100%;overflow-x:clip}
+
+/* 外层区域统一左右安全边距；内容宽度由内层容器控制。 */
 .module-hero,
 .module-section,
 .module-footer,
-.hero:not(:has(.hero-grid)):has(>.inner),
-.hero:has(>.hero-inner),
+.hero:not(:has(.hero-grid)),
 .daily-hero,
-.main,
 .section,
-.footer{
+.footer,
+main.main:has(>.chat){
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
   padding-left:var(--qily-wide-gutter)!important;
   padding-right:var(--qily-wide-gutter)!important;
+  box-sizing:border-box!important;
 }
 
-/* 首屏、正文、卡片与页脚使用同一内容边线 */
+/* 首屏、正文、目录、卡片和页脚全部使用同一条左右内容轴。 */
 .module-inner,
 .module-page .inner,
 .module-hero>.module-inner,
@@ -28,11 +34,17 @@
 .module-page main>.module-section>.module-inner,
 .hero:not(:has(.hero-grid))>.inner,
 .hero>.hero-inner,
+.hero-inner,
+.section>.inner,
+.section>.section-inner,
+.section-inner,
 .daily-hero>.daily-inner,
 .daily-inner,
-.main>.main-inner,
 .footer>.footer-inner,
-.section>.inner,
+.footer-inner,
+.main>.main-inner,
+.main-inner,
+main.main:has(>.chat)>.chat,
 .qily-home-balanced .hero-grid,
 .qily-home-balanced .inner,
 .qily-home-balanced .section>.inner,
@@ -41,14 +53,30 @@ body.module-page .content-inner,
 body.module-page .archive-inner,
 body.module-page .knowledge-inner,
 body.module-page .project-inner,
-body.module-page .tool-inner{
+body.module-page .tool-inner,
+.page-inner,
+.content-inner,
+.archive-inner,
+.knowledge-inner,
+.project-inner,
+.tool-inner{
   width:min(var(--qily-wide-content),100%)!important;
   max-width:var(--qily-wide-content)!important;
   margin-left:auto!important;
   margin-right:auto!important;
+  box-sizing:border-box!important;
 }
 
-/* 标题说明、页内导航与下方内容同宽，不再人为缩窄 */
+/* QilyLean AI：取消1080px窄框，聊天工作区与上方标题区同轴。 */
+main.main:has(>.chat){
+  padding-top:24px!important;
+  padding-bottom:40px!important;
+}
+main.main:has(>.chat)>.chat{
+  min-width:0!important;
+}
+
+/* 标题说明、模块目录与正文不再人为缩窄。 */
 .module-lead,
 .module-heading,
 .module-page .head,
@@ -58,42 +86,41 @@ body.module-page .tool-inner{
 .daily-hero p,
 .qily-home-balanced .lead,
 .qily-home-balanced .section .head,
+.section-head,
+.section-heading,
+.page-heading,
 body.module-page .section-heading,
 body.module-page .page-heading{
   width:100%!important;
   max-width:100%!important;
 }
 
-/* 卡片网格与正文容器沿用父级完整宽度 */
+/* 网格、文章集合和功能面板沿用父级完整宽度。 */
 .module-grid,
+.paper-grid,
 .project-list-grid,
 .project-story-grid,
 .capability-map,
 .capability-digital-tool,
-.capability-certificate{
-  width:100%!important;
+.capability-certificate,
+.toc,
+.article-list,
+.chat{
   max-width:100%!important;
+  box-sizing:border-box!important;
 }
 
-/* 常见旧页面容器同步对齐 */
-.hero-inner,
-.main-inner,
-.footer-inner,
-.page-inner,
-.content-inner,
-.archive-inner,
-.knowledge-inner,
-.project-inner,
-.tool-inner{
-  box-sizing:border-box;
+@media(max-width:1100px){
+  :root{--qily-wide-gutter:clamp(18px,4vw,36px)}
 }
 
 @media(max-width:900px){
   :root{--qily-wide-gutter:clamp(16px,4vw,28px)}
+  main.main:has(>.chat){padding-top:18px!important;padding-bottom:30px!important}
 }
 
 @media(max-width:620px){
-  :root{--qily-wide-gutter:18px}
+  :root{--qily-wide-gutter:16px}
   .module-inner,
   .module-page .inner,
   .module-hero>.module-inner,
@@ -103,11 +130,17 @@ body.module-page .page-heading{
   .module-page main>.module-section>.module-inner,
   .hero:not(:has(.hero-grid))>.inner,
   .hero>.hero-inner,
+  .hero-inner,
+  .section>.inner,
+  .section>.section-inner,
+  .section-inner,
   .daily-hero>.daily-inner,
   .daily-inner,
-  .main>.main-inner,
   .footer>.footer-inner,
-  .section>.inner,
+  .footer-inner,
+  .main>.main-inner,
+  .main-inner,
+  main.main:has(>.chat)>.chat,
   .qily-home-balanced .hero-grid,
   .qily-home-balanced .inner,
   .qily-home-balanced .section>.inner,
@@ -116,7 +149,13 @@ body.module-page .page-heading{
   body.module-page .archive-inner,
   body.module-page .knowledge-inner,
   body.module-page .project-inner,
-  body.module-page .tool-inner{
+  body.module-page .tool-inner,
+  .page-inner,
+  .content-inner,
+  .archive-inner,
+  .knowledge-inner,
+  .project-inner,
+  .tool-inner{
     width:100%!important;
     max-width:100%!important;
   }
