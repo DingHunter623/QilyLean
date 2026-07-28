@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - ".github/workflows/build-daily-archive.yml"
       - "qilylean/daily/*.html"
       - "qilylean/assets/daily-*.svg"
       - "qilylean/daily-briefs.css"
