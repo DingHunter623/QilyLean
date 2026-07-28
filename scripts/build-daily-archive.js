@@ -3,7 +3,11 @@
 
 const fs = require('fs');
 const path = require('path');
-const vm = require('vm');
+const {
+  archiveStart,
+  archiveEnd,
+  collectArchiveBriefs
+} = require('./daily-engineering-archive');
 
 const root = path.resolve(__dirname, '..');
 const qily = path.join(root, 'qilylean');
@@ -28,19 +32,6 @@ function capture(value, expression, label) {
   return match[1];
 }
 
-function iso(date) {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
-}
-
-function backfillData() {
-  const source = fs.readFileSync(path.join(qily, 'daily-backfill-20251219-20260707.js'), 'utf8');
-  const themes = JSON.parse(capture(source, /var themes=(\[[\s\S]*?\]);\nvar lenses=/, 'backfill themes'));
-  const lenses = vm.runInNewContext(capture(source, /var lenses=(\[[\s\S]*?\]);\nvar actions=/, 'backfill lenses'));
-  const actions = vm.runInNewContext(capture(source, /var actions=(\[[\s\S]*?\]);\nvar endings=/, 'backfill actions'));
-  const endings = vm.runInNewContext(capture(source, /var endings=(\[[\s\S]*?\]);\nfunction esc/, 'backfill endings'));
-  return { themes, lenses, actions, endings };
-}
-
 function visual(theme, index) {
   const c1 = ['#0f4b5a', '#153f4c', '#17443b', '#264f61'][index % 4];
   const c2 = ['#177f87', '#2d8c84', '#3b7f91', '#4a786e'][index % 4];
@@ -56,8 +47,8 @@ function visual(theme, index) {
   return `<svg viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${escapeHtml(theme.title)}"><rect width="800" height="800" rx="36" fill="${c1}"/>${shape}<text x="400" y="675" fill="#fff" font-size="46" font-weight="850" text-anchor="middle">${escapeHtml(theme.cat)}</text><text x="400" y="727" fill="#d8efeb" font-size="26" text-anchor="middle">制造改善 · 方法沉淀 · 现场实践</text></svg>`;
 }
 
-function collectRecentBriefs() {
-  return fs.readdirSync(dailyDir).filter((name) => /^\d{4}-\d{2}-\d{2}\.html$/.test(name) && name.slice(0, 10) >= '2026-07-08').map((name) => {
+function collectPublishedBriefs() {
+  return fs.readdirSync(dailyDir).filter((name) => /^\d{4}-\d{2}-\d{2}\.html$/.test(name) && name.slice(0, 10) > archiveEnd).map((name) => {
     const page = fs.readFileSync(path.join(dailyDir, name), 'utf8');
     const date = name.replace('.html', '');
     const article = capture(page, /(<article class="post(?: [^"]*)?"[\s\S]*?<\/article>)/, `${date} article`);
@@ -66,26 +57,7 @@ function collectRecentBriefs() {
     const summary = textFromHtml(capture(article, /<p>([\s\S]*?)<\/p>/, `${date} summary`));
     const dayNo = (dateLine.match(/DAY\d+/) || [''])[0];
     const theme = dateLine.replace(date, '').replace(dayNo, '').replace(/[｜|]/g, '').trim();
-    return { date, article, title, summary, dayNo, theme };
-  });
-}
-
-function collectBackfillBriefs() {
-  const { themes, lenses, actions, endings } = backfillData();
-  const start = new Date(2025, 11, 19);
-  const end = new Date(2026, 6, 7);
-  const dates = [];
-  for (let date = new Date(end); date >= start; date.setDate(date.getDate() - 1)) dates.push(new Date(date));
-  return dates.map((date, index) => {
-    const theme = themes[index % themes.length];
-    const lens = lenses[Math.floor(index / themes.length) % lenses.length];
-    const title = `${theme.title}：${lens.replace('看', '')}`;
-    const summary = theme.p1;
-    const paragraph2 = `${actions[index % actions.length]} ${actions[(index + 3) % actions.length]}`;
-    const paragraph3 = endings[index % endings.length];
-    const dateText = iso(date);
-    const article = `<article class="post" id="${dateText}"><div class="visual">${visual(theme, index)}</div><div class="content"><div class="date">${dateText}｜${escapeHtml(theme.cat)}</div><h2>${escapeHtml(title)}</h2><p>${escapeHtml(summary)}</p><div class="quote">${escapeHtml(theme.quote)}</div><p>${escapeHtml(paragraph2)}</p><p>${escapeHtml(paragraph3)}</p><div class="tags">${theme.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}</div><button class="share" type="button">分享本期网址</button><span class="status"></span></div></article>`;
-    return { date: dateText, article, title, summary, dayNo: '', theme: theme.cat };
+    return { date, article, title, summary, dayNo, theme, archive: false };
   });
 }
 
@@ -104,7 +76,7 @@ function pageHeader(title, description, canonical, ogType = 'article') {
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:url" content="${canonical}">
   <link rel="stylesheet" href="/site-shell.css?v=20260725-compact-hero-v1">
-  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260722-daily-v2">
+  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260728-daily-continuity-v4">
 </head>`;
 }
 
@@ -116,7 +88,7 @@ function siteHeader() {
 }
 
 function pageScripts() {
-  return `<script src="/site-navigation.js?v=20260727-controlled-home-moments-v2"></script>
+  return `<script src="/site-navigation.js?v=20260728-layout-type-v3"></script>
 <script src="/homepage-music.js?v=20260722-continuous-v3"></script>`;
 }
 
@@ -128,33 +100,49 @@ function buildIndex(briefs) {
     byMonth.get(month).push(brief);
   });
   const monthNames = { '01': '1月', '02': '2月', '03': '3月', '04': '4月', '05': '5月', '06': '6月', '07': '7月', '08': '8月', '09': '9月', '10': '10月', '11': '11月', '12': '12月' };
+  const years = Array.from(new Set(briefs.map((brief) => brief.date.slice(0, 4))));
+  const yearFilters = ['<button class="active" type="button" data-year-filter="">全部年份</button>']
+    .concat(years.map((year) => `<button type="button" data-year-filter="${year}">${year}年</button>`))
+    .join('');
   const months = Array.from(byMonth.entries()).map(([month, list], monthIndex) => {
     const cards = list.map((brief, index) => {
       const url = `/qilylean/daily/${brief.date}.html`;
-      return `<article class="brief-index-card${monthIndex === 0 && index === 0 ? ' latest' : ''}">
-  <div class="brief-index-meta"><time datetime="${brief.date}">${brief.date}</time><span>${escapeHtml(brief.theme)}</span>${brief.dayNo ? `<b>${brief.dayNo}</b>` : ''}</div>
+      const searchText = `${brief.date} ${brief.theme} ${brief.title} ${brief.summary}`;
+      return `<article class="brief-index-card${monthIndex === 0 && index === 0 ? ' latest' : ''}" data-brief-year="${brief.date.slice(0, 4)}" data-brief-search="${escapeHtml(searchText)}">
+  <div class="brief-index-meta"><time datetime="${brief.date}">${brief.date}</time><span>${escapeHtml(brief.theme)}</span></div>
   <h2><a href="${url}">${escapeHtml(brief.title)}</a></h2>
   <div class="brief-index-actions"><a class="brief-open" href="${url}">打开本期简报</a><button type="button" data-brief-url="${baseUrl}${url}" data-brief-title="${escapeHtml(brief.title)}">分享本期网址</button><span class="brief-share-status" aria-live="polite"></span></div>
 </article>`;
     }).join('\n');
     const [year, number] = month.split('-');
-    return `<details class="brief-month"${monthIndex === 0 ? ' open' : ''}><summary><span>${year}年${monthNames[number]}</span><b>${list.length}期</b></summary><div class="brief-grid">${cards}</div></details>`;
+    return `<details class="brief-month" data-brief-month="${month}"${monthIndex === 0 ? ' open' : ''}><summary><span>${year}年${monthNames[number]}</span><b>${list.length}期</b></summary><div class="brief-grid">${cards}</div></details>`;
   }).join('\n');
   const latest = briefs[0];
   const earliest = briefs[briefs.length - 1];
-  return `${pageHeader('每日工程版简报｜QilyLean', '围绕精益生产、IE、数智化工厂与制造改善持续更新的每日工程版简报目录。', `${baseUrl}/qilylean/daily-insights.html`, 'website')}
+  return `${pageHeader('每日工程版简报｜QilyLean', `自${archiveStart}起，围绕精益生产、IE、PMC、质量、NPI、新工厂规划、数智化工厂与项目交付持续沉淀的每日工程版简报。`, `${baseUrl}/qilylean/daily-insights.html`, 'website')}
 <body class="module-page daily-index-page">
 ${siteHeader()}
 <main>
-  <section class="daily-hero"><div class="daily-inner"><span>DAILY ENGINEERING BRIEF</span><h1>每日工程版简报</h1><p>按日期选择简报，每次只打开当天内容；每一期都有独立网址，便于针对性分享。</p></div></section>
+  <section class="daily-hero"><div class="daily-inner"><span>DAILY ENGINEERING BRIEF</span><h1>每日工程版简报</h1><p>自2019年7月10日起，以现场事实、工程方法、数据闭环和项目交付持续沉淀；每一天对应一个独立网址，可单独打开、连续翻阅与直接分享。</p></div></section>
   <section class="daily-index-section"><div class="daily-inner">
     <div class="daily-index-heading"><div><h2>简报目录</h2><p>${earliest.date}—${latest.date}｜共${briefs.length}期｜按月份收纳、最新优先</p></div><a href="/qilylean/daily/${latest.date}.html">打开最新简报</a></div>
+    <div class="brief-directory-tools">
+      <label><span>搜索日期、主题或关键词</span><input type="search" id="briefSearch" placeholder="例如：标准工时、NPI、2021-05" autocomplete="off"></label>
+      <div class="brief-year-filters" aria-label="按年份筛选">${yearFilters}</div>
+      <p id="briefFilterStatus" aria-live="polite">当前显示全部 ${briefs.length} 期</p>
+    </div>
     <div class="brief-months">${months}</div>
   </div></section>
 </main>
 <footer class="module-footer"><div class="module-inner"><span>丁启利｜每日工程版简报</span><span>精益 · IE · 数智化工厂 · 制造改善</span></div></footer>
 <script>
-(function(){var legacy=(location.hash||'').slice(1);if(/^\\d{4}-\\d{2}-\\d{2}$/.test(legacy)){location.replace('/qilylean/daily/'+legacy+'.html');return;}function copy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();return Promise.resolve();}function mobile(){return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'')||!!(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches&&innerWidth<=820);}document.addEventListener('click',function(event){var button=event.target.closest&&event.target.closest('[data-brief-url]');if(!button)return;var url=button.getAttribute('data-brief-url');var title=button.getAttribute('data-brief-title')||document.title;var status=button.parentNode.querySelector('.brief-share-status');function done(text){if(status)status.textContent=text;setTimeout(function(){if(status)status.textContent='';},2200);}if(mobile()&&navigator.share){navigator.share({title:title,text:title,url:url}).then(function(){done('已调起分享');}).catch(function(error){if(error&&error.name==='AbortError')return;copy(url).then(function(){done('网址已复制');});});}else copy(url).then(function(){done('网址已复制');});});})();
+(function(){
+var legacy=(location.hash||'').slice(1);if(/^\\d{4}-\\d{2}-\\d{2}$/.test(legacy)){location.replace('/qilylean/daily/'+legacy+'.html');return;}
+var input=document.getElementById('briefSearch'),statusLine=document.getElementById('briefFilterStatus'),selectedYear='',cards=Array.prototype.slice.call(document.querySelectorAll('.brief-index-card')),months=Array.prototype.slice.call(document.querySelectorAll('.brief-month'));
+function applyFilter(){var query=(input&&input.value||'').trim().toLowerCase(),visible=0;cards.forEach(function(card){var matchYear=!selectedYear||card.getAttribute('data-brief-year')===selectedYear;var matchQuery=!query||(card.getAttribute('data-brief-search')||'').toLowerCase().indexOf(query)>=0;card.hidden=!(matchYear&&matchQuery);if(!card.hidden)visible+=1;});months.forEach(function(month,index){var hasVisible=!!month.querySelector('.brief-index-card:not([hidden])');month.hidden=!hasVisible;if(query||selectedYear)month.open=hasVisible;else month.open=index===0;});if(statusLine)statusLine.textContent='当前显示 '+visible+' 期'+(selectedYear?'｜'+selectedYear+'年':'')+(query?'｜关键词：'+query:'');}
+if(input)input.addEventListener('input',applyFilter);
+document.addEventListener('click',function(event){var yearButton=event.target.closest&&event.target.closest('[data-year-filter]');if(yearButton){selectedYear=yearButton.getAttribute('data-year-filter')||'';document.querySelectorAll('[data-year-filter]').forEach(function(button){button.classList.toggle('active',button===yearButton);});applyFilter();return;}var button=event.target.closest&&event.target.closest('[data-brief-url]');if(!button)return;var url=button.getAttribute('data-brief-url');var title=button.getAttribute('data-brief-title')||document.title;var shareStatus=button.parentNode.querySelector('.brief-share-status');function copy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();return Promise.resolve();}function done(text){if(shareStatus)shareStatus.textContent=text;setTimeout(function(){if(shareStatus)shareStatus.textContent='';},2200);}var mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'')||!!(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches&&innerWidth<=820);if(mobile&&navigator.share){navigator.share({title:title,text:title,url:url}).then(function(){done('已调起分享');}).catch(function(error){if(error&&error.name==='AbortError')return;copy(url).then(function(){done('网址已复制');});});}else copy(url).then(function(){done('网址已复制');});});
+})();
 </script>
 ${pageScripts()}
 </body>
@@ -204,19 +192,32 @@ function updateKnowledgeLatest(latest) {
   fs.writeFileSync(file, page);
 }
 
-function main() {
-  const recent = collectRecentBriefs();
-  const backfill = collectBackfillBriefs();
-  const briefs = [...recent, ...backfill].sort((a, b) => b.date.localeCompare(a.date));
-  if (briefs.length < 216 || new Set(briefs.map((brief) => brief.date)).size !== briefs.length) {
-    throw new Error(`Daily archive has a missing or duplicate date; found ${briefs.length} entries`);
+function assertContinuousArchive(briefs) {
+  const dates = briefs.map((brief) => brief.date);
+  if (dates[dates.length - 1] !== archiveStart) {
+    throw new Error(`Daily archive must start on ${archiveStart}; found ${dates[dates.length - 1]}`);
   }
+  if (new Set(dates).size !== dates.length) throw new Error('Daily archive contains duplicate dates');
+  for (let index = 1; index < dates.length; index += 1) {
+    const newer = new Date(`${dates[index - 1]}T00:00:00Z`);
+    const older = new Date(`${dates[index]}T00:00:00Z`);
+    if ((newer - older) !== 86400000) {
+      throw new Error(`Daily archive date gap between ${dates[index - 1]} and ${dates[index]}`);
+    }
+  }
+}
+
+function main() {
+  const published = collectPublishedBriefs();
+  const archive = collectArchiveBriefs(visual);
+  const briefs = [...published, ...archive].sort((a, b) => b.date.localeCompare(a.date));
+  assertContinuousArchive(briefs);
   fs.writeFileSync(path.join(qily, 'daily-insights.html'), buildIndex(briefs));
   briefs.forEach((brief, index) => fs.writeFileSync(path.join(dailyDir, `${brief.date}.html`), buildBriefPage(brief, briefs, index)));
   fs.writeFileSync(path.join(dailyDir, 'index.json'), `${JSON.stringify(briefs.map(({ date, title, summary, dayNo, theme }) => ({ date, title, summary, dayNo, theme })), null, 2)}\n`);
   updateSitemap(briefs);
   updateKnowledgeLatest(briefs[0]);
-  process.stdout.write(`Built ${briefs.length} independent daily brief pages.\n`);
+  process.stdout.write(`Built ${briefs.length} independent daily engineering brief pages from ${archiveStart} through ${briefs[0].date}.\n`);
 }
 
 main();
