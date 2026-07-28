@@ -277,6 +277,15 @@ function splitTitle(title) {
       const window = characters.slice(0, 15).join('');
       const punctuation = Math.max(window.lastIndexOf('，'), window.lastIndexOf('：'), window.lastIndexOf('、'));
       if (punctuation >= 7) take = punctuation + 1;
+      const asciiWord = (character) => /[A-Za-z0-9/+-]/.test(character || '');
+      if (asciiWord(characters[take - 1]) && asciiWord(characters[take])) {
+        let wordStart = take;
+        while (wordStart > 0 && asciiWord(characters[wordStart - 1])) wordStart -= 1;
+        if (wordStart >= 6) take = wordStart;
+        else {
+          while (take < characters.length && asciiWord(characters[take])) take += 1;
+        }
+      }
     }
     lines.push(characters.splice(0, take).join(''));
   }
@@ -359,6 +368,20 @@ function cleanIndexFiles() {
   fs.writeFileSync(indexJson, `${JSON.stringify(data, null, 2)}\n`);
 }
 
+function normalizeExistingVisualLabels() {
+  fs.readdirSync(assetDir)
+    .filter((name) => /^daily-\d{4}-\d{2}-\d{2}\.svg$/.test(name))
+    .forEach((name) => {
+      const file = path.join(assetDir, name);
+      const original = fs.readFileSync(file, 'utf8');
+      const updated = original
+        .replace(/Factory Layout/g, '工厂布局规划')
+        .replace(/Factory La(?=<\/text>)/g, '工厂布局规划')
+        .replace(/ERP\/ME(?=<\/text>)/g, 'ERP/MES');
+      if (updated !== original) fs.writeFileSync(file, updated);
+    });
+}
+
 function main() {
   fs.mkdirSync(assetDir, { recursive: true });
   const files = fs.readdirSync(dailyDir)
@@ -366,6 +389,7 @@ function main() {
     .sort();
   files.forEach((name, index) => enhancePage(path.join(dailyDir, name), name.slice(0, 10), index));
   cleanIndexFiles();
+  normalizeExistingVisualLabels();
   process.stdout.write(`Enhanced ${files.length} daily brief pages; DAY labels removed and training depth applied.\n`);
 }
 
