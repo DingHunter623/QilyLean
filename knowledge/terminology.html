@@ -26,21 +26,9 @@
 
 
 
+
 /* terminology-search-v4 */
-.term-card{display:flex;min-height:0;flex-direction:column;gap:0}
-.term-code::before,.term-en::before,.term-card h3::before{display:block;margin-bottom:5px;color:var(--qily-teal,#178b94);font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
-.term-code::before{content:"术语代码"}.term-en::before{content:"英文全称"}.term-card h3::before{content:"中文名称"}
-.term-formula{margin-top:10px!important;padding:11px 13px;border-left:4px solid #caa15f;background:#fff8e8;color:#344845!important}
-.term-card>p:last-child{margin-top:10px;padding-top:12px;border-top:1px dashed var(--qily-line,#d5e4e3)}
-.term-card>p strong{display:inline-block;margin-right:2px}
-.term-search-results{display:none;margin-top:18px}.term-search-results.show{display:block}
-.term-search-results .module-heading{margin:0 0 14px}.term-search-results .module-heading p{margin-bottom:0}
-.term-search-hit{position:relative;cursor:pointer;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}
-.term-search-hit:hover,.term-search-hit:focus-visible{transform:translateY(-2px);border-color:var(--qily-teal,#178b94);box-shadow:0 12px 30px rgba(15,75,90,.14);outline:none}
-.term-jump-hint{margin-top:auto;padding-top:12px;color:var(--qily-teal,#178b94);font-size:13px;font-weight:900}
-.term-focus{animation:term-focus 1.8s ease}
-@keyframes term-focus{0%,100%{box-shadow:0 8px 24px rgba(15,75,90,.06)}25%,70%{box-shadow:0 0 0 4px rgba(23,139,148,.2),0 14px 34px rgba(15,75,90,.16);border-color:var(--qily-teal,#178b94)}}
-@media(max-width:760px){.term-card{padding:18px}.term-code{font-size:24px}.term-card h3{font-size:20px}.term-card p{font-size:15.5px;line-height:1.68}}
+.term-card{display:flex;min-height:0;flex-direction:column;gap:0}.term-code::before,.term-en::before,.term-card h3::before{display:block;margin-bottom:5px;color:var(--qily-teal,#178b94);font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.term-code::before{content:"术语代码"}.term-en::before{content:"英文全称"}.term-card h3::before{content:"中文名称"}.term-formula{margin-top:10px!important;padding:11px 13px;border-left:4px solid #caa15f;background:#fff8e8;color:#344845!important}.term-card>p:last-child{margin-top:10px;padding-top:12px;border-top:1px dashed var(--qily-line,#d5e4e3)}.term-card>p strong{display:inline-block;margin-right:2px}.term-search-results{display:none;margin-top:18px}.term-search-results.show{display:block}.term-search-results .module-heading{margin:0 0 14px}.term-search-results .module-heading p{margin-bottom:0}.term-search-hit{position:relative;cursor:pointer;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}.term-search-hit:hover,.term-search-hit:focus-visible{transform:translateY(-2px);border-color:var(--qily-teal,#178b94);box-shadow:0 12px 30px rgba(15,75,90,.14);outline:none}.term-jump-hint{margin-top:auto;padding-top:12px;color:var(--qily-teal,#178b94);font-size:13px;font-weight:900}.term-focus{animation:term-focus 1.8s ease}@keyframes term-focus{0%,100%{box-shadow:0 8px 24px rgba(15,75,90,.06)}25%,70%{box-shadow:0 0 0 4px rgba(23,139,148,.2),0 14px 34px rgba(15,75,90,.16);border-color:var(--qily-teal,#178b94)}}@media(max-width:760px){.term-card{padding:18px}.term-code{font-size:24px}.term-card h3{font-size:20px}.term-card p{font-size:15.5px;line-height:1.68}}
 </style>
 </head>
 <body class="module-page">
@@ -385,13 +373,7 @@
   <p class="term-formula"><strong>计算公式／判定：</strong>设备综合效率＝可动率 × 性能效率 × 质量率。三项口径必须使用同一计划生产时间边界。</p>
   <p><strong>应用场景：</strong>由可动率、性能效率和质量率构成，用于分析停机、降速与不良损失。</p>
 </article>
-<article class="term-card" data-term-card data-keywords="人效 人均产出 单位人工小时产出 劳动生产率">
-  <div class="term-code">UPPH</div>
-  <div class="term-en">Units Per Person Hour</div>
-  <h3>人均小时产出／单位人工小时产量</h3>
-  <p class="term-formula"><strong>计算公式／判定：</strong>人均小时产出＝合格产出 ÷（直接人力 × 实际生产小时）。跨产品比较时应同步说明标准工时和工艺差异。</p>
-  <p><strong>应用场景：</strong>用于衡量投入人工后的生产效率，适合比较不同产线、班组、产品或改善前后的人效。UPPH的分母包含直接人数与生产小时；即使UPH相同，投入人数不同，UPPH也会不同。统计时须统一合格产出、直接人力、实际生产时间、辅助人员是否计入及异常停线口径。</p>
-</article>
+<article class="term-card" data-term-card data-keywords="人效 人均产出 单位人工小时产出 劳动生产率"><div class="term-code">UPPH</div><div class="term-en">Units Per Person Hour</div><h3>人均小时产出／单位人工小时产量</h3><p class="term-formula"><strong>计算公式／判定：</strong>人均小时产出＝合格产出 ÷（直接人力 × 实际生产小时）。跨产品比较时应同步说明标准工时和工艺差异。</p><p><strong>应用场景：</strong>用于衡量投入人工后的生产效率，适合比较不同产线、班组、产品或改善前后的人效。UPPH的分母包含直接人数与生产小时；即使UPH相同，投入人数不同，UPPH也会不同。统计时须统一合格产出、直接人力、实际生产时间、辅助人员是否计入及异常停线口径。</p></article>
 <article class="term-card" data-term-card>
   <div class="term-code">SMED</div>
   <div class="term-en">Single-Minute Exchange of Die</div>
@@ -507,13 +489,7 @@
   <h3>标准工时</h3>
   <p><strong>应用场景：</strong>用于在规定方法与正常熟练度下确定完成作业所需时间，支撑产能、人力、排程、报价与改善。</p>
 </article>
-<article class="term-card" data-term-card>
-  <div class="term-code">UPH</div>
-  <div class="term-en">Units Per Hour</div>
-  <h3>每小时产出</h3>
-  <p class="term-formula"><strong>计算公式／判定：</strong>每小时产出＝合格产出 ÷ 实际生产小时。该指标不除以投入人数，须明确统计对象是产线、设备、工序还是班组。</p>
-  <p><strong>应用场景：</strong>用于衡量设备、工位或产线每小时完成数量；需明确投入资源、产品组合和有效作业时间。</p>
-</article>
+<article class="term-card" data-term-card data-keywords="小时产能 单位小时产量 产线产出 设备产出"><div class="term-code">UPH</div><div class="term-en">Units Per Hour</div><h3>每小时产出／单位小时产量</h3><p class="term-formula"><strong>计算公式／判定：</strong>每小时产出＝合格产出 ÷ 实际生产小时。该指标不除以投入人数，须明确统计对象是产线、设备、工序还是班组。</p><p><strong>应用场景：</strong>用于衡量产线、设备、工序或班组在单位时间内完成的合格产量，常用于小时产能监控、节拍验证、瓶颈分析和排产能力确认。UPH只反映单位时间产出，不考虑投入人数；即使增加人力后UPH提高，也不能据此判断人效同步提高，需要评价人工效率时应使用UPPH。</p></article>
 <article class="term-card" data-term-card>
   <div class="term-code">OTD</div>
   <div class="term-en">On-Time Delivery</div>
@@ -1114,113 +1090,17 @@
 <footer class="module-footer"><div class="module-inner"><span>丁启利｜QilyLean全站术语词典</span><span>中文诠释 · 应用场景 · 使用边界</span></div></footer>
 <script>
 (function(){
-  var input=document.getElementById('termSearch');
-  var cards=Array.prototype.slice.call(document.querySelectorAll('[data-term-card]'));
-  var count=document.getElementById('termCount');
-  var empty=document.getElementById('termEmpty');
-  var categorySections=[];
-  cards.forEach(function(card,index){
-    var section=card.closest('.module-section[id]');
-    if(section&&categorySections.indexOf(section)===-1)categorySections.push(section);
-    var code=(card.querySelector('.term-code')||{}).textContent||'';
-    var id='term-'+String(code).toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g,'-').replace(/^-|-$/g,'')+'-'+index;
-    if(!card.id)card.id=id;
-  });
-
-  var results=document.createElement('div');
-  results.className='term-search-results';
-  results.id='termSearchResults';
-  results.setAttribute('aria-live','polite');
-  results.innerHTML='<div class="module-heading"><h2>搜索结果</h2><p>仅匹配术语代码、英文全称、中文名称和专用别名，并按相关度排序；点击词条可返回原分类位置。</p></div><div class="term-grid" id="termSearchGrid"></div>';
-  empty.parentNode.insertBefore(results,empty.nextSibling);
-  var resultGrid=document.getElementById('termSearchGrid');
-
-  function normalize(value){
-    return String(value||'').normalize('NFKC').trim().toLocaleLowerCase('zh-CN').replace(/\s+/g,' ');
-  }
-  function compact(value){
-    return normalize(value).replace(/[\s\-_/+()（）·,.，。:：]/g,'');
-  }
-  function values(card){
-    return {
-      code:normalize((card.querySelector('.term-code')||{}).textContent),
-      en:normalize((card.querySelector('.term-en')||{}).textContent),
-      zh:normalize((card.querySelector('h3')||{}).textContent),
-      aliases:normalize(card.getAttribute('data-keywords')||'')
-    };
-  }
-  function score(card,query){
-    var field=values(card);
-    var q=normalize(query);
-    var qc=compact(q);
-    var codeCompact=compact(field.code);
-    var codeTokens=field.code.split(/[^a-z0-9\u4e00-\u9fff]+/).filter(Boolean);
-    if(!q)return 0;
-    if(field.code===q||codeCompact===qc)return 1200;
-    if(codeTokens.indexOf(q)!==-1)return 1150;
-    if(field.zh===q||field.en===q)return 1100;
-    if(field.code.indexOf(q)===0||codeCompact.indexOf(qc)===0)return 1000;
-    if(field.zh.indexOf(q)===0)return 900;
-    if(field.en.split(/\s+/).some(function(word){return word.indexOf(q)===0;}))return 850;
-    if(field.code.indexOf(q)!==-1||codeCompact.indexOf(qc)!==-1)return 800;
-    if(field.zh.indexOf(q)!==-1)return 700;
-    if(field.en.indexOf(q)!==-1)return 600;
-    if(field.aliases&&field.aliases.indexOf(q)!==-1)return 500;
-    return -1;
-  }
-  function showCategories(visible){
-    categorySections.forEach(function(section){section.hidden=!visible;});
-  }
-  function locate(card){
-    input.value='';
-    render();
-    window.requestAnimationFrame(function(){
-      card.scrollIntoView({behavior:'smooth',block:'center'});
-      card.classList.remove('term-focus');
-      void card.offsetWidth;
-      card.classList.add('term-focus');
-      window.setTimeout(function(){card.classList.remove('term-focus');},1900);
-    });
-  }
-  function resultCard(original){
-    var clone=original.cloneNode(true);
-    clone.removeAttribute('id');
-    clone.classList.add('term-search-hit');
-    clone.setAttribute('role','button');
-    clone.setAttribute('tabindex','0');
-    var code=(original.querySelector('.term-code')||{}).textContent||'该术语';
-    clone.setAttribute('aria-label','定位到 '+code+' 原词条');
-    var hint=document.createElement('div');
-    hint.className='term-jump-hint';
-    hint.textContent='点击定位原词条';
-    clone.appendChild(hint);
-    clone.addEventListener('click',function(){locate(original);});
-    clone.addEventListener('keydown',function(event){
-      if(event.key==='Enter'||event.key===' '){event.preventDefault();locate(original);}
-    });
-    return clone;
-  }
-  function render(){
-    var query=normalize(input.value);
-    resultGrid.innerHTML='';
-    if(!query){
-      showCategories(true);
-      results.classList.remove('show');
-      empty.style.display='none';
-      count.textContent='共收录 '+cards.length+' 项术语';
-      return;
-    }
-    var matches=cards.map(function(card,index){return{card:card,index:index,score:score(card,query)};})
-      .filter(function(item){return item.score>=0;})
-      .sort(function(a,b){return b.score-a.score||a.index-b.index;});
-    showCategories(false);
-    results.classList.toggle('show',matches.length>0);
-    empty.style.display=matches.length?'none':'block';
-    matches.forEach(function(item){resultGrid.appendChild(resultCard(item.card));});
-    count.textContent=matches.length?'找到 '+matches.length+' 项相关术语（已按相关度排序）':'未找到相关术语';
-  }
-  input.addEventListener('input',render,{passive:true});
-  input.addEventListener('search',render,{passive:true});
+var input=document.getElementById('termSearch'),cards=Array.prototype.slice.call(document.querySelectorAll('[data-term-card]')),count=document.getElementById('termCount'),empty=document.getElementById('termEmpty'),sections=[];
+cards.forEach(function(card,index){var section=card.closest('.module-section[id]');if(section&&sections.indexOf(section)<0)sections.push(section);var code=(card.querySelector('.term-code')||{}).textContent||'';if(!card.id)card.id='term-'+String(code).toLowerCase().replace(/[^a-z0-9\u4e00-\u9fff]+/g,'-').replace(/^-|-$/g,'')+'-'+index;});
+var results=document.createElement('div');results.className='term-search-results';results.setAttribute('aria-live','polite');results.innerHTML='<div class="module-heading"><h2>搜索结果</h2><p>仅匹配术语代码、英文全称、中文名称和专用别名，并按相关度排序；点击词条可返回原分类位置。</p></div><div class="term-grid" id="termSearchGrid"></div>';empty.parentNode.insertBefore(results,empty.nextSibling);var grid=document.getElementById('termSearchGrid');
+function norm(v){return String(v||'').normalize('NFKC').trim().toLocaleLowerCase('zh-CN').replace(/\s+/g,' ');}function compact(v){return norm(v).replace(/[\s\-_/+()（）·,.，。:：]/g,'');}
+function fields(card){return{code:norm((card.querySelector('.term-code')||{}).textContent),en:norm((card.querySelector('.term-en')||{}).textContent),zh:norm((card.querySelector('h3')||{}).textContent),aliases:norm(card.getAttribute('data-keywords')||'')};}
+function score(card,q){var f=fields(card),qc=compact(q),cc=compact(f.code),tokens=f.code.split(/[^a-z0-9\u4e00-\u9fff]+/).filter(Boolean);if(f.code===q||cc===qc)return 1200;if(tokens.indexOf(q)>=0)return 1150;if(f.zh===q||f.en===q)return 1100;if(f.code.indexOf(q)===0||cc.indexOf(qc)===0)return 1000;if(f.zh.indexOf(q)===0)return 900;if(f.en.split(/\s+/).some(function(w){return w.indexOf(q)===0;}))return 850;if(f.code.indexOf(q)>=0||cc.indexOf(qc)>=0)return 800;if(f.zh.indexOf(q)>=0)return 700;if(f.en.indexOf(q)>=0)return 600;if(f.aliases&&f.aliases.indexOf(q)>=0)return 500;return-1;}
+function categories(show){sections.forEach(function(section){section.hidden=!show;});}
+function locate(card){input.value='';render();requestAnimationFrame(function(){card.scrollIntoView({behavior:'smooth',block:'center'});card.classList.remove('term-focus');void card.offsetWidth;card.classList.add('term-focus');setTimeout(function(){card.classList.remove('term-focus');},1900);});}
+function clone(original){var hit=original.cloneNode(true);hit.removeAttribute('id');hit.classList.add('term-search-hit');hit.setAttribute('role','button');hit.setAttribute('tabindex','0');var hint=document.createElement('div');hint.className='term-jump-hint';hint.textContent='点击定位原词条';hit.appendChild(hint);hit.addEventListener('click',function(){locate(original);});hit.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();locate(original);}});return hit;}
+function render(){var q=norm(input.value);grid.innerHTML='';if(!q){categories(true);results.classList.remove('show');empty.style.display='none';count.textContent='共收录 '+cards.length+' 项术语';return;}var matches=cards.map(function(card,index){return{card:card,index:index,score:score(card,q)};}).filter(function(x){return x.score>=0;}).sort(function(a,b){return b.score-a.score||a.index-b.index;});categories(false);results.classList.toggle('show',matches.length>0);empty.style.display=matches.length?'none':'block';matches.forEach(function(x){grid.appendChild(clone(x.card));});count.textContent=matches.length?'找到 '+matches.length+' 项相关术语（已按相关度排序）':'未找到相关术语';}
+input.addEventListener('input',render,{passive:true});input.addEventListener('search',render,{passive:true});
 })();
 </script>
 <script src="/site-navigation.js?v=20260725-compact-hero-v1"></script>
