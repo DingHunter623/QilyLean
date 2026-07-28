@@ -31,10 +31,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Publish wide layout and readable typography
+      - name: Publish wide layout, readable typography and factory renderings
         run: node scripts/publish-site-system-v2.js
 
-      - name: Validate alignment, responsive grids and cache refresh
+      - name: Validate alignment, responsive grids, factory gallery and cache refresh
         shell: bash
         run: |
           grep -q 'site-wide-layout-v1.css?v=20260728-balanced-layout-v4' site-navigation.js
@@ -55,16 +55,23 @@ jobs:
           grep -q '.answer-content h2' site-typography-v1.css
           grep -q '.composer textarea' site-typography-v1.css
           grep -R -q 'site-navigation.js?v=20260728-layout-type-v3' --include='*.html' .
+          test -s media/projects/factory-campus-aerial.png
+          test -s media/projects/factory-campus-front.png
+          grep -q 'factory-campus-aerial.png' projects/index.html
+          grep -q 'factory-campus-front.png' projects/factory-layout/index.html
+          grep -q '匿名化展示说明' projects/factory-layout/index.html
+          grep -q 'factory-render-v1' projects/project-pages.css
+          ! grep -q '天星电子' projects/factory-layout/index.html
 
       - name: Commit site-system release
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Site-wide layout and typography are already current."
+            echo "Site-wide layout, typography and factory renderings are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add site-navigation.js '*.html' '**/*.html'
-          git commit -m "fix: publish wide readable layout and typography [skip ci]"
+          git add site-navigation.js projects/project-pages.css media/projects/factory-campus-aerial.png media/projects/factory-campus-front.png '*.html' '**/*.html'
+          git commit -m "feat: publish anonymous factory layout renderings [skip ci]"
           git push
