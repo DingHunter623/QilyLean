@@ -3,7 +3,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { archiveStart, archiveEnd } = require('./daily-engineering-archive');
+const { archiveStart, archiveEnd, careerTimeline } = require('./daily-engineering-archive');
 
 const root = path.resolve(__dirname, '..');
 const dailyDir = path.join(root, 'qilylean', 'daily');
@@ -32,6 +32,7 @@ function main() {
   const expectedArchive = dayCount(archiveStart, archiveEnd);
   const archive = index.filter((item) => item.date <= archiveEnd);
   const recent = index.filter((item) => item.date > archiveEnd);
+  const productTerms = ['电子烟', '游戏机手柄', '电磁阀', '新能源负极材料', '负极材料', '逆变器', '汽车电子', '整流器', '继电器', '小家电', '汽车座椅开关总成', '汽车座椅开关', '座椅开关'];
 
   assert(index.length > expectedArchive, 'Archive does not include the recent period');
   assert(archive.length === expectedArchive, `Expected ${expectedArchive} archive briefs; found ${archive.length}`);
@@ -42,6 +43,16 @@ function main() {
   assert(index.every((item) => Object.keys(item).sort().join(',') === publicFields.join(',')), 'Public index contains unexpected classification fields');
   assert(new Set(index.map((item) => item.date)).size === index.length, 'Daily index contains duplicate dates');
   assert(new Set(archive.map((item) => item.title)).size === archive.length, 'Daily brief titles are not unique');
+  assert(archive.every((item) => !item.title.includes('｜')), 'Archive titles still use the former uniform pipe pattern');
+  assert(archive.every((item) => !productTerms.some((term) => `${item.title} ${item.summary} ${item.theme}`.includes(term))), 'Archive index still exposes product-led daily wording');
+  const titleShape = (title) => title.replace(/[\u3400-\u9fffA-Za-z0-9／-]+/g, '字');
+  let sameShapeRun = 1;
+  let longestShapeRun = 1;
+  for (let position = 1; position < archive.length; position += 1) {
+    sameShapeRun = titleShape(archive[position].title) === titleShape(archive[position - 1].title) ? sameShapeRun + 1 : 1;
+    longestShapeRun = Math.max(longestShapeRun, sameShapeRun);
+  }
+  assert(longestShapeRun <= 2, `Archive title sentence patterns repeat ${longestShapeRun} times consecutively`);
 
   for (let position = 1; position < index.length; position += 1) {
     assert(index[position].date === previousDay(index[position - 1].date), `Archive gap after ${index[position - 1].date}`);
@@ -67,13 +78,18 @@ function main() {
   ];
   samples.forEach((date) => {
     const page = read(`qilylean/daily/${date}.html`);
-    assert(page.includes('现场识别信号') && page.includes('核心指标与证据口径'), `Engineering depth is missing: ${date}`);
-    assert(page.includes('跨职能责任与交付接口') && page.includes('工程者手记'), `Professional closure is missing: ${date}`);
+    assert((page.match(/<h3>/g) || []).length >= 9, `Engineering depth is missing: ${date}`);
+    assert(page.includes('class="owner-grid"') && page.includes('工程者手记'), `Professional closure is missing: ${date}`);
     assert(page.includes('/knowledge/') && page.includes('/projects/') && page.includes('/ai.html') && page.includes('/cooperation/'), `QilyLean module links are incomplete: ${date}`);
     assert(page.includes(`https://qilylean.com/qilylean/daily/${date}.html`), `Canonical URL is missing: ${date}`);
     assert(page.includes(`<img src="/qilylean/assets/daily-${date}.svg"`), `External share visual is missing: ${date}`);
     assert(page.includes('daily-briefs.css?v=20260728-daily-continuity-v4'), `Responsive archive stylesheet is not pinned: ${date}`);
     assert(!page.includes('<div class="date">' + date + '｜' + index.find((item) => item.date === date).theme + ' ·'), `Daily date line contains an unexpected suffix: ${date}`);
+  });
+
+  index.forEach((item) => {
+    const page = read(`qilylean/daily/${item.date}.html`);
+    assert(!productTerms.some((term) => page.includes(term)), `Product-led wording remains in daily brief: ${item.date}`);
   });
 
   const firstPublished = read('qilylean/daily/2025-12-19.html');
@@ -84,6 +100,10 @@ function main() {
   assert(directory.includes('data-year-filter="2019"') && directory.includes('data-year-filter="2025"'), 'Archive year filters are missing');
   assert(directory.includes(`共${index.length}期`), 'Archive directory total is incorrect');
   assert(!/<div class="brief-index-meta">[\s\S]*?<i>/i.test(directory), 'Public directory contains an unexpected classification badge');
+  assert(directory.includes('工程项目履历主线'), 'Consolidated career timeline is missing');
+  careerTimeline.forEach((item) => {
+    assert(directory.includes(`${item.year}年`) && directory.includes(item.field), `Career timeline is incomplete for ${item.year}`);
+  });
 
   const sitemap = read('sitemap.xml');
   const dailyUrls = sitemap.match(/https:\/\/qilylean\.com\/qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html/g) || [];
