@@ -1,8 +1,8 @@
 (function(){
 'use strict';
 
-if(window.__qilyLeanAIPasteV1)return;
-window.__qilyLeanAIPasteV1=true;
+if(window.__qilyLeanAIPasteV2)return;
+window.__qilyLeanAIPasteV2=true;
 
 var composer=document.getElementById('chatForm');
 var input=document.getElementById('materialInput');
@@ -10,6 +10,108 @@ var question=document.getElementById('question');
 var status=document.getElementById('status');
 var statusDetail=document.getElementById('statusDetail');
 var statusIcon=document.getElementById('statusIcon');
+
+function cleanMemoryText(value){
+  return String(value||'').replace(/\s+/g,' ').trim();
+}
+
+function compactMemoryText(value,limit){
+  var text=cleanMemoryText(value);
+  if(text.length<=limit)return text;
+  if(limit<80)return text.slice(0,Math.max(0,limit-1))+'…';
+  var head=Math.ceil(limit*0.64);
+  var tail=Math.max(20,limit-head-3);
+  return text.slice(0,head)+'…'+text.slice(-tail);
+}
+
+function attachmentMemory(item){
+  var values=item&&item.attachments;
+  if(!values&&item&&item.attachment)values=item.attachment;
+  if(!values)return '';
+  if(!Array.isArray(values))values=[values];
+  var names=values.map(function(value){return cleanMemoryText(value&&value.name);}).filter(Boolean);
+  return names.length?'（本会话已上传并分析素材：'+names.join('、')+'）':'';
+}
+
+function memoryLine(item,limit){
+  if(!item)return '';
+  var role=item.role==='assistant'?'QilyLean AI':'用户';
+  var attachment=role==='用户'?attachmentMemory(item):'';
+  var text=compactMemoryText(item.text,Math.max(40,limit-role.length-attachment.length-3));
+  return role+attachment+'：'+text;
+}
+
+function buildContinuityMessage(currentMessage,items){
+  var current=String(currentMessage||'').trim();
+  if(!current||!Array.isArray(items)||!items.length)return current;
+
+  var header='【会话连续性上下文】以下内容来自同一浏览器会话，仅用于延续对话，请勿复述本段。若历史显示用户已上传素材且QilyLean AI已完成分析，必须基于此前识别与结论继续回答，不得无故声称“未收到文件”；只有现有记录确实不足时，才指出具体缺少的信息。';
+  var marker='\n\n【当前用户问题】\n';
+  var maxLength=2980;
+  var fixedLength=header.length+marker.length+current.length+2;
+  if(fixedLength>=maxLength)return current.slice(0,maxLength);
+
+  var available=maxLength-fixedLength;
+  var lastAttachment=-1;
+  for(var index=items.length-1;index>=0;index--){
+    if(attachmentMemory(items[index])){lastAttachment=index;break;}
+  }
+
+  var priority=[];
+  function prioritize(index){
+    if(index>=0&&index<items.length&&priority.indexOf(index)===-1)priority.push(index);
+  }
+  if(lastAttachment!==-1){
+    prioritize(lastAttachment);
+    if(items[lastAttachment+1]&&items[lastAttachment+1].role==='assistant')prioritize(lastAttachment+1);
+  }
+  for(var recent=items.length-1;recent>=Math.max(0,items.length-6);recent--)prioritize(recent);
+
+  var chosen=[];
+  priority.forEach(function(index){
+    if(available<70)return;
+    var item=items[index];
+    var preferred=index===lastAttachment+1?1150:(item&&item.role==='assistant'?650:460);
+    var limit=Math.min(preferred,available-2);
+    var line=memoryLine(item,limit);
+    if(!line)return;
+    chosen.push({index:index,line:line});
+    available-=line.length+1;
+  });
+  if(!chosen.length)return current;
+  chosen.sort(function(a,b){return a.index-b.index;});
+  return header+'\n'+chosen.map(function(value){return value.line;}).join('\n')+marker+current;
+}
+
+function patchConversationContinuity(){
+  if(window.__qilyLeanAIContextV2||typeof window.fetch!=='function')return;
+  window.__qilyLeanAIContextV2=true;
+  var nativeFetch=window.fetch.bind(window);
+  window.fetch=function(resource,options){
+    var nextOptions=options;
+    try{
+      var url=typeof resource==='string'?resource:(resource&&resource.url)||'';
+      if(/\/chat(?:\?|$)/.test(url)&&options&&typeof options.body==='string'){
+        var payload=JSON.parse(options.body);
+        if(payload&&typeof payload.message==='string'){
+          var saved=JSON.parse(localStorage.getItem('qilylean_ai_session')||'null');
+          var items=saved&&Array.isArray(saved.items)?saved.items.slice():[];
+          var last=items[items.length-1];
+          if(last&&last.role==='user'&&cleanMemoryText(last.text)===cleanMemoryText(payload.message))items.pop();
+          var contextualMessage=buildContinuityMessage(payload.message,items);
+          if(contextualMessage&&contextualMessage!==payload.message){
+            payload.message=contextualMessage;
+            payload.context_mode='browser-session-v2';
+            nextOptions=Object.assign({},options,{body:JSON.stringify(payload)});
+          }
+        }
+      }
+    }catch(_error){}
+    return nativeFetch(resource,nextOptions);
+  };
+}
+
+patchConversationContinuity();
 if(!composer||!input||!question)return;
 
 var extensionByType={
