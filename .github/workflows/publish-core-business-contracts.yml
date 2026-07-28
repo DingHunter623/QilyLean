@@ -1,0 +1,48 @@
+name: Publish core business contract PDFs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/publish-core-business-contracts.yml
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download and encode original PDFs
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p qilylean/private
+          curl --fail --location --retry 3 --retry-delay 3 --output /tmp/factory.pdf 'https://at.adobe.com/RiRdbZojlWB5x1U9'
+          curl --fail --location --retry 3 --retry-delay 3 --output /tmp/lean.pdf 'https://at.adobe.com/fNHCFjKCqWgZhUQf'
+          curl --fail --location --retry 3 --retry-delay 3 --output /tmp/visual.pdf 'https://at.adobe.com/lxDmlnnYfqdWJ8bE'
+          for file in /tmp/factory.pdf /tmp/lean.pdf /tmp/visual.pdf; do
+            test "$(head -c 4 "$file")" = '%PDF'
+          done
+          base64 -w 0 /tmp/factory.pdf > qilylean/private/factory-planning-contract.pdf.b64
+          base64 -w 0 /tmp/lean.pdf > qilylean/private/lean-improvement-delivery-contract.pdf.b64
+          base64 -w 0 /tmp/visual.pdf > qilylean/private/5s-visual-contract.pdf.b64
+          test -s qilylean/private/factory-planning-contract.pdf.b64
+          test -s qilylean/private/lean-improvement-delivery-contract.pdf.b64
+          test -s qilylean/private/5s-visual-contract.pdf.b64
+
+      - name: Commit contract originals
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qilylean/private/factory-planning-contract.pdf.b64 qilylean/private/lean-improvement-delivery-contract.pdf.b64 qilylean/private/5s-visual-contract.pdf.b64
+          git rm .github/workflows/publish-core-business-contracts.yml
+          git commit -m 'feat: publish three core business contract originals [skip ci]'
+          git push
