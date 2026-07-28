@@ -9,10 +9,10 @@ const navigationFile = path.join(root, 'site-navigation.js');
 const wideLayoutFile = path.join(root, 'site-wide-layout-v1.css');
 const typographyFile = path.join(root, 'site-typography-v1.css');
 
-const NAV_VERSION = '20260728-layout-type-v2';
-const ASSET_VERSION = '20260728-layout-type-v2';
-const WIDE_VERSION = '20260728-balanced-layout-v3';
-const TYPE_VERSION = '20260728-type-system-v2';
+const NAV_VERSION = '20260728-layout-type-v3';
+const ASSET_VERSION = '20260728-layout-type-v3';
+const WIDE_VERSION = '20260728-balanced-layout-v4';
+const TYPE_VERSION = '20260728-type-system-v3';
 
 function read(file) { return fs.readFileSync(file, 'utf8'); }
 function write(file, content) { fs.writeFileSync(file, content, 'utf8'); }
@@ -21,17 +21,19 @@ function validatePublicStyles() {
   const wide = read(wideLayoutFile);
   const type = read(typographyFile);
   const wideMarkers = [
-    '--qily-wide-content:1480px',
-    '.section>.section-inner',
+    '--qily-wide-content:1560px',
+    '.hero>.hero-grid',
     'main.main:has(>.chat)>.chat',
-    '.paper-grid'
+    '.career-full-grid',
+    '.module-grid.four{grid-template-columns:repeat(auto-fit'
   ];
   const typeMarkers = [
     '--qily-type-nav-1:17px',
     '--qily-type-nav-2:16px',
     '--qily-type-nav-3:15px',
     '--qily-type-body:18.5px',
-    '.paper-card h3',
+    'text-wrap:pretty',
+    '.career-full-card h3',
     '.answer-content h2',
     '.composer textarea'
   ];
@@ -46,7 +48,7 @@ function validatePublicStyles() {
 function publishNavigation() {
   let page = read(navigationFile);
   page = page
-    .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV5')
+    .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV6')
     .replace(/var SHARED_ASSET_VERSION = '[^']*';/, `var SHARED_ASSET_VERSION = '${ASSET_VERSION}';`)
     .replace(/var VISUAL_SCALE_VERSION = '[^']*';/, `var VISUAL_SCALE_VERSION = '${ASSET_VERSION}';`)
     .replace(/site-wide-layout-v1\.css\?v=[^'"\s]+/g, `site-wide-layout-v1.css?v=${WIDE_VERSION}`)
@@ -91,7 +93,7 @@ function main() {
   validatePublicStyles();
   publishNavigation();
   const refreshed = refreshHtmlReferences();
-  process.stdout.write(`Published balanced 1480px layout and typography hierarchy; refreshed ${refreshed} HTML files.\n`);
+  process.stdout.write(`Published 1560px content axis, responsive card widths and anti-orphan typography; refreshed ${refreshed} HTML files.\n`);
 }
 
 main();
