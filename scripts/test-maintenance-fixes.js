@@ -163,6 +163,7 @@ async function main() {
   const wrangler = read('wrangler.toml');
   const projectViewer = read('projects/project-image-viewer.js');
   const projectStyles = read('projects/project-pages.css');
+  const projectIndex = read('projects/index.html');
   const knowledge = read('knowledge/index.html');
   const latest = read('qilylean/latest-brief.js');
   const brief = read('qilylean/daily/2026-07-27.html');
@@ -202,6 +203,12 @@ async function main() {
   assert(/手机长按原图可保存或转发高清版/.test(projectViewer), 'Project image viewer long-press guidance is missing');
   assert(/-webkit-touch-callout:default/.test(projectStyles), 'Project original-image long-press support is missing');
   assert(!/-webkit-user-drag:none/.test(projectStyles), 'Project original-image dragging is still disabled');
+  assert(/--project-thumb-size:2cm/.test(projectStyles), 'Project thumbnails are not standardized to 2cm square');
+  assert(/project-list-page \.project-list-thumb img/.test(projectViewer), 'Project list thumbnails are not connected to the image viewer');
+  assert(/data-image-action="save"/.test(projectViewer), 'Project image viewer save-original action is missing');
+  assert(/touchstart/.test(projectViewer) && /touchend/.test(projectViewer), 'Project image viewer swipe navigation is missing');
+  assert(/project-pages\.css\?v=20260728-project-thumbnails-v3/.test(projectIndex), 'Project list is not loading the 2cm thumbnail styles');
+  assert(/project-image-viewer\.js\?v=20260728-project-thumbnails-v3/.test(projectIndex), 'Project list is not loading the continuous image viewer');
   [
     'projects/automotive-lean/index.html',
     'projects/smed-300t/index.html',
@@ -211,8 +218,8 @@ async function main() {
     'projects/digital-factory/index.html'
   ].forEach((file) => {
     const page = read(file);
-    assert(/project-pages\.css\?v=20260728-project-images-v2/.test(page), `Unified project thumbnail styles are missing: ${file}`);
-    assert(/project-image-viewer\.js\?v=20260728-project-images-v2/.test(page), `Unified project image viewer is missing: ${file}`);
+    assert(/project-pages\.css\?v=20260728-project-thumbnails-v3/.test(page), `Unified project thumbnail styles are missing: ${file}`);
+    assert(/project-image-viewer\.js\?v=20260728-project-thumbnails-v3/.test(page), `Unified project image viewer is missing: ${file}`);
   });
   assert(/data-latest-brief-card/.test(knowledge) && /daily\/index\.json/.test(latest), 'Knowledge page is not bound to the latest brief index');
   assert(index.length > 0 && index.every((item, position) => position === 0 || index[position - 1].date >= item.date), 'Daily brief index is not newest-first');
