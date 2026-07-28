@@ -43,7 +43,7 @@
     var block=function(event){event.preventDefault();event.stopPropagation();return false;};['contextmenu','dragstart','selectstart','copy','cut'].forEach(function(name){document.addEventListener(name,block,true);});document.addEventListener('keydown',function(event){var k=(event.key||'').toLowerCase();if(event.key==='F12'||((event.ctrlKey||event.metaKey)&&['s','p','u','c','a'].indexOf(k)>-1))block(event);},true);try{window.print=function(){return false;};}catch(error){}
   })();
   </script>
-  <script src="/site-navigation.js?v=20260728-public-access-v2"></script>
+  <script src="/site-navigation.js?v=20260728-wide-layout-v1"></script>
   <script src="/homepage-music.js?v=20260722-recovery-v1"></script>
 </body>
 </html>

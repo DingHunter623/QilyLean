@@ -1,13 +1,13 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanSiteNavigationPublicV2) return;
-  window.__qilyLeanSiteNavigationPublicV2 = true;
+  if (window.__qilyLeanSiteNavigationPublicV3) return;
+  window.__qilyLeanSiteNavigationPublicV3 = true;
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260728-public-access-v2';
-  var VISUAL_SCALE_VERSION = '20260728-public-access-v2';
+  var SHARED_ASSET_VERSION = '20260728-wide-layout-v1';
+  var VISUAL_SCALE_VERSION = '20260728-wide-layout-v1';
     var CONTROLLED_ROUTE_PATHS = [];
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
   var routes = [
@@ -70,6 +70,19 @@
     link.id = 'qilyVisualScaleStylesheet';
     link.rel = 'stylesheet';
     link.href = '/site-visual-scale-v1.css?v=' + VISUAL_SCALE_VERSION;
+    document.head.appendChild(link);
+  }
+
+  function addWideLayoutStylesheet() {
+    var current = document.getElementById('qilyWideLayoutStylesheet');
+    if (current) {
+      current.href = '/site-wide-layout-v1.css?v=20260728-wide-layout-v1';
+      return;
+    }
+    var link = document.createElement('link');
+    link.id = 'qilyWideLayoutStylesheet';
+    link.rel = 'stylesheet';
+    link.href = '/site-wide-layout-v1.css?v=20260728-wide-layout-v1';
     document.head.appendChild(link);
   }
 
@@ -434,6 +447,7 @@
   function boot() {
     addStylesheet();
     addVisualScaleStylesheet();
+    addWideLayoutStylesheet();
     addGlobalHeaderStyles();
     buildNavigation();
     protectControlledPage();
