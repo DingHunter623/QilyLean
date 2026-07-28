@@ -11,6 +11,7 @@ on:
       - "scripts/build-daily-archive.js"
       - "scripts/enhance-daily-archive.js"
       - "scripts/enhance-terminology-training.js"
+      - "scripts/bump-daily-css-version.js"
   workflow_dispatch:
 
 permissions:
@@ -42,6 +43,9 @@ jobs:
 
       - name: Restructure terminology for training
         run: node scripts/enhance-terminology-training.js
+
+      - name: Pin responsive daily stylesheet version
+        run: node scripts/bump-daily-css-version.js
 
       - name: Unify Daily Engineering Brief brand
         shell: bash
@@ -104,6 +108,10 @@ jobs:
           }
           grep -q "mobile-fit-v3" qilylean/daily-briefs.css || {
             echo "Mobile responsive stylesheet marker is missing"
+            exit 1
+          }
+          grep -q "daily-briefs.css?v=20260728-mobile-fit-v3" "qilylean/daily/$LATEST_DATE.html" || {
+            echo "Latest brief is not pinned to the mobile responsive stylesheet"
             exit 1
           }
 
