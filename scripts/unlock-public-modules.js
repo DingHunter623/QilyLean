@@ -9,6 +9,7 @@ const navigationFile = path.join(root, 'site-navigation.js');
 const visualScaleFile = path.join(root, 'site-visual-scale-v1.css');
 const experienceFile = path.join(root, 'experience', 'index.html');
 const PUBLIC_NAV_VERSION = '20260728-public-access-v2';
+const PUBLIC_ASSET_VERSION = '20260728-public-access-v2';
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
@@ -23,8 +24,14 @@ function unlockNavigation() {
 
   page = page
     .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV2')
+    .replace(/var SHARED_ASSET_VERSION = '[^']*';/, `var SHARED_ASSET_VERSION = '${PUBLIC_ASSET_VERSION}';`)
+    .replace(/var VISUAL_SCALE_VERSION = '[^']*';/, `var VISUAL_SCALE_VERSION = '${PUBLIC_ASSET_VERSION}';`)
     .replace(/var ACCESS_PASSWORD = '[^']*';\n/, '')
     .replace(/var CONTROLLED_ROUTE_PATHS = \[[^\]]*\];/, 'var CONTROLLED_ROUTE_PATHS = [];')
+    .replace(
+      /\n      if \(CONTROLLED_ROUTE_PATHS\.indexOf\(route\[1\]\) !== -1\) \{[\s\S]*?\n      \}/,
+      ''
+    )
     .replace(
       /  function controlledPageConfig\(path\) \{[\s\S]*?\n  \}\n\n  function protectControlledPage/,
       "  function controlledPageConfig() { return null; }\n\n  function protectControlledPage"
@@ -41,8 +48,11 @@ function unlockNavigation() {
   if (!/function controlledPageConfig\(\) \{ return null; \}/.test(page)) {
     throw new Error('Failed to disable controlled page gate');
   }
-  if (/content:["']🔒["']|data-controlled-access="true"/.test(page)) {
-    throw new Error('Legacy navigation lock styling remains');
+  if (/content:["']🔒["']|data-controlled-access|加密访问/.test(page)) {
+    throw new Error('Legacy navigation lock styling or labels remain');
+  }
+  if (!page.includes(`var VISUAL_SCALE_VERSION = '${PUBLIC_ASSET_VERSION}';`)) {
+    throw new Error('Public visual stylesheet cache version was not refreshed');
   }
 
   write(navigationFile, page);
@@ -125,7 +135,7 @@ function main() {
   removeLegacyLockStyles();
   publishExperience();
   const refreshed = refreshNavigationReferences();
-  process.stdout.write(`Public access enabled; legacy lock icons removed; refreshed navigation reference in ${refreshed} HTML files.\n`);
+  process.stdout.write(`Public access enabled; legacy lock icons removed; public assets cache-refreshed; updated ${refreshed} HTML files.\n`);
 }
 
 main();
