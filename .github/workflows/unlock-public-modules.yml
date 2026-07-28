@@ -1,0 +1,57 @@
+name: Publish all public modules
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/unlock-public-modules.js"
+      - ".github/workflows/unlock-public-modules.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-public-modules-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Unlock all public modules
+        run: node scripts/unlock-public-modules.js
+
+      - name: Validate public access
+        shell: bash
+        run: |
+          grep -q 'var CONTROLLED_ROUTE_PATHS = \[\];' site-navigation.js
+          grep -q 'function controlledPageConfig() { return null; }' site-navigation.js
+          grep -q '<h1>履历主线</h1>' experience/index.html
+          grep -q 'index,follow,max-image-preview:large' experience/index.html
+          grep -q 'career-resume-full.js?v=20260728-public-access-v1' experience/index.html
+          ! grep -q '访问履历主线\|experiencePassword\|密码不正确\|履历主线（加密）' experience/index.html
+          ! grep -R 'site-navigation.js?v=20260727-controlled-home-moments-v2' --include='*.html' .
+
+      - name: Commit public access release
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "All modules are already public."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site-navigation.js experience/index.html '*.html' '**/*.html'
+          git commit -m "feat: unlock all website modules for public access [skip ci]"
+          git push
