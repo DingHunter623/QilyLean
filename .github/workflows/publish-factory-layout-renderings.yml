@@ -1,0 +1,118 @@
+name: Publish anonymous factory layout renderings
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-factory-layout-renderings.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-factory-layout-renderings-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download anonymous renderings
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p media/projects
+          curl -L --fail --retry 3 --retry-delay 2 \
+            'https://at.adobe.com/eaMWaMFwZe5ORqu7' \
+            -o media/projects/factory-campus-aerial.png
+          curl -L --fail --retry 3 --retry-delay 2 \
+            'https://at.adobe.com/hvmrdUgMEmGMZr03' \
+            -o media/projects/factory-campus-front.png
+          test -s media/projects/factory-campus-aerial.png
+          test -s media/projects/factory-campus-front.png
+          file media/projects/factory-campus-aerial.png
+          file media/projects/factory-campus-front.png
+
+      - name: Update project presentation
+        shell: bash
+        run: |
+          node <<'NODE'
+          'use strict';
+          const fs = require('fs');
+
+          const VERSION = '20260728-factory-render-v1';
+          const listPath = 'projects/index.html';
+          const detailPath = 'projects/factory-layout/index.html';
+          const cssPath = 'projects/project-pages.css';
+
+          function replaceRequired(source, search, replacement, label) {
+            if (!source.includes(search)) throw new Error(`Missing expected marker: ${label}`);
+            return source.replace(search, replacement);
+          }
+
+          let list = fs.readFileSync(listPath, 'utf8');
+          const oldListMedia = '<figure class="module-media project-list-thumb"><img src="/media/projects/factory-layout.webp?v=20260721-speed-v1" alt="新工厂与新产线规划" width="1333" height="1180" loading="lazy" decoding="async"></figure><div class="project-list-content"><small>新工厂／新产线｜设计规划</small>';
+          const newListMedia = `<figure class="module-media project-list-thumb factory-layout-thumb"><img src="/media/projects/factory-campus-aerial.png?v=${VERSION}" alt="匿名化工业园区新工厂规划3D鸟瞰效果图" width="1672" height="941" loading="lazy" decoding="async"></figure><div class="project-list-content"><small>新工厂／新产线｜设计规划</small>`;
+          list = replaceRequired(list, oldListMedia, newListMedia, 'factory layout project-list image');
+          list = list.replace(/project-pages\.css\?v=[^"']+/, `project-pages.css?v=${VERSION}`);
+          fs.writeFileSync(listPath, list, 'utf8');
+
+          let detail = fs.readFileSync(detailPath, 'utf8');
+          const oldHeroMedia = '<section class="module-section"><div class="module-inner"><article class="module-card"><figure class="module-media"><img src="/media/projects/factory-layout.webp?v=20260721-speed-v1" alt="Factory Layout新工厂新产线设计规划" width="1333" height="1180" loading="eager" decoding="async" fetchpriority="high"><figcaption>新工厂/新产线｜Factory Layout、精益物流与扩展边界规划</figcaption></figure>';
+          const newHeroMedia = `<section class="module-section"><div class="module-inner"><article class="module-card"><div class="factory-render-gallery" aria-label="匿名化新工厂与工业园区3D规划效果图"><figure class="factory-render-card"><a href="/media/projects/factory-campus-aerial.png?v=${VERSION}" target="_blank" rel="noopener" aria-label="查看园区总体3D鸟瞰高清原图"><img src="/media/projects/factory-campus-aerial.png?v=${VERSION}" alt="匿名化工业园区总体规划3D鸟瞰效果图" width="1672" height="941" loading="eager" decoding="async" fetchpriority="high"></a><figcaption><strong>园区总体鸟瞰</strong><span>表达建筑体量、功能分区、内部交通、停车组织、绿化边界及后续扩展关系。</span></figcaption></figure><figure class="factory-render-card"><a href="/media/projects/factory-campus-front.png?v=${VERSION}" target="_blank" rel="noopener" aria-label="查看园区主入口与办公楼正立面高清原图"><img src="/media/projects/factory-campus-front.png?v=${VERSION}" alt="匿名化工业园区主入口与办公楼正立面效果图" width="1672" height="941" loading="eager" decoding="async"></a><figcaption><strong>主入口与办公形象</strong><span>用于呈现园区门户、办公建筑形象、道路界面、门岗组织与景观展示效果。</span></figcaption></figure></div><p class="factory-confidential-note"><strong>匿名化展示说明：</strong>为保护甲方商业信息，本页不展示企业名称、品牌标识及可识别地址；效果图用于说明QilyLean在新工厂／新产线规划、园区体量表达、交通组织与方案可视化方面的交付能力，不作为具体项目施工图。</p>`;
+          detail = replaceRequired(detail, oldHeroMedia, newHeroMedia, 'factory layout detail gallery');
+          detail = detail.replace(/project-pages\.css\?v=[^"']+/, `project-pages.css?v=${VERSION}`);
+          if (!detail.includes('<meta property="og:image"')) {
+            detail = detail.replace('<link rel="canonical" href="https://qilylean.com/projects/factory-layout/">', '<link rel="canonical" href="https://qilylean.com/projects/factory-layout/">\n<meta property="og:image" content="https://qilylean.com/media/projects/factory-campus-aerial.png">');
+          }
+          fs.writeFileSync(detailPath, detail, 'utf8');
+
+          let css = fs.readFileSync(cssPath, 'utf8');
+          css = css.replace(/\n\/\* factory-render-v1 \*\/[\s\S]*$/m, '');
+          css += `
+
+/* factory-render-v1：匿名化新工厂规划双图展示 */
+.factory-layout-thumb img{object-fit:cover!important;object-position:center!important}
+.factory-render-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:0 0 18px}
+.factory-render-card{overflow:hidden;margin:0;border:1px solid var(--qily-line);background:#edf4f2;box-shadow:0 14px 34px rgba(15,75,90,.1)}
+.factory-render-card>a{display:block;overflow:hidden;background:#dfeae8;cursor:zoom-in}
+.factory-render-card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;transition:transform .28s ease}
+.factory-render-card:hover img{transform:scale(1.018)}
+.factory-render-card figcaption{display:grid;gap:4px;padding:14px 16px;color:#526968;background:#fff;font-size:16px;line-height:1.62}
+.factory-render-card figcaption strong{color:#0f4b5a;font-size:19px}
+.factory-confidential-note{margin:0 0 20px;padding:14px 17px;border-left:5px solid #caa15f;color:#365b58;background:#eef8f6;font-size:16.5px!important;line-height:1.72!important}
+.factory-confidential-note strong{color:#0f4b5a}
+@media(max-width:860px){.factory-render-gallery{grid-template-columns:1fr}.factory-render-card figcaption{font-size:15.5px}}
+`;
+          fs.writeFileSync(cssPath, css, 'utf8');
+          NODE
+
+      - name: Validate anonymous presentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'factory-campus-aerial.png' projects/index.html
+          grep -q 'factory-campus-aerial.png' projects/factory-layout/index.html
+          grep -q 'factory-campus-front.png' projects/factory-layout/index.html
+          grep -q '匿名化展示说明' projects/factory-layout/index.html
+          grep -q 'factory-render-v1' projects/project-pages.css
+          ! grep -q '天星电子' projects/factory-layout/index.html
+          ! grep -q '天星电子' media/projects/factory-campus-aerial.png || true
+
+      - name: Commit published renderings
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/publish-factory-layout-renderings.yml
+          git add media/projects/factory-campus-aerial.png media/projects/factory-campus-front.png projects/index.html projects/factory-layout/index.html projects/project-pages.css
+          git commit -m 'feat: publish anonymous factory layout renderings [skip ci]'
+          git push
