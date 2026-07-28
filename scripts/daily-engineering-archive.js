@@ -81,68 +81,101 @@ const lenses = [
   }
 ];
 
-const contexts = [
-  {
-    name: '汽车电子多品种装配',
-    condition: '订单批量变化快、人工与设备工序交错、质量追溯要求高',
-    risk: '只看单工位效率，容易忽略换线、物料齐套、错漏装与尾单交付',
-    evidence: '订单、产品编码、工序CT、实际人力、FPY、换线时间与欠产原因'
-  },
-  {
-    name: 'SMT／DIP电子制造',
-    condition: '设备连续运行、程序与物料版本多、前后工序节奏差异明显',
-    risk: '设备稼动率高但WIP与等待继续增加，局部最优反而压迫整体交付',
-    evidence: '程序版本、Feeder与物料、设备停机代码、直通率、WIP与Lead Time'
-  },
-  {
-    name: '小家电总装与包装',
-    condition: '季节性订单明显、人员熟练度波动、装配与包装节拍相互制约',
-    risk: '依靠临时增人和加班掩盖瓶颈，标准工时与实际配置长期脱节',
-    evidence: '客户节拍、山积图、标准人工工时、UPPH、缺陷分层与换线损失'
-  },
-  {
-    name: '注塑／冲压与模具换型',
-    condition: '设备、模具、参数、首件确认和物料准备共同决定有效产能',
-    risk: '只压缩拆装动作，忽略外部准备、参数确认、首件调整和安全边界',
-    evidence: '末件至首件合格时间、内部／外部作业、参数版本、首件次数与停机损失'
-  },
-  {
-    name: '半导体与精密制造',
-    condition: '过程窗口窄、设备与环境约束强、批次追溯和变更控制要求高',
-    risk: '只追求产出速度，可能放大良率、污染、量测与批次隔离风险',
-    evidence: '批次、设备、Recipe、环境、量测系统、良率、Hold时间与变更记录'
-  },
-  {
-    name: '新产品导入与量产爬坡',
-    condition: '设计、工艺、质量、物料、设备、治具与产能准备必须同步成熟',
-    risk: '问题未关闭就跨越阶段门，最终在PVT或MP集中爆发',
-    evidence: '阶段评审清单、问题关闭率、齐套率、FPY、节拍达成率与产能验证'
-  },
-  {
-    name: '新工厂／新产线规划',
-    condition: '产品族、产能、设备、物流、人流、公辅、安全与扩展相互约束',
-    risk: '先摆设备再补流程，会造成搬运交叉、面积浪费和后期改造',
-    evidence: '产能模型、From-To、面积清单、物流频次、安全间距、公辅负荷与扩展余量'
-  },
-  {
-    name: 'ERP／MES／APS协同',
-    condition: '订单、BOM、工艺、工时、库存、计划与实绩需要共用可信主数据',
-    risk: '字段和状态规则不统一，系统接口只会加快错误传播',
-    evidence: '唯一编码、有效版本、数据Owner、接口日志、库存准确率与订单关闭状态'
-  },
-  {
-    name: '设备自动化与工程改造',
-    condition: '节拍、质量、安全、换型、接口、维护和投资收益必须同时成立',
-    risk: '把未稳定流程直接自动化，会把人工问题固化为设备问题',
-    evidence: 'URS、FAT／SAT、极限状态测试、故障恢复、备件、OEE、ROI与回收期'
-  },
-  {
-    name: '精益运营与项目交付',
-    condition: '改善需要跨越诊断、方案、试点、验证、固化、验收和复制',
-    risk: '完成文件、会议或设备安装就宣布结案，真实收益与维持机制仍然缺失',
-    evidence: '基准、目标、里程碑、风险清单、实绩、验收记录、标准更新与收益确认'
-  }
+const careerTimeline = [
+  { year: '2019', field: '电子烟制造' },
+  { year: '2020', field: '游戏机手柄制造' },
+  { year: '2021', field: '电磁阀制造' },
+  { year: '2022', field: '新能源负极材料制造' },
+  { year: '2023', field: '逆变器制造' },
+  { year: '2024', field: '汽车电子、整流器、继电器制造' },
+  { year: '2025', field: '小家电制造' },
+  { year: '2026', field: '汽车座椅开关总成制造' }
 ];
+
+/*
+ * The public archive keeps product names in the consolidated career timeline
+ * only. Individual briefs use method- and problem-led language so the archive
+ * reads as engineering practice rather than a daily product roll call.
+ */
+const experienceStages = {
+  '2019': {
+    condition: '短周期手工作业、焊接、密封、功能检测与包装相互衔接，人员熟练度和物料切换会直接放大节拍波动',
+    risk: '只追逐当日产量，容易用加人、堆料和返工掩盖动作浪费、错漏装与检测不稳定',
+    evidence: '工序CT、动作次数、一次通过率、换线时间、缺陷分层、在制数量与人员配置',
+    scenes: [
+      { name: '短周期装配线', signal: '工位忙闲明显却仍然欠产', loss: '局部忙碌' },
+      { name: '焊接与功能检测', signal: '返工集中在少数工位反复出现', loss: '终检拦截' },
+      { name: '密封与外观检验', signal: '同类缺陷在班次之间波动', loss: '平均合格率' },
+      { name: '多品种换线现场', signal: '换线后首件确认反复调整', loss: '临时准备' }
+    ]
+  },
+  '2020': {
+    condition: '多部件装配、焊接、程序烧录、功能测试与包装节拍相互制约，订单组合和人员技能变化频繁',
+    risk: '只看总装末端产出，容易忽略前置齐套、左右手动作、测试等待和返修回流',
+    evidence: '客户节拍、山积图、左右手作业记录、测试周期、齐套率、返修路径与UPPH',
+    scenes: [
+      { name: '多部件总装线', signal: '人员都在动作但线体仍有堵点', loss: '表面开动率' },
+      { name: '焊接与烧录工位', signal: '人工等待与设备等待交替发生', loss: '单机效率' },
+      { name: '机构与功能测试', signal: '测试通过却在后段重复返修', loss: '一次判定' },
+      { name: '包装与出货衔接', signal: '成品堆在末端仍赶不上交期', loss: '末端库存' }
+    ]
+  },
+  '2021': {
+    condition: '机电部件装配、线圈与电气检测、密封测试、参数设定和首件确认共同决定过程稳定性',
+    risk: '把异常归因于人员注意力，容易漏掉治具定位、参数窗口、来料波动和量测一致性',
+    evidence: '工艺参数、首件记录、泄漏或功能测试值、量具状态、FPY、返工工时与批次追溯',
+    scenes: [
+      { name: '机电部件装配', signal: '尺寸合格但总装功能仍不稳定', loss: '单项尺寸判断' },
+      { name: '线圈与电气检测', signal: '检测值在临界区间频繁波动', loss: '只判合格与否' },
+      { name: '密封与泄漏测试', signal: '重复测试后结果发生变化', loss: '重复检测' },
+      { name: '参数与首件确认', signal: '每次换型都依赖老师傅调机', loss: '个人经验' }
+    ]
+  },
+  '2022': {
+    condition: '批次配方、连续设备、过程窗口、实验检测、环境与放行规则共同影响一致性和交付节奏',
+    risk: '只看最终检验结果，容易忽略批间波动、设备微停、参数漂移、等待放行和能源损失',
+    evidence: '批次号、配方与版本、关键参数趋势、设备停机代码、实验数据、放行时间与单位能耗',
+    scenes: [
+      { name: '批次制程现场', signal: '相同设定下批次结果仍有差异', loss: '最终平均值' },
+      { name: '配方与工艺窗口', signal: '参数都在范围内却持续靠近边界', loss: '规格内即稳定' },
+      { name: '连续设备运行', signal: '大故障不多但产能持续打折', loss: '只统计停机' },
+      { name: '实验与批次放行', signal: '加工完成后仍长时间等待放行', loss: '加工周期' }
+    ]
+  },
+  '2023': {
+    condition: 'SMT、插件、总装、电气安全、老化测试和量产导入需要在版本、物料、工艺与产能上同步成熟',
+    risk: '追求设备稼动和试产进度，容易把版本错用、测试瓶颈、返修回流和阶段问题带入量产',
+    evidence: 'BOM与程序版本、设备停机、测试CT、FPY、老化通过率、问题关闭率与产能验证记录',
+    scenes: [
+      { name: '电子制程衔接', signal: '前段高稼动却不断向后段推积在制', loss: '设备局部最优' },
+      { name: '总装与电气测试', signal: '装配节拍满足而测试工位持续排队', loss: '单工序达成' },
+      { name: '老化与可靠性验证', signal: '等待测试的时间远高于加工时间', loss: '加工效率' },
+      { name: '试产与量产爬坡', signal: '问题未关闭就进入下一阶段', loss: '节点完成' }
+    ]
+  },
+  '2024': {
+    condition: '高可靠电子制造强调多品种追溯、过程防错、变更控制、特殊特性和跨部门量产准备',
+    risk: '只靠终检或临时遏制保交付，容易让过程风险、文件不一致、供应波动和重复异常继续累积',
+    evidence: '订单与批次、PFMEA、控制计划、工艺版本、防错点检、FPY、DPPM与问题关闭证据',
+    scenes: [
+      { name: '高可靠电子装配', signal: '错漏装风险仍依赖人工记忆控制', loss: '重复提醒' },
+      { name: '过程质量与追溯', signal: '结果可查但过程参数无法回溯', loss: '结果追溯' },
+      { name: '变更与量产准备', signal: '文件已更新而现场仍执行旧版本', loss: '文件完成' },
+      { name: '供应与制造协同', signal: '来料异常在生产末端才集中暴露', loss: '内部检验' }
+    ]
+  },
+  '2025': {
+    condition: '多品种总装、包装、季节性订单、物料齐套、人员熟练度和自动化接口共同影响交付能力',
+    risk: '依赖临时增人和加班追单，容易掩盖标准工时失真、排产断点、缺料等待和包装瓶颈',
+    evidence: '订单交期、标准工时、实际人力、工位负荷率、齐套率、欠产原因、包装CT与结单状态',
+    scenes: [
+      { name: '多品种总装现场', signal: '计划数量明确却无法解释当日欠产', loss: '加班追产' },
+      { name: '季节性订单排产', signal: '计划频繁变更导致前后工序失去节奏', loss: '滚动插单' },
+      { name: '物料齐套与线边配送', signal: '线边库存很多却仍然发生缺料', loss: '高库存保护' },
+      { name: '包装与自动化接口', signal: '前段产出提升后末端开始堆积', loss: '理论省人' }
+    ]
+  }
+};
 
 const phases = [
   {
@@ -263,12 +296,87 @@ function list(items, ordered = false) {
   return `<${tag}>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</${tag}>`;
 }
 
-function buildArchiveArticle({ date, topic, guide, lens, context, phase, role, energy, visual, index }) {
-  const title = `${topic}｜${lens.title}：${context.name}${phase.title}`;
-  const summary = `在${context.name}场景下，以“${lens.question}”重新审视${topic}。本期从${phase.title}切入，把现场信号、数据口径、跨职能责任、验证边界与标准固化连成一条可执行的工程闭环。`;
+const titlePatterns = [
+  ({ topic, lens }) => `${lens.title}，${topic}才有可靠起点`,
+  ({ topic, phase, lens }) => `${topic}怎样以“${lens.title}”推进${phase.title}`,
+  ({ topic, scene, phase }) => `现场出现“${scene.signal}”，先用${topic}做${phase.title}`,
+  ({ topic, scene, phase }) => `别让${scene.loss}遮住瓶颈：${topic}的${phase.title}`,
+  ({ topic, lens, phase }) => `从一组原始记录开始，把${topic}做到${phase.title}`,
+  ({ topic, phase, lens }) => `${topic}不是口号：${phase.title}必须${lens.title}`,
+  ({ topic, scene, lens }) => `${scene.name}为什么更要守住${topic}边界`,
+  ({ topic, lens, phase }) => `看见波动以后，${topic}如何完成${phase.title}`,
+  ({ topic, lens, scene }) => `${lens.title}——来自${scene.name}的一次${topic}复盘`,
+  ({ topic, phase, lens }) => `把异常变成项目：${topic}怎样推进${phase.title}`,
+  ({ topic, lens, phase }) => `交付不止“做完”：${topic}在${phase.title}如何验证结果`,
+  ({ topic, scene, lens }) => `${topic}进入${scene.name}日常管理，需要哪四类证据`,
+  ({ topic, scene, lens }) => `当“${scene.signal}”，怎样用${topic}破题`,
+  ({ topic, lens, scene }) => `先问数据再问责任：${scene.name}的${topic}判断`,
+  ({ topic, phase, scene }) => `从${phase.title}到复制，${topic}最容易漏掉什么`,
+  ({ topic, phase, lens }) => `一项可验收的${topic}，怎样完成${phase.title}`,
+  ({ topic, phase, lens }) => `${phase.title}为何决定${topic}能否真正维持`,
+  ({ topic, lens, phase }) => `不靠经验硬撑：${topic}以${lens.title}推进${phase.title}`,
+  ({ topic, scene, lens }) => `${scene.loss}减少以后，${topic}还要检查什么`,
+  ({ topic, lens, scene }) => `把“${lens.title}”落实到${scene.name}`,
+  ({ topic, phase, scene }) => `${scene.name}的${phase.title}，先从${topic}证据链开始`,
+  ({ topic, lens, phase }) => `${topic}的现场判断：${lens.title}之后怎样${phase.title}`,
+  ({ topic, scene, phase }) => `为什么“${scene.signal}”不能只靠催产：${topic}${phase.title}`,
+  ({ topic, lens, scene }) => `真正可复制的${topic}，要经得起${scene.name}验证`
+];
+
+const summaryPatterns = [
+  ({ topic, lens, scene, phase }) => `本期围绕${topic}，从${scene.name}的现场信号切入，回答“${lens.question}”。推进重点落在${phase.title}、证据口径、跨职能责任和结果复验。`,
+  ({ topic, lens, scene, phase }) => `当${scene.signal}时，先不要急着归因。本期用${topic}建立事实边界，并沿着${phase.title}把判断、行动、验收和标准更新连接起来。`,
+  ({ topic, lens, scene, phase }) => `${topic}的价值不在工具名称，而在能否解决${scene.name}的真实问题。本期以${lens.title}为判断原则，完成一轮${phase.title}推演。`,
+  ({ topic, lens, scene, phase }) => `从${scene.name}的一组原始记录出发，本期拆解${topic}如何形成可复现、可验收、可维持的${phase.title}交付，避免用${scene.loss}代替系统结果。`,
+  ({ topic, lens, scene, phase }) => `本期不追求大而全，而是把${topic}压缩为一个可验证动作：围绕${lens.title}，在${scene.name}完成${phase.title}并留下关闭证据。`,
+  ({ topic, lens, scene, phase }) => `${scene.name}出现波动时，${topic}需要同时守住数据、质量、安全、交付和责任边界。本期从${phase.title}展开，检验${lens.title}是否真正落地。`,
+  ({ topic, lens, scene, phase }) => `一次可信的${topic}交付，应当说明问题从哪里来、数据如何采、方案如何试、结果由谁验。本期结合${scene.name}，重点复盘${phase.title}。`,
+  ({ topic, lens, scene, phase }) => `面对${scene.signal}，本期先用“${lens.title}”校准判断，再用${topic}推进${phase.title}，最终把现场经验沉淀为版本、点检与复盘机制。`
+];
+
+const sectionHeadingSets = [
+  ['今天先回答什么', '现场先看见什么', '数据怎样证明', '从动作走向闭环', '谁负责、谁协同、谁验收', '哪些做法容易失效', '关联 QilyLean 职能与项目', '今天可以落地的一步'],
+  ['本期工程判断', '异常从哪里露头', '证据链与计算口径', '试点验证路径', '跨职能交付接口', '风险与使用边界', '继续延伸的方法入口', '带回现场的动作'],
+  ['问题边界', '现场信号清单', '基准、分母与样本', '推进节奏', '责任和关闭标准', '别踩这些坑', '关联能力与项目实践', '下一步只做这一件事'],
+  ['从现场问题开始', '识别真正损失', '把判断落到数据', '形成可验收交付', '让接口不再靠催', '复制前先看边界', 'QilyLean 方法关联', '今日最小闭环'],
+  ['这期为什么值得做', '先收集这些事实', '指标不能缺少什么', '由小试验走向标准', '项目责任矩阵', '常见偏差与防再发', '关联知识与项目', '今天完成一个验证'],
+  ['先把现象说准确', '去现场核对信号', '保留可追溯证据', '把方案跑完整', '明确交付责任', '验证不能忽略的边界', '连接 QilyLean 体系', '落地动作与复验']
+];
+
+function stageFor(date, index) {
+  const year = date.slice(0, 4);
+  const stage = experienceStages[year];
+  if (!stage) throw new Error(`No experience stage configured for ${date}`);
+  const scene = stage.scenes[(index + Number(date.slice(5, 7))) % stage.scenes.length];
+  return { stage, scene };
+}
+
+function uniqueTitle(candidate, { scene, phase, lens, index }, usedTitles) {
+  const options = [
+    candidate,
+    `${candidate}：${scene.name}现场`,
+    `${candidate}——${phase.focus}`,
+    `${candidate}：再核对${lens.title}`,
+    `${candidate}（${['数据口径', '责任接口', '试点验证', '风险边界', '标准固化', '交付复盘'][index % 6]}）`
+  ];
+  const title = options.find((option) => !usedTitles.has(option));
+  if (!title) throw new Error(`Cannot create a distinct title for ${candidate}`);
+  usedTitles.add(title);
+  return title;
+}
+
+function buildArchiveArticle({ date, topic, guide, lens, stage, scene, phase, role, energy, visual, index, usedTitles }) {
+  const titleContext = { topic, lens, scene, phase };
+  const title = uniqueTitle(
+    titlePatterns[(index + Math.floor(index / 7) + Number(date.slice(0, 4))) % titlePatterns.length](titleContext),
+    { scene, phase, lens, index },
+    usedTitles
+  );
+  const summary = summaryPatterns[(index + Number(date.slice(5, 7))) % summaryPatterns.length](titleContext);
+  const headings = sectionHeadingSets[(index + Number(date.slice(8, 10))) % sectionHeadingSets.length];
   const signals = rotate(guide.signals, index % guide.signals.length).concat([
-    `场景约束：${context.condition}`,
-    `优先警惕：${context.risk}`
+    `场景约束：${stage.condition}`,
+    `优先警惕：${stage.risk}`
   ]);
   const steps = [
     phase.action,
@@ -277,11 +385,11 @@ function buildArchiveArticle({ date, topic, guide, lens, context, phase, role, e
     '将有效方法写入标准、点检、系统规则与复盘节奏'
   ];
   const pitfalls = rotate(guide.pitfalls, index % guide.pitfalls.length).concat([
-    context.risk,
+    stage.risk,
     lens.boundary
   ]);
   const links = moduleLinks(topic).map((item) => `<a href="${item.href}"><strong>${item.name}</strong><span>${item.text}</span></a>`).join('');
-  const tags = [topic, context.name.replace(/／.*$/, ''), phase.title];
+  const tags = [topic, scene.name, phase.title];
 
   const article = `<article class="post detailed" id="${date}">
 <div class="visual">${visual({ title, cat: topic }, index)}</div>
@@ -291,25 +399,25 @@ function buildArchiveArticle({ date, topic, guide, lens, context, phase, role, e
 <p>${escapeHtml(summary)}</p>
 <div class="quote">${escapeHtml(guide.takeaway)}</div>
 
-<h3>1. 今日工程命题</h3>
-<p>${escapeHtml(guide.definition)} 在${escapeHtml(context.name)}中，${escapeHtml(context.condition)}。因此，本期不从工具名称出发，而先回答：${escapeHtml(lens.question)}。</p>
+<h3>1. ${escapeHtml(headings[0])}</h3>
+<p>${escapeHtml(guide.definition)} 在${escapeHtml(scene.name)}中，${escapeHtml(stage.condition)}。因此，本期不从工具名称出发，而先回答：${escapeHtml(lens.question)}。</p>
 <div class="engineering-checklist"><strong>本期切口：</strong>${escapeHtml(phase.focus)}。判断是否有效，必须能够回到真实对象、真实数据、真实责任和真实结果。</div>
 
-<h3>2. 现场识别信号</h3>
+<h3>2. ${escapeHtml(headings[1])}</h3>
 ${list(signals)}
 <p>这些信号不是结论，而是进入现场调查的入口。应继续按产品、班组、设备、物料批次、时间段或异常类型分层，避免用平均值掩盖波动。</p>
 
-<h3>3. 核心指标与证据口径</h3>
+<h3>3. ${escapeHtml(headings[2])}</h3>
 <div class="brief-learning-grid">
   <div class="brief-learning-card"><strong>方法口径</strong><p>${escapeHtml(guide.formula)}</p></div>
-  <div class="brief-learning-card"><strong>本期证据</strong><p>${escapeHtml(lens.metric)}；现场至少保留${escapeHtml(context.evidence)}。</p></div>
+  <div class="brief-learning-card"><strong>本期证据</strong><p>${escapeHtml(lens.metric)}；现场至少保留${escapeHtml(stage.evidence)}。</p></div>
 </div>
 <p>数据必须说明来源、分母、时间范围、版本和异常样本。无法追溯到订单、产品、工序、设备或责任对象的数据，不宜直接用于评价个人或判断项目收益。</p>
 
-<h3>4. 从动作到闭环的推进路径</h3>
+<h3>4. ${escapeHtml(headings[3])}</h3>
 ${list(steps, true)}
 
-<h3>5. 跨职能责任与交付接口</h3>
+<h3>5. ${escapeHtml(headings[4])}</h3>
 <div class="owner-grid">
   <div class="owner-card"><strong>主责：${escapeHtml(role.owner)}</strong>定义问题边界、方法、数据口径与阶段交付物，对专业判断负责。</div>
   <div class="owner-card"><strong>协同：${escapeHtml(role.partner)}</strong>提供真实现场条件与约束，参与试点并及时暴露异常。</div>
@@ -317,14 +425,14 @@ ${list(steps, true)}
   <div class="owner-card"><strong>系统固化</strong>${escapeHtml(role.system)}必须同步更新版本、生效日期、维护责任与异常升级规则。</div>
 </div>
 
-<h3>6. 常见失效与使用边界</h3>
+<h3>6. ${escapeHtml(headings[5])}</h3>
 ${list(pitfalls)}
 <p>任何方法都不能脱离产品特性、工艺风险、人员技能、设备能力和客户要求直接复制。先验证边界，再扩大范围，才能避免把局部经验变成新的系统风险。</p>
 
-<h3>7. 关联 QilyLean 职能与项目</h3>
+<h3>7. ${escapeHtml(headings[6])}</h3>
 <div class="brief-related-grid">${links}</div>
 
-<h3>8. 今天可以落地的一步</h3>
+<h3>8. ${escapeHtml(headings[7])}</h3>
 <div class="brief-action-strip">
   <span>选一个典型对象</span><span>记录一组真实基准</span><span>验证一个主要假设</span><span>固化一条有效标准</span>
 </div>
@@ -350,10 +458,11 @@ ${list(pitfalls)}
 
 function collectArchiveBriefs(visual) {
   const topics = Object.keys(guides);
+  const usedTitles = new Set();
   return datesBetween(archiveStart, archiveEnd).map((date, index) => {
     const topic = topics[index % topics.length];
     const lens = lenses[Math.floor(index / topics.length) % lenses.length];
-    const context = contexts[Math.floor(index / (topics.length * lenses.length)) % contexts.length];
+    const { stage, scene } = stageFor(date, index);
     const month = Number(date.slice(5, 7));
     const phase = phases[(month + index) % phases.length];
     const role = roles[(index * 5 + month) % roles.length];
@@ -363,12 +472,14 @@ function collectArchiveBriefs(visual) {
       topic,
       guide: guides[topic],
       lens,
-      context,
+      stage,
+      scene,
       phase,
       role,
       energy,
       visual,
-      index
+      index,
+      usedTitles
     });
   });
 }
@@ -376,5 +487,6 @@ function collectArchiveBriefs(visual) {
 module.exports = {
   archiveStart,
   archiveEnd,
+  careerTimeline,
   collectArchiveBriefs
 };
