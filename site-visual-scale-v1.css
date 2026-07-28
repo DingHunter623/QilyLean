@@ -19,76 +19,7 @@
   background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5') center/contain no-repeat!important;
 }
 
-/* ---------- 加密导航模块：与公开模块明显区分 ---------- */
-.qily-global-nav a[href="/"],
-.qily-global-nav a[href="/experience/"],
-.qily-global-nav a[href="/moments/"],
-.qily-global-nav a[href="/moments.html"],
-.qily-global-nav a[href="/cooperation/"],
-.site-nav a[href="/"],
-.site-nav a[href="/experience/"],
-.site-nav a[href="/moments/"],
-.site-nav a[href="/moments.html"],
-.site-nav a[href="/cooperation/"]{
-  color:#624810!important;
-  border-color:#d5a84f!important;
-  background:linear-gradient(135deg,#fff5d5,#ffe39b)!important;
-  box-shadow:inset 0 0 0 1px rgba(202,161,95,.18),0 4px 12px rgba(110,78,26,.09)!important;
-}
-.qily-global-nav a[href="/"]::before,
-.qily-global-nav a[href="/experience/"]::before,
-.qily-global-nav a[href="/moments/"]::before,
-.qily-global-nav a[href="/moments.html"]::before,
-.qily-global-nav a[href="/cooperation/"]::before,
-.site-nav a[href="/"]::before,
-.site-nav a[href="/experience/"]::before,
-.site-nav a[href="/moments/"]::before,
-.site-nav a[href="/moments.html"]::before,
-.site-nav a[href="/cooperation/"]::before{
-  content:'🔒';
-  margin-right:4px;
-  font-size:.78em;
-  line-height:1;
-}
-.qily-global-nav a[href="/"]:hover,
-.qily-global-nav a[href="/"]:focus-visible,
-.qily-global-nav a[href="/experience/"]:hover,
-.qily-global-nav a[href="/experience/"]:focus-visible,
-.qily-global-nav a[href="/moments/"]:hover,
-.qily-global-nav a[href="/moments/"]:focus-visible,
-.qily-global-nav a[href="/moments.html"]:hover,
-.qily-global-nav a[href="/moments.html"]:focus-visible,
-.qily-global-nav a[href="/cooperation/"]:hover,
-.qily-global-nav a[href="/cooperation/"]:focus-visible,
-.site-nav a[href="/"]:hover,
-.site-nav a[href="/"]:focus-visible,
-.site-nav a[href="/experience/"]:hover,
-.site-nav a[href="/experience/"]:focus-visible,
-.site-nav a[href="/moments/"]:hover,
-.site-nav a[href="/moments/"]:focus-visible,
-.site-nav a[href="/moments.html"]:hover,
-.site-nav a[href="/moments.html"]:focus-visible,
-.site-nav a[href="/cooperation/"]:hover,
-.site-nav a[href="/cooperation/"]:focus-visible{
-  color:#fff!important;
-  border-color:#6e3f5f!important;
-  background:#6e3f5f!important;
-}
-.qily-global-nav a[href="/"][aria-current="page"],
-.qily-global-nav a[href="/experience/"][aria-current="page"],
-.qily-global-nav a[href="/moments/"][aria-current="page"],
-.qily-global-nav a[href="/moments.html"][aria-current="page"],
-.qily-global-nav a[href="/cooperation/"][aria-current="page"],
-.site-nav a[href="/"][aria-current="page"],
-.site-nav a[href="/experience/"][aria-current="page"],
-.site-nav a[href="/moments/"][aria-current="page"],
-.site-nav a[href="/moments.html"][aria-current="page"],
-.site-nav a[href="/cooperation/"][aria-current="page"]{
-  color:#fff!important;
-  border-color:#8d641f!important;
-  background:linear-gradient(135deg,#9a6f25,#caa15f)!important;
-}
-
+/* ---------- 全站公开导航：不显示加密锁标识 ---------- */
 /* ---------- 全站统一宽版内容窗口 ---------- */
 .module-inner,
 .module-page .inner{
