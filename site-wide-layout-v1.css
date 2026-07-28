@@ -24,14 +24,24 @@
 .module-hero>.module-inner,
 .module-section>.module-inner,
 .module-footer>.module-inner,
+.module-page main>.module-hero>.module-inner,
+.module-page main>.module-section>.module-inner,
 .hero:not(:has(.hero-grid))>.inner,
 .hero>.hero-inner,
 .daily-hero>.daily-inner,
+.daily-inner,
 .main>.main-inner,
 .footer>.footer-inner,
 .section>.inner,
 .qily-home-balanced .hero-grid,
-.qily-home-balanced .inner{
+.qily-home-balanced .inner,
+.qily-home-balanced .section>.inner,
+body.module-page .page-inner,
+body.module-page .content-inner,
+body.module-page .archive-inner,
+body.module-page .knowledge-inner,
+body.module-page .project-inner,
+body.module-page .tool-inner{
   width:min(var(--qily-wide-content),100%)!important;
   max-width:var(--qily-wide-content)!important;
   margin-left:auto!important;
@@ -47,7 +57,20 @@
 .hero:not(:has(.hero-grid)) p,
 .daily-hero p,
 .qily-home-balanced .lead,
-.qily-home-balanced .section .head{
+.qily-home-balanced .section .head,
+body.module-page .section-heading,
+body.module-page .page-heading{
+  width:100%!important;
+  max-width:100%!important;
+}
+
+/* 卡片网格与正文容器沿用父级完整宽度 */
+.module-grid,
+.project-list-grid,
+.project-story-grid,
+.capability-map,
+.capability-digital-tool,
+.capability-certificate{
   width:100%!important;
   max-width:100%!important;
 }
@@ -55,7 +78,13 @@
 /* 常见旧页面容器同步对齐 */
 .hero-inner,
 .main-inner,
-.footer-inner{
+.footer-inner,
+.page-inner,
+.content-inner,
+.archive-inner,
+.knowledge-inner,
+.project-inner,
+.tool-inner{
   box-sizing:border-box;
 }
 
@@ -70,14 +99,24 @@
   .module-hero>.module-inner,
   .module-section>.module-inner,
   .module-footer>.module-inner,
+  .module-page main>.module-hero>.module-inner,
+  .module-page main>.module-section>.module-inner,
   .hero:not(:has(.hero-grid))>.inner,
   .hero>.hero-inner,
   .daily-hero>.daily-inner,
+  .daily-inner,
   .main>.main-inner,
   .footer>.footer-inner,
   .section>.inner,
   .qily-home-balanced .hero-grid,
-  .qily-home-balanced .inner{
+  .qily-home-balanced .inner,
+  .qily-home-balanced .section>.inner,
+  body.module-page .page-inner,
+  body.module-page .content-inner,
+  body.module-page .archive-inner,
+  body.module-page .knowledge-inner,
+  body.module-page .project-inner,
+  body.module-page .tool-inner{
     width:100%!important;
     max-width:100%!important;
   }
