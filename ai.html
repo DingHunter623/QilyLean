@@ -48,7 +48,7 @@
 <div class="bar">
   <div class="status-panel" id="statusPanel" role="status" aria-live="polite">
     <span class="status-icon" id="statusIcon">✓</span>
-    <span class="status-copy"><strong class="status-title" id="status">准备就绪</strong><span class="status-detail" id="statusDetail">可直接提问，也可选择、粘贴或拖入素材进行针对性分析。</span></span>
+    <span class="status-copy"><strong class="status-title" id="status">准备就绪</strong><span class="status-detail" id="statusDetail">可直接提问，也可选择、粘贴或拖入素材进行针对性分析；当前会话支持连续追问。</span></span>
   </div>
   <button class="clear" id="clearBtn" type="button">清空会话</button>
 </div>
@@ -67,13 +67,13 @@
     <textarea id="question" maxlength="3000" placeholder="输入问题；也可复制文件、图片、视频或语音后，在此按 Ctrl/⌘+V 粘贴上传。"></textarea>
     <button class="send-btn" id="sendBtn" type="submit">发送</button>
   </div>
-  <p class="upload-note"><strong>新增：</strong>可从其它界面复制文件、截图、图片、视频或语音，在输入框按 Ctrl+V（Mac按 ⌘+V）粘贴上传；也支持直接拖入。一次最多 5 件，单件与合计均不超过 25MB。Enter 发送，Shift+Enter 换行。</p>
+  <p class="upload-note"><strong>新增：</strong>可从其它界面复制文件、截图、图片、视频或语音，在输入框按 Ctrl+V（Mac按 ⌘+V）粘贴上传；也支持直接拖入。一次最多 5 件，单件与合计均不超过 25MB。当前页面会保留最近对话，并在连续追问时复用刚上传的素材。Enter 发送，Shift+Enter 换行。</p>
 </form>
 <div class="notice">AI建议仅供辅助分析，不替代专业判断、现场验证或正式决策。请勿提交公司机密、客户资料、未公开项目数据、账号密码及其他敏感信息。</div>
 </section>
 </main>
 <script src="/qilylean-ai.js?v=20260727-multi-material-v1"></script>
-<script src="/qilylean-ai-paste.js?v=20260728-clipboard-v1"></script>
+<script src="/qilylean-ai-paste.js?v=20260728-context-memory-v2"></script>
 <script src="/qilylean-ai-speech.js?v=20260727-click-start-v3"></script>
 <script src="/qilylean-ai-export.js?v=20260727-word-procedure-v3"></script>
 <script src="/direct-navigation.js?v=20260722-reliability-v1"></script>
