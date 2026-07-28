@@ -23,6 +23,16 @@
 .module-lead,.module-heading p,.term-card p{text-wrap:pretty}
 .term-empty{display:none;margin-top:18px;padding:18px;border:1px dashed var(--qily-line,#d5e4e3);color:var(--qily-muted,#5f7474);background:#fff}
 @media(max-width:760px){.term-grid{grid-template-columns:1fr}.term-card{min-height:0}.term-en{min-height:0}}
+
+/* terminology-training-v2 */
+.term-card{display:flex;min-height:0;flex-direction:column;gap:0}
+.term-code::before,.term-en::before,.term-card h3::before{display:block;margin-bottom:5px;color:var(--qily-teal,#178b94);font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.term-code::before{content:"术语代码"}.term-en::before{content:"英文全称"}.term-card h3::before{content:"中文名称"}
+.term-overview,.term-formula{margin-top:10px!important;padding:12px 14px;border-left:4px solid var(--qily-teal,#178b94);background:#f3f9f7;color:#344845!important}
+.term-formula{border-left-color:#caa15f;background:#fff8e8}
+.term-card>p:last-child{margin-top:10px;padding-top:12px;border-top:1px dashed var(--qily-line,#d5e4e3)}
+.term-card>p strong{display:inline-block;margin-right:2px}
+@media(max-width:760px){.term-card{padding:18px}.term-code{font-size:24px}.term-card h3{font-size:20px}.term-card p{font-size:15.5px;line-height:1.68}}
 </style>
 </head>
 <body class="module-page">
@@ -34,7 +44,7 @@
 <section class="module-hero"><div class="module-inner">
 <span class="module-eyebrow">Terminology / Lean / Engineering / Quality / Production / Digital Factory</span>
 <h1>全站术语中文诠释与应用场景</h1>
-<p class="module-lead">集中解释制造管理、精益改善、工程开发、质量体系、生产计划、数智化系统与电子制造专业术语。每项均给出中文含义和现场应用边界，便于非专业读者理解，也为后续专题内容建立统一代码口径。</p>
+<p class="module-lead">集中解释制造管理、精益改善、工程开发、质量体系、生产计划、数智化系统与电子制造专业术语。每项按“术语代码—英文全称—中文名称—简介概述—计算公式或判定—应用场景”组织，并补充使用边界，便于直接用于培训讲解、案例讨论与现场查阅。</p>
 <nav class="module-subnav" aria-label="术语分类"><a href="#brand">品牌与改善</a><a href="#roles">工程职能</a><a href="#flow">精益流程</a><a href="#engineering">工程开发</a><a href="#quality">质量体系</a><a href="#production">生产运营</a><a href="#digital">数智化系统</a><a href="#manufacturing">制造与安全</a></nav>
 </div></section>
 <section class="module-section alt"><div class="module-inner">
@@ -54,126 +64,148 @@
   <div class="term-code">QilyLean</div>
   <div class="term-en">Qily + Lean</div>
   <h3>启力精益</h3>
+  <p class="term-overview"><strong>简介概述：</strong>启力精益（QilyLean，英文全称为“Qily + Lean”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>Qily取“启利”谐音，Lean意为精益；用于官网品牌、制造改善知识输出与项目交流窗口。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Lean</div>
   <div class="term-en">Lean Production / Lean Thinking</div>
   <h3>精益生产／精益思想</h3>
+  <p class="term-overview"><strong>简介概述：</strong>精益生产／精益思想（Lean，英文全称为“Lean Production / Lean Thinking”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于识别并减少等待、库存、搬运、返工、过量生产等浪费，以客户价值拉动持续改善。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">TPS</div>
   <div class="term-en">Toyota Production System</div>
   <h3>丰田生产方式／丰田生产系统</h3>
+  <p class="term-overview"><strong>简介概述：</strong>丰田生产方式／丰田生产系统（TPS，英文全称为“Toyota Production System”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>以准时化生产（JIT）和自働化（Jidoka）为两大支柱，以标准作业、生产均衡化、持续改善、目视化及尊重人为基础，追求在更短交付周期内稳定提供质量、成本和交付结果。TPS不是简单复制看板、零库存或单件流，而是围绕客户价值建立完整的制造管理系统。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">AI</div>
   <div class="term-en">Artificial Intelligence</div>
   <h3>人工智能</h3>
+  <p class="term-overview"><strong>简介概述：</strong>人工智能（AI，英文全称为“Artificial Intelligence”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于知识检索、方案辅助、数据归纳、异常分析和制造改善经验复用，不替代现场事实确认。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">AI + Lean</div>
   <div class="term-en">Artificial Intelligence + Lean</div>
   <h3>人工智能与精益融合</h3>
+  <p class="term-overview"><strong>简介概述：</strong>人工智能与精益融合（AI + Lean，英文全称为“Artificial Intelligence + Lean”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于把精益方法、案例与企业数据连接起来，辅助诊断、生成方案并沉淀组织知识。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PQCD</div>
   <div class="term-en">Productivity / Quality / Cost / Delivery</div>
   <h3>效率、质量、成本、交付</h3>
+  <p class="term-overview"><strong>简介概述：</strong>效率、质量、成本、交付（PQCD，英文全称为“Productivity / Quality / Cost / Delivery”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于制造项目目标分解和改善收益评估，避免只看单一效率指标。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Gemba</div>
   <div class="term-en">Gemba</div>
   <h3>现场／现地现物</h3>
+  <p class="term-overview"><strong>简介概述：</strong>现场／现地现物（Gemba）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于到真实作业现场观察流程、核实数据和确认问题，不以会议室推测代替事实。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Pilot</div>
   <div class="term-en">Pilot Run / Pilot Project</div>
   <h3>试运行／试点项目</h3>
+  <p class="term-overview"><strong>简介概述：</strong>试运行／试点项目（Pilot，英文全称为“Pilot Run / Pilot Project”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于先在小范围验证对策效果与风险，再决定是否横向复制。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Factory Layout</div>
   <div class="term-en">Factory Layout Planning</div>
   <h3>工厂／产线布局规划</h3>
+  <p class="term-overview"><strong>简介概述：</strong>工厂／产线布局规划（Factory Layout，英文全称为“Factory Layout Planning”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于规划人流、物流、设备、仓储、消防与扩产空间，降低搬运和交叉干扰。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">DMS</div>
   <div class="term-en">Daily Management System</div>
   <h3>日常管理系统</h3>
+  <p class="term-overview"><strong>简介概述：</strong>日常管理系统（DMS，英文全称为“Daily Management System”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于建立班前、日清、异常升级、责任跟踪与复盘的稳定管理节奏。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">KPI</div>
   <div class="term-en">Key Performance Indicator</div>
   <h3>关键绩效指标</h3>
+  <p class="term-overview"><strong>简介概述：</strong>关键绩效指标（KPI，英文全称为“Key Performance Indicator”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于衡量阶段结果；改善试运行期应先暴露问题、建立基准，再谨慎设定考核值。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Kaizen</div>
   <div class="term-en">Continuous Improvement</div>
   <h3>持续改善</h3>
+  <p class="term-overview"><strong>简介概述：</strong>持续改善（Kaizen，英文全称为“Continuous Improvement”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于员工提案、班组改善和跨部门项目，以小步验证、标准固化和持续迭代形成长期改善能力。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">5S</div>
   <div class="term-en">Sort-Set in Order-Shine-Standardize-Sustain</div>
   <h3>整理、整顿、清扫、清洁、素养</h3>
+  <p class="term-overview"><strong>简介概述：</strong>整理、整顿、清扫、清洁、素养（5S，英文全称为“Sort-Set in Order-Shine-Standardize-Sustain”）属于标准与规范。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于建立现场基础秩序、定置、清扫与维持标准，为质量、安全、效率和目视化提供基础。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">6S</div>
   <div class="term-en">5S + Safety</div>
   <h3>5S加安全</h3>
+  <p class="term-overview"><strong>简介概述：</strong>5S加安全（6S，英文全称为“5S + Safety”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于在5S基础上纳入危险源识别、安全防护、点检和行为规范，常用于制造现场稽查与红线管理。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">7S</div>
   <div class="term-en">5S + Safety + Saving</div>
   <h3>5S加安全与节约</h3>
+  <p class="term-overview"><strong>简介概述：</strong>5S加安全与节约（7S，英文全称为“5S + Safety + Saving”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于在6S基础上强化能源、物料、工时与资源节约；不同企业对第七项定义可能不同，使用时应统一口径。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">8S</div>
   <div class="term-en">5S + Safety + Saving + Study</div>
   <h3>整理、整顿、清扫、清洁、素养、安全、节约、学习</h3>
+  <p class="term-overview"><strong>简介概述：</strong>整理、整顿、清扫、清洁、素养、安全、节约、学习（8S，英文全称为“5S + Safety + Saving + Study”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>在7S基础上增加学习（Study），用于把现场秩序、安全、资源节约与员工知识技能提升结合起来。不同企业也可能把第八项定义为服务或满意，制度、看板和稽查表必须先统一本企业口径，不能只增加口号而不定义检查标准。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">TQM</div>
   <div class="term-en">Total Quality Management</div>
   <h3>全面质量管理</h3>
+  <p class="term-overview"><strong>简介概述：</strong>全面质量管理（TQM，英文全称为“Total Quality Management”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于把质量责任延伸至设计、采购、制造、交付和服务全过程，推动全员、全流程预防与持续改进。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">QCC</div>
   <div class="term-en">Quality Control Circle</div>
   <h3>品管圈／质量控制小组</h3>
+  <p class="term-overview"><strong>简介概述：</strong>品管圈／质量控制小组（QCC，英文全称为“Quality Control Circle”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于一线小组围绕现场质量、效率和成本问题开展选题、分析、对策、验证与成果发表。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">CBA</div>
   <div class="term-en">Cost-Benefit Analysis</div>
   <h3>成本效益分析</h3>
+  <p class="term-overview"><strong>简介概述：</strong>成本效益分析（CBA，英文全称为“Cost-Benefit Analysis”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于比较改善方案的投入与预期收益，支持设备、自动化、工装、布局和数字化项目决策。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">ROI</div>
   <div class="term-en">Return on Investment</div>
   <h3>投资回报率</h3>
+  <p class="term-overview"><strong>简介概述：</strong>投资回报率（ROI，英文全称为“Return on Investment”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
+  <p class="term-formula"><strong>计算公式／判定：</strong>投资回报率＝期间净收益 ÷ 项目总投入 × 100%。净收益应扣除维护、能耗、耗材和持续运行成本。</p>
   <p><strong>应用场景：</strong>用于衡量改善或投资收益相对投入的比例；应明确计算周期、收益口径和一次性／持续性成本。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Payback Period</div>
   <div class="term-en">Investment Payback Period</div>
   <h3>投资回收期</h3>
+  <p class="term-overview"><strong>简介概述：</strong>投资回收期（Payback Period，英文全称为“Investment Payback Period”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于判断累计净收益覆盖初始投入需要多长时间，并识别何时开始进入持续纯效益阶段。</p>
 </article></div>
   </div>
@@ -186,90 +218,105 @@
   <div class="term-code">IE</div>
   <div class="term-en">Industrial Engineering</div>
   <h3>工业工程</h3>
+  <p class="term-overview"><strong>简介概述：</strong>工业工程（IE，英文全称为“Industrial Engineering”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于标准工时、产能、人力、线平衡、物流与布局改善，是生产效率和资源配置的数据基础。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PE</div>
   <div class="term-en">Process Engineering</div>
   <h3>工艺工程</h3>
+  <p class="term-overview"><strong>简介概述：</strong>工艺工程（PE，英文全称为“Process Engineering”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于工艺路线、参数、治具、作业方法、异常改善及量产稳定性管理。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">TE</div>
   <div class="term-en">Test Engineering</div>
   <h3>测试工程</h3>
+  <p class="term-overview"><strong>简介概述：</strong>测试工程（TE，英文全称为“Test Engineering”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于测试方案、测试设备、判定标准、失效定位及测试覆盖率管理。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">ME</div>
   <div class="term-en">Manufacturing Engineering</div>
   <h3>制造工程</h3>
+  <p class="term-overview"><strong>简介概述：</strong>制造工程（ME，英文全称为“Manufacturing Engineering”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于设备、工装、自动化、可制造性与量产工程支持，具体职责依企业组织定义。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">NPI</div>
   <div class="term-en">New Product Introduction</div>
   <h3>新产品导入</h3>
+  <p class="term-overview"><strong>简介概述：</strong>新产品导入（NPI，英文全称为“New Product Introduction”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于从样件、EVT／DVT／PVT验证到MP转量产的跨部门协同，管控工艺、质量、产能、物料与交付风险。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PMC</div>
   <div class="term-en">Production and Material Control</div>
   <h3>生产与物料控制</h3>
+  <p class="term-overview"><strong>简介概述：</strong>生产与物料控制（PMC，英文全称为“Production and Material Control”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于订单评审、主计划、排产、齐套、欠料、在制与交付协调。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">R&amp;D</div>
   <div class="term-en">Research and Development</div>
   <h3>研究与开发</h3>
+  <p class="term-overview"><strong>简介概述：</strong>研究与开发（R&amp;D，英文全称为“Research and Development”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于产品、技术、材料、结构和平台开发，并与工程、质量、采购和制造共同完成量产转化。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">QA</div>
   <div class="term-en">Quality Assurance</div>
   <h3>质量保证</h3>
+  <p class="term-overview"><strong>简介概述：</strong>质量保证（QA，英文全称为“Quality Assurance”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>侧重质量体系、流程规则、审核监督、风险预防和放行机制，确保从研发、采购、制造到交付的全过程持续满足标准与客户要求。QA关注“体系能否稳定保证质量”，不等同于现场QC检验。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">QC</div>
   <div class="term-en">Quality Control</div>
   <h3>质量控制</h3>
+  <p class="term-overview"><strong>简介概述：</strong>质量控制（QC，英文全称为“Quality Control”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>偏重检验、监控、判定和异常处置，通过过程与结果控制防止不合格流出。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">QE</div>
   <div class="term-en">Quality Engineering</div>
   <h3>质量工程</h3>
+  <p class="term-overview"><strong>简介概述：</strong>质量工程（QE，英文全称为“Quality Engineering”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于质量策划、客户要求转化、检验与控制方案设计、过程能力分析、异常根因改善、质量工具应用及跨部门闭环。QE承担工程化预防与改进职责，不只是检验判定；企业还可按阶段细分为DQE、PQE、CQE或SQE。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">SQE</div>
   <div class="term-en">Supplier Quality Engineering</div>
   <h3>供应商质量工程</h3>
+  <p class="term-overview"><strong>简介概述：</strong>供应商质量工程（SQE，英文全称为“Supplier Quality Engineering”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于供应商准入、过程审核、来料异常、改善追踪和供应链质量能力提升。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">DQE</div>
   <div class="term-en">Design Quality Engineering</div>
   <h3>设计质量工程</h3>
+  <p class="term-overview"><strong>简介概述：</strong>设计质量工程（DQE，英文全称为“Design Quality Engineering”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于研发阶段的质量策划、设计风险评审、验证和客户质量要求转化。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PQE</div>
   <div class="term-en">Process Quality Engineering</div>
   <h3>过程质量工程</h3>
+  <p class="term-overview"><strong>简介概述：</strong>过程质量工程（PQE，英文全称为“Process Quality Engineering”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于量产过程质量控制、制程异常分析、控制计划维护和良率提升。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PM</div>
   <div class="term-en">Project Management / Project Manager</div>
   <h3>项目管理／项目经理</h3>
+  <p class="term-overview"><strong>简介概述：</strong>项目管理／项目经理（PM，英文全称为“Project Management / Project Manager”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于统筹范围、进度、成本、质量、风险和跨部门交付；具体含义依组织岗位定义。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PMO</div>
   <div class="term-en">Project Management Office</div>
   <h3>项目管理办公室／项目管理组织</h3>
+  <p class="term-overview"><strong>简介概述：</strong>项目管理办公室／项目管理组织（PMO，英文全称为“Project Management Office”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于建立组织级项目治理、方法标准、项目组合与资源协调、节点评审、风险升级和交付监督；PM负责具体项目，PMO负责统一规则与跨项目协同。</p>
 </article></div>
   </div>
@@ -282,216 +329,265 @@
   <div class="term-code">PDCA</div>
   <div class="term-en">Plan-Do-Check-Act</div>
   <h3>计划—执行—检查—处置</h3>
+  <p class="term-overview"><strong>简介概述：</strong>计划—执行—检查—处置（PDCA，英文全称为“Plan-Do-Check-Act”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于把改善从方案推进到验证、纠偏和标准化，形成持续循环。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">VSM</div>
   <div class="term-en">Value Stream Mapping</div>
   <h3>价值流图析</h3>
+  <p class="term-overview"><strong>简介概述：</strong>价值流图析（VSM，英文全称为“Value Stream Mapping”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于同时呈现客户需求、信息流、物料流、生产流、库存与等待，设计现状图和未来态。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">CT</div>
   <div class="term-en">Cycle Time</div>
   <h3>循环时间／工序周期</h3>
+  <p class="term-overview"><strong>简介概述：</strong>循环时间／工序周期（CT，英文全称为“Cycle Time”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于测量完成一个作业循环所需时间，判断瓶颈、产能和节拍匹配。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">C/O</div>
   <div class="term-en">Changeover Time</div>
   <h3>换型／换模时间</h3>
+  <p class="term-overview"><strong>简介概述：</strong>换型／换模时间（C/O，英文全称为“Changeover Time”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于衡量上一型号合格品到下一型号合格品之间的停机转换时间。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">TT</div>
   <div class="term-en">Takt Time</div>
   <h3>客户需求节拍</h3>
+  <p class="term-overview"><strong>简介概述：</strong>客户需求节拍（TT，英文全称为“Takt Time”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
+  <p class="term-formula"><strong>计算公式／判定：</strong>客户需求节拍＝可用生产时间 ÷ 客户需求量。时间单位与需求周期必须一致。</p>
   <p><strong>应用场景：</strong>用于把可用生产时间与客户需求量关联，指导人机配置和工序平衡。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">LT</div>
   <div class="term-en">Lead Time</div>
   <h3>前置时间／交付周期</h3>
+  <p class="term-overview"><strong>简介概述：</strong>前置时间／交付周期（LT，英文全称为“Lead Time”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于衡量从需求触发到完成交付的总历时，通常包含加工、等待、库存和流动。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">DLT</div>
   <div class="term-en">Delivery Lead Time</div>
   <h3>交付前置时间</h3>
+  <p class="term-overview"><strong>简介概述：</strong>交付前置时间（DLT，英文全称为“Delivery Lead Time”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于衡量订单或需求到客户交付的周期，识别计划、物料和制造链断点。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">VAT</div>
   <div class="term-en">Value-Added Time</div>
   <h3>增值时间</h3>
+  <p class="term-overview"><strong>简介概述：</strong>增值时间（VAT，英文全称为“Value-Added Time”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于统计真正改变产品形态、功能且客户愿意付费的加工时间。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">VAR</div>
   <div class="term-en">Value-Added Ratio</div>
   <h3>增值比率</h3>
+  <p class="term-overview"><strong>简介概述：</strong>增值比率（VAR，英文全称为“Value-Added Ratio”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于衡量增值时间占总周期的比例，暴露等待、库存和搬运浪费。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PCE</div>
   <div class="term-en">Process Cycle Efficiency</div>
   <h3>流程周期效率</h3>
+  <p class="term-overview"><strong>简介概述：</strong>流程周期效率（PCE，英文全称为“Process Cycle Efficiency”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
+  <p class="term-formula"><strong>计算公式／判定：</strong>流程周期效率＝增值时间 ÷ 总交付周期 × 100%。总周期应包含加工、等待、库存和流动。</p>
   <p><strong>应用场景：</strong>通常以增值时间除以总交付周期，用于评价价值流中的时间利用质量。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">WIP</div>
   <div class="term-en">Work in Process</div>
   <h3>在制品</h3>
+  <p class="term-overview"><strong>简介概述：</strong>在制品（WIP，英文全称为“Work in Process”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于控制工序间库存、等待和占用；单件流或FIFO设计时需明确标准在制。</p>
+</article>
+<article class="term-card" data-term-card>
+  <div class="term-code">Inventory Turnover</div>
+  <div class="term-en">Inventory Turnover Ratio</div>
+  <h3>库存周转率</h3>
+  <p class="term-overview"><strong>简介概述：</strong>库存周转率（Inventory Turnover，英文全称为“Inventory Turnover Ratio”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
+  <p class="term-formula"><strong>计算公式／判定：</strong>库存周转率＝期间销售成本 ÷ 平均库存；平均库存＝（期初库存＋期末库存）÷2。库存周转天数＝期间天数 ÷ 库存周转率。</p>
+  <p><strong>应用场景：</strong>用于衡量一定期间内库存转化为销售成本或完成出货的速度，适合PMC、采购、仓储、财务与经营管理联合评估原材料、在制品和成品占用。周转率偏低通常提示积压、呆滞、批量过大或需求预测偏差；周转率过高也可能意味着安全库存不足、供应波动或缺料风险，应与库存周转天数、呆滞金额、缺料次数、交付达成率和现金占用共同判断。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">FIFO</div>
   <div class="term-en">First In, First Out</div>
   <h3>先进先出</h3>
+  <p class="term-overview"><strong>简介概述：</strong>先进先出（FIFO，英文全称为“First In, First Out”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于控制物料和在制品顺序，防止超期、混料、插单和追溯断点。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">OEE</div>
   <div class="term-en">Overall Equipment Effectiveness</div>
   <h3>设备综合效率</h3>
+  <p class="term-overview"><strong>简介概述：</strong>设备综合效率（OEE，英文全称为“Overall Equipment Effectiveness”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
+  <p class="term-formula"><strong>计算公式／判定：</strong>设备综合效率＝可动率 × 性能效率 × 质量率。三项口径必须使用同一计划生产时间边界。</p>
   <p><strong>应用场景：</strong>由可动率、性能效率和质量率构成，用于分析停机、降速与不良损失。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">UPPH</div>
   <div class="term-en">Units Per Person Hour</div>
   <h3>人均小时产出</h3>
+  <p class="term-overview"><strong>简介概述：</strong>人均小时产出（UPPH，英文全称为“Units Per Person Hour”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
+  <p class="term-formula"><strong>计算公式／判定：</strong>人均小时产出＝合格产出 ÷（直接人力 × 实际生产小时）。跨产品比较时应同步说明标准工时和工艺差异。</p>
   <p><strong>应用场景：</strong>用于比较不同产品或产线的人效，必须与标准工时、工位数和实际投入人数配套解释。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">SMED</div>
   <div class="term-en">Single-Minute Exchange of Die</div>
   <h3>快速换型／快速换模</h3>
+  <p class="term-overview"><strong>简介概述：</strong>快速换型／快速换模（SMED，英文全称为“Single-Minute Exchange of Die”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于区分内外部作业、并行准备、快换连接和首件确认，缩短停机转换时间。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">TPM</div>
   <div class="term-en">Total Productive Maintenance</div>
   <h3>全员生产维护</h3>
+  <p class="term-overview"><strong>简介概述：</strong>全员生产维护（TPM，英文全称为“Total Productive Maintenance”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于通过自主保全、计划保全和损失改善提升设备稳定性与综合效率。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">ECRS</div>
   <div class="term-en">Eliminate-Combine-Rearrange-Simplify</div>
   <h3>取消—合并—重排—简化</h3>
+  <p class="term-overview"><strong>简介概述：</strong>取消—合并—重排—简化（ECRS，英文全称为“Eliminate-Combine-Rearrange-Simplify”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于系统审查动作、工序和流程，优先消除无价值工作。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">FPY</div>
   <div class="term-en">First Pass Yield</div>
   <h3>一次通过率／直通率</h3>
+  <p class="term-overview"><strong>简介概述：</strong>一次通过率／直通率（FPY，英文全称为“First Pass Yield”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
+  <p class="term-formula"><strong>计算公式／判定：</strong>一次通过率＝一次合格数量 ÷ 投入数量 × 100%。返工后合格不能计入一次合格。</p>
   <p><strong>应用场景：</strong>用于衡量产品不返工、不返修即一次合格通过的比例。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Muda</div>
   <div class="term-en">Waste</div>
   <h3>浪费</h3>
+  <p class="term-overview"><strong>简介概述：</strong>浪费（Muda，英文全称为“Waste”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于识别过量生产、等待、搬运、过度加工、库存、动作、不良及人才未充分发挥等非增值活动。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Mura</div>
   <div class="term-en">Unevenness</div>
   <h3>不均衡</h3>
+  <p class="term-overview"><strong>简介概述：</strong>不均衡（Mura，英文全称为“Unevenness”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于识别订单、计划、节拍、工作负荷和物料供应的波动，避免忽忙忽闲和系统失稳。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Muri</div>
   <div class="term-en">Overburden</div>
   <h3>过载</h3>
+  <p class="term-overview"><strong>简介概述：</strong>过载（Muri，英文全称为“Overburden”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于识别人、机、工装或流程超过合理能力的状态，预防疲劳、故障、质量和安全风险。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">JIT</div>
   <div class="term-en">Just in Time</div>
   <h3>准时化生产</h3>
+  <p class="term-overview"><strong>简介概述：</strong>准时化生产（JIT，英文全称为“Just in Time”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于在需要的时间、按需要的数量生产和配送所需物料，减少库存与等待。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Jidoka</div>
   <div class="term-en">Autonomation</div>
   <h3>自働化／带人字旁的自动化</h3>
+  <p class="term-overview"><strong>简介概述：</strong>自働化／带人字旁的自动化（Jidoka，英文全称为“Autonomation”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于设备或工序发现异常后自动停止、隔离和提示，防止缺陷连续制造与流出。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Kanban</div>
   <div class="term-en">Kanban</div>
   <h3>看板拉动</h3>
+  <p class="term-overview"><strong>简介概述：</strong>看板拉动（Kanban）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于传递生产、补料或搬运信号，按下游实际消耗触发上游补充。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Pull System</div>
   <div class="term-en">Pull Production System</div>
   <h3>拉动式生产</h3>
+  <p class="term-overview"><strong>简介概述：</strong>拉动式生产（Pull System，英文全称为“Pull Production System”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于由客户或后工序需求触发生产，控制超前生产、在制品和库存。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Heijunka</div>
   <div class="term-en">Production Leveling</div>
   <h3>生产均衡化</h3>
+  <p class="term-overview"><strong>简介概述：</strong>生产均衡化（Heijunka，英文全称为“Production Leveling”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于平衡品种与数量波动，稳定节拍、人员负荷、物料供应和设备利用。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Andon</div>
   <div class="term-en">Andon System</div>
   <h3>安灯／异常呼叫系统</h3>
+  <p class="term-overview"><strong>简介概述：</strong>安灯／异常呼叫系统（Andon，英文全称为“Andon System”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于现场即时显示停线、缺料、质量或设备异常，并触发快速响应和升级。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">One-piece Flow</div>
   <div class="term-en">One-Piece Flow</div>
   <h3>单件流</h3>
+  <p class="term-overview"><strong>简介概述：</strong>单件流（One-piece Flow，英文全称为“One-Piece Flow”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于产品按工艺顺序逐件连续流动，缩短等待和异常反馈时间；不适用时应设计受控小批流。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Standard Work</div>
   <div class="term-en">Standardized Work</div>
   <h3>标准作业</h3>
+  <p class="term-overview"><strong>简介概述：</strong>标准作业（Standard Work，英文全称为“Standardized Work”）属于标准与规范。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于规定节拍时间、作业顺序和标准在制，是稳定过程、培训员工和持续改善的基准。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Yamazumi</div>
   <div class="term-en">Yamazumi Chart</div>
   <h3>山积图／工序负荷图</h3>
+  <p class="term-overview"><strong>简介概述：</strong>山积图／工序负荷图（Yamazumi，英文全称为“Yamazumi Chart”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于将各工序作业时间按节拍堆叠比较，识别瓶颈并支持线平衡。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Line Balancing</div>
   <div class="term-en">Production Line Balancing</div>
   <h3>生产线平衡</h3>
+  <p class="term-overview"><strong>简介概述：</strong>生产线平衡（Line Balancing，英文全称为“Production Line Balancing”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于按节拍重新分配作业内容，降低工位等待、瓶颈和人员负荷差异。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Bottleneck</div>
   <div class="term-en">Bottleneck Process</div>
   <h3>瓶颈工序</h3>
+  <p class="term-overview"><strong>简介概述：</strong>瓶颈工序（Bottleneck，英文全称为“Bottleneck Process”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于识别限制系统产出或交付的关键资源，改善时应优先保护并提升瓶颈能力。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">ST</div>
   <div class="term-en">Standard Time</div>
   <h3>标准工时</h3>
+  <p class="term-overview"><strong>简介概述：</strong>标准工时（ST，英文全称为“Standard Time”）属于标准与规范。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于在规定方法与正常熟练度下确定完成作业所需时间，支撑产能、人力、排程、报价与改善。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">UPH</div>
   <div class="term-en">Units Per Hour</div>
   <h3>每小时产出</h3>
+  <p class="term-overview"><strong>简介概述：</strong>每小时产出（UPH，英文全称为“Units Per Hour”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于衡量设备、工位或产线每小时完成数量；需明确投入资源、产品组合和有效作业时间。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">OTD</div>
   <div class="term-en">On-Time Delivery</div>
   <h3>准时交付率</h3>
+  <p class="term-overview"><strong>简介概述：</strong>准时交付率（OTD，英文全称为“On-Time Delivery”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于衡量订单是否在承诺日期完成交付，应统一按订单、批次或数量的计算口径。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">OTIF</div>
   <div class="term-en">On Time In Full</div>
   <h3>按时足量交付率</h3>
+  <p class="term-overview"><strong>简介概述：</strong>按时足量交付率（OTIF，英文全称为“On Time In Full”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于同时衡量交付是否准时且数量完整，比只看日期更能反映客户交付表现。</p>
 </article></div>
   </div>
@@ -504,78 +600,91 @@
   <div class="term-code">DFM</div>
   <div class="term-en">Design for Manufacturability</div>
   <h3>面向可制造性设计</h3>
+  <p class="term-overview"><strong>简介概述：</strong>面向可制造性设计（DFM，英文全称为“Design for Manufacturability”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于在设计阶段评审材料、工艺、设备、装配和量产能力，降低制造难度与成本。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">DFA</div>
   <div class="term-en">Design for Assembly</div>
   <h3>面向装配设计</h3>
+  <p class="term-overview"><strong>简介概述：</strong>面向装配设计（DFA，英文全称为“Design for Assembly”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于减少零件、紧固、方向错误和装配动作，提升装配效率、质量与防错能力。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">DFX</div>
   <div class="term-en">Design for Excellence</div>
   <h3>面向全生命周期设计</h3>
+  <p class="term-overview"><strong>简介概述：</strong>面向全生命周期设计（DFX，英文全称为“Design for Excellence”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于统筹可制造、可装配、可测试、可靠性、成本、维护和环保等设计要求。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">ECR</div>
   <div class="term-en">Engineering Change Request</div>
   <h3>工程变更申请</h3>
+  <p class="term-overview"><strong>简介概述：</strong>工程变更申请（ECR，英文全称为“Engineering Change Request”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于提出并评估图纸、材料、BOM、工艺、设备或软件变更需求及影响。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">ECN</div>
   <div class="term-en">Engineering Change Notice</div>
   <h3>工程变更通知</h3>
+  <p class="term-overview"><strong>简介概述：</strong>工程变更通知（ECN，英文全称为“Engineering Change Notice”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于正式发布经批准的工程变更，明确版本、生效时间、库存处置和执行范围。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">ECO</div>
   <div class="term-en">Engineering Change Order</div>
   <h3>工程变更指令</h3>
+  <p class="term-overview"><strong>简介概述：</strong>工程变更指令（ECO，英文全称为“Engineering Change Order”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于授权并跟踪工程变更实施，连接审批、任务、文件更新与现场切换。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">EVT</div>
   <div class="term-en">Engineering Validation Test</div>
   <h3>工程验证测试</h3>
+  <p class="term-overview"><strong>简介概述：</strong>工程验证测试（EVT，英文全称为“Engineering Validation Test”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于样机阶段验证设计原理、关键功能和工程可行性，尽早暴露重大风险。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">DVT</div>
   <div class="term-en">Design Validation Test</div>
   <h3>设计验证测试</h3>
+  <p class="term-overview"><strong>简介概述：</strong>设计验证测试（DVT，英文全称为“Design Validation Test”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于验证产品设计是否满足规格、可靠性、法规和使用场景要求。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PVT</div>
   <div class="term-en">Production Validation Test</div>
   <h3>生产验证测试</h3>
+  <p class="term-overview"><strong>简介概述：</strong>生产验证测试（PVT，英文全称为“Production Validation Test”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于试产阶段验证工艺、设备、治具、质量控制、产能和量产准备状态，为MP转量产决策提供依据。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">MP</div>
   <div class="term-en">Mass Production</div>
   <h3>转量产／量产阶段</h3>
+  <p class="term-overview"><strong>简介概述：</strong>转量产／量产阶段（MP，英文全称为“Mass Production”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于PVT及试产验证完成后，确认问题闭环和量产准入条件，正式转入受控的批量生产；重点核查文件、工艺、设备、治具、质量、产能、人员、物料与供应链准备状态。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">EBOM</div>
   <div class="term-en">Engineering Bill of Materials</div>
   <h3>工程物料清单</h3>
+  <p class="term-overview"><strong>简介概述：</strong>工程物料清单（EBOM，英文全称为“Engineering Bill of Materials”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于描述研发设计结构、零部件层级和版本，是向制造数据转化的源头。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">MBOM</div>
   <div class="term-en">Manufacturing Bill of Materials</div>
   <h3>制造物料清单</h3>
+  <p class="term-overview"><strong>简介概述：</strong>制造物料清单（MBOM，英文全称为“Manufacturing Bill of Materials”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于按实际制造、装配、包装和发料逻辑组织物料，支撑ERP、领料与成本核算。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Routing</div>
   <div class="term-en">Manufacturing Process Routing</div>
   <h3>工艺路线</h3>
+  <p class="term-overview"><strong>简介概述：</strong>工艺路线（Routing，英文全称为“Manufacturing Process Routing”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于定义产品经过的工序、工作中心、顺序、标准时间和外协节点，是排程与成本计算基础。</p>
 </article></div>
   </div>
@@ -588,210 +697,245 @@
   <div class="term-code">IATF 16949</div>
   <div class="term-en">Automotive Quality Management System Standard</div>
   <h3>汽车行业质量管理体系标准</h3>
+  <p class="term-overview"><strong>简介概述：</strong>汽车行业质量管理体系标准（IATF 16949，英文全称为“Automotive Quality Management System Standard”）属于标准与规范。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于汽车供应链质量体系建设、客户审核、过程管理与持续改进。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">APQP</div>
   <div class="term-en">Advanced Product Quality Planning</div>
   <h3>产品质量先期策划</h3>
+  <p class="term-overview"><strong>简介概述：</strong>产品质量先期策划（APQP，英文全称为“Advanced Product Quality Planning”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于从项目立项到量产分阶段管理客户要求、风险、验证与交付物。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">FMEA</div>
   <div class="term-en">Failure Mode and Effects Analysis</div>
   <h3>失效模式及后果分析</h3>
+  <p class="term-overview"><strong>简介概述：</strong>失效模式及后果分析（FMEA，英文全称为“Failure Mode and Effects Analysis”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于在问题发生前系统识别产品、过程或系统可能怎样失效、造成什么后果、由什么原因引起，以及现有预防与探测控制是否充分。FMEA是上位概念，常按对象展开为DFMEA、PFMEA及系统FMEA；正确缩写为FMEA，“FEMA”属于常见误写。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">DFMEA</div>
   <div class="term-en">Design Failure Mode and Effects Analysis</div>
   <h3>设计失效模式及后果分析</h3>
+  <p class="term-overview"><strong>简介概述：</strong>设计失效模式及后果分析（DFMEA，英文全称为“Design Failure Mode and Effects Analysis”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于产品设计阶段识别功能、结构、材料、接口及使用条件中的潜在失效模式，分析失效后果与原因，并通过设计预防、验证和改进降低风险。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PFMEA</div>
   <div class="term-en">Process Failure Mode and Effects Analysis</div>
   <h3>过程失效模式及后果分析</h3>
+  <p class="term-overview"><strong>简介概述：</strong>过程失效模式及后果分析（PFMEA，英文全称为“Process Failure Mode and Effects Analysis”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于制造过程策划和量产前识别人、机、料、法、测、环及工序衔接中的潜在失效，明确预防控制、探测控制与改进措施，并为控制计划提供风险输入。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">CP</div>
   <div class="term-en">Control Plan</div>
   <h3>控制计划</h3>
+  <p class="term-overview"><strong>简介概述：</strong>控制计划（CP，英文全称为“Control Plan”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于承接DFMEA／PFMEA识别的关键风险，定义产品与过程特性、控制方法、频次、样本量、责任和反应计划，把风险预防要求落实到现场执行。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">MSA</div>
   <div class="term-en">Measurement System Analysis</div>
   <h3>测量系统分析</h3>
+  <p class="term-overview"><strong>简介概述：</strong>测量系统分析（MSA，英文全称为“Measurement System Analysis”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于验证量具和测量过程的重复性、再现性、偏倚、线性与稳定性。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">SPC</div>
   <div class="term-en">Statistical Process Control</div>
   <h3>统计过程控制</h3>
+  <p class="term-overview"><strong>简介概述：</strong>统计过程控制（SPC，英文全称为“Statistical Process Control”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于通过控制图和过程能力识别波动，防止异常流入客户。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PPAP</div>
   <div class="term-en">Production Part Approval Process</div>
   <h3>生产件批准程序</h3>
+  <p class="term-overview"><strong>简介概述：</strong>生产件批准程序（PPAP，英文全称为“Production Part Approval Process”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于向客户证明产品、过程和产能已满足量产要求。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">8D</div>
   <div class="term-en">Eight Disciplines Problem Solving</div>
   <h3>八步问题解决法</h3>
+  <p class="term-overview"><strong>简介概述：</strong>八步问题解决法（8D，英文全称为“Eight Disciplines Problem Solving”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于客户投诉和重大异常的团队化遏制、根因、纠正、验证与防再发。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">5M2E</div>
   <div class="term-en">Man-Machine-Material-Method-Measurement-Environment</div>
   <h3>人、机、料、法、测、环</h3>
+  <p class="term-overview"><strong>简介概述：</strong>人、机、料、法、测、环（5M2E，英文全称为“Man-Machine-Material-Method-Measurement-Environment”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于从七类要素系统展开可能原因，是要因分析和现场排查框架。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">5Why</div>
   <div class="term-en">Five Whys</div>
   <h3>五个为什么</h3>
+  <p class="term-overview"><strong>简介概述：</strong>五个为什么（5Why，英文全称为“Five Whys”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于沿因果链连续追问，找到可验证、可控制的根因。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">5W2H</div>
   <div class="term-en">What？ Why？ Who？ When？ Where？ How do？ How much？</div>
   <h3>执行计划七问（怎么做＋投入产出）</h3>
+  <p class="term-overview"><strong>简介概述：</strong>执行计划七问（怎么做＋投入产出）（5W2H，英文全称为“What？ Why？ Who？ When？ Where？ How do？ How much？”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于根因验证后的行动策划与改善收益评估：What？做什么；Why？为什么做；Who？谁负责；When？何时完成；Where？在哪里实施；How do？采用什么方法／措施，具体怎么做、如何验证；How much？投入多少成本、预期产出多少收益、多久回本、何时开始产生纯效益。5W2H用于把对策转成可执行计划，不替代5M2E、鱼骨图或5Why等要因分析。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Pareto</div>
   <div class="term-en">Pareto Analysis</div>
   <h3>柏拉图／二八分析</h3>
+  <p class="term-overview"><strong>简介概述：</strong>柏拉图／二八分析（Pareto，英文全称为“Pareto Analysis”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于按频次、损失或金额排序，锁定少数关键问题和优先改善对象。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Poka-Yoke</div>
   <div class="term-en">Mistake Proofing</div>
   <h3>防错／防呆</h3>
+  <p class="term-overview"><strong>简介概述：</strong>防错／防呆（Poka-Yoke，英文全称为“Mistake Proofing”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于通过结构、传感、联锁、识别和顺序控制预防错误或立即检出。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">AQL</div>
   <div class="term-en">Acceptance Quality Limit</div>
   <h3>接收质量限</h3>
+  <p class="term-overview"><strong>简介概述：</strong>接收质量限（AQL，英文全称为“Acceptance Quality Limit”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于GB/T 2828等计数抽样方案中选择抽样表，不等同于允许生产的不良率。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Ac/Re</div>
   <div class="term-en">Acceptance / Rejection Number</div>
   <h3>接收数／拒收数</h3>
+  <p class="term-overview"><strong>简介概述：</strong>接收数／拒收数（Ac/Re，英文全称为“Acceptance / Rejection Number”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于判定抽样批次接收或拒收，必须结合样本量和抽样方案使用。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">GB/T 2828</div>
   <div class="term-en">Sampling Procedures for Inspection by Attributes</div>
   <h3>计数抽样检验国家标准系列</h3>
+  <p class="term-overview"><strong>简介概述：</strong>计数抽样检验国家标准系列（GB/T 2828，英文全称为“Sampling Procedures for Inspection by Attributes”）属于标准与规范。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于来料、过程和成品批次抽样，规定检验水平、样本量和Ac/Re判定。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">CTQ</div>
   <div class="term-en">Critical to Quality</div>
   <h3>关键质量特性</h3>
+  <p class="term-overview"><strong>简介概述：</strong>关键质量特性（CTQ，英文全称为“Critical to Quality”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于把客户要求转换为可测量、需重点控制的产品或过程特性。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">DOE</div>
   <div class="term-en">Design of Experiments</div>
   <h3>试验设计</h3>
+  <p class="term-overview"><strong>简介概述：</strong>试验设计（DOE，英文全称为“Design of Experiments”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于多因素、多水平试验，识别主效应、交互作用和最佳工艺窗口。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">RPN</div>
   <div class="term-en">Risk Priority Number</div>
   <h3>风险优先数</h3>
+  <p class="term-overview"><strong>简介概述：</strong>风险优先数（RPN，英文全称为“Risk Priority Number”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>传统FMEA中由严重度、发生度和探测度相乘得到，用于辅助排序，不能代替专业判断。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">AP</div>
   <div class="term-en">Action Priority</div>
   <h3>措施优先级</h3>
+  <p class="term-overview"><strong>简介概述：</strong>措施优先级（AP，英文全称为“Action Priority”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>AIAG-VDA FMEA中依据严重度、发生度和探测度确定高、中、低措施优先级。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">GR&amp;R</div>
   <div class="term-en">Gage Repeatability and Reproducibility</div>
   <h3>量具重复性与再现性</h3>
+  <p class="term-overview"><strong>简介概述：</strong>量具重复性与再现性（GR&amp;R，英文全称为“Gage Repeatability and Reproducibility”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于评价测量设备和不同测量人员带来的变差，是MSA的重要组成。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Cp/Cpk</div>
   <div class="term-en">Process Capability / Process Capability Index</div>
   <h3>过程能力／过程能力指数</h3>
+  <p class="term-overview"><strong>简介概述：</strong>过程能力／过程能力指数（Cp/Cpk，英文全称为“Process Capability / Process Capability Index”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>Cp＝(USL−LSL)/(6σ)，反映过程波动宽度相对规格宽度的潜在能力；Cpk＝min[(USL−μ)/(3σ)，(μ−LSL)/(3σ)]，同时考虑均值偏移后的实际能力。<strong>数据量要求：</strong>纯数学计算至少需要2个不同数值才能估计样本标准差，但该结果不具备过程能力判定意义；初步评估宜至少取得约50个相互独立、来自稳定过程的数据；正式过程能力研究建议不少于100个数据，并覆盖正常生产中的不同时间、班次、人员、设备和材料波动。若数据全相同导致标准差为0，或过程尚未受控、量测系统不可信，则Cpk不能作为有效能力结论。常用参考：Cpk＜1.00为能力不足；1.00≤Cpk＜1.33为临界、需改善；1.33≤Cpk＜1.67通常具备一般量产能力；Cpk≥1.67表示能力较好，关键特性或新过程常采用更高目标；Cpk≥2.00表示高能力。最终判定以客户特殊要求、产品风险与企业标准为准。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Pp/Ppk</div>
   <div class="term-en">Process Performance / Process Performance Index</div>
   <h3>过程绩效指数</h3>
+  <p class="term-overview"><strong>简介概述：</strong>过程绩效指数（Pp/Ppk，英文全称为“Process Performance / Process Performance Index”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于基于总体长期波动评价过程表现，常与Cp/Cpk结合判断短期与长期差异。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">CAPA</div>
   <div class="term-en">Corrective and Preventive Action</div>
   <h3>纠正与预防措施</h3>
+  <p class="term-overview"><strong>简介概述：</strong>纠正与预防措施（CAPA，英文全称为“Corrective and Preventive Action”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于针对已发生问题消除原因，并针对潜在风险建立预防、验证和防再发机制。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">NCR</div>
   <div class="term-en">Nonconformance Report</div>
   <h3>不符合报告</h3>
+  <p class="term-overview"><strong>简介概述：</strong>不符合报告（NCR，英文全称为“Nonconformance Report”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于记录产品、过程或体系不符合项，并启动隔离、评审、处置与纠正。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">MRB</div>
   <div class="term-en">Material Review Board</div>
   <h3>材料评审委员会</h3>
+  <p class="term-overview"><strong>简介概述：</strong>材料评审委员会（MRB，英文全称为“Material Review Board”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于跨部门评审不合格物料或产品的返工、返修、让步接收、报废等处置。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">IQC</div>
   <div class="term-en">Incoming Quality Control</div>
   <h3>来料质量控制／来料检验</h3>
+  <p class="term-overview"><strong>简介概述：</strong>来料质量控制／来料检验（IQC，英文全称为“Incoming Quality Control”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于供应商来料的规格核对、抽样或全检、性能与外观判定、批次追溯、隔离和异常反馈。IQC结果应与供应商质量、采购、仓储及MRB处置联动，不能只完成检验而不推动来料风险闭环。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">IPQC</div>
   <div class="term-en">In-Process Quality Control</div>
   <h3>制程质量控制／过程检验</h3>
+  <p class="term-overview"><strong>简介概述：</strong>制程质量控制／过程检验（IPQC，英文全称为“In-Process Quality Control”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于生产过程中的首件、中检／巡检、工艺参数、关键特性、人员与设备状态确认，并按控制计划执行异常反应。IPQC重点是及时发现过程偏移、遏制不良继续制造和流转，而不是等到终检再筛选。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">FQC/OQC</div>
   <div class="term-en">Final / Outgoing Quality Control</div>
   <h3>最终质量控制／出货质量控制</h3>
+  <p class="term-overview"><strong>简介概述：</strong>最终质量控制／出货质量控制（FQC/OQC，英文全称为“Final / Outgoing Quality Control”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>FQC侧重产品完成后的最终尺寸、外观、功能和文件符合性确认；OQC侧重出货前的抽检、包装、标识、数量、客户特殊要求及放行。部分企业由同一岗位承担，但最终检验和出货放行的控制时点与责任应明确区分。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">FAI</div>
   <div class="term-en">First Article Inspection</div>
   <h3>首件检验</h3>
+  <p class="term-overview"><strong>简介概述：</strong>首件检验（FAI，英文全称为“First Article Inspection”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于换线、换模、换料、调机或工程变更后的首件确认，验证量产条件是否正确。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">品质三检</div>
   <div class="term-en">First / In-process / Final Inspection</div>
   <h3>首检、中检、终检</h3>
+  <p class="term-overview"><strong>简介概述：</strong>首检、中检、终检（品质三检，英文全称为“First / In-process / Final Inspection”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>首检用于开线、换线、换模、换料、调机或工程变更后的首件确认；中检用于生产过程中按规定频次、批次或时间节点检查尺寸、外观、参数和关键特性；终检用于工序完结、包装或放行前确认最终质量状态。品质三检强调检验时点，不等同于“自检、互检、专检”的责任分工。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PPM/DPPM</div>
   <div class="term-en">Parts / Defective Parts Per Million</div>
   <h3>百万分之不良数</h3>
+  <p class="term-overview"><strong>简介概述：</strong>百万分之不良数（PPM/DPPM，英文全称为“Parts / Defective Parts Per Million”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于衡量低不良水平下的质量表现，需统一按不良件、缺陷数或客户口径计算。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">RCA</div>
   <div class="term-en">Root Cause Analysis</div>
   <h3>根本原因分析</h3>
+  <p class="term-overview"><strong>简介概述：</strong>根本原因分析（RCA，英文全称为“Root Cause Analysis”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于通过事实、数据和因果验证找到可控制根因，常结合5M2E、鱼骨图、5Why、FTA等方法。</p>
 </article></div>
   </div>
@@ -804,96 +948,112 @@
   <div class="term-code">S&amp;OP</div>
   <div class="term-en">Sales and Operations Planning</div>
   <h3>销售与运营计划</h3>
+  <p class="term-overview"><strong>简介概述：</strong>销售与运营计划（S&amp;OP，英文全称为“Sales and Operations Planning”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于月度或滚动平衡市场需求、产能、库存、供应与经营目标，形成跨部门一致计划。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">MPS</div>
   <div class="term-en">Master Production Schedule</div>
   <h3>主生产计划</h3>
+  <p class="term-overview"><strong>简介概述：</strong>主生产计划（MPS，英文全称为“Master Production Schedule”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于把订单和预测转换为关键产品、数量与时间计划，驱动后续物料和产能计划。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">RCCP</div>
   <div class="term-en">Rough-Cut Capacity Planning</div>
   <h3>粗能力计划</h3>
+  <p class="term-overview"><strong>简介概述：</strong>粗能力计划（RCCP，英文全称为“Rough-Cut Capacity Planning”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于在主计划层面快速验证关键工作中心、人力或设备是否具备总体承接能力。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">CRP</div>
   <div class="term-en">Capacity Requirements Planning</div>
   <h3>能力需求计划</h3>
+  <p class="term-overview"><strong>简介概述：</strong>能力需求计划（CRP，英文全称为“Capacity Requirements Planning”）属于标准与规范。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于依据工艺路线、工时和订单负荷计算各工作中心的详细产能需求。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">ATP</div>
   <div class="term-en">Available to Promise</div>
   <h3>可承诺量</h3>
+  <p class="term-overview"><strong>简介概述：</strong>可承诺量（ATP，英文全称为“Available to Promise”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于依据库存、已排产和已有订单计算还能向客户承诺的数量与日期。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">CTP</div>
   <div class="term-en">Capable to Promise</div>
   <h3>可承诺能力</h3>
+  <p class="term-overview"><strong>简介概述：</strong>可承诺能力（CTP，英文全称为“Capable to Promise”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于进一步考虑物料、产能和约束，判断企业是否有能力按期满足新需求。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">WMS</div>
   <div class="term-en">Warehouse Management System</div>
   <h3>仓储管理系统</h3>
+  <p class="term-overview"><strong>简介概述：</strong>仓储管理系统（WMS，英文全称为“Warehouse Management System”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于库位、收发、上架、拣配、盘点、批次和条码追溯管理。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">SCM</div>
   <div class="term-en">Supply Chain Management</div>
   <h3>供应链管理</h3>
+  <p class="term-overview"><strong>简介概述：</strong>供应链管理（SCM，英文全称为“Supply Chain Management”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于协同供应商、采购、物流、库存、生产和客户交付，优化端到端供应与响应。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">SKU</div>
   <div class="term-en">Stock Keeping Unit</div>
   <h3>库存保有单位</h3>
+  <p class="term-overview"><strong>简介概述：</strong>库存保有单位（SKU，英文全称为“Stock Keeping Unit”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于区分可独立库存、销售或管理的产品／物料规格，是计划和库存分析的基本颗粒度。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">MOQ</div>
   <div class="term-en">Minimum Order Quantity</div>
   <h3>最小订购量</h3>
+  <p class="term-overview"><strong>简介概述：</strong>最小订购量（MOQ，英文全称为“Minimum Order Quantity”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于供应商采购、生产批量和成本评估；过高会增加库存，过低可能增加价格和换型损失。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">EOQ</div>
   <div class="term-en">Economic Order Quantity</div>
   <h3>经济订购量</h3>
+  <p class="term-overview"><strong>简介概述：</strong>经济订购量（EOQ，英文全称为“Economic Order Quantity”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于在订购成本与库存持有成本之间寻求相对经济的采购批量。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">ROP</div>
   <div class="term-en">Reorder Point</div>
   <h3>再订货点</h3>
+  <p class="term-overview"><strong>简介概述：</strong>再订货点（ROP，英文全称为“Reorder Point”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于依据需求速度、采购提前期和安全库存触发补货。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Safety Stock</div>
   <div class="term-en">Safety Stock</div>
   <h3>安全库存</h3>
+  <p class="term-overview"><strong>简介概述：</strong>安全库存（Safety Stock）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于应对需求、交期或供应波动；应基于风险与数据设定，不能掩盖流程问题。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">SO</div>
   <div class="term-en">Sales Order</div>
   <h3>销售订单</h3>
+  <p class="term-overview"><strong>简介概述：</strong>销售订单（SO，英文全称为“Sales Order”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于记录客户、产品、数量、价格、交期和交付要求，并触发计划与供应链协同。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">MO/WO</div>
   <div class="term-en">Manufacturing / Work Order</div>
   <h3>生产订单／工单</h3>
+  <p class="term-overview"><strong>简介概述：</strong>生产订单／工单（MO/WO，英文全称为“Manufacturing / Work Order”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于下达产品、数量、工艺、日期和领料要求，是现场执行、报工和成本归集载体。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">Plan Attainment</div>
   <div class="term-en">Production Plan Attainment</div>
   <h3>生产计划达成率</h3>
+  <p class="term-overview"><strong>简介概述：</strong>生产计划达成率（Plan Attainment，英文全称为“Production Plan Attainment”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于比较计划与实际完成情况，应同步区分欠产、超产、结单、延期及原因。</p>
 </article></div>
   </div>
@@ -906,78 +1066,91 @@
   <div class="term-code">ERP</div>
   <div class="term-en">Enterprise Resource Planning</div>
   <h3>企业资源计划</h3>
+  <p class="term-overview"><strong>简介概述：</strong>企业资源计划（ERP，英文全称为“Enterprise Resource Planning”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于连接销售、计划、采购、库存、生产、成本和财务，形成企业经营主数据链。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">MES</div>
   <div class="term-en">Manufacturing Execution System</div>
   <h3>制造执行系统</h3>
+  <p class="term-overview"><strong>简介概述：</strong>制造执行系统（MES，英文全称为“Manufacturing Execution System”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于承接计划并管理派工、报工、追溯、质量、设备与在制状态。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">APS</div>
   <div class="term-en">Advanced Planning and Scheduling</div>
   <h3>高级计划与排程</h3>
+  <p class="term-overview"><strong>简介概述：</strong>高级计划与排程（APS，英文全称为“Advanced Planning and Scheduling”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于在产能、物料、工艺路线、交期和换型约束下生成可执行排程。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">MRP</div>
   <div class="term-en">Material Requirements Planning</div>
   <h3>物料需求计划</h3>
+  <p class="term-overview"><strong>简介概述：</strong>物料需求计划（MRP，英文全称为“Material Requirements Planning”）属于标准与规范。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于依据订单、BOM、库存和提前期计算物料净需求与到料计划。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">QMS</div>
   <div class="term-en">Quality Management System</div>
   <h3>质量管理系统</h3>
+  <p class="term-overview"><strong>简介概述：</strong>质量管理系统（QMS，英文全称为“Quality Management System”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于管理检验、异常、审核、客诉、纠正预防与质量数据。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PLM</div>
   <div class="term-en">Product Lifecycle Management</div>
   <h3>产品生命周期管理</h3>
+  <p class="term-overview"><strong>简介概述：</strong>产品生命周期管理（PLM，英文全称为“Product Lifecycle Management”）属于指标与数据。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于管理图纸、BOM、版本、变更和从设计到退市的产品数据。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">IoT</div>
   <div class="term-en">Internet of Things</div>
   <h3>物联网</h3>
+  <p class="term-overview"><strong>简介概述：</strong>物联网（IoT，英文全称为“Internet of Things”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于连接设备、传感器与系统，采集状态、能耗、产量和异常数据。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">BI</div>
   <div class="term-en">Business Intelligence</div>
   <h3>商业智能／经营分析</h3>
+  <p class="term-overview"><strong>简介概述：</strong>商业智能／经营分析（BI，英文全称为“Business Intelligence”）属于系统与机制。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于将多源数据形成指标、看板和趋势分析，支持经营与改善决策。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">AGV</div>
   <div class="term-en">Automated Guided Vehicle</div>
   <h3>自动导引运输车</h3>
+  <p class="term-overview"><strong>简介概述：</strong>自动导引运输车（AGV，英文全称为“Automated Guided Vehicle”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于按固定或可配置路径搬运物料、在制品和成品，适合路线稳定的厂内物流。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">AMR</div>
   <div class="term-en">Autonomous Mobile Robot</div>
   <h3>自主移动机器人</h3>
+  <p class="term-overview"><strong>简介概述：</strong>自主移动机器人（AMR，英文全称为“Autonomous Mobile Robot”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于自主定位、避障和动态路径规划，适合柔性物流与多点配送。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PLC</div>
   <div class="term-en">Programmable Logic Controller</div>
   <h3>可编程逻辑控制器</h3>
+  <p class="term-overview"><strong>简介概述：</strong>可编程逻辑控制器（PLC，英文全称为“Programmable Logic Controller”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于设备顺序、联锁、传感器和执行机构控制，是自动化设备的核心控制单元。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">HMI</div>
   <div class="term-en">Human-Machine Interface</div>
   <h3>人机界面</h3>
+  <p class="term-overview"><strong>简介概述：</strong>人机界面（HMI，英文全称为“Human-Machine Interface”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于操作设备、设置参数、显示状态、报警和维护信息。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">SCADA</div>
   <div class="term-en">Supervisory Control and Data Acquisition</div>
   <h3>监控与数据采集系统</h3>
+  <p class="term-overview"><strong>简介概述：</strong>监控与数据采集系统（SCADA，英文全称为“Supervisory Control and Data Acquisition”）属于标准与规范。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于对设备、产线或能源系统进行集中监控、数据采集、报警和趋势分析。</p>
 </article></div>
   </div>
@@ -990,90 +1163,105 @@
   <div class="term-code">PCBA</div>
   <div class="term-en">Printed Circuit Board Assembly</div>
   <h3>印制电路板组件</h3>
+  <p class="term-overview"><strong>简介概述：</strong>印制电路板组件（PCBA，英文全称为“Printed Circuit Board Assembly”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于描述完成元器件贴装、焊接与测试后的电路板总成。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">SMT</div>
   <div class="term-en">Surface Mount Technology</div>
   <h3>表面贴装技术</h3>
+  <p class="term-overview"><strong>简介概述：</strong>表面贴装技术（SMT，英文全称为“Surface Mount Technology”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于将贴片元器件通过印刷、贴装、回流焊等工序装配到PCB。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">DIP</div>
   <div class="term-en">Dual In-line Package / Through-hole Process</div>
   <h3>双列直插／插件工艺</h3>
+  <p class="term-overview"><strong>简介概述：</strong>双列直插／插件工艺（DIP，英文全称为“Dual In-line Package / Through-hole Process”）属于方法与工具。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>现场通常指通孔元件插件、波峰焊或手焊等后段工艺。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">SOP</div>
   <div class="term-en">Standard Operating Procedure</div>
   <h3>标准作业程序</h3>
+  <p class="term-overview"><strong>简介概述：</strong>标准作业程序（SOP，英文全称为“Standard Operating Procedure”）属于标准与规范。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于规定流程、职责、步骤、记录和异常处理，确保执行一致。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">SWI</div>
   <div class="term-en">Standard Work Instruction</div>
   <h3>标准作业指导书</h3>
+  <p class="term-overview"><strong>简介概述：</strong>标准作业指导书（SWI，英文全称为“Standard Work Instruction”）属于标准与规范。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于在工位层面明确动作顺序、工艺参数、质量要点和安全要求。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">BOM</div>
   <div class="term-en">Bill of Materials</div>
   <h3>物料清单</h3>
+  <p class="term-overview"><strong>简介概述：</strong>物料清单（BOM，英文全称为“Bill of Materials”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于定义产品层级、物料编码、单位用量和版本，是计划、领料与成本核算基础。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">EHS</div>
   <div class="term-en">Environment, Health and Safety</div>
   <h3>环境、健康与安全</h3>
+  <p class="term-overview"><strong>简介概述：</strong>环境、健康与安全（EHS，英文全称为“Environment, Health and Safety”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于管理职业健康、消防、环保、危险源、事故预防和合规要求。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">ESD</div>
   <div class="term-en">Electrostatic Discharge</div>
   <h3>静电放电／防静电管理</h3>
+  <p class="term-overview"><strong>简介概述：</strong>静电放电／防静电管理（ESD，英文全称为“Electrostatic Discharge”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于电子制造中控制人体、设备和物料静电，防止元器件潜在或即时损伤。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">PCB</div>
   <div class="term-en">Printed Circuit Board</div>
   <h3>印制电路板</h3>
+  <p class="term-overview"><strong>简介概述：</strong>印制电路板（PCB，英文全称为“Printed Circuit Board”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于承载并电气连接电子元器件，是PCBA装配前的基础板件。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">SPI</div>
   <div class="term-en">Solder Paste Inspection</div>
   <h3>锡膏检测</h3>
+  <p class="term-overview"><strong>简介概述：</strong>锡膏检测（SPI，英文全称为“Solder Paste Inspection”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于SMT印刷后检测锡膏高度、面积、体积、偏移和连锡风险。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">AOI</div>
   <div class="term-en">Automated Optical Inspection</div>
   <h3>自动光学检测</h3>
+  <p class="term-overview"><strong>简介概述：</strong>自动光学检测（AOI，英文全称为“Automated Optical Inspection”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于通过视觉检测贴装、焊点、极性、缺件、偏移等外观缺陷。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">ICT</div>
   <div class="term-en">In-Circuit Test</div>
   <h3>在线电路测试</h3>
+  <p class="term-overview"><strong>简介概述：</strong>在线电路测试（ICT，英文全称为“In-Circuit Test”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于对PCBA元件、网络连接、开短路和部分电气参数进行测试。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">FCT</div>
   <div class="term-en">Functional Circuit Test</div>
   <h3>功能测试</h3>
+  <p class="term-overview"><strong>简介概述：</strong>功能测试（FCT，英文全称为“Functional Circuit Test”）属于制造专业术语。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于验证PCBA或整机在模拟实际工作条件下的功能与性能。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">IPC-A-610</div>
   <div class="term-en">Acceptability of Electronic Assemblies</div>
   <h3>电子组件可接受性标准</h3>
+  <p class="term-overview"><strong>简介概述：</strong>电子组件可接受性标准（IPC-A-610，英文全称为“Acceptability of Electronic Assemblies”）属于标准与规范。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于PCBA焊接、装配和外观质量判定，应按客户等级与最新适用版本执行。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">CNC</div>
   <div class="term-en">Computer Numerical Control</div>
   <h3>计算机数字控制</h3>
+  <p class="term-overview"><strong>简介概述：</strong>计算机数字控制（CNC，英文全称为“Computer Numerical Control”）属于岗位与职能。培训时应先理解它解决的管理问题，再统一对象、数据口径、责任边界和适用条件，避免只记缩写而不会在现场应用。</p>
   <p><strong>应用场景：</strong>用于机加工设备按程序控制刀具和运动，实现零件的精密加工与重复制造。</p>
 </article></div>
   </div>
