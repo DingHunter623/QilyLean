@@ -1,14 +1,15 @@
-/* QilyLean 2026-07-28：全站一阶、二阶、三阶菜单与正文层级统一规范 */
+/* QilyLean 2026-07-28：全站菜单、标题、正文、卡片与AI工作区统一排版层级 */
 :root{
   --qily-font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
   --qily-type-nav-1:17px;
   --qily-type-nav-2:16px;
   --qily-type-nav-3:15px;
-  --qily-type-h1:clamp(42px,4.6vw,68px);
+  --qily-type-h1:clamp(42px,4.35vw,66px);
   --qily-type-h2:clamp(31px,3vw,46px);
   --qily-type-h3:clamp(22px,1.7vw,27px);
   --qily-type-h4:19px;
   --qily-type-body:18.5px;
+  --qily-type-card:18px;
   --qily-type-note:16px;
   --qily-type-small:14.5px;
   --qily-line-body:1.78;
@@ -18,19 +19,20 @@
 html,body,button,input,textarea,select{
   font-family:var(--qily-font-sans)!important;
 }
+body{font-size:var(--qily-type-body)!important;line-height:var(--qily-line-body)!important}
 
-/* 一阶菜单：全站主导航 */
+/* 一阶菜单：全站主导航。 */
 .qily-site-header.qily-global-header>.qily-global-nav a,
 .qily-site-header .site-nav>a,
-.topbar .nav>a,
-.top .nav>a{
+header.topbar .nav>a,
+header.top .nav>a{
   font-family:var(--qily-font-sans)!important;
   font-size:var(--qily-type-nav-1)!important;
   font-weight:850!important;
   line-height:1.2!important;
 }
 
-/* 二阶菜单：模块内导航、页签、主题切换 */
+/* 二阶菜单：首屏子导航、页签、主题切换。 */
 .module-subnav>a,
 .subnav>a,
 .tabs>a,
@@ -38,15 +40,16 @@ html,body,button,input,textarea,select{
 .topic-controls .topic-control,
 .module-action,
 .section-nav>a,
-.category-nav>a{
+.category-nav>a,
+.hero .toc>a{
   font-family:var(--qily-font-sans)!important;
   font-size:var(--qily-type-nav-2)!important;
   font-weight:850!important;
   line-height:1.3!important;
 }
 
-/* 三阶菜单：目录、筛选、卡片内操作与细分入口 */
-.toc a,
+/* 三阶菜单：正文目录、筛选、卡片操作及标签。 */
+.section .toc a,
 .table-of-contents a,
 .filter-bar button,
 .filter-bar a,
@@ -54,8 +57,12 @@ html,body,button,input,textarea,select{
 .filters a,
 .module-actions a,
 .card-actions a,
+.actions a,
+.button,
+.share-button,
 .project-card-brief,
 .module-card small,
+.paper-card small,
 .module-eyebrow,
 .eyebrow{
   font-family:var(--qily-font-sans)!important;
@@ -63,9 +70,9 @@ html,body,button,input,textarea,select{
   line-height:1.5!important;
 }
 
-/* 正文标题层级：H1—H4全站统一 */
+/* 一级标题。 */
 .module-hero h1,
-.hero:not(:has(.hero-grid)) h1,
+.hero h1,
 .daily-hero h1,
 .qily-home-balanced h1,
 main>h1,
@@ -77,10 +84,14 @@ article>h1{
   letter-spacing:-.025em!important;
 }
 
+/* 二级标题：模块标题、文章标题。 */
 .module-heading h2,
 .module-page .head h2,
 .section .head h2,
+.section-head h2,
+.section-heading h2,
 .module-card>h2,
+.article>h2,
 main section>h2,
 article>h2{
   font-family:var(--qily-font-sans)!important;
@@ -90,9 +101,13 @@ article>h2{
   letter-spacing:-.012em!important;
 }
 
+/* 三级标题：卡片标题、文章分节标题。 */
 .module-card h3,
+.paper-card h3,
+.project-list-content h3,
 .project-story h3,
 .project-result-panel h3,
+.article h3,
 article h3,
 section h3{
   font-family:var(--qily-font-sans)!important;
@@ -102,6 +117,7 @@ section h3{
 }
 
 .module-card h4,
+.article h4,
 article h4,
 section h4{
   font-family:var(--qily-font-sans)!important;
@@ -110,13 +126,20 @@ section h4{
   line-height:1.42!important;
 }
 
-/* 正文、概述、列表、说明统一阅读尺度 */
+/* 正文、概述和列表统一阅读尺度。 */
 .module-page,
 .module-card p,
 .module-card li,
+.paper-card p,
+.article p,
+.article li,
+.project-list-content>p,
 .project-story p,
 .project-story li,
 .project-result-panel p,
+.section-head p,
+.section-heading p,
+.module-page .head p,
 article p,
 article li,
 section p,
@@ -127,7 +150,8 @@ section li{
 }
 
 .module-lead,
-.hero:not(:has(.hero-grid)) .lead,
+.hero .lead,
+.hero>div>p,
 .daily-hero p,
 .qily-home-balanced .lead{
   font-family:var(--qily-font-sans)!important;
@@ -137,11 +161,12 @@ section li{
 
 .module-result,
 .module-note,
+.note,
 figcaption,
 .caption,
-.note,
 .meta,
-.module-footer{
+.module-footer,
+.footer{
   font-family:var(--qily-font-sans)!important;
   font-size:var(--qily-type-note)!important;
   line-height:1.68!important;
@@ -149,19 +174,38 @@ figcaption,
 
 small,
 .module-card small,
-.project-fact small{
+.paper-card small,
+.project-fact small,
+.tag,
+.tag-row li{
   font-size:var(--qily-type-small)!important;
 }
 
-/* 卡片内层级间距统一，避免各页面标题跳动 */
+/* QilyLean AI：对话内容与操作控件采用稳定的组件级层级。 */
+.chat{font-family:var(--qily-font-sans)!important;font-size:17px!important;line-height:1.7!important}
+.messages,.bubble,.answer-content{font-size:17.5px!important;line-height:1.72!important}
+.answer-content h2{font-size:24px!important;line-height:1.35!important}
+.answer-content h3{font-size:21px!important;line-height:1.4!important}
+.answer-content h4{font-size:18.5px!important;line-height:1.45!important}
+.answer-content p,.answer-content li{font-size:17.5px!important;line-height:1.72!important}
+.answer-content table{font-size:15px!important}
+.status-title{font-size:15.5px!important;line-height:1.35!important}
+.status-detail,.meta,.upload-note,.notice{font-size:13.5px!important;line-height:1.62!important}
+.quick button,.upload-btn,.send-btn,.clear,.speech-play,.speech-settings summary,.speech-save{font-size:14.5px!important;line-height:1.35!important}
+.composer textarea{font-size:16.5px!important;line-height:1.55!important}
+.attachment-name{font-size:14.5px!important}.attachment-size{font-size:12.5px!important}
+
+/* 统一标题与正文的垂直节奏。 */
 .module-heading,
 .module-page .head,
-.section .head{
+.section .head,
+.section-head,
+.section-heading{
   margin-bottom:28px!important;
 }
-.module-card h2,.module-card h3{margin-top:0!important;margin-bottom:12px!important}
+.module-card h2,.module-card h3,.paper-card h3{margin-top:0!important;margin-bottom:12px!important}
 .module-card h4{margin-top:18px!important;margin-bottom:7px!important}
-.module-card p{margin-top:0!important;margin-bottom:12px!important}
+.module-card p,.paper-card p{margin-top:0!important;margin-bottom:12px!important}
 
 @media(max-width:900px){
   :root{
@@ -170,6 +214,7 @@ small,
     --qily-type-nav-3:13.5px;
     --qily-type-h3:22px;
     --qily-type-body:18px;
+    --qily-type-card:17.5px;
   }
 }
 
@@ -183,6 +228,9 @@ small,
     --qily-type-h3:21px;
     --qily-type-h4:18px;
     --qily-type-body:17.5px;
+    --qily-type-card:17px;
     --qily-type-note:15px;
   }
+  .messages,.bubble,.answer-content,.answer-content p,.answer-content li{font-size:16.5px!important}
+  .answer-content h2{font-size:22px!important}.answer-content h3{font-size:20px!important}
 }
