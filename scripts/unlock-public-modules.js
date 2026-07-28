@@ -7,10 +7,12 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const navigationFile = path.join(root, 'site-navigation.js');
 const visualScaleFile = path.join(root, 'site-visual-scale-v1.css');
+const wideLayoutFile = path.join(root, 'site-wide-layout-v1.css');
 const experienceFile = path.join(root, 'experience', 'index.html');
-const PUBLIC_NAV_VERSION = '20260728-public-access-v2';
-const PUBLIC_ASSET_VERSION = '20260728-public-access-v2';
+const PUBLIC_NAV_VERSION = '20260728-wide-layout-v1';
+const PUBLIC_ASSET_VERSION = '20260728-wide-layout-v1';
 const PUBLIC_RESUME_VERSION = '20260728-public-access-v2';
+const WIDE_LAYOUT_VERSION = '20260728-wide-layout-v1';
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
@@ -24,7 +26,7 @@ function unlockNavigation() {
   let page = read(navigationFile);
 
   page = page
-    .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV2')
+    .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV3')
     .replace(/var SHARED_ASSET_VERSION = '[^']*';/, `var SHARED_ASSET_VERSION = '${PUBLIC_ASSET_VERSION}';`)
     .replace(/var VISUAL_SCALE_VERSION = '[^']*';/, `var VISUAL_SCALE_VERSION = '${PUBLIC_ASSET_VERSION}';`)
     .replace(/var ACCESS_PASSWORD = '[^']*';\n/, '')
@@ -37,6 +39,18 @@ function unlockNavigation() {
       /  function controlledPageConfig\(path\) \{[\s\S]*?\n  \}\n\n  function protectControlledPage/,
       "  function controlledPageConfig() { return null; }\n\n  function protectControlledPage"
     );
+
+  if (!page.includes('function addWideLayoutStylesheet()')) {
+    page = page.replace(
+      '  function addGlobalHeaderStyles() {',
+      `  function addWideLayoutStylesheet() {\n    var current = document.getElementById('qilyWideLayoutStylesheet');\n    if (current) {\n      current.href = '/site-wide-layout-v1.css?v=${WIDE_LAYOUT_VERSION}';\n      return;\n    }\n    var link = document.createElement('link');\n    link.id = 'qilyWideLayoutStylesheet';\n    link.rel = 'stylesheet';\n    link.href = '/site-wide-layout-v1.css?v=${WIDE_LAYOUT_VERSION}';\n    document.head.appendChild(link);\n  }\n\n  function addGlobalHeaderStyles() {`
+    );
+  }
+
+  page = page.replace(
+    /(\n\s*addVisualScaleStylesheet\(\);)(?!\n\s*addWideLayoutStylesheet\(\);)/,
+    '$1\n    addWideLayoutStylesheet();'
+  );
 
   page = page
     .split('\n')
@@ -55,6 +69,9 @@ function unlockNavigation() {
   if (!page.includes(`var VISUAL_SCALE_VERSION = '${PUBLIC_ASSET_VERSION}';`)) {
     throw new Error('Public visual stylesheet cache version was not refreshed');
   }
+  if (!page.includes(`site-wide-layout-v1.css?v=${WIDE_LAYOUT_VERSION}`) || !page.includes('addWideLayoutStylesheet();')) {
+    throw new Error('Site-wide aligned layout loader was not installed');
+  }
 
   write(navigationFile, page);
 }
@@ -71,6 +88,16 @@ function removeLegacyLockStyles() {
   }
 
   write(visualScaleFile, css);
+}
+
+function validateWideLayout() {
+  const css = read(wideLayoutFile);
+  if (!css.includes('--qily-wide-content:1480px')) {
+    throw new Error('Wide content width is not configured at 1480px');
+  }
+  if (!css.includes('.module-hero>.module-inner') || !css.includes('.module-section>.module-inner')) {
+    throw new Error('Hero and content alignment selectors are incomplete');
+  }
 }
 
 function publishExperience() {
@@ -138,11 +165,12 @@ function refreshNavigationReferences() {
 }
 
 function main() {
+  validateWideLayout();
   unlockNavigation();
   removeLegacyLockStyles();
   publishExperience();
   const refreshed = refreshNavigationReferences();
-  process.stdout.write(`Public access enabled; resume rendering and public labels restored; updated ${refreshed} HTML files.\n`);
+  process.stdout.write(`Public access retained; all modules aligned to the 1480px wide content grid; updated ${refreshed} HTML files.\n`);
 }
 
 main();
