@@ -1,7 +1,8 @@
-/* QilyLean 2026-07-28：全站首屏、正文、卡片、工具区与页脚统一宽版对齐 */
+/* QilyLean 2026-07-28：全站首屏、正文、卡片、工具区与页脚统一宽版对齐 v4 */
 :root{
-  --qily-wide-content:1480px;
-  --qily-wide-gutter:clamp(18px,3.2vw,64px);
+  --qily-wide-content:1560px;
+  --qily-wide-gutter:clamp(14px,2.2vw,40px);
+  --qily-grid-gap:clamp(14px,1.25vw,22px);
 }
 
 html,body{max-width:100%;overflow-x:clip}
@@ -11,6 +12,7 @@ html,body{max-width:100%;overflow-x:clip}
 .module-section,
 .module-footer,
 .hero:not(:has(.hero-grid)),
+.hero:has(>.hero-grid),
 .daily-hero,
 .section,
 .footer,
@@ -35,6 +37,8 @@ main.main:has(>.chat){
 .hero:not(:has(.hero-grid))>.inner,
 .hero>.hero-inner,
 .hero-inner,
+.hero>.hero-grid,
+.hero-grid,
 .section>.inner,
 .section>.section-inner,
 .section-inner,
@@ -67,13 +71,24 @@ body.module-page .tool-inner,
   box-sizing:border-box!important;
 }
 
-/* QilyLean AI：取消1080px窄框，聊天工作区与上方标题区同轴。 */
+/* 首页：压缩人物图片区占比，把更多横向空间留给职业概述。 */
+.hero-grid,
+.qily-home-balanced .hero-grid{
+  grid-template-columns:minmax(0,1fr) minmax(300px,360px)!important;
+  gap:clamp(24px,2.5vw,42px)!important;
+}
+.hero-grid>div:first-child,
+.qily-home-balanced .hero-grid>div:first-child{min-width:0!important}
+.portrait-frame{width:min(360px,100%)!important}
+
+/* QilyLean AI：聊天工作区与标题区同轴，取消旧1080px窄框。 */
 main.main:has(>.chat){
   padding-top:24px!important;
   padding-bottom:40px!important;
 }
 main.main:has(>.chat)>.chat{
   min-width:0!important;
+  width:min(var(--qily-wide-content),100%)!important;
 }
 
 /* 标题说明、模块目录与正文不再人为缩窄。 */
@@ -83,6 +98,7 @@ main.main:has(>.chat)>.chat{
 .module-subnav,
 .hero:not(:has(.hero-grid)) .lead,
 .hero:not(:has(.hero-grid)) p,
+.hero-grid .lead,
 .daily-hero p,
 .qily-home-balanced .lead,
 .qily-home-balanced .section .head,
@@ -95,7 +111,7 @@ body.module-page .page-heading{
   max-width:100%!important;
 }
 
-/* 网格、文章集合和功能面板沿用父级完整宽度。 */
+/* 网格按最小可读宽度自动换列，杜绝因硬性列数造成卡片过窄。 */
 .module-grid,
 .paper-grid,
 .project-list-grid,
@@ -105,22 +121,50 @@ body.module-page .page-heading{
 .capability-certificate,
 .toc,
 .article-list,
-.chat{
+.chat,
+.career-full-grid{
   max-width:100%!important;
   box-sizing:border-box!important;
+  gap:var(--qily-grid-gap)!important;
+}
+.module-grid.two{grid-template-columns:repeat(auto-fit,minmax(min(520px,100%),1fr))!important}
+.module-grid.three{grid-template-columns:repeat(auto-fit,minmax(min(390px,100%),1fr))!important}
+.module-grid.four{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))!important}
+.paper-grid{grid-template-columns:repeat(auto-fit,minmax(min(390px,100%),1fr))!important}
+.career-full-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+
+/* 卡片略减无效留白，换取更完整的中文行宽。 */
+.module-card,
+.paper-card,
+.career-full-card,
+.project-story,
+.project-list-content{min-width:0!important}
+.module-card,
+.paper-card,
+.career-full-card{padding-left:clamp(20px,1.45vw,24px)!important;padding-right:clamp(20px,1.45vw,24px)!important}
+.career-overview{grid-template-columns:minmax(120px,150px) minmax(0,1fr)!important}
+
+@media(max-width:1320px){
+  :root{--qily-wide-gutter:clamp(16px,2.6vw,34px)}
+  .hero-grid,.qily-home-balanced .hero-grid{grid-template-columns:minmax(0,1fr) minmax(280px,330px)!important}
+  .portrait-frame{width:min(330px,100%)!important}
 }
 
 @media(max-width:1100px){
-  :root{--qily-wide-gutter:clamp(18px,4vw,36px)}
+  :root{--qily-wide-gutter:clamp(16px,3vw,30px)}
+  .hero-grid,.qily-home-balanced .hero-grid{grid-template-columns:1fr!important}
+  .portrait-frame{width:min(430px,100%)!important;margin-left:auto!important;margin-right:auto!important}
+  .career-full-grid{grid-template-columns:1fr!important}
 }
 
 @media(max-width:900px){
-  :root{--qily-wide-gutter:clamp(16px,4vw,28px)}
+  :root{--qily-wide-gutter:clamp(15px,4vw,26px)}
   main.main:has(>.chat){padding-top:18px!important;padding-bottom:30px!important}
+  .module-grid.two,.module-grid.three,.module-grid.four,.paper-grid{grid-template-columns:1fr!important}
 }
 
 @media(max-width:620px){
-  :root{--qily-wide-gutter:16px}
+  :root{--qily-wide-gutter:15px;--qily-grid-gap:14px}
   .module-inner,
   .module-page .inner,
   .module-hero>.module-inner,
@@ -131,6 +175,8 @@ body.module-page .page-heading{
   .hero:not(:has(.hero-grid))>.inner,
   .hero>.hero-inner,
   .hero-inner,
+  .hero>.hero-grid,
+  .hero-grid,
   .section>.inner,
   .section>.section-inner,
   .section-inner,
@@ -159,4 +205,5 @@ body.module-page .page-heading{
     width:100%!important;
     max-width:100%!important;
   }
+  .module-card,.paper-card,.career-full-card{padding-left:18px!important;padding-right:18px!important}
 }
