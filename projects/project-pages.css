@@ -174,3 +174,12 @@ body.project-lightbox-open{overflow:hidden}
 .project-media-copy p{position:static!important;inset:auto!important;margin:0!important;padding:0!important;color:#526968!important;background:transparent!important;font-size:14.5px!important;line-height:1.55!important;font-weight:650!important}
 @media(max-width:860px){.project-detail-page .project-media-card-grid{grid-template-columns:1fr!important}}
 @media(max-width:520px){.project-detail-page .project-media-card-grid>.project-media-card{gap:10px!important;padding:10px!important}.project-media-copy strong{font-size:16px}.project-media-copy p{font-size:14px!important;line-height:1.48!important}}
+
+/* project-media-cards-v6：智能模具库视频移入第四张证据卡，封面按需跳转播放，避免预加载拖慢页面。 */
+.project-media-video-card .project-video-thumb{position:relative!important;display:grid!important;place-items:center!important;width:var(--project-thumb-size)!important;height:var(--project-thumb-size)!important;min-height:var(--project-thumb-size)!important;aspect-ratio:1!important;overflow:hidden!important;margin:0!important;border:1px solid var(--qily-line)!important;background-color:#071115!important;background-image:linear-gradient(rgba(4,22,27,.18),rgba(4,22,27,.42)),url('/media/projects/mold-after1.webp?v=20260721-speed-v1')!important;background-position:center!important;background-size:cover!important;box-shadow:none!important;text-decoration:none!important;cursor:pointer}
+.project-media-video-card .project-video-thumb::after{content:'';position:absolute;inset:0;border:2px solid transparent;transition:border-color .2s ease,background-color .2s ease}
+.project-media-video-card .project-video-thumb:hover::after,.project-media-video-card .project-video-thumb:focus-visible::after{border-color:#ffe39b;background:rgba(255,227,155,.08)}
+.project-media-video-card .project-video-thumb:focus-visible{outline:3px solid #ffe39b;outline-offset:3px}
+.project-video-play{position:relative;z-index:1;display:grid;place-items:center;width:34px;height:34px;padding-left:2px;border:2px solid rgba(255,255,255,.9);border-radius:50%;color:#fff;background:rgba(15,75,90,.82);box-shadow:0 5px 14px rgba(0,0,0,.3);font-size:16px;line-height:1;transition:transform .2s ease,background-color .2s ease}
+.project-video-thumb:hover .project-video-play,.project-video-thumb:focus-visible .project-video-play{color:#17322d;background:#ffe39b;transform:scale(1.08)}
+
