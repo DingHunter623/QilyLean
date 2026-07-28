@@ -8,8 +8,8 @@ const root = path.resolve(__dirname, '..');
 const qily = path.join(root, 'qilylean');
 const dailyDir = path.join(qily, 'daily');
 const assetDir = path.join(qily, 'assets');
-const archiveStart = '2025-12-19';
-const backfillEnd = '2026-07-07';
+const archiveStart = '2019-07-10';
+const archiveVisualEnd = '2025-12-18';
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
@@ -328,12 +328,12 @@ function enhancePage(file, date, index) {
   const tags = Array.from(article.matchAll(/<span class="tag">([\s\S]*?)<\/span>/gi)).map((match) => textFromHtml(match[1]));
   const h3Count = (article.match(/<h3[ >]/gi) || []).length;
 
-  if (date <= backfillEnd) {
+  if (date <= archiveVisualEnd) {
     const assetName = `daily-${date}.svg`;
     const assetPath = path.join(assetDir, assetName);
     fs.writeFileSync(assetPath, `${buildVisual({ date, category, title, tags, index })}\n`);
     const visual = `<div class="visual"><img src="/qilylean/assets/${assetName}" alt="${escapeHtml(title)}" width="1080" height="1080" decoding="async"></div>`;
-    article = article.replace(/<div class="visual">[\s\S]*?<\/div>(?=<div class="content">)/i, visual);
+    article = article.replace(/<div class="visual">[\s\S]*?<\/div>(?=\s*<div class="content">)/i, visual);
     page = replaceOrInsertOgImage(page, `https://qilylean.com/qilylean/assets/${assetName}`);
   }
 
@@ -369,4 +369,10 @@ function main() {
   process.stdout.write(`Enhanced ${files.length} daily brief pages; DAY labels removed and training depth applied.\n`);
 }
 
-main();
+if (require.main === module) main();
+
+module.exports = {
+  guides,
+  resolveGuide,
+  buildVisual
+};
