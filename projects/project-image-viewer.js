@@ -33,7 +33,7 @@
       '<button class="project-lightbox-nav prev" type="button" data-image-action="prev" aria-label="上一张">‹</button>',
       '<div class="project-lightbox-stage"><img alt=""></div>',
       '<button class="project-lightbox-nav next" type="button" data-image-action="next" aria-label="下一张">›</button>',
-      '<div class="project-lightbox-footer"><div class="project-lightbox-caption"></div><div class="project-lightbox-save-tip">图片已自动适配屏幕；可连续切换上一张／下一张，点击“保存原图”或手机长按保存高清版。</div></div>',
+      '<div class="project-lightbox-footer"><div class="project-lightbox-caption"></div><div class="project-lightbox-save-tip">图片已自动适配屏幕；可连续切换上一张／下一张，点击“保存原图”，手机长按原图可保存或转发高清版。</div></div>',
     '</div>'
   ].join('');
   document.body.appendChild(lightbox);
