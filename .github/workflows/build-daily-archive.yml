@@ -6,7 +6,11 @@ on:
     paths:
       - "qilylean/daily/*.html"
       - "qilylean/assets/daily-*.svg"
+      - "qilylean/daily-briefs.css"
+      - "knowledge/terminology.html"
       - "scripts/build-daily-archive.js"
+      - "scripts/enhance-daily-archive.js"
+      - "scripts/enhance-terminology-training.js"
   workflow_dispatch:
 
 permissions:
@@ -33,6 +37,12 @@ jobs:
       - name: Rebuild archive, adjacent links and sitemap
         run: node scripts/build-daily-archive.js
 
+      - name: Deepen archive content and external visuals
+        run: node scripts/enhance-daily-archive.js
+
+      - name: Restructure terminology for training
+        run: node scripts/enhance-terminology-training.js
+
       - name: Unify Daily Engineering Brief brand
         shell: bash
         run: |
@@ -53,6 +63,7 @@ jobs:
         run: |
           test -f qilylean/daily-insights.html
           test -f qilylean/daily/index.json
+          test -f qilylean/assets/daily-2025-12-19.svg
           LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
           grep -q "qilylean/daily/$LATEST_DATE.html" sitemap.xml || {
             echo "Latest daily brief is missing from sitemap.xml"
@@ -71,6 +82,30 @@ jobs:
             echo "Daily Engineering Brief brand is not unified"
             exit 1
           }
+          if grep -R -E "DAY[0-9]{3}" qilylean/daily qilylean/daily-insights.html >/dev/null; then
+            echo "Legacy DAY sequence is still present"
+            exit 1
+          fi
+          grep -q "brief-training-depth" qilylean/daily/2025-12-19.html || {
+            echo "Historical brief training depth was not generated"
+            exit 1
+          }
+          grep -q 'img src="/qilylean/assets/daily-2025-12-19.svg"' qilylean/daily/2025-12-19.html || {
+            echo "Historical brief external visual was not generated"
+            exit 1
+          }
+          grep -q "Inventory Turnover" knowledge/terminology.html || {
+            echo "Inventory turnover terminology is missing"
+            exit 1
+          }
+          grep -q "库存周转率＝期间销售成本" knowledge/terminology.html || {
+            echo "Inventory turnover formula is missing"
+            exit 1
+          }
+          grep -q "mobile-fit-v3" qilylean/daily-briefs.css || {
+            echo "Mobile responsive stylesheet marker is missing"
+            exit 1
+          }
 
       - name: Commit generated files
         shell: bash
@@ -81,6 +116,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add knowledge/index.html qilylean/daily-insights.html qilylean/daily/index.json qilylean/daily/*.html sitemap.xml
-          git commit -m "build: publish latest daily engineering brief archive [skip ci]"
+          git add knowledge/index.html knowledge/terminology.html qilylean/daily-insights.html qilylean/daily/index.json qilylean/daily/*.html qilylean/assets/daily-*.svg sitemap.xml
+          git commit -m "build: publish enriched daily engineering brief archive [skip ci]"
           git push
