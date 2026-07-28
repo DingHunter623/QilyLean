@@ -69,10 +69,10 @@ jobs:
         shell: bash
         run: |
           node <<'NODE'
-          const bases = [
+          const base = 'https://qilylean-ai.dinghunter623.workers.dev';
+          const pendingCustomDomains = [
             'https://api.qilylean.com',
-            'https://ai-api.qilylean.com',
-            'https://qilylean-ai.dinghunter623.workers.dev'
+            'https://ai-api.qilylean.com'
           ];
           const androidHeaders = {
             Origin: 'https://qilylean.com',
@@ -90,39 +90,36 @@ jobs:
             }
             throw new Error(label + ' failed after route propagation retries: ' + lastError.message);
           }
-          for (const base of bases) {
-            await withRetry(base + ' health', async () => {
-              const health = await fetch(base + '/health', {
-                headers: androidHeaders,
-                signal: AbortSignal.timeout(12000)
-              });
-              if (!health.ok) throw new Error('status ' + health.status);
-              if (health.headers.get('access-control-allow-origin') !== 'https://qilylean.com') {
-                throw new Error('CORS origin is not available to the website');
-              }
-              const healthData = await health.json();
-              if (healthData.build_version !== 'v1.5.1-android-connectivity') {
-                throw new Error('unexpected build ' + healthData.build_version);
-              }
+          await withRetry(base + ' health', async () => {
+            const health = await fetch(base + '/health', {
+              headers: androidHeaders,
+              signal: AbortSignal.timeout(12000)
             });
-            await withRetry(base + ' chat', async () => {
-              const chat = await fetch(base + '/chat', {
-                method: 'POST',
-                headers: {
-                  ...androidHeaders,
-                  'Content-Type': 'text/plain;charset=UTF-8',
-                  Accept: 'application/json'
-                },
-                body: JSON.stringify({ message: '安卓链路验证：请仅回复OK。' }),
-                signal: AbortSignal.timeout(60000)
-              });
-              const data = await chat.json();
-              if (!chat.ok || !String(data.answer || '').trim()) {
-                throw new Error('status ' + chat.status);
-              }
-            }, 3, 3000);
-          }
-          const base = bases[0];
+            if (!health.ok) throw new Error('status ' + health.status);
+            if (health.headers.get('access-control-allow-origin') !== 'https://qilylean.com') {
+              throw new Error('CORS origin is not available to the website');
+            }
+            const healthData = await health.json();
+            if (healthData.build_version !== 'v1.5.1-android-connectivity') {
+              throw new Error('unexpected build ' + healthData.build_version);
+            }
+          });
+          await withRetry(base + ' chat', async () => {
+            const chat = await fetch(base + '/chat', {
+              method: 'POST',
+              headers: {
+                ...androidHeaders,
+                'Content-Type': 'text/plain;charset=UTF-8',
+                Accept: 'application/json'
+              },
+              body: JSON.stringify({ message: '安卓链路验证：请仅回复OK。' }),
+              signal: AbortSignal.timeout(60000)
+            });
+            const data = await chat.json();
+            if (!chat.ok || !String(data.answer || '').trim()) {
+              throw new Error('status ' + chat.status);
+            }
+          }, 3, 3000);
           const speech = await fetch(base + '/tts', {
             method: 'POST',
             headers: {
@@ -138,5 +135,17 @@ jobs:
           if (!speech.ok || !speechType.startsWith('audio/') || speechVoice !== 'Neil' || speechBytes.length < 1000) {
             throw new Error('AI male voice smoke test failed: ' + speech.status);
           }
-          console.log('QilyLean AI Android primary, backup, disaster-recovery and male voice checks passed.');
+          for (const customBase of pendingCustomDomains) {
+            try {
+              const customHealth = await fetch(customBase + '/health', {
+                headers: androidHeaders,
+                signal: AbortSignal.timeout(8000)
+              });
+              if (!customHealth.ok) throw new Error('status ' + customHealth.status);
+              console.log(customBase + ' custom-domain endpoint is ready.');
+            } catch (error) {
+              console.warn(customBase + ' is pending DNS/zone activation: ' + error.message);
+            }
+          }
+          console.log('QilyLean AI Android Worker, real answer and male voice checks passed.');
           NODE

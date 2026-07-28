@@ -176,8 +176,8 @@ async function main() {
   assert(/https:\/\/qilylean-ai\.dinghunter623\.workers\.dev/.test(aiClient), 'AI client disaster-recovery endpoint is missing');
   assert(/orderedApiBases/.test(aiClient), 'AI client multi-route retry sequence is missing');
   assert(!/主链路与备用链路均未能连接/.test(aiClient), 'Legacy two-route Android connection error remains');
-  assert(/pattern = "api\.qilylean\.com"[\s\S]*custom_domain = true/.test(wrangler), 'Primary AI custom-domain route is missing');
-  assert(/pattern = "ai-api\.qilylean\.com"[\s\S]*custom_domain = true/.test(wrangler), 'Backup AI custom-domain route is missing');
+  assert(/workers_dev = true/.test(wrangler), 'Cloudflare Workers production endpoint is disabled');
+  assert(!/custom_domain = true/.test(wrangler), 'Unprovisioned custom-domain routes must not block Worker deployment');
   assert(/v1\.5\.1-android-connectivity/.test(worker), 'Android connectivity Worker build version is missing');
   assert(/validateAttachments\(payload\.attachments, payload\.attachment\)/.test(worker), 'Worker does not validate multiple attachments');
   assert(/callQwenMixed/.test(worker), 'Worker mixed-material analysis path is missing');
