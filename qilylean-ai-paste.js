@@ -49,7 +49,7 @@ function buildContinuityMessage(currentMessage,items){
   var marker='\n\n【当前用户问题】\n';
   var maxLength=2980;
   var fixedLength=header.length+marker.length+current.length+2;
-  if(fixedLength>=maxLength)return current.slice(0,maxLength);
+  if(fixedLength>=maxLength)return current;
 
   var available=maxLength-fixedLength;
   var lastAttachment=-1;
@@ -83,6 +83,26 @@ function buildContinuityMessage(currentMessage,items){
   return header+'\n'+chosen.map(function(value){return value.line;}).join('\n')+marker+current;
 }
 
+var retainedMaterial=null;
+var retainedMaterialFollowups=0;
+
+function shouldReuseRetainedMaterial(message,items){
+  if(!retainedMaterial||!retainedMaterial.length||retainedMaterialFollowups>=3)return false;
+  var text=cleanMemoryText(message);
+  if(!text)return false;
+  if(/简历|附件|文件|材料|素材|上面|上述|上一轮|刚才|此前|前述|这份|该份|根据|基于|继续|面试|岗位|jd|匹配|评估|分析|清单|模拟|修改|优化|撰写|生成/i.test(text))return true;
+  var recent=Array.isArray(items)?items.slice(-4):[];
+  var hasRecentMaterial=recent.some(function(item){return Boolean(attachmentMemory(item));});
+  return hasRecentMaterial&&text.length<=80;
+}
+
+function cloneRetainedMaterial(values){
+  if(!Array.isArray(values))return null;
+  return values.map(function(value){
+    return {name:value.name,type:value.type,size:value.size,kind:value.kind,data:value.data};
+  });
+}
+
 function patchConversationContinuity(){
   if(window.__qilyLeanAIContextV2||typeof window.fetch!=='function')return;
   window.__qilyLeanAIContextV2=true;
@@ -98,20 +118,48 @@ function patchConversationContinuity(){
           var items=saved&&Array.isArray(saved.items)?saved.items.slice():[];
           var last=items[items.length-1];
           if(last&&last.role==='user'&&cleanMemoryText(last.text)===cleanMemoryText(payload.message))items.pop();
+
+          var hasCurrentMaterial=Array.isArray(payload.attachments)&&payload.attachments.length>0;
+          if(hasCurrentMaterial){
+            retainedMaterial=cloneRetainedMaterial(payload.attachments);
+            retainedMaterialFollowups=0;
+          }else if(shouldReuseRetainedMaterial(payload.message,items)){
+            payload.attachments=cloneRetainedMaterial(retainedMaterial);
+            payload.material_continuation=true;
+            retainedMaterialFollowups+=1;
+          }
+
           var contextualMessage=buildContinuityMessage(payload.message,items);
           if(contextualMessage&&contextualMessage!==payload.message){
             payload.message=contextualMessage;
             payload.context_mode='browser-session-v2';
+          }
+          if(payload.context_mode||payload.material_continuation){
             nextOptions=Object.assign({},options,{body:JSON.stringify(payload)});
+          }
+          if(payload.material_continuation){
+            var extendedController=new AbortController();
+            nextOptions=Object.assign({},nextOptions,{signal:extendedController.signal});
+            nextOptions.__qilyExtendedController=extendedController;
           }
         }
       }
     }catch(_error){}
+    var extendedController=nextOptions&&nextOptions.__qilyExtendedController;
+    if(extendedController){
+      delete nextOptions.__qilyExtendedController;
+      var extendedTimeout=setTimeout(function(){extendedController.abort();},125000);
+      return nativeFetch(resource,nextOptions).finally(function(){clearTimeout(extendedTimeout);});
+    }
     return nativeFetch(resource,nextOptions);
   };
 }
 
 patchConversationContinuity();
+var clearConversation=document.getElementById('clearBtn');
+if(clearConversation){
+  clearConversation.addEventListener('click',function(){retainedMaterial=null;retainedMaterialFollowups=0;});
+}
 if(!composer||!input||!question)return;
 
 var extensionByType={
