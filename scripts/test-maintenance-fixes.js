@@ -160,7 +160,9 @@ async function main() {
   const worker = read('cloudflare-worker/worker.js');
   const exportCode = read('qilylean-ai-export.js');
   const navigation = read('site-navigation.js');
-  const visualScale = read('site-visual-scale-v1.css');
+  const wrangler = read('wrangler.toml');
+  const projectViewer = read('projects/project-image-viewer.js');
+  const projectStyles = read('projects/project-pages.css');
   const knowledge = read('knowledge/index.html');
   const latest = read('qilylean/latest-brief.js');
   const brief = read('qilylean/daily/2026-07-27.html');
@@ -169,6 +171,14 @@ async function main() {
   assert(/id="materialInput"[^>]*\bmultiple\b/.test(aiPage), 'Material input is not configured for multiple files');
   assert(/MAX_ATTACHMENT_COUNT=5/.test(aiClient), 'Client attachment count limit is missing');
   assert(/payload\.attachments=/.test(aiClient), 'Client does not submit the attachments array');
+  assert(/https:\/\/api\.qilylean\.com/.test(aiClient), 'AI client primary custom domain is missing');
+  assert(/https:\/\/ai-api\.qilylean\.com/.test(aiClient), 'AI client backup custom domain is missing');
+  assert(/https:\/\/qilylean-ai\.dinghunter623\.workers\.dev/.test(aiClient), 'AI client disaster-recovery endpoint is missing');
+  assert(/orderedApiBases/.test(aiClient), 'AI client multi-route retry sequence is missing');
+  assert(!/主链路与备用链路均未能连接/.test(aiClient), 'Legacy two-route Android connection error remains');
+  assert(/pattern = "api\.qilylean\.com"[\s\S]*custom_domain = true/.test(wrangler), 'Primary AI custom-domain route is missing');
+  assert(/pattern = "ai-api\.qilylean\.com"[\s\S]*custom_domain = true/.test(wrangler), 'Backup AI custom-domain route is missing');
+  assert(/v1\.5\.1-android-connectivity/.test(worker), 'Android connectivity Worker build version is missing');
   assert(/validateAttachments\(payload\.attachments, payload\.attachment\)/.test(worker), 'Worker does not validate multiple attachments');
   assert(/callQwenMixed/.test(worker), 'Worker mixed-material analysis path is missing');
   assert(!/application\/msword|application\/vnd\.ms-excel/.test(exportCode), 'Legacy HTML-disguised Office MIME types remain');
@@ -178,18 +188,35 @@ async function main() {
   assert(/--forest:var\(--qily-forest,#0f4b5a\)/.test(aiPage), 'AI page is not bound to the global forest color');
   assert(/\.user \.bubble\{[^}]*background:var\(--qily-forest,#0f4b5a\)/.test(aiPage), 'User message background is not using the global homepage color');
   assert(/word-procedure-v3/.test(aiPage), 'AI page is not loading the revised procedure-style Word exporter');
-  assert(/ACCESS_PASSWORD = '259'/.test(navigation), 'Controlled modules are not using the existing access password');
-  assert(/CONTROLLED_ROUTE_PATHS = \['\/', '\/experience\/', '\/moments\/', '\/cooperation\/'\]/.test(navigation), 'Controlled navigation route list is incomplete');
-  assert(/key: 'homeUnlocked'/.test(navigation) && /key: 'momentsUnlocked'/.test(navigation), 'Home or moments session access gate is missing');
-  assert(/protectControlledPage\(\)/.test(navigation), 'Controlled page gate is not bootstrapped');
-  assert(/data-controlled-access/.test(navigation), 'Global navigation does not mark encrypted modules');
-  assert(/a\[href="\/"\]::before/.test(visualScale), 'Home navigation lock icon styling is missing');
-  assert(/a\[href="\/moments\/"\]::before/.test(visualScale), 'Moments navigation lock icon styling is missing');
+  const controlledRoutes = navigation.match(/CONTROLLED_ROUTE_PATHS = \[([^\]]*)\]/);
+  assert(controlledRoutes, 'Controlled navigation route declaration is missing');
+  if (controlledRoutes[1].trim()) {
+    assert(/ACCESS_PASSWORD = '259'/.test(navigation), 'Controlled modules are not using the established access password');
+    assert(!/function controlledPageConfig\(\) \{ return null; \}/.test(navigation), 'Controlled routes are configured without an access gate');
+  } else {
+    assert(/function controlledPageConfig\(\) \{ return null; \}/.test(navigation), 'Public page access state is inconsistent');
+  }
   ['index.html','moments/index.html','moments/work/index.html','moments/team/index.html','moments/business/index.html','moments/life/index.html'].forEach((file) => {
-    assert(/site-navigation\.js\?v=20260727-controlled-home-moments-v2/.test(read(file)), `Controlled-access navigation cache version is missing: ${file}`);
+    assert(/site-navigation\.js\?v=/.test(read(file)), `Global navigation bootstrap is missing: ${file}`);
+  });
+  assert(/手机长按原图可保存或转发高清版/.test(projectViewer), 'Project image viewer long-press guidance is missing');
+  assert(/-webkit-touch-callout:default/.test(projectStyles), 'Project original-image long-press support is missing');
+  assert(!/-webkit-user-drag:none/.test(projectStyles), 'Project original-image dragging is still disabled');
+  [
+    'projects/automotive-lean/index.html',
+    'projects/smed-300t/index.html',
+    'projects/mold-warehouse/index.html',
+    'projects/fuse-improvement/index.html',
+    'projects/factory-layout/index.html',
+    'projects/digital-factory/index.html'
+  ].forEach((file) => {
+    const page = read(file);
+    assert(/project-pages\.css\?v=20260728-project-images-v2/.test(page), `Unified project thumbnail styles are missing: ${file}`);
+    assert(/project-image-viewer\.js\?v=20260728-project-images-v2/.test(page), `Unified project image viewer is missing: ${file}`);
   });
   assert(/data-latest-brief-card/.test(knowledge) && /daily\/index\.json/.test(latest), 'Knowledge page is not bound to the latest brief index');
-  assert(index[0].date === '2026-07-27', 'Daily brief index is not newest-first');
+  assert(index.length > 0 && index.every((item, position) => position === 0 || index[position - 1].date >= item.date), 'Daily brief index is not newest-first');
+  assert(knowledge.includes(`/qilylean/daily/${index[0].date}.html`), 'Knowledge hub does not link to the newest daily brief');
   ['防呆法','动改法','双手法','人机法','五五法','流程法','抽样法'].forEach((method) => {
     assert(brief.includes(method), `The July 27 brief is missing ${method}`);
   });

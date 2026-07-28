@@ -6,7 +6,10 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const origin = 'https://qilylean.com';
-const today = '2026-07-28';
+const today = process.env.QILY_BUILD_DATE || new Date().toISOString().slice(0, 10);
+const dailyIndex = JSON.parse(fs.readFileSync(path.join(root, 'qilylean/daily/index.json'), 'utf8'));
+const latestDailyDate = dailyIndex[0] && dailyIndex[0].date;
+if (!latestDailyDate) throw new Error('Latest daily brief metadata is missing');
 // One source of truth for public-route completeness, global navigation and discoverability.
 
 const projectRoutes = [
@@ -46,7 +49,7 @@ const expectedRoutes = [
   '/moments/life/',
   '/cooperation/',
   '/qilylean/daily-insights.html',
-  '/qilylean/daily/2026-07-28.html'
+  `/qilylean/daily/${latestDailyDate}.html`
 ];
 
 function routeFile(route) {
@@ -130,7 +133,8 @@ function validateKnowledgeDiscovery() {
   const html = read('/knowledge/');
   if (!html.includes('/qilylean/gbt2828.html')) throw new Error('GB/T 2828 entry missing from knowledge hub');
   if (!html.includes('/qilylean/production-operations-organization.html')) throw new Error('Production operations organization entry missing from knowledge hub');
-  if (!html.includes('/qilylean/daily/2026-07-27.html')) throw new Error('2026-07-27 brief missing from knowledge hub');
+  const latestRoute = `/qilylean/daily/${latestDailyDate}.html`;
+  if (!html.includes(latestRoute)) throw new Error(`${latestDailyDate} brief missing from knowledge hub`);
 }
 
 function main() {

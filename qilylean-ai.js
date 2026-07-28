@@ -1,8 +1,8 @@
 (function(){
 'use strict';
-var API_BASES=['https://api.qilylean.com','https://qilylean-ai.dinghunter623.workers.dev'];
+var API_BASES=['https://api.qilylean.com','https://ai-api.qilylean.com','https://qilylean-ai.dinghunter623.workers.dev'];
 var TEXT_REQUEST_TIMEOUT=56000;
-var API_PROBE_TIMEOUT=6000;
+var API_PROBE_TIMEOUT=4500;
 var MATERIAL_REQUEST_TIMEOUT=125000;
 var RETRY_DELAY=650;
 var MAX_FILE_SIZE=25*1024*1024;
@@ -370,98 +370,87 @@ function isNetworkFailure(error){
 }
 
 function probeApiBase(base){
-  var controller=new AbortController();
-  var timeout=setTimeout(function(){controller.abort();},API_PROBE_TIMEOUT);
-  return fetch(base+'/health',{
+  var controller=typeof AbortController==='function'?new AbortController():null;
+  var timeout=controller?setTimeout(function(){controller.abort();},API_PROBE_TIMEOUT):null;
+  var options={
     method:'GET',
     mode:'cors',
     credentials:'omit',
-    cache:'no-store',
-    signal:controller.signal
-  }).then(function(response){return response.ok;}).catch(function(){return false;}).finally(function(){clearTimeout(timeout);});
+    cache:'no-store'
+  };
+  if(controller)options.signal=controller.signal;
+  var request=fetch(base+'/health',options).then(function(response){return response.ok;}).catch(function(){return false;});
+  if(!controller){
+    request=Promise.race([request,wait(API_PROBE_TIMEOUT).then(function(){return false;})]);
+  }
+  return request.finally(function(){if(timeout)clearTimeout(timeout);});
 }
 
 function resolveApiBase(){
   if(preferredApiBase)return Promise.resolve(preferredApiBase);
   if(apiProbe)return apiProbe;
-  apiProbe=new Promise(function(resolve){
-    var settled=false;
-    var remaining=API_BASES.length;
-    API_BASES.forEach(function(base){
-      probeApiBase(base).then(function(ok){
-        if(ok&&!settled){
-          settled=true;
-          preferredApiBase=base;
-          resolve(base);
-          return;
-        }
-        remaining-=1;
-        if(!remaining&&!settled){
-          settled=true;
-          preferredApiBase=API_BASES[API_BASES.length-1];
-          resolve(preferredApiBase);
-        }
-      });
-    });
-    window.setTimeout(function(){
-      if(settled)return;
-      settled=true;
-      preferredApiBase=API_BASES[API_BASES.length-1];
-      resolve(preferredApiBase);
-    },API_PROBE_TIMEOUT+300);
+  apiProbe=Promise.all(API_BASES.map(probeApiBase)).then(function(results){
+    var index=results.indexOf(true);
+    preferredApiBase=API_BASES[index<0?0:index];
+    return preferredApiBase;
   });
   return apiProbe;
 }
 
-function alternateApiBase(current){
-  return API_BASES.filter(function(base){return base!==current;})[0]||current;
+function orderedApiBases(first){
+  return [first].concat(API_BASES.filter(function(base){return base!==first;}));
 }
 
 function requestOnce(payload,hasAttachment,isRetry,base){
-  var controller=new AbortController();
-  var timeout=setTimeout(function(){controller.abort();},hasAttachment?MATERIAL_REQUEST_TIMEOUT:TEXT_REQUEST_TIMEOUT);
+  var controller=typeof AbortController==='function'?new AbortController():null;
+  var timeout=controller?setTimeout(function(){controller.abort();},hasAttachment?MATERIAL_REQUEST_TIMEOUT:TEXT_REQUEST_TIMEOUT):null;
   var url=base+'/chat'+(isRetry?'?retry=1&t='+Date.now():'');
-  return fetch(url,{
+  var options={
     method:'POST',
     headers:{'Content-Type':'text/plain;charset=UTF-8','Accept':'application/json'},
     body:JSON.stringify(payload),
     mode:'cors',
     credentials:'omit',
-    cache:'no-store',
-    signal:controller.signal
-  }).finally(function(){clearTimeout(timeout);});
+    cache:'no-store'
+  };
+  if(controller)options.signal=controller.signal;
+  return fetch(url,options).finally(function(){if(timeout)clearTimeout(timeout);});
 }
 
 async function requestAnswer(payload,hasAttachment){
-  var base=await resolveApiBase();
-  try{
-    var first=await requestOnce(payload,hasAttachment,false,base);
-    if(!hasAttachment&&(first.status===502||first.status===503||first.status===504)){
-      var gatewayAlternate=alternateApiBase(base);
-      setStatus('主链路暂时不可用，正在切换备用链路','系统正在自动切换接口，您无需重复提问。','↻');
+  var first=await resolveApiBase();
+  var bases=orderedApiBases(first);
+  var lastError=null;
+  for(var index=0;index<bases.length;index+=1){
+    var base=bases[index];
+    try{
+      var response=await requestOnce(payload,hasAttachment,index>0,base);
+      var gatewayFailure=response.status===502||response.status===503||response.status===504;
+      if(!hasAttachment&&gatewayFailure&&index<bases.length-1){
+        setStatus('当前接口暂时不可用，正在切换下一条链路','系统正在自动切换，您无需重复提问。','↻');
+        await wait(RETRY_DELAY);
+        continue;
+      }
+      preferredApiBase=base;
+      return response;
+    }catch(error){
+      lastError=error;
+      var canRetry=!hasAttachment&&error&&error.name!=='AbortError'&&isNetworkFailure(error)&&index<bases.length-1;
+      if(!canRetry)throw error;
+      setStatus('当前链路未连接，正在切换下一条链路','系统正在自动切换，您无需重复提问。','↻');
       await wait(RETRY_DELAY);
-      var gatewayResponse=await requestOnce(payload,false,true,gatewayAlternate);
-      preferredApiBase=gatewayAlternate;
-      return gatewayResponse;
     }
-    return first;
-  }catch(error){
-    if(hasAttachment||error&&error.name==='AbortError'||!isNetworkFailure(error))throw error;
-    var alternate=alternateApiBase(base);
-    setStatus('主链路未连接，正在切换备用链路','系统正在自动切换接口，您无需重复提问。','↻');
-    var response=await requestOnce(payload,false,true,alternate);
-    preferredApiBase=alternate;
-    return response;
   }
+  throw lastError||new Error('Network request failed');
 }
 
 function clientErrorMessage(error){
   var message=String(error&&error.message||'');
   if((error&&error.name==='AbortError')||/timed out/i.test(message)){
-    return '本次回答等待超过约55秒，系统已停止等待且没有重复提交。请点击发送再次提交；若使用4G，可切换至Wi-Fi后重试。';
+    return '本次回答等待超过约55秒，系统已停止等待且没有重复提交。请点击发送再次提交。';
   }
   if(/load failed|failed to fetch|networkerror|network request failed/i.test(message)){
-    return '主链路与备用链路均未能连接。请点击发送再次提交；若使用4G，可切换至Wi-Fi后重试。';
+    return '当前网络未能连接 QilyLean AI，系统已自动尝试自有主域名、备用域名及灾备链路。请检查网络后点击发送重试。';
   }
   return message||'AI 服务暂时未能完成回答，请稍后重试。';
 }

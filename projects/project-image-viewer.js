@@ -26,13 +26,13 @@
           '<button type="button" data-image-action="zoom-out" aria-label="缩小">−</button>',
           '<button type="button" data-image-action="reset" aria-label="恢复适合屏幕">适屏</button>',
           '<button type="button" data-image-action="zoom-in" aria-label="放大">＋</button>',
-          '<button type="button" data-image-action="original">查看原图</button>',
+          '<button type="button" data-image-action="original">原图新窗口</button>',
         '</div>',
       '</div>',
       '<button class="project-lightbox-nav prev" type="button" data-image-action="prev" aria-label="上一张">‹</button>',
       '<div class="project-lightbox-stage"><img alt=""></div>',
       '<button class="project-lightbox-nav next" type="button" data-image-action="next" aria-label="下一张">›</button>',
-      '<div class="project-lightbox-caption"></div>',
+      '<div class="project-lightbox-footer"><div class="project-lightbox-caption"></div><div class="project-lightbox-save-tip">图片已自动适配屏幕；手机长按原图可保存或转发高清版。</div></div>',
     '</div>'
   ].join('');
   document.body.appendChild(lightbox);
@@ -50,7 +50,13 @@
     return (figcaption&&figcaption.textContent.trim())||img.alt||'代表项目图片';
   }
 
-  function sourceOf(img){return img.currentSrc||img.getAttribute('src')||'';}
+  function sourceOf(img){
+    var explicit=img.getAttribute('data-original-src');
+    if(explicit)return explicit;
+    var link=img.closest('a[href]');
+    if(link&&/^https?:/i.test(link.href))return link.href;
+    return img.currentSrc||img.getAttribute('src')||'';
+  }
   function calculateBaseWidth(){if(!viewer.naturalWidth||!viewer.naturalHeight)return;var maxWidth=Math.max(280,window.innerWidth-(window.innerWidth<620?24:120));var maxHeight=Math.max(240,window.innerHeight-(window.innerWidth<620?150:175));var fit=Math.min(maxWidth/viewer.naturalWidth,maxHeight/viewer.naturalHeight,1);baseWidth=Math.max(1,Math.floor(viewer.naturalWidth*fit));renderZoom();}
   function renderZoom(){if(!baseWidth)return;viewer.style.width=Math.round(baseWidth*zoom)+'px';viewer.style.maxWidth='none';viewer.style.height='auto';stage.scrollTop=0;stage.scrollLeft=0;}
   function setZoom(value){zoom=Math.min(4,Math.max(.75,value));renderZoom();}
@@ -58,7 +64,23 @@
   function open(index,trigger){previousFocus=trigger||document.activeElement;show(index);lightbox.classList.add('show');lightbox.setAttribute('aria-hidden','false');document.body.classList.add('project-lightbox-open');lightbox.querySelector('[data-image-action="close"]').focus();}
   function close(){lightbox.classList.remove('show');lightbox.setAttribute('aria-hidden','true');document.body.classList.remove('project-lightbox-open');viewer.removeAttribute('src');if(previousFocus&&typeof previousFocus.focus==='function')previousFocus.focus();}
 
-  images.forEach(function(img,index){img.classList.add('project-zoomable');img.setAttribute('tabindex','0');img.setAttribute('role','button');img.setAttribute('title','点击放大查看');img.setAttribute('aria-label','放大查看：'+imageCaption(img));img.addEventListener('click',function(){open(index,img);});img.addEventListener('keydown',function(event){if(event.key==='Enter'||event.key===' '){event.preventDefault();open(index,img);}});});
+  images.forEach(function(img,index){
+    img.classList.add('project-zoomable');
+    img.setAttribute('tabindex','0');
+    img.setAttribute('role','button');
+    img.setAttribute('title','点击查看完整高清图；手机长按可保存或转发');
+    img.setAttribute('aria-label','查看完整高清图：'+imageCaption(img));
+    img.addEventListener('click',function(event){
+      if(img.closest('a[href]'))event.preventDefault();
+      open(index,img);
+    });
+    img.addEventListener('keydown',function(event){
+      if(event.key==='Enter'||event.key===' '){
+        event.preventDefault();
+        open(index,img);
+      }
+    });
+  });
   lightbox.addEventListener('click',function(event){var action=event.target.closest('[data-image-action]');if(action){var name=action.getAttribute('data-image-action');if(name==='close')close();else if(name==='prev')show(activeIndex-1);else if(name==='next')show(activeIndex+1);else if(name==='zoom-in')setZoom(zoom+.25);else if(name==='zoom-out')setZoom(zoom-.25);else if(name==='reset')setZoom(1);else if(name==='original')window.open(sourceOf(images[activeIndex]),'_blank','noopener');return;}if(event.target===lightbox)close();});
   viewer.addEventListener('dblclick',function(){setZoom(zoom===1?2:1);});
   viewer.addEventListener('wheel',function(event){if(!lightbox.classList.contains('show'))return;event.preventDefault();setZoom(zoom+(event.deltaY<0?.15:-.15));},{passive:false});
