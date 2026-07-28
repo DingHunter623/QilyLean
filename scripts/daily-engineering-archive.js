@@ -255,6 +255,11 @@ const moduleMap = {
   '精益生产': '/projects/automotive-lean/'
 };
 
+const topicLabels = {
+  'Factory Layout': '工厂布局规划',
+  'ERP/MES': 'ERP／MES协同'
+};
+
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
@@ -314,7 +319,7 @@ const titlePatterns = [
   ({ topic, phase, scene }) => `从${phase.title}到复制，${topic}最容易漏掉什么`,
   ({ topic, phase, lens }) => `一项可验收的${topic}，怎样完成${phase.title}`,
   ({ topic, phase, lens }) => `${phase.title}为何决定${topic}能否真正维持`,
-  ({ topic, lens, phase }) => `不靠经验硬撑：${topic}以${lens.title}推进${phase.title}`,
+  ({ topic, lens, phase }) => `不靠经验硬撑：${topic}的${phase.title}要${lens.title}`,
   ({ topic, scene, lens }) => `${scene.loss}减少以后，${topic}还要检查什么`,
   ({ topic, lens, scene }) => `把“${lens.title}”落实到${scene.name}`,
   ({ topic, phase, scene }) => `${scene.name}的${phase.title}，先从${topic}证据链开始`,
@@ -366,7 +371,8 @@ function uniqueTitle(candidate, { scene, phase, lens, index }, usedTitles) {
 }
 
 function buildArchiveArticle({ date, topic, guide, lens, stage, scene, phase, role, energy, visual, index, usedTitles }) {
-  const titleContext = { topic, lens, scene, phase };
+  const publicTopic = topicLabels[topic] || topic;
+  const titleContext = { topic: publicTopic, lens, scene, phase };
   const title = uniqueTitle(
     titlePatterns[(index + Math.floor(index / 7) + Number(date.slice(0, 4))) % titlePatterns.length](titleContext),
     { scene, phase, lens, index },
@@ -389,12 +395,12 @@ function buildArchiveArticle({ date, topic, guide, lens, stage, scene, phase, ro
     lens.boundary
   ]);
   const links = moduleLinks(topic).map((item) => `<a href="${item.href}"><strong>${item.name}</strong><span>${item.text}</span></a>`).join('');
-  const tags = [topic, scene.name, phase.title];
+  const tags = [publicTopic, scene.name, phase.title];
 
   const article = `<article class="post detailed" id="${date}">
-<div class="visual">${visual({ title, cat: topic }, index)}</div>
+<div class="visual">${visual({ title, cat: publicTopic }, index)}</div>
 <div class="content">
-<div class="date">${date}｜${escapeHtml(topic)}</div>
+<div class="date">${date}｜${escapeHtml(publicTopic)}</div>
 <h2>${escapeHtml(title)}</h2>
 <p>${escapeHtml(summary)}</p>
 <div class="quote">${escapeHtml(guide.takeaway)}</div>
@@ -451,7 +457,7 @@ ${list(pitfalls)}
     title,
     summary,
     dayNo: '',
-    theme: topic,
+    theme: publicTopic,
     archive: true
   };
 }
