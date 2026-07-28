@@ -1,3 +1,4 @@
+# trigger: 20260728-factory-render-v1
 name: Publish anonymous factory layout renderings
 
 on:
@@ -104,7 +105,6 @@ jobs:
           grep -q '匿名化展示说明' projects/factory-layout/index.html
           grep -q 'factory-render-v1' projects/project-pages.css
           ! grep -q '天星电子' projects/factory-layout/index.html
-          ! grep -q '天星电子' media/projects/factory-campus-aerial.png || true
 
       - name: Commit published renderings
         shell: bash
