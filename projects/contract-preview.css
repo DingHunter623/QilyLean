@@ -1,0 +1,29 @@
+/* QilyLean 合同范本在线预览：仅展示高清原稿，不提供文件下载入口。 */
+.contract-template-preview{margin-top:28px;padding:22px;border:1px solid var(--qily-line);background:linear-gradient(180deg,#f8fcfb,#edf7f5);box-shadow:0 16px 38px rgba(15,75,90,.1)}
+.contract-preview-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:start;margin-bottom:16px}
+.contract-preview-heading small{display:block;margin-bottom:5px;color:#9a7130;font-weight:950;letter-spacing:.04em}
+.contract-preview-heading h2{margin:0 0 8px!important;color:#0f4b5a;font-size:clamp(25px,2.5vw,36px)!important;line-height:1.2}
+.contract-preview-heading p{max-width:920px;margin:0;color:#526968;font-size:16.5px!important;line-height:1.72!important}
+.contract-preview-badge{align-self:start;padding:8px 13px;border:1px solid #caa15f;border-radius:999px;color:#17322d;background:#ffe39b;font-size:14px;font-weight:950;white-space:nowrap}
+.contract-preview-shell{overflow:hidden;border:1px solid #aac9c4;background:#071b20;box-shadow:0 18px 48px rgba(7,60,71,.18)}
+.contract-preview-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:52px;padding:10px 15px;color:#eaf6f3;background:#0c3f49;border-bottom:1px solid rgba(255,255,255,.16);font-size:14.5px;font-weight:850}
+.contract-preview-bar strong{color:#ffe39b;font-size:16px}
+.contract-preview-viewport{position:relative;height:clamp(680px,78vh,1040px);min-height:620px;background:#eef4f2;isolation:isolate}
+.contract-preview-viewport iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+.contract-preview-shield{position:absolute;top:0;right:0;z-index:4;display:flex;align-items:center;justify-content:center;width:min(31%,270px);height:66px;padding:8px 12px;color:#eaf6f3;background:linear-gradient(90deg,rgba(12,63,73,.32),#0c3f49 32%);font-size:13px;font-weight:900;text-align:center;pointer-events:auto;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.contract-preview-note{margin:13px 0 0;padding:12px 14px;border-left:4px solid #caa15f;color:#365b58;background:#fff;font-size:14.5px!important;line-height:1.65!important}
+.contract-preview-note strong{color:#0f4b5a}
+.contract-preview-viewport,.contract-preview-viewport *{-webkit-touch-callout:none}
+@media(max-width:760px){
+  .contract-template-preview{padding:15px}
+  .contract-preview-heading{grid-template-columns:1fr;gap:10px}
+  .contract-preview-badge{justify-self:start}
+  .contract-preview-bar{align-items:flex-start;flex-direction:column;gap:3px}
+  .contract-preview-viewport{height:74vh;min-height:560px}
+  .contract-preview-shield{width:190px;height:62px;font-size:12px}
+}
+@media(max-width:480px){
+  .contract-preview-viewport{height:70vh;min-height:520px}
+  .contract-preview-shield{width:155px;padding:6px 8px}
+}
+@media print{.contract-template-preview{display:none!important}}
