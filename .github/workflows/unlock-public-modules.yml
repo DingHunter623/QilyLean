@@ -39,7 +39,9 @@ jobs:
           grep -q 'function controlledPageConfig() { return null; }' site-navigation.js
           grep -q '<h1>履历主线</h1>' experience/index.html
           grep -q 'index,follow,max-image-preview:large' experience/index.html
-          grep -q 'career-resume-full.js?v=20260728-public-access-v1' experience/index.html
+          grep -q "sessionStorage.setItem('experienceUnlocked', '1')" experience/index.html
+          grep -q 'career-resume-full.js?v=20260728-public-access-v2' experience/index.html
+          grep -q 'career-resume-document.js?v=20260728-public-access-v2' experience/index.html
           ! grep -q '访问履历主线\|experiencePassword\|密码不正确\|履历主线（加密）' experience/index.html
           ! grep -q '🔒\|data-controlled-access="true"' site-navigation.js
           ! grep -q '🔒\|加密导航模块' site-visual-scale-v1.css
@@ -50,11 +52,11 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All modules are already public and lock icons are removed."
+            echo "All modules are public and resume rendering is healthy."
             exit 0
           fi
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.email "4189828+github-actions[bot]@users.noreply.github.com"
           git add site-navigation.js site-visual-scale-v1.css experience/index.html '*.html' '**/*.html'
-          git commit -m "fix: remove legacy lock icons from public modules [skip ci]"
+          git commit -m "fix: restore public resume rendering [skip ci]"
           git push
