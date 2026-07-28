@@ -1,0 +1,84 @@
+/* QilyLean 2026-07-28：全站标题区、正文区、卡片区与页脚统一宽版对齐 */
+:root{
+  --qily-wide-content:1480px;
+  --qily-wide-gutter:clamp(18px,3.2vw,64px);
+}
+
+/* 同一层级统一水平安全边距 */
+.module-hero,
+.module-section,
+.module-footer,
+.hero:not(:has(.hero-grid)):has(>.inner),
+.hero:has(>.hero-inner),
+.daily-hero,
+.main,
+.section,
+.footer{
+  padding-left:var(--qily-wide-gutter)!important;
+  padding-right:var(--qily-wide-gutter)!important;
+}
+
+/* 首屏、正文、卡片与页脚使用同一内容边线 */
+.module-inner,
+.module-page .inner,
+.module-hero>.module-inner,
+.module-section>.module-inner,
+.module-footer>.module-inner,
+.hero:not(:has(.hero-grid))>.inner,
+.hero>.hero-inner,
+.daily-hero>.daily-inner,
+.main>.main-inner,
+.footer>.footer-inner,
+.section>.inner,
+.qily-home-balanced .hero-grid,
+.qily-home-balanced .inner{
+  width:min(var(--qily-wide-content),100%)!important;
+  max-width:var(--qily-wide-content)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+
+/* 标题说明、页内导航与下方内容同宽，不再人为缩窄 */
+.module-lead,
+.module-heading,
+.module-page .head,
+.module-subnav,
+.hero:not(:has(.hero-grid)) .lead,
+.hero:not(:has(.hero-grid)) p,
+.daily-hero p,
+.qily-home-balanced .lead,
+.qily-home-balanced .section .head{
+  width:100%!important;
+  max-width:100%!important;
+}
+
+/* 常见旧页面容器同步对齐 */
+.hero-inner,
+.main-inner,
+.footer-inner{
+  box-sizing:border-box;
+}
+
+@media(max-width:900px){
+  :root{--qily-wide-gutter:clamp(16px,4vw,28px)}
+}
+
+@media(max-width:620px){
+  :root{--qily-wide-gutter:18px}
+  .module-inner,
+  .module-page .inner,
+  .module-hero>.module-inner,
+  .module-section>.module-inner,
+  .module-footer>.module-inner,
+  .hero:not(:has(.hero-grid))>.inner,
+  .hero>.hero-inner,
+  .daily-hero>.daily-inner,
+  .main>.main-inner,
+  .footer>.footer-inner,
+  .section>.inner,
+  .qily-home-balanced .hero-grid,
+  .qily-home-balanced .inner{
+    width:100%!important;
+    max-width:100%!important;
+  }
+}
