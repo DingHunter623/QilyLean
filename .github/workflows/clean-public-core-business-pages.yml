@@ -1,0 +1,108 @@
+name: Clean public core business pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/clean-public-core-business-pages.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Remove internal notes and add fast title links
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('.')
+
+          # 1) 独立业务页：删除面向后台/运维的预览保护及分享说明，仅保留客户可见业务内容与合同图文。
+          detail_pages = [
+              root / 'cooperation/factory-planning/index.html',
+              root / 'cooperation/lean-improvement/index.html',
+              root / 'cooperation/visual-management/index.html',
+          ]
+          for path in detail_pages:
+              text = path.read_text(encoding='utf-8')
+              text = re.sub(r'<p class="core-contract-viewer-note">.*?</p>', '', text, flags=re.S)
+              text = re.sub(r'<p class="core-business-share-note">.*?</p>', '', text, flags=re.S)
+              path.write_text(text, encoding='utf-8')
+
+          # 2) 项目合作主页：编号＋英文分类＋中文标题整体可点击，高速进入对应独立业务页。
+          index = root / 'cooperation/index.html'
+          text = index.read_text(encoding='utf-8')
+
+          replacements = {
+              '<span class="service-number">01</span><small>Factory Planning</small><h3>新工厂／新产线规划</h3>':
+              '<a class="service-heading-link" href="/cooperation/factory-planning/" aria-label="进入新工厂／新产线规划独立业务页"><span class="service-number">01</span><small>Factory Planning</small><h3>新工厂／新产线规划</h3></a>',
+              '<span class="service-number">02</span><small>Lean Improvement</small><h3>精益改善项目交付</h3>':
+              '<a class="service-heading-link" href="/cooperation/lean-improvement/" aria-label="进入精益改善项目交付独立业务页"><span class="service-number">02</span><small>Lean Improvement</small><h3>精益改善项目交付</h3></a>',
+              '<span class="service-number">03</span><small>Visual Management Delivery</small><h3>目视化项目设计与交付</h3>':
+              '<a class="service-heading-link" href="/cooperation/visual-management/" aria-label="进入目视化项目设计与交付独立业务页"><span class="service-number">03</span><small>Visual Management Delivery</small><h3>目视化项目设计与交付</h3></a>',
+          }
+          for old, new in replacements.items():
+              if old not in text:
+                  raise SystemExit(f'missing cooperation card heading: {old}')
+              text = text.replace(old, new, 1)
+
+          # 新工厂合同页数与当前原稿保持一致。
+          text = text.replace('<span>15页高清PDF原版</span>', '<span>16页高清PDF原版</span>', 1)
+
+          marker = '    .service-card{display:flex;flex-direction:column}\n'
+          styles = (
+              '    .service-heading-link{display:block;margin:-2px -2px 4px;padding:2px;color:inherit;text-decoration:none;border-radius:8px;cursor:pointer;transition:transform .18s ease,background-color .18s ease,box-shadow .18s ease}\n'
+              '    .service-heading-link small{display:block}\n'
+              '    .service-heading-link h3{margin:7px 0;color:#0f4b5a}\n'
+              '    .service-heading-link:hover,.service-heading-link:focus-visible{transform:translateY(-2px);background:#eef8f6;box-shadow:0 8px 20px rgba(15,75,90,.12);outline:2px solid rgba(23,139,148,.26);outline-offset:3px}\n'
+          )
+          if '.service-heading-link{' not in text:
+              if marker not in text:
+                  raise SystemExit('missing service card CSS marker')
+              text = text.replace(marker, marker + styles, 1)
+
+          index.write_text(text, encoding='utf-8')
+
+          # 3) 清理已不再展示的说明样式。
+          css = root / 'cooperation/core-business-detail.css'
+          css_text = css.read_text(encoding='utf-8')
+          css_text = re.sub(r'\.core-contract-viewer-note\{[^\n]*\}\n?', '', css_text)
+          css_text = re.sub(r'\.core-business-share-note\{[^\n]*\}\n?', '', css_text)
+          css.write_text(css_text, encoding='utf-8')
+
+          # 4) 强制刷新主页内联样式与独立页样式缓存。
+          for path in detail_pages:
+              page = path.read_text(encoding='utf-8')
+              page = page.replace('core-business-pages-v1', 'core-business-pages-v2')
+              path.write_text(page, encoding='utf-8')
+
+          # 基本验收
+          assert 'core-contract-viewer-note' not in ''.join(p.read_text(encoding='utf-8') for p in detail_pages)
+          assert 'core-business-share-note' not in ''.join(p.read_text(encoding='utf-8') for p in detail_pages)
+          assert text.count('class="service-heading-link"') == 3
+          PY
+
+      - name: Commit and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/clean-public-core-business-pages.yml
+          git add cooperation/index.html cooperation/core-business-detail.css \
+            cooperation/factory-planning/index.html \
+            cooperation/lean-improvement/index.html \
+            cooperation/visual-management/index.html
+          git commit -m 'fix: clean client pages and link core business headings [skip ci]'
+          git push
