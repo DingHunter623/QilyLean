@@ -8,11 +8,15 @@ const root = path.resolve(__dirname, '..');
 const navigationFile = path.join(root, 'site-navigation.js');
 const visualScaleFile = path.join(root, 'site-visual-scale-v1.css');
 const wideLayoutFile = path.join(root, 'site-wide-layout-v1.css');
+const typographyFile = path.join(root, 'site-typography-v1.css');
 const experienceFile = path.join(root, 'experience', 'index.html');
-const PUBLIC_NAV_VERSION = '20260728-wide-layout-v1';
-const PUBLIC_ASSET_VERSION = '20260728-wide-layout-v1';
+const capabilitiesFile = path.join(root, 'capabilities', 'index.html');
+const certificateFile = path.join(root, 'certificates', 'chatgpt-lean', 'index.html');
+const PUBLIC_NAV_VERSION = '20260728-type-system-v1';
+const PUBLIC_ASSET_VERSION = '20260728-type-system-v1';
 const PUBLIC_RESUME_VERSION = '20260728-public-access-v2';
-const WIDE_LAYOUT_VERSION = '20260728-wide-layout-v1';
+const WIDE_LAYOUT_VERSION = '20260728-aligned-layout-v2';
+const TYPE_SYSTEM_VERSION = '20260728-type-system-v1';
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
@@ -26,9 +30,11 @@ function unlockNavigation() {
   let page = read(navigationFile);
 
   page = page
-    .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV3')
+    .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV4')
     .replace(/var SHARED_ASSET_VERSION = '[^']*';/, `var SHARED_ASSET_VERSION = '${PUBLIC_ASSET_VERSION}';`)
     .replace(/var VISUAL_SCALE_VERSION = '[^']*';/, `var VISUAL_SCALE_VERSION = '${PUBLIC_ASSET_VERSION}';`)
+    .replace(/site-wide-layout-v1\.css\?v=[^'"\s]+/g, `site-wide-layout-v1.css?v=${WIDE_LAYOUT_VERSION}`)
+    .replace(/site-typography-v1\.css\?v=[^'"\s]+/g, `site-typography-v1.css?v=${TYPE_SYSTEM_VERSION}`)
     .replace(/var ACCESS_PASSWORD = '[^']*';\n/, '')
     .replace(/var CONTROLLED_ROUTE_PATHS = \[[^\]]*\];/, 'var CONTROLLED_ROUTE_PATHS = [];')
     .replace(
@@ -47,9 +53,21 @@ function unlockNavigation() {
     );
   }
 
+  if (!page.includes('function addTypographyStylesheet()')) {
+    page = page.replace(
+      '  function addGlobalHeaderStyles() {',
+      `  function addTypographyStylesheet() {\n    var current = document.getElementById('qilyTypographyStylesheet');\n    if (current) {\n      current.href = '/site-typography-v1.css?v=${TYPE_SYSTEM_VERSION}';\n      return;\n    }\n    var link = document.createElement('link');\n    link.id = 'qilyTypographyStylesheet';\n    link.rel = 'stylesheet';\n    link.href = '/site-typography-v1.css?v=${TYPE_SYSTEM_VERSION}';\n    document.head.appendChild(link);\n  }\n\n  function addGlobalHeaderStyles() {`
+    );
+  }
+
   page = page.replace(
     /(\n\s*addVisualScaleStylesheet\(\);)(?!\n\s*addWideLayoutStylesheet\(\);)/,
     '$1\n    addWideLayoutStylesheet();'
+  );
+
+  page = page.replace(
+    /(\n\s*addGlobalHeaderStyles\(\);)(?!\n\s*addTypographyStylesheet\(\);)/,
+    '$1\n    addTypographyStylesheet();'
   );
 
   page = page
@@ -71,6 +89,9 @@ function unlockNavigation() {
   }
   if (!page.includes(`site-wide-layout-v1.css?v=${WIDE_LAYOUT_VERSION}`) || !page.includes('addWideLayoutStylesheet();')) {
     throw new Error('Site-wide aligned layout loader was not installed');
+  }
+  if (!page.includes(`site-typography-v1.css?v=${TYPE_SYSTEM_VERSION}`) || !page.includes('addTypographyStylesheet();')) {
+    throw new Error('Site-wide typography loader was not installed');
   }
 
   write(navigationFile, page);
@@ -97,6 +118,44 @@ function validateWideLayout() {
   }
   if (!css.includes('.module-hero>.module-inner') || !css.includes('.module-section>.module-inner')) {
     throw new Error('Hero and content alignment selectors are incomplete');
+  }
+  if (!css.includes('body.module-page .content-inner') || !css.includes('.capability-certificate')) {
+    throw new Error('Extended vertical alignment selectors are incomplete');
+  }
+}
+
+function validateTypography() {
+  const css = read(typographyFile);
+  const required = [
+    '--qily-type-nav-1:17px',
+    '--qily-type-nav-2:16px',
+    '--qily-type-nav-3:15px',
+    '--qily-type-h1:',
+    '--qily-type-h2:',
+    '--qily-type-body:18.5px',
+    '.qily-site-header.qily-global-header>.qily-global-nav a',
+    '.module-subnav>a',
+    '.module-card h3'
+  ];
+  for (const marker of required) {
+    if (!css.includes(marker)) throw new Error(`Typography marker missing: ${marker}`);
+  }
+}
+
+function validateCertificatePresentation() {
+  const capabilities = read(capabilitiesFile);
+  const certificate = read(certificateFile);
+  if (!capabilities.includes('grid-template-columns:minmax(220px,300px) minmax(0,1fr)')) {
+    throw new Error('ChatGPT certificate thumbnail layout is missing');
+  }
+  if (!capabilities.includes('href="/certificates/chatgpt-lean/"')) {
+    throw new Error('ChatGPT certificate detail link is missing');
+  }
+  if (!certificate.includes('<h1>ChatGPT应用与精益生产实践证书</h1>')) {
+    throw new Error('Independent certificate page is incomplete');
+  }
+  if (!certificate.includes('/qilylean/chatgpt-lean-certificate.png')) {
+    throw new Error('Certificate original image link is missing');
   }
 }
 
@@ -166,11 +225,13 @@ function refreshNavigationReferences() {
 
 function main() {
   validateWideLayout();
+  validateTypography();
+  validateCertificatePresentation();
   unlockNavigation();
   removeLegacyLockStyles();
   publishExperience();
   const refreshed = refreshNavigationReferences();
-  process.stdout.write(`Public access retained; all modules aligned to the 1480px wide content grid; updated ${refreshed} HTML files.\n`);
+  process.stdout.write(`Public access retained; typography hierarchy, 1480px alignment and certificate detail page published; updated ${refreshed} HTML files.\n`);
 }
 
 main();
