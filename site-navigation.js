@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanSiteNavigationPublicV1) return;
-  window.__qilyLeanSiteNavigationPublicV1 = true;
+  if (window.__qilyLeanSiteNavigationPublicV2) return;
+  window.__qilyLeanSiteNavigationPublicV2 = true;
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
@@ -84,10 +84,6 @@
       '.qily-global-header>.qily-global-nav a{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;min-height:42px!important;padding:7px 10px!important;border:1px solid transparent!important;border-radius:10px!important;color:#182420!important;background:transparent!important;box-shadow:none!important;font-size:17.5px!important;font-weight:850!important;line-height:1.2!important;text-decoration:none!important;transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease!important}',
       '.qily-global-header>.qily-global-nav a:hover,.qily-global-header>.qily-global-nav a:focus-visible{color:#fff!important;background:#0f4b5a!important;border-color:#0f4b5a!important;box-shadow:0 8px 18px rgba(15,75,90,.22)!important;outline:none!important;transform:translateY(-2px)!important}',
       '.qily-global-header>.qily-global-nav a[aria-current="page"]{color:#0f4b5a!important;background:#e4f2ef!important;border-color:#b8d9d4!important}',
-      '.qily-global-header>.qily-global-nav a[data-controlled-access="true"]{color:#624810!important;border-color:#d5a84f!important;background:linear-gradient(135deg,#fff5d5,#ffe39b)!important;box-shadow:inset 0 0 0 1px rgba(202,161,95,.18),0 4px 12px rgba(110,78,26,.09)!important}',
-      '.qily-global-header>.qily-global-nav a[data-controlled-access="true"]::before{content:"🔒";margin-right:4px;font-size:.78em;line-height:1}',
-      '.qily-global-header>.qily-global-nav a[data-controlled-access="true"]:hover,.qily-global-header>.qily-global-nav a[data-controlled-access="true"]:focus-visible{color:#fff!important;border-color:#6e3f5f!important;background:#6e3f5f!important}',
-      '.qily-global-header>.qily-global-nav a[data-controlled-access="true"][aria-current="page"]{color:#fff!important;border-color:#8d641f!important;background:linear-gradient(135deg,#9a6f25,#caa15f)!important}',
       '@media(max-width:900px){.qily-site-header.qily-global-header{flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:5px!important;min-height:auto!important;padding:7px 9px 8px!important}.qily-global-header>.qily-brand{width:142px!important;height:27px!important;margin-left:42px!important}.qily-global-header>.qily-global-nav{width:100%!important;max-width:100%!important;margin:0!important;justify-content:flex-start!important;gap:5px!important;overflow-x:auto!important}.qily-global-header>.qily-global-nav a{min-height:34px!important;padding:5px 9px!important;font-size:12.5px!important;border-radius:9px!important}}',
       '@media(max-width:620px){.qily-global-header>.qily-brand{width:126px!important;height:23px!important}.qily-global-header>.qily-global-nav a{font-size:11.5px!important;padding:5px 7px!important}}'
     ].join('');
