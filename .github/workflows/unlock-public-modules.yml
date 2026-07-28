@@ -6,6 +6,9 @@ on:
     paths:
       - "scripts/unlock-public-modules.js"
       - "site-wide-layout-v1.css"
+      - "site-typography-v1.css"
+      - "capabilities/index.html"
+      - "certificates/chatgpt-lean/index.html"
       - ".github/workflows/unlock-public-modules.yml"
   workflow_dispatch:
 
@@ -30,35 +33,47 @@ jobs:
         with:
           node-version: 20
 
-      - name: Publish public modules and global layout
+      - name: Publish public modules, alignment and typography
         run: node scripts/unlock-public-modules.js
 
-      - name: Validate public access and wide alignment
+      - name: Validate public access, hierarchy and certificate presentation
         shell: bash
         run: |
           grep -q 'var CONTROLLED_ROUTE_PATHS = \[\];' site-navigation.js
           grep -q 'function controlledPageConfig() { return null; }' site-navigation.js
+          grep -q 'addWideLayoutStylesheet();' site-navigation.js
+          grep -q 'addTypographyStylesheet();' site-navigation.js
+          grep -q 'site-wide-layout-v1.css?v=20260728-aligned-layout-v2' site-navigation.js
+          grep -q 'site-typography-v1.css?v=20260728-type-system-v1' site-navigation.js
           grep -q '<h1>履历主线</h1>' experience/index.html
           grep -q 'index,follow,max-image-preview:large' experience/index.html
           grep -q "sessionStorage.setItem('experienceUnlocked', '1')" experience/index.html
           grep -q 'career-resume-full.js?v=20260728-' experience/index.html
           grep -q 'career-resume-document.js?v=20260728-' experience/index.html
           grep -q -- '--qily-wide-content:1480px' site-wide-layout-v1.css
-          grep -q 'module-hero>.module-inner' site-wide-layout-v1.css
+          grep -q 'body.module-page .content-inner' site-wide-layout-v1.css
+          grep -q -- '--qily-type-nav-1:17px' site-typography-v1.css
+          grep -q -- '--qily-type-nav-2:16px' site-typography-v1.css
+          grep -q -- '--qily-type-nav-3:15px' site-typography-v1.css
+          grep -q -- '--qily-type-body:18.5px' site-typography-v1.css
+          grep -q 'grid-template-columns:minmax(220px,300px) minmax(0,1fr)' capabilities/index.html
+          grep -q 'href="/certificates/chatgpt-lean/"' capabilities/index.html
+          grep -q '<h1>ChatGPT应用与精益生产实践证书</h1>' certificates/chatgpt-lean/index.html
+          grep -q '/qilylean/chatgpt-lean-certificate.png' certificates/chatgpt-lean/index.html
           ! grep -q '访问履历主线\|experiencePassword\|密码不正确\|履历主线（加密）' experience/index.html
           ! grep -q '🔒\|data-controlled-access="true"' site-navigation.js
           ! grep -q '🔒\|加密导航模块' site-visual-scale-v1.css
-          grep -R -q 'site-navigation.js?v=20260728-' --include='*.html' .
+          grep -R -q 'site-navigation.js?v=20260728-type-system-v1' --include='*.html' .
 
-      - name: Commit public layout release
+      - name: Commit public typography release
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Public modules and global wide layout are already current."
+            echo "Public modules, typography hierarchy and certificate page are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add site-navigation.js site-visual-scale-v1.css site-wide-layout-v1.css experience/index.html '*.html' '**/*.html'
-          git commit -m "feat: publish site-wide aligned content width [skip ci]"
+          git add site-navigation.js site-visual-scale-v1.css site-wide-layout-v1.css site-typography-v1.css experience/index.html capabilities/index.html certificates '*.html' '**/*.html'
+          git commit -m "feat: publish site-wide typography and certificate detail [skip ci]"
           git push
