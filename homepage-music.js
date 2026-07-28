@@ -19,7 +19,7 @@
 
   function enableProjectPresentation() {
     if (!/^\/projects(?:\/|$)/.test(location.pathname || '')) return;
-    var version = '20260724-project-gallery-v1';
+    var version = '20260728-project-media-cards-v5';
     var stylesheet = document.querySelector('link[href*="/projects/project-pages.css"]');
     if (stylesheet) stylesheet.href = '/projects/project-pages.css?v=' + version;
     else {
