@@ -21,7 +21,6 @@
       <a href="/ai.html">QilyLean AI</a>
       <a href="/knowledge/">知识分享</a>
       <a href="/moments.html">行走印记</a>
-
     </nav>
   </header>
 
@@ -42,14 +41,16 @@
     (function () {
       'use strict';
       var message = document.getElementById('experienceMessage');
+      try { sessionStorage.setItem('experienceUnlocked', '1'); } catch (error) {}
       var contentScript = document.createElement('script');
       contentScript.id = 'experienceResumeContentScript';
-      contentScript.src = '/qilylean/career-resume-full.js?v=20260728-public-access-v1';
+      contentScript.src = '/qilylean/career-resume-full.js?v=20260728-public-access-v2';
       contentScript.onload = function () {
-        if (message) message.textContent = '';
+        var section = document.getElementById('experience');
+        if (message && section && section.dataset.fullResume === '1') message.textContent = '';
         var documentScript = document.createElement('script');
         documentScript.id = 'experienceResumeDocumentScript';
-        documentScript.src = '/qilylean/career-resume-document.js?v=20260728-public-access-v1';
+        documentScript.src = '/qilylean/career-resume-document.js?v=20260728-public-access-v2';
         documentScript.onerror = function () { if (message) message.textContent = '高清履历附件暂未加载成功，请刷新重试。'; };
         document.body.appendChild(documentScript);
       };
