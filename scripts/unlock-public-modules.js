@@ -6,8 +6,9 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const navigationFile = path.join(root, 'site-navigation.js');
+const visualScaleFile = path.join(root, 'site-visual-scale-v1.css');
 const experienceFile = path.join(root, 'experience', 'index.html');
-const PUBLIC_NAV_VERSION = '20260728-public-access-v1';
+const PUBLIC_NAV_VERSION = '20260728-public-access-v2';
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
@@ -21,7 +22,7 @@ function unlockNavigation() {
   let page = read(navigationFile);
 
   page = page
-    .replace(/window\.__qilyLeanSiteNavigationV\d+/g, 'window.__qilyLeanSiteNavigationPublicV1')
+    .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV2')
     .replace(/var ACCESS_PASSWORD = '[^']*';\n/, '')
     .replace(/var CONTROLLED_ROUTE_PATHS = \[[^\]]*\];/, 'var CONTROLLED_ROUTE_PATHS = [];')
     .replace(
@@ -29,14 +30,36 @@ function unlockNavigation() {
       "  function controlledPageConfig() { return null; }\n\n  function protectControlledPage"
     );
 
+  page = page
+    .split('\n')
+    .filter((line) => !line.includes('data-controlled-access="true"'))
+    .join('\n');
+
   if (!/var CONTROLLED_ROUTE_PATHS = \[\];/.test(page)) {
     throw new Error('Failed to disable controlled navigation routes');
   }
   if (!/function controlledPageConfig\(\) \{ return null; \}/.test(page)) {
     throw new Error('Failed to disable controlled page gate');
   }
+  if (/content:["']🔒["']|data-controlled-access="true"/.test(page)) {
+    throw new Error('Legacy navigation lock styling remains');
+  }
 
   write(navigationFile, page);
+}
+
+function removeLegacyLockStyles() {
+  let css = read(visualScaleFile);
+  css = css.replace(
+    /\/\* ---------- 加密导航模块：与公开模块明显区分 ---------- \*\/[\s\S]*?(?=\/\* ---------- 全站统一宽版内容窗口 ---------- \*\/)/,
+    '/* ---------- 全站公开导航：不显示加密锁标识 ---------- */\n'
+  );
+
+  if (/content\s*:\s*["']🔒["']|加密导航模块/.test(css)) {
+    throw new Error('Legacy lock icon rules remain in visual scale stylesheet');
+  }
+
+  write(visualScaleFile, css);
 }
 
 function publishExperience() {
@@ -99,9 +122,10 @@ function refreshNavigationReferences() {
 
 function main() {
   unlockNavigation();
+  removeLegacyLockStyles();
   publishExperience();
   const refreshed = refreshNavigationReferences();
-  process.stdout.write(`Public access enabled; refreshed navigation reference in ${refreshed} HTML files.\n`);
+  process.stdout.write(`Public access enabled; legacy lock icons removed; refreshed navigation reference in ${refreshed} HTML files.\n`);
 }
 
 main();
