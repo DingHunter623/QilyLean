@@ -95,7 +95,7 @@ function publishExperience() {
     )
     .replace(
       /  <script>\s*\(function \(\) \{[\s\S]*?<\/script>\s*<script src="\/site-navigation\.js\?v=[^"]+"><\/script>/,
-      `  <script>\n    (function () {\n      'use strict';\n      var message = document.getElementById('experienceMessage');\n      try { sessionStorage.setItem('experienceUnlocked', '1'); } catch (error) {}\n      var contentScript = document.createElement('script');\n      contentScript.id = 'experienceResumeContentScript';\n      contentScript.src = '/qilylean/career-resume-full.js?v=${PUBLIC_RESUME_VERSION}';\n      contentScript.onload = function () {\n        var section = document.getElementById('experience');\n        if (message && section && section.dataset.fullResume === '1') message.textContent = '';\n        var documentScript = document.createElement('script');\n        documentScript.id = 'experienceResumeDocumentScript';\n        documentScript.src = '/qilylean/career-resume-document.js?v=${PUBLIC_RESUME_VERSION}';\n        documentScript.onerror = function () { if (message) message.textContent = '高清履历附件暂未加载成功，请刷新重试。'; };\n        document.body.appendChild(documentScript);\n      };\n      contentScript.onerror = function () { if (message) message.textContent = '履历内容暂未加载成功，请刷新重试。'; };\n      document.body.appendChild(contentScript);\n    })();\n  </script>\n  <script src="/site-navigation.js?v=${PUBLIC_NAV_VERSION}"></script>`
+      `  <script>\n    (function () {\n      'use strict';\n      var message = document.getElementById('experienceMessage');\n      try { sessionStorage.setItem('experienceUnlocked', '1'); } catch (error) {}\n      var contentScript = document.createElement('script');\n      contentScript.id = 'experienceResumeContentScript';\n      contentScript.src = '/qilylean/career-resume-full.js?v=${PUBLIC_RESUME_VERSION}';\n      contentScript.onload = function () {\n        var section = document.getElementById('experience');\n        if (section && section.dataset.fullResume === '1') {\n          var innerHeading = section.querySelector('.head h2');\n          if (innerHeading) innerHeading.textContent = '履历主线';\n          if (message) message.textContent = '';\n        } else if (message) {\n          message.textContent = '履历内容尚未完成渲染，请刷新页面重试。';\n        }\n        var documentScript = document.createElement('script');\n        documentScript.id = 'experienceResumeDocumentScript';\n        documentScript.src = '/qilylean/career-resume-document.js?v=${PUBLIC_RESUME_VERSION}';\n        documentScript.onload = function () {\n          var note = document.querySelector('.career-document-note');\n          if (note) note.textContent = '公开访问说明：履历主线及高清原版PDF均可直接在线预览或下载，无需输入访问密码。';\n        };\n        documentScript.onerror = function () { if (message) message.textContent = '高清履历附件暂未加载成功，请刷新重试。'; };\n        document.body.appendChild(documentScript);\n      };\n      contentScript.onerror = function () { if (message) message.textContent = '履历内容暂未加载成功，请刷新重试。'; };\n      document.body.appendChild(contentScript);\n    })();\n  </script>\n  <script src="/site-navigation.js?v=${PUBLIC_NAV_VERSION}"></script>`
     );
 
   if (/访问履历主线|experiencePassword|密码不正确|履历主线（加密）/.test(page)) {
@@ -106,6 +106,9 @@ function publishExperience() {
   }
   if (!page.includes(`career-resume-full.js?v=${PUBLIC_RESUME_VERSION}`)) {
     throw new Error('Public resume loader was not installed');
+  }
+  if (!page.includes("innerHeading.textContent = '履历主线'")) {
+    throw new Error('Legacy encrypted heading cleanup was not installed');
   }
 
   write(experienceFile, page);
@@ -139,7 +142,7 @@ function main() {
   removeLegacyLockStyles();
   publishExperience();
   const refreshed = refreshNavigationReferences();
-  process.stdout.write(`Public access enabled; resume rendering restored; legacy lock icons removed; updated ${refreshed} HTML files.\n`);
+  process.stdout.write(`Public access enabled; resume rendering and public labels restored; updated ${refreshed} HTML files.\n`);
 }
 
 main();
