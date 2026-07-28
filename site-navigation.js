@@ -6,8 +6,8 @@
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260727-controlled-home-moments-v2';
-  var VISUAL_SCALE_VERSION = '20260727-controlled-home-moments-v2';
+  var SHARED_ASSET_VERSION = '20260728-public-access-v2';
+  var VISUAL_SCALE_VERSION = '20260728-public-access-v2';
     var CONTROLLED_ROUTE_PATHS = [];
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
   var routes = [
@@ -114,11 +114,6 @@
       var link = document.createElement('a');
       link.textContent = route[0];
       link.href = route[1];
-      if (CONTROLLED_ROUTE_PATHS.indexOf(route[1]) !== -1) {
-        link.dataset.controlledAccess = 'true';
-        link.title = route[0] + '（加密访问）';
-        link.setAttribute('aria-label', route[0] + '，加密访问');
-      }
       if (modulePath === route[1]) link.setAttribute('aria-current', 'page');
       nav.appendChild(link);
     });
