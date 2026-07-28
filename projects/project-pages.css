@@ -139,3 +139,27 @@ body.project-lightbox-open{overflow:hidden}
   .project-detail-page .module-media-grid img{height:210px}
 }
 @media(max-width:460px){.project-list-content .module-actions a{width:100%}}
+
+
+/* project-thumbnails-v3：清单与详情统一使用约2cm × 2cm缩略入口。 */
+:root{--project-thumb-size:2cm}
+.project-list-card{display:grid!important;grid-template-columns:var(--project-thumb-size) minmax(0,1fr)!important;gap:16px!important;min-height:0!important;padding:16px!important;align-items:start!important;overflow:visible!important;contain-intrinsic-size:auto 250px}
+.project-list-thumb{align-self:start!important;width:var(--project-thumb-size)!important;height:var(--project-thumb-size)!important;min-height:var(--project-thumb-size)!important;margin:0!important;border:1px solid var(--qily-line)!important;background:#edf4f2!important;box-shadow:0 8px 20px rgba(15,75,90,.1)}
+.project-list-thumb img{display:block!important;width:var(--project-thumb-size)!important;height:var(--project-thumb-size)!important;min-height:var(--project-thumb-size)!important;aspect-ratio:1!important;object-fit:cover!important;object-position:center!important;background:#edf4f2}
+.project-list-content{padding:0!important;min-width:0}
+.project-list-content .module-actions{margin-top:12px!important;padding-top:0!important}
+.project-detail-page .module-card>.module-media{display:grid!important;gap:10px!important;width:100%!important;margin:0 0 20px!important;border:0!important;background:transparent!important;box-shadow:none!important}
+.project-detail-page .module-card>.module-media>img,.project-detail-page .module-media-grid img{display:block!important;width:var(--project-thumb-size)!important;height:var(--project-thumb-size)!important;min-height:var(--project-thumb-size)!important;aspect-ratio:1!important;object-fit:cover!important;object-position:center!important;border:1px solid var(--qily-line);background:#edf4f2;box-shadow:0 8px 20px rgba(15,75,90,.1)}
+.project-detail-page .module-media-grid{display:flex!important;grid-template-columns:none!important;gap:12px!important;align-items:flex-start!important;flex-wrap:wrap!important}
+.project-detail-page .module-media-grid>div{display:grid;gap:5px;justify-items:start;width:max-content;max-width:100%}
+.project-detail-page .module-media-grid .wide{grid-column:auto!important}
+.project-detail-page .module-media figcaption{width:min(100%,760px);padding:8px 0!important;border-top:0!important;color:#526968;background:transparent!important}
+.factory-render-gallery{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:14px!important;justify-content:stretch!important;margin:0 0 18px!important}
+.factory-render-card{display:grid!important;grid-template-columns:var(--project-thumb-size) minmax(0,1fr)!important;gap:12px!important;align-items:start!important;width:100%!important;overflow:visible!important;margin:0!important;padding:12px!important;border:1px solid var(--qily-line)!important;background:#fff!important;box-shadow:0 8px 22px rgba(15,75,90,.08)!important}
+.factory-render-card>a{display:block!important;width:var(--project-thumb-size)!important;height:var(--project-thumb-size)!important;overflow:hidden!important;border:1px solid var(--qily-line);background:#dfeae8}
+.factory-render-card img{display:block!important;width:var(--project-thumb-size)!important;height:var(--project-thumb-size)!important;min-height:var(--project-thumb-size)!important;aspect-ratio:1!important;object-fit:cover!important;object-position:center!important}
+.factory-render-card figcaption{display:grid!important;gap:3px!important;padding:0!important;border:0!important;background:transparent!important;font-size:14.5px!important;line-height:1.5!important}
+.factory-render-card figcaption strong{font-size:17px!important}
+.project-lightbox-toolbar a{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:7px 13px;border:1px solid rgba(255,255,255,.28);border-radius:999px;color:#fff;background:rgba(255,255,255,.08);text-decoration:none;font:inherit;font-size:15px;font-weight:850}
+.project-lightbox-toolbar a:hover,.project-lightbox-toolbar a:focus-visible{color:#17322d;background:#ffe39b;border-color:#ffe39b;outline:none}
+@media(max-width:720px){.project-list-card{gap:13px!important;padding:14px!important}.factory-render-gallery{grid-template-columns:1fr!important}.project-lightbox-toolbar a{min-height:34px;padding:6px 9px;font-size:13px}}
