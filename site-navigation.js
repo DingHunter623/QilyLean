@@ -1,15 +1,14 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanSiteNavigationV11) return;
-  window.__qilyLeanSiteNavigationV11 = true;
+  if (window.__qilyLeanSiteNavigationPublicV1) return;
+  window.__qilyLeanSiteNavigationPublicV1 = true;
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
   var SHARED_ASSET_VERSION = '20260727-controlled-home-moments-v2';
   var VISUAL_SCALE_VERSION = '20260727-controlled-home-moments-v2';
-  var ACCESS_PASSWORD = '259';
-  var CONTROLLED_ROUTE_PATHS = ['/', '/experience/', '/moments/', '/cooperation/'];
+    var CONTROLLED_ROUTE_PATHS = [];
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
   var routes = [
     ['首页', '/'],
@@ -217,45 +216,7 @@
     return copyText(shareText).then(function () { showToast('网页标题及网址已复制'); });
   }
 
-  function controlledPageConfig(path) {
-    if (path === '/') {
-      return {
-        key: 'homeUnlocked',
-        title: '首页（加密）',
-        eyebrow: 'Controlled Access / QilyLean Home',
-        lead: '首页内容已设置为受控访问，请输入与履历主线相同的访问口令后查看。',
-        heading: '访问首页',
-        description: '本页包含个人定位、职业能力、代表数据、合作入口及 QilyLean AI 快捷问答。请输入访问口令后查看完整内容。',
-        button: '查看首页',
-        selectors: 'main,footer'
-      };
-    }
-    if (path.indexOf('/moments/') === 0 || /\/moments\.html$/.test(path)) {
-      return {
-        key: 'momentsUnlocked',
-        title: '行走印记（加密）',
-        eyebrow: 'Controlled Access / Work & Life Moments',
-        lead: '行走印记内容已设置为受控访问，请输入与履历主线相同的访问口令后查看。',
-        heading: '访问行走印记',
-        description: '本模块包含工作现场、团队同行、出差足迹与生活远方等影像记录。请输入访问口令后查看完整内容。',
-        button: '查看行走印记',
-        selectors: 'section.hero,main,footer'
-      };
-    }
-    if (path.indexOf('/cooperation/') === 0) {
-      return {
-        key: 'cooperationUnlocked',
-        title: '项目合作（加密）',
-        eyebrow: 'Controlled Access / Project Cooperation',
-        lead: '项目合作内容暂为受控访问，请输入与履历主线相同的访问口令后查看。',
-        heading: '访问项目合作',
-        description: '本页包含企业问题初筛、合作范围、服务边界、项目交付方式及联系入口。请输入访问口令后查看完整内容。',
-        button: '查看项目合作',
-        selectors: 'main,footer'
-      };
-    }
-    return null;
-  }
+  function controlledPageConfig() { return null; }
 
   function protectControlledPage() {
     var path = normalizedPath(location.pathname);
