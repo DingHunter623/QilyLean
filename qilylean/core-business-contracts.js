@@ -8,26 +8,37 @@
     factory:{
       title:'新工厂规划设计项目技术服务合同范本',
       meta:'16页 A4｜高清图文原版｜仅限在线预览',
-      pageCount:16,
-      url:'/qilylean/private/factory-planning-contract.pdf.b64?v=20260728-canvas-preview-v1'
+      url:'/qilylean/private/factory-planning-contract.pdf.b64?v=20260728-canvas-preview-v2'
     },
     lean:{
       title:'精益改善项目交付技术服务合同范本',
       meta:'17页 A4｜用户上传高清图文原版｜仅限在线预览',
-      pageCount:17,
-      url:'/qilylean/private/lean-improvement-delivery-contract.pdf.b64?v=20260728-canvas-preview-v1'
+      url:'/qilylean/private/lean-improvement-delivery-contract.pdf.b64?v=20260728-canvas-preview-v2'
     },
     visual:{
       title:'5S与目视化管理咨询项目技术服务合同范本',
       meta:'12页 A4｜高清图文原版｜仅限在线预览',
-      pageCount:12,
-      url:'/qilylean/private/5s-visual-contract.pdf.b64?v=20260728-canvas-preview-v1'
+      url:'/qilylean/private/5s-visual-contract.pdf.b64?v=20260728-canvas-preview-v2'
     }
   };
 
   var PDF_JS_SOURCES=[
-    'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js',
-    'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js'
+    {
+      script:'https://cdn.bootcdn.net/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+      worker:'https://cdn.bootcdn.net/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
+    },
+    {
+      script:'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js',
+      worker:'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js'
+    },
+    {
+      script:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+      worker:'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'
+    },
+    {
+      script:'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.min.js',
+      worker:'https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js'
+    }
   ];
 
   var detailKey=document.body.getAttribute('data-core-contract-detail');
@@ -51,16 +62,37 @@
       var index=0;
       function tryNext(){
         if(index>=PDF_JS_SOURCES.length){reject(new Error('pdfjs_unavailable'));return;}
+        var source=PDF_JS_SOURCES[index++];
         var script=document.createElement('script');
-        script.src=PDF_JS_SOURCES[index++];
+        var settled=false;
+        var timer=window.setTimeout(function(){
+          if(settled)return;
+          settled=true;
+          script.remove();
+          tryNext();
+        },8000);
+        script.src=source.script;
         script.async=true;
         script.referrerPolicy='no-referrer';
         script.onload=function(){
-          if(window.pdfjsLib){resolve(window.pdfjsLib);return;}
+          if(settled)return;
+          settled=true;
+          window.clearTimeout(timer);
+          if(window.pdfjsLib){
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc=source.worker;
+            resolve(window.pdfjsLib);
+            return;
+          }
           script.remove();
           tryNext();
         };
-        script.onerror=function(){script.remove();tryNext();};
+        script.onerror=function(){
+          if(settled)return;
+          settled=true;
+          window.clearTimeout(timer);
+          script.remove();
+          tryNext();
+        };
         document.head.appendChild(script);
       }
       tryNext();
@@ -69,6 +101,7 @@
 
   function decodeBase64(encoded){
     var clean=encoded.replace(/\s/g,'');
+    if(!clean)throw new Error('empty_contract');
     var binary=atob(clean);
     var bytes=new Uint8Array(binary.length);
     for(var index=0;index<binary.length;index+=1)bytes[index]=binary.charCodeAt(index);
@@ -88,7 +121,7 @@
     ]).then(function(results){
       var pdfjs=results[0];
       var bytes=decodeBase64(results[1]);
-      return pdfjs.getDocument({data:bytes,disableWorker:true,disableFontFace:false,useSystemFonts:true}).promise;
+      return pdfjs.getDocument({data:bytes,disableFontFace:false,useSystemFonts:true,isEvalSupported:false}).promise;
     });
     return loadingPromise;
   }
@@ -98,7 +131,8 @@
     figure.dataset.rendering='1';
     pdf.getPage(pageNumber).then(function(page){
       var baseViewport=page.getViewport({scale:1});
-      var cssWidth=Math.max(320,Math.min(1414,frame.clientWidth-20));
+      var availableWidth=frame.clientWidth>40?frame.clientWidth-20:900;
+      var cssWidth=Math.max(320,Math.min(1414,availableWidth));
       var pixelRatio=Math.min(window.devicePixelRatio||1,2);
       var targetWidth=Math.min(1600,Math.max(900,cssWidth*pixelRatio));
       var viewport=page.getViewport({scale:targetWidth/baseViewport.width});
@@ -127,18 +161,8 @@
   function buildPages(pdf){
     frame.innerHTML='';
     var fragment=document.createDocumentFragment();
+    var figures=[];
     var observer=null;
-
-    if('IntersectionObserver' in window){
-      observer=new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          if(!entry.isIntersecting)return;
-          var figure=entry.target;
-          renderPage(pdf,Number(figure.dataset.page),figure);
-          observer.unobserve(figure);
-        });
-      },{rootMargin:'900px 0px'});
-    }
 
     for(var pageNumber=1;pageNumber<=pdf.numPages;pageNumber+=1){
       var figure=document.createElement('figure');
@@ -162,18 +186,24 @@
       figure.appendChild(placeholder);
       figure.appendChild(caption);
       fragment.appendChild(figure);
-
-      if(observer)observer.observe(figure);
+      figures.push(figure);
     }
 
     frame.appendChild(fragment);
-    if(!observer){
-      Array.prototype.slice.call(frame.querySelectorAll('.core-contract-page')).forEach(function(figure){
-        renderPage(pdf,Number(figure.dataset.page),figure);
-      });
+
+    if('IntersectionObserver' in window){
+      observer=new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(!entry.isIntersecting)return;
+          var figure=entry.target;
+          renderPage(pdf,Number(figure.dataset.page),figure);
+          observer.unobserve(figure);
+        });
+      },{rootMargin:'900px 0px'});
+      figures.forEach(function(figure){observer.observe(figure);});
+      renderPage(pdf,1,figures[0]);
     }else{
-      var first=frame.querySelector('.core-contract-page');
-      if(first)renderPage(pdf,1,first);
+      figures.forEach(function(figure){renderPage(pdf,Number(figure.dataset.page),figure);});
     }
   }
 
