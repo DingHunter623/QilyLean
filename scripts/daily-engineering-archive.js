@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-const { guides } = require('./enhance-daily-archive');
+const { guides, resolveIntegration } = require('./enhance-daily-archive');
 
 const archiveStart = '2019-07-10';
 const archiveEnd = '2025-12-18';
@@ -218,17 +218,6 @@ const phases = [
     focus: '用分层审核、日清周结和周期复盘守住改善成果',
     action: '把维持指标纳入日常看板，对重复问题重新打开原因分析'
   }
-];
-
-const roles = [
-  { owner: 'IE／精益', partner: '制造与PMC', reviewer: '运营负责人', system: '标准工时、产能与改善台账' },
-  { owner: 'PE／工艺', partner: '质量与制造', reviewer: '工程负责人', system: '工艺参数、SOP与变更记录' },
-  { owner: 'PMC', partner: 'IE、仓储与制造', reviewer: '生产运营', system: '订单、排产、齐套与结单状态' },
-  { owner: '质量工程', partner: '工艺、制造与供应商', reviewer: '质量负责人', system: 'PFMEA、控制计划与问题闭环' },
-  { owner: '设备／ME', partner: '生产、工艺与安全', reviewer: '工程负责人', system: '点检、保全、故障与改造履历' },
-  { owner: 'NPI／项目', partner: '研发、供应链与制造', reviewer: '阶段评审组', system: '阶段门、问题清单与量产移交' },
-  { owner: 'IT／数字化', partner: '业务Owner与数据Owner', reviewer: '流程负责人', system: '主数据、权限、接口与审计日志' },
-  { owner: '项目经理', partner: '跨职能交付团队', reviewer: '项目Sponsor', system: '范围、里程碑、风险、验收与收益' }
 ];
 
 const energyNotes = [
@@ -471,7 +460,7 @@ function collectArchiveBriefs(visual) {
     const { stage, scene } = stageFor(date, index);
     const month = Number(date.slice(5, 7));
     const phase = phases[(month + index) % phases.length];
-    const role = roles[(index * 5 + month) % roles.length];
+    const role = resolveIntegration(topic);
     const energy = energyNotes[(index + Number(date.slice(0, 4))) % energyNotes.length];
     return buildArchiveArticle({
       date,
