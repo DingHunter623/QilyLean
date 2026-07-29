@@ -200,7 +200,7 @@
     addFuseCuttingProjectImages();
     forceArticleShortShare();
     normalizeLegacyBrand();
-    load('/site-navigation.js?v=20260725-compact-hero-v1', 'qilySiteNavigationScript');
+    if (!window.__qilyLeanSiteNavigationPublicV8) load('/site-navigation.js?v=20260729-no-old-flash-v1', 'qilySiteNavigationScript');
   }
 
   if (document.readyState === 'loading') {
