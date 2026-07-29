@@ -14,7 +14,8 @@ const experienceFile = path.join(root, 'experience', 'index.html');
 const capabilitiesFile = path.join(root, 'capabilities', 'index.html');
 const certificateFile = path.join(root, 'certificates', 'chatgpt-lean', 'index.html');
 const PUBLIC_NAV_VERSION = '20260729-no-old-flash-v1';
-const PUBLIC_ASSET_VERSION = '20260729-no-old-flash-v1';
+const PUBLIC_SHELL_VERSION = '20260729-no-old-flash-v1';
+const PUBLIC_ASSET_VERSION = '20260729-hierarchy-v4';
 const PUBLIC_RESUME_VERSION = '20260728-public-access-v2';
 const WIDE_LAYOUT_VERSION = '20260729-fluid-copy-v5';
 const TYPE_SYSTEM_VERSION = '20260729-hierarchy-v4';
@@ -33,7 +34,7 @@ function unlockNavigation() {
 
   page = page
     .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV8')
-    .replace(/var SHARED_ASSET_VERSION = '[^']*';/, `var SHARED_ASSET_VERSION = '${PUBLIC_ASSET_VERSION}';`)
+    .replace(/var SHARED_ASSET_VERSION = '[^']*';/, `var SHARED_ASSET_VERSION = '${PUBLIC_SHELL_VERSION}';`)
     .replace(/var VISUAL_SCALE_VERSION = '[^']*';/, `var VISUAL_SCALE_VERSION = '${PUBLIC_ASSET_VERSION}';`)
     .replace(/site-wide-layout-v1\.css\?v=[^'"\s]+/g, `site-wide-layout-v1.css?v=${WIDE_LAYOUT_VERSION}`)
     .replace(/site-typography-v1\.css\?v=[^'"\s]+/g, `site-typography-v1.css?v=${TYPE_SYSTEM_VERSION}`)
