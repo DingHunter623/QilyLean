@@ -109,7 +109,7 @@ function pageHeader(title, description, canonical, ogType = 'article') {
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:url" content="${canonical}">
   <link rel="stylesheet" href="/site-shell.css?v=20260725-compact-hero-v1">
-  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260729-engineering-system-v7">
+  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260729-engineering-system-v9">
 </head>`;
 }
 
@@ -160,6 +160,22 @@ ${siteHeader()}
       <label><span>搜索日期、主题或关键词</span><input type="search" id="briefSearch" placeholder="例如：标准工时、NPI、2021-05" autocomplete="off"></label>
       <p id="briefFilterStatus" aria-live="polite"><span id="briefFilterText">当前显示全部 ${briefs.length} 期</span><a id="briefFilterReset" href="/qilylean/daily-insights.html#brief-directory" hidden>查看全部简报</a></p>
     </div>
+    <section class="brief-consultation" id="brief-consultation" aria-labelledby="briefConsultationTitle">
+      <div class="brief-consultation-heading"><span>MESSAGE / CONSULTATION</span><h2 id="briefConsultationTitle">简报留言咨询</h2><p>可针对某一期简报、制造现场问题或项目需求留言。信息将提交至QilyLean咨询后台，并同步向项目初筛的同一接收邮箱发送通知。</p></div>
+      <form class="brief-consultation-form" id="briefConsultationForm">
+        <label>企业名称／姓名<input name="company" autocomplete="organization" placeholder="企业简称或您的姓名" maxlength="120" required></label>
+        <label>行业<input name="industry" placeholder="如汽车电子、家电、半导体" maxlength="120" required></label>
+        <label>所在地区<input name="location" placeholder="省／市" maxlength="120" required></label>
+        <label>联系方式<input name="contact" autocomplete="name" placeholder="姓名＋手机或微信" maxlength="180" required></label>
+        <label class="full">关联简报<input name="brief_reference" id="briefReference" placeholder="可填写日期或标题，例如：2026-07-29" maxlength="220"></label>
+        <label class="full">留言咨询内容<textarea name="problem" placeholder="请描述想咨询的简报内容、现场问题或项目需求" minlength="8" maxlength="1800" required></textarea></label>
+        <label class="full">希望达到的目标<textarea name="target" placeholder="可填写期望获得的判断、改善方向或项目目标" maxlength="1200"></textarea></label>
+        <label class="brief-website-field" aria-hidden="true">网站<input name="website" tabindex="-1" autocomplete="off"></label>
+        <div class="brief-consultation-actions"><button id="submitBriefConsultation" type="submit">提交留言咨询</button><a href="/cooperation/#diagnosis">预约企业问题初筛</a></div>
+        <div class="brief-consultation-status" id="briefConsultationStatus" role="status" aria-live="polite"></div>
+        <p class="brief-consultation-privacy">提交即表示同意将上述资料用于本次问题初筛与联系沟通。信息不会在公开页面展示。</p>
+      </form>
+    </section>
     <div class="brief-months">${months}</div>
   </div></section>
 </main>
@@ -168,14 +184,20 @@ ${siteHeader()}
 (function(){
 var legacy=(location.hash||'').slice(1);if(/^\\d{4}-\\d{2}-\\d{2}$/.test(legacy)){location.replace('/qilylean/daily/'+legacy+'.html');return;}
 var input=document.getElementById('briefSearch'),statusText=document.getElementById('briefFilterText'),reset=document.getElementById('briefFilterReset'),directory=document.getElementById('brief-directory'),selectedYear='',cards=Array.prototype.slice.call(document.querySelectorAll('.brief-index-card')),months=Array.prototype.slice.call(document.querySelectorAll('.brief-month'));
-var requestedYear=new URLSearchParams(location.search).get('year')||'';if(/^\d{4}$/.test(requestedYear)&&cards.some(function(card){return card.getAttribute('data-brief-year')===requestedYear;}))selectedYear=requestedYear;
+var requestedYear=new URLSearchParams(location.search).get('year')||'';if(/^\\d{4}$/.test(requestedYear)&&cards.some(function(card){return card.getAttribute('data-brief-year')===requestedYear;}))selectedYear=requestedYear;
 function applyFilter(){var query=(input&&input.value||'').trim().toLowerCase(),visible=0;cards.forEach(function(card){var matchYear=!selectedYear||card.getAttribute('data-brief-year')===selectedYear;var matchQuery=!query||(card.getAttribute('data-brief-search')||'').toLowerCase().indexOf(query)>=0;card.hidden=!(matchYear&&matchQuery);if(!card.hidden)visible+=1;});months.forEach(function(month,index){var hasVisible=!!month.querySelector('.brief-index-card:not([hidden])');month.hidden=!hasVisible;if(query||selectedYear)month.open=hasVisible;else month.open=index===0;});document.querySelectorAll('[data-year-filter]').forEach(function(link){var active=!!selectedYear&&link.getAttribute('data-year-filter')===selectedYear;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','true');else link.removeAttribute('aria-current');});if(statusText)statusText.textContent='当前显示 '+visible+' 期'+(selectedYear?'｜'+selectedYear+'年':'')+(query?'｜关键词：'+query:'');if(reset)reset.hidden=!selectedYear;}
 function selectYear(year,updateHistory){selectedYear=year||'';applyFilter();if(updateHistory&&history.pushState){var next=location.pathname+(selectedYear?'?year='+encodeURIComponent(selectedYear):'')+'#brief-directory';history.pushState(null,'',next);}if(directory)directory.scrollIntoView({behavior:'smooth',block:'start'});}
 if(input)input.addEventListener('input',applyFilter);
 document.addEventListener('click',function(event){var yearLink=event.target.closest&&event.target.closest('[data-year-filter]');if(yearLink){event.preventDefault();selectYear(yearLink.getAttribute('data-year-filter')||'',true);return;}var button=event.target.closest&&event.target.closest('[data-brief-url]');if(!button)return;var url=button.getAttribute('data-brief-url');var title=button.getAttribute('data-brief-title')||document.title;var shareStatus=button.parentNode.querySelector('.brief-share-status');function copy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();return Promise.resolve();}function done(text){if(shareStatus)shareStatus.textContent=text;setTimeout(function(){if(shareStatus)shareStatus.textContent='';},2200);}var mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'')||!!(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches&&innerWidth<=820);if(mobile&&navigator.share){navigator.share({title:title,text:title,url:url}).then(function(){done('已调起分享');}).catch(function(error){if(error&&error.name==='AbortError')return;copy(url).then(function(){done('网址已复制');});});}else copy(url).then(function(){done('网址已复制');});});
 if(reset)reset.addEventListener('click',function(event){event.preventDefault();if(input)input.value='';selectYear('',true);});
-window.addEventListener('popstate',function(){var year=new URLSearchParams(location.search).get('year')||'';selectedYear=/^\d{4}$/.test(year)?year:'';applyFilter();});
+window.addEventListener('popstate',function(){var year=new URLSearchParams(location.search).get('year')||'';selectedYear=/^\\d{4}$/.test(year)?year:'';applyFilter();});
 applyFilter();
+var consultationForm=document.getElementById('briefConsultationForm'),consultationStatus=document.getElementById('briefConsultationStatus'),consultationButton=document.getElementById('submitBriefConsultation'),briefReference=document.getElementById('briefReference'),consultationApi='https://qilylean-ai.dinghunter623.workers.dev',consultationEmail='https://formsubmit.co/ajax/396767769@qq.com';
+var requestedBrief=new URLSearchParams(location.search).get('brief')||'';if(briefReference&&requestedBrief)briefReference.value=requestedBrief;
+function consultationSetStatus(text,type){if(!consultationStatus)return;consultationStatus.textContent=text;consultationStatus.className='brief-consultation-status'+(type?' '+type:'');}
+function consultationPayload(){var formData=new FormData(consultationForm),reference=String(formData.get('brief_reference')||'').trim(),message=String(formData.get('problem')||'').trim();return{company:String(formData.get('company')||'').trim(),industry:String(formData.get('industry')||'').trim(),location:String(formData.get('location')||'').trim(),scale:'',problem:(reference?'关联简报：'+reference+'\\n':'')+message,target:String(formData.get('target')||'').trim(),timing:'今日简报留言咨询',contact:String(formData.get('contact')||'').trim(),website:String(formData.get('website')||'').trim(),source_page:window.location.href};}
+async function sendConsultationEmail(data,id){var mail=new FormData();mail.append('_subject','【QilyLean简报留言】'+data.company+'｜'+data.industry);mail.append('_template','table');mail.append('_captcha','false');mail.append('咨询编号',id||'后台处理中');mail.append('企业名称／姓名',data.company);mail.append('行业',data.industry);mail.append('所在地区',data.location);mail.append('留言咨询内容',data.problem);mail.append('希望达到的目标',data.target||'未填写');mail.append('联系方式',data.contact);mail.append('来源页面',data.source_page);var response=await fetch(consultationEmail,{method:'POST',headers:{Accept:'application/json'},body:mail});if(!response.ok)throw new Error('email_'+response.status);return true;}
+if(consultationForm)consultationForm.addEventListener('submit',async function(event){event.preventDefault();if(!consultationForm.reportValidity())return;var data=consultationPayload();if(data.website){consultationSetStatus('留言已提交。','success');return;}consultationButton.disabled=true;consultationButton.textContent='正在提交…';consultationSetStatus('正在提交至QilyLean咨询后台…','');var emailSent=false,id='';try{var response=await fetch(consultationApi+'/consultations',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});var result=await response.json().catch(function(){return{};});if(!response.ok)throw new Error(result.error||('submit_'+response.status));id=result.id||'';emailSent=Boolean(result.email_sent);if(!emailSent){try{emailSent=await sendConsultationEmail(data,id);}catch(emailError){console.warn('Brief consultation email fallback unavailable',emailError);}}consultationSetStatus(emailSent?'留言咨询已提交成功，后台已保存并发送邮件通知。':'留言咨询已提交成功，后台已保存；邮件通知暂未确认，请稍后通过项目合作页联系。','success');consultationForm.reset();}catch(error){try{emailSent=await sendConsultationEmail(data,id);}catch(emailError){console.warn('Brief consultation email unavailable',emailError);}consultationSetStatus(emailSent?'后台暂时繁忙，但留言已发送至接收邮箱。':'提交暂未完成，请稍后重试或进入项目合作页联系。','error');}finally{consultationButton.disabled=false;consultationButton.textContent='提交留言咨询';}});
 })();
 </script>
 ${pageScripts()}
@@ -195,7 +217,7 @@ function buildBriefPage(brief, briefs, index) {
 ${siteHeader()}
 <main>
   <section class="daily-hero compact"><div class="daily-inner"><span>DAILY ENGINEERING BRIEF${brief.dayNo ? ` · ${brief.dayNo}` : ''}</span><h1>今日简报</h1><p>${brief.date}｜${escapeHtml(brief.theme)}</p></div></section>
-  <section class="daily-single-section"><div class="daily-inner"><nav class="brief-adjacent top" aria-label="简报翻页">${adjacent}</nav>${article}<nav class="brief-adjacent" aria-label="简报翻页">${adjacent}</nav></div></section>
+  <section class="daily-single-section"><div class="daily-inner"><nav class="brief-adjacent top" aria-label="简报翻页">${adjacent}</nav>${article}<aside class="brief-consultation-cta"><div><span>MESSAGE / CONSULTATION</span><h2>针对本期内容留言咨询</h2><p>如需结合企业现场进一步判断，可携带本期日期直接留言，提交至QilyLean咨询后台与项目初筛接收邮箱。</p></div><a href="/qilylean/daily-insights.html?brief=${brief.date}#brief-consultation">进入留言咨询窗口</a></aside><nav class="brief-adjacent" aria-label="简报翻页">${adjacent}</nav></div></section>
 </main>
 <footer class="module-footer"><div class="module-inner"><span>丁启利｜今日简报</span><span>${brief.date} · ${escapeHtml(brief.theme)}</span></div></footer>
 <script>
