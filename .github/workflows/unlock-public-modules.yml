@@ -7,6 +7,7 @@ on:
       - "scripts/publish-site-system-v2.js"
       - "site-wide-layout-v1.css"
       - "site-typography-v1.css"
+      - "homepage-music.js"
       - ".github/workflows/unlock-public-modules.yml"
   workflow_dispatch:
 
@@ -37,8 +38,8 @@ jobs:
       - name: Validate alignment, responsive grids and cache refresh
         shell: bash
         run: |
-          grep -q 'site-wide-layout-v1.css?v=20260728-balanced-layout-v4' site-navigation.js
-          grep -q 'site-typography-v1.css?v=20260728-type-system-v3' site-navigation.js
+          grep -q 'site-wide-layout-v1.css?v=20260729-fluid-copy-v5' site-navigation.js
+          grep -q 'site-typography-v1.css?v=20260729-hierarchy-v4' site-navigation.js
           grep -q 'addWideLayoutStylesheet();' site-navigation.js
           grep -q 'addTypographyStylesheet();' site-navigation.js
           grep -q -- '--qily-wide-content:1560px' site-wide-layout-v1.css
@@ -50,11 +51,15 @@ jobs:
           grep -q -- '--qily-type-nav-2:16px' site-typography-v1.css
           grep -q -- '--qily-type-nav-3:15px' site-typography-v1.css
           grep -q -- '--qily-type-body:18.5px' site-typography-v1.css
-          grep -q 'text-wrap:pretty' site-typography-v1.css
+          grep -q 'text-wrap:wrap' site-typography-v1.css
           grep -q '.career-full-card h3' site-typography-v1.css
           grep -q '.answer-content h2' site-typography-v1.css
           grep -q '.composer textarea' site-typography-v1.css
-          grep -R -q 'site-navigation.js?v=20260728-layout-type-v3' --include='*.html' .
+          grep -q 'var restoreSettled = false' homepage-music.js
+          grep -q 'if (!restoreSettled) return' homepage-music.js
+          grep -q 'function settlePlaybackRestore()' homepage-music.js
+          grep -R -q 'site-navigation.js?v=20260729-fluid-copy-v4' --include='*.html' .
+          grep -R -q 'homepage-music.js?v=20260729-continuous-v4' --include='*.html' .
 
       - name: Commit site-system release
         shell: bash
@@ -66,5 +71,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add site-navigation.js '*.html' '**/*.html'
-          git commit -m "fix: publish wide readable layout and typography [skip ci]"
+          git commit -m "fix: publish fluid copy, type hierarchy and music continuity [skip ci]"
           git push

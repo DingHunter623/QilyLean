@@ -1,4 +1,4 @@
-/* QilyLean 2026-07-28：全站菜单、标题、正文、卡片与AI工作区统一排版层级 v3 */
+/* QilyLean 2026-07-29：全站一阶至三阶菜单、标题、正文与说明统一排版层级 v4 */
 :root{
   --qily-font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
   --qily-type-nav-1:17px;
@@ -21,7 +21,7 @@ html,body,button,input,textarea,select{
 }
 body{font-size:var(--qily-type-body)!important;line-height:var(--qily-line-body)!important}
 
-/* 中文排版：标题平衡换行，正文采用更自然的断行，避免末行孤立单字。 */
+/* 中文排版：标题允许平衡换行；正文优先铺满可用行宽后自然换行。 */
 h1,h2,h3,h4,h5,h6,
 .module-hero h1,.hero h1,.daily-hero h1,
 .module-heading h2,.section-head h2,.section-heading h2,
@@ -35,7 +35,7 @@ p,li,dd,dt,blockquote,
 .module-lead,.lead,.answer-content,
 .module-card p,.paper-card p,.career-full-card p,.career-full-card li,
 .career-overview span,.career-chain{
-  text-wrap:pretty;
+  text-wrap:wrap;
   word-break:normal!important;
   overflow-wrap:break-word!important;
   line-break:strict!important;
@@ -56,6 +56,8 @@ header.top .nav>a{
 /* 二阶菜单：首屏子导航、页签、主题切换。 */
 .module-subnav>a,
 .subnav>a,
+.site-subnav>a,
+.category-nav>a,
 .tabs>a,
 .tabs>button,
 .topic-controls .topic-control,
@@ -79,6 +81,13 @@ header.top .nav>a{
 .module-actions a,
 .card-actions a,
 .actions a,
+.moment-link,
+.moment-back,
+.design-link,
+.article-links a,
+.project-list-action,
+.project-card-action,
+.travel-year,
 .button,
 .share-button,
 .project-card-brief,
@@ -168,6 +177,18 @@ section h4{
 .section-head p,
 .section-heading p,
 .module-page .head p,
+.intro,
+.lead,
+.summary,
+.description,
+.desc,
+.copy,
+.prose,
+.travel-story-heading p,
+.design-feature p,
+.moment-directory-card p,
+.gallery-group p,
+.travel-card span,
 article p,
 article li,
 section p,
@@ -194,6 +215,11 @@ section li{
 figcaption,
 .caption,
 .meta,
+.gallery-tip,
+.empty,
+.moment-count,
+.project-meta,
+.article-meta,
 .module-footer,
 .footer{
   font-family:var(--qily-font-sans)!important;

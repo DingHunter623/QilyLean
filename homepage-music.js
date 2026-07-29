@@ -16,6 +16,8 @@
   var AUDIO_SRC = '/%E6%88%91%E7%9A%84%E6%A2%A6%EF%BC%88%E5%BC%A0%E9%9D%93%E9%A2%96%EF%BC%89.mp3';
   var MODULE_ROUTES = ['/', '/ai.html', '/capabilities/', '/experience/', '/improvements/', '/knowledge/', '/moments.html'];
   var prefetchedDocuments = Object.create(null);
+  var restoreStarted = false;
+  var restoreSettled = false;
 
   function enableProjectPresentation() {
     if (!/^\/projects(?:\/|$)/.test(location.pathname || '')) return;
@@ -85,28 +87,95 @@
     '</svg>';
 
   function readState() {
+    var candidates = [];
     try {
-      var saved = JSON.parse(sessionStorage.getItem(STATE_KEY) || 'null');
-      return saved && typeof saved === 'object' ? saved : null;
-    } catch (error) {
-      return null;
-    }
+      var sessionSaved = JSON.parse(sessionStorage.getItem(STATE_KEY) || 'null');
+      if (sessionSaved && typeof sessionSaved === 'object') candidates.push(sessionSaved);
+    } catch (error) {}
+    try {
+      var localSaved = JSON.parse(localStorage.getItem(STATE_KEY) || 'null');
+      if (localSaved && typeof localSaved === 'object') candidates.push(localSaved);
+    } catch (error) {}
+    if (!candidates.length) return null;
+    candidates.sort(function (a, b) {
+      return Number(b.savedAt || 0) - Number(a.savedAt || 0);
+    });
+    return candidates[0];
+  }
+
+  function statePayload() {
+    return JSON.stringify({
+      time: Number.isFinite(audio.currentTime) ? audio.currentTime : 0,
+      muted: audio.muted,
+      playing: !audio.paused,
+      savedAt: Date.now()
+    });
+  }
+
+  function persistState(payload) {
+    try { sessionStorage.setItem(STATE_KEY, payload); } catch (error) {}
+    try { localStorage.setItem(STATE_KEY, payload); } catch (error) {}
   }
 
   function writeState() {
+    /*
+     * A redirect or a slow metadata request can leave a new audio element at 0s.
+     * Never let that temporary value overwrite the valid position from the page
+     * the visitor just left.
+     */
+    if (!restoreSettled) return;
     try {
-      sessionStorage.setItem(STATE_KEY, JSON.stringify({
-        time: Number.isFinite(audio.currentTime) ? audio.currentTime : 0,
-        muted: audio.muted,
-        playing: !audio.paused,
-        savedAt: Date.now()
-      }));
+      persistState(statePayload());
     } catch (error) {}
   }
 
   function tryPlay() {
     var result = audio.play();
     if (result && typeof result.catch === 'function') result.catch(function () {});
+  }
+
+  function computeRestoreTime(saved) {
+    if (!saved || !Number.isFinite(Number(saved.time))) return 0;
+    var elapsed = saved.playing && Number.isFinite(Number(saved.savedAt))
+      ? Math.max(0, (Date.now() - Number(saved.savedAt)) / 1000)
+      : 0;
+    var nextTime = Math.max(0, Number(saved.time) + elapsed);
+    if (Number.isFinite(audio.duration) && audio.duration > 0) nextTime %= audio.duration;
+    return nextTime;
+  }
+
+  function settlePlaybackRestore() {
+    if (restoreStarted || restoreSettled || audio.readyState < 1) return;
+    restoreStarted = true;
+
+    var targetTime = computeRestoreTime(savedState);
+    var finished = false;
+    var fallbackTimer = 0;
+
+    function finish() {
+      if (finished) return;
+      finished = true;
+      if (fallbackTimer) window.clearTimeout(fallbackTimer);
+      audio.removeEventListener('seeked', finish);
+      restoreSettled = true;
+      tryPlay();
+      writeState();
+    }
+
+    try {
+      if (targetTime > 0.15) {
+        audio.addEventListener('seeked', finish, { once: true });
+        if (typeof audio.fastSeek === 'function') audio.fastSeek(targetTime);
+        else audio.currentTime = targetTime;
+        fallbackTimer = window.setTimeout(finish, 700);
+      } else {
+        try { audio.currentTime = targetTime; } catch (error) {}
+        finish();
+      }
+    } catch (error) {
+      restoreStarted = false;
+      fallbackTimer = window.setTimeout(settlePlaybackRestore, 120);
+    }
   }
 
   function render() {
@@ -160,23 +229,12 @@
   var savedState = readState();
   if (savedState) audio.muted = Boolean(savedState.muted);
 
-  function restorePlaybackPosition() {
-    if (!savedState || !Number.isFinite(savedState.time)) return;
-    var elapsed = savedState.playing && Number.isFinite(savedState.savedAt)
-      ? Math.max(0, (Date.now() - savedState.savedAt) / 1000)
-      : 0;
-    var nextTime = Math.max(0, savedState.time + elapsed);
-    if (Number.isFinite(audio.duration) && audio.duration > 0) nextTime %= audio.duration;
-    try { audio.currentTime = nextTime; } catch (error) {}
+  if (audio.readyState >= 1) settlePlaybackRestore();
+  else {
+    audio.addEventListener('loadedmetadata', settlePlaybackRestore, { once: true });
+    audio.addEventListener('durationchange', settlePlaybackRestore, { once: true });
+    audio.addEventListener('canplay', settlePlaybackRestore, { once: true });
   }
-
-  function startPlayback() {
-    restorePlaybackPosition();
-    tryPlay();
-  }
-
-  if (audio.readyState >= 1) startPlayback();
-  else audio.addEventListener('loadedmetadata', startPlayback, { once: true });
 
   function clamp(value, min, max) {
     return Math.min(Math.max(value, min), Math.max(min, max));
@@ -238,6 +296,10 @@
   });
 
   function resumeAfterGesture() {
+    if (!restoreSettled) {
+      settlePlaybackRestore();
+      return;
+    }
     if (audio.paused) tryPlay();
   }
 
@@ -251,9 +313,10 @@
     if (document.visibilityState === 'hidden') writeState();
   });
   window.addEventListener('pageshow', function () {
-    if (!audio.muted && audio.paused) tryPlay();
+    if (!restoreSettled) settlePlaybackRestore();
+    else if (audio.paused) tryPlay();
   });
-  window.setInterval(writeState, 400);
+  window.setInterval(writeState, 500);
   window.__qilyLeanMusicWriteState = writeState;
 
   render();

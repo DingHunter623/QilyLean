@@ -8,11 +8,13 @@ const root = path.resolve(__dirname, '..');
 const navigationFile = path.join(root, 'site-navigation.js');
 const wideLayoutFile = path.join(root, 'site-wide-layout-v1.css');
 const typographyFile = path.join(root, 'site-typography-v1.css');
+const musicFile = path.join(root, 'homepage-music.js');
 
-const NAV_VERSION = '20260728-layout-type-v3';
-const ASSET_VERSION = '20260728-layout-type-v3';
-const WIDE_VERSION = '20260728-balanced-layout-v4';
-const TYPE_VERSION = '20260728-type-system-v3';
+const NAV_VERSION = '20260729-fluid-copy-v4';
+const ASSET_VERSION = '20260729-hierarchy-v4';
+const WIDE_VERSION = '20260729-fluid-copy-v5';
+const TYPE_VERSION = '20260729-hierarchy-v4';
+const MUSIC_VERSION = '20260729-continuous-v4';
 
 function read(file) { return fs.readFileSync(file, 'utf8'); }
 function write(file, content) { fs.writeFileSync(file, content, 'utf8'); }
@@ -20,6 +22,7 @@ function write(file, content) { fs.writeFileSync(file, content, 'utf8'); }
 function validatePublicStyles() {
   const wide = read(wideLayoutFile);
   const type = read(typographyFile);
+  const music = read(musicFile);
   const wideMarkers = [
     '--qily-wide-content:1560px',
     '.hero>.hero-grid',
@@ -32,7 +35,7 @@ function validatePublicStyles() {
     '--qily-type-nav-2:16px',
     '--qily-type-nav-3:15px',
     '--qily-type-body:18.5px',
-    'text-wrap:pretty',
+    'text-wrap:wrap',
     '.career-full-card h3',
     '.answer-content h2',
     '.composer textarea'
@@ -43,12 +46,21 @@ function validatePublicStyles() {
   for (const marker of typeMarkers) {
     if (!type.includes(marker)) throw new Error(`Typography marker missing: ${marker}`);
   }
+  const musicMarkers = [
+    'var restoreSettled = false',
+    'if (!restoreSettled) return',
+    'function settlePlaybackRestore()',
+    "localStorage.setItem(STATE_KEY, payload)"
+  ];
+  for (const marker of musicMarkers) {
+    if (!music.includes(marker)) throw new Error(`Music continuity marker missing: ${marker}`);
+  }
 }
 
 function publishNavigation() {
   let page = read(navigationFile);
   page = page
-    .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV6')
+    .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV7')
     .replace(/var SHARED_ASSET_VERSION = '[^']*';/, `var SHARED_ASSET_VERSION = '${ASSET_VERSION}';`)
     .replace(/var VISUAL_SCALE_VERSION = '[^']*';/, `var VISUAL_SCALE_VERSION = '${ASSET_VERSION}';`)
     .replace(/site-wide-layout-v1\.css\?v=[^'"\s]+/g, `site-wide-layout-v1.css?v=${WIDE_VERSION}`)
@@ -80,7 +92,9 @@ function refreshHtmlReferences() {
   walk(root, (file) => {
     if (!file.endsWith('.html')) return;
     const before = read(file);
-    const after = before.replace(/site-navigation\.js\?v=[^"']+/g, `site-navigation.js?v=${NAV_VERSION}`);
+    const after = before
+      .replace(/site-navigation\.js\?v=[^"']+/g, `site-navigation.js?v=${NAV_VERSION}`)
+      .replace(/homepage-music\.js\?v=[^"']+/g, `homepage-music.js?v=${MUSIC_VERSION}`);
     if (after !== before) {
       write(file, after);
       changed += 1;
@@ -93,7 +107,7 @@ function main() {
   validatePublicStyles();
   publishNavigation();
   const refreshed = refreshHtmlReferences();
-  process.stdout.write(`Published 1560px content axis, responsive card widths and anti-orphan typography; refreshed ${refreshed} HTML files.\n`);
+  process.stdout.write(`Published 1560px fluid copy, unified type hierarchy and continuous music state; refreshed ${refreshed} HTML files.\n`);
 }
 
 main();

@@ -1,4 +1,4 @@
-/* QilyLean 2026-07-28：全站首屏、正文、卡片、工具区与页脚统一宽版对齐 v4 */
+/* QilyLean 2026-07-29：全站首屏、正文、卡片、工具区与页脚统一宽版对齐 v5 */
 :root{
   --qily-wide-content:1560px;
   --qily-wide-gutter:clamp(14px,2.2vw,40px);
@@ -109,6 +109,68 @@ body.module-page .section-heading,
 body.module-page .page-heading{
   width:100%!important;
   max-width:100%!important;
+}
+
+/*
+ * 正文宽度统一规则：
+ * 仅解除文字内容的旧限宽，图片、视频、二维码、PDF、弹窗与表格仍保留各自尺寸。
+ * 块级文字自然占满所在列；带年份、按钮等并列元素时，占满扣除操作区后的可用列。
+ */
+main :where(p,li,dd,dt,blockquote),
+article :where(p,li,dd,dt,blockquote),
+.module-page :where(p,li,dd,dt,blockquote),
+.answer-content :where(p,li,dd,dt,blockquote){
+  max-width:none!important;
+  max-inline-size:none!important;
+}
+
+.intro,
+.lead,
+.summary,
+.description,
+.desc,
+.copy,
+.prose,
+.article-intro,
+.article-summary,
+.page-intro,
+.section-intro,
+.module-lead,
+.module-heading,
+.section-head,
+.section-heading,
+.page-heading,
+.module-page .head,
+.section .head,
+.travel-story-heading p,
+.design-feature p,
+.project-list-content>p,
+.project-story p,
+.project-result-panel p{
+  max-width:none!important;
+  max-inline-size:none!important;
+}
+
+.travel-story-heading>div,
+.design-feature-head>div,
+.section-head>div,
+.section-heading>div,
+.page-heading>div,
+.module-heading>div{
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+}
+
+.detail-intro>span{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  max-width:none!important;
+}
+
+.travel-story-heading p,
+.design-feature p{
+  width:auto!important;
 }
 
 /* 网格按最小可读宽度自动换列，杜绝因硬性列数造成卡片过窄。 */

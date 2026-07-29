@@ -9,14 +9,16 @@ const navigationFile = path.join(root, 'site-navigation.js');
 const visualScaleFile = path.join(root, 'site-visual-scale-v1.css');
 const wideLayoutFile = path.join(root, 'site-wide-layout-v1.css');
 const typographyFile = path.join(root, 'site-typography-v1.css');
+const musicFile = path.join(root, 'homepage-music.js');
 const experienceFile = path.join(root, 'experience', 'index.html');
 const capabilitiesFile = path.join(root, 'capabilities', 'index.html');
 const certificateFile = path.join(root, 'certificates', 'chatgpt-lean', 'index.html');
-const PUBLIC_NAV_VERSION = '20260728-type-system-v1';
-const PUBLIC_ASSET_VERSION = '20260728-type-system-v1';
+const PUBLIC_NAV_VERSION = '20260729-fluid-copy-v4';
+const PUBLIC_ASSET_VERSION = '20260729-hierarchy-v4';
 const PUBLIC_RESUME_VERSION = '20260728-public-access-v2';
-const WIDE_LAYOUT_VERSION = '20260728-aligned-layout-v2';
-const TYPE_SYSTEM_VERSION = '20260728-type-system-v1';
+const WIDE_LAYOUT_VERSION = '20260729-fluid-copy-v5';
+const TYPE_SYSTEM_VERSION = '20260729-hierarchy-v4';
+const MUSIC_VERSION = '20260729-continuous-v4';
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
@@ -30,7 +32,7 @@ function unlockNavigation() {
   let page = read(navigationFile);
 
   page = page
-    .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV4')
+    .replace(/window\.__qilyLeanSiteNavigation(?:V\d+|PublicV\d+)/g, 'window.__qilyLeanSiteNavigationPublicV7')
     .replace(/var SHARED_ASSET_VERSION = '[^']*';/, `var SHARED_ASSET_VERSION = '${PUBLIC_ASSET_VERSION}';`)
     .replace(/var VISUAL_SCALE_VERSION = '[^']*';/, `var VISUAL_SCALE_VERSION = '${PUBLIC_ASSET_VERSION}';`)
     .replace(/site-wide-layout-v1\.css\?v=[^'"\s]+/g, `site-wide-layout-v1.css?v=${WIDE_LAYOUT_VERSION}`)
@@ -113,8 +115,8 @@ function removeLegacyLockStyles() {
 
 function validateWideLayout() {
   const css = read(wideLayoutFile);
-  if (!css.includes('--qily-wide-content:1480px')) {
-    throw new Error('Wide content width is not configured at 1480px');
+  if (!css.includes('--qily-wide-content:1560px')) {
+    throw new Error('Wide content width is not configured at 1560px');
   }
   if (!css.includes('.module-hero>.module-inner') || !css.includes('.module-section>.module-inner')) {
     throw new Error('Hero and content alignment selectors are incomplete');
@@ -139,6 +141,19 @@ function validateTypography() {
   ];
   for (const marker of required) {
     if (!css.includes(marker)) throw new Error(`Typography marker missing: ${marker}`);
+  }
+}
+
+function validateMusicContinuity() {
+  const script = read(musicFile);
+  const required = [
+    'var restoreSettled = false',
+    'if (!restoreSettled) return',
+    'function settlePlaybackRestore()',
+    "localStorage.setItem(STATE_KEY, payload)"
+  ];
+  for (const marker of required) {
+    if (!script.includes(marker)) throw new Error(`Music continuity marker missing: ${marker}`);
   }
 }
 
@@ -209,12 +224,14 @@ function walk(directory, callback) {
   }
 }
 
-function refreshNavigationReferences() {
+function refreshPublicReferences() {
   let changed = 0;
   walk(root, (file) => {
     if (!file.endsWith('.html')) return;
     const before = read(file);
-    const after = before.replace(/site-navigation\.js\?v=[^"']+/g, `site-navigation.js?v=${PUBLIC_NAV_VERSION}`);
+    const after = before
+      .replace(/site-navigation\.js\?v=[^"']+/g, `site-navigation.js?v=${PUBLIC_NAV_VERSION}`)
+      .replace(/homepage-music\.js\?v=[^"']+/g, `homepage-music.js?v=${MUSIC_VERSION}`);
     if (after !== before) {
       write(file, after);
       changed += 1;
@@ -226,12 +243,13 @@ function refreshNavigationReferences() {
 function main() {
   validateWideLayout();
   validateTypography();
+  validateMusicContinuity();
   validateCertificatePresentation();
   unlockNavigation();
   removeLegacyLockStyles();
   publishExperience();
-  const refreshed = refreshNavigationReferences();
-  process.stdout.write(`Public access retained; typography hierarchy, 1480px alignment and certificate detail page published; updated ${refreshed} HTML files.\n`);
+  const refreshed = refreshPublicReferences();
+  process.stdout.write(`Public access retained; typography hierarchy, 1560px fluid copy and continuous music state published; updated ${refreshed} HTML files.\n`);
 }
 
 main();
