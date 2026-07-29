@@ -14,7 +14,7 @@ const targets = [
 
 for (const file of targets) {
   const source = fs.readFileSync(file, 'utf8');
-  const next = source.replace(/\/qilylean\/daily-briefs\.css\?v=[^"']+/g, '/qilylean/daily-briefs.css?v=20260729-engineering-system-v9');
+  const next = source.replace(/\/qilylean\/daily-briefs\.css\?v=[^"']+/g, '/qilylean/daily-briefs.css?v=20260729-engineering-system-v10');
   if (next !== source) fs.writeFileSync(file, next);
 }
 
