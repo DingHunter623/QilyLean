@@ -1,12 +1,12 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanSiteNavigationPublicV7) return;
-  window.__qilyLeanSiteNavigationPublicV7 = true;
+  if (window.__qilyLeanSiteNavigationPublicV8) return;
+  window.__qilyLeanSiteNavigationPublicV8 = true;
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260729-hierarchy-v4';
+  var SHARED_ASSET_VERSION = '20260729-no-old-flash-v1';
   var VISUAL_SCALE_VERSION = '20260729-hierarchy-v4';
     var CONTROLLED_ROUTE_PATHS = [];
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
@@ -457,18 +457,34 @@
     });
   }
 
-  function boot() {
-    addStylesheet();
-    addVisualScaleStylesheet();
-    addWideLayoutStylesheet();
-    addGlobalHeaderStyles();
-    addTypographyStylesheet();
-    buildNavigation();
-    protectControlledPage();
-    enableNavigationPrefetch();
-    buildDock();
+  function revealCurrentShell() {
+    document.documentElement.classList.remove('qily-shell-pending');
+    if (typeof window.__qilyLeanRevealCurrentShell === 'function') {
+      window.__qilyLeanRevealCurrentShell();
+    }
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
-  else boot();
+  function boot() {
+    try {
+      addStylesheet();
+      addVisualScaleStylesheet();
+      addWideLayoutStylesheet();
+      addGlobalHeaderStyles();
+      addTypographyStylesheet();
+      buildNavigation();
+      protectControlledPage();
+      enableNavigationPrefetch();
+      buildDock();
+    } finally {
+      revealCurrentShell();
+    }
+  }
+
+  /*
+   * Deferred head scripts execute after HTML parsing and before DOMContentLoaded.
+   * Boot immediately once <body> exists so the browser never paints the legacy
+   * per-page shell before the shared QilyLean shell takes over.
+   */
+  if (document.body) boot();
+  else document.addEventListener('DOMContentLoaded', boot, { once: true });
 })();
