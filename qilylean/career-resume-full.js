@@ -1,5 +1,5 @@
 (function(){
-  const FULL_HTML=`<div class="inner"><div class="head"><h2>履历主线（加密）</h2><p>以制造改善实践为主线，系统呈现不同阶段的典型场景、职责分工、关键成果与能力积累。</p></div>
+  const FULL_HTML=`<div class="inner"><div class="head"><h2>履历主线</h2><p>以制造改善实践为主线，系统呈现不同阶段的典型场景、职责分工、关键成果与能力积累。</p></div>
   <div class="career-overview"><strong>职业主线</strong><span>一线IE/TE工程技术 → 工程部管理与NPI体系 → 精益咨询与Lean项目交付 → 汽车电子精益体系及数智化工厂第一阶段推进</span></div>
   <div class="career-full-grid">
     <article class="career-full-card"><small>2025.11—至今｜汽车电子制造企业</small><h3>精益顾问 / 数智化工厂推进</h3><p class="career-industry"><b>服务场景：</b>汽车座椅开关、线束、注塑、装配、SMT/波峰焊等汽车电子制造场景。</p><h4>职责范围</h4><ul><li>推进精益生产体系、VSM价值流分析、IE标准工时/标准产能、6S稽查机制、目视化管理、SMED、车间布局及ERP/MES基础数据改善。</li><li>对接经营层及技术、生产、品质、PMC、物控、设备等部门，推动现场改善、看板机制和项目闭环。</li></ul><h4>关键成果</h4><ul><li>主导搭建第一阶段精益生产推进体系，形成精益推进总纲、组织职责、DMS日常管理系统、6S稽核、红线管控、改善表单等公司级制度与流程框架，推动精益改善由单点项目向体系化运行转化。</li><li>推进汽车座椅开关总成装配VSM、IE标工/标准产能、线平衡及ERP/MES数据沉淀，识别交付周期、WIP、信息流/物料流与节拍断点。</li><li>结合5M2E与5W2H/PDCA编制单件流/小批流试运行程序文件，支撑排产、人力配置、产能评估和现场改善决策。</li><li>推动6S稽查、现场目视化、安全防呆、装配精益桌、通道划线、包装/物控布局优化及注塑SMED工具导入等第一阶段项目，为后续试运行、测时验证和横向推广奠定基础。</li></ul><div class="career-result">阶段沉淀：公司级精益运行框架、主流产品族VSM改善路径、IE基础数据、单件流/小批流试运行程序、SMED程序文件及目视化与安全防呆项目群。</div></article>
