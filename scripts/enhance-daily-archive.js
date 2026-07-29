@@ -290,10 +290,163 @@ const guides = {
   }
 };
 
+const integrationProfiles = {
+  leanSystem: {
+    owner: 'IE／精益',
+    partner: 'PE、PMC、制造与质量',
+    reviewer: '生产运营负责人',
+    system: '标准工时、产能、改善台账与标准作业',
+    interface: 'IE／精益负责方法与数据口径；PE确认工艺边界，PMC提供需求与计划约束，制造和质量共同验证合格产出、波动及维持效果。'
+  },
+  processEngineering: {
+    owner: 'PE／工艺',
+    partner: '质量、IE、ME、制造与NPI',
+    reviewer: '工程负责人',
+    system: '工艺路线、参数窗口、PFMEA、控制计划与工程变更',
+    interface: 'PE负责过程设计与版本；质量确认控制要求，IE验证节拍和产能，ME保障设备治具条件，NPI与制造完成试产、放行和运营移交。'
+  },
+  equipmentEngineering: {
+    owner: 'ME／设备',
+    partner: 'PE、IE、制造、质量与安全',
+    reviewer: '工程负责人',
+    system: 'URS、FAT/SAT、点检保全、故障代码与设备履历',
+    interface: 'ME负责设备能力和可维护性；PE明确工艺窗口，IE核算节拍与负荷，制造和质量验证有效产出，安全职能确认正常、异常及维修状态风险。'
+  },
+  qualityEngineering: {
+    owner: '质量工程',
+    partner: 'PE、制造、供应商质量、IE与NPI',
+    reviewer: '质量负责人',
+    system: 'PFMEA、控制计划、检验标准、问题闭环与追溯记录',
+    interface: '质量工程定义风险与验证证据；PE回到过程原因，制造执行遏制和标准，供应商质量处理来料链路，IE与NPI评估对产能和阶段放行的影响。'
+  },
+  planningFlow: {
+    owner: 'PMC／计划物流',
+    partner: 'IE、采购、仓储、PE与制造',
+    reviewer: '生产运营负责人',
+    system: '订单、齐套、负荷、拉动补充、在制与结单状态',
+    interface: 'PMC把订单与齐套转化为可执行节奏；IE校核产能和人力，采购仓储保障补充，PE提供工艺和换型约束，制造按实绩回写欠产、超产与结单。'
+  },
+  npiDelivery: {
+    owner: 'NPI／项目',
+    partner: '研发、PE、IE、ME、质量、供应链与制造',
+    reviewer: '跨职能阶段评审组',
+    system: 'EVT/DVT/PVT/MP阶段门、成熟度矩阵、问题清单与量产移交',
+    interface: 'NPI统一版本、阶段和问题主线；各专业职能对本领域交付物负责，阶段评审只依据可复现证据放行，制造在MP稳定后承接日常运营。'
+  },
+  digitalSystem: {
+    owner: '业务Owner／数字化',
+    partner: 'IT、IE、PMC、PE、质量与财务',
+    reviewer: '流程与数据负责人',
+    system: '主数据、状态字典、权限、接口、审计日志与指标口径',
+    interface: '业务Owner先定义流程和状态，IT实现系统能力；IE、PMC、PE、质量和财务共同核对主键、分母与业务边界，禁止用系统上线代替业务验收。'
+  },
+  layoutPlanning: {
+    owner: 'IE／布局规划',
+    partner: 'PE、ME、物流、制造、安全与设施',
+    reviewer: '项目Sponsor',
+    system: '产能假设、SLP关系、设备清单、物流路线、安全约束与扩展预留',
+    interface: 'IE统筹流动和面积；PE、ME给出工艺设备条件，物流与制造验证动线，安全和设施审查消防、公辅、维修及扩展约束。'
+  },
+  managementImprovement: {
+    owner: '职能负责人／持续改善',
+    partner: '相关专业Owner、制造与数据Owner',
+    reviewer: '运营负责人',
+    system: '目标、责任、期限、证据、标准更新与分层复盘',
+    interface: '职能负责人建立节奏和升级规则；专业Owner对原因与措施负责，制造提供现场事实，数据Owner守住统计口径，运营负责人按综合结果验收。'
+  },
+  costBusiness: {
+    owner: 'IE／成本工程',
+    partner: '财务、PE、采购、ME、质量与制造',
+    reviewer: '经营负责人',
+    system: '标准成本、工时、损耗、质量成本、投资与收益台账',
+    interface: 'IE建立资源与损失基准，财务确认收益口径；PE、采购、ME、质量和制造分别验证工艺、材料、设备、风险及实际消耗，避免把理论节省当成经营收益。'
+  },
+  safetyEngineering: {
+    owner: '安全／EHS',
+    partner: 'ME、PE、制造、质量与设施',
+    reviewer: '安全与工程负责人',
+    system: '风险辨识、工程控制、联锁点检、变更评审与事件闭环',
+    interface: '安全职能定义风险等级和法规边界；ME、PE优先采用工程控制，制造验证作业状态，质量和设施共同确认变更不会引入新的产品或环境风险。'
+  }
+};
+
+const topicIntegrationProfiles = {
+  '精益生产': 'leanSystem',
+  'IE方法': 'leanSystem',
+  'PE工程': 'processEngineering',
+  'ME工程': 'equipmentEngineering',
+  'VSM': 'leanSystem',
+  'SMED': 'leanSystem',
+  'OEE': 'equipmentEngineering',
+  'JIT': 'planningFlow',
+  'PDCA': 'managementImprovement',
+  'PQCD': 'managementImprovement',
+  'Kaizen': 'leanSystem',
+  '6S': 'managementImprovement',
+  '目视化管理': 'managementImprovement',
+  'PMC': 'planningFlow',
+  'ERP/MES': 'digitalSystem',
+  'Factory Layout': 'layoutPlanning',
+  '线平衡': 'leanSystem',
+  '标准作业': 'processEngineering',
+  '质量改善': 'qualityEngineering',
+  '防错': 'processEngineering',
+  'TPM': 'equipmentEngineering',
+  '精益物流': 'planningFlow',
+  '自动化': 'equipmentEngineering',
+  '项目管理': 'npiDelivery',
+  '数据分析': 'digitalSystem',
+  '成本改善': 'costBusiness',
+  '安全改善': 'safetyEngineering',
+  'NPI四阶段': 'npiDelivery',
+  '持续改善': 'managementImprovement',
+  '管理执行': 'managementImprovement'
+};
+
+function resolveTopicKey(category) {
+  const value = String(category || '').trim();
+  if (guides[value]) return value;
+  const direct = Object.keys(guides).find((name) => value.includes(name) || name.includes(value));
+  if (direct) return direct;
+  const aliases = [
+    [/NPI|EVT|DVT|PVT|量产导入/i, 'NPI四阶段'],
+    [/ERP|MES|数智化工厂/i, 'ERP/MES'],
+    [/Factory Layout|工厂布局|布局规划/i, 'Factory Layout'],
+    [/PMC|APS|排产|计划闭环/i, 'PMC'],
+    [/标准工时|IE七大手法|工业工程|IE标工/i, 'IE方法'],
+    [/OEE|设备效率/i, 'OEE'],
+    [/TPM|设备保全/i, 'TPM'],
+    [/质量防错|Poka-Yoke|防错/i, '防错'],
+    [/质量|FPY|DPPM|过程审核/i, '质量改善'],
+    [/精益物流|配送|Milk Run/i, '精益物流'],
+    [/VSM|价值流/i, 'VSM'],
+    [/SMED|快速换型|快速换模/i, 'SMED'],
+    [/线平衡|山积图/i, '线平衡'],
+    [/标准作业|标准化|知识沉淀/i, '标准作业'],
+    [/自动化/i, '自动化'],
+    [/数据分析|数据闭环/i, '数据分析'],
+    [/成本|收益/i, '成本改善'],
+    [/安全/i, '安全改善'],
+    [/目视化/i, '目视化管理'],
+    [/\b6S\b/i, '6S'],
+    [/项目|横向展开/i, '项目管理'],
+    [/PDCA|5W2H|闭环|异常反应/i, 'PDCA'],
+    [/持续改善|防止复发/i, '持续改善'],
+    [/精益|制造改善/i, '精益生产'],
+    [/管理|执行/i, '管理执行']
+  ];
+  const alias = aliases.find(([expression]) => expression.test(value));
+  return alias ? alias[1] : '';
+}
+
 function resolveGuide(category) {
-  if (guides[category]) return guides[category];
-  const key = Object.keys(guides).find((name) => category.includes(name) || name.includes(category));
+  const key = resolveTopicKey(category);
   return key ? guides[key] : defaultGuide;
+}
+
+function resolveIntegration(category) {
+  const key = resolveTopicKey(category);
+  return integrationProfiles[key ? topicIntegrationProfiles[key] : 'managementImprovement'];
 }
 
 function listHtml(items, ordered = false) {
@@ -312,6 +465,22 @@ ${listHtml(guide.steps, true)}
 <h3>3. 常见误区与使用边界</h3>
 ${listHtml(guide.pitfalls)}
 <div class="engineering-checklist"><strong>培训复盘：</strong>${escapeHtml(guide.takeaway)}</div>
+</section>`;
+}
+
+function onePointTrainingSection(category) {
+  const guide = resolveGuide(category);
+  const integration = resolveIntegration(category);
+  return `<section class="brief-one-point-training" data-one-point-training="v1">
+<div class="brief-one-point-heading"><span>SINGLE-POINT LESSON</span><h3>单点培训｜${escapeHtml(category)}</h3><p>建议用10—15分钟完成一次班前会、工程例会或个人学习；先理解本期一个核心判断，再带回现场验证。</p></div>
+<div class="brief-one-point-grid">
+  <div><strong>培训目标</strong><p>${escapeHtml(guide.takeaway)}</p></div>
+  <div><strong>核心口径</strong><p>${escapeHtml(guide.formula)}</p></div>
+  <div><strong>现场动作</strong><p>${escapeHtml(guide.steps[0])}</p></div>
+  <div><strong>使用边界</strong><p>${escapeHtml(guide.pitfalls[0])}</p></div>
+</div>
+<div class="brief-one-point-interface"><strong>相关职能接口：</strong>${escapeHtml(integration.interface)}</div>
+<p class="brief-one-point-check"><strong>培训验收：</strong>学员应能选取一个真实对象，说明问题、数据、主责、协同、验证方式和不能直接套用的边界。</p>
 </section>`;
 }
 
@@ -356,13 +525,24 @@ function buildVisual({ date, category, title, tags, index }) {
     const x = 76 + tagIndex * 300;
     return `<rect x="${x}" y="700" width="260" height="66" rx="33" fill="${pale}" opacity=".96"/><text x="${x + 130}" y="743" fill="${dark}" font-size="27" font-weight="800" text-anchor="middle">${escapeXml(tag.slice(0, 10))}</text>`;
   }).join('');
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" role="img" aria-labelledby="title desc"><title id="title">${escapeXml(title)}</title><desc id="desc">QilyLean每日工程知识配图，${escapeXml(date)}，${escapeXml(category)}</desc><defs><linearGradient id="bg${index}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${dark}"/><stop offset="1" stop-color="${mid}"/></linearGradient><filter id="shadow${index}"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity=".22"/></filter></defs><rect width="1080" height="1080" fill="url(#bg${index})"/><circle cx="900" cy="165" r="210" fill="#fff" opacity=".07"/><circle cx="960" cy="430" r="300" fill="#fff" opacity=".045"/><rect x="64" y="62" width="360" height="62" rx="31" fill="${gold}"/><text x="244" y="103" fill="${dark}" font-size="28" font-weight="850" text-anchor="middle">${escapeXml(category.slice(0, 18))}</text><text x="1000" y="102" fill="#fff" opacity=".9" font-size="27" text-anchor="end">${escapeXml(date)}</text>${titleSvg}<g filter="url(#shadow${index})"><rect x="64" y="615" width="952" height="190" rx="28" fill="#fff" opacity=".11"/><path d="M110 658h190l52 52h168l52-52h190l52 52h156" fill="none" stroke="${gold}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><g fill="#fff" font-size="25" font-weight="750" text-anchor="middle"><text x="205" y="680">定义问题</text><text x="435" y="742">统一口径</text><text x="665" y="680">现场验证</text><text x="895" y="742">标准闭环</text></g></g>${tagSvg}<line x1="64" y1="905" x2="1016" y2="905" stroke="#fff" opacity=".35"/><text x="64" y="977" fill="#fff" font-size="34" font-weight="850">QilyLean｜启力精益</text><text x="1016" y="977" fill="${gold}" font-size="28" font-weight="750" text-anchor="end">制造方法 · 工程实践 · 数智化</text></svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" role="img" aria-labelledby="title desc"><title id="title">${escapeXml(title)}</title><desc id="desc">QilyLean今日简报单点培训配图，${escapeXml(date)}，${escapeXml(category)}</desc><defs><linearGradient id="bg${index}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${dark}"/><stop offset="1" stop-color="${mid}"/></linearGradient><filter id="shadow${index}"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity=".22"/></filter></defs><rect width="1080" height="1080" fill="url(#bg${index})"/><circle cx="900" cy="165" r="210" fill="#fff" opacity=".07"/><circle cx="960" cy="430" r="300" fill="#fff" opacity=".045"/><rect x="64" y="62" width="360" height="62" rx="31" fill="${gold}"/><text x="244" y="103" fill="${dark}" font-size="28" font-weight="850" text-anchor="middle">${escapeXml(category.slice(0, 18))}</text><text x="1000" y="102" fill="#fff" opacity=".9" font-size="27" text-anchor="end">${escapeXml(date)}</text>${titleSvg}<g filter="url(#shadow${index})"><rect x="64" y="615" width="952" height="190" rx="28" fill="#fff" opacity=".11"/><path d="M110 658h190l52 52h168l52-52h190l52 52h156" fill="none" stroke="${gold}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><g fill="#fff" font-size="25" font-weight="750" text-anchor="middle"><text x="205" y="680">定义问题</text><text x="435" y="742">统一口径</text><text x="665" y="680">现场验证</text><text x="895" y="742">标准闭环</text></g></g>${tagSvg}<line x1="64" y1="905" x2="1016" y2="905" stroke="#fff" opacity=".35"/><text x="64" y="977" fill="#fff" font-size="34" font-weight="850">QilyLean｜启力精益</text><text x="1016" y="977" fill="${gold}" font-size="28" font-weight="750" text-anchor="end">单点培训 · 工程实践 · 现场应用</text></svg>`;
 }
 
 function replaceOrInsertOgImage(page, imageUrl) {
   const tag = `<meta property="og:image" content="${imageUrl}">`;
   if (/<meta property="og:image"[^>]*>/i.test(page)) return page.replace(/<meta property="og:image"[^>]*>/i, tag);
   return page.replace(/(<meta property="og:url"[^>]*>)/i, `$1\n  ${tag}`);
+}
+
+function optimizeCompactTableColumns(article) {
+  return article.replace(/<table class="([^"]*\brule-table\b[^"]*)">[\s\S]*?<\/table>/gi, (table, className) => {
+    if (/\bcompact-first-col\b/.test(className)) return table;
+    const firstCells = Array.from(table.matchAll(/<tr[^>]*>\s*<(?:th|td)[^>]*>([\s\S]*?)<\/(?:th|td)>/gi))
+      .map((match) => textFromHtml(match[1]));
+    const longest = firstCells.reduce((maximum, value) => Math.max(maximum, Array.from(value).length), 0);
+    if (!firstCells.length || longest > 10) return table;
+    return table.replace(`class="${className}"`, `class="${className} compact-first-col"`);
+  });
 }
 
 function enhancePage(file, date, index) {
@@ -378,25 +558,35 @@ function enhancePage(file, date, index) {
     return;
   }
 
-  let article = articleMatch[0].replace(/<section class="brief-training-depth"[\s\S]*?<\/section>/i, '');
+  let article = articleMatch[0]
+    .replace(/<section class="brief-training-depth"[\s\S]*?<\/section>/i, '')
+    .replace(/<section class="brief-one-point-training"[\s\S]*?<\/section>/i, '');
   const title = textFromHtml(capture(article, /<h2>([\s\S]*?)<\/h2>/i, date));
   const dateLine = textFromHtml(capture(article, /<div class="date">([\s\S]*?)<\/div>/i, date));
   const category = dateLine.replace(date, '').replace(/[｜|]/g, '').trim() || '制造改善';
   const tags = Array.from(article.matchAll(/<span class="tag">([\s\S]*?)<\/span>/gi)).map((match) => textFromHtml(match[1]));
   const h3Count = (article.match(/<h3[ >]/gi) || []).length;
 
+  const assetName = `daily-${date}.svg`;
+  const assetPath = path.join(assetDir, assetName);
+  fs.writeFileSync(assetPath, `${buildVisual({ date, category, title, tags, index })}\n`);
+  page = replaceOrInsertOgImage(page, `https://qilylean.com/qilylean/assets/${assetName}`);
   if (date <= archiveVisualEnd) {
-    const assetName = `daily-${date}.svg`;
-    const assetPath = path.join(assetDir, assetName);
-    fs.writeFileSync(assetPath, `${buildVisual({ date, category, title, tags, index })}\n`);
     const visual = `<div class="visual"><img src="/qilylean/assets/${assetName}" alt="${escapeHtml(title)}" width="1080" height="1080" decoding="async"></div>`;
     article = article.replace(/<div class="visual">[\s\S]*?<\/div>(?=\s*<div class="content">)/i, visual);
-    page = replaceOrInsertOgImage(page, `https://qilylean.com/qilylean/assets/${assetName}`);
+  }
+
+  const onePointTraining = onePointTrainingSection(category);
+  if (/<div class="quote">[\s\S]*?<\/div>/i.test(article)) {
+    article = article.replace(/(<div class="quote">[\s\S]*?<\/div>)/i, `$1\n${onePointTraining}`);
+  } else {
+    article = article.replace(/(<h2>[\s\S]*?<\/h2>\s*<p>[\s\S]*?<\/p>)/i, `$1\n${onePointTraining}`);
   }
 
   if (h3Count < 2 && !/data-training-depth=/i.test(article)) {
     article = article.replace(/(<div class="tags">)/i, `${trainingSection(category)}$1`);
   }
+  article = optimizeCompactTableColumns(article);
 
   page = page.replace(articleMatch[0], article);
   fs.writeFileSync(file, page);
@@ -446,5 +636,9 @@ if (require.main === module) main();
 module.exports = {
   guides,
   resolveGuide,
+  resolveTopicKey,
+  resolveIntegration,
+  integrationProfiles,
+  topicIntegrationProfiles,
   buildVisual
 };
