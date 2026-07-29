@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>履历主线｜丁启利制造工程、精益改善与数智化工厂实践｜QilyLean</title>
-  <meta name="description" content="丁启利制造工程、工程管理、精益改善、新工厂规划与数智化工厂推进履历主线，公开展示职责、项目方法、关键成果与高清履历附件。">
+  <meta name="description" content="丁启利制造工程、工程管理、精益改善、新工厂规划与数智化工厂推进履历主线，公开展示职责、项目方法、关键成果与能力递进。">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://qilylean.com/experience/">
   <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>
@@ -34,7 +34,7 @@
       <div class="module-inner">
         <span class="module-eyebrow">Career Path / Engineering / Lean Delivery</span>
         <h1>履历主线</h1>
-        <p class="module-lead">公开展示制造工程、工程管理、精益咨询、新工厂规划与数智化推进经历，包含职责范围、项目方法、关键成果、能力递进与高清履历附件。</p>
+        <p class="module-lead">公开展示制造工程、工程管理、精益咨询、新工厂规划与数智化推进经历，包含职责范围、项目方法、关键成果与能力递进。</p>
       </div>
     </section>
 
@@ -59,15 +59,6 @@
         } else if (message) {
           message.textContent = '履历内容尚未完成渲染，请刷新页面重试。';
         }
-        var documentScript = document.createElement('script');
-        documentScript.id = 'experienceResumeDocumentScript';
-        documentScript.src = '/qilylean/career-resume-document.js?v=20260728-public-access-v2';
-        documentScript.onload = function () {
-          var note = document.querySelector('.career-document-note');
-          if (note) note.textContent = '公开访问说明：履历主线及高清原版PDF均可直接在线预览或下载，无需输入访问密码。';
-        };
-        documentScript.onerror = function () { if (message) message.textContent = '高清履历附件暂未加载成功，请刷新重试。'; };
-        document.body.appendChild(documentScript);
       };
       contentScript.onerror = function () { if (message) message.textContent = '履历内容暂未加载成功，请刷新重试。'; };
       document.body.appendChild(contentScript);
