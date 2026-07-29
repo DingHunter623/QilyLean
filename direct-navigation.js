@@ -13,7 +13,7 @@
     var link=document.createElement('link');
     link.id='qilyVisualScaleStylesheet';
     link.rel='stylesheet';
-    link.href='/site-visual-scale-v1.css?v=20260724-home-balance-v1';
+    link.href='/site-visual-scale-v1.css?v=20260729-hierarchy-v4';
     document.head.appendChild(link);
   }
 
@@ -45,6 +45,6 @@
     document.body.appendChild(brandScript);
   }
 
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',balanceHomepageHero,{once:true});
-  else balanceHomepageHero();
+  if(document.body)balanceHomepageHero();
+  else document.addEventListener('DOMContentLoaded',balanceHomepageHero,{once:true});
 })();
