@@ -117,7 +117,7 @@ function main() {
     assert((page.match(/data-brief-rating="[1-5]"/g) || []).length === 5, `Five-star rating controls are incomplete: ${item.date}`);
     assert(page.includes('data-brief-sentiment="good"') && page.includes('data-brief-sentiment="bad"'), `Positive and negative feedback controls are incomplete: ${item.date}`);
     assert(page.includes('data-brief-message-form') && page.includes('称谓（选填）') && page.includes('联系方式（选填）'), `Simple inline message form is incomplete: ${item.date}`);
-    assert(page.includes('/qilylean/daily-feedback.js?v=20260729-brief-engagement-v1'), `Shared feedback client is not loaded: ${item.date}`);
+    assert(page.includes('/qilylean/daily-feedback.js?v=20260729-social-counts-v3'), `Shared feedback client is not loaded: ${item.date}`);
     assert(page.includes(`data-brief-date="${item.date}"`) && page.includes(`data-brief-url="https://qilylean.com/qilylean/daily/${item.date}.html"`), `Feedback source tracking is incomplete: ${item.date}`);
   });
   fs.readdirSync(assetDir).filter((name) => /^daily-.*\.svg$/.test(name)).forEach((name) => {
