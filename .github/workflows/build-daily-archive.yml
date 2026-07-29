@@ -137,6 +137,24 @@ jobs:
             echo "Obsolete public rating module still exists"
             exit 1
           fi
+          for PAGE in "qilylean/daily-insights.html" "qilylean/daily/$LATEST_DATE.html" "qilylean/daily/2019-07-10.html"; do
+            grep -q 'data-qily-shell-bootstrap' "$PAGE" || {
+              echo "No-flash shell bootstrap is missing: $PAGE"
+              exit 1
+            }
+            grep -q '<script defer src="/site-navigation.js?v=20260729-no-old-flash-v1"></script>' "$PAGE" || {
+              echo "Current deferred navigation is missing: $PAGE"
+              exit 1
+            }
+            grep -q 'site-shell.css?v=20260729-no-old-flash-v1' "$PAGE" || {
+              echo "Current shell stylesheet is missing: $PAGE"
+              exit 1
+            }
+          done
+          if grep -R -E 'site-navigation\.js\?v=20260728-layout-type-v3|site-shell\.css\?v=20260725-compact-hero-v1|homepage-music\.js\?v=20260722-continuous-v3' qilylean/daily qilylean/daily-insights.html >/dev/null; then
+            echo "Legacy shared asset reference was regenerated"
+            exit 1
+          fi
 
       - name: Commit generated files
         shell: bash
