@@ -16,6 +16,7 @@ on:
       - "scripts/enhance-terminology-training.js"
       - "scripts/bump-daily-css-version.js"
       - "scripts/validate-daily-archive.js"
+      - "scripts/remove-daily-directory-consultation.js"
   workflow_dispatch:
 
 permissions:
@@ -108,6 +109,30 @@ jobs:
             exit 1
           }
           node scripts/validate-daily-archive.js
+
+      - name: Remove duplicate directory consultation
+        run: node scripts/remove-daily-directory-consultation.js
+
+      - name: Validate directory consultation removal
+        shell: bash
+        run: |
+          if grep -E 'id="brief-consultation"|id="briefConsultationForm"|简报留言交流|留言来源：今日简报总目录' qilylean/daily-insights.html >/dev/null; then
+            echo "Duplicate consultation module still exists in the daily directory"
+            exit 1
+          fi
+          if grep -R -E 'brief-consultation-cta|#brief-consultation' qilylean/daily/*.html >/dev/null; then
+            echo "Obsolete directory consultation CTA still exists in a brief page"
+            exit 1
+          fi
+          LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
+          grep -q 'data-brief-message-form' "qilylean/daily/$LATEST_DATE.html" || {
+            echo "Direct message form is missing from the latest brief"
+            exit 1
+          }
+          grep -q '评价本期简报' "qilylean/daily/$LATEST_DATE.html" || {
+            echo "Direct brief feedback module is missing"
+            exit 1
+          }
 
       - name: Commit generated files
         shell: bash
