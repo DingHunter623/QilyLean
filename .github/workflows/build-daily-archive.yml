@@ -98,11 +98,11 @@ jobs:
             echo "Daily brief external visual was not generated"
             exit 1
           }
-          grep -q "engineering-system-v7" qilylean/daily-briefs.css || {
+          grep -q "engineering-system-v9" qilylean/daily-briefs.css || {
             echo "Mobile responsive stylesheet marker is missing"
             exit 1
           }
-          grep -q "daily-briefs.css?v=20260729-engineering-system-v7" "qilylean/daily/$LATEST_DATE.html" || {
+          grep -q "daily-briefs.css?v=20260729-engineering-system-v9" "qilylean/daily/$LATEST_DATE.html" || {
             echo "Latest brief is not pinned to the mobile responsive stylesheet"
             exit 1
           }

@@ -88,7 +88,8 @@ function main() {
     assert(page.includes('/knowledge/') && page.includes('/projects/') && page.includes('/ai.html') && page.includes('/cooperation/'), `QilyLean module links are incomplete: ${date}`);
     assert(page.includes(`https://qilylean.com/qilylean/daily/${date}.html`), `Canonical URL is missing: ${date}`);
     assert(page.includes(`<img src="/qilylean/assets/daily-${date}.svg"`), `External share visual is missing: ${date}`);
-    assert(page.includes('daily-briefs.css?v=20260729-engineering-system-v7'), `Responsive archive stylesheet is not pinned: ${date}`);
+    assert(page.includes('daily-briefs.css?v=20260729-engineering-system-v9'), `Responsive archive stylesheet is not pinned: ${date}`);
+    assert(page.includes(`/qilylean/daily-insights.html?brief=${date}#brief-consultation`), `Brief consultation entry is missing: ${date}`);
     assert(!page.includes('<div class="date">' + date + '｜' + index.find((item) => item.date === date).theme + ' ·'), `Daily date line contains an unexpected suffix: ${date}`);
   });
 
@@ -128,10 +129,17 @@ function main() {
   const dailyCss = read('qilylean/daily-briefs.css');
   assert(/\.career-table \.career-year-col\{width:116px\}/.test(dailyCss), 'Desktop career year column is not narrowed');
   assert(/\.career-table \.career-year-col\{width:70px\}/.test(dailyCss), 'Mobile career year column is not narrowed');
-  assert(dailyCss.includes('engineering-system-v7'), 'Daily archive stylesheet version is not current');
-  assert(dailyCss.includes('font-size:clamp(20px,1.55vw,24px)'), 'Directory brief titles were not reduced');
+  assert(dailyCss.includes('engineering-system-v9'), 'Daily archive stylesheet version is not current');
+  assert(dailyCss.includes('font-size:clamp(20px,1.55vw,24px)!important'), 'Directory brief titles were not reduced or do not override the global heading rule');
+  assert(dailyCss.includes('font-size:clamp(28px,2.7vw,34px)!important'), 'Single-page brief titles were not reduced or do not override the global heading rule');
   assert(dailyCss.includes('font-size:16px;font-weight:900;line-height:1.45'), 'Directory date and theme text were not enlarged');
   assert(dailyCss.includes('.daily-single-section .date{color:var(--daily-gold);font-size:18px'), 'Single-page date text was not enlarged');
+  assert(dailyCss.includes('.brief-consultation-form{'), 'Brief consultation form styles are missing');
+  assert(directory.includes('id="briefConsultationForm"') && directory.includes('id="brief-consultation"'), 'Brief consultation window is missing');
+  assert(directory.includes('/^\\d{4}$/.test(requestedYear)') && directory.includes('/^\\d{4}$/.test(year)'), 'Year query validation was not emitted correctly');
+  assert(directory.includes("consultationApi+'/consultations'"), 'Brief consultation does not use the QilyLean consultation backend');
+  assert(directory.includes('formsubmit.co/ajax/'), 'Brief consultation email fallback is missing');
+  assert(directory.includes('timing:\'今日简报留言咨询\''), 'Brief consultation source classification is missing');
 
   const latestPage = read('qilylean/daily/2026-07-29.html');
   ['PE', 'IE', 'NPI', 'ME', 'JIT', 'PDCA', 'PQCD', 'OEE', 'EVT', 'DVT', 'PVT', 'MP', '精益物流', 'Kaizen'].forEach((term) => {
