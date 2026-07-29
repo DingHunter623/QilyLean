@@ -281,8 +281,8 @@ function updateSitemap(briefs) {
 function updateKnowledgeLatest(latest) {
   const file = path.join(root, 'knowledge', 'index.html');
   let page = fs.readFileSync(file, 'utf8');
-  const card = `<article class="module-card" data-latest-brief-card><small data-latest-brief-meta>最新：${latest.date}｜${escapeHtml(latest.theme)}</small><h3 data-latest-brief-title>${escapeHtml(latest.title)}</h3><p data-latest-brief-summary>${escapeHtml(latest.summary)}</p><div class="module-actions"><a href="/qilylean/daily-insights.html">查看简报目录</a><a class="secondary" data-latest-brief-link href="/qilylean/daily/${latest.date}.html">查看最新简报</a></div></article>`;
-  const pattern = /<article class="module-card" data-latest-brief-card>[\s\S]*?<\/article>/;
+  const card = `<article class="module-card" data-latest-brief-card data-latest-brief-date="${latest.date}"><small data-latest-brief-meta>最新：${latest.date}｜${escapeHtml(latest.theme)}</small><h3 data-latest-brief-title>${escapeHtml(latest.title)}</h3><p data-latest-brief-summary>${escapeHtml(latest.summary)}</p><div class="module-actions"><a href="/qilylean/daily-insights.html">查看简报目录</a><a class="secondary" data-latest-brief-link href="/qilylean/daily/${latest.date}.html">查看最新简报</a></div></article>`;
+  const pattern = /<article class="module-card" data-latest-brief-card(?: data-latest-brief-date="[^"]*")?>[\s\S]*?<\/article>/;
   if (!pattern.test(page)) throw new Error('Knowledge latest brief card marker is missing');
   page = page.replace(pattern, card);
   fs.writeFileSync(file, page);

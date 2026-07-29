@@ -79,9 +79,12 @@ jobs:
             echo "Latest daily brief is missing from daily-insights.html"
             exit 1
           }
-          grep -q "data-latest-brief-card" knowledge/index.html
-          grep -q "$LATEST_DATE" knowledge/index.html || {
-            echo "Knowledge sharing page is not showing the latest daily brief"
+          grep -q "data-latest-brief-card data-latest-brief-date=\"$LATEST_DATE\"" knowledge/index.html || {
+            echo "Knowledge sharing latest brief card has a mismatched date"
+            exit 1
+          }
+          grep -q "data-latest-brief-link href=\"/qilylean/daily/$LATEST_DATE.html\"" knowledge/index.html || {
+            echo "Knowledge sharing latest brief card has a mismatched link"
             exit 1
           }
           grep -q "QilyLean｜启力精益" qilylean/daily-insights.html || {
