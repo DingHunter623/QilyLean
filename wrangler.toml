@@ -1,5 +1,5 @@
 name = "qilylean-ai"
-main = "cloudflare-worker/worker.js"
+main = "cloudflare-worker/worker-social.js"
 compatibility_date = "2026-07-16"
 workers_dev = true
 
