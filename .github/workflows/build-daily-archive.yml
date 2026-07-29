@@ -129,10 +129,14 @@ jobs:
             echo "Direct message form is missing from the latest brief"
             exit 1
           }
-          grep -q '评价本期简报' "qilylean/daily/$LATEST_DATE.html" || {
-            echo "Direct brief feedback module is missing"
+          grep -q '留言交流' "qilylean/daily/$LATEST_DATE.html" || {
+            echo "Direct brief message module is missing"
             exit 1
           }
+          if grep -E '评价本期简报|五星好评|点赞好评|data-brief-rating|data-brief-sentiment|data-like-count|data-dislike-count' "qilylean/daily/$LATEST_DATE.html" >/dev/null; then
+            echo "Obsolete public rating module still exists"
+            exit 1
+          fi
 
       - name: Commit generated files
         shell: bash
