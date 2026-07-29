@@ -1,0 +1,7 @@
+{
+  "feature": "brief-social-counts",
+  "status": "deployed-and-verified",
+  "verified_at_utc": "2026-07-29T03:52:43Z",
+  "commit": "673f52ca311814191ac3fd8fc5350370b89da861",
+  "fields": ["rating_average", "rating_count", "five_star_count", "likes", "dislikes", "comments", "interaction_count"]
+}
