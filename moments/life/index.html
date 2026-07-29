@@ -1,10 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>生活远方｜行走印记 · QilyLean</title>
-  <meta name="description" content="业余旅行、自然风光与工作之外值得珍藏的生活片段。">
+  <meta name="description" content="2023年香港、澳门旅行影像：维多利亚港、黄大仙祠、星光大道、澳门回归贺礼陈列馆与大三巴牌坊。">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://qilylean.com/moments/life/">
   <style>
@@ -44,13 +44,29 @@
     .travel-card figcaption{padding:12px 13px}
     .travel-card strong{display:block;color:var(--forest);font-size:16px;line-height:1.4}
     .travel-card span{display:block;margin-top:5px;color:var(--muted);font-size:14px;line-height:1.6}
+    .travel-story{margin-top:24px;padding:clamp(18px,3vw,28px);border:1px solid var(--line);border-radius:18px;background:#f7fbfa}
+    .travel-story+.travel-story{margin-top:18px}
+    .travel-story-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+    .travel-story-heading h3{margin:0;color:var(--forest);font-size:clamp(21px,3vw,28px);line-height:1.3}
+    .travel-story-heading p{max-width:760px;margin:7px 0 0;color:var(--muted);font-size:15px}
+    .travel-year{flex:0 0 auto;padding:5px 11px;border:1px solid #b9d9d4;border-radius:999px;color:var(--forest);background:#eaf6f3;font-size:13px;font-weight:900}
+    .travel-card{border-radius:14px;box-shadow:0 10px 25px rgba(15,75,90,.08)}
+    .travel-card--wide{grid-column:1/-1}
+    .travel-media{display:block;overflow:hidden;background:#e9f1ef}
+    .travel-media img{width:100%;height:100%;object-fit:cover;transition:transform .28s ease}
+    .travel-card:not(.travel-card--wide) .travel-media{aspect-ratio:4/5}
+    .travel-card--wide .travel-media{aspect-ratio:16/9}
+    .travel-media:hover img,.travel-media:focus-visible img{transform:scale(1.015)}
+    .travel-media:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+    .gallery-tip{display:flex;align-items:center;gap:8px;margin:20px 0 0;padding:10px 12px;border-radius:10px;color:#496663;background:#eaf6f3;font-size:14px}
+    .gallery-tip::before{content:"↗";display:grid;place-items:center;width:24px;height:24px;border-radius:50%;color:#fff;background:var(--teal);font-weight:900}
     .empty{min-height:120px;display:grid;place-items:center;margin-top:22px;border:1px dashed #b8ceca;background:linear-gradient(135deg,#f5fbfa,#edf5f3);color:#78908d;text-align:center}
     .empty strong{display:block;color:var(--forest);font-size:17px}
     .empty span{display:block;margin-top:4px;font-size:14px}
     .footer{padding:24px clamp(18px,4vw,56px);color:#d6e5df;background:#101916}
     .footer-inner{width:min(1180px,100%);margin:auto}
     @media(max-width:900px){.topbar{position:static;align-items:flex-start;flex-direction:column}.site-nav{justify-content:flex-start}}
-    @media(max-width:760px){.gallery-groups{grid-template-columns:1fr}.travel-grid{grid-template-columns:1fr}.travel-spacer{display:none}.gallery-group{min-height:240px}}
+    @media(max-width:760px){.gallery-groups{grid-template-columns:1fr}.travel-grid{grid-template-columns:1fr}.travel-spacer{display:none}.gallery-group{min-height:240px}.travel-card--wide{grid-column:auto}.travel-story-heading{flex-direction:column;gap:8px}.travel-card--wide .travel-media{aspect-ratio:4/3}}
   
     .category-nav a[aria-current="page"]{color:#17322d;background:var(--gold);border-color:var(--gold)}
     .moment-directory{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
@@ -109,8 +125,62 @@
         <section class="gallery-group" id="life" data-gallery="life">
           <div class="group-number">04 · LIFE</div>
           <h2>生活远方</h2>
-          <p>业余旅行、自然风光与工作之外值得珍藏的生活片段。</p>
-          <div class="empty"><div><strong>照片待上传</strong><span>后续在此呈现旅行生活影像</span></div></div>
+          <p>2023年赴香港、澳门，在城市天际线、传统文化地标与历史建筑之间行走。旅途不仅是抵达远方，也是从不同城市的空间、节奏与人文中，重新观察生活。</p>
+          <div class="gallery-tip">点击图片可查看高清原图；手机端可长按保存或转发。</div>
+
+          <article class="travel-story" aria-labelledby="hong-kong-2023">
+            <div class="travel-story-heading">
+              <div>
+                <h3 id="hong-kong-2023">香港｜山海之间的城市节奏</h3>
+                <p>从维多利亚港的现代天际线，到黄大仙祠的传统文化，再沿星光大道感受香港电影记忆；在紧凑的城市空间里，看见效率、活力与人文底蕴彼此交融。</p>
+              </div>
+              <time class="travel-year" datetime="2023">2023年</time>
+            </div>
+            <div class="travel-grid">
+              <figure class="travel-card travel-card--wide">
+                <a class="travel-media" href="/香港1.jpg" target="_blank" rel="noopener" aria-label="查看维多利亚港高清原图">
+                  <img src="/香港1.jpg" alt="2023年香港维多利亚港与九龙天际线" width="4032" height="3024" decoding="async" fetchpriority="high">
+                </a>
+                <figcaption><strong>维多利亚港｜城市天际线</strong><span>隔海远眺九龙高密度建筑群，海面、云层与城市界面共同构成香港极具辨识度的开放景观。</span></figcaption>
+              </figure>
+              <figure class="travel-card">
+                <a class="travel-media" href="/香港2.jpg" target="_blank" rel="noopener" aria-label="查看黄大仙祠旅行高清原图">
+                  <img src="/香港2.jpg" alt="丁启利在香港黄大仙祠旅行留影" width="4032" height="3024" loading="lazy" decoding="async">
+                </a>
+                <figcaption><strong>黄大仙祠｜传统与社区</strong><span>金色文化浮雕、传统亭阁与周边高密度住宅同框，呈现香港传统信仰融入现代城市生活的日常场景。</span></figcaption>
+              </figure>
+              <figure class="travel-card">
+                <a class="travel-media" href="/香港3.jpg" target="_blank" rel="noopener" aria-label="查看星光大道旅行高清原图">
+                  <img src="/香港3.jpg" alt="丁启利在香港星光大道李小龙像前留影" width="4032" height="3024" loading="lazy" decoding="async">
+                </a>
+                <figcaption><strong>星光大道｜香港电影记忆</strong><span>以李小龙雕像、维港海景和公共步道为背景，记录香港电影文化与滨水城市空间的鲜明连接。</span></figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <article class="travel-story" aria-labelledby="macau-2023">
+            <div class="travel-story-heading">
+              <div>
+                <h3 id="macau-2023">澳门｜历史地标与城市记忆</h3>
+                <p>从澳门回归贺礼陈列馆到大三巴牌坊，在国家记忆与中西文化交汇的建筑场景中，感受一座城市如何保存历史、讲述身份并延续文化。</p>
+              </div>
+              <time class="travel-year" datetime="2023">2023年</time>
+            </div>
+            <div class="travel-grid">
+              <figure class="travel-card">
+                <a class="travel-media" href="/澳门1.jpg" target="_blank" rel="noopener" aria-label="查看澳门回归贺礼陈列馆高清原图">
+                  <img src="/澳门1.jpg" alt="丁启利在澳门回归贺礼陈列馆前留影" width="4032" height="3024" loading="lazy" decoding="async">
+                </a>
+                <figcaption><strong>澳门回归贺礼陈列馆｜国家记忆</strong><span>以澳门回归主题文化空间为背景，记录城市发展与国家历史节点相互连接的现场。</span></figcaption>
+              </figure>
+              <figure class="travel-card">
+                <a class="travel-media" href="/澳门2.jpg" target="_blank" rel="noopener" aria-label="查看大三巴牌坊旅行高清原图">
+                  <img src="/澳门2.jpg" alt="丁启利在澳门大三巴牌坊前留影" width="4032" height="3024" loading="lazy" decoding="async">
+                </a>
+                <figcaption><strong>大三巴牌坊｜中西文化交汇</strong><span>石质立面、宗教雕刻与城市公共空间共同构成澳门最具代表性的历史建筑场景。</span></figcaption>
+              </figure>
+            </div>
+          </article>
         </section>
       </div>
     </div>
