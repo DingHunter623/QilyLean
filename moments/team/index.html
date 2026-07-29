@@ -1,10 +1,10 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>团队同行｜行走印记 · QilyLean</title>
-  <meta name="description" content="团队建设、项目协同、集体活动与并肩作战的珍贵瞬间。">
+  <meta name="description" content="2017—2023年团队同行影像：温州洞头包船、深圳梧桐山登山、公司培训休憩、冬季年会与东莞第一峰团建。">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://qilylean.com/moments/team/">
   <style>
@@ -22,12 +22,12 @@
     .hero-inner,.main-inner{width:min(1180px,100%);margin:auto}
     .eyebrow{color:var(--gold);font-size:14px;font-weight:900;letter-spacing:.08em}
     h1{margin:10px 0 14px;font-size:clamp(40px,6vw,72px);line-height:1.08}
-    .lead{max-width:820px;margin:0;color:#e9f7f3;font-size:clamp(18px,2vw,23px)}
+    .lead{max-width:1180px;margin:0;color:#e9f7f3;font-size:clamp(18px,2vw,23px);text-wrap:pretty}
     .category-nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
     .category-nav a{padding:8px 14px;border:1px solid rgba(255,227,155,.52);border-radius:999px;color:#fff7e8;background:rgba(255,255,255,.08);font-size:15px;font-weight:850;text-decoration:none;transition:transform .16s ease,background .16s ease,box-shadow .16s ease}
     .category-nav a:hover,.category-nav a:focus-visible{transform:translateY(-2px);background:rgba(255,255,255,.18);box-shadow:0 8px 18px rgba(7,60,71,.24);outline:none}
     .main{padding:clamp(38px,6vw,72px) clamp(18px,4vw,56px)}
-    .intro{max-width:840px;margin:0 0 30px;color:var(--muted);font-size:18px}
+    .intro{max-width:none;margin:0 0 30px;color:var(--muted);font-size:18px}
     .gallery-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
     .gallery-group{min-height:280px;padding:26px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow);scroll-margin-top:78px}
     .gallery-group:nth-child(2){border-top:4px solid var(--copper)}
@@ -44,13 +44,27 @@
     .travel-card figcaption{padding:12px 13px}
     .travel-card strong{display:block;color:var(--forest);font-size:16px;line-height:1.4}
     .travel-card span{display:block;margin-top:5px;color:var(--muted);font-size:14px;line-height:1.6}
+    .team-intro{max-width:none!important}
+    .team-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:22px}
+    .team-card{overflow:hidden;margin:0;border:1px solid var(--line);border-radius:16px;background:#f7fbfa;box-shadow:0 12px 28px rgba(15,75,90,.09)}
+    .team-card:first-child{grid-column:1/-1}
+    .team-media{display:block;overflow:hidden;padding:10px;background:linear-gradient(135deg,#eaf4f2,#f8fbfa)}
+    .team-media img{display:block;width:100%;height:auto;margin:auto;background:#e9f1ef;transition:transform .25s ease}
+    .team-media:hover img,.team-media:focus-visible img{transform:scale(1.01)}
+    .team-media:focus-visible{outline:3px solid var(--gold);outline-offset:-3px}
+    .team-card figcaption{padding:16px 17px 18px}
+    .team-card strong{display:block;color:var(--forest);font-size:18px;line-height:1.45}
+    .team-card span{display:block;margin-top:7px;color:var(--muted);font-size:15px;line-height:1.75}
+    .team-year{display:inline-flex;margin-bottom:8px;padding:4px 10px;border:1px solid #b9d9d4;border-radius:999px;color:var(--forest);background:#eaf6f3;font-size:13px;font-weight:900}
+    .gallery-tip{display:flex;align-items:center;gap:8px;margin:20px 0 0;padding:10px 12px;border-radius:10px;color:#496663;background:#eaf6f3;font-size:14px}
+    .gallery-tip::before{content:"↗";display:grid;place-items:center;width:24px;height:24px;border-radius:50%;color:#fff;background:var(--teal);font-weight:900}
     .empty{min-height:120px;display:grid;place-items:center;margin-top:22px;border:1px dashed #b8ceca;background:linear-gradient(135deg,#f5fbfa,#edf5f3);color:#78908d;text-align:center}
     .empty strong{display:block;color:var(--forest);font-size:17px}
     .empty span{display:block;margin-top:4px;font-size:14px}
     .footer{padding:24px clamp(18px,4vw,56px);color:#d6e5df;background:#101916}
     .footer-inner{width:min(1180px,100%);margin:auto}
     @media(max-width:900px){.topbar{position:static;align-items:flex-start;flex-direction:column}.site-nav{justify-content:flex-start}}
-    @media(max-width:760px){.gallery-groups{grid-template-columns:1fr}.travel-grid{grid-template-columns:1fr}.travel-spacer{display:none}.gallery-group{min-height:240px}}
+    @media(max-width:760px){.gallery-groups{grid-template-columns:1fr}.travel-grid,.team-gallery{grid-template-columns:1fr}.team-card:first-child{grid-column:auto}.travel-spacer{display:none}.gallery-group{min-height:240px}}
   
     .category-nav a[aria-current="page"]{color:#17322d;background:var(--gold);border-color:var(--gold)}
     .moment-directory{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
@@ -109,8 +123,40 @@
         <section class="gallery-group" id="team" data-gallery="team">
           <div class="group-number">02 · TEAM</div>
           <h2>团队同行</h2>
-          <p>团队建设、项目协同、集体活动与并肩作战的珍贵瞬间。</p>
-          <div class="empty"><div><strong>照片待上传</strong><span>后续在此呈现团队活动影像</span></div></div>
+          <p class="team-intro">从户外挑战、年度相聚到培训交流与团队出游，记录2017—2023年间并肩同行的真实片段。不同场景共同承载团队凝聚、协同互信、阶段复盘与共同成长，让工作关系在目标之外形成更稳定的连接。</p>
+          <div class="gallery-tip">点击图片可查看高清原图；手机端可长按保存或转发。</div>
+          <div class="team-gallery">
+            <figure class="team-card">
+              <a class="team-media" href="/2023年6月份带团队温州洞头包船游览.jpg" target="_blank" rel="noopener" aria-label="查看2023年温州洞头团队包船游览高清原图">
+                <img src="/2023年6月份带团队温州洞头包船游览.jpg" alt="2023年6月温州洞头团队包船游览，成员身着救生衣在海上同行" width="4032" height="3024" decoding="async" fetchpriority="high">
+              </a>
+              <figcaption><time class="team-year" datetime="2023-06">2023年6月</time><strong>温州洞头｜团队包船游览</strong><span>带领团队走出日常工作场景，在海岛航程与集体活动中放松身心、增进交流。共同出行有助于加强成员之间的理解与信任，为后续协作建立更顺畅的沟通基础。</span></figcaption>
+            </figure>
+            <figure class="team-card">
+              <a class="team-media" href="/2020年10月份深圳梧桐山好汉坡团建.jpg" target="_blank" rel="noopener" aria-label="查看2020年深圳梧桐山好汉坡团建高清原图">
+                <img src="/2020年10月份深圳梧桐山好汉坡团建.jpg" alt="2020年10月深圳梧桐山好汉坡登山团建现场" width="2328" height="1744" loading="lazy" decoding="async">
+              </a>
+              <figcaption><time class="team-year" datetime="2020-10">2020年10月</time><strong>深圳梧桐山｜好汉坡登山团建</strong><span>以共同攀登和抵达目标点为主线，在体能挑战中体验相互鼓励与坚持。登山过程映射项目推进中的目标分解、节奏控制与团队互助。</span></figcaption>
+            </figure>
+            <figure class="team-card">
+              <a class="team-media" href="/2018年10月份公司培训晚上休憩.jpg" target="_blank" rel="noopener" aria-label="查看2018年公司培训期间团队休憩高清原图">
+                <img src="/2018年10月份公司培训晚上休憩.jpg" alt="2018年10月公司培训期间团队成员晚间交流休憩" width="4096" height="3072" loading="lazy" decoding="async">
+              </a>
+              <figcaption><time class="team-year" datetime="2018-10">2018年10月</time><strong>公司培训｜晚间交流休憩</strong><span>培训之余与团队成员轻松交流，在非正式氛围中分享学习体会、拉近协作距离。培训不仅传递知识，也为团队共识与经验互通创造场景。</span></figcaption>
+            </figure>
+            <figure class="team-card">
+              <a class="team-media" href="/2017年冬季公司年会.jpg" target="_blank" rel="noopener" aria-label="查看2017年冬季公司年会高清原图">
+                <img src="/2017年冬季公司年会.jpg" alt="2017年冬季公司年会团队成员佩戴红围巾合影" width="1080" height="1080" loading="lazy" decoding="async">
+              </a>
+              <figcaption><time class="team-year" datetime="2017">2017年冬季</time><strong>公司年会｜阶段总结与共同庆贺</strong><span>以年度相聚回顾并肩奋斗的阶段成果，红围巾合影定格团队荣誉感。年会场景承接复盘、认可与激励，为新一阶段目标凝聚士气。</span></figcaption>
+            </figure>
+            <figure class="team-card">
+              <a class="team-media" href="/2017年9月份团建东莞第一峰.jpg" target="_blank" rel="noopener" aria-label="查看2017年东莞第一峰团建高清原图">
+                <img src="/2017年9月份团建东莞第一峰.jpg" alt="2017年9月东莞第一峰户外团建留影" width="1080" height="1440" loading="lazy" decoding="async">
+              </a>
+              <figcaption><time class="team-year" datetime="2017-09">2017年9月</time><strong>东莞第一峰｜户外挑战与影像记录</strong><span>在山岳场景中完成团队户外挑战，并用镜头记录同行过程。共同面对路线与体能考验，强化了目标意识、韧性与伙伴间的支持。</span></figcaption>
+            </figure>
+          </div>
         </section>
       </div>
     </div>
