@@ -14,6 +14,12 @@ const root = path.resolve(__dirname, '..');
 const qily = path.join(root, 'qilylean');
 const dailyDir = path.join(qily, 'daily');
 const baseUrl = 'https://qilylean.com';
+const NAV_VERSION = '20260729-no-old-flash-v1';
+const SHELL_VERSION = '20260729-no-old-flash-v1';
+const VISUAL_VERSION = '20260729-hierarchy-v4';
+const WIDE_VERSION = '20260729-fluid-copy-v5';
+const TYPE_VERSION = '20260729-hierarchy-v4';
+const MUSIC_VERSION = '20260729-continuous-v4';
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({
@@ -112,8 +118,13 @@ function pageHeader(title, description, canonical, ogType = 'article') {
   <meta property="og:image:width" content="1080">
   <meta property="og:image:height" content="1080">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="/site-shell.css?v=20260725-compact-hero-v1">
+  <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>
+  <link rel="stylesheet" href="/site-shell.css?v=${SHELL_VERSION}">
+  <link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=${VISUAL_VERSION}">
+  <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=${WIDE_VERSION}">
+  <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=${TYPE_VERSION}">
   <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260729-engineering-system-v11">
+  <script defer src="/site-navigation.js?v=${NAV_VERSION}"></script>
 </head>`;
 }
 
@@ -125,8 +136,7 @@ function siteHeader() {
 }
 
 function pageScripts() {
-  return `<script src="/site-navigation.js?v=20260728-layout-type-v3"></script>
-<script src="/homepage-music.js?v=20260722-continuous-v3"></script>`;
+  return `<script src="/homepage-music.js?v=${MUSIC_VERSION}"></script>`;
 }
 
 function buildBriefFeedback(brief) {
