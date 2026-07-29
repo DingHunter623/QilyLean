@@ -3,7 +3,7 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.qilylean.com'
 ]);
 
-const BUILD_VERSION = 'v1.5.1-android-connectivity';
+const BUILD_VERSION = 'v1.6.0-brief-engagement';
 const CONSULTATION_RECEIVER = '396767769@qq.com';
 const CONSULTATION_STATUSES = new Set(['new', 'contacted', 'closed']);
 const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
@@ -168,6 +168,15 @@ async function checkConsultationRateLimit(request, env) {
   return { allowed: true, used: await increment(env.QILY_STATS, key, 60 * 60 * 48), limit, storage: true };
 }
 
+async function checkBriefFeedbackRateLimit(request, env) {
+  const limit = Math.max(1, Number(env.BRIEF_FEEDBACK_DAILY_IP_LIMIT || 30));
+  if (!env.QILY_STATS) return { allowed: false, used: 0, limit, storage: false };
+  const key = `brief-feedback-limit:${todayUTC()}:${clientId(request)}`;
+  const used = await readNumber(env.QILY_STATS, key);
+  if (used >= limit) return { allowed: false, used, limit, storage: true };
+  return { allowed: true, used: await increment(env.QILY_STATS, key, 60 * 60 * 48), limit, storage: true };
+}
+
 async function checkTtsRateLimit(request, env) {
   const limit = Math.max(1, Number(env.DAILY_TTS_LIMIT || 60));
   if (!env.QILY_STATS) return { allowed: true, used: 0, limit, storage: false };
@@ -191,7 +200,7 @@ function providerConfig(env) {
 
 async function adminStatus(env) {
   const day = todayUTC();
-  const names = ['requests', 'success', 'errors', 'rate_limited', 'consultations'];
+  const names = ['requests', 'success', 'errors', 'rate_limited', 'consultations', 'brief_ratings', 'brief_sentiments', 'brief_comments'];
   const today = {}, all = {};
   for (const name of names) {
     today[name] = await readNumber(env.QILY_STATS, `metric:${day}:${name}`);
@@ -211,6 +220,7 @@ async function adminStatus(env) {
     max_output_tokens: Number(env.MAX_OUTPUT_TOKENS || 1400),
     daily_ip_limit: Number(env.DAILY_IP_LIMIT || 20),
     consultation_daily_ip_limit: Number(env.CONSULTATION_DAILY_IP_LIMIT || 5),
+    brief_feedback_daily_ip_limit: Number(env.BRIEF_FEEDBACK_DAILY_IP_LIMIT || 30),
     consultation_receiver: CONSULTATION_RECEIVER,
     consultation_email_binding: Boolean(env.CONSULTATION_EMAIL),
     admin_token_configured: Boolean(env.ADMIN_TOKEN),
@@ -233,7 +243,8 @@ function normalizeConsultation(payload, request) {
     target: clean(payload.target, 1200),
     timing: clean(payload.timing, 80),
     contact: clean(payload.contact, 180),
-    source_page: clean(payload.source_page || request.headers.get('Referer') || '', 300)
+    source_page: clean(payload.source_page || request.headers.get('Referer') || '', 300),
+    source_brief: clean(payload.source_brief, 300)
   };
 }
 
@@ -246,6 +257,18 @@ function validateConsultation(record) {
 }
 
 function consultationText(record) {
+  if (record.industry === '今日简报留言交流') {
+    return [
+      '【QilyLean 今日简报留言】',
+      `提交时间：${record.submitted_at}`,
+      `留言人称谓：${record.company}`,
+      `联系方式：${record.contact}`,
+      `来源简报：${record.source_brief || record.timing || '未标注'}`,
+      `留言内容：${record.problem.replace(/^来源简报：[^\n]*\n留言内容：/, '').trim()}`,
+      `来源页面：${record.source_page || '未标注'}`,
+      `留言编号：${record.id}`
+    ].join('\n');
+  }
   return [
     '【QilyLean 企业问题诊断卡】',
     `提交时间：${record.submitted_at}`,
@@ -263,21 +286,29 @@ function consultationText(record) {
 
 async function sendConsultationEmail(record, env) {
   if (!env.CONSULTATION_EMAIL) return false;
-  const subject = `【QilyLean新咨询】${record.company}｜${record.industry}`;
+  const isBriefMessage = record.industry === '今日简报留言交流';
+  const subject = isBriefMessage
+    ? `【QilyLean今日简报留言】${record.company}｜${record.source_brief || record.timing || '来源待核'}`
+    : `【QilyLean新咨询】${record.company}｜${record.industry}`;
   const text = consultationText(record);
-  const rows = [
+  const rows = (isBriefMessage ? [
+    ['留言人称谓', record.company], ['联系方式', record.contact],
+    ['来源简报', record.source_brief || record.timing || '未标注'],
+    ['留言内容', record.problem.replace(/^来源简报：[^\n]*\n留言内容：/, '').trim()],
+    ['来源页面', record.source_page || '未标注'], ['留言编号', record.id]
+  ] : [
     ['企业名称', record.company], ['行业', record.industry], ['所在地区', record.location],
     ['企业／产线规模', record.scale || '未填写'], ['当前主要问题', record.problem],
     ['希望达到的目标', record.target || '未填写'], ['计划启动时间', record.timing || '未填写'],
     ['联系人及电话', record.contact], ['咨询编号', record.id]
-  ].map(([label, value]) => `<tr><th style="text-align:left;padding:8px;border:1px solid #d5e4e3;background:#eef7f5">${escapeHtml(label)}</th><td style="padding:8px;border:1px solid #d5e4e3">${escapeHtml(value)}</td></tr>`).join('');
+  ]).map(([label, value]) => `<tr><th style="text-align:left;padding:8px;border:1px solid #d5e4e3;background:#eef7f5">${escapeHtml(label)}</th><td style="padding:8px;border:1px solid #d5e4e3">${escapeHtml(value)}</td></tr>`).join('');
   try {
     await env.CONSULTATION_EMAIL.send({
       to: CONSULTATION_RECEIVER,
       from: env.CONSULTATION_FROM || 'consultation@qilylean.com',
       subject,
       text,
-      html: `<h2 style="color:#0f4b5a">QilyLean 企业问题诊断卡</h2><p>提交时间：${escapeHtml(record.submitted_at)}</p><table style="border-collapse:collapse;width:100%;max-width:720px">${rows}</table>`
+      html: `<h2 style="color:#0f4b5a">${isBriefMessage ? 'QilyLean 今日简报留言' : 'QilyLean 企业问题诊断卡'}</h2><p>提交时间：${escapeHtml(record.submitted_at)}</p><table style="border-collapse:collapse;width:100%;max-width:720px">${rows}</table>`
     });
     return true;
   } catch (error) {
@@ -310,6 +341,112 @@ async function updateConsultationStatus(payload, env) {
   const updated = { ...current, status, updated_at: new Date().toISOString() };
   await env.QILY_STATS.put(key, JSON.stringify(updated));
   return updated;
+}
+
+function normalizeBriefDate(value) {
+  const date = clean(value, 10);
+  return /^\d{4}-\d{2}-\d{2}$/.test(date) ? date : '';
+}
+
+function emptyBriefSummary(date, title = '', url = '') {
+  return {
+    brief_date: date,
+    brief_title: title,
+    brief_url: url,
+    rating_sum: 0,
+    rating_count: 0,
+    likes: 0,
+    dislikes: 0,
+    updated_at: ''
+  };
+}
+
+function publicBriefSummary(summary) {
+  const ratingCount = Math.max(0, Number(summary.rating_count || 0));
+  const ratingSum = Math.max(0, Number(summary.rating_sum || 0));
+  return {
+    brief_date: summary.brief_date || '',
+    brief_title: summary.brief_title || '',
+    brief_url: summary.brief_url || '',
+    rating_average: ratingCount ? Math.round((ratingSum / ratingCount) * 10) / 10 : 0,
+    rating_count: ratingCount,
+    likes: Math.max(0, Number(summary.likes || 0)),
+    dislikes: Math.max(0, Number(summary.dislikes || 0)),
+    updated_at: summary.updated_at || ''
+  };
+}
+
+async function briefVoterKey(request, briefDate, action, clientToken) {
+  const raw = `${clientId(request)}|${briefDate}|${action}|${clientToken}`;
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+  const hash = Array.from(new Uint8Array(digest)).map((value) => value.toString(16).padStart(2, '0')).join('');
+  return `brief-feedback-voter:${briefDate}:${action}:${hash}`;
+}
+
+async function getBriefSummary(env, briefDate) {
+  if (!env.QILY_STATS) return emptyBriefSummary(briefDate);
+  return (await env.QILY_STATS.get(`brief-feedback:summary:${briefDate}`, 'json')) || emptyBriefSummary(briefDate);
+}
+
+async function saveBriefFeedback(payload, request, env) {
+  if (!env.QILY_STATS) return { error: 'Brief feedback storage is not configured', status: 503 };
+  const briefDate = normalizeBriefDate(payload.brief_date);
+  const briefTitle = clean(payload.brief_title, 220);
+  const briefUrl = clean(payload.brief_url, 300);
+  const action = clean(payload.action, 20);
+  const clientToken = clean(payload.client_token, 120);
+  if (!briefDate || !briefTitle || !briefUrl) return { error: 'Brief source is incomplete', status: 400 };
+  if (!['rating', 'sentiment'].includes(action)) return { error: 'Unsupported feedback action', status: 400 };
+  if (clientToken.length < 8) return { error: 'Feedback client token is invalid', status: 400 };
+
+  let value;
+  if (action === 'rating') {
+    value = Number(payload.value);
+    if (!Number.isInteger(value) || value < 1 || value > 5) return { error: 'Rating must be from 1 to 5', status: 400 };
+  } else {
+    value = clean(payload.value, 10);
+    if (!['good', 'bad'].includes(value)) return { error: 'Sentiment must be good or bad', status: 400 };
+  }
+
+  const rate = await checkBriefFeedbackRateLimit(request, env);
+  if (!rate.allowed) return { error: rate.storage ? 'Brief feedback submission limit reached' : 'Brief feedback storage is not configured', status: rate.storage ? 429 : 503 };
+
+  const voterKey = await briefVoterKey(request, briefDate, action, clientToken);
+  const existingVote = await env.QILY_STATS.get(voterKey);
+  if (existingVote) {
+    return { duplicate: true, summary: publicBriefSummary(await getBriefSummary(env, briefDate)) };
+  }
+
+  const summary = await getBriefSummary(env, briefDate);
+  summary.brief_date = briefDate;
+  summary.brief_title = briefTitle;
+  summary.brief_url = briefUrl;
+  if (action === 'rating') {
+    summary.rating_sum = Number(summary.rating_sum || 0) + value;
+    summary.rating_count = Number(summary.rating_count || 0) + 1;
+  } else if (value === 'good') {
+    summary.likes = Number(summary.likes || 0) + 1;
+  } else {
+    summary.dislikes = Number(summary.dislikes || 0) + 1;
+  }
+  summary.updated_at = new Date().toISOString();
+  await Promise.all([
+    env.QILY_STATS.put(`brief-feedback:summary:${briefDate}`, JSON.stringify(summary)),
+    env.QILY_STATS.put(voterKey, String(value), { expirationTtl: 60 * 60 * 24 * 400 }),
+    recordMetric(env, action === 'rating' ? 'brief_ratings' : 'brief_sentiments')
+  ]);
+  return { duplicate: false, summary: publicBriefSummary(summary) };
+}
+
+async function listBriefFeedback(env, limit) {
+  if (!env.QILY_STATS) return [];
+  const listed = await env.QILY_STATS.list({ prefix: 'brief-feedback:summary:', limit: Math.min(Math.max(limit || 100, 1), 1000) });
+  const values = await Promise.all(listed.keys.map((item) => env.QILY_STATS.get(item.name, 'json')));
+  return values.filter(Boolean).map(publicBriefSummary).sort((a, b) => {
+    const interactionsA = a.rating_count + a.likes + a.dislikes;
+    const interactionsB = b.rating_count + b.likes + b.dislikes;
+    return interactionsB - interactionsA || String(b.updated_at).localeCompare(String(a.updated_at));
+  });
 }
 
 function safeUpstreamError(provider, data, status, requestId) {
@@ -649,6 +786,12 @@ export default {
       return json({ ok: true, consultations }, 200, origin);
     }
 
+    if (request.method === 'GET' && url.pathname === '/admin/brief-feedback') {
+      if (!isAdmin(request, env)) return json({ error: 'Unauthorized' }, 401, origin);
+      const feedback = await listBriefFeedback(env, Number(url.searchParams.get('limit') || 100));
+      return json({ ok: true, feedback }, 200, origin);
+    }
+
     if (request.method === 'POST' && url.pathname === '/admin/consultations/status') {
       if (!isAdmin(request, env)) return json({ error: 'Unauthorized' }, 401, origin);
       if (!env.QILY_STATS) return json({ error: 'Consultation storage is not configured' }, 503, origin);
@@ -673,11 +816,27 @@ export default {
         const key = await saveConsultation(record, env);
         const emailSent = await sendConsultationEmail(record, env);
         await recordMetric(env, 'consultations');
+        if (record.industry === '今日简报留言交流') await recordMetric(env, 'brief_comments');
         return json({ ok: true, id: record.id, key, email_sent: emailSent, receiver: CONSULTATION_RECEIVER }, 201, origin);
       } catch (error) {
         console.error('consultation save failed', error && error.message ? error.message : String(error));
         return json({ error: 'Consultation service unavailable', diagnostic: error && error.message ? error.message : 'unknown' }, 503, origin);
       }
+    }
+
+    if (request.method === 'GET' && url.pathname === '/brief-feedback') {
+      const briefDate = normalizeBriefDate(url.searchParams.get('brief'));
+      if (!briefDate) return json({ error: 'Brief date is invalid' }, 400, origin);
+      return json(publicBriefSummary(await getBriefSummary(env, briefDate)), 200, origin);
+    }
+
+    if (request.method === 'POST' && url.pathname === '/brief-feedback') {
+      if (!ALLOWED_ORIGINS.has(origin)) return json({ error: 'Origin not allowed' }, 403, origin);
+      let payload;
+      try { payload = await request.json(); } catch { return json({ error: 'Invalid JSON' }, 400, origin); }
+      const result = await saveBriefFeedback(payload, request, env);
+      if (result.error) return json({ error: result.error }, result.status || 400, origin);
+      return json({ ok: true, duplicate: result.duplicate, summary: result.summary }, result.duplicate ? 200 : 201, origin);
     }
 
     if (request.method === 'POST' && url.pathname === '/tts') {

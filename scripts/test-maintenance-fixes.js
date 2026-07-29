@@ -179,7 +179,10 @@ async function main() {
   assert(!/主链路与备用链路均未能连接/.test(aiClient), 'Legacy two-route Android connection error remains');
   assert(/workers_dev = true/.test(wrangler), 'Cloudflare Workers production endpoint is disabled');
   assert(!/custom_domain = true/.test(wrangler), 'Unprovisioned custom-domain routes must not block Worker deployment');
-  assert(/v1\.5\.1-android-connectivity/.test(worker), 'Android connectivity Worker build version is missing');
+  assert(/v1\.6\.0-brief-engagement/.test(worker), 'Brief engagement Worker build version is missing');
+  assert(/url\.pathname === '\/brief-feedback'/.test(worker), 'Brief rating and sentiment endpoint is missing');
+  assert(/url\.pathname === '\/admin\/brief-feedback'/.test(worker), 'Admin brief feedback endpoint is missing');
+  assert(/brief-feedback-voter:/.test(worker) && /BRIEF_FEEDBACK_DAILY_IP_LIMIT/.test(worker), 'Brief feedback duplicate or abuse protection is missing');
   assert(/validateAttachments\(payload\.attachments, payload\.attachment\)/.test(worker), 'Worker does not validate multiple attachments');
   assert(/callQwenMixed/.test(worker), 'Worker mixed-material analysis path is missing');
   assert(!/application\/msword|application\/vnd\.ms-excel/.test(exportCode), 'Legacy HTML-disguised Office MIME types remain');

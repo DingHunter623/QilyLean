@@ -113,7 +113,7 @@ function pageHeader(title, description, canonical, ogType = 'article') {
   <meta property="og:image:height" content="1080">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/site-shell.css?v=20260725-compact-hero-v1">
-  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260729-engineering-system-v10">
+  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260729-engineering-system-v11">
 </head>`;
 }
 
@@ -127,6 +127,32 @@ function siteHeader() {
 function pageScripts() {
   return `<script src="/site-navigation.js?v=20260728-layout-type-v3"></script>
 <script src="/homepage-music.js?v=20260722-continuous-v3"></script>`;
+}
+
+function buildBriefFeedback(brief) {
+  const canonical = `${baseUrl}/qilylean/daily/${brief.date}.html`;
+  const stars = [1, 2, 3, 4, 5].map((value) => `<button type="button" data-brief-rating="${value}" aria-label="${value}星" aria-pressed="false">★</button>`).join('');
+  return [
+    `<section class="brief-feedback" data-brief-feedback data-brief-date="${brief.date}" data-brief-title="${escapeHtml(brief.title)}" data-brief-url="${canonical}" aria-labelledby="briefFeedbackTitle">`,
+    '<div class="brief-feedback-heading"><span>RATE / DISCUSS / CONNECT</span><h2 id="briefFeedbackTitle">评价本期简报</h2><p>你的评分与观点将用于持续完善单点培训内容；如需回复，可留下称谓与联系方式。</p></div>',
+    '<div class="brief-feedback-votes"><div class="brief-rating-block"><strong>五星好评</strong>',
+    `<div class="brief-stars" role="group" aria-label="为本期简报评分">${stars}</div>`,
+    '<p data-rating-summary>暂无评分，期待你的第一颗星。</p></div>',
+    '<div class="brief-sentiment-block"><strong>点赞好评／差评</strong><div class="brief-sentiment-actions"><button type="button" data-brief-sentiment="good" aria-pressed="false">👍 好评 <b data-like-count>0</b></button><button type="button" data-brief-sentiment="bad" aria-pressed="false">👎 差评 <b data-dislike-count>0</b></button></div><p>欢迎真实反馈，差评同样会被认真对待。</p></div></div>',
+    '<form class="brief-inline-message" data-brief-message-form>',
+    `<div class="brief-inline-message-heading"><strong>留言交流</strong><span>后台自动识别：${brief.date}｜${escapeHtml(brief.title)}</span></div>`,
+    '<label>称谓（选填）<input name="name" autocomplete="name" maxlength="120" placeholder="怎么称呼你"></label>',
+    '<label>联系方式（选填）<input name="contact" autocomplete="email" maxlength="180" placeholder="需要回复时填写手机、微信或邮箱"></label>',
+    '<label class="full">留言内容<textarea name="message" minlength="4" maxlength="1800" required placeholder="写下你的观点、疑问、建议，或希望深入探讨的话题"></textarea></label>',
+    '<label class="brief-website-field" aria-hidden="true">网站<input name="website" tabindex="-1" autocomplete="off"></label>',
+    '<div class="brief-inline-message-actions"><button type="submit">提交留言</button><a href="/cooperation/">需要结合现场深入交流？进入合作咨询</a></div>',
+    '</form><div class="brief-feedback-status" data-brief-feedback-status role="status" aria-live="polite"></div>',
+    '<p class="brief-feedback-privacy">评分与好／差评仅展示汇总数据；留言不会在公开页面展示，仅用于回复与后续交流。</p></section>'
+  ].join('');
+}
+
+function briefFeedbackScript() {
+  return `<script src="/qilylean/daily-feedback.js?v=20260729-brief-engagement-v1"></script>`;
 }
 
 function buildIndex(briefs) {
@@ -221,12 +247,13 @@ function buildBriefPage(brief, briefs, index) {
 ${siteHeader()}
 <main>
   <section class="daily-hero compact"><div class="daily-inner"><span>DAILY ENGINEERING BRIEF${brief.dayNo ? ` · ${brief.dayNo}` : ''}</span><h1>今日简报</h1><p>${brief.date}｜${escapeHtml(brief.theme)}</p></div></section>
-  <section class="daily-single-section"><div class="daily-inner"><nav class="brief-adjacent top" aria-label="简报翻页">${adjacent}</nav>${article}<aside class="brief-consultation-cta"><div><span>MESSAGE / DISCUSSION</span><h2>针对本期内容留言交流</h2><p>可就本期内容留言、交流观点或深入探讨；提交时会自动标注本期简报的日期、标题与来源网址。</p></div><a href="/qilylean/daily-insights.html?brief=${brief.date}#brief-consultation">进入留言窗口</a></aside><nav class="brief-adjacent" aria-label="简报翻页">${adjacent}</nav></div></section>
+  <section class="daily-single-section"><div class="daily-inner"><nav class="brief-adjacent top" aria-label="简报翻页">${adjacent}</nav>${article}${buildBriefFeedback(brief)}<aside class="brief-consultation-cta"><div><span>MESSAGE / DISCUSSION</span><h2>继续浏览或集中留言</h2><p>本页可直接评价与留言；也可返回总目录检索其他简报，并在集中留言窗口继续交流。</p></div><a href="/qilylean/daily-insights.html?brief=${brief.date}#brief-consultation">进入总目录留言窗口</a></aside><nav class="brief-adjacent" aria-label="简报翻页">${adjacent}</nav></div></section>
 </main>
 <footer class="module-footer"><div class="module-inner"><span>丁启利｜今日简报</span><span>${brief.date} · ${escapeHtml(brief.theme)}</span></div></footer>
 <script>
 (function(){var button=document.querySelector('.share');if(!button)return;var status=document.querySelector('.status');function copy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();return Promise.resolve();}function done(text){if(status)status.textContent=text;setTimeout(function(){if(status)status.textContent='';},2200);}button.addEventListener('click',function(){var url=location.href;var title=document.title;if((/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'')||!!(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches&&innerWidth<=820))&&navigator.share){navigator.share({title:title,text:title,url:url}).then(function(){done('已调起分享');}).catch(function(error){if(error&&error.name==='AbortError')return;copy(url).then(function(){done('网址已复制');});});}else copy(url).then(function(){done('网址已复制');});});})();
 </script>
+${briefFeedbackScript()}
 ${pageScripts()}
 </body>
 </html>
