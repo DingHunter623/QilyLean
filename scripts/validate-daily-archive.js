@@ -33,11 +33,16 @@ function main() {
   const expectedArchive = dayCount(archiveStart, archiveEnd);
   const archive = index.filter((item) => item.date <= archiveEnd);
   const recent = index.filter((item) => item.date > archiveEnd);
+  const publishedDates = fs.readdirSync(dailyDir)
+    .filter((name) => /^\d{4}-\d{2}-\d{2}\.html$/.test(name))
+    .map((name) => name.slice(0, 10))
+    .sort()
+    .reverse();
   const productTerms = ['电子烟', '游戏机手柄', '电磁阀', '新能源负极材料', '负极材料', '逆变器', '汽车电子', '整流器', '继电器', '小家电', '汽车座椅开关总成', '汽车座椅开关', '座椅开关'];
   const requiredEngineeringThemes = ['PE工程', 'IE方法', 'ME工程', 'JIT', 'PDCA', 'PQCD', 'OEE', 'NPI四阶段', '精益物流', 'Kaizen'];
 
   assert(index.length > expectedArchive, 'Archive does not include the recent period');
-  assert(index[0].date === '2026-07-29', `Latest daily brief must be 2026-07-29; found ${index[0].date}`);
+  assert(index[0].date === publishedDates[0], `Latest daily brief must match the newest published page ${publishedDates[0]}; found ${index[0].date}`);
   assert(archive.length === expectedArchive, `Expected ${expectedArchive} archive briefs; found ${archive.length}`);
   assert(index[index.length - 1].date === archiveStart, `Archive must begin on ${archiveStart}`);
   assert(archive[0].date === archiveEnd, `First archive period must end on ${archiveEnd}`);
@@ -130,7 +135,7 @@ function main() {
   assert(!directory.includes('每日工程版简报'), 'Former public brief name remains in the directory');
   assert(directory.includes('<h1>今日简报</h1>'), 'Unified public brief name is missing from the directory');
   assert(directory.includes('id="briefSearch"'), 'Archive keyword search is missing');
-  assert(directory.includes('href="?year=2019#brief-directory"') && directory.includes('href="?year=2025#brief-directory"'), 'Career year links are missing');
+  assert(directory.includes('href="/qilylean/daily-insights.html?year=2019#brief-directory"') && directory.includes('href="/qilylean/daily-insights.html?year=2025#brief-directory"'), 'Career year links are missing');
   assert(!directory.includes('class="brief-year-filters"'), 'The duplicate year filter button module still exists');
   assert(!/<button[^>]*data-year-filter=/i.test(directory), 'Legacy year filter buttons still exist');
   assert(directory.includes(`共${index.length}期`), 'Archive directory total is incorrect');
@@ -140,8 +145,12 @@ function main() {
   assert(directory.includes('<col class="career-year-col">'), 'Career timeline does not use the narrow year column');
   careerTimeline.forEach((item) => {
     assert(directory.includes(`${item.year}年`) && directory.includes(item.field), `Career timeline is incomplete for ${item.year}`);
-    assert(directory.includes(`href="?year=${item.year}#brief-directory" data-year-filter="${item.year}"`), `Career year link is incomplete for ${item.year}`);
+    assert(directory.includes(`href="/qilylean/daily-insights.html?year=${item.year}#brief-directory" data-year-filter="${item.year}"`), `Career year link is incomplete for ${item.year}`);
+    assert(index.some((brief) => brief.date.startsWith(`${item.year}-`)), `Career year has no matching daily briefs: ${item.year}`);
   });
+  assert(directory.includes(`data-brief-date="${index[index.length - 1].date}"`), 'The earliest daily brief is missing from the directory');
+  assert(directory.includes('var requestedYear=new URLSearchParams(location.search).get(\'year\')'), 'Year query filtering script is missing');
+  assert(directory.trimEnd().endsWith('</html>'), 'Daily directory HTML is incomplete');
   assert(
     careerTimeline.every((item, position) => position === 0 || Number(careerTimeline[position - 1].year) > Number(item.year)),
     'Career timeline is not ordered from newest to earliest'
@@ -163,11 +172,13 @@ function main() {
   assert(directory.includes('<h2 id="briefConsultationTitle">简报留言交流</h2>'), 'Generic brief message heading is missing');
   assert(directory.includes('name="name"') && directory.includes('name="contact"') && directory.includes('name="problem"'), 'Simple brief message fields are incomplete');
   assert(directory.includes('type="hidden" name="brief_reference"') && directory.includes('id="briefReferenceDisplay"'), 'Automatic brief source tracking is missing');
-  assert(directory.includes('data-brief-date="2026-07-29"') && directory.includes('data-brief-title='), 'Brief source metadata is missing from directory cards');
+  assert(directory.includes(`data-brief-date="${index[0].date}"`) && directory.includes('data-brief-title='), 'Brief source metadata is missing from directory cards');
   ['企业名称／姓名', 'name="industry"', 'name="location"', 'name="target"', '预约企业问题初筛', '本次问题初筛'].forEach((term) => {
     assert(!directory.includes(term), `Enterprise-only message field or wording remains: ${term}`);
   });
-  assert(directory.includes('/^\\d{4}$/.test(requestedYear)') && directory.includes('/^\\d{4}$/.test(year)'), 'Year query validation was not emitted correctly');
+  assert(directory.includes('/^\\d{4}$/.test(requestedYear)'), 'Year query validation was not emitted correctly');
+  assert(!directory.includes('event.preventDefault();selectYear('), 'Year links still depend on in-page click interception');
+  assert(!directory.includes('后台'), 'Public daily directory contains management-only wording');
   assert(directory.includes("consultationApi+'/consultations'"), 'Brief consultation does not use the QilyLean consultation backend');
   assert(directory.includes('formsubmit.co/ajax/'), 'Brief consultation email fallback is missing');
   assert(directory.includes("timing:'今日简报留言｜'+reference"), 'Brief message source classification is missing');
