@@ -308,7 +308,7 @@
     }
     var script = document.createElement('script');
     script.id = 'qilySiteSearchScript';
-    script.src = '/site-search.js?v=20260724-site-search-v2';
+    script.src = '/site-search.js?v=20260729-ranked-search-v1';
     if (callback) script.addEventListener('load', callback, { once: true });
     document.body.appendChild(script);
   }

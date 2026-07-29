@@ -123,7 +123,7 @@ function pageHeader(title, description, canonical, ogType = 'article') {
   <link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=${VISUAL_VERSION}">
   <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=${WIDE_VERSION}">
   <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=${TYPE_VERSION}">
-  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260729-engineering-system-v11">
+  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260729-ranked-search-v12">
   <script defer src="/site-navigation.js?v=${NAV_VERSION}"></script>
 </head>`;
 }
@@ -172,7 +172,7 @@ function buildIndex(briefs) {
     const cards = list.map((brief, index) => {
       const url = `/qilylean/daily/${brief.date}.html`;
       const searchText = `${brief.date} ${brief.theme} ${brief.title} ${brief.summary}`;
-      return `<article class="brief-index-card${monthIndex === 0 && index === 0 ? ' latest' : ''}" data-brief-year="${brief.date.slice(0, 4)}" data-brief-date="${brief.date}" data-brief-title="${escapeHtml(brief.title)}" data-brief-search="${escapeHtml(searchText)}">
+      return `<article class="brief-index-card${monthIndex === 0 && index === 0 ? ' latest' : ''}" data-brief-year="${brief.date.slice(0, 4)}" data-brief-date="${brief.date}" data-brief-theme="${escapeHtml(brief.theme)}" data-brief-title="${escapeHtml(brief.title)}" data-brief-summary="${escapeHtml(brief.summary)}" data-brief-search="${escapeHtml(searchText)}">
   <div class="brief-index-meta"><time datetime="${brief.date}">${brief.date}</time><span>${escapeHtml(brief.theme)}</span></div>
   <h2><a href="${url}">${escapeHtml(brief.title)}</a></h2>
   <div class="brief-index-actions"><a class="brief-open" href="${url}">打开本期简报</a><button type="button" data-brief-url="${baseUrl}${url}" data-brief-title="${escapeHtml(brief.title)}">分享本期网址</button><span class="brief-share-status" aria-live="polite"></span></div>
@@ -195,6 +195,10 @@ ${siteHeader()}
       <label><span>搜索日期、主题或关键词</span><input type="search" id="briefSearch" placeholder="例如：标准工时、NPI、2021-05" autocomplete="off"></label>
       <p id="briefFilterStatus" aria-live="polite"><span id="briefFilterText">当前显示全部 ${briefs.length} 期</span><a id="briefFilterReset" href="/qilylean/daily-insights.html#brief-directory" hidden>查看全部简报</a></p>
     </div>
+    <section class="brief-search-results" id="briefSearchResults" hidden aria-live="polite">
+      <div class="brief-search-results-heading"><strong>关联结果优先</strong><span>标题、主题、摘要与日期按相关度排序；点击标题或“打开本期简报”可直接进入对应网页。</span></div>
+      <div class="brief-grid brief-search-result-grid" id="briefSearchGrid"></div>
+    </section>
     <section class="brief-consultation" id="brief-consultation" aria-labelledby="briefConsultationTitle">
       <div class="brief-consultation-heading"><span>MESSAGE / DISCUSSION</span><h2 id="briefConsultationTitle">简报留言交流</h2><p>可就某一期简报留言、交流观点或深入探讨，不限定企业身份与话题类型。</p></div>
       <form class="brief-consultation-form" id="briefConsultationForm">
@@ -216,9 +220,52 @@ ${siteHeader()}
 <script>
 (function(){
 var legacy=(location.hash||'').slice(1);if(/^\\d{4}-\\d{2}-\\d{2}$/.test(legacy)){location.replace('/qilylean/daily/'+legacy+'.html');return;}
-var input=document.getElementById('briefSearch'),statusText=document.getElementById('briefFilterText'),reset=document.getElementById('briefFilterReset'),directory=document.getElementById('brief-directory'),selectedYear='',cards=Array.prototype.slice.call(document.querySelectorAll('.brief-index-card')),months=Array.prototype.slice.call(document.querySelectorAll('.brief-month'));
+var input=document.getElementById('briefSearch'),statusText=document.getElementById('briefFilterText'),reset=document.getElementById('briefFilterReset'),directory=document.getElementById('brief-directory'),searchResults=document.getElementById('briefSearchResults'),searchGrid=document.getElementById('briefSearchGrid'),monthsContainer=document.querySelector('.brief-months'),selectedYear='',cards=Array.prototype.slice.call(document.querySelectorAll('.brief-month .brief-index-card')),months=Array.prototype.slice.call(document.querySelectorAll('.brief-month'));
 var requestedYear=new URLSearchParams(location.search).get('year')||'';if(/^\\d{4}$/.test(requestedYear)&&cards.some(function(card){return card.getAttribute('data-brief-year')===requestedYear;}))selectedYear=requestedYear;
-function applyFilter(){var query=(input&&input.value||'').trim().toLowerCase(),visible=0;cards.forEach(function(card){var matchYear=!selectedYear||card.getAttribute('data-brief-year')===selectedYear;var matchQuery=!query||(card.getAttribute('data-brief-search')||'').toLowerCase().indexOf(query)>=0;card.hidden=!(matchYear&&matchQuery);if(!card.hidden)visible+=1;});months.forEach(function(month,index){var hasVisible=!!month.querySelector('.brief-index-card:not([hidden])');month.hidden=!hasVisible;if(query||selectedYear)month.open=hasVisible;else month.open=index===0;});document.querySelectorAll('[data-year-filter]').forEach(function(link){var active=!!selectedYear&&link.getAttribute('data-year-filter')===selectedYear;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','true');else link.removeAttribute('aria-current');});if(statusText)statusText.textContent='当前显示 '+visible+' 期'+(selectedYear?'｜'+selectedYear+'年':'')+(query?'｜关键词：'+query:'');if(reset)reset.hidden=!selectedYear;}
+function norm(value){return String(value||'').normalize('NFKC').trim().toLocaleLowerCase('zh-CN').replace(/\\s+/g,' ');}
+function compact(value){return norm(value).replace(/[\\s\\-_/+()（）·,.，。:：]/g,'');}
+function briefFields(card){return{date:norm(card.getAttribute('data-brief-date')),theme:norm(card.getAttribute('data-brief-theme')),title:norm(card.getAttribute('data-brief-title')),summary:norm(card.getAttribute('data-brief-summary'))};}
+function fieldScore(value,query,exact,prefix,contains){if(!value)return 0;if(value===query)return exact;if(value.indexOf(query)===0)return prefix;if(value.indexOf(query)>=0)return contains;return 0;}
+function scoreBrief(card,query){
+  var fields=briefFields(card),queryCompact=compact(query),score=0,terms=query.split(/[\\s,，。；;、|/]+/).filter(Boolean);
+  score+=fieldScore(fields.date,query,1800,1450,900);
+  score+=fieldScore(fields.title,query,1700,1400,1150);
+  score+=fieldScore(fields.theme,query,1600,1350,1080);
+  score+=fieldScore(fields.summary,query,850,700,560);
+  if(queryCompact&&compact(fields.title)===queryCompact)score+=500;
+  if(queryCompact&&compact(fields.theme)===queryCompact)score+=460;
+  terms.forEach(function(term){score+=fieldScore(fields.title,term,300,240,180);score+=fieldScore(fields.theme,term,280,220,165);score+=fieldScore(fields.summary,term,120,90,65);score+=fieldScore(fields.date,term,110,85,55);});
+  return score>0?score:-1;
+}
+function matchReason(card,query){var fields=briefFields(card);if(fields.title.indexOf(query)>=0)return'标题关联';if(fields.theme.indexOf(query)>=0)return'主题关联';if(fields.date.indexOf(query)>=0)return'日期关联';return'摘要与内容关联';}
+function renderSearch(matches,query){
+  searchGrid.innerHTML='';
+  matches.forEach(function(item,index){
+    var hit=item.card.cloneNode(true),summary=document.createElement('p'),reason=document.createElement('div');
+    hit.classList.remove('latest');hit.classList.add('brief-search-hit');hit.hidden=false;
+    reason.className='brief-search-reason';reason.textContent='关联 '+String(index+1).padStart(2,'0')+'｜'+matchReason(item.card,query);
+    summary.className='brief-index-summary';summary.textContent=item.card.getAttribute('data-brief-summary')||'打开本期简报查看完整内容。';
+    hit.insertBefore(reason,hit.firstChild);hit.insertBefore(summary,hit.querySelector('.brief-index-actions'));
+    searchGrid.appendChild(hit);
+  });
+}
+function applyFilter(){
+  var query=norm(input&&input.value),visible=0,matches=[];
+  document.querySelectorAll('[data-year-filter]').forEach(function(link){var active=!!selectedYear&&link.getAttribute('data-year-filter')===selectedYear;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','true');else link.removeAttribute('aria-current');});
+  if(query){
+    cards.forEach(function(card){if(selectedYear&&card.getAttribute('data-brief-year')!==selectedYear)return;var score=scoreBrief(card,query);if(score>=0)matches.push({card:card,score:score,date:card.getAttribute('data-brief-date')||''});});
+    matches.sort(function(a,b){return b.score-a.score||b.date.localeCompare(a.date);});
+    renderSearch(matches,query);visible=matches.length;
+    if(monthsContainer)monthsContainer.hidden=true;if(searchResults)searchResults.hidden=!visible;
+    if(statusText)statusText.textContent=visible?'找到 '+visible+' 期相关简报（已按相关度排序）'+(selectedYear?'｜'+selectedYear+'年':''):'未找到与“'+query+'”相关的简报';
+  }else{
+    if(searchGrid)searchGrid.innerHTML='';if(searchResults)searchResults.hidden=true;if(monthsContainer)monthsContainer.hidden=false;
+    cards.forEach(function(card){var matchYear=!selectedYear||card.getAttribute('data-brief-year')===selectedYear;card.hidden=!matchYear;if(matchYear)visible+=1;});
+    months.forEach(function(month,index){var hasVisible=!!month.querySelector('.brief-index-card:not([hidden])');month.hidden=!hasVisible;if(selectedYear)month.open=hasVisible;else month.open=index===0;});
+    if(statusText)statusText.textContent=selectedYear?'当前显示 '+visible+' 期｜'+selectedYear+'年':'当前显示全部 '+visible+' 期';
+  }
+  if(reset)reset.hidden=!selectedYear&&!query;
+}
 if(input)input.addEventListener('input',applyFilter);
 document.addEventListener('click',function(event){var button=event.target.closest&&event.target.closest('[data-brief-url]');if(!button)return;var url=button.getAttribute('data-brief-url');var title=button.getAttribute('data-brief-title')||document.title;var shareStatus=button.parentNode.querySelector('.brief-share-status');function copy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();return Promise.resolve();}function done(text){if(shareStatus)shareStatus.textContent=text;setTimeout(function(){if(shareStatus)shareStatus.textContent='';},2200);}var mobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'')||!!(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches&&innerWidth<=820);if(mobile&&navigator.share){navigator.share({title:title,text:title,url:url}).then(function(){done('已调起分享');}).catch(function(error){if(error&&error.name==='AbortError')return;copy(url).then(function(){done('网址已复制');});});}else copy(url).then(function(){done('网址已复制');});});
 applyFilter();

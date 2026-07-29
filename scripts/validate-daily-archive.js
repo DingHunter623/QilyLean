@@ -97,7 +97,7 @@ function main() {
     assert(page.includes('/knowledge/') && page.includes('/projects/') && page.includes('/ai.html') && page.includes('/cooperation/'), `QilyLean module links are incomplete: ${date}`);
     assert(page.includes(`https://qilylean.com/qilylean/daily/${date}.html`), `Canonical URL is missing: ${date}`);
     assert(page.includes(`<img src="/qilylean/assets/daily-${date}.svg"`), `External share visual is missing: ${date}`);
-    assert(page.includes('daily-briefs.css?v=20260729-engineering-system-v11'), `Responsive archive stylesheet is not pinned: ${date}`);
+    assert(page.includes('daily-briefs.css?v=20260729-ranked-search-v12'), `Responsive archive stylesheet is not pinned: ${date}`);
     assert(page.includes(`/qilylean/daily-insights.html?brief=${date}#brief-consultation`), `Brief consultation entry is missing: ${date}`);
     assert(!page.includes('评价本期简报') && page.includes('留言交流'), `Direct brief message-only entry is incomplete: ${date}`);
     assert(!page.includes('如需结合企业现场进一步判断'), `Enterprise-only brief message wording remains: ${date}`);
@@ -135,6 +135,11 @@ function main() {
   assert(!directory.includes('每日工程版简报'), 'Former public brief name remains in the directory');
   assert(directory.includes('<h1>今日简报</h1>'), 'Unified public brief name is missing from the directory');
   assert(directory.includes('id="briefSearch"'), 'Archive keyword search is missing');
+  assert(directory.includes('id="briefSearchResults"') && directory.includes('id="briefSearchGrid"'), 'Ranked archive search result region is missing');
+  assert(directory.includes('关联结果优先') && directory.includes('已按相关度排序'), 'Archive search does not explain relevance-first ordering');
+  assert(directory.includes('data-brief-theme=') && directory.includes('data-brief-summary='), 'Archive cards do not expose weighted search fields');
+  assert(directory.includes('function scoreBrief(card,query)') && directory.includes('b.score-a.score||b.date.localeCompare(a.date)'), 'Archive search is not sorted by relevance before date');
+  assert(directory.includes('打开本期简报') && directory.includes('点击标题或“打开本期简报”可直接进入对应网页'), 'Archive search result navigation is not explicit');
   assert(directory.includes('href="/qilylean/daily-insights.html?year=2019#brief-directory"') && directory.includes('href="/qilylean/daily-insights.html?year=2025#brief-directory"'), 'Career year links are missing');
   assert(!directory.includes('class="brief-year-filters"'), 'The duplicate year filter button module still exists');
   assert(!/<button[^>]*data-year-filter=/i.test(directory), 'Legacy year filter buttons still exist');
@@ -159,12 +164,13 @@ function main() {
   const dailyCss = read('qilylean/daily-briefs.css');
   assert(/\.career-table \.career-year-col\{width:116px\}/.test(dailyCss), 'Desktop career year column is not narrowed');
   assert(/\.career-table \.career-year-col\{width:70px\}/.test(dailyCss), 'Mobile career year column is not narrowed');
-  assert(dailyCss.includes('engineering-system-v11'), 'Daily archive stylesheet version is not current');
+  assert(dailyCss.includes('ranked-search-v12'), 'Daily archive stylesheet version is not current');
   assert(dailyCss.includes('font-size:clamp(20px,1.55vw,24px)!important'), 'Directory brief titles were not reduced or do not override the global heading rule');
   assert(dailyCss.includes('font-size:clamp(28px,2.7vw,34px)!important'), 'Single-page brief titles were not reduced or do not override the global heading rule');
   assert(dailyCss.includes('font-size:16px;font-weight:900;line-height:1.45'), 'Directory date and theme text were not enlarged');
   assert(dailyCss.includes('.daily-single-section .date{color:var(--daily-gold);font-size:18px'), 'Single-page date text was not enlarged');
   assert(dailyCss.includes('.brief-consultation-form{'), 'Brief consultation form styles are missing');
+  assert(dailyCss.includes('.brief-search-results{') && dailyCss.includes('.brief-search-hit{'), 'Ranked archive search styles are missing');
   assert(dailyCss.includes('.brief-one-point-training{') && dailyCss.includes('.brief-one-point-grid{'), 'Single-point training styles are missing');
   assert(dailyCss.includes('.brief-feedback{') && dailyCss.includes('.brief-inline-message{'), 'Brief message responsive styles are missing');
   assert(dailyCss.includes('.rule-table.compact-first-col{table-layout:auto}') && dailyCss.includes('width:1%;min-width:5.5em'), 'Compact first-column table rules are missing');

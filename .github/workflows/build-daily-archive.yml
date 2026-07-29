@@ -9,6 +9,8 @@ on:
       - "qilylean/assets/daily-*.svg"
       - "qilylean/daily-briefs.css"
       - "qilylean/daily-feedback.js"
+      - "site-search.js"
+      - "site-navigation.js"
       - "knowledge/terminology.html"
       - "scripts/build-daily-archive.js"
       - "scripts/daily-engineering-archive.js"
@@ -45,6 +47,9 @@ jobs:
 
       - name: Deepen archive content and external visuals
         run: node scripts/enhance-daily-archive.js
+
+      - name: Keep terminology search aligned
+        run: node scripts/enhance-terminology-training.js
 
       - name: Pin responsive daily stylesheet version
         run: node scripts/bump-daily-css-version.js
@@ -103,11 +108,29 @@ jobs:
             echo "Daily brief external visual was not generated"
             exit 1
           }
-          grep -q "engineering-system-v11" qilylean/daily-briefs.css || {
+          grep -q "ranked-search-v12" qilylean/daily-briefs.css || {
             echo "Mobile responsive stylesheet marker is missing"
             exit 1
           }
-          grep -q "daily-briefs.css?v=20260729-engineering-system-v11" "qilylean/daily/$LATEST_DATE.html" || {
+          node --check site-search.js
+          node --check site-navigation.js
+          grep -q "loadDailyEntries" site-search.js || {
+            echo "Structured Daily Brief search index is missing"
+            exit 1
+          }
+          grep -q "已按关联度排序" site-search.js || {
+            echo "Site search relevance-first status is missing"
+            exit 1
+          }
+          grep -q "site-search.js?v=20260729-ranked-search-v1" site-navigation.js || {
+            echo "Ranked site search asset version is not active"
+            exit 1
+          }
+          grep -q "点击进入该词条的原分类位置" knowledge/terminology.html || {
+            echo "Terminology result jump guidance is missing"
+            exit 1
+          }
+          grep -q "daily-briefs.css?v=20260729-ranked-search-v12" "qilylean/daily/$LATEST_DATE.html" || {
             echo "Latest brief is not pinned to the mobile responsive stylesheet"
             exit 1
           }
