@@ -85,22 +85,22 @@ function publishNavigation() {
 
 function publicHeadAssets() {
   return [
-    '  <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);<\\/script>',
+    '  <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>',
     '  <link rel="stylesheet" href="/site-shell.css?v=' + SHELL_VERSION + '">',
     '  <link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=' + VISUAL_VERSION + '">',
     '  <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=' + WIDE_VERSION + '">',
     '  <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=' + TYPE_VERSION + '">',
-    '  <script defer src="/site-navigation.js?v=' + NAV_VERSION + '"><\\/script>'
-  ].join('\\n');
+    '  <script defer src="/site-navigation.js?v=' + NAV_VERSION + '"></script>'
+  ].join('\n');
 }
 
 function installHeadAssets(page) {
-  if (!/site-navigation\\.js\\?v=/i.test(page) || !/<\\/head>/i.test(page)) return page;
+  if (!/site-navigation\.js\?v=/i.test(page) || !/<\/head>/i.test(page)) return page;
   let next = page
-    .replace(/\\s*<script\\b[^>]*data-qily-shell-bootstrap[^>]*>[\\s\\S]*?<\\/script>\\s*/gi, '\\n')
-    .replace(/\\s*<script\\b[^>]*src=["'][^"']*\\/site-navigation\\.js\\?v=[^"']+["'][^>]*>\\s*<\\/script>\\s*/gi, '\\n')
-    .replace(/\\s*<link\\b[^>]*href=["'][^"']*\\/(?:site-shell|site-visual-scale-v1|site-wide-layout-v1|site-typography-v1)\\.css\\?v=[^"']+["'][^>]*>\\s*/gi, '\\n');
-  return next.replace(/<\\/head>/i, publicHeadAssets() + '\\n</head>');
+    .replace(/\s*<script\b[^>]*data-qily-shell-bootstrap[^>]*>[\s\S]*?<\/script>\s*/gi, '\n')
+    .replace(/\s*<script\b[^>]*src=["'][^"']*\/site-navigation\.js\?v=[^"']+["'][^>]*>\s*<\/script>\s*/gi, '\n')
+    .replace(/\s*<link\b[^>]*href=["'][^"']*\/(?:site-shell|site-visual-scale-v1|site-wide-layout-v1|site-typography-v1)\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n');
+  return next.replace(/<\/head>/i, publicHeadAssets() + '\n</head>');
 }
 
 function walk(directory, callback) {
@@ -118,7 +118,7 @@ function refreshHtmlReferences() {
     if (!file.endsWith('.html')) return;
     const before = read(file);
     const after = installHeadAssets(before)
-      .replace(/homepage-music\\.js\\?v=[^"']+/g, `homepage-music.js?v=${MUSIC_VERSION}`);
+      .replace(/homepage-music\.js\?v=[^"']+/g, `homepage-music.js?v=${MUSIC_VERSION}`);
     if (after !== before) {
       write(file, after);
       changed += 1;
