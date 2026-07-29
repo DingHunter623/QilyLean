@@ -2,6 +2,7 @@
   'use strict';
 
   var STYLE_ID = 'projectMediaStableStyle';
+  var MEDIA_VERSION = '20260729-factory-layout-v2';
   var queued = false;
 
   function ensureStyle() {
@@ -29,12 +30,18 @@
   }
 
   function mountFigure(card, id, html) {
-    if (!card || card.querySelector('#' + id)) return;
-    var figure = document.createElement('figure');
-    figure.id = id;
+    if (!card) return;
+    var figure = card.querySelector('#' + id);
+    if (!figure) {
+      figure = document.createElement('figure');
+      figure.id = id;
+      figure.className = 'project-media-stable';
+      card.insertBefore(figure, card.firstChild);
+    }
+    if (figure.getAttribute('data-qily-media-version') === MEDIA_VERSION && figure.innerHTML === html) return;
     figure.className = 'project-media-stable';
     figure.innerHTML = html;
-    card.insertBefore(figure, card.firstChild);
+    figure.setAttribute('data-qily-media-version', MEDIA_VERSION);
   }
 
   function apply() {
@@ -78,8 +85,8 @@
       findCard(['Factory Layout、精益物流与扩展边界规划', '新工厂/新产线', '设计规划']),
       'factoryLayoutProjectImageStable',
       '<div class="project-media-grid-2">' +
-      '<div><img src="/园区.png?v=20260729-factory-layout-v1" alt="新工厂与工业园区总体规划鸟瞰效果图" loading="lazy" decoding="async" fetchpriority="low"><span>园区总体规划</span></div>' +
-      '<div><img src="/写字楼.png?v=20260729-factory-layout-v1" alt="新工厂写字楼与园区门户规划效果图" loading="lazy" decoding="async" fetchpriority="low"><span>写字楼与园区门户</span></div>' +
+      '<div><img src="/园区.png?v=20260729-factory-layout-v2" alt="新工厂与工业园区总体规划鸟瞰效果图" loading="lazy" decoding="async" fetchpriority="low"><span>园区总体规划</span></div>' +
+      '<div><img src="/写字楼.png?v=20260729-factory-layout-v2" alt="新工厂写字楼与园区门户规划效果图" loading="lazy" decoding="async" fetchpriority="low"><span>写字楼与园区门户</span></div>' +
       '</div><figcaption>新工厂／新产线｜Factory Layout、精益物流与扩展边界规划</figcaption>'
     );
 
