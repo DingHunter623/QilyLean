@@ -89,8 +89,8 @@ function buildCareerTimeline() {
   const rows = careerTimeline.map((item) => `<tr><td>${escapeHtml(item.year)}年</td><td>${escapeHtml(item.field)}</td></tr>`).join('');
   return `<section class="engineering-checklist career-track" aria-labelledby="careerTrackTitle">
   <h2 id="careerTrackTitle">工程项目履历主线</h2>
-  <p>以下按年度汇总制造项目领域；每日简报聚焦可复用的工程方法、现场判断和项目交付闭环。</p>
-  <table class="rule-table"><thead><tr><th>年份</th><th>主要制造项目</th></tr></thead><tbody>${rows}</tbody></table>
+  <p>以下按最近至最早汇总制造项目领域；每日简报贯通PE、IE、NPI、ME、精益运营与项目交付方法。</p>
+  <table class="rule-table career-table"><colgroup><col class="career-year-col"><col></colgroup><thead><tr><th>年份</th><th>主要制造项目</th></tr></thead><tbody>${rows}</tbody></table>
 </section>`;
 }
 
@@ -109,7 +109,7 @@ function pageHeader(title, description, canonical, ogType = 'article') {
   <meta property="og:description" content="${escapeHtml(description)}">
   <meta property="og:url" content="${canonical}">
   <link rel="stylesheet" href="/site-shell.css?v=20260725-compact-hero-v1">
-  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260728-daily-continuity-v4">
+  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260729-engineering-system-v5">
 </head>`;
 }
 
@@ -152,11 +152,11 @@ function buildIndex(briefs) {
   }).join('\n');
   const latest = briefs[0];
   const earliest = briefs[briefs.length - 1];
-  return `${pageHeader('每日工程版简报｜QilyLean', `自${archiveStart}起，围绕精益生产、IE、PMC、质量、NPI、新工厂规划、数智化工厂与项目交付持续沉淀的每日工程版简报。`, `${baseUrl}/qilylean/daily-insights.html`, 'website')}
+  return `${pageHeader('今日简报｜QilyLean', `自${archiveStart}起，贯通PE、IE、NPI、ME、JIT、PDCA、PQCD、OEE、精益物流、Kaizen、数智化工厂与项目交付的今日简报。`, `${baseUrl}/qilylean/daily-insights.html`, 'website')}
 <body class="module-page daily-index-page">
 ${siteHeader()}
 <main>
-  <section class="daily-hero"><div class="daily-inner"><span>DAILY ENGINEERING BRIEF</span><h1>每日工程版简报</h1><p>自2019年7月10日起，以现场事实、工程方法、数据闭环和项目交付持续沉淀；每一天对应一个独立网址，可单独打开、连续翻阅与直接分享。</p></div></section>
+  <section class="daily-hero"><div class="daily-inner"><span>DAILY ENGINEERING BRIEF</span><h1>今日简报</h1><p>自2019年7月10日起，以现场事实贯通PE、IE、NPI、ME、精益运营、数据闭环与项目交付；每一天对应一个独立网址，可单独打开、连续翻阅与直接分享。</p></div></section>
   <section class="daily-index-section"><div class="daily-inner">
     <div class="daily-index-heading"><div><h2>简报目录</h2><p>${earliest.date}—${latest.date}｜共${briefs.length}期｜按月份收纳、最新优先</p></div><a href="/qilylean/daily/${latest.date}.html">打开最新简报</a></div>
     ${buildCareerTimeline()}
@@ -168,7 +168,7 @@ ${siteHeader()}
     <div class="brief-months">${months}</div>
   </div></section>
 </main>
-<footer class="module-footer"><div class="module-inner"><span>丁启利｜每日工程版简报</span><span>精益 · IE · 数智化工厂 · 制造改善</span></div></footer>
+<footer class="module-footer"><div class="module-inner"><span>丁启利｜今日简报</span><span>PE · IE · NPI · ME · 精益运营 · 数智化工厂</span></div></footer>
 <script>
 (function(){
 var legacy=(location.hash||'').slice(1);if(/^\\d{4}-\\d{2}-\\d{2}$/.test(legacy)){location.replace('/qilylean/daily/'+legacy+'.html');return;}
@@ -190,14 +190,14 @@ function buildBriefPage(brief, briefs, index) {
   const canonical = `${baseUrl}/qilylean/daily/${brief.date}.html`;
   const article = brief.article.replace(/<button class="share"[^>]*>[^<]*<\/button>/, '<button class="share" type="button">分享本期网址</button>');
   const adjacent = [older ? `<a href="/qilylean/daily/${older.date}.html">← 上一期</a>` : '<span>已是最早一期</span>', '<a class="directory" href="/qilylean/daily-insights.html">返回简报目录</a>', newer ? `<a href="/qilylean/daily/${newer.date}.html">下一期 →</a>` : '<span>已是最新一期</span>'].join('');
-  return `${pageHeader(`${brief.title}｜每日工程版简报`, brief.summary, canonical)}
+  return `${pageHeader(`${brief.title}｜今日简报`, brief.summary, canonical)}
 <body class="module-page daily-single-page">
 ${siteHeader()}
 <main>
-  <section class="daily-hero compact"><div class="daily-inner"><span>DAILY ENGINEERING BRIEF${brief.dayNo ? ` · ${brief.dayNo}` : ''}</span><h1>每日工程版简报</h1><p>${brief.date}｜${escapeHtml(brief.theme)}</p></div></section>
+  <section class="daily-hero compact"><div class="daily-inner"><span>DAILY ENGINEERING BRIEF${brief.dayNo ? ` · ${brief.dayNo}` : ''}</span><h1>今日简报</h1><p>${brief.date}｜${escapeHtml(brief.theme)}</p></div></section>
   <section class="daily-single-section"><div class="daily-inner"><nav class="brief-adjacent top" aria-label="简报翻页">${adjacent}</nav>${article}<nav class="brief-adjacent" aria-label="简报翻页">${adjacent}</nav></div></section>
 </main>
-<footer class="module-footer"><div class="module-inner"><span>丁启利｜每日工程版简报</span><span>${brief.date} · ${escapeHtml(brief.theme)}</span></div></footer>
+<footer class="module-footer"><div class="module-inner"><span>丁启利｜今日简报</span><span>${brief.date} · ${escapeHtml(brief.theme)}</span></div></footer>
 <script>
 (function(){var button=document.querySelector('.share');if(!button)return;var status=document.querySelector('.status');function copy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();return Promise.resolve();}function done(text){if(status)status.textContent=text;setTimeout(function(){if(status)status.textContent='';},2200);}button.addEventListener('click',function(){var url=location.href;var title=document.title;if((/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'')||!!(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches&&innerWidth<=820))&&navigator.share){navigator.share({title:title,text:title,url:url}).then(function(){done('已调起分享');}).catch(function(error){if(error&&error.name==='AbortError')return;copy(url).then(function(){done('网址已复制');});});}else copy(url).then(function(){done('网址已复制');});});})();
 </script>
@@ -210,6 +210,10 @@ ${pageScripts()}
 function updateSitemap(briefs) {
   const file = path.join(root, 'sitemap.xml');
   let sitemap = fs.readFileSync(file, 'utf8');
+  sitemap = sitemap.replace(
+    /(<url><loc>https:\/\/qilylean\.com\/qilylean\/daily-insights\.html<\/loc><lastmod>)\d{4}-\d{2}-\d{2}(<\/lastmod>)/,
+    `$1${briefs[0].date}$2`
+  );
   sitemap = sitemap.replace(/\n  <url><loc>https:\/\/qilylean\.com\/qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html<\/loc>[\s\S]*?<\/url>/g, '');
   const urls = briefs.map((brief) => `  <url><loc>${baseUrl}/qilylean/daily/${brief.date}.html</loc><lastmod>${brief.date}</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>`).join('\n');
   sitemap = sitemap.replace(/(  <url><loc>https:\/\/qilylean\.com\/qilylean\/daily-insights\.html<\/loc>[^\n]*<\/url>)/, `$1\n${urls}`);

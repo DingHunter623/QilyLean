@@ -5,7 +5,7 @@ function isLeanKnowledgePage(){return /lean-knowledge\.html$/i.test(location.pat
 function isKnowledgeLink(link){
   var href=link.getAttribute('href')||'';
   var label=text(link);
-  return label==='知识分享'||label==='精益知识分享'||label==='每日工程版简报'||/knowledge\.html(?:$|[?#])/.test(href)||/lean-knowledge\.html(?:$|[?#])/.test(href)||href==='#daily-insights';
+  return label==='知识分享'||label==='精益知识分享'||label==='今日简报'||/knowledge\.html(?:$|[?#])/.test(href)||/lean-knowledge\.html(?:$|[?#])/.test(href)||href==='#daily-insights';
 }
 function fixNavigation(){
   var nav=document.querySelector('.nav');
@@ -14,7 +14,7 @@ function fixNavigation(){
   var primary=links[0];
   if(!primary){primary=document.createElement('a');nav.appendChild(primary);}
   if(isLeanKnowledgePage()){
-    primary.textContent='每日工程版简报';
+    primary.textContent='今日简报';
     primary.setAttribute('href','#daily-insights');
   }else{
     primary.textContent='知识分享';
@@ -55,10 +55,10 @@ function addDailyInsights(){
   fixNavigation();
   var toc=document.querySelector('.toc');
   if(toc){
-    var dailyEntries=[].slice.call(toc.querySelectorAll('a')).filter(function(a){return text(a)==='每日工程版简报'||a.getAttribute('href')==='#daily-insights';});
+    var dailyEntries=[].slice.call(toc.querySelectorAll('a')).filter(function(a){return text(a)==='今日简报'||a.getAttribute('href')==='#daily-insights';});
     var dailyEntry=dailyEntries[0];
     if(!dailyEntry){dailyEntry=document.createElement('a');toc.insertBefore(dailyEntry,toc.firstChild);}
-    dailyEntry.href='#daily-insights';dailyEntry.textContent='每日工程版简报';
+    dailyEntry.href='#daily-insights';dailyEntry.textContent='今日简报';
     dailyEntries.slice(1).forEach(function(a){a.remove();});
     if(!toc.querySelector('a[href="/qilylean/lean-tools.html"]')){
       var toolEntry=document.createElement('a');toolEntry.href='/qilylean/lean-tools.html';toolEntry.textContent='精益工具库';
@@ -68,9 +68,9 @@ function addDailyInsights(){
   if(document.getElementById('daily-insights'))return;
   var directory=document.querySelector('main .section.alt');
   var section=document.createElement('section');section.className='section';section.id='daily-insights';
-  section.innerHTML='<div class="inner"><div class="head"><h2>每日工程版简报</h2><p>围绕精益生产、IE、PMC、ERP/MES、数智化工厂、AI工具、汽车电子与半导体制造，持续发布可用于工作决策、行业观察和个人知识沉淀的工程版内容。</p></div><article class="article" data-latest-brief-card><small data-latest-brief-meta>2026-07-28｜IE标工 / PMC排产闭环</small><h2 data-latest-brief-title>IE标工联同PMC排产，关键是形成计划—实绩—结单闭环</h2><ul class="tag-row"><li>IE标工</li><li>PMC排产</li><li>生产实绩</li><li>交付闭环</li></ul><p data-latest-brief-summary>IE标准工时不是独立台账，PMC排产也不是手工填数。只有以金蝶编码为主键，将订单净需求、标工版本、工位与人力、冻结计划、生产实绩、欠产与超产、尾单调整和结单状态贯通，计划才会成为可校验、可追溯、可持续改善的制造闭环。</p><div class="actions"><a class="button" data-latest-brief-link href="/qilylean/daily/2026-07-28.html" target="_top">查看最新简报</a><a class="button secondary" href="/qilylean/daily-insights.html" target="_top">查看简报目录</a><a class="button secondary" href="/qilylean/lean-tools.html" target="_top">进入精益工具库</a></div></article></div>';
+  section.innerHTML='<div class="inner"><div class="head"><h2>今日简报</h2><p>贯通PE、IE、NPI、ME、JIT、PDCA、PQCD、OEE、精益物流、Kaizen、数智化工厂与项目交付，持续沉淀可复用的制造工程方法。</p></div><article class="article" data-latest-brief-card><small data-latest-brief-meta>2026-07-29｜NPI全链路工程</small><h2 data-latest-brief-title>从EVT到MP：让PE、IE、NPI、ME形成量产交付闭环</h2><ul class="tag-row"><li>PE/IE/NPI/ME</li><li>EVT/DVT/PVT/MP</li><li>PQCD/OEE</li><li>PDCA/Kaizen</li></ul><p data-latest-brief-summary>新产品从样件走向稳定量产，必须让产品、工艺、产能、设备、质量与物流在同一阶段门中成熟，并用PQCD、OEE、PDCA和Kaizen形成持续验证与交付闭环。</p><div class="actions"><a class="button" data-latest-brief-link href="/qilylean/daily/2026-07-29.html" target="_top">查看最新简报</a><a class="button secondary" href="/qilylean/daily-insights.html" target="_top">查看简报目录</a><a class="button secondary" href="/qilylean/lean-tools.html" target="_top">进入精益工具库</a></div></article></div>';
   if(!document.getElementById('latestBriefScript')){
-    var script=document.createElement('script');script.id='latestBriefScript';script.src='/qilylean/latest-brief.js?v=20260728-latest-v1';document.head.appendChild(script);
+    var script=document.createElement('script');script.id='latestBriefScript';script.src='/qilylean/latest-brief.js?v=20260729-today-v2';document.head.appendChild(script);
   }
   if(directory&&directory.nextSibling)directory.parentNode.insertBefore(section,directory.nextSibling);else main.appendChild(section);
 }

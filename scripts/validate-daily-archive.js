@@ -33,8 +33,10 @@ function main() {
   const archive = index.filter((item) => item.date <= archiveEnd);
   const recent = index.filter((item) => item.date > archiveEnd);
   const productTerms = ['电子烟', '游戏机手柄', '电磁阀', '新能源负极材料', '负极材料', '逆变器', '汽车电子', '整流器', '继电器', '小家电', '汽车座椅开关总成', '汽车座椅开关', '座椅开关'];
+  const requiredEngineeringThemes = ['PE工程', 'IE方法', 'ME工程', 'JIT', 'PDCA', 'PQCD', 'OEE', 'NPI四阶段', '精益物流', 'Kaizen'];
 
   assert(index.length > expectedArchive, 'Archive does not include the recent period');
+  assert(index[0].date === '2026-07-29', `Latest daily brief must be 2026-07-29; found ${index[0].date}`);
   assert(archive.length === expectedArchive, `Expected ${expectedArchive} archive briefs; found ${archive.length}`);
   assert(index[index.length - 1].date === archiveStart, `Archive must begin on ${archiveStart}`);
   assert(archive[0].date === archiveEnd, `First archive period must end on ${archiveEnd}`);
@@ -45,6 +47,9 @@ function main() {
   assert(new Set(archive.map((item) => item.title)).size === archive.length, 'Daily brief titles are not unique');
   assert(archive.every((item) => !item.title.includes('｜')), 'Archive titles still use the former uniform pipe pattern');
   assert(archive.every((item) => !productTerms.some((term) => `${item.title} ${item.summary} ${item.theme}`.includes(term))), 'Archive index still exposes product-led daily wording');
+  requiredEngineeringThemes.forEach((theme) => {
+    assert(archive.some((item) => item.theme === theme), `Engineering theme is missing from the long-term archive: ${theme}`);
+  });
   const titleShape = (title) => title.replace(/[\u3400-\u9fffA-Za-z0-9／-]+/g, '字');
   let sameShapeRun = 1;
   let longestShapeRun = 1;
@@ -83,26 +88,46 @@ function main() {
     assert(page.includes('/knowledge/') && page.includes('/projects/') && page.includes('/ai.html') && page.includes('/cooperation/'), `QilyLean module links are incomplete: ${date}`);
     assert(page.includes(`https://qilylean.com/qilylean/daily/${date}.html`), `Canonical URL is missing: ${date}`);
     assert(page.includes(`<img src="/qilylean/assets/daily-${date}.svg"`), `External share visual is missing: ${date}`);
-    assert(page.includes('daily-briefs.css?v=20260728-daily-continuity-v4'), `Responsive archive stylesheet is not pinned: ${date}`);
+    assert(page.includes('daily-briefs.css?v=20260729-engineering-system-v5'), `Responsive archive stylesheet is not pinned: ${date}`);
     assert(!page.includes('<div class="date">' + date + '｜' + index.find((item) => item.date === date).theme + ' ·'), `Daily date line contains an unexpected suffix: ${date}`);
   });
 
   index.forEach((item) => {
     const page = read(`qilylean/daily/${item.date}.html`);
     assert(!productTerms.some((term) => page.includes(term)), `Product-led wording remains in daily brief: ${item.date}`);
+    assert(!page.includes('每日工程版简报'), `Former public brief name remains: ${item.date}`);
+  });
+  fs.readdirSync(assetDir).filter((name) => /^daily-.*\.svg$/.test(name)).forEach((name) => {
+    assert(!fs.readFileSync(path.join(assetDir, name), 'utf8').includes('每日工程版简报'), `Former public brief name remains in visual: ${name}`);
   });
 
   const firstPublished = read('qilylean/daily/2025-12-19.html');
   assert(firstPublished.includes('/qilylean/daily/2025-12-18.html'), 'Adjacent navigation is not continuous at 2025-12-19');
 
   const directory = read('qilylean/daily-insights.html');
+  assert(!directory.includes('每日工程版简报'), 'Former public brief name remains in the directory');
+  assert(directory.includes('<h1>今日简报</h1>'), 'Unified public brief name is missing from the directory');
   assert(directory.includes('id="briefSearch"'), 'Archive keyword search is missing');
   assert(directory.includes('data-year-filter="2019"') && directory.includes('data-year-filter="2025"'), 'Archive year filters are missing');
   assert(directory.includes(`共${index.length}期`), 'Archive directory total is incorrect');
   assert(!/<div class="brief-index-meta">[\s\S]*?<i>/i.test(directory), 'Public directory contains an unexpected classification badge');
   assert(directory.includes('工程项目履历主线'), 'Consolidated career timeline is missing');
+  assert(directory.includes('<col class="career-year-col">'), 'Career timeline does not use the narrow year column');
   careerTimeline.forEach((item) => {
     assert(directory.includes(`${item.year}年`) && directory.includes(item.field), `Career timeline is incomplete for ${item.year}`);
+  });
+  assert(
+    careerTimeline.every((item, position) => position === 0 || Number(careerTimeline[position - 1].year) > Number(item.year)),
+    'Career timeline is not ordered from newest to earliest'
+  );
+  assert(careerTimeline.find((item) => item.year === '2024').field === '汽车电子、整流器', 'The 2024 career field is not correct');
+  const dailyCss = read('qilylean/daily-briefs.css');
+  assert(/\.career-table \.career-year-col\{width:116px\}/.test(dailyCss), 'Desktop career year column is not narrowed');
+  assert(/\.career-table \.career-year-col\{width:70px\}/.test(dailyCss), 'Mobile career year column is not narrowed');
+
+  const latestPage = read('qilylean/daily/2026-07-29.html');
+  ['PE', 'IE', 'NPI', 'ME', 'JIT', 'PDCA', 'PQCD', 'OEE', 'EVT', 'DVT', 'PVT', 'MP', '精益物流', 'Kaizen'].forEach((term) => {
+    assert(latestPage.includes(term), `July 29 engineering brief is missing: ${term}`);
   });
 
   const sitemap = read('sitemap.xml');

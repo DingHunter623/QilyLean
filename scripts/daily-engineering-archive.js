@@ -82,14 +82,14 @@ const lenses = [
 ];
 
 const careerTimeline = [
-  { year: '2019', field: '电子烟制造' },
-  { year: '2020', field: '游戏机手柄制造' },
-  { year: '2021', field: '电磁阀制造' },
-  { year: '2022', field: '新能源负极材料制造' },
-  { year: '2023', field: '逆变器制造' },
-  { year: '2024', field: '汽车电子、整流器、继电器制造' },
+  { year: '2026', field: '汽车座椅开关总成制造' },
   { year: '2025', field: '小家电制造' },
-  { year: '2026', field: '汽车座椅开关总成制造' }
+  { year: '2024', field: '汽车电子、整流器' },
+  { year: '2023', field: '逆变器制造' },
+  { year: '2022', field: '新能源负极材料制造' },
+  { year: '2021', field: '电磁阀制造' },
+  { year: '2020', field: '游戏机手柄制造' },
+  { year: '2019', field: '电子烟制造' }
 ];
 
 /*
@@ -359,9 +359,9 @@ function stageFor(date, index) {
 function uniqueTitle(candidate, { scene, phase, lens, index }, usedTitles) {
   const options = [
     candidate,
-    `${candidate}：${scene.name}现场`,
+    `${candidate}（${scene.name}现场）`,
     `${candidate}——${phase.focus}`,
-    `${candidate}：再核对${lens.title}`,
+    `${candidate}，再核对${lens.title}`,
     `${candidate}（${['数据口径', '责任接口', '试点验证', '风险边界', '标准固化', '交付复盘'][index % 6]}）`
   ];
   const title = options.find((option) => !usedTitles.has(option));
