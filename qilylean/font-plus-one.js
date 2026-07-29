@@ -31,7 +31,7 @@
     normalizeModuleNavigation();
     load('terminology-v2.js?v=term2','terminologyV2Script');
     load('homepage-depth.js?v=depth3','homepageDepthScript');
-    load('project-media-home.js?v=20260721-speed-v3','projectMediaHomeScript');
+    load('project-media-home.js?v=20260729-factory-layout-v1','projectMediaHomeScript');
     load('content-restore.js?v=20260722-reference-hd-v2','contentRestoreScript');
     load('daily-insights-card.js?v=20260729-today-v2','dailyInsightsCardScript');
     load('gbt2828-card.js?v=gbt2828-1','gbt2828CardScript');
