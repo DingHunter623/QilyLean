@@ -88,7 +88,7 @@ function main() {
     assert(page.includes('/knowledge/') && page.includes('/projects/') && page.includes('/ai.html') && page.includes('/cooperation/'), `QilyLean module links are incomplete: ${date}`);
     assert(page.includes(`https://qilylean.com/qilylean/daily/${date}.html`), `Canonical URL is missing: ${date}`);
     assert(page.includes(`<img src="/qilylean/assets/daily-${date}.svg"`), `External share visual is missing: ${date}`);
-    assert(page.includes('daily-briefs.css?v=20260729-engineering-system-v5'), `Responsive archive stylesheet is not pinned: ${date}`);
+    assert(page.includes('daily-briefs.css?v=20260729-engineering-system-v7'), `Responsive archive stylesheet is not pinned: ${date}`);
     assert(!page.includes('<div class="date">' + date + '｜' + index.find((item) => item.date === date).theme + ' ·'), `Daily date line contains an unexpected suffix: ${date}`);
   });
 
@@ -108,13 +108,17 @@ function main() {
   assert(!directory.includes('每日工程版简报'), 'Former public brief name remains in the directory');
   assert(directory.includes('<h1>今日简报</h1>'), 'Unified public brief name is missing from the directory');
   assert(directory.includes('id="briefSearch"'), 'Archive keyword search is missing');
-  assert(directory.includes('data-year-filter="2019"') && directory.includes('data-year-filter="2025"'), 'Archive year filters are missing');
+  assert(directory.includes('href="?year=2019#brief-directory"') && directory.includes('href="?year=2025#brief-directory"'), 'Career year links are missing');
+  assert(!directory.includes('class="brief-year-filters"'), 'The duplicate year filter button module still exists');
+  assert(!/<button[^>]*data-year-filter=/i.test(directory), 'Legacy year filter buttons still exist');
   assert(directory.includes(`共${index.length}期`), 'Archive directory total is incorrect');
   assert(!/<div class="brief-index-meta">[\s\S]*?<i>/i.test(directory), 'Public directory contains an unexpected classification badge');
-  assert(directory.includes('工程项目履历主线'), 'Consolidated career timeline is missing');
+  assert(directory.includes('<h2 id="careerTrackTitle">主要项目履历</h2>'), 'Renamed project timeline is missing');
+  assert(!directory.includes('工程项目履历主线'), 'Former project timeline name remains');
   assert(directory.includes('<col class="career-year-col">'), 'Career timeline does not use the narrow year column');
   careerTimeline.forEach((item) => {
     assert(directory.includes(`${item.year}年`) && directory.includes(item.field), `Career timeline is incomplete for ${item.year}`);
+    assert(directory.includes(`href="?year=${item.year}#brief-directory" data-year-filter="${item.year}"`), `Career year link is incomplete for ${item.year}`);
   });
   assert(
     careerTimeline.every((item, position) => position === 0 || Number(careerTimeline[position - 1].year) > Number(item.year)),
@@ -124,6 +128,10 @@ function main() {
   const dailyCss = read('qilylean/daily-briefs.css');
   assert(/\.career-table \.career-year-col\{width:116px\}/.test(dailyCss), 'Desktop career year column is not narrowed');
   assert(/\.career-table \.career-year-col\{width:70px\}/.test(dailyCss), 'Mobile career year column is not narrowed');
+  assert(dailyCss.includes('engineering-system-v7'), 'Daily archive stylesheet version is not current');
+  assert(dailyCss.includes('font-size:clamp(20px,1.55vw,24px)'), 'Directory brief titles were not reduced');
+  assert(dailyCss.includes('font-size:16px;font-weight:900;line-height:1.45'), 'Directory date and theme text were not enlarged');
+  assert(dailyCss.includes('.daily-single-section .date{color:var(--daily-gold);font-size:18px'), 'Single-page date text was not enlarged');
 
   const latestPage = read('qilylean/daily/2026-07-29.html');
   ['PE', 'IE', 'NPI', 'ME', 'JIT', 'PDCA', 'PQCD', 'OEE', 'EVT', 'DVT', 'PVT', 'MP', '精益物流', 'Kaizen'].forEach((term) => {
