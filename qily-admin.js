@@ -66,10 +66,14 @@ function renderBriefFeedback(items){
   var list=Array.isArray(items)?items:[];
   if(!list.length){briefFeedbackList.innerHTML='<div class="empty">暂无简报评分互动。</div>';return;}
   briefFeedbackList.innerHTML=list.map(function(item){
-    var count=Number(item.rating_count||0),average=Number(item.rating_average||0),total=count+Number(item.likes||0)+Number(item.dislikes||0);
+    var count=Number(item.rating_count||0);
+    var average=Number(item.rating_average||0);
+    var five=Number(item.five_star_count||0);
+    var comments=Number(item.comments||0);
+    var total=Number(item.interaction_count||0)||(count+Number(item.likes||0)+Number(item.dislikes||0)+comments);
     return '<article class="feedback-card"><div><strong>'+escapeHtml(item.brief_date||'未标注日期')+'</strong><span>'+escapeHtml(item.brief_title||'未标注标题')+'</span></div>'
-      +'<div class="feedback-numbers"><b>'+escapeHtml(count?average.toFixed(1):'—')+'</b><small>五星均分／'+escapeHtml(count)+'次</small></div>'
-      +'<div class="feedback-numbers"><b>👍 '+escapeHtml(item.likes||0)+'　👎 '+escapeHtml(item.dislikes||0)+'</b><small>总互动 '+escapeHtml(total)+'</small></div>'
+      +'<div class="feedback-numbers"><b>'+escapeHtml(count?average.toFixed(1):'—')+'</b><small>平均分／'+escapeHtml(count)+'次 · 五星 '+escapeHtml(five)+'</small></div>'
+      +'<div class="feedback-numbers"><b>👍 '+escapeHtml(item.likes||0)+'　👎 '+escapeHtml(item.dislikes||0)+'　💬 '+escapeHtml(comments)+'</b><small>累计互动 '+escapeHtml(total)+'</small></div>'
       +(item.brief_url?'<a href="'+escapeHtml(item.brief_url)+'" target="_blank" rel="noopener">打开简报</a>':'')+'</article>';
   }).join('');
 }
