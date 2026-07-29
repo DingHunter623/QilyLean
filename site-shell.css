@@ -1,3 +1,12 @@
+/* QilyLean no-old-shell flash guard: keep the legacy page shell out of the first paint. */
+html.qily-shell-pending {
+  min-height: 100%;
+  background: #eef7f5;
+}
+html.qily-shell-pending body {
+  visibility: hidden !important;
+}
+
 :root {
   --qily-ink: #182420;
   --qily-muted: #5f7474;
