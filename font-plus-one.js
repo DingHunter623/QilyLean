@@ -35,7 +35,7 @@
     load('homepage-depth.js?v=depth3','homepageDepthScript');
     load('project-media-home.js?v=20260721-speed-v3','projectMediaHomeScript');
     load('content-restore.js?v=20260722-reference-hd-v2','contentRestoreScript');
-    load('daily-insights-card.js?v=20260724-daily-v1','dailyInsightsCardScript');
+    load('daily-insights-card.js?v=20260729-today-v2','dailyInsightsCardScript');
     load('gbt2828-card.js?v=gbt2828-1','gbt2828CardScript');
     load('experience-lock-v3.js?v=lock3','experienceLockV3Script');
     load('career-resume-full.js?v=career-full1','careerResumeFullScript');
@@ -45,7 +45,7 @@
     load('wechat-qr-official.js?v=official-full1','wechatQrOfficialScript');
     load('public-copy-polish.js?v=public1','publicCopyPolishScript');
     load('public-boundary-fix.js?v=boundary1','publicBoundaryFixScript');
-    load('knowledge-publish-fix-v1.js?v=20260724-daily-v1','knowledgePublishFixScript');
+    load('knowledge-publish-fix-v1.js?v=20260729-today-v2','knowledgePublishFixScript');
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
