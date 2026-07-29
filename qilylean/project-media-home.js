@@ -77,8 +77,10 @@
     mountFigure(
       findCard(['Factory Layout、精益物流与扩展边界规划', '新工厂/新产线', '设计规划']),
       'factoryLayoutProjectImageStable',
-      '<img src="/media/projects/factory-layout.webp?v=20260721-speed-v1" alt="Factory Layout新工厂新产线设计规划" width="1333" height="1180" loading="lazy" decoding="async" fetchpriority="low">' +
-      '<figcaption>新工厂/新产线｜Factory Layout、精益物流与扩展边界规划</figcaption>'
+      '<div class="project-media-grid-2">' +
+      '<div><img src="/园区.png?v=20260729-factory-layout-v1" alt="新工厂与工业园区总体规划鸟瞰效果图" loading="lazy" decoding="async" fetchpriority="low"><span>园区总体规划</span></div>' +
+      '<div><img src="/写字楼.png?v=20260729-factory-layout-v1" alt="新工厂写字楼与园区门户规划效果图" loading="lazy" decoding="async" fetchpriority="low"><span>写字楼与园区门户</span></div>' +
+      '</div><figcaption>新工厂／新产线｜Factory Layout、精益物流与扩展边界规划</figcaption>'
     );
 
     mountFigure(
