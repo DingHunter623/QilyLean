@@ -53,8 +53,8 @@ function removeDirectoryCtaFromBriefPages() {
     if (after.includes('brief-consultation-cta') || after.includes('#brief-consultation')) {
       throw new Error(`Obsolete directory consultation CTA remains: ${name}`);
     }
-    if (!after.includes('data-brief-message-form') || !after.includes('评价本期简报')) {
-      throw new Error(`Direct brief feedback must remain available: ${name}`);
+    if (!after.includes('data-brief-message-form') || after.includes('评价本期简报') || after.includes('data-brief-rating') || after.includes('data-brief-sentiment')) {
+      throw new Error(`Direct brief message-only module validation failed: ${name}`);
     }
     if (writeIfChanged(filePath, before, after)) changed += 1;
   });
