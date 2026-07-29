@@ -92,9 +92,9 @@ function main() {
     assert(page.includes('/knowledge/') && page.includes('/projects/') && page.includes('/ai.html') && page.includes('/cooperation/'), `QilyLean module links are incomplete: ${date}`);
     assert(page.includes(`https://qilylean.com/qilylean/daily/${date}.html`), `Canonical URL is missing: ${date}`);
     assert(page.includes(`<img src="/qilylean/assets/daily-${date}.svg"`), `External share visual is missing: ${date}`);
-    assert(page.includes('daily-briefs.css?v=20260729-engineering-system-v10'), `Responsive archive stylesheet is not pinned: ${date}`);
+    assert(page.includes('daily-briefs.css?v=20260729-engineering-system-v11'), `Responsive archive stylesheet is not pinned: ${date}`);
     assert(page.includes(`/qilylean/daily-insights.html?brief=${date}#brief-consultation`), `Brief consultation entry is missing: ${date}`);
-    assert(page.includes('针对本期内容留言交流') && page.includes('自动标注本期简报的日期、标题与来源网址'), `Generic brief message entry is incomplete: ${date}`);
+    assert(page.includes('评价本期简报') && page.includes('留言交流'), `Direct brief feedback and message entry is incomplete: ${date}`);
     assert(!page.includes('如需结合企业现场进一步判断'), `Enterprise-only brief message wording remains: ${date}`);
     assert(!page.includes('<div class="date">' + date + '｜' + index.find((item) => item.date === date).theme + ' ·'), `Daily date line contains an unexpected suffix: ${date}`);
   });
@@ -113,6 +113,12 @@ function main() {
     assert(page.includes('<meta name="twitter:card" content="summary_large_image">'), `Large social card metadata is missing: ${item.date}`);
     assert(fs.existsSync(assetPath) && fs.statSync(assetPath).size > 1000, `Social share visual is missing or shallow: ${item.date}`);
     assert(!page.includes('<table class="rule-table">'), `A short-label table still uses equal-width columns: ${item.date}`);
+    assert((page.match(/data-brief-feedback/g) || []).length >= 2, `Brief feedback module or script is missing: ${item.date}`);
+    assert((page.match(/data-brief-rating="[1-5]"/g) || []).length === 5, `Five-star rating controls are incomplete: ${item.date}`);
+    assert(page.includes('data-brief-sentiment="good"') && page.includes('data-brief-sentiment="bad"'), `Positive and negative feedback controls are incomplete: ${item.date}`);
+    assert(page.includes('data-brief-message-form') && page.includes('称谓（选填）') && page.includes('联系方式（选填）'), `Simple inline message form is incomplete: ${item.date}`);
+    assert(page.includes('/qilylean/daily-feedback.js?v=20260729-brief-engagement-v1'), `Shared feedback client is not loaded: ${item.date}`);
+    assert(page.includes(`data-brief-date="${item.date}"`) && page.includes(`data-brief-url="https://qilylean.com/qilylean/daily/${item.date}.html"`), `Feedback source tracking is incomplete: ${item.date}`);
   });
   fs.readdirSync(assetDir).filter((name) => /^daily-.*\.svg$/.test(name)).forEach((name) => {
     assert(!fs.readFileSync(path.join(assetDir, name), 'utf8').includes('每日工程版简报'), `Former public brief name remains in visual: ${name}`);
@@ -145,13 +151,14 @@ function main() {
   const dailyCss = read('qilylean/daily-briefs.css');
   assert(/\.career-table \.career-year-col\{width:116px\}/.test(dailyCss), 'Desktop career year column is not narrowed');
   assert(/\.career-table \.career-year-col\{width:70px\}/.test(dailyCss), 'Mobile career year column is not narrowed');
-  assert(dailyCss.includes('engineering-system-v10'), 'Daily archive stylesheet version is not current');
+  assert(dailyCss.includes('engineering-system-v11'), 'Daily archive stylesheet version is not current');
   assert(dailyCss.includes('font-size:clamp(20px,1.55vw,24px)!important'), 'Directory brief titles were not reduced or do not override the global heading rule');
   assert(dailyCss.includes('font-size:clamp(28px,2.7vw,34px)!important'), 'Single-page brief titles were not reduced or do not override the global heading rule');
   assert(dailyCss.includes('font-size:16px;font-weight:900;line-height:1.45'), 'Directory date and theme text were not enlarged');
   assert(dailyCss.includes('.daily-single-section .date{color:var(--daily-gold);font-size:18px'), 'Single-page date text was not enlarged');
   assert(dailyCss.includes('.brief-consultation-form{'), 'Brief consultation form styles are missing');
   assert(dailyCss.includes('.brief-one-point-training{') && dailyCss.includes('.brief-one-point-grid{'), 'Single-point training styles are missing');
+  assert(dailyCss.includes('.brief-feedback{') && dailyCss.includes('.brief-stars{') && dailyCss.includes('.brief-inline-message{'), 'Brief feedback responsive styles are missing');
   assert(dailyCss.includes('.rule-table.compact-first-col{table-layout:auto}') && dailyCss.includes('width:1%;min-width:5.5em'), 'Compact first-column table rules are missing');
   assert(directory.includes('id="briefConsultationForm"') && directory.includes('id="brief-consultation"'), 'Brief consultation window is missing');
   assert(directory.includes('<h2 id="briefConsultationTitle">简报留言交流</h2>'), 'Generic brief message heading is missing');
@@ -167,6 +174,20 @@ function main() {
   assert(directory.includes("timing:'今日简报留言｜'+reference"), 'Brief message source classification is missing');
   assert(directory.includes("mail.append('来源简报',data.source_brief)"), 'Brief source is missing from the received email');
   assert(directory.includes("source_page:window.location.href,source_brief:reference"), 'Brief source URL and metadata are missing from the backend payload');
+
+  const worker = read('cloudflare-worker/worker.js');
+  const feedbackClient = read('qilylean/daily-feedback.js');
+  const admin = read('admin.html');
+  const adminScript = read('qily-admin.js');
+  assert(worker.includes("url.pathname === '/brief-feedback'"), 'Public brief feedback endpoint is missing');
+  assert(worker.includes("url.pathname === '/admin/brief-feedback'"), 'Admin brief feedback endpoint is missing');
+  assert(worker.includes('brief-feedback-voter:') && worker.includes('BRIEF_FEEDBACK_DAILY_IP_LIMIT'), 'Brief feedback duplicate or rate-limit protection is missing');
+  assert(worker.includes("recordMetric(env, 'brief_comments')"), 'Brief message conversion metric is missing');
+  assert(worker.includes("record.industry === '今日简报留言交流'"), 'Brief messages are not separated from enterprise consultations');
+  assert(feedbackClient.includes("api+'/brief-feedback'") && feedbackClient.includes("api+'/consultations'"), 'Feedback or message client is not connected to the backend');
+  assert(feedbackClient.includes('qilylean_feedback_client') && feedbackClient.includes("marker('rating')") && feedbackClient.includes("marker('sentiment')"), 'Browser-side duplicate feedback protection is incomplete');
+  assert(admin.includes('id="briefFeedbackList"') && admin.includes('id="todayBriefRatings"') && admin.includes('id="todayBriefComments"'), 'Admin brief interaction overview is incomplete');
+  assert(adminScript.includes("request('/admin/brief-feedback?limit=100')") && adminScript.includes('今日简报留言｜'), 'Admin feedback loading or message classification is incomplete');
 
   const latestPage = read('qilylean/daily/2026-07-29.html');
   assert((latestPage.match(/class="rule-table compact-first-col"/g) || []).length === 2, 'July 29 short-label tables were not compacted');

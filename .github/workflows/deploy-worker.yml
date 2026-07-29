@@ -46,6 +46,8 @@ jobs:
           node --check cloudflare-worker/worker.js
           grep -q "url.pathname === '/consultations'" cloudflare-worker/worker.js
           grep -q "url.pathname === '/admin/consultations'" cloudflare-worker/worker.js
+          grep -q "url.pathname === '/brief-feedback'" cloudflare-worker/worker.js
+          grep -q "url.pathname === '/admin/brief-feedback'" cloudflare-worker/worker.js
           grep -q "396767769@qq.com" cloudflare-worker/worker.js
 
       - name: 校验 Cloudflare 账户 ID
@@ -100,7 +102,7 @@ jobs:
               throw new Error('CORS origin is not available to the website');
             }
             const healthData = await health.json();
-            if (healthData.build_version !== 'v1.5.1-android-connectivity') {
+            if (healthData.build_version !== 'v1.6.0-brief-engagement') {
               throw new Error('unexpected build ' + healthData.build_version);
             }
           });
@@ -120,6 +122,19 @@ jobs:
               throw new Error('status ' + chat.status);
             }
           }, 3, 3000);
+          await withRetry(base + ' brief feedback', async () => {
+            const feedback = await fetch(base + '/brief-feedback?brief=2026-07-29', {
+              headers: androidHeaders,
+              signal: AbortSignal.timeout(12000)
+            });
+            const data = await feedback.json();
+            if (!feedback.ok || data.brief_date !== '2026-07-29') {
+              throw new Error('status ' + feedback.status);
+            }
+            for (const field of ['rating_average', 'rating_count', 'likes', 'dislikes']) {
+              if (typeof data[field] !== 'number') throw new Error('missing numeric field ' + field);
+            }
+          });
           const speech = await fetch(base + '/tts', {
             method: 'POST',
             headers: {

@@ -14,14 +14,14 @@ main{width:min(1180px,calc(100% - 32px));margin:28px auto 50px}.hero{padding:26p
 .statusline{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap}.badge{display:inline-flex;padding:5px 10px;border-radius:999px;background:#edf4f2;color:var(--muted);font-size:13px;font-weight:800}.badge.ok{background:#e6f5ed;color:var(--green)}.badge.bad{background:#f9ebe7;color:var(--red)}.badge.new{background:#fff4d6;color:#795b13}.badge.contacted{background:#e7f4f7;color:#17616d}.badge.closed{background:#edf1ef;color:#53615c}
 .grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:18px}.card{padding:16px;background:#fff;border:1px solid var(--line);border-top:4px solid var(--teal)}.card:nth-child(2n){border-top-color:var(--gold)}.card strong{display:block;font-size:27px;color:var(--forest)}.card span{display:block;margin-top:6px;color:var(--muted);font-size:14px}
 .table{width:100%;border-collapse:collapse;margin-top:14px}.table th,.table td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}.table th{color:var(--muted);font-size:14px}.note{margin-top:16px;padding:14px;background:#fff9e8;border:1px solid #ead9a4;color:#6a5724;line-height:1.7}.hidden{display:none}
-.consultation-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:28px 0 12px}.consultation-head h2{margin:0}.consultation-head p{margin:5px 0 0;color:var(--muted)}.consultation-list{display:grid;gap:14px}.consultation-card{padding:18px;border:1px solid var(--line);border-left:5px solid var(--gold);background:#fff}.consultation-meta{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.consultation-card h3{margin:10px 0 4px;color:var(--forest)}.consultation-card small{color:var(--muted)}.consultation-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px;margin-top:13px}.consultation-fields div{padding:9px 11px;background:#f6faf9;border:1px solid #e1ecea}.consultation-fields strong{display:block;margin-bottom:3px;color:var(--muted);font-size:13px}.consultation-wide{grid-column:1/-1;white-space:pre-wrap}.consultation-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);background:#fff}
-@media(max-width:980px){.grid{grid-template-columns:repeat(3,1fr)}}@media(max-width:760px){.grid{grid-template-columns:1fr 1fr}.login{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.consultation-fields{grid-template-columns:1fr}.consultation-wide{grid-column:1}}@media(max-width:480px){.grid{grid-template-columns:1fr}}
+.consultation-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:28px 0 12px}.consultation-head h2{margin:0}.consultation-head p{margin:5px 0 0;color:var(--muted)}.consultation-list,.feedback-list{display:grid;gap:14px}.consultation-card{padding:18px;border:1px solid var(--line);border-left:5px solid var(--gold);background:#fff}.consultation-meta{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.consultation-card h3{margin:10px 0 4px;color:var(--forest)}.consultation-card small{color:var(--muted)}.consultation-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px;margin-top:13px}.consultation-fields div{padding:9px 11px;background:#f6faf9;border:1px solid #e1ecea}.consultation-fields strong{display:block;margin-bottom:3px;color:var(--muted);font-size:13px}.consultation-wide{grid-column:1/-1;white-space:pre-wrap}.consultation-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.feedback-card{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;gap:14px;padding:16px 18px;border:1px solid var(--line);border-left:5px solid var(--teal);background:#fff}.feedback-card>div:first-child{display:grid;gap:4px}.feedback-card>div:first-child strong{color:var(--forest)}.feedback-card>div:first-child span{color:var(--muted);font-size:14px}.feedback-numbers{display:grid;gap:2px;text-align:center}.feedback-numbers b{color:var(--forest)}.feedback-numbers small{color:var(--muted)}.feedback-card>a{color:var(--forest);font-weight:800}.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);background:#fff}
+@media(max-width:980px){.grid{grid-template-columns:repeat(3,1fr)}.feedback-card{grid-template-columns:minmax(0,1fr) auto auto}}@media(max-width:760px){.grid{grid-template-columns:1fr 1fr}.login{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.consultation-fields,.feedback-card{grid-template-columns:1fr}.consultation-wide{grid-column:1}.feedback-numbers{text-align:left}}@media(max-width:480px){.grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header class="top"><strong>QilyLean 运维管理后台</strong><nav><a href="/">返回主页</a>　<a href="/cooperation/#diagnosis">项目咨询入口</a>　<a href="/ai.html">进入 AI</a></nav></header>
 <main>
-<section class="hero"><h1>运行状态、咨询记录与用量控制</h1><p>统一查看AI服务状态、调用统计和企业咨询需求卡。管理口令只保存在当前浏览器会话中，不写入网站代码。</p></section>
+<section class="hero"><h1>运行状态、互动反馈与咨询转化</h1><p>统一查看AI服务、今日简报评分、留言及企业咨询记录。管理口令只保存在当前浏览器会话中，不写入网站代码。</p></section>
 <section class="login" id="loginBox"><input id="token" type="password" autocomplete="current-password" placeholder="请输入 Cloudflare ADMIN_TOKEN"><button class="btn" id="connect">连接后台</button></section>
 <section class="panel hidden" id="dashboard">
 <div class="statusline"><div><strong>服务状态</strong> <span class="badge" id="serviceBadge">检测中</span></div><div><button class="btn secondary" id="refresh">刷新</button> <button class="btn secondary" id="logout">退出</button></div></div>
@@ -30,8 +30,11 @@ main{width:min(1180px,calc(100% - 32px));margin:28px auto 50px}.hero{padding:26p
 <div class="card"><strong id="todaySuccess">0</strong><span>今日AI成功</span></div>
 <div class="card"><strong id="todayErrors">0</strong><span>今日AI错误</span></div>
 <div class="card"><strong id="todayLimited">0</strong><span>今日限流</span></div>
-<div class="card"><strong id="todayConsultations">0</strong><span>今日咨询</span></div>
-<div class="card"><strong id="pendingConsultations">0</strong><span>待联系咨询</span></div>
+<div class="card"><strong id="todayConsultations">0</strong><span>今日咨询／留言</span></div>
+<div class="card"><strong id="pendingConsultations">0</strong><span>待联系记录</span></div>
+<div class="card"><strong id="todayBriefRatings">0</strong><span>今日五星评分</span></div>
+<div class="card"><strong id="todayBriefSentiments">0</strong><span>今日好／差评</span></div>
+<div class="card"><strong id="todayBriefComments">0</strong><span>今日简报留言</span></div>
 </div>
 <table class="table"><tbody>
 <tr><th>当前模型</th><td id="model">—</td></tr>
@@ -44,11 +47,13 @@ main{width:min(1180px,calc(100% - 32px));margin:28px auto 50px}.hero{padding:26p
 <tr><th>累计请求 / 成功 / 错误</th><td id="allTime">—</td></tr>
 <tr><th>统计日期（UTC）</th><td id="dateUtc">—</td></tr>
 </tbody></table>
-<div class="consultation-head"><div><h2>企业咨询记录</h2><p>最新提交优先；可标记为“已联系”或“已关闭”。</p></div><button class="btn secondary" id="refreshConsultations">刷新咨询</button></div>
+<div class="consultation-head"><div><h2>今日简报互动热度</h2><p>按评分、好评与差评总互动排序，用于识别高关注主题。</p></div><button class="btn secondary" id="refreshBriefFeedback">刷新互动</button></div>
+<div class="feedback-list" id="briefFeedbackList"><div class="empty">连接后台后加载简报评分。</div></div>
+<div class="consultation-head"><div><h2>咨询与留言记录</h2><p>企业咨询和简报留言统一收纳；最新提交优先，可标记为“已联系”或“已关闭”。</p></div><button class="btn secondary" id="refreshConsultations">刷新记录</button></div>
 <div class="consultation-list" id="consultationList"><div class="empty">连接后台后加载咨询记录。</div></div>
 <div class="note">邮箱通知用于及时提醒，后台咨询记录是完整追踪依据。OpenAI官方余额与美元消耗仍以Platform的Billing / Usage为准。</div>
 </section>
 </main>
-<script src="/qily-admin.js?v=20260724-consultation-v1"></script>
+<script src="/qily-admin.js?v=20260729-brief-engagement-v2"></script>
 </body>
 </html>
