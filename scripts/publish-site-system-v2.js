@@ -96,6 +96,13 @@ function publicHeadAssets() {
 
 function installHeadAssets(page) {
   if (!/site-navigation\.js\?v=/i.test(page) || !/<\/head>/i.test(page)) return page;
+  const alreadyCurrent = page.includes('data-qily-shell-bootstrap')
+    && page.includes('/site-shell.css?v=' + SHELL_VERSION)
+    && page.includes('/site-visual-scale-v1.css?v=' + VISUAL_VERSION)
+    && page.includes('/site-wide-layout-v1.css?v=' + WIDE_VERSION)
+    && page.includes('/site-typography-v1.css?v=' + TYPE_VERSION)
+    && page.includes('<script defer src="/site-navigation.js?v=' + NAV_VERSION + '"></script>');
+  if (alreadyCurrent) return page;
   let next = page
     .replace(/\s*<script\b[^>]*data-qily-shell-bootstrap[^>]*>[\s\S]*?<\/script>\s*/gi, '\n')
     .replace(/\s*<script\b[^>]*src=["'][^"']*\/site-navigation\.js\?v=[^"']+["'][^>]*>\s*<\/script>\s*/gi, '\n')
