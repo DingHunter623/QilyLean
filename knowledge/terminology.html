@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>全站术语词典｜中文诠释与应用场景｜QilyLean</title>
-<meta name="description" content="QilyLean全站制造管理与工程专业术语词典：177项英文、字母代码及标准编号的中文诠释与实际应用场景。">
+<meta name="description" content="QilyLean全站制造管理与工程专业术语词典：177项中文诠释、实际应用场景及一对一单点培训课件，支持在线学习、独立分享与A4打印。">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://qilylean.com/knowledge/terminology.html">
 <style>
@@ -32,6 +32,87 @@
 
 /* terminology-search-v4 */
 .term-card{display:flex;min-height:0;flex-direction:column;gap:0}.term-code::before,.term-en::before,.term-card h3::before{display:block;margin-bottom:5px;color:var(--qily-teal,#178b94);font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.term-code::before{content:"术语代码"}.term-en::before{content:"英文全称"}.term-card h3::before{content:"中文名称"}.term-formula{margin-top:10px!important;padding:11px 13px;border-left:4px solid #caa15f;background:#fff8e8;color:#344845!important}.term-card>p:last-child{margin-top:10px;padding-top:12px;border-top:1px dashed var(--qily-line,#d5e4e3)}.term-card>p strong{display:inline-block;margin-right:2px}.term-search-results{display:none;margin-top:18px}.term-search-results.show{display:block}.term-search-results .module-heading{margin:0 0 14px}.term-search-results .module-heading p{margin-bottom:0}.term-search-hit{position:relative;cursor:pointer;transition:transform .16s ease,border-color .16s ease,box-shadow .16s ease}.term-search-hit:hover,.term-search-hit:focus-visible{transform:translateY(-2px);border-color:var(--qily-teal,#178b94);box-shadow:0 12px 30px rgba(15,75,90,.14);outline:none}.term-jump-hint{margin-top:auto;padding-top:12px;color:var(--qily-teal,#178b94);font-size:13px;font-weight:900}.term-focus{animation:term-focus 1.8s ease}@keyframes term-focus{0%,100%{box-shadow:0 8px 24px rgba(15,75,90,.06)}25%,70%{box-shadow:0 0 0 4px rgba(23,139,148,.2),0 14px 34px rgba(15,75,90,.16);border-color:var(--qily-teal,#178b94)}}@media(max-width:760px){.term-card{padding:18px}.term-code{font-size:24px}.term-card h3{font-size:20px}.term-card p{font-size:15.5px;line-height:1.68}}
+/* terminology-opl-v1 */
+.term-opl-actions{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:16px}
+.term-opl-open{display:inline-flex;min-height:42px;align-items:center;justify-content:center;gap:7px;padding:9px 15px;border:1px solid var(--qily-teal,#178b94);border-radius:10px;color:#fff;background:var(--qily-teal,#178b94);font:inherit;font-size:14px;font-weight:900;line-height:1.2;cursor:pointer;box-shadow:0 7px 16px rgba(23,139,148,.16);transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
+.term-opl-open::before{content:"OPL";display:inline-flex;min-width:31px;height:21px;align-items:center;justify-content:center;border-radius:5px;color:var(--qily-forest,#0f4b5a);background:#fff;font-size:10px;font-weight:950;letter-spacing:.05em}
+.term-opl-open:hover,.term-opl-open:focus-visible{transform:translateY(-1px);background:var(--qily-forest,#0f4b5a);box-shadow:0 10px 22px rgba(15,75,90,.2);outline:none}
+.term-opl-note{color:var(--qily-muted,#5f7474);font-size:12px;font-weight:800}
+.term-search-hit .term-opl-actions{position:relative;z-index:2}
+.term-search-hit .term-jump-hint{margin-top:10px}
+.term-opl-modal[hidden]{display:none!important}
+.term-opl-modal{position:fixed;inset:0;z-index:10020;display:grid;place-items:center;padding:20px}
+.term-opl-backdrop{position:absolute;inset:0;background:rgba(7,31,36,.74);backdrop-filter:blur(5px)}
+.term-opl-dialog{position:relative;display:flex;width:min(1120px,100%);max-height:calc(100vh - 40px);flex-direction:column;overflow:hidden;border:1px solid rgba(255,255,255,.48);border-radius:20px;background:#f4f8f7;box-shadow:0 28px 90px rgba(0,0,0,.34)}
+.term-opl-header{position:relative;flex:0 0 auto;padding:24px 68px 21px 28px;color:#fff;background:linear-gradient(135deg,var(--qily-forest,#0f4b5a),var(--qily-teal,#178b94))}
+.term-opl-kicker{margin:0 0 7px;font-size:12px;font-weight:950;letter-spacing:.13em;text-transform:uppercase;opacity:.86}
+.term-opl-title{margin:0;font-size:clamp(24px,3vw,36px);line-height:1.17}
+.term-opl-subtitle{margin:8px 0 0;color:rgba(255,255,255,.88);font-size:15px;line-height:1.55}
+.term-opl-close{position:absolute;top:18px;right:20px;width:42px;height:42px;border:1px solid rgba(255,255,255,.55);border-radius:50%;color:#fff;background:rgba(255,255,255,.12);font-size:28px;line-height:1;cursor:pointer}
+.term-opl-close:hover,.term-opl-close:focus-visible{background:#fff;color:var(--qily-forest,#0f4b5a);outline:none}
+.term-opl-toolbar{display:flex;flex:0 0 auto;flex-wrap:wrap;align-items:center;gap:9px;padding:12px 20px;border-bottom:1px solid var(--qily-line,#d5e4e3);background:#fff}
+.term-opl-toolbar button{min-height:38px;padding:8px 13px;border:1px solid var(--qily-line,#d5e4e3);border-radius:9px;color:var(--qily-forest,#0f4b5a);background:#fff;font:inherit;font-size:13px;font-weight:900;cursor:pointer}
+.term-opl-toolbar button:hover,.term-opl-toolbar button:focus-visible{border-color:var(--qily-teal,#178b94);background:#eaf7f6;outline:none}
+.term-opl-toolbar button:disabled{cursor:not-allowed;opacity:.38}
+.term-opl-page{margin-left:auto;color:var(--qily-muted,#5f7474);font-size:13px;font-weight:900}
+.term-opl-content{overflow:auto;padding:24px 26px 32px;overscroll-behavior:contain}
+.term-opl-meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:17px}
+.term-opl-meta-item{padding:13px 14px;border:1px solid var(--qily-line,#d5e4e3);border-radius:12px;background:#fff}
+.term-opl-meta-label{display:block;margin-bottom:5px;color:var(--qily-teal,#178b94);font-size:11px;font-weight:950;letter-spacing:.08em}
+.term-opl-meta-value{display:block;color:var(--qily-ink,#182420);font-size:14px;font-weight:850;line-height:1.45;overflow-wrap:anywhere}
+.term-opl-objective{margin-bottom:17px;padding:18px 20px;border-left:5px solid #caa15f;border-radius:0 12px 12px 0;background:#fff8e8;color:#30423e;line-height:1.75}
+.term-opl-objective strong{color:#765416}
+.term-opl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.term-opl-block{padding:18px 20px;border:1px solid var(--qily-line,#d5e4e3);border-radius:14px;background:#fff;box-shadow:0 7px 20px rgba(15,75,90,.05)}
+.term-opl-block.term-opl-wide{grid-column:1/-1}
+.term-opl-block h3{display:flex;align-items:center;gap:9px;margin:0 0 11px;color:var(--qily-forest,#0f4b5a);font-size:18px;line-height:1.35}
+.term-opl-num{display:inline-flex;width:26px;height:26px;flex:0 0 26px;align-items:center;justify-content:center;border-radius:50%;color:#fff;background:var(--qily-teal,#178b94);font-size:12px;font-weight:950}
+.term-opl-block p{margin:0;color:#465b58;font-size:15px;line-height:1.78}
+.term-opl-block ul,.term-opl-block ol{margin:0;padding-left:1.35em;color:#465b58}
+.term-opl-block li{margin:6px 0;font-size:15px;line-height:1.7}
+.term-opl-formula{padding:15px 16px;border-radius:10px;color:#263b37!important;background:#edf7f6;font-weight:800}
+.term-opl-case{border-left:4px solid var(--qily-teal,#178b94);padding-left:14px}
+.term-opl-check{display:grid;gap:9px}
+.term-opl-question{padding:11px 13px;border-radius:9px;background:#f4f8f7}
+.term-opl-answer{margin-top:11px;padding-top:11px;border-top:1px dashed var(--qily-line,#d5e4e3)}
+.term-opl-answer summary{color:var(--qily-teal,#178b94);font-size:14px;font-weight:900;cursor:pointer}
+.term-opl-answer p{margin-top:9px;font-size:14px}
+.term-opl-footer{display:flex;justify-content:space-between;gap:16px;margin-top:18px;padding:14px 4px 0;border-top:1px solid var(--qily-line,#d5e4e3);color:var(--qily-muted,#5f7474);font-size:12px;line-height:1.55}
+body.term-opl-locked{overflow:hidden}
+.term-opl-toast{position:fixed;left:50%;bottom:32px;z-index:10040;transform:translate(-50%,18px);padding:11px 17px;border-radius:999px;color:#fff;background:#143f46;font-size:14px;font-weight:850;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+.term-opl-toast.show{transform:translate(-50%,0);opacity:1}
+@media(max-width:780px){
+  .term-opl-modal{padding:0}
+  .term-opl-dialog{width:100%;max-height:100vh;height:100%;border:0;border-radius:0}
+  .term-opl-header{padding:20px 60px 18px 18px}
+  .term-opl-close{top:13px;right:13px}
+  .term-opl-toolbar{padding:10px 12px}
+  .term-opl-page{width:100%;margin-left:0}
+  .term-opl-content{padding:17px 14px 26px}
+  .term-opl-meta{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .term-opl-grid{grid-template-columns:1fr}
+  .term-opl-block.term-opl-wide{grid-column:auto}
+  .term-opl-footer{display:block}
+  .term-opl-footer span{display:block;margin-top:5px}
+}
+@media print{
+  @page{size:A4;margin:11mm}
+  body.term-opl-locked>*:not(.term-opl-modal){display:none!important}
+  body.term-opl-locked{overflow:visible!important;background:#fff!important}
+  .term-opl-modal{position:static!important;display:block!important;padding:0!important}
+  .term-opl-backdrop,.term-opl-close,.term-opl-toolbar,.term-opl-toast{display:none!important}
+  .term-opl-dialog{display:block!important;width:auto!important;max-height:none!important;overflow:visible!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important}
+  .term-opl-header{padding:10mm 9mm!important;border-radius:0!important;background:#0f4b5a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .term-opl-title{font-size:24pt!important}
+  .term-opl-content{overflow:visible!important;padding:7mm 1mm 0!important}
+  .term-opl-meta{grid-template-columns:repeat(4,1fr)!important;break-inside:avoid}
+  .term-opl-objective,.term-opl-block,.term-opl-meta-item{break-inside:avoid;box-shadow:none!important}
+  .term-opl-grid{display:block!important}
+  .term-opl-block{margin-bottom:4mm}
+  .term-opl-answer details[open] .term-opl-answer{display:block}
+  .term-opl-footer{break-inside:avoid}
+}
+
 </style>
   <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>
   <link rel="stylesheet" href="/site-shell.css?v=20260729-no-old-flash-v1">
@@ -49,14 +130,14 @@
 <section class="module-hero"><div class="module-inner">
 <span class="module-eyebrow">Terminology / Lean / Engineering / Quality / Production / Digital Factory</span>
 <h1>全站术语中文诠释与应用场景</h1>
-<p class="module-lead">集中解释制造管理、精益改善、工程开发、质量体系、生产计划、数智化系统与电子制造专业术语。每项保留术语代码、英文全称、中文名称和具体应用场景；仅对关键指标补充计算公式或判定口径，便于快速查阅与培训引用。</p>
+<p class="module-lead">集中解释制造管理、精益改善、工程开发、质量体系、生产计划、数智化系统与电子制造专业术语。每项保留术语代码、英文全称、中文名称和具体应用场景，并一对一匹配可展开、可打印、可分享的单点培训课件；关键指标同步提供计算公式、数据口径、现场案例与掌握检查。</p>
 <nav class="module-subnav" aria-label="术语分类"><a href="#brand">品牌与改善</a><a href="#roles">工程职能</a><a href="#flow">精益流程</a><a href="#engineering">工程开发</a><a href="#quality">质量体系</a><a href="#production">生产运营</a><a href="#digital">数智化系统</a><a href="#manufacturing">制造与安全</a></nav>
 </div></section>
 <section class="module-section alt"><div class="module-inner">
 <div class="term-toolbar">
 <label for="termSearch"><strong>快速查找术语</strong></label>
 <input class="term-search" id="termSearch" type="search" placeholder="输入术语代码、英文全称或中文名称，例如：UPH、UPPH、标准工时" autocomplete="off">
-<div class="term-count" id="termCount">共收录 177 项术语</div>
+<div class="term-count" id="termCount">共收录 177 项术语 · 177 份单点培训课件</div>
 </div>
 <div class="term-empty" id="termEmpty">未找到名称相符的术语，请检查代码或尝试更短的中文名称。</div>
 </div></section>
@@ -1168,7 +1249,7 @@
   </div>
 </section>
 </main>
-<footer class="module-footer"><div class="module-inner"><span>丁启利｜QilyLean全站术语词典</span><span>中文诠释 · 应用场景 · 使用边界</span></div></footer>
+<footer class="module-footer"><div class="module-inner"><span>丁启利｜QilyLean全站术语词典</span><span>中文诠释 · 应用场景 · 177份单点培训课件</span></div></footer>
 <script>
 (function(){
 var input=document.getElementById('termSearch'),cards=Array.prototype.slice.call(document.querySelectorAll('[data-term-card]')),count=document.getElementById('termCount'),empty=document.getElementById('termEmpty'),sections=[];
@@ -1178,12 +1259,420 @@ function norm(v){return String(v||'').normalize('NFKC').trim().toLocaleLowerCase
 function fields(card){return{code:norm((card.querySelector('.term-code')||{}).textContent),en:norm((card.querySelector('.term-en')||{}).textContent),zh:norm((card.querySelector('h3')||{}).textContent),aliases:norm(card.getAttribute('data-keywords')||'')};}
 function score(card,q){var f=fields(card),qc=compact(q),cc=compact(f.code),tokens=f.code.split(/[^a-z0-9\u4e00-\u9fff]+/).filter(Boolean);if(f.code===q||cc===qc)return 1200;if(tokens.indexOf(q)>=0)return 1150;if(f.zh===q||f.en===q)return 1100;if(f.code.indexOf(q)===0||cc.indexOf(qc)===0)return 1000;if(f.zh.indexOf(q)===0)return 900;if(f.en.split(/\s+/).some(function(w){return w.indexOf(q)===0;}))return 850;if(f.code.indexOf(q)>=0||cc.indexOf(qc)>=0)return 800;if(f.zh.indexOf(q)>=0)return 700;if(f.en.indexOf(q)>=0)return 600;if(f.aliases&&f.aliases.indexOf(q)>=0)return 500;return-1;}
 function categories(show){sections.forEach(function(section){section.hidden=!show;});}
-function locate(card){var code=(card.querySelector('.term-code')||{}).textContent||'';input.value='';render();try{history.replaceState(null,'',location.pathname+'?term='+encodeURIComponent(code)+'#'+card.id);}catch(error){}requestAnimationFrame(function(){card.scrollIntoView({behavior:'smooth',block:'center'});card.classList.remove('term-focus');void card.offsetWidth;card.classList.add('term-focus');setTimeout(function(){card.classList.remove('term-focus');},1900);});}
+function locate(card){var code=(card.querySelector('.term-code')||{}).textContent||'';input.value='';render();try{history.replaceState(null,'',location.pathname+'?term='+encodeURIComponent(code)+(new URLSearchParams(location.search).get('opl')==='1'?'&opl=1':'')+'#'+card.id);}catch(error){}requestAnimationFrame(function(){card.scrollIntoView({behavior:'smooth',block:'center'});card.classList.remove('term-focus');void card.offsetWidth;card.classList.add('term-focus');setTimeout(function(){card.classList.remove('term-focus');},1900);});}
 function clone(original){var hit=original.cloneNode(true);hit.removeAttribute('id');hit.classList.add('term-search-hit');hit.setAttribute('role','link');hit.setAttribute('tabindex','0');var hint=document.createElement('div');hint.className='term-jump-hint';hint.textContent='点击进入该词条的原分类位置';hit.appendChild(hint);hit.addEventListener('click',function(){locate(original);});hit.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();locate(original);}});return hit;}
-function render(){var q=norm(input.value);grid.innerHTML='';if(!q){categories(true);results.classList.remove('show');empty.style.display='none';count.textContent='共收录 '+cards.length+' 项术语';return;}var matches=cards.map(function(card,index){return{card:card,index:index,score:score(card,q)};}).filter(function(x){return x.score>=0;}).sort(function(a,b){return b.score-a.score||a.index-b.index;});categories(false);results.classList.toggle('show',matches.length>0);empty.style.display=matches.length?'none':'block';matches.forEach(function(x){grid.appendChild(clone(x.card));});count.textContent=matches.length?'找到 '+matches.length+' 项相关术语（已按相关度排序）':'未找到相关术语';}
+function render(){var q=norm(input.value);grid.innerHTML='';if(!q){categories(true);results.classList.remove('show');empty.style.display='none';count.textContent='共收录 '+cards.length+' 项术语 · '+cards.length+' 份单点培训课件';return;}var matches=cards.map(function(card,index){return{card:card,index:index,score:score(card,q)};}).filter(function(x){return x.score>=0;}).sort(function(a,b){return b.score-a.score||a.index-b.index;});categories(false);results.classList.toggle('show',matches.length>0);empty.style.display=matches.length?'none':'block';matches.forEach(function(x){grid.appendChild(clone(x.card));});count.textContent=matches.length?'找到 '+matches.length+' 项相关术语（已按相关度排序）':'未找到相关术语';}
 input.addEventListener('input',render,{passive:true});input.addEventListener('search',render,{passive:true});
 var requested=new URLSearchParams(location.search).get('term')||'';if(requested){var target=cards.find(function(card){var f=fields(card);return f.code===norm(requested)||f.zh===norm(requested);});if(target)locate(target);}
 })();
+</script>
+<script>
+(function(){
+'use strict';
+var cards=Array.prototype.slice.call(document.querySelectorAll('[data-term-card]'));
+if(!cards.length||document.getElementById('termOplModal'))return;
+
+var profiles={
+  brand:{
+    label:'管理理念与改善机制',
+    goal:'理解该理念在制造经营中的定位，能够把抽象概念转化为现场行为、管理规则或改善项目。',
+    problem:'解决管理语言不统一、改善只停留在口号、项目目标与经营结果脱节的问题。',
+    boundary:'应结合企业规模、产品特性与当前成熟度使用；不能把一种理念机械复制成全公司的唯一答案。',
+    steps:['明确要改善的经营或现场问题','统一术语口径与适用范围','选择一个可控区域试点验证','用事实数据复盘效果与副作用','固化有效做法并形成推广条件'],
+    caseText:'某汽车电子工厂把{term}用于装配线改善：先限定试点范围和问题，再用现场数据验证，最后写入日常管理与复盘机制，避免只做宣传展示。',
+    mistakes:['只讲概念，不指定问题、责任人和验证数据','把工具上线或资料完成误当成改善结果','未经试点便全厂铺开，导致形式化执行'],
+    owners:'经营负责人／改善负责人牵头，相关部门经理与现场主管共同执行。',
+    records:'项目任务书、现状数据、试点记录、效果验证、标准化文件与复盘纪要。'
+  },
+  roles:{
+    label:'职能职责与协同接口',
+    goal:'说清该职能的职责边界、输入输出及跨部门接口，减少职责空白和重复管理。',
+    problem:'解决部门之间“都在管、又没人负责”，以及问题反复转交、开发与量产脱节的问题。',
+    boundary:'岗位名称可因企业组织不同而变化，应以流程责任和交付物为准，不能仅凭部门名称判断职责。',
+    steps:['识别该职能的上游输入与客户要求','明确必须负责、协同和知会的事项','定义阶段交付物与放行条件','建立异常升级和变更接口','按项目节点复核责任闭环'],
+    caseText:'某座椅开关新产品在PVT前由{term}按职责清单核对输入、量产条件和遗留问题，并与研发、质量、PMC及制造完成签核，防止问题带入MP。',
+    mistakes:['以岗位名称代替职责定义','只参加会议，不对交付物和节点负责','职责边界过窄，出现跨部门问题便直接退回'],
+    owners:'部门负责人定义职责，项目经理维护接口，岗位承担者对本职输出负责。',
+    records:'岗位职责、RACI矩阵、阶段清单、评审纪要、问题清单及签核记录。'
+  },
+  flow:{
+    label:'流程效率与交付改善',
+    goal:'掌握该指标或工具的数据口径、现场用法和改善闭环，能够识别等待、库存、波动与瓶颈。',
+    problem:'解决只看产出不看过程、指标口径不一致，以及局部效率提升却没有缩短整体交付周期的问题。',
+    boundary:'必须先明确产品、工序、班次和统计周期；跨产品或跨线比较时应同步说明工艺、人力与标准工时差异。',
+    steps:['选定产品族、流程边界和统计周期','到现场确认数据来源与当前状态','按统一口径计算或绘制现状','识别瓶颈、等待、库存和异常波动','实施小范围改善并用同口径复测','把有效对策纳入标准作业和日常管理'],
+    caseText:'某装配线以{term}识别交付损失：现场采集节拍、在制和停机事实，锁定主要约束后实施改善，并用改善前后同口径数据确认结果。',
+    mistakes:['混用计划时间、出勤时间和实际生产时间','只报平均值，掩盖波动、换型和异常停机','只优化单工序速度，导致后工序堆积或质量风险'],
+    owners:'IE／生产负责现场数据与改善，PMC确认需求边界，质量和设备共同验证。',
+    records:'原始测时、产出记录、停机与异常记录、现状／未来态图、改善验证及标准作业。'
+  },
+  engineering:{
+    label:'工程开发与量产验证',
+    goal:'掌握该工程活动在EVT、DVT、PVT至MP链条中的输入、验证证据和放行条件。',
+    problem:'解决设计输出不完整、变更不同步、验证证据不足以及样品可做但量产不可复制的问题。',
+    boundary:'任何放行都应基于已批准的版本和客观证据；临时偏差、口头承诺或单次成功不能替代量产验证。',
+    steps:['确认客户需求、版本和适用阶段','列出输入、风险与验证项目','按批准方案执行试制或验证','记录偏差、失效和未决事项','完成关闭验证与跨部门评审','受控发布并同步BOM、工艺、程序和培训'],
+    caseText:'某汽车座椅开关项目在{term}节点发现工艺参数与图纸版本不一致，团队冻结放行、完成影响评估和再验证，证据齐套后才进入下一阶段。',
+    mistakes:['把样件功能合格等同于量产条件成熟','工程变更只改图纸，未同步BOM、工艺和库存','评审只看结论，不核验原始数据与未决风险'],
+    owners:'研发／工程对技术输出负责，NPI或PM组织阶段评审，质量与制造共同确认量产条件。',
+    records:'需求规格、验证计划与报告、BOM／工艺路线、变更记录、问题清单和阶段放行表。'
+  },
+  quality:{
+    label:'质量策划与问题解决',
+    goal:'掌握该质量工具或标准的适用时机、证据要求和判定边界，形成预防与闭环能力。',
+    problem:'解决检验代替预防、问题重复发生、判定凭经验以及质量记录无法追溯的问题。',
+    boundary:'应执行客户要求、适用标准和受控版本；统计结论必须满足样本、测量系统和过程稳定性前提。',
+    steps:['确认客户要求、标准版本和质量特性','识别风险、缺陷模式或数据需求','选择适用工具、样本和判定规则','执行分析并保留原始证据','制定措施并验证有效性','更新控制文件并持续监控'],
+    caseText:'某PCBA过程应用{term}处理焊接异常：先确认缺陷定义和样本边界，再分析证据、验证根因与对策，并同步控制计划和作业文件。',
+    mistakes:['先写结论再补数据，根因与证据脱节','忽略测量系统和过程稳定性便直接计算指标','只做围堵，不验证根因和长期措施有效性'],
+    owners:'质量工程师主导方法与证据，责任部门落实措施，工程与生产共同验证。',
+    records:'检验／测量原始数据、分析表、问题报告、措施验证、控制计划和标准更新记录。'
+  },
+  production:{
+    label:'计划、物料与生产运营',
+    goal:'理解该计划或物料概念的输入逻辑、运算边界和执行反馈，支撑齐套、排产与准时交付。',
+    problem:'解决销售需求、物料、能力和现场执行脱节，避免计划频繁变动、欠料停线与交付失真。',
+    boundary:'计划结果取决于订单、BOM、库存、提前期、产能和损耗等基础数据；数据未核实前不能把系统结果直接当作执行指令。',
+    steps:['确认订单需求、交期和优先级','核对BOM、库存、在途与损耗','校验人机料法环及产能约束','形成可执行计划并冻结适当窗口','采集实绩、欠产和异常原因','滚动调整后续计划并闭环交付'],
+    caseText:'某周交付计划使用{term}联动订单、物料和工位能力；当日超产或欠产实时回写，后续计划按未完成量滚动调整，避免“表上完成、现场欠产”。',
+    mistakes:['只按订单数量排产，不校验物料与工位能力','用月度平均产能掩盖日别瓶颈和换型损失','实绩未回写，仍按原计划判断完成状态'],
+    owners:'PMC牵头，销售确认需求，采购与仓储保障齐套，生产和IE反馈能力与实绩。',
+    records:'订单需求、物料齐套表、能力负荷、日排产、生产实绩、欠产原因和交付关闭记录。'
+  },
+  digital:{
+    label:'数智化系统与数据闭环',
+    goal:'理解该系统或技术在业务架构中的层级、数据来源和接口边界，避免“系统上线但业务未闭环”。',
+    problem:'解决多套表格口径冲突、数据重复录入、计划与现场断层以及异常不能及时追溯的问题。',
+    boundary:'系统不能替代稳定流程和准确主数据；实施前应明确业务责任、编码规则、接口、权限和异常补偿机制。',
+    steps:['定义业务问题与目标流程','梳理主数据、交易数据和责任人','明确系统边界及上下游接口','先用样板业务验证数据闭环','验证异常、权限和追溯场景','分阶段推广并监控数据质量'],
+    caseText:'某工厂导入{term}时先打通订单、编码、BOM、工艺、排产与实绩链路，选一条产品线验证后再扩展，避免只上线界面而数据无法支撑决策。',
+    mistakes:['先买系统，后补流程和主数据','同一指标在ERP、MES和Excel中口径不同','只验证正常流程，遗漏返工、拆单、欠料和补录异常'],
+    owners:'业务负责人对流程与数据负责，IT／自动化负责技术实现，关键用户参与测试与验收。',
+    records:'业务蓝图、数据字典、接口清单、权限矩阵、测试案例、问题清单和上线验收记录。'
+  },
+  manufacturing:{
+    label:'制造工艺、文件与安全',
+    goal:'掌握该工艺、文件或安全要求的控制要点、异常判定和追溯证据，稳定现场执行。',
+    problem:'解决作业依赖个人经验、工艺参数漂移、检验遗漏以及安全和静电风险失控的问题。',
+    boundary:'必须按产品等级、受控文件、设备能力和安全规范执行；未经批准不得擅自修改参数、程序或判定标准。',
+    steps:['确认受控版本、产品等级和设备状态','核对材料、工装、程序与环境条件','按标准顺序和参数执行作业','监控关键参数与检验结果','隔离异常并按权限处置','完成追溯记录和班次交接'],
+    caseText:'某电子制造现场针对{term}建立参数、点检和异常隔离要求，操作员按受控文件执行，班组长抽查，工程与质量用记录追溯波动来源。',
+    mistakes:['文件已更新但现场仍使用旧版本','只记录合格结论，不保留参数和原始结果','异常品未隔离便继续流转或混入下一工序'],
+    owners:'制造执行，工程维护工艺，质量负责判定与审核，设备／EHS负责设备和安全条件。',
+    records:'SOP／作业指导书、参数记录、设备点检、检验结果、异常隔离单和追溯批次。'
+  }
+};
+
+var special={
+  'OEE':{
+    focus:'以可动率、性能效率和质量率分解设备时间损失，找到真实改善优先级。',
+    formula:'OEE＝可动率 × 性能效率 × 质量率。三项必须使用同一计划生产时间边界，并保留停机、速度损失与不良原始数据。',
+    method:['定义设备、产品、班次和计划生产时间','分类记录计划停机与故障、换型等非计划停机','按理想周期核算性能效率','按合格产出核算质量率','绘制损失柏拉图并优先处理最大损失','同口径复测并标准化'],
+    caseText:'某自动化线可动率90%、性能效率92%、质量率98%，OEE约为81.1%。团队不能只说“设备利用率高”，而应继续从停机、降速和不良三类损失中确定改善重点。',
+    questions:['OEE三项因子分别反映哪类损失？','计划停机是否计入可动率分母，必须先确认什么？']
+  },
+  'UPPH':{
+    focus:'按合格产出和直接人工投入评价人效，同时防止跨产品、跨工艺误比。',
+    formula:'UPPH＝合格产出 ÷（直接人力 × 实际生产小时）。休息、停线、支援人力和返工工时是否计入，必须在统计口径中明确。',
+    method:['锁定产品、产线、班次和统计时段','确认合格产出，不把返工后重复产出累计两次','统计该时段直接投入人数及实际生产小时','计算人均小时产出并与标准工时交叉校验','分析线平衡、等待和异常造成的人力损失','改善后用相同产品与口径复测'],
+    caseText:'某线8名直接人员生产7.5小时，合格产出480件，UPPH＝480÷（8×7.5）＝8件/人·小时。若另有2小时支援工时，应按约定口径折算计入，不能隐藏投入。',
+    questions:['UPH与UPPH的分母有什么根本差别？','返工后合格产品是否可重复计入产出？']
+  },
+  'UPH':{
+    focus:'衡量产线、设备或工序每小时合格产出，不直接反映投入人数。',
+    formula:'UPH＝合格产出 ÷ 实际生产小时。必须注明统计对象是设备、工序、产线还是班组。',
+    caseText:'某产线7.5小时合格产出600件，UPH＝80件/小时。即使投入人数变化，UPH公式不变；评价人效应另看UPPH。',
+    questions:['UPH是否能单独判断人效改善？为什么？','统计停线时间时需要保持什么口径？']
+  },
+  'TT':{
+    focus:'把客户需求转换为生产节奏，是线平衡、人员配置和产能判断的需求基准。',
+    formula:'客户需求节拍＝可用生产时间 ÷ 客户需求量。时间与需求必须处于同一周期，且先扣除约定的非生产时间。',
+    caseText:'某班可用生产时间420分钟，客户需求840件，TT＝30秒/件。若工序CT持续大于30秒，必须改善、并行或增加资源。',
+    questions:['TT由客户需求还是当前产能决定？','CT大于TT时现场意味着什么？']
+  },
+  'CT':{
+    focus:'测量某工序完成相邻两个合格单位的循环间隔，用于判断是否满足客户节拍。',
+    formula:'连续稳定生产时，CT可按观察总时间÷完成数量计算；应分离异常停机并同时保留异常占比，不能只报平均值。',
+    caseText:'某工位连续完成20件用时600秒，观察CT为30秒/件；若客户TT为27秒/件，该工位存在3秒/件的能力缺口。',
+    questions:['CT与标准工时是否必然相等？','为什么既要记录正常循环，也要记录异常停机？']
+  },
+  'LT':{
+    focus:'从需求触发到交付完成观察全过程时间，暴露等待、库存和流动造成的交付损失。',
+    formula:'LT＝结束时间－开始时间，按所定义流程边界累计加工、等待、库存、搬运和排队时间。',
+    caseText:'某产品实际加工只有20分钟，但从领料到入库经历2.5天，LT应按2.5天计算；20分钟只是其中的加工时间。',
+    questions:['LT是否只包含加工时间？','不同部门分别优化局部工时，为什么总LT可能不变？']
+  },
+  'PCE':{
+    focus:'用增值时间占总交付周期的比例识别流程中等待与库存的压缩空间。',
+    formula:'PCE＝增值时间 ÷ 总交付周期 ×100%。总周期必须包含加工、等待、库存和流动。',
+    caseText:'某流程增值时间30分钟，总LT为600分钟，PCE＝5%。改善重点通常不是再压缩几秒动作，而是减少排队、在制和等待。',
+    questions:['检验时间是否一定属于增值时间？应按什么原则判断？','PCE很低时应优先调查哪类时间？']
+  },
+  'FPY':{
+    focus:'识别过程第一次就做对的能力，避免返工后合格掩盖过程损失。',
+    formula:'FPY＝一次合格数量 ÷ 投入数量 ×100%。返工、返修后合格不能回填为一次合格。',
+    caseText:'投入1000件，首次通过960件，返工后又合格35件；FPY仍为96%，最终合格率可为99.5%，两者不能混用。',
+    questions:['返工后合格为什么不能计入FPY分子？','FPY与最终合格率各回答什么问题？']
+  },
+  'ROI':{
+    focus:'判断改善或投资项目的经济回报，防止只统计收益、不统计持续成本。',
+    formula:'ROI＝期间净收益 ÷ 项目总投入 ×100%。净收益应扣除维护、能耗、耗材、培训和持续运行成本。',
+    caseText:'项目投入20万元，年度可验证净收益8万元，年度ROI为40%；仍需结合回收期、风险和现金流判断是否实施。',
+    questions:['设备节省的理论人力能否直接全部计为现金收益？','ROI评估为什么要纳入持续运行成本？']
+  },
+  'RPN':{
+    focus:'在传统FMEA中用严重度、发生度和探测度乘积辅助排序风险，但不替代对高严重度的单独关注。',
+    formula:'RPN＝S（严重度）×O（发生度）×D（探测度）。按企业采用的FMEA手册和评分表执行。',
+    caseText:'某失效S=9、O=3、D=4，RPN=108。即使总分并非最高，高严重度仍需优先评审，不能只按RPN由大到小机械排序。',
+    questions:['RPN相同的两个风险是否必然具有相同优先级？','高严重度项目为何不能因发生度低而忽略？']
+  },
+  'Cp/Cpk':{
+    focus:'评价稳定过程相对规格的潜在能力与实际居中程度。',
+    formula:'Cp＝(USL－LSL)÷6σ；Cpk＝min[(USL－μ)÷3σ，(μ－LSL)÷3σ]。使用前须确认测量系统可接受且过程统计稳定。',
+    caseText:'某尺寸Cp较高但Cpk明显偏低，说明过程离散可能不大但均值偏离规格中心；应先调整中心，而不是只看Cp合格。',
+    questions:['为什么Cpk通常不大于Cp？','过程不稳定时直接报告Cpk有什么风险？']
+  },
+  'Pp/Ppk':{
+    focus:'用总体波动评价一段期间的实际过程绩效，并与Cp/Cpk的组内短期波动口径区分。',
+    formula:'Pp与Ppk使用总体标准差；Pp＝(USL－LSL)÷6s，Ppk取上下单侧绩效指数较小值。',
+    caseText:'同一过程Cpk高而Ppk低，可能说明长期存在批次、班次或漂移波动，应查找分层差异，不能只用短期样本证明长期能力。',
+    questions:['Ppk与Cpk的标准差口径有什么区别？','长期波动被掩盖时应怎样分层分析？']
+  },
+  'GR&R':{
+    focus:'确认量具和人员造成的测量变差是否足以支持产品与过程判定。',
+    formula:'按适用MSA方法评价重复性、再现性及总量具变差占比，同时检查分辨力、偏倚、线性与稳定性要求。',
+    caseText:'三名检验员对10个样件重复测量，若人员间差异明显，应先统一测量方法和夹持基准，再讨论过程能力。',
+    questions:['量具校准合格是否等于GR&R一定合格？','测量系统不可靠时计算Cpk会发生什么？']
+  },
+  'PPM/DPPM':{
+    focus:'把不良数量标准化为百万分比，便于跨批量比较，但须区分不良品与缺陷数口径。',
+    formula:'不良品PPM＝不良品数÷总检验数×1,000,000；缺陷DPPM须明确每单位机会数及客户口径。',
+    caseText:'检验20000件发现4件不良，不良品PPM＝200。若一件含多个缺陷，不得在未说明口径时把缺陷数直接当不良品数。',
+    questions:['一件产品有两个缺陷时，PPM分子按1还是2？取决于什么？','小样本PPM波动大时应如何解释？']
+  },
+  'Plan Attainment':{
+    focus:'评价计划数量是否按既定日期和范围完成，同时真实标识超产、欠产与结单。',
+    formula:'计划达成率＝实际合格完成量÷计划量×100%。应同步显示欠产量、超产量和是否满足订单交期，不能只看百分比。',
+    caseText:'当日计划100件、实际91件，达成率91%，状态应为欠产9件；若次日补齐，须滚动冲减后续尾单计划并保留原日欠产事实。',
+    questions:['当天欠产、次日补齐后，原日是否可改为100%？','超产为什么需要同步调整后续计划？']
+  },
+  'EOQ':{
+    focus:'在需求较稳定的假设下平衡订购成本与库存持有成本，给出经济批量参考。',
+    formula:'EOQ＝√(2DS÷H)，D为期间需求量，S为每次订购成本，H为单位期间持有成本。',
+    caseText:'若需求、交期或价格阶梯波动明显，应把EOQ作为参考并结合MOQ、保质期、资金和供应风险修正。',
+    questions:['EOQ模型最关键的稳定性假设有哪些？','MOQ大于EOQ时应进一步评估什么？']
+  },
+  'ROP':{
+    focus:'根据补货提前期需求和安全库存确定再次下单的库存触发点。',
+    formula:'ROP＝平均需求率×补货提前期＋安全库存。需求率和提前期必须使用一致时间单位。',
+    caseText:'日均需求100件、补货提前期5天、安全库存200件，则ROP为700件；库存位置降至该水平时触发补货。',
+    questions:['供应提前期延长会怎样影响ROP？','在途库存是否计入库存位置，应由什么规则决定？']
+  },
+  'PDCA':{
+    focus:'用计划、执行、检查、处置形成可验证的改善闭环。',
+    caseText:'针对换型时间长，P阶段定义基线与目标，D阶段试行内外作业分离，C阶段复测验证，A阶段固化标准并确定下一轮问题。',
+    questions:['没有改善前基线，C阶段会失去什么？','A阶段除了“结案”还必须做什么？']
+  },
+  'VSM':{
+    focus:'以产品族为对象同时绘制物流与信息流，用LT、VAT和WIP识别端到端改善机会。',
+    caseText:'某座椅开关价值流显示加工仅数十分钟、总交付却需数天，未来态优先压缩批量、等待和信息延迟，而非只削减单工位动作。',
+    questions:['VSM为什么必须选定产品族？','现状图的数据应来自会议估计还是现场事实？']
+  },
+  'SMED':{
+    focus:'把停机换型活动分为内作业与外作业，优先外移、并行和标准化。',
+    caseText:'某注塑换模由14小时降至6—7小时：先录像分解作业，再把准备工作外移、并行连接与点检，最后固化换模清单。',
+    questions:['SMED第一步为什么不是直接购买快换装置？','什么叫内作业转外作业？']
+  },
+  'FMEA':{
+    focus:'在问题发生前识别失效链、现行控制和改进优先级，并与设计、过程和控制计划联动。',
+    caseText:'某铆压工序识别“误触发导致伤害”失效，团队从严重度、发生原因和探测控制评估风险，增加防呆并验证后同步PFMEA与控制计划。',
+    questions:['FMEA是否应在量产问题发生后才启动？','措施完成后需要更新哪些评分与控制文件？']
+  },
+  '8D':{
+    focus:'针对复杂或客户问题，以团队方式完成围堵、根因、纠正、验证和防再发。',
+    caseText:'客户反馈间歇性功能不良后，团队先隔离风险批次，再用复现与试验验证根因；未验证前不能把经验判断写成D4根因。',
+    questions:['D3围堵措施能否直接替代D5永久措施？','根因和漏出原因为什么都要验证？']
+  },
+  '5Why':{
+    focus:'沿事实因果链连续追问，找到可控制的系统根因，而非把责任停在“人员疏忽”。',
+    caseText:'漏检不是简单归因为员工不认真，应继续追问作业标准、检具、防错、培训和审核机制为何未能预防或发现。',
+    questions:['是否必须机械地问满五次？','为什么“员工粗心”通常不是充分根因？']
+  },
+  'ERP':{
+    focus:'统一订单、计划、采购、库存、生产和财务等企业资源数据，是业务主干而非现场控制万能系统。',
+    caseText:'ERP排产前必须确保编码、BOM、库存、提前期和工单规则准确；若实绩不回写，系统库存与计划将持续失真。',
+    questions:['ERP上线为什么不能等同于管理流程已经改善？','主数据错误会沿哪些业务环节放大？']
+  },
+  'MES':{
+    focus:'连接计划与车间执行，采集工单、人员、设备、物料、质量和追溯数据。',
+    caseText:'MES接收ERP工单，在工位采集投料、过站、测试和异常，并把实绩回传；接口断开时须有补录与防重复机制。',
+    questions:['MES与ERP的核心边界是什么？','离线补录为什么必须考虑防重与时间戳？']
+  },
+  'APS':{
+    focus:'在物料、设备、人力、工艺和交期约束下生成有限能力排程，并支持异常重排。',
+    caseText:'APS不能只读取订单数量，还要读取工艺路线、换型矩阵、设备能力、班次和物料齐套；否则“最优排程”无法执行。',
+    questions:['无限产能计划与APS有限能力排程有何区别？','基础数据不准确时自动排程会带来什么风险？']
+  },
+  'ESD':{
+    focus:'通过人员、设备、材料、环境和接地的系统控制，防止静电损伤电子产品。',
+    caseText:'进入EPA区域前人员佩戴并点检防静电装备，台垫与接地按规定验证；“摸一下金属”不能替代受控的静电防护。',
+    questions:['ESD损伤为什么可能在出货后才暴露？','防静电手环佩戴了是否等于控制有效？还需验证什么？']
+  },
+  'IPC-A-610':{
+    focus:'按产品等级和客户要求判定电子组件的可接受性，统一焊接与装配外观标准。',
+    caseText:'同一焊点在不同产品等级下判定可能不同；检验前必须确认适用等级、客户特殊要求和受控版本。',
+    questions:['IPC-A-610的判定能否脱离产品等级？','客户特殊要求与通用标准冲突时应如何处理？']
+  }
+};
+
+function clean(value){return String(value||'').replace(/\s+/g,' ').trim();}
+function esc(value){return clean(value).replace(/[&<>"']/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
+function field(card,selector){var el=card.querySelector(selector);return clean(el?el.textContent:'');}
+function application(card){var p=Array.prototype.slice.call(card.querySelectorAll('p')).filter(function(node){return !node.classList.contains('term-formula');})[0];return clean(p?p.textContent:'').replace(/^应用场景[：:]\s*/,'');}
+function formula(card){var p=card.querySelector('.term-formula');return clean(p?p.textContent:'').replace(/^计算公式[／/]判定[：:]\s*/,'');}
+function category(card){var section=card.closest('.module-section[id]');return section&&profiles[section.id]?section.id:'brand';}
+function lesson(card,index){
+  var code=field(card,'.term-code'),en=field(card,'.term-en'),zh=field(card,'h3'),app=application(card),cat=category(card),profile=profiles[cat],extra=special[code]||{},shownFormula=extra.formula||formula(card);
+  var focus=extra.focus||('正确理解“'+zh+'”的定义、适用边界和现场证据，并能把它用于实际问题。');
+  var method=extra.method||profile.steps.map(function(step){return step.replace('{term}',zh);});
+  var caseText=(extra.caseText||profile.caseText).replace(/\{term\}/g,zh+'（'+code+'）');
+  var questions=extra.questions||[
+    '请用自己的话说明“'+code+'”与“'+zh+'”的核心含义。',
+    '在你的现场，哪一个具体问题最适合使用本术语？需要哪些事实或记录证明？',
+    '若只有结论而没有原始数据、版本或责任记录，这项工作是否可以判定完成？为什么？'
+  ];
+  return{
+    code:code,en:en,zh:zh,app:app,cat:cat,profile:profile,extra:extra,index:index,
+    oplCode:'OPL-'+String(index+1).padStart(3,'0')+'-'+code.toUpperCase().replace(/&/g,'-AND-').replace(/[^A-Z0-9\u4e00-\u9fff]+/g,'-').replace(/^-|-$/g,''),
+    definition:code+'（'+en+'），中文为“'+zh+'”。'+app,
+    goal:focus+' 培训后，学员应能说清定义、指出适用边界、完成一次现场应用并保留验证证据。',
+    problem:extra.problem||profile.problem,
+    boundary:extra.boundary||profile.boundary,
+    shownFormula:shownFormula||('本术语不以单一公式为核心。判定重点是：输入真实、过程受控、输出明确、结果有证据，并符合“'+zh+'”的适用要求。'),
+    method:method,
+    caseText:caseText,
+    mistakes:extra.mistakes||profile.mistakes,
+    owners:extra.owners||profile.owners,
+    records:extra.records||profile.records,
+    questions:questions
+  };
+}
+function list(items){return'<ul>'+items.map(function(item){return'<li>'+esc(item)+'</li>';}).join('')+'</ul>';}
+function steps(items){return'<ol>'+items.map(function(item){return'<li>'+esc(item)+'</li>';}).join('')+'</ol>';}
+function block(num,title,body,wide,extraClass){return'<section class="term-opl-block'+(wide?' term-opl-wide':'')+(extraClass?' '+extraClass:'')+'"><h3><span class="term-opl-num">'+num+'</span>'+esc(title)+'</h3>'+body+'</section>';}
+function buildModal(){
+  var node=document.createElement('div');
+  node.id='termOplModal';
+  node.className='term-opl-modal';
+  node.hidden=true;
+  node.innerHTML='<div class="term-opl-backdrop" data-opl-close></div><article class="term-opl-dialog" role="dialog" aria-modal="true" aria-labelledby="termOplTitle"><header class="term-opl-header"><p class="term-opl-kicker" id="termOplKicker"></p><h2 class="term-opl-title" id="termOplTitle"></h2><p class="term-opl-subtitle" id="termOplSubtitle"></p><button class="term-opl-close" type="button" aria-label="关闭课件" data-opl-close>×</button></header><div class="term-opl-toolbar"><button type="button" data-opl-prev>← 上一项</button><button type="button" data-opl-next>下一项 →</button><button type="button" data-opl-link>复制课件链接</button><button type="button" data-opl-print>打印／保存PDF</button><span class="term-opl-page" id="termOplPage"></span></div><div class="term-opl-content" id="termOplContent"></div></article>';
+  document.body.appendChild(node);
+  return node;
+}
+function toast(message){
+  var node=document.getElementById('termOplToast');
+  if(!node){node=document.createElement('div');node.id='termOplToast';node.className='term-opl-toast';document.body.appendChild(node);}
+  node.textContent=message;node.classList.add('show');
+  clearTimeout(toast.timer);toast.timer=setTimeout(function(){node.classList.remove('show');},1900);
+}
+function copyText(text){
+  if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);
+  return new Promise(function(resolve,reject){
+    var area=document.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.opacity='0';document.body.appendChild(area);area.select();
+    try{document.execCommand('copy')?resolve():reject();}catch(error){reject(error);}area.remove();
+  });
+}
+
+var modal=buildModal(),current=-1,lastFocus=null;
+var contentNode=modal.querySelector('#termOplContent'),titleNode=modal.querySelector('#termOplTitle'),subtitleNode=modal.querySelector('#termOplSubtitle'),kickerNode=modal.querySelector('#termOplKicker'),pageNode=modal.querySelector('#termOplPage');
+var prevButton=modal.querySelector('[data-opl-prev]'),nextButton=modal.querySelector('[data-opl-next]');
+
+cards.forEach(function(card,index){
+  card.setAttribute('data-opl-index',index);
+  var actions=document.createElement('div');actions.className='term-opl-actions';
+  actions.innerHTML='<button class="term-opl-open" type="button" data-opl-index="'+index+'">打开单点培训课件</button><span class="term-opl-note">可打印 · 可分享</span>';
+  card.appendChild(actions);
+});
+
+function canonicalLink(data){
+  return location.origin+location.pathname+'?term='+encodeURIComponent(data.code)+'&opl=1#'+cards[data.index].id;
+}
+function render(index){
+  current=Math.max(0,Math.min(cards.length-1,index));
+  var data=lesson(cards[current],current);
+  kickerNode.textContent='ONE POINT LESSON · '+data.oplCode;
+  titleNode.textContent=data.code+'｜'+data.zh;
+  subtitleNode.textContent=data.en+' · '+data.profile.label;
+  pageNode.textContent='第 '+(current+1)+'／'+cards.length+' 项';
+  prevButton.disabled=current===0;nextButton.disabled=current===cards.length-1;
+  var checks=data.questions.map(function(q,i){return'<div class="term-opl-question"><strong>Q'+(i+1)+'：</strong>'+esc(q)+'</div>';}).join('');
+  var answer='回答应包含准确含义、适用边界、现场例子和验证证据；不得只复述缩写。涉及公式时，必须先说明统计对象、周期、分母和数据来源。';
+  contentNode.innerHTML=
+    '<div class="term-opl-meta">'+
+      '<div class="term-opl-meta-item"><span class="term-opl-meta-label">课件编号</span><span class="term-opl-meta-value">'+esc(data.oplCode)+'</span></div>'+
+      '<div class="term-opl-meta-item"><span class="term-opl-meta-label">术语代码</span><span class="term-opl-meta-value">'+esc(data.code)+'</span></div>'+
+      '<div class="term-opl-meta-item"><span class="term-opl-meta-label">英文全称</span><span class="term-opl-meta-value">'+esc(data.en)+'</span></div>'+
+      '<div class="term-opl-meta-item"><span class="term-opl-meta-label">培训类型</span><span class="term-opl-meta-value">'+esc(data.profile.label)+'</span></div>'+
+    '</div>'+
+    '<div class="term-opl-objective"><strong>培训目标：</strong>'+esc(data.goal)+'</div>'+
+    '<div class="term-opl-grid">'+
+      block('1','核心定义','<p>'+esc(data.definition)+'</p>',true)+
+      block('2','解决什么现场问题','<p>'+esc(data.problem)+'</p>',false)+
+      block('3','适用场景与边界','<p>'+esc(data.boundary)+'</p>',false)+
+      block('4','公式、口径与数据来源','<p class="term-opl-formula">'+esc(data.shownFormula)+'</p>',true)+
+      block('5','标准实施步骤',steps(data.method),true)+
+      block('6','制造现场案例','<p class="term-opl-case">'+esc(data.caseText)+'</p>',true)+
+      block('7','常见误区与异常判断',list(data.mistakes),false)+
+      block('8','责任与输出记录','<p><strong>责任：</strong>'+esc(data.owners)+'</p><p style="margin-top:9px"><strong>输出：</strong>'+esc(data.records)+'</p>',false)+
+      block('9','培训确认题','<div class="term-opl-check">'+checks+'</div><details class="term-opl-answer"><summary>展开讲师确认要点</summary><p>'+esc(answer)+'</p></details>',true)+
+    '</div>'+
+    '<div class="term-opl-footer"><span>QilyLean｜启力精益 · 单点培训知识库</span><span>页面：'+esc(canonicalLink(data))+'</span></div>';
+  contentNode.scrollTop=0;
+  var url=new URL(location.href);url.searchParams.set('term',data.code);url.searchParams.set('opl','1');url.hash=cards[current].id;history.replaceState(null,'',url.pathname+url.search+url.hash);
+}
+function open(index,trigger){
+  lastFocus=trigger||document.activeElement;
+  modal.hidden=false;document.body.classList.add('term-opl-locked');render(index);
+  requestAnimationFrame(function(){modal.querySelector('.term-opl-close').focus();});
+}
+function close(){
+  if(modal.hidden)return;
+  modal.hidden=true;document.body.classList.remove('term-opl-locked');
+  var url=new URL(location.href);url.searchParams.delete('opl');history.replaceState(null,'',url.pathname+url.search+url.hash);
+  if(lastFocus&&typeof lastFocus.focus==='function')lastFocus.focus();
+}
+
+document.addEventListener('click',function(event){
+  var button=event.target.closest('.term-opl-open');
+  if(!button)return;
+  event.preventDefault();event.stopPropagation();
+  open(Number(button.getAttribute('data-opl-index')),button);
+},true);
+modal.addEventListener('click',function(event){
+  if(event.target.closest('[data-opl-close]')){close();return;}
+  if(event.target.closest('[data-opl-prev]')){render(current-1);return;}
+  if(event.target.closest('[data-opl-next]')){render(current+1);return;}
+  if(event.target.closest('[data-opl-link]')){
+    copyText(canonicalLink(lesson(cards[current],current))).then(function(){toast('课件链接已复制');}).catch(function(){toast('复制失败，请从地址栏复制');});
+    return;
+  }
+  if(event.target.closest('[data-opl-print]')){window.print();}
+});
+document.addEventListener('keydown',function(event){
+  if(modal.hidden)return;
+  if(event.key==='Escape'){event.preventDefault();close();}
+  if(event.key==='ArrowLeft'&&!event.target.matches('input,textarea')){event.preventDefault();if(current>0)render(current-1);}
+  if(event.key==='ArrowRight'&&!event.target.matches('input,textarea')){event.preventDefault();if(current<cards.length-1)render(current+1);}
+});
+
+var params=new URLSearchParams(location.search);
+if(params.get('opl')==='1'){
+  var requested=clean(params.get('term')).toLocaleLowerCase('zh-CN');
+  var index=cards.findIndex(function(card){return field(card,'.term-code').toLocaleLowerCase('zh-CN')===requested||field(card,'h3').toLocaleLowerCase('zh-CN')===requested;});
+  if(index>=0)open(index,null);
+}
+})();
+
 </script>
 <script src="/homepage-music.js?v=20260729-continuous-v4"></script>
 </body>
