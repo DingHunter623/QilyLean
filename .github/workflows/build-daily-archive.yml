@@ -130,6 +130,26 @@ jobs:
             echo "Terminology result jump guidance is missing"
             exit 1
           }
+          grep -q "terminology-opl-v1" knowledge/terminology.html || {
+            echo "Terminology OPL stylesheet marker is missing"
+            exit 1
+          }
+          grep -q "term-opl-running-head" knowledge/terminology.html || {
+            echo "Terminology OPL print header is missing"
+            exit 1
+          }
+          grep -q "term-opl-contact-card" knowledge/terminology.html || {
+            echo "Terminology OPL brand contact module is missing"
+            exit 1
+          }
+          grep -q "qilylean-home-qr.svg" knowledge/terminology.html || {
+            echo "Terminology OPL website QR is missing"
+            exit 1
+          }
+          grep -q 'class="wx-qr-image"' knowledge/terminology.html || {
+            echo "Terminology OPL WeChat QR is missing"
+            exit 1
+          }
           grep -q "daily-briefs.css?v=20260729-ranked-search-v12" "qilylean/daily/$LATEST_DATE.html" || {
             echo "Latest brief is not pinned to the mobile responsive stylesheet"
             exit 1
