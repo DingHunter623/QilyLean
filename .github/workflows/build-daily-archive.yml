@@ -134,6 +134,10 @@ jobs:
             echo "Terminology OPL stylesheet marker is missing"
             exit 1
           }
+          grep -q "terminology-opl-document-template-v2" knowledge/terminology.html || {
+            echo "Terminology OPL document template marker is missing"
+            exit 1
+          }
           grep -q "term-opl-running-head" knowledge/terminology.html || {
             echo "Terminology OPL print header is missing"
             exit 1

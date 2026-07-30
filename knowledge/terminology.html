@@ -83,6 +83,41 @@
 .term-opl-qr span{color:var(--qily-muted,#5f7474);font-size:11px;font-weight:900;text-align:center}
 .term-opl-running{display:none}
 
+/* terminology-opl-document-template-v2 */
+.term-opl-dialog{border-color:#b9c9ce;border-radius:0;background:#e9f1ef}
+.term-opl-header{padding:22px 72px 19px;color:#354b53;background:#fff;border-bottom:2px solid #2d6683;text-align:center}
+.term-opl-brandbar{color:#526a73;border-bottom:1px solid #b8c8cf}
+.term-opl-brandbar strong{color:#1f5d78}
+.term-opl-kicker{color:#667b83;opacity:1}
+.term-opl-title{color:#1f5d78;font-size:clamp(24px,3vw,34px)}
+.term-opl-subtitle{color:#596b72}
+.term-opl-theme{margin:13px 0 0;padding:8px 12px;border:1px solid #9fb3bf;color:#2f6782;background:#edf3f6;font-size:13px;font-weight:900;line-height:1.55}
+.term-opl-close{border:1px solid #7f9ca8;border-radius:0;color:#1f5d78;background:#fff}
+.term-opl-close:hover,.term-opl-close:focus-visible{color:#fff;background:#1f5d78}
+.term-opl-toolbar{border-bottom-color:#b8c8cf;background:#f7faf9}
+.term-opl-toolbar button{border-radius:0;border-color:#9eb2bb;color:#1f5d78}
+.term-opl-toolbar button:hover,.term-opl-toolbar button:focus-visible{border-color:#1f5d78;background:#edf3f6}
+.term-opl-content{box-sizing:border-box;width:min(920px,calc(100% - 44px));margin:20px auto 28px;padding:26px 30px 32px;background:#fff;box-shadow:0 8px 24px rgba(31,93,120,.09)}
+.term-opl-meta{gap:0;border-top:1px solid #aebdc4;border-left:1px solid #aebdc4}
+.term-opl-meta-item{padding:0;border:0;border-right:1px solid #aebdc4;border-bottom:1px solid #aebdc4;border-radius:0}
+.term-opl-meta-label{margin:0;padding:7px 10px;border-bottom:1px solid #aebdc4;color:#245d78;background:#e7eef3}
+.term-opl-meta-value{min-height:43px;padding:10px;background:#fff}
+.term-opl-objective{padding:14px 16px;border:1px solid #9fb3bf;border-left:4px solid #2d6683;border-radius:0;color:#334b55;background:#edf3f6}
+.term-opl-objective strong{color:#1f5d78}
+.term-opl-grid{grid-template-columns:1fr;gap:12px}
+.term-opl-block,.term-opl-block.term-opl-wide{grid-column:auto;padding:17px 19px;border-color:#bdcbd1;border-radius:0;box-shadow:none}
+.term-opl-block h3{padding-bottom:9px;border-bottom:1px solid #c8d3d8;color:#1f5d78}
+.term-opl-num{border-radius:0;background:#2d6683}
+.term-opl-formula{border:1px solid #b7c8d1;border-radius:0;background:#edf3f6}
+.term-opl-case{border-left-color:#2d6683}
+.term-opl-question{border:1px solid #c5d1d6;border-radius:0;background:#f4f7f8}
+.term-opl-answer summary{color:#1f5d78}
+.term-opl-contact-card{border-color:#9fb3bf;border-radius:0;background:#edf3f6}
+.term-opl-contact-copy h3{color:#1f5d78}
+.term-opl-contact-copy a{color:#1f5d78}
+.term-opl-qr img,.term-opl-qr .wx-qr-image{border-color:#9fb3bf;border-radius:0}
+.term-opl-footer{border-top-color:#9fb3bf;color:#5c7078}
+
 body.term-opl-locked{overflow:hidden}
 .term-opl-toast{position:fixed;left:50%;bottom:32px;z-index:10040;transform:translate(-50%,18px);padding:11px 17px;border-radius:999px;color:#fff;background:#143f46;font-size:14px;font-weight:850;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease}
 .term-opl-toast.show{transform:translate(-50%,0);opacity:1}
@@ -93,7 +128,7 @@ body.term-opl-locked{overflow:hidden}
   .term-opl-close{top:13px;right:13px}
   .term-opl-toolbar{padding:10px 12px}
   .term-opl-page{width:100%;margin-left:0}
-  .term-opl-content{padding:17px 14px 26px}
+  .term-opl-content{width:100%;margin:0;padding:17px 14px 26px;box-shadow:none}
   .term-opl-meta{grid-template-columns:repeat(2,minmax(0,1fr))}
   .term-opl-grid{grid-template-columns:1fr}
   .term-opl-block.term-opl-wide{grid-column:auto}
@@ -116,16 +151,20 @@ body.term-opl-locked{overflow:hidden}
   .term-opl-modal{position:static!important;display:block!important;padding:0!important}
   .term-opl-backdrop,.term-opl-close,.term-opl-toolbar,.term-opl-toast{display:none!important}
   .term-opl-dialog{display:block!important;width:auto!important;max-height:none!important;overflow:visible!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:#fff!important}
-  .term-opl-header{padding:10mm 9mm!important;border-radius:0!important;background:#0f4b5a!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-  .term-opl-title{font-size:24pt!important}
-  .term-opl-content{overflow:visible!important;padding:7mm 1mm 0!important}
+  .term-opl-header{padding:7mm 8mm 6mm!important;border-radius:0!important;border-bottom:.5mm solid #2d6683!important;color:#354b53!important;background:#fff!important;text-align:center!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .term-opl-brandbar{color:#526a73!important;border-bottom-color:#9fb3bf!important}
+  .term-opl-brandbar strong,.term-opl-title{color:#1f5d78!important}
+  .term-opl-kicker,.term-opl-subtitle{color:#596b72!important}
+  .term-opl-title{font-size:22pt!important}
+  .term-opl-theme{border-color:#9fb3bf!important;color:#2f6782!important;background:#edf3f6!important}
+  .term-opl-content{width:auto!important;margin:0!important;overflow:visible!important;padding:6mm 1mm 0!important;box-shadow:none!important}
   .term-opl-meta{grid-template-columns:repeat(4,1fr)!important;break-inside:avoid}
   .term-opl-objective,.term-opl-block,.term-opl-meta-item{break-inside:avoid;box-shadow:none!important}
   .term-opl-grid{display:block!important}
   .term-opl-block{margin-bottom:4mm}
   .term-opl-answer details[open] .term-opl-answer{display:block}
   .term-opl-brandbar{margin-bottom:4mm}
-  .term-opl-contact-card{grid-template-columns:minmax(0,1fr) 29mm 29mm!important;gap:5mm;padding:5mm!important;break-inside:avoid;box-shadow:none!important}
+  .term-opl-contact-card{grid-template-columns:minmax(0,1fr) 29mm 29mm!important;gap:5mm;padding:5mm!important;border-color:#9fb3bf!important;border-radius:0!important;background:#edf3f6!important;break-inside:avoid;box-shadow:none!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .term-opl-qr img,.term-opl-qr .wx-qr-image{width:25mm!important;height:25mm!important;max-width:25mm!important}
   .term-opl-footer{break-inside:avoid}
 }
@@ -1583,7 +1622,7 @@ function buildModal(){
   node.id='termOplModal';
   node.className='term-opl-modal';
   node.hidden=true;
-  node.innerHTML='<div class="term-opl-backdrop" data-opl-close></div><article class="term-opl-dialog" role="dialog" aria-modal="true" aria-labelledby="termOplTitle"><aside class="term-opl-running term-opl-running-head" aria-hidden="true"><strong>QilyLean｜启力精益</strong><span>启精益之智，聚企业之力。 · 让改善形成体系，让精益产生力量。</span></aside><aside class="term-opl-running term-opl-running-foot" aria-hidden="true"><span>QilyLean 单点培训知识库 · qilylean.com</span><span>微信 Qily259 · 134 5001 4003 / 151 6812 0722 / 176 8178 8259</span></aside><header class="term-opl-header"><div class="term-opl-brandbar"><strong>QilyLean｜启力精益</strong><span>启精益之智，聚企业之力。 · 让改善形成体系，让精益产生力量。</span></div><p class="term-opl-kicker" id="termOplKicker"></p><h2 class="term-opl-title" id="termOplTitle"></h2><p class="term-opl-subtitle" id="termOplSubtitle"></p><button class="term-opl-close" type="button" aria-label="关闭课件" data-opl-close>×</button></header><div class="term-opl-toolbar"><button type="button" data-opl-prev>← 上一项</button><button type="button" data-opl-next>下一项 →</button><button type="button" data-opl-link>复制课件链接</button><button type="button" data-opl-print>打印／保存PDF</button><span class="term-opl-page" id="termOplPage"></span></div><div class="term-opl-content" id="termOplContent"></div></article>';
+  node.innerHTML='<div class="term-opl-backdrop" data-opl-close></div><article class="term-opl-dialog" role="dialog" aria-modal="true" aria-labelledby="termOplTitle"><aside class="term-opl-running term-opl-running-head" aria-hidden="true"><strong>QilyLean｜启力精益</strong><span>启精益之智，聚企业之力。 · 让改善形成体系，让精益产生力量。</span></aside><aside class="term-opl-running term-opl-running-foot" aria-hidden="true"><span>QilyLean 单点培训知识库 · qilylean.com</span><span>微信 Qily259 · 134 5001 4003 / 151 6812 0722 / 176 8178 8259</span></aside><header class="term-opl-header"><div class="term-opl-brandbar"><strong>QilyLean｜启力精益</strong><span>启精益之智，聚企业之力。 · 让改善形成体系，让精益产生力量。</span></div><p class="term-opl-kicker" id="termOplKicker"></p><h2 class="term-opl-title" id="termOplTitle"></h2><p class="term-opl-subtitle" id="termOplSubtitle"></p><p class="term-opl-theme">主题：数智化工厂建设 · 目视化项目交付 · 精益改善落地</p><button class="term-opl-close" type="button" aria-label="关闭课件" data-opl-close>×</button></header><div class="term-opl-toolbar"><button type="button" data-opl-prev>← 上一项</button><button type="button" data-opl-next>下一项 →</button><button type="button" data-opl-link>复制课件链接</button><button type="button" data-opl-print>打印／保存PDF</button><span class="term-opl-page" id="termOplPage"></span></div><div class="term-opl-content" id="termOplContent"></div></article>';
   document.body.appendChild(node);
   return node;
 }
