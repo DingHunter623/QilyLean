@@ -78,6 +78,19 @@
 .term-opl-answer summary{color:var(--qily-teal,#178b94);font-size:14px;font-weight:900;cursor:pointer}
 .term-opl-answer p{margin-top:9px;font-size:14px}
 .term-opl-footer{display:flex;justify-content:space-between;gap:16px;margin-top:18px;padding:14px 4px 0;border-top:1px solid var(--qily-line,#d5e4e3);color:var(--qily-muted,#5f7474);font-size:12px;line-height:1.55}
+.term-opl-brandbar{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 12px;padding:0 0 11px;border-bottom:1px solid rgba(255,255,255,.32)}
+.term-opl-brandbar strong{font-size:16px;letter-spacing:.04em}
+.term-opl-brandbar span{font-size:12px;font-weight:800;line-height:1.5;text-align:right;opacity:.9}
+.term-opl-contact-card{display:grid;grid-template-columns:minmax(0,1fr) 118px 118px;align-items:center;gap:18px;margin-top:18px;padding:18px;border:1px solid var(--qily-line,#d5e4e3);border-radius:14px;background:linear-gradient(135deg,#edf7f6,#fff8e8)}
+.term-opl-contact-copy h3{margin:0 0 8px;color:var(--qily-forest,#0f4b5a);font-size:18px}
+.term-opl-contact-copy p{margin:0;color:#465b58;font-size:13px;line-height:1.7}
+.term-opl-contact-copy .term-opl-contact-lines{margin-top:9px;color:var(--qily-ink,#182420);font-weight:850}
+.term-opl-contact-copy a{color:var(--qily-teal,#178b94);text-decoration:none}
+.term-opl-qr{display:grid;justify-items:center;gap:6px}
+.term-opl-qr img,.term-opl-qr .wx-qr-image{display:block;width:104px!important;height:104px!important;max-width:104px!important;margin:0 auto!important;padding:4px;object-fit:contain!important;background:#fff!important;border:1px solid var(--qily-line,#d5e4e3);border-radius:8px}
+.term-opl-qr span{color:var(--qily-muted,#5f7474);font-size:11px;font-weight:900;text-align:center}
+.term-opl-running{display:none}
+
 body.term-opl-locked{overflow:hidden}
 .term-opl-toast{position:fixed;left:50%;bottom:32px;z-index:10040;transform:translate(-50%,18px);padding:11px 17px;border-radius:999px;color:#fff;background:#143f46;font-size:14px;font-weight:850;opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease}
 .term-opl-toast.show{transform:translate(-50%,0);opacity:1}
@@ -94,9 +107,18 @@ body.term-opl-locked{overflow:hidden}
   .term-opl-block.term-opl-wide{grid-column:auto}
   .term-opl-footer{display:block}
   .term-opl-footer span{display:block;margin-top:5px}
+  .term-opl-brandbar{display:block}
+  .term-opl-brandbar span{display:block;margin-top:5px;text-align:left}
+  .term-opl-contact-card{grid-template-columns:1fr 1fr}
+  .term-opl-contact-copy{grid-column:1/-1}
 }
+
 @media print{
-  @page{size:A4;margin:11mm}
+  @page{size:A4;margin:19mm 11mm 18mm}
+  .term-opl-running{display:flex!important;position:fixed;left:0;right:0;z-index:30;align-items:center;justify-content:space-between;gap:12px;color:#31504b;font-size:8.5pt;font-weight:800}
+  .term-opl-running-head{top:-14mm;padding-bottom:2.5mm;border-bottom:.35mm solid #178b94}
+  .term-opl-running-foot{bottom:-13mm;padding-top:2.5mm;border-top:.25mm solid #9fb8b5}
+
   body.term-opl-locked>*:not(.term-opl-modal){display:none!important}
   body.term-opl-locked{overflow:visible!important;background:#fff!important}
   .term-opl-modal{position:static!important;display:block!important;padding:0!important}
@@ -110,8 +132,12 @@ body.term-opl-locked{overflow:hidden}
   .term-opl-grid{display:block!important}
   .term-opl-block{margin-bottom:4mm}
   .term-opl-answer details[open] .term-opl-answer{display:block}
+  .term-opl-brandbar{margin-bottom:4mm}
+  .term-opl-contact-card{grid-template-columns:minmax(0,1fr) 29mm 29mm!important;gap:5mm;padding:5mm!important;break-inside:avoid;box-shadow:none!important}
+  .term-opl-qr img,.term-opl-qr .wx-qr-image{width:25mm!important;height:25mm!important;max-width:25mm!important}
   .term-opl-footer{break-inside:avoid}
 }
+
 
 </style>
   <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>
@@ -1565,7 +1591,7 @@ function buildModal(){
   node.id='termOplModal';
   node.className='term-opl-modal';
   node.hidden=true;
-  node.innerHTML='<div class="term-opl-backdrop" data-opl-close></div><article class="term-opl-dialog" role="dialog" aria-modal="true" aria-labelledby="termOplTitle"><header class="term-opl-header"><p class="term-opl-kicker" id="termOplKicker"></p><h2 class="term-opl-title" id="termOplTitle"></h2><p class="term-opl-subtitle" id="termOplSubtitle"></p><button class="term-opl-close" type="button" aria-label="关闭课件" data-opl-close>×</button></header><div class="term-opl-toolbar"><button type="button" data-opl-prev>← 上一项</button><button type="button" data-opl-next>下一项 →</button><button type="button" data-opl-link>复制课件链接</button><button type="button" data-opl-print>打印／保存PDF</button><span class="term-opl-page" id="termOplPage"></span></div><div class="term-opl-content" id="termOplContent"></div></article>';
+  node.innerHTML='<div class="term-opl-backdrop" data-opl-close></div><article class="term-opl-dialog" role="dialog" aria-modal="true" aria-labelledby="termOplTitle"><aside class="term-opl-running term-opl-running-head" aria-hidden="true"><strong>QilyLean｜启力精益</strong><span>启精益之智，聚企业之力。 · 让改善形成体系，让精益产生力量。</span></aside><aside class="term-opl-running term-opl-running-foot" aria-hidden="true"><span>QilyLean 单点培训知识库 · qilylean.com</span><span>微信 Qily259 · 134 5001 4003 / 151 6812 0722 / 176 8178 8259</span></aside><header class="term-opl-header"><div class="term-opl-brandbar"><strong>QilyLean｜启力精益</strong><span>启精益之智，聚企业之力。 · 让改善形成体系，让精益产生力量。</span></div><p class="term-opl-kicker" id="termOplKicker"></p><h2 class="term-opl-title" id="termOplTitle"></h2><p class="term-opl-subtitle" id="termOplSubtitle"></p><button class="term-opl-close" type="button" aria-label="关闭课件" data-opl-close>×</button></header><div class="term-opl-toolbar"><button type="button" data-opl-prev>← 上一项</button><button type="button" data-opl-next>下一项 →</button><button type="button" data-opl-link>复制课件链接</button><button type="button" data-opl-print>打印／保存PDF</button><span class="term-opl-page" id="termOplPage"></span></div><div class="term-opl-content" id="termOplContent"></div></article>';
   document.body.appendChild(node);
   return node;
 }
@@ -1626,7 +1652,12 @@ function render(index){
       block('8','责任与输出记录','<p><strong>责任：</strong>'+esc(data.owners)+'</p><p style="margin-top:9px"><strong>输出：</strong>'+esc(data.records)+'</p>',false)+
       block('9','培训确认题','<div class="term-opl-check">'+checks+'</div><details class="term-opl-answer"><summary>展开讲师确认要点</summary><p>'+esc(answer)+'</p></details>',true)+
     '</div>'+
-    '<div class="term-opl-footer"><span>QilyLean｜启力精益 · 单点培训知识库</span><span>页面：'+esc(canonicalLink(data))+'</span></div>';
+    '<section class="term-opl-contact-card" aria-label="QilyLean品牌与联系方式">'+
+      '<div class="term-opl-contact-copy"><h3>QilyLean｜制造改善与精益赋能交流</h3><p>精益生产管理 · 工业工程IE · PQCD改善 · 数智化工厂规划 · 目视化项目交付</p><p class="term-opl-contact-lines">官网：<a href="https://qilylean.com/">qilylean.com</a><br>微信：Qily259<br>电话：<a href="tel:13450014003">134 5001 4003</a>　<a href="tel:15168120722">151 6812 0722</a>　<a href="tel:17681788259">176 8178 8259</a></p></div>'+
+      '<a class="term-opl-qr" href="https://qilylean.com/" target="_blank" rel="noopener"><img src="/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4" alt="QilyLean官网二维码"><span>扫码访问官网</span></a>'+
+      '<div class="term-opl-qr"><img class="wx-qr-image" alt="QilyLean微信二维码"><span>扫码微信交流</span></div>'+
+    '</section>'+
+    '<div class="term-opl-footer"><span>QilyLean｜启力精益 · 单点培训知识库 · 来源可追溯</span><span>课件页面：'+esc(canonicalLink(data))+'</span></div>';
   contentNode.scrollTop=0;
   var url=new URL(location.href);url.searchParams.set('term',data.code);url.searchParams.set('opl','1');url.hash=cards[current].id;history.replaceState(null,'',url.pathname+url.search+url.hash);
 }
