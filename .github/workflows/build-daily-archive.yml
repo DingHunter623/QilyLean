@@ -130,16 +130,28 @@ jobs:
             echo "Terminology result jump guidance is missing"
             exit 1
           }
-          grep -q "terminology-opl-v1" knowledge/terminology.html || {
-            echo "Terminology OPL stylesheet marker is missing"
+          grep -q "terminology-opl-v4" knowledge/terminology.html || {
+            echo "Terminology OPL online-only stylesheet marker is missing"
             exit 1
           }
           grep -q "terminology-opl-document-template-v2" knowledge/terminology.html || {
             echo "Terminology OPL document template marker is missing"
             exit 1
           }
-          grep -q "term-opl-running-head" knowledge/terminology.html || {
-            echo "Terminology OPL print header is missing"
+          grep -q "terminology-opl-print-disabled-v1" knowledge/terminology.html || {
+            echo "Terminology OPL print restriction is missing"
+            exit 1
+          }
+          if grep -E 'data-opl-print|window\.print\(\)|打印／保存PDF|独立网址 · 单课件PDF|单课件打印与PDF保存' knowledge/terminology.html >/dev/null; then
+            echo "Terminology OPL print or PDF-save control was restored"
+            exit 1
+          fi
+          grep -q "打开独立培训课件" knowledge/terminology.html || {
+            echo "Terminology OPL independent lesson link is missing"
+            exit 1
+          }
+          grep -q "复制课件链接" knowledge/terminology.html || {
+            echo "Terminology OPL share-link control is missing"
             exit 1
           }
           grep -q "term-opl-contact-card" knowledge/terminology.html || {
