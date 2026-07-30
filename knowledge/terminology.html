@@ -1551,7 +1551,7 @@ function render(index){
       '<a class="term-opl-qr" href="https://qilylean.com/" target="_blank" rel="noopener"><img src="/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4" alt="QilyLean官网二维码"><span>扫码访问官网</span></a>'+
       '<div class="term-opl-qr"><img class="wx-qr-image" alt="QilyLean微信二维码"><span>扫码微信交流</span></div>'+
     '</section>'+
-    '<div class="term-opl-footer"><span>QilyLean｜启力精益 · 单点培训知识库 · 来源可追溯</span><span>课件页面：'+esc(canonicalLink(data))+'</span></div>';
+    '<div class="term-opl-footer"><span>QilyLean｜启力精益 · 单点培训知识库 · 来源可追溯</span><span>官网网址：https://qilylean.com/</span></div>';
   contentNode.scrollTop=0;
   var url=new URL(location.href);url.searchParams.set('term',data.code);url.searchParams.set('opl','1');url.hash=cards[current].id;history.replaceState(null,'',url.pathname+url.search+url.hash);
 }
