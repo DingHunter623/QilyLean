@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>全站术语词典｜中文诠释与应用场景｜QilyLean</title>
-<meta name="description" content="QilyLean全站制造管理与工程专业术语词典：177项中文诠释与应用场景，每个术语代码配套独立网址单点培训课件，仅供在线阅览与链接分享。">
+<meta name="description" content="QilyLean全站制造管理与工程专业术语词典：180项中文诠释与应用场景，每个术语代码配套独立网址单点培训课件，仅供在线阅览与链接分享。">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://qilylean.com/knowledge/terminology.html">
 <style>
@@ -212,7 +212,7 @@ body.term-opl-locked{overflow:hidden}
 <div class="term-toolbar">
 <label for="termSearch"><strong>快速查找术语</strong></label>
 <input class="term-search" id="termSearch" type="search" placeholder="输入术语代码、英文全称或中文名称，例如：UPH、UPPH、标准工时" autocomplete="off">
-<div class="term-count" id="termCount">共收录 177 项术语 · 177 份单点培训课件</div>
+<div class="term-count" id="termCount">共收录 180 项术语 · 180 份单点培训课件</div>
 </div>
 <div class="term-empty" id="termEmpty">未找到名称相符的术语，请检查代码或尝试更短的中文名称。</div>
 </div></section>
@@ -1009,11 +1009,17 @@ body.term-opl-locked{overflow:hidden}
   <h3>制程质量控制／过程检验</h3>
   <p><strong>应用场景：</strong>用于生产过程中的首件、中检／巡检、工艺参数、关键特性、人员与设备状态确认，并按控制计划执行异常反应。IPQC重点是及时发现过程偏移、遏制不良继续制造和流转，而不是等到终检再筛选。</p>
 </article>
-<article class="term-card" data-term-card>
-  <div class="term-code">FQC/OQC</div>
-  <div class="term-en">Final / Outgoing Quality Control</div>
-  <h3>最终质量控制／出货质量控制</h3>
-  <p><strong>应用场景：</strong>FQC侧重产品完成后的最终尺寸、外观、功能和文件符合性确认；OQC侧重出货前的抽检、包装、标识、数量、客户特殊要求及放行。部分企业由同一岗位承担，但最终检验和出货放行的控制时点与责任应明确区分。</p>
+<article class="term-card" data-term-card data-keywords="终检 最终检验 成品检验 Final Inspection">
+  <div class="term-code">FQC</div>
+  <div class="term-en">Final Quality Control</div>
+  <h3>最终质量控制／成品终检</h3>
+  <p><strong>应用场景：</strong>用于产品完成后、入库或转入出货环节前，依据受控标准确认尺寸、外观、功能、性能及记录完整性。FQC负责验证完工产品是否满足最终检验要求，不能用末端挑选代替过程质量控制。</p>
+</article>
+<article class="term-card" data-term-card data-keywords="出货检验 出厂检验 放行 Shipping Inspection">
+  <div class="term-code">OQC</div>
+  <div class="term-en">Outgoing Quality Control</div>
+  <h3>出货质量控制／出货检验</h3>
+  <p><strong>应用场景：</strong>用于产品出货前复核批次、抽样结果、标识、包装、数量、文件、客户特殊要求和授权放行状态，确保实物、记录与订单要求一致。OQC不能在证据不足或异常未关闭时以经验替代正式放行。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">FAI</div>
@@ -1027,11 +1033,26 @@ body.term-opl-locked{overflow:hidden}
   <h3>首检、中检、终检</h3>
   <p><strong>应用场景：</strong>首检用于开线、换线、换模、换料、调机或工程变更后的首件确认；中检用于生产过程中按规定频次、批次或时间节点检查尺寸、外观、参数和关键特性；终检用于工序完结、包装或放行前确认最终质量状态。品质三检强调检验时点，不等同于“自检、互检、专检”的责任分工。</p>
 </article>
-<article class="term-card" data-term-card>
-  <div class="term-code">PPM/DPPM</div>
-  <div class="term-en">Parts / Defective Parts Per Million</div>
-  <h3>百万分之不良数</h3>
-  <p><strong>应用场景：</strong>用于衡量低不良水平下的质量表现，需统一按不良件、缺陷数或客户口径计算。</p>
+<article class="term-card" data-term-card data-keywords="百万分率 百万不良率 Parts Per Million">
+  <div class="term-code">PPM</div>
+  <div class="term-en">Parts Per Million</div>
+  <h3>百万分率／百万分之不良数</h3>
+  <p class="term-formula"><strong>计算公式／判定：</strong>PPM＝不符合数量 ÷ 总数量 × 1,000,000。使用前必须说明分子按不良件还是缺陷数统计，并遵循客户或企业统一口径。</p>
+  <p><strong>应用场景：</strong>用于在低不良水平下比较供应、制程或客户质量表现；不同统计对象、周期和机会数的数据不得直接混比。</p>
+</article>
+<article class="term-card" data-term-card data-keywords="百万不良品数 不良件百万分率 Defective Parts Per Million">
+  <div class="term-code">DPPM</div>
+  <div class="term-en">Defective Parts Per Million</div>
+  <h3>百万分之不良品数</h3>
+  <p class="term-formula"><strong>计算公式／判定：</strong>DPPM＝不合格品数 ÷ 检验总数 × 1,000,000。同一产品即使存在多个缺陷，按不良品口径通常只计一个不合格品。</p>
+  <p><strong>应用场景：</strong>用于衡量每百万件产品中不合格品的数量，适合供应商绩效、制程质量和客户流出评价；必须统一不合格品定义、统计周期、分母和重复计数规则。</p>
+</article>
+<article class="term-card" data-term-card data-keywords="不良质量成本 质量损失 Cost of Poor Quality">
+  <div class="term-code">COPQ</div>
+  <div class="term-en">Cost of Poor Quality</div>
+  <h3>不良质量成本</h3>
+  <p class="term-formula"><strong>计算公式／判定：</strong>COPQ＝内部失效成本＋外部失效成本＋经确认纳入的不良损失；统计范围、周期和财务口径必须统一。</p>
+  <p><strong>应用场景：</strong>用于量化报废、返工、复检、挑选、停线、退货、索赔、保修及客户流失等质量损失，帮助确定改善优先级。COPQ不等同于全部质量成本，也不能把未经验证的机会损失直接当作财务收益。</p>
 </article>
 <article class="term-card" data-term-card>
   <div class="term-code">RCA</div>
@@ -1324,7 +1345,7 @@ body.term-opl-locked{overflow:hidden}
   </div>
 </section>
 </main>
-<footer class="module-footer"><div class="module-inner"><span>丁启利｜QilyLean全站术语词典</span><span>中文诠释 · 应用场景 · 177份单点培训课件</span></div></footer>
+<footer class="module-footer"><div class="module-inner"><span>丁启利｜QilyLean全站术语词典</span><span>中文诠释 · 应用场景 · 180份单点培训课件</span></div></footer>
 <script>
 (function(){
 var input=document.getElementById('termSearch'),cards=Array.prototype.slice.call(document.querySelectorAll('[data-term-card]')),count=document.getElementById('termCount'),empty=document.getElementById('termEmpty'),sections=[];
@@ -1488,6 +1509,32 @@ var special={
     formula:'FPY＝一次合格数量 ÷ 投入数量 ×100%。返工、返修后合格不能回填为一次合格。',
     caseText:'投入1000件，首次通过960件，返工后又合格35件；FPY仍为96%，最终合格率可为99.5%，两者不能混用。',
     questions:['返工后合格为什么不能计入FPY分子？','FPY与最终合格率各回答什么问题？']
+  },
+  'FQC':{
+    focus:'确认完工产品满足最终检验要求，并防止用末端筛选掩盖过程失控。',
+    method:['确认产品、批次、工单和受控检验版本','核对尺寸、外观、功能、性能及记录要求','按规定样本、设备和方法完成最终检验','隔离不合格品并界定影响批次','按权限完成复验、评审与状态标识','将结果反馈到过程控制与持续改进'],
+    caseText:'某产品完成装配后，FQC按最终检验标准核对功能、外观和追溯记录；发现批次标签与工单不一致后立即冻结该批，而不是只补贴标签后放行。',
+    questions:['FQC与IPQC的控制时点和目的有何区别？','为什么FQC不能替代过程质量控制？']
+  },
+  'OQC':{
+    focus:'在出货前验证实物、包装、标识、文件与授权状态一致，阻止风险流向客户。',
+    method:['确认订单、客户、产品、批次和出货要求','核对抽检或最终检验结论及异常关闭状态','检查数量、标签、包装、报告和客户特殊要求','确认追溯信息与实物一一对应','按授权清单完成放行或冻结','保留出货检验及放行证据'],
+    caseText:'某批产品功能检验合格，但OQC发现客户标签版本错误，立即冻结出货并追溯已包装范围；只有换标复核和授权完成后才恢复放行。',
+    questions:['OQC与FQC分别关注什么控制时点？','异常尚未关闭时，谁可以授权放行，需要什么证据？']
+  },
+  'DPPM':{
+    focus:'按不合格品而非缺陷机会统一百万分率口径，准确评价低不良水平。',
+    formula:'DPPM＝不合格品数 ÷ 检验总数 ×1,000,000。同一件产品有多个缺陷时，按不良品口径通常只计一件；客户另有规定时从其要求。',
+    method:['定义产品范围、统计周期和不合格品判定','确认检验总数并排除重复入数','按唯一产品或追溯号识别不合格品','计算DPPM并与目标、历史和客户口径对比','按产品、缺陷、工序、供应商或批次分层','针对主要来源改善并用同口径复测'],
+    caseText:'某月检验200000件，其中40件判为不合格品，DPPM＝40÷200000×1000000＝200；即使其中5件各有两个缺陷，不合格品数量仍为40件。',
+    questions:['一件产品出现三个缺陷，DPPM分子通常计几件？','为什么不同分母和统计周期的DPPM不能直接混比？']
+  },
+  'COPQ':{
+    focus:'把不良造成的内部与外部损失转化为同口径成本，支持改善优先级和经营决策。',
+    formula:'COPQ＝内部失效成本＋外部失效成本＋经确认纳入的其他不良损失。必须注明统计周期、责任范围、计价依据及是否包含机会损失。',
+    method:['定义统计边界、周期和财务计价规则','收集报废、返工、复检、挑选与停线成本','收集退货、索赔、保修、加急和客户处置成本','按产品、缺陷、工序与责任来源分层','以成本和风险共同确定改善优先级','验证措施后确认实际成本下降并固化标准'],
+    caseText:'某月报废8万元、返工与复检3万元、客户退货及加急2万元，确认口径内COPQ为13万元；团队应继续按缺陷和工序分层，不能把全部金额笼统归为品质部责任。',
+    questions:['COPQ是否等同于全部质量成本？','尚未兑现的理论机会损失能否直接计为实际节省？']
   },
   'ROI':{
     focus:'判断改善或投资项目的经济回报，防止只统计收益、不统计持续成本。',
