@@ -1,3 +1,4 @@
+# QilyLean公开页面允许抓取；后台与受控资料按页面级robots规则管理。
 User-agent: *
 Allow: /
 Disallow: /admin.html
