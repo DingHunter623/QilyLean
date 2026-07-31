@@ -3,114 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>QilyLean｜制造改善与项目实践主页</title>
-  <meta name="robots" content="noindex,follow">
+  <title>QilyLean主页已迁移</title>
+  <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://qilylean.com/">
-  <style>
-    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f3faf9}
-    #homeFrame{display:block;width:100%;height:100%;border:0;background:#f3faf9}
-  </style>
+  <meta http-equiv="refresh" content="0; url=/">
+  <script>location.replace('/'+location.search+location.hash);</script>
 </head>
-<body>
-  <iframe id="homeFrame" src="home.html?build=20260721-speed-v2" title="QilyLean 制造改善与项目实践主页"></iframe>
-  <script>
-  (function(){
-    'use strict';
-    var frame=document.getElementById('homeFrame');
-
-    function findCard(doc,words){
-      return Array.prototype.slice.call(doc.querySelectorAll('#projects .project')).find(function(card){
-        var h=card.querySelector('h3');
-        if(!h)return false;
-        return words.some(function(word){return h.textContent.indexOf(word)>-1;});
-      });
-    }
-
-    function mountFigure(doc,card,id,html){
-      if(!card)return;
-      var old=card.querySelector('#'+id);
-      if(old)return old;
-      var figure=doc.createElement('figure');
-      figure.id=id;
-      figure.className='project-media-stable';
-      figure.innerHTML=html;
-      card.insertBefore(figure,card.firstChild);
-      return figure;
-    }
-
-    function repairProjectMedia(doc){
-      if(!doc||!doc.head||!doc.body)return;
-
-      if(!doc.getElementById('projectMediaStableStyle')){
-        var style=doc.createElement('style');
-        style.id='projectMediaStableStyle';
-        style.textContent='.project-media-stable{margin:-22px -22px 18px;border-bottom:1px solid var(--line);background:#eef3f5;overflow:hidden}.project-media-stable img{display:block;width:100%;height:auto;object-fit:contain;background:#eef3f5}.project-media-stable figcaption{padding:10px 14px;color:var(--muted);background:#f8fbfa;font-size:14px;line-height:1.55;font-weight:750}.project-media-grid-2,.project-media-grid-3{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}.project-media-grid-3 .main{grid-column:1/-1}.project-media-grid-2>div,.project-media-grid-3>div{position:relative;background:#eef3f5}.project-media-stable span{position:absolute;left:10px;bottom:10px;padding:4px 9px;color:#fff;background:rgba(15,75,90,.88);font-size:13px;font-weight:900}.project-video-stable{margin:14px -22px 18px;padding:14px 22px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#f7fbfa}.project-video-stable h4{margin:0 0 10px;color:#0f4b5a;font-size:16px}.project-video-stable video{display:block;width:100%;max-height:560px;border-radius:10px;background:#0b1113}.project-video-stable p{margin:9px 2px 0;color:#607474;font-size:13px;line-height:1.6}@media(max-width:760px){.project-media-grid-2,.project-media-grid-3{grid-template-columns:1fr}.project-media-grid-3 .main{grid-column:auto}.project-video-stable video{max-height:420px}}';
-        doc.head.appendChild(style);
-      }
-
-      var automotive=findCard(doc,['精益体系、VSM、单件流与SMED标准化','第一阶段精益体系','VSM、单件流与SMED']);
-      if(automotive){
-        mountFigure(doc,automotive,'automotiveLeanProjectImageStable','<img src="/media/projects/vsm-smed.webp?v=20260721-speed-v1" alt="汽车电子企业第一阶段精益体系建设" width="1400" height="933" loading="lazy" decoding="async" fetchpriority="low"><figcaption>汽车电子｜第一阶段精益体系建设｜精益体系、VSM、单件流与SMED标准化</figcaption>');
-      }
-
-      var smed=findCard(doc,['300T冲压机3.5T大型模具换模改善','300T冲压机SMED快速换模改善','3.5T大型模具SMED快速换模','大型模具｜SMED快速换型']);
-      if(smed){
-        var legacySmed=smed.querySelector('.project-cover,.project-media-v2');
-        if(legacySmed)legacySmed.remove();
-        mountFigure(doc,smed,'smed300TProjectImageStable','<img src="/media/projects/300t.webp?v=20260721-speed-v1" alt="300T冲压机3.5T大型模具SMED快速换模改善项目" width="1194" height="1317" loading="lazy" decoding="async" fetchpriority="low">');
-      }
-
-      var fuse=findCard(doc,['玻璃管保险丝切口断裂率改善','保险丝制程','切口工艺改良']);
-      if(fuse){
-        var fuseTitle=fuse.querySelector('h3');
-        if(fuseTitle)fuseTitle.textContent='玻璃管保险丝切口断裂率改善';
-        mountFigure(doc,fuse,'fuseProjectImagesStable','<div class="project-media-grid-2"><div><img src="/media/projects/fuse-before.webp?v=20260721-speed-v2" alt="玻璃管保险丝改善后半成品" width="900" height="494" loading="lazy" decoding="async" fetchpriority="low"><span>改善后半成品</span></div><div><img src="/media/projects/fuse-after.webp?v=20260721-speed-v1" alt="玻璃管保险丝改善后成品" width="816" height="1200" loading="lazy" decoding="async" fetchpriority="low"><span>改善后成品</span></div></div><figcaption>保险丝制程｜质量与工艺改善｜改善后半成品与成品实物对比</figcaption>');
-      }
-
-      var mold=findCard(doc,['智能模具库与可追溯管理','1200+副模具标准化与二维码追溯','1200副模具立体库']);
-      if(mold){
-        mountFigure(doc,mold,'moldProjectImagesStable','<div class="project-media-grid-3"><div class="main"><img src="/media/projects/mold-before.webp?v=20260721-speed-v1" alt="立体库Layout规划设计" width="1400" height="1008" loading="lazy" decoding="async" fetchpriority="low"><span>立体库Layout规划设计</span></div><div><img src="/media/projects/mold-after1.webp?v=20260721-speed-v1" alt="立体库雏形" width="900" height="1200" loading="lazy" decoding="async" fetchpriority="low"><span>立体库雏形</span></div><div><img src="/media/projects/mold-after2.webp?v=20260721-speed-v1" alt="智能立体库操作系统" width="900" height="505" loading="lazy" decoding="async" fetchpriority="low"><span>智能立体库操作系统</span></div></div><figcaption>智能模具库｜库位与追溯管理｜1200+副模具标准化与二维码追溯</figcaption>');
-        if(!mold.querySelector('#moldWarehouseProjectVideo')){
-          var videoBox=doc.createElement('section');
-          videoBox.id='moldWarehouseProjectVideo';
-          videoBox.className='project-video-stable';
-          videoBox.innerHTML='<h4>项目现场视频｜智能模具库运行实录</h4><video controls preload="none" playsinline poster="/media/projects/mold-after1.webp?v=20260721-speed-v1"><source src="/media/projects/mold-warehouse-540.mp4?v=20260721-speed-v1" type="video/mp4">您的浏览器暂不支持视频播放。</video><p>1200+副模具立体库｜库位管理、存取运行与数字化追溯现场记录</p>';
-          var figure=mold.querySelector('#moldProjectImagesStable');
-          if(figure)figure.insertAdjacentElement('afterend',videoBox);else mold.insertBefore(videoBox,mold.firstChild);
-        }
-      }
-
-      var digital=findCard(doc,['ERP/MES/APS协同与IE基础数据治理','数智化工厂｜数据地基']);
-      if(digital){
-        mountFigure(doc,digital,'digitalFactoryProjectImageStable','<img src="/media/projects/shuzhihua.webp?v=20260721-speed-v1" alt="数智化工厂数据地基与制造运营协同" width="1400" height="1120" loading="lazy" decoding="async" fetchpriority="low"><figcaption>数智化工厂｜数据地基：ERP、MES、APS与IE基础数据协同</figcaption>');
-      }
-
-      var factory=findCard(doc,['新工厂/新产线','Factory Layout','设计规划']);
-      if(factory){
-        mountFigure(doc,factory,'factoryLayoutProjectImageStable','<img src="/media/projects/factory-layout.webp?v=20260721-speed-v1" alt="Factory Layout新工厂新产线设计规划" width="1333" height="1180" loading="lazy" decoding="async" fetchpriority="low"><figcaption>新工厂/新产线｜Factory Layout、精益物流与扩展边界规划</figcaption>');
-      }
-    }
-
-    frame.addEventListener('load',function(){
-      try{
-        var doc=frame.contentDocument;
-        repairProjectMedia(doc);
-        setTimeout(function(){repairProjectMedia(doc);},500);
-        setTimeout(function(){repairProjectMedia(doc);},1500);
-        var projects=doc.getElementById('projects')||doc.body;
-        var queued=false;
-        var observer=new frame.contentWindow.MutationObserver(function(){
-          if(queued)return;
-          queued=true;
-          frame.contentWindow.requestAnimationFrame(function(){queued=false;repairProjectMedia(doc);});
-        });
-        observer.observe(projects,{childList:true,subtree:true});
-        setTimeout(function(){observer.disconnect();repairProjectMedia(doc);},5000);
-        if(location.hash&&frame.contentWindow)frame.contentWindow.location.hash=location.hash;
-      }catch(error){console.error(error);}
-    });
-  })();
-  </script>
-  <script src="/homepage-music.js?v=20260729-continuous-v4"></script>
-</body>
+<body><p>主页已迁移至<a href="/">QilyLean｜启力精益</a>。</p></body>
 </html>
