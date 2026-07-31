@@ -1,13 +1,13 @@
 name: Publish site-hosted evidence files
 
 on:
-  push:
-    paths:
-      - '.github/workflows/publish-evidence-pdfs-hd.yml'
   workflow_dispatch:
+  pull_request_target:
+    types: [opened, reopened, synchronize]
 
 permissions:
   contents: write
+  pull-requests: read
 
 concurrency:
   group: publish-site-hosted-evidence
@@ -15,7 +15,11 @@ concurrency:
 
 jobs:
   publish:
-    if: github.event.head_commit.message != 'chore: publish site-hosted evidence files [skip workflow]'
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request_target' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.title == 'Publish QilyLean site-hosted evidence assets')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -31,7 +35,7 @@ jobs:
           sudo apt-get update -qq
           sudo apt-get install -y -qq unzip
 
-      - name: Download temporary page-image archives
+      - name: Download temporary high-resolution page archives
         shell: bash
         run: |
           set -euo pipefail
@@ -58,13 +62,14 @@ jobs:
           mkdir -p "$target/q3" "$target/q4" "$target/award"
           python3 - <<'PY'
           from pathlib import Path
-          import re, shutil
+          import re
+          import shutil
 
           root = Path('/tmp/evidence')
           target = Path('assets/projects/lean-improvement-evidence')
           expected = {'q3': 5, 'q4': 9, 'award': 3}
 
-          def natural_key(path):
+          def natural_key(path: Path):
               return [int(x) if x.isdigit() else x.lower() for x in re.split(r'(\d+)', str(path))]
 
           for group, count in expected.items():
