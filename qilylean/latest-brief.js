@@ -4,6 +4,13 @@ var card=document.querySelector('[data-latest-brief-card]');
 if(!card)return;
 var datePattern=/^\d{4}-\d{2}-\d{2}$/;
 var stamp=Date.now();
+var releaseCandidate={
+  date:'2026-08-01',
+  theme:'工程项目交付管理',
+  title:'工程项目不是“做完”：用里程碑、风险、资源与收益形成交付闭环',
+  summary:'工程项目管理不能停在任务清单和完成率，而要把需求定义、范围基线、里程碑评审、风险控制、资源协同、变更管理、验收证据、收益兑现与标准复制贯通为交付闭环。',
+  href:'/qilylean/daily/2026-08-01.html'
+};
 
 function request(url,type){
   return fetch(url+(url.indexOf('?')>=0?'&':'?')+'latest='+stamp,{cache:'no-store'}).then(function(response){
@@ -91,6 +98,7 @@ Promise.all([
   request('/qilylean/daily-insights.html','text').then(directoryCandidate).catch(function(){return null;})
 ]).then(function(candidates){
   candidates.push(staticCandidate());
+  candidates.push(releaseCandidate);
   var latest=candidates.filter(Boolean).sort(function(a,b){return b.date.localeCompare(a.date);})[0];
   return latest?pageDetails(latest):null;
 }).then(render).catch(function(){});
