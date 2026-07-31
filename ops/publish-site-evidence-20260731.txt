@@ -1,0 +1,1 @@
+Trigger the same-repository pull_request_target workflow to publish the three QilyLean evidence packages as site-hosted page images and PDF files. No Adobe links are used by the public preview pages.
