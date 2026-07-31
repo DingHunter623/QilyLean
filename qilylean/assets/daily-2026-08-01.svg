@@ -1,0 +1,40 @@
+<svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">工程项目交付闭环</title>
+  <desc id="desc">从需求立项、计划基线、里程碑评审、风险资源、验收收益到标准复制的工程项目交付闭环。</desc>
+  <rect width="1080" height="1080" rx="54" fill="#123e51"/>
+  <rect x="72" y="72" width="936" height="936" rx="42" fill="none" stroke="#8fc7c8" stroke-width="3" opacity="0.55"/>
+  <text x="540" y="150" fill="#d8eff0" font-size="28" font-weight="700" text-anchor="middle" letter-spacing="5">DAILY ENGINEERING BRIEF</text>
+  <text x="540" y="225" fill="#ffffff" font-size="54" font-weight="900" text-anchor="middle">工程项目交付闭环</text>
+  <text x="540" y="276" fill="#f7d98b" font-size="27" font-weight="700" text-anchor="middle">不是把任务做完，而是把目标、证据与收益交付</text>
+
+  <g font-family="Arial, PingFang SC, Microsoft YaHei, sans-serif" font-weight="800" text-anchor="middle">
+    <rect x="105" y="390" width="210" height="112" rx="22" fill="#ffffff"/>
+    <text x="210" y="435" fill="#123e51" font-size="25">需求 / 立项</text>
+    <text x="210" y="472" fill="#56737d" font-size="19">范围与收益基线</text>
+
+    <rect x="435" y="390" width="210" height="112" rx="22" fill="#f7d98b"/>
+    <text x="540" y="435" fill="#574015" font-size="25">里程碑评审</text>
+    <text x="540" y="472" fill="#7a622a" font-size="19">阶段门与证据</text>
+
+    <rect x="765" y="390" width="210" height="112" rx="22" fill="#ffffff"/>
+    <text x="870" y="435" fill="#123e51" font-size="25">验收 / 收益</text>
+    <text x="870" y="472" fill="#56737d" font-size="19">结果与标准复制</text>
+  </g>
+
+  <path d="M315 446H435" stroke="#8fc7c8" stroke-width="9" stroke-linecap="round"/>
+  <path d="M645 446H765" stroke="#8fc7c8" stroke-width="9" stroke-linecap="round"/>
+  <path d="M414 428l22 18-22 18M744 428l22 18-22 18" fill="none" stroke="#8fc7c8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <rect x="130" y="610" width="820" height="176" rx="30" fill="#0c3140" stroke="#2f6c78" stroke-width="3"/>
+  <g fill="#d8eff0" font-size="25" font-weight="800" text-anchor="middle">
+    <text x="245" y="675">范围</text><text x="395" y="675">进度</text><text x="545" y="675">风险</text><text x="695" y="675">资源</text><text x="845" y="675">收益</text>
+  </g>
+  <g fill="#f7d98b">
+    <circle cx="245" cy="724" r="14"/><circle cx="395" cy="724" r="14"/><circle cx="545" cy="724" r="14"/><circle cx="695" cy="724" r="14"/><circle cx="845" cy="724" r="14"/>
+  </g>
+  <path d="M245 724H845" stroke="#f7d98b" stroke-width="5" stroke-dasharray="13 12"/>
+
+  <text x="540" y="875" fill="#ffffff" font-size="34" font-weight="850" text-anchor="middle">项目池 · 基线 · 阶段门 · RACI · 风险台账 · 收益验证</text>
+  <text x="540" y="930" fill="#d8eff0" font-size="25" text-anchor="middle">QilyLean｜启力精益</text>
+  <text x="540" y="974" fill="#8fc7c8" font-size="22" text-anchor="middle">2026-08-01</text>
+</svg>
