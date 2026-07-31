@@ -1,0 +1,37 @@
+name: SEO indexability check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - 'robots.txt'
+      - 'sitemap*.xml'
+      - 'scripts/validate-seo-indexability.js'
+      - 'package.json'
+      - '.github/workflows/seo-indexability.yml'
+  pull_request:
+    paths:
+      - '**/*.html'
+      - 'robots.txt'
+      - 'sitemap*.xml'
+      - 'scripts/validate-seo-indexability.js'
+      - 'package.json'
+      - '.github/workflows/seo-indexability.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-indexability:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate sitemap and robots directives
+        run: node scripts/validate-seo-indexability.js
