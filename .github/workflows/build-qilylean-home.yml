@@ -15,8 +15,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Android project only
         uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            android/qilylean-home
+          sparse-checkout-cone-mode: true
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
