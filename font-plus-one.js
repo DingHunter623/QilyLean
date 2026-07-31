@@ -30,7 +30,7 @@
   function load(src,id){if(document.getElementById(id))return;var s=document.createElement('script');s.id=id;s.src=src;document.body.appendChild(s);}
   function boot(){
     normalizeModuleNavigation();
-    load('/direct-navigation.js?v=20260722-reliability-v1','directNavigationScript');
+    load('/direct-navigation.js?v=20260731-links-v1','directNavigationScript');
     load('terminology-v2.js?v=term2','terminologyV2Script');
     load('homepage-depth.js?v=depth3','homepageDepthScript');
     load('project-media-home.js?v=20260721-speed-v3','projectMediaHomeScript');
