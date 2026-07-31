@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanBrandIdentityV2) return;
-  window.__qilyLeanBrandIdentityV2 = true;
+  if (window.__qilyLeanBrandIdentityV3) return;
+  window.__qilyLeanBrandIdentityV3 = true;
 
   var BRAND = 'QilyLean｜启力精益';
   var BRAND_PLAIN = 'QilyLean 启力精益';
@@ -83,6 +83,49 @@
     else link.removeAttribute('aria-current');
   }
 
+  function applyIndustryResourceEntry() {
+    if (normalizedPath().indexOf(FRIEND_LINKS_PATH) !== 0) return;
+
+    var service = document.getElementById('industryResourceService');
+    var grid = document.getElementById('companyGrid');
+    var toolbar = document.querySelector('.toolbar');
+    var filters = document.getElementById('filters');
+    if (!service || !grid || !toolbar || !filters) return;
+
+    if (service.nextElementSibling !== grid) grid.parentNode.insertBefore(service, grid);
+
+    if (!document.getElementById('qilyIndustryResourceEntryStyle')) {
+      var style = document.createElement('style');
+      style.id = 'qilyIndustryResourceEntryStyle';
+      style.textContent = '.resource-filter-shortcut{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:7px 13px;border:1px solid #ffe39b;border-radius:999px;color:#17231e;background:#ffe39b;font:inherit;font-size:14px;font-weight:950;text-decoration:none;box-shadow:0 7px 16px rgba(15,75,90,.12)}.resource-filter-shortcut:hover,.resource-filter-shortcut:focus-visible{transform:translateY(-1px);box-shadow:0 10px 22px rgba(15,75,90,.18);outline:none}.resource-service{margin:0 0 28px!important}.resource-service.qily-resource-focus{animation:qilyResourcePulse 1.1s ease}@keyframes qilyResourcePulse{0%{box-shadow:0 0 0 0 rgba(23,139,148,.32)}100%{box-shadow:0 0 0 18px rgba(23,139,148,0)}}';
+      document.head.appendChild(style);
+    }
+
+    var shortcut = document.getElementById('industryResourceQuickEntry');
+    if (!shortcut) {
+      shortcut = document.createElement('a');
+      shortcut.id = 'industryResourceQuickEntry';
+      shortcut.className = 'resource-filter-shortcut';
+      shortcut.href = '#industryResourceService';
+      shortcut.textContent = '行业资源入驻服务 · 洽谈筹备中';
+      shortcut.setAttribute('aria-label', '查看中国硬科技行业资源入驻服务');
+      shortcut.addEventListener('click', function () {
+        service.classList.remove('qily-resource-focus');
+        requestAnimationFrame(function () { service.classList.add('qily-resource-focus'); });
+      });
+      filters.appendChild(shortcut);
+    }
+
+    Array.prototype.forEach.call(filters.querySelectorAll('button.filter'), function (button) {
+      if ((button.textContent || '').trim() !== '中国硬科技' || button.dataset.qilyResourceBound === '1') return;
+      button.dataset.qilyResourceBound = '1';
+      button.addEventListener('click', function () {
+        service.classList.remove('qily-resource-focus');
+        requestAnimationFrame(function () { service.classList.add('qily-resource-focus'); });
+      });
+    });
+  }
+
   function applyHomepage() {
     if (normalizedPath() !== '/') return;
 
@@ -115,6 +158,7 @@
     applyHead();
     applyBrandHeader();
     applyFriendLinksNavigation();
+    applyIndustryResourceEntry();
     applyHomepage();
     applySharePanel();
   }
