@@ -1,6 +1,9 @@
 name: Protect client and owner identity wording
 
 on:
+  push:
+    paths:
+      - 'ops/run-client-identity-protection.txt'
   pull_request_target:
     types: [opened, reopened, synchronize]
 
@@ -11,8 +14,10 @@ permissions:
 jobs:
   protect-copy:
     if: >-
-      github.event.pull_request.head.repo.full_name == github.repository &&
-      github.event.pull_request.title == 'Protect QilyLean client and owner identity'
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request_target' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.title == 'Protect QilyLean client and owner identity')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
