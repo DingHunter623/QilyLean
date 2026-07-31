@@ -3,30 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>QilyLean页面迁移</title>
-  <meta name="robots" content="noindex,follow">
+  <title>QilyLean主页已迁移</title>
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://qilylean.com/">
+  <meta http-equiv="refresh" content="0; url=/">
   <script>
-    (function () {
-      var routes = {
-        '#capabilities': '/capabilities/',
-        '#experience': '/experience/',
-        '#projects': '/projects/',
-        '#papers': '/improvements/',
-        '#knowledge': '/knowledge/'
-      };
-      location.replace(routes[location.hash] || '/');
+    (function(){
+      var routes={capabilities:'/capabilities/',experience:'/experience/',projects:'/projects/',papers:'/improvements/',knowledge:'/knowledge/',cooperation:'/cooperation/'};
+      var key=(location.hash||'').slice(1);
+      location.replace((routes[key]||'/')+location.search);
     })();
   </script>
 </head>
-<body>
-  <p>页面已拆分为独立模块，正在跳转……</p>
-  <nav>
-    <a href="/">首页</a>
-    <a href="/capabilities/">能力画像</a>
-    <a href="/experience/">履历主线</a>
-    <a href="/projects/">代表项目</a>
-    <a href="/improvements/">改善经验</a>
-    <a href="/knowledge/">知识分享</a>
-  </nav>
-</body>
+<body><p>主页已迁移至<a href="/">QilyLean｜启力精益</a>。</p></body>
 </html>
