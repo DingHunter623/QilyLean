@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - '.github/workflows/publish-evidence-pdfs.yml'
+      - 'assets/projects/lean-improvement-evidence/data/**'
 
 permissions:
   contents: write
