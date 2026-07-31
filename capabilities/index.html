@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>能力画像｜QilyLean制造改善方法体系</title>
-  <meta name="description" content="丁启利制造改善能力画像：VSM、标准工时、OEE、SMED、质量改善、Factory Layout、ERP/MES/APS、AI应用与自主数字工具作品。">
+  <meta name="description" content="丁启利制造改善能力画像：VSM、标准工时、OEE、SMED、质量改善、Factory Layout、ERP/MES/APS、AI应用、自主数字工具及制造改善项目佐证。">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://qilylean.com/capabilities/">
 <style>
@@ -17,6 +17,10 @@
   .capability-certificate-visual img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#edf4f2}
   .capability-certificate-visual figcaption{padding:12px 16px;color:#5f7474;font-size:15px;line-height:1.6;border-top:1px solid #d5e4e3}
   .capability-digital-content p{margin-top:0}
+  .evidence-note{margin:0 0 22px;padding:16px 18px;border-left:4px solid #caa15f;background:#f7fbfa;color:#496565;line-height:1.75}
+  .evidence-card{display:flex;flex-direction:column;min-height:100%}
+  .evidence-card .module-actions{margin-top:auto}
+  .evidence-meta{margin:12px 0 18px;color:#5f7474;font-size:15px;line-height:1.7}
   @media(max-width:860px){.capability-digital-tool,.capability-certificate{grid-template-columns:1fr}.capability-digital-visual{max-width:820px;margin:auto}.capability-certificate-visual{width:min(420px,100%);margin:auto}}
   </style>
   <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>
@@ -47,7 +51,7 @@
       <div class="module-inner">
         <span class="module-eyebrow">Capability Map / Lean / IE / Smart Factory</span>
         <h1>能力画像</h1>
-        <p class="module-lead">从现场诊断、系统数据到机制固化与经营结果，以代表项目和自主数字工具作品呈现方法路径与交付成果。</p>
+        <p class="module-lead">从现场诊断、系统数据到机制固化与经营结果，以代表项目、自主数字工具作品和公开脱敏佐证呈现方法路径与交付成果。</p>
         <nav class="module-subnav" aria-label="能力子模块">
           <a href="#flow">流程与交付</a>
           <a href="#data">数据与产能</a>
@@ -57,6 +61,7 @@
           <a href="#management">管理与固化</a>
           <a href="#digital">数智化协同</a>
           <a href="#mechanism">项目机制</a>
+          <a href="#project-evidence">项目佐证</a>
           <a href="#digital-tools">数字工具作品</a>
           <a href="#ai-certificate">AI应用证书</a>
           <a href="/projects/">代表项目</a>
@@ -71,123 +76,76 @@
           <p>八个能力域分别对应典型问题、核心方法和标准输出，便于企业负责人、项目经理及制造团队快速判断专业匹配度。</p>
         </div>
         <div class="module-grid four capability-map">
-          <article class="module-card" id="flow">
-            <small>流程与交付</small>
-            <h3>VSM / LT / WIP</h3>
-            <p>识别订单信息流、物料流、生产节拍、等待、库存和发货节奏之间的断点。重点不是画图，而是形成改善优先级、责任边界和跨部门行动。</p>
-            <div class="module-result">输出：现状图、未来态、LT结构、WIP控制和交付改善路径。</div>
-          </article>
-          <article class="module-card" id="data">
-            <small>数据与产能</small>
-            <h3>标准工时 / UPPH / 线平衡</h3>
-            <p><strong>IE 7 Tools · ECRS · 动作经济原则</strong><br>运用IE七大手法识别作业、流程、动线与浪费，再以ECRS（取消、合并、重排、简化）及动作经济原则重构作业方法；用标准工时、UPPH和线平衡验证改善成效，支撑产能、排程、报价、成本及ERP/MES参数。</p>
-            <div class="module-result">输出：工时版本、标准产能、线平衡方案、ECRS改善清单、人机配置、节拍和排程基础数据。</div>
-          </article>
-          <article class="module-card" id="equipment">
-            <small>设备与换型</small>
-            <h3>OEE / SMED / TPM</h3>
-            <p>把停机、速度损失、换型等待、首件确认、不良返工和物料准备纳入统一损失结构。SMED不是催人更快，而是标准化换型系统。</p>
-            <div class="module-result">输出：损失结构、换型流程、工具定置、参数基准和首件确认。</div>
-          </article>
-          <article class="module-card" id="quality">
-            <small>质量与异常</small>
-            <h3>IATF 16949 / 六大工具</h3>
-            <p><strong>APQP · PPAP · FMEA · MSA · SPC · CP</strong><br>以汽车质量管理体系贯穿产品与过程策划、风险预防、测量系统、统计控制和量产批准；再用5M2E识别要因、8D解决跨部门异常、PDCA验证并固化改善，避免只在问题发生后被动纠正。</p>
-            <div class="module-result">输出：APQP/PPAP文件链、FMEA与控制计划、MSA/SPC验证、8D闭环、Poka-Yoke和过程控制机制。</div>
-          </article>
-          <article class="module-card" id="layout">
-            <small>布局与物流</small>
-            <h3>Factory Layout / 精益物流</h3>
-            <p>新工厂设计规划不是先画漂亮Layout，而是先定义产品、产能、工艺、物流、人员、设备、公辅、品质和扩展边界。</p>
-            <div class="module-result">输出：人流物流动线、库位、配送频次、WIP控制和扩展弹性。</div>
-          </article>
-          <article class="module-card" id="management">
-            <small>管理与固化</small>
-            <h3>DMS / 6S / 目视化</h3>
-            <p>目视化不是贴标识，而是把状态、边界、责任、异常、标准和节奏变成现场共同语言。</p>
-            <div class="module-result">输出：DMS、6S红线、点检、看板、表单和复盘机制。</div>
-          </article>
-          <article class="module-card" id="digital">
-            <small>数智化协同</small>
-            <h3>ERP / MES / APS</h3>
-            <p>数智化工厂先做数据地基，再谈软件、大屏和自动化；否则系统只会放大现场混乱。</p>
-            <div class="module-result">输出：BOM、路线、工时、产能、计划、实绩和库存口径统一。</div>
-          </article>
-          <article class="module-card" id="mechanism">
-            <small>项目机制</small>
-            <h3>阶段门 / PMO / 横向复制</h3>
-            <p>以项目机制推动改善，不依赖个人英雄主义；用阶段门管理范围、风险、责任、验证和复制。</p>
-            <div class="module-result">输出：试点验证、培训稽核、复盘沉淀和横向复制。</div>
-          </article>
+          <article class="module-card" id="flow"><small>流程与交付</small><h3>VSM / LT / WIP</h3><p>识别订单信息流、物料流、生产节拍、等待、库存和发货节奏之间的断点。重点不是画图，而是形成改善优先级、责任边界和跨部门行动。</p><div class="module-result">输出：现状图、未来态、LT结构、WIP控制和交付改善路径。</div></article>
+          <article class="module-card" id="data"><small>数据与产能</small><h3>标准工时 / UPPH / 线平衡</h3><p><strong>IE 7 Tools · ECRS · 动作经济原则</strong><br>运用IE七大手法识别作业、流程、动线与浪费，再以ECRS（取消、合并、重排、简化）及动作经济原则重构作业方法；用标准工时、UPPH和线平衡验证改善成效，支撑产能、排程、报价、成本及ERP/MES参数。</p><div class="module-result">输出：工时版本、标准产能、线平衡方案、ECRS改善清单、人机配置、节拍和排程基础数据。</div></article>
+          <article class="module-card" id="equipment"><small>设备与换型</small><h3>OEE / SMED / TPM</h3><p>把停机、速度损失、换型等待、首件确认、不良返工和物料准备纳入统一损失结构。SMED不是催人更快，而是标准化换型系统。</p><div class="module-result">输出：损失结构、换型流程、工具定置、参数基准和首件确认。</div></article>
+          <article class="module-card" id="quality"><small>质量与异常</small><h3>IATF 16949 / 六大工具</h3><p><strong>APQP · PPAP · FMEA · MSA · SPC · CP</strong><br>以汽车质量管理体系贯穿产品与过程策划、风险预防、测量系统、统计控制和量产批准；再用5M2E识别要因、8D解决跨部门异常、PDCA验证并固化改善，避免只在问题发生后被动纠正。</p><div class="module-result">输出：APQP/PPAP文件链、FMEA与控制计划、MSA/SPC验证、8D闭环、Poka-Yoke和过程控制机制。</div></article>
+          <article class="module-card" id="layout"><small>布局与物流</small><h3>Factory Layout / 精益物流</h3><p>新工厂设计规划不是先画漂亮Layout，而是先定义产品、产能、工艺、物流、人员、设备、公辅、品质和扩展边界。</p><div class="module-result">输出：人流物流动线、库位、配送频次、WIP控制和扩展弹性。</div></article>
+          <article class="module-card" id="management"><small>管理与固化</small><h3>DMS / 6S / 目视化</h3><p>目视化不是贴标识，而是把状态、边界、责任、异常、标准和节奏变成现场共同语言。</p><div class="module-result">输出：DMS、6S红线、点检、看板、表单和复盘机制。</div></article>
+          <article class="module-card" id="digital"><small>数智化协同</small><h3>ERP / MES / APS</h3><p>数智化工厂先做数据地基，再谈软件、大屏和自动化；否则系统只会放大现场混乱。</p><div class="module-result">输出：BOM、路线、工时、产能、计划、实绩和库存口径统一。</div></article>
+          <article class="module-card" id="mechanism"><small>项目机制</small><h3>阶段门 / PMO / 横向复制</h3><p>以项目机制推动改善，不依赖个人英雄主义；用阶段门管理范围、风险、责任、验证和复制。</p><div class="module-result">输出：试点验证、培训稽核、复盘沉淀和横向复制。</div></article>
         </div>
       </div>
     </section>
 
-    <section class="module-section alt" id="digital-tools">
+    <section class="module-section alt" id="project-evidence">
       <div class="module-inner">
         <div class="module-heading">
-          <h2>数字工具作品</h2>
-          <p>将工业工程现场需求转化为可直接使用、可持续迭代的数字工具，体现从问题识别、功能定义到开发发布的完整交付能力。</p>
+          <h2>制造改善项目佐证资料</h2>
+          <p>以企业内部形成的课题评审、效益核算、风险评价、会议记录及奖励发放照片，补充验证制造改善项目的组织推进与成果闭环。</p>
         </div>
-        <div class="capability-digital-tool">
-          <figure class="capability-digital-visual">
-            <a href="/tools/times26001/" aria-label="查看Times26001应用介绍">
-              <img src="/assets/tools/times26001-overview.svg?v=20260727-android-v112" alt="Times26001思大时间管理与IE分段计时工具功能概览" width="1200" height="720" loading="lazy" decoding="async">
-            </a>
-          </figure>
-          <article class="module-card capability-digital-content">
-            <small>数字工具作品｜时间管理＋IE现场测时</small>
-            <h3>Times26001｜思大时间管理</h3>
-            <p><strong>“QilyLean AI | 启力精益”为IE时间分析自主开发的时间工具。</strong> 集成北京时间、万年历、闹钟响铃、秒表分段、总时长汇总、按秒倒计时、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。</p>
-            <div class="module-result">Android v1.1.2｜按秒倒计时｜闹钟与倒计时响铃通知｜分段计时与文本复制</div>
-            <div class="module-actions">
-              <a href="/tools/times26001/">查看APP介绍</a>
-              <a class="secondary" href="/Times26001-Android-v1.1.2-IE-Stopwatch.apk?build=e9593f1" download>Android直接下载</a>
-            </div>
+        <div class="evidence-note"><strong>公开脱敏说明：</strong>资料仅对企业名称、内部编号、第三方姓名与签名及人物面部进行脱敏；日期、课题、评审结构、评分及财务贡献口径按原材料保留。完整原始资料留档，必要时可在授权范围内核验。</div>
+        <div class="module-grid three">
+          <article class="module-card evidence-card">
+            <small>2022年第三季度｜5页</small>
+            <h3>课题改善效益评审及激励申请报告</h3>
+            <p>覆盖费用报销、改善效益评审、时间管理计划、会议签到与审批记录。8项课题经内部评审，可量化年度财务贡献合计约357.91万元。</p>
+            <div class="evidence-meta">证据链：课题立项与推进 → 效果确认 → 财务贡献核定 → 管理层审批 → 改善激励。</div>
+            <div class="module-actions"><a href="https://www.adobe.com/files/id/urn:aaid:sc:VA6C2:273a8ba2-d99c-463c-bdc9-887239d1fb1d" target="_blank" rel="noopener">在线查看PDF</a></div>
           </article>
+          <article class="module-card evidence-card">
+            <small>2022年第四季度｜9页</small>
+            <h3>精益课题改善评审记录</h3>
+            <p>包含会议签到、多个评委评分记录及风险评价表，展示课题从采纳评审、五维评分到产量、设备、文件、环境、物料、操作和质量风险确认的系统评价过程。</p>
+            <div class="evidence-meta">证据链：会议组织 → 多评委评分 → 风险评价 → 课题采纳与排序。</div>
+            <div class="module-actions"><a href="https://www.adobe.com/files/id/urn:aaid:sc:VA6C2:8084bc61-a64e-4b47-bd18-2a13f356b9b1" target="_blank" rel="noopener">在线查看PDF</a></div>
+          </article>
+          <article class="module-card evidence-card">
+            <small>奖励发放现场｜3页</small>
+            <h3>获奖合照与对应奖励红包</h3>
+            <p>三组奖励发放现场合照与对应红包记录，人物面部统一采用向日葵花盘脱敏，保留颁发动作、奖励载体及现场环境，用于佐证改善激励已实际兑现。</p>
+            <div class="evidence-meta">隐私处理：人物面部向日葵脱敏；红包、颁发动作和现场背景保留。</div>
+            <div class="module-actions"><a href="https://www.adobe.com/files/id/urn:aaid:sc:VA6C2:73d168a5-ab5d-47b9-93db-4cb5c604d650" target="_blank" rel="noopener">在线查看PDF</a></div>
+          </article>
+        </div>
+        <div class="module-actions"><a href="/projects/lean-improvement-evidence/">进入项目佐证独立页面</a><a class="secondary" href="/projects/">返回代表项目</a></div>
+      </div>
+    </section>
+
+    <section class="module-section" id="digital-tools">
+      <div class="module-inner">
+        <div class="module-heading"><h2>数字工具作品</h2><p>将工业工程现场需求转化为可直接使用、可持续迭代的数字工具，体现从问题识别、功能定义到开发发布的完整交付能力。</p></div>
+        <div class="capability-digital-tool">
+          <figure class="capability-digital-visual"><a href="/tools/times26001/" aria-label="查看Times26001应用介绍"><img src="/assets/tools/times26001-overview.svg?v=20260727-android-v112" alt="Times26001思大时间管理与IE分段计时工具功能概览" width="1200" height="720" loading="lazy" decoding="async"></a></figure>
+          <article class="module-card capability-digital-content"><small>数字工具作品｜时间管理＋IE现场测时</small><h3>Times26001｜思大时间管理</h3><p><strong>“QilyLean AI | 启力精益”为IE时间分析自主开发的时间工具。</strong> 集成北京时间、万年历、闹钟响铃、秒表分段、总时长汇总、按秒倒计时、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。</p><div class="module-result">Android v1.1.2｜按秒倒计时｜闹钟与倒计时响铃通知｜分段计时与文本复制</div><div class="module-actions"><a href="/tools/times26001/">查看APP介绍</a><a class="secondary" href="/Times26001-Android-v1.1.2-IE-Stopwatch.apk?build=e9593f1" download>Android直接下载</a></div></article>
         </div>
       </div>
     </section>
 
     <section class="module-section" id="ai-certificate">
       <div class="module-inner">
-        <div class="module-heading">
-          <h2>AI应用与精益实践</h2>
-          <p>以持续学习、真实应用和成果沉淀为主线，将人工智能工具用于制造改善、数据分析、代码与网页资产生成及知识库建设。</p>
-        </div>
+        <div class="module-heading"><h2>AI应用与精益实践</h2><p>以持续学习、真实应用和成果沉淀为主线，将人工智能工具用于制造改善、数据分析、代码与网页资产生成及知识库建设。</p></div>
         <div class="capability-certificate">
-          <figure class="capability-certificate-visual">
-            <a href="/certificates/chatgpt-lean/" aria-label="进入ChatGPT应用与精益生产实践证书独立详情页">
-              <img src="/qilylean/chatgpt-lean-certificate-web.jpg?v=20260728-thumbnail-v2" alt="丁启利ChatGPT应用与精益生产实践学习成果纪念证书缩略图" loading="lazy" decoding="async">
-            </a>
-            <figcaption>证书缩略图｜点击进入独立详情页查看高清原图</figcaption>
-          </figure>
-          <article class="module-card">
-            <small>AI × Lean Manufacturing</small>
-            <h3>ChatGPT应用与精益生产实践</h3>
-            <p>自ChatGPT首次公开发布以来持续学习并实践人工智能工具应用，将ChatGPT、Codex等工具用于流程优化、效率提升、数据分析、程序文件编制、代码与网页资产生成，以及制造改善知识沉淀。</p>
-            <div class="module-result">证书编号：GPT-LE-2025-0422｜颁发日期：2025年4月22日</div>
-            <div class="module-actions">
-              <a href="/certificates/chatgpt-lean/">查看证书详情与原图</a>
-              <a class="secondary" href="/ai.html">进入 QilyLean AI</a>
-            </div>
-          </article>
+          <figure class="capability-certificate-visual"><a href="/certificates/chatgpt-lean/" aria-label="进入ChatGPT应用与精益生产实践证书独立详情页"><img src="/qilylean/chatgpt-lean-certificate-web.jpg?v=20260728-thumbnail-v2" alt="丁启利ChatGPT应用与精益生产实践学习成果纪念证书缩略图" loading="lazy" decoding="async"></a><figcaption>证书缩略图｜点击进入独立详情页查看高清原图</figcaption></figure>
+          <article class="module-card"><small>AI × Lean Manufacturing</small><h3>ChatGPT应用与精益生产实践</h3><p>自ChatGPT首次公开发布以来持续学习并实践人工智能工具应用，将ChatGPT、Codex等工具用于流程优化、效率提升、数据分析、程序文件编制、代码与网页资产生成，以及制造改善知识沉淀。</p><div class="module-result">证书编号：GPT-LE-2025-0422｜颁发日期：2025年4月22日</div><div class="module-actions"><a href="/certificates/chatgpt-lean/">查看证书详情与原图</a><a class="secondary" href="/ai.html">进入 QilyLean AI</a></div></article>
         </div>
       </div>
     </section>
 
     <section class="module-section alt">
       <div class="module-inner">
-        <div class="module-heading">
-          <h2>相关模块</h2>
-          <p>需要核对能力的项目证据或方法沉淀时，可进入相应独立页面。</p>
-        </div>
-        <div class="module-actions">
-          <a href="/cooperation/">项目合作／预约诊断</a>
-          <a class="secondary" href="/projects/">查看代表项目</a>
-          <a class="secondary" href="/improvements/">查看改善经验</a>
-          <a class="secondary" href="/ai.html">进入 QilyLean AI</a>
-        </div>
+        <div class="module-heading"><h2>相关模块</h2><p>需要核对能力的项目证据或方法沉淀时，可进入相应独立页面。</p></div>
+        <div class="module-actions"><a href="/cooperation/">项目合作／预约诊断</a><a class="secondary" href="/projects/">查看代表项目</a><a class="secondary" href="/improvements/">查看改善经验</a><a class="secondary" href="/ai.html">进入 QilyLean AI</a></div>
       </div>
     </section>
   </main>
