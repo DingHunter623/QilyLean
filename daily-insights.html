@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>今日简报｜QilyLean</title>
-  <meta name="robots" content="noindex,follow">
+  <title>今日简报页面已迁移｜QilyLean</title>
+  <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://qilylean.com/qilylean/daily-insights.html">
+  <meta http-equiv="refresh" content="0; url=/qilylean/daily-insights.html">
   <script>
-    (function () {
-      var date = (location.hash || '').slice(1);
-      var target = /^\d{4}-\d{2}-\d{2}$/.test(date)
-        ? '/qilylean/daily/' + date + '.html'
-        : '/qilylean/daily-insights.html';
-      location.replace(target + (/^\d{4}-\d{2}-\d{2}$/.test(date) ? '' : location.search));
+    (function(){
+      var date=(location.hash||'').slice(1);
+      var dated=/^\d{4}-\d{2}-\d{2}$/.test(date);
+      var target=dated?'/qilylean/daily/'+date+'.html':'/qilylean/daily-insights.html';
+      location.replace(target+(dated?'':location.search));
     })();
   </script>
 </head>
-<body><a href="/qilylean/daily-insights.html">进入今日简报</a></body>
+<body><p>页面已迁移至<a href="/qilylean/daily-insights.html">QilyLean今日简报</a>。</p></body>
 </html>
