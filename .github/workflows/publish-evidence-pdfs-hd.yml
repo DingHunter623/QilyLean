@@ -115,3 +115,74 @@ jobs:
           fi
           git commit -m 'chore: publish site-hosted evidence files [skip workflow]'
           git push origin HEAD:main
+
+  add-case-sharing-copy:
+    if: >-
+      github.event_name == 'pull_request_target' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.title == 'Add project case sharing copy'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout latest main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Add public-redaction and projection-review wording
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path('projects/lean-improvement-evidence/index.html'): [
+                  (
+                      '公开版本仅对企业名称、内部编号、第三方姓名与签名及人物面部进行脱敏，日期、课题、评分、评审结构和已核定财务贡献口径按原材料保留。</div>',
+                      '公开版本仅对企业名称、内部编号、第三方姓名与签名及人物面部进行脱敏，日期、课题、评分、评审结构和已核定财务贡献口径按原材料保留。<br><strong>正式洽谈核验：</strong>公开网页仅展示脱敏资料。进入正式洽谈并确认合作意向后，可在签署保密约定或现场会议条件下，通过投屏方式展示与客户需求相匹配的更完整案例资料，包括改善前后基线、实施过程、阶段评审、结案绩效、财务确认口径及相关验收记录；投屏资料仅用于能力核验，不作未授权复制或公开传播。</div>'
+                  )
+              ],
+              Path('capabilities/index.html'): [
+                  (
+                      '资料仅对企业名称、内部编号、第三方姓名与签名及人物面部进行脱敏；日期、课题、评审结构、评分及已核定财务贡献口径按原材料保留。</div>',
+                      '资料仅对企业名称、内部编号、第三方姓名与签名及人物面部进行脱敏；日期、课题、评审结构、评分及已核定财务贡献口径按原材料保留。<br><strong>案例核验方式：</strong>公开端展示脱敏佐证；正式洽谈阶段可依据企业需求，在保密约定下投屏分享匹配案例、改善前后数据、结案绩效及验收材料。涉及客户名称、合同、成本、工艺及内部经营数据的内容，仅限现场核验。</div>'
+                  )
+              ],
+              Path('cooperation/index.html'): [
+                  (
+                      '<section class="module-section alt" id="evidence"><div class="module-inner"><div class="module-heading"><h2>项目结果证据</h2><p>公开展示经过脱敏的典型量化成果；正式合作时依据企业现状重新建立基线，不照搬结论。</p></div>',
+                      '<section class="module-section alt" id="evidence"><div class="module-inner"><div class="module-heading"><h2>项目结果证据</h2><p>公开网页展示经过脱敏的典型量化成果；进入正式洽谈并确认合作意向后，可在签署NDA或双方约定的保密条件下，通过投屏方式展示与企业问题相匹配的案例资料，包括诊断基线、改善方案、实施过程、结案绩效及验收证明。投屏资料用于项目能力核验，不提供未授权拷贝或外传；正式合作仍须依据企业现状重新建立基线，不照搬既有结论。</p></div>'
+                  )
+              ],
+          }
+
+          for path, pairs in replacements.items():
+              text = path.read_text(encoding='utf-8')
+              for old, new in pairs:
+                  count = text.count(old)
+                  if count == 0 and new in text:
+                      print(f'{path}: wording already present')
+                      continue
+                  if count != 1:
+                      raise SystemExit(f'{path}: expected exactly one source match, found {count}')
+                  text = text.replace(old, new, 1)
+              path.write_text(text, encoding='utf-8')
+              print(f'updated {path}')
+          PY
+
+      - name: Commit case-sharing wording
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add projects/lean-improvement-evidence/index.html capabilities/index.html cooperation/index.html
+          if git diff --cached --quiet; then
+            echo 'Case-sharing wording is already current.'
+            exit 0
+          fi
+          git commit -m 'content: clarify redacted evidence and projection review [skip workflow]'
+          git push origin HEAD:main
