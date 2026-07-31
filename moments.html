@@ -3,17 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>行走印记｜QilyLean</title>
-  <meta name="robots" content="noindex,follow">
+  <title>行走印记页面已迁移｜QilyLean</title>
+  <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://qilylean.com/moments/">
+  <meta http-equiv="refresh" content="0; url=/moments/">
   <script>
     (function(){
-      var routes={"work":"/moments/work/","team":"/moments/team/","business":"/moments/business/","life":"/moments/life/"};
+      var routes={work:'/moments/work/',team:'/moments/team/',business:'/moments/business/',life:'/moments/life/'};
       var key=(location.hash||'').slice(1);
       var target=routes[key]||'/moments/';
-      location.replace(target+location.search+(routes[key]?'':location.hash));
+      location.replace(target+location.search);
     })();
   </script>
 </head>
-<body><a href="/moments/">进入行走印记</a></body>
+<body><p>页面已迁移至<a href="/moments/">QilyLean行走印记</a>。</p></body>
 </html>
