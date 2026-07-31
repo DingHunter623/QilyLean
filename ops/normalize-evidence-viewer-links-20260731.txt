@@ -1,0 +1,1 @@
+Trigger the one-time same-repository link-normalization workflow so every legacy evidence preview route is replaced with the new QilyLean site-hosted viewer route.
