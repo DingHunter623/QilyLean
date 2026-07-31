@@ -1,0 +1,61 @@
+name: Publish HD evidence PDF originals
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-evidence-pdfs-hd.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    if: github.event.head_commit.message != 'chore: publish HD evidence PDFs [skip workflow]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download original HD PDF files
+        shell: bash
+        run: |
+          set -euo pipefail
+          target='assets/projects/lean-improvement-evidence'
+          mkdir -p "$target"
+          curl --fail --location --retry 5 --retry-all-errors --connect-timeout 20 --max-time 300 \
+            -A 'Mozilla/5.0' -o "$target/q3-public-hd.pdf" \
+            'https://at.adobe.com/LfvJ96NzVLRBCfzj'
+          curl --fail --location --retry 5 --retry-all-errors --connect-timeout 20 --max-time 300 \
+            -A 'Mozilla/5.0' -o "$target/q4-public-hd.pdf" \
+            'https://at.adobe.com/HykfdvRfXEBvZqNM'
+          curl --fail --location --retry 5 --retry-all-errors --connect-timeout 20 --max-time 300 \
+            -A 'Mozilla/5.0' -o "$target/award-public-hd.pdf" \
+            'https://at.adobe.com/AmGWo81lYqC3otNm'
+
+          expected_q3=4419167
+          expected_q4=5486347
+          expected_award=399238
+          test "$(head -c 4 "$target/q3-public-hd.pdf")" = '%PDF'
+          test "$(head -c 4 "$target/q4-public-hd.pdf")" = '%PDF'
+          test "$(head -c 4 "$target/award-public-hd.pdf")" = '%PDF'
+          test "$(stat -c%s "$target/q3-public-hd.pdf")" -eq "$expected_q3"
+          test "$(stat -c%s "$target/q4-public-hd.pdf")" -eq "$expected_q4"
+          test "$(stat -c%s "$target/award-public-hd.pdf")" -eq "$expected_award"
+          sha256sum "$target"/*-public-hd.pdf
+
+      - name: Commit original HD PDFs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/projects/lean-improvement-evidence/*-public-hd.pdf
+          if git diff --cached --quiet; then
+            echo 'HD PDF files are already current.'
+            exit 0
+          fi
+          git commit -m 'chore: publish HD evidence PDFs [skip workflow]'
+          git push origin HEAD:main
