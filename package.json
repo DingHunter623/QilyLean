@@ -4,6 +4,7 @@
   "scripts": {
     "build:daily": "node scripts/build-daily-archive.js && node scripts/enhance-daily-archive.js && node scripts/bump-daily-css-version.js",
     "test:daily": "node scripts/validate-daily-archive.js",
+    "test:seo": "node scripts/validate-seo-indexability.js",
     "deploy:worker": "wrangler deploy",
     "test:maintenance": "node scripts/test-maintenance-fixes.js"
   },
