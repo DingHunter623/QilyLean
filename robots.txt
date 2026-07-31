@@ -4,3 +4,4 @@ Disallow: /admin.html
 Disallow: /qilylean/reference/
 
 Sitemap: https://qilylean.com/sitemap.xml
+Sitemap: https://qilylean.com/sitemap-core.xml
