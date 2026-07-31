@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  if (window.__qilyLeanBrandIdentityV1) return;
-  window.__qilyLeanBrandIdentityV1 = true;
+  if (window.__qilyLeanBrandIdentityV2) return;
+  window.__qilyLeanBrandIdentityV2 = true;
 
   var BRAND = 'QilyLean｜启力精益';
   var BRAND_PLAIN = 'QilyLean 启力精益';
@@ -11,6 +11,7 @@
   var SLOGAN = '让改善形成体系，让精益产生力量';
   var POSITIONING = '精益生产 · 工程改善 · 数智工厂';
   var HOME_URL = 'https://qilylean.com/';
+  var FRIEND_LINKS_PATH = '/links/';
 
   function normalizedPath() {
     var path = (location.pathname || '/').replace(/\/index\.html$/, '/');
@@ -62,6 +63,26 @@
     setText(brand, BRAND);
   }
 
+  function applyFriendLinksNavigation() {
+    var nav = document.querySelector('.qily-global-nav, nav.site-nav, nav.nav');
+    if (!nav) return;
+
+    var link = nav.querySelector('a[href="/links/"], a[href="/links/index.html"]');
+    if (!link) {
+      link = document.createElement('a');
+      link.href = FRIEND_LINKS_PATH;
+      link.textContent = '友情链接';
+      link.setAttribute('aria-label', '全球科技企业友情链接');
+
+      var cooperation = nav.querySelector('a[href="/cooperation/"], a[href="/cooperation/index.html"]');
+      if (cooperation) nav.insertBefore(link, cooperation);
+      else nav.appendChild(link);
+    }
+
+    if (normalizedPath().indexOf(FRIEND_LINKS_PATH) === 0) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  }
+
   function applyHomepage() {
     if (normalizedPath() !== '/') return;
 
@@ -93,6 +114,7 @@
   function applyAll() {
     applyHead();
     applyBrandHeader();
+    applyFriendLinksNavigation();
     applyHomepage();
     applySharePanel();
   }
