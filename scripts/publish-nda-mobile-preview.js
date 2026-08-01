@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+
+const root = path.resolve(__dirname, '..');
+const target = path.join(root, 'trust', 'nda-preview.html');
+const imageUrl = '/qilylean/assets/legal/qilylean-confidentiality-statement-v1.png?v=20260801-layout-r3';
+
+const html = `<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes">
+<title>QilyLean项目保密声明｜手机在线预览</title>
+<meta name="description" content="QilyLean项目保密声明V1.0高清在线预览。手机端无需下载PDF，可直接浏览、双指放大并滑动查看。">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://qilylean.com/trust/nda-preview.html">
+<style>
+:root{--forest:#0f4b5a;--teal:#177f87;--paper:#eef7f5;--line:#c8dad8;--muted:#526b69;--gold:#ffe39b}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:#183431;background:var(--paper);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+.nda-head{padding:20px clamp(16px,5vw,64px);color:#fff;background:linear-gradient(125deg,var(--forest),var(--teal))}.nda-inner{width:min(1220px,100%);margin:auto}.nda-head small{font-weight:850;letter-spacing:.04em}.nda-head h1{margin:6px 0;font-size:clamp(28px,4vw,46px);line-height:1.15}.nda-head p{margin:0;color:#e8f6f3;line-height:1.65}
+.nda-notice{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,5vw,64px);border-bottom:1px solid var(--line);background:#fff;color:#315f64}.nda-notice strong{color:#9e4a34}.nda-notice a{color:var(--forest);font-weight:900;text-underline-offset:.25em}
+.viewer-tools{position:sticky;top:0;z-index:8;display:flex;justify-content:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(238,247,245,.96);backdrop-filter:blur(10px)}.viewer-tools button{min-height:38px;padding:7px 14px;border:1px solid #9fc3c0;border-radius:999px;color:var(--forest);background:#fff;font-weight:850;cursor:pointer}.viewer-tools button:hover,.viewer-tools button:focus-visible{color:#17322d;background:var(--gold);border-color:#c99a3e;outline:none}
+.viewer-shell{width:min(1240px,calc(100% - 20px));margin:12px auto 28px;padding:12px;overflow:auto;border:1px solid var(--line);background:#dfe9e7;box-shadow:0 18px 46px rgba(15,75,90,.14);-webkit-overflow-scrolling:touch}.document-stage{display:flex;justify-content:center;min-width:100%}.document-stage img{display:block;width:min(100%,980px);height:auto;background:#fff;box-shadow:0 8px 28px rgba(15,75,90,.18);transform-origin:top center;transition:width .16s ease}
+.viewer-tip{width:min(1240px,calc(100% - 20px));margin:0 auto 14px;padding:10px 14px;border-left:4px solid #caa15f;color:var(--muted);background:#fff;line-height:1.7}
+@media(max-width:720px){.nda-notice{align-items:flex-start;flex-direction:column}.viewer-tools{justify-content:flex-start;overflow-x:auto}.viewer-tools button{flex:0 0 auto}.viewer-shell{padding:8px}.document-stage{justify-content:flex-start}.document-stage img{width:920px;max-width:none}.viewer-tip{font-size:14px}}
+@media print{body{display:none!important}}
+</style>
+<link rel="stylesheet" href="/site-shell.css?v=20260729-no-old-flash-v1">
+<link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
+<link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="/site-link-standard-v2.css?v=20260801-global-link-v5">
+<link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v1">
+</head>
+<body oncontextmenu="return false">
+<header class="nda-head"><div class="nda-inner"><small>QilyLean｜启力精益 · CONFIDENTIALITY STATEMENT</small><h1>QilyLean项目保密声明</h1><p>高清一页版 V1.0｜手机端直接在线浏览，无需下载PDF。</p></div></header>
+<section class="nda-notice"><span><strong>在线预览说明：</strong>点击“适应宽度”查看全页；手机可双指缩放或左右滑动查看细节。本站不提供Word或PDF下载入口。</span><a href="/trust/#nda-template">返回信任中心</a></section>
+<nav class="viewer-tools" aria-label="文档缩放控制"><button type="button" data-view="fit">适应宽度</button><button type="button" data-view="100">原始清晰度</button><button type="button" data-view="plus">放大</button><button type="button" data-view="minus">缩小</button></nav>
+<div class="viewer-tip">当前展示为由最新版PDF生成的300DPI高清页面图。手机端不会调用系统PDF下载器，可直接停留在网页内浏览。</div>
+<main class="viewer-shell" id="viewerShell" aria-label="QilyLean项目保密声明在线预览"><div class="document-stage"><img id="ndaImage" src="${imageUrl}" alt="QilyLean项目保密声明V1.0高清页面" draggable="false"></div></main>
+<script>
+(function(){
+  'use strict';
+  var image=document.getElementById('ndaImage');
+  var shell=document.getElementById('viewerShell');
+  var width=980;
+  function apply(){image.style.width=width+'px';}
+  document.querySelectorAll('[data-view]').forEach(function(button){button.addEventListener('click',function(){
+    var mode=button.getAttribute('data-view');
+    if(mode==='fit'){image.style.width='min(100%,980px)';width=980;shell.scrollLeft=0;return;}
+    if(mode==='100'){width=1240;apply();shell.scrollLeft=0;return;}
+    if(mode==='plus'){width=Math.min(1800,width+160);apply();return;}
+    if(mode==='minus'){width=Math.max(680,width-160);apply();return;}
+  });});
+  document.addEventListener('keydown',function(event){var key=(event.key||'').toLowerCase();if((event.ctrlKey||event.metaKey)&&(key==='s'||key==='p')){event.preventDefault();event.stopPropagation();}},true);
+})();
+</script>
+</body>
+</html>`;
+
+fs.mkdirSync(path.dirname(target), {recursive:true});
+fs.writeFileSync(target, html.endsWith('\n') ? html : html + '\n', 'utf8');
+console.log('Published mobile inline image preview for the QilyLean confidentiality statement.');
