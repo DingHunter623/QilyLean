@@ -19,25 +19,28 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const reportPath = path.join(root, 'qilylean', 'site-vi-audit.json');
+const auditScriptPath = 'scripts/enforce-site-vi-palette.js';
 const textExtensions = new Set(['.html', '.css', '.js', '.svg']);
 const ignoredDirectories = new Set([
   '.git', 'node_modules', '.next', 'dist', 'build', 'vendor',
   'qilylean/assets/legal'
 ]);
 
+/* Split legacy values so this audit file never rewrites its own rule definitions. */
+const legacyPurple = ['#' + '6e3f5f', '#' + '7d4a70', '#' + '8e4774'];
 const replacements = [
-  [/#9e4a34/gi, '#9e4a34'],
-  [/#9e4a34/gi, '#9e4a34'],
-  [/#9e4a34/gi, '#9e4a34'],
+  [new RegExp(legacyPurple[0], 'gi'), '#9e4a34'],
+  [new RegExp(legacyPurple[1], 'gi'), '#9e4a34'],
+  [new RegExp(legacyPurple[2], 'gi'), '#9e4a34'],
   [/rgba\(110\s*,\s*63\s*,\s*95\s*,/gi, 'rgba(158,74,52,'],
   [/rgba\(125\s*,\s*74\s*,\s*112\s*,/gi, 'rgba(158,74,52,'],
   [/rgba\(142\s*,\s*71\s*,\s*116\s*,/gi, 'rgba(158,74,52,']
 ];
 
 const bannedPatterns = [
-  /#9e4a34/i,
-  /#9e4a34/i,
-  /#9e4a34/i,
+  new RegExp(legacyPurple[0], 'i'),
+  new RegExp(legacyPurple[1], 'i'),
+  new RegExp(legacyPurple[2], 'i'),
   /rgba\(110\s*,\s*63\s*,\s*95\s*,/i,
   /rgba\(125\s*,\s*74\s*,\s*112\s*,/i,
   /rgba\(142\s*,\s*71\s*,\s*116\s*,/i
@@ -73,10 +76,12 @@ function injectViStylesheet(html) {
 const changedFiles = [];
 const injectedFiles = [];
 const replacementsByFile = {};
+const scanned = walk(root);
 
-for (const file of walk(root)) {
+for (const file of scanned) {
   const rel = relative(file);
-  let source = fs.readFileSync(file, 'utf8');
+  if (rel === auditScriptPath) continue;
+  const source = fs.readFileSync(file, 'utf8');
   let next = source;
   let count = 0;
 
@@ -100,8 +105,9 @@ for (const file of walk(root)) {
 }
 
 const violations = [];
-for (const file of walk(root)) {
+for (const file of scanned) {
   const rel = relative(file);
+  if (rel === auditScriptPath) continue;
   const source = fs.readFileSync(file, 'utf8');
   for (const pattern of bannedPatterns) {
     if (pattern.test(source)) violations.push({ file: rel, pattern: String(pattern) });
@@ -138,7 +144,7 @@ const report = {
       'semantic diagram legends and process-route colors'
     ]
   },
-  scannedFiles: walk(root).length,
+  scannedFiles: scanned.length,
   changedFiles,
   injectedFiles,
   replacementsByFile,
