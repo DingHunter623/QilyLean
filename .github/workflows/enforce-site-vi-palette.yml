@@ -1,0 +1,71 @@
+name: Enforce QilyLean site VI palette
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site-vi-standard-v1.css"
+      - "site-link-standard-v1.css"
+      - "site-link-standard-v2.css"
+      - "site-shell.css"
+      - "scripts/enforce-site-vi-palette.js"
+      - ".github/workflows/enforce-site-vi-palette.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: enforce-site-vi-palette-main
+  cancel-in-progress: false
+
+jobs:
+  enforce:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Normalize legacy accents and link all pages to the VI standard
+        run: node scripts/enforce-site-vi-palette.js
+
+      - name: Validate VI audit result
+        shell: bash
+        run: |
+          test -s qilylean/site-vi-audit.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const report = JSON.parse(fs.readFileSync('qilylean/site-vi-audit.json', 'utf8'));
+          if (report.status !== 'passed') throw new Error('QilyLean VI audit failed');
+          if (report.violations.length) throw new Error(`Legacy off-brand colors remain: ${JSON.stringify(report.violations)}`);
+          if (report.missingRequirements.length) throw new Error(`VI requirements missing: ${report.missingRequirements.join(', ')}`);
+          if (!report.policy.semanticExemptions.some((item) => item.includes('green background with white check'))) {
+            throw new Error('Semantic green-check exemption is missing');
+          }
+          NODE
+          grep -q -- '--qily-vi-olive:#0f4b5a' site-vi-standard-v1.css
+          grep -q -- '--qily-vi-red:#9e4a34' site-vi-standard-v1.css
+          grep -q -- '--qily-vi-gold:#caa15f' site-vi-standard-v1.css
+          grep -q '语义通用元素豁免' site-vi-standard-v1.css
+          grep -q 'site-vi-standard-v1.css' site-link-standard-v1.css
+
+      - name: Commit normalized site VI
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "QilyLean site VI is already compliant."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "build: normalize QilyLean site VI palette [skip ci]"
+          git push
