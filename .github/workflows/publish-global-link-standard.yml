@@ -36,22 +36,29 @@ jobs:
       - name: Apply the site-wide link standard
         run: node scripts/publish-global-link-standard.js
 
-      - name: Validate underline and interaction feedback
+      - name: Validate underline, contrast and interaction feedback
         shell: bash
         run: |
           node --check scripts/publish-global-link-standard.js
           grep -q 'QilyLean 全站链接视觉规范' site-link-standard-v1.css
           grep -q 'html body a\[href\]' site-link-standard-v1.css
           grep -q 'text-decoration-line: underline !important' site-link-standard-v1.css
+          grep -q 'qily-site-header .site-nav a\[href\]' site-link-standard-v1.css
+          grep -q 'qily-global-nav a\[href\]' site-link-standard-v1.css
+          grep -q 'module-actions a\[href\]:not(.secondary)' site-link-standard-v1.css
+          grep -q 'color: #fff !important' site-link-standard-v1.css
+          grep -q 'background-color: var(--qily-link-ink) !important' site-link-standard-v1.css
           grep -q 'a\[href\]:hover' site-link-standard-v1.css
           grep -q 'a\[href\]:focus-visible' site-link-standard-v1.css
           grep -q 'a\[href\]:active' site-link-standard-v1.css
           grep -q 'qily-global-link-standard-loader-v1' site-navigation.js
+          grep -q '20260801-global-link-v2' site-navigation.js
           node - <<'NODE'
           const fs = require('fs');
           const path = require('path');
           const root = process.cwd();
           const failures = [];
+          const stale = [];
           function walk(dir) {
             for (const entry of fs.readdirSync(dir, {withFileTypes:true})) {
               if (['.git','node_modules','.cache'].includes(entry.name)) continue;
@@ -60,22 +67,24 @@ jobs:
               else if (entry.name.endsWith('.html')) {
                 const html = fs.readFileSync(full, 'utf8');
                 if (/<\/head>/i.test(html) && !html.includes('qilyGlobalLinkStandardStylesheet')) failures.push(path.relative(root, full));
+                if (html.includes('site-link-standard-v1.css?v=') && !html.includes('site-link-standard-v1.css?v=20260801-global-link-v2')) stale.push(path.relative(root, full));
               }
             }
           }
           walk(root);
           if (failures.length) throw new Error('Pages missing global link standard: ' + failures.slice(0,20).join(', '));
+          if (stale.length) throw new Error('Pages using stale link-standard cache version: ' + stale.slice(0,20).join(', '));
           NODE
 
       - name: Commit global link standard
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "The global link standard is already current."
+            echo "The high-contrast global link standard is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add site-navigation.js '*.html' '**/*.html'
-          git commit -m "style: publish underlined links and interaction feedback site-wide [skip ci]"
+          git commit -m "style: publish high-contrast link feedback site-wide [skip ci]"
           git push
