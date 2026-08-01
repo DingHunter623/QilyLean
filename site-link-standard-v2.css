@@ -1,6 +1,6 @@
-/* QilyLean 全站链接视觉规范 v3｜导航与页内内容跳转高对比修正版
- * 继承基础规范，并统一：
- * 1. 主导航跳转；2. 页内锚点／目录／标签跳转；3. 悬停、聚焦与按下反馈。
+/* QilyLean 全站链接视觉规范 v4｜链接、页内跳转与橄榄绿底高对比规范
+ * 规范：凡点击后跳转至新页面、文件、锚点、目录、标签或新内容区域，均显示清晰下横线；
+ * 橄榄绿／深青底色上的文字必须使用白色，悬停与聚焦状态不得出现浅底浅字。
  */
 @import url('/site-link-standard-v1.css?v=20260801-global-link-v2');
 
@@ -10,10 +10,11 @@
   --qily-nav-active-hover:#12606f;
   --qily-nav-hover:#ffe39b;
   --qily-nav-hover-border:#c99a3e;
-  --qily-anchor-line:#178b94;
+  --qily-dark-link:#fff;
+  --qily-dark-underline:#ffe39b;
 }
 
-/* 主导航：白底深字＋清晰下横线。 */
+/* 主导航：常态白底深字＋下横线。 */
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
 :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]{
   color:var(--qily-nav-ink)!important;
@@ -29,7 +30,7 @@ html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,hea
   box-shadow:none!important;
 }
 
-/* 当前栏目：深青底、白字、金色下横线，形成明确色界。 */
+/* 当前栏目：橄榄绿／深青底必须白字＋金色下横线。 */
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
 :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]{
   color:#fff!important;
@@ -41,7 +42,7 @@ html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,hea
   box-shadow:0 7px 18px rgba(15,75,90,.24)!important;
 }
 
-/* 非当前栏目悬停／键盘聚焦：金色底＋深色字。 */
+/* 非当前栏目悬停／聚焦：金色底＋深色字。 */
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
 :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]:not([aria-current]):hover,
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
@@ -55,7 +56,7 @@ html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,hea
   transform:translateY(-2px)!important;
 }
 
-/* 当前栏目悬停／聚焦保持深底白字，防止泛白。 */
+/* 当前栏目悬停／聚焦仍保持深底白字。 */
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
 :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]:hover,
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
@@ -81,11 +82,9 @@ html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,hea
   transform:translateY(0) scale(.98)!important;
 }
 
-/* 页内跳转同样属于链接：锚点、目录、标签、年份和筛选入口均保留下横线。 */
+/* 所有页内跳转、目录、标签、年份和筛选入口均加下横线。 */
 html body a[href^="#"]:not([href="#"]),
 html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav,[role="tablist"]) a[href]{
-  color:inherit!important;
-  -webkit-text-fill-color:currentColor!important;
   text-decoration-line:underline!important;
   text-decoration-style:solid!important;
   text-decoration-color:currentColor!important;
@@ -96,11 +95,53 @@ html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-n
   font-weight:850!important;
 }
 
-/* 页内跳转反馈：金色底＋深色文字，保证浅底／深底均可辨识。 */
-html body a[href^="#"]:not([href="#"]):hover,
-html body a[href^="#"]:not([href="#"]):focus-visible,
-html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav,[role="tablist"]) a[href]:hover,
-html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav,[role="tablist"]) a[href]:focus-visible{
+/* 橄榄绿／深青背景：所有可点击文字一律白色，金色下横线。 */
+html body :is(
+  .module-hero,
+  .daily-hero,
+  .hero,
+  .qily-forest-bg,
+  .qily-olive-bg,
+  .olive-bg,
+  .forest-bg,
+  .dark-bg,
+  .qily-dark,
+  .qily-olive,
+  .qily-float-dock,
+  .module-footer,
+  .footer,
+  .contact-card
+) a[href],
+html body :is(.module-hero,.daily-hero,.hero)
+:is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav) a[href]{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  text-decoration-line:underline!important;
+  text-decoration-color:#ffe39b!important;
+  text-decoration-thickness:1.9px!important;
+  text-underline-offset:.25em!important;
+  opacity:1!important;
+  filter:none!important;
+}
+
+/* 深色区域悬停／聚焦改为金色底＋深色字，保证强对比。 */
+html body :is(.module-hero,.daily-hero,.hero,.qily-forest-bg,.qily-olive-bg,.olive-bg,.forest-bg,.dark-bg,.qily-dark,.qily-olive)
+a[href]:hover,
+html body :is(.module-hero,.daily-hero,.hero,.qily-forest-bg,.qily-olive-bg,.olive-bg,.forest-bg,.dark-bg,.qily-dark,.qily-olive)
+a[href]:focus-visible{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  text-decoration-thickness:2.5px!important;
+  box-shadow:0 8px 18px rgba(5,42,51,.28)!important;
+  transform:translateY(-2px)!important;
+}
+
+/* 浅色区域的页内跳转反馈。 */
+html body :not(.module-hero):not(.daily-hero):not(.hero) a[href^="#"]:not([href="#"]):hover,
+html body :not(.module-hero):not(.daily-hero):not(.hero) a[href^="#"]:not([href="#"]):focus-visible{
   color:#17322d!important;
   -webkit-text-fill-color:#17322d!important;
   background-color:#ffe39b!important;
@@ -121,7 +162,7 @@ html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-n
   transform:translateY(0) scale(.98)!important;
 }
 
-/* 页内入口处于当前状态时，采用深青底白字。 */
+/* 当前页内入口也采用深青底白字。 */
 html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav,[role="tablist"])
 a[href][aria-current],
 html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav,[role="tablist"])
@@ -133,6 +174,15 @@ a[href][aria-selected="true"]{
   text-decoration-color:#ffe39b!important;
 }
 
-@media(prefers-reduced-motion:reduce){
-  html body a[href]{transition:none!important}
+/* 常见深青按钮链接：深青底必须白字。 */
+html body :is(.module-actions,.card-actions) a[href]:not(.secondary),
+html body a[href]:where(.module-action,.resource-action,.project-list-action,.project-card-action,.service-contract-link,.moment-link,.moment-back,.design-link,.share-button),
+html body a[href].button:not(.primary){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#0f4b5a!important;
+  border-color:#0f4b5a!important;
+  text-decoration-color:#ffe39b!important;
 }
+
+@media(prefers-reduced-motion:reduce){html body a[href]{transition:none!important}}
