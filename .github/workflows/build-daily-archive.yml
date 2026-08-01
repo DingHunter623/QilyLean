@@ -153,7 +153,7 @@ jobs:
             echo "Site search relevance-first status is missing"
             exit 1
           }
-          grep -q "site-search.js?v=20260729-ranked-search-v1" site-navigation.js || {
+          grep -q "site-search.js?v=20260729-ranked-search-v1" site-navigation-core.js || {
             echo "Ranked site search asset version is not active"
             exit 1
           }
