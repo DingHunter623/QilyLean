@@ -4,6 +4,7 @@ from pathlib import Path
 import base64
 import gzip
 
+BUILD_VERSION = "20260801-nda-v1"
 ROOT = Path(__file__).resolve().parents[1]
 PARTS = sorted((ROOT / "scripts" / "nda-source").glob("part-*.b64"))
 if not PARTS:
