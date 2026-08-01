@@ -41,24 +41,24 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends Activity {
-    private static final int BG = Color.rgb(14, 22, 18);
-    private static final int CARD = Color.rgb(31, 48, 40);
-    private static final int CARD_ALT = Color.rgb(26, 42, 36);
-    private static final int TEAL = Color.rgb(16, 103, 119);
-    private static final int GOLD = Color.rgb(222, 184, 101);
+    private static final int BG = Color.rgb(13, 21, 18);
+    private static final int CARD = Color.rgb(30, 48, 41);
+    private static final int CARD_ALT = Color.rgb(24, 40, 35);
+    private static final int TEAL = Color.rgb(18, 110, 124);
+    private static final int GOLD = Color.rgb(224, 185, 100);
     private static final int WHITE = Color.rgb(244, 248, 246);
-    private static final int MUTED = Color.rgb(181, 197, 188);
+    private static final int MUTED = Color.rgb(181, 198, 189);
 
     private final Handler clockHandler = new Handler();
     private TextView clockView;
-    private boolean showingApps = false;
+    private boolean showingApps;
 
     private final Runnable clockTask = new Runnable() {
         @Override
         public void run() {
             if (clockView != null) {
-                Date now = new Date();
-                clockView.setText(new SimpleDateFormat("HH:mm\nM月d日 EEEE", Locale.CHINA).format(now));
+                clockView.setText(new SimpleDateFormat(
+                        "HH:mm\nEEEE, MMM d", Locale.ENGLISH).format(new Date()));
             }
             clockHandler.postDelayed(this, 30000);
         }
@@ -119,7 +119,9 @@ public class MainActivity extends Activity {
         content.addView(logo, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(112)));
 
-        TextView tagline = text("精益生产 · 工程改善 · 数智工厂", 15, GOLD, Gravity.CENTER);
+        TextView tagline = text(
+                "Lean Manufacturing · Engineering Improvement · Digital Factory",
+                14, GOLD, Gravity.CENTER);
         tagline.setPadding(0, dp(4), 0, dp(16));
         content.addView(tagline);
 
@@ -132,7 +134,7 @@ public class MainActivity extends Activity {
         clockHandler.removeCallbacks(clockTask);
         clockHandler.post(clockTask);
 
-        TextView version = pill("QilyLean OS Lite v0.2 · Galaxy C55专属版");
+        TextView version = pill("QilyLean OS Lite v0.3 · moto g54 English Edition");
         LinearLayout.LayoutParams versionLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -146,70 +148,87 @@ public class MainActivity extends Activity {
         deviceLp.setMargins(0, 0, 0, dp(22));
         content.addView(device, deviceLp);
 
-        addSectionTitle(content, "QilyLean工作台");
+        addSectionTitle(content, "QilyLean Workspace");
         addCardRow(content,
-                card("QilyLean官网", "制造改善与项目实践", new View.OnClickListener() {
+                card("Official Website", "Lean practice and project delivery", new View.OnClickListener() {
                     @Override public void onClick(View v) { openUrl("https://qilylean.com/"); }
                 }),
-                card("QilyLean AI", "通用智能与专业对话", new View.OnClickListener() {
+                card("QilyLean AI", "Professional and general AI assistant", new View.OnClickListener() {
                     @Override public void onClick(View v) { openUrl("https://qilylean.com/ai.html"); }
                 }));
 
         addCardRow(content,
-                card("代表项目", "精益、IE与数智工厂案例", new View.OnClickListener() {
+                card("Featured Projects", "Lean, IE and digital factory cases", new View.OnClickListener() {
                     @Override public void onClick(View v) { openUrl("https://qilylean.com/projects/"); }
                 }),
-                card("知识分享", "工具、简报与参考资料", new View.OnClickListener() {
+                card("Knowledge Center", "Tools, briefs and references", new View.OnClickListener() {
                     @Override public void onClick(View v) { openUrl("https://qilylean.com/knowledge/"); }
                 }));
 
         addCardRow(content,
-                card("今日简报", "制造工程方法持续沉淀", new View.OnClickListener() {
-                    @Override public void onClick(View v) { openUrl("https://qilylean.com/qilylean/daily-insights.html"); }
+                card("Daily Brief", "Manufacturing methods and insights", new View.OnClickListener() {
+                    @Override public void onClick(View v) {
+                        openUrl("https://qilylean.com/qilylean/daily-insights.html");
+                    }
                 }),
-                card("项目合作", "诊断、规划与项目交付", new View.OnClickListener() {
+                card("Project Cooperation", "Diagnosis, planning and delivery", new View.OnClickListener() {
                     @Override public void onClick(View v) { openUrl("https://qilylean.com/cooperation/"); }
                 }));
 
-        addSectionTitle(content, "Galaxy C55快捷管理");
+        addSectionTitle(content, "moto g54 Quick Settings");
         addCardRow(content,
-                cardAlt("设备维护", "电池、存储与安全检查", new View.OnClickListener() {
-                    @Override public void onClick(View v) { openSamsungDeviceCare(); }
+                cardAlt("Network & Internet", "Wi-Fi, mobile data and hotspot", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openSettings(Settings.ACTION_WIRELESS_SETTINGS); }
                 }),
-                cardAlt("显示设置", "亮度、护眼与屏幕显示", new View.OnClickListener() {
-                    @Override public void onClick(View v) { openSettings(Settings.ACTION_DISPLAY_SETTINGS); }
+                cardAlt("Battery", "Battery Saver and power usage", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openSettings(Settings.ACTION_BATTERY_SAVER_SETTINGS); }
                 }));
 
         addCardRow(content,
-                cardAlt("壁纸与主题", "设置QilyLean品牌壁纸", new View.OnClickListener() {
+                cardAlt("Display", "Brightness, colors and screen timeout", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openSettings(Settings.ACTION_DISPLAY_SETTINGS); }
+                }),
+                cardAlt("Sound", "Volume, vibration and ringtones", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openSettings(Settings.ACTION_SOUND_SETTINGS); }
+                }));
+
+        addCardRow(content,
+                cardAlt("Wallpaper", "Apply the QilyLean brand wallpaper", new View.OnClickListener() {
                     @Override public void onClick(View v) { openWallpaperSettings(); }
                 }),
-                cardAlt("应用管理", "权限、通知与存储管理", new View.OnClickListener() {
+                cardAlt("Apps", "Permissions, notifications and storage", new View.OnClickListener() {
                     @Override public void onClick(View v) { openSettings(Settings.ACTION_APPLICATION_SETTINGS); }
                 }));
 
-        addSectionTitle(content, "系统入口");
         addCardRow(content,
-                card("全部应用", "打开本机应用列表", new View.OnClickListener() {
+                cardAlt("Moto Features", "Open Motorola gestures and tools", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openMotoApp(); }
+                }),
+                cardAlt("Security", "Screen lock and device protection", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openSettings(Settings.ACTION_SECURITY_SETTINGS); }
+                }));
+
+        addSectionTitle(content, "System");
+        addCardRow(content,
+                card("All Apps", "Open the installed app list", new View.OnClickListener() {
                     @Override public void onClick(View v) { showAppDrawer(); }
                 }),
-                card("系统设置", "网络、显示与设备管理", new View.OnClickListener() {
+                card("System Settings", "Manage the Android device", new View.OnClickListener() {
                     @Override public void onClick(View v) { openSettings(Settings.ACTION_SETTINGS); }
                 }));
 
         addCardRow(content,
-                card("默认桌面", "切换QilyLean或One UI桌面", new View.OnClickListener() {
+                card("Default Home", "Switch QilyLean or Moto Launcher", new View.OnClickListener() {
                     @Override public void onClick(View v) { openHomeSettings(); }
                 }),
-                card("浏览器", "打开QilyLean官网主页", new View.OnClickListener() {
-                    @Override public void onClick(View v) { openUrl("https://qilylean.com/"); }
+                card("About Phone", "Model, Android version and updates", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openSettings(Settings.ACTION_DEVICE_INFO_SETTINGS); }
                 }));
 
         TextView footer = text(
-                "启精益之智，聚企业之力。\nGalaxy C55免Root专属定制，不修改系统、基带、Recovery或IMEI。",
-                12,
-                MUTED,
-                Gravity.CENTER);
+                "Empower Lean Intelligence. Unite Enterprise Strength.\n"
+                        + "This no-root edition does not modify Android, baseband, Recovery or IMEI.",
+                12, MUTED, Gravity.CENTER);
         footer.setLineSpacing(dp(2), 1f);
         LinearLayout.LayoutParams footerLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -239,7 +258,7 @@ public class MainActivity extends Activity {
         root.setBackgroundColor(BG);
         root.setPadding(dp(16), dp(18), dp(16), dp(10));
 
-        TextView back = text("‹  返回 QilyLean Home", 18, GOLD,
+        TextView back = text("‹  Back to QilyLean Home", 18, GOLD,
                 Gravity.LEFT | Gravity.CENTER_VERTICAL);
         back.setTypeface(Typeface.DEFAULT_BOLD);
         back.setPadding(dp(8), dp(10), dp(8), dp(16));
@@ -292,11 +311,11 @@ public class MainActivity extends Activity {
         rowLp.setMargins(0, 0, 0, dp(10));
         parent.addView(row, rowLp);
 
-        LinearLayout.LayoutParams leftLp = new LinearLayout.LayoutParams(0, dp(96), 1f);
+        LinearLayout.LayoutParams leftLp = new LinearLayout.LayoutParams(0, dp(98), 1f);
         leftLp.setMargins(0, 0, dp(5), 0);
         row.addView(left, leftLp);
 
-        LinearLayout.LayoutParams rightLp = new LinearLayout.LayoutParams(0, dp(96), 1f);
+        LinearLayout.LayoutParams rightLp = new LinearLayout.LayoutParams(0, dp(98), 1f);
         rightLp.setMargins(dp(5), 0, 0, 0);
         row.addView(right, rightLp);
     }
@@ -313,18 +332,20 @@ public class MainActivity extends Activity {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setGravity(Gravity.CENTER_VERTICAL);
-        box.setPadding(dp(16), dp(10), dp(12), dp(10));
+        box.setPadding(dp(15), dp(10), dp(11), dp(10));
         box.setClickable(true);
         box.setFocusable(true);
         box.setElevation(dp(2));
         box.setBackground(roundRect(fill, 16, TEAL, 1));
         box.setOnClickListener(listener);
 
-        TextView titleView = text(title, 17, WHITE, Gravity.LEFT);
+        TextView titleView = text(title, 16, WHITE, Gravity.LEFT);
         titleView.setTypeface(Typeface.DEFAULT_BOLD);
+        titleView.setMaxLines(2);
         box.addView(titleView);
 
-        TextView subView = text(subtitle, 11, MUTED, Gravity.LEFT);
+        TextView subView = text(subtitle, 10, MUTED, Gravity.LEFT);
+        subView.setMaxLines(2);
         LinearLayout.LayoutParams subLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -336,7 +357,7 @@ public class MainActivity extends Activity {
     private TextView pill(String value) {
         TextView view = text(value, 11, GOLD, Gravity.CENTER);
         view.setPadding(dp(12), dp(7), dp(12), dp(7));
-        view.setBackground(roundRect(Color.rgb(28, 43, 36), 20, GOLD, 1));
+        view.setBackground(roundRect(Color.rgb(27, 43, 36), 20, GOLD, 1));
         return view;
     }
 
@@ -370,14 +391,14 @@ public class MainActivity extends Activity {
             byte[] bytes = Base64.decode(data.toString(), Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         } catch (Exception e) {
-            Toast.makeText(this, "LOGO资源读取失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unable to load the QilyLean logo", Toast.LENGTH_SHORT).show();
             return null;
         }
     }
 
     private String deviceSummary() {
-        String manufacturer = Build.MANUFACTURER == null ? "Android" : Build.MANUFACTURER;
-        String model = Build.MODEL == null ? "设备" : Build.MODEL;
+        String manufacturer = Build.MANUFACTURER == null ? "Motorola" : Build.MANUFACTURER;
+        String model = Build.MODEL == null ? "moto g54" : Build.MODEL;
         return manufacturer + " " + model + " · Android " + Build.VERSION.RELEASE;
     }
 
@@ -385,7 +406,7 @@ public class MainActivity extends Activity {
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         } catch (ActivityNotFoundException e) {
-            Toast.makeText(this, "未找到可用浏览器", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "No web browser is available", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -397,13 +418,18 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void openSamsungDeviceCare() {
+    private void openMotoApp() {
         try {
-            Intent intent = new Intent("com.samsung.android.sm.ACTION_DASHBOARD");
-            intent.setPackage("com.samsung.android.lool");
-            startActivity(intent);
+            Intent launch = getPackageManager().getLaunchIntentForPackage("com.motorola.moto");
+            if (launch == null) {
+                launch = getPackageManager().getLaunchIntentForPackage("com.motorola.actions");
+            }
+            if (launch == null) {
+                throw new ActivityNotFoundException();
+            }
+            startActivity(launch);
         } catch (ActivityNotFoundException e) {
-            openSettings(Settings.ACTION_BATTERY_SAVER_SETTINGS);
+            openSettings(Settings.ACTION_SETTINGS);
         }
     }
 
@@ -454,7 +480,7 @@ public class MainActivity extends Activity {
             icon.setImageDrawable(info.loadIcon(pm));
             icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
             item.addView(icon, new LinearLayout.LayoutParams(
-                    dpStatic(context, 56), dpStatic(context, 56)));
+                    dpStatic(context, 52), dpStatic(context, 52)));
 
             TextView label = new TextView(context);
             label.setText(info.loadLabel(pm));
