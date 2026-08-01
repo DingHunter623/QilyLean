@@ -37,17 +37,19 @@ jobs:
       - name: Apply the site-wide link standard
         run: node scripts/publish-global-link-standard.js
 
-      - name: Validate navigation, anchor underline and interaction feedback
+      - name: Validate navigation, anchor underline and olive-green contrast
         shell: bash
         run: |
           node --check scripts/publish-global-link-standard.js
-          grep -q '全站链接视觉规范 v3' site-link-standard-v2.css
+          grep -q '全站链接视觉规范 v4' site-link-standard-v2.css
           grep -q 'a\[href\^="#"\]' site-link-standard-v2.css
           grep -q 'module-subnav' site-link-standard-v2.css
           grep -q 'aria-current' site-link-standard-v2.css
+          grep -q '橄榄绿／深青背景' site-link-standard-v2.css
+          grep -q 'color:#fff!important' site-link-standard-v2.css
           grep -q 'text-decoration-line:underline!important' site-link-standard-v2.css
           grep -q 'qily-global-link-standard-loader-v1' site-navigation.js
-          grep -q 'site-link-standard-v2.css?v=20260801-global-link-v3' site-navigation.js
+          grep -q 'site-link-standard-v2.css?v=20260801-global-link-v4' site-navigation.js
           node - <<'NODE'
           const fs = require('fs');
           const path = require('path');
@@ -62,7 +64,7 @@ jobs:
               else if (entry.name.endsWith('.html')) {
                 const html = fs.readFileSync(full, 'utf8');
                 if (/<\/head>/i.test(html) && !html.includes('qilyGlobalLinkStandardStylesheet')) failures.push(path.relative(root, full));
-                if (html.includes('qilyGlobalLinkStandardStylesheet') && !html.includes('site-link-standard-v2.css?v=20260801-global-link-v3')) stale.push(path.relative(root, full));
+                if (html.includes('qilyGlobalLinkStandardStylesheet') && !html.includes('site-link-standard-v2.css?v=20260801-global-link-v4')) stale.push(path.relative(root, full));
               }
             }
           }
@@ -75,11 +77,11 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "The global link standard v3 is already current."
+            echo "The global link standard v4 is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add site-navigation.js '*.html' '**/*.html'
-          git commit -m "style: publish navigation and in-page anchor feedback site-wide [skip ci]"
+          git commit -m "style: publish white text on olive-green links site-wide [skip ci]"
           git push
