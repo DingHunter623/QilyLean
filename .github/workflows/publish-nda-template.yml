@@ -5,8 +5,10 @@ on:
     branches: [main]
     paths:
       - "scripts/nda-source/approved-pdf-v1.b64"
+      - "scripts/nda-source/nda-preview-template.html"
       - "scripts/publish-nda-link.js"
       - "scripts/publish-nda-mobile-preview.js"
+      - "qilylean/assets/legal/qilylean-trust-qr.svg"
       - ".github/workflows/publish-nda-template.yml"
   workflow_run:
     workflows: ["Sync unified site metadata"]
@@ -36,32 +38,29 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends poppler-utils
 
-      - name: Restore approved PDF and build mobile preview image
+      - name: Restore the approved PDF source of truth
         shell: bash
         run: |
           mkdir -p qilylean/assets/legal
           base64 --decode scripts/nda-source/approved-pdf-v1.b64 \
             > qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
           test -s qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
-          pdftoppm -png -f 1 -singlefile -r 300 \
-            qilylean/assets/legal/qilylean-mutual-nda-v1.pdf \
-            qilylean/assets/legal/qilylean-confidentiality-statement-v1
-          test -s qilylean/assets/legal/qilylean-confidentiality-statement-v1.png
 
       - name: Remove public Word source
         shell: bash
         run: rm -f qilylean/assets/legal/qilylean-mutual-nda-v1.docx
 
-      - name: Publish preview-only access and synchronized metadata
+      - name: Publish responsive preview-only access and synchronized metadata
         run: |
           node scripts/publish-nda-link.js
           node scripts/publish-nda-mobile-preview.js
 
-      - name: Validate approved statement and mobile online preview
+      - name: Validate approved statement and clear mobile online preview
         shell: bash
         run: |
           test -s qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
-          test -s qilylean/assets/legal/qilylean-confidentiality-statement-v1.png
+          test -s qilylean/assets/legal/qilylean-trust-qr.svg
+          test -s trust/nda-preview.html
           test "$(pdfinfo qilylean/assets/legal/qilylean-mutual-nda-v1.pdf | awk '/^Pages:/ {print $2}')" = "1"
           pdfinfo qilylean/assets/legal/qilylean-mutual-nda-v1.pdf | grep -q 'Page size:.*595.*842'
           pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -Eq '保[[:space:]]*密[[:space:]]*声[[:space:]]*明'
@@ -72,12 +71,15 @@ jobs:
           pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '项目名称（填写）'
           grep -q '/trust/nda-preview.html' trust/index.html
           grep -q '在线预览保密声明' trust/index.html
-          grep -q '手机端直接在线浏览' trust/nda-preview.html
-          grep -q 'qilylean-confidentiality-statement-v1.png' trust/nda-preview.html
-          grep -q '适应宽度' trust/nda-preview.html
-          grep -q '双指缩放' trust/nda-preview.html
+          grep -q '内容与正式PDF一致' trust/nda-preview.html
+          grep -q '手机端无需下载' trust/nda-preview.html
+          grep -q 'qilylean-trust-qr.svg' trust/nda-preview.html
+          grep -q '项目责任人：丁启利' trust/nda-preview.html
+          grep -q '委托单位（填写）' trust/nda-preview.html
+          grep -q '项目名称（填写）' trust/nda-preview.html
           ! grep -q '<iframe' trust/nda-preview.html
           ! grep -q 'download=' trust/index.html
+          ! grep -q 'qilylean-mutual-nda-v1.pdf' trust/nda-preview.html
           ! grep -q 'qilylean-mutual-nda-v1.docx' trust/index.html
           grep -q 'https://qilylean.com/trust/nda-preview.html' sitemap.xml
           ! grep -q 'https://qilylean.com/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf' sitemap.xml
@@ -104,6 +106,6 @@ jobs:
           git rm -f --ignore-unmatch qilylean/assets/legal/qilylean-mutual-nda-v1.docx
           git add index.html trust/index.html trust/nda-preview.html qilylean/site-data.json qilylean/site-search-index.json sitemap.xml sitemap-core.xml \
             qilylean/assets/legal/qilylean-mutual-nda-v1.pdf \
-            qilylean/assets/legal/qilylean-confidentiality-statement-v1.png
+            qilylean/assets/legal/qilylean-trust-qr.svg
           git commit -m "build: publish approved QilyLean confidentiality statement PDF [skip ci]"
           git push
