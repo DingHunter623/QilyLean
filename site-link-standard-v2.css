@@ -1,6 +1,6 @@
-/* QilyLean 全站链接视觉规范 v4｜链接、页内跳转与橄榄绿底高对比规范
+/* QilyLean 全站链接视觉规范 v5｜链接、页内跳转与高对比可视化规范
  * 规范：凡点击后跳转至新页面、文件、锚点、目录、标签或新内容区域，均显示清晰下横线；
- * 橄榄绿／深青底色上的文字必须使用白色，悬停与聚焦状态不得出现浅底浅字。
+ * 深色底上的文字必须使用白色，浅色底上的文字必须使用深青色，悬停与聚焦状态不得出现同色或近色叠加。
  */
 @import url('/site-link-standard-v1.css?v=20260801-global-link-v2');
 
@@ -30,7 +30,7 @@ html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,hea
   box-shadow:none!important;
 }
 
-/* 当前栏目：橄榄绿／深青底必须白字＋金色下横线。 */
+/* 当前栏目：深青底白字＋金色下横线。 */
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
 :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]{
   color:#fff!important;
@@ -95,7 +95,7 @@ html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-n
   font-weight:850!important;
 }
 
-/* 橄榄绿／深青背景：所有可点击文字一律白色，金色下横线。 */
+/* 深青背景：所有可点击文字一律白色，金色下横线。 */
 html body :is(
   .module-hero,
   .daily-hero,
@@ -183,6 +183,50 @@ html body a[href].button:not(.primary){
   background-color:#0f4b5a!important;
   border-color:#0f4b5a!important;
   text-decoration-color:#ffe39b!important;
+}
+
+/*
+ * 主体与付款信息核验：浅底深字，悬停切换为深底白字。
+ * 使用显式高优先级，覆盖正文通用链接及历史组件样式，杜绝深底深字。
+ */
+html body .trust-contact > a[href],
+html body section#contact .trust-contact > a[href]{
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  background-color:#fff!important;
+  border:2px solid #178b94!important;
+  border-top:5px solid #caa15f!important;
+  text-decoration-line:underline!important;
+  text-decoration-color:#178b94!important;
+  text-decoration-thickness:2px!important;
+  text-underline-offset:.24em!important;
+  box-shadow:0 9px 22px rgba(15,75,90,.10)!important;
+  opacity:1!important;
+  filter:none!important;
+}
+
+html body .trust-contact > a[href]:hover,
+html body .trust-contact > a[href]:focus-visible,
+html body section#contact .trust-contact > a[href]:hover,
+html body section#contact .trust-contact > a[href]:focus-visible{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#0f4b5a!important;
+  border-color:#0f4b5a!important;
+  border-top-color:#ffe39b!important;
+  text-decoration-color:#ffe39b!important;
+  box-shadow:0 12px 28px rgba(15,75,90,.28)!important;
+  transform:translateY(-2px)!important;
+}
+
+html body .trust-contact > a[href]:active,
+html body section#contact .trust-contact > a[href]:active{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#073c47!important;
+  border-color:#073c47!important;
+  text-decoration-color:#ffe39b!important;
+  transform:translateY(0) scale(.99)!important;
 }
 
 @media(prefers-reduced-motion:reduce){html body a[href]{transition:none!important}}
