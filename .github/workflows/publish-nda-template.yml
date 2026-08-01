@@ -4,11 +4,9 @@ on:
   push:
     branches: [main]
     paths:
-      - "scripts/build-nda-documents.py"
-      - "scripts/optimize-nda-signature.py"
+      - "scripts/nda-source/approved-pdf-v1.b64"
       - "scripts/publish-nda-link.js"
       - "scripts/publish-nda-mobile-preview.js"
-      - "scripts/nda-source/release.marker"
       - ".github/workflows/publish-nda-template.yml"
   workflow_run:
     workflows: ["Sync unified site metadata"]
@@ -26,51 +24,31 @@ jobs:
   publish:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
 
-      - uses: actions/setup-python@v5
-        if: github.event_name != 'workflow_run'
-        with:
-          python-version: "3.12"
-
-      - name: Install document build dependencies
-        if: github.event_name != 'workflow_run'
+      - name: Install PDF validation tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk poppler-utils
-          python -m pip install --disable-pip-version-check python-docx "qrcode[pil]"
+          sudo apt-get install -y --no-install-recommends poppler-utils
 
-      - name: Build the one-page Word source
-        if: github.event_name != 'workflow_run'
-        run: python scripts/build-nda-documents.py
-
-      - name: Optimize signature, date and QR layout
-        if: github.event_name != 'workflow_run'
-        run: python scripts/optimize-nda-signature.py
-
-      - name: Convert the revised Word source to PDF and mobile preview image
-        if: github.event_name != 'workflow_run'
-        env:
-          HOME: /tmp/qily-lo-home
+      - name: Restore approved PDF and build mobile preview image
+        shell: bash
         run: |
-          mkdir -p "$HOME" /tmp/qily-lo-profile build/nda qilylean/assets/legal
-          test -s build/nda/qilylean-mutual-nda-v1.docx
-          unzip -t build/nda/qilylean-mutual-nda-v1.docx >/dev/null
-          libreoffice --headless -env:UserInstallation=file:///tmp/qily-lo-profile \
-            --convert-to pdf --outdir build/nda \
-            build/nda/qilylean-mutual-nda-v1.docx
-          test -s build/nda/qilylean-mutual-nda-v1.pdf
-          cp build/nda/qilylean-mutual-nda-v1.pdf qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
+          mkdir -p qilylean/assets/legal
+          base64 --decode scripts/nda-source/approved-pdf-v1.b64 \
+            > qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
+          test -s qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
           pdftoppm -png -f 1 -singlefile -r 300 \
-            build/nda/qilylean-mutual-nda-v1.pdf \
+            qilylean/assets/legal/qilylean-mutual-nda-v1.pdf \
             qilylean/assets/legal/qilylean-confidentiality-statement-v1
+          test -s qilylean/assets/legal/qilylean-confidentiality-statement-v1.png
 
-      - name: Remove the former public Word source
+      - name: Remove public Word source
         shell: bash
         run: rm -f qilylean/assets/legal/qilylean-mutual-nda-v1.docx
 
@@ -79,22 +57,20 @@ jobs:
           node scripts/publish-nda-link.js
           node scripts/publish-nda-mobile-preview.js
 
-      - name: Validate revised statement and mobile online preview
+      - name: Validate approved statement and mobile online preview
         shell: bash
         run: |
           test -s qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
           test -s qilylean/assets/legal/qilylean-confidentiality-statement-v1.png
-          test "$(wc -c < qilylean/assets/legal/qilylean-mutual-nda-v1.pdf)" -gt 100000
-          test "$(wc -c < qilylean/assets/legal/qilylean-confidentiality-statement-v1.png)" -gt 100000
-          test ! -e qilylean/assets/legal/qilylean-mutual-nda-v1.docx
-          test -s trust/nda-preview.html
           test "$(pdfinfo qilylean/assets/legal/qilylean-mutual-nda-v1.pdf | awk '/^Pages:/ {print $2}')" = "1"
+          pdfinfo qilylean/assets/legal/qilylean-mutual-nda-v1.pdf | grep -q 'Page size:.*595.*842'
           pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -Eq '保[[:space:]]*密[[:space:]]*声[[:space:]]*明'
           pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '声明内容'
-          pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '项目责任人：丁启利'
-          pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '签署日期'
+          pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '项目责任人签名'
+          pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '日期'
+          pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '委托单位（填写）'
+          pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '项目名称（填写）'
           grep -q '/trust/nda-preview.html' trust/index.html
-          grep -q '一页精简版' trust/index.html
           grep -q '在线预览保密声明' trust/index.html
           grep -q '手机端直接在线浏览' trust/nda-preview.html
           grep -q 'qilylean-confidentiality-statement-v1.png' trust/nda-preview.html
@@ -116,11 +92,11 @@ jobs:
           if (!search.entries.some((entry) => entry.url === data.compliance.ndaPreviewUrl)) throw new Error('Statement preview missing from search index');
           NODE
 
-      - name: Commit and publish the revised QilyLean statement
+      - name: Commit and publish the approved QilyLean statement
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "The QilyLean confidentiality statement is already current."
+            echo "The approved QilyLean confidentiality statement is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
@@ -129,5 +105,5 @@ jobs:
           git add index.html trust/index.html trust/nda-preview.html qilylean/site-data.json qilylean/site-search-index.json sitemap.xml sitemap-core.xml \
             qilylean/assets/legal/qilylean-mutual-nda-v1.pdf \
             qilylean/assets/legal/qilylean-confidentiality-statement-v1.png
-          git commit -m "build: publish revised QilyLean confidentiality statement and mobile preview [skip ci]"
+          git commit -m "build: publish approved QilyLean confidentiality statement PDF [skip ci]"
           git push
