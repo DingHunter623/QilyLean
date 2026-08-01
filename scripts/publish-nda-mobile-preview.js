@@ -14,17 +14,19 @@ const html = fs.readFileSync(source, 'utf8');
 for (const required of [
   'QilyLean项目保密声明',
   '最新版PDF在线预览',
-  '300DPI高清预览图',
-  'qilylean-confidentiality-statement-v2.png',
+  '当前页面直接读取并渲染最新上传的正式PDF',
+  'pdf.js/3.11.174/pdf.min.js',
+  'pdfjsLib.getDocument',
+  'qilylean-mutual-nda-v1.pdf?v=20260801-upload-v2',
   '适应宽度',
-  '原始清晰度'
+  '原始比例'
 ]) {
   if (!html.includes(required)) throw new Error(`Preview template missing: ${required}`);
 }
-if (/<iframe|download=|qilylean-mutual-nda-v1\.pdf/.test(html)) {
-  throw new Error('Preview template exposes a PDF frame or download path');
+if (/<iframe|download=|href=["'][^"']*qilylean-mutual-nda-v1\.pdf/.test(html)) {
+  throw new Error('Preview template exposes a PDF frame or direct download link');
 }
 
 fs.mkdirSync(path.dirname(target), {recursive:true});
 fs.writeFileSync(target, html.endsWith('\n') ? html : `${html}\n`, 'utf8');
-console.log('Published latest approved PDF as a responsive high-resolution online preview.');
+console.log('Published the exact latest PDF through an inline, mobile-readable PDF.js preview.');
