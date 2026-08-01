@@ -1,0 +1,51 @@
+name: Publish Sponsor terminology
+on:
+  push:
+    branches: [main]
+    paths:
+      - "knowledge/terminology-sponsor-v1.js"
+      - "knowledge/terminology/sponsor.html"
+      - "scripts/publish-sponsor-terminology.js"
+      - ".github/workflows/publish-sponsor-terminology.yml"
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: publish-sponsor-terminology-main
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Synchronize terminology modules
+        run: |
+          node scripts/publish-sponsor-terminology.js
+          node scripts/build-site-metadata.js
+      - name: Validate Sponsor terminology
+        run: |
+          grep -q 'terminology-sponsor-v1.js' knowledge/terminology.html
+          grep -q '共收录 181 项术语' knowledge/terminology.html
+          grep -q 'Sponsor｜项目发起人／项目主责高层' knowledge/terminology/sponsor.html
+          grep -q '高层Sponsor（项目发起人／主责高层）' qilylean/daily/2026-08-01.html
+          grep -q 'https://qilylean.com/knowledge/terminology/sponsor.html' sitemap.xml
+          node - <<'NODE'
+          const fs=require('fs');
+          const data=JSON.parse(fs.readFileSync('qilylean/site-data.json','utf8'));
+          const index=JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
+          const entries=Array.isArray(index)?index:index.entries;
+          if(data.terminology.total!==181||data.terminology.lessonTotal!==181)throw new Error('terminology count mismatch');
+          if(!entries.some(e=>e.url==='/knowledge/terminology/sponsor.html'))throw new Error('Sponsor missing from search index');
+          NODE
+      - name: Commit generated synchronization
+        run: |
+          if git diff --quiet; then echo "Sponsor terminology is already synchronized."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add knowledge/terminology.html knowledge/index.html index.html qilylean/daily/2026-08-01.html qilylean/site-data.json qilylean/site-search-index.json sitemap.xml sitemap-core.xml
+          git commit -m "build: synchronize Sponsor terminology across site [skip ci]"
+          git push
