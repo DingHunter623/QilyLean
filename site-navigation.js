@@ -2,7 +2,7 @@
 (function(d){
   'use strict';
   var id='qilyGlobalLinkStandardStylesheet';
-  var href='/site-link-standard-v2.css?v=20260801-global-link-v4';
+  var href='/site-link-standard-v2.css?v=20260801-global-link-v5';
   var current=d.getElementById(id);
   if(current){if(current.getAttribute('href')!==href)current.setAttribute('href',href);return;}
   var link=d.createElement('link');
