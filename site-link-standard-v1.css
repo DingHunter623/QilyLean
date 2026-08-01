@@ -1,82 +1,333 @@
-/* QilyLean 全站链接视觉规范｜2026-08-01
- * 所有会跳转至页面、文件、锚点、电话或邮件界面的链接均保留下横线，
- * 并在悬停、键盘聚焦与按下时提供明确反馈。
+/* QilyLean 全站链接视觉规范｜2026-08-01 v2
+ * 规范：凡点击后跳转至页面、文件、锚点、电话或邮件界面的链接，均显示清晰下横线；
+ * 悬停、键盘聚焦与按下状态必须有明显反馈，同时保持文字与底色高对比可读。
  */
 
 :root {
-  --qily-link-accent: var(--qily-teal, #178b94);
-  --qily-link-underline: currentColor;
-  --qily-link-hover-bg: rgba(23, 139, 148, .10);
-  --qily-link-focus: rgba(202, 161, 95, .62);
+  --qily-link-ink: #0f4b5a;
+  --qily-link-deep: #073c47;
+  --qily-link-teal: #178b94;
+  --qily-link-gold: #c28b30;
+  --qily-link-hover-bg: rgba(23, 139, 148, .12);
+  --qily-link-focus: rgba(202, 161, 95, .72);
 }
 
+/* 所有真实链接保留下横线，不依赖颜色单独表达可点击性。 */
 html body a[href] {
   text-decoration-line: underline !important;
   text-decoration-style: solid !important;
-  text-decoration-color: var(--qily-link-underline) !important;
-  text-decoration-thickness: max(1.5px, .085em) !important;
+  text-decoration-color: currentColor !important;
+  text-decoration-thickness: max(1.6px, .09em) !important;
   text-underline-offset: .22em !important;
   text-decoration-skip-ink: auto !important;
   -webkit-text-decoration-skip: ink !important;
   transition:
     color .16s ease,
     background-color .16s ease,
+    border-color .16s ease,
     box-shadow .16s ease,
-    filter .16s ease,
+    outline-color .16s ease,
     opacity .16s ease,
     transform .16s ease !important;
-  -webkit-tap-highlight-color: rgba(23, 139, 148, .20);
+  -webkit-tap-highlight-color: rgba(23, 139, 148, .22);
 }
 
 html body a[href]:hover {
-  text-decoration-color: var(--qily-copper, #caa15f) !important;
   text-decoration-thickness: max(2.5px, .14em) !important;
   text-underline-offset: .28em !important;
-  background-color: var(--qily-link-hover-bg);
-  filter: brightness(1.06) saturate(1.04);
 }
 
 html body a[href]:focus-visible {
-  text-decoration-color: var(--qily-copper, #caa15f) !important;
   text-decoration-thickness: max(2.5px, .14em) !important;
   text-underline-offset: .28em !important;
-  background-color: var(--qily-link-hover-bg);
   outline: 3px solid var(--qily-link-focus) !important;
   outline-offset: 3px !important;
-  border-radius: 4px;
-  box-shadow: 0 0 0 5px rgba(23, 139, 148, .10) !important;
+  border-radius: 5px;
+  box-shadow: 0 0 0 5px rgba(23, 139, 148, .12) !important;
 }
 
 html body a[href]:active {
   text-decoration-thickness: max(3px, .16em) !important;
-  background-color: rgba(202, 161, 95, .18);
-  filter: brightness(.94);
-  opacity: .86;
+  opacity: .88;
   transform: translateY(1px);
 }
 
-/* 图像、卡片或整块区域作为链接时，文字仍保留下横线，整体同时有轮廓反馈。 */
+/* 正文、说明、列表和普通卡片中的文本链接：深青文字＋青色下横线。 */
+html body :where(
+  main,
+  article,
+  section,
+  .module-card,
+  .paper-card,
+  .career-full-card,
+  .trust-card,
+  .article,
+  .prose,
+  .copy,
+  .description,
+  .summary
+) a[href] {
+  color: var(--qily-link-ink) !important;
+  text-decoration-color: var(--qily-link-teal) !important;
+  font-weight: 800;
+}
+
+html body :where(
+  main,
+  article,
+  section,
+  .module-card,
+  .paper-card,
+  .career-full-card,
+  .trust-card,
+  .article,
+  .prose,
+  .copy,
+  .description,
+  .summary
+) a[href]:hover,
+html body :where(
+  main,
+  article,
+  section,
+  .module-card,
+  .paper-card,
+  .career-full-card,
+  .trust-card,
+  .article,
+  .prose,
+  .copy,
+  .description,
+  .summary
+) a[href]:focus-visible {
+  color: var(--qily-link-deep) !important;
+  text-decoration-color: var(--qily-link-gold) !important;
+}
+
+/* 主导航：常态深色文字清晰可见；悬停／聚焦时深青底＋白字＋白色下横线。 */
+html body .qily-site-header .site-nav a[href],
+html body .qily-site-header .qily-global-nav a[href],
+html body .qily-global-header .site-nav a[href],
+html body .qily-global-header .qily-global-nav a[href],
+html body header.topbar .nav a[href],
+html body header.top .nav a[href] {
+  color: #182420 !important;
+  background-color: transparent !important;
+  text-decoration-line: underline !important;
+  text-decoration-color: var(--qily-link-ink) !important;
+  text-decoration-thickness: 1.7px !important;
+  text-underline-offset: .24em !important;
+}
+
+html body .qily-site-header .site-nav a[href][aria-current="page"],
+html body .qily-site-header .qily-global-nav a[href][aria-current="page"],
+html body .qily-global-header .site-nav a[href][aria-current="page"],
+html body .qily-global-header .qily-global-nav a[href][aria-current="page"],
+html body header.topbar .nav a[href][aria-current="page"],
+html body header.top .nav a[href][aria-current="page"] {
+  color: var(--qily-link-ink) !important;
+  background-color: #e4f2ef !important;
+  border-color: #b8d9d4 !important;
+  text-decoration-color: var(--qily-link-teal) !important;
+}
+
+html body .qily-site-header .site-nav a[href]:hover,
+html body .qily-site-header .site-nav a[href]:focus-visible,
+html body .qily-site-header .qily-global-nav a[href]:hover,
+html body .qily-site-header .qily-global-nav a[href]:focus-visible,
+html body .qily-global-header .site-nav a[href]:hover,
+html body .qily-global-header .site-nav a[href]:focus-visible,
+html body .qily-global-header .qily-global-nav a[href]:hover,
+html body .qily-global-header .qily-global-nav a[href]:focus-visible,
+html body header.topbar .nav a[href]:hover,
+html body header.topbar .nav a[href]:focus-visible,
+html body header.top .nav a[href]:hover,
+html body header.top .nav a[href]:focus-visible {
+  color: #fff !important;
+  background-color: var(--qily-link-ink) !important;
+  border-color: var(--qily-link-ink) !important;
+  text-decoration-color: #fff !important;
+  box-shadow: 0 8px 20px rgba(15, 75, 90, .24) !important;
+  transform: translateY(-2px);
+}
+
+html body .qily-site-header .site-nav a[href]:active,
+html body .qily-site-header .qily-global-nav a[href]:active,
+html body .qily-global-header .site-nav a[href]:active,
+html body .qily-global-header .qily-global-nav a[href]:active,
+html body header.topbar .nav a[href]:active,
+html body header.top .nav a[href]:active {
+  color: #fff !important;
+  background-color: var(--qily-link-deep) !important;
+  text-decoration-color: #fff !important;
+  transform: translateY(0) scale(.98);
+}
+
+/* 首屏／深色区域子导航：常态白字，反馈使用金色或白色下横线，避免泛白看不清。 */
+html body :where(.module-hero, .daily-hero, .hero) .module-subnav a[href],
+html body :where(.module-hero, .daily-hero, .hero) .subnav a[href],
+html body :where(.module-hero, .daily-hero, .hero) nav a[href] {
+  color: #fff !important;
+  text-decoration-color: #ffe39b !important;
+}
+
+html body :where(.module-hero, .daily-hero, .hero) .module-subnav a[href]:hover,
+html body :where(.module-hero, .daily-hero, .hero) .module-subnav a[href]:focus-visible,
+html body :where(.module-hero, .daily-hero, .hero) .subnav a[href]:hover,
+html body :where(.module-hero, .daily-hero, .hero) .subnav a[href]:focus-visible {
+  color: #17322d !important;
+  background-color: #ffe39b !important;
+  border-color: #ffe39b !important;
+  text-decoration-color: #17322d !important;
+  box-shadow: 0 8px 20px rgba(5, 42, 51, .24) !important;
+}
+
+/* 卡片操作按钮：明确区分主按钮与次按钮，杜绝白底白字或浅底浅字。 */
+html body .module-actions a[href],
+html body .card-actions a[href] {
+  min-height: 42px;
+  font-weight: 900 !important;
+  text-decoration-color: currentColor !important;
+}
+
+html body .module-actions a[href]:not(.secondary),
+html body .card-actions a[href]:not(.secondary) {
+  color: #fff !important;
+  background-color: var(--qily-link-ink) !important;
+  border-color: var(--qily-link-ink) !important;
+}
+
+html body .module-actions a[href].secondary,
+html body .card-actions a[href].secondary {
+  color: var(--qily-link-ink) !important;
+  background-color: #fff !important;
+  border-color: #b8d9d4 !important;
+}
+
+html body .module-actions a[href]:hover,
+html body .module-actions a[href]:focus-visible,
+html body .card-actions a[href]:hover,
+html body .card-actions a[href]:focus-visible {
+  color: #fff !important;
+  background-color: #12606f !important;
+  border-color: #12606f !important;
+  text-decoration-color: #fff !important;
+  box-shadow: 0 9px 22px rgba(15, 75, 90, .24) !important;
+  transform: translateY(-2px);
+}
+
+html body .module-actions a[href]:active,
+html body .card-actions a[href]:active {
+  color: #fff !important;
+  background-color: var(--qily-link-deep) !important;
+  text-decoration-color: #fff !important;
+  transform: translateY(0) scale(.98);
+}
+
+/* 其他常见按钮式链接：深底白字；金色主按钮保持深色文字。 */
+html body a[href]:where(
+  .module-action,
+  .resource-action,
+  .project-list-action,
+  .project-card-action,
+  .service-contract-link,
+  .moment-link,
+  .moment-back,
+  .design-link,
+  .share-button
+),
+html body a[href].button:not(.primary) {
+  color: #fff !important;
+  background-color: var(--qily-link-ink) !important;
+  border-color: var(--qily-link-ink) !important;
+  text-decoration-color: #fff !important;
+  font-weight: 900 !important;
+}
+
+html body a[href].button.primary {
+  color: #17322d !important;
+  background-color: #ffe39b !important;
+  border-color: #ffe39b !important;
+  text-decoration-color: #17322d !important;
+}
+
+html body a[href]:where(
+  .module-action,
+  .resource-action,
+  .project-list-action,
+  .project-card-action,
+  .service-contract-link,
+  .moment-link,
+  .moment-back,
+  .design-link,
+  .share-button
+):hover,
+html body a[href]:where(
+  .module-action,
+  .resource-action,
+  .project-list-action,
+  .project-card-action,
+  .service-contract-link,
+  .moment-link,
+  .moment-back,
+  .design-link,
+  .share-button
+):focus-visible,
+html body a[href].button:not(.primary):hover,
+html body a[href].button:not(.primary):focus-visible {
+  color: #fff !important;
+  background-color: #12606f !important;
+  border-color: #12606f !important;
+  text-decoration-color: #fff !important;
+  box-shadow: 0 9px 22px rgba(15, 75, 90, .24) !important;
+}
+
+html body a[href].button.primary:hover,
+html body a[href].button.primary:focus-visible {
+  color: #17322d !important;
+  background-color: #f5c766 !important;
+  border-color: #f5c766 !important;
+  text-decoration-color: #17322d !important;
+  box-shadow: 0 9px 22px rgba(202, 161, 95, .28) !important;
+}
+
+/* 搜索结果、联系电话和信任中心入口保持浅底深字。 */
+html body :where(.qily-search-result, .qily-phone-list a[href], .trust-contact a[href]) {
+  color: var(--qily-link-ink) !important;
+  background-color: #f6fbfa !important;
+  border-color: #c8dad8 !important;
+  text-decoration-color: var(--qily-link-teal) !important;
+}
+
+html body :where(.qily-search-result, .qily-phone-list a[href], .trust-contact a[href]):hover,
+html body :where(.qily-search-result, .qily-phone-list a[href], .trust-contact a[href]):focus-visible {
+  color: #fff !important;
+  background-color: var(--qily-link-ink) !important;
+  border-color: var(--qily-link-ink) !important;
+  text-decoration-color: #fff !important;
+}
+
+/* 图像、卡片或整块区域作为链接时，整体增加轮廓和抬升反馈。 */
 html body a[href]:has(img):hover,
 html body a[href]:has(svg):hover,
 html body a[href][class*="card"]:hover,
 html body a[href][class*="item"]:hover,
 html body a[href][class*="tile"]:hover {
-  outline: 2px solid rgba(23, 139, 148, .48) !important;
+  outline: 2px solid rgba(23, 139, 148, .52) !important;
   outline-offset: 3px !important;
-  box-shadow: 0 10px 24px rgba(15, 75, 90, .16) !important;
+  box-shadow: 0 10px 24px rgba(15, 75, 90, .18) !important;
 }
 
-/* 深色区域中的链接保持高对比度下横线。 */
-.module-hero a[href],
-.daily-hero a[href],
-.hero a[href],
-.qily-site-header a[href]:hover,
-.qily-global-header a[href]:hover,
-.module-footer a[href],
-.footer a[href],
-.contact-card a[href],
-.qily-float-dock a[href] {
-  text-decoration-color: currentColor !important;
+/* 页脚、联系卡及悬浮按钮等深色区域保持白字与白／金色下横线。 */
+html body :where(.module-footer, .footer, .contact-card, .qily-float-dock) a[href] {
+  color: #fff !important;
+  text-decoration-color: #ffe39b !important;
+}
+
+html body :where(.module-footer, .footer, .contact-card, .qily-float-dock) a[href]:hover,
+html body :where(.module-footer, .footer, .contact-card, .qily-float-dock) a[href]:focus-visible {
+  color: #fff !important;
+  text-decoration-color: #fff !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -85,6 +336,7 @@ html body a[href][class*="tile"]:hover {
 
 @media print {
   html body a[href] {
+    color: #000 !important;
     text-decoration: underline !important;
     text-decoration-thickness: 1px !important;
     background: transparent !important;
