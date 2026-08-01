@@ -32,7 +32,7 @@ html body a[href]:hover {
   text-decoration-color: var(--qily-copper, #caa15f) !important;
   text-decoration-thickness: max(2.5px, .14em) !important;
   text-underline-offset: .28em !important;
-  background-color: var(--qily-link-hover-bg) !important;
+  background-color: var(--qily-link-hover-bg);
   filter: brightness(1.06) saturate(1.04);
 }
 
@@ -40,7 +40,7 @@ html body a[href]:focus-visible {
   text-decoration-color: var(--qily-copper, #caa15f) !important;
   text-decoration-thickness: max(2.5px, .14em) !important;
   text-underline-offset: .28em !important;
-  background-color: var(--qily-link-hover-bg) !important;
+  background-color: var(--qily-link-hover-bg);
   outline: 3px solid var(--qily-link-focus) !important;
   outline-offset: 3px !important;
   border-radius: 4px;
@@ -49,7 +49,7 @@ html body a[href]:focus-visible {
 
 html body a[href]:active {
   text-decoration-thickness: max(3px, .16em) !important;
-  background-color: rgba(202, 161, 95, .18) !important;
+  background-color: rgba(202, 161, 95, .18);
   filter: brightness(.94);
   opacity: .86;
   transform: translateY(1px);
