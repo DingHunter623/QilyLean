@@ -34,10 +34,14 @@
     "aiRule": "AI用于检索、整理和方案辅助，不替代现场核实、专业评审、管理决策及法律、财税、安全等专项意见。",
     "contactPhone": "13450014003",
     "contactEmail": "396767769@qq.com",
-    "trustCenterUrl": "/trust/"
+    "trustCenterUrl": "/trust/",
+    "ndaVersion": "V1.0",
+    "ndaTemplateUrl": "/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf",
+    "ndaWordUrl": "/qilylean/assets/legal/qilylean-mutual-nda-v1.docx",
+    "ndaContentRule": "Word与PDF由同一DOCX源文件自动生成，条款内容保持一致。"
   },
   "search": {
-    "indexedEntries": 2847,
+    "indexedEntries": 2849,
     "indexedPages": 36,
     "terminologyTotal": 180,
     "briefTotal": 2580,
