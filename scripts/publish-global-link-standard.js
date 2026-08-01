@@ -6,7 +6,9 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const stylesheet = '/site-link-standard-v2.css?v=20260801-global-link-v5';
+const darkSurfaceStylesheet = '/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v1';
 const linkTag = `  <link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="${stylesheet}">`;
+const darkLinkTag = `  <link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="${darkSurfaceStylesheet}">`;
 const loaderMarker = 'qily-global-link-standard-loader-v1';
 
 function read(file) { return fs.readFileSync(file, 'utf8'); }
@@ -26,18 +28,20 @@ function walk(directory, callback) {
   }
 }
 
-function installHtmlLink(page) {
+function installHtmlLinks(page) {
   if (!/<\/head>/i.test(page)) return page;
-  const expression = /\s*<link\b[^>]*id=["']qilyGlobalLinkStandardStylesheet["'][^>]*>\s*/gi;
-  let next = page.replace(expression, '\n');
-  next = next.replace(/\s*<link\b[^>]*href=["'][^"']*\/site-link-standard-v(?:1|2)\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n');
-  return next.replace(/<\/head>/i, `${linkTag}\n</head>`);
+  let next = page
+    .replace(/\s*<link\b[^>]*id=["']qilyGlobalLinkStandardStylesheet["'][^>]*>\s*/gi, '\n')
+    .replace(/\s*<link\b[^>]*id=["']qilyDarkSurfaceContrastStylesheet["'][^>]*>\s*/gi, '\n')
+    .replace(/\s*<link\b[^>]*href=["'][^"']*\/site-link-standard-v(?:1|2)\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n')
+    .replace(/\s*<link\b[^>]*href=["'][^"']*\/site-dark-surface-contrast-v1\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n');
+  return next.replace(/<\/head>/i, `${linkTag}\n${darkLinkTag}\n</head>`);
 }
 
 function patchNavigationLoader() {
   const file = path.join(root, 'site-navigation.js');
   let page = read(file);
-  const loader = `/* ${loaderMarker} */\n(function(d){\n  'use strict';\n  var id='qilyGlobalLinkStandardStylesheet';\n  var href='${stylesheet}';\n  var current=d.getElementById(id);\n  if(current){if(current.getAttribute('href')!==href)current.setAttribute('href',href);return;}\n  var link=d.createElement('link');\n  link.id=id;link.rel='stylesheet';link.href=href;\n  (d.head||d.documentElement).appendChild(link);\n})(document);\n\n`;
+  const loader = `/* ${loaderMarker} */\n(function(d){\n  'use strict';\n  var styles=[\n    {id:'qilyGlobalLinkStandardStylesheet',href:'${stylesheet}'},\n    {id:'qilyDarkSurfaceContrastStylesheet',href:'${darkSurfaceStylesheet}'}\n  ];\n  styles.forEach(function(style){\n    var current=d.getElementById(style.id);\n    if(current){if(current.getAttribute('href')!==style.href)current.setAttribute('href',style.href);return;}\n    var link=d.createElement('link');\n    link.id=style.id;link.rel='stylesheet';link.href=style.href;\n    (d.head||d.documentElement).appendChild(link);\n  });\n})(document);\n\n`;
   if (page.includes(loaderMarker)) {
     page = page.replace(/\/\* qily-global-link-standard-loader-v1 \*\/[\s\S]*?\}\)\(document\);\s*/m, loader);
   } else {
@@ -53,14 +57,14 @@ function main() {
     if (!file.endsWith('.html')) return;
     htmlChecked += 1;
     const before = read(file);
-    const after = installHtmlLink(before);
+    const after = installHtmlLinks(before);
     if (after !== before) {
       write(file, after);
       htmlChanged += 1;
     }
   });
   const navigationChanged = patchNavigationLoader();
-  process.stdout.write(`Published QilyLean global link standard v5 to ${htmlChecked} HTML files; refreshed ${htmlChanged}; navigation loader changed=${navigationChanged}.\n`);
+  process.stdout.write(`Published QilyLean link standard v5 and dark-surface contrast v1 to ${htmlChecked} HTML files; refreshed ${htmlChanged}; navigation loader changed=${navigationChanged}.\n`);
 }
 
 main();
