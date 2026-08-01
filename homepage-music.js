@@ -54,9 +54,25 @@
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyClientConfidentialityPolicy, { once: true });
-  } else {
+  function loadProjectDeliveryTerminologySync() {
+    if (!/\/knowledge\/terminology(?:\.html)?\/?$/i.test(location.pathname || '')) return;
+    if (document.querySelector('script[data-qily-terminology-project-delivery]')) return;
+
+    var script = document.createElement('script');
+    script.src = '/knowledge/terminology-project-delivery-v1.js?v=20260801-raci-project-delivery-v1';
+    script.async = false;
+    script.setAttribute('data-qily-terminology-project-delivery', 'v1');
+    (document.body || document.head || document.documentElement).appendChild(script);
+  }
+
+  function initializePageEnhancements() {
     applyClientConfidentialityPolicy();
+    loadProjectDeliveryTerminologySync();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializePageEnhancements, { once: true });
+  } else {
+    initializePageEnhancements();
   }
 })();
