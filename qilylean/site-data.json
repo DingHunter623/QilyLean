@@ -7,16 +7,16 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 2579,
-    "latestDate": "2026-07-31",
-    "latestTheme": "全过程质量管理",
-    "latestTitle": "品质不是检出来的：把客户要求转化为全过程质量闭环",
-    "latestSummary": "品质管理不能停在IQC、IPQC、FQC与OQC的检验分工，而要把客户要求、风险识别、过程控制、数据判定、异常遏制、根因纠正、标准更新与持续改进贯通为全过程质量闭环。",
-    "latestUrl": "/qilylean/daily/2026-07-31.html",
+    "total": 2580,
+    "latestDate": "2026-08-01",
+    "latestTheme": "工程项目交付管理",
+    "latestTitle": "工程项目不是“做完”：用里程碑、风险、资源与收益形成交付闭环",
+    "latestSummary": "工程项目管理不能停在任务清单和完成率，而要把需求定义、范围基线、里程碑评审、风险控制、资源协同、变更管理、验收证据、收益兑现与标准复制贯通为交付闭环。",
+    "latestUrl": "/qilylean/daily/2026-08-01.html",
     "directoryUrl": "/qilylean/daily-insights.html"
   },
   "knowledge": {
-    "moduleCount": 5,
+    "moduleCount": 6,
     "toolCount": 4,
     "topicCount": 6,
     "documentCount": 6,
