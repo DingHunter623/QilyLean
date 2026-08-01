@@ -80,7 +80,8 @@ function collectSiteData() {
   const knowledgePage = read(knowledgeFile);
   const briefs = JSON.parse(read(dailyIndexFile));
 
-  const terminologyTotal = countMatches(terminologyPage, /<article\b[^>]*\bdata-term-card\b[^>]*>/gi);
+  let terminologyTotal = countMatches(terminologyPage, /<article\b[^>]*\bdata-term-card\b[^>]*>/gi);
+  if (terminologyPage.includes('terminology-sponsor-v1.js') && !/<article\b[^>]*\bdata-term-card\b[^>]*>[\s\S]*?<div class="term-code">Sponsor<\/div>/i.test(terminologyPage)) terminologyTotal += 1;
   if (terminologyTotal < 1) throw new Error('No terminology entries were detected');
   if (!Array.isArray(briefs) || briefs.length < 1) throw new Error('No daily briefs were detected');
 
@@ -119,8 +120,11 @@ function collectSiteData() {
   };
 
   const existing = readExistingData();
-  const unchanged = existing && JSON.stringify(withoutGeneratedAt(existing)) === JSON.stringify(core);
-  return { generatedAt: unchanged && existing.generatedAt ? existing.generatedAt : buildDate, ...core };
+  const reserved = new Set(['generatedAt', 'schemaVersion', 'terminology', 'briefs', 'knowledge']);
+  const extras = existing ? Object.fromEntries(Object.entries(existing).filter(([key]) => !reserved.has(key))) : {};
+  const merged = { ...core, ...extras };
+  const unchanged = existing && JSON.stringify(withoutGeneratedAt(existing)) === JSON.stringify(merged);
+  return { generatedAt: unchanged && existing.generatedAt ? existing.generatedAt : buildDate, ...merged };
 }
 
 function updateTerminology(data) {
