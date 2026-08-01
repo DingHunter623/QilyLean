@@ -18,6 +18,7 @@ on:
       - "scripts/enhance-daily-archive.js"
       - "scripts/enhance-terminology-training.js"
       - "scripts/audit-daily-terminology.js"
+      - "scripts/sync-daily-terminology.js"
       - "scripts/bump-daily-css-version.js"
       - "scripts/validate-daily-archive.js"
       - "scripts/remove-daily-directory-consultation.js"
@@ -55,6 +56,11 @@ jobs:
 
       - name: Audit latest brief terminology before publication
         run: node scripts/audit-daily-terminology.js
+
+      - name: Synchronize terminology quick links across every brief
+        run: |
+          node scripts/sync-daily-terminology.js
+          node scripts/sync-daily-terminology.js --check
 
       - name: Validate daily terminology coverage
         shell: bash
