@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -40,12 +41,13 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends Activity {
-    private static final int BG = Color.rgb(17, 26, 22);
-    private static final int CARD = Color.rgb(35, 53, 45);
-    private static final int TEAL = Color.rgb(15, 89, 108);
-    private static final int GOLD = Color.rgb(216, 177, 96);
-    private static final int WHITE = Color.rgb(242, 246, 244);
-    private static final int MUTED = Color.rgb(180, 194, 187);
+    private static final int BG = Color.rgb(14, 22, 18);
+    private static final int CARD = Color.rgb(31, 48, 40);
+    private static final int CARD_ALT = Color.rgb(26, 42, 36);
+    private static final int TEAL = Color.rgb(16, 103, 119);
+    private static final int GOLD = Color.rgb(222, 184, 101);
+    private static final int WHITE = Color.rgb(244, 248, 246);
+    private static final int MUTED = Color.rgb(181, 197, 188);
 
     private final Handler clockHandler = new Handler();
     private TextView clockView;
@@ -94,6 +96,7 @@ public class MainActivity extends Activity {
 
     private void showHome() {
         showingApps = false;
+
         ScrollView scroll = new ScrollView(this);
         scroll.setFillViewport(true);
         scroll.setBackgroundColor(BG);
@@ -101,7 +104,7 @@ public class MainActivity extends Activity {
         LinearLayout content = new LinearLayout(this);
         content.setOrientation(LinearLayout.VERTICAL);
         content.setGravity(Gravity.CENTER_HORIZONTAL);
-        content.setPadding(dp(22), dp(26), dp(22), dp(36));
+        content.setPadding(dp(22), dp(26), dp(22), dp(40));
         scroll.addView(content, new ScrollView.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -110,27 +113,38 @@ public class MainActivity extends Activity {
         logo.setAdjustViewBounds(true);
         logo.setScaleType(ImageView.ScaleType.FIT_CENTER);
         Bitmap logoBitmap = loadLogo();
-        if (logoBitmap != null) logo.setImageBitmap(logoBitmap);
+        if (logoBitmap != null) {
+            logo.setImageBitmap(logoBitmap);
+        }
         content.addView(logo, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, dp(104)));
+                ViewGroup.LayoutParams.MATCH_PARENT, dp(112)));
 
         TextView tagline = text("精益生产 · 工程改善 · 数智工厂", 15, GOLD, Gravity.CENTER);
-        tagline.setPadding(0, dp(6), 0, dp(18));
+        tagline.setPadding(0, dp(4), 0, dp(16));
         content.addView(tagline);
 
-        clockView = text("", 31, WHITE, Gravity.CENTER);
+        clockView = text("", 33, WHITE, Gravity.CENTER);
         clockView.setTypeface(Typeface.create("sans", Typeface.NORMAL));
         clockView.setLineSpacing(dp(3), 1f);
         content.addView(clockView, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
         clockHandler.removeCallbacks(clockTask);
         clockHandler.post(clockTask);
 
-        TextView version = pill("QilyLean Home v0.1  ·  G0245D免Root定制版");
+        TextView version = pill("QilyLean OS Lite v0.2 · Galaxy C55专属版");
         LinearLayout.LayoutParams versionLp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        versionLp.setMargins(0, dp(14), 0, dp(22));
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        versionLp.setMargins(0, dp(14), 0, dp(8));
         content.addView(version, versionLp);
+
+        TextView device = text(deviceSummary(), 11, MUTED, Gravity.CENTER);
+        LinearLayout.LayoutParams deviceLp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        deviceLp.setMargins(0, 0, 0, dp(22));
+        content.addView(device, deviceLp);
 
         addSectionTitle(content, "QilyLean工作台");
         addCardRow(content,
@@ -157,28 +171,50 @@ public class MainActivity extends Activity {
                     @Override public void onClick(View v) { openUrl("https://qilylean.com/cooperation/"); }
                 }));
 
+        addSectionTitle(content, "Galaxy C55快捷管理");
+        addCardRow(content,
+                cardAlt("设备维护", "电池、存储与安全检查", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openSamsungDeviceCare(); }
+                }),
+                cardAlt("显示设置", "亮度、护眼与屏幕显示", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openSettings(Settings.ACTION_DISPLAY_SETTINGS); }
+                }));
+
+        addCardRow(content,
+                cardAlt("壁纸与主题", "设置QilyLean品牌壁纸", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openWallpaperSettings(); }
+                }),
+                cardAlt("应用管理", "权限、通知与存储管理", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openSettings(Settings.ACTION_APPLICATION_SETTINGS); }
+                }));
+
         addSectionTitle(content, "系统入口");
         addCardRow(content,
                 card("全部应用", "打开本机应用列表", new View.OnClickListener() {
                     @Override public void onClick(View v) { showAppDrawer(); }
                 }),
                 card("系统设置", "网络、显示与设备管理", new View.OnClickListener() {
-                    @Override public void onClick(View v) { startActivity(new Intent(Settings.ACTION_SETTINGS)); }
+                    @Override public void onClick(View v) { openSettings(Settings.ACTION_SETTINGS); }
                 }));
 
         addCardRow(content,
-                card("默认桌面", "设置或切换桌面应用", new View.OnClickListener() {
+                card("默认桌面", "切换QilyLean或One UI桌面", new View.OnClickListener() {
                     @Override public void onClick(View v) { openHomeSettings(); }
                 }),
-                card("浏览器", "打开官网主页", new View.OnClickListener() {
+                card("浏览器", "打开QilyLean官网主页", new View.OnClickListener() {
                     @Override public void onClick(View v) { openUrl("https://qilylean.com/"); }
                 }));
 
-        TextView footer = text("启精益之智，聚企业之力。\n本版本不修改系统、基带、Recovery或IMEI。", 12, MUTED, Gravity.CENTER);
+        TextView footer = text(
+                "启精益之智，聚企业之力。\nGalaxy C55免Root专属定制，不修改系统、基带、Recovery或IMEI。",
+                12,
+                MUTED,
+                Gravity.CENTER);
         footer.setLineSpacing(dp(2), 1f);
         LinearLayout.LayoutParams footerLp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        footerLp.setMargins(0, dp(22), 0, 0);
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        footerLp.setMargins(0, dp(24), 0, 0);
         content.addView(footer, footerLp);
 
         setContentView(scroll);
@@ -190,6 +226,7 @@ public class MainActivity extends Activity {
         Intent query = new Intent(Intent.ACTION_MAIN, null);
         query.addCategory(Intent.CATEGORY_LAUNCHER);
         final List<ResolveInfo> apps = new ArrayList<>(pm.queryIntentActivities(query, 0));
+
         Collections.sort(apps, new Comparator<ResolveInfo>() {
             @Override
             public int compare(ResolveInfo a, ResolveInfo b) {
@@ -202,18 +239,20 @@ public class MainActivity extends Activity {
         root.setBackgroundColor(BG);
         root.setPadding(dp(16), dp(18), dp(16), dp(10));
 
-        TextView back = text("‹  返回 QilyLean Home", 18, GOLD, Gravity.LEFT | Gravity.CENTER_VERTICAL);
+        TextView back = text("‹  返回 QilyLean Home", 18, GOLD,
+                Gravity.LEFT | Gravity.CENTER_VERTICAL);
         back.setTypeface(Typeface.DEFAULT_BOLD);
         back.setPadding(dp(8), dp(10), dp(8), dp(16));
         back.setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) { showHome(); }
         });
         root.addView(back, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
 
         GridView grid = new GridView(this);
         grid.setNumColumns(4);
-        grid.setVerticalSpacing(dp(16));
+        grid.setVerticalSpacing(dp(18));
         grid.setHorizontalSpacing(dp(8));
         grid.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
         grid.setGravity(Gravity.CENTER);
@@ -223,11 +262,14 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ResolveInfo info = apps.get(position);
                 Intent launch = pm.getLaunchIntentForPackage(info.activityInfo.packageName);
-                if (launch != null) startActivity(launch);
+                if (launch != null) {
+                    startActivity(launch);
+                }
             }
         });
         root.addView(grid, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
+
         setContentView(root);
     }
 
@@ -235,7 +277,8 @@ public class MainActivity extends Activity {
         TextView view = text(title, 17, WHITE, Gravity.LEFT);
         view.setTypeface(Typeface.DEFAULT_BOLD);
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         lp.setMargins(dp(2), dp(12), 0, dp(8));
         parent.addView(view, lp);
     }
@@ -244,20 +287,29 @@ public class MainActivity extends Activity {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams rowLp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         rowLp.setMargins(0, 0, 0, dp(10));
         parent.addView(row, rowLp);
 
-        LinearLayout.LayoutParams leftLp = new LinearLayout.LayoutParams(0, dp(92), 1f);
+        LinearLayout.LayoutParams leftLp = new LinearLayout.LayoutParams(0, dp(96), 1f);
         leftLp.setMargins(0, 0, dp(5), 0);
         row.addView(left, leftLp);
 
-        LinearLayout.LayoutParams rightLp = new LinearLayout.LayoutParams(0, dp(92), 1f);
+        LinearLayout.LayoutParams rightLp = new LinearLayout.LayoutParams(0, dp(96), 1f);
         rightLp.setMargins(dp(5), 0, 0, 0);
         row.addView(right, rightLp);
     }
 
     private View card(String title, String subtitle, View.OnClickListener listener) {
+        return buildCard(title, subtitle, CARD, listener);
+    }
+
+    private View cardAlt(String title, String subtitle, View.OnClickListener listener) {
+        return buildCard(title, subtitle, CARD_ALT, listener);
+    }
+
+    private View buildCard(String title, String subtitle, int fill, View.OnClickListener listener) {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setGravity(Gravity.CENTER_VERTICAL);
@@ -265,7 +317,7 @@ public class MainActivity extends Activity {
         box.setClickable(true);
         box.setFocusable(true);
         box.setElevation(dp(2));
-        box.setBackground(roundRect(CARD, 14, TEAL, 1));
+        box.setBackground(roundRect(fill, 16, TEAL, 1));
         box.setOnClickListener(listener);
 
         TextView titleView = text(title, 17, WHITE, Gravity.LEFT);
@@ -274,7 +326,8 @@ public class MainActivity extends Activity {
 
         TextView subView = text(subtitle, 11, MUTED, Gravity.LEFT);
         LinearLayout.LayoutParams subLp = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
         subLp.setMargins(0, dp(5), 0, 0);
         box.addView(subView, subLp);
         return box;
@@ -283,7 +336,7 @@ public class MainActivity extends Activity {
     private TextView pill(String value) {
         TextView view = text(value, 11, GOLD, Gravity.CENTER);
         view.setPadding(dp(12), dp(7), dp(12), dp(7));
-        view.setBackground(roundRect(Color.rgb(30, 45, 38), 20, GOLD, 1));
+        view.setBackground(roundRect(Color.rgb(28, 43, 36), 20, GOLD, 1));
         return view;
     }
 
@@ -297,11 +350,11 @@ public class MainActivity extends Activity {
     }
 
     private GradientDrawable roundRect(int fill, int radiusDp, int stroke, int strokeDp) {
-        GradientDrawable d = new GradientDrawable();
-        d.setColor(fill);
-        d.setCornerRadius(dp(radiusDp));
-        d.setStroke(dp(strokeDp), stroke);
-        return d;
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setColor(fill);
+        drawable.setCornerRadius(dp(radiusDp));
+        drawable.setStroke(dp(strokeDp), stroke);
+        return drawable;
     }
 
     private Bitmap loadLogo() {
@@ -310,7 +363,9 @@ public class MainActivity extends Activity {
                     getAssets().open("qilylean_logo.b64"), "UTF-8"));
             StringBuilder data = new StringBuilder();
             String line;
-            while ((line = reader.readLine()) != null) data.append(line.trim());
+            while ((line = reader.readLine()) != null) {
+                data.append(line.trim());
+            }
             reader.close();
             byte[] bytes = Base64.decode(data.toString(), Base64.DEFAULT);
             return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
@@ -320,11 +375,43 @@ public class MainActivity extends Activity {
         }
     }
 
+    private String deviceSummary() {
+        String manufacturer = Build.MANUFACTURER == null ? "Android" : Build.MANUFACTURER;
+        String model = Build.MODEL == null ? "设备" : Build.MODEL;
+        return manufacturer + " " + model + " · Android " + Build.VERSION.RELEASE;
+    }
+
     private void openUrl(String url) {
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
         } catch (ActivityNotFoundException e) {
             Toast.makeText(this, "未找到可用浏览器", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void openSettings(String action) {
+        try {
+            startActivity(new Intent(action));
+        } catch (ActivityNotFoundException e) {
+            startActivity(new Intent(Settings.ACTION_SETTINGS));
+        }
+    }
+
+    private void openSamsungDeviceCare() {
+        try {
+            Intent intent = new Intent("com.samsung.android.sm.ACTION_DASHBOARD");
+            intent.setPackage("com.samsung.android.lool");
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            openSettings(Settings.ACTION_BATTERY_SAVER_SETTINGS);
+        }
+    }
+
+    private void openWallpaperSettings() {
+        try {
+            startActivity(new Intent(Intent.ACTION_SET_WALLPAPER));
+        } catch (ActivityNotFoundException e) {
+            openSettings(Settings.ACTION_DISPLAY_SETTINGS);
         }
     }
 
@@ -366,7 +453,8 @@ public class MainActivity extends Activity {
             ImageView icon = new ImageView(context);
             icon.setImageDrawable(info.loadIcon(pm));
             icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            item.addView(icon, new LinearLayout.LayoutParams(dpStatic(context, 52), dpStatic(context, 52)));
+            item.addView(icon, new LinearLayout.LayoutParams(
+                    dpStatic(context, 56), dpStatic(context, 56)));
 
             TextView label = new TextView(context);
             label.setText(info.loadLabel(pm));
@@ -375,7 +463,8 @@ public class MainActivity extends Activity {
             label.setGravity(Gravity.CENTER);
             label.setMaxLines(2);
             LinearLayout.LayoutParams labelLp = new LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
             labelLp.setMargins(0, dpStatic(context, 5), 0, 0);
             item.addView(label, labelLp);
             return item;
