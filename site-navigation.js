@@ -1,3 +1,15 @@
+/* qily-global-link-standard-loader-v1 */
+(function(d){
+  'use strict';
+  var id='qilyGlobalLinkStandardStylesheet';
+  var href='/site-link-standard-v1.css?v=20260801-global-link-v1';
+  var current=d.getElementById(id);
+  if(current){if(current.getAttribute('href')!==href)current.setAttribute('href',href);return;}
+  var link=d.createElement('link');
+  link.id=id;link.rel='stylesheet';link.href=href;
+  (d.head||d.documentElement).appendChild(link);
+})(document);
+
 (function () {
   'use strict';
 
