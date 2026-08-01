@@ -1,0 +1,94 @@
+/* QilyLean 全站链接视觉规范｜2026-08-01
+ * 所有会跳转至页面、文件、锚点、电话或邮件界面的链接均保留下横线，
+ * 并在悬停、键盘聚焦与按下时提供明确反馈。
+ */
+
+:root {
+  --qily-link-accent: var(--qily-teal, #178b94);
+  --qily-link-underline: currentColor;
+  --qily-link-hover-bg: rgba(23, 139, 148, .10);
+  --qily-link-focus: rgba(202, 161, 95, .62);
+}
+
+html body a[href] {
+  text-decoration-line: underline !important;
+  text-decoration-style: solid !important;
+  text-decoration-color: var(--qily-link-underline) !important;
+  text-decoration-thickness: max(1.5px, .085em) !important;
+  text-underline-offset: .22em !important;
+  text-decoration-skip-ink: auto !important;
+  -webkit-text-decoration-skip: ink !important;
+  transition:
+    color .16s ease,
+    background-color .16s ease,
+    box-shadow .16s ease,
+    filter .16s ease,
+    opacity .16s ease,
+    transform .16s ease !important;
+  -webkit-tap-highlight-color: rgba(23, 139, 148, .20);
+}
+
+html body a[href]:hover {
+  text-decoration-color: var(--qily-copper, #caa15f) !important;
+  text-decoration-thickness: max(2.5px, .14em) !important;
+  text-underline-offset: .28em !important;
+  background-color: var(--qily-link-hover-bg) !important;
+  filter: brightness(1.06) saturate(1.04);
+}
+
+html body a[href]:focus-visible {
+  text-decoration-color: var(--qily-copper, #caa15f) !important;
+  text-decoration-thickness: max(2.5px, .14em) !important;
+  text-underline-offset: .28em !important;
+  background-color: var(--qily-link-hover-bg) !important;
+  outline: 3px solid var(--qily-link-focus) !important;
+  outline-offset: 3px !important;
+  border-radius: 4px;
+  box-shadow: 0 0 0 5px rgba(23, 139, 148, .10) !important;
+}
+
+html body a[href]:active {
+  text-decoration-thickness: max(3px, .16em) !important;
+  background-color: rgba(202, 161, 95, .18) !important;
+  filter: brightness(.94);
+  opacity: .86;
+  transform: translateY(1px);
+}
+
+/* 图像、卡片或整块区域作为链接时，文字仍保留下横线，整体同时有轮廓反馈。 */
+html body a[href]:has(img):hover,
+html body a[href]:has(svg):hover,
+html body a[href][class*="card"]:hover,
+html body a[href][class*="item"]:hover,
+html body a[href][class*="tile"]:hover {
+  outline: 2px solid rgba(23, 139, 148, .48) !important;
+  outline-offset: 3px !important;
+  box-shadow: 0 10px 24px rgba(15, 75, 90, .16) !important;
+}
+
+/* 深色区域中的链接保持高对比度下横线。 */
+.module-hero a[href],
+.daily-hero a[href],
+.hero a[href],
+.qily-site-header a[href]:hover,
+.qily-global-header a[href]:hover,
+.module-footer a[href],
+.footer a[href],
+.contact-card a[href],
+.qily-float-dock a[href] {
+  text-decoration-color: currentColor !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html body a[href] { transition: none !important; }
+}
+
+@media print {
+  html body a[href] {
+    text-decoration: underline !important;
+    text-decoration-thickness: 1px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    outline: 0 !important;
+  }
+}
