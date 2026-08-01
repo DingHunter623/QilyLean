@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环｜今日简报</title>
+  <meta name="description" content="标准工时只有进入订单拆解、产能校核、工位配置、日计划、实绩反馈与滚动排程，才能从静态资料变成排产决策；用编码同源、函数联动、异常可见和尾单结清建立计划闭环。">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://qilylean.com/qilylean/daily/2026-08-02.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环｜今日简报">
+  <meta property="og:description" content="标准工时只有进入订单拆解、产能校核、工位配置、日计划、实绩反馈与滚动排程，才能从静态资料变成排产决策；用编码同源、函数联动、异常可见和尾单结清建立计划闭环。">
+  <meta property="og:url" content="https://qilylean.com/qilylean/daily/2026-08-02.html">
+  <meta property="og:image" content="https://qilylean.com/qilylean/assets/daily-2026-08-02.svg">
+  <meta property="og:site_name" content="QilyLean｜启力精益">
+  <meta property="og:image:width" content="1080">
+  <meta property="og:image:height" content="1080">
+  <meta name="twitter:card" content="summary_large_image">
+  <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>
+  <link rel="stylesheet" href="/site-shell.css?v=20260729-no-old-flash-v1">
+  <link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=20260729-hierarchy-v4">
+  <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260729-fluid-copy-v5">
+  <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
+  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260729-ranked-search-v12">
+  <script defer src="/site-navigation.js?v=20260729-no-old-flash-v1"></script>
+  <link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="/site-link-standard-v2.css?v=20260801-global-link-v5">
+  <link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2">
+</head>
+<body class="module-page daily-single-page">
+<header class="qily-site-header">
+  <a class="qily-brand" href="/">QilyLean｜启力精益</a>
+  <nav class="site-nav" aria-label="网站导航"><a href="/">首页</a><a href="/knowledge/">知识分享</a></nav>
+</header>
+<main>
+  <section class="daily-hero compact"><div class="daily-inner"><span>DAILY ENGINEERING BRIEF</span><h1>今日简报</h1><p>2026-08-02｜IE标工联动PMC排产</p></div></section>
+  <section class="daily-single-section"><div class="daily-inner"><nav class="brief-adjacent top" aria-label="简报翻页"><a href="/qilylean/daily/2026-08-01.html">← 上一期</a><a class="directory" href="/qilylean/daily-insights.html">返回简报目录</a><span>已是最新一期</span></nav><article class="post detailed" id="2026-08-02">
+<div class="visual"><svg viewBox="0 0 1200 560" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="IE标准工时联动PMC排产闭环"><rect width="1200" height="560" rx="36" fill="#123e51"/><text x="600" y="78" fill="#fff" font-size="38" font-weight="850" text-anchor="middle">标准工时 → 能力校核 → 日计划 → 生产实绩 → 滚动排程</text><text x="600" y="130" fill="#dceff3" font-size="25" text-anchor="middle">同一产品编码 · 同一数据口径 · 同一未完成量</text><g font-size="21" font-weight="850" text-anchor="middle"><rect x="45" y="220" width="190" height="96" rx="18" fill="#fff"/><text x="140" y="278" fill="#123e51">IE标工库</text><rect x="275" y="220" width="190" height="96" rx="18" fill="#fff"/><text x="370" y="278" fill="#123e51">订单净需求</text><rect x="505" y="220" width="190" height="96" rx="18" fill="#f7d98b"/><text x="600" y="278" fill="#574015">PMC日计划</text><rect x="735" y="220" width="190" height="96" rx="18" fill="#fff"/><text x="830" y="278" fill="#123e51">合格实绩</text><rect x="965" y="220" width="190" height="96" rx="18" fill="#fff"/><text x="1060" y="278" fill="#123e51">结单 / 滚动</text></g><g fill="#dceff3" font-size="34" font-weight="900" text-anchor="middle"><text x="255" y="278">→</text><text x="485" y="278">→</text><text x="715" y="278">→</text><text x="945" y="278">→</text></g><path d="M1060 356 C1060 470 140 470 140 356" fill="none" stroke="#f7d98b" stroke-width="5" stroke-dasharray="12 10"/><text x="600" y="482" fill="#f7d98b" font-size="25" font-weight="800" text-anchor="middle">超产冲减 · 欠产顺延 · 尾单结清 · 标工变更受控</text><text x="600" y="526" fill="#dceff3" font-size="22" text-anchor="middle">让计划随真实产出滚动，而不是每天重新手工解释</text></svg></div>
+<div class="content">
+<div class="date">2026-08-02｜IE标工联动PMC排产</div>
+<h2>标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环</h2>
+<p>标准工时只有进入订单拆解、产能校核、工位配置、日计划、实绩反馈与滚动排程，才能从静态资料变成排产决策；这条数据链必须做到编码同源、函数联动、异常可见、尾单结清。</p>
+<div class="quote">标工库显示“已完成”，不等于排产已经具备能力数据。只要计划员仍需手工查工时、手算人力、重复抄计划或每天重算未完成量，IE与PMC就仍是两张表、两套口径。</div>
+<!-- QILY-DAILY-TERMINOLOGY:START -->
+<div class="checklist brief-terminology-audit" data-daily-terminology-audit="2026-08-02">
+<strong>本期术语：</strong><a href="/knowledge/terminology.html?opl=IE">IE｜工业工程</a>；<a href="/knowledge/terminology.html?opl=PMC">PMC｜生产与物料控制</a>。点击进入中文诠释与单点培训课件。
+</div>
+<!-- QILY-DAILY-TERMINOLOGY:END -->
+<section class="brief-one-point-training" data-one-point-training="v1">
+<div class="brief-one-point-heading"><span>SINGLE-POINT LESSON</span><h3>单点培训｜IE标工联动PMC排产</h3><p>建议用10—15分钟完成一次计划评审或工程例会；从一个真实产品编码出发，逐列核对标工、需求、工位、人力、计划、实绩与未完成量是否贯通。</p></div>
+<div class="brief-one-point-grid">
+  <div><strong>培训目标</strong><p>理解标准工时不是资料完成率，而是产能、人力、日计划与实绩滚动的共同计算基准。</p></div>
+  <div><strong>核心口径</strong><p>产品编码、标准工时版本、净需求、计划数量、合格实绩和未完成量必须唯一且可追溯。</p></div>
+  <div><strong>现场动作</strong><p>抽取一个在制订单，从成品清单追到排程和实绩，核验所有字段是否自动带出并实时联动。</p></div>
+  <div><strong>使用边界</strong><p>不得把理论工时直接当作承诺产能；换型、停机、缺料、质量波动与人员熟练度仍需受控评估。</p></div>
+</div>
+<div class="brief-one-point-interface"><strong>相关职能接口：</strong>IE（工业工程）维护标准工时、工位与人力基准；PMC（生产与物料控制）维护订单、交期和排产；制造录入合格实绩；质量确认计入口径；系统或表单负责人维护函数、权限与版本。</div>
+<p class="brief-one-point-check"><strong>培训验收：</strong>学员应能说明一个订单的需求工时、可用工时、负荷率、当日计划、累计实绩、未完成量及结单条件。</p>
+</section>
+
+<h3>1. 先识别断点：为什么“有标工”仍然排不好计划</h3>
+<p>现场常见的表面状态是：成品清单已有装配标工，计划表也有产品编码和日排产，但两者之间没有稳定关联。产品新增、编码改名、标工更新或插入行后，排产表可能继续保留旧值、空值或错位值；计划员只好再建辅助表、手工复制或凭经验安排人力。</p>
+<p>这种断点带来三类损失：一是计划无法准确判断订单需要多少人工工时；二是制造无法解释计划数量与配置人数的依据；三是实绩发生超产或欠产后，后续计划不能自动冲减或顺延，导致同一订单被重复安排或长期挂账。</p>
+
+<h3>2. 用唯一产品编码贯通全部数据表</h3>
+<p>产品名称会因客户简称、包装方式或现场习惯产生差异，产品编码才应成为标工库、订单需求、排程看板和实绩记录的唯一主键。任何关联都不能依靠行号、显示顺序或人工记忆。</p>
+<div class="formula-grid"><div class="formula-card"><strong>标工主数据</strong>产品编码、产品名称、工艺版本、单件标准工时、标准工位数、生效日期</div><div class="formula-card"><strong>订单需求</strong>订单号、产品编码、需求数量、交期、优先级、已入库数量</div><div class="formula-card"><strong>排程计划</strong>计划日期、班次、计划数量、配置人力、需求工时、负荷率</div><div class="formula-card"><strong>生产实绩</strong>合格数量、不合格数量、实际人力、实际工时、异常原因、录入时间</div></div>
+<div class="checklist"><strong>编码治理：</strong>新增产品必须先进入主数据；重复编码、空编码和失效编码应在排程前报警；产品名称只用于阅读，所有函数关联与汇总必须以编码为准。</div>
+
+<h3>3. 标工进入排产，至少要完成六个字段联动</h3>
+<table class="rule-table compact-first-col"><thead><tr><th>字段</th><th>计算或来源</th><th>管理用途</th></tr></thead><tbody>
+<tr><td>单件标工</td><td>按产品编码从已生效标工库自动带出</td><td>计算订单需求工时与人力需求</td></tr>
+<tr><td>净需求</td><td>订单需求减去已入库、已确认冲减数量</td><td>避免把已完成数量再次排入计划</td></tr>
+<tr><td>需求工时</td><td>净需求 × 单件标准工时</td><td>判断订单规模和资源占用</td></tr>
+<tr><td>配置人力</td><td>按计划数量、标准工时与有效生产时间反推</td><td>形成工位数与人力配置依据</td></tr>
+<tr><td>负荷率</td><td>计划需求工时 ÷ 当班可用人工工时 × 100%</td><td>识别超负荷、低负荷与资源缺口</td></tr>
+<tr><td>未完成量</td><td>净需求减去累计合格实绩，最低为零</td><td>驱动后续计划滚动与订单结清</td></tr>
+</tbody></table>
+<p>字段“看得到”不等于“有关联”。抽查时应修改测试编码、计划数量和实绩数量，确认相关字段自动变化；若仍需再次输入同一数据，说明闭环没有建立。</p>
+
+<h3>4. 日计划必须由交期、未完成量与能力共同决定</h3>
+<p>日计划不能只把订单数量平均分到若干天，也不能只按设备或人员最大产能排满。合理的日计划应同时考虑交期优先级、前后工序齐套、当班可用时间、人员技能、换型损失、质量状态和未完成量。</p>
+<ol><li><strong>先算净需求：</strong>扣除已完成和已确认冲减数量。</li><li><strong>再排优先级：</strong>按交期、客户影响、物料齐套与异常风险排序。</li><li><strong>校核能力：</strong>比较需求工时、可用工时、标准工位与可用人员。</li><li><strong>形成日计划：</strong>计划数量不得超过未完成量，也不得脱离真实资源。</li><li><strong>保留约束说明：</strong>因缺料、换型、停机或质量风险调整时，必须记录原因与恢复条件。</li></ol>
+
+<h3>5. “工位数＝人力”要与负荷率同时使用</h3>
+<p>装配场景中，标准工位数通常可作为标准配置人力的直接参考，但不能只显示一个固定人数。相同产品在不同日计划数量下，工位负荷会不同；若计划量很低仍机械配置满工位，会造成等待，若计划量超过标准能力却不增加人力或时间，则计划天然不可达成。</p>
+<div class="formula-grid"><div class="formula-card"><strong>当班可用人工工时</strong>配置人力 × 单人有效生产时间</div><div class="formula-card"><strong>计划需求人工工时</strong>当日计划数量 × 单件标准工时</div><div class="formula-card"><strong>工位负荷率</strong>计划需求人工工时 ÷ 当班可用人工工时 × 100%</div><div class="formula-card"><strong>人力反推</strong>计划需求人工工时 ÷ 单人有效生产时间，按实际配置规则取整</div></div>
+<p>负荷率不是越高越好。必须结合换型、休息、异常响应和产线波动设置管理区间；超过上限应调整数量、人力、班次或交期，低于下限则考虑合并订单、跨线支援或释放资源。</p>
+
+<h3>6. 实绩录入必须只认合格产出，并实时反写计划</h3>
+<p>生产实绩应以通过规定质量判定、可进入下一环节或入库的合格数量为主口径。返工中、待判定和报废数量不能混入合格实绩，否则系统显示订单已完成，现场却没有可交付产品。</p>
+<table class="rule-table compact-first-col"><thead><tr><th>实绩状态</th><th>后续排程规则</th><th>页面提示</th></tr></thead><tbody>
+<tr><td>实绩等于计划</td><td>后续按原计划推进</td><td>正常完成</td></tr>
+<tr><td>实绩大于计划</td><td>超出数量优先冲减同订单后续计划</td><td>超产并显示已冲减数量</td></tr>
+<tr><td>实绩小于计划</td><td>欠产数量进入未完成量并参与下一次排程</td><td>欠产、原因与责任状态</td></tr>
+<tr><td>累计达到净需求</td><td>后续未开工计划归零或关闭</td><td>结单</td></tr>
+<tr><td>累计超过净需求</td><td>停止继续排产并触发超产核查</td><td>超订单预警</td></tr>
+</tbody></table>
+
+<h3>7. 自动排程看板必须“可算、可改、可追溯”</h3>
+<p>真正的自动联动，不是把公式铺满工作表，而是让输入区、计算区与展示区职责清晰：订单需求和生产实绩由授权人员录入；标工、净需求、负荷、累计实绩和未完成量自动计算；看板只展示当前决策所需信息。</p>
+<div class="owner-grid"><div class="owner-card"><strong>防止插行错乱</strong>采用结构化数据区域和按编码关联，禁止依赖固定行号或手工拖拽部分公式。</div><div class="owner-card"><strong>防止日期异常</strong>空交期保持为空，不以零值日期代替；日期字段统一格式与合法性校验。</div><div class="owner-card"><strong>防止旧标工残留</strong>标工版本变更后显示生效日期；历史计划保留当时版本，新计划使用最新生效版本。</div><div class="owner-card"><strong>防止人工覆盖公式</strong>区分输入色与计算色，锁定公式区域，保留异常修改记录和责任人。</div></div>
+
+<h3>8. 标工变更必须同步影响未来计划，不能篡改历史</h3>
+<p>工艺改善、治具变更、人员熟练或产品版本切换都可能引起标准工时变化。IE完成重新测定后，应记录旧值、新值、生效日期、适用产品版本、测定样本和批准人；PMC从生效日期起使用新标工校核未来计划。</p>
+<p>已完成订单和已执行计划应保留原计划引用的标工版本，便于解释当时的负荷和差异。若直接用最新标工覆盖全部历史数据，过去的计划达成率、人效和差异分析都会失真。</p>
+
+<h3>9. 每日闭环要盯偏差，而不是重复抄表</h3>
+<p>计划评审应聚焦未完成量、欠产原因、超产冲减、负荷超限、缺失标工、编码异常和临期订单。每个异常必须明确责任人、恢复时间和验证方式；已关闭异常应保留证据，重复异常则进入专项改善。</p>
+<div class="engineering-checklist"><strong>建议日清看板：</strong>今日计划、今日合格实绩、完成率、累计实绩、未完成量、明日滚动计划、配置人力、负荷率、交期风险、缺料／设备／质量异常及关闭状态。</div>
+
+<h3>10. 8月2日落地清单</h3>
+<div class="checklist"><strong>选一个真实订单做穿透测试：</strong>输入产品编码后自动带出装配标工；修改订单数量后需求工时、人力和负荷同步变化；录入超产或欠产实绩后，未完成量与后续计划实时调整；累计达到净需求后显示结单；插入一行、增加一个新编码、切换一次标工版本，确认函数、日期与历史记录均不被破坏。</div>
+<p>IE与PMC闭环成熟的标志，不是工作表越来越复杂，而是同一个订单从需求进入到结单退出，只需在责任节点录入一次真实数据；其余字段按统一规则自动流动，偏差能够立即显现，计划能够随实绩滚动，管理者能够追溯每一个数字的来源。</p>
+
+<h3>工程者手记</h3>
+<div class="engineering-checklist"><strong>数据闭环的底层逻辑：</strong>标准工时定义能力，订单需求定义任务，日计划匹配资源，生产实绩验证执行，未完成量驱动下一轮计划；五者使用同一编码和同一口径，排产才真正从经验表格升级为管理系统。</div>
+<div class="tags"><span class="tag">IE标准工时</span><span class="tag">PMC排产</span><span class="tag">工位负荷率</span><span class="tag">生产实绩</span><span class="tag">滚动结单</span></div>
+<button class="share" type="button">分享本期网址</button><span class="status"></span>
+</div></article><section class="brief-feedback brief-message-only" data-brief-feedback data-brief-date="2026-08-02" data-brief-title="标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环" data-brief-url="https://qilylean.com/qilylean/daily/2026-08-02.html" aria-labelledby="briefMessageTitle"><div class="brief-feedback-heading"><span>MESSAGE / DISCUSSION</span><h2 id="briefMessageTitle">留言交流</h2><p>可就本期简报留下观点、疑问或建议；如需回复，可留下称谓与联系方式。</p></div><form class="brief-inline-message" data-brief-message-form><div class="brief-inline-message-heading"><strong>本期留言</strong><span>来源简报：2026-08-02｜标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环</span></div><label>称谓（选填）<input name="name" autocomplete="name" maxlength="120" placeholder="怎么称呼你"></label><label>联系方式（选填）<input name="contact" autocomplete="email" maxlength="180" placeholder="需要回复时填写手机、微信或邮箱"></label><label class="full">留言内容<textarea name="message" minlength="4" maxlength="1800" required placeholder="写下你的观点、疑问、建议，或希望深入探讨的话题"></textarea></label><label class="brief-website-field" aria-hidden="true">网站<input name="website" tabindex="-1" autocomplete="off"></label><div class="brief-inline-message-actions"><button type="submit">提交留言</button><a href="/cooperation/">需要结合现场深入交流？进入合作咨询</a></div></form><div class="brief-feedback-status" data-brief-feedback-status role="status" aria-live="polite"></div><p class="brief-feedback-privacy">留言正文不会在公开页面展示，仅用于回复与后续交流。</p></section><nav class="brief-adjacent" aria-label="简报翻页"><a href="/qilylean/daily/2026-08-01.html">← 上一期</a><a class="directory" href="/qilylean/daily-insights.html">返回简报目录</a><span>已是最新一期</span></nav></div></section>
+</main>
+<footer class="module-footer"><div class="module-inner"><span>丁启利｜今日简报</span><span>2026-08-02 · IE标工联动PMC排产</span></div></footer>
+<script>
+(function(){var button=document.querySelector('.share');if(!button)return;var status=document.querySelector('.status');function copy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();return Promise.resolve();}function done(text){if(status)status.textContent=text;setTimeout(function(){if(status)status.textContent='';},2200);}button.addEventListener('click',function(){var url=location.href;var title=document.title;if((/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'')||!!(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches&&innerWidth<=820))&&navigator.share){navigator.share({title:title,text:title,url:url}).then(function(){done('已调起分享');}).catch(function(error){if(error&&error.name==='AbortError')return;copy(url).then(function(){done('网址已复制');});});}else copy(url).then(function(){done('网址已复制');});});})();
+</script>
+<script src="/qilylean/daily-feedback.js?v=20260729-message-only-v4"></script>
+<script src="/homepage-music.js?v=20260729-continuous-v4"></script>
+</body>
+</html>

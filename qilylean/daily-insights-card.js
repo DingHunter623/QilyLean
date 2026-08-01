@@ -1,6 +1,6 @@
 (function(){
  'use strict';
- var release={date:'2026-08-01'};
+ var release={date:'2026-08-02'};
  function render(card,latest){
    var date=latest&&latest.date||release.date;
    var href='/qilylean/daily/'+date+'.html';

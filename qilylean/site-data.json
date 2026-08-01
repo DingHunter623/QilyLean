@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-01",
+  "generatedAt": "2026-08-02",
   "schemaVersion": 1,
   "terminology": {
     "total": 181,
@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 2580,
-    "latestDate": "2026-08-01",
-    "latestTheme": "工程项目交付管理",
-    "latestTitle": "工程项目不是“做完”：用里程碑、风险、资源与收益形成交付闭环",
-    "latestSummary": "工程项目管理不能停在任务清单和完成率，而要把需求定义、范围基线、里程碑评审、风险控制、资源协同、变更管理、验收证据、收益兑现与标准复制贯通为交付闭环。",
-    "latestUrl": "/qilylean/daily/2026-08-01.html",
+    "total": 2581,
+    "latestDate": "2026-08-02",
+    "latestTheme": "IE标工联动PMC排产",
+    "latestTitle": "标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环",
+    "latestSummary": "标准工时只有进入订单拆解、产能校核、工位配置、日计划、实绩反馈与滚动排程，才能从静态资料变成排产决策；用编码同源、函数联动、异常可见和尾单结清建立计划闭环。",
+    "latestUrl": "/qilylean/daily/2026-08-02.html",
     "directoryUrl": "/qilylean/daily-insights.html"
   },
   "knowledge": {
@@ -42,11 +42,11 @@
     "ndaDocumentName": "QilyLean项目保密声明"
   },
   "search": {
-    "indexedEntries": 2849,
+    "indexedEntries": 2850,
     "indexedPages": 36,
     "terminologyTotal": 181,
-    "briefTotal": 2580,
-    "latestBriefDate": "2026-08-01",
-    "sitemapLastmod": "2026-08-01"
+    "briefTotal": 2581,
+    "latestBriefDate": "2026-08-02",
+    "sitemapLastmod": "2026-08-02"
   }
 }

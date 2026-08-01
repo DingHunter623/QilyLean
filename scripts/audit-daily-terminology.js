@@ -28,7 +28,7 @@ const reportPath = path.join(dailyDir, 'terminology-audit-latest.json');
 const UI_ALLOWLIST = new Set([
   'DAILY', 'ENGINEERING', 'BRIEF', 'SINGLE', 'POINT', 'LESSON',
   'QilyLean', 'PPT', 'PDF', 'DOC', 'DOCX', 'HTML', 'CSS', 'SVG',
-  'URL', 'QR', 'V1', 'V2'
+  'URL', 'QR', 'V1', 'V2', 'MESSAGE', 'DISCUSSION'
 ]);
 
 function read(file) {
@@ -215,7 +215,7 @@ function injectFeaturedTermNote(html, date, candidates, standalone) {
 
   const links = featured.map((item) => {
     const meta = standalone.get(item.term);
-    const url = meta ? meta.url : `/knowledge/terminology.html?term=${encodeURIComponent(item.term)}`;
+    const url = meta ? meta.url : `/knowledge/terminology.html?opl=${encodeURIComponent(item.term)}`;
     const label = item.explanation
       ? `${item.term}｜${item.explanation}`
       : (meta ? meta.label : item.term);

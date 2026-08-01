@@ -1,0 +1,40 @@
+<svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">IE标准工时联动PMC排产闭环</title>
+  <desc id="desc">从产品编码、标准工时、订单净需求、工位负荷、日计划到生产实绩与滚动排程的数据闭环。</desc>
+  <rect width="1080" height="1080" rx="54" fill="#123e51"/>
+  <rect x="72" y="72" width="936" height="936" rx="42" fill="none" stroke="#8fc7c8" stroke-width="3" opacity="0.55"/>
+  <text x="540" y="145" fill="#d8eff0" font-size="28" font-weight="700" text-anchor="middle" letter-spacing="5">DAILY ENGINEERING BRIEF</text>
+  <text x="540" y="220" fill="#ffffff" font-size="52" font-weight="900" text-anchor="middle">标工联动排产闭环</text>
+  <text x="540" y="272" fill="#f7d98b" font-size="27" font-weight="700" text-anchor="middle">让同一产品编码贯通能力、计划与实绩</text>
+
+  <g font-family="Arial, PingFang SC, Microsoft YaHei, sans-serif" font-weight="800" text-anchor="middle">
+    <rect x="105" y="355" width="250" height="118" rx="22" fill="#ffffff"/>
+    <text x="230" y="405" fill="#123e51" font-size="29">IE标准工时</text>
+    <text x="230" y="444" fill="#60777b" font-size="21">时间 · 人力 · 工位</text>
+    <rect x="415" y="355" width="250" height="118" rx="22" fill="#f7d98b"/>
+    <text x="540" y="405" fill="#574015" font-size="29">PMC日排产</text>
+    <text x="540" y="444" fill="#6b5323" font-size="21">需求 · 负荷 · 交期</text>
+    <rect x="725" y="355" width="250" height="118" rx="22" fill="#ffffff"/>
+    <text x="850" y="405" fill="#123e51" font-size="29">生产实绩</text>
+    <text x="850" y="444" fill="#60777b" font-size="21">合格 · 欠产 · 结单</text>
+  </g>
+  <g fill="#d8eff0" font-size="40" font-weight="900" text-anchor="middle">
+    <text x="385" y="425">→</text><text x="695" y="425">→</text>
+  </g>
+
+  <path d="M850 520 C850 650 230 650 230 520" fill="none" stroke="#f7d98b" stroke-width="6" stroke-dasharray="14 10"/>
+  <text x="540" y="680" fill="#f7d98b" font-size="27" font-weight="850" text-anchor="middle">实绩反写未完成量，驱动后续计划滚动调整</text>
+
+  <g font-family="Arial, PingFang SC, Microsoft YaHei, sans-serif" text-anchor="middle">
+    <rect x="132" y="748" width="180" height="82" rx="18" fill="#205c68" stroke="#8fc7c8"/>
+    <text x="222" y="798" fill="#ffffff" font-size="23" font-weight="800">编码同源</text>
+    <rect x="347" y="748" width="180" height="82" rx="18" fill="#205c68" stroke="#8fc7c8"/>
+    <text x="437" y="798" fill="#ffffff" font-size="23" font-weight="800">函数联动</text>
+    <rect x="562" y="748" width="180" height="82" rx="18" fill="#205c68" stroke="#8fc7c8"/>
+    <text x="652" y="798" fill="#ffffff" font-size="23" font-weight="800">异常可见</text>
+    <rect x="777" y="748" width="180" height="82" rx="18" fill="#205c68" stroke="#8fc7c8"/>
+    <text x="867" y="798" fill="#ffffff" font-size="23" font-weight="800">尾单结清</text>
+  </g>
+  <text x="540" y="905" fill="#d8eff0" font-size="25" text-anchor="middle">订单需求 → 能力校核 → 日计划 → 实绩反馈 → 滚动排程</text>
+  <text x="540" y="955" fill="#ffffff" font-size="23" font-weight="700" text-anchor="middle">QilyLean｜启力精益 · 2026-08-02</text>
+</svg>
