@@ -3,7 +3,7 @@
   'use strict';
   var styles=[
     {id:'qilyGlobalLinkStandardStylesheet',href:'/site-link-standard-v2.css?v=20260801-global-link-v5'},
-    {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v1'}
+    {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'}
   ];
   styles.forEach(function(style){
     var current=d.getElementById(style.id);
