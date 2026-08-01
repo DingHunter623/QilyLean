@@ -12,10 +12,12 @@ on:
       - "site-search.js"
       - "site-navigation.js"
       - "knowledge/terminology.html"
+      - "knowledge/terminology/*.html"
       - "scripts/build-daily-archive.js"
       - "scripts/daily-engineering-archive.js"
       - "scripts/enhance-daily-archive.js"
       - "scripts/enhance-terminology-training.js"
+      - "scripts/audit-daily-terminology.js"
       - "scripts/bump-daily-css-version.js"
       - "scripts/validate-daily-archive.js"
       - "scripts/remove-daily-directory-consultation.js"
@@ -50,6 +52,29 @@ jobs:
 
       - name: Keep terminology search aligned
         run: node scripts/enhance-terminology-training.js
+
+      - name: Audit latest brief terminology before publication
+        run: node scripts/audit-daily-terminology.js
+
+      - name: Validate daily terminology coverage
+        shell: bash
+        run: |
+          test -s qilylean/daily/terminology-audit-latest.json
+          node - <<'NODE'
+          const fs = require('fs');
+          const report = JSON.parse(fs.readFileSync('qilylean/daily/terminology-audit-latest.json', 'utf8'));
+          if (report.status !== 'passed') throw new Error('Daily terminology audit did not pass');
+          if (!Array.isArray(report.unknownTerms) || report.unknownTerms.length) {
+            throw new Error(`Uncovered Daily Brief terms: ${(report.unknownTerms || []).join(', ')}`);
+          }
+          NODE
+          LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
+          if grep -q 'Sponsor（项目发起人／主责高层）' "qilylean/daily/$LATEST_DATE.html"; then
+            grep -q 'href="/knowledge/terminology/sponsor.html"' "qilylean/daily/$LATEST_DATE.html" || {
+              echo "Sponsor is explained but is not linked to its terminology lesson"
+              exit 1
+            }
+          fi
 
       - name: Pin responsive daily stylesheet version
         run: node scripts/bump-daily-css-version.js
@@ -227,6 +252,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add knowledge/index.html knowledge/terminology.html qilylean/daily-insights.html qilylean/daily/index.json qilylean/daily/*.html qilylean/assets/daily-*.svg sitemap.xml
+          git add knowledge/index.html knowledge/terminology.html qilylean/daily-insights.html qilylean/daily/index.json qilylean/daily/*.html qilylean/daily/terminology-audit-latest.json qilylean/assets/daily-*.svg sitemap.xml
           git commit -m "build: publish enriched daily engineering brief archive [skip ci]"
           git push
