@@ -9,7 +9,8 @@
     "latestBriefDate": "2026-08-01",
     "sitemapLastmod": "2026-08-01",
     "ndaVersion": "V1.0",
-    "ndaPreviewUrl": "/trust/nda-preview.html"
+    "ndaPreviewUrl": "/trust/nda-preview.html",
+    "ndaDocumentName": "QilyLean项目保密声明"
   },
   "entries": [
     {
@@ -28484,11 +28485,11 @@
     },
     {
       "url": "/trust/nda-preview.html",
-      "title": "制造改善项目双向保密协议｜在线预览",
-      "code": "NDA",
-      "description": "QilyLean制造改善、精益生产、工业工程与数智化工厂项目通用双向保密协议在线预览；不提供公开下载。",
-      "headings": "信任中心｜客户数据、隐私与保密｜合同与项目合作",
-      "text": "双向保密协议 NDA 在线预览 保密信息 商业秘密 客户资料 个人信息 数据安全 项目成果 返还 删除 销毁 违约责任 制造改善 精益生产 工业工程 新工厂 目视化 ERP MES APS 数智化工厂",
+      "title": "QilyLean项目保密声明｜在线预览",
+      "code": "CONFIDENTIALITY",
+      "description": "QilyLean制造改善项目一页精简版保密声明在线预览；覆盖调研资料、图片、商业信息、人员信息和成果资料保密要求。",
+      "headings": "信任中心｜客户数据、隐私与保密｜项目合作",
+      "text": "保密声明 在线预览 调研数据 产品信息 未上市产品 图片 视频 原始资料 归还 删除 销毁 商业信息 人员信息 参观管理 项目成果 脱敏 精益改善 工业工程 数智化工厂",
       "kind": "法律与合作范本",
       "date": "2026-08-01"
     }

@@ -36,9 +36,10 @@
     "contactEmail": "396767769@qq.com",
     "trustCenterUrl": "/trust/",
     "ndaVersion": "V1.0",
-    "ndaContentRule": "Word与PDF由同一DOCX源文件生成并完成一致性校验；Word仅作为构建源，不公开发布。",
+    "ndaContentRule": "网站PDF与交付Word由同一DOCX源文件生成，内容保持一致；Word不在官网公开。",
     "ndaPreviewUrl": "/trust/nda-preview.html",
-    "ndaAccessRule": "官网仅开放受控在线预览，不提供Word或PDF下载入口。"
+    "ndaAccessRule": "官网仅开放受控在线预览，不提供Word或PDF下载入口。",
+    "ndaDocumentName": "QilyLean项目保密声明"
   },
   "search": {
     "indexedEntries": 2848,
