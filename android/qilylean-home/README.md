@@ -1,39 +1,37 @@
-# QilyLean Home v0.3 | Motorola moto g54 English Edition
+# QilyLean Home v1.0｜Android通用版
 
-A no-root QilyLean branded Android launcher customized for Motorola moto g54.
+面向常见安卓手机的免Root品牌桌面，不展示手机品牌、型号或其他设备身份信息。
 
-## Features
+## 功能
 
-- Full English interface;
-- QilyLean official logo and dark olive brand design;
-- Optimized portrait layout for moto g54;
-- QilyLean Website, QilyLean AI, Featured Projects, Knowledge Center, Daily Brief and Project Cooperation shortcuts;
-- Motorola quick settings for Network & Internet, Battery, Display, Sound, Wallpaper, Apps, Moto Features and Security;
-- Built-in all-apps drawer;
-- Displays the actual device model and Android version;
-- Can be selected as the default Home app and switched back to Moto Launcher at any time.
+- 使用 QilyLean｜启力精益官方LOGO与橄榄绿视觉；
+- 官网、QilyLean AI、代表项目、知识分享、今日简报、项目合作快捷入口；
+- 网络与互联网、电池、显示、声音、壁纸、应用、安全、语言与输入等通用设置入口；
+- 内置全部应用抽屉；
+- 可设为系统默认桌面，并可随时切回原系统桌面；
+- 首页不读取、不展示手机品牌、型号或设备名称。
 
-## Installation
+## 安装
 
-1. Enable `Developer options > USB debugging` on the moto g54;
-2. Connect the unlocked phone to a Mac and approve USB debugging;
-3. Run:
+1. 开启手机“开发者选项 → USB调试”；
+2. 手机解锁并连接Mac；
+3. 执行：
 
 ```bash
-adb install -r QilyLean_Home_Moto_G54_v0.3.apk
+adb install -r QilyLean_Home_Universal_v1.0.apk
 ```
 
-4. Press the Home button;
-5. Select `QilyLean g54` and choose `Always`.
+4. 按Home键；
+5. 选择 `QilyLean Home`，并选择“始终”。
 
-## Rollback
+## 回退
 
-Open `Default Home` and switch back to Moto Launcher, or run:
+进入“默认桌面”切回原系统桌面，或执行：
 
 ```bash
 adb uninstall com.qilylean.home
 ```
 
-## Safety Boundary
+## 安全边界
 
-This is an application-layer no-root customization. It does not unlock the bootloader, flash Recovery, or modify Android system partitions, baseband, IMEI, EFS, boot animation or mobile communication functions.
+本版本是应用层免Root定制，不解锁Bootloader，不刷Recovery，不修改系统分区、基带、IMEI、EFS、开机动画或通信底层。
