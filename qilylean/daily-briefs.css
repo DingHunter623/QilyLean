@@ -1,4 +1,4 @@
-:root{--daily-forest:#0f4b5a;--daily-teal:#177f87;--daily-gold:#caa15f;--daily-line:#d5e4e3;--daily-paper:#eef7f5;--daily-muted:#5f7474;--daily-plum:#7d4a70}
+:root{--daily-forest:#0f4b5a;--daily-teal:#177f87;--daily-gold:#caa15f;--daily-line:#d5e4e3;--daily-paper:#eef7f5;--daily-muted:#5f7474;--daily-plum:#9e4a34}
 html,body{max-width:100%;overflow-x:hidden}
 .daily-inner{width:min(1180px,100%);max-width:100%;min-width:0;margin:0 auto}
 .daily-hero{padding:clamp(48px,7vw,86px) clamp(18px,6vw,80px);color:#fff;background:linear-gradient(125deg,#0f4b5a,#177f87)}

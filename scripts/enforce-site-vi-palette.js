@@ -26,18 +26,18 @@ const ignoredDirectories = new Set([
 ]);
 
 const replacements = [
-  [/#6e3f5f/gi, '#9e4a34'],
-  [/#7d4a70/gi, '#9e4a34'],
-  [/#8e4774/gi, '#9e4a34'],
+  [/#9e4a34/gi, '#9e4a34'],
+  [/#9e4a34/gi, '#9e4a34'],
+  [/#9e4a34/gi, '#9e4a34'],
   [/rgba\(110\s*,\s*63\s*,\s*95\s*,/gi, 'rgba(158,74,52,'],
   [/rgba\(125\s*,\s*74\s*,\s*112\s*,/gi, 'rgba(158,74,52,'],
   [/rgba\(142\s*,\s*71\s*,\s*116\s*,/gi, 'rgba(158,74,52,']
 ];
 
 const bannedPatterns = [
-  /#6e3f5f/i,
-  /#7d4a70/i,
-  /#8e4774/i,
+  /#9e4a34/i,
+  /#9e4a34/i,
+  /#9e4a34/i,
   /rgba\(110\s*,\s*63\s*,\s*95\s*,/i,
   /rgba\(125\s*,\s*74\s*,\s*112\s*,/i,
   /rgba\(142\s*,\s*71\s*,\s*116\s*,/i

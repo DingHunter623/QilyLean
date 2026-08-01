@@ -18,7 +18,7 @@ html.qily-shell-pending body {
   --qily-teal: #178b94;
   --qily-copper: #caa15f;
   --qily-gold: #ffe39b;
-  --qily-plum: #6e3f5f;
+  --qily-plum: #9e4a34;
   --qily-red: #9e4a34;
   --qily-shadow: 0 20px 55px rgba(15, 75, 90, .14);
 }
@@ -146,8 +146,8 @@ html.qily-shell-pending body {
 .qily-float-btn:active { transform: scale(.96); }
 .qily-float-home { background: rgba(15, 102, 113, .81); }
 .qily-float-back { background: rgba(23, 127, 135, .81); }
-.qily-float-current { background: rgba(110, 63, 95, .81); }
-.qily-float-share { background: rgba(142, 71, 116, .81); }
+.qily-float-current { background: rgba(158,74,52, .81); }
+.qily-float-share { background: rgba(158,74,52, .81); }
 .qily-float-contact { color: #17322d; background: rgba(245, 200, 97, .81); text-shadow: 0 1px 1px rgba(255, 255, 255, .4); }
 
 .qily-modal-mask {
