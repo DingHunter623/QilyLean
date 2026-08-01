@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const stylesheet = '/site-link-standard-v1.css?v=20260801-global-link-v2';
+const stylesheet = '/site-link-standard-v2.css?v=20260801-global-link-v3';
 const linkTag = `  <link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="${stylesheet}">`;
 const loaderMarker = 'qily-global-link-standard-loader-v1';
 
@@ -30,7 +30,7 @@ function installHtmlLink(page) {
   if (!/<\/head>/i.test(page)) return page;
   const expression = /\s*<link\b[^>]*id=["']qilyGlobalLinkStandardStylesheet["'][^>]*>\s*/gi;
   let next = page.replace(expression, '\n');
-  next = next.replace(/\s*<link\b[^>]*href=["'][^"']*\/site-link-standard-v1\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n');
+  next = next.replace(/\s*<link\b[^>]*href=["'][^"']*\/site-link-standard-v(?:1|2)\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n');
   return next.replace(/<\/head>/i, `${linkTag}\n</head>`);
 }
 
@@ -60,7 +60,7 @@ function main() {
     }
   });
   const navigationChanged = patchNavigationLoader();
-  process.stdout.write(`Published QilyLean high-contrast global link standard v2 to ${htmlChecked} HTML files; refreshed ${htmlChanged}; navigation loader changed=${navigationChanged}.\n`);
+  process.stdout.write(`Published QilyLean global link standard v3 to ${htmlChecked} HTML files; refreshed ${htmlChanged}; navigation loader changed=${navigationChanged}.\n`);
 }
 
 main();
