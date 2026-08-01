@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-02",
+  "generatedAt": "2026-08-01",
   "schemaVersion": 1,
   "terminology": {
     "total": 181,
@@ -11,7 +11,7 @@
     "latestDate": "2026-08-02",
     "latestTheme": "IE标工联动PMC排产",
     "latestTitle": "标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环",
-    "latestSummary": "标准工时只有进入订单拆解、产能校核、工位配置、日计划、实绩反馈与滚动排程，才能从静态资料变成排产决策；用编码同源、函数联动、异常可见和尾单结清建立计划闭环。",
+    "latestSummary": "标准工时只有进入订单拆解、产能校核、工位配置、日计划、实绩反馈与滚动排程，才能从静态资料变成排产决策；这条数据链必须做到编码同源、函数联动、异常可见、尾单结清。",
     "latestUrl": "/qilylean/daily/2026-08-02.html",
     "directoryUrl": "/qilylean/daily-insights.html"
   },
@@ -34,19 +34,14 @@
     "aiRule": "AI用于检索、整理和方案辅助，不替代现场核实、专业评审、管理决策及法律、财税、安全等专项意见。",
     "contactPhone": "13450014003",
     "contactEmail": "396767769@qq.com",
-    "trustCenterUrl": "/trust/",
-    "ndaVersion": "V1.0",
-    "ndaContentRule": "网站在线阅读版与正式存档PDF／Word内容保持一致；官网不公开存档文件下载入口。",
-    "ndaPreviewUrl": "/trust/nda-preview.html",
-    "ndaAccessRule": "官网仅开放受控在线预览，不提供Word或PDF下载入口。",
-    "ndaDocumentName": "QilyLean项目保密声明"
+    "trustCenterUrl": "/trust/"
   },
   "search": {
     "indexedEntries": 2850,
-    "indexedPages": 36,
+    "indexedPages": 38,
     "terminologyTotal": 181,
     "briefTotal": 2581,
     "latestBriefDate": "2026-08-02",
-    "sitemapLastmod": "2026-08-02"
+    "sitemapLastmod": "2026-08-01"
   }
 }
