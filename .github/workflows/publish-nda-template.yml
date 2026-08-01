@@ -1,0 +1,99 @@
+name: Publish NDA template
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-nda-template.yml"
+      - "scripts/build-nda-documents.py"
+      - "scripts/publish-nda-link.js"
+      - "scripts/nda-source/*.b64"
+  workflow_run:
+    workflows: ["Sync unified site metadata"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-nda-template-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        if: github.event_name != 'workflow_run'
+        with:
+          python-version: "3.12"
+
+      - name: Install document build dependencies
+        if: github.event_name != 'workflow_run'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk
+          python -m pip install --disable-pip-version-check python-docx "qrcode[pil]"
+
+      - name: Build Word from the canonical source
+        if: github.event_name != 'workflow_run'
+        run: python scripts/build-nda-documents.py
+
+      - name: Convert the same Word source to PDF
+        if: github.event_name != 'workflow_run'
+        env:
+          HOME: /tmp/qily-lo-home
+        run: |
+          mkdir -p "$HOME" /tmp/qily-lo-profile qilylean/assets/legal
+          libreoffice --headless -env:UserInstallation=file:///tmp/qily-lo-profile \
+            --convert-to pdf --outdir qilylean/assets/legal \
+            qilylean/assets/legal/qilylean-mutual-nda-v1.docx
+          rm -f qilylean/assets/legal/qily_home_qr.png qilylean/assets/legal/qily_trust_qr.png
+
+      - name: Link the NDA in the trust center and search index
+        run: node scripts/publish-nda-link.js
+
+      - name: Validate Word, PDF and website links
+        shell: bash
+        run: |
+          test -s qilylean/assets/legal/qilylean-mutual-nda-v1.docx
+          test -s qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
+          test "$(wc -c < qilylean/assets/legal/qilylean-mutual-nda-v1.docx)" -gt 30000
+          test "$(wc -c < qilylean/assets/legal/qilylean-mutual-nda-v1.pdf)" -gt 100000
+          unzip -t qilylean/assets/legal/qilylean-mutual-nda-v1.docx >/dev/null
+          grep -q '/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf' trust/index.html
+          grep -q '/qilylean/assets/legal/qilylean-mutual-nda-v1.docx' trust/index.html
+          grep -q 'Word与PDF由同一源文件自动生成' trust/index.html
+          grep -q 'https://qilylean.com/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf' sitemap.xml
+          node - <<'NODE'
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('qilylean/site-data.json', 'utf8'));
+          const search = JSON.parse(fs.readFileSync('qilylean/site-search-index.json', 'utf8'));
+          if (data.compliance.ndaTemplateUrl !== '/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf') throw new Error('NDA PDF metadata mismatch');
+          if (data.compliance.ndaWordUrl !== '/qilylean/assets/legal/qilylean-mutual-nda-v1.docx') throw new Error('NDA Word metadata mismatch');
+          if (data.search.indexedEntries !== search.entries.length) throw new Error('Search entry count mismatch');
+          if (!search.entries.some((entry) => entry.url === data.compliance.ndaTemplateUrl)) throw new Error('NDA PDF missing from search index');
+          NODE
+
+      - name: Commit and publish NDA documents
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "NDA documents and links are already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html trust/index.html qilylean/site-data.json qilylean/site-search-index.json sitemap.xml sitemap-core.xml \
+            qilylean/assets/legal/qilylean-mutual-nda-v1.docx \
+            qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
+          git commit -m "build: publish QilyLean mutual NDA Word and PDF [skip ci]"
+          git push
