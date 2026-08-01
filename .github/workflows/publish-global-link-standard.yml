@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "site-link-standard-v1.css"
+      - "site-link-standard-v2.css"
       - "site-navigation.js"
       - "scripts/publish-global-link-standard.js"
       - ".github/workflows/publish-global-link-standard.yml"
@@ -36,23 +37,17 @@ jobs:
       - name: Apply the site-wide link standard
         run: node scripts/publish-global-link-standard.js
 
-      - name: Validate underline, contrast and interaction feedback
+      - name: Validate navigation, anchor underline and interaction feedback
         shell: bash
         run: |
           node --check scripts/publish-global-link-standard.js
-          grep -q 'QilyLean 全站链接视觉规范' site-link-standard-v1.css
-          grep -q 'html body a\[href\]' site-link-standard-v1.css
-          grep -q 'text-decoration-line: underline !important' site-link-standard-v1.css
-          grep -q 'qily-site-header .site-nav a\[href\]' site-link-standard-v1.css
-          grep -q 'qily-global-nav a\[href\]' site-link-standard-v1.css
-          grep -q 'module-actions a\[href\]:not(.secondary)' site-link-standard-v1.css
-          grep -q 'color: #fff !important' site-link-standard-v1.css
-          grep -q 'background-color: var(--qily-link-ink) !important' site-link-standard-v1.css
-          grep -q 'a\[href\]:hover' site-link-standard-v1.css
-          grep -q 'a\[href\]:focus-visible' site-link-standard-v1.css
-          grep -q 'a\[href\]:active' site-link-standard-v1.css
+          grep -q '全站链接视觉规范 v3' site-link-standard-v2.css
+          grep -q 'a\[href\^="#"\]' site-link-standard-v2.css
+          grep -q 'module-subnav' site-link-standard-v2.css
+          grep -q 'aria-current' site-link-standard-v2.css
+          grep -q 'text-decoration-line:underline!important' site-link-standard-v2.css
           grep -q 'qily-global-link-standard-loader-v1' site-navigation.js
-          grep -q '20260801-global-link-v2' site-navigation.js
+          grep -q 'site-link-standard-v2.css?v=20260801-global-link-v3' site-navigation.js
           node - <<'NODE'
           const fs = require('fs');
           const path = require('path');
@@ -67,7 +62,7 @@ jobs:
               else if (entry.name.endsWith('.html')) {
                 const html = fs.readFileSync(full, 'utf8');
                 if (/<\/head>/i.test(html) && !html.includes('qilyGlobalLinkStandardStylesheet')) failures.push(path.relative(root, full));
-                if (html.includes('site-link-standard-v1.css?v=') && !html.includes('site-link-standard-v1.css?v=20260801-global-link-v2')) stale.push(path.relative(root, full));
+                if (html.includes('qilyGlobalLinkStandardStylesheet') && !html.includes('site-link-standard-v2.css?v=20260801-global-link-v3')) stale.push(path.relative(root, full));
               }
             }
           }
@@ -80,11 +75,11 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "The high-contrast global link standard is already current."
+            echo "The global link standard v3 is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add site-navigation.js '*.html' '**/*.html'
-          git commit -m "style: publish high-contrast link feedback site-wide [skip ci]"
+          git commit -m "style: publish navigation and in-page anchor feedback site-wide [skip ci]"
           git push
