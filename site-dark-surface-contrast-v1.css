@@ -1,6 +1,7 @@
-/* QilyLean 深色／橄榄绿底色可视化规范 v1｜2026-08-01
+/* QilyLean 深色／橄榄绿底色可视化规范 v2｜2026-08-01
  * 统一原则：深青、橄榄绿及渐变深色区域使用白色文字；
  * 可点击入口使用白字＋金色下横线，悬停／聚焦使用金色底＋深色字。
+ * 凡背景采用QilyLean橄榄绿／深青色的按钮、标签与操作入口，文字一律白色。
  */
 
 :root{
@@ -9,6 +10,8 @@
   --qily-dark-surface-underline:#ffe39b;
   --qily-dark-surface-hover:#ffe39b;
   --qily-dark-surface-hover-ink:#17322d;
+  --qily-olive-control:#0f4b5a;
+  --qily-olive-control-hover:#12606f;
 }
 
 /* 已知深色、橄榄绿及渐变首屏／栏目区。 */
@@ -135,7 +138,109 @@ html body :is(
   filter:none!important;
 }
 
-/* 悬停／键盘聚焦：金色底＋深色字，强化视觉反馈。 */
+/*
+ * 橄榄绿／深青色控件兜底规范。
+ * 解决按钮背景为深色但文字被旧样式覆盖、继承或隐藏的问题。
+ */
+html body :is(
+  .daily-index-heading > a[href],
+  .brief-index-actions a.brief-open[href],
+  .brief-consultation-actions button,
+  .brief-inline-message-actions button,
+  .module-actions a[href]:not(.secondary),
+  .card-actions a[href]:not(.secondary),
+  a[href].module-action,
+  a[href].resource-action,
+  a[href].project-list-action,
+  a[href].project-card-action,
+  a[href].service-contract-link,
+  a[href].share-button,
+  a[href].button:not(.primary),
+  button.button,
+  button.primary,
+  .qily-olive-action,
+  .qily-dark-action
+){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qily-olive-control)!important;
+  border-color:var(--qily-olive-control)!important;
+  text-decoration-color:var(--qily-dark-surface-underline)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+
+html body :is(
+  .daily-index-heading > a[href],
+  .brief-index-actions a.brief-open[href],
+  .brief-consultation-actions button,
+  .brief-inline-message-actions button,
+  .module-actions a[href]:not(.secondary),
+  .card-actions a[href]:not(.secondary),
+  a[href].module-action,
+  a[href].resource-action,
+  a[href].project-list-action,
+  a[href].project-card-action,
+  a[href].service-contract-link,
+  a[href].share-button,
+  a[href].button:not(.primary),
+  button.button,
+  button.primary,
+  .qily-olive-action,
+  .qily-dark-action
+) :is(span,strong,b,small){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
+html body :is(
+  .daily-index-heading > a[href],
+  .brief-index-actions a.brief-open[href],
+  .brief-consultation-actions button,
+  .brief-inline-message-actions button,
+  .module-actions a[href]:not(.secondary),
+  .card-actions a[href]:not(.secondary),
+  a[href].module-action,
+  a[href].resource-action,
+  a[href].project-list-action,
+  a[href].project-card-action,
+  a[href].service-contract-link,
+  a[href].share-button,
+  a[href].button:not(.primary),
+  button.button,
+  button.primary,
+  .qily-olive-action,
+  .qily-dark-action
+):hover,
+html body :is(
+  .daily-index-heading > a[href],
+  .brief-index-actions a.brief-open[href],
+  .brief-consultation-actions button,
+  .brief-inline-message-actions button,
+  .module-actions a[href]:not(.secondary),
+  .card-actions a[href]:not(.secondary),
+  a[href].module-action,
+  a[href].resource-action,
+  a[href].project-list-action,
+  a[href].project-card-action,
+  a[href].service-contract-link,
+  a[href].share-button,
+  a[href].button:not(.primary),
+  button.button,
+  button.primary,
+  .qily-olive-action,
+  .qily-dark-action
+):focus-visible{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qily-olive-control-hover)!important;
+  border-color:#ffe39b!important;
+  text-decoration-color:#ffe39b!important;
+  box-shadow:0 9px 22px rgba(15,75,90,.28)!important;
+}
+
+/* 悬停／键盘聚焦：深色区域链接使用金色底＋深色字，强化视觉反馈。 */
 html body :is(
   .module-hero,
   .daily-hero,
@@ -233,5 +338,5 @@ html body .article-hub .article-links a[href]:not([aria-current="page"]):focus-v
 }
 
 @media(prefers-reduced-motion:reduce){
-  html body a[href]{transition:none!important}
+  html body a[href],html body button{transition:none!important}
 }
