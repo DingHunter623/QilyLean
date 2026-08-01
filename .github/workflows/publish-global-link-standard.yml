@@ -37,19 +37,21 @@ jobs:
       - name: Apply the site-wide link standard
         run: node scripts/publish-global-link-standard.js
 
-      - name: Validate navigation, anchor underline and olive-green contrast
+      - name: Validate navigation, anchor underline and contact contrast
         shell: bash
         run: |
           node --check scripts/publish-global-link-standard.js
-          grep -q '全站链接视觉规范 v4' site-link-standard-v2.css
+          grep -q '全站链接视觉规范 v5' site-link-standard-v2.css
           grep -q 'a\[href\^="#"\]' site-link-standard-v2.css
           grep -q 'module-subnav' site-link-standard-v2.css
           grep -q 'aria-current' site-link-standard-v2.css
-          grep -q '橄榄绿／深青背景' site-link-standard-v2.css
-          grep -q 'color:#fff!important' site-link-standard-v2.css
+          grep -q '深青背景' site-link-standard-v2.css
+          grep -q 'trust-contact > a\[href\]' site-link-standard-v2.css
+          grep -q 'background-color:#fff!important' site-link-standard-v2.css
+          grep -q 'border-top:5px solid #caa15f!important' site-link-standard-v2.css
           grep -q 'text-decoration-line:underline!important' site-link-standard-v2.css
           grep -q 'qily-global-link-standard-loader-v1' site-navigation.js
-          grep -q 'site-link-standard-v2.css?v=20260801-global-link-v4' site-navigation.js
+          grep -q 'site-link-standard-v2.css?v=20260801-global-link-v5' site-navigation.js
           node - <<'NODE'
           const fs = require('fs');
           const path = require('path');
@@ -64,24 +66,26 @@ jobs:
               else if (entry.name.endsWith('.html')) {
                 const html = fs.readFileSync(full, 'utf8');
                 if (/<\/head>/i.test(html) && !html.includes('qilyGlobalLinkStandardStylesheet')) failures.push(path.relative(root, full));
-                if (html.includes('qilyGlobalLinkStandardStylesheet') && !html.includes('site-link-standard-v2.css?v=20260801-global-link-v4')) stale.push(path.relative(root, full));
+                if (html.includes('qilyGlobalLinkStandardStylesheet') && !html.includes('site-link-standard-v2.css?v=20260801-global-link-v5')) stale.push(path.relative(root, full));
               }
             }
           }
           walk(root);
           if (failures.length) throw new Error('Pages missing global link standard: ' + failures.slice(0,20).join(', '));
           if (stale.length) throw new Error('Pages using stale link-standard cache version: ' + stale.slice(0,20).join(', '));
+          const trust = fs.readFileSync('trust/index.html', 'utf8');
+          if (!trust.includes('class="trust-contact"')) throw new Error('Trust contact block is missing');
           NODE
 
       - name: Commit global link standard
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "The global link standard v4 is already current."
+            echo "The global link standard v5 is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add site-navigation.js '*.html' '**/*.html'
-          git commit -m "style: publish white text on olive-green links site-wide [skip ci]"
+          git commit -m "style: publish high-contrast contact and link feedback site-wide [skip ci]"
           git push
