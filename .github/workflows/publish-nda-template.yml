@@ -1,13 +1,10 @@
-name: Publish NDA template
+name: Publish QilyLean confidentiality statement
 
 on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/publish-nda-template.yml"
-      - "scripts/build-nda-documents.py"
-      - "scripts/publish-nda-link.js"
-      - "scripts/nda-source/*.b64"
+      - "scripts/nda-source/release.marker"
   workflow_run:
     workflows: ["Sync unified site metadata"]
     types: [completed]
@@ -40,66 +37,67 @@ jobs:
         if: github.event_name != 'workflow_run'
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk
+          sudo apt-get install -y --no-install-recommends libreoffice-writer fonts-noto-cjk poppler-utils
           python -m pip install --disable-pip-version-check python-docx "qrcode[pil]"
 
-      - name: Build Word from the canonical source
+      - name: Build the one-page Word source
         if: github.event_name != 'workflow_run'
         run: python scripts/build-nda-documents.py
 
-      - name: Convert the same Word source to PDF
+      - name: Convert the same Word source to the website PDF
         if: github.event_name != 'workflow_run'
         env:
           HOME: /tmp/qily-lo-home
         run: |
-          mkdir -p "$HOME" /tmp/qily-lo-profile qilylean/assets/legal
-          test -s qilylean/assets/legal/qilylean-mutual-nda-v1.docx
-          test "$(wc -c < qilylean/assets/legal/qilylean-mutual-nda-v1.docx)" -gt 30000
-          unzip -t qilylean/assets/legal/qilylean-mutual-nda-v1.docx >/dev/null
+          mkdir -p "$HOME" /tmp/qily-lo-profile build/nda qilylean/assets/legal
+          test -s build/nda/qilylean-mutual-nda-v1.docx
+          unzip -t build/nda/qilylean-mutual-nda-v1.docx >/dev/null
           libreoffice --headless -env:UserInstallation=file:///tmp/qily-lo-profile \
-            --convert-to pdf --outdir qilylean/assets/legal \
-            qilylean/assets/legal/qilylean-mutual-nda-v1.docx
-          rm -f qilylean/assets/legal/qily_home_qr.png qilylean/assets/legal/qily_trust_qr.png
+            --convert-to pdf --outdir build/nda \
+            build/nda/qilylean-mutual-nda-v1.docx
+          test -s build/nda/qilylean-mutual-nda-v1.pdf
+          cp build/nda/qilylean-mutual-nda-v1.pdf qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
 
-      - name: Remove the public Word source
+      - name: Remove the former public Word source
         shell: bash
         run: rm -f qilylean/assets/legal/qilylean-mutual-nda-v1.docx
 
-      - name: Publish preview-only access
+      - name: Publish preview-only access and synchronized metadata
         run: node scripts/publish-nda-link.js
 
-      - name: Validate PDF and preview-only controls
+      - name: Validate the concise statement and preview controls
         shell: bash
         run: |
           test -s qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
           test "$(wc -c < qilylean/assets/legal/qilylean-mutual-nda-v1.pdf)" -gt 100000
-          test -s trust/nda-preview.html
           test ! -e qilylean/assets/legal/qilylean-mutual-nda-v1.docx
+          test -s trust/nda-preview.html
+          test "$(pdfinfo qilylean/assets/legal/qilylean-mutual-nda-v1.pdf | awk '/^Pages:/ {print $2}')" = "1"
+          pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '保 密 声 明'
+          pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '声明内容'
           grep -q '/trust/nda-preview.html' trust/index.html
-          grep -q '仅开放受控在线预览' trust/index.html
+          grep -q '一页精简版保密声明' trust/index.html
           grep -q 'toolbar=0' trust/nda-preview.html
           grep -q '不提供Word或PDF下载入口' trust/nda-preview.html
           ! grep -q 'download=' trust/index.html
           ! grep -q 'qilylean-mutual-nda-v1.docx' trust/index.html
-          ! grep -q 'qilylean-mutual-nda-v1.docx' trust/nda-preview.html
           grep -q 'https://qilylean.com/trust/nda-preview.html' sitemap.xml
           ! grep -q 'https://qilylean.com/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf' sitemap.xml
           node - <<'NODE'
           const fs = require('fs');
           const data = JSON.parse(fs.readFileSync('qilylean/site-data.json', 'utf8'));
           const search = JSON.parse(fs.readFileSync('qilylean/site-search-index.json', 'utf8'));
-          if (data.compliance.ndaPreviewUrl !== '/trust/nda-preview.html') throw new Error('NDA preview metadata mismatch');
-          if (data.compliance.ndaTemplateUrl || data.compliance.ndaWordUrl) throw new Error('Direct NDA file URL remains public in metadata');
+          if (data.compliance.ndaPreviewUrl !== '/trust/nda-preview.html') throw new Error('Statement preview metadata mismatch');
+          if (data.compliance.ndaTemplateUrl || data.compliance.ndaWordUrl) throw new Error('Direct file URL remains public in metadata');
           if (data.search.indexedEntries !== search.entries.length) throw new Error('Search entry count mismatch');
-          if (!search.entries.some((entry) => entry.url === data.compliance.ndaPreviewUrl)) throw new Error('NDA preview missing from search index');
-          if (search.entries.some((entry) => /qilylean-mutual-nda-v1\.(?:pdf|docx)$/.test(entry.url || ''))) throw new Error('Direct NDA file remains in search index');
+          if (!search.entries.some((entry) => entry.url === data.compliance.ndaPreviewUrl)) throw new Error('Statement preview missing from search index');
           NODE
 
-      - name: Commit and publish preview-only NDA
+      - name: Commit and publish the concise statement
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "The NDA preview and access controls are already current."
+            echo "The QilyLean confidentiality statement is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
@@ -107,5 +105,5 @@ jobs:
           git rm -f --ignore-unmatch qilylean/assets/legal/qilylean-mutual-nda-v1.docx
           git add index.html trust/index.html trust/nda-preview.html qilylean/site-data.json qilylean/site-search-index.json sitemap.xml sitemap-core.xml \
             qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
-          git commit -m "fix: publish NDA as online preview only [skip ci]"
+          git commit -m "build: publish one-page QilyLean confidentiality statement [skip ci]"
           git push
