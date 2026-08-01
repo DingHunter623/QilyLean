@@ -1,0 +1,81 @@
+name: Publish global link standard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site-link-standard-v1.css"
+      - "site-navigation.js"
+      - "scripts/publish-global-link-standard.js"
+      - ".github/workflows/publish-global-link-standard.yml"
+      - "**/*.html"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-global-link-standard-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Apply the site-wide link standard
+        run: node scripts/publish-global-link-standard.js
+
+      - name: Validate underline and interaction feedback
+        shell: bash
+        run: |
+          node --check scripts/publish-global-link-standard.js
+          grep -q 'QilyLean 全站链接视觉规范' site-link-standard-v1.css
+          grep -q 'html body a\[href\]' site-link-standard-v1.css
+          grep -q 'text-decoration-line: underline !important' site-link-standard-v1.css
+          grep -q 'a\[href\]:hover' site-link-standard-v1.css
+          grep -q 'a\[href\]:focus-visible' site-link-standard-v1.css
+          grep -q 'a\[href\]:active' site-link-standard-v1.css
+          grep -q 'qily-global-link-standard-loader-v1' site-navigation.js
+          node - <<'NODE'
+          const fs = require('fs');
+          const path = require('path');
+          const root = process.cwd();
+          const failures = [];
+          function walk(dir) {
+            for (const entry of fs.readdirSync(dir, {withFileTypes:true})) {
+              if (['.git','node_modules','.cache'].includes(entry.name)) continue;
+              const full = path.join(dir, entry.name);
+              if (entry.isDirectory()) walk(full);
+              else if (entry.name.endsWith('.html')) {
+                const html = fs.readFileSync(full, 'utf8');
+                if (/<\/head>/i.test(html) && !html.includes('qilyGlobalLinkStandardStylesheet')) failures.push(path.relative(root, full));
+              }
+            }
+          }
+          walk(root);
+          if (failures.length) throw new Error('Pages missing global link standard: ' + failures.slice(0,20).join(', '));
+          NODE
+
+      - name: Commit global link standard
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "The global link standard is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site-navigation.js '*.html' '**/*.html'
+          git commit -m "style: publish underlined links and interaction feedback site-wide [skip ci]"
+          git push
