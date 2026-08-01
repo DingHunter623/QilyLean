@@ -7,7 +7,7 @@
  * The latest-brief publication gate remains in audit-daily-terminology.js.
  * This companion pass is intentionally non-destructive: it only surfaces
  * terminology already present in the unified dictionary or an independent
- * lesson page, then validates that every dated brief has exactly one note.
+ * lesson page, then validates that every dated brief has exactly one dated note.
  */
 
 const fs = require('fs');
