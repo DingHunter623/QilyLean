@@ -6,6 +6,8 @@ on:
       - "knowledge/terminology-sponsor-v1.js"
       - "knowledge/terminology/sponsor.html"
       - "scripts/publish-sponsor-terminology.js"
+      - "scripts/audit-daily-terminology.js"
+      - "scripts/install-daily-terminology-gate.js"
       - ".github/workflows/publish-sponsor-terminology.yml"
   workflow_dispatch:
 permissions:
@@ -22,33 +24,46 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-      - name: Synchronize terminology modules
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Synchronize terminology modules and install Daily Brief gate
         run: |
           node scripts/publish-sponsor-terminology.js
           node scripts/build-site-metadata.js
-      - name: Validate Sponsor terminology
+          node scripts/install-daily-terminology-gate.js
+          node scripts/audit-daily-terminology.js
+      - name: Validate Sponsor terminology and daily audit governance
         run: |
           grep -q 'terminology-sponsor-v1.js' knowledge/terminology.html
           grep -q '共收录 181 项术语' knowledge/terminology.html
           grep -q 'Sponsor｜项目发起人／项目主责高层' knowledge/terminology/sponsor.html
           grep -q '高层Sponsor（项目发起人／主责高层）' qilylean/daily/2026-08-01.html
+          grep -q 'href="/knowledge/terminology/sponsor.html"' qilylean/daily/2026-08-01.html
+          grep -q '本期术语：' qilylean/daily/2026-08-01.html
           grep -q 'https://qilylean.com/knowledge/terminology/sponsor.html' sitemap.xml
           grep -q "terminology-sponsor-v1.js') &&" scripts/build-site-metadata.js
+          grep -q 'Audit latest brief terminology before publication' .github/workflows/build-daily-archive.yml
+          grep -q 'scripts/audit-daily-terminology.js' .github/workflows/build-daily-archive.yml
+          test -s qilylean/daily/terminology-audit-latest.json
           node - <<'NODE'
           const fs=require('fs');
           const data=JSON.parse(fs.readFileSync('qilylean/site-data.json','utf8'));
           const index=JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
           const entries=Array.isArray(index)?index:index.entries;
+          const report=JSON.parse(fs.readFileSync('qilylean/daily/terminology-audit-latest.json','utf8'));
           if(data.terminology.total!==181||data.terminology.lessonTotal!==181)throw new Error('terminology count mismatch');
           if(data.search.terminologyTotal!==181)throw new Error('search terminology count mismatch');
           if(!entries.some(e=>e.url==='/knowledge/terminology/sponsor.html'))throw new Error('Sponsor missing from search index');
+          if(report.status!=='passed'||report.unknownTerms.length)throw new Error('latest Daily Brief terminology audit failed');
+          if(!report.coveredTerms.includes('Sponsor'))throw new Error('Sponsor missing from latest Daily Brief audit');
           NODE
       - name: Commit generated synchronization
         run: |
-          if git diff --quiet; then echo "Sponsor terminology is already synchronized."; exit 0; fi
+          if git diff --quiet; then echo "Sponsor terminology and Daily Brief terminology governance are already synchronized."; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add knowledge/terminology.html knowledge/index.html index.html qilylean/daily/2026-08-01.html qilylean/site-data.json qilylean/site-search-index.json sitemap.xml sitemap-core.xml scripts/build-site-metadata.js
-          git commit -m "build: synchronize Sponsor terminology across site [skip ci]"
+          git add knowledge/terminology.html knowledge/index.html index.html qilylean/daily/2026-08-01.html qilylean/daily/terminology-audit-latest.json qilylean/site-data.json qilylean/site-search-index.json sitemap.xml sitemap-core.xml scripts/build-site-metadata.js .github/workflows/build-daily-archive.yml
+          git commit -m "build: synchronize Sponsor and enforce Daily Brief terminology audit [skip ci]"
           git pull --rebase origin main
           git push
