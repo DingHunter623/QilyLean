@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const stylesheet = '/site-link-standard-v1.css?v=20260801-global-link-v1';
+const stylesheet = '/site-link-standard-v1.css?v=20260801-global-link-v2';
 const linkTag = `  <link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="${stylesheet}">`;
 const loaderMarker = 'qily-global-link-standard-loader-v1';
 
@@ -60,7 +60,7 @@ function main() {
     }
   });
   const navigationChanged = patchNavigationLoader();
-  process.stdout.write(`Published QilyLean global link standard to ${htmlChecked} HTML files; refreshed ${htmlChanged}; navigation loader changed=${navigationChanged}.\n`);
+  process.stdout.write(`Published QilyLean high-contrast global link standard v2 to ${htmlChecked} HTML files; refreshed ${htmlChanged}; navigation loader changed=${navigationChanged}.\n`);
 }
 
 main();
