@@ -1,0 +1,237 @@
+/* QilyLean 深色／橄榄绿底色可视化规范 v1｜2026-08-01
+ * 统一原则：深青、橄榄绿及渐变深色区域使用白色文字；
+ * 可点击入口使用白字＋金色下横线，悬停／聚焦使用金色底＋深色字。
+ */
+
+:root{
+  --qily-dark-surface-text:#ffffff;
+  --qily-dark-surface-muted:#e8f6f3;
+  --qily-dark-surface-underline:#ffe39b;
+  --qily-dark-surface-hover:#ffe39b;
+  --qily-dark-surface-hover-ink:#17322d;
+}
+
+/* 已知深色、橄榄绿及渐变首屏／栏目区。 */
+html body :is(
+  .module-hero,
+  .daily-hero,
+  .article-hub,
+  .project-hero,
+  .projects-hero,
+  .cooperation-hero,
+  .capability-hero,
+  .capabilities-hero,
+  .experience-hero,
+  .improvement-hero,
+  .improvements-hero,
+  .knowledge-hero,
+  .trust-hero,
+  .qily-forest-bg,
+  .qily-olive-bg,
+  .olive-bg,
+  .forest-bg,
+  .dark-bg,
+  .qily-dark,
+  .qily-olive,
+  .module-footer,
+  .footer,
+  .contact-card
+){
+  color:var(--qily-dark-surface-text)!important;
+}
+
+/* 深色区域中的标题、说明文字和标签统一白色／浅白色。 */
+html body :is(
+  .module-hero,
+  .daily-hero,
+  .article-hub,
+  .project-hero,
+  .projects-hero,
+  .cooperation-hero,
+  .capability-hero,
+  .capabilities-hero,
+  .experience-hero,
+  .improvement-hero,
+  .improvements-hero,
+  .knowledge-hero,
+  .trust-hero,
+  .qily-forest-bg,
+  .qily-olive-bg,
+  .olive-bg,
+  .forest-bg,
+  .dark-bg,
+  .qily-dark,
+  .qily-olive,
+  .module-footer,
+  .footer,
+  .contact-card
+) :is(h1,h2,h3,h4,h5,h6,.title,.headline,.eyebrow,.hub-title){
+  color:var(--qily-dark-surface-text)!important;
+  -webkit-text-fill-color:var(--qily-dark-surface-text)!important;
+}
+
+html body :is(
+  .module-hero,
+  .daily-hero,
+  .article-hub,
+  .project-hero,
+  .projects-hero,
+  .cooperation-hero,
+  .capability-hero,
+  .capabilities-hero,
+  .experience-hero,
+  .improvement-hero,
+  .improvements-hero,
+  .knowledge-hero,
+  .trust-hero,
+  .qily-forest-bg,
+  .qily-olive-bg,
+  .olive-bg,
+  .forest-bg,
+  .dark-bg,
+  .qily-dark,
+  .qily-olive,
+  .module-footer,
+  .footer,
+  .contact-card
+) :is(p,small,.lead,.module-lead,.hub-lead,.subtitle,.description,.summary,.meta){
+  color:var(--qily-dark-surface-muted)!important;
+  -webkit-text-fill-color:var(--qily-dark-surface-muted)!important;
+}
+
+/* 深色区域中的链接：常态必须白字＋金色下横线。 */
+html body :is(
+  .module-hero,
+  .daily-hero,
+  .article-hub,
+  .project-hero,
+  .projects-hero,
+  .cooperation-hero,
+  .capability-hero,
+  .capabilities-hero,
+  .experience-hero,
+  .improvement-hero,
+  .improvements-hero,
+  .knowledge-hero,
+  .trust-hero,
+  .qily-forest-bg,
+  .qily-olive-bg,
+  .olive-bg,
+  .forest-bg,
+  .dark-bg,
+  .qily-dark,
+  .qily-olive,
+  .module-footer,
+  .footer,
+  .contact-card
+) a[href]{
+  color:var(--qily-dark-surface-text)!important;
+  -webkit-text-fill-color:var(--qily-dark-surface-text)!important;
+  text-decoration-line:underline!important;
+  text-decoration-color:var(--qily-dark-surface-underline)!important;
+  text-decoration-thickness:1.9px!important;
+  text-underline-offset:.25em!important;
+  opacity:1!important;
+  filter:none!important;
+}
+
+/* 悬停／键盘聚焦：金色底＋深色字，强化视觉反馈。 */
+html body :is(
+  .module-hero,
+  .daily-hero,
+  .article-hub,
+  .project-hero,
+  .projects-hero,
+  .cooperation-hero,
+  .capability-hero,
+  .capabilities-hero,
+  .experience-hero,
+  .improvement-hero,
+  .improvements-hero,
+  .knowledge-hero,
+  .trust-hero,
+  .qily-forest-bg,
+  .qily-olive-bg,
+  .olive-bg,
+  .forest-bg,
+  .dark-bg,
+  .qily-dark,
+  .qily-olive
+) a[href]:hover,
+html body :is(
+  .module-hero,
+  .daily-hero,
+  .article-hub,
+  .project-hero,
+  .projects-hero,
+  .cooperation-hero,
+  .capability-hero,
+  .capabilities-hero,
+  .experience-hero,
+  .improvement-hero,
+  .improvements-hero,
+  .knowledge-hero,
+  .trust-hero,
+  .qily-forest-bg,
+  .qily-olive-bg,
+  .olive-bg,
+  .forest-bg,
+  .dark-bg,
+  .qily-dark,
+  .qily-olive
+) a[href]:focus-visible{
+  color:var(--qily-dark-surface-hover-ink)!important;
+  -webkit-text-fill-color:var(--qily-dark-surface-hover-ink)!important;
+  background-color:var(--qily-dark-surface-hover)!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:var(--qily-dark-surface-hover-ink)!important;
+  box-shadow:0 8px 20px rgba(5,42,51,.28)!important;
+}
+
+/* 金色主按钮及当前金色标签仍使用深色文字。 */
+html body :is(
+  .module-hero,
+  .daily-hero,
+  .article-hub,
+  .project-hero,
+  .projects-hero,
+  .cooperation-hero,
+  .capability-hero,
+  .capabilities-hero,
+  .experience-hero,
+  .improvement-hero,
+  .improvements-hero,
+  .knowledge-hero,
+  .trust-hero
+) :is(a.button.primary,.article-links a[aria-current="page"],.module-subnav a.primary,.module-subnav a[aria-selected="true"]){
+  color:var(--qily-dark-surface-hover-ink)!important;
+  -webkit-text-fill-color:var(--qily-dark-surface-hover-ink)!important;
+  background-color:var(--qily-dark-surface-hover)!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:var(--qily-dark-surface-hover-ink)!important;
+}
+
+/* 改善经验文章顶部：返回入口和未选模块必须清晰可见。 */
+html body .article-hub .hub-back,
+html body .article-hub .article-links a[href]:not([aria-current="page"]){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:rgba(255,255,255,.06)!important;
+  border-color:rgba(255,227,155,.62)!important;
+  text-decoration-color:#ffe39b!important;
+}
+
+html body .article-hub .hub-back:hover,
+html body .article-hub .hub-back:focus-visible,
+html body .article-hub .article-links a[href]:not([aria-current="page"]):hover,
+html body .article-hub .article-links a[href]:not([aria-current="page"]):focus-visible{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body a[href]{transition:none!important}
+}
