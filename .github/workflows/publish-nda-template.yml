@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - "QilyLean_项目保密声明_范本_V1.0.pdf"
       - "scripts/nda-source/nda-preview-template.html"
       - "scripts/publish-nda-link.js"
       - "scripts/publish-nda-mobile-preview.js"
@@ -27,7 +28,7 @@ jobs:
     timeout-minutes: 20
     env:
       APPROVED_PDF_SHA256: e724f58694242e6982875b6eb37e19800e1ab86c4876d136f6aa57cf3941637f
-      APPROVED_PDF_SOURCE: https://at.adobe.com/hriAF2BewLT1gdfz
+      APPROVED_PDF_SOURCE: QilyLean_项目保密声明_范本_V1.0.pdf
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,21 +40,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends poppler-utils
 
-      - name: Restore the latest user-approved PDF source of truth
+      - name: Install the exact latest user-uploaded PDF
         shell: bash
         run: |
           set -euo pipefail
+          test -s "$APPROVED_PDF_SOURCE"
+          echo "$APPROVED_PDF_SHA256  $APPROVED_PDF_SOURCE" | sha256sum --check
           mkdir -p qilylean/assets/legal
-          pdf="qilylean/assets/legal/qilylean-mutual-nda-v1.pdf"
-          current=""
-          if [ -s "$pdf" ]; then current="$(sha256sum "$pdf" | awk '{print $1}')"; fi
-          if [ "$current" != "$APPROVED_PDF_SHA256" ]; then
-            curl --fail --location --retry 4 --retry-all-errors --connect-timeout 20 \
-              --output "$pdf.tmp" "$APPROVED_PDF_SOURCE"
-            echo "$APPROVED_PDF_SHA256  $pdf.tmp" | sha256sum --check --status
-            mv "$pdf.tmp" "$pdf"
-          fi
-          echo "$APPROVED_PDF_SHA256  $pdf" | sha256sum --check
+          cp "$APPROVED_PDF_SOURCE" qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
+          echo "$APPROVED_PDF_SHA256  qilylean/assets/legal/qilylean-mutual-nda-v1.pdf" | sha256sum --check
 
       - name: Render exact high-resolution online preview
         shell: bash
@@ -88,6 +83,7 @@ jobs:
           pdftotext "$pdf" - | grep -q '项目责任人签名'
           pdftotext "$pdf" - | grep -q '委托单位（填写）'
           pdftotext "$pdf" - | grep -q '项目名称（填写）'
+          cmp --silent "$APPROVED_PDF_SOURCE" "$pdf"
           grep -q '/trust/nda-preview.html' trust/index.html
           grep -q '在线预览保密声明' trust/index.html
           grep -q '最新版PDF在线预览' trust/nda-preview.html
