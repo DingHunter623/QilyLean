@@ -1,0 +1,138 @@
+/* QilyLean 全站链接视觉规范 v3｜导航与页内内容跳转高对比修正版
+ * 继承基础规范，并统一：
+ * 1. 主导航跳转；2. 页内锚点／目录／标签跳转；3. 悬停、聚焦与按下反馈。
+ */
+@import url('/site-link-standard-v1.css?v=20260801-global-link-v2');
+
+:root{
+  --qily-nav-ink:#102f36;
+  --qily-nav-active:#0f4b5a;
+  --qily-nav-active-hover:#12606f;
+  --qily-nav-hover:#ffe39b;
+  --qily-nav-hover-border:#c99a3e;
+  --qily-anchor-line:#178b94;
+}
+
+/* 主导航：白底深字＋清晰下横线。 */
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]{
+  color:var(--qily-nav-ink)!important;
+  -webkit-text-fill-color:var(--qily-nav-ink)!important;
+  background-color:transparent!important;
+  border-color:transparent!important;
+  opacity:1!important;
+  filter:none!important;
+  text-decoration-line:underline!important;
+  text-decoration-color:#0f4b5a!important;
+  text-decoration-thickness:1.8px!important;
+  text-underline-offset:.25em!important;
+  box-shadow:none!important;
+}
+
+/* 当前栏目：深青底、白字、金色下横线，形成明确色界。 */
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qily-nav-active)!important;
+  border-color:var(--qily-nav-active)!important;
+  text-decoration-color:#ffe39b!important;
+  text-decoration-thickness:2.2px!important;
+  box-shadow:0 7px 18px rgba(15,75,90,.24)!important;
+}
+
+/* 非当前栏目悬停／键盘聚焦：金色底＋深色字。 */
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]:not([aria-current]):hover,
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]:not([aria-current]):focus-visible{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:var(--qily-nav-hover)!important;
+  border-color:var(--qily-nav-hover-border)!important;
+  text-decoration-color:#17322d!important;
+  box-shadow:0 8px 20px rgba(202,161,95,.30)!important;
+  transform:translateY(-2px)!important;
+}
+
+/* 当前栏目悬停／聚焦保持深底白字，防止泛白。 */
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]:hover,
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]:focus-visible{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qily-nav-active-hover)!important;
+  border-color:var(--qily-nav-active-hover)!important;
+  text-decoration-color:#ffe39b!important;
+  box-shadow:0 9px 22px rgba(15,75,90,.30)!important;
+  transform:translateY(-2px)!important;
+}
+
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]:active{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#073c47!important;
+  border-color:#073c47!important;
+  text-decoration-color:#ffe39b!important;
+  opacity:1!important;
+  filter:none!important;
+  transform:translateY(0) scale(.98)!important;
+}
+
+/* 页内跳转同样属于链接：锚点、目录、标签、年份和筛选入口均保留下横线。 */
+html body a[href^="#"]:not([href="#"]),
+html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav,[role="tablist"]) a[href]{
+  color:inherit!important;
+  -webkit-text-fill-color:currentColor!important;
+  text-decoration-line:underline!important;
+  text-decoration-style:solid!important;
+  text-decoration-color:currentColor!important;
+  text-decoration-thickness:1.8px!important;
+  text-underline-offset:.25em!important;
+  opacity:1!important;
+  filter:none!important;
+  font-weight:850!important;
+}
+
+/* 页内跳转反馈：金色底＋深色文字，保证浅底／深底均可辨识。 */
+html body a[href^="#"]:not([href="#"]):hover,
+html body a[href^="#"]:not([href="#"]):focus-visible,
+html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav,[role="tablist"]) a[href]:hover,
+html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav,[role="tablist"]) a[href]:focus-visible{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  text-decoration-thickness:2.5px!important;
+  box-shadow:0 8px 18px rgba(202,161,95,.28)!important;
+  transform:translateY(-2px)!important;
+}
+
+html body a[href^="#"]:not([href="#"]):active,
+html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav,[role="tablist"]) a[href]:active{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#073c47!important;
+  border-color:#073c47!important;
+  text-decoration-color:#ffe39b!important;
+  transform:translateY(0) scale(.98)!important;
+}
+
+/* 页内入口处于当前状态时，采用深青底白字。 */
+html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav,[role="tablist"])
+a[href][aria-current],
+html body :is(.module-subnav,.subnav,.anchor-nav,.toc,.table-of-contents,.year-nav,.filter-nav,.index-nav,.tab-nav,[role="tablist"])
+a[href][aria-selected="true"]{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#0f4b5a!important;
+  border-color:#0f4b5a!important;
+  text-decoration-color:#ffe39b!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body a[href]{transition:none!important}
+}
