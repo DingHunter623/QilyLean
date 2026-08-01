@@ -2,23 +2,30 @@
   "schemaVersion": 1,
   "briefDate": "2026-08-02",
   "briefPath": "qilylean/daily/2026-08-02.html",
-  "checkedAt": "2026-08-01T18:13:29.804Z",
+  "checkedAt": "2026-08-01T23:53:54.284Z",
   "candidates": [
     {
       "term": "IE",
-      "explanation": "工业工程",
-      "explicit": true,
-      "source": "IE（工业工程）"
+      "explanation": "",
+      "explicit": false,
+      "source": "IE"
+    },
+    {
+      "term": "PE",
+      "explanation": "",
+      "explicit": false,
+      "source": "PE"
     },
     {
       "term": "PMC",
-      "explanation": "生产与物料控制",
-      "explicit": true,
-      "source": "PMC（生产与物料控制）"
+      "explanation": "",
+      "explicit": false,
+      "source": "PMC"
     }
   ],
   "coveredTerms": [
     "IE",
+    "PE",
     "PMC"
   ],
   "unknownTerms": [],
