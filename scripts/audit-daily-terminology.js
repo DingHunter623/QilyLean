@@ -241,6 +241,18 @@ function injectFeaturedTermNote(html, date, candidates, standalone) {
   return { html, featured: featured.map((item) => item.term) };
 }
 
+function existingFeaturedTermNote(html, date) {
+  const match = html.match(/<!-- QILY-DAILY-TERMINOLOGY:START -->[\s\S]*?<!-- QILY-DAILY-TERMINOLOGY:END -->/);
+  if (!match) return null;
+  const block = match[0];
+  if (!block.includes(`data-daily-terminology-audit="${date}"`)) return null;
+  if (!block.includes('点击进入中文诠释与单点培训课件')) return null;
+  const featured = [...block.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/g)]
+    .map((item) => stripHtml(item[1]).split('｜')[0].trim())
+    .filter(Boolean);
+  return featured.length ? { featured } : null;
+}
+
 function main() {
   const date = latestBriefDate();
   const briefPath = path.join(dailyDir, `${date}.html`);
@@ -270,8 +282,11 @@ function main() {
     process.exit(1);
   }
 
+  const existingNote = existingFeaturedTermNote(html, date);
   const linkedResult = linkIndependentTerms(html, candidates, terminology.standalone);
-  const noteResult = injectFeaturedTermNote(linkedResult.html, date, candidates, terminology.standalone);
+  const noteResult = existingNote
+    ? { html: linkedResult.html, featured: existingNote.featured }
+    : injectFeaturedTermNote(linkedResult.html, date, candidates, terminology.standalone);
   html = noteResult.html;
 
   report.linkedTerms = linkedResult.linked;
