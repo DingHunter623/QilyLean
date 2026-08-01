@@ -2,8 +2,8 @@
   "generatedAt": "2026-08-01",
   "schemaVersion": 1,
   "terminology": {
-    "total": 180,
-    "lessonTotal": 180,
+    "total": 181,
+    "lessonTotal": 181,
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
@@ -21,32 +21,5 @@
     "topicCount": 6,
     "documentCount": 6,
     "resourceCount": 16
-  },
-  "compliance": {
-    "brandNature": "丁启利发起并运营的个人专业品牌与制造改善实践平台",
-    "separateLegalEntity": false,
-    "defaultContractingParty": "丁启利（自然人）",
-    "contractRule": "若具体项目由依法登记的企业、工作室或合作机构签约，以正式报价、合同首页、盖章／电子签署主体、收款账户及发票信息所载主体为准。",
-    "pricingRule": "网站服务说明与价格信息用于合作沟通和范围评估，不构成不可撤销要约；正式范围、费用、周期、税费、差旅及验收标准以合同为准。",
-    "paymentRule": "仅向正式合同或双方书面确认文件载明的账户付款；变更收款账户时须通过官网公开联系方式复核。",
-    "dataRule": "客户资料按必要、最小化和保密原则使用；涉及客户名称、工艺、成本、经营数据及人员信息的材料，仅在授权范围内处理。",
-    "evidenceRule": "已核定值、阶段性估算值、团队成果与个人职责分别标注，不将预测收益表述为已实现收益。",
-    "aiRule": "AI用于检索、整理和方案辅助，不替代现场核实、专业评审、管理决策及法律、财税、安全等专项意见。",
-    "contactPhone": "13450014003",
-    "contactEmail": "396767769@qq.com",
-    "trustCenterUrl": "/trust/",
-    "ndaVersion": "V1.0",
-    "ndaContentRule": "网站PDF与交付Word由同一DOCX源文件生成，内容保持一致；Word不在官网公开。",
-    "ndaPreviewUrl": "/trust/nda-preview.html",
-    "ndaAccessRule": "官网仅开放受控在线预览，不提供Word或PDF下载入口。",
-    "ndaDocumentName": "QilyLean项目保密声明"
-  },
-  "search": {
-    "indexedEntries": 2848,
-    "indexedPages": 36,
-    "terminologyTotal": 180,
-    "briefTotal": 2580,
-    "latestBriefDate": "2026-08-01",
-    "sitemapLastmod": "2026-08-01"
   }
 }

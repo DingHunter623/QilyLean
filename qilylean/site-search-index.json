@@ -4,13 +4,15 @@
   "meta": {
     "indexedEntries": 2848,
     "indexedPages": 36,
-    "terminologyTotal": 180,
+    "terminologyTotal": 181,
     "briefTotal": 2580,
     "latestBriefDate": "2026-08-01",
     "sitemapLastmod": "2026-08-01",
     "ndaVersion": "V1.0",
     "ndaPreviewUrl": "/trust/nda-preview.html",
-    "ndaDocumentName": "QilyLean项目保密声明"
+    "ndaDocumentName": "QilyLean项目保密声明",
+    "generatedAt": "2026-08-01",
+    "totalEntries": 2849
   },
   "entries": [
     {
@@ -28491,6 +28493,16 @@
       "headings": "信任中心｜客户数据、隐私与保密｜项目合作",
       "text": "保密声明 在线预览 调研数据 产品信息 未上市产品 图片 视频 原始资料 归还 删除 销毁 商业信息 人员信息 参观管理 项目成果 脱敏 精益改善 工业工程 数智化工厂",
       "kind": "法律与合作范本",
+      "date": "2026-08-01"
+    },
+    {
+      "url": "/knowledge/terminology/sponsor.html",
+      "title": "Sponsor｜项目发起人／项目主责高层",
+      "code": "Sponsor",
+      "description": "Project Sponsor：代表组织对项目进行授权、资源保障、重大里程碑评审、跨部门障碍清除、重大风险升级及收益确认的高层治理角色。",
+      "headings": "全站术语｜项目治理｜工程项目交付",
+      "text": "Sponsor Project Sponsor 项目发起人 项目主责高层 项目赞助人 高层支持 项目授权 资源保障 里程碑评审 重大风险升级 跨部门协调 收益确认 项目经理 职能经理",
+      "kind": "全站术语",
       "date": "2026-08-01"
     }
   ]
