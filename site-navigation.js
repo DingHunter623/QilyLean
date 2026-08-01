@@ -1,13 +1,17 @@
 /* qily-global-link-standard-loader-v1 */
 (function(d){
   'use strict';
-  var id='qilyGlobalLinkStandardStylesheet';
-  var href='/site-link-standard-v2.css?v=20260801-global-link-v5';
-  var current=d.getElementById(id);
-  if(current){if(current.getAttribute('href')!==href)current.setAttribute('href',href);return;}
-  var link=d.createElement('link');
-  link.id=id;link.rel='stylesheet';link.href=href;
-  (d.head||d.documentElement).appendChild(link);
+  var styles=[
+    {id:'qilyGlobalLinkStandardStylesheet',href:'/site-link-standard-v2.css?v=20260801-global-link-v5'},
+    {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v1'}
+  ];
+  styles.forEach(function(style){
+    var current=d.getElementById(style.id);
+    if(current){if(current.getAttribute('href')!==style.href)current.setAttribute('href',style.href);return;}
+    var link=d.createElement('link');
+    link.id=style.id;link.rel='stylesheet';link.href=style.href;
+    (d.head||d.documentElement).appendChild(link);
+  });
 })(document);
 
 (function () {
