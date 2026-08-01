@@ -76,8 +76,10 @@
     .head{max-width:980px;margin-bottom:28px}
     .section h2{margin:0 0 12px;color:var(--forest);font-size:clamp(30px,3vw,44px);line-height:1.18}
     .head p{margin:0;color:var(--muted);font-size:19px}
+    .metric-display-note{display:inline-flex;align-items:flex-start;gap:7px;margin-top:11px!important;padding:8px 12px;border-left:4px solid var(--copper);color:#315f64!important;background:#eef8f6;font-size:14px!important;line-height:1.65!important}
+    .metric-display-note strong{flex:0 0 auto;color:var(--forest)}
     .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .metric{min-height:168px;padding:20px;border:1px solid var(--line);border-top:4px solid var(--teal);background:#fff;transition:transform .16s ease,box-shadow .16s ease}
+    .metric{min-height:168px;padding:20px;border:1px solid var(--line);border-top:4px solid var(--teal);background:#fff;cursor:default;transition:transform .16s ease,box-shadow .16s ease}
     .metric:nth-child(2n){border-top-color:var(--copper)}
     .metric:nth-child(3n){border-top-color:var(--plum)}
     .metric:hover{transform:translateY(-3px);box-shadow:0 15px 34px rgba(15,75,90,.12)}
@@ -198,6 +200,7 @@
         <div class="head">
           <h2>关键成果速览</h2>
           <p>以制造场景、改善方法、项目结果和机制沉淀为主线，快速呈现职业价值。</p>
+          <p class="metric-display-note" role="note"><strong>浏览说明：</strong>以下为静态成果概览卡片，仅用于信息展示；鼠标经过时的变化为视觉反馈，不代表可点击或页面跳转。</p>
         </div>
         <div class="metrics">
           <div class="metric"><strong>20年</strong><span>制造工程、精益改善与咨询交付经验，覆盖汽车电子、PCBA、半导体、电气、新能源及小家电。</span><em>跨行业诊断与项目迁移能力。</em></div>
