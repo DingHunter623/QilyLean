@@ -1,0 +1,153 @@
+/* QilyLean 全站VI主色规范 v1｜2026-08-01
+ * 品牌主色仅采用：橄榄绿／深青绿、品牌红、品牌金。
+ * 白色与浅绿色仅作为网页中性背景，不计入VI主色。
+ * 语义通用元素（如❌、绿色底白勾、成功/失败/警告状态图标）不受本文件改色约束。
+ */
+
+:root{
+  /* 三大品牌主色 */
+  --qily-vi-olive:#0f4b5a;
+  --qily-vi-olive-deep:#073c47;
+  --qily-vi-olive-light:#178b94;
+  --qily-vi-red:#9e4a34;
+  --qily-vi-gold:#caa15f;
+  --qily-vi-gold-light:#ffe39b;
+
+  /* 中性背景：不计入VI主色 */
+  --qily-vi-white:#ffffff;
+  --qily-vi-paper:#eef7f5;
+  --qily-vi-paper-soft:#f7fbfa;
+  --qily-vi-line:#d5e4e3;
+
+  /* 兼容全站历史变量，统一归并到三色体系 */
+  --qily-forest:var(--qily-vi-olive)!important;
+  --forest:var(--qily-vi-olive)!important;
+  --qily-deep:var(--qily-vi-olive-deep)!important;
+  --deep:var(--qily-vi-olive-deep)!important;
+  --qily-teal:var(--qily-vi-olive-light)!important;
+  --teal:var(--qily-vi-olive-light)!important;
+  --qily-red:var(--qily-vi-red)!important;
+  --red:var(--qily-vi-red)!important;
+  --danger:var(--qily-vi-red)!important;
+  --qily-plum:var(--qily-vi-red)!important;
+  --plum:var(--qily-vi-red)!important;
+  --qily-copper:var(--qily-vi-gold)!important;
+  --copper:var(--qily-vi-gold)!important;
+  --qily-gold:var(--qily-vi-gold)!important;
+  --gold:var(--qily-vi-gold)!important;
+}
+
+/* 深橄榄绿／深青绿底面：文字必须白色。 */
+html body :is(
+  .module-hero,.daily-hero,.hero,.article-hub,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,
+  .qily-forest-bg,.qily-olive-bg,.olive-bg,.forest-bg,.dark-bg,
+  .qily-dark,.qily-olive,.module-footer,.footer,.contact-card,
+  .qily-olive-action,.qily-dark-action
+){
+  color:#fff!important;
+}
+
+html body :is(
+  .module-hero,.daily-hero,.hero,.article-hub,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,
+  .qily-forest-bg,.qily-olive-bg,.olive-bg,.forest-bg,.dark-bg,
+  .qily-dark,.qily-olive,.module-footer,.footer,.contact-card
+) :is(h1,h2,h3,h4,h5,h6,p,small,strong,b,span,.title,.headline,.lead,.subtitle,.summary,.meta,.eyebrow){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
+/* 深色品牌控件：橄榄绿底＋白字＋金色反馈。 */
+html body :is(
+  .module-actions a[href]:not(.secondary),.card-actions a[href]:not(.secondary),
+  a[href].module-action,a[href].resource-action,a[href].project-list-action,
+  a[href].project-card-action,a[href].service-contract-link,a[href].share-button,
+  a[href].button:not(.primary),button.button,button.primary,.send-btn,.speech-save,
+  .qily-olive-action,.qily-dark-action
+){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qily-vi-olive)!important;
+  border-color:var(--qily-vi-olive)!important;
+  text-decoration-color:var(--qily-vi-gold-light)!important;
+}
+
+html body :is(
+  .module-actions a[href]:not(.secondary),.card-actions a[href]:not(.secondary),
+  a[href].module-action,a[href].resource-action,a[href].project-list-action,
+  a[href].project-card-action,a[href].service-contract-link,a[href].share-button,
+  a[href].button:not(.primary),button.button,button.primary,.send-btn,.speech-save,
+  .qily-olive-action,.qily-dark-action
+):is(:hover,:focus-visible){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qily-vi-olive-deep)!important;
+  border-color:var(--qily-vi-gold)!important;
+  box-shadow:0 9px 22px rgba(15,75,90,.28)!important;
+}
+
+/* 金色：价值、成果、当前选中和关键入口。 */
+html body :is(
+  .button.primary,.primary-gold,.gold-action,.value-highlight,
+  .module-subnav a[aria-selected="true"],.module-subnav a.primary,
+  .article-links a[aria-current="page"]
+){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:var(--qily-vi-gold-light)!important;
+  border-color:var(--qily-vi-gold)!important;
+}
+
+/* 品牌红：风险、异常、纠偏、删除与需关注信息。 */
+html body :is(
+  .clear,.remove-one,.remove-file,.danger,.danger-text,.risk,.risk-text,
+  .warning-critical,.abnormal,.alert-critical,.qily-red-action
+){
+  color:var(--qily-vi-red)!important;
+  -webkit-text-fill-color:var(--qily-vi-red)!important;
+}
+
+/* 浮动操作坞：橄榄绿为主、分享类用品牌红、交流用品牌金。 */
+html body .qily-float-home,
+html body .qily-float-back,
+html body .qily-float-btn:not(.qily-float-current):not(.qily-float-share):not(.qily-float-contact){
+  color:#fff!important;
+  background:rgba(15,75,90,.88)!important;
+}
+html body .qily-float-current,
+html body .qily-float-share{
+  color:#fff!important;
+  background:rgba(158,74,52,.90)!important;
+}
+html body .qily-float-contact{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background:rgba(202,161,95,.92)!important;
+}
+
+/* 历史“紫色/梅红”模块在运行时统一映射为品牌红。 */
+html body :is(.plum,.plum-bg,.qily-plum,.qily-plum-bg,.accent-plum){
+  color:#fff!important;
+  background-color:var(--qily-vi-red)!important;
+  border-color:var(--qily-vi-red)!important;
+}
+
+/* 中性白色、浅绿色背景保持网页默认，不强制改为品牌色。 */
+html body :is(.paper,.white-bg,.surface,.card,.module-card,.trust-card,.post,.chat,.bar){
+  --qily-neutral-surface:1;
+}
+
+/* 语义通用元素豁免：成功绿勾、错误红叉、警告图标及图例保留自身语义色。 */
+html body :is(
+  [data-semantic-color],.semantic-icon,.semantic-success,.semantic-error,.semantic-warning,
+  .status-icon,.result-icon,.check-icon,.error-icon,.warning-icon,.legend,.diagram-legend
+){
+  forced-color-adjust:none;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body *{scroll-behavior:auto}
+}
