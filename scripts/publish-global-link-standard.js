@@ -6,7 +6,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const stylesheet = '/site-link-standard-v2.css?v=20260801-global-link-v5';
-const darkSurfaceStylesheet = '/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v1';
+const darkSurfaceStylesheet = '/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2';
 const linkTag = `  <link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="${stylesheet}">`;
 const darkLinkTag = `  <link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="${darkSurfaceStylesheet}">`;
 const loaderMarker = 'qily-global-link-standard-loader-v1';
@@ -64,7 +64,7 @@ function main() {
     }
   });
   const navigationChanged = patchNavigationLoader();
-  process.stdout.write(`Published QilyLean link standard v5 and dark-surface contrast v1 to ${htmlChecked} HTML files; refreshed ${htmlChanged}; navigation loader changed=${navigationChanged}.\n`);
+  process.stdout.write(`Published QilyLean link standard v5 and dark-surface contrast v2 to ${htmlChecked} HTML files; refreshed ${htmlChanged}; navigation loader changed=${navigationChanged}.\n`);
 }
 
 main();
