@@ -4,7 +4,10 @@ on:
   push:
     branches: [main]
     paths:
+      - "scripts/build-nda-documents.py"
+      - "scripts/publish-nda-link.js"
       - "scripts/nda-source/release.marker"
+      - ".github/workflows/publish-nda-template.yml"
   workflow_run:
     workflows: ["Sync unified site metadata"]
     types: [completed]
@@ -65,7 +68,7 @@ jobs:
       - name: Publish preview-only access and synchronized metadata
         run: node scripts/publish-nda-link.js
 
-      - name: Validate the concise statement and preview controls
+      - name: Validate the uploaded-template statement and preview controls
         shell: bash
         run: |
           test -s qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
@@ -73,10 +76,13 @@ jobs:
           test ! -e qilylean/assets/legal/qilylean-mutual-nda-v1.docx
           test -s trust/nda-preview.html
           test "$(pdfinfo qilylean/assets/legal/qilylean-mutual-nda-v1.pdf | awk '/^Pages:/ {print $2}')" = "1"
-          pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '保 密 声 明'
+          pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -Eq '保[[:space:]]*密[[:space:]]*声[[:space:]]*明'
           pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '声明内容'
+          pdftotext qilylean/assets/legal/qilylean-mutual-nda-v1.pdf - | grep -q '未经委托单位书面授权'
           grep -q '/trust/nda-preview.html' trust/index.html
-          grep -q '一页精简版保密声明' trust/index.html
+          grep -q '一页精简版' trust/index.html
+          grep -q '在线预览保密声明' trust/index.html
+          grep -q 'QilyLean项目保密声明' trust/nda-preview.html
           grep -q 'toolbar=0' trust/nda-preview.html
           grep -q '不提供Word或PDF下载入口' trust/nda-preview.html
           ! grep -q 'download=' trust/index.html
@@ -87,13 +93,14 @@ jobs:
           const fs = require('fs');
           const data = JSON.parse(fs.readFileSync('qilylean/site-data.json', 'utf8'));
           const search = JSON.parse(fs.readFileSync('qilylean/site-search-index.json', 'utf8'));
+          if (data.compliance.ndaDocumentName !== 'QilyLean项目保密声明') throw new Error('Statement document name mismatch');
           if (data.compliance.ndaPreviewUrl !== '/trust/nda-preview.html') throw new Error('Statement preview metadata mismatch');
           if (data.compliance.ndaTemplateUrl || data.compliance.ndaWordUrl) throw new Error('Direct file URL remains public in metadata');
           if (data.search.indexedEntries !== search.entries.length) throw new Error('Search entry count mismatch');
           if (!search.entries.some((entry) => entry.url === data.compliance.ndaPreviewUrl)) throw new Error('Statement preview missing from search index');
           NODE
 
-      - name: Commit and publish the concise statement
+      - name: Commit and publish the QilyLean statement
         shell: bash
         run: |
           if git diff --quiet; then
@@ -105,5 +112,5 @@ jobs:
           git rm -f --ignore-unmatch qilylean/assets/legal/qilylean-mutual-nda-v1.docx
           git add index.html trust/index.html trust/nda-preview.html qilylean/site-data.json qilylean/site-search-index.json sitemap.xml sitemap-core.xml \
             qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
-          git commit -m "build: publish one-page QilyLean confidentiality statement [skip ci]"
+          git commit -m "build: publish template-based QilyLean confidentiality statement [skip ci]"
           git push
