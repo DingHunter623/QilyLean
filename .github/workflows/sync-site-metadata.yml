@@ -7,8 +7,11 @@ on:
       - ".github/workflows/sync-site-metadata.yml"
       - "scripts/build-site-metadata.js"
       - "scripts/sync-daily-index-source.js"
+      - "scripts/build-trust-search-sync.js"
       - "index.html"
       - "knowledge/index.html"
+      - "cooperation/index.html"
+      - "site-search.js"
       - "sitemap.xml"
       - "sitemap-core.xml"
   workflow_run:
@@ -29,7 +32,7 @@ jobs:
       (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') &&
       github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -46,33 +49,54 @@ jobs:
       - name: Generate central site data and synchronized pages
         run: node scripts/build-site-metadata.js
 
-      - name: Validate synchronized metadata
+      - name: Publish trust center and generated search index
+        run: node scripts/build-trust-search-sync.js
+
+      - name: Validate synchronized metadata and trust controls
         shell: bash
         run: |
           node --check scripts/sync-daily-index-source.js
           node --check scripts/build-site-metadata.js
+          node --check scripts/build-trust-search-sync.js
+          node --check site-search.js
           test -f qilylean/site-data.json
+          test -f qilylean/site-search-index.json
+          test -f trust/index.html
           node - <<'NODE'
           const fs = require('fs');
           const data = JSON.parse(fs.readFileSync('qilylean/site-data.json', 'utf8'));
           const briefs = JSON.parse(fs.readFileSync('qilylean/daily/index.json', 'utf8'));
+          const search = JSON.parse(fs.readFileSync('qilylean/site-search-index.json', 'utf8'));
           const home = fs.readFileSync('index.html', 'utf8');
           const knowledge = fs.readFileSync('knowledge/index.html', 'utf8');
           const terminology = fs.readFileSync('knowledge/terminology.html', 'utf8');
           const directory = fs.readFileSync('qilylean/daily-insights.html', 'utf8');
+          const cooperation = fs.readFileSync('cooperation/index.html', 'utf8');
+          const trust = fs.readFileSync('trust/index.html', 'utf8');
+          const siteSearch = fs.readFileSync('site-search.js', 'utf8');
           if (!Number.isInteger(data.terminology.total) || data.terminology.total < 1) throw new Error('Invalid terminology total');
           if (!Number.isInteger(data.briefs.total) || data.briefs.total < 1) throw new Error('Invalid brief total');
           if (!/^\d{4}-\d{2}-\d{2}$/.test(data.briefs.latestDate)) throw new Error('Invalid latest brief date');
           if (!Array.isArray(briefs) || briefs.length !== data.briefs.total) throw new Error('Brief index count mismatch');
           if (!briefs[0] || briefs[0].date !== data.briefs.latestDate) throw new Error('Brief index latest-date mismatch');
+          if (!data.compliance || data.compliance.defaultContractingParty !== '丁启利（自然人）') throw new Error('Commercial contracting party is not explicit');
+          if (!data.search || data.search.indexedEntries !== search.meta.indexedEntries) throw new Error('Search-index metadata mismatch');
+          if (search.meta.briefTotal !== data.briefs.total) throw new Error('Search brief count mismatch');
+          if (search.meta.terminologyTotal !== data.terminology.total) throw new Error('Search terminology count mismatch');
           if (!home.includes('SITE-METADATA:HOME-LATEST:START')) throw new Error('Homepage latest-content block missing');
+          if (!home.includes('QILY-TRUST:HOME:START')) throw new Error('Homepage trust-center block missing');
           if (!home.includes(data.briefs.latestDate)) throw new Error('Homepage latest date mismatch');
           if (!knowledge.includes('SITE-METADATA:KNOWLEDGE-STATS:START')) throw new Error('Knowledge statistics block missing');
           if (!knowledge.includes(`data-latest-brief-date="${data.briefs.latestDate}"`)) throw new Error('Knowledge latest brief mismatch');
           if (!terminology.includes(`共收录 ${data.terminology.total} 项术语`)) throw new Error('Terminology total mismatch');
           if (!directory.includes(`共${data.briefs.total}期`)) throw new Error('Daily directory count mismatch');
           if (!directory.includes(`/qilylean/daily/${data.briefs.latestDate}.html`)) throw new Error('Daily directory latest link mismatch');
+          if (!cooperation.includes('QILY-TRUST:COOPERATION:START')) throw new Error('Cooperation compliance block missing');
+          if (!trust.includes('默认签约主体：丁启利（自然人）')) throw new Error('Trust center contracting party missing');
+          if (!siteSearch.includes('qily-generated-search-index-v1')) throw new Error('Generated search index loader missing');
           NODE
+          grep -q "https://qilylean.com/trust/" sitemap.xml
+          grep -q "https://qilylean.com/trust/" sitemap-core.xml
           grep -q "<lastmod>" sitemap.xml
           grep -q "<lastmod>" sitemap-core.xml
 
@@ -80,11 +104,11 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Unified site metadata is already current."
+            echo "Unified site metadata, trust center and search index are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html knowledge/index.html knowledge/terminology.html qilylean/site-data.json qilylean/daily/index.json qilylean/daily-insights.html qilylean/latest-brief.js qilylean/daily-insights-card.js sitemap.xml sitemap-core.xml
-          git commit -m "build: synchronize unified site metadata [skip ci]"
+          git add index.html knowledge/index.html knowledge/terminology.html cooperation/index.html trust/index.html site-search.js qilylean/site-data.json qilylean/site-search-index.json qilylean/daily/index.json qilylean/daily-insights.html qilylean/latest-brief.js qilylean/daily-insights-card.js sitemap.xml sitemap-core.xml
+          git commit -m "build: publish trust center and synchronized site index [skip ci]"
           git push
