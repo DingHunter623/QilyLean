@@ -18,6 +18,8 @@
     '/improvements/ie-data/',
     '/improvements/visual/',
     '/knowledge/',
+    '/trust/',
+    '/cooperation/',
     '/moments/',
     '/moments/work/',
     '/moments/team/',
@@ -37,7 +39,8 @@
     loading: null,
     loaded: 0,
     total: 0,
-    activeQuery: ''
+    activeQuery: '',
+    indexMeta: null
   };
 
   function normalizeText(value) {
@@ -76,7 +79,7 @@
 
   function prioritizeUrls(urls) {
     var fallback = uniqueUrls(FALLBACK_URLS);
-    var all = uniqueUrls(fallback.concat(urls)).filter(function (url) { return url !== '/cooperation/'; });
+    var all = uniqueUrls(fallback.concat(urls));
     return all.filter(function (url) {
       return url.indexOf('/qilylean/daily/') !== 0;
     });
@@ -246,7 +249,32 @@
     });
   }
 
+  /* qily-generated-search-index-v1 */
+  function loadGeneratedIndex(onProgress) {
+    return fetch('/qilylean/site-search-index.json?index=' + Date.now(), { credentials: 'same-origin', cache: 'no-store', headers: { Accept: 'application/json' } }).then(function (response) {
+      if (!response.ok) throw new Error('generated search index unavailable');
+      return response.json();
+    }).then(function (payload) {
+      if (!payload || !Array.isArray(payload.entries)) throw new Error('generated search index invalid');
+      state.indexMeta = payload.meta || {};
+      state.entries = dedupeEntries(payload.entries.map(makeEntry));
+      state.total = state.entries.length;
+      state.loaded = state.total;
+      if (onProgress) onProgress(state.loaded, state.total);
+      return state.entries;
+    });
+  }
+
   function buildIndex(onProgress) {
+    if (state.loading) return state.loading;
+    state.loading = loadGeneratedIndex(onProgress).catch(function () {
+      state.loading = null;
+      return buildDynamicIndex(onProgress);
+    });
+    return state.loading;
+  }
+
+  function buildDynamicIndex(onProgress) {
     if (state.loading) return state.loading;
     state.loading = Promise.all([loadUrlList(), loadDailyEntries()]).then(function (sources) {
       var urls = sources[0];
@@ -501,7 +529,7 @@
       else mask._qilySearch.status.textContent = '本站索引正在准备中（' + state.loaded + '/' + state.total + '）…';
     }).then(function () {
       if (state.activeQuery) mask._qilySearch.render(state.activeQuery);
-      else mask._qilySearch.status.textContent = '本站内容索引已就绪，可输入关键词搜索。';
+      else { var meta=state.indexMeta||{}; mask._qilySearch.status.textContent = meta.indexedEntries ? '本站索引已同步：'+meta.indexedEntries+'条内容｜'+meta.terminologyTotal+'项术语｜'+meta.briefTotal+'期简报｜最新'+meta.latestBriefDate+'。' : '本站内容索引已就绪，可输入关键词搜索。'; }
     });
   }
 
@@ -513,6 +541,7 @@
       state.loading = null;
       state.loaded = 0;
       state.total = 0;
+      state.indexMeta = null;
       return buildIndex();
     }
   };
