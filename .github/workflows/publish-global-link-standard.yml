@@ -38,19 +38,22 @@ jobs:
       - name: Apply the site-wide link and dark-surface standards
         run: node scripts/publish-global-link-standard.js
 
-      - name: Validate navigation, anchor underline and dark-surface contrast
+      - name: Validate navigation, anchor underline and olive-green contrast
         shell: bash
         run: |
           node --check scripts/publish-global-link-standard.js
           grep -q '全站链接视觉规范 v5' site-link-standard-v2.css
-          grep -q '深色／橄榄绿底色可视化规范 v1' site-dark-surface-contrast-v1.css
-          grep -q 'article-hub' site-dark-surface-contrast-v1.css
+          grep -q '深色／橄榄绿底色可视化规范 v2' site-dark-surface-contrast-v1.css
+          grep -q '凡背景采用QilyLean橄榄绿／深青色' site-dark-surface-contrast-v1.css
+          grep -q 'daily-index-heading > a' site-dark-surface-contrast-v1.css
+          grep -q 'brief-index-actions a.brief-open' site-dark-surface-contrast-v1.css
           grep -q 'color:#fff!important' site-dark-surface-contrast-v1.css
+          grep -q 'background-color:var(--qily-olive-control)!important' site-dark-surface-contrast-v1.css
           grep -q 'text-decoration-color:#ffe39b!important' site-dark-surface-contrast-v1.css
           grep -q 'article-links a\[href\]:not(\[aria-current="page"\])' site-dark-surface-contrast-v1.css
           grep -q 'qily-global-link-standard-loader-v1' site-navigation.js
           grep -q 'site-link-standard-v2.css?v=20260801-global-link-v5' site-navigation.js
-          grep -q 'site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v1' site-navigation.js
+          grep -q 'site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2' site-navigation.js
           node - <<'NODE'
           const fs = require('fs');
           const path = require('path');
@@ -67,13 +70,16 @@ jobs:
                 if (/<\/head>/i.test(html) && !html.includes('qilyGlobalLinkStandardStylesheet')) failures.push(path.relative(root, full) + ':link');
                 if (/<\/head>/i.test(html) && !html.includes('qilyDarkSurfaceContrastStylesheet')) failures.push(path.relative(root, full) + ':dark');
                 if (html.includes('qilyGlobalLinkStandardStylesheet') && !html.includes('site-link-standard-v2.css?v=20260801-global-link-v5')) stale.push(path.relative(root, full) + ':link');
-                if (html.includes('qilyDarkSurfaceContrastStylesheet') && !html.includes('site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v1')) stale.push(path.relative(root, full) + ':dark');
+                if (html.includes('qilyDarkSurfaceContrastStylesheet') && !html.includes('site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2')) stale.push(path.relative(root, full) + ':dark');
               }
             }
           }
           walk(root);
           if (failures.length) throw new Error('Pages missing visual standards: ' + failures.slice(0,20).join(', '));
           if (stale.length) throw new Error('Pages using stale visual-standard cache versions: ' + stale.slice(0,20).join(', '));
+          const daily = fs.readFileSync('qilylean/daily-insights.html', 'utf8');
+          if (!daily.includes('id="latestBriefLink"')) throw new Error('Daily latest button is missing');
+          if (!daily.includes('class="brief-open"')) throw new Error('Daily open-brief button is missing');
           const vsm = fs.readFileSync('improvements/vsm/index.html', 'utf8');
           if (!vsm.includes('class="article-hub"')) throw new Error('VSM article hub is missing');
           NODE
@@ -88,5 +94,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add site-navigation.js '*.html' '**/*.html'
-          git commit -m "style: publish white text on dark surfaces site-wide [skip ci]"
+          git commit -m "style: publish olive-green white-text contrast site-wide [skip ci]"
           git push
