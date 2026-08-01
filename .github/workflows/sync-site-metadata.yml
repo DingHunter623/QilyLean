@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/sync-site-metadata.yml"
       - "scripts/build-site-metadata.js"
+      - "scripts/sync-daily-index-source.js"
       - "index.html"
       - "knowledge/index.html"
       - "sitemap.xml"
@@ -39,27 +40,38 @@ jobs:
         with:
           node-version: 20
 
+      - name: Derive brief index from published daily pages
+        run: node scripts/sync-daily-index-source.js
+
       - name: Generate central site data and synchronized pages
         run: node scripts/build-site-metadata.js
 
       - name: Validate synchronized metadata
         shell: bash
         run: |
+          node --check scripts/sync-daily-index-source.js
           node --check scripts/build-site-metadata.js
           test -f qilylean/site-data.json
           node - <<'NODE'
           const fs = require('fs');
           const data = JSON.parse(fs.readFileSync('qilylean/site-data.json', 'utf8'));
+          const briefs = JSON.parse(fs.readFileSync('qilylean/daily/index.json', 'utf8'));
           const home = fs.readFileSync('index.html', 'utf8');
           const knowledge = fs.readFileSync('knowledge/index.html', 'utf8');
           const terminology = fs.readFileSync('knowledge/terminology.html', 'utf8');
+          const directory = fs.readFileSync('qilylean/daily-insights.html', 'utf8');
           if (!Number.isInteger(data.terminology.total) || data.terminology.total < 1) throw new Error('Invalid terminology total');
           if (!Number.isInteger(data.briefs.total) || data.briefs.total < 1) throw new Error('Invalid brief total');
           if (!/^\d{4}-\d{2}-\d{2}$/.test(data.briefs.latestDate)) throw new Error('Invalid latest brief date');
+          if (!Array.isArray(briefs) || briefs.length !== data.briefs.total) throw new Error('Brief index count mismatch');
+          if (!briefs[0] || briefs[0].date !== data.briefs.latestDate) throw new Error('Brief index latest-date mismatch');
           if (!home.includes('SITE-METADATA:HOME-LATEST:START')) throw new Error('Homepage latest-content block missing');
+          if (!home.includes(data.briefs.latestDate)) throw new Error('Homepage latest date mismatch');
           if (!knowledge.includes('SITE-METADATA:KNOWLEDGE-STATS:START')) throw new Error('Knowledge statistics block missing');
           if (!knowledge.includes(`data-latest-brief-date="${data.briefs.latestDate}"`)) throw new Error('Knowledge latest brief mismatch');
           if (!terminology.includes(`共收录 ${data.terminology.total} 项术语`)) throw new Error('Terminology total mismatch');
+          if (!directory.includes(`共${data.briefs.total}期`)) throw new Error('Daily directory count mismatch');
+          if (!directory.includes(`/qilylean/daily/${data.briefs.latestDate}.html`)) throw new Error('Daily directory latest link mismatch');
           NODE
           grep -q "<lastmod>" sitemap.xml
           grep -q "<lastmod>" sitemap-core.xml
@@ -73,6 +85,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html knowledge/index.html knowledge/terminology.html qilylean/site-data.json sitemap.xml sitemap-core.xml
+          git add index.html knowledge/index.html knowledge/terminology.html qilylean/site-data.json qilylean/daily/index.json qilylean/daily-insights.html qilylean/latest-brief.js qilylean/daily-insights-card.js sitemap.xml sitemap-core.xml
           git commit -m "build: synchronize unified site metadata [skip ci]"
           git push
