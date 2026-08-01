@@ -2,15 +2,14 @@
   "generatedAt": "2026-08-01",
   "schemaVersion": 1,
   "meta": {
-    "indexedEntries": 2849,
+    "indexedEntries": 2848,
     "indexedPages": 36,
     "terminologyTotal": 180,
     "briefTotal": 2580,
     "latestBriefDate": "2026-08-01",
     "sitemapLastmod": "2026-08-01",
     "ndaVersion": "V1.0",
-    "ndaPdfUrl": "/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf",
-    "ndaWordUrl": "/qilylean/assets/legal/qilylean-mutual-nda-v1.docx"
+    "ndaPreviewUrl": "/trust/nda-preview.html"
   },
   "entries": [
     {
@@ -28484,22 +28483,12 @@
       "date": "2019-07-10"
     },
     {
-      "url": "/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf",
-      "title": "制造改善项目双向保密协议｜PDF范本",
+      "url": "/trust/nda-preview.html",
+      "title": "制造改善项目双向保密协议｜在线预览",
       "code": "NDA",
-      "description": "QilyLean制造改善、精益生产、工业工程与数智化工厂项目通用双向保密协议PDF范本。",
+      "description": "QilyLean制造改善、精益生产、工业工程与数智化工厂项目通用双向保密协议在线预览；不提供公开下载。",
       "headings": "信任中心｜客户数据、隐私与保密｜合同与项目合作",
-      "text": "双向保密协议 NDA 保密信息 商业秘密 客户资料 个人信息 数据安全 项目成果 返还 删除 销毁 违约责任 制造改善 精益生产 工业工程 新工厂 目视化 ERP MES APS 数智化工厂",
-      "kind": "法律与合作范本",
-      "date": "2026-08-01"
-    },
-    {
-      "url": "/qilylean/assets/legal/qilylean-mutual-nda-v1.docx",
-      "title": "制造改善项目双向保密协议｜Word范本",
-      "code": "NDA DOCX",
-      "description": "与网站PDF内容一致的可编辑Word保密协议范本。",
-      "headings": "信任中心｜客户数据、隐私与保密｜合同与项目合作",
-      "text": "Word DOCX 双向保密协议 可编辑范本 商业秘密 客户数据 项目合作",
+      "text": "双向保密协议 NDA 在线预览 保密信息 商业秘密 客户资料 个人信息 数据安全 项目成果 返还 删除 销毁 违约责任 制造改善 精益生产 工业工程 新工厂 目视化 ERP MES APS 数智化工厂",
       "kind": "法律与合作范本",
       "date": "2026-08-01"
     }

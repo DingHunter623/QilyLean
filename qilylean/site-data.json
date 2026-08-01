@@ -36,12 +36,12 @@
     "contactEmail": "396767769@qq.com",
     "trustCenterUrl": "/trust/",
     "ndaVersion": "V1.0",
-    "ndaTemplateUrl": "/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf",
-    "ndaWordUrl": "/qilylean/assets/legal/qilylean-mutual-nda-v1.docx",
-    "ndaContentRule": "Word与PDF由同一DOCX源文件自动生成，条款内容保持一致。"
+    "ndaContentRule": "Word与PDF由同一DOCX源文件生成并完成一致性校验；Word仅作为构建源，不公开发布。",
+    "ndaPreviewUrl": "/trust/nda-preview.html",
+    "ndaAccessRule": "官网仅开放受控在线预览，不提供Word或PDF下载入口。"
   },
   "search": {
-    "indexedEntries": 2849,
+    "indexedEntries": 2848,
     "indexedPages": 36,
     "terminologyTotal": 180,
     "briefTotal": 2580,
