@@ -25,7 +25,7 @@ jobs:
   publish:
     if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     env:
       APPROVED_PDF_SHA256: e724f58694242e6982875b6eb37e19800e1ab86c4876d136f6aa57cf3941637f
       APPROVED_PDF_SOURCE: QilyLean_项目保密声明_范本_V1.0.pdf
@@ -35,7 +35,7 @@ jobs:
           ref: main
           fetch-depth: 0
 
-      - name: Install PDF validation and rendering tools
+      - name: Install PDF validation tools
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends poppler-utils
@@ -48,34 +48,22 @@ jobs:
           echo "$APPROVED_PDF_SHA256  $APPROVED_PDF_SOURCE" | sha256sum --check
           mkdir -p qilylean/assets/legal
           cp "$APPROVED_PDF_SOURCE" qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
+          rm -f qilylean/assets/legal/qilylean-mutual-nda-v1.docx \
+                qilylean/assets/legal/qilylean-confidentiality-statement-v2.png
           echo "$APPROVED_PDF_SHA256  qilylean/assets/legal/qilylean-mutual-nda-v1.pdf" | sha256sum --check
 
-      - name: Render exact high-resolution online preview
-        shell: bash
-        run: |
-          rm -f qilylean/assets/legal/qilylean-confidentiality-statement-v2.png
-          pdftoppm -png -f 1 -singlefile -r 300 \
-            qilylean/assets/legal/qilylean-mutual-nda-v1.pdf \
-            qilylean/assets/legal/qilylean-confidentiality-statement-v2
-          test -s qilylean/assets/legal/qilylean-confidentiality-statement-v2.png
-
-      - name: Remove public Word source
-        shell: bash
-        run: rm -f qilylean/assets/legal/qilylean-mutual-nda-v1.docx
-
-      - name: Publish preview-only access and synchronized metadata
+      - name: Publish controlled inline preview and synchronized metadata
         run: |
           node scripts/publish-nda-link.js
           node scripts/publish-nda-mobile-preview.js
 
-      - name: Validate latest PDF and mobile online preview
+      - name: Validate latest PDF and mobile inline preview
         shell: bash
         run: |
           pdf="qilylean/assets/legal/qilylean-mutual-nda-v1.pdf"
-          png="qilylean/assets/legal/qilylean-confidentiality-statement-v2.png"
           test -s "$pdf"
-          test -s "$png"
           echo "$APPROVED_PDF_SHA256  $pdf" | sha256sum --check
+          cmp --silent "$APPROVED_PDF_SOURCE" "$pdf"
           test "$(pdfinfo "$pdf" | awk '/^Pages:/ {print $2}')" = "1"
           pdfinfo "$pdf" | grep -q 'Page size:.*595.*842'
           pdftotext "$pdf" - | grep -Eq '保[[:space:]]*密[[:space:]]*声[[:space:]]*明'
@@ -83,17 +71,18 @@ jobs:
           pdftotext "$pdf" - | grep -q '项目责任人签名'
           pdftotext "$pdf" - | grep -q '委托单位（填写）'
           pdftotext "$pdf" - | grep -q '项目名称（填写）'
-          cmp --silent "$APPROVED_PDF_SOURCE" "$pdf"
           grep -q '/trust/nda-preview.html' trust/index.html
           grep -q '在线预览保密声明' trust/index.html
           grep -q '最新版PDF在线预览' trust/nda-preview.html
-          grep -q '300DPI高清预览图' trust/nda-preview.html
-          grep -q 'qilylean-confidentiality-statement-v2.png' trust/nda-preview.html
+          grep -q '当前页面直接读取并渲染最新上传的正式PDF' trust/nda-preview.html
+          grep -q 'pdf.js/3.11.174/pdf.min.js' trust/nda-preview.html
+          grep -q 'pdfjsLib.getDocument' trust/nda-preview.html
+          grep -q 'qilylean-mutual-nda-v1.pdf?v=20260801-upload-v2' trust/nda-preview.html
           grep -q '适应宽度' trust/nda-preview.html
-          grep -q '原始清晰度' trust/nda-preview.html
+          grep -q '原始比例' trust/nda-preview.html
           ! grep -q '<iframe' trust/nda-preview.html
           ! grep -q 'download=' trust/index.html
-          ! grep -q 'qilylean-mutual-nda-v1.pdf' trust/nda-preview.html
+          ! grep -Eq 'href=["'"'][^"'"']*qilylean-mutual-nda-v1\.pdf' trust/nda-preview.html
           ! grep -q 'qilylean-mutual-nda-v1.docx' trust/index.html
           grep -q 'https://qilylean.com/trust/nda-preview.html' sitemap.xml
           ! grep -q 'https://qilylean.com/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf' sitemap.xml
@@ -117,9 +106,9 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git rm -f --ignore-unmatch qilylean/assets/legal/qilylean-mutual-nda-v1.docx
-          git add index.html trust/index.html trust/nda-preview.html qilylean/site-data.json qilylean/site-search-index.json sitemap.xml sitemap-core.xml \
-            qilylean/assets/legal/qilylean-mutual-nda-v1.pdf \
+          git rm -f --ignore-unmatch qilylean/assets/legal/qilylean-mutual-nda-v1.docx \
             qilylean/assets/legal/qilylean-confidentiality-statement-v2.png
+          git add index.html trust/index.html trust/nda-preview.html qilylean/site-data.json qilylean/site-search-index.json sitemap.xml sitemap-core.xml \
+            qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
           git commit -m "build: publish latest uploaded QilyLean confidentiality PDF [skip ci]"
           git push
