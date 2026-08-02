@@ -7,6 +7,8 @@ on:
       - "index.html"
       - "cooperation/index.html"
       - "qilylean/daily-insights.html"
+      - "qilylean/site-data.json"
+      - "qilylean/site-search-index.json"
       - "site-information-architecture-v1.js"
       - "site-information-architecture-v1.css"
       - "site-static-core-interactions-v1.js"
@@ -14,6 +16,8 @@ on:
       - "scripts/materialize-static-core-pages.js"
       - "scripts/prepare-static-source-rematerialization.js"
       - "scripts/normalize-static-source-output.js"
+      - "scripts/remove-legacy-home-schema.js"
+      - "scripts/refresh-static-core-search-index.js"
       - ".github/workflows/validate-information-architecture.yml"
       - ".github/workflows/finalize-trust-commercial-records.yml"
   push:
@@ -22,6 +26,8 @@ on:
       - "index.html"
       - "cooperation/index.html"
       - "qilylean/daily-insights.html"
+      - "qilylean/site-data.json"
+      - "qilylean/site-search-index.json"
       - "site-information-architecture-v1.js"
       - "site-information-architecture-v1.css"
       - "site-static-core-interactions-v1.js"
@@ -29,6 +35,8 @@ on:
       - "scripts/materialize-static-core-pages.js"
       - "scripts/prepare-static-source-rematerialization.js"
       - "scripts/normalize-static-source-output.js"
+      - "scripts/remove-legacy-home-schema.js"
+      - "scripts/refresh-static-core-search-index.js"
       - ".github/workflows/validate-information-architecture.yml"
       - ".github/workflows/finalize-trust-commercial-records.yml"
   workflow_dispatch:
@@ -61,22 +69,30 @@ jobs:
           node --check scripts/prepare-static-source-rematerialization.js
           node --check scripts/materialize-static-core-pages.js
           node --check scripts/normalize-static-source-output.js
+          node --check scripts/remove-legacy-home-schema.js
+          node --check scripts/refresh-static-core-search-index.js
 
-      - name: Materialize static pages in validation workspace
+      - name: Materialize static pages and search entries in validation workspace
         shell: bash
         run: |
           node scripts/prepare-static-source-rematerialization.js
           node scripts/materialize-static-core-pages.js
           node scripts/normalize-static-source-output.js
+          node scripts/remove-legacy-home-schema.js
+          node scripts/normalize-static-source-output.js
+          node scripts/refresh-static-core-search-index.js
 
       - name: Verify repeatable static generation
         shell: bash
         run: |
-          git diff -- index.html cooperation/index.html qilylean/daily-insights.html > /tmp/first.diff
+          git diff -- index.html cooperation/index.html qilylean/daily-insights.html qilylean/site-search-index.json qilylean/site-data.json > /tmp/first.diff
           node scripts/prepare-static-source-rematerialization.js
           node scripts/materialize-static-core-pages.js
           node scripts/normalize-static-source-output.js
-          git diff -- index.html cooperation/index.html qilylean/daily-insights.html > /tmp/second.diff
+          node scripts/remove-legacy-home-schema.js
+          node scripts/normalize-static-source-output.js
+          node scripts/refresh-static-core-search-index.js
+          git diff -- index.html cooperation/index.html qilylean/daily-insights.html qilylean/site-search-index.json qilylean/site-data.json > /tmp/second.diff
           if ! cmp /tmp/first.diff /tmp/second.diff; then
             echo "Static generation changed on the second run:" >&2
             diff -u /tmp/first.diff /tmp/second.diff || true
@@ -89,6 +105,7 @@ jobs:
           test -s site-information-architecture-v1.css
           test -s site-information-architecture-v1.js
           test -s site-static-core-interactions-v1.js
+          test -s qilylean/site-search-index.json
           grep -q 'qilyInformationArchitectureStylesheet' site-navigation.js
           grep -q '三类核心业务' site-information-architecture-v1.js
           grep -q '专业标签与能力边界' site-information-architecture-v1.js
@@ -114,6 +131,21 @@ jobs:
           ! grep -Eq '超千万元累计(项目)?改善收益' index.html cooperation/index.html
           ! grep -q 'class="group-label">职能标签' index.html
           ! grep -q '<ul class="tags">' index.html
+          node - <<'NODE'
+          const fs = require('fs');
+          const home = fs.readFileSync('index.html','utf8');
+          const schemas = Array.from(home.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)).map((match) => {
+            try { return JSON.parse(match[1]); } catch (error) { return null; }
+          }).filter(Boolean);
+          if (schemas.some((schema) => schema['@type'] === 'Person' && !Array.isArray(schema['@graph']))) throw new Error('Legacy standalone Person schema remains');
+          const search = JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
+          const root = search.entries.find((entry) => entry.url === '/');
+          const cooperation = search.entries.find((entry) => entry.url === '/cooperation/');
+          const daily = search.entries.find((entry) => entry.url === '/qilylean/daily-insights.html');
+          if (!root || !root.text.includes('把复杂制造问题，转化为可验证的交付结果') || root.text.includes('职能标签')) throw new Error('Homepage search entry is stale');
+          if (!cooperation || !cooperation.text.includes('分阶段付款') || cooperation.text.includes('超千万元累计项目改善收益')) throw new Error('Cooperation search entry is stale');
+          if (!daily || !daily.text.includes('不等同于网页首次公开发布日期')) throw new Error('Daily archive search entry is stale');
+          NODE
 
       - name: Guard against visual regressions
         shell: bash
