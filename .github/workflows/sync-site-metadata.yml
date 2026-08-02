@@ -5,13 +5,16 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/sync-site-metadata.yml"
+      - "scripts/apply-integrity-upgrade.js"
       - "scripts/build-site-metadata.js"
       - "scripts/sync-daily-index-source.js"
       - "scripts/build-trust-search-sync.js"
       - "index.html"
       - "knowledge/index.html"
       - "capabilities/index.html"
+      - "projects/index.html"
       - "cooperation/index.html"
+      - "qilylean/daily-insights.html"
       - "site-search.js"
       - "sitemap.xml"
       - "sitemap-core.xml"
@@ -50,12 +53,16 @@ jobs:
       - name: Generate central site data and synchronized pages
         run: node scripts/build-site-metadata.js
 
+      - name: Apply permanent integrity and disclosure rules
+        run: node scripts/apply-integrity-upgrade.js
+
       - name: Publish trust center and generated search index
         run: node scripts/build-trust-search-sync.js
 
       - name: Validate synchronized metadata and trust controls
         shell: bash
         run: |
+          node --check scripts/apply-integrity-upgrade.js
           node --check scripts/sync-daily-index-source.js
           node --check scripts/build-site-metadata.js
           node --check scripts/build-trust-search-sync.js
@@ -73,6 +80,8 @@ jobs:
           const terminology = fs.readFileSync('knowledge/terminology.html', 'utf8');
           const directory = fs.readFileSync('qilylean/daily-insights.html', 'utf8');
           const cooperation = fs.readFileSync('cooperation/index.html', 'utf8');
+          const projects = fs.readFileSync('projects/index.html', 'utf8');
+          const capabilities = fs.readFileSync('capabilities/index.html', 'utf8');
           const trust = fs.readFileSync('trust/index.html', 'utf8');
           const siteSearch = fs.readFileSync('site-search.js', 'utf8');
           if (!Number.isInteger(data.terminology.total) || data.terminology.total < 1) throw new Error('Invalid terminology total');
@@ -81,19 +90,27 @@ jobs:
           if (!Array.isArray(briefs) || briefs.length !== data.briefs.total) throw new Error('Brief index count mismatch');
           if (!briefs[0] || briefs[0].date !== data.briefs.latestDate) throw new Error('Brief index latest-date mismatch');
           if (!data.compliance || data.compliance.defaultContractingParty !== '丁启利（自然人）') throw new Error('Commercial contracting party is not explicit');
+          if (!data.compliance.evidenceLevelRule || !data.compliance.publicationRule || !data.compliance.credentialRule) throw new Error('Integrity disclosure rules missing');
           if (!data.search || data.search.indexedEntries !== search.meta.indexedEntries) throw new Error('Search-index metadata mismatch');
           if (search.meta.briefTotal !== data.briefs.total) throw new Error('Search brief count mismatch');
           if (search.meta.terminologyTotal !== data.terminology.total) throw new Error('Search terminology count mismatch');
           if (!home.includes('SITE-METADATA:HOME-LATEST:START')) throw new Error('Homepage latest-content block missing');
           if (!home.includes('QILY-TRUST:HOME:START')) throw new Error('Homepage trust-center block missing');
+          if (!home.includes('非QilyLean品牌独立营收')) throw new Error('Homepage cumulative-results boundary missing');
           if (!home.includes(data.briefs.latestDate)) throw new Error('Homepage latest date mismatch');
           if (!knowledge.includes('SITE-METADATA:KNOWLEDGE-STATS:START')) throw new Error('Knowledge statistics block missing');
           if (!knowledge.includes(`data-latest-brief-date="${data.briefs.latestDate}"`)) throw new Error('Knowledge latest brief mismatch');
           if (!terminology.includes(`共收录 ${data.terminology.total} 项术语`)) throw new Error('Terminology total mismatch');
           if (!directory.includes(`共${data.briefs.total}期`)) throw new Error('Daily directory count mismatch');
           if (!directory.includes(`/qilylean/daily/${data.briefs.latestDate}.html`)) throw new Error('Daily directory latest link mismatch');
+          if (!directory.includes('QILY-ARCHIVE-DISCLOSURE:START')) throw new Error('Daily archive disclosure missing');
           if (!cooperation.includes('QILY-TRUST:COOPERATION:START')) throw new Error('Cooperation compliance block missing');
+          if (!cooperation.includes('核定、验证、估算、陈述')) throw new Error('Cooperation evidence classification missing');
+          if (!projects.includes('QILY-PROJECT-READING-RULE:START')) throw new Error('Project reading rule missing');
+          if (!capabilities.includes('不构成OpenAI官方认证')) throw new Error('Certificate boundary missing');
           if (!trust.includes('默认签约主体：丁启利（自然人）')) throw new Error('Trust center contracting party missing');
+          if (!trust.includes('公开成果证据分级')) throw new Error('Trust evidence levels missing');
+          if (!trust.includes('内容日期、版本与非背书声明')) throw new Error('Trust publication statement missing');
           if (!siteSearch.includes('qily-generated-search-index-v1')) throw new Error('Generated search index loader missing');
           NODE
           grep -q "https://qilylean.com/trust/" sitemap.xml
@@ -110,6 +127,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html knowledge/index.html knowledge/terminology.html cooperation/index.html trust/index.html site-search.js qilylean/site-data.json qilylean/site-search-index.json qilylean/daily/index.json qilylean/daily-insights.html qilylean/latest-brief.js qilylean/daily-insights-card.js sitemap.xml sitemap-core.xml
-          git commit -m "build: publish trust center and synchronized site index [skip ci]"
+          git add scripts/build-trust-search-sync.js index.html knowledge/index.html knowledge/terminology.html capabilities/index.html projects/index.html cooperation/index.html trust/index.html site-search.js qilylean/site-data.json qilylean/site-search-index.json qilylean/daily/index.json qilylean/daily-insights.html qilylean/latest-brief.js qilylean/daily-insights-card.js sitemap.xml sitemap-core.xml
+          git commit -m "build: publish integrity disclosures and synchronized site index [skip ci]"
           git push
