@@ -1,0 +1,151 @@
+/* QilyLean 今日简报上下导航高对比规范 v1
+ * 目标：所有简报页面顶部／底部翻页区保持可读，防止全站链接规范覆盖深色按钮文字。
+ */
+
+html body.daily-single-page .brief-adjacent{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:12px!important;
+}
+
+html body.daily-single-page .brief-adjacent > a,
+html body.daily-single-page .brief-adjacent > span{
+  position:relative!important;
+  z-index:1!important;
+  isolation:isolate!important;
+  min-height:42px!important;
+  padding:8px 13px!important;
+  border:1px solid #c8dad8!important;
+  border-radius:10px!important;
+  font-size:15px!important;
+  font-weight:850!important;
+  line-height:1.35!important;
+  letter-spacing:0!important;
+  text-indent:0!important;
+  white-space:nowrap!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  text-shadow:none!important;
+  mix-blend-mode:normal!important;
+  overflow:visible!important;
+}
+
+/* 左右翻页：白底深青字。 */
+html body.daily-single-page .brief-adjacent > a:not(.directory){
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  background-color:#fff!important;
+  background-image:none!important;
+  border-color:#b9d1d3!important;
+  text-decoration-line:underline!important;
+  text-decoration-color:#178b94!important;
+  text-decoration-thickness:1.8px!important;
+  text-underline-offset:.24em!important;
+}
+
+/* 中间目录按钮：深青底白字，强制覆盖全站链接颜色。 */
+html body.daily-single-page .brief-adjacent > a.directory,
+html body.daily-single-page .brief-adjacent > .directory{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:118px!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#0f4b5a!important;
+  background-image:none!important;
+  border-color:#0f4b5a!important;
+  text-decoration-line:underline!important;
+  text-decoration-color:#ffe39b!important;
+  text-decoration-thickness:2px!important;
+  text-underline-offset:.24em!important;
+  box-shadow:0 7px 18px rgba(15,75,90,.18)!important;
+}
+
+html body.daily-single-page .brief-adjacent > a.directory *,
+html body.daily-single-page .brief-adjacent > .directory *{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+
+/* 禁用／状态文字：浅灰底深灰字。 */
+html body.daily-single-page .brief-adjacent > span{
+  color:#5f7474!important;
+  -webkit-text-fill-color:#5f7474!important;
+  background-color:#f5f9f8!important;
+  border-color:#d5e4e3!important;
+  font-weight:800!important;
+}
+
+html body.daily-single-page .brief-adjacent > :last-child{
+  justify-content:flex-end!important;
+}
+
+html body.daily-single-page .brief-adjacent > a:not(.directory):hover,
+html body.daily-single-page .brief-adjacent > a:not(.directory):focus-visible{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  box-shadow:0 8px 18px rgba(202,161,95,.24)!important;
+  outline:none!important;
+  transform:translateY(-2px)!important;
+}
+
+html body.daily-single-page .brief-adjacent > a.directory:hover,
+html body.daily-single-page .brief-adjacent > a.directory:focus-visible{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  box-shadow:0 9px 22px rgba(202,161,95,.28)!important;
+  outline:none!important;
+  transform:translateY(-2px)!important;
+}
+
+html body.daily-single-page .brief-adjacent > a.directory:hover *,
+html body.daily-single-page .brief-adjacent > a.directory:focus-visible *{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+}
+
+html body.daily-single-page .brief-adjacent > a:active{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#073c47!important;
+  border-color:#073c47!important;
+  text-decoration-color:#ffe39b!important;
+  transform:translateY(0) scale(.98)!important;
+}
+
+@media(max-width:860px){
+  html body.daily-single-page .brief-adjacent{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+  }
+  html body.daily-single-page .brief-adjacent > .directory{
+    grid-column:1/-1!important;
+    grid-row:1!important;
+    width:100%!important;
+  }
+}
+
+@media(max-width:620px){
+  html body.daily-single-page .brief-adjacent > a,
+  html body.daily-single-page .brief-adjacent > span{
+    min-height:40px!important;
+    padding:7px 9px!important;
+    font-size:13px!important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body.daily-single-page .brief-adjacent > a{
+    transition:none!important;
+  }
+}
