@@ -47,14 +47,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Apply permanent integrity and disclosure rules
-        run: node scripts/apply-integrity-upgrade.js
-
       - name: Derive brief index from published daily pages
         run: node scripts/sync-daily-index-source.js
 
       - name: Generate central site data and synchronized pages
         run: node scripts/build-site-metadata.js
+
+      - name: Apply permanent integrity and disclosure rules
+        run: node scripts/apply-integrity-upgrade.js
 
       - name: Publish trust center and generated search index
         run: node scripts/build-trust-search-sync.js
