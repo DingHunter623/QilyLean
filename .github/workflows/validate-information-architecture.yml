@@ -1,33 +1,49 @@
-name: Validate information architecture
+name: Validate static information architecture
 
 on:
   pull_request:
     branches: [main]
     paths:
+      - "index.html"
+      - "cooperation/index.html"
+      - "qilylean/daily-insights.html"
       - "site-information-architecture-v1.js"
       - "site-information-architecture-v1.css"
+      - "site-static-core-interactions-v1.js"
       - "site-navigation.js"
+      - "scripts/materialize-static-core-pages.js"
+      - "scripts/prepare-static-source-rematerialization.js"
+      - "scripts/normalize-static-source-output.js"
       - ".github/workflows/validate-information-architecture.yml"
+      - ".github/workflows/finalize-trust-commercial-records.yml"
   push:
     branches: [main]
     paths:
+      - "index.html"
+      - "cooperation/index.html"
+      - "qilylean/daily-insights.html"
       - "site-information-architecture-v1.js"
       - "site-information-architecture-v1.css"
+      - "site-static-core-interactions-v1.js"
       - "site-navigation.js"
+      - "scripts/materialize-static-core-pages.js"
+      - "scripts/prepare-static-source-rematerialization.js"
+      - "scripts/normalize-static-source-output.js"
       - ".github/workflows/validate-information-architecture.yml"
+      - ".github/workflows/finalize-trust-commercial-records.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: validate-information-architecture-${{ github.ref }}
+  group: validate-static-information-architecture-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,14 +57,35 @@ jobs:
         run: |
           node --check site-information-architecture-v1.js
           node --check site-navigation.js
+          node --check site-static-core-interactions-v1.js
+          node --check scripts/prepare-static-source-rematerialization.js
+          node --check scripts/materialize-static-core-pages.js
+          node --check scripts/normalize-static-source-output.js
 
-      - name: Validate information hierarchy contract
+      - name: Materialize static pages in validation workspace
+        shell: bash
+        run: |
+          node scripts/prepare-static-source-rematerialization.js
+          node scripts/materialize-static-core-pages.js
+          node scripts/normalize-static-source-output.js
+
+      - name: Verify repeatable static generation
+        shell: bash
+        run: |
+          git diff -- index.html cooperation/index.html qilylean/daily-insights.html > /tmp/first.diff
+          node scripts/prepare-static-source-rematerialization.js
+          node scripts/materialize-static-core-pages.js
+          node scripts/normalize-static-source-output.js
+          git diff -- index.html cooperation/index.html qilylean/daily-insights.html > /tmp/second.diff
+          cmp /tmp/first.diff /tmp/second.diff
+
+      - name: Validate static information hierarchy contract
         shell: bash
         run: |
           test -s site-information-architecture-v1.css
           test -s site-information-architecture-v1.js
+          test -s site-static-core-interactions-v1.js
           grep -q 'qilyInformationArchitectureStylesheet' site-navigation.js
-          grep -q 'site-information-architecture-v1.js?v=20260802-commercial-focus-v1' site-navigation.js
           grep -q '三类核心业务' site-information-architecture-v1.js
           grep -q '专业标签与能力边界' site-information-architecture-v1.js
           grep -q '职业经历摘要与口径说明' site-information-architecture-v1.js
@@ -57,6 +94,22 @@ jobs:
           grep -q '知识资产的定位与边界' site-information-architecture-v1.js
           grep -q '不等同于QilyLean品牌成立后的独立商业订单' site-information-architecture-v1.js
           grep -q '正式项目以双方签署合同为准' site-information-architecture-v1.js
+          grep -q 'QILY-HOME-STATIC-COMMERCIAL:START' index.html
+          grep -q '把复杂制造问题，转化为可验证的交付结果' index.html
+          grep -q '新工厂／新产线规划' index.html
+          grep -q '精益改善项目交付' index.html
+          grep -q '目视化项目设计与实施' index.html
+          grep -q 'qilyInformationArchitectureStylesheet' index.html
+          grep -q 'qilyStaticCoreInteractions' index.html
+          grep -q 'QILY-COOPERATION-STATIC-SUMMARY:START' cooperation/index.html
+          grep -q '分阶段付款' cooperation/index.html
+          grep -q '验收边界' cooperation/index.html
+          grep -q 'QILY-ARCHIVE-DISCLOSURE:START' qilylean/daily-insights.html
+          grep -q 'QILY-ARCHIVE-STATIC-SCHEMA:START' qilylean/daily-insights.html
+          grep -q '不等同于网页首次公开发布日期' qilylean/daily-insights.html
+          ! grep -Eq '超千万元累计(项目)?改善收益' index.html cooperation/index.html
+          ! grep -q 'class="group-label">职能标签' index.html
+          ! grep -q '<ul class="tags">' index.html
 
       - name: Guard against visual regressions
         shell: bash
@@ -65,3 +118,4 @@ jobs:
           grep -q 'focus-visible' site-information-architecture-v1.css
           grep -q 'white-space:nowrap' site-information-architecture-v1.css
           grep -q 'qily-home-commercial-focus' site-information-architecture-v1.css
+          grep -q 'data-qily-results-toggle' site-static-core-interactions-v1.js
