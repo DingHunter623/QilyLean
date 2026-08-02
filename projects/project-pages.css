@@ -183,3 +183,27 @@ body.project-lightbox-open{overflow:hidden}
 .project-video-play{position:relative;z-index:1;display:grid;place-items:center;width:34px;height:34px;padding-left:2px;border:2px solid rgba(255,255,255,.9);border-radius:50%;color:#fff;background:rgba(15,75,90,.82);box-shadow:0 5px 14px rgba(0,0,0,.3);font-size:16px;line-height:1;transition:transform .2s ease,background-color .2s ease}
 .project-video-thumb:hover .project-video-play,.project-video-thumb:focus-visible .project-video-play{color:#17322d;background:#ffe39b;transform:scale(1.08)}
 
+/* factory-plan-pdf-v1：轻量WebP预览负责高速浏览，高清PDF保留为原图纸入口。 */
+.factory-plan-section{margin:26px 0 30px}
+.factory-plan-heading{max-width:1050px;margin:0 0 16px}
+.factory-plan-heading small{display:block;margin-bottom:5px;color:#9a7130;font-weight:900;letter-spacing:.04em}
+.factory-plan-heading h2{margin:0 0 8px!important}
+.factory-plan-heading p{margin:0!important;color:#526968;font-size:16.5px!important;line-height:1.72!important}
+.factory-plan-gallery{display:grid;gap:16px}
+.factory-plan-card{display:grid;grid-template-columns:minmax(320px,44%) minmax(0,1fr);min-height:330px;overflow:hidden;border:1px solid var(--qily-line);background:#fff;box-shadow:0 10px 26px rgba(15,75,90,.08);content-visibility:auto;contain-intrinsic-size:auto 360px}
+.factory-plan-preview{position:relative;display:grid;place-items:center;min-width:0;min-height:330px;padding:14px;overflow:hidden;border-right:1px solid var(--qily-line);background:#edf4f2;text-decoration:none!important;cursor:pointer}
+.factory-plan-preview::after{content:'点击打开高清PDF';position:absolute;right:12px;bottom:12px;padding:6px 10px;border:1px solid rgba(255,255,255,.5);border-radius:999px;color:#fff;background:rgba(15,75,90,.88);box-shadow:0 5px 14px rgba(0,0,0,.16);font-size:13px;font-weight:900;line-height:1}
+.factory-plan-preview img{display:block;width:100%;height:100%;max-height:390px;object-fit:contain;background:#fff;box-shadow:0 7px 20px rgba(15,75,90,.12);transition:transform .22s ease}
+.factory-plan-card-portrait .factory-plan-preview img{max-height:510px}
+.factory-plan-preview:hover img{transform:scale(1.012)}
+.factory-plan-preview:focus-visible{outline:4px solid #ffe39b;outline-offset:-5px}
+.factory-plan-copy{display:flex;flex-direction:column;justify-content:center;min-width:0;padding:24px 26px}
+.factory-plan-file{display:block;margin-bottom:7px;color:#9a7130;font-size:14px;font-weight:900;letter-spacing:.02em}
+.factory-plan-copy h3{margin:0 0 10px;color:#0f4b5a;font-size:clamp(21px,1.8vw,27px)!important;line-height:1.35!important}
+.factory-plan-copy p{margin:0!important;color:#526968;font-size:16px!important;line-height:1.72!important}
+.factory-plan-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+.factory-plan-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:39px;padding:7px 14px;border:1px solid #0f4b5a;border-radius:999px;color:#fff!important;background:#0f4b5a;text-decoration:none!important;font-size:14.5px;font-weight:900;line-height:1.2}
+.factory-plan-actions a:last-child{color:#0f4b5a!important;background:#fff}
+.factory-plan-actions a:hover,.factory-plan-actions a:focus-visible{color:#17322d!important;border-color:#caa15f;background:#ffe39b;outline:none}
+@media(max-width:860px){.factory-plan-card{grid-template-columns:1fr;min-height:0}.factory-plan-preview{min-height:0;padding:10px;border-right:0;border-bottom:1px solid var(--qily-line)}.factory-plan-preview img{height:auto;max-height:none}.factory-plan-card-portrait .factory-plan-preview img{max-height:76vh}.factory-plan-copy{padding:20px}}
+@media(max-width:520px){.factory-plan-section{margin-top:22px}.factory-plan-gallery{gap:13px}.factory-plan-copy{padding:17px}.factory-plan-copy h3{font-size:20px!important}.factory-plan-copy p{font-size:15px!important}.factory-plan-preview::after{right:8px;bottom:8px;font-size:12px}.factory-plan-actions a{flex:1 1 135px}}

@@ -5,7 +5,7 @@
   window.__qilyProjectImageViewerReady=true;
 
   var images=Array.prototype.slice.call(document.querySelectorAll('.project-detail-page main img, .project-list-page .project-list-thumb img')).filter(function(img){
-    return !img.closest('.project-lightbox');
+    return !img.closest('.project-lightbox')&&!img.classList.contains('project-pdf-preview');
   });
   if(!images.length)return;
 
