@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-01",
+  "generatedAt": "2026-08-02",
   "schemaVersion": 1,
   "terminology": {
     "total": 181,
@@ -42,6 +42,6 @@
     "terminologyTotal": 181,
     "briefTotal": 2581,
     "latestBriefDate": "2026-08-02",
-    "sitemapLastmod": "2026-08-01"
+    "sitemapLastmod": "2026-08-02"
   }
 }
