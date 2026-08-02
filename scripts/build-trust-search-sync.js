@@ -76,6 +76,11 @@ function loadSiteData() {
     dataRule: '客户资料按必要、最小化和保密原则使用；涉及客户名称、工艺、成本、经营数据及人员信息的材料，仅在授权范围内处理。',
     evidenceRule: '已核定值、阶段性估算值、团队成果与个人职责分别标注，不将预测收益表述为已实现收益。',
     aiRule: 'AI用于检索、整理和方案辅助，不替代现场核实、专业评审、管理决策及法律、财税、安全等专项意见。',
+    ndaVersion: 'V1.0',
+    ndaDocumentName: 'QilyLean项目保密声明',
+    ndaPreviewUrl: '/trust/nda-preview.html',
+    ndaAccessRule: '官网仅开放受控在线预览，不提供Word或PDF下载入口。',
+    ndaContentRule: '当前正式版本以用户确认的最新版PDF为准；官网仅通过受控页面在线预览，不公开Word或PDF直链。',
     contactPhone: '13450014003',
     contactEmail: '396767769@qq.com',
     trustCenterUrl: '/trust/'
@@ -112,6 +117,8 @@ function trustPage(data) {
   })}</script>
 <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>
 <link rel="stylesheet" href="/site-shell.css?v=20260729-no-old-flash-v1"><link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=20260729-hierarchy-v4"><link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260729-fluid-copy-v5"><link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4"><script defer src="/site-navigation.js?v=20260729-no-old-flash-v1"></script>
+<link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="/site-link-standard-v2.css?v=20260801-global-link-v5">
+<link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2">
 </head>
 <body class="module-page">
 <header class="qily-site-header"><a class="qily-brand" href="/">QilyLean｜启力精益</a><nav class="site-nav" aria-label="网站导航"><a href="/">首页</a><a href="/capabilities/">能力画像</a><a href="/projects/">代表项目</a><a href="/knowledge/">知识分享</a><a href="/cooperation/">项目合作</a></nav></header>
@@ -131,7 +138,7 @@ function trustPage(data) {
 <section class="module-section" id="data"><div class="module-inner"><div class="module-heading"><h2>客户数据、隐私与保密</h2></div><div class="trust-grid">
 <article class="trust-card"><h3>最小必要使用</h3><p>咨询表单、项目资料和现场数据仅用于需求判断、方案设计、项目执行、验收与必要沟通；不以与项目无关的目的扩大收集或使用范围。</p></article>
 <article class="trust-card"><h3>公开资料必须脱敏</h3><p>客户名称、个人身份、签名、联系方式、成本、工艺参数、经营数据和未公开图纸原则上不公开。确需作为案例展示时，应取得授权或进行去标识化、遮挡与信息重构。</p></article>
-<article class="trust-card"><h3>保密协议优先</h3><p>正式项目可在资料交换前签署保密协议；合同与保密协议对资料范围、访问人员、保存期限、返还销毁和违约责任有约定的，以书面约定为准。</p></article>
+<article class="trust-card" id="nda-template"><h3>保密声明优先</h3><p>正式项目可在现场调研或资料交换前，由QilyLean项目责任人签署保密声明；如双方另行签署合同、保密协议或专项数据条款，以双方书面约定为准。</p><p><strong>配套范本：</strong>《QilyLean项目保密声明》V1.0，为一页精简版，覆盖调研数据与产品信息、现场问题及图片、原始资料归还或销毁、商业信息、人员信息、参观管理和项目成果对外披露等事项。官网仅开放受控在线预览，不提供文件下载入口。</p><div class="module-actions"><a href="/trust/nda-preview.html" target="_blank" rel="noopener">在线预览保密声明</a></div></article>
 <article class="trust-card"><h3>不在公开端展示受控原档</h3><p>涉及客户敏感信息的完整原始材料仅在授权、保密或现场核验条件下展示，不因网页存在案例摘要而推定客户同意公开全部底稿。</p></article>
 </div></div></section>
 <section class="module-section alt" id="evidence"><div class="module-inner"><div class="module-heading"><h2>项目成果与证据口径</h2></div><div class="trust-grid">
@@ -363,6 +370,9 @@ function validate(data) {
   const home = read(homeFile);
   const index = JSON.parse(read(searchIndexFile));
   if (!trust.includes('默认签约主体：丁启利（自然人）')) throw new Error('Trust-center contracting party is missing');
+  if (!trust.includes('id="nda-template"') || !trust.includes('在线预览保密声明')) throw new Error('Trust-center confidentiality statement entry is missing');
+  if (!data.compliance || data.compliance.ndaDocumentName !== 'QilyLean项目保密声明' || data.compliance.ndaPreviewUrl !== '/trust/nda-preview.html') throw new Error('Confidentiality statement metadata is missing');
+  if (/download=|href=["'][^"']*qilylean-mutual-nda-v1\.pdf/.test(trust)) throw new Error('A direct confidentiality document download leaked into the trust center');
   if (!cooperation.includes('QILY-TRUST:COOPERATION:START')) throw new Error('Cooperation compliance block is missing');
   if (!home.includes('QILY-TRUST:HOME:START')) throw new Error('Homepage trust block is missing');
   if (!index.meta || index.meta.briefTotal !== data.briefs.total) throw new Error('Search index brief count mismatch');
