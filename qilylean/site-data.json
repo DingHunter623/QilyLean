@@ -32,6 +32,11 @@
     "dataRule": "客户资料按必要、最小化和保密原则使用；涉及客户名称、工艺、成本、经营数据及人员信息的材料，仅在授权范围内处理。",
     "evidenceRule": "已核定值、阶段性估算值、团队成果与个人职责分别标注，不将预测收益表述为已实现收益。",
     "aiRule": "AI用于检索、整理和方案辅助，不替代现场核实、专业评审、管理决策及法律、财税、安全等专项意见。",
+    "ndaVersion": "V1.0",
+    "ndaDocumentName": "QilyLean项目保密声明",
+    "ndaPreviewUrl": "/trust/nda-preview.html",
+    "ndaAccessRule": "官网仅开放受控在线预览，不提供Word或PDF下载入口。",
+    "ndaContentRule": "当前正式版本以用户确认的最新版PDF为准；官网仅通过受控页面在线预览，不公开Word或PDF直链。",
     "contactPhone": "13450014003",
     "contactEmail": "396767769@qq.com",
     "trustCenterUrl": "/trust/"
