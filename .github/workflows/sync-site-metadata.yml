@@ -10,6 +10,7 @@ on:
       - "scripts/build-trust-search-sync.js"
       - "index.html"
       - "knowledge/index.html"
+      - "capabilities/index.html"
       - "cooperation/index.html"
       - "site-search.js"
       - "sitemap.xml"
