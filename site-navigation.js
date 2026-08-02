@@ -6,7 +6,7 @@
 
   function loadTrustStyles(){
     var current=d.getElementById('qilyBrandTrustStylesheet');
-    var href='/site-brand-trust-v1.css?v=20260802-personal-brand-v2';
+    var href='/site-brand-trust-v1.css?v=20260802-project-rolebar-v3';
     if(current){
       if(current.getAttribute('href')!==href)current.setAttribute('href',href);
       return;
@@ -22,9 +22,9 @@
     loadTrustStyles();
     if(d.querySelector('script[data-qily-brand-trust-loader]'))return;
     var enhancer=d.createElement('script');
-    enhancer.src='/site-brand-trust-v1.js?v=20260802-personal-brand-v2';
+    enhancer.src='/site-brand-trust-v1.js?v=20260802-project-rolebar-v3';
     enhancer.defer=true;
-    enhancer.setAttribute('data-qily-brand-trust-loader','v2');
+    enhancer.setAttribute('data-qily-brand-trust-loader','v3');
     (d.head||d.documentElement).appendChild(enhancer);
   }
 
