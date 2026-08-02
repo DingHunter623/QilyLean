@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 
+// Validation bridge v2: keep the generator deterministic while CI performs explicit file checks.
 const file = path.resolve(__dirname, 'finalize-trust-commercial-records.js');
 let content = fs.readFileSync(file, 'utf8');
 

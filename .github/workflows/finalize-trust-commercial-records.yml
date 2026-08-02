@@ -6,6 +6,7 @@ on:
     paths:
       - "scripts/finalize-trust-commercial-records.js"
       - "scripts/patch-finalizer-validation.js"
+      - "scripts/enforce-final-trust-output.js"
       - ".github/workflows/finalize-trust-commercial-records.yml"
       - "index.html"
       - "cooperation/index.html"
@@ -23,6 +24,7 @@ on:
     paths:
       - "scripts/finalize-trust-commercial-records.js"
       - "scripts/patch-finalizer-validation.js"
+      - "scripts/enforce-final-trust-output.js"
       - ".github/workflows/finalize-trust-commercial-records.yml"
   workflow_run:
     workflows: ["Sync unified site metadata", "Build daily engineering brief archive"]
@@ -73,17 +75,22 @@ jobs:
             QILY_SKIP_INTERNAL_VALIDATE=1 node scripts/finalize-trust-commercial-records.js
           fi
 
+      - name: Enforce final static disclosures after upstream generators
+        run: node scripts/enforce-final-trust-output.js
+
       - name: Validate public integrity controls
         shell: bash
         run: |
           node --check scripts/patch-finalizer-validation.js
           node --check scripts/finalize-trust-commercial-records.js
+          node --check scripts/enforce-final-trust-output.js
           test -s projects/qilylean-commercial-deliveries/index.html
           test -s projects/qilylean-commercial-deliveries/records.json
           test -s projects/qilylean-commercial-deliveries/delivery-record-template.html
           test -s projects/qilylean-commercial-deliveries/review-authorization-template.html
           grep -q '非QilyLean品牌独立营收' index.html
           grep -q '职业生涯多年度参与、主导及组织推进的累计改善贡献' index.html
+          grep -q '非QilyLean品牌独立营收' cooperation/index.html
           grep -q '不等同于网页首次公开发布日期' qilylean/daily-insights.html
           grep -q 'QILY-ARCHIVE-STATIC-SCHEMA:START' qilylean/daily-insights.html
           grep -q '当前公开记录：' projects/qilylean-commercial-deliveries/index.html
