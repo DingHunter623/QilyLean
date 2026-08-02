@@ -3,7 +3,7 @@
   if(window.__qilyBrandTrustV1)return;
   window.__qilyBrandTrustV1=true;
 
-  var VERSION='20260802-personal-brand-v1';
+  var VERSION='20260802-project-rolebar-v3';
   var path=(location.pathname||'/').replace(/\/index\.html$/,'/').replace(/\/{2,}/g,'/');
   if(path.length>1&&!/\/$/.test(path))path+='/';
 
@@ -165,8 +165,16 @@
     if(path.indexOf('/factory-layout/')>=0)tags=['个人专业作品与项目实践','规划图纸受控预览','客户信息脱敏','交付能力展示'];
     if(path.indexOf('/automotive-lean/')>=0||path.indexOf('/digital-factory/')>=0)tags=['顾问／管理实践案例','个人组织推进','企业团队共同完成','成果口径分级说明'];
     var bar=node('<strong>成果角色与证据边界</strong>'+tags.map(function(tag){return '<span>'+tag+'</span>';}).join(''),'ql-project-rolebar');
-    var target=document.querySelector('main .module-heading,main .project-hero-copy,main .hero-copy,main .module-inner,main>section>div');
-    if(target)target.appendChild(bar);else mainElement().insertBefore(bar,mainElement().firstChild);
+    /*
+     * 角色与证据条属于正文元数据，禁止追加到深色首屏。
+     * 先锁定项目正文卡片，再逐级退回非首屏的浅色内容容器。
+     */
+    var target=document.querySelector('main .module-section .module-card');
+    if(!target)target=document.querySelector('main .module-section article');
+    if(!target)target=document.querySelector('main article.module-card,main .project-detail-content,main .project-content');
+    if(!target)target=document.querySelector('main .module-section .module-inner,main>section:not(.module-hero):not(.hero)>div');
+    if(target)target.insertBefore(bar,target.firstChild);
+    else mainElement().insertBefore(bar,mainElement().firstChild);
   }
 
   function trustCenterModule(){
