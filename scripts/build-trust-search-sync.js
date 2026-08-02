@@ -75,6 +75,9 @@ function loadSiteData() {
     paymentRule: '仅向正式合同或双方书面确认文件载明的账户付款；变更收款账户时须通过官网公开联系方式复核。',
     dataRule: '客户资料按必要、最小化和保密原则使用；涉及客户名称、工艺、成本、经营数据及人员信息的材料，仅在授权范围内处理。',
     evidenceRule: '已核定值、阶段性估算值、团队成果与个人职责分别标注，不将预测收益表述为已实现收益。',
+    evidenceLevelRule: '公开成果采用A已核定、B已验证、C阶段估算、D经验陈述四级口径；该分级是QilyLean内部披露规则，不是第三方认证。',
+    publicationRule: '历史简报依据历年制造实践、工作记录与项目经验持续整理；页面日期用于知识档案排序与主题定位，不单独证明网页在该日首次公开发布。',
+    credentialRule: '除非页面明确列明颁发方、核验来源和适用范围，不将学习证明、平台记录或个人作品表述为政府资质、行业认证、官方授权或客户背书。',
     aiRule: 'AI用于检索、整理和方案辅助，不替代现场核实、专业评审、管理决策及法律、财税、安全等专项意见。',
     ndaVersion: 'V1.0',
     ndaDocumentName: 'QilyLean项目保密声明',
@@ -101,7 +104,7 @@ function trustPage(data) {
 <link rel="canonical" href="https://qilylean.com/trust/">
 <meta property="og:type" content="website"><meta property="og:title" content="QilyLean信任中心"><meta property="og:description" content="商业主体、合同付款、数据保密、项目证据及AI使用边界的统一公开说明。"><meta property="og:url" content="https://qilylean.com/trust/">
 <style>
-.trust-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.trust-card{padding:24px;border:1px solid #d5e4e3;border-top:4px solid #178b94;background:#fff;box-shadow:0 12px 32px rgba(15,75,90,.07)}.trust-card:nth-child(2n){border-top-color:#caa15f}.trust-card h3{margin:7px 0 10px;color:#0f4b5a;font-size:24px}.trust-card p,.trust-card li{color:#526b69;line-height:1.78}.trust-card ul{margin:0;padding-left:1.25em}.trust-label{color:#8d6a32;font-size:13px;font-weight:950;letter-spacing:.06em}.trust-status{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.trust-status div{padding:19px;border:1px solid #d5e4e3;background:#fff;text-align:center}.trust-status strong{display:block;color:#0f4b5a;font-size:30px}.trust-status span{display:block;margin-top:5px;color:#5f7474;font-size:14px}.trust-callout{padding:20px;border-left:5px solid #caa15f;color:#315f64;background:#eef8f6;line-height:1.8}.trust-contact{display:grid;grid-template-columns:1fr 1fr;gap:14px}.trust-contact a{display:block;padding:16px;border:1px solid #c8dad8;color:#0f4b5a;background:#fff;text-decoration:none;font-weight:900;text-align:center}@media(max-width:860px){.trust-grid,.trust-contact{grid-template-columns:1fr}.trust-status{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.trust-status{grid-template-columns:1fr}}
+.trust-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.trust-card{padding:24px;border:1px solid #d5e4e3;border-top:4px solid #178b94;background:#fff;box-shadow:0 12px 32px rgba(15,75,90,.07)}.trust-card:nth-child(2n){border-top-color:#caa15f}.trust-card h3{margin:7px 0 10px;color:#0f4b5a;font-size:24px}.trust-card p,.trust-card li{color:#526b69;line-height:1.78}.trust-card ul{margin:0;padding-left:1.25em}.trust-label{color:#8d6a32;font-size:13px;font-weight:950;letter-spacing:.06em}.trust-status{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.trust-status div{padding:19px;border:1px solid #d5e4e3;background:#fff;text-align:center}.trust-status strong{display:block;color:#0f4b5a;font-size:30px}.trust-status span{display:block;margin-top:5px;color:#5f7474;font-size:14px}.trust-callout{padding:20px;border-left:5px solid #caa15f;color:#315f64;background:#eef8f6;line-height:1.8}.trust-levels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.trust-level{padding:18px;border:1px solid #d5e4e3;background:#fff}.trust-level b{display:inline-grid;place-items:center;width:34px;height:34px;margin-bottom:10px;border-radius:50%;color:#fff;background:#0f4b5a}.trust-level strong{display:block;color:#0f4b5a}.trust-level span{display:block;margin-top:6px;color:#5f7474;font-size:14px;line-height:1.65}.trust-contact{display:grid;grid-template-columns:1fr 1fr;gap:14px}.trust-contact a{display:block;padding:16px;border:1px solid #c8dad8;color:#0f4b5a;background:#fff;text-decoration:none;font-weight:900;text-align:center}@media(max-width:860px){.trust-grid,.trust-contact{grid-template-columns:1fr}.trust-status,.trust-levels{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.trust-status,.trust-levels{grid-template-columns:1fr}}
 </style>
 <script type="application/ld+json">${JSON.stringify({
     '@context': 'https://schema.org',
@@ -123,7 +126,7 @@ function trustPage(data) {
 <body class="module-page">
 <header class="qily-site-header"><a class="qily-brand" href="/">QilyLean｜启力精益</a><nav class="site-nav" aria-label="网站导航"><a href="/">首页</a><a href="/capabilities/">能力画像</a><a href="/projects/">代表项目</a><a href="/knowledge/">知识分享</a><a href="/cooperation/">项目合作</a></nav></header>
 <main>
-<section class="module-hero"><div class="module-inner"><span class="module-eyebrow">TRUST / CONTRACT / PRIVACY / EVIDENCE</span><h1>信任中心</h1><p class="module-lead">统一公开QilyLean的品牌性质、商业签约主体、合同与付款边界、数据保密、项目成果口径、AI使用边界及站点数据同步状态。</p><nav class="module-subnav"><a href="#identity">主体说明</a><a href="#contract">合同付款</a><a href="#data">数据保密</a><a href="#evidence">成果证据</a><a href="#ai">AI边界</a><a href="#contact">核验联系</a></nav></div></section>
+<section class="module-hero"><div class="module-inner"><span class="module-eyebrow">TRUST / CONTRACT / PRIVACY / EVIDENCE</span><h1>信任中心</h1><p class="module-lead">统一公开QilyLean的品牌性质、商业签约主体、合同与付款边界、数据保密、项目成果口径、AI使用边界及站点数据同步状态。</p><nav class="module-subnav"><a href="#identity">主体说明</a><a href="#contract">合同付款</a><a href="#data">数据保密</a><a href="#evidence">成果证据</a><a href="#evidence-levels">证据分级</a><a href="#publication">内容日期</a><a href="#ai">AI边界</a><a href="#contact">核验联系</a></nav></div></section>
 <section class="module-section alt"><div class="module-inner"><div class="module-heading"><h2>公开透明状态</h2><p>以下数据由统一站点数据源自动生成，并随内容发布流程同步更新。</p></div><div class="trust-status">
 <div><strong>${data.terminology.total}</strong><span>术语及单点课件</span></div><div><strong>${data.briefs.total}</strong><span>今日简报总数</span></div><div><strong>${escapeHtml(data.briefs.latestDate)}</strong><span>最新简报日期</span></div><div><strong>${search.indexedEntries || '自动'}</strong><span>站内搜索索引条目</span></div>
 </div><div class="trust-callout" style="margin-top:18px"><strong>同步版本：</strong>${escapeHtml(data.generatedAt || buildDate)}。术语数量、简报数量、最新日期、知识模块统计、首页最新内容、Sitemap lastmod与站内搜索索引由自动化流程统一核算；搜索引擎外部摘要的刷新时间仍由各搜索平台决定。</div></div></section>
@@ -147,6 +150,18 @@ function trustPage(data) {
 <article class="trust-card"><h3>案例不构成必然结果承诺</h3><p>历史项目结果受产品、流程、资源、管理基础和实施条件影响；类似企业采用相同方法，不代表必然获得相同收益。</p></article>
 <article class="trust-card"><h3>正式核验采用分级展示</h3><p>公开网页提供脱敏证据；确认合作意向后，可在保密约定下核验更完整的基线、过程、结案、财务和验收材料。</p><p><a href="/projects/lean-improvement-evidence/">查看公开脱敏项目佐证 →</a></p></article>
 </div></div></section>
+<section class="module-section" id="evidence-levels"><div class="module-inner"><div class="module-heading"><h2>公开成果证据分级</h2><p>为避免把经验陈述、过程验证、财务核定和预测模型混为一谈，公开成果统一使用以下内部披露等级；该等级不是第三方认证。</p></div><div class="trust-levels">
+<article class="trust-level"><b>A</b><strong>已核定</strong><span>存在企业财务、管理层、验收文件或等效正式记录；公开时仍须脱敏。</span></article>
+<article class="trust-level"><b>B</b><strong>已验证</strong><span>有改善前后数据、过程记录或现场验收，但未取得完整财务核定。</span></article>
+<article class="trust-level"><b>C</b><strong>阶段估算</strong><span>依据基线、模型与假设测算，必须明确“预估／阶段性估算／待核验”。</span></article>
+<article class="trust-level"><b>D</b><strong>经验陈述</strong><span>用于说明任职经历、参与范围和方法实践；正式合作前可按保密条件进一步核验。</span></article>
+</div><div class="trust-callout" style="margin-top:18px"><strong>累计成果说明：</strong>职业生涯累计改善贡献包含本人主导、组织推进及跨部门团队共同完成的多年度项目，不等同于QilyLean品牌成立后的独立营收，也不代表任何新项目必然取得相同结果。</div></div></section>
+<section class="module-section alt" id="publication"><div class="module-inner"><div class="module-heading"><h2>内容日期、版本与非背书声明</h2></div><div class="trust-grid">
+<article class="trust-card"><h3>历史简报日期用于档案定位</h3><p>历史简报依据历年制造实践、工作记录和项目经验持续整理。页面日期用于知识档案排序与主题定位；除非页面另有可核验说明，不单独作为该网页在对应日期首次公开发布的证明。</p></article>
+<article class="trust-card"><h3>不虚构资质、授权或客户背书</h3><p>除非页面明确列明颁发方、核验来源和适用范围，学习证明、平台记录、个人作品及项目经历不表述为政府资质、行业认证、官方授权、合作伙伴身份或客户推荐。</p></article>
+<article class="trust-card"><h3>页面允许持续修订</h3><p>知识内容、统计数字、链接和展示结构可随事实核验与站点维护更新；涉及合同、付款、成果和责任边界时，以最新页面与双方正式书面文件为准。</p></article>
+<article class="trust-card"><h3>欢迎纠错与证据核验</h3><p>发现数字、日期、术语、链接或项目表述存在疑问时，可通过官网公开联系方式提出；经核验属实的错误将修订，并同步更新搜索索引和相关页面。</p></article>
+</div></div></section>
 <section class="module-section" id="ai"><div class="module-inner"><div class="module-heading"><h2>AI、专业判断与责任边界</h2></div><div class="trust-callout">QilyLean AI及相关自动化工具用于知识检索、资料整理、方案辅助、代码生成和经验复用。涉及现场安全、法律合同、税务财务、质量放行、设备参数、人员任用及重大经营决策时，必须由具备相应授权和专业能力的人员复核。AI输出不替代现场事实确认、法定检验、专业签字和管理审批。</div></div></section>
 <section class="module-section alt" id="contact"><div class="module-inner"><div class="module-heading"><h2>主体与付款信息核验</h2><p>签约、付款或资料交换前，可通过以下官网公开渠道进行核验。</p></div><div class="trust-contact"><a href="tel:13450014003">电话：134 5001 4003</a><a href="mailto:396767769@qq.com">邮箱：396767769@qq.com</a></div><div class="module-actions" style="margin-top:18px"><a href="/cooperation/">进入项目合作</a><a class="secondary" href="/projects/">查看代表项目</a><a class="secondary" href="/knowledge/">查看知识分享</a></div></div></section>
 </main>
@@ -158,7 +173,7 @@ function cooperationDisclosure(data) {
   return `<!-- QILY-TRUST:COOPERATION:START -->
 <section class="module-section alt" id="contracting-compliance"><div class="module-inner"><div class="module-heading"><h2>签约主体与合规边界</h2><p>在进入报价、合同和付款前，先明确实际责任主体、收款路径、发票条件、资料保密和项目验收边界。</p></div><div class="boundary">
 <article><h3>当前品牌与默认签约主体</h3><ul><li>QilyLean｜启力精益为丁启利发起并运营的个人专业品牌与项目合作窗口，本身不是独立法人主体。</li><li>未另行书面指定依法登记主体时，默认商业签约及交付责任主体为<strong>丁启利（自然人）</strong>。</li><li>若项目由企业、工作室或合作机构签约，以合同首页、签章、收款账户及发票信息所载实际主体为准。</li></ul></article>
-<article><h3>合作与付款边界</h3><ul><li>网页价格与服务说明仅供范围评估，不替代正式报价和合同。</li><li>仅向合同或双方书面确认文件载明的账户付款；账户变更须通过官网公开渠道复核。</li><li>发票类型、税率和开票主体在签约前按实际主体书面确认。</li><li>项目成果、客户资料、AI辅助及保密边界详见独立信任中心。</li></ul></article>
+<article><h3>合作、付款与证据边界</h3><ul><li>网页价格与服务说明仅供范围评估，不替代正式报价和合同。</li><li>仅向合同或双方书面确认文件载明的账户付款；账户变更须通过官网公开渠道复核。</li><li>发票类型、税率和开票主体在签约前按实际主体书面确认。</li><li>项目结果按已核定、已验证、阶段估算或经验陈述分级披露；历史案例不构成新项目收益承诺。</li><li>未经明确授权，不把客户名称、合作经历或内部材料表述为客户推荐、官方合作或商业背书。</li></ul></article>
 </div><div class="module-actions"><a href="${data.compliance.trustCenterUrl}">进入QilyLean信任中心</a><a class="secondary" href="${data.compliance.trustCenterUrl}#contract">查看合同与付款边界</a><a class="secondary" href="${data.compliance.trustCenterUrl}#data">查看数据保密说明</a></div></div></section>
 <!-- QILY-TRUST:COOPERATION:END -->`;
 }
@@ -169,7 +184,7 @@ function homeTrustBlock(data) {
 <div class="metric"><strong>丁启利</strong><span>未另行书面指定依法登记主体时，默认商业签约与项目责任主体为丁启利本人。</span><em><a href="/trust/#identity">查看主体说明</a></em></div>
 <div class="metric"><strong>合同为准</strong><span>网页范围、价格和案例用于沟通；正式交付物、费用、周期、税费及验收以合同为准。</span><em><a href="/trust/#contract">查看合同边界</a></em></div>
 <div class="metric"><strong>资料保密</strong><span>客户名称、成本、工艺及经营数据按最小必要和授权范围使用，公开案例须脱敏。</span><em><a href="/trust/#data">查看保密说明</a></em></div>
-<div class="metric"><strong>${data.search && data.search.indexedEntries ? data.search.indexedEntries : '自动'}条</strong><span>全站搜索索引与术语、简报、Sitemap及首页统计同步生成。</span><em><a href="/trust/">进入信任中心</a></em></div>
+<div class="metric"><strong>证据分级</strong><span>项目结果按已核定、已验证、阶段估算和经验陈述分类展示，避免把预测值当成已实现结果。</span><em><a href="/trust/#evidence-levels">查看证据分级</a></em></div>
 </div></div></section>
 <!-- QILY-TRUST:HOME:END -->`;
 }

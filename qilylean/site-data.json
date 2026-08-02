@@ -31,6 +31,9 @@
     "paymentRule": "仅向正式合同或双方书面确认文件载明的账户付款；变更收款账户时须通过官网公开联系方式复核。",
     "dataRule": "客户资料按必要、最小化和保密原则使用；涉及客户名称、工艺、成本、经营数据及人员信息的材料，仅在授权范围内处理。",
     "evidenceRule": "已核定值、阶段性估算值、团队成果与个人职责分别标注，不将预测收益表述为已实现收益。",
+    "evidenceLevelRule": "公开成果采用A已核定、B已验证、C阶段估算、D经验陈述四级口径；该分级是QilyLean内部披露规则，不是第三方认证。",
+    "publicationRule": "历史简报依据历年制造实践、工作记录与项目经验持续整理；页面日期用于知识档案排序与主题定位，不单独证明网页在该日首次公开发布。",
+    "credentialRule": "除非页面明确列明颁发方、核验来源和适用范围，不将学习证明、平台记录或个人作品表述为政府资质、行业认证、官方授权或客户背书。",
     "aiRule": "AI用于检索、整理和方案辅助，不替代现场核实、专业评审、管理决策及法律、财税、安全等专项意见。",
     "ndaVersion": "V1.0",
     "ndaDocumentName": "QilyLean项目保密声明",
@@ -42,7 +45,7 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 2851,
+    "indexedEntries": 2854,
     "indexedPages": 38,
     "terminologyTotal": 181,
     "briefTotal": 2581,
