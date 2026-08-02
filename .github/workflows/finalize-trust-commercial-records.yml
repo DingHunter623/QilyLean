@@ -1,0 +1,115 @@
+name: Finalize trust wording and commercial records
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/finalize-trust-commercial-records.js"
+      - "scripts/patch-finalizer-validation.js"
+      - ".github/workflows/finalize-trust-commercial-records.yml"
+      - "index.html"
+      - "cooperation/index.html"
+      - "projects/index.html"
+      - "trust/index.html"
+      - "qilylean/daily-insights.html"
+      - "qilylean/ding-qili-knowledge-base.json"
+      - "qilylean/ding-qili-digital-human.md"
+      - "site-brand-trust-v1.js"
+      - "sitemap.xml"
+      - "sitemap-core.xml"
+      - "projects/qilylean-commercial-deliveries/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "scripts/finalize-trust-commercial-records.js"
+      - "scripts/patch-finalizer-validation.js"
+      - ".github/workflows/finalize-trust-commercial-records.yml"
+  workflow_run:
+    workflows: ["Sync unified site metadata", "Build daily engineering brief archive"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: finalize-trust-commercial-records-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  finalize:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - name: Check out pull request or push revision
+        if: github.event_name != 'workflow_run'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Check out current main after upstream generators
+        if: github.event_name == 'workflow_run'
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Normalize finalizer validation contract
+        run: node scripts/patch-finalizer-validation.js
+
+      - name: Apply cumulative-result, archive and commercial-record rules
+        run: QILY_SKIP_INTERNAL_VALIDATE=1 node scripts/finalize-trust-commercial-records.js
+
+      - name: Refresh generated trust and search assets when available
+        shell: bash
+        run: |
+          if test -f scripts/build-trust-search-sync.js; then
+            node scripts/build-trust-search-sync.js
+            QILY_SKIP_INTERNAL_VALIDATE=1 node scripts/finalize-trust-commercial-records.js
+          fi
+
+      - name: Validate public integrity controls
+        shell: bash
+        run: |
+          node --check scripts/patch-finalizer-validation.js
+          node --check scripts/finalize-trust-commercial-records.js
+          test -s projects/qilylean-commercial-deliveries/index.html
+          test -s projects/qilylean-commercial-deliveries/records.json
+          test -s projects/qilylean-commercial-deliveries/delivery-record-template.html
+          test -s projects/qilylean-commercial-deliveries/review-authorization-template.html
+          grep -q '非QilyLean品牌独立营收' index.html
+          grep -q '职业生涯多年度参与、主导及组织推进的累计改善贡献' index.html
+          grep -q '不等同于网页首次公开发布日期' qilylean/daily-insights.html
+          grep -q 'QILY-ARCHIVE-STATIC-SCHEMA:START' qilylean/daily-insights.html
+          grep -q '当前公开记录：' projects/qilylean-commercial-deliveries/index.html
+          grep -q '不会被冒充为QilyLean商业订单' projects/qilylean-commercial-deliveries/index.html
+          grep -q '没有明确书面授权，不公开客户评价' projects/qilylean-commercial-deliveries/review-authorization-template.html
+          grep -q 'qilylean-commercial-deliveries' sitemap.xml
+          node - <<'NODE'
+          const fs = require('fs');
+          const files = ['index.html','cooperation/index.html','site-brand-trust-v1.js','qilylean/ding-qili-knowledge-base.json','qilylean/ding-qili-digital-human.md'];
+          const joined = files.filter(fs.existsSync).map(file => fs.readFileSync(file,'utf8')).join('\n');
+          if (/超千万元累计(?:项目)?改善收益/.test(joined)) throw new Error('Legacy unqualified cumulative-benefit wording remains');
+          const records = JSON.parse(fs.readFileSync('projects/qilylean-commercial-deliveries/records.json','utf8'));
+          if (!Array.isArray(records.records)) throw new Error('Commercial delivery records must be an array');
+          if (!records.publicationPolicy) throw new Error('Commercial publication policy missing');
+          NODE
+
+      - name: Commit generated public records and disclosure updates
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Trust wording, archive disclosure and commercial records are already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/finalize-trust-commercial-records.js index.html cooperation/index.html projects/index.html trust/index.html qilylean/daily-insights.html qilylean/ding-qili-knowledge-base.json qilylean/ding-qili-digital-human.md site-brand-trust-v1.js site-search.js qilylean/site-search-index.json sitemap.xml sitemap-core.xml projects/qilylean-commercial-deliveries
+          git commit -m "build: publish final trust wording and commercial register [skip ci]"
+          git push
