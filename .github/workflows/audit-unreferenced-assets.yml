@@ -1,0 +1,58 @@
+name: Audit unreferenced repository assets
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/audit-unreferenced-assets.js"
+      - ".github/workflows/audit-unreferenced-assets.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: audit-unreferenced-assets-main
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Audit tracked attachments and references
+        run: node scripts/audit-unreferenced-assets.js
+
+      - name: Validate report
+        shell: bash
+        run: |
+          node --check scripts/audit-unreferenced-assets.js
+          test -s maintenance/unreferenced-assets-report.json
+          node - <<'NODE'
+          const report = require('./maintenance/unreferenced-assets-report.json');
+          if (report.mode !== 'audit') throw new Error('Unexpected report mode');
+          if (!Array.isArray(report.deletable)) throw new Error('Deletion candidate list missing');
+          console.log(`Assets: ${report.assetFiles}; unreferenced: ${report.unreferencedAssets}; potential release: ${report.potentialBytesToRelease} bytes`);
+          NODE
+
+      - name: Commit audit report
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Asset audit report is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add maintenance/unreferenced-assets-report.json
+          git commit -m "chore: report unreferenced repository assets [skip ci]"
+          git push
