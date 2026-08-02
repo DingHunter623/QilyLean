@@ -25,10 +25,8 @@ const textExtensions = new Set([
 const extensionPattern = Array.from(assetExtensions)
   .map((item) => item.slice(1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
   .join('|');
-const referenceRegex = new RegExp(
-  "([^\\s\"'`()<>{}]+?\\.(?:" + extensionPattern + "))(?:[?#][^\\s\"'`()<>{}]*)?",
-  'gi'
-);
+const assetTokenPattern = new RegExp(`\\.(?:${extensionPattern})(?:[?#][^\\s]*)?$`, 'i');
+const tokenPattern = /[^\s"'`()<>{}]+/g;
 
 const protectedPathPatterns = [
   /^assets\/brand\//i,
@@ -56,7 +54,8 @@ function safeDecode(value) {
 
 function cleanReference(raw) {
   let value = String(raw || '').trim().replace(/\\/g, '/');
-  value = value.replace(/^[\s'"`(]+|[\s'"`)]+$/g, '');
+  if (value.includes('=')) value = value.slice(value.lastIndexOf('=') + 1);
+  value = value.replace(/^[\s'"`(]+|[\s'"`),;]+$/g, '');
   value = value.split('#')[0].split('?')[0];
   value = safeDecode(value);
   if (!value || /^(?:data|mailto|tel|javascript):/i.test(value)) return null;
@@ -76,11 +75,8 @@ function cleanReference(raw) {
 }
 
 function extractRawReferences(content) {
-  referenceRegex.lastIndex = 0;
-  const refs = [];
-  let match;
-  while ((match = referenceRegex.exec(content)) !== null) refs.push(match[1]);
-  return refs;
+  const tokens = content.match(tokenPattern) || [];
+  return tokens.filter((token) => assetTokenPattern.test(token));
 }
 
 function isProtectedCore(file) {
@@ -135,7 +131,8 @@ function main() {
         if (!candidateSet.has(key)) return;
         directReferences.add(key);
         if (!referenceSources.has(key)) referenceSources.set(key, []);
-        referenceSources.get(key).push(source);
+        const sources = referenceSources.get(key);
+        if (sources.length < 20 && !sources.includes(source)) sources.push(source);
       });
 
       basenameReferences.add(path.posix.basename(cleaned).toLowerCase());
@@ -168,7 +165,7 @@ function main() {
             : basenameOnly
               ? 'referenced-unique-basename'
               : 'no-reference-found',
-      sources: direct ? Array.from(new Set(referenceSources.get(key) || [])).slice(0, 20) : []
+      sources: direct ? (referenceSources.get(key) || []) : []
     };
 
     if (!protectedCore && !dynamicSequence && !referenced) deletable.push(record);
