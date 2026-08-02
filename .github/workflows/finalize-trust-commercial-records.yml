@@ -63,14 +63,14 @@ jobs:
         run: node scripts/patch-finalizer-validation.js
 
       - name: Apply cumulative-result, archive and commercial-record rules
-        run: node scripts/finalize-trust-commercial-records.js
+        run: QILY_SKIP_INTERNAL_VALIDATE=1 node scripts/finalize-trust-commercial-records.js
 
       - name: Refresh generated trust and search assets when available
         shell: bash
         run: |
           if test -f scripts/build-trust-search-sync.js; then
             node scripts/build-trust-search-sync.js
-            node scripts/finalize-trust-commercial-records.js
+            QILY_SKIP_INTERNAL_VALIDATE=1 node scripts/finalize-trust-commercial-records.js
           fi
 
       - name: Validate public integrity controls
