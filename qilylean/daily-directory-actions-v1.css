@@ -1,0 +1,32 @@
+/* QilyLean 今日简报目录操作按钮规范 v1
+ * “打开最新简报”适度拉宽并始终保持单行，兼顾桌面端和窄屏显示。
+ */
+
+html body .daily-index-heading > a[href]{
+  flex:0 0 auto!important;
+  min-width:160px!important;
+  width:auto!important;
+  padding-left:22px!important;
+  padding-right:22px!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  text-align:center!important;
+  line-height:1.25!important;
+}
+
+@media(max-width:860px){
+  html body .daily-index-heading > a[href]{
+    align-self:flex-start!important;
+    min-width:160px!important;
+    width:auto!important;
+  }
+}
+
+@media(max-width:420px){
+  html body .daily-index-heading > a[href]{
+    min-width:150px!important;
+    padding-left:18px!important;
+    padding-right:18px!important;
+  }
+}
