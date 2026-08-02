@@ -3,7 +3,6 @@
 
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
@@ -23,9 +22,15 @@ const textExtensions = new Set([
   '.ini', '.conf', '.map', '.webmanifest', '.svg'
 ]);
 
+const extensionPattern = Array.from(assetExtensions)
+  .map((item) => item.slice(1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+  .join('|');
+const referenceRegex = new RegExp(`([^\\s"'\\` + '`' + `()<>{}]+?\\.(?:${extensionPattern}))(?:[?#][^\\s"'\\` + '`' + `()<>{}]*)?`, 'gi');
+
 const protectedPathPatterns = [
   /^assets\/brand\//i,
   /^qilylean\/assets\/daily-[^/]+\.svg$/i,
+  /^projects\/lean-improvement-evidence\//i,
   /(?:^|\/)(?:favicon|apple-touch-icon|site-icon|browserconfig)(?:[._-]|$)/i,
   /(?:^|\/)[^/]*(?:logo|brandmark|wechat|weixin|qrcode|qr-code|home-qr)[^/]*$/i,
   /^maintenance\//i
@@ -47,9 +52,8 @@ function cleanReference(raw) {
   value = value.replace(/^['"`(]+|['"`)]+$/g, '');
   value = value.split('#')[0].split('?')[0];
   value = safeDecode(value);
-  if (!value) return null;
+  if (!value || /^(?:data|mailto|tel|javascript):/i.test(value)) return null;
 
-  if (/^(?:data|mailto|tel|javascript):/i.test(value)) return null;
   if (/^https?:\/\//i.test(value)) {
     try {
       const url = new URL(value);
@@ -63,29 +67,33 @@ function cleanReference(raw) {
 }
 
 function extractRawReferences(content) {
-  const ext = Array.from(assetExtensions).map((item) => item.slice(1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-  const regex = new RegExp(`([^\\s"'\\` + '`' + `()<>{}]+?\\.(?:${ext}))(?:[?#][^\\s"'\\` + '`' + `()<>{}]*)?`, 'gi');
+  referenceRegex.lastIndex = 0;
   const refs = [];
   let match;
-  while ((match = regex.exec(content)) !== null) refs.push(match[1]);
+  while ((match = referenceRegex.exec(content)) !== null) refs.push(match[1]);
   return refs;
 }
 
-function isProtected(file) {
+function isProtectedCore(file) {
   return protectedPathPatterns.some((pattern) => pattern.test(file));
 }
 
-function sha256(file) {
-  const hash = crypto.createHash('sha256');
-  hash.update(fs.readFileSync(path.join(root, file)));
-  return hash.digest('hex');
+function isDynamicSequence(file, textDirectories) {
+  const directory = path.posix.dirname(file);
+  if (!textDirectories.has(directory)) return false;
+  const stem = path.posix.basename(file, path.posix.extname(file));
+  return /(?:^|[-_ ])(?:page|slide|frame|sheet|thumb|preview|render|img|image|photo|scan|drawing|layout|view)[-_ ]?\d+/i.test(stem)
+    || /(?:^|[-_ ])\d{2,}(?:[-_ ]|$)/.test(stem);
 }
 
 function main() {
   const files = trackedFiles();
+  const textFiles = files.filter((file) => textExtensions.has(path.posix.extname(file).toLowerCase()));
+  const textDirectories = new Set(textFiles.map((file) => path.posix.dirname(file)));
   const candidates = files.filter((file) => assetExtensions.has(path.posix.extname(file).toLowerCase()));
   const candidateSet = new Set(candidates.map((file) => file.toLowerCase()));
   const basenameMap = new Map();
+
   candidates.forEach((file) => {
     const base = path.posix.basename(file).toLowerCase();
     if (!basenameMap.has(base)) basenameMap.set(base, []);
@@ -96,9 +104,7 @@ function main() {
   const basenameReferences = new Set();
   const referenceSources = new Map();
 
-  files.forEach((source) => {
-    const ext = path.posix.extname(source).toLowerCase();
-    if (!textExtensions.has(ext)) return;
+  textFiles.forEach((source) => {
     let content;
     try { content = fs.readFileSync(path.join(root, source), 'utf8'); } catch (_) { return; }
     extractRawReferences(content).forEach((raw) => {
@@ -109,7 +115,7 @@ function main() {
         path.posix.normalize(path.posix.join(path.posix.dirname(source), cleaned))
       ]);
       variants.forEach((variant) => {
-        const key = variant.replace(/^\.\.\//g, '').toLowerCase();
+        const key = variant.replace(/^(?:\.\.\/)+/, '').toLowerCase();
         if (!candidateSet.has(key)) return;
         directReferences.add(key);
         if (!referenceSources.has(key)) referenceSources.set(key, []);
@@ -119,62 +125,56 @@ function main() {
     });
   });
 
-  const fileMeta = candidates.map((file) => {
-    const stat = fs.statSync(path.join(root, file));
+  const deletable = [];
+  const retained = [];
+
+  candidates.forEach((file) => {
+    const target = path.join(root, file);
+    const stat = fs.statSync(target);
     const key = file.toLowerCase();
     const base = path.posix.basename(file).toLowerCase();
     const direct = directReferences.has(key);
     const uniqueBasename = (basenameMap.get(base) || []).length === 1;
     const basenameOnly = !direct && uniqueBasename && basenameReferences.has(base);
-    return {
+    const protectedCore = isProtectedCore(file);
+    const dynamicSequence = isDynamicSequence(file, textDirectories);
+    const referenced = direct || basenameOnly;
+
+    const record = {
       path: file,
-      size: stat.size,
-      hash: sha256(file),
-      protected: isProtected(file),
-      referenced: direct || basenameOnly,
-      referenceMode: direct ? 'path' : (basenameOnly ? 'unique-basename' : null),
+      bytes: stat.size,
+      reason: protectedCore
+        ? 'protected-core-asset'
+        : dynamicSequence
+          ? 'protected-dynamic-sequence'
+          : direct
+            ? 'referenced-path'
+            : basenameOnly
+              ? 'referenced-unique-basename'
+              : 'no-reference-found',
       sources: direct ? Array.from(new Set(referenceSources.get(key) || [])).slice(0, 20) : []
     };
-  });
 
-  const hashGroups = new Map();
-  fileMeta.forEach((item) => {
-    if (!hashGroups.has(item.hash)) hashGroups.set(item.hash, []);
-    hashGroups.get(item.hash).push(item);
-  });
-
-  const deletable = [];
-  const retained = [];
-  fileMeta.forEach((item) => {
-    const group = hashGroups.get(item.hash) || [];
-    const duplicateOfReferenced = group.some((peer) => peer.path !== item.path && (peer.referenced || peer.protected));
-    const record = {
-      path: item.path,
-      bytes: item.size,
-      reason: item.protected
-        ? 'protected-core-asset'
-        : item.referenced
-          ? `referenced-${item.referenceMode}`
-          : duplicateOfReferenced
-            ? 'unreferenced-duplicate-of-retained-file'
-            : 'no-reference-found',
-      sources: item.sources
-    };
-    if (!item.protected && !item.referenced) deletable.push(record);
+    if (!protectedCore && !dynamicSequence && !referenced) deletable.push(record);
     else retained.push(record);
   });
 
   deletable.sort((a, b) => b.bytes - a.bytes || a.path.localeCompare(b.path));
   retained.sort((a, b) => a.path.localeCompare(b.path));
 
+  const potentialBytes = deletable.reduce((sum, item) => sum + item.bytes, 0);
+  const deletionRatio = candidates.length ? deletable.length / candidates.length : 0;
+  if (apply && deletionRatio > 0.65) {
+    throw new Error(`Safety stop: ${deletable.length}/${candidates.length} assets were classified as unreferenced (${(deletionRatio * 100).toFixed(1)}%). Review the audit before applying.`);
+  }
+
   const deleted = [];
   if (apply) {
     deletable.forEach((item) => {
       const target = path.join(root, item.path);
-      if (fs.existsSync(target)) {
-        fs.unlinkSync(target);
-        deleted.push(item);
-      }
+      if (!fs.existsSync(target)) return;
+      fs.unlinkSync(target);
+      deleted.push(item);
     });
   }
 
@@ -185,17 +185,17 @@ function main() {
     assetFiles: candidates.length,
     retainedAssets: retained.length,
     unreferencedAssets: deletable.length,
-    potentialBytesToRelease: deletable.reduce((sum, item) => sum + item.bytes, 0),
+    potentialBytesToRelease: potentialBytes,
     deletedAssets: deleted.length,
     deletedBytes: deleted.reduce((sum, item) => sum + item.bytes, 0),
-    note: 'This scans the current branch only. Deleting files reduces the current tree and Pages payload; Git history still retains previous blobs until a separate history rewrite.',
+    note: 'Current-branch cleanup only. Git history retains older blobs until a separate, explicitly approved history rewrite.',
     deletable,
     retained
   };
 
   fs.mkdirSync(path.dirname(reportFile), { recursive: true });
   fs.writeFileSync(reportFile, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
-  process.stdout.write(`${apply ? 'Deleted' : 'Found'} ${apply ? deleted.length : deletable.length} unreferenced assets; ${apply ? report.deletedBytes : report.potentialBytesToRelease} bytes.\n`);
+  process.stdout.write(`${apply ? 'Deleted' : 'Found'} ${apply ? deleted.length : deletable.length} unreferenced assets; ${apply ? report.deletedBytes : potentialBytes} bytes.\n`);
 }
 
 main();
