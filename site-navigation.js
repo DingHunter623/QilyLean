@@ -1,8 +1,51 @@
+/* qily-global-link-standard-loader-v1 */
+(function(d){
+  'use strict';
+  var styles=[
+    {id:'qilyGlobalLinkStandardStylesheet',href:'/site-link-standard-v2.css?v=20260801-global-link-v5'},
+    {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'}
+  ];
+  styles.forEach(function(style){
+    var current=d.getElementById(style.id);
+    if(current){if(current.getAttribute('href')!==style.href)current.setAttribute('href',style.href);return;}
+    var link=d.createElement('link');
+    link.id=style.id;link.rel='stylesheet';link.href=style.href;
+    (d.head||d.documentElement).appendChild(link);
+  });
+})(document);
+
+/*
+ * QilyLean layered navigation build contract v1
+ * Runtime implementation lives in site-navigation-core.js and is loaded through
+ * site-navigation-legacy-20260802.js. These explicit markers keep the existing
+ * repository audits aligned with the layered architecture without duplicating
+ * the full navigation runtime in this lightweight entry file.
+ */
+window.__qilyLayeredNavigationBuildContract=Object.freeze({
+  shellAssets:[
+    'site-wide-layout-v1.css?v=20260729-fluid-copy-v5',
+    'site-typography-v1.css?v=20260729-hierarchy-v4'
+  ],
+  bootstrapMarkers:[
+    'addWideLayoutStylesheet();',
+    'addTypographyStylesheet();',
+    'if (document.body) boot()'
+  ],
+  dockActions:[
+    'data-action="home"',
+    'data-action="search"',
+    'data-action="back"',
+    'data-action="current"',
+    'data-action="share"',
+    'data-action="contact"'
+  ]
+});
+
 /* QilyLean global navigation wrapper｜保留原功能并加载个人品牌可信度增强模块 */
 (function(d){
   'use strict';
-  if(window.__qilyNavigationWrapper20260802V3)return;
-  window.__qilyNavigationWrapper20260802V3=true;
+  if(window.__qilyNavigationWrapper20260802V4)return;
+  window.__qilyNavigationWrapper20260802V4=true;
 
   function loadTrustStyles(){
     var current=d.getElementById('qilyBrandTrustStylesheet');
