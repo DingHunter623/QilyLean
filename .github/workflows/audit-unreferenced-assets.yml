@@ -1,4 +1,4 @@
-name: Prune unreferenced repository assets
+name: Audit unreferenced repository assets
 
 on:
   push:
@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  prune:
+  audit:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -29,35 +29,30 @@ jobs:
         with:
           node-version: 20
 
-      - name: Remove attachments with no repository references
-        run: node scripts/audit-unreferenced-assets.js --apply
+      - name: Audit attachments and repository references
+        run: node scripts/audit-unreferenced-assets.js
 
-      - name: Validate cleanup report and remaining site sources
+      - name: Validate cleanup report
         shell: bash
         run: |
           node --check scripts/audit-unreferenced-assets.js
           test -s maintenance/unreferenced-assets-report.json
           node - <<'NODE'
-          const fs = require('fs');
           const report = require('./maintenance/unreferenced-assets-report.json');
-          if (report.mode !== 'apply') throw new Error('Unexpected report mode');
+          if (report.mode !== 'audit') throw new Error('Unexpected report mode');
           if (!Array.isArray(report.deletable) || !Array.isArray(report.retained)) throw new Error('Cleanup report is incomplete');
-          if (report.deletedAssets !== report.unreferencedAssets) throw new Error('Not every approved unreferenced asset was deleted');
-          for (const item of report.deletedAssets ? report.deletable : []) {
-            if (fs.existsSync(item.path)) throw new Error(`Deleted asset still exists: ${item.path}`);
-          }
-          console.log(`Deleted ${report.deletedAssets} unreferenced assets and released ${report.deletedBytes} bytes from the current branch tree.`);
+          console.log(`Assets: ${report.assetFiles}; unreferenced: ${report.unreferencedAssets}; potential release: ${report.potentialBytesToRelease} bytes`);
           NODE
 
-      - name: Commit attachment cleanup
+      - name: Commit attachment audit report
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "No unreferenced attachments required removal."
+            echo "Attachment audit report is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "chore: remove unreferenced repository attachments [skip ci]"
+          git add maintenance/unreferenced-assets-report.json
+          git commit -m "chore: report unreferenced repository attachments [skip ci]"
           git push
