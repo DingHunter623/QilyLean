@@ -1,0 +1,56 @@
+/* QilyLean｜个人专业品牌可信度与小步成交路径增强 */
+:root{
+  --ql-trust-ink:#17322f;
+  --ql-trust-muted:#58716d;
+  --ql-trust-line:#cfe0dc;
+  --ql-trust-paper:#f4faf8;
+  --ql-trust-deep:#0f4b5a;
+  --ql-trust-teal:#178b94;
+  --ql-trust-gold:#c99a45;
+  --ql-trust-white:#fff;
+}
+.ql-trust-strip{position:relative;z-index:8;border-bottom:1px solid var(--ql-trust-line);background:linear-gradient(90deg,#eff8f5,#fff9ec)}
+.ql-trust-strip-inner{width:min(1220px,calc(100% - 36px));margin:auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0;color:var(--ql-trust-ink);font-size:14px;line-height:1.55}
+.ql-trust-strip-copy{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}
+.ql-trust-strip-copy strong{color:var(--ql-trust-deep);font-size:15px}
+.ql-trust-strip-copy span{position:relative;padding-left:13px}
+.ql-trust-strip-copy span:before{content:'✓';position:absolute;left:0;color:var(--ql-trust-teal);font-weight:900}
+.ql-trust-strip-actions{display:flex;flex-wrap:wrap;gap:8px}
+.ql-trust-strip-actions a{display:inline-flex;align-items:center;min-height:34px;padding:5px 12px;border:1px solid #b9d3cd;border-radius:999px;color:var(--ql-trust-deep);background:#fff;text-decoration:none;font-weight:850;white-space:nowrap}
+.ql-trust-strip-actions a:first-child{color:#fff;background:var(--ql-trust-deep);border-color:var(--ql-trust-deep)}
+.ql-trust-module{width:min(1220px,calc(100% - 36px));margin:clamp(28px,4vw,52px) auto;padding:clamp(22px,3.5vw,38px);border:1px solid var(--ql-trust-line);border-top:5px solid var(--ql-trust-gold);background:linear-gradient(145deg,#fff,#f4faf8);box-shadow:0 18px 46px rgba(15,75,90,.10);color:var(--ql-trust-ink)}
+.ql-trust-module *{box-sizing:border-box}
+.ql-trust-kicker{display:block;margin-bottom:8px;color:#94702f;font-size:13px;font-weight:950;letter-spacing:.08em}
+.ql-trust-module h2{margin:0 0 10px;color:var(--ql-trust-deep);font-size:clamp(28px,3vw,42px);line-height:1.18}
+.ql-trust-module>.ql-trust-lead{max-width:980px;margin:0;color:var(--ql-trust-muted);font-size:17px;line-height:1.8}
+.ql-business-grid,.ql-path-grid,.ql-asset-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:22px}
+.ql-business-card,.ql-path-card,.ql-asset-card{display:flex;flex-direction:column;min-height:210px;padding:20px;border:1px solid var(--ql-trust-line);border-top:4px solid var(--ql-trust-teal);background:#fff}
+.ql-business-card:nth-child(2),.ql-path-card:nth-child(2),.ql-asset-card:nth-child(2){border-top-color:var(--ql-trust-gold)}
+.ql-business-card:nth-child(3),.ql-path-card:nth-child(3),.ql-asset-card:nth-child(3){border-top-color:#9e4a34}
+.ql-business-card small,.ql-path-card small,.ql-asset-card small{color:#7c6a48;font-weight:900;letter-spacing:.04em}
+.ql-business-card h3,.ql-path-card h3,.ql-asset-card h3{margin:8px 0 7px;color:var(--ql-trust-deep);font-size:22px;line-height:1.3}
+.ql-business-card p,.ql-path-card p,.ql-asset-card p{margin:0;color:var(--ql-trust-muted);font-size:15.5px;line-height:1.72}
+.ql-business-card ul,.ql-asset-card ul{margin:12px 0 0;padding-left:19px;color:#405d58;font-size:15px;line-height:1.72}
+.ql-business-card a,.ql-asset-card a{align-self:flex-start;margin-top:auto;padding-top:16px;color:var(--ql-trust-deep);font-weight:900;text-decoration:none}
+.ql-business-card a:after,.ql-asset-card a:after{content:' →'}
+.ql-trust-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.ql-trust-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:8px 17px;border:1px solid var(--ql-trust-deep);border-radius:999px;color:var(--ql-trust-deep);background:#fff;text-decoration:none;font-weight:900}
+.ql-trust-actions a:first-child{color:#fff;background:var(--ql-trust-deep)}
+.ql-project-rolebar{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 20px;padding:13px 15px;border:1px solid var(--ql-trust-line);border-left:5px solid var(--ql-trust-gold);background:#f5faf8}
+.ql-project-rolebar strong{width:100%;color:var(--ql-trust-deep);font-size:14px}
+.ql-project-rolebar span{display:inline-flex;align-items:center;padding:5px 10px;border:1px solid #c6dad5;border-radius:999px;color:#345b55;background:#fff;font-size:13px;font-weight:850}
+.ql-proof-note{margin-top:18px;padding:15px 17px;border-left:4px solid var(--ql-trust-gold);background:#fff8e9;color:#5f533e;font-size:14.5px;line-height:1.75}
+.ql-proof-note strong{color:#6f5220}
+.ql-start-small{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:20px;align-items:start;margin-top:22px}
+.ql-start-small-copy{padding:20px;border:1px solid var(--ql-trust-line);background:#fff}
+.ql-start-small-copy h3{margin:0 0 8px;color:var(--ql-trust-deep);font-size:23px}
+.ql-start-small-copy p{margin:0;color:var(--ql-trust-muted);line-height:1.8}
+.ql-start-small-list{margin:0;padding:18px 20px 18px 38px;border:1px solid var(--ql-trust-line);background:#edf7f4;color:#315a54;line-height:1.9}
+.ql-certificate-disclaimer{width:min(980px,calc(100% - 36px));margin:18px auto;padding:16px 18px;border:1px solid #e4c98f;border-left:5px solid var(--ql-trust-gold);background:#fff8e8;color:#594c36;font-size:15px;line-height:1.75}
+.ql-certificate-disclaimer strong{color:#6c4c16}
+.ql-archive-note{width:min(1220px,calc(100% - 36px));margin:18px auto;padding:13px 16px;border:1px solid var(--ql-trust-line);background:#f5faf8;color:#4f6a65;font-size:14px;line-height:1.7}
+.ql-archive-note strong{color:var(--ql-trust-deep)}
+.ql-small-scope-badge{display:inline-flex;align-items:center;margin:8px 0;padding:5px 10px;border:1px solid #d7bd82;border-radius:999px;color:#72551e;background:#fff8e8;font-size:13px;font-weight:900}
+@media(max-width:980px){.ql-business-grid,.ql-path-grid,.ql-asset-grid{grid-template-columns:1fr 1fr}.ql-start-small{grid-template-columns:1fr}}
+@media(max-width:720px){.ql-trust-strip-inner{align-items:flex-start;flex-direction:column}.ql-trust-strip-actions{width:100%}.ql-trust-strip-actions a{flex:1}.ql-business-grid,.ql-path-grid,.ql-asset-grid{grid-template-columns:1fr}.ql-trust-module{width:min(100% - 24px,1220px);padding:20px}.ql-business-card,.ql-path-card,.ql-asset-card{min-height:0}.ql-trust-actions a{width:100%}}
+@media print{.ql-trust-strip,.ql-trust-module,.ql-project-rolebar,.ql-certificate-disclaimer,.ql-archive-note{display:none!important}}
