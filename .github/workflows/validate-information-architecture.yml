@@ -1,0 +1,67 @@
+name: Validate information architecture
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "site-information-architecture-v1.js"
+      - "site-information-architecture-v1.css"
+      - "site-navigation.js"
+      - ".github/workflows/validate-information-architecture.yml"
+  push:
+    branches: [main]
+    paths:
+      - "site-information-architecture-v1.js"
+      - "site-information-architecture-v1.css"
+      - "site-navigation.js"
+      - ".github/workflows/validate-information-architecture.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-information-architecture-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check site-information-architecture-v1.js
+          node --check site-navigation.js
+
+      - name: Validate information hierarchy contract
+        shell: bash
+        run: |
+          test -s site-information-architecture-v1.css
+          test -s site-information-architecture-v1.js
+          grep -q 'qilyInformationArchitectureStylesheet' site-navigation.js
+          grep -q 'site-information-architecture-v1.js?v=20260802-commercial-focus-v1' site-navigation.js
+          grep -q '三类核心业务' site-information-architecture-v1.js
+          grep -q '专业标签与能力边界' site-information-architecture-v1.js
+          grep -q '职业经历摘要与口径说明' site-information-architecture-v1.js
+          grep -q '项目结果如何阅读' site-information-architecture-v1.js
+          grep -q '交付、付款与验收一页看懂' site-information-architecture-v1.js
+          grep -q '知识资产的定位与边界' site-information-architecture-v1.js
+          grep -q '不等同于QilyLean品牌成立后的独立商业订单' site-information-architecture-v1.js
+          grep -q '正式项目以双方签署合同为准' site-information-architecture-v1.js
+
+      - name: Guard against visual regressions
+        shell: bash
+        run: |
+          grep -q '@media(max-width:820px)' site-information-architecture-v1.css
+          grep -q 'focus-visible' site-information-architecture-v1.css
+          grep -q 'white-space:nowrap' site-information-architecture-v1.css
+          grep -q 'qily-home-commercial-focus' site-information-architecture-v1.css
