@@ -13,10 +13,13 @@ for (const relativePath of files) {
   let previous;
   do {
     previous = content;
-    content = content.replace(/data-qily-static-source="([^"]+)"\s+data-qily-static-source="\1"/g, 'data-qily-static-source="$1"');
+    content = content
+      .replace(/data-qily-static-source="([^"]+)"\s+data-qily-static-source="\1"/g, 'data-qily-static-source="$1"')
+      .replace(/^[ \t]+$/gm, '')
+      .replace(/\n{3,}/g, '\n\n');
   } while (content !== previous);
-  const normalized = content.endsWith('\n') ? content : `${content}\n`;
+  const normalized = content.trimEnd() + '\n';
   if (fs.readFileSync(target, 'utf8') !== normalized) fs.writeFileSync(target, normalized, 'utf8');
 }
 
-process.stdout.write('Normalized static-source attributes.\n');
+process.stdout.write('Normalized static-source attributes and whitespace.\n');
