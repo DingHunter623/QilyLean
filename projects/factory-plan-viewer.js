@@ -49,10 +49,19 @@
 
   function cardOf(trigger){return trigger.closest('.factory-plan-card');}
   function titleOf(trigger){
+    var custom=trigger.getAttribute('data-plan-title');
+    if(custom)return custom.trim();
     var heading=cardOf(trigger)&&cardOf(trigger).querySelector('h3');
     return heading?heading.textContent.trim():'新工厂规划图纸';
   }
+  function previewSourceOf(trigger){
+    var img=trigger.querySelector('img');
+    if(!img)return '';
+    return img.currentSrc||img.getAttribute('src')||'';
+  }
   function sourceOf(trigger){
+    var original=trigger.getAttribute('data-plan-source');
+    if(original)return original;
     var img=trigger.querySelector('img');
     if(!img)return '';
     var srcset=img.getAttribute('srcset');
@@ -93,9 +102,18 @@
     counter.textContent=(activeIndex+1)+' / '+triggers.length;
     prevButton.hidden=triggers.length<2;
     nextButton.hidden=triggers.length<2;
-    note.textContent=defaultNote;
+    note.textContent='高清原图加载中；完成后可适屏、缩放及连续切换。';
+    viewer.onload=function(){note.textContent=defaultNote;calculateBaseWidth();};
+    viewer.onerror=function(){
+      var fallback=previewSourceOf(trigger);
+      if(fallback&&viewer.getAttribute('src')!==fallback){
+        note.textContent='高清原图暂未载入，已切换轻量预览。';
+        viewer.src=fallback;
+        return;
+      }
+      note.textContent='图纸暂未载入，请稍后重新打开。';
+    };
     viewer.src=sourceOf(trigger);
-    viewer.onload=calculateBaseWidth;
   }
   function open(index,trigger){
     previousFocus=trigger||document.activeElement;
@@ -109,6 +127,8 @@
     lightbox.classList.remove('show');
     lightbox.setAttribute('aria-hidden','true');
     document.body.classList.remove('factory-plan-viewer-open');
+    viewer.onload=null;
+    viewer.onerror=null;
     viewer.removeAttribute('src');
     if(previousFocus&&typeof previousFocus.focus==='function')previousFocus.focus();
   }
@@ -159,12 +179,13 @@
     else show(activeIndex+(dy<0?1:-1));
   },{passive:true});
   document.addEventListener('keydown',function(event){
-    if(!lightbox.classList.contains('show'))return;
-    if((event.ctrlKey||event.metaKey)&&event.key.toLowerCase()==='p'){
+    var protectedShortcut=(event.ctrlKey||event.metaKey)&&['p','s'].indexOf(event.key.toLowerCase())!==-1;
+    if(protectedShortcut){
       event.preventDefault();
-      note.textContent='图纸仅限在线预览，当前未开放打印功能。';
+      if(lightbox.classList.contains('show'))note.textContent='图纸仅限在线预览，当前未开放下载、另存或打印功能。';
       return;
     }
+    if(!lightbox.classList.contains('show'))return;
     if(event.key==='Escape')close();
     else if(event.key==='ArrowLeft')show(activeIndex-1);
     else if(event.key==='ArrowRight')show(activeIndex+1);
@@ -175,4 +196,7 @@
   window.addEventListener('resize',function(){
     if(lightbox.classList.contains('show'))calculateBaseWidth();
   },{passive:true});
+  window.addEventListener('beforeprint',function(){
+    if(lightbox.classList.contains('show'))close();
+  });
 })();
