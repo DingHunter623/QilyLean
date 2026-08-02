@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "scripts/finalize-trust-commercial-records.js"
+      - "scripts/patch-finalizer-validation.js"
       - ".github/workflows/finalize-trust-commercial-records.yml"
       - "index.html"
       - "cooperation/index.html"
@@ -21,6 +22,7 @@ on:
     branches: [main]
     paths:
       - "scripts/finalize-trust-commercial-records.js"
+      - "scripts/patch-finalizer-validation.js"
       - ".github/workflows/finalize-trust-commercial-records.yml"
   workflow_run:
     workflows: ["Sync unified site metadata", "Build daily engineering brief archive"]
@@ -57,6 +59,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Normalize finalizer validation contract
+        run: node scripts/patch-finalizer-validation.js
+
       - name: Apply cumulative-result, archive and commercial-record rules
         run: node scripts/finalize-trust-commercial-records.js
 
@@ -71,6 +76,7 @@ jobs:
       - name: Validate public integrity controls
         shell: bash
         run: |
+          node --check scripts/patch-finalizer-validation.js
           node --check scripts/finalize-trust-commercial-records.js
           test -s projects/qilylean-commercial-deliveries/index.html
           test -s projects/qilylean-commercial-deliveries/records.json
@@ -104,6 +110,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html cooperation/index.html projects/index.html trust/index.html qilylean/daily-insights.html qilylean/ding-qili-knowledge-base.json qilylean/ding-qili-digital-human.md site-brand-trust-v1.js site-search.js qilylean/site-search-index.json sitemap.xml sitemap-core.xml projects/qilylean-commercial-deliveries
+          git add scripts/finalize-trust-commercial-records.js index.html cooperation/index.html projects/index.html trust/index.html qilylean/daily-insights.html qilylean/ding-qili-knowledge-base.json qilylean/ding-qili-digital-human.md site-brand-trust-v1.js site-search.js qilylean/site-search-index.json sitemap.xml sitemap-core.xml projects/qilylean-commercial-deliveries
           git commit -m "build: publish final trust wording and commercial register [skip ci]"
           git push
