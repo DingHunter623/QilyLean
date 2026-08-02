@@ -1,8 +1,8 @@
 /* QilyLean global navigation wrapper｜保留原功能并加载个人品牌可信度增强模块 */
 (function(d){
   'use strict';
-  if(window.__qilyNavigationWrapper20260802V2)return;
-  window.__qilyNavigationWrapper20260802V2=true;
+  if(window.__qilyNavigationWrapper20260802V3)return;
+  window.__qilyNavigationWrapper20260802V3=true;
 
   function loadTrustStyles(){
     var current=d.getElementById('qilyBrandTrustStylesheet');
@@ -35,9 +35,26 @@
     (d.head||d.documentElement).appendChild(link);
   }
 
+  function loadDailyDirectoryStyles(){
+    var isDirectory=!!d.querySelector('.daily-index-heading');
+    if(!isDirectory)return;
+    var current=d.getElementById('qilyDailyDirectoryActionsStylesheet');
+    var href='/qilylean/daily-directory-actions-v1.css?v=20260802-single-line-v1';
+    if(current){
+      if(current.getAttribute('href')!==href)current.setAttribute('href',href);
+      return;
+    }
+    var link=d.createElement('link');
+    link.id='qilyDailyDirectoryActionsStylesheet';
+    link.rel='stylesheet';
+    link.href=href;
+    (d.head||d.documentElement).appendChild(link);
+  }
+
   function loadEnhancer(){
     loadTrustStyles();
     loadDailyNavigationStyles();
+    loadDailyDirectoryStyles();
     if(d.querySelector('script[data-qily-brand-trust-loader]'))return;
     var enhancer=d.createElement('script');
     enhancer.src='/site-brand-trust-v1.js?v=20260802-project-rolebar-v3';
@@ -48,6 +65,7 @@
 
   loadTrustStyles();
   loadDailyNavigationStyles();
+  loadDailyDirectoryStyles();
 
   var legacy=d.createElement('script');
   legacy.src='/site-navigation-legacy-20260802.js?v=20260802-preserved-v1';
