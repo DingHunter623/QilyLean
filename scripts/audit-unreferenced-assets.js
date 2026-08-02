@@ -25,7 +25,10 @@ const textExtensions = new Set([
 const extensionPattern = Array.from(assetExtensions)
   .map((item) => item.slice(1).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
   .join('|');
-const referenceRegex = new RegExp(`([^\\s"'\\` + '`' + `()<>{}]+?\\.(?:${extensionPattern}))(?:[?#][^\\s"'\\` + '`' + `()<>{}]*)?`, 'gi');
+const referenceRegex = new RegExp(
+  "([^\\s\"'`()<>{}]+?\\.(?:" + extensionPattern + "))(?:[?#][^\\s\"'`()<>{}]*)?",
+  'gi'
+);
 
 const protectedPathPatterns = [
   /^assets\/brand\//i,
@@ -37,7 +40,11 @@ const protectedPathPatterns = [
 ];
 
 function trackedFiles() {
-  return execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8' })
+  return execFileSync('git', ['ls-files', '-z'], {
+    cwd: root,
+    encoding: 'utf8',
+    maxBuffer: 64 * 1024 * 1024
+  })
     .split('\0')
     .filter(Boolean)
     .map((item) => item.replace(/\\/g, '/'));
@@ -49,7 +56,7 @@ function safeDecode(value) {
 
 function cleanReference(raw) {
   let value = String(raw || '').trim().replace(/\\/g, '/');
-  value = value.replace(/^['"`(]+|['"`)]+$/g, '');
+  value = value.replace(/^[\s'"`(]+|[\s'"`)]+$/g, '');
   value = value.split('#')[0].split('?')[0];
   value = safeDecode(value);
   if (!value || /^(?:data|mailto|tel|javascript):/i.test(value)) return null;
@@ -59,7 +66,9 @@ function cleanReference(raw) {
       const url = new URL(value);
       if (!/(^|\.)qilylean\.com$/i.test(url.hostname)) return null;
       value = url.pathname;
-    } catch (_) { return null; }
+    } catch (_) {
+      return null;
+    }
   }
 
   value = value.replace(/^\/+/, '').replace(/^\.\//, '');
@@ -106,14 +115,21 @@ function main() {
 
   textFiles.forEach((source) => {
     let content;
-    try { content = fs.readFileSync(path.join(root, source), 'utf8'); } catch (_) { return; }
+    try {
+      content = fs.readFileSync(path.join(root, source), 'utf8');
+    } catch (_) {
+      return;
+    }
+
     extractRawReferences(content).forEach((raw) => {
       const cleaned = cleanReference(raw);
       if (!cleaned) return;
+
       const variants = new Set([
         cleaned,
         path.posix.normalize(path.posix.join(path.posix.dirname(source), cleaned))
       ]);
+
       variants.forEach((variant) => {
         const key = variant.replace(/^(?:\.\.\/)+/, '').toLowerCase();
         if (!candidateSet.has(key)) return;
@@ -121,6 +137,7 @@ function main() {
         if (!referenceSources.has(key)) referenceSources.set(key, []);
         referenceSources.get(key).push(source);
       });
+
       basenameReferences.add(path.posix.basename(cleaned).toLowerCase());
     });
   });
@@ -129,8 +146,7 @@ function main() {
   const retained = [];
 
   candidates.forEach((file) => {
-    const target = path.join(root, file);
-    const stat = fs.statSync(target);
+    const stat = fs.statSync(path.join(root, file));
     const key = file.toLowerCase();
     const base = path.posix.basename(file).toLowerCase();
     const direct = directReferences.has(key);
@@ -164,19 +180,6 @@ function main() {
 
   const potentialBytes = deletable.reduce((sum, item) => sum + item.bytes, 0);
   const deletionRatio = candidates.length ? deletable.length / candidates.length : 0;
-  if (apply && deletionRatio > 0.65) {
-    throw new Error(`Safety stop: ${deletable.length}/${candidates.length} assets were classified as unreferenced (${(deletionRatio * 100).toFixed(1)}%). Review the audit before applying.`);
-  }
-
-  const deleted = [];
-  if (apply) {
-    deletable.forEach((item) => {
-      const target = path.join(root, item.path);
-      if (!fs.existsSync(target)) return;
-      fs.unlinkSync(target);
-      deleted.push(item);
-    });
-  }
 
   const report = {
     generatedAt: new Date().toISOString(),
@@ -186,8 +189,9 @@ function main() {
     retainedAssets: retained.length,
     unreferencedAssets: deletable.length,
     potentialBytesToRelease: potentialBytes,
-    deletedAssets: deleted.length,
-    deletedBytes: deleted.reduce((sum, item) => sum + item.bytes, 0),
+    deletedAssets: 0,
+    deletedBytes: 0,
+    safetyStop: apply && deletionRatio > 0.65,
     note: 'Current-branch cleanup only. Git history retains older blobs until a separate, explicitly approved history rewrite.',
     deletable,
     retained
@@ -195,7 +199,23 @@ function main() {
 
   fs.mkdirSync(path.dirname(reportFile), { recursive: true });
   fs.writeFileSync(reportFile, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
-  process.stdout.write(`${apply ? 'Deleted' : 'Found'} ${apply ? deleted.length : deletable.length} unreferenced assets; ${apply ? report.deletedBytes : potentialBytes} bytes.\n`);
+
+  if (report.safetyStop) {
+    throw new Error(`Safety stop: ${deletable.length}/${candidates.length} assets were classified as unreferenced (${(deletionRatio * 100).toFixed(1)}%).`);
+  }
+
+  if (apply) {
+    deletable.forEach((item) => {
+      const target = path.join(root, item.path);
+      if (!fs.existsSync(target)) return;
+      fs.unlinkSync(target);
+      report.deletedAssets += 1;
+      report.deletedBytes += item.bytes;
+    });
+    fs.writeFileSync(reportFile, `${JSON.stringify(report, null, 2)}\n`, 'utf8');
+  }
+
+  process.stdout.write(`${apply ? 'Deleted' : 'Found'} ${apply ? report.deletedAssets : deletable.length} unreferenced assets; ${apply ? report.deletedBytes : potentialBytes} bytes.\n`);
 }
 
 main();
