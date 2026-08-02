@@ -3,7 +3,8 @@
   'use strict';
   var styles=[
     {id:'qilyGlobalLinkStandardStylesheet',href:'/site-link-standard-v2.css?v=20260801-global-link-v5'},
-    {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'}
+    {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'},
+    {id:'qilyInformationArchitectureStylesheet',href:'/site-information-architecture-v1.css?v=20260802-commercial-focus-v1'}
   ];
   styles.forEach(function(style){
     var current=d.getElementById(style.id);
@@ -41,11 +42,11 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
   ]
 });
 
-/* QilyLean global navigation wrapper｜保留原功能并加载个人品牌可信度增强模块 */
+/* QilyLean global navigation wrapper｜保留原功能并加载可信度、信息架构与视觉规范模块 */
 (function(d){
   'use strict';
-  if(window.__qilyNavigationWrapper20260802V4)return;
-  window.__qilyNavigationWrapper20260802V4=true;
+  if(window.__qilyNavigationWrapper20260802V5)return;
+  window.__qilyNavigationWrapper20260802V5=true;
 
   function loadTrustStyles(){
     var current=d.getElementById('qilyBrandTrustStylesheet');
@@ -59,6 +60,26 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
     link.rel='stylesheet';
     link.href=href;
     (d.head||d.documentElement).appendChild(link);
+  }
+
+  function loadInformationArchitectureAssets(){
+    var stylesheet=d.getElementById('qilyInformationArchitectureStylesheet');
+    var cssHref='/site-information-architecture-v1.css?v=20260802-commercial-focus-v1';
+    if(stylesheet){
+      if(stylesheet.getAttribute('href')!==cssHref)stylesheet.setAttribute('href',cssHref);
+    }else{
+      stylesheet=d.createElement('link');
+      stylesheet.id='qilyInformationArchitectureStylesheet';
+      stylesheet.rel='stylesheet';
+      stylesheet.href=cssHref;
+      (d.head||d.documentElement).appendChild(stylesheet);
+    }
+    if(d.querySelector('script[data-qily-information-architecture-loader]'))return;
+    var script=d.createElement('script');
+    script.src='/site-information-architecture-v1.js?v=20260802-commercial-focus-v1';
+    script.defer=true;
+    script.setAttribute('data-qily-information-architecture-loader','v1');
+    (d.head||d.documentElement).appendChild(script);
   }
 
   function loadDailyNavigationStyles(){
@@ -96,6 +117,7 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
 
   function loadEnhancer(){
     loadTrustStyles();
+    loadInformationArchitectureAssets();
     loadDailyNavigationStyles();
     loadDailyDirectoryStyles();
     if(d.querySelector('script[data-qily-brand-trust-loader]'))return;
@@ -107,6 +129,7 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
   }
 
   loadTrustStyles();
+  loadInformationArchitectureAssets();
   loadDailyNavigationStyles();
   loadDailyDirectoryStyles();
 
