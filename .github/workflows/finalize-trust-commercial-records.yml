@@ -7,6 +7,8 @@ on:
       - "scripts/materialize-static-core-pages.js"
       - "scripts/prepare-static-source-rematerialization.js"
       - "scripts/normalize-static-source-output.js"
+      - "scripts/remove-legacy-home-schema.js"
+      - "scripts/refresh-static-core-search-index.js"
       - "scripts/finalize-trust-commercial-records.js"
       - "scripts/patch-finalizer-validation.js"
       - "scripts/enforce-final-trust-output.js"
@@ -18,6 +20,8 @@ on:
       - "trust/index.html"
       - "qilylean/ding-qili-knowledge-base.json"
       - "qilylean/ding-qili-digital-human.md"
+      - "qilylean/site-data.json"
+      - "qilylean/site-search-index.json"
       - "site-brand-trust-v1.js"
       - "site-information-architecture-v1.js"
       - "site-information-architecture-v1.css"
@@ -32,6 +36,8 @@ on:
       - "scripts/materialize-static-core-pages.js"
       - "scripts/prepare-static-source-rematerialization.js"
       - "scripts/normalize-static-source-output.js"
+      - "scripts/remove-legacy-home-schema.js"
+      - "scripts/refresh-static-core-search-index.js"
       - "scripts/finalize-trust-commercial-records.js"
       - "scripts/patch-finalizer-validation.js"
       - "scripts/enforce-final-trust-output.js"
@@ -77,7 +83,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Validate finalizer scripts
         shell: bash
@@ -88,6 +94,8 @@ jobs:
           node --check scripts/prepare-static-source-rematerialization.js
           node --check scripts/materialize-static-core-pages.js
           node --check scripts/normalize-static-source-output.js
+          node --check scripts/remove-legacy-home-schema.js
+          node --check scripts/refresh-static-core-search-index.js
           node --check site-static-core-interactions-v1.js
 
       - name: Normalize finalizer validation contract
@@ -106,21 +114,27 @@ jobs:
       - name: Enforce final cumulative-result disclosures
         run: node scripts/enforce-final-trust-output.js
 
-      - name: Materialize final public HTML
+      - name: Materialize final public HTML and final search entries
         shell: bash
         run: |
           node scripts/prepare-static-source-rematerialization.js
           node scripts/materialize-static-core-pages.js
           node scripts/normalize-static-source-output.js
+          node scripts/remove-legacy-home-schema.js
+          node scripts/normalize-static-source-output.js
+          node scripts/refresh-static-core-search-index.js
 
       - name: Verify deterministic repeat execution
         shell: bash
         run: |
-          git diff -- index.html cooperation/index.html qilylean/daily-insights.html > /tmp/static-first.diff
+          git diff -- index.html cooperation/index.html qilylean/daily-insights.html qilylean/site-search-index.json qilylean/site-data.json > /tmp/static-first.diff
           node scripts/prepare-static-source-rematerialization.js
           node scripts/materialize-static-core-pages.js
           node scripts/normalize-static-source-output.js
-          git diff -- index.html cooperation/index.html qilylean/daily-insights.html > /tmp/static-second.diff
+          node scripts/remove-legacy-home-schema.js
+          node scripts/normalize-static-source-output.js
+          node scripts/refresh-static-core-search-index.js
+          git diff -- index.html cooperation/index.html qilylean/daily-insights.html qilylean/site-search-index.json qilylean/site-data.json > /tmp/static-second.diff
           cmp /tmp/static-first.diff /tmp/static-second.diff
 
       - name: Validate final static public output
@@ -163,6 +177,19 @@ jobs:
           if (beforeCore.includes('<section class="assistant-panel" id="assistant">')) {
             throw new Error('AI assistant remains in the static homepage hero');
           }
+          const schemas = Array.from(home.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)).map((match) => {
+            try { return JSON.parse(match[1]); } catch (error) { return null; }
+          }).filter(Boolean);
+          if (schemas.some((schema) => schema['@type'] === 'Person' && !Array.isArray(schema['@graph']))) {
+            throw new Error('Legacy standalone Person schema remains');
+          }
+          const search = JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
+          const root = search.entries.find((entry) => entry.url === '/');
+          const cooperation = search.entries.find((entry) => entry.url === '/cooperation/');
+          const daily = search.entries.find((entry) => entry.url === '/qilylean/daily-insights.html');
+          if (!root || !root.text.includes('把复杂制造问题，转化为可验证的交付结果') || root.text.includes('职能标签')) throw new Error('Homepage search entry is stale');
+          if (!cooperation || !cooperation.text.includes('分阶段付款') || cooperation.text.includes('超千万元累计项目改善收益')) throw new Error('Cooperation search entry is stale');
+          if (!daily || !daily.text.includes('不等同于网页首次公开发布日期')) throw new Error('Daily archive search entry is stale');
           const records = JSON.parse(fs.readFileSync('projects/qilylean-commercial-deliveries/records.json','utf8'));
           if (!Array.isArray(records.records)) throw new Error('Commercial delivery records must be an array');
           if (!records.publicationPolicy) throw new Error('Commercial publication policy missing');
@@ -178,6 +205,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html cooperation/index.html qilylean/daily-insights.html projects/index.html trust/index.html qilylean/ding-qili-knowledge-base.json qilylean/ding-qili-digital-human.md site-brand-trust-v1.js site-search.js qilylean/site-search-index.json sitemap.xml sitemap-core.xml projects/qilylean-commercial-deliveries
+          git add index.html cooperation/index.html qilylean/daily-insights.html projects/index.html trust/index.html qilylean/ding-qili-knowledge-base.json qilylean/ding-qili-digital-human.md qilylean/site-data.json site-brand-trust-v1.js site-search.js qilylean/site-search-index.json sitemap.xml sitemap-core.xml projects/qilylean-commercial-deliveries
           git commit -m "build: publish final static public pages"
           git push
