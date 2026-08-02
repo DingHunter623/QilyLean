@@ -4,14 +4,31 @@
   if(window.__qilyNavigationWrapper20260802)return;
   window.__qilyNavigationWrapper20260802=true;
 
+  function loadTrustStyles(){
+    var current=d.getElementById('qilyBrandTrustStylesheet');
+    var href='/site-brand-trust-v1.css?v=20260802-personal-brand-v2';
+    if(current){
+      if(current.getAttribute('href')!==href)current.setAttribute('href',href);
+      return;
+    }
+    var link=d.createElement('link');
+    link.id='qilyBrandTrustStylesheet';
+    link.rel='stylesheet';
+    link.href=href;
+    (d.head||d.documentElement).appendChild(link);
+  }
+
   function loadEnhancer(){
+    loadTrustStyles();
     if(d.querySelector('script[data-qily-brand-trust-loader]'))return;
     var enhancer=d.createElement('script');
-    enhancer.src='/site-brand-trust-v1.js?v=20260802-personal-brand-v1';
+    enhancer.src='/site-brand-trust-v1.js?v=20260802-personal-brand-v2';
     enhancer.defer=true;
-    enhancer.setAttribute('data-qily-brand-trust-loader','v1');
+    enhancer.setAttribute('data-qily-brand-trust-loader','v2');
     (d.head||d.documentElement).appendChild(enhancer);
   }
+
+  loadTrustStyles();
 
   var legacy=d.createElement('script');
   legacy.src='/site-navigation-legacy-20260802.js?v=20260802-preserved-v1';
