@@ -5,11 +5,11 @@ if(!card)return;
 var datePattern=/^\d{4}-\d{2}-\d{2}$/;
 var stamp=Date.now();
 var releaseCandidate={
-  date:'2026-08-02',
-  theme:'IE标工联动PMC排产',
-  title:'标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环',
-  summary:'标准工时只有进入订单拆解、产能校核、工位配置、日计划、实绩反馈与滚动排程，才能从静态资料变成排产决策；这条数据链必须做到编码同源、函数联动、异常可见、尾单结清。',
-  href:'/qilylean/daily/2026-08-02.html'
+  date:'2026-08-03',
+  theme:'成果证据分级与公开核验',
+  title:'成果不是数字卡片：用证据等级、阶段门与公开链接形成核验闭环',
+  summary:'制造改善成果一旦进入官网、项目报告或对外交流材料，就从内部总结升级为公开主张。公开主张不能只给出“提升多少、节省多少、完成多少”，还必须同步回答：依据是什么、由谁确认、本人承担什么角色、适用于什么条件、读者在哪里核验。',
+  href:'/qilylean/daily/2026-08-03.html'
 };
 
 function request(url,type){
