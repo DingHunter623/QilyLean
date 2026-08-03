@@ -10,15 +10,14 @@ let html = fs.readFileSync(file, 'utf8');
 
 /*
  * QILY-HOME-STATIC-METRIC-NO-HOVER
- * Enforcement revision: 2026-08-03 v2.
+ * Enforcement revision: 2026-08-03 v3.
  * Static result cards must remain visually unchanged under mouse, touch,
  * keyboard focus and active states. Only genuine links/buttons may animate.
+ * The shared metric-display-note style is retained for disclosure notices.
  */
 
 html = html
-  .replace(/\n\s*<p class="metric-display-note"[\s\S]*?<\/p>/g, '')
-  .replace(/\n\s*\.metric-display-note\{[^}]*\}/g, '')
-  .replace(/\n\s*\.metric-display-note strong\{[^}]*\}/g, '')
+  .replace(/\n\s*<p class="metric-display-note"[^>]*>[\s\S]*?以下为静态成果概览卡片[\s\S]*?<\/p>/g, '')
   .replace(/\n\s*\.metric:hover\{[^}]*\}/g, '');
 
 const metricBasePattern = /    \.metric\{[^}]*\}/;
