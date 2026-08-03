@@ -1,19 +1,20 @@
-name: Publish QilyLean international enterprise layout
+name: Restore QilyLean VI and contrast closure
 
 on:
   push:
     branches: [main]
     paths:
       - "scripts/publish-site-system-v2.js"
+      - "scripts/normalize-static-source-output.js"
       - "site-navigation.js"
       - "site-shell.css"
       - "site-visual-scale-v1.css"
       - "site-wide-layout-v1.css"
       - "site-typography-v1.css"
-      - "site-microsoft-international-v1.css"
-      - "site-microsoft-international-v1.js"
-      - "site-microsoft-enterprise-components-v2.css"
+      - "site-vi-standard-v1.css"
+      - "site-vi-contrast-restoration-v1.css"
       - "homepage-music.js"
+      - "homepage-music-core-v4.js"
       - ".github/workflows/unlock-public-modules.yml"
   workflow_dispatch:
 
@@ -39,68 +40,49 @@ jobs:
         with:
           node-version: 20
 
-      - name: Publish international layout and current public shell
+      - name: Publish restored VI and contrast-safe public shell
         run: node scripts/publish-site-system-v2.js
 
-      - name: Validate international layout, enterprise components, navigation and cache refresh
+      - name: Validate VI, controls, navigation, evidence context and cache refresh
         shell: bash
         run: |
           node --check scripts/publish-site-system-v2.js
+          node --check scripts/normalize-static-source-output.js
           node --check site-navigation.js
-          node --check site-microsoft-international-v1.js
-          grep -q 'site-wide-layout-v1.css?v=20260729-fluid-copy-v5' site-navigation.js
-          grep -q 'site-typography-v1.css?v=20260729-hierarchy-v4' site-navigation.js
-          grep -q 'site-microsoft-international-v1.css?v=20260803-ms-international-v1' site-navigation.js
-          grep -q 'site-microsoft-international-v1.js?v=20260803-ms-international-v1' site-navigation.js
-          grep -q 'site-microsoft-enterprise-components-v2.css?v=20260803-ms-components-v2' site-navigation.js
-          grep -q 'QILY-MICROSOFT-NAV-UNDERLINE-RUNTIME:START' site-navigation.js
-          grep -q 'html.qily-shell-pending body' site-shell.css
-          grep -q 'if (document.body) boot()' site-navigation.js
-          grep -q 'addWideLayoutStylesheet();' site-navigation.js
-          grep -q 'addTypographyStylesheet();' site-navigation.js
-          grep -q -- '--qily-wide-content:1560px' site-wide-layout-v1.css
-          grep -q '.hero>.hero-grid' site-wide-layout-v1.css
-          grep -q 'main.main:has(>.chat)>.chat' site-wide-layout-v1.css
-          grep -q '.career-full-grid' site-wide-layout-v1.css
-          grep -q 'module-grid.four{grid-template-columns:repeat(auto-fit' site-wide-layout-v1.css
-          grep -q -- '--qily-type-nav-1:17px' site-typography-v1.css
-          grep -q -- '--qily-type-nav-2:16px' site-typography-v1.css
-          grep -q -- '--qily-type-nav-3:15px' site-typography-v1.css
-          grep -q -- '--qily-type-body:18.5px' site-typography-v1.css
-          grep -q 'text-wrap:wrap' site-typography-v1.css
-          grep -q '.qily-home-balanced .portrait-badge div:nth-child(2) span' site-visual-scale-v1.css
-          grep -q 'white-space:normal!important' site-visual-scale-v1.css
-          grep -q 'min-height:96px!important' site-visual-scale-v1.css
-          grep -q -- '--qily-ms-content:min(1280px' site-microsoft-international-v1.css
-          grep -q '.capability-digital-tool:nth-child(even)' site-microsoft-international-v1.css
-          grep -q '.qily-ms-static-card:hover' site-microsoft-international-v1.css
-          grep -q '.qily-ms-interactive-card:hover' site-microsoft-international-v1.css
-          grep -q 'QilyLean enterprise component layer v2' site-microsoft-enterprise-components-v2.css
-          grep -q '.qily-ia-card:not(.qily-ia-card-link)' site-microsoft-enterprise-components-v2.css
-          grep -q 'qily-founder-line' site-microsoft-enterprise-components-v2.css
-          grep -q '.qily-ia-secondary-links' site-microsoft-enterprise-components-v2.css
-          grep -q '__qilyMicrosoftInternationalV1' site-microsoft-international-v1.js
-          grep -q "section.classList.add('qily-ms-product-showcase')" site-microsoft-international-v1.js
-          grep -q 'var restoreSettled = false' homepage-music.js
-          grep -q 'if (!restoreSettled) return' homepage-music.js
-          grep -q 'function settlePlaybackRestore()' homepage-music.js
+          node --check homepage-music-core-v4.js
+          grep -q 'site-vi-standard-v1.css?v=20260801-vi-standard-v1' site-navigation.js
+          grep -q 'site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1' site-navigation.js
+          ! grep -q 'site-microsoft-international-v1.css?v=' site-navigation.js
+          ! grep -q 'site-microsoft-enterprise-components-v2.css?v=' site-navigation.js
+          ! grep -q 'enhancer.src=.*/site-microsoft-international-v1.js' site-navigation.js
+          grep -q -- '--qily-vi-olive:#0f4b5a' site-vi-standard-v1.css
+          grep -q 'QilyLean 全站VI可读性恢复与对比度保险层' site-vi-contrast-restoration-v1.css
+          grep -q '.site-music-toggle' site-vi-contrast-restoration-v1.css
+          grep -q '.qily-float-contact' site-vi-contrast-restoration-v1.css
+          grep -q '#qily-commercial-deliveries' site-vi-contrast-restoration-v1.css
+          grep -q '.qily-modal-close' site-vi-contrast-restoration-v1.css
+          grep -q 'var speakerOn' homepage-music-core-v4.js
+          grep -q "button.className = 'site-music-toggle'" homepage-music-core-v4.js
           grep -R -q 'data-qily-shell-bootstrap' --include='*.html' .
-          grep -R -q '<script defer src="/site-navigation.js?v=20260803-ms-international-v1"' --include='*.html' .
-          grep -R -q 'site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5' --include='*.html' .
-          grep -R -q 'site-shell.css?v=20260729-no-old-flash-v1' --include='*.html' .
-          grep -R -q 'homepage-music.js?v=20260729-continuous-v4' --include='*.html' .
+          grep -R -q '<script defer src="/site-navigation.js?v=20260803-vi-contrast-restored-v1"' --include='*.html' .
+          grep -R -q 'site-vi-standard-v1.css?v=20260801-vi-standard-v1' --include='*.html' .
+          grep -R -q 'site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1' --include='*.html' .
+          grep -q '<h2>2022年度某制造企业｜制造改善项目佐证资料</h2>' capabilities/index.html
+          grep -q '以下资料来自2022年度某制造企业的制造改善项目' capabilities/index.html
           grep -q '<h1>某制造企业｜2022年度制造改善项目佐证资料</h1>' projects/lean-improvement-evidence/index.html
+          grep -q '查看商业交付档案' trust/index.html
+          grep -q '查看客户评价授权规则' trust/index.html
 
-      - name: Commit international site-system release
+      - name: Commit restored VI public pages
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "International layout and current public shell are already published."
+            echo "Restored VI and contrast-safe pages are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "feat: publish Microsoft-inspired QilyLean international layout [skip ci]"
+          git commit -m "fix: publish restored QilyLean VI and contrast closure [skip ci]"
           git pull --rebase origin main
           git push origin main

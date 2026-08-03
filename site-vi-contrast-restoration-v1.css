@@ -1,0 +1,214 @@
+/* QilyLean 全站VI可读性恢复与对比度保险层｜2026-08-03
+ * 原则：恢复既定橄榄绿／深青绿、品牌红、品牌金；深底白字，浅底深字。
+ * 本文件只修复可读性、控件形态与交互辨识，不重构业务内容及页面结构。
+ */
+:root{
+  --qily-read-olive:#0f4b5a;
+  --qily-read-deep:#073c47;
+  --qily-read-teal:#178b94;
+  --qily-read-red:#9e4a34;
+  --qily-read-gold:#caa15f;
+  --qily-read-gold-light:#ffe39b;
+  --qily-read-ink:#182420;
+  --qily-read-copy:#496565;
+  --qily-read-line:#d5e4e3;
+  --qily-read-paper:#eef7f5;
+  --qily-read-soft:#f7fbfa;
+  --qily-read-white:#fff;
+}
+
+html,html body{color:var(--qily-read-ink)!important;background:var(--qily-read-paper)!important}
+html body :where(p,li,dd,figcaption,.summary,.description,.meta,.fine,.note){text-shadow:none}
+
+/* 恢复全站原VI首屏：深青绿底、白色正文、金色辅助信息。 */
+html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero){
+  color:#fff!important;
+  background:linear-gradient(125deg,var(--qily-read-deep),var(--qily-read-teal))!important;
+  border-color:transparent!important;
+}
+html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero) :is(h1,h2,h3,h4,p,.lead,.module-lead,.summary,.subtitle){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+}
+html body :is(.module-hero,.daily-hero,.hero) :is(.module-eyebrow,.eyebrow,.qily-founder-line){
+  color:var(--qily-read-gold-light)!important;
+  -webkit-text-fill-color:var(--qily-read-gold-light)!important;
+}
+html body :is(.module-hero,.daily-hero,.hero) a:not(.button){
+  color:var(--qily-read-gold-light)!important;
+  -webkit-text-fill-color:var(--qily-read-gold-light)!important;
+  text-decoration-color:var(--qily-read-gold-light)!important;
+}
+
+/* 浅色内容面统一深色文字，避免浅底浅字。 */
+html body :is(.module-section,.section,.qily-ia-section,.daily-section,.content-section,.knowledge-section,.trust-card,.module-card,.card,.metric,.record,.post,.bar,.chat,.qily-modal-panel){
+  color:var(--qily-read-ink)!important;
+}
+html body :is(.module-section,.section,.qily-ia-section,.daily-section,.content-section,.knowledge-section,.trust-card,.module-card,.card,.metric,.record,.post,.bar,.chat,.qily-modal-panel) :is(h1,h2,h3,h4,h5,h6,strong,b){
+  color:var(--qily-read-deep)!important;
+  -webkit-text-fill-color:var(--qily-read-deep)!important;
+}
+html body :is(.module-section,.section,.qily-ia-section,.daily-section,.content-section,.knowledge-section,.trust-card,.module-card,.card,.metric,.record,.post,.bar,.chat,.qily-modal-panel) :is(p,li,span,small,dd,figcaption,.lead,.summary,.meta,.fine){
+  color:var(--qily-read-copy)!important;
+  -webkit-text-fill-color:var(--qily-read-copy)!important;
+  opacity:1!important;
+}
+
+/* 顶部导航：白底深字；当前项与悬停具备明确高对比反馈。 */
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header){
+  color:var(--qily-read-ink)!important;
+  background:rgba(255,255,255,.98)!important;
+  border-bottom:1px solid var(--qily-read-line)!important;
+}
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header) :is(.site-nav,.qily-global-nav,.nav)>a[href]{
+  color:var(--qily-read-ink)!important;
+  -webkit-text-fill-color:var(--qily-read-ink)!important;
+  background:transparent!important;
+  text-shadow:none!important;
+}
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header) :is(.site-nav,.qily-global-nav,.nav)>a[href][aria-current="page"]{
+  color:var(--qily-read-deep)!important;
+  -webkit-text-fill-color:var(--qily-read-deep)!important;
+  background:#e4f2ef!important;
+  border-color:#b8d9d4!important;
+}
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header) :is(.site-nav,.qily-global-nav,.nav)>a[href]:is(:hover,:focus-visible){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-read-olive)!important;
+  border-color:var(--qily-read-olive)!important;
+}
+
+/* 页脚：深底白字，链接采用金色。 */
+html body :is(.module-footer,.footer,footer){
+  color:#fff!important;
+  background:#101916!important;
+  border-color:#263a34!important;
+}
+html body :is(.module-footer,.footer,footer) :is(span,p,strong,b,small){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+}
+html body :is(.module-footer,.footer,footer) a[href]{
+  color:var(--qily-read-gold-light)!important;
+  -webkit-text-fill-color:var(--qily-read-gold-light)!important;
+}
+
+/* 按钮与操作入口：深青绿底白字；次要按钮白底深字。 */
+html body :is(.module-actions,.article-actions,.card-actions,.actions,.qily-ia-actions) a[href]:not(.secondary),
+html body a[href]:is(.resource-action,.module-action,.project-list-action,.project-card-action,.qily-ia-button.primary),
+html body button:not(.qily-modal-close):not(.qily-float-btn):not(.site-music-toggle){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-read-olive)!important;
+  border-color:var(--qily-read-olive)!important;
+  text-shadow:none!important;
+}
+html body :is(.module-actions,.article-actions,.card-actions,.actions,.qily-ia-actions) a[href]:not(.secondary):is(:hover,:focus-visible),
+html body a[href]:is(.resource-action,.module-action,.project-list-action,.project-card-action,.qily-ia-button.primary):is(:hover,:focus-visible){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-read-deep)!important;
+  border-color:var(--qily-read-gold)!important;
+}
+html body :is(.module-actions,.article-actions,.card-actions,.actions,.qily-ia-actions) a[href].secondary,
+html body a[href].qily-ia-button:not(.primary){
+  color:var(--qily-read-deep)!important;
+  -webkit-text-fill-color:var(--qily-read-deep)!important;
+  background:#fff!important;
+  border-color:var(--qily-read-olive)!important;
+}
+
+/* 信任中心商业交付入口专项：严禁白底白字。 */
+html body #qily-commercial-deliveries .article-actions .resource-action{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-read-olive)!important;
+  border:2px solid var(--qily-read-olive)!important;
+  font-weight:900!important;
+}
+html body #qily-commercial-deliveries .article-actions .resource-action:is(:hover,:focus-visible){
+  background:var(--qily-read-deep)!important;
+  border-color:var(--qily-read-gold)!important;
+}
+
+/* 背景音乐按钮：恢复圆形喇叭，不允许被全站按钮规则改成方块。 */
+html body .site-music-toggle,
+html body button.site-music-toggle{
+  width:38px!important;
+  min-width:38px!important;
+  height:38px!important;
+  min-height:38px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:50%!important;
+  color:var(--qily-read-olive)!important;
+  -webkit-text-fill-color:var(--qily-read-olive)!important;
+  background:rgba(255,255,255,.96)!important;
+  box-shadow:0 5px 18px rgba(7,60,71,.22)!important;
+  display:grid!important;
+  place-items:center!important;
+  line-height:1!important;
+}
+html body .site-music-toggle svg{display:block!important;width:23px!important;height:23px!important;color:inherit!important;stroke:currentColor!important;fill:none!important}
+
+/* 悬浮功能坞：恢复圆形和原VI，交流使用金底深字。 */
+html body .qily-float-btn{
+  width:62px!important;
+  min-width:62px!important;
+  height:62px!important;
+  min-height:62px!important;
+  padding:4px!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  border-radius:50%!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:rgba(15,75,90,.92)!important;
+  box-shadow:0 10px 24px rgba(15,75,90,.28)!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  line-height:1.16!important;
+  text-align:center!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.42)!important;
+}
+html body .qily-float-current,html body .qily-float-share{background:rgba(158,74,52,.94)!important}
+html body .qily-float-contact{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background:rgba(255,227,155,.98)!important;
+  border-color:var(--qily-read-gold)!important;
+  text-shadow:none!important;
+}
+
+/* 弹窗和关闭键：浅底深字，关闭符号清晰。 */
+html body .qily-modal-mask{background:rgba(0,0,0,.58)!important}
+html body .qily-modal-panel{color:var(--qily-read-ink)!important;background:#fff!important;border:1px solid var(--qily-read-line)!important}
+html body .qily-modal-panel :is(h2,h3,h4,strong){color:var(--qily-read-deep)!important;-webkit-text-fill-color:var(--qily-read-deep)!important}
+html body .qily-modal-panel :is(p,span,label,.qily-modal-note){color:var(--qily-read-copy)!important;-webkit-text-fill-color:var(--qily-read-copy)!important}
+html body .qily-modal-close,
+html body button.qily-modal-close{
+  color:var(--qily-read-deep)!important;
+  -webkit-text-fill-color:var(--qily-read-deep)!important;
+  background:#e8f2f0!important;
+  border:1px solid #b8d9d4!important;
+  border-radius:50%!important;
+  text-shadow:none!important;
+}
+
+/* 静态模块无伪链接位移；真正的链接保留清晰反馈。 */
+html body :is(.module-card,.metric,.trust-card,.qily-ia-card):not(a):not([role="link"]):not([onclick]){
+  transform:none!important;
+}
+html body a:is(.module-card,.trust-card,.qily-ia-card,[role="link"]):is(:hover,:focus-visible){
+  box-shadow:0 16px 38px rgba(15,75,90,.2)!important;
+}
+
+@media(max-width:760px){
+  html body .site-music-toggle{width:36px!important;min-width:36px!important;height:36px!important;min-height:36px!important}
+  html body .qily-float-btn{width:56px!important;min-width:56px!important;height:56px!important;min-height:56px!important;font-size:12px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body *,html body *::before,html body *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
