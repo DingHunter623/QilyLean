@@ -7,27 +7,34 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const navigationFile = path.join(root, 'site-navigation.js');
 const shellFile = path.join(root, 'site-shell.css');
+const visualFile = path.join(root, 'site-visual-scale-v1.css');
 const wideLayoutFile = path.join(root, 'site-wide-layout-v1.css');
 const typographyFile = path.join(root, 'site-typography-v1.css');
 const musicFile = path.join(root, 'homepage-music.js');
 
-const NAV_VERSION = '20260729-no-old-flash-v1';
-const ASSET_VERSION = '20260729-no-old-flash-v1';
+const NAV_VERSION = '20260803-parent-route-v4';
 const SHELL_VERSION = '20260729-no-old-flash-v1';
-const VISUAL_VERSION = '20260729-hierarchy-v4';
+const VISUAL_VERSION = '20260803-home-badge-wrap-v5';
 const WIDE_VERSION = '20260729-fluid-copy-v5';
 const TYPE_VERSION = '20260729-hierarchy-v4';
 const MUSIC_VERSION = '20260729-continuous-v4';
 
 function read(file) { return fs.readFileSync(file, 'utf8'); }
-function write(file, content) { fs.writeFileSync(file, content, 'utf8'); }
+function write(file, content) {
+  const normalized = content.endsWith('\n') ? content : `${content}\n`;
+  if (fs.existsSync(file) && read(file) === normalized) return false;
+  fs.writeFileSync(file, normalized, 'utf8');
+  return true;
+}
 
 function validatePublicStyles() {
   const wide = read(wideLayoutFile);
   const type = read(typographyFile);
+  const visual = read(visualFile);
   const music = read(musicFile);
   const shell = read(shellFile);
   if (!shell.includes('html.qily-shell-pending body')) throw new Error('No-flash shell guard is missing');
+
   const wideMarkers = [
     '--qily-wide-content:1560px',
     '.hero>.hero-grid',
@@ -45,21 +52,22 @@ function validatePublicStyles() {
     '.answer-content h2',
     '.composer textarea'
   ];
-  for (const marker of wideMarkers) {
-    if (!wide.includes(marker)) throw new Error(`Wide-layout marker missing: ${marker}`);
-  }
-  for (const marker of typeMarkers) {
-    if (!type.includes(marker)) throw new Error(`Typography marker missing: ${marker}`);
-  }
+  const visualMarkers = [
+    '.qily-home-balanced .portrait-badge{grid-template-columns:repeat(2,minmax(0,1fr))',
+    '.qily-home-balanced .portrait-badge div{display:flex!important;min-width:0!important;min-height:96px!important',
+    '.qily-home-balanced .portrait-badge div:nth-child(2) span{font-size:13px!important;line-height:1.48!important;white-space:normal!important'
+  ];
   const musicMarkers = [
     'var restoreSettled = false',
     'if (!restoreSettled) return',
     'function settlePlaybackRestore()',
-    "localStorage.setItem(STATE_KEY, payload)"
+    'localStorage.setItem(STATE_KEY, payload)'
   ];
-  for (const marker of musicMarkers) {
-    if (!music.includes(marker)) throw new Error(`Music continuity marker missing: ${marker}`);
-  }
+
+  for (const marker of wideMarkers) if (!wide.includes(marker)) throw new Error(`Wide-layout marker missing: ${marker}`);
+  for (const marker of typeMarkers) if (!type.includes(marker)) throw new Error(`Typography marker missing: ${marker}`);
+  for (const marker of visualMarkers) if (!visual.includes(marker)) throw new Error(`Homepage portrait marker missing: ${marker}`);
+  for (const marker of musicMarkers) if (!music.includes(marker)) throw new Error(`Music continuity marker missing: ${marker}`);
 }
 
 function publishNavigation() {
@@ -71,12 +79,8 @@ function publishNavigation() {
     .replace(/site-wide-layout-v1\.css\?v=[^'"\s]+/g, `site-wide-layout-v1.css?v=${WIDE_VERSION}`)
     .replace(/site-typography-v1\.css\?v=[^'"\s]+/g, `site-typography-v1.css?v=${TYPE_VERSION}`);
 
-  if (!page.includes(`site-wide-layout-v1.css?v=${WIDE_VERSION}`)) {
-    throw new Error('Wide-layout cache version was not published');
-  }
-  if (!page.includes(`site-typography-v1.css?v=${TYPE_VERSION}`)) {
-    throw new Error('Typography cache version was not published');
-  }
+  if (!page.includes(`site-wide-layout-v1.css?v=${WIDE_VERSION}`)) throw new Error('Wide-layout cache version was not published');
+  if (!page.includes(`site-typography-v1.css?v=${TYPE_VERSION}`)) throw new Error('Typography cache version was not published');
   if (!page.includes('addWideLayoutStylesheet();') || !page.includes('addTypographyStylesheet();')) {
     throw new Error('Public style loaders are incomplete');
   }
@@ -103,7 +107,8 @@ function installHeadAssets(page) {
     && page.includes('/site-typography-v1.css?v=' + TYPE_VERSION)
     && page.includes('<script defer src="/site-navigation.js?v=' + NAV_VERSION + '"></script>');
   if (alreadyCurrent) return page;
-  let next = page
+
+  const next = page
     .replace(/\s*<script\b[^>]*data-qily-shell-bootstrap[^>]*>[\s\S]*?<\/script>\s*/gi, '\n')
     .replace(/\s*<script\b[^>]*src=["'][^"']*\/site-navigation\.js\?v=[^"']+["'][^>]*>\s*<\/script>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*href=["'][^"']*\/(?:site-shell|site-visual-scale-v1|site-wide-layout-v1|site-typography-v1)\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n');
@@ -112,7 +117,7 @@ function installHeadAssets(page) {
 
 function walk(directory, callback) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    if (entry.name === '.git' || entry.name === 'node_modules') continue;
+    if (['.git', 'node_modules', '.cache'].includes(entry.name)) continue;
     const full = path.join(directory, entry.name);
     if (entry.isDirectory()) walk(full, callback);
     else callback(full);
@@ -138,7 +143,7 @@ function main() {
   validatePublicStyles();
   publishNavigation();
   const refreshed = refreshHtmlReferences();
-  process.stdout.write(`Published no-old-shell first paint, 1560px fluid copy, unified type hierarchy and continuous music state; refreshed ${refreshed} HTML files.\n`);
+  process.stdout.write(`Published current shell, homepage portrait wrapping, 1560px fluid copy, unified typography and continuous music; refreshed ${refreshed} HTML files.\n`);
 }
 
 main();
