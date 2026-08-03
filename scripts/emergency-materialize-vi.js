@@ -5,13 +5,14 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const NAV_VERSION = '20260803-vi-contrast-restored-v2';
+const NAV_VERSION = '20260803-visual-closure-v1';
 const SHELL_VERSION = '20260729-no-old-flash-v1';
 const VISUAL_VERSION = '20260803-home-badge-wrap-v5';
 const WIDE_VERSION = '20260729-fluid-copy-v5';
 const TYPE_VERSION = '20260729-hierarchy-v4';
 const VI_VERSION = '20260801-vi-standard-v1';
 const CONTRAST_VERSION = '20260803-vi-contrast-hotfix-v1';
+const CLOSURE_VERSION = '20260803-visual-closure-v1';
 const MUSIC_VERSION = '20260729-continuous-v4';
 
 function read(file) { return fs.readFileSync(file, 'utf8'); }
@@ -31,6 +32,8 @@ function headAssets() {
     '  <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=' + TYPE_VERSION + '">',
     '  <link id="qilyViStandardStylesheet" rel="stylesheet" href="/site-vi-standard-v1.css?v=' + VI_VERSION + '">',
     '  <link id="qilyViContrastRestorationStylesheet" rel="stylesheet" href="/site-vi-contrast-restoration-v1.css?v=' + CONTRAST_VERSION + '">',
+    '  <link id="qilyVisualClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v1.css?v=' + CLOSURE_VERSION + '">',
+    '  <script defer data-qily-visual-closure-loader="v1" src="/site-visual-closure-v1.js?v=' + CLOSURE_VERSION + '"></script>',
     '  <script defer src="/site-navigation.js?v=' + NAV_VERSION + '"></script>'
   ].join('\n');
 }
@@ -40,7 +43,8 @@ function cleanAndInject(page) {
   let next = page
     .replace(/\s*<script\b[^>]*data-qily-shell-bootstrap[^>]*>[\s\S]*?<\/script>\s*/gi, '\n')
     .replace(/\s*<script\b[^>]*src=["'][^"']*\/site-navigation\.js\?v=[^"']+["'][^>]*>\s*<\/script>\s*/gi, '\n')
-    .replace(/\s*<link\b[^>]*href=["'][^"']*\/(?:site-shell|site-visual-scale-v1|site-wide-layout-v1|site-typography-v1|site-vi-standard-v1|site-vi-contrast-restoration-v1)\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n')
+    .replace(/\s*<script\b[^>]*(?:data-qily-visual-closure-loader|src=["'][^"']*\/site-visual-closure-v1\.js\?v=[^"']+["'])[^>]*>\s*<\/script>\s*/gi, '\n')
+    .replace(/\s*<link\b[^>]*href=["'][^"']*\/(?:site-shell|site-visual-scale-v1|site-wide-layout-v1|site-typography-v1|site-vi-standard-v1|site-vi-contrast-restoration-v1|site-visual-closure-v1)\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*href=["'][^"']*\/site-microsoft-(?:international-v1|enterprise-components-v2)\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<script\b[^>]*src=["'][^"']*\/site-microsoft-international-v1\.js\?v=[^"']+["'][^>]*>\s*<\/script>\s*/gi, '\n');
   next = next.replace(/<\/head>/i, headAssets() + '\n</head>');
@@ -82,16 +86,32 @@ walk(root, (file) => {
   if (after !== before && write(file, after)) changed += 1;
 });
 
-const checks = [
+const pageChecks = [
   ['capabilities/index.html', '2022年度某制造企业｜制造改善项目佐证资料'],
-  ['capabilities/index.html', '以下资料来自2022年度某制造企业的制造改善项目'],
-  ['projects/lean-improvement-evidence/index.html', '某制造企业｜2022年度制造改善项目佐证资料'],
+  ['capabilities/index.html', 'capability-home-screen'],
+  ['cooperation/index.html', '六步交付闭环'],
+  ['cooperation/index.html', 'contact-card'],
+  ['links/index.html', 'resource-stage'],
+  ['projects/qilylean-commercial-deliveries/index.html', '当前公开记录：0项'],
   ['trust/index.html', '查看商业交付档案'],
   ['trust/index.html', '查看客户评价授权规则']
 ];
-for (const [relativePath, marker] of checks) {
+for (const [relativePath, marker] of pageChecks) {
   const file = path.join(root, relativePath);
   if (!fs.existsSync(file) || !read(file).includes(marker)) throw new Error(`Required marker missing: ${relativePath} -> ${marker}`);
 }
 
-process.stdout.write(`Emergency VI materialization complete: scanned ${scanned} HTML files, changed ${changed}.\n`);
+const assetChecks = [
+  ['site-visual-closure-v1.css', '.capability-home-screen'],
+  ['site-visual-closure-v1.css', '.resource-stage'],
+  ['site-visual-closure-v1.css', '.flow-step'],
+  ['site-visual-closure-v1.css', 'qily-action-secondary'],
+  ['site-visual-closure-v1.js', 'classifyCards'],
+  ['site-navigation.js', 'qilyVisualClosureStylesheet']
+];
+for (const [relativePath, marker] of assetChecks) {
+  const file = path.join(root, relativePath);
+  if (!fs.existsSync(file) || !read(file).includes(marker)) throw new Error(`Closure asset missing: ${relativePath} -> ${marker}`);
+}
+
+process.stdout.write(`Visual closure materialization complete: scanned ${scanned} HTML files, changed ${changed}.\n`);
