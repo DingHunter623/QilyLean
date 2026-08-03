@@ -12,6 +12,14 @@
   }
 
   ready(function(){
+    Array.prototype.forEach.call(d.querySelectorAll('.metric'),function(card){
+      var interactive=!!card.querySelector('a[href],button,[role="link"]');
+      card.classList.toggle('qily-interactive-card',interactive);
+      card.classList.toggle('qily-static-card',!interactive);
+      if(interactive)card.setAttribute('data-qily-interactive','true');
+      else card.removeAttribute('data-qily-interactive');
+    });
+
     var section=d.getElementById('results');
     var button=d.querySelector('[data-qily-results-toggle]');
     if(!section||!button)return;
