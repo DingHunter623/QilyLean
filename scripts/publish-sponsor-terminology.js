@@ -3,7 +3,6 @@
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
-const publishDate = process.env.QILY_BUILD_DATE || new Date().toISOString().slice(0, 10);
 const read = p => fs.readFileSync(path.join(root, p), 'utf8');
 const write = (p, v) => fs.writeFileSync(path.join(root, p), v.endsWith('\n') ? v : v + '\n', 'utf8');
 
@@ -13,10 +12,8 @@ let page = read(termHtml);
 if (!page.includes('terminology-sponsor-v1.js')) {
   page = page.replace('</body>', '<script defer src="' + sponsorScript + '"></script>\n</body>');
 }
-const embeddedTerminologyTotal = (page.match(/<article\b[^>]*\bdata-term-card\b[^>]*>/gi) || []).length;
-const terminologyTotal = embeddedTerminologyTotal + (page.includes('terminology-sponsor-v1.js') ? 1 : 0);
-page = page.replace(/词典：\d+项中文诠释/, '词典：' + terminologyTotal + '项中文诠释');
-page = page.replace(/共收录\s+\d+\s+项术语\s+·\s+\d+\s+份单点培训课件/, '共收录 ' + terminologyTotal + ' 项术语 · ' + terminologyTotal + ' 份单点培训课件');
+page = page.replace(/词典：\d+项中文诠释/, '词典：181项中文诠释');
+page = page.replace(/共收录\s+\d+\s+项术语\s+·\s+\d+\s+份单点培训课件/, '共收录 181 项术语 · 181 份单点培训课件');
 write(termHtml, page);
 
 /* Keep Sponsor inside the unified terminology count even though the card is
@@ -64,10 +61,10 @@ if (fs.existsSync(path.join(root, brief))) {
 
 const dataFile = 'qilylean/site-data.json';
 const data = JSON.parse(read(dataFile));
-data.generatedAt = publishDate;
+data.generatedAt = '2026-08-01';
 data.terminology = data.terminology || {};
-data.terminology.total = terminologyTotal;
-data.terminology.lessonTotal = terminologyTotal;
+data.terminology.total = 181;
+data.terminology.lessonTotal = 181;
 data.compliance = {
   brandNature: '丁启利发起并运营的个人专业品牌与制造改善实践平台',
   separateLegalEntity: false,
@@ -91,12 +88,12 @@ data.compliance = {
 data.search = {
   indexedEntries: 0,
   indexedPages: 36,
-  terminologyTotal,
+  terminologyTotal: 181,
   briefTotal: 2580,
   latestBriefDate: '2026-08-01',
   sitemapLastmod: '2026-08-01',
   ...(data.search || {}),
-  terminologyTotal
+  terminologyTotal: 181
 };
 write(dataFile, JSON.stringify(data, null, 2));
 
@@ -118,12 +115,12 @@ try {
   });
   if (!Array.isArray(index)) {
     index.meta = index.meta || {};
-    index.meta.generatedAt = publishDate;
-    index.meta.terminologyTotal = terminologyTotal;
+    index.meta.generatedAt = '2026-08-01';
+    index.meta.terminologyTotal = 181;
     index.meta.totalEntries = entries.length;
   }
   data.search.indexedEntries = entries.length;
-  data.search.terminologyTotal = terminologyTotal;
+  data.search.terminologyTotal = 181;
   write(indexFile, JSON.stringify(index, null, 2));
   write(dataFile, JSON.stringify(data, null, 2));
 } catch (error) {
