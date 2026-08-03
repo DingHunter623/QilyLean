@@ -24,6 +24,7 @@ on:
       - "scripts/audit-daily-terminology.js"
       - "scripts/audit-daily-quality-linkage.js"
       - "scripts/apply-commercial-quality-closure-20260804.js"
+      - "scripts/normalize-daily-quality-label.js"
       - "scripts/sync-daily-terminology.js"
       - "scripts/bump-daily-css-version.js"
       - "scripts/validate-daily-archive.js"
@@ -59,6 +60,7 @@ jobs:
           node --check scripts/audit-daily-terminology.js
           node --check scripts/audit-daily-quality-linkage.js
           node --check scripts/apply-commercial-quality-closure-20260804.js
+          node --check scripts/normalize-daily-quality-label.js
           node --check scripts/sync-daily-terminology.js
           node --check scripts/bump-daily-css-version.js
           node --check scripts/validate-daily-archive.js
@@ -66,18 +68,22 @@ jobs:
           node --check scripts/normalize-daily-visual-closure.js
 
       - name: Apply pricing, contrast and quality source closure
-        run: node scripts/apply-commercial-quality-closure-20260804.js
+        run: |
+          node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/normalize-daily-quality-label.js
 
       - name: Build publication candidate
         run: |
           node scripts/build-daily-archive.js
           node scripts/enhance-daily-archive.js
           node scripts/enhance-terminology-training.js
+          node scripts/normalize-daily-quality-label.js
           node scripts/audit-daily-terminology.js
           node scripts/sync-daily-terminology.js
           node scripts/sync-daily-terminology.js --check
           node scripts/bump-daily-css-version.js
           node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/normalize-daily-quality-label.js
 
       - name: Unify Daily Engineering Brief brand
         shell: bash
@@ -100,6 +106,7 @@ jobs:
         run: |
           node scripts/normalize-daily-visual-closure.js
           node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/normalize-daily-quality-label.js
 
       - name: Audit recurring quality linkage
         run: node scripts/audit-daily-quality-linkage.js
@@ -113,6 +120,7 @@ jobs:
           test "$TOTAL" = "2583"
           grep -q '科学改进生产力' "qilylean/daily/$LATEST_DATE.html"
           grep -q 'data-quality-throughline="2026-08-04"' "qilylean/daily/$LATEST_DATE.html"
+          grep -q '质量门槛｜科学改进生产力' "qilylean/daily/$LATEST_DATE.html"
           grep -q '/qilylean/daily/2026-07-31.html' "qilylean/daily/$LATEST_DATE.html"
           grep -q 'data-brief-message-form' "qilylean/daily/$LATEST_DATE.html"
           grep -q '留言交流' "qilylean/daily/$LATEST_DATE.html"
@@ -134,6 +142,10 @@ jobs:
           grep -q 'qilyCommercialQualityClosureStylesheet' links/index.html
           grep -q '#companyGrid .card' site-commercial-quality-closure-v1.css
           grep -q '.cooperation-page .boundary article:last-child' site-commercial-quality-closure-v1.css
+          if grep -q '\bGATE\b' "qilylean/daily/$LATEST_DATE.html"; then
+            echo "Unexplained GATE label remains"
+            exit 1
+          fi
           node - <<'NODE'
           const fs = require('fs');
           const report = JSON.parse(fs.readFileSync('qilylean/daily/terminology-audit-latest.json','utf8'));
