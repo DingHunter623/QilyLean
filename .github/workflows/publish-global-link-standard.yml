@@ -9,10 +9,17 @@ on:
       - "site-navigation-four-border-v3.css"
       - "site-dark-surface-contrast-v1.css"
       - "home-portrait-badge-fix-v1.css"
+      - "site-visual-closure-v1.css"
+      - "site-visual-closure-v1.js"
+      - "site-visual-closure-v2.css"
+      - "site-visual-closure-v2.js"
       - "site-navigation.js"
       - "site-parent-navigation-v3.js"
       - "scripts/publish-global-link-standard.js"
       - ".github/workflows/publish-global-link-standard.yml"
+  workflow_run:
+    workflows: ["Finalize static public pages"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -24,7 +31,9 @@ concurrency:
 
 jobs:
   publish:
-    if: github.actor != 'github-actions[bot]'
+    if: >-
+      (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') &&
+      (github.event_name != 'push' || github.actor != 'github-actions[bot]')
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -38,15 +47,17 @@ jobs:
         with:
           node-version: 20
 
-      - name: Publish hierarchical navigation and evidence context
+      - name: Publish final navigation, service boundaries and visual closure
         run: node scripts/publish-global-link-standard.js
 
-      - name: Validate parent routes, borders, portrait badge and evidence metadata
+      - name: Validate parent routes, V2 closure, service boundaries and evidence metadata
         shell: bash
         run: |
           node --check scripts/publish-global-link-standard.js
           node --check site-navigation.js
           node --check site-parent-navigation-v3.js
+          node --check site-visual-closure-v1.js
+          node --check site-visual-closure-v2.js
 
           grep -q "site-parent-navigation-v3.js?v=20260803-parent-route-v3" site-navigation.js
           grep -q "'/improvements/'" site-parent-navigation-v3.js
@@ -54,6 +65,7 @@ jobs:
           grep -q "'/qilylean/daily-insights.html'" site-parent-navigation-v3.js
           grep -q 'var shouldNavigate=!pointer.moved' site-parent-navigation-v3.js
           grep -q "data-action=\"back\"" site-navigation.js
+          grep -q 'qilyBoundaryLinksClosureStylesheet' site-navigation.js
 
           grep -q 'border-top-color:var(--qily-nav-border-hover)' site-navigation-four-border-v3.css
           grep -q 'border-right-color:var(--qily-nav-border-hover)' site-navigation-four-border-v3.css
@@ -64,6 +76,16 @@ jobs:
           grep -q 'min-height:96px!important' home-portrait-badge-fix-v1.css
           grep -q 'home-portrait-badge-fix-v1.css?v=20260803-badge-wrap-v2' index.html
           grep -q '范围、交付、付款与验收分阶段明确' index.html
+
+          grep -q '三类项目合作边界' cooperation/index.html
+          grep -q '规划输入与专业边界' cooperation/index.html
+          grep -q '基线、试点与收益边界' cooperation/index.html
+          grep -q '标准、内容与实施边界' cooperation/index.html
+          grep -q '不替代具备相应资质单位出具的施工图' cooperation/index.html
+          grep -q 'site-visual-closure-v2.css?v=20260803-boundary-links-v2' cooperation/index.html
+          grep -q 'site-visual-closure-v2.js?v=20260803-boundary-links-v2' links/index.html
+          grep -q '#companyGrid .card' site-visual-closure-v2.css
+          grep -q 'enhanceLinkCards' site-visual-closure-v2.js
 
           grep -q '2582 期' knowledge/index.html
           grep -q '最新更新至 2026-08-03' knowledge/index.html
@@ -85,30 +107,40 @@ jobs:
                 const html = fs.readFileSync(full, 'utf8');
                 if (!/<\/head>/i.test(html)) continue;
                 const relative = path.relative(root, full);
-                if (!html.includes('site-navigation.js?v=20260803-parent-route-v4')) failures.push(relative + ':navigation');
+                if (!html.includes('site-navigation.js?v=20260803-boundary-links-v2')) failures.push(relative + ':navigation');
                 if (!html.includes('site-link-standard-v2.css?v=20260803-nav-four-border-v6')) failures.push(relative + ':links');
                 if (!html.includes('site-navigation-four-border-v3.css?v=20260803-four-border-v3')) failures.push(relative + ':four-border');
                 if (!html.includes('site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2')) failures.push(relative + ':contrast');
+                if (!html.includes('site-visual-closure-v1.css?v=20260803-visual-closure-v1')) failures.push(relative + ':closure-v1-css');
+                if (!html.includes('site-visual-closure-v1.js?v=20260803-visual-closure-v1')) failures.push(relative + ':closure-v1-js');
+                if (!html.includes('site-visual-closure-v2.css?v=20260803-boundary-links-v2')) failures.push(relative + ':closure-v2-css');
+                if (!html.includes('site-visual-closure-v2.js?v=20260803-boundary-links-v2')) failures.push(relative + ':closure-v2-js');
               }
             }
           }
 
           walk(root);
           if (failures.length) {
-            throw new Error('Pages missing current global navigation assets: ' + failures.slice(0,30).join(', '));
+            throw new Error('Pages missing final navigation or visual closure assets: ' + failures.slice(0,30).join(', '));
+          }
+
+          const search = JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
+          const cooperation = search.entries.find((entry) => entry.url === '/cooperation/');
+          if (!cooperation || !String(cooperation.text || '').includes('三类项目合作边界')) {
+            throw new Error('Cooperation search entry does not include the service-specific boundary summary.');
           }
           NODE
 
-      - name: Commit published navigation assets
+      - name: Commit final boundary and link-card publication
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All pages already use the current navigation, portrait and evidence standards."
+            echo "All pages already use the final V2 boundaries, navigation and link-card contrast standards."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: publish current navigation, portrait and evidence context [skip ci]"
+          git commit -m "fix: publish final boundary and link-card closure [skip ci]"
           git pull --rebase origin main
           git push origin main
