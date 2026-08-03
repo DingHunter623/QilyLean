@@ -10,6 +10,7 @@ let html = fs.readFileSync(file, 'utf8');
 
 /*
  * QILY-HOME-STATIC-METRIC-NO-HOVER
+ * Enforcement revision: 2026-08-03 v2.
  * Static result cards must remain visually unchanged under mouse, touch,
  * keyboard focus and active states. Only genuine links/buttons may animate.
  */
