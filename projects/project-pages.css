@@ -281,3 +281,12 @@ body.factory-plan-viewer-open{overflow:hidden}
   .factory-plan-project-copy>p{font-size:14.5px!important}
 }
 @media print{.factory-plan-section,.factory-plan-lightbox{display:none!important}.factory-layout-page::after{content:'规划图纸仅限在线受控预览';display:block;padding:20px;color:#526968;text-align:center}}
+
+/* 全站公开成果证据等级：详情页必须与入口分级一致。 */
+.project-evidence-grade{display:inline-flex;align-items:center;gap:8px;margin:0 0 14px;padding:8px 13px;border:2px solid currentColor;border-radius:999px;font-size:14px;font-weight:950;line-height:1.35;letter-spacing:.02em}
+.project-evidence-grade strong{font-size:16px}
+.project-evidence-grade.grade-a{color:#fff;background:#0f4b5a;border-color:#ffe39b}
+.project-evidence-grade.grade-b{color:#fff;background:#177f87;border-color:#ffe39b}
+.project-evidence-grade.grade-c{color:#fff;background:#9e4a34;border-color:#ffe39b}
+.project-evidence-grade.grade-d{color:#17322d;background:#ffe39b;border-color:#9a7130}
+.project-evidence-boundary{margin:12px 0 18px;padding:12px 15px;border-left:4px solid #caa15f;color:#526968;background:#f3f9f7;font-size:14.5px;line-height:1.7}
