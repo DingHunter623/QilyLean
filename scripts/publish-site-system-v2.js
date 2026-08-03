@@ -63,7 +63,7 @@ function validatePublicStyles() {
   const navigation = read(navigationFile);
   if (navigation.includes('site-microsoft-international-v1.css?v=')) throw new Error('Microsoft international CSS must be disabled');
   if (navigation.includes('site-microsoft-enterprise-components-v2.css?v=')) throw new Error('Microsoft enterprise component CSS must be disabled');
-  if (navigation.includes('data-qily-microsoft-international-loader')) throw new Error('Microsoft international JS loader must be disabled');
+  if (/enhancer\.src\s*=\s*['"]\/site-microsoft-international-v1\.js/.test(navigation)) throw new Error('Microsoft international JS loader must be disabled');
   if (!navigation.includes(`site-vi-contrast-restoration-v1.css?v=${CONTRAST_VERSION}`)) throw new Error('Contrast restoration loader missing');
 }
 
