@@ -1,8 +1,8 @@
-/* QilyLean global VI and visual-closure loader v5 */
+/* QilyLean global VI and visual-closure loader v6 */
 (function(d,w){
   'use strict';
-  if(w.__qilyViRestorationLoaderV5)return;
-  w.__qilyViRestorationLoaderV5=true;
+  if(w.__qilyViRestorationLoaderV6)return;
+  w.__qilyViRestorationLoaderV6=true;
 
   function removeMicrosoftOverrides(){
     [
@@ -27,7 +27,8 @@
     {id:'qilyInformationArchitectureStylesheet',href:'/site-information-architecture-v1.css?v=20260802-commercial-focus-v1'},
     {id:'qilyViStandardStylesheet',href:'/site-vi-standard-v1.css?v=20260801-vi-standard-v1'},
     {id:'qilyViContrastRestorationStylesheet',href:'/site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1'},
-    {id:'qilyVisualClosureStylesheet',href:'/site-visual-closure-v1.css?v=20260803-visual-closure-v1'}
+    {id:'qilyVisualClosureStylesheet',href:'/site-visual-closure-v1.css?v=20260803-visual-closure-v1'},
+    {id:'qilyBoundaryLinksClosureStylesheet',href:'/site-visual-closure-v2.css?v=20260803-boundary-links-v2'}
   ];
 
   function ensureStyles(){
@@ -46,26 +47,31 @@
     });
   }
 
-  function ensureClosureScript(){
-    if(d.querySelector('script[data-qily-visual-closure-loader]'))return;
+  function ensureScript(attribute,value,src){
+    if(d.querySelector('script['+attribute+'="'+value+'"]'))return;
     var script=d.createElement('script');
-    script.src='/site-visual-closure-v1.js?v=20260803-visual-closure-v1';
+    script.src=src;
     script.defer=true;
-    script.setAttribute('data-qily-visual-closure-loader','v1');
+    script.setAttribute(attribute,value);
     (d.head||d.documentElement).appendChild(script);
+  }
+
+  function ensureClosureScripts(){
+    ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260803-visual-closure-v1');
+    ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
   }
 
   function promoteRestoration(){
     removeMicrosoftOverrides();
     var parent=d.head||d.documentElement;
-    ['qilyViStandardStylesheet','qilyViContrastRestorationStylesheet','qilyVisualClosureStylesheet'].forEach(function(id){
+    ['qilyViStandardStylesheet','qilyViContrastRestorationStylesheet','qilyVisualClosureStylesheet','qilyBoundaryLinksClosureStylesheet'].forEach(function(id){
       var current=d.getElementById(id);
       if(current&&current.parentNode===parent)parent.appendChild(current);
     });
   }
 
   ensureStyles();
-  ensureClosureScript();
+  ensureClosureScripts();
   promoteRestoration();
   setTimeout(promoteRestoration,120);
   setTimeout(promoteRestoration,600);
@@ -73,7 +79,7 @@
   setTimeout(promoteRestoration,3000);
 })(document,window);
 
-/* QilyLean layered navigation build contract v5 */
+/* QilyLean layered navigation build contract v6 */
 window.__qilyLayeredNavigationBuildContract=Object.freeze({
   shellAssets:[
     'site-wide-layout-v1.css?v=20260729-fluid-copy-v5',
@@ -81,7 +87,9 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
     'site-vi-standard-v1.css?v=20260801-vi-standard-v1',
     'site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1',
     'site-visual-closure-v1.css?v=20260803-visual-closure-v1',
-    'site-visual-closure-v1.js?v=20260803-visual-closure-v1'
+    'site-visual-closure-v1.js?v=20260803-visual-closure-v1',
+    'site-visual-closure-v2.css?v=20260803-boundary-links-v2',
+    'site-visual-closure-v2.js?v=20260803-boundary-links-v2'
   ],
   disabledAssets:[
     'site-microsoft-international-v1.css',
@@ -106,36 +114,44 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
 /* QilyLean global navigation wrapper｜保留原功能并加载可信度、信息架构及视觉闭环 */
 (function(d,w){
   'use strict';
-  if(w.__qilyNavigationWrapper20260803V11)return;
-  w.__qilyNavigationWrapper20260803V11=true;
+  if(w.__qilyNavigationWrapper20260803V12)return;
+  w.__qilyNavigationWrapper20260803V12=true;
 
   function promoteVi(){
     var parent=d.head||d.documentElement;
-    ['qilyViStandardStylesheet','qilyViContrastRestorationStylesheet','qilyVisualClosureStylesheet'].forEach(function(id){
+    ['qilyViStandardStylesheet','qilyViContrastRestorationStylesheet','qilyVisualClosureStylesheet','qilyBoundaryLinksClosureStylesheet'].forEach(function(id){
       var node=d.getElementById(id);
       if(node&&node.parentNode===parent)parent.appendChild(node);
     });
   }
 
-  function loadVisualClosure(){
-    var href='/site-visual-closure-v1.css?v=20260803-visual-closure-v1';
-    var stylesheet=d.getElementById('qilyVisualClosureStylesheet');
+  function ensureStylesheet(id,href){
+    var stylesheet=d.getElementById(id);
     if(stylesheet){
       if(stylesheet.getAttribute('href')!==href)stylesheet.setAttribute('href',href);
-    }else{
-      stylesheet=d.createElement('link');
-      stylesheet.id='qilyVisualClosureStylesheet';
-      stylesheet.rel='stylesheet';
-      stylesheet.href=href;
-      (d.head||d.documentElement).appendChild(stylesheet);
+      return;
     }
-    if(!d.querySelector('script[data-qily-visual-closure-loader]')){
-      var script=d.createElement('script');
-      script.src='/site-visual-closure-v1.js?v=20260803-visual-closure-v1';
-      script.defer=true;
-      script.setAttribute('data-qily-visual-closure-loader','v1');
-      (d.head||d.documentElement).appendChild(script);
-    }
+    stylesheet=d.createElement('link');
+    stylesheet.id=id;
+    stylesheet.rel='stylesheet';
+    stylesheet.href=href;
+    (d.head||d.documentElement).appendChild(stylesheet);
+  }
+
+  function ensureScript(attribute,value,src){
+    if(d.querySelector('script['+attribute+'="'+value+'"]'))return;
+    var script=d.createElement('script');
+    script.src=src;
+    script.defer=true;
+    script.setAttribute(attribute,value);
+    (d.head||d.documentElement).appendChild(script);
+  }
+
+  function loadVisualClosure(){
+    ensureStylesheet('qilyVisualClosureStylesheet','/site-visual-closure-v1.css?v=20260803-visual-closure-v1');
+    ensureStylesheet('qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2');
+    ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260803-visual-closure-v1');
+    ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
   }
 
   function loadTrustStyles(){
