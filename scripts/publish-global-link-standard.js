@@ -95,8 +95,13 @@ html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,hea
 }
 ${end}`;
 
-  const pattern = new RegExp(`${start.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?${end.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'm');
-  css = pattern.test(css) ? css.replace(pattern, block) : `${css.trimEnd()}\n\n${block}\n`;
+  const startIndex = css.indexOf(start);
+  const endIndex = css.indexOf(end);
+  if (startIndex >= 0 && endIndex >= startIndex) {
+    css = `${css.slice(0, startIndex)}${block}${css.slice(endIndex + end.length)}`;
+  } else {
+    css = `${css.trimEnd()}\n\n${block}\n`;
+  }
   return write(file, css);
 }
 
