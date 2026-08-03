@@ -18,33 +18,36 @@ permissions:
   contents: write
 
 concurrency:
-  group: publish-site-system-main
+  group: qily-site-publication-main
   cancel-in-progress: false
 
 jobs:
   publish:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Publish wide layout and readable typography
+      - name: Publish current shell and homepage portrait layout
         run: node scripts/publish-site-system-v2.js
 
-      - name: Validate alignment, responsive grids and cache refresh
+      - name: Validate current navigation, portrait layout and cache refresh
         shell: bash
         run: |
+          node --check scripts/publish-site-system-v2.js
+          node --check site-navigation.js
           grep -q 'site-wide-layout-v1.css?v=20260729-fluid-copy-v5' site-navigation.js
+          grep -q 'site-typography-v1.css?v=20260729-hierarchy-v4' site-navigation.js
           grep -q 'html.qily-shell-pending body' site-shell.css
           grep -q 'if (document.body) boot()' site-navigation.js
-          grep -q 'site-typography-v1.css?v=20260729-hierarchy-v4' site-navigation.js
           grep -q 'addWideLayoutStylesheet();' site-navigation.js
           grep -q 'addTypographyStylesheet();' site-navigation.js
           grep -q -- '--qily-wide-content:1560px' site-wide-layout-v1.css
@@ -57,26 +60,29 @@ jobs:
           grep -q -- '--qily-type-nav-3:15px' site-typography-v1.css
           grep -q -- '--qily-type-body:18.5px' site-typography-v1.css
           grep -q 'text-wrap:wrap' site-typography-v1.css
-          grep -q '.career-full-card h3' site-typography-v1.css
-          grep -q '.answer-content h2' site-typography-v1.css
-          grep -q '.composer textarea' site-typography-v1.css
+          grep -q '.qily-home-balanced .portrait-badge div:nth-child(2) span' site-visual-scale-v1.css
+          grep -q 'white-space:normal!important' site-visual-scale-v1.css
+          grep -q 'min-height:96px!important' site-visual-scale-v1.css
           grep -q 'var restoreSettled = false' homepage-music.js
           grep -q 'if (!restoreSettled) return' homepage-music.js
           grep -q 'function settlePlaybackRestore()' homepage-music.js
           grep -R -q 'data-qily-shell-bootstrap' --include='*.html' .
-          grep -R -q '<script defer src="/site-navigation.js?v=20260729-no-old-flash-v1"' --include='*.html' .
+          grep -R -q '<script defer src="/site-navigation.js?v=20260803-parent-route-v4"' --include='*.html' .
+          grep -R -q 'site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5' --include='*.html' .
           grep -R -q 'site-shell.css?v=20260729-no-old-flash-v1' --include='*.html' .
           grep -R -q 'homepage-music.js?v=20260729-continuous-v4' --include='*.html' .
+          grep -q '<h1>某制造企业｜2022年度制造改善项目佐证资料</h1>' projects/lean-improvement-evidence/index.html
 
       - name: Commit site-system release
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Site-wide layout and typography are already current."
+            echo "Current shell, portrait layout and cache versions are already published."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add site-navigation.js '*.html' '**/*.html'
-          git commit -m "fix: publish fluid copy, type hierarchy and music continuity [skip ci]"
-          git push
+          git add -A
+          git commit -m "fix: publish current shell and homepage portrait wrapping [skip ci]"
+          git pull --rebase origin main
+          git push origin main
