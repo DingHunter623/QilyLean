@@ -1,23 +1,19 @@
 name: Audit unreferenced repository assets
 
 on:
-  push:
+  pull_request:
     branches: [main]
-    paths:
-      - "scripts/audit-unreferenced-assets.js"
-      - ".github/workflows/audit-unreferenced-assets.yml"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: audit-unreferenced-assets-main
+  group: audit-unreferenced-assets-pr-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
   audit:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -44,15 +40,11 @@ jobs:
           console.log(`Assets: ${report.assetFiles}; unreferenced: ${report.unreferencedAssets}; potential release: ${report.potentialBytesToRelease} bytes`);
           NODE
 
-      - name: Commit attachment audit report
-        shell: bash
-        run: |
-          if git diff --quiet; then
-            echo "Attachment audit report is already current."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add maintenance/unreferenced-assets-report.json
-          git commit -m "chore: report unreferenced repository attachments [skip ci]"
-          git push
+      - name: Upload attachment audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unreferenced-assets-report
+          path: maintenance/unreferenced-assets-report.json
+          if-no-files-found: warn
+          retention-days: 7
