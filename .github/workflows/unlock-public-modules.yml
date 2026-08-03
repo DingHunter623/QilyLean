@@ -12,6 +12,7 @@ on:
       - "site-typography-v1.css"
       - "site-microsoft-international-v1.css"
       - "site-microsoft-international-v1.js"
+      - "site-microsoft-enterprise-components-v2.css"
       - "homepage-music.js"
       - ".github/workflows/unlock-public-modules.yml"
   workflow_dispatch:
@@ -41,7 +42,7 @@ jobs:
       - name: Publish international layout and current public shell
         run: node scripts/publish-site-system-v2.js
 
-      - name: Validate international layout, navigation and cache refresh
+      - name: Validate international layout, enterprise components, navigation and cache refresh
         shell: bash
         run: |
           node --check scripts/publish-site-system-v2.js
@@ -51,6 +52,7 @@ jobs:
           grep -q 'site-typography-v1.css?v=20260729-hierarchy-v4' site-navigation.js
           grep -q 'site-microsoft-international-v1.css?v=20260803-ms-international-v1' site-navigation.js
           grep -q 'site-microsoft-international-v1.js?v=20260803-ms-international-v1' site-navigation.js
+          grep -q 'site-microsoft-enterprise-components-v2.css?v=20260803-ms-components-v2' site-navigation.js
           grep -q 'QILY-MICROSOFT-NAV-UNDERLINE-RUNTIME:START' site-navigation.js
           grep -q 'html.qily-shell-pending body' site-shell.css
           grep -q 'if (document.body) boot()' site-navigation.js
@@ -73,6 +75,10 @@ jobs:
           grep -q '.capability-digital-tool:nth-child(even)' site-microsoft-international-v1.css
           grep -q '.qily-ms-static-card:hover' site-microsoft-international-v1.css
           grep -q '.qily-ms-interactive-card:hover' site-microsoft-international-v1.css
+          grep -q 'QilyLean enterprise component layer v2' site-microsoft-enterprise-components-v2.css
+          grep -q '.qily-ia-card:not(.qily-ia-card-link)' site-microsoft-enterprise-components-v2.css
+          grep -q 'qily-founder-line' site-microsoft-enterprise-components-v2.css
+          grep -q '.qily-ia-secondary-links' site-microsoft-enterprise-components-v2.css
           grep -q '__qilyMicrosoftInternationalV1' site-microsoft-international-v1.js
           grep -q "section.classList.add('qily-ms-product-showcase')" site-microsoft-international-v1.js
           grep -q 'var restoreSettled = false' homepage-music.js
