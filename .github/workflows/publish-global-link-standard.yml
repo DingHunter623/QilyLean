@@ -13,21 +13,20 @@ on:
       - "site-parent-navigation-v3.js"
       - "scripts/publish-global-link-standard.js"
       - ".github/workflows/publish-global-link-standard.yml"
-      - "**/*.html"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: publish-global-navigation-main
+  group: qily-site-publication-main
   cancel-in-progress: false
 
 jobs:
   publish:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
 
     steps:
       - uses: actions/checkout@v4
@@ -39,10 +38,10 @@ jobs:
         with:
           node-version: 20
 
-      - name: Publish hierarchical navigation site-wide
+      - name: Publish hierarchical navigation and evidence context
         run: node scripts/publish-global-link-standard.js
 
-      - name: Validate parent routes, dragging, borders, portrait badge and metadata
+      - name: Validate parent routes, borders, portrait badge and evidence metadata
         shell: bash
         run: |
           node --check scripts/publish-global-link-standard.js
@@ -63,12 +62,13 @@ jobs:
 
           grep -q 'white-space:normal!important' home-portrait-badge-fix-v1.css
           grep -q 'min-height:96px!important' home-portrait-badge-fix-v1.css
-          grep -q 'home-portrait-badge-fix-v1.css?v=20260803-badge-wrap-v1' index.html
+          grep -q 'home-portrait-badge-fix-v1.css?v=20260803-badge-wrap-v2' index.html
           grep -q '范围、交付、付款与验收分阶段明确' index.html
 
           grep -q '2582 期' knowledge/index.html
           grep -q '最新更新至 2026-08-03' knowledge/index.html
           grep -q '<h1>某制造企业｜2022年度制造改善项目佐证资料</h1>' projects/lean-improvement-evidence/index.html
+          grep -q 'data-evidence-revision="20260803-context-v3"' projects/lean-improvement-evidence/index.html
 
           node - <<'NODE'
           const fs = require('fs');
@@ -85,7 +85,7 @@ jobs:
                 const html = fs.readFileSync(full, 'utf8');
                 if (!/<\/head>/i.test(html)) continue;
                 const relative = path.relative(root, full);
-                if (!html.includes('site-navigation.js?v=20260803-parent-route-v3')) failures.push(relative + ':navigation');
+                if (!html.includes('site-navigation.js?v=20260803-parent-route-v4')) failures.push(relative + ':navigation');
                 if (!html.includes('site-link-standard-v2.css?v=20260803-nav-four-border-v6')) failures.push(relative + ':links');
                 if (!html.includes('site-navigation-four-border-v3.css?v=20260803-four-border-v3')) failures.push(relative + ':four-border');
                 if (!html.includes('site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2')) failures.push(relative + ':contrast');
@@ -103,11 +103,12 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All pages already use the current navigation and homepage portrait badge standards."
+            echo "All pages already use the current navigation, portrait and evidence standards."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: publish homepage portrait badge wrapping [skip ci]"
-          git push
+          git commit -m "fix: publish current navigation, portrait and evidence context [skip ci]"
+          git pull --rebase origin main
+          git push origin main
