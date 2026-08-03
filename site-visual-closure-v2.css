@@ -1,0 +1,167 @@
+/* QilyLean 合作边界与友情链接可读性闭环层 v2｜2026-08-03
+ * 目标：按三类业务分别定义合作边界；强化友情链接官网资源卡的文字与组件边界。
+ */
+
+/* 一、项目合作：三类业务分别定义适用条件、暂缓条件与专业边界。 */
+html body #boundary .boundary-service-grid{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:18px!important;
+  align-items:stretch!important;
+}
+html body #boundary .boundary-service-card{
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  height:100%!important;
+  padding:24px!important;
+  border:1px solid #b9d3d0!important;
+  border-top:5px solid var(--ql-teal,#178b94)!important;
+  background:#fff!important;
+  box-shadow:0 12px 30px rgba(7,60,71,.08)!important;
+}
+html body #boundary .boundary-service-card:nth-child(2){border-top-color:var(--ql-gold,#caa15f)!important}
+html body #boundary .boundary-service-card:nth-child(3){border-top-color:var(--ql-risk,#9e4a34)!important}
+html body #boundary .boundary-type{
+  display:inline-flex!important;
+  align-self:flex-start!important;
+  margin:0 0 10px!important;
+  padding:5px 10px!important;
+  border-radius:999px!important;
+  color:var(--ql-deep,#073c47)!important;
+  -webkit-text-fill-color:var(--ql-deep,#073c47)!important;
+  background:#e3f2ef!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  line-height:1.35!important;
+}
+html body #boundary .boundary-service-card h3{
+  margin:0 0 16px!important;
+  color:var(--ql-deep,#073c47)!important;
+  -webkit-text-fill-color:var(--ql-deep,#073c47)!important;
+  font-size:23px!important;
+  line-height:1.3!important;
+}
+html body #boundary .boundary-split{
+  display:grid!important;
+  gap:12px!important;
+}
+html body #boundary .boundary-split>div{
+  padding:15px 16px!important;
+  border:1px solid #d5e4e3!important;
+  border-left:4px solid var(--ql-teal,#178b94)!important;
+  background:#f3faf9!important;
+}
+html body #boundary .boundary-split>.boundary-hold{
+  border-left-color:var(--ql-risk,#9e4a34)!important;
+  background:#fff5f1!important;
+}
+html body #boundary .boundary-split strong{
+  display:block!important;
+  margin:0 0 7px!important;
+  color:var(--ql-deep,#073c47)!important;
+  -webkit-text-fill-color:var(--ql-deep,#073c47)!important;
+  font-size:16px!important;
+  font-weight:950!important;
+}
+html body #boundary .boundary-split ul{
+  margin:0!important;
+  padding-left:1.18em!important;
+}
+html body #boundary .boundary-split li{
+  margin:6px 0!important;
+  color:#315956!important;
+  -webkit-text-fill-color:#315956!important;
+  font-size:15px!important;
+  line-height:1.65!important;
+}
+html body #boundary .boundary-note{
+  margin:14px 0 0!important;
+  padding:13px 14px!important;
+  border-left:4px solid var(--ql-gold,#caa15f)!important;
+  color:#315956!important;
+  -webkit-text-fill-color:#315956!important;
+  background:#fff9e9!important;
+  font-size:14px!important;
+  line-height:1.65!important;
+}
+html body #boundary .boundary-note strong{
+  color:var(--ql-deep,#073c47)!important;
+  -webkit-text-fill-color:var(--ql-deep,#073c47)!important;
+}
+
+/* 二、友情链接：官网资源卡必须达到明确的文字、标签、图标和边框对比。 */
+html body #companyGrid .card,
+html body .grid#companyGrid .card{
+  min-height:198px!important;
+  padding:19px!important;
+  border:2px solid #a8c9c6!important;
+  border-top:5px solid var(--ql-teal,#178b94)!important;
+  color:var(--ql-body,#182420)!important;
+  -webkit-text-fill-color:var(--ql-body,#182420)!important;
+  background:#fff!important;
+  box-shadow:0 10px 24px rgba(7,60,71,.10)!important;
+}
+html body #companyGrid .card h2{
+  margin:13px 0 4px!important;
+  color:var(--ql-deep,#073c47)!important;
+  -webkit-text-fill-color:var(--ql-deep,#073c47)!important;
+  font-weight:950!important;
+  text-decoration-color:var(--ql-teal,#178b94)!important;
+}
+html body #companyGrid .card .cn{
+  color:#315956!important;
+  -webkit-text-fill-color:#315956!important;
+  font-weight:850!important;
+  opacity:1!important;
+}
+html body #companyGrid .card .mark{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--ql-deep,#073c47)!important;
+  border:1px solid var(--ql-deep,#073c47)!important;
+  box-shadow:0 5px 12px rgba(7,60,71,.18)!important;
+}
+html body #companyGrid .card .external{
+  color:var(--ql-deep,#073c47)!important;
+  -webkit-text-fill-color:var(--ql-deep,#073c47)!important;
+  font-weight:950!important;
+  text-decoration-color:var(--ql-teal,#178b94)!important;
+}
+html body #companyGrid .card .tag{
+  padding:5px 9px!important;
+  border:1px solid #a9cfca!important;
+  color:var(--ql-deep,#073c47)!important;
+  -webkit-text-fill-color:var(--ql-deep,#073c47)!important;
+  background:#dff1ed!important;
+  font-weight:900!important;
+  opacity:1!important;
+}
+html body #companyGrid .card:is(:hover,:focus-visible){
+  transform:translateY(-2px)!important;
+  border-color:var(--ql-gold,#caa15f)!important;
+  border-top-color:var(--ql-deep,#073c47)!important;
+  background:#fff9e9!important;
+  box-shadow:0 16px 34px rgba(7,60,71,.18)!important;
+}
+html body #companyGrid .card:is(:hover,:focus-visible) :is(h2,.cn,.external){
+  color:var(--ql-deep,#073c47)!important;
+  -webkit-text-fill-color:var(--ql-deep,#073c47)!important;
+}
+html body #companyGrid .card:is(:hover,:focus-visible) .tag{
+  color:var(--ql-deep,#073c47)!important;
+  -webkit-text-fill-color:var(--ql-deep,#073c47)!important;
+  background:#fff!important;
+  border-color:var(--ql-gold,#caa15f)!important;
+}
+
+@media(max-width:1080px){
+  html body #boundary .boundary-service-grid{grid-template-columns:1fr!important}
+}
+@media(max-width:560px){
+  html body #boundary .boundary-service-card{padding:20px!important}
+  html body #companyGrid .card{min-height:176px!important;padding:17px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body #companyGrid .card{transition:none!important}
+}
