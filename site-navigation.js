@@ -1,8 +1,8 @@
-/* QilyLean global VI restoration loader v4 */
+/* QilyLean global VI and visual-closure loader v5 */
 (function(d,w){
   'use strict';
-  if(w.__qilyViRestorationLoaderV4)return;
-  w.__qilyViRestorationLoaderV4=true;
+  if(w.__qilyViRestorationLoaderV5)return;
+  w.__qilyViRestorationLoaderV5=true;
 
   function removeMicrosoftOverrides(){
     [
@@ -26,7 +26,8 @@
     {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'},
     {id:'qilyInformationArchitectureStylesheet',href:'/site-information-architecture-v1.css?v=20260802-commercial-focus-v1'},
     {id:'qilyViStandardStylesheet',href:'/site-vi-standard-v1.css?v=20260801-vi-standard-v1'},
-    {id:'qilyViContrastRestorationStylesheet',href:'/site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1'}
+    {id:'qilyViContrastRestorationStylesheet',href:'/site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1'},
+    {id:'qilyVisualClosureStylesheet',href:'/site-visual-closure-v1.css?v=20260803-visual-closure-v1'}
   ];
 
   function ensureStyles(){
@@ -45,16 +46,26 @@
     });
   }
 
+  function ensureClosureScript(){
+    if(d.querySelector('script[data-qily-visual-closure-loader]'))return;
+    var script=d.createElement('script');
+    script.src='/site-visual-closure-v1.js?v=20260803-visual-closure-v1';
+    script.defer=true;
+    script.setAttribute('data-qily-visual-closure-loader','v1');
+    (d.head||d.documentElement).appendChild(script);
+  }
+
   function promoteRestoration(){
     removeMicrosoftOverrides();
     var parent=d.head||d.documentElement;
-    ['qilyViStandardStylesheet','qilyViContrastRestorationStylesheet'].forEach(function(id){
+    ['qilyViStandardStylesheet','qilyViContrastRestorationStylesheet','qilyVisualClosureStylesheet'].forEach(function(id){
       var current=d.getElementById(id);
       if(current&&current.parentNode===parent)parent.appendChild(current);
     });
   }
 
   ensureStyles();
+  ensureClosureScript();
   promoteRestoration();
   setTimeout(promoteRestoration,120);
   setTimeout(promoteRestoration,600);
@@ -62,18 +73,15 @@
   setTimeout(promoteRestoration,3000);
 })(document,window);
 
-/*
- * QilyLean layered navigation build contract v4
- * Public runtime remains in site-navigation-core.js through the legacy wrapper.
- * The Microsoft visual override is intentionally disabled; established QilyLean
- * VI, contrast and interaction standards are the final authority.
- */
+/* QilyLean layered navigation build contract v5 */
 window.__qilyLayeredNavigationBuildContract=Object.freeze({
   shellAssets:[
     'site-wide-layout-v1.css?v=20260729-fluid-copy-v5',
     'site-typography-v1.css?v=20260729-hierarchy-v4',
     'site-vi-standard-v1.css?v=20260801-vi-standard-v1',
-    'site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1'
+    'site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1',
+    'site-visual-closure-v1.css?v=20260803-visual-closure-v1',
+    'site-visual-closure-v1.js?v=20260803-visual-closure-v1'
   ],
   disabledAssets:[
     'site-microsoft-international-v1.css',
@@ -95,18 +103,39 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
   ]
 });
 
-/* QilyLean global navigation wrapper｜保留原功能并加载可信度、信息架构与VI规范 */
+/* QilyLean global navigation wrapper｜保留原功能并加载可信度、信息架构及视觉闭环 */
 (function(d,w){
   'use strict';
-  if(w.__qilyNavigationWrapper20260803V10)return;
-  w.__qilyNavigationWrapper20260803V10=true;
+  if(w.__qilyNavigationWrapper20260803V11)return;
+  w.__qilyNavigationWrapper20260803V11=true;
 
   function promoteVi(){
     var parent=d.head||d.documentElement;
-    ['qilyViStandardStylesheet','qilyViContrastRestorationStylesheet'].forEach(function(id){
+    ['qilyViStandardStylesheet','qilyViContrastRestorationStylesheet','qilyVisualClosureStylesheet'].forEach(function(id){
       var node=d.getElementById(id);
       if(node&&node.parentNode===parent)parent.appendChild(node);
     });
+  }
+
+  function loadVisualClosure(){
+    var href='/site-visual-closure-v1.css?v=20260803-visual-closure-v1';
+    var stylesheet=d.getElementById('qilyVisualClosureStylesheet');
+    if(stylesheet){
+      if(stylesheet.getAttribute('href')!==href)stylesheet.setAttribute('href',href);
+    }else{
+      stylesheet=d.createElement('link');
+      stylesheet.id='qilyVisualClosureStylesheet';
+      stylesheet.rel='stylesheet';
+      stylesheet.href=href;
+      (d.head||d.documentElement).appendChild(stylesheet);
+    }
+    if(!d.querySelector('script[data-qily-visual-closure-loader]')){
+      var script=d.createElement('script');
+      script.src='/site-visual-closure-v1.js?v=20260803-visual-closure-v1';
+      script.defer=true;
+      script.setAttribute('data-qily-visual-closure-loader','v1');
+      (d.head||d.documentElement).appendChild(script);
+    }
   }
 
   function loadTrustStyles(){
@@ -172,6 +201,7 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
     loadInformationArchitectureAssets();
     loadDailyNavigationStyles();
     loadDailyDirectoryStyles();
+    loadVisualClosure();
     if(!d.querySelector('script[data-qily-brand-trust-loader]')){
       var enhancer=d.createElement('script');
       enhancer.src='/site-brand-trust-v1.js?v=20260802-project-rolebar-v3';
@@ -212,5 +242,6 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
   loadInformationArchitectureAssets();
   loadDailyNavigationStyles();
   loadDailyDirectoryStyles();
+  loadVisualClosure();
   loadParentNavigation();
 })(document,window);
