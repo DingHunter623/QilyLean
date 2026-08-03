@@ -43,7 +43,8 @@ jobs:
           grep -q 'transition:none!important' index.html
           grep -q 'transform:none!important' index.html
           grep -q 'qily-static-metric-no-hover-style' site-static-core-interactions-v1.js
-          if grep -q 'metric-display-note' index.html; then
+          grep -q '“超千万元”口径' index.html
+          if grep -q '以下为静态成果概览卡片' index.html; then
             echo 'Misleading static-card note must not exist.' >&2
             exit 1
           fi
