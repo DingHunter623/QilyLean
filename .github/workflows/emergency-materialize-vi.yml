@@ -1,13 +1,27 @@
-name: Emergency materialize QilyLean VI
+name: Materialize QilyLean visual closure
 
 on:
-  push:
+  pull_request:
     branches: [main]
     paths:
+      - "**/*.html"
       - "scripts/emergency-materialize-vi.js"
       - "site-navigation.js"
       - "site-vi-standard-v1.css"
       - "site-vi-contrast-restoration-v1.css"
+      - "site-visual-closure-v1.css"
+      - "site-visual-closure-v1.js"
+      - ".github/workflows/emergency-materialize-vi.yml"
+  push:
+    branches: [main]
+    paths:
+      - "**/*.html"
+      - "scripts/emergency-materialize-vi.js"
+      - "site-navigation.js"
+      - "site-vi-standard-v1.css"
+      - "site-vi-contrast-restoration-v1.css"
+      - "site-visual-closure-v1.css"
+      - "site-visual-closure-v1.js"
       - ".github/workflows/emergency-materialize-vi.yml"
   workflow_dispatch:
 
@@ -15,48 +29,58 @@ permissions:
   contents: write
 
 concurrency:
-  group: qily-emergency-vi-materialization
+  group: qily-visual-closure-materialization
   cancel-in-progress: false
 
 jobs:
   materialize:
-    if: github.actor != 'github-actions[bot]'
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]')
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
           fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Directly materialize VI into every HTML page
+      - name: Materialize VI and final visual closure into every HTML page
         run: node scripts/emergency-materialize-vi.js
 
-      - name: Verify critical closure markers
+      - name: Verify visual closure markers and critical pages
         shell: bash
         run: |
-          grep -R -q '<script defer src="/site-navigation.js?v=20260803-vi-contrast-restored-v2"' --include='*.html' .
-          grep -R -q 'site-vi-standard-v1.css?v=20260801-vi-standard-v1' --include='*.html' .
-          grep -R -q 'site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1' --include='*.html' .
-          grep -q '<h2>2022年度某制造企业｜制造改善项目佐证资料</h2>' capabilities/index.html
-          grep -q '以下资料来自2022年度某制造企业的制造改善项目' capabilities/index.html
+          grep -R -q '<script defer src="/site-navigation.js?v=20260803-visual-closure-v1"' --include='*.html' .
+          grep -R -q 'site-visual-closure-v1.css?v=20260803-visual-closure-v1' --include='*.html' .
+          grep -R -q 'site-visual-closure-v1.js?v=20260803-visual-closure-v1' --include='*.html' .
+          grep -q 'capability-home-screen' capabilities/index.html
+          grep -q '六步交付闭环' cooperation/index.html
+          grep -q 'contact-card' cooperation/index.html
+          grep -q 'resource-stage' links/index.html
+          grep -q '当前公开记录：0项' projects/qilylean-commercial-deliveries/index.html
           grep -q '查看商业交付档案' trust/index.html
           grep -q '查看客户评价授权规则' trust/index.html
+          grep -q '.capability-home-screen' site-visual-closure-v1.css
+          grep -q '.resource-stage' site-visual-closure-v1.css
+          grep -q '.flow-step' site-visual-closure-v1.css
+          grep -q 'classifyCards' site-visual-closure-v1.js
+
+      - name: Check generated diff integrity
+        run: git diff --check
 
       - name: Commit materialized public pages
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All public pages already contain the restored VI."
+            echo "All public pages already contain the visual closure assets."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: materialize restored QilyLean VI across all HTML [skip ci]"
+          git commit -m "fix: materialize QilyLean visual closure across all HTML [skip ci]"
           git pull --rebase origin main
           git push origin main
