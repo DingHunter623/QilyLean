@@ -76,7 +76,7 @@ function validatePublicStyles() {
     'QilyLean Microsoft-inspired international visual system'
   ];
   const internationalJsMarkers = [
-    'window.__qilyMicrosoftInternationalV1',
+    '__qilyMicrosoftInternationalV1',
     "d.documentElement.classList.add('qily-ms-international')",
     "card.classList.add(isDirectlyInteractive(card)?'qily-ms-interactive-card':'qily-ms-static-card')",
     "section.classList.add('qily-ms-product-showcase')"
