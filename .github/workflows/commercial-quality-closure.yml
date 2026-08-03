@@ -9,6 +9,7 @@ on:
       - "site-commercial-quality-closure-v1.css"
       - "scripts/apply-commercial-quality-closure-20260804.js"
       - "scripts/audit-daily-quality-linkage.js"
+      - "scripts/normalize-daily-quality-label.js"
       - "scripts/enhance-daily-archive.js"
       - "scripts/materialize-static-core-pages.js"
       - "cooperation/index.html"
@@ -40,23 +41,28 @@ jobs:
         run: |
           node --check scripts/apply-commercial-quality-closure-20260804.js
           node --check scripts/audit-daily-quality-linkage.js
+          node --check scripts/normalize-daily-quality-label.js
           node --check scripts/build-daily-archive.js
           node --check scripts/enhance-daily-archive.js
           node --check scripts/validate-daily-archive.js
 
       - name: Apply source and public-page closure
-        run: node scripts/apply-commercial-quality-closure-20260804.js
+        run: |
+          node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/normalize-daily-quality-label.js
 
       - name: Rebuild complete Daily Engineering Brief archive
         run: |
           node scripts/build-daily-archive.js
           node scripts/enhance-daily-archive.js
           node scripts/enhance-terminology-training.js
+          node scripts/normalize-daily-quality-label.js
           node scripts/audit-daily-terminology.js
           node scripts/sync-daily-terminology.js
           node scripts/sync-daily-terminology.js --check
           node scripts/bump-daily-css-version.js
           node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/normalize-daily-quality-label.js
 
       - name: Unify Daily Engineering Brief brand
         shell: bash
@@ -77,6 +83,7 @@ jobs:
           node scripts/remove-daily-directory-consultation.js
           node scripts/normalize-daily-visual-closure.js
           node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/normalize-daily-quality-label.js
           node scripts/audit-daily-quality-linkage.js
 
       - name: Validate publication contract
@@ -88,6 +95,7 @@ jobs:
           test "$TOTAL" = "2583"
           grep -q '科学改进生产力' "qilylean/daily/$LATEST_DATE.html"
           grep -q 'data-quality-throughline="2026-08-04"' "qilylean/daily/$LATEST_DATE.html"
+          grep -q '质量门槛｜科学改进生产力' "qilylean/daily/$LATEST_DATE.html"
           grep -q 'data-brief-message-form' "qilylean/daily/$LATEST_DATE.html"
           grep -q '¥80,000–300,000+／项目' cooperation/index.html
           grep -q '¥3,000–6,000／人日' cooperation/index.html
@@ -100,6 +108,10 @@ jobs:
           grep -q 'data-latest-brief-date="2026-08-04"' knowledge/index.html
           grep -q '#companyGrid .card' site-commercial-quality-closure-v1.css
           grep -q '.cooperation-page .boundary article:last-child' site-commercial-quality-closure-v1.css
+          if grep -q '\bGATE\b' "qilylean/daily/$LATEST_DATE.html"; then
+            echo "Unexplained GATE label remains"
+            exit 1
+          fi
           git diff --check
 
       - name: Commit generated publication
