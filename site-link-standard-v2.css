@@ -268,7 +268,6 @@ html body #results .metric:not(a):not([role="link"]):hover{
   transform:none!important;
   outline:0!important;
 }
-html body #results .metric:not(a):not([role="link"]):hover :is(strong,span,em){color:inherit!important;-webkit-text-fill-color:initial!important}
 html body a[href]:is(.qily-ia-card-link,.module-card-link,.project-card-link,.linked-card){
   cursor:pointer!important;
   text-decoration-line:none!important;
@@ -310,6 +309,45 @@ html body #results .metric.qily-static-card:active{
   border-bottom-color:transparent!important;
   border-top-color:var(--qily-static-top)!important;
   outline:0!important;
+}
+html body #results .metric.qily-static-card strong,
+html body #results .metric.qily-static-card:hover strong,
+html body #results .metric.qily-static-card:focus strong,
+html body #results .metric.qily-static-card:focus-visible strong,
+html body #results .metric.qily-static-card:active strong{
+  color:var(--forest)!important;
+  -webkit-text-fill-color:var(--forest)!important;
+  transition:none!important;
+  transform:none!important;
+  filter:none!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body #results .metric.qily-static-card span,
+html body #results .metric.qily-static-card:hover span,
+html body #results .metric.qily-static-card:focus span,
+html body #results .metric.qily-static-card:focus-visible span,
+html body #results .metric.qily-static-card:active span{
+  color:var(--muted)!important;
+  -webkit-text-fill-color:var(--muted)!important;
+  transition:none!important;
+  transform:none!important;
+  filter:none!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body #results .metric.qily-static-card em,
+html body #results .metric.qily-static-card:hover em,
+html body #results .metric.qily-static-card:focus em,
+html body #results .metric.qily-static-card:focus-visible em,
+html body #results .metric.qily-static-card:active em{
+  color:var(--red)!important;
+  -webkit-text-fill-color:var(--red)!important;
+  transition:none!important;
+  transform:none!important;
+  filter:none!important;
+  opacity:1!important;
+  text-shadow:none!important;
 }
 html body #results .metric.qily-static-card::before,
 html body #results .metric.qily-static-card::after,
