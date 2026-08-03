@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "scripts/clarify-home-static-metrics.js"
+      - "scripts/materialize-static-core-pages.js"
       - "site-static-core-interactions-v1.js"
       - ".github/workflows/clarify-home-static-metrics.yml"
   workflow_dispatch:
@@ -38,11 +39,14 @@ jobs:
         shell: bash
         run: |
           node --check scripts/clarify-home-static-metrics.js
+          node --check scripts/materialize-static-core-pages.js
           node --check site-static-core-interactions-v1.js
           grep -q 'QILY-HOME-STATIC-METRIC-NO-HOVER' index.html
           grep -q 'transition:none!important' index.html
           grep -q 'transform:none!important' index.html
           grep -q 'qily-static-metric-no-hover-style' site-static-core-interactions-v1.js
+          grep -q '20260803-static-no-hover-v2' index.html
+          grep -q '20260803-static-no-hover-v2' scripts/materialize-static-core-pages.js
           grep -q '“超千万元”口径' index.html
           if grep -q '以下为静态成果概览卡片' index.html; then
             echo 'Misleading static-card note must not exist.' >&2
@@ -62,6 +66,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git commit -m "fix: remove all hover feedback from static result cards [skip ci]"
+          git add index.html scripts/materialize-static-core-pages.js
+          git commit -m "fix: persist zero-hover static cards in final page source [skip ci]"
           git push
