@@ -1,0 +1,62 @@
+name: Emergency materialize QilyLean VI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/emergency-materialize-vi.js"
+      - "site-navigation.js"
+      - "site-vi-standard-v1.css"
+      - "site-vi-contrast-restoration-v1.css"
+      - ".github/workflows/emergency-materialize-vi.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-emergency-vi-materialization
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Directly materialize VI into every HTML page
+        run: node scripts/emergency-materialize-vi.js
+
+      - name: Verify critical closure markers
+        shell: bash
+        run: |
+          grep -R -q '<script defer src="/site-navigation.js?v=20260803-vi-contrast-restored-v2"' --include='*.html' .
+          grep -R -q 'site-vi-standard-v1.css?v=20260801-vi-standard-v1' --include='*.html' .
+          grep -R -q 'site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1' --include='*.html' .
+          grep -q '<h2>2022年度某制造企业｜制造改善项目佐证资料</h2>' capabilities/index.html
+          grep -q '以下资料来自2022年度某制造企业的制造改善项目' capabilities/index.html
+          grep -q '查看商业交付档案' trust/index.html
+          grep -q '查看客户评价授权规则' trust/index.html
+
+      - name: Commit materialized public pages
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "All public pages already contain the restored VI."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: materialize restored QilyLean VI across all HTML [skip ci]"
+          git pull --rebase origin main
+          git push origin main
