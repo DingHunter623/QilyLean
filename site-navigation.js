@@ -3,6 +3,7 @@
   'use strict';
   var styles=[
     {id:'qilyGlobalLinkStandardStylesheet',href:'/site-link-standard-v2.css?v=20260803-nav-four-border-v6'},
+    {id:'qilyNavigationFourBorderStylesheet',href:'/site-navigation-four-border-v3.css?v=20260803-four-border-v3'},
     {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'},
     {id:'qilyInformationArchitectureStylesheet',href:'/site-information-architecture-v1.css?v=20260802-commercial-focus-v1'}
   ];
