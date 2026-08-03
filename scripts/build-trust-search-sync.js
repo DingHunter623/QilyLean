@@ -76,6 +76,9 @@ function loadSiteData() {
     dataRule: '客户资料按必要、最小化和保密原则使用；涉及客户名称、工艺、成本、经营数据及人员信息的材料，仅在授权范围内处理。',
     evidenceRule: '已核定值、阶段性估算值、团队成果与个人职责分别标注，不将预测收益表述为已实现收益。',
     evidenceLevelRule: '公开成果采用A已核定、B已验证、C阶段估算、D经验陈述四级口径；该分级是QilyLean内部披露规则，不是第三方认证。',
+    evidenceLinkRule: '公开证据分级入口必须关联可访问的公开成果链接，成果详情页必须重复标注同一证据等级与适用边界。',
+    interactionRule: '只有链接、按钮或点击模块后会打开新界面的控件才提供悬停与键盘焦点反馈；反馈须采用高对比背景与文字，静态模块不得使用暗示可点击的动画、阴影或变色。',
+    typographyRule: '阶段门、标准工时、证据链等专业词组按完整语义单元排版，避免一两个字孤立换行；必要时使用显式换行与不换行包裹。',
     publicationRule: '历史简报依据历年制造实践、工作记录与项目经验持续整理；页面日期用于知识档案排序与主题定位，不单独证明网页在该日首次公开发布。',
     credentialRule: '除非页面明确列明颁发方、核验来源和适用范围，不将学习证明、平台记录或个人作品表述为政府资质、行业认证、官方授权或客户背书。',
     aiRule: 'AI用于检索、整理和方案辅助，不替代现场核实、专业评审、管理决策及法律、财税、安全等专项意见。',
@@ -105,6 +108,11 @@ function trustPage(data) {
 <meta property="og:type" content="website"><meta property="og:title" content="QilyLean信任中心"><meta property="og:description" content="商业主体、合同付款、数据保密、项目证据及AI使用边界的统一公开说明。"><meta property="og:url" content="https://qilylean.com/trust/">
 <style>
 .trust-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.trust-card{padding:24px;border:1px solid #d5e4e3;border-top:4px solid #178b94;background:#fff;box-shadow:0 12px 32px rgba(15,75,90,.07)}.trust-card:nth-child(2n){border-top-color:#caa15f}.trust-card h3{margin:7px 0 10px;color:#0f4b5a;font-size:24px}.trust-card p,.trust-card li{color:#526b69;line-height:1.78}.trust-card ul{margin:0;padding-left:1.25em}.trust-label{color:#8d6a32;font-size:13px;font-weight:950;letter-spacing:.06em}.trust-status{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}.trust-status div{padding:19px;border:1px solid #d5e4e3;background:#fff;text-align:center}.trust-status strong{display:block;color:#0f4b5a;font-size:30px}.trust-status span{display:block;margin-top:5px;color:#5f7474;font-size:14px}.trust-callout{padding:20px;border-left:5px solid #caa15f;color:#315f64;background:#eef8f6;line-height:1.8}.trust-levels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.trust-level{padding:18px;border:1px solid #d5e4e3;background:#fff}.trust-level b{display:inline-grid;place-items:center;width:34px;height:34px;margin-bottom:10px;border-radius:50%;color:#fff;background:#0f4b5a}.trust-level strong{display:block;color:#0f4b5a}.trust-level span{display:block;margin-top:6px;color:#5f7474;font-size:14px;line-height:1.65}.trust-contact{display:grid;grid-template-columns:1fr 1fr;gap:14px}.trust-contact a{display:block;padding:16px;border:1px solid #c8dad8;color:#0f4b5a;background:#fff;text-decoration:none;font-weight:900;text-align:center}@media(max-width:860px){.trust-grid,.trust-contact{grid-template-columns:1fr}.trust-status,.trust-levels{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.trust-status,.trust-levels{grid-template-columns:1fr}}
+/* 证据等级卡属于真实公开成果入口，整卡提供高对比反馈。 */
+a.trust-level{display:block;color:inherit!important;-webkit-text-fill-color:initial!important;text-decoration:none!important;transition:transform .16s ease,background .16s ease,color .16s ease,box-shadow .16s ease}
+a.trust-level:hover,a.trust-level:focus-visible{color:#fff!important;background:#0f4b5a;border-color:#0f4b5a;box-shadow:0 14px 32px rgba(15,75,90,.28);transform:translateY(-3px);outline:3px solid #caa15f;outline-offset:3px}
+a.trust-level:hover :is(b,strong,span),a.trust-level:focus-visible :is(b,strong,span){color:#fff!important;-webkit-text-fill-color:#fff!important}
+a.trust-level:hover b,a.trust-level:focus-visible b{color:#17322d!important;background:#ffe39b!important}
 </style>
 <script type="application/ld+json">${JSON.stringify({
     '@context': 'https://schema.org',
@@ -151,10 +159,10 @@ function trustPage(data) {
 <article class="trust-card"><h3>正式核验采用分级展示</h3><p>公开网页提供脱敏证据；确认合作意向后，可在保密约定下核验更完整的基线、过程、结案、财务和验收材料。</p><p><a href="/projects/lean-improvement-evidence/">查看公开脱敏项目佐证 →</a></p></article>
 </div></div></section>
 <section class="module-section" id="evidence-levels"><div class="module-inner"><div class="module-heading"><h2>公开成果证据分级</h2><p>为避免把经验陈述、过程验证、财务核定和预测模型混为一谈，公开成果统一使用以下内部披露等级；该等级不是第三方认证。</p></div><div class="trust-levels">
-<article class="trust-level"><b>A</b><strong>已核定</strong><span>存在企业财务、管理层、验收文件或等效正式记录；公开时仍须脱敏。</span></article>
-<article class="trust-level"><b>B</b><strong>已验证</strong><span>有改善前后数据、过程记录或现场验收，但未取得完整财务核定。</span></article>
-<article class="trust-level"><b>C</b><strong>阶段估算</strong><span>依据基线、模型与假设测算，必须明确“预估／阶段性估算／待核验”。</span></article>
-<article class="trust-level"><b>D</b><strong>经验陈述</strong><span>用于说明任职经历、参与范围和方法实践；正式合作前可按保密条件进一步核验。</span></article>
+<a class="trust-level" data-qily-card-link href="/projects/lean-improvement-evidence/q3-online-view.html" aria-label="查看A级已核定公开成果"><b>A</b><strong>已核定</strong><span>存在企业财务、管理层、验收文件或等效正式记录；公开时仍须脱敏。</span></a>
+<a class="trust-level" data-qily-card-link href="/projects/smed-300t/" aria-label="查看B级已验证公开成果"><b>B</b><strong>已验证</strong><span>有改善前后数据、过程记录或现场验收，但未取得完整财务核定。</span></a>
+<a class="trust-level" data-qily-card-link href="/projects/lean-improvement-evidence/q4-online-view.html" aria-label="查看C级阶段估算公开成果"><b>C</b><strong>阶段估算</strong><span>依据基线、模型与假设测算，必须明确“预估／阶段性估算／待核验”。</span></a>
+<a class="trust-level" data-qily-card-link href="/projects/factory-layout/" aria-label="查看D级经验陈述公开成果"><b>D</b><strong>经验陈述</strong><span>用于说明任职经历、参与范围和方法实践；正式合作前可按保密条件进一步核验。</span></a>
 </div><div class="trust-callout" style="margin-top:18px"><strong>累计成果说明：</strong>职业生涯累计改善贡献包含本人主导、组织推进及跨部门团队共同完成的多年度项目，不等同于QilyLean品牌成立后的独立营收，也不代表任何新项目必然取得相同结果。</div></div></section>
 <section class="module-section alt" id="publication"><div class="module-inner"><div class="module-heading"><h2>内容日期、版本与非背书声明</h2></div><div class="trust-grid">
 <article class="trust-card"><h3>历史简报日期用于档案定位</h3><p>历史简报依据历年制造实践、工作记录和项目经验持续整理。页面日期用于知识档案排序与主题定位；除非页面另有可核验说明，不单独作为该网页在对应日期首次公开发布的证明。</p></article>
