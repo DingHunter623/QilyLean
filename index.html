@@ -79,10 +79,13 @@
     .metric-display-note{display:inline-flex;align-items:flex-start;gap:7px;margin-top:11px!important;padding:8px 12px;border-left:4px solid var(--copper);color:#315f64!important;background:#eef8f6;font-size:14px!important;line-height:1.65!important}
     .metric-display-note strong{flex:0 0 auto;color:var(--forest)}
     .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .metric{min-height:168px;padding:20px;border:1px solid var(--line);border-top:4px solid var(--teal);background:#fff;cursor:default;transition:transform .16s ease,box-shadow .16s ease}
+    .metric{min-height:168px;padding:20px;border:1px solid var(--line);border-top:4px solid var(--teal);background:#fff;cursor:default;transition:none}
     .metric:nth-child(2n){border-top-color:var(--copper)}
     .metric:nth-child(3n){border-top-color:var(--plum)}
-    .metric:hover{transform:translateY(-3px);box-shadow:0 15px 34px rgba(15,75,90,.12)}
+    .metric.qily-interactive-card{cursor:pointer;transition:transform .16s ease,box-shadow .16s ease,background .16s ease,color .16s ease}
+    .metric.qily-interactive-card:hover,.metric.qily-interactive-card:focus-within{color:#fff;background:#0f4b5a;border-color:#0f4b5a;border-top-color:#ffe39b;transform:translateY(-3px);box-shadow:0 15px 34px rgba(15,75,90,.28)}
+    .metric.qily-interactive-card:hover :is(strong,span,em),.metric.qily-interactive-card:focus-within :is(strong,span,em){color:#fff!important;-webkit-text-fill-color:#fff!important}
+    .metric.qily-static-card:hover{background:#fff;transform:none;box-shadow:none}
     .metric strong{display:block;color:var(--forest);font-size:clamp(24px,2vw,34px);line-height:1.25}
     .metric span{display:block;margin-top:8px;color:var(--muted);font-size:16.5px;line-height:1.62}
     .metric em{display:block;margin-top:8px;color:var(--red);font-style:normal;font-weight:850;font-size:15px;line-height:1.55}
@@ -101,7 +104,7 @@
   <link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2">
   <meta name="twitter:description" content="QilyLean聚焦新工厂规划、精益改善项目交付与目视化实施，以交付资产、阶段付款和验收闭环定义合作。">
   <link id="qilyInformationArchitectureStylesheet" rel="stylesheet" href="/site-information-architecture-v1.css?v=20260802-static-source-v2">
-  <script id="qilyStaticCoreInteractions" defer src="/site-static-core-interactions-v1.js?v=20260802-static-source-v1"></script>
+  <script id="qilyStaticCoreInteractions" defer src="/site-static-core-interactions-v1.js?v=20260803-interaction-standard-v1"></script>
 <!-- QILY-HOME-STATIC-SCHEMA:START -->
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"QilyLean｜启力精益","url":"https://qilylean.com/","description":"面向制造企业的新工厂与新产线规划、精益改善项目交付及目视化项目设计实施专业窗口。"},{"@type":"Person","name":"丁启利","url":"https://qilylean.com/","jobTitle":"制造改善与精益工程实践者","knowsAbout":["新工厂规划","精益改善","工业工程","VSM","标准工时","OEE","SMED","目视化管理","ERP/MES/APS"]},{"@type":"Service","name":"QilyLean制造改善项目交付","provider":{"@type":"Person","name":"丁启利"},"areaServed":"中国","serviceType":["新工厂／新产线规划","精益改善项目交付","目视化项目设计与实施"]}]}</script>
 <!-- QILY-HOME-STATIC-SCHEMA:END -->
@@ -187,7 +190,6 @@
         <div class="head">
           <h2>更多职业成果与方法积累</h2>
           <p>首页仅显示部分代表性结果；完整项目背景、角色边界、数据口径和佐证材料统一归入代表项目与能力画像。</p>
-          <p class="metric-display-note" role="note"><strong>浏览说明：</strong>以下为静态成果概览卡片，仅用于信息展示；鼠标经过时的变化为视觉反馈，不代表可点击或页面跳转。</p>
         </div>
         <div class="metrics">
           <div class="metric"><strong>20年</strong><span>制造工程、精益改善与咨询交付经验，覆盖汽车电子、PCBA、半导体、电气、新能源及小家电。</span><em>跨行业诊断与项目迁移能力。</em></div>
@@ -206,9 +208,9 @@
 <section class="section qily-ia-secondary-section" id="latest-content" data-qily-static-source="home-latest-v1" data-site-metadata-source="/qilylean/site-data.json">
 <div class="inner"><div class="head"><h2>知识资产与持续更新</h2><p>简报、术语、程序文件和参考资料用于展示持续学习与方法沉淀，不与三大核心商业服务争夺首页主视觉。</p></div>
 <div class="metrics">
-<div class="metric"><strong>2026-08-02</strong><span>标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环</span><em><a href="/qilylean/daily/2026-08-02.html">查看最新简报</a></em></div>
-<div class="metric"><strong>2581期</strong><span>今日简报连续归档，贯通PE、IE、NPI、ME、质量与精益运营。</span><em><a href="/qilylean/daily-insights.html">进入简报目录</a></em></div>
-<div class="metric"><strong>181项</strong><span>制造管理与工程术语中文诠释，并一对一配套单点培训课件。</span><em><a href="/knowledge/terminology.html">进入术语词典</a></em></div>
+<div class="metric"><strong>2026-08-03</strong><span>成果分级不是贴标签：用阶段门把公开证据链做成可点击、可追溯的交付闭环</span><em><a href="/qilylean/daily/2026-08-03.html">查看最新简报</a></em></div>
+<div class="metric"><strong>2582期</strong><span>今日简报连续归档，贯通PE、IE、NPI、ME、质量与精益运营。</span><em><a href="/qilylean/daily-insights.html">进入简报目录</a></em></div>
+<div class="metric"><strong>184项</strong><span>制造管理与工程术语中文诠释，并一对一配套单点培训课件。</span><em><a href="/knowledge/terminology.html">进入术语词典</a></em></div>
 <div class="metric"><strong>6大模块</strong><span>汇集16项工具、专题、程序文件与参考资料入口。</span><em><a href="/knowledge/">进入知识分享</a></em></div>
 </div></div></section>
 <!-- SITE-METADATA:HOME-LATEST:END -->
