@@ -119,11 +119,12 @@
   margin:0 0 0 auto!important;
 }
 .qily-home-balanced .portrait-frame img{width:100%!important;height:auto!important}
-.qily-home-balanced .portrait-badge div{padding:10px 11px!important}
-.qily-home-balanced .portrait-badge strong{font-size:18.5px!important}
-.qily-home-balanced .portrait-badge span{font-size:13.5px!important;line-height:1.45!important}
-.qily-home-balanced .portrait-badge div:nth-child(2){padding-left:8px!important;padding-right:8px!important}
-.qily-home-balanced .portrait-badge div:nth-child(2) span{font-size:12.25px!important;white-space:nowrap!important;letter-spacing:-.25px!important}
+.qily-home-balanced .portrait-badge{grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important}
+.qily-home-balanced .portrait-badge div{display:flex!important;min-width:0!important;min-height:96px!important;padding:10px 11px!important;flex-direction:column!important;justify-content:flex-start!important;overflow:visible!important}
+.qily-home-balanced .portrait-badge strong{font-size:18.5px!important;line-height:1.25!important;white-space:nowrap!important}
+.qily-home-balanced .portrait-badge span{display:block!important;width:100%!important;margin-top:6px!important;font-size:13px!important;line-height:1.48!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;overflow:visible!important;text-overflow:clip!important}
+.qily-home-balanced .portrait-badge div:nth-child(2){padding-left:10px!important;padding-right:10px!important}
+.qily-home-balanced .portrait-badge div:nth-child(2) span{font-size:13px!important;line-height:1.48!important;white-space:normal!important;letter-spacing:0!important;word-break:normal!important;overflow-wrap:break-word!important;overflow:visible!important;text-overflow:clip!important}
 .qily-home-balanced .hero-grid>.assistant-panel{
   grid-column:1/-1!important;
   width:100%!important;
@@ -257,6 +258,8 @@
   }
   .qily-home-balanced .lead{max-width:100%!important;font-size:20px!important;line-height:1.7!important}
   .qily-home-balanced .portrait-frame{width:min(270px,100%)!important;margin:auto!important}
+  .qily-home-balanced .portrait-badge{grid-template-columns:1fr!important}
+  .qily-home-balanced .portrait-badge div{min-height:auto!important}
   .qily-home-balanced .answer{font-size:19px!important}
   .qily-home-balanced .panel-body{padding:16px!important}
   .qily-global-header>.qily-brand,
