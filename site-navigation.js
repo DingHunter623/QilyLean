@@ -84,8 +84,8 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
 /* QilyLean global navigation wrapper｜保留原功能并加载可信度、信息架构与视觉规范模块 */
 (function(d){
   'use strict';
-  if(window.__qilyNavigationWrapper20260803V6)return;
-  window.__qilyNavigationWrapper20260803V6=true;
+  if(window.__qilyNavigationWrapper20260803V7)return;
+  window.__qilyNavigationWrapper20260803V7=true;
 
   function loadTrustStyles(){
     var current=d.getElementById('qilyBrandTrustStylesheet');
@@ -170,22 +170,22 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
   function appendLegacy(){
     if(d.querySelector('script[data-qily-navigation-legacy]'))return;
     var legacy=d.createElement('script');
-    legacy.src='/site-navigation-legacy-20260802.js?v=20260803-parent-route-v2';
+    legacy.src='/site-navigation-legacy-20260802.js?v=20260803-parent-route-v3';
     legacy.async=false;
-    legacy.setAttribute('data-qily-navigation-legacy','parent-route-v2');
+    legacy.setAttribute('data-qily-navigation-legacy','parent-route-v3');
     legacy.onload=loadEnhancer;
     legacy.onerror=loadEnhancer;
     (d.head||d.documentElement).appendChild(legacy);
   }
 
   function loadParentNavigation(){
-    if(window.__qilyParentNavigationV2){appendLegacy();return;}
+    if(window.__qilyParentNavigationV3){appendLegacy();return;}
     var existing=d.querySelector('script[data-qily-parent-navigation]');
     if(existing){existing.addEventListener('load',appendLegacy,{once:true});return;}
     var script=d.createElement('script');
-    script.src='/site-parent-navigation-v2.js?v=20260803-parent-route-v2';
+    script.src='/site-parent-navigation-v3.js?v=20260803-parent-route-v3';
     script.async=false;
-    script.setAttribute('data-qily-parent-navigation','v2');
+    script.setAttribute('data-qily-parent-navigation','v3');
     script.onload=appendLegacy;
     script.onerror=appendLegacy;
     (d.head||d.documentElement).appendChild(script);
