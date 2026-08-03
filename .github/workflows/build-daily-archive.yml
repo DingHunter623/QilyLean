@@ -34,7 +34,7 @@ permissions:
 
 concurrency:
   group: daily-archive-main
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
