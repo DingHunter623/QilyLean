@@ -7,6 +7,8 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const stylesheet = '/site-link-standard-v2.css?v=20260803-nav-four-border-v6';
 const darkSurfaceStylesheet = '/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2';
+const navigationScript = '/site-navigation.js?v=20260803-nav-four-border-v3';
+const navigationScriptTag = `  <script defer src="${navigationScript}"></script>`;
 const linkTag = `  <link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="${stylesheet}">`;
 const darkLinkTag = `  <link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="${darkSurfaceStylesheet}">`;
 const loaderMarker = 'qily-global-link-standard-loader-v1';
@@ -31,11 +33,12 @@ function walk(directory, callback) {
 function installHtmlLinks(page) {
   if (!/<\/head>/i.test(page)) return page;
   let next = page
+    .replace(/\s*<script\b[^>]*src=["'][^"']*\/site-navigation\.js\?v=[^"']+["'][^>]*><\/script>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*id=["']qilyGlobalLinkStandardStylesheet["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*id=["']qilyDarkSurfaceContrastStylesheet["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*href=["'][^"']*\/site-link-standard-v(?:1|2)\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*href=["'][^"']*\/site-dark-surface-contrast-v1\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n');
-  return next.replace(/<\/head>/i, `${linkTag}\n${darkLinkTag}\n</head>`);
+  return next.replace(/<\/head>/i, `${navigationScriptTag}\n${linkTag}\n${darkLinkTag}\n</head>`);
 }
 
 function patchNavigationLoader() {
@@ -57,37 +60,36 @@ function patchNavigationBorderStandard() {
 
   const start = '/* QILY-NAV-FOUR-SIDE-BORDER:START */';
   const end = '/* QILY-NAV-FOUR-SIDE-BORDER:END */';
+  const nav = 'html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)\n:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]';
+  const current = ':is([aria-current],[aria-selected="true"],[data-current="true"],[data-active="true"],.active,.current,.is-active,.selected)';
   const block = `${start}
 /* 主导航真实交互态：常态预留透明四边框，悬停、聚焦、当前页及按下状态均显示完整上下左右边线。 */
-html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]{
+${nav}{
   box-sizing:border-box!important;
   border-style:solid!important;
   border-width:2px!important;
-  border-color:transparent!important;
+  border-top-color:transparent!important;
+  border-right-color:transparent!important;
+  border-bottom-color:transparent!important;
+  border-left-color:transparent!important;
+  background-clip:padding-box!important;
 }
-html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]{
-  border-top-color:#caa15f!important;
-  border-right-color:#caa15f!important;
-  border-bottom-color:#caa15f!important;
-  border-left-color:#caa15f!important;
+${nav}${current}{
+  border-top-color:#ffe39b!important;
+  border-right-color:#ffe39b!important;
+  border-bottom-color:#ffe39b!important;
+  border-left-color:#ffe39b!important;
 }
-html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]:not([aria-current]):hover,
-html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]:not([aria-current]):focus-visible{
-  border-top-color:var(--qily-nav-hover-border)!important;
-  border-right-color:var(--qily-nav-hover-border)!important;
-  border-bottom-color:var(--qily-nav-hover-border)!important;
-  border-left-color:var(--qily-nav-hover-border)!important;
+${nav}:not(${current}):hover,
+${nav}:not(${current}):focus-visible{
+  border-top-color:var(--qily-nav-hover-border,#c99a3e)!important;
+  border-right-color:var(--qily-nav-hover-border,#c99a3e)!important;
+  border-bottom-color:var(--qily-nav-hover-border,#c99a3e)!important;
+  border-left-color:var(--qily-nav-hover-border,#c99a3e)!important;
 }
-html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]:hover,
-html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]:focus-visible,
-html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]:active{
+${nav}${current}:hover,
+${nav}${current}:focus-visible,
+${nav}:active{
   border-top-color:#ffe39b!important;
   border-right-color:#ffe39b!important;
   border-bottom-color:#ffe39b!important;
@@ -135,7 +137,7 @@ function main() {
     }
   });
   const navigationChanged = patchNavigationLoader();
-  process.stdout.write(`Published QilyLean link standard v6 to ${htmlChecked} HTML files; refreshed ${htmlChanged}; four-side navigation border changed=${navigationBorderChanged}; evidence context changed=${evidenceChanged}; navigation loader changed=${navigationChanged}.\n`);
+  process.stdout.write(`Published QilyLean link standard v6 to ${htmlChecked} HTML files; refreshed ${htmlChanged}; navigation script=${navigationScript}; four-side navigation border changed=${navigationBorderChanged}; evidence context changed=${evidenceChanged}; navigation loader changed=${navigationChanged}.\n`);
 }
 
 main();
