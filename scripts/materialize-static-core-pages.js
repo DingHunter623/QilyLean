@@ -9,7 +9,7 @@ const HOME = 'index.html';
 const COOPERATION = 'cooperation/index.html';
 const DAILY = 'qilylean/daily-insights.html';
 const IA_CSS = '/site-information-architecture-v1.css?v=20260802-static-source-v2';
-const STATIC_INTERACTIONS = '/site-static-core-interactions-v1.js?v=20260802-static-source-v1';
+const STATIC_INTERACTIONS = '/site-static-core-interactions-v1.js?v=20260803-static-no-hover-v2';
 const ARCHIVE_DESCRIPTION = 'QilyLean今日简报历史知识档案，按2019年7月10日至今的制造实践时间轴持续整理；每个日期对应独立知识档案网址，页面日期用于档案排序与主题定位，不等同于网页首次公开发布日期。';
 
 function filePath(relativePath) {
