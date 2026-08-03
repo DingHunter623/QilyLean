@@ -8,6 +8,7 @@ on:
       - "site-link-standard-v2.css"
       - "site-navigation-four-border-v3.css"
       - "site-dark-surface-contrast-v1.css"
+      - "home-portrait-badge-fix-v1.css"
       - "site-navigation.js"
       - "site-parent-navigation-v3.js"
       - "scripts/publish-global-link-standard.js"
@@ -41,7 +42,7 @@ jobs:
       - name: Publish hierarchical navigation site-wide
         run: node scripts/publish-global-link-standard.js
 
-      - name: Validate parent routes, dragging, borders and metadata
+      - name: Validate parent routes, dragging, borders, portrait badge and metadata
         shell: bash
         run: |
           node --check scripts/publish-global-link-standard.js
@@ -59,6 +60,11 @@ jobs:
           grep -q 'border-right-color:var(--qily-nav-border-hover)' site-navigation-four-border-v3.css
           grep -q 'border-bottom-color:var(--qily-nav-border-hover)' site-navigation-four-border-v3.css
           grep -q 'border-left-color:var(--qily-nav-border-hover)' site-navigation-four-border-v3.css
+
+          grep -q 'white-space:normal!important' home-portrait-badge-fix-v1.css
+          grep -q 'min-height:96px!important' home-portrait-badge-fix-v1.css
+          grep -q 'home-portrait-badge-fix-v1.css?v=20260803-badge-wrap-v1' index.html
+          grep -q '范围、交付、付款与验收分阶段明确' index.html
 
           grep -q '2582 期' knowledge/index.html
           grep -q '最新更新至 2026-08-03' knowledge/index.html
@@ -97,11 +103,11 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All pages already use the current drag-safe hierarchical navigation standard."
+            echo "All pages already use the current navigation and homepage portrait badge standards."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: publish drag-safe hierarchical back navigation [skip ci]"
+          git commit -m "fix: publish homepage portrait badge wrapping [skip ci]"
           git push
