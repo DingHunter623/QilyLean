@@ -1,10 +1,11 @@
-name: Clarify homepage static metrics
+name: Enforce homepage static metric cards
 
 on:
   push:
     branches: [main]
     paths:
       - "scripts/clarify-home-static-metrics.js"
+      - "site-static-core-interactions-v1.js"
       - ".github/workflows/clarify-home-static-metrics.yml"
   workflow_dispatch:
 
@@ -12,7 +13,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: clarify-home-static-metrics-main
+  group: enforce-home-static-metrics-main
   cancel-in-progress: false
 
 jobs:
@@ -30,27 +31,36 @@ jobs:
         with:
           node-version: 20
 
-      - name: Add static-display clarification
+      - name: Enforce zero-feedback static cards
         run: node scripts/clarify-home-static-metrics.js
 
-      - name: Validate homepage interaction wording
+      - name: Validate static-card interaction standard
         shell: bash
         run: |
           node --check scripts/clarify-home-static-metrics.js
-          grep -q 'metric-display-note' index.html
-          grep -q '以下为静态成果概览卡片，仅用于信息展示' index.html
-          grep -q '不代表可点击或页面跳转' index.html
-          grep -q 'cursor:default' index.html
+          node --check site-static-core-interactions-v1.js
+          grep -q 'QILY-HOME-STATIC-METRIC-NO-HOVER' index.html
+          grep -q 'transition:none!important' index.html
+          grep -q 'transform:none!important' index.html
+          grep -q 'qily-static-metric-no-hover-style' site-static-core-interactions-v1.js
+          if grep -q 'metric-display-note' index.html; then
+            echo 'Misleading static-card note must not exist.' >&2
+            exit 1
+          fi
+          if grep -q '\.metric:hover{transform:translateY' index.html; then
+            echo 'Static metric cards must not move on hover.' >&2
+            exit 1
+          fi
 
-      - name: Commit homepage clarification
+      - name: Commit homepage static-card correction
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Homepage static-card clarification is already current."
+            echo "Homepage static cards already have zero hover feedback."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "fix: clarify homepage metric cards are display-only [skip ci]"
+          git commit -m "fix: remove all hover feedback from static result cards [skip ci]"
           git push
