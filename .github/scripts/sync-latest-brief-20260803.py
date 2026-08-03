@@ -7,6 +7,7 @@ PREV = "2026-08-02"
 THEME = "成果证据分级与公开核验"
 TITLE = "成果不是数字卡片：用证据等级、阶段门与公开链接形成核验闭环"
 SUMMARY = "制造改善成果一旦进入官网、项目报告或对外交流材料，就从内部总结升级为公开主张。公开主张不能只给出“提升多少、节省多少、完成多少”，还必须同步回答：依据是什么、由谁确认、本人承担什么角色、适用于什么条件、读者在哪里核验。"
+OLD_TITLE = "标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环"
 URL = f"/qilylean/daily/{DATE}.html"
 ABS_URL = f"https://qilylean.com{URL}"
 
@@ -72,7 +73,7 @@ if f'data-brief-date="{DATE}"' not in directory:
     directory = directory.replace(normal_prefix, new_card + normal_prefix, 1)
 directory_path.write_text(directory, encoding="utf-8")
 
-# Preserve existing card structures; update only latest-brief fields.
+# Preserve the knowledge-card structure; update only latest-brief fields.
 def sync_latest_card(path):
     text = read(path)
     pattern = re.compile(r'<article\b[^>]*data-latest-brief-card[\s\S]*?</article>')
@@ -89,7 +90,18 @@ def sync_latest_card(path):
 
 
 sync_latest_card("knowledge/index.html")
-sync_latest_card("index.html")
+
+# Homepage has an existing static latest-content metric, not the knowledge-card component.
+home_path = Path("index.html")
+home = home_path.read_text(encoding="utf-8")
+old_home = f'<div class="metric"><strong>{PREV}</strong><span>{OLD_TITLE}</span><em><a href="/qilylean/daily/{PREV}.html">查看最新简报</a></em></div>'
+new_home = f'<div class="metric"><strong>{DATE}</strong><span>{TITLE}</span><em><a href="{URL}">查看最新简报</a></em></div>'
+if old_home in home:
+    home = home.replace(old_home, new_home, 1)
+elif new_home not in home:
+    raise SystemExit("Homepage latest brief metric not found")
+home = home.replace('<div class="metric"><strong>2581期</strong>', '<div class="metric"><strong>2582期</strong>', 1)
+home_path.write_text(home, encoding="utf-8")
 
 # Runtime fallback candidate.
 latest_js_path = Path("qilylean/latest-brief.js")
