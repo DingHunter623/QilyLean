@@ -1,13 +1,13 @@
-/* qily-global-link-standard-loader-v1 */
+/* qily-global-link-standard-loader-v2 */
 (function(d){
   'use strict';
   var styles=[
     {id:'qilyVisualScaleStylesheet',href:'/site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5'},
     {id:'qilyHomePortraitBadgeFixStylesheet',href:'/home-portrait-badge-fix-v1.css?v=20260803-badge-wrap-v2'},
     {id:'qilyGlobalLinkStandardStylesheet',href:'/site-link-standard-v2.css?v=20260803-nav-four-border-v6'},
-    {id:'qilyNavigationFourBorderStylesheet',href:'/site-navigation-four-border-v3.css?v=20260803-four-border-v3'},
     {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'},
-    {id:'qilyInformationArchitectureStylesheet',href:'/site-information-architecture-v1.css?v=20260802-commercial-focus-v1'}
+    {id:'qilyInformationArchitectureStylesheet',href:'/site-information-architecture-v1.css?v=20260802-commercial-focus-v1'},
+    {id:'qilyMicrosoftInternationalStylesheet',href:'/site-microsoft-international-v1.css?v=20260803-ms-international-v1'}
   ];
   styles.forEach(function(style){
     var current=d.getElementById(style.id);
@@ -16,28 +16,38 @@
     link.id=style.id;link.rel='stylesheet';link.href=style.href;
     (d.head||d.documentElement).appendChild(link);
   });
+
+  if(!d.querySelector('script[data-qily-microsoft-international-loader]')){
+    var enhancer=d.createElement('script');
+    enhancer.src='/site-microsoft-international-v1.js?v=20260803-ms-international-v1';
+    enhancer.defer=true;
+    enhancer.setAttribute('data-qily-microsoft-international-loader','v1');
+    (d.head||d.documentElement).appendChild(enhancer);
+  }
 })(document);
 
-/* QILY-NAV-FOUR-SIDE-BORDER-RUNTIME:START */
+/* QILY-MICROSOFT-NAV-UNDERLINE-RUNTIME:START */
 (function(d,w){
   'use strict';
-  if(w.__qilyNavFourSideBorderV3)return;
-  w.__qilyNavFourSideBorderV3=true;
+  if(w.__qilyMicrosoftNavUnderlineV1)return;
+  w.__qilyMicrosoftNavUnderlineV1=true;
 
-  var styleId='qilyNavFourSideBorderStyle';
+  var styleId='qilyMicrosoftNavUnderlineStyle';
   var nav='html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]';
   var current=':is([aria-current],[aria-selected="true"],[data-current="true"],[data-active="true"],.active,.current,.is-active,.selected)';
 
   function ensureStyleIsLast(){
+    var old=d.getElementById('qilyNavFourSideBorderStyle');
+    if(old&&old.parentNode)old.parentNode.removeChild(old);
     var style=d.getElementById(styleId);
     if(!style){
       style=d.createElement('style');
       style.id=styleId;
       style.textContent=[
-        nav+'{box-sizing:border-box!important;border-style:solid!important;border-width:2px!important;border-top-color:transparent!important;border-right-color:transparent!important;border-bottom-color:transparent!important;border-left-color:transparent!important;background-clip:padding-box!important}',
-        nav+current+'{border-top-color:#ffe39b!important;border-right-color:#ffe39b!important;border-bottom-color:#ffe39b!important;border-left-color:#ffe39b!important}',
-        nav+':not('+current+'):hover,'+nav+':not('+current+'):focus-visible{border-top-color:#c99a3e!important;border-right-color:#c99a3e!important;border-bottom-color:#c99a3e!important;border-left-color:#c99a3e!important}',
-        nav+current+':hover,'+nav+current+':focus-visible,'+nav+':active{border-top-color:#ffe39b!important;border-right-color:#ffe39b!important;border-bottom-color:#ffe39b!important;border-left-color:#ffe39b!important}'
+        nav+'{box-sizing:border-box!important;border:0!important;border-bottom:2px solid transparent!important;border-radius:0!important;color:#262626!important;background:transparent!important;box-shadow:none!important;transform:none!important}',
+        nav+current+'{color:#0f4b5a!important;border-bottom-color:#0f4b5a!important;background:transparent!important}',
+        nav+':not('+current+'):hover,'+nav+':not('+current+'):focus-visible{color:#0f4b5a!important;border-bottom-color:#0f4b5a!important;background:transparent!important;box-shadow:none!important;transform:none!important}',
+        nav+current+':hover,'+nav+current+':focus-visible,'+nav+':active{color:#073c47!important;border-bottom-color:#073c47!important;background:transparent!important;box-shadow:none!important;transform:none!important}'
       ].join('');
     }
     var parent=d.body||d.head||d.documentElement;
@@ -54,19 +64,20 @@
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',install,{once:true});
   else install();
 })(document,window);
-/* QILY-NAV-FOUR-SIDE-BORDER-RUNTIME:END */
+/* QILY-MICROSOFT-NAV-UNDERLINE-RUNTIME:END */
 
 /*
- * QilyLean layered navigation build contract v1
+ * QilyLean layered navigation build contract v2
  * Runtime implementation lives in site-navigation-core.js and is loaded through
- * site-navigation-legacy-20260802.js. These explicit markers keep the existing
- * repository audits aligned with the layered architecture without duplicating
- * the full navigation runtime in this lightweight entry file.
+ * site-navigation-legacy-20260802.js. These explicit markers keep repository
+ * audits aligned with the layered architecture and the international layout.
  */
 window.__qilyLayeredNavigationBuildContract=Object.freeze({
   shellAssets:[
     'site-wide-layout-v1.css?v=20260729-fluid-copy-v5',
-    'site-typography-v1.css?v=20260729-hierarchy-v4'
+    'site-typography-v1.css?v=20260729-hierarchy-v4',
+    'site-microsoft-international-v1.css?v=20260803-ms-international-v1',
+    'site-microsoft-international-v1.js?v=20260803-ms-international-v1'
   ],
   bootstrapMarkers:[
     'addWideLayoutStylesheet();',
@@ -86,8 +97,8 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
 /* QilyLean global navigation wrapper｜保留原功能并加载可信度、信息架构与视觉规范模块 */
 (function(d){
   'use strict';
-  if(window.__qilyNavigationWrapper20260803V7)return;
-  window.__qilyNavigationWrapper20260803V7=true;
+  if(window.__qilyNavigationWrapper20260803V8)return;
+  window.__qilyNavigationWrapper20260803V8=true;
 
   function loadTrustStyles(){
     var current=d.getElementById('qilyBrandTrustStylesheet');
