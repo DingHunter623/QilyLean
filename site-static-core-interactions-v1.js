@@ -13,8 +13,19 @@
 
   ready(function(){
     var section=d.getElementById('results');
+    if(!section)return;
+
+    var misleadingNote=section.querySelector('.metric-display-note');
+    if(misleadingNote)misleadingNote.remove();
+
+    Array.prototype.forEach.call(section.querySelectorAll('.metric:not(a):not([role="link"])'),function(card){
+      card.classList.add('qily-static-card');
+      card.removeAttribute('tabindex');
+      card.removeAttribute('aria-label');
+    });
+
     var button=d.querySelector('[data-qily-results-toggle]');
-    if(!section||!button)return;
+    if(!button)return;
     button.addEventListener('click',function(){
       var expanded=section.classList.toggle('qily-results-expanded');
       button.setAttribute('aria-expanded',String(expanded));
