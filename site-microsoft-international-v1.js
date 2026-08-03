@@ -46,6 +46,14 @@
     sections.forEach(function(section){section.classList.add('qily-ms-section');});
   }
 
+  function normalizeToolLabels(){
+    var heading=d.querySelector('#digital-tools .module-heading h2,#digital-tools .head h2');
+    if(heading&&heading.textContent.trim()==='数字工具作品')heading.textContent='精益数字工具';
+    d.querySelectorAll('a[href="#digital-tools"]').forEach(function(link){
+      if(link.textContent.trim()==='数字工具作品')link.textContent='精益数字工具';
+    });
+  }
+
   function markTools(root){
     var scope=isElement(root)?root:d;
     var toolSections=[];
@@ -59,6 +67,7 @@
         tool.setAttribute('data-qily-product-order',String(index+1));
       });
     });
+    normalizeToolLabels();
   }
 
   function markHero(root){
