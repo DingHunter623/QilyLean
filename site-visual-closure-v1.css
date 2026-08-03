@@ -1,0 +1,342 @@
+/* QilyLean 全站视觉可读性闭环层 v1｜2026-08-03
+ * 依据：QL-WEB-STD-001 与 QL-WEB-STD-001-A01。
+ * 目标：按实际背景恢复文字对比；统一提示条、按钮、流程卡与静态卡片交互。
+ */
+:root{
+  --ql-deep:#073c47;
+  --ql-forest:#0f4b5a;
+  --ql-teal:#178b94;
+  --ql-gold:#caa15f;
+  --ql-gold-light:#ffe39b;
+  --ql-body:#182420;
+  --ql-copy:#496565;
+  --ql-muted:#5f7474;
+  --ql-line:#d5e4e3;
+  --ql-surface:#f3faf9;
+  --ql-surface-alt:#eef8f6;
+  --ql-risk:#9e4a34;
+  --ql-dark-title:#fff;
+  --ql-dark-body:#e4f1ee;
+  --ql-dark-muted:#d3e5e1;
+  --ql-control-height:44px;
+  --ql-pill-radius:999px;
+}
+
+/* 一、真正的深色子模块必须覆盖外层浅色模块的通用文字规则。 */
+html body :is(
+  .qily-ia-dark,
+  .qily-ai-secondary,
+  .contact-card,
+  .resource-stage,
+  .capability-home-screen,
+  [data-qily-dark-surface="true"]
+){
+  color:var(--ql-dark-body)!important;
+}
+html body :is(
+  .qily-ia-dark,
+  .qily-ai-secondary,
+  .contact-card,
+  .resource-stage,
+  .capability-home-screen,
+  [data-qily-dark-surface="true"]
+) :is(h1,h2,h3,h4,h5,h6,.title,.headline,strong,b){
+  color:var(--ql-dark-title)!important;
+  -webkit-text-fill-color:var(--ql-dark-title)!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body :is(
+  .qily-ia-dark,
+  .qily-ai-secondary,
+  .contact-card,
+  .resource-stage,
+  .capability-home-screen,
+  [data-qily-dark-surface="true"]
+) :is(p,li,span,small,.lead,.summary,.subtitle,.meta,.fine,.note){
+  color:var(--ql-dark-body)!important;
+  -webkit-text-fill-color:var(--ql-dark-body)!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body :is(.qily-ia-dark,.qily-ai-secondary) :is(.qily-ia-kicker,.panel-head,.eyebrow,.module-eyebrow),
+html body .contact-card h3{
+  color:var(--ql-gold-light)!important;
+  -webkit-text-fill-color:var(--ql-gold-light)!important;
+}
+
+/* 二、首页 QilyLean AI 对话专项。 */
+html body #qily-home-ai.qily-ia-dark,
+html body .qily-ai-secondary{
+  background:linear-gradient(135deg,var(--ql-deep),#0f6570)!important;
+}
+html body #qily-home-ai .qily-ia-heading h2,
+html body #qily-home-ai .qily-ia-heading p,
+html body #qily-home-ai .assistant-panel,
+html body #qily-home-ai .assistant-panel :is(h2,h3,p,span,small,strong){
+  opacity:1!important;
+}
+
+/* 三、QilyLean Home DOM 预览重新建立高对比，而非滤镜处理。 */
+html body .capability-home-screen{
+  border:2px solid rgba(255,227,155,.82)!important;
+  background:linear-gradient(155deg,var(--ql-deep),#12818a)!important;
+  box-shadow:0 22px 52px rgba(7,60,71,.28)!important;
+}
+html body .capability-home-screen h3{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  font-weight:950!important;
+  letter-spacing:-.02em!important;
+}
+html body .capability-home-screen>p{
+  color:var(--ql-gold-light)!important;
+  -webkit-text-fill-color:var(--ql-gold-light)!important;
+  font-weight:900!important;
+}
+html body .capability-home-shortcuts span{
+  min-height:44px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:9px 12px!important;
+  border:1px solid rgba(255,227,155,.72)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:rgba(255,255,255,.15)!important;
+  font-weight:900!important;
+  opacity:1!important;
+}
+
+/* 四、项目合作深色联系卡。 */
+html body .contact-card h3{font-weight:950!important}
+html body .contact-card p{color:var(--ql-dark-body)!important;-webkit-text-fill-color:var(--ql-dark-body)!important}
+html body .contact-card .contact-note{color:var(--ql-dark-muted)!important;-webkit-text-fill-color:var(--ql-dark-muted)!important}
+html body .contact-card a{
+  min-height:var(--ql-control-height)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:rgba(255,255,255,.10)!important;
+  border-color:rgba(255,227,155,.72)!important;
+}
+html body .contact-card button{
+  min-height:var(--ql-control-height)!important;
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background:var(--ql-gold-light)!important;
+  border-color:var(--ql-gold)!important;
+}
+
+/* 五、友情链接深色资源状态条。 */
+html body .resource-stage{
+  border-left:5px solid var(--ql-gold)!important;
+  background:var(--ql-forest)!important;
+}
+html body .resource-stage strong{color:#fff!important;-webkit-text-fill-color:#fff!important}
+html body .resource-stage p{color:var(--ql-dark-body)!important;-webkit-text-fill-color:var(--ql-dark-body)!important}
+html body .resource-stage .resource-action{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background:var(--ql-gold-light)!important;
+  border-color:var(--ql-gold)!important;
+}
+
+/* 六、提示条与状态条：浅底、深字、左侧强调线。 */
+html body :is(
+  .status,
+  .trust-callout,
+  .evidence-note,
+  .qily-ia-boundary,
+  .core-contract-viewer-note,
+  .brief-output,
+  [data-qily-notice="true"]
+){
+  color:var(--ql-body)!important;
+  -webkit-text-fill-color:var(--ql-body)!important;
+  background:var(--ql-surface-alt)!important;
+  border-color:var(--ql-line)!important;
+  border-left:5px solid var(--ql-gold)!important;
+  opacity:1!important;
+  line-height:1.65!important;
+  text-shadow:none!important;
+}
+html body :is(
+  .status,
+  .trust-callout,
+  .evidence-note,
+  .qily-ia-boundary,
+  .core-contract-viewer-note,
+  .brief-output,
+  [data-qily-notice="true"]
+) :is(h1,h2,h3,h4,strong,b){
+  color:var(--ql-deep)!important;
+  -webkit-text-fill-color:var(--ql-deep)!important;
+  opacity:1!important;
+}
+html body :is(
+  .status,
+  .trust-callout,
+  .evidence-note,
+  .qily-ia-boundary,
+  .core-contract-viewer-note,
+  .brief-output,
+  [data-qily-notice="true"]
+) :is(p,span,small,li){
+  color:var(--ql-copy)!important;
+  -webkit-text-fill-color:var(--ql-copy)!important;
+  opacity:1!important;
+}
+html body .main>.hero .status{
+  margin-top:18px!important;
+  padding:17px 20px!important;
+  box-shadow:0 8px 24px rgba(7,60,71,.12)!important;
+}
+
+/* 七、核心操作入口按钮化。 */
+html body :is(.module-actions,.article-actions,.actions,.qily-ia-actions){
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:center!important;
+  gap:12px!important;
+}
+html body a[href].qily-action-primary,
+html body #qily-commercial-deliveries a[href="/projects/qilylean-commercial-deliveries/"],
+html body a[href="/projects/qilylean-commercial-deliveries/"]{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:var(--ql-control-height)!important;
+  padding:9px 18px!important;
+  border:2px solid var(--ql-forest)!important;
+  border-radius:var(--ql-pill-radius)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--ql-forest)!important;
+  font-weight:900!important;
+  line-height:1.35!important;
+  text-decoration:none!important;
+}
+html body a[href].qily-action-secondary,
+html body #qily-commercial-deliveries a[href*="review-authorization-template"]{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:var(--ql-control-height)!important;
+  padding:9px 18px!important;
+  border:2px solid var(--ql-forest)!important;
+  border-radius:var(--ql-pill-radius)!important;
+  color:var(--ql-deep)!important;
+  -webkit-text-fill-color:var(--ql-deep)!important;
+  background:#fff!important;
+  font-weight:900!important;
+  line-height:1.35!important;
+  text-decoration:none!important;
+}
+html body a[href].qily-action-primary:is(:hover,:focus-visible),
+html body #qily-commercial-deliveries a[href="/projects/qilylean-commercial-deliveries/"]:is(:hover,:focus-visible){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--ql-deep)!important;
+  border-color:var(--ql-gold)!important;
+  box-shadow:0 9px 22px rgba(15,75,90,.24)!important;
+}
+html body a[href].qily-action-secondary:is(:hover,:focus-visible),
+html body #qily-commercial-deliveries a[href*="review-authorization-template"]:is(:hover,:focus-visible){
+  color:var(--ql-deep)!important;
+  -webkit-text-fill-color:var(--ql-deep)!important;
+  background:var(--ql-gold-light)!important;
+  border-color:var(--ql-gold)!important;
+  box-shadow:0 9px 22px rgba(15,75,90,.18)!important;
+}
+
+/* 八、流程卡、阶段卡、步骤卡。 */
+html body :is(.flow-grid,.trust-levels,[data-qily-process-grid="true"]){align-items:stretch!important}
+html body :is(.flow-step,.trust-level,[data-qily-step-card="true"]){
+  display:flex!important;
+  flex-direction:column!important;
+  min-height:210px!important;
+  height:100%!important;
+  padding:22px 16px 20px!important;
+  border:1px solid var(--ql-line)!important;
+  background:#fff!important;
+  overflow:visible!important;
+}
+html body :is(.flow-step,.trust-level,[data-qily-step-card="true"])>b:first-child{
+  flex:0 0 auto!important;
+  display:grid!important;
+  place-items:center!important;
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  min-height:38px!important;
+  margin:0 0 16px!important;
+  border-radius:50%!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--ql-forest)!important;
+  font-weight:950!important;
+  line-height:1!important;
+}
+html body :is(.flow-step,.trust-level,[data-qily-step-card="true"])>strong{
+  display:block!important;
+  margin:0 0 9px!important;
+  color:var(--ql-deep)!important;
+  -webkit-text-fill-color:var(--ql-deep)!important;
+  font-size:18px!important;
+  line-height:1.35!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  text-wrap:balance!important;
+}
+html body :is(.flow-step,.trust-level,[data-qily-step-card="true"])>span{
+  display:block!important;
+  margin:0!important;
+  color:var(--ql-copy)!important;
+  -webkit-text-fill-color:var(--ql-copy)!important;
+  font-size:14.5px!important;
+  line-height:1.65!important;
+  opacity:1!important;
+}
+html body .flow-step:nth-child(4)>strong{white-space:nowrap!important}
+
+/* 九、静态卡片绝不模拟整卡链接；真正可点击卡片保留轻反馈。 */
+html body .qily-static-card,
+html body :is(.flow-step,.resource-item,.price-card,.evidence,.boundary article,.trust-level):not(a):not(button):not([role="link"]):not([onclick]){
+  transform:none!important;
+  cursor:default!important;
+}
+html body .qily-static-card:is(:hover,:focus-within),
+html body :is(.flow-step,.resource-item,.price-card,.evidence,.boundary article,.trust-level):not(a):not(button):not([role="link"]):not([onclick]):hover{
+  transform:none!important;
+}
+html body .qily-interactive-card:is(:hover,:focus-visible){
+  transform:translateY(-2px)!important;
+  box-shadow:0 14px 30px rgba(15,75,90,.17)!important;
+}
+
+/* 十、标题完整词组与通用控件。 */
+html body :is(h1,h2,h3,h4,.module-heading,.qily-ia-heading){word-break:normal!important;overflow-wrap:break-word!important}
+html body .qily-no-break{white-space:nowrap!important}
+html body :is(a,button,input,select,textarea):focus-visible{outline:3px solid rgba(202,161,95,.68)!important;outline-offset:3px!important}
+html body :is(a.button,.module-actions a,.article-actions a,.actions a,.qily-ia-button,button):not(.site-music-toggle):not(.qily-modal-close):not(.qily-float-btn){min-height:var(--ql-control-height)}
+
+/* 十一、悬浮工具栏和小屏避免遮挡。 */
+html body :is(.qily-float-dock,.qily-floating-dock,.qily-float-tools){max-height:calc(100vh - 24px)!important;overflow-y:auto!important;overscroll-behavior:contain!important}
+@media(max-width:1080px){
+  html body .flow-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+}
+@media(max-width:820px){
+  html body :is(.article-actions,.module-actions,.actions,.qily-ia-actions)>a{max-width:100%;white-space:normal!important;text-align:center!important}
+  html body .capability-home-shortcuts{grid-template-columns:1fr 1fr!important}
+}
+@media(max-width:560px){
+  html body .flow-grid{grid-template-columns:1fr!important}
+  html body :is(.flow-step,.trust-level,[data-qily-step-card="true"]){min-height:0!important;padding:20px!important}
+  html body .capability-home-screen{padding:22px 18px!important}
+  html body .capability-home-shortcuts{grid-template-columns:1fr!important}
+  html body :is(.article-actions,.module-actions,.actions,.qily-ia-actions)>a{width:100%!important}
+  html body :is(.qily-float-dock,.qily-floating-dock,.qily-float-tools){inset-inline-end:6px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body .qily-interactive-card{transition:none!important}
+}
