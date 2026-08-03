@@ -54,6 +54,17 @@ body.qily-ia-ready button:focus-visible{outline:3px solid rgba(202,161,95,.62);o
 .qily-ia-card li{margin:6px 0}
 .qily-ia-card .qily-ia-result{margin-top:auto;padding-top:16px;color:var(--qily-ia-deep);font-size:14.5px;font-weight:900;line-height:1.65}
 .qily-ia-card .qily-ia-result::before{content:"交付重点｜";color:#93691d}
+.qily-ia-title-line{display:block}
+.qily-ia-no-break{white-space:nowrap}
+.qily-ia-card h3,.qily-ia-heading h2{word-break:auto-phrase;overflow-wrap:normal;text-wrap:balance}
+
+/* 只有整卡可跳转时才提供模块级反馈；静态卡片不使用悬停动画。 */
+.qily-ia-evidence-link{display:block;height:100%;color:inherit!important;background:transparent!important;text-decoration:none!important}
+.qily-ia-evidence-link .qily-ia-card{height:100%;transition:transform .16s ease,box-shadow .16s ease,background .16s ease,border-color .16s ease}
+.qily-ia-evidence-cta{display:block;margin-top:auto;padding-top:16px;color:var(--qily-ia-deep);font-size:14.5px;font-weight:950;text-decoration:underline;text-underline-offset:.24em}
+.qily-ia-evidence-link:hover .qily-ia-card,.qily-ia-evidence-link:focus-visible .qily-ia-card{color:#fff;background:#0f4b5a;border-color:#0f4b5a;border-top-color:#ffe39b;box-shadow:0 18px 42px rgba(15,75,90,.28);transform:translateY(-4px)}
+.qily-ia-evidence-link:hover :is(small,h3,p,.qily-ia-evidence-cta),.qily-ia-evidence-link:focus-visible :is(small,h3,p,.qily-ia-evidence-cta){color:#fff!important;-webkit-text-fill-color:#fff!important;text-decoration-color:#ffe39b!important}
+.qily-ia-evidence-link:focus-visible{outline:3px solid #caa15f;outline-offset:4px}
 
 .qily-ia-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:22px}
 .qily-ia-button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:9px 18px;border:1px solid var(--qily-ia-deep);border-radius:999px;color:var(--qily-ia-deep)!important;background:#fff;text-decoration:none!important;font-weight:900;line-height:1.35;white-space:nowrap;transition:transform .16s ease,box-shadow .16s ease,background .16s ease}
@@ -110,6 +121,7 @@ body.qily-home-commercial-focus .qily-ai-secondary .qily-ia-inner{width:min(1120
   .qily-ia-section{padding-inline:14px}
   .qily-ia-secondary-links{grid-template-columns:1fr}
   .qily-ia-card{padding:20px}
+  .qily-ia-no-break{white-space:normal}
 }
 @media print{
   .qily-ia-actions,.qily-results-toggle{display:none!important}
