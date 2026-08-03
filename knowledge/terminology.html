@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>全站术语词典｜中文诠释与应用场景｜QilyLean</title>
-<meta name="description" content="QilyLean全站制造管理与工程专业术语词典：181项中文诠释与应用场景，每个术语代码配套独立网址单点培训课件，仅供在线阅览与链接分享。">
+<meta name="description" content="QilyLean全站制造管理与工程专业术语词典：184项中文诠释与应用场景，每个术语代码配套独立网址单点培训课件，仅供在线阅览与链接分享。">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://qilylean.com/knowledge/terminology.html">
 <style>
@@ -214,7 +214,7 @@ body.term-opl-locked{overflow:hidden}
 <div class="term-toolbar">
 <label for="termSearch"><strong>快速查找术语</strong></label>
 <input class="term-search" id="termSearch" type="search" placeholder="输入术语代码、英文全称或中文名称，例如：UPH、UPPH、标准工时" autocomplete="off">
-<div class="term-count" id="termCount" data-site-metadata-source="/qilylean/site-data.json">共收录 180 项术语 · 181 份单点培训课件</div>
+<div class="term-count" id="termCount" data-site-metadata-source="/qilylean/site-data.json">共收录 184 项术语 · 184 份单点培训课件</div>
 </div>
 <div class="term-empty" id="termEmpty">未找到名称相符的术语，请检查代码或尝试更短的中文名称。</div>
 </div></section>
@@ -349,6 +349,18 @@ body.term-opl-locked{overflow:hidden}
   <div class="term-en">Investment Payback Period</div>
   <h3>投资回收期</h3>
   <p><strong>应用场景：</strong>用于判断累计净收益覆盖初始投入需要多长时间，并识别何时开始进入持续纯效益阶段。</p>
+</article>
+<article class="term-card" data-term-card data-keywords="证据分级 成果等级 A级 B级 C级 D级 已核定 已验证 阶段估算 经验陈述">
+  <div class="term-code">Evidence Level</div>
+  <div class="term-en">Evidence Classification Level</div>
+  <h3>证据等级／成果证据分级</h3>
+  <p><strong>应用场景：</strong>用于按证据成熟度区分公开成果：A级已核定、B级已验证、C级阶段估算、D级经验陈述。分级必须与公开成果链接和详情页口径一致，不得把预测值当作已实现结果。</p>
+</article>
+<article class="term-card" data-term-card data-keywords="证据闭环 可追溯 公开成果链接 详情页">
+  <div class="term-code">Evidence Chain</div>
+  <div class="term-en">Traceable Evidence Chain</div>
+  <h3>证据链／可追溯成果链</h3>
+  <p><strong>应用场景：</strong>用于把项目背景、角色、基线、过程记录、验证或核定结论、公开链接和适用边界串联起来，使读者能够从分级入口直达原始公开成果并核对详情页等级。</p>
 </article></div>
   
 <article class="term-card" data-term-card>
@@ -794,6 +806,12 @@ body.term-opl-locked{overflow:hidden}
   <div class="term-en">Manufacturing Process Routing</div>
   <h3>工艺路线</h3>
   <p><strong>应用场景：</strong>用于定义产品经过的工序、工作中心、顺序、标准时间和外协节点，是排程与成本计算基础。</p>
+</article>
+<article class="term-card" data-term-card data-keywords="阶段门 门径评审 Gate Review PMO 里程碑">
+  <div class="term-code">Stage Gate</div>
+  <div class="term-en">Stage-Gate Review</div>
+  <h3>阶段门评审</h3>
+  <p><strong>应用场景：</strong>用于在项目关键里程碑集中检查范围、交付物、风险、资源、验证证据和关闭条件，并作出继续、补充、暂停或终止决定。页面排版应把“阶段门”作为完整词组，避免拆成单字换行。</p>
 </article></div>
   
 <article class="term-card" data-term-card>
@@ -1347,7 +1365,7 @@ body.term-opl-locked{overflow:hidden}
   </div>
 </section>
 </main>
-<footer class="module-footer"><div class="module-inner"><span>丁启利｜QilyLean全站术语词典</span><span>中文诠释 · 应用场景 · 180份单点培训课件</span></div></footer>
+<footer class="module-footer"><div class="module-inner"><span>丁启利｜QilyLean全站术语词典</span><span>中文诠释 · 应用场景 · 184份单点培训课件</span></div></footer>
 <script>
 (function(){
 var input=document.getElementById('termSearch'),cards=Array.prototype.slice.call(document.querySelectorAll('[data-term-card]')),count=document.getElementById('termCount'),empty=document.getElementById('termEmpty'),sections=[];
@@ -1359,7 +1377,7 @@ function score(card,q){var f=fields(card),qc=compact(q),cc=compact(f.code),token
 function categories(show){sections.forEach(function(section){section.hidden=!show;});}
 function locate(card){var code=(card.querySelector('.term-code')||{}).textContent||'';input.value='';render();try{history.replaceState(null,'',location.pathname+'?term='+encodeURIComponent(code)+'#'+card.id);}catch(error){}requestAnimationFrame(function(){card.scrollIntoView({behavior:'smooth',block:'center'});card.classList.remove('term-focus');void card.offsetWidth;card.classList.add('term-focus');setTimeout(function(){card.classList.remove('term-focus');},1900);});}
 function clone(original){var hit=original.cloneNode(true);hit.removeAttribute('id');hit.classList.add('term-search-hit');hit.setAttribute('role','link');hit.setAttribute('tabindex','0');var hint=document.createElement('div');hint.className='term-jump-hint';hint.textContent='点击进入该词条的原分类位置';hit.appendChild(hint);hit.addEventListener('click',function(){locate(original);});hit.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();locate(original);}});return hit;}
-function render(){var q=norm(input.value);grid.innerHTML='';if(!q){categories(true);results.classList.remove('show');empty.style.display='none';count.textContent='共收录 '+cards.length+' 项术语';return;}var matches=cards.map(function(card,index){return{card:card,index:index,score:score(card,q)};}).filter(function(x){return x.score>=0;}).sort(function(a,b){return b.score-a.score||a.index-b.index;});categories(false);results.classList.toggle('show',matches.length>0);empty.style.display=matches.length?'none':'block';matches.forEach(function(x){grid.appendChild(clone(x.card));});count.textContent=matches.length?'找到 '+matches.length+' 项相关术语（已按相关度排序）':'未找到相关术语';}
+function render(){var q=norm(input.value);grid.innerHTML='';if(!q){categories(true);results.classList.remove('show');empty.style.display='none';var total=Math.max(cards.length,document.querySelectorAll('[data-term-card]').length)+(document.querySelector('script[src*="terminology-sponsor-v1.js"]')&&!document.getElementById('term-sponsor')?1:0);count.textContent='共收录 '+total+' 项术语 · '+total+' 份单点培训课件';return;}var matches=cards.map(function(card,index){return{card:card,index:index,score:score(card,q)};}).filter(function(x){return x.score>=0;}).sort(function(a,b){return b.score-a.score||a.index-b.index;});categories(false);results.classList.toggle('show',matches.length>0);empty.style.display=matches.length?'none':'block';matches.forEach(function(x){grid.appendChild(clone(x.card));});count.textContent=matches.length?'找到 '+matches.length+' 项相关术语（已按相关度排序）':'未找到相关术语';}
 input.addEventListener('input',render,{passive:true});input.addEventListener('search',render,{passive:true});
 var requested=new URLSearchParams(location.search).get('term')||'';if(requested){var target=cards.find(function(card){var f=fields(card);return f.code===norm(requested)||f.zh===norm(requested);});if(target)locate(target);}
 })();
@@ -1462,6 +1480,36 @@ var profiles={
 };
 
 var special={
+  'Evidence Level':{
+    focus:'能按A已核定、B已验证、C阶段估算、D经验陈述四级口径判断公开成果，并保证入口、链接与详情页标识一致。',
+    formula:'证据等级不是分数相加，而是按当前可核验材料确定成熟度：A＝正式核定记录；B＝前后数据或过程验证；C＝基线、模型与假设测算；D＝任职、参与或方法实践陈述。',
+    method:['识别成果结论与适用边界','核对基线、数据来源和责任角色','确认现有验证或核定记录','按A／B／C／D确定当前等级','在分级入口关联公开成果网址','在成果详情页重复标注等级与边界','材料升级后复核等级并保留版本记录'],
+    caseText:'某改善金额具有财务核算与总部复核记录，归为A级；另一个项目只有改善前后时间数据和过程记录，归为B级。两个入口均链接到公开详情页，详情页再次展示同一等级。',
+    mistakes:['只显示等级却没有公开成果链接','入口写A级而详情页未标注或口径不一致','把阶段估算或团队贡献写成已核定个人收益'],
+    owners:'内容负责人确认事实与边界，项目责任人提供材料，页面维护者保证链接和等级一致，审核者抽查可访问性。',
+    records:'证据分级清单、公开成果网址、详情页等级标识、原始记录索引、审核与变更记录。',
+    questions:['A级与B级的关键证据差异是什么？','为什么分级卡必须关联公开成果链接？','详情页与入口等级不一致时应怎样处理？']
+  },
+  'Evidence Chain':{
+    focus:'把项目事实、角色、数据、验证、核定、公开链接和边界组织成可追溯闭环。',
+    formula:'完整证据链＝项目背景＋角色边界＋基线／数据源＋过程记录＋验证／核定结论＋公开链接＋适用边界＋版本状态。',
+    method:['定义要公开的成果结论','确认项目背景和本人角色','索引原始数据与过程记录','标注验证或核定主体','确定证据等级和边界','建立入口到公开成果的可点击链接','在详情页反向标注等级并定期核验链接'],
+    caseText:'读者从“B级已验证”入口点击进入SMED项目页，可看到改善前约14小时、改善后约7小时、方法过程以及B级边界说明，由此完成从等级到成果详情的核验。',
+    mistakes:['只给数字，不说明数据来源和责任边界','只给链接，不在详情页说明等级','链接失效后仍保留可点击视觉反馈'],
+    owners:'项目负责人维护事实与原始记录，内容维护者维护网址和页面标识，审核者执行链接与口径巡检。',
+    records:'成果主张清单、证据索引、链接巡检报告、版本日志、授权与脱敏记录。',
+    questions:['一条最小可用证据链至少包含哪些要素？','公开链接失效时页面应如何处理？','为什么团队成果必须说明本人角色？']
+  },
+  'Stage Gate':{
+    focus:'用明确准入条件和证据在关键里程碑作出项目决策，避免把阶段门简化为形式化会议。',
+    formula:'阶段门通过＝必需交付物齐套＋关键风险可接受＋责任与资源明确＋验证证据满足准入条件；任一红线未关闭则补充、暂停或终止。',
+    method:['定义项目阶段和门点','列出每个门点的交付物与准入条件','明确评审人、决策人和升级路径','会前核对数据、风险与版本','会议形成继续／补充／暂停／终止结论','记录行动项、责任人与截止日期','关闭问题后再进入下一阶段并固化经验'],
+    caseText:'新工厂规划在方案冻结门点检查产能模型、Layout、物流、公辅、安全、预算和扩展边界；若关键设备接口未确认，结论为补充验证而不是形式通过。',
+    mistakes:['把阶段门等同于普通进度汇报','没有预设准入条件，靠现场印象决策','问题未关闭便进入下一阶段，后续用返工补救'],
+    owners:'项目经理组织材料与行动项，职能负责人确认专业输出，Sponsor或授权决策人作出门点结论。',
+    records:'阶段门清单、交付物版本、风险清单、评审纪要、决策结论、行动项与关闭证据。',
+    questions:['阶段门与普通周例会的根本区别是什么？','哪些证据缺失时不能宣布门点通过？','页面为何应避免把“阶段门”拆成单字换行？']
+  },
   'OEE':{
     focus:'以可动率、性能效率和质量率分解设备时间损失，找到真实改善优先级。',
     formula:'OEE＝可动率 × 性能效率 × 质量率。三项必须使用同一计划生产时间边界，并保留停机、速度损失与不良原始数据。',
