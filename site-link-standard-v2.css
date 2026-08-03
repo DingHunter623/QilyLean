@@ -230,3 +230,44 @@ html body section#contact .trust-contact > a[href]:active{
 }
 
 @media(prefers-reduced-motion:reduce){html body a[href]{transition:none!important}}
+
+/* QilyLean unified interaction and contrast standard · 2026-08-03 */
+html body :is(.actions,.module-actions,.card-actions,.qily-ia-actions) a[href].primary,
+html body a[href].qily-ia-button.primary,
+html body .actions a[href]:first-child:not(.secondary){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#0f4b5a!important;
+  border-color:#0f4b5a!important;
+  text-decoration-color:#ffe39b!important;
+  opacity:1!important;
+  filter:none!important;
+}
+html body :is(.actions,.module-actions,.card-actions,.qily-ia-actions) a[href].primary:hover,
+html body :is(.actions,.module-actions,.card-actions,.qily-ia-actions) a[href].primary:focus-visible,
+html body a[href].qily-ia-button.primary:hover,
+html body a[href].qily-ia-button.primary:focus-visible,
+html body .actions a[href]:first-child:not(.secondary):hover,
+html body .actions a[href]:first-child:not(.secondary):focus-visible{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  box-shadow:0 10px 24px rgba(15,75,90,.24)!important;
+  transform:translateY(-2px)!important;
+}
+html body #results .metric:not(a):not([role="link"]){cursor:default!important;transition:none!important}
+html body #results .metric:not(a):not([role="link"]):hover{
+  color:inherit!important;
+  background-color:#fff!important;
+  border-color:inherit!important;
+  box-shadow:none!important;
+  transform:none!important;
+  outline:0!important;
+}
+html body #results .metric:not(a):not([role="link"]):hover :is(strong,span,em){color:inherit!important;-webkit-text-fill-color:initial!important}
+html body a[href]:is(.qily-ia-card-link,.module-card-link,.project-card-link,.linked-card){
+  cursor:pointer!important;
+  text-decoration-line:none!important;
+}

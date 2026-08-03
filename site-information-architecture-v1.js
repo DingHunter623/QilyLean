@@ -233,3 +233,85 @@
 
   ready(boot);
 })(document,window);
+
+/* QilyLean unified evidence, phrase-integrity and OPL standard · 2026-08-03 */
+(function(d,w){
+  'use strict';
+  var path=(w.location.pathname||'/').replace(/\/+/g,'/');
+  function ready(fn){if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',fn,{once:true});else fn();}
+  function evidenceBadge(target,grade,title,detail){
+    if(!target||target.querySelector('.qily-evidence-grade-badge'))return;
+    var badge=d.createElement('div');
+    badge.className='qily-evidence-grade-badge grade-'+grade.toLowerCase();
+    badge.innerHTML='<strong>'+grade+'级｜'+title+'</strong><span>'+detail+'</span>';
+    target.insertBefore(badge,target.firstChild);
+  }
+  function makeEvidenceCardsLinked(){
+    var guide=d.getElementById('qily-project-evidence-guide');
+    if(!guide)return;
+    var cards=guide.querySelectorAll('.qily-ia-grid.four > .qily-ia-card');
+    var links=[
+      '/projects/lean-improvement-evidence/#q3',
+      '/projects/smed-300t/#evidence-grade',
+      '/projects/lean-improvement-evidence/#q4',
+      '/projects/digital-factory/#evidence-grade'
+    ];
+    var labels=['查看A级公开核定成果','查看B级公开验证成果','查看C级阶段估算成果','查看D级经验陈述成果'];
+    Array.prototype.forEach.call(cards,function(card,index){
+      if(index>=links.length||card.tagName.toLowerCase()==='a')return;
+      var link=d.createElement('a');
+      link.className=card.className+' qily-ia-card-link';
+      link.href=links[index];
+      link.setAttribute('aria-label',labels[index]);
+      link.innerHTML=card.innerHTML+'<span class="qily-card-link-hint">'+labels[index]+' →</span>';
+      card.replaceWith(link);
+    });
+  }
+  function keepCapabilityPhraseTogether(){
+    var section=d.getElementById('qily-professional-labels');
+    if(!section)return;
+    Array.prototype.forEach.call(section.querySelectorAll('.qily-ia-card'),function(card){
+      var label=card.querySelector('small');
+      var heading=card.querySelector('h3');
+      if(label&&heading&&label.textContent.trim()==='组织机制')heading.innerHTML='PMO／<br><span class="qily-no-break">阶段门</span>／横向复制';
+    });
+  }
+  function markTargetEvidenceLevels(){
+    if(/^\/projects\/lean-improvement-evidence(?:\/|$)/.test(path)){
+      evidenceBadge(d.getElementById('q3'),'A','已核定','具有财务核算、审批结构及奖励兑现等正式记录，公开页面保留脱敏后的核定口径。');
+      evidenceBadge(d.getElementById('q4'),'C','阶段估算','依据结案评审、评分与风险评价说明阶段成果；350～400万元为阶段性估算，非财务核定值。');
+      evidenceBadge(d.getElementById('award'),'B','已验证','具有年度／月度评比、稽核整改、流动红黑旗及奖励兑现的现场记录。');
+    }
+    if(/^\/projects\/smed-300t(?:\/|$)/.test(path)){
+      var fact=d.querySelector('.project-fact-grid');
+      if(fact&&!d.getElementById('evidence-grade')){
+        var panel=d.createElement('div');panel.id='evidence-grade';panel.className='qily-evidence-level-panel grade-b';
+        panel.innerHTML='<strong>B级｜已验证</strong><span>依据改善前后换模时间、现场过程记录及标准化交付进行验证；结果适用于所述设备、模具与当期约束条件。</span>';
+        fact.parentNode.insertBefore(panel,fact);
+      }
+    }
+    if(/^\/projects\/digital-factory(?:\/|$)/.test(path)){
+      var digitalFact=d.querySelector('.project-fact-grid');
+      if(digitalFact&&!d.getElementById('evidence-grade')){
+        var digitalPanel=d.createElement('div');digitalPanel.id='evidence-grade';digitalPanel.className='qily-evidence-level-panel grade-d';
+        digitalPanel.innerHTML='<strong>D级｜经验陈述</strong><span>用于说明本人参与的数据治理、系统协同与交付沉淀范围；页面不将该方法陈述表述为已核定财务收益。</span>';
+        digitalFact.parentNode.insertBefore(digitalPanel,digitalFact);
+      }
+    }
+  }
+  function updateSponsorLesson(){
+    if(path!=='/knowledge/terminology/sponsor.html'||d.getElementById('sponsor-evidence-governance'))return;
+    var grid=d.querySelector('main .grid');
+    if(!grid)return;
+    var block=d.createElement('article');
+    block.className='block wide';block.id='sponsor-evidence-governance';
+    block.innerHTML='<h2>9. 证据等级与公开链接治理</h2><p class="case">Sponsor在阶段门评审中不仅确认“项目是否完成”，还应确认结果属于已核定、已验证、阶段估算或经验陈述中的哪一级；每项公开成果必须链接到对应脱敏证据页面，目标页面同步显示证据等级、数据口径、本人角色、适用条件和禁止外推边界。</p><ul><li>没有正式财务、验收或管理层记录，不得标注为A级已核定；</li><li>具备改善前后数据、现场记录或过程验收，可标注为B级已验证；</li><li>依据模型、基线与假设测算的结果必须标注为C级阶段估算并列明待核验条件；</li><li>仅用于说明任职、参与范围和方法实践的内容标注为D级经验陈述，不作为收益承诺；</li><li>静态说明卡不得设置误导性悬停反馈，只有真实可跳转入口才使用明显交互反馈。</li></ul>';
+    grid.appendChild(block);
+  }
+  ready(function(){
+    keepCapabilityPhraseTogether();
+    makeEvidenceCardsLinked();
+    markTargetEvidenceLevels();
+    updateSponsorLesson();
+  });
+})(document,window);
