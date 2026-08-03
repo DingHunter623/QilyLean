@@ -115,3 +115,27 @@ body.qily-home-commercial-focus .qily-ai-secondary .qily-ia-inner{width:min(1120
   .qily-ia-actions,.qily-results-toggle{display:none!important}
   .qily-ia-card,.qily-ia-delivery-summary article{box-shadow:none}
 }
+
+/* Unified interactive-card, evidence-grade and phrase-integrity standard · 2026-08-03 */
+.qily-no-break{white-space:nowrap}
+.qily-ia-card h3{word-break:normal;overflow-wrap:break-word;text-wrap:balance}
+.qily-ia-card-link{position:relative;color:inherit!important;-webkit-text-fill-color:initial!important;text-decoration:none!important;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease}
+.qily-ia-card-link .qily-card-link-hint{display:block;margin-top:auto;padding-top:16px;color:#0f4b5a;font-size:14px;font-weight:950;line-height:1.45;text-decoration:underline;text-decoration-color:#178b94;text-underline-offset:.24em}
+.qily-ia-card-link:hover,.qily-ia-card-link:focus-visible{color:#17322d!important;-webkit-text-fill-color:#17322d!important;background:#ffe39b!important;border-color:#c99a3e!important;border-top-color:#0f4b5a!important;box-shadow:0 18px 40px rgba(15,75,90,.24)!important;transform:translateY(-4px)!important;outline:3px solid rgba(15,75,90,.22)!important;outline-offset:3px}
+.qily-ia-card-link:hover small,.qily-ia-card-link:focus-visible small,.qily-ia-card-link:hover h3,.qily-ia-card-link:focus-visible h3,.qily-ia-card-link:hover p,.qily-ia-card-link:focus-visible p,.qily-ia-card-link:hover .qily-card-link-hint,.qily-ia-card-link:focus-visible .qily-card-link-hint{color:#17322d!important;-webkit-text-fill-color:#17322d!important;text-decoration-color:#17322d!important}
+.qily-ia-card-link:active{transform:translateY(0) scale(.99)!important}
+
+.qily-evidence-grade-badge{display:grid;gap:5px;margin:0 0 14px;padding:12px 15px;border-left:5px solid #178b94;background:#eef8f6}
+.qily-evidence-grade-badge strong{color:#0f4b5a;font-size:16px}
+.qily-evidence-grade-badge span{color:#496765;font-size:14px;line-height:1.62}
+.qily-evidence-grade-badge.grade-a{border-left-color:#178b94;background:#eaf7f6}
+.qily-evidence-grade-badge.grade-b{border-left-color:#caa15f;background:#fff8e8}
+.qily-evidence-grade-badge.grade-c{border-left-color:#9e4a34;background:#fff1ed}
+.qily-evidence-level-panel{display:grid;gap:6px;margin:18px 0;padding:16px 18px;border:1px solid #c8dad8;border-left:6px solid #178b94;background:#eef8f6}
+.qily-evidence-level-panel strong{color:#0f4b5a;font-size:19px}
+.qily-evidence-level-panel span{color:#365b58;font-size:15.5px;line-height:1.68}
+.qily-evidence-level-panel.grade-b{border-left-color:#caa15f;background:#fff8e8}
+.qily-evidence-level-panel.grade-d{border-left-color:#617779;background:#f4f7f7}
+
+@media(max-width:560px){.qily-ia-card-link{min-height:0}.qily-evidence-level-panel{padding:14px}}
+@media(prefers-reduced-motion:reduce){.qily-ia-card-link{transition:none!important}}
