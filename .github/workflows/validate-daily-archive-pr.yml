@@ -25,6 +25,7 @@ on:
       - "scripts/audit-daily-quality-linkage.js"
       - "scripts/apply-commercial-quality-closure-20260804.js"
       - "scripts/normalize-daily-quality-label.js"
+      - "scripts/enforce-productivity-theme-alias.js"
       - "scripts/sync-daily-terminology.js"
       - "scripts/bump-daily-css-version.js"
       - "scripts/validate-daily-archive.js"
@@ -61,6 +62,7 @@ jobs:
           node --check scripts/audit-daily-quality-linkage.js
           node --check scripts/apply-commercial-quality-closure-20260804.js
           node --check scripts/normalize-daily-quality-label.js
+          node --check scripts/enforce-productivity-theme-alias.js
           node --check scripts/sync-daily-terminology.js
           node --check scripts/bump-daily-css-version.js
           node --check scripts/validate-daily-archive.js
@@ -70,6 +72,7 @@ jobs:
       - name: Apply pricing, contrast and quality source closure
         run: |
           node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
 
       - name: Build publication candidate
@@ -83,6 +86,7 @@ jobs:
           node scripts/sync-daily-terminology.js --check
           node scripts/bump-daily-css-version.js
           node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
 
       - name: Unify Daily Engineering Brief brand
@@ -106,6 +110,7 @@ jobs:
         run: |
           node scripts/normalize-daily-visual-closure.js
           node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
 
       - name: Audit recurring quality linkage
