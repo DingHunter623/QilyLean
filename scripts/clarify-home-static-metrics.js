@@ -14,6 +14,7 @@ let html = fs.readFileSync(file, 'utf8');
 
 /*
  * QILY-HOME-STATIC-METRIC-NO-HOVER
+ * Publication trigger: 2026-08-03 border-state hard lock.
  * Static result cards must keep exactly the same geometry and colors in every
  * pointer, focus and active state. The left, right and bottom borders remain
  * transparent; only the existing top classification line remains visible.
