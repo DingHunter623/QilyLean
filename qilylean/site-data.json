@@ -1,18 +1,18 @@
 {
-  "generatedAt": "2026-08-02",
+  "generatedAt": "2026-08-03",
   "schemaVersion": 1,
   "terminology": {
-    "total": 181,
-    "lessonTotal": 181,
+    "total": 184,
+    "lessonTotal": 184,
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 2581,
-    "latestDate": "2026-08-02",
-    "latestTheme": "IE标工联动PMC排产",
-    "latestTitle": "标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环",
-    "latestSummary": "标准工时只有进入订单拆解、产能校核、工位配置、日计划、实绩反馈与滚动排程，才能从静态资料变成排产决策；这条数据链必须做到编码同源、函数联动、异常可见、尾单结清。",
-    "latestUrl": "/qilylean/daily/2026-08-02.html",
+    "total": 2582,
+    "latestDate": "2026-08-03",
+    "latestTheme": "成果证据链与阶段门",
+    "latestTitle": "成果分级不是贴标签：用阶段门把公开证据链做成可点击、可追溯的交付闭环",
+    "latestSummary": "制造项目的成果数字只有与角色、基线、验证记录、核定状态和公开链接相互对应，才具备可核验价值；A／B／C／D分级应贯穿项目立项、阶段门评审、详情页披露与横向复制。",
+    "latestUrl": "/qilylean/daily/2026-08-03.html",
     "directoryUrl": "/qilylean/daily-insights.html"
   },
   "knowledge": {
@@ -32,6 +32,9 @@
     "dataRule": "客户资料按必要、最小化和保密原则使用；涉及客户名称、工艺、成本、经营数据及人员信息的材料，仅在授权范围内处理。",
     "evidenceRule": "已核定值、阶段性估算值、团队成果与个人职责分别标注，不将预测收益表述为已实现收益。",
     "evidenceLevelRule": "公开成果采用A已核定、B已验证、C阶段估算、D经验陈述四级口径；该分级是QilyLean内部披露规则，不是第三方认证。",
+    "evidenceLinkRule": "公开证据分级入口必须关联可访问的公开成果链接，成果详情页必须重复标注同一证据等级与适用边界。",
+    "interactionRule": "只有链接、按钮或点击模块后会打开新界面的控件才提供悬停与键盘焦点反馈；反馈须采用高对比背景与文字，静态模块不得使用暗示可点击的动画、阴影或变色。",
+    "typographyRule": "阶段门、标准工时、证据链等专业词组按完整语义单元排版，避免一两个字孤立换行；必要时使用显式换行与不换行包裹。",
     "publicationRule": "历史简报依据历年制造实践、工作记录与项目经验持续整理；页面日期用于知识档案排序与主题定位，不单独证明网页在该日首次公开发布。",
     "credentialRule": "除非页面明确列明颁发方、核验来源和适用范围，不将学习证明、平台记录或个人作品表述为政府资质、行业认证、官方授权或客户背书。",
     "aiRule": "AI用于检索、整理和方案辅助，不替代现场核实、专业评审、管理决策及法律、财税、安全等专项意见。",
@@ -45,11 +48,11 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 2860,
-    "indexedPages": 2802,
-    "terminologyTotal": 181,
-    "briefTotal": 2581,
-    "latestBriefDate": "2026-08-02",
-    "sitemapLastmod": "2026-08-02"
+    "indexedEntries": 2867,
+    "indexedPages": 2809,
+    "terminologyTotal": 184,
+    "briefTotal": 2582,
+    "latestBriefDate": "2026-08-03",
+    "sitemapLastmod": "2026-08-03"
   }
 }
