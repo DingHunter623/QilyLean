@@ -261,7 +261,9 @@ html body #results .metric:not(a):not([role="link"]){cursor:default!important;tr
 html body #results .metric:not(a):not([role="link"]):hover{
   color:inherit!important;
   background-color:#fff!important;
-  border-color:inherit!important;
+  border-left-color:transparent!important;
+  border-right-color:transparent!important;
+  border-bottom-color:transparent!important;
   box-shadow:none!important;
   transform:none!important;
   outline:0!important;
@@ -271,3 +273,53 @@ html body a[href]:is(.qily-ia-card-link,.module-card-link,.project-card-link,.li
   cursor:pointer!important;
   text-decoration-line:none!important;
 }
+
+/* QILY-STATIC-RESULT-CARD-HARD-LOCK:START */
+html body #results .metric.qily-static-card{
+  --qily-static-top:var(--teal);
+  cursor:default!important;
+  transition:none!important;
+  transform:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+  animation:none!important;
+  will-change:auto!important;
+  background-color:#fff!important;
+  border-left-color:transparent!important;
+  border-right-color:transparent!important;
+  border-bottom-color:transparent!important;
+  border-top-color:var(--qily-static-top)!important;
+  outline:0!important;
+}
+html body #results .metric.qily-static-card:nth-child(2n){--qily-static-top:var(--copper)}
+html body #results .metric.qily-static-card:nth-child(3n){--qily-static-top:var(--plum)}
+html body #results .metric.qily-static-card:hover,
+html body #results .metric.qily-static-card:focus,
+html body #results .metric.qily-static-card:focus-visible,
+html body #results .metric.qily-static-card:active{
+  cursor:default!important;
+  transition:none!important;
+  transform:none!important;
+  box-shadow:none!important;
+  filter:none!important;
+  animation:none!important;
+  will-change:auto!important;
+  background-color:#fff!important;
+  border-left-color:transparent!important;
+  border-right-color:transparent!important;
+  border-bottom-color:transparent!important;
+  border-top-color:var(--qily-static-top)!important;
+  outline:0!important;
+}
+html body #results .metric.qily-static-card::before,
+html body #results .metric.qily-static-card::after,
+html body #results .metric.qily-static-card:hover::before,
+html body #results .metric.qily-static-card:hover::after{
+  content:none!important;
+  display:none!important;
+  border:0!important;
+  box-shadow:none!important;
+  transform:none!important;
+  animation:none!important;
+}
+/* QILY-STATIC-RESULT-CARD-HARD-LOCK:END */
