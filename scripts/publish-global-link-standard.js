@@ -5,11 +5,11 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const navigationScript = '/site-navigation.js?v=20260803-parent-route-v3';
+const navigationScript = '/site-navigation.js?v=20260803-parent-route-v4';
 const linkStylesheet = '/site-link-standard-v2.css?v=20260803-nav-four-border-v6';
 const navigationBorderStylesheet = '/site-navigation-four-border-v3.css?v=20260803-four-border-v3';
 const darkStylesheet = '/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2';
-const portraitBadgeStylesheet = '/home-portrait-badge-fix-v1.css?v=20260803-badge-wrap-v1';
+const portraitBadgeStylesheet = '/home-portrait-badge-fix-v1.css?v=20260803-badge-wrap-v2';
 
 const navigationTag = `  <script defer src="${navigationScript}"></script>`;
 const linkTag = `  <link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="${linkStylesheet}">`;
@@ -40,7 +40,7 @@ function walk(directory, callback) {
 function installHtmlAssets(page, file) {
   if (!/<\/head>/i.test(page)) return page;
 
-  let next = page
+  const next = page
     .replace(/\s*<script\b[^>]*src=["'][^"']*\/site-navigation\.js\?v=[^"']+["'][^>]*><\/script>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*id=["']qilyGlobalLinkStandardStylesheet["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*id=["']qilyNavigationFourBorderStylesheet["'][^>]*>\s*/gi, '\n')
@@ -67,7 +67,8 @@ function patchEvidencePage() {
     .replace('以企业内部形成的课题评审、效益核算、风险评价、会议记录及奖励兑现资料，补充验证制造改善项目从组织推进到成果闭环的真实路径。', '以某制造企业2022年度形成的精益课题评审、效益核算、风险评价、会议记录及6S激励兑现资料，补充验证制造改善项目从组织推进到成果闭环的真实路径。')
     .replace('这些资料不是个人重新编制的项目总结，而是由企业内部形成并用于课题评审、财务贡献核算、风险确认、6S稽核改善及奖励发放的原始业务文件公开脱敏版。', '这些资料不是个人重新编制的项目总结，而是某制造企业在2022年度内部形成并用于课题评审、财务贡献核算、风险确认、6S稽核改善及奖励发放的原始业务文件公开脱敏版。')
     .replace('<small>6S评比与改善激励｜3页</small>', '<small>某制造企业｜2022年度6S评比与改善激励｜3页</small>')
-    .replace('<span>QilyLean｜制造改善项目佐证</span>', '<span>QilyLean｜某制造企业2022年度制造改善项目佐证</span>');
+    .replace('<span>QilyLean｜制造改善项目佐证</span>', '<span>QilyLean｜某制造企业2022年度制造改善项目佐证</span>')
+    .replace(/<body class="module-page"(?: data-evidence-revision="[^"]*")?>/, '<body class="module-page" data-evidence-revision="20260803-context-v3">');
   return write(file, page);
 }
 
@@ -88,7 +89,7 @@ function main() {
 
   const evidenceChanged = patchEvidencePage();
   process.stdout.write(
-    `Published drag-safe hierarchical parent navigation, complete four-side borders and homepage portrait badge fix to ${checked} HTML files; refreshed ${changed}; evidence context changed=${evidenceChanged}.\n`
+    `Published current hierarchical navigation, complete four-side borders, homepage portrait wrapping and evidence revision to ${checked} HTML files; refreshed ${changed}; evidence context changed=${evidenceChanged}.\n`
   );
 }
 
