@@ -159,7 +159,7 @@
       '<article class="qily-ia-card"><small>工程角色</small><h3>TE／PE／IE／ME／NPI</h3><p>覆盖工艺导入、标准工时、产能、设备、质量协同和量产爬坡。</p></article>'+
       '<article class="qily-ia-card"><small>改善方法</small><h3>VSM／SMED／OEE／ECRS</h3><p>从价值流、换型、设备损失、动作与流程重构建立可验证改善路径。</p></article>'+
       '<article class="qily-ia-card"><small>系统协同</small><h3>ERP／MES／APS／IE数据</h3><p>统一BOM、工艺路线、工时、产能、计划、实绩和库存口径。</p></article>'+
-      '<article class="qily-ia-card"><small>组织机制</small><h3>PMO／阶段门／横向复制</h3><p>以责任、风险、验证、培训、稽核和复盘机制推动成果固化。</p></article>'+
+      '<article class="qily-ia-card"><small>组织机制</small><h3><span class="qily-ia-title-line">PMO／</span><span class="qily-ia-title-line qily-ia-no-break">阶段门／横向复制</span></h3><p>以责任、风险、验证、培训、稽核和复盘机制推动成果固化。</p></article>'+
       '</div><div class="qily-ia-boundary"><strong>阅读边界：</strong>能力标签说明专业覆盖范围，不等同于每项服务均由一人独立完成，也不构成特定项目结果承诺；具体团队配置与职责以项目合同为准。</div>';
     var section=buildSection({id:'qily-professional-labels',alt:true,kicker:'PROFESSIONAL LABELS｜原首页标签统一归档',title:'专业标签与能力边界',lead:'首页不再平铺大量缩写和工具名称；本页按工程角色、改善方法、系统协同与项目机制集中呈现。',body:labels});
     insertAfter(hero(),section);
@@ -180,10 +180,10 @@
   function addProjectEvidenceGuide(){
     if(!/^\/projects(?:\/|$)/.test(path)||d.getElementById('qily-project-evidence-guide'))return;
     var body='<div class="qily-ia-grid four">'+
-      '<article class="qily-ia-card"><small>A级</small><h3>已核定</h3><p>具有财务、验收、管理层确认或等效正式记录。</p></article>'+
-      '<article class="qily-ia-card"><small>B级</small><h3>已验证</h3><p>具备改善前后数据、现场记录、试点或过程验收。</p></article>'+
-      '<article class="qily-ia-card"><small>C级</small><h3>阶段估算</h3><p>依据基线、模型与假设测算，必须说明待核验条件。</p></article>'+
-      '<article class="qily-ia-card"><small>D级</small><h3>经验陈述</h3><p>用于说明任职、参与范围和方法实践，不当作已实现收益。</p></article>'+
+      '<a class="qily-ia-evidence-link" data-qily-card-link href="/projects/lean-improvement-evidence/q3-online-view.html" aria-label="查看A级已核定公开成果"><article class="qily-ia-card" data-evidence-grade="A"><small>A级</small><h3>已核定</h3><p>具有财务、验收、管理层确认或等效正式记录。</p><span class="qily-ia-evidence-cta">查看A级公开成果</span></article></a>'+
+      '<a class="qily-ia-evidence-link" data-qily-card-link href="/projects/smed-300t/" aria-label="查看B级已验证公开成果"><article class="qily-ia-card" data-evidence-grade="B"><small>B级</small><h3>已验证</h3><p>具备改善前后数据、现场记录、试点或过程验收。</p><span class="qily-ia-evidence-cta">查看B级公开成果</span></article></a>'+
+      '<a class="qily-ia-evidence-link" data-qily-card-link href="/projects/lean-improvement-evidence/q4-online-view.html" aria-label="查看C级阶段估算公开成果"><article class="qily-ia-card" data-evidence-grade="C"><small>C级</small><h3>阶段估算</h3><p>依据基线、模型与假设测算，必须说明待核验条件。</p><span class="qily-ia-evidence-cta">查看C级公开成果</span></article></a>'+
+      '<a class="qily-ia-evidence-link" data-qily-card-link href="/projects/factory-layout/" aria-label="查看D级经验陈述公开成果"><article class="qily-ia-card" data-evidence-grade="D"><small>D级</small><h3>经验陈述</h3><p>用于说明任职、参与范围和方法实践，不当作已实现收益。</p><span class="qily-ia-evidence-cta">查看D级公开成果</span></article></a>'+
       '</div><div class="qily-ia-boundary"><strong>职责口径：</strong>主导、组织推进、专业参与和跨部门团队成果分别表述；未经客户明确授权，不将脱敏材料表述为客户推荐、官方合作或商业背书。</div>';
     var section=buildSection({id:'qily-project-evidence-guide',alt:true,kicker:'EVIDENCE FIRST｜量化成果统一归代表项目',title:'项目结果如何阅读',lead:'量化结果必须与项目背景、本人角色、证据等级和适用边界一起阅读，避免只看数字、不看条件。',body:body});
     insertAfter(hero(),section);
