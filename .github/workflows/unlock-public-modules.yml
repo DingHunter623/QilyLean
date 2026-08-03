@@ -1,4 +1,4 @@
-name: Publish current QilyLean shell without legacy flash
+name: Publish QilyLean international enterprise layout
 
 on:
   push:
@@ -10,6 +10,8 @@ on:
       - "site-visual-scale-v1.css"
       - "site-wide-layout-v1.css"
       - "site-typography-v1.css"
+      - "site-microsoft-international-v1.css"
+      - "site-microsoft-international-v1.js"
       - "homepage-music.js"
       - ".github/workflows/unlock-public-modules.yml"
   workflow_dispatch:
@@ -36,16 +38,20 @@ jobs:
         with:
           node-version: 20
 
-      - name: Publish current shell and homepage portrait layout
+      - name: Publish international layout and current public shell
         run: node scripts/publish-site-system-v2.js
 
-      - name: Validate current navigation, portrait layout and cache refresh
+      - name: Validate international layout, navigation and cache refresh
         shell: bash
         run: |
           node --check scripts/publish-site-system-v2.js
           node --check site-navigation.js
+          node --check site-microsoft-international-v1.js
           grep -q 'site-wide-layout-v1.css?v=20260729-fluid-copy-v5' site-navigation.js
           grep -q 'site-typography-v1.css?v=20260729-hierarchy-v4' site-navigation.js
+          grep -q 'site-microsoft-international-v1.css?v=20260803-ms-international-v1' site-navigation.js
+          grep -q 'site-microsoft-international-v1.js?v=20260803-ms-international-v1' site-navigation.js
+          grep -q 'QILY-MICROSOFT-NAV-UNDERLINE-RUNTIME:START' site-navigation.js
           grep -q 'html.qily-shell-pending body' site-shell.css
           grep -q 'if (document.body) boot()' site-navigation.js
           grep -q 'addWideLayoutStylesheet();' site-navigation.js
@@ -63,26 +69,32 @@ jobs:
           grep -q '.qily-home-balanced .portrait-badge div:nth-child(2) span' site-visual-scale-v1.css
           grep -q 'white-space:normal!important' site-visual-scale-v1.css
           grep -q 'min-height:96px!important' site-visual-scale-v1.css
+          grep -q -- '--qily-ms-content:min(1280px' site-microsoft-international-v1.css
+          grep -q '.capability-digital-tool:nth-child(even)' site-microsoft-international-v1.css
+          grep -q '.qily-ms-static-card:hover' site-microsoft-international-v1.css
+          grep -q '.qily-ms-interactive-card:hover' site-microsoft-international-v1.css
+          grep -q '__qilyMicrosoftInternationalV1' site-microsoft-international-v1.js
+          grep -q "section.classList.add('qily-ms-product-showcase')" site-microsoft-international-v1.js
           grep -q 'var restoreSettled = false' homepage-music.js
           grep -q 'if (!restoreSettled) return' homepage-music.js
           grep -q 'function settlePlaybackRestore()' homepage-music.js
           grep -R -q 'data-qily-shell-bootstrap' --include='*.html' .
-          grep -R -q '<script defer src="/site-navigation.js?v=20260803-parent-route-v4"' --include='*.html' .
+          grep -R -q '<script defer src="/site-navigation.js?v=20260803-ms-international-v1"' --include='*.html' .
           grep -R -q 'site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5' --include='*.html' .
           grep -R -q 'site-shell.css?v=20260729-no-old-flash-v1' --include='*.html' .
           grep -R -q 'homepage-music.js?v=20260729-continuous-v4' --include='*.html' .
           grep -q '<h1>某制造企业｜2022年度制造改善项目佐证资料</h1>' projects/lean-improvement-evidence/index.html
 
-      - name: Commit site-system release
+      - name: Commit international site-system release
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Current shell, portrait layout and cache versions are already published."
+            echo "International layout and current public shell are already published."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: publish current shell and homepage portrait wrapping [skip ci]"
+          git commit -m "feat: publish Microsoft-inspired QilyLean international layout [skip ci]"
           git pull --rebase origin main
           git push origin main

@@ -11,13 +11,16 @@ const visualFile = path.join(root, 'site-visual-scale-v1.css');
 const wideLayoutFile = path.join(root, 'site-wide-layout-v1.css');
 const typographyFile = path.join(root, 'site-typography-v1.css');
 const musicFile = path.join(root, 'homepage-music.js');
+const internationalCssFile = path.join(root, 'site-microsoft-international-v1.css');
+const internationalJsFile = path.join(root, 'site-microsoft-international-v1.js');
 
-const NAV_VERSION = '20260803-parent-route-v4';
+const NAV_VERSION = '20260803-ms-international-v1';
 const SHELL_VERSION = '20260729-no-old-flash-v1';
 const VISUAL_VERSION = '20260803-home-badge-wrap-v5';
 const WIDE_VERSION = '20260729-fluid-copy-v5';
 const TYPE_VERSION = '20260729-hierarchy-v4';
 const MUSIC_VERSION = '20260729-continuous-v4';
+const INTERNATIONAL_VERSION = '20260803-ms-international-v1';
 
 function read(file) { return fs.readFileSync(file, 'utf8'); }
 function write(file, content) {
@@ -33,6 +36,8 @@ function validatePublicStyles() {
   const visual = read(visualFile);
   const music = read(musicFile);
   const shell = read(shellFile);
+  const internationalCss = read(internationalCssFile);
+  const internationalJs = read(internationalJsFile);
   if (!shell.includes('html.qily-shell-pending body')) throw new Error('No-flash shell guard is missing');
 
   const wideMarkers = [
@@ -63,11 +68,26 @@ function validatePublicStyles() {
     'function settlePlaybackRestore()',
     'localStorage.setItem(STATE_KEY, payload)'
   ];
+  const internationalCssMarkers = [
+    '--qily-ms-content:min(1280px',
+    '.capability-digital-tool:nth-child(even)',
+    '.qily-ms-static-card:hover',
+    '.qily-ms-interactive-card:hover',
+    'QilyLean Microsoft-inspired international visual system'
+  ];
+  const internationalJsMarkers = [
+    '__qilyMicrosoftInternationalV1',
+    "d.documentElement.classList.add('qily-ms-international')",
+    "card.classList.add(isDirectlyInteractive(card)?'qily-ms-interactive-card':'qily-ms-static-card')",
+    "section.classList.add('qily-ms-product-showcase')"
+  ];
 
   for (const marker of wideMarkers) if (!wide.includes(marker)) throw new Error(`Wide-layout marker missing: ${marker}`);
   for (const marker of typeMarkers) if (!type.includes(marker)) throw new Error(`Typography marker missing: ${marker}`);
   for (const marker of visualMarkers) if (!visual.includes(marker)) throw new Error(`Homepage portrait marker missing: ${marker}`);
   for (const marker of musicMarkers) if (!music.includes(marker)) throw new Error(`Music continuity marker missing: ${marker}`);
+  for (const marker of internationalCssMarkers) if (!internationalCss.includes(marker)) throw new Error(`International CSS marker missing: ${marker}`);
+  for (const marker of internationalJsMarkers) if (!internationalJs.includes(marker)) throw new Error(`International JS marker missing: ${marker}`);
 }
 
 function publishNavigation() {
@@ -77,10 +97,14 @@ function publishNavigation() {
     .replace(/var SHARED_ASSET_VERSION = '[^']*';/, `var SHARED_ASSET_VERSION = '${SHELL_VERSION}';`)
     .replace(/var VISUAL_SCALE_VERSION = '[^']*';/, `var VISUAL_SCALE_VERSION = '${VISUAL_VERSION}';`)
     .replace(/site-wide-layout-v1\.css\?v=[^'"\s]+/g, `site-wide-layout-v1.css?v=${WIDE_VERSION}`)
-    .replace(/site-typography-v1\.css\?v=[^'"\s]+/g, `site-typography-v1.css?v=${TYPE_VERSION}`);
+    .replace(/site-typography-v1\.css\?v=[^'"\s]+/g, `site-typography-v1.css?v=${TYPE_VERSION}`)
+    .replace(/site-microsoft-international-v1\.css\?v=[^'"\s]+/g, `site-microsoft-international-v1.css?v=${INTERNATIONAL_VERSION}`)
+    .replace(/site-microsoft-international-v1\.js\?v=[^'"\s]+/g, `site-microsoft-international-v1.js?v=${INTERNATIONAL_VERSION}`);
 
   if (!page.includes(`site-wide-layout-v1.css?v=${WIDE_VERSION}`)) throw new Error('Wide-layout cache version was not published');
   if (!page.includes(`site-typography-v1.css?v=${TYPE_VERSION}`)) throw new Error('Typography cache version was not published');
+  if (!page.includes(`site-microsoft-international-v1.css?v=${INTERNATIONAL_VERSION}`)) throw new Error('International CSS cache version was not published');
+  if (!page.includes(`site-microsoft-international-v1.js?v=${INTERNATIONAL_VERSION}`)) throw new Error('International JS cache version was not published');
   if (!page.includes('addWideLayoutStylesheet();') || !page.includes('addTypographyStylesheet();')) {
     throw new Error('Public style loaders are incomplete');
   }
@@ -143,7 +167,7 @@ function main() {
   validatePublicStyles();
   publishNavigation();
   const refreshed = refreshHtmlReferences();
-  process.stdout.write(`Published current shell, homepage portrait wrapping, 1560px fluid copy, unified typography and continuous music; refreshed ${refreshed} HTML files.\n`);
+  process.stdout.write(`Published QilyLean international enterprise layout, alternating digital-tool showcases, current shell, unified typography and continuous music; refreshed ${refreshed} HTML files.\n`);
 }
 
 main();
