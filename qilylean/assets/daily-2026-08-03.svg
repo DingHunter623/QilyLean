@@ -1,7 +1,7 @@
 <svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
   <title id="title">成果证据分级与公开核验闭环</title>
   <desc id="desc">将公开成果按已核定、已验证、阶段估算和经验陈述分级，并关联对应公开证据页面。</desc>
-  <metadata>QilyLean Daily Engineering Brief · 2026-08-03 · evidence verification · archive rebuild v2</metadata>
+  <metadata>QilyLean Daily Engineering Brief · 2026-08-03 · targeted publication sync</metadata>
   <rect width="1080" height="1080" rx="54" fill="#123e51"/>
   <rect x="72" y="72" width="936" height="936" rx="42" fill="none" stroke="#8fc7c8" stroke-width="3" opacity="0.55"/>
   <text x="540" y="145" fill="#d8eff0" font-size="28" font-weight="700" text-anchor="middle" letter-spacing="5">DAILY ENGINEERING BRIEF</text>
