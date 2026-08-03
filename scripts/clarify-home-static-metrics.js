@@ -6,11 +6,13 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const file = path.join(root, 'index.html');
+const materializerFile = path.join(root, 'scripts', 'materialize-static-core-pages.js');
+const interactionAsset = '/site-static-core-interactions-v1.js?v=20260803-static-no-hover-v2';
 let html = fs.readFileSync(file, 'utf8');
 
 /*
  * QILY-HOME-STATIC-METRIC-NO-HOVER
- * Enforcement revision: 2026-08-03 v3.
+ * Enforcement revision: 2026-08-03 v4.
  * Static result cards must remain visually unchanged under mouse, touch,
  * keyboard focus and active states. Only genuine links/buttons may animate.
  * The shared metric-display-note style is retained for disclosure notices.
@@ -36,8 +38,21 @@ if (!html.includes(staticStateMarker)) {
 
 html = html.replace(
   /\/site-static-core-interactions-v1\.js\?v=[^"']+/,
-  '/site-static-core-interactions-v1.js?v=20260803-static-no-hover-v2'
+  interactionAsset
 );
 
 fs.writeFileSync(file, html.endsWith('\n') ? html : `${html}\n`, 'utf8');
+
+if (fs.existsSync(materializerFile)) {
+  let materializer = fs.readFileSync(materializerFile, 'utf8');
+  const updated = materializer.replace(
+    /const STATIC_INTERACTIONS = '[^']+';/,
+    `const STATIC_INTERACTIONS = '${interactionAsset}';`
+  );
+  if (updated === materializer && !materializer.includes(`const STATIC_INTERACTIONS = '${interactionAsset}';`)) {
+    throw new Error('Cannot align static interaction asset in materializer');
+  }
+  fs.writeFileSync(materializerFile, updated.endsWith('\n') ? updated : `${updated}\n`, 'utf8');
+}
+
 console.log('Homepage result cards now have zero hover, focus or active visual feedback.');
