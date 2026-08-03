@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const stylesheet = '/site-link-standard-v2.css?v=20260801-global-link-v5';
+const stylesheet = '/site-link-standard-v2.css?v=20260803-nav-four-border-v6';
 const darkSurfaceStylesheet = '/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2';
 const linkTag = `  <link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="${stylesheet}">`;
 const darkLinkTag = `  <link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="${darkSurfaceStylesheet}">`;
@@ -50,7 +50,73 @@ function patchNavigationLoader() {
   return write(file, page);
 }
 
+function patchNavigationBorderStandard() {
+  const file = path.join(root, 'site-link-standard-v2.css');
+  let css = read(file);
+  css = css.replace('全站链接视觉规范 v5', '全站链接视觉规范 v6');
+
+  const start = '/* QILY-NAV-FOUR-SIDE-BORDER:START */';
+  const end = '/* QILY-NAV-FOUR-SIDE-BORDER:END */';
+  const block = `${start}
+/* 主导航真实交互态：常态预留透明四边框，悬停、聚焦、当前页及按下状态均显示完整上下左右边线。 */
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]{
+  box-sizing:border-box!important;
+  border-style:solid!important;
+  border-width:2px!important;
+  border-color:transparent!important;
+}
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]{
+  border-top-color:#caa15f!important;
+  border-right-color:#caa15f!important;
+  border-bottom-color:#caa15f!important;
+  border-left-color:#caa15f!important;
+}
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]:not([aria-current]):hover,
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]:not([aria-current]):focus-visible{
+  border-top-color:var(--qily-nav-hover-border)!important;
+  border-right-color:var(--qily-nav-hover-border)!important;
+  border-bottom-color:var(--qily-nav-hover-border)!important;
+  border-left-color:var(--qily-nav-hover-border)!important;
+}
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]:hover,
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]:focus-visible,
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]:active{
+  border-top-color:#ffe39b!important;
+  border-right-color:#ffe39b!important;
+  border-bottom-color:#ffe39b!important;
+  border-left-color:#ffe39b!important;
+}
+${end}`;
+
+  const pattern = new RegExp(`${start.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[\\s\\S]*?${end.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'm');
+  css = pattern.test(css) ? css.replace(pattern, block) : `${css.trimEnd()}\n\n${block}\n`;
+  return write(file, css);
+}
+
+function patchEvidencePage() {
+  const file = path.join(root, 'projects', 'lean-improvement-evidence', 'index.html');
+  let page = read(file);
+  page = page
+    .replace('<title>制造改善项目佐证｜2022年精益课题评审与激励｜QilyLean</title>', '<title>某制造企业｜2022年度制造改善项目佐证资料｜QilyLean</title>')
+    .replace('<meta property="og:type" content="article"><meta property="og:title" content="制造改善项目佐证｜QilyLean">', '<meta property="og:type" content="article"><meta property="og:title" content="某制造企业｜2022年度制造改善项目佐证资料｜QilyLean">')
+    .replace('<h1>制造改善项目佐证</h1>', '<h1>某制造企业｜2022年度制造改善项目佐证资料</h1>')
+    .replace('以企业内部形成的课题评审、效益核算、风险评价、会议记录及奖励兑现资料，补充验证制造改善项目从组织推进到成果闭环的真实路径。', '以某制造企业2022年度形成的精益课题评审、效益核算、风险评价、会议记录及6S激励兑现资料，补充验证制造改善项目从组织推进到成果闭环的真实路径。')
+    .replace('这些资料不是个人重新编制的项目总结，而是由企业内部形成并用于课题评审、财务贡献核算、风险确认、6S稽核改善及奖励发放的原始业务文件公开脱敏版。', '这些资料不是个人重新编制的项目总结，而是某制造企业在2022年度内部形成并用于课题评审、财务贡献核算、风险确认、6S稽核改善及奖励发放的原始业务文件公开脱敏版。')
+    .replace('<small>6S评比与改善激励｜3页</small>', '<small>某制造企业｜2022年度6S评比与改善激励｜3页</small>')
+    .replace('<span>QilyLean｜制造改善项目佐证</span>', '<span>QilyLean｜某制造企业2022年度制造改善项目佐证</span>');
+  return write(file, page);
+}
+
 function main() {
+  const navigationBorderChanged = patchNavigationBorderStandard();
+  const evidenceChanged = patchEvidencePage();
   let htmlChanged = 0;
   let htmlChecked = 0;
   walk(root, (file) => {
@@ -64,7 +130,7 @@ function main() {
     }
   });
   const navigationChanged = patchNavigationLoader();
-  process.stdout.write(`Published QilyLean link standard v5 and dark-surface contrast v2 to ${htmlChecked} HTML files; refreshed ${htmlChanged}; navigation loader changed=${navigationChanged}.\n`);
+  process.stdout.write(`Published QilyLean link standard v6 to ${htmlChecked} HTML files; refreshed ${htmlChanged}; four-side navigation border changed=${navigationBorderChanged}; evidence context changed=${evidenceChanged}; navigation loader changed=${navigationChanged}.\n`);
 }
 
 main();
