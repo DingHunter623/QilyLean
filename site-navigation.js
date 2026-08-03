@@ -2,6 +2,8 @@
 (function(d){
   'use strict';
   var styles=[
+    {id:'qilyVisualScaleStylesheet',href:'/site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5'},
+    {id:'qilyHomePortraitBadgeFixStylesheet',href:'/home-portrait-badge-fix-v1.css?v=20260803-badge-wrap-v2'},
     {id:'qilyGlobalLinkStandardStylesheet',href:'/site-link-standard-v2.css?v=20260803-nav-four-border-v6'},
     {id:'qilyNavigationFourBorderStylesheet',href:'/site-navigation-four-border-v3.css?v=20260803-four-border-v3'},
     {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'},
