@@ -1,0 +1,47 @@
+/* QilyLean 首页职业形象卡信息区修整｜2026-08-03
+ * 目标：两列等高、文字完整换行、禁止裁切与单行溢出。
+ */
+body:is(.qily-home-commercial-focus,.qily-home-balanced) .portrait-badge{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  overflow:visible!important;
+}
+body:is(.qily-home-commercial-focus,.qily-home-balanced) .portrait-badge>div{
+  display:flex!important;
+  min-width:0!important;
+  min-height:96px!important;
+  padding:12px 11px!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  overflow:visible!important;
+}
+body:is(.qily-home-commercial-focus,.qily-home-balanced) .portrait-badge strong{
+  display:block!important;
+  margin:0!important;
+  font-size:18.5px!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+}
+body:is(.qily-home-commercial-focus,.qily-home-balanced) .portrait-badge span,
+body:is(.qily-home-commercial-focus,.qily-home-balanced) .portrait-badge>div:nth-child(2) span{
+  display:block!important;
+  width:100%!important;
+  margin-top:6px!important;
+  font-size:13px!important;
+  line-height:1.48!important;
+  letter-spacing:0!important;
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  text-overflow:clip!important;
+  overflow:visible!important;
+}
+@media(max-width:620px){
+  body:is(.qily-home-commercial-focus,.qily-home-balanced) .portrait-badge{
+    grid-template-columns:1fr!important;
+  }
+  body:is(.qily-home-commercial-focus,.qily-home-balanced) .portrait-badge>div{
+    min-height:auto!important;
+  }
+}
