@@ -14,6 +14,18 @@
   --qily-dark-underline:#ffe39b;
 }
 
+/* 模块级统一规范：整卡跳转须显著反馈；静态模块不得伪装成链接。 */
+html body a[href][data-qily-card-link]{cursor:pointer}
+html body a[href][data-qily-card-link]:hover,
+html body a[href][data-qily-card-link]:focus-visible{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#0f4b5a!important;
+  border-color:#0f4b5a!important;
+  text-decoration-color:#ffe39b!important;
+  box-shadow:0 14px 32px rgba(15,75,90,.30)!important;
+}
+
 /* 主导航：常态白底深字＋下横线。 */
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
 :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href]{
@@ -177,12 +189,23 @@ a[href][aria-selected="true"]{
 /* 常见深青按钮链接：深青底必须白字。 */
 html body :is(.module-actions,.card-actions) a[href]:not(.secondary),
 html body a[href]:where(.module-action,.resource-action,.project-list-action,.project-card-action,.service-contract-link,.moment-link,.moment-back,.design-link,.share-button),
-html body a[href].button:not(.primary){
+html body a[href].button:not(.primary),
+html body .actions a[href].primary{
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
   background-color:#0f4b5a!important;
   border-color:#0f4b5a!important;
   text-decoration-color:#ffe39b!important;
+}
+
+html body .actions a[href].primary:hover,
+html body .actions a[href].primary:focus-visible{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  box-shadow:0 9px 22px rgba(15,75,90,.25)!important;
 }
 
 /*
