@@ -1,0 +1,119 @@
+name: Validate daily archive publication
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/validate-daily-archive-pr.yml"
+      - ".github/workflows/build-daily-archive.yml"
+      - "qilylean/daily/*.html"
+      - "qilylean/assets/daily-*.svg"
+      - "qilylean/daily-briefs.css"
+      - "qilylean/daily-feedback.js"
+      - "knowledge/index.html"
+      - "knowledge/terminology.html"
+      - "knowledge/terminology/*.html"
+      - "scripts/build-daily-archive.js"
+      - "scripts/daily-engineering-archive.js"
+      - "scripts/enhance-daily-archive.js"
+      - "scripts/enhance-terminology-training.js"
+      - "scripts/audit-daily-terminology.js"
+      - "scripts/sync-daily-terminology.js"
+      - "scripts/bump-daily-css-version.js"
+      - "scripts/validate-daily-archive.js"
+      - "scripts/remove-daily-directory-consultation.js"
+      - "scripts/normalize-daily-visual-closure.js"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-archive-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate script syntax
+        run: |
+          node --check scripts/build-daily-archive.js
+          node --check scripts/enhance-daily-archive.js
+          node --check scripts/enhance-terminology-training.js
+          node --check scripts/audit-daily-terminology.js
+          node --check scripts/sync-daily-terminology.js
+          node --check scripts/bump-daily-css-version.js
+          node --check scripts/validate-daily-archive.js
+          node --check scripts/remove-daily-directory-consultation.js
+          node --check scripts/normalize-daily-visual-closure.js
+
+      - name: Build publication candidate
+        run: |
+          node scripts/build-daily-archive.js
+          node scripts/enhance-daily-archive.js
+          node scripts/enhance-terminology-training.js
+          node scripts/audit-daily-terminology.js
+          node scripts/sync-daily-terminology.js
+          node scripts/sync-daily-terminology.js --check
+          node scripts/bump-daily-css-version.js
+
+      - name: Unify Daily Engineering Brief brand
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          files = [Path('qilylean/daily-insights.html'), *Path('qilylean/daily').glob('*.html')]
+          for file in files:
+              text = file.read_text(encoding='utf-8')
+              file.write_text(text.replace('>制造改善知识分享<', '>QilyLean｜启力精益<'), encoding='utf-8')
+          PY
+
+      - name: Validate generated engineering archive
+        run: node scripts/validate-daily-archive.js
+
+      - name: Remove duplicate directory consultation
+        run: node scripts/remove-daily-directory-consultation.js
+
+      - name: Normalize current VI and visual closure
+        run: node scripts/normalize-daily-visual-closure.js
+
+      - name: Validate latest brief publication contract
+        shell: bash
+        run: |
+          LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
+          TOTAL="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(String(data.length))")"
+          test "$LATEST_DATE" = "2026-08-04"
+          test "$TOTAL" = "2583"
+          grep -q '科学改进生产力' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'data-brief-message-form' "qilylean/daily/$LATEST_DATE.html"
+          grep -q '留言交流' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'OEE' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'UPPH' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'ECRS' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'PDCA' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'data-latest-brief-date="2026-08-04"' knowledge/index.html
+          grep -q 'qilylean/daily/2026-08-04.html' sitemap.xml
+          grep -q '2026-08-04' qilylean/daily-insights.html
+          grep -q '<script defer src="/site-navigation.js?v=20260803-boundary-links-v2"></script>' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'site-visual-closure-v2.css?v=20260803-boundary-links-v2' "qilylean/daily/$LATEST_DATE.html"
+          node - <<'NODE'
+          const fs = require('fs');
+          const report = JSON.parse(fs.readFileSync('qilylean/daily/terminology-audit-latest.json','utf8'));
+          if (report.status !== 'passed') throw new Error('Terminology audit failed');
+          if ((report.unknownTerms || []).length) throw new Error(`Unknown terms: ${report.unknownTerms.join(', ')}`);
+          NODE
+
+      - name: Verify deterministic diff
+        shell: bash
+        run: |
+          git diff --check
+          git status --short
