@@ -38,11 +38,17 @@ jobs:
       - name: Apply the site-wide link and dark-surface standards
         run: node scripts/publish-global-link-standard.js
 
-      - name: Validate navigation, anchor underline and olive-green contrast
+      - name: Validate navigation borders, evidence context and contrast
         shell: bash
         run: |
           node --check scripts/publish-global-link-standard.js
-          grep -q '全站链接视觉规范 v5' site-link-standard-v2.css
+          grep -q '全站链接视觉规范 v6' site-link-standard-v2.css
+          grep -q 'QILY-NAV-FOUR-SIDE-BORDER:START' site-link-standard-v2.css
+          grep -q 'border-width:2px!important' site-link-standard-v2.css
+          grep -q 'border-top-color:var(--qily-nav-hover-border)!important' site-link-standard-v2.css
+          grep -q 'border-right-color:var(--qily-nav-hover-border)!important' site-link-standard-v2.css
+          grep -q 'border-bottom-color:var(--qily-nav-hover-border)!important' site-link-standard-v2.css
+          grep -q 'border-left-color:var(--qily-nav-hover-border)!important' site-link-standard-v2.css
           grep -q '深色／橄榄绿底色可视化规范 v2' site-dark-surface-contrast-v1.css
           grep -q '凡背景采用QilyLean橄榄绿／深青色' site-dark-surface-contrast-v1.css
           grep -q 'daily-index-heading > a' site-dark-surface-contrast-v1.css
@@ -52,8 +58,10 @@ jobs:
           grep -q 'text-decoration-color:#ffe39b!important' site-dark-surface-contrast-v1.css
           grep -q 'article-links a\[href\]:not(\[aria-current="page"\])' site-dark-surface-contrast-v1.css
           grep -q 'qily-global-link-standard-loader-v1' site-navigation.js
-          grep -q 'site-link-standard-v2.css?v=20260801-global-link-v5' site-navigation.js
+          grep -q 'site-link-standard-v2.css?v=20260803-nav-four-border-v6' site-navigation.js
           grep -q 'site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2' site-navigation.js
+          grep -q '<h1>某制造企业｜2022年度制造改善项目佐证资料</h1>' projects/lean-improvement-evidence/index.html
+          grep -q '某制造企业｜2022年度6S评比与改善激励｜3页' projects/lean-improvement-evidence/index.html
           node - <<'NODE'
           const fs = require('fs');
           const path = require('path');
@@ -69,7 +77,7 @@ jobs:
                 const html = fs.readFileSync(full, 'utf8');
                 if (/<\/head>/i.test(html) && !html.includes('qilyGlobalLinkStandardStylesheet')) failures.push(path.relative(root, full) + ':link');
                 if (/<\/head>/i.test(html) && !html.includes('qilyDarkSurfaceContrastStylesheet')) failures.push(path.relative(root, full) + ':dark');
-                if (html.includes('qilyGlobalLinkStandardStylesheet') && !html.includes('site-link-standard-v2.css?v=20260801-global-link-v5')) stale.push(path.relative(root, full) + ':link');
+                if (html.includes('qilyGlobalLinkStandardStylesheet') && !html.includes('site-link-standard-v2.css?v=20260803-nav-four-border-v6')) stale.push(path.relative(root, full) + ':link');
                 if (html.includes('qilyDarkSurfaceContrastStylesheet') && !html.includes('site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2')) stale.push(path.relative(root, full) + ':dark');
               }
             }
@@ -88,11 +96,11 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "The global link and dark-surface standards are already current."
+            echo "The global link, navigation-border and evidence-context standards are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add site-navigation.js '*.html' '**/*.html'
-          git commit -m "style: publish olive-green white-text contrast site-wide [skip ci]"
+          git add site-link-standard-v2.css site-navigation.js '*.html' '**/*.html'
+          git commit -m "style: publish four-side navigation borders and evidence context [skip ci]"
           git push
