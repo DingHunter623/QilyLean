@@ -1,0 +1,27 @@
+<svg viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">成果证据分级与公开核验闭环</title>
+  <desc id="desc">将公开成果按已核定、已验证、阶段估算和经验陈述分级，并关联对应公开证据页面。</desc>
+  <rect width="1080" height="1080" rx="54" fill="#123e51"/>
+  <rect x="72" y="72" width="936" height="936" rx="42" fill="none" stroke="#8fc7c8" stroke-width="3" opacity="0.55"/>
+  <text x="540" y="145" fill="#d8eff0" font-size="28" font-weight="700" text-anchor="middle" letter-spacing="5">DAILY ENGINEERING BRIEF</text>
+  <text x="540" y="220" fill="#ffffff" font-size="50" font-weight="900" text-anchor="middle">成果证据核验闭环</text>
+  <text x="540" y="270" fill="#f7d98b" font-size="25" font-weight="700" text-anchor="middle">等级可识别 · 链接可到达 · 口径可追溯</text>
+  <g font-family="Arial, PingFang SC, Microsoft YaHei, sans-serif" text-anchor="middle">
+    <rect x="105" y="345" width="400" height="150" rx="22" fill="#eaf7f6"/>
+    <text x="305" y="405" fill="#123e51" font-size="31" font-weight="900">A级｜已核定</text>
+    <text x="305" y="452" fill="#60777b" font-size="21">财务 · 验收 · 正式确认</text>
+    <rect x="575" y="345" width="400" height="150" rx="22" fill="#fff8e8"/>
+    <text x="775" y="405" fill="#574015" font-size="31" font-weight="900">B级｜已验证</text>
+    <text x="775" y="452" fill="#6b5323" font-size="21">前后数据 · 现场记录</text>
+    <rect x="105" y="545" width="400" height="150" rx="22" fill="#fff1ed"/>
+    <text x="305" y="605" fill="#7b3526" font-size="31" font-weight="900">C级｜阶段估算</text>
+    <text x="305" y="652" fill="#78534c" font-size="21">基线 · 模型 · 待核条件</text>
+    <rect x="575" y="545" width="400" height="150" rx="22" fill="#f4f7f7"/>
+    <text x="775" y="605" fill="#334f53" font-size="31" font-weight="900">D级｜经验陈述</text>
+    <text x="775" y="652" fill="#60777b" font-size="21">任职 · 参与 · 方法实践</text>
+  </g>
+  <path d="M835 745 C835 855 245 855 245 745" fill="none" stroke="#f7d98b" stroke-width="6" stroke-dasharray="14 10"/>
+  <text x="540" y="825" fill="#f7d98b" font-size="26" font-weight="850" text-anchor="middle">证据卡 → 对应成果页 → 同级标识 → 阶段门复核</text>
+  <text x="540" y="900" fill="#d8eff0" font-size="24" text-anchor="middle">只有真实可跳转模块才提供明显交互反馈</text>
+  <text x="540" y="955" fill="#ffffff" font-size="23" font-weight="700" text-anchor="middle">QilyLean｜启力精益 · 2026-08-03</text>
+</svg>
