@@ -9,11 +9,13 @@ const navigationScript = '/site-navigation.js?v=20260803-parent-route-v3';
 const linkStylesheet = '/site-link-standard-v2.css?v=20260803-nav-four-border-v6';
 const navigationBorderStylesheet = '/site-navigation-four-border-v3.css?v=20260803-four-border-v3';
 const darkStylesheet = '/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2';
+const portraitBadgeStylesheet = '/home-portrait-badge-fix-v1.css?v=20260803-badge-wrap-v1';
 
 const navigationTag = `  <script defer src="${navigationScript}"></script>`;
 const linkTag = `  <link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="${linkStylesheet}">`;
 const navigationBorderTag = `  <link id="qilyNavigationFourBorderStylesheet" rel="stylesheet" href="${navigationBorderStylesheet}">`;
 const darkTag = `  <link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="${darkStylesheet}">`;
+const portraitBadgeTag = `  <link id="qilyHomePortraitBadgeFixStylesheet" rel="stylesheet" href="${portraitBadgeStylesheet}">`;
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
@@ -35,7 +37,7 @@ function walk(directory, callback) {
   }
 }
 
-function installHtmlAssets(page) {
+function installHtmlAssets(page, file) {
   if (!/<\/head>/i.test(page)) return page;
 
   let next = page
@@ -43,12 +45,15 @@ function installHtmlAssets(page) {
     .replace(/\s*<link\b[^>]*id=["']qilyGlobalLinkStandardStylesheet["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*id=["']qilyNavigationFourBorderStylesheet["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*id=["']qilyDarkSurfaceContrastStylesheet["'][^>]*>\s*/gi, '\n')
+    .replace(/\s*<link\b[^>]*id=["']qilyHomePortraitBadgeFixStylesheet["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*href=["'][^"']*\/site-link-standard-v(?:1|2)\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*href=["'][^"']*\/site-navigation-four-border-v3\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n')
-    .replace(/\s*<link\b[^>]*href=["'][^"']*\/site-dark-surface-contrast-v1\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n');
+    .replace(/\s*<link\b[^>]*href=["'][^"']*\/site-dark-surface-contrast-v1\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n')
+    .replace(/\s*<link\b[^>]*href=["'][^"']*\/home-portrait-badge-fix-v1\.css\?v=[^"']+["'][^>]*>\s*/gi, '\n');
 
-  const assets = [navigationTag, linkTag, navigationBorderTag, darkTag].join('\n');
-  return next.replace(/<\/head>/i, `${assets}\n</head>`);
+  const assets = [navigationTag, linkTag, navigationBorderTag, darkTag];
+  if (path.relative(root, file) === 'index.html') assets.push(portraitBadgeTag);
+  return next.replace(/<\/head>/i, `${assets.join('\n')}\n</head>`);
 }
 
 function patchEvidencePage() {
@@ -74,7 +79,7 @@ function main() {
     if (!file.endsWith('.html')) return;
     checked += 1;
     const before = read(file);
-    const after = installHtmlAssets(before);
+    const after = installHtmlAssets(before, file);
     if (after !== before) {
       write(file, after);
       changed += 1;
@@ -83,7 +88,7 @@ function main() {
 
   const evidenceChanged = patchEvidencePage();
   process.stdout.write(
-    `Published drag-safe hierarchical parent navigation and complete four-side borders to ${checked} HTML files; refreshed ${changed}; evidence context changed=${evidenceChanged}.\n`
+    `Published drag-safe hierarchical parent navigation, complete four-side borders and homepage portrait badge fix to ${checked} HTML files; refreshed ${changed}; evidence context changed=${evidenceChanged}.\n`
   );
 }
 
