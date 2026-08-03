@@ -16,19 +16,41 @@
 })(document);
 
 /* QILY-NAV-FOUR-SIDE-BORDER-RUNTIME:START */
-(function(d){
+(function(d,w){
   'use strict';
-  if(d.getElementById('qilyNavFourSideBorderStyle'))return;
-  var style=d.createElement('style');
-  style.id='qilyNavFourSideBorderStyle';
-  style.textContent=[
-    'html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]{box-sizing:border-box!important;border-style:solid!important;border-width:2px!important;border-color:transparent!important}',
-    'html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href][aria-current]{border-top-color:#caa15f!important;border-right-color:#caa15f!important;border-bottom-color:#caa15f!important;border-left-color:#caa15f!important}',
-    'html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:not([aria-current]):hover,html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:not([aria-current]):focus-visible{border-top-color:var(--qily-nav-hover-border,#c99a3e)!important;border-right-color:var(--qily-nav-hover-border,#c99a3e)!important;border-bottom-color:var(--qily-nav-hover-border,#c99a3e)!important;border-left-color:var(--qily-nav-hover-border,#c99a3e)!important}',
-    'html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href][aria-current]:hover,html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href][aria-current]:focus-visible,html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:active{border-top-color:#ffe39b!important;border-right-color:#ffe39b!important;border-bottom-color:#ffe39b!important;border-left-color:#ffe39b!important}'
-  ].join('');
-  (d.head||d.documentElement).appendChild(style);
-})(document);
+  if(w.__qilyNavFourSideBorderV3)return;
+  w.__qilyNavFourSideBorderV3=true;
+
+  var styleId='qilyNavFourSideBorderStyle';
+  var nav='html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]';
+  var current=':is([aria-current],[aria-selected="true"],[data-current="true"],[data-active="true"],.active,.current,.is-active,.selected)';
+
+  function ensureStyleIsLast(){
+    var style=d.getElementById(styleId);
+    if(!style){
+      style=d.createElement('style');
+      style.id=styleId;
+      style.textContent=[
+        nav+'{box-sizing:border-box!important;border-style:solid!important;border-width:2px!important;border-top-color:transparent!important;border-right-color:transparent!important;border-bottom-color:transparent!important;border-left-color:transparent!important;background-clip:padding-box!important}',
+        nav+current+'{border-top-color:#ffe39b!important;border-right-color:#ffe39b!important;border-bottom-color:#ffe39b!important;border-left-color:#ffe39b!important}',
+        nav+':not('+current+'):hover,'+nav+':not('+current+'):focus-visible{border-top-color:#c99a3e!important;border-right-color:#c99a3e!important;border-bottom-color:#c99a3e!important;border-left-color:#c99a3e!important}',
+        nav+current+':hover,'+nav+current+':focus-visible,'+nav+':active{border-top-color:#ffe39b!important;border-right-color:#ffe39b!important;border-bottom-color:#ffe39b!important;border-left-color:#ffe39b!important}'
+      ].join('');
+    }
+    var parent=d.body||d.head||d.documentElement;
+    if(style.parentNode!==parent||style!==parent.lastElementChild)parent.appendChild(style);
+  }
+
+  function install(){
+    ensureStyleIsLast();
+    setTimeout(ensureStyleIsLast,120);
+    setTimeout(ensureStyleIsLast,800);
+    setTimeout(ensureStyleIsLast,1800);
+  }
+
+  if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',install,{once:true});
+  else install();
+})(document,window);
 /* QILY-NAV-FOUR-SIDE-BORDER-RUNTIME:END */
 
 /*
