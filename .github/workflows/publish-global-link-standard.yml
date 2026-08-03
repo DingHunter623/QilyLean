@@ -9,7 +9,7 @@ on:
       - "site-navigation-four-border-v3.css"
       - "site-dark-surface-contrast-v1.css"
       - "site-navigation.js"
-      - "site-parent-navigation-v2.js"
+      - "site-parent-navigation-v3.js"
       - "scripts/publish-global-link-standard.js"
       - ".github/workflows/publish-global-link-standard.yml"
       - "**/*.html"
@@ -41,17 +41,18 @@ jobs:
       - name: Publish hierarchical navigation site-wide
         run: node scripts/publish-global-link-standard.js
 
-      - name: Validate parent routes, borders and current metadata
+      - name: Validate parent routes, dragging, borders and metadata
         shell: bash
         run: |
           node --check scripts/publish-global-link-standard.js
           node --check site-navigation.js
-          node --check site-parent-navigation-v2.js
+          node --check site-parent-navigation-v3.js
 
-          grep -q "site-parent-navigation-v2.js?v=20260803-parent-route-v2" site-navigation.js
-          grep -q "'/improvements/'" site-parent-navigation-v2.js
-          grep -q "'/projects/'" site-parent-navigation-v2.js
-          grep -q "'/qilylean/daily-insights.html'" site-parent-navigation-v2.js
+          grep -q "site-parent-navigation-v3.js?v=20260803-parent-route-v3" site-navigation.js
+          grep -q "'/improvements/'" site-parent-navigation-v3.js
+          grep -q "'/projects/'" site-parent-navigation-v3.js
+          grep -q "'/qilylean/daily-insights.html'" site-parent-navigation-v3.js
+          grep -q 'var shouldNavigate=!pointer.moved' site-parent-navigation-v3.js
           grep -q "data-action=\"back\"" site-navigation.js
 
           grep -q 'border-top-color:var(--qily-nav-border-hover)' site-navigation-four-border-v3.css
@@ -78,7 +79,7 @@ jobs:
                 const html = fs.readFileSync(full, 'utf8');
                 if (!/<\/head>/i.test(html)) continue;
                 const relative = path.relative(root, full);
-                if (!html.includes('site-navigation.js?v=20260803-parent-route-v2')) failures.push(relative + ':navigation');
+                if (!html.includes('site-navigation.js?v=20260803-parent-route-v3')) failures.push(relative + ':navigation');
                 if (!html.includes('site-link-standard-v2.css?v=20260803-nav-four-border-v6')) failures.push(relative + ':links');
                 if (!html.includes('site-navigation-four-border-v3.css?v=20260803-four-border-v3')) failures.push(relative + ':four-border');
                 if (!html.includes('site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2')) failures.push(relative + ':contrast');
@@ -96,11 +97,11 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All pages already use the current hierarchical navigation standard."
+            echo "All pages already use the current drag-safe hierarchical navigation standard."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: publish hierarchical back navigation site-wide [skip ci]"
+          git commit -m "fix: publish drag-safe hierarchical back navigation [skip ci]"
           git push
