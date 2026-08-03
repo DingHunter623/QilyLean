@@ -79,10 +79,14 @@
     .metric-display-note{display:inline-flex;align-items:flex-start;gap:7px;margin-top:11px!important;padding:8px 12px;border-left:4px solid var(--copper);color:#315f64!important;background:#eef8f6;font-size:14px!important;line-height:1.65!important}
     .metric-display-note strong{flex:0 0 auto;color:var(--forest)}
     .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-    .metric{min-height:168px;padding:20px;border:1px solid var(--line);border-top:4px solid var(--teal);background:#fff;cursor:default;transition:transform .16s ease,box-shadow .16s ease}
+    .metric{min-height:168px;padding:20px;border:1px solid var(--line);border-top:4px solid var(--teal);background:#fff;cursor:default!important;transition:none!important;transform:none!important;box-shadow:none!important;filter:none!important;animation:none!important;will-change:auto!important}
     .metric:nth-child(2n){border-top-color:var(--copper)}
     .metric:nth-child(3n){border-top-color:var(--plum)}
-    .metric:hover{transform:translateY(-3px);box-shadow:0 15px 34px rgba(15,75,90,.12)}
+    /* QILY-HOME-STATIC-METRIC-NO-HOVER */
+    .metric:hover,.metric:focus,.metric:focus-visible,.metric:active{cursor:default!important;transition:none!important;transform:none!important;box-shadow:none!important;filter:none!important;animation:none!important;background:#fff!important;border-left-color:var(--line)!important;border-right-color:var(--line)!important;border-bottom-color:var(--line)!important;outline:none!important}
+    .metric:nth-child(1n):hover,.metric:nth-child(1n):focus,.metric:nth-child(1n):focus-visible,.metric:nth-child(1n):active{border-top-color:var(--teal)!important}
+    .metric:nth-child(2n):hover,.metric:nth-child(2n):focus,.metric:nth-child(2n):focus-visible,.metric:nth-child(2n):active{border-top-color:var(--copper)!important}
+    .metric:nth-child(3n):hover,.metric:nth-child(3n):focus,.metric:nth-child(3n):focus-visible,.metric:nth-child(3n):active{border-top-color:var(--plum)!important}
     .metric strong{display:block;color:var(--forest);font-size:clamp(24px,2vw,34px);line-height:1.25}
     .metric span{display:block;margin-top:8px;color:var(--muted);font-size:16.5px;line-height:1.62}
     .metric em{display:block;margin-top:8px;color:var(--red);font-style:normal;font-weight:850;font-size:15px;line-height:1.55}
@@ -101,7 +105,7 @@
   <link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2">
   <meta name="twitter:description" content="QilyLean聚焦新工厂规划、精益改善项目交付与目视化实施，以交付资产、阶段付款和验收闭环定义合作。">
   <link id="qilyInformationArchitectureStylesheet" rel="stylesheet" href="/site-information-architecture-v1.css?v=20260802-static-source-v2">
-  <script id="qilyStaticCoreInteractions" defer src="/site-static-core-interactions-v1.js?v=20260802-static-source-v1"></script>
+  <script id="qilyStaticCoreInteractions" defer src="/site-static-core-interactions-v1.js?v=20260803-static-no-hover-v2"></script>
 <!-- QILY-HOME-STATIC-SCHEMA:START -->
 <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebSite","name":"QilyLean｜启力精益","url":"https://qilylean.com/","description":"面向制造企业的新工厂与新产线规划、精益改善项目交付及目视化项目设计实施专业窗口。"},{"@type":"Person","name":"丁启利","url":"https://qilylean.com/","jobTitle":"制造改善与精益工程实践者","knowsAbout":["新工厂规划","精益改善","工业工程","VSM","标准工时","OEE","SMED","目视化管理","ERP/MES/APS"]},{"@type":"Service","name":"QilyLean制造改善项目交付","provider":{"@type":"Person","name":"丁启利"},"areaServed":"中国","serviceType":["新工厂／新产线规划","精益改善项目交付","目视化项目设计与实施"]}]}</script>
 <!-- QILY-HOME-STATIC-SCHEMA:END -->
@@ -187,17 +191,16 @@
         <div class="head">
           <h2>更多职业成果与方法积累</h2>
           <p>首页仅显示部分代表性结果；完整项目背景、角色边界、数据口径和佐证材料统一归入代表项目与能力画像。</p>
-          <p class="metric-display-note" role="note"><strong>浏览说明：</strong>以下为静态成果概览卡片，仅用于信息展示；鼠标经过时的变化为视觉反馈，不代表可点击或页面跳转。</p>
         </div>
         <div class="metrics">
-          <div class="metric"><strong>20年</strong><span>制造工程、精益改善与咨询交付经验，覆盖汽车电子、PCBA、半导体、电气、新能源及小家电。</span><em>跨行业诊断与项目迁移能力。</em></div>
-          <div class="metric"><strong>OEE ≥85%</strong><span>围绕停机、速度损失、换型等待、不良返工与节拍瓶颈建立损失结构。</span><em>OEE / Pareto / TPM / 线平衡。</em></div>
-          <div class="metric"><strong>DLT -30%</strong><span>针对信息流、物料流、WIP堆积、等待和换型断点开展VSM改善。</span><em>VSM / LT结构 / WIP控制。</em></div>
-          <div class="metric"><strong>SMED -50%</strong><span>300T冲压机3.5T大型模具换模时间由约14小时缩短至7小时。</span><em>Time Study / SMED / 5M2E。</em></div>
-          <div class="metric"><strong>超千万元*</strong><span>职业生涯多年度参与、主导及组织推进的累计改善贡献，包含跨部门团队共同成果。</span><em>“超千万元”为多年度累计口径，非QilyLean品牌独立营收；已核定、已验证、阶段估算及职责边界分级披露，不构成新项目收益承诺。</em></div>
-          <div class="metric"><strong>1200+副</strong><span>模具与库位二维码可追溯管理，规范领用、归还、保养、维修与盘点。</span><em>取放时间缩短至1–5分钟。</em></div>
-          <div class="metric"><strong>500+亩</strong><span>参与广东、浙江、内蒙古、福建、山东等多区域新工厂及产线Layout规划。</span><em>规划、验证与项目交付。</em></div>
-          <div class="metric"><strong>10+名</strong><span>培养工程骨干，建立PE/IE/ME/TE/NPI协同机制。</span><em>工程团队与组织能力建设。</em></div>
+          <div class="metric qily-static-card"><strong>20年</strong><span>制造工程、精益改善与咨询交付经验，覆盖汽车电子、PCBA、半导体、电气、新能源及小家电。</span><em>跨行业诊断与项目迁移能力。</em></div>
+          <div class="metric qily-static-card"><strong>OEE ≥85%</strong><span>围绕停机、速度损失、换型等待、不良返工与节拍瓶颈建立损失结构。</span><em>OEE / Pareto / TPM / 线平衡。</em></div>
+          <div class="metric qily-static-card"><strong>DLT -30%</strong><span>针对信息流、物料流、WIP堆积、等待和换型断点开展VSM改善。</span><em>VSM / LT结构 / WIP控制。</em></div>
+          <div class="metric qily-static-card"><strong>SMED -50%</strong><span>300T冲压机3.5T大型模具换模时间由约14小时缩短至7小时。</span><em>Time Study / SMED / 5M2E。</em></div>
+          <div class="metric qily-static-card"><strong>超千万元*</strong><span>职业生涯多年度参与、主导及组织推进的累计改善贡献，包含跨部门团队共同成果。</span><em>“超千万元”为多年度累计口径，非QilyLean品牌独立营收；已核定、已验证、阶段估算及职责边界分级披露，不构成新项目收益承诺。</em></div>
+          <div class="metric qily-static-card"><strong>1200+副</strong><span>模具与库位二维码可追溯管理，规范领用、归还、保养、维修与盘点。</span><em>取放时间缩短至1–5分钟。</em></div>
+          <div class="metric qily-static-card"><strong>500+亩</strong><span>参与广东、浙江、内蒙古、福建、山东等多区域新工厂及产线Layout规划。</span><em>规划、验证与项目交付。</em></div>
+          <div class="metric qily-static-card"><strong>10+名</strong><span>培养工程骨干，建立PE/IE/ME/TE/NPI协同机制。</span><em>工程团队与组织能力建设。</em></div>
         </div>
       <button class="qily-ia-button qily-results-toggle" type="button" data-qily-results-toggle aria-expanded="false">展开全部成果概览</button></div></section>
 
