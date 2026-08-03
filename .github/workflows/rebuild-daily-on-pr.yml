@@ -1,0 +1,57 @@
+name: Rebuild daily archive on maintenance PR
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "qilylean/assets/daily-2026-08-03.svg"
+      - "qilylean/daily/2026-08-03.html"
+      - ".github/workflows/rebuild-daily-on-pr.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rebuild-daily-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Rebuild daily archive and terminology links
+        run: |
+          node scripts/build-daily-archive.js
+          node scripts/enhance-daily-archive.js
+          node scripts/enhance-terminology-training.js
+          node scripts/audit-daily-terminology.js
+          node scripts/sync-daily-terminology.js
+          node scripts/sync-daily-terminology.js --check
+          node scripts/bump-daily-css-version.js
+          node scripts/remove-daily-directory-consultation.js
+
+      - name: Commit generated archive to PR branch
+        shell: bash
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          if git diff --quiet; then
+            echo "Generated archive is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add knowledge/index.html knowledge/terminology.html qilylean/daily-insights.html qilylean/daily/index.json qilylean/daily/*.html qilylean/daily/terminology-audit-latest.json qilylean/assets/daily-*.svg sitemap.xml
+          git commit -m "build: publish 2026-08-03 daily archive [skip ci]"
+          git push origin "HEAD:${BRANCH}"
