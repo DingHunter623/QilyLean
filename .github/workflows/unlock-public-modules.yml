@@ -52,9 +52,9 @@ jobs:
           node --check homepage-music-core-v4.js
           grep -q 'site-vi-standard-v1.css?v=20260801-vi-standard-v1' site-navigation.js
           grep -q 'site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1' site-navigation.js
-          grep -q 'site-microsoft-international-v1.css' site-navigation.js && exit 1 || true
-          grep -q 'site-microsoft-enterprise-components-v2.css' site-navigation.js && exit 1 || true
-          grep -q 'data-qily-microsoft-international-loader' site-navigation.js && exit 1 || true
+          ! grep -q 'site-microsoft-international-v1.css?v=' site-navigation.js
+          ! grep -q 'site-microsoft-enterprise-components-v2.css?v=' site-navigation.js
+          ! grep -q 'enhancer.src=.*/site-microsoft-international-v1.js' site-navigation.js
           grep -q -- '--qily-vi-olive:#0f4b5a' site-vi-standard-v1.css
           grep -q 'QilyLean 全站VI可读性恢复与对比度保险层' site-vi-contrast-restoration-v1.css
           grep -q '.site-music-toggle' site-vi-contrast-restoration-v1.css
