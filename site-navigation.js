@@ -2,7 +2,7 @@
 (function(d){
   'use strict';
   var styles=[
-    {id:'qilyGlobalLinkStandardStylesheet',href:'/site-link-standard-v2.css?v=20260801-global-link-v5'},
+    {id:'qilyGlobalLinkStandardStylesheet',href:'/site-link-standard-v2.css?v=20260803-nav-four-border-v6'},
     {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'},
     {id:'qilyInformationArchitectureStylesheet',href:'/site-information-architecture-v1.css?v=20260802-commercial-focus-v1'}
   ];
@@ -14,6 +14,22 @@
     (d.head||d.documentElement).appendChild(link);
   });
 })(document);
+
+/* QILY-NAV-FOUR-SIDE-BORDER-RUNTIME:START */
+(function(d){
+  'use strict';
+  if(d.getElementById('qilyNavFourSideBorderStyle'))return;
+  var style=d.createElement('style');
+  style.id='qilyNavFourSideBorderStyle';
+  style.textContent=[
+    'html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]{box-sizing:border-box!important;border-style:solid!important;border-width:2px!important;border-color:transparent!important}',
+    'html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href][aria-current]{border-top-color:#caa15f!important;border-right-color:#caa15f!important;border-bottom-color:#caa15f!important;border-left-color:#caa15f!important}',
+    'html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:not([aria-current]):hover,html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:not([aria-current]):focus-visible{border-top-color:var(--qily-nav-hover-border,#c99a3e)!important;border-right-color:var(--qily-nav-hover-border,#c99a3e)!important;border-bottom-color:var(--qily-nav-hover-border,#c99a3e)!important;border-left-color:var(--qily-nav-hover-border,#c99a3e)!important}',
+    'html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href][aria-current]:hover,html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href][aria-current]:focus-visible,html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header) :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:active{border-top-color:#ffe39b!important;border-right-color:#ffe39b!important;border-bottom-color:#ffe39b!important;border-left-color:#ffe39b!important}'
+  ].join('');
+  (d.head||d.documentElement).appendChild(style);
+})(document);
+/* QILY-NAV-FOUR-SIDE-BORDER-RUNTIME:END */
 
 /*
  * QilyLean layered navigation build contract v1
