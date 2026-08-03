@@ -36,7 +36,7 @@ jobs:
       - name: Enforce true static cards
         run: node scripts/clarify-home-static-metrics.js
 
-      - name: Validate static-card border state
+      - name: Validate static-card visual state
         shell: bash
         run: |
           node --check scripts/clarify-home-static-metrics.js
@@ -48,12 +48,22 @@ jobs:
           grep -q 'border-right-color:transparent!important' index.html
           grep -q 'border-bottom-color:transparent!important' index.html
           grep -q 'border-top-color:var(--qily-static-top)!important' index.html
-          grep -q '20260803-static-border-lock-v3' index.html
-          grep -q '20260803-static-card-lock-v6' index.html
-          grep -q '20260803-static-border-lock-v3' scripts/materialize-static-core-pages.js
+          grep -q 'color:var(--forest)!important' index.html
+          grep -q 'color:var(--muted)!important' index.html
+          grep -q 'color:var(--red)!important' index.html
+          grep -q -- '-webkit-text-fill-color:var(--forest)!important' index.html
+          grep -q -- '-webkit-text-fill-color:var(--muted)!important' index.html
+          grep -q -- '-webkit-text-fill-color:var(--red)!important' index.html
+          grep -q '20260803-static-text-lock-v4' index.html
+          grep -q '20260803-static-card-lock-v7' index.html
+          grep -q '20260803-static-text-lock-v4' scripts/materialize-static-core-pages.js
           grep -q '“超千万元”口径' index.html
-          if grep -A8 'html body #results .metric:not(a):not(\[role="link"\]):hover' site-link-standard-v2.css | grep -q 'border-color:inherit!important'; then
-            echo 'Inherited hover borders must not control static result cards.' >&2
+          if grep -q 'hover :is(strong,span,em){color:inherit' site-link-standard-v2.css; then
+            echo 'Static result-card text must not inherit a hover color.' >&2
+            exit 1
+          fi
+          if grep -q '以下为静态成果概览卡片' index.html; then
+            echo 'Do not add explanatory static-card copy to compensate for interaction defects.' >&2
             exit 1
           fi
           if grep -q '\.metric:hover{transform:translateY' index.html; then
@@ -65,11 +75,11 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Homepage static cards already keep an identical border state."
+            echo "Homepage static cards already keep an identical visual state."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html scripts/materialize-static-core-pages.js site-link-standard-v2.css
-          git commit -m "fix: keep static result-card borders unchanged [skip ci]"
+          git commit -m "fix: keep static result-card text and borders unchanged [skip ci]"
           git push
