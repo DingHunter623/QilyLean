@@ -11,6 +11,10 @@ on:
       - "qilylean/daily-feedback.js"
       - "site-search.js"
       - "site-navigation.js"
+      - "site-visual-closure-v1.css"
+      - "site-visual-closure-v1.js"
+      - "site-visual-closure-v2.css"
+      - "site-visual-closure-v2.js"
       - "knowledge/terminology.html"
       - "knowledge/terminology/*.html"
       - "scripts/build-daily-archive.js"
@@ -22,6 +26,7 @@ on:
       - "scripts/bump-daily-css-version.js"
       - "scripts/validate-daily-archive.js"
       - "scripts/remove-daily-directory-consultation.js"
+      - "scripts/normalize-daily-visual-closure.js"
   workflow_dispatch:
 
 permissions:
@@ -145,6 +150,7 @@ jobs:
           }
           node --check site-search.js
           node --check site-navigation.js
+          node --check scripts/normalize-daily-visual-closure.js
           grep -q "loadDailyEntries" site-search.js || {
             echo "Structured Daily Brief search index is missing"
             exit 1
@@ -206,7 +212,10 @@ jobs:
       - name: Remove duplicate directory consultation
         run: node scripts/remove-daily-directory-consultation.js
 
-      - name: Validate directory consultation removal
+      - name: Normalize current VI and visual closure across daily pages
+        run: node scripts/normalize-daily-visual-closure.js
+
+      - name: Validate directory consultation removal and current visual closure
         shell: bash
         run: |
           if grep -E 'id="brief-consultation"|id="briefConsultationForm"|简报留言交流|留言来源：今日简报总目录' qilylean/daily-insights.html >/dev/null; then
@@ -223,7 +232,7 @@ jobs:
             exit 1
           }
           grep -q '留言交流' "qilylean/daily/$LATEST_DATE.html" || {
-            echo "Direct brief message module is missing"
+            echo "Direct brief message module is missing from the latest brief"
             exit 1
           }
           if grep -E '评价本期简报|五星好评|点赞好评|data-brief-rating|data-brief-sentiment|data-like-count|data-dislike-count' "qilylean/daily/$LATEST_DATE.html" >/dev/null; then
@@ -235,7 +244,7 @@ jobs:
               echo "No-flash shell bootstrap is missing: $PAGE"
               exit 1
             }
-            grep -q '<script defer src="/site-navigation.js?v=20260729-no-old-flash-v1"></script>' "$PAGE" || {
+            grep -q '<script defer src="/site-navigation.js?v=20260803-boundary-links-v2"></script>' "$PAGE" || {
               echo "Current deferred navigation is missing: $PAGE"
               exit 1
             }
@@ -243,8 +252,16 @@ jobs:
               echo "Current shell stylesheet is missing: $PAGE"
               exit 1
             }
+            grep -q 'site-visual-closure-v1.css?v=20260803-visual-closure-v1' "$PAGE" || {
+              echo "Visual closure V1 stylesheet is missing: $PAGE"
+              exit 1
+            }
+            grep -q 'site-visual-closure-v2.css?v=20260803-boundary-links-v2' "$PAGE" || {
+              echo "Visual closure V2 stylesheet is missing: $PAGE"
+              exit 1
+            }
           done
-          if grep -R -E 'site-navigation\.js\?v=20260728-layout-type-v3|site-shell\.css\?v=20260725-compact-hero-v1|homepage-music\.js\?v=20260722-continuous-v3' qilylean/daily qilylean/daily-insights.html >/dev/null; then
+          if grep -R -E 'site-navigation\.js\?v=20260728-layout-type-v3|site-navigation\.js\?v=20260729-no-old-flash-v1|site-shell\.css\?v=20260725-compact-hero-v1|homepage-music\.js\?v=20260722-continuous-v3' qilylean/daily qilylean/daily-insights.html >/dev/null; then
             echo "Legacy shared asset reference was regenerated"
             exit 1
           fi
@@ -260,4 +277,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add knowledge/index.html knowledge/terminology.html qilylean/daily-insights.html qilylean/daily/index.json qilylean/daily/*.html qilylean/daily/terminology-audit-latest.json qilylean/assets/daily-*.svg sitemap.xml
           git commit -m "build: publish enriched daily engineering brief archive [skip ci]"
-          git push
+          git pull --rebase origin main
+          git push origin main
