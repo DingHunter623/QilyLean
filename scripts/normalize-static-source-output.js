@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
-const navigationVersion = '20260803-ms-international-v1';
+const navigationVersion = '20260803-vi-contrast-restored-v1';
 const files = [
   'index.html',
   'cooperation/index.html',
@@ -36,4 +36,4 @@ for (const relativePath of files) {
   if (fs.readFileSync(target, 'utf8') !== normalized) fs.writeFileSync(target, normalized, 'utf8');
 }
 
-process.stdout.write(`Normalized static-source attributes, QILY markers, navigation cache ${navigationVersion} and whitespace.\n`);
+process.stdout.write(`Normalized static-source attributes, QILY markers, restored VI navigation cache ${navigationVersion} and whitespace.\n`);
