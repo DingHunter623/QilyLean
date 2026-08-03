@@ -1,4 +1,4 @@
-/* qily-global-link-standard-loader-v2 */
+/* qily-global-link-standard-loader-v3 */
 (function(d){
   'use strict';
   var styles=[
@@ -7,7 +7,8 @@
     {id:'qilyGlobalLinkStandardStylesheet',href:'/site-link-standard-v2.css?v=20260803-nav-four-border-v6'},
     {id:'qilyDarkSurfaceContrastStylesheet',href:'/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'},
     {id:'qilyInformationArchitectureStylesheet',href:'/site-information-architecture-v1.css?v=20260802-commercial-focus-v1'},
-    {id:'qilyMicrosoftInternationalStylesheet',href:'/site-microsoft-international-v1.css?v=20260803-ms-international-v1'}
+    {id:'qilyMicrosoftInternationalStylesheet',href:'/site-microsoft-international-v1.css?v=20260803-ms-international-v1'},
+    {id:'qilyMicrosoftEnterpriseComponentsStylesheet',href:'/site-microsoft-enterprise-components-v2.css?v=20260803-ms-components-v2'}
   ];
   styles.forEach(function(style){
     var current=d.getElementById(style.id);
@@ -18,9 +19,11 @@
   });
 
   function promoteInternationalStyles(){
-    var current=d.getElementById('qilyMicrosoftInternationalStylesheet');
     var parent=d.head||d.documentElement;
-    if(current&&current.parentNode===parent&&current!==parent.lastElementChild)parent.appendChild(current);
+    ['qilyMicrosoftInternationalStylesheet','qilyMicrosoftEnterpriseComponentsStylesheet'].forEach(function(id){
+      var current=d.getElementById(id);
+      if(current&&current.parentNode===parent)parent.appendChild(current);
+    });
   }
   promoteInternationalStyles();
   setTimeout(promoteInternationalStyles,180);
@@ -77,7 +80,7 @@
 /* QILY-MICROSOFT-NAV-UNDERLINE-RUNTIME:END */
 
 /*
- * QilyLean layered navigation build contract v2
+ * QilyLean layered navigation build contract v3
  * Runtime implementation lives in site-navigation-core.js and is loaded through
  * site-navigation-legacy-20260802.js. These explicit markers keep repository
  * audits aligned with the layered architecture and the international layout.
@@ -87,6 +90,7 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
     'site-wide-layout-v1.css?v=20260729-fluid-copy-v5',
     'site-typography-v1.css?v=20260729-hierarchy-v4',
     'site-microsoft-international-v1.css?v=20260803-ms-international-v1',
+    'site-microsoft-enterprise-components-v2.css?v=20260803-ms-components-v2',
     'site-microsoft-international-v1.js?v=20260803-ms-international-v1'
   ],
   bootstrapMarkers:[
@@ -107,8 +111,8 @@ window.__qilyLayeredNavigationBuildContract=Object.freeze({
 /* QilyLean global navigation wrapper｜保留原功能并加载可信度、信息架构与视觉规范模块 */
 (function(d){
   'use strict';
-  if(window.__qilyNavigationWrapper20260803V8)return;
-  window.__qilyNavigationWrapper20260803V8=true;
+  if(window.__qilyNavigationWrapper20260803V9)return;
+  window.__qilyNavigationWrapper20260803V9=true;
 
   function loadTrustStyles(){
     var current=d.getElementById('qilyBrandTrustStylesheet');
