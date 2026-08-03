@@ -49,7 +49,9 @@ function sitemapUrls(file) {
 const protectedNoindex = [
   /^404\.html$/,
   /^admin\.html$/,
-  /^qilylean\/reference-[^/]+\.html$/
+  /^qilylean\/reference-[^/]+\.html$/,
+  // Supporting viewers duplicate the indexed evidence hub and source assets.
+  /^projects\/lean-improvement-evidence\/(?:award|q3|q4)-(?:online-view|preview)\.html$/
 ];
 
 const redirectPages = {
