@@ -17,6 +17,16 @@
     (d.head||d.documentElement).appendChild(link);
   });
 
+  function promoteInternationalStyles(){
+    var current=d.getElementById('qilyMicrosoftInternationalStylesheet');
+    var parent=d.head||d.documentElement;
+    if(current&&current.parentNode===parent&&current!==parent.lastElementChild)parent.appendChild(current);
+  }
+  promoteInternationalStyles();
+  setTimeout(promoteInternationalStyles,180);
+  setTimeout(promoteInternationalStyles,900);
+  setTimeout(promoteInternationalStyles,2200);
+
   if(!d.querySelector('script[data-qily-microsoft-international-loader]')){
     var enhancer=d.createElement('script');
     enhancer.src='/site-microsoft-international-v1.js?v=20260803-ms-international-v1';
