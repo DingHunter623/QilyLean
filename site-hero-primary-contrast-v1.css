@@ -1,0 +1,76 @@
+/* QilyLean 深色首屏主按钮高对比保险层｜2026-08-04
+ * 适用：项目合作、行业资源入驻及全站同类深色首屏主行动按钮。
+ * 原则：浅金实底＋深青／深褐文字；同时覆盖 color 与 -webkit-text-fill-color，
+ * 防止全站“深色首屏普通链接浅色字”规则误伤主按钮。
+ */
+:root{
+  --qily-hero-primary-bg:#ffd36a;
+  --qily-hero-primary-bg-hover:#ffe39b;
+  --qily-hero-primary-text:#332100;
+  --qily-hero-primary-text-hover:#201400;
+  --qily-hero-primary-border:#fff3c6;
+  --qily-hero-primary-focus:#ffffff;
+}
+
+html body .hero-actions > :is(a,button).primary,
+html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,[data-qily-dark-surface="true"])
+  :is(.hero-actions,.module-actions,.actions,.qily-ia-actions) :is(a,button).primary,
+html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,[data-qily-dark-surface="true"])
+  :is(a,button).qily-hero-primary{
+  box-sizing:border-box!important;
+  min-height:44px!important;
+  border:2px solid var(--qily-hero-primary-border)!important;
+  border-radius:999px!important;
+  color:var(--qily-hero-primary-text)!important;
+  -webkit-text-fill-color:var(--qily-hero-primary-text)!important;
+  background:var(--qily-hero-primary-bg)!important;
+  box-shadow:0 10px 24px rgba(0,0,0,.24)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  text-decoration:none!important;
+  font-weight:950!important;
+}
+
+html body .hero-actions > :is(a,button).primary *,
+html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,[data-qily-dark-surface="true"])
+  :is(.hero-actions,.module-actions,.actions,.qily-ia-actions) :is(a,button).primary *,
+html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,[data-qily-dark-surface="true"])
+  :is(a,button).qily-hero-primary *{
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+
+html body .hero-actions > :is(a,button).primary:is(:hover,:focus-visible,:active),
+html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,[data-qily-dark-surface="true"])
+  :is(.hero-actions,.module-actions,.actions,.qily-ia-actions) :is(a,button).primary:is(:hover,:focus-visible,:active),
+html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,[data-qily-dark-surface="true"])
+  :is(a,button).qily-hero-primary:is(:hover,:focus-visible,:active){
+  border-color:var(--qily-hero-primary-focus)!important;
+  color:var(--qily-hero-primary-text-hover)!important;
+  -webkit-text-fill-color:var(--qily-hero-primary-text-hover)!important;
+  background:var(--qily-hero-primary-bg-hover)!important;
+  box-shadow:0 15px 34px rgba(0,0,0,.32)!important;
+  outline:3px solid rgba(255,255,255,.72)!important;
+  outline-offset:3px!important;
+}
+
+html body .hero-actions > :is(a,button).primary[aria-disabled="true"],
+html body .hero-actions > button.primary:disabled{
+  color:#4a4131!important;
+  -webkit-text-fill-color:#4a4131!important;
+  background:#e9d8ad!important;
+  border-color:#f4e7c7!important;
+  opacity:1!important;
+  cursor:not-allowed!important;
+  box-shadow:none!important;
+}
+
+@media(max-width:680px){
+  html body .hero-actions > :is(a,button).primary{
+    width:100%!important;
+    justify-content:center!important;
+  }
+}
