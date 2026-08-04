@@ -1,0 +1,199 @@
+/* QilyLean commercial pricing, boundary contrast and quality-throughline closure */
+
+/* 友情链接：卡片必须一眼分区，不能与页面底色融为一体。 */
+#companyGrid.grid{
+  gap:18px!important;
+  padding:2px!important;
+}
+#companyGrid .card{
+  border:2px solid #8fbab6!important;
+  border-top:6px solid #178b94!important;
+  background:#ffffff!important;
+  box-shadow:0 12px 28px rgba(7,60,71,.13)!important;
+}
+#companyGrid .card:nth-child(even){
+  background:#f5faf9!important;
+}
+#companyGrid .card:hover,
+#companyGrid .card:focus-visible{
+  border-color:#0f6570!important;
+  border-top-color:#caa15f!important;
+  box-shadow:0 18px 38px rgba(7,60,71,.22)!important;
+}
+#companyGrid .card h2,
+#companyGrid .card .cn,
+#companyGrid .card .tag{
+  opacity:1!important;
+}
+
+/* 合作边界：正向与暂缓条件必须具备明确的颜色语义。 */
+.cooperation-page .boundary{
+  gap:22px!important;
+}
+.cooperation-page .boundary article{
+  border:2px solid #94bbb6!important;
+  border-top:6px solid #178b94!important;
+  background:#f2faf8!important;
+  box-shadow:0 12px 28px rgba(7,60,71,.12)!important;
+}
+.cooperation-page .boundary article:first-child{
+  border-color:#76aaa3!important;
+  border-top-color:#0f6570!important;
+  background:#edf8f5!important;
+}
+.cooperation-page .boundary article:last-child{
+  border-color:#d8a394!important;
+  border-top-color:#9e4a34!important;
+  background:#fff5f1!important;
+}
+.cooperation-page .boundary article:first-child h3{
+  color:#073c47!important;
+}
+.cooperation-page .boundary article:last-child h3{
+  color:#7f3527!important;
+}
+.cooperation-page .boundary li{
+  color:#304f50!important;
+  font-weight:650!important;
+}
+.cooperation-page .boundary article:last-child li{
+  color:#65443d!important;
+}
+
+/* 三类核心业务公开价格参考。 */
+.qily-pricing-basis{
+  margin-top:26px;
+}
+.qily-pricing-basis-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:18px;
+}
+.qily-pricing-basis-card{
+  padding:24px;
+  border:2px solid #9bbfbb;
+  border-top:6px solid #178b94;
+  background:#fff;
+  box-shadow:0 13px 30px rgba(7,60,71,.12);
+}
+.qily-pricing-basis-card:nth-child(2){
+  border-top-color:#0f6570;
+  background:#f1f9f7;
+}
+.qily-pricing-basis-card:nth-child(3){
+  border-top-color:#caa15f;
+  background:#fffaf0;
+}
+.qily-pricing-basis-card small{
+  display:block;
+  color:#8b652d;
+  font-size:13px;
+  font-weight:950;
+  letter-spacing:.05em;
+}
+.qily-pricing-basis-card h3{
+  margin:7px 0 8px;
+  color:#073c47;
+}
+.qily-pricing-reference{
+  margin:10px 0 14px;
+  color:#073c47;
+  font-size:clamp(23px,2.25vw,31px);
+  font-weight:950;
+  line-height:1.25;
+}
+.qily-pricing-reference span{
+  display:block;
+  margin-top:5px;
+  color:#5c7372;
+  font-size:14px;
+  font-weight:850;
+}
+.qily-pricing-basis-card strong{
+  color:#0f4b5a;
+}
+.qily-pricing-basis-card p,
+.qily-pricing-basis-card li{
+  color:#435f5f;
+}
+.qily-pricing-basis-card ul{
+  margin:10px 0 0;
+  padding-left:1.25em;
+}
+.qily-pricing-basis-card li{
+  margin:6px 0;
+}
+.qily-pricing-boundary-note{
+  margin-top:18px;
+  padding:17px 20px;
+  border:2px solid #c7a76a;
+  border-left:7px solid #9e4a34;
+  background:#fff8e9;
+  color:#503f29;
+  line-height:1.75;
+}
+.qily-pricing-boundary-note strong{
+  color:#7d3528;
+}
+
+/* 质量必须是PQCD与生产力改善的贯穿主线。 */
+.qily-quality-throughline,
+.daily-quality-throughline{
+  margin:22px 0;
+  padding:20px 22px;
+  border:2px solid #8db9b4;
+  border-left:8px solid #0f6570;
+  background:#edf8f5;
+  box-shadow:0 10px 24px rgba(7,60,71,.1);
+}
+.qily-quality-throughline small,
+.daily-quality-throughline small{
+  display:block;
+  margin-bottom:5px;
+  color:#8c652f;
+  font-size:13px;
+  font-weight:950;
+  letter-spacing:.06em;
+}
+.qily-quality-throughline h3,
+.daily-quality-throughline h3{
+  margin:0 0 8px;
+  color:#073c47;
+}
+.qily-quality-throughline p,
+.daily-quality-throughline p{
+  margin:0;
+  color:#355454;
+  line-height:1.78;
+}
+.qily-quality-throughline a,
+.daily-quality-throughline a{
+  color:#0b5965;
+  font-weight:900;
+  text-decoration-thickness:2px;
+  text-underline-offset:3px;
+}
+.daily-quality-throughline .quality-gates{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-top:14px;
+}
+.daily-quality-throughline .quality-gates span{
+  padding:10px;
+  border:1px solid #94bbb6;
+  background:#fff;
+  color:#17494c;
+  text-align:center;
+  font-size:14px;
+  font-weight:900;
+}
+
+@media(max-width:900px){
+  .qily-pricing-basis-grid{grid-template-columns:1fr}
+  .daily-quality-throughline .quality-gates{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  #companyGrid.grid{gap:14px!important}
+  .daily-quality-throughline .quality-gates{grid-template-columns:1fr}
+}
