@@ -10,11 +10,13 @@ const MUSIC_VERSION = '20260804-continuity-v5';
 const AUDIO_SRC = '/%E6%88%91%E7%9A%84%E6%A2%A6%EF%BC%88%E5%BC%A0%E9%9D%93%E9%A2%96%EF%BC%89.mp3';
 const CSS_HREF = `/site-hero-primary-contrast-v1.css?v=${CSS_VERSION}`;
 const MUSIC_SRC = `/homepage-music-v5.js?v=${MUSIC_VERSION}`;
+const BLOCK_START = '<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->';
+const BLOCK_END = '<!-- QILY-PRIMARY-CONTRAST-MUSIC:END -->';
 
 const cssTag = `  <link id="qilyHeroPrimaryContrastStylesheet" rel="stylesheet" href="${CSS_HREF}">`;
 const preloadTag = `  <link id="qilyBackgroundMusicPreload" rel="preload" href="${AUDIO_SRC}" as="audio" type="audio/mpeg">`;
 const musicTag = `  <script defer id="qilyBackgroundMusicScript" data-qily-background-music="v5" src="${MUSIC_SRC}"></script>`;
-const managedAssets = `${cssTag}\n${preloadTag}\n${musicTag}`;
+const managedBlock = [BLOCK_START, cssTag, preloadTag, musicTag, BLOCK_END].join('\n');
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
@@ -37,10 +39,21 @@ function walk(dir, callback) {
 }
 
 function removeManagedAssets(html) {
-  return html
-    .replace(/\s*<link\b[^>]*(?:id=["']qilyHeroPrimaryContrastStylesheet["']|href=["'][^"']*\/site-hero-primary-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>\s*/gi, '\n')
-    .replace(/\s*<link\b[^>]*(?:id=["']qilyBackgroundMusicPreload["']|href=["'][^"']*%E6%88%91%E7%9A%84%E6%A2%A6[^"']*["'][^>]*\bas=["']audio["'])[^>]*>\s*/gi, '\n')
-    .replace(/\s*<script\b[^>]*(?:id=["']qilyBackgroundMusicScript["']|data-qily-background-music=["'][^"']+["']|src=["'][^"']*\/homepage-music(?:-v5)?\.js(?:\?v=[^"']*)?["'])[^>]*>\s*<\/script>\s*/gi, '\n');
+  let cleaned = html;
+
+  /* Remove the current marked block as complete lines without consuming neighbours. */
+  cleaned = cleaned.replace(
+    /^[ \t]*<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->\r?\n[\s\S]*?^[ \t]*<!-- QILY-PRIMARY-CONTRAST-MUSIC:END -->[ \t]*(?:\r?\n)?/gmi,
+    ''
+  );
+
+  /* Migrate old unmarked assets one complete line at a time. */
+  cleaned = cleaned
+    .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyHeroPrimaryContrastStylesheet["']|href=["'][^"']*\/site-hero-primary-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
+    .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyBackgroundMusicPreload["']|href=["'][^"']*%E6%88%91%E7%9A%84%E6%A2%A6[^"']*["'][^>]*\bas=["']audio["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
+    .replace(/^[ \t]*<script\b[^>]*(?:id=["']qilyBackgroundMusicScript["']|data-qily-background-music=["'][^"']+["']|src=["'][^"']*\/homepage-music(?:-v5)?\.js(?:\?v=[^"']*)?["'])[^>]*>[ \t]*<\/script>[ \t]*(?:\r?\n)?/gmi, '');
+
+  return cleaned;
 }
 
 function isPublicPage(html) {
@@ -49,18 +62,16 @@ function isPublicPage(html) {
 
 function insertBeforeDockOrHead(html) {
   /*
-   * The exact-dock publisher owns the final position before </head>. Place the
-   * contrast/music block immediately before that stable dock block so the two
-   * independent publishers never keep swapping the last position or growing
-   * whitespace on repeated runs.
+   * The dock publisher owns the final block before </head>. This block stays
+   * directly before it, so independent publishers preserve one canonical order.
    */
   const dockNeedle = '<link id="qilyCoreServiceDockClosureStylesheet"';
   const dockIndex = html.indexOf(dockNeedle);
   if (dockIndex >= 0) {
     const lineStart = html.lastIndexOf('\n', dockIndex) + 1;
-    return html.slice(0, lineStart) + managedAssets + '\n' + html.slice(lineStart);
+    return html.slice(0, lineStart) + managedBlock + '\n' + html.slice(lineStart);
   }
-  return html.replace(/<\/head>/i, `${managedAssets}\n</head>`);
+  return html.replace(/<\/head>/i, `${managedBlock}\n</head>`);
 }
 
 function install(html) {
@@ -109,6 +120,7 @@ function main() {
   const keyPages = ['index.html', 'cooperation/index.html', 'links/index.html', 'links/onboarding/index.html'];
   keyPages.forEach((relative) => {
     const html = read(path.join(root, relative));
+    if (!html.includes(BLOCK_START) || !html.includes(BLOCK_END)) throw new Error(`${relative} missing managed block markers.`);
     if (!html.includes(CSS_HREF)) throw new Error(`${relative} missing hero-primary contrast asset.`);
     if (!html.includes(MUSIC_SRC)) throw new Error(`${relative} missing background-music v5 asset.`);
     if (!html.includes(`href="${AUDIO_SRC}"`)) throw new Error(`${relative} missing early audio preload.`);
