@@ -1,8 +1,8 @@
-/* QilyLean 三大核心业务对齐与悬浮入口精简闭环｜2026-08-04 */
+/* QilyLean 三大核心业务对齐与悬浮入口增补闭环｜2026-08-04 */
 (function(d,w){
   'use strict';
-  if(w.__qilyCoreServiceDockClosureV1)return;
-  w.__qilyCoreServiceDockClosureV1=true;
+  if(w.__qilyCoreServiceDockClosureV2)return;
+  w.__qilyCoreServiceDockClosureV2=true;
 
   function groupByVisualRow(nodes){
     var rows=[];
@@ -41,12 +41,11 @@
     });
   }
 
-  function compactDock(){
+  function addBackToTop(){
     var dock=d.getElementById('floatDock');
     if(!dock)return;
 
     var home=dock.querySelector('[data-action="home"]');
-    var search=dock.querySelector('[data-action="search"]');
     var top=dock.querySelector('[data-action="top"]');
     if(!top){
       top=d.createElement('button');
@@ -57,15 +56,12 @@
       top.innerHTML='回到<br>顶部';
     }
 
-    Array.from(dock.querySelectorAll('.qily-float-btn')).forEach(function(button){
-      var action=button.getAttribute('data-action');
-      if(['home','top','search'].indexOf(action)===-1)button.remove();
-    });
-    if(home)dock.appendChild(home);
-    dock.appendChild(top);
-    if(search)dock.appendChild(search);
-
-    ['shareMask','wxMask'].forEach(function(id){var node=d.getElementById(id);if(node)node.remove();});
+    /* 只在“首页”后新增“回顶部”，不得删除、替换或重排任何原有功能。 */
+    if(home&&home.parentNode===dock){
+      dock.insertBefore(top,home.nextSibling);
+    }else if(top.parentNode!==dock){
+      dock.insertBefore(top,dock.firstChild);
+    }
 
     if(top.dataset.qilyBound==='1')return;
     top.dataset.qilyBound='1';
@@ -79,7 +75,7 @@
     },true);
   }
 
-  function apply(){alignCoreServices();compactDock();}
+  function apply(){alignCoreServices();addBackToTop();}
 
   var queued=false;
   function queue(){
