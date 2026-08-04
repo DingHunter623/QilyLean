@@ -7,16 +7,19 @@ on:
       - ".github/workflows/commercial-quality-closure.yml"
       - ".github/workflows/validate-daily-archive-pr.yml"
       - "site-commercial-quality-closure-v1.css"
+      - "site-number-badge-contrast-v1.css"
+      - "site-interactive-hover-contrast-v1.css"
       - "scripts/apply-commercial-quality-closure-20260804.js"
       - "scripts/hide-public-pricing.js"
       - "scripts/audit-daily-quality-linkage.js"
       - "scripts/normalize-daily-quality-label.js"
       - "scripts/enforce-productivity-theme-alias.js"
       - "scripts/enhance-daily-archive.js"
+      - "scripts/publish-number-badge-contrast.js"
       - "scripts/materialize-static-core-pages.js"
       - "cooperation/index.html"
       - "links/index.html"
-      - "qilylean/daily/2026-08-04.html"
+      - "qilylean/daily/*.html"
   workflow_dispatch:
 
 permissions:
@@ -29,7 +32,7 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -49,6 +52,7 @@ jobs:
           node --check scripts/build-daily-archive.js
           node --check scripts/enhance-daily-archive.js
           node --check scripts/validate-daily-archive.js
+          node --check scripts/publish-number-badge-contrast.js
 
       - name: Apply source and public-page closure
         run: |
@@ -71,6 +75,10 @@ jobs:
           node scripts/hide-public-pricing.js
           node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
+          node scripts/remove-daily-directory-consultation.js
+          node scripts/normalize-daily-visual-closure.js
+          node scripts/publish-number-badge-contrast.js
+          node scripts/audit-daily-quality-linkage.js
 
       - name: Unify Daily Engineering Brief brand
         shell: bash
@@ -86,34 +94,32 @@ jobs:
       - name: Validate archive depth and continuity
         run: node scripts/validate-daily-archive.js
 
-      - name: Finalize message-only and current VI resources
-        run: |
-          node scripts/remove-daily-directory-consultation.js
-          node scripts/normalize-daily-visual-closure.js
-          node scripts/apply-commercial-quality-closure-20260804.js
-          node scripts/hide-public-pricing.js
-          node scripts/enforce-productivity-theme-alias.js
-          node scripts/normalize-daily-quality-label.js
-          node scripts/audit-daily-quality-linkage.js
-
       - name: Validate publication contract
         shell: bash
         run: |
           LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
-          TOTAL="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(String(data.length))")"
-          test "$LATEST_DATE" = "2026-08-04"
-          test "$TOTAL" = "2583"
-          grep -q '科学改进生产力' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'data-quality-throughline="2026-08-04"' "qilylean/daily/$LATEST_DATE.html"
-          grep -q '质量门槛｜科学改进生产力' "qilylean/daily/$LATEST_DATE.html"
+          SOURCE_LATEST="$(node - <<'NODE'
+          const fs=require('fs');
+          const files=fs.readdirSync('qilylean/daily').filter(x=>/^\d{4}-\d{2}-\d{2}\.html$/.test(x)).sort().reverse();
+          process.stdout.write(files[0].slice(0,10));
+          NODE
+          )"
+          test "$LATEST_DATE" = "$SOURCE_LATEST"
           grep -q 'data-brief-message-form' "qilylean/daily/$LATEST_DATE.html"
+          grep -q "qilylean/daily/$LATEST_DATE.html" sitemap.xml
+          grep -q "data-latest-brief-date=\"$LATEST_DATE\"" knowledge/index.html
+          grep -q 'site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
+
+          # 专项质量贯穿保留在8月4日简报，不要求后续每期重复相同主题。
+          grep -q 'data-quality-throughline="2026-08-04"' qilylean/daily/2026-08-04.html
+          grep -q '质量门槛｜科学改进生产力' qilylean/daily/2026-08-04.html
+
           grep -q 'QILY-PRICING-PUBLIC-DISABLED' cooperation/index.html
           grep -q '<h2>合作启动路径</h2>' cooperation/index.html
           grep -q '质量不是PQCD中的一个并列数字' cooperation/index.html
           grep -q 'qilyCommercialQualityClosureStylesheet' cooperation/index.html
           grep -q 'qilyCommercialQualityClosureStylesheet' links/index.html
-          grep -q 'qilylean/daily/2026-08-04.html' sitemap.xml
-          grep -q 'data-latest-brief-date="2026-08-04"' knowledge/index.html
           grep -q '#companyGrid .card' site-commercial-quality-closure-v1.css
           grep -q '.cooperation-page .boundary article:last-child' site-commercial-quality-closure-v1.css
           if grep -q '¥\|公开价格参考与报价依据\|公开报价不包含\|<div class="price">' cooperation/index.html; then
@@ -148,6 +154,6 @@ jobs:
             scripts/enhance-daily-archive.js \
             scripts/materialize-static-core-pages.js \
             sitemap.xml
-          git commit -m "build: publish quality closure with public pricing disabled [skip ci]"
+          git commit -m "build: publish quality closure with current daily brief [skip ci]"
           git pull --rebase origin main
           git push origin main
