@@ -16,6 +16,8 @@ on:
       - "qilylean/assets/daily-*.svg"
       - "qilylean/daily-briefs.css"
       - "qilylean/daily-feedback.js"
+      - "qilylean/site-data.json"
+      - "qilylean/site-search-index.json"
       - "knowledge/index.html"
       - "knowledge/terminology.html"
       - "knowledge/terminology/*.html"
@@ -29,6 +31,7 @@ on:
       - "scripts/hide-public-pricing.js"
       - "scripts/normalize-daily-quality-label.js"
       - "scripts/enforce-productivity-theme-alias.js"
+      - "scripts/publish-equipment-reliability-terminology.js"
       - "scripts/sync-daily-terminology.js"
       - "scripts/bump-daily-css-version.js"
       - "scripts/validate-daily-archive.js"
@@ -36,6 +39,8 @@ on:
       - "scripts/normalize-daily-visual-closure.js"
       - "scripts/publish-number-badge-contrast.js"
       - "scripts/materialize-static-core-pages.js"
+      - "sitemap.xml"
+      - "sitemap-core.xml"
 
 permissions:
   contents: read
@@ -68,6 +73,7 @@ jobs:
           node --check scripts/hide-public-pricing.js
           node --check scripts/normalize-daily-quality-label.js
           node --check scripts/enforce-productivity-theme-alias.js
+          node --check scripts/publish-equipment-reliability-terminology.js
           node --check scripts/sync-daily-terminology.js
           node --check scripts/bump-daily-css-version.js
           node --check scripts/validate-daily-archive.js
@@ -82,6 +88,7 @@ jobs:
           node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
           node scripts/build-daily-archive.js
+          node scripts/publish-equipment-reliability-terminology.js
           node scripts/enhance-daily-archive.js
           node scripts/enhance-terminology-training.js
           node scripts/normalize-daily-quality-label.js
@@ -134,11 +141,28 @@ jobs:
           grep -q 'MTTR' "qilylean/daily/$LATEST_DATE.html"
           grep -q 'OEE' "qilylean/daily/$LATEST_DATE.html"
           grep -q 'TPM' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'href="/knowledge/terminology/mtbf.html"' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'href="/knowledge/terminology/mttr.html"' "qilylean/daily/$LATEST_DATE.html"
           grep -q "data-latest-brief-date=\"$LATEST_DATE\"" knowledge/index.html
           grep -q "qilylean/daily/$LATEST_DATE.html" sitemap.xml
           grep -q "$LATEST_DATE" qilylean/daily-insights.html
           grep -q 'site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
           grep -q 'site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
+
+          grep -q '<div class="term-code">MTBF</div>' knowledge/terminology.html
+          grep -q '<div class="term-code">MTTR</div>' knowledge/terminology.html
+          grep -q '词典：183项中文诠释' knowledge/terminology.html
+          grep -q '<h1>MTBF｜平均故障间隔时间</h1>' knowledge/terminology/mtbf.html
+          grep -q '<h1>MTTR｜平均修复时间</h1>' knowledge/terminology/mttr.html
+          grep -q 'knowledge/terminology/mtbf.html' qilylean/site-search-index.json
+          grep -q 'knowledge/terminology/mttr.html' qilylean/site-search-index.json
+          grep -q 'knowledge/terminology/mtbf.html' sitemap.xml
+          grep -q 'knowledge/terminology/mttr.html' sitemap.xml
+          node - <<'NODE'
+          const data=require('./qilylean/site-data.json');
+          if (data.terminology.total !== 183) throw new Error('Terminology total is not 183');
+          if (data.search.terminologyTotal !== 183) throw new Error('Search terminology total is not 183');
+          NODE
 
           # 8月4日质量专题关联必须保留，但不得强制8月5日重复上一期主题。
           grep -q 'data-quality-throughline="2026-08-04"' qilylean/daily/2026-08-04.html
