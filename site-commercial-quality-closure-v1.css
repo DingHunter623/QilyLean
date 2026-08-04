@@ -47,56 +47,15 @@
   background:rgba(4,48,57,.48)!important;
 }
 
-/* 三大核心业务：三张卡片分别采用稳定且可辨识的色界，不依赖轻微顶边区分。 */
-.cooperation-page #services .module-grid.three{
-  gap:20px!important;
-}
-.cooperation-page #services .service-card{
-  border:2px solid #78aaa5!important;
-  border-top:7px solid #0f7780!important;
-  background:#f1faf8!important;
-  box-shadow:0 14px 32px rgba(7,60,71,.13)!important;
-}
-.cooperation-page #services .service-card:nth-child(2){
-  border-color:#d2ae6c!important;
-  border-top-color:#a87521!important;
-  background:#fff9eb!important;
-}
-.cooperation-page #services .service-card:nth-child(3){
-  border-color:#cf9685!important;
-  border-top-color:#99462f!important;
-  background:#fff4f0!important;
-}
+/* 三大核心业务：模块背景、边框、阴影及内部方框全部回退原样，仅强化圆圈序号。 */
 .cooperation-page #services .service-card .service-number{
-  border:2px solid rgba(255,255,255,.92)!important;
+  border:2px solid #ffffff!important;
+  color:#ffffff!important;
   background:#0f6570!important;
-  box-shadow:0 0 0 2px #78aaa5!important;
-}
-.cooperation-page #services .service-card:nth-child(2) .service-number{
-  background:#94631c!important;
-  box-shadow:0 0 0 2px #d2ae6c!important;
-}
-.cooperation-page #services .service-card:nth-child(3) .service-number{
-  background:#8b3f2c!important;
-  box-shadow:0 0 0 2px #cf9685!important;
-}
-.cooperation-page #services .service-card .scope-list span{
-  border-width:2px!important;
-  border-color:#bfd6d3!important;
-  background:#ffffff!important;
-  color:#294e50!important;
-}
-.cooperation-page #services .service-card:nth-child(2) .scope-list span{
-  border-color:#dfc99b!important;
-  background:#fffdf8!important;
-}
-.cooperation-page #services .service-card:nth-child(3) .scope-list span{
-  border-color:#dfbbb0!important;
-  background:#fffafa!important;
-}
-.cooperation-page #services .service-card .module-result,
-.cooperation-page #services .service-card .service-contract{
-  border-width:2px!important;
+  box-shadow:0 0 0 2px #0f6570!important;
+  opacity:1!important;
+  font-weight:950!important;
+  text-shadow:none!important;
 }
 
 /* 合作边界：正向与暂缓条件必须具备明确的颜色语义。 */
