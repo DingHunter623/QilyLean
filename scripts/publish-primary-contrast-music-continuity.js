@@ -62,7 +62,8 @@ function removeManagedAssets(html) {
     ''
   );
 
-  return cleaned;
+  /* A removed standalone tag may leave indentation on an otherwise empty line. */
+  return cleaned.replace(/^[ \t]+$/gm, '');
 }
 
 function isPublicPage(html) {
