@@ -42,7 +42,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: daily-archive-main
+  group: qily-daily-publication-main
   cancel-in-progress: true
 
 jobs:
@@ -157,5 +157,4 @@ jobs:
             sitemap.xml \
             sitemap-core.xml
           git commit -m "build: publish current daily engineering brief archive [skip ci]"
-          git pull --rebase origin main
-          git push origin main
+          git push origin HEAD:main
