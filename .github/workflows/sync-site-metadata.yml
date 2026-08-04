@@ -9,11 +9,14 @@ on:
       - "scripts/build-site-metadata.js"
       - "scripts/sync-daily-index-source.js"
       - "scripts/build-trust-search-sync.js"
+      - "site-visual-closure-v1.js"
       - "index.html"
       - "knowledge/index.html"
       - "capabilities/index.html"
       - "projects/index.html"
       - "cooperation/index.html"
+      - "qilylean/daily/index.json"
+      - "qilylean/daily/*.html"
       - "qilylean/daily-insights.html"
       - "site-search.js"
       - "sitemap.xml"
@@ -34,7 +37,7 @@ jobs:
   sync:
     if: >-
       (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') &&
-      github.actor != 'github-actions[bot]'
+      (github.event_name == 'workflow_run' || github.actor != 'github-actions[bot]')
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -59,7 +62,7 @@ jobs:
       - name: Publish trust center and generated search index
         run: node scripts/build-trust-search-sync.js
 
-      - name: Validate synchronized metadata and trust controls
+      - name: Validate synchronized metadata trust controls and sitewide closure
         shell: bash
         run: |
           node --check scripts/apply-integrity-upgrade.js
@@ -67,9 +70,13 @@ jobs:
           node --check scripts/build-site-metadata.js
           node --check scripts/build-trust-search-sync.js
           node --check site-search.js
+          node --check site-visual-closure-v1.js
           test -f qilylean/site-data.json
           test -f qilylean/site-search-index.json
           test -f trust/index.html
+          grep -q 'qilySitewideClarityStyleV2' site-visual-closure-v1.js
+          grep -q 'syncDailyMetadata' site-visual-closure-v1.js
+          grep -q 'module-grid>.module-card>.module-actions' site-visual-closure-v1.js
           node - <<'NODE'
           const fs = require('fs');
           const data = JSON.parse(fs.readFileSync('qilylean/site-data.json', 'utf8'));
@@ -98,8 +105,10 @@ jobs:
           if (!home.includes('QILY-TRUST:HOME:START')) throw new Error('Homepage trust-center block missing');
           if (!home.includes('非QilyLean品牌独立营收')) throw new Error('Homepage cumulative-results boundary missing');
           if (!home.includes(data.briefs.latestDate)) throw new Error('Homepage latest date mismatch');
+          if (!home.includes(`${data.briefs.total}期`)) throw new Error('Homepage brief total mismatch');
           if (!knowledge.includes('SITE-METADATA:KNOWLEDGE-STATS:START')) throw new Error('Knowledge statistics block missing');
           if (!knowledge.includes(`data-latest-brief-date="${data.briefs.latestDate}"`)) throw new Error('Knowledge latest brief mismatch');
+          if (!knowledge.includes(`${data.briefs.total} 期`)) throw new Error('Knowledge brief total mismatch');
           if (!terminology.includes(`共收录 ${data.terminology.total} 项术语`)) throw new Error('Terminology total mismatch');
           if (!directory.includes(`共${data.briefs.total}期`)) throw new Error('Daily directory count mismatch');
           if (!directory.includes(`/qilylean/daily/${data.briefs.latestDate}.html`)) throw new Error('Daily directory latest link mismatch');
@@ -122,11 +131,12 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Unified site metadata, trust center and search index are already current."
+            echo "Unified site metadata, trust center, search index and sitewide closure are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add scripts/build-trust-search-sync.js index.html knowledge/index.html knowledge/terminology.html capabilities/index.html projects/index.html cooperation/index.html trust/index.html site-search.js qilylean/site-data.json qilylean/site-search-index.json qilylean/daily/index.json qilylean/daily-insights.html qilylean/latest-brief.js qilylean/daily-insights-card.js sitemap.xml sitemap-core.xml
-          git commit -m "build: publish integrity disclosures and synchronized site index [skip ci]"
+          git add scripts/build-trust-search-sync.js site-visual-closure-v1.js index.html knowledge/index.html knowledge/terminology.html capabilities/index.html projects/index.html cooperation/index.html trust/index.html site-search.js qilylean/site-data.json qilylean/site-search-index.json qilylean/daily/index.json qilylean/daily-insights.html qilylean/latest-brief.js qilylean/daily-insights-card.js sitemap.xml sitemap-core.xml
+          git commit -m "build: publish synchronized site data and sitewide clarity closure [skip ci]"
+          git pull --rebase origin main
           git push
