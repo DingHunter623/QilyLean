@@ -1,0 +1,222 @@
+/* QilyLean全站交互悬停高对比规范｜2026-08-05
+ * 解决正常状态可见、鼠标移入后因公共链接规则覆盖而字迹消失的问题。
+ * 仅处理真实可点击操作入口的hover/focus/active状态，不影响静态模块。
+ */
+
+:root{
+  --qily-interactive-hover-bg:#ffe39b;
+  --qily-interactive-hover-text:#17322d;
+  --qily-interactive-hover-border:#c99a3e;
+  --qily-interactive-active-bg:#073c47;
+  --qily-interactive-active-text:#ffffff;
+}
+
+/* 真实操作入口必须建立独立层叠上下文，防止父级伪元素和通用链接规则盖住文字。 */
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button),
+html body :is(
+  a.resource-action,
+  a.qily-ia-button,
+  a.module-action,
+  a.project-list-action,
+  a.project-card-action,
+  a.service-contract-link,
+  a.share-button,
+  button.primary
+){
+  position:relative!important;
+  isolation:isolate!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+
+/* 悬停／键盘聚焦：统一金色实底＋深色字，包含内部span／strong等子元素。 */
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button):is(:hover,:focus-visible),
+html body :is(
+  a.resource-action,
+  a.qily-ia-button,
+  a.module-action,
+  a.project-list-action,
+  a.project-card-action,
+  a.service-contract-link,
+  a.share-button,
+  button.primary
+):is(:hover,:focus-visible){
+  color:var(--qily-interactive-hover-text)!important;
+  -webkit-text-fill-color:var(--qily-interactive-hover-text)!important;
+  background-color:var(--qily-interactive-hover-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-interactive-hover-border)!important;
+  text-decoration-color:var(--qily-interactive-hover-text)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+  box-shadow:0 9px 22px rgba(202,161,95,.30)!important;
+  transform:translateY(-2px)!important;
+  outline:3px solid rgba(255,227,155,.34)!important;
+  outline-offset:2px!important;
+}
+
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button):is(:hover,:focus-visible) *,
+html body :is(
+  a.resource-action,
+  a.qily-ia-button,
+  a.module-action,
+  a.project-list-action,
+  a.project-card-action,
+  a.service-contract-link,
+  a.share-button,
+  button.primary
+):is(:hover,:focus-visible) *{
+  color:var(--qily-interactive-hover-text)!important;
+  -webkit-text-fill-color:var(--qily-interactive-hover-text)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+
+/* 按下状态：深青实底＋纯白文字。 */
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button):active,
+html body :is(
+  a.resource-action,
+  a.qily-ia-button,
+  a.module-action,
+  a.project-list-action,
+  a.project-card-action,
+  a.service-contract-link,
+  a.share-button,
+  button.primary
+):active{
+  color:var(--qily-interactive-active-text)!important;
+  -webkit-text-fill-color:var(--qily-interactive-active-text)!important;
+  background-color:var(--qily-interactive-active-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-interactive-active-bg)!important;
+  text-decoration-color:#ffe39b!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  transform:translateY(0) scale(.98)!important;
+  outline:none!important;
+}
+
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button):active *,
+html body :is(
+  a.resource-action,
+  a.qily-ia-button,
+  a.module-action,
+  a.project-list-action,
+  a.project-card-action,
+  a.service-contract-link,
+  a.share-button,
+  button.primary
+):active *{
+  color:var(--qily-interactive-active-text)!important;
+  -webkit-text-fill-color:var(--qily-interactive-active-text)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+
+/* 伪元素只作装饰，不得覆盖按钮文字。 */
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button)::before,
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button)::after{
+  pointer-events:none!important;
+  z-index:-1!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body :is(.ql-trust-strip-actions,.ql-trust-actions,.hero-actions,.actions,.module-actions,.card-actions,.qily-ia-actions,.form-actions,.resource-stage,.service-contract,.contact-card) > :is(a[href],button){
+    transition:none!important;
+  }
+}

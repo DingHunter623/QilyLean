@@ -1,0 +1,67 @@
+/* QilyLean全站编号徽章高对比规范｜2026-08-05
+ * 适用于流程号、步骤号、核心业务序号及同类圆形编号。
+ * 原则：深色实底、纯白数字、白色内描边、青色外圈；禁止透明、滤镜和同色叠加。
+ */
+
+:root{
+  --qily-number-badge-bg:#075767;
+  --qily-number-badge-ring:#178b94;
+  --qily-number-badge-text:#ffffff;
+}
+
+html body :is(
+  .service-number,
+  .step-number,
+  .step-index,
+  .sequence-number,
+  .process-number,
+  .number-badge,
+  .workflow-number,
+  .timeline-number
+),
+html body :is(.process,.process-grid,.steps,.workflow,.workflow-grid,.timeline,.flow-grid) :is(.step,.process-step,.workflow-step,.timeline-step) > b:first-child {
+  display:inline-grid!important;
+  place-items:center!important;
+  flex:0 0 auto!important;
+  min-width:34px!important;
+  min-height:34px!important;
+  border:2px solid var(--qily-number-badge-text)!important;
+  border-radius:999px!important;
+  color:var(--qily-number-badge-text)!important;
+  background:var(--qily-number-badge-bg)!important;
+  box-shadow:0 0 0 2px var(--qily-number-badge-ring),0 4px 11px rgba(7,60,71,.22)!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  -webkit-text-fill-color:var(--qily-number-badge-text)!important;
+  text-shadow:none!important;
+  font-weight:950!important;
+  line-height:1!important;
+}
+
+/* 核心业务01／02／03保持既有42px规格。 */
+html body .service-number {
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  min-height:42px!important;
+  font-size:16px!important;
+}
+
+/* 流程1／2／3／4等短编号统一34px，不改变卡片结构和间距。 */
+html body :is(.process,.process-grid,.steps,.workflow,.workflow-grid,.timeline,.flow-grid) :is(.step,.process-step,.workflow-step,.timeline-step) > b:first-child,
+html body :is(.step-number,.step-index,.sequence-number,.process-number,.number-badge,.workflow-number,.timeline-number) {
+  width:34px!important;
+  height:34px!important;
+  font-size:14px!important;
+}
+
+/* 深色背景内仍保持白字，不受父级链接或文字填充色覆盖。 */
+html body :is(.service-number,.step-number,.step-index,.sequence-number,.process-number,.number-badge,.workflow-number,.timeline-number) *,
+html body :is(.process,.process-grid,.steps,.workflow,.workflow-grid,.timeline,.flow-grid) :is(.step,.process-step,.workflow-step,.timeline-step) > b:first-child * {
+  color:var(--qily-number-badge-text)!important;
+  -webkit-text-fill-color:var(--qily-number-badge-text)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
