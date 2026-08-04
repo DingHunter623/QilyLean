@@ -1,4 +1,4 @@
-name: Publish commercial pricing and quality closure
+name: Publish commercial quality closure
 
 on:
   push:
@@ -8,6 +8,7 @@ on:
       - ".github/workflows/validate-daily-archive-pr.yml"
       - "site-commercial-quality-closure-v1.css"
       - "scripts/apply-commercial-quality-closure-20260804.js"
+      - "scripts/hide-public-pricing.js"
       - "scripts/audit-daily-quality-linkage.js"
       - "scripts/normalize-daily-quality-label.js"
       - "scripts/enforce-productivity-theme-alias.js"
@@ -41,6 +42,7 @@ jobs:
       - name: Validate closure scripts
         run: |
           node --check scripts/apply-commercial-quality-closure-20260804.js
+          node --check scripts/hide-public-pricing.js
           node --check scripts/audit-daily-quality-linkage.js
           node --check scripts/normalize-daily-quality-label.js
           node --check scripts/enforce-productivity-theme-alias.js
@@ -51,6 +53,7 @@ jobs:
       - name: Apply source and public-page closure
         run: |
           node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/hide-public-pricing.js
           node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
 
@@ -65,6 +68,7 @@ jobs:
           node scripts/sync-daily-terminology.js --check
           node scripts/bump-daily-css-version.js
           node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/hide-public-pricing.js
           node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
 
@@ -87,6 +91,7 @@ jobs:
           node scripts/remove-daily-directory-consultation.js
           node scripts/normalize-daily-visual-closure.js
           node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/hide-public-pricing.js
           node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
           node scripts/audit-daily-quality-linkage.js
@@ -102,10 +107,8 @@ jobs:
           grep -q 'data-quality-throughline="2026-08-04"' "qilylean/daily/$LATEST_DATE.html"
           grep -q '质量门槛｜科学改进生产力' "qilylean/daily/$LATEST_DATE.html"
           grep -q 'data-brief-message-form' "qilylean/daily/$LATEST_DATE.html"
-          grep -q '¥80,000–300,000+／项目' cooperation/index.html
-          grep -q '¥3,000–6,000／人日' cooperation/index.html
-          grep -q '¥30,000–150,000／项目' cooperation/index.html
-          grep -q '公开报价不包含' cooperation/index.html
+          grep -q 'QILY-PRICING-PUBLIC-DISABLED' cooperation/index.html
+          grep -q '<h2>合作启动路径</h2>' cooperation/index.html
           grep -q '质量不是PQCD中的一个并列数字' cooperation/index.html
           grep -q 'qilyCommercialQualityClosureStylesheet' cooperation/index.html
           grep -q 'qilyCommercialQualityClosureStylesheet' links/index.html
@@ -113,6 +116,10 @@ jobs:
           grep -q 'data-latest-brief-date="2026-08-04"' knowledge/index.html
           grep -q '#companyGrid .card' site-commercial-quality-closure-v1.css
           grep -q '.cooperation-page .boundary article:last-child' site-commercial-quality-closure-v1.css
+          if grep -q '¥\|公开价格参考与报价依据\|公开报价不包含\|<div class="price">' cooperation/index.html; then
+            echo "Public pricing remains on the cooperation page"
+            exit 1
+          fi
           if grep -q '\bGATE\b' "qilylean/daily/$LATEST_DATE.html"; then
             echo "Unexplained GATE label remains"
             exit 1
@@ -123,7 +130,7 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Commercial pricing and quality closure is already current."
+            echo "Commercial quality closure is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
@@ -141,6 +148,6 @@ jobs:
             scripts/enhance-daily-archive.js \
             scripts/materialize-static-core-pages.js \
             sitemap.xml
-          git commit -m "build: publish pricing contrast and quality-throughline closure [skip ci]"
+          git commit -m "build: publish quality closure with public pricing disabled [skip ci]"
           git pull --rebase origin main
           git push origin main
