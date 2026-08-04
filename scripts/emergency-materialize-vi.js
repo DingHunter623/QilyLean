@@ -12,7 +12,7 @@ const WIDE_VERSION = '20260729-fluid-copy-v5';
 const TYPE_VERSION = '20260729-hierarchy-v4';
 const VI_VERSION = '20260801-vi-standard-v1';
 const CONTRAST_VERSION = '20260803-vi-contrast-hotfix-v1';
-const CLOSURE_V1_VERSION = '20260803-visual-closure-v1';
+const CLOSURE_V1_VERSION = '20260804-sitewide-clarity-v2';
 const CLOSURE_V2_VERSION = '20260803-boundary-links-v2';
 const MUSIC_VERSION = '20260729-continuous-v4';
 
@@ -125,7 +125,8 @@ const assetChecks = [
   ['site-visual-closure-v1.css', '.flow-step'],
   ['site-visual-closure-v2.css', '.boundary-service-grid'],
   ['site-visual-closure-v2.css', '#companyGrid .card'],
-  ['site-visual-closure-v1.js', 'classifyCards'],
+  ['site-visual-closure-v1.js', 'qilySitewideClarityStyleV2'],
+  ['site-visual-closure-v1.js', 'syncDailyMetadata'],
   ['site-visual-closure-v2.js', 'refineCooperationBoundary'],
   ['site-visual-closure-v2.js', 'enhanceLinkCards'],
   ['site-navigation.js', 'qilyBoundaryLinksClosureStylesheet']
@@ -135,4 +136,4 @@ for (const [relativePath, marker] of assetChecks) {
   if (!fs.existsSync(file) || !read(file).includes(marker)) throw new Error(`Closure asset missing: ${relativePath} -> ${marker}`);
 }
 
-process.stdout.write(`Boundary and link-card closure materialization complete: scanned ${scanned} HTML files, changed ${changed}.\n`);
+process.stdout.write(`Boundary, sitewide clarity and link-card closure materialization complete: scanned ${scanned} HTML files, changed ${changed}.\n`);
