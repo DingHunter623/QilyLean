@@ -12,11 +12,22 @@ replacements = {
     '<a href="/QilyLean_Home_Universal_v1.0.apk?build=096cf0389446627" download>Android通用版下载</a>': '<a href="/QilyLean_Home_Universal_v2.0.apk?build=dc8ba9ddff23" download>Android通用版 v2.0下载</a>',
 }
 
+changed = False
 for old, new in replacements.items():
-    count = text.count(old)
-    if count != 1:
-        raise SystemExit(f"Expected exactly one match, found {count}: {old[:90]}")
-    text = text.replace(old, new, 1)
+    old_count = text.count(old)
+    new_count = text.count(new)
+    if old_count == 1:
+        text = text.replace(old, new, 1)
+        changed = True
+    elif old_count == 0 and new_count == 1:
+        continue
+    else:
+        raise SystemExit(
+            f"Unexpected publication state: old={old_count}, new={new_count}: {old[:90]}"
+        )
 
-page.write_text(text, encoding="utf-8")
-print("Updated capabilities/index.html for QilyLean Home v2.0")
+if changed:
+    page.write_text(text, encoding="utf-8")
+    print("Updated capabilities/index.html for QilyLean Home v2.0")
+else:
+    print("capabilities/index.html is already current for QilyLean Home v2.0")
