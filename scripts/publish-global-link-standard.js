@@ -5,13 +5,13 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const navigationScript = '/site-navigation.js?v=20260803-boundary-links-v2';
+const navigationScript = '/site-navigation.js?v=20260804-sitewide-clarity-v2';
 const linkStylesheet = '/site-link-standard-v2.css?v=20260803-nav-four-border-v6';
 const navigationBorderStylesheet = '/site-navigation-four-border-v3.css?v=20260803-four-border-v3';
 const darkStylesheet = '/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2';
 const portraitBadgeStylesheet = '/home-portrait-badge-fix-v1.css?v=20260803-badge-wrap-v2';
-const visualClosureV1Stylesheet = '/site-visual-closure-v1.css?v=20260803-visual-closure-v1';
-const visualClosureV1Script = '/site-visual-closure-v1.js?v=20260803-visual-closure-v1';
+const visualClosureV1Stylesheet = '/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2';
+const visualClosureV1Script = '/site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2';
 const boundaryLinksStylesheet = '/site-visual-closure-v2.css?v=20260803-boundary-links-v2';
 const boundaryLinksScript = '/site-visual-closure-v2.js?v=20260803-boundary-links-v2';
 
@@ -130,7 +130,7 @@ function main() {
   const boundaryChanged = patchCooperationBoundary();
   const searchChanged = patchSearchIndex();
   process.stdout.write(
-    `Published current navigation, V1/V2 visual closure, service-specific cooperation boundaries and evidence context to ${checked} HTML files; refreshed ${changed}; evidence=${evidenceChanged}; boundary=${boundaryChanged}; search=${searchChanged}.\n`
+    `Published current navigation, sitewide clarity, V2 visual closure, service-specific cooperation boundaries and evidence context to ${checked} HTML files; refreshed ${changed}; evidence=${evidenceChanged}; boundary=${boundaryChanged}; search=${searchChanged}.\n`
   );
 }
 
