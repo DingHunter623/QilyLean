@@ -6,6 +6,7 @@ on:
     paths:
       - "site-hero-primary-contrast-v1.css"
       - "homepage-music-v5.js"
+      - "site-music-persistent-navigation-v1.js"
       - "scripts/publish-primary-contrast-music-continuity.js"
       - ".github/workflows/publish-primary-contrast-music-continuity.yml"
       - "docs/QilyLean全站统一规范补充条款_20260804_主按钮对比与背景音乐连续性.md"
@@ -15,6 +16,7 @@ on:
     paths:
       - "site-hero-primary-contrast-v1.css"
       - "homepage-music-v5.js"
+      - "site-music-persistent-navigation-v1.js"
       - "scripts/publish-primary-contrast-music-continuity.js"
       - ".github/workflows/publish-primary-contrast-music-continuity.yml"
       - "docs/QilyLean全站统一规范补充条款_20260804_主按钮对比与背景音乐连续性.md"
@@ -56,12 +58,17 @@ jobs:
         shell: bash
         run: |
           node --check homepage-music-v5.js
+          node --check site-music-persistent-navigation-v1.js
           node --check scripts/publish-primary-contrast-music-continuity.js
           grep -q -- '--qily-hero-primary-bg:#ffd36a' site-hero-primary-contrast-v1.css
           grep -q -- '-webkit-text-fill-color:var(--qily-hero-primary-text)!important' site-hero-primary-contrast-v1.css
           grep -q 'TRANSIT_COMPENSATION_CAP = 0.25' homepage-music-v5.js
           grep -q "'/links/'" homepage-music-v5.js
           grep -q 'playNow().then' homepage-music-v5.js
+          grep -q 'window.__qilyPersistentNavigationV1 = true' site-music-persistent-navigation-v1.js
+          grep -q "frame.contentWindow.location.replace(url.href)" site-music-persistent-navigation-v1.js
+          grep -q "window.history.pushState(state, '', url.href)" site-music-persistent-navigation-v1.js
+          grep -q "navigate('/', 'push')" site-music-persistent-navigation-v1.js
 
       - name: Materialize sitewide contrast and music assets
         run: node scripts/publish-primary-contrast-music-continuity.js
@@ -78,6 +85,7 @@ jobs:
           const path = require('path');
           const cssHref = '/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1';
           const musicSrc = '/homepage-music-v5.js?v=20260804-continuity-v5';
+          const navigationSrc = '/site-music-persistent-navigation-v1.js?v=20260804-persistent-music-nav-v1';
           const audioNeedle = 'id="qilyBackgroundMusicPreload"';
           const failures = [];
           let publicPages = 0;
@@ -90,15 +98,17 @@ jobs:
               else if (entry.name.endsWith('.html')) {
                 const html = fs.readFileSync(full, 'utf8');
                 if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html)) continue;
-                const isPublicShell = /site-navigation\.js\?v=/i.test(html) || /homepage-music(?:-v5)?\.js\?v=/i.test(html);
+                const isPublicShell = /site-navigation\.js\?v=/i.test(html) || /homepage-music(?:-v5)?\.js\?v=/i.test(html) || /site-music-persistent-navigation-v1\.js\?v=/i.test(html);
                 if (!isPublicShell) continue;
                 publicPages += 1;
                 const rel = path.relative(process.cwd(), full);
                 if (!html.includes(cssHref)) failures.push(`${rel}:contrast-css`);
                 if (!html.includes(musicSrc)) failures.push(`${rel}:music-v5`);
+                if (!html.includes(navigationSrc)) failures.push(`${rel}:persistent-navigation`);
                 if (!html.includes(audioNeedle)) failures.push(`${rel}:audio-preload`);
                 if (/homepage-music\.js\?v=/i.test(html)) failures.push(`${rel}:legacy-music`);
                 if (html.indexOf(cssHref) > html.indexOf('</head>')) failures.push(`${rel}:css-order`);
+                if (html.indexOf(musicSrc) > html.indexOf(navigationSrc)) failures.push(`${rel}:music-navigation-order`);
               }
             }
           }
@@ -109,16 +119,21 @@ jobs:
           const cooperation = fs.readFileSync('cooperation/index.html','utf8');
           const onboarding = fs.readFileSync('links/onboarding/index.html','utf8');
           const links = fs.readFileSync('links/index.html','utf8');
+          const ai = fs.readFileSync('ai.html','utf8');
           const css = fs.readFileSync('site-hero-primary-contrast-v1.css','utf8');
           const music = fs.readFileSync('homepage-music-v5.js','utf8');
+          const navigation = fs.readFileSync('site-music-persistent-navigation-v1.js','utf8');
 
           if (!cooperation.includes('预约60分钟问题初筛')) throw new Error('Cooperation primary action missing.');
           if (!onboarding.includes('立即填写入驻资料')) throw new Error('Onboarding primary action missing.');
           if (!css.includes('.hero-actions > :is(a,button).primary')) throw new Error('Shared hero-primary selector missing.');
           if (!css.includes('-webkit-text-fill-color:var(--qily-hero-primary-text)!important')) throw new Error('WebKit text-fill override missing.');
-          if (!links.includes(musicSrc)) throw new Error('Friend-links page still lacks background music.');
+          if (!links.includes(musicSrc) || !links.includes(navigationSrc)) throw new Error('Friend-links page still lacks music persistence assets.');
+          if (!ai.includes(navigationSrc)) throw new Error('QilyLean AI page lacks persistent navigation.');
           if (!music.includes('V4 waited for seeked')) throw new Error('Low-gap restore rationale missing.');
-          console.log(`Validated ${publicPages} public pages.`);
+          ['window.__qilyPersistentNavigationV1 = true','frame.contentWindow.location.replace(url.href)','window.__qilyPersistentNavigate']
+            .forEach(marker=>{if(!navigation.includes(marker))throw new Error('Persistent navigation marker missing: '+marker);});
+          console.log(`Validated ${publicPages} public pages with persistent music navigation.`);
           NODE
           git diff --check
 
@@ -127,12 +142,12 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All public pages already use the current contrast and music continuity assets."
+            echo "All public pages already use the current contrast, music and persistent navigation assets."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: publish sitewide primary contrast and continuous music [skip ci]"
+          git commit -m "fix: publish persistent sitewide music navigation [skip ci]"
           git pull --rebase origin main
           git push origin main
