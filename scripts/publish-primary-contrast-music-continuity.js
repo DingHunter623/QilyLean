@@ -47,11 +47,20 @@ function removeManagedAssets(html) {
     ''
   );
 
-  /* Migrate old unmarked assets one complete line at a time. */
+  /* Migrate old unmarked link assets one complete line at a time. */
   cleaned = cleaned
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyHeroPrimaryContrastStylesheet["']|href=["'][^"']*\/site-hero-primary-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
-    .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyBackgroundMusicPreload["']|href=["'][^"']*%E6%88%91%E7%9A%84%E6%A2%A6[^"']*["'][^>]*\bas=["']audio["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
-    .replace(/^[ \t]*<script\b[^>]*(?:id=["']qilyBackgroundMusicScript["']|data-qily-background-music=["'][^"']+["']|src=["'][^"']*\/homepage-music(?:-v5)?\.js(?:\?v=[^"']*)?["'])[^>]*>[ \t]*<\/script>[ \t]*(?:\r?\n)?/gmi, '');
+    .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyBackgroundMusicPreload["']|href=["'][^"']*%E6%88%91%E7%9A%84%E6%A2%A6[^"']*["'][^>]*\bas=["']audio["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '');
+
+  /*
+   * Some generated pages concatenate another script and the old music script
+   * on one line. Remove only the matching script element wherever it appears;
+   * do not consume adjacent whitespace or the neighbouring script element.
+   */
+  cleaned = cleaned.replace(
+    /<script\b[^>]*(?:id=["']qilyBackgroundMusicScript["']|data-qily-background-music=["'][^"']+["']|src=["'][^"']*\/homepage-music(?:-v5)?\.js(?:\?v=[^"']*)?["'])[^>]*>[ \t\r\n]*<\/script>/gi,
+    ''
+  );
 
   return cleaned;
 }
