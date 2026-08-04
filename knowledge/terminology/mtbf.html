@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MTBF｜平均故障间隔时间｜单点培训课件｜QilyLean</title>
+<meta name="description" content="MTBF平均故障间隔时间中文诠释与制造现场应用：统一故障边界、计算设备连续稳定运行能力，并与MTTR、OEE和重复故障率联合分析。">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://qilylean.com/knowledge/terminology/mtbf.html">
+<style>
+:root{--forest:#0f4b5a;--teal:#178b94;--ink:#182420;--muted:#526b69;--line:#c8dad8;--paper:#eef7f5;--gold:#caa15f}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}.hero{padding:clamp(28px,6vw,64px) clamp(18px,6vw,76px);color:#fff;background:linear-gradient(135deg,var(--forest),var(--teal))}.inner{width:min(1180px,100%);margin:auto}.hero small{font-weight:900;letter-spacing:.1em}.hero h1{margin:8px 0 10px;font-size:clamp(34px,5vw,58px);line-height:1.12}.hero p{max-width:920px;margin:0;color:#e6f5f3;font-size:18px;line-height:1.75}.hero nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.hero a{display:inline-flex;min-height:44px;align-items:center;padding:9px 15px;border:1px solid rgba(255,255,255,.75);border-radius:999px;color:#fff;font-weight:900;text-underline-offset:.25em}main{width:min(1180px,calc(100% - 28px));margin:22px auto 40px}.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.meta div,.block{padding:18px;border:1px solid var(--line);background:#fff}.meta span{display:block;color:var(--teal);font-size:12px;font-weight:900;letter-spacing:.06em}.meta strong{display:block;margin-top:6px;color:var(--forest);font-size:18px}.objective{margin:16px 0;padding:18px 20px;border-left:5px solid var(--gold);background:#fff8e8;color:#3d4c47;line-height:1.75}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.block h2{margin:0 0 10px;color:var(--forest);font-size:21px}.block p,.block li{color:#465b58;font-size:16px;line-height:1.78}.block ul,.block ol{margin:0;padding-left:1.35em}.wide{grid-column:1/-1}.formula{padding:14px 16px;border-left:4px solid var(--teal);background:#edf7f6;color:#263b37!important;font-weight:800}.role-table{width:100%;border-collapse:collapse}.role-table th,.role-table td{padding:12px;border:1px solid var(--line);text-align:left;vertical-align:top}.role-table th{color:#fff;background:var(--forest)}.footer{display:flex;justify-content:space-between;gap:18px;margin-top:18px;padding:16px 0;border-top:1px solid var(--line);color:var(--muted);font-size:13px;line-height:1.6}@media(max-width:760px){.meta,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.role-table{font-size:14px}.footer{flex-direction:column}}@media print{body{display:none!important}}
+</style>
+<script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>
+<link rel="stylesheet" href="/site-shell.css?v=20260729-no-old-flash-v1">
+<link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5">
+<link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260729-fluid-copy-v5">
+<link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
+<link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="/site-link-standard-v2.css?v=20260803-nav-four-border-v6">
+<link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2">
+<link id="qilyNumberBadgeContrastStylesheet" rel="stylesheet" href="/site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1">
+<link id="qilyInteractiveHoverContrastStylesheet" rel="stylesheet" href="/site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v1">
+<link id="qilyBackgroundMusicPreload" rel="preload" href="/%E6%88%91%E7%9A%84%E6%A2%A6%EF%BC%88%E5%BC%A0%E9%9D%93%E9%A2%96%EF%BC%89.mp3" as="audio" type="audio/mpeg">
+<script defer id="qilyBackgroundMusicScript" data-qily-background-music="v5" src="/homepage-music-v5.js?v=20260804-continuity-v5"></script>
+<script defer id="qilyPersistentMusicNavigationScript" data-qily-persistent-music-navigation="v1" src="/site-music-persistent-navigation-v1.js?v=20260804-persistent-music-nav-v1"></script>
+<script defer src="/site-navigation.js?v=20260804-sitewide-clarity-v2"></script>
+</head>
+<body>
+<header class="hero"><div class="inner"><small>ONE POINT LESSON · EQUIPMENT RELIABILITY</small><h1>MTBF｜平均故障间隔时间</h1><p>Mean Time Between Failures用于衡量可修复设备两次故障之间的平均稳定运行时间。它回答的不是“修了多少次”，而是设备能连续稳定运行多久、同类故障是否真正减少。</p><nav><a href="/knowledge/terminology.html?term=MTBF">返回术语词典</a><a href="/qilylean/daily/2026-08-05.html">查看设备可靠性简报</a><a href="/knowledge/terminology/mttr.html">关联学习MTTR</a></nav></div></header>
+<main>
+<section class="meta"><div><span>术语代码</span><strong>MTBF</strong></div><div><span>英文全称</span><strong>Mean Time Between Failures</strong></div><div><span>中文名称</span><strong>平均故障间隔时间</strong></div><div><span>适用领域</span><strong>设备可靠性／计划保全</strong></div></section>
+<section class="objective"><strong>培训目标：</strong>能够统一故障与运行时间边界，正确计算MTBF，识别数字被“漏记短停、合并故障、缩小统计范围”人为美化的风险，并把指标转化为重复故障与预防维护改善。</section>
+<section class="grid">
+<article class="block"><h2>1. 核心定义</h2><p>MTBF是可修复设备在统计周期内的总运行时间除以故障次数。数值越大，表示两次故障之间的平均稳定运行时间越长。它适合观察同一设备或同类设备在相同口径下的可靠性趋势。</p></article>
+<article class="block"><h2>2. 计算公式</h2><p class="formula">MTBF＝统计周期内设备有效运行时间 ÷ 故障次数。</p><p>运行时间、计划停机、换型、待料、微停和故障的边界必须预先统一；不同口径的MTBF不能直接比较。</p></article>
+<article class="block wide"><h2>3. 数据边界</h2><table class="role-table"><thead><tr><th>项目</th><th>建议口径</th><th>风险</th></tr></thead><tbody><tr><td>故障开始</td><td>设备不能按批准节拍、参数或质量要求继续生产</td><td>只记录完全停机，漏掉反复复位与降速</td></tr><tr><td>故障次数</td><td>按批准的故障代码和事件边界独立计数</td><td>将多次复发合并为一张工单</td></tr><tr><td>运行时间</td><td>采用设备实际具备生产能力并运行的时间</td><td>把待料、计划停机或空闲时间全部加入分子</td></tr><tr><td>比较对象</td><td>同设备、同工况、同产品条件或已说明差异</td><td>跨设备直接排名而不考虑负荷与环境</td></tr></tbody></table></article>
+<article class="block"><h2>4. 使用场景</h2><ul><li>识别关键设备可靠性趋势；</li><li>评价预防维护、改造和部件升级效果；</li><li>寻找重复故障与薄弱部位；</li><li>确定关键备件、点检和保养策略；</li><li>与MTTR、OEE及重复故障率联合评审。</li></ul></article>
+<article class="block"><h2>5. 常见误区</h2><ul><li>为提升数字而不记录短停和人工复位；</li><li>把同一故障多次复发合并成一次；</li><li>统计周期太短，单次偶然事件造成剧烈波动；</li><li>只要求MTBF上升，却不追踪具体失效模式；</li><li>跨不同设备负荷直接比较绝对值。</li></ul></article>
+<article class="block wide"><h2>6. 现场案例</h2><p>某送料设备一个月有效运行480小时，记录8次符合故障定义的停机，MTBF为60小时。改善后连续两个月分别运行500小时与520小时，各发生4次故障，MTBF提升到125小时和130小时。只有故障代码、产品条件和记录边界保持一致，并确认同类故障未被改名或漏记，才能判定可靠性真正提升。</p></article>
+<article class="block"><h2>7. 管理动作</h2><ol><li>建立故障代码和时间边界；</li><li>按设备与失效模式形成Pareto；</li><li>针对重复故障做根因与永久措施；</li><li>把结果更新到点检、保养、备件和技术标准；</li><li>持续观察MTBF趋势与复发周期。</li></ol></article>
+<article class="block"><h2>8. 培训确认题</h2><ol><li>MTBF的分子和分母分别是什么？</li><li>为什么漏记微停会使MTBF失真？</li><li>MTBF上升后还要检查哪些质量与产能结果？</li><li>MTBF与MTTR为什么必须成对观察？</li></ol></article>
+</section>
+<div class="footer"><span>QilyLean｜启力精益 · 制造工程单点培训</span><span>在线阅读版｜关闭打印与PDF保存</span></div>
+</main>
+</body>
+</html>
