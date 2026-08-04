@@ -1,4 +1,4 @@
-name: Publish core-service and additive-dock closure
+name: Publish core-service and exact-dock closure
 
 on:
   pull_request:
@@ -31,7 +31,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: qily-core-service-additive-dock-closure
+  group: qily-core-service-exact-dock-closure
   cancel-in-progress: false
 
 jobs:
@@ -47,27 +47,32 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Validate closure assets and preserve every original dock action
+      - name: Validate exact dock order, wording and preserved functions
         shell: bash
         run: |
           node --check site-core-service-dock-closure-v1.js
           node --check site-navigation-core.js
           node --check scripts/publish-core-service-dock-closure.js
-          grep -q 'data-action=.top' site-core-service-dock-closure-v1.js
-          grep -q 'insertBefore(top,home.nextSibling)' site-core-service-dock-closure-v1.js
           grep -q 'service-number' site-core-service-dock-closure-v1.css
           grep -q 'scope-list' site-core-service-dock-closure-v1.css
           for action in home search back current share contact; do
             grep -q "data-action=\\\"$action\\\"" site-navigation-core.js
           done
-          if grep -q 'button.remove' site-core-service-dock-closure-v1.js; then
-            echo 'Additive dock closure must not remove original buttons.' >&2
-            exit 1
-          fi
-          if grep -Eq "\['shareMask','wxMask'\].*remove" site-core-service-dock-closure-v1.js; then
-            echo 'Additive dock closure must not remove original modal functions.' >&2
-            exit 1
-          fi
+          node - <<'NODE'
+          const fs=require('fs');
+          const source=fs.readFileSync('site-core-service-dock-closure-v1.js','utf8');
+          const required=[
+            "var order=['home','top','back','search','current','share','contact'];",
+            "top:{html:'回<br>顶部',aria:'回顶部'}",
+            "back:{html:'回<br>上一层',aria:'回上一层'}",
+            "current:{html:'分享<br>当前页',aria:'分享当前页'}",
+            "share:{html:'分享<br>官网',aria:'分享官网'}"
+          ];
+          required.forEach(item=>{if(!source.includes(item))throw new Error('Dock rule missing: '+item);});
+          if(source.includes('返回<br>上一层'))throw new Error('Obsolete wording “返回上一层” remains in closure.');
+          if(source.includes("share:{html:'分享',"))throw new Error('Share label must explicitly say 分享官网.');
+          if(source.includes('button.remove'))throw new Error('Exact dock closure must not remove original buttons.');
+          NODE
       - name: Install closure in all public pages
         run: node scripts/publish-core-service-dock-closure.js
       - name: Verify repeatability and page coverage
@@ -80,9 +85,9 @@ jobs:
           node - <<'NODE'
           const fs=require('fs'),path=require('path');
           const failures=[];
-          function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){if(['.git','node_modules','.cache'].includes(e.name))continue;const f=path.join(dir,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith('.html')){const h=fs.readFileSync(f,'utf8');if(/<\/head>/i.test(h)&&(!h.includes('site-core-service-dock-closure-v1.css?v=20260804-core-service-dock-v2')||!h.includes('site-core-service-dock-closure-v1.js?v=20260804-core-service-dock-v2')))failures.push(path.relative(process.cwd(),f));}}}
+          function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){if(['.git','node_modules','.cache'].includes(e.name))continue;const f=path.join(dir,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith('.html')){const h=fs.readFileSync(f,'utf8');if(/<\/head>/i.test(h)&&(!h.includes('site-core-service-dock-closure-v1.css?v=20260804-core-service-dock-v3')||!h.includes('site-core-service-dock-closure-v1.js?v=20260804-core-service-dock-v3')))failures.push(path.relative(process.cwd(),f));}}}
           walk(process.cwd());
-          if(failures.length)throw new Error('Closure missing: '+failures.slice(0,40).join(', '));
+          if(failures.length)throw new Error('Exact dock closure missing: '+failures.slice(0,40).join(', '));
           NODE
           git diff --check
       - name: Commit materialized public pages
@@ -90,12 +95,12 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All pages already use the current additive dock closure."
+            echo "All pages already use the exact seven-item dock closure."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: publish restored dock with additive back-to-top [skip ci]"
+          git commit -m "fix: publish exact floating dock order and wording [skip ci]"
           git pull --rebase origin main
           git push origin main

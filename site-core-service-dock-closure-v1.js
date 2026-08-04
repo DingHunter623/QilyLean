@@ -1,8 +1,8 @@
-/* QilyLean 三大核心业务对齐与悬浮入口增补闭环｜2026-08-04 */
+/* QilyLean 三大核心业务对齐与悬浮入口精确排序闭环｜2026-08-04 */
 (function(d,w){
   'use strict';
-  if(w.__qilyCoreServiceDockClosureV2)return;
-  w.__qilyCoreServiceDockClosureV2=true;
+  if(w.__qilyCoreServiceDockClosureV3)return;
+  w.__qilyCoreServiceDockClosureV3=true;
 
   function groupByVisualRow(nodes){
     var rows=[];
@@ -41,28 +41,21 @@
     });
   }
 
-  function addBackToTop(){
-    var dock=d.getElementById('floatDock');
-    if(!dock)return;
-
-    var home=dock.querySelector('[data-action="home"]');
+  function ensureBackToTop(dock){
     var top=dock.querySelector('[data-action="top"]');
     if(!top){
       top=d.createElement('button');
       top.type='button';
       top.className='qily-float-btn qily-float-top';
       top.setAttribute('data-action','top');
-      top.setAttribute('aria-label','回到页面顶部');
-      top.innerHTML='回到<br>顶部';
     }
+    top.setAttribute('aria-label','回顶部');
+    top.setAttribute('title','回顶部');
+    top.innerHTML='回<br>顶部';
+    return top;
+  }
 
-    /* 只在“首页”后新增“回顶部”，不得删除、替换或重排任何原有功能。 */
-    if(home&&home.parentNode===dock){
-      dock.insertBefore(top,home.nextSibling);
-    }else if(top.parentNode!==dock){
-      dock.insertBefore(top,dock.firstChild);
-    }
-
+  function bindBackToTop(top){
     if(top.dataset.qilyBound==='1')return;
     top.dataset.qilyBound='1';
     var startY=0;
@@ -75,7 +68,35 @@
     },true);
   }
 
-  function apply(){alignCoreServices();addBackToTop();}
+  function normalizeDock(){
+    var dock=d.getElementById('floatDock');
+    if(!dock)return;
+
+    var top=ensureBackToTop(dock);
+    var labels={
+      home:{html:'首页',aria:'首页'},
+      top:{html:'回<br>顶部',aria:'回顶部'},
+      back:{html:'回<br>上一层',aria:'回上一层'},
+      search:{html:'本站<br>搜索',aria:'本站搜索'},
+      current:{html:'分享<br>当前页',aria:'分享当前页'},
+      share:{html:'分享<br>官网',aria:'分享官网'},
+      contact:{html:'交流',aria:'交流'}
+    };
+    var order=['home','top','back','search','current','share','contact'];
+
+    order.forEach(function(action){
+      var button=action==='top'?top:dock.querySelector('[data-action="'+action+'"]');
+      if(!button)return;
+      button.innerHTML=labels[action].html;
+      button.setAttribute('aria-label',labels[action].aria);
+      button.setAttribute('title',labels[action].aria);
+      dock.appendChild(button);
+    });
+
+    bindBackToTop(top);
+  }
+
+  function apply(){alignCoreServices();normalizeDock();}
 
   var queued=false;
   function queue(){
