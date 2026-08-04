@@ -16,6 +16,10 @@ on:
       - "site-navigation.js"
       - "site-parent-navigation-v3.js"
       - "scripts/publish-global-link-standard.js"
+      - "scripts/sync-daily-index-source.js"
+      - "scripts/build-site-metadata.js"
+      - "scripts/apply-integrity-upgrade.js"
+      - "scripts/build-trust-search-sync.js"
       - ".github/workflows/publish-global-link-standard.yml"
   workflow_run:
     workflows: ["Finalize static public pages"]
@@ -35,7 +39,7 @@ jobs:
       (github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success') &&
       (github.event_name != 'push' || github.actor != 'github-actions[bot]')
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - uses: actions/checkout@v4
@@ -47,13 +51,24 @@ jobs:
         with:
           node-version: 20
 
+      - name: Refresh daily index, unified metadata and generated search
+        run: |
+          node scripts/sync-daily-index-source.js
+          node scripts/build-site-metadata.js
+          node scripts/apply-integrity-upgrade.js
+          node scripts/build-trust-search-sync.js
+
       - name: Publish final navigation, service boundaries and visual closure
         run: node scripts/publish-global-link-standard.js
 
-      - name: Validate parent routes, V2 closure, service boundaries and evidence metadata
+      - name: Validate current routes, fresh clarity assets, service boundaries and live metadata
         shell: bash
         run: |
           node --check scripts/publish-global-link-standard.js
+          node --check scripts/sync-daily-index-source.js
+          node --check scripts/build-site-metadata.js
+          node --check scripts/apply-integrity-upgrade.js
+          node --check scripts/build-trust-search-sync.js
           node --check site-navigation.js
           node --check site-parent-navigation-v3.js
           node --check site-visual-closure-v1.js
@@ -66,6 +81,7 @@ jobs:
           grep -q 'var shouldNavigate=!pointer.moved' site-parent-navigation-v3.js
           grep -q "data-action=\"back\"" site-navigation.js
           grep -q 'qilyBoundaryLinksClosureStylesheet' site-navigation.js
+          grep -q 'site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2' site-navigation.js
 
           grep -q 'border-top-color:var(--qily-nav-border-hover)' site-navigation-four-border-v3.css
           grep -q 'border-right-color:var(--qily-nav-border-hover)' site-navigation-four-border-v3.css
@@ -82,13 +98,15 @@ jobs:
           grep -q '基线、试点与收益边界' cooperation/index.html
           grep -q '标准、内容与实施边界' cooperation/index.html
           grep -q '不替代具备相应资质单位出具的施工图' cooperation/index.html
+          grep -q 'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2' cooperation/index.html
+          grep -q 'site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2' cooperation/index.html
           grep -q 'site-visual-closure-v2.css?v=20260803-boundary-links-v2' cooperation/index.html
           grep -q 'site-visual-closure-v2.js?v=20260803-boundary-links-v2' links/index.html
           grep -q '#companyGrid .card' site-visual-closure-v2.css
           grep -q 'enhanceLinkCards' site-visual-closure-v2.js
+          grep -q 'qilySitewideClarityStyleV2' site-visual-closure-v1.js
+          grep -q 'syncDailyMetadata' site-visual-closure-v1.js
 
-          grep -q '2582 期' knowledge/index.html
-          grep -q '最新更新至 2026-08-03' knowledge/index.html
           grep -q '<h1>某制造企业｜2022年度制造改善项目佐证资料</h1>' projects/lean-improvement-evidence/index.html
           grep -q 'data-evidence-revision="20260803-context-v3"' projects/lean-improvement-evidence/index.html
 
@@ -97,6 +115,19 @@ jobs:
           const path = require('path');
           const root = process.cwd();
           const failures = [];
+          const briefs = JSON.parse(fs.readFileSync('qilylean/daily/index.json','utf8'));
+          if (!Array.isArray(briefs) || !briefs.length) throw new Error('Daily index is empty.');
+          const sorted = briefs.slice().sort((a,b) => String(b.date || '').localeCompare(String(a.date || '')));
+          const latest = sorted[0];
+          const siteData = JSON.parse(fs.readFileSync('qilylean/site-data.json','utf8'));
+          const knowledge = fs.readFileSync('knowledge/index.html','utf8');
+          const home = fs.readFileSync('index.html','utf8');
+          if (siteData.briefs.total !== sorted.length) throw new Error(`Site-data brief total is stale; expected ${sorted.length}.`);
+          if (siteData.briefs.latestDate !== latest.date) throw new Error(`Site-data latest date is stale; expected ${latest.date}.`);
+          if (!knowledge.includes(`${sorted.length} 期`)) throw new Error(`Knowledge brief total is stale; expected ${sorted.length}.`);
+          if (!knowledge.includes(`最新更新至 ${latest.date}`)) throw new Error(`Knowledge latest date is stale; expected ${latest.date}.`);
+          if (!home.includes(`${sorted.length}期`)) throw new Error(`Homepage brief total is stale; expected ${sorted.length}.`);
+          if (!home.includes(latest.date)) throw new Error(`Homepage latest date is stale; expected ${latest.date}.`);
 
           function walk(dir) {
             for (const entry of fs.readdirSync(dir, {withFileTypes:true})) {
@@ -107,12 +138,12 @@ jobs:
                 const html = fs.readFileSync(full, 'utf8');
                 if (!/<\/head>/i.test(html)) continue;
                 const relative = path.relative(root, full);
-                if (!html.includes('site-navigation.js?v=20260803-boundary-links-v2')) failures.push(relative + ':navigation');
+                if (!html.includes('site-navigation.js?v=20260804-sitewide-clarity-v2')) failures.push(relative + ':navigation');
                 if (!html.includes('site-link-standard-v2.css?v=20260803-nav-four-border-v6')) failures.push(relative + ':links');
                 if (!html.includes('site-navigation-four-border-v3.css?v=20260803-four-border-v3')) failures.push(relative + ':four-border');
                 if (!html.includes('site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2')) failures.push(relative + ':contrast');
-                if (!html.includes('site-visual-closure-v1.css?v=20260803-visual-closure-v1')) failures.push(relative + ':closure-v1-css');
-                if (!html.includes('site-visual-closure-v1.js?v=20260803-visual-closure-v1')) failures.push(relative + ':closure-v1-js');
+                if (!html.includes('site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2')) failures.push(relative + ':closure-v1-css');
+                if (!html.includes('site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2')) failures.push(relative + ':closure-v1-js');
                 if (!html.includes('site-visual-closure-v2.css?v=20260803-boundary-links-v2')) failures.push(relative + ':closure-v2-css');
                 if (!html.includes('site-visual-closure-v2.js?v=20260803-boundary-links-v2')) failures.push(relative + ':closure-v2-js');
               }
@@ -121,7 +152,7 @@ jobs:
 
           walk(root);
           if (failures.length) {
-            throw new Error('Pages missing final navigation or visual closure assets: ' + failures.slice(0,30).join(', '));
+            throw new Error('Pages missing current navigation or visual closure assets: ' + failures.slice(0,30).join(', '));
           }
 
           const search = JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
@@ -131,16 +162,16 @@ jobs:
           }
           NODE
 
-      - name: Commit final boundary and link-card publication
+      - name: Commit current sitewide clarity, metadata and navigation publication
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All pages already use the final V2 boundaries, navigation and link-card contrast standards."
+            echo "All pages already use current metadata, sitewide clarity, V2 boundaries, navigation and link-card standards."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: publish final boundary and link-card closure [skip ci]"
+          git commit -m "fix: publish current metadata sitewide clarity and navigation closure [skip ci]"
           git pull --rebase origin main
           git push origin main
