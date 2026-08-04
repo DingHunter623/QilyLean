@@ -15,10 +15,13 @@ on:
       - "scripts/normalize-daily-quality-label.js"
       - "scripts/enforce-productivity-theme-alias.js"
       - "scripts/enhance-daily-archive.js"
+      - "scripts/publish-equipment-reliability-terminology.js"
       - "scripts/publish-number-badge-contrast.js"
       - "scripts/materialize-static-core-pages.js"
       - "cooperation/index.html"
       - "links/index.html"
+      - "knowledge/terminology.html"
+      - "knowledge/terminology/*.html"
       - "qilylean/daily/*.html"
   workflow_dispatch:
 
@@ -51,6 +54,7 @@ jobs:
           node --check scripts/enforce-productivity-theme-alias.js
           node --check scripts/build-daily-archive.js
           node --check scripts/enhance-daily-archive.js
+          node --check scripts/publish-equipment-reliability-terminology.js
           node --check scripts/validate-daily-archive.js
           node --check scripts/publish-number-badge-contrast.js
 
@@ -64,6 +68,7 @@ jobs:
       - name: Rebuild complete Daily Engineering Brief archive
         run: |
           node scripts/build-daily-archive.js
+          node scripts/publish-equipment-reliability-terminology.js
           node scripts/enhance-daily-archive.js
           node scripts/enhance-terminology-training.js
           node scripts/normalize-daily-quality-label.js
@@ -110,6 +115,12 @@ jobs:
           grep -q "data-latest-brief-date=\"$LATEST_DATE\"" knowledge/index.html
           grep -q 'site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
           grep -q 'site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
+          grep -q '<div class="term-code">MTBF</div>' knowledge/terminology.html
+          grep -q '<div class="term-code">MTTR</div>' knowledge/terminology.html
+          grep -q '<h1>MTBF｜平均故障间隔时间</h1>' knowledge/terminology/mtbf.html
+          grep -q '<h1>MTTR｜平均修复时间</h1>' knowledge/terminology/mttr.html
+          grep -q 'knowledge/terminology/mtbf.html' qilylean/site-search-index.json
+          grep -q 'knowledge/terminology/mttr.html' qilylean/site-search-index.json
 
           # 专项质量贯穿保留在8月4日简报，不要求后续每期重复相同主题。
           grep -q 'data-quality-throughline="2026-08-04"' qilylean/daily/2026-08-04.html
@@ -142,10 +153,15 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add \
+            index.html \
             cooperation/index.html \
             links/index.html \
             knowledge/index.html \
             knowledge/terminology.html \
+            knowledge/terminology/mtbf.html \
+            knowledge/terminology/mttr.html \
+            qilylean/site-data.json \
+            qilylean/site-search-index.json \
             qilylean/daily-insights.html \
             qilylean/daily/index.json \
             qilylean/daily/*.html \
@@ -153,7 +169,8 @@ jobs:
             qilylean/assets/daily-*.svg \
             scripts/enhance-daily-archive.js \
             scripts/materialize-static-core-pages.js \
-            sitemap.xml
-          git commit -m "build: publish quality closure with current daily brief [skip ci]"
+            sitemap.xml \
+            sitemap-core.xml
+          git commit -m "build: publish reliability brief and terminology [skip ci]"
           git pull --rebase origin main
           git push origin main
