@@ -53,16 +53,22 @@ jobs:
       - name: Materialize VI and final visual closure into every HTML page
         run: node scripts/emergency-materialize-vi.js
 
+      - name: Normalize navigation cache version after legacy materialization
+        shell: bash
+        run: |
+          find . -type f -name '*.html' -not -path './.git/*' -print0 | xargs -0 sed -i 's#site-navigation.js?v=20260803-boundary-links-v2#site-navigation.js?v=20260804-sitewide-clarity-v2#g'
+
       - name: Verify boundary-specific content, fresh clarity assets and link-card contrast
         shell: bash
         run: |
-          grep -R -q '<script defer src="/site-navigation.js?v=20260803-boundary-links-v2"' --include='*.html' .
+          grep -R -q '<script defer src="/site-navigation.js?v=20260804-sitewide-clarity-v2"' --include='*.html' .
           grep -R -q 'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2' --include='*.html' .
           grep -R -q 'site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2' --include='*.html' .
           grep -R -q 'site-visual-closure-v2.css?v=20260803-boundary-links-v2' --include='*.html' .
           grep -R -q 'site-visual-closure-v2.js?v=20260803-boundary-links-v2' --include='*.html' .
           grep -q 'qilySitewideClarityStyleV2' site-visual-closure-v1.js
           grep -q 'syncDailyMetadata' site-visual-closure-v1.js
+          grep -q 'site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2' site-navigation.js
           grep -q '三类项目合作边界' cooperation/index.html
           grep -q '新工厂／新产线规划' cooperation/index.html
           grep -q '不替代具备相应资质单位出具的施工图' cooperation/index.html
