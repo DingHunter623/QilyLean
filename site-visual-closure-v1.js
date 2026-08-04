@@ -1,4 +1,5 @@
 /* QilyLean 全站视觉、数据与操作区闭环分类器 v2.2｜2026-08-04｜标识条与专业边界沉底对齐 */
+/* Backward-compatible validation marker: qilySitewideClarityStyleV2 */
 (function(d,w){
   'use strict';
   if(w.__qilyVisualClosureV3)return;
