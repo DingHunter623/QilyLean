@@ -1,0 +1,87 @@
+/* QilyLean 三大核心业务可读性、同排对齐与悬浮入口精简规范｜2026-08-04 */
+
+/* 01／02／03：高对比实底白字，禁止透明度和同色叠加。 */
+html body .cooperation-page #services .service-number,
+html body #services .service-card .service-number {
+  display:inline-grid!important;
+  place-items:center!important;
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  min-height:42px!important;
+  margin:0 0 14px!important;
+  border:3px solid #ffffff!important;
+  border-radius:50%!important;
+  color:#ffffff!important;
+  background:#075767!important;
+  box-shadow:0 0 0 3px #178b94,0 5px 13px rgba(7,60,71,.22)!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  -webkit-text-fill-color:#ffffff!important;
+  text-shadow:none!important;
+  font-size:16px!important;
+  font-weight:950!important;
+  line-height:1!important;
+}
+
+/* 三大核心业务卡片同排拉齐，各语义区块由脚本按实际内容动态对齐。 */
+html body .cooperation-page #services .module-grid.three {
+  align-items:stretch!important;
+  gap:20px!important;
+}
+html body .cooperation-page #services .service-card {
+  display:flex!important;
+  flex-direction:column!important;
+  align-self:stretch!important;
+  height:100%!important;
+}
+html body .cooperation-page #services .service-heading-link,
+html body .cooperation-page #services .service-card>p,
+html body .cooperation-page #services .scope-list,
+html body .cooperation-page #services .service-card>.module-result,
+html body .cooperation-page #services .service-contract {
+  box-sizing:border-box!important;
+}
+html body .cooperation-page #services .scope-list {
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-auto-rows:1fr!important;
+  gap:12px!important;
+  margin-top:18px!important;
+  margin-bottom:16px!important;
+}
+html body .cooperation-page #services .scope-list span {
+  display:flex!important;
+  align-items:center!important;
+  min-height:50px!important;
+  padding:11px 13px!important;
+  border:1px solid #c8dad8!important;
+  color:#294e50!important;
+  background:#f7fbfa!important;
+  line-height:1.4!important;
+}
+html body .cooperation-page #services .service-card>.module-result {
+  margin-top:auto!important;
+  margin-bottom:16px!important;
+  padding:14px 16px!important;
+}
+html body .cooperation-page #services .service-contract {
+  margin-top:0!important;
+}
+
+/* 悬浮栏仅保留：首页、回顶部、本站搜索。 */
+html body #floatDock.qily-float-dock .qily-float-top {
+  color:#ffffff!important;
+  background:#0f6570!important;
+  border-color:rgba(255,255,255,.8)!important;
+}
+html body #floatDock.qily-float-dock .qily-float-top:hover,
+html body #floatDock.qily-float-dock .qily-float-top:focus-visible {
+  color:#ffffff!important;
+  background:#073c47!important;
+}
+
+@media(max-width:820px){
+  html body .cooperation-page #services .scope-list{grid-template-columns:1fr!important}
+}
