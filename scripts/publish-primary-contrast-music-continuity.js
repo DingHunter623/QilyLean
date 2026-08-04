@@ -14,6 +14,7 @@ const MUSIC_SRC = `/homepage-music-v5.js?v=${MUSIC_VERSION}`;
 const cssTag = `  <link id="qilyHeroPrimaryContrastStylesheet" rel="stylesheet" href="${CSS_HREF}">`;
 const preloadTag = `  <link id="qilyBackgroundMusicPreload" rel="preload" href="${AUDIO_SRC}" as="audio" type="audio/mpeg">`;
 const musicTag = `  <script defer id="qilyBackgroundMusicScript" data-qily-background-music="v5" src="${MUSIC_SRC}"></script>`;
+const managedAssets = `${cssTag}\n${preloadTag}\n${musicTag}`;
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');
@@ -46,10 +47,25 @@ function isPublicPage(html) {
   return /site-navigation\.js\?v=/i.test(html) || /homepage-music(?:-v5)?\.js(?:\?v=)?/i.test(html);
 }
 
+function insertBeforeDockOrHead(html) {
+  /*
+   * The exact-dock publisher owns the final position before </head>. Place the
+   * contrast/music block immediately before that stable dock block so the two
+   * independent publishers never keep swapping the last position or growing
+   * whitespace on repeated runs.
+   */
+  const dockNeedle = '<link id="qilyCoreServiceDockClosureStylesheet"';
+  const dockIndex = html.indexOf(dockNeedle);
+  if (dockIndex >= 0) {
+    const lineStart = html.lastIndexOf('\n', dockIndex) + 1;
+    return html.slice(0, lineStart) + managedAssets + '\n' + html.slice(lineStart);
+  }
+  return html.replace(/<\/head>/i, `${managedAssets}\n</head>`);
+}
+
 function install(html) {
   if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html) || !isPublicPage(html)) return html;
-  const cleaned = removeManagedAssets(html);
-  return cleaned.replace(/<\/head>/i, `${cssTag}\n${preloadTag}\n${musicTag}\n</head>`);
+  return insertBeforeDockOrHead(removeManagedAssets(html));
 }
 
 function verifySourceContracts() {
@@ -97,6 +113,9 @@ function main() {
     if (!html.includes(MUSIC_SRC)) throw new Error(`${relative} missing background-music v5 asset.`);
     if (!html.includes(`href="${AUDIO_SRC}"`)) throw new Error(`${relative} missing early audio preload.`);
     if (/homepage-music\.js(?:\?v=)?/i.test(html)) throw new Error(`${relative} still loads legacy music bootstrap.`);
+    const contrastIndex = html.indexOf(CSS_HREF);
+    const dockIndex = html.indexOf('qilyCoreServiceDockClosureStylesheet');
+    if (dockIndex >= 0 && contrastIndex > dockIndex) throw new Error(`${relative} managed assets must remain before dock closure assets.`);
   });
 
   process.stdout.write(`Primary-button contrast and music continuity materialized in ${checked} public pages; refreshed ${changed}.\n`);
