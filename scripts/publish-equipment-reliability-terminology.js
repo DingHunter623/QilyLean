@@ -31,14 +31,22 @@ const termCards = `
   <p><a class="term-training-link" href="/knowledge/terminology/mttr.html">单点培训课件｜MTTR平均修复时间</a></p>
 </article>`;
 
+const reliabilitySection = `
+<section class="module-section" id="equipment-reliability-terms" data-equipment-reliability-terms="2026-08-05">
+  <div class="module-inner">
+    <div class="module-heading"><h2>设备可靠性与维修能力</h2><p>用于故障间隔、完整修复周期、重复故障与设备损失改善</p></div>
+    <div class="term-grid">${termCards}
+    </div>
+  </div>
+</section>`;
+
 function updateTerminologyPage() {
   const file = 'knowledge/terminology.html';
   let html = read(file);
   if (!html.includes('<div class="term-code">MTBF</div>')) {
-    const anchorPattern = /<article\s+class="term-card"\s+data-term-card>\s*<div\s+class="term-code">UPPH<\/div>/i;
-    const match = html.match(anchorPattern);
-    if (!match) throw new Error('Unable to find UPPH terminology-card insertion anchor.');
-    html = html.replace(anchorPattern, `${termCards}\n${match[0]}`);
+    if (html.includes('</main>')) html = html.replace('</main>', `${reliabilitySection}\n</main>`);
+    else if (html.includes('</body>')) html = html.replace('</body>', `${reliabilitySection}\n</body>`);
+    else throw new Error('Unable to find a stable terminology-page section anchor.');
   }
   html = html
     .replace(/词典：\d+项中文诠释/g, `词典：${TOTAL}项中文诠释`)
