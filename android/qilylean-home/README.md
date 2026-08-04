@@ -11,6 +11,12 @@
 - 保留全部应用抽屉、系统设置和默认桌面切换；
 - 优化卡片密度与长标题排布，避免词组被拆成孤立单字换行。
 
+## 发布校验
+
+- APK：`QilyLean_Home_Universal_v2.0.apk`
+- SHA-256：`dc8ba9ddff239b5caf28ea933cce16f0720ad2a6e9ea2149ac02c71af80924b5`
+- 官网下载：`https://qilylean.com/QilyLean_Home_Universal_v2.0.apk`
+
 ## 安装
 
 1. 开启手机“开发者选项 → USB调试”；
