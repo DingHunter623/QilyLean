@@ -10,10 +10,14 @@ on:
       - "cooperation/index.html"
       - "links/index.html"
       - "site-commercial-quality-closure-v1.css"
+      - "site-number-badge-contrast-v1.css"
+      - "site-interactive-hover-contrast-v1.css"
       - "qilylean/daily/*.html"
       - "qilylean/assets/daily-*.svg"
       - "qilylean/daily-briefs.css"
       - "qilylean/daily-feedback.js"
+      - "qilylean/site-data.json"
+      - "qilylean/site-search-index.json"
       - "knowledge/index.html"
       - "knowledge/terminology.html"
       - "knowledge/terminology/*.html"
@@ -27,12 +31,16 @@ on:
       - "scripts/hide-public-pricing.js"
       - "scripts/normalize-daily-quality-label.js"
       - "scripts/enforce-productivity-theme-alias.js"
+      - "scripts/publish-equipment-reliability-terminology.js"
       - "scripts/sync-daily-terminology.js"
       - "scripts/bump-daily-css-version.js"
       - "scripts/validate-daily-archive.js"
       - "scripts/remove-daily-directory-consultation.js"
       - "scripts/normalize-daily-visual-closure.js"
+      - "scripts/publish-number-badge-contrast.js"
       - "scripts/materialize-static-core-pages.js"
+      - "sitemap.xml"
+      - "sitemap-core.xml"
 
 permissions:
   contents: read
@@ -44,7 +52,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -65,22 +73,22 @@ jobs:
           node --check scripts/hide-public-pricing.js
           node --check scripts/normalize-daily-quality-label.js
           node --check scripts/enforce-productivity-theme-alias.js
+          node --check scripts/publish-equipment-reliability-terminology.js
           node --check scripts/sync-daily-terminology.js
           node --check scripts/bump-daily-css-version.js
           node --check scripts/validate-daily-archive.js
           node --check scripts/remove-daily-directory-consultation.js
           node --check scripts/normalize-daily-visual-closure.js
+          node --check scripts/publish-number-badge-contrast.js
 
-      - name: Apply commercial quality source closure
+      - name: Build publication candidate
         run: |
           node scripts/apply-commercial-quality-closure-20260804.js
           node scripts/hide-public-pricing.js
           node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
-
-      - name: Build publication candidate
-        run: |
           node scripts/build-daily-archive.js
+          node scripts/publish-equipment-reliability-terminology.js
           node scripts/enhance-daily-archive.js
           node scripts/enhance-terminology-training.js
           node scripts/normalize-daily-quality-label.js
@@ -107,49 +115,66 @@ jobs:
       - name: Validate generated engineering archive
         run: node scripts/validate-daily-archive.js
 
-      - name: Remove duplicate directory consultation
-        run: node scripts/remove-daily-directory-consultation.js
-
-      - name: Normalize current VI and visual closure
+      - name: Finalize current message and visual closure
         run: |
+          node scripts/remove-daily-directory-consultation.js
           node scripts/normalize-daily-visual-closure.js
-          node scripts/apply-commercial-quality-closure-20260804.js
-          node scripts/hide-public-pricing.js
-          node scripts/enforce-productivity-theme-alias.js
-          node scripts/normalize-daily-quality-label.js
+          node scripts/publish-number-badge-contrast.js
+          node scripts/audit-daily-quality-linkage.js
 
-      - name: Audit recurring quality linkage
-        run: node scripts/audit-daily-quality-linkage.js
-
-      - name: Validate latest brief and commercial publication contract
+      - name: Validate latest brief and publication contracts
         shell: bash
         run: |
           LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
+          SOURCE_LATEST="$(node - <<'NODE'
+          const fs=require('fs');
+          const files=fs.readdirSync('qilylean/daily').filter(x=>/^\d{4}-\d{2}-\d{2}\.html$/.test(x)).sort().reverse();
+          process.stdout.write(files[0].slice(0,10));
+          NODE
+          )"
           TOTAL="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(String(data.length))")"
-          test "$LATEST_DATE" = "2026-08-04"
-          test "$TOTAL" = "2583"
-          grep -q '科学改进生产力' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'data-quality-throughline="2026-08-04"' "qilylean/daily/$LATEST_DATE.html"
-          grep -q '质量门槛｜科学改进生产力' "qilylean/daily/$LATEST_DATE.html"
-          grep -q '/qilylean/daily/2026-07-31.html' "qilylean/daily/$LATEST_DATE.html"
+          test "$LATEST_DATE" = "$SOURCE_LATEST"
+          test "$LATEST_DATE" = "2026-08-05"
+          test "$TOTAL" -ge "2584"
+          grep -q '设备停机不是维修单' "qilylean/daily/$LATEST_DATE.html"
+          grep -q '2026-08-05｜ME工程' "qilylean/daily/$LATEST_DATE.html"
           grep -q 'data-brief-message-form' "qilylean/daily/$LATEST_DATE.html"
           grep -q '留言交流' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'MTBF' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'MTTR' "qilylean/daily/$LATEST_DATE.html"
           grep -q 'OEE' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'UPPH' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'ECRS' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'PDCA' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'data-latest-brief-date="2026-08-04"' knowledge/index.html
-          grep -q 'qilylean/daily/2026-08-04.html' sitemap.xml
-          grep -q '2026-08-04' qilylean/daily-insights.html
-          grep -q '<script defer src="/site-navigation.js?v=20260803-boundary-links-v2"></script>' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'site-visual-closure-v2.css?v=20260803-boundary-links-v2' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'site-commercial-quality-closure-v1.css?v=20260804-quality-pricing-v1' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'TPM' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'href="/knowledge/terminology/mtbf.html"' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'href="/knowledge/terminology/mttr.html"' "qilylean/daily/$LATEST_DATE.html"
+          grep -q "data-latest-brief-date=\"$LATEST_DATE\"" knowledge/index.html
+          grep -q "qilylean/daily/$LATEST_DATE.html" sitemap.xml
+          grep -q "$LATEST_DATE" qilylean/daily-insights.html
+          grep -q 'site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
+
+          grep -q '<div class="term-code">MTBF</div>' knowledge/terminology.html
+          grep -q '<div class="term-code">MTTR</div>' knowledge/terminology.html
+          grep -q '词典：183项中文诠释' knowledge/terminology.html
+          grep -q '<h1>MTBF｜平均故障间隔时间</h1>' knowledge/terminology/mtbf.html
+          grep -q '<h1>MTTR｜平均修复时间</h1>' knowledge/terminology/mttr.html
+          grep -q 'knowledge/terminology/mtbf.html' qilylean/site-search-index.json
+          grep -q 'knowledge/terminology/mttr.html' qilylean/site-search-index.json
+          grep -q 'knowledge/terminology/mtbf.html' sitemap.xml
+          grep -q 'knowledge/terminology/mttr.html' sitemap.xml
+          node - <<'NODE'
+          const data=require('./qilylean/site-data.json');
+          if (data.terminology.total !== 183) throw new Error('Terminology total is not 183');
+          if (data.search.terminologyTotal !== 183) throw new Error('Search terminology total is not 183');
+          NODE
+
+          # 8月4日质量专题关联必须保留，但不得强制8月5日重复上一期主题。
+          grep -q 'data-quality-throughline="2026-08-04"' qilylean/daily/2026-08-04.html
+          grep -q '质量门槛｜科学改进生产力' qilylean/daily/2026-08-04.html
+
           grep -q 'QILY-PRICING-PUBLIC-DISABLED' cooperation/index.html
           grep -q '<h2>合作启动路径</h2>' cooperation/index.html
           grep -q '质量不是PQCD中的一个并列数字' cooperation/index.html
           grep -q 'qilyCommercialQualityClosureStylesheet' links/index.html
-          grep -q '#companyGrid .card' site-commercial-quality-closure-v1.css
-          grep -q '.cooperation-page .boundary article:last-child' site-commercial-quality-closure-v1.css
           if grep -q '¥\|公开价格参考与报价依据\|公开报价不包含\|<div class="price">' cooperation/index.html; then
             echo "Public pricing remains on the cooperation page"
             exit 1

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MTTR｜平均修复时间｜单点培训课件｜QilyLean</title>
+<meta name="description" content="MTTR平均修复时间中文诠释与制造现场应用：统一从故障发生到恢复合格生产的时间边界，改善响应、诊断、备件、维修和质量验证能力。">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<link rel="canonical" href="https://qilylean.com/knowledge/terminology/mttr.html">
+<style>
+:root{--forest:#0f4b5a;--teal:#178b94;--ink:#182420;--muted:#526b69;--line:#c8dad8;--paper:#eef7f5;--gold:#caa15f}
+*{box-sizing:border-box}body{margin:0;color:var(--ink);background:var(--paper);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}.hero{padding:clamp(28px,6vw,64px) clamp(18px,6vw,76px);color:#fff;background:linear-gradient(135deg,var(--forest),var(--teal))}.inner{width:min(1180px,100%);margin:auto}.hero small{font-weight:900;letter-spacing:.1em}.hero h1{margin:8px 0 10px;font-size:clamp(34px,5vw,58px);line-height:1.12}.hero p{max-width:920px;margin:0;color:#e6f5f3;font-size:18px;line-height:1.75}.hero nav{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}.hero a{display:inline-flex;min-height:44px;align-items:center;padding:9px 15px;border:1px solid rgba(255,255,255,.75);border-radius:999px;color:#fff;font-weight:900;text-underline-offset:.25em}main{width:min(1180px,calc(100% - 28px));margin:22px auto 40px}.meta{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.meta div,.block{padding:18px;border:1px solid var(--line);background:#fff}.meta span{display:block;color:var(--teal);font-size:12px;font-weight:900;letter-spacing:.06em}.meta strong{display:block;margin-top:6px;color:var(--forest);font-size:18px}.objective{margin:16px 0;padding:18px 20px;border-left:5px solid var(--gold);background:#fff8e8;color:#3d4c47;line-height:1.75}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.block h2{margin:0 0 10px;color:var(--forest);font-size:21px}.block p,.block li{color:#465b58;font-size:16px;line-height:1.78}.block ul,.block ol{margin:0;padding-left:1.35em}.wide{grid-column:1/-1}.formula{padding:14px 16px;border-left:4px solid var(--teal);background:#edf7f6;color:#263b37!important;font-weight:800}.role-table{width:100%;border-collapse:collapse}.role-table th,.role-table td{padding:12px;border:1px solid var(--line);text-align:left;vertical-align:top}.role-table th{color:#fff;background:var(--forest)}.footer{display:flex;justify-content:space-between;gap:18px;margin-top:18px;padding:16px 0;border-top:1px solid var(--line);color:var(--muted);font-size:13px;line-height:1.6}@media(max-width:760px){.meta,.grid{grid-template-columns:1fr}.wide{grid-column:auto}.role-table{font-size:14px}.footer{flex-direction:column}}@media print{body{display:none!important}}
+</style>
+<script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>
+<link rel="stylesheet" href="/site-shell.css?v=20260729-no-old-flash-v1">
+<link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5">
+<link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260729-fluid-copy-v5">
+<link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
+<link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="/site-link-standard-v2.css?v=20260803-nav-four-border-v6">
+<link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2">
+<link id="qilyNumberBadgeContrastStylesheet" rel="stylesheet" href="/site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1">
+<link id="qilyInteractiveHoverContrastStylesheet" rel="stylesheet" href="/site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v1">
+<link id="qilyBackgroundMusicPreload" rel="preload" href="/%E6%88%91%E7%9A%84%E6%A2%A6%EF%BC%88%E5%BC%A0%E9%9D%93%E9%A2%96%EF%BC%89.mp3" as="audio" type="audio/mpeg">
+<script defer id="qilyBackgroundMusicScript" data-qily-background-music="v5" src="/homepage-music-v5.js?v=20260804-continuity-v5"></script>
+<script defer id="qilyPersistentMusicNavigationScript" data-qily-persistent-music-navigation="v1" src="/site-music-persistent-navigation-v1.js?v=20260804-persistent-music-nav-v1"></script>
+<script defer src="/site-navigation.js?v=20260804-sitewide-clarity-v2"></script>
+</head>
+<body>
+<header class="hero"><div class="inner"><small>ONE POINT LESSON · EQUIPMENT MAINTAINABILITY</small><h1>MTTR｜平均修复时间</h1><p>Mean Time To Repair用于衡量故障发生后恢复合格生产所需的平均时间。它不只反映维修动作速度，还暴露响应、诊断、权限、备件、技术支持和质量确认等完整恢复链路的损失。</p><nav><a href="/knowledge/terminology.html?term=MTTR">返回术语词典</a><a href="/qilylean/daily/2026-08-05.html">查看设备可靠性简报</a><a href="/knowledge/terminology/mtbf.html">关联学习MTBF</a></nav></div></header>
+<main>
+<section class="meta"><div><span>术语代码</span><strong>MTTR</strong></div><div><span>英文全称</span><strong>Mean Time To Repair</strong></div><div><span>中文名称</span><strong>平均修复时间</strong></div><div><span>适用领域</span><strong>设备维修／恢复能力</strong></div></section>
+<section class="objective"><strong>培训目标：</strong>能够统一MTTR起止时间，区分响应等待、诊断、备件、修复、调试和质量验证等损失，避免只统计“扳手作业时间”而掩盖完整恢复周期。</section>
+<section class="grid">
+<article class="block"><h2>1. 核心定义</h2><p>MTTR是统计周期内全部故障修复时间除以故障次数。对于制造现场，建议将终点定义为恢复合格生产，而不是设备空运行、报警消除或维修人员离场。</p></article>
+<article class="block"><h2>2. 计算公式</h2><p class="formula">MTTR＝统计周期内从故障开始到恢复合格生产的总时间 ÷ 故障次数。</p><p>企业也可分别统计响应时间、诊断时间、等待备件时间和实际修复时间，但必须保留完整恢复时间。</p></article>
+<article class="block wide"><h2>3. 时间结构</h2><table class="role-table"><thead><tr><th>阶段</th><th>定义</th><th>改善方向</th></tr></thead><tbody><tr><td>响应等待</td><td>故障发生到责任人员开始处理</td><td>呼叫机制、值班、升级规则和权限</td></tr><tr><td>诊断</td><td>识别故障部位、失效模式与条件</td><td>报警履历、图纸、标准流程和技能</td></tr><tr><td>资源等待</td><td>等待备件、工具、外援、程序或批准</td><td>关键备件、专用工具、远程支持和授权</td></tr><tr><td>修复与调试</td><td>更换、调整、程序恢复与功能确认</td><td>模块化、快换设计、维修标准和防错</td></tr><tr><td>质量验证</td><td>首件或规定数量产品确认合格</td><td>参数基准、首件标准和质量接口</td></tr></tbody></table></article>
+<article class="block"><h2>4. 使用场景</h2><ul><li>评价维修响应与恢复能力；</li><li>识别等待备件、权限或技术支持损失；</li><li>优化维修标准和故障诊断路径；</li><li>验证快换部件、模块化和备件策略；</li><li>与MTBF、OEE、停机损失和客户交付联合评审。</li></ul></article>
+<article class="block"><h2>5. 常见误区</h2><ul><li>只统计实际拆装时间，排除等待和验证；</li><li>设备一能启动就停止计时，不确认合格生产；</li><li>不同故障类型使用不同终点却混合计算；</li><li>只要求维修人员更快，不改善可维护性设计；</li><li>通过提前关闭工单人为缩短MTTR。</li></ul></article>
+<article class="block wide"><h2>6. 现场案例</h2><p>某设备一次故障总停机90分钟：等待响应10分钟、诊断20分钟、等待备件25分钟、更换与调试20分钟、首件验证15分钟。若维修记录只填写“更换部件20分钟”，MTTR会被严重低估。改善备件位置、报警诊断和首件标准后，完整恢复时间降至45分钟，才属于真实的恢复能力提升。</p></article>
+<article class="block"><h2>7. 管理动作</h2><ol><li>统一故障开始与恢复合格生产边界；</li><li>把MTTR拆分为响应、诊断、等待、修复和验证；</li><li>对主要等待项建立责任和时限；</li><li>完善备件、工具、图纸、程序和维修标准；</li><li>推动设备可维护性和快换设计改善。</li></ol></article>
+<article class="block"><h2>8. 培训确认题</h2><ol><li>为什么MTTR终点不应定义为“设备能动”？</li><li>完整恢复时间通常由哪些阶段组成？</li><li>备件等待应不应该计入MTTR，为什么？</li><li>MTTR下降后如何确认没有牺牲质量验证？</li></ol></article>
+</section>
+<div class="footer"><span>QilyLean｜启力精益 · 制造工程单点培训</span><span>在线阅读版｜关闭打印与PDF保存</span></div>
+</main>
+</body>
+</html>
