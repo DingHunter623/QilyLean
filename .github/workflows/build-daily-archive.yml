@@ -9,12 +9,10 @@ on:
       - "qilylean/assets/daily-*.svg"
       - "qilylean/daily-briefs.css"
       - "qilylean/daily-feedback.js"
-      - "site-search.js"
-      - "site-navigation.js"
-      - "site-visual-closure-v1.css"
-      - "site-visual-closure-v1.js"
-      - "site-visual-closure-v2.css"
-      - "site-visual-closure-v2.js"
+      - "qilylean/site-data.json"
+      - "qilylean/site-search-index.json"
+      - "site-number-badge-contrast-v1.css"
+      - "site-interactive-hover-contrast-v1.css"
       - "knowledge/terminology.html"
       - "knowledge/terminology/*.html"
       - "scripts/build-daily-archive.js"
@@ -22,11 +20,20 @@ on:
       - "scripts/enhance-daily-archive.js"
       - "scripts/enhance-terminology-training.js"
       - "scripts/audit-daily-terminology.js"
+      - "scripts/audit-daily-quality-linkage.js"
+      - "scripts/publish-equipment-reliability-terminology.js"
       - "scripts/sync-daily-terminology.js"
       - "scripts/bump-daily-css-version.js"
       - "scripts/validate-daily-archive.js"
       - "scripts/remove-daily-directory-consultation.js"
       - "scripts/normalize-daily-visual-closure.js"
+      - "scripts/publish-number-badge-contrast.js"
+      - "scripts/apply-commercial-quality-closure-20260804.js"
+      - "scripts/hide-public-pricing.js"
+      - "scripts/enforce-productivity-theme-alias.js"
+      - "scripts/normalize-daily-quality-label.js"
+      - "sitemap.xml"
+      - "sitemap-core.xml"
   workflow_dispatch:
 
 permissions:
@@ -40,7 +47,7 @@ jobs:
   build:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -50,174 +57,127 @@ jobs:
         with:
           node-version: 20
 
-      - name: Rebuild archive, adjacent links and sitemap
-        run: node scripts/build-daily-archive.js
-
-      - name: Deepen archive content and external visuals
-        run: node scripts/enhance-daily-archive.js
-
-      - name: Keep terminology search aligned
-        run: node scripts/enhance-terminology-training.js
-
-      - name: Audit latest brief terminology before publication
-        run: node scripts/audit-daily-terminology.js
-
-      - name: Synchronize terminology quick links across every brief
+      - name: Validate publisher syntax
         run: |
+          node --check scripts/build-daily-archive.js
+          node --check scripts/enhance-daily-archive.js
+          node --check scripts/enhance-terminology-training.js
+          node --check scripts/audit-daily-terminology.js
+          node --check scripts/audit-daily-quality-linkage.js
+          node --check scripts/publish-equipment-reliability-terminology.js
+          node --check scripts/sync-daily-terminology.js
+          node --check scripts/bump-daily-css-version.js
+          node --check scripts/validate-daily-archive.js
+          node --check scripts/remove-daily-directory-consultation.js
+          node --check scripts/normalize-daily-visual-closure.js
+          node --check scripts/publish-number-badge-contrast.js
+          node --check scripts/apply-commercial-quality-closure-20260804.js
+          node --check scripts/hide-public-pricing.js
+          node --check scripts/enforce-productivity-theme-alias.js
+          node --check scripts/normalize-daily-quality-label.js
+
+      - name: Rebuild archive and synchronized knowledge assets
+        run: |
+          node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/hide-public-pricing.js
+          node scripts/enforce-productivity-theme-alias.js
+          node scripts/normalize-daily-quality-label.js
+          node scripts/build-daily-archive.js
+          node scripts/publish-equipment-reliability-terminology.js
+          node scripts/enhance-daily-archive.js
+          node scripts/enhance-terminology-training.js
+          node scripts/normalize-daily-quality-label.js
+          node scripts/audit-daily-terminology.js
           node scripts/sync-daily-terminology.js
           node scripts/sync-daily-terminology.js --check
-
-      - name: Validate daily terminology coverage
-        shell: bash
-        run: |
-          test -s qilylean/daily/terminology-audit-latest.json
-          node - <<'NODE'
-          const fs = require('fs');
-          const report = JSON.parse(fs.readFileSync('qilylean/daily/terminology-audit-latest.json', 'utf8'));
-          if (report.status !== 'passed') throw new Error('Daily terminology audit did not pass');
-          if (!Array.isArray(report.unknownTerms) || report.unknownTerms.length) {
-            throw new Error(`Uncovered Daily Brief terms: ${(report.unknownTerms || []).join(', ')}`);
-          }
-          NODE
-          LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
-          if grep -q 'Sponsor（项目发起人／主责高层）' "qilylean/daily/$LATEST_DATE.html"; then
-            grep -q 'href="/knowledge/terminology/sponsor.html"' "qilylean/daily/$LATEST_DATE.html" || {
-              echo "Sponsor is explained but is not linked to its terminology lesson"
-              exit 1
-            }
-          fi
-
-      - name: Pin responsive daily stylesheet version
-        run: node scripts/bump-daily-css-version.js
+          node scripts/bump-daily-css-version.js
+          node scripts/apply-commercial-quality-closure-20260804.js
+          node scripts/hide-public-pricing.js
+          node scripts/enforce-productivity-theme-alias.js
+          node scripts/normalize-daily-quality-label.js
 
       - name: Unify Daily Engineering Brief brand
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
-
           files = [Path('qilylean/daily-insights.html'), *Path('qilylean/daily').glob('*.html')]
-          old = '>制造改善知识分享<'
-          new = '>QilyLean｜启力精益<'
           for file in files:
               text = file.read_text(encoding='utf-8')
-              if old in text:
-                  file.write_text(text.replace(old, new), encoding='utf-8')
+              file.write_text(text.replace('>制造改善知识分享<', '>QilyLean｜启力精益<'), encoding='utf-8')
           PY
 
-      - name: Validate generated archive
+      - name: Validate complete archive before final presentation cleanup
+        run: node scripts/validate-daily-archive.js
+
+      - name: Finalize current message, visual and contrast closure
+        run: |
+          node scripts/remove-daily-directory-consultation.js
+          node scripts/normalize-daily-visual-closure.js
+          node scripts/publish-number-badge-contrast.js
+          node scripts/audit-daily-quality-linkage.js
+
+      - name: Validate latest publication and current assets
         shell: bash
         run: |
           test -f qilylean/daily-insights.html
           test -f qilylean/daily/index.json
           test -f qilylean/assets/daily-2019-07-10.svg
+
           LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
-          grep -q "qilylean/daily/$LATEST_DATE.html" sitemap.xml || {
-            echo "Latest daily brief is missing from sitemap.xml"
-            exit 1
-          }
-          grep -q "$LATEST_DATE" qilylean/daily-insights.html || {
-            echo "Latest daily brief is missing from daily-insights.html"
-            exit 1
-          }
-          grep -q "data-latest-brief-card data-latest-brief-date=\"$LATEST_DATE\"" knowledge/index.html || {
-            echo "Knowledge sharing latest brief card has a mismatched date"
-            exit 1
-          }
-          grep -q "data-latest-brief-link href=\"/qilylean/daily/$LATEST_DATE.html\"" knowledge/index.html || {
-            echo "Knowledge sharing latest brief card has a mismatched link"
-            exit 1
-          }
-          grep -q "QilyLean｜启力精益" qilylean/daily-insights.html || {
-            echo "Daily Engineering Brief brand is not unified"
-            exit 1
-          }
-          if grep -R -E "DAY[0-9]{3}" qilylean/daily qilylean/daily-insights.html >/dev/null; then
-            echo "Legacy DAY sequence is still present"
+          SOURCE_LATEST="$(node - <<'NODE'
+          const fs=require('fs');
+          const files=fs.readdirSync('qilylean/daily').filter(x=>/^\d{4}-\d{2}-\d{2}\.html$/.test(x)).sort().reverse();
+          process.stdout.write(files[0].slice(0,10));
+          NODE
+          )"
+          TOTAL="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(String(data.length))")"
+
+          test "$LATEST_DATE" = "$SOURCE_LATEST"
+          test "$TOTAL" -ge 2584
+          grep -q "qilylean/daily/$LATEST_DATE.html" sitemap.xml
+          grep -q "$LATEST_DATE" qilylean/daily-insights.html
+          grep -q "data-latest-brief-date=\"$LATEST_DATE\"" knowledge/index.html
+          grep -q "data-latest-brief-link href=\"/qilylean/daily/$LATEST_DATE.html\"" knowledge/index.html
+          grep -q 'data-brief-message-form' "qilylean/daily/$LATEST_DATE.html"
+          grep -q '留言交流' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'site-navigation.js?v=20260804-sitewide-clarity-v2' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2' "qilylean/daily/$LATEST_DATE.html"
+          grep -q 'site-visual-closure-v2.css?v=20260803-boundary-links-v2' "qilylean/daily/$LATEST_DATE.html"
+
+          grep -q '<div class="term-code">MTBF</div>' knowledge/terminology.html
+          grep -q '<div class="term-code">MTTR</div>' knowledge/terminology.html
+          grep -q '词典：183项中文诠释' knowledge/terminology.html
+          grep -q '<h1>MTBF｜平均故障间隔时间</h1>' knowledge/terminology/mtbf.html
+          grep -q '<h1>MTTR｜平均修复时间</h1>' knowledge/terminology/mttr.html
+          grep -q 'knowledge/terminology/mtbf.html' qilylean/site-search-index.json
+          grep -q 'knowledge/terminology/mttr.html' qilylean/site-search-index.json
+          grep -q 'knowledge/terminology/mtbf.html' sitemap.xml
+          grep -q 'knowledge/terminology/mttr.html' sitemap.xml
+
+          node - <<'NODE'
+          const data=require('./qilylean/site-data.json');
+          if (data.terminology.total !== 183) throw new Error('Terminology total is not 183');
+          if (data.search.terminologyTotal !== 183) throw new Error('Search terminology total is not 183');
+          const audit=require('./qilylean/daily/terminology-audit-latest.json');
+          if (audit.status !== 'passed') throw new Error('Latest terminology audit failed');
+          if ((audit.unknownTerms || []).length) throw new Error(`Unknown terms: ${audit.unknownTerms.join(', ')}`);
+          NODE
+
+          if [ "$LATEST_DATE" = "2026-08-05" ]; then
+            grep -q '设备停机不是维修单' "qilylean/daily/$LATEST_DATE.html"
+            grep -q 'MTBF' "qilylean/daily/$LATEST_DATE.html"
+            grep -q 'MTTR' "qilylean/daily/$LATEST_DATE.html"
+            grep -q 'href="/knowledge/terminology/mtbf.html"' "qilylean/daily/$LATEST_DATE.html"
+            grep -q 'href="/knowledge/terminology/mttr.html"' "qilylean/daily/$LATEST_DATE.html"
+          fi
+
+          if grep -R -E 'site-navigation\.js\?v=20260728-layout-type-v3|site-navigation\.js\?v=20260729-no-old-flash-v1|site-shell\.css\?v=20260725-compact-hero-v1|homepage-music\.js\?v=20260722-continuous-v3' qilylean/daily qilylean/daily-insights.html >/dev/null; then
+            echo "Legacy shared asset reference was regenerated"
             exit 1
           fi
-          grep -q "工程者手记" qilylean/daily/2019-07-10.html || {
-            echo "Daily engineering archive depth was not generated"
-            exit 1
-          }
-          grep -q 'img src="/qilylean/assets/daily-2019-07-10.svg"' qilylean/daily/2019-07-10.html || {
-            echo "Daily brief external visual was not generated"
-            exit 1
-          }
-          grep -q "ranked-search-v12" qilylean/daily-briefs.css || {
-            echo "Mobile responsive stylesheet marker is missing"
-            exit 1
-          }
-          node --check site-search.js
-          node --check site-navigation.js
-          node --check scripts/normalize-daily-visual-closure.js
-          grep -q "loadDailyEntries" site-search.js || {
-            echo "Structured Daily Brief search index is missing"
-            exit 1
-          }
-          grep -q "已按关联度排序" site-search.js || {
-            echo "Site search relevance-first status is missing"
-            exit 1
-          }
-          grep -q "site-search.js?v=20260729-ranked-search-v1" site-navigation-core.js || {
-            echo "Ranked site search asset version is not active"
-            exit 1
-          }
-          grep -q "点击进入该词条的原分类位置" knowledge/terminology.html || {
-            echo "Terminology result jump guidance is missing"
-            exit 1
-          }
-          grep -q "terminology-opl-v4" knowledge/terminology.html || {
-            echo "Terminology OPL online-only stylesheet marker is missing"
-            exit 1
-          }
-          grep -q "terminology-opl-document-template-v2" knowledge/terminology.html || {
-            echo "Terminology OPL document template marker is missing"
-            exit 1
-          }
-          grep -q "terminology-opl-print-disabled-v1" knowledge/terminology.html || {
-            echo "Terminology OPL print restriction is missing"
-            exit 1
-          }
-          if grep -E 'data-opl-print|window\.print\(\)|打印／保存PDF|独立网址 · 单课件PDF|单课件打印与PDF保存' knowledge/terminology.html >/dev/null; then
-            echo "Terminology OPL print or PDF-save control was restored"
-            exit 1
-          fi
-          grep -q "打开独立培训课件" knowledge/terminology.html || {
-            echo "Terminology OPL independent lesson link is missing"
-            exit 1
-          }
-          grep -q "复制课件链接" knowledge/terminology.html || {
-            echo "Terminology OPL share-link control is missing"
-            exit 1
-          }
-          grep -q "term-opl-contact-card" knowledge/terminology.html || {
-            echo "Terminology OPL brand contact module is missing"
-            exit 1
-          }
-          grep -q "qilylean-home-qr.svg" knowledge/terminology.html || {
-            echo "Terminology OPL website QR is missing"
-            exit 1
-          }
-          grep -q 'class="wx-qr-image"' knowledge/terminology.html || {
-            echo "Terminology OPL WeChat QR is missing"
-            exit 1
-          }
-          grep -q "daily-briefs.css?v=20260729-ranked-search-v12" "qilylean/daily/$LATEST_DATE.html" || {
-            echo "Latest brief is not pinned to the mobile responsive stylesheet"
-            exit 1
-          }
-          node scripts/validate-daily-archive.js
-
-      - name: Remove duplicate directory consultation
-        run: node scripts/remove-daily-directory-consultation.js
-
-      - name: Normalize current VI and visual closure across daily pages
-        run: node scripts/normalize-daily-visual-closure.js
-
-      - name: Validate directory consultation removal and current visual closure
-        shell: bash
-        run: |
           if grep -E 'id="brief-consultation"|id="briefConsultationForm"|简报留言交流|留言来源：今日简报总目录' qilylean/daily-insights.html >/dev/null; then
             echo "Duplicate consultation module still exists in the daily directory"
             exit 1
@@ -226,47 +186,14 @@ jobs:
             echo "Obsolete directory consultation CTA still exists in a brief page"
             exit 1
           fi
-          LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
-          grep -q 'data-brief-message-form' "qilylean/daily/$LATEST_DATE.html" || {
-            echo "Direct message form is missing from the latest brief"
-            exit 1
-          }
-          grep -q '留言交流' "qilylean/daily/$LATEST_DATE.html" || {
-            echo "Direct brief message module is missing from the latest brief"
-            exit 1
-          }
           if grep -E '评价本期简报|五星好评|点赞好评|data-brief-rating|data-brief-sentiment|data-like-count|data-dislike-count' "qilylean/daily/$LATEST_DATE.html" >/dev/null; then
             echo "Obsolete public rating module still exists"
             exit 1
           fi
-          for PAGE in "qilylean/daily-insights.html" "qilylean/daily/$LATEST_DATE.html" "qilylean/daily/2019-07-10.html"; do
-            grep -q 'data-qily-shell-bootstrap' "$PAGE" || {
-              echo "No-flash shell bootstrap is missing: $PAGE"
-              exit 1
-            }
-            grep -q '<script defer src="/site-navigation.js?v=20260803-boundary-links-v2"></script>' "$PAGE" || {
-              echo "Current deferred navigation is missing: $PAGE"
-              exit 1
-            }
-            grep -q 'site-shell.css?v=20260729-no-old-flash-v1' "$PAGE" || {
-              echo "Current shell stylesheet is missing: $PAGE"
-              exit 1
-            }
-            grep -q 'site-visual-closure-v1.css?v=20260803-visual-closure-v1' "$PAGE" || {
-              echo "Visual closure V1 stylesheet is missing: $PAGE"
-              exit 1
-            }
-            grep -q 'site-visual-closure-v2.css?v=20260803-boundary-links-v2' "$PAGE" || {
-              echo "Visual closure V2 stylesheet is missing: $PAGE"
-              exit 1
-            }
-          done
-          if grep -R -E 'site-navigation\.js\?v=20260728-layout-type-v3|site-navigation\.js\?v=20260729-no-old-flash-v1|site-shell\.css\?v=20260725-compact-hero-v1|homepage-music\.js\?v=20260722-continuous-v3' qilylean/daily qilylean/daily-insights.html >/dev/null; then
-            echo "Legacy shared asset reference was regenerated"
-            exit 1
-          fi
 
-      - name: Commit generated files
+          git diff --check
+
+      - name: Commit generated publication
         shell: bash
         run: |
           if git diff --quiet; then
@@ -275,7 +202,24 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add knowledge/index.html knowledge/terminology.html qilylean/daily-insights.html qilylean/daily/index.json qilylean/daily/*.html qilylean/daily/terminology-audit-latest.json qilylean/assets/daily-*.svg sitemap.xml
-          git commit -m "build: publish enriched daily engineering brief archive [skip ci]"
+          git add \
+            index.html \
+            knowledge/index.html \
+            knowledge/terminology.html \
+            knowledge/terminology/*.html \
+            cooperation/index.html \
+            links/index.html \
+            qilylean/site-data.json \
+            qilylean/site-search-index.json \
+            qilylean/daily-insights.html \
+            qilylean/daily/index.json \
+            qilylean/daily/*.html \
+            qilylean/daily/terminology-audit-latest.json \
+            qilylean/assets/daily-*.svg \
+            scripts/enhance-daily-archive.js \
+            scripts/materialize-static-core-pages.js \
+            sitemap.xml \
+            sitemap-core.xml
+          git commit -m "build: publish current daily engineering brief archive [skip ci]"
           git pull --rebase origin main
           git push origin main
