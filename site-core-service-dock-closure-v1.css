@@ -1,4 +1,4 @@
-/* QilyLean 三大核心业务可读性、同排对齐与悬浮入口精简规范｜2026-08-04 */
+/* QilyLean 三大核心业务可读性、同排对齐与悬浮入口增补规范｜2026-08-04 */
 
 /* 01／02／03：高对比实底白字，禁止透明度和同色叠加。 */
 html body .cooperation-page #services .service-number,
@@ -70,7 +70,7 @@ html body .cooperation-page #services .service-contract {
   margin-top:0!important;
 }
 
-/* 悬浮栏仅保留：首页、回顶部、本站搜索。 */
+/* 悬浮栏保留全部原有模块，仅为第二项“回顶部”提供独立样式。 */
 html body #floatDock.qily-float-dock .qily-float-top {
   color:#ffffff!important;
   background:#0f6570!important;
