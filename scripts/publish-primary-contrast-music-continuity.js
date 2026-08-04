@@ -7,7 +7,7 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const CSS_VERSION = '20260804-hero-primary-contrast-v1';
 const MUSIC_VERSION = '20260804-continuity-v5';
-const AUDIO_SRC = '/%E6%88%91%E7%9A%84%E6%A2%A6%EF%BC%88%E5%BC%A0%E9%9A%93%E9%A2%96%EF%BC%89.mp3';
+const AUDIO_SRC = '/%E6%88%91%E7%9A%84%E6%A2%A6%EF%BC%88%E5%BC%A0%E9%9D%93%E9%A2%96%EF%BC%89.mp3';
 const CSS_HREF = `/site-hero-primary-contrast-v1.css?v=${CSS_VERSION}`;
 const MUSIC_SRC = `/homepage-music-v5.js?v=${MUSIC_VERSION}`;
 
@@ -37,49 +37,41 @@ function walk(dir, callback) {
 
 function removeManagedAssets(html) {
   return html
-    .replace(/\s*<link\b[^>]*(?:id=["']qilyHeroPrimaryContrastStylesheet["']|href=["'][^"']*\/site-hero-primary-contrast-v1\.css\?v=[^"']+["'])[^>]*>\s*/gi, '\n')
+    .replace(/\s*<link\b[^>]*(?:id=["']qilyHeroPrimaryContrastStylesheet["']|href=["'][^"']*\/site-hero-primary-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>\s*/gi, '\n')
     .replace(/\s*<link\b[^>]*(?:id=["']qilyBackgroundMusicPreload["']|href=["'][^"']*%E6%88%91%E7%9A%84%E6%A2%A6[^"']*["'][^>]*\bas=["']audio["'])[^>]*>\s*/gi, '\n')
-    .replace(/\s*<script\b[^>]*(?:id=["']qilyBackgroundMusicScript["']|data-qily-background-music=["'][^"']+["']|src=["'][^"']*\/homepage-music(?:-v5)?\.js\?v=[^"']+["'])[^>]*>\s*<\/script>\s*/gi, '\n');
+    .replace(/\s*<script\b[^>]*(?:id=["']qilyBackgroundMusicScript["']|data-qily-background-music=["'][^"']+["']|src=["'][^"']*\/homepage-music(?:-v5)?\.js(?:\?v=[^"']*)?["'])[^>]*>\s*<\/script>\s*/gi, '\n');
+}
+
+function isPublicPage(html) {
+  return /site-navigation\.js\?v=/i.test(html) || /homepage-music(?:-v5)?\.js(?:\?v=)?/i.test(html);
 }
 
 function install(html) {
-  if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html)) return html;
-
-  /*
-   * Music and the shared contrast layer belong to public pages using the
-   * QilyLean navigation shell. Existing music-enabled legacy pages are also
-   * migrated even if their navigation marker differs.
-   */
-  const isPublicShell = /site-navigation\.js\?v=/i.test(html) || /homepage-music(?:-v5)?\.js\?v=/i.test(html);
-  if (!isPublicShell) return html;
-
+  if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html) || !isPublicPage(html)) return html;
   const cleaned = removeManagedAssets(html);
-  const headAssets = `${cssTag}\n${preloadTag}\n${musicTag}`;
-  return cleaned.replace(/<\/head>/i, `${headAssets}\n</head>`);
+  return cleaned.replace(/<\/head>/i, `${cssTag}\n${preloadTag}\n${musicTag}\n</head>`);
 }
 
 function verifySourceContracts() {
   const css = read(path.join(root, 'site-hero-primary-contrast-v1.css'));
   const music = read(path.join(root, 'homepage-music-v5.js'));
 
-  const cssMarkers = [
+  [
     '.hero-actions > :is(a,button).primary',
     '-webkit-text-fill-color:var(--qily-hero-primary-text)!important',
     '--qily-hero-primary-bg:#ffd36a',
     ':is(:hover,:focus-visible,:active)'
-  ];
-  cssMarkers.forEach((marker) => {
+  ].forEach((marker) => {
     if (!css.includes(marker)) throw new Error(`Primary-button contrast marker missing: ${marker}`);
   });
 
-  const musicMarkers = [
-    "window.__qilyLeanBackgroundMusicV5 = true",
+  [
+    'window.__qilyLeanBackgroundMusicV5 = true',
     'TRANSIT_COMPENSATION_CAP = 0.25',
     'playNow().then',
     "'/links/'",
-    "window.setInterval(writeState, 400)"
-  ];
-  musicMarkers.forEach((marker) => {
+    'window.setInterval(writeState, 400)'
+  ].forEach((marker) => {
     if (!music.includes(marker)) throw new Error(`Music-continuity marker missing: ${marker}`);
   });
 }
@@ -92,11 +84,10 @@ function main() {
   walk(root, (file) => {
     if (!file.endsWith('.html')) return;
     const before = read(file);
-    if (!/<\/head>/i.test(before)) return;
-    const after = install(before);
-    if (after === before) return;
+    if (!/<\/head>/i.test(before) || !isPublicPage(before)) return;
     checked += 1;
-    if (write(file, after)) changed += 1;
+    const after = install(before);
+    if (after !== before && write(file, after)) changed += 1;
   });
 
   const keyPages = ['index.html', 'cooperation/index.html', 'links/index.html', 'links/onboarding/index.html'];
@@ -105,10 +96,10 @@ function main() {
     if (!html.includes(CSS_HREF)) throw new Error(`${relative} missing hero-primary contrast asset.`);
     if (!html.includes(MUSIC_SRC)) throw new Error(`${relative} missing background-music v5 asset.`);
     if (!html.includes(`href="${AUDIO_SRC}"`)) throw new Error(`${relative} missing early audio preload.`);
-    if (/homepage-music\.js\?v=/i.test(html)) throw new Error(`${relative} still loads legacy music bootstrap.`);
+    if (/homepage-music\.js(?:\?v=)?/i.test(html)) throw new Error(`${relative} still loads legacy music bootstrap.`);
   });
 
-  process.stdout.write(`Primary-button contrast and music-continuity assets materialized; refreshed ${changed} public HTML files.\n`);
+  process.stdout.write(`Primary-button contrast and music continuity materialized in ${checked} public pages; refreshed ${changed}.\n`);
 }
 
 main();
