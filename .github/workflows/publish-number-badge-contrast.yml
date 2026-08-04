@@ -34,7 +34,7 @@ permissions:
 
 concurrency:
   group: qily-number-badge-hover-contrast
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   publish:
