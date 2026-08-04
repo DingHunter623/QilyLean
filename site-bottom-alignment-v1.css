@@ -1,0 +1,44 @@
+/* QilyLean 全站同组卡片底部语义模块沉底对齐规范｜2026-08-04 */
+
+/*
+ * 适用原则：
+ * 1. 信息标识条、结果条、边界说明条与其操作区作为卡片底部语义模块统一沉底；
+ * 2. 不改变现有配色、文案、字号和边框；
+ * 3. 不使用固定高度、空行、绝对定位或假占位实现表面对齐。
+ */
+
+/* 程序文件、参考资料及全站同类模块卡片。 */
+html body .module-grid > .module-card {
+  display: flex !important;
+  flex-direction: column !important;
+  align-self: stretch !important;
+  height: 100% !important;
+}
+
+/* 信息标识条／结果条沉底。 */
+html body .module-grid > .module-card > .module-result {
+  margin-top: auto !important;
+}
+
+/* 标识条存在时，按钮区紧随标识条，不再单独吃掉中部空白。 */
+html body .module-grid > .module-card > .module-result + .module-actions {
+  margin-top: 0 !important;
+  padding-top: 16px !important;
+}
+
+/* 三类项目合作边界卡片整体等高。 */
+html body .boundary-service-grid {
+  align-items: stretch !important;
+}
+
+html body .boundary-service-grid > .boundary-service-card {
+  display: flex !important;
+  flex-direction: column !important;
+  align-self: stretch !important;
+  height: 100% !important;
+}
+
+/* “专业边界”说明条统一沉至卡片底部。 */
+html body .boundary-service-grid > .boundary-service-card > .boundary-note {
+  margin-top: auto !important;
+}
