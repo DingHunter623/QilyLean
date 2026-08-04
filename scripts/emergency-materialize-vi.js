@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const NAV_VERSION = '20260803-boundary-links-v2';
+const NAV_VERSION = '20260804-sitewide-clarity-v2';
 const SHELL_VERSION = '20260729-no-old-flash-v1';
 const VISUAL_VERSION = '20260803-home-badge-wrap-v5';
 const WIDE_VERSION = '20260729-fluid-copy-v5';
@@ -129,7 +129,8 @@ const assetChecks = [
   ['site-visual-closure-v1.js', 'syncDailyMetadata'],
   ['site-visual-closure-v2.js', 'refineCooperationBoundary'],
   ['site-visual-closure-v2.js', 'enhanceLinkCards'],
-  ['site-navigation.js', 'qilyBoundaryLinksClosureStylesheet']
+  ['site-navigation.js', 'qilyBoundaryLinksClosureStylesheet'],
+  ['site-navigation.js', '20260804-sitewide-clarity-v2']
 ];
 for (const [relativePath, marker] of assetChecks) {
   const file = path.join(root, relativePath);
