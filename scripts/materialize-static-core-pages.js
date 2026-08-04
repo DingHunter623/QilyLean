@@ -114,7 +114,7 @@ function buildHomeCommercialBlock() {
     <div class="qily-ia-heading"><span class="qily-ia-kicker">CORE BUSINESS｜首页只保留客户首先需要理解的内容</span><h2>三类核心业务</h2><p>先说明解决什么问题、交付什么资产，再逐层展示个人履历、方法体系和知识沉淀。</p></div>
     <div class="qily-ia-grid">
       <article class="qily-ia-card"><small>CORE SERVICE 01</small><h3>新工厂／新产线规划</h3><p>从产品、工艺、产能、设备、物流、公辅、品质和扩展边界出发，形成可评审、可实施的规划资产。</p><div class="qily-ia-result">产能模型、Layout、物流与库位、公辅接口、实施路线图</div></article>
-      <article class="qily-ia-card"><small>CORE SERVICE 02</small><h3>精益改善项目交付</h3><p>围绕VSM、标准工时、线平衡、SMED、OEE、质量异常和计划实绩闭环，先验证再固化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>
+      <article class="qily-ia-card"><small>CORE SERVICE 02</small><h3>精益改善项目交付</h3><p>以质量为贯穿主线，围绕VSM、标准工时、线平衡、SMED、OEE、质量防错和计划实绩闭环，先验证合格产出，再固化效率、成本与交付改善。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>
       <article class="qily-ia-card"><small>CORE SERVICE 03</small><h3>目视化项目设计与实施</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、设计图、材料预算、打样、实施清单与验收</div></article>
     </div>
     <div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#services">查看交付资产与合同范本</a></div>

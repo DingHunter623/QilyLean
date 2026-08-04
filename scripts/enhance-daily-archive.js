@@ -56,6 +56,14 @@ const guides = {
     pitfalls: ['把精益等同于裁员或压库存', '只做活动周而不建立日常管理', '局部效率改善反而放大在制品'],
     takeaway: '精益不是一组口号，而是用事实识别损失、用标准稳定过程、用持续改善提升交付能力。'
   },
+  '科学改进生产力': {
+    definition: '科学改进生产力以合格且满足需求的有效产出为对象，通过事实基线、损失结构、小范围试验和标准固化减少系统浪费；质量是效率、成本和交付改善成立的前提。',
+    signals: ['人员和设备持续忙碌但合格交付没有改善', '产出上升同时返工、客诉、库存或加班增加', '改善报告只有结果数字而缺少基线、条件和复验'],
+    formula: '有效生产力＝合格且满足需求的产出÷系统总投入；必须同步观察FPY、DPPM／COPQ、交付达成和安全边界。',
+    steps: ['定义客户需要的合格产出与质量门槛', '建立时间、人员、设备、质量和异常事实基线', '识别最大系统损失并设计小范围试点', '联合验证质量、效率、成本、交付与可持续性后固化标准'],
+    pitfalls: ['把催人提速、加班或简单减员当作生产力改善', '只看产量或UPPH而忽略质量损失和库存转移', '试点未验证质量风险就直接全面推广'],
+    takeaway: '科学改进生产力必须先守住质量，再用证据减少损失，让系统稳定地产出合格品。'
+  },
   'IE方法': {
     definition: '工业工程通过作业研究、时间研究、产能分析、线平衡、人机配置和布局物流优化，使人、机、料、法、环等资源形成可计算、可验证的生产系统。',
     signals: ['标准工时来源不明或长期不换版', '排产、人力与实际瓶颈节拍不匹配', '同产品不同班组效率差异无法解释'],
@@ -372,6 +380,7 @@ const integrationProfiles = {
 
 const topicIntegrationProfiles = {
   '精益生产': 'leanSystem',
+  '科学改进生产力': 'leanSystem',
   'IE方法': 'leanSystem',
   'PE工程': 'processEngineering',
   'ME工程': 'equipmentEngineering',
@@ -405,6 +414,10 @@ const topicIntegrationProfiles = {
 
 function resolveTopicKey(category) {
   const value = String(category || '').trim();
+  // QILY-EXPLICIT-RECENT-THEME-ALIASES:START
+  if (/科学改进生产力|生产力改善|有效生产力/.test(value) && guides['科学改进生产力']) return '科学改进生产力';
+  if (/成果|证据|核验|验收|阶段门|公开链接|交付资产/.test(value) && guides['项目管理']) return '项目管理';
+  // QILY-EXPLICIT-RECENT-THEME-ALIASES:END
   if (guides[value]) return value;
   const direct = Object.keys(guides).find((name) => value.includes(name) || name.includes(value));
   if (direct) return direct;
@@ -413,6 +426,7 @@ function resolveTopicKey(category) {
     [/ERP|MES|数智化工厂/i, 'ERP/MES'],
     [/Factory Layout|工厂布局|布局规划/i, 'Factory Layout'],
     [/PMC|APS|排产|计划闭环/i, 'PMC'],
+    [/科学改进生产力|生产力改善|有效生产力/i, '科学改进生产力'],
     [/标准工时|IE七大手法|工业工程|IE标工/i, 'IE方法'],
     [/OEE|设备效率/i, 'OEE'],
     [/TPM|设备保全/i, 'TPM'],
