@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05",
+  "generatedAt": "2026-08-04",
   "schemaVersion": 1,
   "terminology": {
     "total": 183,
@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 2582,
-    "latestDate": "2026-08-03",
-    "latestTheme": "成果证据分级与公开核验",
-    "latestTitle": "成果不是数字卡片：用证据等级、阶段门与公开链接形成核验闭环",
-    "latestSummary": "制造改善成果一旦进入官网、项目报告或对外交流材料，就从内部总结升级为公开主张。公开主张不能只给出“提升多少、节省多少、完成多少”，还必须同步回答：依据是什么、由谁确认、本人承担什么角色、适用于什么条件、读者在哪里核验。",
-    "latestUrl": "/qilylean/daily/2026-08-03.html",
+    "total": 2584,
+    "latestDate": "2026-08-05",
+    "latestTheme": "ME工程",
+    "latestTitle": "设备停机不是维修单：用故障代码、MTBF与MTTR建立可靠性闭环",
+    "latestSummary": "设备管理不能停在故障发生后抢修和填写维修单，而要统一停机边界、故障代码、响应过程、原因验证与复发控制，用MTBF、MTTR、OEE和重复故障率把设备问题转化为可预防、可验证、可持续关闭的可靠性闭环。",
+    "latestUrl": "/qilylean/daily/2026-08-05.html",
     "directoryUrl": "/qilylean/daily-insights.html"
   },
   "knowledge": {
