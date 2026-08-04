@@ -1,22 +1,17 @@
 name: Build QilyLean Home APK
 
 on:
-  push:
-    branches: [qilylean-home-universal-v2.0]
-    paths:
-      - 'android/qilylean-home/**'
-      - 'scripts/publish-qilylean-home-v2.py'
-      - '.github/workflows/build-qilylean-home.yml'
   pull_request:
     branches: [main]
     paths:
       - 'android/qilylean-home/**'
+      - 'capabilities/index.html'
       - 'scripts/publish-qilylean-home-v2.py'
       - '.github/workflows/build-qilylean-home.yml'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
@@ -60,11 +55,12 @@ jobs:
           cp android/qilylean-home/app/build/outputs/apk/debug/app-debug.apk dist/QilyLean_Home_Universal_v2.0.apk
           sha256sum dist/QilyLean_Home_Universal_v2.0.apk > dist/SHA256SUMS.txt
 
-      - name: Validate website publication patch
+      - name: Validate website publication
         run: |
           python3 scripts/publish-qilylean-home-v2.py
           grep -q 'Android官网全导航通用版 v2.0' capabilities/index.html
           grep -q 'QilyLean_Home_Universal_v2.0.apk?build=dc8ba9ddff23' capabilities/index.html
+          test -f QilyLean_Home_Universal_v2.0.apk || true
           git diff --check
 
       - name: Upload APK
@@ -73,17 +69,3 @@ jobs:
           name: QilyLean-Home-Universal-v2.0
           path: dist/
           if-no-files-found: error
-
-      - name: Publish APK and website module to branch
-        if: github.event_name == 'push'
-        run: |
-          cp dist/QilyLean_Home_Universal_v2.0.apk ./QilyLean_Home_Universal_v2.0.apk
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add --sparse -f QilyLean_Home_Universal_v2.0.apk capabilities/index.html
-          if git diff --cached --quiet; then
-            echo 'No publication changes required.'
-          else
-            git commit -m 'build: publish QilyLean Home universal v2.0'
-            git push origin "HEAD:${GITHUB_REF_NAME}"
-          fi
