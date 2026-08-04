@@ -40,12 +40,19 @@ if (fs.existsSync(augustFourthBrief)) {
     .replace(
       '<table class="rule-table"><thead><tr><th>试点前</th>',
       '<table class="rule-table balanced-cols"><thead><tr><th>试点前</th>'
+    )
+    .replace(
+      /(?:质量是生产力成立的首要门槛，){2,}/g,
+      '质量是生产力成立的首要门槛，'
     );
 
   if (brief.includes('<table class="rule-table">')) {
     throw new Error('An unclassified equal-width table remains in the 2026-08-04 brief.');
   }
+  if (brief.includes('质量是生产力成立的首要门槛，质量是生产力成立的首要门槛')) {
+    throw new Error('Duplicated quality-throughline copy remains in the 2026-08-04 brief.');
+  }
   fs.writeFileSync(augustFourthBrief, brief.endsWith('\n') ? brief : `${brief}\n`, 'utf8');
 }
 
-process.stdout.write('Explicit recent-theme aliases and 2026-08-04 table layouts enforced.\n');
+process.stdout.write('Explicit recent-theme aliases, Aug 4 table layouts and quality copy were normalized.\n');
