@@ -1,8 +1,8 @@
-/* QilyLean 全站视觉、数据与操作区闭环分类器 v2.1｜2026-08-04｜强制刷新与静态同步闭环 */
+/* QilyLean 全站视觉、数据与操作区闭环分类器 v2.2｜2026-08-04｜标识条与专业边界沉底对齐 */
 (function(d,w){
   'use strict';
-  if(w.__qilyVisualClosureV2)return;
-  w.__qilyVisualClosureV2=true;
+  if(w.__qilyVisualClosureV3)return;
+  w.__qilyVisualClosureV3=true;
 
   function ready(fn){
     if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',fn,{once:true});
@@ -14,20 +14,23 @@
   }
 
   function ensureSitewideClarityStyle(){
-    var id='qilySitewideClarityStyleV2';
+    var id='qilySitewideClarityStyleV3';
     if(d.getElementById(id))return;
     var style=d.createElement('style');
     style.id=id;
-    style.setAttribute('data-qily-sitewide-clarity','2026-08-04-v2.1');
+    style.setAttribute('data-qily-sitewide-clarity','2026-08-04-v2.2');
     style.textContent=[
       'html body .cooperation-page #services .service-number{display:inline-grid!important;place-items:center!important;width:40px!important;height:40px!important;border:2px solid #fff!important;border-radius:50%!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:#073c47!important;box-shadow:0 0 0 2px #178b94!important;opacity:1!important;filter:none!important;text-shadow:none!important;font-family:Arial,"Segoe UI",sans-serif!important;font-size:18px!important;font-weight:900!important;line-height:1!important;letter-spacing:0!important}',
       'html body .cooperation-page .hero-actions a.primary,html body .cooperation-page .hero-actions a.primary *{color:#332100!important;-webkit-text-fill-color:#332100!important;opacity:1!important;filter:none!important;text-shadow:none!important;font-weight:950!important}',
       'html body .cooperation-page .hero-actions a.primary{border:2px solid #fff3c6!important;background:#ffd36a!important;box-shadow:0 10px 24px rgba(0,0,0,.24)!important}',
       'html body .cooperation-page .hero-actions a.primary:hover,html body .cooperation-page .hero-actions a.primary:focus-visible{color:#201400!important;-webkit-text-fill-color:#201400!important;background:#ffe39b!important;border-color:#fff!important}',
-      'html body .module-grid>.module-card{display:flex!important;flex-direction:column!important;align-self:stretch!important}',
+      'html body .module-grid>.module-card{display:flex!important;flex-direction:column!important;align-self:stretch!important;height:100%!important}',
       'html body .module-grid>.module-card>.module-actions{display:flex!important;align-items:flex-end!important;flex-wrap:wrap!important;gap:10px!important;margin-top:auto!important;padding-top:16px!important}',
       'html body .module-grid>.module-card>.module-actions>a,html body .module-grid>.module-card>.module-actions>button{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:44px!important;box-sizing:border-box!important}',
-      'html body .module-grid>.module-card>.module-result+.module-actions{margin-top:auto!important}',
+      'html body .module-grid>.module-card>.module-result{margin-top:auto!important}',
+      'html body .module-grid>.module-card>.module-result+.module-actions{margin-top:0!important;padding-top:16px!important}',
+      'html body .boundary-service-grid>.boundary-service-card{display:flex!important;flex-direction:column!important;align-self:stretch!important;height:100%!important}',
+      'html body .boundary-service-grid>.boundary-service-card>.boundary-note{margin-top:auto!important}',
       '@media(max-width:560px){html body .module-grid>.module-card>.module-actions>a,html body .module-grid>.module-card>.module-actions>button{width:100%!important}}'
     ].join('\n');
     (d.head||d.documentElement).appendChild(style);
