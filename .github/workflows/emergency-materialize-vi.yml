@@ -53,13 +53,16 @@ jobs:
       - name: Materialize VI and final visual closure into every HTML page
         run: node scripts/emergency-materialize-vi.js
 
-      - name: Verify boundary-specific content and link-card contrast
+      - name: Verify boundary-specific content, fresh clarity assets and link-card contrast
         shell: bash
         run: |
           grep -R -q '<script defer src="/site-navigation.js?v=20260803-boundary-links-v2"' --include='*.html' .
-          grep -R -q 'site-visual-closure-v1.css?v=20260803-visual-closure-v1' --include='*.html' .
+          grep -R -q 'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2' --include='*.html' .
+          grep -R -q 'site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2' --include='*.html' .
           grep -R -q 'site-visual-closure-v2.css?v=20260803-boundary-links-v2' --include='*.html' .
           grep -R -q 'site-visual-closure-v2.js?v=20260803-boundary-links-v2' --include='*.html' .
+          grep -q 'qilySitewideClarityStyleV2' site-visual-closure-v1.js
+          grep -q 'syncDailyMetadata' site-visual-closure-v1.js
           grep -q '三类项目合作边界' cooperation/index.html
           grep -q '新工厂／新产线规划' cooperation/index.html
           grep -q '不替代具备相应资质单位出具的施工图' cooperation/index.html
@@ -87,12 +90,12 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All public pages already contain the latest boundary and link-card closure."
+            echo "All public pages already contain the latest sitewide clarity, boundary and link-card closure."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: materialize QilyLean boundary and link-card closure [skip ci]"
+          git commit -m "fix: materialize QilyLean sitewide clarity closure [skip ci]"
           git pull --rebase origin main
           git push origin main

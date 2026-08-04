@@ -1,4 +1,4 @@
-/* QilyLean 全站视觉、数据与操作区闭环分类器 v2｜2026-08-04 */
+/* QilyLean 全站视觉、数据与操作区闭环分类器 v2.1｜2026-08-04｜强制刷新与静态同步闭环 */
 (function(d,w){
   'use strict';
   if(w.__qilyVisualClosureV2)return;
@@ -18,7 +18,7 @@
     if(d.getElementById(id))return;
     var style=d.createElement('style');
     style.id=id;
-    style.setAttribute('data-qily-sitewide-clarity','2026-08-04-v2');
+    style.setAttribute('data-qily-sitewide-clarity','2026-08-04-v2.1');
     style.textContent=[
       'html body .cooperation-page #services .service-number{display:inline-grid!important;place-items:center!important;width:40px!important;height:40px!important;border:2px solid #fff!important;border-radius:50%!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:#073c47!important;box-shadow:0 0 0 2px #178b94!important;opacity:1!important;filter:none!important;text-shadow:none!important;font-family:Arial,"Segoe UI",sans-serif!important;font-size:18px!important;font-weight:900!important;line-height:1!important;letter-spacing:0!important}',
       'html body .cooperation-page .hero-actions a.primary,html body .cooperation-page .hero-actions a.primary *{color:#332100!important;-webkit-text-fill-color:#332100!important;opacity:1!important;filter:none!important;text-shadow:none!important;font-weight:950!important}',
