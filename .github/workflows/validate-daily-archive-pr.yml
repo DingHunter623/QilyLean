@@ -56,7 +56,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /.github/workflows/
+            /scripts/
+            /qilylean/daily/
+            /qilylean/assets/daily-*.svg
+            /qilylean/daily-insights.html
+            /qilylean/daily-briefs.css
+            /qilylean/daily-feedback.js
+            /qilylean/site-data.json
+            /qilylean/site-search-index.json
+            /knowledge/
+            /cooperation/index.html
+            /links/index.html
+            /index.html
+            /sitemap.xml
+            /sitemap-core.xml
+            /*.css
+            /*.js
 
       - uses: actions/setup-node@v4
         with:
@@ -167,7 +186,6 @@ jobs:
           if (data.search.terminologyTotal !== 183) throw new Error('Search terminology total is not 183');
           NODE
 
-          # 8月4日质量专题关联必须保留，但不得强制8月5日重复上一期主题。
           grep -q 'data-quality-throughline="2026-08-04"' qilylean/daily/2026-08-04.html
           grep -q '质量门槛｜科学改进生产力' qilylean/daily/2026-08-04.html
 
