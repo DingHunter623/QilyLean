@@ -12,6 +12,7 @@ on:
       - "docs/QilyLean全站统一规范补充条款_20260804_核心业务与悬浮入口.md"
       - "site-hero-primary-contrast-v1.css"
       - "homepage-music-v5.js"
+      - "site-music-persistent-navigation-v1.js"
       - "scripts/publish-primary-contrast-music-continuity.js"
       - ".github/workflows/publish-primary-contrast-music-continuity.yml"
       - "docs/QilyLean全站统一规范补充条款_20260804_主按钮对比与背景音乐连续性.md"
@@ -25,6 +26,7 @@ on:
       - ".github/workflows/publish-core-service-dock-closure.yml"
       - "site-hero-primary-contrast-v1.css"
       - "homepage-music-v5.js"
+      - "site-music-persistent-navigation-v1.js"
       - "scripts/publish-primary-contrast-music-continuity.js"
       - ".github/workflows/publish-primary-contrast-music-continuity.yml"
       - "docs/QilyLean全站统一规范补充条款_20260804_主按钮对比与背景音乐连续性.md"
@@ -65,6 +67,7 @@ jobs:
           node --check site-navigation-core.js
           node --check scripts/publish-core-service-dock-closure.js
           node --check homepage-music-v5.js
+          node --check site-music-persistent-navigation-v1.js
           node --check scripts/publish-primary-contrast-music-continuity.js
           grep -q 'service-number' site-core-service-dock-closure-v1.css
           grep -q 'scope-list' site-core-service-dock-closure-v1.css
@@ -72,6 +75,8 @@ jobs:
           grep -q -- '-webkit-text-fill-color:var(--qily-hero-primary-text)!important' site-hero-primary-contrast-v1.css
           grep -q 'TRANSIT_COMPENSATION_CAP = 0.25' homepage-music-v5.js
           grep -q "'/links/'" homepage-music-v5.js
+          grep -q 'window.__qilyPersistentNavigationV1 = true' site-music-persistent-navigation-v1.js
+          grep -q "navigate('/', 'push')" site-music-persistent-navigation-v1.js
           for action in home search back current share contact; do
             grep -q "data-action=\\\"$action\\\"" site-navigation-core.js
           done
@@ -93,6 +98,9 @@ jobs:
           const music=fs.readFileSync('homepage-music-v5.js','utf8');
           ['window.__qilyLeanBackgroundMusicV5 = true','playNow().then','V4 waited for seeked','window.setInterval(writeState, 400)']
             .forEach(item=>{if(!music.includes(item))throw new Error('Music rule missing: '+item);});
+          const navigation=fs.readFileSync('site-music-persistent-navigation-v1.js','utf8');
+          ['window.__qilyPersistentNavigationV1 = true','frame.contentWindow.location.replace(url.href)','window.__qilyPersistentNavigate']
+            .forEach(item=>{if(!navigation.includes(item))throw new Error('Persistent navigation rule missing: '+item);});
           NODE
 
       - name: Install exact dock, primary contrast and music in public pages
@@ -114,6 +122,7 @@ jobs:
           const dockJs='site-core-service-dock-closure-v1.js?v=20260804-core-service-dock-v3';
           const contrast='/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1';
           const music='/homepage-music-v5.js?v=20260804-continuity-v5';
+          const navigation='/site-music-persistent-navigation-v1.js?v=20260804-persistent-music-nav-v1';
           const failures=[];
           let publicPages=0;
           function walk(dir){
@@ -126,13 +135,15 @@ jobs:
                 if(!/<\/head>/i.test(h))continue;
                 const rel=path.relative(process.cwd(),f);
                 if(!h.includes(dockCss)||!h.includes(dockJs))failures.push(`${rel}:dock`);
-                const isPublic=/site-navigation\.js\?v=/i.test(h)||/homepage-music(?:-v5)?\.js(?:\?v=)?/i.test(h);
+                const isPublic=/site-navigation\.js\?v=/i.test(h)||/homepage-music(?:-v5)?\.js(?:\?v=)?/i.test(h)||/site-music-persistent-navigation-v1\.js(?:\?v=)?/i.test(h);
                 if(!isPublic)continue;
                 publicPages+=1;
                 if(!h.includes(contrast))failures.push(`${rel}:primary-contrast`);
                 if(!h.includes(music))failures.push(`${rel}:music-v5`);
+                if(!h.includes(navigation))failures.push(`${rel}:persistent-navigation`);
                 if(!h.includes('id="qilyBackgroundMusicPreload"'))failures.push(`${rel}:audio-preload`);
                 if(/homepage-music\.js(?:\?v=)?/i.test(h))failures.push(`${rel}:legacy-music`);
+                if(h.indexOf(music)>h.indexOf(navigation))failures.push(`${rel}:music-navigation-order`);
               }
             }
           }
@@ -147,8 +158,8 @@ jobs:
           if(!cooperation.includes('预约60分钟问题初筛'))throw new Error('Cooperation primary action missing.');
           if(!onboarding.includes('立即填写入驻资料'))throw new Error('Onboarding primary action missing.');
           if(!css.includes('.hero-actions > :is(a,button).primary'))throw new Error('Shared hero primary selector missing.');
-          if(!links.includes(music))throw new Error('Friend-links page still lacks V5 music.');
-          console.log(`Validated ${publicPages} public pages with exact dock, button contrast and music continuity.`);
+          if(!links.includes(music)||!links.includes(navigation))throw new Error('Friend-links page still lacks persistent music assets.');
+          console.log(`Validated ${publicPages} public pages with exact dock, button contrast and persistent music navigation.`);
           NODE
           git diff --check
 
@@ -157,12 +168,12 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All pages already use the exact dock, primary contrast and music continuity assets."
+            echo "All pages already use the exact dock, primary contrast and persistent music navigation assets."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: publish exact dock primary contrast and continuous music [skip ci]"
+          git commit -m "fix: publish exact dock and persistent music navigation [skip ci]"
           git pull --rebase origin main
           git push origin main
