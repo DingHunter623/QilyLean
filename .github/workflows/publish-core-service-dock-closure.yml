@@ -1,11 +1,21 @@
-name: Publish core-service and compact-dock closure
+name: Publish core-service and additive-dock closure
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "site-core-service-dock-closure-v1.css"
+      - "site-core-service-dock-closure-v1.js"
+      - "site-navigation-core.js"
+      - "scripts/publish-core-service-dock-closure.js"
+      - ".github/workflows/publish-core-service-dock-closure.yml"
+      - "docs/QilyLean全站统一规范补充条款_20260804_核心业务与悬浮入口.md"
   push:
     branches: [main]
     paths:
       - "site-core-service-dock-closure-v1.css"
       - "site-core-service-dock-closure-v1.js"
+      - "site-navigation-core.js"
       - "scripts/publish-core-service-dock-closure.js"
       - ".github/workflows/publish-core-service-dock-closure.yml"
   workflow_run:
@@ -21,7 +31,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: qily-core-service-dock-closure
+  group: qily-core-service-additive-dock-closure
   cancel-in-progress: false
 
 jobs:
@@ -32,19 +42,32 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'main' }}
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Validate closure assets
+      - name: Validate closure assets and preserve every original dock action
+        shell: bash
         run: |
           node --check site-core-service-dock-closure-v1.js
+          node --check site-navigation-core.js
           node --check scripts/publish-core-service-dock-closure.js
           grep -q 'data-action=.top' site-core-service-dock-closure-v1.js
-          grep -q "\['home','top','search'\]" site-core-service-dock-closure-v1.js
+          grep -q 'insertBefore(top,home.nextSibling)' site-core-service-dock-closure-v1.js
           grep -q 'service-number' site-core-service-dock-closure-v1.css
           grep -q 'scope-list' site-core-service-dock-closure-v1.css
+          for action in home search back current share contact; do
+            grep -q "data-action=\\\"$action\\\"" site-navigation-core.js
+          done
+          if grep -q 'button.remove' site-core-service-dock-closure-v1.js; then
+            echo 'Additive dock closure must not remove original buttons.' >&2
+            exit 1
+          fi
+          if grep -Eq "\['shareMask','wxMask'\].*remove" site-core-service-dock-closure-v1.js; then
+            echo 'Additive dock closure must not remove original modal functions.' >&2
+            exit 1
+          fi
       - name: Install closure in all public pages
         run: node scripts/publish-core-service-dock-closure.js
       - name: Verify repeatability and page coverage
@@ -57,21 +80,22 @@ jobs:
           node - <<'NODE'
           const fs=require('fs'),path=require('path');
           const failures=[];
-          function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){if(['.git','node_modules','.cache'].includes(e.name))continue;const f=path.join(dir,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith('.html')){const h=fs.readFileSync(f,'utf8');if(/<\/head>/i.test(h)&&(!h.includes('site-core-service-dock-closure-v1.css?v=20260804-core-service-dock-v1')||!h.includes('site-core-service-dock-closure-v1.js?v=20260804-core-service-dock-v1')))failures.push(path.relative(process.cwd(),f));}}}
+          function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){if(['.git','node_modules','.cache'].includes(e.name))continue;const f=path.join(dir,e.name);if(e.isDirectory())walk(f);else if(e.name.endsWith('.html')){const h=fs.readFileSync(f,'utf8');if(/<\/head>/i.test(h)&&(!h.includes('site-core-service-dock-closure-v1.css?v=20260804-core-service-dock-v2')||!h.includes('site-core-service-dock-closure-v1.js?v=20260804-core-service-dock-v2')))failures.push(path.relative(process.cwd(),f));}}}
           walk(process.cwd());
           if(failures.length)throw new Error('Closure missing: '+failures.slice(0,40).join(', '));
           NODE
           git diff --check
       - name: Commit materialized public pages
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "All pages already use the current closure."
+            echo "All pages already use the current additive dock closure."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "fix: publish core-service and compact-dock closure [skip ci]"
+          git commit -m "fix: publish restored dock with additive back-to-top [skip ci]"
           git pull --rebase origin main
           git push origin main
