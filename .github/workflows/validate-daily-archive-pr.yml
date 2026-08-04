@@ -35,6 +35,7 @@ on:
       - "scripts/sync-daily-terminology.js"
       - "scripts/bump-daily-css-version.js"
       - "scripts/validate-daily-archive.js"
+      - "scripts/validate-current-daily-publication.js"
       - "scripts/remove-daily-directory-consultation.js"
       - "scripts/normalize-daily-visual-closure.js"
       - "scripts/publish-number-badge-contrast.js"
@@ -56,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - uses: actions/setup-node@v4
         with:
@@ -77,6 +78,7 @@ jobs:
           node --check scripts/sync-daily-terminology.js
           node --check scripts/bump-daily-css-version.js
           node --check scripts/validate-daily-archive.js
+          node --check scripts/validate-current-daily-publication.js
           node --check scripts/remove-daily-directory-consultation.js
           node --check scripts/normalize-daily-visual-closure.js
           node --check scripts/publish-number-badge-contrast.js
@@ -122,76 +124,8 @@ jobs:
           node scripts/publish-number-badge-contrast.js
           node scripts/audit-daily-quality-linkage.js
 
-      - name: Validate latest brief and publication contracts
-        shell: bash
-        run: |
-          LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
-          SOURCE_LATEST="$(node - <<'NODE'
-          const fs=require('fs');
-          const files=fs.readdirSync('qilylean/daily').filter(x=>/^\d{4}-\d{2}-\d{2}\.html$/.test(x)).sort().reverse();
-          process.stdout.write(files[0].slice(0,10));
-          NODE
-          )"
-          TOTAL="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(String(data.length))")"
-          test "$LATEST_DATE" = "$SOURCE_LATEST"
-          test "$LATEST_DATE" = "2026-08-05"
-          test "$TOTAL" -ge "2584"
-          grep -q '设备停机不是维修单' "qilylean/daily/$LATEST_DATE.html"
-          grep -q '2026-08-05｜ME工程' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'data-brief-message-form' "qilylean/daily/$LATEST_DATE.html"
-          grep -q '留言交流' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'MTBF' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'MTTR' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'OEE' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'TPM' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'href="/knowledge/terminology/mtbf.html"' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'href="/knowledge/terminology/mttr.html"' "qilylean/daily/$LATEST_DATE.html"
-          grep -q "data-latest-brief-date=\"$LATEST_DATE\"" knowledge/index.html
-          grep -q "qilylean/daily/$LATEST_DATE.html" sitemap.xml
-          grep -q "$LATEST_DATE" qilylean/daily-insights.html
-          grep -q 'site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
-
-          grep -q '<div class="term-code">MTBF</div>' knowledge/terminology.html
-          grep -q '<div class="term-code">MTTR</div>' knowledge/terminology.html
-          grep -q '词典：183项中文诠释' knowledge/terminology.html
-          grep -q '<h1>MTBF｜平均故障间隔时间</h1>' knowledge/terminology/mtbf.html
-          grep -q '<h1>MTTR｜平均修复时间</h1>' knowledge/terminology/mttr.html
-          grep -q 'knowledge/terminology/mtbf.html' qilylean/site-search-index.json
-          grep -q 'knowledge/terminology/mttr.html' qilylean/site-search-index.json
-          grep -q 'knowledge/terminology/mtbf.html' sitemap.xml
-          grep -q 'knowledge/terminology/mttr.html' sitemap.xml
-          node - <<'NODE'
-          const data=require('./qilylean/site-data.json');
-          if (data.terminology.total !== 183) throw new Error('Terminology total is not 183');
-          if (data.search.terminologyTotal !== 183) throw new Error('Search terminology total is not 183');
-          NODE
-
-          # 8月4日质量专题关联必须保留，但不得强制8月5日重复上一期主题。
-          grep -q 'data-quality-throughline="2026-08-04"' qilylean/daily/2026-08-04.html
-          grep -q '质量门槛｜科学改进生产力' qilylean/daily/2026-08-04.html
-
-          grep -q 'QILY-PRICING-PUBLIC-DISABLED' cooperation/index.html
-          grep -q '<h2>合作启动路径</h2>' cooperation/index.html
-          grep -q '质量不是PQCD中的一个并列数字' cooperation/index.html
-          grep -q 'qilyCommercialQualityClosureStylesheet' links/index.html
-          if grep -q '¥\|公开价格参考与报价依据\|公开报价不包含\|<div class="price">' cooperation/index.html; then
-            echo "Public pricing remains on the cooperation page"
-            exit 1
-          fi
-          if grep -q '\bGATE\b' "qilylean/daily/$LATEST_DATE.html"; then
-            echo "Unexplained GATE label remains"
-            exit 1
-          fi
-          node - <<'NODE'
-          const fs = require('fs');
-          const report = JSON.parse(fs.readFileSync('qilylean/daily/terminology-audit-latest.json','utf8'));
-          if (report.status !== 'passed') throw new Error('Terminology audit failed');
-          if ((report.unknownTerms || []).length) throw new Error(`Unknown terms: ${report.unknownTerms.join(', ')}`);
-          NODE
+      - name: Validate current publication contracts
+        run: node scripts/validate-current-daily-publication.js
 
       - name: Verify deterministic diff
-        shell: bash
-        run: |
-          git diff --check
-          git status --short
+        run: git diff --check
