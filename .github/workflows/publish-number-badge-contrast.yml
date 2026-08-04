@@ -1,0 +1,132 @@
+name: Publish sitewide number badge contrast
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "site-number-badge-contrast-v1.css"
+      - "scripts/publish-number-badge-contrast.js"
+      - ".github/workflows/publish-number-badge-contrast.yml"
+      - "docs/QilyLean全站统一规范补充条款_20260805_编号徽章高对比.md"
+      - "**/*.html"
+  push:
+    branches: [main]
+    paths:
+      - "site-number-badge-contrast-v1.css"
+      - "scripts/publish-number-badge-contrast.js"
+      - ".github/workflows/publish-number-badge-contrast.yml"
+      - "docs/QilyLean全站统一规范补充条款_20260805_编号徽章高对比.md"
+      - "**/*.html"
+  workflow_run:
+    workflows:
+      - "Finalize static public pages"
+      - "Publish global navigation standards"
+      - "Materialize QilyLean visual closure"
+      - "Publish core-service and exact-dock closure"
+      - "Publish primary contrast and music continuity"
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-number-badge-contrast
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'main' }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate number-badge source contracts
+        shell: bash
+        run: |
+          node --check scripts/publish-number-badge-contrast.js
+          grep -q -- '--qily-number-badge-bg:#075767' site-number-badge-contrast-v1.css
+          grep -q -- '--qily-number-badge-text:#ffffff' site-number-badge-contrast-v1.css
+          grep -q -- '-webkit-text-fill-color:var(--qily-number-badge-text)!important' site-number-badge-contrast-v1.css
+          grep -q 'opacity:1!important' site-number-badge-contrast-v1.css
+          grep -q 'filter:none!important' site-number-badge-contrast-v1.css
+          grep -q '.service-number' site-number-badge-contrast-v1.css
+          grep -q '.process-number' site-number-badge-contrast-v1.css
+
+      - name: Materialize number-badge contrast in all public pages
+        run: node scripts/publish-number-badge-contrast.js
+
+      - name: Verify repeatability and full-site coverage
+        shell: bash
+        run: |
+          git diff > /tmp/number-badge-first.diff
+          node scripts/publish-number-badge-contrast.js
+          git diff > /tmp/number-badge-second.diff
+          cmp /tmp/number-badge-first.diff /tmp/number-badge-second.diff
+          node - <<'NODE'
+          const fs=require('fs'),path=require('path');
+          const href='/site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1';
+          const failures=[];
+          let publicPages=0;
+          let candidatePages=0;
+
+          function walk(dir){
+            for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
+              if(['.git','node_modules','.cache'].includes(entry.name))continue;
+              const full=path.join(dir,entry.name);
+              if(entry.isDirectory())walk(full);
+              else if(entry.name.endsWith('.html')){
+                const html=fs.readFileSync(full,'utf8');
+                if(!/<\/head>/i.test(html)||!/<\/body>/i.test(html))continue;
+                const isPublic=/site-navigation\.js\?v=/i.test(html)||/homepage-music(?:-v5)?\.js(?:\?v=)?/i.test(html)||/qilyCoreServiceDockClosureStylesheet/i.test(html);
+                if(!isPublic)continue;
+                publicPages+=1;
+                const rel=path.relative(process.cwd(),full);
+                if(!html.includes(href))failures.push(`${rel}:number-badge-css`);
+                if(/class=["'][^"']*(?:service-number|step-number|step-index|sequence-number|process-number|number-badge|workflow-number|timeline-number)[^"']*["']/i.test(html)||/class=["'][^"']*(?:process|steps|workflow|timeline)[^"']*["'][\s\S]{0,800}<b>\s*\d{1,2}\s*<\/b>/i.test(html))candidatePages+=1;
+              }
+            }
+          }
+
+          walk(process.cwd());
+          if(publicPages<20)throw new Error(`Unexpected public-page count: ${publicPages}`);
+          if(candidatePages<2)throw new Error(`Unexpectedly low number-badge candidate-page count: ${candidatePages}`);
+          if(failures.length)throw new Error('Number-badge coverage failed: '+failures.slice(0,80).join(', '));
+
+          const onboarding=fs.readFileSync('links/onboarding/index.html','utf8');
+          ['<b>1</b>','<b>2</b>','<b>3</b>','<b>4</b>'].forEach(marker=>{
+            if(!onboarding.includes(marker))throw new Error(`Onboarding marker missing: ${marker}`);
+          });
+          if(!onboarding.includes(href))throw new Error('Onboarding page missing number-badge stylesheet.');
+
+          const cooperation=fs.readFileSync('cooperation/index.html','utf8');
+          if(!/service-number/i.test(cooperation))throw new Error('Core-service number markers missing.');
+          if(!cooperation.includes(href))throw new Error('Cooperation page missing number-badge stylesheet.');
+
+          console.log(`Validated ${publicPages} public pages; ${candidatePages} contain numbered-badge patterns.`);
+          NODE
+          git diff --check
+
+      - name: Commit materialized public pages
+        if: github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "All public pages already use the current number-badge contrast asset."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix: publish sitewide number badge contrast [skip ci]"
+          git pull --rebase origin main
+          git push origin main
