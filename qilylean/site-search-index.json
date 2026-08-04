@@ -4,10 +4,12 @@
   "meta": {
     "indexedEntries": 2862,
     "indexedPages": 2804,
-    "terminologyTotal": 181,
+    "terminologyTotal": 183,
     "briefTotal": 2582,
     "latestBriefDate": "2026-08-03",
-    "sitemapLastmod": "2026-08-04"
+    "sitemapLastmod": "2026-08-04",
+    "generatedAt": "2026-08-05",
+    "totalEntries": 2864
   },
   "entries": [
     {
@@ -28629,6 +28631,26 @@
       "text": "精益生产 别让临时准备遮住瓶颈：精益生产的持续运营 面对换线后首件确认反复调整，本期先用“先把问题定义准确”校准判断，再用精益生产推进持续运营，最终把现场经验沉淀为版本、点检与复盘机制。",
       "kind": "今日简报",
       "date": "2019-07-10"
+    },
+    {
+      "url": "/knowledge/terminology/mtbf.html",
+      "title": "MTBF｜平均故障间隔时间",
+      "code": "MTBF",
+      "description": "Mean Time Between Failures：衡量可修复设备两次故障之间的平均稳定运行时间，用于可靠性、重复故障和预防维护改善。",
+      "headings": "全站术语｜设备可靠性｜ME工程｜计划保全",
+      "text": "MTBF Mean Time Between Failures 平均故障间隔时间 设备可靠性 故障次数 有效运行时间 预防维护 重复故障 OEE MTTR TPM",
+      "kind": "全站术语",
+      "date": "2026-08-05"
+    },
+    {
+      "url": "/knowledge/terminology/mttr.html",
+      "title": "MTTR｜平均修复时间",
+      "code": "MTTR",
+      "description": "Mean Time To Repair：衡量设备故障后从故障开始到恢复合格生产的平均完整恢复时间。",
+      "headings": "全站术语｜设备维修｜ME工程｜恢复能力",
+      "text": "MTTR Mean Time To Repair 平均修复时间 响应 诊断 备件 等待 修复 调试 质量验证 MTBF OEE TPM",
+      "kind": "全站术语",
+      "date": "2026-08-05"
     }
   ]
 }

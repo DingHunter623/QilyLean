@@ -1,38 +1,32 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-08-04",
-  "briefPath": "qilylean/daily/2026-08-04.html",
-  "checkedAt": "2026-08-04T00:49:42.946Z",
+  "briefDate": "2026-08-05",
+  "briefPath": "qilylean/daily/2026-08-05.html",
+  "checkedAt": "2026-08-04T23:53:26.091Z",
   "candidates": [
-    {
-      "term": "COPQ",
-      "explanation": "",
-      "explicit": false,
-      "source": "COPQ"
-    },
-    {
-      "term": "DPPM",
-      "explanation": "",
-      "explicit": false,
-      "source": "DPPM"
-    },
-    {
-      "term": "ECRS",
-      "explanation": "",
-      "explicit": false,
-      "source": "ECRS"
-    },
-    {
-      "term": "FPY",
-      "explanation": "",
-      "explicit": false,
-      "source": "FPY"
-    },
     {
       "term": "IE",
       "explanation": "",
       "explicit": false,
       "source": "IE"
+    },
+    {
+      "term": "ME",
+      "explanation": "",
+      "explicit": false,
+      "source": "ME"
+    },
+    {
+      "term": "MTBF",
+      "explanation": "",
+      "explicit": false,
+      "source": "MTBF"
+    },
+    {
+      "term": "MTTR",
+      "explanation": "",
+      "explicit": false,
+      "source": "MTTR"
     },
     {
       "term": "OEE",
@@ -41,57 +35,43 @@
       "source": "OEE"
     },
     {
-      "term": "PDCA",
-      "explanation": "",
-      "explicit": false,
-      "source": "PDCA"
-    },
-    {
       "term": "PE",
       "explanation": "",
       "explicit": false,
       "source": "PE"
     },
     {
-      "term": "PMC",
+      "term": "TPM",
       "explanation": "",
       "explicit": false,
-      "source": "PMC"
+      "source": "TPM"
     },
     {
-      "term": "PQCD",
+      "term": "URS",
       "explanation": "",
       "explicit": false,
-      "source": "PQCD"
-    },
-    {
-      "term": "UPPH",
-      "explanation": "",
-      "explicit": false,
-      "source": "UPPH"
+      "source": "URS"
     }
   ],
   "coveredTerms": [
-    "COPQ",
-    "DPPM",
-    "ECRS",
-    "FPY",
     "IE",
+    "ME",
+    "MTBF",
+    "MTTR",
     "OEE",
-    "PDCA",
     "PE",
-    "PMC",
-    "PQCD",
-    "UPPH"
+    "TPM",
+    "URS"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
-  "linkedTerms": [],
+  "linkedTerms": [
+    "MTBF",
+    "MTTR"
+  ],
   "featuredTerms": [
-    "OEE",
-    "UPPH",
-    "ECRS",
-    "PDCA"
+    "MTBF",
+    "MTTR"
   ],
   "status": "passed"
 }
