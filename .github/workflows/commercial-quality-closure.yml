@@ -80,10 +80,6 @@ jobs:
           node scripts/hide-public-pricing.js
           node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
-          node scripts/remove-daily-directory-consultation.js
-          node scripts/normalize-daily-visual-closure.js
-          node scripts/publish-number-badge-contrast.js
-          node scripts/audit-daily-quality-linkage.js
 
       - name: Unify Daily Engineering Brief brand
         shell: bash
@@ -98,6 +94,13 @@ jobs:
 
       - name: Validate archive depth and continuity
         run: node scripts/validate-daily-archive.js
+
+      - name: Finalize current message and visual closure
+        run: |
+          node scripts/remove-daily-directory-consultation.js
+          node scripts/normalize-daily-visual-closure.js
+          node scripts/publish-number-badge-contrast.js
+          node scripts/audit-daily-quality-linkage.js
 
       - name: Validate publication contract
         shell: bash
