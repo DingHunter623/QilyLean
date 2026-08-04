@@ -42,15 +42,13 @@ const files = collectDailyFiles();
 assert(files.length > 0, 'Daily source files exist');
 
 const sourceLatest = files[0].slice(0, 10);
-const indexPath = 'qilylean/daily/index.json';
-const index = JSON.parse(read(indexPath));
+const index = JSON.parse(read('qilylean/daily/index.json'));
 assert(Array.isArray(index) && index.length > 0, 'Daily index is a non-empty array');
 assert(index[0].date === sourceLatest, 'Daily index latest date matches newest source file', `${index[0].date} != ${sourceLatest}`);
 assert(index.length === files.length, 'Daily index count matches independent brief pages', `${index.length} != ${files.length}`);
 assert(index.length >= 2584, 'Daily archive contains at least 2584 briefs', String(index.length));
 
-const latestPath = `qilylean/daily/${sourceLatest}.html`;
-const latest = read(latestPath);
+const latest = read(`qilylean/daily/${sourceLatest}.html`);
 const directory = read('qilylean/daily-insights.html');
 const knowledge = read('knowledge/index.html');
 const sitemap = read('sitemap.xml');
@@ -73,7 +71,12 @@ includes(latest, 'site-visual-closure-v2.css?v=20260803-boundary-links-v2', 'Lat
 includes(directory, sourceLatest, 'Daily directory exposes latest date');
 includes(sitemap, `qilylean/daily/${sourceLatest}.html`, 'Sitemap contains latest brief');
 matches(knowledge, new RegExp(`data-latest-brief-date=["']${sourceLatest}["']`), 'Knowledge page latest card uses latest date');
-matches(knowledge, new RegExp(`(?:data-latest-brief-link[^>]*href|href[^>]*data-latest-brief-link)=["']?[^>]*qilylean/daily/${sourceLatest}\\.html`, 'i'), 'Knowledge page latest link points to latest brief');
+const escapedLatestPath = `\\/qilylean\\/daily\\/${sourceLatest}\\.html`;
+matches(
+  knowledge,
+  new RegExp(`<a[^>]*(?:data-latest-brief-link[^>]*href=["']${escapedLatestPath}["']|href=["']${escapedLatestPath}["'][^>]*data-latest-brief-link)[^>]*>`, 'i'),
+  'Knowledge page latest link points to latest brief'
+);
 
 assert(siteData.briefs && siteData.briefs.latestDate === sourceLatest, 'Site data latest date is current');
 assert(siteData.briefs && siteData.briefs.total === index.length, 'Site data brief count matches index');
@@ -102,8 +105,9 @@ if (sourceLatest === '2026-08-05') {
   assert(!latest.includes('科学改进生产力：从“催人提速”转向“系统减少损失”'), 'August 5 brief does not reuse August 4 title');
 }
 
-includes(read('qilylean/daily/2026-08-04.html'), 'data-quality-throughline="2026-08-04"', 'August 4 quality-throughline remains intact');
-includes(read('qilylean/daily/2026-08-04.html'), '质量门槛｜科学改进生产力', 'August 4 quality label remains intact');
+const augustFourth = read('qilylean/daily/2026-08-04.html');
+includes(augustFourth, 'data-quality-throughline="2026-08-04"', 'August 4 quality-throughline remains intact');
+includes(augustFourth, '质量门槛｜科学改进生产力', 'August 4 quality label remains intact');
 
 includes(cooperation, 'QILY-PRICING-PUBLIC-DISABLED', 'Public pricing remains disabled');
 includes(cooperation, '<h2>合作启动路径</h2>', 'Cooperation start path remains visible');
@@ -116,11 +120,15 @@ assert(!/\bGATE\b/.test(latest), 'No unexplained GATE label remains');
 assert(!/id="brief-consultation"|id="briefConsultationForm"|简报留言交流|留言来源：今日简报总目录/.test(directory), 'Daily directory has no duplicate consultation module');
 
 const legacyExpression = /site-navigation\.js\?v=20260728-layout-type-v3|site-navigation\.js\?v=20260729-no-old-flash-v1|site-shell\.css\?v=20260725-compact-hero-v1|homepage-music\.js\?v=20260722-continuous-v3/;
+const legacyFiles = [];
+const obsoleteCtaFiles = [];
 for (const name of files) {
   const page = fs.readFileSync(path.join(dailyDir, name), 'utf8');
-  assert(!legacyExpression.test(page), `No legacy shared asset in ${name}`);
-  assert(!/brief-consultation-cta|#brief-consultation/.test(page), `No obsolete directory CTA in ${name}`);
+  if (legacyExpression.test(page)) legacyFiles.push(name);
+  if (/brief-consultation-cta|#brief-consultation/.test(page)) obsoleteCtaFiles.push(name);
 }
+assert(legacyFiles.length === 0, 'All daily pages are free of legacy shared assets', legacyFiles.slice(0, 10).join(', '));
+assert(obsoleteCtaFiles.length === 0, 'All daily pages are free of obsolete directory CTAs', obsoleteCtaFiles.slice(0, 10).join(', '));
 assert(!legacyExpression.test(directory), 'Daily directory has no legacy shared asset');
 
 process.stdout.write(`Current daily publication validated: ${sourceLatest}, ${index.length} briefs.\n`);
