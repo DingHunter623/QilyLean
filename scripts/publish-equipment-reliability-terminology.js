@@ -35,9 +35,10 @@ function updateTerminologyPage() {
   const file = 'knowledge/terminology.html';
   let html = read(file);
   if (!html.includes('<div class="term-code">MTBF</div>')) {
-    const anchor = '<article class="term-card" data-term-card>\n  <div class="term-code">UPPH</div>';
-    if (!html.includes(anchor)) throw new Error('Unable to find UPPH terminology-card insertion anchor.');
-    html = html.replace(anchor, `${termCards}\n${anchor}`);
+    const anchorPattern = /<article\s+class="term-card"\s+data-term-card>\s*<div\s+class="term-code">UPPH<\/div>/i;
+    const match = html.match(anchorPattern);
+    if (!match) throw new Error('Unable to find UPPH terminology-card insertion anchor.');
+    html = html.replace(anchorPattern, `${termCards}\n${match[0]}`);
   }
   html = html
     .replace(/词典：\d+项中文诠释/g, `词典：${TOTAL}项中文诠释`)
