@@ -5,7 +5,6 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/commercial-quality-closure.yml"
-      - ".github/workflows/validate-daily-archive-pr.yml"
       - "site-commercial-quality-closure-v1.css"
       - "site-number-badge-contrast-v1.css"
       - "site-interactive-hover-contrast-v1.css"
@@ -17,6 +16,9 @@ on:
       - "scripts/enhance-daily-archive.js"
       - "scripts/publish-equipment-reliability-terminology.js"
       - "scripts/publish-number-badge-contrast.js"
+      - "scripts/build-site-metadata.js"
+      - "scripts/validate-current-daily-publication.js"
+      - "scripts/normalize-daily-visual-closure.js"
       - "scripts/materialize-static-core-pages.js"
       - "cooperation/index.html"
       - "links/index.html"
@@ -29,17 +31,18 @@ permissions:
   contents: write
 
 concurrency:
-  group: commercial-quality-closure-main
+  group: qily-daily-publication-main
   cancel-in-progress: true
 
 jobs:
   publish:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - uses: actions/setup-node@v4
         with:
@@ -53,9 +56,17 @@ jobs:
           node --check scripts/normalize-daily-quality-label.js
           node --check scripts/enforce-productivity-theme-alias.js
           node --check scripts/build-daily-archive.js
+          node --check scripts/build-site-metadata.js
           node --check scripts/enhance-daily-archive.js
+          node --check scripts/enhance-terminology-training.js
+          node --check scripts/audit-daily-terminology.js
           node --check scripts/publish-equipment-reliability-terminology.js
+          node --check scripts/sync-daily-terminology.js
+          node --check scripts/bump-daily-css-version.js
           node --check scripts/validate-daily-archive.js
+          node --check scripts/validate-current-daily-publication.js
+          node --check scripts/remove-daily-directory-consultation.js
+          node --check scripts/normalize-daily-visual-closure.js
           node --check scripts/publish-number-badge-contrast.js
 
       - name: Apply source and public-page closure
@@ -75,6 +86,7 @@ jobs:
           node scripts/audit-daily-terminology.js
           node scripts/sync-daily-terminology.js
           node scripts/sync-daily-terminology.js --check
+          node scripts/build-site-metadata.js
           node scripts/bump-daily-css-version.js
           node scripts/apply-commercial-quality-closure-20260804.js
           node scripts/hide-public-pricing.js
@@ -101,50 +113,13 @@ jobs:
           node scripts/normalize-daily-visual-closure.js
           node scripts/publish-number-badge-contrast.js
           node scripts/audit-daily-quality-linkage.js
+          node scripts/build-site-metadata.js
 
       - name: Validate publication contract
-        shell: bash
-        run: |
-          LATEST_DATE="$(node -e "const data=require('./qilylean/daily/index.json'); process.stdout.write(data[0].date)")"
-          SOURCE_LATEST="$(node - <<'NODE'
-          const fs=require('fs');
-          const files=fs.readdirSync('qilylean/daily').filter(x=>/^\d{4}-\d{2}-\d{2}\.html$/.test(x)).sort().reverse();
-          process.stdout.write(files[0].slice(0,10));
-          NODE
-          )"
-          test "$LATEST_DATE" = "$SOURCE_LATEST"
-          grep -q 'data-brief-message-form' "qilylean/daily/$LATEST_DATE.html"
-          grep -q "qilylean/daily/$LATEST_DATE.html" sitemap.xml
-          grep -q "data-latest-brief-date=\"$LATEST_DATE\"" knowledge/index.html
-          grep -q 'site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
-          grep -q 'site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v1' "qilylean/daily/$LATEST_DATE.html"
-          grep -q '<div class="term-code">MTBF</div>' knowledge/terminology.html
-          grep -q '<div class="term-code">MTTR</div>' knowledge/terminology.html
-          grep -q '<h1>MTBF｜平均故障间隔时间</h1>' knowledge/terminology/mtbf.html
-          grep -q '<h1>MTTR｜平均修复时间</h1>' knowledge/terminology/mttr.html
-          grep -q 'knowledge/terminology/mtbf.html' qilylean/site-search-index.json
-          grep -q 'knowledge/terminology/mttr.html' qilylean/site-search-index.json
+        run: node scripts/validate-current-daily-publication.js
 
-          # 专项质量贯穿保留在8月4日简报，不要求后续每期重复相同主题。
-          grep -q 'data-quality-throughline="2026-08-04"' qilylean/daily/2026-08-04.html
-          grep -q '质量门槛｜科学改进生产力' qilylean/daily/2026-08-04.html
-
-          grep -q 'QILY-PRICING-PUBLIC-DISABLED' cooperation/index.html
-          grep -q '<h2>合作启动路径</h2>' cooperation/index.html
-          grep -q '质量不是PQCD中的一个并列数字' cooperation/index.html
-          grep -q 'qilyCommercialQualityClosureStylesheet' cooperation/index.html
-          grep -q 'qilyCommercialQualityClosureStylesheet' links/index.html
-          grep -q '#companyGrid .card' site-commercial-quality-closure-v1.css
-          grep -q '.cooperation-page .boundary article:last-child' site-commercial-quality-closure-v1.css
-          if grep -q '¥\|公开价格参考与报价依据\|公开报价不包含\|<div class="price">' cooperation/index.html; then
-            echo "Public pricing remains on the cooperation page"
-            exit 1
-          fi
-          if grep -q '\bGATE\b' "qilylean/daily/$LATEST_DATE.html"; then
-            echo "Unexplained GATE label remains"
-            exit 1
-          fi
-          git diff --check
+      - name: Verify deterministic diff
+        run: git diff --check
 
       - name: Commit generated publication
         shell: bash
@@ -161,8 +136,7 @@ jobs:
             links/index.html \
             knowledge/index.html \
             knowledge/terminology.html \
-            knowledge/terminology/mtbf.html \
-            knowledge/terminology/mttr.html \
+            knowledge/terminology/*.html \
             qilylean/site-data.json \
             qilylean/site-search-index.json \
             qilylean/daily-insights.html \
@@ -174,6 +148,5 @@ jobs:
             scripts/materialize-static-core-pages.js \
             sitemap.xml \
             sitemap-core.xml
-          git commit -m "build: publish reliability brief and terminology [skip ci]"
-          git pull --rebase origin main
-          git push origin main
+          git commit -m "build: publish current reliability brief and terminology [skip ci]"
+          git push origin HEAD:main
