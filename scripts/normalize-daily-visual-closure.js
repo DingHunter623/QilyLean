@@ -7,14 +7,15 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const dailyRoot = path.join(root, 'qilylean');
 const dailyDir = path.join(dailyRoot, 'daily');
-const version = '20260803-boundary-links-v2';
+const primaryVersion = '20260804-sitewide-clarity-v2';
+const boundaryVersion = '20260803-boundary-links-v2';
 
 const assets = [
-  '  <link id="qilyVisualClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v1.css?v=20260803-visual-closure-v1">',
-  '  <link id="qilyBoundaryLinksClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v2.css?v=20260803-boundary-links-v2">',
-  '  <script defer data-qily-visual-closure-loader="v1" src="/site-visual-closure-v1.js?v=20260803-visual-closure-v1"></script>',
-  '  <script defer data-qily-boundary-links-loader="v2" src="/site-visual-closure-v2.js?v=20260803-boundary-links-v2"></script>',
-  `  <script defer src="/site-navigation.js?v=${version}"></script>`
+  `  <link id="qilyVisualClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v1.css?v=${primaryVersion}">`,
+  `  <link id="qilyBoundaryLinksClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v2.css?v=${boundaryVersion}">`,
+  `  <script defer data-qily-visual-closure-loader="v1" src="/site-visual-closure-v1.js?v=${primaryVersion}"></script>`,
+  `  <script defer data-qily-boundary-links-loader="v2" src="/site-visual-closure-v2.js?v=${boundaryVersion}"></script>`,
+  `  <script defer src="/site-navigation.js?v=${primaryVersion}"></script>`
 ].join('\n');
 
 function normalize(file) {
@@ -47,16 +48,17 @@ function files() {
 
 let changed = 0;
 const failures = [];
-for (const file of files()) {
+const targets = files();
+for (const file of targets) {
   if (normalize(file)) changed += 1;
   const html = fs.readFileSync(file, 'utf8');
   const relative = path.relative(root, file);
-  if (!html.includes(`/site-navigation.js?v=${version}`)) failures.push(`${relative}: navigation`);
-  if (!html.includes('site-visual-closure-v1.css?v=20260803-visual-closure-v1')) failures.push(`${relative}: closure-v1-css`);
-  if (!html.includes('site-visual-closure-v2.css?v=20260803-boundary-links-v2')) failures.push(`${relative}: closure-v2-css`);
-  if (!html.includes('site-visual-closure-v1.js?v=20260803-visual-closure-v1')) failures.push(`${relative}: closure-v1-js`);
-  if (!html.includes('site-visual-closure-v2.js?v=20260803-boundary-links-v2')) failures.push(`${relative}: closure-v2-js`);
+  if (!html.includes(`/site-navigation.js?v=${primaryVersion}`)) failures.push(`${relative}: navigation`);
+  if (!html.includes(`site-visual-closure-v1.css?v=${primaryVersion}`)) failures.push(`${relative}: closure-v1-css`);
+  if (!html.includes(`site-visual-closure-v2.css?v=${boundaryVersion}`)) failures.push(`${relative}: closure-v2-css`);
+  if (!html.includes(`site-visual-closure-v1.js?v=${primaryVersion}`)) failures.push(`${relative}: closure-v1-js`);
+  if (!html.includes(`site-visual-closure-v2.js?v=${boundaryVersion}`)) failures.push(`${relative}: closure-v2-js`);
 }
 
 if (failures.length) throw new Error(`Daily visual closure incomplete: ${failures.slice(0, 30).join(', ')}`);
-process.stdout.write(`Normalized ${files().length} daily pages to current visual closure; changed ${changed}.\n`);
+process.stdout.write(`Normalized ${targets.length} daily pages to current visual closure; changed ${changed}.\n`);
