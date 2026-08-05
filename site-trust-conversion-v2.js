@@ -167,7 +167,7 @@
         '<article class="qtc-card"><small>商业条件</small><strong>主体与费用可核验</strong><ul><li>合同、签章、收款账户一致</li><li>差旅、税费、发票提前书面确认</li><li>新增工作通过变更单管理</li></ul></article>' +
         '<article class="qtc-card"><small>交付条件</small><strong>阶段门与验收可执行</strong><ul><li>诊断、设计、Pilot、复制分阶段</li><li>每阶段有交付物与验收标准</li><li>问题关闭与遗留风险均留痕</li></ul></article>' +
         '<article class="qtc-card"><small>暂缓条件</small><strong>不以表面改善换取签约</strong><ul><li>无真实数据或拒绝现场核验</li><li>要求承诺必然收益或虚假成果</li><li>用放宽质量／安全换取效率</li></ul></article>' +
-      '</div><div class="qtc-actions"><a class="qtc-action" href="#consultation">提交问题初筛</a><a class="qtc-action secondary" href="/trust/">核验商业边界</a><a class="qtc-action secondary" href="/projects/">查看项目证据结构</a></div>'
+      '</div><div class="qtc-actions"><a class="qtc-action" href="#diagnosis">提交问题初筛</a><a class="qtc-action secondary" href="/trust/">核验商业边界</a><a class="qtc-action secondary" href="/projects/">查看项目证据结构</a></div>'
     });
     insertAfterHero(section);
   }
