@@ -1,0 +1,119 @@
+name: Finalize Unified App Release v2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-unified-app-release-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    env:
+      TIMES_APK: Times26001-Android-v1.1.4-IE-Stopwatch.apk
+      HOME_APK: QilyLean_Home_Universal_v2.1.apk
+
+    steps:
+      - name: Checkout release inputs
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: blob:none
+          sparse-checkout: |
+            .github/workflows/build-qilylean-home.yml
+            android/qilylean-home
+            assets/tools/qilylean-unified-app-icon.svg
+            assets/tools/times26001-overview.svg
+            capabilities/index.html
+            scripts/finalize-unified-app-release.py
+            scripts/publish-qilylean-home-v2.py
+            times26001-home-card.js
+            tools/times26001/index.html
+            Times26001-Android-v1.1.4-IE-Stopwatch.apk
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android build packages
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Verify Times26001 package
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$TIMES_APK"
+          grep -q 'qily_unified_app_icon' <(unzip -l "$TIMES_APK")
+
+      - name: Build and verify QilyLean Home v2.1
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'android:icon="@drawable/ic_launcher"' android/qilylean-home/app/src/main/AndroidManifest.xml
+          grep -q 'android:roundIcon="@drawable/ic_launcher"' android/qilylean-home/app/src/main/AndroidManifest.xml
+          grep -q '#FF10596C' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
+          grep -q '#FF121A16' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
+          grep -q '#FFDC3C31' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
+          gradle -p android/qilylean-home :app:assembleDebug --stacktrace
+          cp android/qilylean-home/app/build/outputs/apk/debug/app-debug.apk "$HOME_APK"
+          test -s "$HOME_APK"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$HOME_APK" | grep -q "application-icon-.*:'res/drawable/ic_launcher.xml'"
+
+      - name: Update website and checksums
+        shell: bash
+        run: |
+          set -euo pipefail
+          TIMES_SHA256="$(sha256sum "$TIMES_APK" | awk '{print $1}')"
+          HOME_SHA256="$(sha256sum "$HOME_APK" | awk '{print $1}')"
+          export TIMES_SHA256 HOME_SHA256
+          printf '%s  %s\n%s  %s\n' "$TIMES_SHA256" "$TIMES_APK" "$HOME_SHA256" "$HOME_APK" > app-release-sha256.txt
+          python3 scripts/finalize-unified-app-release.py
+
+      - name: Validate final publication
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s "$TIMES_APK"
+          test -s "$HOME_APK"
+          test -s assets/tools/qilylean-unified-app-icon.svg
+          grep -q 'QilyLean_Home_Universal_v2.1.apk' capabilities/index.html
+          grep -q 'Times26001-Android-v1.1.4-IE-Stopwatch.apk' capabilities/index.html
+          grep -q 'qilylean-unified-app-icon.svg' capabilities/index.html
+          git diff --check
+
+      - name: Commit and push with conflict recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add --sparse "$HOME_APK" app-release-sha256.txt \
+            capabilities/index.html tools/times26001/index.html times26001-home-card.js \
+            assets/tools/times26001-overview.svg assets/tools/qilylean-unified-app-icon.svg \
+            android/qilylean-home scripts/publish-qilylean-home-v2.py \
+            .github/workflows/build-qilylean-home.yml
+          git commit -m 'release: publish unified app icons and Android packages'
+          for attempt in 1 2 3 4; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep 3
+          done
+          exit 1
