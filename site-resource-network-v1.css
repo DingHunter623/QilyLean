@@ -42,6 +42,61 @@
 .qily-resource-network.dark .qily-resource-network__button.primary{border-color:var(--qlrn-light-gold);color:#17322d;background:var(--qlrn-light-gold)}
 .qily-resource-network.dark .qily-resource-network__button:not(.primary){border-color:rgba(255,255,255,.72);color:#fff;background:transparent}
 .qily-resource-network__button:hover,.qily-resource-network__button:focus-visible{box-shadow:0 0 0 3px rgba(23,139,148,.2);outline:none}
+
+/* QILY-RESOURCE-NETWORK-BUTTON-CONTRAST-V2
+ * 高优先级覆盖全站通用链接规则，杜绝主按钮在常态、已访问、悬停或按下时出现深底深字。
+ */
+html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary,
+html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary:visited{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qlrn-forest)!important;
+  border-color:var(--qlrn-forest)!important;
+  text-decoration-color:var(--qlrn-light-gold)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary:hover,
+html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary:focus-visible{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:var(--qlrn-light-gold)!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  box-shadow:0 9px 22px rgba(15,75,90,.26)!important;
+  transform:translateY(-2px)!important;
+  outline:none!important;
+}
+html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary:active{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qlrn-deep)!important;
+  border-color:var(--qlrn-deep)!important;
+  text-decoration-color:var(--qlrn-light-gold)!important;
+  transform:translateY(0) scale(.98)!important;
+}
+html body .qily-resource-network:not(.dark) .qily-resource-network__actions a.qily-resource-network__button:not(.primary),
+html body .qily-resource-network:not(.dark) .qily-resource-network__actions a.qily-resource-network__button:not(.primary):visited{
+  color:var(--qlrn-forest)!important;
+  -webkit-text-fill-color:var(--qlrn-forest)!important;
+  background-color:#fff!important;
+  border-color:var(--qlrn-teal)!important;
+  text-decoration-color:var(--qlrn-teal)!important;
+  opacity:1!important;
+  filter:none!important;
+}
+html body .qily-resource-network:not(.dark) .qily-resource-network__actions a.qily-resource-network__button:not(.primary):hover,
+html body .qily-resource-network:not(.dark) .qily-resource-network__actions a.qily-resource-network__button:not(.primary):focus-visible{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qlrn-forest)!important;
+  border-color:var(--qlrn-forest)!important;
+  text-decoration-color:var(--qlrn-light-gold)!important;
+  box-shadow:0 9px 22px rgba(15,75,90,.24)!important;
+  transform:translateY(-2px)!important;
+  outline:none!important;
+}
 .qily-resource-network__definition{margin-top:24px;padding:22px;border:1px solid #b8d9d4;background:#fff}
 .qily-resource-network__definition blockquote{margin:0;color:var(--qlrn-forest);font-size:clamp(19px,1.7vw,24px);font-weight:850;line-height:1.75}
 .qily-resource-network__definition p{margin:12px 0 0;color:var(--qlrn-muted);font-size:15px;line-height:1.7}
