@@ -1,0 +1,126 @@
+name: Materialize industry resource network
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "site-resource-network-v1.css"
+      - "links/network/**"
+      - "scripts/materialize-industry-resource-network.js"
+      - ".github/workflows/materialize-industry-resource-network.yml"
+      - "index.html"
+      - "links/index.html"
+      - "links/onboarding/index.html"
+      - "sitemap.xml"
+      - "sitemap-core.xml"
+  push:
+    branches: [main]
+    paths:
+      - "site-resource-network-v1.css"
+      - "links/network/**"
+      - "scripts/materialize-industry-resource-network.js"
+      - ".github/workflows/materialize-industry-resource-network.yml"
+      - "index.html"
+      - "links/index.html"
+      - "links/onboarding/index.html"
+      - "sitemap.xml"
+      - "sitemap-core.xml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-industry-resource-network-${{ github.event_name == 'pull_request' && github.event.pull_request.number || 'main' }}
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Validate scripts and source page
+        shell: bash
+        run: |
+          node --check scripts/materialize-industry-resource-network.js
+          test -s site-resource-network-v1.css
+          test -s links/network/index.html
+
+      - name: Materialize resource-network pages
+        shell: bash
+        run: |
+          node scripts/materialize-industry-resource-network.js
+          if test -f scripts/build-trust-search-sync.js; then
+            node scripts/build-trust-search-sync.js
+          fi
+          node scripts/materialize-industry-resource-network.js
+
+      - name: Verify deterministic generation
+        shell: bash
+        run: |
+          git diff -- index.html links/index.html links/onboarding/index.html links/network/index.html sitemap.xml sitemap-core.xml qilylean/site-data.json qilylean/site-search-index.json > /tmp/resource-first.diff
+          node scripts/materialize-industry-resource-network.js
+          if test -f scripts/build-trust-search-sync.js; then
+            node scripts/build-trust-search-sync.js
+          fi
+          node scripts/materialize-industry-resource-network.js
+          git diff -- index.html links/index.html links/onboarding/index.html links/network/index.html sitemap.xml sitemap-core.xml qilylean/site-data.json qilylean/site-search-index.json > /tmp/resource-second.diff
+          if ! cmp /tmp/resource-first.diff /tmp/resource-second.diff; then
+            echo "Resource-network generation changed on repeat execution:" >&2
+            diff -u /tmp/resource-first.diff /tmp/resource-second.diff || true
+            exit 1
+          fi
+
+      - name: Validate public definition and compliance boundaries
+        shell: bash
+        run: |
+          grep -q 'QILY-RESOURCE-NETWORK:HOME:START' index.html
+          grep -q 'QilyLean以制造改善项目交付为核心' index.html
+          grep -q '产业资源协同网络｜建设阶段' index.html
+          grep -q 'QILY-RESOURCE-NETWORK:LINKS:START' links/index.html
+          grep -q '产业资源目录｜全球科技企业与跨行业资源' links/index.html
+          grep -q 'QILY-RESOURCE-NETWORK:ONBOARDING:START' links/onboarding/index.html
+          grep -q '入驻不等于背书，展示不等于成交' links/network/index.html
+          grep -q '当前状态：建设阶段' links/network/index.html
+          grep -q 'https://qilylean.com/links/network/' sitemap.xml
+          grep -q 'https://qilylean.com/links/onboarding/' sitemap.xml
+          grep -q 'qilyResourceNetworkStylesheet' index.html
+          grep -q 'qilyResourceNetworkStylesheet' links/index.html
+          grep -q 'qilyResourceNetworkStylesheet' links/onboarding/index.html
+          grep -q 'site-resource-network-v1.css' links/network/index.html
+          ! grep -Eq '成熟行业平台|保证成交|固定访问量|官方推荐资源' index.html links/index.html links/onboarding/index.html links/network/index.html
+          node - <<'NODE'
+          const fs = require('fs');
+          const index = JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
+          const required = ['/', '/links/', '/links/onboarding/', '/links/network/'];
+          for (const url of required) {
+            if (!index.entries.some((entry) => entry.url === url)) throw new Error(`Search index missing ${url}`);
+          }
+          const network = index.entries.find((entry) => entry.url === '/links/network/');
+          if (!network.text.includes('可信展示') || !network.text.includes('需求匹配') || !network.text.includes('成果交付')) {
+            throw new Error('Resource-network search entry is incomplete');
+          }
+          NODE
+
+      - name: Commit generated public pages
+        if: github.event_name == 'push'
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Industry resource network is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html links/index.html links/onboarding/index.html links/network/index.html sitemap.xml sitemap-core.xml trust/index.html cooperation/index.html qilylean/site-data.json qilylean/site-search-index.json site-search.js
+          git commit -m "build: publish industry resource network"
+          git push
