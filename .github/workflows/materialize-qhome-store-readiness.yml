@@ -1,0 +1,41 @@
+name: Materialize QilyLean Home store readiness
+
+on:
+  push:
+    branches:
+      - release/app-store-readiness-20260806
+    paths:
+      - scripts/materialize-qhome-store-readiness.py
+      - .github/workflows/materialize-qhome-store-readiness.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/app-store-readiness-20260806
+          fetch-depth: 1
+      - name: Materialize UI
+        run: python3 scripts/materialize-qhome-store-readiness.py
+      - name: Validate source
+        run: |
+          grep -q 'QilyLean Home v2.3.0' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+          grep -q 'legal/qilylean-home/privacy' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+          grep -q 'legal/qilylean-home/terms' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+          grep -q 'app-support' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+      - name: Commit materialized source
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+          if git diff --cached --quiet; then
+            echo 'No materialization changes.'
+            exit 0
+          fi
+          git commit -m 'feat: add QilyLean Home privacy and support entries'
+          git push origin HEAD:release/app-store-readiness-20260806
