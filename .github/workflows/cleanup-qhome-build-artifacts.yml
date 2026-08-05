@@ -23,20 +23,9 @@ jobs:
         run: |
           set -euo pipefail
           git rm -r --ignore-unmatch android/qilylean-home/.gradle android/qilylean-home/app/build
-          python3 - <<'PY'
-          from pathlib import Path
-          path = Path('.gitignore')
-          text = path.read_text(encoding='utf-8')
-          block = '''
-
-# Android / Gradle generated build files
-**/.gradle/
-**/build/
-'''
-          if '**/.gradle/' not in text:
-              text = text.rstrip() + block
-          path.write_text(text, encoding='utf-8')
-          PY
+          if ! grep -q '^\*\*/\.gradle/$' .gitignore; then
+            printf '\n\n# Android / Gradle generated build files\n**/.gradle/\n**/build/\n' >> .gitignore
+          fi
           git rm --ignore-unmatch .github/workflows/cleanup-qhome-build-artifacts.yml
           git diff --check
 
