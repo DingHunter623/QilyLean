@@ -2,7 +2,8 @@ name: Release QilyLean Home v2.2
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
     paths:
       - '.github/workflows/upgrade-qhome-v22-clock-lunar-times.yml'
 
@@ -21,266 +22,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Upgrade QilyLean Home source and website modules
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-
-          source_path = Path('android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java')
-          source = source_path.read_text(encoding='utf-8')
-
-          if 'private TextView dateView;' not in source:
-              source = source.replace(
-                  '    private TextView clockView;\n',
-                  '    private TextView clockView;\n    private TextView dateView;\n',
-                  1,
-              )
-
-          clock_replacement = '''    private final Runnable clockTask = new Runnable() {
-              @Override
-              public void run() {
-                  Date now = new Date();
-
-                  if (clockView != null) {
-                      clockView.setText(new SimpleDateFormat(
-                              "HH:mm:ss", Locale.CHINA).format(now));
-                  }
-
-                  if (dateView != null) {
-                      java.util.Calendar weekCalendar = java.util.Calendar.getInstance(Locale.CHINA);
-                      weekCalendar.setFirstDayOfWeek(java.util.Calendar.MONDAY);
-                      weekCalendar.setMinimalDaysInFirstWeek(4);
-                      weekCalendar.setTime(now);
-                      int weekOfYear = weekCalendar.get(java.util.Calendar.WEEK_OF_YEAR);
-
-                      String solarDate = new SimpleDateFormat(
-                              "yyyy年M月d日 EEEE", Locale.CHINA).format(now);
-                      dateView.setText(
-                              solarDate
-                                      + " · 第" + weekOfYear + "周"
-                                      + "\\n" + formatLunarDate(now));
-                  }
-
-                  long delay = 1000L - (System.currentTimeMillis() % 1000L);
-                  clockHandler.postDelayed(this, delay);
-              }
-          };'''
-
-          source, count = re.subn(
-              r'    private final Runnable clockTask = new Runnable\(\) \{.*?^    \};',
-              clock_replacement,
-              source,
-              count=1,
-              flags=re.S | re.M,
-          )
-          if count != 1:
-              raise SystemExit('Clock task replacement failed')
-
-          old_clock_ui = '''        clockView = text("", 32, WHITE, Gravity.CENTER);
-                  clockView.setTypeface(Typeface.create("sans", Typeface.NORMAL));
-                  clockView.setLineSpacing(dp(3), 1f);
-                  content.addView(clockView, new LinearLayout.LayoutParams(
-                          ViewGroup.LayoutParams.MATCH_PARENT,
-                          ViewGroup.LayoutParams.WRAP_CONTENT));
-                  clockHandler.removeCallbacks(clockTask);
-                  clockHandler.post(clockTask);
-          '''
-          new_clock_ui = '''        clockView = text("", 44, WHITE, Gravity.CENTER);
-                  clockView.setTypeface(Typeface.create("sans", Typeface.NORMAL));
-                  clockView.setIncludeFontPadding(false);
-                  content.addView(clockView, new LinearLayout.LayoutParams(
-                          ViewGroup.LayoutParams.MATCH_PARENT,
-                          ViewGroup.LayoutParams.WRAP_CONTENT));
-
-                  dateView = text("", 15, GOLD, Gravity.CENTER);
-                  dateView.setLineSpacing(dp(3), 1.08f);
-                  LinearLayout.LayoutParams dateLp = new LinearLayout.LayoutParams(
-                          ViewGroup.LayoutParams.MATCH_PARENT,
-                          ViewGroup.LayoutParams.WRAP_CONTENT);
-                  dateLp.setMargins(0, dp(8), 0, 0);
-                  content.addView(dateView, dateLp);
-
-                  clockHandler.removeCallbacks(clockTask);
-                  clockHandler.post(clockTask);
-          '''
-          if old_clock_ui not in source:
-              raise SystemExit('Clock UI block not found')
-          source = source.replace(old_clock_ui, new_clock_ui, 1)
-
-          source = source.replace(
-              'TextView version = pill("QilyLean Home v2.0 · 官网全导航通用版");',
-              'TextView version = pill("QilyLean Home v2.2 · 秒级时钟＋农历＋周次");',
-              1,
-          )
-
-          digital_section = '''        addSectionTitle(content, "数字工具直达");
-                  addCardRow(content,
-                          card("思大时间管理", "黄历、IE计时、闹钟与倒计时", new View.OnClickListener() {
-                              @Override public void onClick(View v) { openTimeManager(); }
-                          }),
-                          webCard("时间工具说明", "Times26001功能与安装说明", "https://qilylean.com/tools/times26001/"));
-
-          '''
-          system_marker = '        addSectionTitle(content, "系统入口");\n'
-          if 'card("思大时间管理"' not in source:
-              if system_marker not in source:
-                  raise SystemExit('System section marker not found')
-              source = source.replace(system_marker, digital_section + system_marker, 1)
-
-          helper_marker = '    private View webCard(String title, String subtitle, final String url) {'
-          if 'private String formatLunarDate(Date date)' not in source:
-              lunar_helpers = '''    private String formatLunarDate(Date date) {
-                  if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
-                      return "农历日期需 Android 7.0 及以上";
-                  }
-
-                  android.icu.util.Calendar lunar = android.icu.util.Calendar.getInstance(
-                          new android.icu.util.ULocale("zh_CN@calendar=chinese"));
-                  lunar.setTime(date);
-
-                  int month = lunar.get(android.icu.util.Calendar.MONTH) + 1;
-                  int day = lunar.get(android.icu.util.Calendar.DAY_OF_MONTH);
-                  boolean leapMonth = lunar.get(android.icu.util.Calendar.IS_LEAP_MONTH) == 1;
-
-                  return "农历 "
-                          + (leapMonth ? "闰" : "")
-                          + formatLunarMonth(month)
-                          + formatLunarDay(day);
-              }
-
-              private String formatLunarMonth(int month) {
-                  String[] months = {
-                          "正月", "二月", "三月", "四月", "五月", "六月",
-                          "七月", "八月", "九月", "十月", "冬月", "腊月"
-                  };
-                  return month >= 1 && month <= months.length ? months[month - 1] : "";
-              }
-
-              private String formatLunarDay(int day) {
-                  String[] days = {
-                          "初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十",
-                          "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十",
-                          "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十"
-                  };
-                  return day >= 1 && day <= days.length ? days[day - 1] : "";
-              }
-
-          '''
-              if helper_marker not in source:
-                  raise SystemExit('Lunar helper insertion point not found')
-              source = source.replace(helper_marker, lunar_helpers + helper_marker, 1)
-
-          open_url_marker = '    private void openUrl(String url) {'
-          if 'private void openTimeManager()' not in source:
-              time_manager = '''    private void openTimeManager() {
-                  PackageManager pm = getPackageManager();
-                  Intent query = new Intent(Intent.ACTION_MAIN, null);
-                  query.addCategory(Intent.CATEGORY_LAUNCHER);
-                  List<ResolveInfo> apps = pm.queryIntentActivities(query, 0);
-
-                  for (ResolveInfo info : apps) {
-                      String label = info.loadLabel(pm).toString();
-                      String packageName = info.activityInfo.packageName;
-                      String normalizedLabel = label.toLowerCase(Locale.ROOT);
-                      String normalizedPackage = packageName.toLowerCase(Locale.ROOT);
-
-                      if (normalizedLabel.contains("times26001")
-                              || label.contains("思大时间管理")
-                              || normalizedPackage.contains("times26001")) {
-                          Intent launch = pm.getLaunchIntentForPackage(packageName);
-                          if (launch != null) {
-                              startActivity(launch);
-                              return;
-                          }
-                      }
-                  }
-
-                  Toast.makeText(this, "未检测到思大时间管理，正在打开官网安装与使用页", Toast.LENGTH_SHORT).show();
-                  openUrl("https://qilylean.com/tools/times26001/");
-              }
-
-          '''
-              if open_url_marker not in source:
-                  raise SystemExit('openUrl insertion point not found')
-              source = source.replace(open_url_marker, time_manager + open_url_marker, 1)
-
-          required_markers = [
-              'HH:mm:ss',
-              '第" + weekOfYear + "周',
-              'zh_CN@calendar=chinese',
-              'card("思大时间管理"',
-              'private void openTimeManager()',
-              'QilyLean Home v2.2',
-          ]
-          for marker in required_markers:
-              if marker not in source:
-                  raise SystemExit(f'Missing source marker: {marker}')
-          source_path.write_text(source, encoding='utf-8')
-
-          gradle_path = Path('android/qilylean-home/app/build.gradle')
-          gradle = gradle_path.read_text(encoding='utf-8')
-          gradle = re.sub(r'versionCode\s+\d+', 'versionCode 7', gradle, count=1)
-          gradle = re.sub(r"versionName\s+'[^']+'", "versionName '2.2.0-clock-lunar-week-times'", gradle, count=1)
-          gradle_path.write_text(gradle, encoding='utf-8')
-
-          build_workflow = Path('.github/workflows/build-qilylean-home.yml')
-          build_text = build_workflow.read_text(encoding='utf-8')
-          build_text = build_text.replace('QilyLean_Home_Universal_v2.1.apk', 'QilyLean_Home_Universal_v2.2.apk')
-          build_text = build_text.replace('QilyLean-Home-Universal-v2.1', 'QilyLean-Home-Universal-v2.2')
-          build_workflow.write_text(build_text, encoding='utf-8')
-
-          capabilities_path = Path('capabilities/index.html')
-          capabilities = capabilities_path.read_text(encoding='utf-8')
-          if '.capability-home-clock{' not in capabilities:
-              capabilities = capabilities.replace(
-                  '.capability-home-screen p{margin:7px 0 18px;color:#e9f7f4;font-weight:800}',
-                  '.capability-home-screen p{margin:7px 0 12px;color:#e9f7f4;font-weight:800}'
-                  '.capability-home-clock{color:#fff;font-size:clamp(34px,5vw,52px);font-variant-numeric:tabular-nums;letter-spacing:.04em;font-weight:850}'
-                  '.capability-home-date{margin:7px 0 18px;color:#ffe6a8;font-size:14px;line-height:1.65;font-weight:850}',
-                  1,
-              )
-          capabilities = capabilities.replace('Android官网全导航通用版 v2.1', 'Android官网全导航通用版 v2.2')
-          capabilities = capabilities.replace('QilyLean_Home_Universal_v2.1.apk', 'QilyLean_Home_Universal_v2.2.apk')
-          capabilities = capabilities.replace('Android通用版 v2.1下载', 'Android通用版 v2.2下载')
-          capabilities = capabilities.replace(
-              '<h3>QilyLean Home</h3><p>Android官网全导航通用版 v2.2</p>\n                <div class="capability-home-shortcuts">',
-              '<h3>QilyLean Home</h3><p>Android官网全导航通用版 v2.2</p>\n'
-              '                <div class="capability-home-clock">08:05:32</div>\n'
-              '                <div class="capability-home-date">2026年8月5日 星期三 · 第32周<br>农历 六月廿三</div>\n'
-              '                <div class="capability-home-shortcuts">',
-              1,
-          )
-          capabilities = capabilities.replace(
-              '<span>今日简报</span><span>系统设置</span>',
-              '<span>今日简报</span><span>思大时间管理</span><span>系统设置</span>',
-              1,
-          )
-          capabilities = capabilities.replace(
-              '将首页、能力画像、履历主线、代表项目、改善经验、QilyLean AI、知识分享、行走印记和项目合作完整集中到手机桌面；',
-              '桌面时钟升级为“小时：分钟：秒钟”并按秒刷新，日期同步显示公历、星期、中国农历与年度周次；新增“思大时间管理”直达入口，已安装Times26001时直接启动，用于查看黄历、IE分段计时、闹钟和倒计时，未安装时自动进入官网安装与使用页。将首页、能力画像、履历主线、代表项目、改善经验、QilyLean AI、知识分享、行走印记和项目合作完整集中到手机桌面；',
-              1,
-          )
-          capabilities = capabilities.replace(
-              'Android通用版 v2.1｜免Root｜官网首页全导航｜重点内容直达＋通用设置＋全部应用抽屉',
-              'Android通用版 v2.2｜秒级时钟｜公历＋农历＋周次｜思大时间管理直达｜免Root',
-              1,
-          )
-          capabilities_path.write_text(capabilities, encoding='utf-8')
-
-          times_path = Path('tools/times26001/index.html')
-          times = times_path.read_text(encoding='utf-8')
-          integration_note = '<br><strong>现已接入QilyLean Home v2.2，可从品牌桌面直接启动；未安装时自动进入本页。</strong>'
-          if integration_note not in times:
-              times = times.replace(
-                  'Times26001把北京时间、万年历、闹钟响铃、秒表分段、按秒倒计时、黄历节气及数据复制整合在一个Android APP中。</p>',
-                  'Times26001把北京时间、万年历、闹钟响铃、秒表分段、按秒倒计时、黄历节气及数据复制整合在一个Android APP中。' + integration_note + '</p>',
-                  1,
-              )
-          times_path.write_text(times, encoding='utf-8')
-          PY
+      - name: Prepare source and website modules
+        run: python3 scripts/release-qhome-v22.py prepare
 
       - name: Set up Java 17
         uses: actions/setup-java@v4
@@ -291,8 +34,7 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Android build packages
-        shell: bash
+      - name: Install Android packages
         run: |
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
@@ -302,8 +44,7 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Build and validate QilyLean Home v2.2
-        shell: bash
+      - name: Build and validate APK
         run: |
           set -euo pipefail
           gradle -p android/qilylean-home :app:assembleDebug --stacktrace
@@ -313,100 +54,13 @@ jobs:
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$NEW_APK" | grep -q "versionName='2.2.0-clock-lunar-week-times'"
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$NEW_APK" | grep -q "application-label:'QilyLean Home'"
 
-      - name: Finalize website hash and release documentation
-        shell: bash
+      - name: Finalize release metadata
         run: |
           set -euo pipefail
           HOME_SHA256="$(sha256sum "$NEW_APK" | awk '{print $1}')"
-          export HOME_SHA256
-          printf '%s  %s\n' "$HOME_SHA256" "$NEW_APK" > QilyLean_Home_Universal_v2.2.sha256.txt
-          python3 - <<'PY'
-          from pathlib import Path
-          import os
-          import re
-
-          home_sha = os.environ['HOME_SHA256']
-          short_sha = home_sha[:12]
-
-          capabilities_path = Path('capabilities/index.html')
-          capabilities = capabilities_path.read_text(encoding='utf-8')
-          capabilities = re.sub(
-              r'QilyLean_Home_Universal_v2\.2\.apk\?build=[0-9a-f]+',
-              f'QilyLean_Home_Universal_v2.2.apk?build={short_sha}',
-              capabilities,
-              count=1,
-          )
-          capabilities_path.write_text(capabilities, encoding='utf-8')
-
-          readme = f'''# QilyLean Home v2.2｜Android官网全导航通用版
-
-面向常见安卓手机自主开发的免Root品牌桌面，不展示手机品牌、型号或其他设备身份信息。
-
-## v2.2升级内容
-
-- 桌面时钟升级为“小时：分钟：秒钟”格式，并按秒同步刷新；
-- 日期同步显示公历日期、星期与年度周次；
-- 同步显示中国农历月份、日期及闰月状态；
-- 新增“思大时间管理”直达入口：检测到Times26001时直接启动，用于查看黄历、IE分段计时、闹钟与倒计时；未安装时自动进入官网安装与使用页；
-- 保留官网首页全导航、重点内容直达、通用设置和全部应用抽屉；
-- 继续采用统一Q图标，并保持免Root和设备信息保护边界。
-
-## 发布校验
-
-- APK：`QilyLean_Home_Universal_v2.2.apk`
-- SHA-256：`{home_sha}`
-- 官网下载：`https://qilylean.com/QilyLean_Home_Universal_v2.2.apk`
-
-## 安装
-
-```bash
-adb install -r QilyLean_Home_Universal_v2.2.apk
-```
-
-如旧版本与新构建签名不同：
-
-```bash
-adb uninstall com.qilylean.home
-adb install QilyLean_Home_Universal_v2.2.apk
-```
-
-按Home键后选择 `QilyLean Home`，并选择“始终”。
-
-## 回退
-
-进入“默认桌面”切回原系统桌面，或执行：
-
-```bash
-adb uninstall com.qilylean.home
-```
-
-## 安全边界
-
-本版本是应用层免Root定制，不读取、不展示手机品牌、型号或设备名称；不解锁Bootloader，不刷Recovery，不修改系统分区、基带、IMEI、EFS、开机动画或通信底层。
-'''
-          Path('android/qilylean-home/README.md').write_text(readme, encoding='utf-8')
-
-          checks = {
-              'android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java': [
-                  'HH:mm:ss', 'formatLunarDate(now)', '第" + weekOfYear + "周',
-                  '思大时间管理', 'openTimeManager()',
-              ],
-              'capabilities/index.html': [
-                  'Android官网全导航通用版 v2.2', '思大时间管理',
-                  'QilyLean_Home_Universal_v2.2.apk', short_sha,
-              ],
-              'tools/times26001/index.html': ['现已接入QilyLean Home v2.2'],
-              'android/qilylean-home/README.md': [home_sha, '思大时间管理'],
-          }
-          for name, needles in checks.items():
-              text = Path(name).read_text(encoding='utf-8')
-              for needle in needles:
-                  if needle not in text:
-                      raise SystemExit(f'Missing {needle!r} in {name}')
-          PY
+          python3 scripts/release-qhome-v22.py finalize --apk "$NEW_APK" --sha256 "$HOME_SHA256"
 
       - name: Commit and publish release
-        shell: bash
         run: |
           set -euo pipefail
           git config user.name 'QilyLean Release Bot'
