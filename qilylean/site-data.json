@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04",
+  "generatedAt": "2026-08-05",
   "schemaVersion": 1,
   "terminology": {
     "total": 183,
@@ -48,8 +48,8 @@
     "indexedEntries": 2862,
     "indexedPages": 2804,
     "terminologyTotal": 183,
-    "briefTotal": 2582,
-    "latestBriefDate": "2026-08-03",
+    "briefTotal": 2584,
+    "latestBriefDate": "2026-08-05",
     "sitemapLastmod": "2026-08-04"
   }
 }
