@@ -1,8 +1,8 @@
-/* QilyLean global VI, navigation, trust and contrast loader v10 */
+/* QilyLean global VI, navigation, trust and contrast loader v11 */
 (function (d, w) {
   'use strict';
-  if (w.__qilyGlobalAssetLoaderV10) return;
-  w.__qilyGlobalAssetLoaderV10 = true;
+  if (w.__qilyGlobalAssetLoaderV11) return;
+  w.__qilyGlobalAssetLoaderV11 = true;
 
   function removeMicrosoftOverrides() {
     ['qilyMicrosoftInternationalStylesheet','qilyMicrosoftEnterpriseComponentsStylesheet','qilyMicrosoftNavUnderlineStyle','qilyNavFourSideBorderStyle'].forEach(function (id) {
@@ -64,7 +64,7 @@
     ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260802-commercial-focus-v1');
     ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260802-project-rolebar-v3');
     ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-action-label-v3');
-    ensureScript('data-qily-text-contrast-audit','v1','/site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v1');
+    ensureScript('data-qily-text-contrast-audit','v2','/site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2');
   }
 
   function loadConditionalStyles() {
@@ -102,7 +102,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     'site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v2',
     'site-trust-conversion-v2.css?v=20260805-action-label-v4',
     'site-trust-conversion-v2.js?v=20260805-action-label-v3',
-    'site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v1'
+    'site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2'
   ],
   disabledAssets:['site-microsoft-international-v1.css','site-microsoft-enterprise-components-v2.css','site-microsoft-international-v1.js'],
   bootstrapMarkers:['addWideLayoutStylesheet();','addTypographyStylesheet();','if (document.body) boot()'],
@@ -112,8 +112,8 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
 /* QilyLean global navigation wrapper｜保留原导航功能并加载可信度、信息架构与对比度闭环 */
 (function (d, w) {
   'use strict';
-  if (w.__qilyNavigationWrapper20260805V16) return;
-  w.__qilyNavigationWrapper20260805V16 = true;
+  if (w.__qilyNavigationWrapper20260805V17) return;
+  w.__qilyNavigationWrapper20260805V17 = true;
 
   function ensureStylesheet(id, href) {
     var current = d.getElementById(id);
@@ -155,7 +155,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2');
     ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
     ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-action-label-v3');
-    ensureScript('data-qily-text-contrast-audit','v1','/site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v1');
+    ensureScript('data-qily-text-contrast-audit','v2','/site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2');
 
     var body = d.body;
     var isDaily = !!(body && body.classList && body.classList.contains('daily-single-page')) || !!d.querySelector('.brief-adjacent');
