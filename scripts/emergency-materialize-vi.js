@@ -112,8 +112,8 @@ const pageChecks = [
   ['links/index.html', 'companyGrid'],
   ['links/index.html', 'resource-stage'],
   ['projects/qilylean-commercial-deliveries/index.html', '当前公开记录：0项'],
-  ['trust/index.html', '查看商业交付档案'],
-  ['trust/index.html', '查看客户评价授权规则']
+  ['trust/index.html', 'id="evidence-levels"'],
+  ['trust/index.html', 'href="/projects/lean-improvement-evidence/"']
 ];
 for (const [relativePath, marker] of pageChecks) {
   const file = path.join(root, relativePath);
