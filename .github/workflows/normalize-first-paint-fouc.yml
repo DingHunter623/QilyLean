@@ -1,0 +1,111 @@
+name: Normalize first-paint FOUC protection
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/normalize-first-paint-fouc.yml"
+      - "scripts/normalize-first-paint-fouc.js"
+      - "index.html"
+      - "cooperation/index.html"
+      - "site-navigation.js"
+      - "site-navigation-legacy-20260802.js"
+      - "site-shell.css"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/normalize-first-paint-fouc.yml"
+      - "scripts/normalize-first-paint-fouc.js"
+      - "index.html"
+      - "cooperation/index.html"
+      - "site-navigation.js"
+      - "site-navigation-legacy-20260802.js"
+      - "site-shell.css"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-first-paint-fouc-${{ github.event.pull_request.number || 'main' }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Materialize and validate first-paint protection
+        run: |
+          node --check scripts/normalize-first-paint-fouc.js
+          node scripts/normalize-first-paint-fouc.js
+          node scripts/normalize-first-paint-fouc.js --check
+          git diff --check
+      - name: Verify guard order and deferred pricing injection
+        shell: bash
+        run: |
+          grep -F 'QILY-FIRST-PAINT-GUARD:START' index.html
+          grep -F 'QILY-FIRST-PAINT-GUARD:START' cooperation/index.html
+          grep -F 'qilyCriticalFirstPaintGuard' index.html
+          grep -F 'qilyCriticalFirstPaintGuard' cooperation/index.html
+          grep -F 'site-navigation.js?v=20260805-first-paint-v1' index.html
+          grep -F 'site-navigation.js?v=20260805-first-paint-v1' cooperation/index.html
+          grep -F 'site-navigation-legacy-20260802.js?v=20260805-first-paint-v1' site-navigation.js
+          grep -F 'if (window.__qilyLeanSiteNavigationPublicV8)' site-navigation-legacy-20260802.js
+          ! grep -F 'data-qily-shell-bootstrap' index.html cooperation/index.html
+          node - <<'NODE'
+          const fs = require('fs');
+          for (const file of ['index.html', 'cooperation/index.html']) {
+            const html = fs.readFileSync(file, 'utf8');
+            const head = html.indexOf('<head>');
+            const guard = html.indexOf('QILY-FIRST-PAINT-GUARD:START');
+            const meta = html.indexOf('<meta charset=');
+            const style = html.search(/<link[^>]+rel=["']stylesheet["']/i);
+            if (!(head >= 0 && guard > head && meta > guard && (style < 0 || guard < style))) {
+              throw new Error(`${file}: first-paint guard is not the first executable head asset`);
+            }
+          }
+          NODE
+
+  publish:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'push' && github.actor != 'github-actions[bot]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Refresh main and materialize first-paint protection
+        shell: bash
+        run: |
+          git fetch origin main --depth=1
+          git reset --hard origin/main
+          node --check scripts/normalize-first-paint-fouc.js
+          node scripts/normalize-first-paint-fouc.js
+          node scripts/normalize-first-paint-fouc.js --check
+          git diff --check
+      - name: Commit protected public entry pages and runtime order
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "First-paint FOUC protection is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html cooperation/index.html site-navigation.js site-navigation-legacy-20260802.js
+          git commit -m "build: prevent homepage and cooperation first-paint flash [skip ci]"
+          git push origin HEAD:main
