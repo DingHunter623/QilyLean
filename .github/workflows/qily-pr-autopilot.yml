@@ -1,0 +1,155 @@
+name: QilyLean PR Autopilot
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: "需要接管的拉取请求编号"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+  checks: read
+  actions: read
+  issues: write
+
+concurrency:
+  group: qily-pr-autopilot-${{ github.event.pull_request.number || inputs.pr_number }}
+  cancel-in-progress: true
+
+jobs:
+  autopilot:
+    name: autopilot
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.user.login == 'DingHunter623' &&
+       github.event.pull_request.head.repo.full_name == github.repository &&
+       github.event.pull_request.draft == false &&
+       !contains(github.event.pull_request.labels.*.name, 'manual-review'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Wait for checks, refresh branch and merge safely
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          EVENT_PR: ${{ github.event.pull_request.number }}
+          INPUT_PR: ${{ inputs.pr_number }}
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+
+          PR_NUMBER="${EVENT_PR:-${INPUT_PR:-}}"
+          REPO="$REPOSITORY"
+          EXPECTED_AUTHOR="DingHunter623"
+
+          if [[ -z "$PR_NUMBER" ]]; then
+            echo "No pull request number was supplied."
+            exit 1
+          fi
+
+          echo "QilyLean PR Autopilot is taking over PR #$PR_NUMBER."
+          sleep 12
+
+          for attempt in $(seq 1 80); do
+            pr_json="$(gh api "repos/$REPO/pulls/$PR_NUMBER")"
+            state="$(jq -r '.state' <<<"$pr_json")"
+            merged="$(jq -r '.merged' <<<"$pr_json")"
+            draft="$(jq -r '.draft' <<<"$pr_json")"
+            author="$(jq -r '.user.login' <<<"$pr_json")"
+            head_repo="$(jq -r '.head.repo.full_name // ""' <<<"$pr_json")"
+            head_sha="$(jq -r '.head.sha' <<<"$pr_json")"
+            mergeable_state="$(jq -r '.mergeable_state // "unknown"' <<<"$pr_json")"
+
+            if [[ "$merged" == "true" || "$state" != "open" ]]; then
+              echo "PR #$PR_NUMBER is already closed or merged."
+              exit 0
+            fi
+
+            if [[ "$draft" == "true" ]]; then
+              echo "PR #$PR_NUMBER is a draft; autopilot will not merge it."
+              exit 0
+            fi
+
+            if [[ "$author" != "$EXPECTED_AUTHOR" || "$head_repo" != "$REPO" ]]; then
+              echo "PR #$PR_NUMBER is not an approved same-repository owner PR."
+              exit 0
+            fi
+
+            labels="$(gh api "repos/$REPO/issues/$PR_NUMBER" --jq '[.labels[].name]')"
+            if jq -e 'index("manual-review") != null' >/dev/null <<<"$labels"; then
+              echo "manual-review label detected; leaving PR open."
+              exit 0
+            fi
+
+            if [[ "$mergeable_state" == "dirty" ]]; then
+              gh pr comment "$PR_NUMBER" --repo "$REPO" --body "QilyLean PR Autopilot：检测到代码冲突，已停止自动合并并保留PR，等待冲突修复。"
+              exit 1
+            fi
+
+            if [[ "$mergeable_state" == "behind" ]]; then
+              echo "Base branch advanced; refreshing PR branch."
+              gh api --method PUT "repos/$REPO/pulls/$PR_NUMBER/update-branch" \
+                -f expected_head_sha="$head_sha" >/dev/null 2>&1 || true
+              sleep 15
+              continue
+            fi
+
+            checks_pages="$(gh api --paginate "repos/$REPO/commits/$head_sha/check-runs?per_page=100" --slurp)"
+            latest_checks="$(jq -c '
+              [ .[] | .check_runs[]
+                | select(.name != "autopilot")
+                | select(.name != "QilyLean PR Autopilot") ]
+              | sort_by(.name, (.started_at // .created_at // ""))
+              | group_by(.name)
+              | map(last)
+            ' <<<"$checks_pages")"
+
+            check_count="$(jq 'length' <<<"$latest_checks")"
+            pending="$(jq '[.[] | select(.status != "completed")] | length' <<<"$latest_checks")"
+            failed="$(jq '[.[] | select(.status == "completed") | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "action_required" or .conclusion == "startup_failure")] | length' <<<"$latest_checks")"
+
+            if (( failed > 0 )); then
+              failed_names="$(jq -r '[.[] | select(.status == "completed") | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "action_required" or .conclusion == "startup_failure") | .name] | join("、")' <<<"$latest_checks")"
+              gh pr comment "$PR_NUMBER" --repo "$REPO" --body "QilyLean PR Autopilot：检查未通过（${failed_names}），已停止自动合并并保留PR，供后续自动诊断修复。"
+              exit 1
+            fi
+
+            if (( check_count == 0 && attempt < 7 )); then
+              echo "Checks have not registered yet; waiting ($attempt/6)."
+              sleep 12
+              continue
+            fi
+
+            if (( pending > 0 )); then
+              echo "$pending check(s) still running for $head_sha."
+              sleep 12
+              continue
+            fi
+
+            latest_pr_json="$(gh api "repos/$REPO/pulls/$PR_NUMBER")"
+            latest_head_sha="$(jq -r '.head.sha' <<<"$latest_pr_json")"
+            if [[ "$latest_head_sha" != "$head_sha" ]]; then
+              echo "PR head moved while checks were evaluated; restarting."
+              sleep 8
+              continue
+            fi
+
+            echo "All current checks are acceptable; attempting squash merge."
+            if gh pr merge "$PR_NUMBER" --repo "$REPO" --squash --delete-branch; then
+              echo "PR #$PR_NUMBER merged by QilyLean PR Autopilot."
+              exit 0
+            fi
+
+            echo "Merge raced with a base/head update; refreshing and retrying."
+            gh api --method PUT "repos/$REPO/pulls/$PR_NUMBER/update-branch" \
+              -f expected_head_sha="$head_sha" >/dev/null 2>&1 || true
+            sleep 15
+          done
+
+          gh pr comment "$PR_NUMBER" --repo "$REPO" --body "QilyLean PR Autopilot：等待检查或基线稳定超过25分钟，已保留PR并停止本次自动合并。"
+          exit 1
