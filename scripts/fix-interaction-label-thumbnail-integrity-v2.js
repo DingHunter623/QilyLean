@@ -8,9 +8,13 @@ function replaceMarked(content, start, end, block) {
   return `${content.replace(pattern, '').trimEnd()}\n\n${block.trim()}\n`;
 }
 function extractTemplate(source, name) {
-  const match = source.match(new RegExp(`const ${name} = \\`([\\s\\S]*?)\\`;`));
-  if (!match) throw new Error(`Unable to extract ${name}`);
-  return match[1];
+  const startMarker = 'const ' + name + ' = `';
+  const start = source.indexOf(startMarker);
+  if (start < 0) throw new Error(`Unable to locate ${name}`);
+  const contentStart = start + startMarker.length;
+  const end = source.indexOf('`;', contentStart);
+  if (end < 0) throw new Error(`Unable to close ${name}`);
+  return source.slice(contentStart, end);
 }
 
 const source = read('scripts/fix-interaction-label-thumbnail-integrity.js');
