@@ -1,0 +1,7 @@
+com.qilylean.home.app-pngs-0 /home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/build/generated/res/pngs/debug
+com.qilylean.home.app-resValues-1 /home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/build/generated/res/resValues/debug
+com.qilylean.home.app-packageDebugResources-2 /home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/build/intermediates/incremental/debug/packageDebugResources/merged.dir
+com.qilylean.home.app-packageDebugResources-3 /home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
+com.qilylean.home.app-debug-4 /home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/build/intermediates/merged_res/debug/mergeDebugResources
+com.qilylean.home.app-debug-5 /home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/debug/res
+com.qilylean.home.app-main-6 /home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/res

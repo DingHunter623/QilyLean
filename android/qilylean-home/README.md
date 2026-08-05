@@ -1,8 +1,8 @@
-# QilyLean Home v2.0｜Android官网全导航通用版
+# QilyLean Home v2.1｜Android官网全导航通用版
 
 面向常见安卓手机自主开发的免Root品牌桌面，不展示手机品牌、型号或其他设备身份信息。
 
-## v2.0升级内容
+## v2.1升级内容
 
 - 按QilyLean官网当前首页导航重构移动端入口；
 - 完整纳入：首页、能力画像、履历主线、代表项目、改善经验、QilyLean AI、知识分享、行走印记、项目合作；
@@ -13,9 +13,9 @@
 
 ## 发布校验
 
-- APK：`QilyLean_Home_Universal_v2.0.apk`
+- APK：`QilyLean_Home_Universal_v2.1.apk`
 - SHA-256：`dc8ba9ddff239b5caf28ea933cce16f0720ad2a6e9ea2149ac02c71af80924b5`
-- 官网下载：`https://qilylean.com/QilyLean_Home_Universal_v2.0.apk`
+- 官网下载：`https://qilylean.com/QilyLean_Home_Universal_v2.1.apk`
 
 ## 安装
 
@@ -24,14 +24,14 @@
 3. 执行：
 
 ```bash
-adb install -r QilyLean_Home_Universal_v2.0.apk
+adb install -r QilyLean_Home_Universal_v2.1.apk
 ```
 
 如旧版本与新构建签名不同，先卸载旧版：
 
 ```bash
 adb uninstall com.qilylean.home
-adb install QilyLean_Home_Universal_v2.0.apk
+adb install QilyLean_Home_Universal_v2.1.apk
 ```
 
 4. 按Home键；

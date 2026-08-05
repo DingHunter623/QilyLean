@@ -1,0 +1,67 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.qilylean.home"
+4    android:versionCode="6"
+5    android:versionName="2.1.0-universal-icon" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="23"
+9        android:targetSdkVersion="28" />
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:4:5-67
+11-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:4:22-64
+12
+13    <application
+13-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:6:5-31:19
+14        android:allowBackup="true"
+14-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:7:9-35
+15        android:debuggable="true"
+16        android:extractNativeLibs="false"
+17        android:icon="@drawable/ic_launcher"
+17-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:8:9-45
+18        android:label="QilyLean Home"
+18-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:10:9-38
+19        android:roundIcon="@drawable/ic_launcher"
+19-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:9:9-50
+20        android:supportsRtl="true"
+20-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:11:9-35
+21        android:theme="@style/AppTheme" >
+21-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:12:9-40
+22        <activity
+22-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:14:9-30:20
+23            android:name="com.qilylean.home.MainActivity"
+23-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:15:13-41
+24            android:exported="true"
+24-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:16:13-36
+25            android:launchMode="singleTask"
+25-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:18:13-44
+26            android:screenOrientation="portrait" >
+26-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:17:13-49
+27            <intent-filter>
+27-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:20:13-23:29
+28                <action android:name="android.intent.action.MAIN" />
+28-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:21:17-69
+28-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:21:25-66
+29
+30                <category android:name="android.intent.category.LAUNCHER" />
+30-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:22:17-77
+30-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:22:27-74
+31            </intent-filter>
+32            <intent-filter>
+32-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:25:13-29:29
+33                <action android:name="android.intent.action.MAIN" />
+33-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:21:17-69
+33-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:21:25-66
+34
+35                <category android:name="android.intent.category.HOME" />
+35-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:27:17-73
+35-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:27:27-70
+36                <category android:name="android.intent.category.DEFAULT" />
+36-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:28:17-76
+36-->/home/runner/work/QilyLean/QilyLean/android/qilylean-home/app/src/main/AndroidManifest.xml:28:27-73
+37            </intent-filter>
+38        </activity>
+39    </application>
+40
+41</manifest>
