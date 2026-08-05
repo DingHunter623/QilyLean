@@ -103,7 +103,6 @@ jobs:
             android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java \
             android/qilylean-home/app/build.gradle \
             android/qilylean-home/README.md \
-            .github/workflows/build-qilylean-home.yml \
             capabilities/index.html \
             tools/times26001/index.html \
             "$NEW_APK" \
