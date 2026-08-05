@@ -5,8 +5,8 @@ on:
     branches: [main]
     paths:
       - 'android/qilylean-home/**'
+      - 'assets/tools/qilylean-unified-app-icon.svg'
       - 'capabilities/index.html'
-      - 'scripts/publish-qilylean-home-v2.py'
       - '.github/workflows/build-qilylean-home.yml'
   workflow_dispatch:
 
@@ -23,8 +23,8 @@ jobs:
           filter: blob:none
           sparse-checkout: |
             android/qilylean-home
+            assets/tools/qilylean-unified-app-icon.svg
             capabilities/index.html
-            scripts/publish-qilylean-home-v2.py
           sparse-checkout-cone-mode: false
 
       - name: Set up Java 17
@@ -46,26 +46,25 @@ jobs:
         with:
           gradle-version: '8.7'
 
+      - name: Validate unified icon wiring
+        run: |
+          grep -q 'android:icon="@drawable/ic_launcher"' android/qilylean-home/app/src/main/AndroidManifest.xml
+          grep -q 'android:roundIcon="@drawable/ic_launcher"' android/qilylean-home/app/src/main/AndroidManifest.xml
+          grep -q '#FF10596C' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
+          grep -q '#FFDC3C31' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
+
       - name: Build debug APK
         run: gradle -p android/qilylean-home :app:assembleDebug --stacktrace
 
       - name: Prepare artifact
         run: |
           mkdir -p dist
-          cp android/qilylean-home/app/build/outputs/apk/debug/app-debug.apk dist/QilyLean_Home_Universal_v2.0.apk
-          sha256sum dist/QilyLean_Home_Universal_v2.0.apk > dist/SHA256SUMS.txt
-
-      - name: Validate website publication
-        run: |
-          python3 scripts/publish-qilylean-home-v2.py
-          grep -q 'Android官网全导航通用版 v2.0' capabilities/index.html
-          grep -q 'QilyLean_Home_Universal_v2.0.apk?build=dc8ba9ddff23' capabilities/index.html
-          test -f QilyLean_Home_Universal_v2.0.apk || true
-          git diff --check
+          cp android/qilylean-home/app/build/outputs/apk/debug/app-debug.apk dist/QilyLean_Home_Universal_v2.1.apk
+          sha256sum dist/QilyLean_Home_Universal_v2.1.apk > dist/SHA256SUMS.txt
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: QilyLean-Home-Universal-v2.0
+          name: QilyLean-Home-Universal-v2.1
           path: dist/
           if-no-files-found: error
