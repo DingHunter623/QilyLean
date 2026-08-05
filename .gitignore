@@ -11,3 +11,8 @@
 # Node dependencies and logs
 node_modules/
 npm-debug.log*
+
+
+# Android / Gradle generated build files
+**/.gradle/
+**/build/
