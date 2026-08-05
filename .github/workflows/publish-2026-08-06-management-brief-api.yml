@@ -53,9 +53,8 @@ jobs:
           echo '[]' > "$entries"
 
           add_blob() {
-            local local_file="$1" repo_path="$2" content sha next
-            content=$(base64 -w0 "$local_file")
-            sha=$(jq -n --arg content "$content" '{content:$content,encoding:"base64"}' \
+            local local_file="$1" repo_path="$2" sha next
+            sha=$(python3 -c 'import base64,json,sys; print(json.dumps({"content":base64.b64encode(open(sys.argv[1],"rb").read()).decode(),"encoding":"base64"}))' "$local_file" \
               | gh api --method POST "repos/$REPO/git/blobs" --input - --jq '.sha')
             next=$(mktemp)
             jq --arg path "$repo_path" --arg sha "$sha" \
