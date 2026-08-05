@@ -32,7 +32,7 @@ const search = JSON.parse(read('qilylean/site-search-index.json'));
   [onboarding, '进入产业资源目录、建立独立资源主页', 'onboarding'],
   [network, '入驻不是背书，展示不等于成交', 'network definition'],
   [network, '当前状态：建设阶段', 'network definition'],
-  [network, 'href="/site-resource-network-v1.css?v=20260805-resource-network-v3"', 'network definition'],
+  [network, 'href="/site-resource-network-v1.css?v=20260805-resource-network-v4"', 'network definition'],
   [network, '<a class="primary" href="/links/onboarding/">申请资源入驻</a>', 'network hero primary action'],
   [sitemap, 'https://qilylean.com/links/network/', 'sitemap'],
   [sitemap, 'https://qilylean.com/links/onboarding/', 'sitemap']
@@ -57,7 +57,13 @@ const search = JSON.parse(read('qilylean/site-search-index.json'));
   'background-color:#ffe39b!important',
   'section.hero .hero-actions a.primary:hover',
   'section.hero .hero-actions a.primary:active',
-  'visibility:visible!important'
+  'visibility:visible!important',
+  'QILY-NETWORK-DARK-SECONDARY-ACTION-CONTRAST-V4',
+  '.qily-resource-network.dark .qily-resource-network__actions a.qily-resource-network__button:not(.primary):visited',
+  'background-color:rgba(255,255,255,.06)!important',
+  'border:2px solid rgba(255,255,255,.88)!important',
+  '.qily-resource-network.dark .qily-resource-network__actions a.qily-resource-network__button:not(.primary):hover',
+  '.qily-resource-network.dark .qily-resource-network__actions a.qily-resource-network__button:not(.primary):active'
 ].forEach((token) => requireToken(stylesheet, token, 'resource-network button contrast stylesheet'));
 
 if (!Array.isArray(search.entries)) throw new Error('Search-index entries are missing');
