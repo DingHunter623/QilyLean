@@ -1,4 +1,4 @@
-name: Publish Times26001 v1.1.4 footer-synced APK
+name: Synchronize Times26001 v1.1.4 website references
 
 on:
   push:
@@ -11,77 +11,68 @@ permissions:
   contents: write
 
 concurrency:
-  group: publish-times26001-v114-footer-sync
+  group: sync-times26001-v114-site-references
   cancel-in-progress: false
 
 jobs:
-  publish:
+  synchronize:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 8
     env:
       GH_TOKEN: ${{ github.token }}
       REPO: DingHunter623/QilyLean
-      ARTIFACT_URL: "https://sdmntprkoreacentral.oaiusercontent.com/files/00000000-f970-8206-86cd-6a5286846412/raw?se=2026-08-05T17:43:25Z&sp=r&sv=2026-02-06&sr=b&scid=bb0ed5a2-f24b-5c1d-aa27-732d5989c9f2&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-05T00:10:33Z&ske=2026-08-06T00:10:33Z&sks=b&skv=2026-02-06&sig=TiVmB7Z0x/8UOC/PjH6wbuceLwBJ5ecj9vk/9nvt4lg%3D"
-      APK_PATH: Times26001-Android-v1.1.4-IE-Stopwatch.apk
-      APK_SHA_PATH: Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt
-      PAGE_PATH: tools/times26001/index.html
+      OLD_CACHE: 81c7653c
+      NEW_CACHE: af47a9ec
+      OLD_SHA: 81c7653c28e5c46421925751342032597fcfd4dbbd7833d76a36e516c0724c9b
+      NEW_SHA: af47a9ec817a1e08a40ae26ee6a1a8943ad5ee36458e611a56b869c13846247a
     steps:
-      - name: Download and verify rebuilt APK
+      - name: Fetch and update all corresponding website references
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p /tmp/times26001-artifact /tmp/times26001-apk
-          curl -L --fail --retry 3 --retry-delay 2 "$ARTIFACT_URL" -o /tmp/times26001-v114.zip
-          unzip -o /tmp/times26001-v114.zip -d /tmp/times26001-artifact
-          test -s /tmp/times26001-artifact/app-debug.apk
-          unzip -q -o /tmp/times26001-artifact/app-debug.apk -d /tmp/times26001-apk
-          grep -RFaq '1.1.4' /tmp/times26001-apk/assets/public/assets
-          if grep -RFaq '1.1.3' /tmp/times26001-apk/assets/public/assets; then
-            echo 'Old visible version 1.1.3 remains in APK assets.' >&2
-            exit 1
-          fi
-          cp /tmp/times26001-artifact/app-debug.apk /tmp/Times26001-Android-v1.1.4-IE-Stopwatch.apk
-          sha256sum /tmp/Times26001-Android-v1.1.4-IE-Stopwatch.apk \
-            | sed 's#/tmp/##' > /tmp/Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt
-
-      - name: Synchronize website download module
-        shell: bash
-        run: |
-          set -euo pipefail
-          gh api "repos/$REPO/contents/$PAGE_PATH?ref=main" --jq '.content' \
-            | tr -d '\n' | base64 -d > /tmp/times26001-index.html
+          mkdir -p /tmp/times-sync
+          for path in times26001-home-card.js capabilities/index.html app-release-sha256.txt; do
+            out="/tmp/times-sync/${path//\//__}"
+            gh api "repos/$REPO/contents/$path?ref=main" --jq '.content' \
+              | tr -d '\n' | base64 -d > "$out"
+          done
           python3 - <<'PY'
           from pathlib import Path
-          import re
 
-          page = Path('/tmp/times26001-index.html')
-          text = page.read_text(encoding='utf-8')
-          target = 'Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=af47a9ec'
-          text, count = re.subn(
-              r'Times26001-Android-v1\.1\.4-IE-Stopwatch\.apk\?build=[^"\']+',
-              target,
-              text,
-          )
-          if count < 1:
-              raise SystemExit('No v1.1.4 APK download link found to refresh.')
-          page.write_text(text, encoding='utf-8')
+          root = Path('/tmp/times-sync')
+          replacements = {
+              'times26001-home-card.js': ('81c7653c', 'af47a9ec'),
+              'capabilities__index.html': ('81c7653c', 'af47a9ec'),
+              'app-release-sha256.txt': (
+                  '81c7653c28e5c46421925751342032597fcfd4dbbd7833d76a36e516c0724c9b',
+                  'af47a9ec817a1e08a40ae26ee6a1a8943ad5ee36458e611a56b869c13846247a',
+              ),
+          }
+          for name, (old, new) in replacements.items():
+              path = root / name
+              text = path.read_text(encoding='utf-8')
+              if old not in text:
+                  raise SystemExit(f'Expected old reference not found in {name}: {old}')
+              path.write_text(text.replace(old, new), encoding='utf-8')
           PY
-          grep -Fq 'Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=af47a9ec' /tmp/times26001-index.html
-          grep -Fq 'Android直接下载 v1.1.4' /tmp/times26001-index.html
+          ! grep -RFq "$OLD_CACHE" /tmp/times-sync/times26001-home-card.js
+          ! grep -RFq "$OLD_CACHE" /tmp/times-sync/capabilities__index.html
+          ! grep -RFq "$OLD_SHA" /tmp/times-sync/app-release-sha256.txt
+          grep -Fq "$NEW_CACHE" /tmp/times-sync/times26001-home-card.js
+          grep -Fq "$NEW_CACHE" /tmp/times-sync/capabilities__index.html
+          grep -Fq "$NEW_SHA" /tmp/times-sync/app-release-sha256.txt
 
-      - name: Publish APK, checksum and synchronized page through Git data API
+      - name: Commit synchronized references through Git data API
         shell: bash
         run: |
           set -euo pipefail
-
           create_blob() {
             python3 -c 'import base64,json,sys; print(json.dumps({"content":base64.b64encode(open(sys.argv[1],"rb").read()).decode(),"encoding":"base64"}))' "$1" \
               | gh api --method POST "repos/$REPO/git/blobs" --input - --jq '.sha'
           }
-
-          apk_blob=$(create_blob /tmp/Times26001-Android-v1.1.4-IE-Stopwatch.apk)
-          sha_blob=$(create_blob /tmp/Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt)
-          page_blob=$(create_blob /tmp/times26001-index.html)
+          home_blob=$(create_blob /tmp/times-sync/times26001-home-card.js)
+          capabilities_blob=$(create_blob /tmp/times-sync/capabilities__index.html)
+          checksum_blob=$(create_blob /tmp/times-sync/app-release-sha256.txt)
 
           published=''
           for attempt in 1 2 3; do
@@ -89,17 +80,17 @@ jobs:
             base_tree=$(gh api "repos/$REPO/git/commits/$parent" --jq '.tree.sha')
             tree=$(jq -n \
               --arg base_tree "$base_tree" \
-              --arg apk_path "$APK_PATH" --arg apk_blob "$apk_blob" \
-              --arg sha_path "$APK_SHA_PATH" --arg sha_blob "$sha_blob" \
-              --arg page_path "$PAGE_PATH" --arg page_blob "$page_blob" \
+              --arg home_blob "$home_blob" \
+              --arg capabilities_blob "$capabilities_blob" \
+              --arg checksum_blob "$checksum_blob" \
               '{base_tree:$base_tree,tree:[
-                {path:$apk_path,mode:"100644",type:"blob",sha:$apk_blob},
-                {path:$sha_path,mode:"100644",type:"blob",sha:$sha_blob},
-                {path:$page_path,mode:"100644",type:"blob",sha:$page_blob}
+                {path:"times26001-home-card.js",mode:"100644",type:"blob",sha:$home_blob},
+                {path:"capabilities/index.html",mode:"100644",type:"blob",sha:$capabilities_blob},
+                {path:"app-release-sha256.txt",mode:"100644",type:"blob",sha:$checksum_blob}
               ]}' \
               | gh api --method POST "repos/$REPO/git/trees" --input - --jq '.sha')
             commit=$(jq -n \
-              --arg message 'fix: publish Times26001 v1.1.4 footer-synced APK [skip ci]' \
+              --arg message 'fix: synchronize Times26001 v1.1.4 website references [skip ci]' \
               --arg tree "$tree" --arg parent "$parent" \
               '{message:$message,tree:$tree,parents:[$parent]}' \
               | gh api --method POST "repos/$REPO/git/commits" --input - --jq '.sha')
