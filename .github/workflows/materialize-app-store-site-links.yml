@@ -1,0 +1,46 @@
+name: Materialize app store legal links
+
+on:
+  push:
+    branches:
+      - release/app-store-readiness-20260806
+    paths:
+      - scripts/materialize-app-store-site-links.py
+      - .github/workflows/materialize-app-store-site-links.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: release/app-store-readiness-20260806
+          fetch-depth: 0
+      - name: Synchronize latest branch
+        run: git pull --rebase origin release/app-store-readiness-20260806
+      - name: Materialize site links
+        run: python3 scripts/materialize-app-store-site-links.py
+      - name: Validate links and sitemaps
+        run: |
+          grep -q '/legal/times26001/privacy/' tools/times26001/index.html
+          grep -q '/legal/times26001/terms/' tools/times26001/index.html
+          grep -q '/legal/qilylean-home/privacy/' capabilities/index.html
+          grep -q '/legal/qilylean-home/terms/' capabilities/index.html
+          grep -q 'https://qilylean.com/app-support/' sitemap.xml
+          grep -q 'https://qilylean.com/app-support/' sitemap-core.xml
+      - name: Commit materialized pages
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/times26001/index.html capabilities/index.html sitemap.xml sitemap-core.xml
+          if git diff --cached --quiet; then
+            echo 'No site materialization changes.'
+            exit 0
+          fi
+          git commit -m 'feat: link app privacy terms and support across website'
+          git pull --rebase origin release/app-store-readiness-20260806
+          git push origin HEAD:release/app-store-readiness-20260806
