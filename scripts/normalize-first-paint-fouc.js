@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+// QilyLean first-paint protection materialization trigger｜2026-08-05
 const fs = require('fs');
 const path = require('path');
 
