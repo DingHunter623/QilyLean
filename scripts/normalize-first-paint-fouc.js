@@ -26,11 +26,11 @@ function assert(condition, message) {
 }
 
 function injectFirstPaintGuard(source, relativePath) {
-  const markerExpression = /<!-- QILY-FIRST-PAINT-GUARD:START -->[\s\S]*?<!-- QILY-FIRST-PAINT-GUARD:END -->\s*/g;
+  const markerExpression = /<!-- QILY-FIRST-PAINT-GUARD:START -->[\s\S]*?<!-- QILY-FIRST-PAINT-GUARD:END -->/g;
   const oldBootstrapExpression = /<script\s+data-qily-shell-bootstrap>[\s\S]*?<\/script>\s*/g;
   let next = source.replace(markerExpression, '').replace(oldBootstrapExpression, '');
   assert(next.includes('<head>'), `${relativePath}: missing <head>`);
-  next = next.replace('<head>', `<head>\n${guard}`);
+  next = next.replace(/<head>\s*/i, `<head>\n${guard}\n  `);
   next = next.replace(/\/site-navigation\.js\?v=[^'"\s<]+/g, `/site-navigation.js?v=${version}`);
   return next;
 }
