@@ -1,4 +1,4 @@
-/* QilyLean｜早期职业履历与主要项目履历联动｜V2026.08.05 R2 */
+/* QilyLean｜职业履历公司主体与官网联动｜V2026.08.05 R3 */
 .career-table .career-year-col{
   width:168px!important;
   min-width:168px!important;
@@ -24,19 +24,33 @@
 }
 .career-table .career-row-company{
   display:flex;
-  align-items:center;
-  gap:8px;
+  align-items:flex-start;
+  gap:8px 10px;
   flex-wrap:wrap;
   margin:7px 0 6px;
-  padding:8px 10px;
+  padding:9px 10px;
   border-left:3px solid var(--daily-gold,#caa15f);
   color:#315f64;
   background:#f7fbfa;
   font-size:.88em;
   line-height:1.65;
 }
-.career-table .career-row-company b{
+.career-table .career-row-company>b{
+  flex:0 0 auto;
   color:var(--daily-forest,#0f4b5a);
+}
+.career-table .career-row-company-list{
+  display:grid;
+  flex:1 1 520px;
+  gap:8px;
+  min-width:0;
+}
+.career-table .career-row-company-item{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  min-width:0;
 }
 .career-table .career-row-company a,
 .career-full-card .career-company-official{
@@ -72,17 +86,23 @@
   font-weight:500;
   line-height:1.72;
 }
+#career-2019-2025,
 #career-2015-2019,
 #career-2009-2015,
 #career-2006-2009{
   scroll-margin-top:96px;
+}
+.career-full-card .career-company-group{
+  display:grid;
+  gap:8px;
+  margin:0 0 12px;
 }
 .career-full-card .career-company-line{
   display:flex;
   align-items:center;
   gap:8px 10px;
   flex-wrap:wrap;
-  margin:0 0 12px;
+  margin:0;
   padding:12px 14px;
   border:1px solid #d5e4e3;
   border-left:4px solid var(--teal,#178b94);
@@ -90,6 +110,10 @@
   background:#f8fbfa;
   font-size:16px;
   line-height:1.65;
+}
+.career-full-card .career-company-line:nth-child(even){
+  border-left-color:var(--copper,#caa15f);
+  background:#fffaf0;
 }
 .career-full-card .career-company-line b{
   color:var(--forest,#0f4b5a);
@@ -125,6 +149,8 @@
   }
   .career-table .career-row-title{font-size:13px}
   .career-table .career-row-company{font-size:11.8px;padding:7px 8px}
+  .career-table .career-row-company-list{flex-basis:100%}
+  .career-table .career-row-company-item{align-items:flex-start;flex-direction:column}
   .career-table .career-row-company a{width:100%;justify-content:center}
   .career-table .career-row-summary{font-size:12px;line-height:1.65}
   .career-full-card .career-company-line{align-items:flex-start;flex-direction:column;font-size:14px}
