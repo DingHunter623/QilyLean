@@ -1,0 +1,100 @@
+name: Publish early career history
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-early-career-history.yml"
+      - "site-early-career-history-v1.css"
+      - "site-early-career-history-v1.js"
+      - "scripts/publish-early-career-history.js"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-early-career-history.yml"
+      - "site-early-career-history-v1.css"
+      - "site-early-career-history-v1.js"
+      - "scripts/publish-early-career-history.js"
+  workflow_run:
+    workflows: ["Build daily engineering brief archive"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-early-career-history-${{ github.event.pull_request.number || 'main' }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate scripts and publication contract
+        run: |
+          node --check site-early-career-history-v1.js
+          node --check scripts/publish-early-career-history.js
+          node scripts/publish-early-career-history.js
+          node scripts/publish-early-career-history.js --check
+          git diff --check
+      - name: Verify exact career links and wording
+        shell: bash
+        run: |
+          grep -F '2015～2019年' qilylean/daily-insights.html
+          grep -F '2009～2015年' qilylean/daily-insights.html
+          grep -F '2006～2009年' qilylean/daily-insights.html
+          grep -F '/experience/#career-2015-2019' qilylean/daily-insights.html
+          grep -F '/experience/#career-2009-2015' qilylean/daily-insights.html
+          grep -F '/experience/#career-2006-2009' qilylean/daily-insights.html
+          grep -F "id = 'career-2015-2019'" site-early-career-history-v1.js
+          grep -F "'career-2009-2015'" site-early-career-history-v1.js
+          grep -F "'career-2006-2009'" site-early-career-history-v1.js
+          grep -F 'width:168px!important' site-early-career-history-v1.css
+          grep -F 'white-space:nowrap!important' site-early-career-history-v1.css
+
+  publish:
+    if: >-
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Refresh latest main and materialize early career history
+        shell: bash
+        run: |
+          git fetch origin main --depth=1
+          git reset --hard origin/main
+          node --check site-early-career-history-v1.js
+          node --check scripts/publish-early-career-history.js
+          node scripts/publish-early-career-history.js
+          node scripts/publish-early-career-history.js --check
+          git diff --check
+      - name: Commit public pages
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Early career history is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qilylean/daily-insights.html experience/index.html
+          git commit -m "build: publish early career history links [skip ci]"
+          git push origin HEAD:main
