@@ -58,6 +58,7 @@ jobs:
       - name: Materialize resource-network pages
         shell: bash
         run: |
+          sed -i 's|<link rel="stylesheet" href="/site-resource-network-v1.css?v=20260805-resource-network-v1">|<link id="qilyResourceNetworkStylesheet" rel="stylesheet" href="/site-resource-network-v1.css?v=20260805-resource-network-v1">|' links/network/index.html
           node scripts/materialize-industry-resource-network.js
           if test -f scripts/build-trust-search-sync.js; then
             node scripts/build-trust-search-sync.js
@@ -96,7 +97,7 @@ jobs:
           grep -q 'qilyResourceNetworkStylesheet' index.html
           grep -q 'qilyResourceNetworkStylesheet' links/index.html
           grep -q 'qilyResourceNetworkStylesheet' links/onboarding/index.html
-          grep -q 'site-resource-network-v1.css' links/network/index.html
+          grep -q 'qilyResourceNetworkStylesheet' links/network/index.html
           ! grep -Eq '成熟行业平台|保证成交|固定访问量|官方推荐资源' index.html links/index.html links/onboarding/index.html links/network/index.html
           node - <<'NODE'
           const fs = require('fs');
