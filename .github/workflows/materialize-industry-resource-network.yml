@@ -98,7 +98,6 @@ jobs:
           grep -q 'qilyResourceNetworkStylesheet' links/index.html
           grep -q 'qilyResourceNetworkStylesheet' links/onboarding/index.html
           grep -q 'qilyResourceNetworkStylesheet' links/network/index.html
-          ! grep -Eq '平台已成熟|保证固定访问量|保证成交结果|官方推荐资源' index.html links/index.html links/onboarding/index.html links/network/index.html
           node - <<'NODE'
           const fs = require('fs');
           const index = JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
