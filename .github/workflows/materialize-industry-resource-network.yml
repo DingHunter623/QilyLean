@@ -1,5 +1,6 @@
 name: Materialize industry resource network
 
+# QilyLean publication contract: source pages are materialized into final static HTML on every authorized main update.
 on:
   pull_request:
     branches: [main]
