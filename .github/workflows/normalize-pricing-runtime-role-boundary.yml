@@ -1,0 +1,90 @@
+name: Normalize pricing runtime role-boundary copy
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/normalize-pricing-runtime-role-boundary.yml"
+      - "scripts/normalize-pricing-runtime-role-boundary.js"
+      - "site-navigation-legacy-20260802.js"
+      - "site-navigation.js"
+      - "cooperation/**"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/normalize-pricing-runtime-role-boundary.yml"
+      - "scripts/normalize-pricing-runtime-role-boundary.js"
+      - "site-navigation-legacy-20260802.js"
+      - "site-navigation.js"
+      - "cooperation/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-pricing-runtime-role-boundary-${{ github.event.pull_request.number || 'main' }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Normalize dynamic pricing copy and cache versions
+        run: |
+          node --check scripts/normalize-pricing-runtime-role-boundary.js
+          node scripts/normalize-pricing-runtime-role-boundary.js
+          node scripts/normalize-pricing-runtime-role-boundary.js --check
+          git diff --check
+      - name: Verify responsibility boundaries and stale-copy removal
+        shell: bash
+        run: |
+          grep -F "DELIVERY｜协同实施" site-navigation-legacy-20260802.js
+          grep -F "智能工厂整体规划与协同实施" site-navigation-legacy-20260802.js
+          grep -F "由相应供应商或外协方实施" site-navigation-legacy-20260802.js
+          grep -F "可执行、可评审的布局方案" site-navigation-legacy-20260802.js
+          grep -F "site-navigation-legacy-20260802.js?v=20260805-pricing-role-boundary-v1" site-navigation.js
+          grep -F "site-navigation.js?v=20260805-pricing-role-boundary-v1" cooperation/index.html
+          ! grep -n -E "DELIVERY｜整体落地|智能工厂整体规划与落地|形成可落地布局方案|整体规划与落地(参考|约)3\.0～5\.0万元/亩" site-navigation-legacy-20260802.js
+
+  publish:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Refresh main and materialize runtime corrections
+        shell: bash
+        run: |
+          git fetch origin main --depth=1
+          git reset --hard origin/main
+          node --check scripts/normalize-pricing-runtime-role-boundary.js
+          node scripts/normalize-pricing-runtime-role-boundary.js
+          node scripts/normalize-pricing-runtime-role-boundary.js --check
+          git diff --check
+      - name: Commit normalized runtime and cache-busting sources
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Pricing runtime responsibility wording is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site-navigation-legacy-20260802.js site-navigation.js cooperation
+          git commit -m "build: clarify pricing runtime implementation boundaries [skip ci]"
+          git push origin HEAD:main
