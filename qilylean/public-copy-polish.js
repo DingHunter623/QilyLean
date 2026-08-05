@@ -11,7 +11,7 @@
   }
   function apply(){
     setHead(document.getElementById('projects'),'代表项目矩阵','围绕典型制造场景，呈现问题识别、关键动作、方法应用、阶段成果与机制固化，体现从现场改善到经营支撑的完整实践链路。');
-    setHead(document.getElementById('papers')||document.getElementById('paper-list'),'改善经验','围绕VSM、标准工时、SMED、ERP/MES协同、IE数据底座与目视化管理，沉淀可理解、可借鉴、可落地的制造改善方法。');
+    setHead(document.getElementById('papers')||document.getElementById('paper-list'),'改善经验','围绕VSM、标准工时、SMED、ERP/MES协同、IE数据底座与目视化管理，沉淀可理解、可借鉴、可执行、可验证、可复用的制造改善方法。');
     setHead(document.getElementById('knowledge'),'精益知识分享','按照“理念—工具—体系—案例”整理精益生产、IE方法、现场改善工具、IATF16949核心工具、数智化工厂与项目交付经验，服务专业交流与知识复用。');
     const experience=document.getElementById('experience');
     if(experience){
