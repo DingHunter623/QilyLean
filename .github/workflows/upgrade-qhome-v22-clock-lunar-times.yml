@@ -22,6 +22,26 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Fix release script escaping
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/release-qhome-v22.py')
+          text = path.read_text(encoding='utf-8')
+          old = '''        clock_replacement,
+                  source,
+                  count=1,
+          '''
+          new = '''        lambda _match: clock_replacement,
+                  source,
+                  count=1,
+          '''
+          if old not in text:
+              raise SystemExit('Release script replacement block not found')
+          path.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
+
       - name: Prepare source and website modules
         run: python3 scripts/release-qhome-v22.py prepare
 
@@ -79,6 +99,7 @@ jobs:
           git config user.name 'QilyLean Release Bot'
           git config user.email 'actions@users.noreply.github.com'
           git add \
+            scripts/release-qhome-v22.py \
             android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java \
             android/qilylean-home/app/build.gradle \
             android/qilylean-home/README.md \
