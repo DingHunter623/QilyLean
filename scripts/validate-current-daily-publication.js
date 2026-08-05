@@ -80,6 +80,9 @@ matches(
 
 assert(siteData.briefs && siteData.briefs.latestDate === sourceLatest, 'Site data latest date is current');
 assert(siteData.briefs && siteData.briefs.total === index.length, 'Site data brief count matches index');
+assert(siteData.search && siteData.search.latestBriefDate === sourceLatest, 'Search metadata latest date matches daily index');
+assert(siteData.search && siteData.search.briefTotal === index.length, 'Search metadata brief count matches daily index');
+assert(siteData.search && siteData.terminology && siteData.search.terminologyTotal === siteData.terminology.total, 'Search terminology count matches central terminology count');
 assert(audit.status === 'passed', 'Latest terminology audit passed');
 assert(Array.isArray(audit.unknownTerms) && audit.unknownTerms.length === 0, 'Latest terminology audit has no unknown terms');
 
