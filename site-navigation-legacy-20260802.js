@@ -333,13 +333,14 @@
     setTimeout(applyFixes, 500);
   }
 
-  repairOnboardingLink();
-  publishCooperationPricing();
-  publishDetailPricing();
-
   var existing = document.getElementById('qilySiteNavigationCoreScript');
   if (existing) {
-    existing.addEventListener('load', function () { applyFixes(); observeShell(); }, { once: true });
+    if (window.__qilyLeanSiteNavigationPublicV8) {
+      applyFixes();
+      observeShell();
+    } else {
+      existing.addEventListener('load', function () { applyFixes(); observeShell(); }, { once: true });
+    }
     return;
   }
 
