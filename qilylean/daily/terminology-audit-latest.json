@@ -1,77 +1,13 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-08-05",
-  "briefPath": "qilylean/daily/2026-08-05.html",
-  "checkedAt": "2026-08-05T00:07:07.957Z",
-  "candidates": [
-    {
-      "term": "IE",
-      "explanation": "",
-      "explicit": false,
-      "source": "IE"
-    },
-    {
-      "term": "ME",
-      "explanation": "",
-      "explicit": false,
-      "source": "ME"
-    },
-    {
-      "term": "MTBF",
-      "explanation": "",
-      "explicit": false,
-      "source": "MTBF"
-    },
-    {
-      "term": "MTTR",
-      "explanation": "",
-      "explicit": false,
-      "source": "MTTR"
-    },
-    {
-      "term": "OEE",
-      "explanation": "",
-      "explicit": false,
-      "source": "OEE"
-    },
-    {
-      "term": "PE",
-      "explanation": "",
-      "explicit": false,
-      "source": "PE"
-    },
-    {
-      "term": "TPM",
-      "explanation": "",
-      "explicit": false,
-      "source": "TPM"
-    },
-    {
-      "term": "URS",
-      "explanation": "",
-      "explicit": false,
-      "source": "URS"
-    }
-  ],
-  "coveredTerms": [
-    "IE",
-    "ME",
-    "MTBF",
-    "MTTR",
-    "OEE",
-    "PE",
-    "TPM",
-    "URS"
-  ],
+  "briefDate": "2026-08-06",
+  "briefPath": "qilylean/daily/2026-08-06.html",
+  "checkedAt": "2026-08-05T16:22:25.835Z",
+  "candidates": [],
+  "coveredTerms": [],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
-  "linkedTerms": [
-    "MTBF",
-    "MTTR"
-  ],
-  "featuredTerms": [
-    "MTBF",
-    "MTTR"
-  ],
+  "linkedTerms": [],
+  "featuredTerms": [],
   "status": "passed"
 }

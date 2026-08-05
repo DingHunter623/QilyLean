@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 2584,
-    "latestDate": "2026-08-05",
-    "latestTheme": "ME工程",
-    "latestTitle": "设备停机不是维修单：用故障代码、MTBF与MTTR建立可靠性闭环",
-    "latestSummary": "设备管理不能停在故障发生后抢修和填写维修单，而要统一停机边界、故障代码、响应过程、原因验证与复发控制，用MTBF、MTTR、OEE和重复故障率把设备问题转化为可预防、可验证、可持续关闭的可靠性闭环。",
-    "latestUrl": "/qilylean/daily/2026-08-05.html",
+    "total": 2585,
+    "latestDate": "2026-08-06",
+    "latestTheme": "组织管理",
+    "latestTitle": "管理六大用人之道：选对人、留住人，让不同层级各司其职",
+    "latestSummary": "用人不能只看能力，也不能只讲感情。基层看才能、中层看德行、高层看胸怀；基层靠公平待遇稳定，中层靠尊重信任凝聚，高层靠事业平台同行。九张管理图将选人、留人和分层履责整合为一套可落地的组织管理逻辑。",
+    "latestUrl": "/qilylean/daily/2026-08-06.html",
     "directoryUrl": "/qilylean/daily-insights.html"
   },
   "knowledge": {
@@ -48,8 +48,8 @@
     "indexedEntries": 2870,
     "indexedPages": 2812,
     "terminologyTotal": 183,
-    "briefTotal": 2584,
-    "latestBriefDate": "2026-08-05",
+    "briefTotal": 2585,
+    "latestBriefDate": "2026-08-06",
     "sitemapLastmod": "2026-08-05"
   }
 }
