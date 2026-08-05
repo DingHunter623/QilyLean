@@ -1,4 +1,5 @@
 name: Build daily engineering brief archive
+# Publication refresh: 2026-08-06 management brief
 
 on:
   push:
