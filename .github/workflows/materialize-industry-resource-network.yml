@@ -90,7 +90,7 @@ jobs:
           grep -q 'QILY-RESOURCE-NETWORK:LINKS:START' links/index.html
           grep -q '产业资源目录｜全球科技企业与跨行业资源' links/index.html
           grep -q 'QILY-RESOURCE-NETWORK:ONBOARDING:START' links/onboarding/index.html
-          grep -q '入驻不等于背书，展示不等于成交' links/network/index.html
+          grep -q '入驻不是背书，展示不等于成交' links/network/index.html
           grep -q '当前状态：建设阶段' links/network/index.html
           grep -q 'https://qilylean.com/links/network/' sitemap.xml
           grep -q 'https://qilylean.com/links/onboarding/' sitemap.xml
