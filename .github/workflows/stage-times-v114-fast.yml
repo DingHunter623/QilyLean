@@ -1,0 +1,48 @@
+name: Stage Times26001 v1.1.4 APK Fast
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/stage-times-v114-fast.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACT_URL: 'https://sdmntprseasia.oaiusercontent.com/files/00000000-73a4-8207-abdd-83d7667df0ce/raw?se=2026-08-05T15:34:59Z&sp=r&sv=2026-02-06&sr=b&scid=88a2329c-99fc-58bc-8af8-f01fbe238214&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-04T21:21:56Z&ske=2026-08-05T21:21:56Z&sks=b&skv=2026-02-06&sig=pI7NpfQIyMC07y0qGpfJ8oot6lBSYAcsa3vPSeiF3xs%3D'
+      APK_NAME: Times26001-Android-v1.1.4-IE-Stopwatch.apk
+
+    steps:
+      - name: Sparse checkout
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout: |
+            .github/workflows/stage-times-v114-fast.yml
+          sparse-checkout-cone-mode: false
+
+      - name: Download APK immediately
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 4 --retry-delay 2 "$ARTIFACT_URL" --output /tmp/times-v114.zip
+          mkdir -p /tmp/times-v114
+          unzip -q /tmp/times-v114.zip -d /tmp/times-v114
+          cp /tmp/times-v114/app-debug.apk "$APK_NAME"
+          test -s "$APK_NAME"
+          grep -q 'qily_unified_app_icon' <(unzip -l "$APK_NAME")
+
+      - name: Commit APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm --ignore-unmatch .github/workflows/stage-times-v114-fast.yml
+          git add "$APK_NAME"
+          git commit -m 'release: stage Times26001 Android v1.1.4'
+          git push origin HEAD:main
