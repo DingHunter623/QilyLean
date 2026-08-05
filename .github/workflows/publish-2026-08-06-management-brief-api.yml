@@ -64,7 +64,8 @@ jobs:
           }
 
           add_blob "$work/2026-08-06.html" "qilylean/daily/2026-08-06.html"
-          for n in $(seq -w 1 9); do
+          for i in $(seq 1 9); do
+            n=$(printf '%02d' "$i")
             add_blob "$work/daily-2026-08-06-${n}.webp" "qilylean/assets/daily-2026-08-06-${n}.webp"
           done
 
