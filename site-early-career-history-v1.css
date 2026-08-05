@@ -1,0 +1,76 @@
+/* QilyLean｜早期职业履历与主要项目履历联动｜V2026.08.05 */
+.career-table .career-year-col{
+  width:168px!important;
+  min-width:168px!important;
+}
+.career-table th:first-child,
+.career-table td:first-child{
+  width:168px!important;
+  min-width:168px!important;
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  word-break:keep-all!important;
+}
+.career-table .career-year-link{
+  white-space:nowrap!important;
+}
+.career-table .career-row-title{
+  display:block;
+  margin:0 0 5px;
+  color:var(--daily-forest,#0f4b5a);
+  font-size:1.02em;
+  font-weight:950;
+  line-height:1.45;
+}
+.career-table .career-row-summary{
+  display:block;
+  color:#526967;
+  font-size:.91em;
+  font-weight:500;
+  line-height:1.72;
+}
+#career-2015-2019,
+#career-2009-2015,
+#career-2006-2009{
+  scroll-margin-top:96px;
+}
+.career-full-card .career-stage-summary{
+  margin:0 0 12px;
+  padding:12px 14px;
+  border-left:4px solid var(--copper,#caa15f);
+  color:#315f64;
+  background:#eef8f6;
+  font-size:17.5px;
+  font-weight:720;
+  line-height:1.75;
+}
+.career-full-card[data-qily-early-career-card="true"]{
+  position:relative;
+}
+.career-full-card[data-qily-early-career-card="true"]:target{
+  box-shadow:0 0 0 3px rgba(202,161,95,.34),0 14px 38px rgba(15,75,90,.12);
+}
+@media(max-width:760px){
+  .career-table .career-year-col{
+    width:132px!important;
+    min-width:132px!important;
+  }
+  .career-table th:first-child,
+  .career-table td:first-child{
+    width:132px!important;
+    min-width:132px!important;
+  }
+  .career-table .career-row-title{font-size:13px}
+  .career-table .career-row-summary{font-size:12px;line-height:1.65}
+}
+@media(max-width:420px){
+  .career-table .career-year-col{
+    width:122px!important;
+    min-width:122px!important;
+  }
+  .career-table th:first-child,
+  .career-table td:first-child{
+    width:122px!important;
+    min-width:122px!important;
+  }
+}
