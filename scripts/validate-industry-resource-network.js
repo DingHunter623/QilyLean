@@ -18,6 +18,7 @@ const home = read('index.html');
 const links = read('links/index.html');
 const onboarding = read('links/onboarding/index.html');
 const network = read('links/network/index.html');
+const stylesheet = read('site-resource-network-v1.css');
 const sitemap = read('sitemap.xml');
 const search = JSON.parse(read('qilylean/site-search-index.json'));
 
@@ -42,6 +43,14 @@ const search = JSON.parse(read('qilylean/site-search-index.json'));
   ['links/network/index.html', network]
 ].forEach(([file, content]) => requireToken(content, 'qilyResourceNetworkStylesheet', file));
 
+[
+  'QILY-RESOURCE-NETWORK-BUTTON-CONTRAST-V2',
+  'a.qily-resource-network__button.primary:visited',
+  'background-color:var(--qlrn-light-gold)!important',
+  '-webkit-text-fill-color:#fff!important',
+  'a.qily-resource-network__button.primary:active'
+].forEach((token) => requireToken(stylesheet, token, 'resource-network button contrast stylesheet'));
+
 if (!Array.isArray(search.entries)) throw new Error('Search-index entries are missing');
 const requiredUrls = ['/', '/links/', '/links/onboarding/', '/links/network/'];
 for (const url of requiredUrls) {
@@ -57,4 +66,4 @@ for (const claim of ['平台已成熟', '保证固定访问量', '保证成交�
   if (combined.includes(claim)) throw new Error(`Prohibited overstated claim detected: ${claim}`);
 }
 
-process.stdout.write('Industry resource network validation passed: static pages, governance boundary, sitemap, stylesheet and search index are aligned.\n');
+process.stdout.write('Industry resource network validation passed: static pages, governance boundary, sitemap, stylesheet, button contrast and search index are aligned.\n');
