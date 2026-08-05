@@ -19,7 +19,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: release/app-store-readiness-20260806
-          fetch-depth: 1
+          fetch-depth: 0
+      - name: Synchronize latest branch
+        run: git pull --rebase origin release/app-store-readiness-20260806
       - name: Materialize UI
         run: python3 scripts/materialize-qhome-store-readiness.py
       - name: Validate source
@@ -38,4 +40,5 @@ jobs:
             exit 0
           fi
           git commit -m 'feat: add QilyLean Home privacy and support entries'
+          git pull --rebase origin release/app-store-readiness-20260806
           git push origin HEAD:release/app-store-readiness-20260806
