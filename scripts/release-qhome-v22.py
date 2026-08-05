@@ -65,7 +65,7 @@ def prepare_source() -> None:
     };'''
     source, count = re.subn(
         r'    private final Runnable clockTask = new Runnable\(\) \{.*?^    \};',
-        clock_replacement,
+        lambda _match: clock_replacement,
         source,
         count=1,
         flags=re.S | re.M,

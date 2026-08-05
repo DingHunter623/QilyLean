@@ -50,16 +50,36 @@ public class MainActivity extends Activity {
 
     private final Handler clockHandler = new Handler();
     private TextView clockView;
+    private TextView dateView;
     private boolean showingApps = false;
 
     private final Runnable clockTask = new Runnable() {
         @Override
         public void run() {
+            Date now = new Date();
+
             if (clockView != null) {
                 clockView.setText(new SimpleDateFormat(
-                        "HH:mm\nM月d日 EEEE", Locale.CHINA).format(new Date()));
+                        "HH:mm:ss", Locale.CHINA).format(now));
             }
-            clockHandler.postDelayed(this, 30000);
+
+            if (dateView != null) {
+                java.util.Calendar weekCalendar = java.util.Calendar.getInstance(Locale.CHINA);
+                weekCalendar.setFirstDayOfWeek(java.util.Calendar.MONDAY);
+                weekCalendar.setMinimalDaysInFirstWeek(4);
+                weekCalendar.setTime(now);
+                int weekOfYear = weekCalendar.get(java.util.Calendar.WEEK_OF_YEAR);
+
+                String solarDate = new SimpleDateFormat(
+                        "yyyy年M月d日 EEEE", Locale.CHINA).format(now);
+                dateView.setText(
+                        solarDate
+                                + " · 第" + weekOfYear + "周"
+                                + "\n" + formatLunarDate(now));
+            }
+
+            long delay = 1000L - (System.currentTimeMillis() % 1000L);
+            clockHandler.postDelayed(this, delay);
         }
     };
 
@@ -116,16 +136,25 @@ public class MainActivity extends Activity {
         tagline.setPadding(0, dp(4), 0, dp(14));
         content.addView(tagline);
 
-        clockView = text("", 32, WHITE, Gravity.CENTER);
+        clockView = text("", 44, WHITE, Gravity.CENTER);
         clockView.setTypeface(Typeface.create("sans", Typeface.NORMAL));
-        clockView.setLineSpacing(dp(3), 1f);
+        clockView.setIncludeFontPadding(false);
         content.addView(clockView, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        dateView = text("", 15, GOLD, Gravity.CENTER);
+        dateView.setLineSpacing(dp(3), 1.08f);
+        LinearLayout.LayoutParams dateLp = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        dateLp.setMargins(0, dp(8), 0, 0);
+        content.addView(dateView, dateLp);
+
         clockHandler.removeCallbacks(clockTask);
         clockHandler.post(clockTask);
 
-        TextView version = pill("QilyLean Home v2.0 · 官网全导航通用版");
+        TextView version = pill("QilyLean Home v2.2 · 秒级时钟＋农历＋周次");
         LinearLayout.LayoutParams versionLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -184,6 +213,13 @@ public class MainActivity extends Activity {
                     @Override public void onClick(View v) { openSettings(Settings.ACTION_INPUT_METHOD_SETTINGS); }
                 }));
 
+        addSectionTitle(content, "数字工具直达");
+        addCardRow(content,
+                card("思大时间管理", "黄历、IE计时、闹钟与倒计时", new View.OnClickListener() {
+                    @Override public void onClick(View v) { openTimeManager(); }
+                }),
+                webCard("时间工具说明", "Times26001功能与安装说明", "https://qilylean.com/tools/times26001/"));
+
         addSectionTitle(content, "系统入口");
         addCardRow(content,
                 card("全部应用", "打开本机应用抽屉", new View.OnClickListener() {
@@ -209,6 +245,42 @@ public class MainActivity extends Activity {
         content.addView(footer, footerLp);
 
         setContentView(scroll);
+    }
+
+    private String formatLunarDate(Date date) {
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.N) {
+            return "农历日期需 Android 7.0 及以上";
+        }
+
+        android.icu.util.Calendar lunar = android.icu.util.Calendar.getInstance(
+                new android.icu.util.ULocale("zh_CN@calendar=chinese"));
+        lunar.setTime(date);
+
+        int month = lunar.get(android.icu.util.Calendar.MONTH) + 1;
+        int day = lunar.get(android.icu.util.Calendar.DAY_OF_MONTH);
+        boolean leapMonth = lunar.get(android.icu.util.Calendar.IS_LEAP_MONTH) == 1;
+
+        return "农历 "
+                + (leapMonth ? "闰" : "")
+                + formatLunarMonth(month)
+                + formatLunarDay(day);
+    }
+
+    private String formatLunarMonth(int month) {
+        String[] months = {
+                "正月", "二月", "三月", "四月", "五月", "六月",
+                "七月", "八月", "九月", "十月", "冬月", "腊月"
+        };
+        return month >= 1 && month <= months.length ? months[month - 1] : "";
+    }
+
+    private String formatLunarDay(int day) {
+        String[] days = {
+                "初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十",
+                "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十",
+                "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十"
+        };
+        return day >= 1 && day <= days.length ? days[day - 1] : "";
     }
 
     private View webCard(String title, String subtitle, final String url) {
@@ -361,6 +433,33 @@ public class MainActivity extends Activity {
             Toast.makeText(this, "LOGO资源读取失败", Toast.LENGTH_SHORT).show();
             return null;
         }
+    }
+
+    private void openTimeManager() {
+        PackageManager pm = getPackageManager();
+        Intent query = new Intent(Intent.ACTION_MAIN, null);
+        query.addCategory(Intent.CATEGORY_LAUNCHER);
+        List<ResolveInfo> apps = pm.queryIntentActivities(query, 0);
+
+        for (ResolveInfo info : apps) {
+            String label = info.loadLabel(pm).toString();
+            String packageName = info.activityInfo.packageName;
+            String normalizedLabel = label.toLowerCase(Locale.ROOT);
+            String normalizedPackage = packageName.toLowerCase(Locale.ROOT);
+
+            if (normalizedLabel.contains("times26001")
+                    || label.contains("思大时间管理")
+                    || normalizedPackage.contains("times26001")) {
+                Intent launch = pm.getLaunchIntentForPackage(packageName);
+                if (launch != null) {
+                    startActivity(launch);
+                    return;
+                }
+            }
+        }
+
+        Toast.makeText(this, "未检测到思大时间管理，正在打开官网安装与使用页", Toast.LENGTH_SHORT).show();
+        openUrl("https://qilylean.com/tools/times26001/");
     }
 
     private void openUrl(String url) {
