@@ -17,19 +17,15 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 10
     env:
-      ARTIFACT_URL: "https://sdmntprjapaneast.oaiusercontent.com/files/00000000-b6b4-8209-848b-60c6b4591cbb/raw?se=2026-08-05T17:39:05Z&sp=r&sv=2026-02-06&sr=b&scid=36e663d4-5986-5ec0-960c-a3250b5292b1&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-04T22:08:40Z&ske=2026-08-05T22:08:40Z&sks=b&skv=2026-02-06&sig=4EtKVkYQXVU%2BgOaHFtcfCphW2m4qJ2AHW6EZmt1vPtI%3D"
+      GH_TOKEN: ${{ github.token }}
+      REPO: DingHunter623/QilyLean
+      ARTIFACT_URL: "https://sdmntprkoreacentral.oaiusercontent.com/files/00000000-f970-8206-86cd-6a5286846412/raw?se=2026-08-05T17:43:25Z&sp=r&sv=2026-02-06&sr=b&scid=bb0ed5a2-f24b-5c1d-aa27-732d5989c9f2&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-05T00:10:33Z&ske=2026-08-06T00:10:33Z&sks=b&skv=2026-02-06&sig=TiVmB7Z0x/8UOC/PjH6wbuceLwBJ5ecj9vk/9nvt4lg%3D"
       APK_PATH: Times26001-Android-v1.1.4-IE-Stopwatch.apk
       APK_SHA_PATH: Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt
-      CACHE_KEY: af47a9ec
+      PAGE_PATH: tools/times26001/index.html
     steps:
-      - name: Checkout current main
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 1
-
       - name: Download and verify rebuilt APK
         shell: bash
         run: |
@@ -39,47 +35,80 @@ jobs:
           unzip -o /tmp/times26001-v114.zip -d /tmp/times26001-artifact
           test -s /tmp/times26001-artifact/app-debug.apk
           unzip -q -o /tmp/times26001-artifact/app-debug.apk -d /tmp/times26001-apk
-          grep -Raq '1.1.4' /tmp/times26001-apk/assets/public/assets
-          if grep -Raq '1.1.3' /tmp/times26001-apk/assets/public/assets; then
+          grep -RFaq '1.1.4' /tmp/times26001-apk/assets/public/assets
+          if grep -RFaq '1.1.3' /tmp/times26001-apk/assets/public/assets; then
             echo 'Old visible version 1.1.3 remains in APK assets.' >&2
             exit 1
           fi
-          install -m 0644 /tmp/times26001-artifact/app-debug.apk "$APK_PATH"
-          sha256sum "$APK_PATH" > "$APK_SHA_PATH"
+          cp /tmp/times26001-artifact/app-debug.apk /tmp/Times26001-Android-v1.1.4-IE-Stopwatch.apk
+          sha256sum /tmp/Times26001-Android-v1.1.4-IE-Stopwatch.apk \
+            | sed 's#/tmp/##' > /tmp/Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt
 
       - name: Synchronize website download module
         shell: bash
         run: |
           set -euo pipefail
+          gh api "repos/$REPO/contents/$PAGE_PATH?ref=main" --jq '.content' \
+            | tr -d '\n' | base64 -d > /tmp/times26001-index.html
           python3 - <<'PY'
           from pathlib import Path
           import re
 
-          page = Path('tools/times26001/index.html')
+          page = Path('/tmp/times26001-index.html')
           text = page.read_text(encoding='utf-8')
-          new_target = 'Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=af47a9ec'
+          target = 'Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=af47a9ec'
           text, count = re.subn(
               r'Times26001-Android-v1\.1\.4-IE-Stopwatch\.apk\?build=[^"\']+',
-              new_target,
+              target,
               text,
           )
           if count < 1:
               raise SystemExit('No v1.1.4 APK download link found to refresh.')
           page.write_text(text, encoding='utf-8')
           PY
-          grep -q 'Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=af47a9ec' tools/times26001/index.html
-          grep -q 'Android直接下载 v1.1.4' tools/times26001/index.html
+          grep -Fq 'Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=af47a9ec' /tmp/times26001-index.html
+          grep -Fq 'Android直接下载 v1.1.4' /tmp/times26001-index.html
 
-      - name: Commit synchronized APK and website module
+      - name: Publish APK, checksum and synchronized page through Git data API
         shell: bash
         run: |
           set -euo pipefail
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add "$APK_PATH" "$APK_SHA_PATH" tools/times26001/index.html
-          if git diff --cached --quiet; then
-            echo 'No publication changes detected.'
-            exit 0
-          fi
-          git commit -m 'fix: publish Times26001 v1.1.4 footer-synced APK [skip ci]'
-          git push origin HEAD:main
+
+          create_blob() {
+            python3 -c 'import base64,json,sys; print(json.dumps({"content":base64.b64encode(open(sys.argv[1],"rb").read()).decode(),"encoding":"base64"}))' "$1" \
+              | gh api --method POST "repos/$REPO/git/blobs" --input - --jq '.sha'
+          }
+
+          apk_blob=$(create_blob /tmp/Times26001-Android-v1.1.4-IE-Stopwatch.apk)
+          sha_blob=$(create_blob /tmp/Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt)
+          page_blob=$(create_blob /tmp/times26001-index.html)
+
+          published=''
+          for attempt in 1 2 3; do
+            parent=$(gh api "repos/$REPO/git/ref/heads/main" --jq '.object.sha')
+            base_tree=$(gh api "repos/$REPO/git/commits/$parent" --jq '.tree.sha')
+            tree=$(jq -n \
+              --arg base_tree "$base_tree" \
+              --arg apk_path "$APK_PATH" --arg apk_blob "$apk_blob" \
+              --arg sha_path "$APK_SHA_PATH" --arg sha_blob "$sha_blob" \
+              --arg page_path "$PAGE_PATH" --arg page_blob "$page_blob" \
+              '{base_tree:$base_tree,tree:[
+                {path:$apk_path,mode:"100644",type:"blob",sha:$apk_blob},
+                {path:$sha_path,mode:"100644",type:"blob",sha:$sha_blob},
+                {path:$page_path,mode:"100644",type:"blob",sha:$page_blob}
+              ]}' \
+              | gh api --method POST "repos/$REPO/git/trees" --input - --jq '.sha')
+            commit=$(jq -n \
+              --arg message 'fix: publish Times26001 v1.1.4 footer-synced APK [skip ci]' \
+              --arg tree "$tree" --arg parent "$parent" \
+              '{message:$message,tree:$tree,parents:[$parent]}' \
+              | gh api --method POST "repos/$REPO/git/commits" --input - --jq '.sha')
+            if jq -n --arg sha "$commit" '{sha:$sha,force:false}' \
+              | gh api --method PATCH "repos/$REPO/git/refs/heads/main" --input - >/dev/null 2>&1; then
+              published="$commit"
+              break
+            fi
+            sleep 2
+          done
+          test -n "$published"
+          echo "Published commit: $published"
