@@ -5,13 +5,20 @@
 .dev.vars
 .dev.vars.*
 
+# Signing keys and credentials
+*.jks
+*.keystore
+*.p12
+*.pem
+keystore.properties
+signing.properties
+
 # Cloudflare Wrangler local state
 .wrangler/
 
 # Node dependencies and logs
 node_modules/
 npm-debug.log*
-
 
 # Android / Gradle generated build files
 **/.gradle/

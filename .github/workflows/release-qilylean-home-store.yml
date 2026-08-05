@@ -1,0 +1,114 @@
+name: Release QilyLean Home signed store packages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      KEYSTORE_BASE64: ${{ secrets.QHOME_ANDROID_KEYSTORE_BASE64 }}
+      KEYSTORE_PASSWORD: ${{ secrets.QHOME_ANDROID_KEYSTORE_PASSWORD }}
+      KEY_ALIAS: ${{ secrets.QHOME_ANDROID_KEY_ALIAS }}
+      KEY_PASSWORD: ${{ secrets.QHOME_ANDROID_KEY_PASSWORD }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Require signing secrets
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$KEYSTORE_BASE64" || { echo 'Missing QHOME_ANDROID_KEYSTORE_BASE64'; exit 1; }
+          test -n "$KEYSTORE_PASSWORD" || { echo 'Missing QHOME_ANDROID_KEYSTORE_PASSWORD'; exit 1; }
+          test -n "$KEY_ALIAS" || { echo 'Missing QHOME_ANDROID_KEY_ALIAS'; exit 1; }
+          test -n "$KEY_PASSWORD" || { echo 'Missing QHOME_ANDROID_KEY_PASSWORD'; exit 1; }
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android 16 SDK packages
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Decode private signing keystore
+        shell: bash
+        run: |
+          umask 077
+          printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/qilylean-home-release.jks"
+          keytool -list -keystore "$RUNNER_TEMP/qilylean-home-release.jks" -storepass "$KEYSTORE_PASSWORD" -alias "$KEY_ALIAS" >/dev/null
+
+      - name: Build unsigned release APK and AAB
+        run: gradle -p android/qilylean-home :app:assembleRelease :app:bundleRelease --stacktrace
+
+      - name: Sign and verify store packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/36.0.0"
+          UNSIGNED_APK='android/qilylean-home/app/build/outputs/apk/release/app-release-unsigned.apk'
+          UNSIGNED_AAB='android/qilylean-home/app/build/outputs/bundle/release/app-release.aab'
+          mkdir -p dist
+
+          "$BUILD_TOOLS/zipalign" -f -p 4 "$UNSIGNED_APK" dist/QilyLean_Home_v2.3.0_API36_aligned.apk
+          "$BUILD_TOOLS/apksigner" sign \
+            --ks "$RUNNER_TEMP/qilylean-home-release.jks" \
+            --ks-key-alias "$KEY_ALIAS" \
+            --ks-pass "pass:$KEYSTORE_PASSWORD" \
+            --key-pass "pass:$KEY_PASSWORD" \
+            --out dist/QilyLean_Home_v2.3.0_API36_release.apk \
+            dist/QilyLean_Home_v2.3.0_API36_aligned.apk
+          rm dist/QilyLean_Home_v2.3.0_API36_aligned.apk
+          "$BUILD_TOOLS/apksigner" verify --verbose --print-certs dist/QilyLean_Home_v2.3.0_API36_release.apk
+
+          cp "$UNSIGNED_AAB" dist/QilyLean_Home_v2.3.0_API36_release.aab
+          jarsigner \
+            -keystore "$RUNNER_TEMP/qilylean-home-release.jks" \
+            -storepass "$KEYSTORE_PASSWORD" \
+            -keypass "$KEY_PASSWORD" \
+            -sigalg SHA256withRSA \
+            -digestalg SHA-256 \
+            dist/QilyLean_Home_v2.3.0_API36_release.aab \
+            "$KEY_ALIAS"
+          jarsigner -verify -strict -certs dist/QilyLean_Home_v2.3.0_API36_release.aab
+
+      - name: Validate metadata and certificate fingerprints
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK='dist/QilyLean_Home_v2.3.0_API36_release.apk'
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "package: name='com.qilylean.home' versionCode='8' versionName='2.3.0'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "targetSdkVersion:'36'"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs "$APK" > dist/CERTIFICATE_FINGERPRINTS.txt
+          sha256sum dist/*.apk dist/*.aab > dist/SHA256SUMS.txt
+
+      - name: Upload signed store packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: QilyLean-Home-v2.3.0-API36-signed-store-release
+          path: |
+            dist/QilyLean_Home_v2.3.0_API36_release.apk
+            dist/QilyLean_Home_v2.3.0_API36_release.aab
+            dist/CERTIFICATE_FINGERPRINTS.txt
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Remove private keystore
+        if: always()
+        run: rm -f "$RUNNER_TEMP/qilylean-home-release.jks"

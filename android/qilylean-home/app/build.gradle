@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace 'com.qilylean.home'
-    compileSdk 35
+    compileSdk 36
 
     defaultConfig {
         applicationId 'com.qilylean.home'
         minSdk 23
-        targetSdk 28
-        versionCode 7
-        versionName '2.2.0-clock-lunar-week-times'
+        targetSdk 36
+        versionCode 8
+        versionName '2.3.0'
     }
 
     buildTypes {

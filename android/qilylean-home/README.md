@@ -1,40 +1,66 @@
-# QilyLean Home v2.2｜Android官网全导航通用版
+# QilyLean Home v2.3.0｜Android 16 / API 36商店准备版
 
-面向常见安卓手机自主开发的免Root品牌桌面，不展示手机品牌、型号或其他设备身份信息。
+面向常见Android手机自主开发的免Root品牌桌面，不读取、不展示IMEI、序列号、手机品牌、型号或其他设备身份信息。
 
-## v2.2升级内容
+## v2.3.0升级内容
 
-- 桌面时钟升级为“小时：分钟：秒钟”格式，并按秒同步刷新；
-- 日期同步显示公历日期、星期与年度周次；
-- 同步显示中国农历月份、日期及闰月状态；
-- 新增“思大时间管理”直达入口：检测到Times26001时直接启动，用于查看黄历、IE分段计时、闹钟与倒计时；未安装时自动进入官网安装与使用页；
-- 保留官网首页全导航、重点内容直达、通用设置和全部应用抽屉；
-- 继续采用统一Q图标，并保持免Root和设备信息保护边界。
+- `compileSdk`与`targetSdk`统一升级至Android 16 / API 36；
+- 版本升级为`versionCode 8`、`versionName 2.3.0`；
+- 桌面时钟保持“小时：分钟：秒钟”格式，并按秒同步刷新；
+- 日期同步显示公历、星期、年度周次和中国农历；
+- 保留“思大时间管理”直达入口，用于黄历、IE分段计时、闹钟与倒计时；
+- 为Android 11及以上补充应用可见性声明，仅查询可启动应用和`com.qilylean.times26001`；
+- 不申请`QUERY_ALL_PACKAGES`，应用抽屉信息仅在本机使用；
+- 新增隐私政策、用户协议、技术支持与信任中心入口；
+- 继续采用统一Q图标，并明确可随时切回系统原桌面；
+- 增加AAB、Release APK、固定签名和证书指纹自动验证流水线。
 
-## 发布校验
+## 应用标识
 
-- APK：`QilyLean_Home_Universal_v2.2.apk`
-- SHA-256：`19dad120e99b9577ab745a7f432444ea0304e788c27c27bd42fdcef45d5563c2`
-- 官网下载：`https://qilylean.com/QilyLean_Home_Universal_v2.2.apk`
+- 包名：`com.qilylean.home`
+- 最低Android版本：Android 6.0 / API 23
+- 目标Android版本：Android 16 / API 36
+- 版本：`2.3.0 (8)`
 
-## 安装
+## 法律与支持页面
+
+- 隐私政策：`https://qilylean.com/legal/qilylean-home/privacy/`
+- 用户协议：`https://qilylean.com/legal/qilylean-home/terms/`
+- 技术支持：`https://qilylean.com/app-support/`
+
+## 构建层级
+
+### PR自动验证
+
+`.github/workflows/build-qilylean-home.yml`会生成未签名的Release APK和AAB，仅用于编译、元数据和API 36兼容性验证，不得直接提交应用商店。
+
+### 正式签名发行
+
+`.github/workflows/release-qilylean-home-store.yml`通过手动触发，并从GitHub Actions Secrets读取固定Release密钥，生成：
+
+- `QilyLean_Home_v2.3.0_API36_release.apk`
+- `QilyLean_Home_v2.3.0_API36_release.aab`
+- `CERTIFICATE_FINGERPRINTS.txt`
+- `SHA256SUMS.txt`
+
+所需Secrets：
+
+- `QHOME_ANDROID_KEYSTORE_BASE64`
+- `QHOME_ANDROID_KEYSTORE_PASSWORD`
+- `QHOME_ANDROID_KEY_ALIAS`
+- `QHOME_ANDROID_KEY_PASSWORD`
+
+密钥文件和密码不得提交到GitHub仓库。
+
+## 安装与恢复
+
+正式APK生成后可执行：
 
 ```bash
-adb install -r QilyLean_Home_Universal_v2.2.apk
+adb install -r QilyLean_Home_v2.3.0_API36_release.apk
 ```
 
-如旧版本与新构建签名不同：
-
-```bash
-adb uninstall com.qilylean.home
-adb install QilyLean_Home_Universal_v2.2.apk
-```
-
-按Home键后选择 `QilyLean Home`，并选择“始终”。
-
-## 回退
-
-进入“默认桌面”切回原系统桌面，或执行：
+按Home键后选择`QilyLean Home`并选择“始终”。需要恢复时，进入应用内“默认桌面”或Android系统“默认应用／主屏幕应用”切回原系统桌面，也可卸载：
 
 ```bash
 adb uninstall com.qilylean.home
@@ -42,4 +68,4 @@ adb uninstall com.qilylean.home
 
 ## 安全边界
 
-本版本是应用层免Root定制，不读取、不展示手机品牌、型号或设备名称；不解锁Bootloader，不刷Recovery，不修改系统分区、基带、IMEI、EFS、开机动画或通信底层。
+本版本是应用层免Root定制，不解锁Bootloader、不刷Recovery、不修改系统分区、基带、IMEI、EFS、开机动画或通信底层。应用可见性仅用于本机应用抽屉和思大时间管理直达，不上传、不用于广告或用户画像。

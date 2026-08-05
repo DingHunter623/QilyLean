@@ -154,7 +154,7 @@ public class MainActivity extends Activity {
         clockHandler.removeCallbacks(clockTask);
         clockHandler.post(clockTask);
 
-        TextView version = pill("QilyLean Home v2.2 · 秒级时钟＋农历＋周次");
+        TextView version = pill("QilyLean Home v2.3.0 · Android 16 / API 36商店版");
         LinearLayout.LayoutParams versionLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -234,8 +234,16 @@ public class MainActivity extends Activity {
                 }),
                 webCard("官网搜索", "进入官网并使用全站搜索", "https://qilylean.com/"));
 
+        addSectionTitle(content, "隐私与支持");
+        addCardRow(content,
+                webCard("隐私政策", "本地数据、应用可见性与网络说明", "https://qilylean.com/legal/qilylean-home/privacy/"),
+                webCard("用户协议", "默认桌面、第三方应用与责任边界", "https://qilylean.com/legal/qilylean-home/terms/"));
+        addCardRow(content,
+                webCard("技术支持", "安装、恢复系统桌面与问题反馈", "https://qilylean.com/app-support/"),
+                webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust/"));
+
         TextView footer = text(
-                "启精益之智，聚企业之力。\n免Root通用版，不读取、不展示手机品牌或型号。",
+                "启精益之智，聚企业之力。\n免Root通用版，不读取、不展示手机品牌或型号；可随时切回系统桌面。",
                 12, MUTED, Gravity.CENTER);
         footer.setLineSpacing(dp(2), 1f);
         LinearLayout.LayoutParams footerLp = new LinearLayout.LayoutParams(

@@ -1,4 +1,4 @@
-name: Build QilyLean Home APK
+name: Build QilyLean Home API 36 packages
 
 on:
   pull_request:
@@ -6,7 +6,9 @@ on:
     paths:
       - 'android/qilylean-home/**'
       - 'assets/tools/qilylean-unified-app-icon.svg'
-      - 'capabilities/index.html'
+      - 'legal/**'
+      - 'app-support/**'
+      - 'app-store/qilylean-home/**'
       - '.github/workflows/build-qilylean-home.yml'
   workflow_dispatch:
 
@@ -24,7 +26,9 @@ jobs:
           sparse-checkout: |
             android/qilylean-home
             assets/tools/qilylean-unified-app-icon.svg
-            capabilities/index.html
+            legal
+            app-support
+            app-store/qilylean-home
           sparse-checkout-cone-mode: false
 
       - name: Set up Java 17
@@ -36,47 +40,57 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install SDK packages
+      - name: Install Android 16 SDK packages
         run: |
           yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager 'platforms;android-35' 'build-tools;35.0.0'
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.7'
 
-      - name: Validate v2.2 source and unified icon
+      - name: Validate v2.3.0 API 36 source and unified icon
         run: |
+          grep -q 'compileSdk 36' android/qilylean-home/app/build.gradle
+          grep -q 'targetSdk 36' android/qilylean-home/app/build.gradle
+          grep -q 'versionCode 8' android/qilylean-home/app/build.gradle
+          grep -q "versionName '2.3.0'" android/qilylean-home/app/build.gradle
           grep -q 'android:icon="@drawable/ic_launcher"' android/qilylean-home/app/src/main/AndroidManifest.xml
           grep -q 'android:roundIcon="@drawable/ic_launcher"' android/qilylean-home/app/src/main/AndroidManifest.xml
+          grep -q 'com.qilylean.times26001' android/qilylean-home/app/src/main/AndroidManifest.xml
+          grep -q 'android.intent.category.LAUNCHER' android/qilylean-home/app/src/main/AndroidManifest.xml
           grep -q '#FF10596C' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
           grep -q '#FFDC3C31' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
-          grep -q 'versionCode 7' android/qilylean-home/app/build.gradle
-          grep -q "versionName '2.2.0-clock-lunar-week-times'" android/qilylean-home/app/build.gradle
           grep -q 'HH:mm:ss' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
           grep -q 'formatLunarDate(now)' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
-          grep -q '思大时间管理' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+          grep -q 'legal/qilylean-home/privacy' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+          grep -q 'legal/qilylean-home/terms' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+          grep -q 'app-support' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
 
-      - name: Build debug APK
-        run: gradle -p android/qilylean-home :app:assembleDebug --stacktrace
+      - name: Build unsigned release APK and AAB
+        run: gradle -p android/qilylean-home :app:assembleRelease :app:bundleRelease --stacktrace
 
-      - name: Validate APK metadata
+      - name: Validate release package metadata
         run: |
-          APK='android/qilylean-home/app/build/outputs/apk/debug/app-debug.apk'
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep -q "versionCode='7'"
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep -q "versionName='2.2.0-clock-lunar-week-times'"
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$APK" | grep -q "application-label:'QilyLean Home'"
+          APK='android/qilylean-home/app/build/outputs/apk/release/app-release-unsigned.apk'
+          AAB='android/qilylean-home/app/build/outputs/bundle/release/app-release.aab'
+          test -s "$APK"
+          test -s "$AAB"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "package: name='com.qilylean.home' versionCode='8' versionName='2.3.0'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "targetSdkVersion:'36'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "application-label:'QilyLean Home'"
 
-      - name: Prepare artifact
+      - name: Prepare unsigned validation artifacts
         run: |
           mkdir -p dist
-          cp android/qilylean-home/app/build/outputs/apk/debug/app-debug.apk dist/QilyLean_Home_Universal_v2.2.apk
-          sha256sum dist/QilyLean_Home_Universal_v2.2.apk > dist/SHA256SUMS.txt
+          cp android/qilylean-home/app/build/outputs/apk/release/app-release-unsigned.apk dist/QilyLean_Home_v2.3.0_API36_unsigned.apk
+          cp android/qilylean-home/app/build/outputs/bundle/release/app-release.aab dist/QilyLean_Home_v2.3.0_API36_unsigned.aab
+          sha256sum dist/* > dist/SHA256SUMS.txt
 
-      - name: Upload APK
+      - name: Upload unsigned validation packages
         uses: actions/upload-artifact@v4
         with:
-          name: QilyLean-Home-Universal-v2.2
+          name: QilyLean-Home-v2.3.0-API36-unsigned-validation
           path: dist/
           if-no-files-found: error
