@@ -46,7 +46,7 @@ jobs:
           node scripts/publish-early-career-history.js
           node scripts/publish-early-career-history.js --check
           git diff --check
-      - name: Verify exact career links, company names and official websites
+      - name: Verify career links, company identities and official websites
         shell: bash
         run: |
           grep -F '2015～2019年' qilylean/daily-insights.html
@@ -55,19 +55,29 @@ jobs:
           grep -F '/experience/#career-2015-2019' qilylean/daily-insights.html
           grep -F '/experience/#career-2009-2015' qilylean/daily-insights.html
           grep -F '/experience/#career-2006-2009' qilylean/daily-insights.html
-          grep -F 'Dongguan Cooper Electronics Co., Ltd.' qilylean/daily-insights.html
+          grep -F '深圳万润科技股份有限公司' qilylean/daily-insights.html
+          grep -F 'https://www.masonled.com/' qilylean/daily-insights.html
+          grep -F '广东恒润光电有限公司' qilylean/daily-insights.html
+          grep -F 'https://www.mason-led.com/' qilylean/daily-insights.html
           grep -F '东莞库柏电子有限公司' qilylean/daily-insights.html
           grep -F 'https://www.eaton.com.cn/cn/zh-cn.html' qilylean/daily-insights.html
-          grep -F 'Flextronics Manufacturing (Zhuhai) Co., Ltd.' qilylean/daily-insights.html
           grep -F '伟创力制造（珠海）有限公司' qilylean/daily-insights.html
           grep -F 'https://flex.com/zh/' qilylean/daily-insights.html
-          grep -F '2009.07—2015.06｜保险丝制造｜生产技术、先后PE工程、IE工程（美资企业：东莞库柏电子）' site-early-career-history-v1.js
-          grep -F '2006.07—2009.06｜PCBA TE工程／IE工程（欧美合资企业：珠海伟创力制造）' site-early-career-history-v1.js
-          grep -F "id = 'career-2015-2019'" site-early-career-history-v1.js
+          grep -F '2019.07—2025.08｜广东精工智能系统 / 广东高胜互联科技（集团内调动）' site-early-career-history-v1.js
+          grep -F '广东精工智能系统有限公司' site-early-career-history-v1.js
+          grep -F 'https://www.jinggon.com/' site-early-career-history-v1.js
+          grep -F '广东高胜互联科技有限公司' site-early-career-history-v1.js
+          grep -F 'https://www.gdgaosheng.cn/' site-early-career-history-v1.js
+          grep -F '2015.07—2019.06｜深圳万润科技·广东恒润光电有限公司（上市公司：万润科技）' site-early-career-history-v1.js
+          grep -F 'https://www.masonled.com/' site-early-career-history-v1.js
+          grep -F 'https://www.mason-led.com/' site-early-career-history-v1.js
+          grep -F "'career-2019-2025'" site-early-career-history-v1.js
+          grep -F "'career-2015-2019'" site-early-career-history-v1.js
           grep -F "'career-2009-2015'" site-early-career-history-v1.js
           grep -F "'career-2006-2009'" site-early-career-history-v1.js
           grep -F 'width:168px!important' site-early-career-history-v1.css
           grep -F 'white-space:nowrap!important' site-early-career-history-v1.css
+          grep -F 'career-company-group' site-early-career-history-v1.css
           grep -F 'career-company-official' site-early-career-history-v1.css
 
   publish:
@@ -85,7 +95,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Refresh latest main and materialize early career history
+      - name: Refresh latest main and materialize career company websites
         shell: bash
         run: |
           git fetch origin main --depth=1
@@ -99,11 +109,11 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Early career history is already current."
+            echo "Career company websites are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add qilylean/daily-insights.html experience/index.html
-          git commit -m "build: publish company names and official career links [skip ci]"
+          git commit -m "build: publish 2015-2025 company websites [skip ci]"
           git push origin HEAD:main
