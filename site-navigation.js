@@ -1,8 +1,8 @@
-/* QilyLean global VI, navigation, trust and contrast loader v9 */
+/* QilyLean global VI, navigation, trust and contrast loader v10 */
 (function (d, w) {
   'use strict';
-  if (w.__qilyGlobalAssetLoaderV9) return;
-  w.__qilyGlobalAssetLoaderV9 = true;
+  if (w.__qilyGlobalAssetLoaderV10) return;
+  w.__qilyGlobalAssetLoaderV10 = true;
 
   function removeMicrosoftOverrides() {
     ['qilyMicrosoftInternationalStylesheet','qilyMicrosoftEnterpriseComponentsStylesheet','qilyMicrosoftNavUnderlineStyle','qilyNavFourSideBorderStyle'].forEach(function (id) {
@@ -56,14 +56,15 @@
       ['qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2'],
       ['qilyBrandTrustStylesheet','/site-brand-trust-v1.css?v=20260802-project-rolebar-v3'],
       ['qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v2'],
-      ['qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-text-contrast-v3']
+      ['qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4']
     ].forEach(function (asset) { ensureStylesheet(asset[0], asset[1]); });
 
     ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2');
     ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
     ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260802-commercial-focus-v1');
     ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260802-project-rolebar-v3');
-    ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-trust-conversion-v2');
+    ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-action-label-v3');
+    ensureScript('data-qily-text-contrast-audit','v1','/site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v1');
   }
 
   function loadConditionalStyles() {
@@ -99,8 +100,9 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     'site-visual-closure-v2.css?v=20260803-boundary-links-v2',
     'site-visual-closure-v2.js?v=20260803-boundary-links-v2',
     'site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v2',
-    'site-trust-conversion-v2.css?v=20260805-text-contrast-v3',
-    'site-trust-conversion-v2.js?v=20260805-trust-conversion-v2'
+    'site-trust-conversion-v2.css?v=20260805-action-label-v4',
+    'site-trust-conversion-v2.js?v=20260805-action-label-v3',
+    'site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v1'
   ],
   disabledAssets:['site-microsoft-international-v1.css','site-microsoft-enterprise-components-v2.css','site-microsoft-international-v1.js'],
   bootstrapMarkers:['addWideLayoutStylesheet();','addTypographyStylesheet();','if (document.body) boot()'],
@@ -110,8 +112,8 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
 /* QilyLean global navigation wrapper｜保留原导航功能并加载可信度、信息架构与对比度闭环 */
 (function (d, w) {
   'use strict';
-  if (w.__qilyNavigationWrapper20260805V15) return;
-  w.__qilyNavigationWrapper20260805V15 = true;
+  if (w.__qilyNavigationWrapper20260805V16) return;
+  w.__qilyNavigationWrapper20260805V16 = true;
 
   function ensureStylesheet(id, href) {
     var current = d.getElementById(id);
@@ -146,13 +148,14 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     ensureStylesheet('qilyVisualClosureStylesheet','/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2');
     ensureStylesheet('qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2');
     ensureStylesheet('qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v2');
-    ensureStylesheet('qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-text-contrast-v3');
+    ensureStylesheet('qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4');
 
     ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260802-project-rolebar-v3');
     ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260802-commercial-focus-v1');
     ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2');
     ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
-    ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-trust-conversion-v2');
+    ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-action-label-v3');
+    ensureScript('data-qily-text-contrast-audit','v1','/site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v1');
 
     var body = d.body;
     var isDaily = !!(body && body.classList && body.classList.contains('daily-single-page')) || !!d.querySelector('.brief-adjacent');

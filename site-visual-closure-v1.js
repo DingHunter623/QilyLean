@@ -51,10 +51,10 @@
 
   function classifyActions(){
     d.querySelectorAll('a[href="/projects/qilylean-commercial-deliveries/"]').forEach(function(link){
-      link.classList.add('qily-action-primary');
+      if(!link.classList.contains('qtc-action'))link.classList.add('qily-action-primary');
     });
     d.querySelectorAll('a[href*="/projects/qilylean-commercial-deliveries/review-authorization-template"]').forEach(function(link){
-      link.classList.add('qily-action-secondary');
+      if(!link.classList.contains('qtc-action'))link.classList.add('qily-action-secondary');
     });
   }
 

@@ -281,3 +281,80 @@ body.factory-plan-viewer-open{overflow:hidden}
   .factory-plan-project-copy>p{font-size:14.5px!important}
 }
 @media print{.factory-plan-section,.factory-plan-lightbox{display:none!important}.factory-layout-page::after{content:'规划图纸仅限在线受控预览';display:block;padding:20px;color:#526968;text-align:center}}
+
+/* QILY-FACTORY-THUMBNAIL-LABEL-SEPARATION:START */
+/* 图纸缩略标题与图片物理分离：不使用整块深色底，不与上下行图片边框粘连。 */
+.factory-plan-thumb-grid,
+.factory-plan-thumb-grid-two{
+  column-gap:14px!important;
+  row-gap:16px!important;
+}
+.factory-plan-thumb-grid .factory-plan-preview{
+  display:grid!important;
+  grid-template-rows:var(--project-thumb-size) auto!important;
+  row-gap:7px!important;
+  align-content:start!important;
+  justify-items:center!important;
+  width:var(--project-thumb-size)!important;
+  height:auto!important;
+  min-height:0!important;
+  padding:0 0 2px!important;
+  overflow:visible!important;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+}
+.factory-plan-thumb-grid .factory-plan-preview img{
+  grid-row:1!important;
+  display:block!important;
+  width:var(--project-thumb-size)!important;
+  height:var(--project-thumb-size)!important;
+  margin:0!important;
+  border:1px solid var(--qily-line)!important;
+  background:#fff!important;
+  box-shadow:0 7px 18px rgba(15,75,90,.10)!important;
+}
+.factory-plan-thumb-grid .factory-plan-preview span{
+  position:static!important;
+  inset:auto!important;
+  grid-row:2!important;
+  justify-self:center!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:max-content!important;
+  max-width:calc(var(--project-thumb-size) + 20px)!important;
+  min-width:0!important;
+  min-height:26px!important;
+  margin:0!important;
+  padding:4px 9px!important;
+  border:1.5px solid #178b94!important;
+  border-radius:999px!important;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  background:#fff!important;
+  box-shadow:0 3px 9px rgba(15,75,90,.07)!important;
+  font-size:12px!important;
+  font-weight:900!important;
+  line-height:1.2!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  opacity:1!important;
+  visibility:visible!important;
+  transform:none!important;
+}
+.factory-plan-thumb-grid .factory-plan-preview:is(:hover,:focus-visible) span{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background:#ffe39b!important;
+  border-color:#c99a3e!important;
+}
+.factory-plan-thumb-grid .factory-plan-preview:active span{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#073c47!important;
+  border-color:#073c47!important;
+}
+/* QILY-FACTORY-THUMBNAIL-LABEL-SEPARATION:END */
