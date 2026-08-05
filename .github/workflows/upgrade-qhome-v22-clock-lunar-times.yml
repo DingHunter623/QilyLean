@@ -47,12 +47,25 @@ jobs:
       - name: Build and validate APK
         run: |
           set -euo pipefail
-          gradle -p android/qilylean-home :app:assembleDebug --stacktrace
+          gradle -p android/qilylean-home :app:assembleDebug --stacktrace 2>&1 | tee qhome-v22-build.log
           cp android/qilylean-home/app/build/outputs/apk/debug/app-debug.apk "$NEW_APK"
           test -s "$NEW_APK"
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$NEW_APK" | grep -q "versionCode='7'"
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$NEW_APK" | grep -q "versionName='2.2.0-clock-lunar-week-times'"
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$NEW_APK" | grep -q "application-label:'QilyLean Home'"
+          {
+            echo
+            echo '===== AAPT BADGING ====='
+            "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$NEW_APK"
+          } | tee -a qhome-v22-build.log
+          grep -q "versionCode='7'" qhome-v22-build.log
+          grep -q "versionName='2.2.0-clock-lunar-week-times'" qhome-v22-build.log
+          grep -q "application-label:'QilyLean Home'" qhome-v22-build.log
+
+      - name: Upload build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qhome-v22-build-diagnostics
+          path: qhome-v22-build.log
+          if-no-files-found: warn
 
       - name: Finalize release metadata
         run: |
