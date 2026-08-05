@@ -1,8 +1,8 @@
 (function () {
   'use strict';
 
-  var VERSION = 'v2';
-  var TARGET_IDS = ['career-2015-2019', 'career-2009-2015', 'career-2006-2009'];
+  var VERSION = 'v3';
+  var TARGET_IDS = ['career-2019-2025', 'career-2015-2019', 'career-2009-2015', 'career-2006-2009'];
 
   var summaries = {
     'career-2015-2019': '聚焦LED背光源与PCBA制造，持续推进生产工艺优化、品质异常处理、量产稳定性改善及生产效率提升。进一步强化跨部门协同、现场工程改善与项目推进能力，为后续精益运营和制造项目管理奠定基础。',
@@ -11,6 +11,30 @@
   };
 
   var companies = {
+    jinggon: {
+      english: 'Guangdong Jinggon Intelligence System Co., Ltd.',
+      chinese: '广东精工智能系统有限公司',
+      website: 'https://www.jinggon.com/',
+      websiteLabel: '官方网站：JINGGON｜精工智能（www.jinggon.com）'
+    },
+    gaosheng: {
+      english: 'GO-think（官方英文品牌）',
+      chinese: '广东高胜互联科技有限公司',
+      website: 'https://www.gdgaosheng.cn/',
+      websiteLabel: '官方网站：GO-think｜高胜咨询（www.gdgaosheng.cn）'
+    },
+    mason: {
+      english: 'Shenzhen Mason Technologies Co., Ltd.',
+      chinese: '深圳万润科技股份有限公司',
+      website: 'https://www.masonled.com/',
+      websiteLabel: '上市公司官方网站：MASON｜万润科技（www.masonled.com）'
+    },
+    hengrun: {
+      english: 'MASON LED（官方品牌）',
+      chinese: '广东恒润光电有限公司',
+      website: 'https://www.mason-led.com/',
+      websiteLabel: '子公司官方网站：MASON LED｜恒润光电（www.mason-led.com）'
+    },
     cooper: {
       english: 'Dongguan Cooper Electronics Co., Ltd.',
       chinese: '东莞库柏电子有限公司',
@@ -29,6 +53,19 @@
     return '<p class="career-company-line"><b>任职公司：</b><span class="career-company-name"><span lang="en">' + company.english + '</span><span aria-hidden="true">｜</span><span>' + company.chinese + '</span></span><a class="career-company-official" href="' + company.website + '" target="_blank" rel="noopener noreferrer external">' + company.websiteLabel + ' ↗</a></p>';
   }
 
+  function companyGroup(companyKeys) {
+    return '<div class="career-company-group" aria-label="任职公司与官方网站">' + companyKeys.map(function (key) {
+      return companyLine(companies[key]);
+    }).join('') + '</div>';
+  }
+
+  function ensureCompanyGroup(card, companyKeys) {
+    if (!card || card.querySelector('.career-company-group')) return;
+    var heading = card.querySelector('h3');
+    if (!heading) return;
+    heading.insertAdjacentHTML('afterend', companyGroup(companyKeys));
+  }
+
   function insertSummary(card, id) {
     if (!card || card.querySelector('.career-stage-summary')) return;
     var heading = card.querySelector('h3');
@@ -39,7 +76,23 @@
     heading.insertAdjacentElement('afterend', summary);
   }
 
-  function buildCard(id, period, title, summary, company, industry, duties, results, resultText) {
+  function markExistingCard(card, id, exactPeriod) {
+    if (!card) return null;
+    card.id = id;
+    card.dataset.qilyEarlyCareerCard = 'true';
+    card.dataset.qilyEarlyCareerHistory = VERSION;
+    var period = card.querySelector('small');
+    if (period && exactPeriod) period.textContent = exactPeriod;
+    return card;
+  }
+
+  function findCard(grid, expression) {
+    return Array.prototype.slice.call(grid.querySelectorAll('.career-full-card')).find(function (card) {
+      return expression.test(card.textContent || '');
+    });
+  }
+
+  function buildCard(id, period, title, summary, companyKeys, industry, duties, results, resultText) {
     var article = document.createElement('article');
     article.className = 'career-full-card';
     article.id = id;
@@ -48,7 +101,7 @@
     article.innerHTML = [
       '<small>' + period + '</small>',
       '<h3>' + title + '</h3>',
-      companyLine(company),
+      companyGroup(companyKeys),
       '<p class="career-stage-summary">' + summary + '</p>',
       '<p class="career-industry"><b>制造与工程场景：</b>' + industry + '</p>',
       '<h4>职责范围</h4><ul>' + duties.map(function (item) { return '<li>' + item + '</li>'; }).join('') + '</ul>',
@@ -60,10 +113,7 @@
 
   function splitEarlyCareerCard(grid) {
     if (!grid || document.getElementById('career-2009-2015') || document.getElementById('career-2006-2009')) return;
-    var cards = Array.prototype.slice.call(grid.querySelectorAll('.career-full-card'));
-    var combined = cards.find(function (card) {
-      return /2006\.07[—–-]2015\.06/.test(card.textContent || '');
-    });
+    var combined = findCard(grid, /2006\.07[—–-]2015\.06/);
     if (!combined) return;
 
     var fuseCard = buildCard(
@@ -71,7 +121,7 @@
       '2009.07—2015.06｜保险丝制造｜生产技术、先后PE工程、IE工程（美资企业：东莞库柏电子）',
       '保险丝生产技术／先后PE工程、IE工程',
       summaries['career-2009-2015'],
-      companies.cooper,
+      ['cooper'],
       '覆盖SMD、DIP、砖块保险丝、陶瓷管／玻璃管保险丝及汽车插片保险丝等产品与工艺形态。',
       [
         '负责保险丝制程参数、设备与工装、品质异常、量产稳定性及工艺标准维护，推动现场问题由临时处理转为参数、方法和标准闭环。',
@@ -91,7 +141,7 @@
       '2006.07—2009.06｜PCBA TE工程／IE工程（欧美合资企业：珠海伟创力制造）',
       'PCBA TE工程／IE工程',
       summaries['career-2006-2009'],
-      companies.flex,
+      ['flex'],
       '涵盖摩托罗拉、诺基亚、华为等品牌手机，以及戴尔、华硕、联想等品牌电脑与服务器产品。',
       [
         '参与PCBA测试、故障定位、异常分析、维修验证、测试结果确认及量产支持，协同生产、品质和工程人员关闭现场问题。',
@@ -123,19 +173,23 @@
     var grid = document.querySelector('.career-full-grid');
     if (!grid) return false;
 
-    var existing2015 = document.getElementById('career-2015-2019');
-    if (!existing2015) {
-      var cards = Array.prototype.slice.call(grid.querySelectorAll('.career-full-card'));
-      existing2015 = cards.find(function (card) {
-        return /2015\.07[—–-]2019\.06/.test(card.textContent || '');
-      });
-      if (existing2015) {
-        existing2015.id = 'career-2015-2019';
-        existing2015.dataset.qilyEarlyCareerCard = 'true';
-        existing2015.dataset.qilyEarlyCareerHistory = VERSION;
-      }
-    }
+    var consultingCard = document.getElementById('career-2019-2025') || findCard(grid, /2019\.07[—–-]2025\.08/);
+    consultingCard = markExistingCard(
+      consultingCard,
+      'career-2019-2025',
+      '2019.07—2025.08｜广东精工智能系统 / 广东高胜互联科技（集团内调动）'
+    );
+    ensureCompanyGroup(consultingCard, ['jinggon', 'gaosheng']);
+
+    var existing2015 = document.getElementById('career-2015-2019') || findCard(grid, /2015\.07[—–-]2019\.06/);
+    existing2015 = markExistingCard(
+      existing2015,
+      'career-2015-2019',
+      '2015.07—2019.06｜深圳万润科技·广东恒润光电有限公司（上市公司：万润科技）'
+    );
     insertSummary(existing2015, 'career-2015-2019');
+    ensureCompanyGroup(existing2015, ['mason', 'hengrun']);
+
     splitEarlyCareerCard(grid);
 
     var complete = TARGET_IDS.every(function (id) { return Boolean(document.getElementById(id)); });
