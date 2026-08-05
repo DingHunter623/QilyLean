@@ -11,7 +11,7 @@ const files = {
   onboarding: 'links/onboarding/index.html',
   network: 'links/network/index.html'
 };
-const stylesheet = '<link id="qilyResourceNetworkStylesheet" rel="stylesheet" href="/site-resource-network-v1.css?v=20260805-resource-network-v1">';
+const stylesheet = '<link id="qilyResourceNetworkStylesheet" rel="stylesheet" href="/site-resource-network-v1.css?v=20260805-resource-network-v4">';
 const today = '2026-08-05';
 
 function target(relativePath) { return path.join(root, relativePath); }
