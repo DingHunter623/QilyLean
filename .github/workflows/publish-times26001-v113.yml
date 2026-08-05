@@ -1,0 +1,74 @@
+name: Publish Times26001 Android v1.1.3
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-times26001-v113.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACT_URL: 'https://sdmntprindiasocentral.oaiusercontent.com/files/00000000-a200-8211-9ac6-5cb7ca0a3af2/raw?se=2026-08-05T14:08:20Z&sp=r&sv=2026-02-06&sr=b&scid=073e48b1-7c3f-5396-ad2d-ec643342b27a&skoid=6980ab1e-b994-4668-84de-ad0444c9d08b&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-05T03:04:17Z&ske=2026-08-06T03:04:17Z&sks=b&skv=2026-02-06&sig=/yElHBqk9KKtVgvuFOWCJ7pHUck%2BVX75Nms6OKgOp94%3D'
+      APK_NAME: Times26001-Android-v1.1.3-IE-Stopwatch.apk
+      APK_SHA256: 9e5930e330f94cab94b2db941eadbfb1e1c5663520f2fde4270c30c4040eb774
+
+    steps:
+      - name: Checkout QilyLean website
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download and verify Times26001 v1.1.3
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --retry-delay 2 "$ARTIFACT_URL" --output /tmp/times26001-v113.zip
+          rm -rf /tmp/times26001-v113
+          mkdir -p /tmp/times26001-v113
+          unzip -q /tmp/times26001-v113.zip -d /tmp/times26001-v113
+          cp /tmp/times26001-v113/app-debug.apk "$APK_NAME"
+          echo "$APK_SHA256  $APK_NAME" | sha256sum --check --strict
+
+      - name: Update website release references
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          targets = [
+              Path('times26001-home-card.js'),
+              Path('tools/times26001/index.html'),
+              Path('capabilities/index.html'),
+          ]
+          replacements = [
+              ('Times26001-Android-v1.1.2-IE-Stopwatch.apk', 'Times26001-Android-v1.1.3-IE-Stopwatch.apk'),
+              ('v1.1.2', 'v1.1.3'),
+              ('20260727-android-v112', '20260805-android-v113'),
+              ('build=e9593f1', 'build=9e5930e'),
+          ]
+
+          for path in targets:
+              original = path.read_text(encoding='utf-8')
+              updated = original
+              for old, new in replacements:
+                  updated = updated.replace(old, new)
+              if updated == original:
+                  raise SystemExit(f'No Times26001 v1.1.2 references changed in {path}')
+              path.write_text(updated, encoding='utf-8')
+              print(f'Updated {path}')
+          PY
+
+      - name: Commit website and APK release
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$APK_NAME" times26001-home-card.js tools/times26001/index.html capabilities/index.html
+          git commit -m 'release: publish Times26001 Android v1.1.3'
+          git push origin HEAD:main
