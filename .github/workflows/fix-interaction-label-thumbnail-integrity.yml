@@ -7,6 +7,7 @@ on:
     paths:
       - "site-text-contrast-audit-v1.js"
       - "scripts/fix-interaction-label-thumbnail-integrity.js"
+      - "scripts/fix-interaction-label-thumbnail-integrity-v2.js"
       - ".github/workflows/fix-interaction-label-thumbnail-integrity.yml"
   workflow_dispatch:
 
@@ -34,8 +35,8 @@ jobs:
       - name: Apply repeatable sitewide fixes
         run: |
           node --check site-text-contrast-audit-v1.js
-          node --check scripts/fix-interaction-label-thumbnail-integrity.js
-          node scripts/fix-interaction-label-thumbnail-integrity.js
+          node --check scripts/fix-interaction-label-thumbnail-integrity-v2.js
+          node scripts/fix-interaction-label-thumbnail-integrity-v2.js
           node --check site-navigation.js
           node --check site-visual-closure-v1.js
           git diff --check
@@ -50,7 +51,7 @@ jobs:
           grep -q 'data-qily-text-contrast-audit' site-navigation.js
           grep -q '20260805-action-label-v4' site-navigation.js
           grep -q '20260805-runtime-audit-v1' site-navigation.js
-          node scripts/fix-interaction-label-thumbnail-integrity.js
+          node scripts/fix-interaction-label-thumbnail-integrity-v2.js
           git diff --check
 
       - name: Commit materialized fixes to branch
