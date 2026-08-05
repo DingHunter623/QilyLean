@@ -7,6 +7,7 @@ on:
       - "site-resource-network-v1.css"
       - "links/network/**"
       - "scripts/materialize-industry-resource-network.js"
+      - "scripts/validate-industry-resource-network.js"
       - ".github/workflows/materialize-industry-resource-network.yml"
       - "index.html"
       - "links/index.html"
@@ -19,6 +20,7 @@ on:
       - "site-resource-network-v1.css"
       - "links/network/**"
       - "scripts/materialize-industry-resource-network.js"
+      - "scripts/validate-industry-resource-network.js"
       - ".github/workflows/materialize-industry-resource-network.yml"
       - "index.html"
       - "links/index.html"
@@ -52,6 +54,7 @@ jobs:
         shell: bash
         run: |
           node --check scripts/materialize-industry-resource-network.js
+          node --check scripts/validate-industry-resource-network.js
           test -s site-resource-network-v1.css
           test -s links/network/index.html
 
@@ -82,34 +85,7 @@ jobs:
           fi
 
       - name: Validate public definition and compliance boundaries
-        shell: bash
-        run: |
-          grep -q 'QILY-RESOURCE-NETWORK:HOME:START' index.html
-          grep -q 'QilyLean以制造改善项目交付为核心' index.html
-          grep -q '产业资源协同网络｜建设阶段' index.html
-          grep -q 'QILY-RESOURCE-NETWORK:LINKS:START' links/index.html
-          grep -q '产业资源目录｜全球科技企业与跨行业资源' links/index.html
-          grep -q 'QILY-RESOURCE-NETWORK:ONBOARDING:START' links/onboarding/index.html
-          grep -q '入驻不是背书，展示不等于成交' links/network/index.html
-          grep -q '当前状态：建设阶段' links/network/index.html
-          grep -q 'https://qilylean.com/links/network/' sitemap.xml
-          grep -q 'https://qilylean.com/links/onboarding/' sitemap.xml
-          grep -q 'qilyResourceNetworkStylesheet' index.html
-          grep -q 'qilyResourceNetworkStylesheet' links/index.html
-          grep -q 'qilyResourceNetworkStylesheet' links/onboarding/index.html
-          grep -q 'qilyResourceNetworkStylesheet' links/network/index.html
-          node - <<'NODE'
-          const fs = require('fs');
-          const index = JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
-          const required = ['/', '/links/', '/links/onboarding/', '/links/network/'];
-          for (const url of required) {
-            if (!index.entries.some((entry) => entry.url === url)) throw new Error(`Search index missing ${url}`);
-          }
-          const network = index.entries.find((entry) => entry.url === '/links/network/');
-          if (!network.text.includes('可信展示') || !network.text.includes('需求匹配') || !network.text.includes('成果交付')) {
-            throw new Error('Resource-network search entry is incomplete');
-          }
-          NODE
+        run: node scripts/validate-industry-resource-network.js
 
       - name: Commit generated public pages
         if: github.event_name == 'push'
