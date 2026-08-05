@@ -1,4 +1,4 @@
-/* QilyLean｜早期职业履历与主要项目履历联动｜V2026.08.05 */
+/* QilyLean｜早期职业履历与主要项目履历联动｜V2026.08.05 R2 */
 .career-table .career-year-col{
   width:168px!important;
   min-width:168px!important;
@@ -22,6 +22,49 @@
   font-weight:950;
   line-height:1.45;
 }
+.career-table .career-row-company{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:7px 0 6px;
+  padding:8px 10px;
+  border-left:3px solid var(--daily-gold,#caa15f);
+  color:#315f64;
+  background:#f7fbfa;
+  font-size:.88em;
+  line-height:1.65;
+}
+.career-table .career-row-company b{
+  color:var(--daily-forest,#0f4b5a);
+}
+.career-table .career-row-company a,
+.career-full-card .career-company-official{
+  display:inline-flex;
+  align-items:center;
+  min-height:32px;
+  padding:4px 10px;
+  border:1px solid #bdd8d3;
+  border-radius:999px;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  background:#fff;
+  font-weight:900;
+  text-decoration:none;
+  transition:background .16s ease,color .16s ease,border-color .16s ease,transform .16s ease,box-shadow .16s ease;
+}
+.career-table .career-row-company a:hover,
+.career-table .career-row-company a:focus-visible,
+.career-full-card .career-company-official:hover,
+.career-full-card .career-company-official:focus-visible{
+  color:#332100!important;
+  -webkit-text-fill-color:#332100!important;
+  background:#ffd36a;
+  border-color:#e5b847;
+  transform:translateY(-1px);
+  box-shadow:0 8px 18px rgba(15,75,90,.14);
+  outline:none;
+}
 .career-table .career-row-summary{
   display:block;
   color:#526967;
@@ -33,6 +76,26 @@
 #career-2009-2015,
 #career-2006-2009{
   scroll-margin-top:96px;
+}
+.career-full-card .career-company-line{
+  display:flex;
+  align-items:center;
+  gap:8px 10px;
+  flex-wrap:wrap;
+  margin:0 0 12px;
+  padding:12px 14px;
+  border:1px solid #d5e4e3;
+  border-left:4px solid var(--teal,#178b94);
+  color:#315f64;
+  background:#f8fbfa;
+  font-size:16px;
+  line-height:1.65;
+}
+.career-full-card .career-company-line b{
+  color:var(--forest,#0f4b5a);
+}
+.career-full-card .career-company-name{
+  font-weight:850;
 }
 .career-full-card .career-stage-summary{
   margin:0 0 12px;
@@ -61,7 +124,11 @@
     min-width:132px!important;
   }
   .career-table .career-row-title{font-size:13px}
+  .career-table .career-row-company{font-size:11.8px;padding:7px 8px}
+  .career-table .career-row-company a{width:100%;justify-content:center}
   .career-table .career-row-summary{font-size:12px;line-height:1.65}
+  .career-full-card .career-company-line{align-items:flex-start;flex-direction:column;font-size:14px}
+  .career-full-card .career-company-official{width:100%;justify-content:center}
 }
 @media(max-width:420px){
   .career-table .career-year-col{

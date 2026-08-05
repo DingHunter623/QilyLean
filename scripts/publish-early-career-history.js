@@ -6,12 +6,12 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20260805-early-career-v1';
+const version = '20260805-company-links-v2';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
   <link id="qilyEarlyCareerHistoryStylesheet" rel="stylesheet" href="/site-early-career-history-v1.css?v=${version}">
-  <script defer id="qilyEarlyCareerHistoryScript" data-qily-early-career-history="v1" src="/site-early-career-history-v1.js?v=${version}"></script>
+  <script defer id="qilyEarlyCareerHistoryScript" data-qily-early-career-history="v2" src="/site-early-career-history-v1.js?v=${version}"></script>
 ${endMarker}`;
 
 const careerRows = [
@@ -24,13 +24,21 @@ const careerRows = [
   {
     key: '2009-2015',
     label: '2009～2015年',
-    title: '保险丝生产技术／PE转IE工程',
+    title: '保险丝制造｜生产技术、先后PE工程、IE工程',
+    companyEnglish: 'Dongguan Cooper Electronics Co., Ltd.',
+    companyChinese: '东莞库柏电子有限公司',
+    website: 'https://www.eaton.com.cn/cn/zh-cn.html',
+    websiteLabel: '现集团官方网站：Eaton｜伊顿',
     summary: '长期从事保险丝生产技术与PE工程，产品工艺涵盖SMD、DIP、砖块保险丝、陶瓷管／玻璃管保险丝及汽车插片保险丝，负责工艺优化、设备与品质异常处理及量产稳定性改善。随后逐步转向IE工程，围绕标准工时、产能分析、工序平衡、人员配置、效率提升与现场改善，形成由生产技术、PE工程向IE工程延伸的能力路径。'
   },
   {
     key: '2006-2009',
     label: '2006～2009年',
-    title: 'PCBA测试工程／工业工程',
+    title: 'PCBA TE工程／IE工程',
+    companyEnglish: 'Flextronics Manufacturing (Zhuhai) Co., Ltd.',
+    companyChinese: '伟创力制造（珠海）有限公司',
+    website: 'https://flex.com/zh/',
+    websiteLabel: '官方网站：Flex｜伟创力',
     summary: '参与摩托罗拉、诺基亚、华为等品牌手机，以及戴尔、华硕、联想等品牌电脑与服务器产品的PCBA测试、异常分析、维修验证和量产支持。随后延伸至工业工程领域，围绕标准工时、生产效率、工序平衡、流程优化与现场改善，建立制造工程与IE改善基础。'
   }
 ];
@@ -53,8 +61,13 @@ function injectResources(source, relativePath) {
   return next;
 }
 
+function companyMarkup(item) {
+  if (!item.companyEnglish) return '';
+  return `<span class="career-row-company"><b>任职公司：</b><span lang="en">${item.companyEnglish}</span><span aria-hidden="true">｜</span><span>${item.companyChinese}</span><a href="${item.website}" target="_blank" rel="noopener noreferrer external">${item.websiteLabel} ↗</a></span>`;
+}
+
 function buildRow(item) {
-  return `<tr data-career-era="${item.key}"><td><a class="career-year-link career-range-link" href="/experience/#career-${item.key}" aria-label="查看${item.label}履历主线">${item.label}</a></td><td><strong class="career-row-title">${item.title}</strong><span class="career-row-summary">${item.summary}</span></td></tr>`;
+  return `<tr data-career-era="${item.key}"><td><a class="career-year-link career-range-link" href="/experience/#career-${item.key}" aria-label="查看${item.label}履历主线">${item.label}</a></td><td><strong class="career-row-title">${item.title}</strong>${companyMarkup(item)}<span class="career-row-summary">${item.summary}</span></td></tr>`;
 }
 
 function updateCareerTable(source) {
@@ -78,6 +91,7 @@ function validate(archive, experience) {
     const label = index === 0 ? 'daily-insights' : 'experience';
     assert(content.includes('site-early-career-history-v1.css?v=' + version), `${label}: stylesheet missing`);
     assert(content.includes('site-early-career-history-v1.js?v=' + version), `${label}: script missing`);
+    assert(content.includes('data-qily-early-career-history="v2"'), `${label}: v2 data marker missing`);
     assert((content.match(/QILY-EARLY-CAREER-HISTORY:START/g) || []).length === 1, `${label}: duplicate resource block`);
   });
 
@@ -87,6 +101,12 @@ function validate(archive, experience) {
     assert(archive.includes(item.label), `archive: ${item.label} missing`);
     assert(archive.includes(item.title), `archive: ${item.title} missing`);
     assert(archive.includes(item.summary), `archive: ${item.key} summary missing`);
+    if (item.companyEnglish) {
+      assert(archive.includes(item.companyEnglish), `archive: ${item.key} English company name missing`);
+      assert(archive.includes(item.companyChinese), `archive: ${item.key} Chinese company name missing`);
+      assert(archive.includes(`href="${item.website}"`), `archive: ${item.key} official website missing`);
+      assert(archive.includes(item.websiteLabel), `archive: ${item.key} official website label missing`);
+    }
   });
 
   assert(archive.includes('<col class="career-year-col">'), 'archive: career year column missing');
