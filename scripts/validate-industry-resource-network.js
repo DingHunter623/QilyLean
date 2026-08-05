@@ -32,6 +32,8 @@ const search = JSON.parse(read('qilylean/site-search-index.json'));
   [onboarding, '进入产业资源目录、建立独立资源主页', 'onboarding'],
   [network, '入驻不是背书，展示不等于成交', 'network definition'],
   [network, '当前状态：建设阶段', 'network definition'],
+  [network, 'href="/site-resource-network-v1.css?v=20260805-resource-network-v3"', 'network definition'],
+  [network, '<a class="primary" href="/links/onboarding/">申请资源入驻</a>', 'network hero primary action'],
   [sitemap, 'https://qilylean.com/links/network/', 'sitemap'],
   [sitemap, 'https://qilylean.com/links/onboarding/', 'sitemap']
 ].forEach(([content, token, label]) => requireToken(content, token, label));
@@ -48,7 +50,14 @@ const search = JSON.parse(read('qilylean/site-search-index.json'));
   'a.qily-resource-network__button.primary:visited',
   'background-color:var(--qlrn-light-gold)!important',
   '-webkit-text-fill-color:#fff!important',
-  'a.qily-resource-network__button.primary:active'
+  'a.qily-resource-network__button.primary:active',
+  'QILY-NETWORK-HERO-ACTION-CONTRAST-V3',
+  'section.hero .hero-actions a.primary:visited',
+  '-webkit-text-fill-color:#17322d!important',
+  'background-color:#ffe39b!important',
+  'section.hero .hero-actions a.primary:hover',
+  'section.hero .hero-actions a.primary:active',
+  'visibility:visible!important'
 ].forEach((token) => requireToken(stylesheet, token, 'resource-network button contrast stylesheet'));
 
 if (!Array.isArray(search.entries)) throw new Error('Search-index entries are missing');
@@ -66,4 +75,4 @@ for (const claim of ['平台已成熟', '保证固定访问量', '保证成交�
   if (combined.includes(claim)) throw new Error(`Prohibited overstated claim detected: ${claim}`);
 }
 
-process.stdout.write('Industry resource network validation passed: static pages, governance boundary, sitemap, stylesheet, button contrast and search index are aligned.\n');
+process.stdout.write('Industry resource network validation passed: static pages, governance boundary, sitemap, stylesheet, hero/button contrast and search index are aligned.\n');

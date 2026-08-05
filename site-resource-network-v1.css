@@ -103,3 +103,63 @@ html body .qily-resource-network:not(.dark) .qily-resource-network__actions a.qi
 @media(max-width:1080px){.qily-resource-network__grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}.qily-resource-network__loop{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:820px){.qily-resource-network__grid,.qily-resource-network__grid.four{grid-template-columns:1fr}.qily-resource-network__loop{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.qily-resource-network__loop{grid-template-columns:1fr}.qily-resource-network__actions{display:grid}.qily-resource-network__button{width:100%}}
+
+/* QILY-NETWORK-HERO-ACTION-CONTRAST-V3
+ * 独立网络页首屏主按钮：浅金底必须深色字；高优先级覆盖全站深色Hero通用链接规则。
+ */
+html body main section.hero .hero-actions a.primary,
+html body main section.hero .hero-actions a.primary:visited{
+  position:relative!important;
+  z-index:1!important;
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  border:2px solid #c99a3e!important;
+  text-decoration-color:#17322d!important;
+  font-weight:950!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html body main section.hero .hero-actions a.primary:hover,
+html body main section.hero .hero-actions a.primary:focus-visible{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#0f4b5a!important;
+  border-color:#ffe39b!important;
+  text-decoration-color:#ffe39b!important;
+  box-shadow:0 10px 24px rgba(5,42,51,.34)!important;
+  transform:translateY(-2px)!important;
+  outline:3px solid rgba(255,227,155,.32)!important;
+  outline-offset:2px!important;
+}
+html body main section.hero .hero-actions a.primary:active{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#073c47!important;
+  border-color:#ffe39b!important;
+  text-decoration-color:#ffe39b!important;
+  transform:translateY(0) scale(.98)!important;
+}
+html body main section.hero .hero-actions a:not(.primary),
+html body main section.hero .hero-actions a:not(.primary):visited{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:transparent!important;
+  border-color:rgba(255,255,255,.82)!important;
+  text-decoration-color:#ffe39b!important;
+  opacity:1!important;
+  filter:none!important;
+}
+html body main section.hero .hero-actions a:not(.primary):hover,
+html body main section.hero .hero-actions a:not(.primary):focus-visible{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  box-shadow:0 9px 22px rgba(5,42,51,.28)!important;
+  transform:translateY(-2px)!important;
+  outline:none!important;
+}
