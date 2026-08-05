@@ -1,0 +1,85 @@
+name: Publish Times26001 v1.1.4 footer-synced APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-times26001-v114-footer-sync.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-times26001-v114-footer-sync
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    env:
+      ARTIFACT_URL: "https://sdmntprjapaneast.oaiusercontent.com/files/00000000-b6b4-8209-848b-60c6b4591cbb/raw?se=2026-08-05T17:39:05Z&sp=r&sv=2026-02-06&sr=b&scid=36e663d4-5986-5ec0-960c-a3250b5292b1&skoid=3e273c3d-5ea1-4088-9e18-79685531b184&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-04T22:08:40Z&ske=2026-08-05T22:08:40Z&sks=b&skv=2026-02-06&sig=4EtKVkYQXVU%2BgOaHFtcfCphW2m4qJ2AHW6EZmt1vPtI%3D"
+      APK_PATH: Times26001-Android-v1.1.4-IE-Stopwatch.apk
+      APK_SHA_PATH: Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt
+      CACHE_KEY: af47a9ec
+    steps:
+      - name: Checkout current main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Download and verify rebuilt APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/times26001-artifact /tmp/times26001-apk
+          curl -L --fail --retry 3 --retry-delay 2 "$ARTIFACT_URL" -o /tmp/times26001-v114.zip
+          unzip -o /tmp/times26001-v114.zip -d /tmp/times26001-artifact
+          test -s /tmp/times26001-artifact/app-debug.apk
+          unzip -q -o /tmp/times26001-artifact/app-debug.apk -d /tmp/times26001-apk
+          grep -Raq '1.1.4' /tmp/times26001-apk/assets/public/assets
+          if grep -Raq '1.1.3' /tmp/times26001-apk/assets/public/assets; then
+            echo 'Old visible version 1.1.3 remains in APK assets.' >&2
+            exit 1
+          fi
+          install -m 0644 /tmp/times26001-artifact/app-debug.apk "$APK_PATH"
+          sha256sum "$APK_PATH" > "$APK_SHA_PATH"
+
+      - name: Synchronize website download module
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          page = Path('tools/times26001/index.html')
+          text = page.read_text(encoding='utf-8')
+          new_target = 'Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=af47a9ec'
+          text, count = re.subn(
+              r'Times26001-Android-v1\.1\.4-IE-Stopwatch\.apk\?build=[^"\']+',
+              new_target,
+              text,
+          )
+          if count < 1:
+              raise SystemExit('No v1.1.4 APK download link found to refresh.')
+          page.write_text(text, encoding='utf-8')
+          PY
+          grep -q 'Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=af47a9ec' tools/times26001/index.html
+          grep -q 'Android直接下载 v1.1.4' tools/times26001/index.html
+
+      - name: Commit synchronized APK and website module
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add "$APK_PATH" "$APK_SHA_PATH" tools/times26001/index.html
+          if git diff --cached --quiet; then
+            echo 'No publication changes detected.'
+            exit 0
+          fi
+          git commit -m 'fix: publish Times26001 v1.1.4 footer-synced APK [skip ci]'
+          git push origin HEAD:main
