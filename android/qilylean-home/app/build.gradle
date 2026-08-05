@@ -10,8 +10,8 @@ android {
         applicationId 'com.qilylean.home'
         minSdk 23
         targetSdk 28
-        versionCode 5
-        versionName '2.0.0-universal'
+        versionCode 6
+        versionName '2.1.0-universal-icon'
     }
 
     buildTypes {
