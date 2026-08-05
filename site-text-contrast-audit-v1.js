@@ -1,8 +1,8 @@
-/* QilyLean sitewide textual-control contrast audit v1 | 2026-08-05 */
+/* QilyLean sitewide textual-control contrast audit v2 | 2026-08-05 */
 (function (d, w) {
   'use strict';
-  if (w.__qilyTextContrastAuditV1) return;
-  w.__qilyTextContrastAuditV1 = true;
+  if (w.__qilyTextContrastAuditV2) return;
+  w.__qilyTextContrastAuditV2 = true;
 
   var controlSelector = [
     'a[href]', 'button', '[role="button"]', '[role="link"]',
@@ -12,6 +12,7 @@
     '.site-music-toggle', '.qily-modal-close', '.qily-float-btn',
     '.qily-float-dock a', '.qily-float-dock button',
     '.qily-floating-dock a', '.qily-floating-dock button',
+    '.factory-plan-preview',
     '[aria-hidden="true"]'
   ].join(',');
   var scheduled = 0;
@@ -50,11 +51,15 @@
     return { r: 255, g: 255, b: 255, a: 1 };
   }
 
-  function normalizeQtcActions(root) {
+  function collect(root, selector) {
     var nodes = [];
-    if (root && root.matches && root.matches('.qtc-action')) nodes.push(root);
-    if (root && root.querySelectorAll) nodes = nodes.concat(Array.from(root.querySelectorAll('.qtc-action')));
-    nodes.forEach(function (node) {
+    if (root && root.matches && root.matches(selector)) nodes.push(root);
+    if (root && root.querySelectorAll) nodes = nodes.concat(Array.from(root.querySelectorAll(selector)));
+    return nodes;
+  }
+
+  function normalizeQtcActions(root) {
+    collect(root, '.qtc-action').forEach(function (node) {
       node.classList.remove('qily-action-primary', 'qily-action-secondary');
       var label = (node.getAttribute('data-qily-action-label') || node.textContent || node.getAttribute('aria-label') || '').trim();
       if (!label) return;
@@ -69,6 +74,43 @@
         node.appendChild(span);
       }
       node.setAttribute('data-qily-textual-control', 'true');
+    });
+  }
+
+  function normalizeFactoryPlanPreviews(root) {
+    collect(root, '.factory-plan-thumb-grid .factory-plan-preview').forEach(function (node) {
+      node.removeAttribute('data-qily-auto-contrast');
+      node.setAttribute('data-qily-thumbnail-control', 'clean');
+      node.style.setProperty('-webkit-appearance', 'none', 'important');
+      node.style.setProperty('appearance', 'none', 'important');
+      node.style.setProperty('background', 'transparent', 'important');
+      node.style.setProperty('background-color', 'transparent', 'important');
+      node.style.setProperty('background-image', 'none', 'important');
+      node.style.setProperty('border', '0', 'important');
+      node.style.setProperty('box-shadow', 'none', 'important');
+      node.style.setProperty('outline-offset', '4px', 'important');
+      node.style.setProperty('padding', '0 0 2px', 'important');
+      node.style.setProperty('overflow', 'visible', 'important');
+
+      var label = node.querySelector(':scope > span');
+      if (label) {
+        label.style.setProperty('display', 'inline-flex', 'important');
+        label.style.setProperty('align-items', 'center', 'important');
+        label.style.setProperty('justify-content', 'center', 'important');
+        label.style.setProperty('min-height', '26px', 'important');
+        label.style.setProperty('margin', '0', 'important');
+        label.style.setProperty('padding', '4px 9px', 'important');
+        label.style.setProperty('border', '1.5px solid #178b94', 'important');
+        label.style.setProperty('border-radius', '999px', 'important');
+        label.style.setProperty('color', '#0f4b5a', 'important');
+        label.style.setProperty('-webkit-text-fill-color', '#0f4b5a', 'important');
+        label.style.setProperty('background', '#ffffff', 'important');
+        label.style.setProperty('background-color', '#ffffff', 'important');
+        label.style.setProperty('background-image', 'none', 'important');
+        label.style.setProperty('box-shadow', '0 3px 9px rgba(15,75,90,.07)', 'important');
+        label.style.setProperty('opacity', '1', 'important');
+        label.style.setProperty('visibility', 'visible', 'important');
+      }
     });
   }
 
@@ -101,11 +143,12 @@
   function audit(root) {
     root = root || d;
     normalizeQtcActions(root);
+    normalizeFactoryPlanPreviews(root);
     var controls = [];
     if (root.matches && root.matches(controlSelector)) controls.push(root);
     if (root.querySelectorAll) controls = controls.concat(Array.from(root.querySelectorAll(controlSelector)));
     controls.forEach(auditControl);
-    d.documentElement.setAttribute('data-qily-text-contrast-audited', 'v1');
+    d.documentElement.setAttribute('data-qily-text-contrast-audited', 'v2');
   }
 
   function schedule(root) {
