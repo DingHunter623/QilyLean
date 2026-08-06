@@ -1,10 +1,8 @@
 name: Configure Zoho DKIM via NameSilo MCP
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/configure-zoho-dkim-mcp.yml'
+  schedule:
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
