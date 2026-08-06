@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans SC','Microsoft YaHei','PingFang SC',sans-serif" viewBox="0 0 1080 1350" role="img" aria-labelledby="title desc">
+<title id="title">03 善战的狼：打胜仗</title>
+<desc id="desc">2026年8月7日团队沟通与协作话术，善战的狼</desc>
+<defs>
+  <linearGradient id="bg03" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#273b43"/><stop offset="1" stop-color="#4e6970"/></linearGradient>
+  <filter id="shadow03"><feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#000" flood-opacity=".18"/></filter>
+</defs>
+<rect width="1080" height="1350" fill="#f8f5ec"/>
+<rect x="0" y="0" width="1080" height="620" fill="url(#bg03)"/>
+<circle cx="910" cy="95" r="185" fill="#fff" opacity=".06"/>
+<text x="70" y="72" fill="#fff" font-size="26" font-weight="700">8月7日简报｜团队沟通与协作话术</text>
+<text x="1010" y="72" fill="#fff" font-size="24" font-weight="700" text-anchor="end">QilyLean｜启力精益</text>
+<text x="76" y="178" fill="#d7c88b" font-size="96" font-weight="900">03</text>
+<text x="250" y="175" fill="#fff" font-size="56" font-weight="900">善战的狼</text>
+<text x="250" y="228" fill="#fff" opacity=".93" font-size="31" font-weight="700">敢拼敢打，执行强，拿结果</text>
+<g transform="translate(540 390)">
+          <circle r="160" fill="#d7c88b" opacity=".12"/>
+          <path d="M-128-138 L-88-48 Q-135 12-102 102 Q-55 164 0 178 Q55 164 102 102 Q135 12 88-48 L128-138 L38-88 Q0-114-38-88Z" fill="#d7c88b" opacity=".95"/>
+          <path d="M-128-138 L-88-48M128-138 L88-48" stroke="#273b43" stroke-width="18" stroke-linecap="round"/>
+          <path d="M-70-25 Q-38-55-15-19M70-25 Q38-55 15-19" fill="none" stroke="#273b43" stroke-width="17" stroke-linecap="round"/>
+          <circle cx="-43" cy="-5" r="10" fill="#273b43"/><circle cx="43" cy="-5" r="10" fill="#273b43"/>
+          <path d="M0 18 l-24 28 h48z" fill="#273b43"/><path d="M0 46 Q-28 82-54 61M0 46 Q28 82 54 61" fill="none" stroke="#273b43" stroke-width="11" stroke-linecap="round"/>
+          <path d="M-90 34 Q-52 66-35 116M90 34 Q52 66 35 116" fill="none" stroke="#273b43" stroke-width="13" stroke-linecap="round"/>
+        </g>
+<rect x="70" y="655" width="940" height="185" rx="26" fill="#fff" filter="url(#shadow03)"/>
+<rect x="95" y="685" width="132" height="44" rx="22" fill="#273b43"/>
+<text x="161" y="716" fill="#fff" font-size="25" font-weight="800" text-anchor="middle">角色价值</text>
+<text x="155" y="760" fill="#263f38" font-size="31" font-weight="560" text-anchor="start"><tspan x="155" dy="0">冲锋在前，执行到位，</tspan><tspan x="155" dy="46">在竞争和困难中拿下结果。</tspan></text>
+<rect x="70" y="865" width="940" height="245" rx="26" fill="#fff" filter="url(#shadow03)"/>
+<rect x="95" y="893" width="132" height="44" rx="22" fill="#273b43"/>
+<text x="161" y="924" fill="#fff" font-size="25" font-weight="800" text-anchor="middle">沟通话术</text>
+<text x="155" y="975" fill="#153a32" font-size="29" font-weight="620" text-anchor="start"><tspan x="155" dy="0">• 这项任务交给你，我相信你能搞定！</tspan><tspan x="155" dy="47">• 目标明确，集中力量去打！</tspan><tspan x="155" dy="47">• 遇到困难想办法解决，不找理由！</tspan></text>
+<rect x="70" y="1145" width="940" height="145" rx="26" fill="url(#bg03)"/>
+<text x="115" y="1191" fill="#d7c88b" font-size="26" font-weight="850">使用要点｜打胜仗</text>
+<text x="155" y="1235" fill="#ffffff" font-size="28" font-weight="650" text-anchor="start"><tspan x="155" dy="0">给目标、给资源、给信任，</tspan><tspan x="155" dy="42">同时明确节点与验收标准。</tspan></text>
+<line x1="70" y1="1320" x2="1010" y2="1320" stroke="#273b43" opacity=".25"/>
+<text x="70" y="1339" fill="#273b43" font-size="20" font-weight="700">虎定方向｜鹰看未来｜狼打胜仗｜豹提效率｜狗守底线</text>
+<text x="1010" y="1339" fill="#273b43" font-size="20" font-weight="700" text-anchor="end">qilylean.com</text>
+</svg>
