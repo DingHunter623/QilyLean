@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans SC','Microsoft YaHei','PingFang SC',sans-serif" viewBox="0 0 1080 1350" role="img" aria-labelledby="title desc">
+<title id="title">05 忠诚的狗：守底线</title>
+<desc id="desc">2026年8月7日团队沟通与协作话术，忠诚的狗</desc>
+<defs>
+  <linearGradient id="bg05" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5a3d25"/><stop offset="1" stop-color="#9a6b3d"/></linearGradient>
+  <filter id="shadow05"><feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#000" flood-opacity=".18"/></filter>
+</defs>
+<rect width="1080" height="1350" fill="#f8f5ec"/>
+<rect x="0" y="0" width="1080" height="620" fill="url(#bg05)"/>
+<circle cx="910" cy="95" r="185" fill="#fff" opacity=".06"/>
+<text x="70" y="72" fill="#fff" font-size="26" font-weight="700">8月7日简报｜团队沟通与协作话术</text>
+<text x="1010" y="72" fill="#fff" font-size="24" font-weight="700" text-anchor="end">QilyLean｜启力精益</text>
+<text x="76" y="178" fill="#f0d18a" font-size="96" font-weight="900">05</text>
+<text x="250" y="175" fill="#fff" font-size="56" font-weight="900">忠诚的狗</text>
+<text x="250" y="228" fill="#fff" opacity=".93" font-size="31" font-weight="700">最可靠，讲信任，守底线</text>
+<g transform="translate(540 390)">
+          <circle r="160" fill="#f0d18a" opacity=".12"/>
+          <path d="M-112-78 Q-175-132-174-22 Q-172 55-115 70 Q-92 154 0 174 Q92 154 115 70 Q172 55 174-22 Q175-132 112-78 Q60-118 0-116 Q-60-118-112-78Z" fill="#f0d18a" opacity=".96"/>
+          <path d="M-112-78 Q-155-103-150-26 Q-145 25-112 39M112-78 Q155-103 150-26 Q145 25 112 39" fill="none" stroke="#5a3d25" stroke-width="17" stroke-linecap="round"/>
+          <circle cx="-45" cy="-20" r="11" fill="#5a3d25"/><circle cx="45" cy="-20" r="11" fill="#5a3d25"/>
+          <path d="M0 8 l-25 27 h50z" fill="#5a3d25"/><path d="M0 35 Q-36 74-68 48M0 35 Q36 74 68 48" fill="none" stroke="#5a3d25" stroke-width="11" stroke-linecap="round"/>
+          <path d="M-20 70 Q0 95 20 70 Q38 86 30 110 Q0 142-30 110 Q-38 86-20 70Z" fill="#d57a72"/>
+          <path d="M0-180 C-40-235-130-212-125-140 C-120-70-45-35 0 5 C45-35 120-70 125-140 C130-212 40-235 0-180Z" fill="#f0d18a" opacity=".25"/>
+        </g>
+<rect x="70" y="655" width="940" height="185" rx="26" fill="#fff" filter="url(#shadow05)"/>
+<rect x="95" y="685" width="132" height="44" rx="22" fill="#5a3d25"/>
+<text x="161" y="716" fill="#fff" font-size="25" font-weight="800" text-anchor="middle">角色价值</text>
+<text x="155" y="760" fill="#263f38" font-size="31" font-weight="560" text-anchor="start"><tspan x="155" dy="0">忠诚可靠，坚守原则，</tspan><tspan x="155" dy="46">维护团队信任与文化。</tspan></text>
+<rect x="70" y="865" width="940" height="245" rx="26" fill="#fff" filter="url(#shadow05)"/>
+<rect x="95" y="893" width="132" height="44" rx="22" fill="#5a3d25"/>
+<text x="161" y="924" fill="#fff" font-size="25" font-weight="800" text-anchor="middle">沟通话术</text>
+<text x="155" y="975" fill="#153a32" font-size="29" font-weight="620" text-anchor="start"><tspan x="155" dy="0">• 谢谢你的付出，团队有你很安心。</tspan><tspan x="155" dy="47">• 我们一起守住原则和底线。</tspan><tspan x="155" dy="47">• 有你在，大家更信任彼此。</tspan></text>
+<rect x="70" y="1145" width="940" height="145" rx="26" fill="url(#bg05)"/>
+<text x="115" y="1191" fill="#f0d18a" font-size="26" font-weight="850">使用要点｜守底线</text>
+<text x="155" y="1235" fill="#ffffff" font-size="28" font-weight="650" text-anchor="start"><tspan x="155" dy="0">真诚对待，公平认可，</tspan><tspan x="155" dy="42">可靠贡献会带来更强凝聚力。</tspan></text>
+<line x1="70" y1="1320" x2="1010" y2="1320" stroke="#5a3d25" opacity=".25"/>
+<text x="70" y="1339" fill="#5a3d25" font-size="20" font-weight="700">虎定方向｜鹰看未来｜狼打胜仗｜豹提效率｜狗守底线</text>
+<text x="1010" y="1339" fill="#5a3d25" font-size="20" font-weight="700" text-anchor="end">qilylean.com</text>
+</svg>
