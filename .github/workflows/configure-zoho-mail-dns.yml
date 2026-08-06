@@ -1,9 +1,8 @@
 name: Configure Zoho mail DNS
 
 on:
-  workflow_run:
-    workflows: ['pages build and deployment']
-    types: [completed]
+  issues:
+    types: [opened]
   workflow_dispatch:
 
 permissions:
@@ -11,7 +10,7 @@ permissions:
 
 jobs:
   configure:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.issue.title == '[ops] Configure Zoho mail DNS' }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
