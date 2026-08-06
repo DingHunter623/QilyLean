@@ -1,0 +1,65 @@
+name: Configure Zoho DKIM via NameSilo MCP
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/configure-zoho-dkim-mcp.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  configure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      NAMESILO_API_KEY: ${{ secrets.NAMESILO_API_KEY }}
+      DOMAIN: qilylean.com
+      DKIM_HOST: zmail._domainkey
+      DKIM_VALUE: v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCavOSWmc5ijAfkGNNIjc+BpLUXwQOL4w3mBmpOQJos1ULQXFrXKowmafcJWs94bdpuP1fuhxDoU4GpuUKLapdbAtpplvVmpUwVSOeP3ndaQp4mS/n8Y/QaXfphbxSKAsFe92/c6wBaOzFzfihlC6EQni9wskji1pBEa1IIG3zMOQIDAQAB
+    steps:
+      - name: Require API key
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$NAMESILO_API_KEY" || { echo 'Missing NAMESILO_API_KEY'; exit 2; }
+
+      - name: Add DKIM record through NameSilo MCP
+        shell: bash
+        run: |
+          set -euo pipefail
+          payload=$(jq -n \
+            --arg domain "$DOMAIN" \
+            --arg rrtype "TXT" \
+            --arg rrhost "$DKIM_HOST" \
+            --arg rrvalue "$DKIM_VALUE" \
+            --arg rrttl "3600" \
+            '{jsonrpc:"2.0",method:"namesilo.dnsAddRecord",params:{domain:$domain,rrtype:$rrtype,rrhost:$rrhost,rrvalue:$rrvalue,rrttl:$rrttl},id:1}')
+          response=$(curl -fsS -X POST 'https://mcp.namesilo.com/rpc' \
+            -H "X-API-KEY: $NAMESILO_API_KEY" \
+            -H 'Content-Type: application/json' \
+            --data "$payload")
+          echo "$response" | jq '.'
+          if jq -e '.error' >/dev/null <<<"$response"; then
+            echo 'NameSilo MCP returned an error.'
+            exit 1
+          fi
+
+      - name: Verify public DNS
+        shell: bash
+        run: |
+          set -euo pipefail
+          fqdn="$DKIM_HOST.$DOMAIN"
+          for attempt in $(seq 1 24); do
+            dkim=$(dig +short TXT "$fqdn" @1.1.1.1 | tr -d '"\n')
+            echo "Attempt $attempt: DKIM length=${#dkim}"
+            if [ "$dkim" = "$DKIM_VALUE" ]; then
+              echo 'DKIM public DNS verification passed.'
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'MCP call completed, but DNS propagation remains pending.'
+          exit 3
