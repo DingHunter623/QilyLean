@@ -1,8 +1,8 @@
 name: Configure Zoho mail DNS
 
 on:
-  issues:
-    types: [opened]
+  schedule:
+    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   configure:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.issue.title == '[ops] Configure Zoho mail DNS' }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
