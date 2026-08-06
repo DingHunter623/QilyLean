@@ -1,10 +1,9 @@
 name: Configure Zoho mail DNS
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/configure-zoho-mail-dns.yml'
+  workflow_run:
+    workflows: ['pages build and deployment']
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -12,6 +11,7 @@ permissions:
 
 jobs:
   configure:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     env:
@@ -28,7 +28,6 @@ jobs:
           test -n "$NAMESILO_API_KEY" || { echo 'Missing NAMESILO_API_KEY'; exit 2; }
 
       - name: Read current NameSilo DNS records
-        id: current
         shell: bash
         run: |
           set -euo pipefail
