@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="font-family:'Noto Sans SC','Microsoft YaHei','PingFang SC',sans-serif" viewBox="0 0 1080 1350" role="img" aria-labelledby="title desc">
+<title id="title">02 远见的鹰：看未来</title>
+<desc id="desc">2026年8月7日团队沟通与协作话术，远见的鹰</desc>
+<defs>
+  <linearGradient id="bg02" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#123b4a"/><stop offset="1" stop-color="#2b7182"/></linearGradient>
+  <filter id="shadow02"><feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#000" flood-opacity=".18"/></filter>
+</defs>
+<rect width="1080" height="1350" fill="#f8f5ec"/>
+<rect x="0" y="0" width="1080" height="620" fill="url(#bg02)"/>
+<circle cx="910" cy="95" r="185" fill="#fff" opacity=".06"/>
+<text x="70" y="72" fill="#fff" font-size="26" font-weight="700">8月7日简报｜团队沟通与协作话术</text>
+<text x="1010" y="72" fill="#fff" font-size="24" font-weight="700" text-anchor="end">QilyLean｜启力精益</text>
+<text x="76" y="178" fill="#e6c15d" font-size="96" font-weight="900">02</text>
+<text x="250" y="175" fill="#fff" font-size="56" font-weight="900">远见的鹰</text>
+<text x="250" y="228" fill="#fff" opacity=".93" font-size="31" font-weight="700">看得远，抓机会，定方向</text>
+<g transform="translate(540 390)" fill="none" stroke="#e6c15d" stroke-linecap="round" stroke-linejoin="round">
+          <circle r="160" fill="#e6c15d" opacity=".10" stroke="none"/>
+          <path d="M0 58 Q-36-8-12-90 Q22-155 104-174 Q73-124 62-67 Q124-104 198-96 Q132-45 70-11 Q130-6 182 34 Q105 54 42 44" stroke-width="24"/>
+          <path d="M0 58 Q36-8 12-90 Q-22-155-104-174 Q-73-124-62-67 Q-124-104-198-96 Q-132-45-70-11 Q-130-6-182 34 Q-105 54-42 44" stroke-width="24"/>
+          <path d="M-20 55 Q0 95 20 55M-18-24 Q0-44 18-24" stroke-width="18"/>
+          <path d="M0 0 L42 10 L0 30" fill="#e6c15d" stroke="none"/>
+        </g>
+<rect x="70" y="655" width="940" height="185" rx="26" fill="#fff" filter="url(#shadow02)"/>
+<rect x="95" y="685" width="132" height="44" rx="22" fill="#123b4a"/>
+<text x="161" y="716" fill="#fff" font-size="25" font-weight="800" text-anchor="middle">角色价值</text>
+<text x="155" y="760" fill="#263f38" font-size="31" font-weight="560" text-anchor="start"><tspan x="155" dy="0">洞察趋势，识别机会与风险，</tspan><tspan x="155" dy="46">引领团队提前布局。</tspan></text>
+<rect x="70" y="865" width="940" height="245" rx="26" fill="#fff" filter="url(#shadow02)"/>
+<rect x="95" y="893" width="132" height="44" rx="22" fill="#123b4a"/>
+<text x="161" y="924" fill="#fff" font-size="25" font-weight="800" text-anchor="middle">沟通话术</text>
+<text x="155" y="975" fill="#153a32" font-size="29" font-weight="620" text-anchor="start"><tspan x="155" dy="0">• 这个趋势值得我们重点关注！</tspan><tspan x="155" dy="47">• 机会在前方，要提前做好准备。</tspan><tspan x="155" dy="47">• 从长远看，这一步非常关键。</tspan></text>
+<rect x="70" y="1145" width="940" height="145" rx="26" fill="url(#bg02)"/>
+<text x="115" y="1191" fill="#e6c15d" font-size="26" font-weight="850">使用要点｜看未来</text>
+<text x="155" y="1235" fill="#ffffff" font-size="28" font-weight="650" text-anchor="start"><tspan x="155" dy="0">多听其判断，检验其依据，</tspan><tspan x="155" dy="42">不要用短期事务限制长期视野。</tspan></text>
+<line x1="70" y1="1320" x2="1010" y2="1320" stroke="#123b4a" opacity=".25"/>
+<text x="70" y="1339" fill="#123b4a" font-size="20" font-weight="700">虎定方向｜鹰看未来｜狼打胜仗｜豹提效率｜狗守底线</text>
+<text x="1010" y="1339" fill="#123b4a" font-size="20" font-weight="700" text-anchor="end">qilylean.com</text>
+</svg>
