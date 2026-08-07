@@ -1,11 +1,10 @@
 # QilyLean Home 应用商店提交资料
 
-更新时间：2026-08-07  
+更新时间：2026-08-08  
 开发者：丁启利（QilyLean｜启力精益）  
 包名：`com.qilylean.home`  
 支持邮箱：`admin@qilylean.com`  
 官网介绍：`https://qilylean.com/capabilities/#digital-tools`
-
 
 ## 0. 官网与应用市场版本关联
 
@@ -15,6 +14,19 @@
 - 开发者支持官网：`https://qilylean.com/`
 - 企业邮箱：`admin@qilylean.com`
 - 规则：官网公开版与应用市场候选版分开管理；只有正式签名发布包完成并提交对应商店后，才更新“已上架/正式商店版”状态。
+
+## 0.1 双APP统一图标规则
+
+QilyLean Home与思大时间管理从本次应用市场准备起统一使用同一QilyLean Q图标：青绿色Q主体、深色内核、右上红点、外围透明。
+
+- 商店图标唯一源：`assets/tools/qilylean-unified-app-icon.svg`
+- QilyLean Home安装图标：`@drawable/ic_launcher`
+- 安装包、Android安装确认界面、安装后桌面/应用抽屉、系统应用信息页必须保持同一Q图视觉；
+- 两个APP通过应用名称和包名区分，不在主Q图上叠加Home/时间等第二角标；
+- 商店PNG通过`Export unified QilyLean store icons`工作流统一输出，QilyLean Home与Times26001的同规格PNG必须字节一致；
+- 详细规范见`app-store/UNIFIED_APP_ICON_POLICY.md`。
+
+统一色值：Q主体`#126478`、深色内核`#081E20`、红点`#F03A39`、外围透明。
 
 ## 1. 商店名称与文案
 
@@ -46,6 +58,7 @@ QilyLean Home是一款面向精益制造、工业工程与日常效率场景的A
 - 使用固定正式Release签名；
 - 增加隐私政策、用户协议和技术支持入口；
 - 完善秒级时钟、公历、周次、农历和思大时间管理联动；
+- 双APP统一QilyLean Q图标，锁定商店、安装与安装后图标一致性；
 - 增加恢复系统桌面的清晰说明。
 
 ## 2. 分类与标签
@@ -111,12 +124,14 @@ QilyLean Home是一款面向精益制造、工业工程与日常效率场景的A
 ## 6. 提交前硬性校验
 
 - [ ] `compileSdk`和`targetSdk`为36；
-- [ ] `versionCode`严格递增，`versionName`采用纯数字点分格式；
+- [ ] `versionCode`为9、`versionName`为2.3.1，后续版本严格递增；
 - [ ] Manifest包含LAUNCHER、HOME、DEFAULT及必要的`queries`声明；
 - [ ] 不申请`QUERY_ALL_PACKAGES`；
 - [ ] AAB和官网APK使用固定Release签名；
 - [ ] 隐私政策、协议和支持页公网可访问；
 - [ ] 商店文案明确第三方桌面属性和恢复方式；
+- [ ] 商店图标使用统一Q图，且与APK安装界面、安装后桌面/应用抽屉图标一致；
+- [ ] `ICON_POLICY.txt`、证书指纹与SHA-256随正式包留档；
 - [ ] 在Android 12—16至少各验证一次Home键、应用抽屉、默认桌面切换和思大时间管理启动；
 - [ ] 完成Data Safety、内容分级、目标受众和应用访问说明；
-- [ ] 新个人账号按要求完成12名测试者连续14天封闭测试。
+- [ ] 新个人账号按目标商店现行规则完成测试或资质审核。

@@ -1,0 +1,74 @@
+name: Export unified QilyLean store icons
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'assets/tools/qilylean-unified-app-icon.svg'
+      - 'app-store/UNIFIED_APP_ICON_POLICY.md'
+      - '.github/workflows/export-unified-qily-app-icons.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout canonical icon
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            assets/tools/qilylean-unified-app-icon.svg
+            app-store/UNIFIED_APP_ICON_POLICY.md
+          sparse-checkout-cone-mode: false
+
+      - name: Install SVG rasterizer
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends librsvg2-bin
+
+      - name: Validate canonical icon contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          ICON='assets/tools/qilylean-unified-app-icon.svg'
+          grep -q 'fill="#126478"' "$ICON"
+          grep -q 'fill="#081e20"' "$ICON"
+          grep -q 'fill="#f03a39"' "$ICON"
+          ! grep -q 'fill="#ffffff"' "$ICON"
+
+      - name: Export canonical PNG assets for both apps
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist-icons
+          ICON='assets/tools/qilylean-unified-app-icon.svg'
+
+          rsvg-convert -w 512 -h 512 "$ICON" -o dist-icons/QilyLean_Unified_App_Icon_512.png
+          rsvg-convert -w 1024 -h 1024 "$ICON" -o dist-icons/QilyLean_Unified_App_Icon_1024.png
+
+          cp dist-icons/QilyLean_Unified_App_Icon_512.png dist-icons/QilyLean_Home_store_icon_512.png
+          cp dist-icons/QilyLean_Unified_App_Icon_512.png dist-icons/Times26001_store_icon_512.png
+          cp dist-icons/QilyLean_Unified_App_Icon_1024.png dist-icons/QilyLean_Home_store_icon_1024.png
+          cp dist-icons/QilyLean_Unified_App_Icon_1024.png dist-icons/Times26001_store_icon_1024.png
+
+          cmp -s dist-icons/QilyLean_Home_store_icon_512.png dist-icons/Times26001_store_icon_512.png
+          cmp -s dist-icons/QilyLean_Home_store_icon_1024.png dist-icons/Times26001_store_icon_1024.png
+
+          file dist-icons/*.png
+          sha256sum dist-icons/*.png > dist-icons/SHA256SUMS.txt
+          printf '%s\n' \
+            'QilyLean Home and Times26001 use byte-identical store icon PNGs.' \
+            'Canonical source: assets/tools/qilylean-unified-app-icon.svg' \
+            'Installer/launcher icons are validated separately by each app release workflow.' \
+            > dist-icons/README.txt
+
+      - name: Upload unified store icon pack
+        uses: actions/upload-artifact@v4
+        with:
+          name: QilyLean-two-apps-unified-store-icons
+          path: dist-icons/
+          if-no-files-found: error
+          retention-days: 90

@@ -1,11 +1,10 @@
 # 思大时间管理｜Times26001 应用商店提交资料
 
-更新时间：2026-08-07  
+更新时间：2026-08-08  
 开发者：丁启利（QilyLean｜启力精益）  
 包名：`com.qilylean.times26001`  
 支持邮箱：`admin@qilylean.com`  
 官网：`https://qilylean.com/tools/times26001/`
-
 
 ## 0. 官网与应用市场版本关联
 
@@ -15,6 +14,19 @@
 - 开发者支持官网：`https://qilylean.com/`
 - 企业邮箱：`admin@qilylean.com`
 - 规则：官网公开版与应用市场候选版分开管理；只有正式签名发布包完成并提交对应商店后，才更新“已上架/正式商店版”状态。
+
+## 0.1 双APP统一图标规则
+
+Times26001与QilyLean Home统一使用同一QilyLean Q图标：青绿色Q主体、深色内核、右上红点、外围透明。
+
+- 商店图标唯一源：`assets/tools/qilylean-unified-app-icon.svg`
+- Times26001安装图标：`@drawable/qily_unified_app_icon`
+- 安装包、Android安装确认界面、安装后桌面/应用抽屉、系统应用信息页必须保持同一Q图视觉；
+- 两个APP通过应用名称和包名区分，不在主Q图上叠加“时间/秒表/Home”等第二角标；
+- 商店PNG通过`Export unified QilyLean store icons`工作流统一输出，QilyLean Home与Times26001的同规格PNG必须字节一致；
+- 详细规范见`app-store/UNIFIED_APP_ICON_POLICY.md`。
+
+统一色值：Q主体`#126478`、深色内核`#081E20`、红点`#F03A39`、外围透明。
 
 ## 1. 商店名称与文案
 
@@ -46,7 +58,8 @@
 - 统一正式发布签名；
 - 面向Android 16 / API 36完成商店适配；
 - 增加隐私政策、用户协议和技术支持入口；
-- 保留黄历、闹钟、按秒倒计时、IE分段测时和统一Q图标；
+- 保留黄历、闹钟、按秒倒计时、IE分段测时；
+- 双APP统一QilyLean Q图标，锁定商店、安装与安装后图标一致性；
 - 增加版本一致性、权限和发布包自动校验。
 
 ## 2. 分类与标签
@@ -110,13 +123,14 @@
 
 ## 6. 提交前硬性校验
 
-- [ ] `versionCode`严格递增；
-- [ ] `versionName`与应用底部、官网和商店文案一致；
+- [ ] `versionCode`为9、`versionName`为1.1.6，后续版本严格递增；
 - [ ] `targetSdk` / `compileSdk`为36；
 - [ ] 上传AAB使用固定上传密钥签名；
-- [ ] 官网APK使用同一正式Release密钥签名；
+- [ ] 官网APK使用同一正式Release签名体系；
 - [ ] AAB、APK均通过签名验证；
 - [ ] 隐私政策、协议、支持网址公网可访问；
 - [ ] Data Safety与实际代码、权限、SDK一致；
-- [ ] 12名测试者连续参与封闭测试14天（适用于新个人账号）；
+- [ ] 商店图标使用统一Q图，且与APK安装界面、安装后桌面/应用抽屉图标一致；
+- [ ] `ICON_POLICY.txt`、证书指纹与SHA-256随正式包留档；
+- [ ] 新个人开发者账号按目标商店现行规则完成测试或资质审核；
 - [ ] 完成内容分级、目标受众、广告、数据安全和精确闹钟声明。
