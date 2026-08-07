@@ -12,20 +12,20 @@ for p in sorted((root/'knowledge'/'terminology').glob('*.html')):
     # Remove historical keyboard print/save blocker.
     s=re.sub(r'<script>\(function\(\)\{document\.addEventListener\(\'keydown\',[\s\S]*?</script>','',s)
     # Materialize a consistent footer: website, then enterprise email, then PDF action.
-    m=re.search(r'<footer class="footer">[\s\S]*?</footer>',s,re.I)
+    m=re.search(r'<(?P<tag>div|footer)\s+class="footer"[^>]*>[\s\S]*?</(?P=tag)>',s,re.I)
     if not m:
         raise SystemExit(f'{p}: footer missing')
     footer=m.group(0)
-    # Preserve first brand span; replace contact section with explicit rows.
+    tag=m.group('tag')
     first=re.search(r'<span>[\s\S]*?</span>',footer,re.I)
     brand=first.group(0) if first else '<span>QilyLean｜启力精益 · 全站术语单点培训课件</span>'
     new_footer=(
-        '<footer class="footer">'+brand+
+        f'<{tag} class="footer">'+brand+
         '<span class="qily-term-footer-contact">'
         '<span>官网：<a href="https://qilylean.com/">https://qilylean.com/</a></span>'
         '<span>企业邮箱：<a href="mailto:'+email+'">'+email+'</a></span>'
         '<button class="qily-term-pdf-action" type="button" onclick="window.print()">下载 / 保存PDF</button>'
-        '</span></footer>'
+        f'</span></{tag}>'
     )
     s=s[:m.start()]+new_footer+s[m.end():]
     if '.qily-term-footer-contact{' not in s:
@@ -33,6 +33,6 @@ for p in sorted((root/'knowledge'/'terminology').glob('*.html')):
     if s!=old:
         p.write_text(s,'utf-8')
         print('UPDATED',p.relative_to(root))
-    if email not in s or '下载 / 保存PDF' not in s:
+    if email not in s or '下载 / 保存PDF' not in s or 'qily-term-footer-contact' not in s:
         raise SystemExit(f'{p}: contact/pdf action validation failed')
 print('TERM_OPL_CONTACT_OK')
