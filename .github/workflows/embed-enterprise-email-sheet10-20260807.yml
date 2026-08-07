@@ -1,0 +1,99 @@
+name: Embed enterprise email into final worksheet preview 2026-08-07
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/embed-enterprise-email-sheet10-20260807.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image engine
+        run: python -m pip install --disable-pip-version-check --quiet pillow
+      - name: Embed email into source WebP and remove duplicate overlay
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageDraw, ImageFont
+
+          img_path=Path('assets/knowledge/production-operations-organization/sheets/sheet-10.webp')
+          im=Image.open(img_path).convert('RGB')
+          w,h=im.size
+          draw=ImageDraw.Draw(im)
+          email='admin@qilylean.com'
+          # Keep the original worksheet dimensions and place the contact in the lower white brand area.
+          font_path='/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
+          fs=max(14,round(h*0.021))
+          font=ImageFont.truetype(font_path,fs)
+          bbox=draw.textbbox((0,0),email,font=font)
+          tw,th=bbox[2]-bbox[0],bbox[3]-bbox[1]
+
+          # Search for the cleanest light band in the lower brand/contact zone.
+          x0=int(w*0.22); x1=int(w*0.78)
+          band_h=max(th+14,int(h*0.040))
+          best=None
+          for cy in range(int(h*0.72), int(h*0.88), max(1,int(h*0.005))):
+              y0=max(0,cy-band_h//2); y1=min(h,cy+band_h//2)
+              crop=im.crop((x0,y0,x1,y1)).resize((max(1,(x1-x0)//8),max(1,(y1-y0)//4)))
+              px=list(crop.getdata())
+              light=sum(1 for r,g,b in px if r>225 and g>225 and b>225)/max(1,len(px))
+              score=light - abs(cy-int(h*0.81))/h*0.12
+              if best is None or score>best[0]: best=(score,cy,light)
+          _,cy,light=best
+          box_w=tw+max(24,int(w*0.020)); box_h=th+max(12,int(h*0.016))
+          bx0=(w-box_w)//2; by0=max(0,cy-box_h//2); bx1=bx0+box_w; by1=by0+box_h
+          radius=max(4,int(h*0.006))
+          draw.rounded_rectangle((bx0,by0,bx1,by1),radius=radius,fill=(255,255,255),outline=(185,212,210),width=max(1,int(h*0.002)))
+          tx=(w-tw)//2; ty=by0+(box_h-th)//2-bbox[1]
+          draw.text((tx,ty),email,font=font,fill=(11,86,98))
+          im.save(img_path,'WEBP',quality=94,method=6)
+          check=Image.open(img_path)
+          if check.size!=(w,h): raise RuntimeError(f'Image dimensions changed: {(w,h)} -> {check.size}')
+          print(f'SHEET10_EMBEDDED size={w}x{h} font={fs} band_light_ratio={light:.3f} y={cy}')
+
+          # Source image now owns the visible email. Keep only the caption contact in HTML; remove image overlay to avoid duplication.
+          p=Path('qilylean/production-operations-organization.html')
+          s=p.read_text(encoding='utf-8')
+          start='<!-- QILY-FINAL-SHEET-CONTACT:START -->'
+          end='<!-- QILY-FINAL-SHEET-CONTACT:END -->'
+          replacement='''<!-- QILY-FINAL-SHEET-CONTACT:START -->\n<style id="qily-final-sheet-enterprise-email-20260807">\n.qily-contact-sheet-preview figcaption span::after{content:" · 企业邮箱：admin@qilylean.com";color:#0b5662;font-weight:900}\n</style>\n<!-- QILY-FINAL-SHEET-CONTACT:END -->'''
+          if start not in s or end not in s: raise RuntimeError('Final-sheet contact marker missing')
+          a=s.index(start); b=s.index(end,a)+len(end)
+          s=s[:a]+replacement+s[b:]
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate source and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s assets/knowledge/production-operations-organization/sheets/sheet-10.webp
+          grep -q 'qily-contact-sheet-preview' qilylean/production-operations-organization.html
+          grep -q '企业邮箱：admin@qilylean.com' qilylean/production-operations-organization.html
+          ! grep -q 'preview-open::after' qilylean/production-operations-organization.html
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git rm -f .github/workflows/embed-enterprise-email-sheet10-20260807.yml
+          git add -A
+          git commit -m '全站规范：将企业邮箱写入末页预览图实体'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then git rebase --abort || true; exit 1; fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          exit 1
