@@ -20,6 +20,7 @@ html body :is(
   .module-actions,
   .card-actions,
   .qily-ia-actions,
+  .qtc-actions,
   .form-actions,
   .resource-stage,
   .service-contract,
@@ -28,12 +29,19 @@ html body :is(
 html body :is(
   a.resource-action,
   a.qily-ia-button,
+  a.qtc-action,
   a.module-action,
   a.project-list-action,
   a.project-card-action,
   a.service-contract-link,
   a.share-button,
-  button.primary
+  a.button,
+  a.qily-action-primary,
+  a.qily-action-secondary,
+  button.primary,
+  button.button,
+  button.qily-action-primary,
+  button.qily-action-secondary
 ){
   position:relative!important;
   isolation:isolate!important;
@@ -44,7 +52,7 @@ html body :is(
   text-shadow:none!important;
 }
 
-/* 悬停／键盘聚焦：统一金色实底＋深色字，包含内部span／strong等子元素。 */
+/* 悬停／键盘聚焦：全站统一金砖色实底＋深色高对比文字。 */
 html body :is(
   .ql-trust-strip-actions,
   .ql-trust-actions,
@@ -53,6 +61,7 @@ html body :is(
   .module-actions,
   .card-actions,
   .qily-ia-actions,
+  .qtc-actions,
   .form-actions,
   .resource-stage,
   .service-contract,
@@ -61,12 +70,19 @@ html body :is(
 html body :is(
   a.resource-action,
   a.qily-ia-button,
+  a.qtc-action,
   a.module-action,
   a.project-list-action,
   a.project-card-action,
   a.service-contract-link,
   a.share-button,
-  button.primary
+  a.button,
+  a.qily-action-primary,
+  a.qily-action-secondary,
+  button.primary,
+  button.button,
+  button.qily-action-primary,
+  button.qily-action-secondary
 ):is(:hover,:focus-visible){
   color:var(--qily-interactive-hover-text)!important;
   -webkit-text-fill-color:var(--qily-interactive-hover-text)!important;
@@ -93,6 +109,7 @@ html body :is(
   .module-actions,
   .card-actions,
   .qily-ia-actions,
+  .qtc-actions,
   .form-actions,
   .resource-stage,
   .service-contract,
@@ -101,12 +118,19 @@ html body :is(
 html body :is(
   a.resource-action,
   a.qily-ia-button,
+  a.qtc-action,
   a.module-action,
   a.project-list-action,
   a.project-card-action,
   a.service-contract-link,
   a.share-button,
-  button.primary
+  a.button,
+  a.qily-action-primary,
+  a.qily-action-secondary,
+  button.primary,
+  button.button,
+  button.qily-action-primary,
+  button.qily-action-secondary
 ):is(:hover,:focus-visible) *{
   color:var(--qily-interactive-hover-text)!important;
   -webkit-text-fill-color:var(--qily-interactive-hover-text)!important;
@@ -126,6 +150,7 @@ html body :is(
   .module-actions,
   .card-actions,
   .qily-ia-actions,
+  .qtc-actions,
   .form-actions,
   .resource-stage,
   .service-contract,
@@ -134,12 +159,19 @@ html body :is(
 html body :is(
   a.resource-action,
   a.qily-ia-button,
+  a.qtc-action,
   a.module-action,
   a.project-list-action,
   a.project-card-action,
   a.service-contract-link,
   a.share-button,
-  button.primary
+  a.button,
+  a.qily-action-primary,
+  a.qily-action-secondary,
+  button.primary,
+  button.button,
+  button.qily-action-primary,
+  button.qily-action-secondary
 ):active{
   color:var(--qily-interactive-active-text)!important;
   -webkit-text-fill-color:var(--qily-interactive-active-text)!important;
@@ -162,6 +194,7 @@ html body :is(
   .module-actions,
   .card-actions,
   .qily-ia-actions,
+  .qtc-actions,
   .form-actions,
   .resource-stage,
   .service-contract,
@@ -170,12 +203,19 @@ html body :is(
 html body :is(
   a.resource-action,
   a.qily-ia-button,
+  a.qtc-action,
   a.module-action,
   a.project-list-action,
   a.project-card-action,
   a.service-contract-link,
   a.share-button,
-  button.primary
+  a.button,
+  a.qily-action-primary,
+  a.qily-action-secondary,
+  button.primary,
+  button.button,
+  button.qily-action-primary,
+  button.qily-action-secondary
 ):active *{
   color:var(--qily-interactive-active-text)!important;
   -webkit-text-fill-color:var(--qily-interactive-active-text)!important;
@@ -193,6 +233,7 @@ html body :is(
   .module-actions,
   .card-actions,
   .qily-ia-actions,
+  .qtc-actions,
   .form-actions,
   .resource-stage,
   .service-contract,
@@ -206,6 +247,7 @@ html body :is(
   .module-actions,
   .card-actions,
   .qily-ia-actions,
+  .qtc-actions,
   .form-actions,
   .resource-stage,
   .service-contract,
@@ -216,7 +258,7 @@ html body :is(
 }
 
 @media(prefers-reduced-motion:reduce){
-  html body :is(.ql-trust-strip-actions,.ql-trust-actions,.hero-actions,.actions,.module-actions,.card-actions,.qily-ia-actions,.form-actions,.resource-stage,.service-contract,.contact-card) > :is(a[href],button){
+  html body :is(.ql-trust-strip-actions,.ql-trust-actions,.hero-actions,.actions,.module-actions,.card-actions,.qily-ia-actions,.qtc-actions,.form-actions,.resource-stage,.service-contract,.contact-card) > :is(a[href],button){
     transition:none!important;
   }
 }
@@ -266,4 +308,44 @@ a[href^="mailto:admin@qilylean.com"]:active{
   border-color:#caa15f !important;
   opacity:1 !important;
   outline-color:#0b5662 !important;
+}
+
+/* QILY-SITEWIDE-ACTION-HOVER-GOLD-20260808
+ * 所有真实按钮型链接补充兜底：Hover/Focus统一“金砖色”反馈。
+ * 只作用于可点击a/button，不改变静态卡片、静态指标和说明模块。
+ */
+html body :is(
+  a.button,
+  a[class*="-button"],
+  a[class*="-action"],
+  button[class*="button"],
+  button[class*="action"]
+):is(:hover,:focus-visible){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  background-image:none!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+  box-shadow:0 9px 22px rgba(202,161,95,.30)!important;
+  outline:3px solid rgba(255,227,155,.40)!important;
+  outline-offset:2px!important;
+}
+html body :is(
+  a.button,
+  a[class*="-button"],
+  a[class*="-action"],
+  button[class*="button"],
+  button[class*="action"]
+):is(:hover,:focus-visible) *{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  opacity:1!important;
+  visibility:visible!important;
+  text-shadow:none!important;
 }
