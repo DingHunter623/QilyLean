@@ -1,0 +1,45 @@
+name: Check Zoho DKIM DNS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/check-zoho-dkim.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      NAMESILO_API_KEY: ${{ secrets.NAMESILO_API_KEY }}
+      DOMAIN: qilylean.com
+    steps:
+      - name: Read NameSilo DNS
+        shell: bash
+        run: |
+          set -euo pipefail
+          response=$(curl -fsS -G 'https://www.namesilo.com/api/dnsListRecords' \
+            --data-urlencode 'version=1' \
+            --data-urlencode 'type=json' \
+            --data-urlencode "key=$NAMESILO_API_KEY" \
+            --data-urlencode "domain=$DOMAIN")
+          code=$(jq -r '.reply.code // empty' <<<"$response")
+          test "$code" = "300" || { jq '.reply' <<<"$response"; exit 1; }
+          jq -r '(.reply.resource_record // []) | if type=="array" then . else [.] end | .[] | select(.type=="TXT" and (.host|contains("_domainkey"))) | "AUTH type=\(.type) host=\(.host) ttl=\(.ttl) value=\(.value)"' <<<"$response"
+
+      - name: Check public DNS
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq dnsutils >/dev/null
+          echo 'PUBLIC zmail:'
+          dig +short TXT zmail._domainkey.qilylean.com @1.1.1.1
+          echo 'PUBLIC zoho:'
+          dig +short TXT zoho._domainkey.qilylean.com @1.1.1.1
+          echo 'PUBLIC SPF:'
+          dig +short TXT qilylean.com @1.1.1.1
