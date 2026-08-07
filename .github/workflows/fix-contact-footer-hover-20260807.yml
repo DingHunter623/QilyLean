@@ -1,0 +1,198 @@
+name: Fix contact footer and hover contrast 2026-08-07
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-contact-footer-hover-20260807.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fix-contact-footer-hover-20260807
+  cancel-in-progress: true
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install PDF and CJK font support
+        shell: bash
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          python -m pip install --disable-pip-version-check --quiet pymupdf
+
+      - name: Rewrite contact footer in every page of site management PDF
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import fitz, glob, os
+
+          pdf = Path('现场管理.pdf')
+          if not pdf.exists():
+              raise RuntimeError('现场管理.pdf not found')
+
+          fonts = glob.glob('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc') + glob.glob('/usr/share/fonts/opentype/noto/NotoSansCJK-*.ttc')
+          if not fonts:
+              raise RuntimeError('Noto CJK font not found')
+          fontfile = fonts[0]
+          font = fitz.Font(fontfile=fontfile)
+
+          contact = '官网 qilylean.com  |  微信 Qily259  |  电话 134 5001 4003  |  邮箱 admin@qilylean.com'
+          doc = fitz.open(pdf)
+          rewritten = []
+          missing = []
+
+          for page in doc:
+              w, h = page.rect.width, page.rect.height
+              hits = []
+              for term in ('qilylean.com', 'https://qilylean.com'):
+                  for r in page.search_for(term):
+                      if r.y0 >= h * 0.80:
+                          hits.append(r)
+              if not hits:
+                  missing.append(page.number + 1)
+                  continue
+
+              anchor = max(hits, key=lambda r: r.y0)
+              x0 = max(3.0, anchor.x0 - 2.0)
+              x1 = w * 0.91
+              y0 = max(0.0, anchor.y0 - 2.4)
+              y1 = min(h, anchor.y1 + 2.8)
+              clear = fitz.Rect(x0, y0, x1, y1)
+              page.add_redact_annot(clear, fill=(1, 1, 1))
+              page.apply_redactions()
+
+              fontname = f'QilyNoto{page.number}'
+              page.insert_font(fontname=fontname, fontfile=fontfile)
+              available = max(10.0, x1 - x0 - 2.0)
+              max_fs = min(8.2, max(5.0, anchor.height * 0.90))
+              unit = max(1.0, font.text_length(contact, fontsize=1.0))
+              fit_fs = available / unit
+              fs = max(4.6, min(max_fs, fit_fs))
+              baseline = min(y1 - 0.6, anchor.y1 + 0.2)
+              page.insert_text(
+                  fitz.Point(x0 + 1.0, baseline),
+                  contact,
+                  fontname=fontname,
+                  fontsize=fs,
+                  color=(0.035, 0.25, 0.30),
+                  overlay=True,
+              )
+              rewritten.append(page.number + 1)
+
+          if missing:
+              raise RuntimeError(f'Footer website anchor not found on pages: {missing[:20]}'+('...' if len(missing)>20 else ''))
+
+          tmp = pdf.with_suffix('.pdf.qilytmp')
+          doc.save(tmp, garbage=4, deflate=True, clean=True)
+          doc.close()
+          os.replace(tmp, pdf)
+
+          check = fitz.open(pdf)
+          bad = []
+          for page in check:
+              h = page.rect.height
+              bottom = page.get_text('text', clip=fitz.Rect(0, h*0.80, page.rect.width, h)) or ''
+              if 'admin@qilylean.com' not in bottom or 'qilylean.com' not in bottom:
+                  bad.append(page.number + 1)
+          pages = len(check)
+          check.close()
+          if bad:
+              raise RuntimeError(f'Enterprise contact validation failed on pages: {bad[:20]}')
+          print(f'PDF_CONTACT_REWRITTEN pages={pages} rewritten={len(rewritten)}')
+          PY
+
+      - name: Enforce high-contrast hover for official website and enterprise email
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('site-interactive-hover-contrast-v1.css')
+          s = p.read_text(encoding='utf-8')
+          marker = 'QILY-OFFICIAL-CONTACT-HOVER-CONTRAST-20260807'
+          block = r'''
+
+/* QILY-OFFICIAL-CONTACT-HOVER-CONTRAST-20260807
+   Official website / enterprise email must remain clearly readable in hover, focus and active states. */
+a[href="https://qilylean.com"],
+a[href="https://qilylean.com/"],
+a[href^="mailto:admin@qilylean.com"]{
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+a[href="https://qilylean.com"]:hover,
+a[href="https://qilylean.com"]:focus-visible,
+a[href="https://qilylean.com/ "]:hover,
+a[href="https://qilylean.com/"]:focus-visible,
+a[href="https://qilylean.com/"]:hover,
+a[href^="mailto:admin@qilylean.com"]:hover,
+a[href^="mailto:admin@qilylean.com"]:focus-visible{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  background:#0b5662 !important;
+  border-color:#063f49 !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+  box-shadow:0 0 0 3px rgba(255,227,155,.72),0 8px 20px rgba(6,63,73,.22) !important;
+  outline:2px solid #ffe39b !important;
+  outline-offset:2px !important;
+  text-decoration-color:#ffe39b !important;
+}
+a[href="https://qilylean.com"]:hover *,
+a[href="https://qilylean.com"]:focus-visible *,
+a[href="https://qilylean.com/"]:hover *,
+a[href="https://qilylean.com/"]:focus-visible *,
+a[href^="mailto:admin@qilylean.com"]:hover *,
+a[href^="mailto:admin@qilylean.com"]:focus-visible *{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  opacity:1 !important;
+}
+a[href="https://qilylean.com"]:active,
+a[href="https://qilylean.com/"]:active,
+a[href^="mailto:admin@qilylean.com"]:active{
+  color:#17231e !important;
+  -webkit-text-fill-color:#17231e !important;
+  background:#ffe39b !important;
+  border-color:#caa15f !important;
+  opacity:1 !important;
+}
+'''
+          if marker not in s:
+              p.write_text(s + block, encoding='utf-8')
+          PY
+
+      - name: Validate and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'QILY-OFFICIAL-CONTACT-HOVER-CONTRAST-20260807' site-interactive-hover-contrast-v1.css
+          grep -q 'mailto:admin@qilylean.com' site-interactive-hover-contrast-v1.css
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git rm -f .github/workflows/fix-contact-footer-hover-20260807.yml
+          git add -A
+          git commit -m '全站规范：补齐现场管理PDF官网邮箱并强化联系链接悬停对比度'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            if ! git rebase origin/main; then git rebase --abort || true; exit 1; fi
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          exit 1
