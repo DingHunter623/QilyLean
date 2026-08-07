@@ -1,4 +1,4 @@
-name: Audit QilyLean repository cleanup 2026-08-07
+name: Apply QilyLean repository cleanup 2026-08-07
 
 on:
   push:
@@ -15,9 +15,9 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  audit:
+  cleanup:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,12 +25,58 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Audit current branch assets
-        run: node scripts/audit-unreferenced-assets.js
-      - name: Summarize cleanup candidates
+
+      - name: Apply conservative unreferenced-asset cleanup
+        run: node scripts/audit-unreferenced-assets.js --apply
+
+      - name: Validate cleanup safety and recount
+        shell: bash
         run: |
+          node --check scripts/audit-unreferenced-assets.js
           node - <<'NODE'
           const r=require('./maintenance/unreferenced-assets-report.json');
-          console.log(`CLEANUP_SUMMARY tracked=${r.trackedFiles} assets=${r.assetFiles} retained=${r.retainedAssets} unreferenced=${r.unreferencedAssets} bytes=${r.potentialBytesToRelease}`);
-          for(const x of r.deletable.slice(0,80)) console.log(`CANDIDATE ${x.bytes} ${x.path}`);
+          if(r.safetyStop) throw new Error('Cleanup safety stop was triggered');
+          if(!r.deletedAssets) throw new Error('Expected obsolete/unreferenced assets were not deleted');
+          console.log(`CLEANUP_APPLIED deleted=${r.deletedAssets} bytes=${r.deletedBytes}`);
           NODE
+          node scripts/audit-unreferenced-assets.js
+          node - <<'NODE'
+          const r=require('./maintenance/unreferenced-assets-report.json');
+          console.log(`POST_CLEANUP assets=${r.assetFiles} retained=${r.retainedAssets} remainingUnreferenced=${r.unreferencedAssets}`);
+          if(r.unreferencedAssets!==0) throw new Error('Unreferenced assets remain after cleanup');
+          NODE
+
+      - name: Validate critical site sources remain
+        shell: bash
+        run: |
+          test -s index.html
+          test -s site-navigation-core.js
+          test -s site-shell.css
+          test -s knowledge/terminology.html
+          test -s scripts/audit-unreferenced-assets.js
+          test -d projects/lean-improvement-evidence
+          node --check site-navigation-core.js
+          node --check site-navigation.js
+          node --check site-core-service-dock-closure-v1.js
+          grep -q 'admin@qilylean.com' knowledge/terminology.html
+          grep -q 'data-opl-print' knowledge/terminology.html
+
+      - name: Commit deletion set with concurrency-safe retry
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add -u -- ':!maintenance/unreferenced-assets-report.json' ':!.github/workflows/audit-clean-repo-20260807.yml'
+          if git diff --cached --quiet; then
+            echo 'No obsolete assets require deletion.'
+            exit 0
+          fi
+          git commit -m '仓库瘦身：清理当前主分支无引用图文附件与旧安装包'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
