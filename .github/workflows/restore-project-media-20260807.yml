@@ -34,7 +34,7 @@ jobs:
                 restored=$((restored+1))
                 ;;
             esac
-          done < <(git diff-tree --no-commit-id --name-only -r "$CLEANUP_COMMIT")
+          done < <(git -c core.quotePath=false diff-tree --no-commit-id --name-only -r "$CLEANUP_COMMIT")
 
           echo "Restored media files: $restored"
           if [ "$restored" -lt 1 ]; then
@@ -56,6 +56,8 @@ jobs:
             'media/projects/fuse-after.webp'
             'media/projects/shuzhihua.webp'
             'media/projects/factory-layout.webp'
+            '园区.png'
+            '写字楼.png'
           )
           for f in "${required[@]}"; do
             test -s "$f" || { echo "Missing required project media: $f" >&2; exit 1; }
@@ -93,18 +95,20 @@ jobs:
               '300t.webp','mold-before.webp','mold-after1.webp','mold-after2.webp',
               'fuse-before.webp','fuse-after.webp','shuzhihua.webp','vsm-smed.webp','factory-layout.webp'
           }
-          version='20260807-project-media-restore-v1'
-          pattern=re.compile(r'(/media/projects/([^?"\']+))(?:\?v=[^"\']+)?')
+          version='20260807-project-media-restore-v2'
+          media_pattern=re.compile(r'(/media/projects/([^?"\']+))(?:\?v=[^"\']+)?')
+          root_pattern=re.compile(r'(/(?:园区|写字楼)\.png)(?:\?v=[^"\']+)?')
           for p in targets:
               if not p.exists():
                   continue
               text=p.read_text(encoding='utf-8')
-              def repl(m):
+              def repl_media(m):
                   full,name=m.group(1),m.group(2)
                   if name in restored_names:
                       return full+'?v='+version
                   return m.group(0)
-              new=pattern.sub(repl,text)
+              new=media_pattern.sub(repl_media,text)
+              new=root_pattern.sub(lambda m: m.group(1)+'?v='+version,new)
               if new != text:
                   p.write_text(new,encoding='utf-8')
                   print('CACHE-BUST',p)
