@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-08-07",
+  "officialWebsite": "https://qilylean.com/",
+  "supportEmail": "admin@qilylean.com",
+  "apps": {
+    "times26001": {
+      "name": "思大时间管理",
+      "productName": "Times26001｜思大时间管理",
+      "packageName": "com.qilylean.times26001",
+      "publicRelease": {
+        "versionName": "1.1.4",
+        "apk": "/Times26001-Android-v1.1.4-IE-Stopwatch.apk",
+        "sha256": "/Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt",
+        "label": "官网公开版"
+      },
+      "storeCandidate": {
+        "versionName": "1.1.5",
+        "versionCode": 8,
+        "targetSdk": 36,
+        "label": "应用市场候选版",
+        "status": "正式签名发布包待完成"
+      },
+      "productPage": "https://qilylean.com/tools/times26001/",
+      "privacy": "https://qilylean.com/legal/times26001/privacy/",
+      "terms": "https://qilylean.com/legal/times26001/terms/",
+      "support": "https://qilylean.com/app-support/"
+    },
+    "qilyleanHome": {
+      "name": "QilyLean Home",
+      "productName": "QilyLean Home｜安卓通用品牌桌面",
+      "packageName": "com.qilylean.home",
+      "publicRelease": {
+        "versionName": "2.2",
+        "apk": "/QilyLean_Home_Universal_v2.2.apk",
+        "sha256": "/QilyLean_Home_Universal_v2.2.sha256.txt",
+        "label": "官网公开版"
+      },
+      "storeCandidate": {
+        "versionName": "2.3.0",
+        "versionCode": 8,
+        "targetSdk": 36,
+        "label": "应用市场候选版",
+        "status": "正式签名发布包待确认"
+      },
+      "productPage": "https://qilylean.com/capabilities/#digital-tools",
+      "privacy": "https://qilylean.com/legal/qilylean-home/privacy/",
+      "terms": "https://qilylean.com/legal/qilylean-home/terms/",
+      "support": "https://qilylean.com/app-support/"
+    }
+  }
+}
