@@ -9,7 +9,9 @@ on:
       - 'legal/**'
       - 'app-support/**'
       - 'app-store/qilylean-home/**'
+      - 'app-store/UNIFIED_APP_ICON_POLICY.md'
       - '.github/workflows/build-qilylean-home.yml'
+      - '.github/workflows/release-qilylean-home-store.yml'
   workflow_dispatch:
 
 permissions:
@@ -29,6 +31,7 @@ jobs:
             legal
             app-support
             app-store/qilylean-home
+            app-store/UNIFIED_APP_ICON_POLICY.md
           sparse-checkout-cone-mode: false
 
       - name: Set up Java 17
@@ -50,18 +53,24 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Validate v2.3.0 API 36 source and unified icon
+      - name: Validate v2.3.1 API 36 source and unified icon
         run: |
           grep -q 'compileSdk 36' android/qilylean-home/app/build.gradle
           grep -q 'targetSdk 36' android/qilylean-home/app/build.gradle
-          grep -q 'versionCode 8' android/qilylean-home/app/build.gradle
-          grep -q "versionName '2.3.0'" android/qilylean-home/app/build.gradle
+          grep -q 'versionCode 9' android/qilylean-home/app/build.gradle
+          grep -q "versionName '2.3.1'" android/qilylean-home/app/build.gradle
           grep -q 'android:icon="@drawable/ic_launcher"' android/qilylean-home/app/src/main/AndroidManifest.xml
           grep -q 'android:roundIcon="@drawable/ic_launcher"' android/qilylean-home/app/src/main/AndroidManifest.xml
           grep -q 'com.qilylean.times26001' android/qilylean-home/app/src/main/AndroidManifest.xml
           grep -q 'android.intent.category.LAUNCHER' android/qilylean-home/app/src/main/AndroidManifest.xml
-          grep -q '#FF10596C' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
-          grep -q '#FFDC3C31' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
+          grep -q '#FF126478' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
+          grep -q '#FF081E20' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
+          grep -q '#FFF03A39' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
+          ! grep -q '#FFFFFFFF' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
+          grep -q 'fill="#126478"' assets/tools/qilylean-unified-app-icon.svg
+          grep -q 'fill="#081e20"' assets/tools/qilylean-unified-app-icon.svg
+          grep -q 'fill="#f03a39"' assets/tools/qilylean-unified-app-icon.svg
+          ! grep -q 'fill="#ffffff"' assets/tools/qilylean-unified-app-icon.svg
           grep -q 'HH:mm:ss' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
           grep -q 'formatLunarDate(now)' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
           grep -q 'legal/qilylean-home/privacy' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
@@ -77,20 +86,26 @@ jobs:
           AAB='android/qilylean-home/app/build/outputs/bundle/release/app-release.aab'
           test -s "$APK"
           test -s "$AAB"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "package: name='com.qilylean.home' versionCode='8' versionName='2.3.0'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "package: name='com.qilylean.home' versionCode='9' versionName='2.3.1'"
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "targetSdkVersion:'36'"
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "application-label:'QilyLean Home'"
 
       - name: Prepare unsigned validation artifacts
         run: |
           mkdir -p dist
-          cp android/qilylean-home/app/build/outputs/apk/release/app-release-unsigned.apk dist/QilyLean_Home_v2.3.0_API36_unsigned.apk
-          cp android/qilylean-home/app/build/outputs/bundle/release/app-release.aab dist/QilyLean_Home_v2.3.0_API36_unsigned.aab
-          sha256sum dist/* > dist/SHA256SUMS.txt
+          cp android/qilylean-home/app/build/outputs/apk/release/app-release-unsigned.apk dist/QilyLean_Home_v2.3.1_API36_unsigned.apk
+          cp android/qilylean-home/app/build/outputs/bundle/release/app-release.aab dist/QilyLean_Home_v2.3.1_API36_unsigned.aab
+          printf '%s\n' \
+            'ICON_POLICY=QilyLean unified Q icon' \
+            'INSTALLER_ICON=@drawable/ic_launcher' \
+            'LAUNCHER_ICON=@drawable/ic_launcher' \
+            'STORE_ICON_SOURCE=assets/tools/qilylean-unified-app-icon.svg' \
+            > dist/ICON_POLICY.txt
+          sha256sum dist/*.apk dist/*.aab > dist/SHA256SUMS.txt
 
       - name: Upload unsigned validation packages
         uses: actions/upload-artifact@v4
         with:
-          name: QilyLean-Home-v2.3.0-API36-unsigned-validation
+          name: QilyLean-Home-v2.3.1-API36-unsigned-validation
           path: dist/
           if-no-files-found: error
