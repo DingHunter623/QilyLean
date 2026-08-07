@@ -220,3 +220,50 @@ html body :is(
     transition:none!important;
   }
 }
+
+
+/* QILY-OFFICIAL-CONTACT-HOVER-CONTRAST-20260807
+   官网与企业邮箱属于关键联系入口：Hover / Focus / Active 必须保持高对比度与清晰字迹。 */
+a[href="https://qilylean.com"],
+a[href="https://qilylean.com/"],
+a[href^="mailto:admin@qilylean.com"]{
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+a[href="https://qilylean.com"]:hover,
+a[href="https://qilylean.com"]:focus-visible,
+a[href="https://qilylean.com/"]:hover,
+a[href="https://qilylean.com/"]:focus-visible,
+a[href^="mailto:admin@qilylean.com"]:hover,
+a[href^="mailto:admin@qilylean.com"]:focus-visible{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  background:#0b5662 !important;
+  border-color:#063f49 !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+  text-decoration-color:#ffe39b !important;
+  outline:3px solid #ffe39b !important;
+  outline-offset:2px !important;
+  box-shadow:0 9px 24px rgba(6,63,73,.28) !important;
+}
+a[href="https://qilylean.com"]:hover *,
+a[href="https://qilylean.com"]:focus-visible *,
+a[href="https://qilylean.com/"]:hover *,
+a[href="https://qilylean.com/"]:focus-visible *,
+a[href^="mailto:admin@qilylean.com"]:hover *,
+a[href^="mailto:admin@qilylean.com"]:focus-visible *{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  opacity:1 !important;
+}
+a[href="https://qilylean.com"]:active,
+a[href="https://qilylean.com/"]:active,
+a[href^="mailto:admin@qilylean.com"]:active{
+  color:#17231e !important;
+  -webkit-text-fill-color:#17231e !important;
+  background:#ffe39b !important;
+  border-color:#caa15f !important;
+  opacity:1 !important;
+  outline-color:#0b5662 !important;
+}
