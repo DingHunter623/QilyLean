@@ -1,0 +1,45 @@
+name: Finalize all dynamic terminology OPL lessons
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/finalize-dynamic-opl-20260807.py'
+      - '.github/workflows/finalize-dynamic-opl-20260807.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: finalize-dynamic-opl-20260807
+  cancel-in-progress: true
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: python3 scripts/finalize-dynamic-opl-20260807.py
+      - run: |
+          grep -q 'data-opl-print' knowledge/terminology.html
+          grep -q 'admin@qilylean.com' knowledge/terminology.html
+          grep -q 'terminology-opl-print-enabled-v2' knowledge/terminology.html
+          ! grep -q '已关闭打印与保存PDF功能' knowledge/terminology.html
+          ! grep -q '已关闭打印与保存功能' knowledge/terminology.html
+      - name: Commit with concurrency-safe retry
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add knowledge/terminology.html
+          git commit -m '术语词典：183项动态OPL统一企业邮箱并开放PDF保存'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
