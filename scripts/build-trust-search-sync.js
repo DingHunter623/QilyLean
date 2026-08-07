@@ -85,7 +85,7 @@ function loadSiteData() {
     ndaAccessRule: '官网仅开放受控在线预览，不提供Word或PDF下载入口。',
     ndaContentRule: '当前正式版本以用户确认的最新版PDF为准；官网仅通过受控页面在线预览，不公开Word或PDF直链。',
     contactPhone: '13450014003',
-    contactEmail: '396767769@qq.com',
+    contactEmail: 'admin@qilylean.com',
     trustCenterUrl: '/trust/'
   };
   return data;
@@ -115,7 +115,7 @@ function trustPage(data) {
       '@type': 'Person',
       name: '丁启利',
       telephone: '+86-134-5001-4003',
-      email: '396767769@qq.com'
+      email: 'admin@qilylean.com'
     }
   })}</script>
 <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>
@@ -163,7 +163,7 @@ function trustPage(data) {
 <article class="trust-card"><h3>欢迎纠错与证据核验</h3><p>发现数字、日期、术语、链接或项目表述存在疑问时，可通过官网公开联系方式提出；经核验属实的错误将修订，并同步更新搜索索引和相关页面。</p></article>
 </div></div></section>
 <section class="module-section" id="ai"><div class="module-inner"><div class="module-heading"><h2>AI、专业判断与责任边界</h2></div><div class="trust-callout">QilyLean AI及相关自动化工具用于知识检索、资料整理、方案辅助、代码生成和经验复用。涉及现场安全、法律合同、税务财务、质量放行、设备参数、人员任用及重大经营决策时，必须由具备相应授权和专业能力的人员复核。AI输出不替代现场事实确认、法定检验、专业签字和管理审批。</div></div></section>
-<section class="module-section alt" id="contact"><div class="module-inner"><div class="module-heading"><h2>主体与付款信息核验</h2><p>签约、付款或资料交换前，可通过以下官网公开渠道进行核验。</p></div><div class="trust-contact"><a href="tel:13450014003">电话：134 5001 4003</a><a href="mailto:396767769@qq.com">邮箱：396767769@qq.com</a></div><div class="module-actions" style="margin-top:18px"><a href="/cooperation/">进入项目合作</a><a class="secondary" href="/projects/">查看代表项目</a><a class="secondary" href="/knowledge/">查看知识分享</a></div></div></section>
+<section class="module-section alt" id="contact"><div class="module-inner"><div class="module-heading"><h2>主体与付款信息核验</h2><p>签约、付款或资料交换前，可通过以下官网公开渠道进行核验。</p></div><div class="trust-contact"><a href="tel:13450014003">电话：134 5001 4003</a><a href="mailto:admin@qilylean.com">邮箱：admin@qilylean.com</a></div><div class="module-actions" style="margin-top:18px"><a href="/cooperation/">进入项目合作</a><a class="secondary" href="/projects/">查看代表项目</a><a class="secondary" href="/knowledge/">查看知识分享</a></div></div></section>
 </main>
 <footer class="module-footer"><div class="module-inner"><span>QilyLean｜信任中心</span><span>主体 · 合同 · 数据 · 证据 · AI边界</span></div></footer><script src="/homepage-music.js?v=20260729-continuous-v4"></script>
 </body></html>`;
@@ -198,7 +198,7 @@ function updateCooperation(data) {
     name: 'QilyLean制造改善与项目交付',
     url: 'https://qilylean.com/cooperation/',
     description: '面向制造企业提供新工厂规划、精益改善、目视化项目交付与数智化制造数据治理服务。',
-    provider: { '@type': 'Person', name: '丁启利', telephone: '+86-134-5001-4003', email: '396767769@qq.com' },
+    provider: { '@type': 'Person', name: '丁启利', telephone: '+86-134-5001-4003', email: 'admin@qilylean.com' },
     areaServed: '中国'
   })}</script>`;
   page = page.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, schema);

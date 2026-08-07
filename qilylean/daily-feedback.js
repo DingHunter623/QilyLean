@@ -27,7 +27,7 @@ async function sendMessageFallback(data,id){
   mail.append('来源简报',date+'｜'+title);
   mail.append('留言内容',data.message);
   mail.append('来源页面',pageUrl);
-  var response=await fetch('https://formsubmit.co/ajax/396767769@qq.com',{method:'POST',headers:{Accept:'application/json'},body:mail});
+  var response=await fetch('https://formsubmit.co/ajax/admin@qilylean.com',{method:'POST',headers:{Accept:'application/json'},body:mail});
   if(!response.ok)throw new Error('email_'+response.status);
   return true;
 }

@@ -4,7 +4,7 @@ const ALLOWED_ORIGINS = new Set([
 ]);
 
 const BUILD_VERSION = 'v1.6.0-brief-engagement';
-const CONSULTATION_RECEIVER = '396767769@qq.com';
+const CONSULTATION_RECEIVER = 'admin@qilylean.com';
 const CONSULTATION_STATUSES = new Set(['new', 'contacted', 'closed']);
 const MAX_ATTACHMENT_BYTES = 25 * 1024 * 1024;
 const MAX_ATTACHMENT_TOTAL_BYTES = 25 * 1024 * 1024;

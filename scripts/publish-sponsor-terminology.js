@@ -76,7 +76,7 @@ data.compliance = {
   evidenceRule: '已核定值、阶段性估算值、团队成果与个人职责分别标注，不将预测收益表述为已实现收益。',
   aiRule: 'AI用于检索、整理和方案辅助，不替代现场核实、专业评审、管理决策及法律、财税、安全等专项意见。',
   contactPhone: '13450014003',
-  contactEmail: '396767769@qq.com',
+  contactEmail: 'admin@qilylean.com',
   trustCenterUrl: '/trust/',
   ndaVersion: 'V1.0',
   ndaContentRule: '网站在线阅读版与正式存档PDF／Word内容保持一致；官网不公开存档文件下载入口。',

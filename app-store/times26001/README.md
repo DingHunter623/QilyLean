@@ -3,7 +3,7 @@
 更新时间：2026-08-06  
 开发者：丁启利（QilyLean｜启力精益）  
 包名：`com.qilylean.times26001`  
-支持邮箱：`396767769@qq.com`  
+支持邮箱：`admin@qilylean.com`  
 官网：`https://qilylean.com/tools/times26001/`
 
 ## 1. 商店名称与文案

@@ -114,7 +114,7 @@ async function load(){
     setText('maxTokens',data.max_output_tokens||'—');
     setText('keyState',data.openai_key_configured?'已配置':'未配置');
     setText('storage',data.statistics_storage==='enabled'?'已启用 Cloudflare KV':'尚未绑定 KV');
-    setText('consultationEmail',data.consultation_receiver||'396767769@qq.com');
+    setText('consultationEmail',data.consultation_receiver||'admin@qilylean.com');
     setText('emailBinding',data.consultation_email_binding?'Cloudflare邮件绑定已启用':'使用网页邮件通知通道');
     setText('allTime',[data.all_time.requests||0,data.all_time.success||0,data.all_time.errors||0].join(' / '));
     setText('dateUtc',data.date_utc||'—');
