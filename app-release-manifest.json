@@ -12,19 +12,27 @@
         "versionName": "1.1.4",
         "apk": "/Times26001-Android-v1.1.4-IE-Stopwatch.apk",
         "sha256": "/Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt",
-        "label": "官网公开版"
+        "label": "历史官网安装包（旧Debug签名）"
       },
       "storeCandidate": {
-        "versionName": "1.1.5",
-        "versionCode": 8,
+        "versionName": "1.1.6",
+        "versionCode": 9,
         "targetSdk": 36,
         "label": "应用市场候选版",
-        "status": "正式签名发布包待完成"
+        "status": "生产签名待启用；签名完成后官网与应用市场共用稳定发布链"
       },
       "productPage": "https://qilylean.com/tools/times26001/",
       "privacy": "https://qilylean.com/legal/times26001/privacy/",
       "terms": "https://qilylean.com/legal/times26001/terms/",
-      "support": "https://qilylean.com/app-support/"
+      "support": "https://qilylean.com/app-support/",
+      "latestBuild": {
+        "versionName": "1.1.6",
+        "versionCode": 9,
+        "targetSdk": 36,
+        "label": "最新构建",
+        "status": "构建与企业联系信息校验完成；生产签名待启用",
+        "upgradeFromHistoricalPublicApk": "旧官网Debug签名与当前构建签名不同，不作为覆盖升级包发布"
+      }
     },
     "qilyleanHome": {
       "name": "QilyLean Home",
@@ -34,19 +42,27 @@
         "versionName": "2.2",
         "apk": "/QilyLean_Home_Universal_v2.2.apk",
         "sha256": "/QilyLean_Home_Universal_v2.2.sha256.txt",
-        "label": "官网公开版"
+        "label": "历史官网安装包（旧Debug签名）"
       },
       "storeCandidate": {
-        "versionName": "2.3.0",
-        "versionCode": 8,
+        "versionName": "2.3.1",
+        "versionCode": 9,
         "targetSdk": 36,
         "label": "应用市场候选版",
-        "status": "正式签名发布包待确认"
+        "status": "生产签名待启用；签名完成后官网与应用市场共用稳定发布链"
       },
       "productPage": "https://qilylean.com/capabilities/#digital-tools",
       "privacy": "https://qilylean.com/legal/qilylean-home/privacy/",
       "terms": "https://qilylean.com/legal/qilylean-home/terms/",
-      "support": "https://qilylean.com/app-support/"
+      "support": "https://qilylean.com/app-support/",
+      "latestBuild": {
+        "versionName": "2.3.1",
+        "versionCode": 9,
+        "targetSdk": 36,
+        "label": "最新构建",
+        "status": "构建与企业联系信息校验完成；生产签名待启用",
+        "upgradeFromHistoricalPublicApk": "旧官网Debug签名与当前构建签名不同，不作为覆盖升级包发布"
+      }
     }
   }
 }

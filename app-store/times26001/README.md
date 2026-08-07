@@ -9,8 +9,8 @@
 
 ## 0. 官网与应用市场版本关联
 
-- 官网公开版：`1.1.4`
-- 应用市场候选版：`1.1.5` / Android API 36
+- 历史官网安装包：`1.1.4`（旧Debug签名）
+- 最新构建 / 应用市场候选版：`1.1.6` / versionCode `9` / Android API 36
 - 包名：`com.qilylean.times26001`
 - 开发者支持官网：`https://qilylean.com/`
 - 企业邮箱：`admin@qilylean.com`
