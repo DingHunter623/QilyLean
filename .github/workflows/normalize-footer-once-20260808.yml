@@ -1,0 +1,39 @@
+name: Normalize sitewide footer once 20260808
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/normalize-footer-once-20260808.yml
+
+permissions:
+  contents: write
+
+jobs:
+  normalize-footer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Normalize all shared-shell footers
+        run: python scripts/sitewide_contact_association_closure_20260807.py
+
+      - name: Audit unified footer contract
+        run: python scripts/audit-official-contact-association.py
+
+      - name: Commit normalized pages
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "No footer normalization changes required."
+            exit 0
+          fi
+          git config user.name "QilyLean"
+          git config user.email "DingHunter623@gmail.com"
+          git add -A
+          git commit -m "fix: normalize duplicate contact rows across site footers"
+          git push
