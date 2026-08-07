@@ -154,7 +154,7 @@ public class MainActivity extends Activity {
         clockHandler.removeCallbacks(clockTask);
         clockHandler.post(clockTask);
 
-        TextView version = pill("QilyLean Home v2.3.0 · Android 16 / API 36商店版");
+        TextView version = pill("QilyLean Home v2.3.1 · Android 16 / API 36");
         LinearLayout.LayoutParams versionLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -241,6 +241,11 @@ public class MainActivity extends Activity {
         addCardRow(content,
                 webCard("技术支持", "安装、恢复系统桌面与问题反馈", "https://qilylean.com/app-support/"),
                 webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust/"));
+
+        addSectionTitle(content, "官方联系");
+        addCardRow(content,
+                webCard("官网", "https://qilylean.com/", "https://qilylean.com/"),
+                webCard("企业邮箱", "admin@qilylean.com", "mailto:admin@qilylean.com"));
 
         TextView footer = text(
                 "启精益之智，聚企业之力。\n免Root通用版，不读取、不展示手机品牌或型号；可随时切回系统桌面。",
