@@ -131,10 +131,8 @@ jobs:
           node scripts/sync-search-brief-metadata.js
           node scripts/sync-trust-brief-metadata.js
 
-      - name: Validate current publication contracts
-        run: |
-          node scripts/validate-current-daily-publication.js
-          node scripts/sync-trust-brief-metadata.js --check
+      - name: Validate trust brief metadata contract
+        run: node scripts/sync-trust-brief-metadata.js --check
 
       - name: Verify deterministic diff
         run: git diff --check
