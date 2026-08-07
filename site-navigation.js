@@ -166,7 +166,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   function appendLegacy() {
     if (d.querySelector('script[data-qily-navigation-legacy]')) { loadEnhancers(); return; }
     var legacy = d.createElement('script');
-    legacy.src = '/site-navigation-legacy-20260802.js?v=20260807-sitewide-closure-v4';
+    legacy.src = '/site-navigation-legacy-20260802.js?v=20260807-contact-label-v5';
     legacy.async = false;
     legacy.setAttribute('data-qily-navigation-legacy','parent-route-v3');
     legacy.onload = loadEnhancers;
