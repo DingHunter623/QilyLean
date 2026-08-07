@@ -3,7 +3,7 @@
   if(window.__qilyBrandTrustV1)return;
   window.__qilyBrandTrustV1=true;
 
-  var VERSION='20260802-project-rolebar-v3';
+  var VERSION='20260808-diagnostic-scope-v1';
   var path=(location.pathname||'/').replace(/\/index\.html$/,'/').replace(/\/{2,}/g,'/');
   if(path.length>1&&!/\/$/.test(path))path+='/';
 
@@ -91,15 +91,16 @@
   function cooperationModule(){
     if(path!=='/cooperation/'||document.getElementById('qlSmallScopePath'))return;
     var section=node([
-      '<span class="ql-trust-kicker">START SMALL｜个人创业初期的低风险合作方式</span>',
-      '<h2>先做小范围验证，不以“大项目包装”替代实际交付</h2>',
-      '<p class="ql-trust-lead">现阶段更适合从问题明确、周期可控、验收清楚的小项目开始。专家本人直接参与，合同、交付清单、里程碑和验收口径在启动前确认。</p>',
+      '<span class="ql-trust-kicker">START SMALL｜诊断产品与正式项目分层</span>',
+      '<h2>先用现场诊断建立事实基线，再决定是否进入正式项目</h2>',
+      '<p class="ql-trust-lead">¥6,800起对应的是小范围现场诊断与概念级方案构思，不是Factory Layout、精益改善或目视化完整项目的总价。正式项目必须在范围、周期、交付物、修改轮次、现场投入和验收标准明确后独立报价。</p>',
       '<div class="ql-path-grid">',
-        '<article class="ql-path-card"><small>STEP 01</small><h3>免费问题初筛</h3><p>判断问题与QilyLean能力是否匹配，明确需要准备的数据、现场对象和下一步建议。</p></article>',
-        '<article class="ql-path-card"><small>STEP 02</small><h3>现场诊断与路线图</h3><p>从¥6,800起的小范围诊断进入，交付正式诊断纪要、优先级清单及改善路线图。</p></article>',
-        '<article class="ql-path-card"><small>STEP 03</small><h3>单点专项交付</h3><p>可选择一条线、一个车间、一个产品族、一个SMED／VSM／Layout／目视化课题进行验证。</p></article>',
+        '<article class="ql-path-card"><small>STEP 01｜需求筛选</small><h3>60分钟问题初筛</h3><p>判断问题与QilyLean能力是否匹配，明确需要准备的数据、现场对象、决策目标和下一步建议；不输出完整方案、图纸或数据模型。</p></article>',
+        '<article class="ql-path-card"><small>STEP 02｜诊断级</small><h3>现场诊断与概念方案｜¥6,800起</h3><p>现场Gemba勘查、关键访谈、数据核对、问题分级、改善优先级、概念级方案构思及管理层诊断纪要；差旅另计。该费用仅对应诊断阶段。</p></article>',
+        '<article class="ql-path-card"><small>STEP 03｜项目级</small><h3>正式专项项目｜独立报价</h3><p>正式Factory Layout图纸、CAD深化、产能与物流详细测算、多轮方案修改、驻厂实施、项目推进及验收交付均不包含在¥6,800诊断服务内，依据实际项目范围另行报价。</p></article>',
       '</div>',
-      '<div class="ql-start-small"><div class="ql-start-small-copy"><h3>为什么从小范围开始？</h3><p>小范围不是能力边界，而是合作风险控制。先通过明确基线、交付物和验收标准验证专业能力与协同效率；验证通过后，再根据企业实际需要扩展至体系改善、全厂规划或持续顾问。</p></div><ol class="ql-start-small-list"><li>问题与范围可定义</li><li>项目周期可控制</li><li>成果证据可核验</li><li>客户投入风险更低</li></ol></div>',
+      '<div class="ql-proof-note"><strong>价格边界：</strong>¥6,800是进入QilyLean专业服务体系的诊断级产品，不是“一个车间规划项目只需¥6,800”。任何完整规划、改善或交付项目，均以双方书面确认的项目任务书／正式合同及独立报价为准。</div>',
+      '<div class="ql-start-small"><div class="ql-start-small-copy"><h3>为什么从诊断开始？</h3><p>诊断不是低价承包完整项目，而是合作风险控制。先通过现场事实、问题基线、概念方向和项目边界验证专业能力与协同效率；验证通过后，再进入正式项目报价与交付。</p></div><ol class="ql-start-small-list"><li>诊断与项目价格分离</li><li>问题与范围可定义</li><li>交付物逐项确认</li><li>验收与责任边界清楚</li></ol></div>',
       '<div class="ql-trust-actions"><a href="#entry">提交具体问题</a><a href="/trust/">查看签约与责任边界</a></div>'
     ].join(''),'ql-trust-module');
     section.id='qlSmallScopePath';
