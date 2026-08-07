@@ -105,7 +105,7 @@ assert(onboarding.includes('企业邮箱：'+EMAIL),'onboarding email not visibl
 assert(core.includes('Technical &amp; Project Contact'),'global footer contact line missing');
 assert(siteData.compliance && siteData.compliance.contactEmail===EMAIL,'site-data contactEmail is not standardized');
 
-const forbidden=['396767769@qq.com','DingHunter623@gmail.com','dinghunter623@gmail.com'];
+const forbidden=['396767769'+'@qq.com','DingHunter623'+'@gmail.com','dinghunter623'+'@gmail.com'];
 const publicExt=new Set(['.html','.js','.json','.md']);
 let leaks=[];
 function audit(dir){

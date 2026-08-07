@@ -6,7 +6,7 @@
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260807-enterprise-email-contact-v1';
+  var SHARED_ASSET_VERSION = '20260807-enterprise-contact-standard-v2';
   var VISUAL_SCALE_VERSION = '20260729-hierarchy-v4';
     var CONTROLLED_ROUTE_PATHS = [];
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
@@ -461,6 +461,22 @@
     });
   }
 
+  function ensureGlobalContactFooter() {
+    if (document.getElementById('qilyGlobalContactFooter')) return;
+    var block = document.createElement('div');
+    block.id = 'qilyGlobalContactFooter';
+    block.className = 'qily-global-contact-footer';
+    block.innerHTML = '<span>QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span><a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>';
+    var footer = document.querySelector('footer');
+    if (footer) footer.appendChild(block);
+    else {
+      var shell = document.createElement('div');
+      shell.className = 'qily-global-contact-footer-shell';
+      shell.appendChild(block);
+      document.body.appendChild(shell);
+    }
+  }
+
   function revealCurrentShell() {
     document.documentElement.classList.remove('qily-shell-pending');
     if (typeof window.__qilyLeanRevealCurrentShell === 'function') {
@@ -476,6 +492,7 @@
       addGlobalHeaderStyles();
       addTypographyStylesheet();
       buildNavigation();
+      ensureGlobalContactFooter();
       protectControlledPage();
       enableNavigationPrefetch();
       buildDock();
