@@ -6,6 +6,16 @@
 支持邮箱：`admin@qilylean.com`  
 官网：`https://qilylean.com/tools/times26001/`
 
+
+## 0. 官网与应用市场版本关联
+
+- 官网公开版：`1.1.4`
+- 应用市场候选版：`1.1.5` / Android API 36
+- 包名：`com.qilylean.times26001`
+- 开发者支持官网：`https://qilylean.com/`
+- 企业邮箱：`admin@qilylean.com`
+- 规则：官网公开版与应用市场候选版分开管理；只有正式签名发布包完成并提交对应商店后，才更新“已上架/正式商店版”状态。
+
 ## 1. 商店名称与文案
 
 ### 应用名称
