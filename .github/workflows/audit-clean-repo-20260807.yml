@@ -1,0 +1,36 @@
+name: Audit QilyLean repository cleanup 2026-08-07
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/audit-clean-repo-20260807.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: audit-clean-repo-20260807
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Audit current branch assets
+        run: node scripts/audit-unreferenced-assets.js
+      - name: Summarize cleanup candidates
+        run: |
+          node - <<'NODE'
+          const r=require('./maintenance/unreferenced-assets-report.json');
+          console.log(`CLEANUP_SUMMARY tracked=${r.trackedFiles} assets=${r.assetFiles} retained=${r.retainedAssets} unreferenced=${r.unreferencedAssets} bytes=${r.potentialBytesToRelease}`);
+          for(const x of r.deletable.slice(0,80)) console.log(`CANDIDATE ${x.bytes} ${x.path}`);
+          NODE
