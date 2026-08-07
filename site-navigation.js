@@ -191,3 +191,67 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   loadParentNavigation();
 })(document, window);
 
+/* QILY-SITEWIDE-FOOTER-DEDUPE-20260808｜仅保留统一 Technical & Project Contact 标准栏 */
+(function (d, w) {
+  'use strict';
+  if (w.__qilySitewideFooterDedupe20260808) return;
+  w.__qilySitewideFooterDedupe20260808 = true;
+
+  function cleanText(value) {
+    return (value || '').replace(/\s+/g, ' ').trim();
+  }
+
+  function isOfficialSiteLink(node) {
+    if (!node || node.nodeType !== 1 || !node.matches('a[href]')) return false;
+    var href = (node.getAttribute('href') || '').trim().toLowerCase();
+    return href === 'https://qilylean.com/' || href === 'https://qilylean.com' || href === 'mailto:admin@qilylean.com';
+  }
+
+  function isDuplicateContactFragment(node) {
+    if (!node) return false;
+    var text = cleanText(node.textContent);
+    if (!text) return false;
+    if (node.nodeType === 3) {
+      return /官网网址|企业邮箱|丁启利|qilylean|启力精益/i.test(text);
+    }
+    if (node.nodeType !== 1) return false;
+    if (node.id === 'qilyGlobalContactFooter' || node.closest('#qilyGlobalContactFooter')) return false;
+    if (isOfficialSiteLink(node)) return true;
+    var hasUrl = /qilylean\.com/i.test(text);
+    var hasEmail = /admin@qilylean\.com/i.test(text);
+    var hasContactLabel = /官网网址|企业邮箱/i.test(text);
+    return (hasUrl && hasEmail) || (hasContactLabel && (hasUrl || hasEmail));
+  }
+
+  function removeDuplicateFooterRows() {
+    d.querySelectorAll('footer').forEach(function (footer) {
+      var standard = footer.querySelector('#qilyGlobalContactFooter');
+      if (!standard) return;
+
+      Array.from(footer.childNodes).forEach(function (node) {
+        if (node === standard || (node.nodeType === 1 && node.contains(standard))) return;
+        if (isDuplicateContactFragment(node)) node.remove();
+      });
+
+      Array.from(footer.children).forEach(function (node) {
+        if (node === standard || node.contains(standard)) return;
+        var text = cleanText(node.textContent);
+        if (/qilylean\.com/i.test(text) && /admin@qilylean\.com/i.test(text)) node.remove();
+      });
+    });
+  }
+
+  function boot() {
+    removeDuplicateFooterRows();
+    [60,180,500,1200,2600].forEach(function (delay) {
+      setTimeout(removeDuplicateFooterRows, delay);
+    });
+    if (w.MutationObserver && d.body) {
+      var observer = new MutationObserver(function () { removeDuplicateFooterRows(); });
+      observer.observe(d.body, { childList: true, subtree: true });
+    }
+  }
+
+  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot, { once: true });
+  else boot();
+})(document, window);
