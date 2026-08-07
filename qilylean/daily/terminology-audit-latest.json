@@ -1,25 +1,66 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-08-07",
-  "briefPath": "qilylean/daily/2026-08-07.html",
-  "checkedAt": "2026-08-07T16:48:24.873Z",
+  "briefDate": "2026-08-08",
+  "briefPath": "qilylean/daily/2026-08-08.html",
+  "checkedAt": "2026-08-07T17:43:30.532Z",
   "candidates": [
     {
-      "term": "PDCA",
-      "explanation": "计划、执行、检查、处理",
+      "term": "Andon",
+      "explanation": "安灯",
       "explicit": true,
-      "source": "PDCA（计划、执行、检查、处理）"
+      "source": "Andon（安灯）"
+    },
+    {
+      "term": "FPY",
+      "explanation": "",
+      "explicit": false,
+      "source": "FPY"
+    },
+    {
+      "term": "IE",
+      "explanation": "",
+      "explicit": false,
+      "source": "IE"
+    },
+    {
+      "term": "PDCA",
+      "explanation": "",
+      "explicit": false,
+      "source": "PDCA"
+    },
+    {
+      "term": "PE",
+      "explanation": "",
+      "explicit": false,
+      "source": "PE"
+    },
+    {
+      "term": "PMC",
+      "explanation": "",
+      "explicit": false,
+      "source": "PMC"
+    },
+    {
+      "term": "WIP",
+      "explanation": "",
+      "explicit": false,
+      "source": "WIP"
     }
   ],
   "coveredTerms": [
-    "PDCA"
+    "Andon",
+    "FPY",
+    "IE",
+    "PDCA",
+    "PE",
+    "PMC",
+    "WIP"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
   "featuredTerms": [
-    "组织管理",
-    "PDCA"
+    "Andon"
   ],
   "status": "passed"
 }

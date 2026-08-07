@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05",
+  "generatedAt": "2026-08-07",
   "schemaVersion": 1,
   "terminology": {
     "total": 183,
@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 2586,
-    "latestDate": "2026-08-07",
-    "latestTheme": "组织管理",
-    "latestTitle": "团队沟通五力：虎定方向、鹰看未来、狼打胜仗、豹提效率、狗守底线",
-    "latestSummary": "优秀团队不是所有人都一样强，而是方向、视野、执行、改善与信任五种力量互补。用虎、鹰、狼、豹、狗五种角色识别团队缺口，匹配沟通方式，并把协作转化为可验证的组织结果。",
-    "latestUrl": "/qilylean/daily/2026-08-07.html",
+    "total": 2587,
+    "latestDate": "2026-08-08",
+    "latestTheme": "精益现场异常管理",
+    "latestTitle": "异常不过夜：从 Andon 暴露、分层响应到复发验证，建立现场异常闭环",
+    "latestSummary": "异常管理的价值不在于登记多少问题，而在于让异常被看见、被及时遏制、被正确升级、被验证关闭，并把复发风险转化为标准。用 Andon（安灯）、响应时限、分层升级与 PDCA，把现场异常从“有人处理”升级为“有证据关闭”。",
+    "latestUrl": "/qilylean/daily/2026-08-08.html",
     "directoryUrl": "/qilylean/daily-insights.html"
   },
   "knowledge": {
@@ -48,8 +48,8 @@
     "indexedEntries": 2870,
     "indexedPages": 2812,
     "terminologyTotal": 183,
-    "briefTotal": 2586,
-    "latestBriefDate": "2026-08-07",
+    "briefTotal": 2587,
+    "latestBriefDate": "2026-08-08",
     "sitemapLastmod": "2026-08-05"
   }
 }
