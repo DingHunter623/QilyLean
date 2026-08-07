@@ -191,28 +191,3 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   loadParentNavigation();
 })(document, window);
 
-
-/* QILY-OFFICIAL-CONTACT-RUNTIME-20260807 */
-(function(d,w){
-  'use strict';
-  if(w.__qilyOfficialContactRuntime20260807)return;
-  w.__qilyOfficialContactRuntime20260807=true;
-  var URL='https://qilylean.com/';
-  var EMAIL='admin@qilylean.com';
-  function boot(){
-    if(!d.body)return;
-    var id='qilyOfficialContactRuntime';
-    if(d.getElementById(id))return;
-    var host=d.querySelector('footer.footer, footer.site-footer, footer.qily-footer, body > footer:last-of-type');
-    if(!host){host=d.createElement('footer');host.className='qily-official-contact-footer';d.body.appendChild(host);}
-    var box=d.createElement('div');box.id=id;box.className='qily-official-contact-runtime';
-    box.innerHTML='<span class="qily-contact-label">官网网址：</span><a href="'+URL+'">'+URL+'</a><span class="qily-contact-sep">｜</span><span class="qily-contact-label">企业邮箱：</span><a href="mailto:'+EMAIL+'">'+EMAIL+'</a>';
-    host.appendChild(box);
-    if(!d.getElementById('qilyOfficialContactRuntimeStyle')){
-      var style=d.createElement('style');style.id='qilyOfficialContactRuntimeStyle';
-      style.textContent='.qily-official-contact-footer{padding:18px;text-align:center;background:#101916;color:#d7e8e2}.qily-official-contact-runtime{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px 5px;margin-top:10px;font-size:13px;font-weight:750;line-height:1.7}.qily-official-contact-runtime a{display:inline-flex;align-items:center;min-height:34px;padding:5px 9px;border:1px solid rgba(255,227,155,.45);border-radius:8px;color:#eaf7f3!important;-webkit-text-fill-color:#eaf7f3!important;background:#173e42;text-decoration:none}.qily-official-contact-runtime a:hover,.qily-official-contact-runtime a:focus-visible{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0b5662!important;border-color:#ffe39b!important;outline:3px solid #ffe39b!important;outline-offset:2px!important}.qily-official-contact-runtime a:active{color:#17231e!important;-webkit-text-fill-color:#17231e!important;background:#ffe39b!important}.qily-contact-label{font-weight:900}.qily-contact-sep{opacity:.6}@media(max-width:640px){.qily-contact-sep{display:none}.qily-official-contact-runtime{flex-direction:column;gap:6px}}';
-      (d.head||d.documentElement).appendChild(style);
-    }
-  }
-  if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-})(document,window);
