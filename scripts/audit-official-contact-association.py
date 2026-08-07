@@ -13,6 +13,9 @@ if '企业邮箱</th><td class=\"qtc-state-ok\">已启用' not in Path('site-tru
 core=Path('site-navigation-core.js').read_text(encoding='utf-8')
 if '官网网址：https://qilylean.com/' not in core: errors.append('核心导航/文档尾注缺官网网址标准字段')
 if '企业邮箱' not in core or 'admin@qilylean.com' not in core: errors.append('核心导航缺企业邮箱')
+nav=Path('site-navigation.js').read_text(encoding='utf-8')
+if 'qilyOfficialContactRuntime' in nav or 'qily-official-contact-runtime' in nav:
+    errors.append('全站页脚存在重复官网/企业邮箱运行时行')
 term=Path('knowledge/terminology.html').read_text(encoding='utf-8')
 if '独立网址：在线阅览' not in term: errors.append('OPL入口说明未统一')
 if errors:
