@@ -1,0 +1,130 @@
+name: Restore project media after cleanup regression
+
+on:
+  push:
+    paths:
+      - '.github/workflows/restore-project-media-20260807.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  restore-project-media:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore image and video assets removed by cleanup commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          CLEANUP_COMMIT='794fc58b7493aa8c10d634142ee0154bfb24ff9e'
+          PARENT_COMMIT='5027c6b308c035a2ce65c77f39f2e3399d60188d'
+
+          restored=0
+          while IFS= read -r path; do
+            case "$path" in
+              *.png|*.PNG|*.jpg|*.JPG|*.jpeg|*.JPEG|*.webp|*.WEBP|*.gif|*.GIF|*.svg|*.SVG|*.mp4|*.MP4|*.webm|*.WEBM)
+                git checkout "$PARENT_COMMIT" -- "$path"
+                echo "RESTORED $path"
+                restored=$((restored+1))
+                ;;
+            esac
+          done < <(git diff-tree --no-commit-id --name-only -r "$CLEANUP_COMMIT")
+
+          echo "Restored media files: $restored"
+          if [ "$restored" -lt 1 ]; then
+            echo 'No media files restored; aborting.' >&2
+            exit 1
+          fi
+
+      - name: Verify critical project-list media
+        shell: bash
+        run: |
+          set -euo pipefail
+          required=(
+            'media/projects/vsm-smed.webp'
+            'media/projects/300t.webp'
+            'media/projects/mold-before.webp'
+            'media/projects/mold-after1.webp'
+            'media/projects/mold-after2.webp'
+            'media/projects/fuse-before.webp'
+            'media/projects/fuse-after.webp'
+            'media/projects/shuzhihua.webp'
+            'media/projects/factory-layout.webp'
+          )
+          for f in "${required[@]}"; do
+            test -s "$f" || { echo "Missing required project media: $f" >&2; exit 1; }
+            echo "OK $f"
+          done
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          html = Path('projects/index.html').read_text(encoding='utf-8')
+          refs = sorted(set(re.findall(r'(?:src|href)=["\'](/[^"\']+\.(?:png|jpe?g|webp|gif|svg|mp4|webm)(?:\?[^"\']*)?)["\']', html, flags=re.I)))
+          missing=[]
+          for ref in refs:
+              rel=ref.split('?',1)[0].lstrip('/')
+              if not Path(rel).exists():
+                  missing.append((ref, rel))
+          if missing:
+              print('Broken project-list media references:')
+              for ref, rel in missing:
+                  print('  ', ref, '->', rel)
+              raise SystemExit(1)
+          print(f'Project-list media verification passed: {len(refs)} local media references resolved.')
+          PY
+
+      - name: Bust restored project-media cache references
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          targets = [Path('projects/index.html'), Path('qilylean/project-media-home.js')]
+          restored_names = {
+              '300t.webp','mold-before.webp','mold-after1.webp','mold-after2.webp',
+              'fuse-before.webp','fuse-after.webp','shuzhihua.webp','vsm-smed.webp','factory-layout.webp'
+          }
+          version='20260807-project-media-restore-v1'
+          pattern=re.compile(r'(/media/projects/([^?"\']+))(?:\?v=[^"\']+)?')
+          for p in targets:
+              if not p.exists():
+                  continue
+              text=p.read_text(encoding='utf-8')
+              def repl(m):
+                  full,name=m.group(1),m.group(2)
+                  if name in restored_names:
+                      return full+'?v='+version
+                  return m.group(0)
+              new=pattern.sub(repl,text)
+              if new != text:
+                  p.write_text(new,encoding='utf-8')
+                  print('CACHE-BUST',p)
+          PY
+
+      - name: Commit emergency restoration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+
+          # The repair workflow is one-time only; remove it from the final tree.
+          git rm --quiet .github/workflows/restore-project-media-20260807.yml
+          git add -A
+
+          if git diff --cached --quiet; then
+            echo 'Nothing to commit.'
+            exit 0
+          fi
+
+          git commit -m '紧急修复：恢复项目清单误删图片与媒体资源'
+          git push origin HEAD:main
