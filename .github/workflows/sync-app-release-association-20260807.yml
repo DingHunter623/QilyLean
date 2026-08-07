@@ -1,0 +1,49 @@
+name: Sync website and app-store release association 2026-08-07
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-app-release-association-20260807.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Apply app release association
+        run: python scripts/sync_app_release_association_20260807.py
+
+      - name: Validate association
+        run: |
+          python scripts/audit-app-release-association.py
+          grep -q '官网公开版 v1.1.4' tools/times26001/index.html
+          grep -q '应用市场候选版 v1.1.5 / API 36' tools/times26001/index.html
+          grep -q '官网公开版 v2.2' capabilities/index.html
+          grep -q '应用市场候选版 v2.3.0 / API 36' capabilities/index.html
+          grep -q 'admin@qilylean.com' app-support/index.html
+
+      - name: Commit and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git rm -f .github/workflows/sync-app-release-association-20260807.yml
+          git add -A
+          git commit -m '全站关联：区分官网公开版与应用市场候选版并建立版本主数据'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main || { git rebase --abort || true; exit 1; }
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          exit 1
