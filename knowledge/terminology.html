@@ -202,7 +202,7 @@ body.term-opl-locked{overflow:hidden}
 <link id="qilyBottomAlignmentStylesheet" rel="stylesheet" href="/site-bottom-alignment-v1.css?v=20260804-bottom-align-v1">
 <!-- QILY-NUMBER-BADGE-CONTRAST:START -->
   <link id="qilyNumberBadgeContrastStylesheet" rel="stylesheet" href="/site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1">
-  <link id="qilyInteractiveHoverContrastStylesheet" rel="stylesheet" href="/site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v1">
+  <link id="qilyInteractiveHoverContrastStylesheet" rel="stylesheet" href="/site-interactive-hover-contrast-v1.css?v=20260807-official-contact-hover-v3">
 <!-- QILY-NUMBER-BADGE-CONTRAST:END -->
 <!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->
   <link id="qilyHeroPrimaryContrastStylesheet" rel="stylesheet" href="/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1">
@@ -1765,7 +1765,7 @@ var prevButton=modal.querySelector('[data-opl-prev]'),nextButton=modal.querySele
 cards.forEach(function(card,index){
   card.setAttribute('data-opl-index',index);
   var actions=document.createElement('div'),code=field(card,'.term-code');actions.className='term-opl-actions';
-  actions.innerHTML='<a class="term-opl-open" href="'+location.pathname+'?opl='+encodeURIComponent(code)+'" target="_blank" rel="noopener" data-opl-index="'+index+'">打开独立培训课件</a><span class="term-opl-note">独立网址 · 在线阅览</span>';
+  actions.innerHTML='<a class="term-opl-open" href="'+location.pathname+'?opl='+encodeURIComponent(code)+'" target="_blank" rel="noopener" data-opl-index="'+index+'">打开独立培训课件</a><span class="term-opl-note">独立网址：在线阅览</span>';
   card.appendChild(actions);
 });
 

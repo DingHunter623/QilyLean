@@ -1,6 +1,6 @@
 # 思大时间管理｜Times26001 应用商店提交资料
 
-更新时间：2026-08-06  
+更新时间：2026-08-07  
 开发者：丁启利（QilyLean｜启力精益）  
 包名：`com.qilylean.times26001`  
 支持邮箱：`admin@qilylean.com`  

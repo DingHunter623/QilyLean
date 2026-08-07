@@ -1,8 +1,8 @@
-/* QilyLean global VI, navigation, trust and contrast loader v11 */
+/* QilyLean global VI, navigation, trust and contrast loader v12 */
 (function (d, w) {
   'use strict';
-  if (w.__qilyGlobalAssetLoaderV11) return;
-  w.__qilyGlobalAssetLoaderV11 = true;
+  if (w.__qilyGlobalAssetLoaderV12) return;
+  w.__qilyGlobalAssetLoaderV12 = true;
 
   function removeMicrosoftOverrides() {
     ['qilyMicrosoftInternationalStylesheet','qilyMicrosoftEnterpriseComponentsStylesheet','qilyMicrosoftNavUnderlineStyle','qilyNavFourSideBorderStyle'].forEach(function (id) {
@@ -55,7 +55,7 @@
       ['qilyVisualClosureStylesheet','/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2'],
       ['qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2'],
       ['qilyBrandTrustStylesheet','/site-brand-trust-v1.css?v=20260802-project-rolebar-v3'],
-      ['qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v2'],
+      ['qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260807-official-contact-hover-v3'],
       ['qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4']
     ].forEach(function (asset) { ensureStylesheet(asset[0], asset[1]); });
 
@@ -99,7 +99,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     'site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2',
     'site-visual-closure-v2.css?v=20260803-boundary-links-v2',
     'site-visual-closure-v2.js?v=20260803-boundary-links-v2',
-    'site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v2',
+    'site-interactive-hover-contrast-v1.css?v=20260807-official-contact-hover-v3',
     'site-trust-conversion-v2.css?v=20260805-action-label-v4',
     'site-trust-conversion-v2.js?v=20260805-action-label-v3',
     'site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2'
@@ -147,7 +147,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     ensureStylesheet('qilyInformationArchitectureStylesheet','/site-information-architecture-v1.css?v=20260802-commercial-focus-v1');
     ensureStylesheet('qilyVisualClosureStylesheet','/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2');
     ensureStylesheet('qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2');
-    ensureStylesheet('qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v2');
+    ensureStylesheet('qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260807-official-contact-hover-v3');
     ensureStylesheet('qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4');
 
     ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260802-project-rolebar-v3');
@@ -190,3 +190,29 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   loadEnhancers();
   loadParentNavigation();
 })(document, window);
+
+
+/* QILY-OFFICIAL-CONTACT-RUNTIME-20260807 */
+(function(d,w){
+  'use strict';
+  if(w.__qilyOfficialContactRuntime20260807)return;
+  w.__qilyOfficialContactRuntime20260807=true;
+  var URL='https://qilylean.com/';
+  var EMAIL='admin@qilylean.com';
+  function boot(){
+    if(!d.body)return;
+    var id='qilyOfficialContactRuntime';
+    if(d.getElementById(id))return;
+    var host=d.querySelector('footer.footer, footer.site-footer, footer.qily-footer, body > footer:last-of-type');
+    if(!host){host=d.createElement('footer');host.className='qily-official-contact-footer';d.body.appendChild(host);}
+    var box=d.createElement('div');box.id=id;box.className='qily-official-contact-runtime';
+    box.innerHTML='<span class="qily-contact-label">官网网址：</span><a href="'+URL+'">'+URL+'</a><span class="qily-contact-sep">｜</span><span class="qily-contact-label">企业邮箱：</span><a href="mailto:'+EMAIL+'">'+EMAIL+'</a>';
+    host.appendChild(box);
+    if(!d.getElementById('qilyOfficialContactRuntimeStyle')){
+      var style=d.createElement('style');style.id='qilyOfficialContactRuntimeStyle';
+      style.textContent='.qily-official-contact-footer{padding:18px;text-align:center;background:#101916;color:#d7e8e2}.qily-official-contact-runtime{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:7px 5px;margin-top:10px;font-size:13px;font-weight:750;line-height:1.7}.qily-official-contact-runtime a{display:inline-flex;align-items:center;min-height:34px;padding:5px 9px;border:1px solid rgba(255,227,155,.45);border-radius:8px;color:#eaf7f3!important;-webkit-text-fill-color:#eaf7f3!important;background:#173e42;text-decoration:none}.qily-official-contact-runtime a:hover,.qily-official-contact-runtime a:focus-visible{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0b5662!important;border-color:#ffe39b!important;outline:3px solid #ffe39b!important;outline-offset:2px!important}.qily-official-contact-runtime a:active{color:#17231e!important;-webkit-text-fill-color:#17231e!important;background:#ffe39b!important}.qily-contact-label{font-weight:900}.qily-contact-sep{opacity:.6}@media(max-width:640px){.qily-contact-sep{display:none}.qily-official-contact-runtime{flex-direction:column;gap:6px}}';
+      (d.head||d.documentElement).appendChild(style);
+    }
+  }
+  if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})(document,window);

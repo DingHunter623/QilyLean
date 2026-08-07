@@ -346,7 +346,7 @@
     var contactMask = document.createElement('div');
     contactMask.id = 'wxMask';
     contactMask.className = 'qily-modal-mask';
-    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><p class="qily-wechat"><span>微信号</span><strong>Qily259</strong></p><button class="qily-copy-wechat" type="button">复制微信号</button><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (phone) { return '<a href="tel:' + phone + '">' + phone + '</a>'; }).join('') + '</div><div class="qily-email-list"><div>企业邮箱</div><a class="qily-contact-email" href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a><div class="qily-email-actions"><button class="qily-copy-email" type="button">复制邮箱</button><a class="qily-send-email" href="mailto:' + CONTACT_EMAIL + '">发送邮件</a></div></div></div>';
+    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><p class="qily-wechat"><span>微信号</span><strong>Qily259</strong></p><button class="qily-copy-wechat" type="button">复制微信号</button><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (phone) { return '<a href="tel:' + phone + '">' + phone + '</a>'; }).join('') + '</div><div class="qily-email-list"><div>官网</div><a class="qily-contact-email" href="https://qilylean.com/">https://qilylean.com/</a></div><div class="qily-email-list"><div>企业邮箱</div><a class="qily-contact-email" href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a><div class="qily-email-actions"><button class="qily-copy-email" type="button">复制邮箱</button><a class="qily-send-email" href="mailto:' + CONTACT_EMAIL + '">发送邮件</a></div></div></div>';
     document.body.appendChild(contactMask);
 
     var toast = document.createElement('div');
@@ -468,7 +468,7 @@
     var block = document.createElement('div');
     block.id = 'qilyGlobalContactFooter';
     block.className = 'qily-global-contact-footer';
-    block.innerHTML = '<span>QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span><a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>';
+    block.innerHTML = '<span>QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span><span>官网网址：</span><a href="https://qilylean.com/">https://qilylean.com/</a><span>企业邮箱：</span><a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>';
     var footer = document.querySelector('footer');
     if (footer) footer.appendChild(block);
     else {
@@ -495,7 +495,7 @@
         var last=pages.length?pages[pages.length-1]:null;
         if(last && !last.querySelector('.qily-document-email-tail')){
           var tail=document.createElement('div'); tail.className='qily-document-email-tail';
-          tail.innerHTML='官网：https://qilylean.com　｜　企业邮箱：<a href="mailto:'+CONTACT_EMAIL+'">'+CONTACT_EMAIL+'</a>';
+          tail.innerHTML='官网网址：https://qilylean.com/　｜　企业邮箱：<a href="mailto:'+CONTACT_EMAIL+'">'+CONTACT_EMAIL+'</a>';
           last.appendChild(tail);
         }
       }

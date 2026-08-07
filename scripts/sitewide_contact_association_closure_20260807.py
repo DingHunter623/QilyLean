@@ -94,7 +94,7 @@ def update_app_support():
 
 
 def update_one_piece_flow_shell():
-    p = Path('seat-switch-one-piece-flow.html')
+    p = Path('qilylean/reference-one-piece-flow.html')
     if not p.exists():
         return
     s = p.read_text(encoding='utf-8')
@@ -115,7 +115,7 @@ def find_cjk_font():
 
 
 def redraw_one_piece_flow_qly():
-    qdir = Path('reference/seat-switch-one-piece-flow')
+    qdir = Path('qilylean/reference/seat-switch-one-piece-flow')
     if not qdir.exists():
         return
     fp = find_cjk_font()
