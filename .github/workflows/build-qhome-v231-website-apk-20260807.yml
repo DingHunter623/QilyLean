@@ -59,13 +59,6 @@ jobs:
           g = re.sub(r'versionCode\s+\d+', 'versionCode 9', g, count=1)
           g = re.sub(r"versionName\s+'[^']+'", "versionName '2.3.1'", g, count=1)
           gradle.write_text(g, encoding='utf-8')
-
-          for path in ['.github/workflows/build-qilylean-home.yml',
-                       '.github/workflows/release-qilylean-home-store.yml']:
-              p = Path(path)
-              t = p.read_text(encoding='utf-8')
-              t = t.replace('v2.3.0', 'v2.3.1').replace("versionCode='8'", "versionCode='9'").replace('versionCode 8', 'versionCode 9')
-              p.write_text(t, encoding='utf-8')
           PY
           grep -q 'QilyLean Home v2.3.1' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
           grep -q 'admin@qilylean.com' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
@@ -114,8 +107,7 @@ jobs:
           set -euo pipefail
           git config user.name 'QilyLean'
           git config user.email 'admin@qilylean.com'
-          git rm -f .github/workflows/build-qhome-v231-website-apk-20260807.yml
-          git add android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java android/qilylean-home/app/build.gradle .github/workflows/build-qilylean-home.yml .github/workflows/release-qilylean-home-store.yml
+          git add android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java android/qilylean-home/app/build.gradle
           git commit -m 'release: QilyLean Home v2.3.1 with official website and enterprise email'
           git pull --rebase origin main
           git push origin HEAD:main
