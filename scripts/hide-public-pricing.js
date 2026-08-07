@@ -9,7 +9,7 @@ const cooperationFile = path.join(root, 'cooperation', 'index.html');
 
 function qualityOnlyBlock() {
   return `<!-- QILY-CORE-PRICING-QUALITY:START -->
-<!-- QILY-PRICING-PUBLIC-DISABLED｜三大核心业务价格统一归属“项目合作／报价依据”模块；当前不在公网展示。 -->
+<!-- QILY-PRICING-POLICY｜仅公开诊断级入口价格；Factory Layout、精益改善、目视化等完整项目均按范围独立报价，不在公网展示统一总价。 -->
 <section class="module-section alt" id="quality-throughline" aria-labelledby="qualityThroughlineTitle">
   <div class="module-inner">
     <div class="qily-quality-throughline">
@@ -24,11 +24,12 @@ function qualityOnlyBlock() {
 
 function normalizeEntrySection(html) {
   return html
-    .replace('<div class="module-heading"><h2>从小范围验证开始</h2><p>先判断问题是否匹配，再用诊断明确范围和收益逻辑；专项项目在范围、周期、人员投入和交付物确认后报价。</p></div>', '<div class="module-heading"><h2>合作启动路径</h2><p>先判断问题是否匹配，再通过现场诊断明确范围、事实基线、交付深度与验收边界。</p></div>')
+    .replace('<div class="module-heading"><h2>从小范围验证开始</h2><p>先判断问题是否匹配，再用诊断明确范围和收益逻辑；专项项目在范围、周期、人员投入和交付物确认后报价。</p></div>', '<div class="module-heading"><h2>合作启动路径</h2><p>先判断问题是否匹配，再通过现场诊断明确范围、事实基线、概念方向、交付深度与验收边界。</p></div>')
     .replace(/<div class="price">免费<\/div>/g, '')
-    .replace(/<div class="price">¥6,800起\s*<span>＋差旅<\/span><\/div>/g, '')
+    .replace(/<div class="price">¥6,800起\s*<span>＋差旅<\/span><\/div>/g, '<div class="price">¥6,800起 <span>＋差旅</span></div>')
     .replace(/<div class="price">按范围评估<\/div>/g, '')
-    .replace(/<p class="fine-print">价格说明：[\s\S]*?<\/p>/g, '<p class="fine-print">合作说明：正式项目的范围、周期、现场投入、交付物、付款节点与验收标准，均在需求诊断后通过书面方案和正式合同确认。</p>');
+    .replace(/<p class="fine-print">价格说明：[\s\S]*?<\/p>/g, '<p class="fine-print"><strong>价格边界：</strong>¥6,800仅对应小范围现场诊断与概念级方案构思，不代表完整Factory Layout、精益改善或目视化项目总价。正式项目的范围、周期、图纸／模型深度、修改轮次、现场投入、交付物、付款节点与验收标准，均在诊断后通过书面方案和正式合同确认并独立报价。</p>')
+    .replace(/<p class="fine-print">合作说明：[\s\S]*?<\/p>/g, '<p class="fine-print"><strong>价格边界：</strong>¥6,800仅对应小范围现场诊断与概念级方案构思，不代表完整Factory Layout、精益改善或目视化项目总价。正式项目的范围、周期、图纸／模型深度、修改轮次、现场投入、交付物、付款节点与验收标准，均在诊断后通过书面方案和正式合同确认并独立报价。</p>');
 }
 
 function main() {
@@ -44,22 +45,20 @@ function main() {
     '¥3,000–6,000／人日',
     '¥30,000–150,000／项目',
     '¥2,500–4,500／人日',
-    '¥6,800起',
     '三大核心业务｜公开价格参考与报价依据',
     '公开报价不包含',
-    'qily-pricing-basis-grid',
-    '<div class="price">'
+    'qily-pricing-basis-grid'
   ];
   forbidden.forEach((value) => {
-    if (html.includes(value)) throw new Error(`Public pricing content remains: ${value}`);
+    if (html.includes(value)) throw new Error(`Public core-project pricing content remains: ${value}`);
   });
 
-  if (!html.includes('QILY-PRICING-PUBLIC-DISABLED')) throw new Error('Unified public-pricing disabled marker is missing.');
-  if (!html.includes('<h2>合作启动路径</h2>')) throw new Error('Non-pricing cooperation path was not normalized.');
+  if (!html.includes('QILY-PRICING-POLICY')) throw new Error('Unified pricing policy marker is missing.');
+  if (!html.includes('<h2>合作启动路径</h2>')) throw new Error('Cooperation path was not normalized.');
   if (!html.includes('质量不是PQCD中的一个并列数字')) throw new Error('Quality-throughline module was removed unexpectedly.');
 
   fs.writeFileSync(cooperationFile, html.endsWith('\n') ? html : `${html}\n`, 'utf8');
-  process.stdout.write('Public pricing was consolidated to one disabled module; no quotation is rendered on the cooperation page.\n');
+  process.stdout.write('Diagnostic entry pricing retained; full project pricing remains scope-based and non-public.\n');
 }
 
 main();
