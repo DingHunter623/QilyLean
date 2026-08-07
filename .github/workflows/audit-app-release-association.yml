@@ -1,0 +1,46 @@
+name: Audit APP release association
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app-release-manifest.json'
+      - 'times26001-home-card.js'
+      - 'tools/times26001/**'
+      - 'capabilities/**'
+      - 'app-support/**'
+      - 'app-store/**'
+      - 'assets/tools/times26001-overview.svg'
+      - 'Times26001-Android-*.apk'
+      - 'Times26001-Android-*.sha256.txt'
+      - 'QilyLean_Home_*.apk'
+      - 'QilyLean_Home_*.sha256.txt'
+      - 'scripts/audit-app-release-association.py'
+      - '.github/workflows/audit-app-release-association.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app-release-manifest.json'
+      - 'times26001-home-card.js'
+      - 'tools/times26001/**'
+      - 'capabilities/**'
+      - 'app-support/**'
+      - 'app-store/**'
+      - 'assets/tools/times26001-overview.svg'
+      - 'Times26001-Android-*.apk'
+      - 'Times26001-Android-*.sha256.txt'
+      - 'QilyLean_Home_*.apk'
+      - 'QilyLean_Home_*.sha256.txt'
+      - 'scripts/audit-app-release-association.py'
+      - '.github/workflows/audit-app-release-association.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate website/store/app version association
+        run: python scripts/audit-app-release-association.py
