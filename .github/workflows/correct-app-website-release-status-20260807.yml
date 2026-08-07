@@ -1,0 +1,40 @@
+name: Correct APP website release status 2026-08-07
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/correct-app-website-release-status-20260807.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  correct:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Apply website release status correction
+        run: python scripts/correct_app_website_release_status_20260807.py
+      - name: Validate
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '"versionName": "1.1.6"' app-release-manifest.json
+          grep -q '"versionName": "2.3.1"' app-release-manifest.json
+          grep -q '生产签名' tools/times26001/index.html
+          grep -q '历史官网包 v2.2' capabilities/index.html
+          grep -q 'admin@qilylean.com' app-support/index.html
+      - name: Commit correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add app-release-manifest.json times26001-home-card.js tools/times26001/index.html capabilities/index.html app-support/index.html app-store/times26001/README.md app-store/qilylean-home/README.md assets/tools/times26001-overview.svg scripts/correct_app_website_release_status_20260807.py
+          git commit -m '官网整改：旧安装包降级为历史包并标明最新构建与生产签名状态'
+          git pull --rebase origin main
+          git push origin HEAD:main
