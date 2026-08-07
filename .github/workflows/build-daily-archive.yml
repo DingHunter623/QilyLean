@@ -1,5 +1,5 @@
 name: Build daily engineering brief archive
-# Publication refresh: 2026-08-07 team collaboration brief
+# Publication refresh: 2026-08-08 trust brief metadata sync closure
 
 on:
   push:
@@ -19,6 +19,7 @@ on:
       - "scripts/build-daily-archive.js"
       - "scripts/build-site-metadata.js"
       - "scripts/sync-search-brief-metadata.js"
+      - "scripts/sync-trust-brief-metadata.js"
       - "scripts/daily-engineering-archive.js"
       - "scripts/enhance-daily-archive.js"
       - "scripts/enhance-terminology-training.js"
@@ -66,6 +67,7 @@ jobs:
           node --check scripts/build-daily-archive.js
           node --check scripts/build-site-metadata.js
           node --check scripts/sync-search-brief-metadata.js
+          node --check scripts/sync-trust-brief-metadata.js
           node --check scripts/enhance-daily-archive.js
           node --check scripts/enhance-terminology-training.js
           node --check scripts/audit-daily-terminology.js
@@ -127,9 +129,12 @@ jobs:
           node scripts/audit-daily-quality-linkage.js
           node scripts/build-site-metadata.js
           node scripts/sync-search-brief-metadata.js
+          node scripts/sync-trust-brief-metadata.js
 
       - name: Validate current publication contracts
-        run: node scripts/validate-current-daily-publication.js
+        run: |
+          node scripts/validate-current-daily-publication.js
+          node scripts/sync-trust-brief-metadata.js --check
 
       - name: Verify deterministic diff
         run: git diff --check
@@ -150,6 +155,7 @@ jobs:
             knowledge/terminology/*.html \
             cooperation/index.html \
             links/index.html \
+            trust/index.html \
             qilylean/site-data.json \
             qilylean/site-search-index.json \
             qilylean/daily-insights.html \
