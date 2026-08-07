@@ -1,0 +1,110 @@
+name: Refresh August 7 role images
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/refresh-aug7-role-images-20260807.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rename uploaded images and refresh August 7 brief
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p qilylean/assets
+
+          test -f 1.png
+          test -f 2.png
+          test -f 3.png
+          test -f 4.png
+          test -f 5.png
+
+          git mv -f 1.png qilylean/assets/2026-08-07-tiger.png
+          git mv -f 2.png qilylean/assets/2026-08-07-eagle.png
+          git mv -f 3.png qilylean/assets/2026-08-07-wolf.png
+          git mv -f 4.png qilylean/assets/2026-08-07-leopard.png
+          git mv -f 5.png qilylean/assets/2026-08-07-dog.png
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('qilylean/daily/2026-08-07.html')
+          text = path.read_text(encoding='utf-8')
+
+          replacements = {
+              '/qilylean/assets/daily-2026-08-07-01.svg': '/qilylean/assets/2026-08-07-tiger.png',
+              '/qilylean/assets/daily-2026-08-07-02.svg': '/qilylean/assets/2026-08-07-eagle.png',
+              '/qilylean/assets/daily-2026-08-07-03.svg': '/qilylean/assets/2026-08-07-wolf.png',
+              '/qilylean/assets/daily-2026-08-07-04.svg': '/qilylean/assets/2026-08-07-leopard.png',
+              '/qilylean/assets/daily-2026-08-07-05.svg': '/qilylean/assets/2026-08-07-dog.png',
+              'https://qilylean.com/qilylean/assets/daily-2026-08-07.svg': 'https://qilylean.com/qilylean/assets/2026-08-07-tiger.png',
+          }
+          for old, new in replacements.items():
+              text = text.replace(old, new)
+
+          old_intro = '以下五张图按“先确定方向，再看见未来；随后推进结果、提升效率，最后守住原则与信任”的顺序展开。每张图对应一个独立角色，既可用于团队培训，也可作为项目启动、干部沟通与改善复盘的话术参考。'
+          new_intro = '<strong>贯穿逻辑：</strong>虎先定方向，解决“往哪里去”；鹰再看未来，解决“提前看什么、机会在哪里”；狼把判断转成行动，解决“如何打胜仗、拿结果”；豹在执行过程中持续提效，解决“怎样更快、更稳、更少浪费”；狗最后守住原则、承诺与信任，确保团队在追求结果与效率时不突破底线。五张图不是五个孤立标签，而是一条从方向、视野、执行、改善到信任的完整协作链。'
+          if old_intro not in text:
+              raise SystemExit('August 7 logic intro not found')
+          text = text.replace(old_intro, new_intro, 1)
+
+          old_quote = '虎让团队不迷路，鹰让团队不短视，狼让目标不落空，豹让组织不迟钝，狗让信任不崩塌。五种力量互补，团队才能形成真正的合力。'
+          new_quote = '虎定方向，鹰看未来，狼打胜仗，豹提效率，狗守底线。先解决方向，再建立前瞻；以执行兑现判断，以改善提升过程，最终用原则与信任守住长期协作。五种力量前后衔接、彼此补位，团队才能形成真正的组织合力。'
+          text = text.replace(old_quote, new_quote, 1)
+
+          required = [
+              '2026-08-07-tiger.png',
+              '2026-08-07-eagle.png',
+              '2026-08-07-wolf.png',
+              '2026-08-07-leopard.png',
+              '2026-08-07-dog.png',
+          ]
+          for item in required:
+              if item not in text:
+                  raise SystemExit(f'missing new image reference: {item}')
+          for item in [
+              'daily-2026-08-07-01.svg',
+              'daily-2026-08-07-02.svg',
+              'daily-2026-08-07-03.svg',
+              'daily-2026-08-07-04.svg',
+              'daily-2026-08-07-05.svg',
+          ]:
+              if item in text:
+                  raise SystemExit(f'old image reference still present: {item}')
+
+          path.write_text(text, encoding='utf-8')
+          PY
+
+          grep -q '2026-08-07-tiger.png' qilylean/daily/2026-08-07.html
+          grep -q '2026-08-07-eagle.png' qilylean/daily/2026-08-07.html
+          grep -q '2026-08-07-wolf.png' qilylean/daily/2026-08-07.html
+          grep -q '2026-08-07-leopard.png' qilylean/daily/2026-08-07.html
+          grep -q '2026-08-07-dog.png' qilylean/daily/2026-08-07.html
+          test ! -e 1.png
+          test ! -e 2.png
+          test ! -e 3.png
+          test ! -e 4.png
+          test ! -e 5.png
+
+      - name: Commit refreshed brief and remove one-time workflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git rm .github/workflows/refresh-aug7-role-images-20260807.yml
+          git add -A
+          git commit -m 'fix: rename Aug 7 role images and refresh brief logic'
+          git pull --rebase origin main
+          git push origin HEAD:main
