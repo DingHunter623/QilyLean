@@ -143,7 +143,9 @@ function main() {
   const retained = [];
 
   candidates.forEach((file) => {
-    const stat = fs.statSync(path.join(root, file));
+    const absolute = path.join(root, file);
+    if (!fs.existsSync(absolute)) return;
+    const stat = fs.statSync(absolute);
     const key = file.toLowerCase();
     const base = path.posix.basename(file).toLowerCase();
     const direct = directReferences.has(key);
