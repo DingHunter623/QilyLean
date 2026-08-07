@@ -23,27 +23,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          OLD='site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v1'
+          MATCH='site-interactive-hover-contrast-v1.css?v=20260805-interactive-hover-contrast-v'
           NEW='site-interactive-hover-contrast-v1.css?v=20260807-official-contact-hover-v2'
-          mapfile -d '' FILES < <(git grep -lz -F "$OLD" -- . || true)
-          if [ "${#FILES[@]}" -eq 0 ]; then
-            echo 'No stale hover-cache references found.'
-          else
-            for f in "${FILES[@]}"; do
-              python - "$f" "$OLD" "$NEW" <<'PY'
-import sys
-from pathlib import Path
-p=Path(sys.argv[1]); old=sys.argv[2]; new=sys.argv[3]
-s=p.read_text(encoding='utf-8')
-p.write_text(s.replace(old,new),encoding='utf-8')
-PY
-            done
-          fi
-          if git grep -q -F "$OLD" -- .; then
+          git grep -lz -F "$MATCH" -- . | xargs -0 -r sed -i -E 's#site-interactive-hover-contrast-v1\.css\?v=20260805-interactive-hover-contrast-v[12]#site-interactive-hover-contrast-v1.css?v=20260807-official-contact-hover-v2#g'
+          if git grep -q -F "$MATCH" -- .; then
             echo 'Stale hover cache version remains.' >&2
             exit 1
           fi
           grep -q 'QILY-OFFICIAL-CONTACT-HOVER-CONTRAST-20260807' site-interactive-hover-contrast-v1.css
+          grep -q '20260807-official-contact-hover-v2' site-navigation.js
 
       - name: Publish cache closure
         shell: bash
