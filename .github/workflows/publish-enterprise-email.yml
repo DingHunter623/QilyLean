@@ -20,7 +20,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Replace public contact email in tracked text files
+      - name: Replace public contact email in site content and generators
         shell: bash
         run: |
           set -euo pipefail
@@ -37,6 +37,8 @@ jobs:
               if not raw:
                   continue
               path = Path(raw.decode('utf-8', errors='surrogateescape'))
+              if path.as_posix().startswith('.github/workflows/'):
+                  continue
               try:
                   data = path.read_bytes()
               except OSError:
@@ -48,8 +50,8 @@ jobs:
               changed.append((str(path), count))
               total += count
           if not changed:
-              raise SystemExit('No public email occurrences were found; refusing an empty publish.')
-          print(f'Replaced {total} occurrence(s) across {len(changed)} file(s):')
+              raise SystemExit('No public website email occurrences were found; refusing an empty publish.')
+          print(f'Replaced {total} occurrence(s) across {len(changed)} website/source file(s):')
           for path, count in changed:
               print(f'  {count:>2}  {path}')
           PY
@@ -58,17 +60,43 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git grep -n -I -F '396767769@qq.com' -- .; then
-            echo 'Old public email remains in tracked text files.'
-            exit 1
-          fi
-          count=$(git grep -I -F 'admin@qilylean.com' -- . | wc -l | tr -d ' ')
-          test "$count" -gt 0
-          echo "Files containing the enterprise email: $count"
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
 
-          mailto_count=$(git grep -I -F 'mailto:admin@qilylean.com' -- . | wc -l | tr -d ' ')
-          test "$mailto_count" -gt 0
-          echo "Files containing mailto enterprise links: $mailto_count"
+          old = b'396767769@qq.com'
+          new = b'admin@qilylean.com'
+          tracked = subprocess.check_output(['git', 'ls-files', '-z']).split(b'\0')
+          old_hits = []
+          new_files = set()
+          mailto_files = set()
+          for raw in tracked:
+              if not raw:
+                  continue
+              path = Path(raw.decode('utf-8', errors='surrogateescape'))
+              if path.as_posix().startswith('.github/workflows/'):
+                  continue
+              try:
+                  data = path.read_bytes()
+              except OSError:
+                  continue
+              if b'\0' in data:
+                  continue
+              if old in data:
+                  old_hits.append(str(path))
+              if new in data:
+                  new_files.add(str(path))
+              if b'mailto:admin@qilylean.com' in data:
+                  mailto_files.add(str(path))
+          if old_hits:
+              raise SystemExit('Old public email remains in: ' + ', '.join(old_hits))
+          if not new_files:
+              raise SystemExit('Enterprise email was not found after replacement.')
+          if not mailto_files:
+              raise SystemExit('No mailto enterprise links were found after replacement.')
+          print(f'Enterprise email present in {len(new_files)} website/source file(s).')
+          print(f'Mailto enterprise links present in {len(mailto_files)} file(s).')
+          PY
 
           python3 -m json.tool qilylean/site-data.json >/dev/null
           node --check qilylean/daily-feedback.js
@@ -86,7 +114,7 @@ jobs:
           git status --short
           git diff --stat
 
-      - name: Commit and publish
+      - name: Commit and publish website content
         shell: bash
         run: |
           set -euo pipefail
