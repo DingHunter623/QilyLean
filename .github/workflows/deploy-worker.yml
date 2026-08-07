@@ -48,7 +48,7 @@ jobs:
           grep -q "url.pathname === '/admin/consultations'" cloudflare-worker/worker.js
           grep -q "url.pathname === '/brief-feedback'" cloudflare-worker/worker.js
           grep -q "url.pathname === '/admin/brief-feedback'" cloudflare-worker/worker.js
-          grep -q "396767769@qq.com" cloudflare-worker/worker.js
+          grep -q "admin@qilylean.com" cloudflare-worker/worker.js
 
       - name: 校验 Cloudflare 账户 ID
         shell: bash
