@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/audit-clean-repo-20260807.yml'
+      - 'scripts/audit-unreferenced-assets.js'
   workflow_dispatch:
 
 permissions:
