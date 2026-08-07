@@ -1,0 +1,3 @@
+QilyLean project media restore deployment marker
+version=20260807-project-media-restore-v3
+purpose=force GitHub Pages rebuild after restoring project media accidentally removed by cleanup
