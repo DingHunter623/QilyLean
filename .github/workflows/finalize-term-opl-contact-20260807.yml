@@ -1,0 +1,28 @@
+name: Finalize terminology OPL contact and PDF
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/finalize-term-opl-contact.py'
+      - '.github/workflows/finalize-term-opl-contact-20260807.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/finalize-term-opl-contact.py
+      - run: |
+          grep -R -q '企业邮箱：<a href="mailto:admin@qilylean.com"' knowledge/terminology
+          grep -R -q '下载 / 保存PDF' knowledge/terminology
+      - run: |
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add knowledge/terminology/*.html
+          git commit -m '术语课件：官网下方统一企业邮箱并开放PDF保存' || exit 0
+          git push origin HEAD:main
