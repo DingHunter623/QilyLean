@@ -1,13 +1,25 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-08-06",
-  "briefPath": "qilylean/daily/2026-08-06.html",
-  "checkedAt": "2026-08-05T16:22:25.835Z",
-  "candidates": [],
-  "coveredTerms": [],
+  "briefDate": "2026-08-07",
+  "briefPath": "qilylean/daily/2026-08-07.html",
+  "checkedAt": "2026-08-07T00:04:51.422Z",
+  "candidates": [
+    {
+      "term": "PDCA",
+      "explanation": "计划、执行、检查、处理",
+      "explicit": true,
+      "source": "PDCA（计划、执行、检查、处理）"
+    }
+  ],
+  "coveredTerms": [
+    "PDCA"
+  ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
-  "featuredTerms": [],
+  "featuredTerms": [
+    "组织管理",
+    "PDCA"
+  ],
   "status": "passed"
 }

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05",
+  "generatedAt": "2026-08-07",
   "schemaVersion": 1,
   "terminology": {
     "total": 183,
@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 2585,
-    "latestDate": "2026-08-06",
+    "total": 2586,
+    "latestDate": "2026-08-07",
     "latestTheme": "组织管理",
-    "latestTitle": "管理六大用人之道：选对人、留住人，让不同层级各司其职",
-    "latestSummary": "用人不能只看能力，也不能只讲感情。基层看才能、中层看德行、高层看胸怀；基层靠公平待遇稳定，中层靠尊重信任凝聚，高层靠事业平台同行。九张管理图将选人、留人和分层履责整合为一套可落地的组织管理逻辑。",
-    "latestUrl": "/qilylean/daily/2026-08-06.html",
+    "latestTitle": "团队沟通五力：虎定方向、鹰看未来、狼打胜仗、豹提效率、狗守底线",
+    "latestSummary": "优秀团队不是所有人都一样强，而是方向、视野、执行、改善与信任五种力量互补。用虎、鹰、狼、豹、狗五种角色识别团队缺口，匹配沟通方式，并把协作转化为可验证的组织结果。",
+    "latestUrl": "/qilylean/daily/2026-08-07.html",
     "directoryUrl": "/qilylean/daily-insights.html"
   },
   "knowledge": {
@@ -48,8 +48,8 @@
     "indexedEntries": 2870,
     "indexedPages": 2812,
     "terminologyTotal": 183,
-    "briefTotal": 2585,
-    "latestBriefDate": "2026-08-06",
+    "briefTotal": 2586,
+    "latestBriefDate": "2026-08-07",
     "sitemapLastmod": "2026-08-05"
   }
 }
