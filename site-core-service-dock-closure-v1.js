@@ -56,16 +56,14 @@
   }
 
   function bindBackToTop(top){
-    if(top.dataset.qilyBound==='1')return;
-    top.dataset.qilyBound='1';
-    var startY=0;
-    var moved=false;
+    if(top.dataset.qilyBound==='2')return;
+    top.dataset.qilyBound='2';
+    var startY=0,moved=false;
+    function goTop(event){if(event){event.preventDefault();event.stopPropagation();}d.documentElement.scrollTop=0;d.body.scrollTop=0;w.scrollTo(0,0);w.requestAnimationFrame(function(){w.scrollTo(0,0);});}
     top.addEventListener('pointerdown',function(event){startY=event.clientY;moved=false;},{capture:true,passive:true});
     top.addEventListener('pointermove',function(event){if(Math.abs(event.clientY-startY)>8)moved=true;},{capture:true,passive:true});
-    top.addEventListener('pointerup',function(){if(!moved)w.scrollTo({top:0,behavior:'smooth'});},{capture:true,passive:true});
-    top.addEventListener('click',function(event){
-      if(event.detail===0){event.preventDefault();w.scrollTo({top:0,behavior:'smooth'});}
-    },true);
+    top.addEventListener('pointerup',function(event){if(!moved)goTop(event);},{capture:true,passive:false});
+    top.addEventListener('click',goTop,true);
   }
 
   function normalizeDock(){
@@ -96,7 +94,7 @@
     bindBackToTop(top);
   }
 
-  function apply(){alignCoreServices();normalizeDock();}
+  function apply(){d.documentElement.classList.remove('qily-shell-pending','qily-first-paint-pending');alignCoreServices();normalizeDock();}
 
   var queued=false;
   function queue(){

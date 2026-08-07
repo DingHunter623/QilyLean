@@ -106,7 +106,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   ],
   disabledAssets:['site-microsoft-international-v1.css','site-microsoft-enterprise-components-v2.css','site-microsoft-international-v1.js'],
   bootstrapMarkers:['addWideLayoutStylesheet();','addTypographyStylesheet();','if (document.body) boot()'],
-  dockActions:['data-action="home"','data-action="search"','data-action="back"','data-action="current"','data-action="share"','data-action="contact"']
+  dockActions:['data-action="home"','data-action="top"','data-action="search"','data-action="back"','data-action="current"','data-action="share"','data-action="contact"']
 });
 
 /* QilyLean global navigation wrapper｜保留原导航功能并加载可信度、信息架构与对比度闭环 */
@@ -166,7 +166,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   function appendLegacy() {
     if (d.querySelector('script[data-qily-navigation-legacy]')) { loadEnhancers(); return; }
     var legacy = d.createElement('script');
-    legacy.src = '/site-navigation-legacy-20260802.js?v=20260807-enterprise-contact-standard-v2';
+    legacy.src = '/site-navigation-legacy-20260802.js?v=20260807-sitewide-closure-v4';
     legacy.async = false;
     legacy.setAttribute('data-qily-navigation-legacy','parent-route-v3');
     legacy.onload = loadEnhancers;

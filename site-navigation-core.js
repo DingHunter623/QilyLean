@@ -6,7 +6,7 @@
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260807-enterprise-contact-standard-v2';
+  var SHARED_ASSET_VERSION = '20260807-sitewide-closure-v4';
   var VISUAL_SCALE_VERSION = '20260729-hierarchy-v4';
     var CONTROLLED_ROUTE_PATHS = [];
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
@@ -154,7 +154,7 @@
     var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     if (connection && (connection.saveData || /(?:^|-)2g$/.test(connection.effectiveType || ''))) return;
 
-    document.querySelectorAll('.qily-global-nav a[href],.site-nav a[href]').forEach(function (link) {
+    document.querySelectorAll('a[href]').forEach(function (link) {
       var done = false;
       function prefetch() {
         if (done) return;
@@ -328,6 +328,7 @@
     dock.setAttribute('aria-label', '快捷服务');
     dock.innerHTML = [
       '<button class="qily-float-btn qily-float-home" data-action="home" type="button">首页</button>',
+      '<button class="qily-float-btn qily-float-top" data-action="top" type="button">回<br>顶部</button>',
       '<button class="qily-float-btn qily-float-search" data-action="search" type="button">本站<br>搜索</button>',
       '<button class="qily-float-btn qily-float-back" data-action="back" type="button">返回<br>上一层</button>',
       '<button class="qily-float-btn qily-float-current" data-action="current" type="button">分享<br>当前页</button>',
@@ -359,6 +360,7 @@
     function closeMask(mask) { if (mask) mask.classList.remove('show'); }
     function runAction(action) {
       if (action === 'home') location.href = '/';
+      else if (action === 'top') { document.documentElement.scrollTop=0; document.body.scrollTop=0; window.scrollTo(0,0); requestAnimationFrame(function(){ window.scrollTo(0,0); }); }
       else if (action === 'search') {
         loadSiteSearch(function () {
           if (window.QilySiteSearch) window.QilySiteSearch.open();
@@ -477,6 +479,31 @@
     }
   }
 
+  function ensureKnowledgeDocumentEnhancements() {
+    var title = document.title || '';
+    var isTerm = /^\/knowledge\/terminology\/[^/]+\.html$/i.test(location.pathname);
+    var isDoc = /\/(?:qilylean\/reference|reference|trust\/nda-preview|gbt2828)/i.test(location.pathname) || /参考资料|程序文件|PDF|标准作业|抽样检验/i.test(title);
+    if (!document.getElementById('qilyDocumentUtilityStyle')) {
+      var style=document.createElement('style');
+      style.id='qilyDocumentUtilityStyle';
+      style.textContent='.qily-document-email-tail{padding:9px 12px;border-top:1px solid #cbdcda;color:#0f4b5a;background:#f7fbfa;font-size:13px;font-weight:850;text-align:center}.qily-document-email-tail a{color:#0f4b5a;text-underline-offset:.18em}@media print{html.qily-shell-pending body,html.qily-first-paint-pending body{visibility:visible!important}.qily-site-header,.qily-global-header,.qily-float-dock,.qily-modal-mask,.qily-global-contact-footer{display:none!important}body{display:block!important;background:#fff!important}}';
+      document.head.appendChild(style);
+    }
+    if (isDoc) {
+      function addTail(){
+        var pages=document.querySelectorAll('.viewer .page,.pdf-page,.document-page,.paper-page');
+        var last=pages.length?pages[pages.length-1]:null;
+        if(last && !last.querySelector('.qily-document-email-tail')){
+          var tail=document.createElement('div'); tail.className='qily-document-email-tail';
+          tail.innerHTML='官网：https://qilylean.com　｜　企业邮箱：<a href="mailto:'+CONTACT_EMAIL+'">'+CONTACT_EMAIL+'</a>';
+          last.appendChild(tail);
+        }
+      }
+      addTail(); setTimeout(addTail,120); setTimeout(addTail,600);
+    }
+    if(isTerm){ document.documentElement.classList.remove('qily-first-paint-pending','qily-shell-pending'); }
+  }
+
   function revealCurrentShell() {
     document.documentElement.classList.remove('qily-shell-pending');
     if (typeof window.__qilyLeanRevealCurrentShell === 'function') {
@@ -493,6 +520,7 @@
       addTypographyStylesheet();
       buildNavigation();
       ensureGlobalContactFooter();
+      ensureKnowledgeDocumentEnhancements();
       protectControlledPage();
       enableNavigationPrefetch();
       buildDock();

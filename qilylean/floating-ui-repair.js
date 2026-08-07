@@ -42,6 +42,7 @@
       if(moved){var r=dock.getBoundingClientRect();localStorage.setItem('floatDockPos',JSON.stringify({left:r.left,top:r.top}));return;}
       if(action==='home'){
         if(/\/home\.html$|\/digital_human\/?$/i.test(location.pathname))window.scrollTo({top:0,behavior:'smooth'});else location.href='home.html';
+      }else if(action==='top'){document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0);requestAnimationFrame(function(){window.scrollTo(0,0);});
       }else if(action==='share'){
         var u=location.href.split('#')[0];
         if(navigator.share)navigator.share({title:document.title,url:u}).catch(function(){});else copyText(document.title+'\n'+u).then(function(){toast('链接已复制');});

@@ -4,7 +4,7 @@ html.qily-shell-pending {
   background: #eef7f5;
 }
 html.qily-shell-pending body {
-  visibility: hidden !important;
+  visibility: visible !important;
 }
 
 :root {
