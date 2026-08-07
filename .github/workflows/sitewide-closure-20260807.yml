@@ -1,0 +1,242 @@
+name: QilyLean sitewide closure 2026-08-07
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sitewide-closure-20260807.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prepare PDF tooling
+        run: python3 -m pip install --quiet pymupdf
+
+      - name: Apply sitewide fixes and safe cleanup
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, subprocess, hashlib, os, shutil, tempfile
+
+          ROOT=Path('.')
+          EMAIL='admin@qilylean.com'
+          VERSION='20260807-sitewide-closure-v3'
+
+          def text_files():
+              for p in ROOT.rglob('*'):
+                  if not p.is_file() or '.git' in p.parts or p.parts[:2]==('.github','workflows'):
+                      continue
+                  if p.suffix.lower() in {'.html','.htm','.js','.css','.json','.md','.txt','.xml','.yml','.yaml','.toml'}:
+                      yield p
+
+          # 1) Remove multi-second first-paint hiding and stale shell bootstrap blocks.
+          html_changed=0
+          for p in ROOT.rglob('*.html'):
+              if '.git' in p.parts: continue
+              try: s=p.read_text('utf-8')
+              except: continue
+              old=s
+              s=s.replace('html.qily-first-paint-pending body{visibility:hidden!important}','html.qily-first-paint-pending body{visibility:visible!important}')
+              s=re.sub(r'<script\s+data-qily-shell-bootstrap>[\s\S]*?</script>\s*','',s)
+              s=re.sub(r'/site-navigation\.js\?v=[^\"\'\s<]+',f'/site-navigation.js?v={VERSION}',s)
+              if s!=old:
+                  p.write_text(s,'utf-8'); html_changed+=1
+
+          # 2) Patch navigation core: reliable back-to-top, universal internal prefetch, terminology/document email utilities.
+          p=Path('site-navigation-core.js'); s=p.read_text('utf-8'); old=s
+          s=s.replace("var SHARED_ASSET_VERSION = '20260807-enterprise-contact-standard-v2';",f"var SHARED_ASSET_VERSION = '{VERSION}';")
+          if "data-action=\"top\"" not in s[s.find("dock.innerHTML"):s.find("document.body.appendChild(dock)")]:
+              s=s.replace("'<button class=\"qily-float-btn qily-float-home\" data-action=\"home\" type=\"button\">首页</button>',",
+                          "'<button class=\"qily-float-btn qily-float-home\" data-action=\"home\" type=\"button\">首页</button>',\n      '<button class=\"qily-float-btn qily-float-top\" data-action=\"top\" type=\"button\">回<br>顶部</button>',")
+          s=s.replace("if (action === 'home') location.href = '/';\n      else if (action === 'search') {",
+                      "if (action === 'home') location.href = '/';\n      else if (action === 'top') { document.documentElement.scrollTop=0; document.body.scrollTop=0; window.scrollTo(0,0); requestAnimationFrame(function(){ window.scrollTo(0,0); }); }\n      else if (action === 'search') {")
+          s=s.replace("document.querySelectorAll('.qily-global-nav a[href],.site-nav a[href]').forEach(function (link) {",
+                      "document.querySelectorAll('a[href]').forEach(function (link) {")
+
+          marker="  function revealCurrentShell() {"
+          if 'function ensureKnowledgeDocumentEnhancements()' not in s:
+              addon=r'''  function ensureKnowledgeDocumentEnhancements() {
+    var path = normalizedPath(location.pathname);
+    var isTerm = /^\/knowledge\/terminology\/[^/]+\.html$/i.test(location.pathname);
+    var title = document.title || '';
+    var isDoc = /\/(?:qilylean\/reference|reference|trust\/nda-preview|gbt2828)/i.test(location.pathname) || /参考资料|程序文件|PDF|标准作业|抽样检验/i.test(title);
+
+    if (!document.getElementById('qilyDocumentUtilityStyle')) {
+      var style=document.createElement('style');
+      style.id='qilyDocumentUtilityStyle';
+      style.textContent='.qily-enterprise-email-line{margin-top:8px;color:#0f4b5a;font-weight:850;line-height:1.6}.qily-enterprise-email-line a{color:#0f4b5a;text-underline-offset:.18em}.qily-download-pdf{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 14px;border:1px solid #0f4b5a;border-radius:999px;color:#fff;background:#0f4b5a;font:inherit;font-weight:900;cursor:pointer}.qily-document-email-tail{padding:10px 14px;border-top:1px solid #cbdcda;color:#0f4b5a;background:#f7fbfa;font-size:13px;font-weight:850;text-align:center}@media print{html.qily-shell-pending body,html.qily-first-paint-pending body{visibility:visible!important}.qily-site-header,.qily-global-header,.qily-float-dock,.qily-modal-mask,.qily-download-pdf,.qily-global-contact-footer{display:none!important}body{display:block!important;background:#fff!important}}';
+      document.head.appendChild(style);
+    }
+
+    if (isTerm) {
+      var footer=document.querySelector('.footer') || document.querySelector('main');
+      if (footer && !footer.querySelector('.qily-enterprise-email-line')) {
+        var line=document.createElement('div'); line.className='qily-enterprise-email-line';
+        line.innerHTML='企业邮箱：<a href="mailto:'+CONTACT_EMAIL+'">'+CONTACT_EMAIL+'</a>';
+        footer.appendChild(line);
+      }
+      if (!document.querySelector('.qily-download-pdf')) {
+        var btn=document.createElement('button'); btn.type='button'; btn.className='qily-download-pdf'; btn.textContent='下载PDF';
+        btn.addEventListener('click',function(){ window.print(); });
+        var nav=document.querySelector('.hero nav'); if(nav) nav.appendChild(btn); else if(footer) footer.insertBefore(btn,footer.firstChild);
+      }
+    }
+
+    if (isDoc) {
+      var pages=document.querySelectorAll('.viewer .page,.pdf-page,.document-page,.paper-page');
+      var last=pages.length?pages[pages.length-1]:null;
+      if (last && !last.querySelector('.qily-document-email-tail')) {
+        var tail=document.createElement('div'); tail.className='qily-document-email-tail';
+        tail.innerHTML='官网：https://qilylean.com　｜　企业邮箱：<a href="mailto:'+CONTACT_EMAIL+'">'+CONTACT_EMAIL+'</a>';
+        last.appendChild(tail);
+      }
+    }
+  }
+
+'''
+              s=s.replace(marker,addon+marker)
+          s=s.replace("      ensureGlobalContactFooter();\n      protectControlledPage();",
+                      "      ensureGlobalContactFooter();\n      ensureKnowledgeDocumentEnhancements();\n      protectControlledPage();")
+          if s!=old: p.write_text(s,'utf-8')
+
+          # 3) Core service dock: make back-to-top impossible to lose due pointer/click edge cases.
+          p=Path('site-core-service-dock-closure-v1.js'); s=p.read_text('utf-8'); old=s
+          start=s.find('  function bindBackToTop(top){')
+          end=s.find('\n  function normalizeDock()',start)
+          if start!=-1 and end!=-1:
+              replacement='''  function bindBackToTop(top){\n    if(top.dataset.qilyBound==='2')return;\n    top.dataset.qilyBound='2';\n    var startY=0,moved=false;\n    function goTop(event){if(event){event.preventDefault();event.stopPropagation();}d.documentElement.scrollTop=0;d.body.scrollTop=0;w.scrollTo(0,0);w.requestAnimationFrame(function(){w.scrollTo(0,0);});}\n    top.addEventListener('pointerdown',function(event){startY=event.clientY;moved=false;},{capture:true,passive:true});\n    top.addEventListener('pointermove',function(event){if(Math.abs(event.clientY-startY)>8)moved=true;},{capture:true,passive:true});\n    top.addEventListener('pointerup',function(event){if(!moved)goTop(event);},{capture:true,passive:false});\n    top.addEventListener('click',goTop,true);\n  }\n'''
+              s=s[:start]+replacement+s[end:]
+          if s!=old: p.write_text(s,'utf-8')
+
+          # 4) Old floating repair also understands top.
+          p=Path('qilylean/floating-ui-repair.js')
+          if p.exists():
+              s=p.read_text('utf-8'); old=s
+              s=s.replace("if(action==='home'){\n        if(/\\/home\\.html$|\\/digital_human\\/?$/i.test(location.pathname))window.scrollTo({top:0,behavior:'smooth'});else location.href='home.html';\n      }else if(action==='share')",
+                          "if(action==='home'){\n        if(/\\/home\\.html$|\\/digital_human\\/?$/i.test(location.pathname))window.scrollTo(0,0);else location.href='home.html';\n      }else if(action==='top'){document.documentElement.scrollTop=0;document.body.scrollTop=0;window.scrollTo(0,0);requestAnimationFrame(function(){window.scrollTo(0,0);});\n      }else if(action==='share')")
+              if s!=old: p.write_text(s,'utf-8')
+
+          # 5) Remove the CSS rule that hides all body content during shell bootstrap.
+          p=Path('site-shell.css'); s=p.read_text('utf-8'); old=s
+          s=s.replace('html.qily-shell-pending body {\n  visibility: hidden !important;\n}','html.qily-shell-pending body {\n  visibility: visible !important;\n}')
+          if s!=old: p.write_text(s,'utf-8')
+
+          # 6) Keep future first-paint normalization non-blocking.
+          p=Path('scripts/normalize-first-paint-fouc.js')
+          if p.exists():
+              s=p.read_text('utf-8'); old=s
+              s=s.replace("html.qily-first-paint-pending body{visibility:hidden!important}","html.qily-first-paint-pending body{visibility:visible!important}")
+              s=s.replace("w.setTimeout(w.__qilyLeanRevealCurrentShell,5000)","w.setTimeout(w.__qilyLeanRevealCurrentShell,250)")
+              s=s.replace("const version = '20260805-first-paint-v1';",f"const version = '{VERSION}';")
+              if s!=old:p.write_text(s,'utf-8')
+
+          # 7) Cache-bust navigation wrapper / core loader.
+          p=Path('site-navigation.js'); s=p.read_text('utf-8'); old=s
+          s=re.sub(r'/site-navigation-legacy-20260802\.js\?v=[^\'\"\s]+',f'/site-navigation-legacy-20260802.js?v={VERSION}',s)
+          if s!=old:p.write_text(s,'utf-8')
+          p=Path('site-navigation-legacy-20260802.js')
+          if p.exists():
+              s=p.read_text('utf-8'); old=s
+              s=re.sub(r'/site-navigation-core\.js\?v=[^\'\"\s]+',f'/site-navigation-core.js?v={VERSION}',s)
+              if s!=old:p.write_text(s,'utf-8')
+
+          # 8) Stamp all tracked PDFs with the official enterprise contact on final page.
+          try:
+              import fitz
+              for raw in subprocess.check_output(['git','ls-files','*.pdf','-z']).split(b'\0'):
+                  if not raw: continue
+                  pdf=Path(raw.decode())
+                  try:
+                      doc=fitz.open(pdf)
+                      if doc.page_count<1: doc.close(); continue
+                      last=doc[-1]
+                      if EMAIL in last.get_text('text'):
+                          doc.close(); continue
+                      r=last.rect
+                      text='QilyLean | https://qilylean.com | '+EMAIL
+                      last.insert_text((max(18,r.x0+24),r.y1-10),text,fontsize=6.5,color=(0.12,0.28,0.30),overlay=True)
+                      tmp=pdf.with_suffix(pdf.suffix+'.tmp')
+                      doc.save(tmp,garbage=4,deflate=True); doc.close(); tmp.replace(pdf)
+                  except Exception as e:
+                      print('PDF skip',pdf,e)
+          except Exception as e:
+              print('PDF tooling unavailable',e)
+
+          # 9) High-confidence repository cleanup: OS junk, temp/backups and exact duplicate unreferenced binary copies.
+          junk_patterns=[re.compile(r'(^|/)(?:\.DS_Store|Thumbs\.db)$',re.I),re.compile(r'(?:\.bak|\.tmp|\.temp|~)$',re.I),re.compile(r'(?:^|[-_.])(backup|old|obsolete|unused|deprecated)(?:[-_.]|$)',re.I)]
+          removed=[]
+          for p in list(ROOT.rglob('*')):
+              if not p.is_file() or '.git' in p.parts or p.parts[:2]==('.github','workflows'): continue
+              rel=p.as_posix()
+              if any(rx.search(rel) for rx in junk_patterns):
+                  p.unlink(); removed.append(rel)
+
+          # exact duplicate binary cleanup only when one copy is clearly unreferenced by basename/path
+          binary_ext={'.png','.jpg','.jpeg','.webp','.gif','.svg','.pdf','.doc','.docx','.xls','.xlsx','.ppt','.pptx','.mp3','.mp4','.mov','.apk','.aab','.zip','.7z','.rar'}
+          corpus='\n'.join(p.read_text('utf-8',errors='ignore') for p in text_files())
+          hashes={}
+          for p in ROOT.rglob('*'):
+              if not p.is_file() or '.git' in p.parts or p.suffix.lower() not in binary_ext: continue
+              try:h=hashlib.sha256(p.read_bytes()).hexdigest()
+              except:continue
+              hashes.setdefault(h,[]).append(p)
+          for group in hashes.values():
+              if len(group)<2: continue
+              refs=[]; unrefs=[]
+              for p in group:
+                  rel=p.as_posix(); name=p.name
+                  (refs if (rel in corpus or name in corpus) else unrefs).append(p)
+              if refs:
+                  for p in unrefs:
+                      if p.exists(): p.unlink(); removed.append(p.as_posix())
+
+          # 10) Validate key requirements.
+          core=Path('site-navigation-core.js').read_text('utf-8')
+          assert 'data-action="top"' in core
+          assert "action === 'top'" in core
+          assert 'function ensureKnowledgeDocumentEnhancements()' in core
+          assert '下载PDF' in core and EMAIL in core
+          assert 'visibility: hidden !important' not in Path('site-shell.css').read_text('utf-8')[:260]
+          print('HTML normalized:',html_changed)
+          print('High-confidence stale files removed:',len(removed))
+          for x in removed[:200]: print('  removed',x)
+          PY
+
+      - name: Syntax and consistency checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check site-navigation-core.js
+          node --check site-core-service-dock-closure-v1.js
+          node --check site-navigation.js
+          node --check site-navigation-legacy-20260802.js
+          node --check scripts/normalize-first-paint-fouc.js
+          grep -q 'admin@qilylean.com' site-navigation-core.js
+          grep -q '下载PDF' site-navigation-core.js
+          grep -q 'data-action="top"' site-navigation-core.js
+          ! grep -q 'html.qily-shell-pending body.*visibility: hidden' site-shell.css
+          git status --short
+          git diff --stat
+
+      - name: Commit sitewide closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add -A ':!.github/workflows/sitewide-closure-20260807.yml'
+          if git diff --cached --quiet; then echo 'No content changes'; exit 0; fi
+          git commit -m '全站整改：文档企业邮箱、PDF下载、回顶部、首屏性能与冗余清理'
+          git push origin HEAD:main
