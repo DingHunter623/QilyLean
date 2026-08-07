@@ -580,3 +580,15 @@ body:has(.hero:not(:has(.hero-grid))) {
   .module-action,
   .module-actions a { transition: none; }
 }
+
+
+/* QILY-ENTERPRISE-EMAIL-CONTACT:START */
+.qily-contact-panel{width:min(92vw,480px)}
+.qily-email-list{display:grid;gap:8px;margin:18px 0 2px;padding-top:16px;border-top:1px solid var(--qily-line)}
+.qily-email-list>div:first-child{color:var(--qily-muted);font-size:14px;font-weight:800}
+.qily-contact-email{display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:42px;padding:8px 12px;border:1px solid var(--qily-line);border-radius:10px;color:var(--qily-forest)!important;background:#f6fbfa;font-weight:900;letter-spacing:.01em;text-decoration:none!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qily-email-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.qily-copy-email,.qily-send-email{display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:42px;padding:9px 12px;border:0;border-radius:10px;color:#fff!important;background:var(--qily-forest);cursor:pointer;font:inherit;font-weight:850;line-height:1.2;text-decoration:none!important;white-space:nowrap}
+.qily-copy-email:hover,.qily-copy-email:focus-visible,.qily-send-email:hover,.qily-send-email:focus-visible{background:var(--qily-deep);outline:3px solid rgba(23,139,148,.2);outline-offset:2px}
+@media(max-width:420px){.qily-modal-panel.qily-contact-panel{width:min(94vw,380px);padding:22px 18px}.qily-email-actions{grid-template-columns:1fr}.qily-contact-email{font-size:14px}}
+/* QILY-ENTERPRISE-EMAIL-CONTACT:END */
