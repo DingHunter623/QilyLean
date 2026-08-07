@@ -25,16 +25,21 @@ jobs:
           sudo apt-get install -y fonts-noto-cjk
           python -m pip install --quiet Pillow
 
-      - name: Apply closure
-        run: python scripts/sitewide_contact_association_closure_20260807.py
+      - name: Apply sitewide closure
+        run: |
+          python scripts/sitewide_contact_association_closure_20260807.py
+          python scripts/sitewide_contact_core_patch_20260807.py
 
       - name: Validate closure
         run: |
           python scripts/audit-official-contact-association.py
           grep -q 'QILY-OFFICIAL-CONTACT-RUNTIME-20260807' site-navigation.js
           grep -q '20260807-official-contact-hover-v3' site-navigation.js
-          grep -q '企业邮箱：admin@qilylean.com' app-support/index.html
+          grep -q 'admin@qilylean.com' app-support/index.html
+          grep -q '官网网址：' app-support/index.html
           grep -q '企业邮箱</th><td class="qtc-state-ok">已启用' site-trust-conversion-v2.js
+          grep -q '官网网址：https://qilylean.com/' site-navigation-core.js
+          grep -q '独立网址：在线阅览' knowledge/terminology.html
           test "$(find reference/seat-switch-one-piece-flow -name 'page-*.qly' | wc -l)" -eq 14
 
       - name: Commit and publish
@@ -45,7 +50,7 @@ jobs:
           git config user.email 'admin@qilylean.com'
           git rm -f .github/workflows/sitewide-contact-association-closure-20260807.yml
           git add -A
-          git commit -m '全站规范：统一官网企业邮箱、Hover对比度与APP关联逻辑'
+          git commit -m '全站规范：统一官网企业邮箱、Hover对比度、OPL与APP关联逻辑'
           for attempt in 1 2 3 4 5; do
             git fetch origin main
             git rebase origin/main || { git rebase --abort || true; exit 1; }
