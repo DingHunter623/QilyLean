@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
-  <title id="title">Times26001 思大时间管理应用概览</title>
-  <desc id="desc">展示Times26001历史官网 Android v1.1.4 的统一软件图标、北京时间、万年历、闹钟响铃、秒表计时、按秒倒计时和黄历功能；最新构建 / 应用市场候选版为v1.1.6 / API 36。</desc>
+  <title id="title">Times26001工业工程时间研究与IE现场测时工具概览</title>
+  <desc id="desc">Times26001面向工业工程、现场改善与时间研究场景，展示IE现场分段测时、累计总时长、数据复制、倒计时、闹钟与时间日历辅助功能；应用市场候选版为v1.1.6 / API 36。</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff7f5"/><stop offset="1" stop-color="#eef8f6"/></linearGradient>
     <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0f4b5a"/><stop offset="1" stop-color="#178b94"/></linearGradient>
@@ -14,42 +14,43 @@
     <path fill="#dc3c31" d="m192 33-8 2-8 4-9 9-6 15v11l6 15 9 9 11 5 13 1 9-2 8-4 9-9 6-15V63l-6-15-8-8-9-5-9-2Z"/>
   </g>
   <text x="242" y="112" fill="#0f4b5a" font-family="Arial Rounded MT Bold,Avenir Next,Segoe UI,sans-serif" font-size="58" font-weight="900">Times26001</text>
-  <text x="244" y="166" fill="#4e6d70" font-family="PingFang SC,Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="30" font-weight="800">思大时间管理 · 一站式移动时间工具</text>
+  <text x="244" y="166" fill="#4e6d70" font-family="PingFang SC,Microsoft YaHei,Noto Sans CJK SC,sans-serif" font-size="28" font-weight="800">工业工程时间研究 · IE现场测时工具</text>
   <g transform="translate(68 250)" filter="url(#shadow)">
     <rect width="470" height="398" rx="34" fill="#fff"/>
     <rect width="470" height="82" rx="34" fill="url(#teal)"/>
     <rect y="50" width="470" height="32" fill="url(#teal)"/>
-    <text x="30" y="50" fill="#fff" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="25" font-weight="900">北京时间 · 万年历</text>
+    <text x="30" y="50" fill="#fff" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="25" font-weight="900">IE现场测时 · 时间研究</text>
     <text x="235" y="162" text-anchor="middle" fill="#0f4b5a" font-family="Arial,Segoe UI,sans-serif" font-size="72" font-weight="900">21:26:48</text>
-    <text x="235" y="205" text-anchor="middle" fill="#6a7e7f" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="22">2026年7月24日 · 农历六月十一</text>
+    <text x="235" y="205" text-anchor="middle" fill="#6a7e7f" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="22">分段时间 · 累计总时长 · 数据复制</text>
     <g font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="800">
-      <rect x="30" y="240" width="126" height="58" rx="14" fill="#eef8f6"/><text x="93" y="276" text-anchor="middle" fill="#0f4b5a">闹钟提醒</text>
-      <rect x="172" y="240" width="126" height="58" rx="14" fill="#fff2ef"/><text x="235" y="276" text-anchor="middle" fill="#b7423c">分段计时</text>
-      <rect x="314" y="240" width="126" height="58" rx="14" fill="#fff8e4"/><text x="377" y="276" text-anchor="middle" fill="#80601e">黄历节气</text>
+      <rect x="30" y="240" width="126" height="58" rx="14" fill="#eef8f6"/><text x="93" y="276" text-anchor="middle" fill="#0f4b5a">IE分段</text>
+      <rect x="172" y="240" width="126" height="58" rx="14" fill="#fff2ef"/><text x="235" y="276" text-anchor="middle" fill="#b7423c">累计总时长</text>
+      <rect x="314" y="240" width="126" height="58" rx="14" fill="#fff8e4"/><text x="377" y="276" text-anchor="middle" fill="#80601e">倒计时</text>
     </g>
     <rect x="30" y="326" width="410" height="44" rx="22" fill="#0f4b5a"/>
-    <text x="235" y="355" text-anchor="middle" fill="#fff" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="900">离线提醒 · 数据复制 · 大字号显示</text>
+    <text x="235" y="355" text-anchor="middle" fill="#fff" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="19" font-weight="900">标准工时 · 工序分析 · 改善验证</text>
   </g>
   <g transform="translate(585 250)" font-family="PingFang SC,Microsoft YaHei,Noto Sans CJK SC,sans-serif">
-    <text x="0" y="22" fill="#0f4b5a" font-size="34" font-weight="900">为日常时间管理，也为IE现场测时</text>
+    <text x="0" y="22" fill="#0f4b5a" font-size="31" font-weight="900">为工业工程时间研究而设计</text>
     <g transform="translate(0 58)">
       <rect width="540" height="76" rx="18" fill="#fff" stroke="#d5e4e3"/>
       <circle cx="42" cy="38" r="22" fill="#e9f7f4"/><text x="42" y="46" text-anchor="middle" fill="#0f4b5a" font-size="23" font-weight="900">01</text>
-      <text x="82" y="34" fill="#0f4b5a" font-size="23" font-weight="900">北京时间与万年历</text><text x="82" y="59" fill="#637b7c" font-size="17">阳历、农历、生肖、周次、节气、节假日、时辰</text>
+      <text x="82" y="34" fill="#0f4b5a" font-size="23" font-weight="900">IE秒表与分段测时</text><text x="82" y="59" fill="#637b7c" font-size="17">记录本段时间、累计总时长与多次作业样本</text>
     </g>
     <g transform="translate(0 148)">
       <rect width="540" height="76" rx="18" fill="#fff" stroke="#d5e4e3"/>
       <circle cx="42" cy="38" r="22" fill="#fff0ed"/><text x="42" y="46" text-anchor="middle" fill="#b7423c" font-size="23" font-weight="900">02</text>
-      <text x="82" y="34" fill="#0f4b5a" font-size="23" font-weight="900">秒表、分段与倒计时</text><text x="82" y="59" fill="#637b7c" font-size="17">分段记录、总时长汇总、文本复制与结束提醒</text>
+      <text x="82" y="34" fill="#0f4b5a" font-size="23" font-weight="900">数据复制与工程衔接</text><text x="82" y="59" fill="#637b7c" font-size="17">分段记录可复制到Excel / WPS用于后续分析</text>
     </g>
     <g transform="translate(0 238)">
       <rect width="540" height="76" rx="18" fill="#fff" stroke="#d5e4e3"/>
       <circle cx="42" cy="38" r="22" fill="#fff8e4"/><text x="42" y="46" text-anchor="middle" fill="#80601e" font-size="23" font-weight="900">03</text>
-      <text x="82" y="34" fill="#0f4b5a" font-size="23" font-weight="900">闹钟、提醒与黄历</text><text x="82" y="59" fill="#637b7c" font-size="17">重复规则、本地通知、宜忌、冲煞与节气信息</text>
+      <text x="82" y="34" fill="#0f4b5a" font-size="23" font-weight="900">倒计时、闹钟与时间辅助</text><text x="82" y="59" fill="#637b7c" font-size="17">本地提醒、北京时间、万年历、农历与节气信息</text>
     </g>
     <g transform="translate(0 328)">
       <rect width="540" height="70" rx="18" fill="url(#teal)"/>
-      <text x="270" y="44" text-anchor="middle" fill="#fff" font-size="21" font-weight="900">历史官网 v1.1.4 · 最新构建 v1.1.6 / API36</text>
+      <text x="270" y="32" text-anchor="middle" fill="#fff" font-size="18" font-weight="900">QilyLean｜启力精益 开发</text>
+      <text x="270" y="54" text-anchor="middle" fill="#fff" font-size="17" font-weight="800">应用市场候选 v1.1.6 · versionCode 9 · API36</text>
     </g>
   </g>
 </svg>
