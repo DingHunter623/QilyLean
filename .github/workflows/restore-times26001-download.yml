@@ -1,0 +1,108 @@
+name: Restore Times26001 download port
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/restore-times26001-download.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Restore download-first user flow
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          APK_PATH = '/Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=3922dff0'
+          APK_URL = 'https://qilylean.com/Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=3922dff0'
+          DOWNLOAD_PAGE = 'https://qilylean.com/tools/times26001/#android-download'
+
+          def replace_once(text, old, new, label):
+              if old not in text:
+                  raise SystemExit(f'missing marker: {label}')
+              return text.replace(old, new, 1)
+
+          # 1) Times26001 independent page: download is primary; QR/share are auxiliary.
+          path = Path('tools/times26001/index.html')
+          text = path.read_text(encoding='utf-8')
+          old_actions = '<div class="tool-actions"><button type="button" class="app-share-trigger" data-app-share-qr="times26001">二维码分享</button><button type="button" class="app-link-share-trigger" data-app-share-link="times26001">分享本页链接</button>'
+          new_actions = f'<div class="tool-actions"><a class="download" href="{APK_PATH}" download>立即下载 Android APK｜v1.1.4</a><button type="button" class="app-share-trigger" data-app-share-qr="times26001">扫码下载</button><button type="button" class="app-link-share-trigger" data-app-share-link="times26001">分享下载页</button>'
+          text = replace_once(text, old_actions, new_actions, 'hero download actions')
+
+          old_section = '<section class="tool-section" id="android-download"><div class="tool-inner"><div class="tool-heading"><h2>Android发布状态</h2><p>历史官网安装包 v1.1.4 仅保留用于追溯，不再作为最新版推荐；最新构建 v1.1.6 / versionCode 9 / API 36 已进入应用市场候选准备阶段。</p></div><div class="download-panel"><div><h3>Times26001 v1.1.6｜应用市场候选版</h3><p>包名固定为 <code>com.qilylean.times26001</code>。固定Release签名完成后，将优先提交国内应用市场；正式商店版后续更新以对应应用市场渠道为主。官网继续承担品牌介绍、产品说明、工程内容与技术支持。</p></div><div class="app-share-inline"><button type="button" class="app-share-trigger" data-app-share-qr="times26001">二维码分享本页</button><button type="button" class="app-link-share-trigger" data-app-share-link="times26001">分享本页链接</button></div></div>'
+          new_section = f'<section class="tool-section" id="android-download"><div class="tool-inner"><div class="tool-heading"><h2>Android 下载</h2><p><strong>当前可直接下载 v1.1.4 Android APK。</strong> v1.1.6 / versionCode 9 / API 36 为应用市场候选版，待固定Release签名完成后将替换为正式下载版本。</p></div><div class="download-panel"><div><h3>当前可下载：Times26001 v1.1.4</h3><p>Android APK，约 4.29 MB。该文件使用历史 Debug 签名，可直接安装体验与现场使用；未来应用市场正式版将采用固定 Release 签名，因此可能需要卸载旧版后再安装正式版。包名固定为 <code>com.qilylean.times26001</code>。</p></div><div class="app-share-inline"><a href="{APK_PATH}" download>立即下载 APK</a><button type="button" class="app-share-trigger" data-app-share-qr="times26001">扫码下载</button><button type="button" class="app-link-share-trigger" data-app-share-link="times26001">分享下载页</button></div></div><div class="tool-note"><strong>文件校验：</strong><a href="/Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt">查看 SHA-256 校验值</a>。下载入口优先于分享入口；二维码与分享链接均指向本页 Android 下载区。</div>'
+          text = replace_once(text, old_section, new_section, 'android download section')
+          text = text.replace('/app-download-share-v1.js?v=20260808-times26001-unified-v2', '/app-download-share-v1.js?v=20260808-download-first-v1')
+          path.write_text(text, encoding='utf-8')
+
+          # 2) Capabilities: restore a direct APK port beside the product page.
+          path = Path('capabilities/index.html')
+          text = path.read_text(encoding='utf-8')
+          old = '<div class="module-actions"><a href="/tools/times26001/">查看APP介绍</a><button type="button" class="app-share-trigger" data-app-share-qr="times26001">二维码分享</button><button type="button" class="app-link-share-trigger" data-app-share-link="times26001">分享产品页链接</button><a class="secondary" href="/legal/times26001/privacy/">隐私政策</a>'
+          new = f'<div class="module-actions"><a href="{APK_PATH}" download>下载 Android APK</a><a class="secondary" href="/tools/times26001/#android-download">下载说明</a><button type="button" class="app-share-trigger" data-app-share-qr="times26001">扫码下载</button><button type="button" class="app-link-share-trigger" data-app-share-link="times26001">分享下载页</button><a class="secondary" href="/legal/times26001/privacy/">隐私政策</a>'
+          text = replace_once(text, old, new, 'capability download actions')
+          text = text.replace('/app-download-share-v1.js?v=20260808-share-v1', '/app-download-share-v1.js?v=20260808-download-first-v1')
+          path.write_text(text, encoding='utf-8')
+
+          # 3) Share logic: all Times26001 sharing points to the download section, and QR dialog exposes direct APK download.
+          path = Path('app-download-share-v1.js')
+          text = path.read_text(encoding='utf-8')
+          old = """    times26001:{\n      name:'Times26001',\n      url:'https://qilylean.com/tools/times26001/',\n      qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'\n    },"""
+          new = f"""    times26001:{{\n      name:'Times26001',\n      url:'{DOWNLOAD_PAGE}',\n      download:'{APK_URL}',\n      qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'\n    }},"""
+          text = replace_once(text, old, new, 'times share config')
+          text = text.replace('<div class="app-share-dialog-head"><div><h3 id="qilyAppShareTitle">APP页面分享</h3><p>扫码打开官方产品页；正式应用市场上线后以对应商店渠道更新为主。</p></div><button type="button" class="app-share-close" aria-label="关闭">×</button></div>', '<div class="app-share-dialog-head"><div><h3 id="qilyAppShareTitle">APP下载分享</h3><p>扫码进入官方下载区；页面内提供可安装APK。正式应用市场上线后，以对应商店渠道更新为主。</p></div><button type="button" class="app-share-close" aria-label="关闭">×</button></div>')
+          text = text.replace('<div class="app-share-dialog-actions"><button type="button" id="qilyAppShareNative">分享页面链接</button><button type="button" class="secondary" id="qilyAppShareCopy">复制页面链接</button></div>', '<div class="app-share-dialog-actions"><button type="button" id="qilyAppShareDownload">直接下载 APK</button><button type="button" id="qilyAppShareNative">分享下载页</button><button type="button" class="secondary" id="qilyAppShareCopy">复制下载页链接</button></div>')
+          old_show = """    document.getElementById('qilyAppShareTitle').textContent=app.name+'｜扫码打开官方页面';\n    var img=document.getElementById('qilyAppShareQr');img.src=app.qr;img.alt=app.name+'官方页面二维码';\n    document.getElementById('qilyAppShareUrl').textContent=app.url;\n    var nativeBtn=document.getElementById('qilyAppShareNative');\n    var copyBtn=document.getElementById('qilyAppShareCopy');\n    nativeBtn.onclick=function(){shareLink(key);};\n    copyBtn.onclick=function(){copy(app.url).then(function(){toast('页面链接已复制');});};"""
+          new_show = """    document.getElementById('qilyAppShareTitle').textContent=app.name+'｜扫码进入下载页';\n    var img=document.getElementById('qilyAppShareQr');img.src=app.qr;img.alt=app.name+'官方下载页二维码';\n    document.getElementById('qilyAppShareUrl').textContent=app.url;\n    var downloadBtn=document.getElementById('qilyAppShareDownload');\n    var nativeBtn=document.getElementById('qilyAppShareNative');\n    var copyBtn=document.getElementById('qilyAppShareCopy');\n    if(app.download){downloadBtn.hidden=false;downloadBtn.onclick=function(){window.location.href=app.download;};}\n    else{downloadBtn.hidden=true;downloadBtn.onclick=null;}\n    nativeBtn.onclick=function(){shareLink(key);};\n    copyBtn.onclick=function(){copy(app.url).then(function(){toast('下载页链接已复制');});};"""
+          text = replace_once(text, old_show, new_show, 'dialog download behavior')
+          text = text.replace("var data={title:app.name,text:app.name+' 官方产品页',url:app.url};", "var data={title:app.name+' Android 下载',text:app.name+' 官方下载页',url:app.url};")
+          text = text.replace("toast('页面链接已复制')", "toast('下载页链接已复制')")
+          text = text.replace("btn.textContent='分享产品页链接';", "btn.textContent='分享下载页';")
+          text = text.replace("replaceLeafText(section,'分享下载链接','分享产品页链接');", "replaceLeafText(section,'分享产品页链接','分享下载页');")
+          path.write_text(text, encoding='utf-8')
+
+          # 4) Rewrite the old maintenance script so it cannot remove download ports again.
+          Path('scripts/refine_app_download_share_20260808.py').write_text('''from pathlib import Path\n\n# 2026-08-08 corrected rule: download is primary; QR/share are auxiliary.\n# This validator intentionally does not rewrite download buttons.\n\nchecks = {\n    "APK exists": Path("Times26001-Android-v1.1.4-IE-Stopwatch.apk").is_file(),\n    "Times page has direct download": "download>立即下载 APK</a>" in Path("tools/times26001/index.html").read_text(encoding="utf-8"),\n    "Capabilities has direct download": "download>下载 Android APK</a>" in Path("capabilities/index.html").read_text(encoding="utf-8"),\n    "Share logic points to download section": "tools/times26001/#android-download" in Path("app-download-share-v1.js").read_text(encoding="utf-8"),\n    "QR dialog has direct APK download": "qilyAppShareDownload" in Path("app-download-share-v1.js").read_text(encoding="utf-8"),\n}\nfailed = [name for name, ok in checks.items() if not ok]\nif failed:\n    raise SystemExit("validation failed: " + ", ".join(failed))\nprint("download-first APP flow validated")\n''', encoding='utf-8')
+          PY
+
+      - name: Validate download endpoints
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s Times26001-Android-v1.1.4-IE-Stopwatch.apk
+          test "$(stat -c%s Times26001-Android-v1.1.4-IE-Stopwatch.apk)" -gt 4000000
+          grep -q 'download>立即下载 Android APK｜v1.1.4</a>' tools/times26001/index.html
+          grep -q 'download>立即下载 APK</a>' tools/times26001/index.html
+          grep -q 'download>下载 Android APK</a>' capabilities/index.html
+          grep -q "url:'https://qilylean.com/tools/times26001/#android-download'" app-download-share-v1.js
+          grep -q "download:'https://qilylean.com/Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=3922dff0'" app-download-share-v1.js
+          grep -q 'qilyAppShareDownload' app-download-share-v1.js
+          grep -q '分享下载页' tools/times26001/index.html
+          grep -q '扫码下载' tools/times26001/index.html
+          node --check app-download-share-v1.js
+          python scripts/refine_app_download_share_20260808.py
+
+      - name: Commit corrected download flow
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git rm -f .github/workflows/restore-times26001-download.yml
+          git add tools/times26001/index.html capabilities/index.html app-download-share-v1.js scripts/refine_app_download_share_20260808.py
+          git commit -m 'fix: restore Times26001 APK download-first flow'
+          git pull --rebase origin main
+          git push origin HEAD:main
