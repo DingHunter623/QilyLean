@@ -1,11 +1,11 @@
-/* QilyLean APP download/share controls | 2026-08-08 */
+/* QilyLean APP product/share normalization | 2026-08-08 */
 (function(){
   'use strict';
   var TIMES_POSITIONING='面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。';
   var apps={
     times26001:{
       name:'Times26001',
-      url:'https://qilylean.com/tools/times26001/#android-download',
+      url:'https://qilylean.com/tools/times26001/',
       qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'
     },
     qilyleanHome:{
@@ -71,6 +71,15 @@
     var el=document.querySelector(selector);if(el)el.setAttribute('content',value);
   }
 
+  function replaceLeafText(root,from,to){
+    if(!root)return;
+    root.querySelectorAll('h1,h2,h3,p,small,li,a,button,span,figcaption').forEach(function(el){
+      if(el.children.length)return;
+      var text=el.textContent||'';
+      if(text.indexOf(from)>=0)el.textContent=text.split(from).join(to);
+    });
+  }
+
   function normalizeTimes26001Page(){
     var path=(location.pathname||'').replace(/\/index\.html$/,'/');
     if(path!=='/tools/times26001/')return;
@@ -79,31 +88,38 @@
     setMeta('meta[name="description"]',TIMES_POSITIONING+' Times26001提供IE秒表分段、累计总时长、倒计时、闹钟及时间日历辅助功能。');
     setMeta('meta[property="og:title"]','Times26001｜工业工程时间研究与IE现场测时工具');
     setMeta('meta[property="og:description"]',TIMES_POSITIONING);
+  }
 
-    var heroLead=document.querySelector('.tool-hero .tool-lead');
-    if(heroLead){
-      heroLead.innerHTML='<strong>'+TIMES_POSITIONING+'</strong><br>Times26001以工业工程时间研究和制造现场测时为核心，提供IE秒表分段、累计总时长、数据复制、倒计时、闹钟及时间日历辅助能力。<br><strong>当前应用市场候选版：v1.1.6 / versionCode 9 / API 36；固定Release签名完成后进入国内应用市场正式分发。</strong>';
+  function normalizeCapabilitiesCrossLinks(){
+    var path=(location.pathname||'').replace(/\/index\.html$/,'/');
+    if(path!=='/capabilities/')return;
+    var section=document.getElementById('digital-tools');
+    if(!section)return;
+
+    var cards=section.querySelectorAll('.capability-digital-tool');
+    var timesCard=cards[0];
+    if(timesCard){
+      var image=timesCard.querySelector('img');
+      if(image)image.alt='Times26001工业工程时间研究与IE现场测时工具功能概览';
+      var small=timesCard.querySelector('small');
+      if(small)small.textContent='数字工具作品｜工业工程时间研究＋IE现场测时';
+      var title=timesCard.querySelector('h3');
+      if(title)title.textContent='Times26001';
+      var paragraph=timesCard.querySelector('.capability-digital-content > p');
+      if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、数据复制、按秒倒计时、闹钟、北京时间、万年历、农历、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。';
+      var result=timesCard.querySelector('.module-result');
+      if(result)result.textContent='应用市场候选：v1.1.6 / versionCode 9 / API 36｜IE分段测时｜累计总时长｜数据复制｜倒计时与闹钟提醒';
+      timesCard.querySelectorAll('[data-app-share-link="times26001"]').forEach(function(btn){btn.textContent='分享产品页链接';});
     }
 
-    var visual=document.querySelector('.tool-visual img');
-    if(visual)visual.alt='Times26001工业工程时间研究与IE现场测时工具功能概览';
+    replaceLeafText(section,'Times26001｜思大时间管理','Times26001');
+    replaceLeafText(section,'思大时间管理','Times26001');
+    replaceLeafText(section,'分享下载链接','分享产品页链接');
+  }
 
-    var heading=document.querySelector('#features .tool-heading p');
-    if(heading)heading.textContent='以工业工程时间研究与制造现场测时为主线，同时保留日常提醒和时间日历辅助能力。';
-
-    var scenario=document.querySelector('.tool-section.alt .tool-heading p');
-    if(scenario)scenario.textContent='Times26001不是普通闹钟或单纯时间管理APP，而是把测量、记录、复制、提醒组合成面向IE与现场改善的时间研究工具。';
-
-    document.querySelectorAll('h1,h2,h3,p,small,li,a,button').forEach(function(el){
-      if(el.children.length)return;
-      var text=el.textContent||'';
-      if(text.indexOf('Times26001｜思大时间管理')>=0)el.textContent=text.replace(/Times26001｜思大时间管理/g,'Times26001');
-      else if(text.indexOf('思大时间管理 / Times26001')>=0)el.textContent=text.replace(/思大时间管理 \/ Times26001/g,'Times26001');
-      else if(text.indexOf('思大时间管理')>=0)el.textContent=text.replace(/思大时间管理/g,'Times26001');
-      if(el.textContent&&el.textContent.indexOf('"QilyLean AI | 启力精益"为IE时间分析自主开发的时间工具。')>=0){
-        el.textContent=el.textContent.replace('"QilyLean AI | 启力精益"为IE时间分析自主开发的时间工具。',TIMES_POSITIONING);
-      }
-    });
+  function boot(){
+    normalizeTimes26001Page();
+    normalizeCapabilitiesCrossLinks();
   }
 
   document.addEventListener('click',function(e){
@@ -113,6 +129,6 @@
     if(share){e.preventDefault();shareLink(share.getAttribute('data-app-share-link'));}
   });
 
-  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',normalizeTimes26001Page,{once:true});
-  else normalizeTimes26001Page();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
+  else boot();
 })();
