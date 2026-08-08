@@ -2,25 +2,13 @@
   "schemaVersion": 1,
   "briefDate": "2026-08-08",
   "briefPath": "qilylean/daily/2026-08-08.html",
-  "checkedAt": "2026-08-08T03:29:44.923Z",
+  "checkedAt": "2026-08-08T16:45:58.458Z",
   "candidates": [
     {
-      "term": "Andon",
-      "explanation": "安灯",
-      "explicit": true,
-      "source": "Andon（安灯）"
-    },
-    {
-      "term": "FPY",
+      "term": "KPI",
       "explanation": "",
       "explicit": false,
-      "source": "FPY"
-    },
-    {
-      "term": "IE",
-      "explanation": "",
-      "explicit": false,
-      "source": "IE"
+      "source": "KPI"
     },
     {
       "term": "PDCA",
@@ -29,38 +17,29 @@
       "source": "PDCA"
     },
     {
-      "term": "PE",
+      "term": "SMART",
       "explanation": "",
       "explicit": false,
-      "source": "PE"
+      "source": "SMART"
     },
     {
-      "term": "PMC",
+      "term": "SOP",
       "explanation": "",
       "explicit": false,
-      "source": "PMC"
-    },
-    {
-      "term": "WIP",
-      "explanation": "",
-      "explicit": false,
-      "source": "WIP"
+      "source": "SOP"
     }
   ],
   "coveredTerms": [
-    "Andon",
-    "FPY",
-    "IE",
+    "KPI",
     "PDCA",
-    "PE",
-    "PMC",
-    "WIP"
+    "SMART",
+    "SOP"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
   "featuredTerms": [
-    "Andon"
+    "PDCA"
   ],
   "status": "passed"
 }
