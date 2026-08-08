@@ -45,8 +45,8 @@ cap = replace_required(
 )
 cap = replace_required(
     cap,
-    '历史官网包 v2.2｜最新构建 / 应用市场候选 v2.3.1 / API 36｜秒级时钟｜公历＋农历＋周次｜思大时间管理直达｜免Root',
-    '当前官网APK：v2.2（历史归档）｜最新构建：v2.3.1 / API 36（待正式签名发布）｜秒级时钟｜公历＋农历＋周次｜思大时间管理直达｜免Root',
+    '历史官网包 v2.2｜最新构建 / 应用市场候选 v2.3.1 / API 36｜秒级时钟｜公历＋农历＋周次｜Times26001直达｜免Root',
+    '当前官网APK：v2.2（历史归档）｜最新构建：v2.3.1 / API 36（待正式签名发布）｜秒级时钟｜公历＋农历＋周次｜Times26001直达｜免Root',
     'QilyLean Home status copy',
 )
 cap = replace_required(

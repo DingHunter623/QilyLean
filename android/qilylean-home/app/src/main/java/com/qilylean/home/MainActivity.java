@@ -215,10 +215,10 @@ public class MainActivity extends Activity {
 
         addSectionTitle(content, "数字工具直达");
         addCardRow(content,
-                card("思大时间管理", "黄历、IE计时、闹钟与倒计时", new View.OnClickListener() {
+                card("Times26001", "工业工程时间研究、IE现场测时与提醒", new View.OnClickListener() {
                     @Override public void onClick(View v) { openTimeManager(); }
                 }),
-                webCard("时间工具说明", "Times26001功能与安装说明", "https://qilylean.com/tools/times26001/"));
+                webCard("Times26001说明", "工业工程时间研究与IE现场测时工具", "https://qilylean.com/tools/times26001/"));
 
         addSectionTitle(content, "系统入口");
         addCardRow(content,
@@ -461,7 +461,7 @@ public class MainActivity extends Activity {
             String normalizedPackage = packageName.toLowerCase(Locale.ROOT);
 
             if (normalizedLabel.contains("times26001")
-                    || label.contains("思大时间管理")
+                    || label.contains("Times26001")
                     || normalizedPackage.contains("times26001")) {
                 Intent launch = pm.getLaunchIntentForPackage(packageName);
                 if (launch != null) {
@@ -471,7 +471,7 @@ public class MainActivity extends Activity {
             }
         }
 
-        Toast.makeText(this, "未检测到思大时间管理，正在打开官网安装与使用页", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "未检测到Times26001，正在打开官网安装与使用页", Toast.LENGTH_SHORT).show();
         openUrl("https://qilylean.com/tools/times26001/");
     }
 

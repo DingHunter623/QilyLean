@@ -96,8 +96,8 @@ update('capabilities/index.html', [
         '<h3>QilyLean Home</h3><p>Android 官网公开版 v2.2｜应用市场候选版 v2.3.0 / API 36</p>'
     ),
     (
-        '<div class="module-result">Android通用版 v2.2｜秒级时钟｜公历＋农历＋周次｜思大时间管理直达｜免Root</div>',
-        '<div class="module-result">官网公开版 v2.2｜应用市场候选版 v2.3.0 / API 36｜秒级时钟｜公历＋农历＋周次｜思大时间管理直达｜免Root</div>'
+        '<div class="module-result">Android通用版 v2.2｜秒级时钟｜公历＋农历＋周次｜Times26001直达｜免Root</div>',
+        '<div class="module-result">官网公开版 v2.2｜应用市场候选版 v2.3.0 / API 36｜秒级时钟｜公历＋农历＋周次｜Times26001直达｜免Root</div>'
     ),
     (
         '>Android通用版 v2.2下载</a>',
@@ -120,7 +120,7 @@ update('assets/tools/times26001-overview.svg', [
 # APP支持中心：公开说明两条版本链路和统一联系身份。
 p = Path('app-support/index.html')
 s = p.read_text(encoding='utf-8')
-status_block = '''<section class="card"><h2>官网公开版与应用市场候选版</h2><ul><li><strong>思大时间管理 / Times26001：</strong>官网公开版 v1.1.4；应用市场候选版 v1.1.5 / targetSdk 36。</li><li><strong>QilyLean Home：</strong>官网公开版 v2.2；应用市场候选版 v2.3.0 / targetSdk 36。</li><li><strong>统一开发者支持：</strong>官网 <a href="https://qilylean.com/">https://qilylean.com/</a>；企业邮箱 <a href="mailto:admin@qilylean.com">admin@qilylean.com</a>。</li></ul><p>“官网公开版”表示当前官网提供并可核验下载的APK；“应用市场候选版”表示面向商店提交准备的源码/构建版本。未正式上架前，不把候选版描述为已上市版本。</p></section>'''
+status_block = '''<section class="card"><h2>官网公开版与应用市场候选版</h2><ul><li><strong>Times26001：</strong>官网公开版 v1.1.4；应用市场候选版 v1.1.5 / targetSdk 36。</li><li><strong>QilyLean Home：</strong>官网公开版 v2.2；应用市场候选版 v2.3.0 / targetSdk 36。</li><li><strong>统一开发者支持：</strong>官网 <a href="https://qilylean.com/">https://qilylean.com/</a>；企业邮箱 <a href="mailto:admin@qilylean.com">admin@qilylean.com</a>。</li></ul><p>“官网公开版”表示当前官网提供并可核验下载的APK；“应用市场候选版”表示面向商店提交准备的源码/构建版本。未正式上架前，不把候选版描述为已上市版本。</p></section>'''
 if '官网公开版与应用市场候选版' not in s:
     s = s.replace('<section class="card"><h2>版本与安全</h2>', status_block + '\n<section class="card"><h2>版本与安全</h2>')
 p.write_text(s, encoding='utf-8')

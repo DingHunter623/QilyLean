@@ -110,10 +110,10 @@ def prepare_source() -> None:
             'version pill',
         )
 
-    if 'card("思大时间管理"' not in source:
+    if 'card("Times26001"' not in source:
         digital_section = '''        addSectionTitle(content, "数字工具直达");
         addCardRow(content,
-                card("思大时间管理", "黄历、IE计时、闹钟与倒计时", new View.OnClickListener() {
+                card("Times26001", "黄历、IE计时、闹钟与倒计时", new View.OnClickListener() {
                     @Override public void onClick(View v) { openTimeManager(); }
                 }),
                 webCard("时间工具说明", "Times26001功能与安装说明", "https://qilylean.com/tools/times26001/"));
@@ -185,7 +185,7 @@ def prepare_source() -> None:
             String normalizedPackage = packageName.toLowerCase(Locale.ROOT);
 
             if (normalizedLabel.contains("times26001")
-                    || label.contains("思大时间管理")
+                    || label.contains("Times26001")
                     || normalizedPackage.contains("times26001")) {
                 Intent launch = pm.getLaunchIntentForPackage(packageName);
                 if (launch != null) {
@@ -195,7 +195,7 @@ def prepare_source() -> None:
             }
         }
 
-        Toast.makeText(this, "未检测到思大时间管理，正在打开官网安装与使用页", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "未检测到Times26001，正在打开官网安装与使用页", Toast.LENGTH_SHORT).show();
         openUrl("https://qilylean.com/tools/times26001/");
     }
 
@@ -211,7 +211,7 @@ def prepare_source() -> None:
         'HH:mm:ss',
         '第" + weekOfYear + "周',
         'zh_CN@calendar=chinese',
-        'card("思大时间管理"',
+        'card("Times26001"',
         'private void openTimeManager()',
         'QilyLean Home v2.2',
     ]
@@ -266,11 +266,11 @@ def prepare_capabilities() -> None:
             'QilyLean Home website clock mockup',
         )
 
-    if '<span>思大时间管理</span>' not in text:
+    if '<span>Times26001</span>' not in text:
         text = replace_once(
             text,
             '<span>今日简报</span><span>系统设置</span>',
-            '<span>今日简报</span><span>思大时间管理</span><span>系统设置</span>',
+            '<span>今日简报</span><span>Times26001</span><span>系统设置</span>',
             'QilyLean Home Times26001 shortcut',
         )
 
@@ -279,13 +279,13 @@ def prepare_capabilities() -> None:
         text = replace_once(
             text,
             old_intro,
-            '桌面时钟升级为“小时：分钟：秒钟”并按秒刷新，日期同步显示公历、星期、中国农历与年度周次；新增“思大时间管理”直达入口，已安装Times26001时直接启动，用于查看黄历、IE分段计时、闹钟和倒计时，未安装时自动进入官网安装与使用页。' + old_intro,
+            '桌面时钟升级为“小时：分钟：秒钟”并按秒刷新，日期同步显示公历、星期、中国农历与年度周次；新增“Times26001”直达入口，已安装Times26001时直接启动，用于查看黄历、IE分段计时、闹钟和倒计时，未安装时自动进入官网安装与使用页。' + old_intro,
             'QilyLean Home v2.2 description',
         )
 
     text = text.replace(
         'Android通用版 v2.1｜免Root｜官网首页全导航｜重点内容直达＋通用设置＋全部应用抽屉',
-        'Android通用版 v2.2｜秒级时钟｜公历＋农历＋周次｜思大时间管理直达｜免Root',
+        'Android通用版 v2.2｜秒级时钟｜公历＋农历＋周次｜Times26001直达｜免Root',
     )
     CAPABILITIES_PATH.write_text(text, encoding='utf-8')
 
@@ -340,7 +340,7 @@ def finalize(apk_path: Path, sha256: str) -> None:
 - 桌面时钟升级为“小时：分钟：秒钟”格式，并按秒同步刷新；
 - 日期同步显示公历日期、星期与年度周次；
 - 同步显示中国农历月份、日期及闰月状态；
-- 新增“思大时间管理”直达入口：检测到Times26001时直接启动，用于查看黄历、IE分段计时、闹钟与倒计时；未安装时自动进入官网安装与使用页；
+- 新增“Times26001”直达入口：检测到Times26001时直接启动，用于查看黄历、IE分段计时、闹钟与倒计时；未安装时自动进入官网安装与使用页；
 - 保留官网首页全导航、重点内容直达、通用设置和全部应用抽屉；
 - 继续采用统一Q图标，并保持免Root和设备信息保护边界。
 
@@ -384,17 +384,17 @@ adb uninstall com.qilylean.home
             'HH:mm:ss',
             'formatLunarDate(now)',
             '第" + weekOfYear + "周',
-            '思大时间管理',
+            'Times26001',
             'openTimeManager()',
         ],
         CAPABILITIES_PATH: [
             'Android官网全导航通用版 v2.2',
-            '思大时间管理',
+            'Times26001',
             APK_NAME,
             short_sha,
         ],
         TIMES_PAGE_PATH: ['现已接入QilyLean Home v2.2'],
-        README_PATH: [sha256, '思大时间管理'],
+        README_PATH: [sha256, 'Times26001'],
     }
     for path, markers in checks.items():
         content = path.read_text(encoding='utf-8')
