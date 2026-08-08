@@ -36,7 +36,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Preserve original brief, enforce order and publish training note supplement
+      - name: Enforce same-day newest-first order and publish training note
         run: |
           node --check scripts/publish-20260808-training-note.js
           node scripts/publish-20260808-training-note.js
@@ -44,6 +44,9 @@ jobs:
           grep -F 'data-brief-training-note="2026-08-08"' qilylean/daily-insights.html
           grep -F 'data-publish-sequence="2"' qilylean/daily-insights.html
           grep -F '/qilylean/training/2026-08-08.html' qilylean/daily-insights.html
+          ! grep -F '<strong>发布顺序：</strong>' qilylean/daily-insights.html
+          grep -F '培训讲师：章磊老师' qilylean/assets/training-2026-08-08.svg
+          ! grep -F 'TRAINING MINUTES · PDCA · STANDARDIZATION' qilylean/assets/training-2026-08-08.svg
           grep -F 'training-2026-08-08-smart-cascade.svg' qilylean/training/2026-08-08.html
           grep -F 'training-2026-08-08-cross-flow.svg' qilylean/training/2026-08-08.html
           grep -F 'training-2026-08-08-execution-loop.svg' qilylean/training/2026-08-08.html
