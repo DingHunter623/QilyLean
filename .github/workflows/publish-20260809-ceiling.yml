@@ -1,0 +1,66 @@
+name: Publish 2026-08-09 Ceiling brief
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-20260809-ceiling.yml"
+      - "scripts/publish-20260809-ceiling.js"
+      - "qilylean/daily/2026-08-09.html"
+      - "qilylean/assets/daily-2026-08-09.svg"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-20260809-ceiling-main
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Publish brief and terminology linkage
+        run: |
+          node --check scripts/publish-20260809-ceiling.js
+          node scripts/publish-20260809-ceiling.js
+          QILY_BUILD_DATE=2026-08-09 node scripts/build-site-metadata.js
+          grep -F 'data-brief-date="2026-08-09"' qilylean/daily-insights.html
+          grep -F 'data-brief-training-note="2026-08-08"' qilylean/daily-insights.html
+          grep -F 'Ceiling｜天花板／上限' qilylean/daily/2026-08-09.html
+          grep -F '<div class="term-code">Ceiling</div>' knowledge/terminology.html
+          grep -F '2026-08-09' qilylean/site-data.json
+          grep -F 'daily/2026-08-09.html' sitemap.xml
+          grep -F '下一期 →' qilylean/daily/2026-08-08.html
+          git diff --check
+      - name: Commit publication outputs
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "2026-08-09 publication is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            qilylean/daily-insights.html \
+            qilylean/daily/index.json \
+            qilylean/daily/2026-08-09.html \
+            qilylean/daily/2026-08-08.html \
+            knowledge/terminology.html \
+            knowledge/index.html \
+            qilylean/site-data.json \
+            index.html \
+            sitemap.xml \
+            sitemap-core.xml
+          git commit -m "build: publish 2026-08-09 Ceiling brief and terminology [skip ci]"
+          git push origin HEAD:main
