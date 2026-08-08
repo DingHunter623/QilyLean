@@ -1,17 +1,21 @@
-# QilyLean双APP统一图标与安装交付规范
+# QilyLean APP统一图标与安装交付规范
 
 更新时间：2026-08-08
 
 适用应用：
 
-| 应用 | 包名 | 应用市场候选版 |
-| --- | --- | --- |
-| QilyLean Home | `com.qilylean.home` | `2.3.1 (9)` |
-| 思大时间管理｜Times26001 | `com.qilylean.times26001` | `1.1.6 (9)` |
+| 应用 | 包名 | 应用市场候选版 | 发布优先级 |
+| --- | --- | --- | --- |
+| Times26001 | `com.qilylean.times26001` | `1.1.6 (9)` | P0｜国内首发 |
+| QilyLean Home | `com.qilylean.home` | `2.3.1 (9)` | P1｜后续评估 |
+
+Times26001统一产品定位：
+
+> **面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。**
 
 ## 1. 唯一视觉基线
 
-两个APP统一使用QilyLean Q图标：青绿色Q主体、深色内核、右上红色圆点、外围透明。
+两款APP统一使用QilyLean Q图标：青绿色Q主体、深色内核、右上红色圆点、外围透明。
 
 仓库唯一商店图标源：
 
@@ -31,7 +35,7 @@
 - APK与应用市场分别使用不同颜色、不同背景或不同Q图；
 - 安装前后切换另一套图标。
 
-两个APP通过“应用名称 + 包名”区分，而不是通过修改主品牌图标区分。
+两款APP通过“应用名称 + 包名”区分，而不是通过修改主品牌图标区分。
 
 ## 2. 图标一致性链路
 
@@ -43,17 +47,18 @@
 4. 安装后桌面、应用抽屉图标；
 5. Android系统“应用信息/权限/通知”页面图标。
 
+### Times26001
+
+- 正式名称：`Times26001`
+- Manifest：`android:icon="@drawable/qily_unified_app_icon"`
+- Round icon：`android:roundIcon="@drawable/qily_unified_app_icon"`
+- Drawable：由`Times26001/scripts/apply-unified-app-icon.mjs`在构建时写入。
+
 ### QilyLean Home
 
 - Manifest：`android:icon="@drawable/ic_launcher"`
 - Round icon：`android:roundIcon="@drawable/ic_launcher"`
 - Drawable：`android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml`
-
-### Times26001
-
-- Manifest：`android:icon="@drawable/qily_unified_app_icon"`
-- Round icon：`android:roundIcon="@drawable/qily_unified_app_icon"`
-- Drawable：由`Times26001/scripts/apply-unified-app-icon.mjs`在构建时写入。
 
 ## 3. 应用市场图标输出
 
@@ -63,23 +68,23 @@
 
 将从唯一SVG源生成：
 
-- `QilyLean_Unified_App_Icon_512.png`：Google Play等商店提交；
+- `QilyLean_Unified_App_Icon_512.png`：应用市场提交；
 - `QilyLean_Unified_App_Icon_1024.png`：高分辨率商店素材/国内市场备用；
 - `SHA256SUMS.txt`：交付校验。
 
-两个APP提交商店时必须复用同一份PNG，不重复另做一套。
+两款APP提交商店时复用同一品牌图标源，不重复另做一套主Q图。
 
 ## 4. 安装包交付命名
-
-### QilyLean Home
-
-- `QilyLean_Home_v2.3.1_API36_release.apk`
-- `QilyLean_Home_v2.3.1_API36_release.aab`
 
 ### Times26001
 
 - `Times26001_v1.1.6_API36_release.apk`
 - `Times26001_v1.1.6_API36_release.aab`
+
+### QilyLean Home
+
+- `QilyLean_Home_v2.3.1_API36_release.apk`
+- `QilyLean_Home_v2.3.1_API36_release.aab`
 
 每套正式产物同时交付：
 
@@ -87,19 +92,19 @@
 - `ICON_POLICY.txt`
 - `SHA256SUMS.txt`
 
-## 5. 发布前验收
+## 5. Times26001国内首发验收
 
-- [ ] 两个APP的商店图标肉眼一致；
-- [ ] 两个APP安装确认页图标与商店图标一致；
-- [ ] 两个APP安装后桌面/应用抽屉图标与安装确认页一致；
-- [ ] QilyLean Home版本为`2.3.1 (9)`；
-- [ ] Times26001版本为`1.1.6 (9)`；
-- [ ] 两个APP均为API 36目标版本；
-- [ ] AAB/APK使用各自固定Release签名，不使用Debug签名；
-- [ ] `ICON_POLICY.txt`与SHA-256随正式包留档；
+- [ ] 应用市场名称为`Times26001`；
+- [ ] 安装确认页名称为`Times26001`；
+- [ ] 商店图标、安装确认页、安装后桌面/应用抽屉使用同一Q图；
+- [ ] 版本为`1.1.6 (9)`；
+- [ ] targetSdk为API 36；
+- [ ] AAB/APK使用固定Release签名，不使用Debug签名；
+- [ ] 官网和企业邮箱可保留为品牌与联系入口；
+- [ ] APP内不引导站外APK下载或绕过应用市场更新；
 - [ ] 隐私政策、用户协议、技术支持网址均可公网访问；
 - [ ] 商店截图、名称、文案与实际功能一致。
 
 ## 6. 版本迭代纪律
 
-后续任何版本升级，只允许变更应用版本、功能与必要的商店素材；除非QilyLean品牌图标正式换版，否则两个APP不得各自修改主图标。若品牌图标换版，必须在同一次发布周期同时更新：商店图标源、两个APP原生图标、安装包、应用市场素材与官网展示。
+后续任何版本升级，只允许变更应用版本、功能与必要的商店素材；除非QilyLean品牌图标正式换版，否则两款APP不得各自修改主图标。若品牌图标换版，应在同一发布周期同步更新商店图标源、原生图标、安装包、应用市场素材与官网展示。
