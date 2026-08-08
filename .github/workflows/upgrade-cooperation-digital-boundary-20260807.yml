@@ -1,46 +1,52 @@
-name: Upgrade cooperation digital factory boundary 2026-08-07
+name: Legacy cooperation boundary migration guard
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/upgrade-cooperation-digital-boundary-20260807.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  upgrade:
+  enforce-six-core:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
-      - name: Apply four-category cooperation boundary
-        run: python scripts/upgrade-cooperation-digital-boundary-20260807.py
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
 
-      - name: Validate cooperation page
+      - name: Enforce current six-core static source
+        run: node scripts/enforce-six-core-static-source.js
+
+      - name: Validate current cooperation contract
         shell: bash
         run: |
           set -euo pipefail
-          grep -q '四类项目合作边界' cooperation/index.html
-          grep -q '02｜数字化工厂项目' cooperation/index.html
-          grep -q '03｜精益改善项目' cooperation/index.html
-          grep -q '04｜目视化项目' cooperation/index.html
-          grep -q 'ERP／MES／APS厂商' cooperation/index.html
-          grep -q 'data-qily-boundary-version="v3"' cooperation/index.html
-          ! grep -q '三类项目合作边界' cooperation/index.html
+          grep -q '<h2>六大核心业务</h2>' cooperation/index.html
+          grep -q '<h2>六类项目合作边界</h2>' cooperation/index.html
+          grep -q '04｜数字化工厂' cooperation/index.html
+          grep -q '05｜APP软件开发' cooperation/index.html
+          grep -q '06｜官网建设' cooperation/index.html
+          grep -q 'data-qily-six-core-services="v1"' cooperation/index.html
+          grep -q 'data-qily-six-service-boundary="v1"' cooperation/index.html
+          ! grep -q '<h2>四类项目合作边界</h2>' cooperation/index.html
+          ! grep -q '<h2>三大核心业务</h2>' cooperation/index.html
 
-      - name: Commit upgrade
+      - name: Commit only if legacy drift was repaired
         shell: bash
         run: |
           set -euo pipefail
+          if git diff --quiet; then
+            echo 'No legacy cooperation drift detected.'
+            exit 0
+          fi
           git config user.name 'QilyLean'
           git config user.email 'admin@qilylean.com'
-          git add cooperation/index.html
-          git commit -m '项目合作：新增数字化工厂项目合作边界并升级为四类'
+          git add index.html cooperation/index.html site-information-architecture-v1.js scripts/materialize-static-core-pages.js scripts/hide-public-pricing.js
+          git commit -m '项目合作：恢复六大核心业务静态源口径'
           git pull --rebase origin main
           git push origin HEAD:main
