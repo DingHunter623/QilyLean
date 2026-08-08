@@ -1,0 +1,121 @@
+name: Normalize Times26001 identity across static sources
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/normalize-times26001-identity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Normalize legacy Times26001 references
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+
+          targets = [
+              Path('capabilities/index.html'),
+              Path('android/qilylean-home/README.md'),
+              Path('android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java'),
+              Path('app-store/qilylean-home/README.md'),
+              Path('legal/qilylean-home/privacy/index.html'),
+              Path('legal/qilylean-home/terms/index.html'),
+              Path('QilyLean_Home_v2.2_RELEASE.txt'),
+              Path('scripts/release-qhome-v22.py'),
+              Path('scripts/sync_app_release_association_20260807.py'),
+              Path('scripts/refine_app_download_share_20260808.py'),
+          ]
+
+          positioning = '面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。'
+
+          common = [
+              ('Times26001思大时间管理', 'Times26001'),
+              ('Times26001｜思大时间管理', 'Times26001'),
+              ('思大时间管理 / Times26001', 'Times26001'),
+              ('思大时间管理｜Times26001', 'Times26001'),
+              ('“QilyLean AI | 启力精益”为IE时间分析自主开发的时间工具。', positioning),
+              ('"QilyLean AI | 启力精益"为IE时间分析自主开发的时间工具。', positioning),
+              ('数字工具作品｜时间管理＋IE现场测时', '数字工具作品｜工业工程时间研究＋IE现场测时'),
+              ('思大时间管理直达', 'Times26001直达'),
+              ('思大时间管理', 'Times26001'),
+          ]
+
+          for path in targets:
+              if not path.exists():
+                  continue
+              text = path.read_text(encoding='utf-8')
+              for old, new in common:
+                  text = text.replace(old, new)
+              path.write_text(text, encoding='utf-8')
+
+          cap = Path('capabilities/index.html')
+          text = cap.read_text(encoding='utf-8')
+          text = text.replace(
+              'src="/assets/tools/times26001-overview.svg?v=20260805-android-v114"',
+              'src="/assets/tools/times26001-overview.svg?v=20260808-times26001-ie-v1"'
+          )
+          text = text.replace(
+              '<article class="module-card capability-digital-content"><small>数字工具作品｜工业工程时间研究＋IE现场测时</small><h3>Times26001</h3><p><strong>'+positioning+'</strong> 集成北京时间、万年历、闹钟响铃、秒表分段、总时长汇总、按秒倒计时、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。</p>',
+              '<article class="module-card capability-digital-content"><small>数字工具作品｜工业工程时间研究＋IE现场测时</small><h3>Times26001</h3><p><strong>'+positioning+'</strong> 以IE现场分段测时、累计总时长与数据复制为核心，配套倒计时、闹钟、北京时间、万年历、农历、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。</p>'
+          )
+          text = text.replace(
+              '当前官网APK：v1.1.4（历史归档）｜最新构建：v1.1.6 / API 36（待正式签名发布）｜按秒倒计时｜闹钟与倒计时响铃通知｜分段计时与文本复制',
+              '应用市场候选：v1.1.6 / versionCode 9 / API 36｜IE分段测时｜累计总时长｜数据复制｜倒计时与闹钟提醒'
+          )
+          text = text.replace('data-app-share-link="times26001">分享下载链接', 'data-app-share-link="times26001">分享产品页链接')
+          text = text.replace('/app-download-share-v1.js?v=20260808-share-v1', '/app-download-share-v1.js?v=20260808-times26001-unified-v2')
+          cap.write_text(text, encoding='utf-8')
+
+          java = Path('android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java')
+          if java.exists():
+              text = java.read_text(encoding='utf-8')
+              text = text.replace('card("Times26001", "黄历、IE计时、闹钟与倒计时"', 'card("Times26001", "工业工程时间研究、IE现场测时与提醒"')
+              text = text.replace('webCard("时间工具说明", "Times26001功能与安装说明"', 'webCard("Times26001说明", "工业工程时间研究与IE现场测时工具"')
+              java.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Validate static and cross-app identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -q '思大时间管理' capabilities/index.html
+          grep -q 'Times26001</h3>' capabilities/index.html
+          grep -q '工业工程时间研究＋IE现场测时' capabilities/index.html
+          grep -q '面向工业工程、现场改善与时间研究场景的专业测时工具' capabilities/index.html
+          grep -q 'Times26001' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+          ! grep -q '思大时间管理' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+
+      - name: Commit normalized static sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add capabilities/index.html \
+            android/qilylean-home/README.md \
+            android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java \
+            app-store/qilylean-home/README.md \
+            legal/qilylean-home/privacy/index.html \
+            legal/qilylean-home/terms/index.html \
+            QilyLean_Home_v2.2_RELEASE.txt \
+            scripts/release-qhome-v22.py \
+            scripts/sync_app_release_association_20260807.py \
+            scripts/refine_app_download_share_20260808.py
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix: unify Times26001 static identity across website and app links'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
