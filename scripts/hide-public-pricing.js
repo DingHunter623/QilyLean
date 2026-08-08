@@ -9,7 +9,7 @@ const cooperationFile = path.join(root, 'cooperation', 'index.html');
 
 function qualityOnlyBlock() {
   return `<!-- QILY-CORE-PRICING-QUALITY:START -->
-<!-- QILY-PRICING-POLICY｜仅公开诊断级入口价格；Factory Layout、精益改善、目视化等完整项目均按范围独立报价，不在公网展示统一总价。 -->
+<!-- QILY-PRICING-POLICY｜仅公开诊断级入口价格；六大核心业务完整项目均按范围、投入、交付物和验收标准独立报价，不在公网展示统一总价。 -->
 <section class="module-section alt" id="quality-throughline" aria-labelledby="qualityThroughlineTitle">
   <div class="module-inner">
     <div class="qily-quality-throughline">
@@ -24,12 +24,12 @@ function qualityOnlyBlock() {
 
 function normalizeEntrySection(html) {
   return html
-    .replace('<div class="module-heading"><h2>从小范围验证开始</h2><p>先判断问题是否匹配，再用诊断明确范围和收益逻辑；专项项目在范围、周期、人员投入和交付物确认后报价。</p></div>', '<div class="module-heading"><h2>合作启动路径</h2><p>先判断问题是否匹配，再通过现场诊断明确范围、事实基线、概念方向、交付深度与验收边界。</p></div>')
+    .replace('<div class="module-heading"><h2>从小范围验证开始</h2><p>先判断问题是否匹配，再用诊断明确范围和收益逻辑；专项项目在范围、周期、人员投入和交付物确认后报价。</p></div>', '<div class="module-heading"><h2>合作启动路径与公开报价边界</h2><p>六大核心业务均属于项目型服务；官网仅公开前期合作入口及价格边界，正式项目须在明确范围、投入、交付物和验收标准后独立报价。</p></div>')
     .replace(/<div class="price">免费<\/div>/g, '')
     .replace(/<div class="price">¥6,800起\s*<span>＋差旅<\/span><\/div>/g, '<div class="price">¥6,800起 <span>＋差旅</span></div>')
     .replace(/<div class="price">按范围评估<\/div>/g, '')
-    .replace(/<p class="fine-print">价格说明：[\s\S]*?<\/p>/g, '<p class="fine-print"><strong>价格边界：</strong>¥6,800仅对应小范围现场诊断与概念级方案构思，不代表完整Factory Layout、精益改善或目视化项目总价。正式项目的范围、周期、图纸／模型深度、修改轮次、现场投入、交付物、付款节点与验收标准，均在诊断后通过书面方案和正式合同确认并独立报价。</p>')
-    .replace(/<p class="fine-print">合作说明：[\s\S]*?<\/p>/g, '<p class="fine-print"><strong>价格边界：</strong>¥6,800仅对应小范围现场诊断与概念级方案构思，不代表完整Factory Layout、精益改善或目视化项目总价。正式项目的范围、周期、图纸／模型深度、修改轮次、现场投入、交付物、付款节点与验收标准，均在诊断后通过书面方案和正式合同确认并独立报价。</p>');
+    .replace(/<p class="fine-print">价格说明：[\s\S]*?<\/p>/g, '<p class="fine-print"><strong>价格边界：</strong>¥6,800仅对应约定范围内的小范围现场诊断与概念级方案构思，不代表六大核心业务任一完整专项项目总价。六大核心业务均须根据实际需求明确范围、周期、投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。</p>')
+    .replace(/<p class="fine-print">合作说明：[\s\S]*?<\/p>/g, '<p class="fine-print"><strong>价格边界：</strong>¥6,800仅对应约定范围内的小范围现场诊断与概念级方案构思，不代表六大核心业务任一完整专项项目总价。六大核心业务均须根据实际需求明确范围、周期、投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。</p>');
 }
 
 function main() {
@@ -54,7 +54,7 @@ function main() {
   });
 
   if (!html.includes('QILY-PRICING-POLICY')) throw new Error('Unified pricing policy marker is missing.');
-  if (!html.includes('<h2>合作启动路径</h2>')) throw new Error('Cooperation path was not normalized.');
+  if (!html.includes('<h2>合作启动路径与公开报价边界</h2>')) throw new Error('Cooperation path was not normalized.');
   if (!html.includes('质量不是PQCD中的一个并列数字')) throw new Error('Quality-throughline module was removed unexpectedly.');
 
   fs.writeFileSync(cooperationFile, html.endsWith('\n') ? html : `${html}\n`, 'utf8');
