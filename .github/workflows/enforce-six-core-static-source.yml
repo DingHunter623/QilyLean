@@ -1,0 +1,82 @@
+name: Enforce six-core static source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "cooperation/index.html"
+      - "site-information-architecture-v1.js"
+      - "scripts/materialize-static-core-pages.js"
+      - "scripts/hide-public-pricing.js"
+      - "scripts/enforce-six-core-static-source.js"
+      - ".github/workflows/enforce-six-core-static-source.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: enforce-six-core-static-source-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Validate source script syntax
+        run: node --check scripts/enforce-six-core-static-source.js
+
+      - name: Enforce canonical static business source
+        run: node scripts/enforce-six-core-static-source.js
+
+      - name: Refresh static search index
+        run: |
+          if [ -f scripts/refresh-static-core-search-index.js ]; then
+            node scripts/refresh-static-core-search-index.js
+          fi
+
+      - name: Validate SSR and no-JS business contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '两大业务主线｜六大核心业务' index.html
+          grep -q 'data-qily-six-core-services="v1"' cooperation/index.html
+          grep -q '<h2>六大核心业务</h2>' cooperation/index.html
+          grep -q '<h2>六类项目合作边界</h2>' cooperation/index.html
+          grep -q '01｜新工厂／新产线规划' cooperation/index.html
+          grep -q '02｜精益改善项目' cooperation/index.html
+          grep -q '03｜目视化项目' cooperation/index.html
+          grep -q '04｜数字化工厂' cooperation/index.html
+          grep -q '05｜APP软件开发' cooperation/index.html
+          grep -q '06｜官网建设' cooperation/index.html
+          grep -q 'data-qily-six-service-boundary="v1"' cooperation/index.html
+          grep -q '合作启动路径与公开报价边界' cooperation/index.html
+          ! grep -q '<h2>三大核心业务</h2>' cooperation/index.html
+          ! grep -q '<h2>四类项目合作边界</h2>' cooperation/index.html
+          ! grep -q '三类核心业务' index.html
+          ! grep -q '三类核心服务' index.html
+
+      - name: Commit normalized static output
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'No static-source drift detected.'
+            exit 0
+          fi
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add index.html cooperation/index.html site-information-architecture-v1.js scripts/materialize-static-core-pages.js scripts/hide-public-pricing.js qilylean/site-search-index.json
+          git commit -m '全站口径：静态源统一为两大业务主线六大核心业务'
+          git pull --rebase origin main
+          git push origin HEAD:main
