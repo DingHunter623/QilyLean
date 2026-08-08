@@ -1,0 +1,86 @@
+name: Publish early career history
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-early-career-history.yml"
+      - "site-early-career-history-v1.css"
+      - "site-early-career-history-v1.js"
+      - "scripts/publish-early-career-history.js"
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-early-career-history.yml"
+      - "site-early-career-history-v1.css"
+      - "site-early-career-history-v1.js"
+      - "scripts/publish-early-career-history.js"
+  workflow_run:
+    workflows: ["Build daily engineering brief archive"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-early-career-history-${{ github.event.pull_request.number || 'main' }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate early career publication contract
+        run: |
+          node --check site-early-career-history-v1.js
+          node --check scripts/publish-early-career-history.js
+          node scripts/publish-early-career-history.js
+          node scripts/publish-early-career-history.js --check
+          git diff --check
+
+  publish:
+    if: >-
+      github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Materialize early career history and anchors
+        shell: bash
+        run: |
+          git fetch origin main --depth=1
+          git reset --hard origin/main
+          node --check site-early-career-history-v1.js
+          node --check scripts/publish-early-career-history.js
+          node scripts/publish-early-career-history.js
+          node scripts/publish-early-career-history.js --check
+          git diff --check
+      - name: Commit public pages
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Early career history is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add qilylean/daily-insights.html experience/index.html
+          git commit -m "build: restore early career history links [skip ci]"
+          git push origin HEAD:main
