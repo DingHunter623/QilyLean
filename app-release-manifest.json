@@ -1,36 +1,39 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-08-07",
+  "updatedAt": "2026-08-08",
   "officialWebsite": "https://qilylean.com/",
   "supportEmail": "admin@qilylean.com",
   "apps": {
     "times26001": {
-      "name": "思大时间管理",
-      "productName": "Times26001｜思大时间管理",
+      "name": "Times26001",
+      "productName": "Times26001｜工业工程时间研究与IE现场测时工具",
+      "positioning": "面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。",
+      "historicalName": "思大时间管理",
       "packageName": "com.qilylean.times26001",
       "publicRelease": {
         "versionName": "1.1.4",
         "apk": "/Times26001-Android-v1.1.4-IE-Stopwatch.apk",
         "sha256": "/Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt",
-        "label": "历史官网安装包（旧Debug签名）"
+        "label": "历史官网安装包（旧Debug签名，仅追溯）"
       },
       "storeCandidate": {
         "versionName": "1.1.6",
         "versionCode": 9,
         "targetSdk": 36,
-        "label": "应用市场候选版",
-        "status": "生产签名待启用；签名完成后官网与应用市场共用稳定发布链"
+        "label": "国内应用市场候选版",
+        "status": "固定Release签名待启用；正式商店版后续更新以对应应用市场渠道为主"
       },
       "productPage": "https://qilylean.com/tools/times26001/",
       "privacy": "https://qilylean.com/legal/times26001/privacy/",
       "terms": "https://qilylean.com/legal/times26001/terms/",
       "support": "https://qilylean.com/app-support/",
+      "officialWebsiteLinkPolicy": "APP可展示并由用户主动访问QilyLean官网与企业邮箱；国内商店版不得引导用户绕过应用市场下载、更新或安装APK",
       "latestBuild": {
         "versionName": "1.1.6",
         "versionCode": 9,
         "targetSdk": 36,
         "label": "最新构建",
-        "status": "构建与企业联系信息校验完成；生产签名待启用",
+        "status": "产品名称、品牌定位、官网与企业联系信息已统一；固定Release签名待启用",
         "upgradeFromHistoricalPublicApk": "旧官网Debug签名与当前构建签名不同，不作为覆盖升级包发布"
       }
     },
@@ -49,7 +52,7 @@
         "versionCode": 9,
         "targetSdk": 36,
         "label": "应用市场候选版",
-        "status": "生产签名待启用；签名完成后官网与应用市场共用稳定发布链"
+        "status": "生产签名待启用；签名完成后进入稳定发布链"
       },
       "productPage": "https://qilylean.com/capabilities/#digital-tools",
       "privacy": "https://qilylean.com/legal/qilylean-home/privacy/",
