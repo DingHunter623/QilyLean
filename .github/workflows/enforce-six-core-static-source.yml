@@ -40,6 +40,7 @@ jobs:
         run: node scripts/enforce-six-core-static-source.js
 
       - name: Refresh static search index
+        continue-on-error: true
         run: |
           if [ -f scripts/refresh-static-core-search-index.js ]; then
             node scripts/refresh-static-core-search-index.js
@@ -76,7 +77,7 @@ jobs:
           fi
           git config user.name 'QilyLean'
           git config user.email 'admin@qilylean.com'
-          git add index.html cooperation/index.html site-information-architecture-v1.js scripts/materialize-static-core-pages.js scripts/hide-public-pricing.js qilylean/site-search-index.json
+          git add index.html cooperation/index.html site-information-architecture-v1.js scripts/materialize-static-core-pages.js scripts/hide-public-pricing.js qilylean/site-search-index.json qilylean/site-data.json
           git commit -m '全站口径：静态源统一为两大业务主线六大核心业务'
           git pull --rebase origin main
           git push origin HEAD:main
