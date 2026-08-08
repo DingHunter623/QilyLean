@@ -35,6 +35,5 @@
 <text x="70" y="820" fill="#fff" font-size="30" font-weight="850">核心判断</text>
 <text x="70" y="870" fill="#e0ece8" font-size="25">管理不是“安排过”，而是让责任、标准、节点、检查与结果形成闭环。</text>
 <line x1="64" y1="930" x2="1016" y2="930" stroke="#fff" opacity=".25"/>
-<text x="64" y="995" fill="#fff" font-size="34" font-weight="850">QilyLean｜启力精益</text>
-<text x="1016" y="995" fill="#d6b467" font-size="26" font-weight="750" text-anchor="end">TRAINING MINUTES · PDCA · STANDARDIZATION</text>
+<text x="64" y="988" fill="#dfece7" font-size="23" font-weight="650">培训讲师：章磊老师</text>
 </svg>
