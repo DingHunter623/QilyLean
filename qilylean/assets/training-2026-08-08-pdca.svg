@@ -1,8 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
 <title id="title">PDCA｜持续改善闭环</title>
-<desc id="desc">专业化PDCA持续改善闭环：P计划、D执行、C检查、A处理，标准化后进入下一轮改善。</desc>
+<desc id="desc">专业化PDCA持续改善闭环：缩小中心留白以完整展示四阶段图标，并调整外围箭头避让阶段文字。</desc>
 <defs>
   <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#173f34" flood-opacity="0.12"/></filter>
+  <filter id="centerShadow" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="5" stdDeviation="8" flood-color="#173f34" flood-opacity="0.10"/></filter>
   <marker id="arrowGreen" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#1f6547"/></marker>
   <marker id="arrowGold" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#b99135"/></marker>
   <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#f7f6f0"/></linearGradient>
@@ -15,49 +16,93 @@
 <g font-family="Arial,'Microsoft YaHei','PingFang SC',sans-serif">
   <text x="70" y="105" font-size="58" font-weight="900" fill="#0d4636">PDCA｜持续改善闭环</text>
   <text x="70" y="158" font-size="25" fill="#4f5b56">一次改善的终点，是把有效方法固化成下一轮的标准起点</text>
+
   <g transform="translate(0,5)">
+    <!-- 四阶段主环 -->
     <circle cx="470" cy="500" r="220" fill="#fff" stroke="#e8ece7" stroke-width="2"/>
-    <path d="M470 280 A220 220 0 0 1 690 500" fill="none" stroke="url(#pGrad)" stroke-width="92"/>
-    <path d="M690 500 A220 220 0 0 1 470 720" fill="none" stroke="url(#dGrad)" stroke-width="92"/>
-    <path d="M470 720 A220 220 0 0 1 250 500" fill="none" stroke="url(#cGrad)" stroke-width="92"/>
-    <path d="M250 500 A220 220 0 0 1 470 280" fill="none" stroke="url(#aGrad)" stroke-width="92"/>
-    <circle cx="470" cy="500" r="142" fill="#fff" stroke="#dfe8e2" stroke-width="2" stroke-dasharray="6 7"/>
-    <text x="470" y="492" text-anchor="middle" font-size="58" font-weight="900" fill="#0d4636">PDCA</text>
-    <text x="470" y="546" text-anchor="middle" font-size="28" font-weight="700" fill="#315f50">持续改善</text>
-    <path d="M310 250 C385 190 500 185 590 225" fill="none" stroke="#1f6547" stroke-width="4" marker-end="url(#arrowGreen)"/>
-    <path d="M725 330 C780 400 785 505 742 585" fill="none" stroke="#1f6547" stroke-width="4" marker-end="url(#arrowGreen)"/>
-    <path d="M635 765 C545 820 420 820 328 770" fill="none" stroke="#b99135" stroke-width="4" marker-end="url(#arrowGold)"/>
-    <path d="M215 650 C160 575 155 465 198 382" fill="none" stroke="#6d9279" stroke-width="4" marker-end="url(#arrowGreen)"/>
+    <path d="M470 280 A220 220 0 0 1 690 500" fill="none" stroke="url(#pGrad)" stroke-width="96" stroke-linecap="butt"/>
+    <path d="M690 500 A220 220 0 0 1 470 720" fill="none" stroke="url(#dGrad)" stroke-width="96" stroke-linecap="butt"/>
+    <path d="M470 720 A220 220 0 0 1 250 500" fill="none" stroke="url(#cGrad)" stroke-width="96" stroke-linecap="butt"/>
+    <path d="M250 500 A220 220 0 0 1 470 280" fill="none" stroke="url(#aGrad)" stroke-width="96" stroke-linecap="butt"/>
+
+    <!-- 中心白底缩小，避免遮挡四阶段图标 -->
+    <circle cx="470" cy="500" r="104" fill="#fff" stroke="#dfe8e2" stroke-width="2" stroke-dasharray="6 7" filter="url(#centerShadow)"/>
+    <text x="470" y="492" text-anchor="middle" font-size="52" font-weight="900" fill="#0d4636">PDCA</text>
+    <text x="470" y="542" text-anchor="middle" font-size="26" font-weight="700" fill="#315f50">持续改善</text>
+
+    <!-- 顺时针方向箭头：全部放在阶段文字之外 -->
+    <path d="M300 245 C395 170 535 165 650 225" fill="none" stroke="#1f6547" stroke-width="4" marker-end="url(#arrowGreen)"/>
+    <path d="M812 365 C865 440 870 545 815 635" fill="none" stroke="#1f6547" stroke-width="4" marker-end="url(#arrowGreen)"/>
+    <path d="M650 795 C545 855 400 855 292 795" fill="none" stroke="#b99135" stroke-width="4" marker-end="url(#arrowGold)"/>
+    <path d="M128 635 C78 555 78 440 128 355" fill="none" stroke="#6d9279" stroke-width="4" marker-end="url(#arrowGreen)"/>
+
+    <!-- 阶段字母与名称 -->
     <g text-anchor="middle">
-      <circle cx="740" cy="285" r="42" fill="#fff" stroke="#0f5038" stroke-width="2"/><text x="740" y="300" font-size="48" font-weight="900" fill="#0f5038">P</text><text x="740" y="352" font-size="25" font-weight="800" fill="#174e3b">Plan</text>
-      <circle cx="742" cy="712" r="42" fill="#fff" stroke="#5f9275" stroke-width="2"/><text x="742" y="727" font-size="48" font-weight="900" fill="#5f9275">D</text><text x="742" y="779" font-size="25" font-weight="800" fill="#547d67">Do</text>
-      <circle cx="182" cy="712" r="42" fill="#fff" stroke="#c89a32" stroke-width="2"/><text x="182" y="727" font-size="48" font-weight="900" fill="#b98b26">C</text><text x="182" y="779" font-size="25" font-weight="800" fill="#a57a1d">Check</text>
-      <circle cx="182" cy="285" r="42" fill="#fff" stroke="#7fa28a" stroke-width="2"/><text x="182" y="300" font-size="48" font-weight="900" fill="#6f917a">A</text><text x="182" y="352" font-size="25" font-weight="800" fill="#698976">Act</text>
+      <circle cx="748" cy="270" r="42" fill="#fff" stroke="#0f5038" stroke-width="2"/>
+      <text x="748" y="285" font-size="48" font-weight="900" fill="#0f5038">P</text>
+      <text x="748" y="332" font-size="25" font-weight="800" fill="#174e3b">Plan</text>
+
+      <circle cx="748" cy="725" r="42" fill="#fff" stroke="#5f9275" stroke-width="2"/>
+      <text x="748" y="740" font-size="48" font-weight="900" fill="#5f9275">D</text>
+      <text x="748" y="787" font-size="25" font-weight="800" fill="#547d67">Do</text>
+
+      <circle cx="178" cy="725" r="42" fill="#fff" stroke="#c89a32" stroke-width="2"/>
+      <text x="178" y="740" font-size="48" font-weight="900" fill="#b98b26">C</text>
+      <text x="178" y="787" font-size="25" font-weight="800" fill="#a57a1d">Check</text>
+
+      <circle cx="178" cy="270" r="42" fill="#fff" stroke="#7fa28a" stroke-width="2"/>
+      <text x="178" y="285" font-size="48" font-weight="900" fill="#6f917a">A</text>
+      <text x="178" y="332" font-size="25" font-weight="800" fill="#698976">Act</text>
     </g>
+
+    <!-- 四阶段图标：完整展示，不被中心白底覆盖 -->
     <g fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="570" y="340" width="52" height="62" rx="8"/><path d="M583 356h26M583 372h26M583 388h18"/><path d="M586 340v-8h20v8"/>
-      <circle cx="600" cy="618" r="14"/><path d="M582 632l-18 18M618 632l18 18M600 600v-24"/>
-      <rect x="316" y="590" width="54" height="62" rx="8"/><path d="M328 607h28M328 623h22"/><circle cx="363" cy="648" r="16"/><path d="M375 660l14 14"/>
-      <path d="M315 390h18v-28h18v28h18v-52h18v52"/><path d="M306 352l28-26 22 16 34-34"/>
+      <!-- P / Plan -->
+      <rect x="570" y="335" width="58" height="68" rx="8"/>
+      <path d="M584 352h30M584 370h30M584 388h21"/>
+      <path d="M589 335v-10h20v10"/>
+      <!-- D / Do -->
+      <circle cx="606" cy="618" r="16"/>
+      <path d="M586 633l-20 20M626 633l20 20M606 598v-26"/>
+      <circle cx="648" cy="605" r="12"/>
+      <path d="M648 586v-10M648 634v-10M629 605h-10M677 605h-10M635 592l-8-8M669 626l-8-8M669 592l8-8M635 626l-8 8"/>
+      <!-- C / Check -->
+      <rect x="307" y="590" width="58" height="68" rx="8"/>
+      <path d="M321 608h30M321 626h22"/>
+      <circle cx="362" cy="650" r="17"/>
+      <path d="M374 662l16 16"/>
+      <!-- A / Act -->
+      <path d="M310 394h20v-30h20v30h20v-56h20v56"/>
+      <path d="M302 354l31-29 24 17 38-37"/>
     </g>
   </g>
+
+  <!-- 右侧阶段定义 -->
   <g>
     <rect x="900" y="235" width="280" height="210" rx="28" fill="#f2f7f3" stroke="#d5e3da"/>
-    <circle cx="1040" cy="300" r="42" fill="#15513c"/><text x="1040" y="313" text-anchor="middle" font-size="38" font-weight="900" fill="#fff">P</text>
+    <circle cx="1040" cy="300" r="42" fill="#15513c"/>
+    <text x="1040" y="313" text-anchor="middle" font-size="38" font-weight="900" fill="#fff">P</text>
     <text x="1040" y="372" text-anchor="middle" font-size="34" font-weight="900" fill="#174e3b">P｜Plan</text>
     <text x="1040" y="416" text-anchor="middle" font-size="23" fill="#4f5b56">目标 · 任务 · 资源</text>
+
     <rect x="1210" y="235" width="280" height="210" rx="28" fill="#f2f7f3" stroke="#d5e3da"/>
-    <circle cx="1350" cy="300" r="42" fill="#6f987d"/><text x="1350" y="313" text-anchor="middle" font-size="38" font-weight="900" fill="#fff">D</text>
+    <circle cx="1350" cy="300" r="42" fill="#6f987d"/>
+    <text x="1350" y="313" text-anchor="middle" font-size="38" font-weight="900" fill="#fff">D</text>
     <text x="1350" y="372" text-anchor="middle" font-size="34" font-weight="900" fill="#557a65">D｜Do</text>
     <text x="1350" y="416" text-anchor="middle" font-size="23" fill="#4f5b56">按计划与标准执行</text>
+
     <rect x="900" y="475" width="280" height="210" rx="28" fill="#fff9ec" stroke="#ead7aa"/>
-    <circle cx="1040" cy="540" r="42" fill="#c59a37"/><text x="1040" y="553" text-anchor="middle" font-size="38" font-weight="900" fill="#fff">C</text>
+    <circle cx="1040" cy="540" r="42" fill="#c59a37"/>
+    <text x="1040" y="553" text-anchor="middle" font-size="38" font-weight="900" fill="#fff">C</text>
     <text x="1040" y="612" text-anchor="middle" font-size="34" font-weight="900" fill="#a67a1e">C｜Check</text>
     <text x="1040" y="656" text-anchor="middle" font-size="23" fill="#6f654f">检查过程与结果</text>
+
     <rect x="1210" y="475" width="280" height="210" rx="28" fill="#f2f7f3" stroke="#d5e3da"/>
-    <circle cx="1350" cy="540" r="42" fill="#608f70"/><text x="1350" y="553" text-anchor="middle" font-size="38" font-weight="900" fill="#fff">A</text>
+    <circle cx="1350" cy="540" r="42" fill="#608f70"/>
+    <text x="1350" y="553" text-anchor="middle" font-size="38" font-weight="900" fill="#fff">A</text>
     <text x="1350" y="612" text-anchor="middle" font-size="34" font-weight="900" fill="#557a65">A｜Act</text>
     <text x="1350" y="656" text-anchor="middle" font-size="23" fill="#4f5b56">纠正 · 改善 · 固化</text>
+
     <path d="M980 744 H1400" fill="none" stroke="#1f6547" stroke-width="5" marker-end="url(#arrowGreen)"/>
     <rect x="930" y="768" width="520" height="72" rx="36" fill="#fff" stroke="#b99135" stroke-width="2"/>
     <text x="1190" y="813" text-anchor="middle" font-size="27" font-weight="850" fill="#315f50">标准化 → 再进入下一轮提升</text>
