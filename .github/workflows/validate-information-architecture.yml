@@ -14,11 +14,13 @@ on:
       - "site-static-core-interactions-v1.js"
       - "site-navigation.js"
       - "scripts/materialize-static-core-pages.js"
+      - "scripts/enforce-six-core-static-source.js"
       - "scripts/prepare-static-source-rematerialization.js"
       - "scripts/normalize-static-source-output.js"
       - "scripts/remove-legacy-home-schema.js"
       - "scripts/refresh-static-core-search-index.js"
       - ".github/workflows/validate-information-architecture.yml"
+      - ".github/workflows/enforce-six-core-static-source.yml"
       - ".github/workflows/finalize-trust-commercial-records.yml"
   push:
     branches: [main]
@@ -33,11 +35,13 @@ on:
       - "site-static-core-interactions-v1.js"
       - "site-navigation.js"
       - "scripts/materialize-static-core-pages.js"
+      - "scripts/enforce-six-core-static-source.js"
       - "scripts/prepare-static-source-rematerialization.js"
       - "scripts/normalize-static-source-output.js"
       - "scripts/remove-legacy-home-schema.js"
       - "scripts/refresh-static-core-search-index.js"
       - ".github/workflows/validate-information-architecture.yml"
+      - ".github/workflows/enforce-six-core-static-source.yml"
       - ".github/workflows/finalize-trust-commercial-records.yml"
   workflow_dispatch:
 
@@ -53,11 +57,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
 
@@ -68,11 +72,12 @@ jobs:
           node --check site-static-core-interactions-v1.js
           node --check scripts/prepare-static-source-rematerialization.js
           node --check scripts/materialize-static-core-pages.js
+          node --check scripts/enforce-six-core-static-source.js
           node --check scripts/normalize-static-source-output.js
           node --check scripts/remove-legacy-home-schema.js
           node --check scripts/refresh-static-core-search-index.js
 
-      - name: Materialize static pages and search entries in validation workspace
+      - name: Materialize canonical static pages and search entries
         shell: bash
         run: |
           node scripts/prepare-static-source-rematerialization.js
@@ -80,19 +85,21 @@ jobs:
           node scripts/normalize-static-source-output.js
           node scripts/remove-legacy-home-schema.js
           node scripts/normalize-static-source-output.js
+          node scripts/enforce-six-core-static-source.js
           node scripts/refresh-static-core-search-index.js
 
       - name: Verify repeatable static generation
         shell: bash
         run: |
-          git diff -- index.html cooperation/index.html qilylean/daily-insights.html qilylean/site-search-index.json qilylean/site-data.json > /tmp/first.diff
+          git diff -- index.html cooperation/index.html qilylean/daily-insights.html qilylean/site-search-index.json qilylean/site-data.json site-information-architecture-v1.js scripts/materialize-static-core-pages.js scripts/hide-public-pricing.js > /tmp/first.diff
           node scripts/prepare-static-source-rematerialization.js
           node scripts/materialize-static-core-pages.js
           node scripts/normalize-static-source-output.js
           node scripts/remove-legacy-home-schema.js
           node scripts/normalize-static-source-output.js
+          node scripts/enforce-six-core-static-source.js
           node scripts/refresh-static-core-search-index.js
-          git diff -- index.html cooperation/index.html qilylean/daily-insights.html qilylean/site-search-index.json qilylean/site-data.json > /tmp/second.diff
+          git diff -- index.html cooperation/index.html qilylean/daily-insights.html qilylean/site-search-index.json qilylean/site-data.json site-information-architecture-v1.js scripts/materialize-static-core-pages.js scripts/hide-public-pricing.js > /tmp/second.diff
           if ! cmp /tmp/first.diff /tmp/second.diff; then
             echo "Static generation changed on the second run:" >&2
             diff -u /tmp/first.diff /tmp/second.diff || true
@@ -102,12 +109,13 @@ jobs:
       - name: Validate static information hierarchy contract
         shell: bash
         run: |
+          set -euo pipefail
           test -s site-information-architecture-v1.css
           test -s site-information-architecture-v1.js
           test -s site-static-core-interactions-v1.js
           test -s qilylean/site-search-index.json
           grep -q 'qilyInformationArchitectureStylesheet' site-navigation.js
-          grep -q '三类核心业务' site-information-architecture-v1.js
+          grep -q '六大核心业务' site-information-architecture-v1.js
           grep -q '专业标签与能力边界' site-information-architecture-v1.js
           grep -q '职业经历摘要与口径说明' site-information-architecture-v1.js
           grep -q '项目结果如何阅读' site-information-architecture-v1.js
@@ -115,35 +123,62 @@ jobs:
           grep -q '知识资产的定位与边界' site-information-architecture-v1.js
           grep -q '不等同于QilyLean品牌成立后的独立商业订单' site-information-architecture-v1.js
           grep -q '正式项目以双方签署合同为准' site-information-architecture-v1.js
+
           grep -q 'QILY-HOME-STATIC-COMMERCIAL:START' index.html
-          grep -q '把复杂制造问题，转化为可验证的交付结果' index.html
+          grep -q '两大业务主线｜六大核心业务' index.html
           grep -q '新工厂／新产线规划' index.html
           grep -q '精益改善项目交付' index.html
-          grep -q '目视化项目设计与实施' index.html
-          grep -q 'qilyInformationArchitectureStylesheet' index.html
-          grep -q 'qilyStaticCoreInteractions' index.html
+          grep -q '目视化项目设计与交付' index.html
+          grep -q '数字化工厂' index.html
+          grep -q 'APP软件开发' index.html
+          grep -q '官网建设' index.html
+          ! grep -q '三类核心业务' index.html
+          ! grep -q '三类核心服务' index.html
+          ! grep -q '查看三大核心业务与交付' index.html
+
           grep -q 'QILY-COOPERATION-STATIC-SUMMARY:START' cooperation/index.html
+          grep -q '<h2>六大核心业务</h2>' cooperation/index.html
+          grep -q 'data-qily-six-core-services="v1"' cooperation/index.html
+          grep -q '<h2>六类项目合作边界</h2>' cooperation/index.html
+          grep -q '01｜新工厂／新产线规划' cooperation/index.html
+          grep -q '02｜精益改善项目' cooperation/index.html
+          grep -q '03｜目视化项目' cooperation/index.html
+          grep -q '04｜数字化工厂' cooperation/index.html
+          grep -q '05｜APP软件开发' cooperation/index.html
+          grep -q '06｜官网建设' cooperation/index.html
+          grep -q 'data-qily-six-service-boundary="v1"' cooperation/index.html
+          grep -q '合作启动路径与公开报价边界' cooperation/index.html
           grep -q '分阶段付款' cooperation/index.html
           grep -q '验收边界' cooperation/index.html
+          ! grep -q '<h2>三大核心业务</h2>' cooperation/index.html
+          ! grep -q '<h2>四类项目合作边界</h2>' cooperation/index.html
+
           grep -q 'QILY-ARCHIVE-DISCLOSURE:START' qilylean/daily-insights.html
           grep -q 'QILY-ARCHIVE-STATIC-SCHEMA:START' qilylean/daily-insights.html
           grep -q '不等同于网页首次公开发布日期' qilylean/daily-insights.html
           ! grep -Eq '超千万元累计(项目)?改善收益' index.html cooperation/index.html
           ! grep -q 'class="group-label">职能标签' index.html
           ! grep -q '<ul class="tags">' index.html
+
           node - <<'NODE'
           const fs = require('fs');
           const home = fs.readFileSync('index.html','utf8');
+          const cooperationHtml = fs.readFileSync('cooperation/index.html','utf8');
           const schemas = Array.from(home.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)).map((match) => {
             try { return JSON.parse(match[1]); } catch (error) { return null; }
           }).filter(Boolean);
           if (schemas.some((schema) => schema['@type'] === 'Person' && !Array.isArray(schema['@graph']))) throw new Error('Legacy standalone Person schema remains');
+          const graph = schemas.find((schema) => Array.isArray(schema['@graph']));
+          const service = graph && graph['@graph'].find((item) => item['@type'] === 'Service');
+          if (!service || !Array.isArray(service.serviceType) || service.serviceType.length !== 6) throw new Error('Homepage JSON-LD serviceType is not six-core canonical');
+          if (!cooperationHtml.includes('APP软件开发') || !cooperationHtml.includes('官网建设')) throw new Error('Cooperation static HTML is not six-core canonical');
+
           const search = JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
           const root = search.entries.find((entry) => entry.url === '/');
           const cooperation = search.entries.find((entry) => entry.url === '/cooperation/');
           const daily = search.entries.find((entry) => entry.url === '/qilylean/daily-insights.html');
-          if (!root || !root.text.includes('把复杂制造问题，转化为可验证的交付结果') || root.text.includes('职能标签')) throw new Error('Homepage search entry is stale');
-          if (!cooperation || !cooperation.text.includes('分阶段付款') || cooperation.text.includes('超千万元累计项目改善收益')) throw new Error('Cooperation search entry is stale');
+          if (!root || !root.text.includes('两大业务主线') || !root.text.includes('APP软件开发') || root.text.includes('三类核心业务') || root.text.includes('职能标签')) throw new Error('Homepage search entry is stale');
+          if (!cooperation || !cooperation.text.includes('六大核心业务') || !cooperation.text.includes('04｜数字化工厂') || !cooperation.text.includes('分阶段付款') || cooperation.text.includes('四类项目合作边界')) throw new Error('Cooperation search entry is stale');
           if (!daily || !daily.text.includes('不等同于网页首次公开发布日期')) throw new Error('Daily archive search entry is stale');
           NODE
 
