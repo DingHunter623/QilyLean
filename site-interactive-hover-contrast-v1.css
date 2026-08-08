@@ -349,3 +349,96 @@ html body :is(
   visibility:visible!important;
   text-shadow:none!important;
 }
+
+/* QILY-SITE-SEARCH-RESULT-HOVER-CONTRAST-20260808
+ * 本站搜索结果属于整块可点击卡片：Hover / Focus / Active 必须连同标题、路径、摘要、标签一起切换颜色。
+ * 覆盖旧版site-link-standard-v1.css仅改变父级背景、子元素仍保留深青字的冲突，禁止再次出现深底深字。
+ */
+html body a.qily-search-result{
+  position:relative!important;
+  isolation:isolate!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+
+html body a.qily-search-result:is(:hover,:focus-visible){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  background-image:none!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+  box-shadow:0 10px 24px rgba(202,161,95,.30)!important;
+  outline:3px solid rgba(255,227,155,.42)!important;
+  outline-offset:2px!important;
+  transform:translateY(-2px)!important;
+}
+
+html body a.qily-search-result:is(:hover,:focus-visible) :is(
+  .qily-search-meta,
+  strong,
+  .qily-search-path,
+  .qily-search-snippet,
+  .qily-search-open
+){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  text-decoration-color:#17322d!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+
+html body a.qily-search-result:is(:hover,:focus-visible) .qily-search-rank{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#fff8df!important;
+  border:1px solid rgba(23,50,45,.24)!important;
+  opacity:1!important;
+}
+
+html body a.qily-search-result:active{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#073c47!important;
+  background-image:none!important;
+  border-color:#073c47!important;
+  text-decoration-color:#ffe39b!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  outline:none!important;
+  transform:translateY(0) scale(.99)!important;
+}
+
+html body a.qily-search-result:active :is(
+  .qily-search-meta,
+  strong,
+  .qily-search-path,
+  .qily-search-snippet,
+  .qily-search-open
+){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  text-decoration-color:#ffe39b!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+
+html body a.qily-search-result:active .qily-search-rank{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  border-color:#ffe39b!important;
+}
