@@ -5,7 +5,8 @@
   var apps={
     times26001:{
       name:'Times26001',
-      url:'https://qilylean.com/tools/times26001/',
+      url:'https://qilylean.com/tools/times26001/#android-download',
+      download:'https://qilylean.com/Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=3922dff0',
       qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'
     },
     qilyleanHome:{
@@ -34,10 +35,10 @@
     dialog=document.createElement('dialog');
     dialog.id='qilyAppShareDialog';dialog.className='app-share-dialog';
     dialog.innerHTML='<div class="app-share-dialog-card">'+
-      '<div class="app-share-dialog-head"><div><h3 id="qilyAppShareTitle">APP页面分享</h3><p>扫码打开官方产品页；正式应用市场上线后以对应商店渠道更新为主。</p></div><button type="button" class="app-share-close" aria-label="关闭">×</button></div>'+
+      '<div class="app-share-dialog-head"><div><h3 id="qilyAppShareTitle">APP下载分享</h3><p>扫码进入官方下载区；页面内提供可安装APK。正式应用市场上线后，以对应商店渠道更新为主。</p></div><button type="button" class="app-share-close" aria-label="关闭">×</button></div>'+
       '<div class="app-share-qr-wrap"><img class="app-share-qr" id="qilyAppShareQr" alt="APP页面二维码"></div>'+
       '<p class="app-share-url" id="qilyAppShareUrl"></p>'+
-      '<div class="app-share-dialog-actions"><button type="button" id="qilyAppShareNative">分享页面链接</button><button type="button" class="secondary" id="qilyAppShareCopy">复制页面链接</button></div>'+
+      '<div class="app-share-dialog-actions"><button type="button" id="qilyAppShareDownload">直接下载 APK</button><button type="button" id="qilyAppShareNative">分享下载页</button><button type="button" class="secondary" id="qilyAppShareCopy">复制下载页链接</button></div>'+
       '</div>';
     document.body.appendChild(dialog);
     dialog.querySelector('.app-share-close').addEventListener('click',function(){dialog.close();});
@@ -50,21 +51,24 @@
     var app=apps[key];if(!app)return;
     var dialog=ensureDialog();
     dialog.dataset.app=key;
-    document.getElementById('qilyAppShareTitle').textContent=app.name+'｜扫码打开官方页面';
-    var img=document.getElementById('qilyAppShareQr');img.src=app.qr;img.alt=app.name+'官方页面二维码';
+    document.getElementById('qilyAppShareTitle').textContent=app.name+'｜扫码进入下载页';
+    var img=document.getElementById('qilyAppShareQr');img.src=app.qr;img.alt=app.name+'官方下载页二维码';
     document.getElementById('qilyAppShareUrl').textContent=app.url;
+    var downloadBtn=document.getElementById('qilyAppShareDownload');
     var nativeBtn=document.getElementById('qilyAppShareNative');
     var copyBtn=document.getElementById('qilyAppShareCopy');
+    if(app.download){downloadBtn.hidden=false;downloadBtn.onclick=function(){window.location.href=app.download;};}
+    else{downloadBtn.hidden=true;downloadBtn.onclick=null;}
     nativeBtn.onclick=function(){shareLink(key);};
-    copyBtn.onclick=function(){copy(app.url).then(function(){toast('页面链接已复制');});};
+    copyBtn.onclick=function(){copy(app.url).then(function(){toast('下载页链接已复制');});};
     if(typeof dialog.showModal==='function')dialog.showModal();else dialog.setAttribute('open','');
   }
 
   function shareLink(key){
     var app=apps[key];if(!app)return;
-    var data={title:app.name,text:app.name+' 官方产品页',url:app.url};
-    if(navigator.share){navigator.share(data).catch(function(err){if(err&&err.name!=='AbortError')copy(app.url).then(function(){toast('页面链接已复制');});});}
-    else{copy(app.url).then(function(){toast('页面链接已复制');});}
+    var data={title:app.name+' Android 下载',text:app.name+' 官方下载页',url:app.url};
+    if(navigator.share){navigator.share(data).catch(function(err){if(err&&err.name!=='AbortError')copy(app.url).then(function(){toast('下载页链接已复制');});});}
+    else{copy(app.url).then(function(){toast('下载页链接已复制');});}
   }
 
   function setMeta(selector,value){
@@ -109,12 +113,12 @@
       if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、数据复制、按秒倒计时、闹钟、北京时间、万年历、农历、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。';
       var result=timesCard.querySelector('.module-result');
       if(result)result.textContent='应用市场候选：v1.1.6 / versionCode 9 / API 36｜IE分段测时｜累计总时长｜数据复制｜倒计时与闹钟提醒';
-      timesCard.querySelectorAll('[data-app-share-link="times26001"]').forEach(function(btn){btn.textContent='分享产品页链接';});
+      timesCard.querySelectorAll('[data-app-share-link="times26001"]').forEach(function(btn){btn.textContent='分享下载页';});
     }
 
     replaceLeafText(section,'Times26001｜思大时间管理','Times26001');
     replaceLeafText(section,'思大时间管理','Times26001');
-    replaceLeafText(section,'分享下载链接','分享产品页链接');
+    replaceLeafText(section,'分享产品页链接','分享下载页');
   }
 
   function boot(){
