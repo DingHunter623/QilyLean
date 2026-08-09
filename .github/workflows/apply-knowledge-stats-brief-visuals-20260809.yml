@@ -41,12 +41,12 @@ jobs:
           PY
       - name: Commit production changes
         run: |
-          if git diff --quiet; then
+          if git diff --quiet && [ -z "$(git ls-files --others --exclude-standard)" ]; then
             echo 'No changes to commit.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add scripts/build-site-metadata.js knowledge/index.html qilylean/daily/2026-08-10.html qilylean/daily/assets/2026-08-10-0*.svg index.html qilylean/site-data.json sitemap.xml sitemap-qilylean.xml 2>/dev/null || true
+          git add -A
           git commit -m '知识分享整改：统计卡可跳转并为8月10日简报铺设场景简图 [skip ci]'
           git push
