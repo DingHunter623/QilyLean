@@ -39,16 +39,16 @@ function upsertTitle(html,value){
 const HOME_BLOCK=`<!-- QILY-HOME-STATIC-COMMERCIAL:START -->
 <section class="qily-ia-section" id="qily-core-services" data-qily-static-source="home-core-v2" data-qily-six-core-services="v1">
   <div class="qily-ia-inner">
-    <div class="qily-ia-heading"><span class="qily-ia-kicker">CORE BUSINESS｜两大业务主线</span><h2>两大业务主线｜六大核心业务</h2><p>制造工程交付解决工厂、产线与现场运营问题；数智化产品交付把制造业务逻辑进一步沉淀为数字化系统、软件工具与专业互联网载体。六项业务统一遵循问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化与项目验收。</p></div>
+    <div class="qily-ia-heading"><span class="qily-ia-kicker">COOPERATION CAPABILITIES｜核心项目交付 + 数智化技术能力</span><h2>六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力</h2><p>前三类核心项目交付直接解决工厂、产线与现场运营问题；后三项数智化产品与技术能力把制造业务逻辑进一步沉淀为数字化系统、软件工具与专业互联网载体。六类项目合作能力统一遵循问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化与项目验收。</p></div>
     <div class="qily-ia-grid">
-      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>制造工程交付｜01</small><h3>新工厂／新产线规划</h3><p>从产品、工艺、产能、设备、物流、公辅、品质和扩展边界出发，形成可评审、可实施的规划资产。</p><div class="qily-ia-result">产能模型、Layout、物流与库位、公辅接口、实施路线图</div></article>
-      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>制造工程交付｜02</small><h3>精益改善项目交付</h3><p>围绕PQCD与交付瓶颈，以VSM、标准工时、线平衡、SMED、OEE、质量防错及计划实绩闭环开展诊断、Pilot与标准化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>
-      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>制造工程交付｜03</small><h3>目视化项目设计与交付</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、视觉标准、设计图、材料清单、打样、实施与验收</div></article>
-      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品交付｜04</small><h3>数字化工厂</h3><p>以业务流程和可信主数据为底座，规划ERP／MES／APS、设备数据、生产透明化、管理看板与实施路线。</p><div class="qily-ia-result">数字化蓝图、数据口径、功能／接口需求、看板原型、Pilot与验收机制</div></article>
-      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品交付｜05</small><h3>APP软件开发</h3><p>面向IE测时、现场采集、异常管理、移动看板、提醒及轻量化管理场景，完成需求、原型、开发、测试、发布与迭代。</p><div class="qily-ia-result">需求清单、交互原型、可运行版本、测试记录、安装／发布包与版本记录</div></article>
-      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品交付｜06</small><h3>官网建设</h3><p>围绕品牌定位、信息架构、可信证据、内容体系、SEO、咨询转化、响应式适配及持续运维建设专业官网。</p><div class="qily-ia-result">信息架构、页面模板、响应式官网、SEO基础、咨询入口、部署与运维规范</div></article>
+      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>核心项目交付｜01</small><h3>新工厂／新产线规划</h3><p>从产品、工艺、产能、设备、物流、公辅、品质和扩展边界出发，形成可评审、可实施的规划资产。</p><div class="qily-ia-result">产能模型、Layout、物流与库位、公辅接口、实施路线图</div></article>
+      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>核心项目交付｜02</small><h3>精益改善项目交付</h3><p>围绕PQCD与交付瓶颈，以VSM、标准工时、线平衡、SMED、OEE、质量防错及计划实绩闭环开展诊断、Pilot与标准化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>
+      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>核心项目交付｜03</small><h3>目视化项目设计与交付</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、视觉标准、设计图、材料清单、打样、实施与验收</div></article>
+      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品与技术能力｜04</small><h3>数字化工厂</h3><p>以业务流程和可信主数据为底座，规划ERP／MES／APS、设备数据、生产透明化、管理看板与实施路线。</p><div class="qily-ia-result">数字化蓝图、数据口径、功能／接口需求、看板原型、Pilot与验收机制</div></article>
+      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品与技术能力｜05</small><h3>APP软件开发</h3><p>面向IE测时、现场采集、异常管理、移动看板、提醒及轻量化管理场景，完成需求、原型、开发、测试、发布与迭代。</p><div class="qily-ia-result">需求清单、交互原型、可运行版本、测试记录、安装／发布包与版本记录</div></article>
+      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品与技术能力｜06</small><h3>官网建设</h3><p>围绕品牌定位、信息架构、可信证据、内容体系、SEO、咨询转化、响应式适配及持续运维建设专业官网。</p><div class="qily-ia-result">信息架构、页面模板、响应式官网、SEO基础、咨询入口、部署与运维规范</div></article>
     </div>
-    <div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#services">查看六大核心业务与交付边界</a></div>
+    <div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#services">查看六类项目合作能力与交付边界</a></div>
   </div>
 </section>
 <section class="qily-ia-section qily-ia-alt" id="qily-home-proof" data-qily-static-source="home-proof-v2">
@@ -57,7 +57,7 @@ const HOME_BLOCK=`<!-- QILY-HOME-STATIC-COMMERCIAL:START -->
     <div class="qily-ia-delivery-summary">
       <article><strong>专业基础</strong><span>制造工程、工业工程、精益改善与数智化实践；详细年限和岗位归入履历主线。</span></article>
       <article><strong>项目证据</strong><span>代表项目按已核定、已验证、阶段估算和经验陈述分级展示。</span></article>
-      <article><strong>交易机制</strong><span>六大核心业务均明确范围、交付物与验收边界；现有合同范本与专项报价按具体业务成熟度及项目范围配置。</span></article>
+      <article><strong>交易机制</strong><span>六类项目合作能力均明确范围、交付物与验收边界；现有合同范本与专项报价按具体业务成熟度及项目范围配置。</span></article>
       <article><strong>责任边界</strong><span>网页用于沟通与能力说明，正式范围、费用、税费、周期和验收以书面方案与合同为准。</span></article>
     </div>
     <div class="qily-ia-actions"><a class="qily-ia-button primary" href="/projects/">代表项目</a><a class="qily-ia-button" href="/trust/">诚信与责任边界</a><a class="qily-ia-button" href="/projects/qilylean-commercial-deliveries/">商业交付档案</a></div>
@@ -65,11 +65,11 @@ const HOME_BLOCK=`<!-- QILY-HOME-STATIC-COMMERCIAL:START -->
 </section>
 <!-- QILY-HOME-STATIC-COMMERCIAL:END -->`;
 
-const COOP_SERVICES=`<section class="module-section" id="services"><div class="module-inner"><div class="module-heading"><h2>六大核心业务</h2><p>六项业务形成“制造工程交付 + 数智化产品交付”两条主线；不销售泛化概念，以企业真实问题、项目范围、标准交付物和验收口径定义合作。</p></div><div class="module-grid three" data-qily-six-core-services="v1">
-      <article class="module-card service-card"><a class="service-heading-link" href="/cooperation/factory-planning/" aria-label="进入新工厂／新产线规划独立业务页"><span class="service-number">01</span><small>Factory Planning</small><h3>新工厂／新产线规划</h3></a><p>从产品组合、需求预测和工艺路线出发，建立产能、设备、人力、面积、物流、公辅、安全与扩展边界，避免“先摆设备、后反复搬迁”。</p><div class="scope-list"><span>产能与资源模型</span><span>Factory Layout</span><span>人流物流与仓储</span><span>设备及公辅接口</span><span>分期建设与扩展</span><span>投产爬坡计划</span></div><div class="module-result">标准交付：设计输入、产能模型、Layout方案、物流方案、设备接口清单、评审纪要与实施路线图。</div><div class="service-contract"><div class="service-contract-meta"><strong>匹配合同范本</strong><span>制造工程交付</span></div><a class="service-contract-link" href="/cooperation/factory-planning/">查看独立业务页与合同范本</a></div></article>
-      <article class="module-card service-card"><a class="service-heading-link" href="/cooperation/lean-improvement/" aria-label="进入精益改善项目交付独立业务页"><span class="service-number">02</span><small>Lean Improvement</small><h3>精益改善项目交付</h3></a><p>以质量为贯穿主线，围绕PQCD与交付瓶颈，运用IE、VSM、单件流、SMED、OEE、线平衡和Poka-Yoke开展诊断与试点；任何效率、成本和交付改善，均以合格产出、过程稳定和客户风险受控为验收前提。</p><div class="scope-list"><span>标准工时／UPPH</span><span>VSM／LT／WIP</span><span>SMED／OEE／TPM</span><span>线平衡／人机配置</span><span>质量与防错</span><span>ERP/MES基础数据</span></div><div class="module-result">标准交付：质量与效率基线、问题清单、未来态方案、Pilot验证、标准作业、质量防错、培训稽核与横向复制计划。</div><div class="service-contract"><div class="service-contract-meta"><strong>匹配合同范本</strong><span>制造工程交付</span></div><a class="service-contract-link" href="/cooperation/lean-improvement/">查看独立业务页与合同范本</a></div></article>
-      <article class="module-card service-card"><a class="service-heading-link" href="/cooperation/visual-management/" aria-label="进入目视化项目设计与交付独立业务页"><span class="service-number">03</span><small>Visual Management Delivery</small><h3>目视化项目设计与交付</h3></a><p>把区域、状态、标准、责任、异常和节奏转化为现场共同语言，贯通6S、安全、质量、设备、物流、仓储、工位与DMS管理。</p><div class="scope-list"><span>现场勘查与诊断</span><span>目视化标准设计</span><span>清单预算与打样</span><span>制作施工协同</span><span>安装效果校核</span><span>验收维护机制</span></div><div class="module-result">标准交付：区域方案、VI与颜色语义、图纸尺寸、材料清单、预算、样板确认、施工协同与验收标准。</div><div class="service-contract"><div class="service-contract-meta"><strong>匹配合同范本</strong><span>制造工程交付</span></div><a class="service-contract-link" href="/cooperation/visual-management/">查看独立业务页与合同范本</a></div></article>
-      <article class="module-card service-card" data-qily-service-key="digital-factory"><a class="service-heading-link" href="/projects/digital-factory/" aria-label="查看数字化工厂规划与数据治理项目证据"><span class="service-number">04</span><small>Digital Factory</small><h3>数字化工厂</h3></a><p>以业务流程和主数据为底座，打通订单、计划、工艺、工时、设备、质量、库存与现场执行，围绕ERP／MES／APS、设备数据、生产透明化和管理看板形成可实施的数字化蓝图。</p><div class="scope-list"><span>业务流程／数字化蓝图</span><span>ERP／MES／APS需求</span><span>BOM／工艺／工时主数据</span><span>设备数据／OEE</span><span>生产看板／DMS</span><span>Pilot／上线验收</span></div><div class="module-result">标准交付：现状诊断、数字化蓝图、数据字典与口径、功能需求、接口清单、看板原型、实施路线、Pilot验证与验收机制。</div><div class="service-contract"><div class="service-contract-meta"><strong>相关成果证据</strong><span>数智化产品交付</span></div><a class="service-contract-link" href="/projects/digital-factory/">查看数字化工厂项目证据</a></div></article>
+const COOP_SERVICES=`<section class="module-section" id="services"><div class="module-inner"><div class="module-heading"><h2>六类项目合作能力</h2><p>六类能力采用“3+3”结构：前三类为核心项目交付，后三项为数智化产品与技术能力；不销售泛化概念，以企业真实问题、项目范围、标准交付物和验收口径定义合作。</p></div><div class="module-grid three" data-qily-six-core-services="v1">
+      <article class="module-card service-card"><a class="service-heading-link" href="/cooperation/factory-planning/" aria-label="进入新工厂／新产线规划独立业务页"><span class="service-number">01</span><small>Factory Planning</small><h3>新工厂／新产线规划</h3></a><p>从产品组合、需求预测和工艺路线出发，建立产能、设备、人力、面积、物流、公辅、安全与扩展边界，避免“先摆设备、后反复搬迁”。</p><div class="scope-list"><span>产能与资源模型</span><span>Factory Layout</span><span>人流物流与仓储</span><span>设备及公辅接口</span><span>分期建设与扩展</span><span>投产爬坡计划</span></div><div class="module-result">标准交付：设计输入、产能模型、Layout方案、物流方案、设备接口清单、评审纪要与实施路线图。</div><div class="service-contract"><div class="service-contract-meta"><strong>匹配合同范本</strong><span>核心项目交付</span></div><a class="service-contract-link" href="/cooperation/factory-planning/">查看独立业务页与合同范本</a></div></article>
+      <article class="module-card service-card"><a class="service-heading-link" href="/cooperation/lean-improvement/" aria-label="进入精益改善项目交付独立业务页"><span class="service-number">02</span><small>Lean Improvement</small><h3>精益改善项目交付</h3></a><p>以质量为贯穿主线，围绕PQCD与交付瓶颈，运用IE、VSM、单件流、SMED、OEE、线平衡和Poka-Yoke开展诊断与试点；任何效率、成本和交付改善，均以合格产出、过程稳定和客户风险受控为验收前提。</p><div class="scope-list"><span>标准工时／UPPH</span><span>VSM／LT／WIP</span><span>SMED／OEE／TPM</span><span>线平衡／人机配置</span><span>质量与防错</span><span>ERP/MES基础数据</span></div><div class="module-result">标准交付：质量与效率基线、问题清单、未来态方案、Pilot验证、标准作业、质量防错、培训稽核与横向复制计划。</div><div class="service-contract"><div class="service-contract-meta"><strong>匹配合同范本</strong><span>核心项目交付</span></div><a class="service-contract-link" href="/cooperation/lean-improvement/">查看独立业务页与合同范本</a></div></article>
+      <article class="module-card service-card"><a class="service-heading-link" href="/cooperation/visual-management/" aria-label="进入目视化项目设计与交付独立业务页"><span class="service-number">03</span><small>Visual Management Delivery</small><h3>目视化项目设计与交付</h3></a><p>把区域、状态、标准、责任、异常和节奏转化为现场共同语言，贯通6S、安全、质量、设备、物流、仓储、工位与DMS管理。</p><div class="scope-list"><span>现场勘查与诊断</span><span>目视化标准设计</span><span>清单预算与打样</span><span>制作施工协同</span><span>安装效果校核</span><span>验收维护机制</span></div><div class="module-result">标准交付：区域方案、VI与颜色语义、图纸尺寸、材料清单、预算、样板确认、施工协同与验收标准。</div><div class="service-contract"><div class="service-contract-meta"><strong>匹配合同范本</strong><span>核心项目交付</span></div><a class="service-contract-link" href="/cooperation/visual-management/">查看独立业务页与合同范本</a></div></article>
+      <article class="module-card service-card" data-qily-service-key="digital-factory"><a class="service-heading-link" href="/projects/digital-factory/" aria-label="查看数字化工厂规划与数据治理项目证据"><span class="service-number">04</span><small>Digital Factory</small><h3>数字化工厂</h3></a><p>以业务流程和主数据为底座，打通订单、计划、工艺、工时、设备、质量、库存与现场执行，围绕ERP／MES／APS、设备数据、生产透明化和管理看板形成可实施的数字化蓝图。</p><div class="scope-list"><span>业务流程／数字化蓝图</span><span>ERP／MES／APS需求</span><span>BOM／工艺／工时主数据</span><span>设备数据／OEE</span><span>生产看板／DMS</span><span>Pilot／上线验收</span></div><div class="module-result">标准交付：现状诊断、数字化蓝图、数据字典与口径、功能需求、接口清单、看板原型、实施路线、Pilot验证与验收机制。</div><div class="service-contract"><div class="service-contract-meta"><strong>相关成果证据</strong><span>数智化产品与技术能力</span></div><a class="service-contract-link" href="/projects/digital-factory/">查看数字化工厂项目证据</a></div></article>
       <article class="module-card service-card" data-qily-service-key="app-development"><a class="service-heading-link" href="/tools/times26001/" aria-label="查看APP软件开发实证作品Times26001"><span class="service-number">05</span><small>APP Software Development</small><h3>APP软件开发</h3></a><p>围绕IE测时、现场采集、异常记录、移动看板、提醒与轻量化管理等制造场景，把重复的纸面或Excel操作转化为可运行的软件工具；从需求、原型、开发、测试到安装包、发布与版本迭代形成闭环。</p><div class="scope-list"><span>需求场景／产品原型</span><span>Android／iOS／Web</span><span>数据录入／统计分析</span><span>通知／权限／离线能力</span><span>测试／打包／发布</span><span>版本迭代／使用支持</span></div><div class="module-result">标准交付：需求清单、交互原型、可运行版本、测试记录、安装包／发布包、使用说明、版本清单与验收记录。</div><div class="service-contract"><div class="service-contract-meta"><strong>当前实证作品</strong><span>Times26001</span></div><a class="service-contract-link" href="/tools/times26001/">查看APP软件开发实证</a></div></article>
       <article class="module-card service-card" data-qily-service-key="website-development"><a class="service-heading-link" href="/" aria-label="查看QilyLean官网建设实证"><span class="service-number">06</span><small>Website Development</small><h3>官网建设</h3></a><p>不把官网当作单纯页面装修，而是围绕品牌定位、信息架构、可信证据、内容体系、SEO、咨询入口、移动适配、性能与持续运维，建设能够解释能力、承接咨询并沉淀专业资产的企业或个人专业官网。</p><div class="scope-list"><span>品牌定位／信息架构</span><span>UI／响应式页面</span><span>项目证据／内容体系</span><span>SEO／结构化数据</span><span>表单／邮箱／分享入口</span><span>域名／部署／持续运维</span></div><div class="module-result">标准交付：信息架构、页面模板、响应式官网、SEO基础、咨询入口、证据链、部署配置、运维规范与版本记录。</div><div class="service-contract"><div class="service-contract-meta"><strong>当前实证作品</strong><span>QilyLean官网</span></div><a class="service-contract-link" href="/">查看QilyLean官网建设实证</a></div></article>
     </div></div></section>`;
@@ -90,9 +90,9 @@ const BOUNDARY=`<style id="qilySixBoundaryGrid20260808">
 function homeSchema(){
   return `<!-- QILY-HOME-STATIC-SCHEMA:START -->\n<script type="application/ld+json">${JSON.stringify({
     '@context':'https://schema.org','@graph':[
-      {'@type':'WebSite',name:'QilyLean｜启力精益',url:'https://qilylean.com/',description:'围绕制造工程交付与数智化产品交付，提供新工厂／新产线规划、精益改善、目视化、数字化工厂、APP软件开发与官网建设六大核心业务。'},
+      {'@type':'WebSite',name:'QilyLean｜启力精益',url:'https://qilylean.com/',description:'围绕制造工程交付与数智化产品交付，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。'},
       {'@type':'Person',name:'丁启利',url:'https://qilylean.com/',jobTitle:'制造工程、精益改善与数智化项目实践者',knowsAbout:['新工厂规划','精益改善','工业工程','VSM','标准工时','OEE','SMED','目视化管理','ERP/MES/APS','APP软件开发','官网建设']},
-      {'@type':'Service',name:'QilyLean六大核心业务项目交付',provider:{'@type':'Person',name:'丁启利'},areaServed:'中国',serviceType:['新工厂／新产线规划','精益改善项目交付','目视化项目设计与交付','数字化工厂','APP软件开发','官网建设']}
+      {'@type':'Service',name:'QilyLean六类项目合作能力',provider:{'@type':'Person',name:'丁启利'},areaServed:'中国',serviceType:['新工厂／新产线规划','精益改善项目交付','目视化项目设计与交付','数字化工厂','APP软件开发','官网建设']}
     ]
   })}</script>\n<!-- QILY-HOME-STATIC-SCHEMA:END -->`;
 }
@@ -101,24 +101,24 @@ function patchHome(html){
   html=replaceMarker(html,'QILY-HOME-STATIC-COMMERCIAL:START','QILY-HOME-STATIC-COMMERCIAL:END',HOME_BLOCK);
   html=replaceMarker(html,'QILY-HOME-STATIC-SCHEMA:START','QILY-HOME-STATIC-SCHEMA:END',homeSchema());
   html=upsertTitle(html,'QilyLean｜启力精益｜精益生产、工程改善与数智工厂');
-  html=upsertNamedMeta(html,'description','QilyLean｜启力精益围绕制造工程交付与数智化产品交付，提供新工厂／新产线规划、精益改善、目视化项目、数字化工厂、APP软件开发与官网建设六大核心业务。');
-  html=upsertPropertyMeta(html,'og:title','QilyLean｜启力精益｜六大核心业务项目交付');
-  html=upsertPropertyMeta(html,'og:description','两大业务主线，六大核心业务——从制造现场改善，到数智化产品交付。');
-  html=upsertNamedMeta(html,'twitter:description','QilyLean围绕制造工程交付与数智化产品交付，形成新工厂规划、精益改善、目视化、数字化工厂、APP软件开发与官网建设六大核心业务。');
+  html=upsertNamedMeta(html,'description','QilyLean｜启力精益围绕制造工程交付与数智化产品交付，提供新工厂／新产线规划、精益改善、目视化项目、数字化工厂、APP软件开发与官网建设六类项目合作能力。');
+  html=upsertPropertyMeta(html,'og:title','QilyLean｜启力精益｜六类项目合作能力');
+  html=upsertPropertyMeta(html,'og:description','三类核心项目交付 + 三项数智化产品与技术能力，合计六类项目合作能力。');
+  html=upsertNamedMeta(html,'twitter:description','QilyLean形成三类核心项目交付（新工厂规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。');
   html=html
-    .replace(/制造改善项目交付｜新工厂规划｜精益改善｜目视化实施/g,'制造工程交付｜数智化产品交付｜六大核心业务')
-    .replace(/QilyLean｜启力精益由丁启利发起，依托20年制造工程与精益改善实践，为制造企业提供三类核心服务。项目以现场诊断、范围确认、方案设计、Pilot验证、标准固化和验收闭环推进；具体交付物、周期、费用、分阶段付款比例与验收条件以对应合同及正式约定为准。/g,'QilyLean｜启力精益由丁启利发起，围绕“制造工程交付”与“数智化产品交付”两条主线形成六大核心业务。项目以问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化和验收闭环推进；具体范围、周期、费用、交付物及验收条件以书面方案与正式合同为准。')
-    .replace(/查看三大核心业务与交付/g,'查看六大核心业务与交付')
-    .replace(/PLATFORM EXTENSION｜三大项目之外的平台扩展价值/g,'PLATFORM EXTENSION｜六大核心业务之外的平台扩展价值')
-    .replace(/不与三大核心商业服务争夺首页主视觉/g,'不与六大核心业务争夺首页主视觉');
+    .replace(/制造改善项目交付｜新工厂规划｜精益改善｜目视化实施/g,'三类核心项目交付｜三项数智化产品与技术能力｜六类项目合作能力')
+    .replace(/QilyLean｜启力精益由丁启利发起，依托20年制造工程与精益改善实践，为制造企业提供三类核心服务。项目以现场诊断、范围确认、方案设计、Pilot验证、标准固化和验收闭环推进；具体交付物、周期、费用、分阶段付款比例与验收条件以对应合同及正式约定为准。/g,'QilyLean｜启力精益由丁启利发起，形成三类核心项目交付与三项数智化产品与技术能力，合计六类项目合作能力。项目以问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化和验收闭环推进；具体范围、周期、费用、交付物及验收条件以书面方案与正式合同为准。')
+    .replace(/查看三大核心业务与交付/g,'查看六类项目合作能力与交付')
+    .replace(/PLATFORM EXTENSION｜三大项目之外的平台扩展价值/g,'PLATFORM EXTENSION｜六类项目合作能力之外的平台扩展价值')
+    .replace(/不与三大核心商业服务争夺首页主视觉/g,'不与六类项目合作能力争夺首页主视觉');
   return html;
 }
 
 function patchCooperation(html){
-  html=upsertTitle(html,'项目合作｜QilyLean六大核心业务与项目交付');
-  html=upsertNamedMeta(html,'description','QilyLean提供六大核心业务项目合作：新工厂／新产线规划、精益改善、目视化设计交付、数字化工厂、APP软件开发与官网建设，通过诊断、方案、Pilot／测试、验证、固化和验收形成项目闭环。');
-  html=upsertPropertyMeta(html,'og:title','QilyLean项目合作｜六大核心业务与项目交付');
-  html=upsertPropertyMeta(html,'og:description','两大业务主线、六大核心业务；以范围、交付物、Pilot／测试、验证和验收定义合作。');
+  html=upsertTitle(html,'项目合作｜QilyLean六类项目合作能力');
+  html=upsertNamedMeta(html,'description','QilyLean提供六类项目合作能力项目合作：新工厂／新产线规划、精益改善、目视化设计交付、数字化工厂、APP软件开发与官网建设，通过诊断、方案、Pilot／测试、验证、固化和验收形成项目闭环。');
+  html=upsertPropertyMeta(html,'og:title','QilyLean项目合作｜六类项目合作能力');
+  html=upsertPropertyMeta(html,'og:description','三类核心项目交付 + 三项数智化产品与技术能力，合计六类项目合作能力；以范围、交付物、Pilot／测试、验证和验收定义合作。');
 
   const serviceRe=/<section class="module-section" id="services">[\s\S]*?<\/section>/m;
   if(!serviceRe.test(html)) throw new Error('Cooperation services section missing');
@@ -129,23 +129,23 @@ function patchCooperation(html){
   html=html.replace(boundaryRe,BOUNDARY);
 
   html=html
-    .replace(/<div class="module-heading"><h2>合作启动路径<\/h2><p>先判断问题是否匹配，再通过现场诊断明确范围、事实基线、(?:概念方向、)?交付深度与验收边界。<\/p><\/div>/g,'<div class="module-heading"><h2>合作启动路径与公开报价边界</h2><p>六大核心业务均属于项目型服务；官网仅公开前期合作入口及价格边界，正式项目须在明确范围、投入、交付物和验收标准后独立报价。</p></div>')
-    .replace(/<p class="fine-print"><strong>价格边界：<\/strong>[\s\S]*?<\/p>/g,'<p class="fine-print"><strong>公开报价说明：</strong>¥6,800仅对应约定范围内的小范围现场诊断与概念级方案构思，不代表六大核心业务任一完整专项项目总价。新工厂／新产线规划、精益改善、目视化、数字化工厂、APP软件开发及官网建设，均须根据实际需求明确项目范围、周期、现场投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。</p>')
-    .replace(/QILY-PRICING-POLICY｜仅公开诊断级入口价格；Factory Layout、精益改善、目视化等完整项目均按范围独立报价，不在公网展示统一总价。/g,'QILY-PRICING-POLICY｜仅公开诊断级入口价格；六大核心业务完整项目均按范围、投入、交付物和验收标准独立报价，不在公网展示统一总价。')
-    .replace(/面向制造企业提供新工厂规划、数字化工厂规划与数据治理、精益改善及目视化项目交付服务。/g,'围绕制造工程交付与数智化产品交付，提供新工厂／新产线规划、精益改善、目视化项目、数字化工厂、APP软件开发与官网建设六大核心业务。');
+    .replace(/<div class="module-heading"><h2>合作启动路径<\/h2><p>先判断问题是否匹配，再通过现场诊断明确范围、事实基线、(?:概念方向、)?交付深度与验收边界。<\/p><\/div>/g,'<div class="module-heading"><h2>合作启动路径与公开报价边界</h2><p>六类项目合作能力均按项目边界定义合作；官网仅公开前期合作入口及价格边界，正式项目须在明确范围、投入、交付物和验收标准后独立报价。</p></div>')
+    .replace(/<p class="fine-print"><strong>价格边界：<\/strong>[\s\S]*?<\/p>/g,'<p class="fine-print"><strong>公开报价说明：</strong>¥6,800仅对应约定范围内的小范围现场诊断与概念级方案构思，不代表六类项目合作能力任一完整专项合作总价。新工厂／新产线规划、精益改善、目视化、数字化工厂、APP软件开发及官网建设，均须根据实际需求明确项目范围、周期、现场投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。</p>')
+    .replace(/QILY-PRICING-POLICY｜仅公开诊断级入口价格；Factory Layout、精益改善、目视化等完整项目均按范围独立报价，不在公网展示统一总价。/g,'QILY-PRICING-POLICY｜仅公开诊断级入口价格；六类项目合作能力的完整合作均按范围、投入、交付物和验收标准独立报价，不在公网展示统一总价。')
+    .replace(/面向制造企业提供新工厂规划、数字化工厂规划与数据治理、精益改善及目视化项目交付服务。/g,'围绕制造工程交付与数智化产品交付，提供新工厂／新产线规划、精益改善、目视化项目、数字化工厂、APP软件开发与官网建设六类项目合作能力。');
   return html;
 }
 
 function patchFallbackJs(src){
   src=src
     .replace(/QilyLean｜新工厂规划、精益改善与目视化项目交付/g,'QilyLean｜启力精益｜精益生产、工程改善与数智工厂')
-    .replace(/QilyLean由丁启利发起，面向制造企业提供新工厂与新产线规划、精益改善项目及目视化实施协同；以现场诊断、交付资产、分阶段节点和验收闭环为主线。/g,'QilyLean围绕制造工程交付与数智化产品交付，提供新工厂／新产线规划、精益改善、目视化、数字化工厂、APP软件开发与官网建设六大核心业务。')
-    .replace(/制造改善项目交付｜新工厂规划｜精益改善｜目视化实施/g,'制造工程交付｜数智化产品交付｜六大核心业务')
-    .replace(/为制造企业提供三类核心服务/g,'围绕两大业务主线形成六大核心业务')
-    .replace(/查看三大核心业务与交付/g,'查看六大核心业务与交付')
-    .replace(/title:'三类核心业务'/g,"title:'两大业务主线｜六大核心业务'")
-    .replace(/三类核心业务均设置交付物、项目阶段、合同范本、付款节点和验收边界。/g,'六大核心业务均明确范围、交付物与验收边界；合同范本及专项报价按具体业务成熟度与项目范围配置。')
-    .replace(/不与三大核心商业服务争夺首页主视觉/g,'不与六大核心业务争夺首页主视觉');
+    .replace(/QilyLean由丁启利发起，面向制造企业提供新工厂与新产线规划、精益改善项目及目视化实施协同；以现场诊断、交付资产、分阶段节点和验收闭环为主线。/g,'QilyLean围绕制造工程交付与数智化产品交付，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。')
+    .replace(/制造改善项目交付｜新工厂规划｜精益改善｜目视化实施/g,'三类核心项目交付｜三项数智化产品与技术能力｜六类项目合作能力')
+    .replace(/为制造企业提供三类核心服务/g,'围绕两大业务主线形成六类项目合作能力')
+    .replace(/查看三大核心业务与交付/g,'查看六类项目合作能力与交付')
+    .replace(/title:'三类核心业务'/g,"title:'六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力'")
+    .replace(/三类核心业务均设置交付物、项目阶段、合同范本、付款节点和验收边界。/g,'六类项目合作能力均明确范围、交付物与验收边界；合同范本及专项报价按具体业务成熟度与项目范围配置。')
+    .replace(/不与三大核心商业服务争夺首页主视觉/g,'不与六类项目合作能力争夺首页主视觉');
   return src;
 }
 
@@ -157,21 +157,21 @@ function patchMaterializer(src){
 
   src=src
     .replace(/QilyLean｜新工厂规划、精益改善与目视化项目交付/g,'QilyLean｜启力精益｜精益生产、工程改善与数智工厂')
-    .replace(/QilyLean由丁启利发起，面向制造企业提供新工厂与新产线规划、精益改善项目及目视化实施协同；以现场诊断、交付资产、分阶段节点和验收闭环为主线。/g,'QilyLean围绕制造工程交付与数智化产品交付，提供新工厂／新产线规划、精益改善、目视化、数字化工厂、APP软件开发与官网建设六大核心业务。')
-    .replace(/把复杂制造问题转化为可测量、可验证、可交付的改善项目；聚焦新工厂规划、精益改善与目视化实施。/g,'两大业务主线，六大核心业务——从制造现场改善，到数智化产品交付。')
-    .replace(/QilyLean聚焦新工厂规划、精益改善项目交付与目视化实施，以交付资产、阶段付款和验收闭环定义合作。/g,'QilyLean围绕制造工程交付与数智化产品交付，以范围、交付物、Pilot／测试、验证和验收定义六大核心业务合作。')
-    .replace(/制造改善项目交付｜新工厂规划｜精益改善｜目视化实施/g,'制造工程交付｜数智化产品交付｜六大核心业务')
-    .replace(/为制造企业提供三类核心服务/g,'围绕两大业务主线形成六大核心业务')
-    .replace(/查看三大核心业务与交付/g,'查看六大核心业务与交付')
-    .replace(/不与三大核心商业服务争夺首页主视觉/g,'不与六大核心业务争夺首页主视觉');
+    .replace(/QilyLean由丁启利发起，面向制造企业提供新工厂与新产线规划、精益改善项目及目视化实施协同；以现场诊断、交付资产、分阶段节点和验收闭环为主线。/g,'QilyLean围绕制造工程交付与数智化产品交付，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。')
+    .replace(/把复杂制造问题转化为可测量、可验证、可交付的改善项目；聚焦新工厂规划、精益改善与目视化实施。/g,'三类核心项目交付 + 三项数智化产品与技术能力，合计六类项目合作能力。')
+    .replace(/QilyLean聚焦新工厂规划、精益改善项目交付与目视化实施，以交付资产、阶段付款和验收闭环定义合作。/g,'QilyLean围绕制造工程交付与数智化产品交付，以范围、交付物、Pilot／测试、验证和验收定义六类项目合作能力合作。')
+    .replace(/制造改善项目交付｜新工厂规划｜精益改善｜目视化实施/g,'三类核心项目交付｜三项数智化产品与技术能力｜六类项目合作能力')
+    .replace(/为制造企业提供三类核心服务/g,'围绕两大业务主线形成六类项目合作能力')
+    .replace(/查看三大核心业务与交付/g,'查看六类项目合作能力与交付')
+    .replace(/不与三大核心商业服务争夺首页主视觉/g,'不与六类项目合作能力争夺首页主视觉');
   return src;
 }
 
 function patchPricingScript(src){
   return src
-    .replace(/Factory Layout、精益改善、目视化等完整项目均按范围独立报价/g,'六大核心业务完整项目均按范围、投入、交付物和验收标准独立报价')
-    .replace(/<h2>合作启动路径<\/h2><p>先判断问题是否匹配，再通过现场诊断明确范围、事实基线、概念方向、交付深度与验收边界。<\/p>/g,'<h2>合作启动路径与公开报价边界</h2><p>六大核心业务均属于项目型服务；官网仅公开前期合作入口及价格边界，正式项目须在明确范围、投入、交付物和验收标准后独立报价。</p>')
-    .replace(/¥6,800仅对应小范围现场诊断与概念级方案构思，不代表完整Factory Layout、精益改善或目视化项目总价。正式项目的范围、周期、图纸／模型深度、修改轮次、现场投入、交付物、付款节点与验收标准，均在诊断后通过书面方案和正式合同确认并独立报价。/g,'¥6,800仅对应约定范围内的小范围现场诊断与概念级方案构思，不代表六大核心业务任一完整专项项目总价。六大核心业务均须根据实际需求明确范围、周期、投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。')
+    .replace(/Factory Layout、精益改善、目视化等完整项目均按范围独立报价/g,'六类项目合作能力的完整合作均按范围、投入、交付物和验收标准独立报价')
+    .replace(/<h2>合作启动路径<\/h2><p>先判断问题是否匹配，再通过现场诊断明确范围、事实基线、概念方向、交付深度与验收边界。<\/p>/g,'<h2>合作启动路径与公开报价边界</h2><p>六类项目合作能力均按项目边界定义合作；官网仅公开前期合作入口及价格边界，正式项目须在明确范围、投入、交付物和验收标准后独立报价。</p>')
+    .replace(/¥6,800仅对应小范围现场诊断与概念级方案构思，不代表完整Factory Layout、精益改善或目视化项目总价。正式项目的范围、周期、图纸／模型深度、修改轮次、现场投入、交付物、付款节点与验收标准，均在诊断后通过书面方案和正式合同确认并独立报价。/g,'¥6,800仅对应约定范围内的小范围现场诊断与概念级方案构思，不代表六类项目合作能力任一完整专项合作总价。六类项目合作能力均须根据实际需求明确范围、周期、投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。')
     .replace(/<h2>合作启动路径<\/h2>/g,'<h2>合作启动路径与公开报价边界</h2>');
 }
 
@@ -180,8 +180,8 @@ function validate(home,coop){
   const forbiddenCoop=['<h2>三大核心业务</h2>','<h2>四类项目合作边界</h2>'];
   forbiddenHome.forEach(v=>{ if(home.includes(v)) throw new Error(`Homepage legacy core-business wording remains: ${v}`); });
   forbiddenCoop.forEach(v=>{ if(coop.includes(v)) throw new Error(`Cooperation legacy wording remains: ${v}`); });
-  ['两大业务主线｜六大核心业务','数字化工厂','APP软件开发','官网建设'].forEach(v=>{ if(!home.includes(v)) throw new Error(`Homepage six-core static source missing: ${v}`); });
-  ['<h2>六大核心业务</h2>','01｜新工厂／新产线规划','02｜精益改善项目','03｜目视化项目','04｜数字化工厂','05｜APP软件开发','06｜官网建设','data-qily-six-core-services="v1"','data-qily-six-service-boundary="v1"'].forEach(v=>{ if(!coop.includes(v)) throw new Error(`Cooperation six-core static source missing: ${v}`); });
+  ['六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力','数字化工厂','APP软件开发','官网建设'].forEach(v=>{ if(!home.includes(v)) throw new Error(`Homepage six-core static source missing: ${v}`); });
+  ['<h2>六类项目合作能力</h2>','01｜新工厂／新产线规划','02｜精益改善项目','03｜目视化项目','04｜数字化工厂','05｜APP软件开发','06｜官网建设','data-qily-six-core-services="v1"','data-qily-six-service-boundary="v1"'].forEach(v=>{ if(!coop.includes(v)) throw new Error(`Cooperation six-core static source missing: ${v}`); });
 }
 
 let changed=[];

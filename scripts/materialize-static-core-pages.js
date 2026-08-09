@@ -111,16 +111,16 @@ function buildHomeCommercialBlock() {
   return `<!-- QILY-HOME-STATIC-COMMERCIAL:START -->
 <section class="qily-ia-section" id="qily-core-services" data-qily-static-source="home-core-v2" data-qily-six-core-services="v1">
   <div class="qily-ia-inner">
-    <div class="qily-ia-heading"><span class="qily-ia-kicker">CORE BUSINESS｜两大业务主线</span><h2>两大业务主线｜六大核心业务</h2><p>制造工程交付解决工厂、产线与现场运营问题；数智化产品交付把制造业务逻辑进一步沉淀为数字化系统、软件工具与专业互联网载体。六项业务统一遵循问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化与项目验收。</p></div>
+    <div class="qily-ia-heading"><span class="qily-ia-kicker">COOPERATION CAPABILITIES｜核心项目交付 + 数智化技术能力</span><h2>六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力</h2><p>前三类核心项目交付直接解决工厂、产线与现场运营问题；后三项数智化产品与技术能力把制造业务逻辑进一步沉淀为数字化系统、软件工具与专业互联网载体。六类项目合作能力统一遵循问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化与项目验收。</p></div>
     <div class="qily-ia-grid">
-      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>制造工程交付｜01</small><h3>新工厂／新产线规划</h3><p>从产品、工艺、产能、设备、物流、公辅、品质和扩展边界出发，形成可评审、可实施的规划资产。</p><div class="qily-ia-result">产能模型、Layout、物流与库位、公辅接口、实施路线图</div></article>
-      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>制造工程交付｜02</small><h3>精益改善项目交付</h3><p>围绕PQCD与交付瓶颈，以VSM、标准工时、线平衡、SMED、OEE、质量防错及计划实绩闭环开展诊断、Pilot与标准化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>
-      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>制造工程交付｜03</small><h3>目视化项目设计与交付</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、视觉标准、设计图、材料清单、打样、实施与验收</div></article>
-      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品交付｜04</small><h3>数字化工厂</h3><p>以业务流程和可信主数据为底座，规划ERP／MES／APS、设备数据、生产透明化、管理看板与实施路线。</p><div class="qily-ia-result">数字化蓝图、数据口径、功能／接口需求、看板原型、Pilot与验收机制</div></article>
-      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品交付｜05</small><h3>APP软件开发</h3><p>面向IE测时、现场采集、异常管理、移动看板、提醒及轻量化管理场景，完成需求、原型、开发、测试、发布与迭代。</p><div class="qily-ia-result">需求清单、交互原型、可运行版本、测试记录、安装／发布包与版本记录</div></article>
-      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品交付｜06</small><h3>官网建设</h3><p>围绕品牌定位、信息架构、可信证据、内容体系、SEO、咨询转化、响应式适配及持续运维建设专业官网。</p><div class="qily-ia-result">信息架构、页面模板、响应式官网、SEO基础、咨询入口、部署与运维规范</div></article>
+      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>核心项目交付｜01</small><h3>新工厂／新产线规划</h3><p>从产品、工艺、产能、设备、物流、公辅、品质和扩展边界出发，形成可评审、可实施的规划资产。</p><div class="qily-ia-result">产能模型、Layout、物流与库位、公辅接口、实施路线图</div></article>
+      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>核心项目交付｜02</small><h3>精益改善项目交付</h3><p>围绕PQCD与交付瓶颈，以VSM、标准工时、线平衡、SMED、OEE、质量防错及计划实绩闭环开展诊断、Pilot与标准化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>
+      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>核心项目交付｜03</small><h3>目视化项目设计与交付</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、视觉标准、设计图、材料清单、打样、实施与验收</div></article>
+      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品与技术能力｜04</small><h3>数字化工厂</h3><p>以业务流程和可信主数据为底座，规划ERP／MES／APS、设备数据、生产透明化、管理看板与实施路线。</p><div class="qily-ia-result">数字化蓝图、数据口径、功能／接口需求、看板原型、Pilot与验收机制</div></article>
+      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品与技术能力｜05</small><h3>APP软件开发</h3><p>面向IE测时、现场采集、异常管理、移动看板、提醒及轻量化管理场景，完成需求、原型、开发、测试、发布与迭代。</p><div class="qily-ia-result">需求清单、交互原型、可运行版本、测试记录、安装／发布包与版本记录</div></article>
+      <article class="qily-ia-card" data-qily-business-line="digital"><small>数智化产品与技术能力｜06</small><h3>官网建设</h3><p>围绕品牌定位、信息架构、可信证据、内容体系、SEO、咨询转化、响应式适配及持续运维建设专业官网。</p><div class="qily-ia-result">信息架构、页面模板、响应式官网、SEO基础、咨询入口、部署与运维规范</div></article>
     </div>
-    <div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#services">查看六大核心业务与交付边界</a></div>
+    <div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#services">查看六类项目合作能力与交付边界</a></div>
   </div>
 </section>
 <section class="qily-ia-section qily-ia-alt" id="qily-home-proof" data-qily-static-source="home-proof-v2">
@@ -129,7 +129,7 @@ function buildHomeCommercialBlock() {
     <div class="qily-ia-delivery-summary">
       <article><strong>专业基础</strong><span>制造工程、工业工程、精益改善与数智化实践；详细年限和岗位归入履历主线。</span></article>
       <article><strong>项目证据</strong><span>代表项目按已核定、已验证、阶段估算和经验陈述分级展示。</span></article>
-      <article><strong>交易机制</strong><span>六大核心业务均明确范围、交付物与验收边界；现有合同范本与专项报价按具体业务成熟度及项目范围配置。</span></article>
+      <article><strong>交易机制</strong><span>六类项目合作能力均明确范围、交付物与验收边界；现有合同范本与专项报价按具体业务成熟度及项目范围配置。</span></article>
       <article><strong>责任边界</strong><span>网页用于沟通与能力说明，正式范围、费用、税费、周期和验收以书面方案与合同为准。</span></article>
     </div>
     <div class="qily-ia-actions"><a class="qily-ia-button primary" href="/projects/">代表项目</a><a class="qily-ia-button" href="/trust/">诚信与责任边界</a><a class="qily-ia-button" href="/projects/qilylean-commercial-deliveries/">商业交付档案</a></div>
@@ -200,7 +200,7 @@ function normalizeLatestBlock(block) {
   return block
     .replace(/<section class="section(?: qily-ia-secondary-section)?" id="latest-content"/, '<section class="section qily-ia-secondary-section" id="latest-content" data-qily-static-source="home-latest-v1"')
     .replace(/<h2>[^<]*<\/h2>/, '<h2>知识资产与持续更新</h2>')
-    .replace(/<div class="head"><h2>知识资产与持续更新<\/h2><p>[\s\S]*?<\/p><\/div>/, '<div class="head"><h2>知识资产与持续更新</h2><p>简报、术语、程序文件和参考资料用于展示持续学习与方法沉淀，不与六大核心业务争夺首页主视觉。</p></div>');
+    .replace(/<div class="head"><h2>知识资产与持续更新<\/h2><p>[\s\S]*?<\/p><\/div>/, '<div class="head"><h2>知识资产与持续更新</h2><p>简报、术语、程序文件和参考资料用于展示持续学习与方法沉淀，不与六类项目合作能力争夺首页主视觉。</p></div>');
 }
 
 function normalizeResults(html) {
@@ -234,21 +234,21 @@ function materializeHome() {
   html = html.replace(assistantExpression, '');
 
   html = upsertTitle(html, 'QilyLean｜启力精益｜精益生产、工程改善与数智工厂');
-  html = upsertNamedMeta(html, 'description', 'QilyLean围绕制造工程交付与数智化产品交付，提供新工厂／新产线规划、精益改善、目视化、数字化工厂、APP软件开发与官网建设六大核心业务。');
+  html = upsertNamedMeta(html, 'description', 'QilyLean围绕制造工程交付与数智化产品交付，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。');
   html = upsertPropertyMeta(html, 'og:title', 'QilyLean｜制造改善项目交付');
-  html = upsertPropertyMeta(html, 'og:description', '两大业务主线，六大核心业务——从制造现场改善，到数智化产品交付。');
-  html = upsertNamedMeta(html, 'twitter:description', 'QilyLean围绕制造工程交付与数智化产品交付，以范围、交付物、Pilot／测试、验证和验收定义六大核心业务合作。');
+  html = upsertPropertyMeta(html, 'og:description', '三类核心项目交付 + 三项数智化产品与技术能力，合计六类项目合作能力。');
+  html = upsertNamedMeta(html, 'twitter:description', 'QilyLean围绕制造工程交付与数智化产品交付，以范围、交付物、Pilot／测试、验证和验收定义六类项目合作能力合作。');
   html = upsertStylesheet(html, 'qilyInformationArchitectureStylesheet', IA_CSS);
   html = upsertScript(html, 'qilyStaticCoreInteractions', STATIC_INTERACTIONS);
   html = addBodyClasses(html, ['qily-ia-ready', 'qily-home-commercial-focus']);
 
-  html = html.replace(/<span class="eyebrow">[\s\S]*?<\/span>/, '<span class="eyebrow">制造工程交付｜数智化产品交付｜六大核心业务</span>');
+  html = html.replace(/<span class="eyebrow">[\s\S]*?<\/span>/, '<span class="eyebrow">三类核心项目交付｜三项数智化产品与技术能力｜六类项目合作能力</span>');
   html = html.replace(/<h1>[\s\S]*?<\/h1>\s*<p class="lead">[\s\S]*?<\/p>/, `<h1>把复杂制造问题，转化为可验证的交付结果</h1>
           <p class="qily-founder-line">丁启利｜制造工程、工业工程与精益改善项目实践者</p>
-          <p class="lead">QilyLean｜启力精益由丁启利发起，依托20年制造工程与精益改善实践，围绕两大业务主线形成六大核心业务。项目以现场诊断、范围确认、方案设计、Pilot验证、标准固化和验收闭环推进；具体交付物、周期、费用、分阶段付款比例与验收条件以对应合同及正式约定为准。</p>
+          <p class="lead">QilyLean｜启力精益由丁启利发起，依托20年制造工程与精益改善实践，形成三类核心项目交付与三项数智化产品与技术能力，合计六类项目合作能力。项目以现场诊断、范围确认、方案设计、Pilot验证、标准固化和验收闭环推进；具体交付物、周期、费用、分阶段付款比例与验收条件以对应合同及正式约定为准。</p>
           <p class="qily-home-relocation-note">专业标签已归入<a href="/capabilities/">能力画像</a>，任职年限与岗位历程已归入<a href="/experience/">履历主线</a>，量化成果与证据归入<a href="/projects/">代表项目</a>。</p>`);
   html = html.replace(/\s*<div class="group-label">职能标签<\/div>\s*<ul class="tags">[\s\S]*?<\/ul>/m, '');
-  html = html.replace(/<div class="actions">[\s\S]*?<\/div>/m, '<div class="actions"><a class="button primary" href="/cooperation/">查看六大核心业务与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">代表项目与证据</a></div>');
+  html = html.replace(/<div class="actions">[\s\S]*?<\/div>/m, '<div class="actions"><a class="button primary" href="/cooperation/">查看六类项目合作能力与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">代表项目与证据</a></div>');
   html = html.replace(/<figcaption class="portrait-badge">[\s\S]*?<\/figcaption>/m, '<figcaption class="portrait-badge"><div><strong>20年</strong><span>制造工程与精益改善实践</span></div><div><strong>合同闭环</strong><span>范围、交付、付款与验收分阶段明确</span></div></figcaption>');
 
   const heroExpression = /<section class="hero">[\s\S]*?<\/section>/m;

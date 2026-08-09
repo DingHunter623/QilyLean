@@ -58,15 +58,15 @@
 
     d.body.classList.add('qily-home-commercial-focus');
     d.title='QilyLean｜启力精益｜精益生产、工程改善与数智工厂';
-    setMeta('description','QilyLean围绕制造工程交付与数智化产品交付，提供新工厂／新产线规划、精益改善、目视化、数字化工厂、APP软件开发与官网建设六大核心业务。');
+    setMeta('description','QilyLean围绕制造工程交付与数智化产品交付，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。');
 
     var eyebrow=homeHero.querySelector('.eyebrow');
     var title=homeHero.querySelector('h1');
     var lead=homeHero.querySelector('.lead');
-    if(eyebrow)eyebrow.textContent='制造工程交付｜数智化产品交付｜六大核心业务';
+    if(eyebrow)eyebrow.textContent='三类核心项目交付｜三项数智化产品与技术能力｜六类项目合作能力';
     if(title)title.textContent='把复杂制造问题，转化为可验证的交付结果';
     if(lead){
-      lead.innerHTML='QilyLean｜启力精益由丁启利发起，依托20年制造工程与精益改善实践，围绕两大业务主线形成六大核心业务。项目以现场诊断、范围确认、方案设计、Pilot验证、标准固化和验收闭环推进；具体交付物、周期、费用、分阶段付款比例与验收条件以对应合同及正式约定为准。';
+      lead.innerHTML='QilyLean｜启力精益由丁启利发起，依托20年制造工程与精益改善实践，形成三类核心项目交付与三项数智化产品与技术能力，合计六类项目合作能力。项目以现场诊断、范围确认、方案设计、Pilot验证、标准固化和验收闭环推进；具体交付物、周期、费用、分阶段付款比例与验收条件以对应合同及正式约定为准。';
       var founder=el('p','qily-founder-line','丁启利｜制造工程、工业工程与精益改善项目实践者');
       lead.parentNode.insertBefore(founder,lead);
       var relocation=el('p','qily-home-relocation-note','专业标签已归入<a href="/capabilities/">能力画像</a>，任职年限与岗位历程已归入<a href="/experience/">履历主线</a>，量化成果与证据归入<a href="/projects/">代表项目</a>。');
@@ -75,7 +75,7 @@
 
     var actionBox=homeHero.querySelector('.actions');
     if(actionBox){
-      actionBox.innerHTML='<a class="button primary" href="/cooperation/">查看六大核心业务与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">代表项目与证据</a>';
+      actionBox.innerHTML='<a class="button primary" href="/cooperation/">查看六类项目合作能力与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">代表项目与证据</a>';
     }
 
     var portraitBadge=homeHero.querySelector('.portrait-badge');
@@ -89,14 +89,14 @@
       '<article class="qily-ia-card"><small>CORE SERVICE 02</small><h3>精益改善项目交付</h3><p>围绕VSM、标准工时、线平衡、SMED、OEE、质量异常和计划实绩闭环，先验证再固化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>'+
       '<article class="qily-ia-card"><small>CORE SERVICE 03</small><h3>目视化项目设计与实施</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、设计图、材料预算、打样、实施清单与验收</div></article>'+
       '</div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#core-services">查看交付资产与合同范本</a></div>';
-    var services=buildSection({id:'qily-core-services',kicker:'CORE BUSINESS｜首页只保留客户首先需要理解的内容',title:'两大业务主线｜六大核心业务',lead:'先说明解决什么问题、交付什么资产，再逐层展示个人履历、方法体系和知识沉淀。',body:servicesBody});
+    var services=buildSection({id:'qily-core-services',kicker:'CORE BUSINESS｜首页只保留客户首先需要理解的内容',title:'六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力',lead:'先说明解决什么问题、交付什么资产，再逐层展示个人履历、方法体系和知识沉淀。',body:servicesBody});
     insertAfter(homeHero,services);
 
     var proofBody=el('div','');
     proofBody.innerHTML='<div class="qily-ia-delivery-summary">'+
       '<article><strong>专业基础</strong><span>20年制造工程、工业工程与精益改善实践；详细年限和岗位归入履历主线。</span></article>'+
       '<article><strong>项目证据</strong><span>代表项目按已核定、已验证、阶段估算和经验陈述分级展示。</span></article>'+
-      '<article><strong>交易机制</strong><span>六大核心业务均明确范围、交付物与验收边界；合同范本及专项报价按具体业务成熟度与项目范围配置。</span></article>'+
+      '<article><strong>交易机制</strong><span>六类项目合作能力均明确范围、交付物与验收边界；合同范本及专项报价按具体业务成熟度与项目范围配置。</span></article>'+
       '<article><strong>责任边界</strong><span>网页用于沟通与能力说明，正式范围、费用、税费、周期和验收以合同为准。</span></article>'+
       '</div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/projects/">代表项目</a><a class="qily-ia-button" href="/trust/">诚信与责任边界</a><a class="qily-ia-button" href="/projects/qilylean-commercial-deliveries/">商业交付档案</a></div>';
     var proof=buildSection({id:'qily-home-proof',alt:true,kicker:'WHY QILYLEAN｜证据与交易边界',title:'先看交付逻辑，再看专业深度',lead:'不以资质徽章堆砌信任，而以真实项目、脱敏佐证、合同交付资产、阶段节点及验收规则建立可核验的合作基础。',body:proofBody});
@@ -130,7 +130,7 @@
       var latestTitle=latest.querySelector('.head h2');
       var latestText=latest.querySelector('.head p');
       if(latestTitle)latestTitle.textContent='知识资产与持续更新';
-      if(latestText)latestText.textContent='简报、术语、程序文件和参考资料用于展示持续学习与方法沉淀，不与六大核心业务争夺首页主视觉。';
+      if(latestText)latestText.textContent='简报、术语、程序文件和参考资料用于展示持续学习与方法沉淀，不与六类项目合作能力争夺首页主视觉。';
       if(results)insertAfter(results,latest);
     }
 
