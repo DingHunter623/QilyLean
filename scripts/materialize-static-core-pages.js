@@ -248,7 +248,7 @@ function materializeHome() {
           <p class="lead">QilyLean｜启力精益由丁启利发起，依托20年制造工程与精益改善实践，围绕两大业务主线形成六大核心业务。项目以现场诊断、范围确认、方案设计、Pilot验证、标准固化和验收闭环推进；具体交付物、周期、费用、分阶段付款比例与验收条件以对应合同及正式约定为准。</p>
           <p class="qily-home-relocation-note">专业标签已归入<a href="/capabilities/">能力画像</a>，任职年限与岗位历程已归入<a href="/experience/">履历主线</a>，量化成果与证据归入<a href="/projects/">代表项目</a>。</p>`);
   html = html.replace(/\s*<div class="group-label">职能标签<\/div>\s*<ul class="tags">[\s\S]*?<\/ul>/m, '');
-  html = html.replace(/<div class="actions">[\s\S]*?<\/div>/m, '<div class="actions"><a class="button primary" href="/cooperation/">查看六大核心业务与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">核验代表项目与证据</a></div>');
+  html = html.replace(/<div class="actions">[\s\S]*?<\/div>/m, '<div class="actions"><a class="button primary" href="/cooperation/">查看六大核心业务与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">代表项目与证据</a></div>');
   html = html.replace(/<figcaption class="portrait-badge">[\s\S]*?<\/figcaption>/m, '<figcaption class="portrait-badge"><div><strong>20年</strong><span>制造工程与精益改善实践</span></div><div><strong>合同闭环</strong><span>范围、交付、付款与验收分阶段明确</span></div></figcaption>');
 
   const heroExpression = /<section class="hero">[\s\S]*?<\/section>/m;

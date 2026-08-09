@@ -75,7 +75,7 @@
 
     var actionBox=homeHero.querySelector('.actions');
     if(actionBox){
-      actionBox.innerHTML='<a class="button primary" href="/cooperation/">查看六大核心业务与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">核验代表项目与证据</a>';
+      actionBox.innerHTML='<a class="button primary" href="/cooperation/">查看六大核心业务与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">代表项目与证据</a>';
     }
 
     var portraitBadge=homeHero.querySelector('.portrait-badge');
