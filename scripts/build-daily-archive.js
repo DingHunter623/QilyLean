@@ -220,7 +220,7 @@ ${siteHeader()}
 <script>
 (function(){
 var legacy=(location.hash||'').slice(1);if(/^\\d{4}-\\d{2}-\\d{2}$/.test(legacy)){location.replace('/qilylean/daily/'+legacy+'.html');return;}
-var input=document.getElementById('briefSearch'),statusText=document.getElementById('briefFilterText'),reset=document.getElementById('briefFilterReset'),directory=document.getElementById('brief-directory'),searchResults=document.getElementById('briefSearchResults'),searchGrid=document.getElementById('briefSearchGrid'),monthsContainer=document.querySelector('.brief-months'),selectedYear='',cards=Array.prototype.slice.call(document.querySelectorAll('.brief-month .brief-index-card')),months=Array.prototype.slice.call(document.querySelectorAll('.brief-month'));
+var input=document.getElementById('briefSearch'),statusText=document.getElementById('briefFilterText'),reset=document.getElementById('briefFilterReset'),directory=document.getElementById('brief-directory'),searchResults=document.getElementById('briefSearchResults'),searchGrid=document.getElementById('briefSearchGrid'),monthsContainer=document.querySelector('.brief-months'),selectedYear='',cards=Array.prototype.slice.call(document.querySelectorAll('.brief-month .brief-index-card')),officialCards=cards.filter(function(card){return !card.hasAttribute('data-brief-training-note');}),months=Array.prototype.slice.call(document.querySelectorAll('.brief-month'));
 var requestedYear=new URLSearchParams(location.search).get('year')||'';if(/^\\d{4}$/.test(requestedYear)&&cards.some(function(card){return card.getAttribute('data-brief-year')===requestedYear;}))selectedYear=requestedYear;
 function norm(value){return String(value||'').normalize('NFKC').trim().toLocaleLowerCase('zh-CN').replace(/\\s+/g,' ');}
 function compact(value){return norm(value).replace(/[\\s\\-_/+()（）·,.，。:：]/g,'');}
@@ -260,7 +260,7 @@ function applyFilter(){
     if(statusText)statusText.textContent=visible?'找到 '+visible+' 期相关简报（已按相关度排序）'+(selectedYear?'｜'+selectedYear+'年':''):'未找到与“'+query+'”相关的简报';
   }else{
     if(searchGrid)searchGrid.innerHTML='';if(searchResults)searchResults.hidden=true;if(monthsContainer)monthsContainer.hidden=false;
-    cards.forEach(function(card){var matchYear=!selectedYear||card.getAttribute('data-brief-year')===selectedYear;card.hidden=!matchYear;if(matchYear)visible+=1;});
+    cards.forEach(function(card){var matchYear=!selectedYear||card.getAttribute('data-brief-year')===selectedYear;card.hidden=!matchYear;if(matchYear&&!card.hasAttribute('data-brief-training-note'))visible+=1;});
     months.forEach(function(month,index){var hasVisible=!!month.querySelector('.brief-index-card:not([hidden])');month.hidden=!hasVisible;if(selectedYear)month.open=hasVisible;else month.open=index===0;});
     if(statusText)statusText.textContent=selectedYear?'当前显示 '+visible+' 期｜'+selectedYear+'年':'当前显示全部 '+visible+' 期';
   }

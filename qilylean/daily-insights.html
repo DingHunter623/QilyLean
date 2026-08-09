@@ -64,7 +64,7 @@
   <div class="brief-index-meta"><time datetime="2026-08-09">2026-08-09</time><span>职场术语与目标管理</span></div>
   <h2><a href="/qilylean/daily/2026-08-09.html">别把“天花板”当成努力目标：上限、标杆与挑战目标必须分开</a></h2>
   <div class="brief-index-actions"><a class="brief-open" href="/qilylean/daily/2026-08-09.html">打开本期简报</a><button type="button" data-brief-url="https://qilylean.com/qilylean/daily/2026-08-09.html" data-brief-title="别把“天花板”当成努力目标：上限、标杆与挑战目标必须分开">分享本期网址</button><span class="brief-share-status" aria-live="polite"></span></div>
-</article><article class="brief-index-card training-note-card" data-brief-training-note="2026-08-08" data-publish-sequence="2" data-brief-date="2026-08-08" data-brief-theme="培训纪要｜组织管理" data-brief-title="培训纪要｜团队建设与管理执行力提升：从目标到标准，从执行到PDCA闭环" data-brief-summary="2026年8月8日公司团队建设与管理执行力提升培训纪要；作为当日后发布的培训记录独立保留。" data-brief-search="2026-08-08 培训纪要 组织管理 SMART 岗位说明书 流程 SOP PDCA 执行力 团队建设">
+</article><article class="brief-index-card training-note-card" data-brief-training-note="2026-08-08" data-publish-sequence="2" data-brief-counted="false" data-brief-year="2026" data-brief-date="2026-08-08" data-brief-theme="培训纪要｜组织管理" data-brief-title="培训纪要｜团队建设与管理执行力提升：从目标到标准，从执行到PDCA闭环" data-brief-summary="2026年8月8日公司团队建设与管理执行力提升培训纪要；作为当日后发布的培训记录独立保留。" data-brief-search="2026-08-08 培训纪要 组织管理 SMART 岗位说明书 流程 SOP PDCA 执行力 团队建设">
   <div class="brief-index-meta"><time datetime="2026-08-08">2026-08-08</time><span>培训纪要 · 同日第2条</span></div>
   <h2><a href="/qilylean/training/2026-08-08.html">培训纪要｜团队建设与管理执行力提升：从目标到标准，从执行到PDCA闭环</a></h2>
   <div class="brief-index-actions"><a class="brief-open" href="/qilylean/training/2026-08-08.html">打开培训纪要</a><button type="button" data-brief-url="https://qilylean.com/qilylean/training/2026-08-08.html" data-brief-title="培训纪要｜团队建设与管理执行力提升：从目标到标准，从执行到PDCA闭环">分享培训纪要网址</button><span class="brief-share-status" aria-live="polite"></span></div>
@@ -13010,7 +13010,7 @@
 <script>
 (function(){
 var legacy=(location.hash||'').slice(1);if(/^\d{4}-\d{2}-\d{2}$/.test(legacy)){location.replace('/qilylean/daily/'+legacy+'.html');return;}
-var input=document.getElementById('briefSearch'),statusText=document.getElementById('briefFilterText'),reset=document.getElementById('briefFilterReset'),directory=document.getElementById('brief-directory'),searchResults=document.getElementById('briefSearchResults'),searchGrid=document.getElementById('briefSearchGrid'),monthsContainer=document.querySelector('.brief-months'),selectedYear='',cards=Array.prototype.slice.call(document.querySelectorAll('.brief-month .brief-index-card')),months=Array.prototype.slice.call(document.querySelectorAll('.brief-month'));
+var input=document.getElementById('briefSearch'),statusText=document.getElementById('briefFilterText'),reset=document.getElementById('briefFilterReset'),directory=document.getElementById('brief-directory'),searchResults=document.getElementById('briefSearchResults'),searchGrid=document.getElementById('briefSearchGrid'),monthsContainer=document.querySelector('.brief-months'),selectedYear='',cards=Array.prototype.slice.call(document.querySelectorAll('.brief-month .brief-index-card')),officialCards=cards.filter(function(card){return !card.hasAttribute('data-brief-training-note');}),months=Array.prototype.slice.call(document.querySelectorAll('.brief-month'));
 var requestedYear=new URLSearchParams(location.search).get('year')||'';if(/^\d{4}$/.test(requestedYear)&&cards.some(function(card){return card.getAttribute('data-brief-year')===requestedYear;}))selectedYear=requestedYear;
 function norm(value){return String(value||'').normalize('NFKC').trim().toLocaleLowerCase('zh-CN').replace(/\s+/g,' ');}
 function compact(value){return norm(value).replace(/[\s\-_/+()（）·,.，。:：]/g,'');}
@@ -13050,7 +13050,7 @@ function applyFilter(){
     if(statusText)statusText.textContent=visible?'找到 '+visible+' 期相关简报（已按相关度排序）'+(selectedYear?'｜'+selectedYear+'年':''):'未找到与“'+query+'”相关的简报';
   }else{
     if(searchGrid)searchGrid.innerHTML='';if(searchResults)searchResults.hidden=true;if(monthsContainer)monthsContainer.hidden=false;
-    cards.forEach(function(card){var matchYear=!selectedYear||card.getAttribute('data-brief-year')===selectedYear;card.hidden=!matchYear;if(matchYear)visible+=1;});
+    cards.forEach(function(card){var matchYear=!selectedYear||card.getAttribute('data-brief-year')===selectedYear;card.hidden=!matchYear;if(matchYear&&!card.hasAttribute('data-brief-training-note'))visible+=1;});
     months.forEach(function(month,index){var hasVisible=!!month.querySelector('.brief-index-card:not([hidden])');month.hidden=!hasVisible;if(selectedYear)month.open=hasVisible;else month.open=index===0;});
     if(statusText)statusText.textContent=selectedYear?'当前显示 '+visible+' 期｜'+selectedYear+'年':'当前显示全部 '+visible+' 期';
   }

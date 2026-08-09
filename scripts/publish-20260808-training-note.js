@@ -10,7 +10,7 @@ const marker = 'data-brief-training-note="2026-08-08"';
 const originalTitle = '异常不过夜：从 Andon 暴露、分层响应到复发验证，建立现场异常闭环';
 const trainingTitle = '培训纪要｜团队建设与管理执行力提升：从目标到标准，从执行到PDCA闭环';
 
-const card = `<article class="brief-index-card training-note-card" ${marker} data-publish-sequence="2" data-brief-date="2026-08-08" data-brief-theme="培训纪要｜组织管理" data-brief-title="${trainingTitle}" data-brief-summary="2026年8月8日公司团队建设与管理执行力提升培训纪要；作为当日后发布的培训记录独立保留。" data-brief-search="2026-08-08 培训纪要 组织管理 SMART 岗位说明书 流程 SOP PDCA 执行力 团队建设">
+const card = `<article class="brief-index-card training-note-card" ${marker} data-publish-sequence="2" data-brief-counted="false" data-brief-year="2026" data-brief-date="2026-08-08" data-brief-theme="培训纪要｜组织管理" data-brief-title="${trainingTitle}" data-brief-summary="2026年8月8日公司团队建设与管理执行力提升培训纪要；作为当日后发布的培训记录独立保留。" data-brief-search="2026-08-08 培训纪要 组织管理 SMART 岗位说明书 流程 SOP PDCA 执行力 团队建设">
   <div class="brief-index-meta"><time datetime="2026-08-08">2026-08-08</time><span>培训纪要 · 同日第2条</span></div>
   <h2><a href="/qilylean/training/2026-08-08.html">${trainingTitle}</a></h2>
   <div class="brief-index-actions"><a class="brief-open" href="/qilylean/training/2026-08-08.html">打开培训纪要</a><button type="button" data-brief-url="https://qilylean.com/qilylean/training/2026-08-08.html" data-brief-title="${trainingTitle}">分享培训纪要网址</button><span class="brief-share-status" aria-live="polite"></span></div>
