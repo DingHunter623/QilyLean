@@ -1,0 +1,43 @@
+name: Materialize sitewide interaction V5
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'scripts/publish-number-badge-contrast.js'
+      - '.github/workflows/materialize-sitewide-interaction-v5.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: materialize-sitewide-interaction-v5-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Materialize current interaction assets
+        run: |
+          node scripts/publish-number-badge-contrast.js
+          node scripts/validate-sitewide-interaction-clarity.js
+      - name: Commit materialized pages
+        run: |
+          if git diff --quiet; then
+            echo 'All public pages already use V5.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- '*.html'
+          git commit -m 'chore: materialize sitewide interaction V5 references'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
