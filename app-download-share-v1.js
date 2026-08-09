@@ -6,7 +6,7 @@
     times26001:{
       name:'Times26001',
       url:'https://qilylean.com/tools/times26001/#android-download',
-      download:'https://qilylean.com/Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=3922dff0',
+      download:'https://qilylean.com/Times26001-Android-v1.1.7-Weather-Test.apk?build=ae1eff0b',
       qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'
     },
     qilyleanHome:{
@@ -89,7 +89,7 @@
     if(path!=='/tools/times26001/')return;
 
     document.title='Times26001｜工业工程时间研究与IE现场测时工具';
-    setMeta('meta[name="description"]',TIMES_POSITIONING+' Times26001提供IE秒表分段、累计总时长、倒计时、闹钟及时间日历辅助功能。');
+    setMeta('meta[name="description"]',TIMES_POSITIONING+' Times26001提供IE秒表分段、累计总时长、倒计时、闹钟、时间日历及天气预报辅助功能。');
     setMeta('meta[property="og:title"]','Times26001｜工业工程时间研究与IE现场测时工具');
     setMeta('meta[property="og:description"]',TIMES_POSITIONING);
   }
@@ -110,9 +110,9 @@
       var title=timesCard.querySelector('h3');
       if(title)title.textContent='Times26001';
       var paragraph=timesCard.querySelector('.capability-digital-content > p');
-      if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、数据复制、按秒倒计时、闹钟、北京时间、万年历、农历、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。';
+      if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、数据复制、按秒倒计时、闹钟、北京时间、万年历、农历、黄历、节气与天气预报，可查看当前位置或指定城市的当前实况和未来7天趋势。';
       var result=timesCard.querySelector('.module-result');
-      if(result)result.textContent='应用市场候选：v1.1.6 / versionCode 9 / API 36｜IE分段测时｜累计总时长｜数据复制｜倒计时与闹钟提醒';
+      if(result)result.textContent='手机试用版：v1.1.7 / versionCode 10 / API 36｜天气预报｜当前位置/城市搜索｜当前实况＋未来7天｜IE分段测时';
       timesCard.querySelectorAll('[data-app-share-link="times26001"]').forEach(function(btn){btn.textContent='分享下载页';});
     }
 
