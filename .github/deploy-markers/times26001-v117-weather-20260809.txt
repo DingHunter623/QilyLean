@@ -1,0 +1,3 @@
+Times26001 v1.1.7 weather site deployment marker
+Source commit: ccf05d10dcf4dc075c4b2c5ee24e9a9724b4f192
+APK SHA-256: ae1eff0be34676246a65023cf9954a37765f465e7644b43bfb7b14a2ad0a9d41
