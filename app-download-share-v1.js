@@ -10,9 +10,10 @@
       qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'
     },
     qilyleanHome:{
-      name:'QilyLean Home｜安卓通用品牌桌面',
+      name:'QilyLean Home｜官网通用安装包',
       url:'https://qilylean.com/capabilities/#digital-tools',
-      qr:'/assets/tools/qr-qilylean-home-download.svg?v=20260808-share-v1'
+      download:'https://qilylean.com/QilyLean_Home_Universal_v2.2.apk?build=20260809-qilylean-home-download-v1',
+      qr:'/assets/tools/qr-qilylean-home-download.svg?v=20260809-download-v2'
     }
   };
 
@@ -114,6 +115,26 @@
       var result=timesCard.querySelector('.module-result');
       if(result)result.textContent='手机试用版：v1.1.10 / versionCode 13 / API 36｜原生定位权限｜不默认上海｜当前位置/城市搜索｜当前实况＋未来7天';
       timesCard.querySelectorAll('[data-app-share-link="times26001"]').forEach(function(btn){btn.textContent='分享下载页';});
+    }
+
+    var homeCard=cards[1];
+    if(homeCard){
+      var homeActions=homeCard.querySelector('.module-actions');
+      if(homeActions){
+        var direct=homeActions.querySelector('[data-qilylean-home-direct-download]');
+        if(!direct){
+          direct=document.createElement('a');
+          direct.setAttribute('data-qilylean-home-direct-download','1');
+          direct.href='/QilyLean_Home_Universal_v2.2.apk?build=20260809-qilylean-home-download-v1';
+          direct.setAttribute('download','');
+          direct.textContent='下载 Android APK（v2.2）';
+          homeActions.insertBefore(direct,homeActions.firstChild);
+        }
+        homeActions.querySelectorAll('[data-app-share-qr="qilyleanHome"]').forEach(function(btn){btn.textContent='扫码下载';});
+        homeActions.querySelectorAll('[data-app-share-link="qilyleanHome"]').forEach(function(btn){btn.textContent='分享下载页';});
+      }
+      var homeResult=homeCard.querySelector('.module-result');
+      if(homeResult)homeResult.textContent='当前官网可下载APK：v2.2（历史归档／旧Debug签名）｜最新构建：v2.3.1 / API 36（待正式签名发布，不作为当前覆盖升级包）｜秒级时钟｜公历＋农历＋周次｜Times26001直达｜免Root';
     }
 
     replaceLeafText(section,'Times26001｜思大时间管理','Times26001');
