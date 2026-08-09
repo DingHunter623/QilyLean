@@ -61,8 +61,8 @@
 
     ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2');
     ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
-    ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260802-commercial-focus-v1');
-    ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260802-project-rolebar-v3');
+    ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260809-six-capabilities-v2');
+    ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260809-project-delivery-strategy-v2');
     ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-action-label-v3');
     ensureScript('data-qily-text-contrast-audit','v2','/site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2');
   }
@@ -150,8 +150,8 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     ensureStylesheet('qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260807-official-contact-hover-v3');
     ensureStylesheet('qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4');
 
-    ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260802-project-rolebar-v3');
-    ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260802-commercial-focus-v1');
+    ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260809-project-delivery-strategy-v2');
+    ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260809-six-capabilities-v2');
     ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2');
     ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
     ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-action-label-v3');
@@ -166,7 +166,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   function appendLegacy() {
     if (d.querySelector('script[data-qily-navigation-legacy]')) { loadEnhancers(); return; }
     var legacy = d.createElement('script');
-    legacy.src = '/site-navigation-legacy-20260802.js?v=20260807-contact-label-v5';
+    legacy.src = '/site-navigation-legacy-20260802.js?v=20260809-core-project-pricing-v2';
     legacy.async = false;
     legacy.setAttribute('data-qily-navigation-legacy','parent-route-v3');
     legacy.onload = loadEnhancers;
