@@ -21,19 +21,34 @@ jobs:
         with:
           python-version: '3.x'
       - name: Apply terminology cleanup
-        run: python scripts/remove-terminology-independent-url-note-20260809.py
-      - name: Verify active terminology wording
+        run: |
+          python scripts/remove-terminology-independent-url-note-20260809.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('knowledge/terminology.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('/knowledge/terminology-sponsor-v1.js?v=20260801-sponsor-v1','/knowledge/terminology-sponsor-v1.js?v=20260809-opl-note-clean-v2')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Verify terminology module only
         run: |
           python - <<'PY'
           from pathlib import Path
-          active=[Path('knowledge/terminology.html'),Path('knowledge/terminology-sponsor-v1.js')]
-          for p in active:
-              s=p.read_text(encoding='utf-8')
-              assert '独立网址：在线阅览' not in s, p
-              assert '独立网址 · 在线阅览' not in s, p
-          print('active terminology wording clean')
+          term=Path('knowledge/terminology.html').read_text(encoding='utf-8')
+          sponsor=Path('knowledge/terminology-sponsor-v1.js').read_text(encoding='utf-8')
+          patch=Path('scripts/sitewide_contact_core_patch_20260807.py').read_text(encoding='utf-8')
+          audit=Path('scripts/audit-official-contact-association.py').read_text(encoding='utf-8')
+          for name,s in [('terminology',term),('sponsor',sponsor)]:
+              assert '独立网址：在线阅览' not in s, name
+              assert '独立网址 · 在线阅览' not in s, name
+          assert '每个术语代码配套独立网址单点培训课件，支持在线阅览' not in term
+          assert '一对一匹配独立网址、仅供在线阅览' not in term
+          assert '20260809-opl-note-clean-v2' in term
+          assert "replace('独立网址 · 在线阅览','独立网址：在线阅览')" not in patch
+          assert "'独立网址：在线阅览' not in term" not in audit
+          assert "'独立网址：在线阅览' in term" in audit
+          print('terminology wording, runtime, regeneration and audit rules are clean')
           PY
-          python scripts/audit-official-contact-association.py
       - name: Commit cleanup
         run: |
           if git diff --quiet; then
@@ -43,5 +58,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add knowledge/terminology.html knowledge/terminology-sponsor-v1.js scripts/sitewide_contact_core_patch_20260807.py scripts/audit-official-contact-association.py
-          git commit -m '术语页清理：删除独立网址在线阅览字样 [skip ci]'
+          git commit -m '术语页清理：删除独立网址在线阅览字样并防回退 [skip ci]'
           git push
