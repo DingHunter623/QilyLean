@@ -1,4 +1,4 @@
-name: Enforce six-core static source
+name: Enforce 3+3 cooperation static source
 
 on:
   push:
@@ -50,10 +50,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q '两大业务主线｜六大核心业务' index.html
-          grep -q 'data-qily-six-core-services="v1"' cooperation/index.html
-          grep -q '<h2>六大核心业务</h2>' cooperation/index.html
-          grep -q '<h2>六类项目合作边界</h2>' cooperation/index.html
+          grep -q '六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力' index.html
+          grep -q '<h2>六类项目合作能力</h2>' cooperation/index.html
+          grep -q '三类核心项目交付' index.html
+          grep -q '三项数智化产品与技术能力' cooperation/index.html
           grep -q '01｜新工厂／新产线规划' cooperation/index.html
           grep -q '02｜精益改善项目' cooperation/index.html
           grep -q '03｜目视化项目' cooperation/index.html
@@ -62,6 +62,8 @@ jobs:
           grep -q '06｜官网建设' cooperation/index.html
           grep -q 'data-qily-six-service-boundary="v1"' cooperation/index.html
           grep -q '合作启动路径与公开报价边界' cooperation/index.html
+          ! grep -q '六大核心业务' index.html
+          ! grep -q '六大核心业务' cooperation/index.html
           ! grep -q '<h2>三大核心业务</h2>' cooperation/index.html
           ! grep -q '<h2>四类项目合作边界</h2>' cooperation/index.html
           ! grep -q '三类核心业务' index.html
@@ -78,6 +80,6 @@ jobs:
           git config user.name 'QilyLean'
           git config user.email 'admin@qilylean.com'
           git add index.html cooperation/index.html site-information-architecture-v1.js scripts/materialize-static-core-pages.js scripts/hide-public-pricing.js qilylean/site-search-index.json qilylean/site-data.json
-          git commit -m '全站口径：静态源统一为两大业务主线六大核心业务'
+          git commit -m '全站口径：统一3+3六类项目合作能力'
           git pull --rebase origin main
           git push origin HEAD:main
