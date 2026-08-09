@@ -5,11 +5,11 @@ if(!card)return;
 var datePattern=/^\d{4}-\d{2}-\d{2}$/;
 var stamp=Date.now();
 var releaseCandidate={
-  date:'2026-08-09',
-  theme:'职场术语与目标管理',
-  title:'别把“天花板”当成努力目标：上限、标杆与挑战目标必须分开',
-  summary:'职场与管理语境中的“天花板”本质是上限，不等于“努努力就能达到的标准”。管理中应把 Ceiling（天花板／上限）、Benchmark（标杆）、Target（目标）与 Stretch Target（挑战目标）分开定义，否则绩效、改善和资源配置容易因为术语混用而失真。',
-  href:'/qilylean/daily/2026-08-09.html'
+  date:'2026-08-10',
+  theme:'岗位价值与项目交付',
+  title:'真正的职能含金量：不是“负责过”，而是能把问题变成结果',
+  summary:'一个岗位真正的含金量，不在职位名称、汇报对象或会多少术语，而在于能否完成从问题识别、数据基线、方案设计、责任协同、Pilot验证、结果验收到机制固化的完整闭环。',
+  href:'/qilylean/daily/2026-08-10.html'
 };
 
 function request(url,type){

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09",
+  "generatedAt": "2026-08-10",
   "schemaVersion": 1,
   "terminology": {
     "total": 184,
@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 2588,
-    "latestDate": "2026-08-09",
-    "latestTheme": "职场术语与目标管理",
-    "latestTitle": "别把“天花板”当成努力目标：上限、标杆与挑战目标必须分开",
-    "latestSummary": "职场与管理语境中的“天花板”本质是上限，不等于“努努力就能达到的标准”。管理中应把 Ceiling（天花板／上限）、Benchmark（标杆）、Target（目标）与 Stretch Target（挑战目标）分开定义，否则绩效、改善和资源配置容易因为术语混用而失真。",
-    "latestUrl": "/qilylean/daily/2026-08-09.html",
+    "total": 2589,
+    "latestDate": "2026-08-10",
+    "latestTheme": "岗位价值与项目交付",
+    "latestTitle": "真正的职能含金量：不是“负责过”，而是能把问题变成结果",
+    "latestSummary": "一个岗位真正的含金量，不在职位名称、汇报对象或会多少术语，而在于能否完成从问题识别、数据基线、方案设计、责任协同、Pilot验证、结果验收到机制固化的完整闭环。",
+    "latestUrl": "/qilylean/daily/2026-08-10.html",
     "directoryUrl": "/qilylean/daily-insights.html"
   },
   "knowledge": {
@@ -45,11 +45,11 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 2886,
-    "indexedPages": 2822,
+    "indexedEntries": 2881,
+    "indexedPages": 51,
     "terminologyTotal": 184,
-    "briefTotal": 2588,
-    "latestBriefDate": "2026-08-09",
-    "sitemapLastmod": "2026-08-09"
+    "briefTotal": 2589,
+    "latestBriefDate": "2026-08-10",
+    "sitemapLastmod": "2026-08-10"
   }
 }
