@@ -1,0 +1,47 @@
+name: Remove terminology independent URL note 20260809
+
+on:
+  push:
+    paths:
+      - 'scripts/remove-terminology-independent-url-note-20260809.py'
+      - '.github/workflows/remove-terminology-independent-url-note-20260809.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Apply terminology cleanup
+        run: python scripts/remove-terminology-independent-url-note-20260809.py
+      - name: Verify active terminology wording
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          active=[Path('knowledge/terminology.html'),Path('knowledge/terminology-sponsor-v1.js')]
+          for p in active:
+              s=p.read_text(encoding='utf-8')
+              assert '独立网址：在线阅览' not in s, p
+              assert '独立网址 · 在线阅览' not in s, p
+          print('active terminology wording clean')
+          PY
+          python scripts/audit-official-contact-association.py
+      - name: Commit cleanup
+        run: |
+          if git diff --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add knowledge/terminology.html knowledge/terminology-sponsor-v1.js scripts/sitewide_contact_core_patch_20260807.py scripts/audit-official-contact-association.py
+          git commit -m '术语页清理：删除独立网址在线阅览字样 [skip ci]'
+          git push
