@@ -1,0 +1,101 @@
+name: Publish Times26001 v1.1.10 Official Website Label Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-times26001-v1110-official-website-fix-20260809.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download verified v1.1.10 build artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 'https://sdmntprwestcentralus.oaiusercontent.com/files/00000000-6dd4-81fb-a1ef-3bebad5964e7/raw?se=2026-08-09T06%3A16%3A09Z&sp=r&sv=2026-02-06&sr=b&scid=5964cc05-95f2-50dd-a3c5-dce20cef3a37&skoid=18c14e53-ea0c-429b-8d09-d22d66ca7169&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-08T11%3A09%3A24Z&ske=2026-08-09T11%3A09%3A24Z&sks=b&skv=2026-02-06&sig=JQsDq9aR1/%2BSvtgF0zYrvb/3obbqL0C2F%2BR4%2BzX6C5Y%3D' -o /tmp/times1110.zip
+          rm -rf /tmp/times1110 && mkdir -p /tmp/times1110
+          unzip -q /tmp/times1110.zip -d /tmp/times1110
+          test -f /tmp/times1110/Times26001-Android-v1.1.10-Official-Website-Fix.apk
+          echo '37e5a6adb1d2d2328c0217ac91b9d25373cba15ff6403c8e851b677e8d30a07a  /tmp/times1110/Times26001-Android-v1.1.10-Official-Website-Fix.apk' | sha256sum -c -
+          cp /tmp/times1110/Times26001-Android-v1.1.10-Official-Website-Fix.apk ./Times26001-Android-v1.1.10-Official-Website-Fix.apk
+          printf '%s  %s\n' '37e5a6adb1d2d2328c0217ac91b9d25373cba15ff6403c8e851b677e8d30a07a' 'Times26001-Android-v1.1.10-Official-Website-Fix.apk' > Times26001-Android-v1.1.10-Official-Website-Fix.sha256.txt
+
+      - name: Synchronize website modules to v1.1.10
+        shell: python
+        run: |
+          from pathlib import Path
+          import json, re
+
+          apk_old = 'Times26001-Android-v1.1.9-Location-City-Fix.apk'
+          apk_new = 'Times26001-Android-v1.1.10-Official-Website-Fix.apk'
+          build_old = '1f89d56b'
+          build_new = '37e5a6ad'
+
+          text_files = [
+              'tools/times26001/index.html',
+              'capabilities/index.html',
+              'app-download-share-v1.js',
+              'times26001-home-card.js',
+              'assets/tools/times26001-overview.svg',
+              'app-support/index.html',
+              'app-store/times26001/README.md',
+          ]
+          for name in text_files:
+              p = Path(name)
+              if not p.exists():
+                  continue
+              s = p.read_text(encoding='utf-8')
+              s = s.replace(apk_old, apk_new).replace(build_old, build_new)
+              s = s.replace('v1.1.9 / versionCode 12', 'v1.1.10 / versionCode 13')
+              s = s.replace('v1.1.9 · versionCode 12', 'v1.1.10 · versionCode 13')
+              s = s.replace('v1.1.9 / code 12', 'v1.1.10 / code 13')
+              s = s.replace('v1.1.9', 'v1.1.10').replace('versionCode 12', 'versionCode 13')
+              s = s.replace('定位城市识别修正版', '官方网址标签修正版')
+              p.write_text(s, encoding='utf-8')
+
+          manifest = Path('app-release-manifest.json')
+          if manifest.exists():
+              data = json.loads(manifest.read_text(encoding='utf-8'))
+              data['updatedAt'] = '2026-08-09'
+              app = data['apps']['times26001']
+              app['publicRelease']['versionName'] = '1.1.10'
+              app['publicRelease']['versionCode'] = 13
+              app['publicRelease']['apk'] = '/' + apk_new
+              app['publicRelease']['sha256'] = '/Times26001-Android-v1.1.10-Official-Website-Fix.sha256.txt'
+              app['publicRelease']['label'] = '当前官网试用包（已包含“官方网址”标签修正）'
+              app['storeCandidate']['versionName'] = '1.1.10'
+              app['storeCandidate']['versionCode'] = 13
+              app['latestBuild']['versionName'] = '1.1.10'
+              app['latestBuild']['versionCode'] = 13
+              app['latestBuild']['status'] = '当前位置城市识别与天气闭环保留；底部联系方式“官方网址/企业邮箱”对称标签已进入APK；固定Release签名待启用'
+              manifest.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          # Hard checks: no v1.1.9 public download remains in active website surfaces.
+          checks = ['tools/times26001/index.html','capabilities/index.html','app-download-share-v1.js','app-release-manifest.json']
+          for name in checks:
+              s = Path(name).read_text(encoding='utf-8')
+              if apk_old in s:
+                  raise SystemExit(f'old v1.1.9 APK link remains in {name}')
+          if apk_new not in Path('app-download-share-v1.js').read_text(encoding='utf-8'):
+              raise SystemExit('v1.1.10 download link missing')
+
+      - name: Commit APK and website updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add Times26001-Android-v1.1.10-Official-Website-Fix.apk Times26001-Android-v1.1.10-Official-Website-Fix.sha256.txt tools/times26001/index.html capabilities/index.html app-download-share-v1.js times26001-home-card.js assets/tools/times26001-overview.svg app-support/index.html app-store/times26001/README.md app-release-manifest.json
+          git commit -m 'release: publish Times26001 v1.1.10 official website label fix'
+          git push origin HEAD:main
