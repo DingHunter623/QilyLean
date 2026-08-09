@@ -442,3 +442,301 @@ html body a.qily-search-result:active .qily-search-rank{
   background-color:#ffe39b!important;
   border-color:#ffe39b!important;
 }
+
+/* QILY-SITEWIDE-INTERACTION-CLARITY-V4-20260809
+ * 根因封堵：site-vi-contrast-restoration-v1.css 等后续组件规则曾以更高
+ * specificity 把按钮悬停重新覆盖为“深青底＋白字”，导致视觉状态几乎不变。
+ * 本闭环层只命中真实可操作控件；静态卡片不进入选择器。
+ */
+:root{
+  --qily-control-hover-bg:#ffe39b;
+  --qily-control-hover-ink:#17322d;
+  --qily-control-hover-border:#c99a3e;
+  --qily-control-active-bg:#052a33;
+  --qily-control-active-ink:#ffffff;
+  --qily-control-active-border:#ffe39b;
+  --qily-control-focus-ring:#fff3c6;
+  --qily-control-disabled-bg:#e6eceb;
+  --qily-control-disabled-ink:#465a57;
+  --qily-control-disabled-border:#9aadaa;
+}
+
+/* 所有真实按钮、按钮型链接与图标控件先恢复稳定可读的文字层。 */
+:root:root html body :is(
+  button:not([hidden]),
+  [role="button"]:not([aria-hidden="true"]),
+  input[type="button"],
+  input[type="submit"],
+  a.button,
+  a.btn,
+  a[class*="-button"],
+  a[class*="-action"],
+  .hero-actions>a[href],
+  .actions>a[href],
+  .module-actions>a[href],
+  .article-actions>a[href],
+  .card-actions>a[href],
+  .qily-ia-actions>a[href],
+  .qtc-actions>a[href],
+  .form-actions>a[href],
+  .qily-float-btn,
+  .site-music-toggle,
+  .qily-modal-close
+){
+  position:relative!important;
+  isolation:isolate!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+  transition:
+    color .16s ease,
+    background-color .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease,
+    transform .16s ease!important;
+}
+
+:root:root html body :is(
+  button:not([hidden]),
+  [role="button"]:not([aria-hidden="true"]),
+  input[type="button"],
+  input[type="submit"],
+  a.button,
+  a.btn,
+  a[class*="-button"],
+  a[class*="-action"],
+  .hero-actions>a[href],
+  .actions>a[href],
+  .module-actions>a[href],
+  .article-actions>a[href],
+  .card-actions>a[href],
+  .qily-ia-actions>a[href],
+  .qtc-actions>a[href],
+  .form-actions>a[href],
+  .qily-float-btn,
+  .site-music-toggle,
+  .qily-modal-close
+) :is(span,strong,b,small,em,i,label,svg){
+  color:inherit!important;
+  -webkit-text-fill-color:currentColor!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+
+/* 深色首屏：主按钮金底深字；其余按钮透明浅层＋白色边界。 */
+:root:root html body :is(
+  .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
+  .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
+  [data-qily-dark-surface="true"]
+) :is(.hero-actions,.actions,.module-actions,.article-actions,.card-actions,.qily-ia-actions)
+> :is(a,button).primary,
+:root:root html body :is(
+  .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
+  .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
+  [data-qily-dark-surface="true"]
+) :is(a,button).qily-action-primary{
+  color:#332100!important;
+  -webkit-text-fill-color:#332100!important;
+  background-color:#ffd36a!important;
+  background-image:none!important;
+  border:2px solid #fff3c6!important;
+  text-decoration-color:#332100!important;
+  box-shadow:0 10px 24px rgba(0,0,0,.24)!important;
+}
+
+:root:root html body :is(
+  .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
+  .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
+  [data-qily-dark-surface="true"]
+) :is(.hero-actions,.actions,.module-actions,.article-actions,.card-actions,.qily-ia-actions)
+> :is(a,button):not(.primary):not(.qily-action-primary),
+:root:root html body :is(
+  .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
+  .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
+  [data-qily-dark-surface="true"]
+) :is(a,button).qily-action-secondary{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background-color:rgba(255,255,255,.10)!important;
+  background-image:none!important;
+  border:2px solid rgba(255,255,255,.92)!important;
+  text-decoration-color:#ffe39b!important;
+  box-shadow:none!important;
+}
+
+/* Hover：所有按钮和图标统一切为浅金实底＋深色字，形成明确色界变化。 */
+:root:root html body :is(
+  button:not([hidden]):not(:disabled),
+  [role="button"]:not([aria-hidden="true"]):not([aria-disabled="true"]),
+  input[type="button"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  a.button:not([aria-disabled="true"]),
+  a.btn:not([aria-disabled="true"]),
+  a[class*="-button"]:not([aria-disabled="true"]),
+  a[class*="-action"]:not([aria-disabled="true"]),
+  .hero-actions>a[href]:not([aria-disabled="true"]),
+  .actions>a[href]:not([aria-disabled="true"]),
+  .module-actions>a[href]:not([aria-disabled="true"]),
+  .article-actions>a[href]:not([aria-disabled="true"]),
+  .card-actions>a[href]:not([aria-disabled="true"]),
+  .qily-ia-actions>a[href]:not([aria-disabled="true"]),
+  .qtc-actions>a[href]:not([aria-disabled="true"]),
+  .form-actions>a[href]:not([aria-disabled="true"]),
+  .qily-float-btn:not([aria-disabled="true"]),
+  .site-music-toggle:not([aria-disabled="true"]),
+  .qily-modal-close:not([aria-disabled="true"])
+):is(:hover,:focus-visible){
+  color:var(--qily-control-hover-ink)!important;
+  -webkit-text-fill-color:var(--qily-control-hover-ink)!important;
+  background-color:var(--qily-control-hover-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-control-hover-border)!important;
+  text-decoration-color:var(--qily-control-hover-ink)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  box-shadow:0 10px 24px rgba(202,161,95,.34)!important;
+  transform:translateY(-2px)!important;
+}
+
+:root:root html body :is(
+  button:not([hidden]),[role="button"],input[type="button"],input[type="submit"],
+  a.button,a.btn,a[class*="-button"],a[class*="-action"],
+  .hero-actions>a[href],.actions>a[href],.module-actions>a[href],.article-actions>a[href],
+  .card-actions>a[href],.qily-ia-actions>a[href],.qtc-actions>a[href],.form-actions>a[href],
+  .qily-float-btn,.site-music-toggle,.qily-modal-close
+):focus-visible{
+  outline:3px solid var(--qily-control-focus-ring)!important;
+  outline-offset:3px!important;
+}
+
+/* Active：按下时切为更深青底＋白字；顺序位于Hover之后，保证点击瞬间可辨。 */
+:root:root html body :is(
+  button:not([hidden]):not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  input[type="button"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  a.button:not([aria-disabled="true"]),
+  a.btn:not([aria-disabled="true"]),
+  a[class*="-button"]:not([aria-disabled="true"]),
+  a[class*="-action"]:not([aria-disabled="true"]),
+  .hero-actions>a[href]:not([aria-disabled="true"]),
+  .actions>a[href]:not([aria-disabled="true"]),
+  .module-actions>a[href]:not([aria-disabled="true"]),
+  .article-actions>a[href]:not([aria-disabled="true"]),
+  .card-actions>a[href]:not([aria-disabled="true"]),
+  .qily-ia-actions>a[href]:not([aria-disabled="true"]),
+  .qtc-actions>a[href]:not([aria-disabled="true"]),
+  .form-actions>a[href]:not([aria-disabled="true"]),
+  .qily-float-btn:not([aria-disabled="true"]),
+  .site-music-toggle:not([aria-disabled="true"]),
+  .qily-modal-close:not([aria-disabled="true"])
+):active{
+  color:var(--qily-control-active-ink)!important;
+  -webkit-text-fill-color:var(--qily-control-active-ink)!important;
+  background-color:var(--qily-control-active-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-control-active-border)!important;
+  text-decoration-color:var(--qily-control-active-border)!important;
+  box-shadow:inset 0 0 0 2px rgba(255,227,155,.22),0 5px 14px rgba(5,42,51,.28)!important;
+  transform:translateY(0) scale(.97)!important;
+  outline-color:var(--qily-control-active-border)!important;
+}
+
+/* 导航按钮同样必须换色，含当前栏目，杜绝“当前项悬停仍无变化”。 */
+:root:root html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:is(:hover,:focus-visible){
+  color:var(--qily-control-hover-ink)!important;
+  -webkit-text-fill-color:var(--qily-control-hover-ink)!important;
+  background-color:var(--qily-control-hover-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-control-hover-border)!important;
+  text-decoration-color:var(--qily-control-hover-ink)!important;
+  box-shadow:0 8px 20px rgba(202,161,95,.32)!important;
+  transform:translateY(-2px)!important;
+  outline:3px solid rgba(15,75,90,.26)!important;
+  outline-offset:2px!important;
+}
+
+:root:root html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:active{
+  color:var(--qily-control-active-ink)!important;
+  -webkit-text-fill-color:var(--qily-control-active-ink)!important;
+  background-color:var(--qily-control-active-bg)!important;
+  border-color:var(--qily-control-active-border)!important;
+  text-decoration-color:var(--qily-control-active-border)!important;
+  transform:translateY(0) scale(.97)!important;
+}
+
+/* 整卡链接与搜索结果：所有子文字随整卡状态切换，不再出现深底深字。 */
+:root:root html body :is(
+  a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
+  a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
+):is(:hover,:focus-visible){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#fff8df!important;
+  background-image:none!important;
+  border-color:#c99a3e!important;
+  box-shadow:0 14px 30px rgba(15,75,90,.20)!important;
+  transform:translateY(-3px)!important;
+  outline:3px solid rgba(202,161,95,.42)!important;
+  outline-offset:3px!important;
+}
+
+:root:root html body :is(
+  a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
+  a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
+):is(:hover,:focus-visible) *{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  text-decoration-color:#17322d!important;
+  opacity:1!important;
+  visibility:visible!important;
+  text-shadow:none!important;
+}
+
+:root:root html body :is(
+  a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
+  a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
+):active,
+:root:root html body :is(
+  a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
+  a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
+):active *{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background-color:#052a33!important;
+  border-color:#ffe39b!important;
+  text-decoration-color:#ffe39b!important;
+}
+
+/* 禁用态不用透明度“做灰”，保持文字仍可读。 */
+:root:root html body :is(
+  button:disabled,input[type="button"]:disabled,input[type="submit"]:disabled,
+  [role="button"][aria-disabled="true"],a[aria-disabled="true"]
+){
+  color:var(--qily-control-disabled-ink)!important;
+  -webkit-text-fill-color:var(--qily-control-disabled-ink)!important;
+  background-color:var(--qily-control-disabled-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-control-disabled-border)!important;
+  opacity:1!important;
+  filter:none!important;
+  box-shadow:none!important;
+  transform:none!important;
+  cursor:not-allowed!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  :root:root html body :is(
+    button,[role="button"],input[type="button"],input[type="submit"],a.button,a.btn,
+    a[class*="-button"],a[class*="-action"],.qily-float-btn,.site-music-toggle,.qily-modal-close
+  ){
+    transition:none!important;
+  }
+}

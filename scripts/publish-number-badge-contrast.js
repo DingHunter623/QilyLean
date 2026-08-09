@@ -6,7 +6,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const NUMBER_VERSION = '20260805-number-badge-contrast-v1';
-const HOVER_VERSION = '20260805-interactive-hover-contrast-v1';
+const HOVER_VERSION = '20260809-sitewide-interaction-clarity-v4';
 const NUMBER_HREF = `/site-number-badge-contrast-v1.css?v=${NUMBER_VERSION}`;
 const HOVER_HREF = `/site-interactive-hover-contrast-v1.css?v=${HOVER_VERSION}`;
 const START = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';

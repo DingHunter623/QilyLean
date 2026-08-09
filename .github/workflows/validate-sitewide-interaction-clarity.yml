@@ -1,0 +1,46 @@
+name: Validate sitewide interaction clarity
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/validate-sitewide-interaction-clarity.yml'
+      - 'package.json'
+      - 'site-interactive-hover-contrast-v1.css'
+      - 'site-navigation.js'
+      - 'scripts/publish-number-badge-contrast.js'
+      - 'scripts/validate-sitewide-interaction-clarity.js'
+      - 'scripts/validate-current-daily-publication.js'
+      - 'scripts/nda-source/nda-preview-template.html'
+      - '**/*.html'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sitewide-interaction-clarity-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check site-navigation.js
+          node --check scripts/publish-number-badge-contrast.js
+          node --check scripts/validate-sitewide-interaction-clarity.js
+
+      - name: Validate interaction states, contrast and materialization
+        run: npm run test:visual
+
+      - name: Verify clean patch formatting
+        run: git diff --check
