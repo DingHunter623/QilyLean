@@ -1,0 +1,79 @@
+name: Publish 2026-08-10 function value brief
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-20260810-function-value.yml"
+      - "scripts/publish-20260810-function-value.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-20260810-function-value-main
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 20
+      - name: Publish function value brief and rebuild site metadata
+        run: |
+          node --check scripts/publish-20260810-function-value.js
+          node scripts/publish-20260810-function-value.js
+          QILY_BUILD_DATE=2026-08-10 node scripts/build-site-metadata.js
+          node --check scripts/build-trust-search-sync.js
+          QILY_BUILD_DATE=2026-08-10 node scripts/build-trust-search-sync.js
+          test -s qilylean/daily/2026-08-10.html
+          grep -F '真正的职能含金量：不是“负责过”，而是能把问题变成结果' qilylean/daily/2026-08-10.html
+          grep -F '问题识别' qilylean/daily/2026-08-10.html
+          grep -F '数据基线' qilylean/daily/2026-08-10.html
+          grep -F 'Pilot验证' qilylean/daily/2026-08-10.html
+          grep -F 'RACI｜责任分工矩阵' qilylean/daily/2026-08-10.html
+          grep -F 'PDCA｜计划-执行-检查-改进' qilylean/daily/2026-08-10.html
+          grep -F 'data-brief-date="2026-08-10"' qilylean/daily-insights.html
+          grep -F '<span>2026年8月</span><b>10期</b>' qilylean/daily-insights.html
+          grep -F '"total": 2589' qilylean/site-data.json
+          grep -F '"latestDate": "2026-08-10"' qilylean/site-data.json
+          grep -F '<strong>2589</strong><span>今日简报总数</span>' trust/index.html
+          grep -F '<strong>2026-08-10</strong><span>最新简报日期</span>' trust/index.html
+          grep -F 'daily/2026-08-10.html' sitemap.xml
+          grep -F '下一期 →' qilylean/daily/2026-08-09.html
+          grep -F "date:'2026-08-10'" qilylean/latest-brief.js
+          git diff --check
+      - name: Commit publication outputs
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "2026-08-10 brief is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            qilylean/daily/2026-08-10.html \
+            qilylean/daily/2026-08-09.html \
+            qilylean/daily-insights.html \
+            qilylean/daily/index.json \
+            qilylean/latest-brief.js \
+            qilylean/site-data.json \
+            qilylean/site-search-index.json \
+            knowledge/index.html \
+            trust/index.html \
+            cooperation/index.html \
+            site-search.js \
+            index.html \
+            sitemap.xml \
+            sitemap-core.xml
+          git commit -m "publish: 2026-08-10 function value brief [skip ci]"
+          git push origin HEAD:main
