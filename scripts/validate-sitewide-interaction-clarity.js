@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const version = '20260809-sitewide-interaction-clarity-v8';
+const version = '20260809-sitewide-interaction-clarity-v9';
 const href = `/site-interactive-hover-contrast-v1.css?v=${version}`;
 const managedStart = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const managedEnd = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
@@ -91,6 +91,14 @@ function validateCss() {
   const css = read('site-interactive-hover-contrast-v1.css');
   [
     'QILY-SITEWIDE-INTERACTION-CLARITY-V8-20260809',
+    'QILY-SITEWIDE-COLOR-BOUNDARY-V9-20260809',
+    '--qily-boundary-accent:#ffd36a',
+    '.qtc-global-trust-links>a[href]',
+    'a.moment-link',
+    '.qily-latest-brief-button::after',
+    'border:2px solid var(--qily-boundary-accent)!important',
+    'min-height:44px!important',
+    'font-size:12px!important',
     '--qily-control-hover-bg:#ffe39b',
     '--qily-control-hover-ink:#17322d',
     '--qily-control-active-bg:#052a33',
@@ -152,7 +160,7 @@ function validatePublicPages() {
     if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html) || !isPublicPage(html)) return;
     publicPages += 1;
     actionControls += (html.match(/<button\b|<input\b[^>]*type=["'](?:button|submit)["']|<a\b[^>]*class=["'][^"']*(?:button|action|btn|cta)/gi) || []).length;
-    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260809-sitewide-interaction-clarity-v8)/i.test(html)) staleBeforeMaterialization += 1;
+    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260809-sitewide-interaction-clarity-v9)/i.test(html)) staleBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);
     const currentCount = candidate.split(href).length - 1;
