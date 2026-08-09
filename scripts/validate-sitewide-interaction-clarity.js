@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const version = '20260809-sitewide-interaction-clarity-v4';
+const version = '20260809-sitewide-interaction-clarity-v5';
 const href = `/site-interactive-hover-contrast-v1.css?v=${version}`;
 const managedStart = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const managedEnd = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
@@ -90,7 +90,7 @@ function contrast(foreground, background) {
 function validateCss() {
   const css = read('site-interactive-hover-contrast-v1.css');
   [
-    'QILY-SITEWIDE-INTERACTION-CLARITY-V4-20260809',
+    'QILY-SITEWIDE-INTERACTION-CLARITY-V5-20260809',
     '--qily-control-hover-bg:#ffe39b',
     '--qily-control-hover-ink:#17322d',
     '--qily-control-active-bg:#052a33',
@@ -109,6 +109,8 @@ function validateCss() {
     'outline:3px solid var(--qily-control-focus-ring)!important'
   ].forEach((marker) => assert(css.includes(marker), `Interaction CSS marker missing: ${marker}`));
 
+  assert(css.includes('html:root:root body'), 'Specificity closure must target the real root html element.');
+  assert(!css.includes(':root:root html body'), 'Impossible root-descendant selector would prevent the closure from matching.');
   assert(!/qily-static-card[^\n,{]*:(?:hover|focus-visible|active)/.test(css), 'Static cards must not receive interactive feedback.');
 
   [
@@ -145,7 +147,7 @@ function validatePublicPages() {
     if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html) || !isPublicPage(html)) return;
     publicPages += 1;
     actionControls += (html.match(/<button\b|<input\b[^>]*type=["'](?:button|submit)["']|<a\b[^>]*class=["'][^"']*(?:button|action|btn|cta)/gi) || []).length;
-    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260809-sitewide-interaction-clarity-v4)/i.test(html)) staleBeforeMaterialization += 1;
+    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260809-sitewide-interaction-clarity-v5)/i.test(html)) staleBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);
     const currentCount = candidate.split(href).length - 1;
