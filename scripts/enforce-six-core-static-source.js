@@ -116,7 +116,7 @@ function patchHome(html){
 
 function patchCooperation(html){
   html=upsertTitle(html,'项目合作｜QilyLean六类项目合作能力');
-  html=upsertNamedMeta(html,'description','QilyLean提供六类项目合作能力项目合作：新工厂／新产线规划、精益改善、目视化设计交付、数字化工厂、APP软件开发与官网建设，通过诊断、方案、Pilot／测试、验证、固化和验收形成项目闭环。');
+  html=upsertNamedMeta(html,'description','QilyLean采用“3+3”项目合作结构：三类核心项目交付——新工厂／新产线规划、精益改善、目视化；三项数智化产品与技术能力——数字化工厂、APP软件开发、官网建设；合计六类项目合作能力。');
   html=upsertPropertyMeta(html,'og:title','QilyLean项目合作｜六类项目合作能力');
   html=upsertPropertyMeta(html,'og:description','三类核心项目交付 + 三项数智化产品与技术能力，合计六类项目合作能力；以范围、交付物、Pilot／测试、验证和验收定义合作。');
 
