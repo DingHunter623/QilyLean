@@ -1,0 +1,65 @@
+name: Sync homepage latest brief CTA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "qilylean/site-data.json"
+      - "qilylean/daily/index.json"
+      - "site-static-core-interactions-v1.js"
+      - "scripts/sync-home-latest-brief-cta.js"
+      - ".github/workflows/sync-home-latest-brief-cta.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-home-latest-brief-cta-main
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Synchronize homepage brief CTA
+        run: |
+          node --check scripts/sync-home-latest-brief-cta.js
+          node --check site-static-core-interactions-v1.js
+          node scripts/sync-home-latest-brief-cta.js
+          grep -F 'data-qily-latest-brief-cta="v1"' index.html
+          node - <<'NODE'
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('qilylean/site-data.json','utf8'));
+          const home = fs.readFileSync('index.html','utf8');
+          const m = data.briefs.latestDate.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+          const label = `今日简报｜${Number(m[2])}月${Number(m[3])}日`;
+          if (!home.includes(label)) throw new Error('Homepage latest brief label mismatch');
+          if (!home.includes(`href="${data.briefs.latestUrl}"`)) throw new Error('Homepage latest brief URL mismatch');
+          if (!home.includes('20260809-latest-brief-cta-v1')) throw new Error('Homepage interaction cache-bust version missing');
+          NODE
+          git diff --check
+
+      - name: Commit synchronized homepage
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "Homepage latest brief CTA is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "build: sync homepage latest brief CTA [skip ci]"
+          git push origin HEAD:main
