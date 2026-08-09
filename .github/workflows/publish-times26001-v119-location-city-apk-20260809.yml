@@ -1,0 +1,43 @@
+name: Publish Times26001 v1.1.9 Location City APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-times26001-v119-location-city-apk-20260809.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Download verified v1.1.9 artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://sdmntprwestcentralus.oaiusercontent.com/files/00000000-65e0-81fb-b846-05d93da9dfe8/raw?se=2026-08-09T05%3A57%3A28Z&sp=r&sv=2026-02-06&sr=b&scid=edd55999-c22e-5be9-9a67-8b24703b28aa&skoid=18c14e53-ea0c-429b-8d09-d22d66ca7169&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-09T02%3A52%3A58Z&ske=2026-08-10T02%3A52%3A58Z&sks=b&skv=2026-02-06&sig=xSTQk6jKRMwaKvQIidLUk8KsvsxQFLc%2BT3fi6u%2BnGrM%3D'
+          curl -fL --retry 3 --retry-delay 1 "$URL" -o /tmp/times119.zip
+          rm -rf /tmp/times119 && mkdir -p /tmp/times119
+          unzip -q /tmp/times119.zip -d /tmp/times119
+          APK='/tmp/times119/Times26001-Android-v1.1.9-Location-City-Fix.apk'
+          test -s "$APK"
+          echo '1f89d56b4314e94f0449c90e31035fafd99e1f1bad1fe69f4b64d8b54f77f4cc  /tmp/times119/Times26001-Android-v1.1.9-Location-City-Fix.apk' | sha256sum -c -
+          cp "$APK" ./Times26001-Android-v1.1.9-Location-City-Fix.apk
+          printf '%s  %s\n' '1f89d56b4314e94f0449c90e31035fafd99e1f1bad1fe69f4b64d8b54f77f4cc' 'Times26001-Android-v1.1.9-Location-City-Fix.apk' > Times26001-Android-v1.1.9-Location-City-Fix.sha256.txt
+      - name: Commit website APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add Times26001-Android-v1.1.9-Location-City-Fix.apk Times26001-Android-v1.1.9-Location-City-Fix.sha256.txt
+          git commit -m 'release: add Times26001 v1.1.9 location city fix APK'
+          git pull --rebase origin main
+          git push origin HEAD:main
