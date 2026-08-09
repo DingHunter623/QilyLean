@@ -25,11 +25,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
 
@@ -54,12 +54,18 @@ jobs:
           grep -q '<h2>六类项目合作能力</h2>' cooperation/index.html
           grep -q '三类核心项目交付' index.html
           grep -q '三项数智化产品与技术能力' cooperation/index.html
-          grep -q '01｜新工厂／新产线规划' cooperation/index.html
-          grep -q '02｜精益改善项目' cooperation/index.html
-          grep -q '03｜目视化项目' cooperation/index.html
-          grep -q '04｜数字化工厂' cooperation/index.html
-          grep -q '05｜APP软件开发' cooperation/index.html
-          grep -q '06｜官网建设' cooperation/index.html
+          grep -q '<span class="service-number">01</span>' cooperation/index.html
+          grep -q '<h3>新工厂／新产线规划</h3>' cooperation/index.html
+          grep -q '<span class="service-number">02</span>' cooperation/index.html
+          grep -q '<h3>精益改善项目交付</h3>' cooperation/index.html
+          grep -q '<span class="service-number">03</span>' cooperation/index.html
+          grep -q '<h3>目视化项目设计与交付</h3>' cooperation/index.html
+          grep -q '<span class="service-number">04</span>' cooperation/index.html
+          grep -q '<h3>数字化工厂</h3>' cooperation/index.html
+          grep -q '<span class="service-number">05</span>' cooperation/index.html
+          grep -q '<h3>APP软件开发</h3>' cooperation/index.html
+          grep -q '<span class="service-number">06</span>' cooperation/index.html
+          grep -q '<h3>官网建设</h3>' cooperation/index.html
           grep -q 'data-qily-six-service-boundary="v1"' cooperation/index.html
           grep -q '合作启动路径与公开报价边界' cooperation/index.html
           ! grep -q '六大核心业务' index.html
