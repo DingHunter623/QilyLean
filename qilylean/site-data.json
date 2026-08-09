@@ -45,13 +45,11 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 2876,
-    "indexedPages": 2812,
-    "terminologyTotal": 183,
-    "briefTotal": 2587,
-    "latestBriefDate": "2026-08-08",
-    "sitemapLastmod": "2026-08-05",
-    "generatedAt": "2026-08-05",
-    "totalEntries": 2870
+    "indexedEntries": 2880,
+    "indexedPages": 51,
+    "terminologyTotal": 184,
+    "briefTotal": 2588,
+    "latestBriefDate": "2026-08-09",
+    "sitemapLastmod": "2026-08-09"
   }
 }
