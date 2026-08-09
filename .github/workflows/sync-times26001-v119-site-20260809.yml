@@ -1,0 +1,149 @@
+name: Sync Times26001 v1.1.9 Across Website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-times26001-v119-site-20260809.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Normalize Times26001 v1.1.9 website identity
+        shell: python
+        run: |
+          from pathlib import Path
+          import json
+
+          apk_old = '/Times26001-Android-v1.1.8-Location-Fix.apk?build=22ae3b2b'
+          apk_new = '/Times26001-Android-v1.1.9-Location-City-Fix.apk?build=1f89d56b'
+
+          text_files = [
+              'tools/times26001/index.html',
+              'capabilities/index.html',
+              'app-download-share-v1.js',
+              'assets/tools/times26001-overview.svg',
+              'times26001-home-card.js',
+              'app-support/index.html',
+              'app-store/times26001/README.md',
+              'app-store/UNIFIED_APP_ICON_POLICY.md',
+              'app-store/TWO_APP_STORE_RELEASE_RUNBOOK_20260808.md',
+          ]
+
+          for name in text_files:
+              p = Path(name)
+              if not p.exists():
+                  continue
+              s = p.read_text(encoding='utf-8')
+              s = s.replace(apk_old, apk_new)
+              s = s.replace('Times26001-Android-v1.1.8-Location-Fix.apk', 'Times26001-Android-v1.1.9-Location-City-Fix.apk')
+              s = s.replace('v1.1.8 / versionCode 11 / API 36', 'v1.1.9 / versionCode 12 / API 36')
+              s = s.replace('v1.1.8 / versionCode 11 / targetSdk 36', 'v1.1.9 / versionCode 12 / targetSdk 36')
+              s = s.replace('v1.1.8 · versionCode 11 · API36', 'v1.1.9 · versionCode 12 · API36')
+              s = s.replace('v1.1.8 定位修正版', 'v1.1.9 定位城市修正版')
+              s = s.replace('手机试用版：v1.1.8', '手机试用版：v1.1.9')
+              s = s.replace('当前手机试用版为v1.1.8', '当前手机试用版为v1.1.9')
+              s = s.replace('应用市场候选 v1.1.6 / versionCode 9 / API 36', '当前手机试用版 v1.1.9 / versionCode 12 / API 36')
+              if name.startswith('app-store/') or name == 'app-support/index.html':
+                  s = s.replace('v1.1.6 / versionCode `9` / Android API 36', 'v1.1.9 / versionCode `12` / Android API 36')
+                  s = s.replace('v1.1.6 / versionCode 9 / targetSdk 36', 'v1.1.9 / versionCode 12 / targetSdk 36')
+                  s = s.replace('`versionCode`为9、`versionName`为1.1.6', '`versionCode`为12、`versionName`为1.1.9')
+                  s = s.replace('最新构建 / 应用市场候选版：`1.1.6` / versionCode `9` / Android API 36', '最新构建 / 应用市场候选版：`1.1.9` / versionCode `12` / Android API 36')
+                  s = s.replace('最新构建 / 应用市场候选版 v1.1.6 / versionCode 9 / targetSdk 36', '最新构建 / 应用市场候选版 v1.1.9 / versionCode 12 / targetSdk 36')
+              p.write_text(s, encoding='utf-8')
+
+          # Homepage card: latest website trial replaces historical-download CTA.
+          p = Path('times26001-home-card.js')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('/Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=af47a9ec', apk_new)
+          s = s.replace('历史版 v1.1.4（仅追溯）', '下载 v1.1.9 定位城市修正版')
+          p.write_text(s, encoding='utf-8')
+
+          # Support page wording: current public trial + store signing boundary.
+          p = Path('app-support/index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('历史官网安装包 v1.1.4；最新构建 / 应用市场候选版 v1.1.9 / versionCode 12 / targetSdk 36。', '当前官网试用版 v1.1.9 / versionCode 12 / targetSdk 36；已修复当前位置城市识别与天气请求闭环。正式应用市场包仍须使用固定Release签名。')
+          p.write_text(s, encoding='utf-8')
+
+          # Privacy policy must match the new reverse-geocoding behavior.
+          p = Path('legal/times26001/privacy/index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace(
+              '使用当前位置时，Android可能请求粗略位置或精确位置权限，获取的经纬度会发送至Open-Meteo天气接口以返回当前实况和未来7天预报。',
+              '使用当前位置时，Android可能请求粗略位置或精确位置权限；获取的经纬度会发送至BigDataCloud客户端反向地理编码接口以解析省/市/区县名称，并发送至Open-Meteo天气接口以返回当前实况和未来7天预报。'
+          )
+          s = s.replace(
+              '天气查询时，仅为完成用户主动请求，将城市关键词或坐标发送至Open-Meteo相关接口。',
+              '天气查询时，仅为完成用户主动请求，将城市关键词或坐标发送至Open-Meteo相关接口；使用当前位置时，坐标还会发送至BigDataCloud反向地理编码接口以解析省/市/区县名称。'
+          )
+          s = s.replace(
+              '天气功能依赖第三方Open-Meteo网络服务，相关请求可能经过用户所在地区以外的网络基础设施；除天气查询所必需的城市关键词或坐标外，Times26001不向该天气服务发送生日、闹钟、秒表分段或其他本地业务数据。',
+              '天气功能依赖第三方Open-Meteo与BigDataCloud网络服务，相关请求可能经过用户所在地区以外的网络基础设施；除天气查询和位置名称解析所必需的城市关键词或坐标外，Times26001不向这些服务发送生日、闹钟、秒表分段或其他本地业务数据。'
+          )
+          p.write_text(s, encoding='utf-8')
+
+          # Release manifest: reflect current public trial and source candidate while preserving signing boundary.
+          p = Path('app-release-manifest.json')
+          data = json.loads(p.read_text(encoding='utf-8'))
+          data['updatedAt'] = '2026-08-09'
+          app = data['apps']['times26001']
+          app['publicRelease'] = {
+              'versionName': '1.1.9',
+              'versionCode': 12,
+              'apk': '/Times26001-Android-v1.1.9-Location-City-Fix.apk',
+              'sha256': '/Times26001-Android-v1.1.9-Location-City-Fix.sha256.txt',
+              'label': '当前官网试用包（Debug签名，非应用市场正式包）'
+          }
+          app['storeCandidate'] = {
+              'versionName': '1.1.9',
+              'versionCode': 12,
+              'targetSdk': 36,
+              'label': '国内应用市场候选源码版本',
+              'status': '当前位置城市识别与天气闭环已修复；固定Release签名待启用，正式商店版后续更新以对应应用市场渠道为主'
+          }
+          app['latestBuild'] = {
+              'versionName': '1.1.9',
+              'versionCode': 12,
+              'targetSdk': 36,
+              'label': '最新构建',
+              'status': '城市反向解析、定位状态闭环与天气请求循环修复已验证；固定Release签名待启用',
+              'upgradeFromHistoricalPublicApk': '是否可直接覆盖安装取决于设备上旧包签名；应用市场正式包必须保持固定Release签名'
+          }
+          p.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          # Hard validation for the current source-of-truth pages.
+          required = {
+              'tools/times26001/index.html': ['v1.1.9', 'versionCode 12', 'Times26001-Android-v1.1.9-Location-City-Fix.apk'],
+              'capabilities/index.html': ['v1.1.9', 'versionCode 12'],
+              'app-download-share-v1.js': ['Times26001-Android-v1.1.9-Location-City-Fix.apk', 'v1.1.9'],
+              'assets/tools/times26001-overview.svg': ['v1.1.9', 'versionCode 12'],
+              'app-support/index.html': ['v1.1.9', 'versionCode 12'],
+              'legal/times26001/privacy/index.html': ['BigDataCloud', 'Open-Meteo'],
+              'app-release-manifest.json': ['"versionName": "1.1.9"', '"versionCode": 12'],
+          }
+          for name, needles in required.items():
+              text = Path(name).read_text(encoding='utf-8')
+              for needle in needles:
+                  if needle not in text:
+                      raise SystemExit(f'{name}: missing {needle}')
+
+      - name: Commit synchronized website sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add tools/times26001/index.html capabilities/index.html app-download-share-v1.js assets/tools/times26001-overview.svg times26001-home-card.js app-support/index.html app-store/times26001/README.md app-store/UNIFIED_APP_ICON_POLICY.md app-store/TWO_APP_STORE_RELEASE_RUNBOOK_20260808.md legal/times26001/privacy/index.html app-release-manifest.json
+          git commit -m 'release: align website and privacy with Times26001 v1.1.9'
+          git pull --rebase origin main
+          git push origin HEAD:main
