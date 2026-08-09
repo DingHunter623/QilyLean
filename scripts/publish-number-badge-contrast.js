@@ -7,8 +7,10 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const NUMBER_VERSION = '20260805-number-badge-contrast-v1';
 const HOVER_VERSION = '20260809-sitewide-interaction-clarity-v5';
+const NAV_VERSION = '20260809-sitewide-interaction-loader-v5';
 const NUMBER_HREF = `/site-number-badge-contrast-v1.css?v=${NUMBER_VERSION}`;
 const HOVER_HREF = `/site-interactive-hover-contrast-v1.css?v=${HOVER_VERSION}`;
+const NAV_HREF = `/site-navigation.js?v=${NAV_VERSION}`;
 const START = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const END = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
 const BLOCK = [
@@ -53,7 +55,8 @@ function removeManaged(html) {
 }
 
 function insert(html) {
-  const cleaned = removeManaged(html);
+  const cleaned = removeManaged(html)
+    .replace(/\/site-navigation\.js\?v=[^"'\s<]+/gi, NAV_HREF);
   const primary = '<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->';
   const primaryIndex = cleaned.indexOf(primary);
   if (primaryIndex >= 0) {
@@ -106,6 +109,7 @@ function verifyPage(relative, requiredText) {
   const html = read(path.join(root, relative));
   if (!html.includes(NUMBER_HREF)) throw new Error(`${relative} missing number-badge contrast asset.`);
   if (!html.includes(HOVER_HREF)) throw new Error(`${relative} missing interactive-hover contrast asset.`);
+  if (!html.includes(NAV_HREF)) throw new Error(`${relative} missing current navigation loader.`);
   if (requiredText && !html.includes(requiredText)) throw new Error(`${relative} missing required action text: ${requiredText}`);
 }
 
