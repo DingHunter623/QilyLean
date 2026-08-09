@@ -1,0 +1,45 @@
+name: Publish Times26001 v1.1.8 Location Fix APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-times26001-v118-location-apk-20260809.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download verified build artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://sdmntprwestcentralus.oaiusercontent.com/files/00000000-ef98-81fb-8752-86b9d9951473/raw?se=2026-08-09T05%3A16%3A21Z&sp=r&sv=2026-02-06&sr=b&scid=97a9756a-afb5-598d-b8be-4174ca105999&skoid=18c14e53-ea0c-429b-8d09-d22d66ca7169&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-09T02%3A52%3A36Z&ske=2026-08-10T02%3A52%3A36Z&sks=b&skv=2026-02-06&sig=3kAXQnRNv9g0pjPHvmMn0jb%2BxGrhVUCRcOSOb2vShqo%3D'
+          curl -fL --retry 3 --retry-delay 1 "$URL" -o /tmp/times118.zip
+          rm -rf /tmp/times118 && mkdir -p /tmp/times118
+          unzip -q /tmp/times118.zip -d /tmp/times118
+          APK='/tmp/times118/Times26001-Android-v1.1.8-Location-Fix.apk'
+          test -s "$APK"
+          echo 'bc80bbc24e547d776511191afb9631689ffecb9e5dcb5a5c94e802f01fd0aa81  /tmp/times118/Times26001-Android-v1.1.8-Location-Fix.apk' | sha256sum -c -
+          cp "$APK" ./Times26001-Android-v1.1.8-Location-Fix.apk
+          printf '%s  %s\n' 'bc80bbc24e547d776511191afb9631689ffecb9e5dcb5a5c94e802f01fd0aa81' 'Times26001-Android-v1.1.8-Location-Fix.apk' > Times26001-Android-v1.1.8-Location-Fix.sha256.txt
+
+      - name: Commit website APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add Times26001-Android-v1.1.8-Location-Fix.apk Times26001-Android-v1.1.8-Location-Fix.sha256.txt
+          git commit -m 'release: add Times26001 v1.1.8 location fix APK'
+          git pull --rebase origin main
+          git push origin HEAD:main
