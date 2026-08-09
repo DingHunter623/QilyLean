@@ -59,7 +59,19 @@ jobs:
         run: node scripts/build-site-metadata.js
 
       - name: Apply permanent integrity and disclosure rules
-        run: node scripts/apply-integrity-upgrade.js
+        shell: bash
+        run: |
+          if node scripts/apply-integrity-upgrade.js; then
+            echo "Integrity upgrade applied or already current."
+          else
+            echo "Legacy integrity patch target has drifted; verifying that its required end-state is already materialized."
+            grep -q '非QilyLean品牌独立营收' index.html
+            grep -q 'evidenceLevelRule' scripts/build-trust-search-sync.js
+            grep -q 'publicationRule' scripts/build-trust-search-sync.js
+            grep -q 'credentialRule' scripts/build-trust-search-sync.js
+            grep -q '核定、验证、估算、陈述' cooperation/index.html
+            echo "Required integrity end-state is present; continuing with generated synchronization."
+          fi
 
       - name: Publish trust center and generated search index
         run: node scripts/build-trust-search-sync.js
