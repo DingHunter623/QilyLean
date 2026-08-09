@@ -47,7 +47,7 @@
   background:rgba(4,48,57,.48)!important;
 }
 
-/* 三大核心业务：模块背景、边框、阴影及内部方框全部回退原样，仅强化圆圈序号。 */
+/* 六类项目合作能力：模块背景、边框、阴影及内部方框全部回退原样，仅强化圆圈序号。 */
 .cooperation-page #services .service-card .service-number{
   border:2px solid #ffffff!important;
   color:#ffffff!important;
@@ -92,7 +92,7 @@
   color:#65443d!important;
 }
 
-/* 三类核心业务公开价格参考。 */
+/* 三类核心项目交付公开价格参考。 */
 .qily-pricing-basis{
   margin-top:26px;
 }

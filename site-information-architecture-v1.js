@@ -85,11 +85,14 @@
 
     var servicesBody=el('div','');
     servicesBody.innerHTML='<div class="qily-ia-grid">'+
-      '<article class="qily-ia-card"><small>CORE SERVICE 01</small><h3>新工厂／新产线规划</h3><p>从产品、工艺、产能、设备、物流、公辅、品质和扩展边界出发，形成可评审、可实施的规划资产。</p><div class="qily-ia-result">产能模型、Layout、物流与库位、公辅接口、实施路线图</div></article>'+
-      '<article class="qily-ia-card"><small>CORE SERVICE 02</small><h3>精益改善项目交付</h3><p>围绕VSM、标准工时、线平衡、SMED、OEE、质量异常和计划实绩闭环，先验证再固化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>'+
-      '<article class="qily-ia-card"><small>CORE SERVICE 03</small><h3>目视化项目设计与实施</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、设计图、材料预算、打样、实施清单与验收</div></article>'+
-      '</div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#core-services">查看交付资产与合同范本</a></div>';
-    var services=buildSection({id:'qily-core-services',kicker:'CORE BUSINESS｜首页只保留客户首先需要理解的内容',title:'六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力',lead:'先说明解决什么问题、交付什么资产，再逐层展示个人履历、方法体系和知识沉淀。',body:servicesBody});
+      '<article class="qily-ia-card"><small>CORE PROJECT DELIVERY 01</small><h3>新工厂／新产线规划</h3><p>从产品、工艺、产能、设备、物流、公辅、品质和扩展边界出发，形成可评审、可实施的规划资产。</p><div class="qily-ia-result">产能模型、Layout、物流与库位、公辅接口、实施路线图</div></article>'+
+      '<article class="qily-ia-card"><small>CORE PROJECT DELIVERY 02</small><h3>精益改善项目交付</h3><p>围绕VSM、标准工时、线平衡、SMED、OEE、质量异常和计划实绩闭环，先验证再固化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>'+
+      '<article class="qily-ia-card"><small>CORE PROJECT DELIVERY 03</small><h3>目视化项目设计与交付</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、设计图、材料预算、打样、实施清单与验收</div></article>'+
+      '<article class="qily-ia-card"><small>DIGITAL PRODUCT & TECH 04</small><h3>数字化工厂</h3><p>以业务流程和可信主数据为底座，规划ERP／MES／APS、设备数据、生产透明化、管理看板与实施路线。</p><div class="qily-ia-result">数字化蓝图、数据口径、功能／接口需求、看板原型、Pilot与验收机制</div></article>'+
+      '<article class="qily-ia-card"><small>DIGITAL PRODUCT & TECH 05</small><h3>APP软件开发</h3><p>面向IE测时、现场采集、异常管理、移动看板和轻量化管理场景，形成需求、原型、开发、测试、发布与迭代闭环。</p><div class="qily-ia-result">需求清单、交互原型、可运行版本、测试记录、安装／发布包与版本记录</div></article>'+
+      '<article class="qily-ia-card"><small>DIGITAL PRODUCT & TECH 06</small><h3>官网建设</h3><p>围绕品牌定位、信息架构、可信证据、内容体系、SEO、咨询转化、响应式适配及持续运维建设专业官网。</p><div class="qily-ia-result">信息架构、页面模板、响应式官网、SEO基础、咨询入口、部署与运维规范</div></article>'+
+      '</div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#services">查看六类项目合作能力与交付边界</a></div>';
+    var services=buildSection({id:'qily-core-services',kicker:'COOPERATION CAPABILITIES｜核心项目交付 + 数智化技术能力',title:'六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力',lead:'先说明解决什么问题、交付什么资产，再逐层展示个人履历、方法体系和知识沉淀。',body:servicesBody});
     insertAfter(homeHero,services);
 
     var proofBody=el('div','');

@@ -3,7 +3,7 @@
   if(window.__qilyBrandTrustV1)return;
   window.__qilyBrandTrustV1=true;
 
-  var VERSION='20260808-diagnostic-scope-v1';
+  var VERSION='20260809-project-delivery-strategy-v2';
   var path=(location.pathname||'/').replace(/\/index\.html$/,'/').replace(/\/{2,}/g,'/');
   if(path.length>1&&!/\/$/.test(path))path+='/';
 
@@ -71,19 +71,22 @@
   }
 
   function homepageModule(){
-    if(path!=='/'||document.getElementById('qlCoreBusinessGateway'))return;
+    if(path!=='/'||document.getElementById('qlProjectDeliveryStrategy'))return;
     var section=node([
-      '<span class="ql-trust-kicker">CORE BUSINESS｜先看能解决什么，再看知识资产规模</span>',
-      '<h2>三项核心业务｜从一个具体制造问题开始</h2>',
-      '<p class="ql-trust-lead">QilyLean现阶段采用丁启利本人直接诊断、直接设计并参与交付的个人专家模式。建议先从一条产线、一个车间、一个产品族或一个明确课题开始，以基线、交付物和验收标准验证合作效果，再决定是否扩大范围。</p>',
-      '<div class="ql-business-grid">',
-        '<article class="ql-business-card"><small>01｜FACTORY PLANNING</small><h3>新工厂／新产线规划</h3><p>从产能、工艺、设备、人流物流、仓储、公辅接口到扩展边界，形成可评审、可实施的制造系统方案。</p><ul><li>Layout与面积测算</li><li>物流及方案比选</li><li>实施与投产路线图</li></ul><a href="/cooperation/factory-planning/">查看合同与交付资产</a></article>',
-        '<article class="ql-business-card"><small>02｜LEAN IMPROVEMENT</small><h3>精益改善项目交付</h3><p>围绕PQCD、VSM、标准工时、线平衡、SMED、OEE及质量防错，建立基线并以实绩闭环。</p><ul><li>单点课题可启动</li><li>Pilot验证后复制</li><li>结案、培训与固化</li></ul><a href="/cooperation/lean-improvement/">查看合同与交付资产</a></article>',
-        '<article class="ql-business-card"><small>03｜VISUAL MANAGEMENT</small><h3>目视化项目设计与交付</h3><p>覆盖现场诊断、区域规划、视觉标准、图纸清单、打样、施工协同、验收及维护机制。</p><ul><li>单车间可先行</li><li>图纸与材料清单</li><li>效果及现场验收</li></ul><a href="/cooperation/visual-management/">查看合同与交付资产</a></article>',
+      '<span class="ql-trust-kicker">PROJECT DELIVERY STRATEGY｜项目合作从哪里开始</span>',
+      '<h2>从一个具体制造问题开始｜先验证，再扩大</h2>',
+      '<p class="ql-trust-lead">QilyLean现阶段采用丁启利本人直接诊断、直接设计并参与交付的个人专家模式。项目优先从一条产线、一个车间、一个产品族或一个明确课题开始，以事实基线、标准交付物和验收口径验证合作效果，再决定是否扩大范围。</p>',
+      '<div class="ql-path-grid">',
+        '<article class="ql-path-card"><small>STEP 01｜问题界定</small><h3>明确问题与事实基线</h3><p>确认目标、对象、数据口径、现场约束、责任人及决策边界，避免一开始就把模糊需求包装成大项目。</p></article>',
+        '<article class="ql-path-card"><small>STEP 02｜小范围验证</small><h3>诊断／Pilot验证</h3><p>通过现场诊断、方案／原型和小范围试点验证方法是否有效，保留过程记录、风险条件与阶段结论。</p></article>',
+        '<article class="ql-path-card"><small>STEP 03｜验收与扩展</small><h3>验证有效后再扩大范围</h3><p>按书面交付物和验收标准确认阶段成果；条件成立后再复制到更多产线、区域、系统或后续开发范围。</p></article>',
       '</div>',
-      '<div class="ql-trust-actions"><a href="/cooperation/">进入项目合作</a><a href="/projects/">查看代表项目与证据</a><a href="/trust/">了解个人品牌责任边界</a></div>'
+      '<div class="ql-proof-note"><strong>业务架构：</strong>六类项目合作能力＝三类核心项目交付＋三项数智化产品与技术能力。本模块只解释“项目如何启动”，不再重复定义另一套“核心业务”。</div>',
+      '<div class="ql-trust-actions"><a href="/cooperation/">查看六类项目合作能力</a><a href="/cooperation/#diagnosis">预约问题初筛</a><a href="/projects/">查看代表项目与证据</a></div>'
     ].join(''),'ql-trust-module');
-    section.id='qlCoreBusinessGateway';
+    section.id='qlProjectDeliveryStrategy';
+    var overview=document.getElementById('qily-core-services');
+    if(overview){insertAfter(overview,section);return;}
     var hero=document.querySelector('main .hero');
     if(!insertAfter(hero,section))mainElement().insertBefore(section,mainElement().firstChild);
   }
@@ -122,7 +125,7 @@
     '/cooperation/lean-improvement/':{
       code:'LEAN IMPROVEMENT｜交付资产样张说明',
       title:'精益改善｜从基线、试点到实绩验证',
-      lead:'核心业务页已经配置合同和标准交付清单；新增此说明用于帮助客户快速理解每类文件在项目闭环中的作用。',
+      lead:'核心项目交付页已经配置合同和标准交付清单；新增此说明用于帮助客户快速理解每类文件在项目闭环中的作用。',
       cards:[
         ['基线与诊断','项目章程、PQCD基线、VSM现状图、标准工时与瓶颈诊断'],
         ['改善与验证','未来态VSM、线平衡、SMED／OEE分析、防错方案及Pilot记录'],

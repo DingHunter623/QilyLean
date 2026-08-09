@@ -29,7 +29,7 @@
     var heading=services.querySelector('.module-heading');
     if(heading){
       setText(heading.querySelector('h2'),'六类项目合作能力');
-      setText(heading.querySelector('p'),'六项业务形成“三类核心项目交付 + 三项数智化产品与技术能力”的3+3结构：01–03聚焦制造现场与工程改善，04–06聚焦数字化、软件与官网载体；共同遵循问题定义、方案／原型、Pilot／测试、交付验收与持续迭代的闭环逻辑。');
+      setText(heading.querySelector('p'),'六类项目合作能力采用“三类核心项目交付 + 三项数智化产品与技术能力”的3+3结构：01–03聚焦制造现场与工程改善，04–06聚焦数字化、软件与官网载体；共同遵循问题定义、方案／原型、Pilot／测试、交付验收与持续迭代的闭环逻辑。');
     }
 
     var grid=services.querySelector('.module-grid');
@@ -66,7 +66,7 @@
     var heading=section.querySelector('.module-heading');
     if(heading){
       setText(heading.querySelector('h2'),'六类项目合作边界');
-      setText(heading.querySelector('p'),'新工厂／新产线规划、精益改善、目视化、数字化工厂、APP软件开发与官网建设的输入条件、专业责任和验收口径不同，须按项目类型分别定义范围，不以一套边界概括全部业务。');
+      setText(heading.querySelector('p'),'新工厂／新产线规划、精益改善、目视化、数字化工厂、APP软件开发与官网建设的输入条件、专业责任和验收口径不同，须按项目类型分别定义范围，不以一套边界概括全部合作能力。');
     }
     var grid=section.querySelector('.boundary-service-grid');
     if(!grid||grid.dataset.qilySixServiceBoundary==='v1')return;

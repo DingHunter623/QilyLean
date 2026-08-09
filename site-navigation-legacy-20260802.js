@@ -241,9 +241,9 @@
     ensurePricingStyles();
     var title = heading.querySelector('h2');
     var lead = heading.querySelector('p');
-    if (title) title.textContent = '三大核心业务公开价格参考';
+    if (title) title.textContent = '三类核心项目交付公开价格参考';
     if (lead) lead.textContent = pricingUnlocked()
-      ? '正式项目按成果范围、工艺复杂度、现场投入、实施周期和验收责任核价。'
+      ? '以下仅对应01–03三类核心项目交付；正式项目按成果范围、工艺复杂度、现场投入、实施周期和验收责任核价。'
       : '价格方案尚在确认，当前模块已设置访问验证，未授权访客无法查看具体金额。';
 
     if (pricingUnlocked()) {
@@ -255,7 +255,7 @@
     if (ladder.dataset.qilyPricingGate !== '1') {
       ladder.dataset.qilyPricingGate = '1';
       ladder.className = 'price-ladder qily-pricing-overview';
-      ladder.innerHTML = pricingGateMarkup('三大核心业务价格方案');
+      ladder.innerHTML = pricingGateMarkup('三类核心项目交付价格方案');
     }
     bindPricingGate(ladder, function () {
       delete ladder.dataset.qilyPricingGate;

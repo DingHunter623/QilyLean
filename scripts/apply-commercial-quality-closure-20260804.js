@@ -54,7 +54,7 @@ function pricingAndQualityBlock() {
 <section class="module-section qily-pricing-basis" id="pricing-basis" aria-labelledby="pricingBasisTitle">
   <div class="module-inner">
     <div class="module-heading">
-      <h2 id="pricingBasisTitle">三大核心业务｜公开价格参考与报价依据</h2>
+      <h2 id="pricingBasisTitle">三类核心项目交付｜公开价格参考与报价依据</h2>
       <p>以下仅用于前期预算沟通，不等同于最终报价。正式金额取决于范围、复杂度、周期、现场投入、交付深度与验收责任，并以需求诊断、书面方案及签署合同为准。</p>
     </div>
     <div class="qily-pricing-basis-grid">
