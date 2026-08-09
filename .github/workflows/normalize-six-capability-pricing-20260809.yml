@@ -1,0 +1,63 @@
+name: Normalize QilyLean six-capability pricing 20260809
+
+on:
+  push:
+    paths:
+      - '.github/workflows/normalize-six-capability-pricing-20260809.yml'
+      - 'scripts/normalize-six-capability-pricing-20260809.py'
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Apply six-capability pricing architecture
+        run: python3 scripts/normalize-six-capability-pricing-20260809.py
+
+      - name: JavaScript syntax checks
+        run: |
+          node --check site-navigation-legacy-20260802.js
+          node --check site-navigation.js
+
+      - name: Validate pricing architecture and cache chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '六类项目合作能力报价参考' site-navigation-legacy-20260802.js
+          grep -q '六类项目合作能力报价方案' site-navigation-legacy-20260802.js
+          grep -q 'var digitalPricing = \[' site-navigation-legacy-20260802.js
+          grep -q 'var appPricing = \[' site-navigation-legacy-20260802.js
+          grep -q 'var websitePricing = \[' site-navigation-legacy-20260802.js
+          grep -q '04｜数字化工厂' site-navigation-legacy-20260802.js
+          grep -q '05｜APP软件开发' site-navigation-legacy-20260802.js
+          grep -q '06｜官网建设' site-navigation-legacy-20260802.js
+          grep -q '按范围独立核价' site-navigation-legacy-20260802.js
+          ! grep -q "title.textContent = '三类核心项目交付公开价格参考'" site-navigation-legacy-20260802.js
+          ! grep -q "pricingGateMarkup('三类核心项目交付价格方案')" site-navigation-legacy-20260802.js
+          grep -q '/site-navigation-legacy-20260802.js?v=20260809-six-capability-pricing-v3' site-navigation.js
+          grep -q '/site-navigation.js?v=20260809-six-capability-pricing-v3' index.html
+          grep -q '/site-navigation.js?v=20260809-six-capability-pricing-v3' cooperation/index.html
+          grep -q '报价体系统一规范' docs/QilyLean全站业务口径规范_20260809.md
+
+      - name: Commit and publish
+        shell: bash
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add -A
+          git commit -m '报价体系闭环：六类项目合作能力统一纳入3+3报价架构'
+          git pull --rebase origin main
+          git push origin HEAD:main
