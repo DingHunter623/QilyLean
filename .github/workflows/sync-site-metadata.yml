@@ -9,6 +9,8 @@ on:
       - "scripts/build-site-metadata.js"
       - "scripts/sync-daily-index-source.js"
       - "scripts/build-trust-search-sync.js"
+      - "scripts/patch-trust-live-status.js"
+      - "trust/live-status.js"
       - "site-visual-closure-v1.js"
       - "index.html"
       - "knowledge/index.html"
@@ -62,6 +64,9 @@ jobs:
       - name: Publish trust center and generated search index
         run: node scripts/build-trust-search-sync.js
 
+      - name: Bind trust status directly to live brief index
+        run: node scripts/patch-trust-live-status.js
+
       - name: Validate synchronized metadata trust controls and sitewide closure
         shell: bash
         run: |
@@ -69,14 +74,19 @@ jobs:
           node --check scripts/sync-daily-index-source.js
           node --check scripts/build-site-metadata.js
           node --check scripts/build-trust-search-sync.js
+          node --check scripts/patch-trust-live-status.js
+          node --check trust/live-status.js
           node --check site-search.js
           node --check site-visual-closure-v1.js
           test -f qilylean/site-data.json
           test -f qilylean/site-search-index.json
           test -f trust/index.html
+          test -f trust/live-status.js
           grep -q 'qilySitewideClarityStyleV2' site-visual-closure-v1.js
           grep -q 'syncDailyMetadata' site-visual-closure-v1.js
           grep -q 'module-grid>.module-card>.module-actions' site-visual-closure-v1.js
+          grep -q 'data-trust-stat="briefs"' trust/index.html
+          grep -q '/trust/live-status.js' trust/index.html
           node - <<'NODE'
           const fs = require('fs');
           const data = JSON.parse(fs.readFileSync('qilylean/site-data.json', 'utf8'));
@@ -120,6 +130,7 @@ jobs:
           if (!trust.includes('默认签约主体：丁启利（自然人）')) throw new Error('Trust center contracting party missing');
           if (!trust.includes('公开成果证据分级')) throw new Error('Trust evidence levels missing');
           if (!trust.includes('内容日期、版本与非背书声明')) throw new Error('Trust publication statement missing');
+          if (!trust.includes(`data-trust-stat="briefs">${briefs.length}<`)) throw new Error('Trust brief total is not bound to daily index');
           if (!siteSearch.includes('qily-generated-search-index-v1')) throw new Error('Generated search index loader missing');
           NODE
           grep -q "https://qilylean.com/trust/" sitemap.xml
@@ -136,7 +147,7 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add scripts/build-trust-search-sync.js site-visual-closure-v1.js index.html knowledge/index.html knowledge/terminology.html capabilities/index.html projects/index.html cooperation/index.html trust/index.html site-search.js qilylean/site-data.json qilylean/site-search-index.json qilylean/daily/index.json qilylean/daily-insights.html qilylean/latest-brief.js qilylean/daily-insights-card.js sitemap.xml sitemap-core.xml
+          git add scripts/build-trust-search-sync.js scripts/patch-trust-live-status.js trust/live-status.js site-visual-closure-v1.js index.html knowledge/index.html knowledge/terminology.html capabilities/index.html projects/index.html cooperation/index.html trust/index.html site-search.js qilylean/site-data.json qilylean/site-search-index.json qilylean/daily/index.json qilylean/daily-insights.html qilylean/latest-brief.js qilylean/daily-insights-card.js sitemap.xml sitemap-core.xml
           git commit -m "build: publish synchronized site data and sitewide clarity closure [skip ci]"
           git pull --rebase origin main
           git push
