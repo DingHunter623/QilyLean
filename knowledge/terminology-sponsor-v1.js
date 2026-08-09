@@ -39,7 +39,7 @@
       '<h3>项目发起人／项目主责高层</h3>',
       '<p class="term-formula"><strong>核心口径：</strong>Sponsor代表组织层面对项目进行授权与背书，负责确认项目价值、保障关键资源、主持或参与重大里程碑评审，并在跨部门障碍或重大风险超出项目经理权限时推动升级解决。</p>',
       '<p><strong>应用场景：</strong>用于A类客户交付、重大质量／安全、量产爬坡、自动化、降本、工厂规划及数智化项目。Sponsor不替代项目经理做日常计划，也不等同于“出资赞助人”；在制造企业中更适合解释为“项目发起人”或“项目主责高层”。</p>',
-      '<div class="term-opl-actions"><a class="term-opl-open" href="/knowledge/terminology/sponsor.html">查看单点培训课件</a><span class="term-opl-note">独立网址 · 在线阅览</span></div>'
+      '<div class="term-opl-actions"><a class="term-opl-open" href="/knowledge/terminology/sponsor.html">查看单点培训课件</a></div>'
     ].join('');
     grid.appendChild(card);
     updateCount();

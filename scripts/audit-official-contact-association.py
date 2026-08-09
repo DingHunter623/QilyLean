@@ -21,7 +21,9 @@ if 'qilyOfficialContactRuntime' in nav or 'qily-official-contact-runtime' in nav
 if 'QILY-SITEWIDE-FOOTER-DEDUPE-20260808' not in nav or '__qilySitewideFooterDedupe20260808' not in nav:
     errors.append('全站统一页脚去重守卫缺失')
 term=Path('knowledge/terminology.html').read_text(encoding='utf-8')
-if '独立网址：在线阅览' not in term: errors.append('OPL入口说明未统一')
+sponsor=Path('knowledge/terminology-sponsor-v1.js').read_text(encoding='utf-8')
+if '独立网址：在线阅览' in term or '独立网址 · 在线阅览' in term: errors.append('术语页仍残留独立网址/在线阅览说明')
+if '独立网址：在线阅览' in sponsor or '独立网址 · 在线阅览' in sponsor: errors.append('Sponsor术语入口仍残留独立网址/在线阅览说明')
 if errors:
     print('\n'.join(errors)); sys.exit(1)
 print('Official contact association audit passed.')
