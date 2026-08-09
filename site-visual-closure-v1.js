@@ -1,4 +1,4 @@
-/* QilyLean 全站视觉、数据与操作区闭环分类器 v3.1｜2026-08-09｜信息密度与视觉层级收口 */
+/* QilyLean 全站视觉、数据与操作区闭环分类器 v3.2｜2026-08-09｜信息密度、视觉层级与首页叙事收口 */
 /* Backward-compatible validation marker: qilySitewideClarityStyleV2 */
 (function(d,w){
   'use strict';
@@ -19,7 +19,7 @@
     if(d.getElementById(id))return;
     var style=d.createElement('style');
     style.id=id;
-    style.setAttribute('data-qily-sitewide-clarity','2026-08-09-v3.1');
+    style.setAttribute('data-qily-sitewide-clarity','2026-08-09-v3.2');
     style.textContent=[
       'html body .cooperation-page #services .service-number{display:inline-grid!important;place-items:center!important;width:40px!important;height:40px!important;border:2px solid #fff!important;border-radius:50%!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:#073c47!important;box-shadow:0 0 0 2px #178b94!important;opacity:1!important;filter:none!important;text-shadow:none!important;font-family:Arial,"Segoe UI",sans-serif!important;font-size:18px!important;font-weight:900!important;line-height:1!important;letter-spacing:0!important}',
       'html body .cooperation-page .hero-actions a.primary,html body .cooperation-page .hero-actions a.primary *{color:#332100!important;-webkit-text-fill-color:#332100!important;opacity:1!important;filter:none!important;text-shadow:none!important;font-weight:950!important}',
@@ -42,7 +42,7 @@
     if(d.getElementById(id))return;
     var style=d.createElement('style');
     style.id=id;
-    style.setAttribute('data-qily-site-density','2026-08-09-v1.1');
+    style.setAttribute('data-qily-site-density','2026-08-09-v1.2');
     style.textContent=[
       ':root{--qily-density-section:clamp(32px,4.1vw,54px);--qily-density-section-mobile:28px;--qily-density-card:20px;--qily-density-gap:14px;--qily-density-copy:17px;--qily-density-line:1.68}',
       'html body :is(.module-section,.qily-ia-section,.section,.qily-resource-network){padding-top:var(--qily-density-section)!important;padding-bottom:var(--qily-density-section)!important}',
@@ -147,6 +147,23 @@
     if(node&&typeof value==='string'&&node.textContent!==value)node.textContent=value;
   }
 
+  function optimizeHomeNarrative(){
+    if(!d.body||!d.body.classList.contains('qily-home-commercial-focus'))return;
+    var heroLead=d.querySelector('.hero .lead');
+    setText(heroLead,'QilyLean｜启力精益由丁启利发起，聚焦新工厂／新产线规划、精益改善、目视化三类核心项目交付，并将制造业务逻辑延伸至数字化工厂、APP软件开发、官网建设三项数智化产品与技术能力。项目从问题定义与事实基线出发，以方案／原型、Pilot／测试、实绩验证、标准固化和验收闭环推进。');
+    var relocation=d.querySelector('.hero .qily-home-relocation-note');
+    if(relocation)relocation.innerHTML='需要快速核验专业匹配度？查看<a href="/capabilities/">能力画像</a>、<a href="/experience/">履历主线</a>与<a href="/projects/">代表项目</a>。';
+    var core=d.querySelector('#qily-core-services .qily-ia-heading');
+    if(core){setText(core.querySelector('h2'),'六类项目合作能力');setText(core.querySelector('p'),'前三类核心项目交付直接解决工厂、产线与现场运营问题；后三项数智化产品与技术能力把制造业务逻辑沉淀为数字化系统、软件工具与专业互联网载体。六类能力统一遵循问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化与项目验收。');}
+    var latest=d.querySelector('#latest-content .head');
+    if(latest)setText(latest.querySelector('p'),'持续更新制造工程、精益改善、质量与数智化工厂知识；可从最新简报、术语词典和知识分享快速进入对应内容。');
+    var context=d.querySelector('#qily-more-context .qily-ia-heading');
+    if(context){setText(context.querySelector('h2'),'继续了解｜能力、履历与知识资产');setText(context.querySelector('p'),'按需求进入能力画像、履历主线、知识分享、QilyLean AI与行走印记，快速查看对应的专业证据与长期积累。');}
+    var network=d.getElementById('qily-resource-network');
+    var latestSection=d.getElementById('latest-content');
+    if(network&&latestSection&&network.parentNode===latestSection.parentNode)latestSection.insertAdjacentElement('afterend',network);
+  }
+
   function updateHomeLatest(latest,total){
     var cards=d.querySelectorAll('#latest-content .metrics>.metric');
     if(cards.length>=2){
@@ -216,8 +233,9 @@
     classifyActions();
     classifyCards();
     preservePhrases();
+    optimizeHomeNarrative();
     syncDailyMetadata();
-    d.documentElement.setAttribute('data-qily-density','2026-08-09-v1.1');
+    d.documentElement.setAttribute('data-qily-density','2026-08-09-v1.2');
   }
 
   ready(boot);
