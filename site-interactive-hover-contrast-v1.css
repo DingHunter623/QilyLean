@@ -443,7 +443,7 @@ html body a.qily-search-result:active .qily-search-rank{
   border-color:#ffe39b!important;
 }
 
-/* QILY-SITEWIDE-INTERACTION-CLARITY-V7-20260809
+/* QILY-SITEWIDE-INTERACTION-CLARITY-V8-20260809
  * 根因封堵：site-vi-contrast-restoration-v1.css 等后续组件规则曾以更高
  * specificity 把按钮悬停重新覆盖为“深青底＋白字”，导致视觉状态几乎不变。
  * 本闭环层只命中真实可操作控件；静态卡片不进入选择器。
@@ -599,6 +599,7 @@ html:root:root body :is(
   opacity:1!important;
   filter:none!important;
   text-shadow:none!important;
+  transition:none!important;
   box-shadow:0 10px 24px rgba(202,161,95,.34)!important;
   transform:translateY(-2px)!important;
 }
@@ -645,6 +646,7 @@ html:root:root body :is(
   box-shadow:inset 0 0 0 2px rgba(255,227,155,.22),0 5px 14px rgba(5,42,51,.28)!important;
   transform:translateY(0) scale(.97)!important;
   outline-color:var(--qily-control-active-border)!important;
+  transition:none!important;
 }
 
 /* 导航按钮同样必须换色，含当前栏目，杜绝“当前项悬停仍无变化”。 */
@@ -658,6 +660,7 @@ html:root:root body :is(.qily-site-header,.qily-global-header,header.topbar,head
   text-decoration-color:var(--qily-control-hover-ink)!important;
   box-shadow:0 8px 20px rgba(202,161,95,.32)!important;
   transform:translateY(-2px)!important;
+  transition:none!important;
   outline:3px solid rgba(15,75,90,.26)!important;
   outline-offset:2px!important;
 }
@@ -670,6 +673,7 @@ html:root:root body :is(.qily-site-header,.qily-global-header,header.topbar,head
   border-color:var(--qily-control-active-border)!important;
   text-decoration-color:var(--qily-control-active-border)!important;
   transform:translateY(0) scale(.97)!important;
+  transition:none!important;
 }
 
 /* 整卡链接与搜索结果：所有子文字随整卡状态切换，不再出现深底深字。 */
@@ -686,6 +690,7 @@ html:root:root body :is(
   transform:translateY(-3px)!important;
   outline:3px solid rgba(202,161,95,.42)!important;
   outline-offset:3px!important;
+  transition:none!important;
 }
 
 html:root:root body :is(
@@ -713,6 +718,7 @@ html:root:root body :is(
   background-color:#052a33!important;
   border-color:#ffe39b!important;
   text-decoration-color:#ffe39b!important;
+  transition:none!important;
 }
 
 /* 禁用态不用透明度“做灰”，保持文字仍可读。 */
