@@ -8,6 +8,8 @@ on:
       - "qilylean/site-data.json"
       - "qilylean/daily/index.json"
       - "site-static-core-interactions-v1.js"
+      - "site-information-architecture-v1.js"
+      - "scripts/materialize-static-core-pages.js"
       - "scripts/sync-home-latest-brief-cta.js"
       - ".github/workflows/sync-home-latest-brief-cta.yml"
   workflow_dispatch:
@@ -34,9 +36,24 @@ jobs:
           node-version: 24
 
       - name: Synchronize homepage brief CTA
+        shell: bash
         run: |
+          set -euo pipefail
+          files=(
+            index.html
+            site-information-architecture-v1.js
+            scripts/materialize-static-core-pages.js
+            scripts/sync-home-latest-brief-cta.js
+          )
+          for f in "${files[@]}"; do
+            sed -i 's/核验代表项目与证据/代表项目与证据/g' "$f"
+          done
+          ! grep -R --line-number --fixed-strings '核验代表项目与证据' "${files[@]}"
+          grep -q '>代表项目与证据<' index.html
           node --check scripts/sync-home-latest-brief-cta.js
           node --check site-static-core-interactions-v1.js
+          node --check site-information-architecture-v1.js
+          node --check scripts/materialize-static-core-pages.js
           node scripts/sync-home-latest-brief-cta.js
           grep -F 'data-qily-latest-brief-cta="v1"' index.html
           node - <<'NODE'
@@ -48,18 +65,27 @@ jobs:
           if (!home.includes(label)) throw new Error('Homepage latest brief label mismatch');
           if (!home.includes(`href="${data.briefs.latestUrl}"`)) throw new Error('Homepage latest brief URL mismatch');
           if (!home.includes('20260809-latest-brief-cta-v1')) throw new Error('Homepage interaction cache-bust version missing');
+          if (home.includes('核验代表项目与证据')) throw new Error('Legacy project evidence CTA label remains');
+          if (!home.includes('>代表项目与证据<')) throw new Error('Concise project evidence CTA label missing');
           NODE
           git diff --check
 
       - name: Commit synchronized homepage
         shell: bash
         run: |
-          if git diff --quiet -- index.html; then
-            echo "Homepage latest brief CTA is already current."
+          set -euo pipefail
+          tracked=(
+            index.html
+            site-information-architecture-v1.js
+            scripts/materialize-static-core-pages.js
+            scripts/sync-home-latest-brief-cta.js
+          )
+          if git diff --quiet -- "${tracked[@]}"; then
+            echo "Homepage CTA labels and latest brief entry are already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git commit -m "build: sync homepage latest brief CTA [skip ci]"
+          git add "${tracked[@]}"
+          git commit -m "build: sync homepage CTA labels and latest brief [skip ci]"
           git push origin HEAD:main
