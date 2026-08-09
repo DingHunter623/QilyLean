@@ -1,0 +1,83 @@
+name: Validate QilyLean business architecture v2
+
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'cooperation/**'
+      - 'site-brand-trust-v1.js'
+      - 'site-information-architecture-v1.js'
+      - 'site-core-service-dock-closure-v1.js'
+      - 'site-navigation-legacy-20260802.js'
+      - 'scripts/apply-commercial-quality-closure-20260804.js'
+      - 'scripts/materialize-static-core-pages.js'
+      - 'docs/QilyLean全站业务口径规范_20260809.md'
+      - '.github/workflows/validate-business-architecture-v2.yml'
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'cooperation/**'
+      - 'site-brand-trust-v1.js'
+      - 'site-information-architecture-v1.js'
+      - 'site-core-service-dock-closure-v1.js'
+      - 'site-navigation-legacy-20260802.js'
+      - 'scripts/apply-commercial-quality-closure-20260804.js'
+      - 'scripts/materialize-static-core-pages.js'
+      - 'docs/QilyLean全站业务口径规范_20260809.md'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: JavaScript syntax
+        run: |
+          node --check site-brand-trust-v1.js
+          node --check site-information-architecture-v1.js
+          node --check site-core-service-dock-closure-v1.js
+          node --check site-navigation-legacy-20260802.js
+          node --check scripts/apply-commercial-quality-closure-20260804.js
+          node --check scripts/materialize-static-core-pages.js
+      - name: Enforce one business architecture
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力' index.html
+          grep -q '三类核心项目交付' cooperation/index.html
+          grep -q '三项数智化产品与技术能力' cooperation/index.html
+          ! grep -q '六大核心业务' index.html
+          ! grep -q '六大核心业务' cooperation/index.html
+
+          grep -q 'PROJECT DELIVERY STRATEGY｜项目合作从哪里开始' site-brand-trust-v1.js
+          ! grep -q '三项核心业务' site-brand-trust-v1.js
+          ! grep -q 'CORE BUSINESS｜先看能解决什么' site-brand-trust-v1.js
+
+          grep -q 'DIGITAL PRODUCT & TECH 04' site-information-architecture-v1.js
+          grep -q 'DIGITAL PRODUCT & TECH 05' site-information-architecture-v1.js
+          grep -q 'DIGITAL PRODUCT & TECH 06' site-information-architecture-v1.js
+          ! grep -q "kicker:'CORE BUSINESS" site-information-architecture-v1.js
+
+          for f in cooperation/factory-planning/index.html cooperation/lean-improvement/index.html cooperation/visual-management/index.html; do
+            grep -q 'QilyLean核心项目交付' "$f"
+            grep -q 'CORE PROJECT DELIVERY' "$f"
+            grep -q '返回六类项目合作能力' "$f"
+            ! grep -q 'QilyLean核心业务' "$f"
+            ! grep -q '返回三大核心业务' "$f"
+            ! grep -q 'CORE BUSINESS 0' "$f"
+          done
+
+          grep -q '三类核心项目交付公开价格参考' site-navigation-legacy-20260802.js
+          grep -q '三类核心项目交付价格方案' site-navigation-legacy-20260802.js
+          ! grep -q '三大核心业务公开价格参考' site-navigation-legacy-20260802.js
+          ! grep -q '三大核心业务价格方案' site-navigation-legacy-20260802.js
+
+          grep -q '三类核心项目交付｜公开价格参考与报价依据' scripts/apply-commercial-quality-closure-20260804.js
+          ! grep -q '三大核心业务｜公开价格参考与报价依据' scripts/apply-commercial-quality-closure-20260804.js
+
+          grep -q '运行时一致性' docs/QilyLean全站业务口径规范_20260809.md
