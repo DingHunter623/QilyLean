@@ -153,11 +153,11 @@ function renderKnowledgeStats(data) {
   return `<!-- SITE-METADATA:KNOWLEDGE-STATS:START -->
 <section class="module-section" id="knowledge-stats" data-site-metadata-source="/qilylean/site-data.json"><div class="module-inner">
 <div class="module-heading"><h2>知识库实时统计</h2><p>术语、简报与知识入口由统一数据源自动核算；新增内容发布后同步更新首页、知识模块及站点地图。</p></div>
-<div class="module-grid four">
-<article class="module-card"><small>知识架构</small><h3>${data.knowledge.moduleCount} 大模块</h3><p>术语词典、今日简报、工具库、精益专题及程序文件／参考资料。</p></article>
-<article class="module-card"><small>术语与培训</small><h3>${data.terminology.total} 项</h3><p>每项术语一对一匹配独立网址单点培训课件。</p></article>
-<article class="module-card"><small>今日简报</small><h3>${data.briefs.total} 期</h3><p>最新更新至 ${escapeHtml(data.briefs.latestDate)}，按日期连续归档。</p></article>
-<article class="module-card"><small>工具／专题／资料</small><h3>${data.knowledge.resourceCount} 项</h3><p>${data.knowledge.toolCount} 项工具、${data.knowledge.topicCount} 项专题、${data.knowledge.documentCount} 项程序文件与参考资料入口。</p></article>
+<div class="module-grid four knowledge-stat-grid">
+<a class="module-card knowledge-stat-card" href="/knowledge/#terminology" aria-label="查看知识架构与六大知识模块"><small>知识架构</small><h3>${data.knowledge.moduleCount} 大模块</h3><p>术语词典、今日简报、工具库、精益专题及程序文件／参考资料。</p><span class="knowledge-stat-jump">进入知识架构 →</span></a>
+<a class="module-card knowledge-stat-card" href="/knowledge/terminology.html" aria-label="进入全站术语中文诠释与单点培训课件"><small>术语与培训</small><h3>${data.terminology.total} 项</h3><p>每项术语一对一匹配独立网址单点培训课件。</p><span class="knowledge-stat-jump">进入术语词典 →</span></a>
+<a class="module-card knowledge-stat-card" href="/qilylean/daily-insights.html" aria-label="进入今日简报目录"><small>今日简报</small><h3>${data.briefs.total} 期</h3><p>最新更新至 ${escapeHtml(data.briefs.latestDate)}，按日期连续归档。</p><span class="knowledge-stat-jump">进入简报目录 →</span></a>
+<a class="module-card knowledge-stat-card" href="/knowledge/#tools" aria-label="进入工具专题与资料入口"><small>工具／专题／资料</small><h3>${data.knowledge.resourceCount} 项</h3><p>${data.knowledge.toolCount} 项工具、${data.knowledge.topicCount} 项专题、${data.knowledge.documentCount} 项程序文件与参考资料入口。</p><span class="knowledge-stat-jump">进入工具与资料 →</span></a>
 </div></div></section>
 <!-- SITE-METADATA:KNOWLEDGE-STATS:END -->`;
 }
