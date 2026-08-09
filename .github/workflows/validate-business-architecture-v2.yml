@@ -8,9 +8,12 @@ on:
       - 'site-brand-trust-v1.js'
       - 'site-information-architecture-v1.js'
       - 'site-core-service-dock-closure-v1.js'
+      - 'site-navigation.js'
       - 'site-navigation-legacy-20260802.js'
       - 'scripts/apply-commercial-quality-closure-20260804.js'
       - 'scripts/materialize-static-core-pages.js'
+      - 'scripts/repair-business-architecture-20260809.py'
+      - 'scripts/publish-business-architecture-cache-bust-20260809.py'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
       - '.github/workflows/validate-business-architecture-v2.yml'
   pull_request:
@@ -20,9 +23,8 @@ on:
       - 'site-brand-trust-v1.js'
       - 'site-information-architecture-v1.js'
       - 'site-core-service-dock-closure-v1.js'
+      - 'site-navigation.js'
       - 'site-navigation-legacy-20260802.js'
-      - 'scripts/apply-commercial-quality-closure-20260804.js'
-      - 'scripts/materialize-static-core-pages.js'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
 
 permissions:
@@ -36,18 +38,23 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
+
       - name: JavaScript syntax
         run: |
           node --check site-brand-trust-v1.js
           node --check site-information-architecture-v1.js
           node --check site-core-service-dock-closure-v1.js
+          node --check site-navigation.js
           node --check site-navigation-legacy-20260802.js
           node --check scripts/apply-commercial-quality-closure-20260804.js
           node --check scripts/materialize-static-core-pages.js
-      - name: Enforce one business architecture
+
+      - name: Enforce one business architecture and pricing architecture
         shell: bash
         run: |
           set -euo pipefail
+
+          # 3+3 business architecture
           grep -q '六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力' index.html
           grep -q '三类核心项目交付' cooperation/index.html
           grep -q '三项数智化产品与技术能力' cooperation/index.html
@@ -72,12 +79,26 @@ jobs:
             ! grep -q 'CORE BUSINESS 0' "$f"
           done
 
-          grep -q '三类核心项目交付公开价格参考' site-navigation-legacy-20260802.js
-          grep -q '三类核心项目交付价格方案' site-navigation-legacy-20260802.js
+          # Six-capability pricing architecture
+          grep -q '六类项目合作能力报价参考' site-navigation-legacy-20260802.js
+          grep -q '六类项目合作能力报价方案' site-navigation-legacy-20260802.js
+          grep -q 'var digitalPricing = \[' site-navigation-legacy-20260802.js
+          grep -q 'var appPricing = \[' site-navigation-legacy-20260802.js
+          grep -q 'var websitePricing = \[' site-navigation-legacy-20260802.js
+          grep -q '04｜数字化工厂' site-navigation-legacy-20260802.js
+          grep -q '05｜APP软件开发' site-navigation-legacy-20260802.js
+          grep -q '06｜官网建设' site-navigation-legacy-20260802.js
+          grep -q '按范围独立核价' site-navigation-legacy-20260802.js
+          ! grep -q "title.textContent = '三类核心项目交付公开价格参考'" site-navigation-legacy-20260802.js
+          ! grep -q "pricingGateMarkup('三类核心项目交付价格方案')" site-navigation-legacy-20260802.js
           ! grep -q '三大核心业务公开价格参考' site-navigation-legacy-20260802.js
           ! grep -q '三大核心业务价格方案' site-navigation-legacy-20260802.js
 
-          grep -q '三类核心项目交付｜公开价格参考与报价依据' scripts/apply-commercial-quality-closure-20260804.js
-          ! grep -q '三大核心业务｜公开价格参考与报价依据' scripts/apply-commercial-quality-closure-20260804.js
+          # Cache/load-chain closure
+          grep -q '/site-navigation-legacy-20260802.js?v=20260809-six-capability-pricing-v3' site-navigation.js
+          grep -q '/site-navigation.js?v=20260809-six-capability-pricing-v3' index.html
+          grep -q '/site-navigation.js?v=20260809-six-capability-pricing-v3' cooperation/index.html
 
+          # Canonical rules
           grep -q '运行时一致性' docs/QilyLean全站业务口径规范_20260809.md
+          grep -q '报价体系统一规范' docs/QilyLean全站业务口径规范_20260809.md
