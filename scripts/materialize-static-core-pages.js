@@ -234,10 +234,10 @@ function materializeHome() {
   html = html.replace(assistantExpression, '');
 
   html = upsertTitle(html, 'QilyLean｜启力精益｜精益生产、工程改善与数智工厂');
-  html = upsertNamedMeta(html, 'description', 'QilyLean围绕制造工程交付与数智化产品交付，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。');
+  html = upsertNamedMeta(html, 'description', 'QilyLean围绕三类核心项目交付与三项数智化产品与技术能力，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。');
   html = upsertPropertyMeta(html, 'og:title', 'QilyLean｜制造改善项目交付');
   html = upsertPropertyMeta(html, 'og:description', '三类核心项目交付 + 三项数智化产品与技术能力，合计六类项目合作能力。');
-  html = upsertNamedMeta(html, 'twitter:description', 'QilyLean围绕制造工程交付与数智化产品交付，以范围、交付物、Pilot／测试、验证和验收定义六类项目合作能力合作。');
+  html = upsertNamedMeta(html, 'twitter:description', 'QilyLean围绕三类核心项目交付与三项数智化产品与技术能力，以范围、交付物、Pilot／测试、验证和验收定义六类项目合作能力合作。');
   html = upsertStylesheet(html, 'qilyInformationArchitectureStylesheet', IA_CSS);
   html = upsertScript(html, 'qilyStaticCoreInteractions', STATIC_INTERACTIONS);
   html = addBodyClasses(html, ['qily-ia-ready', 'qily-home-commercial-focus']);

@@ -58,7 +58,7 @@
 
     d.body.classList.add('qily-home-commercial-focus');
     d.title='QilyLean｜启力精益｜精益生产、工程改善与数智工厂';
-    setMeta('description','QilyLean围绕制造工程交付与数智化产品交付，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。');
+    setMeta('description','QilyLean围绕三类核心项目交付与三项数智化产品与技术能力，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。');
 
     var eyebrow=homeHero.querySelector('.eyebrow');
     var title=homeHero.querySelector('h1');

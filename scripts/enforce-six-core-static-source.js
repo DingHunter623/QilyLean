@@ -90,7 +90,7 @@ const BOUNDARY=`<style id="qilySixBoundaryGrid20260808">
 function homeSchema(){
   return `<!-- QILY-HOME-STATIC-SCHEMA:START -->\n<script type="application/ld+json">${JSON.stringify({
     '@context':'https://schema.org','@graph':[
-      {'@type':'WebSite',name:'QilyLean｜启力精益',url:'https://qilylean.com/',description:'围绕制造工程交付与数智化产品交付，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。'},
+      {'@type':'WebSite',name:'QilyLean｜启力精益',url:'https://qilylean.com/',description:'围绕三类核心项目交付与三项数智化产品与技术能力，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。'},
       {'@type':'Person',name:'丁启利',url:'https://qilylean.com/',jobTitle:'制造工程、精益改善与数智化项目实践者',knowsAbout:['新工厂规划','精益改善','工业工程','VSM','标准工时','OEE','SMED','目视化管理','ERP/MES/APS','APP软件开发','官网建设']},
       {'@type':'Service',name:'QilyLean六类项目合作能力',provider:{'@type':'Person',name:'丁启利'},areaServed:'中国',serviceType:['新工厂／新产线规划','精益改善项目交付','目视化项目设计与交付','数字化工厂','APP软件开发','官网建设']}
     ]
@@ -101,7 +101,7 @@ function patchHome(html){
   html=replaceMarker(html,'QILY-HOME-STATIC-COMMERCIAL:START','QILY-HOME-STATIC-COMMERCIAL:END',HOME_BLOCK);
   html=replaceMarker(html,'QILY-HOME-STATIC-SCHEMA:START','QILY-HOME-STATIC-SCHEMA:END',homeSchema());
   html=upsertTitle(html,'QilyLean｜启力精益｜精益生产、工程改善与数智工厂');
-  html=upsertNamedMeta(html,'description','QilyLean｜启力精益围绕制造工程交付与数智化产品交付，提供新工厂／新产线规划、精益改善、目视化项目、数字化工厂、APP软件开发与官网建设六类项目合作能力。');
+  html=upsertNamedMeta(html,'description','QilyLean｜启力精益围绕三类核心项目交付与三项数智化产品与技术能力，提供新工厂／新产线规划、精益改善、目视化项目、数字化工厂、APP软件开发与官网建设六类项目合作能力。');
   html=upsertPropertyMeta(html,'og:title','QilyLean｜启力精益｜六类项目合作能力');
   html=upsertPropertyMeta(html,'og:description','三类核心项目交付 + 三项数智化产品与技术能力，合计六类项目合作能力。');
   html=upsertNamedMeta(html,'twitter:description','QilyLean形成三类核心项目交付（新工厂规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。');
@@ -132,16 +132,16 @@ function patchCooperation(html){
     .replace(/<div class="module-heading"><h2>合作启动路径<\/h2><p>先判断问题是否匹配，再通过现场诊断明确范围、事实基线、(?:概念方向、)?交付深度与验收边界。<\/p><\/div>/g,'<div class="module-heading"><h2>合作启动路径与公开报价边界</h2><p>六类项目合作能力均按项目边界定义合作；官网仅公开前期合作入口及价格边界，正式项目须在明确范围、投入、交付物和验收标准后独立报价。</p></div>')
     .replace(/<p class="fine-print"><strong>价格边界：<\/strong>[\s\S]*?<\/p>/g,'<p class="fine-print"><strong>公开报价说明：</strong>¥6,800仅对应约定范围内的小范围现场诊断与概念级方案构思，不代表六类项目合作能力任一完整专项合作总价。新工厂／新产线规划、精益改善、目视化、数字化工厂、APP软件开发及官网建设，均须根据实际需求明确项目范围、周期、现场投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。</p>')
     .replace(/QILY-PRICING-POLICY｜仅公开诊断级入口价格；Factory Layout、精益改善、目视化等完整项目均按范围独立报价，不在公网展示统一总价。/g,'QILY-PRICING-POLICY｜仅公开诊断级入口价格；六类项目合作能力的完整合作均按范围、投入、交付物和验收标准独立报价，不在公网展示统一总价。')
-    .replace(/面向制造企业提供新工厂规划、数字化工厂规划与数据治理、精益改善及目视化项目交付服务。/g,'围绕制造工程交付与数智化产品交付，提供新工厂／新产线规划、精益改善、目视化项目、数字化工厂、APP软件开发与官网建设六类项目合作能力。');
+    .replace(/面向制造企业提供新工厂规划、数字化工厂规划与数据治理、精益改善及目视化项目交付服务。/g,'围绕三类核心项目交付与三项数智化产品与技术能力，提供新工厂／新产线规划、精益改善、目视化项目、数字化工厂、APP软件开发与官网建设六类项目合作能力。');
   return html;
 }
 
 function patchFallbackJs(src){
   src=src
     .replace(/QilyLean｜新工厂规划、精益改善与目视化项目交付/g,'QilyLean｜启力精益｜精益生产、工程改善与数智工厂')
-    .replace(/QilyLean由丁启利发起，面向制造企业提供新工厂与新产线规划、精益改善项目及目视化实施协同；以现场诊断、交付资产、分阶段节点和验收闭环为主线。/g,'QilyLean围绕制造工程交付与数智化产品交付，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。')
+    .replace(/QilyLean由丁启利发起，面向制造企业提供新工厂与新产线规划、精益改善项目及目视化实施协同；以现场诊断、交付资产、分阶段节点和验收闭环为主线。/g,'QilyLean围绕三类核心项目交付与三项数智化产品与技术能力，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。')
     .replace(/制造改善项目交付｜新工厂规划｜精益改善｜目视化实施/g,'三类核心项目交付｜三项数智化产品与技术能力｜六类项目合作能力')
-    .replace(/为制造企业提供三类核心服务/g,'围绕两大业务主线形成六类项目合作能力')
+    .replace(/为制造企业提供三类核心服务/g,'形成三类核心项目交付与三项数智化产品与技术能力，合计六类项目合作能力')
     .replace(/查看三大核心业务与交付/g,'查看六类项目合作能力与交付')
     .replace(/title:'三类核心业务'/g,"title:'六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力'")
     .replace(/三类核心业务均设置交付物、项目阶段、合同范本、付款节点和验收边界。/g,'六类项目合作能力均明确范围、交付物与验收边界；合同范本及专项报价按具体业务成熟度与项目范围配置。')
@@ -157,11 +157,11 @@ function patchMaterializer(src){
 
   src=src
     .replace(/QilyLean｜新工厂规划、精益改善与目视化项目交付/g,'QilyLean｜启力精益｜精益生产、工程改善与数智工厂')
-    .replace(/QilyLean由丁启利发起，面向制造企业提供新工厂与新产线规划、精益改善项目及目视化实施协同；以现场诊断、交付资产、分阶段节点和验收闭环为主线。/g,'QilyLean围绕制造工程交付与数智化产品交付，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。')
+    .replace(/QilyLean由丁启利发起，面向制造企业提供新工厂与新产线规划、精益改善项目及目视化实施协同；以现场诊断、交付资产、分阶段节点和验收闭环为主线。/g,'QilyLean围绕三类核心项目交付与三项数智化产品与技术能力，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。')
     .replace(/把复杂制造问题转化为可测量、可验证、可交付的改善项目；聚焦新工厂规划、精益改善与目视化实施。/g,'三类核心项目交付 + 三项数智化产品与技术能力，合计六类项目合作能力。')
-    .replace(/QilyLean聚焦新工厂规划、精益改善项目交付与目视化实施，以交付资产、阶段付款和验收闭环定义合作。/g,'QilyLean围绕制造工程交付与数智化产品交付，以范围、交付物、Pilot／测试、验证和验收定义六类项目合作能力合作。')
+    .replace(/QilyLean聚焦新工厂规划、精益改善项目交付与目视化实施，以交付资产、阶段付款和验收闭环定义合作。/g,'QilyLean围绕三类核心项目交付与三项数智化产品与技术能力，以范围、交付物、Pilot／测试、验证和验收定义六类项目合作能力合作。')
     .replace(/制造改善项目交付｜新工厂规划｜精益改善｜目视化实施/g,'三类核心项目交付｜三项数智化产品与技术能力｜六类项目合作能力')
-    .replace(/为制造企业提供三类核心服务/g,'围绕两大业务主线形成六类项目合作能力')
+    .replace(/为制造企业提供三类核心服务/g,'形成三类核心项目交付与三项数智化产品与技术能力，合计六类项目合作能力')
     .replace(/查看三大核心业务与交付/g,'查看六类项目合作能力与交付')
     .replace(/不与三大核心商业服务争夺首页主视觉/g,'不与六类项目合作能力争夺首页主视觉');
   return src;

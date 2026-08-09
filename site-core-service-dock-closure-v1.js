@@ -29,7 +29,7 @@
     var heading=services.querySelector('.module-heading');
     if(heading){
       setText(heading.querySelector('h2'),'六类项目合作能力');
-      setText(heading.querySelector('p'),'六项业务形成“制造工程交付 + 数智化产品交付”两条主线：01–03聚焦制造现场与工程改善，04–06聚焦数字化、软件与官网载体；共同遵循问题定义、方案／原型、Pilot／测试、交付验收与持续迭代的闭环逻辑。');
+      setText(heading.querySelector('p'),'六项业务形成“三类核心项目交付 + 三项数智化产品与技术能力”的3+3结构：01–03聚焦制造现场与工程改善，04–06聚焦数字化、软件与官网载体；共同遵循问题定义、方案／原型、Pilot／测试、交付验收与持续迭代的闭环逻辑。');
     }
 
     var grid=services.querySelector('.module-grid');
