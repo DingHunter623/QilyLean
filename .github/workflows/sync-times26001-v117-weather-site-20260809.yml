@@ -1,0 +1,123 @@
+name: Sync Times26001 v1.1.7 Weather Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-times26001-v117-weather-site-20260809.yml'
+      - 'Times26001-Android-v1.1.7-Weather-Test.apk'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Verify APK exists
+        run: |
+          set -euo pipefail
+          test -s Times26001-Android-v1.1.7-Weather-Test.apk
+          sha256sum Times26001-Android-v1.1.7-Weather-Test.apk | grep -q '^ae1eff0be34676246a65023cf9954a37765f465e7644b43bfb7b14a2ad0a9d41 '
+
+      - name: Update Times26001 website modules
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          APK = '/Times26001-Android-v1.1.7-Weather-Test.apk?build=ae1eff0b'
+          OLD_APK = '/Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=3922dff0'
+
+          def write(path, text):
+              Path(path).write_text(text, encoding='utf-8')
+
+          # Product page
+          p = Path('tools/times26001/index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace(OLD_APK, APK)
+          s = s.replace('Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt', 'Times26001-Android-v1.1.7-Weather-Test.sha256.txt')
+          s = s.replace('提供IE秒表分段、累计总时长、数据复制、倒计时、闹钟及时间日历辅助能力。', '提供IE秒表分段、累计总时长、数据复制、倒计时、闹钟、时间日历及天气预报辅助能力。')
+          s = s.replace('提供IE秒表分段、累计总时长、数据复制、倒计时、闹钟及时间日历辅助能力。<br><strong>当前应用市场候选版：v1.1.6 / versionCode 9 / API 36；固定Release签名完成后进入国内应用市场正式分发。</strong>', '提供IE秒表分段、累计总时长、数据复制、倒计时、闹钟、时间日历及天气预报辅助能力。<br><strong>当前手机试用版：v1.1.7 / versionCode 10 / API 36；新增当前位置/城市搜索、当前天气与未来7天预报。</strong>')
+          s = s.replace('当前应用市场候选版：v1.1.6 / versionCode 9 / API 36；固定Release签名完成后进入国内应用市场正式分发。', '当前手机试用版：v1.1.7 / versionCode 10 / API 36；新增当前位置/城市搜索、当前天气与未来7天预报。')
+          s = s.replace('立即下载 Android APK｜v1.1.4', '立即下载 Android APK｜v1.1.7 天气测试版')
+          s = s.replace('以工业工程时间研究与制造现场测时为主线，同时保留日常提醒和时间日历辅助能力。', '以工业工程时间研究与制造现场测时为主线，同时保留日常提醒、时间日历与天气预报辅助能力。')
+          weather_card = '''<article class="tool-card"><small>06｜天气预报</small><h3>当前位置与未来7天趋势</h3><p>支持用户主动使用当前位置或搜索城市，查看当前温度、体感温度、天气状态、湿度、风速、降水及未来7天最高/最低温度与降水概率；最近一次成功天气保存在本机，便于快速回看。</p></article>\n'''
+          if '06｜天气预报' not in s:
+              s = s.replace('<article class="tool-card"><small>06｜Android持续优化</small>', weather_card + '<article class="tool-card"><small>07｜Android持续优化</small>')
+          else:
+              s = s.replace('<small>06｜Android持续优化</small>', '<small>07｜Android持续优化</small>')
+          s = s.replace('<strong>当前可直接下载 v1.1.4 Android APK。</strong> v1.1.6 / versionCode 9 / API 36 为应用市场候选版，待固定Release签名完成后将替换为正式下载版本。', '<strong>当前可直接下载 v1.1.7 Android 天气测试 APK。</strong> versionCode 10 / API 36，已通过TypeScript、Web正式构建、Android原生打包、定位权限与包信息校验。')
+          s = s.replace('<h3>当前可下载：Times26001 v1.1.4</h3>', '<h3>当前可下载：Times26001 v1.1.7 天气测试版</h3>')
+          s = re.sub(r'<p>Android APK，约 4\.29 MB。该文件使用历史 Debug 签名.*?包名固定为 <code>com\.qilylean\.times26001</code>。</p>', '<p>Android APK，v1.1.7 / versionCode 10 / API 36。新增天气预报功能，支持当前位置与城市搜索。该试用包采用测试签名；如手机已安装签名不同的旧测试版，Android可能要求先卸载旧版再安装。包名固定为 <code>com.qilylean.times26001</code>。</p>', s, flags=re.S)
+          s = s.replace('立即下载 APK</a>', '立即下载 v1.1.7 天气测试 APK</a>')
+          s = s.replace('当前可下载 v1.1.4 Android APK', '当前可下载 v1.1.7 Android 天气测试 APK')
+          s = s.replace('v1.1.6 / versionCode 9 / API 36 为应用市场候选版', 'v1.1.7 / versionCode 10 / API 36 为当前天气功能手机试用版')
+          write(p, s)
+
+          # Capabilities cross-entry
+          p = Path('capabilities/index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace(OLD_APK, APK)
+          s = s.replace('应用市场候选：v1.1.6 / versionCode 9 / API 36｜IE分段测时｜累计总时长｜数据复制｜倒计时与闹钟提醒', '手机试用版：v1.1.7 / versionCode 10 / API 36｜新增天气预报｜当前位置/城市搜索｜当前实况＋未来7天｜IE分段测时｜累计总时长')
+          s = s.replace('配套倒计时、闹钟、北京时间、万年历、农历、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。', '配套倒计时、闹钟、北京时间、万年历、农历、黄历、节气与天气预报，可查看当前位置或指定城市的当前实况及未来7天趋势，并用于标准工时测量、工序分析和改善前后对比。')
+          write(p, s)
+
+          # Shared download/share runtime
+          p = Path('app-download-share-v1.js')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('https://qilylean.com/Times26001-Android-v1.1.4-IE-Stopwatch.apk?build=3922dff0', 'https://qilylean.com/Times26001-Android-v1.1.7-Weather-Test.apk?build=ae1eff0b')
+          s = s.replace('Times26001提供IE秒表分段、累计总时长、倒计时、闹钟及时间日历辅助功能。', 'Times26001提供IE秒表分段、累计总时长、倒计时、闹钟、时间日历及天气预报辅助功能。')
+          s = s.replace('集成IE秒表分段、累计总时长、数据复制、按秒倒计时、闹钟、北京时间、万年历、农历、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。', '集成IE秒表分段、累计总时长、数据复制、按秒倒计时、闹钟、北京时间、万年历、农历、黄历、节气与天气预报，可查看当前位置或指定城市的当前实况和未来7天趋势。')
+          s = s.replace('应用市场候选：v1.1.6 / versionCode 9 / API 36｜IE分段测时｜累计总时长｜数据复制｜倒计时与闹钟提醒', '手机试用版：v1.1.7 / versionCode 10 / API 36｜天气预报｜当前位置/城市搜索｜当前实况＋未来7天｜IE分段测时')
+          write(p, s)
+
+          # Privacy policy: make location/network weather processing explicit
+          p = Path('legal/times26001/privacy/index.html')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('生效日期：</strong>2026年8月8日', '生效日期：</strong>2026年8月9日')
+          s = s.replace('当前版本：</strong>V1.1', '当前版本：</strong>V1.2')
+          s = s.replace('本应用以IE现场测时、时间研究、倒计时、闹钟及时间日历辅助为主要功能。', '本应用以IE现场测时、时间研究、倒计时、闹钟、时间日历及天气预报辅助为主要功能。')
+          location_info = '<h3>3. 天气、城市与位置信息</h3><p>用户可选择搜索城市或主动点击“使用当前位置”查询天气。城市搜索文字会发送至Open-Meteo地理编码服务；使用当前位置时，Android可能请求粗略位置或精确位置权限，获取的经纬度会发送至Open-Meteo天气接口以返回当前实况和未来7天预报。最近一次选定地点（可能包含经纬度）及成功天气结果会保存在本机localStorage，便于下次快速打开。拒绝位置权限不影响城市搜索和IE测时、闹钟、倒计时等核心功能。</p>'
+          if '天气、城市与位置信息' not in s:
+              s = s.replace('<h3>3. 技术运行信息</h3>', location_info + '<h3>4. 技术运行信息</h3>')
+          s = s.replace('<li><strong>网络访问：</strong>核心测时、计时、黄历和本地数据功能可离线使用；用户主动点击官网、隐私政策、用户协议或技术支持链接时，会访问QilyLean网站。</li>', '<li><strong>位置权限：</strong>仅在用户主动使用“当前位置”查询天气时用于获取设备坐标；用户可拒绝授权并改用城市搜索。</li><li><strong>网络访问：</strong>用于用户主动查询Open-Meteo天气/城市数据，以及访问QilyLean官网、隐私政策、用户协议或技术支持链接；IE测时、计时、闹钟、黄历等本地核心能力不依赖天气服务。</li>')
+          s = s.replace('本应用不申请通讯录、短信、通话记录、精确位置、相机、麦克风、文件全盘访问或广告标识符权限。', '除用户主动使用天气“当前位置”时申请位置权限外，本应用不申请通讯录、短信、通话记录、相机、麦克风、文件全盘访问或广告标识符权限。')
+          s = s.replace('当前版本不向开发者服务器、广告商或数据经纪商出售、出租或共享用户本地数据。', '当前版本不向开发者服务器、广告商或数据经纪商出售、出租用户本地数据。天气查询时，仅为完成用户主动请求，将城市关键词或坐标发送至Open-Meteo相关接口。')
+          s = s.replace('当前版本不存在开发者主动将用户本地数据传输至境外服务器的功能。', '天气功能依赖第三方Open-Meteo网络服务，相关请求可能经过用户所在地区以外的网络基础设施；除天气查询所必需的城市关键词或坐标外，Times26001不向该天气服务发送生日、闹钟、秒表分段或其他本地业务数据。')
+          write(p, s)
+
+          # Validation
+          checks = {
+              'tools/times26001/index.html': ['v1.1.7', '天气预报', 'Times26001-Android-v1.1.7-Weather-Test.apk'],
+              'capabilities/index.html': ['v1.1.7', '新增天气预报', 'Times26001-Android-v1.1.7-Weather-Test.apk'],
+              'app-download-share-v1.js': ['Times26001-Android-v1.1.7-Weather-Test.apk', '天气预报'],
+              'legal/times26001/privacy/index.html': ['Open-Meteo', '位置权限', '当前版本：</strong>V1.2'],
+          }
+          for path, needles in checks.items():
+              text = Path(path).read_text(encoding='utf-8')
+              for needle in needles:
+                  if needle not in text:
+                      raise SystemExit(f'{path}: missing {needle}')
+          print('Times26001 v1.1.7 weather website synchronization validated')
+
+      - name: Commit website synchronization
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add tools/times26001/index.html capabilities/index.html app-download-share-v1.js legal/times26001/privacy/index.html
+          if git diff --cached --quiet; then
+            echo 'No website changes needed'
+            exit 0
+          fi
+          git commit -m 'feat: publish Times26001 v1.1.7 weather feature on website'
+          git pull --rebase origin main
+          git push origin HEAD:main
