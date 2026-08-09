@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const version = '20260809-sitewide-interaction-clarity-v7';
+const version = '20260809-sitewide-interaction-clarity-v8';
 const href = `/site-interactive-hover-contrast-v1.css?v=${version}`;
 const managedStart = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const managedEnd = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
@@ -90,7 +90,7 @@ function contrast(foreground, background) {
 function validateCss() {
   const css = read('site-interactive-hover-contrast-v1.css');
   [
-    'QILY-SITEWIDE-INTERACTION-CLARITY-V7-20260809',
+    'QILY-SITEWIDE-INTERACTION-CLARITY-V8-20260809',
     '--qily-control-hover-bg:#ffe39b',
     '--qily-control-hover-ink:#17322d',
     '--qily-control-active-bg:#052a33',
@@ -110,7 +110,8 @@ function validateCss() {
     '[aria-disabled="true"]',
     'background-color:var(--qily-control-hover-bg)!important',
     'background-color:var(--qily-control-active-bg)!important',
-    'outline:3px solid var(--qily-control-focus-ring)!important'
+    'outline:3px solid var(--qily-control-focus-ring)!important',
+    'transition:none!important'
   ].forEach((marker) => assert(css.includes(marker), `Interaction CSS marker missing: ${marker}`));
 
   assert(css.includes('html:root:root body'), 'Specificity closure must target the real root html element.');
@@ -151,7 +152,7 @@ function validatePublicPages() {
     if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html) || !isPublicPage(html)) return;
     publicPages += 1;
     actionControls += (html.match(/<button\b|<input\b[^>]*type=["'](?:button|submit)["']|<a\b[^>]*class=["'][^"']*(?:button|action|btn|cta)/gi) || []).length;
-    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260809-sitewide-interaction-clarity-v7)/i.test(html)) staleBeforeMaterialization += 1;
+    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260809-sitewide-interaction-clarity-v8)/i.test(html)) staleBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);
     const currentCount = candidate.split(href).length - 1;
