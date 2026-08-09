@@ -1,0 +1,62 @@
+/* QilyLean Factory Layout period comparison – 2026-08-09 */
+/* Keep the case page comfortably wide while preserving responsive margins. */
+.factory-layout-page .module-inner{
+  width:min(96vw,1600px)!important;
+  max-width:1600px!important;
+}
+.factory-plan-heading{
+  width:100%!important;
+  max-width:none!important;
+}
+.factory-plan-heading .factory-plan-intro{
+  display:block;
+  width:100%!important;
+  max-width:none!important;
+  margin:12px 0 18px!important;
+  padding:14px 20px!important;
+  box-sizing:border-box;
+  border:1px solid #d7e7e5;
+  border-left:5px solid #7faeaa;
+  border-radius:10px;
+  background:#f6fbfb;
+  color:#49656a;
+  font-size:17px!important;
+  line-height:1.9!important;
+}
+.factory-plan-project-gallery{width:100%!important}
+.factory-plan-project-card{gap:24px!important}
+.factory-plan-period-divider{
+  grid-column:1/-1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  min-height:34px;
+  padding:6px 10px;
+  box-sizing:border-box;
+  border-radius:8px;
+  font-size:12.5px;
+  font-weight:900;
+  line-height:1.4;
+  text-align:center;
+}
+.factory-plan-period-divider-top{
+  margin:0 0 2px;
+  border:1px solid #b9d8d3;
+  border-left:5px solid #0f4b5a;
+  background:#eaf6f4;
+  color:#0f4b5a;
+}
+.factory-plan-period-divider-bottom{
+  margin:4px 0 2px;
+  border:1px solid #efcfbe;
+  border-top:4px solid #c86b3c;
+  border-left:5px solid #c86b3c;
+  background:#fff3ec;
+  color:#8a431c;
+}
+@media(max-width:860px){
+  .factory-layout-page .module-inner{width:min(94vw,1600px)!important}
+  .factory-plan-heading .factory-plan-intro{padding:12px 15px!important;font-size:16px!important;line-height:1.78!important}
+  .factory-plan-period-divider{grid-column:1/-1}
+}
