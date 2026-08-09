@@ -443,7 +443,7 @@ html body a.qily-search-result:active .qily-search-rank{
   border-color:#ffe39b!important;
 }
 
-/* QILY-SITEWIDE-INTERACTION-CLARITY-V5-20260809
+/* QILY-SITEWIDE-INTERACTION-CLARITY-V6-20260809
  * 根因封堵：site-vi-contrast-restoration-v1.css 等后续组件规则曾以更高
  * specificity 把按钮悬停重新覆盖为“深青底＋白字”，导致视觉状态几乎不变。
  * 本闭环层只命中真实可操作控件；静态卡片不进入选择器。
@@ -589,7 +589,7 @@ html:root:root body :is(
   .qily-float-btn:not([aria-disabled="true"]),
   .site-music-toggle:not([aria-disabled="true"]),
   .qily-modal-close:not([aria-disabled="true"])
-):is(:hover,:focus-visible){
+):is(:hover:hover,:focus-visible:focus-visible){
   color:var(--qily-control-hover-ink)!important;
   -webkit-text-fill-color:var(--qily-control-hover-ink)!important;
   background-color:var(--qily-control-hover-bg)!important;
@@ -609,7 +609,7 @@ html:root:root body :is(
   .hero-actions>a[href],.actions>a[href],.module-actions>a[href],.article-actions>a[href],
   .card-actions>a[href],.qily-ia-actions>a[href],.qtc-actions>a[href],.form-actions>a[href],
   .qily-float-btn,.site-music-toggle,.qily-modal-close
-):focus-visible{
+):focus-visible:focus-visible{
   outline:3px solid var(--qily-control-focus-ring)!important;
   outline-offset:3px!important;
 }
@@ -635,7 +635,7 @@ html:root:root body :is(
   .qily-float-btn:not([aria-disabled="true"]),
   .site-music-toggle:not([aria-disabled="true"]),
   .qily-modal-close:not([aria-disabled="true"])
-):active{
+):active:active{
   color:var(--qily-control-active-ink)!important;
   -webkit-text-fill-color:var(--qily-control-active-ink)!important;
   background-color:var(--qily-control-active-bg)!important;
@@ -649,7 +649,7 @@ html:root:root body :is(
 
 /* 导航按钮同样必须换色，含当前栏目，杜绝“当前项悬停仍无变化”。 */
 html:root:root body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:is(:hover,:focus-visible){
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:is(:hover:hover,:focus-visible:focus-visible){
   color:var(--qily-control-hover-ink)!important;
   -webkit-text-fill-color:var(--qily-control-hover-ink)!important;
   background-color:var(--qily-control-hover-bg)!important;
@@ -663,7 +663,7 @@ html:root:root body :is(.qily-site-header,.qily-global-header,header.topbar,head
 }
 
 html:root:root body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:active{
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:active:active{
   color:var(--qily-control-active-ink)!important;
   -webkit-text-fill-color:var(--qily-control-active-ink)!important;
   background-color:var(--qily-control-active-bg)!important;
@@ -676,7 +676,7 @@ html:root:root body :is(.qily-site-header,.qily-global-header,header.topbar,head
 html:root:root body :is(
   a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
   a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
-):is(:hover,:focus-visible){
+):is(:hover:hover,:focus-visible:focus-visible){
   color:#17322d!important;
   -webkit-text-fill-color:#17322d!important;
   background-color:#fff8df!important;
@@ -691,7 +691,7 @@ html:root:root body :is(
 html:root:root body :is(
   a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
   a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
-):is(:hover,:focus-visible) *{
+):is(:hover:hover,:focus-visible:focus-visible) *{
   color:#17322d!important;
   -webkit-text-fill-color:#17322d!important;
   text-decoration-color:#17322d!important;
@@ -703,11 +703,11 @@ html:root:root body :is(
 html:root:root body :is(
   a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
   a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
-):active,
+):active:active,
 html:root:root body :is(
   a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
   a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
-):active *{
+):active:active *{
   color:#ffffff!important;
   -webkit-text-fill-color:#ffffff!important;
   background-color:#052a33!important;
