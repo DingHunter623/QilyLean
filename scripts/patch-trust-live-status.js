@@ -7,6 +7,7 @@ const path=require('path');
 const root=path.resolve(__dirname,'..');
 const trustFile=path.join(root,'trust','index.html');
 const dailyIndexFile=path.join(root,'qilylean','daily','index.json');
+const dailyDirectoryFile=path.join(root,'qilylean','daily-insights.html');
 const siteDataFile=path.join(root,'qilylean','site-data.json');
 const searchIndexFile=path.join(root,'qilylean','site-search-index.json');
 
@@ -23,11 +24,27 @@ function escapeHtml(value){return String(value).replace(/[&<>"']/g,(character)=>
   '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
 })[character]);}
 
+function ensureDailyArchiveDisclosure(){
+  if(!fs.existsSync(dailyDirectoryFile))return;
+  let directory=read(dailyDirectoryFile);
+  if(directory.includes('QILY-ARCHIVE-DISCLOSURE:START'))return;
+  const anchor='<h2>简报目录</h2>';
+  if(!directory.includes(anchor))throw new Error('Daily directory heading missing');
+  const block=`${anchor}
+<!-- QILY-ARCHIVE-DISCLOSURE:START -->
+<div role="note" style="margin:16px 0 22px;padding:16px 18px;border-left:5px solid #caa15f;color:#315f64;background:#eef8f6;line-height:1.8"><strong>归档口径说明：</strong>历史简报依据历年制造实践、工作记录与项目经验持续整理；页面日期用于知识档案排序与主题定位，不单独作为该网页在对应日期首次公开发布的证明。内容如经修订，以当前页面和全站同步版本为准。 <a href="/trust/#publication">查看完整说明</a></div>
+<!-- QILY-ARCHIVE-DISCLOSURE:END -->`;
+  directory=directory.replace(anchor,block);
+  writeIfChanged(dailyDirectoryFile,directory);
+}
+
 function main(){
   const briefs=readJson(dailyIndexFile);
   const site=readJson(siteDataFile);
   const search=readJson(searchIndexFile);
   if(!Array.isArray(briefs)||!briefs.length)throw new Error('No daily brief entries found');
+
+  ensureDailyArchiveDisclosure();
 
   const sorted=[...briefs].sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')));
   const latest=sorted[0];
