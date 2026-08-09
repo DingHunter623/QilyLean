@@ -1,4 +1,4 @@
-/* QilyLean 全站视觉、数据与操作区闭环分类器 v3.0｜2026-08-09｜信息密度与视觉层级收口 */
+/* QilyLean 全站视觉、数据与操作区闭环分类器 v3.1｜2026-08-09｜信息密度与视觉层级收口 */
 /* Backward-compatible validation marker: qilySitewideClarityStyleV2 */
 (function(d,w){
   'use strict';
@@ -19,7 +19,7 @@
     if(d.getElementById(id))return;
     var style=d.createElement('style');
     style.id=id;
-    style.setAttribute('data-qily-sitewide-clarity','2026-08-09-v3.0');
+    style.setAttribute('data-qily-sitewide-clarity','2026-08-09-v3.1');
     style.textContent=[
       'html body .cooperation-page #services .service-number{display:inline-grid!important;place-items:center!important;width:40px!important;height:40px!important;border:2px solid #fff!important;border-radius:50%!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:#073c47!important;box-shadow:0 0 0 2px #178b94!important;opacity:1!important;filter:none!important;text-shadow:none!important;font-family:Arial,"Segoe UI",sans-serif!important;font-size:18px!important;font-weight:900!important;line-height:1!important;letter-spacing:0!important}',
       'html body .cooperation-page .hero-actions a.primary,html body .cooperation-page .hero-actions a.primary *{color:#332100!important;-webkit-text-fill-color:#332100!important;opacity:1!important;filter:none!important;text-shadow:none!important;font-weight:950!important}',
@@ -42,7 +42,7 @@
     if(d.getElementById(id))return;
     var style=d.createElement('style');
     style.id=id;
-    style.setAttribute('data-qily-site-density','2026-08-09-v1');
+    style.setAttribute('data-qily-site-density','2026-08-09-v1.1');
     style.textContent=[
       ':root{--qily-density-section:clamp(32px,4.1vw,54px);--qily-density-section-mobile:28px;--qily-density-card:20px;--qily-density-gap:14px;--qily-density-copy:17px;--qily-density-line:1.68}',
       'html body :is(.module-section,.qily-ia-section,.section,.qily-resource-network){padding-top:var(--qily-density-section)!important;padding-bottom:var(--qily-density-section)!important}',
@@ -52,12 +52,17 @@
       'html body :is(.module-heading,.qily-ia-heading,.head)>p{line-height:1.68!important}',
       'html body :is(.module-grid,.qily-ia-grid,.metrics,.qily-resource-network__grid){gap:var(--qily-density-gap)!important}',
       'html body :is(.module-card,.qily-ia-card,.metric,.qily-resource-network__card){min-height:0!important;padding:var(--qily-density-card)!important}',
+      'html body :is(.price-card,.evidence,.boundary article,.diagnosis-form,.contact-card,.trust-card,.resource-item){padding:20px!important}',
+      'html body :is(.price-ladder,.evidence-grid,.boundary,.diagnosis-layout){gap:14px!important}',
       'html body .module-card :is(p,li){font-size:var(--qily-density-copy)!important;line-height:var(--qily-density-line)!important}',
       'html body .module-card p{margin-bottom:10px!important}',
       'html body .module-card h4{margin-top:14px!important}',
       'html body .module-result{margin-top:13px!important;padding:11px 13px!important;font-size:16px!important;line-height:1.62!important}',
       'html body :is(.module-actions,.article-actions,.qily-ia-actions){margin-top:14px!important;gap:9px!important}',
       'html body :is(.module-note,.qily-ia-boundary,.evidence-note,.trust-callout,.status){margin-top:14px!important;padding:13px 15px!important}',
+      'html body :is(.flow-step,.trust-level,[data-qily-step-card="true"]){min-height:0!important;padding:18px 15px!important}',
+      'html body :is(.flow-step,.trust-level,[data-qily-step-card="true"])>b:first-child{width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;margin-bottom:10px!important}',
+      'html body :is(.flow-step,.trust-level,[data-qily-step-card="true"])>strong{margin-bottom:6px!important}',
       'html body .module-media{margin:-20px -20px 15px!important}',
       'html body .module-media figcaption{padding:8px 12px!important}',
       'html body .module-video{margin-top:14px!important;padding:12px!important}',
@@ -65,6 +70,12 @@
       'html body .module-subnav{margin-top:13px!important;gap:8px!important}',
       'html body .module-subnav a{min-height:38px!important;padding:6px 12px!important}',
       'html body .module-section{contain-intrinsic-size:auto 520px!important}',
+      'html body .hero-actions{margin-top:18px!important;gap:9px!important}',
+      'html body .trust-strip{margin-top:20px!important}',
+      'html body .scope-list{margin-top:12px!important;gap:8px!important}',
+      'html body .service-contract{margin-top:13px!important;padding:12px!important}',
+      'html body .core-contract-viewer{margin-top:18px!important;padding:20px!important}',
+      'html body .fine-print{margin-top:14px!important;line-height:1.65!important}',
       'html body .qily-resource-network__grid{margin-top:20px!important}',
       'html body .qily-resource-network__card{padding:18px!important}',
       'html body .qily-resource-network__card strong{padding-top:12px!important}',
@@ -97,8 +108,8 @@
       'html body .qily-interactive-card{transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease,background-color .16s ease!important}',
       'html body .qily-interactive-card:is(:hover,:focus-visible){transform:translateY(-2px)!important;box-shadow:0 12px 28px rgba(15,75,90,.15)!important}',
       '@media(max-width:900px){html body.qily-home-commercial-focus #qily-home-ai .qily-ia-inner{grid-template-columns:1fr!important;gap:18px!important}}',
-      '@media(max-width:820px){html body :is(.module-section,.qily-ia-section,.section,.qily-resource-network){padding-top:var(--qily-density-section-mobile)!important;padding-bottom:var(--qily-density-section-mobile)!important}html body :is(.module-card,.qily-ia-card,.metric,.qily-resource-network__card){padding:18px!important}html body .module-media{margin:-18px -18px 14px!important}html body.qily-home-commercial-focus .hero-grid{align-items:start!important}}',
-      '@media(max-width:560px){html body :is(.module-section,.qily-ia-section,.section,.qily-resource-network){padding-top:24px!important;padding-bottom:24px!important}html body :is(.module-heading,.qily-ia-heading,.head){margin-bottom:16px!important}html body :is(.module-card,.qily-ia-card,.metric,.qily-resource-network__card){padding:16px!important}html body .module-media{margin:-16px -16px 13px!important}html body.qily-home-commercial-focus .hero{padding-top:28px!important;padding-bottom:28px!important}html body.qily-home-commercial-focus .hero h1{font-size:clamp(36px,11vw,48px)!important}html body.qily-home-commercial-focus #qily-more-context .qily-ia-secondary-link{padding:13px 14px!important}}',
+      '@media(max-width:820px){html body :is(.module-section,.qily-ia-section,.section,.qily-resource-network){padding-top:var(--qily-density-section-mobile)!important;padding-bottom:var(--qily-density-section-mobile)!important}html body :is(.module-card,.qily-ia-card,.metric,.qily-resource-network__card,.price-card,.evidence,.boundary article,.diagnosis-form,.contact-card,.trust-card,.resource-item){padding:18px!important}html body .module-media{margin:-18px -18px 14px!important}html body.qily-home-commercial-focus .hero-grid{align-items:start!important}}',
+      '@media(max-width:560px){html body :is(.module-section,.qily-ia-section,.section,.qily-resource-network){padding-top:24px!important;padding-bottom:24px!important}html body :is(.module-heading,.qily-ia-heading,.head){margin-bottom:16px!important}html body :is(.module-card,.qily-ia-card,.metric,.qily-resource-network__card,.price-card,.evidence,.boundary article,.diagnosis-form,.contact-card,.trust-card,.resource-item){padding:16px!important}html body .module-media{margin:-16px -16px 13px!important}html body.qily-home-commercial-focus .hero{padding-top:28px!important;padding-bottom:28px!important}html body.qily-home-commercial-focus .hero h1{font-size:clamp(36px,11vw,48px)!important}html body.qily-home-commercial-focus #qily-more-context .qily-ia-secondary-link{padding:13px 14px!important}}',
       '@media(prefers-reduced-motion:reduce){html body .qily-interactive-card{transition:none!important}}'
     ].join('\n');
     (d.head||d.documentElement).appendChild(style);
@@ -206,7 +217,7 @@
     classifyCards();
     preservePhrases();
     syncDailyMetadata();
-    d.documentElement.setAttribute('data-qily-density','2026-08-09-v1');
+    d.documentElement.setAttribute('data-qily-density','2026-08-09-v1.1');
   }
 
   ready(boot);
