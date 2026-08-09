@@ -1,0 +1,45 @@
+name: Publish Times26001 v1.1.7 Weather APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-times26001-v117-weather-apk-20260809.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download verified build artifact
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://sdmntprwestus3.oaiusercontent.com/files/00000000-5438-81fd-8e6e-286c95aefe29/raw?se=2026-08-09T04%3A49%3A16Z&sp=r&sv=2026-02-06&sr=b&scid=ca204885-67e8-5c89-9eb4-b56826f2dede&skoid=5e713cdb-766b-475e-a3ca-8adb6cf99aa0&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-09T02%3A46%3A57Z&ske=2026-08-10T02%3A46%3A57Z&sks=b&skv=2026-02-06&sig=IWI5TQhF6kdRfIsGp1P6YQZv60pJdAsEH6VaVjK66k8%3D'
+          curl -fL --retry 3 --retry-delay 1 "$URL" -o /tmp/times117.zip
+          rm -rf /tmp/times117 && mkdir -p /tmp/times117
+          unzip -q /tmp/times117.zip -d /tmp/times117
+          APK='/tmp/times117/Times26001-Android-v1.1.7-Weather-Test.apk'
+          test -s "$APK"
+          echo 'ae1eff0be34676246a65023cf9954a37765f465e7644b43bfb7b14a2ad0a9d41  /tmp/times117/Times26001-Android-v1.1.7-Weather-Test.apk' | sha256sum -c -
+          cp "$APK" ./Times26001-Android-v1.1.7-Weather-Test.apk
+          printf '%s  %s\n' 'ae1eff0be34676246a65023cf9954a37765f465e7644b43bfb7b14a2ad0a9d41' 'Times26001-Android-v1.1.7-Weather-Test.apk' > Times26001-Android-v1.1.7-Weather-Test.sha256.txt
+
+      - name: Commit website APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add Times26001-Android-v1.1.7-Weather-Test.apk Times26001-Android-v1.1.7-Weather-Test.sha256.txt
+          git commit -m 'release: add Times26001 v1.1.7 weather test APK'
+          git pull --rebase origin main
+          git push origin HEAD:main
