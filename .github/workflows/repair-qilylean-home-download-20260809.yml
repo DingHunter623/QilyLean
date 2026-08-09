@@ -1,0 +1,50 @@
+name: Repair QilyLean Home download and share flow 20260809
+
+on:
+  push:
+    paths:
+      - '.github/workflows/repair-qilylean-home-download-20260809.yml'
+      - 'scripts/repair_qilylean_home_download_20260809.py'
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Apply QilyLean Home download closure
+        run: python3 scripts/repair_qilylean_home_download_20260809.py
+      - name: Validate runtime and static download chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check app-download-share-v1.js
+          test -f QilyLean_Home_Universal_v2.2.apk
+          test -f QilyLean_Home_Universal_v2.2.sha256.txt
+          grep -q 'data-qilylean-home-direct-download="1"' capabilities/index.html
+          grep -q 'QilyLean_Home_Universal_v2.2.apk?build=20260809-qilylean-home-download-v1' capabilities/index.html
+          grep -q 'data-app-share-qr="qilyleanHome">扫码下载' capabilities/index.html
+          grep -q 'data-app-share-link="qilyleanHome">分享下载页' capabilities/index.html
+          grep -q "download:'https://qilylean.com/QilyLean_Home_Universal_v2.2.apk?build=20260809-qilylean-home-download-v1'" app-download-share-v1.js
+          grep -q '/app-download-share-v1.js?v=20260809-qilylean-home-download-v3' capabilities/index.html
+          grep -q '当前官网可下载历史归档包（旧Debug签名）' app-release-manifest.json
+      - name: Commit and publish
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add app-download-share-v1.js capabilities/index.html app-release-manifest.json scripts/refine_app_download_share_20260808.py
+          git commit -m 'QilyLean Home下载闭环：补直接下载、扫码下载与分享入口'
+          git pull --rebase origin main
+          git push origin HEAD:main
