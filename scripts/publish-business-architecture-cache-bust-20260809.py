@@ -1,7 +1,7 @@
 from pathlib import Path
 
 OLD_NAV = '/site-navigation.js?v=20260807-sitewide-closure-v4'
-NEW_NAV = '/site-navigation.js?v=20260809-business-architecture-v2'
+NEW_NAV = '/site-navigation.js?v=20260809-six-capability-pricing-v3'
 
 changed = []
 
@@ -21,7 +21,7 @@ text = path.read_text(encoding='utf-8')
 new = text
 new = new.replace('/site-brand-trust-v1.js?v=20260802-project-rolebar-v3', '/site-brand-trust-v1.js?v=20260809-project-delivery-strategy-v2')
 new = new.replace('/site-information-architecture-v1.js?v=20260802-commercial-focus-v1', '/site-information-architecture-v1.js?v=20260809-six-capabilities-v2')
-new = new.replace('/site-navigation-legacy-20260802.js?v=20260807-contact-label-v5', '/site-navigation-legacy-20260802.js?v=20260809-core-project-pricing-v2')
+new = new.replace('/site-navigation-legacy-20260802.js?v=20260807-contact-label-v5', '/site-navigation-legacy-20260802.js?v=20260809-six-capability-pricing-v3')
 if new != text:
     path.write_text(new, encoding='utf-8')
     changed.append(str(path))

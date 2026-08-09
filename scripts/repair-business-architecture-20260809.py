@@ -99,15 +99,15 @@ for rel, (title, num, en) in detail_pages.items():
     write(rel, s)
 
 
-# 5) Pricing only covers 01-03, so call it "core project delivery pricing".
+# 5) Pricing follows the full 3+3 architecture: all six capabilities are represented; 04-06 use scope-based pricing until standardized.
 rel = 'site-navigation-legacy-20260802.js'
 s = read(rel)
-s = s.replace("title.textContent = '三大核心业务公开价格参考';", "title.textContent = '三类核心项目交付公开价格参考';")
+s = s.replace("title.textContent = '三大核心业务公开价格参考';", "title.textContent = '六类项目合作能力报价参考';")
 s = s.replace(
     "? '正式项目按成果范围、工艺复杂度、现场投入、实施周期和验收责任核价。'",
-    "? '以下仅对应01–03三类核心项目交付；正式项目按成果范围、工艺复杂度、现场投入、实施周期和验收责任核价。'"
+    "? '01–03展示已建立的价格参考；04–06按真实需求范围独立核价。六类能力均以正式范围、交付物和验收责任确认最终报价。'"
 )
-s = s.replace("'三大核心业务价格方案'", "'三类核心项目交付价格方案'")
+s = s.replace("'三大核心业务价格方案'", "'六类项目合作能力报价方案'")
 write(rel, s)
 
 
@@ -135,7 +135,7 @@ if '## 首页信息层级' not in s:
 1. **唯一业务总览**：六类项目合作能力＝三类核心项目交付＋三项数智化产品与技术能力。
 2. **项目启动逻辑**：只解释“明确问题 → 小范围诊断／Pilot → 验收 → 扩大范围”，不得再次定义“三项核心业务”。
 3. **独立业务页01–03**：统一标识为“核心项目交付 / CORE PROJECT DELIVERY”。
-4. **价格参考**：如仅覆盖01–03，统一称“三类核心项目交付价格参考”，不得称“三大核心业务价格”。
+4. **报价体系**：统一称“六类项目合作能力报价参考”；01–03可展示已建立参考价，04–06在未完成标准化前统一按范围独立核价。
 5. **运行时一致性**：静态HTML、客户端JS注入、SEO/Schema、生成脚本和CI必须使用同一业务口径；任何一层不得二次写回旧口径。
 
 内部技术类名、历史文件名（如 `core-business-*`）可保留以维持兼容性，但不得作为用户可见业务定义。
