@@ -51,6 +51,8 @@ jobs:
       - name: Commit and publish
         shell: bash
         run: |
+          # Workflow files are maintained through the GitHub management API, not by GITHUB_TOKEN.
+          git checkout -- .github/workflows/validate-business-architecture-v2.yml 2>/dev/null || true
           if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
             echo 'No changes to commit.'
             exit 0
@@ -58,6 +60,7 @@ jobs:
           git config user.name 'QilyLean'
           git config user.email 'admin@qilylean.com'
           git add -A
+          git reset .github/workflows 2>/dev/null || true
           git commit -m '报价体系闭环：六类项目合作能力统一纳入3+3报价架构'
           git pull --rebase origin main
           git push origin HEAD:main
