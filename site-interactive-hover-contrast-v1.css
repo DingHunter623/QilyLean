@@ -883,3 +883,29 @@ html:root:root body .hero .actions .qily-latest-brief-button::after{
     flex:1 1 112px!important;
   }
 }
+/* QILY-SITEWIDE-COLOR-BOUNDARY-V10-20260809
+ * 公网真实悬停复核：V8整卡链接规则含ID级优先权，曾把moment-link重新覆盖为浅灰金。
+ * 以同级ID否定伪类并利用后置顺序封口，确保按钮Hover保持亮金实底。
+ */
+html:root:root body :is(a.moment-link,a.moment-back):not(#qily-boundary-state-priority):is(:hover:hover,:focus-visible:focus-visible){
+  color:#332100!important;
+  -webkit-text-fill-color:#332100!important;
+  background-color:var(--qily-boundary-accent)!important;
+  background-image:none!important;
+  border:2px solid var(--qily-boundary-deep)!important;
+  outline:3px solid var(--qily-boundary-accent-soft)!important;
+  outline-offset:3px!important;
+  box-shadow:0 10px 24px rgba(202,161,95,.34)!important;
+  transform:translateY(-2px)!important;
+  transition:none!important;
+}
+html:root:root body :is(a.moment-link,a.moment-back):not(#qily-boundary-state-priority):active:active{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background-color:var(--qily-boundary-pressed)!important;
+  background-image:none!important;
+  border:2px solid var(--qily-boundary-accent)!important;
+  outline-color:var(--qily-boundary-accent)!important;
+  transform:translateY(0) scale(.97)!important;
+  transition:none!important;
+}
