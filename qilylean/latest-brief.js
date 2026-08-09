@@ -6,7 +6,7 @@ var datePattern=/^\d{4}-\d{2}-\d{2}$/;
 var stamp=Date.now();
 var releaseCandidate={
   date:'2026-08-10',
-  theme:'岗位价值与项目交付',
+  theme:'岗位价值与职能闭环',
   title:'真正的职能含金量：不是“负责过”，而是能把问题变成结果',
   summary:'一个岗位真正的含金量，不在职位名称、汇报对象或会多少术语，而在于能否完成从问题识别、数据基线、方案设计、责任协同、Pilot验证、结果验收到机制固化的完整闭环。',
   href:'/qilylean/daily/2026-08-10.html'
