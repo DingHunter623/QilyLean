@@ -6,7 +6,7 @@
     times26001:{
       name:'Times26001',
       url:'https://qilylean.com/tools/times26001/#android-download',
-      download:'https://qilylean.com/Times26001-Android-v1.1.9-Location-City-Fix.apk?build=1f89d56b',
+      download:'https://qilylean.com/Times26001-Android-v1.1.10-Official-Website-Fix.apk?build=37e5a6ad',
       qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'
     },
     qilyleanHome:{
@@ -112,7 +112,7 @@
       var paragraph=timesCard.querySelector('.capability-digital-content > p');
       if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、数据复制、按秒倒计时、闹钟、北京时间、万年历、农历、黄历、节气与天气预报，可查看当前位置或指定城市的当前实况和未来7天趋势。';
       var result=timesCard.querySelector('.module-result');
-      if(result)result.textContent='手机试用版：v1.1.9 / versionCode 12 / API 36｜原生定位权限｜不默认上海｜当前位置/城市搜索｜当前实况＋未来7天';
+      if(result)result.textContent='手机试用版：v1.1.10 / versionCode 13 / API 36｜原生定位权限｜不默认上海｜当前位置/城市搜索｜当前实况＋未来7天';
       timesCard.querySelectorAll('[data-app-share-link="times26001"]').forEach(function(btn){btn.textContent='分享下载页';});
     }
 
