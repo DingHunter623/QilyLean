@@ -1,0 +1,81 @@
+name: Sync Times26001 v1.1.8 Location Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-times26001-v118-location-site-20260809.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Verify v1.1.8 APK exists
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s Times26001-Android-v1.1.8-Location-Fix.apk
+          echo 'bc80bbc24e547d776511191afb9631689ffecb9e5dcb5a5c94e802f01fd0aa81  Times26001-Android-v1.1.8-Location-Fix.apk' | sha256sum -c -
+
+      - name: Update website modules
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          files = [
+              Path('tools/times26001/index.html'),
+              Path('capabilities/index.html'),
+              Path('app-download-share-v1.js'),
+              Path('assets/tools/times26001-overview.svg'),
+              Path('legal/times26001/privacy/index.html'),
+          ]
+
+          for path in files:
+              s = path.read_text(encoding='utf-8')
+              s = s.replace('/Times26001-Android-v1.1.7-Weather-Test.apk?build=ae1eff0b', '/Times26001-Android-v1.1.8-Location-Fix.apk?build=bc80bbc2')
+              s = s.replace('https://qilylean.com/Times26001-Android-v1.1.7-Weather-Test.apk?build=ae1eff0b', 'https://qilylean.com/Times26001-Android-v1.1.8-Location-Fix.apk?build=bc80bbc2')
+              s = s.replace('v1.1.7 / versionCode 10 / API 36', 'v1.1.8 / versionCode 11 / API 36')
+              s = s.replace('v1.1.7 · versionCode 10 · API36', 'v1.1.8 · versionCode 11 · API36')
+              s = s.replace('v1.1.7 天气测试版', 'v1.1.8 定位修正版')
+              s = s.replace('当前手机试用版：v1.1.8 / versionCode 11 / API 36；新增当前位置/城市搜索、当前天气与未来7天预报。', '当前手机试用版：v1.1.8 / versionCode 11 / API 36；新增原生定位权限管理，首次天气不预设上海，需明确选择当前位置或搜索城市。')
+              s = s.replace('手机试用版：v1.1.8 / versionCode 11 / API 36｜天气预报｜当前位置/城市搜索｜当前实况＋未来7天｜IE分段测时', '手机试用版：v1.1.8 / versionCode 11 / API 36｜原生定位权限｜不默认上海｜当前位置/城市搜索｜当前实况＋未来7天')
+              s = s.replace('应用市场候选 v1.1.8 · versionCode 11 · API36', '手机试用版 v1.1.8 · versionCode 11 · API36')
+              if path.name == 'times26001-overview.svg':
+                  s = s.replace('天气预报 · 当前实况 + 未来7天', '天气预报 · 原生定位权限 · 未来7天')
+              if path.as_posix() == 'legal/times26001/privacy/index.html':
+                  old = '用户可拒绝授权并改用城市搜索。'
+                  new = '用户可在APP“设置 → 天气与位置权限”查看权限状态并主动申请定位，也可拒绝授权并改用城市搜索。'
+                  s = s.replace(old, new)
+              path.write_text(s, encoding='utf-8')
+
+          product = Path('tools/times26001/index.html').read_text(encoding='utf-8')
+          assert 'Times26001-Android-v1.1.8-Location-Fix.apk?build=bc80bbc2' in product
+          assert 'v1.1.8 / versionCode 11 / API 36' in product
+          assert '不预设上海' in product
+          share = Path('app-download-share-v1.js').read_text(encoding='utf-8')
+          assert 'Times26001-Android-v1.1.8-Location-Fix.apk?build=bc80bbc2' in share
+          assert 'v1.1.8 / versionCode 11 / API 36' in share
+          PY
+
+      - name: Commit website synchronization
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add tools/times26001/index.html capabilities/index.html app-download-share-v1.js assets/tools/times26001-overview.svg legal/times26001/privacy/index.html
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'feat: publish Times26001 v1.1.8 native location fix on website'
+          git pull --rebase origin main
+          git push origin HEAD:main
