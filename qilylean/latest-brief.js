@@ -5,11 +5,11 @@ if(!card)return;
 var datePattern=/^\d{4}-\d{2}-\d{2}$/;
 var stamp=Date.now();
 var releaseCandidate={
-  date:'2026-08-03',
-  theme:'成果证据分级与公开核验',
-  title:'成果不是数字卡片：用证据等级、阶段门与公开链接形成核验闭环',
-  summary:'制造改善成果一旦进入官网、项目报告或对外交流材料，就从内部总结升级为公开主张。公开主张不能只给出“提升多少、节省多少、完成多少”，还必须同步回答：依据是什么、由谁确认、本人承担什么角色、适用于什么条件、读者在哪里核验。',
-  href:'/qilylean/daily/2026-08-03.html'
+  date:'2026-08-09',
+  theme:'职场术语与目标管理',
+  title:'别把“天花板”当成努力目标：上限、标杆与挑战目标必须分开',
+  summary:'职场与管理语境中的“天花板”本质是上限，不等于“努努力就能达到的标准”。管理中应把 Ceiling（天花板／上限）、Benchmark（标杆）、Target（目标）与 Stretch Target（挑战目标）分开定义，否则绩效、改善和资源配置容易因为术语混用而失真。',
+  href:'/qilylean/daily/2026-08-09.html'
 };
 
 function request(url,type){
