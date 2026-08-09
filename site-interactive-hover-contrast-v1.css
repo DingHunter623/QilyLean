@@ -443,7 +443,7 @@ html body a.qily-search-result:active .qily-search-rank{
   border-color:#ffe39b!important;
 }
 
-/* QILY-SITEWIDE-INTERACTION-CLARITY-V4-20260809
+/* QILY-SITEWIDE-INTERACTION-CLARITY-V5-20260809
  * 根因封堵：site-vi-contrast-restoration-v1.css 等后续组件规则曾以更高
  * specificity 把按钮悬停重新覆盖为“深青底＋白字”，导致视觉状态几乎不变。
  * 本闭环层只命中真实可操作控件；静态卡片不进入选择器。
@@ -462,7 +462,7 @@ html body a.qily-search-result:active .qily-search-rank{
 }
 
 /* 所有真实按钮、按钮型链接与图标控件先恢复稳定可读的文字层。 */
-:root:root html body :is(
+html:root:root body :is(
   button:not([hidden]),
   [role="button"]:not([aria-hidden="true"]),
   input[type="button"],
@@ -498,7 +498,7 @@ html body a.qily-search-result:active .qily-search-rank{
     transform .16s ease!important;
 }
 
-:root:root html body :is(
+html:root:root body :is(
   button:not([hidden]),
   [role="button"]:not([aria-hidden="true"]),
   input[type="button"],
@@ -528,13 +528,13 @@ html body a.qily-search-result:active .qily-search-rank{
 }
 
 /* 深色首屏：主按钮金底深字；其余按钮透明浅层＋白色边界。 */
-:root:root html body :is(
+html:root:root body :is(
   .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
   .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
   [data-qily-dark-surface="true"]
 ) :is(.hero-actions,.actions,.module-actions,.article-actions,.card-actions,.qily-ia-actions)
 > :is(a,button).primary,
-:root:root html body :is(
+html:root:root body :is(
   .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
   .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
   [data-qily-dark-surface="true"]
@@ -548,13 +548,13 @@ html body a.qily-search-result:active .qily-search-rank{
   box-shadow:0 10px 24px rgba(0,0,0,.24)!important;
 }
 
-:root:root html body :is(
+html:root:root body :is(
   .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
   .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
   [data-qily-dark-surface="true"]
 ) :is(.hero-actions,.actions,.module-actions,.article-actions,.card-actions,.qily-ia-actions)
 > :is(a,button):not(.primary):not(.qily-action-primary),
-:root:root html body :is(
+html:root:root body :is(
   .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
   .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
   [data-qily-dark-surface="true"]
@@ -569,7 +569,7 @@ html body a.qily-search-result:active .qily-search-rank{
 }
 
 /* Hover：所有按钮和图标统一切为浅金实底＋深色字，形成明确色界变化。 */
-:root:root html body :is(
+html:root:root body :is(
   button:not([hidden]):not(:disabled),
   [role="button"]:not([aria-hidden="true"]):not([aria-disabled="true"]),
   input[type="button"]:not(:disabled),
@@ -603,7 +603,7 @@ html body a.qily-search-result:active .qily-search-rank{
   transform:translateY(-2px)!important;
 }
 
-:root:root html body :is(
+html:root:root body :is(
   button:not([hidden]),[role="button"],input[type="button"],input[type="submit"],
   a.button,a.btn,a[class*="-button"],a[class*="-action"],
   .hero-actions>a[href],.actions>a[href],.module-actions>a[href],.article-actions>a[href],
@@ -615,7 +615,7 @@ html body a.qily-search-result:active .qily-search-rank{
 }
 
 /* Active：按下时切为更深青底＋白字；顺序位于Hover之后，保证点击瞬间可辨。 */
-:root:root html body :is(
+html:root:root body :is(
   button:not([hidden]):not(:disabled),
   [role="button"]:not([aria-disabled="true"]),
   input[type="button"]:not(:disabled),
@@ -648,7 +648,7 @@ html body a.qily-search-result:active .qily-search-rank{
 }
 
 /* 导航按钮同样必须换色，含当前栏目，杜绝“当前项悬停仍无变化”。 */
-:root:root html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+html:root:root body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
 :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:is(:hover,:focus-visible){
   color:var(--qily-control-hover-ink)!important;
   -webkit-text-fill-color:var(--qily-control-hover-ink)!important;
@@ -662,7 +662,7 @@ html body a.qily-search-result:active .qily-search-rank{
   outline-offset:2px!important;
 }
 
-:root:root html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+html:root:root body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
 :is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:active{
   color:var(--qily-control-active-ink)!important;
   -webkit-text-fill-color:var(--qily-control-active-ink)!important;
@@ -673,7 +673,7 @@ html body a.qily-search-result:active .qily-search-rank{
 }
 
 /* 整卡链接与搜索结果：所有子文字随整卡状态切换，不再出现深底深字。 */
-:root:root html body :is(
+html:root:root body :is(
   a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
   a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
 ):is(:hover,:focus-visible){
@@ -688,7 +688,7 @@ html body a.qily-search-result:active .qily-search-rank{
   outline-offset:3px!important;
 }
 
-:root:root html body :is(
+html:root:root body :is(
   a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
   a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
 ):is(:hover,:focus-visible) *{
@@ -700,11 +700,11 @@ html body a.qily-search-result:active .qily-search-rank{
   text-shadow:none!important;
 }
 
-:root:root html body :is(
+html:root:root body :is(
   a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
   a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
 ):active,
-:root:root html body :is(
+html:root:root body :is(
   a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
   a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
 ):active *{
@@ -716,7 +716,7 @@ html body a.qily-search-result:active .qily-search-rank{
 }
 
 /* 禁用态不用透明度“做灰”，保持文字仍可读。 */
-:root:root html body :is(
+html:root:root body :is(
   button:disabled,input[type="button"]:disabled,input[type="submit"]:disabled,
   [role="button"][aria-disabled="true"],a[aria-disabled="true"]
 ){
@@ -733,7 +733,7 @@ html body a.qily-search-result:active .qily-search-rank{
 }
 
 @media(prefers-reduced-motion:reduce){
-  :root:root html body :is(
+  html:root:root body :is(
     button,[role="button"],input[type="button"],input[type="submit"],a.button,a.btn,
     a[class*="-button"],a[class*="-action"],.qily-float-btn,.site-music-toggle,.qily-modal-close
   ){
