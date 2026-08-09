@@ -6,7 +6,7 @@
     times26001:{
       name:'Times26001',
       url:'https://qilylean.com/tools/times26001/#android-download',
-      download:'https://qilylean.com/Times26001-Android-v1.1.8-Location-Fix.apk?build=bc80bbc2',
+      download:'https://qilylean.com/Times26001-Android-v1.1.8-Location-Fix.apk?build=22ae3b2b',
       qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'
     },
     qilyleanHome:{

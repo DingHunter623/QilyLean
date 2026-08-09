@@ -1,1 +1,1 @@
-bc80bbc24e547d776511191afb9631689ffecb9e5dcb5a5c94e802f01fd0aa81  Times26001-Android-v1.1.8-Location-Fix.apk
+22ae3b2bf7af7565a0114e6d7889de97e03d89f710848f5571ce12e1a4a61b5a  Times26001-Android-v1.1.8-Location-Fix.apk
