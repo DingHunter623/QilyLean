@@ -1,0 +1,48 @@
+name: Sync 0810 six-question matrix
+
+on:
+  push:
+    paths:
+      - 'scripts/sync-0810-six-question-matrix.py'
+      - '.github/workflows/sync-0810-six-question-matrix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Sync generator source
+        run: python scripts/sync-0810-six-question-matrix.py
+      - name: Validate generator no longer contains radial layout
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('scripts/patch-knowledge-stats-brief-visuals-20260809.py').read_text(encoding='utf-8')
+          start=s.index("'2026-08-10-04-six-question-check.svg'")
+          end=s.index("'2026-08-10-05-person-to-system.svg'", start)
+          block=s[start:end]
+          assert '六项证据并列检核' in block
+          assert '<circle r="96"' not in block
+          assert 'translate(600 280)' not in block
+          print('generator validation passed')
+          PY
+      - name: Commit synchronized generator
+        run: |
+          if git diff --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add scripts/patch-knowledge-stats-brief-visuals-20260809.py
+          git commit -m '简报可视化规范：六问检核改为证据矩阵并防回退 [skip ci]'
+          git push
