@@ -63,7 +63,7 @@ includes(latest, `id="${sourceLatest}"`, 'Latest page carries its date identity'
 includes(latest, 'data-brief-message-form', 'Latest page contains message form');
 includes(latest, '留言交流', 'Latest page contains message section');
 includes(latest, 'site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1', 'Latest page loads number-badge contrast');
-includes(latest, 'site-interactive-hover-contrast-v1.css?v=20260809-sitewide-interaction-clarity-v6', 'Latest page loads interactive contrast');
+includes(latest, 'site-interactive-hover-contrast-v1.css?v=20260809-sitewide-interaction-clarity-v7', 'Latest page loads interactive contrast');
 includes(latest, 'site-navigation.js?v=20260804-sitewide-clarity-v2', 'Latest page loads current navigation');
 includes(latest, 'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2', 'Latest page loads current visual closure');
 includes(latest, 'site-visual-closure-v2.css?v=20260803-boundary-links-v2', 'Latest page loads boundary-link closure');
