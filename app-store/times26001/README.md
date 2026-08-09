@@ -24,7 +24,7 @@
 ## 1. 官网与应用市场版本关联
 
 - 历史官网安装包：`1.1.4`（旧Debug签名，仅历史追溯）；
-- 最新构建 / 应用市场候选版：`1.1.6` / versionCode `9` / Android API 36；
+- 最新构建 / 应用市场候选版：`1.1.9` / versionCode `12` / Android API 36；
 - 包名：`com.qilylean.times26001`；
 - 开发者支持官网：`https://qilylean.com/`；
 - 企业邮箱：`admin@qilylean.com`；
@@ -135,7 +135,7 @@ Times26001是一款以工业工程时间研究和制造现场测时为核心的A
 
 - [ ] 应用名称统一为 `Times26001`；
 - [ ] APP备案名称、软著材料、官网主标题与商店名称尽可能一致；
-- [ ] `versionCode`为9、`versionName`为1.1.6，后续严格递增；
+- [ ] `versionCode`为12、`versionName`为1.1.9，后续严格递增；
 - [ ] `targetSdk` / `compileSdk`为36；
 - [ ] 上传AAB/APK使用固定Release签名；
 - [ ] 隐私政策、协议、支持网址公网可访问；
