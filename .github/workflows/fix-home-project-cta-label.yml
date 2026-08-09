@@ -1,0 +1,57 @@
+name: Fix homepage project CTA label
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/fix-home-project-cta-label.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Remove redundant CTA prefix everywhere
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            index.html
+            site-information-architecture-v1.js
+            scripts/materialize-static-core-pages.js
+            scripts/sync-home-latest-brief-cta.js
+          )
+          for f in "${files[@]}"; do
+            test -f "$f"
+            sed -i 's/核验代表项目与证据/代表项目与证据/g' "$f"
+          done
+          ! grep -R --line-number --fixed-strings '核验代表项目与证据' "${files[@]}"
+          grep -q '>代表项目与证据<' index.html
+          node --check site-information-architecture-v1.js
+          node --check scripts/materialize-static-core-pages.js
+          node --check scripts/sync-home-latest-brief-cta.js
+
+      - name: Commit corrected label
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "QilyLean"
+          git config user.email "DingHunter623@gmail.com"
+          git add index.html site-information-architecture-v1.js scripts/materialize-static-core-pages.js scripts/sync-home-latest-brief-cta.js
+          if git diff --cached --quiet; then
+            echo "No label changes required."
+            exit 0
+          fi
+          git commit -m "fix: simplify homepage project evidence CTA [skip ci]"
+          git push
