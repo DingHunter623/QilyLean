@@ -1,0 +1,52 @@
+name: Replace Times26001 v1.1.8 Final Location APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/replace-times26001-v118-final-apk-20260809.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Download final verified APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://sdmntprwestcentralus.oaiusercontent.com/files/00000000-0354-81fb-80df-b39a386362b5/raw?se=2026-08-09T05%3A24%3A16Z&sp=r&sv=2026-02-06&sr=b&scid=4c33d821-f10e-5ae1-8777-2883152012cf&skoid=18c14e53-ea0c-429b-8d09-d22d66ca7169&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-08T11%3A06%3A21Z&ske=2026-08-09T11%3A06%3A21Z&sks=b&skv=2026-02-06&sig=lOPQWDKdUrVBOBXCOT9jXwk/JM3uhn7OuufG82mC7IM%3D'
+          curl -fL --retry 3 --retry-delay 1 "$URL" -o /tmp/times118final.zip
+          rm -rf /tmp/times118final && mkdir -p /tmp/times118final
+          unzip -q /tmp/times118final.zip -d /tmp/times118final
+          APK='/tmp/times118final/Times26001-Android-v1.1.8-Location-Fix.apk'
+          test -s "$APK"
+          echo '22ae3b2bf7af7565a0114e6d7889de97e03d89f710848f5571ce12e1a4a61b5a  /tmp/times118final/Times26001-Android-v1.1.8-Location-Fix.apk' | sha256sum -c -
+          cp "$APK" ./Times26001-Android-v1.1.8-Location-Fix.apk
+          printf '%s  %s\n' '22ae3b2bf7af7565a0114e6d7889de97e03d89f710848f5571ce12e1a4a61b5a' 'Times26001-Android-v1.1.8-Location-Fix.apk' > Times26001-Android-v1.1.8-Location-Fix.sha256.txt
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ['tools/times26001/index.html','capabilities/index.html','app-download-share-v1.js']:
+              p=Path(name)
+              s=p.read_text(encoding='utf-8').replace('build=bc80bbc2','build=22ae3b2b')
+              p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Commit final website APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add Times26001-Android-v1.1.8-Location-Fix.apk Times26001-Android-v1.1.8-Location-Fix.sha256.txt tools/times26001/index.html capabilities/index.html app-download-share-v1.js
+          git commit -m 'release: replace Times26001 v1.1.8 with final location APK'
+          git pull --rebase origin main
+          git push origin HEAD:main
