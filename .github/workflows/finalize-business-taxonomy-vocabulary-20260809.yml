@@ -1,0 +1,94 @@
+name: Finalize QilyLean 3+3 taxonomy vocabulary 20260809
+
+on:
+  push:
+    paths:
+      - '.github/workflows/finalize-business-taxonomy-vocabulary-20260809.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Close remaining legacy grouping vocabulary
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          targets = [
+              Path('index.html'),
+              Path('cooperation/index.html'),
+              Path('site-information-architecture-v1.js'),
+              Path('site-core-service-dock-closure-v1.js'),
+              Path('scripts/materialize-static-core-pages.js'),
+              Path('scripts/hide-public-pricing.js'),
+              Path('scripts/sync-home-latest-brief-cta.js'),
+              Path('scripts/enforce-six-core-static-source.js'),
+          ]
+          replacements = [
+              ('围绕制造工程交付与数智化产品交付', '围绕三类核心项目交付与三项数智化产品与技术能力'),
+              ('“制造工程交付 + 数智化产品交付”两条主线', '“三类核心项目交付 + 三项数智化产品与技术能力”的3+3结构'),
+              ('制造工程交付 + 数智化产品交付', '三类核心项目交付 + 三项数智化产品与技术能力'),
+              ('围绕“制造工程交付”与“数智化产品交付”两条主线', '围绕三类核心项目交付与三项数智化产品与技术能力'),
+              ('围绕两大业务主线形成六类项目合作能力', '形成三类核心项目交付与三项数智化产品与技术能力，合计六类项目合作能力'),
+          ]
+          changed = []
+          for path in targets:
+              if not path.exists():
+                  continue
+              text = path.read_text(encoding='utf-8')
+              before = text
+              for old, new in replacements:
+                  text = text.replace(old, new)
+              if text != before:
+                  path.write_text(text, encoding='utf-8')
+                  changed.append(str(path))
+          print('Vocabulary-updated files:')
+          for path in changed:
+              print(' -', path)
+          PY
+
+          node --check scripts/enforce-six-core-static-source.js
+          node scripts/enforce-six-core-static-source.js
+          if [ -f scripts/refresh-static-core-search-index.js ]; then
+            node scripts/refresh-static-core-search-index.js
+          fi
+
+      - name: Validate exact 3+3 vocabulary contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q '三类核心项目交付' index.html
+          grep -q '三项数智化产品与技术能力' index.html
+          grep -q '六类项目合作能力' index.html
+          grep -q '三类核心项目交付' cooperation/index.html
+          grep -q '三项数智化产品与技术能力' cooperation/index.html
+          grep -q '六类项目合作能力' cooperation/index.html
+          ! grep -q '六大核心业务' index.html
+          ! grep -q '六大核心业务' cooperation/index.html
+          ! grep -q '围绕制造工程交付与数智化产品交付' index.html
+          ! grep -q '围绕制造工程交付与数智化产品交付' scripts/enforce-six-core-static-source.js
+          ! grep -q '制造工程交付 + 数智化产品交付' scripts/enforce-six-core-static-source.js
+
+      - name: Commit final taxonomy closure
+        shell: bash
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo 'No vocabulary drift found.'
+            exit 0
+          fi
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add index.html cooperation/index.html site-information-architecture-v1.js site-core-service-dock-closure-v1.js scripts/materialize-static-core-pages.js scripts/hide-public-pricing.js scripts/sync-home-latest-brief-cta.js scripts/enforce-six-core-static-source.js qilylean/site-search-index.json qilylean/site-data.json 2>/dev/null || true
+          git commit -m '全站口径闭环：统一3+3项目合作能力描述'
+          git pull --rebase origin main
+          git push origin HEAD:main
