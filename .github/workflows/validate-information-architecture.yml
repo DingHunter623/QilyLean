@@ -115,7 +115,9 @@ jobs:
           test -s site-static-core-interactions-v1.js
           test -s qilylean/site-search-index.json
           grep -q 'qilyInformationArchitectureStylesheet' site-navigation.js
-          grep -q '六大核心业务' site-information-architecture-v1.js
+          grep -q '六类项目合作能力' site-information-architecture-v1.js
+          grep -q '三类核心项目交付' site-information-architecture-v1.js
+          grep -q '三项数智化产品与技术能力' site-information-architecture-v1.js
           grep -q '专业标签与能力边界' site-information-architecture-v1.js
           grep -q '职业经历摘要与口径说明' site-information-architecture-v1.js
           grep -q '项目结果如何阅读' site-information-architecture-v1.js
@@ -125,19 +127,20 @@ jobs:
           grep -q '正式项目以双方签署合同为准' site-information-architecture-v1.js
 
           grep -q 'QILY-HOME-STATIC-COMMERCIAL:START' index.html
-          grep -q '两大业务主线｜六大核心业务' index.html
+          grep -q '六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力' index.html
           grep -q '新工厂／新产线规划' index.html
           grep -q '精益改善项目交付' index.html
           grep -q '目视化项目设计与交付' index.html
           grep -q '数字化工厂' index.html
           grep -q 'APP软件开发' index.html
           grep -q '官网建设' index.html
+          ! grep -q '六大核心业务' index.html
           ! grep -q '三类核心业务' index.html
           ! grep -q '三类核心服务' index.html
-          ! grep -q '查看三大核心业务与交付' index.html
 
           grep -q 'QILY-COOPERATION-STATIC-SUMMARY:START' cooperation/index.html
-          grep -q '<h2>六大核心业务</h2>' cooperation/index.html
+          grep -q '<h2>六类项目合作能力</h2>' cooperation/index.html
+          grep -q '三项数智化产品与技术能力' cooperation/index.html
           grep -q 'data-qily-six-core-services="v1"' cooperation/index.html
           grep -q '<h2>六类项目合作边界</h2>' cooperation/index.html
           grep -q '01｜新工厂／新产线规划' cooperation/index.html
@@ -150,6 +153,7 @@ jobs:
           grep -q '合作启动路径与公开报价边界' cooperation/index.html
           grep -q '分阶段付款' cooperation/index.html
           grep -q '验收边界' cooperation/index.html
+          ! grep -q '六大核心业务' cooperation/index.html
           ! grep -q '<h2>三大核心业务</h2>' cooperation/index.html
           ! grep -q '<h2>四类项目合作边界</h2>' cooperation/index.html
 
@@ -170,15 +174,15 @@ jobs:
           if (schemas.some((schema) => schema['@type'] === 'Person' && !Array.isArray(schema['@graph']))) throw new Error('Legacy standalone Person schema remains');
           const graph = schemas.find((schema) => Array.isArray(schema['@graph']));
           const service = graph && graph['@graph'].find((item) => item['@type'] === 'Service');
-          if (!service || !Array.isArray(service.serviceType) || service.serviceType.length !== 6) throw new Error('Homepage JSON-LD serviceType is not six-core canonical');
-          if (!cooperationHtml.includes('APP软件开发') || !cooperationHtml.includes('官网建设')) throw new Error('Cooperation static HTML is not six-core canonical');
+          if (!service || !Array.isArray(service.serviceType) || service.serviceType.length !== 6) throw new Error('Homepage JSON-LD serviceType is not six-capability canonical');
+          if (!cooperationHtml.includes('APP软件开发') || !cooperationHtml.includes('官网建设') || cooperationHtml.includes('六大核心业务')) throw new Error('Cooperation static HTML taxonomy is stale');
 
           const search = JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
           const root = search.entries.find((entry) => entry.url === '/');
           const cooperation = search.entries.find((entry) => entry.url === '/cooperation/');
           const daily = search.entries.find((entry) => entry.url === '/qilylean/daily-insights.html');
-          if (!root || !root.text.includes('两大业务主线') || !root.text.includes('APP软件开发') || root.text.includes('三类核心业务') || root.text.includes('职能标签')) throw new Error('Homepage search entry is stale');
-          if (!cooperation || !cooperation.text.includes('六大核心业务') || !cooperation.text.includes('04｜数字化工厂') || !cooperation.text.includes('分阶段付款') || cooperation.text.includes('四类项目合作边界')) throw new Error('Cooperation search entry is stale');
+          if (!root || !root.text.includes('三类核心项目交付') || !root.text.includes('APP软件开发') || root.text.includes('六大核心业务') || root.text.includes('职能标签')) throw new Error('Homepage search entry is stale');
+          if (!cooperation || !cooperation.text.includes('六类项目合作能力') || !cooperation.text.includes('04｜数字化工厂') || !cooperation.text.includes('分阶段付款') || cooperation.text.includes('六大核心业务') || cooperation.text.includes('四类项目合作边界')) throw new Error('Cooperation search entry is stale');
           if (!daily || !daily.text.includes('不等同于网页首次公开发布日期')) throw new Error('Daily archive search entry is stale');
           NODE
 
