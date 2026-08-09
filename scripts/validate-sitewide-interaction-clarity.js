@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const version = '20260809-sitewide-interaction-clarity-v9';
+const version = '20260809-sitewide-interaction-clarity-v10';
 const href = `/site-interactive-hover-contrast-v1.css?v=${version}`;
 const managedStart = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const managedEnd = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
@@ -92,6 +92,8 @@ function validateCss() {
   [
     'QILY-SITEWIDE-INTERACTION-CLARITY-V8-20260809',
     'QILY-SITEWIDE-COLOR-BOUNDARY-V9-20260809',
+    'QILY-SITEWIDE-COLOR-BOUNDARY-V10-20260809',
+    ':not(#qily-boundary-state-priority)',
     '--qily-boundary-accent:#ffd36a',
     '.qtc-global-trust-links>a[href]',
     'a.moment-link',
@@ -160,7 +162,7 @@ function validatePublicPages() {
     if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html) || !isPublicPage(html)) return;
     publicPages += 1;
     actionControls += (html.match(/<button\b|<input\b[^>]*type=["'](?:button|submit)["']|<a\b[^>]*class=["'][^"']*(?:button|action|btn|cta)/gi) || []).length;
-    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260809-sitewide-interaction-clarity-v9)/i.test(html)) staleBeforeMaterialization += 1;
+    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260809-sitewide-interaction-clarity-v10)/i.test(html)) staleBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);
     const currentCount = candidate.split(href).length - 1;
