@@ -1,0 +1,53 @@
+/* QILY-SITEWIDE-TAIL-GAP-HOTFIX-V22-20260810
+ * Purpose: remove the viewport-forced footer gap introduced by the V19/V20 tail flex rules.
+ * Scope: document-flow height only. Footer visuals, contact/trust layout, floating dock and business modules remain unchanged.
+ */
+
+html:root:root:root body.qily-tail-compact{
+  min-height:0!important;
+  height:auto!important;
+  display:block!important;
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+
+html:root:root:root body.qily-tail-compact > main{
+  flex:none!important;
+  min-height:0!important;
+  height:auto!important;
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer),
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer{
+  flex:none!important;
+  min-height:0!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+}
+
+/* Fixed utilities must never re-enter document flow and create a false tail height. */
+html:root:root:root body.qily-tail-compact > :is(
+  #floatDock,#shareMask,#wxMask,#qilySearchMask,#qilyDockToast,#siteMusicMute,
+  #qilyPersistentNavigationFrame,#qilyPersistentNavigationLoader
+){
+  position:fixed!important;
+  flex:none!important;
+  margin:0!important;
+}
+
+html:root:root:root body.qily-tail-compact > #siteBackgroundMusic:not([controls]){
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+
+html:root:root:root body.qily-tail-compact::after{
+  content:none!important;
+  display:none!important;
+}
