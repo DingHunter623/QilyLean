@@ -64,7 +64,8 @@ jobs:
           const label = `今日简报｜${Number(m[2])}月${Number(m[3])}日`;
           if (!home.includes(label)) throw new Error('Homepage latest brief label mismatch');
           if (!home.includes(`href="${data.briefs.latestUrl}"`)) throw new Error('Homepage latest brief URL mismatch');
-          if (!home.includes('20260809-latest-brief-cta-v1')) throw new Error('Homepage interaction cache-bust version missing');
+          if (!home.includes('20260810-no-new-badge-v3')) throw new Error('Homepage no-NEW interaction cache-bust version missing');
+          if (home.includes('20260809-latest-brief-cta-v1')) throw new Error('Homepage stale NEW-badge interaction cache remains');
           if (home.includes('核验代表项目与证据')) throw new Error('Legacy project evidence CTA label remains');
           if (!home.includes('>代表项目与证据<')) throw new Error('Concise project evidence CTA label missing');
           NODE

@@ -46,7 +46,7 @@ home = home.replace(actionsExpression, actions);
 
 home = home.replace(
   /(<script id="qilyStaticCoreInteractions" defer src="\/site-static-core-interactions-v1\.js\?v=)[^"]+("><\/script>)/,
-  '$1' + '20260809-latest-brief-cta-v1' + '$2'
+  '$1' + '20260810-no-new-badge-v3' + '$2'
 );
 
 const changed = writeIfChanged(homeFile, home);

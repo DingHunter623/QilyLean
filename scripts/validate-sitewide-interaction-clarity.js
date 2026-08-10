@@ -193,6 +193,9 @@ function validateLoadOrder() {
   const musicWrapper = read('homepage-music.js');
   const nativeNavigation = read('site-music-persistent-navigation-v1.js');
   const floatingService = read('qilylean/floating-service.js');
+  const homeBriefSync = read('scripts/sync-home-latest-brief-cta.js');
+  const homeBriefWorkflow = read('.github/workflows/sync-home-latest-brief-cta.yml');
+  const trustBuilder = read('scripts/build-trust-search-sync.js');
 
   assert((navigation.match(new RegExp(version, 'g')) || []).length >= 3, 'Navigation does not load the current interaction stylesheet in every loader path.');
   assert(navigation.includes("'qilyTrustConversionV2Stylesheet','qilyInteractiveHoverContrastStylesheet'"), 'Interaction stylesheet must be promoted after trust conversion styles.');
@@ -279,6 +282,11 @@ function validateLoadOrder() {
   assert(!floatingService.includes('20260729-no-old-flash-v1'), 'Floating-service runtime still requests the stale navigation loader.');
   assert(floatingService.includes('document.querySelector(\'script[src*="/site-navigation.js"]\')'), 'Floating-service runtime must reuse an existing navigation loader.');
   assert(floatingService.includes('20260810-native-navigation-stable-v18'), 'Floating-service fallback must use the current navigation version.');
+  assert(homeBriefSync.includes('20260810-no-new-badge-v3'), 'Homepage brief sync must preserve the no-NEW interaction cache version.');
+  assert(!homeBriefSync.includes('20260809-latest-brief-cta-v1'), 'Homepage brief sync still restores the stale NEW-badge cache version.');
+  assert(homeBriefWorkflow.includes('20260810-no-new-badge-v3'), 'Homepage brief workflow validates a stale interaction cache version.');
+  assert(trustBuilder.includes(managedStart) && trustBuilder.includes(managedEnd), 'Trust-center generator omits the managed interaction closure block.');
+  assert(trustBuilder.includes(href) && trustBuilder.includes(layoutHref), 'Trust-center generator uses stale interaction or layout closure assets.');
 }
 
 function validatePublicPages() {
