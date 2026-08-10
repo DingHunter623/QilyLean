@@ -8,11 +8,13 @@ const root = path.resolve(__dirname, '..');
 const NUMBER_VERSION = '20260805-number-badge-contrast-v1';
 const HOVER_VERSION = '20260810-stable-layout-v15';
 const LAYOUT_VERSION = '20260810-stable-layout-v19';
+const UX_VERSION = '20260810-layout-typography-v20';
 const NAV_VERSION = '20260810-native-navigation-stable-v19';
 const MUSIC_VERSION = '20260810-demand-music-v6';
 const NUMBER_HREF = `/site-number-badge-contrast-v1.css?v=${NUMBER_VERSION}`;
 const HOVER_HREF = `/site-interactive-hover-contrast-v1.css?v=${HOVER_VERSION}`;
 const LAYOUT_HREF = `/site-layout-footer-closure-v1.css?v=${LAYOUT_VERSION}`;
+const UX_HREF = `/site-layout-typography-closure-v20.css?v=${UX_VERSION}`;
 const NAV_HREF = `/site-navigation.js?v=${NAV_VERSION}`;
 const MUSIC_HREF = `/homepage-music-v5.js?v=${MUSIC_VERSION}`;
 const MUSIC_WRAPPER_HREF = '/homepage-music.js?v=20260810-demand-music-wrapper-v6';
@@ -35,6 +37,7 @@ const BLOCK = [
   `  <link id="qilyNumberBadgeContrastStylesheet" rel="stylesheet" href="${NUMBER_HREF}">`,
   `  <link id="qilyInteractiveHoverContrastStylesheet" rel="stylesheet" href="${HOVER_HREF}">`,
   `  <link id="qilyLayoutFooterClosureStylesheet" rel="stylesheet" href="${LAYOUT_HREF}">`,
+  `  <link id="qilyLayoutTypographyClosureV20Stylesheet" rel="stylesheet" href="${UX_HREF}">`,
   END
 ].join('\n');
 
@@ -70,6 +73,7 @@ function removeManaged(html) {
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyNumberBadgeContrastStylesheet["']|href=["'][^"']*\/site-number-badge-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyInteractiveHoverContrastStylesheet["']|href=["'][^"']*\/site-interactive-hover-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyLayoutFooterClosureStylesheet["']|href=["'][^"']*\/site-layout-footer-closure-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
+    .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyLayoutTypographyClosureV20Stylesheet["']|href=["'][^"']*\/site-layout-typography-closure-v20\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
     .replace(/^[ \t]+$/gm, '');
 }
 
@@ -152,6 +156,22 @@ function verifyCss() {
     if (!layoutCss.includes(marker)) throw new Error(`Layout/footer closure marker missing: ${marker}`);
   });
 
+  const uxCss = read(path.join(root, 'site-layout-typography-closure-v20.css'));
+  [
+    'sitewide layout + typography closure V20',
+    '--qily-type-body:19.5px',
+    '.capability-map.module-grid.four',
+    'grid-template-columns:repeat(4,minmax(0,1fr))!important',
+    '.resource-service-head',
+    '.resource-service-lead',
+    '.qily-global-contact-footer',
+    '> .qtc-global-trust-footer',
+    '#qilyPersistentNavigationFrame',
+    'min-height:100dvh!important'
+  ].forEach((marker) => {
+    if (!uxCss.includes(marker)) throw new Error(`V20 layout/typography closure marker missing: ${marker}`);
+  });
+
   const navigation = read(path.join(root, 'site-navigation.js'));
   const coreDock = read(path.join(root, 'site-core-service-dock-closure-v1.js'));
   const visualClosure = read(path.join(root, 'site-visual-closure-v1.js'));
@@ -169,6 +189,7 @@ function verifyPage(relative, requiredText) {
   if (!html.includes(NUMBER_HREF)) throw new Error(`${relative} missing number-badge contrast asset.`);
   if (!html.includes(HOVER_HREF)) throw new Error(`${relative} missing interactive-hover contrast asset.`);
   if (!html.includes(LAYOUT_HREF)) throw new Error(`${relative} missing layout/footer closure asset.`);
+  if (!html.includes(UX_HREF)) throw new Error(`${relative} missing V20 layout/typography closure asset.`);
   if (!html.includes(NAV_HREF)) throw new Error(`${relative} missing current navigation loader.`);
   if (!html.includes(WIDE_LAYOUT_HREF)) throw new Error(`${relative} missing current wide-layout asset.`);
   if (!html.includes(MUSIC_HREF)) throw new Error(`${relative} missing demand-loaded background music controller.`);
@@ -217,7 +238,7 @@ function main() {
     throw new Error('Global trust-strip action labels are missing.');
   }
 
-  process.stdout.write(`Number-badge and interactive-hover contrast materialized in ${checked} public pages; refreshed ${changed}.\n`);
+  process.stdout.write(`Sitewide V20 visual closure materialized in ${checked} public pages; refreshed ${changed}.\n`);
 }
 
 main();
