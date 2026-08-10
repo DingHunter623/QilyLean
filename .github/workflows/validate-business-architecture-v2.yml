@@ -96,8 +96,10 @@ jobs:
 
           # Cache/load-chain closure
           grep -q '/site-navigation-legacy-20260802.js?v=20260809-six-capability-pricing-v3' site-navigation.js
-          grep -q '/site-navigation.js?v=20260809-six-capability-pricing-v3' index.html
-          grep -q '/site-navigation.js?v=20260809-six-capability-pricing-v3' cooperation/index.html
+          grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' index.html
+          grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' cooperation/index.html
+          ! grep -q 'site-music-persistent-navigation-v1.js' index.html
+          ! grep -q 'qilyBackgroundMusicPreload' index.html
 
           # Canonical rules
           grep -q '运行时一致性' docs/QilyLean全站业务口径规范_20260809.md
