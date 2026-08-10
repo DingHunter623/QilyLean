@@ -1,7 +1,7 @@
 (function (d, w) {
   'use strict';
-  if (w.__qilyFooterStandardV31) return;
-  w.__qilyFooterStandardV31 = true;
+  if (w.__qilyFooterStandardV32) return;
+  w.__qilyFooterStandardV32 = true;
 
   var FOOTER_ID = 'qilyGlobalFooter';
   var REVIEW_DATE = '2026-08-07';
@@ -25,7 +25,7 @@
       [/\/knowledge(?:\/|\.html|$)|\/papers(?:\/|\.html|$)|\/standards(?:\/|\.html|$)/i, '简报 · 工具 · 专题 · 资料。'],
       [/\/moments(?:\/|\.html|$)|\/journey(?:\/|\.html|$)/i, '丁启利｜工作与生活影像记录 · 活在途中……'],
       [/\/links(?:\/|\.html|$)/i, '连接可信产业资源、专业入口与协同服务。'],
-      [/\/cooperation(?:\/|\.html|$)/i, '围绕诊断、方案、Pilot、验证、固化与验收推进合作。'],
+      [/\/cooperation(?:\/|\.html|$)/i, '诊断 · 方案 · Pilot · 验证 · 固化 · 验收。'],
       [/\/trust(?:\/|\.html|$)/i, '主体、合同、数据、证据与AI边界公开核验。'],
       [/\/tools(?:\/|\.html|$)/i, '将工业工程场景需求转化为可直接使用的数字工具。'],
       [/\/app-support(?:\/|\.html|$)/i, '统一提供QilyLean数字工具的安装、使用与技术支持。'],
@@ -37,9 +37,15 @@
     return '制造改善诊断、方法沉淀与项目交付。';
   }
 
-  function hideLegacyFooters() {
+  function isGlobalFooter(node) {
+    return !!(node && (node.id === FOOTER_ID || (node.closest && node.closest('#' + FOOTER_ID))));
+  }
+
+  function removeLegacyFooters() {
     var selectors = [
-      'footer:not(#' + FOOTER_ID + ')',
+      'body > footer:not(#' + FOOTER_ID + ')',
+      'footer.module-footer:not(#' + FOOTER_ID + ')',
+      'footer.footer:not(#' + FOOTER_ID + ')',
       '.module-footer:not(#' + FOOTER_ID + ')',
       '#qilyGlobalContactFooter',
       '.qily-global-contact-footer',
@@ -47,10 +53,10 @@
       '#qtc-global-trust-footer',
       '.qtc-global-trust-footer'
     ].join(',');
+
     d.querySelectorAll(selectors).forEach(function (node) {
-      if (!node || node.id === FOOTER_ID || (node.closest && node.closest('#' + FOOTER_ID))) return;
-      node.classList.add('qily-footer-v31-legacy-hidden');
-      node.setAttribute('aria-hidden', 'true');
+      if (!node || isGlobalFooter(node)) return;
+      node.remove();
     });
   }
 
@@ -99,8 +105,8 @@
       footer.id = FOOTER_ID;
       d.body.appendChild(footer);
     }
-    footer.className = 'qily-global-footer-v31';
-    footer.setAttribute('data-qily-footer-standard', 'v31');
+    footer.className = 'qily-global-footer-v31 qily-global-footer-v32';
+    footer.setAttribute('data-qily-footer-standard', 'v32');
     footer.setAttribute('aria-label', 'QilyLean全站统一页尾');
     footer.innerHTML = footerMarkup();
     return footer;
@@ -108,9 +114,9 @@
 
   function normalize() {
     if (!d.body) return;
-    hideLegacyFooters();
+    removeLegacyFooters();
     var footer = ensureFooter();
-    hideLegacyFooters();
+    removeLegacyFooters();
     if (footer && footer.parentNode === d.body && footer !== d.body.lastElementChild) {
       d.body.appendChild(footer);
     }
@@ -118,15 +124,16 @@
 
   function boot() {
     normalize();
-    [120, 420, 950, 1800].forEach(function (delay) { w.setTimeout(normalize, delay); });
+    [80, 220, 520, 1000, 1800, 3000].forEach(function (delay) { w.setTimeout(normalize, delay); });
+
     if (w.MutationObserver) {
       var scheduled = false;
       var observer = new MutationObserver(function (records) {
         var relevant = records.some(function (record) {
           return Array.from(record.addedNodes || []).some(function (node) {
-            if (!node || node.nodeType !== 1) return false;
-            if (node.id === FOOTER_ID) return false;
-            return node.matches && node.matches('footer,.module-footer,#qilyGlobalContactFooter,.qily-global-contact-footer,.qily-global-contact-footer-shell,#qtc-global-trust-footer,.qtc-global-trust-footer');
+            if (!node || node.nodeType !== 1 || isGlobalFooter(node)) return false;
+            return (node.matches && node.matches('footer,.module-footer,#qilyGlobalContactFooter,.qily-global-contact-footer,.qily-global-contact-footer-shell,#qtc-global-trust-footer,.qtc-global-trust-footer')) ||
+              (node.querySelector && node.querySelector('footer,.module-footer,#qilyGlobalContactFooter,.qily-global-contact-footer,.qily-global-contact-footer-shell,#qtc-global-trust-footer,.qtc-global-trust-footer'));
           });
         });
         if (!relevant || scheduled) return;
