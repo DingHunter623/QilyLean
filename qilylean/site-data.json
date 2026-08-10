@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-09",
+  "generatedAt": "2026-08-10",
   "schemaVersion": 1,
   "terminology": {
     "total": 184,
@@ -45,8 +45,8 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 2877,
-    "indexedPages": 51,
+    "indexedEntries": 2883,
+    "indexedPages": 2823,
     "terminologyTotal": 184,
     "briefTotal": 2589,
     "latestBriefDate": "2026-08-10",
