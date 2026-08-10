@@ -11,12 +11,12 @@
   var TRANSIT_COMPENSATION_CAP = 0.25;
   var DRAG_THRESHOLD = 5;
   var EDGE_GAP = 10;
-  var prefetchedDocuments = Object.create(null);
   var restored = false;
   var restoring = false;
+  var audioRequested = false;
   var savedState = readState();
 
-  ensureAudioPreload();
+  removeAudioPreload();
 
   /*
    * V5 is the single owner of the player. If an older page fragment created a
@@ -41,15 +41,14 @@
 
   var audio = document.createElement('audio');
   audio.id = 'siteBackgroundMusic';
-  audio.src = AUDIO_SRC;
-  audio.preload = 'auto';
+  audio.preload = 'none';
   audio.autoplay = false;
   audio.loop = true;
   audio.volume = DEFAULT_VOLUME;
   audio.setAttribute('playsinline', '');
   audio.setAttribute('webkit-playsinline', '');
   audio.setAttribute('aria-hidden', 'true');
-  try { audio.fetchPriority = 'high'; } catch (error) {}
+  try { audio.fetchPriority = 'low'; } catch (error) {}
   (document.body || document.documentElement).insertBefore(audio, (document.body || document.documentElement).firstChild);
 
   var button = document.createElement('button');
@@ -66,19 +65,16 @@
   }
   render();
 
-  function ensureAudioPreload() {
+  function removeAudioPreload() {
     var preload = document.getElementById('qilyBackgroundMusicPreload');
-    if (preload) {
-      preload.href = AUDIO_SRC;
-      return;
-    }
-    preload = document.createElement('link');
-    preload.id = 'qilyBackgroundMusicPreload';
-    preload.rel = 'preload';
-    preload.as = 'audio';
-    preload.type = 'audio/mpeg';
-    preload.href = AUDIO_SRC;
-    (document.head || document.documentElement).appendChild(preload);
+    if (preload && preload.parentNode) preload.parentNode.removeChild(preload);
+  }
+
+  function ensureAudioSource() {
+    if (audioRequested) return;
+    audioRequested = true;
+    audio.src = AUDIO_SRC;
+    audio.preload = 'metadata';
   }
 
   function readStored(storage) {
@@ -133,6 +129,7 @@
 
   function playNow() {
     var result;
+    ensureAudioSource();
     try { result = audio.play(); } catch (error) { return Promise.reject(error); }
     return result && typeof result.then === 'function' ? result : Promise.resolve();
   }
@@ -171,6 +168,7 @@
       restored = true;
       restoring = false;
       fadeToVolume(DEFAULT_VOLUME, 160);
+      render();
       writeState();
     }).catch(function () {
       restored = true;
@@ -180,25 +178,27 @@
     });
   }
 
-  if (audio.readyState >= 1) restorePlayback();
-  else {
-    audio.addEventListener('loadedmetadata', restorePlayback, { once: true });
-    audio.addEventListener('durationchange', restorePlayback, { once: true });
-    audio.addEventListener('canplay', restorePlayback, { once: true });
-    try { audio.load(); } catch (error) {}
-  }
-
   function render() {
-    button.innerHTML = audio.muted ? speakerOff : speakerOn;
-    button.setAttribute('aria-label', audio.muted ? '开启背景音乐' : '静音背景音乐');
-    button.setAttribute('title', audio.muted ? '开启背景音乐' : '静音背景音乐');
-    button.setAttribute('aria-pressed', audio.muted ? 'true' : 'false');
+    var enabled = audioRequested && !audio.paused && !audio.muted;
+    button.innerHTML = enabled ? speakerOn : speakerOff;
+    button.setAttribute('aria-label', enabled ? '静音背景音乐' : '开启背景音乐');
+    button.setAttribute('title', enabled ? '静音背景音乐' : '开启背景音乐');
+    button.setAttribute('aria-pressed', enabled ? 'true' : 'false');
   }
 
   function resumeAfterGesture() {
-    if (!restored) restorePlayback();
-    if (audio.paused) {
-      playNow().then(function () { fadeToVolume(DEFAULT_VOLUME, 120); writeState(); }).catch(function () {});
+    ensureAudioSource();
+    if (!restored) {
+      if (audio.readyState >= 1) restorePlayback();
+      else {
+        audio.addEventListener('loadedmetadata', restorePlayback, { once: true });
+        try { audio.load(); } catch (error) {}
+      }
+      return;
+    }
+    if (audio.paused || audio.muted) {
+      audio.muted = false;
+      playNow().then(function () { fadeToVolume(DEFAULT_VOLUME, 120); render(); writeState(); }).catch(function () {});
     }
   }
 
@@ -208,36 +208,15 @@
       event.preventDefault();
       return;
     }
-    audio.muted = !audio.muted;
-    if (audio.paused) resumeAfterGesture();
+    if (!audioRequested || audio.paused || audio.muted) {
+      audio.muted = false;
+      resumeAfterGesture();
+    } else {
+      audio.muted = true;
+    }
     render();
     writeState();
   });
-
-  function prefetchDocument(href) {
-    try {
-      var url = new URL(href, location.href);
-      url.hash = '';
-      if (url.origin !== location.origin || url.href === location.href.split('#')[0] || prefetchedDocuments[url.href]) return;
-      prefetchedDocuments[url.href] = true;
-      var hint = document.createElement('link');
-      hint.rel = 'prefetch';
-      hint.as = 'document';
-      hint.href = url.href;
-      (document.head || document.documentElement).appendChild(hint);
-    } catch (error) {}
-  }
-
-  function warmLinkedPage(event) {
-    var link = event.target && event.target.closest ? event.target.closest('a[href]') : null;
-    if (!link || link.target === '_blank' || link.hasAttribute('download')) return;
-    prefetchDocument(link.href);
-  }
-
-  ['/', '/ai.html', '/capabilities/', '/experience/', '/improvements/', '/knowledge/', '/moments/', '/links/', '/cooperation/'].forEach(prefetchDocument);
-  document.addEventListener('pointerover', warmLinkedPage, { passive: true, capture: true });
-  document.addEventListener('touchstart', warmLinkedPage, { passive: true, capture: true });
-  document.addEventListener('focusin', warmLinkedPage, true);
   document.addEventListener('pointerdown', function (event) {
     var link = event.target && event.target.closest ? event.target.closest('a[href]') : null;
     if (!link) return;
@@ -282,19 +261,15 @@
     button.style.top = clamp(rect.top, EDGE_GAP, window.innerHeight - rect.height - EDGE_GAP) + 'px';
   }
 
-  document.addEventListener('pointerdown', resumeAfterGesture, { once:true, capture:true });
-  document.addEventListener('touchstart', resumeAfterGesture, { once:true, capture:true });
-  document.addEventListener('keydown', resumeAfterGesture, { once:true, capture:true });
   window.addEventListener('resize', keepButtonInView, { passive:true });
   window.addEventListener('beforeunload', writeState);
   window.addEventListener('pagehide', writeState);
-  window.addEventListener('pageshow', function () {
-    if (!restored) restorePlayback();
-    else if (audio.paused) resumeAfterGesture();
-  });
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'hidden') writeState();
   });
-  window.setInterval(writeState, 400);
+  audio.addEventListener('timeupdate', writeState, { passive:true });
+  window.setInterval(function () {
+    if (audioRequested && !audio.paused) writeState();
+  }, 5000);
   window.__qilyLeanMusicWriteState = writeState;
 })();

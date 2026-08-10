@@ -3,7 +3,7 @@
   if(window.__qilyBrandTrustV1)return;
   window.__qilyBrandTrustV1=true;
 
-  var VERSION='20260809-project-delivery-strategy-v2';
+  var VERSION='20260810-content-axis-v3';
   var path=(location.pathname||'/').replace(/\/index\.html$/,'/').replace(/\/{2,}/g,'/');
   if(path.length>1&&!/\/$/.test(path))path+='/';
 

@@ -6,13 +6,17 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const NUMBER_VERSION = '20260805-number-badge-contrast-v1';
-const HOVER_VERSION = '20260810-sitewide-floating-dock-feedback-v13';
-const LAYOUT_VERSION = '20260810-sitewide-layout-footer-v16';
-const NAV_VERSION = '20260810-sitewide-layout-footer-loader-v16';
+const HOVER_VERSION = '20260810-inline-badge-feedback-v14';
+const LAYOUT_VERSION = '20260810-layout-performance-corrective-v17';
+const NAV_VERSION = '20260810-native-navigation-corrective-v17';
+const MUSIC_VERSION = '20260810-demand-music-v6';
 const NUMBER_HREF = `/site-number-badge-contrast-v1.css?v=${NUMBER_VERSION}`;
 const HOVER_HREF = `/site-interactive-hover-contrast-v1.css?v=${HOVER_VERSION}`;
 const LAYOUT_HREF = `/site-layout-footer-closure-v1.css?v=${LAYOUT_VERSION}`;
 const NAV_HREF = `/site-navigation.js?v=${NAV_VERSION}`;
+const MUSIC_HREF = `/homepage-music-v5.js?v=${MUSIC_VERSION}`;
+const STATIC_INTERACTIONS_HREF = '/site-static-core-interactions-v1.js?v=20260810-inline-badge-v2';
+const VISUAL_CLOSURE_HREF = '/site-visual-closure-v1.js?v=20260810-content-axis-v4';
 const START = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const END = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
 const BLOCK = [
@@ -60,7 +64,12 @@ function removeManaged(html) {
 
 function insert(html) {
   const cleaned = removeManaged(html)
-    .replace(/\/site-navigation\.js\?v=[^"'\s<]+/gi, NAV_HREF);
+    .replace(/\/site-navigation\.js\?v=[^"'\s<]+/gi, NAV_HREF)
+    .replace(/\/homepage-music-v5\.js\?v=[^"'\s<]+/gi, MUSIC_HREF)
+    .replace(/\/site-static-core-interactions-v1\.js\?v=[^"'\s<]+/gi, STATIC_INTERACTIONS_HREF)
+    .replace(/\/site-visual-closure-v1\.js\?v=[^"'\s<]+/gi, VISUAL_CLOSURE_HREF)
+    .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyBackgroundMusicPreload["']|href=["'][^"']*%E6%88%91%E7%9A%84%E6%A2%A6[^"']*["'][^>]*\bas=["']audio["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
+    .replace(/^[ \t]*<script\b[^>]*(?:id=["']qilyPersistentMusicNavigationScript["']|data-qily-persistent-music-navigation=["'][^"']+["']|src=["'][^"']*\/site-music-persistent-navigation-v1\.js(?:\?v=[^"']*)?["'])[^>]*>[ \t\r\n]*<\/script>[ \t]*(?:\r?\n)?/gmi, '');
   const primary = '<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->';
   const primaryIndex = cleaned.indexOf(primary);
   if (primaryIndex >= 0) {
@@ -110,11 +119,14 @@ function verifyCss() {
 
   const layoutCss = read(path.join(root, 'site-layout-footer-closure-v1.css'));
   [
-    'QILY-SITEWIDE-LAYOUT-FOOTER-CLOSURE-V16-20260810',
+    'QILY-SITEWIDE-LAYOUT-PERFORMANCE-CORRECTIVE-V17-20260810',
     '--qily-site-content-width:var(--qily-wide-content,1560px)',
     '.qily-ia-inner',
     '.qtc-inner',
     '.qily-resource-network__inner',
+    '.ql-trust-module',
+    '.ql-trust-strip-inner',
+    '#results.qily-ia-secondary-section',
     'height:auto!important',
     'min-height:0!important',
     'html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]',
@@ -131,6 +143,9 @@ function verifyPage(relative, requiredText) {
   if (!html.includes(HOVER_HREF)) throw new Error(`${relative} missing interactive-hover contrast asset.`);
   if (!html.includes(LAYOUT_HREF)) throw new Error(`${relative} missing layout/footer closure asset.`);
   if (!html.includes(NAV_HREF)) throw new Error(`${relative} missing current navigation loader.`);
+  if (!html.includes(MUSIC_HREF)) throw new Error(`${relative} missing demand-loaded background music controller.`);
+  if (/qilyBackgroundMusicPreload/i.test(html)) throw new Error(`${relative} still preloads background audio.`);
+  if (/site-music-persistent-navigation-v1\.js/i.test(html)) throw new Error(`${relative} still loads iframe navigation.`);
   if (requiredText && !html.includes(requiredText)) throw new Error(`${relative} missing required action text: ${requiredText}`);
 }
 
