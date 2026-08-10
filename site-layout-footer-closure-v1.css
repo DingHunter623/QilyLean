@@ -1,5 +1,5 @@
 /* QilyLean 全站内容轴、自然高度与页尾闭环 v1｜2026-08-10
- * QILY-SITEWIDE-LAYOUT-FOOTER-CLOSURE-V15-20260810
+ * QILY-SITEWIDE-LAYOUT-FOOTER-CLOSURE-V16-20260810
  * 统一信息架构、知识、资源与可信度模块的内容宽度；禁止固定空高；页尾入口按品牌边界清晰呈现。
  */
 :root{
@@ -92,21 +92,21 @@ html body.qily-tail-compact > #siteBackgroundMusic:not([controls]){
   display:none!important;
 }
 
-html body .qtc-global-trust-footer{
+html:root:root body.qily-tail-compact .qtc-global-trust-footer{
   height:auto!important;
   min-height:0!important;
   margin:0!important;
 }
 
 /* 四、可信度入口使用深青底、金色四边界和清晰浅色字；交互态保持高对比。 */
-html body .qtc-global-trust-footer .qtc-global-trust-links{
+html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{
   display:flex!important;
   align-items:center!important;
   gap:10px!important;
   margin:0!important;
 }
 
-html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
+html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
   box-sizing:border-box!important;
   display:inline-flex!important;
   align-items:center!important;
@@ -130,7 +130,7 @@ html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
   filter:none!important;
 }
 
-html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]:is(:hover,:focus-visible){
+html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]:is(:hover:hover,:focus-visible:focus-visible){
   border-color:#fff3c6!important;
   color:#17322d!important;
   -webkit-text-fill-color:#17322d!important;
@@ -140,7 +140,7 @@ html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]:is(:hover,:
   outline-offset:2px!important;
 }
 
-html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]:active{
+html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]:active:active{
   border-color:var(--qily-site-gold-light)!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
@@ -155,10 +155,10 @@ html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]:active{
 }
 
 @media(max-width:560px){
-  html body .qtc-global-trust-footer .qtc-global-trust-links{align-items:stretch!important;flex-direction:column!important}
-  html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]{width:100%!important;min-width:0!important}
+  html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{align-items:stretch!important;flex-direction:column!important}
+  html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{width:100%!important;min-width:0!important}
 }
 
 @media(prefers-reduced-motion:reduce){
-  html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]{transition:none!important}
+  html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{transition:none!important}
 }
