@@ -309,9 +309,9 @@ if (require.main === module && !process.argv.includes('--check')) {
 }
 // QILY-PROFESSIONALIZATION-V24:END
 
-// QILY-FOOTER-STANDARD-V26:START
-// Site metadata generator: keep the unified sitewide footer runtime materialized after generated HTML updates.
+// QILY-FOOTER-STANDARD-V28:START
+// Site metadata generator: keep the single authoritative V28 footer after generated HTML updates.
 if (require.main === module && !process.argv.includes('--check')) {
-  require('./materialize-footer-standard-v26.js');
+  require('./materialize-footer-standard-v28.js');
 }
-// QILY-FOOTER-STANDARD-V26:END
+// QILY-FOOTER-STANDARD-V28:END
