@@ -65,19 +65,27 @@ function isPublicPage(html) {
   return /site-navigation\.js\?v=/i.test(html) || /homepage-music(?:-v5)?\.js(?:\?v=)?/i.test(html) || /site-music-persistent-navigation-v1\.js(?:\?v=)?/i.test(html);
 }
 
-function insertBeforeDockOrHead(html) {
+function insertBeforeDockFooterOrHead(html) {
   const dockNeedle = '<link id="qilyCoreServiceDockClosureStylesheet"';
   const dockIndex = html.indexOf(dockNeedle);
   if (dockIndex >= 0) {
     const lineStart = html.lastIndexOf('\n', dockIndex) + 1;
     return html.slice(0, lineStart) + managedBlock + '\n' + html.slice(lineStart);
   }
+
+  const footerNeedle = '<script defer id="qilyFooterStandardV26Script"';
+  const footerIndex = html.indexOf(footerNeedle);
+  if (footerIndex >= 0) {
+    const lineStart = html.lastIndexOf('\n', footerIndex) + 1;
+    return html.slice(0, lineStart) + managedBlock + '\n' + html.slice(lineStart);
+  }
+
   return html.replace(/<\/head>/i, `${managedBlock}\n</head>`);
 }
 
 function install(html) {
   if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html) || !isPublicPage(html)) return html;
-  return insertBeforeDockOrHead(removeManagedAssets(html));
+  return insertBeforeDockFooterOrHead(removeManagedAssets(html));
 }
 
 function verifySourceContracts() {
@@ -144,6 +152,8 @@ function main() {
     const contrastIndex = html.indexOf(CSS_HREF);
     const dockIndex = html.indexOf('qilyCoreServiceDockClosureStylesheet');
     if (dockIndex >= 0 && contrastIndex > dockIndex) throw new Error(`${relative} managed assets must remain before dock closure assets.`);
+    const footerIndex = html.indexOf('qilyFooterStandardV26Script');
+    if (footerIndex >= 0 && html.indexOf(MUSIC_SRC) > footerIndex) throw new Error(`${relative} music assets must remain before V26 footer runtime.`);
   });
 
   process.stdout.write(`Primary contrast and V27 sitewide gesture music materialized in ${checked} public pages; refreshed ${changed}.\n`);
