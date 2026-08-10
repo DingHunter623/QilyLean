@@ -1,0 +1,164 @@
+/* QilyLean 全站内容轴、自然高度与页尾闭环 v1｜2026-08-10
+ * QILY-SITEWIDE-LAYOUT-FOOTER-CLOSURE-V15-20260810
+ * 统一信息架构、知识、资源与可信度模块的内容宽度；禁止固定空高；页尾入口按品牌边界清晰呈现。
+ */
+:root{
+  --qily-site-content-width:var(--qily-wide-content,1560px);
+  --qily-site-gutter:var(--qily-wide-gutter,clamp(14px,2.2vw,40px));
+  --qily-site-deep:#073c47;
+  --qily-site-forest:#0f4b5a;
+  --qily-site-gold:#caa15f;
+  --qily-site-gold-light:#ffe39b;
+  --qily-site-dark-copy:#fff3d2;
+}
+
+/* 一、所有公共内容模块共用 1560px 内容轴和同一安全边距。 */
+html body :is(
+  .qily-ia-section,
+  .qtc-section,
+  .qily-resource-network,
+  .qtc-global-trust-footer
+){
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  padding-left:var(--qily-site-gutter)!important;
+  padding-right:var(--qily-site-gutter)!important;
+}
+
+html body :is(
+  .qily-ia-inner,
+  .qtc-inner,
+  .qily-resource-network__inner
+){
+  box-sizing:border-box!important;
+  width:min(var(--qily-site-content-width),100%)!important;
+  max-width:var(--qily-site-content-width)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+
+html body :is(.qily-ia-heading,.qtc-heading){
+  width:100%!important;
+  max-width:100%!important;
+}
+
+/* 二、深青模块只由真实文字、控件及统一内边距撑高，禁止遗留固定高度或空白占位。 */
+html body :is(.qily-ia-section,.qtc-section,.qily-resource-network),
+html body #qily-home-ai.qily-ia-section,
+html body #qily-home-ai.qily-ai-secondary{
+  height:auto!important;
+  min-height:0!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+}
+
+html body.qily-home-commercial-focus #qily-home-ai .qily-ia-inner,
+html body.qily-home-commercial-focus .qily-ai-secondary .qily-ia-inner,
+html body.qily-home-commercial-focus #qily-more-context .qily-ia-inner,
+html body #qily-knowledge-positioning .qily-ia-inner{
+  width:min(var(--qily-site-content-width),100%)!important;
+  max-width:var(--qily-site-content-width)!important;
+}
+
+/* 三、页尾不得再由隐藏工具、旧最小高度或补白撑出无内容滚动区。 */
+html body.qily-tail-compact{
+  height:auto!important;
+  min-height:0!important;
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+
+html body.qily-tail-compact > :is(
+  #floatDock,
+  #shareMask,
+  #wxMask,
+  #qilySearchMask,
+  #qilyDockToast,
+  #siteMusicMute,
+  #qilyPersistentNavigationFrame,
+  #qilyPersistentNavigationLoader
+){
+  margin:0!important;
+}
+
+html body.qily-tail-compact > :is(#shareMask,#wxMask,#qilySearchMask,#qilyPersistentNavigationFrame){
+  position:fixed!important;
+}
+
+html body.qily-tail-compact > #siteBackgroundMusic:not([controls]){
+  display:none!important;
+}
+
+html body .qtc-global-trust-footer{
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+}
+
+/* 四、可信度入口使用深青底、金色四边界和清晰浅色字；交互态保持高对比。 */
+html body .qtc-global-trust-footer .qtc-global-trust-links{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  margin:0!important;
+}
+
+html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:max-content!important;
+  min-height:44px!important;
+  padding:8px 15px!important;
+  border:2px solid var(--qily-site-gold)!important;
+  border-radius:999px!important;
+  color:var(--qily-site-dark-copy)!important;
+  -webkit-text-fill-color:var(--qily-site-dark-copy)!important;
+  background:var(--qily-site-forest)!important;
+  box-shadow:none!important;
+  font-size:14px!important;
+  font-weight:900!important;
+  line-height:1.25!important;
+  text-decoration:none!important;
+  text-shadow:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+}
+
+html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]:is(:hover,:focus-visible){
+  border-color:#fff3c6!important;
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background:var(--qily-site-gold-light)!important;
+  box-shadow:0 9px 22px rgba(0,0,0,.22)!important;
+  outline:3px solid rgba(255,227,155,.45)!important;
+  outline-offset:2px!important;
+}
+
+html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]:active{
+  border-color:var(--qily-site-gold-light)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-site-deep)!important;
+  transform:scale(.97)!important;
+}
+
+@media(max-width:820px){
+  html body :is(.qily-ia-inner,.qtc-inner,.qily-resource-network__inner){
+    width:min(100% - 24px,var(--qily-site-content-width))!important;
+  }
+}
+
+@media(max-width:560px){
+  html body .qtc-global-trust-footer .qtc-global-trust-links{align-items:stretch!important;flex-direction:column!important}
+  html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]{width:100%!important;min-width:0!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body .qtc-global-trust-footer .qtc-global-trust-links > a[href]{transition:none!important}
+}
