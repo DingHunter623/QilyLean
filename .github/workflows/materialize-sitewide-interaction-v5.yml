@@ -6,6 +6,8 @@ on:
     paths:
       - 'scripts/bump-live-asset-version-v19.js'
       - 'scripts/publish-number-badge-contrast.js'
+      - 'scripts/apply-tail-gap-hotfix-v22.js'
+      - 'site-tail-gap-hotfix-v22.css'
       - '.github/workflows/materialize-sitewide-interaction-v5.yml'
 
 permissions:
@@ -33,14 +35,15 @@ jobs:
         run: |
           node scripts/publish-number-badge-contrast.js
           node scripts/validate-sitewide-interaction-clarity.js
+          node scripts/apply-tail-gap-hotfix-v22.js
       - name: Commit materialized live references
         run: |
           if git diff --quiet; then
-            echo 'All public pages and runtime sources already use V19.'
+            echo 'All public pages and runtime sources already use current layout references.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'chore: materialize live V19 layout and navigation references'
+          git commit -m 'chore: materialize V22 tail-gap hotfix sitewide'
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
