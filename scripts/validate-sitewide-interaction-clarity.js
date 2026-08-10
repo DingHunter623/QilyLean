@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const version = '20260810-sitewide-interaction-clarity-v11';
+const version = '20260810-sitewide-floating-dock-feedback-v12';
 const href = `/site-interactive-hover-contrast-v1.css?v=${version}`;
 const managedStart = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const managedEnd = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
@@ -94,6 +94,12 @@ function validateCss() {
     'QILY-SITEWIDE-COLOR-BOUNDARY-V9-20260809',
     'QILY-SITEWIDE-COLOR-BOUNDARY-V10-20260809',
     'QILY-SITEWIDE-COLOR-BOUNDARY-V11-20260810',
+    'QILY-FLOAT-DOCK-INTERACTION-V12-20260810',
+    '#floatDock.qily-float-dock',
+    '--qily-float-hover-bg:#ffd36a',
+    '[data-qily-pressed="true"]',
+    '-webkit-tap-highlight-color:rgba(255,211,106,.46)',
+    'transform:translateX(-5px) scale(1.06)',
     ':not(#qily-boundary-state-priority):not(#qily-boundary-state-override)',
     ':not(#qily-boundary-state-priority)',
     '--qily-boundary-accent:#ffd36a',
@@ -151,6 +157,8 @@ function validateLoadOrder() {
   assert(navigation.indexOf("['qilyTrustConversionV2Stylesheet'") < navigation.indexOf("['qilyInteractiveHoverContrastStylesheet'"), 'Initial asset order must place interaction closure last.');
   assert(publisher.includes(`const HOVER_VERSION = '${version}'`), 'Public-page materializer uses a stale interaction version.');
   assert(ndaTemplate.includes(href), 'NDA preview generator uses a stale interaction version.');
+  assert(navigation.includes('QILY-FLOAT-DOCK-POINTER-FEEDBACK-V1'), 'Navigation is missing floating-dock pointer feedback binding.');
+  assert(navigation.includes("button.dataset.qilyPressed = 'true'"), 'Navigation does not expose a persistent touch pressed state.');
 }
 
 function validatePublicPages() {
@@ -164,7 +172,7 @@ function validatePublicPages() {
     if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html) || !isPublicPage(html)) return;
     publicPages += 1;
     actionControls += (html.match(/<button\b|<input\b[^>]*type=["'](?:button|submit)["']|<a\b[^>]*class=["'][^"']*(?:button|action|btn|cta)/gi) || []).length;
-    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260810-sitewide-interaction-clarity-v11)/i.test(html)) staleBeforeMaterialization += 1;
+    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260810-sitewide-floating-dock-feedback-v12)/i.test(html)) staleBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);
     const currentCount = candidate.split(href).length - 1;
