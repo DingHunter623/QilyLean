@@ -1,8 +1,8 @@
-/* QilyLean global VI, navigation, trust and contrast loader v13 */
+/* QilyLean global VI, navigation, trust, contrast and layout loader v15 */
 (function (d, w) {
   'use strict';
-  if (w.__qilyGlobalAssetLoaderV13) return;
-  w.__qilyGlobalAssetLoaderV13 = true;
+  if (w.__qilyGlobalAssetLoaderV15) return;
+  w.__qilyGlobalAssetLoaderV15 = true;
 
   function removeMicrosoftOverrides() {
     ['qilyMicrosoftInternationalStylesheet','qilyMicrosoftEnterpriseComponentsStylesheet','qilyMicrosoftNavUnderlineStyle','qilyNavFourSideBorderStyle'].forEach(function (id) {
@@ -56,7 +56,8 @@
       ['qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2'],
       ['qilyBrandTrustStylesheet','/site-brand-trust-v1.css?v=20260802-project-rolebar-v3'],
       ['qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4'],
-      ['qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-sitewide-floating-dock-feedback-v13']
+      ['qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-sitewide-floating-dock-feedback-v13'],
+      ['qilyLayoutFooterClosureStylesheet','/site-layout-footer-closure-v1.css?v=20260810-sitewide-layout-footer-v15']
     ].forEach(function (asset) { ensureStylesheet(asset[0], asset[1]); });
 
     ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2');
@@ -77,7 +78,7 @@
   function promoteVi() {
     removeMicrosoftOverrides();
     var parent = d.head || d.documentElement;
-    ['qilyViStandardStylesheet','qilyViContrastRestorationStylesheet','qilyVisualClosureStylesheet','qilyBoundaryLinksClosureStylesheet','qilyTrustConversionV2Stylesheet','qilyInteractiveHoverContrastStylesheet'].forEach(function (id) {
+    ['qilyViStandardStylesheet','qilyViContrastRestorationStylesheet','qilyVisualClosureStylesheet','qilyBoundaryLinksClosureStylesheet','qilyTrustConversionV2Stylesheet','qilyInteractiveHoverContrastStylesheet','qilyLayoutFooterClosureStylesheet'].forEach(function (id) {
       var current = d.getElementById(id);
       if (current && current.parentNode === parent) parent.appendChild(current);
     });
@@ -101,6 +102,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     'site-visual-closure-v2.js?v=20260803-boundary-links-v2',
     'site-trust-conversion-v2.css?v=20260805-action-label-v4',
     'site-interactive-hover-contrast-v1.css?v=20260810-sitewide-floating-dock-feedback-v13',
+    'site-layout-footer-closure-v1.css?v=20260810-sitewide-layout-footer-v15',
     'site-trust-conversion-v2.js?v=20260805-action-label-v3',
     'site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2'
   ],
@@ -149,6 +151,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     ensureStylesheet('qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2');
     ensureStylesheet('qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4');
     ensureStylesheet('qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-sitewide-floating-dock-feedback-v13');
+    ensureStylesheet('qilyLayoutFooterClosureStylesheet','/site-layout-footer-closure-v1.css?v=20260810-sitewide-layout-footer-v15');
 
     ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260809-project-delivery-strategy-v2');
     ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260809-six-capabilities-v2');
@@ -189,6 +192,60 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
 
   loadEnhancers();
   loadParentNavigation();
+})(document, window);
+
+/* QILY-SITEWIDE-TAIL-COMPACTION-V1
+ * 保证统一可信度栏是文档最后一个流式模块；悬浮坞、弹层、音乐和导航工具不占用页尾高度。
+ */
+(function (d, w) {
+  'use strict';
+  if (w.__qilySitewideTailCompactionV1) return;
+  w.__qilySitewideTailCompactionV1 = true;
+
+  var utilitySelector = [
+    '#floatDock', '#shareMask', '#wxMask', '#qilySearchMask', '#qilyDockToast',
+    '#siteMusicMute', '#siteBackgroundMusic', '#qilyPersistentNavigationFrame',
+    '#qilyPersistentNavigationLoader'
+  ].join(',');
+
+  function compactTail() {
+    if (!d.body) return;
+    d.body.classList.add('qily-tail-compact');
+
+    d.querySelectorAll(utilitySelector).forEach(function (node) {
+      node.setAttribute('data-qily-tail-utility', 'true');
+    });
+
+    var trustFooter = d.getElementById('qtc-global-trust-footer');
+    if (trustFooter) {
+      trustFooter.setAttribute('data-qily-document-tail', 'true');
+      if (d.body.lastElementChild !== trustFooter) d.body.appendChild(trustFooter);
+    }
+
+    d.querySelectorAll('.qily-global-contact-footer-shell:empty,[data-qily-empty-tail="true"]:empty').forEach(function (node) {
+      node.remove();
+    });
+  }
+
+  function boot() {
+    compactTail();
+    [80,260,800,1800,3200].forEach(function (delay) { w.setTimeout(compactTail, delay); });
+    if (w.MutationObserver && d.body) {
+      var pending = false;
+      var observer = new MutationObserver(function () {
+        if (pending) return;
+        pending = true;
+        w.requestAnimationFrame(function () {
+          pending = false;
+          compactTail();
+        });
+      });
+      observer.observe(d.body, { childList:true });
+    }
+  }
+
+  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot, { once:true });
+  else boot();
 })(document, window);
 
 /* QILY-SITEWIDE-FOOTER-DEDUPE-20260808｜仅保留统一 Technical & Project Contact 标准栏 */
