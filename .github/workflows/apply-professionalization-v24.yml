@@ -78,8 +78,7 @@ jobs:
           node scripts/apply-footer-standard-v28.js --check
           node scripts/materialize-professionalization-v24.js --all --check
           node scripts/materialize-footer-standard-v28.js --check
-          node scripts/publish-primary-contrast-music-continuity.js
-          node scripts/materialize-footer-standard-v28.js --check
+          node --check scripts/publish-primary-contrast-music-continuity.js
           node --check scripts/build-daily-archive.js
           node --check scripts/build-site-metadata.js
           git diff --check
