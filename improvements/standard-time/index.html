@@ -93,7 +93,7 @@
     shareButtons.forEach((button) => { button.addEventListener('click', async () => { const title = button.dataset.title || document.title; const target = button.dataset.target || ''; const url = `${pagePath}#${target}`; const status = button.parentElement.querySelector('.share-status'); const shareText = `${title}\n${url}`; try { if (navigator.share) { await navigator.share({ title, text: title, url }); if (status) status.textContent = '已调起系统转发'; } else { await copyToClipboard(shareText); if (status) status.textContent = '链接已复制，可粘贴转发'; } } catch (error) { await copyToClipboard(shareText); if (status) status.textContent = '链接已复制，可粘贴转发'; } window.setTimeout(() => { if (status) status.textContent = ''; }, 3600); }); });
   </script>
   <script>window.__qilyLeanFloatingAssetBase="/qilylean/";</script>
-  <script src="/qilylean/floating-service.js?v=20260723-dependency-base-v1"></script>
+  <script src="/qilylean/floating-service.js?v=20260810-native-navigation-dedupe-v1"></script>
 
 
   <script id="articleHashOffsetFix">
