@@ -6,7 +6,9 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const version = '20260810-sitewide-floating-dock-feedback-v13';
+const navVersion = '20260810-sitewide-floating-dock-loader-v14';
 const href = `/site-interactive-hover-contrast-v1.css?v=${version}`;
+const navHref = `/site-navigation.js?v=${navVersion}`;
 const managedStart = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const managedEnd = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
 const managedBlock = [
@@ -47,7 +49,8 @@ function removeManaged(html) {
 }
 
 function materializeInMemory(html) {
-  const cleaned = removeManaged(html);
+  const cleaned = removeManaged(html)
+    .replace(/\/site-navigation\.js\?v=[^"'\\s<]+/gi, navHref);
   const primary = '<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->';
   const primaryIndex = cleaned.indexOf(primary);
   if (primaryIndex >= 0) {
@@ -165,14 +168,25 @@ function validateLoadOrder() {
   assert(navigation.indexOf("['qilyTrustConversionV2Stylesheet'") < navigation.indexOf("['qilyInteractiveHoverContrastStylesheet'"), 'Initial asset order must place interaction closure last.');
   assert(publisher.includes(`const HOVER_VERSION = '${version}'`), 'Public-page materializer uses a stale interaction version.');
   assert(ndaTemplate.includes(href), 'NDA preview generator uses a stale interaction version.');
+  assert(publisher.includes(`const NAV_VERSION = '${navVersion}'`), 'Public-page materializer uses a stale navigation version.');
+  assert(ndaTemplate.includes(navHref), 'NDA preview generator uses a stale navigation version.');
   assert(navigation.includes('QILY-FLOAT-DOCK-POINTER-FEEDBACK-V1'), 'Navigation is missing floating-dock pointer feedback binding.');
   assert(navigation.includes("button.dataset.qilyPressed = 'true'"), 'Navigation does not expose a persistent touch pressed state.');
+  assert(
+    navigation.includes("var order = ['home','top','back','search','current','share','contact'];"),
+    'Navigation does not normalize the seven floating actions to the approved order.'
+  );
+  assert(
+    navigation.includes("dockActions:['data-action=\"home\"','data-action=\"top\"','data-action=\"back\"','data-action=\"search\"','data-action=\"current\"','data-action=\"share\"','data-action=\"contact\"']"),
+    'Navigation build contract uses a stale floating-action order.'
+  );
 }
 
 function validatePublicPages() {
   let publicPages = 0;
   let actionControls = 0;
   let staleBeforeMaterialization = 0;
+  let staleNavigationBeforeMaterialization = 0;
 
   walk(root, (absolute) => {
     if (!absolute.endsWith('.html')) return;
@@ -181,16 +195,18 @@ function validatePublicPages() {
     publicPages += 1;
     actionControls += (html.match(/<button\b|<input\b[^>]*type=["'](?:button|submit)["']|<a\b[^>]*class=["'][^"']*(?:button|action|btn|cta)/gi) || []).length;
     if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260810-sitewide-floating-dock-feedback-v13)/i.test(html)) staleBeforeMaterialization += 1;
+    if (/site-navigation\.js\?v=(?!20260810-sitewide-floating-dock-loader-v14)/i.test(html)) staleNavigationBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);
     const currentCount = candidate.split(href).length - 1;
     assert(currentCount === 1, `${path.relative(root, absolute)} would not materialize exactly one current interaction stylesheet.`);
     assert((candidate.match(/id=["']qilyInteractiveHoverContrastStylesheet["']/gi) || []).length === 1, `${path.relative(root, absolute)} would contain duplicate interaction stylesheet IDs.`);
+    assert((candidate.split(navHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current navigation loader.`);
   });
 
   assert(publicPages >= 2600, `Public-page coverage unexpectedly fell to ${publicPages}.`);
   assert(actionControls >= 100, `Only ${actionControls} action controls were covered; expected a sitewide corpus.`);
-  return { publicPages, actionControls, staleBeforeMaterialization };
+  return { publicPages, actionControls, staleBeforeMaterialization, staleNavigationBeforeMaterialization };
 }
 
 function main() {
@@ -200,7 +216,8 @@ function main() {
   process.stdout.write(
     `Interaction clarity validated: ${coverage.publicPages} public pages, ` +
     `${coverage.actionControls} button/action controls, ` +
-    `${coverage.staleBeforeMaterialization} cache references queued for deterministic refresh.\n`
+    `${coverage.staleBeforeMaterialization} style cache references and ` +
+    `${coverage.staleNavigationBeforeMaterialization} navigation cache references queued for deterministic refresh.\n`
   );
 }
 

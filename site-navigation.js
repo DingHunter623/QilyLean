@@ -106,7 +106,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   ],
   disabledAssets:['site-microsoft-international-v1.css','site-microsoft-enterprise-components-v2.css','site-microsoft-international-v1.js'],
   bootstrapMarkers:['addWideLayoutStylesheet();','addTypographyStylesheet();','if (document.body) boot()'],
-  dockActions:['data-action="home"','data-action="top"','data-action="search"','data-action="back"','data-action="current"','data-action="share"','data-action="contact"']
+  dockActions:['data-action="home"','data-action="top"','data-action="back"','data-action="search"','data-action="current"','data-action="share"','data-action="contact"']
 });
 
 /* QilyLean global navigation wrapper｜保留原导航功能并加载可信度、信息架构与对比度闭环 */
@@ -301,7 +301,18 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     button.addEventListener('click', function () { release(button); });
   }
 
+  function normalizeOrder() {
+    var dock = d.querySelector('#floatDock.qily-float-dock');
+    if (!dock) return;
+    var order = ['home','top','back','search','current','share','contact'];
+    order.forEach(function (action) {
+      var button = dock.querySelector('.qily-float-btn[data-action="' + action + '"]');
+      if (button) dock.appendChild(button);
+    });
+  }
+
   function scan() {
+    normalizeOrder();
     d.querySelectorAll('#floatDock.qily-float-dock .qily-float-btn').forEach(bind);
   }
 
