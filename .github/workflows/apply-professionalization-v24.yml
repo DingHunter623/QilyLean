@@ -1,4 +1,4 @@
-name: Apply QilyLean professionalization V24/V25/V26/V27
+name: Apply QilyLean professionalization V24/V25/V27/V28
 
 on:
   push:
@@ -11,17 +11,18 @@ on:
       - "scripts/apply-professionalization-v24.js"
       - "scripts/materialize-professionalization-v24.js"
       - "scripts/apply-footer-one-line-v25.js"
-      - "scripts/apply-footer-standard-v26.js"
-      - "scripts/materialize-footer-standard-v26.js"
+      - "scripts/apply-footer-standard-v28.js"
+      - "scripts/materialize-footer-standard-v28.js"
       - "site-layout-typography-closure-v20.css"
-      - "site-footer-standard-v26.js"
+      - "site-footer-standard-v28.css"
+      - "site-footer-standard-v28.js"
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: qily-professionalization-v24-main
+  group: qily-professionalization-v28-main
   cancel-in-progress: true
 
 jobs:
@@ -38,56 +39,60 @@ jobs:
         with:
           node-version: 20
 
-      - name: Validate V24/V25/V26/V27 scripts
+      - name: Validate V24/V25/V27/V28 scripts
         run: |
           node --check scripts/apply-professionalization-v24.js
           node --check scripts/materialize-professionalization-v24.js
           node --check scripts/apply-footer-one-line-v25.js
-          node --check scripts/apply-footer-standard-v26.js
-          node --check scripts/materialize-footer-standard-v26.js
-          node --check site-footer-standard-v26.js
+          node --check scripts/apply-footer-standard-v28.js
+          node --check scripts/materialize-footer-standard-v28.js
+          node --check site-footer-standard-v28.js
           node --check homepage-music-v5.js
           node --check scripts/publish-primary-contrast-music-continuity.js
 
       - name: Integrate V24 into publication sources
         run: node scripts/apply-professionalization-v24.js
 
-      - name: Apply V25 single-line footer closure
+      - name: Apply V25 single-line closure assets
         run: node scripts/apply-footer-one-line-v25.js
 
-      - name: Integrate V26 footer standard into publication sources
-        run: node scripts/apply-footer-standard-v26.js
+      - name: Integrate V28 footer standard into publication sources
+        run: node scripts/apply-footer-standard-v28.js
 
       - name: Materialize V24 across current public HTML
         run: node scripts/materialize-professionalization-v24.js --all
 
-      - name: Materialize V26 footer runtime across every HTML page
-        run: node scripts/materialize-footer-standard-v26.js
+      - name: Materialize V28 unified footer across every HTML page
+        run: node scripts/materialize-footer-standard-v28.js
 
       - name: Materialize V27 sitewide gesture music
         run: node scripts/publish-primary-contrast-music-continuity.js
 
-      - name: Validate deterministic V24/V25/V26/V27 state
+      - name: Reassert V28 after all other materializers
+        run: node scripts/materialize-footer-standard-v28.js
+
+      - name: Validate deterministic V24/V25/V27/V28 state
         run: |
           node scripts/apply-professionalization-v24.js --check
           node scripts/apply-footer-one-line-v25.js --check
-          node scripts/apply-footer-standard-v26.js --check
+          node scripts/apply-footer-standard-v28.js --check
           node scripts/materialize-professionalization-v24.js --all --check
-          node scripts/materialize-footer-standard-v26.js --check
+          node scripts/materialize-footer-standard-v28.js --check
           node scripts/publish-primary-contrast-music-continuity.js
+          node scripts/materialize-footer-standard-v28.js --check
           node --check scripts/build-daily-archive.js
           node --check scripts/build-site-metadata.js
           git diff --check
 
-      - name: Commit V24/V25/V26/V27 full-site closure
+      - name: Commit V28 full-site footer closure
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "V24/V25/V26/V27 full-site closure is already current."
+            echo "V28 full-site footer closure is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "V27: publish sitewide gesture music and home-only control"
+          git commit -m "V28: standardize one authoritative footer across the full site"
           git push origin HEAD:main
