@@ -7,9 +7,11 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const NUMBER_VERSION = '20260805-number-badge-contrast-v1';
 const HOVER_VERSION = '20260810-sitewide-floating-dock-feedback-v13';
-const NAV_VERSION = '20260810-sitewide-floating-dock-loader-v14';
+const LAYOUT_VERSION = '20260810-sitewide-layout-footer-v15';
+const NAV_VERSION = '20260810-sitewide-layout-footer-loader-v15';
 const NUMBER_HREF = `/site-number-badge-contrast-v1.css?v=${NUMBER_VERSION}`;
 const HOVER_HREF = `/site-interactive-hover-contrast-v1.css?v=${HOVER_VERSION}`;
+const LAYOUT_HREF = `/site-layout-footer-closure-v1.css?v=${LAYOUT_VERSION}`;
 const NAV_HREF = `/site-navigation.js?v=${NAV_VERSION}`;
 const START = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const END = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
@@ -17,6 +19,7 @@ const BLOCK = [
   START,
   `  <link id="qilyNumberBadgeContrastStylesheet" rel="stylesheet" href="${NUMBER_HREF}">`,
   `  <link id="qilyInteractiveHoverContrastStylesheet" rel="stylesheet" href="${HOVER_HREF}">`,
+  `  <link id="qilyLayoutFooterClosureStylesheet" rel="stylesheet" href="${LAYOUT_HREF}">`,
   END
 ].join('\n');
 
@@ -51,6 +54,7 @@ function removeManaged(html) {
     .replace(/^[ \t]*<!-- QILY-NUMBER-BADGE-CONTRAST:START -->\r?\n[\s\S]*?^[ \t]*<!-- QILY-NUMBER-BADGE-CONTRAST:END -->[ \t]*(?:\r?\n)?/gmi, '')
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyNumberBadgeContrastStylesheet["']|href=["'][^"']*\/site-number-badge-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyInteractiveHoverContrastStylesheet["']|href=["'][^"']*\/site-interactive-hover-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
+    .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyLayoutFooterClosureStylesheet["']|href=["'][^"']*\/site-layout-footer-closure-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
     .replace(/^[ \t]+$/gm, '');
 }
 
@@ -103,12 +107,29 @@ function verifyCss() {
   ].forEach((marker) => {
     if (!hoverCss.includes(marker)) throw new Error(`Interactive-hover contrast marker missing: ${marker}`);
   });
+
+  const layoutCss = read(path.join(root, 'site-layout-footer-closure-v1.css'));
+  [
+    'QILY-SITEWIDE-LAYOUT-FOOTER-CLOSURE-V15-20260810',
+    '--qily-site-content-width:var(--qily-wide-content,1560px)',
+    '.qily-ia-inner',
+    '.qtc-inner',
+    '.qily-resource-network__inner',
+    'height:auto!important',
+    'min-height:0!important',
+    '.qtc-global-trust-links > a[href]',
+    'border:2px solid var(--qily-site-gold)!important',
+    'min-height:44px!important'
+  ].forEach((marker) => {
+    if (!layoutCss.includes(marker)) throw new Error(`Layout/footer closure marker missing: ${marker}`);
+  });
 }
 
 function verifyPage(relative, requiredText) {
   const html = read(path.join(root, relative));
   if (!html.includes(NUMBER_HREF)) throw new Error(`${relative} missing number-badge contrast asset.`);
   if (!html.includes(HOVER_HREF)) throw new Error(`${relative} missing interactive-hover contrast asset.`);
+  if (!html.includes(LAYOUT_HREF)) throw new Error(`${relative} missing layout/footer closure asset.`);
   if (!html.includes(NAV_HREF)) throw new Error(`${relative} missing current navigation loader.`);
   if (requiredText && !html.includes(requiredText)) throw new Error(`${relative} missing required action text: ${requiredText}`);
 }
