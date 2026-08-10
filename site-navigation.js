@@ -1,8 +1,8 @@
-/* QilyLean global VI, navigation, trust, contrast and layout loader v17 */
+/* QilyLean global VI, navigation, trust, contrast and layout loader v18 */
 (function (d, w) {
   'use strict';
-  if (w.__qilyGlobalAssetLoaderV17) return;
-  w.__qilyGlobalAssetLoaderV17 = true;
+  if (w.__qilyGlobalAssetLoaderV18) return;
+  w.__qilyGlobalAssetLoaderV18 = true;
 
   function removeMicrosoftOverrides() {
     ['qilyMicrosoftInternationalStylesheet','qilyMicrosoftEnterpriseComponentsStylesheet','qilyMicrosoftNavUnderlineStyle','qilyNavFourSideBorderStyle'].forEach(function (id) {
@@ -54,13 +54,13 @@
       ['qilyViContrastRestorationStylesheet','/site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1'],
       ['qilyVisualClosureStylesheet','/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2'],
       ['qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2'],
-      ['qilyBrandTrustStylesheet','/site-brand-trust-v1.css?v=20260810-content-axis-v3'],
+      ['qilyBrandTrustStylesheet','/site-brand-trust-v1.css?v=20260810-stable-layout-v4'],
       ['qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4'],
-      ['qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-inline-badge-feedback-v14'],
-      ['qilyLayoutFooterClosureStylesheet','/site-layout-footer-closure-v1.css?v=20260810-layout-performance-corrective-v17']
+      ['qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15'],
+      ['qilyLayoutFooterClosureStylesheet','/site-layout-footer-closure-v1.css?v=20260810-stable-layout-v18']
     ].forEach(function (asset) { ensureStylesheet(asset[0], asset[1]); });
 
-    ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260810-content-axis-v4');
+    ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260810-stable-layout-v5');
     ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
     ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260809-six-capabilities-v2');
     ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260810-content-axis-v3');
@@ -92,17 +92,17 @@
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
   shellAssets:[
-    'site-wide-layout-v1.css?v=20260729-fluid-copy-v5',
+    'site-wide-layout-v1.css?v=20260810-content-axis-v8',
     'site-typography-v1.css?v=20260729-hierarchy-v4',
     'site-vi-standard-v1.css?v=20260801-vi-standard-v1',
     'site-vi-contrast-restoration-v1.css?v=20260803-vi-contrast-hotfix-v1',
     'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2',
-    'site-visual-closure-v1.js?v=20260810-content-axis-v4',
+    'site-visual-closure-v1.js?v=20260810-stable-layout-v5',
     'site-visual-closure-v2.css?v=20260803-boundary-links-v2',
     'site-visual-closure-v2.js?v=20260803-boundary-links-v2',
     'site-trust-conversion-v2.css?v=20260805-action-label-v4',
-    'site-interactive-hover-contrast-v1.css?v=20260810-inline-badge-feedback-v14',
-    'site-layout-footer-closure-v1.css?v=20260810-layout-performance-corrective-v17',
+    'site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15',
+    'site-layout-footer-closure-v1.css?v=20260810-stable-layout-v18',
     'site-trust-conversion-v2.js?v=20260805-action-label-v3',
     'site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2'
   ],
@@ -145,17 +145,17 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   }
 
   function loadEnhancers() {
-    ensureStylesheet('qilyBrandTrustStylesheet','/site-brand-trust-v1.css?v=20260810-content-axis-v3');
+    ensureStylesheet('qilyBrandTrustStylesheet','/site-brand-trust-v1.css?v=20260810-stable-layout-v4');
     ensureStylesheet('qilyInformationArchitectureStylesheet','/site-information-architecture-v1.css?v=20260810-content-axis-v3');
     ensureStylesheet('qilyVisualClosureStylesheet','/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2');
     ensureStylesheet('qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2');
     ensureStylesheet('qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4');
-    ensureStylesheet('qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-inline-badge-feedback-v14');
-    ensureStylesheet('qilyLayoutFooterClosureStylesheet','/site-layout-footer-closure-v1.css?v=20260810-layout-performance-corrective-v17');
+    ensureStylesheet('qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15');
+    ensureStylesheet('qilyLayoutFooterClosureStylesheet','/site-layout-footer-closure-v1.css?v=20260810-stable-layout-v18');
 
     ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260810-content-axis-v3');
     ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260809-six-capabilities-v2');
-    ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260810-content-axis-v4');
+    ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260810-stable-layout-v5');
     ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
     ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-action-label-v3');
     ensureScript('data-qily-text-contrast-audit','v2','/site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2');
@@ -344,17 +344,34 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
 
   function normalizeOrder() {
     var dock = d.querySelector('#floatDock.qily-float-dock');
-    if (!dock) return;
+    if (!dock) return false;
     var order = ['home','top','back','search','current','share','contact'];
-    order.forEach(function (action) {
-      var button = dock.querySelector('.qily-float-btn[data-action="' + action + '"]');
-      if (button) dock.appendChild(button);
+    var buttons = order.map(function (action) {
+      return dock.querySelector('.qily-float-btn[data-action="' + action + '"]');
+    }).filter(Boolean);
+    var current = Array.from(dock.children).filter(function (node) {
+      return node.matches && node.matches('.qily-float-btn[data-action]');
     });
+    var orderChanged = current.length !== buttons.length || buttons.some(function (button, index) {
+      return current[index] !== button;
+    });
+    if (orderChanged) {
+      var fragment = d.createDocumentFragment();
+      buttons.forEach(function (button) { fragment.appendChild(button); });
+      dock.appendChild(fragment);
+    }
+    dock.dataset.qilyStableOrder = buttons.map(function (button) { return button.getAttribute('data-action'); }).join(',');
+    return buttons.length === order.length;
   }
 
   function scan() {
-    normalizeOrder();
+    var complete = normalizeOrder();
     d.querySelectorAll('#floatDock.qily-float-dock .qily-float-btn').forEach(bind);
+    if (complete && observer) {
+      observer.disconnect();
+      observer = null;
+    }
+    return complete;
   }
 
   function releaseAll() {
@@ -366,9 +383,14 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', scan, { once:true });
   else scan();
 
-  if (w.MutationObserver) {
-    var observer = new MutationObserver(scan);
+  var observer = null;
+  if (w.MutationObserver && !scan()) {
+    observer = new MutationObserver(scan);
     observer.observe(d.documentElement, { childList:true, subtree:true });
+    w.setTimeout(function () {
+      if (observer) observer.disconnect();
+      observer = null;
+    }, 2600);
   }
 
   d.addEventListener('pointerup', releaseAll, true);

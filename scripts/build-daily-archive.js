@@ -14,12 +14,12 @@ const root = path.resolve(__dirname, '..');
 const qily = path.join(root, 'qilylean');
 const dailyDir = path.join(qily, 'daily');
 const baseUrl = 'https://qilylean.com';
-const NAV_VERSION = '20260729-no-old-flash-v1';
+const NAV_VERSION = '20260810-native-navigation-stable-v18';
 const SHELL_VERSION = '20260729-no-old-flash-v1';
 const VISUAL_VERSION = '20260729-hierarchy-v4';
-const WIDE_VERSION = '20260729-fluid-copy-v5';
+const WIDE_VERSION = '20260810-content-axis-v8';
 const TYPE_VERSION = '20260729-hierarchy-v4';
-const MUSIC_VERSION = '20260729-continuous-v4';
+const MUSIC_VERSION = '20260810-demand-music-wrapper-v6';
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (character) => ({

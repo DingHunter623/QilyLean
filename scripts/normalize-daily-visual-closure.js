@@ -7,15 +7,17 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const dailyRoot = path.join(root, 'qilylean');
 const dailyDir = path.join(dailyRoot, 'daily');
-const primaryVersion = '20260804-sitewide-clarity-v2';
+const navigationVersion = '20260810-native-navigation-stable-v18';
+const visualStyleVersion = '20260804-sitewide-clarity-v2';
+const visualScriptVersion = '20260810-stable-layout-v5';
 const boundaryVersion = '20260803-boundary-links-v2';
 
 const assets = [
-  `  <link id="qilyVisualClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v1.css?v=${primaryVersion}">`,
+  `  <link id="qilyVisualClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v1.css?v=${visualStyleVersion}">`,
   `  <link id="qilyBoundaryLinksClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v2.css?v=${boundaryVersion}">`,
-  `  <script defer data-qily-visual-closure-loader="v1" src="/site-visual-closure-v1.js?v=${primaryVersion}"></script>`,
+  `  <script defer data-qily-visual-closure-loader="v1" src="/site-visual-closure-v1.js?v=${visualScriptVersion}"></script>`,
   `  <script defer data-qily-boundary-links-loader="v2" src="/site-visual-closure-v2.js?v=${boundaryVersion}"></script>`,
-  `  <script defer src="/site-navigation.js?v=${primaryVersion}"></script>`
+  `  <script defer src="/site-navigation.js?v=${navigationVersion}"></script>`
 ].join('\n');
 
 function normalize(file) {
@@ -53,10 +55,10 @@ for (const file of targets) {
   if (normalize(file)) changed += 1;
   const html = fs.readFileSync(file, 'utf8');
   const relative = path.relative(root, file);
-  if (!html.includes(`/site-navigation.js?v=${primaryVersion}`)) failures.push(`${relative}: navigation`);
-  if (!html.includes(`site-visual-closure-v1.css?v=${primaryVersion}`)) failures.push(`${relative}: closure-v1-css`);
+  if (!html.includes(`/site-navigation.js?v=${navigationVersion}`)) failures.push(`${relative}: navigation`);
+  if (!html.includes(`site-visual-closure-v1.css?v=${visualStyleVersion}`)) failures.push(`${relative}: closure-v1-css`);
   if (!html.includes(`site-visual-closure-v2.css?v=${boundaryVersion}`)) failures.push(`${relative}: closure-v2-css`);
-  if (!html.includes(`site-visual-closure-v1.js?v=${primaryVersion}`)) failures.push(`${relative}: closure-v1-js`);
+  if (!html.includes(`site-visual-closure-v1.js?v=${visualScriptVersion}`)) failures.push(`${relative}: closure-v1-js`);
   if (!html.includes(`site-visual-closure-v2.js?v=${boundaryVersion}`)) failures.push(`${relative}: closure-v2-js`);
 }
 

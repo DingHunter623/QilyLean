@@ -34,7 +34,6 @@
     style.id='qily-home-latest-brief-cta-style';
     style.textContent=[
       '.hero .actions .qily-latest-brief-button{position:relative;border-color:#ffe39b;background:rgba(7,60,71,.72);box-shadow:inset 0 0 0 1px rgba(255,227,155,.18)}',
-      '.hero .actions .qily-latest-brief-button::after{content:"NEW";position:static;display:inline-grid;place-items:center;flex:0 0 auto;min-width:38px;min-height:20px;margin-left:9px;padding:2px 8px;border-radius:999px;color:#173238;background:#ffe39b;border:2px solid #fff3c6;font-size:11px;font-weight:950;line-height:1.2;letter-spacing:.04em;box-shadow:0 0 0 2px #073c47}',
       '.hero .actions .qily-latest-brief-button:hover,.hero .actions .qily-latest-brief-button:focus-visible{color:#17231e;background:linear-gradient(135deg,#ffe39b,#f5b64b);border-color:#ffe39b}',
       '@media(max-width:820px){.hero .actions .qily-latest-brief-button{width:100%}}'
     ].join('');

@@ -1,8 +1,8 @@
-/* QilyLean 六类项目合作能力对齐、合作边界与悬浮入口精确排序闭环｜2026-08-08 */
+/* QilyLean 六类项目合作能力对齐、合作边界与悬浮入口稳定闭环｜2026-08-10 */
 (function(d,w){
   'use strict';
-  if(w.__qilyCoreServiceDockClosureV4)return;
-  w.__qilyCoreServiceDockClosureV4=true;
+  if(w.__qilyCoreServiceDockClosureV5)return;
+  w.__qilyCoreServiceDockClosureV5=true;
 
   function groupByVisualRow(nodes){
     var rows=[];
@@ -141,7 +141,7 @@
 
   function normalizeDock(){
     var dock=d.getElementById('floatDock');
-    if(!dock)return;
+    if(!dock)return false;
 
     var top=ensureBackToTop(dock);
     var labels={
@@ -155,16 +155,26 @@
     };
     var order=['home','top','back','search','current','share','contact'];
 
-    order.forEach(function(action){
+    var buttons=order.map(function(action){
       var button=action==='top'?top:dock.querySelector('[data-action="'+action+'"]');
-      if(!button)return;
-      button.innerHTML=labels[action].html;
-      button.setAttribute('aria-label',labels[action].aria);
-      button.setAttribute('title',labels[action].aria);
-      dock.appendChild(button);
-    });
+      if(!button)return null;
+      if(button.innerHTML!==labels[action].html)button.innerHTML=labels[action].html;
+      if(button.getAttribute('aria-label')!==labels[action].aria)button.setAttribute('aria-label',labels[action].aria);
+      if(button.getAttribute('title')!==labels[action].aria)button.setAttribute('title',labels[action].aria);
+      return button;
+    }).filter(Boolean);
+
+    var current=Array.from(dock.children).filter(function(node){return node.matches&&node.matches('.qily-float-btn[data-action]');});
+    var orderChanged=current.length!==buttons.length||buttons.some(function(button,index){return current[index]!==button;});
+    if(orderChanged){
+      var fragment=d.createDocumentFragment();
+      buttons.forEach(function(button){fragment.appendChild(button);});
+      dock.appendChild(fragment);
+    }
+    dock.dataset.qilyStableOrder=buttons.map(function(button){return button.getAttribute('data-action');}).join(',');
 
     bindBackToTop(top);
+    return buttons.length===order.length;
   }
 
   function apply(){
@@ -172,7 +182,7 @@
     enhanceCoreServices();
     enhanceServiceBoundaries();
     alignCoreServices();
-    normalizeDock();
+    if(normalizeDock())stopDockObserver();
   }
 
   var queued=false;
@@ -182,15 +192,21 @@
     w.requestAnimationFrame(function(){queued=false;apply();});
   }
 
+  var dockObserver=null;
+  function stopDockObserver(){
+    if(!dockObserver)return;
+    dockObserver.disconnect();
+    dockObserver=null;
+  }
+
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',queue,{once:true});
   else queue();
   w.addEventListener('load',queue,{once:true});
   w.addEventListener('resize',queue,{passive:true});
-  if('ResizeObserver'in w){
-    var resizeObserver=new ResizeObserver(queue);
-    resizeObserver.observe(d.documentElement);
+  if('MutationObserver'in w){
+    dockObserver=new MutationObserver(queue);
+    dockObserver.observe(d.documentElement,{childList:true,subtree:true});
+    w.setTimeout(stopDockObserver,2600);
   }
-  var observer=new MutationObserver(queue);
-  observer.observe(d.documentElement,{childList:true,subtree:true});
   [60,220,700,1600].forEach(function(delay){w.setTimeout(queue,delay);});
 })(document,window);

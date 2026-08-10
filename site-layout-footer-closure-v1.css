@@ -1,6 +1,6 @@
-/* QilyLean 全站内容轴、自然高度与页尾闭环 v2｜2026-08-10
- * QILY-SITEWIDE-LAYOUT-PERFORMANCE-CORRECTIVE-V17-20260810
- * 单一内容轴覆盖静态与运行时模块；内容决定高度；页尾与交互入口保持清晰。
+/* QilyLean 全站稳定渲染、单一内容轴与页尾闭环 v3｜2026-08-10
+ * QILY-SITEWIDE-STABLE-LAYOUT-V18-20260810
+ * 单一1560px内容轴覆盖静态与运行时模块；真实内容决定高度；悬浮入口稳定可用。
  */
 :root{
   --qily-site-content-width:var(--qily-wide-content,1560px);
@@ -14,6 +14,13 @@
 
 /* 一、所有公共内容模块共用 1560px 内容轴和同一安全边距。 */
 html body :is(
+  .module-hero,
+  .module-section,
+  .module-footer,
+  .hero,
+  .daily-hero,
+  .section,
+  .footer,
   .qily-ia-section,
   .qtc-section,
   .qily-resource-network,
@@ -33,8 +40,18 @@ html body :is(
   .qtc-inner,
   .qily-resource-network__inner,
   .module-inner,
+  .hero-inner,
+  .hero-grid,
+  .daily-inner,
   .section-inner,
   .footer-inner,
+  .main-inner,
+  .page-inner,
+  .content-inner,
+  .archive-inner,
+  .knowledge-inner,
+  .project-inner,
+  .tool-inner,
   main > .section > .inner,
   main > .module-section > .module-inner
 ){
@@ -64,6 +81,14 @@ html body :is(.qily-ia-heading,.qtc-heading){
   max-width:100%!important;
 }
 
+/* 禁止 content-visibility 占位和 contain-intrinsic-size 伪高度造成“模块空白”。 */
+html body main > :is(.section,.module-section,.qily-ia-section,.qtc-section,.qily-resource-network),
+html body :is(.ql-trust-module,.ql-certificate-disclaimer,.ql-archive-note){
+  content-visibility:visible!important;
+  contain:none!important;
+  contain-intrinsic-size:none!important;
+}
+
 /* 二、深青模块只由真实文字、控件及统一内边距撑高，禁止遗留固定高度或空白占位。 */
 html body main > :is(.section,.module-section,.qily-ia-section,.qtc-section,.qily-resource-network),
 html body #qily-home-ai.qily-ia-section,
@@ -85,6 +110,21 @@ html body #results.qily-ia-secondary-section > .inner > .metrics{
 
 html body #results.qily-ia-secondary-section > .inner > .metrics{
   align-items:stretch!important;
+}
+
+html body #results.qily-ia-secondary-section > .inner > .metrics > .metric{
+  height:auto!important;
+  min-height:0!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+}
+
+html body #results.qily-ia-secondary-section .qily-results-toggle{
+  position:static!important;
+  inset:auto!important;
+  display:inline-flex!important;
+  min-height:44px!important;
+  margin-top:18px!important;
 }
 
 html body.qily-home-commercial-focus #qily-home-ai .qily-ia-inner,
@@ -190,7 +230,9 @@ html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust
 }
 
 @media(max-width:820px){
-  html body :is(.qily-ia-inner,.qtc-inner,.qily-resource-network__inner,.module-inner,.section-inner,.footer-inner),
+  html body :is(.qily-ia-inner,.qtc-inner,.qily-resource-network__inner,.module-inner,.hero-inner,.hero-grid,.daily-inner,.section-inner,.footer-inner,.main-inner,.page-inner,.content-inner,.archive-inner,.knowledge-inner,.project-inner,.tool-inner){
+    width:100%!important;
+  }
   html body :is(.ql-trust-strip-inner,.ql-trust-module,.ql-certificate-disclaimer,.ql-archive-note){
     width:calc(100% - 24px)!important;
   }

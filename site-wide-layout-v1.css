@@ -1,4 +1,4 @@
-/* QilyLean 2026-07-31：全站首屏、正文、卡片、工具区与页脚统一宽版对齐 v7 */
+/* QilyLean 2026-08-10：全站首屏、正文、卡片、工具区与页脚统一1560px内容轴 v8 */
 :root{
   --qily-wide-content:1560px;
   --qily-wide-gutter:clamp(14px,2.2vw,40px);

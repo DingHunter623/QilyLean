@@ -9,6 +9,7 @@ const cooperationFile = path.join(root, 'cooperation', 'index.html');
 
 function qualityOnlyBlock() {
   return `<!-- QILY-CORE-PRICING-QUALITY:START -->
+<!-- QILY-PRICING-PUBLIC-DISABLED｜完整项目价格不在公网展示。 -->
 <!-- QILY-PRICING-POLICY｜仅公开诊断级入口价格；六类项目合作能力的完整合作均按范围、投入、交付物和验收标准独立报价，不在公网展示统一总价。 -->
 <section class="module-section alt" id="quality-throughline" aria-labelledby="qualityThroughlineTitle">
   <div class="module-inner">
@@ -28,8 +29,9 @@ function normalizeEntrySection(html) {
     .replace(/<div class="price">免费<\/div>/g, '')
     .replace(/<div class="price">¥6,800起\s*<span>＋差旅<\/span><\/div>/g, '<div class="price">¥6,800起 <span>＋差旅</span></div>')
     .replace(/<div class="price">按范围评估<\/div>/g, '')
-    .replace(/<p class="fine-print">价格说明：[\s\S]*?<\/p>/g, '<p class="fine-print"><strong>价格边界：</strong>¥6,800仅对应约定范围内的小范围现场诊断与概念级方案构思，不代表六类项目合作能力任一完整专项合作总价。六类项目合作能力均须根据实际需求明确范围、周期、投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。</p>')
-    .replace(/<p class="fine-print">合作说明：[\s\S]*?<\/p>/g, '<p class="fine-print"><strong>价格边界：</strong>¥6,800仅对应约定范围内的小范围现场诊断与概念级方案构思，不代表六类项目合作能力任一完整专项合作总价。六类项目合作能力均须根据实际需求明确范围、周期、投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。</p>');
+    .replace(/<p class="fine-print">价格说明：[\s\S]*?<\/p>/g, '<p class="fine-print"><strong>价格边界：</strong>前期诊断与概念级方案构思不代表六类项目合作能力任一完整专项合作范围。具体费用须根据实际需求明确范围、周期、投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。</p>')
+    .replace(/<p class="fine-print">合作说明：[\s\S]*?<\/p>/g, '<p class="fine-print"><strong>价格边界：</strong>前期诊断与概念级方案构思不代表六类项目合作能力任一完整专项合作范围。具体费用须根据实际需求明确范围、周期、投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。</p>')
+    .replace(/<p class="fine-print">[\s\S]*?¥6,800[\s\S]*?<\/p>/g, '<p class="fine-print"><strong>价格边界：</strong>前期诊断与概念级方案构思不代表六类项目合作能力任一完整专项合作范围。具体费用须根据实际需求明确范围、周期、投入、技术复杂度、交付物、修改轮次及验收标准，并通过书面项目方案和正式合同独立报价。</p>');
 }
 
 function main() {

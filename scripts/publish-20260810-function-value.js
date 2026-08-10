@@ -36,10 +36,10 @@ const page = `<!doctype html>
   <meta name="twitter:card" content="summary">
   <link rel="stylesheet" href="/site-shell.css?v=20260729-no-old-flash-v1">
   <link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=20260729-hierarchy-v4">
-  <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260729-fluid-copy-v5">
+  <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260810-content-axis-v8">
   <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
   <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260729-ranked-search-v12">
-  <script defer src="/site-navigation.js?v=20260809-six-capability-pricing-v3"></script>
+  <script defer src="/site-navigation.js?v=20260810-native-navigation-stable-v18"></script>
 <style>
 .function-ladder{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:20px 0 28px}.function-ladder>div{padding:18px;border:1px solid rgba(202,161,95,.34);border-radius:16px;background:#fff}.function-ladder strong{display:block;color:#0f4b5a;font-size:18px;margin-bottom:8px}.function-ladder span{display:block;color:#526967;line-height:1.7}.value-chain{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin:18px 0 28px}.value-chain div{padding:14px 10px;border-radius:14px;background:#f4f8f7;border:1px solid #d9e7e4;text-align:center}.value-chain b{display:block;color:#0f4b5a;font-size:15px}.value-chain small{display:block;margin-top:5px;color:#617775;line-height:1.5}.brief-callout{margin:20px 0;padding:18px 20px;border-left:4px solid #caa15f;background:#f8fbfa;line-height:1.75}.role-matrix td:first-child{font-weight:850;color:#0f4b5a;white-space:nowrap}@media(max-width:900px){.value-chain{grid-template-columns:repeat(2,minmax(0,1fr))}.function-ladder{grid-template-columns:1fr 1fr}}@media(max-width:620px){.function-ladder,.value-chain{grid-template-columns:1fr}}
 </style>
@@ -163,7 +163,7 @@ const page = `<!doctype html>
 </div></section>
 </main>
 <script src="/qilylean/daily-feedback.js?v=20260729-message-only-v4"></script>
-<script src="/homepage-music.js?v=20260729-continuous-v4"></script>
+<script src="/homepage-music.js?v=20260810-demand-music-wrapper-v6"></script>
 </body>
 </html>`;
 write(todayPath, page);

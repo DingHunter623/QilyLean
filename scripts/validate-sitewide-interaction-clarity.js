@@ -5,14 +5,19 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const version = '20260810-inline-badge-feedback-v14';
-const layoutVersion = '20260810-layout-performance-corrective-v17';
-const navVersion = '20260810-native-navigation-corrective-v17';
+const version = '20260810-stable-layout-v15';
+const layoutVersion = '20260810-stable-layout-v18';
+const navVersion = '20260810-native-navigation-stable-v18';
 const musicVersion = '20260810-demand-music-v6';
 const href = `/site-interactive-hover-contrast-v1.css?v=${version}`;
 const layoutHref = `/site-layout-footer-closure-v1.css?v=${layoutVersion}`;
 const navHref = `/site-navigation.js?v=${navVersion}`;
 const musicHref = `/homepage-music-v5.js?v=${musicVersion}`;
+const musicWrapperHref = '/homepage-music.js?v=20260810-demand-music-wrapper-v6';
+const staticInteractionsHref = '/site-static-core-interactions-v1.js?v=20260810-no-new-badge-v3';
+const visualClosureHref = '/site-visual-closure-v1.js?v=20260810-stable-layout-v5';
+const wideLayoutHref = '/site-wide-layout-v1.css?v=20260810-content-axis-v8';
+const coreDockHref = '/site-core-service-dock-closure-v1.js?v=20260810-stable-dock-v5';
 const managedStart = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const managedEnd = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
 const managedBlock = [
@@ -58,6 +63,11 @@ function materializeInMemory(html) {
   const cleaned = removeManaged(html)
     .replace(/\/site-navigation\.js\?v=[^"'\\s<]+/gi, navHref)
     .replace(/\/homepage-music-v5\.js\?v=[^"'\\s<]+/gi, musicHref)
+    .replace(/\/homepage-music\.js\?v=[^"'\\s<]+/gi, musicWrapperHref)
+    .replace(/\/site-static-core-interactions-v1\.js\?v=[^"'\\s<]+/gi, staticInteractionsHref)
+    .replace(/\/site-visual-closure-v1\.js\?v=[^"'\\s<]+/gi, visualClosureHref)
+    .replace(/\/site-wide-layout-v1\.css\?v=[^"'\\s<]+/gi, wideLayoutHref)
+    .replace(/\/site-core-service-dock-closure-v1\.js\?v=[^"'\\s<]+/gi, coreDockHref)
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyBackgroundMusicPreload["']|href=["'][^"']*%E6%88%91%E7%9A%84%E6%A2%A6[^"']*["'][^>]*\bas=["']audio["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
     .replace(/^[ \t]*<script\b[^>]*(?:id=["']qilyPersistentMusicNavigationScript["']|data-qily-persistent-music-navigation=["'][^"']+["']|src=["'][^"']*\/site-music-persistent-navigation-v1\.js(?:\?v=[^"']*)?["'])[^>]*>[ \t\r\n]*<\/script>[ \t]*(?:\r?\n)?/gmi, '');
   const primary = '<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->';
@@ -117,12 +127,8 @@ function validateCss() {
     '--qily-boundary-accent:#ffd36a',
     '.qtc-global-trust-links>a[href]',
     'a.moment-link',
-    '.qily-latest-brief-button::after',
-    'position:static!important',
-    'margin-left:9px!important',
     'border:2px solid var(--qily-boundary-accent)!important',
     'min-height:44px!important',
-    'font-size:12px!important',
     '--qily-control-hover-bg:#ffe39b',
     '--qily-control-hover-ink:#17322d',
     '--qily-control-active-bg:#052a33',
@@ -157,7 +163,7 @@ function validateCss() {
     'Floating-dock hover/focus selector does not attach directly to the button.'
   );
   assert(!/qily-static-card[^\n,{]*:(?:hover|focus-visible|active)/.test(css), 'Static cards must not receive interactive feedback.');
-  assert(!/\.qily-latest-brief-button::after[^}]*position:absolute/s.test(css), 'Latest-brief NEW badge must not use overlap-prone absolute positioning.');
+  assert(!/content\s*:\s*["']NEW["']/i.test(css), 'All sitewide NEW badges must be removed from interaction CSS.');
 
   [
     ['hover', '#17322d', '#ffe39b', 4.5],
@@ -177,13 +183,19 @@ function validateLoadOrder() {
   const layoutCss = read('site-layout-footer-closure-v1.css');
   const shellCss = read('site-shell.css');
   const navigationCore = read('site-navigation-core.js');
+  const coreDock = read('site-core-service-dock-closure-v1.js');
+  const visualClosure = read('site-visual-closure-v1.js');
+  const staticInteractions = read('site-static-core-interactions-v1.js');
+  const wideLayout = read('site-wide-layout-v1.css');
   const music = read('homepage-music-v5.js');
+  const musicWrapper = read('homepage-music.js');
   const nativeNavigation = read('site-music-persistent-navigation-v1.js');
 
   assert((navigation.match(new RegExp(version, 'g')) || []).length >= 3, 'Navigation does not load the current interaction stylesheet in every loader path.');
   assert(navigation.includes("'qilyTrustConversionV2Stylesheet','qilyInteractiveHoverContrastStylesheet'"), 'Interaction stylesheet must be promoted after trust conversion styles.');
   assert(navigation.indexOf("['qilyTrustConversionV2Stylesheet'") < navigation.indexOf("['qilyInteractiveHoverContrastStylesheet'"), 'Initial asset order must place interaction closure last.');
   assert((navigation.match(new RegExp(layoutVersion, 'g')) || []).length >= 3, 'Navigation does not load the current layout/footer stylesheet in every loader path.');
+  assert((navigation.match(/site-brand-trust-v1\.css\?v=20260810-stable-layout-v4/g) || []).length >= 2, 'Navigation does not cache-bust the corrected trust-module width.');
   assert(navigation.includes("'qilyInteractiveHoverContrastStylesheet','qilyLayoutFooterClosureStylesheet'"), 'Layout/footer closure must be promoted after interaction styles.');
   assert(publisher.includes(`const HOVER_VERSION = '${version}'`), 'Public-page materializer uses a stale interaction version.');
   assert(ndaTemplate.includes(href), 'NDA preview generator uses a stale interaction version.');
@@ -200,13 +212,27 @@ function validateLoadOrder() {
     navigation.includes("var order = ['home','top','back','search','current','share','contact'];"),
     'Navigation does not normalize the seven floating actions to the approved order.'
   );
+  assert(navigation.includes('var orderChanged = current.length !== buttons.length'), 'Navigation order normalization is not idempotent.');
+  assert(!navigation.includes('if (button) dock.appendChild(button)'), 'Navigation still moves every dock button on every scan.');
+  assert(navigation.includes('observer.disconnect();') && navigation.includes('2600'), 'Navigation dock observer must disconnect after the bounded startup window.');
+  assert(coreDock.includes('__qilyCoreServiceDockClosureV5'), 'Core-service dock closure is not on the stable V5 implementation.');
+  assert(coreDock.includes('var orderChanged=current.length!==buttons.length'), 'Core-service dock ordering is not idempotent.');
+  assert(!coreDock.includes('dock.appendChild(button)'), 'Core-service dock still moves every button on every observer callback.');
+  assert(!coreDock.includes('ResizeObserver'), 'Core-service dock must not observe the document size continuously.');
+  assert(coreDock.includes('w.setTimeout(stopDockObserver,2600)'), 'Core-service dock observer must have a bounded lifetime.');
+  assert(!visualClosure.includes('max-width:1240px'), 'Runtime density style still narrows the canonical 1560px content axis.');
+  assert(!visualClosure.includes('contain-intrinsic-size:auto 520px'), 'Runtime density style still creates a phantom module height.');
+  assert(visualClosure.includes('max-width:var(--qily-wide-content,1560px)!important'), 'Runtime density style does not preserve the canonical 1560px axis.');
+  assert(visualClosure.includes('content-visibility:visible!important'), 'Runtime density style does not force real module rendering.');
+  assert(!/content\s*:\s*["']NEW["']/i.test(staticInteractions), 'Homepage enhancer still injects a NEW badge.');
+  assert(wideLayout.includes('--qily-wide-content:1560px'), 'Wide-layout source lost the canonical 1560px token.');
   assert(
     navigation.includes("dockActions:['data-action=\"home\"','data-action=\"top\"','data-action=\"back\"','data-action=\"search\"','data-action=\"current\"','data-action=\"share\"','data-action=\"contact\"']"),
     'Navigation build contract uses a stale floating-action order.'
   );
 
   [
-    'QILY-SITEWIDE-LAYOUT-PERFORMANCE-CORRECTIVE-V17-20260810',
+    'QILY-SITEWIDE-STABLE-LAYOUT-V18-20260810',
     '--qily-site-content-width:var(--qily-wide-content,1560px)',
     '.qily-ia-inner',
     '.qtc-inner',
@@ -219,6 +245,8 @@ function validateLoadOrder() {
     'z-index:9000!important',
     'height:auto!important',
     'min-height:0!important',
+    'content-visibility:visible!important',
+    'contain-intrinsic-size:none!important',
     'html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]',
     ':is(:hover:hover,:focus-visible:focus-visible)',
     ':active:active',
@@ -240,6 +268,8 @@ function validateLoadOrder() {
   assert(!music.includes('ensureAudioPreload'), 'Background music must not create a first-paint audio preload.');
   assert(!music.includes("['/', '/ai.html'"), 'Background music must not prefetch the primary navigation corpus.');
   assert(!music.includes('window.setInterval(writeState, 400)'), 'Background music must not write storage every 400ms.');
+  assert(musicWrapper.includes("var PLAYER_SRC = '/homepage-music-v5.js?v=20260810-demand-music-v6'"), 'Compatibility music entry does not delegate to demand-loaded V5.');
+  assert(!musicWrapper.includes('homepage-music-core-v4.js'), 'Compatibility music entry still loads the eager V4 core.');
   assert(nativeNavigation.includes('window.__qilyNativeNavigationFallbackV2'), 'Cached navigation fallback is not native-navigation only.');
   assert(!/createElement\(['"]iframe['"]\)|qilyPersistentNavigationFrame|页面加载中/.test(nativeNavigation), 'Iframe/spinner navigation must not remain in the fallback.');
   assert(!navigation.includes('observer.observe(d.body, { childList:true })'), 'Tail compaction must not keep a permanent body observer.');
@@ -258,9 +288,9 @@ function validatePublicPages() {
     if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html) || !isPublicPage(html)) return;
     publicPages += 1;
     actionControls += (html.match(/<button\b|<input\b[^>]*type=["'](?:button|submit)["']|<a\b[^>]*class=["'][^"']*(?:button|action|btn|cta)/gi) || []).length;
-    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260810-inline-badge-feedback-v14)/i.test(html)) staleBeforeMaterialization += 1;
-    if (/site-layout-footer-closure-v1\.css\?v=(?!20260810-layout-performance-corrective-v17)/i.test(html)) staleLayoutBeforeMaterialization += 1;
-    if (/site-navigation\.js\?v=(?!20260810-native-navigation-corrective-v17)/i.test(html)) staleNavigationBeforeMaterialization += 1;
+    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260810-stable-layout-v15)/i.test(html)) staleBeforeMaterialization += 1;
+    if (/site-layout-footer-closure-v1\.css\?v=(?!20260810-stable-layout-v18)/i.test(html)) staleLayoutBeforeMaterialization += 1;
+    if (/site-navigation\.js\?v=(?!20260810-native-navigation-stable-v18)/i.test(html)) staleNavigationBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);
     const currentCount = candidate.split(href).length - 1;
@@ -269,7 +299,13 @@ function validatePublicPages() {
     assert((candidate.split(layoutHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current layout/footer stylesheet.`);
     assert((candidate.match(/id=["']qilyLayoutFooterClosureStylesheet["']/gi) || []).length === 1, `${path.relative(root, absolute)} would contain duplicate layout/footer stylesheet IDs.`);
     assert((candidate.split(navHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current navigation loader.`);
+    assert((candidate.split(wideLayoutHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current wide-layout asset.`);
+    if (/site-visual-closure-v1\.js\?v=/i.test(html)) assert((candidate.split(visualClosureHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current visual closure.`);
+    if (/site-core-service-dock-closure-v1\.js\?v=/i.test(html)) assert((candidate.split(coreDockHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current core-dock closure.`);
+    if (/site-static-core-interactions-v1\.js\?v=/i.test(html)) assert((candidate.split(staticInteractionsHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current static interaction enhancer.`);
     assert((candidate.split(musicHref).length - 1) <= 1, `${path.relative(root, absolute)} would contain duplicate demand-loaded music controllers.`);
+    assert((candidate.split(musicWrapperHref).length - 1) <= 1, `${path.relative(root, absolute)} would contain duplicate demand-music compatibility entries.`);
+    if (/homepage-music\.js\?v=/i.test(html)) assert((candidate.split(musicWrapperHref).length - 1) === 1, `${path.relative(root, absolute)} would retain a stale eager-music compatibility entry.`);
     assert(!/qilyBackgroundMusicPreload/i.test(candidate), `${path.relative(root, absolute)} would still preload background audio.`);
     assert(!/site-music-persistent-navigation-v1\.js/i.test(candidate), `${path.relative(root, absolute)} would still load iframe navigation.`);
   });
@@ -289,10 +325,25 @@ function validateDailyDirectoryPerformance() {
   assert(directory.includes('matches.slice(0,80)'), 'Daily directory search must cap the rendered result DOM.');
 }
 
+function validateLegacyRoutes() {
+  [
+    ['links.html', '/links/'],
+    ['trust.html', '/trust/'],
+    ['standards.html', '/trust/#evidence-levels'],
+    ['delivery.html', '/projects/qilylean-commercial-deliveries/']
+  ].forEach(([relative, target]) => {
+    const html = read(relative);
+    assert(html.includes(`location.replace('${target}')`), `${relative} does not redirect to its maintained public destination.`);
+    assert(html.includes(`href="${target}"`), `${relative} lacks a visible no-JavaScript fallback link.`);
+    assert(html.includes('min-height:44px'), `${relative} fallback action is below the 44px interaction minimum.`);
+  });
+}
+
 function main() {
   validateCss();
   validateLoadOrder();
   validateDailyDirectoryPerformance();
+  validateLegacyRoutes();
   const coverage = validatePublicPages();
   process.stdout.write(
     `Interaction clarity validated: ${coverage.publicPages} public pages, ` +

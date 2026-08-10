@@ -5,7 +5,7 @@ const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
 const css='/site-core-service-dock-closure-v1.css?v=20260804-core-service-dock-v3';
-const js='/site-core-service-dock-closure-v1.js?v=20260808-six-core-services-v4';
+const js='/site-core-service-dock-closure-v1.js?v=20260810-stable-dock-v5';
 const cssTag=`  <link id="qilyCoreServiceDockClosureStylesheet" rel="stylesheet" href="${css}">`;
 const jsTag=`  <script defer data-qily-core-service-dock-closure="v4" src="${js}"></script>`;
 

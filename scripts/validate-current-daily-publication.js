@@ -64,9 +64,9 @@ includes(latest, `id="${sourceLatest}"`, 'Latest page carries its date identity'
 includes(latest, 'data-brief-message-form', 'Latest page contains message form');
 includes(latest, '留言交流', 'Latest page contains message section');
 includes(latest, 'site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1', 'Latest page loads number-badge contrast');
-includes(latest, 'site-interactive-hover-contrast-v1.css?v=20260810-inline-badge-feedback-v14', 'Latest page loads current interactive contrast');
-includes(latest, 'site-layout-footer-closure-v1.css?v=20260810-layout-performance-corrective-v17', 'Latest page loads current layout closure');
-includes(latest, 'site-navigation.js?v=20260810-native-navigation-corrective-v17', 'Latest page loads current native navigation');
+includes(latest, 'site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15', 'Latest page loads current interactive contrast');
+includes(latest, 'site-layout-footer-closure-v1.css?v=20260810-stable-layout-v18', 'Latest page loads current layout closure');
+includes(latest, 'site-navigation.js?v=20260810-native-navigation-stable-v18', 'Latest page loads current native navigation');
 assert(!latest.includes('site-music-persistent-navigation-v1.js'), 'Latest page does not load iframe navigation');
 assert(!latest.includes('qilyBackgroundMusicPreload'), 'Latest page does not preload background audio');
 includes(navigation, 'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2', 'Navigation loader supplies current visual closure');
@@ -117,7 +117,7 @@ includes(augustFourth, 'data-quality-throughline="2026-08-04"', 'August 4 qualit
 includes(augustFourth, '质量门槛｜科学改进生产力', 'August 4 quality label remains intact');
 
 includes(cooperation, 'QILY-PRICING-PUBLIC-DISABLED', 'Public pricing remains disabled');
-includes(cooperation, '<h2>合作启动路径</h2>', 'Cooperation start path remains visible');
+includes(cooperation, '<h2>合作启动路径与公开报价边界</h2>', 'Cooperation start path remains visible');
 includes(cooperation, '质量不是PQCD中的一个并列数字', 'Cooperation quality-throughline remains visible');
 assert(!/¥|公开价格参考与报价依据|公开报价不包含|<div class="price">/.test(cooperation), 'No public quotation is rendered');
 includes(links, 'qilyCommercialQualityClosureStylesheet', 'Links page keeps commercial-quality closure');

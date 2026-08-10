@@ -8,7 +8,7 @@
   --ql-trust-teal:#178b94;
   --ql-trust-gold:#c99a45;
   --ql-trust-white:#fff;
-  --ql-trust-content:var(--qily-wide-content,1560px);
+  --ql-trust-content:var(--qily-site-content-width,var(--qily-wide-content,1560px));
   --ql-trust-gutter:var(--qily-wide-gutter,clamp(14px,2.2vw,40px));
 }
 .ql-trust-strip{position:relative;z-index:8;border-bottom:1px solid var(--ql-trust-line);background:linear-gradient(90deg,#eff8f5,#fff9ec)}
