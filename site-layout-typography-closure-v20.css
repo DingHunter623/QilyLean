@@ -305,3 +305,176 @@ html:root:root:root body #floatDock.qily-float-dock .qily-float-btn{
     min-width:0!important;
   }
 }
+
+/* G. V21 页尾视觉闭环：删除重复左侧身份文案，只保留标语、联系方式和可信度三层。 */
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner):has(> :nth-child(2)) > :first-child{
+  display:none!important;
+}
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner):has(> :nth-child(2)){
+  display:block!important;
+  padding:0!important;
+}
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner):has(> :nth-child(2)) > :last-child{
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+  color:#e6efec!important;
+  font-size:15.5px!important;
+  font-weight:750!important;
+  line-height:1.45!important;
+  letter-spacing:.015em!important;
+  text-align:center!important;
+}
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer){
+  padding-top:12px!important;
+  padding-bottom:12px!important;
+}
+
+/* 联系信息拆成“标题 + 两组联系方式”两行，避免所有内容挤在同一行。 */
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer{
+  display:grid!important;
+  grid-template-columns:auto max-content auto max-content!important;
+  align-items:center!important;
+  justify-content:center!important;
+  column-gap:10px!important;
+  row-gap:9px!important;
+  width:min(980px,100%)!important;
+  max-width:980px!important;
+  margin:10px auto 0!important;
+  padding:12px 12px 0!important;
+  color:#dbe8e4!important;
+  font-size:14.5px!important;
+  line-height:1.35!important;
+  text-align:center!important;
+}
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer > :first-child{
+  grid-column:1 / -1!important;
+  color:#ffffff!important;
+  font-size:15.5px!important;
+  font-weight:900!important;
+  letter-spacing:.01em!important;
+}
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer > span:not(:first-child){
+  color:#dbe8e4!important;
+  font-size:14px!important;
+  font-weight:800!important;
+  white-space:nowrap!important;
+}
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer > a{
+  min-height:36px!important;
+  padding:6px 11px!important;
+  border:1px solid rgba(255,227,155,.55)!important;
+  border-radius:8px!important;
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  background:rgba(255,255,255,.045)!important;
+  font-size:14.5px!important;
+  font-weight:900!important;
+  line-height:1.2!important;
+  text-decoration:none!important;
+  white-space:nowrap!important;
+}
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer > a:is(:hover,:focus-visible){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background:#ffe39b!important;
+  border-color:#ffe39b!important;
+  outline:2px solid rgba(255,227,155,.35)!important;
+  outline-offset:2px!important;
+}
+
+/* 可信度栏压缩为清晰的一行决策信息 + 三个操作入口。 */
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer{
+  padding-top:12px!important;
+  padding-bottom:12px!important;
+}
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer .qtc-inner{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:18px!important;
+}
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer .qtc-inner > div:first-child{
+  min-width:0!important;
+  color:#d7e8e4!important;
+  font-size:14.5px!important;
+  line-height:1.55!important;
+  letter-spacing:0!important;
+}
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer .qtc-inner > div:first-child strong{
+  color:#ffe39b!important;
+  font-size:14.5px!important;
+}
+html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:9px!important;
+  margin:0!important;
+  flex-wrap:nowrap!important;
+}
+html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
+  min-height:40px!important;
+  padding:7px 13px!important;
+  font-size:14px!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+}
+
+@media(max-width:1050px){
+  html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer .qtc-inner{
+    grid-template-columns:1fr!important;
+    justify-items:center!important;
+    text-align:center!important;
+  }
+  html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{
+    justify-content:center!important;
+    flex-wrap:wrap!important;
+  }
+}
+
+@media(max-width:720px){
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer{
+    grid-template-columns:auto minmax(0,1fr)!important;
+    width:100%!important;
+    max-width:100%!important;
+    justify-content:stretch!important;
+    text-align:left!important;
+  }
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > :first-child{
+    text-align:center!important;
+  }
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > a{
+    min-width:0!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+}
+
+@media(max-width:520px){
+  html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner):has(> :nth-child(2)) > :last-child{
+    font-size:14px!important;
+  }
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer{
+    grid-template-columns:1fr!important;
+    row-gap:7px!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > :first-child,
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > span:not(:first-child),
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > a{
+    grid-column:1!important;
+    width:100%!important;
+    text-align:center!important;
+  }
+  html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{
+    width:100%!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+  }
+  html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
+    width:100%!important;
+    min-width:0!important;
+  }
+}
