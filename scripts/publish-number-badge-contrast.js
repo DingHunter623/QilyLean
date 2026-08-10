@@ -20,6 +20,7 @@ const STATIC_INTERACTIONS_HREF = '/site-static-core-interactions-v1.js?v=2026081
 const VISUAL_CLOSURE_HREF = '/site-visual-closure-v1.js?v=20260810-stable-layout-v5';
 const WIDE_LAYOUT_HREF = '/site-wide-layout-v1.css?v=20260810-content-axis-v8';
 const CORE_DOCK_HREF = '/site-core-service-dock-closure-v1.js?v=20260810-stable-dock-v5';
+const FLOATING_SERVICE_HREF = '/qilylean/floating-service.js?v=20260810-native-navigation-dedupe-v1';
 const REQUIRED_SOURCE_HTML = [
   'scripts/nda-source/nda-preview-template.html',
   'links.html',
@@ -81,6 +82,7 @@ function insert(html) {
     .replace(/\/site-visual-closure-v1\.js\?v=[^"'\s<]+/gi, VISUAL_CLOSURE_HREF)
     .replace(/\/site-wide-layout-v1\.css\?v=[^"'\s<]+/gi, WIDE_LAYOUT_HREF)
     .replace(/\/site-core-service-dock-closure-v1\.js\?v=[^"'\s<]+/gi, CORE_DOCK_HREF)
+    .replace(/(?:\/qilylean\/)?floating-service\.js\?v=[^"'\s<]+/gi, FLOATING_SERVICE_HREF)
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyBackgroundMusicPreload["']|href=["'][^"']*%E6%88%91%E7%9A%84%E6%A2%A6[^"']*["'][^>]*\bas=["']audio["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
     .replace(/^[ \t]*<script\b[^>]*(?:id=["']qilyPersistentMusicNavigationScript["']|data-qily-persistent-music-navigation=["'][^"']+["']|src=["'][^"']*\/site-music-persistent-navigation-v1\.js(?:\?v=[^"']*)?["'])[^>]*>[ \t\r\n]*<\/script>[ \t]*(?:\r?\n)?/gmi, '');
   const primary = '<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->';
