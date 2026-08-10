@@ -4,6 +4,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
+      - 'homepage-music-v5.js'
+      - 'scripts/publish-primary-contrast-music-continuity.js'
       - 'scripts/bump-live-asset-version-v19.js'
       - 'scripts/publish-number-badge-contrast.js'
       - 'scripts/apply-tail-gap-hotfix-v22.js'
@@ -29,6 +31,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Validate V27 music runtime
+        run: |
+          node --check homepage-music-v5.js
+          node --check scripts/publish-primary-contrast-music-continuity.js
       - name: Bump live asset cache versions
         run: node scripts/bump-live-asset-version-v19.js
       - name: Materialize current interaction assets
@@ -36,14 +42,15 @@ jobs:
           node scripts/publish-number-badge-contrast.js
           node scripts/validate-sitewide-interaction-clarity.js
           node scripts/apply-tail-gap-hotfix-v22.js
+          node scripts/publish-primary-contrast-music-continuity.js
       - name: Commit materialized live references
         run: |
           if git diff --quiet; then
-            echo 'All public pages and runtime sources already use current layout references.'
+            echo 'All public pages and runtime sources already use current interaction and V27 music references.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'chore: materialize V22 tail-gap hotfix sitewide'
+          git commit -m 'V27: materialize sitewide gesture music and home-only control'
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
