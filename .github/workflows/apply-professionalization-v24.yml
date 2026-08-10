@@ -1,4 +1,4 @@
-name: Apply QilyLean professionalization V24
+name: Apply QilyLean professionalization V24/V25
 
 on:
   push:
@@ -8,6 +8,8 @@ on:
       - ".github/workflows/build-daily-archive.yml"
       - "scripts/apply-professionalization-v24.js"
       - "scripts/materialize-professionalization-v24.js"
+      - "scripts/apply-footer-one-line-v25.js"
+      - "site-layout-typography-closure-v20.css"
   workflow_dispatch:
 
 permissions:
@@ -31,34 +33,39 @@ jobs:
         with:
           node-version: 20
 
-      - name: Validate V24 scripts
+      - name: Validate V24/V25 scripts
         run: |
           node --check scripts/apply-professionalization-v24.js
           node --check scripts/materialize-professionalization-v24.js
+          node --check scripts/apply-footer-one-line-v25.js
 
       - name: Integrate V24 into publication sources
         run: node scripts/apply-professionalization-v24.js
 
-      - name: Materialize V24 across current public HTML
+      - name: Apply V25 single-line footer closure
+        run: node scripts/apply-footer-one-line-v25.js
+
+      - name: Materialize V24/V25 across current public HTML
         run: node scripts/materialize-professionalization-v24.js --all
 
-      - name: Validate deterministic V24 state
+      - name: Validate deterministic V24/V25 state
         run: |
           node scripts/apply-professionalization-v24.js --check
+          node scripts/apply-footer-one-line-v25.js --check
           node scripts/materialize-professionalization-v24.js --all --check
           node --check scripts/build-daily-archive.js
           node --check scripts/build-site-metadata.js
           git diff --check
 
-      - name: Commit V24 professionalization closure
+      - name: Commit V24/V25 professionalization closure
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "V24 professionalization is already current."
+            echo "V24/V25 professionalization is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "V24: consolidate site closure assets, improve rendering and freshness signals"
+          git commit -m "V25: merge desktop footer contact information into one line"
           git push origin HEAD:main
