@@ -1,7 +1,7 @@
 (function (d, w) {
   'use strict';
-  if (w.__qilyFooterStandardV29) return;
-  w.__qilyFooterStandardV29 = true;
+  if (w.__qilyFooterStandardV30) return;
+  w.__qilyFooterStandardV30 = true;
 
   var FOOTER_ID = 'qilyGlobalFooter';
   var REVIEW_DATE = '2026-08-07';
@@ -10,6 +10,11 @@
 
   function pathName() {
     return (location.pathname || '/').replace(/\/{2,}/g, '/');
+  }
+
+  function isMomentsRoute() {
+    var path = pathName();
+    return /\/moments(?:\/|\.html|$)|\/journey(?:\/|\.html|$)/i.test(path);
   }
 
   function moduleLabel() {
@@ -35,6 +40,23 @@
       if (rules[i][0].test(path)) return rules[i][1];
     }
     return '制造改善诊断、方法沉淀与项目交付。';
+  }
+
+  function normalizeMomentsPrimaryFooter() {
+    if (!isMomentsRoute()) return;
+    var candidates = d.querySelectorAll('footer:not(#' + FOOTER_ID + ')');
+    for (var i = 0; i < candidates.length; i += 1) {
+      var primary = candidates[i];
+      if (!primary) continue;
+      var inner = primary.querySelector('.footer-inner,.module-inner');
+      if (!inner) continue;
+      primary.classList.add('qily-moments-primary-footer-v30');
+      var text = (inner.textContent || '').replace(/\s+/g, ' ').trim();
+      if (!text || /工作与生活影像记录|行走印记/i.test(text)) {
+        inner.textContent = '丁启利｜工作与生活影像记录　｜　活在途中……';
+      }
+      return;
+    }
   }
 
   function unhidePrimaryFooter() {
@@ -117,7 +139,7 @@
       d.body.appendChild(footer);
     }
     footer.className = 'qily-global-footer-v28 qily-global-footer-v29';
-    footer.setAttribute('data-qily-footer-standard', 'v29');
+    footer.setAttribute('data-qily-footer-standard', 'v30');
     footer.setAttribute('aria-label', 'QilyLean全站统一可信度页尾');
     footer.innerHTML = footerMarkup();
     return footer;
@@ -125,9 +147,11 @@
 
   function normalize() {
     if (!d.body) return;
+    normalizeMomentsPrimaryFooter();
     unhidePrimaryFooter();
     hideLegacyTrustOnly();
     var footer = ensureFooter();
+    normalizeMomentsPrimaryFooter();
     unhidePrimaryFooter();
     hideLegacyTrustOnly();
     if (footer && footer.parentNode === d.body && footer !== d.body.lastElementChild) {
