@@ -356,3 +356,85 @@ article :where(p,li,dd,dt,blockquote),
   }
   .module-card,.paper-card,.career-full-card{padding-left:18px!important;padding-right:18px!important}
 }
+
+/*
+ * QilyLean商业交付档案子目录：强制跟随全站1560px内容轴。
+ * 当前三个公开页面均带有本目录专属链接，因此用结构选择器限定作用域，避免影响其它项目页。
+ */
+:is(
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+){
+  width:min(
+    var(--qily-wide-content,1560px),
+    calc(100% - var(--qily-wide-gutter,40px) - var(--qily-wide-gutter,40px))
+  )!important;
+  max-width:var(--qily-wide-content,1560px)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  padding-top:clamp(28px,3vw,46px)!important;
+  padding-bottom:clamp(52px,5vw,80px)!important;
+  box-sizing:border-box!important;
+}
+
+:is(
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+) > :is(.hero,.section){
+  margin-bottom:var(--qily-grid-gap)!important;
+}
+
+:is(
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+) .grid{
+  gap:var(--qily-grid-gap)!important;
+}
+
+:is(
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+) .card{
+  min-width:0!important;
+  padding:clamp(20px,1.55vw,26px)!important;
+}
+
+/* 档案主页在宽屏上把“状态披露”置于首屏右侧，减少大屏超长文字行并充分利用横向空间。 */
+@media(min-width:1180px){
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]) > .hero{
+    display:grid!important;
+    grid-template-columns:minmax(0,1.55fr) minmax(340px,.7fr)!important;
+    column-gap:clamp(28px,3vw,48px)!important;
+    align-items:start!important;
+  }
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]) > .hero > :is(.eyebrow,h1,.lead){
+    grid-column:1!important;
+    min-width:0!important;
+  }
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]) > .hero > .status{
+    grid-column:2!important;
+    grid-row:1 / span 3!important;
+    align-self:center!important;
+    margin:0!important;
+  }
+}
+
+@media(max-width:900px){
+  :is(
+    main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+    main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+  ){
+    width:calc(100% - var(--qily-wide-gutter,26px) - var(--qily-wide-gutter,26px))!important;
+    padding-top:20px!important;
+    padding-bottom:42px!important;
+  }
+}
+
+@media(max-width:620px){
+  :is(
+    main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+    main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+  ){
+    width:calc(100% - 30px)!important;
+  }
+}
