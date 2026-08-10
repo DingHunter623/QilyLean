@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, '..');
 const NUMBER_VERSION = '20260805-number-badge-contrast-v1';
 const HOVER_VERSION = '20260810-stable-layout-v15';
 const LAYOUT_VERSION = '20260810-stable-layout-v19';
-const UX_VERSION = '20260810-layout-typography-v20';
+const UX_VERSION = '20260810-footer-visual-v21';
 const NAV_VERSION = '20260810-native-navigation-stable-v19';
 const MUSIC_VERSION = '20260810-demand-music-v6';
 const NUMBER_HREF = `/site-number-badge-contrast-v1.css?v=${NUMBER_VERSION}`;
@@ -167,9 +167,12 @@ function verifyCss() {
     '.qily-global-contact-footer',
     '> .qtc-global-trust-footer',
     '#qilyPersistentNavigationFrame',
-    'min-height:100dvh!important'
+    'min-height:100dvh!important',
+    'V21 页尾视觉闭环',
+    'grid-template-columns:auto max-content auto max-content!important',
+    ':has(> :nth-child(2)) > :first-child'
   ].forEach((marker) => {
-    if (!uxCss.includes(marker)) throw new Error(`V20 layout/typography closure marker missing: ${marker}`);
+    if (!uxCss.includes(marker)) throw new Error(`V21 footer visual closure marker missing: ${marker}`);
   });
 
   const navigation = read(path.join(root, 'site-navigation.js'));
@@ -189,7 +192,7 @@ function verifyPage(relative, requiredText) {
   if (!html.includes(NUMBER_HREF)) throw new Error(`${relative} missing number-badge contrast asset.`);
   if (!html.includes(HOVER_HREF)) throw new Error(`${relative} missing interactive-hover contrast asset.`);
   if (!html.includes(LAYOUT_HREF)) throw new Error(`${relative} missing layout/footer closure asset.`);
-  if (!html.includes(UX_HREF)) throw new Error(`${relative} missing V20 layout/typography closure asset.`);
+  if (!html.includes(UX_HREF)) throw new Error(`${relative} missing V21 footer visual closure asset.`);
   if (!html.includes(NAV_HREF)) throw new Error(`${relative} missing current navigation loader.`);
   if (!html.includes(WIDE_LAYOUT_HREF)) throw new Error(`${relative} missing current wide-layout asset.`);
   if (!html.includes(MUSIC_HREF)) throw new Error(`${relative} missing demand-loaded background music controller.`);
@@ -238,7 +241,7 @@ function main() {
     throw new Error('Global trust-strip action labels are missing.');
   }
 
-  process.stdout.write(`Sitewide V20 visual closure materialized in ${checked} public pages; refreshed ${changed}.\n`);
+  process.stdout.write(`Sitewide V21 footer visual closure materialized in ${checked} public pages; refreshed ${changed}.\n`);
 }
 
 main();
