@@ -279,9 +279,20 @@ function validatePublicPages() {
   return { publicPages, actionControls, staleBeforeMaterialization, staleLayoutBeforeMaterialization, staleNavigationBeforeMaterialization };
 }
 
+function validateDailyDirectoryPerformance() {
+  const directoryPath = path.join(root, 'qilylean', 'daily-insights.html');
+  const directory = fs.readFileSync(directoryPath, 'utf8');
+  const initialCards = (directory.match(/class=["'][^"']*brief-index-card/g) || []).length;
+  assert(Buffer.byteLength(directory, 'utf8') <= 400000, `Daily directory initial HTML is ${Buffer.byteLength(directory, 'utf8')} bytes; expected at most 400000.`);
+  assert(initialCards > 0 && initialCards <= 400, `Daily directory initially renders ${initialCards} cards; expected 1-400.`);
+  assert(directory.includes("fetch('/qilylean/daily/index.json"), 'Daily directory must load the complete archive index only when search/year filtering needs it.');
+  assert(directory.includes('matches.slice(0,80)'), 'Daily directory search must cap the rendered result DOM.');
+}
+
 function main() {
   validateCss();
   validateLoadOrder();
+  validateDailyDirectoryPerformance();
   const coverage = validatePublicPages();
   process.stdout.write(
     `Interaction clarity validated: ${coverage.publicPages} public pages, ` +
