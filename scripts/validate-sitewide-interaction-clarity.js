@@ -6,8 +6,10 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const version = '20260810-sitewide-floating-dock-feedback-v13';
-const navVersion = '20260810-sitewide-floating-dock-loader-v14';
+const layoutVersion = '20260810-sitewide-layout-footer-v15';
+const navVersion = '20260810-sitewide-layout-footer-loader-v15';
 const href = `/site-interactive-hover-contrast-v1.css?v=${version}`;
+const layoutHref = `/site-layout-footer-closure-v1.css?v=${layoutVersion}`;
 const navHref = `/site-navigation.js?v=${navVersion}`;
 const managedStart = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const managedEnd = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
@@ -15,6 +17,7 @@ const managedBlock = [
   managedStart,
   '  <link id="qilyNumberBadgeContrastStylesheet" rel="stylesheet" href="/site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1">',
   `  <link id="qilyInteractiveHoverContrastStylesheet" rel="stylesheet" href="${href}">`,
+  `  <link id="qilyLayoutFooterClosureStylesheet" rel="stylesheet" href="${layoutHref}">`,
   managedEnd
 ].join('\n');
 
@@ -45,7 +48,8 @@ function removeManaged(html) {
   return html
     .replace(/^[ \t]*<!-- QILY-NUMBER-BADGE-CONTRAST:START -->\r?\n[\s\S]*?^[ \t]*<!-- QILY-NUMBER-BADGE-CONTRAST:END -->[ \t]*(?:\r?\n)?/gmi, '')
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyNumberBadgeContrastStylesheet["']|href=["'][^"']*\/site-number-badge-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
-    .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyInteractiveHoverContrastStylesheet["']|href=["'][^"']*\/site-interactive-hover-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '');
+    .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyInteractiveHoverContrastStylesheet["']|href=["'][^"']*\/site-interactive-hover-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
+    .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyLayoutFooterClosureStylesheet["']|href=["'][^"']*\/site-layout-footer-closure-v1\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '');
 }
 
 function materializeInMemory(html) {
@@ -162,15 +166,23 @@ function validateLoadOrder() {
   const navigation = read('site-navigation.js');
   const publisher = read('scripts/publish-number-badge-contrast.js');
   const ndaTemplate = read('scripts/nda-source/nda-preview-template.html');
+  const layoutCss = read('site-layout-footer-closure-v1.css');
 
   assert((navigation.match(new RegExp(version, 'g')) || []).length >= 3, 'Navigation does not load the current interaction stylesheet in every loader path.');
   assert(navigation.includes("'qilyTrustConversionV2Stylesheet','qilyInteractiveHoverContrastStylesheet'"), 'Interaction stylesheet must be promoted after trust conversion styles.');
   assert(navigation.indexOf("['qilyTrustConversionV2Stylesheet'") < navigation.indexOf("['qilyInteractiveHoverContrastStylesheet'"), 'Initial asset order must place interaction closure last.');
+  assert((navigation.match(new RegExp(layoutVersion, 'g')) || []).length >= 3, 'Navigation does not load the current layout/footer stylesheet in every loader path.');
+  assert(navigation.includes("'qilyInteractiveHoverContrastStylesheet','qilyLayoutFooterClosureStylesheet'"), 'Layout/footer closure must be promoted after interaction styles.');
   assert(publisher.includes(`const HOVER_VERSION = '${version}'`), 'Public-page materializer uses a stale interaction version.');
   assert(ndaTemplate.includes(href), 'NDA preview generator uses a stale interaction version.');
+  assert(publisher.includes(`const LAYOUT_VERSION = '${layoutVersion}'`), 'Public-page materializer uses a stale layout/footer version.');
+  assert(ndaTemplate.includes(layoutHref), 'NDA preview generator uses a stale layout/footer version.');
   assert(publisher.includes(`const NAV_VERSION = '${navVersion}'`), 'Public-page materializer uses a stale navigation version.');
   assert(ndaTemplate.includes(navHref), 'NDA preview generator uses a stale navigation version.');
   assert(navigation.includes('QILY-FLOAT-DOCK-POINTER-FEEDBACK-V1'), 'Navigation is missing floating-dock pointer feedback binding.');
+  assert(navigation.includes('QILY-SITEWIDE-TAIL-COMPACTION-V1'), 'Navigation is missing the sitewide tail compaction guard.');
+  assert(navigation.includes("d.body.classList.add('qily-tail-compact')"), 'Navigation does not clear the trailing empty document tail.');
+  assert(navigation.includes("d.body.appendChild(trustFooter)"), 'Unified trust footer is not kept as the final flow module.');
   assert(navigation.includes("button.dataset.qilyPressed = 'true'"), 'Navigation does not expose a persistent touch pressed state.');
   assert(
     navigation.includes("var order = ['home','top','back','search','current','share','contact'];"),
@@ -180,12 +192,26 @@ function validateLoadOrder() {
     navigation.includes("dockActions:['data-action=\"home\"','data-action=\"top\"','data-action=\"back\"','data-action=\"search\"','data-action=\"current\"','data-action=\"share\"','data-action=\"contact\"']"),
     'Navigation build contract uses a stale floating-action order.'
   );
+
+  [
+    'QILY-SITEWIDE-LAYOUT-FOOTER-CLOSURE-V15-20260810',
+    '--qily-site-content-width:var(--qily-wide-content,1560px)',
+    '.qily-ia-inner',
+    '.qtc-inner',
+    '.qily-resource-network__inner',
+    'height:auto!important',
+    'min-height:0!important',
+    '.qtc-global-trust-footer .qtc-global-trust-links > a[href]',
+    'border:2px solid var(--qily-site-gold)!important',
+    'min-height:44px!important'
+  ].forEach((marker) => assert(layoutCss.includes(marker), `Layout/footer closure marker missing: ${marker}`));
 }
 
 function validatePublicPages() {
   let publicPages = 0;
   let actionControls = 0;
   let staleBeforeMaterialization = 0;
+  let staleLayoutBeforeMaterialization = 0;
   let staleNavigationBeforeMaterialization = 0;
 
   walk(root, (absolute) => {
@@ -195,18 +221,21 @@ function validatePublicPages() {
     publicPages += 1;
     actionControls += (html.match(/<button\b|<input\b[^>]*type=["'](?:button|submit)["']|<a\b[^>]*class=["'][^"']*(?:button|action|btn|cta)/gi) || []).length;
     if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260810-sitewide-floating-dock-feedback-v13)/i.test(html)) staleBeforeMaterialization += 1;
-    if (/site-navigation\.js\?v=(?!20260810-sitewide-floating-dock-loader-v14)/i.test(html)) staleNavigationBeforeMaterialization += 1;
+    if (/site-layout-footer-closure-v1\.css\?v=(?!20260810-sitewide-layout-footer-v15)/i.test(html)) staleLayoutBeforeMaterialization += 1;
+    if (/site-navigation\.js\?v=(?!20260810-sitewide-layout-footer-loader-v15)/i.test(html)) staleNavigationBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);
     const currentCount = candidate.split(href).length - 1;
     assert(currentCount === 1, `${path.relative(root, absolute)} would not materialize exactly one current interaction stylesheet.`);
     assert((candidate.match(/id=["']qilyInteractiveHoverContrastStylesheet["']/gi) || []).length === 1, `${path.relative(root, absolute)} would contain duplicate interaction stylesheet IDs.`);
+    assert((candidate.split(layoutHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current layout/footer stylesheet.`);
+    assert((candidate.match(/id=["']qilyLayoutFooterClosureStylesheet["']/gi) || []).length === 1, `${path.relative(root, absolute)} would contain duplicate layout/footer stylesheet IDs.`);
     assert((candidate.split(navHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current navigation loader.`);
   });
 
   assert(publicPages >= 2600, `Public-page coverage unexpectedly fell to ${publicPages}.`);
   assert(actionControls >= 100, `Only ${actionControls} action controls were covered; expected a sitewide corpus.`);
-  return { publicPages, actionControls, staleBeforeMaterialization, staleNavigationBeforeMaterialization };
+  return { publicPages, actionControls, staleBeforeMaterialization, staleLayoutBeforeMaterialization, staleNavigationBeforeMaterialization };
 }
 
 function main() {
@@ -216,7 +245,8 @@ function main() {
   process.stdout.write(
     `Interaction clarity validated: ${coverage.publicPages} public pages, ` +
     `${coverage.actionControls} button/action controls, ` +
-    `${coverage.staleBeforeMaterialization} style cache references and ` +
+    `${coverage.staleBeforeMaterialization} interaction style, ` +
+    `${coverage.staleLayoutBeforeMaterialization} layout/footer style and ` +
     `${coverage.staleNavigationBeforeMaterialization} navigation cache references queued for deterministic refresh.\n`
   );
 }
