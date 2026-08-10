@@ -1,9 +1,11 @@
-/* QilyLean Global Footer V32 | one authoritative two-row footer, no legacy duplicates */
+/* QilyLean Global Footer V33 | one authoritative two-row footer across root and nested pages */
 .qily-footer-v31-legacy-hidden,
 .qily-footer-v32-legacy-hidden,
-html body > footer:not(#qilyGlobalFooter),
-html body footer.module-footer:not(#qilyGlobalFooter),
-html body footer.footer:not(#qilyGlobalFooter),
+.qily-footer-v33-legacy-hidden,
+html body footer:not(#qilyGlobalFooter),
+html body > .footer:not(#qilyGlobalFooter),
+html body > .site-footer:not(#qilyGlobalFooter),
+html body > .page-footer:not(#qilyGlobalFooter),
 html body .module-footer:not(#qilyGlobalFooter),
 html body #qilyGlobalContactFooter,
 html body .qily-global-contact-footer,
@@ -23,7 +25,8 @@ html body .qtc-global-trust-footer{
 }
 
 #qilyGlobalFooter.qily-global-footer-v31,
-#qilyGlobalFooter.qily-global-footer-v32{
+#qilyGlobalFooter.qily-global-footer-v32,
+#qilyGlobalFooter.qily-global-footer-v33{
   box-sizing:border-box;
   display:block!important;
   visibility:visible!important;
@@ -38,7 +41,7 @@ html body .qtc-global-trust-footer{
   overflow:visible!important;
 }
 
-/* Both footer rows share the same content axis as the site body. */
+/* Both footer rows share exactly the same content axis as the site body. */
 #qilyGlobalFooter .qily-footer-v31-inner{
   box-sizing:border-box;
   width:min(var(--qily-wide-content,1560px),calc(100% - var(--qily-wide-gutter,40px) - var(--qily-wide-gutter,40px)));
@@ -46,7 +49,7 @@ html body .qtc-global-trust-footer{
   margin:0 auto;
 }
 
-/* Row 1: module-specific theme left; unified contact block right. */
+/* Row 1: page/module-specific theme left; unified contact block right. */
 #qilyGlobalFooter .qily-footer-v31-mainline{
   min-height:48px;
   display:grid;
@@ -58,12 +61,15 @@ html body .qtc-global-trust-footer{
 }
 #qilyGlobalFooter .qily-footer-v31-module{
   min-width:0;
+  max-width:100%;
   justify-self:start;
+  overflow:hidden;
   color:#f2f5f2;
   font-size:clamp(11.8px,.82vw,14.6px);
   font-weight:760;
   line-height:1.35;
   text-align:left;
+  text-overflow:ellipsis;
   white-space:nowrap;
 }
 #qilyGlobalFooter .qily-footer-v31-contact{
@@ -134,7 +140,7 @@ html body .qtc-global-trust-footer{
   #qilyGlobalFooter .qily-footer-v31-inner{width:min(var(--qily-wide-content,1560px),calc(100% - var(--qily-wide-gutter,26px) - var(--qily-wide-gutter,26px)))}
   #qilyGlobalFooter .qily-footer-v31-mainline{grid-template-columns:1fr;row-gap:8px;padding:10px 0}
   #qilyGlobalFooter .qily-footer-v31-module,#qilyGlobalFooter .qily-footer-v31-contact{justify-self:start;text-align:left}
-  #qilyGlobalFooter .qily-footer-v31-module{white-space:normal;font-size:12px}
+  #qilyGlobalFooter .qily-footer-v31-module{overflow:visible;text-overflow:clip;white-space:normal;font-size:12px}
   #qilyGlobalFooter .qily-footer-v31-contact{justify-content:flex-start;flex-wrap:wrap;white-space:normal;font-size:11.2px}
   #qilyGlobalFooter .qily-footer-v31-bottomline{grid-template-columns:1fr;row-gap:9px;padding:9px 0 11px}
   #qilyGlobalFooter .qily-footer-v31-actions{justify-self:start;justify-content:flex-start}
