@@ -96,7 +96,7 @@
       'html body.qily-home-commercial-focus .metric em{margin-top:6px!important;font-size:14px!important;line-height:1.5!important}',
       'html body.qily-home-commercial-focus .qily-ia-card{padding:20px!important}',
       'html body.qily-home-commercial-focus .qily-ia-card p{font-size:16px!important;line-height:1.64!important}',
-      'html body.qily-home-commercial-focus #qily-home-ai .qily-ia-inner{width:min(1220px,100%)!important;display:grid!important;grid-template-columns:minmax(250px,.62fr) minmax(0,1.38fr)!important;gap:28px!important;align-items:start!important}',
+      'html body.qily-home-commercial-focus #qily-home-ai .qily-ia-inner{width:min(var(--qily-wide-content,1560px),100%)!important;display:grid!important;grid-template-columns:minmax(250px,.62fr) minmax(0,1.38fr)!important;gap:28px!important;align-items:start!important}',
       'html body.qily-home-commercial-focus #qily-home-ai .qily-ia-heading{margin:0!important}',
       'html body.qily-home-commercial-focus #qily-home-ai .assistant-panel{margin:0!important}',
       'html body.qily-home-commercial-focus #qily-home-ai .panel-body{padding:14px 16px 16px!important}',
