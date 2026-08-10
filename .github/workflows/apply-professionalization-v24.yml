@@ -4,26 +4,26 @@ on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/apply-professionalization-v24.yml"
-      - ".github/workflows/build-daily-archive.yml"
-      - "homepage-music-v5.js"
-      - "scripts/publish-primary-contrast-music-continuity.js"
-      - "scripts/apply-professionalization-v24.js"
-      - "scripts/materialize-professionalization-v24.js"
-      - "scripts/apply-footer-one-line-v25.js"
-      - "scripts/apply-footer-standard-v28.js"
-      - "scripts/materialize-footer-standard-v28.js"
-      - "site-layout-typography-closure-v20.css"
-      - "site-footer-standard-v28.css"
-      - "site-footer-standard-v28.js"
+      - '.github/workflows/apply-professionalization-v24.yml'
+      - '.github/workflows/build-daily-archive.yml'
+      - 'homepage-music-v5.js'
+      - 'scripts/publish-primary-contrast-music-continuity.js'
+      - 'scripts/apply-professionalization-v24.js'
+      - 'scripts/materialize-professionalization-v24.js'
+      - 'scripts/apply-footer-one-line-v25.js'
+      - 'scripts/apply-footer-standard-v28.js'
+      - 'scripts/materialize-footer-standard-v28.js'
+      - 'site-layout-typography-closure-v20.css'
+      - 'site-footer-standard-v28.css'
+      - 'site-footer-standard-v28.js'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: qily-professionalization-v28-main
-  cancel-in-progress: true
+  group: qily-site-publication-main
+  cancel-in-progress: false
 
 jobs:
   apply:
@@ -33,6 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 1
 
       - uses: actions/setup-node@v4
@@ -87,11 +88,11 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "V28 full-site footer closure is already current."
+            echo 'V28 full-site footer closure is already current.'
             exit 0
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m "V28: standardize one authoritative footer across the full site"
+          git commit -m 'V28: standardize one authoritative footer across the full site'
           git push origin HEAD:main
