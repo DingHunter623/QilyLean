@@ -1,4 +1,4 @@
-name: Apply QilyLean professionalization V24/V25
+name: Apply QilyLean professionalization V24/V25/V26
 
 on:
   push:
@@ -9,7 +9,10 @@ on:
       - "scripts/apply-professionalization-v24.js"
       - "scripts/materialize-professionalization-v24.js"
       - "scripts/apply-footer-one-line-v25.js"
+      - "scripts/apply-footer-standard-v26.js"
+      - "scripts/materialize-footer-standard-v26.js"
       - "site-layout-typography-closure-v20.css"
+      - "site-footer-standard-v26.js"
   workflow_dispatch:
 
 permissions:
@@ -33,11 +36,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Validate V24/V25 scripts
+      - name: Validate V24/V25/V26 scripts
         run: |
           node --check scripts/apply-professionalization-v24.js
           node --check scripts/materialize-professionalization-v24.js
           node --check scripts/apply-footer-one-line-v25.js
+          node --check scripts/apply-footer-standard-v26.js
+          node --check scripts/materialize-footer-standard-v26.js
+          node --check site-footer-standard-v26.js
 
       - name: Integrate V24 into publication sources
         run: node scripts/apply-professionalization-v24.js
@@ -45,27 +51,35 @@ jobs:
       - name: Apply V25 single-line footer closure
         run: node scripts/apply-footer-one-line-v25.js
 
-      - name: Materialize V24/V25 across current public HTML
+      - name: Integrate V26 footer standard into publication sources
+        run: node scripts/apply-footer-standard-v26.js
+
+      - name: Materialize V24 across current public HTML
         run: node scripts/materialize-professionalization-v24.js --all
 
-      - name: Validate deterministic V24/V25 state
+      - name: Materialize V26 footer runtime across every HTML page
+        run: node scripts/materialize-footer-standard-v26.js
+
+      - name: Validate deterministic V24/V25/V26 state
         run: |
           node scripts/apply-professionalization-v24.js --check
           node scripts/apply-footer-one-line-v25.js --check
+          node scripts/apply-footer-standard-v26.js --check
           node scripts/materialize-professionalization-v24.js --all --check
+          node scripts/materialize-footer-standard-v26.js --check
           node --check scripts/build-daily-archive.js
           node --check scripts/build-site-metadata.js
           git diff --check
 
-      - name: Commit V24/V25 professionalization closure
+      - name: Commit V24/V25/V26 full-site closure
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "V24/V25 professionalization is already current."
+            echo "V24/V25/V26 full-site closure is already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "V25: merge desktop footer contact information into one line"
+          git commit -m "V26: standardize footer information across all pages"
           git push origin HEAD:main
