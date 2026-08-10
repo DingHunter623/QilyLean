@@ -1,14 +1,68 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-08-08",
-  "briefPath": "qilylean/daily/2026-08-08.html",
-  "checkedAt": "2026-08-08T16:50:01.454Z",
+  "briefDate": "2026-08-10",
+  "briefPath": "qilylean/daily/2026-08-10.html",
+  "checkedAt": "2026-08-10T04:16:11.105Z",
   "candidates": [
     {
-      "term": "Andon",
-      "explanation": "安灯",
-      "explicit": true,
-      "source": "Andon（安灯）"
+      "term": "APS",
+      "explanation": "",
+      "explicit": false,
+      "source": "MES/ERP/APS"
+    },
+    {
+      "term": "BOM",
+      "explanation": "",
+      "explicit": false,
+      "source": "BOM"
+    },
+    {
+      "term": "CP",
+      "explanation": "",
+      "explicit": false,
+      "source": "CP"
+    },
+    {
+      "term": "CPK",
+      "explanation": "",
+      "explicit": false,
+      "source": "CPK"
+    },
+    {
+      "term": "CT",
+      "explanation": "",
+      "explicit": false,
+      "source": "CT"
+    },
+    {
+      "term": "DMS",
+      "explanation": "",
+      "explicit": false,
+      "source": "DMS"
+    },
+    {
+      "term": "DOE",
+      "explanation": "",
+      "explicit": false,
+      "source": "DOE"
+    },
+    {
+      "term": "ECRS",
+      "explanation": "",
+      "explicit": false,
+      "source": "ECRS"
+    },
+    {
+      "term": "ERP",
+      "explanation": "",
+      "explicit": false,
+      "source": "MES/ERP/APS"
+    },
+    {
+      "term": "FMEA",
+      "explanation": "",
+      "explicit": false,
+      "source": "FMEA"
     },
     {
       "term": "FPY",
@@ -23,6 +77,48 @@
       "source": "IE"
     },
     {
+      "term": "IT",
+      "explanation": "",
+      "explicit": false,
+      "source": "IT"
+    },
+    {
+      "term": "LT",
+      "explanation": "",
+      "explicit": false,
+      "source": "LT"
+    },
+    {
+      "term": "MES",
+      "explanation": "",
+      "explicit": false,
+      "source": "MES/ERP/APS"
+    },
+    {
+      "term": "MSA",
+      "explanation": "",
+      "explicit": false,
+      "source": "MSA"
+    },
+    {
+      "term": "OEE",
+      "explanation": "",
+      "explicit": false,
+      "source": "OEE"
+    },
+    {
+      "term": "OPL",
+      "explanation": "",
+      "explicit": false,
+      "source": "OPL"
+    },
+    {
+      "term": "OTD",
+      "explanation": "",
+      "explicit": false,
+      "source": "OTD"
+    },
+    {
       "term": "PDCA",
       "explanation": "",
       "explicit": false,
@@ -32,13 +128,61 @@
       "term": "PE",
       "explanation": "",
       "explicit": false,
-      "source": "PE"
+      "source": "PE/TE"
     },
     {
       "term": "PMC",
       "explanation": "",
       "explicit": false,
       "source": "PMC"
+    },
+    {
+      "term": "PQCD",
+      "explanation": "",
+      "explicit": false,
+      "source": "PQCD"
+    },
+    {
+      "term": "RACI",
+      "explanation": "",
+      "explicit": false,
+      "source": "RACI"
+    },
+    {
+      "term": "SMED",
+      "explanation": "",
+      "explicit": false,
+      "source": "SMED"
+    },
+    {
+      "term": "SOP",
+      "explanation": "",
+      "explicit": false,
+      "source": "SOP"
+    },
+    {
+      "term": "SPC",
+      "explanation": "",
+      "explicit": false,
+      "source": "SPC"
+    },
+    {
+      "term": "TE",
+      "explanation": "",
+      "explicit": false,
+      "source": "PE/TE"
+    },
+    {
+      "term": "UPPH",
+      "explanation": "",
+      "explicit": false,
+      "source": "UPPH"
+    },
+    {
+      "term": "VSM",
+      "explanation": "",
+      "explicit": false,
+      "source": "VSM"
     },
     {
       "term": "WIP",
@@ -48,19 +192,44 @@
     }
   ],
   "coveredTerms": [
-    "Andon",
+    "APS",
+    "BOM",
+    "CP",
+    "CPK",
+    "CT",
+    "DMS",
+    "DOE",
+    "ECRS",
+    "ERP",
+    "FMEA",
     "FPY",
     "IE",
+    "IT",
+    "LT",
+    "MES",
+    "MSA",
+    "OEE",
+    "OPL",
+    "OTD",
     "PDCA",
     "PE",
     "PMC",
+    "PQCD",
+    "RACI",
+    "SMED",
+    "SOP",
+    "SPC",
+    "TE",
+    "UPPH",
+    "VSM",
     "WIP"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
   "featuredTerms": [
-    "Andon"
+    "RACI",
+    "PDCA"
   ],
   "status": "passed"
 }

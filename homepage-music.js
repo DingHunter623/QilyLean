@@ -1,12 +1,19 @@
 (function () {
   'use strict';
 
-  var CORE_SRC = '/homepage-music-core-v4.js?v=20260731-client-confidentiality-v1';
-  var core = document.createElement('script');
-  core.src = CORE_SRC;
-  core.async = false;
-  core.setAttribute('data-qily-music-core', 'v4');
-  (document.head || document.documentElement).appendChild(core);
+  /*
+   * Keep this compatibility entry for page-specific enhancements, but delegate
+   * playback to the demand-loaded V5 controller. The retired V4 core eagerly
+   * fetched audio/documents and wrote storage every 500ms on every brief page.
+   */
+  var PLAYER_SRC = '/homepage-music-v5.js?v=20260810-demand-music-v6';
+  if (!document.querySelector('script[data-qily-demand-music="v5"]')) {
+    var player = document.createElement('script');
+    player.src = PLAYER_SRC;
+    player.async = false;
+    player.setAttribute('data-qily-demand-music', 'v5');
+    (document.head || document.documentElement).appendChild(player);
+  }
 
   function normalizedPath(path) {
     var value = (path || '/').replace(/\/index\.html$/, '/');
@@ -34,6 +41,25 @@
     note.setAttribute('role', 'note');
     note.innerHTML = html;
     target.insertAdjacentElement('afterend', note);
+  }
+
+  function enableProjectPresentation() {
+    if (!/^\/projects(?:\/|$)/.test(location.pathname || '')) return;
+    var version = '20260728-project-media-cards-v6';
+    var stylesheet = document.querySelector('link[href*="/projects/project-pages.css"]');
+    if (stylesheet) stylesheet.href = '/projects/project-pages.css?v=' + version;
+    else {
+      stylesheet = document.createElement('link');
+      stylesheet.rel = 'stylesheet';
+      stylesheet.href = '/projects/project-pages.css?v=' + version;
+      document.head.appendChild(stylesheet);
+    }
+    if (!document.querySelector('script[src*="/projects/project-image-viewer.js"]')) {
+      var viewer = document.createElement('script');
+      viewer.id = 'qilyProjectImageViewerScript';
+      viewer.src = '/projects/project-image-viewer.js?v=' + version;
+      document.body.appendChild(viewer);
+    }
   }
 
   function applyClientConfidentialityPolicy() {
@@ -66,6 +92,7 @@
   }
 
   function initializePageEnhancements() {
+    enableProjectPresentation();
     applyClientConfidentialityPolicy();
     loadProjectDeliveryTerminologySync();
   }

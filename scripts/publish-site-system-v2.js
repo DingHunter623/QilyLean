@@ -14,14 +14,14 @@ const viFile = path.join(root, 'site-vi-standard-v1.css');
 const contrastFile = path.join(root, 'site-vi-contrast-restoration-v1.css');
 const musicCoreFile = path.join(root, 'homepage-music-core-v4.js');
 
-const NAV_VERSION = '20260803-vi-contrast-restored-v1';
+const NAV_VERSION = '20260810-native-navigation-stable-v18';
 const SHELL_VERSION = '20260729-no-old-flash-v1';
 const VISUAL_VERSION = '20260803-home-badge-wrap-v5';
-const WIDE_VERSION = '20260729-fluid-copy-v5';
+const WIDE_VERSION = '20260810-content-axis-v8';
 const TYPE_VERSION = '20260729-hierarchy-v4';
 const VI_VERSION = '20260801-vi-standard-v1';
 const CONTRAST_VERSION = '20260803-vi-contrast-hotfix-v1';
-const MUSIC_VERSION = '20260729-continuous-v4';
+const MUSIC_VERSION = '20260810-demand-music-wrapper-v6';
 
 function read(file) { return fs.readFileSync(file, 'utf8'); }
 function write(file, content) {

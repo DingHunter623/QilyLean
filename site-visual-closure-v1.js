@@ -25,12 +25,12 @@
       'html body .cooperation-page .hero-actions a.primary,html body .cooperation-page .hero-actions a.primary *{color:#332100!important;-webkit-text-fill-color:#332100!important;opacity:1!important;filter:none!important;text-shadow:none!important;font-weight:950!important}',
       'html body .cooperation-page .hero-actions a.primary{border:2px solid #fff3c6!important;background:#ffd36a!important;box-shadow:0 10px 24px rgba(0,0,0,.24)!important}',
       'html body .cooperation-page .hero-actions a.primary:hover,html body .cooperation-page .hero-actions a.primary:focus-visible{color:#201400!important;-webkit-text-fill-color:#201400!important;background:#ffe39b!important;border-color:#fff!important}',
-      'html body .module-grid>.module-card{display:flex!important;flex-direction:column!important;align-self:stretch!important;height:100%!important}',
+      'html body .module-grid>.module-card{display:flex!important;flex-direction:column!important;align-self:stretch!important;height:auto!important;min-height:0!important}',
       'html body .module-grid>.module-card>.module-actions{display:flex!important;align-items:flex-end!important;flex-wrap:wrap!important;gap:10px!important;margin-top:auto!important;padding-top:14px!important}',
       'html body .module-grid>.module-card>.module-actions>a,html body .module-grid>.module-card>.module-actions>button{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:42px!important;box-sizing:border-box!important}',
       'html body .module-grid>.module-card>.module-result{margin-top:auto!important}',
       'html body .module-grid>.module-card>.module-result+.module-actions{margin-top:0!important;padding-top:14px!important}',
-      'html body .boundary-service-grid>.boundary-service-card{display:flex!important;flex-direction:column!important;align-self:stretch!important;height:100%!important}',
+      'html body .boundary-service-grid>.boundary-service-card{display:flex!important;flex-direction:column!important;align-self:stretch!important;height:auto!important;min-height:0!important}',
       'html body .boundary-service-grid>.boundary-service-card>.boundary-note{margin-top:auto!important}',
       '@media(max-width:560px){html body .module-grid>.module-card>.module-actions>a,html body .module-grid>.module-card>.module-actions>button{width:100%!important}}'
     ].join('\n');
@@ -46,7 +46,7 @@
     style.textContent=[
       ':root{--qily-density-section:clamp(32px,4.1vw,54px);--qily-density-section-mobile:28px;--qily-density-card:20px;--qily-density-gap:14px;--qily-density-copy:17px;--qily-density-line:1.68}',
       'html body :is(.module-section,.qily-ia-section,.section,.qily-resource-network){padding-top:var(--qily-density-section)!important;padding-bottom:var(--qily-density-section)!important}',
-      'html body :is(.module-inner,.qily-ia-inner,.inner,.qily-resource-network__inner){max-width:1240px}',
+      'html body :is(.module-inner,.qily-ia-inner,.inner,.qily-resource-network__inner){width:min(var(--qily-wide-content,1560px),100%)!important;max-width:var(--qily-wide-content,1560px)!important}',
       'html body :is(.module-heading,.qily-ia-heading,.head){max-width:1040px!important;margin-bottom:clamp(17px,1.8vw,22px)!important}',
       'html body :is(.module-heading,.qily-ia-heading,.head)>:is(h1,h2,h3){text-wrap:balance}',
       'html body :is(.module-heading,.qily-ia-heading,.head)>p{line-height:1.68!important}',
@@ -69,7 +69,7 @@
       'html body .module-hero,html body .daily-hero,html body .hero:not(:has(.hero-grid)):has(>.inner),html body .hero:has(>.hero-inner){padding-top:30px!important;padding-bottom:30px!important}',
       'html body .module-subnav{margin-top:13px!important;gap:8px!important}',
       'html body .module-subnav a{min-height:38px!important;padding:6px 12px!important}',
-      'html body .module-section{contain-intrinsic-size:auto 520px!important}',
+      'html body :is(.module-section,.qily-ia-section,.section,.qily-resource-network){content-visibility:visible!important;contain:none!important;contain-intrinsic-size:none!important}',
       'html body .hero-actions{margin-top:18px!important;gap:9px!important}',
       'html body .trust-strip{margin-top:20px!important}',
       'html body .scope-list{margin-top:12px!important;gap:8px!important}',

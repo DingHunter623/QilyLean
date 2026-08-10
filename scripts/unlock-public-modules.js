@@ -13,13 +13,13 @@ const musicFile = path.join(root, 'homepage-music.js');
 const experienceFile = path.join(root, 'experience', 'index.html');
 const capabilitiesFile = path.join(root, 'capabilities', 'index.html');
 const certificateFile = path.join(root, 'certificates', 'chatgpt-lean', 'index.html');
-const PUBLIC_NAV_VERSION = '20260729-no-old-flash-v1';
+const PUBLIC_NAV_VERSION = '20260810-native-navigation-stable-v18';
 const PUBLIC_SHELL_VERSION = '20260729-no-old-flash-v1';
 const PUBLIC_ASSET_VERSION = '20260729-hierarchy-v4';
 const PUBLIC_RESUME_VERSION = '20260728-public-access-v2';
-const WIDE_LAYOUT_VERSION = '20260729-fluid-copy-v5';
+const WIDE_LAYOUT_VERSION = '20260810-content-axis-v8';
 const TYPE_SYSTEM_VERSION = '20260729-hierarchy-v4';
-const MUSIC_VERSION = '20260729-continuous-v4';
+const MUSIC_VERSION = '20260810-demand-music-wrapper-v6';
 
 function read(file) {
   return fs.readFileSync(file, 'utf8');

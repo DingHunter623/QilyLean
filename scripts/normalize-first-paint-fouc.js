@@ -7,7 +7,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20260807-sitewide-closure-v4';
+const version = '20260810-native-navigation-stable-v18';
 const startMarker = '<!-- QILY-FIRST-PAINT-GUARD:START -->';
 const endMarker = '<!-- QILY-FIRST-PAINT-GUARD:END -->';
 const guard = `${startMarker}\n<style id="qilyCriticalFirstPaintGuard">html.qily-first-paint-pending{min-height:100%;background:#eef7f5}html.qily-first-paint-pending body{visibility:visible!important}</style><script data-qily-first-paint-guard>(function(d,w){var e=d.documentElement;e.classList.add('qily-first-paint-pending','qily-shell-pending');var done=false;w.__qilyLeanRevealCurrentShell=function(){if(done)return;done=true;e.classList.remove('qily-first-paint-pending','qily-shell-pending')};w.setTimeout(w.__qilyLeanRevealCurrentShell,180)})(document,window);</script>\n${endMarker}`;

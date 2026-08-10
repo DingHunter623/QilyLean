@@ -6,17 +6,20 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const NUMBER_VERSION = '20260805-number-badge-contrast-v1';
-const HOVER_VERSION = '20260810-inline-badge-feedback-v14';
-const LAYOUT_VERSION = '20260810-layout-performance-corrective-v17';
-const NAV_VERSION = '20260810-native-navigation-corrective-v17';
+const HOVER_VERSION = '20260810-stable-layout-v15';
+const LAYOUT_VERSION = '20260810-stable-layout-v18';
+const NAV_VERSION = '20260810-native-navigation-stable-v18';
 const MUSIC_VERSION = '20260810-demand-music-v6';
 const NUMBER_HREF = `/site-number-badge-contrast-v1.css?v=${NUMBER_VERSION}`;
 const HOVER_HREF = `/site-interactive-hover-contrast-v1.css?v=${HOVER_VERSION}`;
 const LAYOUT_HREF = `/site-layout-footer-closure-v1.css?v=${LAYOUT_VERSION}`;
 const NAV_HREF = `/site-navigation.js?v=${NAV_VERSION}`;
 const MUSIC_HREF = `/homepage-music-v5.js?v=${MUSIC_VERSION}`;
-const STATIC_INTERACTIONS_HREF = '/site-static-core-interactions-v1.js?v=20260810-inline-badge-v2';
-const VISUAL_CLOSURE_HREF = '/site-visual-closure-v1.js?v=20260810-content-axis-v4';
+const MUSIC_WRAPPER_HREF = '/homepage-music.js?v=20260810-demand-music-wrapper-v6';
+const STATIC_INTERACTIONS_HREF = '/site-static-core-interactions-v1.js?v=20260810-no-new-badge-v3';
+const VISUAL_CLOSURE_HREF = '/site-visual-closure-v1.js?v=20260810-stable-layout-v5';
+const WIDE_LAYOUT_HREF = '/site-wide-layout-v1.css?v=20260810-content-axis-v8';
+const CORE_DOCK_HREF = '/site-core-service-dock-closure-v1.js?v=20260810-stable-dock-v5';
 const START = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const END = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
 const BLOCK = [
@@ -66,8 +69,11 @@ function insert(html) {
   const cleaned = removeManaged(html)
     .replace(/\/site-navigation\.js\?v=[^"'\s<]+/gi, NAV_HREF)
     .replace(/\/homepage-music-v5\.js\?v=[^"'\s<]+/gi, MUSIC_HREF)
+    .replace(/\/homepage-music\.js\?v=[^"'\s<]+/gi, MUSIC_WRAPPER_HREF)
     .replace(/\/site-static-core-interactions-v1\.js\?v=[^"'\s<]+/gi, STATIC_INTERACTIONS_HREF)
     .replace(/\/site-visual-closure-v1\.js\?v=[^"'\s<]+/gi, VISUAL_CLOSURE_HREF)
+    .replace(/\/site-wide-layout-v1\.css\?v=[^"'\s<]+/gi, WIDE_LAYOUT_HREF)
+    .replace(/\/site-core-service-dock-closure-v1\.js\?v=[^"'\s<]+/gi, CORE_DOCK_HREF)
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyBackgroundMusicPreload["']|href=["'][^"']*%E6%88%91%E7%9A%84%E6%A2%A6[^"']*["'][^>]*\bas=["']audio["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
     .replace(/^[ \t]*<script\b[^>]*(?:id=["']qilyPersistentMusicNavigationScript["']|data-qily-persistent-music-navigation=["'][^"']+["']|src=["'][^"']*\/site-music-persistent-navigation-v1\.js(?:\?v=[^"']*)?["'])[^>]*>[ \t\r\n]*<\/script>[ \t]*(?:\r?\n)?/gmi, '');
   const primary = '<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->';
@@ -116,10 +122,11 @@ function verifyCss() {
   ].forEach((marker) => {
     if (!hoverCss.includes(marker)) throw new Error(`Interactive-hover contrast marker missing: ${marker}`);
   });
+  if (/content\s*:\s*["']NEW["']/i.test(hoverCss)) throw new Error('Interactive CSS still injects a NEW badge.');
 
   const layoutCss = read(path.join(root, 'site-layout-footer-closure-v1.css'));
   [
-    'QILY-SITEWIDE-LAYOUT-PERFORMANCE-CORRECTIVE-V17-20260810',
+    'QILY-SITEWIDE-STABLE-LAYOUT-V18-20260810',
     '--qily-site-content-width:var(--qily-wide-content,1560px)',
     '.qily-ia-inner',
     '.qtc-inner',
@@ -135,6 +142,17 @@ function verifyCss() {
   ].forEach((marker) => {
     if (!layoutCss.includes(marker)) throw new Error(`Layout/footer closure marker missing: ${marker}`);
   });
+
+  const navigation = read(path.join(root, 'site-navigation.js'));
+  const coreDock = read(path.join(root, 'site-core-service-dock-closure-v1.js'));
+  const visualClosure = read(path.join(root, 'site-visual-closure-v1.js'));
+  const staticInteractions = read(path.join(root, 'site-static-core-interactions-v1.js'));
+  const musicWrapper = read(path.join(root, 'homepage-music.js'));
+  if (navigation.includes('if (button) dock.appendChild(button)')) throw new Error('Navigation still contains a perpetual dock reorder loop.');
+  if (coreDock.includes('dock.appendChild(button)') || coreDock.includes('ResizeObserver')) throw new Error('Core dock still contains a perpetual observer/layout loop.');
+  if (visualClosure.includes('max-width:1240px') || visualClosure.includes('contain-intrinsic-size:auto 520px')) throw new Error('Visual runtime still narrows or reserves phantom module space.');
+  if (/content\s*:\s*["']NEW["']/i.test(staticInteractions)) throw new Error('Homepage enhancer still injects a NEW badge.');
+  if (!musicWrapper.includes("var PLAYER_SRC = '/homepage-music-v5.js?v=20260810-demand-music-v6'") || musicWrapper.includes('homepage-music-core-v4.js')) throw new Error('Compatibility music entry still activates the eager V4 player.');
 }
 
 function verifyPage(relative, requiredText) {
@@ -143,6 +161,7 @@ function verifyPage(relative, requiredText) {
   if (!html.includes(HOVER_HREF)) throw new Error(`${relative} missing interactive-hover contrast asset.`);
   if (!html.includes(LAYOUT_HREF)) throw new Error(`${relative} missing layout/footer closure asset.`);
   if (!html.includes(NAV_HREF)) throw new Error(`${relative} missing current navigation loader.`);
+  if (!html.includes(WIDE_LAYOUT_HREF)) throw new Error(`${relative} missing current wide-layout asset.`);
   if (!html.includes(MUSIC_HREF)) throw new Error(`${relative} missing demand-loaded background music controller.`);
   if (/qilyBackgroundMusicPreload/i.test(html)) throw new Error(`${relative} still preloads background audio.`);
   if (/site-music-persistent-navigation-v1\.js/i.test(html)) throw new Error(`${relative} still loads iframe navigation.`);
