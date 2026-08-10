@@ -1,5 +1,5 @@
 name: Build daily engineering brief archive
-# Publication refresh: 2026-08-10 V27 music continuity closure
+# Publication refresh: 2026-08-10 V28 unified footer closure
 
 on:
   push:
@@ -15,11 +15,15 @@ on:
       - "site-number-badge-contrast-v1.css"
       - "site-interactive-hover-contrast-v1.css"
       - "homepage-music-v5.js"
+      - "site-footer-standard-v28.css"
+      - "site-footer-standard-v28.js"
       - "knowledge/terminology.html"
       - "knowledge/terminology/*.html"
       - "scripts/build-daily-archive.js"
       - "scripts/materialize-professionalization-v24.js"
       - "scripts/publish-primary-contrast-music-continuity.js"
+      - "scripts/apply-footer-standard-v28.js"
+      - "scripts/materialize-footer-standard-v28.js"
       - "scripts/build-site-metadata.js"
       - "scripts/sync-search-brief-metadata.js"
       - "scripts/sync-trust-brief-metadata.js"
@@ -89,6 +93,9 @@ jobs:
           node --check scripts/normalize-daily-quality-label.js
           node --check scripts/materialize-professionalization-v24.js
           node --check scripts/publish-primary-contrast-music-continuity.js
+          node --check scripts/apply-footer-standard-v28.js
+          node --check scripts/materialize-footer-standard-v28.js
+          node --check site-footer-standard-v28.js
           node --check homepage-music-v5.js
 
       - name: Rebuild archive and synchronized knowledge assets
@@ -143,6 +150,12 @@ jobs:
       - name: Apply V27 sitewide gesture music contract
         run: node scripts/publish-primary-contrast-music-continuity.js
 
+      - name: Apply V28 unified footer contract
+        run: |
+          node scripts/apply-footer-standard-v28.js
+          node scripts/materialize-footer-standard-v28.js
+          node scripts/materialize-footer-standard-v28.js --check
+
       - name: Validate trust brief metadata contract
         run: node scripts/sync-trust-brief-metadata.js --check
 
@@ -158,29 +171,6 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add \
-            index.html \
-            knowledge/index.html \
-            knowledge/terminology.html \
-            knowledge/terminology/*.html \
-            cooperation/index.html \
-            links/index.html \
-            trust/index.html \
-            capabilities/index.html \
-            projects/index.html \
-            experience/index.html \
-            site-closure-bundle-v24.css \
-            qilylean/daily/feed.xml \
-            qilylean/site-data.json \
-            qilylean/site-search-index.json \
-            qilylean/daily-insights.html \
-            qilylean/daily/index.json \
-            qilylean/daily/*.html \
-            qilylean/daily/terminology-audit-latest.json \
-            qilylean/assets/daily-*.svg \
-            scripts/enhance-daily-archive.js \
-            scripts/materialize-static-core-pages.js \
-            sitemap.xml \
-            sitemap-core.xml
+          git add -A
           git commit -m "build: publish current daily engineering brief archive [skip ci]"
           git push origin HEAD:main
