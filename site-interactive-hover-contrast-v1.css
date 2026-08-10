@@ -935,8 +935,8 @@ html:root:root body :is(a.moment-link,a.moment-back):not(#qily-boundary-state-pr
   transform:translateY(0) scale(.97)!important;
   transition:none!important;
 }
-/* QILY-FLOAT-DOCK-INTERACTION-V12-20260810
- * 悬浮功能栏独立反馈闭环：七个真实功能按钮在鼠标、键盘与触摸输入下
+/* QILY-FLOAT-DOCK-INTERACTION-V13-20260810
+ * V13语义封口：状态伪类紧贴按钮本体；七个真实功能按钮在鼠标、键盘与触摸输入下
  * 都必须发生明显色界变化；默认本来为金色的“交流”也不能与Hover混同。
  */
 :root{
@@ -961,8 +961,7 @@ html:root:root body #floatDock.qily-float-dock
 }
 
 html:root:root body #floatDock.qily-float-dock
-.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override)
-:is(:hover:hover,:focus-visible:focus-visible){
+.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override):is(:hover:hover,:focus-visible:focus-visible){
   color:var(--qily-float-hover-ink)!important;
   -webkit-text-fill-color:var(--qily-float-hover-ink)!important;
   background-color:var(--qily-float-hover-bg)!important;
@@ -976,8 +975,7 @@ html:root:root body #floatDock.qily-float-dock
 }
 
 html:root:root body #floatDock.qily-float-dock
-.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override)
-:is(:active:active,[data-qily-pressed="true"]){
+.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override):is(:active:active,[data-qily-pressed="true"]){
   color:var(--qily-float-pressed-ink)!important;
   -webkit-text-fill-color:var(--qily-float-pressed-ink)!important;
   background-color:var(--qily-float-pressed-bg)!important;
@@ -991,8 +989,7 @@ html:root:root body #floatDock.qily-float-dock
 }
 
 html:root:root body #floatDock.qily-float-dock
-.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override)
-:is(:hover:hover,:focus-visible:focus-visible,[data-qily-pressed="true"]) *{
+.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override):is(:hover:hover,:focus-visible:focus-visible,[data-qily-pressed="true"]) *{
   color:inherit!important;
   -webkit-text-fill-color:currentColor!important;
   opacity:1!important;
@@ -1005,8 +1002,7 @@ html:root:root body #floatDock.qily-float-dock
     transition:none!important;
   }
   html:root:root body #floatDock.qily-float-dock
-  .qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override)
-  :is(:hover:hover,:focus-visible:focus-visible){
+  .qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override):is(:hover:hover,:focus-visible:focus-visible){
     transform:none!important;
   }
 }

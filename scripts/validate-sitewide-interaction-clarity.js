@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const version = '20260810-sitewide-floating-dock-feedback-v12';
+const version = '20260810-sitewide-floating-dock-feedback-v13';
 const href = `/site-interactive-hover-contrast-v1.css?v=${version}`;
 const managedStart = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const managedEnd = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
@@ -94,7 +94,7 @@ function validateCss() {
     'QILY-SITEWIDE-COLOR-BOUNDARY-V9-20260809',
     'QILY-SITEWIDE-COLOR-BOUNDARY-V10-20260809',
     'QILY-SITEWIDE-COLOR-BOUNDARY-V11-20260810',
-    'QILY-FLOAT-DOCK-INTERACTION-V12-20260810',
+    'QILY-FLOAT-DOCK-INTERACTION-V13-20260810',
     '#floatDock.qily-float-dock',
     '--qily-float-hover-bg:#ffd36a',
     '[data-qily-pressed="true"]',
@@ -134,6 +134,14 @@ function validateCss() {
 
   assert(css.includes('html:root:root body'), 'Specificity closure must target the real root html element.');
   assert(!css.includes(':root:root html body'), 'Impossible root-descendant selector would prevent the closure from matching.');
+  assert(
+    !/\.qily-float-btn:not\([^)]*\):not\([^)]*\)\s+:is\(/.test(css),
+    'Floating-dock state pseudo-class must attach to the button; descendant whitespace makes the selector impossible.'
+  );
+  assert(
+    css.includes('.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override):is(:hover:hover,:focus-visible:focus-visible)'),
+    'Floating-dock hover/focus selector does not attach directly to the button.'
+  );
   assert(!/qily-static-card[^\n,{]*:(?:hover|focus-visible|active)/.test(css), 'Static cards must not receive interactive feedback.');
 
   [
@@ -172,7 +180,7 @@ function validatePublicPages() {
     if (!/<\/head>/i.test(html) || !/<\/body>/i.test(html) || !isPublicPage(html)) return;
     publicPages += 1;
     actionControls += (html.match(/<button\b|<input\b[^>]*type=["'](?:button|submit)["']|<a\b[^>]*class=["'][^"']*(?:button|action|btn|cta)/gi) || []).length;
-    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260810-sitewide-floating-dock-feedback-v12)/i.test(html)) staleBeforeMaterialization += 1;
+    if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260810-sitewide-floating-dock-feedback-v13)/i.test(html)) staleBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);
     const currentCount = candidate.split(href).length - 1;
