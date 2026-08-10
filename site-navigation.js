@@ -56,7 +56,7 @@
       ['qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2'],
       ['qilyBrandTrustStylesheet','/site-brand-trust-v1.css?v=20260802-project-rolebar-v3'],
       ['qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4'],
-      ['qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-sitewide-interaction-clarity-v11']
+      ['qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-sitewide-floating-dock-feedback-v12']
     ].forEach(function (asset) { ensureStylesheet(asset[0], asset[1]); });
 
     ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260804-sitewide-clarity-v2');
@@ -100,7 +100,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     'site-visual-closure-v2.css?v=20260803-boundary-links-v2',
     'site-visual-closure-v2.js?v=20260803-boundary-links-v2',
     'site-trust-conversion-v2.css?v=20260805-action-label-v4',
-    'site-interactive-hover-contrast-v1.css?v=20260810-sitewide-interaction-clarity-v11',
+    'site-interactive-hover-contrast-v1.css?v=20260810-sitewide-floating-dock-feedback-v12',
     'site-trust-conversion-v2.js?v=20260805-action-label-v3',
     'site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2'
   ],
@@ -148,7 +148,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     ensureStylesheet('qilyVisualClosureStylesheet','/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2');
     ensureStylesheet('qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2');
     ensureStylesheet('qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4');
-    ensureStylesheet('qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-sitewide-interaction-clarity-v11');
+    ensureStylesheet('qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-sitewide-floating-dock-feedback-v12');
 
     ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260809-project-delivery-strategy-v2');
     ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260809-six-capabilities-v2');
@@ -254,4 +254,72 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
 
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot, { once: true });
   else boot();
+})(document, window);
+
+/* QILY-FLOAT-DOCK-POINTER-FEEDBACK-V1
+ * 动态悬浮栏统一触摸／鼠标／键盘按压态；不改变七项功能、顺序或跳转逻辑。
+ */
+(function (d, w) {
+  'use strict';
+  if (w.__qilyFloatDockPointerFeedbackV1) return;
+  w.__qilyFloatDockPointerFeedbackV1 = true;
+
+  var releaseDelay = 150;
+
+  function press(button) {
+    if (!button || button.matches(':disabled,[aria-disabled="true"]')) return;
+    if (button.__qilyPressedTimer) w.clearTimeout(button.__qilyPressedTimer);
+    button.dataset.qilyPressed = 'true';
+  }
+
+  function release(button, delay) {
+    if (!button) return;
+    if (button.__qilyPressedTimer) w.clearTimeout(button.__qilyPressedTimer);
+    button.__qilyPressedTimer = w.setTimeout(function () {
+      delete button.dataset.qilyPressed;
+      button.__qilyPressedTimer = 0;
+    }, typeof delay === 'number' ? delay : releaseDelay);
+  }
+
+  function bind(button) {
+    if (!button || button.dataset.qilyPointerFeedback === 'v1') return;
+    button.dataset.qilyPointerFeedback = 'v1';
+
+    button.addEventListener('pointerdown', function () { press(button); }, { passive:true });
+    button.addEventListener('pointerup', function () { release(button); }, { passive:true });
+    button.addEventListener('pointercancel', function () { release(button, 0); }, { passive:true });
+    button.addEventListener('pointerleave', function (event) {
+      if (event.pointerType === 'mouse') release(button, 0);
+    }, { passive:true });
+    button.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') press(button);
+    });
+    button.addEventListener('keyup', function (event) {
+      if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') release(button);
+    });
+    button.addEventListener('blur', function () { release(button, 0); });
+    button.addEventListener('click', function () { release(button); });
+  }
+
+  function scan() {
+    d.querySelectorAll('#floatDock.qily-float-dock .qily-float-btn').forEach(bind);
+  }
+
+  function releaseAll() {
+    d.querySelectorAll('#floatDock.qily-float-dock .qily-float-btn[data-qily-pressed="true"]').forEach(function (button) {
+      release(button);
+    });
+  }
+
+  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', scan, { once:true });
+  else scan();
+
+  if (w.MutationObserver) {
+    var observer = new MutationObserver(scan);
+    observer.observe(d.documentElement, { childList:true, subtree:true });
+  }
+
+  d.addEventListener('pointerup', releaseAll, true);
+  d.addEventListener('pointercancel', releaseAll, true);
+  [80,260,800,1800].forEach(function (delay) { w.setTimeout(scan, delay); });
 })(document, window);

@@ -935,3 +935,78 @@ html:root:root body :is(a.moment-link,a.moment-back):not(#qily-boundary-state-pr
   transform:translateY(0) scale(.97)!important;
   transition:none!important;
 }
+/* QILY-FLOAT-DOCK-INTERACTION-V12-20260810
+ * 悬浮功能栏独立反馈闭环：七个真实功能按钮在鼠标、键盘与触摸输入下
+ * 都必须发生明显色界变化；默认本来为金色的“交流”也不能与Hover混同。
+ */
+:root{
+  --qily-float-hover-bg:#ffd36a;
+  --qily-float-hover-ink:#17322d;
+  --qily-float-hover-border:#052a33;
+  --qily-float-pressed-bg:#052a33;
+  --qily-float-pressed-ink:#ffffff;
+  --qily-float-pressed-border:#ffe39b;
+  --qily-float-focus-ring:#fff3c6;
+}
+
+html:root:root body #floatDock.qily-float-dock
+.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override){
+  min-width:44px!important;
+  min-height:44px!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:rgba(255,211,106,.46)!important;
+}
+
+html:root:root body #floatDock.qily-float-dock
+.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override)
+:is(:hover:hover,:focus-visible:focus-visible){
+  color:var(--qily-float-hover-ink)!important;
+  -webkit-text-fill-color:var(--qily-float-hover-ink)!important;
+  background-color:var(--qily-float-hover-bg)!important;
+  background-image:none!important;
+  border:2px solid var(--qily-float-hover-border)!important;
+  outline:3px solid var(--qily-float-focus-ring)!important;
+  outline-offset:3px!important;
+  box-shadow:0 0 0 2px rgba(5,42,51,.24),0 12px 28px rgba(5,42,51,.38)!important;
+  transform:translateX(-5px) scale(1.06)!important;
+  transition:none!important;
+}
+
+html:root:root body #floatDock.qily-float-dock
+.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override)
+:is(:active:active,[data-qily-pressed="true"]){
+  color:var(--qily-float-pressed-ink)!important;
+  -webkit-text-fill-color:var(--qily-float-pressed-ink)!important;
+  background-color:var(--qily-float-pressed-bg)!important;
+  background-image:none!important;
+  border:2px solid var(--qily-float-pressed-border)!important;
+  outline:3px solid rgba(255,227,155,.58)!important;
+  outline-offset:2px!important;
+  box-shadow:inset 0 0 0 2px rgba(255,227,155,.24),0 5px 14px rgba(5,42,51,.34)!important;
+  transform:translateX(-2px) scale(.94)!important;
+  transition:none!important;
+}
+
+html:root:root body #floatDock.qily-float-dock
+.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override)
+:is(:hover:hover,:focus-visible:focus-visible,[data-qily-pressed="true"]) *{
+  color:inherit!important;
+  -webkit-text-fill-color:currentColor!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html:root:root body #floatDock.qily-float-dock .qily-float-btn{
+    transition:none!important;
+  }
+  html:root:root body #floatDock.qily-float-dock
+  .qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override)
+  :is(:hover:hover,:focus-visible:focus-visible){
+    transform:none!important;
+  }
+}
