@@ -97,8 +97,10 @@ jobs:
 
           # Cache/load-chain closure
           grep -q '/site-navigation-legacy-20260802.js?v=20260809-six-capability-pricing-v3' site-navigation.js
-          grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' index.html
-          grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' cooperation/index.html
+          grep -q '/site-navigation.js?v=20260810-native-navigation-stable-v18' index.html
+          grep -q '/site-navigation.js?v=20260810-native-navigation-stable-v18' cooperation/index.html
+          ! grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' index.html
+          ! grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' cooperation/index.html
           ! grep -q 'site-music-persistent-navigation-v1.js' index.html
           ! grep -q 'qilyBackgroundMusicPreload' index.html
 
