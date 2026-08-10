@@ -26,6 +26,7 @@ on:
       - 'site-navigation.js'
       - 'site-navigation-legacy-20260802.js'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
+      - '.github/workflows/validate-business-architecture-v2.yml'
 
 permissions:
   contents: read
