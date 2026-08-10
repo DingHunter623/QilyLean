@@ -1,5 +1,5 @@
 name: Build daily engineering brief archive
-# Publication refresh: 2026-08-10 V24 professionalization closure
+# Publication refresh: 2026-08-10 V27 music continuity closure
 
 on:
   push:
@@ -14,10 +14,12 @@ on:
       - "qilylean/site-search-index.json"
       - "site-number-badge-contrast-v1.css"
       - "site-interactive-hover-contrast-v1.css"
+      - "homepage-music-v5.js"
       - "knowledge/terminology.html"
       - "knowledge/terminology/*.html"
       - "scripts/build-daily-archive.js"
       - "scripts/materialize-professionalization-v24.js"
+      - "scripts/publish-primary-contrast-music-continuity.js"
       - "scripts/build-site-metadata.js"
       - "scripts/sync-search-brief-metadata.js"
       - "scripts/sync-trust-brief-metadata.js"
@@ -86,6 +88,8 @@ jobs:
           node --check scripts/enforce-productivity-theme-alias.js
           node --check scripts/normalize-daily-quality-label.js
           node --check scripts/materialize-professionalization-v24.js
+          node --check scripts/publish-primary-contrast-music-continuity.js
+          node --check homepage-music-v5.js
 
       - name: Rebuild archive and synchronized knowledge assets
         run: |
@@ -135,6 +139,9 @@ jobs:
 
       - name: Apply V24 professionalization closure
         run: node scripts/materialize-professionalization-v24.js
+
+      - name: Apply V27 sitewide gesture music contract
+        run: node scripts/publish-primary-contrast-music-continuity.js
 
       - name: Validate trust brief metadata contract
         run: node scripts/sync-trust-brief-metadata.js --check
