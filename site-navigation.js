@@ -62,7 +62,7 @@
 
     ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260810-stable-layout-v5');
     ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
-    ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260809-six-capabilities-v2');
+    ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260811-mobile-no-break-v3');
     ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260810-content-axis-v3');
     ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-action-label-v3');
     ensureScript('data-qily-text-contrast-audit','v2','/site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2');
@@ -154,7 +154,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     ensureStylesheet('qilyLayoutFooterClosureStylesheet','/site-layout-footer-closure-v1.css?v=20260810-stable-layout-v19');
 
     ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260810-content-axis-v3');
-    ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260809-six-capabilities-v2');
+    ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260811-mobile-no-break-v3');
     ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260810-stable-layout-v5');
     ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
     ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-action-label-v3');

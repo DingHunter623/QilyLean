@@ -1,7 +1,8 @@
-/* QilyLean Global Footer V33 | one authoritative two-row footer across root and nested pages */
+/* QilyLean Global Footer V34 | mobile website-label line break + one authoritative footer */
 .qily-footer-v31-legacy-hidden,
 .qily-footer-v32-legacy-hidden,
 .qily-footer-v33-legacy-hidden,
+.qily-footer-v34-legacy-hidden,
 html body footer:not(#qilyGlobalFooter),
 html body > .footer:not(#qilyGlobalFooter),
 html body > .site-footer:not(#qilyGlobalFooter),
@@ -26,7 +27,8 @@ html body .qtc-global-trust-footer{
 
 #qilyGlobalFooter.qily-global-footer-v31,
 #qilyGlobalFooter.qily-global-footer-v32,
-#qilyGlobalFooter.qily-global-footer-v33{
+#qilyGlobalFooter.qily-global-footer-v33,
+#qilyGlobalFooter.qily-global-footer-v34{
   box-sizing:border-box;
   display:block!important;
   visibility:visible!important;
@@ -87,6 +89,7 @@ html body .qtc-global-trust-footer{
   white-space:nowrap;
 }
 #qilyGlobalFooter .qily-footer-v31-contact-title{color:#fff;font-weight:850}
+#qilyGlobalFooter .qily-footer-v34-mobile-break{display:none}
 #qilyGlobalFooter .qily-footer-v31-contact-sep{flex:0 0 auto;color:rgba(227,194,119,.72);font-weight:700}
 #qilyGlobalFooter .qily-footer-v31-field{display:inline-flex;align-items:center;gap:4px;color:#dfeae7;font-weight:760}
 #qilyGlobalFooter .qily-footer-v31-field a{
@@ -150,6 +153,7 @@ html body .qtc-global-trust-footer{
   #qilyGlobalFooter .qily-footer-v31-inner{width:calc(100% - var(--qily-wide-gutter,15px) - var(--qily-wide-gutter,15px))}
   #qilyGlobalFooter .qily-footer-v31-contact{display:block;font-size:10.8px;line-height:1.65}
   #qilyGlobalFooter .qily-footer-v31-contact>*{display:inline}
+  #qilyGlobalFooter .qily-footer-v34-mobile-break{display:block}
   #qilyGlobalFooter .qily-footer-v31-field a{display:inline;min-height:0;padding:0;border:0;border-radius:0;background:transparent;color:#f3d17d;-webkit-text-fill-color:#f3d17d}
   #qilyGlobalFooter .qily-footer-v31-trust{font-size:10.8px;line-height:1.6}
   #qilyGlobalFooter .qily-footer-v31-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:6px}

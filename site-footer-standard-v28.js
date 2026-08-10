@@ -1,7 +1,7 @@
 (function (d, w) {
   'use strict';
-  if (w.__qilyFooterStandardV33) return;
-  w.__qilyFooterStandardV33 = true;
+  if (w.__qilyFooterStandardV34) return;
+  w.__qilyFooterStandardV34 = true;
 
   var FOOTER_ID = 'qilyGlobalFooter';
   var REVIEW_DATE = '2026-08-07';
@@ -158,7 +158,7 @@
       '  <div class="qily-footer-v31-contact">',
       '    <span class="qily-footer-v31-contact-title">QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span>',
       '    <span class="qily-footer-v31-contact-sep">｜</span>',
-      '    <span class="qily-footer-v31-field">官网网址：<a href="' + HOME_URL + '">' + HOME_URL + '</a></span>',
+      '    <span class="qily-footer-v31-field">官网网址：<br class="qily-footer-v34-mobile-break"><a href="' + HOME_URL + '">' + HOME_URL + '</a></span>',
       '    <span class="qily-footer-v31-contact-sep">｜</span>',
       '    <span class="qily-footer-v31-field">企业邮箱：<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></span>',
       '  </div>',
@@ -196,8 +196,8 @@
       footer.id = FOOTER_ID;
       d.body.appendChild(footer);
     }
-    footer.className = 'qily-global-footer-v31 qily-global-footer-v32 qily-global-footer-v33';
-    footer.setAttribute('data-qily-footer-standard', 'v33');
+    footer.className = 'qily-global-footer-v31 qily-global-footer-v32 qily-global-footer-v33 qily-global-footer-v34';
+    footer.setAttribute('data-qily-footer-standard', 'v34');
     footer.setAttribute('aria-label', 'QilyLean全站统一页尾');
     footer.innerHTML = footerMarkup();
     return footer;

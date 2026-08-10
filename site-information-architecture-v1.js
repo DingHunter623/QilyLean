@@ -276,7 +276,7 @@
     Array.prototype.forEach.call(section.querySelectorAll('.qily-ia-card'),function(card){
       var label=card.querySelector('small');
       var heading=card.querySelector('h3');
-      if(label&&heading&&label.textContent.trim()==='组织机制')heading.innerHTML='PMO／<br><span class="qily-no-break">阶段门</span>／横向复制';
+      if(label&&heading&&label.textContent.trim()==='组织机制')heading.innerHTML='<span class="qily-no-break">PMO／阶段门／横向复制</span>';
     });
   }
   function markTargetEvidenceLevels(){
