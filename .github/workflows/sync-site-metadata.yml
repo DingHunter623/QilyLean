@@ -9,6 +9,7 @@ on:
       - "scripts/build-site-metadata.js"
       - "scripts/sync-daily-index-source.js"
       - "scripts/build-trust-search-sync.js"
+      - "scripts/ensure-footer-v21-source.js"
       - "scripts/patch-trust-live-status.js"
       - "trust/live-status.js"
       - "site-visual-closure-v1.js"
@@ -76,6 +77,9 @@ jobs:
       - name: Publish trust center and generated search index
         run: node scripts/build-trust-search-sync.js
 
+      - name: Preserve V21 footer visual closure on generated pages
+        run: node scripts/ensure-footer-v21-source.js
+
       - name: Bind trust status directly to live brief index
         run: node scripts/patch-trust-live-status.js
 
@@ -86,6 +90,7 @@ jobs:
           node --check scripts/sync-daily-index-source.js
           node --check scripts/build-site-metadata.js
           node --check scripts/build-trust-search-sync.js
+          node --check scripts/ensure-footer-v21-source.js
           node --check scripts/patch-trust-live-status.js
           node --check trust/live-status.js
           node --check site-search.js
@@ -99,6 +104,8 @@ jobs:
           grep -q 'module-grid>.module-card>.module-actions' site-visual-closure-v1.js
           grep -q 'data-trust-stat="briefs"' trust/index.html
           grep -q '/trust/live-status.js' trust/index.html
+          grep -q 'site-layout-typography-closure-v20.css?v=20260810-footer-visual-v21' trust/index.html
+          grep -q 'site-layout-typography-closure-v20.css?v=20260810-footer-visual-v21' capabilities/index.html
           node - <<'NODE'
           const fs = require('fs');
           const data = JSON.parse(fs.readFileSync('qilylean/site-data.json', 'utf8'));
@@ -159,7 +166,7 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add scripts/build-trust-search-sync.js scripts/patch-trust-live-status.js trust/live-status.js site-visual-closure-v1.js index.html knowledge/index.html knowledge/terminology.html capabilities/index.html projects/index.html cooperation/index.html trust/index.html site-search.js qilylean/site-data.json qilylean/site-search-index.json qilylean/daily/index.json qilylean/daily-insights.html qilylean/latest-brief.js qilylean/daily-insights-card.js sitemap.xml sitemap-core.xml
+          git add scripts/build-trust-search-sync.js scripts/ensure-footer-v21-source.js scripts/patch-trust-live-status.js trust/live-status.js site-visual-closure-v1.js index.html knowledge/index.html knowledge/terminology.html capabilities/index.html projects/index.html cooperation/index.html trust/index.html site-search.js qilylean/site-data.json qilylean/site-search-index.json qilylean/daily/index.json qilylean/daily-insights.html qilylean/latest-brief.js qilylean/daily-insights-card.js sitemap.xml sitemap-core.xml
           git commit -m "build: publish synchronized site data and sitewide clarity closure [skip ci]"
           git pull --rebase origin main
           git push
