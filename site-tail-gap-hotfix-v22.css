@@ -434,3 +434,101 @@ html:root:root:root body.qily-tail-compact::after{
     padding-right:12px!important;
   }
 }
+
+/* QILY-MOBILE-HOME-SCAN-MODE-V25-20260811
+ * Homepage detail belongs on detail pages; mobile home should prioritize scanability and conversion.
+ * This layer only applies to the homepage at phone widths and preserves all desktop content.
+ */
+@media(max-width:620px){
+  html:root:root:root body.qily-home-commercial-focus .hero .qily-home-relocation-note{
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .portrait-frame{
+    width:min(220px,68vw)!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-core-services .qily-ia-heading p{
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:3!important;
+    overflow:hidden!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-core-services .qily-ia-card{
+    padding:15px 16px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-core-services .qily-ia-card p{
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-core-services .qily-ia-card h3{
+    margin-bottom:3px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-core-services .qily-ia-card .qily-ia-result{
+    margin-top:0!important;
+    padding-top:7px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-core-services .qily-ia-actions > a:nth-child(n+2){
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-home-proof .qily-ia-heading p{
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:2!important;
+    overflow:hidden!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-home-proof .qily-ia-delivery-summary article{
+    padding:12px 14px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-home-proof .qily-ia-delivery-summary span{
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:2!important;
+    overflow:hidden!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-home-proof .qily-ia-actions > a:nth-child(n+3){
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #results .head p,
+  html:root:root:root body.qily-home-commercial-focus #latest-content .head p{
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:2!important;
+    overflow:hidden!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #latest-content .metric:nth-child(n+4){
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-resource-network .qily-resource-network__lead{
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:3!important;
+    overflow:hidden!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-more-context .qily-ia-heading p{
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-more-context .qily-ia-secondary-link:nth-child(n+4){
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-more-context .qily-ia-secondary-link span{
+    display:-webkit-box!important;
+    -webkit-box-orient:vertical!important;
+    -webkit-line-clamp:1!important;
+    overflow:hidden!important;
+  }
+}
