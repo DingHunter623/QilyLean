@@ -49,6 +49,7 @@ assert(index.length === files.length, 'Daily index count matches independent bri
 assert(index.length >= 2584, 'Daily archive contains at least 2584 briefs', String(index.length));
 
 const latest = read(`qilylean/daily/${sourceLatest}.html`);
+const navigation = read('site-navigation.js');
 const directory = read('qilylean/daily-insights.html');
 const knowledge = read('knowledge/index.html');
 const sitemap = read('sitemap.xml');
@@ -63,10 +64,13 @@ includes(latest, `id="${sourceLatest}"`, 'Latest page carries its date identity'
 includes(latest, 'data-brief-message-form', 'Latest page contains message form');
 includes(latest, '留言交流', 'Latest page contains message section');
 includes(latest, 'site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1', 'Latest page loads number-badge contrast');
-includes(latest, 'site-interactive-hover-contrast-v1.css?v=20260809-sitewide-interaction-clarity-v8', 'Latest page loads interactive contrast');
-includes(latest, 'site-navigation.js?v=20260804-sitewide-clarity-v2', 'Latest page loads current navigation');
-includes(latest, 'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2', 'Latest page loads current visual closure');
-includes(latest, 'site-visual-closure-v2.css?v=20260803-boundary-links-v2', 'Latest page loads boundary-link closure');
+includes(latest, 'site-interactive-hover-contrast-v1.css?v=20260810-inline-badge-feedback-v14', 'Latest page loads current interactive contrast');
+includes(latest, 'site-layout-footer-closure-v1.css?v=20260810-layout-performance-corrective-v17', 'Latest page loads current layout closure');
+includes(latest, 'site-navigation.js?v=20260810-native-navigation-corrective-v17', 'Latest page loads current native navigation');
+assert(!latest.includes('site-music-persistent-navigation-v1.js'), 'Latest page does not load iframe navigation');
+assert(!latest.includes('qilyBackgroundMusicPreload'), 'Latest page does not preload background audio');
+includes(navigation, 'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2', 'Navigation loader supplies current visual closure');
+includes(navigation, 'site-visual-closure-v2.css?v=20260803-boundary-links-v2', 'Navigation loader supplies boundary-link closure');
 
 includes(directory, sourceLatest, 'Daily directory exposes latest date');
 includes(sitemap, `qilylean/daily/${sourceLatest}.html`, 'Sitemap contains latest brief');
