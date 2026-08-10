@@ -1,7 +1,7 @@
 (function (d, w) {
   'use strict';
-  if (w.__qilyFooterStandardV30) return;
-  w.__qilyFooterStandardV30 = true;
+  if (w.__qilyFooterStandardV31) return;
+  w.__qilyFooterStandardV31 = true;
 
   var FOOTER_ID = 'qilyGlobalFooter';
   var REVIEW_DATE = '2026-08-07';
@@ -12,11 +12,6 @@
     return (location.pathname || '/').replace(/\/{2,}/g, '/');
   }
 
-  function isMomentsRoute() {
-    var path = pathName();
-    return /\/moments(?:\/|\.html|$)|\/journey(?:\/|\.html|$)/i.test(path);
-  }
-
   function moduleLabel() {
     var path = pathName();
     var rules = [
@@ -25,12 +20,12 @@
       [/\/capabilities(?:\/|\.html|$)|\/capability(?:\/|\.html|$)/i, '公开方法体系、代表项目与数字工具能力边界。'],
       [/\/experience(?:\/|\.html|$)|\/resume(?:\/|\.html|$)/i, '按任职阶段展示岗位职责、项目经历与成长主线。'],
       [/\/improvements(?:\/|\.html|$)/i, '制造工程、精益改善、新工厂规划、数智化推进。'],
-      [/\/projects(?:\/|\.html|$)|\/delivery(?:\/|\.html|$)/i, '以项目证据呈现制造改善方法路径与交付结果。'],
+      [/\/projects(?:\/|\.html|$)|\/delivery(?:\/|\.html|$)/i, '诊断 · 方案 · Pilot · 验证 · 固化 · 验收。'],
       [/\/qilylean\/daily|\/daily(?:\/|\.html|$)/i, '以工程简报沉淀制造改善方法、术语与实践认知。'],
-      [/\/knowledge(?:\/|\.html|$)|\/papers(?:\/|\.html|$)|\/standards(?:\/|\.html|$)/i, '持续沉淀制造工程、精益改善与数智化知识资产。'],
-      [/\/moments(?:\/|\.html|$)|\/journey(?:\/|\.html|$)/i, '记录工作现场、团队同行与阶段性实践足迹。'],
+      [/\/knowledge(?:\/|\.html|$)|\/papers(?:\/|\.html|$)|\/standards(?:\/|\.html|$)/i, '简报 · 工具 · 专题 · 资料。'],
+      [/\/moments(?:\/|\.html|$)|\/journey(?:\/|\.html|$)/i, '丁启利｜工作与生活影像记录 · 活在途中……'],
       [/\/links(?:\/|\.html|$)/i, '连接可信产业资源、专业入口与协同服务。'],
-      [/\/cooperation(?:\/|\.html|$)/i, '诊断、方案、Pilot、验证、固化、验收。'],
+      [/\/cooperation(?:\/|\.html|$)/i, '围绕诊断、方案、Pilot、验证、固化与验收推进合作。'],
       [/\/trust(?:\/|\.html|$)/i, '主体、合同、数据、证据与AI边界公开核验。'],
       [/\/tools(?:\/|\.html|$)/i, '将工业工程场景需求转化为可直接使用的数字工具。'],
       [/\/app-support(?:\/|\.html|$)/i, '统一提供QilyLean数字工具的安装、使用与技术支持。'],
@@ -42,85 +37,51 @@
     return '制造改善诊断、方法沉淀与项目交付。';
   }
 
-  function normalizeMomentsPrimaryFooter() {
-    if (!isMomentsRoute()) return;
-    var candidates = d.querySelectorAll('footer:not(#' + FOOTER_ID + ')');
-    for (var i = 0; i < candidates.length; i += 1) {
-      var primary = candidates[i];
-      if (!primary) continue;
-      var inner = primary.querySelector('.footer-inner,.module-inner');
-      if (!inner) continue;
-      primary.classList.add('qily-moments-primary-footer-v30');
-      var text = (inner.textContent || '').replace(/\s+/g, ' ').trim();
-      if (!text || /工作与生活影像记录|行走印记/i.test(text)) {
-        inner.textContent = '丁启利｜工作与生活影像记录　｜　活在途中……';
-      }
-      return;
-    }
-  }
-
-  function unhidePrimaryFooter() {
+  function hideLegacyFooters() {
     var selectors = [
       'footer:not(#' + FOOTER_ID + ')',
-      '.module-footer',
+      '.module-footer:not(#' + FOOTER_ID + ')',
       '#qilyGlobalContactFooter',
       '.qily-global-contact-footer',
-      '.qily-global-contact-footer-shell'
+      '.qily-global-contact-footer-shell',
+      '#qtc-global-trust-footer',
+      '.qtc-global-trust-footer'
     ].join(',');
     d.querySelectorAll(selectors).forEach(function (node) {
-      if (!node) return;
-      node.classList.remove('qily-footer-v28-legacy-hidden');
-      node.removeAttribute('aria-hidden');
-    });
-  }
-
-  function hideLegacyTrustOnly() {
-    d.querySelectorAll('#qtc-global-trust-footer,.qtc-global-trust-footer').forEach(function (node) {
-      if (!node || node.id === FOOTER_ID) return;
-      node.classList.add('qily-footer-v28-legacy-hidden');
+      if (!node || node.id === FOOTER_ID || (node.closest && node.closest('#' + FOOTER_ID))) return;
+      node.classList.add('qily-footer-v31-legacy-hidden');
       node.setAttribute('aria-hidden', 'true');
     });
   }
 
-  function hasPrimaryLine() {
-    var candidates = d.querySelectorAll('footer:not(#' + FOOTER_ID + '),.module-footer,#qilyGlobalContactFooter,.qily-global-contact-footer,.qily-global-contact-footer-shell');
-    for (var i = 0; i < candidates.length; i += 1) {
-      var node = candidates[i];
-      if (!node || !node.textContent || !node.textContent.trim()) continue;
-      if (node.closest && node.closest('#' + FOOTER_ID)) continue;
-      return true;
-    }
-    return false;
-  }
-
-  function fallbackMainlineMarkup() {
+  function mainlineMarkup() {
     return [
-      '<div class="qily-footer-v28-mainline qily-footer-v29-fallback-mainline">',
-      '  <span class="qily-footer-v28-module-label">' + moduleLabel() + '</span>',
-      '  <span class="qily-footer-v28-sep">｜</span>',
-      '  <span class="qily-footer-v28-contact-title">QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span>',
-      '  <span class="qily-footer-v28-sep">｜</span>',
-      '  <span class="qily-footer-v28-field">官网网址：<a href="' + HOME_URL + '">' + HOME_URL + '</a></span>',
-      '  <span class="qily-footer-v28-sep">｜</span>',
-      '  <span class="qily-footer-v28-field">企业邮箱：<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></span>',
+      '<div class="qily-footer-v31-mainline">',
+      '  <div class="qily-footer-v31-module">' + moduleLabel() + '</div>',
+      '  <div class="qily-footer-v31-contact">',
+      '    <span class="qily-footer-v31-contact-title">QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span>',
+      '    <span class="qily-footer-v31-contact-sep">｜</span>',
+      '    <span class="qily-footer-v31-field">官网网址：<a href="' + HOME_URL + '">' + HOME_URL + '</a></span>',
+      '    <span class="qily-footer-v31-contact-sep">｜</span>',
+      '    <span class="qily-footer-v31-field">企业邮箱：<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></span>',
+      '  </div>',
       '</div>'
     ].join('');
   }
 
   function footerMarkup() {
-    var fallback = hasPrimaryLine() ? '' : fallbackMainlineMarkup();
     return [
-      '<div class="qily-footer-v28-inner">',
-      fallback,
-      '  <div class="qily-footer-v28-bottomline">',
-      '    <div class="qily-footer-v28-trust">',
+      '<div class="qily-footer-v31-inner">',
+      mainlineMarkup(),
+      '  <div class="qily-footer-v31-bottomline">',
+      '    <div class="qily-footer-v31-trust">',
       '      <strong>可信度口径：</strong>个人专业品牌',
-      '      <span class="qily-footer-v28-trust-sep">｜</span>默认责任主体丁启利',
-      '      <span class="qily-footer-v28-trust-sep">｜</span>品牌商业交付公开记录0项',
-      '      <span class="qily-footer-v28-trust-sep">｜</span>历史项目、个人作品与品牌订单分轨披露',
-      '      <span class="qily-footer-v28-trust-sep">｜</span>核验日期 ' + REVIEW_DATE,
+      '      <span>｜</span>默认责任主体丁启利',
+      '      <span>｜</span>品牌商业交付公开记录0项',
+      '      <span>｜</span>历史项目、个人作品与品牌订单分轨披露',
+      '      <span>｜</span>核验日期 ' + REVIEW_DATE,
       '    </div>',
-      '    <nav class="qily-footer-v28-actions" aria-label="QilyLean可信度与项目入口">',
+      '    <nav class="qily-footer-v31-actions" aria-label="QilyLean可信度与项目入口">',
       '      <a href="/trust/">信任中心</a>',
       '      <a href="/projects/qilylean-commercial-deliveries/">商业记录</a>',
       '      <a href="/cooperation/">项目合作</a>',
@@ -138,22 +99,18 @@
       footer.id = FOOTER_ID;
       d.body.appendChild(footer);
     }
-    footer.className = 'qily-global-footer-v28 qily-global-footer-v29';
-    footer.setAttribute('data-qily-footer-standard', 'v30');
-    footer.setAttribute('aria-label', 'QilyLean全站统一可信度页尾');
+    footer.className = 'qily-global-footer-v31';
+    footer.setAttribute('data-qily-footer-standard', 'v31');
+    footer.setAttribute('aria-label', 'QilyLean全站统一页尾');
     footer.innerHTML = footerMarkup();
     return footer;
   }
 
   function normalize() {
     if (!d.body) return;
-    normalizeMomentsPrimaryFooter();
-    unhidePrimaryFooter();
-    hideLegacyTrustOnly();
+    hideLegacyFooters();
     var footer = ensureFooter();
-    normalizeMomentsPrimaryFooter();
-    unhidePrimaryFooter();
-    hideLegacyTrustOnly();
+    hideLegacyFooters();
     if (footer && footer.parentNode === d.body && footer !== d.body.lastElementChild) {
       d.body.appendChild(footer);
     }
