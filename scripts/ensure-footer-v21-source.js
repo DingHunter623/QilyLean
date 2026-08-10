@@ -6,7 +6,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const UX_LINK = '  <link id="qilyLayoutTypographyClosureV20Stylesheet" rel="stylesheet" href="/site-layout-typography-closure-v20.css?v=20260810-footer-visual-v21">';
-const TAIL_GAP_LINK = '  <link id="qilyTailGapHotfixV22Stylesheet" rel="stylesheet" href="/site-tail-gap-hotfix-v22.css?v=20260810-remove-tail-gap-v22">';
+const TAIL_GAP_LINK = '  <link id="qilyTailGapHotfixV22Stylesheet" rel="stylesheet" href="/site-tail-gap-hotfix-v22.css?v=20260810-mobile-controls-v23">';
 const TARGETS = [
   'index.html',
   'knowledge/index.html',
@@ -42,9 +42,9 @@ for (const relative of TARGETS) {
   if (!current.includes('site-layout-typography-closure-v20.css?v=20260810-footer-visual-v21')) {
     throw new Error(`V21 footer closure missing after patch: ${relative}`);
   }
-  if (!current.includes('site-tail-gap-hotfix-v22.css?v=20260810-remove-tail-gap-v22')) {
-    throw new Error(`V22 tail-gap hotfix missing after patch: ${relative}`);
+  if (!current.includes('site-tail-gap-hotfix-v22.css?v=20260810-mobile-controls-v23')) {
+    throw new Error(`V23 mobile-control hotfix missing after patch: ${relative}`);
   }
 }
 
-process.stdout.write(`V21 footer visuals + V22 tail-gap hotfix preserved in generated core pages; refreshed ${changed}.\n`);
+process.stdout.write(`V21 footer visuals + V23 mobile-control hotfix preserved in generated core pages; refreshed ${changed}.\n`);
