@@ -1,0 +1,52 @@
+name: Publish QilyLean mobile layout and footer fix 20260811
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-mobile-layout-footer-fix-20260811.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Apply sitewide mobile layout and footer patch
+        run: python3 scripts/mobile_layout_footer_fix_20260811.py
+      - name: Validate JavaScript and mobile rules
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check site-information-architecture-v1.js
+          node --check site-footer-standard-v28.js
+          node --check site-navigation.js
+          ! grep -q 'PMO／<br>' site-information-architecture-v1.js
+          grep -q 'PMO／阶段门／横向复制</span>' site-information-architecture-v1.js
+          grep -q '官网网址：<br class="qily-footer-v34-mobile-break">' site-footer-standard-v28.js
+          grep -q 'qily-footer-v34-mobile-break{display:block}' site-footer-standard-v28.css
+          grep -q '/site-navigation.js?v=20260811-mobile-layout-v20' capabilities/index.html
+          grep -q '/site-footer-standard-v28.css?v=20260811-mobile-footer-linebreak-v34' capabilities/index.html
+          grep -q '/site-footer-standard-v28.js?v=20260811-mobile-footer-linebreak-v34' capabilities/index.html
+      - name: Commit publication materialization
+        shell: bash
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add site-information-architecture-v1.js site-footer-standard-v28.js site-footer-standard-v28.css site-navigation.js '*.html' '**/*.html' 2>/dev/null || true
+          git commit -m '手机版统一整改：能力词组不换行及页脚官网字段定点换行'
+          git pull --rebase origin main
+          git push origin HEAD:main
