@@ -26,6 +26,13 @@ function maxIsoDate(...values) {
     .pop() || '';
 }
 
+function statExpression(key, label, valuePattern) {
+  return new RegExp(
+    `(<strong\\b[^>]*data-trust-stat=["']${key}["'][^>]*>)${valuePattern}(<\\/strong>\\s*<span>${label}<\\/span>)`,
+    'i'
+  );
+}
+
 function buildExpected(page, data) {
   if (!data.briefs || !Number.isInteger(data.briefs.total) || data.briefs.total < 1) {
     throw new Error('Invalid central brief total');
@@ -44,45 +51,58 @@ function buildExpected(page, data) {
   let next = page;
   next = replaceRequired(
     next,
-    /<div><strong>\d+<\/strong><span>今日简报总数<\/span><\/div>/,
-    `<div><strong>${briefTotal}</strong><span>今日简报总数</span></div>`,
+    statExpression('briefs', '今日简报总数', '\\d+'),
+    `$1${briefTotal}$2`,
     'brief total'
   );
   next = replaceRequired(
     next,
-    /<div><strong>\d{4}-\d{2}-\d{2}<\/strong><span>最新简报日期<\/span><\/div>/,
-    `<div><strong>${latestDate}</strong><span>最新简报日期</span></div>`,
+    statExpression('latest-date', '最新简报日期', '\\d{4}-\\d{2}-\\d{2}'),
+    `$1${latestDate}$2`,
     'latest brief date'
   );
 
   if (indexedEntries !== null) {
     next = replaceRequired(
       next,
-      /<div><strong>\d+<\/strong><span>站内搜索索引条目<\/span><\/div>/,
-      `<div><strong>${indexedEntries}</strong><span>站内搜索索引条目</span></div>`,
+      statExpression('search', '站内搜索索引条目', '\\d+'),
+      `$1${indexedEntries}$2`,
       'search index entries'
     );
   }
 
   next = replaceRequired(
     next,
-    /(<strong>同步版本：<\/strong>)\d{4}-\d{2}-\d{2}。/,
-    `$1${syncVersion}。`,
+    /(<strong>同步版本：<\/strong>\s*<span\b[^>]*data-trust-sync-version[^>]*>)\d{4}-\d{2}-\d{2}(<\/span>。)/i,
+    `$1${syncVersion}$2`,
     'sync version'
   );
 
   return next;
 }
 
-function validate(page, data) {
-  const expectedTotal = `<strong>${data.briefs.total}</strong><span>今日简报总数</span>`;
-  const expectedDate = `<strong>${data.briefs.latestDate}</strong><span>最新简报日期</span>`;
-  if (!page.includes(expectedTotal)) throw new Error(`Trust brief total is stale: expected ${data.briefs.total}`);
-  if (!page.includes(expectedDate)) throw new Error(`Trust latest brief date is stale: expected ${data.briefs.latestDate}`);
-  if (data.search && Number.isInteger(data.search.indexedEntries)) {
-    const expectedSearch = `<strong>${data.search.indexedEntries}</strong><span>站内搜索索引条目</span>`;
-    if (!page.includes(expectedSearch)) throw new Error(`Trust search index count is stale: expected ${data.search.indexedEntries}`);
+function validateStat(page, key, label, expected, valuePattern) {
+  const expression = statExpression(key, label, valuePattern);
+  const match = page.match(expression);
+  if (!match) throw new Error(`Trust ${label} target is missing`);
+  const current = match[0].match(new RegExp(`>${valuePattern}<`, 'i'));
+  const actual = current ? current[0].slice(1, -1) : '';
+  if (String(actual) !== String(expected)) {
+    throw new Error(`Trust ${label} is stale: expected ${expected}, found ${actual || 'unknown'}`);
   }
+}
+
+function validate(page, data) {
+  validateStat(page, 'briefs', '今日简报总数', data.briefs.total, '\\d+');
+  validateStat(page, 'latest-date', '最新简报日期', data.briefs.latestDate, '\\d{4}-\\d{2}-\\d{2}');
+  if (data.search && Number.isInteger(data.search.indexedEntries)) {
+    validateStat(page, 'search', '站内搜索索引条目', data.search.indexedEntries, '\\d+');
+  }
+
+  const syncVersion = maxIsoDate(data.generatedAt, data.briefs.latestDate) || data.briefs.latestDate;
+  const syncMatch = page.match(/<span\b[^>]*data-trust-sync-version[^>]*>(\d{4}-\d{2}-\d{2})<\/span>/i);
+  if (!syncMatch) throw new Error('Trust sync version target is missing');
+  if (syncMatch[1] !== syncVersion) throw new Error(`Trust sync version is stale: expected ${syncVersion}, found ${syncMatch[1]}`);
 }
 
 function main() {
