@@ -246,3 +246,117 @@ html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust
 @media(prefers-reduced-motion:reduce){
   html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{transition:none!important}
 }
+
+/* 五、2026-08-10截图问题闭环：只修复内容行宽、悬浮圆形入口与页尾收口，不二次改动业务卡片结构。 */
+html body :is(
+  .module-heading,
+  .module-page .head,
+  .qily-ia-heading,
+  .qtc-heading,
+  .module-lead,
+  .section-head,
+  .section-heading,
+  .page-heading
+){
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:none!important;
+  max-inline-size:none!important;
+}
+
+html body :is(
+  .module-heading,
+  .module-page .head,
+  .qily-ia-heading,
+  .qtc-heading,
+  .section-head,
+  .section-heading,
+  .page-heading
+) > p{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  max-inline-size:none!important;
+}
+
+/* 首页QilyLean AI说明在桌面宽屏有足够空间时保持完整单行；窄屏仍允许自然换行。 */
+@media(min-width:1100px){
+  html body #qily-home-ai .qily-ia-heading p{
+    white-space:nowrap!important;
+  }
+}
+@media(max-width:1099px){
+  html body #qily-home-ai .qily-ia-heading p{
+    white-space:normal!important;
+  }
+}
+
+/* 悬浮功能入口始终保留完整圆形边界与悬停轮廓，避免贴近视口边缘被裁切。 */
+html body #floatDock.qily-float-dock{
+  right:max(18px,env(safe-area-inset-right))!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+html body #floatDock.qily-float-dock .qily-float-btn{
+  box-sizing:border-box!important;
+  flex:0 0 62px!important;
+  width:62px!important;
+  height:62px!important;
+  min-width:62px!important;
+  min-height:62px!important;
+  aspect-ratio:1 / 1!important;
+  border-radius:50%!important;
+  overflow:visible!important;
+}
+html body #floatDock.qily-float-dock .qily-float-btn:is(:hover,:focus-visible){
+  outline:3px solid rgba(255,227,155,.72)!important;
+  outline-offset:3px!important;
+}
+
+/* 页尾统一为连续、紧凑的两段式信息区；消除浅色断层、短页页尾悬空和底部大块空白。 */
+html body.qily-tail-compact{
+  min-height:100vh!important;
+  min-height:100dvh!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+html body.qily-tail-compact > main{
+  flex:1 0 auto!important;
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+html body.qily-tail-compact :is(.module-footer,.footer,footer){
+  flex:0 0 auto!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+}
+html body.qily-tail-compact .module-footer{
+  padding-top:16px!important;
+  padding-bottom:16px!important;
+}
+html body.qily-tail-compact .qily-global-contact-footer{
+  margin-top:8px!important;
+  padding-top:10px!important;
+  padding-bottom:10px!important;
+}
+html:root:root body.qily-tail-compact > .qtc-global-trust-footer{
+  flex:0 0 auto!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+  padding-top:11px!important;
+  padding-bottom:11px!important;
+  border-top:1px solid rgba(255,255,255,.10)!important;
+}
+html body.qily-tail-compact > :is(
+  #floatDock,
+  #shareMask,
+  #wxMask,
+  #qilySearchMask,
+  #qilyDockToast,
+  #siteMusicMute,
+  #siteBackgroundMusic,
+  #qilyPersistentNavigationFrame,
+  #qilyPersistentNavigationLoader
+){
+  flex:none!important;
+}
