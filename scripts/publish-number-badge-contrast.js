@@ -20,6 +20,13 @@ const STATIC_INTERACTIONS_HREF = '/site-static-core-interactions-v1.js?v=2026081
 const VISUAL_CLOSURE_HREF = '/site-visual-closure-v1.js?v=20260810-stable-layout-v5';
 const WIDE_LAYOUT_HREF = '/site-wide-layout-v1.css?v=20260810-content-axis-v8';
 const CORE_DOCK_HREF = '/site-core-service-dock-closure-v1.js?v=20260810-stable-dock-v5';
+const REQUIRED_SOURCE_HTML = [
+  'scripts/nda-source/nda-preview-template.html',
+  'links.html',
+  'trust.html',
+  'standards.html',
+  'delivery.html'
+];
 const START = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const END = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
 const BLOCK = [
@@ -168,7 +175,16 @@ function verifyPage(relative, requiredText) {
   if (requiredText && !html.includes(requiredText)) throw new Error(`${relative} missing required action text: ${requiredText}`);
 }
 
+function verifyRequiredSourceHtml() {
+  REQUIRED_SOURCE_HTML.forEach((relative) => {
+    if (!fs.existsSync(path.join(root, relative))) {
+      throw new Error(`Required HTML source is missing: ${relative}`);
+    }
+  });
+}
+
 function main() {
+  verifyRequiredSourceHtml();
   verifyCss();
   let checked = 0;
   let changed = 0;
