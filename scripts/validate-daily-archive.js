@@ -136,9 +136,10 @@ function main() {
   assert(directory.includes('<h1>今日简报</h1>'), 'Unified public brief name is missing from the directory');
   assert(directory.includes('id="briefSearch"'), 'Archive keyword search is missing');
   assert(directory.includes('id="briefSearchResults"') && directory.includes('id="briefSearchGrid"'), 'Ranked archive search result region is missing');
-  assert(directory.includes('关联结果优先') && directory.includes('已按相关度排序'), 'Archive search does not explain relevance-first ordering');
+  assert(directory.includes('关联结果优先') && directory.includes('按相关度排序'), 'Archive search does not explain relevance-first ordering');
   assert(directory.includes('data-brief-theme=') && directory.includes('data-brief-summary='), 'Archive cards do not expose weighted search fields');
-  assert(directory.includes('function scoreBrief(card,query)') && directory.includes('b.score-a.score||b.date.localeCompare(a.date)'), 'Archive search is not sorted by relevance before date');
+  assert(directory.includes('function scoreBrief(record,query)') && directory.includes('b.score-a.score||b.date.localeCompare(a.date)'), 'Archive search is not sorted by relevance before date');
+  assert(directory.includes("fetch('/qilylean/daily/index.json") && directory.includes('matches.slice(0,80)'), 'Archive search must fetch the full index on demand and cap rendered results');
   assert(directory.includes('打开本期简报') && directory.includes('点击标题或“打开本期简报”可直接进入对应网页'), 'Archive search result navigation is not explicit');
   assert(directory.includes('href="/qilylean/daily-insights.html?year=2019#brief-directory"') && directory.includes('href="/qilylean/daily-insights.html?year=2025#brief-directory"'), 'Career year links are missing');
   assert(!directory.includes('class="brief-year-filters"'), 'The duplicate year filter button module still exists');
@@ -153,7 +154,7 @@ function main() {
     assert(directory.includes(`href="/qilylean/daily-insights.html?year=${item.year}#brief-directory" data-year-filter="${item.year}"`), `Career year link is incomplete for ${item.year}`);
     assert(index.some((brief) => brief.date.startsWith(`${item.year}-`)), `Career year has no matching daily briefs: ${item.year}`);
   });
-  assert(directory.includes(`data-brief-date="${index[index.length - 1].date}"`), 'The earliest daily brief is missing from the directory');
+  assert(directory.includes(index[index.length - 1].date) && directory.includes("fetch('/qilylean/daily/index.json"), 'The directory must disclose the earliest date and provide on-demand access to the full archive');
   assert(directory.includes('var requestedYear=new URLSearchParams(location.search).get(\'year\')'), 'Year query filtering script is missing');
   assert(directory.trimEnd().endsWith('</html>'), 'Daily directory HTML is incomplete');
   assert(
