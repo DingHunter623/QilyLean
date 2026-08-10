@@ -202,7 +202,7 @@
     normalizeLegacyBrand();
     var navigationScript = document.querySelector('script[src*="/site-navigation.js"]');
     if (!window.__qilyLeanSiteNavigationPublicV8 && !navigationScript) {
-      load('/site-navigation.js?v=20260810-native-navigation-stable-v18', 'qilySiteNavigationScript');
+      load('/site-navigation.js?v=20260810-native-navigation-stable-v19', 'qilySiteNavigationScript');
     }
   }
 

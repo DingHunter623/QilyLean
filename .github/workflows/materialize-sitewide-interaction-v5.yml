@@ -4,6 +4,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
+      - 'scripts/bump-live-asset-version-v19.js'
       - 'scripts/publish-number-badge-contrast.js'
       - '.github/workflows/materialize-sitewide-interaction-v5.yml'
 
@@ -26,18 +27,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Bump live asset cache versions
+        run: node scripts/bump-live-asset-version-v19.js
       - name: Materialize current interaction assets
         run: |
           node scripts/publish-number-badge-contrast.js
           node scripts/validate-sitewide-interaction-clarity.js
-      - name: Commit materialized pages
+      - name: Commit materialized live references
         run: |
           if git diff --quiet; then
-            echo 'All public pages already use V5.'
+            echo 'All public pages and runtime sources already use V19.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- '*.html'
-          git commit -m 'chore: materialize sitewide interaction V5 references'
+          git add -A
+          git commit -m 'chore: materialize live V19 layout and navigation references'
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
