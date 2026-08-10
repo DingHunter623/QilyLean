@@ -200,7 +200,10 @@
     addFuseCuttingProjectImages();
     forceArticleShortShare();
     normalizeLegacyBrand();
-    if (!window.__qilyLeanSiteNavigationPublicV8) load('/site-navigation.js?v=20260729-no-old-flash-v1', 'qilySiteNavigationScript');
+    var navigationScript = document.querySelector('script[src*="/site-navigation.js"]');
+    if (!window.__qilyLeanSiteNavigationPublicV8 && !navigationScript) {
+      load('/site-navigation.js?v=20260810-native-navigation-stable-v18', 'qilySiteNavigationScript');
+    }
   }
 
   if (document.readyState === 'loading') {

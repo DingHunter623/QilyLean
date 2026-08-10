@@ -18,6 +18,7 @@ const staticInteractionsHref = '/site-static-core-interactions-v1.js?v=20260810-
 const visualClosureHref = '/site-visual-closure-v1.js?v=20260810-stable-layout-v5';
 const wideLayoutHref = '/site-wide-layout-v1.css?v=20260810-content-axis-v8';
 const coreDockHref = '/site-core-service-dock-closure-v1.js?v=20260810-stable-dock-v5';
+const floatingServiceHref = '/qilylean/floating-service.js?v=20260810-native-navigation-dedupe-v1';
 const managedStart = '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->';
 const managedEnd = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
 const managedBlock = [
@@ -68,6 +69,7 @@ function materializeInMemory(html) {
     .replace(/\/site-visual-closure-v1\.js\?v=[^"'\\s<]+/gi, visualClosureHref)
     .replace(/\/site-wide-layout-v1\.css\?v=[^"'\\s<]+/gi, wideLayoutHref)
     .replace(/\/site-core-service-dock-closure-v1\.js\?v=[^"'\\s<]+/gi, coreDockHref)
+    .replace(/(?:\/qilylean\/)?floating-service\.js\?v=[^"'\\s<]+/gi, floatingServiceHref)
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyBackgroundMusicPreload["']|href=["'][^"']*%E6%88%91%E7%9A%84%E6%A2%A6[^"']*["'][^>]*\bas=["']audio["'])[^>]*>[ \t]*(?:\r?\n)?/gmi, '')
     .replace(/^[ \t]*<script\b[^>]*(?:id=["']qilyPersistentMusicNavigationScript["']|data-qily-persistent-music-navigation=["'][^"']+["']|src=["'][^"']*\/site-music-persistent-navigation-v1\.js(?:\?v=[^"']*)?["'])[^>]*>[ \t\r\n]*<\/script>[ \t]*(?:\r?\n)?/gmi, '');
   const primary = '<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->';
@@ -190,6 +192,7 @@ function validateLoadOrder() {
   const music = read('homepage-music-v5.js');
   const musicWrapper = read('homepage-music.js');
   const nativeNavigation = read('site-music-persistent-navigation-v1.js');
+  const floatingService = read('qilylean/floating-service.js');
 
   assert((navigation.match(new RegExp(version, 'g')) || []).length >= 3, 'Navigation does not load the current interaction stylesheet in every loader path.');
   assert(navigation.includes("'qilyTrustConversionV2Stylesheet','qilyInteractiveHoverContrastStylesheet'"), 'Interaction stylesheet must be promoted after trust conversion styles.');
@@ -273,6 +276,9 @@ function validateLoadOrder() {
   assert(nativeNavigation.includes('window.__qilyNativeNavigationFallbackV2'), 'Cached navigation fallback is not native-navigation only.');
   assert(!/createElement\(['"]iframe['"]\)|qilyPersistentNavigationFrame|页面加载中/.test(nativeNavigation), 'Iframe/spinner navigation must not remain in the fallback.');
   assert(!navigation.includes('observer.observe(d.body, { childList:true })'), 'Tail compaction must not keep a permanent body observer.');
+  assert(!floatingService.includes('20260729-no-old-flash-v1'), 'Floating-service runtime still requests the stale navigation loader.');
+  assert(floatingService.includes('document.querySelector(\'script[src*="/site-navigation.js"]\')'), 'Floating-service runtime must reuse an existing navigation loader.');
+  assert(floatingService.includes('20260810-native-navigation-stable-v18'), 'Floating-service fallback must use the current navigation version.');
 }
 
 function validatePublicPages() {
@@ -281,6 +287,7 @@ function validatePublicPages() {
   let staleBeforeMaterialization = 0;
   let staleLayoutBeforeMaterialization = 0;
   let staleNavigationBeforeMaterialization = 0;
+  let staleFloatingServiceBeforeMaterialization = 0;
 
   walk(root, (absolute) => {
     if (!absolute.endsWith('.html')) return;
@@ -291,6 +298,7 @@ function validatePublicPages() {
     if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260810-stable-layout-v15)/i.test(html)) staleBeforeMaterialization += 1;
     if (/site-layout-footer-closure-v1\.css\?v=(?!20260810-stable-layout-v18)/i.test(html)) staleLayoutBeforeMaterialization += 1;
     if (/site-navigation\.js\?v=(?!20260810-native-navigation-stable-v18)/i.test(html)) staleNavigationBeforeMaterialization += 1;
+    if (/(?:\/qilylean\/)?floating-service\.js\?v=(?!20260810-native-navigation-dedupe-v1)/i.test(html)) staleFloatingServiceBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);
     const currentCount = candidate.split(href).length - 1;
@@ -303,6 +311,7 @@ function validatePublicPages() {
     if (/site-visual-closure-v1\.js\?v=/i.test(html)) assert((candidate.split(visualClosureHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current visual closure.`);
     if (/site-core-service-dock-closure-v1\.js\?v=/i.test(html)) assert((candidate.split(coreDockHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current core-dock closure.`);
     if (/site-static-core-interactions-v1\.js\?v=/i.test(html)) assert((candidate.split(staticInteractionsHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current static interaction enhancer.`);
+    if (/floating-service\.js\?v=/i.test(html)) assert((candidate.split(floatingServiceHref).length - 1) === 1, `${path.relative(root, absolute)} would not materialize exactly one current floating-service runtime.`);
     assert((candidate.split(musicHref).length - 1) <= 1, `${path.relative(root, absolute)} would contain duplicate demand-loaded music controllers.`);
     assert((candidate.split(musicWrapperHref).length - 1) <= 1, `${path.relative(root, absolute)} would contain duplicate demand-music compatibility entries.`);
     if (/homepage-music\.js\?v=/i.test(html)) assert((candidate.split(musicWrapperHref).length - 1) === 1, `${path.relative(root, absolute)} would retain a stale eager-music compatibility entry.`);
@@ -312,7 +321,7 @@ function validatePublicPages() {
 
   assert(publicPages >= 2600, `Public-page coverage unexpectedly fell to ${publicPages}.`);
   assert(actionControls >= 100, `Only ${actionControls} action controls were covered; expected a sitewide corpus.`);
-  return { publicPages, actionControls, staleBeforeMaterialization, staleLayoutBeforeMaterialization, staleNavigationBeforeMaterialization };
+  return { publicPages, actionControls, staleBeforeMaterialization, staleLayoutBeforeMaterialization, staleNavigationBeforeMaterialization, staleFloatingServiceBeforeMaterialization };
 }
 
 function validateDailyDirectoryPerformance() {
@@ -350,7 +359,8 @@ function main() {
     `${coverage.actionControls} button/action controls, ` +
     `${coverage.staleBeforeMaterialization} interaction style, ` +
     `${coverage.staleLayoutBeforeMaterialization} layout/footer style and ` +
-    `${coverage.staleNavigationBeforeMaterialization} navigation cache references queued for deterministic refresh.\n`
+    `${coverage.staleNavigationBeforeMaterialization} navigation and ` +
+    `${coverage.staleFloatingServiceBeforeMaterialization} floating-service cache references queued for deterministic refresh.\n`
   );
 }
 
