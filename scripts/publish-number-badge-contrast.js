@@ -7,8 +7,8 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const NUMBER_VERSION = '20260805-number-badge-contrast-v1';
 const HOVER_VERSION = '20260810-sitewide-floating-dock-feedback-v13';
-const LAYOUT_VERSION = '20260810-sitewide-layout-footer-v15';
-const NAV_VERSION = '20260810-sitewide-layout-footer-loader-v15';
+const LAYOUT_VERSION = '20260810-sitewide-layout-footer-v16';
+const NAV_VERSION = '20260810-sitewide-layout-footer-loader-v16';
 const NUMBER_HREF = `/site-number-badge-contrast-v1.css?v=${NUMBER_VERSION}`;
 const HOVER_HREF = `/site-interactive-hover-contrast-v1.css?v=${HOVER_VERSION}`;
 const LAYOUT_HREF = `/site-layout-footer-closure-v1.css?v=${LAYOUT_VERSION}`;
@@ -110,14 +110,14 @@ function verifyCss() {
 
   const layoutCss = read(path.join(root, 'site-layout-footer-closure-v1.css'));
   [
-    'QILY-SITEWIDE-LAYOUT-FOOTER-CLOSURE-V15-20260810',
+    'QILY-SITEWIDE-LAYOUT-FOOTER-CLOSURE-V16-20260810',
     '--qily-site-content-width:var(--qily-wide-content,1560px)',
     '.qily-ia-inner',
     '.qtc-inner',
     '.qily-resource-network__inner',
     'height:auto!important',
     'min-height:0!important',
-    '.qtc-global-trust-links > a[href]',
+    'html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]',
     'border:2px solid var(--qily-site-gold)!important',
     'min-height:44px!important'
   ].forEach((marker) => {
