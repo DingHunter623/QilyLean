@@ -31,6 +31,10 @@
 <!-- QILY-NUMBER-BADGE-CONTRAST:START -->
   <link id="qilyClosureBundleV24Stylesheet" rel="stylesheet" href="/site-closure-bundle-v24.css?v=20260810-professionalization-v24">
 <!-- QILY-NUMBER-BADGE-CONTRAST:END -->
+<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->
+  <link id="qilyHeroPrimaryContrastStylesheet" rel="stylesheet" href="/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1">
+  <script defer id="qilyBackgroundMusicScript" data-qily-background-music="v27" src="/homepage-music-v5.js?v=20260810-gesture-music-v27"></script>
+<!-- QILY-PRIMARY-CONTRAST-MUSIC:END -->
   <script defer id="qilyFooterStandardV26Script" data-qily-footer-standard="v26" src="/site-footer-standard-v26.js?v=20260810-footer-global-v26"></script>
 </head>
 <body class="module-page daily-single-page qily-pro-v24">
@@ -148,6 +152,6 @@
 (function(){var button=document.querySelector('.share');if(!button)return;var status=document.querySelector('.status');function copy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();return Promise.resolve();}function done(text){if(status)status.textContent=text;setTimeout(function(){if(status)status.textContent='';},2200);}button.addEventListener('click',function(){var url=location.href;var title=document.title;if((/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'')||!!(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches&&innerWidth<=820))&&navigator.share){navigator.share({title:title,text:title,url:url}).then(function(){done('已调起分享');}).catch(function(error){if(error&&error.name==='AbortError')return;copy(url).then(function(){done('网址已复制');});});}else copy(url).then(function(){done('网址已复制');});});})();
 </script>
 <script src="/qilylean/daily-feedback.js?v=20260729-message-only-v4"></script>
-<script src="/homepage-music.js?v=20260810-demand-music-wrapper-v6"></script>
+
 </body>
 </html>
