@@ -1,0 +1,63 @@
+name: Apply QilyLean professionalization V24
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/apply-professionalization-v24.yml"
+      - "scripts/apply-professionalization-v24.js"
+      - "scripts/materialize-professionalization-v24.js"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-professionalization-v24-main
+  cancel-in-progress: true
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate V24 scripts
+        run: |
+          node --check scripts/apply-professionalization-v24.js
+          node --check scripts/materialize-professionalization-v24.js
+
+      - name: Integrate V24 into publication sources
+        run: node scripts/apply-professionalization-v24.js
+
+      - name: Materialize V24 across current public HTML
+        run: node scripts/materialize-professionalization-v24.js --all
+
+      - name: Validate deterministic V24 state
+        run: |
+          node scripts/apply-professionalization-v24.js --check
+          node scripts/materialize-professionalization-v24.js --all --check
+          node --check scripts/build-daily-archive.js
+          node --check scripts/build-site-metadata.js
+          git diff --check
+
+      - name: Commit V24 professionalization closure
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "V24 professionalization is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "V24: consolidate site closure assets, improve rendering and freshness signals"
+          git push origin HEAD:main
