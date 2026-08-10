@@ -1,0 +1,2113 @@
+/* QilyLean consolidated closure bundle｜20260810-professionalization-v24
+ * Replaces five historical closure stylesheet requests while preserving source order.
+ */
+/* ===== site-number-badge-contrast-v1.css ===== */
+/* QilyLean全站编号徽章高对比规范｜2026-08-05
+ * 适用于流程号、步骤号、核心业务序号及同类圆形编号。
+ * 原则：深色实底、纯白数字、白色内描边、青色外圈；禁止透明、滤镜和同色叠加。
+ */
+
+:root{
+  --qily-number-badge-bg:#075767;
+  --qily-number-badge-ring:#178b94;
+  --qily-number-badge-text:#ffffff;
+}
+
+html body :is(
+  .service-number,
+  .step-number,
+  .step-index,
+  .sequence-number,
+  .process-number,
+  .number-badge,
+  .workflow-number,
+  .timeline-number
+),
+html body :is(.process,.process-grid,.steps,.workflow,.workflow-grid,.timeline,.flow-grid) :is(.step,.process-step,.workflow-step,.timeline-step) > b:first-child {
+  display:inline-grid!important;
+  place-items:center!important;
+  flex:0 0 auto!important;
+  min-width:34px!important;
+  min-height:34px!important;
+  border:2px solid var(--qily-number-badge-text)!important;
+  border-radius:999px!important;
+  color:var(--qily-number-badge-text)!important;
+  background:var(--qily-number-badge-bg)!important;
+  box-shadow:0 0 0 2px var(--qily-number-badge-ring),0 4px 11px rgba(7,60,71,.22)!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  -webkit-text-fill-color:var(--qily-number-badge-text)!important;
+  text-shadow:none!important;
+  font-weight:950!important;
+  line-height:1!important;
+}
+
+/* 核心业务01／02／03保持既有42px规格。 */
+html body .service-number {
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  min-height:42px!important;
+  font-size:16px!important;
+}
+
+/* 流程1／2／3／4等短编号统一34px，不改变卡片结构和间距。 */
+html body :is(.process,.process-grid,.steps,.workflow,.workflow-grid,.timeline,.flow-grid) :is(.step,.process-step,.workflow-step,.timeline-step) > b:first-child,
+html body :is(.step-number,.step-index,.sequence-number,.process-number,.number-badge,.workflow-number,.timeline-number) {
+  width:34px!important;
+  height:34px!important;
+  font-size:14px!important;
+}
+
+/* 深色背景内仍保持白字，不受父级链接或文字填充色覆盖。 */
+html body :is(.service-number,.step-number,.step-index,.sequence-number,.process-number,.number-badge,.workflow-number,.timeline-number) *,
+html body :is(.process,.process-grid,.steps,.workflow,.workflow-grid,.timeline,.flow-grid) :is(.step,.process-step,.workflow-step,.timeline-step) > b:first-child * {
+  color:var(--qily-number-badge-text)!important;
+  -webkit-text-fill-color:var(--qily-number-badge-text)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+
+/* ===== site-interactive-hover-contrast-v1.css ===== */
+/* QilyLean全站交互悬停高对比规范｜2026-08-05
+ * 解决正常状态可见、鼠标移入后因公共链接规则覆盖而字迹消失的问题。
+ * 仅处理真实可点击操作入口的hover/focus/active状态，不影响静态模块。
+ */
+
+:root{
+  --qily-interactive-hover-bg:#ffe39b;
+  --qily-interactive-hover-text:#17322d;
+  --qily-interactive-hover-border:#c99a3e;
+  --qily-interactive-active-bg:#073c47;
+  --qily-interactive-active-text:#ffffff;
+}
+
+/* 真实操作入口必须建立独立层叠上下文，防止父级伪元素和通用链接规则盖住文字。 */
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .qtc-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button),
+html body :is(
+  a.resource-action,
+  a.qily-ia-button,
+  a.qtc-action,
+  a.module-action,
+  a.project-list-action,
+  a.project-card-action,
+  a.service-contract-link,
+  a.share-button,
+  a.button,
+  a.qily-action-primary,
+  a.qily-action-secondary,
+  button.primary,
+  button.button,
+  button.qily-action-primary,
+  button.qily-action-secondary
+){
+  position:relative!important;
+  isolation:isolate!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+
+/* 悬停／键盘聚焦：全站统一金砖色实底＋深色高对比文字。 */
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .qtc-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button):is(:hover,:focus-visible),
+html body :is(
+  a.resource-action,
+  a.qily-ia-button,
+  a.qtc-action,
+  a.module-action,
+  a.project-list-action,
+  a.project-card-action,
+  a.service-contract-link,
+  a.share-button,
+  a.button,
+  a.qily-action-primary,
+  a.qily-action-secondary,
+  button.primary,
+  button.button,
+  button.qily-action-primary,
+  button.qily-action-secondary
+):is(:hover,:focus-visible){
+  color:var(--qily-interactive-hover-text)!important;
+  -webkit-text-fill-color:var(--qily-interactive-hover-text)!important;
+  background-color:var(--qily-interactive-hover-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-interactive-hover-border)!important;
+  text-decoration-color:var(--qily-interactive-hover-text)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+  box-shadow:0 9px 22px rgba(202,161,95,.30)!important;
+  transform:translateY(-2px)!important;
+  outline:3px solid rgba(255,227,155,.34)!important;
+  outline-offset:2px!important;
+}
+
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .qtc-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button):is(:hover,:focus-visible) *,
+html body :is(
+  a.resource-action,
+  a.qily-ia-button,
+  a.qtc-action,
+  a.module-action,
+  a.project-list-action,
+  a.project-card-action,
+  a.service-contract-link,
+  a.share-button,
+  a.button,
+  a.qily-action-primary,
+  a.qily-action-secondary,
+  button.primary,
+  button.button,
+  button.qily-action-primary,
+  button.qily-action-secondary
+):is(:hover,:focus-visible) *{
+  color:var(--qily-interactive-hover-text)!important;
+  -webkit-text-fill-color:var(--qily-interactive-hover-text)!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+
+/* 按下状态：深青实底＋纯白文字。 */
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .qtc-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button):active,
+html body :is(
+  a.resource-action,
+  a.qily-ia-button,
+  a.qtc-action,
+  a.module-action,
+  a.project-list-action,
+  a.project-card-action,
+  a.service-contract-link,
+  a.share-button,
+  a.button,
+  a.qily-action-primary,
+  a.qily-action-secondary,
+  button.primary,
+  button.button,
+  button.qily-action-primary,
+  button.qily-action-secondary
+):active{
+  color:var(--qily-interactive-active-text)!important;
+  -webkit-text-fill-color:var(--qily-interactive-active-text)!important;
+  background-color:var(--qily-interactive-active-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-interactive-active-bg)!important;
+  text-decoration-color:#ffe39b!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  transform:translateY(0) scale(.98)!important;
+  outline:none!important;
+}
+
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .qtc-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button):active *,
+html body :is(
+  a.resource-action,
+  a.qily-ia-button,
+  a.qtc-action,
+  a.module-action,
+  a.project-list-action,
+  a.project-card-action,
+  a.service-contract-link,
+  a.share-button,
+  a.button,
+  a.qily-action-primary,
+  a.qily-action-secondary,
+  button.primary,
+  button.button,
+  button.qily-action-primary,
+  button.qily-action-secondary
+):active *{
+  color:var(--qily-interactive-active-text)!important;
+  -webkit-text-fill-color:var(--qily-interactive-active-text)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+
+/* 伪元素只作装饰，不得覆盖按钮文字。 */
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .qtc-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button)::before,
+html body :is(
+  .ql-trust-strip-actions,
+  .ql-trust-actions,
+  .hero-actions,
+  .actions,
+  .module-actions,
+  .card-actions,
+  .qily-ia-actions,
+  .qtc-actions,
+  .form-actions,
+  .resource-stage,
+  .service-contract,
+  .contact-card
+) > :is(a[href],button)::after{
+  pointer-events:none!important;
+  z-index:-1!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body :is(.ql-trust-strip-actions,.ql-trust-actions,.hero-actions,.actions,.module-actions,.card-actions,.qily-ia-actions,.qtc-actions,.form-actions,.resource-stage,.service-contract,.contact-card) > :is(a[href],button){
+    transition:none!important;
+  }
+}
+
+
+/* QILY-OFFICIAL-CONTACT-HOVER-CONTRAST-20260807
+   官网与企业邮箱属于关键联系入口：Hover / Focus / Active 必须保持高对比度与清晰字迹。 */
+a[href="https://qilylean.com"],
+a[href="https://qilylean.com/"],
+a[href^="mailto:admin@qilylean.com"]{
+  opacity:1 !important;
+  text-shadow:none !important;
+}
+a[href="https://qilylean.com"]:hover,
+a[href="https://qilylean.com"]:focus-visible,
+a[href="https://qilylean.com/"]:hover,
+a[href="https://qilylean.com/"]:focus-visible,
+a[href^="mailto:admin@qilylean.com"]:hover,
+a[href^="mailto:admin@qilylean.com"]:focus-visible{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  background:#0b5662 !important;
+  border-color:#063f49 !important;
+  opacity:1 !important;
+  text-shadow:none !important;
+  text-decoration-color:#ffe39b !important;
+  outline:3px solid #ffe39b !important;
+  outline-offset:2px !important;
+  box-shadow:0 9px 24px rgba(6,63,73,.28) !important;
+}
+a[href="https://qilylean.com"]:hover *,
+a[href="https://qilylean.com"]:focus-visible *,
+a[href="https://qilylean.com/"]:hover *,
+a[href="https://qilylean.com/"]:focus-visible *,
+a[href^="mailto:admin@qilylean.com"]:hover *,
+a[href^="mailto:admin@qilylean.com"]:focus-visible *{
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
+  opacity:1 !important;
+}
+a[href="https://qilylean.com"]:active,
+a[href="https://qilylean.com/"]:active,
+a[href^="mailto:admin@qilylean.com"]:active{
+  color:#17231e !important;
+  -webkit-text-fill-color:#17231e !important;
+  background:#ffe39b !important;
+  border-color:#caa15f !important;
+  opacity:1 !important;
+  outline-color:#0b5662 !important;
+}
+
+/* QILY-SITEWIDE-ACTION-HOVER-GOLD-20260808
+ * 所有真实按钮型链接补充兜底：Hover/Focus统一“金砖色”反馈。
+ * 只作用于可点击a/button，不改变静态卡片、静态指标和说明模块。
+ */
+html body :is(
+  a.button,
+  a[class*="-button"],
+  a[class*="-action"],
+  button[class*="button"],
+  button[class*="action"]
+):is(:hover,:focus-visible){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  background-image:none!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+  box-shadow:0 9px 22px rgba(202,161,95,.30)!important;
+  outline:3px solid rgba(255,227,155,.40)!important;
+  outline-offset:2px!important;
+}
+html body :is(
+  a.button,
+  a[class*="-button"],
+  a[class*="-action"],
+  button[class*="button"],
+  button[class*="action"]
+):is(:hover,:focus-visible) *{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  opacity:1!important;
+  visibility:visible!important;
+  text-shadow:none!important;
+}
+
+/* QILY-SITE-SEARCH-RESULT-HOVER-CONTRAST-20260808
+ * 本站搜索结果属于整块可点击卡片：Hover / Focus / Active 必须连同标题、路径、摘要、标签一起切换颜色。
+ * 覆盖旧版site-link-standard-v1.css仅改变父级背景、子元素仍保留深青字的冲突，禁止再次出现深底深字。
+ */
+html body a.qily-search-result{
+  position:relative!important;
+  isolation:isolate!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+
+html body a.qily-search-result:is(:hover,:focus-visible){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  background-image:none!important;
+  border-color:#c99a3e!important;
+  text-decoration-color:#17322d!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+  box-shadow:0 10px 24px rgba(202,161,95,.30)!important;
+  outline:3px solid rgba(255,227,155,.42)!important;
+  outline-offset:2px!important;
+  transform:translateY(-2px)!important;
+}
+
+html body a.qily-search-result:is(:hover,:focus-visible) :is(
+  .qily-search-meta,
+  strong,
+  .qily-search-path,
+  .qily-search-snippet,
+  .qily-search-open
+){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  text-decoration-color:#17322d!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+
+html body a.qily-search-result:is(:hover,:focus-visible) .qily-search-rank{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#fff8df!important;
+  border:1px solid rgba(23,50,45,.24)!important;
+  opacity:1!important;
+}
+
+html body a.qily-search-result:active{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:#073c47!important;
+  background-image:none!important;
+  border-color:#073c47!important;
+  text-decoration-color:#ffe39b!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  outline:none!important;
+  transform:translateY(0) scale(.99)!important;
+}
+
+html body a.qily-search-result:active :is(
+  .qily-search-meta,
+  strong,
+  .qily-search-path,
+  .qily-search-snippet,
+  .qily-search-open
+){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  text-decoration-color:#ffe39b!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+
+html body a.qily-search-result:active .qily-search-rank{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#ffe39b!important;
+  border-color:#ffe39b!important;
+}
+
+/* QILY-SITEWIDE-INTERACTION-CLARITY-V8-20260809
+ * 根因封堵：site-vi-contrast-restoration-v1.css 等后续组件规则曾以更高
+ * specificity 把按钮悬停重新覆盖为“深青底＋白字”，导致视觉状态几乎不变。
+ * 本闭环层只命中真实可操作控件；静态卡片不进入选择器。
+ */
+:root{
+  --qily-control-hover-bg:#ffe39b;
+  --qily-control-hover-ink:#17322d;
+  --qily-control-hover-border:#c99a3e;
+  --qily-control-active-bg:#052a33;
+  --qily-control-active-ink:#ffffff;
+  --qily-control-active-border:#ffe39b;
+  --qily-control-focus-ring:#fff3c6;
+  --qily-control-disabled-bg:#e6eceb;
+  --qily-control-disabled-ink:#465a57;
+  --qily-control-disabled-border:#9aadaa;
+}
+
+/* 所有真实按钮、按钮型链接与图标控件先恢复稳定可读的文字层。 */
+html:root:root body :is(
+  button:not([hidden]),
+  [role="button"]:not([aria-hidden="true"]),
+  input[type="button"],
+  input[type="submit"],
+  a.button,
+  a.btn,
+  a[class*="-button"],
+  a[class*="-action"],
+  .hero-actions>a[href],
+  .actions>a[href],
+  .module-actions>a[href],
+  .article-actions>a[href],
+  .card-actions>a[href],
+  .qily-ia-actions>a[href],
+  .qtc-actions>a[href],
+  .form-actions>a[href],
+  .qily-float-btn,
+  .site-music-toggle,
+  .qily-modal-close
+){
+  position:relative!important;
+  isolation:isolate!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+  transition:
+    color .16s ease,
+    background-color .16s ease,
+    border-color .16s ease,
+    box-shadow .16s ease,
+    transform .16s ease!important;
+}
+
+html:root:root body :is(
+  button:not([hidden]),
+  [role="button"]:not([aria-hidden="true"]),
+  input[type="button"],
+  input[type="submit"],
+  a.button,
+  a.btn,
+  a[class*="-button"],
+  a[class*="-action"],
+  .hero-actions>a[href],
+  .actions>a[href],
+  .module-actions>a[href],
+  .article-actions>a[href],
+  .card-actions>a[href],
+  .qily-ia-actions>a[href],
+  .qtc-actions>a[href],
+  .form-actions>a[href],
+  .qily-float-btn,
+  .site-music-toggle,
+  .qily-modal-close
+) :is(span,strong,b,small,em,i,label,svg){
+  color:inherit!important;
+  -webkit-text-fill-color:currentColor!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+
+/* 深色首屏：主按钮金底深字；其余按钮透明浅层＋白色边界。 */
+html:root:root body :is(
+  .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
+  .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
+  [data-qily-dark-surface="true"]
+) :is(.hero-actions,.actions,.module-actions,.article-actions,.card-actions,.qily-ia-actions)
+> :is(a,button).primary,
+html:root:root body :is(
+  .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
+  .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
+  [data-qily-dark-surface="true"]
+) :is(a,button).qily-action-primary{
+  color:#332100!important;
+  -webkit-text-fill-color:#332100!important;
+  background-color:#ffd36a!important;
+  background-image:none!important;
+  border:2px solid #fff3c6!important;
+  text-decoration-color:#332100!important;
+  box-shadow:0 10px 24px rgba(0,0,0,.24)!important;
+}
+
+html:root:root body :is(
+  .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
+  .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
+  [data-qily-dark-surface="true"]
+) :is(.hero-actions,.actions,.module-actions,.article-actions,.card-actions,.qily-ia-actions)
+> :is(a,button):not(.primary):not(.qily-action-primary),
+html:root:root body :is(
+  .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,
+  .trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
+  [data-qily-dark-surface="true"]
+) :is(a,button).qily-action-secondary{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background-color:rgba(255,255,255,.10)!important;
+  background-image:none!important;
+  border:2px solid rgba(255,255,255,.92)!important;
+  text-decoration-color:#ffe39b!important;
+  box-shadow:none!important;
+}
+
+/* Hover：所有按钮和图标统一切为浅金实底＋深色字，形成明确色界变化。 */
+html:root:root body :is(
+  button:not([hidden]):not(:disabled),
+  [role="button"]:not([aria-hidden="true"]):not([aria-disabled="true"]),
+  input[type="button"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  a.button:not([aria-disabled="true"]),
+  a.btn:not([aria-disabled="true"]),
+  a[class*="-button"]:not([aria-disabled="true"]),
+  a[class*="-action"]:not([aria-disabled="true"]),
+  .hero-actions>a[href]:not([aria-disabled="true"]),
+  .actions>a[href]:not([aria-disabled="true"]),
+  .module-actions>a[href]:not([aria-disabled="true"]),
+  .article-actions>a[href]:not([aria-disabled="true"]),
+  .card-actions>a[href]:not([aria-disabled="true"]),
+  .qily-ia-actions>a[href]:not([aria-disabled="true"]),
+  .qtc-actions>a[href]:not([aria-disabled="true"]),
+  .form-actions>a[href]:not([aria-disabled="true"]),
+  .qily-float-btn:not([aria-disabled="true"]),
+  .site-music-toggle:not([aria-disabled="true"]),
+  .qily-modal-close:not([aria-disabled="true"])
+):not(#qily-interaction-state-priority):is(:hover:hover,:focus-visible:focus-visible){
+  color:var(--qily-control-hover-ink)!important;
+  -webkit-text-fill-color:var(--qily-control-hover-ink)!important;
+  background-color:var(--qily-control-hover-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-control-hover-border)!important;
+  text-decoration-color:var(--qily-control-hover-ink)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  transition:none!important;
+  box-shadow:0 10px 24px rgba(202,161,95,.34)!important;
+  transform:translateY(-2px)!important;
+}
+
+html:root:root body :is(
+  button:not([hidden]),[role="button"],input[type="button"],input[type="submit"],
+  a.button,a.btn,a[class*="-button"],a[class*="-action"],
+  .hero-actions>a[href],.actions>a[href],.module-actions>a[href],.article-actions>a[href],
+  .card-actions>a[href],.qily-ia-actions>a[href],.qtc-actions>a[href],.form-actions>a[href],
+  .qily-float-btn,.site-music-toggle,.qily-modal-close
+):not(#qily-interaction-state-priority):focus-visible:focus-visible{
+  outline:3px solid var(--qily-control-focus-ring)!important;
+  outline-offset:3px!important;
+}
+
+/* Active：按下时切为更深青底＋白字；顺序位于Hover之后，保证点击瞬间可辨。 */
+html:root:root body :is(
+  button:not([hidden]):not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  input[type="button"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  a.button:not([aria-disabled="true"]),
+  a.btn:not([aria-disabled="true"]),
+  a[class*="-button"]:not([aria-disabled="true"]),
+  a[class*="-action"]:not([aria-disabled="true"]),
+  .hero-actions>a[href]:not([aria-disabled="true"]),
+  .actions>a[href]:not([aria-disabled="true"]),
+  .module-actions>a[href]:not([aria-disabled="true"]),
+  .article-actions>a[href]:not([aria-disabled="true"]),
+  .card-actions>a[href]:not([aria-disabled="true"]),
+  .qily-ia-actions>a[href]:not([aria-disabled="true"]),
+  .qtc-actions>a[href]:not([aria-disabled="true"]),
+  .form-actions>a[href]:not([aria-disabled="true"]),
+  .qily-float-btn:not([aria-disabled="true"]),
+  .site-music-toggle:not([aria-disabled="true"]),
+  .qily-modal-close:not([aria-disabled="true"])
+):not(#qily-interaction-state-priority):active:active{
+  color:var(--qily-control-active-ink)!important;
+  -webkit-text-fill-color:var(--qily-control-active-ink)!important;
+  background-color:var(--qily-control-active-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-control-active-border)!important;
+  text-decoration-color:var(--qily-control-active-border)!important;
+  box-shadow:inset 0 0 0 2px rgba(255,227,155,.22),0 5px 14px rgba(5,42,51,.28)!important;
+  transform:translateY(0) scale(.97)!important;
+  outline-color:var(--qily-control-active-border)!important;
+  transition:none!important;
+}
+
+/* 导航按钮同样必须换色，含当前栏目，杜绝“当前项悬停仍无变化”。 */
+html:root:root body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:not(#qily-interaction-state-priority):is(:hover:hover,:focus-visible:focus-visible){
+  color:var(--qily-control-hover-ink)!important;
+  -webkit-text-fill-color:var(--qily-control-hover-ink)!important;
+  background-color:var(--qily-control-hover-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-control-hover-border)!important;
+  text-decoration-color:var(--qily-control-hover-ink)!important;
+  box-shadow:0 8px 20px rgba(202,161,95,.32)!important;
+  transform:translateY(-2px)!important;
+  transition:none!important;
+  outline:3px solid rgba(15,75,90,.26)!important;
+  outline-offset:2px!important;
+}
+
+html:root:root body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"])>a[href]:not(#qily-interaction-state-priority):active:active{
+  color:var(--qily-control-active-ink)!important;
+  -webkit-text-fill-color:var(--qily-control-active-ink)!important;
+  background-color:var(--qily-control-active-bg)!important;
+  border-color:var(--qily-control-active-border)!important;
+  text-decoration-color:var(--qily-control-active-border)!important;
+  transform:translateY(0) scale(.97)!important;
+  transition:none!important;
+}
+
+/* 整卡链接与搜索结果：所有子文字随整卡状态切换，不再出现深底深字。 */
+html:root:root body :is(
+  a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
+  a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
+):not(#qily-interaction-state-priority):is(:hover:hover,:focus-visible:focus-visible){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:#fff8df!important;
+  background-image:none!important;
+  border-color:#c99a3e!important;
+  box-shadow:0 14px 30px rgba(15,75,90,.20)!important;
+  transform:translateY(-3px)!important;
+  outline:3px solid rgba(202,161,95,.42)!important;
+  outline-offset:3px!important;
+  transition:none!important;
+}
+
+html:root:root body :is(
+  a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
+  a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
+):not(#qily-interaction-state-priority):is(:hover:hover,:focus-visible:focus-visible) *{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  text-decoration-color:#17322d!important;
+  opacity:1!important;
+  visibility:visible!important;
+  text-shadow:none!important;
+}
+
+html:root:root body :is(
+  a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
+  a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
+):not(#qily-interaction-state-priority):active:active,
+html:root:root body :is(
+  a.qily-search-result,a.qily-ia-card-link,a.module-card-link,a.project-card-link,
+  a.linked-card,a.resource-card-link,a.moment-link,[role="link"].qily-interactive-card
+):not(#qily-interaction-state-priority):active:active *{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background-color:#052a33!important;
+  border-color:#ffe39b!important;
+  text-decoration-color:#ffe39b!important;
+  transition:none!important;
+}
+
+/* 禁用态不用透明度“做灰”，保持文字仍可读。 */
+html:root:root body :is(
+  button:disabled,input[type="button"]:disabled,input[type="submit"]:disabled,
+  [role="button"][aria-disabled="true"],a[aria-disabled="true"]
+){
+  color:var(--qily-control-disabled-ink)!important;
+  -webkit-text-fill-color:var(--qily-control-disabled-ink)!important;
+  background-color:var(--qily-control-disabled-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-control-disabled-border)!important;
+  opacity:1!important;
+  filter:none!important;
+  box-shadow:none!important;
+  transform:none!important;
+  cursor:not-allowed!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html:root:root body :is(
+    button,[role="button"],input[type="button"],input[type="submit"],a.button,a.btn,
+    a[class*="-button"],a[class*="-action"],.qily-float-btn,.site-music-toggle,.qily-modal-close
+  ){
+    transition:none!important;
+  }
+}
+/* QILY-SITEWIDE-COLOR-BOUNDARY-V9-20260809
+ * 用户复核闭环：统一加强全站底部可信入口、行走印记操作按钮及首页NEW徽章的
+ * 默认／Hover／Focus／Active色界；只命中真实操作入口，不改变静态卡片。
+ */
+:root{
+  --qily-boundary-accent:#ffd36a;
+  --qily-boundary-accent-soft:#fff3c6;
+  --qily-boundary-ink:#17322d;
+  --qily-boundary-deep:#073c47;
+  --qily-boundary-pressed:#052a33;
+}
+
+/* 全站底部可信度导航：三项全部按钮化，禁止只让单个链接出现色块。 */
+html:root:root body .qtc-global-trust-footer .qtc-global-trust-links{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+}
+html:root:root body .qtc-global-trust-footer .qtc-global-trust-links>a[href]{
+  position:relative!important;
+  isolation:isolate!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:88px!important;
+  min-height:44px!important;
+  padding:9px 16px!important;
+  border:2px solid var(--qily-boundary-accent)!important;
+  border-radius:999px!important;
+  color:var(--qily-boundary-deep)!important;
+  -webkit-text-fill-color:var(--qily-boundary-deep)!important;
+  background-color:#f7fbfa!important;
+  background-image:none!important;
+  text-decoration:none!important;
+  font-size:14px!important;
+  font-weight:900!important;
+  line-height:1.35!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  box-shadow:inset 0 0 0 1px rgba(7,60,71,.12),0 5px 14px rgba(0,0,0,.18)!important;
+}
+html:root:root body .qtc-global-trust-footer .qtc-global-trust-links>a[href]:is(:hover:hover,:focus-visible:focus-visible){
+  color:#332100!important;
+  -webkit-text-fill-color:#332100!important;
+  background-color:var(--qily-boundary-accent)!important;
+  border-color:var(--qily-boundary-accent-soft)!important;
+  outline:3px solid var(--qily-boundary-accent-soft)!important;
+  outline-offset:2px!important;
+  box-shadow:0 9px 22px rgba(255,211,106,.32)!important;
+  transform:translateY(-2px)!important;
+  transition:none!important;
+}
+html:root:root body .qtc-global-trust-footer .qtc-global-trust-links>a[href]:active:active{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background-color:var(--qily-boundary-pressed)!important;
+  border-color:var(--qily-boundary-accent)!important;
+  outline-color:var(--qily-boundary-accent)!important;
+  box-shadow:inset 0 0 0 2px rgba(255,211,106,.22)!important;
+  transform:translateY(0) scale(.97)!important;
+  transition:none!important;
+}
+
+/* 行走印记及同模板返回按钮：默认态已有实边界，Hover不再呈现近似禁用的浅灰金。 */
+html:root:root body :is(a.moment-link,a.moment-back){
+  min-height:44px!important;
+  padding:8px 16px!important;
+  border:2px solid var(--qily-boundary-accent)!important;
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background-color:#0f4b5a!important;
+  background-image:none!important;
+  text-decoration:none!important;
+  font-weight:900!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.15),0 5px 14px rgba(15,75,90,.18)!important;
+}
+html:root:root body :is(a.moment-link,a.moment-back):is(:hover:hover,:focus-visible:focus-visible){
+  color:#332100!important;
+  -webkit-text-fill-color:#332100!important;
+  background-color:var(--qily-boundary-accent)!important;
+  border-color:var(--qily-boundary-deep)!important;
+  outline:3px solid var(--qily-boundary-accent-soft)!important;
+  outline-offset:3px!important;
+  box-shadow:0 10px 24px rgba(202,161,95,.34)!important;
+  transform:translateY(-2px)!important;
+  transition:none!important;
+}
+html:root:root body :is(a.moment-link,a.moment-back):active:active{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background-color:var(--qily-boundary-pressed)!important;
+  border-color:var(--qily-boundary-accent)!important;
+  outline-color:var(--qily-boundary-accent)!important;
+  transform:translateY(0) scale(.97)!important;
+  transition:none!important;
+}
+
+@media(max-width:560px){
+  html:root:root body .qtc-global-trust-footer .qtc-global-trust-links>a[href]{
+    flex:1 1 112px!important;
+  }
+}
+/* QILY-SITEWIDE-COLOR-BOUNDARY-V10-20260809
+ * 公网真实悬停复核：V8整卡链接规则含ID级优先权，曾把moment-link重新覆盖为浅灰金。
+ * 以同级ID否定伪类并利用后置顺序封口，确保按钮Hover保持亮金实底。
+ */
+html:root:root body :is(a.moment-link,a.moment-back):not(#qily-boundary-state-priority):is(:hover:hover,:focus-visible:focus-visible){
+  color:#332100!important;
+  -webkit-text-fill-color:#332100!important;
+  background-color:var(--qily-boundary-accent)!important;
+  background-image:none!important;
+  border:2px solid var(--qily-boundary-deep)!important;
+  outline:3px solid var(--qily-boundary-accent-soft)!important;
+  outline-offset:3px!important;
+  box-shadow:0 10px 24px rgba(202,161,95,.34)!important;
+  transform:translateY(-2px)!important;
+  transition:none!important;
+}
+html:root:root body :is(a.moment-link,a.moment-back):not(#qily-boundary-state-priority):active:active{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background-color:var(--qily-boundary-pressed)!important;
+  background-image:none!important;
+  border:2px solid var(--qily-boundary-accent)!important;
+  outline-color:var(--qily-boundary-accent)!important;
+  transform:translateY(0) scale(.97)!important;
+  transition:none!important;
+}
+/* QILY-SITEWIDE-COLOR-BOUNDARY-V11-20260810
+ * 双ID优先级封口：旧整卡规则在:is()中隐含更高类级优先权，一个ID仍不足。
+ * 两个永不命中的:not(#id)同时提高specificity，并保持选择器可真实命中。
+ */
+html:root:root body :is(a.moment-link,a.moment-back):not(#qily-boundary-state-priority):not(#qily-boundary-state-override):is(:hover:hover,:focus-visible:focus-visible){
+  color:#332100!important;
+  -webkit-text-fill-color:#332100!important;
+  background-color:var(--qily-boundary-accent)!important;
+  background-image:none!important;
+  border:2px solid var(--qily-boundary-deep)!important;
+  outline:3px solid var(--qily-boundary-accent-soft)!important;
+  outline-offset:3px!important;
+  box-shadow:0 10px 24px rgba(202,161,95,.34)!important;
+  transform:translateY(-2px)!important;
+  transition:none!important;
+}
+html:root:root body :is(a.moment-link,a.moment-back):not(#qily-boundary-state-priority):not(#qily-boundary-state-override):active:active{
+  color:#ffffff!important;
+  -webkit-text-fill-color:#ffffff!important;
+  background-color:var(--qily-boundary-pressed)!important;
+  background-image:none!important;
+  border:2px solid var(--qily-boundary-accent)!important;
+  outline-color:var(--qily-boundary-accent)!important;
+  transform:translateY(0) scale(.97)!important;
+  transition:none!important;
+}
+/* QILY-FLOAT-DOCK-INTERACTION-V13-20260810
+ * V13语义封口：状态伪类紧贴按钮本体；七个真实功能按钮在鼠标、键盘与触摸输入下
+ * 都必须发生明显色界变化；默认本来为金色的“交流”也不能与Hover混同。
+ */
+:root{
+  --qily-float-hover-bg:#ffd36a;
+  --qily-float-hover-ink:#17322d;
+  --qily-float-hover-border:#052a33;
+  --qily-float-pressed-bg:#052a33;
+  --qily-float-pressed-ink:#ffffff;
+  --qily-float-pressed-border:#ffe39b;
+  --qily-float-focus-ring:#fff3c6;
+}
+
+html:root:root body #floatDock.qily-float-dock
+.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override){
+  min-width:44px!important;
+  min-height:44px!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:rgba(255,211,106,.46)!important;
+}
+
+html:root:root body #floatDock.qily-float-dock
+.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override):is(:hover:hover,:focus-visible:focus-visible){
+  color:var(--qily-float-hover-ink)!important;
+  -webkit-text-fill-color:var(--qily-float-hover-ink)!important;
+  background-color:var(--qily-float-hover-bg)!important;
+  background-image:none!important;
+  border:2px solid var(--qily-float-hover-border)!important;
+  outline:3px solid var(--qily-float-focus-ring)!important;
+  outline-offset:3px!important;
+  box-shadow:0 0 0 2px rgba(5,42,51,.24),0 12px 28px rgba(5,42,51,.38)!important;
+  transform:translateX(-5px) scale(1.06)!important;
+  transition:none!important;
+}
+
+html:root:root body #floatDock.qily-float-dock
+.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override):is(:active:active,[data-qily-pressed="true"]){
+  color:var(--qily-float-pressed-ink)!important;
+  -webkit-text-fill-color:var(--qily-float-pressed-ink)!important;
+  background-color:var(--qily-float-pressed-bg)!important;
+  background-image:none!important;
+  border:2px solid var(--qily-float-pressed-border)!important;
+  outline:3px solid rgba(255,227,155,.58)!important;
+  outline-offset:2px!important;
+  box-shadow:inset 0 0 0 2px rgba(255,227,155,.24),0 5px 14px rgba(5,42,51,.34)!important;
+  transform:translateX(-2px) scale(.94)!important;
+  transition:none!important;
+}
+
+html:root:root body #floatDock.qily-float-dock
+.qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override):is(:hover:hover,:focus-visible:focus-visible,[data-qily-pressed="true"]) *{
+  color:inherit!important;
+  -webkit-text-fill-color:currentColor!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html:root:root body #floatDock.qily-float-dock .qily-float-btn{
+    transition:none!important;
+  }
+  html:root:root body #floatDock.qily-float-dock
+  .qily-float-btn:not(#qily-float-state-priority):not(#qily-float-state-override):is(:hover:hover,:focus-visible:focus-visible){
+    transform:none!important;
+  }
+}
+
+/* ===== site-layout-footer-closure-v1.css ===== */
+/* QilyLean 全站稳定渲染、单一内容轴与页尾闭环 v3｜2026-08-10
+ * QILY-SITEWIDE-STABLE-LAYOUT-V18-20260810
+ * 单一1560px内容轴覆盖静态与运行时模块；真实内容决定高度；悬浮入口稳定可用。
+ */
+:root{
+  --qily-site-content-width:var(--qily-wide-content,1560px);
+  --qily-site-gutter:var(--qily-wide-gutter,clamp(14px,2.2vw,40px));
+  --qily-site-deep:#073c47;
+  --qily-site-forest:#0f4b5a;
+  --qily-site-gold:#caa15f;
+  --qily-site-gold-light:#ffe39b;
+  --qily-site-dark-copy:#fff3d2;
+}
+
+/* 一、所有公共内容模块共用 1560px 内容轴和同一安全边距。 */
+html body :is(
+  .module-hero,
+  .module-section,
+  .module-footer,
+  .hero,
+  .daily-hero,
+  .section,
+  .footer,
+  .qily-ia-section,
+  .qtc-section,
+  .qily-resource-network,
+  .qtc-global-trust-footer
+){
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  padding-left:var(--qily-site-gutter)!important;
+  padding-right:var(--qily-site-gutter)!important;
+}
+
+html body :is(
+  .qily-ia-inner,
+  .qtc-inner,
+  .qily-resource-network__inner,
+  .module-inner,
+  .hero-inner,
+  .hero-grid,
+  .daily-inner,
+  .section-inner,
+  .footer-inner,
+  .main-inner,
+  .page-inner,
+  .content-inner,
+  .archive-inner,
+  .knowledge-inner,
+  .project-inner,
+  .tool-inner,
+  main > .section > .inner,
+  main > .module-section > .module-inner
+){
+  box-sizing:border-box!important;
+  width:min(var(--qily-site-content-width),100%)!important;
+  max-width:var(--qily-site-content-width)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+
+/* 运行时新增的可信度、项目启动和归档模块不得建立第二条 1220px 内容轴。 */
+html body :is(
+  .ql-trust-strip-inner,
+  .ql-trust-module,
+  .ql-certificate-disclaimer,
+  .ql-archive-note
+){
+  box-sizing:border-box!important;
+  width:min(var(--qily-site-content-width),calc(100% - var(--qily-site-gutter) - var(--qily-site-gutter)))!important;
+  max-width:var(--qily-site-content-width)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+
+html body :is(.qily-ia-heading,.qtc-heading){
+  width:100%!important;
+  max-width:100%!important;
+}
+
+/* 禁止 content-visibility 占位和 contain-intrinsic-size 伪高度造成“模块空白”。 */
+html body main > :is(.section,.module-section,.qily-ia-section,.qtc-section,.qily-resource-network),
+html body :is(.ql-trust-module,.ql-certificate-disclaimer,.ql-archive-note){
+  content-visibility:visible!important;
+  contain:none!important;
+  contain-intrinsic-size:none!important;
+}
+
+/* 二、深青模块只由真实文字、控件及统一内边距撑高，禁止遗留固定高度或空白占位。 */
+html body main > :is(.section,.module-section,.qily-ia-section,.qtc-section,.qily-resource-network),
+html body #qily-home-ai.qily-ia-section,
+html body #qily-home-ai.qily-ai-secondary{
+  height:auto!important;
+  min-height:0!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+}
+
+html body #results.qily-ia-secondary-section,
+html body #results.qily-ia-secondary-section > .inner,
+html body #results.qily-ia-secondary-section > .inner > .metrics{
+  height:auto!important;
+  min-height:0!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+}
+
+html body #results.qily-ia-secondary-section > .inner > .metrics{
+  align-items:stretch!important;
+}
+
+html body #results.qily-ia-secondary-section > .inner > .metrics > .metric{
+  height:auto!important;
+  min-height:0!important;
+  block-size:auto!important;
+  min-block-size:0!important;
+}
+
+html body #results.qily-ia-secondary-section .qily-results-toggle{
+  position:static!important;
+  inset:auto!important;
+  display:inline-flex!important;
+  min-height:44px!important;
+  margin-top:18px!important;
+}
+
+html body.qily-home-commercial-focus #qily-home-ai .qily-ia-inner,
+html body.qily-home-commercial-focus .qily-ai-secondary .qily-ia-inner,
+html body.qily-home-commercial-focus #qily-more-context .qily-ia-inner,
+html body #qily-knowledge-positioning .qily-ia-inner{
+  width:min(var(--qily-site-content-width),100%)!important;
+  max-width:var(--qily-site-content-width)!important;
+}
+
+/* 三、页尾不得再由隐藏工具、旧最小高度或补白撑出无内容滚动区。 */
+html body.qily-tail-compact{
+  height:auto!important;
+  min-height:0!important;
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+
+html body.qily-tail-compact > :is(
+  #floatDock,
+  #shareMask,
+  #wxMask,
+  #qilySearchMask,
+  #qilyDockToast,
+  #siteMusicMute,
+  #qilyPersistentNavigationFrame,
+  #qilyPersistentNavigationLoader
+){
+  margin:0!important;
+}
+
+/* 悬浮功能坞是固定工具，不得因页尾收口、导航遮罩或模块样式而消失。 */
+html body.qily-tail-compact > #floatDock.qily-float-dock{
+  position:fixed!important;
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  z-index:9000!important;
+}
+
+html body.qily-tail-compact > :is(#shareMask,#wxMask,#qilySearchMask,#qilyPersistentNavigationFrame){
+  position:fixed!important;
+}
+
+html body.qily-tail-compact > #siteBackgroundMusic:not([controls]){
+  display:none!important;
+}
+
+html:root:root body.qily-tail-compact .qtc-global-trust-footer{
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+}
+
+/* 四、可信度入口使用深青底、金色四边界和清晰浅色字；交互态保持高对比。 */
+html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{
+  display:flex!important;
+  align-items:center!important;
+  gap:10px!important;
+  margin:0!important;
+}
+
+html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-width:max-content!important;
+  min-height:44px!important;
+  padding:8px 15px!important;
+  border:2px solid var(--qily-site-gold)!important;
+  border-radius:999px!important;
+  color:var(--qily-site-dark-copy)!important;
+  -webkit-text-fill-color:var(--qily-site-dark-copy)!important;
+  background:var(--qily-site-forest)!important;
+  box-shadow:none!important;
+  font-size:14px!important;
+  font-weight:900!important;
+  line-height:1.25!important;
+  text-decoration:none!important;
+  text-shadow:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+}
+
+html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]:is(:hover:hover,:focus-visible:focus-visible){
+  border-color:#fff3c6!important;
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background:var(--qily-site-gold-light)!important;
+  box-shadow:0 9px 22px rgba(0,0,0,.22)!important;
+  outline:3px solid rgba(255,227,155,.45)!important;
+  outline-offset:2px!important;
+}
+
+html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]:active:active{
+  border-color:var(--qily-site-gold-light)!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-site-deep)!important;
+  transform:scale(.97)!important;
+}
+
+@media(max-width:820px){
+  html body :is(.qily-ia-inner,.qtc-inner,.qily-resource-network__inner,.module-inner,.hero-inner,.hero-grid,.daily-inner,.section-inner,.footer-inner,.main-inner,.page-inner,.content-inner,.archive-inner,.knowledge-inner,.project-inner,.tool-inner){
+    width:100%!important;
+  }
+  html body :is(.ql-trust-strip-inner,.ql-trust-module,.ql-certificate-disclaimer,.ql-archive-note){
+    width:calc(100% - 24px)!important;
+  }
+}
+
+@media(max-width:560px){
+  html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{align-items:stretch!important;flex-direction:column!important}
+  html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{width:100%!important;min-width:0!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{transition:none!important}
+}
+
+/* 五、2026-08-10截图问题闭环：只修复内容行宽、悬浮圆形入口与页尾收口，不二次改动业务卡片结构。 */
+html body :is(
+  .module-heading,
+  .module-page .head,
+  .qily-ia-heading,
+  .qtc-heading,
+  .module-lead,
+  .section-head,
+  .section-heading,
+  .page-heading
+){
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:none!important;
+  max-inline-size:none!important;
+}
+
+html body :is(
+  .module-heading,
+  .module-page .head,
+  .qily-ia-heading,
+  .qtc-heading,
+  .section-head,
+  .section-heading,
+  .page-heading
+) > p{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  max-inline-size:none!important;
+}
+
+/* 首页QilyLean AI说明在桌面宽屏有足够空间时保持完整单行；窄屏仍允许自然换行。 */
+@media(min-width:1100px){
+  html body #qily-home-ai .qily-ia-heading p{
+    white-space:nowrap!important;
+  }
+}
+@media(max-width:1099px){
+  html body #qily-home-ai .qily-ia-heading p{
+    white-space:normal!important;
+  }
+}
+
+/* 悬浮功能入口始终保留完整圆形边界与悬停轮廓，避免贴近视口边缘被裁切。 */
+html body #floatDock.qily-float-dock{
+  right:max(18px,env(safe-area-inset-right))!important;
+  overflow:visible!important;
+  box-sizing:border-box!important;
+}
+html body #floatDock.qily-float-dock .qily-float-btn{
+  box-sizing:border-box!important;
+  flex:0 0 62px!important;
+  width:62px!important;
+  height:62px!important;
+  min-width:62px!important;
+  min-height:62px!important;
+  aspect-ratio:1 / 1!important;
+  border-radius:50%!important;
+  overflow:visible!important;
+}
+html body #floatDock.qily-float-dock .qily-float-btn:is(:hover,:focus-visible){
+  outline:3px solid rgba(255,227,155,.72)!important;
+  outline-offset:3px!important;
+}
+
+/* 页尾统一为连续、紧凑的两段式信息区；消除浅色断层、短页页尾悬空和底部大块空白。 */
+html body.qily-tail-compact{
+  min-height:100vh!important;
+  min-height:100dvh!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+html body.qily-tail-compact > main{
+  flex:1 0 auto!important;
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+html body.qily-tail-compact :is(.module-footer,.footer,footer){
+  flex:0 0 auto!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+}
+html body.qily-tail-compact .module-footer{
+  padding-top:16px!important;
+  padding-bottom:16px!important;
+}
+html body.qily-tail-compact .qily-global-contact-footer{
+  margin-top:8px!important;
+  padding-top:10px!important;
+  padding-bottom:10px!important;
+}
+html:root:root body.qily-tail-compact > .qtc-global-trust-footer{
+  flex:0 0 auto!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+  padding-top:11px!important;
+  padding-bottom:11px!important;
+  border-top:1px solid rgba(255,255,255,.10)!important;
+}
+html body.qily-tail-compact > :is(
+  #floatDock,
+  #shareMask,
+  #wxMask,
+  #qilySearchMask,
+  #qilyDockToast,
+  #siteMusicMute,
+  #siteBackgroundMusic,
+  #qilyPersistentNavigationFrame,
+  #qilyPersistentNavigationLoader
+){
+  flex:none!important;
+}
+
+/* ===== site-layout-typography-closure-v20.css ===== */
+/* QilyLean sitewide layout + typography closure V20 | 2026-08-10
+ * Scope: card-grid balance, resource intro width, footer/tail closure, readable typography.
+ * This is the final visual convergence layer for the 2026-08-10 marked screenshots.
+ */
+:root{
+  --qily-type-nav-1:18.2px;
+  --qily-type-nav-2:17.2px;
+  --qily-type-nav-3:16px;
+  --qily-type-h1:clamp(45px,4.35vw,70px);
+  --qily-type-h2:clamp(34px,3vw,49px);
+  --qily-type-h3:clamp(23.5px,1.65vw,28px);
+  --qily-type-h4:20.5px;
+  --qily-type-body:19.5px;
+  --qily-type-card:19.25px;
+  --qily-type-note:17px;
+  --qily-type-small:15.5px;
+}
+
+/* A. 全站字号整体上移一档；原有 typography 变量继续作为唯一字号体系。 */
+html body{
+  font-size:var(--qily-type-body)!important;
+}
+html body :is(
+  .module-eyebrow,.eyebrow,.qtc-kicker,.resource-kicker,
+  .module-card small,.paper-card small,.career-full-card small,.qtc-card small,
+  .tag,.qtc-mini-badge,.resource-status,.stat span
+){
+  font-size:var(--qily-type-small)!important;
+}
+html body :is(
+  .module-result,.module-note,.career-result,.note,figcaption,.caption,.meta,
+  .gallery-tip,.empty,.moment-count,.project-meta,.article-meta,
+  .qtc-disclosure,.qtc-cert-note,.qtc-archive-item span,
+  .qtc-global-trust-footer,.qily-global-contact-footer
+){
+  font-size:var(--qily-type-note)!important;
+}
+html body :is(.qtc-card p,.qtc-card ul,.resource-item p,.resource-stage p,.result){
+  font-size:17px!important;
+  line-height:1.72!important;
+}
+html body #floatDock.qily-float-dock .qily-float-btn{
+  font-size:14.5px!important;
+}
+
+/* B. 八模块方法图谱及同类“正好8张四列卡片”在桌面端统一4x2。 */
+@media(min-width:1180px){
+  html:root:root:root body .capability-map.module-grid.four,
+  html:root:root:root body .module-grid.four:has(> :nth-child(8):last-child){
+    display:grid!important;
+    grid-template-columns:repeat(4,minmax(0,1fr))!important;
+    align-items:stretch!important;
+  }
+}
+@media(min-width:760px) and (max-width:1179px){
+  html:root:root:root body .capability-map.module-grid.four,
+  html:root:root:root body .module-grid.four:has(> :nth-child(8):last-child){
+    display:grid!important;
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    align-items:stretch!important;
+  }
+}
+@media(max-width:759px){
+  html:root:root:root body .capability-map.module-grid.four,
+  html:root:root:root body .module-grid.four:has(> :nth-child(8):last-child){
+    grid-template-columns:1fr!important;
+  }
+}
+html:root:root:root body .capability-map>.module-card,
+html:root:root:root body .module-grid.four:has(> :nth-child(8):last-child)>.module-card{
+  display:flex!important;
+  flex-direction:column!important;
+  height:100%!important;
+}
+html:root:root:root body .capability-map>.module-card>.module-result:last-child,
+html:root:root:root body .module-grid.four:has(> :nth-child(8):last-child)>.module-card>.module-result:last-child{
+  margin-top:auto!important;
+}
+
+/* C. 行业资源入驻服务：正文优先占满剩余宽度，状态按钮只占自身宽度。 */
+html:root:root:root body .resource-service-head{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) max-content!important;
+  align-items:end!important;
+  column-gap:16px!important;
+  row-gap:10px!important;
+}
+html:root:root:root body .resource-service-head>div:first-child{
+  min-width:0!important;
+  width:100%!important;
+}
+html:root:root:root body .resource-service-lead{
+  width:100%!important;
+  max-width:none!important;
+  max-inline-size:none!important;
+  margin-right:0!important;
+}
+html:root:root:root body .resource-status{
+  justify-self:end!important;
+  align-self:end!important;
+  margin:0 0 3px!important;
+  white-space:nowrap!important;
+}
+@media(min-width:1480px){
+  html:root:root:root body .resource-service-lead{
+    white-space:nowrap!important;
+  }
+}
+@media(max-width:1099px){
+  html:root:root:root body .resource-service-head{
+    grid-template-columns:1fr!important;
+  }
+  html:root:root:root body .resource-service-lead{
+    white-space:normal!important;
+  }
+  html:root:root:root body .resource-status{
+    justify-self:start!important;
+  }
+}
+
+/* D. 页尾：品牌/标语、技术联系、可信度栏使用同一内容轴和同一基线。 */
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer){
+  box-sizing:border-box!important;
+  flex:0 0 auto!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+  padding-top:16px!important;
+  padding-bottom:16px!important;
+}
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner){
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:24px!important;
+  flex-wrap:wrap!important;
+  width:min(var(--qily-site-content-width,var(--qily-wide-content,1560px)),100%)!important;
+  max-width:var(--qily-site-content-width,var(--qily-wide-content,1560px))!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner) > :first-child{
+  margin-right:auto!important;
+  text-align:left!important;
+}
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner) > :last-child{
+  margin-left:auto!important;
+  text-align:right!important;
+}
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer{
+  box-sizing:border-box!important;
+  width:min(var(--qily-site-content-width,var(--qily-wide-content,1560px)),100%)!important;
+  max-width:var(--qily-site-content-width,var(--qily-wide-content,1560px))!important;
+  margin:10px auto 0!important;
+  padding:12px 0 0!important;
+  border-top:1px solid rgba(255,227,155,.28)!important;
+  justify-content:center!important;
+  gap:12px!important;
+  text-align:center!important;
+}
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer{
+  box-sizing:border-box!important;
+  order:9000!important;
+  flex:0 0 auto!important;
+  width:100%!important;
+  margin:0!important;
+  padding-top:14px!important;
+  padding-bottom:14px!important;
+  border-top:1px solid rgba(255,255,255,.10)!important;
+}
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer .qtc-inner{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:18px!important;
+  flex-wrap:wrap!important;
+  width:min(var(--qily-site-content-width,var(--qily-wide-content,1560px)),100%)!important;
+  max-width:var(--qily-site-content-width,var(--qily-wide-content,1560px))!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
+  font-size:15.5px!important;
+  min-height:46px!important;
+  padding:9px 16px!important;
+}
+
+/* E. 短页真实收口：Main只承担剩余高度，工具与废弃持久导航不参与文档流。 */
+html:root:root:root body.qily-tail-compact{
+  min-height:100vh!important;
+  min-height:100dvh!important;
+  height:auto!important;
+  margin:0!important;
+  padding-bottom:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+html:root:root:root body.qily-tail-compact > main{
+  flex:1 0 auto!important;
+  min-height:0!important;
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+html:root:root:root body.qily-tail-compact > :is(
+  #floatDock,#shareMask,#wxMask,#qilySearchMask,#qilyDockToast,#siteMusicMute
+){
+  position:fixed!important;
+  flex:0 0 auto!important;
+  margin:0!important;
+}
+html:root:root:root body.qily-tail-compact > :is(
+  #qilyPersistentNavigationFrame,#qilyPersistentNavigationLoader
+){
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  overflow:hidden!important;
+}
+html:root:root:root body.qily-tail-compact > #siteBackgroundMusic:not([controls]){
+  display:none!important;
+  width:0!important;
+  height:0!important;
+}
+html:root:root:root body.qily-tail-compact::after{
+  content:none!important;
+  display:none!important;
+}
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer-shell:empty{
+  display:none!important;
+}
+
+/* F. 悬浮按钮保持完整圆形和可读字号，不因字号提升挤出边界。 */
+html:root:root:root body #floatDock.qily-float-dock{
+  right:max(20px,env(safe-area-inset-right))!important;
+  overflow:visible!important;
+}
+html:root:root:root body #floatDock.qily-float-dock .qily-float-btn{
+  box-sizing:border-box!important;
+  width:62px!important;
+  height:62px!important;
+  min-width:62px!important;
+  min-height:62px!important;
+  border-radius:50%!important;
+  line-height:1.16!important;
+}
+
+@media(max-width:900px){
+  :root{
+    --qily-type-nav-1:14.5px;
+    --qily-type-nav-2:15.5px;
+    --qily-type-nav-3:15px;
+    --qily-type-h3:23px;
+    --qily-type-body:18.5px;
+    --qily-type-card:18px;
+    --qily-type-note:16.2px;
+    --qily-type-small:14.8px;
+  }
+  html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner),
+  html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer .qtc-inner{
+    align-items:flex-start!important;
+    flex-direction:column!important;
+  }
+  html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner) > :last-child{
+    margin-left:0!important;
+    text-align:left!important;
+  }
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer{
+    justify-content:flex-start!important;
+    text-align:left!important;
+  }
+}
+
+@media(max-width:620px){
+  :root{
+    --qily-type-nav-1:13px;
+    --qily-type-nav-2:14.5px;
+    --qily-type-nav-3:14px;
+    --qily-type-h1:clamp(37px,10vw,45px);
+    --qily-type-h2:clamp(30.5px,8vw,38px);
+    --qily-type-h3:22px;
+    --qily-type-h4:19px;
+    --qily-type-body:18px;
+    --qily-type-card:17.5px;
+    --qily-type-note:15.5px;
+    --qily-type-small:14.5px;
+  }
+  html body #floatDock.qily-float-dock .qily-float-btn{
+    width:54px!important;
+    height:54px!important;
+    min-width:54px!important;
+    min-height:54px!important;
+    font-size:12.5px!important;
+  }
+  html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{
+    width:100%!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+  }
+  html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
+    width:100%!important;
+    min-width:0!important;
+  }
+}
+
+/* G. V21 页尾视觉闭环：删除重复左侧身份文案，只保留标语、联系方式和可信度三层。 */
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner):has(> :nth-child(2)) > :first-child{
+  display:none!important;
+}
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner):has(> :nth-child(2)){
+  display:block!important;
+  padding:0!important;
+}
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner):has(> :nth-child(2)) > :last-child{
+  display:block!important;
+  width:100%!important;
+  margin:0!important;
+  color:#e6efec!important;
+  font-size:15.5px!important;
+  font-weight:750!important;
+  line-height:1.45!important;
+  letter-spacing:.015em!important;
+  text-align:center!important;
+}
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer){
+  padding-top:12px!important;
+  padding-bottom:12px!important;
+}
+
+/* 联系信息拆成“标题 + 两组联系方式”两行，避免所有内容挤在同一行。 */
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer{
+  display:grid!important;
+  grid-template-columns:auto max-content auto max-content!important;
+  align-items:center!important;
+  justify-content:center!important;
+  column-gap:10px!important;
+  row-gap:9px!important;
+  width:min(980px,100%)!important;
+  max-width:980px!important;
+  margin:10px auto 0!important;
+  padding:12px 12px 0!important;
+  color:#dbe8e4!important;
+  font-size:14.5px!important;
+  line-height:1.35!important;
+  text-align:center!important;
+}
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer > :first-child{
+  grid-column:1 / -1!important;
+  color:#ffffff!important;
+  font-size:15.5px!important;
+  font-weight:900!important;
+  letter-spacing:.01em!important;
+}
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer > span:not(:first-child){
+  color:#dbe8e4!important;
+  font-size:14px!important;
+  font-weight:800!important;
+  white-space:nowrap!important;
+}
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer > a{
+  min-height:36px!important;
+  padding:6px 11px!important;
+  border:1px solid rgba(255,227,155,.55)!important;
+  border-radius:8px!important;
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  background:rgba(255,255,255,.045)!important;
+  font-size:14.5px!important;
+  font-weight:900!important;
+  line-height:1.2!important;
+  text-decoration:none!important;
+  white-space:nowrap!important;
+}
+html:root:root:root body.qily-tail-compact .qily-global-contact-footer > a:is(:hover,:focus-visible){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background:#ffe39b!important;
+  border-color:#ffe39b!important;
+  outline:2px solid rgba(255,227,155,.35)!important;
+  outline-offset:2px!important;
+}
+
+/* 可信度栏压缩为清晰的一行决策信息 + 三个操作入口。 */
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer{
+  padding-top:12px!important;
+  padding-bottom:12px!important;
+}
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer .qtc-inner{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:18px!important;
+}
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer .qtc-inner > div:first-child{
+  min-width:0!important;
+  color:#d7e8e4!important;
+  font-size:14.5px!important;
+  line-height:1.55!important;
+  letter-spacing:0!important;
+}
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer .qtc-inner > div:first-child strong{
+  color:#ffe39b!important;
+  font-size:14.5px!important;
+}
+html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:9px!important;
+  margin:0!important;
+  flex-wrap:nowrap!important;
+}
+html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
+  min-height:40px!important;
+  padding:7px 13px!important;
+  font-size:14px!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+}
+
+@media(max-width:1050px){
+  html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer .qtc-inner{
+    grid-template-columns:1fr!important;
+    justify-items:center!important;
+    text-align:center!important;
+  }
+  html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{
+    justify-content:center!important;
+    flex-wrap:wrap!important;
+  }
+}
+
+@media(max-width:720px){
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer{
+    grid-template-columns:auto minmax(0,1fr)!important;
+    width:100%!important;
+    max-width:100%!important;
+    justify-content:stretch!important;
+    text-align:left!important;
+  }
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > :first-child{
+    text-align:center!important;
+  }
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > a{
+    min-width:0!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+}
+
+@media(max-width:520px){
+  html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer) > :is(.module-inner,.footer-inner):has(> :nth-child(2)) > :last-child{
+    font-size:14px!important;
+  }
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer{
+    grid-template-columns:1fr!important;
+    row-gap:7px!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > :first-child,
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > span:not(:first-child),
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > a{
+    grid-column:1!important;
+    width:100%!important;
+    text-align:center!important;
+  }
+  html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{
+    width:100%!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+  }
+  html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
+    width:100%!important;
+    min-width:0!important;
+  }
+}
+
+/* ===== site-tail-gap-hotfix-v22.css ===== */
+/* QILY-SITEWIDE-TAIL-GAP-HOTFIX-V22-20260810
+ * Purpose: remove the viewport-forced footer gap introduced by the V19/V20 tail flex rules.
+ * Scope: document-flow height only. Footer visuals, contact/trust layout, floating dock and business modules remain unchanged.
+ */
+
+html:root:root:root body.qily-tail-compact{
+  min-height:0!important;
+  height:auto!important;
+  display:block!important;
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+
+html:root:root:root body.qily-tail-compact > main{
+  flex:none!important;
+  min-height:0!important;
+  height:auto!important;
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+
+html:root:root:root body.qily-tail-compact :is(.module-footer,.footer,footer),
+html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer{
+  flex:none!important;
+  min-height:0!important;
+  margin-top:0!important;
+  margin-bottom:0!important;
+}
+
+/* Fixed utilities must never re-enter document flow and create a false tail height. */
+html:root:root:root body.qily-tail-compact > :is(
+  #floatDock,#shareMask,#wxMask,#qilySearchMask,#qilyDockToast,#siteMusicMute,
+  #qilyPersistentNavigationFrame,#qilyPersistentNavigationLoader
+){
+  position:fixed!important;
+  flex:none!important;
+  margin:0!important;
+}
+
+html:root:root:root body.qily-tail-compact > #siteBackgroundMusic:not([controls]){
+  display:none!important;
+  width:0!important;
+  height:0!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+}
+
+html:root:root:root body.qily-tail-compact::after{
+  content:none!important;
+  display:none!important;
+}
+
+/* QILY-MOBILE-FOOTER-CONTROL-DENSITY-V23-20260810
+ * Mobile only: restore compact touch targets after the global typography/footer enlargement.
+ * Keep desktop layout, content hierarchy and all existing actions unchanged.
+ */
+@media(max-width:620px){
+  html:root:root:root body #floatDock.qily-float-dock{
+    right:max(8px,env(safe-area-inset-right))!important;
+    gap:5px!important;
+  }
+
+  html:root:root:root body #floatDock.qily-float-dock .qily-float-btn{
+    box-sizing:border-box!important;
+    flex:0 0 46px!important;
+    width:46px!important;
+    height:46px!important;
+    min-width:46px!important;
+    min-height:46px!important;
+    padding:4px!important;
+    border-radius:50%!important;
+    font-size:10.5px!important;
+    font-weight:850!important;
+    line-height:1.08!important;
+  }
+
+  html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer{
+    padding-top:10px!important;
+    padding-bottom:10px!important;
+  }
+
+  html:root:root:root body.qily-tail-compact > .qtc-global-trust-footer .qtc-inner{
+    gap:10px!important;
+  }
+
+  html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links{
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
+    align-items:stretch!important;
+    justify-content:stretch!important;
+    width:100%!important;
+    gap:7px!important;
+    flex-direction:initial!important;
+  }
+
+  html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
+    box-sizing:border-box!important;
+    width:auto!important;
+    min-width:0!important;
+    min-height:40px!important;
+    padding:6px 7px!important;
+    border-radius:999px!important;
+    font-size:13px!important;
+    line-height:1.15!important;
+    white-space:nowrap!important;
+  }
+
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer{
+    grid-template-columns:max-content minmax(0,1fr)!important;
+    column-gap:8px!important;
+    row-gap:6px!important;
+    width:100%!important;
+    max-width:100%!important;
+    padding-left:10px!important;
+    padding-right:10px!important;
+  }
+
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > :first-child{
+    grid-column:1 / -1!important;
+    width:auto!important;
+    margin-bottom:2px!important;
+    text-align:center!important;
+    font-size:14px!important;
+  }
+
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > span:not(:first-child){
+    grid-column:1!important;
+    width:auto!important;
+    text-align:right!important;
+    font-size:13px!important;
+  }
+
+  html:root:root:root body.qily-tail-compact .qily-global-contact-footer > a{
+    grid-column:2!important;
+    width:auto!important;
+    min-width:0!important;
+    min-height:34px!important;
+    padding:5px 9px!important;
+    text-align:left!important;
+    font-size:13px!important;
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+}
+
+@media(max-width:380px){
+  html:root:root:root body #floatDock.qily-float-dock .qily-float-btn{
+    flex-basis:44px!important;
+    width:44px!important;
+    height:44px!important;
+    min-width:44px!important;
+    min-height:44px!important;
+    font-size:10px!important;
+  }
+
+  html:root:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]{
+    min-height:38px!important;
+    padding:5px 4px!important;
+    font-size:12px!important;
+  }
+}
+
+/* ===== QilyLean professionalization V24 =====
+ * Goal: preserve the existing visual language while reducing request count,
+ * rendering work and long-page cognitive load. Static content remains in DOM.
+ */
+html { scrollbar-gutter: stable; }
+body.qily-pro-v24 main { overflow: clip; }
+body.qily-pro-v24 .qily-ia-heading > p,
+body.qily-pro-v24 .module-heading > p,
+body.qily-pro-v24 .daily-index-heading > div > p,
+body.qily-pro-v24 .head > p { max-width: 78ch; }
+body.qily-pro-v24 .qily-ia-grid,
+body.qily-pro-v24 .qily-ia-delivery-summary,
+body.qily-pro-v24 .qily-ia-secondary-links { align-items: stretch; }
+body.qily-pro-v24 .qily-ia-card,
+body.qily-pro-v24 .qily-ia-delivery-summary > article,
+body.qily-pro-v24 .qily-ia-secondary-link { min-width: 0; }
+body.qily-pro-v24 :where(section[id], article[id], div[id]) { scroll-margin-top: 92px; }
+
+@supports (content-visibility: auto) {
+  body.qily-pro-v24.daily-index-page .brief-index-card {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 230px;
+  }
+  body.qily-pro-v24 main > .qily-ia-section:nth-of-type(n + 2),
+  body.qily-pro-v24 main > .module-section:nth-of-type(n + 2),
+  body.qily-pro-v24 main > .section:nth-of-type(n + 3) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 720px;
+  }
+}
+
+@media (max-width: 760px) {
+  body.qily-pro-v24 .qily-ia-heading > p,
+  body.qily-pro-v24 .module-heading > p,
+  body.qily-pro-v24 .daily-index-heading > div > p,
+  body.qily-pro-v24 .head > p { max-width: none; }
+  body.qily-pro-v24 .qily-ia-grid,
+  body.qily-pro-v24 .qily-ia-delivery-summary,
+  body.qily-pro-v24 .qily-ia-secondary-links { gap: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.qily-pro-v24 *,
+  body.qily-pro-v24 *::before,
+  body.qily-pro-v24 *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

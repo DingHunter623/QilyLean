@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>QilyLean 今日简报</title>
+    <link>https://qilylean.com/qilylean/daily-insights.html</link>
+    <description>制造工程、精益生产、质量、数智化工厂与项目交付知识档案。页面日期用于知识档案排序与主题定位，不单独作为网页首次公开发布日期证明。</description>
+    <language>zh-cn</language>
+    <atom:link href="https://qilylean.com/qilylean/daily/feed.xml" rel="self" type="application/rss+xml"/>
+    <lastBuildDate>Sun, 09 Aug 2026 16:00:00 GMT</lastBuildDate>
+    <generator>QilyLean professionalization V24</generator>
+    <docs>https://www.rssboard.org/rss-specification</docs>
+    <ttl>720</ttl>
+    <category>制造工程</category>
+    <copyright>QilyLean｜启力精益</copyright>
+    <!-- 当前知识档案总量：2589；RSS仅提供最新30条。 -->
+    <item>
+      <title>真正的职能含金量：不是“负责过”，而是能把问题变成结果</title>
+      <link>https://qilylean.com/qilylean/daily/2026-08-10.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-08-10.html</guid>
+      <category>岗位价值与职能闭环</category>
+      <description>一个岗位真正的含金量，不在职位名称、汇报对象或会多少术语，而在于能否完成从问题识别、数据基线、方案设计、责任协同、Pilot验证、结果验收到机制固化的完整闭环。</description>
+    </item>
+    <item>
+      <title>别把“天花板”当成努力目标：上限、标杆与挑战目标必须分开</title>
+      <link>https://qilylean.com/qilylean/daily/2026-08-09.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-08-09.html</guid>
+      <category>职场术语与目标管理</category>
+      <description>职场与管理语境中的“天花板”本质是上限，不等于“努努力就能达到的标准”。管理中应把 Ceiling（天花板／上限）、Benchmark（标杆）、Target（目标）与 Stretch Target（挑战目标）分开定义，否则绩效、改善和资源配置容易因为术语混用而失真。</description>
+    </item>
+    <item>
+      <title>异常不过夜：从 Andon 暴露、分层响应到复发验证，建立现场异常闭环</title>
+      <link>https://qilylean.com/qilylean/daily/2026-08-08.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-08-08.html</guid>
+      <category>精益现场异常管理</category>
+      <description>异常管理的价值不在于登记多少问题，而在于让异常被看见、被及时遏制、被正确升级、被验证关闭，并把复发风险转化为标准。用 Andon（安灯）、响应时限、分层升级与 PDCA，把现场异常从“有人处理”升级为“有证据关闭”。</description>
+    </item>
+    <item>
+      <title>团队沟通五力：虎定方向、鹰看未来、狼打胜仗、豹提效率、狗守底线</title>
+      <link>https://qilylean.com/qilylean/daily/2026-08-07.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-08-07.html</guid>
+      <category>组织管理</category>
+      <description>优秀团队不是所有人都一样强，而是方向、视野、执行、改善与信任五种力量互补。用虎、鹰、狼、豹、狗五种角色识别团队缺口，匹配沟通方式，并把协作转化为可验证的组织结果。</description>
+    </item>
+    <item>
+      <title>管理六大用人之道：选对人、留住人，让不同层级各司其职</title>
+      <link>https://qilylean.com/qilylean/daily/2026-08-06.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-08-06.html</guid>
+      <category>组织管理</category>
+      <description>用人不能只看能力，也不能只讲感情。基层看才能、中层看德行、高层看胸怀；基层靠公平待遇稳定，中层靠尊重信任凝聚，高层靠事业平台同行。九张管理图将选人、留人和分层履责整合为一套可落地的组织管理逻辑。</description>
+    </item>
+    <item>
+      <title>设备停机不是维修单：用故障代码、MTBF与MTTR建立可靠性闭环</title>
+      <link>https://qilylean.com/qilylean/daily/2026-08-05.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-08-05.html</guid>
+      <category>ME工程</category>
+      <description>设备管理不能停在故障发生后抢修和填写维修单，而要统一停机边界、故障代码、响应过程、原因验证与复发控制，用MTBF、MTTR、OEE和重复故障率把设备问题转化为可预防、可验证、可持续关闭的可靠性闭环。</description>
+    </item>
+    <item>
+      <title>科学改进生产力：从“催人提速”转向“系统减少损失”</title>
+      <link>https://qilylean.com/qilylean/daily/2026-08-04.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-08-04.html</guid>
+      <category>科学改进生产力</category>
+      <description>生产现场越忙，不等于生产力越高。真正的生产力改善，应先定义什么是有效产出，再用事实基线识别等待、返工、换型、故障、搬运、缺料和信息延迟等系统损失，通过小范围试验验证改善，最后固化为稳定、可重复的作业与管理机制。</description>
+    </item>
+    <item>
+      <title>成果不是数字卡片：用证据等级、阶段门与公开链接形成核验闭环</title>
+      <link>https://qilylean.com/qilylean/daily/2026-08-03.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-08-03.html</guid>
+      <category>成果证据分级与公开核验</category>
+      <description>制造改善成果一旦进入官网、项目报告或对外交流材料，就从内部总结升级为公开主张。公开主张不能只给出“提升多少、节省多少、完成多少”，还必须同步回答：依据是什么、由谁确认、本人承担什么角色、适用于什么条件、读者在哪里核验。</description>
+    </item>
+    <item>
+      <title>标准工时不是一列数字：让IE标工、PMC排产与生产实绩形成闭环</title>
+      <link>https://qilylean.com/qilylean/daily/2026-08-02.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-08-02.html</guid>
+      <category>IE标工联动PMC排产</category>
+      <description>标准工时只有进入订单拆解、产能校核、工位配置、日计划、实绩反馈与滚动排程，才能从静态资料变成排产决策；这条数据链必须做到编码同源、函数联动、异常可见、尾单结清。</description>
+    </item>
+    <item>
+      <title>工程项目不是“做完”：用里程碑、风险、资源与收益形成交付闭环</title>
+      <link>https://qilylean.com/qilylean/daily/2026-08-01.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-08-01.html</guid>
+      <category>工程项目交付管理</category>
+      <description>工程项目管理不能停在任务清单和完成率，而要把需求定义、范围基线、里程碑评审、风险控制、资源协同、变更管理、验收证据、收益兑现与标准复制贯通为交付闭环。</description>
+    </item>
+    <item>
+      <title>品质不是检出来的：把客户要求转化为全过程质量闭环</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-31.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-31.html</guid>
+      <category>全过程质量管理</category>
+      <description>品质管理不能停在IQC、IPQC、FQC与OQC的检验分工，而要把客户要求、风险识别、过程控制、数据判定、异常遏制、根因纠正、标准更新与持续改进贯通为全过程质量闭环。</description>
+    </item>
+    <item>
+      <title>现场管理不是盯人：用标准、目视与责任闭环驱动日清日结</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-30.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-30.html</guid>
+      <category>现场管理闭环</category>
+      <description>现场管理的核心不是增加检查，而是把目标、标准、状态、异常和责任放到同一现场节奏中，用5W2H、SMART、RACI与PDCA形成日清日结闭环。</description>
+    </item>
+    <item>
+      <title>从EVT到MP：让PE、IE、NPI、ME形成量产交付闭环</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-29.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-29.html</guid>
+      <category>NPI全链路工程</category>
+      <description>新产品从样件走向稳定量产，必须让产品、工艺、产能、设备、质量与物流在同一阶段门中成熟，并用PQCD、OEE、PDCA和Kaizen形成持续验证与交付闭环。</description>
+    </item>
+    <item>
+      <title>IE标工联同PMC排产，关键是形成计划—实绩—结单闭环</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-28.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-28.html</guid>
+      <category>IE标工 / PMC排产闭环</category>
+      <description>IE标准工时不是独立台账，PMC排产也不是手工填数。只有以金蝶编码为主键，将订单净需求、标工版本、工位与人力、冻结计划、生产实绩、欠产与超产、尾单调整和结单状态贯通，计划才会成为可校验、可追溯、可持续改善的制造闭环。</description>
+    </item>
+    <item>
+      <title>IE七大手法简介与应用</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-27.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-27.html</guid>
+      <category>IE七大手法</category>
+      <description>本期采用制造现场常用的一组 IE 七大手法：防呆法、动改法、双手法、人机法、五五法、流程法、抽样法。它们分别处理“做错、动作浪费、双手不协调、人机等待、方法追问、跨工序流动、时间利用率”七类问题，不应被当成彼此孤立的工具清单。</description>
+    </item>
+    <item>
+      <title>审核发现偏差不是结束，必须进入异常反应闭环</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-26.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-26.html</guid>
+      <category>异常反应 / 审核闭环</category>
+      <description>分层过程审核能把标准偏差暴露出来，但发现问题不等于解决问题。若审核结果只停留在拍照、登记、扣分和责任人签字，现场会反复出现同类偏差。真正有效的机制，是让每个偏差进入遏制、分析、对策、复验与标准更新的异常反应闭环。</description>
+    </item>
+    <item>
+      <title>标准复制出去以后，还要靠分层审核守住执行</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-25.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-25.html</guid>
+      <category>分层过程审核 / 标准维持</category>
+      <description>横向展开把有效做法带到更多场景，但标准发布、培训完成并不代表执行稳定。制造现场会受人员轮换、设备状态、订单波动和版本变更影响，若缺少按层级、按频次、按风险的过程审核，标准很快就会回弹为旧习惯。</description>
+    </item>
+    <item>
+      <title>改善真正形成能力，不是结案，而是把有效做法复制出去</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-24.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-24.html</guid>
+      <category>横向展开 / 防止复发</category>
+      <description>对策经过实绩验证并固化为标准，只完成了单点闭环。制造企业要把一次改善转化为组织能力，还必须识别相似产品、设备、工序和区域，完成风险复核、标准适配、责任移交与效果追踪。</description>
+    </item>
+    <item>
+      <title>改善有没有完成，不看“已处理”，要看实绩是否验证</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-23.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-23.html</guid>
+      <category>闭环管理 / 实绩验证</category>
+      <description>5W2H能把对象、责任、时间、方法、投入成本、预期收益和回本周期说明白，但行动完成不等于问题关闭。制造现场真正的闭环，还需要用计划值、实绩值、差异原因和复发情况验证效果；否则“已完成”只是流程状态，不是改善结果。</description>
+    </item>
+    <item>
+      <title>5W2H不是要因分析，而是把问题和行动说清楚</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-22.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-22.html</guid>
+      <category>5W2H / 问题澄清</category>
+      <description>制造现场遇到异常时，很多人习惯连续追问“为什么”，却把问题界定、原因分析和行动安排混在一起。结果往往是问题问了很多遍，真正的边界没有明确；原因列了一大堆，责任、时间和措施仍然没有落地。</description>
+    </item>
+    <item>
+      <title>防错不是提醒员工小心，而是让错误难以发生</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-21.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-21.html</guid>
+      <category>质量防错 / Poka-Yoke</category>
+      <description>制造现场出现错装、漏装、反装或误操作后，最常见的对策是培训、通报和要求员工加强注意。但人在重复作业、换线赶产和疲劳状态下必然会产生波动，仅靠责任心无法长期保证零缺陷。</description>
+    </item>
+    <item>
+      <title>精益改善的终点，是形成企业持续改善能力</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-20.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-20.html</guid>
+      <category>制造改善体系</category>
+      <description>制造企业推进改善，不能只关注单项效率提升，而应建立从问题发现、数据分析、改善实施到标准固化的完整闭环。</description>
+    </item>
+    <item>
+      <title>精益改善不是单点优化，而是体系能力建设</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-19.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-19.html</guid>
+      <category>高可靠电子精益体系建设</category>
+      <description>很多企业推进精益改善时，容易停留在单项改善，例如效率提升、现场整理或局部设备优化。但真正持续创造价值的精益体系，需要将VSM价值流分析、标准工时、单件流、SMED快速换型、6S现场管理和数据化管理形成闭环。</description>
+    </item>
+    <item>
+      <title>效率提升，不是让设备跑得更快，而是减少设备等待</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-18.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-18.html</guid>
+      <category>OEE与设备效率</category>
+      <description>很多企业谈设备效率，第一反应是提高速度、增加产量。但真正拉低设备综合效率的，往往不是设备跑得不够快，而是设备频繁处于等待状态。</description>
+    </item>
+    <item>
+      <title>现场越忙，不代表交付越快</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-17.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-17.html</guid>
+      <category>精益物流</category>
+      <description>很多制造现场每天都在赶料、催料、找料，人员与车辆不停穿梭，看起来十分忙碌，交付却仍然不稳定。真正的问题往往不是搬运动作不够快，而是物料没有按照生产节拍和实际需求进行组织。</description>
+    </item>
+    <item>
+      <title>改善最大的浪费，不是没有工具，而是没有标准</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-16.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-16.html</guid>
+      <category>标准化 / 知识沉淀</category>
+      <description>很多企业做过改善、导入过系统，也组织过培训，但一段时间后，现场又回到了原来的状态。问题往往不在于缺少工具，而在于有效做法没有形成标准，标准没有形成机制，机制也没有沉淀为组织能力。</description>
+    </item>
+    <item>
+      <title>计划不是填满产能，而是保护交付节奏</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-15.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-15.html</guid>
+      <category>PMC / APS</category>
+      <description>很多排程表看起来每天都排得满满当当，但真正进入现场后，却不断出现缺料、插单、换线、等待和尾单积压。计划表越满，不代表交付能力越强；当排程没有考虑物料齐套、标准工时、瓶颈工序和异常缓冲时，所谓满负荷往往只是把风险提前写进计划。</description>
+    </item>
+    <item>
+      <title>改善不是“做完”，而是形成执行闭环</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-14.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-14.html</guid>
+      <category>管理与执行</category>
+      <description>很多改善项目在方案落地、数据好转后就被视为结束，但没有把有效做法转化为标准，没有明确维护责任，也没有形成持续检查与复盘机制。时间一长，现场往往重新回到原来的状态。</description>
+    </item>
+    <item>
+      <title>标准工时，为什么是数智化工厂真正的数据底座？</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-13.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-13.html</guid>
+      <category>标准工时 / APS</category>
+      <description>很多企业导入ERP、MES或APS后，仍然发现排程不准、产能失真、人力配置反复调整。问题往往不在系统本身，而在基础工时没有统一口径，现场实绩也无法持续校验。</description>
+    </item>
+    <item>
+      <title>改善不是先压指标，而是先把问题跑出来</title>
+      <link>https://qilylean.com/qilylean/daily/2026-07-12.html</link>
+      <guid isPermaLink="true">https://qilylean.com/qilylean/daily/2026-07-12.html</guid>
+      <category>精益生产</category>
+      <description>精益项目刚启动时，最重要的不是马上追求漂亮数据，而是让方案进入现场试运行。只有经过真实订单、真实节拍、真实物料和真实人员配合，问题才会充分暴露。</description>
+    </item>
+  </channel>
+</rss>

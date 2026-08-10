@@ -301,3 +301,10 @@ function main() {
 }
 
 main();
+
+// QILY-PROFESSIONALIZATION-V24:START
+// Site metadata generator: keep consolidated closure CSS, freshness metadata and render optimizations materialized.
+if (require.main === module && !process.argv.includes('--check')) {
+  require('./materialize-professionalization-v24.js');
+}
+// QILY-PROFESSIONALIZATION-V24:END
