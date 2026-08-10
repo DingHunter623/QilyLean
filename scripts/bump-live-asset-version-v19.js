@@ -32,7 +32,11 @@ let replacementsCount = 0;
 const changedFiles = [];
 
 walk(root, (file) => {
+  const relative = path.relative(root, file).replace(/\\/g, '/');
   if (path.resolve(file) === self) return;
+  // GitHub Actions GITHUB_TOKEN cannot push workflow-file changes from inside a workflow.
+  // Workflow references are updated explicitly through the GitHub connector instead.
+  if (relative.startsWith('.github/workflows/')) return;
   if (!textExtensions.has(path.extname(file).toLowerCase())) return;
 
   scanned += 1;
@@ -52,7 +56,7 @@ walk(root, (file) => {
   fs.writeFileSync(file, after, 'utf8');
   changed += 1;
   replacementsCount += fileReplacements;
-  changedFiles.push(path.relative(root, file));
+  changedFiles.push(relative);
 });
 
 const mustContainV19 = [
