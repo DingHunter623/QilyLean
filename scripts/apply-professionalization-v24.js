@@ -68,7 +68,8 @@ function patchBuildDailyWorkflow(source) {
     `            site-closure-bundle-v24.css ${slash}`,
     `            qilylean/daily/feed.xml ${slash}`
   ];
-  if (!next.includes(`            site-closure-bundle-v24.css ${slash}`)) {
+  const usesFullGitAdd = next.includes('          git add -A');
+  if (!usesFullGitAdd && !next.includes(`            site-closure-bundle-v24.css ${slash}`)) {
     const anchor = `            sitemap.xml ${slash}`;
     if (!next.includes(anchor)) throw new Error('build-daily-archive.yml: git-add anchor missing');
     next = next.replace(anchor, `${gitAddInsertions.join('\n')}\n${anchor}`);
