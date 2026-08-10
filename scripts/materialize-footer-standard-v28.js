@@ -6,12 +6,12 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const CSS_VERSION = '20260811-footer-content-axis-v31';
-const SCRIPT_VERSION = '20260811-footer-content-axis-v31';
+const CSS_VERSION = '20260811-footer-no-legacy-duplicate-v32';
+const SCRIPT_VERSION = '20260811-footer-no-legacy-duplicate-v32';
 const CSS_HREF = `/site-footer-standard-v28.css?v=${CSS_VERSION}`;
 const SCRIPT_SRC = `/site-footer-standard-v28.js?v=${SCRIPT_VERSION}`;
 const CSS_TAG = `<link id="qilyFooterStandardV28Stylesheet" rel="stylesheet" href="${CSS_HREF}">`;
-const SCRIPT_TAG = `<script defer id="qilyFooterStandardV28Script" data-qily-footer-standard="v31" src="${SCRIPT_SRC}"></script>`;
+const SCRIPT_TAG = `<script defer id="qilyFooterStandardV28Script" data-qily-footer-standard="v32" src="${SCRIPT_SRC}"></script>`;
 
 function listHtml(directory, prefix = '') {
   const out = [];
@@ -52,20 +52,20 @@ for (const relative of files) {
   const cssMatches = after.match(new RegExp(`site-footer-standard-v28\\.css\\?v=${CSS_VERSION}`, 'g')) || [];
   const scriptMatches = after.match(new RegExp(`site-footer-standard-v28\\.js\\?v=${SCRIPT_VERSION}`, 'g')) || [];
   const v26Matches = after.match(/site-footer-standard-v26\.js/g) || [];
-  if (cssMatches.length !== 1) throw new Error(`${relative}: expected exactly one V31 footer stylesheet reference, found ${cssMatches.length}`);
-  if (scriptMatches.length !== 1) throw new Error(`${relative}: expected exactly one V31 footer runtime reference, found ${scriptMatches.length}`);
+  if (cssMatches.length !== 1) throw new Error(`${relative}: expected exactly one V32 footer stylesheet reference, found ${cssMatches.length}`);
+  if (scriptMatches.length !== 1) throw new Error(`${relative}: expected exactly one V32 footer runtime reference, found ${scriptMatches.length}`);
   if (v26Matches.length !== 0) throw new Error(`${relative}: obsolete V26 footer runtime still present`);
 
   if (after === before) continue;
-  if (checkOnly) throw new Error(`${relative}: V31 footer content-axis standard is not materialized`);
+  if (checkOnly) throw new Error(`${relative}: V32 footer no-duplicate standard is not materialized`);
   fs.writeFileSync(absolute, after, 'utf8');
   changed += 1;
   changedFiles.push(relative);
 }
 
 if (checkOnly) {
-  process.stdout.write(`V31 footer content-axis contract passed for ${eligible} HTML files.\n`);
+  process.stdout.write(`V32 footer no-duplicate contract passed for ${eligible} HTML files.\n`);
 } else {
-  process.stdout.write(`V31 footer content-axis standard materialized in ${changed}/${eligible} HTML files.\n`);
+  process.stdout.write(`V32 footer no-duplicate standard materialized in ${changed}/${eligible} HTML files.\n`);
   if (changedFiles.length) process.stdout.write(changedFiles.slice(0, 40).join('\n') + (changedFiles.length > 40 ? '\n…\n' : '\n'));
 }

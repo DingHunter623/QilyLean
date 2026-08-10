@@ -1,17 +1,44 @@
-/* QilyLean Global Footer V31 | two-row full-site footer aligned to the common content axis */
-.qily-footer-v31-legacy-hidden{display:none!important}
-
-#qilyGlobalFooter.qily-global-footer-v31{
-  box-sizing:border-box;
-  width:100%;
-  margin:0;
-  padding:0;
-  color:#dfeae7;
-  background:#0b1815;
-  border-top:1px solid rgba(204,164,83,.28);
+/* QilyLean Global Footer V32 | one authoritative two-row footer, no legacy duplicates */
+.qily-footer-v31-legacy-hidden,
+.qily-footer-v32-legacy-hidden,
+html body > footer:not(#qilyGlobalFooter),
+html body footer.module-footer:not(#qilyGlobalFooter),
+html body footer.footer:not(#qilyGlobalFooter),
+html body .module-footer:not(#qilyGlobalFooter),
+html body #qilyGlobalContactFooter,
+html body .qily-global-contact-footer,
+html body .qily-global-contact-footer-shell,
+html body #qtc-global-trust-footer,
+html body .qtc-global-trust-footer{
+  display:none!important;
+  visibility:hidden!important;
+  width:0!important;
+  height:0!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  overflow:hidden!important;
 }
 
-/* Both footer rows use exactly the same content axis as the site's 1560px layout. */
+#qilyGlobalFooter.qily-global-footer-v31,
+#qilyGlobalFooter.qily-global-footer-v32{
+  box-sizing:border-box;
+  display:block!important;
+  visibility:visible!important;
+  width:100%!important;
+  height:auto!important;
+  min-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  color:#dfeae7;
+  background:#0b1815;
+  border-top:1px solid rgba(204,164,83,.28)!important;
+  overflow:visible!important;
+}
+
+/* Both footer rows share the same content axis as the site body. */
 #qilyGlobalFooter .qily-footer-v31-inner{
   box-sizing:border-box;
   width:min(var(--qily-wide-content,1560px),calc(100% - var(--qily-wide-gutter,40px) - var(--qily-wide-gutter,40px)));
@@ -19,7 +46,7 @@
   margin:0 auto;
 }
 
-/* Row 1: module-specific theme on the left; unified contact group on the right. */
+/* Row 1: module-specific theme left; unified contact block right. */
 #qilyGlobalFooter .qily-footer-v31-mainline{
   min-height:48px;
   display:grid;
@@ -57,32 +84,16 @@
 #qilyGlobalFooter .qily-footer-v31-contact-sep{flex:0 0 auto;color:rgba(227,194,119,.72);font-weight:700}
 #qilyGlobalFooter .qily-footer-v31-field{display:inline-flex;align-items:center;gap:4px;color:#dfeae7;font-weight:760}
 #qilyGlobalFooter .qily-footer-v31-field a{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:24px;
-  padding:2px 7px;
-  border:1px solid rgba(213,173,84,.5);
-  border-radius:7px;
-  color:#f3d17d;
-  -webkit-text-fill-color:#f3d17d;
-  background:rgba(255,255,255,.025);
-  font:inherit;
-  font-weight:850;
-  line-height:1.15;
-  text-decoration:none;
-  white-space:nowrap;
+  display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:2px 7px;
+  border:1px solid rgba(213,173,84,.5);border-radius:7px;color:#f3d17d;-webkit-text-fill-color:#f3d17d;
+  background:rgba(255,255,255,.025);font:inherit;font-weight:850;line-height:1.15;text-decoration:none;white-space:nowrap;
 }
 #qilyGlobalFooter .qily-footer-v31-field a:is(:hover,:focus-visible){
-  color:#15312c;
-  -webkit-text-fill-color:#15312c;
-  background:#f3d17d;
-  border-color:#f3d17d;
-  outline:2px solid rgba(243,209,125,.24);
-  outline-offset:2px;
+  color:#15312c;-webkit-text-fill-color:#15312c;background:#f3d17d;border-color:#f3d17d;
+  outline:2px solid rgba(243,209,125,.24);outline-offset:2px;
 }
 
-/* Row 2: credibility statement on the left; the three unified actions on the right. */
+/* Row 2: credibility statement left; unified action buttons right. */
 #qilyGlobalFooter .qily-footer-v31-bottomline{
   min-height:54px;
   display:grid;
@@ -92,49 +103,21 @@
   padding:8px 0 9px;
 }
 #qilyGlobalFooter .qily-footer-v31-trust{
-  min-width:0;
-  justify-self:start;
-  color:#d8e4e0;
-  font-size:clamp(10.8px,.7vw,12.9px);
-  line-height:1.45;
-  text-align:left;
+  min-width:0;justify-self:start;color:#d8e4e0;font-size:clamp(10.8px,.7vw,12.9px);line-height:1.45;text-align:left;
 }
 #qilyGlobalFooter .qily-footer-v31-trust strong{color:#f2cc6b;font-weight:850}
 #qilyGlobalFooter .qily-footer-v31-trust span{margin:0 4px;color:rgba(220,186,105,.6)}
 #qilyGlobalFooter .qily-footer-v31-actions{
-  justify-self:end;
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:8px;
-  flex:0 0 auto;
+  justify-self:end;display:flex;align-items:center;justify-content:flex-end;gap:8px;flex:0 0 auto;
 }
 #qilyGlobalFooter .qily-footer-v31-actions a{
-  min-width:76px;
-  height:34px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  box-sizing:border-box;
-  padding:0 12px;
-  border:1.5px solid #d3a74d;
-  border-radius:999px;
-  color:#f6d991;
-  -webkit-text-fill-color:#f6d991;
-  background:#123339;
-  font-size:12px;
-  line-height:1;
-  font-weight:820;
-  text-decoration:none;
-  white-space:nowrap;
+  min-width:76px;height:34px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;padding:0 12px;
+  border:1.5px solid #d3a74d;border-radius:999px;color:#f6d991;-webkit-text-fill-color:#f6d991;background:#123339;
+  font-size:12px;line-height:1;font-weight:820;text-decoration:none;white-space:nowrap;
 }
 #qilyGlobalFooter .qily-footer-v31-actions a:is(:hover,:focus-visible){
-  color:#fff0bf;
-  -webkit-text-fill-color:#fff0bf;
-  background:#184a52;
-  border-color:#e6bc60;
-  outline:2px solid rgba(230,188,96,.22);
-  outline-offset:2px;
+  color:#fff0bf;-webkit-text-fill-color:#fff0bf;background:#184a52;border-color:#e6bc60;
+  outline:2px solid rgba(230,188,96,.22);outline-offset:2px;
 }
 
 @media(max-width:1320px) and (min-width:981px){
@@ -148,45 +131,20 @@
 }
 
 @media(max-width:980px){
-  #qilyGlobalFooter .qily-footer-v31-inner{
-    width:min(var(--qily-wide-content,1560px),calc(100% - var(--qily-wide-gutter,26px) - var(--qily-wide-gutter,26px)));
-  }
-  #qilyGlobalFooter .qily-footer-v31-mainline{
-    grid-template-columns:1fr;
-    row-gap:8px;
-    padding:10px 0;
-  }
-  #qilyGlobalFooter .qily-footer-v31-module,
-  #qilyGlobalFooter .qily-footer-v31-contact{
-    justify-self:start;
-    text-align:left;
-  }
+  #qilyGlobalFooter .qily-footer-v31-inner{width:min(var(--qily-wide-content,1560px),calc(100% - var(--qily-wide-gutter,26px) - var(--qily-wide-gutter,26px)))}
+  #qilyGlobalFooter .qily-footer-v31-mainline{grid-template-columns:1fr;row-gap:8px;padding:10px 0}
+  #qilyGlobalFooter .qily-footer-v31-module,#qilyGlobalFooter .qily-footer-v31-contact{justify-self:start;text-align:left}
   #qilyGlobalFooter .qily-footer-v31-module{white-space:normal;font-size:12px}
   #qilyGlobalFooter .qily-footer-v31-contact{justify-content:flex-start;flex-wrap:wrap;white-space:normal;font-size:11.2px}
-  #qilyGlobalFooter .qily-footer-v31-bottomline{
-    grid-template-columns:1fr;
-    row-gap:9px;
-    padding:9px 0 11px;
-  }
+  #qilyGlobalFooter .qily-footer-v31-bottomline{grid-template-columns:1fr;row-gap:9px;padding:9px 0 11px}
   #qilyGlobalFooter .qily-footer-v31-actions{justify-self:start;justify-content:flex-start}
 }
 
 @media(max-width:620px){
-  #qilyGlobalFooter .qily-footer-v31-inner{
-    width:calc(100% - var(--qily-wide-gutter,15px) - var(--qily-wide-gutter,15px));
-  }
+  #qilyGlobalFooter .qily-footer-v31-inner{width:calc(100% - var(--qily-wide-gutter,15px) - var(--qily-wide-gutter,15px))}
   #qilyGlobalFooter .qily-footer-v31-contact{display:block;font-size:10.8px;line-height:1.65}
   #qilyGlobalFooter .qily-footer-v31-contact>*{display:inline}
-  #qilyGlobalFooter .qily-footer-v31-field a{
-    display:inline;
-    min-height:0;
-    padding:0;
-    border:0;
-    border-radius:0;
-    background:transparent;
-    color:#f3d17d;
-    -webkit-text-fill-color:#f3d17d;
-  }
+  #qilyGlobalFooter .qily-footer-v31-field a{display:inline;min-height:0;padding:0;border:0;border-radius:0;background:transparent;color:#f3d17d;-webkit-text-fill-color:#f3d17d}
   #qilyGlobalFooter .qily-footer-v31-trust{font-size:10.8px;line-height:1.6}
   #qilyGlobalFooter .qily-footer-v31-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:6px}
   #qilyGlobalFooter .qily-footer-v31-actions a{width:100%;min-width:0;height:32px;padding:0 4px;font-size:10.8px}
