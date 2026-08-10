@@ -6,8 +6,8 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const version = '20260810-sitewide-floating-dock-feedback-v13';
-const layoutVersion = '20260810-sitewide-layout-footer-v15';
-const navVersion = '20260810-sitewide-layout-footer-loader-v15';
+const layoutVersion = '20260810-sitewide-layout-footer-v16';
+const navVersion = '20260810-sitewide-layout-footer-loader-v16';
 const href = `/site-interactive-hover-contrast-v1.css?v=${version}`;
 const layoutHref = `/site-layout-footer-closure-v1.css?v=${layoutVersion}`;
 const navHref = `/site-navigation.js?v=${navVersion}`;
@@ -194,14 +194,16 @@ function validateLoadOrder() {
   );
 
   [
-    'QILY-SITEWIDE-LAYOUT-FOOTER-CLOSURE-V15-20260810',
+    'QILY-SITEWIDE-LAYOUT-FOOTER-CLOSURE-V16-20260810',
     '--qily-site-content-width:var(--qily-wide-content,1560px)',
     '.qily-ia-inner',
     '.qtc-inner',
     '.qily-resource-network__inner',
     'height:auto!important',
     'min-height:0!important',
-    '.qtc-global-trust-footer .qtc-global-trust-links > a[href]',
+    'html:root:root body.qily-tail-compact .qtc-global-trust-footer .qtc-global-trust-links > a[href]',
+    ':is(:hover:hover,:focus-visible:focus-visible)',
+    ':active:active',
     'border:2px solid var(--qily-site-gold)!important',
     'min-height:44px!important'
   ].forEach((marker) => assert(layoutCss.includes(marker), `Layout/footer closure marker missing: ${marker}`));
@@ -221,8 +223,8 @@ function validatePublicPages() {
     publicPages += 1;
     actionControls += (html.match(/<button\b|<input\b[^>]*type=["'](?:button|submit)["']|<a\b[^>]*class=["'][^"']*(?:button|action|btn|cta)/gi) || []).length;
     if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260810-sitewide-floating-dock-feedback-v13)/i.test(html)) staleBeforeMaterialization += 1;
-    if (/site-layout-footer-closure-v1\.css\?v=(?!20260810-sitewide-layout-footer-v15)/i.test(html)) staleLayoutBeforeMaterialization += 1;
-    if (/site-navigation\.js\?v=(?!20260810-sitewide-layout-footer-loader-v15)/i.test(html)) staleNavigationBeforeMaterialization += 1;
+    if (/site-layout-footer-closure-v1\.css\?v=(?!20260810-sitewide-layout-footer-v16)/i.test(html)) staleLayoutBeforeMaterialization += 1;
+    if (/site-navigation\.js\?v=(?!20260810-sitewide-layout-footer-loader-v16)/i.test(html)) staleNavigationBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);
     const currentCount = candidate.split(href).length - 1;
