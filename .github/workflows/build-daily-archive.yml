@@ -1,59 +1,59 @@
 name: Build daily engineering brief archive
-# Publication refresh: 2026-08-10 V28 unified footer closure
+# Publication refresh: 2026-08-11 serialized site publication
 
 on:
   push:
     branches: [main]
     paths:
-      - ".github/workflows/build-daily-archive.yml"
-      - "qilylean/daily/*.html"
-      - "qilylean/assets/daily-*.svg"
-      - "qilylean/daily-briefs.css"
-      - "qilylean/daily-feedback.js"
-      - "qilylean/site-data.json"
-      - "qilylean/site-search-index.json"
-      - "site-number-badge-contrast-v1.css"
-      - "site-interactive-hover-contrast-v1.css"
-      - "homepage-music-v5.js"
-      - "site-footer-standard-v28.css"
-      - "site-footer-standard-v28.js"
-      - "knowledge/terminology.html"
-      - "knowledge/terminology/*.html"
-      - "scripts/build-daily-archive.js"
-      - "scripts/materialize-professionalization-v24.js"
-      - "scripts/publish-primary-contrast-music-continuity.js"
-      - "scripts/apply-footer-standard-v28.js"
-      - "scripts/materialize-footer-standard-v28.js"
-      - "scripts/build-site-metadata.js"
-      - "scripts/sync-search-brief-metadata.js"
-      - "scripts/sync-trust-brief-metadata.js"
-      - "scripts/daily-engineering-archive.js"
-      - "scripts/enhance-daily-archive.js"
-      - "scripts/enhance-terminology-training.js"
-      - "scripts/audit-daily-terminology.js"
-      - "scripts/audit-daily-quality-linkage.js"
-      - "scripts/publish-equipment-reliability-terminology.js"
-      - "scripts/sync-daily-terminology.js"
-      - "scripts/bump-daily-css-version.js"
-      - "scripts/validate-daily-archive.js"
-      - "scripts/validate-current-daily-publication.js"
-      - "scripts/remove-daily-directory-consultation.js"
-      - "scripts/normalize-daily-visual-closure.js"
-      - "scripts/publish-number-badge-contrast.js"
-      - "scripts/apply-commercial-quality-closure-20260804.js"
-      - "scripts/hide-public-pricing.js"
-      - "scripts/enforce-productivity-theme-alias.js"
-      - "scripts/normalize-daily-quality-label.js"
-      - "sitemap.xml"
-      - "sitemap-core.xml"
+      - '.github/workflows/build-daily-archive.yml'
+      - 'qilylean/daily/*.html'
+      - 'qilylean/assets/daily-*.svg'
+      - 'qilylean/daily-briefs.css'
+      - 'qilylean/daily-feedback.js'
+      - 'qilylean/site-data.json'
+      - 'qilylean/site-search-index.json'
+      - 'site-number-badge-contrast-v1.css'
+      - 'site-interactive-hover-contrast-v1.css'
+      - 'homepage-music-v5.js'
+      - 'site-footer-standard-v28.css'
+      - 'site-footer-standard-v28.js'
+      - 'knowledge/terminology.html'
+      - 'knowledge/terminology/*.html'
+      - 'scripts/build-daily-archive.js'
+      - 'scripts/materialize-professionalization-v24.js'
+      - 'scripts/publish-primary-contrast-music-continuity.js'
+      - 'scripts/apply-footer-standard-v28.js'
+      - 'scripts/materialize-footer-standard-v28.js'
+      - 'scripts/build-site-metadata.js'
+      - 'scripts/sync-search-brief-metadata.js'
+      - 'scripts/sync-trust-brief-metadata.js'
+      - 'scripts/daily-engineering-archive.js'
+      - 'scripts/enhance-daily-archive.js'
+      - 'scripts/enhance-terminology-training.js'
+      - 'scripts/audit-daily-terminology.js'
+      - 'scripts/audit-daily-quality-linkage.js'
+      - 'scripts/publish-equipment-reliability-terminology.js'
+      - 'scripts/sync-daily-terminology.js'
+      - 'scripts/bump-daily-css-version.js'
+      - 'scripts/validate-daily-archive.js'
+      - 'scripts/validate-current-daily-publication.js'
+      - 'scripts/remove-daily-directory-consultation.js'
+      - 'scripts/normalize-daily-visual-closure.js'
+      - 'scripts/publish-number-badge-contrast.js'
+      - 'scripts/apply-commercial-quality-closure-20260804.js'
+      - 'scripts/hide-public-pricing.js'
+      - 'scripts/enforce-productivity-theme-alias.js'
+      - 'scripts/normalize-daily-quality-label.js'
+      - 'sitemap.xml'
+      - 'sitemap-core.xml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: qily-daily-publication-main
-  cancel-in-progress: true
+  group: qily-site-publication-main
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -63,6 +63,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 1
 
       - uses: actions/setup-node@v4
@@ -166,11 +167,11 @@ jobs:
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Generated archive is already current."
+            echo 'Generated archive is already current.'
             exit 0
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m "build: publish current daily engineering brief archive [skip ci]"
+          git commit -m 'build: publish current daily engineering brief archive [skip ci]'
           git push origin HEAD:main
