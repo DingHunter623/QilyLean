@@ -1,7 +1,7 @@
 (function (d, w) {
   'use strict';
-  if (w.__qilyFooterStandardV28) return;
-  w.__qilyFooterStandardV28 = true;
+  if (w.__qilyFooterStandardV29) return;
+  w.__qilyFooterStandardV29 = true;
 
   var FOOTER_ID = 'qilyGlobalFooter';
   var REVIEW_DATE = '2026-08-07';
@@ -19,12 +19,13 @@
       [/\/ai(?:\/|\.html|$)|qilylean-ai/i, 'AI对答用于快速了解能力、项目与知识内容。'],
       [/\/capabilities(?:\/|\.html|$)|\/capability(?:\/|\.html|$)/i, '公开方法体系、代表项目与数字工具能力边界。'],
       [/\/experience(?:\/|\.html|$)|\/resume(?:\/|\.html|$)/i, '按任职阶段展示岗位职责、项目经历与成长主线。'],
+      [/\/improvements(?:\/|\.html|$)/i, '制造工程、精益改善、新工厂规划、数智化推进。'],
       [/\/projects(?:\/|\.html|$)|\/delivery(?:\/|\.html|$)/i, '以项目证据呈现制造改善方法路径与交付结果。'],
       [/\/qilylean\/daily|\/daily(?:\/|\.html|$)/i, '以工程简报沉淀制造改善方法、术语与实践认知。'],
       [/\/knowledge(?:\/|\.html|$)|\/papers(?:\/|\.html|$)|\/standards(?:\/|\.html|$)/i, '持续沉淀制造工程、精益改善与数智化知识资产。'],
       [/\/moments(?:\/|\.html|$)|\/journey(?:\/|\.html|$)/i, '记录工作现场、团队同行与阶段性实践足迹。'],
       [/\/links(?:\/|\.html|$)/i, '连接可信产业资源、专业入口与协同服务。'],
-      [/\/cooperation(?:\/|\.html|$)/i, '围绕诊断、方案、Pilot、验证、固化与验收推进合作。'],
+      [/\/cooperation(?:\/|\.html|$)/i, '诊断、方案、Pilot、验证、固化、验收。'],
       [/\/trust(?:\/|\.html|$)/i, '主体、合同、数据、证据与AI边界公开核验。'],
       [/\/tools(?:\/|\.html|$)/i, '将工业工程场景需求转化为可直接使用的数字工具。'],
       [/\/app-support(?:\/|\.html|$)/i, '统一提供QilyLean数字工具的安装、使用与技术支持。'],
@@ -36,34 +37,59 @@
     return '制造改善诊断、方法沉淀与项目交付。';
   }
 
-  function markLegacy() {
+  function unhidePrimaryFooter() {
     var selectors = [
-      'footer',
+      'footer:not(#' + FOOTER_ID + ')',
       '.module-footer',
       '#qilyGlobalContactFooter',
       '.qily-global-contact-footer',
-      '#qtc-global-trust-footer',
-      '.qtc-global-trust-footer'
+      '.qily-global-contact-footer-shell'
     ].join(',');
     d.querySelectorAll(selectors).forEach(function (node) {
+      if (!node) return;
+      node.classList.remove('qily-footer-v28-legacy-hidden');
+      node.removeAttribute('aria-hidden');
+    });
+  }
+
+  function hideLegacyTrustOnly() {
+    d.querySelectorAll('#qtc-global-trust-footer,.qtc-global-trust-footer').forEach(function (node) {
       if (!node || node.id === FOOTER_ID) return;
       node.classList.add('qily-footer-v28-legacy-hidden');
       node.setAttribute('aria-hidden', 'true');
     });
   }
 
+  function hasPrimaryLine() {
+    var candidates = d.querySelectorAll('footer:not(#' + FOOTER_ID + '),.module-footer,#qilyGlobalContactFooter,.qily-global-contact-footer,.qily-global-contact-footer-shell');
+    for (var i = 0; i < candidates.length; i += 1) {
+      var node = candidates[i];
+      if (!node || !node.textContent || !node.textContent.trim()) continue;
+      if (node.closest && node.closest('#' + FOOTER_ID)) continue;
+      return true;
+    }
+    return false;
+  }
+
+  function fallbackMainlineMarkup() {
+    return [
+      '<div class="qily-footer-v28-mainline qily-footer-v29-fallback-mainline">',
+      '  <span class="qily-footer-v28-module-label">' + moduleLabel() + '</span>',
+      '  <span class="qily-footer-v28-sep">｜</span>',
+      '  <span class="qily-footer-v28-contact-title">QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span>',
+      '  <span class="qily-footer-v28-sep">｜</span>',
+      '  <span class="qily-footer-v28-field">官网网址：<a href="' + HOME_URL + '">' + HOME_URL + '</a></span>',
+      '  <span class="qily-footer-v28-sep">｜</span>',
+      '  <span class="qily-footer-v28-field">企业邮箱：<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></span>',
+      '</div>'
+    ].join('');
+  }
+
   function footerMarkup() {
+    var fallback = hasPrimaryLine() ? '' : fallbackMainlineMarkup();
     return [
       '<div class="qily-footer-v28-inner">',
-      '  <div class="qily-footer-v28-mainline">',
-      '    <span class="qily-footer-v28-module-label">' + moduleLabel() + '</span>',
-      '    <span class="qily-footer-v28-sep">｜</span>',
-      '    <span class="qily-footer-v28-contact-title">QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span>',
-      '    <span class="qily-footer-v28-sep">｜</span>',
-      '    <span class="qily-footer-v28-field">官网网址：<a href="' + HOME_URL + '">' + HOME_URL + '</a></span>',
-      '    <span class="qily-footer-v28-sep">｜</span>',
-      '    <span class="qily-footer-v28-field">企业邮箱：<a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a></span>',
-      '  </div>',
+      fallback,
       '  <div class="qily-footer-v28-bottomline">',
       '    <div class="qily-footer-v28-trust">',
       '      <strong>可信度口径：</strong>个人专业品牌',
@@ -88,22 +114,22 @@
     if (!footer) {
       footer = d.createElement('footer');
       footer.id = FOOTER_ID;
-      footer.className = 'qily-global-footer-v28';
-      footer.setAttribute('data-qily-footer-standard', 'v28');
-      footer.setAttribute('aria-label', 'QilyLean全站统一页尾');
       d.body.appendChild(footer);
     }
-    footer.className = 'qily-global-footer-v28';
-    footer.setAttribute('data-qily-footer-standard', 'v28');
+    footer.className = 'qily-global-footer-v28 qily-global-footer-v29';
+    footer.setAttribute('data-qily-footer-standard', 'v29');
+    footer.setAttribute('aria-label', 'QilyLean全站统一可信度页尾');
     footer.innerHTML = footerMarkup();
     return footer;
   }
 
   function normalize() {
     if (!d.body) return;
-    markLegacy();
+    unhidePrimaryFooter();
+    hideLegacyTrustOnly();
     var footer = ensureFooter();
-    markLegacy();
+    unhidePrimaryFooter();
+    hideLegacyTrustOnly();
     if (footer && footer.parentNode === d.body && footer !== d.body.lastElementChild) {
       d.body.appendChild(footer);
     }
@@ -111,9 +137,7 @@
 
   function boot() {
     normalize();
-    [120, 420, 950, 1800].forEach(function (delay) {
-      w.setTimeout(normalize, delay);
-    });
+    [120, 420, 950, 1800].forEach(function (delay) { w.setTimeout(normalize, delay); });
     if (w.MutationObserver) {
       var scheduled = false;
       var observer = new MutationObserver(function (records) {
@@ -121,7 +145,7 @@
           return Array.from(record.addedNodes || []).some(function (node) {
             if (!node || node.nodeType !== 1) return false;
             if (node.id === FOOTER_ID) return false;
-            return node.matches && node.matches('footer,.module-footer,#qilyGlobalContactFooter,.qily-global-contact-footer,#qtc-global-trust-footer,.qtc-global-trust-footer');
+            return node.matches && node.matches('footer,.module-footer,#qilyGlobalContactFooter,.qily-global-contact-footer,.qily-global-contact-footer-shell,#qtc-global-trust-footer,.qtc-global-trust-footer');
           });
         });
         if (!relevant || scheduled) return;

@@ -6,10 +6,12 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const CSS_HREF = '/site-footer-standard-v28.css?v=20260810-footer-standard-v28';
-const SCRIPT_SRC = '/site-footer-standard-v28.js?v=20260810-footer-standard-v28';
+const CSS_VERSION = '20260811-footer-single-row-v29';
+const SCRIPT_VERSION = '20260811-footer-single-row-v29';
+const CSS_HREF = `/site-footer-standard-v28.css?v=${CSS_VERSION}`;
+const SCRIPT_SRC = `/site-footer-standard-v28.js?v=${SCRIPT_VERSION}`;
 const CSS_TAG = `<link id="qilyFooterStandardV28Stylesheet" rel="stylesheet" href="${CSS_HREF}">`;
-const SCRIPT_TAG = `<script defer id="qilyFooterStandardV28Script" data-qily-footer-standard="v28" src="${SCRIPT_SRC}"></script>`;
+const SCRIPT_TAG = `<script defer id="qilyFooterStandardV28Script" data-qily-footer-standard="v29" src="${SCRIPT_SRC}"></script>`;
 
 function listHtml(directory, prefix = '') {
   const out = [];
@@ -30,7 +32,7 @@ function normalize(html) {
   next = next.replace(/\s*<link\b[^>]*(?:id=["']qilyFooterStandardV28Stylesheet["']|href=["'][^"']*site-footer-standard-v28\.css[^"']*["'])[^>]*>\s*/gi, '\n');
   next = next.replace(/\s*<script\b[^>]*(?:id=["']qilyFooterStandardV28Script["']|src=["'][^"']*site-footer-standard-v28\.js[^"']*["'])[^>]*><\/script>\s*/gi, '\n');
 
-  // Remove the obsolete V26 runtime so there is only one authoritative visible footer implementation.
+  // Remove the obsolete V26 runtime. V29 preserves the page's own primary footer row and contributes trust/actions only.
   next = next.replace(/\s*<script\b[^>]*(?:id=["']qilyFooterStandardV26Script["']|src=["'][^"']*site-footer-standard-v26\.js[^"']*["'])[^>]*><\/script>\s*/gi, '\n');
 
   next = next.replace(/<\/head>/i, `  ${CSS_TAG}\n  ${SCRIPT_TAG}\n</head>`);
@@ -49,23 +51,23 @@ for (const relative of files) {
   eligible += 1;
   const after = normalize(before);
 
-  const cssMatches = after.match(/site-footer-standard-v28\.css\?v=20260810-footer-standard-v28/g) || [];
-  const scriptMatches = after.match(/site-footer-standard-v28\.js\?v=20260810-footer-standard-v28/g) || [];
+  const cssMatches = after.match(new RegExp(`site-footer-standard-v28\\.css\\?v=${CSS_VERSION}`, 'g')) || [];
+  const scriptMatches = after.match(new RegExp(`site-footer-standard-v28\\.js\\?v=${SCRIPT_VERSION}`, 'g')) || [];
   const v26Matches = after.match(/site-footer-standard-v26\.js/g) || [];
-  if (cssMatches.length !== 1) throw new Error(`${relative}: expected exactly one V28 footer stylesheet, found ${cssMatches.length}`);
-  if (scriptMatches.length !== 1) throw new Error(`${relative}: expected exactly one V28 footer runtime, found ${scriptMatches.length}`);
+  if (cssMatches.length !== 1) throw new Error(`${relative}: expected exactly one V29 footer stylesheet reference, found ${cssMatches.length}`);
+  if (scriptMatches.length !== 1) throw new Error(`${relative}: expected exactly one V29 footer runtime reference, found ${scriptMatches.length}`);
   if (v26Matches.length !== 0) throw new Error(`${relative}: obsolete V26 footer runtime still present`);
 
   if (after === before) continue;
-  if (checkOnly) throw new Error(`${relative}: V28 footer standard is not materialized`);
+  if (checkOnly) throw new Error(`${relative}: V29 footer single-row standard is not materialized`);
   fs.writeFileSync(absolute, after, 'utf8');
   changed += 1;
   changedFiles.push(relative);
 }
 
 if (checkOnly) {
-  process.stdout.write(`V28 footer materialization contract passed for ${eligible} HTML files.\n`);
+  process.stdout.write(`V29 single-row footer materialization contract passed for ${eligible} HTML files.\n`);
 } else {
-  process.stdout.write(`V28 footer standard materialized in ${changed}/${eligible} HTML files.\n`);
+  process.stdout.write(`V29 single-row footer standard materialized in ${changed}/${eligible} HTML files.\n`);
   if (changedFiles.length) process.stdout.write(changedFiles.slice(0, 40).join('\n') + (changedFiles.length > 40 ? '\n…\n' : '\n'));
 }
