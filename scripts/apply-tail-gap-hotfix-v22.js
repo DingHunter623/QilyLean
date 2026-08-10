@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const HOTFIX_HREF = '/site-tail-gap-hotfix-v22.css?v=20260810-remove-tail-gap-v22';
+const HOTFIX_HREF = '/site-tail-gap-hotfix-v22.css?v=20260810-mobile-controls-v23';
 const HOTFIX_LINK = `  <link id="qilyTailGapHotfixV22Stylesheet" rel="stylesheet" href="${HOTFIX_HREF}">`;
 const UX_PATTERN = /(^[ \t]*<link\b[^>]*(?:id=["']qilyLayoutTypographyClosureV20Stylesheet["']|href=["'][^"']*\/site-layout-typography-closure-v20\.css(?:\?v=[^"']*)?["'])[^>]*>[ \t]*$)/mi;
 const MANAGED_END = '<!-- QILY-NUMBER-BADGE-CONTRAST:END -->';
@@ -56,7 +56,7 @@ walk(root, (file) => {
     changed += 1;
   }
   const current = fs.readFileSync(file, 'utf8');
-  if (!current.includes(HOTFIX_HREF)) throw new Error(`V22 tail-gap hotfix missing after patch: ${path.relative(root, file)}`);
+  if (!current.includes(HOTFIX_HREF)) throw new Error(`V23 mobile-control hotfix missing after patch: ${path.relative(root, file)}`);
 });
 
 const css = fs.readFileSync(path.join(root, 'site-tail-gap-hotfix-v22.css'), 'utf8');
@@ -66,9 +66,12 @@ const css = fs.readFileSync(path.join(root, 'site-tail-gap-hotfix-v22.css'), 'ut
   'min-height:0!important',
   'display:block!important',
   'body.qily-tail-compact > main',
-  'flex:none!important'
+  'flex:none!important',
+  'QILY-MOBILE-FOOTER-CONTROL-DENSITY-V23-20260810',
+  'width:46px!important',
+  'grid-template-columns:repeat(3,minmax(0,1fr))!important'
 ].forEach((marker) => {
-  if (!css.includes(marker)) throw new Error(`V22 tail-gap CSS marker missing: ${marker}`);
+  if (!css.includes(marker)) throw new Error(`V23 mobile-control CSS marker missing: ${marker}`);
 });
 
-process.stdout.write(`V22 tail-gap hotfix materialized in ${checked} public pages; refreshed ${changed}.\n`);
+process.stdout.write(`V23 mobile footer/control density materialized in ${checked} public pages; refreshed ${changed}.\n`);
