@@ -161,3 +161,276 @@ html:root:root:root body.qily-tail-compact::after{
     font-size:12px!important;
   }
 }
+
+/* QILY-MOBILE-HOME-DENSITY-CLOSURE-V24-20260811
+ * Mobile homepage only: reduce visual overload while preserving the full desktop IA.
+ * Strategy: 1 primary + 1 secondary hero CTA, remove duplicate trust/AI blocks from mobile flow,
+ * compact cards and make result numbers the first visual anchor.
+ */
+@media(max-width:620px){
+  html:root:root:root body.qily-home-commercial-focus .hero{
+    padding:28px 14px 30px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero-grid{
+    gap:24px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .eyebrow{
+    font-size:12.5px!important;
+    line-height:1.5!important;
+    letter-spacing:.015em!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero h1{
+    max-width:100%!important;
+    margin:9px 0 10px!important;
+    font-size:clamp(33px,9.5vw,38px)!important;
+    line-height:1.08!important;
+    letter-spacing:-.025em!important;
+    text-wrap:balance!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .qily-founder-line{
+    margin-bottom:8px!important;
+    font-size:13.5px!important;
+    line-height:1.55!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .lead{
+    max-width:100%!important;
+    font-size:17px!important;
+    line-height:1.66!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .qily-home-relocation-note{
+    margin-top:11px!important;
+    font-size:13px!important;
+    line-height:1.55!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .actions{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:9px!important;
+    margin-top:15px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .actions > a{
+    width:100%!important;
+    min-height:44px!important;
+    padding:8px 14px!important;
+    font-size:15px!important;
+    line-height:1.3!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .actions > a:nth-child(n+3){
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .portrait-frame{
+    width:min(250px,78vw)!important;
+    margin:0 auto!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .portrait-badge div{
+    min-height:0!important;
+    padding:9px 11px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .portrait-badge strong{
+    font-size:17px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .portrait-badge span{
+    font-size:12.5px!important;
+    line-height:1.42!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus :is(.qily-ia-section,.section){
+    padding:31px 14px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus :is(.qily-ia-heading,.head){
+    margin-bottom:18px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-kicker{
+    margin-bottom:5px!important;
+    font-size:12px!important;
+    line-height:1.45!important;
+    letter-spacing:.055em!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus :is(.qily-ia-heading h2,.section h2){
+    margin-bottom:8px!important;
+    font-size:clamp(25px,7.2vw,29px)!important;
+    line-height:1.2!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus :is(.qily-ia-heading p,.head p){
+    font-size:15.5px!important;
+    line-height:1.62!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-grid{
+    gap:11px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-card{
+    min-height:0!important;
+    padding:17px!important;
+    box-shadow:0 8px 22px rgba(15,75,90,.07)!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-card small{
+    font-size:12px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-card h3{
+    margin:6px 0 7px!important;
+    font-size:20px!important;
+    line-height:1.28!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-card p{
+    font-size:15px!important;
+    line-height:1.58!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-card .qily-ia-result{
+    padding-top:11px!important;
+    font-size:13px!important;
+    line-height:1.5!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-actions{
+    gap:8px!important;
+    margin-top:15px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-actions .qily-ia-button{
+    min-height:42px!important;
+    padding:8px 13px!important;
+    font-size:14px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-delivery-summary{
+    gap:9px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-delivery-summary article{
+    padding:14px 15px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-delivery-summary strong{
+    margin-bottom:4px!important;
+    font-size:16px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-ia-delivery-summary span{
+    font-size:14px!important;
+    line-height:1.55!important;
+  }
+
+  /* WHY QILYLEAN already provides the mobile trust summary and links. */
+  html:root:root:root body.qily-home-commercial-focus #trust-center{
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus :is(#results,#latest-content) .metrics{
+    gap:9px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus :is(#results,#latest-content) .metric{
+    min-height:0!important;
+    padding:14px 15px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus :is(#results,#latest-content) .metric strong{
+    font-size:clamp(24px,7vw,29px)!important;
+    line-height:1.15!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus :is(#results,#latest-content) .metric span{
+    margin-top:5px!important;
+    font-size:14.5px!important;
+    line-height:1.52!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #results .metric em{
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #latest-content .metric em{
+    margin-top:6px!important;
+    font-size:13px!important;
+    line-height:1.42!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .qily-results-toggle{
+    width:100%!important;
+    min-height:42px!important;
+    margin-top:12px!important;
+    padding:8px 13px!important;
+    font-size:14px!important;
+  }
+
+  /* Platform extension remains discoverable, but the homepage no longer repeats three full resource cards on a phone. */
+  html:root:root:root body.qily-home-commercial-focus #qily-resource-network{
+    padding:31px 14px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-resource-network .qily-resource-network__lead{
+    font-size:15.5px!important;
+    line-height:1.62!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-resource-network .qily-resource-network__grid{
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-resource-network .qily-resource-network__actions{
+    margin-top:14px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-resource-network .qily-resource-network__actions > a:nth-child(n+2){
+    display:none!important;
+  }
+
+  /* Dedicated /ai.html remains available from navigation and the following context links. */
+  html:root:root:root body.qily-home-commercial-focus #qily-home-ai{
+    display:none!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-more-context .qily-ia-secondary-links{
+    gap:8px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-more-context .qily-ia-secondary-link{
+    padding:13px 14px!important;
+    font-size:15px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus #qily-more-context .qily-ia-secondary-link span{
+    margin-top:3px!important;
+    font-size:12.5px!important;
+    line-height:1.45!important;
+  }
+}
+
+@media(max-width:380px){
+  html:root:root:root body.qily-home-commercial-focus .hero h1{
+    font-size:32px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus .hero .lead{
+    font-size:16.5px!important;
+  }
+
+  html:root:root:root body.qily-home-commercial-focus :is(.qily-ia-section,.section),
+  html:root:root:root body.qily-home-commercial-focus #qily-resource-network{
+    padding-left:12px!important;
+    padding-right:12px!important;
+  }
+}
