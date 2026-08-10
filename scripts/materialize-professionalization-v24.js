@@ -7,7 +7,7 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const allMode = process.argv.includes('--all');
 const checkOnly = process.argv.includes('--check');
-const VERSION = '20260810-professionalization-v24';
+const VERSION = '20260810-footer-one-line-v25';
 const BUNDLE_FILE = 'site-closure-bundle-v24.css';
 const BUNDLE_HREF = `/${BUNDLE_FILE}?v=${VERSION}`;
 const RSS_FILE = 'qilylean/daily/feed.xml';
