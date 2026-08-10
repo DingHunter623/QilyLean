@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - ".github/workflows/apply-professionalization-v24.yml"
+      - ".github/workflows/build-daily-archive.yml"
       - "scripts/apply-professionalization-v24.js"
       - "scripts/materialize-professionalization-v24.js"
   workflow_dispatch:
