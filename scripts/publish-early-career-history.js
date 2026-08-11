@@ -6,12 +6,12 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20260805-company-websites-v3';
+const version = '20260811-cooper-bussmann-v4';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
   <link id="qilyEarlyCareerHistoryStylesheet" rel="stylesheet" href="/site-early-career-history-v1.css?v=${version}">
-  <script defer id="qilyEarlyCareerHistoryScript" data-qily-early-career-history="v3" src="/site-early-career-history-v1.js?v=${version}"></script>
+  <script defer id="qilyEarlyCareerHistoryScript" data-qily-early-career-history="v4" src="/site-early-career-history-v1.js?v=${version}"></script>
 ${endMarker}`;
 
 const companies = {
@@ -41,9 +41,9 @@ const companies = {
   },
   cooper: {
     english: 'Dongguan Cooper Electronics Co., Ltd.',
-    chinese: '东莞库柏电子有限公司',
+    chinese: '东莞库柏电子有限公司｜Cooper Bussmann（现 Eaton Bussmann）保险丝制造',
     website: 'https://www.eaton.com.cn/cn/zh-cn.html',
-    websiteLabel: '现集团官方网站：Eaton｜伊顿'
+    websiteLabel: '现集团官方网站：Eaton｜伊顿（Bussmann 系列）'
   },
   flex: {
     english: 'Flextronics Manufacturing (Zhuhai) Co., Ltd.',
@@ -64,9 +64,9 @@ const careerRows = [
   {
     key: '2009-2015',
     label: '2009～2015年',
-    title: '保险丝制造｜生产技术、先后PE工程、IE工程',
+    title: 'Cooper Bussmann保险丝制造｜生产技术、先后PE工程、IE工程',
     companyKeys: ['cooper'],
-    summary: '长期从事保险丝生产技术与PE工程，产品工艺涵盖SMD、DIP、砖块保险丝、陶瓷管／玻璃管保险丝及汽车插片保险丝，负责工艺优化、设备与品质异常处理及量产稳定性改善。随后逐步转向IE工程，围绕标准工时、产能分析、工序平衡、人员配置、效率提升与现场改善，形成由生产技术、PE工程向IE工程延伸的能力路径。'
+    summary: '长期在东莞库柏电子从事 Cooper Bussmann（现 Eaton Bussmann）保险丝制造相关生产技术与PE工程，产品工艺涵盖SMD、DIP、砖块保险丝、陶瓷管／玻璃管保险丝及汽车插片保险丝，负责工艺优化、设备与品质异常处理及量产稳定性改善。随后逐步转向IE工程，围绕标准工时、产能分析、工序平衡、人员配置、效率提升与现场改善，形成由生产技术、PE工程向IE工程延伸的能力路径。该国际品牌制造经历也成为后续进入上市公司并晋升工程管理岗位的重要职业背书之一。'
   },
   {
     key: '2006-2009',
@@ -129,7 +129,7 @@ function validate(archive, experience, enhancer) {
     const label = index === 0 ? 'daily-insights' : 'experience';
     assert(content.includes('site-early-career-history-v1.css?v=' + version), `${label}: stylesheet missing`);
     assert(content.includes('site-early-career-history-v1.js?v=' + version), `${label}: script missing`);
-    assert(content.includes('data-qily-early-career-history="v3"'), `${label}: v3 data marker missing`);
+    assert(content.includes('data-qily-early-career-history="v4"'), `${label}: v4 data marker missing`);
     assert((content.match(/QILY-EARLY-CAREER-HISTORY:START/g) || []).length === 1, `${label}: duplicate resource block`);
   });
 
@@ -155,6 +155,7 @@ function validate(archive, experience, enhancer) {
     assert(enhancer.includes(company.website), `enhancer: ${key} official website missing`);
   });
 
+  assert(enhancer.includes('Cooper Bussmann（现 Eaton Bussmann）'), 'enhancer: Cooper Bussmann brand history missing');
   assert(enhancer.includes('2019.07—2025.08｜广东精工智能系统 / 广东高胜互联科技（集团内调动）'), 'enhancer: 2019-2025 exact career period missing');
   assert(enhancer.includes('2015.07—2019.06｜深圳万润科技·广东恒润光电有限公司（上市公司：万润科技）'), 'enhancer: 2015-2019 exact career period missing');
   assert(enhancer.includes("'career-2019-2025'"), 'enhancer: 2019-2025 anchor missing');
