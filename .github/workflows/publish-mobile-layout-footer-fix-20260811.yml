@@ -23,7 +23,35 @@ jobs:
           node-version: 24
       - name: Apply sitewide mobile layout and footer patch
         run: python3 scripts/mobile_layout_footer_fix_20260811.py
-      - name: Validate JavaScript and mobile rules
+      - name: Normalize project-governance terminology order
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          root = Path('.')
+          replacements = (
+              ('阶段门 / PMO / 横向复制', 'PMO / 阶段门 / 横向复制'),
+              ('阶段门／PMO／横向复制', 'PMO／阶段门／横向复制'),
+          )
+          changed = []
+          for suffix in ('*.html', '*.json'):
+              for path in root.rglob(suffix):
+                  if '.git' in path.parts:
+                      continue
+                  text = path.read_text(encoding='utf-8')
+                  updated = text
+                  for old, new in replacements:
+                      updated = updated.replace(old, new)
+                  if updated != text:
+                      path.write_text(updated, encoding='utf-8')
+                      changed.append(str(path))
+
+          print('Project-governance terminology normalized: PMO → 阶段门 → 横向复制')
+          for item in changed:
+              print(' -', item)
+          PY
+      - name: Validate JavaScript, terminology and mobile rules
         shell: bash
         run: |
           set -euo pipefail
@@ -32,6 +60,11 @@ jobs:
           node --check site-navigation.js
           ! grep -q 'PMO／<br>' site-information-architecture-v1.js
           grep -q 'PMO／阶段门／横向复制</span>' site-information-architecture-v1.js
+          grep -q '<h3>PMO / 阶段门 / 横向复制</h3>' capabilities/index.html
+          if grep -R -n --include='*.html' --include='*.json' -E '阶段门[[:space:]]*/[[:space:]]*PMO[[:space:]]*/[[:space:]]*横向复制|阶段门／PMO／横向复制' .; then
+            echo '发现项目机制术语顺序回退，统一口径应为：PMO → 阶段门 → 横向复制' >&2
+            exit 1
+          fi
           grep -q '官网网址：<br class="qily-footer-v34-mobile-break">' site-footer-standard-v28.js
           grep -q 'qily-footer-v34-mobile-break{display:block}' site-footer-standard-v28.css
           grep -q '/site-navigation.js?v=20260811-mobile-layout-v20' capabilities/index.html
@@ -46,7 +79,7 @@ jobs:
           fi
           git config user.name 'QilyLean'
           git config user.email 'admin@qilylean.com'
-          git add site-information-architecture-v1.js site-footer-standard-v28.js site-footer-standard-v28.css site-navigation.js '*.html' '**/*.html' 2>/dev/null || true
-          git commit -m '手机版统一整改：能力词组不换行及页脚官网字段定点换行'
+          git add site-information-architecture-v1.js site-footer-standard-v28.js site-footer-standard-v28.css site-navigation.js '*.html' '**/*.html' '*.json' '**/*.json' 2>/dev/null || true
+          git commit -m '全站术语统一：PMO、阶段门、横向复制顺序一致'
           git pull --rebase origin main
           git push origin HEAD:main
