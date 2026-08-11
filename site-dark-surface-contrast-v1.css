@@ -340,3 +340,11 @@ html body .article-hub .article-links a[href]:not([aria-current="page"]):focus-v
 @media(prefers-reduced-motion:reduce){
   html body a[href],html body button{transition:none!important}
 }
+
+/* QILY-REGRESSION-DARK-SURFACE-GUARD:START */
+/* 深色面板防回退：任何后加载的全站文字色阶都不得把文字压回深色。 */
+html body :is(.career-chain,.module-hero,.daily-hero,.article-hub,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.qily-forest-bg,.qily-olive-bg,.olive-bg,.forest-bg,.dark-bg,.qily-dark,.qily-olive,[data-qily-dark-surface="true"]){color:#fff!important;-webkit-text-fill-color:#fff!important}
+html body :is(.career-chain,.module-hero,.daily-hero,.article-hub,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.qily-forest-bg,.qily-olive-bg,.olive-bg,.forest-bg,.dark-bg,.qily-dark,.qily-olive,[data-qily-dark-surface="true"]) :is(p,li,span,small,h1,h2,h3,h4,h5,h6){color:inherit!important;-webkit-text-fill-color:inherit!important;opacity:1!important}
+html body :is(.career-chain,[data-qily-dark-surface="true"]) :is(strong,b){color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;opacity:1!important}
+@media(max-width:760px){html body .career-chain{color:#fff!important;-webkit-text-fill-color:#fff!important}html body .career-chain strong{color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important}}
+/* QILY-REGRESSION-DARK-SURFACE-GUARD:END */

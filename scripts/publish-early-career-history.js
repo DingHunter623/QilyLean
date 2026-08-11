@@ -3,6 +3,8 @@
 
 const fs = require('fs');
 const path = require('path');
+const { materializeExperienceCareerBaseline } = require('./site-career-baseline-lib');
+// QILY-STATIC-CAREER-BASELINE:v1
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
@@ -170,7 +172,7 @@ const originalArchive = read(archivePath);
 const originalExperience = read(experiencePath);
 const enhancer = read(enhancerPath);
 const nextArchive = updateCareerTable(injectResources(originalArchive, archivePath));
-const nextExperience = injectResources(originalExperience, experiencePath);
+const nextExperience = materializeExperienceCareerBaseline(injectResources(originalExperience, experiencePath));
 
 validate(nextArchive, nextExperience, enhancer);
 

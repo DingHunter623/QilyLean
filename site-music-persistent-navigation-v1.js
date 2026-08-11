@@ -1,28 +1,24 @@
-/* QilyLean native navigation safety fallback v2 | 2026-08-10
- * The former full-screen iframe navigation retained the previous document,
- * waited on a second page load and could leave visitors behind a spinner.
- * Keep the public API for cached callers, but always use native navigation.
+/* QilyLean same-document soft navigation v3 | 2026-08-11
+ * 音乐播放期间使用同文档站内导航，保留同一个 audio 元素；不兼容时自动回退原生导航。
  */
-(function (window) {
-  'use strict';
-
-  if (window.top !== window.self) return;
-  if (window.__qilyNativeNavigationFallbackV2) return;
-  window.__qilyNativeNavigationFallbackV2 = true;
-
-  window.__qilyPersistentNavigate = function (href) {
-    var url;
-    try {
-      url = new URL(href, window.location.href);
-    } catch (error) {
-      window.location.assign(String(href || '/'));
-      return;
-    }
-
-    if (url.origin === window.location.origin) {
-      window.location.assign(url.href);
-      return;
-    }
-    window.location.href = url.href;
-  };
-})(window);
+(function(window,document){
+'use strict';
+if(window.top!==window.self||window.__qilySoftNavigationV3)return;
+window.__qilySoftNavigationV3=true;
+var cache=new Map(),busy=false;
+var blocked=/\.(?:pdf|xlsx?|docx?|pptx?|zip|rar|7z|apk|aab|mp3|mp4|webm|mov|jpe?g|png|gif|webp|svg)(?:$|\?)/i;
+var globals=/(?:homepage-music-v5|site-music-persistent-navigation-v1|site-navigation(?:-legacy)?|site-parent-navigation|site-core-service-dock-closure|site-footer-standard|site-brand-trust|site-information-architecture|site-visual-closure|site-trust-conversion|site-text-contrast-audit)/i;
+function audioPlaying(){var a=document.getElementById('siteBackgroundMusic');return !!(a&&!a.paused&&!a.ended)}
+function urlOf(h){try{return new URL(h,location.href)}catch(e){return null}}
+function allowed(url,a){if(!url||url.origin!==location.origin||!/^https?:$/.test(url.protocol)||blocked.test(url.pathname+url.search))return false;if(url.pathname===location.pathname&&url.search===location.search&&url.hash)return false;if(a&&(a.hasAttribute('download')||(a.getAttribute('target')||'').toLowerCase()==='_blank'||a.closest('[data-qily-native-navigation="true"]')))return false;return true}
+function fetchPage(url){if(cache.has(url.href))return Promise.resolve(cache.get(url.href));return fetch(url.href,{credentials:'same-origin',headers:{'X-Qily-Soft-Navigation':'1'}}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);if(!/text\/html/i.test(r.headers.get('content-type')||''))throw new Error('not html');return r.text()}).then(function(t){cache.set(url.href,t);if(cache.size>10)cache.delete(cache.keys().next().value);return t})}
+function syncHead(next){document.title=next.title||document.title;var d=next.head.querySelector('meta[name="description"]'),cur=document.head.querySelector('meta[name="description"]');if(d){if(!cur){cur=document.createElement('meta');cur.name='description';document.head.appendChild(cur)}cur.content=d.content||''}var can=next.head.querySelector('link[rel="canonical"]'),cc=document.head.querySelector('link[rel="canonical"]');if(can){if(!cc){cc=document.createElement('link');cc.rel='canonical';document.head.appendChild(cc)}cc.href=can.href}var known=new Set(Array.from(document.head.querySelectorAll('link[rel="stylesheet"]')).map(function(n){return n.href}));next.head.querySelectorAll('link[rel="stylesheet"]').forEach(function(n){if(known.has(n.href))return;var c=n.cloneNode(true);c.setAttribute('data-qily-soft-nav-asset','true');document.head.appendChild(c);known.add(n.href)});next.head.querySelectorAll('style[id]').forEach(function(n){if(document.getElementById(n.id))return;document.head.appendChild(n.cloneNode(true))})}
+function scripts(next){var known=new Set(Array.from(document.querySelectorAll('script[src]')).map(function(n){return urlOf(n.src).pathname}));next.querySelectorAll('script[src]').forEach(function(n){var src=n.getAttribute('src')||'';if(!src||globals.test(src))return;var u=urlOf(src),key=u?u.pathname:src;if(known.has(key))return;var s=document.createElement('script');s.src=u?u.href:src;s.defer=true;s.setAttribute('data-qily-soft-nav-asset','true');document.body.appendChild(s);known.add(key)})}
+function swap(url,text,push){var next=new DOMParser().parseFromString(text,'text/html'),main=next.querySelector('main'),old=document.querySelector('main');if(!main||!old)throw new Error('shell');syncHead(next);var nh=next.querySelector('header.qily-site-header,header.topbar,header.top'),oh=document.querySelector('header.qily-site-header,header.topbar,header.top');if(nh&&oh)oh.replaceWith(document.importNode(nh,true));old.replaceWith(document.importNode(main,true));var keep=document.body.classList.contains('qily-tail-compact');document.body.className=next.body.className||'';if(keep)document.body.classList.add('qily-tail-compact');scripts(next);if(push)history.pushState({qilySoftNavigation:true},'',url.href);else history.replaceState({qilySoftNavigation:true},'',url.href);document.documentElement.dataset.qilySoftNavigation='v3';document.dispatchEvent(new CustomEvent('qily:softnavigate',{detail:{url:url.href}}));requestAnimationFrame(function(){if(url.hash){var t=document.getElementById(decodeURIComponent(url.hash.slice(1)));if(t){t.scrollIntoView({block:'start'});return}}scrollTo({top:0,left:0,behavior:'auto'})})}
+function nativeNav(url){try{if(window.__qilyLeanMusicWriteState)window.__qilyLeanMusicWriteState()}catch(e){}location.assign(url.href)}
+function go(h,opt){var url=urlOf(h),o=opt||{};if(!allowed(url,o.anchor)||busy){if(url)nativeNav(url);return Promise.resolve(false)}busy=true;document.documentElement.setAttribute('aria-busy','true');return fetchPage(url).then(function(t){swap(url,t,o.push!==false);busy=false;document.documentElement.removeAttribute('aria-busy');return true}).catch(function(){busy=false;document.documentElement.removeAttribute('aria-busy');nativeNav(url);return false})}
+document.addEventListener('click',function(e){if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey||!audioPlaying())return;var a=e.target.closest&&e.target.closest('a[href]'),u=a&&urlOf(a.href);if(!allowed(u,a))return;e.preventDefault();go(u.href,{anchor:a,push:true})},true);
+document.addEventListener('pointerover',function(e){if(!audioPlaying())return;var a=e.target.closest&&e.target.closest('a[href]'),u=a&&urlOf(a.href);if(allowed(u,a))fetchPage(u).catch(function(){})},{capture:true,passive:true});
+window.addEventListener('popstate',function(){var u=urlOf(location.href);if(!u)return;if(!audioPlaying()){location.reload();return}go(u.href,{push:false})});
+window.__qilyPersistentNavigate=function(h){var u=urlOf(h||'/');if(!u)return;if(audioPlaying()&&allowed(u,null))go(u.href,{push:true});else nativeNav(u)};
+})(window,document);
