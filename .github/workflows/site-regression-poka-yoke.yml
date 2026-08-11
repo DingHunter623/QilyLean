@@ -17,13 +17,20 @@ concurrency:
 jobs:
   self-heal:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 10
     steps:
-      - name: Checkout main
+      - name: Checkout site source only
         uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 1
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /**/*.html
+            /**/*.css
+            /**/*.js
+            /.github/workflows/*.yml
 
       - name: Apply protected baseline and validate
         shell: bash
@@ -62,6 +69,6 @@ jobs:
             fi
 
             echo "main advanced during self-heal; reload latest main and retry."
-            git fetch origin main --depth=1
+            git fetch origin main --depth=1 --filter=blob:none
             git reset --hard origin/main
           done
