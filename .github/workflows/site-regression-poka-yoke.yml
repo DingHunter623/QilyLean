@@ -1,0 +1,67 @@
+name: Site regression poka-yoke and self-heal
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-site-regression-poka-yoke
+  cancel-in-progress: false
+
+jobs:
+  self-heal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout main with history
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 20
+
+      - name: Apply protected baseline and validate
+        shell: bash
+        run: |
+          node scripts/apply-site-poka-yoke-v1.js
+          node scripts/site-regression-guard.js
+          git diff --check
+
+      - name: Commit automatic self-heal when required
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          for attempt in 1 2 3; do
+            node scripts/apply-site-poka-yoke-v1.js
+            node scripts/site-regression-guard.js
+            git diff --check
+
+            if git diff --quiet; then
+              echo "Protected baseline is healthy; no rollback/self-heal required."
+              exit 0
+            fi
+
+            git add -A
+            git commit -m "guard: auto-heal protected site baseline [skip ci]"
+
+            if git push origin HEAD:main; then
+              echo "Protected baseline automatically restored."
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 3 ]; then
+              echo "Automatic self-heal could not publish after 3 attempts."
+              exit 1
+            fi
+
+            echo "main advanced during self-heal; reload latest main and retry."
+            git fetch origin main --depth=20
+            git reset --hard origin/main
+          done
