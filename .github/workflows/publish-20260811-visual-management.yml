@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/publish-20260811-visual-management.yml"
       - "scripts/publish-20260811-visual-management.js"
+      - "scripts/patch-20260811-visual-loop-readability.js"
       - "scripts/patch-20260811-sitemap.js"
   workflow_dispatch:
 
@@ -13,8 +14,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: qily-20260811-visual-management-main
-  cancel-in-progress: true
+  group: qily-site-publication-main
+  cancel-in-progress: false
 
 jobs:
   publish:
@@ -32,6 +33,8 @@ jobs:
         run: |
           node --check scripts/publish-20260811-visual-management.js
           node scripts/publish-20260811-visual-management.js
+          node --check scripts/patch-20260811-visual-loop-readability.js
+          node scripts/patch-20260811-visual-loop-readability.js
           node --check scripts/patch-20260811-sitemap.js
           node scripts/patch-20260811-sitemap.js
           QILY_BUILD_DATE=2026-08-11 node scripts/build-site-metadata.js
@@ -42,6 +45,9 @@ jobs:
           grep -F '目视化不是把信息贴上墙：让状态可见、异常可判、责任可追、行动可闭环' qilylean/daily/2026-08-11.html
           grep -F '5W2H｜问题与行动结构化' qilylean/daily/2026-08-11.html
           grep -F 'PDCA｜计划-执行-检查-改进' qilylean/daily/2026-08-11.html
+          grep -F '20260811-readability-v2' qilylean/daily/2026-08-11.html
+          grep -F 'width="1280" height="540"' qilylean/daily/2026-08-11.html
+          grep -F 'stroke="#74aca4" stroke-width="3"' qilylean/daily/assets/2026-08-11-01-visual-loop.svg
           grep -F 'data-brief-date="2026-08-11"' qilylean/daily-insights.html
           grep -F '<span>2026年8月</span><b>11期</b>' qilylean/daily-insights.html
           grep -F '"latestDate": "2026-08-11"' qilylean/site-data.json
