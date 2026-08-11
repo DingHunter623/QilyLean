@@ -46,7 +46,10 @@ function write(relativePath, content) {
   const normalized = content.endsWith('\n') ? content : `${content}\n`;
   const current = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
   if (current === normalized) return false;
-  if (checkOnly) throw new Error(`${relativePath}: V24 materialization is not current`);
+  if (checkOnly) {
+    process.stdout.write(`::error file=${relativePath},title=V24 materialization drift::${relativePath} is not in deterministic V24 state\n`);
+    throw new Error(`${relativePath}: V24 materialization is not current`);
+  }
   fs.mkdirSync(path.dirname(file), { recursive: true });
   fs.writeFileSync(file, normalized, 'utf8');
   return true;
@@ -180,7 +183,7 @@ function insertBundleAtStableAnchor(html, bundleTag) {
 function consolidateClosureLinks(html, relativePath) {
   const bundleTag = `<link id="qilyClosureBundleV24Stylesheet" rel="stylesheet" href="${BUNDLE_HREF}">`;
   const closureNames = new Set(closureCssFiles);
-  const existingBundleExpression = /<link\b[^>]*id=["']qilyClosureBundleV24Stylesheet["'][^>]*>\s*/gi;
+  const existingBundleExpression = /^[ \t]*<link\b[^>]*id=["']qilyClosureBundleV24Stylesheet["'][^>]*>[ \t]*(?:\r?\n)?/gmi;
   let hadBundle = false;
   let hadClosure = false;
 
@@ -189,7 +192,7 @@ function consolidateClosureLinks(html, relativePath) {
     return '';
   });
 
-  next = next.replace(/<link\b[^>]*href=["']([^"']+)["'][^>]*>\s*/gi, (tag, href) => {
+  next = next.replace(/^[ \t]*<link\b[^>]*href=["']([^"']+)["'][^>]*>[ \t]*(?:\r?\n)?/gmi, (tag, href) => {
     const matched = Array.from(closureNames).some((name) => href.includes(name));
     if (!matched) return tag;
     hadClosure = true;
