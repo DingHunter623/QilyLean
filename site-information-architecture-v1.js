@@ -80,7 +80,13 @@
 
     var portraitBadge=homeHero.querySelector('.portrait-badge');
     if(portraitBadge){
+      portraitBadge.classList.add('hero-summary-strip');
+      portraitBadge.setAttribute('data-qily-hero-summary','v3');
+      portraitBadge.setAttribute('aria-label','专业实践与合作机制摘要');
       portraitBadge.innerHTML='<div><strong>20年</strong><span>制造工程与精益改善实践</span></div><div><strong>合同闭环</strong><span>范围、交付、付款与验收分阶段明确</span></div>';
+      if(actionBox&&actionBox.parentNode&&portraitBadge!==actionBox.nextElementSibling){
+        actionBox.parentNode.insertBefore(portraitBadge,actionBox.nextSibling);
+      }
     }
 
     var servicesBody=el('div','');

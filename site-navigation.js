@@ -46,7 +46,7 @@
     removeMicrosoftOverrides();
     [
       ['qilyVisualScaleStylesheet','/site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5'],
-      ['qilyHomePortraitBadgeFixStylesheet','/home-portrait-badge-fix-v1.css?v=20260803-badge-wrap-v2'],
+      ['qilyHomePortraitBadgeFixStylesheet','/home-portrait-badge-fix-v1.css?v=20260811-hero-summary-relocation-v3'],
       ['qilyGlobalLinkStandardStylesheet','/site-link-standard-v2.css?v=20260803-nav-four-border-v6'],
       ['qilyDarkSurfaceContrastStylesheet','/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'],
       ['qilyInformationArchitectureStylesheet','/site-information-architecture-v1.css?v=20260810-content-axis-v3'],

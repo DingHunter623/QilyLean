@@ -249,7 +249,15 @@ function materializeHome() {
           <p class="qily-home-relocation-note">专业标签已归入<a href="/capabilities/">能力画像</a>，任职年限与岗位历程已归入<a href="/experience/">履历主线</a>，量化成果与证据归入<a href="/projects/">代表项目</a>。</p>`);
   html = html.replace(/\s*<div class="group-label">职能标签<\/div>\s*<ul class="tags">[\s\S]*?<\/ul>/m, '');
   html = html.replace(/<div class="actions">[\s\S]*?<\/div>/m, '<div class="actions"><a class="button primary" href="/cooperation/">查看六类项目合作能力与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">代表项目与证据</a></div>');
-  html = html.replace(/<figcaption class="portrait-badge">[\s\S]*?<\/figcaption>/m, '<figcaption class="portrait-badge"><div><strong>20年</strong><span>制造工程与精益改善实践</span></div><div><strong>合同闭环</strong><span>范围、交付、付款与验收分阶段明确</span></div></figcaption>');
+  const heroSummary = `<!-- QILY-HOME-HERO-SUMMARY:START -->
+<div class="portrait-badge hero-summary-strip" data-qily-hero-summary="v3" aria-label="专业实践与合作机制摘要">
+  <div><strong>20年</strong><span>制造工程与精益改善实践</span></div>
+  <div><strong>合同闭环</strong><span>范围、交付、付款与验收分阶段明确</span></div>
+</div>
+<!-- QILY-HOME-HERO-SUMMARY:END -->`;
+  html = html.replace(/\s*<!-- QILY-HOME-HERO-SUMMARY:START -->[\s\S]*?<!-- QILY-HOME-HERO-SUMMARY:END -->\s*/m, '\n');
+  html = html.replace(/\s*<figcaption class="portrait-badge">[\s\S]*?<\/figcaption>\s*/m, '\n');
+  html = html.replace(/(<div class="actions">[\s\S]*?<\/div>)/m, `$1\n${heroSummary}`);
 
   const heroExpression = /<section class="hero">[\s\S]*?<\/section>/m;
   const heroMatch = html.match(heroExpression);
