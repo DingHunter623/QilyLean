@@ -1,0 +1,57 @@
+name: Publish QilyLean text color semantic standard V2 20260811
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-text-color-standard-v2-20260811.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-site-publication-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Apply sitewide text color semantic standard V2
+        run: python3 scripts/apply_text_color_standard_v2_20260811.py
+      - name: Validate CSS, navigation and publication sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'QilyLean 全站文字色彩语义规范 V2' site-vi-contrast-restoration-v1.css
+          grep -q 'html body .qily-no-break{' site-vi-contrast-restoration-v1.css
+          ! grep -q ':is(p,li,span,small,dd,figcaption,.lead,.summary,.meta,.fine)' site-vi-contrast-restoration-v1.css
+          grep -q '20260811-text-color-standard-v2' site-navigation.js
+          grep -q "const CONTRAST_VERSION = '20260811-text-color-standard-v2';" scripts/publish-site-system-v2.js
+          grep -q "const NAV_VERSION = '20260811-mobile-layout-v20';" scripts/publish-site-system-v2.js
+          ! grep -q 'setTimeout(window.__qilyLeanRevealCurrentShell,1800)' scripts/publish-site-system-v2.js
+          node --check site-navigation.js
+          node --check scripts/publish-site-system-v2.js
+          grep -q '/site-vi-contrast-restoration-v1.css?v=20260811-text-color-standard-v2' capabilities/index.html
+      - name: Commit standardized text colors
+        shell: bash
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add site-vi-contrast-restoration-v1.css site-navigation.js scripts/publish-site-system-v2.js '*.html' '**/*.html' 2>/dev/null || true
+          git commit -m '全站视觉文字规范V2：统一标题正文辅助字与控件色阶'
+          git pull --rebase origin main
+          git push origin HEAD:main
