@@ -8,6 +8,7 @@ const root = path.resolve(__dirname, '..');
 const allMode = process.argv.includes('--all');
 const checkOnly = process.argv.includes('--check');
 const VERSION = '20260810-footer-one-line-v25';
+const NAV_VERSION = '20260811-mobile-layout-v20';
 const BUNDLE_FILE = 'site-closure-bundle-v24.css';
 const BUNDLE_HREF = `/${BUNDLE_FILE}?v=${VERSION}`;
 const RSS_FILE = 'qilylean/daily/feed.xml';
@@ -162,24 +163,27 @@ function addBodyClass(html) {
 function consolidateClosureLinks(html, relativePath) {
   const bundleTag = `<link id="qilyClosureBundleV24Stylesheet" rel="stylesheet" href="${BUNDLE_HREF}">`;
   const closureNames = new Set(closureCssFiles);
+  const existingBundleExpression = /<link\b[^>]*id=["']qilyClosureBundleV24Stylesheet["'][^>]*>\s*/gi;
+  let hadBundle = false;
   let hadClosure = false;
-  let insertedBundle = false;
-  let next = html.replace(/<link\b[^>]*href=["']([^"']+)["'][^>]*>\s*/gi, (tag, href) => {
+
+  let next = html.replace(existingBundleExpression, () => {
+    hadBundle = true;
+    return '';
+  });
+
+  next = next.replace(/<link\b[^>]*href=["']([^"']+)["'][^>]*>\s*/gi, (tag, href) => {
     const matched = Array.from(closureNames).some((name) => href.includes(name));
     if (!matched) return tag;
     hadClosure = true;
-    if (insertedBundle) return '';
-    insertedBundle = true;
-    return `${bundleTag}\n`;
+    return '';
   });
 
   const isDaily = relativePath === 'qilylean/daily-insights.html' || /^qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html$/.test(relativePath);
-  const shouldBundle = hadClosure || coreTargets.has(relativePath) || isDaily;
+  const shouldBundle = hadBundle || hadClosure || coreTargets.has(relativePath) || isDaily;
   if (!shouldBundle || !/<head[\s>]/i.test(next)) return { html: next, bundled: false };
 
-  const existing = /<link\b[^>]*id=["']qilyClosureBundleV24Stylesheet["'][^>]*>/i;
-  if (existing.test(next)) next = next.replace(existing, bundleTag);
-  else if (!insertedBundle) next = next.replace(/<\/head>/i, `  ${bundleTag}\n</head>`);
+  next = next.replace(/<\/head>/i, `  ${bundleTag}\n</head>`);
   next = addBodyClass(next);
   return { html: next, bundled: true };
 }
@@ -200,6 +204,10 @@ function accelerateShellReveal(html) {
   return html
     .replace(/setTimeout\(window\.__qilyLeanRevealCurrentShell,\s*1800\s*\)/g, 'setTimeout(window.__qilyLeanRevealCurrentShell,180)')
     .replace(/setTimeout\(w\.__qilyLeanRevealCurrentShell,\s*1800\s*\)/g, 'setTimeout(w.__qilyLeanRevealCurrentShell,180)');
+}
+
+function normalizeNavigationVersion(html) {
+  return html.replace(/\/site-navigation\.js\?v=[^'"\s<]+/g, `/site-navigation.js?v=${NAV_VERSION}`);
 }
 
 function upsertNamedMeta(html, name, value) {
@@ -299,7 +307,7 @@ function materializeHtml(relativePath) {
   const consolidated = consolidateClosureLinks(html, relativePath);
   html = consolidated.html;
   if (!consolidated.bundled && !coreTargets.has(relativePath)) return false;
-  html = accelerateShellReveal(html);
+  html = normalizeNavigationVersion(accelerateShellReveal(html));
   html = optimizeImages(html);
   if (relativePath === 'qilylean/daily-insights.html') {
     const freshness = upsertDailyFreshness(html);
