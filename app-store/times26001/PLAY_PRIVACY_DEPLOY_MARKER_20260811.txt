@@ -1,0 +1,5 @@
+Times26001 Google Play privacy deployment marker
+Privacy policy version: V1.3
+Effective date: 2026-08-11
+Location scope: foreground approximate/coarse only for user-initiated weather lookup
+Privacy URL: https://qilylean.com/legal/times26001/privacy/
