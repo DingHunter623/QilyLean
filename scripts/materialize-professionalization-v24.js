@@ -160,6 +160,23 @@ function addBodyClass(html) {
   });
 }
 
+function insertBundleAtStableAnchor(html, bundleTag) {
+  const anchors = [
+    '<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->',
+    '<link id="qilyCoreServiceDockClosureStylesheet"',
+    '<link id="qilyFooterStandardV28Stylesheet"'
+  ];
+
+  for (const anchor of anchors) {
+    const index = html.indexOf(anchor);
+    if (index < 0) continue;
+    const lineStart = html.lastIndexOf('\n', index) + 1;
+    return html.slice(0, lineStart) + `  ${bundleTag}\n` + html.slice(lineStart);
+  }
+
+  return html.replace(/<\/head>/i, `  ${bundleTag}\n</head>`);
+}
+
 function consolidateClosureLinks(html, relativePath) {
   const bundleTag = `<link id="qilyClosureBundleV24Stylesheet" rel="stylesheet" href="${BUNDLE_HREF}">`;
   const closureNames = new Set(closureCssFiles);
@@ -183,7 +200,7 @@ function consolidateClosureLinks(html, relativePath) {
   const shouldBundle = hadBundle || hadClosure || coreTargets.has(relativePath) || isDaily;
   if (!shouldBundle || !/<head[\s>]/i.test(next)) return { html: next, bundled: false };
 
-  next = next.replace(/<\/head>/i, `  ${bundleTag}\n</head>`);
+  next = insertBundleAtStableAnchor(next, bundleTag);
   next = addBodyClass(next);
   return { html: next, bundled: true };
 }
