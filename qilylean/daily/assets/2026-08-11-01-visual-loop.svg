@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="t d">
+<title id="t">目视化管理闭环</title><desc id="d">从目标标准到现状显示、异常判定、责任响应、验证关闭和标准更新的闭环。</desc>
+<rect width="1200" height="520" rx="30" fill="#f7faf9"/>
+<text x="600" y="64" text-anchor="middle" font-family="Arial,'Microsoft YaHei',sans-serif" font-size="30" font-weight="700" fill="#173f48">目视化管理不是展示，而是缩短“发现—判断—响应—关闭”的时间</text>
+<g font-family="Arial,'Microsoft YaHei',sans-serif" text-anchor="middle">
+<g><rect x="55" y="160" width="175" height="150" rx="20" fill="#ffffff" stroke="#b6d1cc" stroke-width="2"/><text x="142" y="210" font-size="22" font-weight="700" fill="#0f4b5a">① 目标/标准</text><text x="142" y="248" font-size="17" fill="#55706d">正常是什么</text><text x="142" y="278" font-size="17" fill="#55706d">阈值在哪里</text></g>
+<g><rect x="285" y="160" width="175" height="150" rx="20" fill="#ffffff" stroke="#b6d1cc" stroke-width="2"/><text x="372" y="210" font-size="22" font-weight="700" fill="#0f4b5a">② 现状显示</text><text x="372" y="248" font-size="17" fill="#55706d">当前值/趋势</text><text x="372" y="278" font-size="17" fill="#55706d">更新时间</text></g>
+<g><rect x="515" y="160" width="175" height="150" rx="20" fill="#fffaf1" stroke="#d6b675" stroke-width="2"/><text x="602" y="210" font-size="22" font-weight="700" fill="#76551d">③ 异常判定</text><text x="602" y="248" font-size="17" fill="#6d654f">差距/越界</text><text x="602" y="278" font-size="17" fill="#6d654f">影响等级</text></g>
+<g><rect x="745" y="160" width="175" height="150" rx="20" fill="#ffffff" stroke="#b6d1cc" stroke-width="2"/><text x="832" y="210" font-size="22" font-weight="700" fill="#0f4b5a">④ 责任响应</text><text x="832" y="248" font-size="17" fill="#55706d">Owner/措施</text><text x="832" y="278" font-size="17" fill="#55706d">截止时间</text></g>
+<g><rect x="975" y="160" width="175" height="150" rx="20" fill="#ffffff" stroke="#b6d1cc" stroke-width="2"/><text x="1062" y="210" font-size="22" font-weight="700" fill="#0f4b5a">⑤ 验证关闭</text><text x="1062" y="248" font-size="17" fill="#55706d">实绩/证据</text><text x="1062" y="278" font-size="17" fill="#55706d">标准更新</text></g>
+<g fill="#8aa9a4" font-size="34"><text x="258" y="247">→</text><text x="488" y="247">→</text><text x="718" y="247">→</text><text x="948" y="247">→</text></g>
+<path d="M1060 330 C1060 430 145 430 145 330" fill="none" stroke="#8aa9a4" stroke-width="3" stroke-dasharray="10 8"/>
+<text x="600" y="405" font-size="19" font-weight="700" fill="#3f625f">关闭后的有效做法回写到标准，下一轮“正常/异常”判定才会更快、更准</text>
+</g></svg>

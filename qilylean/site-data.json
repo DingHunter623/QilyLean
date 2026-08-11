@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 2589,
-    "latestDate": "2026-08-10",
-    "latestTheme": "岗位价值与职能闭环",
-    "latestTitle": "真正的职能含金量：不是“负责过”，而是能把问题变成结果",
-    "latestSummary": "一个岗位真正的含金量，不在职位名称、汇报对象或会多少术语，而在于能否完成从问题识别、数据基线、方案设计、责任协同、Pilot验证、结果验收到机制固化的完整闭环。",
-    "latestUrl": "/qilylean/daily/2026-08-10.html",
+    "total": 2590,
+    "latestDate": "2026-08-11",
+    "latestTheme": "目视化管理与现场闭环",
+    "latestTitle": "目视化不是把信息贴上墙：让状态可见、异常可判、责任可追、行动可闭环",
+    "latestSummary": "制造现场的目视化不是多做几块看板、贴几张标签，而是把目标、现状、标准、异常、责任、时限与验证证据放到同一信息界面，让任何相关人员都能快速判断“现在是否正常、哪里异常、谁在处理、何时关闭”。",
+    "latestUrl": "/qilylean/daily/2026-08-11.html",
     "directoryUrl": "/qilylean/daily-insights.html"
   },
   "knowledge": {
@@ -45,11 +45,11 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 2877,
+    "indexedEntries": 2878,
     "indexedPages": 51,
     "terminologyTotal": 184,
-    "briefTotal": 2589,
-    "latestBriefDate": "2026-08-10",
+    "briefTotal": 2590,
+    "latestBriefDate": "2026-08-11",
     "sitemapLastmod": "2026-08-11"
   }
 }
