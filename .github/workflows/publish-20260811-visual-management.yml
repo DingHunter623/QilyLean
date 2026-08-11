@@ -6,6 +6,7 @@ on:
     paths:
       - ".github/workflows/publish-20260811-visual-management.yml"
       - "scripts/publish-20260811-visual-management.js"
+      - "scripts/patch-20260811-sitemap.js"
   workflow_dispatch:
 
 permissions:
@@ -31,6 +32,8 @@ jobs:
         run: |
           node --check scripts/publish-20260811-visual-management.js
           node scripts/publish-20260811-visual-management.js
+          node --check scripts/patch-20260811-sitemap.js
+          node scripts/patch-20260811-sitemap.js
           QILY_BUILD_DATE=2026-08-11 node scripts/build-site-metadata.js
           node --check scripts/build-trust-search-sync.js
           QILY_BUILD_DATE=2026-08-11 node scripts/build-trust-search-sync.js
