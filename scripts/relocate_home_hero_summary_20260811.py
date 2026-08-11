@@ -68,7 +68,6 @@ body:is(.qily-home-commercial-focus,.qily-home-balanced) .hero-summary-strip spa
   overflow-wrap:break-word!important;
   opacity:1!important;
 }
-/* 防止旧 DOM / 旧缓存短暂把摘要继续挂在人物图下方。 */
 body:is(.qily-home-commercial-focus,.qily-home-balanced) .portrait-frame>.portrait-badge{
   display:none!important;
 }
@@ -125,10 +124,8 @@ def write(path, text):
     return True
 
 def patch_index(text):
-    # Remove any previously materialized V3 summary block, then remove legacy portrait figcaption.
     text = re.sub(r'\s*<!-- QILY-HOME-HERO-SUMMARY:START -->[\s\S]*?<!-- QILY-HOME-HERO-SUMMARY:END -->\s*', '\n', text, count=1)
     text = re.sub(r'\s*<figcaption class="portrait-badge">[\s\S]*?</figcaption>\s*', '\n', text, count=1)
-    # Insert summary directly after the first Hero CTA actions block.
     m = re.search(r'<div class="actions">[\s\S]*?</div>', text)
     if not m:
         raise RuntimeError('Homepage Hero actions block not found')
@@ -154,13 +151,14 @@ def patch_ia_js(text):
     return text
 
 def patch_materializer(text):
-    old_line = "  html = html.replace(/<figcaption class=\\\"portrait-badge\\\">[\\s\\S]*?<\\/figcaption>/m, '<figcaption class=\\\"portrait-badge\\\"><div><strong>20年</strong><span>制造工程与精益改善实践</span></div><div><strong>合同闭环</strong><span>范围、交付、付款与验收分阶段明确</span></div></figcaption>');"
-    if old_line not in text:
-        # Accept current source variant with regular quote escaping.
-        candidates = [line for line in text.splitlines() if 'figcaption class=\\"portrait-badge\\"' in line and '合同闭环' in line]
-        if not candidates:
-            raise RuntimeError('Static materializer portrait badge line not found')
-        old_line = candidates[0]
+    lines = text.splitlines()
+    target = None
+    for i, line in enumerate(lines):
+        if 'html = html.replace(' in line and 'portrait-badge' in line and '合同闭环' in line:
+            target = i
+            break
+    if target is None:
+        raise RuntimeError('Static materializer portrait badge line not found')
     new_lines = """  const heroSummary = `<!-- QILY-HOME-HERO-SUMMARY:START -->
 <div class=\"portrait-badge hero-summary-strip\" data-qily-hero-summary=\"v3\" aria-label=\"专业实践与合作机制摘要\">
   <div><strong>20年</strong><span>制造工程与精益改善实践</span></div>
@@ -169,9 +167,9 @@ def patch_materializer(text):
 <!-- QILY-HOME-HERO-SUMMARY:END -->`;
   html = html.replace(/\\s*<!-- QILY-HOME-HERO-SUMMARY:START -->[\\s\\S]*?<!-- QILY-HOME-HERO-SUMMARY:END -->\\s*/m, '\\n');
   html = html.replace(/\\s*<figcaption class=\"portrait-badge\">[\\s\\S]*?<\\/figcaption>\\s*/m, '\\n');
-  html = html.replace(/(<div class=\"actions\">[\\s\\S]*?<\\/div>)/m, `$1\\n${heroSummary}`);"""
-    text = text.replace(old_line, new_lines)
-    return text
+  html = html.replace(/(<div class=\"actions\">[\\s\\S]*?<\\/div>)/m, `$1\\n${heroSummary}`);""".splitlines()
+    lines[target:target + 1] = new_lines
+    return '\n'.join(lines) + ('\n' if text.endswith('\n') else '')
 
 def patch_versions(text):
     return re.sub(r'home-portrait-badge-fix-v1\.css\?v=[^\'"\s]+', f'home-portrait-badge-fix-v1.css?v={VERSION}', text)
@@ -196,7 +194,6 @@ for path in ['site-navigation.js', 'scripts/publish-global-link-standard.js']:
     dst = patch_versions(src)
     if write(path, dst): changed.append(path)
 
-# Validation: structural and regression checks.
 final_index = read('index.html')
 if final_index.count('data-qily-hero-summary="v3"') != 1:
     raise RuntimeError('Homepage summary must exist exactly once')
