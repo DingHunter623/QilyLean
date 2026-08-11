@@ -1,14 +1,14 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-08-10",
-  "briefPath": "qilylean/daily/2026-08-10.html",
-  "checkedAt": "2026-08-11T00:42:09.178Z",
+  "briefDate": "2026-08-12",
+  "briefPath": "qilylean/daily/2026-08-12.html",
+  "checkedAt": "2026-08-11T17:06:42.747Z",
   "candidates": [
     {
-      "term": "APS",
+      "term": "APQP",
       "explanation": "",
       "explicit": false,
-      "source": "MES/ERP/APS"
+      "source": "APQP"
     },
     {
       "term": "BOM",
@@ -17,52 +17,16 @@
       "source": "BOM"
     },
     {
-      "term": "CP",
+      "term": "DFMEA",
       "explanation": "",
       "explicit": false,
-      "source": "CP"
+      "source": "DFMEA"
     },
     {
-      "term": "CPK",
+      "term": "DV",
       "explanation": "",
       "explicit": false,
-      "source": "CPK"
-    },
-    {
-      "term": "CT",
-      "explanation": "",
-      "explicit": false,
-      "source": "CT"
-    },
-    {
-      "term": "DMS",
-      "explanation": "",
-      "explicit": false,
-      "source": "DMS"
-    },
-    {
-      "term": "DOE",
-      "explanation": "",
-      "explicit": false,
-      "source": "DOE"
-    },
-    {
-      "term": "ECRS",
-      "explanation": "",
-      "explicit": false,
-      "source": "ECRS"
-    },
-    {
-      "term": "ERP",
-      "explanation": "",
-      "explicit": false,
-      "source": "MES/ERP/APS"
-    },
-    {
-      "term": "FMEA",
-      "explanation": "",
-      "explicit": false,
-      "source": "FMEA"
+      "source": "DV"
     },
     {
       "term": "FPY",
@@ -77,58 +41,40 @@
       "source": "IE"
     },
     {
-      "term": "IT",
+      "term": "ME",
       "explanation": "",
       "explicit": false,
-      "source": "IT"
+      "source": "ME"
     },
     {
-      "term": "LT",
+      "term": "MP",
       "explanation": "",
       "explicit": false,
-      "source": "LT"
-    },
-    {
-      "term": "MES",
-      "explanation": "",
-      "explicit": false,
-      "source": "MES/ERP/APS"
+      "source": "MP"
     },
     {
       "term": "MSA",
       "explanation": "",
       "explicit": false,
-      "source": "MSA"
+      "source": "MSA/SPC"
     },
     {
-      "term": "OEE",
+      "term": "NPI",
       "explanation": "",
       "explicit": false,
-      "source": "OEE"
-    },
-    {
-      "term": "OPL",
-      "explanation": "",
-      "explicit": false,
-      "source": "OPL"
-    },
-    {
-      "term": "OTD",
-      "explanation": "",
-      "explicit": false,
-      "source": "OTD"
-    },
-    {
-      "term": "PDCA",
-      "explanation": "",
-      "explicit": false,
-      "source": "PDCA"
+      "source": "NPI"
     },
     {
       "term": "PE",
       "explanation": "",
       "explicit": false,
-      "source": "PE/TE"
+      "source": "NPI/PE"
+    },
+    {
+      "term": "PFMEA",
+      "explanation": "",
+      "explicit": false,
+      "source": "PFMEA"
     },
     {
       "term": "PMC",
@@ -137,10 +83,34 @@
       "source": "PMC"
     },
     {
-      "term": "PQCD",
+      "term": "PMO",
       "explanation": "",
       "explicit": false,
-      "source": "PQCD"
+      "source": "PMO"
+    },
+    {
+      "term": "PPAP",
+      "explanation": "",
+      "explicit": false,
+      "source": "PPAP"
+    },
+    {
+      "term": "PQE",
+      "explanation": "",
+      "explicit": false,
+      "source": "SQE/PQE"
+    },
+    {
+      "term": "PV",
+      "explanation": "",
+      "explicit": false,
+      "source": "PV"
+    },
+    {
+      "term": "QCD",
+      "explanation": "",
+      "explicit": false,
+      "source": "QCD"
     },
     {
       "term": "RACI",
@@ -149,10 +119,16 @@
       "source": "RACI"
     },
     {
-      "term": "SMED",
+      "term": "RAID",
+      "explanation": "风险/假设/问题/依赖",
+      "explicit": true,
+      "source": "RAID（风险/假设/问题/依赖）"
+    },
+    {
+      "term": "SMT",
       "explanation": "",
       "explicit": false,
-      "source": "SMED"
+      "source": "SMT"
     },
     {
       "term": "SOP",
@@ -164,72 +140,53 @@
       "term": "SPC",
       "explanation": "",
       "explicit": false,
-      "source": "SPC"
+      "source": "MSA/SPC"
     },
     {
-      "term": "TE",
+      "term": "SQE",
       "explanation": "",
       "explicit": false,
-      "source": "PE/TE"
+      "source": "SQE"
     },
     {
-      "term": "UPPH",
+      "term": "WBS",
       "explanation": "",
       "explicit": false,
-      "source": "UPPH"
-    },
-    {
-      "term": "VSM",
-      "explanation": "",
-      "explicit": false,
-      "source": "VSM"
-    },
-    {
-      "term": "WIP",
-      "explanation": "",
-      "explicit": false,
-      "source": "WIP"
+      "source": "WBS"
     }
   ],
   "coveredTerms": [
-    "APS",
+    "APQP",
     "BOM",
-    "CP",
-    "CPK",
-    "CT",
-    "DMS",
-    "DOE",
-    "ECRS",
-    "ERP",
-    "FMEA",
+    "DFMEA",
+    "DV",
     "FPY",
     "IE",
-    "IT",
-    "LT",
-    "MES",
+    "ME",
+    "MP",
     "MSA",
-    "OEE",
-    "OPL",
-    "OTD",
-    "PDCA",
+    "NPI",
     "PE",
+    "PFMEA",
     "PMC",
-    "PQCD",
+    "PMO",
+    "PPAP",
+    "PQE",
+    "PV",
+    "QCD",
     "RACI",
-    "SMED",
+    "RAID",
+    "SMT",
     "SOP",
     "SPC",
-    "TE",
-    "UPPH",
-    "VSM",
-    "WIP"
+    "SQE",
+    "WBS"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
   "featuredTerms": [
-    "RACI",
-    "PDCA"
+    "RAID"
   ],
   "status": "passed"
 }
