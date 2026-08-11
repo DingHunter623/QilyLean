@@ -1,0 +1,58 @@
+name: Publish QilyLean home Hero summary relocation 20260811
+
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-home-hero-summary-relocation-20260811.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-site-publication-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Relocate Hero summary out of portrait
+        run: python3 scripts/relocate_home_hero_summary_20260811.py
+      - name: Validate Hero structure and responsive source
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/relocate_home_hero_summary_20260811.py
+          node --check site-information-architecture-v1.js
+          node --check scripts/materialize-static-core-pages.js
+          grep -q 'data-qily-hero-summary="v3"' index.html
+          ! grep -q '<figcaption class="portrait-badge">' index.html
+          grep -q 'actionBox.parentNode.insertBefore(portraitBadge,actionBox.nextSibling)' site-information-architecture-v1.js
+          grep -q 'grid-template-columns:repeat(2,minmax(0,1fr))!important' home-portrait-badge-fix-v1.css
+          grep -q '@media(max-width:820px)' home-portrait-badge-fix-v1.css
+          grep -q 'grid-template-columns:1fr!important' home-portrait-badge-fix-v1.css
+          grep -q '20260811-hero-summary-relocation-v3' index.html
+          grep -q '20260811-hero-summary-relocation-v3' site-navigation.js
+      - name: Commit homepage Hero relocation
+        shell: bash
+        run: |
+          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add index.html home-portrait-badge-fix-v1.css site-information-architecture-v1.js site-navigation.js scripts/materialize-static-core-pages.js scripts/publish-global-link-standard.js
+          git commit -m '首页Hero优化：摘要移出人物图并统一PC平板手机布局'
+          git pull --rebase origin main
+          git push origin HEAD:main
