@@ -14,13 +14,13 @@ const viFile = path.join(root, 'site-vi-standard-v1.css');
 const contrastFile = path.join(root, 'site-vi-contrast-restoration-v1.css');
 const musicCoreFile = path.join(root, 'homepage-music-core-v4.js');
 
-const NAV_VERSION = '20260810-native-navigation-stable-v19';
+const NAV_VERSION = '20260811-mobile-layout-v20';
 const SHELL_VERSION = '20260729-no-old-flash-v1';
 const VISUAL_VERSION = '20260803-home-badge-wrap-v5';
 const WIDE_VERSION = '20260810-content-axis-v8';
 const TYPE_VERSION = '20260729-hierarchy-v4';
 const VI_VERSION = '20260801-vi-standard-v1';
-const CONTRAST_VERSION = '20260803-vi-contrast-hotfix-v1';
+const CONTRAST_VERSION = '20260811-text-color-standard-v2';
 const MUSIC_VERSION = '20260810-demand-music-wrapper-v6';
 
 function read(file) { return fs.readFileSync(file, 'utf8'); }
@@ -49,7 +49,7 @@ function validatePublicStyles() {
     [visual, '.qily-home-balanced .portrait-badge', 'Homepage portrait'],
     [vi, '--qily-vi-olive:#0f4b5a', 'VI palette'],
     [vi, '.qily-float-contact', 'VI floating contact'],
-    [contrast, 'QilyLean 全站VI可读性恢复与对比度保险层', 'Contrast restoration'],
+    [contrast, 'QilyLean 全站文字色彩语义规范 V2', 'Text color semantic standard V2'],
     [contrast, '.site-music-toggle', 'Music control restoration'],
     [contrast, '#qily-commercial-deliveries', 'Trust action contrast'],
     [contrast, '.qily-modal-close', 'Modal close contrast'],
@@ -79,7 +79,7 @@ function publishNavigation() {
 
 function publicHeadAssets() {
   return [
-    '  <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>',
+    '  <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,180)})(document);</script>',
     '  <link rel="stylesheet" href="/site-shell.css?v=' + SHELL_VERSION + '">',
     '  <link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=' + VISUAL_VERSION + '">',
     '  <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=' + WIDE_VERSION + '">',
