@@ -165,7 +165,8 @@ function addBodyClass(html) {
 
 function insertBundleAtStableAnchor(html, bundleTag) {
   const anchors = [
-    '<!-- QILY-PRIMARY-CONTRAST-MUSIC:START -->',
+    '<!-- QILY-NUMBER-BADGE-CONTRAST:START -->',
+    '/site-navigation.js?v=',
     '<link id="qilyCoreServiceDockClosureStylesheet"',
     '<link id="qilyFooterStandardV28Stylesheet"'
   ];
