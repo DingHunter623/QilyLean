@@ -2,17 +2,17 @@
   "generatedAt": "2026-08-11",
   "schemaVersion": 1,
   "terminology": {
-    "total": 184,
-    "lessonTotal": 184,
+    "total": 190,
+    "lessonTotal": 190,
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 2590,
-    "latestDate": "2026-08-11",
-    "latestTheme": "目视化管理与现场闭环",
-    "latestTitle": "目视化不是把信息贴上墙：让状态可见、异常可判、责任可追、行动可闭环",
-    "latestSummary": "制造现场的目视化不是多做几块看板、贴几张标签，而是把目标、现状、标准、异常、责任、时限与验证证据放到同一信息界面，让任何相关人员都能快速判断“现在是否正常、哪里异常、谁在处理、何时关闭”。",
-    "latestUrl": "/qilylean/daily/2026-08-11.html",
+    "total": 2591,
+    "latestDate": "2026-08-12",
+    "latestTheme": "汽车座椅开关PMO项目管理",
+    "latestTitle": "汽车座椅开关PMO：从职能架构到量产交付的项目管理闭环",
+    "latestSummary": "汽车座椅开关项目不是研发部门单独完成的一组任务，而是一条把客户要求、产品设计、模具与设备、供应链、过程质量、产能爬坡和量产移交连成一体的交付链。PMO的价值，是建立统一目标、阶段门、责任界面和升级机制，让跨职能团队围绕同一基线做决策。",
+    "latestUrl": "/qilylean/daily/2026-08-12.html",
     "directoryUrl": "/qilylean/daily-insights.html"
   },
   "knowledge": {
@@ -45,11 +45,11 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 2878,
-    "indexedPages": 51,
-    "terminologyTotal": 184,
-    "briefTotal": 2590,
-    "latestBriefDate": "2026-08-11",
+    "indexedEntries": 2884,
+    "indexedPages": 2824,
+    "terminologyTotal": 190,
+    "briefTotal": 2591,
+    "latestBriefDate": "2026-08-12",
     "sitemapLastmod": "2026-08-11"
   }
 }
