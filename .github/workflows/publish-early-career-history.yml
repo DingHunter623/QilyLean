@@ -24,8 +24,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: qily-early-career-history-${{ github.event.pull_request.number || 'main' }}
-  cancel-in-progress: true
+  group: qily-site-publication-main
+  cancel-in-progress: false
 
 jobs:
   validate:
@@ -53,7 +53,7 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
@@ -72,15 +72,35 @@ jobs:
           node scripts/publish-early-career-history.js
           node scripts/publish-early-career-history.js --check
           git diff --check
-      - name: Commit public pages
+      - name: Commit public pages with concurrent-update retry
         shell: bash
         run: |
-          if git diff --quiet; then
-            echo "Early career history is already current."
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add qilylean/daily-insights.html experience/index.html
-          git commit -m "build: restore early career history links [skip ci]"
-          git push origin HEAD:main
+
+          for attempt in 1 2 3; do
+            if git diff --quiet; then
+              echo "Early career history is already current."
+              exit 0
+            fi
+
+            git add qilylean/daily-insights.html experience/index.html
+            git commit -m "build: restore early career history links [skip ci]"
+
+            if git push origin HEAD:main; then
+              echo "Early career history published successfully."
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 3 ]; then
+              echo "Failed to publish early career history after 3 attempts."
+              exit 1
+            fi
+
+            echo "main advanced during publication; reloading latest main and re-materializing (attempt $((attempt + 1))/3)."
+            git fetch origin main --depth=1
+            git reset --hard origin/main
+            node scripts/publish-early-career-history.js
+            node scripts/publish-early-career-history.js --check
+            git diff --check
+          done
