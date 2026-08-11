@@ -38,13 +38,23 @@ function upsertRuntimeHook(source, label) {
   return `${source.trimEnd()}\n\n${block}\n`;
 }
 
+function hasWorkflowPath(source, relativePath) {
+  const escaped = escapeRegExp(relativePath);
+  return new RegExp(`^\\s*-\\s*['\"]${escaped}['\"]\\s*$`, 'm').test(source);
+}
+
+function insertWorkflowPathAfter(source, anchorPath, newPath) {
+  const escapedAnchor = escapeRegExp(anchorPath);
+  const anchorExpression = new RegExp(`^(\\s*-\\s*)['\"]${escapedAnchor}['\"]\\s*$`, 'm');
+  if (!anchorExpression.test(source)) throw new Error(`build-daily-archive.yml: trigger anchor missing: ${anchorPath}`);
+  return source.replace(anchorExpression, (line) => `${line}\n      - '${newPath}'`);
+}
+
 function patchBuildDailyWorkflow(source) {
   let next = source;
 
-  if (!next.includes('      - "scripts/materialize-professionalization-v24.js"')) {
-    const anchor = '      - "scripts/build-daily-archive.js"';
-    if (!next.includes(anchor)) throw new Error('build-daily-archive.yml: trigger anchor missing');
-    next = next.replace(anchor, `${anchor}\n      - "scripts/materialize-professionalization-v24.js"`);
+  if (!hasWorkflowPath(next, 'scripts/materialize-professionalization-v24.js')) {
+    next = insertWorkflowPathAfter(next, 'scripts/build-daily-archive.js', 'scripts/materialize-professionalization-v24.js');
   }
 
   if (!next.includes('          node --check scripts/materialize-professionalization-v24.js')) {
