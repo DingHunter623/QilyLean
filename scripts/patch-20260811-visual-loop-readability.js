@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+// Publication refresh: 2026-08-11 visual readability v2.
 
 const fs = require('fs');
 const path = require('path');
