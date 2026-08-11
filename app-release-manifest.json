@@ -1,6 +1,6 @@
 {
-  "schemaVersion": 1,
-  "updatedAt": "2026-08-09",
+  "schemaVersion": 2,
+  "updatedAt": "2026-08-11",
   "officialWebsite": "https://qilylean.com/",
   "supportEmail": "admin@qilylean.com",
   "apps": {
@@ -15,27 +15,28 @@
         "versionCode": 13,
         "apk": "/Times26001-Android-v1.1.10-Official-Website-Fix.apk",
         "sha256": "/Times26001-Android-v1.1.10-Official-Website-Fix.sha256.txt",
-        "label": "当前官网试用包（已包含“官方网址”标签修正）"
+        "label": "当前官网独立分发包（非Google Play发布链）",
+        "status": "用于官网直接下载与试用；不作为Google Play首发AAB的上传签名或后续升级签名基线"
       },
       "storeCandidate": {
-        "versionName": "1.1.10",
-        "versionCode": 13,
+        "versionName": "1.1.11",
+        "versionCode": 14,
         "targetSdk": 36,
-        "label": "国内应用市场候选源码版本",
-        "status": "当前位置城市识别与天气闭环已修复；固定Release签名待启用，正式商店版后续更新以对应应用市场渠道为主"
+        "label": "Google Play首发候选版",
+        "status": "固定Google Play Upload Key已生成并用于AAB签名；AAB构建、包名、版本、API 36与最小定位权限校验通过；待Play Console上传、测试与审核"
       },
       "productPage": "https://qilylean.com/tools/times26001/",
       "privacy": "https://qilylean.com/legal/times26001/privacy/",
       "terms": "https://qilylean.com/legal/times26001/terms/",
       "support": "https://qilylean.com/app-support/",
-      "officialWebsiteLinkPolicy": "APP可展示并由用户主动访问QilyLean官网与企业邮箱；国内商店版不得引导用户绕过应用市场下载、更新或安装APK",
+      "officialWebsiteLinkPolicy": "APP可展示并由用户主动访问QilyLean官网与企业邮箱；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK",
       "latestBuild": {
-        "versionName": "1.1.10",
-        "versionCode": 13,
+        "versionName": "1.1.11",
+        "versionCode": 14,
         "targetSdk": 36,
-        "label": "最新构建",
-        "status": "当前位置城市识别与天气闭环保留；底部联系方式“官方网址/企业邮箱”对称标签已进入APK；固定Release签名待启用",
-        "upgradeFromHistoricalPublicApk": "是否可直接覆盖安装取决于设备上旧包签名；应用市场正式包必须保持固定Release签名"
+        "label": "最新Google Play构建",
+        "status": "Google Play首发AAB已使用固定Upload Key签名；仅前台粗略位置，无精确位置、无后台位置；发布产物校验通过",
+        "upgradeFromHistoricalPublicApk": "官网独立分发包与Google Play发布链分开管理；Google Play后续版本持续使用同一Upload Key并由Play App Signing管理最终分发签名"
       }
     },
     "qilyleanHome": {
