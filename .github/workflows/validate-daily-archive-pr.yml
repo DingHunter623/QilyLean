@@ -4,48 +4,37 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - ".github/workflows/validate-daily-archive-pr.yml"
-      - ".github/workflows/build-daily-archive.yml"
-      - "cooperation/index.html"
-      - "links/index.html"
-      - "qilylean/brief-curation-policy.json"
-      - "qilylean/daily/*.html"
-      - "qilylean/assets/daily-*.svg"
-      - "qilylean/daily-briefs.css"
-      - "qilylean/daily-feedback.js"
-      - "qilylean/site-data.json"
-      - "qilylean/site-search-index.json"
-      - "knowledge/index.html"
-      - "knowledge/terminology.html"
-      - "knowledge/terminology/*.html"
-      - "scripts/build-daily-archive.js"
-      - "scripts/curate-weekly-briefs.js"
-      - "scripts/validate-weekly-brief-curation.js"
-      - "scripts/enforce-six-core-static-source.js"
-      - "scripts/sync-curated-site-metadata.js"
-      - "scripts/build-site-metadata.js"
-      - "scripts/sync-search-brief-metadata.js"
-      - "scripts/sync-trust-brief-metadata.js"
-      - "scripts/daily-engineering-archive.js"
-      - "scripts/enhance-daily-archive.js"
-      - "scripts/enhance-terminology-training.js"
-      - "scripts/audit-daily-terminology.js"
-      - "scripts/audit-daily-quality-linkage.js"
-      - "scripts/apply-commercial-quality-closure-20260804.js"
-      - "scripts/hide-public-pricing.js"
-      - "scripts/normalize-daily-quality-label.js"
-      - "scripts/enforce-productivity-theme-alias.js"
-      - "scripts/publish-equipment-reliability-terminology.js"
-      - "scripts/sync-daily-terminology.js"
-      - "scripts/bump-daily-css-version.js"
-      - "scripts/validate-daily-archive.js"
-      - "scripts/validate-current-daily-publication.js"
-      - "scripts/remove-daily-directory-consultation.js"
-      - "scripts/normalize-daily-visual-closure.js"
-      - "scripts/publish-r2-clean-runtime-v3.js"
-      - "scripts/materialize-static-core-pages.js"
-      - "sitemap.xml"
-      - "sitemap-core.xml"
+      - '.github/workflows/validate-daily-archive-pr.yml'
+      - '.github/workflows/build-daily-archive.yml'
+      - 'qilylean/brief-curation-policy.json'
+      - 'qilylean/daily/*.html'
+      - 'qilylean/daily/index.json'
+      - 'qilylean/daily/feed.xml'
+      - 'qilylean/daily/curation-report.json'
+      - 'qilylean/daily/curation-baseline.json'
+      - 'qilylean/assets/daily-*.svg'
+      - 'qilylean/daily/assets/**'
+      - 'knowledge/terminology.html'
+      - 'knowledge/terminology/*.html'
+      - 'scripts/curate-weekly-briefs.js'
+      - 'scripts/validate-weekly-brief-curation.js'
+      - 'scripts/enforce-six-core-static-source.js'
+      - 'scripts/sync-curated-site-metadata.js'
+      - 'scripts/sync-search-brief-metadata.js'
+      - 'scripts/sync-trust-brief-metadata.js'
+      - 'scripts/sync-daily-terminology.js'
+      - 'scripts/audit-daily-terminology.js'
+      - 'scripts/audit-daily-quality-linkage.js'
+      - 'scripts/normalize-daily-quality-label.js'
+      - 'scripts/remove-daily-directory-consultation.js'
+      - 'scripts/normalize-daily-visual-closure.js'
+      - 'scripts/publish-r2-clean-runtime-v3.js'
+      - 'scripts/validate-current-daily-publication.js'
+      - 'index.html'
+      - 'knowledge/index.html'
+      - 'trust/index.html'
+      - 'sitemap.xml'
+      - 'sitemap-core.xml'
 
 permissions:
   contents: read
@@ -57,7 +46,7 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
         with:
@@ -67,91 +56,47 @@ jobs:
         with:
           node-version: 24
 
-      - name: Validate script syntax
+      - name: Validate curated publisher syntax
         run: |
-          node --check scripts/build-daily-archive.js
           node --check scripts/curate-weekly-briefs.js
           node --check scripts/validate-weekly-brief-curation.js
           node --check scripts/enforce-six-core-static-source.js
           node --check scripts/sync-curated-site-metadata.js
-          node --check scripts/build-site-metadata.js
           node --check scripts/sync-search-brief-metadata.js
           node --check scripts/sync-trust-brief-metadata.js
-          node --check scripts/enhance-daily-archive.js
-          node --check scripts/enhance-terminology-training.js
+          node --check scripts/sync-daily-terminology.js
           node --check scripts/audit-daily-terminology.js
           node --check scripts/audit-daily-quality-linkage.js
-          node --check scripts/apply-commercial-quality-closure-20260804.js
-          node --check scripts/hide-public-pricing.js
           node --check scripts/normalize-daily-quality-label.js
-          node --check scripts/enforce-productivity-theme-alias.js
-          node --check scripts/publish-equipment-reliability-terminology.js
-          node --check scripts/sync-daily-terminology.js
-          node --check scripts/bump-daily-css-version.js
-          node --check scripts/validate-daily-archive.js
-          node --check scripts/validate-current-daily-publication.js
           node --check scripts/remove-daily-directory-consultation.js
           node --check scripts/normalize-daily-visual-closure.js
           node --check scripts/publish-r2-clean-runtime-v3.js
+          node --check scripts/validate-current-daily-publication.js
 
-      - name: Rebuild complete engineering source archive
-        run: |
-          node scripts/apply-commercial-quality-closure-20260804.js
-          node scripts/hide-public-pricing.js
-          node scripts/enforce-productivity-theme-alias.js
-          node scripts/normalize-daily-quality-label.js
-          node scripts/build-daily-archive.js
-          node scripts/publish-equipment-reliability-terminology.js
-          node scripts/enhance-daily-archive.js
-          node scripts/enhance-terminology-training.js
-          node scripts/normalize-daily-quality-label.js
-          node scripts/audit-daily-terminology.js
-          node scripts/sync-daily-terminology.js
-          node scripts/sync-daily-terminology.js --check
-          node scripts/build-site-metadata.js
-          node scripts/sync-search-brief-metadata.js
-          node scripts/bump-daily-css-version.js
-          node scripts/apply-commercial-quality-closure-20260804.js
-          node scripts/hide-public-pricing.js
-          node scripts/enforce-productivity-theme-alias.js
-          node scripts/normalize-daily-quality-label.js
-
-      - name: Unify source archive brand
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          files = [Path('qilylean/daily-insights.html'), *Path('qilylean/daily').glob('*.html')]
-          for file in files:
-              text = file.read_text(encoding='utf-8')
-              file.write_text(text.replace('>制造改善知识分享<', '>QilyLean｜启力精益<'), encoding='utf-8')
-          PY
-
-      - name: Validate complete source archive before curation
-        run: node scripts/validate-daily-archive.js
-
-      - name: Curate weekly high-value public archive
+      - name: Curate current candidate archive by weekly value
         run: node scripts/curate-weekly-briefs.js
 
-      - name: Finalize curated metadata, six-core homepage and R2 clean runtime
+      - name: Normalize retained knowledge and brief quality
         run: |
+          node scripts/normalize-daily-quality-label.js
           node scripts/remove-daily-directory-consultation.js
           node scripts/normalize-daily-visual-closure.js
+          node scripts/sync-daily-terminology.js
+          node scripts/sync-daily-terminology.js --check
+          node scripts/audit-daily-terminology.js
           node scripts/audit-daily-quality-linkage.js
+
+      - name: Synchronize six-core source, search, trust and R2 runtime
+        run: |
           node scripts/sync-curated-site-metadata.js
+          node scripts/enforce-six-core-static-source.js
           node scripts/sync-search-brief-metadata.js
           node scripts/sync-trust-brief-metadata.js
-          node scripts/enforce-six-core-static-source.js
           node scripts/publish-r2-clean-runtime-v3.js
 
-      - name: Validate weekly curation and protected briefs
-        run: node scripts/validate-weekly-brief-curation.js
-
-      - name: Validate current publication contracts
-        run: node scripts/validate-current-daily-publication.js
-
-      - name: Validate trust metadata contract
-        run: node scripts/sync-trust-brief-metadata.js --check
-
-      - name: Verify deterministic diff
-        run: git diff --check
+      - name: Validate curated publication contracts
+        run: |
+          node scripts/sync-trust-brief-metadata.js --check
+          node scripts/validate-weekly-brief-curation.js
+          node scripts/validate-current-daily-publication.js
+          git diff --check
