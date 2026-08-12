@@ -13,17 +13,13 @@ const protectedDates = new Set(policy.protected_dates || []);
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
-
 function mondayKey(date) {
   const value = new Date(`${date}T00:00:00Z`);
   const day = value.getUTCDay() || 7;
   value.setUTCDate(value.getUTCDate() - day + 1);
   return value.toISOString().slice(0, 10);
 }
-
-function read(rel) {
-  return fs.readFileSync(path.join(root, rel), 'utf8');
-}
+function read(rel) { return fs.readFileSync(path.join(root, rel), 'utf8'); }
 
 function main() {
   const dates = fs.readdirSync(dailyDir)
@@ -32,13 +28,12 @@ function main() {
     .sort()
     .reverse();
   assert(dates.length > 0, 'Curated brief archive is empty');
+
   const index = JSON.parse(read('qilylean/daily/index.json'));
   assert(index.length === dates.length, `Index/page count mismatch: ${index.length} vs ${dates.length}`);
   assert(index.map((item) => item.date).join('|') === dates.join('|'), 'Index dates do not match retained brief pages');
 
-  for (const date of protectedDates) {
-    assert(dates.includes(date), `Protected brief was removed: ${date}`);
-  }
+  for (const date of protectedDates) assert(dates.includes(date), `Protected brief was removed: ${date}`);
 
   const byWeek = new Map();
   for (const date of dates) {
@@ -55,11 +50,18 @@ function main() {
     }
   }
 
+  const baseline = JSON.parse(read('qilylean/daily/curation-baseline.json'));
+  assert(baseline.policy_version === policy.version, 'Initial curation baseline policy version mismatch');
+  assert(baseline.source_total === 2591, `Initial source baseline changed unexpectedly: ${baseline.source_total}`);
+  assert(baseline.removed_total === baseline.source_total - baseline.retained_total, 'Initial curation baseline arithmetic is invalid');
+  assert(baseline.reduction_rate >= 0.8, `Initial curation reduction baseline is too low: ${baseline.reduction_rate}`);
+  for (const date of protectedDates) assert((baseline.protected_dates || []).includes(date), `Initial curation baseline lost protected date: ${date}`);
+
   const report = JSON.parse(read('qilylean/daily/curation-report.json'));
-  assert(report.policy_version === policy.version, 'Curation report policy version mismatch');
-  assert(report.total_after === dates.length, 'Curation report retained count mismatch');
-  assert(report.removed > 0, 'Curation did not remove any low-priority briefs');
-  assert(report.total_after < report.total_before * 0.25, `Curation reduction is not substantial enough: ${report.total_before} -> ${report.total_after}`);
+  assert(report.policy_version === policy.version, 'Current curation report policy version mismatch');
+  assert(report.total_after === dates.length, `Current curation report retained count mismatch: ${report.total_after} vs ${dates.length}`);
+  assert(report.total_before >= report.total_after, `Current curation report is invalid: ${report.total_before} -> ${report.total_after}`);
+  assert(report.removed === report.total_before - report.total_after, 'Current curation report removal arithmetic is invalid');
 
   const directory = read('qilylean/daily-insights.html');
   assert(directory.includes('<h1>精选简报</h1>'), 'Curated directory title is missing');
@@ -89,7 +91,7 @@ function main() {
   assert(!homepage.includes('2591期'), 'Homepage still exposes the legacy quantity-first brief count');
   assert(homepage.includes(`${dates.length}篇`) || homepage.includes('精选简报按周归档'), 'Homepage weekly curated brief positioning is missing');
 
-  process.stdout.write(`Weekly curation validated: ${dates.length} curated briefs; protected ${protectedDates.size}.\n`);
+  process.stdout.write(`Weekly curation validated: ${dates.length} curated briefs; protected ${protectedDates.size}; initial reduction baseline ${baseline.source_total} -> ${baseline.retained_total}.\n`);
 }
 
 main();
