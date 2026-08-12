@@ -1,0 +1,34 @@
+{
+  "version": "2026-08-12-r1",
+  "effective_date": "2026-08-12",
+  "cadence": "weekly_curated",
+  "timezone": "Asia/Shanghai",
+  "default_publication_rule": "one_high_value_brief_per_iso_week",
+  "protected_dates": [
+    "2026-07-29",
+    "2026-08-08",
+    "2026-08-09",
+    "2026-08-12"
+  ],
+  "protected_notes": {
+    "2026-07-29": "NPI四阶段：EVT、DVT、PVT、MP；用户明确要求长期保留",
+    "2026-08-08": "培训／异常闭环主题；用户明确要求长期保留",
+    "2026-08-09": "Ceiling／天花板、Benchmark、Target、Stretch Target；用户明确要求长期保留",
+    "2026-08-12": "本周精选：汽车座椅开关PMO量产交付闭环"
+  },
+  "quality_dimensions": [
+    "manufacturing_professional_relevance",
+    "engineering_logic_and_data",
+    "problem_to_result_closure",
+    "evidence_and_boundary_clarity",
+    "originality_and_reusability",
+    "search_and_training_value"
+  ],
+  "retention_principles": [
+    "优先保留有明确制造问题、工程数据、阶段门、验证方法、交付物或标准固化逻辑的内容",
+    "同周主题重复时只保留专业深度、工程结构与长期复用价值最高的一篇",
+    "泛职场、泛励志、低信息密度、模板化重复内容原则上不进入公开简报档案",
+    "用户明确点名的精品内容作为保护项，可形成同周多篇的唯一例外",
+    "简报数量不得作为竞争力指标；公开统计以真实精选档案数量为准"
+  ]
+}

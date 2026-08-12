@@ -1,5 +1,5 @@
-name: Build daily engineering brief archive
-# Publication refresh: 2026-08-11 serialized site publication
+name: Build curated engineering brief archive
+# Weekly quality-first publication baseline: 2026-08-12
 
 on:
   push:
@@ -10,6 +10,7 @@ on:
       - 'qilylean/assets/daily-*.svg'
       - 'qilylean/daily-briefs.css'
       - 'qilylean/daily-feedback.js'
+      - 'qilylean/brief-curation-policy.json'
       - 'qilylean/site-data.json'
       - 'qilylean/site-search-index.json'
       - 'site-number-badge-contrast-v1.css'
@@ -20,6 +21,8 @@ on:
       - 'knowledge/terminology.html'
       - 'knowledge/terminology/*.html'
       - 'scripts/build-daily-archive.js'
+      - 'scripts/curate-weekly-briefs.js'
+      - 'scripts/validate-weekly-brief-curation.js'
       - 'scripts/materialize-professionalization-v24.js'
       - 'scripts/publish-primary-contrast-music-continuity.js'
       - 'scripts/apply-footer-standard-v28.js'
@@ -73,6 +76,8 @@ jobs:
       - name: Validate publisher syntax
         run: |
           node --check scripts/build-daily-archive.js
+          node --check scripts/curate-weekly-briefs.js
+          node --check scripts/validate-weekly-brief-curation.js
           node --check scripts/build-site-metadata.js
           node --check scripts/sync-search-brief-metadata.js
           node --check scripts/sync-trust-brief-metadata.js
@@ -99,7 +104,7 @@ jobs:
           node --check site-footer-standard-v28.js
           node --check homepage-music-v5.js
 
-      - name: Rebuild archive and synchronized knowledge assets
+      - name: Rebuild complete engineering source archive
         run: |
           node scripts/apply-commercial-quality-closure-20260804.js
           node scripts/hide-public-pricing.js
@@ -121,7 +126,7 @@ jobs:
           node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
 
-      - name: Unify Daily Engineering Brief brand
+      - name: Unify source archive brand
         shell: bash
         run: |
           python3 - <<'PY'
@@ -132,10 +137,13 @@ jobs:
               file.write_text(text.replace('>制造改善知识分享<', '>QilyLean｜启力精益<'), encoding='utf-8')
           PY
 
-      - name: Validate complete archive before presentation cleanup
+      - name: Validate complete source archive before curation
         run: node scripts/validate-daily-archive.js
 
-      - name: Finalize current message, visual and contrast closure
+      - name: Curate weekly high-value public archive
+        run: node scripts/curate-weekly-briefs.js
+
+      - name: Finalize current message, visual and metadata closure
         run: |
           node scripts/remove-daily-directory-consultation.js
           node scripts/normalize-daily-visual-closure.js
@@ -160,18 +168,21 @@ jobs:
       - name: Validate trust brief metadata contract
         run: node scripts/sync-trust-brief-metadata.js --check
 
+      - name: Validate weekly curation and protected briefs
+        run: node scripts/validate-weekly-brief-curation.js
+
       - name: Verify deterministic diff
         run: git diff --check
 
-      - name: Commit generated publication
+      - name: Commit generated curated publication
         shell: bash
         run: |
           if git diff --quiet; then
-            echo 'Generated archive is already current.'
+            echo 'Generated curated archive is already current.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'build: publish current daily engineering brief archive [skip ci]'
+          git commit -m 'build: publish weekly curated engineering brief archive [skip ci]'
           git push origin HEAD:main
