@@ -98,11 +98,11 @@ jobs:
           ! grep -q '三大核心业务公开价格参考' site-navigation-legacy-20260802.js
           ! grep -q '三大核心业务价格方案' site-navigation-legacy-20260802.js
 
-          # Cache/load-chain closure: homepage uses V3 cache key; cooperation stays on its
-          # maintained stable key until that page itself is migrated.
+          # Cache/load-chain closure: homepage uses V3 cache key; cooperation stays on
+          # the current mobile-layout key until the sitewide V3 cache migration lands.
           grep -q '/site-navigation-legacy-20260802.js?v=20260809-six-capability-pricing-v3' site-navigation.js
           grep -q '/site-navigation.js?v=20260812-competition-upgrade-v21' index.html
-          grep -q '/site-navigation.js?v=20260810-native-navigation-stable-v19' cooperation/index.html
+          grep -q '/site-navigation.js?v=20260811-mobile-layout-v20' cooperation/index.html
           ! grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' index.html
           ! grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' cooperation/index.html
           ! grep -q 'site-music-persistent-navigation-v1.js' index.html
