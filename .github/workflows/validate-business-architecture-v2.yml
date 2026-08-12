@@ -12,6 +12,7 @@ on:
       - 'site-navigation-legacy-20260802.js'
       - 'scripts/apply-commercial-quality-closure-20260804.js'
       - 'scripts/materialize-static-core-pages.js'
+      - 'scripts/prepare-static-source-rematerialization.js'
       - 'scripts/repair-business-architecture-20260809.py'
       - 'scripts/publish-business-architecture-cache-bust-20260809.py'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
@@ -25,6 +26,7 @@ on:
       - 'site-core-service-dock-closure-v1.js'
       - 'site-navigation.js'
       - 'site-navigation-legacy-20260802.js'
+      - 'scripts/prepare-static-source-rematerialization.js'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
       - '.github/workflows/validate-business-architecture-v2.yml'
 
@@ -49,6 +51,7 @@ jobs:
           node --check site-navigation-legacy-20260802.js
           node --check scripts/apply-commercial-quality-closure-20260804.js
           node --check scripts/materialize-static-core-pages.js
+          node --check scripts/prepare-static-source-rematerialization.js
 
       - name: Enforce one business architecture and pricing architecture
         shell: bash
@@ -95,14 +98,21 @@ jobs:
           ! grep -q '三大核心业务公开价格参考' site-navigation-legacy-20260802.js
           ! grep -q '三大核心业务价格方案' site-navigation-legacy-20260802.js
 
-          # Cache/load-chain closure
+          # Cache/load-chain closure: homepage uses V3 cache key; cooperation stays on
+          # the current mobile-layout key until the sitewide V3 cache migration lands.
           grep -q '/site-navigation-legacy-20260802.js?v=20260809-six-capability-pricing-v3' site-navigation.js
-          grep -q '/site-navigation.js?v=20260810-native-navigation-stable-v19' index.html
-          grep -q '/site-navigation.js?v=20260810-native-navigation-stable-v19' cooperation/index.html
+          grep -q '/site-navigation.js?v=20260812-competition-upgrade-v21' index.html
+          grep -q '/site-navigation.js?v=20260811-mobile-layout-v20' cooperation/index.html
           ! grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' index.html
           ! grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' cooperation/index.html
           ! grep -q 'site-music-persistent-navigation-v1.js' index.html
           ! grep -q 'qilyBackgroundMusicPreload' index.html
+
+          # V3 static authority: current homepage taxonomy and rematerialization contract
+          # must remain explicit, so automation cannot silently restore retired panels.
+          grep -q 'QILY-HOME-STATIC-COMMERCIAL:START' index.html
+          grep -q 'qily-home-v3' index.html
+          grep -q 'QILY-HOME-V3-AUTHORITATIVE-STATIC-SOURCE' scripts/prepare-static-source-rematerialization.js
 
           # Canonical rules
           grep -q '运行时一致性' docs/QilyLean全站业务口径规范_20260809.md
