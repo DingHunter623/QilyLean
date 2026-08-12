@@ -1,102 +1,17 @@
-name: Finalize QilyLean 3+3 taxonomy vocabulary 20260809
+name: DEPRECATED - legacy 3+3 taxonomy vocabulary writer
 
 on:
-  push:
-    paths:
-      - '.github/workflows/finalize-business-taxonomy-vocabulary-20260809.yml'
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  finalize:
+  deprecated:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 1
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-      - name: Close remaining taxonomy and SEO vocabulary drift
-        shell: bash
+      - name: R2 retirement notice
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-
-          targets = [
-              Path('index.html'),
-              Path('cooperation/index.html'),
-              Path('site-information-architecture-v1.js'),
-              Path('site-core-service-dock-closure-v1.js'),
-              Path('scripts/materialize-static-core-pages.js'),
-              Path('scripts/hide-public-pricing.js'),
-              Path('scripts/sync-home-latest-brief-cta.js'),
-              Path('scripts/enforce-six-core-static-source.js'),
-          ]
-          replacements = [
-              ('围绕制造工程交付与数智化产品交付', '围绕三类核心项目交付与三项数智化产品与技术能力'),
-              ('“制造工程交付 + 数智化产品交付”两条主线', '“三类核心项目交付 + 三项数智化产品与技术能力”的3+3结构'),
-              ('制造工程交付 + 数智化产品交付', '三类核心项目交付 + 三项数智化产品与技术能力'),
-              ('围绕“制造工程交付”与“数智化产品交付”两条主线', '围绕三类核心项目交付与三项数智化产品与技术能力'),
-              ('围绕两大业务主线形成六类项目合作能力', '形成三类核心项目交付与三项数智化产品与技术能力，合计六类项目合作能力'),
-              ('QilyLean提供六类项目合作能力项目合作：新工厂／新产线规划、精益改善、目视化设计交付、数字化工厂、APP软件开发与官网建设，通过诊断、方案、Pilot／测试、验证、固化和验收形成项目闭环。', 'QilyLean采用“3+3”项目合作结构：三类核心项目交付——新工厂／新产线规划、精益改善、目视化；三项数智化产品与技术能力——数字化工厂、APP软件开发、官网建设；合计六类项目合作能力。'),
-              ('"name":"QilyLean制造改善与项目交付"', '"name":"QilyLean六类项目合作能力"'),
-              ('"description":"面向制造企业提供新工厂规划、精益改善、目视化项目交付与数智化制造数据治理服务。","provider"', '"description":"QilyLean采用3+3结构：三类核心项目交付与三项数智化产品与技术能力，合计六类项目合作能力。","serviceType":["新工厂／新产线规划","精益改善项目交付","目视化项目设计与交付","数字化工厂","APP软件开发","官网建设"],"provider"'),
-          ]
-          changed = []
-          for path in targets:
-              if not path.exists():
-                  continue
-              text = path.read_text(encoding='utf-8')
-              before = text
-              for old, new in replacements:
-                  text = text.replace(old, new)
-              if text != before:
-                  path.write_text(text, encoding='utf-8')
-                  changed.append(str(path))
-          print('Updated files:')
-          for path in changed:
-              print(' -', path)
-          PY
-
-          node --check scripts/enforce-six-core-static-source.js
-          node scripts/enforce-six-core-static-source.js
-          if [ -f scripts/refresh-static-core-search-index.js ]; then
-            node scripts/refresh-static-core-search-index.js || echo 'Legacy daily-archive search assertion reported separately; taxonomy closure continues.'
-          fi
-
-      - name: Validate exact 3+3 SEO and schema contract
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -q '三类核心项目交付' index.html
-          grep -q '三项数智化产品与技术能力' index.html
-          grep -q '六类项目合作能力' index.html
-          grep -q 'QilyLean采用“3+3”项目合作结构' cooperation/index.html
-          grep -q '三类核心项目交付' cooperation/index.html
-          grep -q '三项数智化产品与技术能力' cooperation/index.html
-          grep -q '六类项目合作能力' cooperation/index.html
-          grep -q '"name":"QilyLean六类项目合作能力"' cooperation/index.html
-          grep -q '"serviceType":\["新工厂／新产线规划","精益改善项目交付","目视化项目设计与交付","数字化工厂","APP软件开发","官网建设"\]' cooperation/index.html
-          ! grep -q '六大核心业务' index.html
-          ! grep -q '六大核心业务' cooperation/index.html
-          ! grep -q 'QilyLean提供六类项目合作能力项目合作' cooperation/index.html
-          ! grep -q 'QilyLean制造改善与项目交付' cooperation/index.html
-          ! grep -q '围绕制造工程交付与数智化产品交付' index.html
-          ! grep -q '围绕制造工程交付与数智化产品交付' scripts/enforce-six-core-static-source.js
-          ! grep -q '制造工程交付 + 数智化产品交付' scripts/enforce-six-core-static-source.js
-
-      - name: Commit final SEO taxonomy closure
-        shell: bash
-        run: |
-          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
-            echo 'No taxonomy or SEO drift found.'
-            exit 0
-          fi
-          git config user.name 'QilyLean'
-          git config user.email 'admin@qilylean.com'
-          git add index.html cooperation/index.html site-information-architecture-v1.js site-core-service-dock-closure-v1.js scripts/materialize-static-core-pages.js scripts/hide-public-pricing.js scripts/sync-home-latest-brief-cta.js scripts/enforce-six-core-static-source.js qilylean/site-search-index.json qilylean/site-data.json 2>/dev/null || true
-          git commit -m '官网SEO口径闭环：统一3+3合作能力与结构化数据'
-          git pull --rebase origin main
-          git push origin HEAD:main
+          echo 'Deprecated by QilyLean R2 on 2026-08-12.'
+          echo 'The 3+3 business taxonomy is retired. Six core capabilities are the only current business taxonomy.'
+          echo 'Use scripts/enforce-six-core-static-source.js and the R2 six-core validation workflow instead.'
