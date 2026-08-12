@@ -155,3 +155,59 @@ html,body{max-width:100%;overflow-x:hidden}
 @media(max-width:860px){.brief-grid{grid-template-columns:1fr}.daily-single-section .post{grid-template-columns:1fr}.daily-single-section .visual{min-height:auto}.daily-index-heading{align-items:flex-start;flex-direction:column}.brief-adjacent{grid-template-columns:1fr 1fr}.brief-adjacent .directory{grid-column:1/-1;grid-row:1}.brief-adjacent>:last-child{justify-content:flex-end}.brief-learning-grid,.brief-one-point-grid,.formula-grid,.owner-grid,.status-grid,.brief-related-grid,.brief-feedback-votes{grid-template-columns:1fr}.brief-action-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.brief-consultation{grid-template-columns:1fr}.brief-consultation-cta{align-items:flex-start;flex-direction:column}}
 @media(max-width:760px){.daily-index-section,.daily-single-section{padding:24px 12px}.daily-hero,.daily-hero.compact{padding:30px 14px}.daily-single-section .visual{padding:12px}.daily-single-section .post.detailed .visual{min-height:0}.engineering-flow{padding:8px;margin:16px 0}.rule-table{font-size:13.5px}.rule-table th,.rule-table td{padding:8px 7px}.rule-table.compact-first-col th:first-child,.rule-table.compact-first-col td:first-child{min-width:4.5em}.career-table .career-year-col{width:70px}.formula-card,.owner-card,.status-card,.brief-learning-card{padding:15px}.daily-single-section .content ol,.daily-single-section .content ul{padding-left:1.25em}}
 @media(max-width:620px){.daily-hero h1{font-size:38px}.daily-hero p{font-size:18px}.brief-index-card{min-height:0;padding:20px}.brief-index-actions a,.brief-index-actions button{flex:1 1 140px}.daily-single-section .content{padding:18px}.daily-single-section .content p,.daily-single-section .content li{font-size:17px;line-height:1.75}.daily-single-section h2{font-size:25px!important}.daily-single-section .content h3{font-size:21px;padding:9px 11px}.brief-adjacent a,.brief-adjacent span{font-size:12.5px;padding:7px 8px}.engineering-checklist,.checklist{padding:16px}.brief-action-strip{grid-template-columns:1fr}.rule-table th,.rule-table td{font-size:12.5px;padding:7px 5px}.brief-consultation{padding:19px 16px}.brief-consultation-form,.brief-inline-message{grid-template-columns:1fr}.brief-consultation-form label,.brief-consultation-reference,.brief-consultation-actions,.brief-consultation-status,.brief-consultation-privacy,.brief-inline-message-heading,.brief-inline-message label,.brief-inline-message label.full,.brief-inline-message-actions{grid-column:1}.brief-consultation-actions>*,.brief-inline-message-actions>*{width:100%}.brief-consultation-cta{padding:18px}.brief-consultation-cta>a{width:100%}.brief-feedback{padding:19px 16px}.brief-stars{gap:2px}.brief-stars button{font-size:30px}}
+
+
+/* QILY-DAILY-READABILITY-CLOSURE-V13-20260812 */
+/* Scope: all generated Daily Engineering Brief detail pages, past and future. */
+html body.daily-single-page .daily-single-section article.post.detailed{
+  box-sizing:border-box;
+  padding-inline:1em;
+}
+
+/* Keep the two article edges breathable without changing hero, adjacent navigation,
+   feedback form, floating dock, cards or the outer content axis. */
+html body.daily-single-page .daily-single-section article.post.detailed > :first-child{
+  margin-top:0;
+}
+html body.daily-single-page .daily-single-section article.post.detailed > :last-child{
+  margin-bottom:0;
+}
+
+/* Guard against later site-wide link rules overriding dark navigation controls. */
+html body.daily-single-page .brief-adjacent a.directory,
+html body.daily-single-page .brief-adjacent a.directory:link,
+html body.daily-single-page .brief-adjacent a.directory:visited,
+html body.daily-single-page .brief-adjacent a.directory:hover,
+html body.daily-single-page .brief-adjacent a.directory:focus-visible,
+html body.daily-single-page .brief-adjacent a.directory:active{
+  border-color:var(--daily-forest)!important;
+  color:#fff!important;
+  background:var(--daily-forest)!important;
+  -webkit-text-fill-color:#fff!important;
+  text-decoration:none!important;
+  opacity:1!important;
+}
+html body.daily-single-page .brief-adjacent a.directory:hover,
+html body.daily-single-page .brief-adjacent a.directory:focus-visible{
+  border-color:#177f87!important;
+  background:#177f87!important;
+  box-shadow:0 0 0 3px rgba(23,127,135,.18)!important;
+  outline:none!important;
+}
+
+/* Dark controls across Daily Brief pages must never inherit dark text. */
+html body.daily-single-page :is(
+  .brief-inline-message-actions button,
+  .brief-consultation-actions button,
+  .brief-consultation-cta > a,
+  .daily-single-section .share
+){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
+@media(max-width:620px){
+  html body.daily-single-page .daily-single-section article.post.detailed{
+    padding-inline:1em;
+  }
+}
