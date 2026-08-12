@@ -101,58 +101,6 @@ jobs:
           NODE
           cp /tmp/qilylean-final-cleanup-report.json maintenance/unreferenced-assets-report.json
 
-      - name: Restore normal audit-only workflow
-        shell: bash
-        run: |
-          cat > .github/workflows/audit-unreferenced-assets.yml <<'YAML'
-          name: Audit unreferenced repository assets
-
-          on:
-            pull_request:
-              branches: [main]
-            workflow_dispatch:
-
-          permissions:
-            contents: read
-
-          concurrency:
-            group: audit-unreferenced-assets-pr-${{ github.event.pull_request.number || github.ref }}
-            cancel-in-progress: true
-
-          jobs:
-            audit:
-              runs-on: ubuntu-latest
-              timeout-minutes: 20
-              steps:
-                - uses: actions/checkout@v4
-                  with:
-                    fetch-depth: 1
-                - uses: actions/setup-node@v4
-                  with:
-                    node-version: 20
-                - name: Audit attachments and repository references
-                  run: node scripts/audit-unreferenced-assets.js
-                - name: Validate cleanup report
-                  shell: bash
-                  run: |
-                    node --check scripts/audit-unreferenced-assets.js
-                    test -s maintenance/unreferenced-assets-report.json
-                    node - <<'NODE'
-                    const report = require('./maintenance/unreferenced-assets-report.json');
-                    if (report.mode !== 'audit') throw new Error('Unexpected report mode');
-                    if (!Array.isArray(report.deletable) || !Array.isArray(report.retained)) throw new Error('Cleanup report is incomplete');
-                    console.log(`Assets: ${report.assetFiles}; unreferenced: ${report.unreferencedAssets}; potential release: ${report.potentialReleaseHuman}`);
-                    NODE
-                - name: Upload attachment audit report
-                  if: always()
-                  uses: actions/upload-artifact@v4
-                  with:
-                    name: unreferenced-assets-report
-                    path: maintenance/unreferenced-assets-report.json
-                    if-no-files-found: warn
-                    retention-days: 7
-          YAML
-
       - name: Commit cleanup result
         shell: bash
         run: |
