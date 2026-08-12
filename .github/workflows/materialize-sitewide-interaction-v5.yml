@@ -13,10 +13,6 @@ on:
       - 'scripts/publish-primary-contrast-music-continuity.js'
       - 'scripts/site-regression-guard.js'
       - 'scripts/apply-site-poka-yoke-v2.js'
-      - 'scripts/bump-live-asset-version-v19.js'
-      - 'scripts/publish-number-badge-contrast.js'
-      - 'scripts/apply-tail-gap-hotfix-v22.js'
-      - 'site-tail-gap-hotfix-v22.css'
       - '.github/workflows/materialize-sitewide-interaction-v5.yml'
 
 permissions:
@@ -37,7 +33,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
       - name: Validate R2 runtime sources
         run: |
           node --check scripts/publish-r2-runtime-stability.js
@@ -45,12 +41,10 @@ jobs:
           node --check scripts/apply-site-poka-yoke-v2.js
           node --check scripts/site-regression-guard.js
           node --check site-music-persistent-navigation-v1.js
-      - name: Materialize current interaction assets
+      - name: Materialize R2 stable shell and navigation
+        run: node scripts/publish-r2-runtime-stability.js
+      - name: Run R2 regression guard
         run: |
-          node scripts/publish-number-badge-contrast.js
-          node scripts/validate-sitewide-interaction-clarity.js
-          node scripts/apply-tail-gap-hotfix-v22.js
-          node scripts/publish-r2-runtime-stability.js
           node scripts/site-regression-guard.js
           git diff --check
       - name: Commit materialized R2 live references
