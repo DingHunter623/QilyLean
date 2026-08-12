@@ -1,0 +1,55 @@
+name: Align primary navigation to manufacturing operating axis
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/align-primary-nav-operating-axis.js'
+      - '.github/workflows/align-primary-nav-operating-axis.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: align-primary-nav-operating-axis
+  cancel-in-progress: false
+
+jobs:
+  align:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Align static and runtime navigation order
+        run: node scripts/align-primary-nav-operating-axis.js --apply
+
+      - name: Validate JavaScript syntax and navigation contract
+        shell: bash
+        run: |
+          node --check scripts/align-primary-nav-operating-axis.js
+          node --check site-navigation-core.js
+          node --check site-parent-navigation-v3.js
+          node --check site-navigation.js
+          node scripts/align-primary-nav-operating-axis.js --apply
+
+      - name: Commit aligned site navigation
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add site-navigation-core.js site-parent-navigation-v3.js site-navigation.js docs/QILYLEAN_SITE_SYSTEM_V3.md '*.html' '**/*.html'
+          if git diff --cached --quiet; then
+            echo 'No navigation changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: align primary navigation with manufacturing operating axis [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
