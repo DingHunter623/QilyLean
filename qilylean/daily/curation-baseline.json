@@ -1,0 +1,16 @@
+{
+  "baseline_id": "weekly-curation-initial-20260812",
+  "policy_version": "2026-08-12-r2",
+  "baseline_date": "2026-08-12",
+  "source_total": 2591,
+  "retained_total": 372,
+  "removed_total": 2219,
+  "reduction_rate": 0.8564,
+  "protected_dates": [
+    "2026-07-29",
+    "2026-08-08",
+    "2026-08-09",
+    "2026-08-12"
+  ],
+  "statement": "首次从日更数量型公开档案切换为周度精品型公开档案；删除低信息密度、模板化重复和同周重复内容，之后生产发布不再重建被淘汰的日报全集。"
+}
