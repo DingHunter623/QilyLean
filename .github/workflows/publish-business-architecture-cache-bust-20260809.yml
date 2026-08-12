@@ -1,47 +1,17 @@
-name: Publish QilyLean business architecture cache bust 20260809
+name: DEPRECATED - legacy 3+3 business cache writer
 
 on:
-  push:
-    paths:
-      - '.github/workflows/publish-business-architecture-cache-bust-20260809.yml'
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  publish:
+  deprecated:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-        with:
-          fetch-depth: 1
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-      - name: Apply sitewide cache bust
-        run: python3 scripts/publish-business-architecture-cache-bust-20260809.py
-      - name: Validate loader chain
-        shell: bash
+      - name: R2 retirement notice
         run: |
-          set -euo pipefail
-          node --check site-navigation.js
-          grep -q '/site-brand-trust-v1.js?v=20260809-project-delivery-strategy-v2' site-navigation.js
-          grep -q '/site-information-architecture-v1.js?v=20260809-six-capabilities-v2' site-navigation.js
-          grep -q '/site-navigation-legacy-20260802.js?v=20260809-core-project-pricing-v2' site-navigation.js
-          grep -q '/site-navigation.js?v=20260809-business-architecture-v2' index.html
-          grep -q '/site-navigation.js?v=20260809-business-architecture-v2' cooperation/index.html
-          grep -q '/site-navigation.js?v=20260809-business-architecture-v2' cooperation/factory-planning/index.html
-          ! grep -q '/site-navigation.js?v=20260807-sitewide-closure-v4' index.html
-      - name: Commit cache-bust publication
-        shell: bash
-        run: |
-          if git diff --quiet && [ -z "$(git status --porcelain)" ]; then
-            echo 'No changes to commit.'
-            exit 0
-          fi
-          git config user.name 'QilyLean'
-          git config user.email 'admin@qilylean.com'
-          git add site-navigation.js '*.html' '**/*.html' 2>/dev/null || true
-          git commit -m '全站缓存闭环：强制加载新版3+3业务架构运行层'
-          git pull --rebase origin main
-          git push origin HEAD:main
+          echo 'Deprecated by QilyLean R2 on 2026-08-12.'
+          echo 'The former 20260809 3+3 runtime/cache chain must not be republished.'
+          echo 'Current runtime baseline is R2 static-first + Fast Native Navigation V5.'
