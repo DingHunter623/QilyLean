@@ -19,8 +19,7 @@
   <meta property="og:image:width" content="1080">
   <meta property="og:image:height" content="1080">
   <meta name="twitter:card" content="summary_large_image">
-  <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,180)})(document);</script>
-  <link rel="stylesheet" href="/site-shell.css?v=20260729-no-old-flash-v1">
+<link rel="stylesheet" href="/site-shell.css?v=20260812-r2-stability-v1">
   <link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=20260729-hierarchy-v4">
   <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260810-content-axis-v8">
   <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
@@ -29,13 +28,26 @@
 <link id="qilyVisualClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2">
   <link id="qilyBoundaryLinksClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v2.css?v=20260803-boundary-links-v2">
   <script defer src="/site-navigation.js?v=20260813-r2-clean-v4"></script>
+<link id="qilyVisualReadabilityV4Stylesheet" rel="stylesheet" href="/site-visual-readability-v4.css?v=20260813-visual-readability-v4">
+  <link id="qilyR2RuntimeStabilityStylesheet" rel="stylesheet" href="/site-r2-stability-fixes-v1.css?v=20260813-r2-clean-v4">
+<!-- QILY-R2-PRIMARY-CONTRAST-NAV:START -->
+  <link id="qilyHeroPrimaryContrastStylesheet" rel="stylesheet" href="/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1">
+<!-- QILY-R2-PRIMARY-CONTRAST-NAV:END -->
   <script defer id="qilyFastNativeNavigationV5" data-qily-fast-native-navigation="v5" src="/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5"></script>
-  <link id="qilyVisualReadabilityV4Stylesheet" rel="stylesheet" href="/site-visual-readability-v4.css?v=20260813-visual-readability-v4">
 </head>
 <body class="module-page daily-single-page qily-pro-v24">
 <header class="qily-site-header">
   <a class="qily-brand" href="/">QilyLean｜启力精益</a>
-  <nav class="site-nav" aria-label="网站导航"><a href="/">首页</a><a href="/knowledge/">知识分享</a></nav>
+  <nav class="site-nav" aria-label="QilyLean核心导视">
+      <a href="/">首页</a>
+      <a href="/capabilities/">能力体系</a>
+      <a href="/projects/">代表项目</a>
+      <a href="/improvements/">改善方法</a>
+      <a href="/knowledge/" aria-current="page">知识资产</a>
+      <a href="/experience/">履历主线</a>
+      <a href="/cooperation/">项目合作</a>
+      <a href="/trust/">信任中心</a>
+    </nav>
 </header>
 <main>
   <section class="daily-hero compact"><div class="daily-inner"><span>DAILY ENGINEERING BRIEF</span><h1>精选简报</h1><p>2025-03-25｜JIT</p></div></section>
@@ -114,6 +126,5 @@
 (function(){var button=document.querySelector('.share');if(!button)return;var status=document.querySelector('.status');function copy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();return Promise.resolve();}function done(text){if(status)status.textContent=text;setTimeout(function(){if(status)status.textContent='';},2200);}button.addEventListener('click',function(){var url=location.href;var title=document.title;if((/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'')||!!(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches&&innerWidth<=820))&&navigator.share){navigator.share({title:title,text:title,url:url}).then(function(){done('已调起分享');}).catch(function(error){if(error&&error.name==='AbortError')return;copy(url).then(function(){done('网址已复制');});});}else copy(url).then(function(){done('网址已复制');});});})();
 </script>
 <script src="/qilylean/daily-feedback.js?v=20260729-message-only-v4"></script>
-<script src="/homepage-music.js?v=20260810-demand-music-wrapper-v6"></script>
 </body>
 </html>
