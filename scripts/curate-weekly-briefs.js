@@ -3,6 +3,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { careerTimeline } = require('./daily-engineering-archive');
 
 const root = path.resolve(__dirname, '..');
 const qily = path.join(root, 'qilylean');
@@ -172,6 +173,11 @@ function pruneFiles(keepDates) {
   }
 }
 
+function buildCareerTimeline() {
+  const rows = careerTimeline.map((item) => '<tr><td><a class="career-year-link" href="/qilylean/daily-insights.html?year=' + esc(item.year) + '#brief-directory" data-year-filter="' + esc(item.year) + '" aria-label="查看' + esc(item.year) + '年精选简报">' + esc(item.year) + '年</a></td><td>' + esc(item.field) + '</td></tr>').join('');
+  return '<section class="engineering-checklist career-track" aria-labelledby="careerTrackTitle"><h2 id="careerTrackTitle">主要项目履历</h2><p>以下按最近至最早汇总制造项目领域；精选简报贯通PE、IE、NPI、ME、精益运营与项目交付方法。</p><table class="rule-table career-table"><colgroup><col class="career-year-col"><col></colgroup><thead><tr><th>年份</th><th>主要制造项目</th></tr></thead><tbody>' + rows + '</tbody></table></section>';
+}
+
 function buildDirectory(records) {
   const cards = records.map((record) => `<article class="brief-index-card" data-date="${record.date}" data-search="${esc(`${record.date} ${record.theme} ${record.title} ${record.summary}`)}"><div class="brief-index-meta"><time datetime="${record.date}">${record.date}</time><span>${esc(record.theme)}</span></div><h2><a href="/qilylean/daily/${record.date}.html">${esc(record.title)}</a></h2><p class="brief-index-summary">${esc(record.summary)}</p><div class="brief-index-actions"><a class="brief-open" href="/qilylean/daily/${record.date}.html">打开本期精选</a></div></article>`).join('\n');
   const latest = records[0];
@@ -198,6 +204,7 @@ function buildDirectory(records) {
 <section class="daily-index-section"><div class="daily-inner">
 <div class="daily-index-heading"><div><h2>精选简报目录</h2><p>${earliest.date}—${latest.date}｜现存 ${records.length} 篇｜周度精选、最新优先</p></div><a href="/qilylean/daily/${latest.date}.html">打开最新精选</a></div>
 <div class="engineering-checklist"><strong>内容准入：</strong>制造专业相关性、工程逻辑与数据、问题到结果闭环、证据与边界、原创复用价值、检索培训价值。低信息密度、模板化重复和泛职场内容不作为公开简报资产。</div>
+${buildCareerTimeline()}
 <div class="brief-directory-tools" id="brief-directory"><label><span>搜索日期、主题或关键词</span><input type="search" id="briefSearch" placeholder="例如：NPI、SMED、标准工时、PMO" autocomplete="off"></label><p id="briefFilterStatus">当前 ${records.length} 篇精选</p></div>
 <div class="brief-grid" id="briefCuratedGrid">${cards}</div>
 </div></section>
