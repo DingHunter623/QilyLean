@@ -1,9 +1,10 @@
 {
-  "version": "2026-08-12-r1",
+  "version": "2026-08-12-r2",
   "effective_date": "2026-08-12",
   "cadence": "weekly_curated",
   "timezone": "Asia/Shanghai",
   "default_publication_rule": "one_high_value_brief_per_iso_week",
+  "publication_trigger": "post_legacy_taxonomy_writer_retirement",
   "protected_dates": [
     "2026-07-29",
     "2026-08-08",
