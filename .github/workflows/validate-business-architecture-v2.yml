@@ -1,4 +1,4 @@
-name: Validate QilyLean business architecture v2
+name: Validate QilyLean R2 six-core business architecture
 
 on:
   push:
@@ -11,12 +11,12 @@ on:
       - 'site-navigation.js'
       - 'site-navigation-legacy-20260802.js'
       - 'scripts/apply-commercial-quality-closure-20260804.js'
+      - 'scripts/enforce-six-core-static-source.js'
       - 'scripts/materialize-static-core-pages.js'
       - 'scripts/prepare-static-source-rematerialization.js'
       - 'scripts/publish-r2-clean-runtime-v3.js'
-      - 'scripts/repair-business-architecture-20260809.py'
-      - 'scripts/publish-business-architecture-cache-bust-20260809.py'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
+      - 'docs/QILYLEAN_COMPETITION_AND_CONTENT_BASELINE_20260812.md'
       - '.github/workflows/validate-business-architecture-v2.yml'
   pull_request:
     paths:
@@ -27,9 +27,10 @@ on:
       - 'site-core-service-dock-closure-v1.js'
       - 'site-navigation.js'
       - 'site-navigation-legacy-20260802.js'
+      - 'scripts/enforce-six-core-static-source.js'
       - 'scripts/prepare-static-source-rematerialization.js'
-      - 'scripts/publish-r2-clean-runtime-v3.js'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
+      - 'docs/QILYLEAN_COMPETITION_AND_CONTENT_BASELINE_20260812.md'
       - '.github/workflows/validate-business-architecture-v2.yml'
 
 permissions:
@@ -52,40 +53,42 @@ jobs:
           node --check site-navigation.js
           node --check site-navigation-legacy-20260802.js
           node --check scripts/apply-commercial-quality-closure-20260804.js
+          node --check scripts/enforce-six-core-static-source.js
           node --check scripts/materialize-static-core-pages.js
           node --check scripts/prepare-static-source-rematerialization.js
           node --check scripts/publish-r2-clean-runtime-v3.js
 
-      - name: Enforce one business architecture and pricing architecture
+      - name: Normalize current R2 static baseline for validation
+        run: |
+          node scripts/prepare-static-source-rematerialization.js
+          node scripts/enforce-six-core-static-source.js
+
+      - name: Enforce one six-core business architecture and runtime boundary
         shell: bash
         run: |
           set -euo pipefail
 
-          # 3+3 business architecture remains represented in authoritative static HTML/source data.
-          grep -q '六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力' index.html
-          grep -q '三类核心项目交付' cooperation/index.html
-          grep -q '三项数智化产品与技术能力' cooperation/index.html
-          ! grep -q '六大核心业务' index.html
-          ! grep -q '六大核心业务' cooperation/index.html
+          # Six core capabilities are the only public business taxonomy.
+          grep -q '六类核心能力' index.html
+          grep -q '制造运营资产' index.html
+          grep -q '新工厂／新产线规划' cooperation/index.html
+          grep -q '精益改善项目交付' cooperation/index.html
+          grep -q '目视化项目设计与交付' cooperation/index.html
+          grep -q '数字化工厂' cooperation/index.html
+          grep -q 'APP软件开发' cooperation/index.html
+          grep -q '官网建设' cooperation/index.html
+          ! grep -Eq '三类核心项目交付[[:space:]]*[+＋与][[:space:]]*三项数智化产品与技术能力' index.html cooperation/index.html
+          ! grep -Eq '六类能力采用[“"]?3\+3' index.html cooperation/index.html
+          ! grep -q '六大核心业务' index.html cooperation/index.html
 
-          # Historical content-source modules may remain as source assets, but R2 forbids loading
-          # them at runtime to reshape already-materialized HTML.
+          # Fallback source assets must normalize to the same vocabulary.
           grep -q 'PROJECT DELIVERY STRATEGY｜项目合作从哪里开始' site-brand-trust-v1.js
           ! grep -q '三项核心业务' site-brand-trust-v1.js
-          grep -q 'DIGITAL PRODUCT & TECH 04' site-information-architecture-v1.js
-          grep -q 'DIGITAL PRODUCT & TECH 05' site-information-architecture-v1.js
-          grep -q 'DIGITAL PRODUCT & TECH 06' site-information-architecture-v1.js
+          grep -q 'CORE CAPABILITY 04' site-information-architecture-v1.js
+          grep -q 'CORE CAPABILITY 05' site-information-architecture-v1.js
+          grep -q 'CORE CAPABILITY 06' site-information-architecture-v1.js
 
-          for f in cooperation/factory-planning/index.html cooperation/lean-improvement/index.html cooperation/visual-management/index.html; do
-            grep -q 'QilyLean核心项目交付' "$f"
-            grep -q 'CORE PROJECT DELIVERY' "$f"
-            grep -q '返回六类项目合作能力' "$f"
-            ! grep -q 'QilyLean核心业务' "$f"
-            ! grep -q '返回三大核心业务' "$f"
-            ! grep -q 'CORE BUSINESS 0' "$f"
-          done
-
-          # Six-capability pricing architecture remains in the single cooperation runtime.
+          # Pricing may cover all six capabilities, but must not redefine the business taxonomy.
           grep -q '六类项目合作能力报价参考' site-navigation-legacy-20260802.js
           grep -q '六类项目合作能力报价方案' site-navigation-legacy-20260802.js
           grep -q 'var digitalPricing = \[' site-navigation-legacy-20260802.js
@@ -95,10 +98,8 @@ jobs:
           grep -q '05｜APP软件开发' site-navigation-legacy-20260802.js
           grep -q '06｜官网建设' site-navigation-legacy-20260802.js
           grep -q '按范围独立核价' site-navigation-legacy-20260802.js
-          ! grep -q '三大核心业务公开价格参考' site-navigation-legacy-20260802.js
-          ! grep -q '三大核心业务价格方案' site-navigation-legacy-20260802.js
 
-          # R2 clean runtime closure: static HTML is authoritative; wrapper must not load DOM shapers.
+          # R2 clean runtime: static HTML is authoritative; no DOM content shapers.
           grep -q "mode: 'r2-static-first-v20'" site-navigation.js
           grep -q 'staticHtmlAuthority: true' site-navigation.js
           grep -q 'dynamicContentShapers: false' site-navigation.js
@@ -115,11 +116,9 @@ jobs:
           ! grep -q '<footer' index.html
           ! grep -q '<footer' cooperation/index.html
 
-          # V3 static authority: taxonomy/rematerialization contract remains explicit.
+          # V3 static authority and current strategy baseline.
           grep -q 'QILY-HOME-STATIC-COMMERCIAL:START' index.html
           grep -q 'qily-home-v3' index.html
           grep -q 'QILY-HOME-V3-AUTHORITATIVE-STATIC-SOURCE' scripts/prepare-static-source-rematerialization.js
-
-          # Canonical rules
-          grep -q '运行时一致性' docs/QilyLean全站业务口径规范_20260809.md
-          grep -q '报价体系统一规范' docs/QilyLean全站业务口径规范_20260809.md
+          grep -q '制造运营资产化' docs/QILYLEAN_COMPETITION_AND_CONTENT_BASELINE_20260812.md
+          grep -q '不再使用“3+3”作为业务分类' docs/QILYLEAN_COMPETITION_AND_CONTENT_BASELINE_20260812.md
