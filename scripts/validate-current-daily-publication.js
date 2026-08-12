@@ -42,7 +42,7 @@ const knowledge = read('knowledge/index.html');
 const sitemap = read('sitemap.xml');
 const cooperation = read('cooperation/index.html');
 const links = read('links/index.html');
-const searchIndex = read('qilylean/site-search-index.json');
+const searchIndex = JSON.parse(read('qilylean/site-search-index.json'));
 const siteData = JSON.parse(read('qilylean/site-data.json'));
 const audit = exists('qilylean/daily/terminology-audit-latest.json') ? JSON.parse(read('qilylean/daily/terminology-audit-latest.json')) : null;
 
@@ -73,6 +73,9 @@ if (weeklyCurated) assert(siteData.briefs.cadence === 'weekly_curated', 'Site da
 assert(siteData.search && siteData.search.latestBriefDate === sourceLatest, 'Search metadata latest date matches retained index');
 assert(siteData.search && siteData.search.briefTotal === index.length, 'Search metadata brief count matches retained index');
 assert(siteData.search && siteData.terminology && siteData.search.terminologyTotal === siteData.terminology.total, 'Search terminology count matches central terminology count');
+assert(searchIndex.meta && searchIndex.meta.latestBriefDate === sourceLatest, 'Search index metadata latest date matches retained index');
+assert(searchIndex.meta && searchIndex.meta.briefTotal === index.length, 'Search index metadata brief count matches retained index');
+assert(searchIndex.meta && siteData.terminology && searchIndex.meta.terminologyTotal === siteData.terminology.total, 'Search index terminology count matches central terminology count');
 if (audit) {
   assert(audit.status === 'passed', 'Latest terminology audit passed');
   assert(Array.isArray(audit.unknownTerms) && audit.unknownTerms.length === 0, 'Latest terminology audit has no unknown terms');
@@ -107,5 +110,4 @@ if (weeklyCurated) {
   includes(directory, '不以日更数量证明专业度', 'Directory states quality-first publication rule');
   assert(!directory.includes('每一天对应一个独立网址'), 'Retired daily-cadence claim is absent');
 }
-assert(searchIndex.includes(`qilylean/daily/${sourceLatest}.html`) || searchIndex.includes(`\/qilylean\/daily\/${sourceLatest}.html`), 'Search index contains latest retained brief');
 process.stdout.write(`Current ${weeklyCurated ? 'weekly curated' : 'archive'} publication validated: ${sourceLatest}, ${index.length} retained briefs.\n`);
