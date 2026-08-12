@@ -22,13 +22,8 @@ const ROUTES = [
 const LABELS = ROUTES.map(([label]) => label);
 const EXPECTED = LABELS.join(' > ');
 
-function read(rel) {
-  return fs.readFileSync(path.join(ROOT, rel), 'utf8');
-}
-
-function write(rel, content) {
-  fs.writeFileSync(path.join(ROOT, rel), content, 'utf8');
-}
+function read(rel) { return fs.readFileSync(path.join(ROOT, rel), 'utf8'); }
+function write(rel, content) { fs.writeFileSync(path.join(ROOT, rel), content, 'utf8'); }
 
 function trackedHtml() {
   return execFileSync('git', ['ls-files', '*.html'], {
@@ -45,60 +40,48 @@ function routeArray(indent, compact) {
     : `var routes = [\n${lines.join(',\n')}\n  ];`;
 }
 
+function replaceLocated(source, pattern, replacement, label) {
+  if (!pattern.test(source)) throw new Error(`${label} was not located`);
+  pattern.lastIndex = 0;
+  return source.replace(pattern, replacement);
+}
+
 function patchCentralSources() {
   let changed = 0;
 
   const corePath = 'site-navigation-core.js';
-  let core = read(corePath);
-  const nextCore = core.replace(
-    /var routes = \[\n[\s\S]*?\n  \];/,
-    routeArray('    ', false)
-  );
-  if (nextCore === core) throw new Error('site-navigation-core.js route array was not located');
-  if (nextCore !== core) {
-    if (APPLY) write(corePath, nextCore);
-    changed += 1;
-  }
+  const core = read(corePath);
+  const corePattern = /var routes = \[\n[\s\S]*?\n  \];/;
+  const nextCore = replaceLocated(core, corePattern, routeArray('    ', false), 'site-navigation-core.js route array');
+  if (nextCore !== core) { if (APPLY) write(corePath, nextCore); changed += 1; }
 
   const parentPath = 'site-parent-navigation-v3.js';
-  let parent = read(parentPath);
-  const nextParent = parent.replace(
-    /var PRIMARY_ROUTES=\[\n[\s\S]*?\n  \];/,
-    routeArray('    ', true)
-  );
-  if (nextParent === parent) throw new Error('site-parent-navigation-v3.js PRIMARY_ROUTES was not located');
-  if (nextParent !== parent) {
-    if (APPLY) write(parentPath, nextParent);
-    changed += 1;
-  }
+  const parent = read(parentPath);
+  const parentPattern = /var PRIMARY_ROUTES=\[\n[\s\S]*?\n  \];/;
+  const nextParent = replaceLocated(parent, parentPattern, routeArray('    ', true), 'site-parent-navigation-v3.js PRIMARY_ROUTES');
+  if (nextParent !== parent) { if (APPLY) write(parentPath, nextParent); changed += 1; }
 
   const wrapperPath = 'site-navigation.js';
-  let wrapper = read(wrapperPath);
-  const nextWrapper = wrapper.replace(
-    /var PARENT_SRC = '\/site-parent-navigation-v3\.js\?v=[^']+';/,
-    "var PARENT_SRC = '/site-parent-navigation-v3.js?v=20260813-operating-axis-nav-v4';"
+  const wrapper = read(wrapperPath);
+  const wrapperPattern = /var PARENT_SRC = '\/site-parent-navigation-v3\.js\?v=[^']+';/;
+  const nextWrapper = replaceLocated(
+    wrapper,
+    wrapperPattern,
+    "var PARENT_SRC = '/site-parent-navigation-v3.js?v=20260813-operating-axis-nav-v4';",
+    'site-navigation.js parent-navigation cache version'
   );
-  if (nextWrapper === wrapper) throw new Error('site-navigation.js parent-navigation cache version was not located');
-  if (nextWrapper !== wrapper) {
-    if (APPLY) write(wrapperPath, nextWrapper);
-    changed += 1;
-  }
+  if (nextWrapper !== wrapper) { if (APPLY) write(wrapperPath, nextWrapper); changed += 1; }
 
   return changed;
 }
 
 function anchorLabel(anchor) {
-  return anchor
-    .replace(/<[^>]+>/g, '')
-    .replace(/&nbsp;/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
+  return anchor.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 function reorderNavBlock(block) {
   const open = block.match(/^<nav\b[^>]*>/i);
-  if (!open) return block;
-  if (!/(?:qily-global-nav|site-nav)/i.test(open[0])) return block;
+  if (!open || !/(?:qily-global-nav|site-nav)/i.test(open[0])) return block;
   if (!LABELS.every(label => block.includes(`>${label}<`) || block.includes(`>${label}</a>`))) return block;
 
   const anchors = block.match(/<a\b[^>]*>[\s\S]*?<\/a>/gi) || [];
@@ -109,17 +92,16 @@ function reorderNavBlock(block) {
   });
   if (byLabel.size !== ROUTES.length) return block;
 
-  const close = '</nav>';
   const indentMatch = block.match(/\n([ \t]+)<a\b/i);
   const indent = indentMatch ? indentMatch[1] : '      ';
+  const closeIndent = indent.slice(0, Math.max(0, indent.length - 2));
   const body = ROUTES.map(([label]) => `${indent}${byLabel.get(label)}`).join('\n');
-  return `${open[0]}\n${body}\n${indent.slice(0, Math.max(0, indent.length - 2))}${close}`;
+  return `${open[0]}\n${body}\n${closeIndent}</nav>`;
 }
 
 function patchHtmlNavs() {
   let changedFiles = 0;
   let touchedNavs = 0;
-
   for (const rel of trackedHtml()) {
     const abs = path.join(ROOT, rel);
     let html;
@@ -136,19 +118,18 @@ function patchHtmlNavs() {
       touchedNavs += localTouched;
     }
   }
-
   return { changedFiles, touchedNavs };
 }
 
 function patchDocs() {
   const rel = 'docs/QILYLEAN_SITE_SYSTEM_V3.md';
   const source = read(rel);
-  const start = '一级导航只保留核心专业认知路径：';
-  const after = 'QilyLean AI、行走印记、产业资源协同网络、友情链接及其他扩展内容保留可达，但归入二级或内容内导视，避免与主专业链路争夺注意力。';
-  const replacement = `${start}\n\n- 首页\n- 履历主线（01｜现场事实）\n- 能力体系（02｜工程数据）\n- 改善方法（03｜精益改善）\n- 代表项目（03｜改善验证与项目证据）\n- 信任中心（04｜质量保证／证据边界）\n- 项目合作（05｜机制固化与项目承接）\n- 知识资产（06｜标准、模板、证据与复制）\n\n> 导航排序必须与“现场事实 → 工程数据 → 精益改善 → 质量保证 → 数智固化 → 知识资产”的制造运营资产闭环保持同向认知，不允许把知识资产、履历或信任模块重新打乱到闭环前后。\n\n${after}`;
+  if (source.includes('- 履历主线（01｜现场事实）') && source.includes('- 知识资产（06｜标准、模板、证据与复制）')) return 0;
+
+  const replacement = `一级导航只保留核心专业认知路径：\n\n- 首页\n- 履历主线（01｜现场事实）\n- 能力体系（02｜工程数据）\n- 改善方法（03｜精益改善）\n- 代表项目（03｜改善验证与项目证据）\n- 信任中心（04｜质量保证／证据边界）\n- 项目合作（05｜机制固化与项目承接）\n- 知识资产（06｜标准、模板、证据与复制）\n\n> 导航排序必须与“现场事实 → 工程数据 → 精益改善 → 质量保证 → 数智固化 → 知识资产”的制造运营资产闭环保持同向认知，不允许把知识资产、履历或信任模块重新打乱到闭环前后。\n\nQilyLean AI、行走印记、产业资源协同网络、友情链接及其他扩展内容保留可达，但归入二级或内容内导视，避免与主专业链路争夺注意力。`;
   const pattern = /一级导航只保留核心专业认知路径：\n\n(?:- .*\n)+\nQilyLean AI、行走印记、产业资源协同网络、友情链接及其他扩展内容保留可达，但归入二级或内容内导视，避免与主专业链路争夺注意力。/;
+  if (!pattern.test(source)) throw new Error('Site System V3 navigation section was not located');
   const next = source.replace(pattern, replacement);
-  if (next === source) throw new Error('Site System V3 navigation section was not located');
   if (APPLY) write(rel, next);
   return 1;
 }
@@ -171,21 +152,18 @@ function validate() {
 
   const coreArray = (core.match(/var routes = \[\n([\s\S]*?)\n  \];/) || [])[1] || '';
   const parentArray = (parent.match(/var PRIMARY_ROUTES=\[\n([\s\S]*?)\n  \];/) || [])[1] || '';
-  if (!orderedLabels(coreArray)) errors.push('site-navigation-core.js route order is not aligned with the manufacturing operating axis');
-  if (!orderedLabels(parentArray)) errors.push('site-parent-navigation-v3.js route order is not aligned with the manufacturing operating axis');
-  if (!wrapper.includes('20260813-operating-axis-nav-v4')) errors.push('site-navigation.js cache-bust version was not updated');
+  if (!orderedLabels(coreArray)) errors.push('site-navigation-core.js route order is stale');
+  if (!orderedLabels(parentArray)) errors.push('site-parent-navigation-v3.js route order is stale');
+  if (!wrapper.includes('20260813-operating-axis-nav-v4')) errors.push('site-navigation.js cache-bust version is stale');
 
-  const expectedMapping = [
+  [
     "if(path.indexOf('/experience/')===0)return 0;",
     "if(path.indexOf('/capabilities/')===0)return 1;",
     "if(path.indexOf('/projects/')===0||path.indexOf('/improvements/')===0)return 2;",
     "if(path.indexOf('/trust/')===0)return 3;",
     "if(path.indexOf('/cooperation/')===0)return 4;",
     "if(path.indexOf('/knowledge/')===0||path.indexOf('/qilylean/daily')===0)return 5;"
-  ];
-  expectedMapping.forEach(marker => {
-    if (!parent.includes(marker)) errors.push(`operating-axis mapping missing: ${marker}`);
-  });
+  ].forEach(marker => { if (!parent.includes(marker)) errors.push(`operating-axis mapping missing: ${marker}`); });
 
   let navCount = 0;
   for (const rel of trackedHtml()) {
@@ -201,9 +179,7 @@ function validate() {
   }
 
   const docs = read('docs/QILYLEAN_SITE_SYSTEM_V3.md');
-  if (!docs.includes('- 履历主线（01｜现场事实）') || !docs.includes('- 知识资产（06｜标准、模板、证据与复制）')) {
-    errors.push('Site System V3 documentation does not contain the operating-axis navigation mapping');
-  }
+  if (!docs.includes('- 履历主线（01｜现场事实）') || !docs.includes('- 知识资产（06｜标准、模板、证据与复制）')) errors.push('Site System V3 docs are stale');
 
   if (errors.length) throw new Error(errors.join('\n'));
   process.stdout.write(`Navigation operating-axis validation passed. ${navCount} static primary navigation blocks follow: ${EXPECTED}.\n`);
