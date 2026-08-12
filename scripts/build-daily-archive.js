@@ -123,7 +123,7 @@ function pageHeader(title, description, canonical, ogType = 'article') {
   <link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=${VISUAL_VERSION}">
   <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=${WIDE_VERSION}">
   <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=${TYPE_VERSION}">
-  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260729-ranked-search-v12">
+  <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260812-readability-closure-v13">
   <script defer src="/site-navigation.js?v=${NAV_VERSION}"></script>
 </head>`;
 }
