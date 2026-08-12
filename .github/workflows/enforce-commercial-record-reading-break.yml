@@ -1,0 +1,58 @@
+name: Enforce commercial disclosure reading break
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'projects/qilylean-commercial-deliveries/index.html'
+      - 'scripts/finalize-trust-commercial-records.js'
+      - 'scripts/enforce-commercial-record-reading-break.js'
+      - '.github/workflows/enforce-commercial-record-reading-break.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-site-publication-main
+  cancel-in-progress: false
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Enforce approved reading break
+        run: |
+          node --check scripts/enforce-commercial-record-reading-break.js
+          node scripts/enforce-commercial-record-reading-break.js
+
+      - name: Validate approved desktop/mobile behavior
+        shell: bash
+        run: |
+          grep -q '<br class="desktop-break">首个真实项目完成验收并取得客户明确授权后' projects/qilylean-commercial-deliveries/index.html
+          grep -q '.desktop-break{display:none}' projects/qilylean-commercial-deliveries/index.html
+          grep -q '@media(min-width:1024px){.desktop-break{display:block}}' projects/qilylean-commercial-deliveries/index.html
+
+      - name: Commit self-heal only when needed
+        shell: bash
+        run: |
+          if git diff --quiet -- projects/qilylean-commercial-deliveries/index.html; then
+            echo 'No self-heal commit required.'
+            exit 0
+          fi
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add projects/qilylean-commercial-deliveries/index.html
+          git commit -m 'fix: restore commercial disclosure reading break [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
