@@ -22,6 +22,7 @@ on:
       - "scripts/curate-weekly-briefs.js"
       - "scripts/validate-weekly-brief-curation.js"
       - "scripts/enforce-six-core-static-source.js"
+      - "scripts/sync-curated-site-metadata.js"
       - "scripts/build-site-metadata.js"
       - "scripts/sync-search-brief-metadata.js"
       - "scripts/sync-trust-brief-metadata.js"
@@ -72,6 +73,7 @@ jobs:
           node --check scripts/curate-weekly-briefs.js
           node --check scripts/validate-weekly-brief-curation.js
           node --check scripts/enforce-six-core-static-source.js
+          node --check scripts/sync-curated-site-metadata.js
           node --check scripts/build-site-metadata.js
           node --check scripts/sync-search-brief-metadata.js
           node --check scripts/sync-trust-brief-metadata.js
@@ -136,7 +138,7 @@ jobs:
           node scripts/remove-daily-directory-consultation.js
           node scripts/normalize-daily-visual-closure.js
           node scripts/audit-daily-quality-linkage.js
-          node scripts/build-site-metadata.js
+          node scripts/sync-curated-site-metadata.js
           node scripts/sync-search-brief-metadata.js
           node scripts/sync-trust-brief-metadata.js
           node scripts/enforce-six-core-static-source.js
