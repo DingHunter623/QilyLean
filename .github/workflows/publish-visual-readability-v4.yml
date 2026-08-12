@@ -1,0 +1,83 @@
+name: Publish sitewide visual readability V4
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-visual-readability-v4.css'
+      - 'scripts/publish-visual-readability-v4.js'
+      - '.github/workflows/publish-visual-readability-v4.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-visual-readability-v4
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Materialize visual readability and contact fixes
+        run: node scripts/publish-visual-readability-v4.js
+
+      - name: Re-assert operating-axis navigation
+        run: node scripts/align-primary-nav-operating-axis.js --apply
+
+      - name: Validate syntax and R2 regression contract
+        shell: bash
+        run: |
+          node --check scripts/publish-visual-readability-v4.js
+          node --check scripts/align-primary-nav-operating-axis.js
+          node --check site-navigation-core.js
+          node --check site-parent-navigation-v3.js
+          node --check site-navigation.js
+          node scripts/publish-visual-readability-v4.js
+          node scripts/align-primary-nav-operating-axis.js --apply
+          node scripts/site-regression-guard.js
+
+      - name: Validate exact visual problem fixes
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const must = (ok, msg) => { if (!ok) throw new Error(msg); };
+          const commercial = fs.readFileSync('projects/qilylean-commercial-deliveries/index.html','utf8');
+          const experience = fs.readFileSync('experience/index.html','utf8');
+          const projectCss = fs.readFileSync('projects/project-pages.css','utf8');
+          const nav = fs.readFileSync('site-navigation-core.js','utf8');
+          const readability = fs.readFileSync('site-visual-readability-v4.css','utf8');
+          must(commercial.includes('data-qily-light-surface="true"'), 'Commercial status card readability contract missing');
+          must(commercial.includes('/site-visual-readability-v4.css?v=20260813-visual-readability-v4'), 'Commercial page final readability layer missing');
+          must(experience.includes('class="career-chain" data-qily-dark-surface="true"'), 'Career chain dark-surface contract missing');
+          must(experience.includes('/site-visual-readability-v4.css?v=20260813-visual-readability-v4'), 'Experience page final readability layer missing');
+          must(/project-thumbnails-v3[\s\S]*?\.project-list-card\{[^}]*overflow:hidden!important/.test(projectCss), 'Project thumbnail card still allows overflow');
+          must(['东莞','宁波','乐清','13450014003','15168120722','17681788259'].every(x => nav.includes(x)), 'City/phone mapping incomplete');
+          must(readability.includes('.factory-render-card') && readability.includes('.qily-phone-city'), 'Sitewide visual guard incomplete');
+          console.log('Exact visual regression checks passed.');
+          NODE
+
+      - name: Commit final visual corrections
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No visual changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: enforce sitewide visual readability and safe boundaries [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
