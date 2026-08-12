@@ -27,6 +27,7 @@ function normalize(text) {
     ['三类核心项目交付 + 三项数智化产品与技术能力', '六类核心能力'],
     ['三类核心项目交付与三项数智化产品与技术能力', '六类核心能力'],
     ['三类核心项目交付（新工厂／新产线规划、精益改善、目视化项目）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力', '六类核心能力：新工厂／新产线规划、精益改善、目视化项目设计与交付、数字化工厂、APP软件开发、官网建设'],
+    ['围绕六类核心能力，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。', '围绕六类核心能力，把现场事实、工程数据、精益改善、质量保证、数智固化与知识资产连成制造运营闭环。'],
     ['前三类核心项目交付直接解决工厂、产线与现场运营问题；后三项数智化产品与技术能力把制造业务逻辑进一步沉淀为数字化系统、软件工具与专业互联网载体。', '六类能力不是分成两个阵营，而是沿同一制造运营价值链协同：从工厂与产线规划、现场改善和目视化，到数字化系统、轻量软件与专业互联网资产。'],
     ['六类能力采用“3+3”结构：前三类为核心项目交付，后三项为数智化产品与技术能力；', '六类能力采用统一编号与统一项目闭环，不再使用“3+3”作为业务分类；'],
     ['六类项目合作能力采用“3+3”结构', '六类核心能力采用统一制造运营闭环'],
@@ -51,6 +52,7 @@ function normalize(text) {
   next = next.replace(/六类项目合作能力｜六类核心能力/g, '六类核心能力｜统一服务于制造运营资产化');
   next = next.replace(/六类能力采用[“"]?3\+3[”"]?结构[^。；;]*[。；;]/g, '六类能力采用统一编号与统一项目闭环，不再使用“3+3”作为业务分类；');
   next = next.replace(/前三类(?:为|是)[^；。]*；?后三(?:项|类)[^。]*。/g, '六类能力共同服务于问题定义、数据基线、改善验证、标准固化、系统运行与组织复制。');
+  next = next.replace(/三类核心项目交付（[^）]*）与三项数智化产品与技术能力（[^）]*），?合计六类项目合作能力/g, '六类核心能力统一服务于制造运营资产化');
   return next;
 }
 
@@ -59,6 +61,10 @@ function strengthenHome(html) {
   next = next.replace(
     /<meta name="description" content="[^"]*">/i,
     '<meta name="description" content="QilyLean｜启力精益把制造现场问题转化为可计算、可验证、可固化、可复制的运营资产，围绕新工厂／新产线规划、精益改善、目视化、数字化工厂、APP软件开发与官网建设六类核心能力开展实践与合作。">'
+  );
+  next = next.replace(
+    /<meta property="og:title" content="[^"]*">/i,
+    '<meta property="og:title" content="QilyLean｜启力精益｜制造运营资产化与六类核心能力">'
   );
   next = next.replace(
     /<meta property="og:description" content="[^"]*">/i,
@@ -94,7 +100,7 @@ function main() {
   const combined = `${home}\n${cooperation}`;
   if (!home.includes('六类核心能力')) throw new Error('Homepage six-core capability statement is missing');
   if (!home.includes('制造运营资产')) throw new Error('Homepage manufacturing-operations asset positioning is missing');
-  if (/三类核心项目交付\s*[+＋与]\s*三项数智化产品与技术能力/.test(combined)) throw new Error('Legacy 3+3 taxonomy remains in public core pages');
+  if (/三类核心项目交付(?:（[^）]*）)?\s*[+＋与]\s*三项数智化产品与技术能力/.test(combined)) throw new Error('Legacy 3+3 taxonomy remains in public core pages or structured data');
   if (/六类能力采用[“"]?3\+3/.test(combined)) throw new Error('Legacy 3+3 taxonomy rule remains in public core pages');
   ['新工厂／新产线规划', '精益改善', '目视化', '数字化工厂', 'APP软件开发', '官网建设'].forEach((name) => {
     if (!combined.includes(name)) throw new Error(`Six-core capability missing: ${name}`);
