@@ -19,7 +19,7 @@ on:
       - 'scripts/curate-weekly-briefs.js'
       - 'scripts/validate-weekly-brief-curation.js'
       - 'scripts/enforce-six-core-static-source.js'
-      - 'scripts/materialize-professionalization-v24.js'
+      - 'scripts/sync-curated-site-metadata.js'
       - 'scripts/publish-r2-clean-runtime-v3.js'
       - 'scripts/build-site-metadata.js'
       - 'scripts/sync-search-brief-metadata.js'
@@ -72,6 +72,7 @@ jobs:
           node --check scripts/curate-weekly-briefs.js
           node --check scripts/validate-weekly-brief-curation.js
           node --check scripts/enforce-six-core-static-source.js
+          node --check scripts/sync-curated-site-metadata.js
           node --check scripts/build-site-metadata.js
           node --check scripts/sync-search-brief-metadata.js
           node --check scripts/sync-trust-brief-metadata.js
@@ -90,7 +91,6 @@ jobs:
           node --check scripts/hide-public-pricing.js
           node --check scripts/enforce-productivity-theme-alias.js
           node --check scripts/normalize-daily-quality-label.js
-          node --check scripts/materialize-professionalization-v24.js
           node --check scripts/publish-r2-clean-runtime-v3.js
 
       - name: Rebuild complete engineering source archive
@@ -137,11 +137,10 @@ jobs:
           node scripts/remove-daily-directory-consultation.js
           node scripts/normalize-daily-visual-closure.js
           node scripts/audit-daily-quality-linkage.js
-          node scripts/build-site-metadata.js
+          node scripts/sync-curated-site-metadata.js
           node scripts/sync-search-brief-metadata.js
           node scripts/sync-trust-brief-metadata.js
           node scripts/enforce-six-core-static-source.js
-          node scripts/materialize-professionalization-v24.js
           node scripts/publish-r2-clean-runtime-v3.js
 
       - name: Validate R2 trust metadata contract
