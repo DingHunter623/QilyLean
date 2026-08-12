@@ -20,7 +20,7 @@
   if (window.__qilyLeanSiteNavigationLoaderV4) return;
   window.__qilyLeanSiteNavigationLoaderV4 = true;
 
-  var CORE_SRC = '/site-navigation-core.js?v=20260807-contact-label-v5';
+  var CORE_SRC = '/site-navigation-core.js?v=20260812-r2-stability-v1';
   var LINKS_PATH = '/links/';
   var ONBOARDING_PATH = '/links/onboarding/';
   var PRICING_ACCESS_KEY = 'qily_pricing_access_v1';
@@ -345,20 +345,14 @@
   }
 
   function applyFixes() {
-    ensureFriendLinksNavigation();
     repairOnboardingLink();
     publishCooperationPricing();
     publishDetailPricing();
   }
 
   function observeShell() {
-    var timer = 0;
-    new MutationObserver(function () {
-      clearTimeout(timer);
-      timer = setTimeout(applyFixes, 20);
-    }).observe(document.body, { childList: true, subtree: true });
-    setTimeout(applyFixes, 120);
-    setTimeout(applyFixes, 500);
+    // R2: deterministic one-pass enhancement; no mutation-loop rewrites.
+    applyFixes();
   }
 
   var existing = document.getElementById('qilySiteNavigationCoreScript');

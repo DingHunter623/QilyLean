@@ -1,22 +1,26 @@
-name: Materialize sitewide interaction V5
+name: Materialize sitewide interaction R2
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - 'homepage-music-v5.js'
+      - 'site-r2-stability-fixes-v1.css'
+      - 'site-navigation.js'
+      - 'site-navigation-core.js'
+      - 'site-navigation-legacy-20260802.js'
+      - 'site-music-persistent-navigation-v1.js'
+      - 'scripts/publish-r2-runtime-stability.js'
+      - 'scripts/publish-r2-runtime-stability-v2.js'
       - 'scripts/publish-primary-contrast-music-continuity.js'
-      - 'scripts/bump-live-asset-version-v19.js'
-      - 'scripts/publish-number-badge-contrast.js'
-      - 'scripts/apply-tail-gap-hotfix-v22.js'
-      - 'site-tail-gap-hotfix-v22.css'
+      - 'scripts/site-regression-guard.js'
+      - 'scripts/apply-site-poka-yoke-v2.js'
       - '.github/workflows/materialize-sitewide-interaction-v5.yml'
 
 permissions:
   contents: write
 
 concurrency:
-  group: materialize-sitewide-interaction-v5-${{ github.event.pull_request.number }}
+  group: materialize-sitewide-interaction-r2-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
@@ -30,27 +34,29 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - name: Validate V27 music runtime
+          node-version: '24'
+      - name: Validate R2 runtime sources
         run: |
-          node --check homepage-music-v5.js
+          node --check scripts/publish-r2-runtime-stability.js
+          node --check scripts/publish-r2-runtime-stability-v2.js
           node --check scripts/publish-primary-contrast-music-continuity.js
-      - name: Bump live asset cache versions
-        run: node scripts/bump-live-asset-version-v19.js
-      - name: Materialize current interaction assets
+          node --check scripts/apply-site-poka-yoke-v2.js
+          node --check scripts/site-regression-guard.js
+          node --check site-music-persistent-navigation-v1.js
+      - name: Materialize R2 stable shell and navigation
+        run: node scripts/publish-r2-runtime-stability.js
+      - name: Run R2 regression guard
         run: |
-          node scripts/publish-number-badge-contrast.js
-          node scripts/validate-sitewide-interaction-clarity.js
-          node scripts/apply-tail-gap-hotfix-v22.js
-          node scripts/publish-primary-contrast-music-continuity.js
-      - name: Commit materialized live references
+          node scripts/site-regression-guard.js
+          git diff --check
+      - name: Commit materialized R2 live references
         run: |
           if git diff --quiet; then
-            echo 'All public pages and runtime sources already use current interaction and V27 music references.'
+            echo 'All public pages already use the R2 stable shell/navigation baseline.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'V27: materialize sitewide gesture music and home-only control'
+          git commit -m 'R2: materialize stable shell, navigation and visual guards'
           git push origin HEAD:${{ github.event.pull_request.head.ref }}

@@ -6,20 +6,20 @@
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260807-sitewide-closure-v4';
+  var SHARED_ASSET_VERSION = '20260812-r2-stability-v1';
   var VISUAL_SCALE_VERSION = '20260729-hierarchy-v4';
     var CONTROLLED_ROUTE_PATHS = [];
   var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
   var CONTACT_EMAIL = 'admin@qilylean.com';
   var routes = [
     ['首页', '/'],
-    ['QilyLean AI', '/ai.html'],
-    ['能力画像', '/capabilities/'],
+    ['能力体系', '/capabilities/'],
+    ['代表项目', '/projects/'],
+    ['改善方法', '/improvements/'],
+    ['知识资产', '/knowledge/'],
     ['履历主线', '/experience/'],
-    ['改善经验', '/improvements/'],
-    ['知识分享', '/knowledge/'],
-    ['行走印记', '/moments/'],
-    ['项目合作', '/cooperation/']
+    ['项目合作', '/cooperation/'],
+    ['信任中心', '/trust/']
   ];
 
   function normalizedPath(path) {
@@ -77,13 +77,13 @@
   function addWideLayoutStylesheet() {
     var current = document.getElementById('qilyWideLayoutStylesheet');
     if (current) {
-      current.href = '/site-wide-layout-v1.css?v=20260729-fluid-copy-v5';
+      current.href = '/site-wide-layout-v1.css?v=20260810-content-axis-v8';
       return;
     }
     var link = document.createElement('link');
     link.id = 'qilyWideLayoutStylesheet';
     link.rel = 'stylesheet';
-    link.href = '/site-wide-layout-v1.css?v=20260729-fluid-copy-v5';
+    link.href = '/site-wide-layout-v1.css?v=20260810-content-axis-v8';
     document.head.appendChild(link);
   }
 
@@ -513,16 +513,16 @@
 
   function boot() {
     try {
-      addStylesheet();
-      addVisualScaleStylesheet();
-      addWideLayoutStylesheet();
-      addGlobalHeaderStyles();
-      addTypographyStylesheet();
-      buildNavigation();
-      ensureGlobalContactFooter();
-      ensureKnowledgeDocumentEnhancements();
+      // R2 static-first: shell CSS already materialized.
+      // R2 static-first: visual scale already materialized.
+      // R2 static-first: wide layout already materialized.
+      // R2 static-first: header styles already materialized.
+      // R2 static-first: typography already materialized.
+      if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();
+      // R2: no repeated global contact footer on ordinary pages.
+      // R2: no repeated document contact/email tail.
       protectControlledPage();
-      enableNavigationPrefetch();
+      // R2: Fast Native Navigation V5 owns prefetch.
       buildDock();
     } finally {
       revealCurrentShell();
