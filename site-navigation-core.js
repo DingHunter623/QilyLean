@@ -13,13 +13,13 @@
   var CONTACT_EMAIL = 'admin@qilylean.com';
   var routes = [
     ['首页', '/'],
-    ['履历主线', '/experience/'],
     ['能力体系', '/capabilities/'],
-    ['改善方法', '/improvements/'],
     ['代表项目', '/projects/'],
-    ['信任中心', '/trust/'],
+    ['改善方法', '/improvements/'],
+    ['知识资产', '/knowledge/'],
+    ['履历主线', '/experience/'],
     ['项目合作', '/cooperation/'],
-    ['知识资产', '/knowledge/']
+    ['信任中心', '/trust/']
   ];
 
   function normalizedPath(path) {
