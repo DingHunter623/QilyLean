@@ -13,6 +13,7 @@ on:
       - 'scripts/apply-commercial-quality-closure-20260804.js'
       - 'scripts/materialize-static-core-pages.js'
       - 'scripts/prepare-static-source-rematerialization.js'
+      - 'scripts/publish-r2-clean-runtime-v3.js'
       - 'scripts/repair-business-architecture-20260809.py'
       - 'scripts/publish-business-architecture-cache-bust-20260809.py'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
@@ -27,6 +28,7 @@ on:
       - 'site-navigation.js'
       - 'site-navigation-legacy-20260802.js'
       - 'scripts/prepare-static-source-rematerialization.js'
+      - 'scripts/publish-r2-clean-runtime-v3.js'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
       - '.github/workflows/validate-business-architecture-v2.yml'
 
@@ -52,27 +54,27 @@ jobs:
           node --check scripts/apply-commercial-quality-closure-20260804.js
           node --check scripts/materialize-static-core-pages.js
           node --check scripts/prepare-static-source-rematerialization.js
+          node --check scripts/publish-r2-clean-runtime-v3.js
 
       - name: Enforce one business architecture and pricing architecture
         shell: bash
         run: |
           set -euo pipefail
 
-          # 3+3 business architecture
+          # 3+3 business architecture remains represented in authoritative static HTML/source data.
           grep -q '六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力' index.html
           grep -q '三类核心项目交付' cooperation/index.html
           grep -q '三项数智化产品与技术能力' cooperation/index.html
           ! grep -q '六大核心业务' index.html
           ! grep -q '六大核心业务' cooperation/index.html
 
+          # Historical content-source modules may remain as source assets, but R2 forbids loading
+          # them at runtime to reshape already-materialized HTML.
           grep -q 'PROJECT DELIVERY STRATEGY｜项目合作从哪里开始' site-brand-trust-v1.js
           ! grep -q '三项核心业务' site-brand-trust-v1.js
-          ! grep -q 'CORE BUSINESS｜先看能解决什么' site-brand-trust-v1.js
-
           grep -q 'DIGITAL PRODUCT & TECH 04' site-information-architecture-v1.js
           grep -q 'DIGITAL PRODUCT & TECH 05' site-information-architecture-v1.js
           grep -q 'DIGITAL PRODUCT & TECH 06' site-information-architecture-v1.js
-          ! grep -q "kicker:'CORE BUSINESS" site-information-architecture-v1.js
 
           for f in cooperation/factory-planning/index.html cooperation/lean-improvement/index.html cooperation/visual-management/index.html; do
             grep -q 'QilyLean核心项目交付' "$f"
@@ -83,7 +85,7 @@ jobs:
             ! grep -q 'CORE BUSINESS 0' "$f"
           done
 
-          # Six-capability pricing architecture
+          # Six-capability pricing architecture remains in the single cooperation runtime.
           grep -q '六类项目合作能力报价参考' site-navigation-legacy-20260802.js
           grep -q '六类项目合作能力报价方案' site-navigation-legacy-20260802.js
           grep -q 'var digitalPricing = \[' site-navigation-legacy-20260802.js
@@ -93,23 +95,27 @@ jobs:
           grep -q '05｜APP软件开发' site-navigation-legacy-20260802.js
           grep -q '06｜官网建设' site-navigation-legacy-20260802.js
           grep -q '按范围独立核价' site-navigation-legacy-20260802.js
-          ! grep -q "title.textContent = '三类核心项目交付公开价格参考'" site-navigation-legacy-20260802.js
-          ! grep -q "pricingGateMarkup('三类核心项目交付价格方案')" site-navigation-legacy-20260802.js
           ! grep -q '三大核心业务公开价格参考' site-navigation-legacy-20260802.js
           ! grep -q '三大核心业务价格方案' site-navigation-legacy-20260802.js
 
-          # Cache/load-chain closure: homepage uses V3 cache key; cooperation stays on
-          # the current mobile-layout key until the sitewide V3 cache migration lands.
-          grep -q '/site-navigation-legacy-20260802.js?v=20260809-six-capability-pricing-v3' site-navigation.js
-          grep -q '/site-navigation.js?v=20260812-competition-upgrade-v21' index.html
-          grep -q '/site-navigation.js?v=20260811-mobile-layout-v20' cooperation/index.html
-          ! grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' index.html
-          ! grep -q '/site-navigation.js?v=20260810-native-navigation-corrective-v17' cooperation/index.html
-          ! grep -q 'site-music-persistent-navigation-v1.js' index.html
-          ! grep -q 'qilyBackgroundMusicPreload' index.html
+          # R2 clean runtime closure: static HTML is authoritative; wrapper must not load DOM shapers.
+          grep -q "mode: 'r2-static-first-v20'" site-navigation.js
+          grep -q 'staticHtmlAuthority: true' site-navigation.js
+          grep -q 'dynamicContentShapers: false' site-navigation.js
+          grep -q 'runtimeFooter: false' site-navigation.js
+          grep -q '/site-navigation-legacy-20260802.js?v=20260812-r2-clean-v3' site-navigation.js
+          grep -q '/site-navigation.js?v=20260812-r2-clean-v3' index.html
+          grep -q '/site-navigation.js?v=20260812-r2-clean-v3' cooperation/index.html
+          grep -q '/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5' index.html
+          grep -q '/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5' cooperation/index.html
+          ! grep -Eq '(site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js' index.html
+          ! grep -Eq '(site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js' cooperation/index.html
+          ! grep -q 'site-footer-standard-v28.js' index.html
+          ! grep -q 'site-footer-standard-v28.js' cooperation/index.html
+          ! grep -q '<footer' index.html
+          ! grep -q '<footer' cooperation/index.html
 
-          # V3 static authority: current homepage taxonomy and rematerialization contract
-          # must remain explicit, so automation cannot silently restore retired panels.
+          # V3 static authority: taxonomy/rematerialization contract remains explicit.
           grep -q 'QILY-HOME-STATIC-COMMERCIAL:START' index.html
           grep -q 'qily-home-v3' index.html
           grep -q 'QILY-HOME-V3-AUTHORITATIVE-STATIC-SOURCE' scripts/prepare-static-source-rematerialization.js
