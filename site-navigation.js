@@ -8,7 +8,7 @@
   w.__qilyStaticFirstNavigationV20 = true;
 
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260812-r2-clean-v3';
-  var PARENT_SRC = '/site-parent-navigation-v3.js?v=20260812-competition-upgrade-v3';
+  var PARENT_SRC = '/site-parent-navigation-v3.js?v=20260813-operating-axis-nav-v4';
 
   function appendLegacy() {
     if (w.__qilyLeanSiteNavigationPublicV8) return;

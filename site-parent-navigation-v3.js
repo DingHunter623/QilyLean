@@ -143,14 +143,14 @@
   w.__qilySiteOperatingSystemV3=true;
 
   var PRIMARY_ROUTES=[
-    ['首页','/'],
-    ['能力体系','/capabilities/'],
-    ['代表项目','/projects/'],
-    ['改善方法','/improvements/'],
-    ['知识资产','/knowledge/'],
-    ['履历主线','/experience/'],
-    ['项目合作','/cooperation/'],
-    ['信任中心','/trust/']
+    ['首页', '/'],
+    ['履历主线', '/experience/'],
+    ['能力体系', '/capabilities/'],
+    ['改善方法', '/improvements/'],
+    ['代表项目', '/projects/'],
+    ['信任中心', '/trust/'],
+    ['项目合作', '/cooperation/'],
+    ['知识资产', '/knowledge/']
   ];
 
   var AXIS=[
