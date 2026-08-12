@@ -40,19 +40,31 @@ function patchDirectory() {
 function patchCurator() {
   let source = fs.readFileSync(curatorPath, 'utf8');
   if (!source.includes("require('./daily-engineering-archive')")) {
-    source = source.replace("const path = require('path');", "const path = require('path');\nconst { careerTimeline } = require('./daily-engineering-archive');");
+    source = source.replace(
+      "const path = require('path');",
+      "const path = require('path');\nconst { careerTimeline } = require('./daily-engineering-archive');"
+    );
   }
+
   if (!source.includes('function buildCareerTimeline()')) {
     const marker = 'function buildDirectory(records) {';
-    const helper = `function buildCareerTimeline() {\n  const rows = careerTimeline.map((item) => \`<tr><td><a class=\\"career-year-link\\" href=\\"/qilylean/daily-insights.html?year=\\${esc(item.year)}#brief-directory\\" data-year-filter=\\"\\${esc(item.year)}\\" aria-label=\\"查看\\${esc(item.year)}年精选简报\\">\\${esc(item.year)}年</a></td><td>\\${esc(item.field)}</td></tr>\`).join('');\n  return \`<section class=\\"engineering-checklist career-track\\" aria-labelledby=\\"careerTrackTitle\\"><h2 id=\\"careerTrackTitle\\">主要项目履历</h2><p>以下按最近至最早汇总制造项目领域；精选简报贯通PE、IE、NPI、ME、精益运营与项目交付方法。</p><table class=\\"rule-table career-table\\"><colgroup><col class=\\"career-year-col\\"><col></colgroup><thead><tr><th>年份</th><th>主要制造项目</th></tr></thead><tbody>\\${rows}</tbody></table></section>\`;\n}\n\n`;
+    const helper = [
+      'function buildCareerTimeline() {',
+      '  const rows = careerTimeline.map((item) => \'<tr><td><a class="career-year-link" href="/qilylean/daily-insights.html?year=\' + esc(item.year) + \'#brief-directory" data-year-filter="\' + esc(item.year) + \'" aria-label="查看\' + esc(item.year) + \'年精选简报">\' + esc(item.year) + \'年</a></td><td>\' + esc(item.field) + \'</td></tr>\').join(\'\');',
+      '  return \'<section class="engineering-checklist career-track" aria-labelledby="careerTrackTitle"><h2 id="careerTrackTitle">主要项目履历</h2><p>以下按最近至最早汇总制造项目领域；精选简报贯通PE、IE、NPI、ME、精益运营与项目交付方法。</p><table class="rule-table career-table"><colgroup><col class="career-year-col"><col></colgroup><thead><tr><th>年份</th><th>主要制造项目</th></tr></thead><tbody>\' + rows + \'</tbody></table></section>\';',
+      '}',
+      ''
+    ].join('\n');
     if (!source.includes(marker)) throw new Error('curator buildDirectory marker not found');
-    source = source.replace(marker, helper + marker);
+    source = source.replace(marker, helper + '\n' + marker);
   }
+
   if (!source.includes('${buildCareerTimeline()}')) {
     const admission = '<div class="engineering-checklist"><strong>内容准入：</strong>制造专业相关性、工程逻辑与数据、问题到结果闭环、证据与边界、原创复用价值、检索培训价值。低信息密度、模板化重复和泛职场内容不作为公开简报资产。</div>';
     if (!source.includes(admission)) throw new Error('curator admission anchor not found');
-    source = source.replace(admission, `${admission}\n\${buildCareerTimeline()}`);
+    source = source.replace(admission, admission + '\n${buildCareerTimeline()}');
   }
+
   fs.writeFileSync(curatorPath, source, 'utf8');
 }
 
