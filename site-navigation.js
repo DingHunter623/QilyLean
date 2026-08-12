@@ -179,7 +179,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   function appendLegacy() {
     if (d.querySelector('script[data-qily-navigation-legacy]')) { loadEnhancers(); return; }
     var legacy = d.createElement('script');
-    legacy.src = '/site-navigation-legacy-20260802.js?v=20260809-six-capability-pricing-v3';
+    legacy.src = '/site-navigation-legacy-20260802.js?v=20260812-r2-stability-v1';
     legacy.async = false;
     legacy.setAttribute('data-qily-navigation-legacy','parent-route-v3');
     legacy.onload = loadEnhancers;
