@@ -26,9 +26,9 @@ function maxIsoDate(...values) {
     .pop() || '';
 }
 
-function statExpression(key, label, valuePattern) {
+function statExpression(key, labelPattern, valuePattern) {
   return new RegExp(
-    `(<strong\\b[^>]*data-trust-stat=["']${key}["'][^>]*>)${valuePattern}(<\\/strong>\\s*<span>${label}<\\/span>)`,
+    `(<strong\\b[^>]*data-trust-stat=["']${key}["'][^>]*>)${valuePattern}(<\\/strong>\\s*<span>)${labelPattern}(<\\/span>)`,
     'i'
   );
 }
@@ -43,6 +43,9 @@ function buildExpected(page, data) {
 
   const briefTotal = data.briefs.total;
   const latestDate = data.briefs.latestDate;
+  const weeklyCurated = data.briefs.cadence === 'weekly_curated';
+  const briefLabel = weeklyCurated ? '精选简报总数' : '今日简报总数';
+  const latestLabel = weeklyCurated ? '最新精选日期' : '最新简报日期';
   const indexedEntries = data.search && Number.isInteger(data.search.indexedEntries)
     ? data.search.indexedEntries
     : null;
@@ -51,14 +54,14 @@ function buildExpected(page, data) {
   let next = page;
   next = replaceRequired(
     next,
-    statExpression('briefs', '今日简报总数', '\\d+'),
-    `$1${briefTotal}$2`,
+    statExpression('briefs', '(?:今日简报总数|精选简报总数)', '\\d+'),
+    `$1${briefTotal}$2${briefLabel}$4`,
     'brief total'
   );
   next = replaceRequired(
     next,
-    statExpression('latest-date', '最新简报日期', '\\d{4}-\\d{2}-\\d{2}'),
-    `$1${latestDate}$2`,
+    statExpression('latest-date', '(?:最新简报日期|最新精选日期)', '\\d{4}-\\d{2}-\\d{2}'),
+    `$1${latestDate}$2${latestLabel}$4`,
     'latest brief date'
   );
 
@@ -66,7 +69,7 @@ function buildExpected(page, data) {
     next = replaceRequired(
       next,
       statExpression('search', '站内搜索索引条目', '\\d+'),
-      `$1${indexedEntries}$2`,
+      `$1${indexedEntries}$2站内搜索索引条目$4`,
       'search index entries'
     );
   }
@@ -82,19 +85,22 @@ function buildExpected(page, data) {
 }
 
 function validateStat(page, key, label, expected, valuePattern) {
-  const expression = statExpression(key, label, valuePattern);
+  const expression = statExpression(key, label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), valuePattern);
   const match = page.match(expression);
   if (!match) throw new Error(`Trust ${label} target is missing`);
-  const current = match[0].match(new RegExp(`>${valuePattern}<`, 'i'));
-  const actual = current ? current[0].slice(1, -1) : '';
-  if (String(actual) !== String(expected)) {
-    throw new Error(`Trust ${label} is stale: expected ${expected}, found ${actual || 'unknown'}`);
+  const actual = match[1] ? match[0].match(new RegExp(`>${valuePattern}<`, 'i')) : null;
+  const current = actual ? actual[0].slice(1, -1) : '';
+  if (String(current) !== String(expected)) {
+    throw new Error(`Trust ${label} is stale: expected ${expected}, found ${current || 'unknown'}`);
   }
 }
 
 function validate(page, data) {
-  validateStat(page, 'briefs', '今日简报总数', data.briefs.total, '\\d+');
-  validateStat(page, 'latest-date', '最新简报日期', data.briefs.latestDate, '\\d{4}-\\d{2}-\\d{2}');
+  const weeklyCurated = data.briefs && data.briefs.cadence === 'weekly_curated';
+  const briefLabel = weeklyCurated ? '精选简报总数' : '今日简报总数';
+  const latestLabel = weeklyCurated ? '最新精选日期' : '最新简报日期';
+  validateStat(page, 'briefs', briefLabel, data.briefs.total, '\\d+');
+  validateStat(page, 'latest-date', latestLabel, data.briefs.latestDate, '\\d{4}-\\d{2}-\\d{2}');
   if (data.search && Number.isInteger(data.search.indexedEntries)) {
     validateStat(page, 'search', '站内搜索索引条目', data.search.indexedEntries, '\\d+');
   }
@@ -113,13 +119,13 @@ function main() {
   if (checkOnly) {
     validate(current, data);
     if (current !== expected) throw new Error('Trust metadata contains an unsynchronized generated field');
-    process.stdout.write(`Trust brief metadata is synchronized: ${data.briefs.total} briefs, latest ${data.briefs.latestDate}.\n`);
+    process.stdout.write(`Trust brief metadata is synchronized: ${data.briefs.total} ${data.briefs.cadence === 'weekly_curated' ? 'curated briefs' : 'briefs'}, latest ${data.briefs.latestDate}.\n`);
     return;
   }
 
   if (current !== expected) fs.writeFileSync(trustFile, expected, 'utf8');
   validate(expected, data);
-  process.stdout.write(`Trust brief metadata synchronized: ${data.briefs.total} briefs, latest ${data.briefs.latestDate}.\n`);
+  process.stdout.write(`Trust brief metadata synchronized: ${data.briefs.total} ${data.briefs.cadence === 'weekly_curated' ? 'curated briefs' : 'briefs'}, latest ${data.briefs.latestDate}.\n`);
 }
 
 main();
