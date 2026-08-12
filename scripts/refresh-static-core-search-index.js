@@ -17,6 +17,32 @@ function read(relativePath) {
   return fs.readFileSync(path.join(root, relativePath), 'utf8');
 }
 
+function parseJsonAsset(file, label) {
+  const raw = fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, '');
+  try {
+    return JSON.parse(raw);
+  } catch (initialError) {
+    /*
+     * Historical automation once persisted transport/truncation warnings before the
+     * actual JSON payload. Recover only when a complete JSON object still exists;
+     * the subsequent write removes the contamination permanently.
+     */
+    const firstBrace = raw.indexOf('{');
+    const lastBrace = raw.lastIndexOf('}');
+    if (firstBrace < 0 || lastBrace <= firstBrace) {
+      throw new Error(`${label} is not valid JSON and contains no recoverable object: ${initialError.message}`);
+    }
+    const candidate = raw.slice(firstBrace, lastBrace + 1);
+    try {
+      const parsed = JSON.parse(candidate);
+      process.stderr.write(`Recovered polluted ${label}; canonical JSON will be rewritten.\n`);
+      return parsed;
+    } catch (recoveryError) {
+      throw new Error(`${label} is not valid JSON and recovery failed: ${recoveryError.message}`);
+    }
+  }
+}
+
 function decodeHtml(value) {
   return String(value || '')
     .replace(/<br\s*\/?>/gi, ' ')
@@ -95,7 +121,7 @@ function pageEntries(target) {
   return entries;
 }
 
-const payload = JSON.parse(fs.readFileSync(indexFile, 'utf8'));
+const payload = parseJsonAsset(indexFile, 'site-search-index.json');
 if (!Array.isArray(payload.entries)) throw new Error('Generated search index entries are missing');
 
 const targetUrls = new Set(targets.map((target) => target.url));
@@ -116,7 +142,7 @@ payload.meta.indexedPages = new Set(payload.entries.map((entry) => entry.url)).s
 fs.writeFileSync(indexFile, JSON.stringify(payload, null, 2) + '\n', 'utf8');
 
 if (fs.existsSync(siteDataFile)) {
-  const siteData = JSON.parse(fs.readFileSync(siteDataFile, 'utf8'));
+  const siteData = parseJsonAsset(siteDataFile, 'site-data.json');
   siteData.search = Object.assign({}, siteData.search || {}, payload.meta);
   siteData.generatedAt = payload.generatedAt;
   fs.writeFileSync(siteDataFile, JSON.stringify(siteData, null, 2) + '\n', 'utf8');
@@ -125,10 +151,18 @@ if (fs.existsSync(siteDataFile)) {
 const home = payload.entries.find((entry) => entry.url === '/');
 const cooperation = payload.entries.find((entry) => entry.url === '/cooperation/');
 const daily = payload.entries.find((entry) => entry.url === '/qilylean/daily-insights.html');
-if (!home || !home.text.includes('把复杂制造问题，转化为可验证的交付结果')) throw new Error('Homepage search entry is not based on final static HTML');
-if (home.text.includes('职能标签') || home.text.includes('超千万元累计改善收益')) throw new Error('Legacy homepage text remains in search index');
+const isV3Home = !!(home && home.text.includes('把制造现场，变成可计算、可改善、可固化、可复用的组织资产'));
+if (!home || !(isV3Home || home.text.includes('把复杂制造问题，转化为可验证的交付结果'))) {
+  throw new Error('Homepage search entry is not based on final static HTML');
+}
+if (isV3Home && (!home.text.includes('三类核心项目交付') || !home.text.includes('APP软件开发') || !home.text.includes('官网建设'))) {
+  throw new Error('V3 homepage search entry misses the six-capability operating architecture');
+}
+if (home.text.includes('职能标签') || home.text.includes('超千万元累计改善收益') || home.text.includes('六大核心业务')) {
+  throw new Error('Legacy homepage text remains in search index');
+}
 if (!cooperation || !cooperation.text.includes('分阶段付款') || !cooperation.text.includes('验收边界')) throw new Error('Cooperation search entry misses the static transaction summary');
-if (cooperation.text.includes('超千万元累计项目改善收益')) throw new Error('Legacy cooperation claim remains in search index');
+if (cooperation.text.includes('超千万元累计项目改善收益') || cooperation.text.includes('六大核心业务')) throw new Error('Legacy cooperation claim remains in search index');
 if (!daily || !daily.text.includes('不等同于网页首次公开发布日期')) throw new Error('Daily archive search entry misses the static disclosure');
 
 process.stdout.write(`Refreshed final static core search entries; index now contains ${payload.entries.length} entries.\n`);
