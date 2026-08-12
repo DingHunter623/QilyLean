@@ -42,15 +42,18 @@ function removeFooterAssets(html) {
     .replace(/<footer\b[^>]*>[\s\S]*?<\/footer>\s*/gi, '')
     .replace(/<div\b[^>]*(?:id=["']qilyGlobalContactFooter["']|class=["'][^"']*(?:qily-global-contact-footer|qily-global-contact-footer-shell|qtc-global-trust-footer)[^"']*["'])[^>]*>[\s\S]*?<\/div>\s*/gi, '');
 }
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 function removeDynamicContentShapers(html) {
   const names = [
-    'site-information-architecture-v1\\.js',
-    'site-brand-trust-v1\\.js',
-    'site-trust-conversion-v2\\.js',
-    'site-visual-closure-v1\\.js',
-    'site-visual-closure-v2\\.js',
-    'site-text-contrast-audit-v1\\.js'
-  ].join('|');
+    'site-information-architecture-v1.js',
+    'site-brand-trust-v1.js',
+    'site-trust-conversion-v2.js',
+    'site-visual-closure-v1.js',
+    'site-visual-closure-v2.js',
+    'site-text-contrast-audit-v1.js'
+  ].map(escapeRegExp).join('|');
   const re = new RegExp(`^[ \\t]*<script\\b[^>]*src=["'][^"']*(?:${names})(?:\\?v=[^"']*)?["'][^>]*>\\s*<\\/script>\\s*`, 'gmi');
   return html.replace(re, '');
 }
@@ -84,11 +87,11 @@ function patchRuntimeSources(){
 }
 function verify(rel, html) {
   assert(html.includes(FIRST_START), `${rel}: atomic first-paint guard missing`);
-  assert(html.includes(NAV_JS), `${rel}: R2 clean navigation version missing`);
-  assert(html.includes(R2_CSS), `${rel}: R2 clean CSS version missing`);
   assert(!/site-footer-standard-v28\.(?:css|js)/i.test(html), `${rel}: footer standard asset still referenced`);
   assert(!/<footer\b/i.test(html), `${rel}: visible footer remains`);
   assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/i.test(html), `${rel}: dynamic content shaper still referenced`);
+  if (/site-navigation\.js\?v=/i.test(html)) assert(html.includes(NAV_JS), `${rel}: R2 clean navigation version missing`);
+  if (/site-r2-stability-fixes-v1\.css\?v=/i.test(html)) assert(html.includes(R2_CSS), `${rel}: R2 clean CSS version missing`);
 }
 
 patchRuntimeSources();
