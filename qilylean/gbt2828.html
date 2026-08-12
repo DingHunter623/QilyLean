@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <!-- QILY-R2-FIRST-PAINT:START -->
-<style id="qilyR2CriticalFirstPaintGuard">html.qily-r2-first-paint-pending{min-height:100%;background:#eef7f5}html.qily-r2-first-paint-pending body{visibility:hidden!important}@media print{html.qily-r2-first-paint-pending body{visibility:visible!important}}</style><script data-qily-r2-first-paint>(function(d,w){var e=d.documentElement;e.classList.add('qily-r2-first-paint-pending','qily-shell-pending');var done=false;function shellReady(){e.classList.remove('qily-shell-pending')}function reveal(){if(done)return;done=true;shellReady();e.classList.remove('qily-r2-first-paint-pending')}w.__qilyLeanRevealCurrentShell=shellReady;function afterDom(){w.requestAnimationFrame(function(){w.requestAnimationFrame(reveal)})}if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',afterDom,{once:true});else afterDom();w.setTimeout(reveal,1500)})(document,window);</script>
+<style id="qilyR2CriticalFirstPaintGuard">html.qily-r2-first-paint-pending{min-height:100%;background:#eef7f5}html.qily-r2-first-paint-pending body{opacity:0!important;visibility:hidden!important;pointer-events:none!important}html.qily-r2-first-paint-pending #floatDock{opacity:0!important;visibility:hidden!important}@media print{html.qily-r2-first-paint-pending body{opacity:1!important;visibility:visible!important;pointer-events:auto!important}}</style><script data-qily-r2-first-paint>(function(d,w){var e=d.documentElement;e.classList.add('qily-r2-first-paint-pending','qily-shell-pending');var done=false;function reveal(){if(done)return;done=true;e.classList.remove('qily-shell-pending','qily-r2-first-paint-pending')}function stableReveal(){w.requestAnimationFrame(function(){w.requestAnimationFrame(reveal)})}w.__qilyLeanRevealCurrentShell=function(){e.classList.remove('qily-shell-pending')};if(d.readyState==='complete')stableReveal();else w.addEventListener('load',stableReveal,{once:true});w.setTimeout(stableReveal,2400)})(document,window);</script>
 <!-- QILY-R2-FIRST-PAINT:END -->
   <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -43,14 +43,10 @@
   <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
   <link id="qilyViStandardStylesheet" rel="stylesheet" href="/site-vi-standard-v1.css?v=20260812-manufacturing-asset-system-v3">
   <link id="qilyViContrastRestorationStylesheet" rel="stylesheet" href="/site-vi-contrast-restoration-v1.css?v=20260811-text-color-standard-v2">
-  <link id="qilyR2RuntimeStabilityStylesheet" rel="stylesheet" href="/site-r2-stability-fixes-v1.css?v=20260812-r2-stability-v1">
+  <link id="qilyR2RuntimeStabilityStylesheet" rel="stylesheet" href="/site-r2-stability-fixes-v1.css?v=20260812-r2-clean-v3">
 <link id="qilyVisualClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2">
-  <script defer data-qily-visual-closure-loader="v1" src="/site-visual-closure-v1.js?v=20260810-stable-layout-v5"></script>
   <link id="qilyBoundaryLinksClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v2.css?v=20260803-boundary-links-v2">
-  <script defer data-qily-boundary-links-loader="v2" src="/site-visual-closure-v2.js?v=20260803-boundary-links-v2"></script>
-  <script defer src="/site-navigation.js?v=20260812-r2-stability-v1"></script>
-  <link id="qilyFooterStandardV28Stylesheet" rel="stylesheet" href="/site-footer-standard-v28.css?v=20260812-footer-runtime-stable-v34">
-  <script defer id="qilyFooterStandardV28Script" data-qily-footer-standard="v34" src="/site-footer-standard-v28.js?v=20260812-footer-runtime-stable-v34"></script>
+  <script defer src="/site-navigation.js?v=20260812-r2-clean-v3"></script>
 <!-- QILY-R2-PRIMARY-CONTRAST-NAV:START -->
   <link id="qilyHeroPrimaryContrastStylesheet" rel="stylesheet" href="/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1">
   <script defer id="qilyPersistentMusicNavigationScript" data-qily-persistent-music-navigation="v5" src="/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5"></script>
@@ -74,7 +70,5 @@
 <section class="section alt" id="tips"><div class="inner"><h2>四、使用技巧与常见误区</h2><div class="compare"><div class="bad"><h3>常见误区</h3><ul><li>把AQL理解为供应商可以长期交付的不良率。</li><li>抽样时只取最方便拿到的产品。</li><li>不同缺陷等级共用一个AQL和判定口径。</li><li>连续异常后仍长期使用正常检验。</li><li>用抽样检验替代过程能力、SPC和防错。</li></ul></div><div class="good"><h3>正确做法</h3><ul><li>按严重、主要、次要缺陷分别定义AQL。</li><li>采用分层、跨箱、跨位置的随机抽样。</li><li>建立正常—加严—放宽切换记录。</li><li>高风险特性优先全检、防错或自动检测。</li><li>把来料结果反馈到供应商过程改善。</li></ul></div></div><div class="grid"><article class="card"><h3>什么时候加严？</h3><p>连续批次出现拒收、重大客诉、过程变更或供应商稳定性下降时，应按规则切换加严检验。</p></article><article class="card"><h3>什么时候放宽？</h3><p>只有在连续稳定、历史表现良好且满足标准规定条件时，才可放宽；不能为了省检验工时随意放宽。</p></article><article class="card"><h3>什么时候全检？</h3><p>安全特性、法规特性、关键功能、重大客户风险或自动检测成本低于漏检风险时，应考虑全检或防错。</p></article></div></div></section>
 <section class="section"><div class="inner"><h2>五、与IATF 16949的关系</h2><p class="lead">抽样检验是质量控制的一环，但不是质量保证的全部。真正稳定的汽车电子质量体系依赖预防、过程控制和持续改进。</p><div class="visual"><div class="flow"><div class="step">FMEA识别风险</div><div class="step">控制计划定义方法</div><div class="step">MSA确认测量可信</div><div class="step">SPC监控过程</div><div class="step">抽样检验做批次判定</div></div></div><div class="tip">管理原则：预防优先于检验，过程能力优先于末端筛选，防错优先于依赖人工判断。</div></div></section>
 <section class="section alt" id="reference"><div class="inner"><h2>六、参考资料</h2><div class="visual resource-card"><div><span class="tag">高清表格</span><span class="tag">使用教程</span><span class="tag">PDF下载</span></div><h3>GB/T 2828 抽样检验参考表</h3><p class="lead">样本量字码表、正常检验一次抽样方案、查表步骤与应用示例。</p><a class="reference-button" href="/gbt2828.html">打开独立资料页</a></div></div></section>
-<footer class="footer">GB/T 2828 抽样检验实战培训 · 制造改善知识分享</footer>
-
 </body>
 </html>
