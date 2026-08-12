@@ -4,6 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 
+// Retry from latest main after the fast two-page path completed; no parallel writers.
 const root = path.resolve(__dirname, '..');
 const OLD = '/site-visual-readability-v4.css?v=20260813-visual-readability-v4';
 const NEXT = '/site-visual-readability-v4.css?v=20260813-visual-readability-v5-compact-contact-factory';
