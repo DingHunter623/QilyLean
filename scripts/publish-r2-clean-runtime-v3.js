@@ -14,7 +14,7 @@
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
-const VERSION = '20260812-r2-clean-v3';
+const VERSION = '20260813-r2-clean-v4';
 const R2_CSS = `/site-r2-stability-fixes-v1.css?v=${VERSION}`;
 const NAV_JS = `/site-navigation.js?v=${VERSION}`;
 const LEGACY_JS = `/site-navigation-legacy-20260802.js?v=${VERSION}`;

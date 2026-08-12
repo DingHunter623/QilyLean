@@ -55,7 +55,7 @@ all(wrapper,[
   'dynamicContentShapers: false',
   'runtimeFooter: false',
   'runtimeSharedCssRewrite: false',
-  '/site-navigation-legacy-20260802.js?v=20260812-r2-clean-v3'
+  '/site-navigation-legacy-20260802.js?v=20260813-r2-clean-v4'
 ],'static-first navigation wrapper');
 assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/.test(wrapper),'navigation wrapper: dynamic content shaper returned');
 assert(!/Technical & Project Contact|qilyGlobalFooter|qilyGlobalContactFooter/.test(wrapper),'navigation wrapper: footer logic returned');
@@ -70,8 +70,8 @@ for(const rel of keyPages){
   const html=read(rel);
   all(html,[
     'QILY-R2-FIRST-PAINT:START',
-    '/site-r2-stability-fixes-v1.css?v=20260812-r2-clean-v3',
-    '/site-navigation.js?v=20260812-r2-clean-v3',
+    '/site-r2-stability-fixes-v1.css?v=20260813-r2-clean-v4',
+    '/site-navigation.js?v=20260813-r2-clean-v4',
     '/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5',
     'QILY-R2-PRIMARY-CONTRAST-NAV:START'
   ],rel);
@@ -82,13 +82,13 @@ for(const rel of keyPages){
   assert(!/<script\b[^>]*src=["'][^"']*\/homepage-music(?:-v5)?\.js/i.test(html),`${rel}: deprecated background music script returned`);
   const nav=html.match(/<nav\b[^>]*(?:qily-global-nav|site-nav)[^>]*>([\s\S]*?)<\/nav>/i);
   if(nav){
-    all(nav[1],['首页','能力体系','代表项目','改善方法','知识资产','履历主线','项目合作','信任中心'],`${rel} primary nav`);
+    all(nav[1],['首页','履历主线','能力体系','改善方法','代表项目','信任中心','项目合作','知识资产'],`${rel} primary nav`);
     ['QilyLean AI','能力画像','改善经验','知识分享','行走印记','友情链接'].forEach(old=>assert(!nav[1].includes(old),`${rel}: retired/secondary primary-nav item returned: ${old}`));
   }
 }
 
 const cleaner=read('scripts/publish-r2-clean-runtime-v3.js');
-all(cleaner,['footer and dynamic content shapers removed','site-footer-standard-v28','site-information-architecture-v1','20260812-r2-clean-v3'],'R2 clean materializer');
+all(cleaner,['footer and dynamic content shapers removed','site-footer-standard-v28','site-information-architecture-v1','20260813-r2-clean-v4'],'R2 clean materializer');
 
 const career=read('experience/index.html');
 all(career,['QILY-STATIC-CAREER-BASELINE:v1','id="career-2019-2025"','id="career-2006-2009"'],'experience static baseline');

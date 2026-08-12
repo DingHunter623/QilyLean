@@ -9,7 +9,7 @@
   var SHARED_ASSET_VERSION = '20260812-r2-stability-v1';
   var VISUAL_SCALE_VERSION = '20260729-hierarchy-v4';
     var CONTROLLED_ROUTE_PATHS = [];
-  var PHONE_NUMBERS = ['13450014003', '15168120722', '17681788259'];
+  var PHONE_NUMBERS = [{ city: '东莞', number: '13450014003' }, { city: '宁波', number: '15168120722' }, { city: '乐清', number: '17681788259' }];
   var CONTACT_EMAIL = 'admin@qilylean.com';
   var routes = [
     ['首页', '/'],
@@ -346,7 +346,7 @@
     var contactMask = document.createElement('div');
     contactMask.id = 'wxMask';
     contactMask.className = 'qily-modal-mask';
-    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><p class="qily-wechat"><span>微信号</span><strong>Qily259</strong></p><button class="qily-copy-wechat" type="button">复制微信号</button><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (phone) { return '<a href="tel:' + phone + '">' + phone + '</a>'; }).join('') + '</div><div class="qily-email-list"><div>官网网址</div><a class="qily-contact-email" href="https://qilylean.com/">https://qilylean.com/</a></div><div class="qily-email-list"><div>企业邮箱</div><a class="qily-contact-email" href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a><div class="qily-email-actions"><button class="qily-copy-email" type="button">复制邮箱</button><a class="qily-send-email" href="mailto:' + CONTACT_EMAIL + '">发送邮件</a></div></div></div>';
+    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><p class="qily-wechat"><span>微信号</span><strong>Qily259</strong></p><button class="qily-copy-wechat" type="button">复制微信号</button><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (item) { return '<a href="tel:' + item.number + '"><span class="qily-phone-city">' + item.city + '：</span><strong class="qily-phone-number">' + item.number + '</strong></a>'; }).join('') + '</div><div class="qily-email-list"><div>官网网址</div><a class="qily-contact-email" href="https://qilylean.com/">https://qilylean.com/</a></div><div class="qily-email-list"><div>企业邮箱</div><a class="qily-contact-email" href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a><div class="qily-email-actions"><button class="qily-copy-email" type="button">复制邮箱</button><a class="qily-send-email" href="mailto:' + CONTACT_EMAIL + '">发送邮件</a></div></div></div>';
     document.body.appendChild(contactMask);
 
     var toast = document.createElement('div');
