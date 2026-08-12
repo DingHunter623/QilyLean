@@ -1,113 +1,17 @@
-name: Apply QilyLean professionalization V24/V25/V27/V28
+name: DEPRECATED - V24 V25 V27 V28 legacy writer
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/apply-professionalization-v24.yml'
-      - '.github/workflows/build-daily-archive.yml'
-      - 'homepage-music-v5.js'
-      - 'scripts/publish-primary-contrast-music-continuity.js'
-      - 'scripts/apply-professionalization-v24.js'
-      - 'scripts/materialize-professionalization-v24.js'
-      - 'scripts/apply-footer-one-line-v25.js'
-      - 'scripts/apply-footer-standard-v28.js'
-      - 'scripts/materialize-footer-standard-v28.js'
-      - 'site-layout-typography-closure-v20.css'
-      - 'site-footer-standard-v28.css'
-      - 'site-footer-standard-v28.js'
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: qily-site-publication-main
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  apply:
-    if: github.actor != 'github-actions[bot]'
+  deprecated:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 1
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Validate V24/V25/V27/V28 scripts
+      - name: R2 retirement notice
         run: |
-          node --check scripts/apply-professionalization-v24.js
-          node --check scripts/materialize-professionalization-v24.js
-          node --check scripts/apply-footer-one-line-v25.js
-          node --check scripts/apply-footer-standard-v28.js
-          node --check scripts/materialize-footer-standard-v28.js
-          node --check site-footer-standard-v28.js
-          node --check homepage-music-v5.js
-          node --check scripts/publish-primary-contrast-music-continuity.js
-
-      - name: Integrate V24 into publication sources
-        run: node scripts/apply-professionalization-v24.js
-
-      - name: Apply V25 single-line closure assets
-        run: node scripts/apply-footer-one-line-v25.js
-
-      - name: Integrate V28 footer standard into publication sources
-        run: node scripts/apply-footer-standard-v28.js
-
-      - name: Materialize V24 across current public HTML
-        run: node scripts/materialize-professionalization-v24.js --all
-
-      - name: Materialize V28 unified footer across every HTML page
-        run: node scripts/materialize-footer-standard-v28.js
-
-      - name: Materialize V27 sitewide gesture music
-        run: node scripts/publish-primary-contrast-music-continuity.js
-
-      - name: Reassert V28 after all other materializers
-        run: node scripts/materialize-footer-standard-v28.js
-
-      - name: Check V24 source integration is deterministic
-        run: node scripts/apply-professionalization-v24.js --check
-
-      - name: Check V25 closure source is deterministic
-        run: node scripts/apply-footer-one-line-v25.js --check
-
-      - name: Check V28 footer source integration is deterministic
-        run: node scripts/apply-footer-standard-v28.js --check
-
-      - name: Check V24 full-site materialization is deterministic
-        run: node scripts/materialize-professionalization-v24.js --all --check
-
-      - name: Check V28 full-site footer materialization is deterministic
-        run: node scripts/materialize-footer-standard-v28.js --check
-
-      - name: Check V27 music publisher syntax
-        run: node --check scripts/publish-primary-contrast-music-continuity.js
-
-      - name: Check daily archive generator syntax
-        run: node --check scripts/build-daily-archive.js
-
-      - name: Check site metadata generator syntax
-        run: node --check scripts/build-site-metadata.js
-
-      - name: Verify deterministic diff
-        run: git diff --check
-
-      - name: Commit V28 full-site footer closure
-        shell: bash
-        run: |
-          if git diff --quiet; then
-            echo 'V28 full-site footer closure is already current.'
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'V28: standardize one authoritative footer across the full site'
-          git push origin HEAD:main
+          echo 'Deprecated by QilyLean R2 on 2026-08-12.'
+          echo 'V27 background-music continuity and V28 repeated footer materialization are retired.'
+          echo 'Current production authority: R2 static-first + Fast Native Navigation V5 + curated publication workflow.'
