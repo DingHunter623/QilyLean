@@ -7,7 +7,7 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const CSS_VERSION = '20260804-hero-primary-contrast-v1';
 const MUSIC_VERSION = '20260812-gesture-music-v29';
-const NAV_VERSION = '20260812-soft-navigation-v4';
+const NAV_VERSION = '20260812-fast-native-v5';
 const CSS_HREF = `/site-hero-primary-contrast-v1.css?v=${CSS_VERSION}`;
 const MUSIC_SRC = `/homepage-music-v5.js?v=${MUSIC_VERSION}`;
 const NAV_SRC = `/site-music-persistent-navigation-v1.js?v=${NAV_VERSION}`;
@@ -16,7 +16,7 @@ const BLOCK_END = '<!-- QILY-PRIMARY-CONTRAST-MUSIC:END -->';
 
 const cssTag = `  <link id="qilyHeroPrimaryContrastStylesheet" rel="stylesheet" href="${CSS_HREF}">`;
 const musicTag = `  <script defer id="qilyBackgroundMusicScript" data-qily-background-music="v29" src="${MUSIC_SRC}"></script>`;
-const navTag = `  <script defer id="qilyPersistentMusicNavigationScript" data-qily-persistent-music-navigation="v4" src="${NAV_SRC}"></script>`;
+const navTag = `  <script defer id="qilyPersistentMusicNavigationScript" data-qily-persistent-music-navigation="v5" src="${NAV_SRC}"></script>`;
 const managedBlock = [BLOCK_START, cssTag, musicTag, navTag, BLOCK_END].join('\n');
 
 function read(file) {
@@ -120,11 +120,22 @@ function verifySourceContracts() {
     if (!music.includes(marker)) throw new Error(`Music-continuity marker missing: ${marker}`);
   });
 
-  ['window.__qilySoftNavigationV4', 'siteBackgroundMusic', 'fetch(url.href', 'history.pushState', "new CustomEvent('qily:softnavigate'", 'reconcileHeadAssets', 'data-qily-soft-nav-scope', 'window.__qilyPersistentNavigate'].forEach((marker) => {
-    if (!navigation.includes(marker)) throw new Error(`soft-navigation marker missing: ${marker}`);
+  [
+    'window.__qilyFastNativeNavigationV5',
+    'data-qily-fast-prefetch',
+    'cache:\'force-cache\'',
+    'location.assign(url.href)',
+    'window.__qilyPersistentNavigate',
+    "mode:'native-prefetch-v5'",
+    'domSwap:false'
+  ].forEach((marker) => {
+    if (!navigation.includes(marker)) throw new Error(`fast-native-navigation marker missing: ${marker}`);
   });
+  if (/reconcileHeadAssets|history\.pushState|DOMParser\(\)|qilySoftNavigation/.test(navigation)) {
+    throw new Error('Legacy same-document DOM swapping must stay removed.');
+  }
   if (/createElement\(['"]iframe['"]\)|qilyPersistentNavigationFrame|页面加载中/.test(navigation)) {
-    throw new Error('The cached navigation fallback still contains iframe/spinner navigation.');
+    throw new Error('The navigation runtime still contains iframe/spinner fallback navigation.');
   }
 }
 
@@ -148,9 +159,9 @@ function main() {
     if (!html.includes(BLOCK_START) || !html.includes(BLOCK_END)) throw new Error(`${relative} missing managed block markers.`);
     if (!html.includes(CSS_HREF)) throw new Error(`${relative} missing hero-primary contrast asset.`);
     if (!html.includes(MUSIC_SRC)) throw new Error(`${relative} missing sitewide gesture-music asset.`);
-    if (!html.includes('data-qily-background-music="v29"')) throw new Error(`${relative} missing V27 music contract marker.`);
+    if (!html.includes('data-qily-background-music="v29"')) throw new Error(`${relative} missing V29 music contract marker.`);
     if (/qilyBackgroundMusicPreload/i.test(html)) throw new Error(`${relative} still preloads background audio.`);
-    if (!html.includes(NAV_SRC) || !html.includes('data-qily-persistent-music-navigation="v4"')) throw new Error(`${relative} missing soft-navigation asset.`);
+    if (!html.includes(NAV_SRC) || !html.includes('data-qily-persistent-music-navigation="v5"')) throw new Error(`${relative} missing fast-native-navigation asset.`);
     if (/homepage-music\.js(?:\?v=)?/i.test(html)) throw new Error(`${relative} still loads legacy music bootstrap.`);
     const contrastIndex = html.indexOf(CSS_HREF);
     const dockIndex = html.indexOf('qilyCoreServiceDockClosureStylesheet');
@@ -159,7 +170,7 @@ function main() {
     if (footerIndex >= 0 && html.indexOf(MUSIC_SRC) > footerIndex) throw new Error(`${relative} music assets must remain before V26 footer runtime.`);
   });
 
-  process.stdout.write(`Primary contrast and V29 sitewide gesture music + soft navigation V4 materialized in ${checked} public pages; refreshed ${changed}.\n`);
+  process.stdout.write(`Primary contrast and V29 sitewide gesture music + fast native navigation V5 materialized in ${checked} public pages; refreshed ${changed}.\n`);
 }
 
 main();

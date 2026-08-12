@@ -35,7 +35,7 @@ jobs:
       - name: Apply protected baseline and validate
         shell: bash
         run: |
-          node scripts/apply-site-poka-yoke-v1.js
+          node scripts/apply-site-poka-yoke-v2.js
           node scripts/site-regression-guard.js
           git diff --check
 
@@ -46,7 +46,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           for attempt in 1 2 3; do
-            node scripts/apply-site-poka-yoke-v1.js
+            node scripts/apply-site-poka-yoke-v2.js
             node scripts/site-regression-guard.js
             git diff --check
 

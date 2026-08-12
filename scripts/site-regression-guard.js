@@ -19,7 +19,7 @@ const experience = read('experience/index.html');
 const earlyCareer = read('site-early-career-history-v1.js');
 const darkCss = read('site-dark-surface-contrast-v1.css');
 const music = read('homepage-music-v5.js');
-const softNav = read('site-music-persistent-navigation-v1.js');
+const navigation = read('site-music-persistent-navigation-v1.js');
 const careerPublisher = read('scripts/publish-early-career-history.js');
 const musicPublisher = read('scripts/publish-primary-contrast-music-continuity.js');
 
@@ -49,44 +49,46 @@ includesAll(darkCss, [
 ], 'dark-surface contrast');
 includesAll(experience, ['.career-chain strong{color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important}'], 'career-chain contrast');
 
-// 3) 音乐播放时模块跳转必须走同文档软导航，audio 元素不得因页面卸载而重建。
+// 3) 全站跳转必须保持浏览器原生文档边界：预取可以加速，但禁止跨页搬运 DOM/CSS/脚本。
 includesAll(music, [
   'window.__qilyLeanBackgroundMusicV5 = true',
   "var STATE_KEY = 'qilyleanBackgroundMusicStateV2'",
-  'window.__qilyLeanMusicWriteState = writeState'
+  'window.__qilyLeanMusicWriteState = writeState',
+  'resumeExpected',
+  "audio.preload = resumeExpected ? 'auto' : 'metadata'",
+  "window.addEventListener('pageshow', resumeFromSavedState)"
 ], 'music state');
-includesAll(softNav, [
-  'window.__qilySoftNavigationV4',
-  'siteBackgroundMusic',
-  'fetch(url.href',
-  'history.pushState',
-  "new CustomEvent('qily:softnavigate'",
-  'reconcileHeadAssets',
-  'data-qily-soft-nav-scope',
-  'preparePageAssets',
-  'window.__qilyPersistentNavigate'
-], 'soft navigation');
+includesAll(navigation, [
+  'window.__qilyFastNativeNavigationV5',
+  'data-qily-fast-prefetch',
+  "cache:'force-cache'",
+  'location.assign(url.href)',
+  'window.__qilyPersistentNavigate',
+  "mode:'native-prefetch-v5'",
+  'domSwap:false',
+  'musicStatePersistence:true'
+], 'fast native navigation');
+assert(!/reconcileHeadAssets|history\.pushState|DOMParser\(\)|qilySoftNavigation|qily:softnavigate/.test(navigation), 'navigation: legacy cross-page DOM/CSS swap returned');
+assert(!navigation.includes("document.addEventListener('click',function(e){if(e.defaultPrevented"), 'navigation: click interception returned');
 includesAll(musicPublisher, [
-  "const NAV_VERSION = '20260812-soft-navigation-v4'",
+  "const NAV_VERSION = '20260812-fast-native-v5'",
   'qilyPersistentMusicNavigationScript',
-  'data-qily-persistent-music-navigation="v4"',
-  'soft-navigation marker missing'
+  'data-qily-persistent-music-navigation="v5"',
+  'fast-native-navigation marker missing'
 ], 'music publisher');
 
-
 assert(!music.includes("audio.addEventListener('timeupdate', writeState"), 'music: timeupdate storage writes must stay removed');
-includesAll(music, ['resumeExpected', "audio.preload = resumeExpected ? 'auto' : 'metadata'", "window.addEventListener('pageshow', resumeFromSavedState)"], 'music native-navigation resume');
 assert(!read('site-footer-standard-v28.js').includes('[80, 220, 520, 1000, 1800, 3000]'), 'footer: delayed rewrite loop returned');
 assert(!read('site-navigation.js').includes('[120,600]'), 'navigation: delayed stylesheet reorder returned');
 assert(!read('site-navigation.js').includes('[250,900,1800]'), 'navigation: delayed tail compaction loop returned');
 
-// 4) 防呆工作流本身必须存在，形成 push + 定时复检双保险。
+// 4) 防呆工作流必须持续执行 V2 快速导航基线与回归门禁。
 const workflow = read('.github/workflows/site-regression-poka-yoke.yml');
 includesAll(workflow, [
-  'node scripts/apply-site-poka-yoke-v1.js',
+  'node scripts/apply-site-poka-yoke-v2.js',
   'node scripts/site-regression-guard.js',
   'cron:',
   'contents: write'
 ], 'poka-yoke workflow');
 
-process.stdout.write('QilyLean regression guard passed: career static baseline, dark-surface readability, music continuity V4, runtime layout stability and self-heal workflow are intact.\n');
+process.stdout.write('QilyLean regression guard passed: static career baseline, dark-surface readability, native-prefetch navigation V5, music state continuity and runtime layout stability are intact.\n');
