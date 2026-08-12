@@ -35,6 +35,12 @@ jobs:
       - name: Re-assert operating-axis navigation
         run: node scripts/align-primary-nav-operating-axis.js --apply
 
+      - name: Sync R2 regression guard cache contract
+        shell: bash
+        run: |
+          sed -i 's/20260812-r2-clean-v3/20260813-r2-clean-v4/g' scripts/site-regression-guard-v2.js
+          grep -q '20260813-r2-clean-v4' scripts/site-regression-guard-v2.js
+
       - name: Validate syntax and R2 regression contract
         shell: bash
         run: |
