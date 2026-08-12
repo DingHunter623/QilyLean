@@ -243,20 +243,18 @@ function updateV3Home(page, data) {
     : `QilyLean｜启力精益：把制造现场问题转化为可计算、可验证、可固化、可复制的运营资产；知识资产收录${data.terminology.total}项术语与${data.briefs.total}期制造工程简报。`;
   page = replaceRequired(page, /<meta name="description" content="[^"]*">/, `<meta name="description" content="${escapeHtml(description)}">`, 'V3 home meta description');
 
-  // V3 homepage is authoritative static HTML. Update only the existing knowledge-asset strip;
-  // never inject retired V2 #results / #latest-content sections back into the page.
   const sectionMatch = page.match(/<section class="qily-asset-section" id="qily-knowledge-assets">[\s\S]*?<\/section>/);
   if (!sectionMatch) throw new Error('V3 knowledge asset section is missing');
   let section = sectionMatch[0];
   if (weekly) {
     section = section.replace('把现场经验继续压缩成术语、程序文件、单点课件、工具和每日复盘', '把现场经验继续压缩成术语、程序文件、单点课件、工具和高价值复盘');
-    section = section.replace(/<div class="qily-proof-item"><strong>\d+期<\/strong><span>今日简报连续归档[^<]*<\/span><\/div>/, `<div class="qily-proof-item"><strong>${data.briefs.total}篇</strong><span>精选简报按周归档，聚焦PE、IE、ME、NPI、质量、精益运营与项目交付；数量不作为竞争力指标。</span></div>`);
+    section = section.replace(/<div class="qily-proof-item"><strong>\d+(?:篇|期)<\/strong><span>[^<]*简报[^<]*<\/span><\/div>/, `<div class="qily-proof-item"><strong>${data.briefs.total}篇</strong><span>精选简报按周归档，聚焦PE、IE、ME、NPI、质量、精益运营与项目交付；数量不作为竞争力指标。</span></div>`);
   } else {
-    section = section.replace(/<div class="qily-proof-item"><strong>\d+(?:篇|期)<\/strong><span>[^<]*(?:简报|精选)[^<]*<\/span><\/div>/, `<div class="qily-proof-item"><strong>${data.briefs.total}期</strong><span>今日简报连续归档，覆盖PE、IE、ME、NPI、质量、精益运营与项目管理。</span></div>`);
+    section = section.replace(/<div class="qily-proof-item"><strong>\d+(?:篇|期)<\/strong><span>[^<]*简报[^<]*<\/span><\/div>/, `<div class="qily-proof-item"><strong>${data.briefs.total}期</strong><span>今日简报连续归档，覆盖PE、IE、ME、NPI、质量、精益运营与项目管理。</span></div>`);
   }
   section = section.replace(/<div class="qily-proof-item"><strong>\d+项<\/strong><span>制造管理与工程术语中文诠释[^<]*<\/span><\/div>/, `<div class="qily-proof-item"><strong>${data.terminology.total}项</strong><span>制造管理与工程术语中文诠释，并配套单点培训课件。</span></div>`);
   section = section.replace(/<div class="qily-proof-item"><strong>\d{4}-\d{2}-\d{2}<\/strong><span>最新(?:简报|精选)：[^<]*<\/span><\/div>/, `<div class="qily-proof-item"><strong>${escapeHtml(data.briefs.latestDate)}</strong><span>最新精选：${escapeHtml(data.briefs.latestTitle)}。</span></div>`);
-  section = section.replace(/<a href="\/qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html">查看[^<]*简报<\/a>/, `<a href="${data.briefs.latestUrl}">查看最新精选</a>`);
+  section = section.replace(/<a href="\/qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html">(?:查看最新精选|查看[^<]*简报)<\/a>/, `<a href="${data.briefs.latestUrl}">查看最新精选</a>`);
   return page.replace(sectionMatch[0], section);
 }
 
@@ -306,35 +304,76 @@ function fileLastmod(relativePath, data) {
   const dailyMatch = relativePath.match(/^qilylean\/daily\/(\d{4}-\d{2}-\d{2})\.html$/);
   if (dailyMatch) return dailyMatch[1];
   if (relativePath === 'qilylean/daily-insights.html') return data.briefs.latestDate;
-  const file = path.join(root, relativePath);
-  if (!fs.existsSync(file) || !fs.statSync(file).isFile()) return '';
+
+  const absolute = path.join(root, relativePath);
+  if (!fs.existsSync(absolute)) return '';
+  if (gitOutput(['status', '--porcelain', '--', relativePath])) return buildDate;
   return gitOutput(['log', '-1', '--format=%cs', '--', relativePath]) || buildDate;
 }
 
-function updateSitemap(data) {
-  const file = path.join(root, 'sitemap.xml');
+function updateSitemap(fileName, data) {
+  const file = path.join(root, fileName);
   if (!fs.existsSync(file)) return;
-  let sitemap = read(file);
-  sitemap = sitemap.replace(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g, (match, offset, full) => match);
-  sitemap = sitemap.replace(/<url>[\s\S]*?<\/url>/g, (block) => {
-    const location = block.match(/<loc>([^<]+)<\/loc>/);
+  let xml = read(file);
+  xml = xml.replace(/<url>[\s\S]*?<\/url>/g, (block) => {
+    const location = (block.match(/<loc>([^<]+)<\/loc>/) || [])[1];
     if (!location) return block;
-    const lastmod = fileLastmod(urlToRepositoryPath(location[1]), data);
+    const lastmod = fileLastmod(urlToRepositoryPath(location), data);
     if (!lastmod) return block;
     if (/<lastmod>[^<]*<\/lastmod>/.test(block)) return block.replace(/<lastmod>[^<]*<\/lastmod>/, `<lastmod>${lastmod}</lastmod>`);
-    return block.replace('</url>', `<lastmod>${lastmod}</lastmod></url>`);
+    return block.replace(/<\/loc>/, `</loc><lastmod>${lastmod}</lastmod>`);
   });
-  writeIfChanged(file, sitemap);
+  writeIfChanged(file, xml);
+}
+
+function validate(data) {
+  const home = read(homeFile);
+  const knowledge = read(knowledgeFile);
+  const terminology = read(terminologyFile);
+  const siteData = JSON.parse(read(siteDataFile));
+  const isV3 = /\bqily-home-v3\b/.test(home);
+  const weekly = data.briefs.cadence === 'weekly_curated';
+  const homeCountToken = weekly ? `${data.briefs.total}篇` : `${data.briefs.total}期`;
+  const checks = [
+    [isV3 ? home.includes('id="qily-knowledge-assets"') : home.includes('SITE-METADATA:HOME-LATEST:START'), isV3 ? 'Homepage V3 knowledge asset section is missing' : 'Homepage latest-content block is missing'],
+    [home.includes(data.briefs.latestDate), 'Homepage latest brief date is stale'],
+    [isV3 ? home.includes(homeCountToken) : true, 'Homepage curated brief count is stale'],
+    [knowledge.includes('SITE-METADATA:KNOWLEDGE-STATS:START'), 'Knowledge statistics block is missing'],
+    [knowledge.includes(`全站术语词典｜${data.terminology.total}项`), 'Knowledge terminology count is stale'],
+    [knowledge.includes(`data-latest-brief-date="${data.briefs.latestDate}"`), 'Knowledge latest brief date is stale'],
+    [terminology.includes(`共收录 ${data.terminology.total} 项术语 · ${data.terminology.lessonTotal} 份单点培训课件`), 'Terminology count is stale'],
+    [siteData.briefs.total === data.briefs.total, 'Central brief count is stale'],
+    [siteData.terminology.total === data.terminology.total, 'Central terminology count is stale'],
+    [siteData.briefs.cadence === data.briefs.cadence, 'Central brief cadence is stale']
+  ];
+  const failed = checks.find(([passed]) => !passed);
+  if (failed) throw new Error(failed[1]);
 }
 
 function main() {
   const data = collectSiteData();
+  writeIfChanged(siteDataFile, JSON.stringify(data, null, 2));
   updateTerminology(data);
   updateKnowledge(data);
   updateHome(data);
-  updateSitemap(data);
-  writeIfChanged(siteDataFile, `${JSON.stringify(data, null, 2)}\n`);
-  process.stdout.write(`Site metadata built: ${data.terminology.total} terms, ${data.briefs.total} briefs, latest ${data.briefs.latestDate}.\n`);
+  updateSitemap('sitemap.xml', data);
+  updateSitemap('sitemap-core.xml', data);
+  validate(data);
+  process.stdout.write(`Unified site metadata: ${data.terminology.total} terms, ${data.briefs.total} briefs, latest ${data.briefs.latestDate}, ${data.knowledge.moduleCount} knowledge modules, cadence ${data.briefs.cadence}.\n`);
 }
 
 main();
+
+// QILY-PROFESSIONALIZATION-V24:START
+// Site metadata generator: keep consolidated closure CSS, freshness metadata and render optimizations materialized.
+if (require.main === module && !process.argv.includes('--check')) {
+  require('./materialize-professionalization-v24.js');
+}
+// QILY-PROFESSIONALIZATION-V24:END
+
+// QILY-FOOTER-STANDARD-V28:START
+// Site metadata generator: keep the single authoritative V28 footer after generated HTML updates.
+if (require.main === module && !process.argv.includes('--check')) {
+  require('./materialize-footer-standard-v28.js');
+}
+// QILY-FOOTER-STANDARD-V28:END
