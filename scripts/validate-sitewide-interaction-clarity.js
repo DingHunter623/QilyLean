@@ -7,11 +7,10 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const R2_NAV = '/site-navigation.js?v=20260812-r2-clean-v3';
 const R2_LEGACY = '/site-navigation-legacy-20260802.js?v=20260812-r2-clean-v3';
-const INTERACTION_CSS = '/site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15';
-const NUMBER_CSS = '/site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1';
 const FORBIDDEN_RUNTIME = /(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/i;
 const FORBIDDEN_FOOTER = /site-footer-standard-v28\.(?:css|js)|<footer\b/i;
 const FORBIDDEN_NAV = /site-music-persistent-navigation-v1\.js|qilyPersistentNavigationFrame|<iframe\b[^>]*qily/i;
+const curationLive = fs.existsSync(path.join(root, 'qilylean', 'daily', 'curation-report.json'));
 
 function read(relative) {
   return fs.readFileSync(path.join(root, relative), 'utf8');
@@ -50,7 +49,6 @@ function validateContrastAndTouch() {
   const interaction = read('site-interactive-hover-contrast-v1.css');
   const number = read('site-number-badge-contrast-v1.css');
   const shell = read('site-shell.css');
-
   [
     ['hover', '#17322d', '#ffe39b', 4.5],
     ['active', '#ffffff', '#052a33', 4.5],
@@ -60,7 +58,6 @@ function validateContrastAndTouch() {
     const ratio = contrast(foreground, background);
     assert(ratio >= minimum, `${name} contrast ${ratio.toFixed(2)} is below ${minimum}:1.`);
   });
-
   ['--qily-interactive-hover-bg:#ffe39b', '--qily-interactive-hover-text:#17322d', ':focus-visible', 'min-height:44px'].forEach((marker) => {
     assert(interaction.includes(marker) || shell.includes(marker), `Interaction/touch marker missing: ${marker}`);
   });
@@ -78,7 +75,6 @@ function validateRuntimeSource() {
   const legacy = read('site-navigation-legacy-20260802.js');
   const cleanRuntime = read('scripts/publish-r2-clean-runtime-v3.js');
   const floatingService = read('qilylean/floating-service.js');
-
   assert(navigation.includes(R2_LEGACY), 'Navigation wrapper is not pinned to the R2 clean legacy runtime.');
   assert(navigation.includes('staticHtmlAuthority: true'), 'Navigation wrapper does not declare static HTML authority.');
   assert(navigation.includes('dynamicContentShapers: false'), 'Navigation wrapper still permits dynamic content shapers.');
@@ -103,7 +99,6 @@ function validatePublicPages() {
   const forbiddenRuntime = [];
   const forbiddenFooter = [];
   const forbiddenNavigation = [];
-
   walk(root, (absolute) => {
     if (!absolute.endsWith('.html')) return;
     const html = fs.readFileSync(absolute, 'utf8');
@@ -116,9 +111,6 @@ function validatePublicPages() {
     if (FORBIDDEN_FOOTER.test(html)) forbiddenFooter.push(relative);
     if (FORBIDDEN_NAV.test(html) || /qilyBackgroundMusicPreload/i.test(html)) forbiddenNavigation.push(relative);
   });
-
-  // R2 intentionally removes thousands of low-value daily pages. Coverage is based on
-  // maintained public assets, not on an obsolete minimum page count.
   assert(publicPages >= 100, `Public-page corpus unexpectedly fell to ${publicPages}.`);
   assert(actionControls >= 40, `Only ${actionControls} action controls were covered.`);
   assert(staleNav.length === 0, `Pages with stale navigation version: ${staleNav.slice(0, 12).join(', ')}`);
@@ -128,14 +120,21 @@ function validatePublicPages() {
   return { publicPages, actionControls };
 }
 
-function validateCuratedDirectory() {
+function validateDirectory() {
   const directory = read('qilylean/daily-insights.html');
   const initialCards = (directory.match(/class=["'][^"']*brief-index-card/g) || []).length;
   const bytes = Buffer.byteLength(directory, 'utf8');
-  assert(bytes <= 400000, `Curated directory HTML is ${bytes} bytes; expected at most 400000.`);
-  assert(initialCards > 0 && initialCards <= 400, `Curated directory renders ${initialCards} cards; expected 1-400.`);
-  assert(directory.includes('精选简报'), 'Curated directory is missing its quality-first identity.');
-  assert(!directory.includes('每一天对应一个独立网址'), 'Curated directory still claims a daily archive cadence.');
+  assert(bytes <= 400000, `Brief directory HTML is ${bytes} bytes; expected at most 400000.`);
+  assert(initialCards > 0 && initialCards <= 400, `Brief directory renders ${initialCards} cards; expected 1-400.`);
+  if (curationLive) {
+    assert(directory.includes('精选简报'), 'Live curated directory is missing its quality-first identity.');
+    assert(directory.includes('不以日更数量证明专业度'), 'Live curated directory is missing its quality-first publication statement.');
+    assert(!directory.includes('每一天对应一个独立网址'), 'Live curated directory still claims a daily archive cadence.');
+  } else {
+    const curator = read('scripts/curate-weekly-briefs.js');
+    assert(curator.includes('<h1>精选简报</h1>'), 'Pre-rollout curator cannot materialize the curated directory identity.');
+    assert(curator.includes('不以日更数量证明专业度'), 'Pre-rollout curator lacks the quality-first publication statement.');
+  }
 }
 
 function validateCorePages() {
@@ -148,9 +147,16 @@ function validateCorePages() {
     assert(!FORBIDDEN_FOOTER.test(html), `${name} still contains a retired footer.`);
     assert(!FORBIDDEN_NAV.test(html), `${name} still contains retired navigation runtime.`);
   });
-  assert(home.includes('六类核心能力'), 'Homepage lost the six-core capability taxonomy.');
-  assert(home.includes('制造运营资产'), 'Homepage lost manufacturing-operations asset positioning.');
-  assert(!/三类核心项目交付\s*[+＋与]\s*三项数智化产品与技术能力/.test(home + cooperation), 'Legacy 3+3 taxonomy returned to a core page.');
+  if (curationLive) {
+    assert(home.includes('六类核心能力'), 'Homepage lost the six-core capability taxonomy.');
+    assert(home.includes('制造运营资产'), 'Homepage lost manufacturing-operations asset positioning.');
+    assert(!/三类核心项目交付\s*[+＋与]\s*三项数智化产品与技术能力/.test(home + cooperation), 'Legacy 3+3 taxonomy returned to a core page.');
+  } else {
+    const enforcer = read('scripts/enforce-six-core-static-source.js');
+    assert(enforcer.includes('六类核心能力'), 'Pre-rollout six-core enforcer is missing the canonical taxonomy.');
+    assert(enforcer.includes('制造运营资产'), 'Pre-rollout six-core enforcer is missing manufacturing-operations asset positioning.');
+    assert(enforcer.includes('Legacy 3+3 taxonomy remains in public core pages'), 'Pre-rollout enforcer does not block legacy 3+3 taxonomy.');
+  }
 }
 
 function validateLegacyRoutes() {
@@ -170,11 +176,11 @@ function validateLegacyRoutes() {
 function main() {
   validateContrastAndTouch();
   validateRuntimeSource();
-  validateCuratedDirectory();
+  validateDirectory();
   validateCorePages();
   validateLegacyRoutes();
   const coverage = validatePublicPages();
-  process.stdout.write(`R2 interaction clarity validated: ${coverage.publicPages} maintained public pages, ${coverage.actionControls} action controls, curated directory and static runtime boundaries are clean.\n`);
+  process.stdout.write(`R2 interaction clarity validated (${curationLive ? 'live-curated' : 'pre-rollout'}): ${coverage.publicPages} maintained public pages, ${coverage.actionControls} action controls.\n`);
 }
 
 main();
