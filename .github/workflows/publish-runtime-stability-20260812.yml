@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/stabilize-runtime-navigation-20260812.py'
+      - 'scripts/hotfix-runtime-stabilizer-20260812.py'
       - 'scripts/run-runtime-stability-closure-20260812.py'
       - '.github/workflows/publish-runtime-stability-20260812.yml'
   workflow_dispatch:
@@ -30,6 +31,8 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
+      - name: Hotfix stabilizer replacement safety
+        run: python3 scripts/hotfix-runtime-stabilizer-20260812.py
       - name: Stabilize runtime navigation, layout, footer and music
         run: python3 scripts/run-runtime-stability-closure-20260812.py
       - name: Verify no obsolete runtime loops or asset versions remain in key sources
