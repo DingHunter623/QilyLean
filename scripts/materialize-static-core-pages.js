@@ -234,7 +234,7 @@ function materializeHome() {
   html = html.replace(assistantExpression, '');
 
   html = upsertTitle(html, 'QilyLean｜启力精益｜精益生产、工程改善与数智工厂');
-  html = upsertNamedMeta(html, 'description', 'QilyLean围绕六类核心能力，提供三类核心项目交付（新工厂／新产线规划、精益改善、目视化）与三项数智化产品与技术能力（数字化工厂、APP软件开发、官网建设），合计六类项目合作能力。');
+  html = upsertNamedMeta(html, 'description', 'QilyLean围绕六类核心能力，把现场事实、工程数据、精益改善、质量保证、数智固化与知识资产连成制造运营闭环。');
   html = upsertPropertyMeta(html, 'og:title', 'QilyLean｜制造改善项目交付');
   html = upsertPropertyMeta(html, 'og:description', '六类核心能力，合计六类项目合作能力。');
   html = upsertNamedMeta(html, 'twitter:description', 'QilyLean围绕六类核心能力，以范围、交付物、Pilot／测试、验证和验收定义六类项目合作能力合作。');
