@@ -1,8 +1,8 @@
-/* QilyLean global VI, navigation, trust, contrast and layout loader v18 */
+/* QilyLean global VI, navigation, trust, contrast and layout loader v19 */
 (function (d, w) {
   'use strict';
-  if (w.__qilyGlobalAssetLoaderV18) return;
-  w.__qilyGlobalAssetLoaderV18 = true;
+  if (w.__qilyGlobalAssetLoaderV19) return;
+  w.__qilyGlobalAssetLoaderV19 = true;
 
   function removeMicrosoftOverrides() {
     ['qilyMicrosoftInternationalStylesheet','qilyMicrosoftEnterpriseComponentsStylesheet','qilyMicrosoftNavUnderlineStyle','qilyNavFourSideBorderStyle'].forEach(function (id) {
@@ -50,7 +50,7 @@
       ['qilyGlobalLinkStandardStylesheet','/site-link-standard-v2.css?v=20260803-nav-four-border-v6'],
       ['qilyDarkSurfaceContrastStylesheet','/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'],
       ['qilyInformationArchitectureStylesheet','/site-information-architecture-v1.css?v=20260810-content-axis-v3'],
-      ['qilyViStandardStylesheet','/site-vi-standard-v1.css?v=20260801-vi-standard-v1'],
+      ['qilyViStandardStylesheet','/site-vi-standard-v1.css?v=20260812-manufacturing-asset-system-v3'],
       ['qilyViContrastRestorationStylesheet','/site-vi-contrast-restoration-v1.css?v=20260811-text-color-standard-v2'],
       ['qilyVisualClosureStylesheet','/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2'],
       ['qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2'],
@@ -77,6 +77,15 @@
 
   function promoteVi() {
     removeMicrosoftOverrides();
+    /* 显式保持 Trust → Interaction → Layout 的最终级联顺序，满足运行时和自动门禁同一契约。 */
+    ['qilyTrustConversionV2Stylesheet','qilyInteractiveHoverContrastStylesheet'].forEach(function (id) {
+      var node = d.getElementById(id);
+      if (node && node.parentNode) node.parentNode.appendChild(node);
+    });
+    ['qilyInteractiveHoverContrastStylesheet','qilyLayoutFooterClosureStylesheet'].forEach(function (id) {
+      var node = d.getElementById(id);
+      if (node && node.parentNode) node.parentNode.appendChild(node);
+    });
   }
 
   ensureGlobalAssets();
@@ -88,7 +97,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   shellAssets:[
     'site-wide-layout-v1.css?v=20260810-content-axis-v8',
     'site-typography-v1.css?v=20260729-hierarchy-v4',
-    'site-vi-standard-v1.css?v=20260801-vi-standard-v1',
+    'site-vi-standard-v1.css?v=20260812-manufacturing-asset-system-v3',
     'site-vi-contrast-restoration-v1.css?v=20260811-text-color-standard-v2',
     'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2',
     'site-visual-closure-v1.js?v=20260810-stable-layout-v5',
@@ -108,8 +117,8 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
 /* QilyLean global navigation wrapper｜保留原导航功能并加载可信度、信息架构与对比度闭环 */
 (function (d, w) {
   'use strict';
-  if (w.__qilyNavigationWrapper20260809V18) return;
-  w.__qilyNavigationWrapper20260809V18 = true;
+  if (w.__qilyNavigationWrapper20260812V19) return;
+  w.__qilyNavigationWrapper20260812V19 = true;
 
   function ensureStylesheet(id, href) {
     var current = d.getElementById(id);
@@ -147,6 +156,13 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     ensureStylesheet('qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15');
     ensureStylesheet('qilyLayoutFooterClosureStylesheet','/site-layout-footer-closure-v1.css?v=20260812-runtime-stability-v20');
 
+    ['qilyTrustConversionV2Stylesheet','qilyInteractiveHoverContrastStylesheet'].forEach(function (id) {
+      var node=d.getElementById(id); if(node&&node.parentNode)node.parentNode.appendChild(node);
+    });
+    ['qilyInteractiveHoverContrastStylesheet','qilyLayoutFooterClosureStylesheet'].forEach(function (id) {
+      var node=d.getElementById(id); if(node&&node.parentNode)node.parentNode.appendChild(node);
+    });
+
     ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260810-content-axis-v3');
     ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260811-mobile-no-break-v3');
     ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260810-stable-layout-v5');
@@ -176,7 +192,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
     var existing = d.querySelector('script[data-qily-parent-navigation]');
     if (existing) { existing.addEventListener('load', appendLegacy, { once:true }); return; }
     var script = d.createElement('script');
-    script.src = '/site-parent-navigation-v3.js?v=20260803-parent-route-v3';
+    script.src = '/site-parent-navigation-v3.js?v=20260812-competition-upgrade-v3';
     script.async = false;
     script.setAttribute('data-qily-parent-navigation','v3');
     script.onload = appendLegacy;
