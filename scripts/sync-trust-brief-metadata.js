@@ -9,117 +9,71 @@ const siteDataFile = path.join(root, 'qilylean', 'site-data.json');
 const trustFile = path.join(root, 'trust', 'index.html');
 const checkOnly = process.argv.includes('--check');
 
-function read(file) {
-  return fs.readFileSync(file, 'utf8');
-}
-
-function replaceRequired(value, expression, replacement, label) {
-  if (!expression.test(value)) throw new Error(`Missing trust metadata target: ${label}`);
-  expression.lastIndex = 0;
-  return value.replace(expression, replacement);
-}
-
+function read(file) { return fs.readFileSync(file, 'utf8'); }
 function maxIsoDate(...values) {
-  return values
-    .filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(String(value || '')))
-    .sort()
-    .pop() || '';
+  return values.filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(String(value || ''))).sort().pop() || '';
 }
-
-function statExpression(key, label, valuePattern) {
-  return new RegExp(
-    `(<strong\\b[^>]*data-trust-stat=["']${key}["'][^>]*>)${valuePattern}(<\\/strong>\\s*<span>${label}<\\/span>)`,
-    'i'
-  );
+function escapeRe(value) { return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+function replaceStat(page, key, labels, value, outputLabel) {
+  const alternatives = labels.map(escapeRe).join('|');
+  const marked = new RegExp(`<div><strong\\b[^>]*data-trust-stat=["']${key}["'][^>]*>[^<]*<\\/strong><span>(?:${alternatives})<\\/span><\\/div>`, 'i');
+  const visible = new RegExp(`<div><strong(?:\\s+[^>]*)?>[^<]*<\\/strong><span>(?:${alternatives})<\\/span><\\/div>`, 'i');
+  const replacement = `<div><strong data-trust-stat="${key}">${value}</strong><span>${outputLabel}</span></div>`;
+  if (marked.test(page)) return page.replace(marked, replacement);
+  if (visible.test(page)) return page.replace(visible, replacement);
+  throw new Error(`Missing trust metadata target: ${key}`);
 }
-
 function buildExpected(page, data) {
-  if (!data.briefs || !Number.isInteger(data.briefs.total) || data.briefs.total < 1) {
-    throw new Error('Invalid central brief total');
-  }
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(data.briefs.latestDate || '')) {
-    throw new Error('Invalid central latest brief date');
-  }
-
-  const briefTotal = data.briefs.total;
-  const latestDate = data.briefs.latestDate;
-  const indexedEntries = data.search && Number.isInteger(data.search.indexedEntries)
-    ? data.search.indexedEntries
-    : null;
-  const syncVersion = maxIsoDate(data.generatedAt, latestDate) || latestDate;
-
+  if (!data.briefs || !Number.isInteger(data.briefs.total) || data.briefs.total < 1) throw new Error('Invalid central brief total');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(data.briefs.latestDate || '')) throw new Error('Invalid central latest brief date');
+  const weekly = data.briefs.cadence === 'weekly_curated';
+  const briefLabel = weekly ? '精选简报总数' : '今日简报总数';
+  const latestLabel = weekly ? '最新精选日期' : '最新简报日期';
   let next = page;
-  next = replaceRequired(
-    next,
-    statExpression('briefs', '今日简报总数', '\\d+'),
-    `$1${briefTotal}$2`,
-    'brief total'
-  );
-  next = replaceRequired(
-    next,
-    statExpression('latest-date', '最新简报日期', '\\d{4}-\\d{2}-\\d{2}'),
-    `$1${latestDate}$2`,
-    'latest brief date'
-  );
-
-  if (indexedEntries !== null) {
-    next = replaceRequired(
-      next,
-      statExpression('search', '站内搜索索引条目', '\\d+'),
-      `$1${indexedEntries}$2`,
-      'search index entries'
-    );
+  if (data.terminology && Number.isInteger(data.terminology.total)) {
+    next = replaceStat(next, 'terminology', ['术语及单点课件'], data.terminology.total, '术语及单点课件');
   }
-
-  next = replaceRequired(
-    next,
-    /(<strong>同步版本：<\/strong>\s*<span\b[^>]*data-trust-sync-version[^>]*>)\d{4}-\d{2}-\d{2}(<\/span>。)/i,
-    `$1${syncVersion}$2`,
-    'sync version'
-  );
-
+  next = replaceStat(next, 'briefs', ['今日简报总数', '精选简报总数'], data.briefs.total, briefLabel);
+  next = replaceStat(next, 'latest-date', ['最新简报日期', '最新精选日期'], data.briefs.latestDate, latestLabel);
+  if (data.search && Number.isInteger(data.search.indexedEntries)) {
+    next = replaceStat(next, 'search', ['站内搜索索引条目'], data.search.indexedEntries, '站内搜索索引条目');
+  }
+  const syncVersion = maxIsoDate(data.generatedAt, data.briefs.latestDate) || data.briefs.latestDate;
+  const markedSync = /(<strong>同步版本：<\/strong>\s*)<span\b[^>]*data-trust-sync-version[^>]*>\d{4}-\d{2}-\d{2}<\/span>(。)/i;
+  const plainSync = /(<strong>同步版本：<\/strong>\s*)\d{4}-\d{2}-\d{2}(。)/i;
+  const replacement = `$1<span data-trust-sync-version>${syncVersion}</span>$2`;
+  if (markedSync.test(next)) next = next.replace(markedSync, replacement);
+  else if (plainSync.test(next)) next = next.replace(plainSync, replacement);
+  else throw new Error('Missing trust metadata target: sync version');
   return next;
 }
-
-function validateStat(page, key, label, expected, valuePattern) {
-  const expression = statExpression(key, label, valuePattern);
-  const match = page.match(expression);
-  if (!match) throw new Error(`Trust ${label} target is missing`);
-  const current = match[0].match(new RegExp(`>${valuePattern}<`, 'i'));
-  const actual = current ? current[0].slice(1, -1) : '';
-  if (String(actual) !== String(expected)) {
-    throw new Error(`Trust ${label} is stale: expected ${expected}, found ${actual || 'unknown'}`);
-  }
-}
-
 function validate(page, data) {
-  validateStat(page, 'briefs', '今日简报总数', data.briefs.total, '\\d+');
-  validateStat(page, 'latest-date', '最新简报日期', data.briefs.latestDate, '\\d{4}-\\d{2}-\\d{2}');
-  if (data.search && Number.isInteger(data.search.indexedEntries)) {
-    validateStat(page, 'search', '站内搜索索引条目', data.search.indexedEntries, '\\d+');
+  const weekly = data.briefs.cadence === 'weekly_curated';
+  const expected = [
+    ['briefs', data.briefs.total, weekly ? '精选简报总数' : '今日简报总数'],
+    ['latest-date', data.briefs.latestDate, weekly ? '最新精选日期' : '最新简报日期']
+  ];
+  if (data.terminology && Number.isInteger(data.terminology.total)) expected.unshift(['terminology', data.terminology.total, '术语及单点课件']);
+  if (data.search && Number.isInteger(data.search.indexedEntries)) expected.push(['search', data.search.indexedEntries, '站内搜索索引条目']);
+  for (const [key, value, label] of expected) {
+    const re = new RegExp(`<div><strong\\b[^>]*data-trust-stat=["']${escapeRe(key)}["'][^>]*>${escapeRe(value)}<\\/strong><span>${escapeRe(label)}<\\/span><\\/div>`, 'i');
+    if (!re.test(page)) throw new Error(`Trust statistic is stale: ${key}`);
   }
-
   const syncVersion = maxIsoDate(data.generatedAt, data.briefs.latestDate) || data.briefs.latestDate;
-  const syncMatch = page.match(/<span\b[^>]*data-trust-sync-version[^>]*>(\d{4}-\d{2}-\d{2})<\/span>/i);
-  if (!syncMatch) throw new Error('Trust sync version target is missing');
-  if (syncMatch[1] !== syncVersion) throw new Error(`Trust sync version is stale: expected ${syncVersion}, found ${syncMatch[1]}`);
+  if (!new RegExp(`<span\\b[^>]*data-trust-sync-version[^>]*>${escapeRe(syncVersion)}<\\/span>`, 'i').test(page)) throw new Error('Trust sync version is stale');
 }
-
 function main() {
   const data = JSON.parse(read(siteDataFile));
   const current = read(trustFile);
   const expected = buildExpected(current, data);
-
   if (checkOnly) {
     validate(current, data);
     if (current !== expected) throw new Error('Trust metadata contains an unsynchronized generated field');
-    process.stdout.write(`Trust brief metadata is synchronized: ${data.briefs.total} briefs, latest ${data.briefs.latestDate}.\n`);
+    process.stdout.write(`Trust metadata is synchronized: ${data.briefs.total} ${data.briefs.cadence === 'weekly_curated' ? 'curated briefs' : 'briefs'}, latest ${data.briefs.latestDate}.\n`);
     return;
   }
-
   if (current !== expected) fs.writeFileSync(trustFile, expected, 'utf8');
   validate(expected, data);
-  process.stdout.write(`Trust brief metadata synchronized: ${data.briefs.total} briefs, latest ${data.briefs.latestDate}.\n`);
+  process.stdout.write(`Trust metadata synchronized: ${data.briefs.total} ${data.briefs.cadence === 'weekly_curated' ? 'curated briefs' : 'briefs'}, latest ${data.briefs.latestDate}.\n`);
 }
-
 main();
