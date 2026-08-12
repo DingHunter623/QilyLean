@@ -42,20 +42,8 @@ function removeFooterAssets(html) {
     .replace(/<footer\b[^>]*>[\s\S]*?<\/footer>\s*/gi, '')
     .replace(/<div\b[^>]*(?:id=["']qilyGlobalContactFooter["']|class=["'][^"']*(?:qily-global-contact-footer|qily-global-contact-footer-shell|qtc-global-trust-footer)[^"']*["'])[^>]*>[\s\S]*?<\/div>\s*/gi, '');
 }
-function escapeRegExp(value) {
-  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
 function removeDynamicContentShapers(html) {
-  const names = [
-    'site-information-architecture-v1.js',
-    'site-brand-trust-v1.js',
-    'site-trust-conversion-v2.js',
-    'site-visual-closure-v1.js',
-    'site-visual-closure-v2.js',
-    'site-text-contrast-audit-v1.js'
-  ].map(escapeRegExp).join('|');
-  const re = new RegExp(`^[ \\t]*<script\\b[^>]*src=["'][^"']*(?:${names})(?:\\?v=[^"']*)?["'][^>]*>\\s*<\\/script>\\s*`, 'gmi');
-  return html.replace(re, '');
+  return html.replace(/<script\b[^>]*\bsrc=["'][^"']*\/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js(?:\?[^"']*)?["'][^>]*>\s*<\/script>\s*/gi, '');
 }
 function installFirstPaint(html) {
   let out = html
