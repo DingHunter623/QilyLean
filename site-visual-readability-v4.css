@@ -1,0 +1,170 @@
+/* QilyLean 全站最终可视化可读性保险层 V4｜2026-08-13
+ * 原则：可视化第一位；浅底深字、深底浅字、边界清楚、图片不越界、文字不被图片/阴影压住。
+ * 本文件必须作为公共页面最后一张样式表加载，用于阻断历史CSS层叠导致的重复回退。
+ */
+:root{
+  --qily-v4-deep:#0f4b5a;
+  --qily-v4-ink:#173d43;
+  --qily-v4-body:#2f4c50;
+  --qily-v4-muted:#526968;
+  --qily-v4-line:#c9dedd;
+  --qily-v4-paper:#fffdf8;
+  --qily-v4-soft:#f5fbf9;
+  --qily-v4-gold:#caa15f;
+  --qily-v4-gold-light:#ffe39b;
+}
+
+/* 1｜深色首屏中的浅色状态卡：强制恢复浅底深字，禁止继承Hero白字。 */
+html body :is(.hero,.module-hero,.project-hero,.projects-hero,.cooperation-hero,.trust-hero,.capability-hero,.capabilities-hero,.experience-hero,.knowledge-hero,.improvement-hero,.improvements-hero)
+  :is(.status,.status-card,.hero-status,.summary-card,.light-card,[data-qily-light-surface="true"]){
+  color:var(--qily-v4-ink)!important;
+  -webkit-text-fill-color:var(--qily-v4-ink)!important;
+  background:rgba(255,253,248,.98)!important;
+  border:1px solid var(--qily-v4-line)!important;
+  border-left:5px solid var(--qily-v4-gold)!important;
+  box-shadow:0 10px 24px rgba(7,60,71,.12)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html body :is(.hero,.module-hero,.project-hero,.projects-hero,.cooperation-hero,.trust-hero,.capability-hero,.capabilities-hero,.experience-hero,.knowledge-hero,.improvement-hero,.improvements-hero)
+  :is(.status,.status-card,.hero-status,.summary-card,.light-card,[data-qily-light-surface="true"]) :is(strong,b,h1,h2,h3,h4,span,p,small){
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html body :is(.hero,.module-hero,.project-hero,.projects-hero,.cooperation-hero,.trust-hero,.capability-hero,.capabilities-hero,.experience-hero,.knowledge-hero,.improvement-hero,.improvements-hero)
+  :is(.status,.status-card,.hero-status,.summary-card,.light-card,[data-qily-light-surface="true"]) :is(strong,b){
+  color:var(--qily-v4-deep)!important;
+  -webkit-text-fill-color:var(--qily-v4-deep)!important;
+  font-weight:950!important;
+}
+
+/* 2｜履历长期方法链路：深青实底只能使用白字，标签用品牌金。 */
+html body .career-chain{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#0f4b5a!important;
+  border:1px solid #0b3f4b!important;
+  box-shadow:0 8px 20px rgba(7,60,71,.10)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html body .career-chain :is(span,p,em){color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important}
+html body .career-chain :is(strong,b){color:var(--qily-v4-gold-light)!important;-webkit-text-fill-color:var(--qily-v4-gold-light)!important;opacity:1!important;text-shadow:none!important}
+
+/* 3｜代表项目清单：缩略图必须处于卡片安全区内，绝不压边线/文字。 */
+html body .project-list-card{
+  position:relative!important;
+  overflow:hidden!important;
+  padding:18px!important;
+  gap:18px!important;
+  isolation:isolate!important;
+}
+html body .project-list-card>.project-list-thumb{
+  position:relative!important;
+  z-index:1!important;
+  overflow:hidden!important;
+  margin:2px 0 0 2px!important;
+  border:1px solid var(--qily-v4-line)!important;
+  border-radius:8px!important;
+  background:#fff!important;
+  box-shadow:0 5px 12px rgba(7,60,71,.10)!important;
+  max-width:100%!important;
+}
+html body .project-list-card>.project-list-thumb img{
+  display:block!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-position:center!important;
+  background:#fff!important;
+  box-shadow:none!important;
+}
+html body .project-list-card>.project-list-content{
+  position:relative!important;
+  z-index:2!important;
+  min-width:0!important;
+  padding:0!important;
+  overflow-wrap:anywhere!important;
+}
+
+/* 4｜工厂规划/图纸卡：去掉缩略区青色漏底，说明文字与底色形成明确边界。 */
+html body .factory-render-card{
+  overflow:hidden!important;
+  background:#fff!important;
+  border:1px solid var(--qily-v4-line)!important;
+  box-shadow:0 7px 18px rgba(7,60,71,.09)!important;
+}
+html body .factory-render-card>a{
+  overflow:hidden!important;
+  background:#fff!important;
+  border:1px solid var(--qily-v4-line)!important;
+  border-radius:6px!important;
+}
+html body .factory-render-card>a img{
+  display:block!important;
+  background:#fff!important;
+  box-shadow:none!important;
+}
+html body .factory-render-card figcaption{
+  color:var(--qily-v4-body)!important;
+  -webkit-text-fill-color:var(--qily-v4-body)!important;
+  background:#fff!important;
+  border:0!important;
+  opacity:1!important;
+}
+html body .factory-render-card figcaption strong{
+  color:var(--qily-v4-deep)!important;
+  -webkit-text-fill-color:var(--qily-v4-deep)!important;
+}
+
+/* 5｜交流联系方式：城市与号码形成明确视觉层级，同时保证号码可点击。 */
+html body .qily-phone-list>a{
+  display:grid!important;
+  grid-template-columns:minmax(64px,.38fr) minmax(0,1fr)!important;
+  align-items:center!important;
+  gap:10px!important;
+  min-height:58px!important;
+  padding:10px 14px!important;
+  overflow:hidden!important;
+  color:var(--qily-v4-deep)!important;
+  -webkit-text-fill-color:var(--qily-v4-deep)!important;
+  background:#f7fbfa!important;
+  border:1px solid var(--qily-v4-line)!important;
+  border-radius:10px!important;
+  text-decoration:none!important;
+}
+html body .qily-phone-city{
+  color:#d84b4b!important;
+  -webkit-text-fill-color:#d84b4b!important;
+  font-weight:900!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+}
+html body .qily-phone-number{
+  color:var(--qily-v4-deep)!important;
+  -webkit-text-fill-color:var(--qily-v4-deep)!important;
+  font-weight:950!important;
+  letter-spacing:.02em!important;
+  text-decoration:underline!important;
+  text-underline-offset:.16em!important;
+  overflow-wrap:anywhere!important;
+}
+
+/* 6｜通用信息边界：禁用低透明度文字制造层次。 */
+html body :is(.module-note,.evidence-note,.project-result-panel,.career-result,.empty,.record,.fine){opacity:1!important;filter:none!important}
+html body :is(.module-note,.evidence-note,.project-result-panel,.career-result,.empty,.record) :is(p,li,span,strong,b){opacity:1!important;filter:none!important}
+
+@media(max-width:760px){
+  html body .project-list-card{padding:14px!important;gap:14px!important}
+  html body .project-list-card>.project-list-thumb{margin:0!important}
+  html body .qily-phone-list>a{grid-template-columns:72px minmax(0,1fr)!important;padding:10px 12px!important}
+}
+@media(max-width:520px){
+  html body .project-list-card{padding:12px!important}
+  html body .qily-phone-list>a{grid-template-columns:64px minmax(0,1fr)!important}
+  html body .qily-phone-city{text-align:left!important}
+}
