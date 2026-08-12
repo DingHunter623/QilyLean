@@ -6,8 +6,9 @@
  * 目的：
  * 1) 彻底移除全站可见页尾/联系栏脚本及静态 footer；
  * 2) 禁止历史动态正文增强脚本在页面加载后追加 CTA / 区块，避免“按钮先出现、正文后出现”；
- * 3) 首屏采用原子显示：文档 load 后双 RAF 一次性显示，避免局部旧版/未着色模块抢先露出；
- * 4) 统一 R2 / site-navigation / legacy cache 版本，确保浏览器拿到本次修订。
+ * 3) 首屏采用原子显示，避免局部旧版/未着色模块抢先露出；
+ * 4) 全站保证 Fast Native Navigation V5：浏览器原生导航 + 同源预取，不做跨页 DOM/CSS 搬运；
+ * 5) 统一 R2 / navigation / legacy cache 版本。
  */
 
 const fs = require('fs');
@@ -17,6 +18,7 @@ const VERSION = '20260812-r2-clean-v3';
 const R2_CSS = `/site-r2-stability-fixes-v1.css?v=${VERSION}`;
 const NAV_JS = `/site-navigation.js?v=${VERSION}`;
 const LEGACY_JS = `/site-navigation-legacy-20260802.js?v=${VERSION}`;
+const FAST_NATIVE_JS = '/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5';
 const FIRST_START = '<!-- QILY-R2-FIRST-PAINT:START -->';
 const FIRST_END = '<!-- QILY-R2-FIRST-PAINT:END -->';
 
@@ -52,6 +54,11 @@ function installFirstPaint(html) {
     .replace(/\s*<style\b[^>]*id=["']qilyR2CriticalFirstPaintGuard["'][^>]*>[\s\S]*?<\/style>\s*/gi, '\n');
   return out.replace(/<head>\s*/i, `<head>\n${firstPaint}\n  `);
 }
+function ensureFastNative(html) {
+  let out = html.replace(/\s*<script\b[^>]*\bsrc=["'][^"']*\/site-music-persistent-navigation-v1\.js(?:\?v=[^"']*)?["'][^>]*>\s*<\/script>\s*/gi, '\n');
+  const tag = `  <script defer id="qilyFastNativeNavigationV5" data-qily-fast-native-navigation="v5" src="${FAST_NATIVE_JS}"></script>`;
+  return out.replace(/<\/head>/i, `${tag}\n</head>`);
+}
 function normalizeVersions(html) {
   return html
     .replace(/\/site-navigation\.js\?v=[^"'\s<]+/g, NAV_JS)
@@ -61,6 +68,7 @@ function normalize(html) {
   let out = removeFooterAssets(html);
   out = removeDynamicContentShapers(out);
   out = installFirstPaint(out);
+  out = ensureFastNative(out);
   out = normalizeVersions(out);
   return out;
 }
@@ -75,12 +83,20 @@ function patchRuntimeSources(){
 }
 function verify(rel, html) {
   assert(html.includes(FIRST_START), `${rel}: atomic first-paint guard missing`);
+  assert(html.includes(FAST_NATIVE_JS), `${rel}: Fast Native Navigation V5 missing`);
   assert(!/site-footer-standard-v28\.(?:css|js)/i.test(html), `${rel}: footer standard asset still referenced`);
   assert(!/<footer\b/i.test(html), `${rel}: visible footer remains`);
   assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/i.test(html), `${rel}: dynamic content shaper still referenced`);
+  assert(!/qilyBackgroundMusicPreload/i.test(html), `${rel}: retired background-audio preload remains`);
   if (/site-navigation\.js\?v=/i.test(html)) assert(html.includes(NAV_JS), `${rel}: R2 clean navigation version missing`);
   if (/site-r2-stability-fixes-v1\.css\?v=/i.test(html)) assert(html.includes(R2_CSS), `${rel}: R2 clean CSS version missing`);
 }
+
+const fastNativeSource = read('site-music-persistent-navigation-v1.js');
+assert(fastNativeSource.includes("mode:'native-prefetch-v5'"),'Fast Native V5 runtime contract missing');
+assert(fastNativeSource.includes('domSwap:false'),'Fast Native V5 must forbid DOM swap');
+assert(fastNativeSource.includes('nativeHistory:true') && fastNativeSource.includes('prefetch:true'),'Fast Native V5 native navigation/prefetch contract missing');
+assert(!/DOMParser|history\.pushState|document\.body\.innerHTML/i.test(fastNativeSource),'Fast Native V5 contains retired soft-navigation logic');
 
 patchRuntimeSources();
 let checked = 0, changed = 0;
@@ -100,4 +116,4 @@ walk(root, (file) => {
 
 assert(read('site-navigation.js').includes(LEGACY_JS),'site-navigation.js clean legacy cache version missing');
 assert(read('site-navigation-legacy-20260802.js').includes(`/site-navigation-core.js?v=${VERSION}`),'legacy runtime clean core cache version missing');
-process.stdout.write(`R2 clean runtime v3 checked ${checked} public HTML pages; refreshed ${changed}; footer and dynamic content shapers removed.\n`);
+process.stdout.write(`R2 clean runtime v3 checked ${checked} public HTML pages; refreshed ${changed}; Fast Native V5 guaranteed; footer and dynamic content shapers removed.\n`);
