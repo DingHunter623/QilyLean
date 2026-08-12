@@ -1,0 +1,54 @@
+name: Publish runtime stability 20260812
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/stabilize-runtime-navigation-20260812.py'
+      - 'scripts/run-runtime-stability-closure-20260812.py'
+      - '.github/workflows/publish-runtime-stability-20260812.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-runtime-stability-20260812
+  cancel-in-progress: false
+
+jobs:
+  stabilize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - name: Stabilize runtime navigation, layout, footer and music
+        run: python3 scripts/run-runtime-stability-closure-20260812.py
+      - name: Verify no obsolete runtime loops or asset versions remain in key sources
+        run: |
+          ! grep -F "[80, 220, 520, 1000, 1800, 3000]" site-footer-standard-v28.js
+          ! grep -F "[120,600]" site-navigation.js
+          ! grep -F "[250,900,1800]" site-navigation.js
+          ! grep -F "audio.addEventListener('timeupdate', writeState" homepage-music-v5.js
+          grep -F "window.__qilySoftNavigationV4" site-music-persistent-navigation-v1.js
+          grep -F "reconcileHeadAssets" site-music-persistent-navigation-v1.js
+          grep -F "QILY-RUNTIME-STABILITY-V20:START" site-layout-footer-closure-v1.css
+      - name: Commit stable runtime baseline and materialized pages
+        run: |
+          git config user.name "QilyLean"
+          git config user.email "admin@qilylean.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No runtime stability changes required."
+          else
+            git commit -m "全站稳定性整改：消除跨页CSS串扰、页尾重排与音乐卡顿"
+            git push origin HEAD:main
+          fi
