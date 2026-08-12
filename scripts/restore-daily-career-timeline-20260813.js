@@ -39,6 +39,7 @@ function patchDirectory() {
 
 function patchCurator() {
   let source = fs.readFileSync(curatorPath, 'utf8');
+
   if (!source.includes("require('./daily-engineering-archive')")) {
     source = source.replace(
       "const path = require('path');",
@@ -65,6 +66,27 @@ function patchCurator() {
     source = source.replace(admission, admission + '\n${buildCareerTimeline()}');
   }
 
+  // Keep future weekly rebuilds aligned with the current R2 operating-axis navigation.
+  const oldNav = '<nav class="site-nav" aria-label="QilyLean核心导视"><a href="/">首页</a><a href="/capabilities/">能力体系</a><a href="/projects/">代表项目</a><a href="/improvements/">改善方法</a><a href="/knowledge/" aria-current="page">知识资产</a><a href="/experience/">履历主线</a><a href="/cooperation/">项目合作</a><a href="/trust/">信任中心</a></nav>';
+  const newNav = '<nav class="site-nav" aria-label="QilyLean核心导视"><a href="/">首页</a><a href="/experience/">履历主线</a><a href="/capabilities/">能力体系</a><a href="/improvements/">改善方法</a><a href="/projects/">代表项目</a><a href="/trust/">信任中心</a><a href="/cooperation/">项目合作</a><a href="/knowledge/" aria-current="page">知识资产</a></nav>';
+  source = source.replace(oldNav, newNav);
+  source = source.replace('/site-navigation.js?v=20260812-r2-clean-v3', '/site-navigation.js?v=20260813-r2-clean-v4');
+
+  if (!source.includes('qilyFastNativeNavigationV5')) {
+    source = source.replace(
+      '<script defer src="/site-navigation.js?v=20260813-r2-clean-v4"></script>',
+      '<script defer src="/site-navigation.js?v=20260813-r2-clean-v4"></script>\n<script defer id="qilyFastNativeNavigationV5" data-qily-fast-native-navigation="v5" src="/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5"></script>\n<link id="qilyVisualReadabilityV4Stylesheet" rel="stylesheet" href="/site-visual-readability-v4.css?v=20260813-visual-readability-v4">'
+    );
+  }
+
+  // R2 ordinary content pages do not render the retired visible footer.
+  source = source.replace(/\n<footer class="module-footer"><div class="module-inner"><span>QilyLean｜启力精益<\/span><span>制造现场 → 工程数据 → 精益改善 → 质量保证 → 数智固化 → 知识资产<\/span><\/div><\/footer>/g, '');
+
+  // Upgrade the weekly generator itself to year + keyword combined filtering.
+  const searchPattern = /<script>\(function\(\)\{var input=document\.getElementById\('briefSearch'\)[\s\S]*?<\/script>/;
+  const upgradedSearch = `<script>(function(){var params=new URLSearchParams(location.search),year=(params.get('year')||'').trim(),input=document.getElementById('briefSearch'),grid=document.getElementById('briefCuratedGrid'),status=document.getElementById('briefFilterStatus');if(!grid)return;var cards=Array.prototype.slice.call(grid.querySelectorAll('.brief-index-card'));function apply(){var q=(input&&input.value||'').trim().toLocaleLowerCase('zh-CN'),n=0;cards.forEach(function(card){var d=card.getAttribute('data-date')||'',s=(card.getAttribute('data-search')||'').toLocaleLowerCase('zh-CN'),hitYear=!year||d.indexOf(year+'-')===0,hitSearch=!q||s.includes(q),hit=hitYear&&hitSearch;card.hidden=!hit;if(hit)n+=1;});document.querySelectorAll('[data-year-filter]').forEach(function(link){var active=!!year&&link.getAttribute('data-year-filter')===year;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','true');else link.removeAttribute('aria-current');});if(status){if(year&&q)status.innerHTML=year+'年｜找到 '+n+' 篇相关精选　<a href="/qilylean/daily-insights.html#brief-directory">查看全部年份</a>';else if(year)status.innerHTML=year+'年｜当前 '+n+' 篇精选　<a href="/qilylean/daily-insights.html#brief-directory">查看全部年份</a>';else status.textContent=q?'找到 '+n+' 篇相关精选':'当前 \${records.length} 篇精选';}}if(input)input.addEventListener('input',apply);apply();})();</script>`;
+  if (searchPattern.test(source)) source = source.replace(searchPattern, upgradedSearch);
+
   fs.writeFileSync(curatorPath, source, 'utf8');
 }
 
@@ -77,5 +99,8 @@ for (const item of careerTimeline) {
   if (!directory.includes(`${item.year}年`) || !directory.includes(item.field)) throw new Error(`directory timeline missing ${item.year}`);
 }
 if (!directory.includes('id="careerTrackTitle"') || !directory.includes('data-year-filter="2026"')) throw new Error('career timeline not restored');
+if (!directory.includes(SCRIPT_START)) throw new Error('current directory year filter missing');
 if (!curator.includes('function buildCareerTimeline()') || !curator.includes('${buildCareerTimeline()}')) throw new Error('weekly curator persistence guard missing');
-console.log(`Restored curated brief career timeline: ${careerTimeline.length} yearly manufacturing project rows; weekly curator persistence enabled.`);
+if (!curator.includes("params.get('year')") || !curator.includes('20260813-r2-clean-v4')) throw new Error('weekly curator year filter/R2 contract missing');
+if (curator.includes('<footer class="module-footer">')) throw new Error('retired footer remains in weekly curator');
+console.log(`Restored curated brief career timeline: ${careerTimeline.length} yearly manufacturing project rows; weekly curator persistence/R2 guard enabled.`);
