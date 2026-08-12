@@ -7,7 +7,7 @@
  * 1) 彻底移除全站可见页尾/联系栏脚本及静态 footer；
  * 2) 禁止历史动态正文增强脚本在页面加载后追加 CTA / 区块，避免“按钮先出现、正文后出现”；
  * 3) 首屏采用原子显示：文档 load 后双 RAF 一次性显示，避免局部旧版/未着色模块抢先露出；
- * 4) 统一 R2 / site-navigation 缓存版本，确保浏览器拿到本次修订。
+ * 4) 统一 R2 / site-navigation / legacy cache 版本，确保浏览器拿到本次修订。
  */
 
 const fs = require('fs');
@@ -16,11 +16,14 @@ const root = path.resolve(__dirname, '..');
 const VERSION = '20260812-r2-clean-v3';
 const R2_CSS = `/site-r2-stability-fixes-v1.css?v=${VERSION}`;
 const NAV_JS = `/site-navigation.js?v=${VERSION}`;
+const LEGACY_JS = `/site-navigation-legacy-20260802.js?v=${VERSION}`;
 const FIRST_START = '<!-- QILY-R2-FIRST-PAINT:START -->';
 const FIRST_END = '<!-- QILY-R2-FIRST-PAINT:END -->';
 
 const firstPaint = `${FIRST_START}\n<style id="qilyR2CriticalFirstPaintGuard">html.qily-r2-first-paint-pending{min-height:100%;background:#eef7f5}html.qily-r2-first-paint-pending body{opacity:0!important;visibility:hidden!important;pointer-events:none!important}html.qily-r2-first-paint-pending #floatDock{opacity:0!important;visibility:hidden!important}@media print{html.qily-r2-first-paint-pending body{opacity:1!important;visibility:visible!important;pointer-events:auto!important}}</style><script data-qily-r2-first-paint>(function(d,w){var e=d.documentElement;e.classList.add('qily-r2-first-paint-pending','qily-shell-pending');var done=false;function reveal(){if(done)return;done=true;e.classList.remove('qily-shell-pending','qily-r2-first-paint-pending')}function stableReveal(){w.requestAnimationFrame(function(){w.requestAnimationFrame(reveal)})}w.__qilyLeanRevealCurrentShell=function(){e.classList.remove('qily-shell-pending')};if(d.readyState==='complete')stableReveal();else w.addEventListener('load',stableReveal,{once:true});w.setTimeout(stableReveal,2400)})(document,window);</script>\n${FIRST_END}`;
 
+function read(rel){return fs.readFileSync(path.join(root,rel),'utf8');}
+function write(rel,content){const file=path.join(root,rel);const out=content.endsWith('\n')?content:`${content}\n`;if(read(rel)===out)return false;fs.writeFileSync(file,out,'utf8');return true;}
 function walk(dir, fn) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (['.git','node_modules','.cache'].includes(entry.name)) continue;
@@ -70,6 +73,15 @@ function normalize(html) {
   out = normalizeVersions(out);
   return out;
 }
+function patchRuntimeSources(){
+  let wrapper=read('site-navigation.js');
+  wrapper=wrapper.replace(/\/site-navigation-legacy-20260802\.js\?v=[^'"\s]+/g,LEGACY_JS);
+  write('site-navigation.js',wrapper);
+
+  let legacy=read('site-navigation-legacy-20260802.js');
+  legacy=legacy.replace(/var CORE_SRC = '\/site-navigation-core\.js\?v=[^']+';/,`var CORE_SRC = '/site-navigation-core.js?v=${VERSION}';`);
+  write('site-navigation-legacy-20260802.js',legacy);
+}
 function verify(rel, html) {
   assert(html.includes(FIRST_START), `${rel}: atomic first-paint guard missing`);
   assert(html.includes(NAV_JS), `${rel}: R2 clean navigation version missing`);
@@ -79,6 +91,7 @@ function verify(rel, html) {
   assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/i.test(html), `${rel}: dynamic content shaper still referenced`);
 }
 
+patchRuntimeSources();
 let checked = 0, changed = 0;
 walk(root, (file) => {
   if (!file.endsWith('.html')) return;
@@ -94,4 +107,6 @@ walk(root, (file) => {
   }
 });
 
+assert(read('site-navigation.js').includes(LEGACY_JS),'site-navigation.js clean legacy cache version missing');
+assert(read('site-navigation-legacy-20260802.js').includes(`/site-navigation-core.js?v=${VERSION}`),'legacy runtime clean core cache version missing');
 process.stdout.write(`R2 clean runtime v3 checked ${checked} public HTML pages; refreshed ${changed}; footer and dynamic content shapers removed.\n`);
