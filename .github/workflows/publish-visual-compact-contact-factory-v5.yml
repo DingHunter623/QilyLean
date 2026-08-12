@@ -1,0 +1,68 @@
+name: Publish compact contact and factory visual V5
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-visual-readability-v4.css'
+      - 'scripts/publish-visual-compact-contact-factory-v5.js'
+      - '.github/workflows/publish-visual-compact-contact-factory-v5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-visual-compact-contact-factory-v5
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apply visual V5 cache-bust
+        run: node scripts/publish-visual-compact-contact-factory-v5.js
+
+      - name: Validate exact visual requirements
+        shell: bash
+        run: |
+          node --check scripts/publish-visual-compact-contact-factory-v5.js
+          node - <<'NODE'
+          const fs=require('fs');
+          const css=fs.readFileSync('site-visual-readability-v4.css','utf8');
+          const factory=fs.readFileSync('projects/factory-layout/index.html','utf8');
+          const knowledge=fs.readFileSync('knowledge/index.html','utf8');
+          const must=[
+            ['contact 220px QR',/qily-share-qr[\s\S]*width:220px!important/],
+            ['contact compact panel',/qily-modal-panel\.qily-contact-panel[\s\S]*420px/],
+            ['phone compact row',/qily-contact-panel \.qily-phone-list>a[\s\S]*min-height:42px!important/],
+            ['factory white surface',/factory-layout-page \.factory-plan-thumb-grid[\s\S]*background:#fff!important/],
+            ['factory readable label',/factory-plan-preview span[\s\S]*color:#0b4651!important[\s\S]*background:#f8fcfb!important/]
+          ];
+          for(const [name,re] of must){if(!re.test(css))throw new Error('Missing '+name);}
+          const version='20260813-visual-readability-v5-compact-contact-factory';
+          if(!factory.includes(version)||!knowledge.includes(version))throw new Error('Cache version not materialized on target pages');
+          console.log('Exact visual V5 validation passed.');
+          NODE
+
+      - name: Commit materialized V5 links
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No materialized changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: materialize compact contact and factory thumbnail visual V5 [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
