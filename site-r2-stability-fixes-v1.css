@@ -1,6 +1,6 @@
 /* QilyLean R2 runtime stability fixes｜2026-08-12
  * 规则来源：QL-WEB-STD-001 V2026.08.12/R2。
- * 本版补充：全站页尾清除、原子首屏、防旧脚本回流。
+ * 本版补充：全站页尾清除、原子首屏、防旧脚本回流、代表项目缩略图安全区。
  */
 
 /* VI-02｜深色按钮 normal / visited / hover / focus / active 全状态必须高对比。 */
@@ -33,6 +33,64 @@ button[style*="background: #0f4b5a"] {
 .qily-trust-wrap > .qily-value-card > strong,
 .qily-value-card[data-qily-equal-card="true"] > strong {
   margin-top:auto!important;
+}
+
+/*
+ * VI-07｜代表项目清单缩略图安全区。
+ * 根因：project-thumbnails-v3 曾把 project-list-card 设为 overflow:visible，
+ * 允许缩略图/阴影侵入卡片边界。这里作为 R2 最终层统一收口：
+ * - 卡片裁切越界内容；
+ * - 左上缩略图与卡片边框保持明确内缩；
+ * - 图片、边框、阴影均不得压边界线或文字；
+ * - PC / 平板 / 手机使用同一安全区逻辑。
+ */
+.project-list-page .project-list-card {
+  position:relative!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  padding:22px 22px 20px 26px!important;
+  column-gap:20px!important;
+  row-gap:16px!important;
+  align-items:start!important;
+}
+.project-list-page .project-list-thumb {
+  position:relative!important;
+  z-index:0!important;
+  box-sizing:border-box!important;
+  max-width:100%!important;
+  margin:2px 0 0 2px!important;
+  overflow:hidden!important;
+  border:1px solid var(--qily-line)!important;
+  background:#edf4f2!important;
+  box-shadow:0 6px 14px rgba(15,75,90,.08)!important;
+}
+.project-list-page .project-list-thumb img {
+  display:block!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  margin:0!important;
+  border:0!important;
+  object-position:center!important;
+}
+.project-list-page .project-list-content {
+  position:relative!important;
+  z-index:1!important;
+  min-width:0!important;
+  padding:0!important;
+}
+@media(max-width:720px){
+  .project-list-page .project-list-card {
+    padding:18px 18px 18px 21px!important;
+    column-gap:16px!important;
+  }
+  .project-list-page .project-list-thumb {margin:1px 0 0 1px!important}
+}
+@media(max-width:520px){
+  .project-list-page .project-list-card {
+    padding:16px!important;
+    gap:14px!important;
+  }
+  .project-list-page .project-list-thumb {margin:0!important}
 }
 
 /* R2 原子首屏：加载完成前任何正文、CTA、悬浮按钮均不得抢先露出。 */
