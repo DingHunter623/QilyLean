@@ -6,12 +6,9 @@ on:
     paths:
       - ".github/workflows/validate-daily-archive-pr.yml"
       - ".github/workflows/build-daily-archive.yml"
-      - ".github/workflows/commercial-quality-closure.yml"
       - "cooperation/index.html"
       - "links/index.html"
-      - "site-commercial-quality-closure-v1.css"
-      - "site-number-badge-contrast-v1.css"
-      - "site-interactive-hover-contrast-v1.css"
+      - "qilylean/brief-curation-policy.json"
       - "qilylean/daily/*.html"
       - "qilylean/assets/daily-*.svg"
       - "qilylean/daily-briefs.css"
@@ -40,7 +37,7 @@ on:
       - "scripts/validate-current-daily-publication.js"
       - "scripts/remove-daily-directory-consultation.js"
       - "scripts/normalize-daily-visual-closure.js"
-      - "scripts/publish-number-badge-contrast.js"
+      - "scripts/publish-r2-clean-runtime-v3.js"
       - "scripts/materialize-static-core-pages.js"
       - "sitemap.xml"
       - "sitemap-core.xml"
@@ -57,13 +54,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Validate script syntax
         run: |
@@ -85,7 +82,7 @@ jobs:
           node --check scripts/validate-current-daily-publication.js
           node --check scripts/remove-daily-directory-consultation.js
           node --check scripts/normalize-daily-visual-closure.js
-          node --check scripts/publish-number-badge-contrast.js
+          node --check scripts/publish-r2-clean-runtime-v3.js
 
       - name: Build publication candidate
         run: |
@@ -123,14 +120,14 @@ jobs:
       - name: Validate generated engineering archive
         run: node scripts/validate-daily-archive.js
 
-      - name: Finalize current message and visual closure
+      - name: Finalize current message and R2 clean runtime
         run: |
           node scripts/remove-daily-directory-consultation.js
           node scripts/normalize-daily-visual-closure.js
-          node scripts/publish-number-badge-contrast.js
           node scripts/audit-daily-quality-linkage.js
           node scripts/build-site-metadata.js
           node scripts/sync-search-brief-metadata.js
+          node scripts/publish-r2-clean-runtime-v3.js
 
       - name: Validate current publication contracts
         run: node scripts/validate-current-daily-publication.js
