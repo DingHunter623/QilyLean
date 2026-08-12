@@ -11,9 +11,13 @@ for (const relativePath of files) {
   if (!fs.existsSync(target)) continue;
   const current = fs.readFileSync(target, 'utf8');
 
-  // Site System V3 首页已经是静态权威源。保留它的资产标记，避免旧生成链
-  // 将新首页重新降级为 assistant/results/latest 的历史首页结构。
-  if (relativePath === 'index.html' && /\bqily-home-v3\b/.test(current)) continue;
+  // Site System V3 首页已经是静态权威源。只升级静态源版本标记，不再把 V3
+  // 降级回旧 assistant/results/latest 首页结构。
+  if (relativePath === 'index.html' && /\bqily-home-v3\b/.test(current)) {
+    const prepared = current.replace(/data-qily-static-source="home-core-v[12]"/g, 'data-qily-static-source="home-core-v3"');
+    if (prepared !== current) fs.writeFileSync(target, prepared, 'utf8');
+    continue;
+  }
 
   const prepared = current.replace(/\sdata-qily-static-source="[^"]*"/g, '');
   if (prepared !== current) fs.writeFileSync(target, prepared, 'utf8');
@@ -36,32 +40,16 @@ if (fs.existsSync(materializer)) {
     );
   }
 
-  // Materializer self-validation must judge a V3 homepage by the V3 contract,
-  // rather than by retired V2 panels or markers. Legacy pages retain their checks.
+  // V3 contract follows the current R2 baseline: six core capabilities are the only
+  // business taxonomy; 3+3 wording is no longer a required homepage signature.
   if (!prepared.includes('QILY-HOME-V3-VALIDATION-CONTRACT')) {
     prepared = prepared.replace(
       /  const requiredHome = \[[\s\S]*?\n  \];\n  requiredHome\.forEach\(\(value\) => \{ if \(!home\.includes\(value\)\) throw new Error\(`Homepage static source missing: \$\{value\}`\); \}\);/m,
-      `  // QILY-HOME-V3-VALIDATION-CONTRACT\n  const isV3Home = /\\bqily-home-v3\\b/.test(home);\n  const requiredHome = isV3Home ? [\n    'QILY-HOME-STATIC-COMMERCIAL:START',\n    'data-qily-static-source="home-core-v3"',\n    '把制造现场，变成可计算、可改善、可固化、可复用的组织资产',\n    '六类项目合作能力｜三类核心项目交付 + 三项数智化产品与技术能力',\n    '新工厂／新产线规划',\n    '精益改善项目交付',\n    '目视化项目设计与交付',\n    'qilyInformationArchitectureStylesheet',\n    'QILY-HOME-STATIC-SCHEMA:START'\n  ] : [\n    'QILY-HOME-STATIC-COMMERCIAL:START',\n    'data-qily-static-source="home-core-v2"',\n    '把复杂制造问题，转化为可验证的交付结果',\n    '新工厂／新产线规划',\n    '精益改善项目交付',\n    '目视化项目设计与交付',\n    'qilyInformationArchitectureStylesheet',\n    'qilyStaticCoreInteractions'\n  ];\n  requiredHome.forEach((value) => { if (!home.includes(value)) throw new Error(\`Homepage static source missing: \${value}\`); });`
+      `  // QILY-HOME-V3-VALIDATION-CONTRACT\n  const isV3Home = /\\bqily-home-v3\\b/.test(home);\n  const requiredHome = isV3Home ? [\n    'QILY-HOME-STATIC-COMMERCIAL:START',\n    'data-qily-static-source="home-core-v3"',\n    '把制造现场，变成可计算、可改善、可固化、可复用的组织资产',\n    '六类核心能力',\n    '新工厂／新产线规划',\n    '精益改善项目交付',\n    '目视化项目设计与交付',\n    '数字化工厂',\n    'APP软件开发',\n    '官网建设',\n    'qilyInformationArchitectureStylesheet',\n    'QILY-HOME-STATIC-SCHEMA:START'\n  ] : [\n    'QILY-HOME-STATIC-COMMERCIAL:START',\n    'data-qily-static-source="home-core-v2"',\n    '把复杂制造问题，转化为可验证的交付结果',\n    '新工厂／新产线规划',\n    '精益改善项目交付',\n    '目视化项目设计与交付',\n    'qilyInformationArchitectureStylesheet',\n    'qilyStaticCoreInteractions'\n  ];\n  requiredHome.forEach((value) => { if (!home.includes(value)) throw new Error(\`Homepage static source missing: \${value}\`); });\n  if (isV3Home && /三类核心项目交付\\s*[+＋与]\\s*三项数智化产品与技术能力/.test(home)) throw new Error('Legacy 3+3 taxonomy remains in V3 homepage');`
     );
   }
 
   if (prepared !== current) fs.writeFileSync(materializer, prepared, 'utf8');
 }
 
-// Six-capability enforcer stays authoritative for legacy pages, but V3 homepage
-// content hierarchy must not be overwritten by the V2 HOME_BLOCK. It may still
-// refresh the canonical six-capability JSON-LD schema.
-const enforcer = path.join(root, 'scripts', 'enforce-six-core-static-source.js');
-if (fs.existsSync(enforcer)) {
-  const current = fs.readFileSync(enforcer, 'utf8');
-  let prepared = current;
-  if (!prepared.includes('QILY-HOME-V3-PRESERVE-CANONICAL-CONTENT')) {
-    prepared = prepared.replace(
-      'function patchHome(html){\n',
-      `function patchHome(html){\n  // QILY-HOME-V3-PRESERVE-CANONICAL-CONTENT\n  if (/\\bqily-home-v3\\b/.test(html)) {\n    html=replaceMarker(html,'QILY-HOME-STATIC-SCHEMA:START','QILY-HOME-STATIC-SCHEMA:END',homeSchema());\n    return html;\n  }\n`
-    );
-  }
-  if (prepared !== current) fs.writeFileSync(enforcer, prepared, 'utf8');
-}
-
-process.stdout.write('Prepared static pages and V3-aware validation aliases for deterministic rematerialization.\n');
+process.stdout.write('Prepared static pages and R2/V3-aware validation aliases for deterministic rematerialization.\n');
