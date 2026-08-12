@@ -14,12 +14,12 @@ const viFile = path.join(root, 'site-vi-standard-v1.css');
 const contrastFile = path.join(root, 'site-vi-contrast-restoration-v1.css');
 const musicCoreFile = path.join(root, 'homepage-music-core-v4.js');
 
-const NAV_VERSION = '20260811-mobile-layout-v20';
+const NAV_VERSION = '20260812-competition-upgrade-v21';
 const SHELL_VERSION = '20260729-no-old-flash-v1';
 const VISUAL_VERSION = '20260803-home-badge-wrap-v5';
 const WIDE_VERSION = '20260810-content-axis-v8';
 const TYPE_VERSION = '20260729-hierarchy-v4';
-const VI_VERSION = '20260801-vi-standard-v1';
+const VI_VERSION = '20260812-manufacturing-asset-system-v3';
 const CONTRAST_VERSION = '20260811-text-color-standard-v2';
 const MUSIC_VERSION = '20260810-demand-music-wrapper-v6';
 
