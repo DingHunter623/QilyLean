@@ -3,34 +3,31 @@ name: Audit unreferenced repository assets
 on:
   pull_request:
     branches: [main]
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/audit-unreferenced-assets.js'
-      - '.github/workflows/audit-unreferenced-assets.yml'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: audit-unreferenced-assets-${{ github.ref }}
-  cancel-in-progress: false
+  group: audit-unreferenced-assets-pr-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
   audit:
-    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Audit attachments and repository references
         run: node scripts/audit-unreferenced-assets.js
+
       - name: Validate cleanup report
         shell: bash
         run: |
@@ -42,6 +39,7 @@ jobs:
           if (!Array.isArray(report.deletable) || !Array.isArray(report.retained)) throw new Error('Cleanup report is incomplete');
           console.log(`Assets: ${report.assetFiles}; unreferenced: ${report.unreferencedAssets}; potential release: ${report.potentialReleaseHuman}`);
           NODE
+
       - name: Upload attachment audit report
         if: always()
         uses: actions/upload-artifact@v4
@@ -50,72 +48,3 @@ jobs:
           path: maintenance/unreferenced-assets-report.json
           if-no-files-found: warn
           retention-days: 7
-
-  cleanup-on-main:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Apply safe unreferenced-asset cleanup
-        run: node scripts/audit-unreferenced-assets.js --apply
-
-      - name: Validate cleanup scope and current critical assets
-        shell: bash
-        run: |
-          node --check scripts/audit-unreferenced-assets.js
-          cp maintenance/unreferenced-assets-report.json /tmp/qilylean-final-cleanup-report.json
-          node - <<'NODE'
-          const fs = require('fs');
-          const report = JSON.parse(fs.readFileSync('/tmp/qilylean-final-cleanup-report.json','utf8'));
-          if (report.mode !== 'apply') throw new Error('Cleanup did not run in apply mode');
-          if (report.safetyStop) throw new Error('Cleanup safety stop was raised');
-          if (report.deletedAssets !== report.unreferencedAssets) throw new Error('Not all audited orphan assets were removed');
-          if (!report.deletedAssets) throw new Error('No orphan assets were deleted; refusing to create an empty cleanup commit');
-          const critical = [
-            '园区.png',
-            'media/projects/mold-warehouse-540.mp4',
-            'projects/index.html',
-            'projects/project-pages.css',
-            'qilylean/assets/daily-2026-08-09-career-development.svg'
-          ];
-          for (const file of critical) {
-            if (!fs.existsSync(file)) throw new Error(`Critical live asset/page missing after cleanup: ${file}`);
-          }
-          for (const item of report.deletable) {
-            if (fs.existsSync(item.path)) throw new Error(`Audited orphan still exists: ${item.path}`);
-          }
-          console.log(`Validated ${report.deletedAssets} deletions; released ${report.deletedHuman}.`);
-          NODE
-          node scripts/audit-unreferenced-assets.js
-          node - <<'NODE'
-          const fs = require('fs');
-          const post = JSON.parse(fs.readFileSync('maintenance/unreferenced-assets-report.json','utf8'));
-          if (post.unreferencedAssets !== 0) throw new Error(`Post-cleanup audit still finds ${post.unreferencedAssets} orphan assets`);
-          NODE
-          cp /tmp/qilylean-final-cleanup-report.json maintenance/unreferenced-assets-report.json
-
-      - name: Commit cleanup result
-        shell: bash
-        run: |
-          git config user.name 'QilyLean'
-          git config user.email 'DingHunter623@gmail.com'
-          git add -A
-          git commit -m 'chore: remove unreferenced repository assets [skip ci]'
-          git pull --rebase origin main
-          git push origin HEAD:main
-
-      - name: Upload final cleanup report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: unreferenced-assets-cleanup-final
-          path: maintenance/unreferenced-assets-report.json
-          if-no-files-found: warn
-          retention-days: 14
