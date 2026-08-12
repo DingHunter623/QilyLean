@@ -132,15 +132,15 @@ jobs:
       - name: Curate weekly high-value public archive
         run: node scripts/curate-weekly-briefs.js
 
-      - name: Finalize curated metadata, six-core homepage and R2 clean runtime
+      - name: Finalize curated metadata, six-core source, search, trust and R2 runtime
         run: |
           node scripts/remove-daily-directory-consultation.js
           node scripts/normalize-daily-visual-closure.js
           node scripts/audit-daily-quality-linkage.js
           node scripts/sync-curated-site-metadata.js
+          node scripts/enforce-six-core-static-source.js
           node scripts/sync-search-brief-metadata.js
           node scripts/sync-trust-brief-metadata.js
-          node scripts/enforce-six-core-static-source.js
           node scripts/publish-r2-clean-runtime-v3.js
 
       - name: Validate R2 trust metadata contract
