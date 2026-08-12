@@ -1,0 +1,99 @@
+name: Publish Times26001 v1.1.12 UI Layout
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-times26001-v1112-ui-layout-20260812.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download and verify Times26001 v1.1.12 APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 'https://sdmntprnorthcentralus.oaiusercontent.com/files/00000000-490c-822f-bee1-a82d790e353b/raw?se=2026-08-12T18%3A00%3A49Z&sp=r&sv=2026-02-06&sr=b&scid=a8a63bef-3a81-4270-915d-3f89f81e7b90&skoid=a1be202a-6464-476c-a496-723317c4a4db&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-12T05%3A49%3A14Z&ske=2026-08-13T05%3A49%3A14Z&sks=b&skv=2026-02-06&sig=yN4YbUia7k%2ByxURuHiXDgIt/PFlS9og%2Bt819mkKc0cg%3D' -o /tmp/times1112.zip
+          rm -rf /tmp/times1112 && mkdir -p /tmp/times1112
+          unzip -q /tmp/times1112.zip -d /tmp/times1112
+          test -f /tmp/times1112/app-debug.apk
+          echo '615c548a286b95953fb6741d440eb35c190b18f0d761b8d415d7d166179730ad  /tmp/times1112/app-debug.apk' | sha256sum -c -
+          cp /tmp/times1112/app-debug.apk ./Times26001-Android-v1.1.12-UI-Layout.apk
+          printf '%s  %s\n' '615c548a286b95953fb6741d440eb35c190b18f0d761b8d415d7d166179730ad' 'Times26001-Android-v1.1.12-UI-Layout.apk' > Times26001-Android-v1.1.12-UI-Layout.sha256.txt
+
+      - name: Synchronize all Times26001 website download modules
+        shell: python
+        run: |
+          from pathlib import Path
+          import json, re
+
+          apk_new = 'Times26001-Android-v1.1.12-UI-Layout.apk'
+          sha_new = 'Times26001-Android-v1.1.12-UI-Layout.sha256.txt'
+          build_new = '615c548a'
+          text_files = [
+              'tools/times26001/index.html',
+              'capabilities/index.html',
+              'app-download-share-v1.js',
+              'times26001-home-card.js',
+              'assets/tools/times26001-overview.svg',
+              'app-support/index.html',
+              'app-store/times26001/README.md',
+          ]
+          apk_pattern = r'Times26001-Android-v1\.1\.\d+(?:-[A-Za-z0-9]+)*\.apk'
+          sha_pattern = r'Times26001-Android-v1\.1\.\d+(?:-[A-Za-z0-9]+)*\.sha256\.txt'
+          for name in text_files:
+              p = Path(name)
+              if not p.exists():
+                  continue
+              s = p.read_text(encoding='utf-8')
+              s = re.sub(apk_pattern, apk_new, s)
+              s = re.sub(sha_pattern, sha_new, s)
+              s = re.sub(r'v1\.1\.\d+\s*/\s*versionCode\s*\d+', 'v1.1.12 / versionCode 15', s)
+              s = re.sub(r'v1\.1\.\d+\s*·\s*versionCode\s*\d+', 'v1.1.12 · versionCode 15', s)
+              s = re.sub(r'v1\.1\.\d+\s*/\s*code\s*\d+', 'v1.1.12 / code 15', s)
+              s = re.sub(r'v1\.1\.\d+', 'v1.1.12', s)
+              s = re.sub(r'\?build=[A-Za-z0-9]+', '?build=' + build_new, s)
+              s = s.replace('定位城市修正版', '界面精简与大字版').replace('天气测试 APK', '界面精简与大字版 APK')
+              p.write_text(s, encoding='utf-8')
+
+          manifest = Path('app-release-manifest.json')
+          if manifest.exists():
+              data = json.loads(manifest.read_text(encoding='utf-8'))
+              data['updatedAt'] = '2026-08-12'
+              app = data['apps']['times26001']
+              for key in ('publicRelease','storeCandidate','latestBuild'):
+                  if key in app:
+                      app[key]['versionName'] = '1.1.12'
+                      app[key]['versionCode'] = 15
+              app['publicRelease']['apk'] = '/' + apk_new
+              app['publicRelease']['sha256'] = '/' + sha_new
+              app['publicRelease']['label'] = '当前官网试用包（界面精简、黄历整合、整体字号放大）'
+              app['latestBuild']['status'] = '页面脚本仅在设置页保留；黄历并入万年历；底部布局与整体字号已优化'
+              manifest.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+          page = Path('tools/times26001/index.html').read_text(encoding='utf-8')
+          if apk_new not in page or 'v1.1.12 / versionCode 15' not in page:
+              raise SystemExit('Times26001 v1.1.12 download page did not synchronize')
+          share = Path('app-download-share-v1.js').read_text(encoding='utf-8')
+          if apk_new not in share:
+              raise SystemExit('Times26001 v1.1.12 share download link missing')
+
+      - name: Commit APK and website updates
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add Times26001-Android-v1.1.12-UI-Layout.apk Times26001-Android-v1.1.12-UI-Layout.sha256.txt tools/times26001/index.html capabilities/index.html app-download-share-v1.js times26001-home-card.js assets/tools/times26001-overview.svg app-support/index.html app-store/times26001/README.md app-release-manifest.json
+          git commit -m 'release: publish Times26001 v1.1.12 UI layout update'
+          git push origin HEAD:main
