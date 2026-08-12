@@ -1,6 +1,6 @@
 /* QilyLean R2 runtime stability fixes｜2026-08-12
- * 目标：修复深色动作按钮文字不可读、同排可信度卡片动作未沉底，以及首屏保护期间的旧版闪现。
  * 规则来源：QL-WEB-STD-001 V2026.08.12/R2。
+ * 本版补充：全站页尾清除、原子首屏、防旧脚本回流。
  */
 
 /* VI-02｜深色按钮 normal / visited / hover / focus / active 全状态必须高对比。 */
@@ -15,7 +15,6 @@
   border-color:#0f4b5a!important;
 }
 
-/* 避免浏览器/历史 visited 色或全站文字语义层重新把深底按钮刷成深字。 */
 a[style*="background:#0f4b5a"],
 a[style*="background: #0f4b5a"],
 button[style*="background:#0f4b5a"],
@@ -31,19 +30,53 @@ button[style*="background: #0f4b5a"] {
   flex-direction:column!important;
   height:100%!important;
 }
-
 .qily-trust-wrap > .qily-value-card > strong,
 .qily-value-card[data-qily-equal-card="true"] > strong {
   margin-top:auto!important;
 }
 
-/* R2 首屏稳定性：在静态共享样式与当前文档准备完成前，不展示旧壳层。 */
+/* R2 原子首屏：加载完成前任何正文、CTA、悬浮按钮均不得抢先露出。 */
 html.qily-r2-first-paint-pending body {
+  opacity:0!important;
   visibility:hidden!important;
+  pointer-events:none!important;
+}
+html.qily-r2-first-paint-pending #floatDock {
+  opacity:0!important;
+  visibility:hidden!important;
+}
+
+/* R2 页尾清除：即使旧缓存脚本短暂执行，也不允许旧页尾重新可见。 */
+#qilyGlobalFooter,
+#qilyGlobalContactFooter,
+#qtc-global-trust-footer,
+.qily-global-footer-v31,
+.qily-global-footer-v32,
+.qily-global-footer-v33,
+.qily-global-footer-v34,
+.qily-global-contact-footer,
+.qily-global-contact-footer-shell,
+.qtc-global-trust-footer,
+body > footer,
+body > .footer,
+body > .site-footer,
+body > .page-footer,
+.module-footer {
+  display:none!important;
+  visibility:hidden!important;
+  height:0!important;
+  min-height:0!important;
+  max-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  overflow:hidden!important;
 }
 
 @media print {
   html.qily-r2-first-paint-pending body {
+    opacity:1!important;
     visibility:visible!important;
+    pointer-events:auto!important;
   }
 }
