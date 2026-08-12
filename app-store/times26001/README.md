@@ -72,7 +72,7 @@ Times26001 是一款以工业工程时间研究和制造现场测时为核心的
 
 **Times26001 由 QilyLean｜启力精益开发，面向工业工程、现场改善与时间研究场景提供专业测时能力。**
 
-### 更新说明（Google Play 首发候选版 v1.1.11）
+### 更新说明（Google Play 首发候选版 v1.1.12）
 - 正式应用名称统一为 Times26001；
 - Google Play 首发 AAB 使用固定 Upload Key 签名；
 - 面向 Android 16 / API 36 完成商店适配；
