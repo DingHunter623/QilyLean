@@ -10,6 +10,7 @@ on:
       - 'site-navigation-legacy-20260802.js'
       - 'site-music-persistent-navigation-v1.js'
       - 'scripts/publish-r2-runtime-stability.js'
+      - 'scripts/publish-r2-runtime-stability-v2.js'
       - 'scripts/publish-primary-contrast-music-continuity.js'
       - 'scripts/site-regression-guard.js'
       - 'scripts/apply-site-poka-yoke-v2.js'
@@ -37,6 +38,7 @@ jobs:
       - name: Validate R2 runtime sources
         run: |
           node --check scripts/publish-r2-runtime-stability.js
+          node --check scripts/publish-r2-runtime-stability-v2.js
           node --check scripts/publish-primary-contrast-music-continuity.js
           node --check scripts/apply-site-poka-yoke-v2.js
           node --check scripts/site-regression-guard.js
