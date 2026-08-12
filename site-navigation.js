@@ -1,408 +1,89 @@
-/* QilyLean global VI, navigation, trust, contrast and layout loader v19 */
+/* QilyLean R2 static-first navigation runtime v20｜2026-08-12
+ * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
+ * 禁止：运行时追加信息架构、品牌信任、转化 CTA、页尾联系栏、正文区块或共享布局 CSS。
+ */
 (function (d, w) {
   'use strict';
-  if (w.__qilyGlobalAssetLoaderV19) return;
-  w.__qilyGlobalAssetLoaderV19 = true;
+  if (w.__qilyStaticFirstNavigationV20) return;
+  w.__qilyStaticFirstNavigationV20 = true;
 
-  function removeMicrosoftOverrides() {
-    ['qilyMicrosoftInternationalStylesheet','qilyMicrosoftEnterpriseComponentsStylesheet','qilyMicrosoftNavUnderlineStyle','qilyNavFourSideBorderStyle'].forEach(function (id) {
-      var node = d.getElementById(id);
-      if (node && node.parentNode) node.parentNode.removeChild(node);
-    });
-    d.querySelectorAll('script[data-qily-microsoft-international-loader]').forEach(function (node) { node.remove(); });
-    d.documentElement.classList.remove('qily-ms-international');
-    if (d.body) d.body.classList.remove('qily-ms-international');
-  }
-
-  function ensureStylesheet(id, href) {
-    var current = d.getElementById(id);
-    if (current) {
-      if (current.getAttribute('href') !== href) current.setAttribute('href', href);
-      return current;
-    }
-    var link = d.createElement('link');
-    link.id = id;
-    link.rel = 'stylesheet';
-    link.href = href;
-    (d.head || d.documentElement).appendChild(link);
-    return link;
-  }
-
-  function ensureScript(attribute, value, src) {
-    var current = d.querySelector('script[' + attribute + '="' + value + '"]');
-    if (current) {
-      if (current.getAttribute('src') !== src) current.setAttribute('src', src);
-      return current;
-    }
-    var script = d.createElement('script');
-    script.src = src;
-    script.defer = true;
-    script.setAttribute(attribute, value);
-    (d.head || d.documentElement).appendChild(script);
-    return script;
-  }
-
-  function ensureGlobalAssets() {
-    removeMicrosoftOverrides();
-    [
-      ['qilyVisualScaleStylesheet','/site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5'],
-      ['qilyHomePortraitBadgeFixStylesheet','/home-portrait-badge-fix-v1.css?v=20260811-hero-summary-relocation-v3'],
-      ['qilyGlobalLinkStandardStylesheet','/site-link-standard-v2.css?v=20260803-nav-four-border-v6'],
-      ['qilyDarkSurfaceContrastStylesheet','/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2'],
-      ['qilyInformationArchitectureStylesheet','/site-information-architecture-v1.css?v=20260810-content-axis-v3'],
-      ['qilyViStandardStylesheet','/site-vi-standard-v1.css?v=20260812-manufacturing-asset-system-v3'],
-      ['qilyViContrastRestorationStylesheet','/site-vi-contrast-restoration-v1.css?v=20260811-text-color-standard-v2'],
-      ['qilyVisualClosureStylesheet','/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2'],
-      ['qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2'],
-      ['qilyBrandTrustStylesheet','/site-brand-trust-v1.css?v=20260810-stable-layout-v4'],
-      ['qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4'],
-      ['qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15'],
-      ['qilyLayoutFooterClosureStylesheet','/site-layout-footer-closure-v1.css?v=20260812-runtime-stability-v20']
-    ].forEach(function (asset) { ensureStylesheet(asset[0], asset[1]); });
-
-    ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260810-stable-layout-v5');
-    ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
-    ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260811-mobile-no-break-v3');
-    ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260810-content-axis-v3');
-    ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-action-label-v3');
-    ensureScript('data-qily-text-contrast-audit','v2','/site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2');
-  }
-
-  function loadConditionalStyles() {
-    var body = d.body;
-    var isDaily = !!(body && body.classList && body.classList.contains('daily-single-page')) || !!d.querySelector('.brief-adjacent');
-    if (isDaily) ensureStylesheet('qilyDailyNavigationContrastStylesheet','/qilylean/daily-navigation-contrast-v1.css?v=20260802-contrast-v1');
-    if (d.querySelector('.daily-index-heading')) ensureStylesheet('qilyDailyDirectoryActionsStylesheet','/qilylean/daily-directory-actions-v1.css?v=20260802-single-line-v1');
-  }
-
-  function promoteVi() {
-    removeMicrosoftOverrides();
-    /* 显式保持 Trust → Interaction → Layout 的最终级联顺序，满足运行时和自动门禁同一契约。 */
-    ['qilyTrustConversionV2Stylesheet','qilyInteractiveHoverContrastStylesheet'].forEach(function (id) {
-      var node = d.getElementById(id);
-      if (node && node.parentNode) node.parentNode.appendChild(node);
-    });
-    ['qilyInteractiveHoverContrastStylesheet','qilyLayoutFooterClosureStylesheet'].forEach(function (id) {
-      var node = d.getElementById(id);
-      if (node && node.parentNode) node.parentNode.appendChild(node);
-    });
-  }
-
-  ensureGlobalAssets();
-  loadConditionalStyles();
-  promoteVi();
-})(document, window);
-
-window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  shellAssets:[
-    'site-wide-layout-v1.css?v=20260810-content-axis-v8',
-    'site-typography-v1.css?v=20260729-hierarchy-v4',
-    'site-vi-standard-v1.css?v=20260812-manufacturing-asset-system-v3',
-    'site-vi-contrast-restoration-v1.css?v=20260811-text-color-standard-v2',
-    'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2',
-    'site-visual-closure-v1.js?v=20260810-stable-layout-v5',
-    'site-visual-closure-v2.css?v=20260803-boundary-links-v2',
-    'site-visual-closure-v2.js?v=20260803-boundary-links-v2',
-    'site-trust-conversion-v2.css?v=20260805-action-label-v4',
-    'site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15',
-    'site-layout-footer-closure-v1.css?v=20260812-runtime-stability-v20',
-    'site-trust-conversion-v2.js?v=20260805-action-label-v3',
-    'site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2'
-  ],
-  disabledAssets:['site-microsoft-international-v1.css','site-microsoft-enterprise-components-v2.css','site-microsoft-international-v1.js'],
-  bootstrapMarkers:['addWideLayoutStylesheet();','addTypographyStylesheet();','if (document.body) boot()'],
-  dockActions:['data-action="home"','data-action="top"','data-action="back"','data-action="search"','data-action="current"','data-action="share"','data-action="contact"']
-});
-
-/* QilyLean global navigation wrapper｜保留原导航功能并加载可信度、信息架构与对比度闭环 */
-(function (d, w) {
-  'use strict';
-  if (w.__qilyNavigationWrapper20260812V19) return;
-  w.__qilyNavigationWrapper20260812V19 = true;
-
-  function ensureStylesheet(id, href) {
-    var current = d.getElementById(id);
-    if (current) {
-      if (current.getAttribute('href') !== href) current.setAttribute('href', href);
-      return;
-    }
-    var link = d.createElement('link');
-    link.id = id;
-    link.rel = 'stylesheet';
-    link.href = href;
-    (d.head || d.documentElement).appendChild(link);
-  }
-
-  function ensureScript(attribute, value, src) {
-    var current = d.querySelector('script[' + attribute + '="' + value + '"]');
-    if (current) {
-      if (current.getAttribute('src') !== src) current.setAttribute('src', src);
-      return current;
-    }
-    var script = d.createElement('script');
-    script.src = src;
-    script.defer = true;
-    script.setAttribute(attribute, value);
-    (d.head || d.documentElement).appendChild(script);
-    return script;
-  }
-
-  function loadEnhancers() {
-    ensureStylesheet('qilyBrandTrustStylesheet','/site-brand-trust-v1.css?v=20260810-stable-layout-v4');
-    ensureStylesheet('qilyInformationArchitectureStylesheet','/site-information-architecture-v1.css?v=20260810-content-axis-v3');
-    ensureStylesheet('qilyVisualClosureStylesheet','/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2');
-    ensureStylesheet('qilyBoundaryLinksClosureStylesheet','/site-visual-closure-v2.css?v=20260803-boundary-links-v2');
-    ensureStylesheet('qilyTrustConversionV2Stylesheet','/site-trust-conversion-v2.css?v=20260805-action-label-v4');
-    ensureStylesheet('qilyInteractiveHoverContrastStylesheet','/site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15');
-    ensureStylesheet('qilyLayoutFooterClosureStylesheet','/site-layout-footer-closure-v1.css?v=20260812-runtime-stability-v20');
-
-    ['qilyTrustConversionV2Stylesheet','qilyInteractiveHoverContrastStylesheet'].forEach(function (id) {
-      var node=d.getElementById(id); if(node&&node.parentNode)node.parentNode.appendChild(node);
-    });
-    ['qilyInteractiveHoverContrastStylesheet','qilyLayoutFooterClosureStylesheet'].forEach(function (id) {
-      var node=d.getElementById(id); if(node&&node.parentNode)node.parentNode.appendChild(node);
-    });
-
-    ensureScript('data-qily-brand-trust-loader','v3','/site-brand-trust-v1.js?v=20260810-content-axis-v3');
-    ensureScript('data-qily-information-architecture-loader','v1','/site-information-architecture-v1.js?v=20260811-mobile-no-break-v3');
-    ensureScript('data-qily-visual-closure-loader','v1','/site-visual-closure-v1.js?v=20260810-stable-layout-v5');
-    ensureScript('data-qily-boundary-links-loader','v2','/site-visual-closure-v2.js?v=20260803-boundary-links-v2');
-    ensureScript('data-qily-trust-conversion-loader','v2','/site-trust-conversion-v2.js?v=20260805-action-label-v3');
-    ensureScript('data-qily-text-contrast-audit','v2','/site-text-contrast-audit-v1.js?v=20260805-runtime-audit-v2');
-
-    var body = d.body;
-    var isDaily = !!(body && body.classList && body.classList.contains('daily-single-page')) || !!d.querySelector('.brief-adjacent');
-    if (isDaily) ensureStylesheet('qilyDailyNavigationContrastStylesheet','/qilylean/daily-navigation-contrast-v1.css?v=20260802-contrast-v1');
-    if (d.querySelector('.daily-index-heading')) ensureStylesheet('qilyDailyDirectoryActionsStylesheet','/qilylean/daily-directory-actions-v1.css?v=20260802-single-line-v1');
-  }
+  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260812-r2-clean-v3';
+  var PARENT_SRC = '/site-parent-navigation-v3.js?v=20260812-competition-upgrade-v3';
 
   function appendLegacy() {
-    if (d.querySelector('script[data-qily-navigation-legacy]')) { loadEnhancers(); return; }
-    var legacy = d.createElement('script');
-    legacy.src = '/site-navigation-legacy-20260802.js?v=20260812-r2-stability-v1';
-    legacy.async = false;
-    legacy.setAttribute('data-qily-navigation-legacy','parent-route-v3');
-    legacy.onload = loadEnhancers;
-    legacy.onerror = loadEnhancers;
-    (d.head || d.documentElement).appendChild(legacy);
+    if (w.__qilyLeanSiteNavigationPublicV8) return;
+    var existing = d.querySelector('script[data-qily-navigation-legacy]');
+    if (existing) return;
+    var script = d.createElement('script');
+    script.src = LEGACY_SRC;
+    script.async = false;
+    script.setAttribute('data-qily-navigation-legacy', 'r2-static-first-v20');
+    (d.head || d.documentElement).appendChild(script);
   }
 
   function loadParentNavigation() {
-    if (w.__qilyParentNavigationV3) { appendLegacy(); return; }
-    var existing = d.querySelector('script[data-qily-parent-navigation]');
-    if (existing) { existing.addEventListener('load', appendLegacy, { once:true }); return; }
+    if (w.__qilyParentNavigationV3) {
+      appendLegacy();
+      return;
+    }
+    var existing = d.querySelector('script[data-qily-parent-navigation],script[src*="/site-parent-navigation-v3.js"]');
+    if (existing) {
+      existing.addEventListener('load', appendLegacy, { once: true });
+      if (existing.dataset && existing.dataset.qilyLoaded === 'true') appendLegacy();
+      return;
+    }
     var script = d.createElement('script');
-    script.src = '/site-parent-navigation-v3.js?v=20260812-competition-upgrade-v3';
+    script.src = PARENT_SRC;
     script.async = false;
-    script.setAttribute('data-qily-parent-navigation','v3');
-    script.onload = appendLegacy;
-    script.onerror = appendLegacy;
+    script.setAttribute('data-qily-parent-navigation', 'v3');
+    script.addEventListener('load', function () {
+      script.dataset.qilyLoaded = 'true';
+      appendLegacy();
+    }, { once: true });
+    script.addEventListener('error', appendLegacy, { once: true });
     (d.head || d.documentElement).appendChild(script);
   }
 
-  loadEnhancers();
-  loadParentNavigation();
-})(document, window);
-
-/* QILY-SITEWIDE-TAIL-COMPACTION-V2
- * 保证统一可信度栏是文档最后一个流式模块；悬浮坞、弹层、音乐和导航工具不占用页尾高度。
- */
-(function (d, w) {
-  'use strict';
-  if (w.__qilySitewideTailCompactionV1) return;
-  w.__qilySitewideTailCompactionV1 = true;
-
-  var utilitySelector = [
-    '#floatDock', '#shareMask', '#wxMask', '#qilySearchMask', '#qilyDockToast',
-    '#siteMusicMute', '#siteBackgroundMusic', '#qilyPersistentNavigationFrame',
-    '#qilyPersistentNavigationLoader'
-  ].join(',');
-
-  function compactTail() {
-    if (!d.body) return;
-    d.body.classList.add('qily-tail-compact');
-
-    d.querySelectorAll(utilitySelector).forEach(function (node) {
-      node.setAttribute('data-qily-tail-utility', 'true');
-    });
-
-    var trustFooter = d.getElementById('qtc-global-trust-footer');
-    if (trustFooter) {
-      trustFooter.setAttribute('data-qily-document-tail', 'true');
-      if (d.body.lastElementChild !== trustFooter) d.body.appendChild(trustFooter);
-    }
-
-    d.querySelectorAll('.qily-global-contact-footer-shell:empty,[data-qily-empty-tail="true"]:empty').forEach(function (node) {
-      node.remove();
-    });
-  }
-
-  function boot() {
-    compactTail();
-  }
-
-  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot, { once:true });
-  else boot();
-})(document, window);
-
-/* QILY-SITEWIDE-FOOTER-DEDUPE-20260808｜仅保留统一 Technical & Project Contact 标准栏 */
-(function (d, w) {
-  'use strict';
-  if (w.__qilySitewideFooterDedupe20260808) return;
-  w.__qilySitewideFooterDedupe20260808 = true;
-
-  function cleanText(value) {
-    return (value || '').replace(/\s+/g, ' ').trim();
-  }
-
-  function isOfficialSiteLink(node) {
-    if (!node || node.nodeType !== 1 || !node.matches('a[href]')) return false;
-    var href = (node.getAttribute('href') || '').trim().toLowerCase();
-    return href === 'https://qilylean.com/' || href === 'https://qilylean.com' || href === 'mailto:admin@qilylean.com';
-  }
-
-  function isDuplicateContactFragment(node) {
-    if (!node) return false;
-    var text = cleanText(node.textContent);
-    if (!text) return false;
-    if (node.nodeType === 3) {
-      return /官网网址|企业邮箱|丁启利|qilylean|启力精益/i.test(text);
-    }
-    if (node.nodeType !== 1) return false;
-    if (node.id === 'qilyGlobalContactFooter' || node.closest('#qilyGlobalContactFooter')) return false;
-    if (isOfficialSiteLink(node)) return true;
-    var hasUrl = /qilylean\.com/i.test(text);
-    var hasEmail = /admin@qilylean\.com/i.test(text);
-    var hasContactLabel = /官网网址|企业邮箱/i.test(text);
-    return (hasUrl && hasEmail) || (hasContactLabel && (hasUrl || hasEmail));
-  }
-
-  function removeDuplicateFooterRows() {
-    d.querySelectorAll('footer').forEach(function (footer) {
-      var standard = footer.querySelector('#qilyGlobalContactFooter');
-      if (!standard) return;
-
-      Array.from(footer.childNodes).forEach(function (node) {
-        if (node === standard || (node.nodeType === 1 && node.contains(standard))) return;
-        if (isDuplicateContactFragment(node)) node.remove();
-      });
-
-      Array.from(footer.children).forEach(function (node) {
-        if (node === standard || node.contains(standard)) return;
-        var text = cleanText(node.textContent);
-        if (/qilylean\.com/i.test(text) && /admin@qilylean\.com/i.test(text)) node.remove();
-      });
-    });
-  }
-
-  function boot() {
-    removeDuplicateFooterRows();
-    [60,300,1200].forEach(function (delay) {
-      setTimeout(removeDuplicateFooterRows, delay);
-    });
-  }
-
-  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot, { once: true });
-  else boot();
-})(document, window);
-
-/* QILY-FLOAT-DOCK-POINTER-FEEDBACK-V1
- * 动态悬浮栏统一触摸／鼠标／键盘按压态；不改变七项功能、顺序或跳转逻辑。
- */
-(function (d, w) {
-  'use strict';
-  if (w.__qilyFloatDockPointerFeedbackV1) return;
-  w.__qilyFloatDockPointerFeedbackV1 = true;
-
-  var releaseDelay = 150;
-
-  function press(button) {
-    if (!button || button.matches(':disabled,[aria-disabled="true"]')) return;
-    if (button.__qilyPressedTimer) w.clearTimeout(button.__qilyPressedTimer);
-    button.dataset.qilyPressed = 'true';
-  }
-
-  function release(button, delay) {
+  function release(button) {
     if (!button) return;
     if (button.__qilyPressedTimer) w.clearTimeout(button.__qilyPressedTimer);
     button.__qilyPressedTimer = w.setTimeout(function () {
       delete button.dataset.qilyPressed;
       button.__qilyPressedTimer = 0;
-    }, typeof delay === 'number' ? delay : releaseDelay);
+    }, 120);
   }
 
-  function bind(button) {
-    if (!button || button.dataset.qilyPointerFeedback === 'v1') return;
-    button.dataset.qilyPointerFeedback = 'v1';
-
-    button.addEventListener('pointerdown', function () { press(button); }, { passive:true });
-    button.addEventListener('pointerup', function () { release(button); }, { passive:true });
-    button.addEventListener('pointercancel', function () { release(button, 0); }, { passive:true });
-    button.addEventListener('pointerleave', function (event) {
-      if (event.pointerType === 'mouse') release(button, 0);
-    }, { passive:true });
-    button.addEventListener('keydown', function (event) {
-      if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') press(button);
-    });
-    button.addEventListener('keyup', function (event) {
-      if (event.key === 'Enter' || event.key === ' ' || event.key === 'Spacebar') release(button);
-    });
-    button.addEventListener('blur', function () { release(button, 0); });
-    button.addEventListener('click', function () { release(button); });
+  function bindDockButton(button) {
+    if (!button || button.dataset.qilyPointerFeedback === 'v2') return;
+    button.dataset.qilyPointerFeedback = 'v2';
+    button.addEventListener('pointerdown', function () {
+      if (!button.matches(':disabled,[aria-disabled="true"]')) button.dataset.qilyPressed = 'true';
+    }, { passive: true });
+    button.addEventListener('pointerup', function () { release(button); }, { passive: true });
+    button.addEventListener('pointercancel', function () { release(button); }, { passive: true });
+    button.addEventListener('blur', function () { release(button); });
   }
 
-  function normalizeOrder() {
-    var dock = d.querySelector('#floatDock.qily-float-dock');
-    if (!dock) return false;
-    var order = ['home','top','back','search','current','share','contact'];
-    var buttons = order.map(function (action) {
-      return dock.querySelector('.qily-float-btn[data-action="' + action + '"]');
-    }).filter(Boolean);
-    var current = Array.from(dock.children).filter(function (node) {
-      return node.matches && node.matches('.qily-float-btn[data-action]');
-    });
-    var orderChanged = current.length !== buttons.length || buttons.some(function (button, index) {
-      return current[index] !== button;
-    });
-    if (orderChanged) {
-      var fragment = d.createDocumentFragment();
-      buttons.forEach(function (button) { fragment.appendChild(button); });
-      dock.appendChild(fragment);
-    }
-    dock.dataset.qilyStableOrder = buttons.map(function (button) { return button.getAttribute('data-action'); }).join(',');
-    return buttons.length === order.length;
+  function bindDock() {
+    d.querySelectorAll('#floatDock.qily-float-dock .qily-float-btn').forEach(bindDockButton);
   }
 
-  function scan() {
-    var complete = normalizeOrder();
-    d.querySelectorAll('#floatDock.qily-float-dock .qily-float-btn').forEach(bind);
-    if (complete && observer) {
-      observer.disconnect();
-      observer = null;
-    }
-    return complete;
-  }
-
-  function releaseAll() {
-    d.querySelectorAll('#floatDock.qily-float-dock .qily-float-btn[data-qily-pressed="true"]').forEach(function (button) {
-      release(button);
-    });
-  }
-
-  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', scan, { once:true });
-  else scan();
-
-  var observer = null;
-  if (w.MutationObserver && !scan()) {
-    observer = new MutationObserver(scan);
-    observer.observe(d.documentElement, { childList:true, subtree:true });
-    w.setTimeout(function () {
-      if (observer) observer.disconnect();
-      observer = null;
-    }, 2600);
-  }
-
-  d.addEventListener('pointerup', releaseAll, true);
-  d.addEventListener('pointercancel', releaseAll, true);
-  [80,260,800,1800].forEach(function (delay) { w.setTimeout(scan, delay); });
+  loadParentNavigation();
+  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', bindDock, { once: true });
+  else bindDock();
+  [120, 500, 1200].forEach(function (delay) { w.setTimeout(bindDock, delay); });
 })(document, window);
+
+window.__qilyLayeredNavigationBuildContract = Object.freeze({
+  mode: 'r2-static-first-v20',
+  staticHtmlAuthority: true,
+  dynamicContentShapers: false,
+  runtimeFooter: false,
+  runtimeSharedCssRewrite: false,
+  nativePrefetch: true,
+  dockActions: [
+    'data-action="home"', 'data-action="top"', 'data-action="back"',
+    'data-action="search"', 'data-action="current"', 'data-action="share"',
+    'data-action="contact"'
+  ]
+});
