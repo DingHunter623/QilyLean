@@ -1,4 +1,4 @@
-name: Validate daily archive publication
+name: Validate weekly curated brief publication
 
 on:
   pull_request:
@@ -19,8 +19,11 @@ on:
       - "knowledge/terminology.html"
       - "knowledge/terminology/*.html"
       - "scripts/build-daily-archive.js"
+      - "scripts/curate-weekly-briefs.js"
+      - "scripts/validate-weekly-brief-curation.js"
       - "scripts/build-site-metadata.js"
       - "scripts/sync-search-brief-metadata.js"
+      - "scripts/sync-trust-brief-metadata.js"
       - "scripts/daily-engineering-archive.js"
       - "scripts/enhance-daily-archive.js"
       - "scripts/enhance-terminology-training.js"
@@ -46,13 +49,13 @@ permissions:
   contents: read
 
 concurrency:
-  group: daily-archive-pr-${{ github.event.pull_request.number }}
+  group: weekly-curation-pr-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
         with:
@@ -65,8 +68,11 @@ jobs:
       - name: Validate script syntax
         run: |
           node --check scripts/build-daily-archive.js
+          node --check scripts/curate-weekly-briefs.js
+          node --check scripts/validate-weekly-brief-curation.js
           node --check scripts/build-site-metadata.js
           node --check scripts/sync-search-brief-metadata.js
+          node --check scripts/sync-trust-brief-metadata.js
           node --check scripts/enhance-daily-archive.js
           node --check scripts/enhance-terminology-training.js
           node --check scripts/audit-daily-terminology.js
@@ -84,7 +90,7 @@ jobs:
           node --check scripts/normalize-daily-visual-closure.js
           node --check scripts/publish-r2-clean-runtime-v3.js
 
-      - name: Build publication candidate
+      - name: Rebuild complete engineering source archive
         run: |
           node scripts/apply-commercial-quality-closure-20260804.js
           node scripts/hide-public-pricing.js
@@ -106,7 +112,7 @@ jobs:
           node scripts/enforce-productivity-theme-alias.js
           node scripts/normalize-daily-quality-label.js
 
-      - name: Unify Daily Engineering Brief brand
+      - name: Unify source archive brand
         shell: bash
         run: |
           python3 - <<'PY'
@@ -117,20 +123,30 @@ jobs:
               file.write_text(text.replace('>制造改善知识分享<', '>QilyLean｜启力精益<'), encoding='utf-8')
           PY
 
-      - name: Validate generated engineering archive
+      - name: Validate complete source archive before curation
         run: node scripts/validate-daily-archive.js
 
-      - name: Finalize current message and R2 clean runtime
+      - name: Curate weekly high-value public archive
+        run: node scripts/curate-weekly-briefs.js
+
+      - name: Finalize curated metadata and R2 clean runtime
         run: |
           node scripts/remove-daily-directory-consultation.js
           node scripts/normalize-daily-visual-closure.js
           node scripts/audit-daily-quality-linkage.js
           node scripts/build-site-metadata.js
           node scripts/sync-search-brief-metadata.js
+          node scripts/sync-trust-brief-metadata.js
           node scripts/publish-r2-clean-runtime-v3.js
+
+      - name: Validate weekly curation and protected briefs
+        run: node scripts/validate-weekly-brief-curation.js
 
       - name: Validate current publication contracts
         run: node scripts/validate-current-daily-publication.js
+
+      - name: Validate trust metadata contract
+        run: node scripts/sync-trust-brief-metadata.js --check
 
       - name: Verify deterministic diff
         run: git diff --check
