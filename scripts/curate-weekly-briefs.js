@@ -195,10 +195,12 @@ function buildDirectory(records) {
 <link rel="stylesheet" href="/site-shell.css?v=20260812-r2-stability-v1">
 <link rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
 <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260812-weekly-curated-v1">
-<script defer src="/site-navigation.js?v=20260812-r2-clean-v3"></script>
+<script defer src="/site-navigation.js?v=20260813-r2-clean-v4"></script>
+<script defer id="qilyFastNativeNavigationV5" data-qily-fast-native-navigation="v5" src="/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5"></script>
+<link id="qilyVisualReadabilityV4Stylesheet" rel="stylesheet" href="/site-visual-readability-v4.css?v=20260813-visual-readability-v4">
 </head>
 <body class="module-page daily-index-page">
-<header class="qily-site-header"><a class="qily-brand" href="/">QilyLean｜启力精益</a><nav class="site-nav" aria-label="QilyLean核心导视"><a href="/">首页</a><a href="/capabilities/">能力体系</a><a href="/projects/">代表项目</a><a href="/improvements/">改善方法</a><a href="/knowledge/" aria-current="page">知识资产</a><a href="/experience/">履历主线</a><a href="/cooperation/">项目合作</a><a href="/trust/">信任中心</a></nav></header>
+<header class="qily-site-header"><a class="qily-brand" href="/">QilyLean｜启力精益</a><nav class="site-nav" aria-label="QilyLean核心导视"><a href="/">首页</a><a href="/experience/">履历主线</a><a href="/capabilities/">能力体系</a><a href="/improvements/">改善方法</a><a href="/projects/">代表项目</a><a href="/trust/">信任中心</a><a href="/cooperation/">项目合作</a><a href="/knowledge/" aria-current="page">知识资产</a></nav></header>
 <main>
 <section class="daily-hero"><div class="daily-inner"><span>CURATED ENGINEERING BRIEF</span><h1>精选简报</h1><p>不以日更数量证明专业度。默认每周只保留一篇真正具备工程逻辑、数据意识、闭环方法与长期复用价值的内容；明确指定的精品可作为保护项例外保留。</p></div></section>
 <section class="daily-index-section"><div class="daily-inner">
@@ -209,8 +211,7 @@ ${buildCareerTimeline()}
 <div class="brief-grid" id="briefCuratedGrid">${cards}</div>
 </div></section>
 </main>
-<footer class="module-footer"><div class="module-inner"><span>QilyLean｜启力精益</span><span>制造现场 → 工程数据 → 精益改善 → 质量保证 → 数智固化 → 知识资产</span></div></footer>
-<script>(function(){var input=document.getElementById('briefSearch'),grid=document.getElementById('briefCuratedGrid'),status=document.getElementById('briefFilterStatus');if(!input||!grid)return;var cards=Array.prototype.slice.call(grid.querySelectorAll('.brief-index-card'));input.addEventListener('input',function(){var q=(input.value||'').trim().toLocaleLowerCase('zh-CN'),n=0;cards.forEach(function(card){var hit=!q||(card.getAttribute('data-search')||'').toLocaleLowerCase('zh-CN').includes(q);card.hidden=!hit;if(hit)n+=1;});status.textContent=q?'找到 '+n+' 篇相关精选':'当前 ${records.length} 篇精选';});})();</script>
+<script>(function(){var params=new URLSearchParams(location.search),year=(params.get('year')||'').trim(),input=document.getElementById('briefSearch'),grid=document.getElementById('briefCuratedGrid'),status=document.getElementById('briefFilterStatus');if(!grid)return;var cards=Array.prototype.slice.call(grid.querySelectorAll('.brief-index-card'));function apply(){var q=(input&&input.value||'').trim().toLocaleLowerCase('zh-CN'),n=0;cards.forEach(function(card){var d=card.getAttribute('data-date')||'',s=(card.getAttribute('data-search')||'').toLocaleLowerCase('zh-CN'),hitYear=!year||d.indexOf(year+'-')===0,hitSearch=!q||s.includes(q),hit=hitYear&&hitSearch;card.hidden=!hit;if(hit)n+=1;});document.querySelectorAll('[data-year-filter]').forEach(function(link){var active=!!year&&link.getAttribute('data-year-filter')===year;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','true');else link.removeAttribute('aria-current');});if(status){if(year&&q)status.innerHTML=year+'年｜找到 '+n+' 篇相关精选　<a href="/qilylean/daily-insights.html#brief-directory">查看全部年份</a>';else if(year)status.innerHTML=year+'年｜当前 '+n+' 篇精选　<a href="/qilylean/daily-insights.html#brief-directory">查看全部年份</a>';else status.textContent=q?'找到 '+n+' 篇相关精选':'当前 ${records.length} 篇精选';}}if(input)input.addEventListener('input',apply);apply();})();</script>
 </body></html>\n`;
 }
 
