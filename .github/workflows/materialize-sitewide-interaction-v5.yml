@@ -1,18 +1,21 @@
-name: Materialize sitewide interaction R2
+name: Materialize sitewide interaction R2 clean
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
       - 'site-r2-stability-fixes-v1.css'
+      - 'site-footer-standard-v28.js'
       - 'site-navigation.js'
       - 'site-navigation-core.js'
       - 'site-navigation-legacy-20260802.js'
       - 'site-music-persistent-navigation-v1.js'
       - 'scripts/publish-r2-runtime-stability.js'
       - 'scripts/publish-r2-runtime-stability-v2.js'
+      - 'scripts/publish-r2-clean-runtime-v3.js'
       - 'scripts/publish-primary-contrast-music-continuity.js'
       - 'scripts/site-regression-guard.js'
+      - 'scripts/site-regression-guard-v2.js'
       - 'scripts/apply-site-poka-yoke-v2.js'
       - '.github/workflows/materialize-sitewide-interaction-v5.yml'
 
@@ -20,7 +23,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: materialize-sitewide-interaction-r2-${{ github.event.pull_request.number }}
+  group: materialize-sitewide-interaction-r2-clean-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
@@ -35,28 +38,34 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - name: Validate R2 runtime sources
+      - name: Validate R2 clean runtime sources
         run: |
           node --check scripts/publish-r2-runtime-stability.js
           node --check scripts/publish-r2-runtime-stability-v2.js
+          node --check scripts/publish-r2-clean-runtime-v3.js
           node --check scripts/publish-primary-contrast-music-continuity.js
           node --check scripts/apply-site-poka-yoke-v2.js
           node --check scripts/site-regression-guard.js
+          node --check scripts/site-regression-guard-v2.js
+          node --check site-navigation.js
+          node --check site-footer-standard-v28.js
           node --check site-music-persistent-navigation-v1.js
-      - name: Materialize R2 stable shell and navigation
-        run: node scripts/publish-r2-runtime-stability.js
-      - name: Run R2 regression guard
+      - name: Materialize R2 stable shell then clean runtime
+        run: |
+          node scripts/publish-r2-runtime-stability.js
+          node scripts/publish-r2-clean-runtime-v3.js
+      - name: Run R2 clean regression guard
         run: |
           node scripts/site-regression-guard.js
           git diff --check
-      - name: Commit materialized R2 live references
+      - name: Commit materialized R2 clean references
         run: |
           if git diff --quiet; then
-            echo 'All public pages already use the R2 stable shell/navigation baseline.'
+            echo 'All public pages already use the R2 clean static-first baseline.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'R2: materialize stable shell, navigation and visual guards'
+          git commit -m 'R2: materialize atomic first paint and clean footerless runtime'
           git push origin HEAD:${{ github.event.pull_request.head.ref }}
