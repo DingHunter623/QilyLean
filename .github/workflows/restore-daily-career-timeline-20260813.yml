@@ -1,0 +1,56 @@
+name: Restore curated brief yearly project timeline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/restore-daily-career-timeline-20260813.js'
+      - '.github/workflows/restore-daily-career-timeline-20260813.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Restore yearly manufacturing project timeline
+        run: node scripts/restore-daily-career-timeline-20260813.js
+      - name: Validate syntax and exact module
+        shell: bash
+        run: |
+          node --check scripts/restore-daily-career-timeline-20260813.js
+          node --check scripts/curate-weekly-briefs.js
+          node - <<'NODE'
+          const fs=require('fs');
+          const html=fs.readFileSync('qilylean/daily-insights.html','utf8');
+          const expected=[
+            ['2026','汽车座椅开关总成制造'],['2025','小家电制造'],['2024','汽车电子、整流器'],['2023','逆变器制造'],
+            ['2022','新能源负极材料制造'],['2021','电磁阀制造'],['2020','游戏机手柄制造'],['2019','电子烟制造']
+          ];
+          if(!html.includes('主要项目履历')) throw new Error('career timeline title missing');
+          for(const [year,field] of expected){if(!html.includes(year+'年')||!html.includes(field))throw new Error('missing '+year+' '+field);}
+          if(!html.includes('data-year-filter="2026"')||!html.includes('QILY-DAILY-CAREER-YEAR-FILTER'))throw new Error('year filter missing');
+          console.log('Yearly manufacturing project timeline validation passed.');
+          NODE
+      - name: Commit restored module
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add qilylean/daily-insights.html scripts/curate-weekly-briefs.js
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: restore yearly manufacturing project timeline in curated briefs [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
