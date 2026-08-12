@@ -1,0 +1,49 @@
+/* QilyLean R2 runtime stability fixes｜2026-08-12
+ * 目标：修复深色动作按钮文字不可读、同排可信度卡片动作未沉底，以及首屏保护期间的旧版闪现。
+ * 规则来源：QL-WEB-STD-001 V2026.08.12/R2。
+ */
+
+/* VI-02｜深色按钮 normal / visited / hover / focus / active 全状态必须高对比。 */
+.qily-section-actions a.primary,
+.qily-section-actions a.primary:visited,
+.qily-section-actions a.primary:hover,
+.qily-section-actions a.primary:focus-visible,
+.qily-section-actions a.primary:active {
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#0f4b5a!important;
+  border-color:#0f4b5a!important;
+}
+
+/* 避免浏览器/历史 visited 色或全站文字语义层重新把深底按钮刷成深字。 */
+a[style*="background:#0f4b5a"],
+a[style*="background: #0f4b5a"],
+button[style*="background:#0f4b5a"],
+button[style*="background: #0f4b5a"] {
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
+/* VI-06｜同网格卡片使用纵向弹性布局，动作/信息条统一沉底。 */
+.qily-trust-wrap > .qily-value-card,
+.qily-value-card[data-qily-equal-card="true"] {
+  display:flex!important;
+  flex-direction:column!important;
+  height:100%!important;
+}
+
+.qily-trust-wrap > .qily-value-card > strong,
+.qily-value-card[data-qily-equal-card="true"] > strong {
+  margin-top:auto!important;
+}
+
+/* R2 首屏稳定性：在静态共享样式与当前文档准备完成前，不展示旧壳层。 */
+html.qily-r2-first-paint-pending body {
+  visibility:hidden!important;
+}
+
+@media print {
+  html.qily-r2-first-paint-pending body {
+    visibility:visible!important;
+  }
+}
