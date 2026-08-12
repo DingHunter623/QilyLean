@@ -176,7 +176,7 @@ function pageShell(title, description, canonical, body) {
 <link rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
 <link rel="stylesheet" href="/site-link-standard-v2.css?v=20260801-global-link-v5">
 ${commercialStyles()}
-<script defer src="/site-navigation.js?v=20260810-native-navigation-stable-v19"></script>
+<script defer src="/site-navigation.js?v=20260812-native-navigation-stable-v20"></script>
 </head>
 <body>
 <main class="main">${body}</main>

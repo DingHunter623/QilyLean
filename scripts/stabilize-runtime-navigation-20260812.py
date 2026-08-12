@@ -4,9 +4,9 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_EXT = {'.js','.mjs','.cjs','.ts','.py','.html','.htm','.css','.json','.xml','.md','.yml','.yaml'}
-LAYOUT_OLD = '20260810-stable-layout-v19'
+LAYOUT_OLD = '20260812-runtime-stability-v20'
 LAYOUT_NEW = '20260812-runtime-stability-v20'
-NAV_OLD = '20260810-native-navigation-stable-v19'
+NAV_OLD = '20260812-native-navigation-stable-v20'
 NAV_NEW = '20260812-native-navigation-stable-v20'
 FOOTER_VERSION = '20260812-footer-runtime-stable-v34'
 MUSIC_VERSION = '20260812-gesture-music-v29'
@@ -333,8 +333,9 @@ def patch_publisher():
 def patch_self_heal():
     rel='scripts/apply-site-poka-yoke-v1.js'
     src=read(rel)
-    escaped=SOFT_NAV_SOURCE.replace('\\','\\\\').replace('`','\\`').replace('${','\\${')
-    src, n = re.subn(r'const softNavigationSource = `[\s\S]*?`;\n\nfunction patchSoftNavigation', 'const softNavigationSource = `'+escaped+'`;\n\nfunction patchSoftNavigation', src, count=1)
+    escaped=SOFT_NAV_SOURCE.replace('`','\\`').replace('${','\\${')
+    replacement = 'const softNavigationSource = String.raw`'+escaped+'`;\n\nfunction patchSoftNavigation'
+    src, n = re.subn(r'const softNavigationSource = (?:String.raw)?`[\s\S]*?`;\n\nfunction patchSoftNavigation', lambda _m: replacement, src, count=1)
     if n != 1: raise RuntimeError('poka-yoke softNavigationSource block not found')
     # 让自愈逻辑知道当前正式版本，防止未来旧基线复写。
     fn_pattern=r"function patchMusicPublisher\(\) \{[\s\S]*?\n\}\n\nfunction runNode"
@@ -352,7 +353,7 @@ def patch_self_heal():
 }
 
 function runNode'''
-    src, n = re.subn(fn_pattern, fn_repl, src, count=1)
+    src, n = re.subn(fn_pattern, lambda _m: fn_repl, src, count=1)
     if n != 1: raise RuntimeError('poka-yoke patchMusicPublisher block not found')
     return write(rel,src)
 

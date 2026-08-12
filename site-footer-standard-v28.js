@@ -191,15 +191,26 @@
   function ensureFooter() {
     if (!d.body) return null;
     var footer = d.getElementById(FOOTER_ID);
+    var created = false;
     if (!footer) {
       footer = d.createElement('footer');
       footer.id = FOOTER_ID;
       d.body.appendChild(footer);
+      created = true;
     }
     footer.className = 'qily-global-footer-v31 qily-global-footer-v32 qily-global-footer-v33 qily-global-footer-v34';
     footer.setAttribute('data-qily-footer-standard', 'v34');
     footer.setAttribute('aria-label', 'QilyLean全站统一页尾');
-    footer.innerHTML = footerMarkup();
+    var label = moduleLabel();
+    var moduleNode = footer.querySelector('.qily-footer-v31-module');
+    if (created || !moduleNode || footer.getAttribute('data-qily-footer-rendered') !== 'v34') {
+      footer.innerHTML = footerMarkup();
+      footer.setAttribute('data-qily-footer-rendered', 'v34');
+      footer.setAttribute('data-qily-footer-module', label);
+    } else if (footer.getAttribute('data-qily-footer-module') !== label) {
+      moduleNode.textContent = label;
+      footer.setAttribute('data-qily-footer-module', label);
+    }
     return footer;
   }
 
@@ -215,8 +226,6 @@
 
   function boot() {
     normalize();
-    [80, 220, 520, 1000, 1800, 3000].forEach(function (delay) { w.setTimeout(normalize, delay); });
-
     if (w.MutationObserver) {
       var scheduled = false;
       var legacySelector = 'footer,.module-footer,.footer,.site-footer,.page-footer,#qilyGlobalContactFooter,.qily-global-contact-footer,.qily-global-contact-footer-shell,#qtc-global-trust-footer,.qtc-global-trust-footer';
@@ -238,6 +247,14 @@
       observer.observe(d.body, { childList: true, subtree: true });
     }
   }
+
+
+  d.addEventListener('qily:softnavigate', function () {
+    w.requestAnimationFrame(normalize);
+  });
+  w.addEventListener('pageshow', function (event) {
+    if (event.persisted) w.requestAnimationFrame(normalize);
+  });
 
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot, { once: true });
   else boot();

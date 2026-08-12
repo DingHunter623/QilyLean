@@ -6,8 +6,8 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const version = '20260810-stable-layout-v15';
-const layoutVersion = '20260810-stable-layout-v19';
-const navVersion = '20260810-native-navigation-stable-v19';
+const layoutVersion = '20260812-runtime-stability-v20';
+const navVersion = '20260812-native-navigation-stable-v20';
 const musicVersion = '20260810-demand-music-v6';
 const href = `/site-interactive-hover-contrast-v1.css?v=${version}`;
 const layoutHref = `/site-layout-footer-closure-v1.css?v=${layoutVersion}`;
@@ -281,7 +281,7 @@ function validateLoadOrder() {
   assert(!navigation.includes('observer.observe(d.body, { childList:true })'), 'Tail compaction must not keep a permanent body observer.');
   assert(!floatingService.includes('20260729-no-old-flash-v1'), 'Floating-service runtime still requests the stale navigation loader.');
   assert(floatingService.includes('document.querySelector(\'script[src*="/site-navigation.js"]\')'), 'Floating-service runtime must reuse an existing navigation loader.');
-  assert(floatingService.includes('20260810-native-navigation-stable-v19'), 'Floating-service fallback must use the current navigation version.');
+  assert(floatingService.includes('20260812-native-navigation-stable-v20'), 'Floating-service fallback must use the current navigation version.');
   assert(homeBriefSync.includes('20260810-no-new-badge-v3'), 'Homepage brief sync must preserve the no-NEW interaction cache version.');
   assert(!homeBriefSync.includes('20260809-latest-brief-cta-v1'), 'Homepage brief sync still restores the stale NEW-badge cache version.');
   assert(homeBriefWorkflow.includes('20260810-no-new-badge-v3'), 'Homepage brief workflow validates a stale interaction cache version.');
@@ -304,8 +304,8 @@ function validatePublicPages() {
     publicPages += 1;
     actionControls += (html.match(/<button\b|<input\b[^>]*type=["'](?:button|submit)["']|<a\b[^>]*class=["'][^"']*(?:button|action|btn|cta)/gi) || []).length;
     if (/site-interactive-hover-contrast-v1\.css\?v=(?!20260810-stable-layout-v15)/i.test(html)) staleBeforeMaterialization += 1;
-    if (/site-layout-footer-closure-v1\.css\?v=(?!20260810-stable-layout-v19)/i.test(html)) staleLayoutBeforeMaterialization += 1;
-    if (/site-navigation\.js\?v=(?!20260810-native-navigation-stable-v19)/i.test(html)) staleNavigationBeforeMaterialization += 1;
+    if (/site-layout-footer-closure-v1\.css\?v=(?!20260812-runtime-stability-v20)/i.test(html)) staleLayoutBeforeMaterialization += 1;
+    if (/site-navigation\.js\?v=(?!20260812-native-navigation-stable-v20)/i.test(html)) staleNavigationBeforeMaterialization += 1;
     if (/(?:\/qilylean\/)?floating-service\.js\?v=(?!20260810-native-navigation-dedupe-v1)/i.test(html)) staleFloatingServiceBeforeMaterialization += 1;
 
     const candidate = materializeInMemory(html);

@@ -65,8 +65,8 @@ includes(latest, 'data-brief-message-form', 'Latest page contains message form')
 includes(latest, '留言交流', 'Latest page contains message section');
 includes(latest, 'site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1', 'Latest page loads number-badge contrast');
 includes(latest, 'site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15', 'Latest page loads current interactive contrast');
-includes(latest, 'site-layout-footer-closure-v1.css?v=20260810-stable-layout-v19', 'Latest page loads current layout closure');
-includes(latest, 'site-navigation.js?v=20260810-native-navigation-stable-v19', 'Latest page loads current native navigation');
+includes(latest, 'site-layout-footer-closure-v1.css?v=20260812-runtime-stability-v20', 'Latest page loads current layout closure');
+includes(latest, 'site-navigation.js?v=20260812-native-navigation-stable-v20', 'Latest page loads current native navigation');
 assert(!latest.includes('site-music-persistent-navigation-v1.js'), 'Latest page does not load iframe navigation');
 assert(!latest.includes('qilyBackgroundMusicPreload'), 'Latest page does not preload background audio');
 includes(navigation, 'site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2', 'Navigation loader supplies current visual closure');

@@ -8,8 +8,8 @@ const root = path.resolve(__dirname, '..');
 const self = path.resolve(__filename);
 
 const replacements = [
-  ['20260810-stable-layout-v18', '20260810-stable-layout-v19'],
-  ['20260810-native-navigation-stable-v18', '20260810-native-navigation-stable-v19']
+  ['20260810-stable-layout-v18', '20260812-runtime-stability-v20'],
+  ['20260810-native-navigation-stable-v18', '20260812-native-navigation-stable-v20']
 ];
 
 const textExtensions = new Set([
@@ -73,10 +73,10 @@ for (const relative of mustContainV19) {
   const file = path.join(root, relative);
   if (!fs.existsSync(file)) throw new Error(`Required live source missing: ${relative}`);
   const text = fs.readFileSync(file, 'utf8');
-  if (!text.includes('20260810-stable-layout-v19')) {
+  if (!text.includes('20260812-runtime-stability-v20')) {
     throw new Error(`V19 layout reference missing after cache-bust: ${relative}`);
   }
-  if (relative.endsWith('.html') && !text.includes('20260810-native-navigation-stable-v19')) {
+  if (relative.endsWith('.html') && !text.includes('20260812-native-navigation-stable-v20')) {
     throw new Error(`V19 navigation reference missing after cache-bust: ${relative}`);
   }
 }

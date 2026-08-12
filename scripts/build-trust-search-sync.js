@@ -17,7 +17,7 @@ const sitemapFiles = ['sitemap.xml', 'sitemap-core.xml'].map((name) => path.join
 const interactionClosureBlock = `<!-- QILY-NUMBER-BADGE-CONTRAST:START -->
   <link id="qilyNumberBadgeContrastStylesheet" rel="stylesheet" href="/site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1">
   <link id="qilyInteractiveHoverContrastStylesheet" rel="stylesheet" href="/site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15">
-  <link id="qilyLayoutFooterClosureStylesheet" rel="stylesheet" href="/site-layout-footer-closure-v1.css?v=20260810-stable-layout-v19">
+  <link id="qilyLayoutFooterClosureStylesheet" rel="stylesheet" href="/site-layout-footer-closure-v1.css?v=20260812-runtime-stability-v20">
 <!-- QILY-NUMBER-BADGE-CONTRAST:END -->`;
 
 function read(file) {
@@ -124,7 +124,7 @@ function trustPage(data) {
     }
   })}</script>
 <script data-qily-shell-bootstrap>(function(d){var e=d.documentElement;e.classList.add("qily-shell-pending");window.__qilyLeanRevealCurrentShell=function(){e.classList.remove("qily-shell-pending")};setTimeout(window.__qilyLeanRevealCurrentShell,1800)})(document);</script>
-<link rel="stylesheet" href="/site-shell.css?v=20260729-no-old-flash-v1"><link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=20260729-hierarchy-v4"><link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260810-content-axis-v8"><link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4"><script defer src="/site-navigation.js?v=20260810-native-navigation-stable-v19"></script>
+<link rel="stylesheet" href="/site-shell.css?v=20260729-no-old-flash-v1"><link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=20260729-hierarchy-v4"><link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260810-content-axis-v8"><link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4"><script defer src="/site-navigation.js?v=20260812-native-navigation-stable-v20"></script>
 <link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="/site-link-standard-v2.css?v=20260801-global-link-v5">
 <link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2">
 ${interactionClosureBlock}

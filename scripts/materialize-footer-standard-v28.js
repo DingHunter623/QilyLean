@@ -6,12 +6,12 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const CSS_VERSION = '20260811-footer-subdirectories-v33';
-const SCRIPT_VERSION = '20260811-footer-subdirectories-v33';
+const CSS_VERSION = '20260812-footer-runtime-stable-v34';
+const SCRIPT_VERSION = '20260812-footer-runtime-stable-v34';
 const CSS_HREF = `/site-footer-standard-v28.css?v=${CSS_VERSION}`;
 const SCRIPT_SRC = `/site-footer-standard-v28.js?v=${SCRIPT_VERSION}`;
 const CSS_TAG = `<link id="qilyFooterStandardV28Stylesheet" rel="stylesheet" href="${CSS_HREF}">`;
-const SCRIPT_TAG = `<script defer id="qilyFooterStandardV28Script" data-qily-footer-standard="v33" src="${SCRIPT_SRC}"></script>`;
+const SCRIPT_TAG = `<script defer id="qilyFooterStandardV28Script" data-qily-footer-standard="v34" src="${SCRIPT_SRC}"></script>`;
 
 function listHtml(directory, prefix = '') {
   const out = [];
@@ -57,15 +57,15 @@ for (const relative of files) {
   if (v26Matches.length !== 0) throw new Error(`${relative}: obsolete V26 footer runtime still present`);
 
   if (after === before) continue;
-  if (checkOnly) throw new Error(`${relative}: V33 nested-page footer standard is not materialized`);
+  if (checkOnly) throw new Error(`${relative}: V34 stable footer standard is not materialized`);
   fs.writeFileSync(absolute, after, 'utf8');
   changed += 1;
   changedFiles.push(relative);
 }
 
 if (checkOnly) {
-  process.stdout.write(`V33 nested-page footer contract passed for ${eligible} HTML files.\n`);
+  process.stdout.write(`V34 stable footer contract passed for ${eligible} HTML files.\n`);
 } else {
-  process.stdout.write(`V33 nested-page footer standard materialized in ${changed}/${eligible} HTML files.\n`);
+  process.stdout.write(`V34 stable footer standard materialized in ${changed}/${eligible} HTML files.\n`);
   if (changedFiles.length) process.stdout.write(changedFiles.slice(0, 40).join('\n') + (changedFiles.length > 40 ? '\n…\n' : '\n'));
 }

@@ -56,19 +56,29 @@ includesAll(music, [
   'window.__qilyLeanMusicWriteState = writeState'
 ], 'music state');
 includesAll(softNav, [
-  'window.__qilySoftNavigationV3',
+  'window.__qilySoftNavigationV4',
   'siteBackgroundMusic',
   'fetch(url.href',
   'history.pushState',
   "new CustomEvent('qily:softnavigate'",
+  'reconcileHeadAssets',
+  'data-qily-soft-nav-scope',
+  'preparePageAssets',
   'window.__qilyPersistentNavigate'
 ], 'soft navigation');
 includesAll(musicPublisher, [
-  "const NAV_VERSION = '20260811-soft-navigation-v3'",
+  "const NAV_VERSION = '20260812-soft-navigation-v4'",
   'qilyPersistentMusicNavigationScript',
-  'data-qily-persistent-music-navigation="v3"',
+  'data-qily-persistent-music-navigation="v4"',
   'soft-navigation marker missing'
 ], 'music publisher');
+
+
+assert(!music.includes("audio.addEventListener('timeupdate', writeState"), 'music: timeupdate storage writes must stay removed');
+includesAll(music, ['resumeExpected', "audio.preload = resumeExpected ? 'auto' : 'metadata'", "window.addEventListener('pageshow', resumeFromSavedState)"], 'music native-navigation resume');
+assert(!read('site-footer-standard-v28.js').includes('[80, 220, 520, 1000, 1800, 3000]'), 'footer: delayed rewrite loop returned');
+assert(!read('site-navigation.js').includes('[120,600]'), 'navigation: delayed stylesheet reorder returned');
+assert(!read('site-navigation.js').includes('[250,900,1800]'), 'navigation: delayed tail compaction loop returned');
 
 // 4) 防呆工作流本身必须存在，形成 push + 定时复检双保险。
 const workflow = read('.github/workflows/site-regression-poka-yoke.yml');
@@ -79,4 +89,4 @@ includesAll(workflow, [
   'contents: write'
 ], 'poka-yoke workflow');
 
-process.stdout.write('QilyLean regression guard passed: career static baseline, dark-surface readability, music continuity and self-heal workflow are intact.\n');
+process.stdout.write('QilyLean regression guard passed: career static baseline, dark-surface readability, music continuity V4, runtime layout stability and self-heal workflow are intact.\n');

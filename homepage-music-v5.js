@@ -8,7 +8,7 @@
   var AUDIO_SRC = '/%E6%88%91%E7%9A%84%E6%A2%A6%EF%BC%88%E5%BC%A0%E9%9D%93%E9%A2%96%EF%BC%89.mp3';
   var STATE_KEY = 'qilyleanBackgroundMusicStateV2';
   var DEFAULT_VOLUME = 0.36;
-  var TRANSIT_COMPENSATION_CAP = 0.25;
+  var TRANSIT_COMPENSATION_CAP = 1.2;
   var DRAG_THRESHOLD = 5;
   var restoredPosition = false;
   var audioRequested = false;
@@ -17,6 +17,7 @@
   var manualPaused = savedState
     ? Boolean(savedState.manualPaused !== undefined ? savedState.manualPaused : savedState.muted)
     : false;
+  var resumeExpected = Boolean(savedState && savedState.playing && !manualPaused);
 
   removeAudioPreload();
 
@@ -26,7 +27,7 @@
 
   var audio = document.createElement('audio');
   audio.id = 'siteBackgroundMusic';
-  audio.preload = 'none';
+  audio.preload = resumeExpected ? 'auto' : 'metadata';
   audio.autoplay = false;
   audio.loop = true;
   audio.volume = DEFAULT_VOLUME;
@@ -147,7 +148,7 @@
     if (audioRequested) return;
     audioRequested = true;
     audio.src = AUDIO_SRC;
-    audio.preload = 'metadata';
+    audio.preload = resumeExpected ? 'auto' : 'metadata';
     audio.addEventListener('loadedmetadata', applySavedPosition, { once: true });
   }
 
@@ -283,6 +284,18 @@
     } catch (error) {}
   }, true);
 
+  function resumeFromSavedState() {
+    if (!resumeExpected || manualPaused) return;
+    ensureAudioSource();
+    startPlayback(false);
+  }
+
+  if (resumeExpected) {
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', resumeFromSavedState, { once: true });
+    else window.setTimeout(resumeFromSavedState, 0);
+  }
+  window.addEventListener('pageshow', resumeFromSavedState);
+
   function clamp(value, min, max) {
     return Math.min(Math.max(value, min), Math.max(min, max));
   }
@@ -294,10 +307,9 @@
   document.addEventListener('visibilitychange', function () {
     if (document.visibilityState === 'hidden') writeState();
   });
-  audio.addEventListener('timeupdate', writeState, { passive: true });
   window.setInterval(function () {
     if (audioRequested && !audio.paused) writeState();
-  }, 5000);
+  }, 3500);
 
   window.__qilyLeanMusicWriteState = writeState;
 })();

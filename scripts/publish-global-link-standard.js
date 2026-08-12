@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const navigationScript = '/site-navigation.js?v=20260810-native-navigation-stable-v19';
+const navigationScript = '/site-navigation.js?v=20260812-native-navigation-stable-v20';
 const linkStylesheet = '/site-link-standard-v2.css?v=20260803-nav-four-border-v6';
 const navigationBorderStylesheet = '/site-navigation-four-border-v3.css?v=20260803-four-border-v3';
 const darkStylesheet = '/site-dark-surface-contrast-v1.css?v=20260801-dark-surface-v2';

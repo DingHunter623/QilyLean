@@ -5,9 +5,9 @@
   w.__qilyFooterV26BridgeToV28 = true;
 
   var CSS_ID = 'qilyFooterStandardV28Stylesheet';
-  var CSS_HREF = '/site-footer-standard-v28.css?v=20260810-footer-standard-v28';
+  var CSS_HREF = '/site-footer-standard-v28.css?v=20260812-footer-runtime-stable-v34';
   var SCRIPT_ID = 'qilyFooterStandardV28Script';
-  var SCRIPT_SRC = '/site-footer-standard-v28.js?v=20260810-footer-standard-v28';
+  var SCRIPT_SRC = '/site-footer-standard-v28.js?v=20260812-footer-runtime-stable-v34';
 
   function ensureCss() {
     var node = d.getElementById(CSS_ID);
