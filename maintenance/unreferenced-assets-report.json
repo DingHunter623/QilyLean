@@ -1,0 +1,5139 @@
+{
+  "generatedAt": "2026-08-12T15:49:03.590Z",
+  "mode": "apply",
+  "trackedFiles": 1456,
+  "scannedTextFiles": 1209,
+  "assetFiles": 560,
+  "retainedAssets": 541,
+  "unreferencedAssets": 19,
+  "potentialBytesToRelease": 46270188,
+  "potentialReleaseHuman": "44.13 MiB",
+  "deletionRatioByCount": 3.39,
+  "deletionRatioByBytes": 15.6,
+  "deletedAssets": 19,
+  "deletedBytes": 46270188,
+  "deletedHuman": "44.13 MiB",
+  "safetyStop": false,
+  "note": "Current-branch cleanup only. Git history retains older blobs until a separately approved history rewrite. The cleanup report itself is excluded from reference scanning. Versioned URLs, URL-encoded paths, absolute site URLs, direct paths and unique basenames are recognized as live references.",
+  "deletable": [
+    {
+      "path": "zhinengmujuku.mp4",
+      "bytes": 22723851,
+      "humanBytes": "21.67 MiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "NF2#-1F方案2_01.png",
+      "bytes": 4877720,
+      "humanBytes": "4.65 MiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "NF2#-1F方案1_01.png",
+      "bytes": 4822574,
+      "humanBytes": "4.60 MiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "factory-layout.png",
+      "bytes": 2210644,
+      "humanBytes": "2.11 MiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "qilylean/assets/2026-08-07-leopard.png",
+      "bytes": 2109085,
+      "humanBytes": "2.01 MiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "qilylean/assets/2026-08-07-wolf.png",
+      "bytes": 2088485,
+      "humanBytes": "1.99 MiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "qilylean/assets/2026-08-07-tiger.png",
+      "bytes": 2003392,
+      "humanBytes": "1.91 MiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "qilylean/assets/2026-08-07-dog.png",
+      "bytes": 1934645,
+      "humanBytes": "1.85 MiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "qilylean/assets/2026-08-07-eagle.png",
+      "bytes": 1889755,
+      "humanBytes": "1.80 MiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "qilylean/assets/legal/qilylean-confidentiality-statement-v1.png",
+      "bytes": 820242,
+      "humanBytes": "801.02 KiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "media/moments/interior-design-weibo-hngwgsv2l-01.svg",
+      "bytes": 240372,
+      "humanBytes": "234.74 KiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "media/moments/interior-design-weibo-hngwgsv2l-02.svg",
+      "bytes": 129512,
+      "humanBytes": "126.48 KiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "projects/factory-layout/previews/nf2-1f-scheme-1-1440.webp",
+      "bytes": 90990,
+      "humanBytes": "88.86 KiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "projects/factory-layout/previews/nf2-1f-scheme-2-1440.webp",
+      "bytes": 90602,
+      "humanBytes": "88.48 KiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "projects/factory-layout/previews/4-1f-1440.webp",
+      "bytes": 85008,
+      "humanBytes": "83.02 KiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "projects/factory-layout/previews/nf2-2f-1440.webp",
+      "bytes": 81336,
+      "humanBytes": "79.43 KiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "projects/factory-layout/previews/nf2-3f-1440.webp",
+      "bytes": 59242,
+      "humanBytes": "57.85 KiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "qilylean/assets/legal/qilylean-trust-qr.svg",
+      "bytes": 7496,
+      "humanBytes": "7.32 KiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    },
+    {
+      "path": "qilylean/assets/homepage-qr.svg",
+      "bytes": 5237,
+      "humanBytes": "5.11 KiB",
+      "reason": "no-current-reference-found",
+      "sources": []
+    }
+  ],
+  "retained": [
+    {
+      "path": "2#-3F_01.png",
+      "bytes": 2329034,
+      "humanBytes": "2.22 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "2#厂房1F车间规划_01.png",
+      "bytes": 1649843,
+      "humanBytes": "1.57 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "2#厂房2F车间规划_01.png",
+      "bytes": 1349147,
+      "humanBytes": "1.29 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "2#厂房3F车间规划_01.png",
+      "bytes": 1255783,
+      "humanBytes": "1.20 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "2017年9月份团建东莞第一峰.jpg",
+      "bytes": 892598,
+      "humanBytes": "871.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/team/index.html"
+      ]
+    },
+    {
+      "path": "2017年冬季公司年会.jpg",
+      "bytes": 617473,
+      "humanBytes": "603.00 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/team/index.html"
+      ]
+    },
+    {
+      "path": "2018年10月份公司培训晚上休憩.jpg",
+      "bytes": 2323428,
+      "humanBytes": "2.22 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/team/index.html"
+      ]
+    },
+    {
+      "path": "2020年10月份深圳梧桐山好汉坡团建.jpg",
+      "bytes": 1070546,
+      "humanBytes": "1.02 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/team/index.html"
+      ]
+    },
+    {
+      "path": "2023年6月份带团队温州洞头包船游览.jpg",
+      "bytes": 2972591,
+      "humanBytes": "2.83 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/team/index.html"
+      ]
+    },
+    {
+      "path": "300T.png",
+      "bytes": 1821488,
+      "humanBytes": "1.74 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/project-images-v2.js"
+      ]
+    },
+    {
+      "path": "4#-1F_01.png",
+      "bytes": 1717792,
+      "humanBytes": "1.64 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "assets/brand/qilylean-logo.svg",
+      "bytes": 1226,
+      "humanBytes": "1.20 KiB",
+      "reason": "protected-source-or-core-asset",
+      "sources": []
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/qilylean-home-qr.png",
+      "bytes": 21240,
+      "humanBytes": "20.74 KiB",
+      "reason": "protected-source-or-core-asset",
+      "sources": []
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/qilylean-wechat-qr.png",
+      "bytes": 23335,
+      "humanBytes": "22.79 KiB",
+      "reason": "protected-source-or-core-asset",
+      "sources": []
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/sheets/sheet-01.webp",
+      "bytes": 57700,
+      "humanBytes": "56.35 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/sheets/sheet-02.webp",
+      "bytes": 68444,
+      "humanBytes": "66.84 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/sheets/sheet-03.webp",
+      "bytes": 175596,
+      "humanBytes": "171.48 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/sheets/sheet-04.webp",
+      "bytes": 160814,
+      "humanBytes": "157.04 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/sheets/sheet-05.webp",
+      "bytes": 126794,
+      "humanBytes": "123.82 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/sheets/sheet-06.webp",
+      "bytes": 102222,
+      "humanBytes": "99.83 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/sheets/sheet-07.webp",
+      "bytes": 54388,
+      "humanBytes": "53.11 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/sheets/sheet-08.webp",
+      "bytes": 81074,
+      "humanBytes": "79.17 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/sheets/sheet-09.webp",
+      "bytes": 45762,
+      "humanBytes": "44.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/sheets/sheet-10.webp",
+      "bytes": 61652,
+      "humanBytes": "60.21 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-01.webp",
+      "bytes": 32872,
+      "humanBytes": "32.10 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-02.webp",
+      "bytes": 45086,
+      "humanBytes": "44.03 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-03.webp",
+      "bytes": 43270,
+      "humanBytes": "42.26 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-04.webp",
+      "bytes": 48622,
+      "humanBytes": "47.48 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-05.webp",
+      "bytes": 75610,
+      "humanBytes": "73.84 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-06.webp",
+      "bytes": 50778,
+      "humanBytes": "49.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-07.webp",
+      "bytes": 33182,
+      "humanBytes": "32.40 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-08.webp",
+      "bytes": 57576,
+      "humanBytes": "56.23 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-09.webp",
+      "bytes": 55206,
+      "humanBytes": "53.91 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-10.webp",
+      "bytes": 59818,
+      "humanBytes": "58.42 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-11.webp",
+      "bytes": 56014,
+      "humanBytes": "54.70 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-12.webp",
+      "bytes": 54922,
+      "humanBytes": "53.63 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-13.webp",
+      "bytes": 60166,
+      "humanBytes": "58.76 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-14.webp",
+      "bytes": 62392,
+      "humanBytes": "60.93 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-15.webp",
+      "bytes": 55760,
+      "humanBytes": "54.45 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-16.webp",
+      "bytes": 55274,
+      "humanBytes": "53.98 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-17.webp",
+      "bytes": 64948,
+      "humanBytes": "63.43 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-18.webp",
+      "bytes": 63566,
+      "humanBytes": "62.08 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-19.webp",
+      "bytes": 52086,
+      "humanBytes": "50.87 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-20.webp",
+      "bytes": 40836,
+      "humanBytes": "39.88 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/knowledge/production-operations-organization/slides/slide-21.webp",
+      "bytes": 56900,
+      "humanBytes": "55.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence.svg",
+      "bytes": 3440,
+      "humanBytes": "3.36 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/index.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/award-public-hd.pdf",
+      "bytes": 3735873,
+      "humanBytes": "3.56 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/award-online-view.html",
+        "projects/lean-improvement-evidence/award-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/award/page-01.jpg",
+      "bytes": 1179456,
+      "humanBytes": "1.12 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/award-online-view.html",
+        "projects/lean-improvement-evidence/award-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/award/page-02.jpg",
+      "bytes": 1250556,
+      "humanBytes": "1.19 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/award-online-view.html",
+        "projects/lean-improvement-evidence/award-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/award/page-03.jpg",
+      "bytes": 1303914,
+      "humanBytes": "1.24 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/award-online-view.html",
+        "projects/lean-improvement-evidence/award-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q3-public-hd.pdf",
+      "bytes": 12369138,
+      "humanBytes": "11.80 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q3-online-view.html",
+        "projects/lean-improvement-evidence/q3-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q3/page-01.jpg",
+      "bytes": 2340480,
+      "humanBytes": "2.23 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q3-online-view.html",
+        "projects/lean-improvement-evidence/q3-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q3/page-02.jpg",
+      "bytes": 2619090,
+      "humanBytes": "2.50 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q3-online-view.html",
+        "projects/lean-improvement-evidence/q3-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q3/page-03.jpg",
+      "bytes": 2537215,
+      "humanBytes": "2.42 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q3-online-view.html",
+        "projects/lean-improvement-evidence/q3-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q3/page-04.jpg",
+      "bytes": 1824972,
+      "humanBytes": "1.74 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q3-online-view.html",
+        "projects/lean-improvement-evidence/q3-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q3/page-05.jpg",
+      "bytes": 3044614,
+      "humanBytes": "2.90 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q3-online-view.html",
+        "projects/lean-improvement-evidence/q3-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q4-public-hd.pdf",
+      "bytes": 15123109,
+      "humanBytes": "14.42 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q4-online-view.html",
+        "projects/lean-improvement-evidence/q4-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q4/page-01.jpg",
+      "bytes": 1302529,
+      "humanBytes": "1.24 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q4-online-view.html",
+        "projects/lean-improvement-evidence/q4-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q4/page-02.jpg",
+      "bytes": 1865963,
+      "humanBytes": "1.78 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q4-online-view.html",
+        "projects/lean-improvement-evidence/q4-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q4/page-03.jpg",
+      "bytes": 1603069,
+      "humanBytes": "1.53 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q4-online-view.html",
+        "projects/lean-improvement-evidence/q4-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q4/page-04.jpg",
+      "bytes": 1782533,
+      "humanBytes": "1.70 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q4-online-view.html",
+        "projects/lean-improvement-evidence/q4-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q4/page-05.jpg",
+      "bytes": 1779360,
+      "humanBytes": "1.70 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q4-online-view.html",
+        "projects/lean-improvement-evidence/q4-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q4/page-06.jpg",
+      "bytes": 1800374,
+      "humanBytes": "1.72 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q4-online-view.html",
+        "projects/lean-improvement-evidence/q4-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q4/page-07.jpg",
+      "bytes": 1753176,
+      "humanBytes": "1.67 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q4-online-view.html",
+        "projects/lean-improvement-evidence/q4-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q4/page-08.jpg",
+      "bytes": 1708706,
+      "humanBytes": "1.63 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q4-online-view.html",
+        "projects/lean-improvement-evidence/q4-preview.html"
+      ]
+    },
+    {
+      "path": "assets/projects/lean-improvement-evidence/q4/page-09.jpg",
+      "bytes": 1523305,
+      "humanBytes": "1.45 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/lean-improvement-evidence/q4-online-view.html",
+        "projects/lean-improvement-evidence/q4-preview.html"
+      ]
+    },
+    {
+      "path": "assets/tools/qilylean-unified-app-icon.svg",
+      "bytes": 1146,
+      "humanBytes": "1.12 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/build-qilylean-home.yml",
+        ".github/workflows/export-unified-qily-app-icons.yml",
+        ".github/workflows/release-qilylean-home-store.yml",
+        "app-store/UNIFIED_APP_ICON_POLICY.md",
+        "app-store/qilylean-home/README.md",
+        "app-store/times26001/README.md",
+        "capabilities/index.html",
+        "scripts/finalize-unified-app-release.py"
+      ]
+    },
+    {
+      "path": "assets/tools/qr-qilylean-home-download.svg",
+      "bytes": 8591,
+      "humanBytes": "8.39 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/refine-app-download-share-20260808.yml",
+        "app-download-share-v1.js",
+        "scripts/repair_qilylean_home_download_20260809.py"
+      ]
+    },
+    {
+      "path": "assets/tools/qr-times26001-download.svg",
+      "bytes": 8979,
+      "humanBytes": "8.77 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/refine-app-download-share-20260808.yml",
+        "app-download-share-v1.js"
+      ]
+    },
+    {
+      "path": "assets/tools/times26001-overview.svg",
+      "bytes": 5998,
+      "humanBytes": "5.86 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/audit-app-release-association.yml",
+        ".github/workflows/correct-app-website-release-status-20260807.yml",
+        ".github/workflows/normalize-times26001-identity.yml",
+        ".github/workflows/publish-times26001-v1110-official-website-fix-20260809.yml",
+        ".github/workflows/sync-times26001-v118-location-site-20260809.yml",
+        ".github/workflows/sync-times26001-v119-site-20260809.yml",
+        "capabilities/index.html",
+        "scripts/correct_app_website_release_status_20260807.py",
+        "scripts/sync_app_release_association_20260807.py",
+        "times26001-home-card.js",
+        "tools/times26001/index.html"
+      ]
+    },
+    {
+      "path": "downloads/production-operations-organization/QilyLean-Production-Operations-Organization-1000-2000.pptx",
+      "bytes": 141880,
+      "humanBytes": "138.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html",
+        "scripts/test-maintenance-fixes.js"
+      ]
+    },
+    {
+      "path": "downloads/production-operations-organization/QilyLean-Production-Operations-Staffing-KPI-1000-2000.xlsx",
+      "bytes": 73995,
+      "humanBytes": "72.26 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/production-operations-organization.html",
+        "scripts/test-maintenance-fixes.js"
+      ]
+    },
+    {
+      "path": "fuse-cutting-after.jpg",
+      "bytes": 378559,
+      "humanBytes": "369.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/project-images-v2.js"
+      ]
+    },
+    {
+      "path": "fuse-cutting-before.jpg",
+      "bytes": 555453,
+      "humanBytes": "542.43 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/project-images-v2.js"
+      ]
+    },
+    {
+      "path": "guangzhou.jpg",
+      "bytes": 6114876,
+      "humanBytes": "5.83 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "guangzhou.webp",
+      "bytes": 1056606,
+      "humanBytes": "1.01 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "guofu.jpg",
+      "bytes": 1386892,
+      "humanBytes": "1.32 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "guofu.webp",
+      "bytes": 217166,
+      "humanBytes": "212.08 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "media/moments/interior-design-weibo-hngwgsv2l-01.png",
+      "bytes": 179969,
+      "humanBytes": "175.75 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "media/moments/interior-design-weibo-hngwgsv2l-02.png",
+      "bytes": 96833,
+      "humanBytes": "94.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "media/projects/300t.webp",
+      "bytes": 140576,
+      "humanBytes": "137.28 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/index.html",
+        "projects/smed-300t/index.html",
+        "qilylean/project-media-home.js"
+      ]
+    },
+    {
+      "path": "media/projects/factory-layout.webp",
+      "bytes": 183064,
+      "humanBytes": "178.77 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "cooperation/factory-planning/index.html",
+        "cooperation/index.html",
+        "cooperation/visual-management/index.html"
+      ]
+    },
+    {
+      "path": "media/projects/fuse-after.webp",
+      "bytes": 23016,
+      "humanBytes": "22.48 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/fuse-improvement/index.html",
+        "qilylean/floating-service.js",
+        "qilylean/project-media-home.js"
+      ]
+    },
+    {
+      "path": "media/projects/fuse-before.webp",
+      "bytes": 18140,
+      "humanBytes": "17.71 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/fuse-improvement/index.html",
+        "projects/index.html",
+        "qilylean/floating-service.js",
+        "qilylean/project-media-home.js"
+      ]
+    },
+    {
+      "path": "media/projects/mold-after1.webp",
+      "bytes": 126424,
+      "humanBytes": "123.46 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/index.html",
+        "projects/mold-warehouse/index.html",
+        "projects/project-pages.css",
+        "qilylean/project-media-home.js",
+        "qilylean/project-mold-video.js"
+      ]
+    },
+    {
+      "path": "media/projects/mold-after2.webp",
+      "bytes": 19258,
+      "humanBytes": "18.81 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/mold-warehouse/index.html",
+        "qilylean/project-media-home.js"
+      ]
+    },
+    {
+      "path": "media/projects/mold-before.webp",
+      "bytes": 123952,
+      "humanBytes": "121.05 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/mold-warehouse/index.html",
+        "qilylean/floating-service.js",
+        "qilylean/project-media-home.js"
+      ]
+    },
+    {
+      "path": "media/projects/mold-warehouse-540.mp4",
+      "bytes": 5270913,
+      "humanBytes": "5.03 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/audit-unreferenced-assets.yml",
+        "projects/mold-warehouse/index.html",
+        "qilylean/project-mold-video.js"
+      ]
+    },
+    {
+      "path": "media/projects/shuzhihua.webp",
+      "bytes": 146664,
+      "humanBytes": "143.23 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/digital-factory/index.html",
+        "projects/index.html",
+        "qilylean/project-media-home.js"
+      ]
+    },
+    {
+      "path": "media/projects/vsm-smed.webp",
+      "bytes": 169440,
+      "humanBytes": "165.47 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "cooperation/lean-improvement/index.html",
+        "projects/automotive-lean/index.html",
+        "projects/index.html",
+        "qilylean/project-media-home.js"
+      ]
+    },
+    {
+      "path": "mold-after1.png",
+      "bytes": 2394884,
+      "humanBytes": "2.28 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "knowledge/smed-injection-mold-change.html",
+        "qilylean/project-images-v2.js"
+      ]
+    },
+    {
+      "path": "mold-after2.jpg",
+      "bytes": 550725,
+      "humanBytes": "537.82 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/project-images-v2.js"
+      ]
+    },
+    {
+      "path": "mold-before.jpg",
+      "bytes": 779202,
+      "humanBytes": "760.94 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/project-images-v2.js"
+      ]
+    },
+    {
+      "path": "nanjing.jpg",
+      "bytes": 7051000,
+      "humanBytes": "6.72 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "nanjing.webp",
+      "bytes": 1055702,
+      "humanBytes": "1.01 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "neimengqiuji.jpg",
+      "bytes": 5088219,
+      "humanBytes": "4.85 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "neimengqiuji.webp",
+      "bytes": 869462,
+      "humanBytes": "849.08 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "neimenxiaji.jpg",
+      "bytes": 1838212,
+      "humanBytes": "1.75 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "neimenxiaji.webp",
+      "bytes": 268754,
+      "humanBytes": "262.46 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "NF2#-2F_01.png",
+      "bytes": 4308754,
+      "humanBytes": "4.11 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "NF2#-3F_01.png",
+      "bytes": 3406926,
+      "humanBytes": "3.25 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "projects/factory-layout/previews/2-3f-480.webp",
+      "bytes": 9378,
+      "humanBytes": "9.16 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "projects/factory-layout/previews/4-1f-720.webp",
+      "bytes": 30824,
+      "humanBytes": "30.10 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "projects/factory-layout/previews/nf2-1f-scheme-1-720.webp",
+      "bytes": 28782,
+      "humanBytes": "28.11 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "projects/factory-layout/previews/nf2-1f-scheme-2-720.webp",
+      "bytes": 28786,
+      "humanBytes": "28.11 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "projects/factory-layout/previews/nf2-2f-720.webp",
+      "bytes": 26942,
+      "humanBytes": "26.31 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "projects/factory-layout/previews/nf2-3f-720.webp",
+      "bytes": 19486,
+      "humanBytes": "19.03 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html"
+      ]
+    },
+    {
+      "path": "QilyLean_Home_Universal_v2.0.apk",
+      "bytes": 27269,
+      "humanBytes": "26.63 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "scripts/finalize-unified-app-release.py"
+      ]
+    },
+    {
+      "path": "QilyLean_Home_Universal_v2.1.apk",
+      "bytes": 27703,
+      "humanBytes": "27.05 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "app-release-sha256.txt",
+        "scripts/finalize-unified-app-release.py",
+        "scripts/publish-qilylean-home-v2.py",
+        "scripts/release-qhome-v22.py"
+      ]
+    },
+    {
+      "path": "QilyLean_Home_Universal_v2.2.apk",
+      "bytes": 29871,
+      "humanBytes": "29.17 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/build-qhome-v231-website-apk-20260807.yml",
+        ".github/workflows/repair-qilylean-home-download-20260809.yml",
+        "QilyLean_Home_Universal_v2.2.sha256.txt",
+        "QilyLean_Home_v2.2_RELEASE.txt",
+        "app-download-share-v1.js",
+        "app-release-manifest.json",
+        "capabilities/index.html",
+        "scripts/refine_app_download_share_20260808.py",
+        "scripts/release-qhome-v22.py",
+        "scripts/repair_qilylean_home_download_20260809.py"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-07-10.svg",
+      "bytes": 2612,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-07-10.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-07-15.svg",
+      "bytes": 2606,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-07-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-07-28.svg",
+      "bytes": 2640,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-07-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-07-29.svg",
+      "bytes": 2610,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-07-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-08-07.svg",
+      "bytes": 2637,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-08-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-08-13.svg",
+      "bytes": 2632,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-08-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-08-21.svg",
+      "bytes": 2592,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-08-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-08-29.svg",
+      "bytes": 2640,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-08-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-09-07.svg",
+      "bytes": 2752,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-09-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-09-13.svg",
+      "bytes": 2693,
+      "humanBytes": "2.63 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-09-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-09-20.svg",
+      "bytes": 2594,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-09-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-09-29.svg",
+      "bytes": 2640,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-09-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-10-04.svg",
+      "bytes": 2710,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-10-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-10-08.svg",
+      "bytes": 2613,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-10-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-10-14.svg",
+      "bytes": 2584,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-10-14.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-10-21.svg",
+      "bytes": 2580,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-10-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-10-30.svg",
+      "bytes": 2650,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-10-30.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-11-08.svg",
+      "bytes": 2732,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-11-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-11-11.svg",
+      "bytes": 2620,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-11-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-11-21.svg",
+      "bytes": 2616,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-11-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-11-30.svg",
+      "bytes": 2759,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-11-30.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-12-05.svg",
+      "bytes": 2623,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-12-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-12-09.svg",
+      "bytes": 2738,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-12-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-12-17.svg",
+      "bytes": 2602,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-12-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-12-29.svg",
+      "bytes": 2596,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-12-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2019-12-31.svg",
+      "bytes": 2620,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2019-12-31.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-01-09.svg",
+      "bytes": 2726,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-01-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-01-15.svg",
+      "bytes": 2606,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-01-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-01-23.svg",
+      "bytes": 2681,
+      "humanBytes": "2.62 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-01-23.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-01-31.svg",
+      "bytes": 2765,
+      "humanBytes": "2.70 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-01-31.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-02-09.svg",
+      "bytes": 2744,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-02-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-02-15.svg",
+      "bytes": 2594,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-02-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-02-17.svg",
+      "bytes": 2602,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-02-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-03-01.svg",
+      "bytes": 2668,
+      "humanBytes": "2.61 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-03-01.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-03-02.svg",
+      "bytes": 2620,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-03-02.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-03-11.svg",
+      "bytes": 2635,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-03-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-03-17.svg",
+      "bytes": 2733,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-03-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-03-25.svg",
+      "bytes": 2620,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-03-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-04-02.svg",
+      "bytes": 2741,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-04-02.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-04-11.svg",
+      "bytes": 2611,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-04-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-04-17.svg",
+      "bytes": 2600,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-04-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-04-20.svg",
+      "bytes": 2622,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-04-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-05-03.svg",
+      "bytes": 2753,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-05-03.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-05-08.svg",
+      "bytes": 2617,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-05-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-05-12.svg",
+      "bytes": 2617,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-05-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-05-18.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-05-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-05-26.svg",
+      "bytes": 2687,
+      "humanBytes": "2.62 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-05-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-06-03.svg",
+      "bytes": 2644,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-06-03.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-06-12.svg",
+      "bytes": 2611,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-06-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-06-18.svg",
+      "bytes": 2618,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-06-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-06-26.svg",
+      "bytes": 2735,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-06-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-07-04.svg",
+      "bytes": 2614,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-07-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-07-09.svg",
+      "bytes": 2629,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-07-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-07-13.svg",
+      "bytes": 2653,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-07-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-07-21.svg",
+      "bytes": 2711,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-07-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-08-02.svg",
+      "bytes": 2593,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-08-02.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-08-04.svg",
+      "bytes": 2614,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-08-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-08-13.svg",
+      "bytes": 2635,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-08-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-08-19.svg",
+      "bytes": 2630,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-08-19.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-08-27.svg",
+      "bytes": 2705,
+      "humanBytes": "2.64 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-08-27.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-09-04.svg",
+      "bytes": 2620,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-09-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-09-13.svg",
+      "bytes": 2605,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-09-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-09-19.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-09-19.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-09-21.svg",
+      "bytes": 2596,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-09-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-10-04.svg",
+      "bytes": 2608,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-10-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-10-10.svg",
+      "bytes": 2635,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-10-10.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-10-14.svg",
+      "bytes": 2623,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-10-14.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-10-20.svg",
+      "bytes": 2697,
+      "humanBytes": "2.63 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-10-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-10-31.svg",
+      "bytes": 2599,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-10-31.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-11-05.svg",
+      "bytes": 2717,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-11-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-11-14.svg",
+      "bytes": 2611,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-11-14.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-11-20.svg",
+      "bytes": 2745,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-11-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-11-23.svg",
+      "bytes": 2604,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-11-23.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-12-06.svg",
+      "bytes": 2608,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-12-06.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-12-11.svg",
+      "bytes": 2768,
+      "humanBytes": "2.70 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-12-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-12-15.svg",
+      "bytes": 2756,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-12-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-12-21.svg",
+      "bytes": 2600,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-12-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2020-12-29.svg",
+      "bytes": 2584,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2020-12-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-01-05.svg",
+      "bytes": 2620,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-01-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-01-15.svg",
+      "bytes": 2611,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-01-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-01-20.svg",
+      "bytes": 2721,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-01-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-01-26.svg",
+      "bytes": 2575,
+      "humanBytes": "2.51 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-01-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-02-07.svg",
+      "bytes": 2629,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-02-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-02-11.svg",
+      "bytes": 2768,
+      "humanBytes": "2.70 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-02-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-02-15.svg",
+      "bytes": 2756,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-02-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-02-23.svg",
+      "bytes": 2596,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-02-23.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-03-07.svg",
+      "bytes": 2623,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-03-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-03-09.svg",
+      "bytes": 2620,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-03-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-03-18.svg",
+      "bytes": 2617,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-03-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-03-26.svg",
+      "bytes": 2590,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-03-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-04-04.svg",
+      "bytes": 2575,
+      "humanBytes": "2.51 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-04-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-04-09.svg",
+      "bytes": 2614,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-04-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-04-18.svg",
+      "bytes": 2647,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-04-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-04-24.svg",
+      "bytes": 2733,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-04-24.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-04-26.svg",
+      "bytes": 2596,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-04-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-05-09.svg",
+      "bytes": 2650,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-05-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-05-11.svg",
+      "bytes": 2599,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-05-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-05-19.svg",
+      "bytes": 2702,
+      "humanBytes": "2.64 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-05-19.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-05-27.svg",
+      "bytes": 2723,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-05-27.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-06-01.svg",
+      "bytes": 2580,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-06-01.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-06-11.svg",
+      "bytes": 2581,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-06-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-06-19.svg",
+      "bytes": 2617,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-06-19.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-06-27.svg",
+      "bytes": 2572,
+      "humanBytes": "2.51 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-06-27.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-06-30.svg",
+      "bytes": 2593,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-06-30.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-07-11.svg",
+      "bytes": 2644,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-07-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-07-16.svg",
+      "bytes": 2611,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-07-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-07-20.svg",
+      "bytes": 2641,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-07-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-07-28.svg",
+      "bytes": 2681,
+      "humanBytes": "2.62 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-07-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-08-03.svg",
+      "bytes": 2590,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-08-03.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-08-12.svg",
+      "bytes": 2587,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-08-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-08-20.svg",
+      "bytes": 2635,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-08-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-08-25.svg",
+      "bytes": 2697,
+      "humanBytes": "2.63 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-08-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-08-31.svg",
+      "bytes": 2605,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-08-31.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-09-12.svg",
+      "bytes": 2611,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-09-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-09-16.svg",
+      "bytes": 2611,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-09-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-09-20.svg",
+      "bytes": 2714,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-09-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-09-28.svg",
+      "bytes": 2596,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-09-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-10-10.svg",
+      "bytes": 2605,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-10-10.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-10-17.svg",
+      "bytes": 2653,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-10-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-10-21.svg",
+      "bytes": 2768,
+      "humanBytes": "2.70 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-10-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-10-29.svg",
+      "bytes": 2626,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-10-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-11-01.svg",
+      "bytes": 2596,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-11-01.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-11-12.svg",
+      "bytes": 2644,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-11-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-11-21.svg",
+      "bytes": 2750,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-11-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-11-26.svg",
+      "bytes": 2733,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-11-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-11-29.svg",
+      "bytes": 2578,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-11-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-12-12.svg",
+      "bytes": 2620,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-12-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-12-18.svg",
+      "bytes": 2665,
+      "humanBytes": "2.60 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-12-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-12-22.svg",
+      "bytes": 2732,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-12-22.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2021-12-28.svg",
+      "bytes": 2600,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2021-12-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-01-04.svg",
+      "bytes": 2607,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-01-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-01-13.svg",
+      "bytes": 2644,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-01-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-01-22.svg",
+      "bytes": 2617,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-01-22.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-01-28.svg",
+      "bytes": 2585,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-01-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-02-02.svg",
+      "bytes": 2723,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-02-02.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-02-13.svg",
+      "bytes": 2717,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-02-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-02-18.svg",
+      "bytes": 2665,
+      "humanBytes": "2.60 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-02-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-02-22.svg",
+      "bytes": 2635,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-02-22.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-02-28.svg",
+      "bytes": 2603,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-02-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-03-07.svg",
+      "bytes": 2601,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-03-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-03-16.svg",
+      "bytes": 2771,
+      "humanBytes": "2.71 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-03-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-03-25.svg",
+      "bytes": 2732,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-03-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-03-28.svg",
+      "bytes": 2650,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-03-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-04-07.svg",
+      "bytes": 2599,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-04-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-04-16.svg",
+      "bytes": 2763,
+      "humanBytes": "2.70 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-04-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-04-21.svg",
+      "bytes": 2748,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-04-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-04-25.svg",
+      "bytes": 2633,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-04-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-05-03.svg",
+      "bytes": 2585,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-05-03.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-05-15.svg",
+      "bytes": 2615,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-05-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-05-17.svg",
+      "bytes": 2648,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-05-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-05-26.svg",
+      "bytes": 2748,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-05-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-06-01.svg",
+      "bytes": 2604,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-06-01.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-06-08.svg",
+      "bytes": 2726,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-06-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-06-17.svg",
+      "bytes": 2751,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-06-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-06-26.svg",
+      "bytes": 2621,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-06-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-07-02.svg",
+      "bytes": 2628,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-07-02.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-07-04.svg",
+      "bytes": 2591,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-07-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-07-17.svg",
+      "bytes": 2621,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-07-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-07-18.svg",
+      "bytes": 2636,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-07-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-07-27.svg",
+      "bytes": 2615,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-07-27.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-08-02.svg",
+      "bytes": 2640,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-08-02.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-08-09.svg",
+      "bytes": 2599,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-08-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-08-18.svg",
+      "bytes": 2757,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-08-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-08-27.svg",
+      "bytes": 2651,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-08-27.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-09-02.svg",
+      "bytes": 2604,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-09-02.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-09-05.svg",
+      "bytes": 2587,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-09-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-09-18.svg",
+      "bytes": 2618,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-09-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-09-23.svg",
+      "bytes": 2621,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-09-23.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-09-27.svg",
+      "bytes": 2760,
+      "humanBytes": "2.70 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-09-27.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-10-03.svg",
+      "bytes": 2634,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-10-03.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-10-10.svg",
+      "bytes": 2603,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-10-10.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-10-19.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-10-19.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-10-28.svg",
+      "bytes": 2742,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-10-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-11-03.svg",
+      "bytes": 2628,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-11-03.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-11-07.svg",
+      "bytes": 2579,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-11-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-11-19.svg",
+      "bytes": 2660,
+      "humanBytes": "2.60 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-11-19.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-11-24.svg",
+      "bytes": 2639,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-11-24.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-11-28.svg",
+      "bytes": 2627,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-11-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-12-06.svg",
+      "bytes": 2621,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-12-06.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-12-18.svg",
+      "bytes": 2754,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-12-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-12-19.svg",
+      "bytes": 2627,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-12-19.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2022-12-29.svg",
+      "bytes": 2748,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2022-12-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-01-04.svg",
+      "bytes": 2628,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-01-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-01-11.svg",
+      "bytes": 2581,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-01-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-01-20.svg",
+      "bytes": 2654,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-01-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-01-29.svg",
+      "bytes": 2633,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-01-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-02-04.svg",
+      "bytes": 2701,
+      "humanBytes": "2.64 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-02-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-02-06.svg",
+      "bytes": 2627,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-02-06.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-02-19.svg",
+      "bytes": 2627,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-02-19.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-02-25.svg",
+      "bytes": 2778,
+      "humanBytes": "2.71 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-02-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-03-01.svg",
+      "bytes": 2618,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-03-01.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-03-07.svg",
+      "bytes": 2713,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-03-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-03-14.svg",
+      "bytes": 2605,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-03-14.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-03-24.svg",
+      "bytes": 2621,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-03-24.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-04-01.svg",
+      "bytes": 2775,
+      "humanBytes": "2.71 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-04-01.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-04-07.svg",
+      "bytes": 2604,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-04-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-04-14.svg",
+      "bytes": 2629,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-04-14.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-04-23.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-04-23.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-04-28.svg",
+      "bytes": 2754,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-04-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-05-02.svg",
+      "bytes": 2715,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-05-02.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-05-10.svg",
+      "bytes": 2603,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-05-10.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-05-20.svg",
+      "bytes": 2796,
+      "humanBytes": "2.73 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-05-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-05-25.svg",
+      "bytes": 2639,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-05-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-06-02.svg",
+      "bytes": 2654,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-06-02.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-06-10.svg",
+      "bytes": 2603,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-06-10.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-06-15.svg",
+      "bytes": 2720,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-06-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-06-25.svg",
+      "bytes": 2603,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-06-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-06-29.svg",
+      "bytes": 2669,
+      "humanBytes": "2.61 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-06-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-07-03.svg",
+      "bytes": 2745,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-07-03.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-07-11.svg",
+      "bytes": 2694,
+      "humanBytes": "2.63 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-07-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-07-23.svg",
+      "bytes": 2639,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-07-23.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-07-30.svg",
+      "bytes": 2627,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-07-30.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-08-03.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-08-03.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-08-11.svg",
+      "bytes": 2579,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-08-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-08-16.svg",
+      "bytes": 2726,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-08-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-08-26.svg",
+      "bytes": 2742,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-08-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-09-03.svg",
+      "bytes": 2654,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-09-03.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-09-09.svg",
+      "bytes": 2598,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-09-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-09-11.svg",
+      "bytes": 2603,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-09-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-09-24.svg",
+      "bytes": 2663,
+      "humanBytes": "2.60 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-09-24.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-09-30.svg",
+      "bytes": 2627,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-09-30.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-10-04.svg",
+      "bytes": 2648,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-10-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-10-10.svg",
+      "bytes": 2701,
+      "humanBytes": "2.64 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-10-10.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-10-17.svg",
+      "bytes": 2684,
+      "humanBytes": "2.62 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-10-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-10-26.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-10-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-11-04.svg",
+      "bytes": 2721,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-11-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-11-10.svg",
+      "bytes": 2640,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-11-10.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-11-15.svg",
+      "bytes": 2594,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-11-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-11-26.svg",
+      "bytes": 2654,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-11-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-12-01.svg",
+      "bytes": 2660,
+      "humanBytes": "2.60 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-12-01.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-12-05.svg",
+      "bytes": 2739,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-12-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-12-13.svg",
+      "bytes": 2573,
+      "humanBytes": "2.51 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-12-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-12-18.svg",
+      "bytes": 2629,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-12-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2023-12-28.svg",
+      "bytes": 2591,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2023-12-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-01-05.svg",
+      "bytes": 2721,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-01-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-01-13.svg",
+      "bytes": 2603,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-01-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-01-16.svg",
+      "bytes": 2736,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-01-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-01-25.svg",
+      "bytes": 2609,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-01-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-02-01.svg",
+      "bytes": 2654,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-02-01.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-02-05.svg",
+      "bytes": 2733,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-02-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-02-13.svg",
+      "bytes": 2579,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-02-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-02-25.svg",
+      "bytes": 2633,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-02-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-03-03.svg",
+      "bytes": 2630,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-03-03.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-03-07.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-03-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-03-12.svg",
+      "bytes": 2604,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-03-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-03-18.svg",
+      "bytes": 2688,
+      "humanBytes": "2.63 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-03-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-03-27.svg",
+      "bytes": 2657,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-03-27.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-04-07.svg",
+      "bytes": 2648,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-04-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-04-12.svg",
+      "bytes": 2749,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-04-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-04-15.svg",
+      "bytes": 2682,
+      "humanBytes": "2.62 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-04-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-04-27.svg",
+      "bytes": 2633,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-04-27.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-05-04.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-05-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-05-08.svg",
+      "bytes": 2757,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-05-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-05-13.svg",
+      "bytes": 2622,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-05-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-05-25.svg",
+      "bytes": 2579,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-05-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-05-28.svg",
+      "bytes": 2609,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-05-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-06-08.svg",
+      "bytes": 2642,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-06-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-06-16.svg",
+      "bytes": 2724,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-06-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-06-19.svg",
+      "bytes": 2633,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-06-19.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-06-28.svg",
+      "bytes": 2603,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-06-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-07-05.svg",
+      "bytes": 2763,
+      "humanBytes": "2.70 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-07-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-07-09.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-07-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-07-17.svg",
+      "bytes": 2633,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-07-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-07-27.svg",
+      "bytes": 2639,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-07-27.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-07-29.svg",
+      "bytes": 2772,
+      "humanBytes": "2.71 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-07-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-08-09.svg",
+      "bytes": 2618,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-08-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-08-17.svg",
+      "bytes": 2579,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-08-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-08-20.svg",
+      "bytes": 2579,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-08-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-08-29.svg",
+      "bytes": 2639,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-08-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-09-05.svg",
+      "bytes": 2642,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-09-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-09-09.svg",
+      "bytes": 2642,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-09-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-09-17.svg",
+      "bytes": 2718,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-09-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-09-29.svg",
+      "bytes": 2754,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-09-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-10-06.svg",
+      "bytes": 2660,
+      "humanBytes": "2.60 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-10-06.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-10-10.svg",
+      "bytes": 2660,
+      "humanBytes": "2.60 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-10-10.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-10-18.svg",
+      "bytes": 2718,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-10-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-10-24.svg",
+      "bytes": 2733,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-10-24.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-10-30.svg",
+      "bytes": 2663,
+      "humanBytes": "2.60 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-10-30.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-11-06.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-11-06.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-11-15.svg",
+      "bytes": 2767,
+      "humanBytes": "2.70 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-11-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-11-18.svg",
+      "bytes": 2597,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-11-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-11-30.svg",
+      "bytes": 2609,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-11-30.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-12-07.svg",
+      "bytes": 2654,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-12-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-12-11.svg",
+      "bytes": 2612,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-12-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-12-16.svg",
+      "bytes": 2719,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-12-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-12-25.svg",
+      "bytes": 2721,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-12-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2024-12-31.svg",
+      "bytes": 2748,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2024-12-31.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-01-11.svg",
+      "bytes": 2630,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-01-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-01-17.svg",
+      "bytes": 2643,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-01-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-01-22.svg",
+      "bytes": 2609,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-01-22.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-02-02.svg",
+      "bytes": 2642,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-02-02.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-02-07.svg",
+      "bytes": 2654,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-02-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-02-11.svg",
+      "bytes": 2757,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-02-11.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-02-17.svg",
+      "bytes": 2758,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-02-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-02-24.svg",
+      "bytes": 2602,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-02-24.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-03-05.svg",
+      "bytes": 2666,
+      "humanBytes": "2.60 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-03-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-03-14.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-03-14.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-03-20.svg",
+      "bytes": 2776,
+      "humanBytes": "2.71 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-03-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-03-25.svg",
+      "bytes": 2712,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-03-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-04-05.svg",
+      "bytes": 2630,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-04-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-04-10.svg",
+      "bytes": 2721,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-04-10.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-04-14.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-04-14.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-04-22.svg",
+      "bytes": 2603,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-04-22.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-05-04.svg",
+      "bytes": 2718,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-05-04.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-05-06.svg",
+      "bytes": 2618,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-05-06.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-05-15.svg",
+      "bytes": 2781,
+      "humanBytes": "2.72 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-05-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-05-21.svg",
+      "bytes": 2752,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-05-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-05-28.svg",
+      "bytes": 2632,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-05-28.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-06-06.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-06-06.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-06-15.svg",
+      "bytes": 2715,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-06-15.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-06-21.svg",
+      "bytes": 2637,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-06-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-06-23.svg",
+      "bytes": 2748,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-06-23.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-07-06.svg",
+      "bytes": 2724,
+      "humanBytes": "2.66 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-07-06.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-07-07.svg",
+      "bytes": 2624,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-07-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-07-16.svg",
+      "bytes": 2648,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-07-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-07-22.svg",
+      "bytes": 2746,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-07-22.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-07-29.svg",
+      "bytes": 2735,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-07-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-08-07.svg",
+      "bytes": 2775,
+      "humanBytes": "2.71 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-08-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-08-16.svg",
+      "bytes": 2751,
+      "humanBytes": "2.69 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-08-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-08-22.svg",
+      "bytes": 2627,
+      "humanBytes": "2.57 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-08-22.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-08-27.svg",
+      "bytes": 2597,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-08-27.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-09-07.svg",
+      "bytes": 2642,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-09-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-09-08.svg",
+      "bytes": 2594,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-09-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-09-16.svg",
+      "bytes": 2648,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-09-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-09-22.svg",
+      "bytes": 2613,
+      "humanBytes": "2.55 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-09-22.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-09-29.svg",
+      "bytes": 2741,
+      "humanBytes": "2.68 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-09-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-10-08.svg",
+      "bytes": 2648,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-10-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-10-17.svg",
+      "bytes": 2654,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-10-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-10-23.svg",
+      "bytes": 2601,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-10-23.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-10-30.svg",
+      "bytes": 2729,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-10-30.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-11-08.svg",
+      "bytes": 2672,
+      "humanBytes": "2.61 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-11-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-11-13.svg",
+      "bytes": 2618,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-11-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-11-17.svg",
+      "bytes": 2793,
+      "humanBytes": "2.73 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-11-17.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-11-25.svg",
+      "bytes": 2712,
+      "humanBytes": "2.65 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-11-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-12-07.svg",
+      "bytes": 2730,
+      "humanBytes": "2.67 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-12-07.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-12-09.svg",
+      "bytes": 2648,
+      "humanBytes": "2.59 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-12-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-12-18.svg",
+      "bytes": 2787,
+      "humanBytes": "2.72 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-12-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-12-26.svg",
+      "bytes": 2589,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-12-26.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2025-12-30.svg",
+      "bytes": 2562,
+      "humanBytes": "2.50 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2025-12-30.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-01-08.svg",
+      "bytes": 2589,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-01-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-01-18.svg",
+      "bytes": 2582,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-01-18.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-01-23.svg",
+      "bytes": 2562,
+      "humanBytes": "2.50 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-01-23.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-02-01.svg",
+      "bytes": 2589,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-02-01.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-02-02.svg",
+      "bytes": 2604,
+      "humanBytes": "2.54 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-02-02.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-02-12.svg",
+      "bytes": 2583,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-02-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-02-16.svg",
+      "bytes": 2562,
+      "humanBytes": "2.50 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-02-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-02-25.svg",
+      "bytes": 2589,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-02-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-03-08.svg",
+      "bytes": 2583,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-03-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-03-12.svg",
+      "bytes": 2568,
+      "humanBytes": "2.51 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-03-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-03-21.svg",
+      "bytes": 2595,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-03-21.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-03-23.svg",
+      "bytes": 2577,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-03-23.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-04-05.svg",
+      "bytes": 2556,
+      "humanBytes": "2.50 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-04-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-04-12.svg",
+      "bytes": 2594,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-04-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-04-14.svg",
+      "bytes": 2583,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-04-14.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-04-25.svg",
+      "bytes": 2577,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-04-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-04-29.svg",
+      "bytes": 2562,
+      "humanBytes": "2.50 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-04-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-05-08.svg",
+      "bytes": 2589,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-05-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-05-13.svg",
+      "bytes": 2579,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-05-13.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-05-23.svg",
+      "bytes": 2562,
+      "humanBytes": "2.50 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-05-23.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-05-31.svg",
+      "bytes": 2570,
+      "humanBytes": "2.51 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-05-31.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-06-01.svg",
+      "bytes": 2589,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-06-01.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-06-12.svg",
+      "bytes": 2583,
+      "humanBytes": "2.52 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-06-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-06-16.svg",
+      "bytes": 2568,
+      "humanBytes": "2.51 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-06-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-06-25.svg",
+      "bytes": 2595,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-06-25.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-07-05.svg",
+      "bytes": 2588,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-07-05.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-07-06.svg",
+      "bytes": 2589,
+      "humanBytes": "2.53 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-07-06.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-07-16.svg",
+      "bytes": 2642,
+      "humanBytes": "2.58 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily-2026-07-16.js",
+        "qilylean/daily/2026-07-16.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-07-20.svg",
+      "bytes": 2620,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily-2026-07-20.js",
+        "qilylean/daily/2026-07-20.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-07-29.svg",
+      "bytes": 2625,
+      "humanBytes": "2.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-07-29.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-08-08.svg",
+      "bytes": 2774,
+      "humanBytes": "2.71 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-08-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-08-09-capacity-improvement.svg",
+      "bytes": 6294,
+      "humanBytes": "6.15 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-08-09.html",
+        "scripts/insert-20260809-scene-diagrams.js"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-08-09-career-development.svg",
+      "bytes": 4609,
+      "humanBytes": "4.50 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/audit-unreferenced-assets.yml",
+        "qilylean/daily/2026-08-09.html",
+        "scripts/insert-20260809-scene-diagrams.js"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-08-09-concept-boundary.svg",
+      "bytes": 6987,
+      "humanBytes": "6.82 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-08-09.html",
+        "scripts/insert-20260809-scene-diagrams.js"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-08-09-management-judgement.svg",
+      "bytes": 5343,
+      "humanBytes": "5.22 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-08-09.html",
+        "scripts/insert-20260809-scene-diagrams.js"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-08-09.svg",
+      "bytes": 2693,
+      "humanBytes": "2.63 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-08-09.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/daily-2026-08-12.svg",
+      "bytes": 2772,
+      "humanBytes": "2.71 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-08-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/legal/qilylean-mutual-nda-v1.pdf",
+      "bytes": 214925,
+      "humanBytes": "209.89 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "scripts/nda-source/nda-preview-template.html",
+        "scripts/publish-nda-link.js",
+        "scripts/publish-nda-mobile-preview.js",
+        "trust/nda-preview.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/legal/qilylean-trust-qr.png",
+      "bytes": 4858,
+      "humanBytes": "4.74 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "scripts/build-nda-documents.py",
+        "scripts/optimize-nda-signature.py"
+      ]
+    },
+    {
+      "path": "qilylean/assets/training-2026-08-08-cross-flow.svg",
+      "bytes": 2853,
+      "humanBytes": "2.79 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/publish-20260808-training-note.yml",
+        "qilylean/training/2026-08-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/training-2026-08-08-execution-loop.svg",
+      "bytes": 2871,
+      "humanBytes": "2.80 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/publish-20260808-training-note.yml",
+        "qilylean/training/2026-08-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/training-2026-08-08-pdca.svg",
+      "bytes": 54476,
+      "humanBytes": "53.20 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/publish-20260808-training-note.yml",
+        "qilylean/training/2026-08-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/training-2026-08-08-smart-cascade.svg",
+      "bytes": 2847,
+      "humanBytes": "2.78 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/publish-20260808-training-note.yml",
+        "qilylean/training/2026-08-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/assets/training-2026-08-08.svg",
+      "bytes": 3337,
+      "humanBytes": "3.26 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/publish-20260808-training-note.yml",
+        "qilylean/training/2026-08-08.html"
+      ]
+    },
+    {
+      "path": "qilylean/chatgpt-lean-certificate-web.jpg",
+      "bytes": 486925,
+      "humanBytes": "475.51 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "capabilities/index.html",
+        "qilylean/README.md"
+      ]
+    },
+    {
+      "path": "qilylean/chatgpt-lean-certificate.png",
+      "bytes": 17634378,
+      "humanBytes": "16.82 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "certificates/chatgpt-lean/index.html",
+        "qilylean/README.md",
+        "scripts/unlock-public-modules.js"
+      ]
+    },
+    {
+      "path": "qilylean/daily/assets/2026-08-12-01-pmo-architecture.svg",
+      "bytes": 3650,
+      "humanBytes": "3.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily/2026-08-12.html"
+      ]
+    },
+    {
+      "path": "qilylean/ding-qili-ai-avatar-560.webp",
+      "bytes": 25816,
+      "humanBytes": "25.21 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "index.html"
+      ]
+    },
+    {
+      "path": "qilylean/ding-qili-ai-avatar-900.webp",
+      "bytes": 51842,
+      "humanBytes": "50.63 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "index.html"
+      ]
+    },
+    {
+      "path": "qilylean/ding-qili-ai-avatar.png",
+      "bytes": 2096760,
+      "humanBytes": "2.00 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "index.html",
+        "qilylean/README.md"
+      ]
+    },
+    {
+      "path": "qilylean/fuse-finished-product.svg",
+      "bytes": 7255,
+      "humanBytes": "7.08 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily-2026-07-17.js"
+      ]
+    },
+    {
+      "path": "qilylean/fuse-semi-finished.svg",
+      "bytes": 7366,
+      "humanBytes": "7.19 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/daily-2026-07-17.js"
+      ]
+    },
+    {
+      "path": "qilylean/qilylean-home-qr.svg",
+      "bytes": 1076,
+      "humanBytes": "1.05 KiB",
+      "reason": "protected-source-or-core-asset",
+      "sources": []
+    },
+    {
+      "path": "qilylean/wechat-qrcode.svg",
+      "bytes": 7414,
+      "humanBytes": "7.24 KiB",
+      "reason": "protected-source-or-core-asset",
+      "sources": []
+    },
+    {
+      "path": "ruian2023-1.webp",
+      "bytes": 90866,
+      "humanBytes": "88.74 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "ruian2023-2.webp",
+      "bytes": 62870,
+      "humanBytes": "61.40 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "ruian2023-3.webp",
+      "bytes": 82494,
+      "humanBytes": "80.56 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "share/qilylean-share-card.svg",
+      "bytes": 3201,
+      "humanBytes": "3.13 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "share/index.html"
+      ]
+    },
+    {
+      "path": "shenzhen.jpg",
+      "bytes": 2528943,
+      "humanBytes": "2.41 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "shenzhen.webp",
+      "bytes": 447872,
+      "humanBytes": "437.38 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "shenzhen2.jpg",
+      "bytes": 2985227,
+      "humanBytes": "2.85 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "shenzhen2.webp",
+      "bytes": 534910,
+      "humanBytes": "522.37 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "shuzhihua.png",
+      "bytes": 2043690,
+      "humanBytes": "1.95 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "qilylean/project-images-v2.js"
+      ]
+    },
+    {
+      "path": "Times26001-Android-v1.1.10-Official-Website-Fix.apk",
+      "bytes": 4796872,
+      "humanBytes": "4.57 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/publish-times26001-v1110-official-website-fix-20260809.yml",
+        "Times26001-Android-v1.1.10-Official-Website-Fix.sha256.txt",
+        "app-download-share-v1.js",
+        "app-release-manifest.json",
+        "capabilities/index.html",
+        "times26001-home-card.js",
+        "tools/times26001/index.html"
+      ]
+    },
+    {
+      "path": "Times26001-Android-v1.1.3-IE-Stopwatch.apk",
+      "bytes": 4224593,
+      "humanBytes": "4.03 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "scripts/finalize-unified-app-release.py"
+      ]
+    },
+    {
+      "path": "Times26001-Android-v1.1.4-IE-Stopwatch.apk",
+      "bytes": 4287870,
+      "humanBytes": "4.09 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/sync-times26001-v117-weather-site-20260809.yml",
+        ".github/workflows/sync-times26001-v119-site-20260809.yml",
+        "Times26001-Android-v1.1.4-IE-Stopwatch.sha256.txt",
+        "app-release-sha256.txt",
+        "scripts/finalize-unified-app-release.py",
+        "scripts/refine_app_download_share_20260808.py",
+        "scripts/sync_app_release_association_20260807.py"
+      ]
+    },
+    {
+      "path": "Times26001-Android-v1.1.7-Weather-Test.apk",
+      "bytes": 4292437,
+      "humanBytes": "4.09 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/publish-times26001-v117-weather-apk-20260809.yml",
+        ".github/workflows/sync-times26001-v117-weather-site-20260809.yml",
+        ".github/workflows/sync-times26001-v118-location-site-20260809.yml",
+        "Times26001-Android-v1.1.7-Weather-Test.sha256.txt"
+      ]
+    },
+    {
+      "path": "Times26001-Android-v1.1.8-Location-Fix.apk",
+      "bytes": 4795901,
+      "humanBytes": "4.57 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/publish-times26001-v118-location-apk-20260809.yml",
+        ".github/workflows/replace-times26001-v118-final-apk-20260809.yml",
+        ".github/workflows/sync-times26001-v118-location-site-20260809.yml",
+        ".github/workflows/sync-times26001-v119-site-20260809.yml",
+        "Times26001-Android-v1.1.8-Location-Fix.sha256.txt"
+      ]
+    },
+    {
+      "path": "Times26001-Android-v1.1.9-Location-City-Fix.apk",
+      "bytes": 4796839,
+      "humanBytes": "4.57 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/publish-times26001-v1110-official-website-fix-20260809.yml",
+        ".github/workflows/publish-times26001-v119-location-city-apk-20260809.yml",
+        ".github/workflows/sync-times26001-v119-site-20260809.yml",
+        "Times26001-Android-v1.1.9-Location-City-Fix.sha256.txt"
+      ]
+    },
+    {
+      "path": "VSM&SMED.png",
+      "bytes": 1970334,
+      "humanBytes": "1.88 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "knowledge/seat-switch-one-piece-flow.html"
+      ]
+    },
+    {
+      "path": "yueqing2021-1.jpg",
+      "bytes": 1743677,
+      "humanBytes": "1.66 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "yueqing2021-1.webp",
+      "bytes": 339456,
+      "humanBytes": "331.50 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "yueqing2021-2.jpg",
+      "bytes": 1925169,
+      "humanBytes": "1.84 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "yueqing2021-2.webp",
+      "bytes": 453532,
+      "humanBytes": "442.90 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "yueqing2024.jpg",
+      "bytes": 2809839,
+      "humanBytes": "2.68 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "yueqing2024.webp",
+      "bytes": 355452,
+      "humanBytes": "347.12 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "zhongshanling.jpg",
+      "bytes": 7079467,
+      "humanBytes": "6.75 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "zhongshanling.webp",
+      "bytes": 1201522,
+      "humanBytes": "1.15 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "zongtonghu.jpg",
+      "bytes": 4675886,
+      "humanBytes": "4.46 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "zongtonghu.webp",
+      "bytes": 822646,
+      "humanBytes": "803.37 KiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/business/index.html"
+      ]
+    },
+    {
+      "path": "写字楼.png",
+      "bytes": 2397891,
+      "humanBytes": "2.29 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "projects/factory-layout/index.html",
+        "qilylean/project-media-home.js"
+      ]
+    },
+    {
+      "path": "园区.png",
+      "bytes": 2927398,
+      "humanBytes": "2.79 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        ".github/workflows/audit-unreferenced-assets.yml",
+        "projects/factory-layout/index.html",
+        "projects/index.html",
+        "qilylean/project-media-home.js"
+      ]
+    },
+    {
+      "path": "我的梦（张靓颖）.mp3",
+      "bytes": 3514682,
+      "humanBytes": "3.35 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "homepage-music-core-v4.js",
+        "homepage-music-v5.js"
+      ]
+    },
+    {
+      "path": "澳门1.jpg",
+      "bytes": 4577721,
+      "humanBytes": "4.37 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/life/index.html"
+      ]
+    },
+    {
+      "path": "澳门2.jpg",
+      "bytes": 3667081,
+      "humanBytes": "3.50 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/life/index.html"
+      ]
+    },
+    {
+      "path": "现场管理.pdf",
+      "bytes": 3809189,
+      "humanBytes": "3.63 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "knowledge/index.html"
+      ]
+    },
+    {
+      "path": "瑞安2023-1.png",
+      "bytes": 3725909,
+      "humanBytes": "3.55 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "瑞安2023-2.jpg",
+      "bytes": 2974764,
+      "humanBytes": "2.84 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "瑞安2023-3.jpg",
+      "bytes": 3651120,
+      "humanBytes": "3.48 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/work/index.html"
+      ]
+    },
+    {
+      "path": "香港1.jpg",
+      "bytes": 3825030,
+      "humanBytes": "3.65 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/life/index.html"
+      ]
+    },
+    {
+      "path": "香港2.jpg",
+      "bytes": 4028237,
+      "humanBytes": "3.84 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/life/index.html"
+      ]
+    },
+    {
+      "path": "香港3.jpg",
+      "bytes": 3486601,
+      "humanBytes": "3.33 MiB",
+      "reason": "referenced-current-text-source",
+      "sources": [
+        "moments/life/index.html"
+      ]
+    }
+  ]
+}
