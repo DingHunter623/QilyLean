@@ -3,7 +3,8 @@ import re
 
 ROOT = Path('.')
 CONTRAST_VERSION = '20260811-text-color-standard-v2'
-NAV_VERSION = '20260811-mobile-layout-v20'
+NAV_VERSION = '20260812-competition-upgrade-v21'
+VI_VERSION = '20260812-manufacturing-asset-system-v3'
 
 changed = []
 
@@ -47,43 +48,59 @@ p = ROOT / 'site-navigation.js'
 s = p.read_text(encoding='utf-8')
 s2 = re.sub(r'site-vi-contrast-restoration-v1\.css\?v=[^\'\"\s,\]]+',
             f'site-vi-contrast-restoration-v1.css?v={CONTRAST_VERSION}', s)
+s2 = re.sub(r'site-vi-standard-v1\.css\?v=[^\'\"\s,\]]+',
+            f'site-vi-standard-v1.css?v={VI_VERSION}', s2)
 write_if_changed(p, s, s2)
 
-# 3) 发布源同步新版色彩规范，并顺手封死旧导航/1800ms 首屏回退。
+# 3) 发布源同步 V3 VI / 导航与新版色彩规范，并封死旧导航/1800ms 首屏回退。
 p = ROOT / 'scripts' / 'publish-site-system-v2.js'
 s = p.read_text(encoding='utf-8')
 s2 = s
 s2 = re.sub(r"const NAV_VERSION = '[^']+';", f"const NAV_VERSION = '{NAV_VERSION}';", s2)
+s2 = re.sub(r"const VI_VERSION = '[^']+';", f"const VI_VERSION = '{VI_VERSION}';", s2)
 s2 = re.sub(r"const CONTRAST_VERSION = '[^']+';", f"const CONTRAST_VERSION = '{CONTRAST_VERSION}';", s2)
 s2 = s2.replace('setTimeout(window.__qilyLeanRevealCurrentShell,1800)', 'setTimeout(window.__qilyLeanRevealCurrentShell,180)')
 s2 = s2.replace("[contrast, 'QilyLean 全站VI可读性恢复与对比度保险层', 'Contrast restoration'],",
                 "[contrast, 'QilyLean 全站文字色彩语义规范 V2', 'Text color semantic standard V2'],")
 write_if_changed(p, s, s2)
 
-# 4) 当前所有 HTML 直接引用统一刷新缓存版本；不改变页面结构和业务内容。
+# 4) V3 全站缓存迁移：只刷新既有公共资源引用，不改变页面业务结构。
 html_checked = 0
 html_changed = 0
+nav_checked = 0
+vi_checked = 0
 for p in ROOT.rglob('*.html'):
     if '.git' in p.parts or 'node_modules' in p.parts:
         continue
     s = p.read_text(encoding='utf-8')
     s2 = re.sub(r'/site-vi-contrast-restoration-v1\.css\?v=[^\'\"\s<]+',
                 f'/site-vi-contrast-restoration-v1.css?v={CONTRAST_VERSION}', s)
+    s2 = re.sub(r'/site-vi-standard-v1\.css\?v=[^\'\"\s<]+',
+                f'/site-vi-standard-v1.css?v={VI_VERSION}', s2)
+    s2 = re.sub(r'/site-navigation\.js\?v=[^\'\"\s<]+',
+                f'/site-navigation.js?v={NAV_VERSION}', s2)
     if 'site-vi-contrast-restoration-v1.css' in s2:
         html_checked += 1
+    if 'site-vi-standard-v1.css' in s2:
+        vi_checked += 1
+    if 'site-navigation.js' in s2:
+        nav_checked += 1
     if s2 != s:
         p.write_text(s2, encoding='utf-8')
         changed.append(str(p))
         html_changed += 1
 
-# 5) 强制验收：标题 span 不再被正文色污染；缓存版本、发布源、首屏策略一致。
+# 5) 强制验收：标题 span 不再被正文色污染；V3 VI、导航、缓存版本、发布源一致。
 css = (ROOT / 'site-vi-contrast-restoration-v1.css').read_text(encoding='utf-8')
+vi_css = (ROOT / 'site-vi-standard-v1.css').read_text(encoding='utf-8')
 nav = (ROOT / 'site-navigation.js').read_text(encoding='utf-8')
 publisher = (ROOT / 'scripts' / 'publish-site-system-v2.js').read_text(encoding='utf-8')
 
 errors = []
 if 'QilyLean 全站文字色彩语义规范 V2' not in css:
     errors.append('V2 文字色彩规范标记缺失')
+if 'QILYLEAN MANUFACTURING ASSET SYSTEM V3' not in vi_css:
+    errors.append('Site System V3 VI 标记缺失')
 if ':is(p,li,span,small,dd,figcaption,.lead,.summary,.meta,.fine)' in css:
     errors.append('仍存在会污染标题 span 的旧通用颜色选择器')
 if 'html body .qily-no-break{' not in css:
@@ -92,16 +109,22 @@ if '卡片小标题／标签使用统一辅助色' not in css:
     errors.append('卡片文字角色规范缺失')
 if f'site-vi-contrast-restoration-v1.css?v={CONTRAST_VERSION}' not in nav:
     errors.append('site-navigation 未刷新 V2 对比度资源版本')
-if '20260803-vi-contrast-hotfix-v1' in nav:
-    errors.append('site-navigation 仍残留旧对比度缓存版本')
+if f'site-vi-standard-v1.css?v={VI_VERSION}' not in nav:
+    errors.append('site-navigation 未刷新 V3 VI 资源版本')
 if f"const CONTRAST_VERSION = '{CONTRAST_VERSION}';" not in publisher:
     errors.append('发布源未同步 V2 对比度版本')
+if f"const VI_VERSION = '{VI_VERSION}';" not in publisher:
+    errors.append('发布源未同步 V3 VI 版本')
 if f"const NAV_VERSION = '{NAV_VERSION}';" not in publisher:
     errors.append('发布源导航版本仍可能回退')
 if 'setTimeout(window.__qilyLeanRevealCurrentShell,1800)' in publisher:
     errors.append('发布源仍存在 1800ms 首屏回退')
 if html_checked == 0:
     errors.append('未发现直接引用对比度 CSS 的 HTML 页面')
+if nav_checked == 0:
+    errors.append('未发现引用全站导航的 HTML 页面')
+if vi_checked == 0:
+    errors.append('未发现直接引用 VI CSS 的 HTML 页面')
 
 for p in ROOT.rglob('*.html'):
     if '.git' in p.parts or 'node_modules' in p.parts:
@@ -109,11 +132,15 @@ for p in ROOT.rglob('*.html'):
     text = p.read_text(encoding='utf-8')
     if 'site-vi-contrast-restoration-v1.css' in text and f'/site-vi-contrast-restoration-v1.css?v={CONTRAST_VERSION}' not in text:
         errors.append(f'{p}: 对比度 CSS 仍为旧缓存版本')
+    if 'site-vi-standard-v1.css' in text and f'/site-vi-standard-v1.css?v={VI_VERSION}' not in text:
+        errors.append(f'{p}: VI CSS 仍为旧缓存版本')
+    if 'site-navigation.js' in text and f'/site-navigation.js?v={NAV_VERSION}' not in text:
+        errors.append(f'{p}: site-navigation 仍为旧缓存版本')
 
 if errors:
     raise SystemExit('\n'.join(errors))
 
-print(f'Text color semantic standard V2 applied. HTML checked: {html_checked}; HTML changed: {html_changed}; total changed: {len(changed)}')
+print(f'Site System V3 cache migration applied. Contrast HTML: {html_checked}; VI HTML: {vi_checked}; navigation HTML: {nav_checked}; HTML changed: {html_changed}; total changed: {len(changed)}')
 for item in changed[:80]:
     print(' -', item)
 if len(changed) > 80:
