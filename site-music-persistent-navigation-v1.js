@@ -1,7 +1,7 @@
 /* QilyLean fast native navigation v5 | 2026-08-12
  * 目标：优先保证全站版式稳定与跳转速度。
- * 不再跨页面搬运 main/head/style/script，不再用 history.pushState 模拟整页跳转；
- * 采用浏览器原生导航 + 同源预取 + 音乐状态持久化，避免 CSS 串扰、脚本重复执行和 900ms 样式等待。
+ * 不再跨页面搬运 main/head/style/script，不再模拟整页历史状态；
+ * 采用浏览器原生导航 + 同源预取 + 音乐状态持久化，避免 CSS 串扰、脚本重复执行和样式等待。
  */
 (function(window,document){
 'use strict';
@@ -51,7 +51,7 @@ function prefetch(url){
   link.setAttribute('data-qily-fast-prefetch','v5');
   (document.head||document.documentElement).appendChild(link);
 
-  /* fetch 同时预热 HTTP cache；不解析、不替换 DOM。 */
+  /* fetch 同时预热 HTTP cache；不解析、不替换页面结构。 */
   if(window.fetch){
     fetch(url.href,{
       credentials:'same-origin',
