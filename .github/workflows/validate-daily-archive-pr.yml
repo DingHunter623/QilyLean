@@ -21,6 +21,7 @@ on:
       - "scripts/build-daily-archive.js"
       - "scripts/curate-weekly-briefs.js"
       - "scripts/validate-weekly-brief-curation.js"
+      - "scripts/enforce-six-core-static-source.js"
       - "scripts/build-site-metadata.js"
       - "scripts/sync-search-brief-metadata.js"
       - "scripts/sync-trust-brief-metadata.js"
@@ -70,6 +71,7 @@ jobs:
           node --check scripts/build-daily-archive.js
           node --check scripts/curate-weekly-briefs.js
           node --check scripts/validate-weekly-brief-curation.js
+          node --check scripts/enforce-six-core-static-source.js
           node --check scripts/build-site-metadata.js
           node --check scripts/sync-search-brief-metadata.js
           node --check scripts/sync-trust-brief-metadata.js
@@ -129,7 +131,7 @@ jobs:
       - name: Curate weekly high-value public archive
         run: node scripts/curate-weekly-briefs.js
 
-      - name: Finalize curated metadata and R2 clean runtime
+      - name: Finalize curated metadata, six-core homepage and R2 clean runtime
         run: |
           node scripts/remove-daily-directory-consultation.js
           node scripts/normalize-daily-visual-closure.js
@@ -137,6 +139,7 @@ jobs:
           node scripts/build-site-metadata.js
           node scripts/sync-search-brief-metadata.js
           node scripts/sync-trust-brief-metadata.js
+          node scripts/enforce-six-core-static-source.js
           node scripts/publish-r2-clean-runtime-v3.js
 
       - name: Validate weekly curation and protected briefs
