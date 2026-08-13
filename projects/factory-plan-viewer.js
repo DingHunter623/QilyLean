@@ -134,7 +134,8 @@
   }
 
   triggers.forEach(function(trigger,index){
-    trigger.setAttribute('title','点击进入站内图纸预览');
+    trigger.removeAttribute('title');
+    trigger.setAttribute('data-qily-preview-hint','站内图纸预览');
     trigger.addEventListener('click',function(){open(index,trigger);});
     trigger.addEventListener('contextmenu',function(event){event.preventDefault();});
     var img=trigger.querySelector('img');

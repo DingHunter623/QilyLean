@@ -352,9 +352,9 @@ body.factory-plan-viewer-open{overflow:hidden}
   border-color:#c99a3e!important;
 }
 .factory-plan-thumb-grid .factory-plan-preview:active span{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background:#073c47!important;
-  border-color:#073c47!important;
+  color:#073c47!important;
+  -webkit-text-fill-color:#073c47!important;
+  background:#ffeab3!important;
+  border-color:#c99a3e!important;
 }
 /* QILY-FACTORY-THUMBNAIL-LABEL-SEPARATION:END */
