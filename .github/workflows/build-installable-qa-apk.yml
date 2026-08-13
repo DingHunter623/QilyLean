@@ -43,8 +43,8 @@ jobs:
 
       - name: Validate version and unified icon
         run: |
-          grep -q 'versionCode 9' android/qilylean-home/app/build.gradle
-          grep -q "versionName '2.3.1'" android/qilylean-home/app/build.gradle
+          grep -q 'versionCode 10' android/qilylean-home/app/build.gradle
+          grep -q "versionName '2.3.2'" android/qilylean-home/app/build.gradle
           grep -q 'android:icon="@drawable/ic_launcher"' android/qilylean-home/app/src/main/AndroidManifest.xml
           grep -q 'android:roundIcon="@drawable/ic_launcher"' android/qilylean-home/app/src/main/AndroidManifest.xml
           grep -q '#FF126478' android/qilylean-home/app/src/main/res/drawable/ic_launcher.xml
@@ -60,16 +60,16 @@ jobs:
           set -euo pipefail
           APK='android/qilylean-home/app/build/outputs/apk/debug/app-debug.apk'
           test -s "$APK"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "package: name='com.qilylean.home' versionCode='9' versionName='2.3.1'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "package: name='com.qilylean.home' versionCode='10' versionName='2.3.2'"
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "targetSdkVersion:'36'"
           mkdir -p dist
-          cp "$APK" dist/QilyLean_Home_v2.3.1_API36_INSTALL.apk
-          sha256sum dist/QilyLean_Home_v2.3.1_API36_INSTALL.apk > dist/SHA256SUMS.txt
+          cp "$APK" dist/QilyLean_Home_v2.3.2_API36_INSTALL.apk
+          sha256sum dist/QilyLean_Home_v2.3.2_API36_INSTALL.apk > dist/SHA256SUMS.txt
 
       - name: Upload installable APK
         uses: actions/upload-artifact@v4
         with:
-          name: QilyLean-Home-v2.3.1-API36-INSTALL
+          name: QilyLean-Home-v2.3.2-API36-INSTALL
           path: dist/
           if-no-files-found: error
           retention-days: 30
