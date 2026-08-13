@@ -1,0 +1,83 @@
+name: Publish Times26001 v1.1.13 and QilyLean Home v2.3.2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-apps-20260813.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download and verify both APKs
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --retry 3 'https://sdmntprwestus3.oaiusercontent.com/files/00000000-953c-81fd-92e4-3e356f485329/raw?se=2026-08-13T05%3A50%3A43Z&sp=r&sv=2026-02-06&sr=b&scid=6b42fef3-0df5-4269-9222-e7083c4b4db3&skoid=b869bb08-96ac-4184-ab38-9c45e2890c4c&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-12T13%3A54%3A04Z&ske=2026-08-13T13%3A54%3A04Z&sks=b&skv=2026-02-06&sig=CWxjplDvR9Lrvf7MTW9jHNQTnN5BICGGXLI1abXMBUg%3D' -o /tmp/times.zip
+          curl -L --fail --retry 3 'https://sdmntprwestcentralus.oaiusercontent.com/files/00000000-2e80-81fb-beaf-4e06809fdb7a/raw?se=2026-08-13T05%3A50%3A44Z&sp=r&sv=2026-02-06&sr=b&scid=99c818ce-35f2-4e85-9b0f-b77380ded4fb&skoid=80e81ea6-3c08-46f9-bd84-b87176742bcd&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-08-13T03%3A46%3A37Z&ske=2026-08-14T03%3A46%3A37Z&sks=b&skv=2026-02-06&sig=BW36kS/0yoBUZWWt%2BJJ24ujf7uXPxjpcrrrJJWOfx0Q%3D' -o /tmp/qhome.zip
+          rm -rf /tmp/times /tmp/qhome && mkdir -p /tmp/times /tmp/qhome
+          unzip -q /tmp/times.zip -d /tmp/times
+          unzip -q /tmp/qhome.zip -d /tmp/qhome
+          echo 'efe5e18804c4c4fb1718f2b8b3d38c88ef7842c427c3f3dc2aeb088e5eecc731  /tmp/times/app-debug.apk' | sha256sum -c -
+          echo '679991e77770951d9836eefd76e3d380ef8a6eb2577ae90f74dd5ff3088ae751  /tmp/qhome/QilyLean_Home_v2.3.2_API36_INSTALL.apk' | sha256sum -c -
+          cp /tmp/times/app-debug.apk Times26001-Android-v1.1.13-Location-Fix.apk
+          cp /tmp/qhome/QilyLean_Home_v2.3.2_API36_INSTALL.apk QilyLean_Home_v2.3.2_API36_INSTALL.apk
+          printf '%s  %s\n' 'efe5e18804c4c4fb1718f2b8b3d38c88ef7842c427c3f3dc2aeb088e5eecc731' 'Times26001-Android-v1.1.13-Location-Fix.apk' > Times26001-Android-v1.1.13-Location-Fix.sha256.txt
+          printf '%s  %s\n' '679991e77770951d9836eefd76e3d380ef8a6eb2577ae90f74dd5ff3088ae751' 'QilyLean_Home_v2.3.2_API36_INSTALL.apk' > QilyLean_Home_v2.3.2_API36_INSTALL.sha256.txt
+      - name: Synchronize website modules and manifest
+        shell: python
+        run: |
+          from pathlib import Path
+          import json, re
+          times_apk='Times26001-Android-v1.1.13-Location-Fix.apk'
+          times_sha='Times26001-Android-v1.1.13-Location-Fix.sha256.txt'
+          home_apk='QilyLean_Home_v2.3.2_API36_INSTALL.apk'
+          home_sha='QilyLean_Home_v2.3.2_API36_INSTALL.sha256.txt'
+          files=['tools/times26001/index.html','capabilities/index.html','app-download-share-v1.js','times26001-home-card.js','assets/tools/times26001-overview.svg','app-support/index.html','app-store/times26001/README.md','app-store/qilylean-home/README.md']
+          for name in files:
+            p=Path(name)
+            if not p.exists(): continue
+            s=p.read_text(encoding='utf-8')
+            s=re.sub(r'Times26001-Android-v1\.1\.\d+(?:-[A-Za-z0-9]+)*\.apk',times_apk,s)
+            s=re.sub(r'Times26001-Android-v1\.1\.\d+(?:-[A-Za-z0-9]+)*\.sha256\.txt',times_sha,s)
+            s=re.sub(r'v1\.1\.\d+\s*/\s*versionCode\s*\d+','v1.1.13 / versionCode 16',s)
+            s=re.sub(r'v1\.1\.\d+','v1.1.13',s)
+            s=re.sub(r'\?build=[A-Za-z0-9]+','?build=efe5e188',s)
+            s=s.replace('界面精简与大字版','定位可靠性修正版')
+            s=re.sub(r'QilyLean_Home_(?:Universal_)?v\d+(?:\.\d+)*(?:_API36_INSTALL)?\.apk',home_apk,s)
+            s=re.sub(r'QilyLean_Home_(?:Universal_)?v\d+(?:\.\d+)*(?:_API36_INSTALL)?\.sha256\.txt',home_sha,s)
+            s=re.sub(r'v2\.\d+(?:\.\d+)?\s*/\s*versionCode\s*\d+','v2.3.2 / versionCode 10',s)
+            p.write_text(s,encoding='utf-8')
+          m=Path('app-release-manifest.json')
+          data=json.loads(m.read_text(encoding='utf-8'))
+          data['updatedAt']='2026-08-13'
+          t=data['apps']['times26001']
+          for k in ('publicRelease','storeCandidate','latestBuild'):
+            t[k]['versionName']='1.1.13'; t[k]['versionCode']=16
+          t['publicRelease'].update(apk='/'+times_apk,sha256='/'+times_sha,label='当前官网试用包（天气定位可靠性修正版）')
+          t['latestBuild']['status']='精确/粗略权限兼容；高精度失败自动降级重试；GPS关闭与超时提示已完善'
+          h=data['apps']['qilyleanHome']
+          h['publicRelease'].update(versionName='2.3.2',versionCode=10,apk='/'+home_apk,sha256='/'+home_sha,label='当前官网安装包（同步官网最新八大导航布局）')
+          h['storeCandidate'].update(versionName='2.3.2',versionCode=10)
+          h['latestBuild'].update(versionName='2.3.2',versionCode=10,status='桌面导航已同步官网最新布局；API 36可安装包构建通过')
+          m.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          assert times_apk in Path('tools/times26001/index.html').read_text(encoding='utf-8')
+          assert times_apk in Path('app-download-share-v1.js').read_text(encoding='utf-8')
+          assert home_apk in Path('app-release-manifest.json').read_text(encoding='utf-8')
+      - name: Commit and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name QilyLean
+          git config user.email admin@qilylean.com
+          git add .
+          git commit -m 'release: publish Times26001 v1.1.13 and QilyLean Home v2.3.2'
+          git push origin HEAD:main
