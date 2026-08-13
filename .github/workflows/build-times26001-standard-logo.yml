@@ -113,7 +113,7 @@ jobs:
                   notice = '<div class="tool-note"><strong>安装提示：</strong>' + warning + '</div>'
                   s = s.replace('</div></section>\n\n</main>', notice + '</div></section>\n\n</main>')
               if name == 'app-store/times26001/README.md' and warning not in s:
-                  s += '\\n> 安装提示：' + warning + '\\n'
+                  s += chr(10) + '> 安装提示：' + warning + chr(10)
               p.write_text(s, encoding='utf-8')
 
           manifest = Path('app-release-manifest.json')
@@ -132,7 +132,7 @@ jobs:
               versionCode=16,
               status='顶部LOGO已统一为官网QilyLean｜启力精益横版标准；保留天气定位可靠性修正'
           )
-          manifest.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\\n', encoding='utf-8')
+          manifest.write_text(json.dumps(data, ensure_ascii=False, indent=2) + chr(10), encoding='utf-8')
 
           checks = ['tools/times26001/index.html','capabilities/index.html','times26001-home-card.js','app-release-manifest.json']
           for name in checks:
