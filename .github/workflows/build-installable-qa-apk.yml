@@ -65,7 +65,7 @@ jobs:
           set -euo pipefail
           APK='android/qilylean-home/app/build/outputs/apk/debug/app-debug.apk'
           test -s "$APK"
-          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "package: name='com.qilylean.home' versionCode='10' versionName='2.3.2'"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "package: name='com.qilylean.home' versionCode='11' versionName='2.3.3'"
           "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | grep -q "targetSdkVersion:'36'"
           mkdir -p dist
           cp "$APK" dist/QilyLean_Home_v2.3.3_API36_INSTALL.apk
