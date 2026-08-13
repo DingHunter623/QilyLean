@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -16,6 +16,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Android signing tools
         uses: android-actions/setup-android@v3
@@ -75,6 +77,80 @@ jobs:
           unzip -p Times26001-Android-v1.1.13-Standard-Website-Logo.apk assets/public/assets/index-P___uYFs.css | grep -q 'width:178px'
           unzip -p Times26001-Android-v1.1.13-Standard-Website-Logo.apk assets/public/assets/qilylean-header-logo.svg | grep -q 'QilyLean｜启力精益'
           sha256sum Times26001-Android-v1.1.13-Standard-Website-Logo.apk > SHA256SUMS.txt
+          cp SHA256SUMS.txt Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt
+
+      - name: Synchronize website Times26001 modules
+        shell: python
+        run: |
+          from pathlib import Path
+          import json, re
+
+          apk = 'Times26001-Android-v1.1.13-Standard-Website-Logo.apk'
+          sha = 'Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt'
+          targets = [
+              'tools/times26001/index.html',
+              'capabilities/index.html',
+              'app-download-share-v1.js',
+              'times26001-home-card.js',
+              'assets/tools/times26001-overview.svg',
+              'app-support/index.html',
+              'app-store/times26001/README.md',
+          ]
+          apk_pattern = r'Times26001-Android-v1\\.1\\.\\d+(?:-[A-Za-z0-9]+)*\\.apk'
+          sha_pattern = r'Times26001-Android-v1\\.1\\.\\d+(?:-[A-Za-z0-9]+)*\\.sha256\\.txt'
+          warning = '如覆盖安装失败，请先备份必要信息后卸载旧版；卸载会清除本机闹钟、设置及测时记录。'
+          for name in targets:
+              p = Path(name)
+              if not p.exists():
+                  continue
+              s = p.read_text(encoding='utf-8')
+              s = re.sub(apk_pattern, apk, s)
+              s = re.sub(sha_pattern, sha, s)
+              s = s.replace('天气定位可靠性修正版', '官网标准LOGO统一修正版')
+              s = s.replace('定位可靠性修正版', '官网标准LOGO统一修正版')
+              s = s.replace('界面精简与大字版', '官网标准LOGO统一修正版')
+              if name == 'app-store/times26001/README.md' and warning not in s:
+                  s += '\\n> 安装提示：' + warning + '\\n'
+              p.write_text(s, encoding='utf-8')
+
+          manifest = Path('app-release-manifest.json')
+          data = json.loads(manifest.read_text(encoding='utf-8'))
+          data['updatedAt'] = '2026-08-13'
+          app = data['apps']['times26001']
+          app['publicRelease'].update(
+              versionName='1.1.13',
+              versionCode=16,
+              apk='/' + apk,
+              sha256='/' + sha,
+              label='当前官网安装包（官网标准LOGO统一修正版）'
+          )
+          app['latestBuild'].update(
+              versionName='1.1.13',
+              versionCode=16,
+              status='顶部LOGO已统一为官网QilyLean｜启力精益横版标准；保留天气定位可靠性修正'
+          )
+          manifest.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\\n', encoding='utf-8')
+
+          checks = ['tools/times26001/index.html','capabilities/index.html','app-download-share-v1.js','app-release-manifest.json']
+          for name in checks:
+              text = Path(name).read_text(encoding='utf-8')
+              if apk not in text:
+                  raise SystemExit(f'new Times26001 APK link missing in {name}')
+
+      - name: Publish APK and website synchronization
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add Times26001-Android-v1.1.13-Standard-Website-Logo.apk \
+            Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt \
+            tools/times26001/index.html capabilities/index.html \
+            app-download-share-v1.js times26001-home-card.js \
+            assets/tools/times26001-overview.svg app-support/index.html \
+            app-store/times26001/README.md app-release-manifest.json
+          git commit -m 'release: publish Times26001 standard website logo APK'
+          git push origin HEAD:main
 
       - name: Upload installable APK
         uses: actions/upload-artifact@v4
