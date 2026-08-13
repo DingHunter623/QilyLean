@@ -109,6 +109,9 @@ jobs:
               s = s.replace('天气定位可靠性修正版', '官网标准LOGO统一修正版')
               s = s.replace('定位可靠性修正版', '官网标准LOGO统一修正版')
               s = s.replace('界面精简与大字版', '官网标准LOGO统一修正版')
+              if name == 'tools/times26001/index.html' and warning not in s:
+                  notice = '<div class="tool-note"><strong>安装提示：</strong>' + warning + '</div>'
+                  s = s.replace('</div></section>\n\n</main>', notice + '</div></section>\n\n</main>')
               if name == 'app-store/times26001/README.md' and warning not in s:
                   s += '\\n> 安装提示：' + warning + '\\n'
               p.write_text(s, encoding='utf-8')
@@ -131,11 +134,13 @@ jobs:
           )
           manifest.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\\n', encoding='utf-8')
 
-          checks = ['tools/times26001/index.html','capabilities/index.html','app-download-share-v1.js','app-release-manifest.json']
+          checks = ['tools/times26001/index.html','capabilities/index.html','times26001-home-card.js','app-release-manifest.json']
           for name in checks:
               text = Path(name).read_text(encoding='utf-8')
               if apk not in text:
                   raise SystemExit(f'new Times26001 APK link missing in {name}')
+          if warning not in Path('tools/times26001/index.html').read_text(encoding='utf-8'):
+              raise SystemExit('Times26001 installation warning missing from product page')
 
       - name: Publish APK and website synchronization
         shell: bash
