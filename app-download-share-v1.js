@@ -6,13 +6,13 @@
     times26001:{
       name:'Times26001',
       url:'https://qilylean.com/tools/times26001/#android-download',
-      download:'https://qilylean.com/Times26001-Android-v1.1.12-UI-Layout.apk?build=615c548a',
+      download:'https://qilylean.com/Times26001-Android-v1.1.13-Location-Fix.apk?build=efe5e188',
       qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'
     },
     qilyleanHome:{
       name:'QilyLean Home｜官网通用安装包',
       url:'https://qilylean.com/capabilities/#digital-tools',
-      download:'https://qilylean.com/QilyLean_Home_Universal_v2.2.apk?build=615c548a-qilylean-home-download-v1',
+      download:'https://qilylean.com/QilyLean_Home_v2.3.2_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1',
       qr:'/assets/tools/qr-qilylean-home-download.svg?v=20260809-download-v2'
     }
   };
@@ -113,7 +113,7 @@
       var paragraph=timesCard.querySelector('.capability-digital-content > p');
       if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、数据复制、按秒倒计时、闹钟、北京时间、万年历、农历、黄历、节气与天气预报，可查看当前位置或指定城市的当前实况和未来7天趋势。';
       var result=timesCard.querySelector('.module-result');
-      if(result)result.textContent='手机试用版：v1.1.12 / versionCode 15 / API 36｜原生定位权限｜不默认上海｜当前位置/城市搜索｜当前实况＋未来7天';
+      if(result)result.textContent='手机试用版：v1.1.13 / versionCode 16 / API 36｜原生定位权限｜不默认上海｜当前位置/城市搜索｜当前实况＋未来7天';
       timesCard.querySelectorAll('[data-app-share-link="times26001"]').forEach(function(btn){btn.textContent='分享下载页';});
     }
 
@@ -125,7 +125,7 @@
         if(!direct){
           direct=document.createElement('a');
           direct.setAttribute('data-qilylean-home-direct-download','1');
-          direct.href='/QilyLean_Home_Universal_v2.2.apk?build=615c548a-qilylean-home-download-v1';
+          direct.href='/QilyLean_Home_v2.3.2_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1';
           direct.setAttribute('download','');
           direct.textContent='下载 Android APK（v2.2）';
           homeActions.insertBefore(direct,homeActions.firstChild);
