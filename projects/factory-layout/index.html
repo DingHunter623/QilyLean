@@ -53,6 +53,37 @@
   <link id="qilyHeroPrimaryContrastStylesheet" rel="stylesheet" href="/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1">
 <!-- QILY-R2-PRIMARY-CONTRAST-NAV:END -->
   <script defer id="qilyFastNativeNavigationV5" data-qily-fast-native-navigation="v5" src="/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5"></script>
+<!-- QILY-FACTORY-THUMB-CONTRAST-V6:START -->
+<style id="qilyFactoryThumbContrastV6">
+/* 2026-08-13｜factory thumbnail visual hard stop: no dark-teal label background */
+html body.factory-layout-page .factory-plan-thumb-grid{background:#fff!important;}
+html body.factory-layout-page .factory-plan-thumb-grid .factory-plan-preview,
+html body.factory-layout-page .factory-plan-thumb-grid .factory-plan-preview:hover,
+html body.factory-layout-page .factory-plan-thumb-grid .factory-plan-preview:focus-visible,
+html body.factory-layout-page .factory-plan-thumb-grid .factory-plan-preview:active{
+  background:#fff!important;background-image:none!important;color:#073c47!important;-webkit-text-fill-color:#073c47!important;
+  border:0!important;box-shadow:none!important;text-shadow:none!important;filter:none!important;opacity:1!important;
+}
+html body.factory-layout-page .factory-plan-thumb-grid .factory-plan-preview::before,
+html body.factory-layout-page .factory-plan-thumb-grid .factory-plan-preview::after{content:none!important;display:none!important;background:none!important;}
+html body.factory-layout-page .factory-plan-thumb-grid .factory-plan-preview img{
+  display:block!important;width:var(--project-thumb-size)!important;height:var(--project-thumb-size)!important;
+  background:#fff!important;border:1px solid #c8dcda!important;box-shadow:none!important;
+}
+html body.factory-layout-page .factory-plan-thumb-grid .factory-plan-preview>span{
+  position:static!important;display:flex!important;align-items:center!important;justify-content:center!important;
+  width:var(--project-thumb-size)!important;max-width:var(--project-thumb-size)!important;min-height:30px!important;
+  margin:5px 0 0!important;padding:5px 4px!important;box-sizing:border-box!important;
+  color:#073c47!important;-webkit-text-fill-color:#073c47!important;background:#f7fbfa!important;background-image:none!important;
+  border:1px solid #9fc8c4!important;border-top:2px solid #c99a3e!important;border-radius:5px!important;
+  box-shadow:none!important;text-shadow:none!important;font-size:12px!important;font-weight:950!important;line-height:1.18!important;
+  opacity:1!important;visibility:visible!important;white-space:normal!important;overflow-wrap:anywhere!important;
+}
+html body.factory-layout-page .factory-plan-thumb-grid .factory-plan-preview:is(:hover,:focus-visible,:active)>span{
+  color:#073c47!important;-webkit-text-fill-color:#073c47!important;background:#fff9e9!important;border-color:#c99a3e!important;
+}
+</style>
+<!-- QILY-FACTORY-THUMB-CONTRAST-V6:END -->
 </head>
 <body class="module-page project-detail-page factory-layout-page qily-pro-v24">
 <header class="qily-site-header"><a class="qily-brand" href="/">QilyLean | 启力精益</a><nav class="site-nav" aria-label="QilyLean核心导视">
