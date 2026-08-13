@@ -119,7 +119,7 @@ public class MainActivity extends Activity {
         LinearLayout content = new LinearLayout(this);
         content.setOrientation(LinearLayout.VERTICAL);
         content.setGravity(Gravity.CENTER_HORIZONTAL);
-        content.setPadding(dp(20), dp(24), dp(20), dp(40));
+        content.setPadding(dp(20), dp(24), dp(20), dp(64));
         scroll.addView(content, new ScrollView.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -246,8 +246,9 @@ public class MainActivity extends Activity {
 
         TextView footer = text(
                 "启精益之智，聚企业之力。\n免Root通用版，不读取、不展示手机品牌或型号；可随时切回系统桌面。",
-                12, MUTED, Gravity.CENTER);
-        footer.setLineSpacing(dp(2), 1f);
+                14, MUTED, Gravity.CENTER);
+        footer.setLineSpacing(dp(4), 1.08f);
+        footer.setPadding(dp(8), 0, dp(8), dp(20));
         LinearLayout.LayoutParams footerLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -365,10 +366,10 @@ public class MainActivity extends Activity {
         rowLp.setMargins(0, 0, 0, dp(10));
         parent.addView(row, rowLp);
 
-        LinearLayout.LayoutParams leftLp = new LinearLayout.LayoutParams(0, dp(92), 1f);
+        LinearLayout.LayoutParams leftLp = new LinearLayout.LayoutParams(0, dp(112), 1f);
         leftLp.setMargins(0, 0, dp(5), 0);
         row.addView(left, leftLp);
-        LinearLayout.LayoutParams rightLp = new LinearLayout.LayoutParams(0, dp(92), 1f);
+        LinearLayout.LayoutParams rightLp = new LinearLayout.LayoutParams(0, dp(112), 1f);
         rightLp.setMargins(dp(5), 0, 0, 0);
         row.addView(right, rightLp);
     }
@@ -385,7 +386,7 @@ public class MainActivity extends Activity {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setGravity(Gravity.CENTER_VERTICAL);
-        box.setPadding(dp(14), dp(9), dp(10), dp(9));
+        box.setPadding(dp(14), dp(12), dp(12), dp(12));
         box.setClickable(true);
         box.setFocusable(true);
         box.setElevation(dp(2));
@@ -395,8 +396,10 @@ public class MainActivity extends Activity {
         TextView titleView = text(title, 16, WHITE, Gravity.LEFT);
         titleView.setTypeface(Typeface.DEFAULT_BOLD);
         box.addView(titleView);
-        TextView subView = text(subtitle, 10, MUTED, Gravity.LEFT);
-        subView.setMaxLines(2);
+        TextView subView = text(subtitle, 12, MUTED, Gravity.LEFT);
+        subView.setIncludeFontPadding(true);
+        subView.setLineSpacing(dp(2), 1.08f);
+        subView.setMaxLines(3);
         LinearLayout.LayoutParams subLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
