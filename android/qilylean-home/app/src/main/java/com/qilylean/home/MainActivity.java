@@ -241,7 +241,7 @@ public class MainActivity extends Activity {
 
         addSectionTitle(content, "官方联系");
         addCardRow(content,
-                webCard("官网", "https://qilylean.com/", "https://qilylean.com/"),
+                webCard("官方网址", "https://qilylean.com/", "https://qilylean.com/"),
                 webCard("企业邮箱", "admin@qilylean.com", "mailto:admin@qilylean.com"));
 
         TextView footer = text(
