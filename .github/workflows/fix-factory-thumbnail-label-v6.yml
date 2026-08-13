@@ -1,0 +1,52 @@
+name: Fix factory thumbnail label visual V6
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/fix-factory-thumbnail-label-v6.js'
+      - '.github/workflows/fix-factory-thumbnail-label-v6.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: factory-thumb-v6
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply V6 hard-stop visual rule
+        run: node scripts/fix-factory-thumbnail-label-v6.js
+      - name: Validate exact contrast contract
+        shell: bash
+        run: |
+          node --check scripts/fix-factory-thumbnail-label-v6.js
+          node - <<'NODE'
+          const fs=require('fs');
+          const h=fs.readFileSync('projects/factory-layout/index.html','utf8');
+          const required=['qilyFactoryThumbContrastV6','background:#f7fbfa!important','border-top:2px solid #c99a3e!important','color:#073c47!important'];
+          for(const x of required) if(!h.includes(x)) throw new Error('missing '+x);
+          if(!h.includes('.factory-plan-thumb-grid .factory-plan-preview>span')) throw new Error('label selector missing');
+          console.log('Factory thumbnail label V6 contract passed.');
+          NODE
+      - name: Commit production page
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add projects/factory-layout/index.html
+          if git diff --cached --quiet; then echo 'No changes.'; exit 0; fi
+          git commit -m 'fix: remove dark factory thumbnail labels and raise contrast [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
