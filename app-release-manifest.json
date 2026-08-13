@@ -13,9 +13,9 @@
       "publicRelease": {
         "versionName": "1.1.13",
         "versionCode": 16,
-        "apk": "/Times26001-Android-v1.1.13-Location-Fix.apk",
-        "sha256": "/Times26001-Android-v1.1.13-Location-Fix.sha256.txt",
-        "label": "当前官网试用包（天气定位可靠性修正版）",
+        "apk": "/Times26001-Android-v1.1.13-Standard-Website-Logo.apk",
+        "sha256": "/Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt",
+        "label": "当前官网安装包（官网标准LOGO统一修正版）",
         "status": "用于官网直接下载与试用；不作为Google Play首发AAB的上传签名或后续升级签名基线"
       },
       "storeCandidate": {
@@ -35,7 +35,7 @@
         "versionCode": 16,
         "targetSdk": 36,
         "label": "最新Google Play构建",
-        "status": "精确/粗略权限兼容；高精度失败自动降级重试；GPS关闭与超时提示已完善",
+        "status": "顶部LOGO已统一为官网QilyLean｜启力精益横版标准；保留天气定位可靠性修正",
         "upgradeFromHistoricalPublicApk": "官网独立分发包与Google Play发布链分开管理；Google Play后续版本持续使用同一Upload Key并由Play App Signing管理最终分发签名"
       }
     },
@@ -71,4 +71,4 @@
       }
     }
   }
-}
+}\n
