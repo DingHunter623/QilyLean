@@ -154,29 +154,26 @@ public class MainActivity extends Activity {
         clockHandler.removeCallbacks(clockTask);
         clockHandler.post(clockTask);
 
-        TextView version = pill("QilyLean Home v2.3.1 · Android 16 / API 36");
+        TextView version = pill("QilyLean Home v2.3.2 · Android 16 / API 36");
         LinearLayout.LayoutParams versionLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         versionLp.setMargins(0, dp(14), 0, dp(20));
         content.addView(version, versionLp);
 
-        addSectionTitle(content, "官网首页导航");
+        addSectionTitle(content, "官网最新导航");
         addCardRow(content,
                 webCard("首页", "官网总入口与最新内容", "https://qilylean.com/"),
-                webCard("能力画像", "方法体系、能力域与佐证", "https://qilylean.com/capabilities/"));
+                webCard("能力体系", "六类核心能力与交付边界", "https://qilylean.com/capabilities/"));
         addCardRow(content,
-                webCard("履历主线", "制造业经历与岗位主线", "https://qilylean.com/experience/"),
-                webCard("代表项目", "精益、IE与数智工厂案例", "https://qilylean.com/projects/"));
+                webCard("代表项目", "项目成果、证据与交付资产", "https://qilylean.com/projects/"),
+                webCard("改善方法", "精益、IE与现场改善方法", "https://qilylean.com/improvements/"));
         addCardRow(content,
-                webCard("改善经验", "现场改善方法与工程沉淀", "https://qilylean.com/improvements/"),
-                webCard("QilyLean AI", "通用智能与专业对话", "https://qilylean.com/ai.html"));
-        addCardRow(content,
-                webCard("知识分享", "工具、简报与参考资料", "https://qilylean.com/knowledge/"),
-                webCard("行走印记", "工作现场、团队与生活记录", "https://qilylean.com/moments.html"));
+                webCard("知识资产", "术语、模板、方法与简报", "https://qilylean.com/knowledge/"),
+                webCard("履历主线", "制造业经历与岗位主线", "https://qilylean.com/experience/"));
         addCardRow(content,
                 webCard("项目合作", "诊断、规划与项目交付", "https://qilylean.com/cooperation/"),
-                webCard("今日简报", "制造工程方法持续沉淀", "https://qilylean.com/qilylean/daily-insights.html"));
+                webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust/"));
 
         addSectionTitle(content, "知识重点直达");
         addCardRow(content,
