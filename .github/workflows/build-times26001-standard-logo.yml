@@ -96,8 +96,8 @@ jobs:
               'app-support/index.html',
               'app-store/times26001/README.md',
           ]
-          apk_pattern = r'Times26001-Android-v1\\.1\\.\\d+(?:-[A-Za-z0-9]+)*\\.apk'
-          sha_pattern = r'Times26001-Android-v1\\.1\\.\\d+(?:-[A-Za-z0-9]+)*\\.sha256\\.txt'
+          apk_pattern = r'Times26001-Android-v1[^" ?]+[.]apk'
+          sha_pattern = r'Times26001-Android-v1[^" ?]+[.]sha256[.]txt'
           warning = '如覆盖安装失败，请先备份必要信息后卸载旧版；卸载会清除本机闹钟、设置及测时记录。'
           for name in targets:
               p = Path(name)
