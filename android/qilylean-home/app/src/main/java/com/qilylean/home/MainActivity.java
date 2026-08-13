@@ -154,7 +154,7 @@ public class MainActivity extends Activity {
         clockHandler.removeCallbacks(clockTask);
         clockHandler.post(clockTask);
 
-        TextView version = pill("QilyLean Home v2.3.2 · Android 16 / API 36");
+        TextView version = pill("QilyLean Home v2.3.3 · Android 16 / API 36");
         LinearLayout.LayoutParams versionLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
