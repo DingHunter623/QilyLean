@@ -2,6 +2,11 @@ name: Build installable QilyLean Home QA APK
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'android/qilylean-home/**'
+      - '.github/workflows/build-installable-qa-apk.yml'
   pull_request:
     branches: [main]
     paths:
