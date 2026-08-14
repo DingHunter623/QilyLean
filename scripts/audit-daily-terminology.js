@@ -26,7 +26,7 @@ const terminologyDir = path.join(root, 'knowledge', 'terminology');
 const reportPath = path.join(dailyDir, 'terminology-audit-latest.json');
 
 const UI_ALLOWLIST = new Set([
-  'DAILY', 'ENGINEERING', 'BRIEF', 'SINGLE', 'POINT', 'LESSON',
+  'DAILY', 'ENGINEERING', 'BRIEF', 'CURATED', 'SINGLE', 'POINT', 'LESSON',
   'QilyLean', 'PPT', 'PDF', 'DOC', 'DOCX', 'HTML', 'CSS', 'SVG',
   'URL', 'QR', 'V1', 'V2', 'L1', 'L2', 'L3', 'L4', 'MESSAGE', 'DISCUSSION'
 ]);
