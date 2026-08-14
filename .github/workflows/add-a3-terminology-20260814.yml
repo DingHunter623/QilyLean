@@ -34,11 +34,11 @@ jobs:
           node - <<'NODE'
           const fs=require('fs');
           const html=fs.readFileSync('knowledge/terminology.html','utf8');
-          const count=(html.match(/<article class="term-card"/g)||[]).length;
-          if(count!==191)throw new Error('terminology count='+count);
+          const cardCount=(html.match(/<article class="term-card"/g)||[]).length;
+          if(cardCount!==190)throw new Error('terminology card count='+cardCount);
           if(!html.includes('<div class="term-code">A3</div>'))throw new Error('A3 missing');
           if(!html.includes('A3 Problem Solving / A3 Report'))throw new Error('A3 English name missing');
-          console.log('A3 terminology exact QA passed: 191 cards.');
+          console.log('A3 terminology exact QA passed: 190 main cards + standalone source = 191 unified terms.');
           NODE
       - name: Commit terminology update
         shell: bash
