@@ -1,0 +1,78 @@
+name: Publish contact naming and WeChat interaction V12
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/unify-wechat-official-url-contact-v12.js'
+      - '.github/workflows/publish-contact-wechat-official-url-v12.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: contact-wechat-official-url-v12-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apply V12 naming and WeChat interaction
+        run: node scripts/unify-wechat-official-url-contact-v12.js
+
+      - name: Validate exact product contract
+        shell: bash
+        run: |
+          node --check scripts/unify-wechat-official-url-contact-v12.js
+          node --check site-navigation-core.js
+          node --check qilylean/contact-wechat-open.js
+          node - <<'NODE'
+          const fs=require('fs');
+          const nav=fs.readFileSync('site-navigation-core.js','utf8');
+          const css=fs.readFileSync('site-shell.css','utf8');
+          const coop=fs.readFileSync('cooperation/index.html','utf8');
+          const term=fs.readFileSync('knowledge/terminology.html','utf8');
+          const prompt='微信号Qily259已复制，是否开启微信主程序';
+          if(nav.includes('qily-copy-wechat')) throw new Error('dedicated copy-WeChat button still present');
+          if(!nav.includes('data-qily-wechat-copy=\\"Qily259\\"')) throw new Error('global WeChat row is not clickable');
+          if(!nav.includes(prompt)) throw new Error('copy/open prompt missing');
+          if(!css.includes('QILY-CONTACT-INTERACTION-V12:START')) throw new Error('V12 contact styles missing');
+          if(!coop.includes('class="wechat-contact-action" data-qily-wechat-copy="Qily259"')) throw new Error('cooperation WeChat is not full-row button');
+          if(!term.includes('微信：<a href="#copy-wechat"')) throw new Error('OPL label not 微信');
+          if(!term.includes('data-qily-wechat-copy="Qily259"')) throw new Error('OPL copy hook missing');
+          for(const file of ['site-navigation-core.js','cooperation/index.html','knowledge/terminology.html']){
+            const t=fs.readFileSync(file,'utf8').split(prompt).join('');
+            if(t.includes('官网网址')) throw new Error(file+' still contains 官网网址');
+            if(t.includes('微信号')) throw new Error(file+' still contains 微信号 outside required prompt');
+          }
+          console.log('V12 exact QA passed.');
+          NODE
+          git diff --check
+
+      - name: Commit production changes
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A ':!.github'
+          if git diff --cached --quiet; then
+            echo 'No production changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: unify 微信 and 官方网址 interactions [skip ci]'
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            echo "push retry $i"
+            sleep 3
+          done
+          exit 1
