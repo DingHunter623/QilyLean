@@ -1,0 +1,98 @@
+name: Publish cooperation contact inline lock V1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-cooperation-contact-inline-lock-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-cooperation-contact-inline-lock-v1
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Lock four cooperation rows inline
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('cooperation/index.html')
+          s=p.read_text(encoding='utf-8')
+          row='box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-height:46px!important;margin-top:10px!important;padding:9px 14px!important;border:2px solid #f5c766!important;border-radius:0!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:rgba(255,255,255,.08)!important;background-image:none!important;box-shadow:none!important;text-decoration:none!important;font:inherit!important;font-weight:900!important;appearance:none!important;-webkit-appearance:none!important;'
+          label='text-decoration:none!important;text-decoration-line:none!important;border-bottom:0!important;box-shadow:none!important;'
+          value='display:inline-block!important;width:max-content!important;max-width:100%!important;padding-bottom:1px!important;text-decoration:none!important;text-decoration-line:none!important;border-bottom:2px solid currentColor!important;'
+          replacements={
+            '<button type="button" class="contact-action contact-phone-action qily-uniform-contact-row" data-qily-phone-copy="13450014003" aria-label="复制并拨打电话 13450014003">':f'<button type="button" class="contact-action contact-phone-action qily-uniform-contact-row" data-qily-phone-copy="13450014003" aria-label="复制并拨打电话 13450014003" style="{row}">',
+            '<a class="contact-action contact-email-action qily-uniform-contact-row" href="mailto:admin@qilylean.com">':f'<a class="contact-action contact-email-action qily-uniform-contact-row" href="mailto:admin@qilylean.com" style="{row}">',
+            '<button type="button" id="copyWechat" class="contact-action wechat-contact-action qily-uniform-contact-row" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259">':f'<button type="button" id="copyWechat" class="contact-action wechat-contact-action qily-uniform-contact-row" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259" style="{row}">',
+            '<a class="contact-action contact-evidence-action qily-uniform-contact-row" href="/projects/">':f'<a class="contact-action contact-evidence-action qily-uniform-contact-row" href="/projects/" style="{row}">',
+            '<span class="contact-action-label">电话：</span>':f'<span class="contact-action-label" style="{label}">电话：</span>',
+            '<span class="contact-action-label">邮箱：</span>':f'<span class="contact-action-label" style="{label}">邮箱：</span>',
+            '<span class="contact-action-label">微信：</span>':f'<span class="contact-action-label" style="{label}">微信：</span>',
+            '<strong class="contact-action-value">134 5001 4003</strong>':f'<strong class="contact-action-value" style="{value}">134 5001 4003</strong>',
+            '<strong class="contact-action-value">admin@qilylean.com</strong>':f'<strong class="contact-action-value" style="{value}">admin@qilylean.com</strong>',
+            '<strong class="contact-action-value">Qily259</strong>':f'<strong class="contact-action-value" style="{value}">Qily259</strong>',
+          }
+          for old,new in replacements.items():
+              if old in s:
+                  s=s.replace(old,new)
+              elif new not in s:
+                  raise SystemExit('Missing expected cooperation contact fragment: '+old[:120])
+          p.write_text(s,encoding='utf-8')
+          PY
+
+      - name: Validate mobile and desktop invariant
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('cooperation/index.html').read_text(encoding='utf-8')
+          rows=re.findall(r'<(?:button|a)[^>]*class="[^"]*qily-uniform-contact-row[^"]*"[^>]*>',s)
+          if len(rows)!=4:
+              raise SystemExit(f'Expected exactly 4 uniform contact rows, found {len(rows)}')
+          for i,row in enumerate(rows,1):
+              if 'border:2px solid #f5c766!important' not in row:
+                  raise SystemExit(f'Row {i} missing forced gold border')
+          if s.count('border-bottom:2px solid currentColor!important') < 3:
+              raise SystemExit('Phone/email/wechat value emphasis incomplete')
+          for label in ('电话：','邮箱：','微信：'):
+              m=re.search(r'<span class="contact-action-label" style="([^"]+)">'+re.escape(label)+r'</span>',s)
+              if not m or 'border-bottom:0!important' not in m.group(1):
+                  raise SystemExit(label+' label underline guard missing')
+          print('PASS: four rows have identical 2px gold inline borders; values emphasized only.')
+          PY
+
+      - name: Commit production HTML
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add cooperation/index.html
+          if git diff --cached --quiet; then
+            echo 'No production HTML changes.'
+            exit 0
+          fi
+          git commit -m 'fix: lock cooperation four-row borders inline for mobile and desktop [skip ci]'
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((i*3))
+          done
+          exit 1
