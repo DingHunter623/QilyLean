@@ -2,22 +2,23 @@
 'use strict';
 
 /*
- * QilyLean R2 clean runtime v3｜2026-08-12
+ * QilyLean R2 clean runtime v3｜2026-08-14 URL V14 compatible
  * 目的：
  * 1) 彻底移除全站可见页尾/联系栏脚本及静态 footer；
  * 2) 禁止历史动态正文增强脚本在页面加载后追加 CTA / 区块，避免“按钮先出现、正文后出现”；
  * 3) 首屏采用原子显示，避免局部旧版/未着色模块抢先露出；
  * 4) 全站保证 Fast Native Navigation V5：浏览器原生导航 + 同源预取，不做跨页 DOM/CSS 搬运；
- * 5) 统一 R2 / navigation / legacy cache 版本。
+ * 5) R2 CSS 保持稳定版本；导航加载链单独采用 URL V14 cache version，防止自愈回退到旧分享/交流逻辑。
  */
 
 const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
 const VERSION = '20260813-r2-clean-v4';
+const NAV_VERSION = '20260814-url-v14';
 const R2_CSS = `/site-r2-stability-fixes-v1.css?v=${VERSION}`;
-const NAV_JS = `/site-navigation.js?v=${VERSION}`;
-const LEGACY_JS = `/site-navigation-legacy-20260802.js?v=${VERSION}`;
+const NAV_JS = `/site-navigation.js?v=${NAV_VERSION}`;
+const LEGACY_JS = `/site-navigation-legacy-20260802.js?v=${NAV_VERSION}`;
 const FAST_NATIVE_JS = '/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5';
 const FIRST_START = '<!-- QILY-R2-FIRST-PAINT:START -->';
 const FIRST_END = '<!-- QILY-R2-FIRST-PAINT:END -->';
@@ -78,7 +79,7 @@ function patchRuntimeSources(){
   write('site-navigation.js',wrapper);
 
   let legacy=read('site-navigation-legacy-20260802.js');
-  legacy=legacy.replace(/var CORE_SRC = '\/site-navigation-core\.js\?v=[^']+';/,`var CORE_SRC = '/site-navigation-core.js?v=${VERSION}';`);
+  legacy=legacy.replace(/var CORE_SRC = '\/site-navigation-core\.js\?v=[^']+';/,`var CORE_SRC = '/site-navigation-core.js?v=${NAV_VERSION}';`);
   write('site-navigation-legacy-20260802.js',legacy);
 }
 function verify(rel, html) {
@@ -88,7 +89,7 @@ function verify(rel, html) {
   assert(!/<footer\b/i.test(html), `${rel}: visible footer remains`);
   assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/i.test(html), `${rel}: dynamic content shaper still referenced`);
   assert(!/qilyBackgroundMusicPreload/i.test(html), `${rel}: retired background-audio preload remains`);
-  if (/site-navigation\.js\?v=/i.test(html)) assert(html.includes(NAV_JS), `${rel}: R2 clean navigation version missing`);
+  if (/site-navigation\.js\?v=/i.test(html)) assert(html.includes(NAV_JS), `${rel}: URL V14 navigation version missing`);
   if (/site-r2-stability-fixes-v1\.css\?v=/i.test(html)) assert(html.includes(R2_CSS), `${rel}: R2 clean CSS version missing`);
 }
 
@@ -114,6 +115,6 @@ walk(root, (file) => {
   }
 });
 
-assert(read('site-navigation.js').includes(LEGACY_JS),'site-navigation.js clean legacy cache version missing');
-assert(read('site-navigation-legacy-20260802.js').includes(`/site-navigation-core.js?v=${VERSION}`),'legacy runtime clean core cache version missing');
-process.stdout.write(`R2 clean runtime v3 checked ${checked} public HTML pages; refreshed ${changed}; Fast Native V5 guaranteed; footer and dynamic content shapers removed.\n`);
+assert(read('site-navigation.js').includes(LEGACY_JS),'site-navigation.js URL V14 legacy cache version missing');
+assert(read('site-navigation-legacy-20260802.js').includes(`/site-navigation-core.js?v=${NAV_VERSION}`),'legacy runtime URL V14 core cache version missing');
+process.stdout.write(`R2 clean runtime v3 checked ${checked} public HTML pages; refreshed ${changed}; Fast Native V5 guaranteed; URL V14 navigation cache protected; footer and dynamic content shapers removed.\n`);
