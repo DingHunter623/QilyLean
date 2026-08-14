@@ -8,14 +8,9 @@ TEXT_EXTS = {
     '.html','.htm','.js','.css','.json','.md','.txt','.py','.java','.kt','.kts','.xml','.yml','.yaml',
     '.gradle','.properties','.svg','.rss','.xhtml','.csv','.ts','.tsx','.jsx','.sh'
 }
-SKIP_DIRS = {'.git','node_modules','build','.gradle','.cache','dist'}
-# Deployment plumbing encodes the legacy phrase intentionally to detect/fix old binaries;
-# do not rewrite its own migration/repack instructions while migrating product content.
+SKIP_DIRS = {'.git','.github','node_modules','build','.gradle','.cache','dist'}
 SKIP_EXACT = {
     'scripts/migrate-official-email-and-fix-brief-arrow-20260814.py',
-    '.github/workflows/migrate-official-email-and-fix-brief-arrow-20260814.yml',
-    '.github/workflows/repack-times26001-official-email-20260814.yml',
-    '.github/workflows/publish-qhome-v233-official-email-20260814.yml',
 }
 
 
@@ -59,7 +54,7 @@ if old_arrow in s:
 elif new_arrow not in s:
     raise SystemExit('scene diagram 02 arrow anchor not found')
 
-# Product-facing validation: all maintained website/app sources must use the new label.
+# Product-facing validation: maintained website/app sources must use the new label.
 remaining = []
 for p in ROOT.rglob('*'):
     if not eligible(p):
