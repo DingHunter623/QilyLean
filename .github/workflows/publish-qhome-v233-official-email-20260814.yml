@@ -1,4 +1,4 @@
-name: Publish QilyLean Home v2.3.3 官网邮箱 + URL V14 APK
+name: Publish QilyLean Home v2.3.3 R5 官网邮箱 + URL V14 APK
 
 on:
   push:
@@ -52,45 +52,34 @@ jobs:
                   continue
               n=s.replace('企业邮箱','官网邮箱')
               n=standalone.sub('https://qilylean.com',n)
-              # Never remove the separator between the host and a real path.
               n=malformed.sub('https://qilylean.com/',n)
               if n!=s:
                   p.write_text(n,encoding='utf-8')
                   changed+=1
-
           main=Path('android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java')
           s=main.read_text(encoding='utf-8')
-          old='''        addSectionTitle(content, "官网最新导航");
-        addCardRow(content,
-                webCard("首页", "官网总入口与最新内容", "https://qilylean.com"),
-                webCard("能力体系", "六类核心能力与交付边界", "https://qilylean.com/capabilities"));
-        addCardRow(content,
-                webCard("代表项目", "项目成果、证据与交付资产", "https://qilylean.com/projects"),
-                webCard("改善方法", "精益、IE与现场改善方法", "https://qilylean.com/improvements"));
-        addCardRow(content,
-                webCard("知识资产", "术语、模板、方法与简报", "https://qilylean.com/knowledge"),
-                webCard("履历主线", "制造业经历与岗位主线", "https://qilylean.com/experience"));
-        addCardRow(content,
-                webCard("项目合作", "诊断、规划与项目交付", "https://qilylean.com/cooperation"),
-                webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust"));'''
-          new='''        addSectionTitle(content, "官网最新导航");
-        addCardRow(content,
-                webCard("首页", "官网总入口与最新内容", "https://qilylean.com"),
-                webCard("履历主线", "制造业经历与岗位主线", "https://qilylean.com/experience"));
-        addCardRow(content,
-                webCard("能力体系", "六类核心能力与交付边界", "https://qilylean.com/capabilities"),
-                webCard("改善方法", "精益、IE与现场改善方法", "https://qilylean.com/improvements"));
-        addCardRow(content,
-                webCard("代表项目", "项目成果、证据与交付资产", "https://qilylean.com/projects"),
-                webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust"));
-        addCardRow(content,
-                webCard("项目合作", "诊断、规划与项目交付", "https://qilylean.com/cooperation"),
-                webCard("知识资产", "术语、模板、方法与简报", "https://qilylean.com/knowledge"));'''
-          if old in s:
-              main.write_text(s.replace(old,new),encoding='utf-8')
+          start=s.index('        addSectionTitle(content, "官网最新导航");')
+          end=s.index('        addSectionTitle(content, "知识重点直达");')
+          desired=[
+              '        addSectionTitle(content, "官网最新导航");',
+              '        addCardRow(content,',
+              '                webCard("首页", "官网总入口与最新内容", "https://qilylean.com"),',
+              '                webCard("履历主线", "制造业经历与岗位主线", "https://qilylean.com/experience"));',
+              '        addCardRow(content,',
+              '                webCard("能力体系", "六类核心能力与交付边界", "https://qilylean.com/capabilities"),',
+              '                webCard("改善方法", "精益、IE与现场改善方法", "https://qilylean.com/improvements"));',
+              '        addCardRow(content,',
+              '                webCard("代表项目", "项目成果、证据与交付资产", "https://qilylean.com/projects"),',
+              '                webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust"));',
+              '        addCardRow(content,',
+              '                webCard("项目合作", "诊断、规划与项目交付", "https://qilylean.com/cooperation"),',
+              '                webCard("知识资产", "术语、模板、方法与简报", "https://qilylean.com/knowledge"));',
+              ''
+          ]
+          n=s[:start]+'\n'.join(desired)+s[end:]
+          if n!=s:
+              main.write_text(n,encoding='utf-8')
               changed+=1
-          elif new not in s:
-              raise SystemExit('QilyLean Home navigation block is neither legacy nor R5 fixed order')
           print('QilyLean Home source files normalized:',changed)
           PY
 
@@ -123,7 +112,7 @@ jobs:
           order=['webCard("首页"','webCard("履历主线"','webCard("能力体系"','webCard("改善方法"','webCard("代表项目"','webCard("信任中心"','webCard("项目合作"','webCard("知识资产"']
           pos=[block.index(x) for x in order]
           assert pos==sorted(pos), 'R5 navigation order mismatch: '+str(pos)
-          print('PASS QHome R5 navigation + URL V14: 首页→履历主线→能力体系→改善方法→代表项目→信任中心→项目合作→知识资产')
+          print('PASS QHome R5 navigation + URL V14')
           PY
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
@@ -166,7 +155,7 @@ jobs:
           data=json.loads(p.read_text(encoding='utf-8'))
           data['updatedAt']='2026-08-14'
           data['apps']['qilyleanHome']['publicRelease'].update(versionName='2.3.3',versionCode=11,apk='/'+apk,sha256='/'+sha,label='当前官网安装包（R5官网最新导航、官网邮箱与URL V14精细化统一版）')
-          data['apps']['qilyleanHome']['latestBuild'].update(versionName='2.3.3',versionCode=11,status='桌面导航按R5固定顺序同步官网： 首页→履历主线→能力体系→改善方法→代表项目→信任中心→项目合作→知识资产；官网邮箱统一；用户可见/复制官方网址无尾斜杠；子路径分隔完整；API 36可安装包构建通过')
+          data['apps']['qilyleanHome']['latestBuild'].update(versionName='2.3.3',versionCode=11,status='桌面导航按R5固定顺序同步官网：首页→履历主线→能力体系→改善方法→代表项目→信任中心→项目合作→知识资产；官网邮箱统一；用户可见/复制官方网址无尾斜杠；子路径分隔完整；API 36可安装包构建通过')
           p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
 
