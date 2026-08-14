@@ -50,13 +50,23 @@ function main() {
     }
   }
 
+  // The initial 2591 -> 372 curation baseline is immutable historical evidence.
+  // Later policy revisions may add newly protected high-value briefs, but must not
+  // rewrite the original baseline policy version, counts, or protected-date snapshot.
   const baseline = JSON.parse(read('qilylean/daily/curation-baseline.json'));
-  assert(baseline.policy_version === policy.version, 'Initial curation baseline policy version mismatch');
+  assert(baseline.baseline_id === 'weekly-curation-initial-20260812', `Initial curation baseline id changed: ${baseline.baseline_id}`);
+  assert(baseline.policy_version === '2026-08-12-r2', `Initial curation baseline policy version changed: ${baseline.policy_version}`);
+  assert(baseline.baseline_date === '2026-08-12', `Initial curation baseline date changed: ${baseline.baseline_date}`);
   assert(baseline.source_total === 2591, `Initial source baseline changed unexpectedly: ${baseline.source_total}`);
+  assert(baseline.retained_total === 372, `Initial retained baseline changed unexpectedly: ${baseline.retained_total}`);
   assert(baseline.removed_total === baseline.source_total - baseline.retained_total, 'Initial curation baseline arithmetic is invalid');
   assert(baseline.reduction_rate >= 0.8, `Initial curation reduction baseline is too low: ${baseline.reduction_rate}`);
-  for (const date of protectedDates) assert((baseline.protected_dates || []).includes(date), `Initial curation baseline lost protected date: ${date}`);
+  const initialProtected = ['2026-07-29', '2026-08-08', '2026-08-09', '2026-08-12'];
+  for (const date of initialProtected) {
+    assert((baseline.protected_dates || []).includes(date), `Initial curation baseline lost original protected date: ${date}`);
+  }
 
+  // Current report must follow the current policy and current retained archive.
   const report = JSON.parse(read('qilylean/daily/curation-report.json'));
   assert(report.policy_version === policy.version, 'Current curation report policy version mismatch');
   assert(report.total_after === dates.length, `Current curation report retained count mismatch: ${report.total_after} vs ${dates.length}`);
@@ -85,13 +95,19 @@ function main() {
   const ceiling = read('qilylean/daily/2026-08-09.html');
   assert(ceiling.includes('Ceiling') && ceiling.includes('Benchmark') && ceiling.includes('Stretch Target'), 'Protected ceiling brief lost its core content');
   const pmo = read('qilylean/daily/2026-08-12.html');
-  assert(pmo.includes('PMO') && pmo.includes('阶段门'), 'Current weekly flagship brief lost its core content');
+  assert(pmo.includes('PMO') && pmo.includes('阶段门'), 'Protected 2026-08-12 PMO brief lost its core content');
+  if (protectedDates.has('2026-08-14')) {
+    const leanGovernance = read('qilylean/daily/2026-08-14.html');
+    assert(leanGovernance.includes('改革自上而下') && leanGovernance.includes('改善自下而上'), 'Protected 2026-08-14 Lean governance brief lost its core thesis');
+    assert((leanGovernance.match(/<svg\b/g) || []).length >= 4, 'Protected 2026-08-14 Lean governance brief lost its scene diagrams');
+    assert(leanGovernance.includes('90天') && leanGovernance.includes('RACI') && leanGovernance.includes('财务验证'), 'Protected 2026-08-14 Lean governance brief lost its implementation framework');
+  }
 
   const homepage = read('index.html');
   assert(!homepage.includes('2591期'), 'Homepage still exposes the legacy quantity-first brief count');
   assert(homepage.includes(`${dates.length}篇`) || homepage.includes('精选简报按周归档'), 'Homepage weekly curated brief positioning is missing');
 
-  process.stdout.write(`Weekly curation validated: ${dates.length} curated briefs; protected ${protectedDates.size}; initial reduction baseline ${baseline.source_total} -> ${baseline.retained_total}.\n`);
+  process.stdout.write(`Weekly curation validated: ${dates.length} curated briefs; protected ${protectedDates.size}; immutable initial reduction baseline ${baseline.source_total} -> ${baseline.retained_total}; current policy ${policy.version}.\n`);
 }
 
 main();
