@@ -7,9 +7,10 @@ def must_replace(text, old, new, label):
         raise SystemExit(f'missing anchor: {label}')
     return text.replace(old, new, 1)
 
-# Shared runtime
-p=Path('site-navigation.js')
+# Shared active runtime
+p=Path('site-navigation-core.js')
 s=p.read_text(encoding='utf-8')
+s=s.replace("var SHARED_ASSET_VERSION = '20260812-r2-stability-v1';","var SHARED_ASSET_VERSION = '20260814-contact-v13';")
 s=s.replace("var SHARED_ASSET_VERSION = '20260814-contact-v12';","var SHARED_ASSET_VERSION = '20260814-contact-v13';")
 
 old="  document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-qily-wechat-copy]');if(!x)return;e.preventDefault();copyWechatAndPrompt(x);});"
@@ -32,7 +33,7 @@ if 'QILY-PHONE-COPY-PROMPT-V13' not in s:
 
 old_phone="PHONE_NUMBERS.map(function (item) { return '<a href=\"tel:' + item.number + '\"><span class=\"qily-phone-city\">' + item.city + '：</span><strong class=\"qily-phone-number\">' + item.number + '</strong></a>'; }).join('')"
 new_phone="PHONE_NUMBERS.map(function (item) { return '<a href=\"tel:' + item.number + '\" data-qily-phone-copy=\"' + item.number + '\" aria-label=\"复制并拨打 ' + item.city + ' ' + item.number + '\"><span class=\"qily-phone-city\">' + item.city + '：</span><strong class=\"qily-phone-number\">' + item.number + '</strong></a>'; }).join('')"
-if 'data-qily-phone-copy=\\"' not in s and 'data-qily-phone-copy="' not in s:
+if 'data-qily-phone-copy=\"' not in s:
     s=must_replace(s,old_phone,new_phone,'phone generator')
 p.write_text(s,encoding='utf-8')
 
@@ -91,9 +92,8 @@ block='''
 s += block
 p.write_text(s,encoding='utf-8')
 
-# Assertions
 checks={
-    'site-navigation.js':['QILY-PHONE-COPY-PROMPT-V13','data-qily-phone-copy'],
+    'site-navigation-core.js':['QILY-PHONE-COPY-PROMPT-V13','data-qily-phone-copy','20260814-contact-v13'],
     'site-shell.css':['QILY-CONTACT-ACTION-V13:START','.qily-phone-number{text-decoration:underline'],
     'cooperation/index.html':['contact-action-value">Qily259','data-qily-phone-copy="13450014003"'],
     'knowledge/terminology.html':['term-opl-contact-label">微信：']
