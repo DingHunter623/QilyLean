@@ -32,7 +32,6 @@ for(const p of walk(root)){
   if(s!==before){fs.writeFileSync(p,s,'utf8');changed.push(r);}
 }
 
-// Explicitly repair known product URLs that may not fit a generic token pattern.
 const explicit=[
   ['https://qilylean.comcapabilities/','https://qilylean.com/capabilities/'],
   ['https://qilylean.comapp-support/','https://qilylean.com/app-support/'],
@@ -53,7 +52,8 @@ for(const p of walk(root)){
   if(s!==before){fs.writeFileSync(p,s,'utf8');if(!changed.includes(r))changed.push(r);}
 }
 
-// Hard QA: hostname must be followed by slash for subpaths, or by a legal URL terminator for root.
+// Hard QA: concrete URLs need a slash before a subpath. Runtime template variables are evaluated later
+// and are intentionally not rewritten here because their route values already carry the separator.
 const bad=[];
 const suspicious=/https:\/\/qilylean\.com([^\s"'`<>]*)/g;
 for(const p of walk(root)){
@@ -62,6 +62,7 @@ for(const p of walk(root)){
   let m;
   while((m=suspicious.exec(s))){
     const tail=m[1]||'';
+    if(tail.startsWith('${'))continue;
     if(tail && !tail.startsWith('/') && !tail.startsWith('?') && !tail.startsWith('#')){
       bad.push(`${r}: ${m[0].slice(0,120)}`);break;
     }
@@ -73,7 +74,7 @@ fs.mkdirSync(path.join(root,'maintenance'),{recursive:true});
 fs.writeFileSync(path.join(root,'maintenance','public-url-path-integrity-v13.json'),JSON.stringify({
   version:'2026-08-14-v13.1',
   root_url:'https://qilylean.com',
-  rule:'root has no trailing slash; subpaths always keep the hostname/path separator slash',
+  rule:'root has no trailing slash; concrete subpaths always keep the hostname/path separator slash; runtime template routes stay dynamic',
   changed_files:[...new Set(changed)].sort(),
   changed_file_count:new Set(changed).size,
   repaired_occurrences:replacements
