@@ -6,6 +6,7 @@ const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
 const VERSION = '20260812-r2-stability-v1';
+const CONTACT_VERSION = '20260814-contact-v13';
 const R2_CSS = `/site-r2-stability-fixes-v1.css?v=${VERSION}`;
 const NATIVE_NAV = '/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5';
 const HERO_CONTRAST = '/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1';
@@ -63,8 +64,8 @@ function normalizeHtml(html,rel){
     .replace(/^[ \t]*<script\b[^>]*(?:id=["']qilyPersistentMusicNavigationScript["']|data-qily-persistent-music-navigation=["'][^"']+["']|src=["'][^"']*\/site-music-persistent-navigation-v1\.js(?:\?v=[^"']*)?["'])[^>]*>\s*<\/script>\s*/gmi,'')
     .replace(/^[ \t]*<link\b[^>]*(?:id=["']qilyHeroPrimaryContrastStylesheet["']|href=["'][^"']*\/site-hero-primary-contrast-v1\.css(?:\?v=[^"']*)?["'])[^>]*>\s*/gmi,'')
     .replace(/\s*<link\b[^>]*(?:id=["']qilyR2RuntimeStabilityStylesheet["']|href=["'][^"']*\/site-r2-stability-fixes-v1\.css(?:\?v=[^"']*)?["'])[^>]*>\s*/gi,'\n')
-    .replace(/\/site-shell\.css\?v=[^"'\s<]+/g,`/site-shell.css?v=${VERSION}`)
-    .replace(/\/site-navigation\.js\?v=[^"'\s<]+/g,`/site-navigation.js?v=${VERSION}`);
+    .replace(/\/site-shell\.css\?v=[^"'\s<]+/g,`/site-shell.css?v=${CONTACT_VERSION}`)
+    .replace(/\/site-navigation\.js\?v=[^"'\s<]+/g,`/site-navigation.js?v=${CONTACT_VERSION}`);
   out=out.replace(/<head>\s*/i,`<head>\n${firstPaint}\n  `);
   const r2Tag=`  <link id="qilyR2RuntimeStabilityStylesheet" rel="stylesheet" href="${R2_CSS}">`;
   if(/<link\b[^>]*id=["']qilyViContrastRestorationStylesheet["'][^>]*>/i.test(out))out=out.replace(/(<link\b[^>]*id=["']qilyViContrastRestorationStylesheet["'][^>]*>)/i,`$1\n${r2Tag}`);
@@ -78,7 +79,7 @@ function patchCore(){
   let s=read('site-navigation-core.js');
   const routes=`  var routes = [\n${ROUTES.map(([l,h])=>`    ['${l}', '${h}']`).join(',\n')}\n  ];`;
   s=s.replace(/  var routes = \[[\s\S]*?\n  \];/,routes)
-    .replace(/var SHARED_ASSET_VERSION = '[^']+';/,`var SHARED_ASSET_VERSION = '${VERSION}';`)
+    .replace(/var SHARED_ASSET_VERSION = '[^']+';/,`var SHARED_ASSET_VERSION = '${CONTACT_VERSION}';`)
     .replace(/20260729-fluid-copy-v5/g,'20260810-content-axis-v8');
   const removeCalls=[
     ['addStylesheet();','// R2 static-first: shell CSS already materialized.'],
@@ -96,12 +97,12 @@ function patchCore(){
 }
 function patchLegacy(){
   let s=read('site-navigation-legacy-20260802.js');
-  s=s.replace(/var CORE_SRC = '\/site-navigation-core\.js\?v=[^']+';/,`var CORE_SRC = '/site-navigation-core.js?v=${VERSION}';`)
+  s=s.replace(/var CORE_SRC = '\/site-navigation-core\.js\?v=[^']+';/,`var CORE_SRC = '/site-navigation-core.js?v=${CONTACT_VERSION}';`)
     .replace(/\n\s*ensureFriendLinksNavigation\(\);/g,'')
     .replace(/  function observeShell\(\) \{[\s\S]*?\n  \}\n\n  var existing =/,"  function observeShell() {\n    // R2: deterministic one-pass enhancement; no mutation-loop rewrites.\n    applyFixes();\n  }\n\n  var existing =");
   write('site-navigation-legacy-20260802.js',s);
 }
-function patchWrapper(){let s=read('site-navigation.js').replace(/\/site-navigation-legacy-20260802\.js\?v=[^'"\s]+/g,`/site-navigation-legacy-20260802.js?v=${VERSION}`);write('site-navigation.js',s);}
+function patchWrapper(){let s=read('site-navigation.js').replace(/\/site-navigation-legacy-20260802\.js\?v=[^'"\s]+/g,`/site-navigation-legacy-20260802.js?v=${CONTACT_VERSION}`);write('site-navigation.js',s);}
 
 function verifyKey(rel){
   const h=read(rel);
@@ -130,6 +131,6 @@ function main(){
   assert(!/^\s{6}ensureGlobalContactFooter\(\);\s*$/m.test(core),'obsolete global contact footer call remains');
   assert(!/^\s{6}ensureKnowledgeDocumentEnhancements\(\);\s*$/m.test(core),'obsolete document tail call remains');
   assert(!/function applyFixes\(\)[\s\S]{0,220}ensureFriendLinksNavigation\(\)/.test(legacy),'legacy primary-nav friend-link injection remains');
-  process.stdout.write(`R2 runtime stability v2 materialized ${checked} public pages; refreshed ${changed}.\n`);
+  process.stdout.write(`R2 runtime stability v2 materialized ${checked} public pages; refreshed ${changed}; contact cache ${CONTACT_VERSION}.\n`);
 }
 main();
