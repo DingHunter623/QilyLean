@@ -63,9 +63,9 @@
 - 主办者：丁启利
 - 服务内容：工业工程时间研究、现场测时、闹钟、倒计时、时间日历辅助
 - 服务域名：`qilylean.com`
-- 隐私政策：`https://qilylean.com/legal/times26001/privacy/`
-- 用户协议：`https://qilylean.com/legal/times26001/terms/`
-- 技术支持：`https://qilylean.com/app-support/`
+- 隐私政策：`https://qilylean.com/legal/times26001/privacy`
+- 用户协议：`https://qilylean.com/legal/times26001/terms`
+- 技术支持：`https://qilylean.com/app-support`
 - 是否登录：否
 - 是否收费：当前否
 - 是否广告：否
@@ -77,9 +77,9 @@
 - 主办者：丁启利
 - 服务内容：Android桌面启动器、日期时间、农历、应用抽屉、系统设置与QilyLean公开内容导航
 - 服务域名：`qilylean.com`
-- 隐私政策：`https://qilylean.com/legal/qilylean-home/privacy/`
-- 用户协议：`https://qilylean.com/legal/qilylean-home/terms/`
-- 技术支持：`https://qilylean.com/app-support/`
+- 隐私政策：`https://qilylean.com/legal/qilylean-home/privacy`
+- 用户协议：`https://qilylean.com/legal/qilylean-home/terms`
+- 技术支持：`https://qilylean.com/app-support`
 - 是否登录：否
 - 是否收费：当前否
 - 是否广告：否

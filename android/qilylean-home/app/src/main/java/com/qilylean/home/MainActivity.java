@@ -164,21 +164,21 @@ public class MainActivity extends Activity {
         addSectionTitle(content, "官网最新导航");
         addCardRow(content,
                 webCard("首页", "官网总入口与最新内容", "https://qilylean.com"),
-                webCard("能力体系", "六类核心能力与交付边界", "https://qilylean.com/capabilities/"));
+                webCard("能力体系", "六类核心能力与交付边界", "https://qilylean.com/capabilities"));
         addCardRow(content,
-                webCard("代表项目", "项目成果、证据与交付资产", "https://qilylean.com/projects/"),
-                webCard("改善方法", "精益、IE与现场改善方法", "https://qilylean.com/improvements/"));
+                webCard("代表项目", "项目成果、证据与交付资产", "https://qilylean.com/projects"),
+                webCard("改善方法", "精益、IE与现场改善方法", "https://qilylean.com/improvements"));
         addCardRow(content,
-                webCard("知识资产", "术语、模板、方法与简报", "https://qilylean.com/knowledge/"),
-                webCard("履历主线", "制造业经历与岗位主线", "https://qilylean.com/experience/"));
+                webCard("知识资产", "术语、模板、方法与简报", "https://qilylean.com/knowledge"),
+                webCard("履历主线", "制造业经历与岗位主线", "https://qilylean.com/experience"));
         addCardRow(content,
-                webCard("项目合作", "诊断、规划与项目交付", "https://qilylean.com/cooperation/"),
-                webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust/"));
+                webCard("项目合作", "诊断、规划与项目交付", "https://qilylean.com/cooperation"),
+                webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust"));
 
         addSectionTitle(content, "知识重点直达");
         addCardRow(content,
                 webCard("全站术语", "中文诠释与应用场景", "https://qilylean.com/knowledge/terminology.html"),
-                webCard("友情链接", "全球科技与制造资源入口", "https://qilylean.com/links/"));
+                webCard("友情链接", "全球科技与制造资源入口", "https://qilylean.com/links"));
 
         addSectionTitle(content, "通用快捷管理");
         addCardRow(content,
@@ -215,7 +215,7 @@ public class MainActivity extends Activity {
                 card("Times26001", "工业工程时间研究、IE现场测时与提醒", new View.OnClickListener() {
                     @Override public void onClick(View v) { openTimeManager(); }
                 }),
-                webCard("Times26001说明", "工业工程时间研究与IE现场测时工具", "https://qilylean.com/tools/times26001/"));
+                webCard("Times26001说明", "工业工程时间研究与IE现场测时工具", "https://qilylean.com/tools/times26001"));
 
         addSectionTitle(content, "系统入口");
         addCardRow(content,
@@ -233,11 +233,11 @@ public class MainActivity extends Activity {
 
         addSectionTitle(content, "隐私与支持");
         addCardRow(content,
-                webCard("隐私政策", "本地数据、应用可见性与网络说明", "https://qilylean.com/legal/qilylean-home/privacy/"),
-                webCard("用户协议", "默认桌面、第三方应用与责任边界", "https://qilylean.com/legal/qilylean-home/terms/"));
+                webCard("隐私政策", "本地数据、应用可见性与网络说明", "https://qilylean.com/legal/qilylean-home/privacy"),
+                webCard("用户协议", "默认桌面、第三方应用与责任边界", "https://qilylean.com/legal/qilylean-home/terms"));
         addCardRow(content,
-                webCard("技术支持", "安装、恢复系统桌面与问题反馈", "https://qilylean.com/app-support/"),
-                webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust/"));
+                webCard("技术支持", "安装、恢复系统桌面与问题反馈", "https://qilylean.com/app-support"),
+                webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust"));
 
         addSectionTitle(content, "官方联系");
         addCardRow(content,
@@ -472,7 +472,7 @@ public class MainActivity extends Activity {
         }
 
         Toast.makeText(this, "未检测到Times26001，正在打开官网安装与使用页", Toast.LENGTH_SHORT).show();
-        openUrl("https://qilylean.com/tools/times26001/");
+        openUrl("https://qilylean.com/tools/times26001");
     }
 
     private void openUrl(String url) {

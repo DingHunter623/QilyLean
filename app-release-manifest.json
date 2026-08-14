@@ -25,10 +25,10 @@
         "label": "Google Play首发候选版",
         "status": "固定Google Play Upload Key已生成并用于AAB签名；AAB构建、包名、版本、API 36与最小定位权限校验通过；待Play Console上传、测试与审核"
       },
-      "productPage": "https://qilylean.com/tools/times26001/",
-      "privacy": "https://qilylean.com/legal/times26001/privacy/",
-      "terms": "https://qilylean.com/legal/times26001/terms/",
-      "support": "https://qilylean.com/app-support/",
+      "productPage": "https://qilylean.com/tools/times26001",
+      "privacy": "https://qilylean.com/legal/times26001/privacy",
+      "terms": "https://qilylean.com/legal/times26001/terms",
+      "support": "https://qilylean.com/app-support",
       "officialWebsiteLinkPolicy": "APP可展示并由用户主动访问QilyLean官网与官网邮箱；用户可见官方网址不带尾斜杠；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK",
       "latestBuild": {
         "versionName": "1.1.13",
@@ -57,10 +57,10 @@
         "label": "应用市场候选版",
         "status": "生产签名待启用；签名完成后进入稳定发布链"
       },
-      "productPage": "https://qilylean.com/capabilities/#digital-tools",
-      "privacy": "https://qilylean.com/legal/qilylean-home/privacy/",
-      "terms": "https://qilylean.com/legal/qilylean-home/terms/",
-      "support": "https://qilylean.com/app-support/",
+      "productPage": "https://qilylean.com/capabilities#digital-tools",
+      "privacy": "https://qilylean.com/legal/qilylean-home/privacy",
+      "terms": "https://qilylean.com/legal/qilylean-home/terms",
+      "support": "https://qilylean.com/app-support",
       "latestBuild": {
         "versionName": "2.3.3",
         "versionCode": 11,

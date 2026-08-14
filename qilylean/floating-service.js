@@ -155,7 +155,7 @@
     var name = (location.pathname.split('/').pop() || 'home.html').toLowerCase();
     var shortPath = Object.prototype.hasOwnProperty.call(map, name) ? map[name] : name;
     var hash = typeof hashOverride === 'string' ? hashOverride : (location.hash || '');
-    return 'https://qilylean.com' + shortPath + (location.search || '') + hash;
+    return 'https://qilylean.com' + (shortPath ? '/' + shortPath.replace(/^\/+/, '') : '') + (location.search || '') + hash;
   }
 
   function forceArticleShortShare() {
@@ -202,7 +202,7 @@
     normalizeLegacyBrand();
     var navigationScript = document.querySelector('script[src*="/site-navigation.js"]');
     if (!window.__qilyLeanSiteNavigationPublicV8 && !navigationScript) {
-      load('/site-navigation.js?v=20260812-native-navigation-stable-v20', 'qilySiteNavigationScript');
+      load('/site-navigation.js?v=20260814-url-v14', 'qilySiteNavigationScript');
     }
   }
 

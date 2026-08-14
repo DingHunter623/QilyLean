@@ -24,9 +24,9 @@
 
 ## 法律与支持页面
 
-- 隐私政策：`https://qilylean.com/legal/qilylean-home/privacy/`
-- 用户协议：`https://qilylean.com/legal/qilylean-home/terms/`
-- 技术支持：`https://qilylean.com/app-support/`
+- 隐私政策：`https://qilylean.com/legal/qilylean-home/privacy`
+- 用户协议：`https://qilylean.com/legal/qilylean-home/terms`
+- 技术支持：`https://qilylean.com/app-support`
 
 ## 构建层级
 
