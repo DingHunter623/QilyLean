@@ -15,7 +15,7 @@
         "versionCode": 16,
         "apk": "/Times26001-Android-v1.1.13-Standard-Website-Logo.apk",
         "sha256": "/Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt",
-        "label": "当前官网安装包（官网标准LOGO、官网邮箱与URL V13统一版）",
+        "label": "当前官网安装包（官网标准LOGO、官网邮箱与URL V14精细化统一版）",
         "status": "用于官网直接下载与试用；不作为Google Play首发AAB的上传签名或后续升级签名基线"
       },
       "storeCandidate": {
@@ -35,7 +35,7 @@
         "versionCode": 16,
         "targetSdk": 36,
         "label": "最新Google Play构建",
-        "status": "顶部LOGO统一为官网横版标准；官网邮箱统一；用户可见官方网址无尾斜杠；保留天气定位可靠性修正",
+        "status": "顶部LOGO统一为官网横版标准；官网邮箱统一；用户可见/复制官方网址无尾斜杠；子路径分隔完整；保留天气定位可靠性修正",
         "upgradeFromHistoricalPublicApk": "官网独立分发包与Google Play发布链分开管理；Google Play后续版本持续使用同一Upload Key并由Play App Signing管理最终分发签名"
       }
     },
