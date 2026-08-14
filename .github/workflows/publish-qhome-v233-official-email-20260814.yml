@@ -1,4 +1,4 @@
-name: Publish QilyLean Home v2.3.3 官网邮箱 APK
+name: Publish QilyLean Home v2.3.3 官网邮箱 + URL V13 APK
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: qhome-v233-official-email-main
+  group: qhome-v233-url-v13-main
   cancel-in-progress: false
 
 jobs:
@@ -32,7 +32,7 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Normalize QilyLean Home source naming
+      - name: Normalize QilyLean Home source naming and root URL
         shell: bash
         run: |
           set -euo pipefail
@@ -47,17 +47,23 @@ jobs:
                   s=p.read_text(encoding='utf-8')
               except (UnicodeDecodeError,OSError):
                   continue
-              if '企业邮箱' in s:
-                  p.write_text(s.replace('企业邮箱','官网邮箱'),encoding='utf-8')
+              n=s.replace('企业邮箱','官网邮箱')
+              # Only standalone/public root literals. Subpage navigation remains directory-safe.
+              n=n.replace('"https://qilylean.com/"','"https://qilylean.com"')
+              n=n.replace('>https://qilylean.com/<','>https://qilylean.com<')
+              if n!=s:
+                  p.write_text(n,encoding='utf-8')
                   changed+=1
           print('QilyLean Home source files normalized:',changed)
           PY
 
-      - name: Validate source naming and Android 16 baseline
+      - name: Validate source naming, URL output and Android 16 baseline
         shell: bash
         run: |
           set -euo pipefail
           ! grep -RIn --exclude-dir=build --exclude-dir=.gradle '企业邮箱' android/qilylean-home
+          ! grep -RIn --exclude-dir=build --exclude-dir=.gradle 'https://qilylean.com/"' android/qilylean-home
+          grep -q 'webCard("官方网址", "https://qilylean.com", "https://qilylean.com")' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
           grep -q 'webCard("官网邮箱", "admin@qilylean.com"' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
           grep -q 'versionCode 11' android/qilylean-home/app/build.gradle
           grep -q "versionName '2.3.3'" android/qilylean-home/app/build.gradle
@@ -91,15 +97,38 @@ jobs:
               s=re.sub(r'QilyLean_Home_v2[.]3[.]\d+_API36_INSTALL[.]apk',apk,s)
               s=re.sub(r'QilyLean_Home_v2[.]3[.]\d+_API36_INSTALL[.]sha256[.]txt',sha,s)
               s=s.replace('企业邮箱','官网邮箱')
+              s=s.replace('https://qilylean.com/','https://qilylean.com') if 'https://qilylean.com/' in s and 'https://qilylean.com//' not in s else s
               p.write_text(s,encoding='utf-8')
           p=Path('app-release-manifest.json')
           data=json.loads(p.read_text(encoding='utf-8'))
           data['updatedAt']='2026-08-14'
-          data['apps']['qilyleanHome']['publicRelease'].update(versionName='2.3.3',versionCode=11,apk='/'+apk,sha256='/'+sha,label='当前官网安装包（官网最新布局与官网邮箱统一版）')
-          data['apps']['qilyleanHome']['latestBuild'].update(versionName='2.3.3',versionCode=11,status='桌面导航同步官网最新布局；官网邮箱称谓统一；API 36可安装包构建通过')
+          data['apps']['qilyleanHome']['publicRelease'].update(versionName='2.3.3',versionCode=11,apk='/'+apk,sha256='/'+sha,label='当前官网安装包（官网最新布局、官网邮箱与URL V13统一版）')
+          data['apps']['qilyleanHome']['latestBuild'].update(versionName='2.3.3',versionCode=11,status='桌面导航同步官网最新布局；官网邮箱统一；用户可见官方网址无尾斜杠；API 36可安装包构建通过')
           p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
-          ! grep -RIn --exclude='*.apk' '企业邮箱' android/qilylean-home app-store/qilylean-home app-support/index.html app-release-manifest.json
+
+      - name: Verify built APK contains no slash-terminated official root URL
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          apk=Path('QilyLean_Home_v2.3.3_API36_INSTALL.apk')
+          needle=b'https://qilylean.com/'
+          with ZipFile(apk) as z:
+              hits=[]
+              for n in z.namelist():
+                  try: data=z.read(n)
+                  except Exception: continue
+                  # A subpage URL is allowed; standalone root literal followed by a quote/NUL/whitespace is not.
+                  for marker in (needle+b'"',needle+b"'",needle+b'\x00',needle+b' ',needle+b'\n'):
+                      if marker in data:
+                          hits.append(n); break
+          if hits:
+              raise SystemExit('slash-terminated standalone root URL remains in APK: '+','.join(hits[:20]))
+          print('PASS: QilyLean Home APK public root URL has no trailing slash')
+          PY
 
       - name: Commit official website package
         shell: bash
@@ -109,13 +138,13 @@ jobs:
           git config user.email 'admin@qilylean.com'
           git add android/qilylean-home QilyLean_Home_v2.3.3_API36_INSTALL.apk QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt \
             capabilities/index.html app-support/index.html app-store/qilylean-home/README.md app-download-share-v1.js app-release-manifest.json
-          git commit -m 'release: publish QilyLean Home v2.3.3 with 官网邮箱 naming [skip ci]' || true
+          git commit -m 'release: rebuild QilyLean Home v2.3.3 URL V13 [skip ci]' || true
           git pull --rebase origin main
           git push origin HEAD:main
 
       - uses: actions/upload-artifact@v4
         with:
-          name: QilyLean-Home-v2.3.3-官网邮箱
+          name: QilyLean-Home-v2.3.3-URL-V13
           path: |
             QilyLean_Home_v2.3.3_API36_INSTALL.apk
             QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt
