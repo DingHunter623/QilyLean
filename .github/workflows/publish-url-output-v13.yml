@@ -1,0 +1,94 @@
+name: Publish URL Output V13 no trailing slash
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/remove-public-url-trailing-slash-v13.js'
+      - '.github/workflows/publish-url-output-v13.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: url-output-v13-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Materialize no-trailing-slash public URL policy
+        run: node scripts/remove-public-url-trailing-slash-v13.js
+
+      - name: Regenerate official homepage QR without trailing slash
+        shell: bash
+        run: |
+          python -m pip install --disable-pip-version-check 'qrcode>=7.4,<9'
+          python - <<'PY'
+          import qrcode
+          import qrcode.image.svg
+          target = 'https://qilylean.com'
+          img = qrcode.make(
+              target,
+              image_factory=qrcode.image.svg.SvgPathImage,
+              error_correction=qrcode.constants.ERROR_CORRECT_M,
+              box_size=10,
+              border=4,
+          )
+          img.save('qilylean/qilylean-home-qr.svg')
+          print('QR payload:', target)
+          PY
+
+      - name: Validate URL output contract
+        shell: bash
+        run: |
+          node --check scripts/remove-public-url-trailing-slash-v13.js
+          node --check site-navigation-core.js
+          python - <<'PY'
+          from pathlib import Path
+          core = Path('site-navigation-core.js').read_text(encoding='utf-8')
+          assert "var HOME_URL = 'https://qilylean.com';" in core
+          assert 'QILY-PUBLIC-URL-NO-TRAILING-SLASH-V13' in core
+          assert 'var url = normalizePublicUrl(location.href);' in core
+          assert 'href="https://qilylean.com">https://qilylean.com</a>' in core
+          main = Path('android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java')
+          if main.exists():
+              text = main.read_text(encoding='utf-8')
+              assert 'https://qilylean.com/"' not in text
+          report = Path('maintenance/public-url-output-v13.json')
+          assert report.exists()
+          print(report.read_text(encoding='utf-8'))
+          PY
+
+      - name: Commit production changes
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A -- ':!.github'
+          if git diff --cached --quiet; then
+            echo 'No production changes.'
+            exit 0
+          fi
+          git commit -m 'fix: remove trailing slash from public shared URLs [skip ci]'
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "push attempt $i failed; retrying"
+            sleep $((i*3))
+          done
+          exit 1
