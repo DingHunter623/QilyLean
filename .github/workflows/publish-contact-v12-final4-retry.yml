@@ -1,0 +1,54 @@
+name: Publish contact V12.4 retry
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-contact-v12-final4-retry.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: contact-v12-final4-retry-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Remove false-positive QA and apply V12.4
+        shell: bash
+        run: |
+          sed -i '/syntax sanity only/d' scripts/apply-contact-v12-final4.py
+          python3 scripts/apply-contact-v12-final4.py
+      - name: Validate V12.4
+        shell: bash
+        run: |
+          python3 -m py_compile scripts/apply-contact-v12-final4.py
+          node --check site-navigation.js
+          node --check site-navigation-core.js
+          git diff --check
+          grep -q 'QILY-PHONE-COPY-CALL-PROMPT-V12.4' site-navigation.js
+          grep -q 'QILY-CONTACT-INTERACTION-V12.4:START' site-shell.css
+          grep -q 'data-qily-phone-call="13450014003"' cooperation/index.html
+          grep -q '<span>微信：</span><strong>Qily259</strong>' cooperation/index.html
+          grep -q '<span>电话：</span><strong>134 5001 4003</strong>' cooperation/index.html
+      - name: Commit and publish
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A ':!.github'
+          if git diff --cached --quiet; then echo 'No changes'; exit 0; fi
+          git commit -m 'fix: phone feedback and value-only underlines V12.4 [skip ci]'
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 3
+          done
+          exit 1
