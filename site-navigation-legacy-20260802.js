@@ -20,7 +20,7 @@
   if (window.__qilyLeanSiteNavigationLoaderV4) return;
   window.__qilyLeanSiteNavigationLoaderV4 = true;
 
-  var CORE_SRC = '/site-navigation-core.js?v=20260813-r2-clean-v4';
+  var CORE_SRC = '/site-navigation-core.js?v=20260814-url-v14';
   var LINKS_PATH = '/links/';
   var ONBOARDING_PATH = '/links/onboarding/';
   var PRICING_ACCESS_KEY = 'qily_pricing_access_v1';

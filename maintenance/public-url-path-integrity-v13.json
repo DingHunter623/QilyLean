@@ -2,9 +2,7 @@
   "version": "2026-08-14-v13.1",
   "root_url": "https://qilylean.com",
   "rule": "root has no trailing slash; concrete subpaths always keep the hostname/path separator slash; runtime template routes stay dynamic",
-  "changed_files": [
-    "app-download-share-v1.js"
-  ],
-  "changed_file_count": 1,
-  "repaired_occurrences": 4
+  "changed_files": [],
+  "changed_file_count": 0,
+  "repaired_occurrences": 0
 }
