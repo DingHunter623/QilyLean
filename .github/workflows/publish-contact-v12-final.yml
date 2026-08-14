@@ -1,0 +1,74 @@
+name: Publish final contact V12 materializer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/apply-contact-v12-final.js'
+      - '.github/workflows/publish-contact-v12-final.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: contact-v12-final-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Apply final V12 materializer
+        run: node scripts/apply-contact-v12-final.js
+      - name: Validate final V12
+        shell: bash
+        run: |
+          node --check scripts/apply-contact-v12-final.js
+          node --check site-navigation-core.js
+          node --check qilylean/contact-wechat-open.js
+          node - <<'NODE'
+          const fs=require('fs');
+          const p='微信号Qily259已复制，是否开启微信主程序';
+          const nav=fs.readFileSync('site-navigation-core.js','utf8');
+          const coop=fs.readFileSync('cooperation/index.html','utf8');
+          const term=fs.readFileSync('knowledge/terminology.html','utf8');
+          const css=fs.readFileSync('site-shell.css','utf8');
+          if(nav.includes('qily-copy-wechat')) throw new Error('old copy button remains');
+          if(!nav.includes('data-qily-wechat-copy=\\"Qily259\\"')) throw new Error('global clickable WeChat module missing');
+          if(!nav.includes(p)) throw new Error('copy/open prompt missing');
+          if(!coop.includes('wechat-contact-action')) throw new Error('cooperation whole-row WeChat button missing');
+          if(!term.includes('微信：<a href="#copy-wechat"')) throw new Error('OPL label not normalized');
+          if(!css.includes('QILY-CONTACT-INTERACTION-V12:START')) throw new Error('V12 visual block missing');
+          for (const [name,t] of [['nav',nav],['coop',coop],['term',term]]) {
+            const c=t.split(p).join('');
+            if(c.includes('官网网址')) throw new Error(name+' has old 官网网址');
+            if(c.includes('微信号')) throw new Error(name+' has old 微信号');
+          }
+          console.log('Final V12 QA passed');
+          NODE
+          git diff --check
+      - name: Commit final production changes
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A ':!.github'
+          if git diff --cached --quiet; then
+            echo 'No production changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: finalize 微信 and 官方网址 contact UX [skip ci]'
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            echo "push retry $i"
+            sleep 3
+          done
+          exit 1
