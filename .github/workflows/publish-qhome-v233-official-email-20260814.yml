@@ -1,0 +1,97 @@
+name: Publish QilyLean Home v2.3.3 官网邮箱 APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-qhome-v233-official-email-20260814.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Validate source naming and Android 16 baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -RIn '企业邮箱' android/qilylean-home
+          grep -q 'webCard("官网邮箱", "admin@qilylean.com"' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+          grep -q 'versionCode 11' android/qilylean-home/app/build.gradle
+          grep -q "versionName '2.3.3'" android/qilylean-home/app/build.gradle
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+
+      - name: Build installable APK
+        run: gradle -p android/qilylean-home :app:assembleDebug --stacktrace
+
+      - name: Publish APK and synchronize website references
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK_SRC='android/qilylean-home/app/build/outputs/apk/debug/app-debug.apk'
+          APK='QilyLean_Home_v2.3.3_API36_INSTALL.apk'
+          SHA='QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt'
+          test -s "$APK_SRC"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK_SRC" | grep -q "package: name='com.qilylean.home' versionCode='11' versionName='2.3.3'"
+          cp "$APK_SRC" "$APK"
+          sha256sum "$APK" > "$SHA"
+          python - <<'PY'
+          from pathlib import Path
+          import json, re
+          apk='QilyLean_Home_v2.3.3_API36_INSTALL.apk'
+          sha='QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt'
+          targets=['capabilities/index.html','app-support/index.html','app-store/qilylean-home/README.md','app-download-share-v1.js']
+          for name in targets:
+              p=Path(name)
+              if not p.exists(): continue
+              s=p.read_text(encoding='utf-8')
+              s=re.sub(r'QilyLean_Home_v2[.]3[.]\d+_API36_INSTALL[.]apk',apk,s)
+              s=re.sub(r'QilyLean_Home_v2[.]3[.]\d+_API36_INSTALL[.]sha256[.]txt',sha,s)
+              s=s.replace('企业邮箱','官网邮箱')
+              p.write_text(s,encoding='utf-8')
+          p=Path('app-release-manifest.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          data['updatedAt']='2026-08-14'
+          data['apps']['qilyleanHome']['publicRelease'].update(versionName='2.3.3',versionCode=11,apk='/'+apk,sha256='/'+sha,label='当前官网安装包（官网最新布局与官网邮箱统一版）')
+          data['apps']['qilyleanHome']['latestBuild'].update(versionName='2.3.3',versionCode=11,status='桌面导航同步官网最新布局；官网邮箱称谓统一；API 36可安装包构建通过')
+          p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          PY
+          ! grep -RIn --exclude='*.apk' '企业邮箱' android/qilylean-home app-store/qilylean-home app-support/index.html app-release-manifest.json
+
+      - name: Commit official website package
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add QilyLean_Home_v2.3.3_API36_INSTALL.apk QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt \
+            capabilities/index.html app-support/index.html app-store/qilylean-home/README.md app-download-share-v1.js app-release-manifest.json
+          git commit -m 'release: publish QilyLean Home v2.3.3 with 官网邮箱 naming [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: QilyLean-Home-v2.3.3-官网邮箱
+          path: |
+            QilyLean_Home_v2.3.3_API36_INSTALL.apk
+            QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt
+          if-no-files-found: error
+          retention-days: 30
