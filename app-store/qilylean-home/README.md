@@ -1,6 +1,6 @@
 # QilyLean Home 应用商店提交资料
 
-更新时间：2026-08-08  
+更新时间：2026-08-14  
 开发者：丁启利（QilyLean｜启力精益）  
 包名：`com.qilylean.home`  
 支持邮箱：`admin@qilylean.com`  
@@ -8,16 +8,16 @@
 
 ## 0. 官网与应用市场版本关联
 
-- 历史官网安装包：`2.2`（旧Debug签名）
-- 最新构建 / 应用市场候选版：`2.3.1` / versionCode `9` / Android API 36
+- 当前官网安装包 / 最新构建：`2.3.3` / versionCode `11` / Android API 36
+- 应用市场候选版：`2.3.2` / versionCode `10` / Android API 36
 - 包名：`com.qilylean.home`
 - 开发者支持官方网址：`https://qilylean.com`
 - 官网邮箱：`admin@qilylean.com`
-- 规则：官网公开版与应用市场候选版分开管理；只有正式签名发布包完成并提交对应商店后，才更新“已上架/正式商店版”状态。
+- 规则：官网安装包、最新构建与应用市场候选版分别按统一发布清单管理；只有正式签名发布包完成并提交对应商店后，才更新“已上架/正式商店版”状态。
 
 ## 0.1 双APP统一图标规则
 
-QilyLean Home与Times26001从本次应用市场准备起统一使用同一QilyLean Q图标：青绿色Q主体、深色内核、右上红点、外围透明。
+QilyLean Home与Times26001统一使用同一QilyLean Q图标：青绿色Q主体、深色内核、右上红点、外围透明。
 
 - 商店图标唯一源：`assets/tools/qilylean-unified-app-icon.svg`
 - QilyLean Home安装图标：`@drawable/ic_launcher`
@@ -47,19 +47,18 @@ QilyLean Home是一款面向精益制造、工业工程与日常效率场景的A
 - 公历日期、星期、年度周次与中国农历同步显示；
 - 本机应用抽屉，快速启动已安装应用；
 - 网络、电池、显示、声音、壁纸、安全、输入法和默认桌面设置入口；
-- QilyLean首页、能力画像、履历、项目、改善经验、知识分享与项目合作导航；
+- QilyLean首页、能力体系、履历主线、代表项目、改善方法、知识资产、项目合作与信任中心导航；
 - “Times26001”直达：已安装时直接启动，未安装时进入官方说明页；
 - 用户可随时切回系统原桌面；
 - 免Root，不修改系统分区、基带、IMEI、EFS或通信底层；
 - 不设账号、不投放广告、不集成第三方广告或统计SDK。
 
-### 更新说明（首个商店正式版）
-- 面向Android 16 / API 36完成应用可见性与桌面启动器适配；
-- 使用固定正式Release签名；
-- 增加隐私政策、用户协议和技术支持入口；
-- 完善秒级时钟、公历、周次、农历和Times26001联动；
-- 双APP统一QilyLean Q图标，锁定商店、安装与安装后图标一致性；
-- 增加恢复系统桌面的清晰说明。
+### 当前构建说明
+- 当前官网安装包 / 最新构建：v2.3.3 / versionCode 11 / API 36；
+- 应用市场候选版：v2.3.2 / versionCode 10 / API 36；
+- 官网最新导航布局、官方网址与官网邮箱口径已同步；
+- 双APP统一QilyLean Q图标；
+- 提交应用市场前继续以对应候选包的固定Release签名与平台资料为准。
 
 ## 2. 分类与标签
 
@@ -124,10 +123,11 @@ QilyLean Home是一款面向精益制造、工业工程与日常效率场景的A
 ## 6. 提交前硬性校验
 
 - [ ] `compileSdk`和`targetSdk`为36；
-- [ ] `versionCode`为9、`versionName`为2.3.1，后续版本严格递增；
+- [ ] 官网安装包 / 最新构建为`versionCode 11`、`versionName 2.3.3`；
+- [ ] 应用市场候选版为`versionCode 10`、`versionName 2.3.2`；
 - [ ] Manifest包含LAUNCHER、HOME、DEFAULT及必要的`queries`声明；
 - [ ] 不申请`QUERY_ALL_PACKAGES`；
-- [ ] AAB和官网APK使用固定Release签名；
+- [ ] 正式商店AAB使用固定Release签名；
 - [ ] 隐私政策、协议和支持页公网可访问；
 - [ ] 商店文案明确第三方桌面属性和恢复方式；
 - [ ] 商店图标使用统一Q图，且与APK安装界面、安装后桌面/应用抽屉图标一致；
