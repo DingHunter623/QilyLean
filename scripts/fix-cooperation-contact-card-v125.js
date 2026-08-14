@@ -10,11 +10,16 @@ function rw(rel, fn){const p=path.join(root,rel);let s=fs.readFileSync(p,'utf8')
 rw('cooperation/index.html', s=>{
   s=s.replace(/<span class="contact-action-label">官网邮箱：<\/span>/g,'<span class="contact-action-label">邮箱：</span>');
   s=s.replace(/<span>官网邮箱：<\/span>/g,'<span class="contact-action-label">邮箱：</span>');
-  s=s.replace(/<a class="contact-line" href="mailto:admin@qilylean\.com">/g,'<a class="contact-line contact-action contact-email-action" href="mailto:admin@qilylean.com">');
-  s=s.replace(/<a class="contact-action" href="mailto:admin@qilylean\.com">/g,'<a class="contact-action contact-email-action" href="mailto:admin@qilylean.com">');
-  s=s.replace(/<a href="\/projects\/">先查看项目证据<\/a>/g,'<a class="contact-action contact-evidence-action" href="/projects/">先查看项目证据</a>');
-  // Normalize phone / WeChat classes without changing their interaction hooks.
-  s=s.replace(/class="contact-action contact-phone-action"/g,'class="contact-action contact-phone-action"');
+
+  // Attribute-order independent normalization of the mail row.
+  s=s.replace(/<a\b[^>]*href="mailto:admin@qilylean\.com"[^>]*>[\s\S]*?<\/a>/g,
+    '<a class="contact-action contact-email-action" href="mailto:admin@qilylean.com"><span class="contact-action-label">邮箱：</span><strong class="contact-action-value">admin@qilylean.com</strong></a>');
+
+  // Evidence row must be the same bordered action block.
+  s=s.replace(/<a\b[^>]*href="\/projects\/"[^>]*>\s*先查看项目证据\s*<\/a>/g,
+    '<a class="contact-action contact-evidence-action" href="/projects/">先查看项目证据</a>');
+
+  // Normalize WeChat class order without touching its copy hook.
   s=s.replace(/class="wechat-contact-action contact-action"/g,'class="contact-action wechat-contact-action"');
   return s;
 });
