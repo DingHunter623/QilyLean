@@ -1,0 +1,80 @@
+name: Publish contact field hierarchy V1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-contact-field-hierarchy-v1.css'
+      - 'scripts/publish-contact-field-hierarchy-v1.js'
+      - '.github/workflows/publish-contact-field-hierarchy-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-contact-field-hierarchy-v1
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Materialize contact field hierarchy
+        run: node scripts/publish-contact-field-hierarchy-v1.js
+
+      - name: Validate syntax and exact visual contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/publish-contact-field-hierarchy-v1.js
+          node - <<'NODE'
+          const fs=require('fs');
+          const must=(ok,msg)=>{if(!ok)throw new Error(msg)};
+          const css=fs.readFileSync('site-contact-field-hierarchy-v1.css','utf8');
+          const home=fs.readFileSync('index.html','utf8');
+          must(/\.qily-phone-list\s*>\s*a[\s\S]*?text-decoration-line:\s*none\s*!important/.test(css),'parent anchor underline hard-stop missing');
+          must(/\.qily-phone-city[\s\S]*?border-bottom:\s*0\s*!important/.test(css),'city label underline guard missing');
+          must(/\.qily-phone-number[\s\S]*?border-bottom:\s*1\.5px solid currentColor\s*!important/.test(css),'number-only emphasis missing');
+          must(home.includes('/site-contact-field-hierarchy-v1.css?v=20260814-contact-field-hierarchy-v1'),'homepage final contact hierarchy CSS missing');
+          console.log('Exact contact label/value hierarchy checks passed.');
+          NODE
+
+      - name: Validate idempotence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --no-ext-diff > /tmp/contact-first.diff
+          node scripts/publish-contact-field-hierarchy-v1.js
+          git diff --no-ext-diff > /tmp/contact-second.diff
+          cmp /tmp/contact-first.diff /tmp/contact-second.diff
+          echo 'Idempotence PASS'
+
+      - name: Commit production materialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No production changes.'
+            exit 0
+          fi
+          git commit -m 'fix: keep contact field labels plain and phone values emphasized [skip ci]'
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((i*3))
+          done
+          exit 1
