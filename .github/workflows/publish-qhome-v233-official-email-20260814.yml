@@ -5,10 +5,15 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/publish-qhome-v233-official-email-20260814.yml'
+      - 'android/qilylean-home/**'
   workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: qhome-v233-official-email-main
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -27,11 +32,32 @@ jobs:
         with:
           gradle-version: '8.7'
 
+      - name: Normalize QilyLean Home source naming
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('android/qilylean-home')
+          changed=0
+          for p in root.rglob('*'):
+              if not p.is_file() or any(x in p.parts for x in ('build','.gradle')):
+                  continue
+              try:
+                  s=p.read_text(encoding='utf-8')
+              except (UnicodeDecodeError,OSError):
+                  continue
+              if '企业邮箱' in s:
+                  p.write_text(s.replace('企业邮箱','官网邮箱'),encoding='utf-8')
+                  changed+=1
+          print('QilyLean Home source files normalized:',changed)
+          PY
+
       - name: Validate source naming and Android 16 baseline
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -RIn '企业邮箱' android/qilylean-home
+          ! grep -RIn --exclude-dir=build --exclude-dir=.gradle '企业邮箱' android/qilylean-home
           grep -q 'webCard("官网邮箱", "admin@qilylean.com"' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
           grep -q 'versionCode 11' android/qilylean-home/app/build.gradle
           grep -q "versionName '2.3.3'" android/qilylean-home/app/build.gradle
@@ -81,9 +107,9 @@ jobs:
           set -euo pipefail
           git config user.name 'QilyLean'
           git config user.email 'admin@qilylean.com'
-          git add QilyLean_Home_v2.3.3_API36_INSTALL.apk QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt \
+          git add android/qilylean-home QilyLean_Home_v2.3.3_API36_INSTALL.apk QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt \
             capabilities/index.html app-support/index.html app-store/qilylean-home/README.md app-download-share-v1.js app-release-manifest.json
-          git commit -m 'release: publish QilyLean Home v2.3.3 with 官网邮箱 naming [skip ci]'
+          git commit -m 'release: publish QilyLean Home v2.3.3 with 官网邮箱 naming [skip ci]' || true
           git pull --rebase origin main
           git push origin HEAD:main
 
