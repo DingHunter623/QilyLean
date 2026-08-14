@@ -36,7 +36,7 @@ js_block=r'''
     var phone=card.querySelector('a[href^="tel:"]');
     if(phone){phone.classList.add('contact-line');if(!phone.querySelector('strong')){var pv=(phone.textContent||'').replace(/^\s*电话\s*[：:]\s*/,'').trim();phone.replaceChildren();var pl=document.createElement('span');pl.textContent='电话：';var ps=document.createElement('strong');ps.textContent=pv;phone.append(pl,ps);}}
     var email=card.querySelector('a[href^="mailto:"]');
-    if(email){email.classList.add('contact-line');if(!email.querySelector('strong')){var ev=(email.textContent||'').replace(/^\s*官网邮箱\s*[：:]\s*/,'').trim();email.replaceChildren();var el=document.createElement('span');el.textContent='官网邮箱：';var es=document.createElement('strong');es.textContent=ev;email.append(el,es);}}
+    if(email){email.classList.add('contact-line');if(!email.querySelector('strong')){var ev=(email.textContent||'').replace(/^\s*邮箱\s*[：:]\s*/,'').trim();email.replaceChildren();var el=document.createElement('span');el.textContent='邮箱：';var es=document.createElement('strong');es.textContent=ev;email.append(el,es);}}
     var wx=card.querySelector('#copyWechat,[data-qily-wechat-copy="Qily259"]');
     if(wx){wx.classList.add('wechat-contact-action');if(!wx.querySelector('strong')){wx.replaceChildren();var wl=document.createElement('span');wl.textContent='微信：';var ws=document.createElement('strong');ws.textContent='Qily259';wx.append(wl,ws);}}
   }
@@ -86,7 +86,7 @@ p=Path('cooperation/index.html')
 if p.exists():
     t=p.read_text('utf-8')
     t=re.sub(r'<a href="tel:13450014003">\s*电话：\s*134 5001 4003\s*</a>', '<a class="contact-line" href="tel:13450014003"><span>电话：</span><strong>134 5001 4003</strong></a>', t, count=1)
-    t=re.sub(r'<a href="mailto:admin@qilylean.com">\s*官网邮箱：\s*admin@qilylean.com\s*</a>', '<a class="contact-line" href="mailto:admin@qilylean.com"><span>官网邮箱：</span><strong>admin@qilylean.com</strong></a>', t, count=1)
+    t=re.sub(r'<a href="mailto:admin@qilylean.com">\s*邮箱：\s*admin@qilylean.com\s*</a>', '<a class="contact-line" href="mailto:admin@qilylean.com"><span>邮箱：</span><strong>admin@qilylean.com</strong></a>', t, count=1)
     p.write_text(t,'utf-8')
 
 print('Contact V12.4 resilient layer materialized.')
