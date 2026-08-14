@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - '.github/workflows/run-contact-action-v13.yml'
+      - 'scripts/apply-contact-action-v13.py'
   workflow_dispatch:
 
 permissions:
@@ -22,12 +23,12 @@ jobs:
       - name: Apply V13
         run: python scripts/apply-contact-action-v13.py
       - name: Validate JavaScript
-        run: node --check site-navigation.js
+        run: node --check site-navigation-core.js
       - name: Commit
         run: |
           git config user.name QilyLean
           git config user.email admin@qilylean.com
-          git add site-navigation.js site-shell.css cooperation/index.html knowledge/terminology.html
+          git add site-navigation-core.js site-shell.css cooperation/index.html knowledge/terminology.html
           git commit -m 'fix: unify phone and WeChat contact interactions V13 [skip ci]' || true
           git pull --rebase origin main
           git push origin HEAD:main
