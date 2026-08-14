@@ -1,0 +1,50 @@
+name: R5 official contact naming audit
+
+on:
+  pull_request:
+    paths:
+      - 'app-support/**'
+      - 'legal/**'
+      - 'app-store/**'
+      - 'app-release-manifest.json'
+      - 'site-navigation*.js'
+      - 'scripts/audit-official-contact-association.py'
+      - 'scripts/sitewide_contact_core_patch_20260807.py'
+      - 'scripts/sync_app_release_association_20260807.py'
+      - 'scripts/correct_app_website_release_status_20260807.py'
+      - '.github/workflows/repack-times26001-official-email-20260814.yml'
+      - '.github/workflows/r5-official-contact-naming-audit.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'app-support/**'
+      - 'legal/**'
+      - 'app-store/**'
+      - 'app-release-manifest.json'
+      - 'site-navigation*.js'
+      - 'scripts/audit-official-contact-association.py'
+      - 'scripts/sitewide_contact_core_patch_20260807.py'
+      - 'scripts/sync_app_release_association_20260807.py'
+      - 'scripts/correct_app_website_release_status_20260807.py'
+      - '.github/workflows/repack-times26001-official-email-20260814.yml'
+      - '.github/workflows/r5-official-contact-naming-audit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: r5-official-contact-naming-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify R5 contact terminology and anti-regression rules
+        run: python scripts/audit-official-contact-association.py
