@@ -1,10 +1,12 @@
-name: Publish URL Output V13 no trailing slash
+name: Publish URL Output V14 path-safe no trailing slash
 
 on:
   push:
     branches: [main]
     paths:
       - 'scripts/remove-public-url-trailing-slash-v13.js'
+      - 'scripts/repair-public-url-path-separator-v13.js'
+      - 'scripts/publish-r2-clean-runtime-v3.js'
       - '.github/workflows/publish-url-output-v13.yml'
   workflow_dispatch:
 
@@ -12,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: url-output-v13-main
+  group: url-output-v14-main
   cancel-in-progress: false
 
 jobs:
@@ -30,8 +32,13 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Materialize no-trailing-slash public URL policy
-        run: node scripts/remove-public-url-trailing-slash-v13.js
+      - name: Materialize path-safe no-trailing-slash public URL policy
+        run: |
+          node scripts/remove-public-url-trailing-slash-v13.js
+          node scripts/repair-public-url-path-separator-v13.js
+          node scripts/publish-r2-clean-runtime-v3.js
+          node scripts/remove-public-url-trailing-slash-v13.js
+          node scripts/repair-public-url-path-separator-v13.js
 
       - name: Regenerate official homepage QR without trailing slash
         shell: bash
@@ -52,25 +59,53 @@ jobs:
           print('QR payload:', target)
           PY
 
-      - name: Validate URL output contract
+      - name: Validate URL V14 output contract
         shell: bash
         run: |
           node --check scripts/remove-public-url-trailing-slash-v13.js
+          node --check scripts/repair-public-url-path-separator-v13.js
+          node --check site-navigation.js
           node --check site-navigation-core.js
           python - <<'PY'
           from pathlib import Path
+          import json, re
+
           core = Path('site-navigation-core.js').read_text(encoding='utf-8')
+          wrapper = Path('site-navigation.js').read_text(encoding='utf-8')
+          legacy = Path('site-navigation-legacy-20260802.js').read_text(encoding='utf-8')
           assert "var HOME_URL = 'https://qilylean.com';" in core
-          assert 'QILY-PUBLIC-URL-NO-TRAILING-SLASH-V13' in core
           assert 'var url = normalizePublicUrl(location.href);' in core
-          assert 'href="https://qilylean.com">https://qilylean.com</a>' in core
-          main = Path('android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java')
-          if main.exists():
-              text = main.read_text(encoding='utf-8')
-              assert 'https://qilylean.com/"' not in text
-          report = Path('maintenance/public-url-output-v13.json')
-          assert report.exists()
-          print(report.read_text(encoding='utf-8'))
+          assert '/site-navigation-legacy-20260802.js?v=20260814-url-v14' in wrapper
+          assert '/site-navigation-core.js?v=20260814-url-v14' in legacy
+
+          report = json.loads(Path('maintenance/public-url-output-v14.json').read_text(encoding='utf-8'))
+          assert report['root_url'] == 'https://qilylean.com'
+          assert report['site_navigation_cache_version'] == '20260814-url-v14'
+
+          integrity = json.loads(Path('maintenance/public-url-path-integrity-v13.json').read_text(encoding='utf-8'))
+          assert integrity['root_url'] == 'https://qilylean.com'
+
+          qhome = Path('android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java')
+          if qhome.exists():
+              text = qhome.read_text(encoding='utf-8')
+              assert 'webCard("官方网址", "https://qilylean.com", "https://qilylean.com")' in text
+
+          # Root may not be slash-terminated in user/product output; subpaths must still keep hostname/path separator.
+          malformed = re.compile(r'https://qilylean[.]com(?=[A-Za-z0-9])')
+          standalone = re.compile(r'https://qilylean[.]com/(?=(?:["\'`<>\s),;\]}]|$))')
+          bad=[]
+          for p in Path('.').rglob('*'):
+              if not p.is_file() or any(x in p.parts for x in ('.git','.github','node_modules','.gradle','build','dist')):
+                  continue
+              if p.suffix.lower() not in {'.html','.htm','.json','.md','.txt','.java','.kt','.xml','.svg'}:
+                  continue
+              try: s=p.read_text(encoding='utf-8')
+              except Exception: continue
+              if malformed.search(s): bad.append(f'{p}: malformed host/path separator')
+              if standalone.search(s): bad.append(f'{p}: standalone root still slash-terminated')
+              if len(bad)>=30: break
+          assert not bad, '\n'.join(bad)
+          print('PASS URL V14: root URL no trailing slash, subpath separators intact, navigation cache chain V14.')
           PY
 
       - name: Commit production changes
@@ -83,7 +118,7 @@ jobs:
             echo 'No production changes.'
             exit 0
           fi
-          git commit -m 'fix: remove trailing slash from public shared URLs [skip ci]'
+          git commit -m 'fix: enforce path-safe no-trailing-slash public URLs V14 [skip ci]'
           for i in 1 2 3; do
             if git pull --rebase origin main && git push origin HEAD:main; then
               exit 0
