@@ -5,14 +5,14 @@
   var apps={
     times26001:{
       name:'Times26001',
-      url:'https://qilylean.com/tools/times26001/#android-download',
-      download:'https://qilylean.com/Times26001-Android-v1.1.13-Standard-Website-Logo.apk?build=efe5e188',
+      url:'https://qilylean.comtools/times26001/#android-download',
+      download:'https://qilylean.comTimes26001-Android-v1.1.13-Standard-Website-Logo.apk?build=efe5e188',
       qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'
     },
     qilyleanHome:{
       name:'QilyLean Home｜官网通用安装包',
-      url:'https://qilylean.com/capabilities/#digital-tools',
-      download:'https://qilylean.com/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1',
+      url:'https://qilylean.comcapabilities/#digital-tools',
+      download:'https://qilylean.comQilyLean_Home_v2.3.3_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1',
       qr:'/assets/tools/qr-qilylean-home-download.svg?v=20260809-download-v2'
     }
   };

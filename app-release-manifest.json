@@ -47,7 +47,7 @@
         "versionName": "2.3.3",
         "apk": "/QilyLean_Home_v2.3.3_API36_INSTALL.apk",
         "sha256": "/QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt",
-        "label": "当前官网安装包（官网最新布局与官网邮箱统一版）",
+        "label": "当前官网安装包（官网最新布局、官网邮箱与URL V13统一版）",
         "versionCode": 11
       },
       "storeCandidate": {
@@ -66,7 +66,7 @@
         "versionCode": 11,
         "targetSdk": 36,
         "label": "最新构建",
-        "status": "桌面导航同步官网最新布局；官网邮箱称谓统一；API 36可安装包构建通过",
+        "status": "桌面导航同步官网最新布局；官网邮箱统一；用户可见官方网址无尾斜杠；API 36可安装包构建通过",
         "upgradeFromHistoricalPublicApk": "旧官网Debug签名与当前构建签名不同，不作为覆盖升级包发布"
       }
     }

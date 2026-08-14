@@ -4,7 +4,7 @@
 开发者：丁启利（QilyLean｜启力精益）  
 包名：`com.qilylean.home`  
 支持邮箱：`admin@qilylean.com`  
-官网介绍：`https://qilylean.com/capabilities/#digital-tools`
+官网介绍：`https://qilylean.comcapabilities/#digital-tools`
 
 ## 0. 官网与应用市场版本关联
 
@@ -88,13 +88,13 @@ QilyLean Home是一款面向精益制造、工业工程与日常效率场景的A
 - 系统设置Intent：跳转Android官方设置页。
 
 ### 隐私政策网址
-`https://qilylean.com/legal/qilylean-home/privacy/`
+`https://qilylean.comlegal/qilylean-home/privacy/`
 
 ### 用户协议网址
-`https://qilylean.com/legal/qilylean-home/terms/`
+`https://qilylean.comlegal/qilylean-home/terms/`
 
 ### 技术支持网址
-`https://qilylean.com/app-support/`
+`https://qilylean.comapp-support/`
 
 ## 4. Google Play审核说明
 
