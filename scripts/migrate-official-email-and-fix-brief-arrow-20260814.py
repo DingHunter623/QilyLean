@@ -1,79 +1,84 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import re
 
 ROOT = Path(__file__).resolve().parents[1]
+OLD = '\u4f01\u4e1a\u90ae\u7bb1'
+NEW = '官网邮箱'
 TEXT_EXTS = {
     '.html','.htm','.js','.css','.json','.md','.txt','.py','.java','.kt','.kts','.xml','.yml','.yaml',
     '.gradle','.properties','.svg','.rss','.xhtml','.csv','.ts','.tsx','.jsx','.sh'
 }
 SKIP_DIRS = {'.git','node_modules','build','.gradle','.cache','dist'}
+# Deployment plumbing encodes the legacy phrase intentionally to detect/fix old binaries;
+# do not rewrite its own migration/repack instructions while migrating product content.
+SKIP_EXACT = {
+    'scripts/migrate-official-email-and-fix-brief-arrow-20260814.py',
+    '.github/workflows/migrate-official-email-and-fix-brief-arrow-20260814.yml',
+    '.github/workflows/repack-times26001-official-email-20260814.yml',
+    '.github/workflows/publish-qhome-v233-official-email-20260814.yml',
+}
+
+
+def rel(p: Path) -> str:
+    return str(p.relative_to(ROOT)).replace('\\', '/')
+
+
+def eligible(p: Path) -> bool:
+    if not p.is_file() or any(part in SKIP_DIRS for part in p.parts):
+        return False
+    if rel(p) in SKIP_EXACT:
+        return False
+    return p.suffix.lower() in TEXT_EXTS or p.name == 'CNAME'
+
 
 changed = []
 replacements = 0
-
 for p in ROOT.rglob('*'):
-    if not p.is_file():
-        continue
-    if any(part in SKIP_DIRS for part in p.parts):
-        continue
-    if p.suffix.lower() not in TEXT_EXTS and p.name not in {'CNAME'}:
+    if not eligible(p):
         continue
     try:
         s = p.read_text(encoding='utf-8')
-    except UnicodeDecodeError:
+    except (UnicodeDecodeError, OSError):
         continue
-    n = s.count('企业邮箱')
+    n = s.count(OLD)
     if n:
-        s = s.replace('企业邮箱', '官网邮箱')
-        p.write_text(s, encoding='utf-8')
+        p.write_text(s.replace(OLD, NEW), encoding='utf-8')
         replacements += n
-        changed.append(str(p.relative_to(ROOT)))
+        changed.append(rel(p))
 
-# Fix scene diagram 02: replace the visually ambiguous lower arrow with a clean upward arrow.
+# Scene diagram 02: use a clean upward process arrow instead of the visually ambiguous marker shape.
 brief = ROOT / 'qilylean/daily/2026-08-14.html'
 if not brief.exists():
     raise SystemExit('2026-08-14 brief missing')
 s = brief.read_text(encoding='utf-8')
-old = '<path d="M600 520 V445" stroke="#178b94" stroke-width="7" marker-end="url(#a3)"/>'
-new = '<line x1="600" y1="515" x2="600" y2="462" stroke="#178b94" stroke-width="8" stroke-linecap="round"/><polygon points="600,438 584,466 616,466" fill="#178b94"/>'
-if old in s:
-    s = s.replace(old, new, 1)
-    brief.write_text(s, encoding='utf-8')
-    changed.append(str(brief.relative_to(ROOT)))
-elif new not in s:
+old_arrow = '<path d="M600 520 V445" stroke="#178b94" stroke-width="7" marker-end="url(#a3)"/>'
+new_arrow = '<line x1="600" y1="515" x2="600" y2="462" stroke="#178b94" stroke-width="8" stroke-linecap="round"/><polygon points="600,438 584,466 616,466" fill="#178b94"/>'
+if old_arrow in s:
+    brief.write_text(s.replace(old_arrow, new_arrow, 1), encoding='utf-8')
+    changed.append(rel(brief))
+elif new_arrow not in s:
     raise SystemExit('scene diagram 02 arrow anchor not found')
 
-# App release manifest wording + QilyLean Home public package baseline.
-manifest = ROOT / 'app-release-manifest.json'
-if manifest.exists():
-    s = manifest.read_text(encoding='utf-8')
-    s = s.replace('企业邮箱', '官网邮箱')
-    manifest.write_text(s, encoding='utf-8')
-
-# Hard validation: user-facing maintained text must no longer contain 企业邮箱.
+# Product-facing validation: all maintained website/app sources must use the new label.
 remaining = []
 for p in ROOT.rglob('*'):
-    if not p.is_file() or any(part in SKIP_DIRS for part in p.parts):
-        continue
-    if p.suffix.lower() not in TEXT_EXTS:
+    if not eligible(p):
         continue
     try:
         text = p.read_text(encoding='utf-8')
-    except UnicodeDecodeError:
+    except (UnicodeDecodeError, OSError):
         continue
-    if '企业邮箱' in text:
-        remaining.append(str(p.relative_to(ROOT)))
-
+    if OLD in text:
+        remaining.append(rel(p))
 if remaining:
-    raise SystemExit('企业邮箱 remains in maintained text: ' + ', '.join(remaining[:40]))
+    raise SystemExit('legacy email label remains in maintained product content: ' + ', '.join(remaining[:40]))
 
 qhome = ROOT / 'android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java'
 if qhome.exists() and 'webCard("官网邮箱", "admin@qilylean.com"' not in qhome.read_text(encoding='utf-8'):
     raise SystemExit('QilyLean Home 官网邮箱 label missing')
 
 final_brief = brief.read_text(encoding='utf-8')
-if new not in final_brief or old in final_brief:
+if new_arrow not in final_brief or old_arrow in final_brief:
     raise SystemExit('brief arrow V2 validation failed')
 
 print(f'官网邮箱 migration complete: {replacements} replacements across {len(set(changed))} changed files.')
