@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/unify-wechat-official-url-contact-v12.js'
+      - 'scripts/preflight-contact-v12-cooperation.js'
       - '.github/workflows/publish-contact-wechat-official-url-v12.yml'
   workflow_dispatch:
 
@@ -27,6 +28,9 @@ jobs:
         with:
           node-version: 22
 
+      - name: Normalize cooperation WeChat source
+        run: node scripts/preflight-contact-v12-cooperation.js
+
       - name: Apply V12 naming and WeChat interaction
         run: node scripts/unify-wechat-official-url-contact-v12.js
 
@@ -34,6 +38,7 @@ jobs:
         shell: bash
         run: |
           node --check scripts/unify-wechat-official-url-contact-v12.js
+          node --check scripts/preflight-contact-v12-cooperation.js
           node --check site-navigation-core.js
           node --check qilylean/contact-wechat-open.js
           node - <<'NODE'
