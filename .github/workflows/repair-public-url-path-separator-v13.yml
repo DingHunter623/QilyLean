@@ -1,0 +1,61 @@
+name: Repair URL V13 subpath separators
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/repair-public-url-path-separator-v13.js'
+      - '.github/workflows/repair-public-url-path-separator-v13.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: url-v13-path-integrity-main
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Repair malformed QilyLean public URL subpaths
+        run: node scripts/repair-public-url-path-separator-v13.js
+      - name: Validate URL root/subpath contract
+        shell: bash
+        run: |
+          node --check scripts/repair-public-url-path-separator-v13.js
+          node - <<'NODE'
+          const fs=require('fs');
+          const checks=['app-download-share-v1.js','app-support/index.html','capabilities/index.html','app-store/qilylean-home/README.md'];
+          for(const f of checks){
+            if(!fs.existsSync(f))continue;
+            const s=fs.readFileSync(f,'utf8');
+            if(/https:\/\/qilylean\.com(?:capabilities|app-support|legal|tools|assets|share|projects|knowledge|Times26001-|QilyLean_Home_)/.test(s))throw new Error('broken path separator: '+f);
+          }
+          const report=JSON.parse(fs.readFileSync('maintenance/public-url-path-integrity-v13.json','utf8'));
+          console.log(report);
+          NODE
+      - name: Commit repaired production files
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add -A -- ':!.github'
+          if git diff --cached --quiet; then
+            echo 'No URL path repairs required.'
+            exit 0
+          fi
+          git commit -m 'fix: restore QilyLean URL subpath separators [skip ci]'
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((i*3))
+          done
+          exit 1
