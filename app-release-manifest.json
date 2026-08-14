@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-08-13",
+  "updatedAt": "2026-08-14",
   "officialWebsite": "https://qilylean.com/",
   "supportEmail": "admin@qilylean.com",
   "apps": {
@@ -15,7 +15,7 @@
         "versionCode": 16,
         "apk": "/Times26001-Android-v1.1.13-Standard-Website-Logo.apk",
         "sha256": "/Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt",
-        "label": "当前官网安装包（官网标准LOGO统一修正版）",
+        "label": "当前官网安装包（官网标准LOGO与官网邮箱统一版）",
         "status": "用于官网直接下载与试用；不作为Google Play首发AAB的上传签名或后续升级签名基线"
       },
       "storeCandidate": {
@@ -29,13 +29,13 @@
       "privacy": "https://qilylean.com/legal/times26001/privacy/",
       "terms": "https://qilylean.com/legal/times26001/terms/",
       "support": "https://qilylean.com/app-support/",
-      "officialWebsiteLinkPolicy": "APP可展示并由用户主动访问QilyLean官网与企业邮箱；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK",
+      "officialWebsiteLinkPolicy": "APP可展示并由用户主动访问QilyLean官网与官网邮箱；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK",
       "latestBuild": {
         "versionName": "1.1.13",
         "versionCode": 16,
         "targetSdk": 36,
         "label": "最新Google Play构建",
-        "status": "顶部LOGO已统一为官网QilyLean｜启力精益横版标准；保留天气定位可靠性修正",
+        "status": "顶部LOGO统一为官网横版标准；官网邮箱称谓统一；保留天气定位可靠性修正",
         "upgradeFromHistoricalPublicApk": "官网独立分发包与Google Play发布链分开管理；Google Play后续版本持续使用同一Upload Key并由Play App Signing管理最终分发签名"
       }
     },
