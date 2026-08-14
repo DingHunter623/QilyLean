@@ -1,8 +1,8 @@
-/* QilyLean sitewide textual-control contrast audit v2 | 2026-08-05 */
+/* QilyLean sitewide textual-control contrast audit v3 | 2026-08-14 */
 (function (d, w) {
   'use strict';
-  if (w.__qilyTextContrastAuditV2) return;
-  w.__qilyTextContrastAuditV2 = true;
+  if (w.__qilyTextContrastAuditV3) return;
+  w.__qilyTextContrastAuditV3 = true;
 
   var controlSelector = [
     'a[href]', 'button', '[role="button"]', '[role="link"]',
@@ -12,7 +12,7 @@
     '.site-music-toggle', '.qily-modal-close', '.qily-float-btn',
     '.qily-float-dock a', '.qily-float-dock button',
     '.qily-floating-dock a', '.qily-floating-dock button',
-    '.factory-plan-preview',
+    '.factory-plan-preview', '.term-opl-open', '.term-opl-copy-wechat-v9',
     '[aria-hidden="true"]'
   ].join(',');
   var scheduled = 0;
@@ -115,7 +115,11 @@
   }
 
   function auditControl(node) {
-    if (!node || !node.matches || !node.matches(controlSelector) || node.matches(excludedSelector)) return;
+    if (!node || !node.matches || !node.matches(controlSelector)) return;
+    if (node.matches(excludedSelector)) {
+      node.removeAttribute('data-qily-auto-contrast');
+      return;
+    }
     var text = (node.textContent || node.value || '').replace(/\s+/g, ' ').trim();
     if (!text) return;
     var rect = node.getBoundingClientRect();
@@ -148,7 +152,7 @@
     if (root.matches && root.matches(controlSelector)) controls.push(root);
     if (root.querySelectorAll) controls = controls.concat(Array.from(root.querySelectorAll(controlSelector)));
     controls.forEach(auditControl);
-    d.documentElement.setAttribute('data-qily-text-contrast-audited', 'v2');
+    d.documentElement.setAttribute('data-qily-text-contrast-audited', 'v3');
   }
 
   function schedule(root) {
