@@ -1,0 +1,113 @@
+name: Prepare Times26001 R5 website-aligned test baseline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/prepare-times26001-r5-test-baseline-20260814.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Android verification tools
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android build tools
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'build-tools;36.0.0'
+
+      - name: Verify R5 release baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          APK='Times26001-Android-v1.1.13-Standard-Website-Logo.apk'
+          SHA='Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt'
+          test -s "$APK"
+          test -s "$SHA"
+          sha256sum -c "$SHA"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK" | tee /tmp/signature.txt
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$APK" | tee /tmp/badging.txt
+          grep -q "package: name='com.qilylean.times26001'" /tmp/badging.txt
+          grep -q "versionCode='16'" /tmp/badging.txt
+          grep -q "versionName='1.1.13'" /tmp/badging.txt
+          grep -q "targetSdkVersion:'36'" /tmp/badging.txt
+          unzip -p "$APK" assets/public/assets/index-CwdlYVYK.js > /tmp/app.js
+          unzip -p "$APK" assets/public/assets/index-P___uYFs.css > /tmp/app.css
+          unzip -p "$APK" assets/public/assets/qilylean-header-logo.svg > /tmp/logo.svg
+          grep -q 'qilylean-header-logo.svg' /tmp/app.js
+          grep -q 'width:178px' /tmp/app.css
+          grep -q 'QilyLean｜启力精益' /tmp/logo.svg
+          grep -q 'admin@qilylean.com' /tmp/app.js
+          grep -q 'https://qilylean.com' /tmp/app.js
+
+      - name: Verify website release association
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+
+          apk = 'Times26001-Android-v1.1.13-Standard-Website-Logo.apk'
+          data = json.loads(Path('app-release-manifest.json').read_text(encoding='utf-8'))
+          app = data['apps']['times26001']
+          assert app['packageName'] == 'com.qilylean.times26001'
+          assert app['publicRelease']['versionName'] == '1.1.13'
+          assert app['publicRelease']['versionCode'] == 16
+          assert app['publicRelease']['apk'] == '/' + apk
+          assert data['officialWebsite'] == 'https://qilylean.com'
+          assert data['supportEmail'] == 'admin@qilylean.com'
+          for name in [
+              'tools/times26001/index.html',
+              'capabilities/index.html',
+              'times26001-home-card.js',
+              'app-release-manifest.json',
+          ]:
+              assert apk in Path(name).read_text(encoding='utf-8'), name
+
+      - name: Create test package
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p Times26001-v1.1.13-R5-Test-Baseline
+          cp Times26001-Android-v1.1.13-Standard-Website-Logo.apk Times26001-v1.1.13-R5-Test-Baseline/
+          cp Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt Times26001-v1.1.13-R5-Test-Baseline/
+          cp /tmp/badging.txt /tmp/signature.txt Times26001-v1.1.13-R5-Test-Baseline/
+          printf '%s\n' \
+            '# Times26001 v1.1.13 R5 同官网测试基线' \
+            '' \
+            '- 日期：2026-08-14' \
+            '- 包名：com.qilylean.times26001' \
+            '- 版本：1.1.13（versionCode 16）' \
+            '- Target API：36' \
+            '- 样品：与官网当前APK为同一文件，禁止二次改包后测试' \
+            '- 范围：Android功能/安装/升级兼容性测试；不是Google Play上传AAB' \
+            '' \
+            '## 必测项' \
+            '1. 全新安装、首次启动、卸载重装。' \
+            '2. 顶部横版QilyLean｜启力精益LOGO完整显示。' \
+            '3. 首页、万年历、天气、闹钟、计时、设置六模块。' \
+            '4. 天气当前位置授权、拒绝、GPS关闭、超时降级、城市搜索。' \
+            '5. 闹钟、倒计时通知及离线提醒。' \
+            '6. 官方网址、官网邮箱、隐私政策、用户协议、技术支持。' \
+            '7. 深浅主题、字号、底部导航文字完整性。' \
+            '8. 三星/主流Android 13-16机型兼容性。' \
+            '' \
+            '## 安装注意' \
+            '如因签名不同无法覆盖安装，先备份必要信息后卸载旧版；卸载会清除本机闹钟、设置及测时记录。' \
+            > Times26001-v1.1.13-R5-Test-Baseline/TEST-CHECKLIST.md
+
+      - name: Upload R5 test baseline
+        uses: actions/upload-artifact@v4
+        with:
+          name: Times26001-v1.1.13-R5-Website-Aligned-Test-Baseline
+          path: Times26001-v1.1.13-R5-Test-Baseline/
+          if-no-files-found: error
+          retention-days: 30
