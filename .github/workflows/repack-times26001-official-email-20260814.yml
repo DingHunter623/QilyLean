@@ -1,4 +1,4 @@
-name: Repack Times26001 v1.1.13 官网邮箱 + URL V13 APK
+name: Repack Times26001 v1.1.13 官网邮箱 + URL V14 APK
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: times26001-url-v13-main
+  group: times26001-url-v14-main
   cancel-in-progress: false
 
 jobs:
@@ -35,7 +35,7 @@ jobs:
           from zipfile import ZipFile, ZIP_DEFLATED
           import re
           source=Path('Times26001-Android-v1.1.13-Standard-Website-Logo.apk')
-          target=Path('/tmp/Times26001-url-v13-unsigned.apk')
+          target=Path('/tmp/Times26001-url-v14-unsigned.apk')
           if not source.exists(): raise SystemExit('Times26001 source APK missing')
           old_email='企业邮箱'.encode('utf-8')
           new_email='官网邮箱'.encode('utf-8')
@@ -53,7 +53,6 @@ jobs:
                   data=zin.read(item.filename)
                   c=data.count(old_email)
                   if c:
-                      # Same UTF-8 byte length, safe for existing binary/string-pool payloads.
                       if len(old_email)!=len(new_email): raise SystemExit('email byte length mismatch')
                       data=data.replace(old_email,new_email)
                       email_replacements+=c
@@ -64,7 +63,7 @@ jobs:
                       if not is_text:
                           unsafe.append(item.filename)
                       else:
-                          # Text/Web resource: variable length replacement is safe inside its ZIP entry.
+                          # Only an exact standalone root loses its terminal slash; subpath separators stay intact.
                           pattern=re.compile(rb'https://qilylean[.]com/(?=(?:["\'<>\s),;\]}]|$))')
                           data,n=pattern.subn(new_url,data)
                           url_replacements+=n
@@ -86,9 +85,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          keytool -genkeypair -v -keystore /tmp/times26001-url-v13.keystore -storepass QilyLean26001 -keypass QilyLean26001 -alias times26001-url-v13 -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=QilyLean, OU=Times26001, O=QilyLean, C=CN'
-          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -p -f 4 /tmp/Times26001-url-v13-unsigned.apk /tmp/Times26001-url-v13-aligned.apk
-          "$ANDROID_HOME/build-tools/36.0.0/apksigner" sign --ks /tmp/times26001-url-v13.keystore --ks-key-alias times26001-url-v13 --ks-pass pass:QilyLean26001 --key-pass pass:QilyLean26001 --out Times26001-Android-v1.1.13-Standard-Website-Logo.apk /tmp/Times26001-url-v13-aligned.apk
+          keytool -genkeypair -v -keystore /tmp/times26001-url-v14.keystore -storepass QilyLean26001 -keypass QilyLean26001 -alias times26001-url-v14 -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=QilyLean, OU=Times26001, O=QilyLean, C=CN'
+          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -p -f 4 /tmp/Times26001-url-v14-unsigned.apk /tmp/Times26001-url-v14-aligned.apk
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" sign --ks /tmp/times26001-url-v14.keystore --ks-key-alias times26001-url-v14 --ks-pass pass:QilyLean26001 --key-pass pass:QilyLean26001 --out Times26001-Android-v1.1.13-Standard-Website-Logo.apk /tmp/Times26001-url-v14-aligned.apk
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose Times26001-Android-v1.1.13-Standard-Website-Logo.apk
           sha256sum Times26001-Android-v1.1.13-Standard-Website-Logo.apk > Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt
 
@@ -98,20 +97,40 @@ jobs:
           from pathlib import Path
           import json,re
           standalone=re.compile(r'https://qilylean[.]com/(?=(?:["\'<>\s),;\]}]|$))')
-          for name in ['tools/times26001/index.html','capabilities/index.html','app-support/index.html','app-store/times26001/README.md','app-download-share-v1.js','times26001-home-card.js']:
+          malformed=re.compile(r'https://qilylean[.]com(?=[A-Za-z0-9])')
+          targets=['tools/times26001/index.html','capabilities/index.html','app-support/index.html','app-store/times26001/README.md','app-download-share-v1.js','times26001-home-card.js']
+          for name in targets:
               p=Path(name)
               if p.exists():
                   s=p.read_text(encoding='utf-8').replace('企业邮箱','官网邮箱')
                   s=standalone.sub('https://qilylean.com',s)
+                  s=malformed.sub('https://qilylean.com/',s)
                   p.write_text(s,encoding='utf-8')
           p=Path('app-release-manifest.json')
           data=json.loads(p.read_text(encoding='utf-8'))
           data['updatedAt']='2026-08-14'
           app=data['apps']['times26001']
-          app['officialWebsiteLinkPolicy']='APP可展示并由用户主动访问QilyLean官网与官网邮箱；用户可见官方网址不带尾斜杠；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK'
-          app['publicRelease']['label']='当前官网安装包（官网标准LOGO、官网邮箱与URL V13统一版）'
-          app['latestBuild']['status']='顶部LOGO统一为官网横版标准；官网邮箱统一；用户可见官方网址无尾斜杠；保留天气定位可靠性修正'
+          app['officialWebsiteLinkPolicy']='APP可展示并由用户主动访问QilyLean官网与官网邮箱；用户可见、复制和分享的官方网址不带尾斜杠；真实子路径保留域名后的分隔斜杠；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK'
+          app['publicRelease']['label']='当前官网安装包（官网标准LOGO、官网邮箱与URL V14精细化统一版）'
+          app['latestBuild']['status']='顶部LOGO统一为官网横版标准；官网邮箱统一；用户可见官方网址无尾斜杠；子路径分隔完整；保留天气定位可靠性修正'
           p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+      - name: Validate URL V14 website metadata
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          standalone=re.compile(r'https://qilylean[.]com/(?=(?:["\'<>\s),;\]}]|$))')
+          malformed=re.compile(r'https://qilylean[.]com(?=[A-Za-z0-9])')
+          bad=[]
+          for name in ['tools/times26001/index.html','capabilities/index.html','app-support/index.html','app-store/times26001/README.md','app-download-share-v1.js','times26001-home-card.js']:
+              p=Path(name)
+              if not p.exists(): continue
+              s=p.read_text(encoding='utf-8')
+              if standalone.search(s): bad.append(name+': trailing slash root')
+              if malformed.search(s): bad.append(name+': malformed host/path separator')
+          if bad: raise SystemExit('\n'.join(bad))
+          print('PASS Times26001 URL V14 website metadata')
 
       - name: Commit repacked official package
         shell: bash
@@ -122,13 +141,13 @@ jobs:
           git add Times26001-Android-v1.1.13-Standard-Website-Logo.apk Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt \
             tools/times26001/index.html capabilities/index.html app-support/index.html app-store/times26001/README.md \
             app-download-share-v1.js times26001-home-card.js app-release-manifest.json
-          git commit -m 'release: repack Times26001 URL V13 [skip ci]' || true
+          git commit -m 'release: repack Times26001 URL V14 [skip ci]' || true
           git pull --rebase origin main
           git push origin HEAD:main
 
       - uses: actions/upload-artifact@v4
         with:
-          name: Times26001-v1.1.13-URL-V13
+          name: Times26001-v1.1.13-URL-V14
           path: |
             Times26001-Android-v1.1.13-Standard-Website-Logo.apk
             Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt
