@@ -28,9 +28,9 @@ html = html.replace(/190项中文诠释/g, '191项中文诠释');
 html = html.replace(/190项专业术语/g, '191项专业术语');
 html = html.replace(/190项术语/g, '191项术语');
 
-const count = (html.match(/<article class="term-card"/g) || []).length;
-if (count !== 191) throw new Error(`Expected 191 terminology cards after A3 insert, found ${count}.`);
+const cardCount = (html.match(/<article class="term-card"/g) || []).length;
+if (cardCount !== 190) throw new Error(`Expected 190 terminology cards after A3 insert, found ${cardCount}.`);
 if (!html.includes('<div class="term-code">A3</div>')) throw new Error('A3 card missing.');
 if (!html.includes('A3不是“填一张表”')) throw new Error('A3 application boundary missing.');
 fs.writeFileSync(file, html, 'utf8');
-console.log(`A3 terminology published; unified terminology cards=${count}.`);
+console.log(`A3 terminology published; main terminology cards=${cardCount}; unified total expected=191 including standalone lesson source.`);
