@@ -1,0 +1,47 @@
+name: Update Daily Brief terminology UI allowlist 2026-08-14
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/allow-curated-ui-in-daily-terminology-audit-20260814.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Patch UI allowlist
+        run: node scripts/allow-curated-ui-in-daily-terminology-audit-20260814.js
+      - name: Validate terminology gate
+        run: |
+          node --check scripts/audit-daily-terminology.js
+          node - <<'NODE'
+          const fs=require('fs');
+          const s=fs.readFileSync('scripts/audit-daily-terminology.js','utf8');
+          if(!s.includes("'CURATED'")) throw new Error('CURATED allowlist missing');
+          console.log('CURATED UI allowlist QA passed.');
+          NODE
+      - name: Commit gate update
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add scripts/audit-daily-terminology.js
+          if git diff --cached --quiet; then
+            echo 'No gate changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: exclude curated UI label from terminology gate'
+          git pull --rebase origin main
+          git push origin HEAD:main
