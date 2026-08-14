@@ -75,7 +75,7 @@ for p in contact_targets:
 # Patch/generator source may legitimately contain an old token as the match-side of a migration.
 # Verify the generated/runtime target instead of flagging the migration pattern itself.
 patch=Path('scripts/sitewide_contact_core_patch_20260807.py').read_text(encoding='utf-8')
-if '<div>官方网址</div>' not in patch or 'https://qilylean.com">https://qilylean.com</a>' not in patch:
+if '<div>官方网址</div>' not in patch or '官方网址：https://qilylean.com' not in patch:
     errors.append('联系核心补丁未固化“官方网址”输出')
 
 term=Path('knowledge/terminology.html').read_text(encoding='utf-8')
