@@ -109,7 +109,7 @@ jobs:
           data=json.loads(p.read_text(encoding='utf-8'))
           data['updatedAt']='2026-08-14'
           app=data['apps']['times26001']
-          app['officialWebsiteLinkPolicy']='APP可展示并由用户主动访问QilyLean官网与官网邮箱；用户可见、复制和分享的官方网址不带尾斜杠；真实子路径保留域名后的分隔斜杠；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK'
+          app['officialWebsiteLinkPolicy']='APP可展示并由用户主动访问QilyLean官方网址与官网邮箱；用户可见、复制和分享的官方网址不带尾斜杠；真实子路径保留域名后的分隔斜杠；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK'
           app['publicRelease']['label']='当前官网安装包（官网标准LOGO、官网邮箱与URL V14精细化统一版）'
           app['latestBuild']['status']='顶部LOGO统一为官网横版标准；官网邮箱统一；用户可见官方网址无尾斜杠；子路径分隔完整；保留天气定位可靠性修正'
           p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

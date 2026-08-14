@@ -29,7 +29,7 @@
       "privacy": "https://qilylean.com/legal/times26001/privacy",
       "terms": "https://qilylean.com/legal/times26001/terms",
       "support": "https://qilylean.com/app-support",
-      "officialWebsiteLinkPolicy": "APP可展示并由用户主动访问QilyLean官网与官网邮箱；用户可见、复制和分享的官方网址不带尾斜杠；真实子路径保留域名后的分隔斜杠；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK",
+      "officialWebsiteLinkPolicy": "APP可展示并由用户主动访问QilyLean官方网址与官网邮箱；用户可见、复制和分享的官方网址不带尾斜杠；真实子路径保留域名后的分隔斜杠；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK",
       "latestBuild": {
         "versionName": "1.1.13",
         "versionCode": 16,
