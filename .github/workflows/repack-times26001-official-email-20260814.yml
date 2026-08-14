@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 5
       - uses: android-actions/setup-android@v3
       - name: Install signing tools
         run: |
@@ -63,7 +63,6 @@ jobs:
                       if not is_text:
                           unsafe.append(item.filename)
                       else:
-                          # Only an exact standalone root loses its terminal slash; subpath separators stay intact.
                           pattern=re.compile(rb'https://qilylean[.]com/(?=(?:["\'<>\s),;\]}]|$))')
                           data,n=pattern.subn(new_url,data)
                           url_replacements+=n
@@ -132,7 +131,7 @@ jobs:
           if bad: raise SystemExit('\n'.join(bad))
           print('PASS Times26001 URL V14 website metadata')
 
-      - name: Commit repacked official package
+      - name: Commit repacked official package with concurrent-main retry
         shell: bash
         run: |
           set -euo pipefail
@@ -142,8 +141,18 @@ jobs:
             tools/times26001/index.html capabilities/index.html app-support/index.html app-store/times26001/README.md \
             app-download-share-v1.js times26001-home-card.js app-release-manifest.json
           git commit -m 'release: repack Times26001 URL V14 [skip ci]' || true
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for i in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              echo "Times26001 URL V14 publish succeeded on attempt $i"
+              exit 0
+            fi
+            git rebase --abort || true
+            echo "Concurrent main update on attempt $i; retrying..."
+            sleep $((i*3))
+          done
+          echo 'Times26001 URL V14 publish failed after 3 retries.' >&2
+          exit 1
 
       - uses: actions/upload-artifact@v4
         with:
