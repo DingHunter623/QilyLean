@@ -32,7 +32,7 @@ jobs:
         with:
           gradle-version: '8.7'
 
-      - name: Normalize QilyLean Home source naming and public URL output
+      - name: Normalize QilyLean Home source naming, R5 navigation and public URL output
         shell: bash
         run: |
           set -euo pipefail
@@ -57,10 +57,44 @@ jobs:
               if n!=s:
                   p.write_text(n,encoding='utf-8')
                   changed+=1
+
+          main=Path('android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java')
+          s=main.read_text(encoding='utf-8')
+          old='''        addSectionTitle(content, "官网最新导航");
+        addCardRow(content,
+                webCard("首页", "官网总入口与最新内容", "https://qilylean.com"),
+                webCard("能力体系", "六类核心能力与交付边界", "https://qilylean.com/capabilities"));
+        addCardRow(content,
+                webCard("代表项目", "项目成果、证据与交付资产", "https://qilylean.com/projects"),
+                webCard("改善方法", "精益、IE与现场改善方法", "https://qilylean.com/improvements"));
+        addCardRow(content,
+                webCard("知识资产", "术语、模板、方法与简报", "https://qilylean.com/knowledge"),
+                webCard("履历主线", "制造业经历与岗位主线", "https://qilylean.com/experience"));
+        addCardRow(content,
+                webCard("项目合作", "诊断、规划与项目交付", "https://qilylean.com/cooperation"),
+                webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust"));'''
+          new='''        addSectionTitle(content, "官网最新导航");
+        addCardRow(content,
+                webCard("首页", "官网总入口与最新内容", "https://qilylean.com"),
+                webCard("履历主线", "制造业经历与岗位主线", "https://qilylean.com/experience"));
+        addCardRow(content,
+                webCard("能力体系", "六类核心能力与交付边界", "https://qilylean.com/capabilities"),
+                webCard("改善方法", "精益、IE与现场改善方法", "https://qilylean.com/improvements"));
+        addCardRow(content,
+                webCard("代表项目", "项目成果、证据与交付资产", "https://qilylean.com/projects"),
+                webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust"));
+        addCardRow(content,
+                webCard("项目合作", "诊断、规划与项目交付", "https://qilylean.com/cooperation"),
+                webCard("知识资产", "术语、模板、方法与简报", "https://qilylean.com/knowledge"));'''
+          if old in s:
+              main.write_text(s.replace(old,new),encoding='utf-8')
+              changed+=1
+          elif new not in s:
+              raise SystemExit('QilyLean Home navigation block is neither legacy nor R5 fixed order')
           print('QilyLean Home source files normalized:',changed)
           PY
 
-      - name: Validate source naming, URL V14 output and Android 16 baseline
+      - name: Validate source naming, R5 navigation, URL V14 output and Android 16 baseline
         shell: bash
         run: |
           set -euo pipefail
@@ -82,7 +116,14 @@ jobs:
               if standalone.search(s):bad.append(str(p)+': trailing slash root')
               if malformed.search(s):bad.append(str(p)+': malformed host/path separator')
           assert not bad, bad
-          print('PASS QHome URL V14: root no trailing slash; subpath separators intact')
+          main=Path('android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java').read_text(encoding='utf-8')
+          start=main.index('addSectionTitle(content, "官网最新导航")')
+          end=main.index('addSectionTitle(content, "知识重点直达")')
+          block=main[start:end]
+          order=['webCard("首页"','webCard("履历主线"','webCard("能力体系"','webCard("改善方法"','webCard("代表项目"','webCard("信任中心"','webCard("项目合作"','webCard("知识资产"']
+          pos=[block.index(x) for x in order]
+          assert pos==sorted(pos), 'R5 navigation order mismatch: '+str(pos)
+          print('PASS QHome R5 navigation + URL V14: 首页→履历主线→能力体系→改善方法→代表项目→信任中心→项目合作→知识资产')
           PY
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
@@ -118,12 +159,14 @@ jobs:
               s=s.replace('企业邮箱','官网邮箱')
               s=standalone.sub('https://qilylean.com',s)
               s=malformed.sub('https://qilylean.com/',s)
+              if name=='app-store/qilylean-home/README.md':
+                  s=s.replace('QilyLean首页、能力体系、履历主线、代表项目、改善方法、知识资产、项目合作与信任中心导航；','QilyLean首页、履历主线、能力体系、改善方法、代表项目、信任中心、项目合作与知识资产导航；')
               p.write_text(s,encoding='utf-8')
           p=Path('app-release-manifest.json')
           data=json.loads(p.read_text(encoding='utf-8'))
           data['updatedAt']='2026-08-14'
-          data['apps']['qilyleanHome']['publicRelease'].update(versionName='2.3.3',versionCode=11,apk='/'+apk,sha256='/'+sha,label='当前官网安装包（官网最新布局、官网邮箱与URL V14精细化统一版）')
-          data['apps']['qilyleanHome']['latestBuild'].update(versionName='2.3.3',versionCode=11,status='桌面导航同步官网最新布局；官网邮箱统一；用户可见/复制官方网址无尾斜杠；子路径分隔完整；API 36可安装包构建通过')
+          data['apps']['qilyleanHome']['publicRelease'].update(versionName='2.3.3',versionCode=11,apk='/'+apk,sha256='/'+sha,label='当前官网安装包（R5官网最新导航、官网邮箱与URL V14精细化统一版）')
+          data['apps']['qilyleanHome']['latestBuild'].update(versionName='2.3.3',versionCode=11,status='桌面导航按R5固定顺序同步官网： 首页→履历主线→能力体系→改善方法→代表项目→信任中心→项目合作→知识资产；官网邮箱统一；用户可见/复制官方网址无尾斜杠；子路径分隔完整；API 36可安装包构建通过')
           p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
 
@@ -137,16 +180,13 @@ jobs:
           apk=Path('QilyLean_Home_v2.3.3_API36_INSTALL.apk')
           slash_root=b'https://qilylean.com/'
           root_markers=(b'"',b"'",b'\x00',b' ',b'\n',b'\r',b'<',b')',b']',b'}')
-          malformed_prefix=b'https://qilylean.com'
           with ZipFile(apk) as z:
               trailing=[]
-              malformed=[]
               for n in z.namelist():
                   try:data=z.read(n)
                   except Exception:continue
                   if any(slash_root+m in data for m in root_markers) or data.endswith(slash_root):
                       trailing.append(n)
-                  # Compiled entries are opaque; source-level malformed-path QA above is authoritative.
               if trailing:
                   raise SystemExit('slash-terminated standalone root URL remains in APK: '+','.join(trailing[:20]))
           print('PASS: QilyLean Home APK public root URL has no trailing slash')
@@ -160,13 +200,13 @@ jobs:
           git config user.email 'admin@qilylean.com'
           git add android/qilylean-home QilyLean_Home_v2.3.3_API36_INSTALL.apk QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt \
             capabilities/index.html app-support/index.html app-store/qilylean-home/README.md app-download-share-v1.js app-release-manifest.json
-          git commit -m 'release: rebuild QilyLean Home v2.3.3 URL V14 [skip ci]' || true
+          git commit -m 'release: rebuild QilyLean Home v2.3.3 R5 latest' || true
           git pull --rebase origin main
           git push origin HEAD:main
 
       - uses: actions/upload-artifact@v4
         with:
-          name: QilyLean-Home-v2.3.3-URL-V14
+          name: QilyLean-Home-v2.3.3-R5-URL-V14
           path: |
             QilyLean_Home_v2.3.3_API36_INSTALL.apk
             QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt
