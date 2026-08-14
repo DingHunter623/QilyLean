@@ -1,0 +1,78 @@
+name: Publish cooperation contact closure V1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-cooperation-contact-closure-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-cooperation-contact-closure-v1
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Refresh cooperation contact final style layer
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p=Path('cooperation/index.html')
+          s=p.read_text(encoding='utf-8')
+          href='/site-contact-field-hierarchy-v1.css?v=20260814-contact-field-hierarchy-v2'
+          tag=f'<link id="qilyContactFieldHierarchyV1Stylesheet" rel="stylesheet" href="{href}">'
+          s=re.sub(r'\s*<link\b[^>]*(?:id=["\']qilyContactFieldHierarchyV1Stylesheet["\']|href=["\'][^"\']*/site-contact-field-hierarchy-v1\.css(?:\?v=[^"\']*)?["\'])[^>]*>\s*','\n',s,flags=re.I)
+          s=s.replace('</head>',f'  {tag}\n</head>',1)
+          p.write_text(s,encoding='utf-8')
+
+      - name: Validate exact four-row visual contract
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          html=Path('cooperation/index.html').read_text(encoding='utf-8')
+          css=Path('site-contact-field-hierarchy-v1.css').read_text(encoding='utf-8')
+          assert '/site-contact-field-hierarchy-v1.css?v=20260814-contact-field-hierarchy-v2' in html
+          assert len(re.findall(r'class="[^"]*qily-uniform-contact-row[^"]*"',html)) == 4
+          for marker in ['contact-phone-action','contact-email-action','wechat-contact-action','contact-evidence-action','admin@qilylean.com']:
+              assert marker in html, marker
+          assert '.qily-uniform-contact-row' in css
+          assert 'border: 1.5px solid #f5c766 !important' in css
+          assert '.contact-action-label' in css and 'border-bottom: 0 !important' in css
+          assert '.contact-action-value' in css and 'border-bottom: 2px solid currentColor !important' in css
+          print('PASS cooperation contact closure: 4 rows / 4 borders / value-only underline')
+
+      - name: Commit production page
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add cooperation/index.html
+          if git diff --cached --quiet; then
+            echo 'No production diff.'
+            exit 0
+          fi
+          git commit -m 'fix: publish cooperation four-row border and email underline closure [skip ci]'
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((i*3))
+          done
+          exit 1
