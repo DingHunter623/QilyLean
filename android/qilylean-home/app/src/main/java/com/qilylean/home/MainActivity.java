@@ -242,7 +242,7 @@ public class MainActivity extends Activity {
         addSectionTitle(content, "官方联系");
         addCardRow(content,
                 webCard("官方网址", "https://qilylean.com/", "https://qilylean.com/"),
-                webCard("企业邮箱", "admin@qilylean.com", "mailto:admin@qilylean.com"));
+                webCard("官网邮箱", "admin@qilylean.com", "mailto:admin@qilylean.com"));
 
         TextView footer = text(
                 "启精益之智，聚企业之力。\n免Root通用版，不读取、不展示手机品牌或型号；可随时切回系统桌面。",

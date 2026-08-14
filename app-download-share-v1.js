@@ -12,7 +12,7 @@
     qilyleanHome:{
       name:'QilyLean Home｜官网通用安装包',
       url:'https://qilylean.com/capabilities/#digital-tools',
-      download:'https://qilylean.com/QilyLean_Home_v2.3.2_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1',
+      download:'https://qilylean.com/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1',
       qr:'/assets/tools/qr-qilylean-home-download.svg?v=20260809-download-v2'
     }
   };
@@ -125,7 +125,7 @@
         if(!direct){
           direct=document.createElement('a');
           direct.setAttribute('data-qilylean-home-direct-download','1');
-          direct.href='/QilyLean_Home_v2.3.2_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1';
+          direct.href='/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1';
           direct.setAttribute('download','');
           direct.textContent='下载 Android APK（v2.2）';
           homeActions.insertBefore(direct,homeActions.firstChild);
