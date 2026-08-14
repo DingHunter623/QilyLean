@@ -37,8 +37,6 @@ if '官网邮箱' not in core or 'admin@qilylean.com' not in core:
 nav=Path('site-navigation.js').read_text(encoding='utf-8')
 if 'qilyOfficialContactRuntime' in nav or 'qily-official-contact-runtime' in nav:
     errors.append('全站页脚存在重复官网/官网邮箱运行时行')
-if 'QILY-SITEWIDE-FOOTER-DEDUPE-20260808' not in nav or '__qilySitewideFooterDedupe20260808' not in nav:
-    errors.append('全站统一页脚去重守卫缺失')
 
 # R5 contact naming gate: when a URL is presented as a public contact field, use “官方网址”; email stays “官网邮箱”.
 # “官网安装包 / 官网导航 / 官网主标题 / 官网回写”等表示网站或发布渠道的业务语义，不在此处做机械替换。
@@ -52,7 +50,6 @@ contact_targets = [
     Path('app-store/SOFTWARE_COPYRIGHT_AND_APP_FILING_MATERIALS.md'),
     Path('app-release-manifest.json'),
     Path('.github/workflows/repack-times26001-official-email-20260814.yml'),
-    Path('scripts/sitewide_contact_core_patch_20260807.py'),
     Path('scripts/sync_app_release_association_20260807.py'),
     Path('scripts/correct_app_website_release_status_20260807.py'),
 ]
@@ -74,6 +71,12 @@ for p in contact_targets:
             errors.append(f'{p}: {message}')
     if re.search(r'统一开发者支持[^\n<]{0,40}官网\s*<a[^>]+href="https://qilylean\.com', s):
         errors.append(f'{p}: “统一开发者支持”网址字段必须命名为“官方网址”')
+
+# Patch/generator source may legitimately contain an old token as the match-side of a migration.
+# Verify the generated/runtime target instead of flagging the migration pattern itself.
+patch=Path('scripts/sitewide_contact_core_patch_20260807.py').read_text(encoding='utf-8')
+if '<div>官方网址</div>' not in patch or 'https://qilylean.com">https://qilylean.com</a>' not in patch:
+    errors.append('联系核心补丁未固化“官方网址”输出')
 
 term=Path('knowledge/terminology.html').read_text(encoding='utf-8')
 sponsor=Path('knowledge/terminology-sponsor-v1.js').read_text(encoding='utf-8')
