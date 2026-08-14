@@ -6,7 +6,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const HREF = '/site-contact-field-hierarchy-v1.css?v=20260814-contact-field-hierarchy-v1';
+const HREF = '/site-contact-field-hierarchy-v1.css?v=20260814-contact-field-hierarchy-v2';
 const TAG = `<link id="qilyContactFieldHierarchyV1Stylesheet" rel="stylesheet" href="${HREF}">`;
 
 function trackedHtml() {
@@ -49,6 +49,17 @@ must(css.includes('border-bottom: 0 !important'), 'city label must have no under
 must(css.includes('.qily-phone-number'), 'phone number emphasis rule missing');
 must(css.includes('border-bottom: 1.5px solid currentColor !important'), 'phone number-only emphasis missing');
 must(css.includes('text-decoration-line: none !important'), 'parent/label text-decoration hard stop missing');
+must(css.includes('.qily-uniform-contact-row'), 'cooperation four-row visual contract missing');
+must(css.includes('border: 1.5px solid #f5c766 !important'), 'cooperation four-row visible border missing');
+must(css.includes('.contact-action-value'), 'cooperation contact value emphasis rule missing');
+must(css.includes('border-bottom: 2px solid currentColor !important'), 'cooperation phone/email/wechat value underline missing');
+must(css.includes('.contact-evidence-action'), 'cooperation evidence-row border guard missing');
+
+const cooperation = fs.readFileSync(path.join(ROOT, 'cooperation/index.html'), 'utf8');
+must((cooperation.match(/qily-uniform-contact-row/g) || []).length === 4, 'cooperation contact card must contain exactly four uniform rows');
+must(cooperation.includes('contact-email-action'), 'cooperation email row missing');
+must(cooperation.includes('admin@qilylean.com'), 'cooperation official email missing');
+must(cooperation.includes('contact-phone-action') && cooperation.includes('wechat-contact-action') && cooperation.includes('contact-evidence-action'), 'cooperation four row types incomplete');
 
 let publicCount = 0;
 for (const rel of trackedHtml()) {
@@ -59,4 +70,4 @@ for (const rel of trackedHtml()) {
   must(html.includes(HREF), `${rel}: contact field hierarchy stylesheet missing`);
 }
 
-process.stdout.write(`Contact field hierarchy V1 PASS: ${publicCount} public pages checked; ${changed} refreshed.\n`);
+process.stdout.write(`Contact field hierarchy V2 PASS: ${publicCount} public pages checked; ${changed} refreshed.\n`);
