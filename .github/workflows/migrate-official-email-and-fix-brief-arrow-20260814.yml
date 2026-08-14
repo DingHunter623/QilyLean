@@ -1,0 +1,53 @@
+name: Migrate 官网邮箱 naming and fix brief arrow
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/migrate-official-email-and-fix-brief-arrow-20260814.py'
+      - '.github/workflows/migrate-official-email-and-fix-brief-arrow-20260814.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: migrate-official-email-main
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Apply repo-wide naming migration and diagram fix
+        run: python scripts/migrate-official-email-and-fix-brief-arrow-20260814.py
+      - name: Validate website and app source terminology
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -RIn --exclude-dir=.git --exclude='*.apk' --exclude='*.aab' --exclude='*.zip' '企业邮箱' .
+          grep -q '官网邮箱' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
+          grep -q 'points="600,438 584,466 616,466"' qilylean/daily/2026-08-14.html
+          grep -q '官网邮箱' knowledge/terminology.html
+          grep -q '官网邮箱' app-support/index.html
+          grep -q '官网邮箱' app-store/qilylean-home/README.md
+          grep -q '官网邮箱' app-store/times26001/README.md
+          echo 'Website + two-app source naming contract passed.'
+      - name: Commit migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: rename enterprise email to official website email and correct brief arrow [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
