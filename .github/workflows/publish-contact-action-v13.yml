@@ -1,0 +1,115 @@
+name: Publish contact action V13
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-contact-action-v13.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: contact-action-v13-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Apply contact action V13
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          # 1) Shared navigation/contact runtime
+          p=Path('site-navigation.js')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace("var SHARED_ASSET_VERSION = '20260814-contact-v12';","var SHARED_ASSET_VERSION = '20260814-contact-v13';")
+
+          old="""  document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-qily-wechat-copy]');if(!x)return;e.preventDefault();copyWechatAndPrompt(x);});"""
+          new="""  document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-qily-wechat-copy]');if(!x)return;e.preventDefault();copyWechatAndPrompt(x);});
+
+  /* QILY-PHONE-COPY-PROMPT-V13 */
+  function ensurePhoneCopyPrompt(){
+    var p=document.getElementById('qilyPhoneCopyPrompt');if(p)return p;
+    p=document.createElement('div');p.id='qilyPhoneCopyPrompt';p.className='qily-phone-copy-prompt';p.setAttribute('role','status');p.setAttribute('aria-live','polite');
+    p.innerHTML='<span></span><button type=\"button\" data-qily-call-now>立即拨打</button><button type=\"button\" data-qily-call-cancel>取消</button>';document.body.appendChild(p);
+    p.querySelector('[data-qily-call-cancel]').addEventListener('click',function(){p.classList.remove('show');});
+    return p;
+  }
+  function copyPhoneAndPrompt(a,phone){return copyText(phone).then(function(){var p=ensurePhoneCopyPrompt();p.dataset.phone=phone;p.querySelector('span').textContent='号码 '+phone+' 已复制，是否立即拨打？';positionWechatCopyPrompt(a,p);p.classList.add('show');var call=p.querySelector('[data-qily-call-now]');call.onclick=function(){p.classList.remove('show');window.location.href='tel:'+phone;};clearTimeout(copyPhoneAndPrompt.timer);copyPhoneAndPrompt.timer=setTimeout(function(){p.classList.remove('show');},9000);});}
+  window.__qilyCopyPhoneAndPrompt=copyPhoneAndPrompt;
+  document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-qily-phone-copy]');if(!x)return;e.preventDefault();copyPhoneAndPrompt(x,x.getAttribute('data-qily-phone-copy'));});"""
+          if old not in s:
+              raise SystemExit('wechat V12 hook missing')
+          s=s.replace(old,new,1)
+
+          old_phone="""PHONE_NUMBERS.map(function (item) { return '<a href=\"tel:' + item.number + '\"><span class=\"qily-phone-city\">' + item.city + '：</span><strong class=\"qily-phone-number\">' + item.number + '</strong></a>'; }).join('')"""
+          new_phone="""PHONE_NUMBERS.map(function (item) { return '<a href=\"tel:' + item.number + '\" data-qily-phone-copy=\"' + item.number + '\" aria-label=\"复制并拨打 ' + item.city + ' ' + item.number + '\"><span class=\"qily-phone-city\">' + item.city + '：</span><strong class=\"qily-phone-number\">' + item.number + '</strong></a>'; }).join('')"""
+          if old_phone not in s:
+              raise SystemExit('phone list generator missing')
+          s=s.replace(old_phone,new_phone,1)
+          p.write_text(s,encoding='utf-8')
+
+          # 2) Cooperation: full-row WeChat + structured labels/values for underline scope.
+          p=Path('cooperation/index.html')
+          s=p.read_text(encoding='utf-8')
+          s=re.sub(r'<a href="tel:13450014003">电话：134 5001 4003</a>',
+                   '<button type="button" class="contact-action contact-phone-action" data-qily-phone-copy="13450014003" aria-label="复制并拨打电话 13450014003"><span class="contact-action-label">电话：</span><strong class="contact-action-value">134 5001 4003</strong></button>',s,count=1)
+          s=re.sub(r'<a href="mailto:admin@qilylean.com">官网邮箱：admin@qilylean.com</a>',
+                   '<a href="mailto:admin@qilylean.com" class="contact-action"><span class="contact-action-label">官网邮箱：</span><strong class="contact-action-value">admin@qilylean.com</strong></a>',s,count=1)
+          s=re.sub(r'<button type="button" id="copyWechat" class="wechat-contact-action" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259"><span>微信：</span><strong>Qily259</strong></button>',
+                   '<button type="button" id="copyWechat" class="wechat-contact-action contact-action" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259"><span class="contact-action-label">微信：</span><strong class="contact-action-value">Qily259</strong></button>',s,count=1)
+          # Insert component CSS after existing contact-card button rule.
+          marker='.contact-card button{color:#17322d;background:#ffe39b}'
+          css='''\n    .contact-card .contact-action{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;min-height:46px!important;margin-top:10px!important;padding:9px 14px!important;border:1px solid rgba(255,227,155,.48)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:rgba(255,255,255,.08)!important;text-decoration:none!important;cursor:pointer!important;font:inherit!important;font-weight:900!important;box-sizing:border-box!important}\n    .contact-card .contact-action:hover,.contact-card .contact-action:focus-visible{background:rgba(255,255,255,.16)!important;border-color:#ffe39b!important;box-shadow:0 8px 20px rgba(0,0,0,.16)!important;outline:2px solid rgba(255,227,155,.36)!important;outline-offset:2px!important;transform:translateY(-1px)!important}\n    .contact-card .contact-action:active{transform:scale(.985)!important}\n    .contact-action-label{text-decoration:none!important;text-underline-offset:0!important}\n    .contact-action-value{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important;text-decoration-skip-ink:none!important}\n'''
+          if 'contact-action-value' not in s:
+              raise SystemExit('cooperation action structure missing')
+          if css.strip() not in s:
+              s=s.replace(marker,marker+css,1)
+          p.write_text(s,encoding='utf-8')
+
+          # 3) OPL contact value: label never underlined, value remains underlined/clickable.
+          p=Path('knowledge/terminology.html')
+          s=p.read_text(encoding='utf-8')
+          s=s.replace('微信：<a href="#copy-wechat" class="term-opl-copy-wechat-v9"','<span class="term-opl-contact-label">微信：</span><a href="#copy-wechat" class="term-opl-copy-wechat-v9"',1)
+          p.write_text(s,encoding='utf-8')
+
+          # 4) Shared CSS: interaction states, full-row visual consistency and underline scope.
+          p=Path('site-shell.css')
+          s=p.read_text(encoding='utf-8')
+          block='''\n/* QILY-CONTACT-ACTION-V13:START */\n.qily-phone-list a{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;cursor:pointer!important;transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease!important}\n.qily-phone-list a:hover,.qily-phone-list a:focus-visible{background:#e6f5f2!important;border-color:#178b94!important;box-shadow:0 8px 18px rgba(15,75,90,.16)!important;outline:2px solid rgba(23,139,148,.2)!important;outline-offset:2px!important;transform:translateY(-1px)!important}\n.qily-phone-list a:active{background:#dff0ec!important;transform:scale(.985)!important}\n.qily-phone-city{text-decoration:none!important}\n.qily-phone-number{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important;text-decoration-skip-ink:none!important}\n.qily-wechat-action span{text-decoration:none!important}\n.qily-wechat-action strong{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important;text-decoration-skip-ink:none!important}\n.qily-phone-copy-prompt{position:fixed;z-index:12040;display:flex;align-items:center;gap:8px;max-width:min(92vw,560px);padding:10px 12px;border:1px solid #b8d9d4;border-radius:12px;color:#073c47;background:#fff;box-shadow:0 16px 40px rgba(7,60,71,.22);opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .16s ease,transform .16s ease,visibility .16s ease}\n.qily-phone-copy-prompt.show{opacity:1;visibility:visible;transform:none}\n.qily-phone-copy-prompt span{font-size:14px;font-weight:850;line-height:1.45}\n.qily-phone-copy-prompt button{min-height:34px;padding:6px 10px;border:1px solid #0f4b5a;border-radius:8px;color:#fff;background:#0f4b5a;cursor:pointer;font:inherit;font-size:13px;font-weight:900;white-space:nowrap}\n.qily-phone-copy-prompt [data-qily-call-cancel]{color:#0f4b5a;background:#fff}\n.term-opl-contact-label{text-decoration:none!important}\n.term-opl-copy-wechat-v9{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:3px!important;text-decoration-skip-ink:none!important}\n/* QILY-CONTACT-ACTION-V13:END */\n'''
+          s=re.sub(r'\n?/\* QILY-CONTACT-ACTION-V13:START \*/[\s\S]*?/\* QILY-CONTACT-ACTION-V13:END \*/\n?','\n',s)
+          s += block
+          p.write_text(s,encoding='utf-8')
+
+      - name: Validate V13
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check site-navigation.js
+          grep -q 'QILY-PHONE-COPY-PROMPT-V13' site-navigation.js
+          grep -q 'data-qily-phone-copy' site-navigation.js
+          grep -q 'QILY-CONTACT-ACTION-V13:START' site-shell.css
+          grep -q 'contact-action-value' cooperation/index.html
+          grep -q 'data-qily-wechat-copy="Qily259"' cooperation/index.html
+          grep -q 'term-opl-contact-label">微信：' knowledge/terminology.html
+
+      - name: Commit V13
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add site-navigation.js site-shell.css cooperation/index.html knowledge/terminology.html
+          git commit -m 'fix: unify phone and WeChat contact interactions V13 [skip ci]' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
