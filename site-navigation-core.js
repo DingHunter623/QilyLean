@@ -6,7 +6,7 @@
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260814-contact-v13';
+  var SHARED_ASSET_VERSION = '20260812-r2-stability-v1';
   var VISUAL_SCALE_VERSION = '20260729-hierarchy-v4';
     var CONTROLLED_ROUTE_PATHS = [];
   var PHONE_NUMBERS = [{ city: '东莞', number: '13450014003' }, { city: '宁波', number: '15168120722' }, { city: '乐清', number: '17681788259' }];
