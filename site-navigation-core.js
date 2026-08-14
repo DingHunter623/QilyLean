@@ -6,7 +6,7 @@
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260814-contact-v13';
+  var SHARED_ASSET_VERSION = '20260814-contact-v124';
   var VISUAL_SCALE_VERSION = '20260729-hierarchy-v4';
     var CONTROLLED_ROUTE_PATHS = [];
   var PHONE_NUMBERS = [{ city: '东莞', number: '13450014003' }, { city: '宁波', number: '15168120722' }, { city: '乐清', number: '17681788259' }];
@@ -561,3 +561,41 @@
   if (document.body) boot();
   else document.addEventListener('DOMContentLoaded', boot, { once: true });
 })();
+
+
+/* QILY-PHONE-CONTACT-V12.4:START */
+(function(){
+  'use strict';
+  if(window.__qilyPhoneContactV124)return;
+  window.__qilyPhoneContactV124=true;
+  function copyTextV124(text){
+    if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);
+    var f=document.createElement('textarea');f.value=text;f.setAttribute('readonly','');f.style.position='fixed';f.style.left='-9999px';document.body.appendChild(f);f.select();document.execCommand('copy');f.remove();return Promise.resolve();
+  }
+  function promptBox(){
+    var p=document.getElementById('qilyPhoneCallPrompt');if(p)return p;
+    p=document.createElement('div');p.id='qilyPhoneCallPrompt';p.className='qily-phone-call-prompt-v124';p.setAttribute('role','status');p.setAttribute('aria-live','polite');
+    p.innerHTML='<span></span><button type="button">立即拨打</button>';document.body.appendChild(p);
+    p.querySelector('button').addEventListener('click',function(){var n=p.getAttribute('data-phone')||'';p.classList.remove('show');if(n)window.location.href='tel:'+n;});
+    return p;
+  }
+  function place(anchor,p){
+    var r=anchor.getBoundingClientRect();p.style.left='12px';p.style.top='12px';requestAnimationFrame(function(){var b=p.getBoundingClientRect(),x=r.right+10;if(x+b.width>innerWidth-12)x=Math.max(12,r.left-b.width-10);var y=Math.max(12,Math.min(r.top,innerHeight-b.height-12));p.style.left=Math.round(x)+'px';p.style.top=Math.round(y)+'px';});
+  }
+  function copyPhone(anchor,phone){
+    phone=(phone||'').replace(/[^0-9+]/g,'');if(!phone)return;
+    copyTextV124(phone).then(function(){var p=promptBox();p.setAttribute('data-phone',phone);p.querySelector('span').textContent='电话号码 '+phone+' 已复制，是否立即拨打？';place(anchor,p);p.classList.add('show');clearTimeout(copyPhone.timer);copyPhone.timer=setTimeout(function(){p.classList.remove('show');},9000);});
+  }
+  function normalizeCooperation(){
+    var card=document.querySelector('.contact-card');if(!card)return;
+    var phone=card.querySelector('a[href^="tel:"]');
+    if(phone){phone.classList.add('contact-line');if(!phone.querySelector('strong')){var pv=(phone.textContent||'').replace(/^\s*电话\s*[：:]\s*/,'').trim();phone.replaceChildren();var pl=document.createElement('span');pl.textContent='电话：';var ps=document.createElement('strong');ps.textContent=pv;phone.append(pl,ps);}}
+    var email=card.querySelector('a[href^="mailto:"]');
+    if(email){email.classList.add('contact-line');if(!email.querySelector('strong')){var ev=(email.textContent||'').replace(/^\s*官网邮箱\s*[：:]\s*/,'').trim();email.replaceChildren();var el=document.createElement('span');el.textContent='官网邮箱：';var es=document.createElement('strong');es.textContent=ev;email.append(el,es);}}
+    var wx=card.querySelector('#copyWechat,[data-qily-wechat-copy="Qily259"]');
+    if(wx){wx.classList.add('wechat-contact-action');if(!wx.querySelector('strong')){wx.replaceChildren();var wl=document.createElement('span');wl.textContent='微信：';var ws=document.createElement('strong');ws.textContent='Qily259';wx.append(wl,ws);}}
+  }
+  document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('.qily-phone-list a[href^="tel:"],.contact-card a[href^="tel:"],.term-opl-contact-lines a[href^="tel:"]');if(!x)return;e.preventDefault();e.stopPropagation();copyPhone(x,(x.getAttribute('href')||'').replace(/^tel:/,''));},true);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',normalizeCooperation,{once:true});else normalizeCooperation();
+})();
+/* QILY-PHONE-CONTACT-V12.4:END */

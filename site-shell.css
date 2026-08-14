@@ -639,3 +639,22 @@ body:has(.hero:not(:has(.hero-grid))) {
 .term-opl-contact-label{text-decoration:none!important}
 .term-opl-copy-wechat-v9{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:3px!important;text-decoration-skip-ink:none!important}
 /* QILY-CONTACT-ACTION-V13:END */
+
+
+/* QILY-CONTACT-V12.4-RESILIENT:START */
+.qily-contact-panel .qily-phone-list a{cursor:pointer!important;transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,border-color .16s ease!important}
+.qily-contact-panel .qily-phone-list a:hover,.qily-contact-panel .qily-phone-list a:focus-visible{transform:translateY(-2px)!important;border-color:#caa15f!important;background:#fff8e8!important;box-shadow:0 9px 20px rgba(15,75,90,.14)!important;outline:3px solid rgba(202,161,95,.18)!important;outline-offset:2px!important}
+.qily-contact-panel .qily-phone-list a:active{transform:scale(.985)!important;background:#ffeab3!important}
+.qily-contact-panel .qily-phone-city{text-decoration:none!important;text-decoration-line:none!important}
+.qily-contact-panel .qily-phone-number{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important;text-decoration-skip-ink:none!important}
+.qily-phone-call-prompt-v124{position:fixed;z-index:12060;display:flex;max-width:min(440px,calc(100vw - 24px));align-items:center;gap:10px;padding:11px 13px;border:1px solid #178b94;border-radius:12px;color:#17322d;background:#eef8f6;box-shadow:0 14px 34px rgba(7,60,71,.22);font-size:14px;font-weight:850;line-height:1.45;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .16s ease,transform .16s ease,visibility .16s ease}
+.qily-phone-call-prompt-v124.show{opacity:1;visibility:visible;transform:translateY(0)}
+.qily-phone-call-prompt-v124 button{flex:0 0 auto;min-height:36px;padding:6px 10px;border:0;border-radius:8px;color:#fff;background:#0f4b5a;cursor:pointer;font:inherit;font-weight:900}
+.contact-card .contact-line,.contact-card .wechat-contact-action{display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;width:100%!important;min-height:46px!important;margin-top:10px!important;padding:9px 14px!important;border:1px solid rgba(255,227,155,.48)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:rgba(255,255,255,.08)!important;text-decoration:none!important;cursor:pointer!important;font:inherit!important;font-weight:900!important;box-sizing:border-box!important}
+.contact-card .contact-line span,.contact-card .wechat-contact-action span{text-decoration:none!important;text-decoration-line:none!important;color:inherit!important;-webkit-text-fill-color:inherit!important}
+.contact-card .contact-line strong,.contact-card .wechat-contact-action strong{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important;text-decoration-skip-ink:none!important;color:inherit!important;-webkit-text-fill-color:inherit!important;font-weight:950!important}
+.contact-card .contact-line:hover,.contact-card .contact-line:focus-visible,.contact-card .wechat-contact-action:hover,.contact-card .wechat-contact-action:focus-visible{transform:translateY(-2px)!important;border-color:#ffe39b!important;background:#12606f!important;box-shadow:0 8px 20px rgba(15,75,90,.22)!important;outline:none!important}
+.contact-card .contact-line:active,.contact-card .wechat-contact-action:active{transform:scale(.99)!important;background:#073c47!important}
+@media(max-width:620px){.qily-phone-call-prompt-v124{left:12px!important;right:12px!important;top:auto!important;bottom:18px!important;max-width:none!important;justify-content:space-between}}
+/* QILY-CONTACT-V12.4-RESILIENT:END */
+
