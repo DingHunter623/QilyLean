@@ -1,6 +1,6 @@
 # Times26001｜Google Play / 应用市场提交资料
 
-更新时间：2026-08-11  
+更新时间：2026-08-14  
 开发者：丁启利（QilyLean｜启力精益）  
 包名：`com.qilylean.times26001`  
 支持邮箱：`admin@qilylean.com`  
@@ -23,8 +23,8 @@
 
 ## 1. 官网与 Google Play 发布链关联
 
-- 当前官网独立分发包：`1.1.10` / versionCode `13`，用于官网直接下载与试用；
-- Google Play 首发候选版：`1.1.11` / versionCode `14` / Android API `36`；
+- 当前官网独立分发包：`1.1.13` / versionCode `16`，用于官网直接下载与试用；
+- Google Play 首发候选版：`1.1.13` / versionCode `16` / Android API `36`；
 - Google Play 首发 AAB 已使用固定 **Upload Key** 签名，并已完成包名、版本、targetSdk 与权限校验；
 - Google Play 版仅声明前台粗略位置，不声明精确位置和后台位置；
 - 包名：`com.qilylean.times26001`；
@@ -152,7 +152,7 @@ QilyLean网站用于品牌延伸、工程内容、产品介绍与技术支持，
 
 - [x] 应用名称统一为 `Times26001`；
 - [x] 包名固定为 `com.qilylean.times26001`；
-- [x] `versionCode` 为 `14`、`versionName` 为 `1.1.11`；
+- [x] `versionCode` 为 `16`、`versionName` 为 `1.1.13`；
 - [x] `targetSdk` 为 `36`；
 - [x] Google Play 首发 AAB 已使用固定 Upload Key 签名；
 - [x] 最终包仅有前台粗略位置，无精确位置、无后台位置；
@@ -161,4 +161,5 @@ QilyLean网站用于品牌延伸、工程内容、产品介绍与技术支持，
 - [x] 官方网址与官网邮箱可保留，APP内没有站外APK更新引导；
 - [ ] 在 Google Play Console 创建应用并上传 AAB；
 - [ ] 按 Console 实际要求完成 Data Safety、内容分级、目标受众、测试轨道与审核提交。
-\n> 安装提示：如覆盖安装失败，请先备份必要信息后卸载旧版；卸载会清除本机闹钟、设置及测时记录。\n
+
+> 安装提示：如覆盖安装失败，请先备份必要信息后卸载旧版；卸载会清除本机闹钟、设置及测时记录。
