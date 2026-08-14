@@ -1,6 +1,10 @@
 name: Publish A3 terminology 2026-08-14
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/add-a3-terminology-20260814.yml'
   workflow_dispatch:
 
 permissions:
