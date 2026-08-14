@@ -42,7 +42,7 @@ def normalize_page_level_contact_footers():
             plain = re.sub(r'\s+', ' ', plain)
             has_url = OFFICIAL_URL in inner or 'qilylean.com' in plain
             has_email = OFFICIAL_EMAIL in inner or OFFICIAL_EMAIL in plain
-            has_labels = '官网网址' in plain or '企业邮箱' in plain
+            has_labels = '官网网址' in plain or '官网邮箱' in plain
             if (has_url and has_email) or (has_labels and (has_url or has_email)):
                 return f'<footer{attrs}></footer>'
             return match.group(0)

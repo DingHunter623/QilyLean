@@ -144,7 +144,7 @@
         '<tr><th>品牌与责任主体</th><td class="qtc-state-ok">已公开</td><td>QilyLean为丁启利发起的个人专业品牌；未另行书面指定依法登记主体时，默认由丁启利本人承担洽谈与交付责任。</td></tr>' +
         '<tr><th>经营主体／对公账户</th><td class="qtc-state-open">按项目书面确认</td><td>官网不推定已注册公司、工作室或具备对公账户。实际签约主体、签章与收款账户必须在合同中一致。</td></tr>' +
         '<tr><th>发票能力</th><td class="qtc-state-open">签约前确认</td><td>发票类型、税率与开票主体以实际签约主体资质为准，不在网页作超出资质的承诺。</td></tr>' +
-        '<tr><th>企业邮箱</th><td class="qtc-state-ok">已启用</td><td>官网、APP支持、隐私与应用市场资料统一使用admin@qilylean.com；用于商务联系、技术支持与合规反馈。</td></tr>' +
+        '<tr><th>官网邮箱</th><td class="qtc-state-ok">已启用</td><td>官网、APP支持、隐私与应用市场资料统一使用admin@qilylean.com；用于商务联系、技术支持与合规反馈。</td></tr>' +
         '<tr><th>品牌商业案例</th><td class="qtc-state-zero">公开记录0项</td><td>任职期间项目、个人作品与QilyLean品牌订单分开管理，不用历史雇佣关系项目替代品牌商业交付记录。</td></tr>' +
         '<tr><th>保密与证据</th><td class="qtc-state-ok">已建立</td><td>已有保密声明、脱敏原则、证据A／B／C／D分级、团队角色边界与收益非承诺说明。</td></tr>' +
       '</tbody></table>' +

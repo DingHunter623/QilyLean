@@ -77,7 +77,7 @@ update('tools/times26001/index.html', [
     ),
     (
         'v1.1.4已修复倒计时无按秒显示以及闹钟、倒计时无响铃通知的问题；后续Android新版本将在本页持续更新。iPhone版本暂缓研究与发布。</div>',
-        'v1.1.4已修复倒计时无按秒显示以及闹钟、倒计时无响铃通知的问题；后续Android新版本将在本页持续更新。iPhone版本暂缓研究与发布。</div><div class="tool-note"><strong>应用市场候选状态：</strong>Times26001 v1.1.5｜versionCode 8｜targetSdk 36。正式签名发布包完成后再更新为可提交商店包；开发者支持统一使用企业邮箱 admin@qilylean.com，官网 https://qilylean.com/。商店正式上架状态以对应应用市场审核结果为准。</div>'
+        'v1.1.4已修复倒计时无按秒显示以及闹钟、倒计时无响铃通知的问题；后续Android新版本将在本页持续更新。iPhone版本暂缓研究与发布。</div><div class="tool-note"><strong>应用市场候选状态：</strong>Times26001 v1.1.5｜versionCode 8｜targetSdk 36。正式签名发布包完成后再更新为可提交商店包；开发者支持统一使用官网邮箱 admin@qilylean.com，官网 https://qilylean.com/。商店正式上架状态以对应应用市场审核结果为准。</div>'
     ),
 ])
 
@@ -120,7 +120,7 @@ update('assets/tools/times26001-overview.svg', [
 # APP支持中心：公开说明两条版本链路和统一联系身份。
 p = Path('app-support/index.html')
 s = p.read_text(encoding='utf-8')
-status_block = '''<section class="card"><h2>官网公开版与应用市场候选版</h2><ul><li><strong>Times26001：</strong>官网公开版 v1.1.4；应用市场候选版 v1.1.5 / targetSdk 36。</li><li><strong>QilyLean Home：</strong>官网公开版 v2.2；应用市场候选版 v2.3.0 / targetSdk 36。</li><li><strong>统一开发者支持：</strong>官网 <a href="https://qilylean.com/">https://qilylean.com/</a>；企业邮箱 <a href="mailto:admin@qilylean.com">admin@qilylean.com</a>。</li></ul><p>“官网公开版”表示当前官网提供并可核验下载的APK；“应用市场候选版”表示面向商店提交准备的源码/构建版本。未正式上架前，不把候选版描述为已上市版本。</p></section>'''
+status_block = '''<section class="card"><h2>官网公开版与应用市场候选版</h2><ul><li><strong>Times26001：</strong>官网公开版 v1.1.4；应用市场候选版 v1.1.5 / targetSdk 36。</li><li><strong>QilyLean Home：</strong>官网公开版 v2.2；应用市场候选版 v2.3.0 / targetSdk 36。</li><li><strong>统一开发者支持：</strong>官网 <a href="https://qilylean.com/">https://qilylean.com/</a>；官网邮箱 <a href="mailto:admin@qilylean.com">admin@qilylean.com</a>。</li></ul><p>“官网公开版”表示当前官网提供并可核验下载的APK；“应用市场候选版”表示面向商店提交准备的源码/构建版本。未正式上架前，不把候选版描述为已上市版本。</p></section>'''
 if '官网公开版与应用市场候选版' not in s:
     s = s.replace('<section class="card"><h2>版本与安全</h2>', status_block + '\n<section class="card"><h2>版本与安全</h2>')
 p.write_text(s, encoding='utf-8')
@@ -134,7 +134,7 @@ for path, public_v, candidate_v, package_name in [
     s = p.read_text(encoding='utf-8')
     marker = '## 0. 官网与应用市场版本关联'
     if marker not in s:
-        block = f'''\n{marker}\n\n- 官网公开版：`{public_v}`\n- 应用市场候选版：`{candidate_v}` / Android API 36\n- 包名：`{package_name}`\n- 开发者支持官网：`{website}`\n- 企业邮箱：`{email}`\n- 规则：官网公开版与应用市场候选版分开管理；只有正式签名发布包完成并提交对应商店后，才更新“已上架/正式商店版”状态。\n\n'''
+        block = f'''\n{marker}\n\n- 官网公开版：`{public_v}`\n- 应用市场候选版：`{candidate_v}` / Android API 36\n- 包名：`{package_name}`\n- 开发者支持官网：`{website}`\n- 官网邮箱：`{email}`\n- 规则：官网公开版与应用市场候选版分开管理；只有正式签名发布包完成并提交对应商店后，才更新“已上架/正式商店版”状态。\n\n'''
         s = s.replace('## 1. 商店名称与文案', block + '## 1. 商店名称与文案')
     p.write_text(s, encoding='utf-8')
 

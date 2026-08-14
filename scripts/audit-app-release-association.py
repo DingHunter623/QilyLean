@@ -8,7 +8,7 @@ errors = []
 if m.get('officialWebsite') != 'https://qilylean.com/':
     errors.append('官网主数据错误')
 if m.get('supportEmail') != 'admin@qilylean.com':
-    errors.append('企业邮箱主数据错误')
+    errors.append('官网邮箱主数据错误')
 
 apps = m.get('apps', {})
 for key in ['times26001', 'qilyleanHome']:
