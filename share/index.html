@@ -45,7 +45,7 @@
 <!-- QILY-NUMBER-BADGE-CONTRAST:END -->
 <link id="qilyCoreServiceDockClosureStylesheet" rel="stylesheet" href="/site-core-service-dock-closure-v1.css?v=20260804-core-service-dock-v3">
   <script defer data-qily-core-service-dock-closure="v3" src="/site-core-service-dock-closure-v1.js?v=20260810-stable-dock-v5"></script>
-<link rel="stylesheet" href="/site-shell.css?v=20260812-r2-stability-v1">
+<link rel="stylesheet" href="/site-shell.css?v=20260814-contact-v12">
   <link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5">
   <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260810-content-axis-v8">
   <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
@@ -88,16 +88,16 @@
         return Promise.resolve();
       }
       document.getElementById('copyUrl').addEventListener('click',function(){
-        copyText(HOME_URL).then(function(){setStatus('官网网址已复制：'+HOME_URL);});
+        copyText(HOME_URL).then(function(){setStatus('官方网址已复制：'+HOME_URL);});
       });
       document.getElementById('systemShare').addEventListener('click',function(){
         if(navigator.share){
           navigator.share({title:TITLE,text:'“启精益之智，聚企业之力。”让改善形成体系，让精益产生力量。',url:HOME_URL})
             .then(function(){setStatus('已调起系统分享');})
-            .catch(function(error){if(error&&error.name!=='AbortError')copyText(HOME_URL).then(function(){setStatus('官网网址已复制：'+HOME_URL);});});
+            .catch(function(error){if(error&&error.name!=='AbortError')copyText(HOME_URL).then(function(){setStatus('官方网址已复制：'+HOME_URL);});});
           return;
         }
-        copyText(TITLE+'\n'+HOME_URL).then(function(){setStatus('分享标题与官网网址已复制');});
+        copyText(TITLE+'\n'+HOME_URL).then(function(){setStatus('分享标题与官方网址已复制');});
       });
     })();
   </script>

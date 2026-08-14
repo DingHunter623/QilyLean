@@ -37,7 +37,7 @@
 <!-- QILY-NUMBER-BADGE-CONTRAST:END -->
 <link id="qilyCoreServiceDockClosureStylesheet" rel="stylesheet" href="/site-core-service-dock-closure-v1.css?v=20260804-core-service-dock-v3">
   <script defer data-qily-core-service-dock-closure="v3" src="/site-core-service-dock-closure-v1.js?v=20260810-stable-dock-v5"></script>
-<link rel="stylesheet" href="/site-shell.css?v=20260812-r2-stability-v1">
+<link rel="stylesheet" href="/site-shell.css?v=20260814-contact-v12">
   <link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5">
   <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260810-content-axis-v8">
   <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
@@ -97,7 +97,7 @@
         <pre class="brief-output" id="briefOutput"></pre>
         <p class="privacy-note">提交即表示同意QilyLean将上述资料用于资源核验、联系沟通和展示方案确认；未经确认，不在公开页面披露联系人信息及未公开材料。</p>
       </form>
-      <aside class="contact-card"><h3>行业资源入驻交流</h3><p>本入口只处理企业官网与行业资源入驻。制造改善诊断、工厂规划和精益项目仍由“项目合作”模块承接。</p><a href="tel:13450014003">电话：134 5001 4003</a><a href="mailto:admin@qilylean.com">官网邮箱：admin@qilylean.com</a><button type="button" id="copyWechat">复制微信号：Qily259</button><a href="/links/">查看现有行业资源模块</a><a href="/cooperation/">制造改善项目合作</a></aside>
+      <aside class="contact-card"><h3>行业资源入驻交流</h3><p>本入口只处理企业官网与行业资源入驻。制造改善诊断、工厂规划和精益项目仍由“项目合作”模块承接。</p><a href="tel:13450014003">电话：134 5001 4003</a><a href="mailto:admin@qilylean.com">官网邮箱：admin@qilylean.com</a><button type="button" id="copyWechat">复制微信：Qily259</button><a href="/links/">查看现有行业资源模块</a><a href="/cooperation/">制造改善项目合作</a></aside>
     </div></div></section>
   </main>
   <script>
@@ -120,7 +120,7 @@
 
       form.addEventListener('submit',async function(event){event.preventDefault();if(!form.reportValidity())return;var d=data();if(d.website)return;var text=build(d);show(text);submitButton.disabled=true;submitButton.textContent='正在提交…';setStatus('正在提交入驻资料…','');try{await send(d);setStatus('入驻资料已提交成功。QilyLean将在完成初步核验后联系确认。','success');output.scrollIntoView({behavior:'smooth',block:'nearest'});}catch(error){setStatus('在线提交暂未完成，申请卡已生成；请复制后通过微信或电话发送。','error');}finally{submitButton.disabled=false;submitButton.textContent='提交入驻资料';}});
       copyButton.addEventListener('click',function(){if(!form.reportValidity())return;var text=build(data());show(text);copyText(text).then(function(){setStatus('行业资源入驻申请卡已复制。','success');});});
-      wechatButton.addEventListener('click',function(){copyText('Qily259').then(function(){setStatus('微信号 Qily259 已复制。','success');});});
+      wechatButton.addEventListener('click',function(){copyText('Qily259').then(function(){setStatus('微信 Qily259 已复制。','success');});});
     })();
   </script>
 

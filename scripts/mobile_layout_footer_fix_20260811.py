@@ -23,15 +23,15 @@ if old not in s and new not in s:
 s2 = s.replace(old, new)
 write_if_changed(p, s, s2)
 
-# 2) 全站统一页脚｜手机版固定在“官网网址：”后换行。
+# 2) 全站统一页脚｜手机版固定在“官方网址：”后换行。
 p = ROOT / 'site-footer-standard-v28.js'
 s = p.read_text(encoding='utf-8')
 s2 = s
 s2 = s2.replace('if (w.__qilyFooterStandardV33) return;', 'if (w.__qilyFooterStandardV34) return;')
 s2 = s2.replace('w.__qilyFooterStandardV33 = true;', 'w.__qilyFooterStandardV34 = true;')
 s2 = s2.replace(
-    "'    <span class=\"qily-footer-v31-field\">官网网址：<a href=\"' + HOME_URL + '\">' + HOME_URL + '</a></span>',",
-    "'    <span class=\"qily-footer-v31-field\">官网网址：<br class=\"qily-footer-v34-mobile-break\"><a href=\"' + HOME_URL + '\">' + HOME_URL + '</a></span>',"
+    "'    <span class=\"qily-footer-v31-field\">官方网址：<a href=\"' + HOME_URL + '\">' + HOME_URL + '</a></span>',",
+    "'    <span class=\"qily-footer-v31-field\">官方网址：<br class=\"qily-footer-v34-mobile-break\"><a href=\"' + HOME_URL + '\">' + HOME_URL + '</a></span>',"
 )
 s2 = s2.replace(
     "footer.className = 'qily-global-footer-v31 qily-global-footer-v32 qily-global-footer-v33';",
@@ -39,7 +39,7 @@ s2 = s2.replace(
 )
 s2 = s2.replace("footer.setAttribute('data-qily-footer-standard', 'v33');", "footer.setAttribute('data-qily-footer-standard', 'v34');")
 if 'qily-footer-v34-mobile-break' not in s2:
-    raise SystemExit('页脚官网网址移动端换行标记注入失败')
+    raise SystemExit('页脚官方网址移动端换行标记注入失败')
 write_if_changed(p, s, s2)
 
 p = ROOT / 'site-footer-standard-v28.css'
@@ -100,8 +100,8 @@ if 'PMO／<br>' in info:
     errors.append('能力画像仍存在 PMO 后强制换行')
 if '<span class="qily-no-break">PMO／阶段门／横向复制</span>' not in info:
     errors.append('能力画像完整词组 nowrap 标记缺失')
-if '官网网址：<br class="qily-footer-v34-mobile-break">' not in footer_js:
-    errors.append('页脚未在“官网网址：”后建立移动端受控换行')
+if '官方网址：<br class="qily-footer-v34-mobile-break">' not in footer_js:
+    errors.append('页脚未在“官方网址：”后建立移动端受控换行')
 if '#qilyGlobalFooter .qily-footer-v34-mobile-break{display:none}' not in footer_css:
     errors.append('页脚桌面端隐藏换行规则缺失')
 if '#qilyGlobalFooter .qily-footer-v34-mobile-break{display:block}' not in footer_css:

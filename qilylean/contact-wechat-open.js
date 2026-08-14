@@ -31,19 +31,12 @@
     var panel=document.querySelector('.wx-panel');
     if(!panel)return;
     var oldTip=panel.querySelector('.wx-tip');
-    if(oldTip)oldTip.textContent='点击下方按钮后，将自动复制微信号 Qily259，并尝试直接打开微信。进入微信后粘贴微信号即可添加。';
+    if(oldTip)oldTip.textContent='点击下方按钮后，将自动复制微信 Qily259，并尝试直接打开微信。进入微信后粘贴微信即可添加。';
     var oldCopy=document.getElementById('copyWxBtn')||panel.querySelector('.wx-copy-btn');
     if(oldCopy&&oldCopy.dataset.wechatOpenReady!=='1'){
       oldCopy.dataset.wechatOpenReady='1';
-      oldCopy.textContent='复制微信号并打开微信';
-      oldCopy.onclick=function(e){
-        e.preventDefault();
-        e.stopPropagation();
-        copyText(WECHAT_ID).then(function(){
-          var toast=document.getElementById('floatToast');
-          if(toast){toast.textContent='微信号已复制，正在打开微信…';toast.classList.add('show');setTimeout(function(){toast.classList.remove('show');},2200);}
-          openWeChat();
-        }).catch(function(){openWeChat();});
+      oldCopy.textContent='微信：Qily259';
+      oldCopy.onclick=function(e){e.preventDefault();e.stopPropagation();if(window.__qilyCopyWechatAndPrompt){window.__qilyCopyWechatAndPrompt(oldCopy);return;}copyText(WECHAT_ID).then(function(){var toast=document.getElementById('floatToast');if(toast){toast.textContent='微信号Qily259已复制，是否开启微信主程序';toast.classList.add('show');setTimeout(function(){toast.classList.remove('show');},3000);}});
       };
     }
     var actionRow=panel.querySelector('.wx-action-row');

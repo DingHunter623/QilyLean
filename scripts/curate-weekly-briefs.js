@@ -192,7 +192,7 @@ function buildDirectory(records) {
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="${baseUrl}/qilylean/daily-insights.html">
 <link rel="alternate" type="application/rss+xml" title="QilyLean精选简报" href="/qilylean/daily/feed.xml">
-<link rel="stylesheet" href="/site-shell.css?v=20260812-r2-stability-v1">
+<link rel="stylesheet" href="/site-shell.css?v=20260814-contact-v12">
 <link rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
 <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260812-weekly-curated-v1">
 <script defer src="/site-navigation.js?v=20260813-r2-clean-v4"></script>

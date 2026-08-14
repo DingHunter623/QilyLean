@@ -22,10 +22,10 @@ html=html.replace(/(<a\b[^>]*class="[^"]*\bterm-opl-open\b[^"]*"[^>]*>)(?!<span 
 
 // Unified visible wording and WeChat interaction: text-link appearance, not a button block.
 html=html.replace('官网：<a href="https://qilylean.com/">qilylean.com</a>','官方网址：<a href="https://qilylean.com/">qilylean.com</a>');
-html=html.replace(/<br>微信号：<button[^>]*data-opl-copy-wechat="Qily259"[^>]*>Qily259<\/button><br>/g,'<br>微信号：<a href="#copy-wechat" class="term-opl-copy-wechat-v9" data-opl-copy-wechat="Qily259" aria-label="复制微信号 Qily259">Qily259</a><br>');
-html=html.replace(/<br>微信：Qily259<br>/g,'<br>微信号：<a href="#copy-wechat" class="term-opl-copy-wechat-v9" data-opl-copy-wechat="Qily259" aria-label="复制微信号 Qily259">Qily259</a><br>');
+html=html.replace(/<br>微信：<button[^>]*data-opl-copy-wechat="Qily259"[^>]*>Qily259<\/button><br>/g,'<br>微信：<a href="#copy-wechat" class="term-opl-copy-wechat-v9" data-opl-copy-wechat="Qily259" aria-label="复制微信 Qily259">Qily259</a><br>');
+html=html.replace(/<br>微信：Qily259<br>/g,'<br>微信：<a href="#copy-wechat" class="term-opl-copy-wechat-v9" data-opl-copy-wechat="Qily259" aria-label="复制微信 Qily259">Qily259</a><br>');
 html=html.replace('扫码访问官网</span>','扫码访问官方网址</span>');
-html=html.replace('官网网址：https://qilylean.com/','官方网址：https://qilylean.com/');
+html=html.replace('官方网址：https://qilylean.com/','官方网址：https://qilylean.com/');
 
 // Existing delegated copy handler: prevent fragment navigation and copy the ID.
 html=html.replace("  if(wechatCopy){\n    copyText(","  if(wechatCopy){\n    event.preventDefault();\n    copyText(");
@@ -40,7 +40,7 @@ const checks=[
   'class="term-opl-copy-wechat-v9" data-opl-copy-wechat="Qily259"',
   '扫码访问官方网址',
   '官方网址：https://qilylean.com/',
-  "toast('微信号已复制')",
+  "toast('微信已复制')",
   'event.preventDefault();'
 ];
 for(const token of checks){if(!out.includes(token))throw new Error('OPL V9 token missing: '+token);}

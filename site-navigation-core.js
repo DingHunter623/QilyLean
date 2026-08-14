@@ -6,7 +6,7 @@
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260812-r2-stability-v1';
+  var SHARED_ASSET_VERSION = '20260814-contact-v12';
   var VISUAL_SCALE_VERSION = '20260729-hierarchy-v4';
     var CONTROLLED_ROUTE_PATHS = [];
   var PHONE_NUMBERS = [{ city: '东莞', number: '13450014003' }, { city: '宁波', number: '15168120722' }, { city: '乐清', number: '17681788259' }];
@@ -199,6 +199,20 @@
     showToast.timer = setTimeout(function () { toast.classList.remove('show'); }, 2600);
   }
 
+
+  /* QILY-WECHAT-COPY-PROMPT-V12 */
+  function ensureWechatCopyPrompt(){
+    var p=document.getElementById('qilyWechatCopyPrompt');if(p)return p;
+    p=document.createElement('div');p.id='qilyWechatCopyPrompt';p.className='qily-wechat-copy-prompt';p.setAttribute('role','status');p.setAttribute('aria-live','polite');
+    p.innerHTML='<span>微信号Qily259已复制，是否开启微信主程序</span><button type="button" data-qily-open-wechat>开启微信</button>';document.body.appendChild(p);
+    p.querySelector('[data-qily-open-wechat]').addEventListener('click',function(){p.classList.remove('show');try{window.location.href='weixin://';}catch(e){}setTimeout(function(){if(document.visibilityState==='visible')showToast('如未自动打开微信，请手动打开微信并粘贴Qily259');},1400);});
+    return p;
+  }
+  function positionWechatCopyPrompt(a,p){var r=a&&a.getBoundingClientRect?a.getBoundingClientRect():{right:innerWidth/2,left:innerWidth/2,top:innerHeight/2};p.style.left='12px';p.style.top='12px';requestAnimationFrame(function(){var b=p.getBoundingClientRect(),x=r.right+10;if(x+b.width>innerWidth-12)x=Math.max(12,r.left-b.width-10);var y=Math.max(12,Math.min(r.top,innerHeight-b.height-12));p.style.left=Math.round(x)+'px';p.style.top=Math.round(y)+'px';});}
+  function copyWechatAndPrompt(a){return copyText('Qily259').then(function(){var p=ensureWechatCopyPrompt();p.querySelector('span').textContent='微信号Qily259已复制，是否开启微信主程序';positionWechatCopyPrompt(a,p);p.classList.add('show');clearTimeout(copyWechatAndPrompt.timer);copyWechatAndPrompt.timer=setTimeout(function(){p.classList.remove('show');},9000);});}
+  window.__qilyCopyWechatAndPrompt=copyWechatAndPrompt;
+  document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-qily-wechat-copy]');if(!x)return;e.preventDefault();copyWechatAndPrompt(x);});
+
   function shareUrl(title, url, successMessage) {
     if (navigator.share) {
       return navigator.share({ title: title, text: title, url: url }).then(function () {
@@ -346,7 +360,7 @@
     var contactMask = document.createElement('div');
     contactMask.id = 'wxMask';
     contactMask.className = 'qily-modal-mask';
-    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><p class="qily-wechat"><span>微信号</span><strong>Qily259</strong></p><button class="qily-copy-wechat" type="button">复制微信号</button><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (item) { return '<a href="tel:' + item.number + '"><span class="qily-phone-city">' + item.city + '：</span><strong class="qily-phone-number">' + item.number + '</strong></a>'; }).join('') + '</div><div class="qily-email-list"><div>官网网址</div><a class="qily-contact-email" href="https://qilylean.com/">https://qilylean.com/</a></div><div class="qily-email-list"><div>官网邮箱</div><a class="qily-contact-email" href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a><div class="qily-email-actions"><button class="qily-copy-email" type="button">复制邮箱</button><a class="qily-send-email" href="mailto:' + CONTACT_EMAIL + '">发送邮件</a></div></div></div>';
+    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><div class="qily-wechat-row"><button class="qily-wechat-action" type="button" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259"><span>微信</span><strong>Qily259</strong></button></div><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (item) { return '<a href="tel:' + item.number + '"><span class="qily-phone-city">' + item.city + '：</span><strong class="qily-phone-number">' + item.number + '</strong></a>'; }).join('') + '</div><div class="qily-email-list"><div>官方网址</div><a class="qily-contact-email" href="https://qilylean.com/">https://qilylean.com/</a></div><div class="qily-email-list"><div>官网邮箱</div><a class="qily-contact-email" href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a><div class="qily-email-actions"><button class="qily-copy-email" type="button">复制邮箱</button><a class="qily-send-email" href="mailto:' + CONTACT_EMAIL + '">发送邮件</a></div></div></div>';
     document.body.appendChild(contactMask);
 
     var toast = document.createElement('div');
@@ -378,13 +392,10 @@
     shareMask.addEventListener('click', function (event) { if (event.target === shareMask) closeMask(shareMask); });
     contactMask.addEventListener('click', function (event) { if (event.target === contactMask) closeMask(contactMask); });
     shareMask.querySelector('[data-share="copy"]').addEventListener('click', function () {
-      copyText(HOME_URL).then(function () { showToast('官网网址已复制'); closeMask(shareMask); });
+      copyText(HOME_URL).then(function () { showToast('官方网址已复制'); closeMask(shareMask); });
     });
     shareMask.querySelector('[data-share="system"]').addEventListener('click', function () {
-      shareUrl('QilyLean｜制造改善与项目实践主页', HOME_URL, '官网网址已复制');
-    });
-    contactMask.querySelector('.qily-copy-wechat').addEventListener('click', function () {
-      copyText('Qily259').then(function () { showToast('微信号已复制'); });
+      shareUrl('QilyLean｜制造改善与项目实践主页', HOME_URL, '官方网址已复制');
     });
     contactMask.querySelector('.qily-copy-email').addEventListener('click', function () {
       copyText(CONTACT_EMAIL).then(function () { showToast('官网邮箱已复制'); });
@@ -468,7 +479,7 @@
     var block = document.createElement('div');
     block.id = 'qilyGlobalContactFooter';
     block.className = 'qily-global-contact-footer';
-    block.innerHTML = '<span>QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span><span>官网网址：</span><a href="https://qilylean.com/">https://qilylean.com/</a><span>官网邮箱：</span><a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>';
+    block.innerHTML = '<span>QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span><span>官方网址：</span><a href="https://qilylean.com/">https://qilylean.com/</a><span>官网邮箱：</span><a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>';
     var footer = document.querySelector('footer');
     if (footer) footer.appendChild(block);
     else {
@@ -495,7 +506,7 @@
         var last=pages.length?pages[pages.length-1]:null;
         if(last && !last.querySelector('.qily-document-email-tail')){
           var tail=document.createElement('div'); tail.className='qily-document-email-tail';
-          tail.innerHTML='官网网址：https://qilylean.com/　｜　官网邮箱：<a href="mailto:'+CONTACT_EMAIL+'">'+CONTACT_EMAIL+'</a>';
+          tail.innerHTML='官方网址：https://qilylean.com/　｜　官网邮箱：<a href="mailto:'+CONTACT_EMAIL+'">'+CONTACT_EMAIL+'</a>';
           last.appendChild(tail);
         }
       }

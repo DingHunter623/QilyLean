@@ -418,7 +418,7 @@ function buildXlsx(items,assets,time){
   ],82));
   sheetRows.push(excelRow(contactInfoRow,[
     excelCell('A'+contactInfoRow,HOME_URL,3),
-    excelCell('C'+contactInfoRow,'微信号：'+WECHAT_ID+'\n手机：'+PHONE_NUMBERS.join(' / '),3)
+    excelCell('C'+contactInfoRow,'微信：'+WECHAT_ID+'\n手机：'+PHONE_NUMBERS.join(' / '),3)
   ],38));
 
   var homeBytes=dataUrlBytes(assets.homeQr);

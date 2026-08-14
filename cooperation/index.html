@@ -127,7 +127,7 @@
 <!-- QILY-NUMBER-BADGE-CONTRAST:END -->
 <link id="qilyCoreServiceDockClosureStylesheet" rel="stylesheet" href="/site-core-service-dock-closure-v1.css?v=20260804-core-service-dock-v3">
   <script defer data-qily-core-service-dock-closure="v3" src="/site-core-service-dock-closure-v1.js?v=20260810-stable-dock-v5"></script>
-<link rel="stylesheet" href="/site-shell.css?v=20260812-r2-stability-v1">
+<link rel="stylesheet" href="/site-shell.css?v=20260814-contact-v12">
   <link id="qilyVisualScaleStylesheet" rel="stylesheet" href="/site-visual-scale-v1.css?v=20260803-home-badge-wrap-v5">
   <link id="qilyWideLayoutStylesheet" rel="stylesheet" href="/site-wide-layout-v1.css?v=20260810-content-axis-v8">
   <link id="qilyTypographyStylesheet" rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
@@ -246,7 +246,7 @@
         <pre class="brief-output" id="briefOutput"></pre>
         <p class="privacy-note">提交即表示同意将上述资料用于本次项目初筛与联系沟通。系统不会在公开页面展示企业及联系人信息。</p>
       </form>
-      <aside class="contact-card"><h3>QilyLean 项目交流</h3><p>建议先生成并提交咨询需求卡，再联系沟通。60分钟初筛用于判断问题与服务是否匹配。</p><a href="tel:13450014003">电话：134 5001 4003</a><a href="mailto:admin@qilylean.com">官网邮箱：admin@qilylean.com</a><button type="button" id="copyWechat">复制微信号：Qily259</button><a href="/projects/">先查看项目证据</a><p class="contact-note">服务范围以正式诊断、项目方案、合同及双方确认的验收口径为准。</p></aside>
+      <aside class="contact-card"><h3>QilyLean 项目交流</h3><p>建议先生成并提交咨询需求卡，再联系沟通。60分钟初筛用于判断问题与服务是否匹配。</p><a href="tel:13450014003">电话：134 5001 4003</a><a href="mailto:admin@qilylean.com">官网邮箱：admin@qilylean.com</a><button type="button" id="copyWechat" class="wechat-contact-action" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259"><span>微信：</span><strong>Qily259</strong></button><a href="/projects/">先查看项目证据</a><p class="contact-note">服务范围以正式诊断、项目方案、合同及双方确认的验收口径为准。</p></aside>
     </div></div></section>
   <!-- QILY-TRUST:COOPERATION:START -->
 <section class="module-section alt" id="contracting-compliance"><div class="module-inner"><div class="module-heading"><h2>签约主体与合规边界</h2><p>在进入报价、合同和付款前，先明确实际责任主体、收款路径、发票条件、资料保密和项目验收边界。</p></div><div class="boundary">
@@ -302,8 +302,7 @@
         }finally{submitButton.disabled=false;submitButton.textContent='生成咨询需求卡';}
       });
 
-      copyButton.addEventListener('click',function(){if(!form.reportValidity())return;var data=payload();var text=buildBrief(data,'');showBrief(data,'');copyText(text).then(function(){setStatus('咨询需求卡已复制。','success');});});
-      wechatButton.addEventListener('click',function(){copyText('Qily259').then(function(){setStatus('微信号 Qily259 已复制。','success');});});
+      copyButton.addEventListener('click',function(){if(!form.reportValidity())return;var data=payload();var text=buildBrief(data,'');showBrief(data,'');copyText(text).then(function(){setStatus('咨询需求卡已复制。','success');});});});
     })();
   </script>
 

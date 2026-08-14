@@ -66,7 +66,7 @@ function applyFix(){
       if(action.getAttribute('data-share')==='system'&&navigator.share){
         navigator.share({title:SHARE_TITLE,text:'“启精益之智，聚企业之力。”让改善形成体系，让精益产生力量。',url:HOME_URL}).catch(function(){});
       }else{
-        copyText(HOME_URL).then(function(){if(noteEl)noteEl.textContent='官网网址已复制：'+HOME_URL;});
+        copyText(HOME_URL).then(function(){if(noteEl)noteEl.textContent='官方网址已复制：'+HOME_URL;});
       }
     },true);
   }
