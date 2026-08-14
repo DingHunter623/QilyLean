@@ -164,17 +164,16 @@ public class MainActivity extends Activity {
         addSectionTitle(content, "官网最新导航");
         addCardRow(content,
                 webCard("首页", "官网总入口与最新内容", "https://qilylean.com"),
-                webCard("能力体系", "六类核心能力与交付边界", "https://qilylean.com/capabilities"));
-        addCardRow(content,
-                webCard("代表项目", "项目成果、证据与交付资产", "https://qilylean.com/projects"),
-                webCard("改善方法", "精益、IE与现场改善方法", "https://qilylean.com/improvements"));
-        addCardRow(content,
-                webCard("知识资产", "术语、模板、方法与简报", "https://qilylean.com/knowledge"),
                 webCard("履历主线", "制造业经历与岗位主线", "https://qilylean.com/experience"));
         addCardRow(content,
-                webCard("项目合作", "诊断、规划与项目交付", "https://qilylean.com/cooperation"),
+                webCard("能力体系", "六类核心能力与交付边界", "https://qilylean.com/capabilities"),
+                webCard("改善方法", "精益、IE与现场改善方法", "https://qilylean.com/improvements"));
+        addCardRow(content,
+                webCard("代表项目", "项目成果、证据与交付资产", "https://qilylean.com/projects"),
                 webCard("信任中心", "主体、隐私、证据与合作边界", "https://qilylean.com/trust"));
-
+        addCardRow(content,
+                webCard("项目合作", "诊断、规划与项目交付", "https://qilylean.com/cooperation"),
+                webCard("知识资产", "术语、模板、方法与简报", "https://qilylean.com/knowledge"));
         addSectionTitle(content, "知识重点直达");
         addCardRow(content,
                 webCard("全站术语", "中文诠释与应用场景", "https://qilylean.com/knowledge/terminology.html"),
