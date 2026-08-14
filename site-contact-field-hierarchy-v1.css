@@ -1,0 +1,45 @@
+/* QilyLean contact field hierarchy V1 | 2026-08-14
+ * Field labels are semantic labels, not the emphasized clickable value.
+ * Only the phone number itself receives the visual bottom-line emphasis.
+ */
+
+html body .qily-contact-panel .qily-phone-list > a {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-color: transparent !important;
+  -webkit-text-decoration-line: none !important;
+}
+
+html body .qily-contact-panel .qily-phone-list > a .qily-phone-city {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  text-decoration-color: transparent !important;
+  -webkit-text-decoration-line: none !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
+html body .qily-contact-panel .qily-phone-list > a .qily-phone-number {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  -webkit-text-decoration-line: none !important;
+  display: inline-block !important;
+  width: max-content !important;
+  max-width: 100% !important;
+  padding-bottom: 1px !important;
+  border-bottom: 1.5px solid currentColor !important;
+}
+
+html body .qily-contact-panel .qily-phone-list > a:is(:hover,:focus-visible,:active) .qily-phone-city {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  -webkit-text-decoration-line: none !important;
+  border-bottom: 0 !important;
+}
+
+html body .qily-contact-panel .qily-phone-list > a:is(:hover,:focus-visible,:active) .qily-phone-number {
+  text-decoration: none !important;
+  text-decoration-line: none !important;
+  -webkit-text-decoration-line: none !important;
+  border-bottom: 1.5px solid currentColor !important;
+}
