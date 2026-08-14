@@ -1,0 +1,72 @@
+name: Fix terminology OPL readability and contact V8
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/fix-terminology-opl-readability-contact-v8.js'
+      - 'knowledge/terminology-opl-readability-v8.css'
+      - '.github/workflows/fix-terminology-opl-readability-contact-v8.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: terminology-opl-v8-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Apply OPL V8 source patch
+        run: node scripts/fix-terminology-opl-readability-contact-v8.js
+
+      - name: Validate wording, copy interaction and all-state contrast contract
+        shell: bash
+        run: |
+          node --check scripts/fix-terminology-opl-readability-contact-v8.js
+          node - <<'NODE'
+          const fs=require('fs');
+          const html=fs.readFileSync('knowledge/terminology.html','utf8');
+          const css=fs.readFileSync('knowledge/terminology-opl-readability-v8.css','utf8');
+          const required=[
+            'terminology-opl-readability-v8.css?v=20260814-opl-readability-contact-v8',
+            '官方网址：<a href="https://qilylean.com/">qilylean.com</a>',
+            'data-opl-copy-wechat="Qily259"',
+            "toast('微信号已复制')",
+            '扫码访问官方网址',
+            '官方网址：https://qilylean.com/'
+          ];
+          for(const token of required){if(!html.includes(token))throw new Error('Missing OPL V8 HTML token: '+token);}
+          if(html.includes('<br>微信：Qily259<br>'))throw new Error('Legacy WeChat line remains');
+          for(const state of ['.term-opl-open:hover','.term-opl-open:focus-visible','.term-opl-open:active']){
+            if(!css.includes(state))throw new Error('Missing OPL CTA state: '+state);
+          }
+          if(!css.includes('-webkit-text-fill-color:#fff!important'))throw new Error('WebKit text-fill contrast lock missing');
+          if(!css.includes('.term-opl-copy-wechat')||!css.includes('text-decoration-line:underline!important'))throw new Error('Underlined WeChat copy control missing');
+          console.log('OPL V8 exact QA passed.');
+          NODE
+
+      - name: Commit production terminology template
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add knowledge/terminology.html
+          if git diff --cached --quiet; then
+            echo 'No production changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: improve OPL contrast and unify contact wording [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
