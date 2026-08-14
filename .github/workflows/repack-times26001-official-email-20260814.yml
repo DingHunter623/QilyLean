@@ -1,0 +1,105 @@
+name: Repack Times26001 v1.1.13 官网邮箱 APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/repack-times26001-official-email-20260814.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: android-actions/setup-android@v3
+      - name: Install signing tools
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'build-tools;36.0.0'
+
+      - name: Replace APK-internal 企业邮箱 with 官网邮箱
+        shell: python
+        run: |
+          from pathlib import Path
+          from zipfile import ZipFile, ZIP_DEFLATED
+          source=Path('Times26001-Android-v1.1.13-Standard-Website-Logo.apk')
+          target=Path('/tmp/Times26001-official-email-unsigned.apk')
+          old='企业邮箱'.encode('utf-8')
+          new='官网邮箱'.encode('utf-8')
+          if len(old)!=len(new):
+              raise SystemExit('byte length mismatch')
+          replacements=0
+          with ZipFile(source,'r') as zin, ZipFile(target,'w',ZIP_DEFLATED) as zout:
+              for item in zin.infolist():
+                  if item.filename.startswith('META-INF/'):
+                      continue
+                  data=zin.read(item.filename)
+                  count=data.count(old)
+                  if count:
+                      data=data.replace(old,new)
+                      replacements+=count
+                  zout.writestr(item,data)
+          print('APK internal replacements:',replacements)
+          # 0 is allowed only when the current binary was already correct; final validation still forbids old wording.
+          with ZipFile(target,'r') as z:
+              stale=[name for name in z.namelist() if old in z.read(name)]
+          if stale:
+              raise SystemExit('企业邮箱 remains inside APK: '+','.join(stale[:20]))
+
+      - name: Sign and validate installable APK
+        shell: bash
+        run: |
+          set -euo pipefail
+          keytool -genkeypair -v -keystore /tmp/times26001-email.keystore -storepass QilyLean26001 -keypass QilyLean26001 -alias times26001-email -keyalg RSA -keysize 2048 -validity 10000 -dname 'CN=QilyLean, OU=Times26001, O=QilyLean, C=CN'
+          "$ANDROID_HOME/build-tools/36.0.0/zipalign" -p -f 4 /tmp/Times26001-official-email-unsigned.apk /tmp/Times26001-official-email-aligned.apk
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" sign --ks /tmp/times26001-email.keystore --ks-key-alias times26001-email --ks-pass pass:QilyLean26001 --key-pass pass:QilyLean26001 --out Times26001-Android-v1.1.13-Standard-Website-Logo.apk /tmp/Times26001-official-email-aligned.apk
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose Times26001-Android-v1.1.13-Standard-Website-Logo.apk
+          sha256sum Times26001-Android-v1.1.13-Standard-Website-Logo.apk > Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt
+
+      - name: Synchronize release metadata
+        shell: python
+        run: |
+          from pathlib import Path
+          import json
+          for name in ['tools/times26001/index.html','capabilities/index.html','app-support/index.html','app-store/times26001/README.md','app-download-share-v1.js','times26001-home-card.js']:
+              p=Path(name)
+              if p.exists():
+                  s=p.read_text(encoding='utf-8').replace('企业邮箱','官网邮箱')
+                  p.write_text(s,encoding='utf-8')
+          p=Path('app-release-manifest.json')
+          data=json.loads(p.read_text(encoding='utf-8'))
+          data['updatedAt']='2026-08-14'
+          app=data['apps']['times26001']
+          app['officialWebsiteLinkPolicy']='APP可展示并由用户主动访问QilyLean官网与官网邮箱；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK'
+          app['publicRelease']['label']='当前官网安装包（官网标准LOGO与官网邮箱统一版）'
+          app['latestBuild']['status']='顶部LOGO统一为官网横版标准；官网邮箱称谓统一；保留天气定位可靠性修正'
+          p.write_text(json.dumps(data,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
+      - name: Commit repacked official package
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add Times26001-Android-v1.1.13-Standard-Website-Logo.apk Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt \
+            tools/times26001/index.html capabilities/index.html app-support/index.html app-store/times26001/README.md \
+            app-download-share-v1.js times26001-home-card.js app-release-manifest.json
+          git commit -m 'release: repack Times26001 with 官网邮箱 naming [skip ci]' || true
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Times26001-v1.1.13-官网邮箱
+          path: |
+            Times26001-Android-v1.1.13-Standard-Website-Logo.apk
+            Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt
+          if-no-files-found: error
+          retention-days: 30
