@@ -1,9 +1,21 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-08-12",
-  "briefPath": "qilylean/daily/2026-08-12.html",
-  "checkedAt": "2026-08-12T14:22:23.846Z",
+  "briefDate": "2026-08-14",
+  "briefPath": "qilylean/daily/2026-08-14.html",
+  "checkedAt": "2026-08-14T01:17:04.439Z",
   "candidates": [
+    {
+      "term": "A",
+      "explanation": "Accountable",
+      "explicit": true,
+      "source": "A（Accountable）"
+    },
+    {
+      "term": "A3",
+      "explanation": "",
+      "explicit": false,
+      "source": "A3/PDCA"
+    },
     {
       "term": "BOM",
       "explanation": "",
@@ -11,16 +23,16 @@
       "source": "BOM"
     },
     {
-      "term": "DFMEA",
-      "explanation": "",
-      "explicit": false,
-      "source": "DFMEA"
+      "term": "COPQ",
+      "explanation": "质量成本",
+      "explicit": true,
+      "source": "COPQ（质量成本）"
     },
     {
-      "term": "DV",
+      "term": "CT",
       "explanation": "",
       "explicit": false,
-      "source": "DV"
+      "source": "CT"
     },
     {
       "term": "FPY",
@@ -32,43 +44,31 @@
       "term": "IE",
       "explanation": "",
       "explicit": false,
-      "source": "IE"
+      "source": "IE/PE"
     },
     {
-      "term": "ME",
-      "explanation": "",
-      "explicit": false,
-      "source": "ME"
+      "term": "Lean",
+      "explanation": "精益",
+      "explicit": true,
+      "source": "Lean（精益）"
     },
     {
-      "term": "MP",
+      "term": "OEE",
       "explanation": "",
       "explicit": false,
-      "source": "MP"
+      "source": "OEE"
     },
     {
-      "term": "MSA",
+      "term": "PDCA",
       "explanation": "",
       "explicit": false,
-      "source": "MSA/SPC"
-    },
-    {
-      "term": "NPI",
-      "explanation": "",
-      "explicit": false,
-      "source": "NPI"
+      "source": "PDCA"
     },
     {
       "term": "PE",
       "explanation": "",
       "explicit": false,
-      "source": "NPI/PE"
-    },
-    {
-      "term": "PFMEA",
-      "explanation": "",
-      "explicit": false,
-      "source": "PFMEA"
+      "source": "IE/PE"
     },
     {
       "term": "PMC",
@@ -77,34 +77,10 @@
       "source": "PMC"
     },
     {
-      "term": "PMO",
+      "term": "PQCD",
       "explanation": "",
       "explicit": false,
-      "source": "PMO"
-    },
-    {
-      "term": "PPAP",
-      "explanation": "",
-      "explicit": false,
-      "source": "PPAP"
-    },
-    {
-      "term": "PQE",
-      "explanation": "",
-      "explicit": false,
-      "source": "SQE/PQE"
-    },
-    {
-      "term": "PV",
-      "explanation": "",
-      "explicit": false,
-      "source": "PV"
-    },
-    {
-      "term": "QCD",
-      "explanation": "",
-      "explicit": false,
-      "source": "QCD"
+      "source": "PQCD"
     },
     {
       "term": "RACI",
@@ -113,73 +89,79 @@
       "source": "RACI"
     },
     {
-      "term": "RAID",
-      "explanation": "风险/假设/问题/依赖",
-      "explicit": true,
-      "source": "RAID（风险/假设/问题/依赖）"
-    },
-    {
-      "term": "SMT",
+      "term": "SMED",
       "explanation": "",
       "explicit": false,
-      "source": "SMT"
+      "source": "SMED"
     },
     {
       "term": "SOP",
       "explanation": "",
       "explicit": false,
-      "source": "SOP"
+      "source": "SOP/SWI"
     },
     {
-      "term": "SPC",
+      "term": "SWI",
       "explanation": "",
       "explicit": false,
-      "source": "MSA/SPC"
+      "source": "SOP/SWI"
     },
     {
-      "term": "SQE",
+      "term": "TT",
       "explanation": "",
       "explicit": false,
-      "source": "SQE"
+      "source": "TT"
     },
     {
-      "term": "WBS",
+      "term": "UPPH",
       "explanation": "",
       "explicit": false,
-      "source": "WBS"
+      "source": "UPPH"
+    },
+    {
+      "term": "VSM",
+      "explanation": "",
+      "explicit": false,
+      "source": "VSM"
+    },
+    {
+      "term": "WIP",
+      "explanation": "",
+      "explicit": false,
+      "source": "WIP"
     }
   ],
   "coveredTerms": [
+    "A",
+    "A3",
     "BOM",
-    "DFMEA",
-    "DV",
+    "COPQ",
+    "CT",
     "FPY",
     "IE",
-    "ME",
-    "MP",
-    "MSA",
-    "NPI",
+    "Lean",
+    "OEE",
+    "PDCA",
     "PE",
-    "PFMEA",
     "PMC",
-    "PMO",
-    "PPAP",
-    "PQE",
-    "PV",
-    "QCD",
+    "PQCD",
     "RACI",
-    "RAID",
-    "SMT",
+    "SMED",
     "SOP",
-    "SPC",
-    "SQE",
-    "WBS"
+    "SWI",
+    "TT",
+    "UPPH",
+    "VSM",
+    "WIP"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
   "featuredTerms": [
-    "RAID"
+    "COPQ",
+    "Lean",
+    "Kaizen",
+    "Standard Work"
   ],
   "status": "passed"
 }
