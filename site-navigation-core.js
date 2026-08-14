@@ -6,7 +6,7 @@
 
   var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
-  var SHARED_ASSET_VERSION = '20260812-r2-stability-v1';
+  var SHARED_ASSET_VERSION = '20260814-contact-v13';
   var VISUAL_SCALE_VERSION = '20260729-hierarchy-v4';
     var CONTROLLED_ROUTE_PATHS = [];
   var PHONE_NUMBERS = [{ city: '东莞', number: '13450014003' }, { city: '宁波', number: '15168120722' }, { city: '乐清', number: '17681788259' }];
@@ -213,6 +213,19 @@
   window.__qilyCopyWechatAndPrompt=copyWechatAndPrompt;
   document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-qily-wechat-copy]');if(!x)return;e.preventDefault();copyWechatAndPrompt(x);});
 
+  /* QILY-PHONE-COPY-PROMPT-V13 */
+  function ensurePhoneCopyPrompt(){
+    var p=document.getElementById('qilyPhoneCopyPrompt');if(p)return p;
+    p=document.createElement('div');p.id='qilyPhoneCopyPrompt';p.className='qily-phone-copy-prompt';p.setAttribute('role','status');p.setAttribute('aria-live','polite');
+    p.innerHTML='<span></span><button type="button" data-qily-call-now>立即拨打</button><button type="button" data-qily-call-cancel>取消</button>';document.body.appendChild(p);
+    p.querySelector('[data-qily-call-cancel]').addEventListener('click',function(){p.classList.remove('show');});
+    return p;
+  }
+  function copyPhoneAndPrompt(a,phone){return copyText(phone).then(function(){var p=ensurePhoneCopyPrompt();p.dataset.phone=phone;p.querySelector('span').textContent='号码 '+phone+' 已复制，是否立即拨打？';positionWechatCopyPrompt(a,p);p.classList.add('show');var call=p.querySelector('[data-qily-call-now]');call.onclick=function(){p.classList.remove('show');window.location.href='tel:'+phone;};clearTimeout(copyPhoneAndPrompt.timer);copyPhoneAndPrompt.timer=setTimeout(function(){p.classList.remove('show');},9000);});}
+  window.__qilyCopyPhoneAndPrompt=copyPhoneAndPrompt;
+  document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-qily-phone-copy]');if(!x)return;e.preventDefault();copyPhoneAndPrompt(x,x.getAttribute('data-qily-phone-copy'));});
+
+
   function shareUrl(title, url, successMessage) {
     if (navigator.share) {
       return navigator.share({ title: title, text: title, url: url }).then(function () {
@@ -360,7 +373,7 @@
     var contactMask = document.createElement('div');
     contactMask.id = 'wxMask';
     contactMask.className = 'qily-modal-mask';
-    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><div class="qily-wechat-row"><button class="qily-wechat-action" type="button" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259"><span>微信</span><strong>Qily259</strong></button></div><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (item) { return '<a href="tel:' + item.number + '"><span class="qily-phone-city">' + item.city + '：</span><strong class="qily-phone-number">' + item.number + '</strong></a>'; }).join('') + '</div><div class="qily-email-list"><div>官方网址</div><a class="qily-contact-email" href="https://qilylean.com/">https://qilylean.com/</a></div><div class="qily-email-list"><div>官网邮箱</div><a class="qily-contact-email" href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a><div class="qily-email-actions"><button class="qily-copy-email" type="button">复制邮箱</button><a class="qily-send-email" href="mailto:' + CONTACT_EMAIL + '">发送邮件</a></div></div></div>';
+    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><div class="qily-wechat-row"><button class="qily-wechat-action" type="button" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259"><span>微信</span><strong>Qily259</strong></button></div><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (item) { return '<a href="tel:' + item.number + '" data-qily-phone-copy="' + item.number + '" aria-label="复制并拨打 ' + item.city + ' ' + item.number + '"><span class="qily-phone-city">' + item.city + '：</span><strong class="qily-phone-number">' + item.number + '</strong></a>'; }).join('') + '</div><div class="qily-email-list"><div>官方网址</div><a class="qily-contact-email" href="https://qilylean.com/">https://qilylean.com/</a></div><div class="qily-email-list"><div>官网邮箱</div><a class="qily-contact-email" href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a><div class="qily-email-actions"><button class="qily-copy-email" type="button">复制邮箱</button><a class="qily-send-email" href="mailto:' + CONTACT_EMAIL + '">发送邮件</a></div></div></div>';
     document.body.appendChild(contactMask);
 
     var toast = document.createElement('div');
