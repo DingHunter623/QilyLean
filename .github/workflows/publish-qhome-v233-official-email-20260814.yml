@@ -38,8 +38,10 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from pathlib import Path
+          import re
           root=Path('android/qilylean-home')
           changed=0
+          standalone=re.compile(r'https://qilylean[.]com/(?=(?:["\'<>\s),;\]}]|$))')
           for p in root.rglob('*'):
               if not p.is_file() or any(x in p.parts for x in ('build','.gradle')):
                   continue
@@ -48,9 +50,7 @@ jobs:
               except (UnicodeDecodeError,OSError):
                   continue
               n=s.replace('企业邮箱','官网邮箱')
-              # Only standalone/public root literals. Subpage navigation remains directory-safe.
-              n=n.replace('"https://qilylean.com/"','"https://qilylean.com"')
-              n=n.replace('>https://qilylean.com/<','>https://qilylean.com<')
+              n=standalone.sub('https://qilylean.com',n)
               if n!=s:
                   p.write_text(n,encoding='utf-8')
                   changed+=1
@@ -62,11 +62,23 @@ jobs:
         run: |
           set -euo pipefail
           ! grep -RIn --exclude-dir=build --exclude-dir=.gradle '企业邮箱' android/qilylean-home
-          ! grep -RIn --exclude-dir=build --exclude-dir=.gradle 'https://qilylean.com/"' android/qilylean-home
           grep -q 'webCard("官方网址", "https://qilylean.com", "https://qilylean.com")' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
           grep -q 'webCard("官网邮箱", "admin@qilylean.com"' android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java
           grep -q 'versionCode 11' android/qilylean-home/app/build.gradle
           grep -q "versionName '2.3.3'" android/qilylean-home/app/build.gradle
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          rx=re.compile(r'https://qilylean[.]com/(?=(?:["\'<>\s),;\]}]|$))')
+          bad=[]
+          for p in Path('android/qilylean-home').rglob('*'):
+              if not p.is_file() or any(x in p.parts for x in ('build','.gradle')): continue
+              try:s=p.read_text(encoding='utf-8')
+              except Exception:continue
+              if rx.search(s):bad.append(str(p))
+          assert not bad, bad
+          print('PASS QHome source public-root URL')
+          PY
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
 
@@ -89,6 +101,7 @@ jobs:
           import json, re
           apk='QilyLean_Home_v2.3.3_API36_INSTALL.apk'
           sha='QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt'
+          standalone=re.compile(r'https://qilylean[.]com/(?=(?:["\'<>\s),;\]}]|$))')
           targets=['capabilities/index.html','app-support/index.html','app-store/qilylean-home/README.md','app-download-share-v1.js']
           for name in targets:
               p=Path(name)
@@ -97,7 +110,7 @@ jobs:
               s=re.sub(r'QilyLean_Home_v2[.]3[.]\d+_API36_INSTALL[.]apk',apk,s)
               s=re.sub(r'QilyLean_Home_v2[.]3[.]\d+_API36_INSTALL[.]sha256[.]txt',sha,s)
               s=s.replace('企业邮箱','官网邮箱')
-              s=s.replace('https://qilylean.com/','https://qilylean.com') if 'https://qilylean.com/' in s and 'https://qilylean.com//' not in s else s
+              s=standalone.sub('https://qilylean.com',s)
               p.write_text(s,encoding='utf-8')
           p=Path('app-release-manifest.json')
           data=json.loads(p.read_text(encoding='utf-8'))
@@ -121,7 +134,6 @@ jobs:
               for n in z.namelist():
                   try: data=z.read(n)
                   except Exception: continue
-                  # A subpage URL is allowed; standalone root literal followed by a quote/NUL/whitespace is not.
                   for marker in (needle+b'"',needle+b"'",needle+b'\x00',needle+b' ',needle+b'\n'):
                       if marker in data:
                           hits.append(n); break
