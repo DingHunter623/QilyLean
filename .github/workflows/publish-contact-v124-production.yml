@@ -1,0 +1,32 @@
+name: Publish contact V12.4 production
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-contact-v124-production.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Materialize production V12.4
+        run: python3 scripts/contact-v124-resilient.py
+      - name: Commit production files
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add site-navigation.js site-navigation-core.js site-shell.css cooperation/index.html
+          if git diff --cached --quiet; then echo 'No changes'; exit 0; fi
+          git commit -m 'fix: contact phone feedback and full-row visual V12.4 [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
