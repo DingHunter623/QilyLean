@@ -1,0 +1,55 @@
+name: Remove OPL slogan separator V12
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/remove-opl-slogan-separator-v12.js'
+      - '.github/workflows/remove-opl-slogan-separator-v12.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: opl-slogan-separator-v12-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Remove residual separator from all OPL slogan sources
+        run: node scripts/remove-opl-slogan-separator-v12.js
+      - name: Validate normalized slogan
+        shell: bash
+        run: |
+          node --check scripts/remove-opl-slogan-separator-v12.js
+          node - <<'NODE'
+          const fs=require('fs');
+          const html=fs.readFileSync('knowledge/terminology.html','utf8');
+          const ok='启精益之智，聚企业之力。让改善形成体系，让精益产生力量。';
+          if(!html.includes(ok)) throw new Error('normalized slogan missing');
+          if(/聚企业之力。(?:\s|&nbsp;|&#183;|&middot;|·|•|・)+让改善形成体系/.test(html)) throw new Error('separator residue remains');
+          console.log('OPL slogan exact QA passed.');
+          NODE
+      - name: Commit normalized OPL sources
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'admin@qilylean.com'
+          git add knowledge scripts
+          if git diff --cached --quiet; then
+            echo 'No production changes to commit.'
+            exit 0
+          fi
+          git commit -m 'fix: remove OPL slogan separator residue [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
