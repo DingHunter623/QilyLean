@@ -2,7 +2,7 @@ from pathlib import Path
 import re
 
 ROOT = Path('.')
-OFFICIAL_URL = 'https://qilylean.com/'
+OFFICIAL_URL = 'https://qilylean.com'
 OFFICIAL_EMAIL = 'admin@qilylean.com'
 
 

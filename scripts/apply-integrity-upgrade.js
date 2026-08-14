@@ -104,7 +104,7 @@ function patchHomepage() {
   );
 
   if (!content.includes('"@type":"Person","name":"丁启利"')) {
-    const schema = '<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"丁启利","url":"https://qilylean.com/","jobTitle":"制造改善与精益工程实践者","description":"QilyLean｜启力精益发起人，聚焦精益生产、工业工程、工程改善与数智化工厂实践。","knowsAbout":["精益生产","工业工程","VSM","标准工时","OEE","SMED","Factory Layout","ERP/MES/APS"]}</script>\n';
+    const schema = '<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"丁启利","url":"https://qilylean.com","jobTitle":"制造改善与精益工程实践者","description":"QilyLean｜启力精益发起人，聚焦精益生产、工业工程、工程改善与数智化工厂实践。","knowsAbout":["精益生产","工业工程","VSM","标准工时","OEE","SMED","Factory Layout","ERP/MES/APS"]}</script>\n';
     const anchor = '  <script data-qily-shell-bootstrap>';
     if (!content.includes(anchor)) throw new Error('Homepage schema insertion anchor missing');
     content = content.replace(anchor, `  ${schema}${anchor}`);

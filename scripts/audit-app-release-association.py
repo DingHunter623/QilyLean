@@ -5,7 +5,7 @@ import sys
 m = json.loads(Path('app-release-manifest.json').read_text(encoding='utf-8'))
 errors = []
 
-if m.get('officialWebsite') != 'https://qilylean.com/':
+if m.get('officialWebsite') != 'https://qilylean.com':
     errors.append('官网主数据错误')
 if m.get('supportEmail') != 'admin@qilylean.com':
     errors.append('官网邮箱主数据错误')

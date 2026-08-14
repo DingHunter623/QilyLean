@@ -171,13 +171,13 @@ function buildHomeSchema() {
       {
         '@type': 'WebSite',
         name: 'QilyLean｜启力精益',
-        url: 'https://qilylean.com/',
+        url: 'https://qilylean.com',
         description: '面向制造企业的新工厂与新产线规划、精益改善项目交付及目视化项目设计实施专业窗口。'
       },
       {
         '@type': 'Person',
         name: '丁启利',
-        url: 'https://qilylean.com/',
+        url: 'https://qilylean.com',
         jobTitle: '制造改善与精益工程实践者',
         knowsAbout: ['新工厂规划', '精益改善', '工业工程', 'VSM', '标准工时', 'OEE', 'SMED', '目视化管理', 'ERP/MES/APS']
       },
@@ -315,7 +315,7 @@ function buildArchiveSchema() {
     name: 'QilyLean今日简报｜历史制造实践知识档案',
     url: 'https://qilylean.com/qilylean/daily-insights.html',
     description: ARCHIVE_DESCRIPTION,
-    isPartOf: { '@type': 'WebSite', name: 'QilyLean｜启力精益', url: 'https://qilylean.com/' },
+    isPartOf: { '@type': 'WebSite', name: 'QilyLean｜启力精益', url: 'https://qilylean.com' },
     temporalCoverage: '2019-07-10/..',
     publishingPrinciples: 'https://qilylean.com/trust/#publication'
   };

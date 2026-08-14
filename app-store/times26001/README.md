@@ -28,7 +28,7 @@
 - Google Play 首发 AAB 已使用固定 **Upload Key** 签名，并已完成包名、版本、targetSdk 与权限校验；
 - Google Play 版仅声明前台粗略位置，不声明精确位置和后台位置；
 - 包名：`com.qilylean.times26001`；
-- 开发者支持官网：`https://qilylean.com/`；
+- 开发者支持官网：`https://qilylean.com`；
 - 官网邮箱：`admin@qilylean.com`；
 - 官网独立分发包与 Google Play 发布链分开管理；官网 APK 不作为 Google Play 后续升级签名基线；
 - Google Play 后续版本持续使用同一 Upload Key，并由 Play App Signing 管理最终分发签名；
@@ -99,7 +99,7 @@ Times26001 是一款以工业工程时间研究和制造现场测时为核心的
 Google Play / 正式应用市场版允许保留：
 
 - `QilyLean｜启力精益` 品牌；
-- 官网 `https://qilylean.com/`；
+- 官网 `https://qilylean.com`；
 - 官网邮箱 `admin@qilylean.com`；
 - 用户主动点击访问官网、隐私政策、用户协议与技术支持页面。
 

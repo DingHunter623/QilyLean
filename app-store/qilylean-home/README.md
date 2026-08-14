@@ -11,7 +11,7 @@
 - 历史官网安装包：`2.2`（旧Debug签名）
 - 最新构建 / 应用市场候选版：`2.3.1` / versionCode `9` / Android API 36
 - 包名：`com.qilylean.home`
-- 开发者支持官网：`https://qilylean.com/`
+- 开发者支持官网：`https://qilylean.com`
 - 官网邮箱：`admin@qilylean.com`
 - 规则：官网公开版与应用市场候选版分开管理；只有正式签名发布包完成并提交对应商店后，才更新“已上架/正式商店版”状态。
 

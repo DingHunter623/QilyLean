@@ -409,7 +409,7 @@ function main() {
   sitemapFiles.forEach((file) => {
     upsertSitemapUrl(file, 'https://qilylean.com/trust/', buildDate, '0.8');
     upsertSitemapUrl(file, 'https://qilylean.com/cooperation/', buildDate, '0.9');
-    upsertSitemapUrl(file, 'https://qilylean.com/', buildDate, '1.0');
+    upsertSitemapUrl(file, 'https://qilylean.com', buildDate, '1.0');
   });
 
   const searchMeta = buildSearchIndex(data);

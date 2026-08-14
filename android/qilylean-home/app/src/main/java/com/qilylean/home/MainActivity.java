@@ -163,7 +163,7 @@ public class MainActivity extends Activity {
 
         addSectionTitle(content, "官网最新导航");
         addCardRow(content,
-                webCard("首页", "官网总入口与最新内容", "https://qilylean.com/"),
+                webCard("首页", "官网总入口与最新内容", "https://qilylean.com"),
                 webCard("能力体系", "六类核心能力与交付边界", "https://qilylean.com/capabilities/"));
         addCardRow(content,
                 webCard("代表项目", "项目成果、证据与交付资产", "https://qilylean.com/projects/"),
@@ -229,7 +229,7 @@ public class MainActivity extends Activity {
                 card("默认桌面", "设置或切换桌面应用", new View.OnClickListener() {
                     @Override public void onClick(View v) { openHomeSettings(); }
                 }),
-                webCard("官网搜索", "进入官网并使用全站搜索", "https://qilylean.com/"));
+                webCard("官网搜索", "进入官网并使用全站搜索", "https://qilylean.com"));
 
         addSectionTitle(content, "隐私与支持");
         addCardRow(content,
@@ -241,7 +241,7 @@ public class MainActivity extends Activity {
 
         addSectionTitle(content, "官方联系");
         addCardRow(content,
-                webCard("官方网址", "https://qilylean.com/", "https://qilylean.com/"),
+                webCard("官方网址", "https://qilylean.com", "https://qilylean.com"),
                 webCard("官网邮箱", "admin@qilylean.com", "mailto:admin@qilylean.com"));
 
         TextView footer = text(

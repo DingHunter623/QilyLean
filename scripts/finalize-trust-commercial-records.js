@@ -123,7 +123,7 @@ function patchDailyArchive() {
       name: 'QilyLean今日简报｜历史制造实践知识档案',
       url: 'https://qilylean.com/qilylean/daily-insights.html',
       description: archiveDescription,
-      isPartOf: { '@type': 'WebSite', name: 'QilyLean｜启力精益', url: 'https://qilylean.com/' },
+      isPartOf: { '@type': 'WebSite', name: 'QilyLean｜启力精益', url: 'https://qilylean.com' },
       about: ['精益生产', '工业工程', '工程改善', '数智工厂', '制造项目实践'],
       temporalCoverage: '2019-07-10/..',
       publishingPrinciples: 'https://qilylean.com/trust/#publication'

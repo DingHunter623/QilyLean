@@ -242,7 +242,7 @@ def build_document():
     paragraph.paragraph_format.space_before = Pt(0)
     paragraph.paragraph_format.space_after = Pt(0)
     add_font(
-        paragraph.add_run("QilyLean｜启力精益  ·  https://qilylean.com/  ·  电话：134 5001 4003  ·  邮箱：admin@qilylean.com"),
+        paragraph.add_run("QilyLean｜启力精益  ·  https://qilylean.com  ·  电话：134 5001 4003  ·  邮箱：admin@qilylean.com"),
         7.8,
         color="526B69",
     )

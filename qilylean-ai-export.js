@@ -5,7 +5,7 @@ var bar=document.querySelector('.chat .bar');
 var clearButton=document.getElementById('clearBtn');
 if(!messages||!bar||!clearButton)return;
 
-var HOME_URL='https://qilylean.com/';
+var HOME_URL='https://qilylean.com';
 var HOME_QR_SRC='/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
 var WECHAT_ID='Qily259';
 var PHONE_NUMBERS=['13450014003','15168120722','17681788259'];

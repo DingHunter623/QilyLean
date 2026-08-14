@@ -13,7 +13,7 @@ if '<footer class="footer"></footer>' not in app_support: errors.append('APP支�
 if '官网邮箱</th><td class=\"qtc-state-ok\">已启用' not in Path('site-trust-conversion-v2.js').read_text(encoding='utf-8'): errors.append('Trust邮箱状态未同步')
 
 core=Path('site-navigation-core.js').read_text(encoding='utf-8')
-if '官方网址：https://qilylean.com/' not in core: errors.append('核心导航/文档尾注缺官方网址标准字段')
+if '官方网址：https://qilylean.com' not in core: errors.append('核心导航/文档尾注缺官方网址标准字段')
 if '官网邮箱' not in core or 'admin@qilylean.com' not in core: errors.append('核心导航缺官网邮箱')
 nav=Path('site-navigation.js').read_text(encoding='utf-8')
 if 'qilyOfficialContactRuntime' in nav or 'qily-official-contact-runtime' in nav:

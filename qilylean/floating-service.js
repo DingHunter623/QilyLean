@@ -155,7 +155,7 @@
     var name = (location.pathname.split('/').pop() || 'home.html').toLowerCase();
     var shortPath = Object.prototype.hasOwnProperty.call(map, name) ? map[name] : name;
     var hash = typeof hashOverride === 'string' ? hashOverride : (location.hash || '');
-    return 'https://qilylean.com/' + shortPath + (location.search || '') + hash;
+    return 'https://qilylean.com' + shortPath + (location.search || '') + hash;
   }
 
   function forceArticleShortShare() {

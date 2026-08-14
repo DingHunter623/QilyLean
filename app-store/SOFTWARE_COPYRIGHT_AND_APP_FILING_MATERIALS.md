@@ -4,7 +4,7 @@
 申请人／主办者建议口径：丁启利（自然人）  
 品牌：QilyLean｜启力精益  
 官网邮箱：`admin@qilylean.com`  
-官网：`https://qilylean.com/`
+官网：`https://qilylean.com`
 
 ## 一、Times26001统一申报口径
 

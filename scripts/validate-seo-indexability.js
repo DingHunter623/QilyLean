@@ -60,12 +60,12 @@ const redirectPages = {
   'moments.html': 'https://qilylean.com/moments/',
   'knowledge.html': 'https://qilylean.com/knowledge/',
   'execution.html': 'https://qilylean.com/qilylean/execution-loop.html',
-  'qilylean/home.html': 'https://qilylean.com/',
-  'qilylean/index.html': 'https://qilylean.com/',
+  'qilylean/home.html': 'https://qilylean.com',
+  'qilylean/index.html': 'https://qilylean.com',
   'daily-insights.html': 'https://qilylean.com/qilylean/daily-insights.html',
   'qilylean/papers.html': 'https://qilylean.com/improvements/',
-  'qilylean/home-fixed.html': 'https://qilylean.com/',
-  'qilylean/home-live.html': 'https://qilylean.com/'
+  'qilylean/home-fixed.html': 'https://qilylean.com',
+  'qilylean/home-live.html': 'https://qilylean.com'
 };
 
 const htmlFiles = walk(ROOT).filter(file => file.endsWith('.html'));

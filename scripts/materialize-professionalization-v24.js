@@ -304,7 +304,7 @@ function upsertDailyFreshness(html) {
     description,
     dateModified: latest.date,
     temporalCoverage: `2019-07-10/${latest.date}`,
-    isPartOf: { '@type': 'WebSite', name: 'QilyLean｜启力精益', url: 'https://qilylean.com/' },
+    isPartOf: { '@type': 'WebSite', name: 'QilyLean｜启力精益', url: 'https://qilylean.com' },
     mainEntity: { '@type': 'ItemList', numberOfItems: total, itemListElement: itemList }
   };
   const block = `<!-- QILY-DAILY-FRESHNESS-V24:START -->\n<script id="qilyDailyFreshnessV24" type="application/ld+json">${JSON.stringify(schema)}</script>\n<!-- QILY-DAILY-FRESHNESS-V24:END -->`;

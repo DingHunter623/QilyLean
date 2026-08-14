@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-var HOME_URL='https://qilylean.com/';
+var HOME_URL='https://qilylean.com';
 var BRAND='QilyLean｜启力精益';
 var SHARE_TITLE='QilyLean｜启力精益｜精益生产、工程改善与数智工厂';
 var QR_SRC='/qilylean/qilylean-home-qr.svg?v=20260717-qrfix2';
@@ -41,7 +41,7 @@ function applyFix(){
     qr=document.createElement('img');
     qr.className='qily-share-qr';
     qr.src=QR_SRC;
-    qr.alt='QilyLean启力精益官网二维码，识别后访问 https://qilylean.com/';
+    qr.alt='QilyLean启力精益官网二维码，识别后访问 https://qilylean.com';
     qr.loading='eager';
     if(urlEl)panel.insertBefore(qr,urlEl);else panel.appendChild(qr);
   }else{
