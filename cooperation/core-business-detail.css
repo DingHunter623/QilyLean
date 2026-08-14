@@ -17,8 +17,8 @@
 .core-business-panel li{margin:6px 0}
 .core-business-deliverables{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
 .core-business-deliverables span{padding:12px;border:1px solid #d5e4e3;color:#244d48;background:#f7fbfa;font-weight:850}
-.core-business-process{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px}
-.core-business-step{padding:16px;border-top:4px solid #178b94;background:#f7fbfa}
+.core-business-process{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px;align-items:stretch}
+.core-business-step{display:flex;flex-direction:column;min-height:100%;padding:18px 16px;border:1px solid #b8d6d2;border-top:4px solid #178b94;border-radius:12px;background:#eef8f6;box-shadow:0 5px 16px rgba(15,75,90,.06)}
 .core-business-step b{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;color:#fff;background:#0f4b5a}
 .core-business-step strong{display:block;margin-top:10px;color:#0f4b5a}
 .core-business-step span{display:block;margin-top:5px;color:#526968;font-size:14px;line-height:1.6}
