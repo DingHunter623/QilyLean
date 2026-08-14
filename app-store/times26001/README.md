@@ -4,7 +4,7 @@
 开发者：丁启利（QilyLean｜启力精益）  
 包名：`com.qilylean.times26001`  
 支持邮箱：`admin@qilylean.com`  
-官网：`https://qilylean.com/tools/times26001`
+产品官方网址：`https://qilylean.com/tools/times26001`
 
 ## 0. 统一产品定义
 
@@ -28,7 +28,7 @@
 - Google Play 首发 AAB 已使用固定 **Upload Key** 签名，并已完成包名、版本、targetSdk 与权限校验；
 - Google Play 版仅声明前台粗略位置，不声明精确位置和后台位置；
 - 包名：`com.qilylean.times26001`；
-- 开发者支持官网：`https://qilylean.com`；
+- 开发者支持官方网址：`https://qilylean.com`；
 - 官网邮箱：`admin@qilylean.com`；
 - 官网独立分发包与 Google Play 发布链分开管理；官网 APK 不作为 Google Play 后续升级签名基线；
 - Google Play 后续版本持续使用同一 Upload Key，并由 Play App Signing 管理最终分发签名；
@@ -94,14 +94,14 @@ Times26001 是一款以工业工程时间研究和制造现场测时为核心的
 - 目标受众：工业工程师、制造现场人员、工程管理者及一般时间管理用户；
 - 建议年龄分级：Everyone / 按平台问卷实际结果执行。
 
-## 5. 官网与官网邮箱展示规则
+## 5. 官方网址与官网邮箱展示规则
 
 Google Play / 正式应用市场版允许保留：
 
 - `QilyLean｜启力精益` 品牌；
-- 官网 `https://qilylean.com`；
+- 官方网址 `https://qilylean.com`；
 - 官网邮箱 `admin@qilylean.com`；
-- 用户主动点击访问官网、隐私政策、用户协议与技术支持页面。
+- 用户主动点击访问官方网址、隐私政策、用户协议与技术支持页面。
 
 禁止：
 
@@ -110,7 +110,7 @@ Google Play / 正式应用市场版允许保留：
 - APP内自动下载APK或引导开启未知来源安装；
 - 绕过应用市场进行版本更新。
 
-官网用于品牌延伸、工程内容、产品介绍与技术支持，不作为商店版的强制更新通道。
+QilyLean网站用于品牌延伸、工程内容、产品介绍与技术支持，不作为商店版的强制更新通道。
 
 ## 6. 隐私和 Data Safety 申报口径
 
@@ -137,7 +137,7 @@ Google Play / 正式应用市场版允许保留：
 - 精确闹钟：核心闹钟／计时功能按设定时间触发；
 - 振动／唤醒：到期提醒；
 - 前台粗略位置：仅在用户主动查询“当前位置”天气时使用；
-- 网络：天气/城市查询，以及用户主动访问官网、隐私政策、协议或支持页面。
+- 网络：天气/城市查询，以及用户主动访问官方网址、隐私政策、协议或支持页面。
 
 ### 隐私政策网址
 `https://qilylean.com/legal/times26001/privacy`
@@ -158,7 +158,7 @@ Google Play / 正式应用市场版允许保留：
 - [x] 最终包仅有前台粗略位置，无精确位置、无后台位置；
 - [x] 隐私政策 V1.3 与实际天气/定位行为保持一致；
 - [x] 商店图标、Feature Graphic 与手机截图已生成；
-- [x] 官网与官网邮箱可保留，APP内没有站外APK更新引导；
+- [x] 官方网址与官网邮箱可保留，APP内没有站外APK更新引导；
 - [ ] 在 Google Play Console 创建应用并上传 AAB；
 - [ ] 按 Console 实际要求完成 Data Safety、内容分级、目标受众、测试轨道与审核提交。
 \n> 安装提示：如覆盖安装失败，请先备份必要信息后卸载旧版；卸载会清除本机闹钟、设置及测时记录。\n
