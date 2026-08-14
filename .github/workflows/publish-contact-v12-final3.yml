@@ -1,0 +1,47 @@
+name: Publish contact V12.3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/apply-contact-v12-final3.py'
+      - '.github/workflows/publish-contact-v12-final3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: contact-v12-final3-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Apply V12.3
+        run: python3 scripts/apply-contact-v12-final3.py
+      - name: Validate V12.3
+        shell: bash
+        run: |
+          python3 -m py_compile scripts/apply-contact-v12-final3.py
+          node --check site-navigation-core.js
+          node --check qilylean/contact-wechat-open.js
+          git diff --check
+      - name: Commit and publish
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A ':!.github'
+          if git diff --cached --quiet; then echo 'No changes'; exit 0; fi
+          git commit -m 'fix: finalize full-row 微信 and 官方网址 V12.3 [skip ci]'
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 3
+          done
+          exit 1
