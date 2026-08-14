@@ -1,0 +1,59 @@
+name: Publish cooperation contact V12.5
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/fix-cooperation-contact-card-v125.js'
+      - '.github/workflows/publish-cooperation-contact-v125.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cooperation-contact-v125-main
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Materialize V12.5 cooperation contact card
+        run: node scripts/fix-cooperation-contact-card-v125.js
+
+      - name: Validate V12.5
+        shell: bash
+        run: |
+          node --check scripts/fix-cooperation-contact-card-v125.js
+          node --check site-navigation.js
+          if [ -f site-navigation-core.js ]; then node --check site-navigation-core.js; fi
+          grep -q 'QILY-COOPERATION-CONTACT-V12.5:START' site-shell.css
+          grep -q 'contact-email-action' cooperation/index.html
+          grep -q 'contact-evidence-action' cooperation/index.html
+          grep -q '>邮箱：</span>' cooperation/index.html
+          if grep -q '>官网邮箱：</span>' cooperation/index.html; then echo 'FAIL: cooperation card still says 官网邮箱'; exit 1; fi
+          grep -q '.contact-email-action .contact-action-value' site-shell.css
+          echo 'V12.5 QA PASS.'
+
+      - name: Commit production files
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add cooperation/index.html site-shell.css site-navigation.js site-navigation-core.js scripts/contact-v124-resilient.py
+          if git diff --cached --quiet; then echo 'No production changes'; exit 0; fi
+          git commit -m 'fix: unify cooperation contact card visual V12.5 [skip ci]'
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push origin HEAD:main && exit 0
+            sleep 3
+          done
+          exit 1
