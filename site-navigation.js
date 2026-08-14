@@ -7,7 +7,7 @@
   if (w.__qilyStaticFirstNavigationV20) return;
   w.__qilyStaticFirstNavigationV20 = true;
 
-  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260814-url-v14';
+  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260813-r2-clean-v4';
   var PARENT_SRC = '/site-parent-navigation-v3.js?v=20260813-operating-axis-nav-v4';
 
   function appendLegacy() {
