@@ -140,7 +140,7 @@ jobs:
           git add Times26001-Android-v1.1.13-Standard-Website-Logo.apk Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt \
             tools/times26001/index.html capabilities/index.html app-support/index.html app-store/times26001/README.md \
             app-download-share-v1.js times26001-home-card.js app-release-manifest.json
-          git commit -m 'release: repack Times26001 URL V14 [skip ci]' || true
+          git commit -m 'release: repack Times26001 URL V14' || true
           for i in 1 2 3; do
             git fetch origin main
             if git rebase origin/main && git push origin HEAD:main; then
