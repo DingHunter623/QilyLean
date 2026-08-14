@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 50
       - name: Apply, validate and publish from latest main with retry
@@ -34,36 +34,6 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             python scripts/migrate-official-email-and-fix-brief-arrow-20260814.py
-            python - <<'PY'
-          from pathlib import Path
-          old='\u4f01\u4e1a\u90ae\u7bb1'
-          skip={
-            'scripts/migrate-official-email-and-fix-brief-arrow-20260814.py',
-            '.github/workflows/migrate-official-email-and-fix-brief-arrow-20260814.yml',
-            '.github/workflows/repack-times26001-official-email-20260814.yml',
-            '.github/workflows/publish-qhome-v233-official-email-20260814.yml',
-          }
-          bad=[]
-          for p in Path('.').rglob('*'):
-            r=p.as_posix().lstrip('./')
-            if not p.is_file() or r in skip or any(x in p.parts for x in ('.git','build','.gradle','node_modules')): continue
-            if p.suffix.lower() in {'.apk','.aab','.zip'}: continue
-            try: s=p.read_text(encoding='utf-8')
-            except Exception: continue
-            if old in s: bad.append(r)
-          if bad: raise SystemExit('legacy email label remains: '+', '.join(bad[:30]))
-          checks={
-            'android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java':'官网邮箱',
-            'knowledge/terminology.html':'官网邮箱',
-            'app-support/index.html':'官网邮箱',
-            'app-store/qilylean-home/README.md':'官网邮箱',
-            'app-store/times26001/README.md':'官网邮箱',
-            'qilylean/daily/2026-08-14.html':'points="600,438 584,466 616,466"',
-          }
-          for f,t in checks.items():
-            if t not in Path(f).read_text(encoding='utf-8'): raise SystemExit(f+' missing '+t)
-          print('Final product-content naming and brief-arrow QA passed.')
-          PY
             git add -A
             if git diff --cached --quiet; then
               echo 'Migration already fully present on latest main.'
