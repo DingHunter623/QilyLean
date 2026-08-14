@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean R2 clean regression guard v3｜2026-08-12 */
+/* QilyLean R2 clean regression guard v4｜2026-08-14 URL V14 compatible */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
+const R2_VERSION='20260813-r2-clean-v4';
+const NAV_VERSION='20260814-url-v14';
 function read(rel){return fs.readFileSync(path.join(root,rel),'utf8');}
 function assert(ok,msg){if(!ok)throw new Error(msg);}
 function all(source,markers,label){for(const marker of markers)assert(source.includes(marker),`${label}: missing ${marker}`);}
@@ -41,12 +43,18 @@ const core=read('site-navigation-core.js');
 assert(core.includes("if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();"),'navigation core: static-first primary navigation guard missing');
 assert(!/^\s*ensureGlobalContactFooter\(\);\s*$/m.test(core),'navigation core: repeated global contact footer call returned');
 assert(!/^\s*ensureKnowledgeDocumentEnhancements\(\);\s*$/m.test(core),'navigation core: repeated document contact/email tail call returned');
+all(core,[
+  "var HOME_URL = 'https://qilylean.com';",
+  'function normalizePublicUrl(value)',
+  'var url = normalizePublicUrl(location.href);'
+],'URL V14 public output runtime');
 
 const legacy=read('site-navigation-legacy-20260802.js');
 const apply=(legacy.match(/function applyFixes\(\)\s*\{([\s\S]*?)\n\s*\}/)||[])[1]||'';
 assert(!apply.includes('ensureFriendLinksNavigation();'),'legacy navigation: 友情链接 injection returned to primary nav');
 const observe=(legacy.match(/function observeShell\(\)\s*\{([\s\S]*?)\n\s*\}/)||[])[1]||'';
 assert(!observe.includes('MutationObserver'),'legacy navigation: mutation-loop DOM rewriting returned');
+assert(legacy.includes(`/site-navigation-core.js?v=${NAV_VERSION}`),'legacy navigation: URL V14 core cache version missing');
 
 const wrapper=read('site-navigation.js');
 all(wrapper,[
@@ -55,7 +63,7 @@ all(wrapper,[
   'dynamicContentShapers: false',
   'runtimeFooter: false',
   'runtimeSharedCssRewrite: false',
-  '/site-navigation-legacy-20260802.js?v=20260813-r2-clean-v4'
+  `/site-navigation-legacy-20260802.js?v=${NAV_VERSION}`
 ],'static-first navigation wrapper');
 assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/.test(wrapper),'navigation wrapper: dynamic content shaper returned');
 assert(!/Technical & Project Contact|qilyGlobalFooter|qilyGlobalContactFooter/.test(wrapper),'navigation wrapper: footer logic returned');
@@ -70,8 +78,8 @@ for(const rel of keyPages){
   const html=read(rel);
   all(html,[
     'QILY-R2-FIRST-PAINT:START',
-    '/site-r2-stability-fixes-v1.css?v=20260813-r2-clean-v4',
-    '/site-navigation.js?v=20260813-r2-clean-v4',
+    `/site-r2-stability-fixes-v1.css?v=${R2_VERSION}`,
+    `/site-navigation.js?v=${NAV_VERSION}`,
     '/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5',
     'QILY-R2-PRIMARY-CONTRAST-NAV:START'
   ],rel);
@@ -88,7 +96,7 @@ for(const rel of keyPages){
 }
 
 const cleaner=read('scripts/publish-r2-clean-runtime-v3.js');
-all(cleaner,['footer and dynamic content shapers removed','site-footer-standard-v28','site-information-architecture-v1','20260813-r2-clean-v4'],'R2 clean materializer');
+all(cleaner,['footer and dynamic content shapers removed','site-footer-standard-v28','site-information-architecture-v1',R2_VERSION,NAV_VERSION],'R2 clean materializer');
 
 const career=read('experience/index.html');
 all(career,['QILY-STATIC-CAREER-BASELINE:v1','id="career-2019-2025"','id="career-2006-2009"'],'experience static baseline');
@@ -96,4 +104,4 @@ all(career,['QILY-STATIC-CAREER-BASELINE:v1','id="career-2019-2025"','id="career
 const selfHeal=read('.github/workflows/site-regression-poka-yoke.yml');
 all(selfHeal,['node scripts/apply-site-poka-yoke-v2.js','node scripts/site-regression-guard.js','contents: write'],'self-heal workflow');
 
-process.stdout.write('QilyLean R2 clean regression guard passed: atomic first paint, static HTML authority, no dynamic CTA shapers, no visible footer, native-prefetch V5 and R2 navigation are intact.\n');
+process.stdout.write('QilyLean R2 clean regression guard passed: atomic first paint, static HTML authority, URL V14 no-trailing-slash public output, no dynamic CTA shapers, no visible footer and native-prefetch V5 are intact.\n');
