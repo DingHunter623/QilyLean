@@ -1,7 +1,6 @@
-/* QilyLean terminology OPL readability/contact V9 | 2026-08-14
- * Component-owned contrast: global auto-contrast must not recolor OPL controls.
- * WeChat ID visually matches URL / email / phone: underlined text link only.
- */
+/* QilyLean terminology OPL readability/contact V11 | 2026-08-14 */
+
+/* OPL CTA contrast ownership */
 html body a.term-opl-open,
 html body a.term-opl-open:link,
 html body a.term-opl-open:visited,
@@ -22,18 +21,13 @@ html body a.term-opl-open:active{
 }
 html body a.term-opl-open:hover,
 html body a.term-opl-open:focus-visible{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
   background:#0f4b5a!important;
   background-color:#0f4b5a!important;
   border-color:#0f4b5a!important;
-  box-shadow:0 10px 22px rgba(15,75,90,.20)!important;
   outline:3px solid rgba(202,161,95,.42)!important;
   outline-offset:2px!important;
 }
 html body a.term-opl-open:active{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
   background:#073c47!important;
   background-color:#073c47!important;
   border-color:#073c47!important;
@@ -46,7 +40,6 @@ html body a.term-opl-open:active>.term-opl-open-label-v9{
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
   background:transparent!important;
-  background-color:transparent!important;
   border:0!important;
   box-shadow:none!important;
   text-shadow:none!important;
@@ -64,10 +57,58 @@ html body a.term-opl-open:active::before{
   color:#0f4b5a!important;
   -webkit-text-fill-color:#0f4b5a!important;
   background:#fff!important;
-  background-color:#fff!important;
   opacity:1!important;
 }
 
+/* OPL header brand: visually use the same SVG logo as the public website header. */
+html body .term-opl-brandbar>strong{
+  display:block!important;
+  flex:0 0 auto!important;
+  width:190px!important;
+  height:36px!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+  color:transparent!important;
+  -webkit-text-fill-color:transparent!important;
+  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5') left center/contain no-repeat!important;
+  text-indent:-9999px!important;
+  white-space:nowrap!important;
+  user-select:none!important;
+}
+html body .term-opl-brandbar>span{
+  color:#5f7474!important;
+  -webkit-text-fill-color:#5f7474!important;
+}
+
+/* Contact card: slightly larger row spacing; equal-height columns and bottom baseline alignment. */
+html body .term-opl-contact-card{
+  align-items:stretch!important;
+}
+html body .term-opl-contact-copy{
+  display:flex!important;
+  min-width:0!important;
+  height:100%!important;
+  flex-direction:column!important;
+  align-self:stretch!important;
+}
+html body .term-opl-contact-copy>p:not(.term-opl-contact-lines){
+  line-height:1.78!important;
+}
+html body .term-opl-contact-copy .term-opl-contact-lines{
+  margin-top:auto!important;
+  padding-top:10px!important;
+  line-height:1.9!important;
+}
+html body .term-opl-contact-copy .term-opl-contact-lines>a{
+  line-height:inherit!important;
+  text-decoration-line:underline!important;
+  text-decoration-thickness:1.5px!important;
+  text-underline-offset:3px!important;
+  text-decoration-skip-ink:none!important;
+}
+
+/* WeChat ID matches URL/email/phone: text link only, continuous underline. */
 html body .term-opl-contact-lines a.term-opl-copy-wechat-v9,
 html body .term-opl-contact-lines a.term-opl-copy-wechat-v9:link,
 html body .term-opl-contact-lines a.term-opl-copy-wechat-v9:visited,
@@ -80,8 +121,6 @@ html body .term-opl-contact-lines a.term-opl-copy-wechat-v9:active{
   color:#0f4b5a!important;
   -webkit-text-fill-color:#0f4b5a!important;
   background:transparent!important;
-  background-color:transparent!important;
-  background-image:none!important;
   border:0!important;
   border-radius:0!important;
   box-shadow:none!important;
@@ -91,6 +130,7 @@ html body .term-opl-contact-lines a.term-opl-copy-wechat-v9:active{
   text-decoration-line:underline!important;
   text-decoration-thickness:1.5px!important;
   text-underline-offset:3px!important;
+  text-decoration-skip-ink:none!important;
   cursor:pointer!important;
   opacity:1!important;
   filter:none!important;
@@ -104,17 +144,51 @@ html body .term-opl-contact-lines a.term-opl-copy-wechat-v9:focus-visible{
   outline:2px solid rgba(202,161,95,.48)!important;
   outline-offset:2px!important;
 }
-html body .term-opl-contact-lines a.term-opl-copy-wechat-v9:active{
-  color:#073c47!important;
-  -webkit-text-fill-color:#073c47!important;
-  background:transparent!important;
+
+/* QR captions sit on the same bottom visual line as the left contact block. */
+html body .term-opl-contact-card .term-opl-qr{
+  display:flex!important;
+  height:100%!important;
+  min-height:0!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  align-self:stretch!important;
+  gap:7px!important;
+}
+html body .term-opl-contact-card .term-opl-qr>img,
+html body .term-opl-contact-card .term-opl-qr>.wx-qr-image{
+  margin-top:auto!important;
+  margin-bottom:0!important;
+}
+html body .term-opl-contact-card .term-opl-qr>span{
+  display:flex!important;
+  min-height:18px!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  margin:0!important;
+  padding:0!important;
+  line-height:1.25!important;
+  text-align:center!important;
+}
+
+@media(max-width:760px){
+  html body .term-opl-brandbar>strong{width:160px!important;height:31px!important}
+  html body .term-opl-contact-copy .term-opl-contact-lines{line-height:1.84!important}
+  html body .term-opl-contact-card .term-opl-qr{height:auto!important}
 }
 
 @media print{
+  html body .term-opl-brandbar>strong{
+    width:190px!important;
+    height:36px!important;
+    background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5') left center/contain no-repeat!important;
+  }
   html body .term-opl-contact-lines a.term-opl-copy-wechat-v9{
     color:#0f4b5a!important;
     -webkit-text-fill-color:#0f4b5a!important;
-    text-decoration:underline!important;
+    text-decoration-line:underline!important;
+    text-decoration-skip-ink:none!important;
     outline:0!important;
   }
 }
