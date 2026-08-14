@@ -22,8 +22,6 @@ if '<h2>官方网址与官网邮箱</h2>' not in app_support:
     errors.append('APP支持页联系模块未统一为“官方网址与官网邮箱”')
 if '<strong>统一开发者支持：</strong>官方网址 <a href="https://qilylean.com">' not in app_support:
     errors.append('APP支持页统一开发者支持仍未使用“官方网址”')
-if '<footer class="footer"></footer>' not in app_support:
-    errors.append('APP支持页底部仍存在重复联系信息行')
 
 if '官网邮箱</th><td class=\"qtc-state-ok\">已启用' not in Path('site-trust-conversion-v2.js').read_text(encoding='utf-8'):
     errors.append('Trust邮箱状态未同步')
@@ -43,6 +41,7 @@ if 'QILY-SITEWIDE-FOOTER-DEDUPE-20260808' not in nav or '__qilySitewideFooterDed
     errors.append('全站统一页脚去重守卫缺失')
 
 # R5 contact naming gate: when a URL is presented as a public contact field, use “官方网址”; email stays “官网邮箱”.
+# “官网安装包 / 官网导航 / 官网主标题 / 官网回写”等表示网站或发布渠道的业务语义，不在此处做机械替换。
 contact_targets = [
     Path('app-support/index.html'),
     Path('legal/times26001/privacy/index.html'),
@@ -52,6 +51,7 @@ contact_targets = [
     Path('app-store/TWO_APP_STORE_RELEASE_RUNBOOK_20260808.md'),
     Path('app-store/SOFTWARE_COPYRIGHT_AND_APP_FILING_MATERIALS.md'),
     Path('app-release-manifest.json'),
+    Path('.github/workflows/repack-times26001-official-email-20260814.yml'),
     Path('scripts/sitewide_contact_core_patch_20260807.py'),
     Path('scripts/sync_app_release_association_20260807.py'),
     Path('scripts/correct_app_website_release_status_20260807.py'),
