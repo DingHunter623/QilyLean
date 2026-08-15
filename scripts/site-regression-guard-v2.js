@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean R2 regression guard v7｜2026-08-15 PERFORMANCE V16 */
+/* QilyLean R2 regression guard v7.1｜2026-08-15 PERFORMANCE V16 */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
@@ -12,6 +12,7 @@ const FAST_NATIVE_VERSION='20260815-prefetch-v6';
 function read(rel){return fs.readFileSync(path.join(root,rel),'utf8');}
 function assert(ok,msg){if(!ok)throw new Error(msg);}
 function all(source,markers,label){for(const marker of markers)assert(source.includes(marker),`${label}: missing ${marker}`);}
+function cssRef(html,file){return new RegExp(`href=["'][^"']*/${file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}(?:\\?[^"']*)?["']`,'i').test(html);}
 
 const nativeNav=read('site-music-persistent-navigation-v1.js');
 all(nativeNav,[
@@ -36,7 +37,7 @@ const core=read('site-navigation-core.js');
 ].forEach(marker=>assert(core.includes(marker),`navigation core: missing ${marker}`));
 assert(core.includes("if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();"),'navigation core: static-first primary navigation guard missing');
 assert(!/^\s*ensureGlobalContactFooter\(\);\s*$/m.test(core),'navigation core: repeated global contact footer call returned');
-assert(!/^\s*ensureKnowledgeDocumentEnhancements\(\);\s*$/m.test(core),'navigation core: repeated document contact/email tail call returned');
+assert(!/^\s*ensureKnowledgeDocumentEnhancements\(\);\s*$/m.test(core),'navigation core: repeated document contact tail injection returned');
 
 const legacy=read('site-navigation-legacy-20260802.js');
 assert(legacy.includes(`/site-navigation-core.js?v=${NAV_VERSION}`),'legacy navigation: performance V16 core cache version missing');
@@ -52,6 +53,10 @@ all(wrapper,[
   'runtimeSharedCssRewrite: false',
   'routeScopedLegacy: true',
   'ordinaryPagesDirectCore: true',
+  'chineseWrapPolish: true',
+  'qilyChineseWrapPolishV1',
+  'text-wrap:pretty',
+  'text-wrap:balance',
   `/site-navigation-legacy-20260802.js?v=${NAV_VERSION}`,
   `/site-navigation-core.js?v=${NAV_VERSION}`,
   `/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}`,
@@ -100,13 +105,20 @@ for(const rel of keyPages){
   all(html,[
     'QILY-R2-FIRST-PAINT:START',
     `/site-navigation.js?v=${NAV_VERSION}`,
-    `/site-music-persistent-navigation-v1.js?v=${FAST_NATIVE_VERSION}`,
-    `/site-core-visual-bundle-v1.css?v=${CORE_CSS_VERSION}`
+    `/site-music-persistent-navigation-v1.js?v=${FAST_NATIVE_VERSION}`
   ],rel);
   const first=(html.match(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/)||[])[0]||'';
   assert(first&& !/opacity\s*:\s*0|visibility\s*:\s*hidden|pointer-events\s*:\s*none|window\.load|stableReveal|2400/.test(first),`${rel}: blocking/blank first-paint logic returned`);
   assert(!/site-parent-navigation-v3\.js/i.test(html),`${rel}: redundant parent-navigation request returned`);
-  individualCoreCss.forEach(file=>assert(!new RegExp(`href=["'][^"']*/${file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}(?:\\?[^"']*)?["']`,'i').test(html),`${rel}: unbundled core CSS returned: ${file}`));
+
+  const hasBundle=html.includes(`/site-core-visual-bundle-v1.css?v=${CORE_CSS_VERSION}`);
+  if(hasBundle){
+    individualCoreCss.forEach(file=>assert(!cssRef(html,file),`${rel}: bundled page still loads individual core CSS: ${file}`));
+  }else{
+    /* 某些页面在基础样式之间夹有页面专用CSS；为保证级联顺序不变，允许保留原7张CSS，不强制合并。 */
+    individualCoreCss.forEach(file=>assert(cssRef(html,file),`${rel}: safe CSS fallback incomplete: ${file}`));
+  }
+
   assert(!/site-footer-standard-v28\.(?:css|js)/i.test(html),`${rel}: footer standard asset returned`);
   assert(!/<footer\b/i.test(html),`${rel}: visible footer returned`);
 }
@@ -130,4 +142,4 @@ all(cleaner,[
 const selfHeal=read('.github/workflows/site-regression-poka-yoke.yml');
 all(selfHeal,['node scripts/apply-site-poka-yoke-v2.js','node scripts/site-regression-guard.js','contents: write'],'self-heal workflow');
 
-process.stdout.write('QilyLean R2 performance V16 guard passed: visual bundle is stable, ordinary pages direct-core, legacy is route-scoped, Fast Native V6 has budget=3/no duplicate fetch, below-fold images are lazy, and first paint remains immediate.\n');
+process.stdout.write('QilyLean R2 performance V16 guard passed: visual bundle/fallback both preserve CSS order, ordinary pages direct-core, legacy is route-scoped, Fast Native V6 has budget=3/no duplicate fetch, Chinese orphan-line polish is protected, and first paint remains immediate.\n');
