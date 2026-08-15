@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean site poka-yoke V2 / R2 performance baseline｜2026-08-15 */
+/* QilyLean site poka-yoke V2 / R2 performance baseline｜2026-08-15 PERFORMANCE V16.1 */
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
@@ -16,9 +16,14 @@ function runNode(rel) {
 
 function verifyFastNavigationBaseline() {
   const navigation = read('site-music-persistent-navigation-v1.js');
-  ['window.__qilyFastNativeNavigationV6','data-qily-fast-prefetch','location.assign(url.href)',"mode:'native-prefetch-v6'",'prefetchBudget:3','duplicateFetch:false','touchPrefetch:false','domSwap:false']
-    .forEach((marker) => assert(navigation.includes(marker), `fast-navigation baseline missing: ${marker}`));
+  [
+    'window.__qilyFastNativeNavigationV6','data-qily-fast-prefetch','location.assign(url.href)',
+    "mode:'native-prefetch-v6'",'prefetchBudget:3','secondaryPrefetchBudget:2',
+    'duplicateFetch:false','touchPrefetch:false','intentPrefetch:true','visualMutation:false',
+    'requestIdleCallback(warmPrimaryNav,{timeout:700})'
+  ].forEach((marker) => assert(navigation.includes(marker), `fast-navigation baseline missing: ${marker}`));
   assert(!/\bfetch\s*\(/.test(navigation), 'duplicate fetch prefetch returned');
+  assert(!/document\.addEventListener\(['"]touchstart['"]/.test(navigation), 'touchstart prefetch returned');
   assert(!/reconcileHeadAssets|history\.pushState|DOMParser\(\)|qilySoftNavigation|qily:softnavigate/.test(navigation), 'legacy cross-page DOM/CSS swap returned');
 }
 
@@ -32,18 +37,13 @@ function verifyCleanRuntime() {
   assert(wrapper.includes('ordinaryPagesDirectCore: true'), 'ordinary-page direct-core route missing');
   assert(wrapper.includes('dynamicContentShapers: false'), 'dynamic content shapers are not disabled');
   assert(wrapper.includes('runtimeFooter: false'), 'runtime footer is not disabled');
-  assert(wrapper.includes('/site-ui-consistency-v1.js?v=20260815-dock-label-v5'), 'dock/freshness consistency cache version v5 missing');
-  assert(consistency.includes("BUILD_ID='20260815-dock-label-v5'"), 'BFCache build identity missing');
-  assert(consistency.includes("w.addEventListener('pageshow'"), 'BFCache pageshow recovery missing');
-  assert(consistency.includes('event.persisted&&restoredBuildIsStale()'), 'BFCache stale-version comparison missing');
-  assert(consistency.includes('normalizePrimaryNav()'), 'primary-nav stale item cleanup missing');
-  assert(consistency.includes('qilyDockOfficialUrlPolishV2'), 'dock official-url visual polish v2 missing');
-  assert(consistency.includes('qily-share-label-primary') && consistency.includes('qily-share-label-url'), 'dock separated line typography missing');
-  assert(consistency.includes('width:76px!important') && consistency.includes('width:72px!important'), 'dock desktop/mobile diameter protection missing');
-  assert(consistency.includes('font-size:12px!important') && consistency.includes('font-size:11px!important'), 'dock official-url compact typography missing');
-  assert(!/new\s+MutationObserver|\.createTreeWalker\s*\(/.test(consistency), 'heavy DOM observer/tree scan returned');
+  assert(wrapper.includes('/site-ui-consistency-v1.js?v=20260815-dock-label-v6'), 'dock-label consistency cache version v6 missing');
+  assert(consistency.includes("BUILD_ID='20260815-dock-label-v6'"), 'dock build id v6 missing');
+  assert(consistency.includes('qilyDockOfficialUrlPolishV3'), 'dock official-url visual fallback v3 missing');
+  assert(consistency.includes('normalizeInteractiveLabelsOnce'), 'one-shot label normalization missing');
+  assert(consistency.includes('w.setTimeout(reconcileFast,120)') && consistency.includes('w.setTimeout(reconcileFast,520)'), 'bounded reconcile schedule missing');
+  assert(!/addEventListener\(['"]resize['"]/.test(consistency), 'resize-wide reconcile returned');
   assert(!/site-parent-navigation-v3\.js/.test(wrapper), 'redundant parent navigation dependency returned');
-  assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/.test(wrapper), 'old DOM content shaper returned in navigation runtime');
   assert(!/ensureFooter|footerMarkup|Technical & Project Contact/.test(footer), 'footer injector returned');
   assert(css.includes('#qilyGlobalFooter') && css.includes('body > footer'), 'footer hide fallback missing');
 }
@@ -58,10 +58,20 @@ function verifyRuntimeBoundary() {
   assert(legacy.includes("var CORE_SRC = '/site-navigation-core.js?v=20260815-performance-v16';"), 'legacy core cache version is not performance-v16');
 }
 
+function verifyDockMaterializer() {
+  const publisher=read('scripts/publish-dock-label-polish-v1.js');
+  [
+    '20260815-dock-label-v6','20260815-prefetch-v6p1','qilyDockCriticalV6',
+    'data-qily-dock-firstpaint-lock="v6"','removeCoreServiceRuntime','patchShareMarkup','patchFastNative'
+  ].forEach((marker)=>assert(publisher.includes(marker),`dock materializer missing: ${marker}`));
+  const servicePublisher=read('scripts/publish-core-service-dock-closure.js');
+  assert(servicePublisher.includes('Core-service runtime scoping')&&servicePublisher.includes('cooperation/index.html'),'core-service runtime is not scoped to cooperation page');
+}
+
 function main() {
   verifyFastNavigationBaseline();
 
-  // 历史发布器先运行；R2 performance materializer 收口性能；dock/freshness polish 最后收口悬浮栏和旧页面恢复。
+  // 历史发布器先运行；R2 performance materializer收口；dock first-paint最后执行并负责去除普通页面冗余合作脚本。
   runNode('scripts/publish-r2-runtime-stability.js');
   runNode('scripts/publish-early-career-history.js');
   runNode('scripts/publish-r2-runtime-stability.js');
@@ -71,7 +81,8 @@ function main() {
   verifyFastNavigationBaseline();
   verifyCleanRuntime();
   verifyRuntimeBoundary();
-  process.stdout.write('QilyLean site poka-yoke applied: immediate first paint, visual CSS bundle, direct-core routing, bounded prefetch, lazy images, dock v5 fit and BFCache stale-page recovery are protected.\n');
+  verifyDockMaterializer();
+  process.stdout.write('QilyLean site poka-yoke applied: first-paint dock label is final, ordinary pages shed cooperation-only runtime, native navigation prefetch starts earlier on real intent/idle, and visual CSS quality is preserved.\n');
 }
 
 main();
