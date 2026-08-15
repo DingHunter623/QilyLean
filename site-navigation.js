@@ -7,9 +7,9 @@
   if (w.__qilyStaticFirstNavigationV20) return;
   w.__qilyStaticFirstNavigationV20 = true;
 
-  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260815-official-url-parent-route-v1';
-  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260814-url-v14';
-  var PARENT_SRC = '/site-parent-navigation-v3.js?v=20260813-operating-axis-nav-v4';
+  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260815-performance-v2';
+  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260815-performance-v15';
+  var PARENT_SRC = '/site-parent-navigation-v3.js?v=20260815-performance-v4';
 
   function appendLegacy() {
     if (w.__qilyLeanSiteNavigationPublicV8) return;
