@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean site poka-yoke V2 / R2 performance baseline｜2026-08-15 PERFORMANCE V16.1 */
+/* QilyLean site poka-yoke V2 / R2 performance baseline｜2026-08-15 PERFORMANCE V16.2 */
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
@@ -64,25 +64,34 @@ function verifyDockMaterializer() {
     '20260815-dock-label-v6','20260815-prefetch-v6p1','qilyDockCriticalV6',
     'data-qily-dock-firstpaint-lock="v6"','removeCoreServiceRuntime','patchShareMarkup','patchFastNative'
   ].forEach((marker)=>assert(publisher.includes(marker),`dock materializer missing: ${marker}`));
+
   const servicePublisher=read('scripts/publish-core-service-dock-closure.js');
-  assert(servicePublisher.includes('Core-service runtime scoping')&&servicePublisher.includes('cooperation/index.html'),'core-service runtime is not scoped to cooperation page');
+  assert(servicePublisher.includes('20260815-cooperation-dock-v6'),'cooperation dock cache version v6 missing');
+  assert(servicePublisher.includes('cooperation/index.html'),'core-service runtime is not scoped to cooperation page');
+
+  const serviceRuntime=read('site-core-service-dock-closure-v1.js');
+  assert(serviceRuntime.includes('__qilyCoreServiceDockClosureV6'),'cooperation lightweight runtime v6 missing');
+  assert(serviceRuntime.includes('分享</span><span class="qily-share-label-line qily-share-label-url">官方网址'),'cooperation dock final official-url markup missing');
+  assert(!serviceRuntime.includes("share:{html:'分享<br>官网'"),'cooperation runtime old share-site label returned');
+  assert(!/new\s+MutationObserver|\.observe\(d\.documentElement/.test(serviceRuntime),'cooperation runtime heavy document observer returned');
 }
 
 function main() {
   verifyFastNavigationBaseline();
 
-  // 历史发布器先运行；R2 performance materializer收口；dock first-paint最后执行并负责去除普通页面冗余合作脚本。
+  // 历史发布器先运行；R2性能收口；合作页专用轻量运行时物化；dock首帧最后统一视觉与缓存。
   runNode('scripts/publish-r2-runtime-stability.js');
   runNode('scripts/publish-early-career-history.js');
   runNode('scripts/publish-r2-runtime-stability.js');
   runNode('scripts/publish-r2-clean-runtime-v3.js');
+  runNode('scripts/publish-core-service-dock-closure.js');
   runNode('scripts/publish-dock-label-polish-v1.js');
 
   verifyFastNavigationBaseline();
   verifyCleanRuntime();
   verifyRuntimeBoundary();
   verifyDockMaterializer();
-  process.stdout.write('QilyLean site poka-yoke applied: first-paint dock label is final, ordinary pages shed cooperation-only runtime, native navigation prefetch starts earlier on real intent/idle, and visual CSS quality is preserved.\n');
+  process.stdout.write('QilyLean site poka-yoke applied: cooperation dock is lightweight v6 with final official-url label, first-paint dock is stable, native navigation prefetch stays fast, and visual quality is preserved.\n');
 }
 
 main();
