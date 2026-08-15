@@ -1,11 +1,14 @@
-/* QilyLean 轻量术语与父级导航防错 v2｜2026-08-15
+/* QilyLean 轻量术语与父级导航防错 v2.1｜2026-08-15
  * 性能原则：不做全站 MutationObserver，不反复扫描正文，不重写整页 DOM。
- * 仅处理悬浮栏与“返回上一层”必要交互，避免移动端/桌面端主线程卡死。
+ * 静态 HTML 与 CSS 已是权威源，运行时立即解除首屏隐藏，仅处理必要交互。
  */
 (function(d,w){
   'use strict';
   if(w.__qilyUiConsistencyV2)return;
   w.__qilyUiConsistencyV2=true;
+
+  /* 静态页面无需等待 window.load；尽早解除旧首屏隐藏。 */
+  d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
 
   function normalizedPath(path){
     var value=(path||'/').replace(/\/index\.html$/,'/').replace(/\/{2,}/g,'/');
@@ -128,12 +131,11 @@
   function boot(){
     normalizeInteractiveLabels();
     if(!normalizeDock()){
-      /* 只做少量定时重试，不监听全站 DOM 变化。 */
       [120,450,1000].forEach(function(delay){w.setTimeout(normalizeDock,delay);});
     }
   }
 
-  /* 已在本脚本实现父级导航，阻止后续再加载体量较大的旧 parent-navigation-v3 运行时。 */
+  /* 本脚本已实现父级导航，阻止包装器再加载旧的重型 parent-navigation 运行时。 */
   w.__qilyParentNavigationV3=true;
 
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});
