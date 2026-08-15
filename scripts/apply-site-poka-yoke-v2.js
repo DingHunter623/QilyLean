@@ -32,9 +32,11 @@ function verifyCleanRuntime() {
   assert(wrapper.includes('ordinaryPagesDirectCore: true'), 'ordinary-page direct-core route missing');
   assert(wrapper.includes('dynamicContentShapers: false'), 'dynamic content shapers are not disabled');
   assert(wrapper.includes('runtimeFooter: false'), 'runtime footer is not disabled');
-  assert(wrapper.includes('/site-ui-consistency-v1.js?v=20260815-dock-label-v3'), 'dock-label consistency cache version missing');
-  assert(consistency.includes('qilyDockOfficialUrlPolishV1'), 'dock official-url visual polish missing');
-  assert(consistency.includes('qily-share-label-line'), 'dock two-line official-url label missing');
+  assert(wrapper.includes('/site-ui-consistency-v1.js?v=20260815-dock-label-v4'), 'dock-label consistency cache version v4 missing');
+  assert(consistency.includes('qilyDockOfficialUrlPolishV2'), 'dock official-url visual polish v2 missing');
+  assert(consistency.includes('qily-share-label-main') && consistency.includes('qily-share-label-url'), 'dock separated line typography missing');
+  assert(consistency.includes('width:76px!important') && consistency.includes('width:72px!important'), 'dock desktop/mobile diameter protection missing');
+  assert(consistency.includes('font-size:12px!important') && consistency.includes('font-size:11px!important'), 'dock official-url compact typography missing');
   assert(!/site-parent-navigation-v3\.js/.test(wrapper), 'redundant parent navigation dependency returned');
   assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/.test(wrapper), 'old DOM content shaper returned in navigation runtime');
   assert(!/ensureFooter|footerMarkup|Technical & Project Contact/.test(footer), 'footer injector returned');
@@ -64,7 +66,7 @@ function main() {
   verifyFastNavigationBaseline();
   verifyCleanRuntime();
   verifyRuntimeBoundary();
-  process.stdout.write('QilyLean site poka-yoke applied: immediate first paint, visual CSS bundle, route-scoped legacy, direct-core ordinary pages, budgeted native prefetch, lazy below-fold images and two-line dock official-url label are protected.\n');
+  process.stdout.write('QilyLean site poka-yoke applied: immediate first paint, visual CSS bundle, route-scoped legacy, direct-core ordinary pages, bounded prefetch, lazy below-fold images and dock official-url v4 desktop/mobile fit are protected.\n');
 }
 
 main();
