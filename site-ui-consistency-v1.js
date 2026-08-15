@@ -1,4 +1,4 @@
-/* QilyLean 轻量术语与父级导航防错 v2.1｜2026-08-15
+/* QilyLean 轻量术语与父级导航防错 v2.2｜2026-08-15
  * 性能原则：不做全站 MutationObserver，不反复扫描正文，不重写整页 DOM。
  * 静态 HTML 与 CSS 已是权威源，运行时立即解除首屏隐藏，仅处理必要交互。
  */
@@ -93,9 +93,22 @@
     navigateParent();
   },true);
 
+  function ensureDockPolish(){
+    if(d.getElementById('qilyDockOfficialUrlPolishV1'))return;
+    var style=d.createElement('style');
+    style.id='qilyDockOfficialUrlPolishV1';
+    style.textContent=[
+      '#floatDock [data-action="share"]{width:68px!important;min-width:68px!important;height:68px!important;min-height:68px!important;padding:5px 2px!important;border-radius:50%!important;font-size:13px!important;line-height:1.08!important;letter-spacing:0!important;white-space:nowrap!important;overflow:visible!important}',
+      '#floatDock [data-action="share"] .qily-share-label-line{display:block!important;white-space:nowrap!important;text-align:center!important}',
+      '@media(max-width:640px){#floatDock [data-action="share"]{width:64px!important;min-width:64px!important;height:64px!important;min-height:64px!important;font-size:12px!important;padding:4px 1px!important}}'
+    ].join('');
+    (d.head||d.documentElement).appendChild(style);
+  }
+
   function normalizeDock(){
     var dock=d.getElementById('floatDock');
     if(!dock)return false;
+    ensureDockPolish();
     var back=dock.querySelector('[data-action="back"]');
     if(back){
       back.setAttribute('data-parent-route',parentRoute(location.pathname));
@@ -104,8 +117,7 @@
     }
     var share=dock.querySelector('[data-action="share"]');
     if(share){
-      var current=(share.textContent||'').replace(/\s+/g,'');
-      if(current!=='分享官方网址')share.innerHTML='分享<br>官方网址';
+      share.innerHTML='<span class="qily-share-label-line">分享</span><span class="qily-share-label-line">官方网址</span>';
       share.setAttribute('title','分享官方网址');
       share.setAttribute('aria-label','分享官方网址');
     }
@@ -129,6 +141,7 @@
   }
 
   function boot(){
+    ensureDockPolish();
     normalizeInteractiveLabels();
     if(!normalizeDock()){
       [120,450,1000].forEach(function(delay){w.setTimeout(normalizeDock,delay);});
