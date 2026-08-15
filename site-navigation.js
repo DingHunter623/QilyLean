@@ -1,6 +1,7 @@
-/* QilyLean R2 static-first navigation runtime v21｜2026-08-15
+/* QilyLean R2 static-first navigation runtime v21.1｜2026-08-15
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
  * 性能：普通页面直达 core；仅合作/资源页面按需加载 legacy，避免全站下载报价与资源逻辑。
+ * 可视化：中文正文启用 pretty wrap / strict line-break，标题平衡换行，避免单字孤行。
  */
 (function (d, w) {
   'use strict';
@@ -10,6 +11,18 @@
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260815-performance-v2';
   var CORE_SRC = '/site-navigation-core.js?v=20260815-performance-v16';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260815-performance-v16';
+
+  function installTypographyPolish() {
+    if (d.getElementById('qilyChineseWrapPolishV1')) return;
+    var style = d.createElement('style');
+    style.id = 'qilyChineseWrapPolishV1';
+    style.textContent = [
+      'html body main :is(h1,h2,h3,h4){text-wrap:balance;line-break:strict}',
+      'html body main :is(p,li,.module-result,.career-result,.qily-asset-note,.evidence-note,.service-contract,.record,.fine){text-wrap:pretty;line-break:strict;word-break:normal;overflow-wrap:break-word}',
+      '@media (min-width:760px){html body main li{letter-spacing:-.008em}}'
+    ].join('');
+    (d.head || d.documentElement).appendChild(style);
+  }
 
   function needsLegacyRuntime() {
     var path = (location.pathname || '/').replace(/\/index\.html$/, '/');
@@ -72,6 +85,7 @@
     d.querySelectorAll('#floatDock.qily-float-dock .qily-float-btn').forEach(bindDockButton);
   }
 
+  installTypographyPolish();
   loadConsistencyGuard();
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', bindDock, { once: true });
   else bindDock();
@@ -87,6 +101,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   nativePrefetch: true,
   routeScopedLegacy: true,
   ordinaryPagesDirectCore: true,
+  chineseWrapPolish: true,
   dockActions: [
     'data-action="home"', 'data-action="top"', 'data-action="back"',
     'data-action="search"', 'data-action="current"', 'data-action="share"',
