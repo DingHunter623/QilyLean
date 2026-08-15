@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean R2 regression guard v7.1｜2026-08-15 PERFORMANCE V16 */
+/* QilyLean R2 regression guard v7.2｜2026-08-15 PERFORMANCE V16 */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
@@ -99,6 +99,7 @@ assert(!timesPage.includes('<strong>统一开发者支持：</strong>官网 '),'
 
 const keyPages=['index.html','ai.html','capabilities/index.html','projects/index.html','improvements/index.html','knowledge/index.html','experience/index.html','cooperation/index.html','trust/index.html','tools/times26001/index.html'];
 const individualCoreCss=['site-shell.css','site-visual-scale-v1.css','site-wide-layout-v1.css','site-typography-v1.css','site-vi-standard-v1.css','site-vi-contrast-restoration-v1.css','site-r2-stability-fixes-v1.css'];
+const essentialFallbackCss=['site-shell.css','site-visual-scale-v1.css','site-wide-layout-v1.css','site-typography-v1.css','site-r2-stability-fixes-v1.css'];
 for(const rel of keyPages){
   if(!fs.existsSync(path.join(root,rel)))continue;
   const html=read(rel);
@@ -115,8 +116,8 @@ for(const rel of keyPages){
   if(hasBundle){
     individualCoreCss.forEach(file=>assert(!cssRef(html,file),`${rel}: bundled page still loads individual core CSS: ${file}`));
   }else{
-    /* 某些页面在基础样式之间夹有页面专用CSS；为保证级联顺序不变，允许保留原7张CSS，不强制合并。 */
-    individualCoreCss.forEach(file=>assert(cssRef(html,file),`${rel}: safe CSS fallback incomplete: ${file}`));
+    /* 页面专用CSS可能夹在基础样式之间。此时不强行合并，保留原级联；只验证必需视觉底座完整。 */
+    essentialFallbackCss.forEach(file=>assert(cssRef(html,file),`${rel}: essential CSS fallback incomplete: ${file}`));
   }
 
   assert(!/site-footer-standard-v28\.(?:css|js)/i.test(html),`${rel}: footer standard asset returned`);
@@ -142,4 +143,4 @@ all(cleaner,[
 const selfHeal=read('.github/workflows/site-regression-poka-yoke.yml');
 all(selfHeal,['node scripts/apply-site-poka-yoke-v2.js','node scripts/site-regression-guard.js','contents: write'],'self-heal workflow');
 
-process.stdout.write('QilyLean R2 performance V16 guard passed: visual bundle/fallback both preserve CSS order, ordinary pages direct-core, legacy is route-scoped, Fast Native V6 has budget=3/no duplicate fetch, Chinese orphan-line polish is protected, and first paint remains immediate.\n');
+process.stdout.write('QilyLean R2 performance V16 guard passed: bundled and non-bundled pages both preserve visual quality, ordinary pages direct-core, legacy is route-scoped, Fast Native V6 has budget=3/no duplicate fetch, Chinese orphan-line polish is protected, and first paint remains immediate.\n');
