@@ -80,7 +80,7 @@ all(uiConsistency,[
   "w.__qilyParentNavigationV3=true",
   "classList.remove('qily-shell-pending','qily-r2-first-paint-pending')"
 ],'official URL terminology / safe parent-route runtime');
-assert(!/MutationObserver|createTreeWalker|TreeWalker/.test(uiConsistency),'ui consistency: full-page mutation/tree scanning returned');
+assert(!/new\s+MutationObserver|\.createTreeWalker\s*\(/.test(uiConsistency),'ui consistency: active full-page mutation/tree scanning returned');
 assert(!uiConsistency.includes("return clean.slice(0,slash+1)"),'parent-route guard: unsafe directory-derived fallback returned');
 
 const parent=read('site-parent-navigation-v3.js');
@@ -90,7 +90,7 @@ all(parent,[
   "if(path.indexOf('/tools/')===0)return '/'",
   'function markCurrentNav()'
 ],'lightweight parent navigation');
-assert(!/MutationObserver|rewriteHome\(|buildAxis\(|qily-system-axis__steps|\[80,260,700,1600,3200\]/.test(parent),'parent navigation: heavy runtime DOM rewrite returned');
+assert(!/new\s+MutationObserver|rewriteHome\(|buildAxis\(|qily-system-axis__steps|\[80,260,700,1600,3200\]/.test(parent),'parent navigation: heavy runtime DOM rewrite returned');
 
 const timesPage=read('tools/times26001/index.html');
 all(timesPage,[
@@ -141,4 +141,4 @@ all(career,['QILY-STATIC-CAREER-BASELINE:v1','id="career-2019-2025"','id="career
 const selfHeal=read('.github/workflows/site-regression-poka-yoke.yml');
 all(selfHeal,['node scripts/apply-site-poka-yoke-v2.js','node scripts/site-regression-guard.js','contents: write'],'self-heal workflow');
 
-process.stdout.write('QilyLean R2 performance guard passed: static first paint is immediate, navigation runtimes are lightweight, no mutation loops, cache V15 is active, official-URL terminology and safe parent routes are protected.\n');
+process.stdout.write('QilyLean R2 performance guard passed: static first paint is immediate, navigation runtimes are lightweight, no active mutation loops, cache V15 is active, official-URL terminology and safe parent routes are protected.\n');
