@@ -1,8 +1,11 @@
-/* QilyLean 全站术语与父级导航防错闭环 v1｜2026-08-15 */
+/* QilyLean 轻量术语与父级导航防错 v2｜2026-08-15
+ * 性能原则：不做全站 MutationObserver，不反复扫描正文，不重写整页 DOM。
+ * 仅处理悬浮栏与“返回上一层”必要交互，避免移动端/桌面端主线程卡死。
+ */
 (function(d,w){
   'use strict';
-  if(w.__qilyUiConsistencyV1)return;
-  w.__qilyUiConsistencyV1=true;
+  if(w.__qilyUiConsistencyV2)return;
+  w.__qilyUiConsistencyV2=true;
 
   function normalizedPath(path){
     var value=(path||'/').replace(/\/index\.html$/,'/').replace(/\/{2,}/g,'/');
@@ -23,52 +26,37 @@
     if(configured)return configured;
     if(path==='/')return '/';
 
-    /* Times26001 与应用支持页：禁止按物理目录回退到不存在的 /tools/ 或 /legal/times26001/。 */
     if(/^\/legal\/times26001\/(?:privacy|terms)\/$/.test(path))return '/tools/times26001/';
     if(path==='/app-support/')return '/tools/times26001/';
     if(path.indexOf('/tools/')===0)return '/';
 
-    /* 每日简报详情先返回简报目录，再返回知识资产。 */
     if(/^\/qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html$/.test(path))return '/qilylean/daily-insights.html';
     if(path==='/qilylean/daily-insights.html')return '/knowledge/';
 
-    /* 制造改善佐证在线预览页先返回佐证总页。 */
     if(path.indexOf('/projects/lean-improvement-evidence/')===0&&path!=='/projects/lean-improvement-evidence/')return '/projects/lean-improvement-evidence/';
-
-    /* 旧知识路径统一归入知识资产。 */
     if(/^\/qilylean\/(?:lean-knowledge|lean-tools|execution-loop|gbt2828|production-operations-organization|reference-[^/]+)\.html$/.test(path))return '/knowledge/';
 
-    /* 一级栏目详情返回所属栏目。 */
     var roots=['projects','improvements','capabilities','experience','knowledge','moments','cooperation','links','trust'];
     for(var i=0;i<roots.length;i++){
       var root='/'+roots[i]+'/';
       if(path.indexOf(root)===0&&path!==root)return root;
     }
-
-    /* 一级栏目本身返回首页。 */
     if(path==='/ai.html')return '/';
     for(var j=0;j<roots.length;j++)if(path==='/'+roots[j]+'/')return '/';
-
-    /* 分享页、独立页及未归类路径统一安全回首页，不再推导不存在的父目录。 */
     return '/';
-  }
-
-  function isBackButton(target){
-    return target&&target.closest?target.closest('[data-action="back"]'):null;
   }
 
   function navigateParent(){
     var target=parentRoute(location.pathname);
     if(normalizedPath(target)===normalizedPath(location.pathname))target='/';
-    location.href=target;
+    location.assign(target);
   }
 
   var pointer=null;
   var handledAt=0;
 
-  /* 本脚本先于旧父级导航脚本加载，以捕获阶段优先阻止旧逻辑跳入不存在目录。 */
   d.addEventListener('pointerdown',function(event){
-    var button=isBackButton(event.target);
+    var button=event.target&&event.target.closest?event.target.closest('[data-action="back"]'):null;
     if(!button)return;
     pointer={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false};
   },true);
@@ -80,9 +68,9 @@
 
   d.addEventListener('pointerup',function(event){
     if(!pointer||event.pointerId!==pointer.id)return;
-    var shouldNavigate=!pointer.moved;
+    var go=!pointer.moved;
     pointer=null;
-    if(!shouldNavigate)return;
+    if(!go)return;
     handledAt=Date.now();
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -94,7 +82,7 @@
   },true);
 
   d.addEventListener('click',function(event){
-    var button=isBackButton(event.target);
+    var button=event.target&&event.target.closest?event.target.closest('[data-action="back"]'):null;
     if(!button)return;
     event.preventDefault();
     event.stopImmediatePropagation();
@@ -102,60 +90,9 @@
     navigateParent();
   },true);
 
-  function normalizeTextValue(value){
-    var text=String(value||'');
-    if(!text||text.indexOf('官网')===-1)return text;
-    text=text.replace(/官网(?=\s*https?:\/\/(?:www\.)?qilylean\.com)/g,'官方网址');
-    text=text.replace(/官网(?=\s*(?:www\.)?qilylean\.com)/g,'官方网址');
-    text=text.replace(/官网[：:](?=\s*(?:https?:\/\/)?(?:www\.)?qilylean\.com)/g,'官方网址：');
-    text=text.replace(/官网地址/g,'官方网址');
-    text=text.replace(/官网链接/g,'官方网址');
-    text=text.replace(/访问官网/g,'访问官方网址');
-    text=text.replace(/打开官网/g,'打开官方网址');
-    text=text.replace(/前往官网/g,'前往官方网址');
-    text=text.replace(/分享官网/g,'分享官方网址');
-    text=text.replace(/官网与官网邮箱/g,'官方网址与官网邮箱');
-    return text;
-  }
-
-  function normalizeTextNodes(root){
-    if(!root)return;
-    var walker=d.createTreeWalker(root,NodeFilter.SHOW_TEXT,null);
-    var nodes=[];
-    while(walker.nextNode())nodes.push(walker.currentNode);
-    nodes.forEach(function(node){
-      var parent=node.parentElement;
-      if(!parent||/^(SCRIPT|STYLE|TEXTAREA|CODE|PRE)$/.test(parent.tagName))return;
-      var original=node.nodeValue||'';
-      var trimmed=original.trim();
-      var next=normalizeTextValue(original);
-      if(trimmed==='官网'){
-        var href=parent.closest&&parent.closest('a[href]');
-        if(href){
-          var value=href.getAttribute('href')||'';
-          if(value==='/'||/^https?:\/\/(?:www\.)?qilylean\.com\/?$/.test(value))next=original.replace('官网','官方网址');
-        }
-      }
-      if(next!==original)node.nodeValue=next;
-    });
-  }
-
-  function normalizeAttributes(root){
-    var scope=root&&root.querySelectorAll?root:d;
-    scope.querySelectorAll('[aria-label],[title]').forEach(function(node){
-      ['aria-label','title'].forEach(function(name){
-        var value=node.getAttribute(name);
-        if(!value)return;
-        var next=normalizeTextValue(value);
-        if(value==='分享官网')next='分享官方网址';
-        if(next!==value)node.setAttribute(name,next);
-      });
-    });
-  }
-
   function normalizeDock(){
     var dock=d.getElementById('floatDock');
-    if(!dock)return;
+    if(!dock)return false;
     var back=dock.querySelector('[data-action="back"]');
     if(back){
       back.setAttribute('data-parent-route',parentRoute(location.pathname));
@@ -164,33 +101,41 @@
     }
     var share=dock.querySelector('[data-action="share"]');
     if(share){
-      share.innerHTML='分享<br>官方网址';
+      var current=(share.textContent||'').replace(/\s+/g,'');
+      if(current!=='分享官方网址')share.innerHTML='分享<br>官方网址';
       share.setAttribute('title','分享官方网址');
       share.setAttribute('aria-label','分享官方网址');
     }
+    return true;
   }
 
-  function run(root){
-    normalizeDock();
-    normalizeTextNodes(root||d.body);
-    normalizeAttributes(root||d);
-  }
-
-  function start(){
-    run(d.body);
-    var observer=new MutationObserver(function(records){
-      records.forEach(function(record){
-        Array.from(record.addedNodes||[]).forEach(function(node){
-          if(node.nodeType===1)run(node);
-          else if(node.nodeType===3&&node.parentElement)run(node.parentElement);
-        });
+  function normalizeInteractiveLabels(){
+    d.querySelectorAll('a,button,[aria-label],[title]').forEach(function(node){
+      if(node.childElementCount===0){
+        var text=node.textContent||'';
+        if(text.trim()==='官网')node.textContent=text.replace('官网','官方网址');
+        else if(text.trim()==='分享官网')node.textContent=text.replace('分享官网','分享官方网址');
+      }
+      ['aria-label','title'].forEach(function(name){
+        var value=node.getAttribute&&node.getAttribute(name);
+        if(!value)return;
+        var next=value.replace(/分享官网/g,'分享官方网址').replace(/访问官网/g,'访问官方网址').replace(/打开官网/g,'打开官方网址').replace(/前往官网/g,'前往官方网址');
+        if(next!==value)node.setAttribute(name,next);
       });
-      normalizeDock();
     });
-    observer.observe(d.documentElement,{childList:true,subtree:true});
-    [180,600,1400,2800].forEach(function(delay){w.setTimeout(function(){run(d.body);},delay);});
   }
 
-  if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',start,{once:true});
-  else start();
+  function boot(){
+    normalizeInteractiveLabels();
+    if(!normalizeDock()){
+      /* 只做少量定时重试，不监听全站 DOM 变化。 */
+      [120,450,1000].forEach(function(delay){w.setTimeout(normalizeDock,delay);});
+    }
+  }
+
+  /* 已在本脚本实现父级导航，阻止后续再加载体量较大的旧 parent-navigation-v3 运行时。 */
+  w.__qilyParentNavigationV3=true;
+
+  if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});
+  else boot();
 })(document,window);
