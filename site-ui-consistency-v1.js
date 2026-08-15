@@ -1,4 +1,4 @@
-/* QilyLean 轻量术语与父级导航防错 v2.2｜2026-08-15
+/* QilyLean 轻量术语与父级导航防错 v2.3｜2026-08-15
  * 性能原则：不做全站 MutationObserver，不反复扫描正文，不重写整页 DOM。
  * 静态 HTML 与 CSS 已是权威源，运行时立即解除首屏隐藏，仅处理必要交互。
  */
@@ -94,13 +94,17 @@
   },true);
 
   function ensureDockPolish(){
-    if(d.getElementById('qilyDockOfficialUrlPolishV1'))return;
+    if(d.getElementById('qilyDockOfficialUrlPolishV2'))return;
+    var old=d.getElementById('qilyDockOfficialUrlPolishV1');
+    if(old)old.remove();
     var style=d.createElement('style');
-    style.id='qilyDockOfficialUrlPolishV1';
+    style.id='qilyDockOfficialUrlPolishV2';
     style.textContent=[
-      '#floatDock [data-action="share"]{width:68px!important;min-width:68px!important;height:68px!important;min-height:68px!important;padding:5px 2px!important;border-radius:50%!important;font-size:13px!important;line-height:1.08!important;letter-spacing:0!important;white-space:nowrap!important;overflow:visible!important}',
-      '#floatDock [data-action="share"] .qily-share-label-line{display:block!important;white-space:nowrap!important;text-align:center!important}',
-      '@media(max-width:640px){#floatDock [data-action="share"]{width:64px!important;min-width:64px!important;height:64px!important;min-height:64px!important;font-size:12px!important;padding:4px 1px!important}}'
+      '#floatDock [data-action="share"]{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2px!important;width:76px!important;min-width:76px!important;max-width:76px!important;height:76px!important;min-height:76px!important;max-height:76px!important;padding:7px 5px!important;box-sizing:border-box!important;border-radius:50%!important;line-height:1!important;letter-spacing:0!important;white-space:nowrap!important;overflow:hidden!important}',
+      '#floatDock [data-action="share"] .qily-share-label-line{display:block!important;max-width:100%!important;margin:0!important;padding:0!important;white-space:nowrap!important;text-align:center!important;line-height:1.02!important}',
+      '#floatDock [data-action="share"] .qily-share-label-main{font-size:16px!important;font-weight:950!important}',
+      '#floatDock [data-action="share"] .qily-share-label-url{font-size:12px!important;font-weight:900!important;letter-spacing:-.02em!important}',
+      '@media(max-width:640px){#floatDock [data-action="share"]{width:72px!important;min-width:72px!important;max-width:72px!important;height:72px!important;min-height:72px!important;max-height:72px!important;padding:6px 4px!important;gap:2px!important}#floatDock [data-action="share"] .qily-share-label-main{font-size:15px!important}#floatDock [data-action="share"] .qily-share-label-url{font-size:11px!important;letter-spacing:-.03em!important}}'
     ].join('');
     (d.head||d.documentElement).appendChild(style);
   }
@@ -117,7 +121,7 @@
     }
     var share=dock.querySelector('[data-action="share"]');
     if(share){
-      share.innerHTML='<span class="qily-share-label-line">分享</span><span class="qily-share-label-line">官方网址</span>';
+      share.innerHTML='<span class="qily-share-label-line qily-share-label-main">分享</span><span class="qily-share-label-line qily-share-label-url">官方网址</span>';
       share.setAttribute('title','分享官方网址');
       share.setAttribute('aria-label','分享官方网址');
     }
