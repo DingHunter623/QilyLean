@@ -1,15 +1,14 @@
-/* QilyLean 轻量术语、父级导航与页面新鲜度防错 v2.5｜2026-08-15
- * 性能原则：不做全站 MutationObserver，不反复扫描正文，不重写整页 DOM。
- * 目标：统一悬浮栏“分享官方网址”、清理旧主导航“友情链接”，并在浏览器 BFCache 恢复旧页面时自动校正/刷新。
+/* QilyLean 轻量术语、父级导航与页面新鲜度防错 v2.6｜2026-08-15
+ * 性能原则：静态HTML首帧即正确；运行时只做必要校正，不反复扫描正文、不监听整页DOM。
+ * 目标：统一悬浮栏“分享官方网址”、清理旧主导航“友情链接”，并在BFCache恢复旧页面时自动校正/刷新。
  */
 (function(d,w){
   'use strict';
   if(w.__qilyUiConsistencyV2)return;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260815-dock-label-v5';
+  var BUILD_ID='20260815-dock-label-v6';
   var BUILD_KEY='qily_site_ui_build_v1';
-  var resizeTimer=0;
 
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
 
@@ -91,9 +90,9 @@
   },true);
 
   function ensureDockPolish(){
-    if(d.getElementById('qilyDockOfficialUrlPolishV2'))return;
+    if(d.getElementById('qilyDockOfficialUrlPolishV3')||d.getElementById('qilyDockCriticalV6'))return;
     var style=d.createElement('style');
-    style.id='qilyDockOfficialUrlPolishV2';
+    style.id='qilyDockOfficialUrlPolishV3';
     style.textContent=[
       '#floatDock [data-action="share"]{width:76px!important;min-width:76px!important;height:76px!important;min-height:76px!important;padding:7px 5px!important;border-radius:50%!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:1px!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;box-sizing:border-box!important}',
       '#floatDock [data-action="share"] .qily-share-label-line{display:block!important;margin:0!important;padding:0!important;white-space:nowrap!important;text-align:center!important;line-height:1.04!important}',
@@ -108,7 +107,6 @@
     var path=normalizedPath(location.pathname);
     d.querySelectorAll('.qily-global-nav,nav.site-nav,nav.nav').forEach(function(nav){
       nav.querySelectorAll('a[href="/links/"],a[href="/links/index.html"]').forEach(function(link){
-        /* 友情链接保留为独立资源页，但不再占用全站核心主导航。 */
         if(path.indexOf('/links/')!==0)link.remove();
       });
     });
@@ -128,13 +126,13 @@
     if(share){
       var html='<span class="qily-share-label-line qily-share-label-primary">分享</span><span class="qily-share-label-line qily-share-label-url">官方网址</span>';
       if(share.innerHTML!==html)share.innerHTML=html;
-      share.setAttribute('title','分享官方网址');
-      share.setAttribute('aria-label','分享官方网址');
+      if(share.getAttribute('title')!=='分享官方网址')share.setAttribute('title','分享官方网址');
+      if(share.getAttribute('aria-label')!=='分享官方网址')share.setAttribute('aria-label','分享官方网址');
     }
     return true;
   }
 
-  function normalizeInteractiveLabels(){
+  function normalizeInteractiveLabelsOnce(){
     d.querySelectorAll('a,button,[aria-label],[title]').forEach(function(node){
       if(node.childElementCount===0){
         var text=node.textContent||'';
@@ -149,32 +147,28 @@
     });
   }
 
-  function reconcile(){
-    ensureDockPolish();
+  function reconcileFast(){
     normalizePrimaryNav();
-    normalizeInteractiveLabels();
     normalizeDock();
   }
 
   function boot(){
     rememberBuild();
-    reconcile();
-    [120,450,1000,1800].forEach(function(delay){w.setTimeout(reconcile,delay);});
+    ensureDockPolish();
+    normalizeInteractiveLabelsOnce();
+    reconcileFast();
+    /* 仅两次短延迟补偿历史defer脚本，不再持续扫描。 */
+    w.setTimeout(reconcileFast,120);
+    w.setTimeout(reconcileFast,520);
   }
 
-  /* BFCache：若浏览器把旧版本 DOM 直接恢复出来，发现站点已有更新版本就自动重新取页。 */
   w.addEventListener('pageshow',function(event){
     if(event.persisted&&restoredBuildIsStale()){
       w.location.reload();
       return;
     }
-    reconcile();
+    reconcileFast();
   });
-  w.addEventListener('load',reconcile,{once:true});
-  w.addEventListener('resize',function(){
-    if(resizeTimer)w.clearTimeout(resizeTimer);
-    resizeTimer=w.setTimeout(reconcile,80);
-  },{passive:true});
 
   w.__qilyParentNavigationV3=true;
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
