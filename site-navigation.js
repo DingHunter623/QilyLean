@@ -1,4 +1,4 @@
-/* QilyLean R2 static-first navigation runtime v20｜2026-08-12
+/* QilyLean R2 static-first navigation runtime v20｜2026-08-15
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
  * 禁止：运行时追加信息架构、品牌信任、转化 CTA、页尾联系栏、正文区块或共享布局 CSS。
  */
@@ -7,6 +7,7 @@
   if (w.__qilyStaticFirstNavigationV20) return;
   w.__qilyStaticFirstNavigationV20 = true;
 
+  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260815-official-url-parent-route-v1';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260814-url-v14';
   var PARENT_SRC = '/site-parent-navigation-v3.js?v=20260813-operating-axis-nav-v4';
 
@@ -44,6 +45,26 @@
     (d.head || d.documentElement).appendChild(script);
   }
 
+  function loadConsistencyGuard() {
+    if (w.__qilyUiConsistencyV1) {
+      loadParentNavigation();
+      return;
+    }
+    var existing = d.querySelector('script[data-qily-ui-consistency],script[src*="/site-ui-consistency-v1.js"]');
+    if (existing) {
+      existing.addEventListener('load', loadParentNavigation, { once: true });
+      if (w.__qilyUiConsistencyV1) loadParentNavigation();
+      return;
+    }
+    var script = d.createElement('script');
+    script.src = CONSISTENCY_SRC;
+    script.async = false;
+    script.setAttribute('data-qily-ui-consistency', 'v1');
+    script.addEventListener('load', loadParentNavigation, { once: true });
+    script.addEventListener('error', loadParentNavigation, { once: true });
+    (d.head || d.documentElement).appendChild(script);
+  }
+
   function release(button) {
     if (!button) return;
     if (button.__qilyPressedTimer) w.clearTimeout(button.__qilyPressedTimer);
@@ -68,7 +89,7 @@
     d.querySelectorAll('#floatDock.qily-float-dock .qily-float-btn').forEach(bindDockButton);
   }
 
-  loadParentNavigation();
+  loadConsistencyGuard();
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', bindDock, { once: true });
   else bindDock();
   [120, 500, 1200].forEach(function (delay) { w.setTimeout(bindDock, delay); });
