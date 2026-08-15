@@ -2,14 +2,15 @@
 'use strict';
 
 /*
- * QilyLean R2 clean runtime v5｜2026-08-15 PERFORMANCE V16
+ * QilyLean R2 clean runtime v5.1｜2026-08-15 PERFORMANCE V16
  * 目的：
  * 1) 静态 HTML 立即可见，不等待 window.load；
  * 2) 普通页面仅加载轻量 core，合作/资源页面才按需加载 legacy；
  * 3) Fast Native V6 单一预取机制，最多空闲预热3个页面，不做重复 fetch；
  * 4) 七个全站基础 CSS 在构建期按原顺序合并，减少阻塞请求且不改变级联顺序；
  * 5) 首张图片保持首屏策略，其余图片默认 lazy + async decoding；
- * 6) 移除页面直接加载的 parent-navigation，统一由轻量 consistency 处理返回上一层。
+ * 6) 移除页面直接加载的 parent-navigation，统一由轻量 consistency 处理返回上一层；
+ * 7) CSS bundle 已存在时清除后续历史发布器重新注入的重复基础CSS，保证自愈流程幂等。
  */
 
 const fs = require('fs');
@@ -92,8 +93,20 @@ function materializeCoreCssBundle(){
   });
   write('site-core-visual-bundle-v1.css',`/* QilyLean core visual bundle v1｜${CORE_CSS_VERSION}\n * 构建期按既有顺序合并，不改任何选择器与声明。\n */\n${parts.join('\n')}`);
 }
+function stripIndividualCoreCss(html){
+  let out=html;
+  for(const file of CORE_CSS_FILES){
+    const re=new RegExp(`\\s*<link\\b[^>]*href=["'][^"']*\\/${escapeRe(file)}(?:\\?[^"']*)?["'][^>]*>\\s*`,'gi');
+    out=out.replace(re,'\n');
+  }
+  return out;
+}
 function installCoreCssBundle(html){
-  if(html.includes('/site-core-visual-bundle-v1.css'))return html.replace(/\/site-core-visual-bundle-v1\.css\?v=[^"'\s<]+/g,CORE_CSS_BUNDLE);
+  if(html.includes('/site-core-visual-bundle-v1.css')){
+    let out=html.replace(/\/site-core-visual-bundle-v1\.css\?v=[^"'\s<]+/g,CORE_CSS_BUNDLE);
+    out=stripIndividualCoreCss(out);
+    return out;
+  }
   const matches=[];
   for(const file of CORE_CSS_FILES){
     const re=new RegExp(`<link\\b[^>]*href=["'][^"']*\\/${escapeRe(file)}(?:\\?[^"']*)?["'][^>]*>`,'i');
@@ -192,4 +205,4 @@ assert(read('site-navigation.js').includes(CORE_JS),'site-navigation.js performa
 assert(read('site-navigation.js').includes(CONSISTENCY_JS),'site-navigation.js lightweight consistency cache version missing');
 assert(read('site-navigation.js').includes('needsLegacyRuntime'),'site-navigation.js route-scoped legacy selector missing');
 assert(read('site-navigation-legacy-20260802.js').includes(`var CORE_SRC = '${CORE_JS}';`),'legacy runtime performance V16 core cache version missing');
-process.stdout.write(`R2 clean runtime v5 checked ${checked} public HTML pages; refreshed ${changed}; bundled core CSS on ${bundled}; added ${lazyImages} lazy image hints; Fast Native V6 budget=3; ordinary pages direct-core; parent runtime request removed.\n`);
+process.stdout.write(`R2 clean runtime v5.1 checked ${checked} public HTML pages; refreshed ${changed}; bundled core CSS on ${bundled}; added ${lazyImages} lazy image hints; Fast Native V6 budget=3; ordinary pages direct-core; duplicate core CSS stripped from bundled pages.\n`);
