@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean site poka-yoke V2 / R2 clean baseline｜2026-08-12 */
+/* QilyLean site poka-yoke V2 / R2 performance baseline｜2026-08-15 */
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
@@ -16,8 +16,9 @@ function runNode(rel) {
 
 function verifyFastNavigationBaseline() {
   const navigation = read('site-music-persistent-navigation-v1.js');
-  ['window.__qilyFastNativeNavigationV5','data-qily-fast-prefetch',"cache:'force-cache'",'location.assign(url.href)',"mode:'native-prefetch-v5'",'domSwap:false']
+  ['window.__qilyFastNativeNavigationV6','data-qily-fast-prefetch','location.assign(url.href)',"mode:'native-prefetch-v6'",'prefetchBudget:3','duplicateFetch:false','touchPrefetch:false','domSwap:false']
     .forEach((marker) => assert(navigation.includes(marker), `fast-navigation baseline missing: ${marker}`));
+  assert(!/\bfetch\s*\(/.test(navigation), 'duplicate fetch prefetch returned');
   assert(!/reconcileHeadAssets|history\.pushState|DOMParser\(\)|qilySoftNavigation|qily:softnavigate/.test(navigation), 'legacy cross-page DOM/CSS swap returned');
 }
 
@@ -25,9 +26,12 @@ function verifyCleanRuntime() {
   const wrapper = read('site-navigation.js');
   const footer = read('site-footer-standard-v28.js');
   const css = read('site-r2-stability-fixes-v1.css');
-  assert(wrapper.includes("mode: 'r2-static-first-v20'"), 'static-first navigation runtime missing');
+  assert(wrapper.includes("mode: 'r2-static-first-v21'"), 'static-first navigation runtime v21 missing');
+  assert(wrapper.includes('routeScopedLegacy: true'), 'route-scoped legacy boundary missing');
+  assert(wrapper.includes('ordinaryPagesDirectCore: true'), 'ordinary-page direct-core route missing');
   assert(wrapper.includes('dynamicContentShapers: false'), 'dynamic content shapers are not disabled');
   assert(wrapper.includes('runtimeFooter: false'), 'runtime footer is not disabled');
+  assert(!/site-parent-navigation-v3\.js/.test(wrapper), 'redundant parent navigation dependency returned');
   assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/.test(wrapper), 'old DOM content shaper returned in navigation runtime');
   assert(!/ensureFooter|footerMarkup|Technical & Project Contact/.test(footer), 'footer injector returned');
   assert(css.includes('#qilyGlobalFooter') && css.includes('body > footer'), 'footer hide fallback missing');
@@ -40,14 +44,13 @@ function verifyRuntimeBoundary() {
   assert(!/^\s*ensureGlobalContactFooter\(\);\s*$/m.test(core), 'runtime global contact footer injection returned');
   assert(!/^\s*ensureKnowledgeDocumentEnhancements\(\);\s*$/m.test(core), 'runtime document contact tail injection returned');
   assert(core.includes("if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();"), 'static-first navigation guard missing');
-  const apply = (legacy.match(/function applyFixes\(\)\s*\{([\s\S]*?)\n\s*\}/) || [])[1] || '';
-  assert(!apply.includes('ensureFriendLinksNavigation();'), 'legacy runtime still adds 友情链接 to primary nav');
+  assert(legacy.includes("var CORE_SRC = '/site-navigation-core.js?v=20260815-performance-v16';"), 'legacy core cache version is not performance-v16');
 }
 
 function main() {
   verifyFastNavigationBaseline();
 
-  // 历史发布器先运行；R2 clean runtime 必须最后运行，负责最终清除旧正文增强与页尾。
+  // 历史发布器先运行；R2 performance materializer 最后收口，确保视觉不降级、请求数下降。
   runNode('scripts/publish-r2-runtime-stability.js');
   runNode('scripts/publish-early-career-history.js');
   runNode('scripts/publish-r2-runtime-stability.js');
@@ -56,7 +59,7 @@ function main() {
   verifyFastNavigationBaseline();
   verifyCleanRuntime();
   verifyRuntimeBoundary();
-  process.stdout.write('QilyLean site poka-yoke R2 clean applied: static-first content, atomic first paint, no visible footer and no dynamic content shapers are protected.\n');
+  process.stdout.write('QilyLean site poka-yoke applied: immediate first paint, visual CSS bundle, route-scoped legacy, direct-core ordinary pages, budgeted native prefetch and lazy below-fold images are protected.\n');
 }
 
 main();

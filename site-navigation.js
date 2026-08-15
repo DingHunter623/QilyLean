@@ -1,67 +1,50 @@
-/* QilyLean R2 static-first navigation runtime v20｜2026-08-15
+/* QilyLean R2 static-first navigation runtime v21｜2026-08-15
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
- * 禁止：运行时追加信息架构、品牌信任、转化 CTA、页尾联系栏、正文区块或共享布局 CSS。
+ * 性能：普通页面直达 core；仅合作/资源页面按需加载 legacy，避免全站下载报价与资源逻辑。
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV20) return;
-  w.__qilyStaticFirstNavigationV20 = true;
+  if (w.__qilyStaticFirstNavigationV21) return;
+  w.__qilyStaticFirstNavigationV21 = true;
 
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260815-performance-v2';
-  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260815-performance-v15';
-  var PARENT_SRC = '/site-parent-navigation-v3.js?v=20260815-performance-v4';
+  var CORE_SRC = '/site-navigation-core.js?v=20260815-performance-v16';
+  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260815-performance-v16';
 
-  function appendLegacy() {
-    if (w.__qilyLeanSiteNavigationPublicV8) return;
-    var existing = d.querySelector('script[data-qily-navigation-legacy]');
-    if (existing) return;
-    var script = d.createElement('script');
-    script.src = LEGACY_SRC;
-    script.async = false;
-    script.setAttribute('data-qily-navigation-legacy', 'r2-static-first-v20');
-    (d.head || d.documentElement).appendChild(script);
+  function needsLegacyRuntime() {
+    var path = (location.pathname || '/').replace(/\/index\.html$/, '/');
+    return path.indexOf('/cooperation/') === 0 || path.indexOf('/links/') === 0;
   }
 
-  function loadParentNavigation() {
-    if (w.__qilyParentNavigationV3) {
-      appendLegacy();
-      return;
-    }
-    var existing = d.querySelector('script[data-qily-parent-navigation],script[src*="/site-parent-navigation-v3.js"]');
-    if (existing) {
-      existing.addEventListener('load', appendLegacy, { once: true });
-      if (existing.dataset && existing.dataset.qilyLoaded === 'true') appendLegacy();
-      return;
-    }
+  function appendRuntime() {
+    if (w.__qilyLeanSiteNavigationPublicV8) return;
+    var legacy = needsLegacyRuntime();
+    var attr = legacy ? 'data-qily-navigation-legacy' : 'data-qily-navigation-core';
+    if (d.querySelector('script[' + attr + ']')) return;
     var script = d.createElement('script');
-    script.src = PARENT_SRC;
+    script.src = legacy ? LEGACY_SRC : CORE_SRC;
     script.async = false;
-    script.setAttribute('data-qily-parent-navigation', 'v3');
-    script.addEventListener('load', function () {
-      script.dataset.qilyLoaded = 'true';
-      appendLegacy();
-    }, { once: true });
-    script.addEventListener('error', appendLegacy, { once: true });
+    script.setAttribute(attr, 'r2-static-first-v21');
     (d.head || d.documentElement).appendChild(script);
   }
 
   function loadConsistencyGuard() {
-    if (w.__qilyUiConsistencyV1) {
-      loadParentNavigation();
+    if (w.__qilyUiConsistencyV2) {
+      appendRuntime();
       return;
     }
     var existing = d.querySelector('script[data-qily-ui-consistency],script[src*="/site-ui-consistency-v1.js"]');
     if (existing) {
-      existing.addEventListener('load', loadParentNavigation, { once: true });
-      if (w.__qilyUiConsistencyV1) loadParentNavigation();
+      existing.addEventListener('load', appendRuntime, { once: true });
+      if (w.__qilyUiConsistencyV2) appendRuntime();
       return;
     }
     var script = d.createElement('script');
     script.src = CONSISTENCY_SRC;
     script.async = false;
-    script.setAttribute('data-qily-ui-consistency', 'v1');
-    script.addEventListener('load', loadParentNavigation, { once: true });
-    script.addEventListener('error', loadParentNavigation, { once: true });
+    script.setAttribute('data-qily-ui-consistency', 'v2');
+    script.addEventListener('load', appendRuntime, { once: true });
+    script.addEventListener('error', appendRuntime, { once: true });
     (d.head || d.documentElement).appendChild(script);
   }
 
@@ -92,23 +75,24 @@
   loadConsistencyGuard();
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', bindDock, { once: true });
   else bindDock();
-  [120, 500, 1200].forEach(function (delay) { w.setTimeout(bindDock, delay); });
+  [120, 500].forEach(function (delay) { w.setTimeout(bindDock, delay); });
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'r2-static-first-v20',
+  mode: 'r2-static-first-v21',
   staticHtmlAuthority: true,
   dynamicContentShapers: false,
   runtimeFooter: false,
   runtimeSharedCssRewrite: false,
   nativePrefetch: true,
+  routeScopedLegacy: true,
+  ordinaryPagesDirectCore: true,
   dockActions: [
     'data-action="home"', 'data-action="top"', 'data-action="back"',
     'data-action="search"', 'data-action="current"', 'data-action="share"',
     'data-action="contact"'
   ]
 });
-
 
 /* QILY-PHONE-CONTACT-V12.4:START */
 (function(){
