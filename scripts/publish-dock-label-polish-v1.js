@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean dock label polish v2｜2026-08-15
- * 目标：保证“分享官方网址”在电脑和手机均固定为两行完整显示：分享 / 官方网址。
- * 通过独立 cache-busted consistency 脚本直挂公共页面，避免旧导航脚本缓存影响。
+/* QilyLean dock + stale-page freshness polish v3｜2026-08-15
+ * 目标：
+ * 1) 保证“分享官方网址”在电脑和手机均固定为两行完整显示；
+ * 2) 直接加载 cache-busted consistency v5；
+ * 3) 为 BFCache 恢复旧页面提供页面新鲜度校正入口。
  */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
-const CONSISTENCY_SRC='/site-ui-consistency-v1.js?v=20260815-dock-label-v4';
-const DIRECT_TAG=`<script defer data-qily-ui-consistency="dock-v4" src="${CONSISTENCY_SRC}"></script>`;
+const CONSISTENCY_SRC='/site-ui-consistency-v1.js?v=20260815-dock-label-v5';
+const DIRECT_TAG=`<script defer data-qily-ui-consistency="dock-v5" src="${CONSISTENCY_SRC}"></script>`;
 
 function read(rel){return fs.readFileSync(path.join(root,rel),'utf8');}
 function write(rel,content){
@@ -54,5 +56,5 @@ walk(root,(file)=>{
 });
 
 const wrapper=read('site-navigation.js');
-if(!wrapper.includes(CONSISTENCY_SRC))throw new Error('site-navigation.js dock-label cache version missing');
-process.stdout.write(`Dock label polish v2 checked ${checked} public HTML pages; refreshed ${changed}; direct consistency cache=${CONSISTENCY_SRC}.\n`);
+if(!wrapper.includes(CONSISTENCY_SRC))throw new Error('site-navigation.js dock/freshness cache version missing');
+process.stdout.write(`Dock + freshness polish v3 checked ${checked} public HTML pages; refreshed ${changed}; direct consistency cache=${CONSISTENCY_SRC}.\n`);
