@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean R2 regression guard v7.3｜2026-08-15 PERFORMANCE V16 */
+/* QilyLean R2 regression guard v7.4｜2026-08-15 PERFORMANCE V16 */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
 const NAV_VERSION='20260815-performance-v16';
-const CONSISTENCY_VERSION='20260815-dock-label-v3';
+const CONSISTENCY_VERSION='20260815-dock-label-v4';
 const CORE_CSS_VERSION='20260815-core-visual-v1';
 const FAST_NATIVE_VERSION='20260815-prefetch-v6';
 function read(rel){return fs.readFileSync(path.join(root,rel),'utf8');}
@@ -54,6 +54,7 @@ all(wrapper,[
   'routeScopedLegacy: true',
   'ordinaryPagesDirectCore: true',
   'chineseWrapPolish: true',
+  'dockOfficialUrlTwoLine: true',
   'qilyChineseWrapPolishV1',
   'text-wrap:pretty',
   'text-wrap:balance',
@@ -67,16 +68,21 @@ assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conv
 
 const uiConsistency=read('site-ui-consistency-v1.js');
 all(uiConsistency,[
-  'qilyDockOfficialUrlPolishV1',
-  'qily-share-label-line',
-  '分享</span><span class="qily-share-label-line">官方网址',
-  'width:68px!important',
+  'qilyDockOfficialUrlPolishV2',
+  'qily-share-label-main',
+  'qily-share-label-url',
+  '分享</span><span class="qily-share-label-line qily-share-label-url">官方网址',
+  'width:76px!important',
+  'width:72px!important',
+  'font-size:12px!important',
+  'font-size:11px!important',
+  'overflow:hidden!important',
   "if(path.indexOf('/tools/')===0)return '/'",
   "if(/^\\/legal\\/times26001\\/(?:privacy|terms)\\/$/.test(path))return '/tools/times26001/'",
   "if(path==='/app-support/')return '/tools/times26001/'",
   "w.__qilyParentNavigationV3=true",
   "classList.remove('qily-shell-pending','qily-r2-first-paint-pending')"
-],'official URL terminology / safe parent-route / dock two-line runtime');
+],'official URL terminology / safe parent-route / dock v4 fit runtime');
 assert(!/new\s+MutationObserver|\.createTreeWalker\s*\(/.test(uiConsistency),'ui consistency: active full-page mutation/tree scanning returned');
 
 const bundle=read('site-core-visual-bundle-v1.css');
@@ -110,7 +116,7 @@ for(const rel of keyPages){
     'QILY-R2-FIRST-PAINT:START',
     `/site-navigation.js?v=${NAV_VERSION}`,
     `/site-music-persistent-navigation-v1.js?v=${FAST_NATIVE_VERSION}`,
-    `data-qily-ui-consistency="dock-v3" src="/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}"`
+    `data-qily-ui-consistency="dock-v4" src="/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}"`
   ],rel);
   const first=(html.match(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/)||[])[0]||'';
   assert(first&& !/opacity\s*:\s*0|visibility\s*:\s*hidden|pointer-events\s*:\s*none|window\.load|stableReveal|2400/.test(first),`${rel}: blocking/blank first-paint logic returned`);
@@ -120,7 +126,6 @@ for(const rel of keyPages){
   if(hasBundle){
     individualCoreCss.forEach(file=>assert(!cssRef(html,file),`${rel}: bundled page still loads individual core CSS: ${file}`));
   }else{
-    /* 页面专用CSS可能夹在基础样式之间。此时不强行合并，保留原级联；只验证必需视觉底座完整。 */
     essentialFallbackCss.forEach(file=>assert(cssRef(html,file),`${rel}: essential CSS fallback incomplete: ${file}`));
   }
 
@@ -147,12 +152,12 @@ all(cleaner,[
 const dockPublisher=read('scripts/publish-dock-label-polish-v1.js');
 all(dockPublisher,[
   CONSISTENCY_VERSION,
-  'data-qily-ui-consistency="dock-v3"',
+  'data-qily-ui-consistency="dock-v4"',
   'patchWrapper()',
   'patchHtml(html)'
-],'dock label polish materializer');
+],'dock label polish materializer v2');
 
 const selfHeal=read('.github/workflows/site-regression-poka-yoke.yml');
 all(selfHeal,['node scripts/apply-site-poka-yoke-v2.js','node scripts/site-regression-guard.js','contents: write'],'self-heal workflow');
 
-process.stdout.write('QilyLean R2 performance V16 guard passed: bundled and non-bundled pages preserve visual quality, Fast Native V6 is bounded, dock 分享官方网址 is fixed to two complete lines with cache-busted direct consistency loading, and first paint remains immediate.\n');
+process.stdout.write('QilyLean R2 performance V16 guard passed: dock 分享官方网址 v4 uses separate line typography, 76px desktop / 72px mobile diameters, compact official-url line, cache-busted direct loading, and the existing performance baseline remains protected.\n');
