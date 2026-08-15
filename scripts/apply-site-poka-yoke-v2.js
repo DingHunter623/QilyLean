@@ -32,11 +32,16 @@ function verifyCleanRuntime() {
   assert(wrapper.includes('ordinaryPagesDirectCore: true'), 'ordinary-page direct-core route missing');
   assert(wrapper.includes('dynamicContentShapers: false'), 'dynamic content shapers are not disabled');
   assert(wrapper.includes('runtimeFooter: false'), 'runtime footer is not disabled');
-  assert(wrapper.includes('/site-ui-consistency-v1.js?v=20260815-dock-label-v4'), 'dock-label consistency cache version v4 missing');
+  assert(wrapper.includes('/site-ui-consistency-v1.js?v=20260815-dock-label-v5'), 'dock/freshness consistency cache version v5 missing');
+  assert(consistency.includes("BUILD_ID='20260815-dock-label-v5'"), 'BFCache build identity missing');
+  assert(consistency.includes("w.addEventListener('pageshow'"), 'BFCache pageshow recovery missing');
+  assert(consistency.includes('event.persisted&&restoredBuildIsStale()'), 'BFCache stale-version comparison missing');
+  assert(consistency.includes('normalizePrimaryNav()'), 'primary-nav stale item cleanup missing');
   assert(consistency.includes('qilyDockOfficialUrlPolishV2'), 'dock official-url visual polish v2 missing');
-  assert(consistency.includes('qily-share-label-main') && consistency.includes('qily-share-label-url'), 'dock separated line typography missing');
+  assert(consistency.includes('qily-share-label-primary') && consistency.includes('qily-share-label-url'), 'dock separated line typography missing');
   assert(consistency.includes('width:76px!important') && consistency.includes('width:72px!important'), 'dock desktop/mobile diameter protection missing');
   assert(consistency.includes('font-size:12px!important') && consistency.includes('font-size:11px!important'), 'dock official-url compact typography missing');
+  assert(!/new\s+MutationObserver|\.createTreeWalker\s*\(/.test(consistency), 'heavy DOM observer/tree scan returned');
   assert(!/site-parent-navigation-v3\.js/.test(wrapper), 'redundant parent navigation dependency returned');
   assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/.test(wrapper), 'old DOM content shaper returned in navigation runtime');
   assert(!/ensureFooter|footerMarkup|Technical & Project Contact/.test(footer), 'footer injector returned');
@@ -56,7 +61,7 @@ function verifyRuntimeBoundary() {
 function main() {
   verifyFastNavigationBaseline();
 
-  // 历史发布器先运行；R2 performance materializer 收口性能；dock polish 最后收口悬浮栏可视化与缓存。
+  // 历史发布器先运行；R2 performance materializer 收口性能；dock/freshness polish 最后收口悬浮栏和旧页面恢复。
   runNode('scripts/publish-r2-runtime-stability.js');
   runNode('scripts/publish-early-career-history.js');
   runNode('scripts/publish-r2-runtime-stability.js');
@@ -66,7 +71,7 @@ function main() {
   verifyFastNavigationBaseline();
   verifyCleanRuntime();
   verifyRuntimeBoundary();
-  process.stdout.write('QilyLean site poka-yoke applied: immediate first paint, visual CSS bundle, route-scoped legacy, direct-core ordinary pages, bounded prefetch, lazy below-fold images and dock official-url v4 desktop/mobile fit are protected.\n');
+  process.stdout.write('QilyLean site poka-yoke applied: immediate first paint, visual CSS bundle, direct-core routing, bounded prefetch, lazy images, dock v5 fit and BFCache stale-page recovery are protected.\n');
 }
 
 main();
