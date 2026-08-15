@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean R2 clean regression guard v4｜2026-08-14 URL V14 compatible */
+/* QilyLean R2 clean regression guard v5｜2026-08-15 URL terminology + parent-route guard */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
@@ -63,10 +63,33 @@ all(wrapper,[
   'dynamicContentShapers: false',
   'runtimeFooter: false',
   'runtimeSharedCssRewrite: false',
-  `/site-navigation-legacy-20260802.js?v=${NAV_VERSION}`
+  `/site-navigation-legacy-20260802.js?v=${NAV_VERSION}`,
+  '/site-ui-consistency-v1.js?v=20260815-official-url-parent-route-v1',
+  'loadConsistencyGuard()'
 ],'static-first navigation wrapper');
 assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/.test(wrapper),'navigation wrapper: dynamic content shaper returned');
 assert(!/Technical & Project Contact|qilyGlobalFooter|qilyGlobalContactFooter/.test(wrapper),'navigation wrapper: footer logic returned');
+
+const uiConsistency=read('site-ui-consistency-v1.js');
+all(uiConsistency,[
+  "share.innerHTML='分享<br>官方网址'",
+  "if(path.indexOf('/tools/')===0)return '/'",
+  "if(/^\\/legal\\/times26001\\/(?:privacy|terms)\\/$/.test(path))return '/tools/times26001/'",
+  "if(path==='/app-support/')return '/tools/times26001/'",
+  "text=text.replace(/分享官网/g,'分享官方网址')",
+  "text=text.replace(/访问官网/g,'访问官方网址')"
+],'official URL terminology / safe parent-route runtime');
+assert(!uiConsistency.includes("return clean.slice(0,slash+1)"),'parent-route guard: unsafe directory-derived fallback returned');
+
+const timesPage=read('tools/times26001/index.html');
+all(timesPage,[
+  'versionCode 16 / API 36',
+  'QilyLean｜启力精益官方网址与官网邮箱',
+  '用户可主动访问官方网址',
+  '<strong>统一开发者支持：</strong>官方网址 '
+],'Times26001 official URL terminology');
+assert(!timesPage.includes('<strong>统一开发者支持：</strong>官网 '),'Times26001: generic 官网 label returned in developer support');
+assert(!timesPage.includes('versionCode 10 / API 36'),'Times26001: stale versionCode 10 returned');
 
 const footerCompat=read('site-footer-standard-v28.js');
 all(footerCompat,['footer compatibility cleanup','严禁再创建任何页尾'],'footer compatibility cleanup');
@@ -104,4 +127,4 @@ all(career,['QILY-STATIC-CAREER-BASELINE:v1','id="career-2019-2025"','id="career
 const selfHeal=read('.github/workflows/site-regression-poka-yoke.yml');
 all(selfHeal,['node scripts/apply-site-poka-yoke-v2.js','node scripts/site-regression-guard.js','contents: write'],'self-heal workflow');
 
-process.stdout.write('QilyLean R2 clean regression guard passed: atomic first paint, static HTML authority, URL V14 no-trailing-slash public output, no dynamic CTA shapers, no visible footer and native-prefetch V5 are intact.\n');
+process.stdout.write('QilyLean R2 clean regression guard passed: atomic first paint, static HTML authority, URL V14 output, official-URL terminology, safe parent navigation, no dynamic CTA shapers, no visible footer and native-prefetch V5 are intact.\n');
