@@ -1,0 +1,2466 @@
+/* QilyLean core visual bundle v1｜20260815-core-visual-v1
+ * 构建期按既有顺序合并，不改任何选择器与声明。
+ */
+/* QILY-CORE-CSS:site-shell.css */
+/* QilyLean no-old-shell flash guard: keep the legacy page shell out of the first paint. */
+html.qily-shell-pending {
+  min-height: 100%;
+  background: #eef7f5;
+}
+html.qily-shell-pending body {
+  visibility: visible !important;
+}
+
+:root {
+  --qily-ink: #182420;
+  --qily-muted: #5f7474;
+  --qily-line: #d5e4e3;
+  --qily-paper: #eef7f5;
+  --qily-white: #fff;
+  --qily-forest: #0f4b5a;
+  --qily-deep: #073c47;
+  --qily-teal: #178b94;
+  --qily-copper: #caa15f;
+  --qily-gold: #ffe39b;
+  --qily-plum: #9e4a34;
+  --qily-red: #9e4a34;
+  --qily-shadow: 0 20px 55px rgba(15, 75, 90, .14);
+}
+
+.nav a,
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  color: inherit;
+  min-height: 38px;
+  padding: 7px 11px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: color .18s ease, background-color .18s ease, border-color .18s ease,
+    box-shadow .18s ease, transform .18s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.topbar > a.brand,
+.top > a.brand { text-decoration: none; }
+
+.nav a:hover,
+.nav a:focus-visible,
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  color: #fff !important;
+  background: var(--qily-forest) !important;
+  border-color: var(--qily-forest) !important;
+  box-shadow: 0 8px 18px rgba(15, 75, 90, .22);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.nav a:active,
+.site-nav a:active {
+  color: #fff !important;
+  background: var(--qily-deep) !important;
+  transform: translateY(0) scale(.98);
+}
+
+.nav a[aria-current="page"],
+.site-nav a[aria-current="page"] {
+  color: var(--qily-forest);
+  background: #e4f2ef;
+  border-color: #b8d9d4;
+}
+
+.qily-global-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 8000 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.qily-global-header > .brand,
+.qily-global-header > .qily-brand {
+  flex: 0 0 auto;
+}
+
+.qily-global-nav {
+  display: flex !important;
+  flex: 0 1 auto;
+  flex-wrap: nowrap !important;
+  justify-content: flex-end !important;
+  max-width: calc(100vw - 190px);
+  margin-left: auto;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  white-space: nowrap;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.qily-float-dock {
+  position: fixed;
+  right: max(10px, env(safe-area-inset-right));
+  top: 20vh;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.qily-float-btn {
+  display: grid;
+  place-items: center;
+  width: 62px;
+  height: 62px;
+  padding: 4px;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(15, 75, 90, .81);
+  border: 1px solid rgba(255, 255, 255, .72);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 10px 24px rgba(15, 75, 90, .28);
+  cursor: ns-resize;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 950;
+  line-height: 1.16;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .42);
+  transition: transform .16s ease, box-shadow .16s ease, filter .16s ease, background-color .16s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.qily-float-btn:hover,
+.qily-float-btn:focus-visible {
+  filter: brightness(1.08);
+  box-shadow: 0 13px 28px rgba(15, 75, 90, .36);
+  outline: 3px solid rgba(255, 227, 155, .68);
+  outline-offset: 2px;
+  transform: translateY(-2px);
+}
+
+.qily-float-btn:active { transform: scale(.96); }
+.qily-float-home { background: rgba(15, 102, 113, .81); }
+.qily-float-back { background: rgba(23, 127, 135, .81); }
+.qily-float-current { background: rgba(158,74,52, .81); }
+.qily-float-share { background: rgba(158,74,52, .81); }
+.qily-float-contact { color: #17322d; background: rgba(245, 200, 97, .81); text-shadow: 0 1px 1px rgba(255, 255, 255, .4); }
+
+.qily-modal-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, .48);
+}
+
+.qily-modal-mask.show { display: flex; }
+.qily-modal-panel {
+  position: relative;
+  width: min(92vw, 460px);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 26px;
+  border-radius: 20px;
+  color: var(--qily-ink);
+  background: #fff;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, .28);
+  text-align: center;
+}
+.qily-modal-panel h3 { margin: 8px 0 12px; color: var(--qily-forest); font-size: 24px; }
+.qily-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  color: var(--qily-ink);
+  background: #eef5f2;
+  cursor: pointer;
+  font-size: 22px;
+}
+.qily-modal-brand { color: var(--qily-forest); font-size: 22px; font-weight: 950; }
+.qily-share-qr,
+.qily-contact-qr { display: block; width: min(64vw, 280px); height: auto; margin: 12px auto 14px; background: #fff; }
+.qily-contact-qr:not([src]) { display: none; }
+.qily-share-url {
+  display: block;
+  margin: 12px 0;
+  padding: 10px 12px;
+  border: 1px solid var(--qily-line);
+  border-radius: 10px;
+  color: #355;
+  background: #f6fbfa;
+  font-size: 14px;
+  line-height: 1.6;
+  word-break: break-all;
+}
+.qily-modal-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.qily-modal-actions button,
+.qily-copy-wechat {
+  min-height: 42px;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 10px;
+  color: #fff;
+  background: var(--qily-forest);
+  cursor: pointer;
+  font-weight: 850;
+}
+.qily-modal-note { margin: 10px 0 0; color: var(--qily-muted); font-size: 14px; }
+.qily-wechat { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 12px 0; }
+.qily-wechat span,
+.qily-phone-list > div { color: var(--qily-muted); font-size: 14px; font-weight: 800; }
+.qily-phone-list { display: grid; gap: 8px; margin: 18px 0 2px; padding-top: 16px; border-top: 1px solid var(--qily-line); }
+.qily-phone-list a { display: block; padding: 8px 12px; border: 1px solid var(--qily-line); border-radius: 10px; color: var(--qily-forest); background: #f6fbfa; font-weight: 900; letter-spacing: .04em; text-decoration: none; }
+.qily-dock-toast {
+  position: fixed;
+  left: 50%;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  z-index: 11000;
+  max-width: min(88vw, 460px);
+  padding: 10px 16px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(7, 60, 71, .96);
+  box-shadow: 0 10px 28px rgba(7, 60, 71, .28);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, 14px);
+  transition: opacity .18s ease, transform .18s ease;
+}
+.qily-dock-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+.module-page {
+  margin: 0;
+  color: var(--qily-ink);
+  background: var(--qily-paper);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 18px;
+  line-height: 1.78;
+}
+
+.module-page * { box-sizing: border-box; }
+.module-page img { display: block; max-width: 100%; }
+.module-page a { color: inherit; }
+
+body:has(.module-hero),
+body:has(.daily-hero),
+body:has(.hero:not(:has(.hero-grid))) {
+  background: var(--qily-paper) !important;
+}
+
+.qily-site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 11px clamp(16px, 3.8vw, 54px);
+  background: rgba(255, 255, 255, .96);
+  border-bottom: 1px solid var(--qily-line);
+  box-shadow: 0 6px 20px rgba(15, 75, 90, .06);
+  backdrop-filter: blur(14px);
+}
+
+.qily-brand {
+  flex: 0 0 auto;
+  color: var(--qily-forest) !important;
+  font-size: 18px;
+  font-weight: 950;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.qily-site-header .site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  color: var(--qily-muted);
+  font-size: 14px;
+  font-weight: 850;
+}
+
+.module-hero {
+  padding: 36px clamp(18px, 6vw, 80px);
+  color: #fff;
+  background: linear-gradient(125deg, #0f4b5a, #177f87);
+}
+
+.module-inner { width: min(1220px, 100%); margin: 0 auto; }
+.module-hero > .module-inner { width: min(1080px, 100%); }
+.module-page .inner { width: min(1220px, 100%); margin: 0 auto; }
+.module-page .head { max-width: 980px; margin-bottom: 28px; }
+.module-page .head h2 { margin: 0 0 12px; color: var(--qily-forest); font-size: clamp(30px, 3.5vw, 46px); line-height: 1.16; }
+.module-page .head p { margin: 0; color: var(--qily-muted); font-size: 19px; }
+.module-eyebrow { color: var(--qily-gold); font-size: 15px; font-weight: 950; }
+.module-hero h1 { margin: 8px 0; font-size: clamp(34px, 5vw, 56px); line-height: 1.08; }
+.module-lead { max-width: 1080px; margin: 0; color: #e8f6f3; font-size: 18px; line-height: 1.7; }
+
+/*
+ * Global hero standard
+ * Mirrors the compact QilyLean AI title band across legacy content pages.
+ * The homepage portrait hero uses .hero-grid and is intentionally excluded.
+ */
+.hero:not(:has(.hero-grid)):has(> .inner),
+.hero:has(> .hero-inner) {
+  padding: 36px clamp(18px, 6vw, 80px) !important;
+  color: #fff !important;
+  background: linear-gradient(125deg, #0f4b5a, #177f87) !important;
+}
+
+.hero:not(:has(.hero-grid)) > .inner,
+.hero > .hero-inner {
+  width: min(1080px, 100%) !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+.hero:not(:has(.hero-grid)) h1 {
+  margin: 8px 0 !important;
+  font-size: clamp(34px, 5vw, 56px) !important;
+  line-height: 1.08 !important;
+}
+
+.hero:not(:has(.hero-grid)) p,
+.hero:not(:has(.hero-grid)) .lead {
+  max-width: 1080px !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  color: #e8f6f3 !important;
+  font-size: 18px !important;
+  line-height: 1.7 !important;
+}
+
+.daily-hero {
+  padding: 36px clamp(18px, 6vw, 80px) !important;
+  color: #fff !important;
+  background: linear-gradient(125deg, #0f4b5a, #177f87) !important;
+}
+
+.daily-hero > .daily-inner {
+  width: min(1080px, 100%) !important;
+}
+
+.daily-hero h1 {
+  margin: 8px 0 !important;
+  font-size: clamp(34px, 5vw, 56px) !important;
+  line-height: 1.08 !important;
+}
+
+.daily-hero p {
+  max-width: 1080px !important;
+  color: #e8f6f3 !important;
+  font-size: 18px !important;
+  line-height: 1.7 !important;
+}
+
+.module-subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.module-subnav a,
+.module-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 7px 14px;
+  border: 1px solid rgba(255, 227, 155, .62);
+  border-radius: 999px;
+  color: #fff !important;
+  background: rgba(255, 255, 255, .09);
+  font-weight: 900;
+  text-decoration: none;
+  transition: background-color .18s ease, color .18s ease, transform .18s ease, box-shadow .18s ease;
+}
+
+.module-subnav a:hover,
+.module-subnav a:focus-visible,
+.module-action:hover,
+.module-action:focus-visible {
+  color: var(--qily-ink) !important;
+  background: var(--qily-gold);
+  box-shadow: 0 10px 24px rgba(7, 60, 71, .2);
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.module-section {
+  padding: clamp(42px, 6vw, 78px) clamp(18px, 4vw, 58px);
+  background: #fff;
+  border-bottom: 1px solid var(--qily-line);
+  scroll-margin-top: 84px;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 720px;
+}
+
+.module-section.alt { background: #eef5f2; }
+.module-heading { max-width: 980px; margin-bottom: 28px; }
+.module-heading h2 { margin: 0 0 12px; color: var(--qily-forest); font-size: clamp(30px, 3.5vw, 46px); line-height: 1.16; }
+.module-heading p { margin: 0; color: var(--qily-muted); font-size: 19px; }
+
+.module-grid { display: grid; gap: 16px; }
+.module-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.module-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.module-grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.module-card {
+  overflow: hidden;
+  padding: 24px;
+  border: 1px solid var(--qily-line);
+  border-top: 4px solid var(--qily-teal);
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(15, 75, 90, .07);
+  scroll-margin-top: 90px;
+}
+
+.module-card:nth-child(2n) { border-top-color: var(--qily-copper); }
+.module-card:nth-child(3n) { border-top-color: var(--qily-plum); }
+.module-card small { display: block; margin-bottom: 8px; color: var(--qily-copper); font-size: 15px; font-weight: 900; }
+.module-card h2,
+.module-card h3 { margin: 0 0 12px; color: var(--qily-forest); font-size: 23px; line-height: 1.35; }
+.module-card h4 { margin: 18px 0 7px; color: var(--qily-forest); font-size: 18px; }
+.module-card p,
+.module-card li { color: var(--qily-muted); font-size: 18.5px; line-height: 1.78; }
+.module-card p { margin: 0 0 12px; }
+.module-card ul { margin: 8px 0 0; padding-left: 1.2em; }
+.module-card li { margin: 5px 0; }
+
+.module-result {
+  margin-top: 16px;
+  padding: 13px 15px;
+  border-left: 4px solid var(--qily-copper);
+  color: #17443b;
+  background: #eef8f6;
+  font-size: 17.5px;
+  font-weight: 850;
+  line-height: 1.7;
+}
+
+.module-media {
+  margin: -24px -24px 18px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--qily-line);
+  background: #e9f0ef;
+}
+
+.module-media img { width: 100%; height: auto; object-fit: contain; content-visibility: auto; }
+.module-media figcaption { padding: 10px 14px; color: var(--qily-muted); background: #f8fbfa; font-size: 14px; font-weight: 750; }
+.module-media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--qily-line); }
+.module-media-grid .wide { grid-column: 1 / -1; }
+.module-media-grid > div { position: relative; background: #e9f0ef; }
+.module-media-grid span { position: absolute; left: 10px; bottom: 10px; padding: 4px 8px; color: #fff; background: rgba(15, 75, 90, .88); font-size: 13px; font-weight: 900; }
+
+.module-video { margin-top: 18px; padding: 14px; border: 1px solid var(--qily-line); background: #f7fbfa; }
+.module-video video { display: block; width: 100%; max-height: 560px; background: #0b1113; }
+.module-video p { margin: 9px 0 0; font-size: 14px; }
+
+.module-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.module-actions a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 43px;
+  padding: 9px 15px;
+  border: 1px solid var(--qily-forest);
+  border-radius: 999px;
+  color: #fff;
+  background: var(--qily-forest);
+  font-weight: 900;
+  text-decoration: none;
+  transition: transform .18s ease, box-shadow .18s ease, background-color .18s ease;
+}
+.module-actions a.secondary { color: var(--qily-forest); background: #fff; border-color: var(--qily-line); }
+.module-actions a:hover,
+.module-actions a:focus-visible { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(15, 75, 90, .18); outline: none; }
+
+.module-note { margin-top: 18px; padding: 16px 18px; border-left: 4px solid var(--qily-copper); color: #17443b; background: #eef8f6; font-weight: 850; }
+.module-footer { padding: 25px clamp(18px, 4vw, 58px); color: #d6e5df; background: #101916; }
+.module-footer .module-inner { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+
+.experience-lock {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 42px);
+  border: 1px solid var(--qily-line);
+  background: #fff;
+  box-shadow: var(--qily-shadow);
+}
+.experience-lock h2 { margin: 0 0 12px; color: var(--qily-forest); font-size: clamp(30px, 3vw, 42px); }
+.experience-lock p { color: var(--qily-muted); font-size: 19px; }
+.experience-lock-form { display: flex; flex-wrap: wrap; gap: 10px; }
+.experience-lock input { flex: 1 1 240px; min-height: 48px; padding: 10px 14px; border: 1px solid var(--qily-line); font: inherit; }
+.experience-lock button { min-height: 48px; padding: 10px 18px; border: 0; color: #fff; background: var(--qily-forest); cursor: pointer; font: inherit; font-weight: 900; }
+.experience-lock button:hover,
+.experience-lock button:focus-visible { background: var(--qily-teal); box-shadow: 0 8px 20px rgba(15, 75, 90, .2); outline: none; }
+.experience-message { min-height: 30px; margin-top: 10px; color: var(--qily-red); font-weight: 850; }
+.career-overview { display: grid; grid-template-columns: 150px 1fr; gap: 14px; padding: 18px 20px; margin-bottom: 18px; border-left: 4px solid var(--qily-copper); background: #fff; }
+.career-overview strong { color: var(--qily-forest); font-size: 20px; }
+.career-overview span { color: var(--qily-muted); font-size: 18.5px; }
+
+@media (max-width: 1080px) {
+  .qily-site-header:not(.qily-global-header) { position: static; align-items: flex-start; flex-direction: column; }
+  .module-grid.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 820px) {
+  .module-grid.two,
+  .module-grid.three,
+  .module-grid.four { grid-template-columns: 1fr; }
+  .module-media-grid { grid-template-columns: 1fr; }
+  .module-media-grid .wide { grid-column: auto; }
+  .career-overview { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 620px) {
+  .module-page { font-size: 17px; }
+  .qily-site-header { padding: 10px 14px; }
+  .qily-site-header .site-nav { gap: 4px; }
+  .qily-site-header .site-nav a { min-height: 36px; padding: 6px 8px; font-size: 13px; }
+  .qily-brand { white-space: normal; }
+  .qily-global-header { min-height: 52px; padding: 7px 8px !important; }
+  .qily-global-header > .qily-brand,
+  .qily-global-header > .brand { display: none; }
+  .qily-global-nav { width: 100%; max-width: 100%; gap: 1px !important; overflow-x: hidden; scrollbar-width: none; }
+  .qily-global-nav::-webkit-scrollbar { display: none; }
+  .qily-global-nav a { flex: 0 0 auto; min-height: 32px; padding: 4px 5px; border-radius: 8px; font-size: 10.75px; line-height: 1.1; letter-spacing: -.1px; }
+  .qily-float-dock { gap: 6px; }
+  .qily-float-btn { width: 50px; height: 50px; font-size: 11.5px; }
+  .qily-modal-panel { padding: 22px 18px; }
+  .module-subnav a,
+  .module-action,
+  .module-actions a { width: 100%; }
+  .module-card { padding: 20px; }
+  .module-media { margin: -20px -20px 18px; }
+}
+
+.module-grid > .module-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.module-grid > .module-card > .module-actions {
+  margin-top: auto;
+  padding-top: 16px;
+}
+
+.module-grid > .module-card > .module-result:last-child { margin-top: auto; }
+
+@media (min-width: 621px) {
+  .qily-global-nav { gap: 1px !important; }
+  .qily-global-nav a {
+    padding: 6px 7px !important;
+    font-size: 17px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  .nav a,
+  .site-nav a,
+  .qily-float-btn,
+  .qily-dock-toast,
+  .module-subnav a,
+  .module-action,
+  .module-actions a { transition: none; }
+}
+
+
+/* QILY-ENTERPRISE-EMAIL-CONTACT:START */
+.qily-contact-panel{width:min(92vw,480px)}
+.qily-email-list{display:grid;gap:8px;margin:18px 0 2px;padding-top:16px;border-top:1px solid var(--qily-line)}
+.qily-email-list>div:first-child{color:var(--qily-muted);font-size:14px;font-weight:800}
+.qily-contact-email{display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:42px;padding:8px 12px;border:1px solid var(--qily-line);border-radius:10px;color:var(--qily-forest)!important;background:#f6fbfa;font-weight:900;letter-spacing:.01em;text-decoration:none!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qily-email-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.qily-copy-email,.qily-send-email{display:flex;align-items:center;justify-content:center;box-sizing:border-box;min-height:42px;padding:9px 12px;border:0;border-radius:10px;color:#fff!important;background:var(--qily-forest);cursor:pointer;font:inherit;font-weight:850;line-height:1.2;text-decoration:none!important;white-space:nowrap}
+.qily-copy-email:hover,.qily-copy-email:focus-visible,.qily-send-email:hover,.qily-send-email:focus-visible{background:var(--qily-deep);outline:3px solid rgba(23,139,148,.2);outline-offset:2px}
+@media(max-width:420px){.qily-modal-panel.qily-contact-panel{width:min(94vw,380px);padding:22px 18px}.qily-email-actions{grid-template-columns:1fr}.qily-contact-email{font-size:14px}}
+/* QILY-ENTERPRISE-EMAIL-CONTACT:END */
+
+
+/* QILY-GLOBAL-CONTACT-FOOTER:START */
+.qily-global-contact-footer-shell{background:#101916}
+.qily-global-contact-footer{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:14px;padding:14px clamp(16px,3vw,34px);border-top:1px solid rgba(255,227,155,.28);color:#d6e5df;background:#101916;font-size:14px;line-height:1.55;text-align:center}
+.qily-global-contact-footer span{font-weight:800;letter-spacing:.01em}
+.qily-global-contact-footer a{display:inline-flex;align-items:center;justify-content:center;min-height:34px;padding:5px 10px;border:1px solid rgba(255,227,155,.48);border-radius:8px;color:#ffe39b!important;background:rgba(255,255,255,.05);font-weight:900;text-decoration:none!important;white-space:nowrap}
+.qily-global-contact-footer a:hover,.qily-global-contact-footer a:focus-visible{color:#17322d!important;background:#ffe39b;outline:none}
+@media(max-width:620px){.qily-global-contact-footer{gap:8px;padding:13px 12px;font-size:13px}.qily-global-contact-footer span,.qily-global-contact-footer a{width:100%}}
+/* QILY-GLOBAL-CONTACT-FOOTER:END */
+
+
+/* QILY-CONTACT-INTERACTION-V12:START */
+.qily-contact-panel{width:min(94vw,520px)!important;padding:22px 25px 24px!important}
+.qily-contact-panel h3{margin:5px 0 8px!important;font-size:27px!important;line-height:1.15!important}
+.qily-contact-panel .qily-contact-qr{width:min(54vw,220px)!important;max-width:220px!important;margin:7px auto 9px!important}
+.qily-wechat-row{display:flex!important;justify-content:center!important;margin:7px 0 11px!important}
+.qily-wechat-action{display:flex!important;width:min(100%,390px)!important;min-height:48px!important;align-items:center!important;justify-content:center!important;gap:12px!important;padding:9px 14px!important;border:1px solid #b8d9d4!important;border-radius:11px!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;background:#f6fbfa!important;cursor:pointer!important;font:inherit!important;font-size:18px!important;font-weight:850!important;box-shadow:none!important}
+.qily-wechat-action strong{color:#073c47!important;-webkit-text-fill-color:#073c47!important;font-size:22px!important;font-weight:950!important;text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important;text-decoration-skip-ink:none!important}
+.qily-wechat-action:hover,.qily-wechat-action:focus-visible{border-color:#caa15f!important;background:#fff8e8!important;outline:3px solid rgba(202,161,95,.2)!important;outline-offset:2px!important}
+.qily-contact-panel .qily-phone-list{gap:9px!important;margin:13px 0 2px!important;padding-top:13px!important}
+.qily-contact-panel .qily-phone-list>div,.qily-contact-panel .qily-email-list>div{font-size:17px!important;font-weight:900!important;line-height:1.35!important}
+.qily-contact-panel .qily-phone-list a{min-height:48px!important;padding:9px 13px!important;font-size:19px!important;line-height:1.3!important}
+.qily-contact-panel .qily-phone-city{font-size:17px!important}.qily-contact-panel .qily-phone-number{font-size:21px!important}
+.qily-contact-panel .qily-email-list{padding-top:13px!important;margin-top:13px!important}.qily-contact-panel .qily-contact-email{font-size:19px!important;line-height:1.35!important}
+.qily-contact-panel .qily-email-actions{margin-top:9px!important}.qily-contact-panel .qily-email-actions button,.qily-contact-panel .qily-email-actions a{min-height:44px!important;font-size:17px!important}
+.qily-wechat-copy-prompt{position:fixed;z-index:12050;display:flex;max-width:min(430px,calc(100vw - 24px));align-items:center;gap:9px;padding:10px 12px;border:1px solid #caa15f;border-radius:12px;color:#17322d;background:#fff8e8;box-shadow:0 14px 34px rgba(7,60,71,.22);font-size:14px;font-weight:850;line-height:1.45;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .16s ease,transform .16s ease,visibility .16s ease}
+.qily-wechat-copy-prompt.show{opacity:1;visibility:visible;transform:translateY(0)}.qily-wechat-copy-prompt button{flex:0 0 auto;min-height:36px;padding:6px 10px;border:0;border-radius:8px;color:#fff;background:#0f4b5a;cursor:pointer;font:inherit;font-weight:900}
+@media(max-width:620px){.qily-contact-panel{width:min(96vw,460px)!important;padding:20px 18px!important}.qily-contact-panel h3{font-size:25px!important}.qily-contact-panel .qily-contact-qr{width:min(58vw,210px)!important}.qily-wechat-action{font-size:17px!important}.qily-wechat-action strong{font-size:20px!important}.qily-wechat-copy-prompt{left:12px!important;right:12px!important;top:auto!important;bottom:18px!important;max-width:none!important;justify-content:space-between}}
+/* QILY-CONTACT-INTERACTION-V12:END */
+
+/* QILY-CONTACT-ACTION-V13:START */
+.qily-phone-list a{display:flex!important;align-items:center!important;justify-content:center!important;gap:8px!important;cursor:pointer!important;transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease!important}
+.qily-phone-list a:hover,.qily-phone-list a:focus-visible{background:#e6f5f2!important;border-color:#178b94!important;box-shadow:0 8px 18px rgba(15,75,90,.16)!important;outline:2px solid rgba(23,139,148,.2)!important;outline-offset:2px!important;transform:translateY(-1px)!important}
+.qily-phone-list a:active{background:#dff0ec!important;transform:scale(.985)!important}
+.qily-phone-city{text-decoration:none!important}
+.qily-phone-number{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important;text-decoration-skip-ink:none!important}
+.qily-wechat-action span{text-decoration:none!important}
+.qily-wechat-action strong{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important;text-decoration-skip-ink:none!important}
+.qily-phone-copy-prompt{position:fixed;z-index:12040;display:flex;align-items:center;gap:8px;max-width:min(92vw,560px);padding:10px 12px;border:1px solid #b8d9d4;border-radius:12px;color:#073c47;background:#fff;box-shadow:0 16px 40px rgba(7,60,71,.22);opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .16s ease,transform .16s ease,visibility .16s ease}
+.qily-phone-copy-prompt.show{opacity:1;visibility:visible;transform:none}
+.qily-phone-copy-prompt span{font-size:14px;font-weight:850;line-height:1.45}
+.qily-phone-copy-prompt button{min-height:34px;padding:6px 10px;border:1px solid #0f4b5a;border-radius:8px;color:#fff;background:#0f4b5a;cursor:pointer;font:inherit;font-size:13px;font-weight:900;white-space:nowrap}
+.qily-phone-copy-prompt [data-qily-call-cancel]{color:#0f4b5a;background:#fff}
+.term-opl-contact-label{text-decoration:none!important}
+.term-opl-copy-wechat-v9{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:3px!important;text-decoration-skip-ink:none!important}
+/* QILY-CONTACT-ACTION-V13:END */
+
+
+/* QILY-CONTACT-V12.4-RESILIENT:START */
+.qily-contact-panel .qily-phone-list a{cursor:pointer!important;transition:transform .16s ease,box-shadow .16s ease,background-color .16s ease,border-color .16s ease!important}
+.qily-contact-panel .qily-phone-list a:hover,.qily-contact-panel .qily-phone-list a:focus-visible{transform:translateY(-2px)!important;border-color:#caa15f!important;background:#fff8e8!important;box-shadow:0 9px 20px rgba(15,75,90,.14)!important;outline:3px solid rgba(202,161,95,.18)!important;outline-offset:2px!important}
+.qily-contact-panel .qily-phone-list a:active{transform:scale(.985)!important;background:#ffeab3!important}
+.qily-contact-panel .qily-phone-city{text-decoration:none!important;text-decoration-line:none!important}
+.qily-contact-panel .qily-phone-number{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important;text-decoration-skip-ink:none!important}
+.qily-phone-call-prompt-v124{position:fixed;z-index:12060;display:flex;max-width:min(440px,calc(100vw - 24px));align-items:center;gap:10px;padding:11px 13px;border:1px solid #178b94;border-radius:12px;color:#17322d;background:#eef8f6;box-shadow:0 14px 34px rgba(7,60,71,.22);font-size:14px;font-weight:850;line-height:1.45;opacity:0;visibility:hidden;transform:translateY(4px);transition:opacity .16s ease,transform .16s ease,visibility .16s ease}
+.qily-phone-call-prompt-v124.show{opacity:1;visibility:visible;transform:translateY(0)}
+.qily-phone-call-prompt-v124 button{flex:0 0 auto;min-height:36px;padding:6px 10px;border:0;border-radius:8px;color:#fff;background:#0f4b5a;cursor:pointer;font:inherit;font-weight:900}
+.contact-card .contact-line,.contact-card .wechat-contact-action{display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;width:100%!important;min-height:46px!important;margin-top:10px!important;padding:9px 14px!important;border:1px solid rgba(255,227,155,.48)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:rgba(255,255,255,.08)!important;text-decoration:none!important;cursor:pointer!important;font:inherit!important;font-weight:900!important;box-sizing:border-box!important}
+.contact-card .contact-line span,.contact-card .wechat-contact-action span{text-decoration:none!important;text-decoration-line:none!important;color:inherit!important;-webkit-text-fill-color:inherit!important}
+.contact-card .contact-line strong,.contact-card .wechat-contact-action strong{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important;text-decoration-skip-ink:none!important;color:inherit!important;-webkit-text-fill-color:inherit!important;font-weight:950!important}
+.contact-card .contact-line:hover,.contact-card .contact-line:focus-visible,.contact-card .wechat-contact-action:hover,.contact-card .wechat-contact-action:focus-visible{transform:translateY(-2px)!important;border-color:#ffe39b!important;background:#12606f!important;box-shadow:0 8px 20px rgba(15,75,90,.22)!important;outline:none!important}
+.contact-card .contact-line:active,.contact-card .wechat-contact-action:active{transform:scale(.99)!important;background:#073c47!important}
+@media(max-width:620px){.qily-phone-call-prompt-v124{left:12px!important;right:12px!important;top:auto!important;bottom:18px!important;max-width:none!important;justify-content:space-between}}
+/* QILY-CONTACT-V12.4-RESILIENT:END */
+
+
+
+/* QILY-COOPERATION-CONTACT-V12.5:START */
+.contact-card .qily-uniform-contact-row,.contact-card .contact-action,.contact-card .wechat-contact-action,.contact-card .contact-evidence-action,.contact-card a.qily-uniform-contact-row:link,.contact-card a.qily-uniform-contact-row:visited{display:flex!important;align-items:center!important;justify-content:center!important;gap:7px!important;width:100%!important;min-height:46px!important;margin-top:10px!important;padding:9px 14px!important;box-sizing:border-box!important;border:1px solid #caa15f!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:#105564!important;background-color:#105564!important;background-image:none!important;text-decoration:none!important;border-radius:0!important;cursor:pointer!important;font:inherit!important;font-weight:900!important;appearance:none!important;-webkit-appearance:none!important;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease!important}
+.contact-card .qily-uniform-contact-row:hover,.contact-card .qily-uniform-contact-row:focus-visible,.contact-card .contact-action:hover,.contact-card .contact-action:focus-visible,.contact-card .wechat-contact-action:hover,.contact-card .wechat-contact-action:focus-visible,.contact-card .contact-evidence-action:hover,.contact-card .contact-evidence-action:focus-visible{background:#105564!important;background-color:#105564!important;background-image:none!important;border-color:#ffe39b!important;box-shadow:0 8px 20px rgba(0,0,0,.18)!important;outline:2px solid rgba(255,227,155,.34)!important;outline-offset:2px!important;transform:translateY(-2px)!important}
+.contact-card .qily-uniform-contact-row:active,.contact-card .contact-action:active,.contact-card .wechat-contact-action:active,.contact-card .contact-evidence-action:active{background:#105564!important;background-color:#105564!important;background-image:none!important;border-color:#ffe39b!important;box-shadow:0 4px 12px rgba(0,0,0,.16)!important;transform:scale(.988)!important}
+.contact-card .contact-action-label,.contact-card .contact-action>span,.contact-card .wechat-contact-action>span{text-decoration:none!important;text-decoration-line:none!important;color:inherit!important;-webkit-text-fill-color:inherit!important}
+.contact-card .contact-action-value,.contact-card .contact-action>strong,.contact-card .wechat-contact-action>strong{text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:4px!important;text-decoration-skip-ink:none!important;color:inherit!important;-webkit-text-fill-color:inherit!important;font-weight:950!important}
+.contact-card .contact-email-action .contact-action-value,.contact-card .contact-email-action strong{text-decoration:none!important;text-decoration-line:none!important}
+.contact-card .contact-evidence-action{text-decoration:none!important}
+/* QILY-COOPERATION-CONTACT-V12.5:END */
+
+/* QILY-CORE-CSS:site-visual-scale-v1.css */
+/* QilyLean 2026-07-24：全站阅读尺度、统一宽版内容窗口、首页首屏、品牌LOGO与移动导航规范 */
+
+/* ---------- 全站LOGO ---------- */
+.qily-brand,.topbar>.brand,.top>.brand{
+  display:block!important;
+  width:clamp(168px,14vw,226px)!important;
+  height:34px!important;
+  overflow:hidden!important;
+  text-indent:-9999px!important;
+  white-space:nowrap!important;
+  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5') left center/contain no-repeat!important;
+}
+.qily-modal-brand{
+  width:min(286px,74vw)!important;
+  height:42px!important;
+  margin:0 auto 8px!important;
+  overflow:hidden!important;
+  text-indent:-9999px!important;
+  background:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5') center/contain no-repeat!important;
+}
+
+/* ---------- 全站公开导航：不显示加密锁标识 ---------- */
+/* ---------- 全站统一宽版内容窗口 ---------- */
+.module-inner,
+.module-page .inner{
+  width:min(1320px,100%)!important;
+}
+.module-lead{
+  width:100%!important;
+  max-width:1180px!important;
+}
+.module-heading,
+.module-page .head{
+  width:100%!important;
+  max-width:1160px!important;
+}
+.module-subnav{
+  max-width:1240px!important;
+}
+
+/* ---------- 全站导航与文字尺度 ---------- */
+.module-page{
+  font-size:19px!important;
+  line-height:1.8!important;
+}
+.qily-brand{font-size:19px!important}
+.qily-site-header .site-nav{font-size:15.5px!important}
+.module-eyebrow{font-size:16px!important}
+.module-hero h1{font-size:clamp(42px,5.1vw,70px)!important;line-height:1.06!important}
+.module-lead{font-size:clamp(21px,1.75vw,26px)!important;line-height:1.78!important}
+.module-subnav a,.module-action{font-size:17.5px!important}
+.module-heading h2,.module-page .head h2{font-size:clamp(32px,3.6vw,48px)!important}
+.module-heading p,.module-page .head p{font-size:20px!important;line-height:1.76!important}
+.module-card{padding:26px!important}
+.module-card small{font-size:16px!important}
+.module-card h2,.module-card h3{font-size:24px!important;line-height:1.36!important}
+.module-card h4{font-size:19px!important}
+.module-card p,.module-card li{font-size:19.5px!important;line-height:1.8!important}
+.module-result{font-size:18.5px!important;line-height:1.72!important}
+.module-media{margin:-26px -26px 19px!important}
+.module-media figcaption{font-size:15px!important}
+.module-actions a{font-size:17.5px!important}
+.module-note{font-size:18.5px!important;line-height:1.72!important}
+.module-footer{font-size:18px!important}
+.experience-lock p{font-size:20px!important}
+.career-overview strong{font-size:21px!important}
+.career-overview span{font-size:19.5px!important}
+.project-list-content h3{font-size:22px!important}
+.project-list-content>p{font-size:17px!important;line-height:1.7!important}
+.project-card-brief span{font-size:15.5px!important;line-height:1.62!important}
+.project-story p,.project-story li{font-size:18.5px!important;line-height:1.76!important}
+.project-result-panel p{font-size:18.5px!important;line-height:1.76!important}
+.project-fact-timeline strong{font-size:14.5px!important;white-space:nowrap;letter-spacing:-.35px}
+
+@media(min-width:901px){
+  .qily-global-nav a{font-size:17.5px!important;padding:7px 8px!important}
+}
+
+/* ---------- 首页首屏：降低品牌标题占用，扩大有效内容窗口 ---------- */
+.qily-home-balanced{
+  font-size:19px!important;
+  line-height:1.8!important;
+}
+.qily-home-balanced .topbar{padding:11px clamp(18px,4vw,56px)!important}
+.qily-home-balanced .brand{font-size:19px!important}
+.qily-home-balanced .nav{font-size:16px!important}
+.qily-home-balanced .hero{padding:clamp(34px,4.5vw,58px) clamp(18px,4vw,58px)!important}
+.qily-home-balanced .hero-grid{
+  width:min(1280px,100%)!important;
+  grid-template-columns:minmax(0,1fr) minmax(270px,310px)!important;
+  gap:clamp(24px,3vw,40px)!important;
+  align-items:start!important;
+}
+.qily-home-balanced .hero-grid>div:first-child{min-width:0}
+.qily-home-balanced .hero-grid>aside{
+  width:100%;
+  max-width:310px;
+  justify-self:end;
+}
+.qily-home-balanced .eyebrow{font-size:16px!important}
+.qily-home-balanced h1{
+  max-width:860px!important;
+  font-size:clamp(43px,4.35vw,66px)!important;
+  line-height:1.05!important;
+  letter-spacing:-.02em!important;
+}
+.qily-home-balanced .lead{
+  width:100%!important;
+  max-width:900px!important;
+  font-size:clamp(21px,1.62vw,25px)!important;
+  line-height:1.76!important;
+}
+.qily-home-balanced .group-label{font-size:15.5px!important}
+.qily-home-balanced .tags{gap:10px!important}
+.qily-home-balanced .tags li{font-size:16px!important;padding:8px 13px!important}
+.qily-home-balanced .button{font-size:17px!important;min-height:46px!important}
+.qily-home-balanced .portrait-frame{
+  width:min(292px,100%)!important;
+  margin:0 0 0 auto!important;
+}
+.qily-home-balanced .portrait-frame img{width:100%!important;height:auto!important}
+.qily-home-balanced .portrait-badge{grid-template-columns:repeat(2,minmax(0,1fr))!important;align-items:stretch!important}
+.qily-home-balanced .portrait-badge div{display:flex!important;min-width:0!important;min-height:96px!important;padding:10px 11px!important;flex-direction:column!important;justify-content:flex-start!important;overflow:visible!important}
+.qily-home-balanced .portrait-badge strong{font-size:18.5px!important;line-height:1.25!important;white-space:nowrap!important}
+.qily-home-balanced .portrait-badge span{display:block!important;width:100%!important;margin-top:6px!important;font-size:13px!important;line-height:1.48!important;white-space:normal!important;word-break:normal!important;overflow-wrap:break-word!important;overflow:visible!important;text-overflow:clip!important}
+.qily-home-balanced .portrait-badge div:nth-child(2){padding-left:10px!important;padding-right:10px!important}
+.qily-home-balanced .portrait-badge div:nth-child(2) span{font-size:13px!important;line-height:1.48!important;white-space:normal!important;letter-spacing:0!important;word-break:normal!important;overflow-wrap:break-word!important;overflow:visible!important;text-overflow:clip!important}
+.qily-home-balanced .hero-grid>.assistant-panel{
+  grid-column:1/-1!important;
+  width:100%!important;
+  margin-top:0!important;
+}
+.qily-home-balanced .panel-head{font-size:23px!important;padding:15px 20px!important}
+.qily-home-balanced .panel-body{padding:18px 22px 22px!important}
+.qily-home-balanced label{font-size:16px!important}
+.qily-home-balanced textarea{font-size:20px!important;min-height:82px!important}
+.qily-home-balanced .topic-control{font-size:15.5px!important}
+.qily-home-balanced .answer{font-size:21px!important;line-height:1.84!important;padding:20px!important}
+.qily-home-balanced .inner{width:min(1280px,100%)!important}
+.qily-home-balanced .section .head{max-width:1120px!important}
+.qily-home-balanced .section h2{font-size:clamp(33px,3.2vw,47px)!important}
+.qily-home-balanced .head p{font-size:20px!important;line-height:1.76!important}
+.qily-home-balanced .metric{padding:22px!important}
+.qily-home-balanced .metric span{font-size:17.5px!important;line-height:1.68!important}
+.qily-home-balanced .metric em{font-size:16px!important;line-height:1.62!important}
+.qily-home-balanced .footer{font-size:18px!important}
+
+@media(max-width:1120px){
+  .qily-home-balanced .hero-grid{
+    width:min(940px,100%)!important;
+    grid-template-columns:1fr!important;
+  }
+  .qily-home-balanced .hero-grid>aside{
+    max-width:286px;
+    justify-self:center;
+  }
+  .qily-home-balanced .hero-grid>.assistant-panel{grid-column:1!important}
+  .qily-home-balanced h1{max-width:820px!important;font-size:clamp(42px,5.8vw,58px)!important}
+  .qily-home-balanced .lead{max-width:900px!important}
+}
+
+/* ---------- 手机／平板导航：LOGO独立一行，导航横向滑动 ---------- */
+@keyframes qilyNavSwipeHint{
+  0%,100%{transform:translateX(0)}
+  50%{transform:translateX(4px)}
+}
+@media(max-width:900px){
+  .qily-global-header{
+    position:sticky!important;
+    top:0!important;
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    justify-content:flex-start!important;
+    gap:4px!important;
+    min-height:auto!important;
+    padding:7px 9px 8px!important;
+  }
+  .qily-global-header>.qily-brand,
+  .qily-global-header>.brand{
+    display:block!important;
+    width:142px!important;
+    height:27px!important;
+    margin:0!important;
+  }
+  .qily-global-header::after{
+    content:'← 左右滑动查看更多 →';
+    position:absolute;
+    top:10px;
+    right:10px;
+    z-index:3;
+    padding:4px 8px;
+    border:1px solid #c9dedb;
+    border-radius:999px;
+    color:#0f4b5a;
+    background:rgba(238,248,246,.96);
+    box-shadow:0 4px 12px rgba(15,75,90,.1);
+    font-size:11px;
+    font-weight:900;
+    line-height:1.2;
+    pointer-events:none;
+    animation:qilyNavSwipeHint 1.8s ease-in-out infinite;
+  }
+  .qily-global-nav{
+    display:flex!important;
+    width:100%!important;
+    max-width:100%!important;
+    margin:0!important;
+    padding:2px 48px 4px 0!important;
+    gap:5px!important;
+    justify-content:flex-start!important;
+    flex-wrap:nowrap!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    white-space:nowrap!important;
+    scroll-snap-type:x proximity;
+    scroll-padding-inline:4px;
+    scrollbar-width:thin!important;
+    scrollbar-color:#9abebb transparent;
+    touch-action:pan-x!important;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(90deg,#000 0,#000 90%,transparent 100%);
+    mask-image:linear-gradient(90deg,#000 0,#000 90%,transparent 100%);
+  }
+  .qily-global-nav::-webkit-scrollbar{height:3px!important;display:block!important}
+  .qily-global-nav::-webkit-scrollbar-thumb{background:#9abebb;border-radius:999px}
+  .qily-global-nav::-webkit-scrollbar-track{background:transparent}
+  .qily-global-nav a{
+    flex:0 0 auto!important;
+    min-height:34px!important;
+    padding:5px 9px!important;
+    border-radius:9px!important;
+    font-size:12.5px!important;
+    line-height:1.12!important;
+    scroll-snap-align:start;
+  }
+}
+
+@media(max-width:620px){
+  .qily-brand,.topbar>.brand,.top>.brand{width:130px!important;height:24px!important}
+  .module-page{font-size:18px!important}
+  .qily-site-header .site-nav a{font-size:12px!important}
+  .module-inner,.module-page .inner{width:100%!important}
+  .module-lead,.module-heading,.module-page .head{max-width:100%!important}
+  .module-card{padding:21px!important}
+  .module-media{margin:-21px -21px 18px!important}
+  .module-card p,.module-card li{font-size:18px!important}
+  .module-heading p,.module-page .head p{font-size:18.5px!important}
+  .project-fact-timeline strong{font-size:15px!important;white-space:normal}
+  .qily-home-balanced{font-size:18px!important}
+  .qily-home-balanced .nav{font-size:14px!important}
+  .qily-home-balanced h1{
+    max-width:100%!important;
+    font-size:clamp(38px,10.5vw,43px)!important;
+    line-height:1.06!important;
+    letter-spacing:-.025em!important;
+  }
+  .qily-home-balanced .lead{max-width:100%!important;font-size:20px!important;line-height:1.7!important}
+  .qily-home-balanced .portrait-frame{width:min(270px,100%)!important;margin:auto!important}
+  .qily-home-balanced .portrait-badge{grid-template-columns:1fr!important}
+  .qily-home-balanced .portrait-badge div{min-height:auto!important}
+  .qily-home-balanced .answer{font-size:19px!important}
+  .qily-home-balanced .panel-body{padding:16px!important}
+  .qily-global-header>.qily-brand,
+  .qily-global-header>.brand{display:block!important;width:126px!important;height:23px!important}
+  .qily-global-header::after{content:'左右滑动查看更多 →';font-size:10.5px;top:9px;right:8px}
+  .qily-global-nav{padding-right:42px!important}
+  .qily-global-nav a{font-size:11.5px!important;padding:5px 7px!important}
+}
+
+@media(max-width:380px){
+  .qily-global-header>.qily-brand,
+  .qily-global-header>.brand{width:112px!important;height:21px!important}
+  .qily-global-header::after{content:'左右滑动 →';font-size:10px;padding:3px 7px}
+  .qily-home-balanced h1{font-size:37px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .qily-global-header::after{animation:none!important}
+}
+
+/* QILY-CORE-CSS:site-wide-layout-v1.css */
+/* QilyLean 2026-08-10：全站首屏、正文、卡片、工具区与页脚统一1560px内容轴 v8 */
+:root{
+  --qily-wide-content:1560px;
+  --qily-wide-gutter:clamp(14px,2.2vw,40px);
+  --qily-grid-gap:clamp(14px,1.25vw,22px);
+}
+
+html,body{max-width:100%;overflow-x:clip}
+
+/* 外层区域统一左右安全边距；内容宽度由内层容器控制。 */
+.module-hero,
+.module-section,
+.module-footer,
+.hero:not(:has(.hero-grid)),
+.hero:has(>.hero-grid),
+.daily-hero,
+.section,
+.footer,
+main.main:has(>.chat){
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  padding-left:var(--qily-wide-gutter)!important;
+  padding-right:var(--qily-wide-gutter)!important;
+  box-sizing:border-box!important;
+}
+
+/* 首屏、正文、目录、卡片和页脚全部使用同一条左右内容轴。 */
+.module-inner,
+.module-page .inner,
+.module-hero>.module-inner,
+.module-section>.module-inner,
+.module-footer>.module-inner,
+.module-page main>.module-hero>.module-inner,
+.module-page main>.module-section>.module-inner,
+.hero:not(:has(.hero-grid))>.inner,
+.hero>.hero-inner,
+.hero-inner,
+.hero>.hero-grid,
+.hero-grid,
+.section>.inner,
+.section>.section-inner,
+.section-inner,
+.daily-hero>.daily-inner,
+.daily-inner,
+.footer>.footer-inner,
+.footer-inner,
+.main>.main-inner,
+.main-inner,
+main.main:has(>.chat)>.chat,
+.qily-home-balanced .hero-grid,
+.qily-home-balanced .inner,
+.qily-home-balanced .section>.inner,
+body.module-page .page-inner,
+body.module-page .content-inner,
+body.module-page .archive-inner,
+body.module-page .knowledge-inner,
+body.module-page .project-inner,
+body.module-page .tool-inner,
+.page-inner,
+.content-inner,
+.archive-inner,
+.knowledge-inner,
+.project-inner,
+.tool-inner{
+  width:min(var(--qily-wide-content),100%)!important;
+  max-width:var(--qily-wide-content)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+
+/* 首页：压缩人物图片区占比，把更多横向空间留给职业概述。 */
+.hero-grid,
+.qily-home-balanced .hero-grid{
+  grid-template-columns:minmax(0,1fr) minmax(300px,360px)!important;
+  gap:clamp(24px,2.5vw,42px)!important;
+}
+.hero-grid>div:first-child,
+.qily-home-balanced .hero-grid>div:first-child{min-width:0!important}
+.portrait-frame{width:min(360px,100%)!important}
+
+/* QilyLean AI：聊天工作区与标题区同轴，取消旧1080px窄框。 */
+main.main:has(>.chat){
+  padding-top:24px!important;
+  padding-bottom:40px!important;
+}
+main.main:has(>.chat)>.chat{
+  min-width:0!important;
+  width:min(var(--qily-wide-content),100%)!important;
+}
+
+/* 标题说明、模块目录与正文不再人为缩窄。 */
+.module-lead,
+.module-heading,
+.module-page .head,
+.module-subnav,
+.hero:not(:has(.hero-grid)) .lead,
+.hero:not(:has(.hero-grid)) p,
+.hero-grid .lead,
+.daily-hero p,
+.qily-home-balanced .lead,
+.qily-home-balanced .section .head,
+.section-head,
+.section-heading,
+.page-heading,
+body.module-page .section-heading,
+body.module-page .page-heading{
+  width:100%!important;
+  max-width:100%!important;
+}
+
+/*
+ * 正文宽度统一规则：
+ * 仅解除文字内容的旧限宽，图片、视频、二维码、PDF、弹窗与表格仍保留各自尺寸。
+ * 块级文字自然占满所在列；带年份、按钮等并列元素时，占满扣除操作区后的可用列。
+ */
+main :where(p,li,dd,dt,blockquote),
+article :where(p,li,dd,dt,blockquote),
+.module-page :where(p,li,dd,dt,blockquote),
+.answer-content :where(p,li,dd,dt,blockquote){
+  max-width:none!important;
+  max-inline-size:none!important;
+}
+
+.intro,
+.lead,
+.summary,
+.description,
+.desc,
+.copy,
+.prose,
+.article-intro,
+.article-summary,
+.page-intro,
+.section-intro,
+.module-lead,
+.module-heading,
+.section-head,
+.section-heading,
+.page-heading,
+.module-page .head,
+.section .head,
+.travel-story-heading p,
+.design-feature p,
+.project-list-content>p,
+.project-story p,
+.project-result-panel p{
+  max-width:none!important;
+  max-inline-size:none!important;
+}
+
+.travel-story-heading>div,
+.design-feature-head>div,
+.section-head>div,
+.section-heading>div,
+.page-heading>div,
+.module-heading>div{
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+}
+
+.detail-intro>span{
+  flex:1 1 auto!important;
+  min-width:0!important;
+  max-width:none!important;
+}
+
+.travel-story-heading p,
+.design-feature p{
+  width:auto!important;
+}
+
+/* 网格按最小可读宽度自动换列，杜绝因硬性列数造成卡片过窄。 */
+.module-grid,
+.paper-grid,
+.project-list-grid,
+.project-story-grid,
+.capability-map,
+.capability-digital-tool,
+.capability-certificate,
+.toc,
+.article-list,
+.chat,
+.career-full-grid{
+  max-width:100%!important;
+  box-sizing:border-box!important;
+  gap:var(--qily-grid-gap)!important;
+}
+.module-grid.two{grid-template-columns:repeat(auto-fit,minmax(min(520px,100%),1fr))!important}
+.module-grid.three{grid-template-columns:repeat(auto-fit,minmax(min(390px,100%),1fr))!important}
+.module-grid.four{grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))!important}
+.paper-grid{grid-template-columns:repeat(auto-fit,minmax(min(390px,100%),1fr))!important}
+.career-full-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+
+/* 卡片略减无效留白，换取更完整的中文行宽。 */
+.module-card,
+.paper-card,
+.career-full-card,
+.project-story,
+.project-list-content{min-width:0!important}
+.module-card,
+.paper-card,
+.career-full-card{padding-left:clamp(20px,1.45vw,24px)!important;padding-right:clamp(20px,1.45vw,24px)!important}
+.career-overview{grid-template-columns:minmax(120px,150px) minmax(0,1fr)!important}
+
+/* 术语单点培训课件：二维码重新均衡定位，官网二维码贴近文字，二维码间距放宽并适度放大。 */
+@media(min-width:980px){
+  body.module-page .term-opl-contact-card{
+    grid-template-columns:max-content 12px 116px minmax(26px,1fr) 116px!important;
+    column-gap:0!important;
+    padding-left:18px!important;
+    padding-right:12px!important;
+  }
+  body.module-page .term-opl-contact-copy{
+    grid-column:1!important;
+    min-width:0!important;
+    padding-right:0!important;
+  }
+  body.module-page .term-opl-contact-copy+.term-opl-qr{
+    grid-column:3!important;
+  }
+  body.module-page .term-opl-contact-card>.term-opl-qr:last-child{
+    grid-column:5!important;
+  }
+  body.module-page .term-opl-contact-copy h3{
+    margin-bottom:7px!important;
+    font-size:20.5px!important;
+    line-height:1.28!important;
+    white-space:nowrap!important;
+  }
+  body.module-page .term-opl-contact-copy>p:not(.term-opl-contact-lines){
+    font-size:15.5px!important;
+    line-height:1.55!important;
+    letter-spacing:-.015em!important;
+    white-space:nowrap!important;
+  }
+  body.module-page .term-opl-contact-copy .term-opl-contact-lines{
+    margin-top:8px!important;
+    font-size:15.5px!important;
+    line-height:1.62!important;
+  }
+  body.module-page .term-opl-qr{
+    gap:5px!important;
+  }
+  body.module-page .term-opl-qr img,
+  body.module-page .term-opl-qr .wx-qr-image{
+    box-sizing:border-box!important;
+    width:112px!important;
+    height:112px!important;
+    max-width:112px!important;
+  }
+}
+
+@media(min-width:781px) and (max-width:979px){
+  body.module-page .term-opl-contact-card{
+    grid-template-columns:1fr 1fr!important;
+    column-gap:18px!important;
+    row-gap:14px!important;
+    padding:17px!important;
+  }
+  body.module-page .term-opl-contact-copy{
+    grid-column:1/-1!important;
+    min-width:0!important;
+  }
+  body.module-page .term-opl-contact-copy h3{
+    font-size:20px!important;
+    line-height:1.3!important;
+  }
+  body.module-page .term-opl-contact-copy>p{
+    font-size:15.5px!important;
+    line-height:1.6!important;
+  }
+  body.module-page .term-opl-qr img,
+  body.module-page .term-opl-qr .wx-qr-image{
+    box-sizing:border-box!important;
+    width:110px!important;
+    height:110px!important;
+    max-width:110px!important;
+  }
+}
+
+@media(max-width:1320px){
+  :root{--qily-wide-gutter:clamp(16px,2.6vw,34px)}
+  .hero-grid,.qily-home-balanced .hero-grid{grid-template-columns:minmax(0,1fr) minmax(280px,330px)!important}
+  .portrait-frame{width:min(330px,100%)!important}
+}
+
+@media(max-width:1100px){
+  :root{--qily-wide-gutter:clamp(16px,3vw,30px)}
+  .hero-grid,.qily-home-balanced .hero-grid{grid-template-columns:1fr!important}
+  .portrait-frame{width:min(430px,100%)!important;margin-left:auto!important;margin-right:auto!important}
+  .career-full-grid{grid-template-columns:1fr!important}
+}
+
+@media(max-width:900px){
+  :root{--qily-wide-gutter:clamp(15px,4vw,26px)}
+  main.main:has(>.chat){padding-top:18px!important;padding-bottom:30px!important}
+  .module-grid.two,.module-grid.three,.module-grid.four,.paper-grid{grid-template-columns:1fr!important}
+}
+
+@media(max-width:780px){
+  body.module-page .term-opl-contact-copy h3{
+    font-size:19px!important;
+    line-height:1.32!important;
+  }
+  body.module-page .term-opl-contact-copy>p{
+    font-size:15px!important;
+    line-height:1.62!important;
+  }
+}
+
+@media(max-width:620px){
+  :root{--qily-wide-gutter:15px;--qily-grid-gap:14px}
+  .module-inner,
+  .module-page .inner,
+  .module-hero>.module-inner,
+  .module-section>.module-inner,
+  .module-footer>.module-inner,
+  .module-page main>.module-hero>.module-inner,
+  .module-page main>.module-section>.module-inner,
+  .hero:not(:has(.hero-grid))>.inner,
+  .hero>.hero-inner,
+  .hero-inner,
+  .hero>.hero-grid,
+  .hero-grid,
+  .section>.inner,
+  .section>.section-inner,
+  .section-inner,
+  .daily-hero>.daily-inner,
+  .daily-inner,
+  .footer>.footer-inner,
+  .footer-inner,
+  .main>.main-inner,
+  .main-inner,
+  main.main:has(>.chat)>.chat,
+  .qily-home-balanced .hero-grid,
+  .qily-home-balanced .inner,
+  .qily-home-balanced .section>.inner,
+  body.module-page .page-inner,
+  body.module-page .content-inner,
+  body.module-page .archive-inner,
+  body.module-page .knowledge-inner,
+  body.module-page .project-inner,
+  body.module-page .tool-inner,
+  .page-inner,
+  .content-inner,
+  .archive-inner,
+  .knowledge-inner,
+  .project-inner,
+  .tool-inner{
+    width:100%!important;
+    max-width:100%!important;
+  }
+  .module-card,.paper-card,.career-full-card{padding-left:18px!important;padding-right:18px!important}
+}
+
+/*
+ * QilyLean商业交付档案子目录：强制跟随全站1560px内容轴。
+ * 当前三个公开页面均带有本目录专属链接，因此用结构选择器限定作用域，避免影响其它项目页。
+ */
+:is(
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+){
+  width:min(
+    var(--qily-wide-content,1560px),
+    calc(100% - var(--qily-wide-gutter,40px) - var(--qily-wide-gutter,40px))
+  )!important;
+  max-width:var(--qily-wide-content,1560px)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  padding-top:clamp(28px,3vw,46px)!important;
+  padding-bottom:clamp(52px,5vw,80px)!important;
+  box-sizing:border-box!important;
+}
+
+:is(
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+) > :is(.hero,.section){
+  margin-bottom:var(--qily-grid-gap)!important;
+}
+
+:is(
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+) .grid{
+  gap:var(--qily-grid-gap)!important;
+}
+
+:is(
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+) .card{
+  min-width:0!important;
+  padding:clamp(20px,1.55vw,26px)!important;
+}
+
+/* 档案主页在宽屏上把“状态披露”置于首屏右侧，减少大屏超长文字行并充分利用横向空间。 */
+@media(min-width:1180px){
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]) > .hero{
+    display:grid!important;
+    grid-template-columns:minmax(0,1.55fr) minmax(340px,.7fr)!important;
+    column-gap:clamp(28px,3vw,48px)!important;
+    align-items:start!important;
+  }
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]) > .hero > :is(.eyebrow,h1,.lead){
+    grid-column:1!important;
+    min-width:0!important;
+  }
+  main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]) > .hero > .status{
+    grid-column:2!important;
+    grid-row:1 / span 3!important;
+    align-self:center!important;
+    margin:0!important;
+  }
+}
+
+@media(max-width:900px){
+  :is(
+    main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+    main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+  ){
+    width:calc(100% - var(--qily-wide-gutter,26px) - var(--qily-wide-gutter,26px))!important;
+    padding-top:20px!important;
+    padding-bottom:42px!important;
+  }
+}
+
+@media(max-width:620px){
+  :is(
+    main.main:has(a[href="/projects/qilylean-commercial-deliveries/delivery-record-template.html"]),
+    main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
+  ){
+    width:calc(100% - 30px)!important;
+  }
+}
+
+/* QILY-CORE-CSS:site-typography-v1.css */
+/* QilyLean 2026-07-29：全站一阶至三阶菜单、标题、正文与说明统一排版层级 v4 */
+:root{
+  --qily-font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
+  --qily-type-nav-1:17px;
+  --qily-type-nav-2:16px;
+  --qily-type-nav-3:15px;
+  --qily-type-h1:clamp(43px,4.25vw,66px);
+  --qily-type-h2:clamp(32px,2.9vw,46px);
+  --qily-type-h3:clamp(22px,1.55vw,26px);
+  --qily-type-h4:19px;
+  --qily-type-body:18.5px;
+  --qily-type-card:18.5px;
+  --qily-type-note:16px;
+  --qily-type-small:14.5px;
+  --qily-line-body:1.72;
+  --qily-line-heading:1.22;
+}
+
+html,body,button,input,textarea,select{
+  font-family:var(--qily-font-sans)!important;
+}
+body{font-size:var(--qily-type-body)!important;line-height:var(--qily-line-body)!important}
+
+/* 中文排版：标题允许平衡换行；正文优先铺满可用行宽后自然换行。 */
+h1,h2,h3,h4,h5,h6,
+.module-hero h1,.hero h1,.daily-hero h1,
+.module-heading h2,.section-head h2,.section-heading h2,
+.module-card h3,.paper-card h3,.career-full-card h3{
+  text-wrap:balance;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  line-break:strict!important;
+}
+p,li,dd,dt,blockquote,
+.module-lead,.lead,.answer-content,
+.module-card p,.paper-card p,.career-full-card p,.career-full-card li,
+.career-overview span,.career-chain{
+  text-wrap:wrap;
+  word-break:normal!important;
+  overflow-wrap:break-word!important;
+  line-break:strict!important;
+}
+
+/* 一阶菜单：全站主导航。 */
+.qily-site-header.qily-global-header>.qily-global-nav a,
+.qily-site-header .site-nav>a,
+header.topbar .nav>a,
+header.top .nav>a{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-nav-1)!important;
+  font-weight:850!important;
+  line-height:1.2!important;
+  white-space:nowrap!important;
+}
+
+/* 二阶菜单：首屏子导航、页签、主题切换。 */
+.module-subnav>a,
+.subnav>a,
+.site-subnav>a,
+.category-nav>a,
+.tabs>a,
+.tabs>button,
+.topic-controls .topic-control,
+.module-action,
+.section-nav>a,
+.category-nav>a,
+.hero .toc>a{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-nav-2)!important;
+  font-weight:850!important;
+  line-height:1.3!important;
+}
+
+/* 三阶菜单：正文目录、筛选、卡片操作及标签。 */
+.section .toc a,
+.table-of-contents a,
+.filter-bar button,
+.filter-bar a,
+.filters button,
+.filters a,
+.module-actions a,
+.card-actions a,
+.actions a,
+.moment-link,
+.moment-back,
+.design-link,
+.article-links a,
+.project-list-action,
+.project-card-action,
+.travel-year,
+.button,
+.share-button,
+.project-card-brief,
+.module-card small,
+.paper-card small,
+.career-full-card small,
+.module-eyebrow,
+.eyebrow{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-nav-3)!important;
+  line-height:1.45!important;
+}
+
+/* 一级标题。 */
+.module-hero h1,
+.hero h1,
+.daily-hero h1,
+.qily-home-balanced h1,
+main>h1,
+article>h1{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-h1)!important;
+  font-weight:950!important;
+  line-height:1.08!important;
+  letter-spacing:-.025em!important;
+}
+
+/* 二级标题：模块标题、文章标题。 */
+.module-heading h2,
+.module-page .head h2,
+.section .head h2,
+.section-head h2,
+.section-heading h2,
+.module-card>h2,
+.article>h2,
+main section>h2,
+article>h2{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-h2)!important;
+  font-weight:930!important;
+  line-height:var(--qily-line-heading)!important;
+  letter-spacing:-.012em!important;
+}
+
+/* 三级标题：卡片标题、文章分节标题。 */
+.module-card h3,
+.paper-card h3,
+.career-full-card h3,
+.project-list-content h3,
+.project-story h3,
+.project-result-panel h3,
+.article h3,
+article h3,
+section h3{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-h3)!important;
+  font-weight:900!important;
+  line-height:1.32!important;
+}
+
+.module-card h4,
+.career-full-card h4,
+.article h4,
+article h4,
+section h4{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-h4)!important;
+  font-weight:880!important;
+  line-height:1.4!important;
+}
+
+/* 正文、概述和列表统一阅读尺度。 */
+.module-page,
+.module-card p,
+.module-card li,
+.paper-card p,
+.career-full-card p,
+.career-full-card li,
+.career-overview span,
+.career-chain,
+.article p,
+.article li,
+.project-list-content>p,
+.project-story p,
+.project-story li,
+.project-result-panel p,
+.section-head p,
+.section-heading p,
+.module-page .head p,
+.intro,
+.lead,
+.summary,
+.description,
+.desc,
+.copy,
+.prose,
+.travel-story-heading p,
+.design-feature p,
+.moment-directory-card p,
+.gallery-group p,
+.travel-card span,
+article p,
+article li,
+section p,
+section li{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-body)!important;
+  line-height:var(--qily-line-body)!important;
+}
+
+.module-lead,
+.hero .lead,
+.hero>div>p,
+.daily-hero p,
+.qily-home-balanced .lead{
+  font-family:var(--qily-font-sans)!important;
+  font-size:clamp(20.5px,1.4vw,24px)!important;
+  line-height:1.68!important;
+}
+
+.module-result,
+.module-note,
+.career-result,
+.note,
+figcaption,
+.caption,
+.meta,
+.gallery-tip,
+.empty,
+.moment-count,
+.project-meta,
+.article-meta,
+.module-footer,
+.footer{
+  font-family:var(--qily-font-sans)!important;
+  font-size:var(--qily-type-note)!important;
+  line-height:1.64!important;
+}
+
+small,
+.module-card small,
+.paper-card small,
+.career-full-card small,
+.project-fact small,
+.tag,
+.tag-row li{
+  font-size:var(--qily-type-small)!important;
+}
+
+/* 首页职业概述：保持信息密度，但不压成小字。 */
+.hero-grid .lead,
+.qily-home-balanced .lead{
+  font-size:clamp(20px,1.25vw,23px)!important;
+  line-height:1.64!important;
+}
+.tags li,.group-label,.topic-control{font-size:15.5px!important}
+.answer{font-size:19px!important;line-height:1.72!important}
+.portrait-badge strong{font-size:20px!important}.portrait-badge span{font-size:14px!important}
+
+/* 履历主线：卡片双栏时保证正文不偏小。 */
+.career-full-card p,
+.career-full-card li,
+.career-overview span,
+.career-chain{font-size:18px!important;line-height:1.7!important}
+.career-full-card h3{font-size:24px!important}
+.career-full-card h4{font-size:19px!important}
+.career-full-card small{font-size:15px!important}
+.career-result{font-size:17px!important;line-height:1.66!important}
+
+/* QilyLean AI：对话正文、状态、按钮和输入区整体提升一档。 */
+.chat{font-family:var(--qily-font-sans)!important;font-size:18px!important;line-height:1.68!important}
+.messages,.bubble,.answer-content{font-size:18.5px!important;line-height:1.7!important}
+.answer-content h2{font-size:25px!important;line-height:1.34!important}
+.answer-content h3{font-size:22px!important;line-height:1.38!important}
+.answer-content h4{font-size:19px!important;line-height:1.42!important}
+.answer-content p,.answer-content li{font-size:18.5px!important;line-height:1.7!important}
+.answer-content table{font-size:16px!important}
+.status-title{font-size:16.5px!important;line-height:1.34!important}
+.status-detail,.meta,.upload-note,.notice{font-size:14.5px!important;line-height:1.58!important}
+.quick button,.upload-btn,.send-btn,.clear,.speech-play,.speech-settings summary,.speech-save{font-size:15px!important;line-height:1.34!important}
+.composer textarea{font-size:17px!important;line-height:1.52!important}
+.attachment-name{font-size:15px!important}.attachment-size{font-size:13px!important}
+
+/* 统一标题与正文的垂直节奏。 */
+.module-heading,
+.module-page .head,
+.section .head,
+.section-head,
+.section-heading{
+  margin-bottom:28px!important;
+}
+.module-card h2,.module-card h3,.paper-card h3,.career-full-card h3{margin-top:0!important;margin-bottom:12px!important}
+.module-card h4,.career-full-card h4{margin-top:18px!important;margin-bottom:7px!important}
+.module-card p,.paper-card p,.career-full-card p{margin-top:0!important;margin-bottom:12px!important}
+
+@media(max-width:1100px){
+  :root{--qily-type-body:18px;--qily-type-card:18px}
+  .career-full-card p,.career-full-card li,.career-overview span,.career-chain{font-size:18px!important}
+}
+
+@media(max-width:900px){
+  :root{
+    --qily-type-nav-1:13.5px;
+    --qily-type-nav-2:14.5px;
+    --qily-type-nav-3:14px;
+    --qily-type-h3:22px;
+    --qily-type-body:18px;
+    --qily-type-card:17.5px;
+  }
+}
+
+@media(max-width:620px){
+  :root{
+    --qily-type-nav-1:12px;
+    --qily-type-nav-2:13.5px;
+    --qily-type-nav-3:13px;
+    --qily-type-h1:clamp(36px,10vw,43px);
+    --qily-type-h2:clamp(29px,8vw,36px);
+    --qily-type-h3:21px;
+    --qily-type-h4:18px;
+    --qily-type-body:17.5px;
+    --qily-type-card:17px;
+    --qily-type-note:15px;
+  }
+  .messages,.bubble,.answer-content,.answer-content p,.answer-content li{font-size:17px!important}
+  .answer-content h2{font-size:22px!important}.answer-content h3{font-size:20px!important}
+  .status-detail,.meta,.upload-note,.notice{font-size:13.5px!important}
+}
+
+/* QILY-CORE-CSS:site-vi-standard-v1.css */
+/* QilyLean 全站VI主色规范 v3｜2026-08-12
+ * 品牌主色仅采用：橄榄绿／深青绿、品牌红、品牌金。
+ * 白色与浅绿色仅作为网页中性背景，不计入VI主色。
+ * 语义通用元素（如❌、绿色底白勾、成功/失败/警告状态图标）不受本文件改色约束。
+ * V3原则：工程化、可信、克制、可读；所有页面共享同一视觉语法，不以装饰抢夺内容层级。
+ */
+
+:root{
+  /* 三大品牌主色 */
+  --qily-vi-olive:#0f4b5a;
+  --qily-vi-olive-deep:#073c47;
+  --qily-vi-olive-light:#178b94;
+  --qily-vi-red:#9e4a34;
+  --qily-vi-gold:#caa15f;
+  --qily-vi-gold-light:#ffe39b;
+
+  /* 中性背景：不计入VI主色 */
+  --qily-vi-white:#ffffff;
+  --qily-vi-paper:#eef7f5;
+  --qily-vi-paper-soft:#f7fbfa;
+  --qily-vi-line:#d5e4e3;
+
+  /* QilyLean V3 统一资产系统 */
+  --qily-surface:#ffffff;
+  --qily-surface-soft:#f7fbfa;
+  --qily-surface-tint:#eef7f5;
+  --qily-ink:#182420;
+  --qily-muted:#5f7474;
+  --qily-line:#d5e4e3;
+  --qily-line-strong:#b8d6d2;
+  --qily-container:1240px;
+  --qily-copy:920px;
+  --qily-radius-sm:8px;
+  --qily-radius:12px;
+  --qily-radius-lg:18px;
+  --qily-shadow-sm:0 6px 20px rgba(7,60,71,.07);
+  --qily-shadow:0 16px 42px rgba(7,60,71,.10);
+  --qily-shadow-strong:0 24px 64px rgba(7,60,71,.15);
+  --qily-space-1:8px;
+  --qily-space-2:12px;
+  --qily-space-3:16px;
+  --qily-space-4:24px;
+  --qily-space-5:32px;
+  --qily-space-6:48px;
+  --qily-space-7:64px;
+  --qily-space-8:88px;
+
+  /* 兼容全站历史变量，统一归并到三色体系 */
+  --qily-forest:var(--qily-vi-olive)!important;
+  --forest:var(--qily-vi-olive)!important;
+  --qily-deep:var(--qily-vi-olive-deep)!important;
+  --deep:var(--qily-vi-olive-deep)!important;
+  --qily-teal:var(--qily-vi-olive-light)!important;
+  --teal:var(--qily-vi-olive-light)!important;
+  --qily-red:var(--qily-vi-red)!important;
+  --red:var(--qily-vi-red)!important;
+  --danger:var(--qily-vi-red)!important;
+  --qily-plum:var(--qily-vi-red)!important;
+  --plum:var(--qily-vi-red)!important;
+  --qily-copper:var(--qily-vi-gold)!important;
+  --copper:var(--qily-vi-gold)!important;
+  --qily-gold:var(--qily-vi-gold)!important;
+  --gold:var(--qily-vi-gold)!important;
+}
+
+/* 深橄榄绿／深青绿底面：文字必须白色。 */
+html body :is(
+  .module-hero,.daily-hero,.hero,.article-hub,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,
+  .qily-forest-bg,.qily-olive-bg,.olive-bg,.forest-bg,.dark-bg,
+  .qily-dark,.qily-olive,.module-footer,.footer,.contact-card,
+  .qily-olive-action,.qily-dark-action
+){
+  color:#fff!important;
+}
+
+html body :is(
+  .module-hero,.daily-hero,.hero,.article-hub,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,
+  .qily-forest-bg,.qily-olive-bg,.olive-bg,.forest-bg,.dark-bg,
+  .qily-dark,.qily-olive,.module-footer,.footer,.contact-card
+) :is(h1,h2,h3,h4,h5,h6,p,small,strong,b,span,.title,.headline,.lead,.subtitle,.summary,.meta,.eyebrow){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
+/* 深色品牌控件：橄榄绿底＋白字＋金色反馈。 */
+html body :is(
+  .module-actions a[href]:not(.secondary),.card-actions a[href]:not(.secondary),
+  a[href].module-action,a[href].resource-action,a[href].project-list-action,
+  a[href].project-card-action,a[href].service-contract-link,a[href].share-button,
+  a[href].button:not(.primary),button.button,button.primary,.send-btn,.speech-save,
+  .qily-olive-action,.qily-dark-action
+){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qily-vi-olive)!important;
+  border-color:var(--qily-vi-olive)!important;
+  text-decoration-color:var(--qily-vi-gold-light)!important;
+}
+
+html body :is(
+  .module-actions a[href]:not(.secondary),.card-actions a[href]:not(.secondary),
+  a[href].module-action,a[href].resource-action,a[href].project-list-action,
+  a[href].project-card-action,a[href].service-contract-link,a[href].share-button,
+  a[href].button:not(.primary),button.button,button.primary,.send-btn,.speech-save,
+  .qily-olive-action,.qily-dark-action
+):is(:hover,:focus-visible){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qily-vi-olive-deep)!important;
+  border-color:var(--qily-vi-gold)!important;
+  box-shadow:0 9px 22px rgba(15,75,90,.28)!important;
+}
+
+/* 金色：价值、成果、当前选中和关键入口。 */
+html body :is(
+  .button.primary,.primary-gold,.gold-action,.value-highlight,
+  .module-subnav a[aria-selected="true"],.module-subnav a.primary,
+  .article-links a[aria-current="page"]
+){
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background-color:var(--qily-vi-gold-light)!important;
+  border-color:var(--qily-vi-gold)!important;
+}
+
+/* 品牌红：风险、异常、纠偏、删除与需关注信息。 */
+html body :is(
+  .clear,.remove-one,.remove-file,.danger,.danger-text,.risk,.risk-text,
+  .warning-critical,.abnormal,.alert-critical,.qily-red-action
+){
+  color:var(--qily-vi-red)!important;
+  -webkit-text-fill-color:var(--qily-vi-red)!important;
+}
+
+/* 浮动操作坞：橄榄绿为主、分享类用品牌红、交流用品牌金。 */
+html body .qily-float-home,
+html body .qily-float-back,
+html body .qily-float-btn:not(.qily-float-current):not(.qily-float-share):not(.qily-float-contact){
+  color:#fff!important;
+  background:rgba(15,75,90,.88)!important;
+}
+html body .qily-float-current,
+html body .qily-float-share{
+  color:#fff!important;
+  background:rgba(158,74,52,.90)!important;
+}
+html body .qily-float-contact{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background:rgba(202,161,95,.92)!important;
+}
+
+/* 历史“紫色/梅红”模块在运行时统一映射为品牌红。 */
+html body :is(.plum,.plum-bg,.qily-plum,.qily-plum-bg,.accent-plum){
+  color:#fff!important;
+  background-color:var(--qily-vi-red)!important;
+  border-color:var(--qily-vi-red)!important;
+}
+
+/* 中性白色、浅绿色背景保持网页默认，不强制改为品牌色。 */
+html body :is(.paper,.white-bg,.surface,.card,.module-card,.trust-card,.post,.chat,.bar){
+  --qily-neutral-surface:1;
+}
+
+/* 语义通用元素豁免：成功绿勾、错误红叉、警告图标及图例保留自身语义色。 */
+html body :is(
+  [data-semantic-color],.semantic-icon,.semantic-success,.semantic-error,.semantic-warning,
+  .status-icon,.result-icon,.check-icon,.error-icon,.warning-icon,.legend,.diagram-legend
+){
+  forced-color-adjust:none;
+}
+
+/* ========================================================================== 
+   QILYLEAN MANUFACTURING ASSET SYSTEM V3｜2026-08-12
+   母逻辑：现场事实 → 工程数据 → 精益改善 → 质量保证 → 数智固化 → 知识资产
+   竞争力：懂现场 / 能计算 / 会改善 / 可固化 / 能证明 / 可复制
+   ========================================================================== */
+
+html{background:var(--qily-surface-tint);color-scheme:light;}
+html body{color:var(--qily-ink);background:var(--qily-surface-tint);text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;}
+html body :is(main,.module-main,.page-main){isolation:isolate;}
+html body :is(.inner,.module-inner,.qily-ia-inner,.section-inner,.content-inner,.wrap,.container){max-width:var(--qily-container);}
+
+/* 统一标题：每个页面先形成“结论层”，再进入证据与细节。 */
+html body :is(h1,h2,h3){letter-spacing:-.018em;text-wrap:balance;}
+html body :is(h1,.hero h1,.module-hero h1,.daily-hero h1){font-weight:950;line-height:1.08;}
+html body :is(h2,.section-title,.qily-ia-heading h2){font-weight:930;line-height:1.18;}
+html body :is(.lead,.hero-lead,.module-lead,.qily-ia-heading>p){max-width:var(--qily-copy);line-height:1.72;}
+html body :is(.eyebrow,.qily-ia-kicker,.kicker,.section-kicker){font-weight:900;letter-spacing:.075em;text-transform:none;}
+
+/* Hero统一为“工业工程蓝图”语义：深青绿基底、金色基准线、克制网格。 */
+html body :is(.hero,.module-hero,.daily-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero){
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))!important;
+  border-bottom:1px solid rgba(202,161,95,.48)!important;
+}
+html body :is(.hero,.module-hero,.daily-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero)::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  opacity:.19;
+  background-image:linear-gradient(rgba(255,255,255,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.13) 1px,transparent 1px);
+  background-size:44px 44px;
+  mask-image:linear-gradient(90deg,#000,transparent 88%);
+}
+html body :is(.hero,.module-hero,.daily-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero)>*{position:relative;z-index:1;}
+
+/* 链接/按钮：不再全站“药丸化”；功能明确、四边界清楚。 */
+html body :is(.button,.qily-ia-button,.module-action,.resource-action,.project-list-action,.project-card-action,.service-contract-link,.share-button){
+  border-radius:var(--qily-radius-sm)!important;
+  min-height:44px;
+  font-weight:900;
+  box-shadow:none;
+}
+html body :is(.button,.qily-ia-button,.module-action,.resource-action,.project-list-action,.project-card-action,.service-contract-link,.share-button):focus-visible{
+  outline:3px solid rgba(255,227,155,.82)!important;
+  outline-offset:3px!important;
+}
+
+/* 卡片：信息层级由“编号/标题/说明/结果”组成，静态卡不做无意义浮动。 */
+html body :is(.card,.module-card,.qily-ia-card,.trust-card,.metric,.price-card,.project-card,.resource-card,.knowledge-card){
+  border-radius:var(--qily-radius)!important;
+  border-color:var(--qily-line)!important;
+  box-shadow:var(--qily-shadow-sm);
+}
+html body :is(.qily-ia-card,.module-card,.project-card,.knowledge-card){position:relative;overflow:hidden;}
+html body :is(.qily-ia-card,.module-card,.project-card,.knowledge-card)::before{
+  content:"";
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:4px;
+  background:linear-gradient(var(--qily-vi-gold),var(--qily-vi-olive-light));
+}
+html body :is(.qily-static-card,.metric:not(:has(a[href])),[data-qily-static-card="true"]){transform:none!important;transition:none!important;cursor:default!important;}
+
+/* 全站段落节奏：白/浅绿交替，避免“满屏卡片”。 */
+html body :is(.section,.qily-ia-section,.module-section){padding-block:clamp(48px,6.3vw,88px);}
+html body :is(.section,.qily-ia-section,.module-section):nth-of-type(even){background:var(--qily-surface-soft);}
+html body :is(.section,.qily-ia-section,.module-section) :is(.head,.qily-ia-heading,.section-heading){margin-bottom:clamp(24px,3.2vw,40px);}
+
+/* 顶部导航：一级业务导视优先；当前模块用金色基准线而不是大面积色块。 */
+html body .qily-global-header{border-bottom:1px solid var(--qily-line)!important;box-shadow:0 5px 18px rgba(7,60,71,.065)!important;}
+html body .qily-global-header>.qily-global-nav{gap:4px!important;}
+html body .qily-global-header>.qily-global-nav a{position:relative;border-radius:var(--qily-radius-sm)!important;font-weight:850!important;}
+html body .qily-global-header>.qily-global-nav a[aria-current="page"]{color:var(--qily-vi-olive)!important;background:#f2f8f7!important;border-color:var(--qily-line-strong)!important;}
+html body .qily-global-header>.qily-global-nav a[aria-current="page"]::after{content:"";position:absolute;left:10px;right:10px;bottom:3px;height:2px;background:var(--qily-vi-gold);}
+
+/* V3全站价值轴/导视 */
+.qily-system-axis{background:#fff;border-bottom:1px solid var(--qily-line);}
+.qily-system-axis__inner{width:min(var(--qily-container),calc(100% - 36px));margin:auto;padding:16px 0;}
+.qily-system-axis__title{display:flex;align-items:center;gap:10px;margin:0 0 10px;color:var(--qily-vi-olive);font-size:13px;font-weight:950;letter-spacing:.08em;}
+.qily-system-axis__title::before{content:"";width:28px;height:3px;background:var(--qily-vi-gold);}
+.qily-system-axis__steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;}
+.qily-system-axis__step{position:relative;min-height:64px;padding:10px 12px 10px 14px;border:1px solid var(--qily-line);border-radius:var(--qily-radius-sm);background:var(--qily-surface-soft);}
+.qily-system-axis__step:not(:last-child)::after{content:"›";position:absolute;right:-8px;top:50%;z-index:2;translate:0 -50%;color:var(--qily-vi-gold);font-size:22px;font-weight:950;}
+.qily-system-axis__step strong{display:block;color:var(--qily-vi-olive);font-size:14px;line-height:1.25;}
+.qily-system-axis__step span{display:block;margin-top:4px;color:var(--qily-muted);font-size:12px;line-height:1.4;}
+.qily-system-axis__step.is-current{border-color:var(--qily-vi-gold);background:#fffaf0;box-shadow:inset 0 0 0 1px rgba(202,161,95,.18);}
+
+/* 首页V3：价值主张先于业务清单。 */
+.qily-home-v3 .hero{padding-block:clamp(46px,6vw,82px)!important;}
+.qily-home-v3 .hero-grid{align-items:center!important;}
+.qily-home-v3 .hero h1{max-width:900px;font-size:clamp(40px,5.2vw,74px)!important;}
+.qily-home-v3 .hero .lead{font-size:clamp(18px,1.5vw,23px)!important;color:#eef8f6!important;}
+.qily-home-v3 .qily-home-thesis{max-width:900px;margin:18px 0 0;padding-left:16px;border-left:3px solid var(--qily-vi-gold);color:#fff5d8!important;font-size:16px;line-height:1.75;}
+.qily-home-v3 .qily-home-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;}
+.qily-home-v3 .qily-home-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 17px;border:1px solid rgba(255,227,155,.55);border-radius:var(--qily-radius-sm);color:#fff;text-decoration:none;font-weight:900;}
+.qily-home-v3 .qily-home-actions a.primary{color:#17322d;background:var(--qily-vi-gold-light);border-color:var(--qily-vi-gold);}
+.qily-home-v3 .portrait-frame{border-radius:var(--qily-radius-lg)!important;box-shadow:var(--qily-shadow-strong)!important;}
+.qily-home-v3 .qily-asset-section{padding:clamp(52px,6vw,88px) clamp(18px,4vw,56px);background:#fff;border-bottom:1px solid var(--qily-line);}
+.qily-home-v3 .qily-asset-section.alt{background:var(--qily-surface-soft);}
+.qily-home-v3 .qily-asset-inner{width:min(var(--qily-container),100%);margin:auto;}
+.qily-home-v3 .qily-asset-heading{max-width:940px;margin-bottom:32px;}
+.qily-home-v3 .qily-asset-heading small{display:block;margin-bottom:9px;color:var(--qily-vi-red);font-weight:950;letter-spacing:.08em;}
+.qily-home-v3 .qily-asset-heading h2{margin:0 0 12px;color:var(--qily-vi-olive);font-size:clamp(30px,3.4vw,48px);}
+.qily-home-v3 .qily-asset-heading p{margin:0;color:var(--qily-muted);font-size:18px;line-height:1.75;}
+.qily-home-v3 .qily-six-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;}
+.qily-home-v3 .qily-value-card{padding:22px;border:1px solid var(--qily-line);border-radius:var(--qily-radius);background:#fff;box-shadow:var(--qily-shadow-sm);}
+.qily-home-v3 .qily-value-card small{color:var(--qily-vi-red);font-size:12px;font-weight:950;letter-spacing:.06em;}
+.qily-home-v3 .qily-value-card h3{margin:8px 0;color:var(--qily-vi-olive);font-size:22px;}
+.qily-home-v3 .qily-value-card p{margin:0;color:var(--qily-muted);font-size:16px;line-height:1.7;}
+.qily-home-v3 .qily-value-card strong{display:block;margin-top:13px;padding-top:11px;border-top:1px solid var(--qily-line);color:#315f64;font-size:14px;line-height:1.55;}
+.qily-home-v3 .qily-proof-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+.qily-home-v3 .qily-proof-item{padding:20px;border-top:3px solid var(--qily-vi-gold);background:#fff;box-shadow:var(--qily-shadow-sm);}
+.qily-home-v3 .qily-proof-item strong{display:block;color:var(--qily-vi-olive);font-size:25px;}
+.qily-home-v3 .qily-proof-item span{display:block;margin-top:7px;color:var(--qily-muted);font-size:14px;line-height:1.6;}
+.qily-home-v3 .qily-section-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;}
+.qily-home-v3 .qily-section-actions a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 15px;border:1px solid var(--qily-line-strong);border-radius:var(--qily-radius-sm);color:var(--qily-vi-olive);background:#fff;text-decoration:none;font-weight:900;}
+.qily-home-v3 .qily-section-actions a.primary{color:#fff;background:var(--qily-vi-olive);border-color:var(--qily-vi-olive);}
+
+/* 表格与长内容：工程资料优先可读性。 */
+html body table{border-collapse:separate;border-spacing:0;border:1px solid var(--qily-line);border-radius:var(--qily-radius);overflow:hidden;background:#fff;}
+html body table :is(th,td){padding:10px 12px;border-color:var(--qily-line);vertical-align:top;}
+html body table th{color:var(--qily-vi-olive-deep);background:#edf6f4;font-weight:900;}
+html body :is(pre,code){font-variant-ligatures:none;}
+
+/* 手机版：不堆字、不挤边，保留至少一个汉字宽度的视觉留白。 */
+@media(max-width:900px){
+  .qily-system-axis__steps{grid-template-columns:repeat(3,minmax(0,1fr));}
+  .qily-system-axis__step:nth-child(3)::after{display:none;}
+  .qily-home-v3 .qily-six-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .qily-home-v3 .qily-proof-strip{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:620px){
+  :root{--qily-radius:10px;--qily-radius-lg:14px;}
+  html body :is(.section,.qily-ia-section,.module-section,.qily-asset-section){padding-left:max(18px,env(safe-area-inset-left))!important;padding-right:max(18px,env(safe-area-inset-right))!important;}
+  .qily-system-axis__inner{width:calc(100% - 36px);padding:13px 0;}
+  .qily-system-axis__steps{grid-template-columns:1fr 1fr;gap:7px;}
+  .qily-system-axis__step:nth-child(2n)::after{display:none;}
+  .qily-system-axis__step{min-height:58px;padding:9px 10px;}
+  .qily-home-v3 .qily-six-grid,.qily-home-v3 .qily-proof-strip{grid-template-columns:1fr;}
+  .qily-home-v3 .hero h1{font-size:clamp(34px,10.5vw,48px)!important;}
+  .qily-home-v3 .qily-home-actions a,.qily-home-v3 .qily-section-actions a{width:100%;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body *{scroll-behavior:auto}
+}
+
+/* QILY-CORE-CSS:site-vi-contrast-restoration-v1.css */
+/* QilyLean 全站文字色彩语义规范 V2｜2026-08-11
+ * 原则：按标题、正文、辅助信息、控件、深色表面分别管理文字颜色；禁止通用 span 规则污染标题。
+ * 保留既定深青绿、品牌红、品牌金；深底白字，浅底深字，并确保 PC／平板／手机一致。
+ */
+:root{
+  --qily-read-olive:#0f4b5a;
+  --qily-read-deep:#073c47;
+  --qily-read-teal:#178b94;
+  --qily-read-red:#9e4a34;
+  --qily-read-gold:#caa15f;
+  --qily-read-gold-light:#ffe39b;
+  --qily-read-ink:#182420;
+  --qily-read-heading:#073c47;
+  --qily-read-copy:#496565;
+  --qily-read-muted:#5f7474;
+  --qily-read-accent:#93691d;
+  --qily-read-on-dark:#fff;
+  --qily-read-line:#d5e4e3;
+  --qily-read-paper:#eef7f5;
+  --qily-read-soft:#f7fbfa;
+  --qily-read-white:#fff;
+}
+
+html,html body{color:var(--qily-read-ink)!important;background:var(--qily-read-paper)!important}
+html body :where(p,li,dd,figcaption,.summary,.description,.meta,.fine,.note){text-shadow:none}
+
+/* 恢复全站原VI首屏：深青绿底、白色正文、金色辅助信息。 */
+html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero){
+  color:#fff!important;
+  background:linear-gradient(125deg,var(--qily-read-deep),var(--qily-read-teal))!important;
+  border-color:transparent!important;
+}
+html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero) :is(h1,h2,h3,h4,p,.lead,.module-lead,.summary,.subtitle){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+}
+html body :is(.module-hero,.daily-hero,.hero) :is(.module-eyebrow,.eyebrow,.qily-founder-line){
+  color:var(--qily-read-gold-light)!important;
+  -webkit-text-fill-color:var(--qily-read-gold-light)!important;
+}
+html body :is(.module-hero,.daily-hero,.hero) a:not(.button){
+  color:var(--qily-read-gold-light)!important;
+  -webkit-text-fill-color:var(--qily-read-gold-light)!important;
+  text-decoration-color:var(--qily-read-gold-light)!important;
+}
+
+/* 浅色内容面统一深色文字，避免浅底浅字。 */
+html body :is(.module-section,.section,.qily-ia-section,.daily-section,.content-section,.knowledge-section,.trust-card,.module-card,.card,.metric,.record,.post,.bar,.chat,.qily-modal-panel){
+  color:var(--qily-read-ink)!important;
+}
+html body :is(.module-section,.section,.qily-ia-section,.daily-section,.content-section,.knowledge-section,.trust-card,.module-card,.card,.metric,.record,.post,.bar,.chat,.qily-modal-panel) :is(h1,h2,h3,h4,h5,h6,strong,b){
+  color:var(--qily-read-heading)!important;
+  -webkit-text-fill-color:var(--qily-read-heading)!important;
+  opacity:1!important;
+}
+
+/* 正文只管理正文语义节点，不再把所有 span／small 一刀切成正文色。 */
+html body :is(.module-section,.section,.qily-ia-section,.daily-section,.content-section,.knowledge-section,.trust-card,.module-card,.card,.metric,.record,.post,.bar,.chat,.qily-modal-panel) :is(p,li,dd,figcaption,.lead,.summary,.description,.meta,.fine,.note){
+  color:var(--qily-read-copy)!important;
+  -webkit-text-fill-color:var(--qily-read-copy)!important;
+  opacity:1!important;
+}
+
+/* 标题内部包裹元素必须继承标题色：修复 nowrap/span 导致的局部发浅。 */
+html body :is(h1,h2,h3,h4,h5,h6) :is(span,strong,b,em,small),
+html body .qily-no-break{
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:inherit!important;
+}
+
+/* 正文内部普通包裹元素继承正文，不自行建立新色阶。 */
+html body :is(p,li,dd,figcaption,.lead,.summary,.description,.meta,.fine,.note) :is(span,small,em){
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  opacity:1!important;
+}
+
+/* 控件内部文字继承控件自身前景色，避免按钮／链接中的 span 被正文规则覆盖。 */
+html body :is(a[href],button,[role="button"],[role="link"]) :is(span,strong,b,small,em){
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  opacity:1!important;
+}
+
+/* 卡片小标题／标签使用统一辅助色；主标题始终使用标题色。 */
+html body :is(.module-card,.paper-card,.career-full-card,.project-story,.project-list-content,.evidence-card,.qily-ia-card) > small{
+  color:var(--qily-read-muted)!important;
+  -webkit-text-fill-color:var(--qily-read-muted)!important;
+  opacity:1!important;
+}
+html body :is(.module-card,.paper-card,.career-full-card,.project-story,.project-list-content,.evidence-card,.qily-ia-card) :is(h2,h3,h4),
+html body :is(.module-card,.paper-card,.career-full-card,.project-story,.project-list-content,.evidence-card,.qily-ia-card) :is(h2,h3,h4) *{
+  color:var(--qily-read-heading)!important;
+  -webkit-text-fill-color:var(--qily-read-heading)!important;
+  opacity:1!important;
+  filter:none!important;
+}
+
+/* 结果条、重点输出属于强调信息，使用深青而不是灰化正文。 */
+html body :is(.module-result,.career-result,.qily-ia-result,.project-result,.result,.output){
+  color:var(--qily-read-heading)!important;
+  -webkit-text-fill-color:var(--qily-read-heading)!important;
+  opacity:1!important;
+}
+
+/* 顶部导航：白底深字；当前项与悬停具备明确高对比反馈。 */
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header){
+  color:var(--qily-read-ink)!important;
+  background:rgba(255,255,255,.98)!important;
+  border-bottom:1px solid var(--qily-read-line)!important;
+}
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header) :is(.site-nav,.qily-global-nav,.nav)>a[href]{
+  color:var(--qily-read-ink)!important;
+  -webkit-text-fill-color:var(--qily-read-ink)!important;
+  background:transparent!important;
+  text-shadow:none!important;
+}
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header) :is(.site-nav,.qily-global-nav,.nav)>a[href][aria-current="page"]{
+  color:var(--qily-read-deep)!important;
+  -webkit-text-fill-color:var(--qily-read-deep)!important;
+  background:#e4f2ef!important;
+  border-color:#b8d9d4!important;
+}
+html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header) :is(.site-nav,.qily-global-nav,.nav)>a[href]:is(:hover,:focus-visible){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-read-olive)!important;
+  border-color:var(--qily-read-olive)!important;
+}
+
+/* 页脚：深底白字，链接采用金色。 */
+html body :is(.module-footer,.footer,footer){
+  color:#fff!important;
+  background:#101916!important;
+  border-color:#263a34!important;
+}
+html body :is(.module-footer,.footer,footer) :is(span,p,strong,b,small){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+}
+html body :is(.module-footer,.footer,footer) a[href]{
+  color:var(--qily-read-gold-light)!important;
+  -webkit-text-fill-color:var(--qily-read-gold-light)!important;
+}
+
+/* 按钮与操作入口：深青绿底白字；次要按钮白底深字。 */
+html body :is(.module-actions,.article-actions,.card-actions,.actions,.qily-ia-actions) a[href]:not(.secondary),
+html body a[href]:is(.resource-action,.module-action,.project-list-action,.project-card-action,.qily-ia-button.primary),
+html body button:not(.qily-modal-close):not(.qily-float-btn):not(.site-music-toggle){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-read-olive)!important;
+  border-color:var(--qily-read-olive)!important;
+  text-shadow:none!important;
+}
+html body :is(.module-actions,.article-actions,.card-actions,.actions,.qily-ia-actions) a[href]:not(.secondary):is(:hover,:focus-visible),
+html body a[href]:is(.resource-action,.module-action,.project-list-action,.project-card-action,.qily-ia-button.primary):is(:hover,:focus-visible){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-read-deep)!important;
+  border-color:var(--qily-read-gold)!important;
+}
+html body :is(.module-actions,.article-actions,.card-actions,.actions,.qily-ia-actions) a[href].secondary,
+html body a[href].qily-ia-button:not(.primary){
+  color:var(--qily-read-deep)!important;
+  -webkit-text-fill-color:var(--qily-read-deep)!important;
+  background:#fff!important;
+  border-color:var(--qily-read-olive)!important;
+}
+
+/* 信任中心商业交付入口专项：严禁白底白字。 */
+html body #qily-commercial-deliveries .article-actions .resource-action{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-read-olive)!important;
+  border:2px solid var(--qily-read-olive)!important;
+  font-weight:900!important;
+}
+html body #qily-commercial-deliveries .article-actions .resource-action:is(:hover,:focus-visible){
+  background:var(--qily-read-deep)!important;
+  border-color:var(--qily-read-gold)!important;
+}
+
+/* 背景音乐按钮：恢复圆形喇叭，不允许被全站按钮规则改成方块。 */
+html body .site-music-toggle,
+html body button.site-music-toggle{
+  width:38px!important;
+  min-width:38px!important;
+  height:38px!important;
+  min-height:38px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:50%!important;
+  color:var(--qily-read-olive)!important;
+  -webkit-text-fill-color:var(--qily-read-olive)!important;
+  background:rgba(255,255,255,.96)!important;
+  box-shadow:0 5px 18px rgba(7,60,71,.22)!important;
+  display:grid!important;
+  place-items:center!important;
+  line-height:1!important;
+}
+html body .site-music-toggle svg{display:block!important;width:23px!important;height:23px!important;color:inherit!important;stroke:currentColor!important;fill:none!important}
+
+/* 悬浮功能坞：恢复圆形和原VI，交流使用金底深字。 */
+html body .qily-float-btn{
+  width:62px!important;
+  min-width:62px!important;
+  height:62px!important;
+  min-height:62px!important;
+  padding:4px!important;
+  border:1px solid rgba(255,255,255,.72)!important;
+  border-radius:50%!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:rgba(15,75,90,.92)!important;
+  box-shadow:0 10px 24px rgba(15,75,90,.28)!important;
+  font-size:13px!important;
+  font-weight:950!important;
+  line-height:1.16!important;
+  text-align:center!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.42)!important;
+}
+html body .qily-float-current,html body .qily-float-share{background:rgba(158,74,52,.94)!important}
+html body .qily-float-contact{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  background:rgba(255,227,155,.98)!important;
+  border-color:var(--qily-read-gold)!important;
+  text-shadow:none!important;
+}
+
+/* 弹窗和关闭键：浅底深字，关闭符号清晰。 */
+html body .qily-modal-mask{background:rgba(0,0,0,.58)!important}
+html body .qily-modal-panel{color:var(--qily-read-ink)!important;background:#fff!important;border:1px solid var(--qily-read-line)!important}
+html body .qily-modal-panel :is(h2,h3,h4,strong){color:var(--qily-read-deep)!important;-webkit-text-fill-color:var(--qily-read-deep)!important}
+html body .qily-modal-panel :is(p,span,label,.qily-modal-note){color:var(--qily-read-copy)!important;-webkit-text-fill-color:var(--qily-read-copy)!important}
+html body .qily-modal-close,
+html body button.qily-modal-close{
+  color:var(--qily-read-deep)!important;
+  -webkit-text-fill-color:var(--qily-read-deep)!important;
+  background:#e8f2f0!important;
+  border:1px solid #b8d9d4!important;
+  border-radius:50%!important;
+  text-shadow:none!important;
+}
+
+/* 静态模块无伪链接位移；真正的链接保留清晰反馈。 */
+html body :is(.module-card,.metric,.trust-card,.qily-ia-card):not(a):not([role="link"]):not([onclick]){
+  transform:none!important;
+}
+html body a:is(.module-card,.trust-card,.qily-ia-card,[role="link"]):is(:hover,:focus-visible){
+  box-shadow:0 16px 38px rgba(15,75,90,.2)!important;
+}
+
+@media(max-width:760px){
+  html body .site-music-toggle{width:36px!important;min-width:36px!important;height:36px!important;min-height:36px!important}
+  html body .qily-float-btn{width:56px!important;min-width:56px!important;height:56px!important;min-height:56px!important;font-size:12px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html body *,html body *::before,html body *::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+/* V2 深色表面保险：标题与正文子元素保持反白，强调信息保持浅金。 */
+html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.qily-ia-dark) :is(h1,h2,h3,h4,h5,h6,p,.lead,.module-lead,.summary,.subtitle) *,
+html body :is(.module-footer,.footer,footer) :is(p,span,strong,b,small,em){
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  opacity:1!important;
+}
+
+/* QILY-CORE-CSS:site-r2-stability-fixes-v1.css */
+/* QilyLean R2 runtime stability fixes｜2026-08-12
+ * 规则来源：QL-WEB-STD-001 V2026.08.12/R2。
+ * 本版补充：全站页尾清除、原子首屏、防旧脚本回流、代表项目缩略图安全区。
+ */
+
+/* VI-02｜深色按钮 normal / visited / hover / focus / active 全状态必须高对比。 */
+.qily-section-actions a.primary,
+.qily-section-actions a.primary:visited,
+.qily-section-actions a.primary:hover,
+.qily-section-actions a.primary:focus-visible,
+.qily-section-actions a.primary:active {
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#0f4b5a!important;
+  border-color:#0f4b5a!important;
+}
+
+a[style*="background:#0f4b5a"],
+a[style*="background: #0f4b5a"],
+button[style*="background:#0f4b5a"],
+button[style*="background: #0f4b5a"] {
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
+/* VI-06｜同网格卡片使用纵向弹性布局，动作/信息条统一沉底。 */
+.qily-trust-wrap > .qily-value-card,
+.qily-value-card[data-qily-equal-card="true"] {
+  display:flex!important;
+  flex-direction:column!important;
+  height:100%!important;
+}
+.qily-trust-wrap > .qily-value-card > strong,
+.qily-value-card[data-qily-equal-card="true"] > strong {
+  margin-top:auto!important;
+}
+
+/*
+ * VI-07｜代表项目清单缩略图安全区。
+ * 根因：project-thumbnails-v3 曾把 project-list-card 设为 overflow:visible，
+ * 允许缩略图/阴影侵入卡片边界。这里作为 R2 最终层统一收口：
+ * - 卡片裁切越界内容；
+ * - 左上缩略图与卡片边框保持明确内缩；
+ * - 图片、边框、阴影均不得压边界线或文字；
+ * - PC / 平板 / 手机使用同一安全区逻辑。
+ */
+.project-list-page .project-list-card {
+  position:relative!important;
+  box-sizing:border-box!important;
+  overflow:hidden!important;
+  padding:22px 22px 20px 26px!important;
+  column-gap:20px!important;
+  row-gap:16px!important;
+  align-items:start!important;
+}
+.project-list-page .project-list-thumb {
+  position:relative!important;
+  z-index:0!important;
+  box-sizing:border-box!important;
+  max-width:100%!important;
+  margin:2px 0 0 2px!important;
+  overflow:hidden!important;
+  border:1px solid var(--qily-line)!important;
+  background:#edf4f2!important;
+  box-shadow:0 6px 14px rgba(15,75,90,.08)!important;
+}
+.project-list-page .project-list-thumb img {
+  display:block!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  margin:0!important;
+  border:0!important;
+  object-position:center!important;
+}
+.project-list-page .project-list-content {
+  position:relative!important;
+  z-index:1!important;
+  min-width:0!important;
+  padding:0!important;
+}
+@media(max-width:720px){
+  .project-list-page .project-list-card {
+    padding:18px 18px 18px 21px!important;
+    column-gap:16px!important;
+  }
+  .project-list-page .project-list-thumb {margin:1px 0 0 1px!important}
+}
+@media(max-width:520px){
+  .project-list-page .project-list-card {
+    padding:16px!important;
+    gap:14px!important;
+  }
+  .project-list-page .project-list-thumb {margin:0!important}
+}
+
+/* R2 原子首屏：加载完成前任何正文、CTA、悬浮按钮均不得抢先露出。 */
+html.qily-r2-first-paint-pending body {
+  opacity:0!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}
+html.qily-r2-first-paint-pending #floatDock {
+  opacity:0!important;
+  visibility:hidden!important;
+}
+
+/* R2 页尾清除：即使旧缓存脚本短暂执行，也不允许旧页尾重新可见。 */
+#qilyGlobalFooter,
+#qilyGlobalContactFooter,
+#qtc-global-trust-footer,
+.qily-global-footer-v31,
+.qily-global-footer-v32,
+.qily-global-footer-v33,
+.qily-global-footer-v34,
+.qily-global-contact-footer,
+.qily-global-contact-footer-shell,
+.qtc-global-trust-footer,
+body > footer,
+body > .footer,
+body > .site-footer,
+body > .page-footer,
+.module-footer {
+  display:none!important;
+  visibility:hidden!important;
+  height:0!important;
+  min-height:0!important;
+  max-height:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  overflow:hidden!important;
+}
+
+@media print {
+  html.qily-r2-first-paint-pending body {
+    opacity:1!important;
+    visibility:visible!important;
+    pointer-events:auto!important;
+  }
+}
