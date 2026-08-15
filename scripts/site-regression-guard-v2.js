@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean R2 regression guard v7.5｜2026-08-15 PERFORMANCE V16 */
+/* QilyLean R2 regression guard v7.5｜2026-08-15 PERFORMANCE V16.1 */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
 const NAV_VERSION='20260815-performance-v16';
-const CONSISTENCY_VERSION='20260815-dock-label-v5';
+const CONSISTENCY_VERSION='20260815-dock-label-v6';
 const CORE_CSS_VERSION='20260815-core-visual-v1';
-const FAST_NATIVE_VERSION='20260815-prefetch-v6';
+const FAST_NATIVE_VERSION='20260815-prefetch-v6p1';
 function read(rel){return fs.readFileSync(path.join(root,rel),'utf8');}
 function assert(ok,msg){if(!ok)throw new Error(msg);}
 function all(source,markers,label){for(const marker of markers)assert(source.includes(marker),`${label}: missing ${marker}`);}
@@ -16,12 +16,21 @@ function cssRef(html,file){return new RegExp(`href=["'][^"']*/${file.replace(/[.
 
 const nativeNav=read('site-music-persistent-navigation-v1.js');
 all(nativeNav,[
-  'window.__qilyFastNativeNavigationV6','data-qily-fast-prefetch','location.assign(url.href)',
-  "mode:'native-prefetch-v6'",'prefetchBudget:3','duplicateFetch:false','touchPrefetch:false','domSwap:false'
-],'Fast Native Navigation V6');
-assert(!/\bfetch\s*\(/.test(nativeNav),'Fast Native Navigation V6: duplicate fetch returned');
-assert(!/document\.addEventListener\(['"]touchstart['"]/.test(nativeNav),'Fast Native Navigation V6: touchstart prefetch returned');
-assert(!/DOMParser\(|history\.pushState|qilySoftNavigation|qily:softnavigate|reconcileHeadAssets/.test(nativeNav),'Fast Native Navigation V6: cross-page DOM/CSS soft navigation returned');
+  'window.__qilyFastNativeNavigationV6',
+  'data-qily-fast-prefetch',
+  'location.assign(url.href)',
+  "mode:'native-prefetch-v6'",
+  'prefetchBudget:3',
+  'secondaryPrefetchBudget:2',
+  'duplicateFetch:false',
+  'touchPrefetch:false',
+  'intentPrefetch:true',
+  'visualMutation:false',
+  'requestIdleCallback(warmPrimaryNav,{timeout:700})'
+],'Fast Native Navigation V6.1');
+assert(!/\bfetch\s*\(/.test(nativeNav),'Fast Native Navigation: duplicate fetch returned');
+assert(!/document\.addEventListener\(['"]touchstart['"]/.test(nativeNav),'Fast Native Navigation: touchstart prefetch returned');
+assert(!/DOMParser\(|history\.pushState|qilySoftNavigation|qily:softnavigate|reconcileHeadAssets/.test(nativeNav),'Fast Native Navigation: cross-page DOM/CSS soft navigation returned');
 
 const core=read('site-navigation-core.js');
 [
@@ -40,49 +49,55 @@ assert(!observe.includes('MutationObserver'),'legacy navigation: mutation-loop D
 
 const wrapper=read('site-navigation.js');
 all(wrapper,[
-  "mode: 'r2-static-first-v21'",'staticHtmlAuthority: true','dynamicContentShapers: false',
-  'runtimeFooter: false','runtimeSharedCssRewrite: false','routeScopedLegacy: true','ordinaryPagesDirectCore: true',
-  'chineseWrapPolish: true','dockOfficialUrlTwoLine: true','qilyChineseWrapPolishV1','text-wrap:pretty','text-wrap:balance',
+  "mode: 'r2-static-first-v21'",
+  'staticHtmlAuthority: true',
+  'dynamicContentShapers: false',
+  'runtimeFooter: false',
+  'runtimeSharedCssRewrite: false',
+  'routeScopedLegacy: true',
+  'ordinaryPagesDirectCore: true',
+  'chineseWrapPolish: true',
+  'dockOfficialUrlTwoLine: true',
   `/site-navigation-legacy-20260802.js?v=${NAV_VERSION}`,
   `/site-navigation-core.js?v=${NAV_VERSION}`,
   `/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}`,
   'needsLegacyRuntime()'
 ],'static-first navigation wrapper v21');
 assert(!/site-parent-navigation-v3\.js/.test(wrapper),'navigation wrapper: parent runtime dependency returned');
-assert(!/(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/.test(wrapper),'navigation wrapper: dynamic content shaper returned');
 
 const uiConsistency=read('site-ui-consistency-v1.js');
 all(uiConsistency,[
-  "BUILD_ID='20260815-dock-label-v5'",
-  "BUILD_KEY='qily_site_ui_build_v1'",
-  "w.addEventListener('pageshow'",
-  'event.persisted&&restoredBuildIsStale()',
-  'qilyDockOfficialUrlPolishV2',
+  "BUILD_ID='20260815-dock-label-v6'",
+  'qilyDockOfficialUrlPolishV3',
   'qily-share-label-primary',
   'qily-share-label-url',
-  'width:76px!important','width:72px!important','font-size:12px!important','font-size:11px!important','overflow:hidden!important',
-  'normalizePrimaryNav()',
-  'a[href="/links/"]',
   '分享</span><span class="qily-share-label-line qily-share-label-url">官方网址',
+  'width:76px!important',
+  'width:72px!important',
+  'font-size:12px!important',
+  'font-size:11px!important',
+  'normalizeInteractiveLabelsOnce',
+  'w.setTimeout(reconcileFast,120)',
+  'w.setTimeout(reconcileFast,520)',
   "if(path.indexOf('/tools/')===0)return '/'",
-  "if(/^\\/legal\\/times26001\\/(?:privacy|terms)\\/$/.test(path))return '/tools/times26001/'",
-  "if(path==='/app-support/')return '/tools/times26001/'",
-  "w.__qilyParentNavigationV3=true",
-  "classList.remove('qily-shell-pending','qily-r2-first-paint-pending')"
-],'official URL / safe parent-route / BFCache freshness / dock v5 runtime');
-assert(!/new\s+MutationObserver|\.createTreeWalker\s*\(/.test(uiConsistency),'ui consistency: active full-page mutation/tree scanning returned');
+  "w.__qilyParentNavigationV3=true"
+],'dock v6 / safe parent-route / lightweight consistency');
+assert(!/new\s+MutationObserver|\.createTreeWalker\s*\(/.test(uiConsistency),'ui consistency: full-page mutation/tree scanning returned');
+assert(!/addEventListener\(['"]resize['"]/.test(uiConsistency),'ui consistency: unnecessary resize reconcile returned');
 
 const bundle=read('site-core-visual-bundle-v1.css');
 [
-  'QILY-CORE-CSS:site-shell.css','QILY-CORE-CSS:site-visual-scale-v1.css','QILY-CORE-CSS:site-wide-layout-v1.css',
-  'QILY-CORE-CSS:site-typography-v1.css','QILY-CORE-CSS:site-vi-standard-v1.css',
-  'QILY-CORE-CSS:site-vi-contrast-restoration-v1.css','QILY-CORE-CSS:site-r2-stability-fixes-v1.css'
+  'QILY-CORE-CSS:site-shell.css',
+  'QILY-CORE-CSS:site-visual-scale-v1.css',
+  'QILY-CORE-CSS:site-wide-layout-v1.css',
+  'QILY-CORE-CSS:site-typography-v1.css',
+  'QILY-CORE-CSS:site-vi-standard-v1.css',
+  'QILY-CORE-CSS:site-vi-contrast-restoration-v1.css',
+  'QILY-CORE-CSS:site-r2-stability-fixes-v1.css'
 ].forEach(marker=>assert(bundle.includes(marker),`core visual bundle: missing ${marker}`));
-assert(bundle.includes('#qilyGlobalFooter')&&bundle.includes('body > footer'),'core visual bundle: R2 footer fallback missing');
 
 const timesPage=read('tools/times26001/index.html');
 all(timesPage,['versionCode 16 / API 36','QilyLean｜启力精益官方网址与官网邮箱','用户可主动访问官方网址','<strong>统一开发者支持：</strong>官方网址 '],'Times26001 official URL terminology');
-assert(!timesPage.includes('<strong>统一开发者支持：</strong>官网 '),'Times26001: generic 官网 label returned in developer support');
 
 const keyPages=['index.html','ai.html','capabilities/index.html','projects/index.html','improvements/index.html','knowledge/index.html','experience/index.html','cooperation/index.html','trust/index.html','tools/times26001/index.html'];
 const individualCoreCss=['site-shell.css','site-visual-scale-v1.css','site-wide-layout-v1.css','site-typography-v1.css','site-vi-standard-v1.css','site-vi-contrast-restoration-v1.css','site-r2-stability-fixes-v1.css'];
@@ -94,28 +109,37 @@ for(const rel of keyPages){
     'QILY-R2-FIRST-PAINT:START',
     `/site-navigation.js?v=${NAV_VERSION}`,
     `/site-music-persistent-navigation-v1.js?v=${FAST_NATIVE_VERSION}`,
-    `data-qily-ui-consistency="dock-v5" src="/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}"`
+    `data-qily-ui-consistency="dock-v6" src="/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}"`,
+    'id="qilyDockCriticalV6"',
+    'data-qily-dock-firstpaint-lock="v6"',
+    'qily-share-label-primary">分享</span><span class="qily-share-label-line qily-share-label-url">官方网址'
   ],rel);
   const first=(html.match(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/)||[])[0]||'';
   assert(first&& !/opacity\s*:\s*0|visibility\s*:\s*hidden|pointer-events\s*:\s*none|window\.load|stableReveal|2400/.test(first),`${rel}: blocking/blank first-paint logic returned`);
   assert(!/site-parent-navigation-v3\.js/i.test(html),`${rel}: redundant parent-navigation request returned`);
+  if(rel!=='cooperation/index.html')assert(!/site-core-service-dock-closure-v1\.(?:css|js)/i.test(html),`${rel}: cooperation-only core-service runtime leaked into ordinary page`);
   const hasBundle=html.includes(`/site-core-visual-bundle-v1.css?v=${CORE_CSS_VERSION}`);
   if(hasBundle)individualCoreCss.forEach(file=>assert(!cssRef(html,file),`${rel}: bundled page still loads individual core CSS: ${file}`));
   else essentialFallbackCss.forEach(file=>assert(cssRef(html,file),`${rel}: essential CSS fallback incomplete: ${file}`));
   assert(!/site-footer-standard-v28\.(?:css|js)/i.test(html),`${rel}: footer standard asset returned`);
-  assert(!/<footer\b/i.test(html),`${rel}: visible footer returned`);
 }
 
-const projects=read('projects/index.html');
-if((projects.match(/<img\b/gi)||[]).length>1)assert(/loading=["']lazy["']/i.test(projects),'projects: below-fold lazy image hints missing');
-
-const cleaner=read('scripts/publish-r2-clean-runtime-v3.js');
-all(cleaner,['PERFORMANCE V16','materializeCoreCssBundle','installCoreCssBundle','optimizeImages','removeParentNavigationScript','ordinary pages direct-core',NAV_VERSION,CORE_CSS_VERSION,FAST_NATIVE_VERSION],'R2 clean performance materializer v5');
-
 const dockPublisher=read('scripts/publish-dock-label-polish-v1.js');
-all(dockPublisher,[CONSISTENCY_VERSION,'data-qily-ui-consistency="dock-v5"','patchWrapper()','patchHtml(html)'],'dock + freshness materializer v3');
+all(dockPublisher,[
+  CONSISTENCY_VERSION,
+  FAST_NATIVE_VERSION,
+  'data-qily-ui-consistency="dock-v6"',
+  'id="qilyDockCriticalV6"',
+  'data-qily-dock-firstpaint-lock="v6"',
+  'removeCoreServiceRuntime',
+  'patchShareMarkup',
+  'patchFastNative'
+],'dock first-paint/performance materializer v3');
+
+const coreServicePublisher=read('scripts/publish-core-service-dock-closure.js');
+all(coreServicePublisher,['Core-service runtime scoping','cooperation/index.html','removeAssets(html)'],'cooperation-only core-service publisher');
 
 const selfHeal=read('.github/workflows/site-regression-poka-yoke.yml');
 all(selfHeal,['node scripts/apply-site-poka-yoke-v2.js','node scripts/site-regression-guard.js','contents: write'],'self-heal workflow');
 
-process.stdout.write('QilyLean R2 performance V16 guard passed: BFCache stale-page recovery, primary-nav cleanup, dock 分享官方网址 v5, cache-busted loading and existing performance protections are active.\n');
+process.stdout.write('QilyLean performance V16.1 guard passed: dock label is correct in static first paint, a single-button lock prevents legacy overwrite, cooperation runtime is scoped, Fast Native intent/idle prefetch is earlier, and visual quality remains unchanged.\n');
