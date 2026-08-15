@@ -1,14 +1,14 @@
-/* QilyLean R2 static-first navigation runtime v21.1｜2026-08-15
+/* QilyLean R2 static-first navigation runtime v21.2｜2026-08-15
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
  * 性能：普通页面直达 core；仅合作/资源页面按需加载 legacy，避免全站下载报价与资源逻辑。
- * 可视化：中文正文启用 pretty wrap / strict line-break，标题平衡换行，避免单字孤行。
+ * 可视化：中文正文启用 pretty wrap / strict line-break，标题平衡换行；悬浮栏“分享官方网址”固定两行完整显示。
  */
 (function (d, w) {
   'use strict';
   if (w.__qilyStaticFirstNavigationV21) return;
   w.__qilyStaticFirstNavigationV21 = true;
 
-  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260815-performance-v2';
+  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260815-dock-label-v3';
   var CORE_SRC = '/site-navigation-core.js?v=20260815-performance-v16';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260815-performance-v16';
 
@@ -55,7 +55,7 @@
     var script = d.createElement('script');
     script.src = CONSISTENCY_SRC;
     script.async = false;
-    script.setAttribute('data-qily-ui-consistency', 'v2');
+    script.setAttribute('data-qily-ui-consistency', 'v3');
     script.addEventListener('load', appendRuntime, { once: true });
     script.addEventListener('error', appendRuntime, { once: true });
     (d.head || d.documentElement).appendChild(script);
@@ -102,6 +102,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   routeScopedLegacy: true,
   ordinaryPagesDirectCore: true,
   chineseWrapPolish: true,
+  dockOfficialUrlTwoLine: true,
   dockActions: [
     'data-action="home"', 'data-action="top"', 'data-action="back"',
     'data-action="search"', 'data-action="current"', 'data-action="share"',
