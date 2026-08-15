@@ -1,10 +1,13 @@
-/* QilyLean 悬浮栏父级导航轻量版 v4｜2026-08-15
+/* QilyLean 悬浮栏父级导航轻量版 v4.1｜2026-08-15
  * 仅负责“返回上一层”与导航当前态；禁止运行时重写首页、插入区块、循环扫描 DOM。
  */
 (function(d,w){
   'use strict';
   if(w.__qilyParentNavigationV3)return;
   w.__qilyParentNavigationV3=true;
+
+  /* 静态页面已具备完整 HTML/CSS，立即解除旧首屏隐藏。 */
+  d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
 
   function normalizedPath(path){
     var value=(path||'/').replace(/\/index\.html$/,'/').replace(/\/{2,}/g,'/');
