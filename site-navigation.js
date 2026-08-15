@@ -8,7 +8,7 @@
   if (w.__qilyStaticFirstNavigationV21) return;
   w.__qilyStaticFirstNavigationV21 = true;
 
-  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260815-dock-label-v5';
+  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260815-dock-label-v6';
   var CORE_SRC = '/site-navigation-core.js?v=20260815-performance-v16';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260815-performance-v16';
 
