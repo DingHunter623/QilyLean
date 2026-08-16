@@ -39,7 +39,15 @@ function routeFor(rel){
   if(rel.startsWith('trust/'))return '/trust/';
   return '';
 }
-function navMarkup(rel){const current=routeFor(rel);return ROUTES.map(([label,href])=>`      <a href="${href}"${href===current?' aria-current="page"':''}>${label}</a>`).join('\n');}
+function navMarkup(rel){
+  const current=routeFor(rel);
+  const pageLocalCurrent=rel==='index.html'||rel==='projects/index.html';
+  return ROUTES.map(([label,href])=>{
+    const active=href===current;
+    const attrs=active?` aria-current="page"${pageLocalCurrent?' data-qily-page-current="true" data-qily-primary-current="true"':''}`:'';
+    return `      <a href="${href}"${attrs}>${label}</a>`;
+  }).join('\n');
+}
 function normalizeNav(html,rel){
   return html.replace(/<nav\b([^>]*)>([\s\S]*?)<\/nav>/gi,(whole,attrs,inner)=>{
     const m=attrs.match(/\bclass=["']([^"']*)["']/i);const cls=m?m[1]:'';
