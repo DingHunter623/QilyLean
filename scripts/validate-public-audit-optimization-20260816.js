@@ -13,11 +13,17 @@ const improvements = read('improvements/index.html');
 const terminology = read('knowledge/terminology.html');
 const data = JSON.parse(read('qilylean/site-data.json'));
 
-assert(home.includes('四类制造项目主线，两项数字工程支撑'), 'Homepage capability hierarchy is missing.');
-assert(home.includes('制造项目主线｜04'), 'Digital factory must remain in the manufacturing project mainline.');
-assert(home.includes('数字工程支撑｜05') && home.includes('数字工程支撑｜06'), 'APP and website support tier is missing.');
-assert(cooperation.includes('01—04直接服务制造系统规划、现场改善与数智运营'), 'Cooperation hierarchy is missing.');
-assert(cooperation.includes('数字工程支撑</strong><span>Times26001实证作品'), 'APP evidence has not been moved to the support tier.');
+assert(home.includes('<h2>三大核心业务</h2>'), 'Homepage three-core business heading is missing.');
+assert(home.includes('data-qily-three-core-services="v1"'), 'Homepage three-core service contract is missing.');
+assert(home.includes('ENGINEERING ENABLERS｜不计入核心业务'), 'Homepage engineering-enabler tier is missing.');
+assert(home.includes('官网本身作为技术实证，不列为核心业务'), 'Website evidence is not clearly excluded from core business.');
+assert(!home.includes('data-qily-six-core-services') && !home.includes('六类核心能力'), 'Homepage still exposes a six-core taxonomy.');
+assert(cooperation.includes('<h2>三大核心业务</h2>'), 'Cooperation three-core business heading is missing.');
+assert(cooperation.includes('data-qily-three-core-services="v1"'), 'Cooperation three-core service contract is missing.');
+assert(cooperation.includes('ENGINEERING ENABLERS｜非核心业务'), 'Cooperation engineering-enabler tier is missing.');
+assert(!cooperation.includes('data-qily-six-core-services') && !cooperation.includes('六类项目合作能力'), 'Cooperation still exposes a six-service taxonomy.');
+assert(!cooperation.includes('<span class="service-number">04</span>'), 'Digital factory is still numbered as a fourth core business.');
+assert(!cooperation.includes('<span class="service-number">05</span>') && !cooperation.includes('<span class="service-number">06</span>'), 'Digital works are still numbered as core businesses.');
 assert(improvements.includes('制造改善实践方法专栏') && improvements.includes('方法文章目录'), 'Academic overstatement remains in method index.');
 assert(!improvements.includes('制造改善实践论文合集') && !improvements.includes('论文目录'), 'Legacy paper naming remains.');
 

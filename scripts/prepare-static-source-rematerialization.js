@@ -31,7 +31,7 @@ if (fs.existsSync(materializer)) {
     .replace('data-qily-static-source="home-core-v1"', 'data-qily-static-source="home-core-v2"')
     .replace("'目视化项目设计与实施',", "'目视化项目设计与交付',");
 
-  // V3 首页本身已包含完整静态叙事、证据纪律和六类能力，不再要求已退役的
+  // V3 首页本身已包含完整静态叙事、证据纪律和三大核心业务，不再要求已退役的
   // assistant/latest/results 面板。旧页面仍继续走原有 materializer。
   if (!prepared.includes('QILY-HOME-V3-AUTHORITATIVE-STATIC-SOURCE')) {
     prepared = prepared.replace(
@@ -40,12 +40,12 @@ if (fs.existsSync(materializer)) {
     );
   }
 
-  // V3 contract follows the current R2 baseline: six core capabilities are the only
-  // business taxonomy; 3+3 wording is no longer a required homepage signature.
+  // V3 contract follows the current public baseline: three core businesses are the
+  // only business taxonomy; digital content remains in the enabler/evidence tier.
   if (!prepared.includes('QILY-HOME-V3-VALIDATION-CONTRACT')) {
     prepared = prepared.replace(
       /  const requiredHome = \[[\s\S]*?\n  \];\n  requiredHome\.forEach\(\(value\) => \{ if \(!home\.includes\(value\)\) throw new Error\(`Homepage static source missing: \$\{value\}`\); \}\);/m,
-      `  // QILY-HOME-V3-VALIDATION-CONTRACT\n  const isV3Home = /\\bqily-home-v3\\b/.test(home);\n  const requiredHome = isV3Home ? [\n    'QILY-HOME-STATIC-COMMERCIAL:START',\n    'data-qily-static-source="home-core-v3"',\n    '把制造现场，变成可计算、可改善、可固化、可复用的组织资产',\n    '六类核心能力',\n    '新工厂／新产线规划',\n    '精益改善项目交付',\n    '目视化项目设计与交付',\n    '数字化工厂',\n    'APP软件开发',\n    '官网建设',\n    'qilyInformationArchitectureStylesheet',\n    'QILY-HOME-STATIC-SCHEMA:START'\n  ] : [\n    'QILY-HOME-STATIC-COMMERCIAL:START',\n    'data-qily-static-source="home-core-v2"',\n    '把复杂制造问题，转化为可验证的交付结果',\n    '新工厂／新产线规划',\n    '精益改善项目交付',\n    '目视化项目设计与交付',\n    'qilyInformationArchitectureStylesheet',\n    'qilyStaticCoreInteractions'\n  ];\n  requiredHome.forEach((value) => { if (!home.includes(value)) throw new Error(\`Homepage static source missing: \${value}\`); });\n  if (isV3Home && /三类核心项目交付\\s*[+＋与]\\s*三项数智化产品与技术能力/.test(home)) throw new Error('Legacy 3+3 taxonomy remains in V3 homepage');`
+      `  // QILY-HOME-V3-VALIDATION-CONTRACT\n  const isV3Home = /\\bqily-home-v3\\b/.test(home);\n  const requiredHome = isV3Home ? [\n    'QILY-HOME-STATIC-COMMERCIAL:START',\n    'data-qily-static-source="home-core-v3"',\n    '把制造现场，变成可计算、可改善、可固化、可复用的组织资产',\n    '三大核心业务',\n    '新工厂／新产线规划',\n    '精益改善项目交付',\n    '目视化项目设计与交付',\n    'ENGINEERING ENABLERS｜不计入核心业务',\n    '数字化工厂',\n    'QilyLean AI／APP',\n    'QilyLean官网',\n    'qilyInformationArchitectureStylesheet',\n    'QILY-HOME-STATIC-SCHEMA:START'\n  ] : [\n    'QILY-HOME-STATIC-COMMERCIAL:START',\n    'data-qily-static-source="home-core-v2"',\n    '把复杂制造问题，转化为可验证的交付结果',\n    '三大核心业务',\n    '新工厂／新产线规划',\n    '精益改善项目交付',\n    '目视化项目设计与交付',\n    'qilyInformationArchitectureStylesheet',\n    'qilyStaticCoreInteractions'\n  ];\n  requiredHome.forEach((value) => { if (!home.includes(value)) throw new Error(\`Homepage static source missing: \${value}\`); });\n  if (isV3Home && (home.includes('六类核心能力') || home.includes('data-qily-six-core-services'))) throw new Error('Legacy six-core taxonomy remains in V3 homepage');`
     );
   }
 

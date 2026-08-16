@@ -87,7 +87,7 @@ function validatePreRolloutCapability() {
   const enforcer = read('scripts/enforce-six-core-static-source.js');
   const publisher = read('.github/workflows/build-daily-archive.yml');
   assert(curator.includes('<h1>精选简报</h1>') && curator.includes('不以日更数量证明专业度'), 'Curator cannot materialize the quality-first directory.');
-  assert(enforcer.includes('六类核心能力') && enforcer.includes('制造运营资产'), 'Six-core manufacturing-operations enforcer is incomplete.');
+  assert(enforcer.includes('三大核心业务') && enforcer.includes('ENGINEERING ENABLERS'), 'Three-core business architecture enforcer is incomplete.');
   assert(enforcer.includes('Legacy 3+3 taxonomy remains in public core pages'), 'Six-core enforcer does not block legacy 3+3 taxonomy.');
   assert(publisher.includes('Curate weekly high-value public archive'), 'Publication workflow does not execute weekly curation.');
   assert(publisher.includes('publish-r2-clean-runtime-v3.js'), 'Publication workflow does not finish with R2 clean runtime.');
@@ -129,7 +129,7 @@ function validateLiveDirectoryAndCore() {
   assert(cards > 0 && cards <= 400, `Curated directory renders ${cards} cards; expected 1-400.`);
   assert(directory.includes('精选简报') && directory.includes('不以日更数量证明专业度'), 'Curated directory lost quality-first positioning.');
   assert(!directory.includes('每一天对应一个独立网址'), 'Curated directory restored daily-cadence wording.');
-  assert(home.includes('六类核心能力') && home.includes('制造运营资产'), 'Homepage lost the R2 strategic positioning.');
+  assert(home.includes('三大核心业务') && home.includes('制造运营资产'), 'Homepage lost the three-core strategic positioning.');
   assert(!/三类核心项目交付\s*[+＋与]\s*三项数智化产品与技术能力/.test(home + cooperation), 'Legacy 3+3 taxonomy returned to a core page.');
   assert(home.includes(FAST_NATIVE) || home.includes('site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5'), 'Homepage lost Fast Native Navigation V5.');
 }

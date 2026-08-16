@@ -38,7 +38,7 @@ if (!briefs.latestUrl) throw new Error('Missing latest brief URL');
 
 let home = read(homeFile);
 const label = `今日简报｜${displayDate(briefs.latestDate)}`;
-const actions = `<div class="actions"><a class="button primary" href="/cooperation/">查看六类项目合作能力与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">代表项目与证据</a><a class="button qily-latest-brief-button" data-qily-latest-brief-cta="v1" data-qily-latest-brief-date="${escapeHtml(briefs.latestDate)}" href="${escapeHtml(briefs.latestUrl)}" aria-label="${escapeHtml(label)}：${escapeHtml(briefs.latestTitle || '打开最新简报')}">${escapeHtml(label)}</a></div>`;
+const actions = `<div class="actions"><a class="button primary" href="/cooperation/">查看三大核心业务与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">代表项目与证据</a><a class="button qily-latest-brief-button" data-qily-latest-brief-cta="v1" data-qily-latest-brief-date="${escapeHtml(briefs.latestDate)}" href="${escapeHtml(briefs.latestUrl)}" aria-label="${escapeHtml(label)}：${escapeHtml(briefs.latestTitle || '打开最新简报')}">${escapeHtml(label)}</a></div>`;
 
 const actionsExpression = /<div class="actions">[\s\S]*?<\/div>/m;
 if (!actionsExpression.test(home)) throw new Error('Homepage hero action group missing');

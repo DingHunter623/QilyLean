@@ -72,16 +72,10 @@ function updateMethodNaming() {
 function layerHomeCapabilities(rel) {
   let html = read(rel);
   const replacements = [
-    ['六类核心能力｜不是六块业务孤岛，而是一条制造运营价值链', '六类能力分层呈现｜四类制造项目主线，两项数字工程支撑'],
-    ['六类核心能力｜统一服务于制造运营资产化', '六类能力分层呈现｜四类制造项目主线，两项数字工程支撑'],
-    ['六类能力不是分成两个阵营，而是沿同一制造运营价值链协同：从工厂与产线规划、现场改善和目视化，到数字化系统、轻量软件与专业互联网资产。六类项目合作能力统一遵循问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化与项目验收。', '新工厂／新产线规划、精益改善、目视化与数字化工厂构成制造项目主线；APP与官网建设作为数字作品和工程实现支撑，用于验证把制造业务逻辑转化为可运行工具与专业互联网资产的能力。六类能力均遵循问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化与项目验收。'],
-    ['<small>核心能力｜01</small>', '<small>制造项目主线｜01</small>'],
-    ['<small>核心能力｜02</small>', '<small>制造项目主线｜02</small>'],
-    ['<small>核心能力｜03</small>', '<small>制造项目主线｜03</small>'],
-    ['<small>核心能力｜04</small>', '<small>制造项目主线｜04</small>'],
-    ['<small>核心能力｜05</small>', '<small>数字工程支撑｜05</small>'],
-    ['<small>核心能力｜06</small>', '<small>数字工程支撑｜06</small>'],
-    ['查看六类项目合作能力与交付边界', '查看分层能力与交付边界']
+    ['六类核心能力｜不是六块业务孤岛，而是一条制造运营价值链', '三大核心业务'],
+    ['六类核心能力｜统一服务于制造运营资产化', '三大核心业务'],
+    ['查看六类项目合作能力与交付边界', '查看三大核心业务与交付边界'],
+    ['查看分层能力与交付边界', '查看三大核心业务与交付边界']
   ];
   for (const [from, to] of replacements) html = html.replaceAll(from, to);
   write(rel, html);
@@ -92,17 +86,13 @@ function updateCooperationHierarchy() {
   let html = read(rel);
   html = html.replace(
     /<meta name="description" content="[^"]*">/,
-    '<meta name="description" content="QilyLean以新工厂／新产线规划、精益改善、目视化和数字化工厂为制造项目主线，以APP与官网建设作为数字工程支撑；所有合作按范围、交付物、验证与验收定义。">'
-  );
-  html = html.replace(
-    '<div class="module-heading"><h2>六类项目合作能力</h2><p>六类能力采用统一编号与统一项目闭环，不再使用“3+3”作为业务分类；不销售泛化概念，以企业真实问题、项目范围、标准交付物和验收口径定义合作。</p></div>',
-    '<div class="module-heading"><h2>六类项目合作能力</h2><p>能力分层不等于能力割裂：01—04直接服务制造系统规划、现场改善与数智运营，构成制造项目主线；05—06作为数字作品与工程实现支撑，证明业务逻辑能够进一步转化为软件工具和专业互联网资产。所有合作均以企业真实问题、项目范围、标准交付物和验收口径定义。</p></div>'
+    '<meta name="description" content="QilyLean聚焦新工厂／新产线规划、精益改善项目交付、目视化项目设计与交付三大核心业务；数智化工厂作为工程增强能力按项目需要嵌入。">'
   );
   html = html
-    .replaceAll('<strong>匹配合同范本</strong><span>核心项目交付</span>', '<strong>匹配合同范本</strong><span>制造项目主线</span>')
-    .replace('<strong>相关成果证据</strong><span>数智化产品与技术能力</span>', '<strong>相关成果证据</strong><span>制造项目主线</span>')
-    .replace('<strong>当前实证作品</strong><span>Times26001</span>', '<strong>数字工程支撑</strong><span>Times26001实证作品</span>')
-    .replace('<strong>当前实证作品</strong><span>QilyLean官网</span>', '<strong>数字工程支撑</strong><span>QilyLean官网实证</span>');
+    .replaceAll('六类项目合作能力均按项目边界定义合作', '三大核心业务均按项目边界定义合作')
+    .replaceAll('前期诊断与概念级方案构思不代表六类项目合作能力任一完整专项合作范围', '前期诊断与概念级方案构思不代表三大核心业务任一完整专项合作范围')
+    .replaceAll('六类项目合作能力的完整合作', '三大核心业务的完整合作')
+    .replace(/<article class="boundary-service-card qily-static-card"><span class="boundary-type">0[456]｜[\s\S]*?<\/article>\n?/g, '');
   write(rel, html);
 }
 

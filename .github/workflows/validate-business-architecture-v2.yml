@@ -1,4 +1,4 @@
-name: Validate QilyLean R2 six-core business architecture
+name: Validate QilyLean three-core business architecture
 
 on:
   push:
@@ -63,41 +63,37 @@ jobs:
           node scripts/prepare-static-source-rematerialization.js
           node scripts/enforce-six-core-static-source.js
 
-      - name: Enforce one six-core business architecture and runtime boundary
+      - name: Enforce three-core business architecture and runtime boundary
         shell: bash
         run: |
           set -euo pipefail
 
-          # Six core capabilities are the only public business taxonomy.
-          grep -q '六类核心能力' index.html
+          # Three core businesses are the only public business taxonomy.
+          grep -q '<h2>三大核心业务</h2>' index.html
           grep -q '制造运营资产' index.html
+          grep -q '<h2>三大核心业务</h2>' cooperation/index.html
           grep -q '新工厂／新产线规划' cooperation/index.html
           grep -q '精益改善项目交付' cooperation/index.html
           grep -q '目视化项目设计与交付' cooperation/index.html
-          grep -q '数字化工厂' cooperation/index.html
-          grep -q 'APP软件开发' cooperation/index.html
-          grep -q '官网建设' cooperation/index.html
-          ! grep -Eq '三类核心项目交付[[:space:]]*[+＋与][[:space:]]*三项数智化产品与技术能力' index.html cooperation/index.html
-          ! grep -Eq '六类能力采用[“"]?3\+3' index.html cooperation/index.html
+          grep -q 'ENGINEERING ENABLERS｜非核心业务' cooperation/index.html
+          ! grep -Eq '<span class="service-number">0[456]</span>' cooperation/index.html
+          ! grep -q '六类核心能力' index.html cooperation/index.html
+          ! grep -q '六类项目合作能力' index.html cooperation/index.html
           ! grep -q '六大核心业务' index.html cooperation/index.html
 
           # Fallback source assets must normalize to the same vocabulary.
           grep -q 'PROJECT DELIVERY STRATEGY｜项目合作从哪里开始' site-brand-trust-v1.js
           ! grep -q '三项核心业务' site-brand-trust-v1.js
-          grep -q 'CORE CAPABILITY 04' site-information-architecture-v1.js
-          grep -q 'CORE CAPABILITY 05' site-information-architecture-v1.js
-          grep -q 'CORE CAPABILITY 06' site-information-architecture-v1.js
+          grep -q 'CORE BUSINESS 01' site-information-architecture-v1.js
+          grep -q 'CORE BUSINESS 02' site-information-architecture-v1.js
+          grep -q 'CORE BUSINESS 03' site-information-architecture-v1.js
+          grep -q 'ENGINEERING ENABLERS｜不计入核心业务' site-information-architecture-v1.js
 
-          # Pricing may cover all six capabilities, but must not redefine the business taxonomy.
-          grep -q '六类项目合作能力报价参考' site-navigation-legacy-20260802.js
-          grep -q '六类项目合作能力报价方案' site-navigation-legacy-20260802.js
-          grep -q 'var digitalPricing = \[' site-navigation-legacy-20260802.js
-          grep -q 'var appPricing = \[' site-navigation-legacy-20260802.js
-          grep -q 'var websitePricing = \[' site-navigation-legacy-20260802.js
-          grep -q '04｜数字化工厂' site-navigation-legacy-20260802.js
-          grep -q '05｜APP软件开发' site-navigation-legacy-20260802.js
-          grep -q '06｜官网建设' site-navigation-legacy-20260802.js
-          grep -q '按范围独立核价' site-navigation-legacy-20260802.js
+          # Public pricing covers only the three core businesses.
+          grep -q '三大核心业务报价参考' site-navigation-legacy-20260802.js
+          grep -q '三大核心业务报价方案' site-navigation-legacy-20260802.js
+          grep -q '本模块只覆盖三大核心业务' site-navigation-legacy-20260802.js
+          ! grep -q "title.textContent = '六类项目合作能力报价参考'" site-navigation-legacy-20260802.js
 
           # R2 clean runtime: static HTML is authoritative; no DOM content shapers.
           grep -q "mode: 'r2-static-first-v20'" site-navigation.js
