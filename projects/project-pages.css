@@ -358,3 +358,13 @@ body.factory-plan-viewer-open{overflow:hidden}
   border-color:#c99a3e!important;
 }
 /* QILY-FACTORY-THUMBNAIL-LABEL-SEPARATION:END */
+
+/* 2026-08-16 采购级公开核验结构：统一呈现基线、方法、结果与证据边界。 */
+.project-verification-section{background:#f7fbfa}
+.project-verification-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.project-verification-grid article{padding:18px;border-top:4px solid #caa15f;background:#fff;box-shadow:0 8px 22px rgba(15,75,90,.07)}
+.project-verification-grid strong{display:block;margin-bottom:7px;color:#0f4b5a;font-size:18px}
+.project-verification-grid span{display:block;color:#526968;font-size:15px;line-height:1.68}
+.project-verification-note{margin:18px 0 0;padding:14px 16px;border-left:4px solid #9e4a34;color:#526968;background:#fff8f1;font-size:14px;line-height:1.7}
+@media(max-width:900px){.project-verification-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.project-verification-grid{grid-template-columns:1fr}}
