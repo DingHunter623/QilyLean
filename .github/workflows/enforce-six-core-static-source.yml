@@ -1,4 +1,4 @@
-name: Enforce unified six-core manufacturing system
+name: Enforce three-core business architecture
 
 on:
   push:
@@ -20,7 +20,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: enforce-six-core-system-${{ github.ref }}
+  group: enforce-three-core-system-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -41,7 +41,7 @@ jobs:
       - name: Validate normalization script syntax
         run: node --check scripts/enforce-six-core-static-source.js
 
-      - name: Enforce canonical six-core static source
+      - name: Validate canonical three-core static source
         run: node scripts/enforce-six-core-static-source.js
 
       - name: Refresh static search index
@@ -55,23 +55,19 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q '六类核心能力' index.html
+          grep -q '<h2>三大核心业务</h2>' index.html
           grep -q '制造运营资产' index.html
-          grep -q '<h2>六类项目合作能力</h2>\|六类核心能力' cooperation/index.html
+          grep -q '<h2>三大核心业务</h2>' cooperation/index.html
           grep -q '<span class="service-number">01</span>' cooperation/index.html
           grep -q '<h3>新工厂／新产线规划</h3>' cooperation/index.html
           grep -q '<span class="service-number">02</span>' cooperation/index.html
           grep -q '<h3>精益改善项目交付</h3>' cooperation/index.html
           grep -q '<span class="service-number">03</span>' cooperation/index.html
           grep -q '<h3>目视化项目设计与交付</h3>' cooperation/index.html
-          grep -q '<span class="service-number">04</span>' cooperation/index.html
-          grep -q '<h3>数字化工厂</h3>' cooperation/index.html
-          grep -q '<span class="service-number">05</span>' cooperation/index.html
-          grep -q '<h3>APP软件开发</h3>' cooperation/index.html
-          grep -q '<span class="service-number">06</span>' cooperation/index.html
-          grep -q '<h3>官网建设</h3>' cooperation/index.html
-          ! grep -Eq '三类核心项目交付[[:space:]]*[+＋与][[:space:]]*三项数智化产品与技术能力' index.html cooperation/index.html
-          ! grep -Eq '六类能力采用[“"]?3\+3' index.html cooperation/index.html
+          grep -q 'ENGINEERING ENABLERS｜非核心业务' cooperation/index.html
+          ! grep -Eq '<span class="service-number">0[456]</span>' cooperation/index.html
+          ! grep -q '六类核心能力' index.html cooperation/index.html
+          ! grep -q '六类项目合作能力' index.html cooperation/index.html
           ! grep -q '六大核心业务' index.html cooperation/index.html
 
       - name: Verify deterministic diff
@@ -82,12 +78,12 @@ jobs:
         run: |
           set -euo pipefail
           if git diff --quiet; then
-            echo 'No six-core source drift detected.'
+            echo 'No three-core source drift detected.'
             exit 0
           fi
           git config user.name 'QilyLean'
           git config user.email 'admin@qilylean.com'
           git add -A
-          git commit -m '全站口径：六类核心能力统一制造运营闭环 [skip ci]'
+          git commit -m '全站口径：三大核心业务与数智化增强边界 [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main

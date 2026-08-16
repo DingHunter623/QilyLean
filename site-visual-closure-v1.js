@@ -154,7 +154,7 @@
     var relocation=d.querySelector('.hero .qily-home-relocation-note');
     if(relocation)relocation.innerHTML='需要快速核验专业匹配度？查看<a href="/capabilities/">能力画像</a>、<a href="/experience/">履历主线</a>与<a href="/projects/">代表项目</a>。';
     var core=d.querySelector('#qily-core-services .qily-ia-heading');
-    if(core){setText(core.querySelector('h2'),'六类项目合作能力');setText(core.querySelector('p'),'前三类核心项目交付直接解决工厂、产线与现场运营问题；后三项数智化产品与技术能力把制造业务逻辑沉淀为数字化系统、软件工具与专业互联网载体。六类能力统一遵循问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化与项目验收。');}
+    if(core){setText(core.querySelector('h2'),'三大核心业务');setText(core.querySelector('p'),'新工厂／新产线规划、精益改善、目视化项目是三大核心业务；数字化工厂作为工程增强能力按项目嵌入，APP与官网作为自主数字作品和技术实证。');}
     var latest=d.querySelector('#latest-content .head');
     if(latest)setText(latest.querySelector('p'),'持续更新制造工程、精益改善、质量与数智化工厂知识；可从最新简报、术语词典和知识分享快速进入对应内容。');
     var context=d.querySelector('#qily-more-context .qily-ia-heading');

@@ -163,14 +163,14 @@ const isV3Home = !!(home && home.text.includes('把制造现场，变成可计�
 if (!home || !(isV3Home || home.text.includes('把复杂制造问题，转化为可验证的交付结果'))) {
   throw new Error('Homepage search entry is not based on final static HTML');
 }
-if (isV3Home && (!home.text.includes('四类制造项目主线') || !home.text.includes('数字工程支撑') || !home.text.includes('APP软件开发') || !home.text.includes('官网建设'))) {
-  throw new Error('V3 homepage search entry misses the layered six-capability operating architecture');
+if (isV3Home && (!home.text.includes('三大核心业务') || !home.text.includes('ENGINEERING ENABLERS｜不计入核心业务') || !home.text.includes('QilyLean AI／APP') || !home.text.includes('QilyLean官网'))) {
+  throw new Error('V3 homepage search entry misses the three-core business and engineering-enabler architecture');
 }
-if (home.text.includes('职能标签') || home.text.includes('超千万元累计改善收益') || home.text.includes('六大核心业务')) {
+if (home.text.includes('职能标签') || home.text.includes('超千万元累计改善收益') || home.text.includes('六大核心业务') || home.text.includes('六类核心能力')) {
   throw new Error('Legacy homepage text remains in search index');
 }
 if (!cooperation || !cooperation.text.includes('分阶段付款') || !cooperation.text.includes('验收边界')) throw new Error('Cooperation search entry misses the static transaction summary');
-if (cooperation.text.includes('超千万元累计项目改善收益') || cooperation.text.includes('六大核心业务')) throw new Error('Legacy cooperation claim remains in search index');
+if (cooperation.text.includes('超千万元累计项目改善收益') || cooperation.text.includes('六大核心业务') || cooperation.text.includes('六类项目合作能力')) throw new Error('Legacy cooperation claim remains in search index');
 if (!daily || !daily.text.includes('不等同于网页首次公开发布日期')) throw new Error('Daily archive search entry misses the static disclosure');
 
 process.stdout.write(`Refreshed final static core search entries; index now contains ${payload.entries.length} entries.\n`);

@@ -245,14 +245,10 @@
       '<div class="qily-pricing-family"><strong>A｜三类核心项目交付</strong><span>01–03已形成参考价；最终仍以范围、投入、交付物和验收责任核价。</span></div>',
       '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>01｜新工厂／车间布局规划</h3><p>以实战项目基准为基础，按规划深度与责任边界分层核价。</p></div>', pricingGrid(factoryPricing), '</section>',
       '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>02｜精益生产项目交付</h3><p>不按培训天数售卖，以基线、Pilot、实绩验证、标准固化和复制成果定义项目。</p></div>', pricingGrid(leanPricing), '</section>',
-      '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>03｜目视化项目设计与交付</h3><p>区分咨询设计费与制作施工费，按区域、图纸、材料清单、施工协同和验收责任核价。</p></div>', pricingGrid(visualPricing), '</section>',
-      '<div class="qily-pricing-family"><strong>B｜三项数智化产品与技术能力</strong><span>04–06不擅自设置脱离需求的统一金额，按真实范围独立核价。</span></div>',
-      '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>04｜数字化工厂</h3><p>以流程、数据和系统边界为核价基础，区分蓝图、数据治理、系统实施协同与Pilot。</p></div>', pricingGrid(digitalPricing), '</section>',
-      '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>05｜APP软件开发</h3><p>以使用场景、平台、功能、数据、测试与发布边界核价，不用一句“做个APP”给出失真的统一价格。</p></div>', pricingGrid(appPricing), '</section>',
-      '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>06｜官网建设</h3><p>以信息架构、页面规模、内容基础、功能、SEO、部署与持续运维责任核价。</p></div>', pricingGrid(websitePricing), '</section>'
+      '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>03｜目视化项目设计与交付</h3><p>区分咨询设计费与制作施工费，按区域、图纸、材料清单、施工协同和验收责任核价。</p></div>', pricingGrid(visualPricing), '</section>'
     ].join('');
     note.hidden = false;
-    note.innerHTML = '<strong>统一报价说明：</strong>本模块覆盖全部六类项目合作能力。01–03保留已建立的价格参考；04–06因功能、接口、页面／平台规模和交付责任差异较大，当前采用“按范围独立核价”，不编造脱离需求的统一公网金额。¥6,800起＋差旅仅对应双方约定范围内的小范围现场诊断与概念级方案构思，不代表任一完整项目总价。最终费用依据项目范围、技术复杂度、数据基础、现场／开发投入、交付深度、修改与测试轮次、实施周期和验收责任综合评估；制作、施工、设备、软件许可、云资源、第三方接口、检测、报审及其他外部费用按合同边界另计。';
+    note.innerHTML = '<strong>统一报价说明：</strong>本模块只覆盖三大核心业务。数字化工厂按具体制造项目作为工程增强能力嵌入；QilyLean AI／APP与官网属于自主数字作品和技术实证，不在此模块作为第四、第五、第六项标准业务报价。¥6,800起＋差旅仅对应双方约定范围内的小范围现场诊断与概念级方案构思，不代表任一完整项目总价。';
   }
 
   function publishCooperationPricing() {
@@ -268,10 +264,10 @@
     ensurePricingStyles();
     var title = heading.querySelector('h2');
     var lead = heading.querySelector('p');
-    if (title) title.textContent = '六类项目合作能力报价参考';
+    if (title) title.textContent = '三大核心业务报价参考';
     if (lead) lead.textContent = pricingUnlocked()
-      ? '01–03展示已建立的价格参考；04–06按真实需求范围独立核价。六类能力均以正式范围、交付物和验收责任确认最终报价。'
-      : '六类项目合作能力报价方案已纳入统一访问验证；未授权访客无法查看具体金额及核价明细。';
+      ? '01–03展示三大核心业务的价格参考；最终以正式范围、交付物和验收责任确认报价。'
+      : '三大核心业务报价方案已纳入统一访问验证；未授权访客无法查看具体金额及核价明细。';
 
     if (pricingUnlocked()) {
       if (ladder.dataset.qilyPublicPricingV5 !== '1') renderCooperationPrices(ladder, note);
@@ -282,14 +278,14 @@
     if (ladder.dataset.qilyPricingGate !== '1') {
       ladder.dataset.qilyPricingGate = '1';
       ladder.className = 'price-ladder qily-pricing-overview';
-      ladder.innerHTML = pricingGateMarkup('六类项目合作能力报价方案');
+      ladder.innerHTML = pricingGateMarkup('三大核心业务报价方案');
     }
     bindPricingGate(ladder, function () {
       delete ladder.dataset.qilyPricingGate;
       delete ladder.dataset.qilyPublicPricingV4;
       delete ladder.dataset.qilyPublicPricingV5;
       renderCooperationPrices(ladder, note);
-      if (lead) lead.textContent = '01–03展示已建立的价格参考；04–06按真实需求范围独立核价。六类能力均以正式范围、交付物和验收责任确认最终报价。';
+      if (lead) lead.textContent = '01–03展示三大核心业务的价格参考；最终以正式范围、交付物和验收责任确认报价。';
     });
   }
 

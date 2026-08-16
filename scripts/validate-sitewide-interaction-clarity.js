@@ -5,9 +5,9 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const R2_NAV = '/site-navigation.js?v=20260812-r2-clean-v3';
-const R2_LEGACY = '/site-navigation-legacy-20260802.js?v=20260812-r2-clean-v3';
-const FAST_NATIVE = '/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5';
+const R2_NAV = '/site-navigation.js?v=20260815-performance-v16';
+const R2_LEGACY = '/site-navigation-legacy-20260802.js?v=20260815-performance-v16';
+const FAST_NATIVE = '/site-music-persistent-navigation-v1.js?v=20260815-prefetch-v6p1';
 const FORBIDDEN_RUNTIME = /(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/i;
 const FORBIDDEN_FOOTER = /site-footer-standard-v28\.(?:css|js)|<footer\b/i;
 const FORBIDDEN_NAV = /qilyPersistentNavigationFrame|<iframe\b[^>]*qily|qilyBackgroundMusicPreload/i;
@@ -71,11 +71,11 @@ function validateRuntimeSource() {
   assert(navigation.includes('dynamicContentShapers: false'), 'Navigation wrapper still permits dynamic content shapers.');
   assert(navigation.includes('runtimeFooter: false'), 'Navigation wrapper still permits runtime footer injection.');
   assert(!navigation.includes('d.body.appendChild(trustFooter)'), 'Navigation wrapper still appends a runtime trust footer.');
-  assert(legacy.includes('/site-navigation-core.js?v=20260812-r2-clean-v3'), 'Legacy runtime does not point to the R2 clean navigation core.');
-  assert(fastNative.includes("mode:'native-prefetch-v5'"), 'Fast Native V5 contract is missing.');
-  assert(fastNative.includes('domSwap:false'), 'Fast Native V5 must forbid DOM swapping.');
-  assert(fastNative.includes('nativeHistory:true') && fastNative.includes('prefetch:true'), 'Fast Native V5 must retain native navigation and prefetch.');
-  assert(!/DOMParser|history\.pushState|document\.body\.innerHTML/i.test(fastNative), 'Fast Native V5 contains a soft-page swap implementation.');
+  assert(legacy.includes('/site-navigation-core.js?v=20260815-performance-v16'), 'Legacy runtime does not point to the current navigation core.');
+  assert(fastNative.includes("mode:'native-prefetch-v6'"), 'Fast Native V6 contract is missing.');
+  assert(fastNative.includes('domSwap:false'), 'Fast Native V6 must forbid DOM swapping.');
+  assert(fastNative.includes('nativeHistory:true') && fastNative.includes('prefetch:true'), 'Fast Native V6 must retain native navigation and prefetch.');
+  assert(!/DOMParser|history\.pushState|document\.body\.innerHTML/i.test(fastNative), 'Fast Native V6 contains a soft-page swap implementation.');
   assert(cleanRuntime.includes('removeFooterAssets'), 'R2 clean runtime is missing footer removal.');
   assert(cleanRuntime.includes('removeDynamicContentShapers'), 'R2 clean runtime is missing dynamic-content-shaper removal.');
   assert(cleanRuntime.includes('QILY-R2-FIRST-PAINT:START'), 'R2 clean runtime is missing first-paint stability guard.');
@@ -87,7 +87,7 @@ function validatePreRolloutCapability() {
   const enforcer = read('scripts/enforce-six-core-static-source.js');
   const publisher = read('.github/workflows/build-daily-archive.yml');
   assert(curator.includes('<h1>精选简报</h1>') && curator.includes('不以日更数量证明专业度'), 'Curator cannot materialize the quality-first directory.');
-  assert(enforcer.includes('六类核心能力') && enforcer.includes('制造运营资产'), 'Six-core manufacturing-operations enforcer is incomplete.');
+  assert(enforcer.includes('三大核心业务') && enforcer.includes('ENGINEERING ENABLERS'), 'Three-core business architecture enforcer is incomplete.');
   assert(enforcer.includes('Legacy 3+3 taxonomy remains in public core pages'), 'Six-core enforcer does not block legacy 3+3 taxonomy.');
   assert(publisher.includes('Curate weekly high-value public archive'), 'Publication workflow does not execute weekly curation.');
   assert(publisher.includes('publish-r2-clean-runtime-v3.js'), 'Publication workflow does not finish with R2 clean runtime.');
@@ -129,7 +129,7 @@ function validateLiveDirectoryAndCore() {
   assert(cards > 0 && cards <= 400, `Curated directory renders ${cards} cards; expected 1-400.`);
   assert(directory.includes('精选简报') && directory.includes('不以日更数量证明专业度'), 'Curated directory lost quality-first positioning.');
   assert(!directory.includes('每一天对应一个独立网址'), 'Curated directory restored daily-cadence wording.');
-  assert(home.includes('六类核心能力') && home.includes('制造运营资产'), 'Homepage lost the R2 strategic positioning.');
+  assert(home.includes('三大核心业务') && home.includes('制造运营资产'), 'Homepage lost the three-core strategic positioning.');
   assert(!/三类核心项目交付\s*[+＋与]\s*三项数智化产品与技术能力/.test(home + cooperation), 'Legacy 3+3 taxonomy returned to a core page.');
   assert(home.includes(FAST_NATIVE) || home.includes('site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5'), 'Homepage lost Fast Native Navigation V5.');
 }

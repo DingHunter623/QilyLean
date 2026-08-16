@@ -18,14 +18,14 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const VERSION = '20260813-r2-clean-v4';
 const NAV_VERSION = '20260815-performance-v16';
-const CONSISTENCY_VERSION = '20260815-performance-v2';
+const CONSISTENCY_VERSION = '20260815-dock-label-v6';
 const CORE_CSS_VERSION = '20260815-core-visual-v1';
 const R2_CSS = `/site-r2-stability-fixes-v1.css?v=${VERSION}`;
 const NAV_JS = `/site-navigation.js?v=${NAV_VERSION}`;
 const LEGACY_JS = `/site-navigation-legacy-20260802.js?v=${NAV_VERSION}`;
 const CORE_JS = `/site-navigation-core.js?v=${NAV_VERSION}`;
 const CONSISTENCY_JS = `/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}`;
-const FAST_NATIVE_JS = '/site-music-persistent-navigation-v1.js?v=20260815-prefetch-v6';
+const FAST_NATIVE_JS = '/site-music-persistent-navigation-v1.js?v=20260815-prefetch-v6p1';
 const CORE_CSS_BUNDLE = `/site-core-visual-bundle-v1.css?v=${CORE_CSS_VERSION}`;
 const CORE_CSS_FILES = [
   'site-shell.css',
