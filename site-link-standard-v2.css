@@ -32,11 +32,11 @@ html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,hea
 
 /* 当前栏目：深青底白字＋金色下横线。 */
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]{
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current][aria-current="page"]{
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
   background-color:var(--qily-nav-active)!important;
-  border-color:var(--qily-nav-active)!important;
+  border:2px solid #ffe39b!important;
   text-decoration-color:#ffe39b!important;
   text-decoration-thickness:2.2px!important;
   box-shadow:0 7px 18px rgba(15,75,90,.24)!important;
@@ -58,13 +58,13 @@ html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,hea
 
 /* 当前栏目悬停／聚焦仍保持深底白字。 */
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]:hover,
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current][aria-current="page"]:hover,
 html body :is(.qily-site-header,.qily-global-header,header.topbar,header.top,header.site-header,header)
-:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current]:focus-visible{
+:is(.site-nav,.qily-global-nav,.nav,nav[aria-label="网站导航"]) > a[href][aria-current][aria-current="page"]:focus-visible{
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
   background-color:var(--qily-nav-active-hover)!important;
-  border-color:var(--qily-nav-active-hover)!important;
+  border-color:#ffe39b!important;
   text-decoration-color:#ffe39b!important;
   box-shadow:0 9px 22px rgba(15,75,90,.30)!important;
   transform:translateY(-2px)!important;

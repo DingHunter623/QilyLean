@@ -6,7 +6,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const R2_NAV = '/site-navigation.js?v=20260815-performance-v16';
-const R2_LEGACY = '/site-navigation-legacy-20260802.js?v=20260815-performance-v16';
+const R2_LEGACY = '/site-navigation-legacy-20260802.js?v=20260816-nav-current-v17';
 const FAST_NATIVE = '/site-music-persistent-navigation-v1.js?v=20260815-prefetch-v6p1';
 const FORBIDDEN_RUNTIME = /(?:site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/i;
 const FORBIDDEN_FOOTER = /site-footer-standard-v28\.(?:css|js)|<footer\b/i;
@@ -71,7 +71,7 @@ function validateRuntimeSource() {
   assert(navigation.includes('dynamicContentShapers: false'), 'Navigation wrapper still permits dynamic content shapers.');
   assert(navigation.includes('runtimeFooter: false'), 'Navigation wrapper still permits runtime footer injection.');
   assert(!navigation.includes('d.body.appendChild(trustFooter)'), 'Navigation wrapper still appends a runtime trust footer.');
-  assert(legacy.includes('/site-navigation-core.js?v=20260815-performance-v16'), 'Legacy runtime does not point to the current navigation core.');
+  assert(legacy.includes('/site-navigation-core.js?v=20260816-nav-current-v17'), 'Legacy runtime does not point to the current navigation core.');
   assert(fastNative.includes("mode:'native-prefetch-v6'"), 'Fast Native V6 contract is missing.');
   assert(fastNative.includes('domSwap:false'), 'Fast Native V6 must forbid DOM swapping.');
   assert(fastNative.includes('nativeHistory:true') && fastNative.includes('prefetch:true'), 'Fast Native V6 must retain native navigation and prefetch.');

@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean R2 regression guard v7.5｜2026-08-15 PERFORMANCE V16.1 */
+/* QilyLean R2 regression guard v7.6｜2026-08-16 NAV CURRENT V17 */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
 const NAV_VERSION='20260815-performance-v16';
-const CONSISTENCY_VERSION='20260815-dock-label-v6';
+const NAV_RUNTIME_VERSION='20260816-nav-current-v17';
+const CONSISTENCY_VERSION='20260816-nav-current-v7';
 const CORE_CSS_VERSION='20260815-core-visual-v1';
 const FAST_NATIVE_VERSION='20260815-prefetch-v6p1';
 function read(rel){return fs.readFileSync(path.join(root,rel),'utf8');}
@@ -39,11 +40,18 @@ const core=read('site-navigation-core.js');
   "['项目合作', '/cooperation/']", "['信任中心', '/trust/']"
 ].forEach(marker=>assert(core.includes(marker),`navigation core: missing ${marker}`));
 assert(core.includes("if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();"),'navigation core: static-first primary navigation guard missing');
+all(core,[
+  "if (value.charAt(value.length - 1) !== '/' && !/\\/[^/]+\\.[^/]+$/.test(value)) value += '/'",
+  "if (path.indexOf('/projects/') === 0) return '/projects/'",
+  "if (path.indexOf('/trust/') === 0 || path.indexOf('/certificates/') === 0 || path.indexOf('/legal/') === 0) return '/trust/'",
+  'syncPrimaryNavCurrentState();',
+  "link.setAttribute('data-qily-primary-current', 'true')"
+],'navigation core: eight-module current-state synchronization');
 assert(!/^\s*ensureGlobalContactFooter\(\);\s*$/m.test(core),'navigation core: repeated global contact footer call returned');
 assert(!/^\s*ensureKnowledgeDocumentEnhancements\(\);\s*$/m.test(core),'navigation core: repeated document contact tail injection returned');
 
 const legacy=read('site-navigation-legacy-20260802.js');
-assert(legacy.includes(`/site-navigation-core.js?v=${NAV_VERSION}`),'legacy navigation: performance V16 core cache version missing');
+assert(legacy.includes(`/site-navigation-core.js?v=${NAV_RUNTIME_VERSION}`),'legacy navigation: current-state V17 core cache version missing');
 const observe=(legacy.match(/function observeShell\(\)\s*\{([\s\S]*?)\n\s*\}/)||[])[1]||'';
 assert(!observe.includes('MutationObserver'),'legacy navigation: mutation-loop DOM rewriting returned');
 
@@ -58,8 +66,8 @@ all(wrapper,[
   'ordinaryPagesDirectCore: true',
   'chineseWrapPolish: true',
   'dockOfficialUrlTwoLine: true',
-  `/site-navigation-legacy-20260802.js?v=${NAV_VERSION}`,
-  `/site-navigation-core.js?v=${NAV_VERSION}`,
+  `/site-navigation-legacy-20260802.js?v=${NAV_RUNTIME_VERSION}`,
+  `/site-navigation-core.js?v=${NAV_RUNTIME_VERSION}`,
   `/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}`,
   'needsLegacyRuntime()'
 ],'static-first navigation wrapper v21');
@@ -67,7 +75,7 @@ assert(!/site-parent-navigation-v3\.js/.test(wrapper),'navigation wrapper: paren
 
 const uiConsistency=read('site-ui-consistency-v1.js');
 all(uiConsistency,[
-  "BUILD_ID='20260815-dock-label-v6'",
+  "BUILD_ID='20260816-nav-current-v7'",
   'qilyDockOfficialUrlPolishV3',
   'qily-share-label-primary',
   'qily-share-label-url',
@@ -77,6 +85,9 @@ all(uiConsistency,[
   'font-size:12px!important',
   'font-size:11px!important',
   'normalizeInteractiveLabelsOnce',
+  'ensurePrimaryNavCurrentStyles',
+  'primaryModule(path)',
+  "link.setAttribute('data-qily-primary-current','true')",
   'w.setTimeout(reconcileFast,120)',
   'w.setTimeout(reconcileFast,520)',
   "if(path.indexOf('/tools/')===0)return '/'",
@@ -109,11 +120,15 @@ for(const rel of keyPages){
     'QILY-R2-FIRST-PAINT:START',
     `/site-navigation.js?v=${NAV_VERSION}`,
     `/site-music-persistent-navigation-v1.js?v=${FAST_NATIVE_VERSION}`,
-    `data-qily-ui-consistency="dock-v6" src="/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}"`,
     'id="qilyDockCriticalV6"',
     'data-qily-dock-firstpaint-lock="v6"',
     'qily-share-label-primary">分享</span><span class="qily-share-label-line qily-share-label-url">官方网址'
   ],rel);
+  if(['/','index.html','capabilities/index.html','projects/index.html','improvements/index.html','knowledge/index.html','experience/index.html','cooperation/index.html','trust/index.html'].includes(rel)){
+    assert(html.includes(`data-qily-ui-consistency="nav-current-v7" src="/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}"`),`${rel}: current-state V7 consistency runtime missing`);
+  }else{
+    assert(/data-qily-ui-consistency="(?:dock-v6|nav-current-v7)" src="\/site-ui-consistency-v1\.js\?v=(?:20260815-dock-label-v6|20260816-nav-current-v7)"/.test(html),`${rel}: consistency fallback missing`);
+  }
   const first=(html.match(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/)||[])[0]||'';
   assert(first&& !/opacity\s*:\s*0|visibility\s*:\s*hidden|pointer-events\s*:\s*none|window\.load|stableReveal|2400/.test(first),`${rel}: blocking/blank first-paint logic returned`);
   assert(!/site-parent-navigation-v3\.js/i.test(html),`${rel}: redundant parent-navigation request returned`);
@@ -128,7 +143,7 @@ const dockPublisher=read('scripts/publish-dock-label-polish-v1.js');
 all(dockPublisher,[
   CONSISTENCY_VERSION,
   FAST_NATIVE_VERSION,
-  'data-qily-ui-consistency="dock-v6"',
+  'data-qily-ui-consistency="nav-current-v7"',
   'id="qilyDockCriticalV6"',
   'data-qily-dock-firstpaint-lock="v6"',
   'removeCoreServiceRuntime',
@@ -142,4 +157,4 @@ all(coreServicePublisher,['Core-service runtime scoping','cooperation/index.html
 const selfHeal=read('.github/workflows/site-regression-poka-yoke.yml');
 all(selfHeal,['node scripts/apply-site-poka-yoke-v2.js','node scripts/site-regression-guard.js','contents: write'],'self-heal workflow');
 
-process.stdout.write('QilyLean performance V16.1 guard passed: dock label is correct in static first paint, a single-button lock prevents legacy overwrite, cooperation runtime is scoped, Fast Native intent/idle prefetch is earlier, and visual quality remains unchanged.\n');
+process.stdout.write('QilyLean navigation current-state V17 guard passed: all eight primary modules synchronize one high-contrast active item while the dock, static-first runtime, and Fast Native performance contracts remain intact.\n');

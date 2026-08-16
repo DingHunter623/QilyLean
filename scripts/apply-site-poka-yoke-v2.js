@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean site poka-yoke V2 / R2 performance baseline｜2026-08-15 PERFORMANCE V16.2 */
+/* QilyLean site poka-yoke V2 / R2 navigation baseline｜2026-08-16 NAV CURRENT V17 */
 const fs = require('fs');
 const path = require('path');
 const cp = require('child_process');
@@ -37,8 +37,8 @@ function verifyCleanRuntime() {
   assert(wrapper.includes('ordinaryPagesDirectCore: true'), 'ordinary-page direct-core route missing');
   assert(wrapper.includes('dynamicContentShapers: false'), 'dynamic content shapers are not disabled');
   assert(wrapper.includes('runtimeFooter: false'), 'runtime footer is not disabled');
-  assert(wrapper.includes('/site-ui-consistency-v1.js?v=20260815-dock-label-v6'), 'dock-label consistency cache version v6 missing');
-  assert(consistency.includes("BUILD_ID='20260815-dock-label-v6'"), 'dock build id v6 missing');
+  assert(wrapper.includes('/site-ui-consistency-v1.js?v=20260816-nav-current-v7'), 'navigation current-state consistency cache version v7 missing');
+  assert(consistency.includes("BUILD_ID='20260816-nav-current-v7'"), 'navigation current-state build id v7 missing');
   assert(consistency.includes('qilyDockOfficialUrlPolishV3'), 'dock official-url visual fallback v3 missing');
   assert(consistency.includes('normalizeInteractiveLabelsOnce'), 'one-shot label normalization missing');
   assert(consistency.includes('w.setTimeout(reconcileFast,120)') && consistency.includes('w.setTimeout(reconcileFast,520)'), 'bounded reconcile schedule missing');
@@ -55,13 +55,14 @@ function verifyRuntimeBoundary() {
   assert(!/^\s*ensureGlobalContactFooter\(\);\s*$/m.test(core), 'runtime global contact footer injection returned');
   assert(!/^\s*ensureKnowledgeDocumentEnhancements\(\);\s*$/m.test(core), 'runtime document contact tail injection returned');
   assert(core.includes("if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();"), 'static-first navigation guard missing');
-  assert(legacy.includes("var CORE_SRC = '/site-navigation-core.js?v=20260815-performance-v16';"), 'legacy core cache version is not performance-v16');
+  assert(core.includes('syncPrimaryNavCurrentState();'), 'primary navigation current-state synchronization missing');
+  assert(legacy.includes("var CORE_SRC = '/site-navigation-core.js?v=20260816-nav-current-v17';"), 'legacy core cache version is not navigation-current-v17');
 }
 
 function verifyDockMaterializer() {
   const publisher=read('scripts/publish-dock-label-polish-v1.js');
   [
-    '20260815-dock-label-v6','20260815-prefetch-v6p1','qilyDockCriticalV6',
+    '20260816-nav-current-v7','20260815-prefetch-v6p1','qilyDockCriticalV6',
     'data-qily-dock-firstpaint-lock="v6"','removeCoreServiceRuntime','patchShareMarkup','patchFastNative'
   ].forEach((marker)=>assert(publisher.includes(marker),`dock materializer missing: ${marker}`));
 

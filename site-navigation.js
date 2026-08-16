@@ -1,4 +1,4 @@
-/* QilyLean R2 static-first navigation runtime v21.3｜2026-08-15
+/* QilyLean R2 static-first navigation runtime v21.4｜2026-08-16
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
  * 性能：普通页面直达 core；仅合作/资源页面按需加载 legacy，避免全站下载报价与资源逻辑。
  * 可视化：中文正文启用 pretty wrap / strict line-break，标题平衡换行；悬浮栏“分享官方网址”固定两行完整显示。
@@ -8,9 +8,9 @@
   if (w.__qilyStaticFirstNavigationV21) return;
   w.__qilyStaticFirstNavigationV21 = true;
 
-  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260815-dock-label-v6';
-  var CORE_SRC = '/site-navigation-core.js?v=20260815-performance-v16';
-  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260815-performance-v16';
+  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260816-nav-current-v7';
+  var CORE_SRC = '/site-navigation-core.js?v=20260816-nav-current-v17';
+  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260816-nav-current-v17';
 
   function installTypographyPolish() {
     if (d.getElementById('qilyChineseWrapPolishV1')) return;
