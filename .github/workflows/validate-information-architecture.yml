@@ -133,8 +133,8 @@ jobs:
           grep -q '精益改善项目交付' index.html
           grep -q '目视化项目设计与交付' index.html
           grep -q '数字化工厂' index.html
-          grep -q 'APP软件开发' index.html
-          grep -q '官网建设' index.html
+          grep -q 'QilyLean AI／APP' index.html
+          grep -q 'QilyLean官网' index.html
           ! grep -q '六大核心业务' index.html
           ! grep -q '六类核心能力' index.html
           ! grep -q '六类项目合作能力' index.html
