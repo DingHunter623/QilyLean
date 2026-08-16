@@ -7,7 +7,8 @@
     "test:seo": "node scripts/validate-seo-indexability.js",
     "test:visual": "node scripts/validate-sitewide-interaction-clarity.js",
     "deploy:worker": "wrangler deploy",
-    "test:maintenance": "node scripts/test-maintenance-fixes.js"
+    "test:maintenance": "node scripts/test-maintenance-fixes.js",
+    "test:audit": "node scripts/validate-public-audit-optimization-20260816.js"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

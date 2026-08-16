@@ -10,6 +10,14 @@ const siteDataFile = path.join(root, 'qilylean', 'site-data.json');
 const targets = [
   { url: '/', file: 'index.html', kind: '首页' },
   { url: '/cooperation/', file: 'cooperation/index.html', kind: '项目合作' },
+  { url: '/improvements/', file: 'improvements/index.html', kind: '改善方法' },
+  { url: '/projects/', file: 'projects/index.html', kind: '代表项目' },
+  { url: '/projects/automotive-lean/', file: 'projects/automotive-lean/index.html', kind: '代表项目' },
+  { url: '/projects/smed-300t/', file: 'projects/smed-300t/index.html', kind: '代表项目' },
+  { url: '/projects/mold-warehouse/', file: 'projects/mold-warehouse/index.html', kind: '代表项目' },
+  { url: '/projects/fuse-improvement/', file: 'projects/fuse-improvement/index.html', kind: '代表项目' },
+  { url: '/projects/factory-layout/', file: 'projects/factory-layout/index.html', kind: '代表项目' },
+  { url: '/projects/digital-factory/', file: 'projects/digital-factory/index.html', kind: '代表项目' },
   { url: '/qilylean/daily-insights.html', file: 'qilylean/daily-insights.html', kind: '今日简报目录' }
 ];
 
@@ -155,8 +163,8 @@ const isV3Home = !!(home && home.text.includes('把制造现场，变成可计�
 if (!home || !(isV3Home || home.text.includes('把复杂制造问题，转化为可验证的交付结果'))) {
   throw new Error('Homepage search entry is not based on final static HTML');
 }
-if (isV3Home && (!home.text.includes('三类核心项目交付') || !home.text.includes('APP软件开发') || !home.text.includes('官网建设'))) {
-  throw new Error('V3 homepage search entry misses the six-capability operating architecture');
+if (isV3Home && (!home.text.includes('四类制造项目主线') || !home.text.includes('数字工程支撑') || !home.text.includes('APP软件开发') || !home.text.includes('官网建设'))) {
+  throw new Error('V3 homepage search entry misses the layered six-capability operating architecture');
 }
 if (home.text.includes('职能标签') || home.text.includes('超千万元累计改善收益') || home.text.includes('六大核心业务')) {
   throw new Error('Legacy homepage text remains in search index');

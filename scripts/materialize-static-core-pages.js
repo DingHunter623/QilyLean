@@ -111,16 +111,16 @@ function buildHomeCommercialBlock() {
   return `<!-- QILY-HOME-STATIC-COMMERCIAL:START -->
 <section class="qily-ia-section" id="qily-core-services" data-qily-static-source="home-core-v2" data-qily-six-core-services="v1">
   <div class="qily-ia-inner">
-    <div class="qily-ia-heading"><span class="qily-ia-kicker">CORE CAPABILITIES｜六类能力，一个制造运营闭环</span><h2>六类核心能力｜统一服务于制造运营资产化</h2><p>六类能力不是分成两个阵营，而是沿同一制造运营价值链协同：从工厂与产线规划、现场改善和目视化，到数字化系统、轻量软件与专业互联网资产。六类项目合作能力统一遵循问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化与项目验收。</p></div>
+    <div class="qily-ia-heading"><span class="qily-ia-kicker">CORE CAPABILITIES｜六类能力，一个制造运营闭环</span><h2>六类能力分层呈现｜四类制造项目主线，两项数字工程支撑</h2><p>新工厂／新产线规划、精益改善、目视化与数字化工厂构成制造项目主线；APP与官网建设作为数字作品和工程实现支撑，用于验证把制造业务逻辑转化为可运行工具与专业互联网资产的能力。六类能力均遵循问题定义、事实基线、方案／原型、Pilot／测试、实绩验证、标准固化与项目验收。</p></div>
     <div class="qily-ia-grid">
-      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>核心能力｜01</small><h3>新工厂／新产线规划</h3><p>从产品、工艺、产能、设备、物流、公辅、品质和扩展边界出发，形成可评审、可实施的规划资产。</p><div class="qily-ia-result">产能模型、Layout、物流与库位、公辅接口、实施路线图</div></article>
-      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>核心能力｜02</small><h3>精益改善项目交付</h3><p>围绕PQCD与交付瓶颈，以VSM、标准工时、线平衡、SMED、OEE、质量防错及计划实绩闭环开展诊断、Pilot与标准化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>
-      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>核心能力｜03</small><h3>目视化项目设计与交付</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、视觉标准、设计图、材料清单、打样、实施与验收</div></article>
-      <article class="qily-ia-card" data-qily-business-line="digital"><small>核心能力｜04</small><h3>数字化工厂</h3><p>以业务流程和可信主数据为底座，规划ERP／MES／APS、设备数据、生产透明化、管理看板与实施路线。</p><div class="qily-ia-result">数字化蓝图、数据口径、功能／接口需求、看板原型、Pilot与验收机制</div></article>
-      <article class="qily-ia-card" data-qily-business-line="digital"><small>核心能力｜05</small><h3>APP软件开发</h3><p>面向IE测时、现场采集、异常管理、移动看板、提醒及轻量化管理场景，完成需求、原型、开发、测试、发布与迭代。</p><div class="qily-ia-result">需求清单、交互原型、可运行版本、测试记录、安装／发布包与版本记录</div></article>
-      <article class="qily-ia-card" data-qily-business-line="digital"><small>核心能力｜06</small><h3>官网建设</h3><p>围绕品牌定位、信息架构、可信证据、内容体系、SEO、咨询转化、响应式适配及持续运维建设专业官网。</p><div class="qily-ia-result">信息架构、页面模板、响应式官网、SEO基础、咨询入口、部署与运维规范</div></article>
+      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>制造项目主线｜01</small><h3>新工厂／新产线规划</h3><p>从产品、工艺、产能、设备、物流、公辅、品质和扩展边界出发，形成可评审、可实施的规划资产。</p><div class="qily-ia-result">产能模型、Layout、物流与库位、公辅接口、实施路线图</div></article>
+      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>制造项目主线｜02</small><h3>精益改善项目交付</h3><p>围绕PQCD与交付瓶颈，以VSM、标准工时、线平衡、SMED、OEE、质量防错及计划实绩闭环开展诊断、Pilot与标准化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>
+      <article class="qily-ia-card" data-qily-business-line="manufacturing"><small>制造项目主线｜03</small><h3>目视化项目设计与交付</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、视觉标准、设计图、材料清单、打样、实施与验收</div></article>
+      <article class="qily-ia-card" data-qily-business-line="digital"><small>制造项目主线｜04</small><h3>数字化工厂</h3><p>以业务流程和可信主数据为底座，规划ERP／MES／APS、设备数据、生产透明化、管理看板与实施路线。</p><div class="qily-ia-result">数字化蓝图、数据口径、功能／接口需求、看板原型、Pilot与验收机制</div></article>
+      <article class="qily-ia-card" data-qily-business-line="digital"><small>数字工程支撑｜05</small><h3>APP软件开发</h3><p>面向IE测时、现场采集、异常管理、移动看板、提醒及轻量化管理场景，完成需求、原型、开发、测试、发布与迭代。</p><div class="qily-ia-result">需求清单、交互原型、可运行版本、测试记录、安装／发布包与版本记录</div></article>
+      <article class="qily-ia-card" data-qily-business-line="digital"><small>数字工程支撑｜06</small><h3>官网建设</h3><p>围绕品牌定位、信息架构、可信证据、内容体系、SEO、咨询转化、响应式适配及持续运维建设专业官网。</p><div class="qily-ia-result">信息架构、页面模板、响应式官网、SEO基础、咨询入口、部署与运维规范</div></article>
     </div>
-    <div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#services">查看六类项目合作能力与交付边界</a></div>
+    <div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#services">查看分层能力与交付边界</a></div>
   </div>
 </section>
 <section class="qily-ia-section qily-ia-alt" id="qily-home-proof" data-qily-static-source="home-proof-v2">
