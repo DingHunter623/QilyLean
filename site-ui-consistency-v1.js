@@ -1,4 +1,4 @@
-/* QilyLean 轻量术语、父级导航与页面新鲜度防错 v2.6｜2026-08-15
+/* QilyLean 轻量术语、父级导航与页面新鲜度防错 v2.7｜2026-08-16
  * 性能原则：静态HTML首帧即正确；运行时只做必要校正，不反复扫描正文、不监听整页DOM。
  * 目标：统一悬浮栏“分享官方网址”、清理旧主导航“友情链接”，并在BFCache恢复旧页面时自动校正/刷新。
  */
@@ -7,14 +7,16 @@
   if(w.__qilyUiConsistencyV2)return;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260815-dock-label-v6';
+  var BUILD_ID='20260816-nav-current-v7';
   var BUILD_KEY='qily_site_ui_build_v1';
 
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
 
   function normalizedPath(path){
     var value=(path||'/').replace(/\/index\.html$/,'/').replace(/\/{2,}/g,'/');
-    return value.length>1?value.replace(/\/+$/,'/'):'/';
+    if(value.length<=1)return '/';
+    if(value.charAt(value.length-1)!=='/'&&!/\/[^/]+\.[^/]+$/.test(value))value+='/';
+    return value.replace(/\/+$/,'/');
   }
 
   function configuredParent(){
@@ -103,11 +105,62 @@
     (d.head||d.documentElement).appendChild(style);
   }
 
+  function primaryModule(path){
+    path=normalizedPath(path);
+    if(path==='/')return '/';
+    if(path.indexOf('/capabilities/')===0)return '/capabilities/';
+    if(path.indexOf('/projects/')===0)return '/projects/';
+    if(path.indexOf('/improvements/')===0||/\/(?:execution|papers)\.html$/.test(path)||/\/qilylean\/papers\.html$/.test(path))return '/improvements/';
+    if(path.indexOf('/knowledge/')===0||path.indexOf('/qilylean/daily/')===0||/^\/(?:knowledge|daily|daily-insights|gbt2828)\.html$/.test(path)||/\/qilylean\/(?:lean-knowledge|daily-insights|lean-tools|execution-loop|reference-|gbt2828)/.test(path))return '/knowledge/';
+    if(path.indexOf('/experience/')===0)return '/experience/';
+    if(path.indexOf('/cooperation/')===0)return '/cooperation/';
+    if(path.indexOf('/trust/')===0||path.indexOf('/certificates/')===0||path.indexOf('/legal/')===0)return '/trust/';
+    return '';
+  }
+
+  function ensurePrimaryNavCurrentStyles(){
+    if(d.getElementById('qilyPrimaryNavCurrentStateV7'))return;
+    var style=d.createElement('style');
+    style.id='qilyPrimaryNavCurrentStateV7';
+    style.textContent=[
+      'html body header :is(.qily-global-nav,nav.site-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href][aria-current="page"][data-qily-primary-current="true"]{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a!important;border:2px solid #ffe39b!important;text-decoration-color:#ffe39b!important;text-decoration-thickness:2.2px!important;box-shadow:0 7px 18px rgba(15,75,90,.24)!important}',
+      'html body header :is(.qily-global-nav,nav.site-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href][aria-current="page"][data-qily-primary-current="true"]:is(:hover,:focus-visible){color:#fff!important;-webkit-text-fill-color:#fff!important;background:#12606f!important;border-color:#ffe39b!important;box-shadow:0 9px 22px rgba(15,75,90,.30)!important}'
+    ].join('');
+    (d.head||d.documentElement).appendChild(style);
+  }
+
+  function primaryRouteForLink(link){
+    var target;
+    try{target=new URL(link.getAttribute('href')||'',location.origin);}catch(error){return '';}
+    if(target.origin!==location.origin)return '';
+    var path=normalizedPath(target.pathname);
+    return ['/','/capabilities/','/projects/','/improvements/','/knowledge/','/experience/','/cooperation/','/trust/'].indexOf(path)!==-1?path:'';
+  }
+
   function normalizePrimaryNav(){
     var path=normalizedPath(location.pathname);
+    var modulePath=primaryModule(path);
+    ensurePrimaryNavCurrentStyles();
     d.querySelectorAll('.qily-global-nav,nav.site-nav,nav.nav').forEach(function(nav){
       nav.querySelectorAll('a[href="/links/"],a[href="/links/index.html"]').forEach(function(link){
         if(path.indexOf('/links/')!==0)link.remove();
+      });
+      if(!modulePath)return;
+      Array.from(nav.children).forEach(function(link){
+        if(!link.matches||!link.matches('a[href]'))return;
+        var routePath=primaryRouteForLink(link);if(!routePath)return;
+        var active=routePath===modulePath;
+        if(active){
+          link.setAttribute('aria-current','page');
+          link.setAttribute('data-qily-primary-current','true');
+        }else{
+          link.removeAttribute('aria-current');
+          link.removeAttribute('aria-selected');
+          link.removeAttribute('data-current');
+          link.removeAttribute('data-active');
+          link.removeAttribute('data-qily-primary-current');
+          link.classList.remove('active','current','is-active','selected');
+        }
       });
     });
   }

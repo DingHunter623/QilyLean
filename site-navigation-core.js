@@ -24,20 +24,63 @@
 
   function normalizedPath(path) {
     var value = (path || '/').replace(/\/index\.html$/, '/');
-    return value.length > 1 ? value.replace(/\/+$/, '/') : '/';
+    if (value.length <= 1) return '/';
+    if (value.charAt(value.length - 1) !== '/' && !/\/[^/]+\.[^/]+$/.test(value)) value += '/';
+    return value.replace(/\/+$/, '/');
   }
 
   function currentModule(path) {
+    path = normalizedPath(path);
     if (path === '/') return '/';
     if (/\/ai\.html$/.test(path)) return '/ai.html';
     if (path.indexOf('/capabilities/') === 0) return '/capabilities/';
+    if (path.indexOf('/projects/') === 0) return '/projects/';
     if (path.indexOf('/experience/') === 0) return '/experience/';
-    if (path.indexOf('/improvements/') === 0 || /\/qilylean\/papers\.html$/.test(path)) return '/improvements/';
-    if (path.indexOf('/knowledge/') === 0 || path.indexOf('/qilylean/daily/') === 0 || /\/qilylean\/(?:lean-knowledge|daily-insights|lean-tools|execution-loop|reference-|gbt2828)/.test(path)) return '/knowledge/';
+    if (path.indexOf('/improvements/') === 0 || /\/(?:execution|papers)\.html$/.test(path) || /\/qilylean\/papers\.html$/.test(path)) return '/improvements/';
+    if (path.indexOf('/knowledge/') === 0 || path.indexOf('/qilylean/daily/') === 0 || /^\/(?:knowledge|daily|daily-insights|gbt2828)\.html$/.test(path) || /\/qilylean\/(?:lean-knowledge|daily-insights|lean-tools|execution-loop|reference-|gbt2828)/.test(path)) return '/knowledge/';
     if (path.indexOf('/moments/') === 0 || /\/moments\.html$/.test(path)) return '/moments/';
     if (path.indexOf('/cooperation/') === 0) return '/cooperation/';
+    if (path.indexOf('/trust/') === 0 || path.indexOf('/certificates/') === 0 || path.indexOf('/legal/') === 0) return '/trust/';
     return '';
   }
+
+  function primaryRouteForLink(link) {
+    var target;
+    try { target = new URL(link.getAttribute('href') || '', location.origin); } catch (error) { return ''; }
+    if (target.origin !== location.origin) return '';
+    var path = normalizedPath(target.pathname);
+    for (var i = 0; i < routes.length; i += 1) {
+      if (path === routes[i][1]) return routes[i][1];
+    }
+    return '';
+  }
+
+  function syncPrimaryNavCurrentState() {
+    var modulePath = currentModule(location.pathname);
+    if (!modulePath) return '';
+    document.querySelectorAll('.qily-global-nav,header nav.site-nav,header nav.nav,header nav[aria-label="网站导航"],header nav[aria-label="QilyLean核心导视"]').forEach(function (nav) {
+      Array.from(nav.children).forEach(function (link) {
+        if (!link.matches || !link.matches('a[href]')) return;
+        var routePath = primaryRouteForLink(link);
+        if (!routePath) return;
+        var active = routePath === modulePath;
+        if (active) {
+          link.setAttribute('aria-current', 'page');
+          link.setAttribute('data-qily-primary-current', 'true');
+        } else {
+          link.removeAttribute('aria-current');
+          link.removeAttribute('aria-selected');
+          link.removeAttribute('data-current');
+          link.removeAttribute('data-active');
+          link.removeAttribute('data-qily-primary-current');
+          link.classList.remove('active', 'current', 'is-active', 'selected');
+        }
+      });
+    });
+    return modulePath;
+  }
+
+  window.__qilySyncPrimaryNavCurrentState = syncPrimaryNavCurrentState;
 
   function parentRoute(path) {
     if (path === '/') return '/';
@@ -110,7 +153,7 @@
       '.qily-global-header>.qily-global-nav{display:flex!important;flex:0 1 auto!important;align-items:center!important;justify-content:flex-end!important;gap:6px!important;max-width:calc(100vw - 330px)!important;margin-left:auto!important;padding:0!important;overflow-x:auto!important;overflow-y:hidden!important;color:#182420!important;white-space:nowrap!important;scrollbar-width:thin!important;-webkit-overflow-scrolling:touch!important}',
       '.qily-global-header>.qily-global-nav a{display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;justify-content:center!important;min-height:42px!important;padding:7px 10px!important;border:1px solid transparent!important;border-radius:10px!important;color:#182420!important;background:transparent!important;box-shadow:none!important;font-size:17.5px!important;font-weight:850!important;line-height:1.2!important;text-decoration:none!important;transition:color .18s ease,background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease!important}',
       '.qily-global-header>.qily-global-nav a:hover,.qily-global-header>.qily-global-nav a:focus-visible{color:#fff!important;background:#0f4b5a!important;border-color:#0f4b5a!important;box-shadow:0 8px 18px rgba(15,75,90,.22)!important;outline:none!important;transform:translateY(-2px)!important}',
-      '.qily-global-header>.qily-global-nav a[aria-current="page"]{color:#0f4b5a!important;background:#e4f2ef!important;border-color:#b8d9d4!important}',
+      '.qily-global-header>.qily-global-nav a[aria-current="page"]{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a!important;border-color:#ffe39b!important;text-decoration-color:#ffe39b!important;box-shadow:0 7px 18px rgba(15,75,90,.24)!important}',
       '@media(max-width:900px){.qily-site-header.qily-global-header{flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;gap:5px!important;min-height:auto!important;padding:7px 9px 8px!important}.qily-global-header>.qily-brand{width:142px!important;height:27px!important;margin-left:42px!important}.qily-global-header>.qily-global-nav{width:100%!important;max-width:100%!important;margin:0!important;justify-content:flex-start!important;gap:5px!important;overflow-x:auto!important}.qily-global-header>.qily-global-nav a{min-height:34px!important;padding:5px 9px!important;font-size:12.5px!important;border-radius:9px!important}}',
       '@media(max-width:620px){.qily-global-header>.qily-brand{width:126px!important;height:23px!important}.qily-global-header>.qily-global-nav a{font-size:11.5px!important;padding:5px 7px!important}}'
     ].join('');
@@ -566,6 +609,7 @@
       // R2 static-first: header styles already materialized.
       // R2 static-first: typography already materialized.
       if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();
+      syncPrimaryNavCurrentState();
       // R2: no repeated global contact footer on ordinary pages.
       // R2: no repeated document contact/email tail.
       protectControlledPage();

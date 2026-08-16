@@ -2,7 +2,7 @@
 'use strict';
 
 /*
- * QilyLean R2 clean runtime v5.1｜2026-08-15 PERFORMANCE V16
+ * QilyLean R2 clean runtime v5.2｜2026-08-16 NAV CURRENT V17
  * 目的：
  * 1) 静态 HTML 立即可见，不等待 window.load；
  * 2) 普通页面仅加载轻量 core，合作/资源页面才按需加载 legacy；
@@ -18,12 +18,13 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const VERSION = '20260813-r2-clean-v4';
 const NAV_VERSION = '20260815-performance-v16';
-const CONSISTENCY_VERSION = '20260815-dock-label-v6';
+const NAV_RUNTIME_VERSION = '20260816-nav-current-v17';
+const CONSISTENCY_VERSION = '20260816-nav-current-v7';
 const CORE_CSS_VERSION = '20260815-core-visual-v1';
 const R2_CSS = `/site-r2-stability-fixes-v1.css?v=${VERSION}`;
 const NAV_JS = `/site-navigation.js?v=${NAV_VERSION}`;
-const LEGACY_JS = `/site-navigation-legacy-20260802.js?v=${NAV_VERSION}`;
-const CORE_JS = `/site-navigation-core.js?v=${NAV_VERSION}`;
+const LEGACY_JS = `/site-navigation-legacy-20260802.js?v=${NAV_RUNTIME_VERSION}`;
+const CORE_JS = `/site-navigation-core.js?v=${NAV_RUNTIME_VERSION}`;
 const CONSISTENCY_JS = `/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}`;
 const FAST_NATIVE_JS = '/site-music-persistent-navigation-v1.js?v=20260815-prefetch-v6p1';
 const CORE_CSS_BUNDLE = `/site-core-visual-bundle-v1.css?v=${CORE_CSS_VERSION}`;
@@ -200,9 +201,9 @@ walk(root, (file) => {
   }
 });
 
-assert(read('site-navigation.js').includes(LEGACY_JS),'site-navigation.js performance V16 legacy cache version missing');
-assert(read('site-navigation.js').includes(CORE_JS),'site-navigation.js performance V16 direct-core cache version missing');
-assert(read('site-navigation.js').includes(CONSISTENCY_JS),'site-navigation.js lightweight consistency cache version missing');
+assert(read('site-navigation.js').includes(LEGACY_JS),'site-navigation.js navigation-current V17 legacy cache version missing');
+assert(read('site-navigation.js').includes(CORE_JS),'site-navigation.js navigation-current V17 direct-core cache version missing');
+assert(read('site-navigation.js').includes(CONSISTENCY_JS),'site-navigation.js navigation-current V7 consistency cache version missing');
 assert(read('site-navigation.js').includes('needsLegacyRuntime'),'site-navigation.js route-scoped legacy selector missing');
-assert(read('site-navigation-legacy-20260802.js').includes(`var CORE_SRC = '${CORE_JS}';`),'legacy runtime performance V16 core cache version missing');
-process.stdout.write(`R2 clean runtime v5.1 checked ${checked} public HTML pages; refreshed ${changed}; bundled core CSS on ${bundled}; added ${lazyImages} lazy image hints; Fast Native V6 budget=3; ordinary pages direct-core; duplicate core CSS stripped from bundled pages.\n`);
+assert(read('site-navigation-legacy-20260802.js').includes(`var CORE_SRC = '${CORE_JS}';`),'legacy runtime navigation-current V17 core cache version missing');
+process.stdout.write(`R2 clean runtime v5.2 checked ${checked} public HTML pages; refreshed ${changed}; bundled core CSS on ${bundled}; added ${lazyImages} lazy image hints; Fast Native V6 budget=3; eight-module current state; duplicate core CSS stripped from bundled pages.\n`);

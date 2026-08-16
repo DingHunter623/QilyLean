@@ -54,7 +54,7 @@ includes(latest, 'site-music-persistent-navigation-v1.js?v=20260815-prefetch-v6p
 assert(!latest.includes('qilyBackgroundMusicPreload'), 'Latest retained page does not preload background audio');
 assert(!latest.includes('site-footer-standard-v28.js'), 'Latest retained page does not load retired footer runtime');
 assert(!/<footer\b/i.test(latest), 'Latest retained page does not restore retired visible footer');
-includes(navigation, 'site-navigation-legacy-20260802.js?v=20260815-performance-v16', 'Navigation wrapper uses current legacy runtime version');
+includes(navigation, 'site-navigation-legacy-20260802.js?v=20260816-nav-current-v17', 'Navigation wrapper uses current legacy runtime version');
 includes(navigation, "mode: 'r2-static-first-v21'", 'Navigation wrapper declares current static-first mode');
 includes(fastNative, "mode:'native-prefetch-v6'", 'Fast Native V6 declares native-prefetch mode');
 includes(fastNative, 'domSwap:false', 'Fast Native V6 forbids cross-page DOM swapping');
