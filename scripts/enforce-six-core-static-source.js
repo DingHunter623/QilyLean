@@ -34,6 +34,15 @@ assert(!cooperation.includes('六类项目合作能力') && !cooperation.include
 assert(!/<span class="service-number">0[456]<\/span>/.test(cooperation), 'Digital enabler or work is still numbered as a core business.');
 assert(!/<span class="boundary-type">0[456]｜/.test(cooperation), 'Digital enabler or work still appears in the core-business boundary grid.');
 
+const pricingRuntime = read('site-navigation-legacy-20260802.js');
+assert(pricingRuntime.includes("title.textContent = '三大核心业务报价参考'"), 'Pricing module heading is not aligned to the three core businesses.');
+assert(pricingRuntime.includes("pricingGateMarkup('三大核心业务报价方案')"), 'Pricing access gate is not aligned to the three core businesses.');
+assert(pricingRuntime.includes('<strong>三大核心业务</strong>'), 'Pricing family heading is not aligned to the three core businesses.');
+assert(pricingRuntime.includes('本模块只覆盖三大核心业务'), 'Pricing scope boundary is missing.');
+assert(!/var\s+(?:digitalPricing|appPricing|websitePricing)\s*=/.test(pricingRuntime), 'A retired non-core pricing array remains in the runtime.');
+assert(!/<h3>0[456]｜/.test(pricingRuntime), 'A retired 04–06 pricing group remains in the runtime.');
+assert(!pricingRuntime.includes('六类项目合作能力报价'), 'Legacy six-capability pricing wording remains in the runtime.');
+
 const cooperationCore = cooperation.slice(cooperation.indexOf('data-qily-three-core-services'), cooperation.indexOf('id="engineering-enablers"'));
 assert((cooperationCore.match(/class="service-number"/g) || []).length === 3, 'Cooperation must contain exactly three numbered core-business cards.');
 

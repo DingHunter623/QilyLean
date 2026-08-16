@@ -93,6 +93,10 @@ jobs:
           grep -q '三大核心业务报价参考' site-navigation-legacy-20260802.js
           grep -q '三大核心业务报价方案' site-navigation-legacy-20260802.js
           grep -q '本模块只覆盖三大核心业务' site-navigation-legacy-20260802.js
+          grep -q '<strong>三大核心业务</strong>' site-navigation-legacy-20260802.js
+          ! grep -Eq 'var (digitalPricing|appPricing|websitePricing) = ' site-navigation-legacy-20260802.js
+          ! grep -Eq '<h3>0[456]｜' site-navigation-legacy-20260802.js
+          ! grep -q '六类项目合作能力报价' site-navigation-legacy-20260802.js
           ! grep -q "title.textContent = '六类项目合作能力报价参考'" site-navigation-legacy-20260802.js
 
           # R2 clean runtime: static HTML is authoritative; no DOM content shapers.
