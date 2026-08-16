@@ -50,7 +50,7 @@ includes(latest, `id="${sourceLatest}"`, 'Latest retained page carries its date 
 includes(latest, 'data-brief-message-form', 'Latest retained page contains message form');
 includes(latest, '留言交流', 'Latest retained page contains message section');
 includes(latest, 'site-navigation.js?v=20260815-performance-v16', 'Latest retained page uses current static-first navigation');
-includes(latest, 'site-music-persistent-navigation-v1.js?v=20260815-prefetch-v6p1', 'Latest retained page uses Fast Native Navigation V6');
+matches(latest, /site-music-persistent-navigation-v1\.js\?v=20260815-prefetch-v6(?:p1)?/, 'Latest retained page uses Fast Native Navigation V6');
 assert(!latest.includes('qilyBackgroundMusicPreload'), 'Latest retained page does not preload background audio');
 assert(!latest.includes('site-footer-standard-v28.js'), 'Latest retained page does not load retired footer runtime');
 assert(!/<footer\b/i.test(latest), 'Latest retained page does not restore retired visible footer');

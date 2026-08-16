@@ -114,7 +114,8 @@ jobs:
           test -s site-information-architecture-v1.js
           test -s site-static-core-interactions-v1.js
           test -s qilylean/site-search-index.json
-          grep -q 'qilyInformationArchitectureStylesheet' site-navigation.js
+          grep -q 'qilyInformationArchitectureStylesheet' index.html
+          grep -q 'qilyInformationArchitectureStylesheet' cooperation/index.html
           grep -q '新工厂／新产线规划' site-information-architecture-v1.js
           grep -q '精益改善项目交付' site-information-architecture-v1.js
           grep -q '目视化项目设计与交付' site-information-architecture-v1.js
