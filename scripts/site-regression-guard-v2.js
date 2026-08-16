@@ -113,6 +113,10 @@ all(timesPage,['versionCode 16 / API 36','QilyLean｜启力精益官方网址与
 const keyPages=['index.html','ai.html','capabilities/index.html','projects/index.html','improvements/index.html','knowledge/index.html','experience/index.html','cooperation/index.html','trust/index.html','tools/times26001/index.html'];
 const individualCoreCss=['site-shell.css','site-visual-scale-v1.css','site-wide-layout-v1.css','site-typography-v1.css','site-vi-standard-v1.css','site-vi-contrast-restoration-v1.css','site-r2-stability-fixes-v1.css'];
 const essentialFallbackCss=['site-shell.css','site-visual-scale-v1.css','site-wide-layout-v1.css','site-typography-v1.css','site-r2-stability-fixes-v1.css'];
+const pageLocalCurrent={
+  'index.html':'<a href="/" aria-current="page" data-qily-page-current="true" data-qily-primary-current="true">首页</a>',
+  'projects/index.html':'<a href="/projects/" aria-current="page" data-qily-page-current="true" data-qily-primary-current="true">代表项目</a>'
+};
 for(const rel of keyPages){
   if(!fs.existsSync(path.join(root,rel)))continue;
   const html=read(rel);
@@ -129,6 +133,7 @@ for(const rel of keyPages){
   }else{
     assert(/data-qily-ui-consistency="(?:dock-v6|nav-current-v7)" src="\/site-ui-consistency-v1\.js\?v=(?:20260815-dock-label-v6|20260816-nav-current-v7)"/.test(html),`${rel}: consistency fallback missing`);
   }
+  if(pageLocalCurrent[rel])all(html,['id="qilyPrimaryNavPageCurrentV8"','data-qily-page-current-failsafe="v8"',pageLocalCurrent[rel]],`${rel}: page-local current-state fallback`);
   const first=(html.match(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/)||[])[0]||'';
   assert(first&& !/opacity\s*:\s*0|visibility\s*:\s*hidden|pointer-events\s*:\s*none|window\.load|stableReveal|2400/.test(first),`${rel}: blocking/blank first-paint logic returned`);
   assert(!/site-parent-navigation-v3\.js/i.test(html),`${rel}: redundant parent-navigation request returned`);
