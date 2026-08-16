@@ -104,7 +104,7 @@ jobs:
           grep -q 'staticHtmlAuthority: true' site-navigation.js
           grep -q 'dynamicContentShapers: false' site-navigation.js
           grep -q 'runtimeFooter: false' site-navigation.js
-          grep -q '/site-navigation-legacy-20260802.js?v=20260815-performance-v16' site-navigation.js
+          grep -q '/site-navigation-legacy-20260802.js?v=20260816-nav-current-v17' site-navigation.js
           grep -q '/site-navigation.js?v=20260815-performance-v16' index.html
           grep -q '/site-navigation.js?v=20260815-performance-v16' cooperation/index.html
           grep -q '/site-music-persistent-navigation-v1.js?v=20260815-prefetch-v6p1' index.html
