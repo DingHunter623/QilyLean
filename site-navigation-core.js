@@ -18,6 +18,7 @@
     ['改善方法', '/improvements/'],
     ['知识资产', '/knowledge/'],
     ['履历主线', '/experience/'],
+    ['友情链接', '/links/'],
     ['项目合作', '/cooperation/'],
     ['信任中心', '/trust/']
   ];
@@ -39,6 +40,7 @@
     if (path.indexOf('/improvements/') === 0 || /\/(?:execution|papers)\.html$/.test(path) || /\/qilylean\/papers\.html$/.test(path)) return '/improvements/';
     if (path.indexOf('/knowledge/') === 0 || path.indexOf('/qilylean/daily/') === 0 || /^\/(?:knowledge|daily|daily-insights|gbt2828)\.html$/.test(path) || /\/qilylean\/(?:lean-knowledge|daily-insights|lean-tools|execution-loop|reference-|gbt2828)/.test(path)) return '/knowledge/';
     if (path.indexOf('/moments/') === 0 || /\/moments\.html$/.test(path)) return '/moments/';
+    if (path.indexOf('/links/') === 0) return '/links/';
     if (path.indexOf('/cooperation/') === 0) return '/cooperation/';
     if (path.indexOf('/trust/') === 0 || path.indexOf('/certificates/') === 0 || path.indexOf('/legal/') === 0) return '/trust/';
     return '';

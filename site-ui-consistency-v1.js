@@ -106,6 +106,7 @@
     if(path.indexOf('/improvements/')===0||/\/(?:execution|papers)\.html$/.test(path)||/\/qilylean\/papers\.html$/.test(path))return '/improvements/';
     if(path.indexOf('/knowledge/')===0||path.indexOf('/qilylean/daily/')===0||/^\/(?:knowledge|daily|daily-insights|gbt2828)\.html$/.test(path)||/\/qilylean\/(?:lean-knowledge|daily-insights|lean-tools|execution-loop|reference-|gbt2828)/.test(path))return '/knowledge/';
     if(path.indexOf('/experience/')===0)return '/experience/';
+    if(path.indexOf('/links/')===0)return '/links/';
     if(path.indexOf('/cooperation/')===0)return '/cooperation/';
     if(path.indexOf('/trust/')===0||path.indexOf('/certificates/')===0||path.indexOf('/legal/')===0)return '/trust/';
     return '';
@@ -127,7 +128,7 @@
     try{target=new URL(link.getAttribute('href')||'',location.origin);}catch(error){return '';}
     if(target.origin!==location.origin)return '';
     var path=normalizedPath(target.pathname);
-    return ['/','/capabilities/','/projects/','/improvements/','/knowledge/','/experience/','/cooperation/','/trust/'].indexOf(path)!==-1?path:'';
+    return ['/','/capabilities/','/projects/','/improvements/','/knowledge/','/experience/','/links/','/cooperation/','/trust/'].indexOf(path)!==-1?path:'';
   }
 
   function normalizePrimaryNav(){
@@ -135,9 +136,6 @@
     var modulePath=primaryModule(path);
     ensurePrimaryNavCurrentStyles();
     d.querySelectorAll('.qily-global-nav,nav.site-nav,nav.nav').forEach(function(nav){
-      nav.querySelectorAll('a[href="/links/"],a[href="/links/index.html"]').forEach(function(link){
-        if(path.indexOf('/links/')!==0)link.remove();
-      });
       if(!modulePath)return;
       Array.from(nav.children).forEach(function(link){
         if(!link.matches||!link.matches('a[href]'))return;
