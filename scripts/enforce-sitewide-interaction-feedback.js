@@ -5,7 +5,8 @@
  * Permanent rule:
  *   1) every public HTML page using the QilyLean shell loads the same interaction CSS;
  *   2) the CSS must expose hover / active / focus-visible / dock pressed feedback;
- *   3) cache version is normalized centrally, preventing old pages from silently drifting back.
+ *   3) cache version is normalized centrally, preventing old pages from silently drifting back;
+ *   4) the main site regression guard is normalized to the same interaction cache contract.
  */
 const fs=require('fs');
 const path=require('path');
@@ -14,6 +15,7 @@ const CSS_FILE='site-interaction-continuity-v1.css';
 const CSS_VERSION='20260817-continuity-v2';
 const CSS_HREF=`/${CSS_FILE}?v=${CSS_VERSION}`;
 const LINK=`<link id="qilyInteractionContinuityV2" rel="stylesheet" href="${CSS_HREF}">`;
+const REGRESSION_GUARD='scripts/site-regression-guard-v2.js';
 
 function read(rel){return fs.readFileSync(path.join(root,rel),'utf8');}
 function write(rel,content){const file=path.join(root,rel);const out=content.endsWith('\n')?content:`${content}\n`;if(fs.readFileSync(file,'utf8')===out)return false;fs.writeFileSync(file,out,'utf8');return true;}
@@ -24,6 +26,13 @@ function normalize(html){
   let out=html.replace(/\s*<link\b[^>]*(?:id=["']qilyInteractionContinuityV\d+["']|href=["'][^"']*\/site-interaction-continuity-v1\.css(?:\?[^"']*)?["'])[^>]*>\s*/gi,'\n');
   out=out.replace(/<\/head>/i,`${LINK}\n</head>`);
   return out;
+}
+function normalizeRegressionGuard(){
+  if(!fs.existsSync(path.join(root,REGRESSION_GUARD)))return false;
+  const before=read(REGRESSION_GUARD);
+  const after=before.replace(/const INTERACTION_CSS_VERSION='[^']+';/,`const INTERACTION_CSS_VERSION='${CSS_VERSION}';`);
+  assert(after.includes(`const INTERACTION_CSS_VERSION='${CSS_VERSION}';`),'site regression guard interaction version could not be normalized');
+  return write(REGRESSION_GUARD,after);
 }
 function validateCss(){
   const css=read(CSS_FILE);
@@ -64,6 +73,7 @@ function main(){
     const after=normalize(before);
     if(after!==before){fs.writeFileSync(file,after.endsWith('\n')?after:`${after}\n`,'utf8');changed++;}
   });
+  const guardChanged=normalizeRegressionGuard();
   const keyPages=['index.html','capabilities/index.html','projects/index.html','improvements/index.html','knowledge/index.html','experience/index.html','cooperation/index.html','trust/index.html'];
   for(const rel of keyPages){
     if(!fs.existsSync(path.join(root,rel)))continue;
@@ -71,6 +81,7 @@ function main(){
     assert(html.includes(CSS_HREF),`${rel}: permanent interaction CSS v2 missing`);
     assert((html.match(/site-interaction-continuity-v1\.css/g)||[]).length===1,`${rel}: interaction CSS duplicated`);
   }
-  process.stdout.write(`Interaction feedback v2 enforced on ${checked} public pages; refreshed ${changed}.\n`);
+  if(fs.existsSync(path.join(root,REGRESSION_GUARD)))assert(read(REGRESSION_GUARD).includes(`const INTERACTION_CSS_VERSION='${CSS_VERSION}';`),'site regression guard drifted from permanent interaction version');
+  process.stdout.write(`Interaction feedback v2 enforced on ${checked} public pages; refreshed ${changed}; regression guard ${guardChanged?'updated':'aligned'}.\n`);
 }
 main();
