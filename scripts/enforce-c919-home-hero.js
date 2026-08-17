@@ -18,7 +18,7 @@ const HERO = `<!-- QILY-C919-STRATEGY-HERO:START -->
       <span class="qily-c919-kicker">QILYLEAN STRATEGIC FLIGHT MAP｜启力精益战略蓝图</span>
       <h1 id="qily-c919-title">以精益为基 · 以数字为翼 · 价值共创 · 未来共赢</h1>
       <p class="qily-c919-lead">这不是一张装饰性的飞机图，而是一张启力精益面向制造企业的战略蓝图。</p>
-      <p class="qily-c919-copy">左翼承载<strong>数字化工厂、APP软件开发、官网建设</strong>，右翼承载<strong>新工厂／新产线规划、精益改善项目交付、目视化项目设计与交付</strong>；机身凝聚精益思维、系统逻辑、数据驱动、标准化、流程优化、持续改善、项目交付与价值创造。以六类核心业务为翼，以方法论与工程技术为核，<strong>助企业高质量发展</strong>，也让<strong>启力精益展翼远航</strong>。</p>
+      <p class="qily-c919-copy">左翼承载<strong>1～3：新工厂／新产线规划、精益改善项目交付、目视化项目设计与交付</strong>，右翼承载<strong>4～6：数字化工厂、APP软件开发、官网建设</strong>；机身凝聚精益思维、系统逻辑、数据驱动、标准化、流程优化、持续改善、项目交付与价值创造。以六类核心业务为翼，以方法论与工程技术为核，<strong>助企业高质量发展</strong>，也让<strong>启力精益展翼远航</strong>。</p>
       <div class="qily-c919-axis" aria-label="双重发展主旨">
         <div><small>客户价值</small><b>助企业高质量发展</b></div>
         <div><small>品牌事业</small><b>启力精益展翼远航</b></div>
@@ -71,4 +71,4 @@ html = html.replace(/聚焦新工厂／新产线规划、精益改善、目视�
 html = html.replace(/三大核心业务/g, '六类核心业务');
 
 fs.writeFileSync(target, html.endsWith('\n') ? html : html + '\n', 'utf8');
-console.log('C919 homepage flight map enforced: summary moved below image, widened, and left/right wing business mapping corrected.');
+console.log('C919 homepage flight map enforced: left wing 1-3 manufacturing businesses, right wing 4-6 digital businesses, widened non-overlapping summary locked.');
