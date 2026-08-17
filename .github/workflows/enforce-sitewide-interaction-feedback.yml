@@ -7,8 +7,11 @@ on:
       - '**/*.html'
       - 'site-interaction-continuity-v1.css'
       - 'scripts/enforce-sitewide-interaction-feedback.js'
+      - 'scripts/site-regression-guard-v2.js'
+      - 'scripts/apply-site-poka-yoke-v2.js'
       - 'docs/QILYLEAN_SITE_INTERACTION_STANDARD_V1.md'
       - '.github/workflows/enforce-sitewide-interaction-feedback.yml'
+      - '.github/workflows/site-regression-poka-yoke.yml'
   workflow_dispatch:
 
 permissions:
@@ -52,6 +55,8 @@ jobs:
           grep -q ':focus-visible' site-interaction-continuity-v1.css
           grep -q 'data-qily-pressed="true"' site-interaction-continuity-v1.css
           grep -q '全站交互反馈永久规范 V1.0' docs/QILYLEAN_SITE_INTERACTION_STANDARD_V1.md
+          grep -q "const INTERACTION_CSS_VERSION='20260817-continuity-v2';" scripts/site-regression-guard-v2.js
+          grep -q "runNode('scripts/enforce-sitewide-interaction-feedback.js');" scripts/apply-site-poka-yoke-v2.js
           grep -q '/site-interaction-continuity-v1.css?v=20260817-continuity-v2' index.html
           grep -q '/site-interaction-continuity-v1.css?v=20260817-continuity-v2' capabilities/index.html
           grep -q '/site-interaction-continuity-v1.css?v=20260817-continuity-v2' projects/index.html
