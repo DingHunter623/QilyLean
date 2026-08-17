@@ -110,7 +110,7 @@ jobs:
           grep -q '/site-navigation.js?v=20260817-atomic-first-paint-v22' cooperation/index.html
           grep -q '/site-music-persistent-navigation-v1.js?v=20260817-native-only-v7' index.html
           grep -q '/site-music-persistent-navigation-v1.js?v=20260817-native-only-v7' cooperation/index.html
-          grep -q "BUILD='20260817-atomic-first-paint-v2'" index.html
+          grep -q "BUILD='20260817-atomic-first-paint-v3'" index.html
           grep -q "ATTEMPT='qily_site_refresh_attempt_v1'" index.html
           ! grep -Eq 'active>BUILD|latest>BUILD|location\.reload\(\)' index.html
           grep -q 'html.qily-stale-document body{visibility:hidden!important}' index.html
