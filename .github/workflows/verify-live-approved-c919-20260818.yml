@@ -1,0 +1,65 @@
+name: Verify live exact approved C919 artwork
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: verify-live-approved-c919-20260818
+  cancel-in-progress: false
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Verify public homepage and public artwork byte-for-byte
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXPECTED='71f37901a72a345ebf298d22055ff28325511594c19f70859dd7ab4ca2cce4f7'
+          IMAGE_PATH='/qilylean/c919-strategy-hero-approved-20260818.png'
+          for attempt in $(seq 1 18); do
+            STAMP="$(date +%s)-$attempt"
+            echo "Public verification attempt $attempt"
+            if curl -fsSL --retry 2 -H 'Cache-Control: no-cache' "https://qilylean.com/?qily-live-verify=$STAMP" -o /tmp/live-index.html \
+              && grep -Fq "src=\"$IMAGE_PATH\"" /tmp/live-index.html \
+              && ! grep -Fq 'src="/qilylean/c919-strategy-hero-v12.webp"' /tmp/live-index.html \
+              && curl -fsSL --retry 2 -H 'Cache-Control: no-cache' "https://qilylean.com${IMAGE_PATH}?qily-live-verify=$STAMP" -o /tmp/live-approved.png; then
+                ACTUAL="$(sha256sum /tmp/live-approved.png | awk '{print $1}')"
+                SIZE="$(wc -c < /tmp/live-approved.png | tr -d ' ')"
+                echo "Live image size: $SIZE"
+                echo "Live image SHA256: $ACTUAL"
+                if [ "$ACTUAL" = "$EXPECTED" ] && [ "$SIZE" = '2303286' ]; then
+                  echo 'LIVE_PUBLIC_C919_EXACT_MATCH=YES'
+                  exit 0
+                fi
+            fi
+            sleep 5
+          done
+          echo 'Public site never matched the exact approved artwork within the verification window.' >&2
+          exit 1
+
+      - name: Retire one-shot verifier after success
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/verify-live-approved-c919-20260818.yml
+          git commit -m 'ops: retire successful live C919 verifier [skip ci]'
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then exit 0; fi
+            git fetch origin main
+            git rebase origin/main
+          done
+          exit 1
