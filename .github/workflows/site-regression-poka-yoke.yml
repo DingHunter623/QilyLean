@@ -32,28 +32,18 @@ jobs:
             /**/*.js
             /**/*.py
             /**/*.sh
-            /qilylean/c919-strategy-hero.png
-            /qilylean/c919-strategy-hero-v10.svg
-            /qilylean/c919-patch-topleft-v10.webp
-            /qilylean/c919-patch-tail-v10.webp
-            /qilylean/c919-patch-bottomq-v10.webp
-            /qilylean/c919-strategy-hero-v11.png
+            /qilylean/c919-strategy-hero-v12.webp.b64
+            /qilylean/c919-strategy-hero-v12.webp
             /.github/workflows/*.yml
             /docs/*.md
 
-      - name: Prepare standalone C919 rasterizer
+      - name: Materialize final approved C919 v12 WebP
         shell: bash
-        run: |
-          if ! command -v rsvg-convert >/dev/null 2>&1; then
-            sudo apt-get update -qq
-            sudo apt-get install -y --no-install-recommends librsvg2-bin
-          fi
+        run: bash scripts/materialize-c919-v12.sh
 
       - name: Apply protected six-core + C919 baseline and validate
         shell: bash
         run: |
-          node scripts/migrate-c919-enforcer-to-v11.js
-          bash scripts/build-c919-raster-v11.sh
           node scripts/enforce-c919-home-hero.js
           node scripts/apply-site-poka-yoke-v2.js
           node scripts/enforce-six-core-static-source.js
@@ -72,8 +62,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           for attempt in 1 2 3; do
-            node scripts/migrate-c919-enforcer-to-v11.js
-            bash scripts/build-c919-raster-v11.sh
+            bash scripts/materialize-c919-v12.sh
             node scripts/enforce-c919-home-hero.js
             node scripts/apply-site-poka-yoke-v2.js
             node scripts/enforce-six-core-static-source.js
@@ -86,15 +75,15 @@ jobs:
             git diff --check
 
             if git diff --quiet; then
-              echo "Protected six-core + C919 homepage baseline is healthy; no self-heal required."
+              echo "Protected six-core + final C919 v12 homepage baseline is healthy; no self-heal required."
               exit 0
             fi
 
             git add -A
-            git commit -m "guard: restore six-core, standalone C919 PNG, operating axis and Friend Links baseline [skip ci]"
+            git commit -m "guard: restore six-core, final C919 v12, operating axis and Friend Links baseline [skip ci]"
 
             if git push origin HEAD:main; then
-              echo "Protected six-core + standalone C919 homepage baseline automatically restored."
+              echo "Protected six-core + final C919 v12 homepage baseline automatically restored."
               exit 0
             fi
 
