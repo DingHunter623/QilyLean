@@ -5,7 +5,7 @@
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
-const HTML_BUILD_VERSION='20260817-atomic-first-paint-v2';
+const HTML_BUILD_VERSION='20260817-atomic-first-paint-v3';
 const NAV_VERSION='20260817-atomic-first-paint-v22';
 const NAV_RUNTIME_VERSION='20260817-atomic-first-paint-v18';
 const CONSISTENCY_VERSION='20260817-atomic-first-paint-v8';
@@ -150,7 +150,7 @@ for(const rel of keyPages){
   if(pageLocalCurrent[rel])all(html,['id="qilyPrimaryNavPageCurrentV8"','data-qily-page-current-failsafe="v9"',pageLocalCurrent[rel]],`${rel}: page-local current-state fallback`);
   const first=(html.match(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/)||[])[0]||'';
   assert(first.includes('html.qily-stale-document body{visibility:hidden!important}')&&!/qily-r2-first-paint-pending body\{visibility:hidden|window\.load|stableReveal|2400/.test(first),`${rel}: atomic stale-document first-paint guard missing`);
-  all(first,["ATTEMPT='qily_site_refresh_attempt_v1'",'w.sessionStorage.getItem(ATTEMPT)===BUILD','if(requested||tried()){fresh();return}','u.searchParams.set(PARAM,BUILD)'],`${rel}: bounded stale-document recovery`);
+  all(first,["ATTEMPT='qily_site_refresh_attempt_v1'",'w.sessionStorage.getItem(ATTEMPT)===BUILD','if(requested||tried()){fallback();return}','if(!active||active===BUILD)fresh();else refresh()','u.searchParams.set(PARAM,BUILD)'],`${rel}: bounded stale-document recovery`);
   assert(!/active>BUILD|latest>BUILD|location\.reload\(\)/.test(first),`${rel}: stale-document recovery can still loop`);
   assert(!/site-parent-navigation-v3\.js/i.test(html),`${rel}: redundant parent-navigation request returned`);
   if(rel!=='cooperation/index.html')assert(!/site-core-service-dock-closure-v1\.(?:css|js)/i.test(html),`${rel}: cooperation-only core-service runtime leaked into ordinary page`);

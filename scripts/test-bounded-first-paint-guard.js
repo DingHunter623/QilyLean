@@ -57,7 +57,7 @@ function execute({ href = 'https://qilylean.com/', active = '', session, replace
   return { classes, attributes, handlers, local, session: tab, replacements };
 }
 
-assert(script && build === '20260817-atomic-first-paint-v2', 'Current bounded first-paint script was not found.');
+assert(script && build === '20260817-atomic-first-paint-v3', 'Current bounded first-paint script was not found.');
 
 const current = execute({ active: build });
 assert(current.replacements.length === 0, 'Current document unexpectedly refreshed.');
@@ -73,14 +73,19 @@ assert(requestedUrl.searchParams.get('qily-refresh') === build, 'Cache-busted at
 const staleAgain = execute({ active: 'older-build', session: sharedSession });
 assert(staleAgain.replacements.length === 0, 'Session retry marker did not cap a stripped-query reload loop.');
 assert(!staleAgain.classes.has('qily-stale-document'), 'Bounded fallback remained hidden.');
+assert(staleAgain.local.snapshot().qily_site_html_build_v2 === 'older-build', 'Bounded fallback overwrote the different active-build marker.');
+assert(staleAgain.session.snapshot().qily_site_refresh_attempt_v1 === build, 'Bounded fallback cleared the retry marker and reopened the loop.');
 
 const terminal = execute({ href: `https://qilylean.com/?qily-refresh=${encodeURIComponent(build)}&qily-ts=test`, active: 'older-build' });
 assert(terminal.replacements.length === 0, 'Cache-busted response retried instead of becoming terminal.');
 assert(!terminal.classes.has('qily-stale-document'), 'Cache-busted terminal response remained hidden.');
+assert(terminal.local.snapshot().qily_site_html_build_v2 === 'older-build', 'Cache-busted terminal response replaced the newer active-build marker.');
 
 const failed = execute({ active: 'older-build', replaceThrows: true });
 assert(failed.replacements.length === 1, 'Navigation failure did not exercise the recovery path.');
 assert(!failed.classes.has('qily-stale-document'), 'Navigation failure left the usable static document hidden.');
+assert(failed.local.snapshot().qily_site_html_build_v2 === 'older-build', 'Navigation fallback replaced the newer active-build marker.');
+assert(failed.session.snapshot().qily_site_refresh_attempt_v1 === build, 'Navigation fallback cleared the retry cap.');
 
 const restored = execute({ active: build });
 restored.local.setItem('qily_site_html_build_v2', 'future-build');
@@ -88,5 +93,6 @@ restored.handlers.pageshow({ persisted: true });
 restored.handlers.pageshow({ persisted: true });
 assert(restored.replacements.length === 1, 'BFCache recovery was not capped at one attempt.');
 assert(!restored.classes.has('qily-stale-document'), 'Repeated BFCache recovery did not reveal the fallback.');
+assert(restored.local.snapshot().qily_site_html_build_v2 === 'future-build', 'BFCache fallback replaced the newer active-build marker.');
 
-process.stdout.write('Bounded first-paint guard behavior passed: normal, stale, stripped-query, terminal, navigation-failure, and BFCache scenarios.\n');
+process.stdout.write('Bounded first-paint guard behavior passed: normal, stale, marker-preserving stripped-query, terminal, navigation-failure, and BFCache scenarios.\n');
