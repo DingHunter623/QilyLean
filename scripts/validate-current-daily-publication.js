@@ -51,7 +51,8 @@ includes(latest, 'data-brief-message-form', 'Latest retained page contains messa
 includes(latest, '留言交流', 'Latest retained page contains message section');
 includes(latest, 'site-navigation.js?v=20260817-atomic-first-paint-v22', 'Latest retained page uses atomic first-paint navigation');
 includes(latest, 'site-music-persistent-navigation-v1.js?v=20260817-native-only-v7', 'Latest retained page uses Native Navigation V7');
-includes(latest, "BUILD='20260817-atomic-first-paint-v1'", 'Latest retained page uses the atomic stale-document guard');
+includes(latest, "BUILD='20260817-atomic-first-paint-v2'", 'Latest retained page uses the bounded stale-document guard');
+includes(latest, "ATTEMPT='qily_site_refresh_attempt_v1'", 'Latest retained page caps stale-document refresh attempts');
 assert(!latest.includes('qilyBackgroundMusicPreload'), 'Latest retained page does not preload background audio');
 assert(!latest.includes('site-footer-standard-v28.js'), 'Latest retained page does not load retired footer runtime');
 assert(!/<footer\b/i.test(latest), 'Latest retained page does not restore retired visible footer');

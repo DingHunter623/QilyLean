@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean atomic first-paint regression guard v8｜2026-08-17 */
+/* QilyLean bounded first-paint regression guard v9｜2026-08-17 */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
-const HTML_BUILD_VERSION='20260817-atomic-first-paint-v1';
+const HTML_BUILD_VERSION='20260817-atomic-first-paint-v2';
 const NAV_VERSION='20260817-atomic-first-paint-v22';
 const NAV_RUNTIME_VERSION='20260817-atomic-first-paint-v18';
 const CONSISTENCY_VERSION='20260817-atomic-first-paint-v8';
@@ -150,6 +150,8 @@ for(const rel of keyPages){
   if(pageLocalCurrent[rel])all(html,['id="qilyPrimaryNavPageCurrentV8"','data-qily-page-current-failsafe="v9"',pageLocalCurrent[rel]],`${rel}: page-local current-state fallback`);
   const first=(html.match(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/)||[])[0]||'';
   assert(first.includes('html.qily-stale-document body{visibility:hidden!important}')&&!/qily-r2-first-paint-pending body\{visibility:hidden|window\.load|stableReveal|2400/.test(first),`${rel}: atomic stale-document first-paint guard missing`);
+  all(first,["ATTEMPT='qily_site_refresh_attempt_v1'",'w.sessionStorage.getItem(ATTEMPT)===BUILD','if(requested||tried()){fresh();return}','u.searchParams.set(PARAM,BUILD)'],`${rel}: bounded stale-document recovery`);
+  assert(!/active>BUILD|latest>BUILD|location\.reload\(\)/.test(first),`${rel}: stale-document recovery can still loop`);
   assert(!/site-parent-navigation-v3\.js/i.test(html),`${rel}: redundant parent-navigation request returned`);
   if(rel!=='cooperation/index.html')assert(!/site-core-service-dock-closure-v1\.(?:css|js)/i.test(html),`${rel}: cooperation-only core-service runtime leaked into ordinary page`);
   const hasBundle=html.includes(`/site-core-visual-bundle-v1.css?v=${CORE_CSS_VERSION}`);
@@ -175,6 +177,8 @@ for(const rel of primaryPages){
   assert(!/>\s*友情链接\s*</.test(header),`${rel}: friend link returned to primary navigation`);
 }
 assert((read('index.html').match(/<a class="qily-value-card qily-value-card-link"/g)||[]).length===3,'index.html: trust cards are not whole-card links');
+const leanKnowledge=read('qilylean/lean-knowledge.html');
+all(leanKnowledge,['QILY-LEAN-KNOWLEDGE-TOC:START','QILY-LEAN-KNOWLEDGE-FEATURES:START','id="management-execution-entry"','id="lean-tools-feature"','href="#management-execution-entry"','href="#lean-tools-feature"'],'static maintained knowledge entries');
 
 const retiredBrand=read('brand-identity.js');
 all(retiredBrand,['retired: true','runtimeHeroRewrite: false','runtimeNavigationRewrite: false','friendLinkInjection: false'],'retired brand-identity cache fallback');
@@ -198,4 +202,4 @@ all(coreServicePublisher,['Core-service runtime scoping','cooperation/index.html
 const selfHeal=read('.github/workflows/site-regression-poka-yoke.yml');
 all(selfHeal,['node scripts/apply-site-poka-yoke-v2.js','node scripts/site-regression-guard.js','contents: write'],'self-heal workflow');
 
-process.stdout.write('QilyLean atomic first-paint guard passed: 461-page static HTML stays authoritative, stale documents are intercepted before body paint, and navigation no longer performs delayed content correction or HTML prefetch.\n');
+process.stdout.write('QilyLean bounded first-paint guard passed: 461-page static HTML stays authoritative, stale-document recovery is capped, and maintained knowledge entries are present without delayed loaders.\n');
