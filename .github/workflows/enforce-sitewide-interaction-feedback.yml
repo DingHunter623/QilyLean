@@ -1,0 +1,77 @@
+name: Enforce sitewide interaction feedback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - 'site-interaction-continuity-v1.css'
+      - 'scripts/enforce-sitewide-interaction-feedback.js'
+      - 'docs/QILYLEAN_SITE_INTERACTION_STANDARD_V1.md'
+      - '.github/workflows/enforce-sitewide-interaction-feedback.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: enforce-sitewide-interaction-feedback-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  enforce:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Validate interaction enforcer syntax
+        run: node --check scripts/enforce-sitewide-interaction-feedback.js
+
+      - name: Enforce permanent hover active focus feedback
+        run: node scripts/enforce-sitewide-interaction-feedback.js
+
+      - name: Verify deterministic diff
+        run: git diff --check
+
+      - name: Verify permanent design-system contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'interaction continuity v2' site-interaction-continuity-v1.css
+          grep -q ':hover' site-interaction-continuity-v1.css
+          grep -q ':active' site-interaction-continuity-v1.css
+          grep -q ':focus-visible' site-interaction-continuity-v1.css
+          grep -q 'data-qily-pressed="true"' site-interaction-continuity-v1.css
+          grep -q '全站交互反馈永久规范 V1.0' docs/QILYLEAN_SITE_INTERACTION_STANDARD_V1.md
+          grep -q '/site-interaction-continuity-v1.css?v=20260817-continuity-v2' index.html
+          grep -q '/site-interaction-continuity-v1.css?v=20260817-continuity-v2' capabilities/index.html
+          grep -q '/site-interaction-continuity-v1.css?v=20260817-continuity-v2' projects/index.html
+          grep -q '/site-interaction-continuity-v1.css?v=20260817-continuity-v2' improvements/index.html
+          grep -q '/site-interaction-continuity-v1.css?v=20260817-continuity-v2' knowledge/index.html
+          grep -q '/site-interaction-continuity-v1.css?v=20260817-continuity-v2' experience/index.html
+          grep -q '/site-interaction-continuity-v1.css?v=20260817-continuity-v2' cooperation/index.html
+          grep -q '/site-interaction-continuity-v1.css?v=20260817-continuity-v2' trust/index.html
+
+      - name: Commit normalized public pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'All public pages already comply with the permanent interaction standard.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'UX: materialize permanent interaction feedback [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
