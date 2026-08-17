@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Checkout site source only
+      - name: Checkout protected site source
         uses: actions/checkout@v4
         with:
           ref: main
@@ -31,16 +31,19 @@ jobs:
             /**/*.css
             /**/*.js
             /**/*.py
+            /qilylean/c919-strategy-hero.png
             /.github/workflows/*.yml
             /docs/*.md
 
-      - name: Apply protected six-core baseline and validate
+      - name: Apply protected six-core + C919 baseline and validate
         shell: bash
         run: |
           node scripts/apply-site-poka-yoke-v2.js
           node scripts/enforce-six-core-static-source.js
+          node scripts/enforce-c919-home-hero.js
           node scripts/enforce-six-core-navigation.js
           node scripts/site-regression-guard-six-core.js
+          node scripts/site-regression-guard-c919-hero.js
           node scripts/site-friend-links-layout-guard.js
           python3 scripts/normalize-six-capability-pricing-20260809.py
           git diff --check
@@ -54,22 +57,24 @@ jobs:
           for attempt in 1 2 3; do
             node scripts/apply-site-poka-yoke-v2.js
             node scripts/enforce-six-core-static-source.js
+            node scripts/enforce-c919-home-hero.js
             node scripts/enforce-six-core-navigation.js
             node scripts/site-regression-guard-six-core.js
+            node scripts/site-regression-guard-c919-hero.js
             node scripts/site-friend-links-layout-guard.js
             python3 scripts/normalize-six-capability-pricing-20260809.py
             git diff --check
 
             if git diff --quiet; then
-              echo "Protected six-core baseline is healthy; no self-heal required."
+              echo "Protected six-core + C919 homepage baseline is healthy; no self-heal required."
               exit 0
             fi
 
             git add -A
-            git commit -m "guard: restore six-core business and Friend Links baseline [skip ci]"
+            git commit -m "guard: restore six-core, C919 homepage and Friend Links baseline [skip ci]"
 
             if git push origin HEAD:main; then
-              echo "Protected six-core baseline automatically restored."
+              echo "Protected six-core + C919 homepage baseline automatically restored."
               exit 0
             fi
 
