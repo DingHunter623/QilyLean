@@ -7,7 +7,7 @@ const root = path.resolve(__dirname, '..');
 const target = path.join(root, 'index.html');
 let html = fs.readFileSync(target, 'utf8');
 
-const IMAGE = '/qilylean/c919-strategy-hero-v11.png';
+const IMAGE = '/qilylean/c919-strategy-hero-v12.webp';
 const HERO = `<!-- QILY-C919-STRATEGY-HERO:START -->
 <section class="qily-c919-flightmap" id="qily-c919-strategy" aria-labelledby="qily-c919-title">
   <div class="qily-c919-shell">
@@ -49,8 +49,8 @@ html = html.replace(styleRe, '');
 if (!/<\/head>/i.test(html)) throw new Error('Homepage </head> not found');
 html = html.replace(/<\/head>/i, `${STYLE}\n</head>`);
 
-const preload = `<link rel="preload" as="image" href="${IMAGE}" type="image/png" fetchpriority="high">`;
-html = html.replace(/<link[^>]+rel=["']preload["'][^>]+href=["']\/qilylean\/c919-strategy-hero(?:-v\d+)?\.(?:png|svg)["'][^>]*>\s*/gi, '');
+const preload = `<link rel="preload" as="image" href="${IMAGE}" type="image/webp" fetchpriority="high">`;
+html = html.replace(/<link[^>]+rel=["']preload["'][^>]+href=["']\/qilylean\/c919-strategy-hero(?:-v\d+)?\.(?:png|svg|webp)["'][^>]*>\s*/gi, '');
 html = html.replace(/(<link rel="canonical"[^>]*>)/i, `$1\n${preload}`);
 
 function setMeta(property, value, attr='property') {
@@ -59,11 +59,11 @@ function setMeta(property, value, attr='property') {
   if (re.test(html)) html = html.replace(re, tag);
   else html = html.replace(/<\/head>/i, `  ${tag}\n</head>`);
 }
-setMeta('og:image','https://qilylean.com/qilylean/c919-strategy-hero-v11.png');
+setMeta('og:image','https://qilylean.com/qilylean/c919-strategy-hero-v12.webp');
 setMeta('og:title','QilyLean｜启力精益｜六类核心业务战略蓝图');
 setMeta('og:description','以精益为基、以数字为翼：六类核心业务构建制造工程与数智化交付闭环，助企业高质量发展，启力精益展翼远航。');
 setMeta('twitter:card','summary_large_image','name');
-setMeta('twitter:image','https://qilylean.com/qilylean/c919-strategy-hero-v11.png','name');
+setMeta('twitter:image','https://qilylean.com/qilylean/c919-strategy-hero-v12.webp','name');
 setMeta('twitter:description','以六类核心业务为翼、以方法论与工程技术为核，助企业高质量发展，启力精益展翼远航。','name');
 
 html = html.replace(/<meta name="description" content="[^"]*">/i, '<meta name="description" content="QilyLean｜启力精益：新工厂／新产线规划、精益改善项目交付、目视化项目设计与交付、数字化工厂、APP软件开发、官网建设六类核心业务，助企业高质量发展。">');
@@ -71,4 +71,4 @@ html = html.replace(/聚焦新工厂／新产线规划、精益改善、目视�
 html = html.replace(/三大核心业务/g, '六类核心业务');
 
 fs.writeFileSync(target, html.endsWith('\n') ? html : html + '\n', 'utf8');
-console.log('C919 homepage flight map enforced: semantic left wing 1-3/right wing 4-6; visual stacks swapped for perspective; official QilyLean logo and exact Q icon patches baked into standalone v11 PNG.');
+console.log('C919 homepage flight map enforced: final approved v12 WebP is homepage number-one visual; semantic left wing 1-3/right wing 4-6 locked.');
