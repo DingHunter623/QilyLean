@@ -1,0 +1,85 @@
+name: Publish final C919 v12 homepage hero
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build-c919-v12-from-v11.py'
+      - 'scripts/publish-c919-v12-final.py'
+      - '.github/workflows/publish-c919-v12-final.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-c919-v12-final-publish
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install image runtime
+        run: python -m pip install --disable-pip-version-check pillow
+      - name: Build and validate final standalone hero
+        shell: bash
+        run: |
+          python scripts/build-c919-v12-from-v11.py
+          python scripts/publish-c919-v12-final.py
+          python - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          p=Path('qilylean/c919-strategy-hero-v12.webp')
+          if not p.exists() or p.stat().st_size < 120000:
+              raise SystemExit('v12 WebP missing or unexpectedly small')
+          with Image.open(p) as im:
+              if im.size != (1672,941):
+                  raise SystemExit(f'wrong hero dimensions: {im.size}')
+          html=Path('index.html').read_text(encoding='utf-8')
+          required=[
+              'src="/qilylean/c919-strategy-hero-v12.webp"',
+              'href="/qilylean/c919-strategy-hero-v12.webp"',
+              '左翼承载<strong>1～3：新工厂／新产线规划、精益改善项目交付、目视化项目设计与交付</strong>',
+              '右翼承载<strong>4～6：数字化工厂、APP软件开发、官网建设</strong>'
+          ]
+          for token in required:
+              if token not in html:
+                  raise SystemExit('missing homepage token: '+token)
+          if 'src="/qilylean/c919-strategy-hero-v11.png"' in html:
+              raise SystemExit('homepage still references v11')
+          print('Final C919 v12 asset and homepage reference validated.')
+          PY
+          git diff --check
+      - name: Publish generated v12 asset and homepage reference
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            if git diff --quiet; then
+              echo "Final C919 v12 is already materialized on main."
+              exit 0
+            fi
+            git add qilylean/c919-strategy-hero-v12.webp index.html
+            git commit -m "首页头号位：发布C919最终v12主视觉 [skip ci]"
+            if git push origin HEAD:main; then
+              echo "Final C919 v12 pushed to main."
+              exit 0
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+            git fetch origin main --depth=1
+            git reset --hard origin/main
+            python scripts/build-c919-v12-from-v11.py
+            python scripts/publish-c919-v12-final.py
+          done
