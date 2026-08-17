@@ -38,6 +38,7 @@ jobs:
       - name: Apply protected six-core + C919 baseline and validate
         shell: bash
         run: |
+          node scripts/enforce-c919-home-hero.js
           node scripts/apply-site-poka-yoke-v2.js
           node scripts/enforce-six-core-static-source.js
           node scripts/enforce-c919-home-hero.js
@@ -55,6 +56,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           for attempt in 1 2 3; do
+            node scripts/enforce-c919-home-hero.js
             node scripts/apply-site-poka-yoke-v2.js
             node scripts/enforce-six-core-static-source.js
             node scripts/enforce-c919-home-hero.js
@@ -71,7 +73,7 @@ jobs:
             fi
 
             git add -A
-            git commit -m "guard: restore six-core, C919 homepage and Friend Links baseline [skip ci]"
+            git commit -m "guard: restore six-core, C919 homepage, operating axis and Friend Links baseline [skip ci]"
 
             if git push origin HEAD:main; then
               echo "Protected six-core + C919 homepage baseline automatically restored."
