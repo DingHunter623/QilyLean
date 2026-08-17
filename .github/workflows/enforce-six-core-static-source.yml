@@ -7,20 +7,15 @@ on:
       - 'index.html'
       - 'cooperation/index.html'
       - 'links/index.html'
-      - 'qilylean/c919-strategy-hero.png'
-      - 'qilylean/c919-strategy-hero-v10.svg'
-      - 'qilylean/c919-patch-topleft-v10.webp'
-      - 'qilylean/c919-patch-tail-v10.webp'
-      - 'qilylean/c919-patch-bottomq-v10.webp'
-      - 'qilylean/c919-strategy-hero-v11.png'
+      - 'qilylean/c919-strategy-hero-v12.webp.b64'
+      - 'qilylean/c919-strategy-hero-v12.webp'
       - 'site-navigation-core.js'
       - 'site-navigation-legacy-20260802.js'
       - 'site-ui-consistency-v1.js'
       - 'scripts/enforce-six-core-static-source.js'
       - 'scripts/enforce-six-core-navigation.js'
       - 'scripts/enforce-c919-home-hero.js'
-      - 'scripts/migrate-c919-enforcer-to-v11.js'
-      - 'scripts/build-c919-raster-v11.sh'
+      - 'scripts/materialize-c919-v12.sh'
       - 'scripts/site-regression-guard-c919-hero.js'
       - 'scripts/normalize-six-capability-pricing-20260809.py'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
@@ -46,22 +41,15 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Prepare standalone C919 rasterizer
+      - name: Materialize final approved C919 v12 WebP
         shell: bash
-        run: |
-          if ! command -v rsvg-convert >/dev/null 2>&1; then
-            sudo apt-get update -qq
-            sudo apt-get install -y --no-install-recommends librsvg2-bin
-          fi
+        run: bash scripts/materialize-c919-v12.sh
       - name: Apply six-core static, C919 hero and navigation baselines
         run: |
           node --check scripts/enforce-six-core-static-source.js
           node --check scripts/enforce-six-core-navigation.js
           node --check scripts/enforce-c919-home-hero.js
-          node --check scripts/migrate-c919-enforcer-to-v11.js
           node --check scripts/site-regression-guard-c919-hero.js
-          node scripts/migrate-c919-enforcer-to-v11.js
-          bash scripts/build-c919-raster-v11.sh
           node scripts/enforce-six-core-static-source.js
           node scripts/enforce-c919-home-hero.js
           node scripts/enforce-six-core-navigation.js
@@ -77,12 +65,12 @@ jobs:
 
           for attempt in 1 2 3; do
             if git diff --quiet; then
-              echo "Six-core + standalone C919 homepage baseline already normalized."
+              echo "Six-core + final C919 v12 homepage baseline already normalized."
               exit 0
             fi
 
             git add -A
-            git commit -m "全站口径：恢复六类核心业务、C919实体PNG头号位与友情链接 [skip ci]"
+            git commit -m "全站口径：发布C919最终v12头号位与六类核心业务 [skip ci]"
             if git push origin HEAD:main; then
               exit 0
             fi
@@ -92,11 +80,10 @@ jobs:
               exit 1
             fi
 
-            echo "main changed concurrently; restart normalization from latest remote instead of rebasing generated output."
+            echo "main changed concurrently; restart normalization from latest remote."
             git fetch origin main --depth=1
             git reset --hard origin/main
-            node scripts/migrate-c919-enforcer-to-v11.js
-            bash scripts/build-c919-raster-v11.sh
+            bash scripts/materialize-c919-v12.sh
             node scripts/enforce-six-core-static-source.js
             node scripts/enforce-c919-home-hero.js
             node scripts/enforce-six-core-navigation.js
