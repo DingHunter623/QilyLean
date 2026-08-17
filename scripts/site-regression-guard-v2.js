@@ -11,7 +11,7 @@ const NAV_RUNTIME_VERSION='20260817-atomic-first-paint-v18';
 const CONSISTENCY_VERSION='20260817-atomic-first-paint-v8';
 const CORE_CSS_VERSION='20260815-core-visual-v1';
 const FAST_NATIVE_VERSION='20260817-native-only-v7';
-const INTERACTION_CSS_VERSION='20260817-continuity-v1';
+const INTERACTION_CSS_VERSION='20260817-continuity-v2';
 function read(rel){return fs.readFileSync(path.join(root,rel),'utf8');}
 function assert(ok,msg){if(!ok)throw new Error(msg);}
 function all(source,markers,label){for(const marker of markers)assert(source.includes(marker),`${label}: missing ${marker}`);}
