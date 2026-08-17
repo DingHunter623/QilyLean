@@ -12,12 +12,15 @@ on:
       - 'qilylean/c919-patch-topleft-v10.webp'
       - 'qilylean/c919-patch-tail-v10.webp'
       - 'qilylean/c919-patch-bottomq-v10.webp'
+      - 'qilylean/c919-strategy-hero-v11.png'
       - 'site-navigation-core.js'
       - 'site-navigation-legacy-20260802.js'
       - 'site-ui-consistency-v1.js'
       - 'scripts/enforce-six-core-static-source.js'
       - 'scripts/enforce-six-core-navigation.js'
       - 'scripts/enforce-c919-home-hero.js'
+      - 'scripts/migrate-c919-enforcer-to-v11.js'
+      - 'scripts/build-c919-raster-v11.sh'
       - 'scripts/site-regression-guard-c919-hero.js'
       - 'scripts/normalize-six-capability-pricing-20260809.py'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
@@ -43,12 +46,22 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
+      - name: Prepare standalone C919 rasterizer
+        shell: bash
+        run: |
+          if ! command -v rsvg-convert >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y --no-install-recommends librsvg2-bin
+          fi
       - name: Apply six-core static, C919 hero and navigation baselines
         run: |
           node --check scripts/enforce-six-core-static-source.js
           node --check scripts/enforce-six-core-navigation.js
           node --check scripts/enforce-c919-home-hero.js
+          node --check scripts/migrate-c919-enforcer-to-v11.js
           node --check scripts/site-regression-guard-c919-hero.js
+          node scripts/migrate-c919-enforcer-to-v11.js
+          bash scripts/build-c919-raster-v11.sh
           node scripts/enforce-six-core-static-source.js
           node scripts/enforce-c919-home-hero.js
           node scripts/enforce-six-core-navigation.js
@@ -64,12 +77,12 @@ jobs:
 
           for attempt in 1 2 3; do
             if git diff --quiet; then
-              echo "Six-core + C919 homepage baseline already normalized."
+              echo "Six-core + standalone C919 homepage baseline already normalized."
               exit 0
             fi
 
             git add -A
-            git commit -m "全站口径：恢复六类核心业务、C919头号位与友情链接 [skip ci]"
+            git commit -m "全站口径：恢复六类核心业务、C919实体PNG头号位与友情链接 [skip ci]"
             if git push origin HEAD:main; then
               exit 0
             fi
@@ -82,6 +95,8 @@ jobs:
             echo "main changed concurrently; restart normalization from latest remote instead of rebasing generated output."
             git fetch origin main --depth=1
             git reset --hard origin/main
+            node scripts/migrate-c919-enforcer-to-v11.js
+            bash scripts/build-c919-raster-v11.sh
             node scripts/enforce-six-core-static-source.js
             node scripts/enforce-c919-home-hero.js
             node scripts/enforce-six-core-navigation.js
