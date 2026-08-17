@@ -10,7 +10,7 @@ const R2_LEGACY = '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-p
 const FAST_NATIVE = '/site-music-persistent-navigation-v1.js?v=20260817-native-only-v7';
 const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260817-atomic-first-paint-v8';
 const INTERACTION_CSS = '/site-interaction-continuity-v1.css?v=20260817-continuity-v1';
-const HTML_BUILD = '20260817-atomic-first-paint-v2';
+const HTML_BUILD = '20260817-atomic-first-paint-v3';
 const FORBIDDEN_RUNTIME = /(?:brand-identity|site-early-career-history-v1|site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js/i;
 const FORBIDDEN_FOOTER = /site-footer-standard-v28\.(?:css|js)|<footer\b/i;
 const FORBIDDEN_NAV = /qilyPersistentNavigationFrame|<iframe\b[^>]*qily|qilyBackgroundMusicPreload/i;
@@ -91,7 +91,7 @@ function validateRuntimeSource() {
   assert(cleanRuntime.includes('removeDynamicContentShapers'), 'R2 clean runtime is missing dynamic-content-shaper removal.');
   assert(cleanRuntime.includes('QILY-R2-FIRST-PAINT:START'), 'R2 clean runtime is missing first-paint stability guard.');
   assert(cleanRuntime.includes(HTML_BUILD) && cleanRuntime.includes('html.qily-stale-document body{visibility:hidden!important}'), 'Atomic stale-document guard is missing from the materializer.');
-  assert(cleanRuntime.includes("ATTEMPT='qily_site_refresh_attempt_v1'") && cleanRuntime.includes('if(requested||tried()){fresh();return}'), 'Bounded stale-document retry contract is missing from the materializer.');
+  assert(cleanRuntime.includes("ATTEMPT='qily_site_refresh_attempt_v1'") && cleanRuntime.includes('if(requested||tried()){fallback();return}') && cleanRuntime.includes('if(!active||active===BUILD)fresh();else refresh()'), 'Marker-preserving bounded stale-document retry contract is missing from the materializer.');
   assert(!/active>BUILD|latest>BUILD|location\.reload\(\)/.test(materializedFirstPaint), 'Stale-document recovery can still loop or follow an untrusted build.');
   assert(floatingService.includes('runtimeContentRewrite: false') && !/ensurePlatformPositioning|addMoldWarehouseProjectImage|brand-identity/.test(floatingService), 'Floating-service still rewrites static page content.');
   assert(directNavigation.includes('runtimeBrandRewrite: false') && !/createElement\(['"]script['"]\)|brand-identity/.test(directNavigation), 'Direct navigation still loads a delayed brand/content rewriter.');
@@ -126,7 +126,7 @@ function validateLivePages() {
     if (!html.includes(CONSISTENCY)) staleConsistency.push(relative);
     if (!html.includes(INTERACTION_CSS)) missingInteraction.push(relative);
     const firstPaint=(html.match(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/)||[])[0]||'';
-    if(!firstPaint.includes(`BUILD='${HTML_BUILD}'`)||!firstPaint.includes('html.qily-stale-document body{visibility:hidden!important}')||!firstPaint.includes("ATTEMPT='qily_site_refresh_attempt_v1'")||!/if\(requested\|\|tried\(\)\)\{fresh\(\);return\}/.test(firstPaint)||/active>BUILD|latest>BUILD|location\.reload\(\)/.test(firstPaint))staleFirstPaint.push(relative);
+    if(!firstPaint.includes(`BUILD='${HTML_BUILD}'`)||!firstPaint.includes('html.qily-stale-document body{visibility:hidden!important}')||!firstPaint.includes("ATTEMPT='qily_site_refresh_attempt_v1'")||!/if\(requested\|\|tried\(\)\)\{fallback\(\);return\}/.test(firstPaint)||!firstPaint.includes('if(!active||active===BUILD)fresh();else refresh()')||/active>BUILD|latest>BUILD|location\.reload\(\)/.test(firstPaint))staleFirstPaint.push(relative);
     if (FORBIDDEN_RUNTIME.test(html)) forbiddenRuntime.push(relative);
     if (FORBIDDEN_FOOTER.test(html)) forbiddenFooter.push(relative);
     if (FORBIDDEN_NAV.test(html)) forbiddenNavigation.push(relative);
