@@ -30,13 +30,19 @@ jobs:
             /**/*.html
             /**/*.css
             /**/*.js
+            /**/*.py
             /.github/workflows/*.yml
+            /docs/*.md
 
-      - name: Apply protected baseline and validate
+      - name: Apply protected six-core baseline and validate
         shell: bash
         run: |
           node scripts/apply-site-poka-yoke-v2.js
-          node scripts/site-regression-guard.js
+          node scripts/enforce-six-core-static-source.js
+          node scripts/enforce-six-core-navigation.js
+          node scripts/site-regression-guard-six-core.js
+          node scripts/site-friend-links-layout-guard.js
+          python3 scripts/normalize-six-capability-pricing-20260809.py
           git diff --check
 
       - name: Commit automatic self-heal when required
@@ -47,19 +53,23 @@ jobs:
 
           for attempt in 1 2 3; do
             node scripts/apply-site-poka-yoke-v2.js
-            node scripts/site-regression-guard.js
+            node scripts/enforce-six-core-static-source.js
+            node scripts/enforce-six-core-navigation.js
+            node scripts/site-regression-guard-six-core.js
+            node scripts/site-friend-links-layout-guard.js
+            python3 scripts/normalize-six-capability-pricing-20260809.py
             git diff --check
 
             if git diff --quiet; then
-              echo "Protected baseline is healthy; no rollback/self-heal required."
+              echo "Protected six-core baseline is healthy; no self-heal required."
               exit 0
             fi
 
             git add -A
-            git commit -m "guard: auto-heal protected site baseline [skip ci]"
+            git commit -m "guard: restore six-core business and Friend Links baseline [skip ci]"
 
             if git push origin HEAD:main; then
-              echo "Protected baseline automatically restored."
+              echo "Protected six-core baseline automatically restored."
               exit 0
             fi
 
@@ -68,7 +78,6 @@ jobs:
               exit 1
             fi
 
-            echo "main advanced during self-heal; reload latest main and retry."
             git fetch origin main --depth=1 --filter=blob:none
             git reset --hard origin/main
           done

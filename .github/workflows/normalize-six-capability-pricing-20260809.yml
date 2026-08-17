@@ -1,24 +1,18 @@
-name: Validate QilyLean three-core pricing architecture
+name: Validate QilyLean six-core pricing architecture
 
 on:
   push:
+    branches: [main]
     paths:
       - '.github/workflows/normalize-six-capability-pricing-20260809.yml'
       - 'scripts/normalize-six-capability-pricing-20260809.py'
       - 'site-navigation-legacy-20260802.js'
       - 'cooperation/index.html'
-      - 'scripts/hide-public-pricing.js'
       - 'scripts/enforce-six-core-static-source.js'
+      - 'scripts/enforce-six-core-navigation.js'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
   pull_request:
-    paths:
-      - '.github/workflows/normalize-six-capability-pricing-20260809.yml'
-      - 'scripts/normalize-six-capability-pricing-20260809.py'
-      - 'site-navigation-legacy-20260802.js'
-      - 'cooperation/index.html'
-      - 'scripts/hide-public-pricing.js'
-      - 'scripts/enforce-six-core-static-source.js'
-      - 'docs/QilyLean全站业务口径规范_20260809.md'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -26,32 +20,26 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-
-      - name: Syntax checks
+      - name: Normalize six-core source in workspace
         run: |
-          node --check site-navigation-legacy-20260802.js
           node --check scripts/enforce-six-core-static-source.js
+          node --check scripts/enforce-six-core-navigation.js
           python3 -m py_compile scripts/normalize-six-capability-pricing-20260809.py
-
-      - name: Validate three-core pricing architecture
+          node scripts/enforce-six-core-static-source.js
+          node scripts/enforce-six-core-navigation.js
+      - name: Validate six-core pricing architecture
         run: |
           python3 scripts/normalize-six-capability-pricing-20260809.py
-          node scripts/enforce-six-core-static-source.js
-
-      - name: Enforce pricing scope and non-public boundary
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -q '三大核心业务报价参考' site-navigation-legacy-20260802.js
-          grep -q '三大核心业务报价方案' site-navigation-legacy-20260802.js
-          grep -q '本模块只覆盖三大核心业务' site-navigation-legacy-20260802.js
-          grep -q 'QILY-PRICING-PUBLIC-DISABLED' cooperation/index.html
-          grep -q 'QILY-PRICING-POLICY' cooperation/index.html
-          ! grep -Eq 'var (digitalPricing|appPricing|websitePricing) = ' site-navigation-legacy-20260802.js
-          ! grep -Eq '<h3>0[456]｜' site-navigation-legacy-20260802.js
-          ! grep -q '六类项目合作能力报价' site-navigation-legacy-20260802.js
+          grep -q 'var digitalPricing = \[' site-navigation-legacy-20260802.js
+          grep -q 'var appPricing = \[' site-navigation-legacy-20260802.js
+          grep -q 'var websitePricing = \[' site-navigation-legacy-20260802.js
+          grep -q 'APP软件开发' cooperation/index.html
+          grep -q '官网建设' cooperation/index.html
+          ! grep -q '本模块只覆盖三大核心业务' site-navigation-legacy-20260802.js
+          git diff --check
