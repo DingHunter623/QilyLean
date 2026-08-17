@@ -32,6 +32,10 @@ jobs:
             /**/*.js
             /**/*.py
             /qilylean/c919-strategy-hero.png
+            /qilylean/c919-strategy-hero-v10.svg
+            /qilylean/c919-patch-topleft-v10.webp
+            /qilylean/c919-patch-tail-v10.webp
+            /qilylean/c919-patch-bottomq-v10.webp
             /.github/workflows/*.yml
             /docs/*.md
 
