@@ -48,17 +48,32 @@ jobs:
       - name: Commit normalized source when required
         shell: bash
         run: |
-          if git diff --quiet; then
-            echo "Six-core baseline already normalized."
-            exit 0
-          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "全站口径：恢复六类核心业务与友情链接 [skip ci]"
+
           for attempt in 1 2 3; do
-            if git push origin HEAD:main; then exit 0; fi
-            if [ "$attempt" -eq 3 ]; then exit 1; fi
+            if git diff --quiet; then
+              echo "Six-core baseline already normalized."
+              exit 0
+            fi
+
+            git add -A
+            git commit -m "全站口径：恢复六类核心业务与友情链接 [skip ci]"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 3 ]; then
+              echo "Unable to publish normalized source after 3 attempts."
+              exit 1
+            fi
+
+            echo "main changed concurrently; restart normalization from latest remote instead of rebasing generated output."
             git fetch origin main --depth=1
-            git rebase origin/main
+            git reset --hard origin/main
+            node scripts/enforce-six-core-static-source.js
+            node scripts/enforce-six-core-navigation.js
+            python3 scripts/normalize-six-capability-pricing-20260809.py
+            node scripts/site-regression-guard-six-core.js
+            git diff --check
           done
