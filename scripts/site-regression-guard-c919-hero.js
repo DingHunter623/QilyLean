@@ -1,28 +1,28 @@
 #!/usr/bin/env node
 'use strict';
-const fs=require('fs');
-const path=require('path');
-const root=path.resolve(__dirname,'..');
-const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
-const image=path.join(root,'qilylean','c919-strategy-hero-v12.webp');
-function assert(ok,msg){if(!ok)throw new Error(msg);}
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+const root = path.resolve(__dirname, '..');
+const html = fs.readFileSync(path.join(root,'index.html'),'utf8');
+const image = path.join(root,'qilylean','c919-strategy-hero-approved-20260818.png');
+const rel = '/qilylean/c919-strategy-hero-approved-20260818.png';
+const pub = 'https://qilylean.com/qilylean/c919-strategy-hero-approved-20260818.png';
+const expectedSha256 = '71f37901a72a345ebf298d22055ff28325511594c19f70859dd7ab4ca2cce4f7';
+function assert(ok,msg){ if(!ok) throw new Error(msg); }
+
 assert((html.match(/<!-- QILY-C919-STRATEGY-HERO:START -->/g)||[]).length===1,'C919 hero start marker must exist once');
 assert((html.match(/<!-- QILY-C919-STRATEGY-HERO:END -->/g)||[]).length===1,'C919 hero end marker must exist once');
-const mainPos=html.search(/<main\b[^>]*>/i), heroPos=html.indexOf('<!-- QILY-C919-STRATEGY-HERO:START -->'), oldHeroPos=html.indexOf('<section class="hero">');
-assert(mainPos>=0&&heroPos>mainPos,'C919 hero must be inside main');
-assert(oldHeroPos<0||heroPos<oldHeroPos,'C919 hero must be homepage number-one content');
-assert(fs.existsSync(image)&&fs.statSync(image).size>150000,'C919 final v12 WebP missing or too small');
-assert(html.includes('src="/qilylean/c919-strategy-hero-v12.webp"'),'C919 final v12 WebP path missing');
-assert(!html.includes('src="/qilylean/c919-strategy-hero-v10.svg"'),'C919 must not fall back to externally-referenced SVG');
-assert(!html.includes('src="/qilylean/c919-strategy-hero-v11.png"'),'C919 must not fall back to old v11 PNG');
-assert(html.includes('左翼承载<strong>1～3：新工厂／新产线规划、精益改善项目交付、目视化项目设计与交付</strong>'),'left wing must be locked to businesses 1-3');
-assert(html.includes('右翼承载<strong>4～6：数字化工厂、APP软件开发、官网建设</strong>'),'right wing must be locked to businesses 4-6');
-assert(!html.includes('左翼承载<strong>数字化工厂、APP软件开发、官网建设</strong>'),'reversed semantic left-wing mapping returned');
-assert(!html.includes('右翼承载<strong>新工厂／新产线规划、精益改善项目交付、目视化项目设计与交付</strong>'),'reversed semantic right-wing mapping returned');
-assert(html.includes('.qily-c919-soul{width:min(1420px,calc(100% - 24px));margin:28px auto 0;'),'C919 soul summary must remain below image');
-assert(html.includes('助企业高质量发展'),'customer strategic axis missing');
-assert(html.includes('启力精益展翼远航'),'brand strategic axis missing');
-assert(!html.includes('三大核心业务'),'retired three-core wording returned');
-assert(html.includes('rel="preload" as="image" href="/qilylean/c919-strategy-hero-v12.webp" type="image/webp"'),'C919 v12 WebP preload missing');
-assert(html.includes('content="https://qilylean.com/qilylean/c919-strategy-hero-v12.webp"'),'C919 social image must use final v12 WebP');
-console.log('C919 homepage hero guard passed: final approved v12 WebP is present, referenced and protected from regression.');
+assert(fs.existsSync(image),'Exact approved C919 PNG is missing');
+const buf = fs.readFileSync(image);
+assert(buf.length===2303286,`Exact approved C919 PNG size changed: ${buf.length}`);
+const actualSha256 = crypto.createHash('sha256').update(buf).digest('hex');
+assert(actualSha256===expectedSha256,`Exact approved C919 PNG SHA256 mismatch: ${actualSha256}`);
+assert(buf.subarray(0,8).equals(Buffer.from([0x89,0x50,0x4e,0x47,0x0d,0x0a,0x1a,0x0a])),'Approved C919 asset is not PNG');
+const width = buf.readUInt32BE(16), height = buf.readUInt32BE(20);
+assert(width===1672 && height===941,`Approved C919 dimensions changed: ${width}x${height}`);
+assert(html.includes(`src="${rel}"`),'Homepage does not reference exact approved C919 PNG');
+assert(html.includes(`rel="preload" as="image" href="${rel}" type="image/png"`),'Approved C919 PNG preload missing');
+assert(html.includes(`content="${pub}"`),'Approved C919 PNG social image missing');
+assert(!html.includes('c919-strategy-hero-v12.webp'),'Retired scrambled v12 WebP is still referenced by homepage');
+console.log(`C919 guard passed: exact approved artwork verified ${width}x${height}, ${buf.length} bytes, SHA256 ${actualSha256}.`);
