@@ -79,22 +79,38 @@ function verifyDockMaterializer() {
   assert(!/\[80,260,760\]|addEventListener\(['"]load['"],apply/.test(serviceRuntime),'cooperation runtime delayed first-paint correction returned');
 }
 
+function verifyPermanentInteractionBaseline() {
+  const css = read('site-interaction-continuity-v1.css');
+  const guard = read('scripts/site-regression-guard-v2.js');
+  const homepage = read('index.html');
+  [
+    'interaction continuity v2', '.qily-home-actions', '.qily-section-actions', '.qily-ia-actions',
+    '.module-actions', '.article-actions', '.hero-actions', '.form-actions',
+    ':hover', ':active', ':focus-visible', '[data-qily-pressed="true"]'
+  ].forEach((marker)=>assert(css.includes(marker),`permanent interaction baseline missing: ${marker}`));
+  assert(guard.includes("const INTERACTION_CSS_VERSION='20260817-continuity-v2';"),'regression guard interaction contract is not v2');
+  assert(homepage.includes('/site-interaction-continuity-v1.css?v=20260817-continuity-v2'),'homepage interaction cache is not v2');
+}
+
 function main() {
   verifyFastNavigationBaseline();
 
-  // 历史发布器先运行；R2性能收口；合作页专用轻量运行时物化；dock首帧最后统一视觉与缓存。
+  // 历史发布器先运行；R2性能收口；合作页专用轻量运行时物化；dock首帧统一；
+  // 最后必须执行全站交互永久规则，防止任何历史发布器把 hover/active/focus 版本写回旧基线。
   runNode('scripts/publish-r2-runtime-stability.js');
   runNode('scripts/publish-early-career-history.js');
   runNode('scripts/publish-r2-runtime-stability.js');
   runNode('scripts/publish-r2-clean-runtime-v3.js');
   runNode('scripts/publish-core-service-dock-closure.js');
   runNode('scripts/publish-dock-label-polish-v1.js');
+  runNode('scripts/enforce-sitewide-interaction-feedback.js');
 
   verifyFastNavigationBaseline();
   verifyCleanRuntime();
   verifyRuntimeBoundary();
   verifyDockMaterializer();
-  process.stdout.write('QilyLean site poka-yoke applied: static HTML is authoritative, stale documents are intercepted before paint, delayed content rewrites are disabled, and native navigation does not prefetch HTML.\n');
+  verifyPermanentInteractionBaseline();
+  process.stdout.write('QilyLean site poka-yoke applied: static HTML is authoritative; interaction feedback v2 is now part of the protected baseline and cannot be rolled back by legacy materializers.\n');
 }
 
 main();
