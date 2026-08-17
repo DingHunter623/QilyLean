@@ -100,17 +100,20 @@ jobs:
           ! grep -q "title.textContent = '六类项目合作能力报价参考'" site-navigation-legacy-20260802.js
 
           # R2 clean runtime: static HTML is authoritative; no DOM content shapers.
-          grep -q "mode: 'r2-static-first-v21'" site-navigation.js
+          grep -q "mode: 'atomic-first-paint-v22'" site-navigation.js
           grep -q 'staticHtmlAuthority: true' site-navigation.js
           grep -q 'dynamicContentShapers: false' site-navigation.js
           grep -q 'runtimeFooter: false' site-navigation.js
-          grep -q '/site-navigation-legacy-20260802.js?v=20260816-nav-current-v17' site-navigation.js
-          grep -q '/site-navigation.js?v=20260815-performance-v16' index.html
-          grep -q '/site-navigation.js?v=20260815-performance-v16' cooperation/index.html
-          grep -q '/site-music-persistent-navigation-v1.js?v=20260815-prefetch-v6p1' index.html
-          grep -q '/site-music-persistent-navigation-v1.js?v=20260815-prefetch-v6p1' cooperation/index.html
-          ! grep -Eq '(site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js' index.html
-          ! grep -Eq '(site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js' cooperation/index.html
+          grep -q 'runtimeDependencyWaterfall: false' site-navigation.js
+          grep -q '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18' site-navigation.js
+          grep -q '/site-navigation.js?v=20260817-atomic-first-paint-v22' index.html
+          grep -q '/site-navigation.js?v=20260817-atomic-first-paint-v22' cooperation/index.html
+          grep -q '/site-music-persistent-navigation-v1.js?v=20260817-native-only-v7' index.html
+          grep -q '/site-music-persistent-navigation-v1.js?v=20260817-native-only-v7' cooperation/index.html
+          grep -q "BUILD='20260817-atomic-first-paint-v1'" index.html
+          grep -q 'html.qily-stale-document body{visibility:hidden!important}' index.html
+          ! grep -Eq '(brand-identity|site-early-career-history-v1|site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js' index.html
+          ! grep -Eq '(brand-identity|site-early-career-history-v1|site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js' cooperation/index.html
           ! grep -q 'site-footer-standard-v28.js' index.html
           ! grep -q 'site-footer-standard-v28.js' cooperation/index.html
           ! grep -q '<footer' index.html

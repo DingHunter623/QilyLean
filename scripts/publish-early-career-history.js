@@ -13,7 +13,7 @@ const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
   <link id="qilyEarlyCareerHistoryStylesheet" rel="stylesheet" href="/site-early-career-history-v1.css?v=${version}">
-  <script defer id="qilyEarlyCareerHistoryScript" data-qily-early-career-history="v4" src="/site-early-career-history-v1.js?v=${version}"></script>
+  <meta name="qily:early-career-history" content="static-v5">
 ${endMarker}`;
 
 const companies = {
@@ -93,6 +93,12 @@ function injectResources(source, relativePath) {
   const blockExpression = new RegExp(`${escapedStart}[\\s\\S]*?${escapedEnd}\\s*`, 'g');
   let next = source.replace(blockExpression, '');
   if (!next.includes('</head>')) throw new Error(`${relativePath}: missing </head>`);
+  const runtimeStabilityAsset=/^[ \t]*<link\b[^>]*id=["']qilyR2RuntimeStabilityStylesheet["'][^>]*>/mi;
+  if(runtimeStabilityAsset.test(next))return next.replace(runtimeStabilityAsset,`${resourceBlock}\n$&`);
+  const primaryContrastStart = '<!-- QILY-R2-PRIMARY-CONTRAST-NAV:START -->';
+  if (next.includes(primaryContrastStart)) return next.replace(primaryContrastStart, `${resourceBlock}\n${primaryContrastStart}`);
+  const firstPaintAsset = /<(?:script\b[^>]*id=["']qilyFastNativeNavigationV7["']|style\b[^>]*id=["']qilyDockCriticalV6["'])/i;
+  if (firstPaintAsset.test(next)) return next.replace(firstPaintAsset, `${resourceBlock}\n  $&`);
   next = next.replace('</head>', `${resourceBlock}\n</head>`);
   return next;
 }
@@ -130,8 +136,8 @@ function validate(archive, experience, enhancer) {
   [archive, experience].forEach((content, index) => {
     const label = index === 0 ? 'daily-insights' : 'experience';
     assert(content.includes('site-early-career-history-v1.css?v=' + version), `${label}: stylesheet missing`);
-    assert(content.includes('site-early-career-history-v1.js?v=' + version), `${label}: script missing`);
-    assert(content.includes('data-qily-early-career-history="v4"'), `${label}: v4 data marker missing`);
+    assert(content.includes('name="qily:early-career-history" content="static-v5"'), `${label}: static career marker missing`);
+    assert(!content.includes('site-early-career-history-v1.js'), `${label}: delayed career content enhancer returned`);
     assert((content.match(/QILY-EARLY-CAREER-HISTORY:START/g) || []).length === 1, `${label}: duplicate resource block`);
   });
 

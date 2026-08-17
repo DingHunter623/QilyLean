@@ -49,17 +49,19 @@ const audit = exists('qilylean/daily/terminology-audit-latest.json') ? JSON.pars
 includes(latest, `id="${sourceLatest}"`, 'Latest retained page carries its date identity');
 includes(latest, 'data-brief-message-form', 'Latest retained page contains message form');
 includes(latest, '留言交流', 'Latest retained page contains message section');
-includes(latest, 'site-navigation.js?v=20260815-performance-v16', 'Latest retained page uses current static-first navigation');
-includes(latest, 'site-music-persistent-navigation-v1.js?v=20260815-prefetch-v6p1', 'Latest retained page uses Fast Native Navigation V6.1');
+includes(latest, 'site-navigation.js?v=20260817-atomic-first-paint-v22', 'Latest retained page uses atomic first-paint navigation');
+includes(latest, 'site-music-persistent-navigation-v1.js?v=20260817-native-only-v7', 'Latest retained page uses Native Navigation V7');
+includes(latest, "BUILD='20260817-atomic-first-paint-v1'", 'Latest retained page uses the atomic stale-document guard');
 assert(!latest.includes('qilyBackgroundMusicPreload'), 'Latest retained page does not preload background audio');
 assert(!latest.includes('site-footer-standard-v28.js'), 'Latest retained page does not load retired footer runtime');
 assert(!/<footer\b/i.test(latest), 'Latest retained page does not restore retired visible footer');
-includes(navigation, 'site-navigation-legacy-20260802.js?v=20260816-nav-current-v17', 'Navigation wrapper uses current legacy runtime version');
-includes(navigation, "mode: 'r2-static-first-v21'", 'Navigation wrapper declares current static-first mode');
-includes(fastNative, "mode:'native-prefetch-v6'", 'Fast Native V6 declares native-prefetch mode');
-includes(fastNative, 'domSwap:false', 'Fast Native V6 forbids cross-page DOM swapping');
-includes(fastNative, 'nativeHistory:true', 'Fast Native V6 keeps browser-native history');
-includes(fastNative, 'prefetch:true', 'Fast Native V6 keeps same-origin prefetch');
+includes(navigation, 'site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18', 'Navigation wrapper uses current atomic first-paint legacy runtime');
+includes(navigation, "mode: 'atomic-first-paint-v22'", 'Navigation wrapper declares current atomic first-paint mode');
+includes(fastNative, "mode: 'native-only-v7'", 'Native Navigation V7 declares native-only mode');
+includes(fastNative, 'domSwap: false', 'Native Navigation V7 forbids cross-page DOM swapping');
+includes(fastNative, 'nativeHistory: true', 'Native Navigation V7 keeps browser-native history');
+includes(fastNative, 'documentPrefetch: false', 'Native Navigation V7 disables HTML prefetch');
+assert(!/requestIdleCallback|rel\s*=\s*['"]prefetch|warmPrimaryNav/.test(fastNative), 'Native Navigation V7 does not prefetch HTML documents');
 assert(!/DOMParser|history\.pushState|replaceWith\s*\(|document\.body\.innerHTML/i.test(fastNative), 'Fast Native V6 contains no soft full-page swap implementation');
 
 includes(directory, sourceLatest, 'Curated directory exposes latest date');

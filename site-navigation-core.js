@@ -613,8 +613,8 @@
       // R2: no repeated global contact footer on ordinary pages.
       // R2: no repeated document contact/email tail.
       protectControlledPage();
-      // R2: Fast Native Navigation V5 owns prefetch.
       buildDock();
+      document.dispatchEvent(new CustomEvent('qily:shell-ready'));
     } finally {
       revealCurrentShell();
     }

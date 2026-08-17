@@ -1,16 +1,16 @@
-/* QilyLean R2 static-first navigation runtime v21.4｜2026-08-16
+/* QilyLean atomic first-paint navigation runtime v22｜2026-08-17
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
  * 性能：普通页面直达 core；仅合作/资源页面按需加载 legacy，避免全站下载报价与资源逻辑。
  * 可视化：中文正文启用 pretty wrap / strict line-break，标题平衡换行；悬浮栏“分享官方网址”固定两行完整显示。
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV21) return;
-  w.__qilyStaticFirstNavigationV21 = true;
+  if (w.__qilyStaticFirstNavigationV22) return;
+  w.__qilyStaticFirstNavigationV22 = true;
 
-  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260816-nav-current-v7';
-  var CORE_SRC = '/site-navigation-core.js?v=20260816-nav-current-v17';
-  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260816-nav-current-v17';
+  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260817-atomic-first-paint-v8';
+  var CORE_SRC = '/site-navigation-core.js?v=20260817-atomic-first-paint-v18';
+  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18';
 
   function installTypographyPolish() {
     if (d.getElementById('qilyChineseWrapPolishV1')) return;
@@ -37,27 +37,20 @@
     var script = d.createElement('script');
     script.src = legacy ? LEGACY_SRC : CORE_SRC;
     script.async = false;
-    script.setAttribute(attr, 'r2-static-first-v21');
+    script.setAttribute(attr, 'atomic-first-paint-v22');
     (d.head || d.documentElement).appendChild(script);
   }
 
   function loadConsistencyGuard() {
-    if (w.__qilyUiConsistencyV2) {
-      appendRuntime();
-      return;
-    }
+    /* Core 与 consistency 并行加载，禁止旧版 load -> core 串行瀑布。 */
+    appendRuntime();
+    if (w.__qilyUiConsistencyV2) return;
     var existing = d.querySelector('script[data-qily-ui-consistency],script[src*="/site-ui-consistency-v1.js"]');
-    if (existing) {
-      existing.addEventListener('load', appendRuntime, { once: true });
-      if (w.__qilyUiConsistencyV2) appendRuntime();
-      return;
-    }
+    if (existing) return;
     var script = d.createElement('script');
     script.src = CONSISTENCY_SRC;
     script.async = false;
-    script.setAttribute('data-qily-ui-consistency', 'v4');
-    script.addEventListener('load', appendRuntime, { once: true });
-    script.addEventListener('error', appendRuntime, { once: true });
+    script.setAttribute('data-qily-ui-consistency', 'atomic-first-paint-v8');
     (d.head || d.documentElement).appendChild(script);
   }
 
@@ -89,12 +82,14 @@
   loadConsistencyGuard();
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', bindDock, { once: true });
   else bindDock();
-  [120, 500].forEach(function (delay) { w.setTimeout(bindDock, delay); });
+  d.addEventListener('qily:shell-ready', bindDock);
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'r2-static-first-v21',
+  mode: 'atomic-first-paint-v22',
   staticHtmlAuthority: true,
+  atomicFirstPaint: true,
+  runtimeDependencyWaterfall: false,
   dynamicContentShapers: false,
   runtimeFooter: false,
   runtimeSharedCssRewrite: false,
