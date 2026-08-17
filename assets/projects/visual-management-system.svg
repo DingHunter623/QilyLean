@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="933" viewBox="0 0 1400 933" role="img" aria-labelledby="title desc">
+<title id="title">制造现场目视化系统设计示意</title>
+<desc id="desc">以状态、边界、责任、异常和节奏为核心的现场目视化系统结构图</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#eef8f6"/><stop offset="1" stop-color="#d7ebe7"/></linearGradient><filter id="shadow"><feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0f4b5a" flood-opacity=".13"/></filter></defs>
+<rect width="1400" height="933" fill="url(#bg)"/>
+<rect x="72" y="68" width="1256" height="797" rx="28" fill="#fff" stroke="#c7dcda" stroke-width="3" filter="url(#shadow)"/>
+<rect x="72" y="68" width="1256" height="140" rx="28" fill="#0f4b5a"/><rect x="72" y="180" width="1256" height="28" fill="#0f4b5a"/>
+<text x="130" y="132" fill="#ffe39b" font-size="28" font-weight="800" font-family="Arial,'Noto Sans SC',sans-serif">VISUAL MANAGEMENT SYSTEM</text>
+<text x="130" y="177" fill="#fff" font-size="38" font-weight="800" font-family="Arial,'Noto Sans SC',sans-serif">制造现场目视化系统｜状态 · 边界 · 责任 · 异常 · 节奏</text>
+<g font-family="Arial,'Noto Sans SC',sans-serif">
+<rect x="126" y="262" width="348" height="210" rx="18" fill="#f5fbfa" stroke="#178b94" stroke-width="3"/>
+<text x="156" y="311" fill="#9a7130" font-size="19" font-weight="800">01 · STATUS</text><text x="156" y="352" fill="#0f4b5a" font-size="31" font-weight="800">状态可见</text>
+<text x="156" y="394" fill="#526968" font-size="22">计划 / 实绩 / WIP / 质量</text><text x="156" y="430" fill="#526968" font-size="22">设备 / 物料 / 人员 / 安全</text>
+<rect x="526" y="262" width="348" height="210" rx="18" fill="#fffaf0" stroke="#caa15f" stroke-width="3"/>
+<text x="556" y="311" fill="#9a7130" font-size="19" font-weight="800">02 · BOUNDARY</text><text x="556" y="352" fill="#0f4b5a" font-size="31" font-weight="800">边界明确</text>
+<text x="556" y="394" fill="#526968" font-size="22">区域 / 物流 / 定置 / 红线</text><text x="556" y="430" fill="#526968" font-size="22">版本 / 权限 / 更新边界</text>
+<rect x="926" y="262" width="348" height="210" rx="18" fill="#f5fbfa" stroke="#178b94" stroke-width="3"/>
+<text x="956" y="311" fill="#9a7130" font-size="19" font-weight="800">03 · RESPONSE</text><text x="956" y="352" fill="#0f4b5a" font-size="31" font-weight="800">异常闭环</text>
+<text x="956" y="394" fill="#526968" font-size="22">触发 / 升级 / 责任 / 时限</text><text x="956" y="430" fill="#526968" font-size="22">复盘 / 验证 / 标准化</text>
+<rect x="126" y="536" width="1148" height="210" rx="18" fill="#0f4b5a"/>
+<text x="166" y="588" fill="#ffe39b" font-size="22" font-weight="800">DAILY OPERATING RHYTHM</text>
+<g fill="#fff" font-size="25" font-weight="800"><text x="166" y="650">班前确认</text><text x="395" y="650">小时跟踪</text><text x="624" y="650">异常升级</text><text x="853" y="650">班后复盘</text><text x="1082" y="650">周度稽核</text></g>
+<g stroke="#ffe39b" stroke-width="5" fill="none"><path d="M292 640h62"/><path d="M521 640h62"/><path d="M750 640h62"/><path d="M979 640h62"/></g>
+<text x="166" y="704" fill="#d9eeea" font-size="21">同一版式语言 · 同一责任口径 · 同一更新频率 · 同一异常链路</text>
+</g></svg>
