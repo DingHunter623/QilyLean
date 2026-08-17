@@ -1,0 +1,87 @@
+/* QilyLean interaction continuity v1｜2026-08-17
+ * 全站制造运营轴 + 真链接卡片的 hover/focus/pressed 反馈。
+ */
+:root{
+  --qily-feedback-ink:#17322d;
+  --qily-feedback-bg:#fff8df;
+  --qily-feedback-border:#c99a3e;
+  --qily-feedback-shadow:0 16px 38px rgba(15,75,90,.20);
+}
+
+.qily-system-axis{background:#fff;border-bottom:1px solid var(--qily-line,#d5e4e3)}
+.qily-system-axis__inner{width:min(var(--qily-container,1240px),calc(100% - 36px));margin:auto;padding:16px 0}
+.qily-system-axis__title{display:flex;align-items:center;gap:10px;margin:0 0 10px;color:#0f4b5a;font-size:13px;font-weight:950;letter-spacing:.08em}
+.qily-system-axis__title::before{content:"";flex:0 0 28px;width:28px;height:3px;background:#caa15f}
+.qily-system-axis__steps{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.qily-system-axis__step{position:relative;display:block;min-height:64px;padding:10px 12px 10px 14px;border:1px solid #d5e4e3;border-radius:8px;color:inherit;background:#f4f9f8;text-decoration:none!important;box-shadow:none;transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease}
+.qily-system-axis__step:not(:last-child)::after{content:"›";position:absolute;right:-8px;top:50%;z-index:2;translate:0 -50%;color:#caa15f;font-size:22px;font-weight:950}
+.qily-system-axis__step strong{display:block;color:#0f4b5a;font-size:14px;line-height:1.25}
+.qily-system-axis__step span{display:block;margin-top:4px;color:#5f7474;font-size:12px;line-height:1.4}
+.qily-system-axis__step:is(:hover,:focus-visible){z-index:3;color:var(--qily-feedback-ink)!important;background:var(--qily-feedback-bg)!important;border-color:var(--qily-feedback-border)!important;box-shadow:0 12px 26px rgba(15,75,90,.18)!important;transform:translateY(-3px);outline:3px solid rgba(202,161,95,.34);outline-offset:2px}
+.qily-system-axis__step:is(:hover,:focus-visible) :is(strong,span){color:var(--qily-feedback-ink)!important}
+.qily-system-axis__step:active{color:#fff!important;background:#052a33!important;border-color:#ffe39b!important;transform:translateY(0) scale(.985)}
+.qily-system-axis__step:active :is(strong,span){color:#fff!important}
+
+html body :is(
+  .qily-secondary-links>a,
+  a.qily-value-card,
+  a.qily-ia-card-link,
+  a.module-card-link,
+  a.project-card-link,
+  a.linked-card,
+  a.resource-card-link,
+  a.moment-link
+){position:relative;display:block;color:inherit;text-decoration:none;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease}
+
+html body :is(
+  .qily-secondary-links>a,
+  a.qily-value-card,
+  a.qily-ia-card-link,
+  a.module-card-link,
+  a.project-card-link,
+  a.linked-card,
+  a.resource-card-link,
+  a.moment-link
+):is(:hover,:focus-visible){color:var(--qily-feedback-ink)!important;background:var(--qily-feedback-bg)!important;border-color:var(--qily-feedback-border)!important;box-shadow:var(--qily-feedback-shadow)!important;transform:translateY(-4px)!important;outline:3px solid rgba(202,161,95,.38)!important;outline-offset:3px!important}
+
+html body :is(
+  .qily-secondary-links>a,
+  a.qily-value-card,
+  a.qily-ia-card-link,
+  a.module-card-link,
+  a.project-card-link,
+  a.linked-card,
+  a.resource-card-link,
+  a.moment-link
+):is(:hover,:focus-visible) *{color:var(--qily-feedback-ink)!important;-webkit-text-fill-color:var(--qily-feedback-ink)!important;text-decoration-color:var(--qily-feedback-ink)!important}
+
+html body :is(
+  .qily-secondary-links>a,
+  a.qily-value-card,
+  a.qily-ia-card-link,
+  a.module-card-link,
+  a.project-card-link,
+  a.linked-card,
+  a.resource-card-link,
+  a.moment-link
+):active{color:#fff!important;background:#052a33!important;border-color:#ffe39b!important;box-shadow:0 7px 18px rgba(15,75,90,.20)!important;transform:translateY(0) scale(.985)!important}
+
+html body :is(
+  .qily-secondary-links>a,
+  a.qily-value-card,
+  a.qily-ia-card-link,
+  a.module-card-link,
+  a.project-card-link,
+  a.linked-card,
+  a.resource-card-link,
+  a.moment-link
+):active *{color:#fff!important;-webkit-text-fill-color:#fff!important}
+
+html body :is(.module-card,.paper-card,.trust-card,.project-list-card,.service-card,.resource-card,.knowledge-card):has(a[href]:hover),
+html body :is(.module-card,.paper-card,.trust-card,.project-list-card,.service-card,.resource-card,.knowledge-card):has(a[href]:focus-visible){border-color:var(--qily-feedback-border)!important;box-shadow:var(--qily-feedback-shadow)!important;transform:translateY(-3px)!important;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease!important}
+
+html body :is(.module-card,.paper-card,.trust-card,.project-list-card,.service-card,.resource-card,.knowledge-card) a[href]:is(:hover,:focus-visible){color:var(--qily-feedback-ink)!important;background:#ffe39b!important;border-color:var(--qily-feedback-border)!important;text-decoration-color:var(--qily-feedback-ink)!important;outline:3px solid rgba(202,161,95,.34)!important;outline-offset:2px!important}
+
+@media(max-width:920px){.qily-system-axis__steps{grid-template-columns:repeat(3,minmax(0,1fr))}.qily-system-axis__step:nth-child(3)::after{display:none}}
+@media(max-width:620px){.qily-system-axis__inner{width:calc(100% - 28px);padding:13px 0}.qily-system-axis__steps{grid-template-columns:1fr 1fr;gap:7px}.qily-system-axis__step:nth-child(2n)::after{display:none}.qily-system-axis__step{min-height:58px;padding:9px 10px}}
+@media(prefers-reduced-motion:reduce){.qily-system-axis__step,html body :is(.qily-secondary-links>a,a.qily-value-card,a.qily-ia-card-link,a.module-card-link,a.project-card-link,a.linked-card,a.resource-card-link,a.moment-link){transition:none!important}}

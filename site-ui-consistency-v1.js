@@ -1,13 +1,13 @@
-/* QilyLean 轻量术语、父级导航与页面新鲜度防错 v2.7｜2026-08-16
- * 性能原则：静态HTML首帧即正确；运行时只做必要校正，不反复扫描正文、不监听整页DOM。
- * 目标：统一悬浮栏“分享官方网址”、清理旧主导航“友情链接”，并在BFCache恢复旧页面时自动校正/刷新。
+/* QilyLean 轻量父级导航与外壳一致性 v2.8｜2026-08-17
+ * 性能原则：静态HTML首帧即正确；运行时只校正导航和悬浮栏，不扫描或改写正文。
+ * 页面新鲜度由 head 内原子首帧守卫在正文解析前处理，本文件不再事后刷新页面。
  */
 (function(d,w){
   'use strict';
   if(w.__qilyUiConsistencyV2)return;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260816-nav-current-v7';
+  var BUILD_ID='20260817-atomic-first-paint-v8';
   var BUILD_KEY='qily_site_ui_build_v1';
 
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
@@ -58,13 +58,6 @@
   function rememberBuild(){
     try{w.localStorage.setItem(BUILD_KEY,BUILD_ID);}catch(error){}
     d.documentElement.setAttribute('data-qily-ui-build',BUILD_ID);
-  }
-
-  function restoredBuildIsStale(){
-    try{
-      var active=w.localStorage.getItem(BUILD_KEY)||'';
-      return !!active&&active!==BUILD_ID;
-    }catch(error){return false;}
   }
 
   var pointer=null;
@@ -185,21 +178,6 @@
     return true;
   }
 
-  function normalizeInteractiveLabelsOnce(){
-    d.querySelectorAll('a,button,[aria-label],[title]').forEach(function(node){
-      if(node.childElementCount===0){
-        var text=node.textContent||'';
-        if(text.trim()==='官网')node.textContent=text.replace('官网','官方网址');
-        else if(text.trim()==='分享官网')node.textContent=text.replace('分享官网','分享官方网址');
-      }
-      ['aria-label','title'].forEach(function(name){
-        var value=node.getAttribute&&node.getAttribute(name);if(!value)return;
-        var next=value.replace(/分享官网/g,'分享官方网址').replace(/访问官网/g,'访问官方网址').replace(/打开官网/g,'打开官方网址').replace(/前往官网/g,'前往官方网址');
-        if(next!==value)node.setAttribute(name,next);
-      });
-    });
-  }
-
   function reconcileFast(){
     normalizePrimaryNav();
     normalizeDock();
@@ -208,20 +186,11 @@
   function boot(){
     rememberBuild();
     ensureDockPolish();
-    normalizeInteractiveLabelsOnce();
     reconcileFast();
-    /* 仅两次短延迟补偿历史defer脚本，不再持续扫描。 */
-    w.setTimeout(reconcileFast,120);
-    w.setTimeout(reconcileFast,520);
   }
 
-  w.addEventListener('pageshow',function(event){
-    if(event.persisted&&restoredBuildIsStale()){
-      w.location.reload();
-      return;
-    }
-    reconcileFast();
-  });
+  d.addEventListener('qily:shell-ready',reconcileFast);
+  w.addEventListener('pageshow',reconcileFast);
 
   w.__qilyParentNavigationV3=true;
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();

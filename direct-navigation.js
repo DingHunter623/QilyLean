@@ -1,50 +1,15 @@
-(function(){
+/* QilyLean direct navigation v2｜2026-08-17
+ * 只声明原生整页导航契约，不再异步加载品牌脚本、改写首屏正文或补挂样式。
+ */
+(function (w) {
   'use strict';
-  /*
-   * 导航只由浏览器原生链接处理。
-   * 不在捕获阶段拦截 click、touch 或 pointer 事件，避免与页面内锚点、
-   * target="_top" 及其他页面脚本互相触发而产生循环或空白页。
-   */
-  if (window.__qilyLeanNativeNavigationReady) return;
-  window.__qilyLeanNativeNavigationReady = true;
-
-  function loadVisualScale(){
-    if(document.getElementById('qilyVisualScaleStylesheet'))return;
-    var link=document.createElement('link');
-    link.id='qilyVisualScaleStylesheet';
-    link.rel='stylesheet';
-    link.href='/site-visual-scale-v1.css?v=20260729-hierarchy-v4';
-    document.head.appendChild(link);
-  }
-
-  function alignHomepageMetrics(){
-    if(document.getElementById('qilyMetricBottomAlignStyle'))return;
-    var style=document.createElement('style');
-    style.id='qilyMetricBottomAlignStyle';
-    style.textContent='.qily-home-balanced .metrics{align-items:stretch!important}.qily-home-balanced .metric{display:flex!important;flex-direction:column!important;height:100%!important}.qily-home-balanced .metric>em{margin-top:auto!important;padding-top:12px!important}';
-    document.head.appendChild(style);
-  }
-
-  function balanceHomepageHero(){
-    var path=(location.pathname||'/').replace(/\/index\.html$/,'/');
-    if(path!=='/'&&path!=='/qilylean/home.html'&&path!=='/qilylean/home-live.html')return;
-    var grid=document.querySelector('.hero-grid');
-    var panel=document.querySelector('.assistant-panel');
-    if(!grid||!panel)return;
-    if(panel.parentElement!==grid)grid.appendChild(panel);
-    document.body.classList.add('qily-home-balanced');
-    alignHomepageMetrics();
-  }
-
-  loadVisualScale();
-
-  if (!document.getElementById('qilyLeanBrandIdentityScript')) {
-    var brandScript = document.createElement('script');
-    brandScript.id = 'qilyLeanBrandIdentityScript';
-    brandScript.src = '/brand-identity.js?v=20260731-links-v1';
-    document.body.appendChild(brandScript);
-  }
-
-  if(document.body)balanceHomepageHero();
-  else document.addEventListener('DOMContentLoaded',balanceHomepageHero,{once:true});
-})();
+  if (w.__qilyLeanNativeNavigationReady) return;
+  w.__qilyLeanNativeNavigationReady = true;
+  w.__qilyDirectNavigationContract = Object.freeze({
+    mode: 'native-document-navigation-v2',
+    domSwap: false,
+    runtimeContentRewrite: false,
+    runtimeBrandRewrite: false,
+    runtimeStylesheetInjection: false
+  });
+})(window);

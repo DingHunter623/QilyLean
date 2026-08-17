@@ -1,14 +1,13 @@
-/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V6｜2026-08-15
+/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V7｜2026-08-17
  * 目标：
  * 1) 项目合作页直接使用已经物化的静态六类能力/边界，不再运行时重复插入正文；
  * 2) “分享官方网址”直接输出最终两行结构，禁止任何“分享官网”旧文案；
- * 3) 删除全 document MutationObserver，仅保留轻量对齐与有限重试，降低页面跳转后的主线程负担。
+ * 3) 删除延时重试，改用静态DOM就绪与shell-ready事件，避免首屏后再次改变布局。
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyCoreServiceDockClosureV6)return;
-  w.__qilyCoreServiceDockClosureV6=true;
-  w.__qilyCoreServiceDockClosureV5=true;
+  if(w.__qilyCoreServiceDockClosureV7)return;
+  w.__qilyCoreServiceDockClosureV7=true;
 
   function groupByVisualRow(nodes){
     var rows=[];
@@ -125,10 +124,9 @@
 
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',apply,{once:true});
   else apply();
-  w.addEventListener('load',apply,{once:true});
+  d.addEventListener('qily:shell-ready',apply);
   w.addEventListener('resize',function(){
     if(resizeTimer)w.clearTimeout(resizeTimer);
     resizeTimer=w.setTimeout(alignCoreServices,100);
   },{passive:true});
-  [80,260,760].forEach(function(delay){w.setTimeout(apply,delay);});
 })(document,window);

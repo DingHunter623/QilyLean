@@ -1,15 +1,17 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean R2 regression guard v7.6｜2026-08-16 NAV CURRENT V17 */
+/* QilyLean atomic first-paint regression guard v8｜2026-08-17 */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
-const NAV_VERSION='20260815-performance-v16';
-const NAV_RUNTIME_VERSION='20260816-nav-current-v17';
-const CONSISTENCY_VERSION='20260816-nav-current-v7';
+const HTML_BUILD_VERSION='20260817-atomic-first-paint-v1';
+const NAV_VERSION='20260817-atomic-first-paint-v22';
+const NAV_RUNTIME_VERSION='20260817-atomic-first-paint-v18';
+const CONSISTENCY_VERSION='20260817-atomic-first-paint-v8';
 const CORE_CSS_VERSION='20260815-core-visual-v1';
-const FAST_NATIVE_VERSION='20260815-prefetch-v6p1';
+const FAST_NATIVE_VERSION='20260817-native-only-v7';
+const INTERACTION_CSS_VERSION='20260817-continuity-v1';
 function read(rel){return fs.readFileSync(path.join(root,rel),'utf8');}
 function assert(ok,msg){if(!ok)throw new Error(msg);}
 function all(source,markers,label){for(const marker of markers)assert(source.includes(marker),`${label}: missing ${marker}`);}
@@ -17,19 +19,18 @@ function cssRef(html,file){return new RegExp(`href=["'][^"']*/${file.replace(/[.
 
 const nativeNav=read('site-music-persistent-navigation-v1.js');
 all(nativeNav,[
-  'window.__qilyFastNativeNavigationV6',
-  'data-qily-fast-prefetch',
+  'w.__qilyFastNativeNavigationV7',
   'location.assign(url.href)',
-  "mode:'native-prefetch-v6'",
-  'prefetchBudget:3',
-  'secondaryPrefetchBudget:2',
-  'duplicateFetch:false',
-  'touchPrefetch:false',
-  'intentPrefetch:true',
-  'visualMutation:false',
-  'requestIdleCallback(warmPrimaryNav,{timeout:700})'
-],'Fast Native Navigation V6.1');
+  "mode: 'native-only-v7'",
+  'domSwap: false',
+  'nativeHistory: true',
+  'documentPrefetch: false',
+  'staleDocumentCacheRisk: false',
+  'runtimeContentRewrite: false',
+  'visualMutation: false'
+],'Native Navigation V7');
 assert(!/\bfetch\s*\(/.test(nativeNav),'Fast Native Navigation: duplicate fetch returned');
+assert(!/requestIdleCallback|rel\s*=\s*['"]prefetch|warmPrimaryNav/.test(nativeNav),'Native Navigation: HTML prefetch returned');
 assert(!/document\.addEventListener\(['"]touchstart['"]/.test(nativeNav),'Fast Native Navigation: touchstart prefetch returned');
 assert(!/DOMParser\(|history\.pushState|qilySoftNavigation|qily:softnavigate|reconcileHeadAssets/.test(nativeNav),'Fast Native Navigation: cross-page DOM/CSS soft navigation returned');
 
@@ -57,8 +58,10 @@ assert(!observe.includes('MutationObserver'),'legacy navigation: mutation-loop D
 
 const wrapper=read('site-navigation.js');
 all(wrapper,[
-  "mode: 'r2-static-first-v21'",
+  "mode: 'atomic-first-paint-v22'",
   'staticHtmlAuthority: true',
+  'atomicFirstPaint: true',
+  'runtimeDependencyWaterfall: false',
   'dynamicContentShapers: false',
   'runtimeFooter: false',
   'runtimeSharedCssRewrite: false',
@@ -70,12 +73,13 @@ all(wrapper,[
   `/site-navigation-core.js?v=${NAV_RUNTIME_VERSION}`,
   `/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}`,
   'needsLegacyRuntime()'
-],'static-first navigation wrapper v21');
+],'atomic first-paint navigation wrapper v22');
+assert(!/addEventListener\(['"]load['"],\s*appendRuntime|\[120,\s*500\]/.test(wrapper),'navigation wrapper: delayed runtime dependency returned');
 assert(!/site-parent-navigation-v3\.js/.test(wrapper),'navigation wrapper: parent runtime dependency returned');
 
 const uiConsistency=read('site-ui-consistency-v1.js');
 all(uiConsistency,[
-  "BUILD_ID='20260816-nav-current-v7'",
+  "BUILD_ID='20260817-atomic-first-paint-v8'",
   'qilyDockOfficialUrlPolishV3',
   'qily-share-label-primary',
   'qily-share-label-url',
@@ -84,15 +88,14 @@ all(uiConsistency,[
   'width:72px!important',
   'font-size:12px!important',
   'font-size:11px!important',
-  'normalizeInteractiveLabelsOnce',
   'ensurePrimaryNavCurrentStyles',
   'primaryModule(path)',
   "link.setAttribute('data-qily-primary-current','true')",
-  'w.setTimeout(reconcileFast,120)',
-  'w.setTimeout(reconcileFast,520)',
+  "d.addEventListener('qily:shell-ready',reconcileFast)",
   "if(path.indexOf('/tools/')===0)return '/'",
   "w.__qilyParentNavigationV3=true"
 ],'dock v6 / safe parent-route / lightweight consistency');
+assert(!/normalizeInteractiveLabelsOnce|w\.setTimeout\(reconcileFast|location\.reload\(\)/.test(uiConsistency),'ui consistency: delayed visible correction or reload returned');
 assert(!/new\s+MutationObserver|\.createTreeWalker\s*\(/.test(uiConsistency),'ui consistency: full-page mutation/tree scanning returned');
 assert(!/addEventListener\(['"]resize['"]/.test(uiConsistency),'ui consistency: unnecessary resize reconcile returned');
 
@@ -106,6 +109,15 @@ const bundle=read('site-core-visual-bundle-v1.css');
   'QILY-CORE-CSS:site-vi-contrast-restoration-v1.css',
   'QILY-CORE-CSS:site-r2-stability-fixes-v1.css'
 ].forEach(marker=>assert(bundle.includes(marker),`core visual bundle: missing ${marker}`));
+
+const interactionContinuity=read('site-interaction-continuity-v1.css');
+all(interactionContinuity,[
+  '.qily-system-axis__step:is(:hover,:focus-visible)',
+  'a.qily-value-card',
+  '.qily-secondary-links>a',
+  ':active',
+  '@media(prefers-reduced-motion:reduce)'
+],'sitewide interaction continuity');
 
 const timesPage=read('tools/times26001/index.html');
 all(timesPage,['versionCode 16 / API 36','QilyLean｜启力精益官方网址与官网邮箱','用户可主动访问官方网址','<strong>统一开发者支持：</strong>官方网址 '],'Times26001 official URL terminology');
@@ -122,20 +134,22 @@ for(const rel of keyPages){
   const html=read(rel);
   all(html,[
     'QILY-R2-FIRST-PAINT:START',
+    `BUILD='${HTML_BUILD_VERSION}'`,
     `/site-navigation.js?v=${NAV_VERSION}`,
     `/site-music-persistent-navigation-v1.js?v=${FAST_NATIVE_VERSION}`,
+    `/site-interaction-continuity-v1.css?v=${INTERACTION_CSS_VERSION}`,
     'id="qilyDockCriticalV6"',
-    'data-qily-dock-firstpaint-lock="v6"',
+    'data-qily-dock-firstpaint-lock="v7"',
     'qily-share-label-primary">分享</span><span class="qily-share-label-line qily-share-label-url">官方网址'
   ],rel);
   if(['/','index.html','capabilities/index.html','projects/index.html','improvements/index.html','knowledge/index.html','experience/index.html','cooperation/index.html','trust/index.html'].includes(rel)){
-    assert(html.includes(`data-qily-ui-consistency="nav-current-v7" src="/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}"`),`${rel}: current-state V7 consistency runtime missing`);
+    assert(html.includes(`data-qily-ui-consistency="atomic-first-paint-v8" src="/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}"`),`${rel}: atomic first-paint consistency runtime missing`);
   }else{
-    assert(/data-qily-ui-consistency="(?:dock-v6|nav-current-v7)" src="\/site-ui-consistency-v1\.js\?v=(?:20260815-dock-label-v6|20260816-nav-current-v7)"/.test(html),`${rel}: consistency fallback missing`);
+    assert(html.includes(`data-qily-ui-consistency="atomic-first-paint-v8" src="/site-ui-consistency-v1.js?v=${CONSISTENCY_VERSION}"`),`${rel}: atomic first-paint consistency fallback missing`);
   }
-  if(pageLocalCurrent[rel])all(html,['id="qilyPrimaryNavPageCurrentV8"','data-qily-page-current-failsafe="v8"',pageLocalCurrent[rel]],`${rel}: page-local current-state fallback`);
+  if(pageLocalCurrent[rel])all(html,['id="qilyPrimaryNavPageCurrentV8"','data-qily-page-current-failsafe="v9"',pageLocalCurrent[rel]],`${rel}: page-local current-state fallback`);
   const first=(html.match(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/)||[])[0]||'';
-  assert(first&& !/opacity\s*:\s*0|visibility\s*:\s*hidden|pointer-events\s*:\s*none|window\.load|stableReveal|2400/.test(first),`${rel}: blocking/blank first-paint logic returned`);
+  assert(first.includes('html.qily-stale-document body{visibility:hidden!important}')&&!/qily-r2-first-paint-pending body\{visibility:hidden|window\.load|stableReveal|2400/.test(first),`${rel}: atomic stale-document first-paint guard missing`);
   assert(!/site-parent-navigation-v3\.js/i.test(html),`${rel}: redundant parent-navigation request returned`);
   if(rel!=='cooperation/index.html')assert(!/site-core-service-dock-closure-v1\.(?:css|js)/i.test(html),`${rel}: cooperation-only core-service runtime leaked into ordinary page`);
   const hasBundle=html.includes(`/site-core-visual-bundle-v1.css?v=${CORE_CSS_VERSION}`);
@@ -144,13 +158,35 @@ for(const rel of keyPages){
   assert(!/site-footer-standard-v28\.(?:css|js)/i.test(html),`${rel}: footer standard asset returned`);
 }
 
+const primaryPages=['index.html','capabilities/index.html','projects/index.html','improvements/index.html','knowledge/index.html','experience/index.html','cooperation/index.html','trust/index.html'];
+const primaryNav=[['/','首页'],['/capabilities/','能力体系'],['/projects/','代表项目'],['/improvements/','改善方法'],['/knowledge/','知识资产'],['/experience/','履历主线'],['/cooperation/','项目合作'],['/trust/','信任中心']];
+for(const rel of primaryPages){
+  const html=read(rel);
+  assert((html.match(/QILY-SYSTEM-AXIS:START/g)||[]).length===1,`${rel}: shared operating axis missing or duplicated`);
+  assert((html.match(/<a class="qily-system-axis__step"/g)||[]).length===6,`${rel}: operating axis must expose six linked steps`);
+  const header=(html.match(/<header\b[\s\S]*?<\/header>/i)||[])[0]||'';
+  let cursor=-1;
+  for(const [href,label] of primaryNav){
+    const marker=`href="${href}"`;
+    const at=header.indexOf(marker,cursor+1);
+    assert(at>cursor&&new RegExp(`href="${href.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}"[^>]*>\\s*${label}\\s*<\\/a>`).test(header.slice(at)),`${rel}: primary navigation drifted at ${label}`);
+    cursor=at;
+  }
+  assert(!/>\s*友情链接\s*</.test(header),`${rel}: friend link returned to primary navigation`);
+}
+assert((read('index.html').match(/<a class="qily-value-card qily-value-card-link"/g)||[]).length===3,'index.html: trust cards are not whole-card links');
+
+const retiredBrand=read('brand-identity.js');
+all(retiredBrand,['retired: true','runtimeHeroRewrite: false','runtimeNavigationRewrite: false','friendLinkInjection: false'],'retired brand-identity cache fallback');
+assert(!/MutationObserver|setTimeout|innerHTML\s*=/.test(retiredBrand),'retired brand-identity fallback can still rewrite visible content');
+
 const dockPublisher=read('scripts/publish-dock-label-polish-v1.js');
 all(dockPublisher,[
   CONSISTENCY_VERSION,
   FAST_NATIVE_VERSION,
-  'data-qily-ui-consistency="nav-current-v7"',
+  'data-qily-ui-consistency="atomic-first-paint-v8"',
   'id="qilyDockCriticalV6"',
-  'data-qily-dock-firstpaint-lock="v6"',
+  'data-qily-dock-firstpaint-lock="v7"',
   'removeCoreServiceRuntime',
   'patchShareMarkup',
   'patchFastNative'
@@ -162,4 +198,4 @@ all(coreServicePublisher,['Core-service runtime scoping','cooperation/index.html
 const selfHeal=read('.github/workflows/site-regression-poka-yoke.yml');
 all(selfHeal,['node scripts/apply-site-poka-yoke-v2.js','node scripts/site-regression-guard.js','contents: write'],'self-heal workflow');
 
-process.stdout.write('QilyLean navigation current-state V17 guard passed: all eight primary modules synchronize one high-contrast active item while the dock, static-first runtime, and Fast Native performance contracts remain intact.\n');
+process.stdout.write('QilyLean atomic first-paint guard passed: 461-page static HTML stays authoritative, stale documents are intercepted before body paint, and navigation no longer performs delayed content correction or HTML prefetch.\n');
