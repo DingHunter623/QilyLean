@@ -1,0 +1,43 @@
+/*
+ * QilyLean 工程深度展示补充规范 v1
+ * 复用全站青绿主色、金色强调、卡片层级与移动端断点。
+ * 仅承载工程架构、数据契约、公式、阶段门与验收矩阵。
+ */
+.engineering-section{margin-top:22px;padding-top:22px;border-top:1px solid var(--qily-line,#d5e4e3)}
+.engineering-section>h3{margin:0 0 8px;color:#0f4b5a;font-size:clamp(22px,2vw,28px)!important}
+.engineering-section>p{margin:0 0 14px;color:#526968;line-height:1.75}
+.engineering-kicker{display:block;margin-bottom:7px;color:#9a7130;font-size:12px;font-weight:950;letter-spacing:.11em;text-transform:uppercase}
+.engineering-architecture{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:16px 0}
+.engineering-layer{position:relative;min-height:142px;padding:16px;border:1px solid #d5e4e3;border-top:5px solid #178b94;background:#f7fbfa;box-shadow:0 7px 18px rgba(15,75,90,.06)}
+.engineering-layer:nth-child(even){border-top-color:#caa15f;background:#fffaf0}
+.engineering-layer small{display:block;margin-bottom:6px;color:#9a7130;font-weight:950}
+.engineering-layer strong{display:block;margin-bottom:7px;color:#0f4b5a;font-size:18px;line-height:1.35}
+.engineering-layer span{display:block;color:#526968;font-size:14px;line-height:1.58}
+.engineering-table-wrap{margin:16px 0;overflow-x:auto;border:1px solid #d5e4e3;background:#fff;box-shadow:0 8px 22px rgba(15,75,90,.06)}
+.engineering-table{width:100%;min-width:780px;border-collapse:collapse;font-size:14.5px;line-height:1.55}
+.engineering-table caption{padding:13px 15px;color:#0f4b5a;background:#eef8f6;font-size:16px;font-weight:950;text-align:left}
+.engineering-table th,.engineering-table td{padding:11px 13px;border-right:1px solid #d5e4e3;border-bottom:1px solid #d5e4e3;vertical-align:top;text-align:left}
+.engineering-table th{color:#fff;background:#0f4b5a;font-weight:900;white-space:nowrap}
+.engineering-table td{color:#526968}
+.engineering-table td strong{color:#0f4b5a}
+.engineering-table tr:last-child td{border-bottom:0}
+.engineering-formula-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:16px 0}
+.engineering-formula{padding:16px;border-left:4px solid #caa15f;background:#fffaf0}
+.engineering-formula strong{display:block;margin-bottom:6px;color:#0f4b5a;font-size:16px}
+.engineering-formula code{display:block;overflow-wrap:anywhere;color:#17322d;background:transparent;font-family:inherit;font-size:14.5px;font-weight:850;line-height:1.6;white-space:normal}
+.engineering-formula span{display:block;margin-top:5px;color:#526968;font-size:13.5px;line-height:1.55}
+.engineering-gates{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.engineering-gate{padding:16px;border:1px solid #d5e4e3;background:#fff}
+.engineering-gate b{display:inline-flex;min-width:42px;justify-content:center;margin-bottom:8px;padding:4px 8px;border-radius:999px;color:#17322d;background:#ffe39b;font-size:13px}
+.engineering-gate strong{display:block;margin-bottom:5px;color:#0f4b5a;font-size:17px}
+.engineering-gate span{display:block;color:#526968;font-size:14px;line-height:1.58}
+.engineering-note{margin:16px 0;padding:14px 16px;border-left:4px solid #9e4a34;color:#526968;background:#fff8f1;font-size:14px;line-height:1.72}
+.engineering-note strong{color:#7d3828}
+.engineering-flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0}
+.engineering-flow span{display:inline-flex;align-items:center;min-height:40px;padding:7px 12px;border:1px solid #178b94;border-radius:999px;color:#0f4b5a;background:#fff;font-size:14px;font-weight:900}
+.engineering-flow i{color:#c28d32;font-style:normal;font-weight:950}
+.article .engineering-section h3{margin-top:0}
+.article .engineering-section p{max-width:none}
+@media(max-width:980px){.engineering-architecture{grid-template-columns:repeat(2,minmax(0,1fr))}.engineering-gates{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.engineering-architecture,.engineering-formula-grid,.engineering-gates{grid-template-columns:1fr}.engineering-layer{min-height:0}.engineering-table{min-width:680px}.engineering-flow{align-items:stretch}.engineering-flow span{width:100%;justify-content:center}.engineering-flow i{display:none}}
+@media print{.engineering-table-wrap{overflow:visible}.engineering-table{min-width:0;font-size:10px}.engineering-layer,.engineering-gate,.engineering-formula{break-inside:avoid}}
