@@ -160,7 +160,7 @@ if (fs.existsSync(siteDataFile)) {
 const home = payload.entries.find((entry) => entry.url === '/');
 const cooperation = payload.entries.find((entry) => entry.url === '/cooperation/');
 const daily = payload.entries.find((entry) => entry.url === '/qilylean/daily-insights.html');
-const isV3Home = !!(home && home.text.includes('把制造现场，变成可计算、可改善、可固化、可复用的组织资产'));
+const isV3Home = !!(home && home.text.includes('现场问题，可计算') && home.text.includes('改善成果，可固化') && home.text.includes('组织能力，可复用'));
 if (!home || !(isV3Home || home.text.includes('把复杂制造问题，转化为可验证的交付结果'))) {
   throw new Error('Homepage search entry is not based on final static HTML');
 }

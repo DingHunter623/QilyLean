@@ -365,7 +365,9 @@ function validate() {
   const requiredHome = isV3Home ? [
     'QILY-HOME-STATIC-COMMERCIAL:START',
     'data-qily-static-source="home-core-v3"',
-    '把制造现场，变成可计算、可改善、可固化、可复用的组织资产',
+    '现场问题，可计算',
+    '改善成果，可固化',
+    '组织能力，可复用',
     '三大核心业务',
     '新工厂／新产线规划',
     '精益改善项目交付',

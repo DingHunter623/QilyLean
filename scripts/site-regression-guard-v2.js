@@ -177,6 +177,7 @@ for(const rel of primaryPages){
   assert(!/>\s*友情链接\s*</.test(header),`${rel}: friend link returned to primary navigation`);
 }
 assert((read('index.html').match(/<a class="qily-value-card qily-value-card-link"/g)||[]).length===3,'index.html: trust cards are not whole-card links');
+all(read('index.html'),['class="qily-home-hero-title"','<span>现场问题，可计算</span>','<span>改善成果，可固化</span>','<span>组织能力，可复用</span>','qilyHomeHeroSemanticLines'],'homepage semantic hero line groups');
 const leanKnowledge=read('qilylean/lean-knowledge.html');
 all(leanKnowledge,['QILY-LEAN-KNOWLEDGE-TOC:START','QILY-LEAN-KNOWLEDGE-FEATURES:START','id="management-execution-entry"','id="lean-tools-feature"','href="#management-execution-entry"','href="#lean-tools-feature"'],'static maintained knowledge entries');
 
