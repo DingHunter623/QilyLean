@@ -23,7 +23,6 @@ function patchConsistency(){
   if(!js.includes("if(path.indexOf('/links/')===0)return '/links/';"))js=js.replace("    if(path.indexOf('/cooperation/')===0)return '/cooperation/';","    if(path.indexOf('/links/')===0)return '/links/';\n    if(path.indexOf('/cooperation/')===0)return '/cooperation/';");
   js=js.replace("return ['/','/capabilities/','/projects/','/improvements/','/knowledge/','/experience/','/cooperation/','/trust/'].indexOf(path)!==-1?path:'';","return ['/','/capabilities/','/projects/','/improvements/','/knowledge/','/experience/','/links/','/cooperation/','/trust/'].indexOf(path)!==-1?path:'';");
   js=js.replace(/\s*nav\.querySelectorAll\('a\[href="\\\/links\\\/"\],a\[href="\\\/links\\\/index\\\.html"\]'\)\.forEach\(function\(link\)\{\s*if\(path\.indexOf\('\\\/links\\\/'\)!==0\)link\.remove\(\);\s*\}\);/m,'');
-  // tolerate the exact non-escaped runtime source form as well
   js=js.replace(/\s*nav\.querySelectorAll\('a\[href="\/links\/"\],a\[href="\/links\/index\.html"\]'\)\.forEach\(function\(link\)\{\s*if\(path\.indexOf\('\/links\/'\)!==0\)link\.remove\(\);\s*\}\);/m,'');
   assert(js.includes("if(path.indexOf('/links/')===0)return '/links/';"),'ui consistency: Friend Links primary module missing');
   assert(js.includes("'/links/'"),'ui consistency: Friend Links route missing');
@@ -36,11 +35,17 @@ function injectFriendLink(html,current){
   const header=(html.match(/<header\b[\s\S]*?<\/header>/i)||[])[0]||'';
   if(!header)return html;
   let nextHeader=header;
-  if(/<a\s+[^>]*href="\/links\/(?:index\.html)?"[^>]*>\s*友情链接\s*<\/a>/i.test(nextHeader)){
-    nextHeader=nextHeader.replace(/<a\s+[^>]*href="\/links\/(?:index\.html)?"[^>]*>\s*友情链接\s*<\/a>/i,currentMarkup);
+  // Idempotent by design: remove every existing Friend Links anchor first, then insert exactly one.
+  nextHeader=nextHeader.replace(/\s*<a\s+[^>]*href="\/links\/(?:index\.html)?"[^>]*>\s*友情链接\s*<\/a>/gi,'');
+  const cooperation=/(\s*<a\s+[^>]*href="\/cooperation\/(?:index\.html)?"[^>]*>)/i;
+  if(cooperation.test(nextHeader)){
+    nextHeader=nextHeader.replace(cooperation,'\n      '+currentMarkup+'$1');
   }else{
-    nextHeader=nextHeader.replace(/(<a\s+[^>]*href="\/cooperation\/(?:index\.html)?"[^>]*>)/i,currentMarkup+'\n      $1');
+    const navClose=/<\/nav>/i;
+    nextHeader=nextHeader.replace(navClose,'      '+currentMarkup+'\n    </nav>');
   }
+  const matches=nextHeader.match(/<a\s+[^>]*href="\/links\/(?:index\.html)?"[^>]*>\s*友情链接\s*<\/a>/gi)||[];
+  assert(matches.length===1,'static header must contain exactly one Friend Links primary anchor');
   return html.replace(header,nextHeader);
 }
 
@@ -55,4 +60,4 @@ function patchStaticHeaders(){
 patchCore();
 patchConsistency();
 patchStaticHeaders();
-process.stdout.write('Six-core navigation baseline applied: Friend Links restored as a primary module with consistent current-state styling.\n');
+process.stdout.write('Six-core navigation baseline applied: Friend Links restored exactly once as a primary module with consistent current-state styling.\n');
