@@ -81,8 +81,8 @@
         '<article class="ql-path-card"><small>STEP 02｜小范围验证</small><h3>诊断／Pilot验证</h3><p>通过现场诊断、方案／原型和小范围试点验证方法是否有效，保留过程记录、风险条件与阶段结论。</p></article>',
         '<article class="ql-path-card"><small>STEP 03｜验收与扩展</small><h3>验证有效后再扩大范围</h3><p>按书面交付物和验收标准确认阶段成果；条件成立后再复制到更多产线、区域、系统或后续开发范围。</p></article>',
       '</div>',
-      '<div class="ql-proof-note"><strong>业务架构：</strong>QilyLean聚焦三大核心业务；数智化工厂按项目需要嵌入，QilyLean AI／APP与官网作为自主数字作品和技术实证。</div>',
-      '<div class="ql-trust-actions"><a href="/cooperation/">查看三大核心业务</a><a href="/cooperation/#diagnosis">预约问题初筛</a><a href="/projects/">查看代表项目与证据</a></div>'
+      '<div class="ql-proof-note"><strong>业务架构：</strong>六类项目合作能力＝三类核心项目交付＋三项数智化产品与技术能力。本模块只解释“项目如何启动”，不再重复定义另一套“核心业务”。</div>',
+      '<div class="ql-trust-actions"><a href="/cooperation/">查看六类项目合作能力</a><a href="/cooperation/#diagnosis">预约问题初筛</a><a href="/projects/">查看代表项目与证据</a></div>'
     ].join(''),'ql-trust-module');
     section.id='qlProjectDeliveryStrategy';
     var overview=document.getElementById('qily-core-services');

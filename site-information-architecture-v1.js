@@ -58,15 +58,15 @@
 
     d.body.classList.add('qily-home-commercial-focus');
     d.title='QilyLean｜启力精益｜精益生产、工程改善与数智工厂';
-    setMeta('description','QilyLean聚焦新工厂／新产线规划、精益改善项目交付、目视化项目设计与交付三大核心业务，并以数智化工厂与自主数字作品增强交付。');
+    setMeta('description','QilyLean围绕六类核心能力，把现场事实、工程数据、精益改善、质量保证、数智固化与知识资产连成制造运营闭环。');
 
     var eyebrow=homeHero.querySelector('.eyebrow');
     var title=homeHero.querySelector('h1');
     var lead=homeHero.querySelector('.lead');
-    if(eyebrow)eyebrow.textContent='制造运营资产化｜三大核心业务｜问题到组织复制';
+    if(eyebrow)eyebrow.textContent='制造运营资产化｜六类核心能力｜问题到组织复制';
     if(title)title.textContent='把复杂制造问题，转化为可验证的交付结果';
     if(lead){
-      lead.innerHTML='QilyLean｜启力精益由丁启利发起，依托20年制造工程与精益改善实践，聚焦新工厂／新产线规划、精益改善项目交付、目视化项目设计与交付三大核心业务；数智化工厂与自主数字作品用于增强并证明工程交付能力。';
+      lead.innerHTML='QilyLean｜启力精益由丁启利发起，依托20年制造工程与精益改善实践，形成六类核心能力，合计六类项目合作能力。项目以现场诊断、范围确认、方案设计、Pilot验证、标准固化和验收闭环推进；具体交付物、周期、费用、分阶段付款比例与验收条件以对应合同及正式约定为准。';
       var founder=el('p','qily-founder-line','丁启利｜制造工程、工业工程与精益改善项目实践者');
       lead.parentNode.insertBefore(founder,lead);
       var relocation=el('p','qily-home-relocation-note','专业标签已归入<a href="/capabilities/">能力画像</a>，任职年限与岗位历程已归入<a href="/experience/">履历主线</a>，量化成果与证据归入<a href="/projects/">代表项目</a>。');
@@ -75,7 +75,7 @@
 
     var actionBox=homeHero.querySelector('.actions');
     if(actionBox){
-      actionBox.innerHTML='<a class="button primary" href="/cooperation/">查看三大核心业务与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">代表项目与证据</a>';
+      actionBox.innerHTML='<a class="button primary" href="/cooperation/">查看六类项目合作能力与交付</a><a class="button" href="/cooperation/#diagnosis">预约60分钟问题初筛</a><a class="button" href="/projects/">代表项目与证据</a>';
     }
 
     var portraitBadge=homeHero.querySelector('.portrait-badge');
@@ -91,22 +91,21 @@
 
     var servicesBody=el('div','');
     servicesBody.innerHTML='<div class="qily-ia-grid">'+
-      '<article class="qily-ia-card"><small>CORE BUSINESS 01</small><h3>新工厂／新产线规划</h3><p>从产品、工艺、产能、设备、物流、公辅、品质和扩展边界出发，形成可评审、可实施的规划资产。</p><div class="qily-ia-result">产能模型、Layout、物流与库位、公辅接口、实施路线图</div></article>'+
-      '<article class="qily-ia-card"><small>CORE BUSINESS 02</small><h3>精益改善项目交付</h3><p>围绕VSM、标准工时、线平衡、SMED、OEE、质量异常和计划实绩闭环，先验证再固化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>'+
-      '<article class="qily-ia-card"><small>CORE BUSINESS 03</small><h3>目视化项目设计与交付</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、设计图、材料预算、打样、实施清单与验收</div></article>'+
-      '</div><div class="qily-ia-support-heading"><span>ENGINEERING ENABLERS｜不计入核心业务</span><h3>数智化增强能力与自主数字作品</h3></div><div class="qily-ia-grid qily-ia-support-grid">'+
-      '<article class="qily-ia-card"><small>数智化增强</small><h3>数字化工厂</h3><p>以业务流程和可信主数据为底座，规划ERP／MES／APS、设备数据、生产透明化、管理看板与实施路线。</p><div class="qily-ia-result">按三大核心业务的具体项目范围嵌入交付</div></article>'+
-      '<article class="qily-ia-card"><small>自主数字作品</small><h3>QilyLean AI／APP</h3><p>以IE测时、现场采集和知识应用作品证明制造逻辑的软件化能力。</p><div class="qily-ia-result">作品实证，不列为标准核心业务</div></article>'+
-      '<article class="qily-ia-card"><small>自主数字作品</small><h3>QilyLean官网</h3><p>以信息架构、可信证据、SEO和持续运维证明专业内容资产化能力。</p><div class="qily-ia-result">官网自身即技术实证</div></article>'+
-      '</div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#services">查看三大核心业务与交付边界</a></div>';
-    var services=buildSection({id:'qily-core-services',kicker:'CORE BUSINESS｜制造工程与精益改善',title:'三大核心业务',lead:'只把可独立定义范围、形成标准交付物并按结果验收的制造项目列为核心业务。',body:servicesBody});
+      '<article class="qily-ia-card"><small>CORE CAPABILITY 01</small><h3>新工厂／新产线规划</h3><p>从产品、工艺、产能、设备、物流、公辅、品质和扩展边界出发，形成可评审、可实施的规划资产。</p><div class="qily-ia-result">产能模型、Layout、物流与库位、公辅接口、实施路线图</div></article>'+
+      '<article class="qily-ia-card"><small>CORE CAPABILITY 02</small><h3>精益改善项目交付</h3><p>围绕VSM、标准工时、线平衡、SMED、OEE、质量异常和计划实绩闭环，先验证再固化。</p><div class="qily-ia-result">基线诊断、Pilot方案、改善数据、标准文件、结案验收</div></article>'+
+      '<article class="qily-ia-card"><small>CORE CAPABILITY 03</small><h3>目视化项目设计与交付</h3><p>把区域、状态、责任、标准和异常转化为现场共同语言，兼顾设计、材料、施工协同和验收。</p><div class="qily-ia-result">现场勘查、设计图、材料预算、打样、实施清单与验收</div></article>'+
+      '<article class="qily-ia-card"><small>CORE CAPABILITY 04</small><h3>数字化工厂</h3><p>以业务流程和可信主数据为底座，规划ERP／MES／APS、设备数据、生产透明化、管理看板与实施路线。</p><div class="qily-ia-result">数字化蓝图、数据口径、功能／接口需求、看板原型、Pilot与验收机制</div></article>'+
+      '<article class="qily-ia-card"><small>CORE CAPABILITY 05</small><h3>APP软件开发</h3><p>面向IE测时、现场采集、异常管理、移动看板和轻量化管理场景，形成需求、原型、开发、测试、发布与迭代闭环。</p><div class="qily-ia-result">需求清单、交互原型、可运行版本、测试记录、安装／发布包与版本记录</div></article>'+
+      '<article class="qily-ia-card"><small>CORE CAPABILITY 06</small><h3>官网建设</h3><p>围绕品牌定位、信息架构、可信证据、内容体系、SEO、咨询转化、响应式适配及持续运维建设专业官网。</p><div class="qily-ia-result">信息架构、页面模板、响应式官网、SEO基础、咨询入口、部署与运维规范</div></article>'+
+      '</div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/cooperation/">进入项目合作</a><a class="qily-ia-button" href="/cooperation/#services">查看六类项目合作能力与交付边界</a></div>';
+    var services=buildSection({id:'qily-core-services',kicker:'CORE CAPABILITIES｜六类能力，一个制造运营闭环',title:'六类核心能力｜统一服务于制造运营资产化',lead:'先说明解决什么问题、交付什么资产，再逐层展示个人履历、方法体系和知识沉淀。',body:servicesBody});
     insertAfter(homeHero,services);
 
     var proofBody=el('div','');
     proofBody.innerHTML='<div class="qily-ia-delivery-summary">'+
       '<article><strong>专业基础</strong><span>20年制造工程、工业工程与精益改善实践；详细年限和岗位归入履历主线。</span></article>'+
       '<article><strong>项目证据</strong><span>代表项目按已核定、已验证、阶段估算和经验陈述分级展示。</span></article>'+
-      '<article><strong>交易机制</strong><span>三大核心业务均明确范围、交付物与验收边界；数智化增强能力按具体项目需要嵌入。</span></article>'+
+      '<article><strong>交易机制</strong><span>六类项目合作能力均明确范围、交付物与验收边界；合同范本及专项报价按具体业务成熟度与项目范围配置。</span></article>'+
       '<article><strong>责任边界</strong><span>网页用于沟通与能力说明，正式范围、费用、税费、周期和验收以合同为准。</span></article>'+
       '</div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/projects/">代表项目</a><a class="qily-ia-button" href="/trust/">诚信与责任边界</a><a class="qily-ia-button" href="/projects/qilylean-commercial-deliveries/">商业交付档案</a></div>';
     var proof=buildSection({id:'qily-home-proof',alt:true,kicker:'WHY QILYLEAN｜证据与交易边界',title:'先看交付逻辑，再看专业深度',lead:'不以资质徽章堆砌信任，而以真实项目、脱敏佐证、合同交付资产、阶段节点及验收规则建立可核验的合作基础。',body:proofBody});
@@ -140,7 +139,7 @@
       var latestTitle=latest.querySelector('.head h2');
       var latestText=latest.querySelector('.head p');
       if(latestTitle)latestTitle.textContent='知识资产与持续更新';
-      if(latestText)latestText.textContent='简报、术语、程序文件和参考资料用于展示持续学习与方法沉淀，不与三大核心业务争夺首页主视觉。';
+      if(latestText)latestText.textContent='简报、术语、程序文件和参考资料用于展示持续学习与方法沉淀，不与六类项目合作能力争夺首页主视觉。';
       if(results)insertAfter(results,latest);
     }
 

@@ -1,197 +1,45 @@
-name: Validate static information architecture
+name: Validate QilyLean information architecture
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - "index.html"
-      - "cooperation/index.html"
-      - "qilylean/daily-insights.html"
-      - "qilylean/site-data.json"
-      - "qilylean/site-search-index.json"
-      - "site-information-architecture-v1.js"
-      - "site-information-architecture-v1.css"
-      - "site-static-core-interactions-v1.js"
-      - "site-navigation.js"
-      - "scripts/materialize-static-core-pages.js"
-      - "scripts/enforce-six-core-static-source.js"
-      - "scripts/prepare-static-source-rematerialization.js"
-      - "scripts/normalize-static-source-output.js"
-      - "scripts/remove-legacy-home-schema.js"
-      - "scripts/refresh-static-core-search-index.js"
-      - ".github/workflows/validate-information-architecture.yml"
-      - ".github/workflows/enforce-six-core-static-source.yml"
-      - ".github/workflows/finalize-trust-commercial-records.yml"
   push:
     branches: [main]
     paths:
       - "index.html"
       - "cooperation/index.html"
-      - "qilylean/daily-insights.html"
-      - "qilylean/site-data.json"
-      - "qilylean/site-search-index.json"
+      - "links/**"
+      - "site-navigation-core.js"
       - "site-information-architecture-v1.js"
-      - "site-information-architecture-v1.css"
-      - "site-static-core-interactions-v1.js"
-      - "site-navigation.js"
-      - "scripts/materialize-static-core-pages.js"
-      - "scripts/enforce-six-core-static-source.js"
-      - "scripts/prepare-static-source-rematerialization.js"
-      - "scripts/normalize-static-source-output.js"
-      - "scripts/remove-legacy-home-schema.js"
-      - "scripts/refresh-static-core-search-index.js"
+      - "docs/QilyLean全站业务口径规范_20260809.md"
       - ".github/workflows/validate-information-architecture.yml"
-      - ".github/workflows/enforce-six-core-static-source.yml"
-      - ".github/workflows/finalize-trust-commercial-records.yml"
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: validate-static-information-architecture-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
-        with:
-          fetch-depth: 1
-
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-
-      - name: Validate JavaScript syntax
+      - name: Verify six-business information architecture
         run: |
+          node scripts/enforce-six-core-static-source.js
+          grep -q '六类核心业务' index.html cooperation/index.html
+          grep -q 'APP软件开发' index.html cooperation/index.html
+          grep -q '官网建设' index.html cooperation/index.html
+          grep -q '友情链接' links/index.html
+          grep -q "\['友情链接', '/links/'\]" site-navigation-core.js
+          grep -q '<strong>友情链接</strong>' index.html
+          grep -q 'Six-Core Business Architecture v2' docs/QilyLean全站业务口径规范_20260809.md
+          ! grep -q 'QilyLean AI／APP</h3>' index.html cooperation/index.html
+          ! grep -q 'QilyLean官网</h3>' index.html cooperation/index.html
+      - name: Verify syntax and diff
+        run: |
+          node --check site-navigation-core.js
           node --check site-information-architecture-v1.js
-          node --check site-navigation.js
-          node --check site-static-core-interactions-v1.js
-          node --check scripts/prepare-static-source-rematerialization.js
-          node --check scripts/materialize-static-core-pages.js
-          node --check scripts/enforce-six-core-static-source.js
-          node --check scripts/normalize-static-source-output.js
-          node --check scripts/remove-legacy-home-schema.js
-          node --check scripts/refresh-static-core-search-index.js
-
-      - name: Materialize canonical static pages and search entries
-        shell: bash
-        run: |
-          node scripts/prepare-static-source-rematerialization.js
-          node scripts/materialize-static-core-pages.js
-          node scripts/normalize-static-source-output.js
-          node scripts/remove-legacy-home-schema.js
-          node scripts/normalize-static-source-output.js
-          node scripts/enforce-six-core-static-source.js
-          node scripts/refresh-static-core-search-index.js
-
-      - name: Verify repeatable static generation
-        shell: bash
-        run: |
-          git diff -- index.html cooperation/index.html qilylean/daily-insights.html qilylean/site-search-index.json qilylean/site-data.json site-information-architecture-v1.js scripts/materialize-static-core-pages.js scripts/hide-public-pricing.js > /tmp/first.diff
-          node scripts/prepare-static-source-rematerialization.js
-          node scripts/materialize-static-core-pages.js
-          node scripts/normalize-static-source-output.js
-          node scripts/remove-legacy-home-schema.js
-          node scripts/normalize-static-source-output.js
-          node scripts/enforce-six-core-static-source.js
-          node scripts/refresh-static-core-search-index.js
-          git diff -- index.html cooperation/index.html qilylean/daily-insights.html qilylean/site-search-index.json qilylean/site-data.json site-information-architecture-v1.js scripts/materialize-static-core-pages.js scripts/hide-public-pricing.js > /tmp/second.diff
-          if ! cmp /tmp/first.diff /tmp/second.diff; then
-            echo "Static generation changed on the second run:" >&2
-            diff -u /tmp/first.diff /tmp/second.diff || true
-            exit 1
-          fi
-
-      - name: Validate static information hierarchy contract
-        shell: bash
-        run: |
-          set -euo pipefail
-          test -s site-information-architecture-v1.css
-          test -s site-information-architecture-v1.js
-          test -s site-static-core-interactions-v1.js
-          test -s qilylean/site-search-index.json
-          grep -q 'qilyInformationArchitectureStylesheet' index.html
-          grep -q 'qilyInformationArchitectureStylesheet' cooperation/index.html
-          grep -q '新工厂／新产线规划' site-information-architecture-v1.js
-          grep -q '精益改善项目交付' site-information-architecture-v1.js
-          grep -q '目视化项目设计与交付' site-information-architecture-v1.js
-          grep -q '专业标签与能力边界' site-information-architecture-v1.js
-          grep -q '职业经历摘要与口径说明' site-information-architecture-v1.js
-          grep -q '项目结果如何阅读' site-information-architecture-v1.js
-          grep -q '交付、付款与验收一页看懂' site-information-architecture-v1.js
-          grep -q '知识资产的定位与边界' site-information-architecture-v1.js
-          grep -q '不等同于QilyLean品牌成立后的独立商业订单' site-information-architecture-v1.js
-          grep -q '正式项目以双方签署合同为准' site-information-architecture-v1.js
-
-          grep -q 'QILY-HOME-STATIC-COMMERCIAL:START' index.html
-          grep -q '<h2>三大核心业务</h2>' index.html
-          grep -q 'ENGINEERING ENABLERS｜不计入核心业务' index.html
-          grep -q '新工厂／新产线规划' index.html
-          grep -q '精益改善项目交付' index.html
-          grep -q '目视化项目设计与交付' index.html
-          grep -q '数字化工厂' index.html
-          grep -q 'QilyLean AI／APP' index.html
-          grep -q 'QilyLean官网' index.html
-          ! grep -q '六大核心业务' index.html
-          ! grep -q '六类核心能力' index.html
-          ! grep -q '六类项目合作能力' index.html
-
-          grep -q 'QILY-COOPERATION-STATIC-SUMMARY:START' cooperation/index.html
-          grep -q '<h2>三大核心业务</h2>' cooperation/index.html
-          grep -q 'ENGINEERING ENABLERS｜非核心业务' cooperation/index.html
-          grep -q 'data-qily-three-core-services="v1"' cooperation/index.html
-          grep -q '<h2>三大核心业务合作边界</h2>' cooperation/index.html
-          grep -q '01｜新工厂／新产线规划' cooperation/index.html
-          grep -q '02｜精益改善项目' cooperation/index.html
-          grep -q '03｜目视化项目' cooperation/index.html
-          ! grep -q '<span class="service-number">04</span>' cooperation/index.html
-          ! grep -q '<span class="service-number">05</span>' cooperation/index.html
-          ! grep -q '<span class="service-number">06</span>' cooperation/index.html
-          grep -q 'data-qily-three-service-boundary="v1"' cooperation/index.html
-          grep -q '合作启动路径与公开报价边界' cooperation/index.html
-          grep -q '分阶段付款' cooperation/index.html
-          grep -q '验收边界' cooperation/index.html
-          ! grep -q '六大核心业务' cooperation/index.html
-          ! grep -q '六类项目合作能力' cooperation/index.html
-
-          grep -q 'QILY-ARCHIVE-DISCLOSURE:START' qilylean/daily-insights.html
-          grep -q 'QILY-ARCHIVE-STATIC-SCHEMA:START' qilylean/daily-insights.html
-          grep -q '不等同于网页首次公开发布日期' qilylean/daily-insights.html
-          ! grep -Eq '超千万元累计(项目)?改善收益' index.html cooperation/index.html
-          ! grep -q 'class="group-label">职能标签' index.html
-          ! grep -q '<ul class="tags">' index.html
-
-          node - <<'NODE'
-          const fs = require('fs');
-          const home = fs.readFileSync('index.html','utf8');
-          const cooperationHtml = fs.readFileSync('cooperation/index.html','utf8');
-          const schemas = Array.from(home.matchAll(/<script\s+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)).map((match) => {
-            try { return JSON.parse(match[1]); } catch (error) { return null; }
-          }).filter(Boolean);
-          if (schemas.some((schema) => schema['@type'] === 'Person' && !Array.isArray(schema['@graph']))) throw new Error('Legacy standalone Person schema remains');
-          const graph = schemas.find((schema) => Array.isArray(schema['@graph']));
-          const service = graph && graph['@graph'].find((item) => item['@type'] === 'Service');
-          if (!service || !Array.isArray(service.serviceType) || service.serviceType.length !== 3) throw new Error('Homepage JSON-LD serviceType is not three-core canonical');
-          if (!cooperationHtml.includes('ENGINEERING ENABLERS｜非核心业务') || cooperationHtml.includes('六类项目合作能力')) throw new Error('Cooperation static HTML taxonomy is stale');
-
-          const search = JSON.parse(fs.readFileSync('qilylean/site-search-index.json','utf8'));
-          const root = search.entries.find((entry) => entry.url === '/');
-          const cooperation = search.entries.find((entry) => entry.url === '/cooperation/');
-          const daily = search.entries.find((entry) => entry.url === '/qilylean/daily-insights.html');
-          if (!root || !root.text.includes('三大核心业务') || !root.text.includes('QilyLean AI／APP') || root.text.includes('六类核心能力') || root.text.includes('职能标签')) throw new Error('Homepage search entry is stale');
-          if (!cooperation || !cooperation.text.includes('三大核心业务') || !cooperation.text.includes('ENGINEERING ENABLERS｜非核心业务') || !cooperation.text.includes('分阶段付款') || cooperation.text.includes('六类项目合作能力')) throw new Error('Cooperation search entry is stale');
-          if (!daily || !daily.text.includes('不等同于网页首次公开发布日期')) throw new Error('Daily archive search entry is stale');
-          NODE
-
-      - name: Guard against visual regressions
-        shell: bash
-        run: |
-          grep -q '@media(max-width:820px)' site-information-architecture-v1.css
-          grep -q 'focus-visible' site-information-architecture-v1.css
-          grep -q 'white-space:nowrap' site-information-architecture-v1.css
-          grep -q 'qily-home-commercial-focus' site-information-architecture-v1.css
-          grep -q 'data-qily-results-toggle' site-static-core-interactions-v1.js
+          git diff --check

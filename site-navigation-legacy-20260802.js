@@ -20,7 +20,7 @@
   if (window.__qilyLeanSiteNavigationLoaderV4) return;
   window.__qilyLeanSiteNavigationLoaderV4 = true;
 
-  var CORE_SRC = '/site-navigation-core.js?v=20260817-atomic-first-paint-v18';
+  var CORE_SRC = '/site-navigation-core.js?v=20260815-performance-v16';
   var LINKS_PATH = '/links/';
   var ONBOARDING_PATH = '/links/onboarding/';
   var PRICING_ACCESS_KEY = 'qily_pricing_access_v1';
@@ -95,6 +95,24 @@
     { code: 'FACTORY｜全厂设计', title: '全厂目视化标准设计', price: '¥128,000起', description: '统一VI、颜色语义、版式、尺寸、材料、安装定位、清单预算和分区实施标准。', featured: true },
     { code: 'DELIVERY｜设计交付', title: '全厂目视化项目设计与交付', price: '¥250,000起', description: '包含诊断、设计、打样、供应商协同、施工校核、整改验收及维护标准；制作材料按清单核价。' },
     { code: 'MAINTENANCE｜持续维护', title: '年度目视化维护与迭代', price: '¥68,000起', unit: '／年', description: '依据现场变化、更新频次、区域数量和稽核辅导范围形成年度维护计划。' }
+  ];
+
+  var digitalPricing = [
+    { code: 'BLUEPRINT｜数字化蓝图', title: '数字化工厂规划与需求定义', price: '按范围独立核价', description: '围绕ERP／MES／APS、设备数据、生产透明化与管理看板，先完成业务流程、主数据、系统边界和实施路线定义。', basis: '核价依据：业务流程范围、系统模块、主数据治理深度、接口数量、现场调研、Pilot及上线验收责任。' },
+    { code: 'DATA｜数据治理与看板', title: '主数据治理／生产看板专项', price: '按范围独立核价', description: '围绕BOM、工艺、标准工时、产能、设备、质量、库存等数据口径及管理看板形成专项交付。', basis: '核价依据：数据对象数量、现状质量、清洗与映射工作量、指标口径、看板数量及验证周期。' },
+    { code: 'IMPLEMENTATION｜实施协同', title: '数字化系统实施协同与Pilot', price: '按范围独立核价', description: '以业务方角色参与需求澄清、接口确认、测试、Pilot、上线验证和阶段验收；底层软件产品研发由相应厂商负责。', basis: '核价依据：实施周期、驻场投入、系统接口、测试轮次、供应商协同、上线范围及验收责任。' }
+  ];
+
+  var appPricing = [
+    { code: 'MVP｜原型验证', title: 'APP原型／MVP开发', price: '按范围独立核价', description: '从明确使用场景开始，完成需求梳理、交互原型、关键流程和最小可运行版本验证。', basis: '核价依据：平台数量、页面与流程复杂度、数据来源、权限、通知、离线能力和原型迭代轮次。' },
+    { code: 'RELEASE｜正式版本', title: 'APP正式版开发与发布资料', price: '按范围独立核价', description: '在已确认需求基础上完成正式版本、测试、打包、发布资料、使用说明与验收记录。', basis: '核价依据：Android／iOS／Web范围、功能模块、第三方接口、测试矩阵、发布材料及审核配合工作量。' },
+    { code: 'ITERATION｜持续迭代', title: '版本迭代与使用支持', price: '按范围独立核价', description: '针对已交付版本进行缺陷修复、功能迭代、兼容适配和使用支持，按版本范围独立确认。', basis: '核价依据：迭代周期、需求数量、兼容范围、历史代码状态、测试回归及支持边界。' }
+  ];
+
+  var websitePricing = [
+    { code: 'ARCHITECTURE｜策划', title: '品牌定位与官网信息架构', price: '按范围独立核价', description: '围绕目标客户、核心业务、项目证据、内容层级和咨询转化建立网站信息架构与页面策略。', basis: '核价依据：页面规模、内容基础、品牌梳理深度、证据资产、SEO结构和交互复杂度。' },
+    { code: 'BUILD｜建设', title: '响应式官网建设与部署', price: '按范围独立核价', description: '完成页面开发、响应式适配、基础SEO、表单／邮箱／分享入口、部署和上线检查。', basis: '核价依据：页面与模板数量、功能模块、动效、表单、结构化数据、部署环境及测试范围。' },
+    { code: 'OPERATIONS｜运维', title: '内容迭代与持续运维', price: '按范围独立核价', description: '围绕内容更新、案例沉淀、SEO维护、性能、链接与版本治理形成持续运维机制。', basis: '核价依据：更新频率、内容数量、功能迭代、监测范围、第三方服务与响应时效。' }
   ];
 
   function pricingGrid(items) {
@@ -224,13 +242,17 @@
     ladder.dataset.qilyPublicPricingV5 = '1';
     ladder.className = 'price-ladder qily-pricing-overview';
     ladder.innerHTML = [
-      '<div class="qily-pricing-family"><strong>三大核心业务</strong><span>仅覆盖01–03；最终仍以范围、投入、交付物和验收责任核价。</span></div>',
+      '<div class="qily-pricing-family"><strong>A｜三类核心项目交付</strong><span>01–03已形成参考价；最终仍以范围、投入、交付物和验收责任核价。</span></div>',
       '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>01｜新工厂／车间布局规划</h3><p>以实战项目基准为基础，按规划深度与责任边界分层核价。</p></div>', pricingGrid(factoryPricing), '</section>',
       '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>02｜精益生产项目交付</h3><p>不按培训天数售卖，以基线、Pilot、实绩验证、标准固化和复制成果定义项目。</p></div>', pricingGrid(leanPricing), '</section>',
-      '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>03｜目视化项目设计与交付</h3><p>区分咨询设计费与制作施工费，按区域、图纸、材料清单、施工协同和验收责任核价。</p></div>', pricingGrid(visualPricing), '</section>'
+      '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>03｜目视化项目设计与交付</h3><p>区分咨询设计费与制作施工费，按区域、图纸、材料清单、施工协同和验收责任核价。</p></div>', pricingGrid(visualPricing), '</section>',
+      '<div class="qily-pricing-family"><strong>B｜三项数智化产品与技术能力</strong><span>04–06不擅自设置脱离需求的统一金额，按真实范围独立核价。</span></div>',
+      '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>04｜数字化工厂</h3><p>以流程、数据和系统边界为核价基础，区分蓝图、数据治理、系统实施协同与Pilot。</p></div>', pricingGrid(digitalPricing), '</section>',
+      '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>05｜APP软件开发</h3><p>以使用场景、平台、功能、数据、测试与发布边界核价，不用一句“做个APP”给出失真的统一价格。</p></div>', pricingGrid(appPricing), '</section>',
+      '<section class="qily-pricing-group"><div class="qily-pricing-group-head"><h3>06｜官网建设</h3><p>以信息架构、页面规模、内容基础、功能、SEO、部署与持续运维责任核价。</p></div>', pricingGrid(websitePricing), '</section>'
     ].join('');
     note.hidden = false;
-    note.innerHTML = '<strong>统一报价说明：</strong>本模块只覆盖三大核心业务。数字化工厂按具体制造项目作为工程增强能力嵌入；QilyLean AI／APP与官网属于自主数字作品和技术实证，不在此模块作为第四、第五、第六项标准业务报价。¥6,800起＋差旅仅对应双方约定范围内的小范围现场诊断与概念级方案构思，不代表任一完整项目总价。';
+    note.innerHTML = '<strong>统一报价说明：</strong>本模块覆盖全部六类项目合作能力。01–03保留已建立的价格参考；04–06因功能、接口、页面／平台规模和交付责任差异较大，当前采用“按范围独立核价”，不编造脱离需求的统一公网金额。¥6,800起＋差旅仅对应双方约定范围内的小范围现场诊断与概念级方案构思，不代表任一完整项目总价。最终费用依据项目范围、技术复杂度、数据基础、现场／开发投入、交付深度、修改与测试轮次、实施周期和验收责任综合评估；制作、施工、设备、软件许可、云资源、第三方接口、检测、报审及其他外部费用按合同边界另计。';
   }
 
   function publishCooperationPricing() {
@@ -246,10 +268,10 @@
     ensurePricingStyles();
     var title = heading.querySelector('h2');
     var lead = heading.querySelector('p');
-    if (title) title.textContent = '三大核心业务报价参考';
+    if (title) title.textContent = '六类项目合作能力报价参考';
     if (lead) lead.textContent = pricingUnlocked()
-      ? '01–03展示三大核心业务的价格参考；最终以正式范围、交付物和验收责任确认报价。'
-      : '三大核心业务报价方案已纳入统一访问验证；未授权访客无法查看具体金额及核价明细。';
+      ? '01–03展示已建立的价格参考；04–06按真实需求范围独立核价。六类能力均以正式范围、交付物和验收责任确认最终报价。'
+      : '六类项目合作能力报价方案已纳入统一访问验证；未授权访客无法查看具体金额及核价明细。';
 
     if (pricingUnlocked()) {
       if (ladder.dataset.qilyPublicPricingV5 !== '1') renderCooperationPrices(ladder, note);
@@ -260,26 +282,26 @@
     if (ladder.dataset.qilyPricingGate !== '1') {
       ladder.dataset.qilyPricingGate = '1';
       ladder.className = 'price-ladder qily-pricing-overview';
-      ladder.innerHTML = pricingGateMarkup('三大核心业务报价方案');
+      ladder.innerHTML = pricingGateMarkup('六类项目合作能力报价方案');
     }
     bindPricingGate(ladder, function () {
       delete ladder.dataset.qilyPricingGate;
       delete ladder.dataset.qilyPublicPricingV4;
       delete ladder.dataset.qilyPublicPricingV5;
       renderCooperationPrices(ladder, note);
-      if (lead) lead.textContent = '01–03展示三大核心业务的价格参考；最终以正式范围、交付物和验收责任确认报价。';
+      if (lead) lead.textContent = '01–03展示已建立的价格参考；04–06按真实需求范围独立核价。六类能力均以正式范围、交付物和验收责任确认最终报价。';
     });
   }
 
   function detailPricingConfig(path) {
     if (path === '/cooperation/factory-planning/') {
-      return { title: '新工厂／车间布局报价参考', lead: '以最低启动价和面积核价取高值，规划深度越高，承担的实施与验收责任越大。', items: factoryPricing, note: '面积口径：1亩≈666.7㎡。概念规划约1.2～1.8万元/亩，深化规划约2.0～3.0万元/亩，整体规划与协同实施约3.0～5.0万元/亩。' };
+      return { title: '新工厂／车间布局公开价格参考', lead: '以最低启动价和面积核价取高值，规划深度越高，承担的实施与验收责任越大。', items: factoryPricing, note: '面积口径：1亩≈666.7㎡。概念规划约1.2～1.8万元/亩，深化规划约2.0～3.0万元/亩，整体规划与协同实施约3.0～5.0万元/亩。' };
     }
     if (path === '/cooperation/lean-improvement/') {
-      return { title: '精益生产项目报价参考', lead: '以项目基线、改善范围、Pilot数量、驻场投入、数据验证和标准固化责任综合核价。', items: leanPricing, note: '专项价格不等同于培训费。客户增加产品族、产线、区域、驻场天数或验收指标时，应按需求变更追加费用。' };
+      return { title: '精益生产项目公开价格参考', lead: '以项目基线、改善范围、Pilot数量、驻场投入、数据验证和标准固化责任综合核价。', items: leanPricing, note: '专项价格不等同于培训费。客户增加产品族、产线、区域、驻场天数或验收指标时，应按需求变更追加费用。' };
     }
     if (path === '/cooperation/visual-management/') {
-      return { title: '目视化项目报价参考', lead: '咨询设计费与制作施工费分开核算；全厂项目依据区域数量、图纸清单、材料工艺和施工协同责任报价。', items: visualPricing, note: '参考价为设计与项目管理起步口径。标识制作、材料、运输、安装、高空作业、地坪施工及第三方费用依据工程量清单另计。' };
+      return { title: '目视化项目公开价格参考', lead: '咨询设计费与制作施工费分开核算；全厂项目依据区域数量、图纸清单、材料工艺和施工协同责任报价。', items: visualPricing, note: '公开价为设计与项目管理起步口径。标识制作、材料、运输、安装、高空作业、地坪施工及第三方费用依据工程量清单另计。' };
     }
     return null;
   }

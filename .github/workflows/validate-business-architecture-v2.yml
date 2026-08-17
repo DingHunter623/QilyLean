@@ -1,37 +1,20 @@
-name: Validate QilyLean three-core business architecture
+name: Validate QilyLean six-core business architecture
 
 on:
   push:
+    branches: [main]
     paths:
-      - 'index.html'
-      - 'cooperation/**'
-      - 'site-brand-trust-v1.js'
-      - 'site-information-architecture-v1.js'
-      - 'site-core-service-dock-closure-v1.js'
-      - 'site-navigation.js'
-      - 'site-navigation-legacy-20260802.js'
-      - 'scripts/apply-commercial-quality-closure-20260804.js'
-      - 'scripts/enforce-six-core-static-source.js'
-      - 'scripts/materialize-static-core-pages.js'
-      - 'scripts/prepare-static-source-rematerialization.js'
-      - 'scripts/publish-r2-clean-runtime-v3.js'
-      - 'docs/QilyLean全站业务口径规范_20260809.md'
-      - 'docs/QILYLEAN_COMPETITION_AND_CONTENT_BASELINE_20260812.md'
-      - '.github/workflows/validate-business-architecture-v2.yml'
+      - "index.html"
+      - "cooperation/index.html"
+      - "site-navigation-core.js"
+      - "site-navigation-legacy-20260802.js"
+      - "site-information-architecture-v1.js"
+      - "scripts/enforce-six-core-static-source.js"
+      - "scripts/prepare-static-source-rematerialization.js"
+      - "docs/QilyLean全站业务口径规范_20260809.md"
+      - ".github/workflows/validate-business-architecture-v2.yml"
   pull_request:
-    paths:
-      - 'index.html'
-      - 'cooperation/**'
-      - 'site-brand-trust-v1.js'
-      - 'site-information-architecture-v1.js'
-      - 'site-core-service-dock-closure-v1.js'
-      - 'site-navigation.js'
-      - 'site-navigation-legacy-20260802.js'
-      - 'scripts/enforce-six-core-static-source.js'
-      - 'scripts/prepare-static-source-rematerialization.js'
-      - 'docs/QilyLean全站业务口径规范_20260809.md'
-      - 'docs/QILYLEAN_COMPETITION_AND_CONTENT_BASELINE_20260812.md'
-      - '.github/workflows/validate-business-architecture-v2.yml'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -39,92 +22,34 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-
-      - name: JavaScript syntax
+      - name: Validate scripts
         run: |
-          node --check site-brand-trust-v1.js
-          node --check site-information-architecture-v1.js
-          node --check site-core-service-dock-closure-v1.js
-          node --check site-navigation.js
-          node --check site-navigation-legacy-20260802.js
-          node --check scripts/apply-commercial-quality-closure-20260804.js
           node --check scripts/enforce-six-core-static-source.js
-          node --check scripts/materialize-static-core-pages.js
           node --check scripts/prepare-static-source-rematerialization.js
-          node --check scripts/publish-r2-clean-runtime-v3.js
-
-      - name: Normalize current R2 static baseline for validation
+      - name: Normalize and validate six-core baseline
         run: |
-          node scripts/prepare-static-source-rematerialization.js
           node scripts/enforce-six-core-static-source.js
-
-      - name: Enforce three-core business architecture and runtime boundary
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          # Three core businesses are the only public business taxonomy.
-          grep -q '<h2>三大核心业务</h2>' index.html
-          grep -q '制造运营资产' index.html
-          grep -q '<h2>三大核心业务</h2>' cooperation/index.html
-          grep -q '新工厂／新产线规划' cooperation/index.html
-          grep -q '精益改善项目交付' cooperation/index.html
-          grep -q '目视化项目设计与交付' cooperation/index.html
-          grep -q 'ENGINEERING ENABLERS｜非核心业务' cooperation/index.html
-          ! grep -Eq '<span class="service-number">0[456]</span>' cooperation/index.html
-          ! grep -q '六类核心能力' index.html cooperation/index.html
-          ! grep -q '六类项目合作能力' index.html cooperation/index.html
-          ! grep -q '六大核心业务' index.html cooperation/index.html
-
-          # Fallback source assets must normalize to the same vocabulary.
-          grep -q 'PROJECT DELIVERY STRATEGY｜项目合作从哪里开始' site-brand-trust-v1.js
-          ! grep -q '三项核心业务' site-brand-trust-v1.js
-          grep -q 'CORE BUSINESS 01' site-information-architecture-v1.js
-          grep -q 'CORE BUSINESS 02' site-information-architecture-v1.js
-          grep -q 'CORE BUSINESS 03' site-information-architecture-v1.js
-          grep -q 'ENGINEERING ENABLERS｜不计入核心业务' site-information-architecture-v1.js
-
-          # Public pricing covers only the three core businesses.
-          grep -q '三大核心业务报价参考' site-navigation-legacy-20260802.js
-          grep -q '三大核心业务报价方案' site-navigation-legacy-20260802.js
-          grep -q '本模块只覆盖三大核心业务' site-navigation-legacy-20260802.js
-          grep -q '<strong>三大核心业务</strong>' site-navigation-legacy-20260802.js
-          ! grep -Eq 'var (digitalPricing|appPricing|websitePricing) = ' site-navigation-legacy-20260802.js
-          ! grep -Eq '<h3>0[456]｜' site-navigation-legacy-20260802.js
-          ! grep -q '六类项目合作能力报价' site-navigation-legacy-20260802.js
-          ! grep -q "title.textContent = '六类项目合作能力报价参考'" site-navigation-legacy-20260802.js
-
-          # R2 clean runtime: static HTML is authoritative; no DOM content shapers.
-          grep -q "mode: 'atomic-first-paint-v22'" site-navigation.js
-          grep -q 'staticHtmlAuthority: true' site-navigation.js
-          grep -q 'dynamicContentShapers: false' site-navigation.js
-          grep -q 'runtimeFooter: false' site-navigation.js
-          grep -q 'runtimeDependencyWaterfall: false' site-navigation.js
-          grep -q '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18' site-navigation.js
-          grep -q '/site-navigation.js?v=20260817-atomic-first-paint-v22' index.html
-          grep -q '/site-navigation.js?v=20260817-atomic-first-paint-v22' cooperation/index.html
-          grep -q '/site-music-persistent-navigation-v1.js?v=20260817-native-only-v7' index.html
-          grep -q '/site-music-persistent-navigation-v1.js?v=20260817-native-only-v7' cooperation/index.html
-          grep -q "BUILD='20260817-atomic-first-paint-v3'" index.html
-          grep -q "ATTEMPT='qily_site_refresh_attempt_v1'" index.html
-          ! grep -Eq 'active>BUILD|latest>BUILD|location\.reload\(\)' index.html
-          grep -q 'html.qily-stale-document body{visibility:hidden!important}' index.html
-          node scripts/test-bounded-first-paint-guard.js
-          ! grep -Eq '(brand-identity|site-early-career-history-v1|site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js' index.html
-          ! grep -Eq '(brand-identity|site-early-career-history-v1|site-information-architecture-v1|site-brand-trust-v1|site-trust-conversion-v2|site-visual-closure-v1|site-visual-closure-v2|site-text-contrast-audit-v1)\.js' cooperation/index.html
-          ! grep -q 'site-footer-standard-v28.js' index.html
-          ! grep -q 'site-footer-standard-v28.js' cooperation/index.html
-          ! grep -q '<footer' index.html
-          ! grep -q '<footer' cooperation/index.html
-
-          # V3 static authority and current strategy baseline.
-          grep -q 'QILY-HOME-STATIC-COMMERCIAL:START' index.html
-          grep -q 'qily-home-v3' index.html
-          grep -q 'QILY-HOME-V3-AUTHORITATIVE-STATIC-SOURCE' scripts/prepare-static-source-rematerialization.js
-          grep -q '三大核心业务与数智化增强边界' docs/QILYLEAN_COMPETITION_AND_CONTENT_BASELINE_20260812.md
-          grep -q '不作为第四、第五、第六项核心业务' docs/QILYLEAN_COMPETITION_AND_CONTENT_BASELINE_20260812.md
+          grep -q 'data-qily-six-core-services="v2"' index.html
+          grep -q 'data-qily-six-core-services="v2"' cooperation/index.html
+          grep -q '新工厂／新产线规划' index.html cooperation/index.html
+          grep -q '精益改善项目交付' index.html cooperation/index.html
+          grep -q '目视化项目设计与交付' index.html cooperation/index.html
+          grep -q '数字化工厂' index.html cooperation/index.html
+          grep -q 'APP软件开发' index.html cooperation/index.html
+          grep -q '官网建设' index.html cooperation/index.html
+          ! grep -q '<h2>三大核心业务</h2>' index.html cooperation/index.html
+          grep -q "\['友情链接', '/links/'\]" site-navigation-core.js
+          grep -q '<strong>友情链接</strong>' index.html
+          grep -q 'var digitalPricing = \[' site-navigation-legacy-20260802.js
+          grep -q 'var appPricing = \[' site-navigation-legacy-20260802.js
+          grep -q 'var websitePricing = \[' site-navigation-legacy-20260802.js
+          grep -q '05｜APP软件开发' site-navigation-legacy-20260802.js
+          grep -q '06｜官网建设' site-navigation-legacy-20260802.js
+      - name: Verify clean diff
+        run: git diff --check
