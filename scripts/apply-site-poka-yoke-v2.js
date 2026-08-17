@@ -73,7 +73,7 @@ function verifyDockMaterializer() {
 
   const serviceRuntime=read('site-core-service-dock-closure-v1.js');
   assert(serviceRuntime.includes('__qilyCoreServiceDockClosureV7'),'cooperation lightweight runtime v7 missing');
-  assert(serviceRuntime.includes('分享</span><span class="qily-share-label-line qily-share-label-url">官方网址'),'cooperation dock final official-url markup missing');
+  assert(serviceRuntime.includes('分享</span><span class="qily-share-label-line qily-share-label-url">官方网址'),'cooperation runtime final official-url markup missing');
   assert(!serviceRuntime.includes("share:{html:'分享<br>官网'"),'cooperation runtime old share-site label returned');
   assert(!/new\s+MutationObserver|\.observe\(d\.documentElement/.test(serviceRuntime),'cooperation runtime heavy document observer returned');
   assert(!/\[80,260,760\]|addEventListener\(['"]load['"],apply/.test(serviceRuntime),'cooperation runtime delayed first-paint correction returned');
@@ -92,11 +92,24 @@ function verifyPermanentInteractionBaseline() {
   assert(homepage.includes('/site-interaction-continuity-v1.css?v=20260817-continuity-v2'),'homepage interaction cache is not v2');
 }
 
+function verifyFriendLinksAndLayoutBaseline() {
+  const homepage=read('index.html');
+  const links=read('links/index.html');
+  assert(homepage.includes('<a href="/links/"><strong>友情链接</strong>'),'homepage friend-links entry missing');
+  assert(!homepage.includes('<a href="/links/network/"><strong>产业资源协同网络</strong>'),'homepage friend-links entry was renamed again');
+  assert(links.includes('<title>友情链接｜全球科技企业100强官网入口｜QilyLean</title>'),'friend-links page title missing');
+  assert(links.includes('<h1>友情链接｜全球科技企业100强</h1>'),'friend-links page H1 missing');
+  assert(links.includes('aria-label="搜索友情链接"'),'friend-links search identity missing');
+  assert(links.includes('href="/links/network/"'),'industry resource network must remain inside friend-links module');
+  assert(!links.includes('width:min(1360px,100%)'),'friend-links page returned to 1360px content width');
+  assert((links.match(/width:min\(1240px,100%\)/g)||[]).length>=2,'friend-links page 1240px content axis incomplete');
+}
+
 function main() {
   verifyFastNavigationBaseline();
 
   // 历史发布器先运行；R2性能收口；合作页专用轻量运行时物化；dock首帧统一；
-  // 最后必须执行全站交互永久规则，防止任何历史发布器把 hover/active/focus 版本写回旧基线。
+  // 最后依次执行全站交互永久规则与友情链接/版式永久规则，防止历史发布器回写旧状态。
   runNode('scripts/publish-r2-runtime-stability.js');
   runNode('scripts/publish-early-career-history.js');
   runNode('scripts/publish-r2-runtime-stability.js');
@@ -104,13 +117,15 @@ function main() {
   runNode('scripts/publish-core-service-dock-closure.js');
   runNode('scripts/publish-dock-label-polish-v1.js');
   runNode('scripts/enforce-sitewide-interaction-feedback.js');
+  runNode('scripts/enforce-friend-links-and-layout.js');
 
   verifyFastNavigationBaseline();
   verifyCleanRuntime();
   verifyRuntimeBoundary();
   verifyDockMaterializer();
   verifyPermanentInteractionBaseline();
-  process.stdout.write('QilyLean site poka-yoke applied: static HTML is authoritative; interaction feedback v2 is now part of the protected baseline and cannot be rolled back by legacy materializers.\n');
+  verifyFriendLinksAndLayoutBaseline();
+  process.stdout.write('QilyLean site poka-yoke applied: static HTML is authoritative; interaction feedback, friend-links identity and 1240px link-page content axis are protected baselines.\n');
 }
 
 main();
