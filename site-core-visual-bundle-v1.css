@@ -1991,6 +1991,7 @@ html body .qily-global-header>.qily-global-nav a[aria-current="page"]::after{con
 .qily-home-v3 .hero{padding-block:clamp(46px,6vw,82px)!important;}
 .qily-home-v3 .hero-grid{align-items:center!important;}
 .qily-home-v3 .hero h1{max-width:900px;font-size:clamp(40px,5.2vw,74px)!important;}
+.qily-home-v3 .hero h1.qily-home-hero-title>span{display:block!important;white-space:nowrap!important;}
 .qily-home-v3 .hero .lead{font-size:clamp(18px,1.5vw,23px)!important;color:#eef8f6!important;}
 .qily-home-v3 .qily-home-thesis{max-width:900px;margin:18px 0 0;padding-left:16px;border-left:3px solid var(--qily-vi-gold);color:#fff5d8!important;font-size:16px;line-height:1.75;}
 .qily-home-v3 .qily-home-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;}
@@ -2040,6 +2041,7 @@ html body :is(pre,code){font-variant-ligatures:none;}
   .qily-system-axis__step{min-height:58px;padding:9px 10px;}
   .qily-home-v3 .qily-six-grid,.qily-home-v3 .qily-proof-strip{grid-template-columns:1fr;}
   .qily-home-v3 .hero h1{font-size:clamp(34px,10.5vw,48px)!important;}
+  .qily-home-v3 .hero h1.qily-home-hero-title{font-size:clamp(32px,9.6vw,40px)!important;}
   .qily-home-v3 .qily-home-actions a,.qily-home-v3 .qily-section-actions a{width:100%;}
 }
 
