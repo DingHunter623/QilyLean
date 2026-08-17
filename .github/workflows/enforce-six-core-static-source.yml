@@ -7,11 +7,14 @@ on:
       - 'index.html'
       - 'cooperation/index.html'
       - 'links/index.html'
+      - 'qilylean/c919-strategy-hero.png'
       - 'site-navigation-core.js'
       - 'site-navigation-legacy-20260802.js'
       - 'site-ui-consistency-v1.js'
       - 'scripts/enforce-six-core-static-source.js'
       - 'scripts/enforce-six-core-navigation.js'
+      - 'scripts/enforce-c919-home-hero.js'
+      - 'scripts/site-regression-guard-c919-hero.js'
       - 'scripts/normalize-six-capability-pricing-20260809.py'
       - 'docs/QilyLean全站业务口径规范_20260809.md'
       - '.github/workflows/enforce-six-core-static-source.yml'
@@ -36,14 +39,18 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Apply six-core static and navigation baselines
+      - name: Apply six-core static, C919 hero and navigation baselines
         run: |
           node --check scripts/enforce-six-core-static-source.js
           node --check scripts/enforce-six-core-navigation.js
+          node --check scripts/enforce-c919-home-hero.js
+          node --check scripts/site-regression-guard-c919-hero.js
           node scripts/enforce-six-core-static-source.js
+          node scripts/enforce-c919-home-hero.js
           node scripts/enforce-six-core-navigation.js
           python3 scripts/normalize-six-capability-pricing-20260809.py
           node scripts/site-regression-guard-six-core.js
+          node scripts/site-regression-guard-c919-hero.js
           git diff --check
       - name: Commit normalized source when required
         shell: bash
@@ -53,12 +60,12 @@ jobs:
 
           for attempt in 1 2 3; do
             if git diff --quiet; then
-              echo "Six-core baseline already normalized."
+              echo "Six-core + C919 homepage baseline already normalized."
               exit 0
             fi
 
             git add -A
-            git commit -m "全站口径：恢复六类核心业务与友情链接 [skip ci]"
+            git commit -m "全站口径：恢复六类核心业务、C919头号位与友情链接 [skip ci]"
             if git push origin HEAD:main; then
               exit 0
             fi
@@ -72,8 +79,10 @@ jobs:
             git fetch origin main --depth=1
             git reset --hard origin/main
             node scripts/enforce-six-core-static-source.js
+            node scripts/enforce-c919-home-hero.js
             node scripts/enforce-six-core-navigation.js
             python3 scripts/normalize-six-capability-pricing-20260809.py
             node scripts/site-regression-guard-six-core.js
+            node scripts/site-regression-guard-c919-hero.js
             git diff --check
           done
