@@ -7,7 +7,7 @@ const root = path.resolve(__dirname, '..');
 const target = path.join(root, 'index.html');
 let html = fs.readFileSync(target, 'utf8');
 
-const IMAGE = '/qilylean/c919-strategy-hero.png';
+const IMAGE = '/qilylean/c919-strategy-hero-v10.svg';
 const HERO = `<!-- QILY-C919-STRATEGY-HERO:START -->
 <section class="qily-c919-flightmap" id="qily-c919-strategy" aria-labelledby="qily-c919-title">
   <div class="qily-c919-shell">
@@ -49,8 +49,8 @@ html = html.replace(styleRe, '');
 if (!/<\/head>/i.test(html)) throw new Error('Homepage </head> not found');
 html = html.replace(/<\/head>/i, `${STYLE}\n</head>`);
 
-const preload = `<link rel="preload" as="image" href="${IMAGE}" type="image/png" fetchpriority="high">`;
-html = html.replace(new RegExp(`<link[^>]+href=["']${IMAGE.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')}["'][^>]*>\\s*`, 'gi'), '');
+const preload = `<link rel="preload" as="image" href="${IMAGE}" type="image/svg+xml" fetchpriority="high">`;
+html = html.replace(/<link[^>]+rel=["']preload["'][^>]+href=["']\/qilylean\/c919-strategy-hero(?:-v\d+)?\.(?:png|svg)["'][^>]*>\s*/gi, '');
 html = html.replace(/(<link rel="canonical"[^>]*>)/i, `$1\n${preload}`);
 
 function setMeta(property, value, attr='property') {
@@ -71,4 +71,4 @@ html = html.replace(/聚焦新工厂／新产线规划、精益改善、目视�
 html = html.replace(/三大核心业务/g, '六类核心业务');
 
 fs.writeFileSync(target, html.endsWith('\n') ? html : html + '\n', 'utf8');
-console.log('C919 homepage flight map enforced: left wing 1-3 manufacturing businesses, right wing 4-6 digital businesses, widened non-overlapping summary locked.');
+console.log('C919 homepage flight map enforced: semantic left wing 1-3/right wing 4-6; visual stacks swapped for perspective; official QilyLean logo and exact Q icon patches locked in v10 asset.');
