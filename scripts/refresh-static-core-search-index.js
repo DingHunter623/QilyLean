@@ -18,6 +18,7 @@ const targets = [
   { url: '/projects/fuse-improvement/', file: 'projects/fuse-improvement/index.html', kind: '代表项目' },
   { url: '/projects/factory-layout/', file: 'projects/factory-layout/index.html', kind: '代表项目' },
   { url: '/projects/digital-factory/', file: 'projects/digital-factory/index.html', kind: '代表项目' },
+  { url: '/projects/visual-management/', file: 'projects/visual-management/index.html', kind: '代表项目' },
   { url: '/qilylean/daily-insights.html', file: 'qilylean/daily-insights.html', kind: '今日简报目录' }
 ];
 
