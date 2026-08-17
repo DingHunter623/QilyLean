@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1672 941" width="1672" height="941">
+  <image href="/qilylean/c919-strategy-hero.png" x="0" y="0" width="1672" height="941"/>
+  <defs>
+    <clipPath id="c-lh" clipPathUnits="userSpaceOnUse"><rect x="35" y="158" width="289" height="46"/></clipPath>
+    <clipPath id="c-l4" clipPathUnits="userSpaceOnUse"><rect x="30" y="223" width="313" height="70"/></clipPath>
+    <clipPath id="c-l5" clipPathUnits="userSpaceOnUse"><rect x="30" y="319" width="313" height="72"/></clipPath>
+    <clipPath id="c-l6" clipPathUnits="userSpaceOnUse"><rect x="30" y="415" width="313" height="72"/></clipPath>
+    <clipPath id="c-rh" clipPathUnits="userSpaceOnUse"><rect x="1357" y="158" width="277" height="45"/></clipPath>
+    <clipPath id="c-r1" clipPathUnits="userSpaceOnUse"><rect x="1337" y="223" width="313" height="73"/></clipPath>
+    <clipPath id="c-r2" clipPathUnits="userSpaceOnUse"><rect x="1337" y="319" width="313" height="73"/></clipPath>
+    <clipPath id="c-r3" clipPathUnits="userSpaceOnUse"><rect x="1337" y="415" width="313" height="73"/></clipPath>
+  </defs>
+  <g clip-path="url(#c-lh)"><image href="/qilylean/c919-strategy-hero.png" x="0" y="0" width="1672" height="941" transform="matrix(1 0 0 1 -1319 1)"/></g>
+  <g clip-path="url(#c-l4)"><image href="/qilylean/c919-strategy-hero.png" x="0" y="0" width="1672" height="941" transform="matrix(1.05033557 0 0 0.95890411 -1384.802 9.2329)"/></g>
+  <g clip-path="url(#c-l5)"><image href="/qilylean/c919-strategy-hero.png" x="0" y="0" width="1672" height="941" transform="matrix(1.05033557 0 0 0.98630137 -1384.802 4.3699)"/></g>
+  <g clip-path="url(#c-l6)"><image href="/qilylean/c919-strategy-hero.png" x="0" y="0" width="1672" height="941" transform="matrix(1.05033557 0 0 0.98630137 -1384.802 5.6849)"/></g>
+  <g clip-path="url(#c-rh)"><image href="/qilylean/c919-strategy-hero.png" x="0" y="0" width="1672" height="941" transform="matrix(1 0 0 1 1319 1)"/></g>
+  <g clip-path="url(#c-r1)"><image href="/qilylean/c919-strategy-hero.png" x="0" y="0" width="1672" height="941" transform="matrix(1 0 0 1 1317 0)"/></g>
+  <g clip-path="url(#c-r2)"><image href="/qilylean/c919-strategy-hero.png" x="0" y="0" width="1672" height="941" transform="matrix(1 0 0 1 1317 0)"/></g>
+  <g clip-path="url(#c-r3)"><image href="/qilylean/c919-strategy-hero.png" x="0" y="0" width="1672" height="941" transform="matrix(1 0 0 1 1317 0)"/></g>
+  <image href="/qilylean/c919-patch-topleft-v10.webp" x="0" y="0" width="470" height="130"/>
+  <image href="/qilylean/c919-patch-tail-v10.webp" x="1090" y="90" width="205" height="180"/>
+  <image href="/qilylean/c919-patch-bottomq-v10.webp" x="820" y="690" width="165" height="160"/>
+</svg>
