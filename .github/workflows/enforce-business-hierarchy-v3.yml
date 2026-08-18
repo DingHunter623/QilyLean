@@ -9,6 +9,7 @@ on:
       - 'docs/QilyLean全站业务口径规范_20260809.md'
       - 'scripts/enforce-business-hierarchy-v3.js'
       - 'scripts/fix-business-hierarchy-seo-v1.js'
+      - 'scripts/fix-cooperation-enabler-dup-v1.js'
       - 'scripts/bump-public-build-20260818.js'
       - '.github/workflows/enforce-business-hierarchy-v3.yml'
   workflow_dispatch:
@@ -32,13 +33,15 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Normalize hierarchy, SEO and public cache contract
+      - name: Normalize hierarchy, SEO, duplicates and public cache contract
         run: |
           node --check scripts/enforce-business-hierarchy-v3.js
           node --check scripts/fix-business-hierarchy-seo-v1.js
+          node --check scripts/fix-cooperation-enabler-dup-v1.js
           node --check scripts/bump-public-build-20260818.js
           node scripts/enforce-business-hierarchy-v3.js
           node scripts/fix-business-hierarchy-seo-v1.js
+          node scripts/fix-cooperation-enabler-dup-v1.js
           node scripts/bump-public-build-20260818.js
           git diff --check
           grep -q '三大核心业务' index.html cooperation/index.html
@@ -47,17 +50,19 @@ jobs:
           grep -q '"name":"QilyLean三大核心业务"' index.html
           grep -q "BUILD='20260818-business-hierarchy-v3'" index.html cooperation/index.html
           grep -q '/site-navigation.js?v=20260818-business-hierarchy-v3' index.html cooperation/index.html
+          grep -q '/site-visual-readability-v5.css?v=20260818-visual-readability-v5' index.html cooperation/index.html
+          test "$(grep -o 'id=\"engineering-enablers\"' cooperation/index.html | wc -l | tr -d ' ')" = '1'
           ! grep -q '六类核心业务' index.html
           ! grep -q '<h2>六类核心业务</h2>' cooperation/index.html
       - name: Publish normalized source if needed
         shell: bash
         run: |
           if git diff --quiet; then
-            echo 'Business Hierarchy v3 and cache contract already healthy.'
+            echo 'Business Hierarchy v3, V5 readability and duplicate guard already healthy.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'guard: publish three-core hierarchy and expire old public cache [skip ci]'
+          git commit -m 'guard: publish three-core hierarchy, V5 readability and single enabler section [skip ci]'
           git push origin HEAD:main
