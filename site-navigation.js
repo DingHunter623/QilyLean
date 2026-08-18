@@ -1,32 +1,43 @@
-/* QilyLean atomic first-paint navigation runtime v23｜2026-08-18
+/* QilyLean atomic first-paint navigation runtime v24｜2026-08-18
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
  * 性能：普通页面直达 core；仅合作/资源页面按需加载 legacy，避免全站下载报价与资源逻辑。
  * 可视化：中文正文启用 pretty wrap / strict line-break，标题平衡换行；悬浮栏“分享官方网址”固定两行完整显示。
- * V23：统一刷新全站视觉治理样式版本，避免浏览器继续命中旧按钮/字号缓存。
+ * V24：统一刷新交互样式，并把视觉治理层放到最终级联，锁定三主色、字号与反馈一致性。
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV23) return;
-  w.__qilyStaticFirstNavigationV23 = true;
+  if (w.__qilyStaticFirstNavigationV24) return;
+  w.__qilyStaticFirstNavigationV24 = true;
 
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260817-atomic-first-paint-v8';
   var CORE_SRC = '/site-navigation-core.js?v=20260817-atomic-first-paint-v18';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
+  var GOVERNANCE_HREF = '/site-visual-governance-v1.css?v=20260818-v1';
 
   function installVisualGovernanceLink() {
-    var link = d.querySelector('link[href*="/site-interaction-continuity-v1.css"]');
-    if (!link) {
-      link = d.createElement('link');
-      link.id = 'qilyInteractionContinuityV3';
-      link.rel = 'stylesheet';
-      link.href = CONTINUITY_HREF;
-      (d.head || d.documentElement).appendChild(link);
-      return;
+    var continuity = d.querySelector('link[href*="/site-interaction-continuity-v1.css"]');
+    if (!continuity) {
+      continuity = d.createElement('link');
+      continuity.id = 'qilyInteractionContinuityV3';
+      continuity.rel = 'stylesheet';
+      continuity.href = CONTINUITY_HREF;
+      (d.head || d.documentElement).appendChild(continuity);
+    } else if (continuity.getAttribute('href') !== CONTINUITY_HREF) {
+      continuity.id = 'qilyInteractionContinuityV3';
+      continuity.setAttribute('href', CONTINUITY_HREF);
     }
-    if (link.getAttribute('href') !== CONTINUITY_HREF) {
-      link.id = 'qilyInteractionContinuityV3';
-      link.setAttribute('href', CONTINUITY_HREF);
+
+    var governance = d.getElementById('qilyVisualGovernanceV1') || d.querySelector('link[href*="/site-visual-governance-v1.css"]');
+    if (!governance) {
+      governance = d.createElement('link');
+      governance.id = 'qilyVisualGovernanceV1';
+      governance.rel = 'stylesheet';
+      governance.href = GOVERNANCE_HREF;
+      (d.head || d.documentElement).appendChild(governance);
+    } else if (governance.getAttribute('href') !== GOVERNANCE_HREF) {
+      governance.id = 'qilyVisualGovernanceV1';
+      governance.setAttribute('href', GOVERNANCE_HREF);
     }
   }
 
@@ -55,7 +66,7 @@
     var script = d.createElement('script');
     script.src = legacy ? LEGACY_SRC : CORE_SRC;
     script.async = false;
-    script.setAttribute(attr, 'atomic-first-paint-v23');
+    script.setAttribute(attr, 'atomic-first-paint-v24');
     (d.head || d.documentElement).appendChild(script);
   }
 
@@ -105,7 +116,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v23',
+  mode: 'atomic-first-paint-v24',
   staticHtmlAuthority: true,
   atomicFirstPaint: true,
   runtimeDependencyWaterfall: false,
@@ -117,6 +128,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   ordinaryPagesDirectCore: true,
   chineseWrapPolish: true,
   visualGovernanceCacheBust: true,
+  visualGovernanceFinalCascade: true,
   dockOfficialUrlTwoLine: true,
   dockActions: [
     'data-action="home"', 'data-action="top"', 'data-action="back"',
