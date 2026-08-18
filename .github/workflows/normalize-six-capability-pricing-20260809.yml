@@ -1,45 +1,16 @@
-name: Validate QilyLean six-core pricing architecture
+name: Retired six-core pricing validator — manual only
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/normalize-six-capability-pricing-20260809.yml'
-      - 'scripts/normalize-six-capability-pricing-20260809.py'
-      - 'site-navigation-legacy-20260802.js'
-      - 'cooperation/index.html'
-      - 'scripts/enforce-six-core-static-source.js'
-      - 'scripts/enforce-six-core-navigation.js'
-      - 'docs/QilyLean全站业务口径规范_20260809.md'
-  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  validate:
+  retired:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-      - name: Normalize six-core source in workspace
-        run: |
-          node --check scripts/enforce-six-core-static-source.js
-          node --check scripts/enforce-six-core-navigation.js
-          python3 -m py_compile scripts/normalize-six-capability-pricing-20260809.py
-          node scripts/enforce-six-core-static-source.js
-          node scripts/enforce-six-core-navigation.js
-      - name: Validate six-core pricing architecture
-        run: |
-          python3 scripts/normalize-six-capability-pricing-20260809.py
-          grep -q 'var digitalPricing = \[' site-navigation-legacy-20260802.js
-          grep -q 'var appPricing = \[' site-navigation-legacy-20260802.js
-          grep -q 'var websitePricing = \[' site-navigation-legacy-20260802.js
-          grep -q 'APP软件开发' cooperation/index.html
-          grep -q '官网建设' cooperation/index.html
-          ! grep -q '本模块只覆盖三大核心业务' site-navigation-legacy-20260802.js
-          git diff --check
+      - run: |
+          echo "Six-core pricing architecture is no longer the public business hierarchy."
+          echo "Pricing may still cover digital/APP/web capabilities, but they must not be labeled as core business peers."
