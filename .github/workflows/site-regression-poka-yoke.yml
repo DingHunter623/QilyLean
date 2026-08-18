@@ -37,15 +37,7 @@ jobs:
             /.github/workflows/*.yml
             /docs/*.md
 
-      - name: Verify approved C919 v13 artwork
-        shell: bash
-        run: |
-          IMAGE='qilylean/c919-strategy-hero-v13.png'
-          SHA='220e893d9db3dedaa7f4c95e57ef30e8af522c9bfcea0da19f4506f496fc306a'
-          test -f "$IMAGE"
-          echo "$SHA  $IMAGE" | sha256sum -c -
-
-      - name: Apply protected six-core + exact approved C919 baseline and validate
+      - name: Apply protected six-core baseline with C919 homepage temporarily offline
         shell: bash
         run: |
           node scripts/enforce-c919-home-hero.js
@@ -78,15 +70,15 @@ jobs:
             git diff --check
 
             if git diff --quiet; then
-              echo "Protected six-core + exact approved C919 homepage baseline is healthy; no self-heal required."
+              echo "Protected six-core baseline is healthy; C919 homepage model remains intentionally offline."
               exit 0
             fi
 
             git add -A
-            git commit -m "guard: restore six-core, approved C919 v13, operating axis and Friend Links baseline [skip ci]"
+            git commit -m "guard: restore six-core baseline and keep C919 homepage offline [skip ci]"
 
             if git push origin HEAD:main; then
-              echo "Protected six-core + approved C919 v13 homepage baseline automatically restored."
+              echo "Protected baseline restored; C919 homepage model remains offline."
               exit 0
             fi
 
@@ -97,8 +89,4 @@ jobs:
 
             git fetch origin main --depth=1 --filter=blob:none
             git reset --hard origin/main
-            IMAGE='qilylean/c919-strategy-hero-v13.png'
-            SHA='220e893d9db3dedaa7f4c95e57ef30e8af522c9bfcea0da19f4506f496fc306a'
-            test -f "$IMAGE"
-            echo "$SHA  $IMAGE" | sha256sum -c -
           done
