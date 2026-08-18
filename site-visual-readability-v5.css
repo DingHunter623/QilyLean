@@ -1,0 +1,165 @@
+/* QilyLean 全站可视化清晰度 V5｜2026-08-18
+ * 目标：落实“最小号字体统一放大一号、底色与字体高对比、编号清晰可读”。
+ * 本层作为最终级联直接进入所有公开 HTML <head>，不改业务架构与正文口径。
+ */
+
+:root{
+  --qily-v5-green:#0f4b5a;
+  --qily-v5-green-deep:#073c47;
+  --qily-v5-ink:#182420;
+  --qily-v5-copy:#3f5e5d;
+  --qily-v5-gold:#caa15f;
+  --qily-v5-red:#9e4a34;
+  --qily-v5-white:#ffffff;
+  --qily-v5-soft:#f4faf8;
+  --qily-v5-line:#bfd6d2;
+  --qily-v5-small:17px;
+  --qily-v5-small-strong:18px;
+}
+
+/* 01｜最小号文字：统一放大一号并提升对比度。 */
+html body main :is(
+  small,figcaption,.caption,.meta,.fine,.eyebrow,.module-eyebrow,.qily-ia-kicker,
+  .kicker,.section-kicker,.tag,.tag-row li,.project-meta,.article-meta,.moment-count,
+  .gallery-tip,.empty,.project-card-brief,.project-fact small,.module-card>small,
+  .paper-card>small,.career-full-card>small,.qily-system-axis__title,.privacy-note,
+  .service-contract-meta span,.qily-secondary-link span,.qily-ia-secondary-link span
+){
+  font-size:var(--qily-v5-small)!important;
+  line-height:1.62!important;
+  color:var(--qily-v5-copy)!important;
+  -webkit-text-fill-color:var(--qily-v5-copy)!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+
+/* 卡片分类标签属于“最小字号中的重点信息”，再提升一级。 */
+html body main :is(
+  .qily-ia-card>small,
+  .module-card.service-card .service-heading-link>small,
+  .module-card.service-card>small,
+  #engineering-enablers .module-card small,
+  #qily-digital-enablers .qily-ia-card small
+){
+  font-size:var(--qily-v5-small-strong)!important;
+  line-height:1.45!important;
+  color:var(--qily-v5-green)!important;
+  -webkit-text-fill-color:var(--qily-v5-green)!important;
+  font-weight:950!important;
+  letter-spacing:.015em!important;
+  opacity:1!important;
+}
+
+/* 深色表面的小标签维持高亮金色，不被通用深色规则误覆盖。 */
+html body main :is(.hero,.module-hero,.daily-hero,.project-hero,.cooperation-hero,.qily-ia-dark) :is(
+  .eyebrow,.module-eyebrow,.qily-ia-kicker,small
+){
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+}
+
+/* 02｜04/05/06 等编号：白字、深色实底、白内圈、金外圈，并同步放大。 */
+html body main .service-number{
+  display:inline-grid!important;
+  place-items:center!important;
+  width:48px!important;
+  height:48px!important;
+  min-width:48px!important;
+  min-height:48px!important;
+  padding:0!important;
+  border:2px solid var(--qily-v5-white)!important;
+  border-radius:999px!important;
+  color:var(--qily-v5-white)!important;
+  -webkit-text-fill-color:var(--qily-v5-white)!important;
+  background:var(--qily-v5-green-deep)!important;
+  box-shadow:0 0 0 3px var(--qily-v5-gold),0 6px 14px rgba(7,60,71,.24)!important;
+  font-size:18px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+html body main .service-number *{
+  color:var(--qily-v5-white)!important;
+  -webkit-text-fill-color:var(--qily-v5-white)!important;
+}
+
+/* 其它流程/步骤编号也统一放大一级。 */
+html body main :is(.step-number,.step-index,.sequence-number,.process-number,.number-badge,.workflow-number,.timeline-number),
+html body main :is(.process,.process-grid,.steps,.workflow,.workflow-grid,.timeline,.flow-grid) :is(.step,.process-step,.workflow-step,.timeline-step)>b:first-child{
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  min-height:38px!important;
+  color:var(--qily-v5-white)!important;
+  -webkit-text-fill-color:var(--qily-v5-white)!important;
+  background:var(--qily-v5-green-deep)!important;
+  border:2px solid var(--qily-v5-white)!important;
+  box-shadow:0 0 0 2px var(--qily-v5-gold)!important;
+  font-size:16px!important;
+  font-weight:950!important;
+}
+
+/* 03｜卡片底色与正文：白底 + 深色字，不允许浅底浅字。 */
+html body main :is(.qily-ia-card,.module-card.service-card,#engineering-enablers .module-card,#qily-digital-enablers .qily-ia-card){
+  color:var(--qily-v5-ink)!important;
+  background:var(--qily-v5-white)!important;
+  border-color:var(--qily-v5-line)!important;
+}
+html body main :is(.qily-ia-card,.module-card.service-card) :is(h3,h4,strong){
+  color:var(--qily-v5-green)!important;
+  -webkit-text-fill-color:var(--qily-v5-green)!important;
+}
+html body main :is(.qily-ia-card,.module-card.service-card) p,
+html body main :is(.qily-ia-card,.module-card.service-card) li{
+  color:var(--qily-v5-copy)!important;
+  -webkit-text-fill-color:var(--qily-v5-copy)!important;
+  font-size:18px!important;
+  line-height:1.72!important;
+}
+html body main :is(.qily-ia-result,.module-result,.module-note,.career-result,.project-result,.result,.output,.note,.notice,.status-detail,.upload-note){
+  color:#244c4e!important;
+  -webkit-text-fill-color:#244c4e!important;
+  font-size:17.5px!important;
+  line-height:1.7!important;
+  opacity:1!important;
+}
+
+/* 数智化增强区域可以保留浅色分区，但卡片本体必须白底。 */
+html body main :is(#engineering-enablers,#qily-digital-enablers){
+  background:var(--qily-v5-soft)!important;
+}
+html body main :is(#engineering-enablers,#qily-digital-enablers) :is(.module-heading p,.qily-ia-heading p){
+  color:#36585a!important;
+  -webkit-text-fill-color:#36585a!important;
+  font-size:18.5px!important;
+  line-height:1.75!important;
+}
+
+/* 04｜常见辅助信息与列表项再兜底，避免历史 CSS 把字体压回 12–15px。 */
+html body main :is(
+  .qily-ia-boundary,.qily-ia-pill-list li,.qily-ia-delivery-summary span,
+  .scope-list span,.project-card-brief,.project-fact small,.qily-card-link-hint,
+  .qily-evidence-grade-badge span,.qily-evidence-level-panel span,.record,.status-detail
+){
+  font-size:17px!important;
+  line-height:1.62!important;
+  color:#36585a!important;
+  -webkit-text-fill-color:#36585a!important;
+}
+
+/* 05｜移动端不缩回小字号；只调整布局。 */
+@media(max-width:620px){
+  html body main :is(small,figcaption,.caption,.meta,.fine,.eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,.tag,.project-meta,.article-meta){
+    font-size:17px!important;
+  }
+  html body main .service-number{
+    width:46px!important;
+    height:46px!important;
+    min-width:46px!important;
+    min-height:46px!important;
+    font-size:18px!important;
+  }
+}
