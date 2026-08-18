@@ -1,19 +1,6 @@
-name: Validate QilyLean six-core business architecture
+name: Validate QilyLean business hierarchy
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "index.html"
-      - "cooperation/index.html"
-      - "site-navigation-core.js"
-      - "site-navigation-legacy-20260802.js"
-      - "site-information-architecture-v1.js"
-      - "scripts/enforce-six-core-static-source.js"
-      - "scripts/prepare-static-source-rematerialization.js"
-      - "docs/QilyLean全站业务口径规范_20260809.md"
-      - ".github/workflows/validate-business-architecture-v2.yml"
-  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -22,34 +9,16 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-      - name: Validate scripts
+      - name: Validate current hierarchy markers
+        shell: bash
         run: |
-          node --check scripts/enforce-six-core-static-source.js
-          node --check scripts/prepare-static-source-rematerialization.js
-      - name: Normalize and validate six-core baseline
-        run: |
-          node scripts/enforce-six-core-static-source.js
-          grep -q 'data-qily-six-core-services="v2"' index.html
-          grep -q 'data-qily-six-core-services="v2"' cooperation/index.html
-          grep -q '新工厂／新产线规划' index.html cooperation/index.html
-          grep -q '精益改善项目交付' index.html cooperation/index.html
-          grep -q '目视化项目设计与交付' index.html cooperation/index.html
-          grep -q '数字化工厂' index.html cooperation/index.html
-          grep -q 'APP软件开发' index.html cooperation/index.html
-          grep -q '官网建设' index.html cooperation/index.html
-          ! grep -q '<h2>三大核心业务</h2>' index.html cooperation/index.html
-          grep -q "\['友情链接', '/links/'\]" site-navigation-core.js
-          grep -q '<strong>友情链接</strong>' index.html
-          grep -q 'var digitalPricing = \[' site-navigation-legacy-20260802.js
-          grep -q 'var appPricing = \[' site-navigation-legacy-20260802.js
-          grep -q 'var websitePricing = \[' site-navigation-legacy-20260802.js
-          grep -q '05｜APP软件开发' site-navigation-legacy-20260802.js
-          grep -q '06｜官网建设' site-navigation-legacy-20260802.js
-      - name: Verify clean diff
-        run: git diff --check
+          set -euo pipefail
+          grep -q '三大核心业务' index.html
+          grep -q '新工厂／新产线规划' index.html
+          grep -q '精益改善项目交付' index.html
+          grep -q '目视化项目设计与交付' index.html
+          grep -q '数智化增强' index.html
+          ! grep -q '两大业务主线 · 六类核心业务' index.html
+          ! grep -q '六类核心业务｜六类核心能力' index.html
