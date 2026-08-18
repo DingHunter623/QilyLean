@@ -9,6 +9,7 @@ on:
       - 'links/index.html'
       - 'qilylean/c919-strategy-hero-v12.webp.b64'
       - 'qilylean/c919-strategy-hero-v12.webp'
+      - 'qilylean/c919-strategy-hero-v13.png'
       - 'site-navigation-core.js'
       - 'site-navigation-legacy-20260802.js'
       - 'site-ui-consistency-v1.js'
@@ -41,7 +42,19 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Materialize final approved C919 v12 WebP
+      - name: Ensure approved C919 v13 artwork is present
+        shell: bash
+        run: |
+          IMAGE='qilylean/c919-strategy-hero-v13.png'
+          SHA='220e893d9db3dedaa7f4c95e57ef30e8af522c9bfcea0da19f4506f496fc306a'
+          mkdir -p qilylean
+          if [ -f "$IMAGE" ] && echo "$SHA  $IMAGE" | sha256sum -c - >/dev/null 2>&1; then
+            echo 'Approved C919 v13 artwork already present.'
+          else
+            curl -fL --retry 3 --retry-delay 2 -o "$IMAGE" 'https://at.adobe.com/e3Mx32HIwzWLFAUb'
+            echo "$SHA  $IMAGE" | sha256sum -c -
+          fi
+      - name: Materialize legacy final C919 v12 WebP compatibility asset
         shell: bash
         run: bash scripts/materialize-c919-v12.sh
       - name: Apply six-core static, C919 hero and navigation baselines
@@ -65,12 +78,12 @@ jobs:
 
           for attempt in 1 2 3; do
             if git diff --quiet; then
-              echo "Six-core + final C919 v12 homepage baseline already normalized."
+              echo "Six-core + approved C919 v13 homepage baseline already normalized."
               exit 0
             fi
 
             git add -A
-            git commit -m "全站口径：发布C919最终v12头号位与六类核心业务 [skip ci]"
+            git commit -m "全站口径：发布C919 v13头号位与六类核心业务 [skip ci]"
             if git push origin HEAD:main; then
               exit 0
             fi
@@ -83,6 +96,12 @@ jobs:
             echo "main changed concurrently; restart normalization from latest remote."
             git fetch origin main --depth=1
             git reset --hard origin/main
+            IMAGE='qilylean/c919-strategy-hero-v13.png'
+            SHA='220e893d9db3dedaa7f4c95e57ef30e8af522c9bfcea0da19f4506f496fc306a'
+            if [ ! -f "$IMAGE" ] || ! echo "$SHA  $IMAGE" | sha256sum -c - >/dev/null 2>&1; then
+              curl -fL --retry 3 --retry-delay 2 -o "$IMAGE" 'https://at.adobe.com/e3Mx32HIwzWLFAUb'
+              echo "$SHA  $IMAGE" | sha256sum -c -
+            fi
             bash scripts/materialize-c919-v12.sh
             node scripts/enforce-six-core-static-source.js
             node scripts/enforce-c919-home-hero.js
