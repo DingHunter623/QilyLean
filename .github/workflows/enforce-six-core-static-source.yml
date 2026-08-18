@@ -1,106 +1,16 @@
-name: Enforce unified six-core manufacturing system
+name: Retired six-core enforcer — manual record only
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'index.html'
-      - 'cooperation/index.html'
-      - 'links/index.html'
-      - 'qilylean/c919-strategy-hero-v12.webp.b64'
-      - 'qilylean/c919-strategy-hero-v12.webp'
-      - 'qilylean/c919-strategy-hero-v13.png'
-      - 'site-navigation-core.js'
-      - 'site-navigation-legacy-20260802.js'
-      - 'site-ui-consistency-v1.js'
-      - 'scripts/enforce-six-core-static-source.js'
-      - 'scripts/enforce-six-core-navigation.js'
-      - 'scripts/enforce-c919-home-hero.js'
-      - 'scripts/materialize-c919-v12.sh'
-      - 'scripts/site-regression-guard-c919-hero.js'
-      - 'scripts/normalize-six-capability-pricing-20260809.py'
-      - 'docs/QilyLean全站业务口径规范_20260809.md'
-      - '.github/workflows/enforce-six-core-static-source.yml'
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: qily-six-core-business-baseline
-  cancel-in-progress: true
+  contents: read
 
 jobs:
-  enforce:
+  retired:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
-        with:
-          ref: main
-          fetch-depth: 1
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-      - name: Verify approved C919 v13 artwork
-        shell: bash
-        run: |
-          IMAGE='qilylean/c919-strategy-hero-v13.png'
-          SHA='220e893d9db3dedaa7f4c95e57ef30e8af522c9bfcea0da19f4506f496fc306a'
-          test -f "$IMAGE"
-          echo "$SHA  $IMAGE" | sha256sum -c -
-      - name: Materialize legacy final C919 v12 WebP compatibility asset
-        shell: bash
-        run: bash scripts/materialize-c919-v12.sh
-      - name: Apply six-core static, C919 hero and navigation baselines
-        run: |
-          node --check scripts/enforce-six-core-static-source.js
-          node --check scripts/enforce-six-core-navigation.js
-          node --check scripts/enforce-c919-home-hero.js
-          node --check scripts/site-regression-guard-c919-hero.js
-          node scripts/enforce-six-core-static-source.js
-          node scripts/enforce-c919-home-hero.js
-          node scripts/enforce-six-core-navigation.js
-          python3 scripts/normalize-six-capability-pricing-20260809.py
-          node scripts/site-regression-guard-six-core.js
-          node scripts/site-regression-guard-c919-hero.js
-          git diff --check
-      - name: Commit normalized source when required
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          for attempt in 1 2 3; do
-            if git diff --quiet; then
-              echo "Six-core + approved C919 v13 homepage baseline already normalized."
-              exit 0
-            fi
-
-            git add -A
-            git commit -m "全站口径：发布C919 v13头号位与六类核心业务 [skip ci]"
-            if git push origin HEAD:main; then
-              exit 0
-            fi
-
-            if [ "$attempt" -eq 3 ]; then
-              echo "Unable to publish normalized source after 3 attempts."
-              exit 1
-            fi
-
-            echo "main changed concurrently; restart normalization from latest remote."
-            git fetch origin main --depth=1
-            git reset --hard origin/main
-            IMAGE='qilylean/c919-strategy-hero-v13.png'
-            SHA='220e893d9db3dedaa7f4c95e57ef30e8af522c9bfcea0da19f4506f496fc306a'
-            test -f "$IMAGE"
-            echo "$SHA  $IMAGE" | sha256sum -c -
-            bash scripts/materialize-c919-v12.sh
-            node scripts/enforce-six-core-static-source.js
-            node scripts/enforce-c919-home-hero.js
-            node scripts/enforce-six-core-navigation.js
-            python3 scripts/normalize-six-capability-pricing-20260809.py
-            node scripts/site-regression-guard-six-core.js
-            node scripts/site-regression-guard-c919-hero.js
-            git diff --check
-          done
+      - run: |
+          echo "Six-core automatic source enforcement is retired."
+          echo "Do not execute enforce-six-core-static-source.js or enforce-six-core-navigation.js as automatic writers."
