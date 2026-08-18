@@ -2,7 +2,7 @@
 'use strict';
 
 /* QilyLean visual readability V5 publisher｜2026-08-18
- * Scope: visual only. Do not rewrite business taxonomy, navigation labels or page copy.
+ * Scope: visual only. Do not rewrite business taxonomy, navigation labels, page copy or navigation cache contracts.
  */
 const fs = require('fs');
 const path = require('path');
@@ -12,7 +12,6 @@ const ROOT = path.resolve(__dirname, '..');
 const VERSION = '20260818-visual-readability-v5';
 const HREF = `/site-visual-readability-v5.css?v=${VERSION}`;
 const TAG = `<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="${HREF}">`;
-const NAV_VERSION = '20260818-readability-v5';
 
 function read(rel) { return fs.readFileSync(path.join(ROOT, rel), 'utf8'); }
 function write(rel, content) {
@@ -42,7 +41,6 @@ function install(html) {
   let out = html.replace(/\s*<link\b[^>]*(?:id=["']qilyVisualReadabilityV5Stylesheet["']|href=["'][^"']*\/site-visual-readability-v5\.css(?:\?v=[^"']*)?["'])[^>]*>\s*/gi, '\n');
   assert(/<\/head>/i.test(out), 'public HTML head closing tag missing');
   out = out.replace(/<\/head>/i, `  ${TAG}\n</head>`);
-  out = out.replace(/\/site-navigation\.js\?v=[^"'\s<]+/g, `/site-navigation.js?v=${NAV_VERSION}`);
   return out;
 }
 
@@ -84,9 +82,6 @@ function verifyPages() {
     if (!isPublicHtml(html)) continue;
     publicCount += 1;
     assert(html.includes(HREF), `${rel}: V5 stylesheet missing`);
-    if (/site-navigation\.js\?v=/.test(html)) {
-      assert(html.includes(`/site-navigation.js?v=${NAV_VERSION}`), `${rel}: navigation cache bust missing`);
-    }
   }
   assert(publicCount > 0, 'No public HTML pages discovered');
   return publicCount;
