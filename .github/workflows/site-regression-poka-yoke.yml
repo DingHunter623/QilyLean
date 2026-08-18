@@ -1,92 +1,17 @@
-name: Site regression poka-yoke and self-heal
+name: Site regression audit — manual only
 
 on:
-  push:
-    branches: [main]
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: qily-site-regression-poka-yoke
-  cancel-in-progress: true
+  contents: read
 
 jobs:
-  self-heal:
+  audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
-      - name: Checkout protected site source
-        uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 1
-          filter: blob:none
-          sparse-checkout-cone-mode: false
-          sparse-checkout: |
-            /**/*.html
-            /**/*.css
-            /**/*.js
-            /**/*.py
-            /**/*.sh
-            /qilylean/c919-strategy-hero-approved-20260818.png
-            /qilylean/c919-strategy-hero-v13.png
-            /.github/workflows/*.yml
-            /docs/*.md
-
-      - name: Apply protected six-core baseline with C919 homepage temporarily offline
-        shell: bash
+      - uses: actions/checkout@v5
+      - name: Confirm retired six-core self-heal is not executed
         run: |
-          node scripts/enforce-c919-home-hero.js
-          node scripts/apply-site-poka-yoke-v2.js
-          node scripts/enforce-six-core-static-source.js
-          node scripts/enforce-c919-home-hero.js
-          node scripts/enforce-six-core-navigation.js
-          node scripts/site-regression-guard-six-core.js
-          node scripts/site-regression-guard-c919-hero.js
-          node scripts/site-friend-links-layout-guard.js
-          python3 scripts/normalize-six-capability-pricing-20260809.py
-          git diff --check
-
-      - name: Commit automatic self-heal when required
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          for attempt in 1 2 3; do
-            node scripts/enforce-c919-home-hero.js
-            node scripts/apply-site-poka-yoke-v2.js
-            node scripts/enforce-six-core-static-source.js
-            node scripts/enforce-c919-home-hero.js
-            node scripts/enforce-six-core-navigation.js
-            node scripts/site-regression-guard-six-core.js
-            node scripts/site-regression-guard-c919-hero.js
-            node scripts/site-friend-links-layout-guard.js
-            python3 scripts/normalize-six-capability-pricing-20260809.py
-            git diff --check
-
-            if git diff --quiet; then
-              echo "Protected six-core baseline is healthy; C919 homepage model remains intentionally offline."
-              exit 0
-            fi
-
-            git add -A
-            git commit -m "guard: restore six-core baseline and keep C919 homepage offline [skip ci]"
-
-            if git push origin HEAD:main; then
-              echo "Protected baseline restored; C919 homepage model remains offline."
-              exit 0
-            fi
-
-            if [ "$attempt" -eq 3 ]; then
-              echo "Automatic self-heal could not publish after 3 attempts."
-              exit 1
-            fi
-
-            git fetch origin main --depth=1 --filter=blob:none
-            git reset --hard origin/main
-          done
+          echo "Automatic six-core self-heal retired on 2026-08-18."
+          echo "Current business hierarchy is maintained by static source and the business-architecture validator."
