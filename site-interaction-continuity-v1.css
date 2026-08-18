@@ -1,7 +1,10 @@
-/* QilyLean interaction continuity v2｜2026-08-17
+/* QilyLean interaction continuity v3｜2026-08-18
  * 永久规则：全站可点击控件必须具备 hover / active / focus-visible / touch pressed 反馈。
  * 目标：不改变布局尺寸，不依赖单页补丁；新增模块默认继承统一交互语言。
+ * V3：接入 site-visual-governance-v1.css，执行三主色、字号下限与统一按钮/图标视觉契约。
  */
+@import url('/site-visual-governance-v1.css?v=20260818-v1');
+
 :root{
   --qily-feedback-ink:#17322d;
   --qily-feedback-bg:#fff8df;
