@@ -37,18 +37,13 @@ jobs:
             /.github/workflows/*.yml
             /docs/*.md
 
-      - name: Ensure approved C919 v13 artwork is present
+      - name: Verify approved C919 v13 artwork
         shell: bash
         run: |
           IMAGE='qilylean/c919-strategy-hero-v13.png'
           SHA='220e893d9db3dedaa7f4c95e57ef30e8af522c9bfcea0da19f4506f496fc306a'
-          mkdir -p qilylean
-          if [ -f "$IMAGE" ] && echo "$SHA  $IMAGE" | sha256sum -c - >/dev/null 2>&1; then
-            echo 'Approved C919 v13 artwork already present.'
-          else
-            curl -fL --retry 3 --retry-delay 2 -o "$IMAGE" 'https://at.adobe.com/e3Mx32HIwzWLFAUb'
-            echo "$SHA  $IMAGE" | sha256sum -c -
-          fi
+          test -f "$IMAGE"
+          echo "$SHA  $IMAGE" | sha256sum -c -
 
       - name: Apply protected six-core + exact approved C919 baseline and validate
         shell: bash
@@ -104,8 +99,6 @@ jobs:
             git reset --hard origin/main
             IMAGE='qilylean/c919-strategy-hero-v13.png'
             SHA='220e893d9db3dedaa7f4c95e57ef30e8af522c9bfcea0da19f4506f496fc306a'
-            if [ ! -f "$IMAGE" ] || ! echo "$SHA  $IMAGE" | sha256sum -c - >/dev/null 2>&1; then
-              curl -fL --retry 3 --retry-delay 2 -o "$IMAGE" 'https://at.adobe.com/e3Mx32HIwzWLFAUb'
-              echo "$SHA  $IMAGE" | sha256sum -c -
-            fi
+            test -f "$IMAGE"
+            echo "$SHA  $IMAGE" | sha256sum -c -
           done
