@@ -1,5 +1,6 @@
 name: Publish sitewide visual readability V5
 
+# Trigger refresh: 2026-08-18 visual readability correction
 on:
   push:
     branches: [main]
