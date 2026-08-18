@@ -1,0 +1,53 @@
+name: Enforce QilyLean business hierarchy v3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'cooperation/index.html'
+      - 'docs/QilyLean全站业务口径规范_20260809.md'
+      - 'scripts/enforce-business-hierarchy-v3.js'
+      - '.github/workflows/enforce-business-hierarchy-v3.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-business-hierarchy-v3
+  cancel-in-progress: true
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Normalize 3-core hierarchy
+        run: |
+          node --check scripts/enforce-business-hierarchy-v3.js
+          node scripts/enforce-business-hierarchy-v3.js
+          git diff --check
+          grep -q '三大核心业务' index.html cooperation/index.html
+          grep -q '数智化增强' index.html cooperation/index.html
+          ! grep -q '两大业务主线 · 六类核心业务' index.html
+          ! grep -q '<h2>六类核心业务</h2>' cooperation/index.html
+      - name: Publish normalized source if needed
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo 'Business Hierarchy v3 already healthy.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html cooperation/index.html docs/QilyLean全站业务口径规范_20260809.md
+          git commit -m 'guard: restore three-core business hierarchy [skip ci]'
+          git push origin HEAD:main
