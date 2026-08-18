@@ -1,0 +1,430 @@
+/* QilyLean 全站可视化治理层 V1｜2026-08-18
+ * 目标：可视化优先；最小字号整体上调一级；硬性概述完整保留；
+ * 全站按钮/图标统一底色、前景色、字号与反馈；品牌仅保留三主色语义。
+ * 三主色：深青绿 #0f4b5a / 品牌红 #9e4a34 / 品牌金 #caa15f。
+ * 白、浅灰绿、正文深色为中性色，不计入品牌主色。
+ */
+
+:root{
+  --qily-gov-green:#0f4b5a;
+  --qily-gov-red:#9e4a34;
+  --qily-gov-gold:#caa15f;
+  --qily-gov-white:#fff;
+  --qily-gov-paper:#eef7f5;
+  --qily-gov-soft:#f7fbfa;
+  --qily-gov-ink:#182420;
+  --qily-gov-copy:#496565;
+  --qily-gov-line:#d5e4e3;
+  --qily-gov-radius:8px;
+  --qily-gov-shadow:0 10px 24px rgba(15,75,90,.16);
+  --qily-gov-shadow-strong:0 16px 38px rgba(15,75,90,.20);
+
+  /* 兼容历史变量：所有彩色语义归并到三主色。 */
+  --qily-forest:var(--qily-gov-green)!important;
+  --forest:var(--qily-gov-green)!important;
+  --qily-deep:var(--qily-gov-green)!important;
+  --deep:var(--qily-gov-green)!important;
+  --qily-teal:var(--qily-gov-green)!important;
+  --teal:var(--qily-gov-green)!important;
+  --qily-copper:var(--qily-gov-gold)!important;
+  --copper:var(--qily-gov-gold)!important;
+  --qily-gold:var(--qily-gov-gold)!important;
+  --gold:var(--qily-gov-gold)!important;
+  --qily-plum:var(--qily-gov-red)!important;
+  --plum:var(--qily-gov-red)!important;
+  --qily-red:var(--qily-gov-red)!important;
+  --red:var(--qily-gov-red)!important;
+  --danger:var(--qily-gov-red)!important;
+
+  /* 原最小字号整体提升一档。 */
+  --qily-type-nav-1:17.5px!important;
+  --qily-type-nav-2:16.5px!important;
+  --qily-type-nav-3:16px!important;
+  --qily-type-note:17px!important;
+  --qily-type-small:15.5px!important;
+}
+
+/* ========================================================================== 
+   01｜字号治理：最小号文字统一上调一级
+   ========================================================================== */
+html body :is(
+  small,figcaption,.caption,.meta,.fine,.eyebrow,.module-eyebrow,.qily-ia-kicker,
+  .kicker,.section-kicker,.tag,.tag-row li,.project-meta,.article-meta,.moment-count,
+  .gallery-tip,.empty,.project-card-brief,.project-fact small,.module-card>small,
+  .paper-card>small,.career-full-card>small,.qily-system-axis__title
+){
+  font-size:max(15.5px,1em)!important;
+  line-height:1.58!important;
+}
+
+html body :is(
+  .module-result,.module-note,.career-result,.qily-ia-result,.project-result,.result,
+  .output,.note,.notice,.status-detail,.upload-note
+){
+  font-size:17px!important;
+  line-height:1.68!important;
+}
+
+html body :is(
+  .module-card p,.module-card li,.paper-card p,.career-full-card p,.career-full-card li,
+  .project-list-content>p,.project-story p,.project-story li,.project-result-panel p,
+  .section-head p,.section-heading p,.module-page .head p,article p,article li,section p,section li
+){
+  font-size:max(18.5px,1em)!important;
+}
+
+/* 硬性要求的概述/说明只做视觉分层，不截断、不隐藏、不省略。 */
+html body :is(
+  .lead,.module-lead,.summary,.description,.desc,.copy,.prose,.page-intro,.article-intro,
+  .article-summary,.section-intro,.qily-home-thesis,.qily-founder-line
+){
+  max-height:none!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  -webkit-line-clamp:unset!important;
+  line-clamp:unset!important;
+}
+
+/* ========================================================================== 
+   02｜三主色治理：所有“装饰色”收敛到绿 / 红 / 金
+   ========================================================================== */
+html body :is(
+  .module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.cooperation-hero,
+  .capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,
+  .improvements-hero,.knowledge-hero,.trust-hero
+){
+  background:linear-gradient(125deg,var(--qily-gov-green),var(--qily-gov-green))!important;
+  border-bottom:2px solid var(--qily-gov-gold)!important;
+}
+
+html body :is(
+  .module-card,.paper-card,.career-full-card,.project-card,.project-list-card,
+  .trust-card,.resource-card,.knowledge-card,.qily-value-card,.qily-proof-item
+){
+  border-color:var(--qily-gov-line)!important;
+}
+
+html body :is(
+  .module-card,.paper-card,.career-full-card,.project-card,.project-list-card,
+  .trust-card,.resource-card,.knowledge-card,.qily-value-card
+)::before{
+  background:var(--qily-gov-gold)!important;
+}
+
+html body :is(.risk,.risk-text,.danger,.danger-text,.abnormal,.warning-critical,.alert-critical){
+  color:var(--qily-gov-red)!important;
+  -webkit-text-fill-color:var(--qily-gov-red)!important;
+}
+
+/* ========================================================================== 
+   03｜全站按钮 / 图标统一视觉契约
+   Normal：深青绿底白字；Hover/Focus：品牌金底深青绿字；Active：深青绿底白字。
+   ========================================================================== */
+html body :is(
+  .qily-home-actions,.qily-section-actions,.qily-ia-actions,.module-actions,.article-actions,
+  .hero-actions,.form-actions,.card-actions,.modal-actions,.qily-modal-actions,.qily-email-actions
+) :is(a[href],button:not(:disabled)),
+html body :is(
+  a.button,button.button,a.module-action,a.resource-action,a.project-list-action,
+  a.project-card-action,a.service-contract-link,a.share-button,a.contact-action,
+  button.contact-action,.wechat-contact-action,.qily-uniform-contact-row,
+  .contact-evidence-action,.quick button,.upload-btn,.send-btn,.speech-play,.speech-save,
+  .speech-settings summary,.qily-copy-email,.qily-send-email,.qily-copy-wechat
+){
+  box-sizing:border-box!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:7px!important;
+  min-height:46px!important;
+  padding:9px 15px!important;
+  border:1px solid var(--qily-gov-green)!important;
+  border-radius:var(--qily-gov-radius)!important;
+  color:var(--qily-gov-white)!important;
+  -webkit-text-fill-color:var(--qily-gov-white)!important;
+  background:var(--qily-gov-green)!important;
+  background-image:none!important;
+  font-size:16.5px!important;
+  font-weight:900!important;
+  line-height:1.25!important;
+  text-decoration:none!important;
+  text-shadow:none!important;
+  cursor:pointer!important;
+  box-shadow:none!important;
+  transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease,color .18s ease!important;
+}
+
+html body :is(
+  .qily-home-actions,.qily-section-actions,.qily-ia-actions,.module-actions,.article-actions,
+  .hero-actions,.form-actions,.card-actions,.modal-actions,.qily-modal-actions,.qily-email-actions
+) :is(a[href],button:not(:disabled)) :is(svg,.icon,[class*="icon"]),
+html body :is(
+  a.button,button.button,a.module-action,a.resource-action,a.project-list-action,
+  a.project-card-action,a.service-contract-link,a.share-button,a.contact-action,
+  button.contact-action,.wechat-contact-action,.qily-uniform-contact-row,
+  .contact-evidence-action,.quick button,.upload-btn,.send-btn,.speech-play,.speech-save
+) :is(svg,.icon,[class*="icon"]){
+  width:18px!important;
+  height:18px!important;
+  color:inherit!important;
+  fill:currentColor!important;
+  stroke:currentColor!important;
+  flex:0 0 auto!important;
+}
+
+html body :is(
+  .qily-home-actions,.qily-section-actions,.qily-ia-actions,.module-actions,.article-actions,
+  .hero-actions,.form-actions,.card-actions,.modal-actions,.qily-modal-actions,.qily-email-actions
+) :is(a[href],button:not(:disabled)):is(:hover,:focus-visible),
+html body :is(
+  a.button,button.button,a.module-action,a.resource-action,a.project-list-action,
+  a.project-card-action,a.service-contract-link,a.share-button,a.contact-action,
+  button.contact-action,.wechat-contact-action,.qily-uniform-contact-row,
+  .contact-evidence-action,.quick button,.upload-btn,.send-btn,.speech-play,.speech-save,
+  .speech-settings summary,.qily-copy-email,.qily-send-email,.qily-copy-wechat
+):is(:hover,:focus-visible){
+  color:var(--qily-gov-green)!important;
+  -webkit-text-fill-color:var(--qily-gov-green)!important;
+  background:var(--qily-gov-gold)!important;
+  border-color:var(--qily-gov-gold)!important;
+  box-shadow:var(--qily-gov-shadow)!important;
+  outline:3px solid rgba(202,161,95,.28)!important;
+  outline-offset:2px!important;
+  transform:translateY(-2px)!important;
+}
+
+html body :is(
+  .qily-home-actions,.qily-section-actions,.qily-ia-actions,.module-actions,.article-actions,
+  .hero-actions,.form-actions,.card-actions,.modal-actions,.qily-modal-actions,.qily-email-actions
+) :is(a[href],button:not(:disabled)):active,
+html body :is(
+  a.button,button.button,a.module-action,a.resource-action,a.project-list-action,
+  a.project-card-action,a.service-contract-link,a.share-button,a.contact-action,
+  button.contact-action,.wechat-contact-action,.qily-uniform-contact-row,
+  .contact-evidence-action,.quick button,.upload-btn,.send-btn,.speech-play,.speech-save,
+  .speech-settings summary,.qily-copy-email,.qily-send-email,.qily-copy-wechat
+):active{
+  color:var(--qily-gov-white)!important;
+  -webkit-text-fill-color:var(--qily-gov-white)!important;
+  background:var(--qily-gov-green)!important;
+  border-color:var(--qily-gov-gold)!important;
+  box-shadow:0 4px 12px rgba(15,75,90,.18)!important;
+  transform:translateY(0) scale(.98)!important;
+}
+
+/* 次要按钮不再使用另一套反馈，只允许正常态白底；交互态与主按钮一致。 */
+html body :is(.module-actions,.qily-section-actions,.qily-ia-actions,.article-actions,.card-actions) a.secondary{
+  color:var(--qily-gov-green)!important;
+  -webkit-text-fill-color:var(--qily-gov-green)!important;
+  background:var(--qily-gov-white)!important;
+  border-color:var(--qily-gov-green)!important;
+  font-size:16.5px!important;
+}
+html body :is(.module-actions,.qily-section-actions,.qily-ia-actions,.article-actions,.card-actions) a.secondary:is(:hover,:focus-visible){
+  color:var(--qily-gov-green)!important;
+  background:var(--qily-gov-gold)!important;
+  border-color:var(--qily-gov-gold)!important;
+}
+
+/* 悬浮工具按钮也统一：不再按“当前/分享/交流”使用不同底色。 */
+html body #floatDock .qily-float-btn,
+html body #floatDock :is(.qily-float-home,.qily-float-back,.qily-float-current,.qily-float-share,.qily-float-contact){
+  color:var(--qily-gov-white)!important;
+  -webkit-text-fill-color:var(--qily-gov-white)!important;
+  background:var(--qily-gov-green)!important;
+  border-color:var(--qily-gov-gold)!important;
+  font-size:14px!important;
+  text-shadow:none!important;
+}
+html body #floatDock .qily-float-btn:is(:hover,:focus-visible){
+  color:var(--qily-gov-green)!important;
+  -webkit-text-fill-color:var(--qily-gov-green)!important;
+  background:var(--qily-gov-gold)!important;
+  border-color:var(--qily-gov-gold)!important;
+  outline:3px solid rgba(202,161,95,.30)!important;
+  outline-offset:2px!important;
+  box-shadow:var(--qily-gov-shadow)!important;
+}
+html body #floatDock .qily-float-btn:active,
+html body #floatDock .qily-float-btn[data-qily-pressed="true"]{
+  color:var(--qily-gov-white)!important;
+  background:var(--qily-gov-green)!important;
+  border-color:var(--qily-gov-gold)!important;
+}
+
+/* 独立系统图标按钮保持原形状，但反馈颜色完全跟随统一契约。 */
+html body :is(.site-music-toggle,.qily-modal-close){
+  color:var(--qily-gov-green)!important;
+  -webkit-text-fill-color:var(--qily-gov-green)!important;
+  background:var(--qily-gov-white)!important;
+  border:1px solid var(--qily-gov-gold)!important;
+}
+html body :is(.site-music-toggle,.qily-modal-close):is(:hover,:focus-visible){
+  color:var(--qily-gov-green)!important;
+  background:var(--qily-gov-gold)!important;
+  border-color:var(--qily-gov-gold)!important;
+  outline:3px solid rgba(202,161,95,.28)!important;
+  outline-offset:2px!important;
+}
+
+/* ========================================================================== 
+   04｜一级导航统一：当前态、悬停态、按下态只有一套视觉语言
+   ========================================================================== */
+html body header.qily-site-header nav.site-nav>a[href],
+html body header.qily-global-header nav.qily-global-nav>a[href]{
+  min-height:40px!important;
+  padding:7px 10px!important;
+  border:1px solid transparent!important;
+  border-radius:var(--qily-gov-radius)!important;
+  color:var(--qily-gov-ink)!important;
+  -webkit-text-fill-color:var(--qily-gov-ink)!important;
+  background:transparent!important;
+  font-size:17.5px!important;
+  font-weight:900!important;
+}
+html body header.qily-site-header nav.site-nav>a[href][aria-current="page"],
+html body header.qily-global-header nav.qily-global-nav>a[href][aria-current="page"]{
+  color:var(--qily-gov-white)!important;
+  -webkit-text-fill-color:var(--qily-gov-white)!important;
+  background:var(--qily-gov-green)!important;
+  border:2px solid var(--qily-gov-gold)!important;
+  box-shadow:0 7px 18px rgba(15,75,90,.18)!important;
+}
+html body header.qily-site-header nav.site-nav>a[href]:is(:hover,:focus-visible),
+html body header.qily-global-header nav.qily-global-nav>a[href]:is(:hover,:focus-visible){
+  color:var(--qily-gov-green)!important;
+  -webkit-text-fill-color:var(--qily-gov-green)!important;
+  background:var(--qily-gov-gold)!important;
+  border-color:var(--qily-gov-gold)!important;
+  box-shadow:0 7px 18px rgba(15,75,90,.14)!important;
+  outline:3px solid rgba(202,161,95,.24)!important;
+  outline-offset:2px!important;
+}
+html body header.qily-site-header nav.site-nav>a[href]:active,
+html body header.qily-global-header nav.qily-global-nav>a[href]:active{
+  color:var(--qily-gov-white)!important;
+  -webkit-text-fill-color:var(--qily-gov-white)!important;
+  background:var(--qily-gov-green)!important;
+  border-color:var(--qily-gov-gold)!important;
+  transform:scale(.98)!important;
+}
+
+/* ========================================================================== 
+   05｜可视化优先：真实项目图、工程图、成果图优先占据视觉面积
+   ========================================================================== */
+html body :is(.module-media,.project-list-thumb,.project-card figure,.project-cover,.gallery figure,.evidence-media){
+  overflow:hidden!important;
+  border:1px solid var(--qily-gov-line)!important;
+  background:var(--qily-gov-soft)!important;
+  box-shadow:0 8px 22px rgba(15,75,90,.09)!important;
+}
+html body :is(.module-media,.project-list-thumb,.project-card figure,.project-cover,.gallery figure,.evidence-media) img{
+  display:block!important;
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+  object-fit:contain!important;
+}
+
+.project-list-page .project-list-card:has(.project-list-thumb){
+  display:grid!important;
+  grid-template-columns:minmax(280px,34%) minmax(0,1fr)!important;
+  gap:22px!important;
+  align-items:stretch!important;
+}
+.project-list-page .project-list-thumb{
+  width:100%!important;
+  min-height:220px!important;
+  margin:0!important;
+}
+.project-list-page .project-list-thumb img{
+  width:100%!important;
+  height:100%!important;
+  min-height:220px!important;
+  object-fit:cover!important;
+}
+.project-list-page .project-list-content{display:flex!important;flex-direction:column!important;min-width:0!important}
+.project-list-page .project-list-content :is(.project-list-action,.module-actions,.project-card-actions){margin-top:auto!important}
+
+/* 首页与正文中的证据数字加强视觉层级，避免“满屏文字”。 */
+html body :is(.qily-proof-item,.metric,.project-fact,.evidence-fact){
+  border-top:3px solid var(--qily-gov-gold)!important;
+}
+html body :is(.qily-proof-item,.metric,.project-fact,.evidence-fact)>:is(strong,b):first-child{
+  color:var(--qily-gov-green)!important;
+  -webkit-text-fill-color:var(--qily-gov-green)!important;
+  font-size:max(26px,1.35em)!important;
+  line-height:1.18!important;
+}
+
+/* 首页首屏不删硬性概述：标题最强、正文退一级、CTA统一。 */
+.qily-home-v3 .hero h1{max-width:920px!important}
+.qily-home-v3 .hero .lead{max-width:1040px!important;font-size:20px!important;line-height:1.68!important}
+.qily-home-v3 .qily-founder-line{font-size:17.5px!important;line-height:1.55!important}
+.qily-home-v3 .qily-home-thesis{font-size:17px!important;line-height:1.68!important;border-left-color:var(--qily-gov-gold)!important}
+
+/* 真链接卡片统一金色反馈，不改变静态卡。 */
+html body :is(
+  .qily-secondary-links>a,a.qily-value-card,a.qily-ia-card-link,a.module-card-link,
+  a.project-card-link,a.linked-card,a.resource-card-link,a.moment-link
+):is(:hover,:focus-visible){
+  color:var(--qily-gov-ink)!important;
+  background:var(--qily-gov-white)!important;
+  border-color:var(--qily-gov-gold)!important;
+  box-shadow:var(--qily-gov-shadow-strong)!important;
+  outline:3px solid rgba(202,161,95,.26)!important;
+  outline-offset:2px!important;
+  transform:translateY(-3px)!important;
+}
+
+/* ========================================================================== 
+   06｜移动端：字号不再压得过小；导航允许滑动换取可读性
+   ========================================================================== */
+@media(max-width:900px){
+  :root{
+    --qily-type-nav-1:14.5px!important;
+    --qily-type-nav-2:15px!important;
+    --qily-type-nav-3:14.5px!important;
+    --qily-type-small:14.5px!important;
+    --qily-type-note:16px!important;
+  }
+  html body header.qily-site-header nav.site-nav>a[href],
+  html body header.qily-global-header nav.qily-global-nav>a[href]{
+    min-height:38px!important;
+    padding:6px 9px!important;
+    font-size:14.5px!important;
+  }
+  .qily-global-nav{overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important}
+  .project-list-page .project-list-card:has(.project-list-thumb){grid-template-columns:1fr!important}
+  .project-list-page .project-list-thumb,.project-list-page .project-list-thumb img{min-height:0!important}
+}
+
+@media(max-width:620px){
+  html body :is(
+    small,figcaption,.caption,.meta,.fine,.eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,
+    .section-kicker,.tag,.tag-row li,.project-meta,.article-meta,.moment-count,.gallery-tip,
+    .empty,.project-card-brief,.project-fact small,.module-card>small,.paper-card>small,.career-full-card>small
+  ){
+    font-size:14.5px!important;
+  }
+  html body :is(
+    .qily-home-actions,.qily-section-actions,.qily-ia-actions,.module-actions,.article-actions,
+    .hero-actions,.form-actions,.card-actions,.modal-actions,.qily-modal-actions,.qily-email-actions
+  ) :is(a[href],button:not(:disabled)),
+  html body :is(
+    a.button,button.button,a.module-action,a.resource-action,a.project-list-action,
+    a.project-card-action,a.service-contract-link,a.share-button,a.contact-action,
+    button.contact-action,.wechat-contact-action,.qily-uniform-contact-row,.contact-evidence-action,
+    .quick button,.upload-btn,.send-btn,.speech-play,.speech-save
+  ){
+    min-height:46px!important;
+    font-size:16px!important;
+  }
+  html body #floatDock .qily-float-btn{font-size:13px!important}
+  .qily-home-v3 .hero .lead{font-size:18.5px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body :is(a[href],button,[role="button"]){transition:none!important}
+  html body :is(a[href],button,[role="button"]):is(:hover,:focus-visible,:active){transform:none!important}
+}
