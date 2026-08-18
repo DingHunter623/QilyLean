@@ -1,16 +1,34 @@
-/* QilyLean atomic first-paint navigation runtime v22｜2026-08-17
+/* QilyLean atomic first-paint navigation runtime v23｜2026-08-18
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
  * 性能：普通页面直达 core；仅合作/资源页面按需加载 legacy，避免全站下载报价与资源逻辑。
  * 可视化：中文正文启用 pretty wrap / strict line-break，标题平衡换行；悬浮栏“分享官方网址”固定两行完整显示。
+ * V23：统一刷新全站视觉治理样式版本，避免浏览器继续命中旧按钮/字号缓存。
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV22) return;
-  w.__qilyStaticFirstNavigationV22 = true;
+  if (w.__qilyStaticFirstNavigationV23) return;
+  w.__qilyStaticFirstNavigationV23 = true;
 
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260817-atomic-first-paint-v8';
   var CORE_SRC = '/site-navigation-core.js?v=20260817-atomic-first-paint-v18';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18';
+  var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
+
+  function installVisualGovernanceLink() {
+    var link = d.querySelector('link[href*="/site-interaction-continuity-v1.css"]');
+    if (!link) {
+      link = d.createElement('link');
+      link.id = 'qilyInteractionContinuityV3';
+      link.rel = 'stylesheet';
+      link.href = CONTINUITY_HREF;
+      (d.head || d.documentElement).appendChild(link);
+      return;
+    }
+    if (link.getAttribute('href') !== CONTINUITY_HREF) {
+      link.id = 'qilyInteractionContinuityV3';
+      link.setAttribute('href', CONTINUITY_HREF);
+    }
+  }
 
   function installTypographyPolish() {
     if (d.getElementById('qilyChineseWrapPolishV1')) return;
@@ -37,7 +55,7 @@
     var script = d.createElement('script');
     script.src = legacy ? LEGACY_SRC : CORE_SRC;
     script.async = false;
-    script.setAttribute(attr, 'atomic-first-paint-v22');
+    script.setAttribute(attr, 'atomic-first-paint-v23');
     (d.head || d.documentElement).appendChild(script);
   }
 
@@ -78,6 +96,7 @@
     d.querySelectorAll('#floatDock.qily-float-dock .qily-float-btn').forEach(bindDockButton);
   }
 
+  installVisualGovernanceLink();
   installTypographyPolish();
   loadConsistencyGuard();
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', bindDock, { once: true });
@@ -86,7 +105,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v22',
+  mode: 'atomic-first-paint-v23',
   staticHtmlAuthority: true,
   atomicFirstPaint: true,
   runtimeDependencyWaterfall: false,
@@ -97,6 +116,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   routeScopedLegacy: true,
   ordinaryPagesDirectCore: true,
   chineseWrapPolish: true,
+  visualGovernanceCacheBust: true,
   dockOfficialUrlTwoLine: true,
   dockActions: [
     'data-action="home"', 'data-action="top"', 'data-action="back"',
