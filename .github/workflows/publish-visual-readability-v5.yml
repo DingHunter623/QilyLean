@@ -1,0 +1,67 @@
+name: Publish sitewide visual readability V5
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-visual-readability-v5.css'
+      - 'scripts/publish-visual-readability-v5.js'
+      - '.github/workflows/publish-visual-readability-v5.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-visual-readability-v5
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Materialize V5 visual readability across public pages
+        run: |
+          node --check scripts/publish-visual-readability-v5.js
+          node scripts/publish-visual-readability-v5.js
+          git diff --check
+
+      - name: Validate exact screenshot issues
+        shell: bash
+        run: |
+          grep -q -- '--qily-v5-small:17px' site-visual-readability-v5.css
+          grep -q -- '--qily-v5-small-strong:18px' site-visual-readability-v5.css
+          grep -q 'width:48px!important' site-visual-readability-v5.css
+          grep -q 'font-size:18px!important' site-visual-readability-v5.css
+          grep -q 'color:var(--qily-v5-white)!important' site-visual-readability-v5.css
+          grep -q '#engineering-enablers' site-visual-readability-v5.css
+          grep -q '#qily-digital-enablers' site-visual-readability-v5.css
+          grep -q '/site-visual-readability-v5.css?v=20260818-visual-readability-v5' index.html
+          grep -q '/site-visual-readability-v5.css?v=20260818-visual-readability-v5' cooperation/index.html
+          grep -q '<h2>三大核心业务</h2>' cooperation/index.html
+          grep -q '三项增强能力，不与三大核心业务同级' cooperation/index.html
+          ! grep -q '<h2>六类核心业务</h2>' cooperation/index.html
+
+      - name: Commit sitewide visual correction
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'V5 visual readability already materialized.'
+            exit 0
+          fi
+          git commit -m 'fix: enlarge minimum typography and restore high contrast sitewide [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
