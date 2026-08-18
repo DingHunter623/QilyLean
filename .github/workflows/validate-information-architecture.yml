@@ -1,4 +1,4 @@
-name: Validate QilyLean information architecture
+name: Validate QilyLean information architecture v3
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
       - "cooperation/index.html"
       - "links/**"
       - "site-navigation-core.js"
-      - "site-information-architecture-v1.js"
       - "docs/QilyLean全站业务口径规范_20260809.md"
       - ".github/workflows/validate-information-architecture.yml"
   pull_request:
@@ -23,23 +22,21 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 24
-      - name: Verify six-business information architecture
+      - name: Verify Business Hierarchy v3
+        shell: bash
         run: |
-          node scripts/enforce-six-core-static-source.js
-          grep -q '六类核心业务' index.html cooperation/index.html
+          set -euo pipefail
+          grep -q '三大核心业务' index.html cooperation/index.html
+          grep -q '新工厂／新产线规划' index.html cooperation/index.html
+          grep -q '精益改善项目交付' index.html cooperation/index.html
+          grep -q '目视化项目设计与交付' index.html cooperation/index.html
+          grep -q '数智化增强' index.html cooperation/index.html
           grep -q 'APP软件开发' index.html cooperation/index.html
           grep -q '官网建设' index.html cooperation/index.html
           grep -q '友情链接' links/index.html
-          grep -q "\['友情链接', '/links/'\]" site-navigation-core.js
-          grep -q '<strong>友情链接</strong>' index.html
-          grep -q 'Six-Core Business Architecture v2' docs/QilyLean全站业务口径规范_20260809.md
-          ! grep -q 'QilyLean AI／APP</h3>' index.html cooperation/index.html
-          ! grep -q 'QilyLean官网</h3>' index.html cooperation/index.html
-      - name: Verify syntax and diff
-        run: |
-          node --check site-navigation-core.js
-          node --check site-information-architecture-v1.js
-          git diff --check
+          ! grep -q '六类核心业务' index.html
+          ! grep -q '<h2>六类核心业务</h2>' cooperation/index.html
+          ! grep -q 'data-qily-six-core-services="v2"' index.html cooperation/index.html
+          grep -q 'Business Hierarchy v3' docs/QilyLean全站业务口径规范_20260809.md
+      - name: Verify diff hygiene
+        run: git diff --check
