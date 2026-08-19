@@ -1,0 +1,70 @@
+name: One-shot materialize resource collaboration and dock v31
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-resource-collab-dock-v31-hotfix
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Materialize current primary navigation and first-paint assets
+        run: |
+          set -euo pipefail
+          node --check site-navigation.js
+          node --check scripts/align-primary-nav-operating-axis.js
+          node scripts/align-primary-nav-operating-axis.js --apply
+          node scripts/enforce-home-hero-layout.js --apply
+          node scripts/enforce-unified-content-axis.js --apply
+          node --check site-navigation-core.js
+          node --check site-navigation-legacy-20260802.js
+          node --check site-navigation.js
+          git diff --check
+
+      - name: Verify visible closure
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q -- "['资源协同', '/links/']" site-navigation-core.js
+          ! grep -q -- "['友情链接', '/links/']" site-navigation-core.js
+          grep -q -- "link.textContent = '资源协同';" site-navigation-legacy-20260802.js
+          grep -q -- '20260820-resource-collaboration-v31' index.html
+          grep -q -- '<a href="/links/">资源协同</a>' index.html
+          grep -q -- "dockAutoHome: 'bottom-right'" site-navigation.js
+          grep -q -- 'dockPositionPersistence: false' site-navigation.js
+          grep -q -- 'function snapDockHome()' site-navigation.js
+          grep -q -- '20260819-dock-snapback-v3' site-navigation.js
+
+      - name: Commit hard-materialized public source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add site-navigation-core.js site-navigation-legacy-20260802.js site-navigation.js index.html '*.html' '**/*.html'
+          if git diff --cached --quiet; then
+            echo 'Visible source already materialized.'
+            exit 0
+          fi
+          git commit -m 'fix: hard-materialize 资源协同 navigation v31 [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
