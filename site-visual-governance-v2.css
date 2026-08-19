@@ -1,16 +1,16 @@
-/* QilyLean 全站可读性治理层 V2｜2026-08-19
- * 目的：永久落实“最小号字体均放大一号”，重点保护手机端、高层/股东浏览场景。
- * 原则：不改变标题层级，不粗暴放大全部正文；抬高最小可读基线，并覆盖历史页面、局部样式、导航、制造运营轴、状态说明、Dock、表格、表单与数字产品等小字号盲区。
+/* QilyLean 全站可读性治理层 V3｜2026-08-19
+ * 目的：永久落实“全站最小字号统一再放大一号”，重点保护手机端、高层/股东浏览场景。
+ * 原则：保持标题层级差异；抬高最小可读基线，并覆盖历史页面、局部样式、导航、制造运营轴、六项竞争力卡片、状态说明、Dock、表格、表单与数字产品等小字号盲区。
  */
 @import url("/site-visual-governance-v1.css?v=20260818-v1");
 
 :root{
   --qily-type-nav-1:19px!important;
   --qily-type-nav-2:18px!important;
-  --qily-type-nav-3:17.5px!important;
+  --qily-type-nav-3:18px!important;
   --qily-type-note:19px!important;
   --qily-type-small:18px!important;
-  --qily-readable-floor:17px;
+  --qily-readable-floor:18px;
   --qily-readable-small:18px;
   --qily-readable-body-note:19px;
   --qily-axis-green:#0f4b5a;
@@ -21,7 +21,7 @@
   --qily-axis-ink:#17322d;
 }
 
-/* 01｜全站“小号信息层”：最低 18px；已有更大字号保持原值。 */
+/* 01｜全站最小信息层：所有可见辅助文字不得低于 18px。 */
 html body :is(
   small,figcaption,.caption,.meta,.fine,.eyebrow,.module-eyebrow,.qily-ia-kicker,
   .kicker,.section-kicker,.tag,.tag-row li,.project-meta,.article-meta,.moment-count,
@@ -29,14 +29,17 @@ html body :is(
   .paper-card>small,.career-full-card>small,.privacy-note,.legal-note,.status-note,
   .service-contract-meta span,.qily-secondary-link span,.qily-ia-secondary-link span,
   .trust-label,.resource-label,.resource-kicker,.qily-resource-network__kicker,
-  .qily-evidence-grade-badge,.qily-card-link-hint
+  .qily-evidence-grade-badge,.qily-card-link-hint,
+  .qily-principle span,.qily-value-card p,.qily-proof-item span,.qily-secondary-links span,
+  .qily-asset-note,.qily-ia-card p,.qily-ia-result,.qily-ia-delivery-summary span,
+  .helper-text,.field-note,.summary-note
 ){
   font-size:max(var(--qily-readable-small),1em)!important;
-  line-height:1.62!important;
+  line-height:1.68!important;
   opacity:1!important;
 }
 
-/* 01A｜上一轮仍漏网的局部小字：合作页、履历、AI、资源页、状态/筛选/附件统一兜底。 */
+/* 01A｜合作页、履历、AI、资源、状态、筛选、附件等历史小字号统一兜底。 */
 html body :is(
   .trust-strip span,.service-contract-meta strong,.core-contract-viewer-head p,
   .core-contract-viewer-status,.core-contract-viewer-note,.price span,.flow-step span,
@@ -50,11 +53,11 @@ html body :is(
   .footer-note,.copyright
 ){
   font-size:max(var(--qily-readable-small),1em)!important;
-  line-height:1.58!important;
+  line-height:1.62!important;
   opacity:1!important;
 }
 
-/* 01B｜通用交互/表单/表格最低层：不得再出现 12–16px 的可见操作字。 */
+/* 01B｜通用交互/表单/表格最低层：统一最低 18px。 */
 html body :is(th,td,label,input,select,textarea,button,option){
   font-size:max(var(--qily-readable-floor),1em)!important;
 }
@@ -62,26 +65,35 @@ html body :is(
   .breadcrumb,.breadcrumbs,.qily-breadcrumb,.site-footer,footer,
   .pagination,.pager,.toolbar,.filters,.filter-bar
 ){
-  font-size:max(17.5px,1em)!important;
-  line-height:1.55!important;
+  font-size:max(var(--qily-readable-floor),1em)!important;
+  line-height:1.58!important;
 }
 
-/* 02｜制造运营资产闭环：标题、阶段名、说明继续整体上调一档。 */
+/* 01C｜正文型说明统一不低于 19px，保持层级差异。 */
+html body main :is(
+  .lead,.hero-lead,.module-lead,.qily-home-thesis,.qily-founder-line,
+  .qily-asset-heading>p,.qily-ia-heading>p
+){
+  font-size:max(var(--qily-readable-body-note),1em)!important;
+  line-height:1.78!important;
+}
+
+/* 02｜制造运营资产闭环：所有最小字同步提升。 */
 html body .qily-system-axis__title{
-  font-size:18.5px!important;
+  font-size:19px!important;
   line-height:1.35!important;
   letter-spacing:.035em!important;
 }
 html body .qily-system-axis__step strong{
-  font-size:18px!important;
-  line-height:1.28!important;
+  font-size:18.5px!important;
+  line-height:1.3!important;
 }
 html body .qily-system-axis__step span{
-  font-size:17.5px!important;
-  line-height:1.4!important;
+  font-size:18px!important;
+  line-height:1.45!important;
 }
 
-/* 02A｜制造运营资产闭环交互永久基线：默认 / hover / focus / touch / 当前模块全部可辨识。 */
+/* 02A｜制造运营资产闭环交互永久基线。 */
 html body .qily-system-axis__step{
   color:var(--qily-axis-ink)!important;
   background:var(--qily-axis-paper)!important;
@@ -91,51 +103,26 @@ html body .qily-system-axis__step{
   -webkit-tap-highlight-color:rgba(202,161,95,.25)!important;
   transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease,color .18s ease!important;
 }
-html body .qily-system-axis__step :is(strong,span){
-  transition:color .18s ease!important;
-}
+html body .qily-system-axis__step :is(strong,span){transition:color .18s ease!important;}
 @media (hover:hover) and (pointer:fine){
   html body .qily-system-axis__step:hover{
-    color:#fff!important;
-    -webkit-text-fill-color:#fff!important;
-    background:var(--qily-axis-green-hover)!important;
-    border-color:var(--qily-axis-gold)!important;
-    box-shadow:0 12px 26px rgba(15,75,90,.23)!important;
-    transform:translateY(-3px)!important;
+    color:#fff!important;-webkit-text-fill-color:#fff!important;background:var(--qily-axis-green-hover)!important;
+    border-color:var(--qily-axis-gold)!important;box-shadow:0 12px 26px rgba(15,75,90,.23)!important;transform:translateY(-3px)!important;
   }
-  html body .qily-system-axis__step:hover :is(strong,span){
-    color:#fff!important;
-    -webkit-text-fill-color:#fff!important;
-  }
+  html body .qily-system-axis__step:hover :is(strong,span){color:#fff!important;-webkit-text-fill-color:#fff!important;}
 }
 html body .qily-system-axis__step:focus-visible{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background:var(--qily-axis-green-hover)!important;
-  border-color:var(--qily-axis-gold)!important;
-  box-shadow:0 12px 26px rgba(15,75,90,.23)!important;
-  outline:3px solid rgba(202,161,95,.38)!important;
-  outline-offset:3px!important;
-  transform:translateY(-2px)!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;background:var(--qily-axis-green-hover)!important;
+  border-color:var(--qily-axis-gold)!important;box-shadow:0 12px 26px rgba(15,75,90,.23)!important;
+  outline:3px solid rgba(202,161,95,.38)!important;outline-offset:3px!important;transform:translateY(-2px)!important;
 }
-html body .qily-system-axis__step:focus-visible :is(strong,span){
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-}
+html body .qily-system-axis__step:focus-visible :is(strong,span){color:#fff!important;-webkit-text-fill-color:#fff!important;}
 html body .qily-system-axis__step:active{
-  color:var(--qily-axis-green)!important;
-  -webkit-text-fill-color:var(--qily-axis-green)!important;
-  background:var(--qily-axis-gold-soft)!important;
-  border-color:var(--qily-axis-gold)!important;
-  box-shadow:0 4px 11px rgba(15,75,90,.16)!important;
-  transform:translateY(0) scale(.975)!important;
+  color:var(--qily-axis-green)!important;-webkit-text-fill-color:var(--qily-axis-green)!important;background:var(--qily-axis-gold-soft)!important;
+  border-color:var(--qily-axis-gold)!important;box-shadow:0 4px 11px rgba(15,75,90,.16)!important;transform:translateY(0) scale(.975)!important;
 }
-html body .qily-system-axis__step:active :is(strong,span){
-  color:var(--qily-axis-green)!important;
-  -webkit-text-fill-color:var(--qily-axis-green)!important;
-}
+html body .qily-system-axis__step:active :is(strong,span){color:var(--qily-axis-green)!important;-webkit-text-fill-color:var(--qily-axis-green)!important;}
 
-/* 当前页面对应的运营资产必须像顶部导航一样稳定高亮；代表项目归入 03 精益改善验证。 */
 html body:has(header a[href="/experience/"][aria-current="page"]) .qily-system-axis__step[href="/experience/"],
 html body:has(header a[href="/capabilities/"][aria-current="page"]) .qily-system-axis__step[href="/capabilities/"],
 html body:has(header a[href="/improvements/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"],
@@ -143,11 +130,7 @@ html body:has(header a[href="/projects/"][aria-current="page"]) .qily-system-axi
 html body:has(header a[href="/trust/"][aria-current="page"]) .qily-system-axis__step[href="/trust/"],
 html body:has(header a[href="/cooperation/"][aria-current="page"]) .qily-system-axis__step[href="/cooperation/"],
 html body:has(header a[href="/knowledge/"][aria-current="page"]) .qily-system-axis__step[href="/knowledge/"]{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background:var(--qily-axis-green)!important;
-  border:2px solid var(--qily-axis-gold)!important;
-  box-shadow:0 8px 20px rgba(15,75,90,.24)!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;background:var(--qily-axis-green)!important;border:2px solid var(--qily-axis-gold)!important;box-shadow:0 8px 20px rgba(15,75,90,.24)!important;
 }
 html body:has(header a[href="/experience/"][aria-current="page"]) .qily-system-axis__step[href="/experience/"] :is(strong,span),
 html body:has(header a[href="/capabilities/"][aria-current="page"]) .qily-system-axis__step[href="/capabilities/"] :is(strong,span),
@@ -155,12 +138,9 @@ html body:has(header a[href="/improvements/"][aria-current="page"]) .qily-system
 html body:has(header a[href="/projects/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"] :is(strong,span),
 html body:has(header a[href="/trust/"][aria-current="page"]) .qily-system-axis__step[href="/trust/"] :is(strong,span),
 html body:has(header a[href="/cooperation/"][aria-current="page"]) .qily-system-axis__step[href="/cooperation/"] :is(strong,span),
-html body:has(header a[href="/knowledge/"][aria-current="page"]) .qily-system-axis__step[href="/knowledge/"] :is(strong,span){
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-}
+html body:has(header a[href="/knowledge/"][aria-current="page"]) .qily-system-axis__step[href="/knowledge/"] :is(strong,span){color:#fff!important;-webkit-text-fill-color:#fff!important;}
 
-/* 03｜模块内小导航、状态、卡片辅助说明：统一进入 18px 小号层。 */
+/* 03｜模块内小导航、状态、卡片辅助说明全部进入 18px 最小层。 */
 html body :is(
   .module-subnav a,.trust-status span,.trust-level span,.scope-list span,
   .qily-ia-pill-list li,.qily-ia-delivery-summary span,.qily-card-link-hint,
@@ -169,58 +149,43 @@ html body :is(
   .project-result,.result,.output,.note,.notice,.upload-note
 ){
   font-size:max(var(--qily-readable-small),1em)!important;
-  line-height:1.62!important;
+  line-height:1.66!important;
   opacity:1!important;
 }
 
-/* 04｜一级导航：桌面 19px；手机 17.5px，保持横向滚动而不是缩字。 */
+/* 04｜一级导航：桌面 19px；移动端最低 18px，不通过缩字解决布局。 */
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
 html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
 html body header.topbar nav.nav>a[href],
-html body header.top nav.nav>a[href]{
-  font-size:19px!important;
-  line-height:1.22!important;
-  font-weight:900!important;
-}
+html body header.top nav.nav>a[href]{font-size:19px!important;line-height:1.22!important;font-weight:900!important;}
 
-/* 05｜右侧 Dock：任何可见字不得再使用 11–16px 小字。 */
+/* 05｜右侧 Dock：可见文字统一最低 18px。 */
 html body #floatDock .qily-float-btn,
-html body #floatDock :is(.qily-float-home,.qily-float-back,.qily-float-current,.qily-float-share,.qily-float-contact){
-  font-size:17px!important;
-  line-height:1.12!important;
-}
+html body #floatDock :is(.qily-float-home,.qily-float-back,.qily-float-current,.qily-float-share,.qily-float-contact){font-size:18px!important;line-height:1.12!important;}
 html body #floatDock [data-action="share"] .qily-share-label-primary,
 html body #floatDock [data-action="share"] .qily-share-label-url,
-html body #floatDock .qily-share-label-line{
-  font-size:17px!important;
-  line-height:1.06!important;
-}
+html body #floatDock .qily-share-label-line{font-size:18px!important;line-height:1.06!important;}
 
-/* 06｜移动端只重排，不缩小信息；运营轴保留按压反馈，不依赖 hover。 */
+/* 06｜移动端只重排，不降低字号。 */
 @media(max-width:900px){
   html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
   html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
   html body header.topbar nav.nav>a[href],
-  html body header.top nav.nav>a[href]{
-    font-size:17.5px!important;
-    min-height:40px!important;
-    padding:7px 10px!important;
-  }
+  html body header.top nav.nav>a[href]{font-size:18px!important;min-height:40px!important;padding:7px 10px!important;}
 }
 @media(max-width:620px){
   html body :is(
     small,figcaption,.caption,.meta,.fine,.eyebrow,.module-eyebrow,.qily-ia-kicker,
     .kicker,.section-kicker,.tag,.project-meta,.article-meta,.trust-status span,
     .trust-level span,.module-subnav a,.privacy-note,.status-note,
-    .trust-strip span,.flow-step span,.core-contract-viewer-note,.attachment-size
-  ){
-    font-size:18px!important;
-  }
-  html body .qily-system-axis__title{font-size:18px!important}
-  html body .qily-system-axis__step strong{font-size:17.5px!important}
-  html body .qily-system-axis__step span{font-size:17px!important}
-  html body .qily-system-axis__step{min-height:68px!important}
+    .trust-strip span,.flow-step span,.core-contract-viewer-note,.attachment-size,
+    .qily-principle span,.qily-value-card p,.qily-proof-item span,.qily-secondary-links span
+  ){font-size:18px!important;}
+  html body .qily-system-axis__title{font-size:19px!important}
+  html body .qily-system-axis__step strong{font-size:18.5px!important}
+  html body .qily-system-axis__step span{font-size:18px!important}
+  html body .qily-system-axis__step{min-height:72px!important}
   html body #floatDock .qily-float-btn,
-  html body #floatDock .qily-share-label-line{font-size:17px!important}
-  html body :is(th,td,label,input,select,textarea,button,option){font-size:17px!important}
+  html body #floatDock .qily-share-label-line{font-size:18px!important}
+  html body :is(th,td,label,input,select,textarea,button,option){font-size:18px!important}
 }
