@@ -144,6 +144,16 @@ const CORE_DRAG_V2 = `    var down = false;
     dock.addEventListener('pointerup', function (event) { finish(event, false); });
     dock.addEventListener('pointercancel', function (event) { finish(event, true); });`;
 
+const CORE_RESIZE_V2 = `    window.addEventListener('resize', function () {
+      var rect = dock.getBoundingClientRect();
+      if (userPositioned) {
+        setDockPosition(rect.left, rect.top, true);
+        saveDockPosition();
+      } else {
+        setDockPosition(0, rect.top, false);
+      }
+    }, { passive: true });`;
+
 function read(rel) { return fs.readFileSync(path.join(root, rel), 'utf8'); }
 function writeIfChanged(rel, source, next) {
   if (source === next) return false;
@@ -169,6 +179,12 @@ function materializeRuntimeSources() {
     if (!dragPattern.test(core)) throw new Error('R6 runtime materializer cannot find legacy vertical-only dock drag block');
     core = core.replace(dragPattern, CORE_DRAG_V2);
   }
+  core = assertReplace(
+    core,
+    "    window.addEventListener('resize', function () { setDockTop(dock.getBoundingClientRect().top); }, { passive: true });",
+    CORE_RESIZE_V2,
+    'legacy dock resize handler'
+  );
   writeIfChanged('site-navigation-core.js', read('site-navigation-core.js'), core);
 
   let legacy = read('site-navigation-legacy-20260802.js');
@@ -274,10 +290,13 @@ const core = fs.readFileSync(path.join(root, 'site-navigation-core.js'), 'utf8')
   'Math.hypot(dx, dy) > 7',
   "localStorage.setItem(DOCK_POSITION_KEY",
   "dock.style.setProperty('left', safeLeft + 'px', 'important')",
+  "if (userPositioned) {",
+  "saveDockPosition();",
   'qily-share-label-url">官网</span>'
 ].forEach((marker) => {
   if (!core.includes(marker)) throw new Error('dock free-drag runtime missing: ' + marker);
 });
+if (core.includes('setDockTop(')) throw new Error('legacy dock resize/top-only helper reference returned');
 
 const brief = fs.readFileSync(path.join(root, 'qilylean/daily/2026-08-14.html'), 'utf8');
 [
