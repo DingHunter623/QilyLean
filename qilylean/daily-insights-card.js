@@ -1,10 +1,10 @@
 (function(){
  'use strict';
- var release={date:'2026-08-12'};
+ var release={date:'2026-08-19'};
  function render(card,latest){
    var date=latest&&latest.date||release.date;
    var href='/qilylean/daily/'+date+'.html';
-   card.innerHTML='<small>今日简报｜最新：'+date+'</small><h3>今日简报</h3><p>贯通PE、IE、NPI、ME、JIT、PDCA、PQCD、OEE、精益物流与Kaizen；每期均有独立网址，可连续翻阅与直接分享。</p><ul class="knowledge-tags"><li>工程体系</li><li>精益运营</li><li>项目交付</li></ul><div class="knowledge-actions"><a class="button" href="/qilylean/daily-insights.html" target="_top">查看简报目录</a><a class="button" href="'+href+'" target="_top">查看最新简报</a></div>';
+   card.innerHTML='<small>精选简报｜最新：'+date+'</small><h3>精选简报</h3><p>贯通PE、IE、NPI、ME、JIT、PDCA、PQCD、OEE、精益物流与Kaizen；每期均有独立网址，可连续翻阅与直接分享。</p><ul class="knowledge-tags"><li>工程体系</li><li>精益运营</li><li>项目交付</li></ul><div class="knowledge-actions"><a class="button" href="/qilylean/daily-insights.html" target="_top">查看简报目录</a><a class="button" href="'+href+'" target="_top">查看最新简报</a></div>';
  }
  function addCard(){
    var sec=document.getElementById('knowledge');
