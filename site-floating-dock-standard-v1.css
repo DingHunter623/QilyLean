@@ -1,0 +1,105 @@
+/* QilyLean sitewide floating dock standard v1｜2026-08-19
+ * One visual contract for every public page.
+ * Overrides legacy per-page/share-only sizing without changing dock actions.
+ */
+:root{
+  --qily-dock-size:62px;
+  --qily-dock-gap:8px;
+  --qily-dock-bg:#0f4b5a;
+  --qily-dock-bg-hover:#12606f;
+  --qily-dock-border:#caa15f;
+}
+
+html body #floatDock.qily-float-dock{
+  position:fixed!important;
+  right:max(12px,env(safe-area-inset-right))!important;
+  left:auto!important;
+  top:clamp(84px,18vh,160px)!important;
+  bottom:auto!important;
+  z-index:9000!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:var(--qily-dock-gap)!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
+
+html body #floatDock.qily-float-dock .qily-float-btn,
+html body #floatDock.qily-float-dock .qily-float-btn[data-action="share"]{
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex:0 0 var(--qily-dock-size)!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:var(--qily-dock-size)!important;
+  min-width:var(--qily-dock-size)!important;
+  max-width:var(--qily-dock-size)!important;
+  height:var(--qily-dock-size)!important;
+  min-height:var(--qily-dock-size)!important;
+  max-height:var(--qily-dock-size)!important;
+  margin:0!important;
+  padding:5px!important;
+  border:1.5px solid var(--qily-dock-border)!important;
+  border-radius:50%!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-dock-bg)!important;
+  box-shadow:0 8px 20px rgba(7,60,71,.22)!important;
+  filter:none!important;
+  font:inherit!important;
+  font-size:15px!important;
+  font-weight:900!important;
+  line-height:1.08!important;
+  letter-spacing:0!important;
+  text-align:center!important;
+  text-shadow:none!important;
+  white-space:normal!important;
+  overflow:hidden!important;
+  cursor:pointer!important;
+  transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease!important;
+}
+
+html body #floatDock.qily-float-dock .qily-float-btn:is(:hover,:focus-visible){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-dock-bg-hover)!important;
+  border-color:#ffe39b!important;
+  box-shadow:0 10px 24px rgba(7,60,71,.30)!important;
+  outline:2px solid rgba(255,227,155,.45)!important;
+  outline-offset:2px!important;
+  transform:translateY(-1px)!important;
+}
+
+html body #floatDock.qily-float-dock .qily-float-btn:active,
+html body #floatDock.qily-float-dock .qily-float-btn[data-qily-pressed="true"]{
+  background:#073c47!important;
+  transform:scale(.96)!important;
+}
+
+html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-line{
+  display:block!important;
+  margin:0!important;
+  padding:0!important;
+  line-height:1.02!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-primary{font-size:15px!important;}
+html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url{font-size:11px!important;letter-spacing:-.02em!important;}
+
+@media(max-width:640px){
+  :root{--qily-dock-size:58px;--qily-dock-gap:7px;}
+  html body #floatDock.qily-float-dock{right:max(8px,env(safe-area-inset-right))!important;top:clamp(76px,16vh,132px)!important;}
+  html body #floatDock.qily-float-dock .qily-float-btn,
+  html body #floatDock.qily-float-dock .qily-float-btn[data-action="share"]{padding:4px!important;font-size:14px!important;}
+  html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-primary{font-size:14px!important;}
+  html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url{font-size:10px!important;}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body #floatDock.qily-float-dock .qily-float-btn{transition:none!important;}
+}
