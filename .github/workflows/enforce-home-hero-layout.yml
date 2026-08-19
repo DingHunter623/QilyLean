@@ -1,0 +1,63 @@
+name: Enforce homepage hero title scale and content alignment
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-home-hero-tune-v1.css'
+      - 'scripts/enforce-home-hero-layout.js'
+      - 'index.html'
+      - '.github/workflows/enforce-home-hero-layout.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-home-hero-alignment
+  cancel-in-progress: false
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 3
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Materialize homepage hero alignment
+        run: |
+          node --check scripts/enforce-home-hero-layout.js
+          node scripts/enforce-home-hero-layout.js --apply
+          git diff --check
+
+      - name: Validate requested visual corrections
+        shell: bash
+        run: |
+          grep -q -- 'qilyHomeHeroTuneV1' index.html
+          grep -q -- '20260819-home-hero-align-v1' index.html
+          grep -q -- 'font-size:clamp(48px,4.35vw,64px)!important' site-home-hero-tune-v1.css
+          grep -q -- 'grid-template-columns:minmax(0,1fr) minmax(330px,360px)!important' site-home-hero-tune-v1.css
+          grep -q -- '.qily-home-thesis' site-home-hero-tune-v1.css
+          grep -q -- '.qily-home-actions' site-home-hero-tune-v1.css
+          grep -q -- 'max-width:none!important' site-home-hero-tune-v1.css
+
+      - name: Commit materialized homepage
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add index.html
+          if git diff --cached --quiet; then
+            echo 'Homepage hero alignment already materialized.'
+            exit 0
+          fi
+          git commit -m 'fix: materialize homepage hero title and alignment [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
