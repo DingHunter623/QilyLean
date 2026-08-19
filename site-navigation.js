@@ -1,13 +1,13 @@
-/* QilyLean atomic first-paint navigation runtime v27｜2026-08-19
+/* QilyLean atomic first-paint navigation runtime v28｜2026-08-19
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
  * 性能：普通页面直达 core；仅合作/资源页面按需加载 legacy，避免全站下载报价与资源逻辑。
- * 可视化：中文正文启用 pretty wrap / strict line-break，标题平衡换行；悬浮栏“分享官方网址”固定两行完整显示。
- * V27：全站箭头几何升级为V3，箭头尖端保留安全间距，marker端点计入三角头外伸量，分离三角与线自动贴合，禁止脱离或压框。
+ * 可视化：中文正文启用 pretty wrap / strict line-break；悬浮功能区执行全站唯一视觉标准。
+ * V28：箭头几何升级为V4——marker箭头与“直线+三角形”统一转为一体化矢量箭头，禁止轴线穿出箭尖；双向改革/改善示意图上下箭头缩小并对称。
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV27) return;
-  w.__qilyStaticFirstNavigationV27 = true;
+  if (w.__qilyStaticFirstNavigationV28) return;
+  w.__qilyStaticFirstNavigationV28 = true;
 
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260817-atomic-first-paint-v8';
   var CORE_SRC = '/site-navigation-core.js?v=20260819-operating-axis-nav-v22';
@@ -16,7 +16,8 @@
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6';
   var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260819-unified-content-axis-v1';
   var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2';
-  var GEOMETRY_SRC = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v3';
+  var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-sitewide-dock-v1';
+  var GEOMETRY_SRC = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';
 
   function installVisualGovernanceLink() {
     var continuity = d.querySelector('link[href*="/site-interaction-continuity-v1.css"]');
@@ -74,6 +75,26 @@
     }
   }
 
+  function installDockStandardLink() {
+    if (!d.getElementById('qilyDockUniformCriticalV1')) {
+      var critical = d.createElement('style');
+      critical.id = 'qilyDockUniformCriticalV1';
+      critical.textContent = 'html body #floatDock.qily-float-dock{right:max(12px,env(safe-area-inset-right))!important;left:auto!important;top:clamp(84px,18vh,160px)!important;bottom:auto!important;gap:8px!important;transform:none!important}html body #floatDock.qily-float-dock .qily-float-btn,html body #floatDock.qily-float-dock .qily-float-btn[data-action="share"]{box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;width:62px!important;min-width:62px!important;max-width:62px!important;height:62px!important;min-height:62px!important;max-height:62px!important;margin:0!important;padding:5px!important;border:1.5px solid #caa15f!important;border-radius:50%!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a!important;font-size:15px!important;line-height:1.08!important;overflow:hidden!important}';
+      (d.head || d.documentElement).appendChild(critical);
+    }
+    var dock = d.getElementById('qilyFloatingDockStandardV1') || d.querySelector('link[href*="/site-floating-dock-standard-v1.css"]');
+    if (!dock) {
+      dock = d.createElement('link');
+      dock.id = 'qilyFloatingDockStandardV1';
+      dock.rel = 'stylesheet';
+      dock.href = DOCK_HREF;
+      (d.head || d.documentElement).appendChild(dock);
+    } else if (dock.getAttribute('href') !== DOCK_HREF) {
+      dock.id = 'qilyFloatingDockStandardV1';
+      dock.setAttribute('href', DOCK_HREF);
+    }
+  }
+
   function installTypographyPolish() {
     if (d.getElementById('qilyChineseWrapPolishV1')) return;
     var style = d.createElement('style');
@@ -87,13 +108,13 @@
   }
 
   function loadVisualGeometry() {
-    if (w.__qilyVisualGeometryV3 || d.querySelector('script[data-qily-visual-geometry="v3"],script[src*="/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v3"]')) return;
+    if (w.__qilyVisualGeometryV4 || d.querySelector('script[data-qily-visual-geometry="v4"],script[src*="/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4"]')) return;
     var stale = d.querySelector('script[data-qily-visual-geometry],script[src*="/site-visual-geometry-v1.js"]');
-    if (stale && !w.__qilyVisualGeometryV3) stale.remove();
+    if (stale && !w.__qilyVisualGeometryV4) stale.remove();
     var script = d.createElement('script');
     script.src = GEOMETRY_SRC;
     script.async = false;
-    script.setAttribute('data-qily-visual-geometry', 'v3');
+    script.setAttribute('data-qily-visual-geometry', 'v4');
     (d.head || d.documentElement).appendChild(script);
   }
 
@@ -110,7 +131,7 @@
     var script = d.createElement('script');
     script.src = legacy ? LEGACY_SRC : CORE_SRC;
     script.async = false;
-    script.setAttribute(attr, 'atomic-first-paint-v27');
+    script.setAttribute(attr, 'atomic-first-paint-v28');
     (d.head || d.documentElement).appendChild(script);
   }
 
@@ -153,6 +174,7 @@
   installVisualGovernanceLink();
   installContentAxisLink();
   installHomeHeroTune();
+  installDockStandardLink();
   installTypographyPolish();
   loadVisualGeometry();
   loadConsistencyGuard();
@@ -162,7 +184,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v27',
+  mode: 'atomic-first-paint-v28',
   staticHtmlAuthority: true,
   atomicFirstPaint: true,
   runtimeDependencyWaterfall: false,
@@ -178,12 +200,14 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   unifiedContentAxis: true,
   unifiedContentAxisWidth: 1560,
   visualGeometryClosure: true,
-  sceneSvgWhitespaceTightening: true,
-  flowArrowSnap: true,
-  markerArrowSafeGap: true,
-  separateTriangleLineJoin: true,
+  unifiedOnePieceArrows: true,
+  markerUnitsOverhangEliminated: true,
+  separateTriangleLineEliminated: true,
+  symmetricBidirectionalSceneArrows: true,
   arrowFrameCollisionPrevention: true,
   homepageHeroTune: true,
+  dockUniformVisualContract: true,
+  dockUniformSize: 62,
   dockOfficialUrlTwoLine: true,
   dockActions: [
     'data-action="home"', 'data-action="top"', 'data-action="back"',
