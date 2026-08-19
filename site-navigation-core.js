@@ -19,7 +19,8 @@
     ['代表项目', '/projects/'],
     ['信任中心', '/trust/'],
     ['项目合作', '/cooperation/'],
-    ['知识资产', '/knowledge/']
+    ['知识资产', '/knowledge/'],
+    ['友情链接', '/links/']
   ];
 
   function normalizedPath(path) {
