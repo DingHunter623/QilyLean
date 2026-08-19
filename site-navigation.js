@@ -10,11 +10,11 @@
   w.__qilyStaticFirstNavigationV24 = true;
 
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260817-atomic-first-paint-v8';
-  var CORE_SRC = '/site-navigation-core.js?v=20260819-operating-axis-nav-v21';
+  var CORE_SRC = '/site-navigation-core.js?v=20260819-operating-axis-nav-v22';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
-  var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v4';
-  var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v1';
+  var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v5';
+  var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2';
 
   function installVisualGovernanceLink() {
     var continuity = d.querySelector('link[href*="/site-interaction-continuity-v1.css"]');
@@ -88,7 +88,6 @@
   }
 
   function loadConsistencyGuard() {
-    /* Core 与 consistency 并行加载，禁止旧版 load -> core 串行瀑布。 */
     appendRuntime();
     if (w.__qilyUiConsistencyV2) return;
     var existing = d.querySelector('script[data-qily-ui-consistency],script[src*="/site-ui-consistency-v1.js"]');
