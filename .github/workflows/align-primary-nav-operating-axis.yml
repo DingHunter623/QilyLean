@@ -1,10 +1,15 @@
-name: Align primary navigation to manufacturing operating axis
+name: Enforce primary navigation, operating-axis mapping and mobile readability
 
 on:
   push:
     branches: [main]
     paths:
       - 'scripts/align-primary-nav-operating-axis.js'
+      - 'site-navigation-core.js'
+      - 'site-navigation.js'
+      - 'site-visual-governance-v2.css'
+      - '*.html'
+      - '**/*.html'
       - '.github/workflows/align-primary-nav-operating-axis.yml'
   workflow_dispatch:
 
@@ -12,44 +17,53 @@ permissions:
   contents: write
 
 concurrency:
-  group: align-primary-nav-operating-axis
+  group: qily-site-operating-axis-readability
   cancel-in-progress: false
 
 jobs:
-  align:
+  enforce:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
-          fetch-depth: 2
+          ref: main
+          fetch-depth: 3
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version: 24
 
-      - name: Align static and runtime navigation order
-        run: node scripts/align-primary-nav-operating-axis.js --apply
-
-      - name: Validate JavaScript syntax and navigation contract
-        shell: bash
+      - name: Materialize unified site baseline
         run: |
           node --check scripts/align-primary-nav-operating-axis.js
-          node --check site-navigation-core.js
-          node --check site-parent-navigation-v3.js
-          node --check site-navigation.js
           node scripts/align-primary-nav-operating-axis.js --apply
+          node --check site-navigation-core.js
+          node --check site-navigation.js
+          git diff --check
 
-      - name: Commit aligned site navigation
+      - name: Validate navigation and mobile readability contract
+        shell: bash
+        run: |
+          node scripts/align-primary-nav-operating-axis.js --apply
+          grep -q -- '--qily-readable-floor:16px' site-visual-governance-v2.css
+          grep -q -- 'font-size:16.5px!important' site-visual-governance-v2.css
+          grep -q -- "['履历主线', '/experience/']" site-navigation-core.js
+          grep -q -- "['信任中心', '/trust/']" site-navigation-core.js
+          ! grep -A12 'var routes = \[' site-navigation-core.js | grep -q '友情链接'
+          ! grep -q 'font-size:11.5px!important' site-navigation-core.js
+          ! grep -q 'font-size:12.5px!important' site-navigation-core.js
+
+      - name: Commit self-healed public baseline
         shell: bash
         run: |
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
-          git add site-navigation-core.js site-parent-navigation-v3.js site-navigation.js docs/QILYLEAN_SITE_SYSTEM_V3.md '*.html' '**/*.html'
+          git add site-navigation-core.js site-navigation.js '*.html' '**/*.html'
           if git diff --cached --quiet; then
-            echo 'No navigation changes to commit.'
+            echo 'Navigation/readability baseline already materialized.'
             exit 0
           fi
-          git commit -m 'fix: align primary navigation with manufacturing operating axis [skip ci]'
+          git commit -m 'fix: lock operating-axis navigation and mobile readability baseline [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main

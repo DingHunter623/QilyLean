@@ -1,0 +1,110 @@
+/* QilyLean 全站可读性治理层 V2｜2026-08-19
+ * 目的：在 V1 视觉治理之上，永久落实“最小号字体整体放大一号”，重点保护手机端、高层/股东浏览场景。
+ * 原则：不改变标题层级，不把正文全部放成同一字号；只抬高最小可读基线，并覆盖导航、制造运营轴、状态说明、Dock、表格与表单等历史小字号盲区。
+ */
+@import url("/site-visual-governance-v1.css?v=20260818-v1");
+
+:root{
+  --qily-type-nav-1:18px!important;
+  --qily-type-nav-2:17px!important;
+  --qily-type-nav-3:16.5px!important;
+  --qily-type-note:18px!important;
+  --qily-type-small:17px!important;
+  --qily-readable-floor:16px;
+  --qily-readable-small:17px;
+  --qily-readable-body-note:18px;
+}
+
+/* 01｜全站最小号文字：默认不低于 17px；保留原有更大字号。 */
+html body :is(
+  small,figcaption,.caption,.meta,.fine,.eyebrow,.module-eyebrow,.qily-ia-kicker,
+  .kicker,.section-kicker,.tag,.tag-row li,.project-meta,.article-meta,.moment-count,
+  .gallery-tip,.empty,.project-card-brief,.project-fact small,.module-card>small,
+  .paper-card>small,.career-full-card>small,.privacy-note,.legal-note,.status-note,
+  .service-contract-meta span,.qily-secondary-link span,.qily-ia-secondary-link span
+){
+  font-size:max(var(--qily-readable-small),1em)!important;
+  line-height:1.62!important;
+  opacity:1!important;
+}
+
+/* 02｜制造运营资产闭环：标题、阶段名、说明都必须在手机上直接读清。 */
+html body .qily-system-axis__title{
+  font-size:17.5px!important;
+  line-height:1.35!important;
+  letter-spacing:.04em!important;
+}
+html body .qily-system-axis__step strong{
+  font-size:17px!important;
+  line-height:1.28!important;
+}
+html body .qily-system-axis__step span{
+  font-size:16.5px!important;
+  line-height:1.38!important;
+}
+
+/* 03｜模块内的小导航、状态、卡片辅助说明统一抬高。 */
+html body :is(
+  .module-subnav a,.trust-status span,.trust-level span,.scope-list span,
+  .qily-ia-pill-list li,.qily-ia-delivery-summary span,.qily-card-link-hint,
+  .qily-evidence-grade-badge span,.qily-evidence-level-panel span,.record,
+  .status-detail,.module-result,.module-note,.career-result,.qily-ia-result,
+  .project-result,.result,.output,.note,.notice,.upload-note
+){
+  font-size:max(var(--qily-readable-small),1em)!important;
+  line-height:1.62!important;
+  opacity:1!important;
+}
+
+/* 04｜一级导航：桌面 18px；手机仍保持 16.5px，不再回退到 11–13px。 */
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav)>a[href],
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav)>a[href]{
+  font-size:18px!important;
+  line-height:1.22!important;
+  font-weight:900!important;
+}
+
+/* 05｜右侧 Dock：任何可见字不得再使用 11–14px 小字。 */
+html body #floatDock .qily-float-btn,
+html body #floatDock :is(.qily-float-home,.qily-float-back,.qily-float-current,.qily-float-share,.qily-float-contact){
+  font-size:16px!important;
+  line-height:1.12!important;
+}
+html body #floatDock [data-action="share"] .qily-share-label-primary,
+html body #floatDock [data-action="share"] .qily-share-label-url,
+html body #floatDock .qily-share-label-line{
+  font-size:16px!important;
+  line-height:1.06!important;
+}
+
+/* 06｜表格、表单、面包屑、页尾等常见历史小字号盲区。 */
+html body :is(th,td,label,input,select,textarea,button){
+  font-size:max(var(--qily-readable-floor),1em)!important;
+}
+html body :is(.breadcrumb,.breadcrumbs,.qily-breadcrumb,.site-footer,footer,.footer-note,.copyright){
+  font-size:max(16.5px,1em)!important;
+  line-height:1.55!important;
+}
+
+/* 07｜移动端只重排，不缩小信息。 */
+@media(max-width:900px){
+  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav)>a[href],
+  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav)>a[href]{
+    font-size:16.5px!important;
+    min-height:38px!important;
+    padding:6px 9px!important;
+  }
+}
+@media(max-width:620px){
+  html body :is(
+    small,figcaption,.caption,.meta,.fine,.eyebrow,.module-eyebrow,.qily-ia-kicker,
+    .kicker,.section-kicker,.tag,.project-meta,.article-meta,.trust-status span,
+    .trust-level span,.module-subnav a
+  ){
+    font-size:17px!important;
+  }
+  html body .qily-system-axis__step strong{font-size:16.5px!important}
+  html body .qily-system-axis__step span{font-size:16px!important}
+  html body #floatDock .qily-float-btn,
+  html body #floatDock .qily-share-label-line{font-size:16px!important}
+}

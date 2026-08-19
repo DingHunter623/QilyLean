@@ -1,12 +1,25 @@
 #!/usr/bin/env node
 'use strict';
 
+/* QilyLean 一级导视 + 制造运营闭环 + 移动可读性永久物化器｜2026-08-19
+ * 目的：消除“静态 HTML / 运行时 / 缓存 / 自动发布器”之间的回退。
+ * 固定一级导视：
+ * 首页 → 履历主线 → 能力体系 → 改善方法 → 代表项目 → 信任中心 → 项目合作 → 知识资产
+ * 制造运营闭环映射：
+ * 01 履历主线 → 02 能力体系 → 03 改善方法（代表项目用于验证）→ 04 信任中心 → 05 项目合作 → 06 知识资产
+ */
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const APPLY = process.argv.includes('--apply');
+const BUILD = '20260819-operating-axis-readable-v1';
+const NAV_JS_VERSION = '20260819-operating-axis-readable-v25';
+const CORE_VERSION = '20260819-operating-axis-nav-v19';
+const GOV_VERSION = '20260819-readable-mobile-v2';
+const GOV_HREF = `/site-visual-governance-v2.css?v=${GOV_VERSION}`;
+const GOV_TAG = `<link id="qilyVisualGovernanceV1" rel="stylesheet" href="${GOV_HREF}">`;
 
 const ROUTES = [
   ['首页', '/'],
@@ -18,13 +31,28 @@ const ROUTES = [
   ['项目合作', '/cooperation/'],
   ['知识资产', '/knowledge/']
 ];
-
 const LABELS = ROUTES.map(([label]) => label);
 const EXPECTED = LABELS.join(' > ');
+const AXIS = new Map([
+  ['01｜现场事实', '/experience/'],
+  ['02｜工程数据', '/capabilities/'],
+  ['03｜精益改善', '/improvements/'],
+  ['04｜质量保证', '/trust/'],
+  ['05｜数智固化', '/cooperation/'],
+  ['06｜知识资产', '/knowledge/']
+]);
 
-function read(rel) { return fs.readFileSync(path.join(ROOT, rel), 'utf8'); }
-function write(rel, content) { fs.writeFileSync(path.join(ROOT, rel), content, 'utf8'); }
-
+function abs(rel) { return path.join(ROOT, rel); }
+function read(rel) { return fs.readFileSync(abs(rel), 'utf8'); }
+function write(rel, content) {
+  if (!APPLY) return false;
+  const out = content.endsWith('\n') ? content : `${content}\n`;
+  const before = fs.readFileSync(abs(rel), 'utf8');
+  if (before === out) return false;
+  fs.writeFileSync(abs(rel), out, 'utf8');
+  return true;
+}
+function assert(ok, msg) { if (!ok) throw new Error(msg); }
 function trackedHtml() {
   return execFileSync('git', ['ls-files', '*.html'], {
     cwd: ROOT,
@@ -32,108 +60,13 @@ function trackedHtml() {
     maxBuffer: 64 * 1024 * 1024
   }).split(/\r?\n/).filter(Boolean);
 }
-
-function routeArray(indent, compact) {
-  const lines = ROUTES.map(([label, href]) => `${indent}['${label}', '${href}']`);
-  return compact
-    ? `var PRIMARY_ROUTES=[\n${lines.join(',\n')}\n  ];`
-    : `var routes = [\n${lines.join(',\n')}\n  ];`;
+function isPublicHtml(html) {
+  return /<html\b/i.test(html) && /<body\b/i.test(html) &&
+    /(?:site-navigation\.js|qily-global-nav|site-nav|site-parent-navigation-v3\.js)/i.test(html);
 }
-
-function replaceLocated(source, pattern, replacement, label) {
-  if (!pattern.test(source)) throw new Error(`${label} was not located`);
-  pattern.lastIndex = 0;
-  return source.replace(pattern, replacement);
-}
-
-function patchCentralSources() {
-  let changed = 0;
-
-  const corePath = 'site-navigation-core.js';
-  const core = read(corePath);
-  const corePattern = /var routes = \[\n[\s\S]*?\n  \];/;
-  const nextCore = replaceLocated(core, corePattern, routeArray('    ', false), 'site-navigation-core.js route array');
-  if (nextCore !== core) { if (APPLY) write(corePath, nextCore); changed += 1; }
-
-  const parentPath = 'site-parent-navigation-v3.js';
-  const parent = read(parentPath);
-  const parentPattern = /var PRIMARY_ROUTES=\[\n[\s\S]*?\n  \];/;
-  const nextParent = replaceLocated(parent, parentPattern, routeArray('    ', true), 'site-parent-navigation-v3.js PRIMARY_ROUTES');
-  if (nextParent !== parent) { if (APPLY) write(parentPath, nextParent); changed += 1; }
-
-  const wrapperPath = 'site-navigation.js';
-  const wrapper = read(wrapperPath);
-  const wrapperPattern = /var PARENT_SRC = '\/site-parent-navigation-v3\.js\?v=[^']+';/;
-  const nextWrapper = replaceLocated(
-    wrapper,
-    wrapperPattern,
-    "var PARENT_SRC = '/site-parent-navigation-v3.js?v=20260813-operating-axis-nav-v4';",
-    'site-navigation.js parent-navigation cache version'
-  );
-  if (nextWrapper !== wrapper) { if (APPLY) write(wrapperPath, nextWrapper); changed += 1; }
-
-  return changed;
-}
-
 function anchorLabel(anchor) {
   return anchor.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
 }
-
-function reorderNavBlock(block) {
-  const open = block.match(/^<nav\b[^>]*>/i);
-  if (!open || !/(?:qily-global-nav|site-nav)/i.test(open[0])) return block;
-  if (!LABELS.every(label => block.includes(`>${label}<`) || block.includes(`>${label}</a>`))) return block;
-
-  const anchors = block.match(/<a\b[^>]*>[\s\S]*?<\/a>/gi) || [];
-  const byLabel = new Map();
-  anchors.forEach(anchor => {
-    const label = anchorLabel(anchor);
-    if (LABELS.includes(label) && !byLabel.has(label)) byLabel.set(label, anchor.trim());
-  });
-  if (byLabel.size !== ROUTES.length) return block;
-
-  const indentMatch = block.match(/\n([ \t]+)<a\b/i);
-  const indent = indentMatch ? indentMatch[1] : '      ';
-  const closeIndent = indent.slice(0, Math.max(0, indent.length - 2));
-  const body = ROUTES.map(([label]) => `${indent}${byLabel.get(label)}`).join('\n');
-  return `${open[0]}\n${body}\n${closeIndent}</nav>`;
-}
-
-function patchHtmlNavs() {
-  let changedFiles = 0;
-  let touchedNavs = 0;
-  for (const rel of trackedHtml()) {
-    const abs = path.join(ROOT, rel);
-    let html;
-    try { html = fs.readFileSync(abs, 'utf8'); } catch (_) { continue; }
-    let localTouched = 0;
-    const next = html.replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi, block => {
-      const reordered = reorderNavBlock(block);
-      if (reordered !== block) localTouched += 1;
-      return reordered;
-    });
-    if (next !== html) {
-      if (APPLY) fs.writeFileSync(abs, next, 'utf8');
-      changedFiles += 1;
-      touchedNavs += localTouched;
-    }
-  }
-  return { changedFiles, touchedNavs };
-}
-
-function patchDocs() {
-  const rel = 'docs/QILYLEAN_SITE_SYSTEM_V3.md';
-  const source = read(rel);
-  if (source.includes('- 履历主线（01｜现场事实）') && source.includes('- 知识资产（06｜标准、模板、证据与复制）')) return 0;
-
-  const replacement = `一级导航只保留核心专业认知路径：\n\n- 首页\n- 履历主线（01｜现场事实）\n- 能力体系（02｜工程数据）\n- 改善方法（03｜精益改善）\n- 代表项目（03｜改善验证与项目证据）\n- 信任中心（04｜质量保证／证据边界）\n- 项目合作（05｜机制固化与项目承接）\n- 知识资产（06｜标准、模板、证据与复制）\n\n> 导航排序必须与“现场事实 → 工程数据 → 精益改善 → 质量保证 → 数智固化 → 知识资产”的制造运营资产闭环保持同向认知，不允许把知识资产、履历或信任模块重新打乱到闭环前后。\n\nQilyLean AI、行走印记、产业资源协同网络、友情链接及其他扩展内容保留可达，但归入二级或内容内导视，避免与主专业链路争夺注意力。`;
-  const pattern = /一级导航只保留核心专业认知路径：\n\n(?:- .*\n)+\nQilyLean AI、行走印记、产业资源协同网络、友情链接及其他扩展内容保留可达，但归入二级或内容内导视，避免与主专业链路争夺注意力。/;
-  if (!pattern.test(source)) throw new Error('Site System V3 navigation section was not located');
-  const next = source.replace(pattern, replacement);
-  if (APPLY) write(rel, next);
-  return 1;
-}
-
 function orderedLabels(text) {
   let cursor = -1;
   for (const label of LABELS) {
@@ -143,54 +76,150 @@ function orderedLabels(text) {
   }
   return true;
 }
+function routeArray(indent = '    ') {
+  return `var routes = [\n${ROUTES.map(([label, href]) => `${indent}['${label}', '${href}']`).join(',\n')}\n  ];`;
+}
 
-function validate() {
-  const errors = [];
-  const core = read('site-navigation-core.js');
-  const parent = read('site-parent-navigation-v3.js');
-  const wrapper = read('site-navigation.js');
+function patchCore() {
+  const rel = 'site-navigation-core.js';
+  let src = read(rel);
+  const before = src;
+  const routePattern = /var routes = \[\n[\s\S]*?\n  \];/;
+  assert(routePattern.test(src), 'site-navigation-core.js route array not found');
+  src = src.replace(routePattern, routeArray());
+  src = src.replace(/font-size:12\.5px!important/g, 'font-size:16.5px!important');
+  src = src.replace(/font-size:11\.5px!important/g, 'font-size:16.5px!important');
+  src = src.replace(/font-size:17\.5px!important/g, 'font-size:18px!important');
+  if (src !== before) write(rel, src);
+  return src !== before;
+}
 
-  const coreArray = (core.match(/var routes = \[\n([\s\S]*?)\n  \];/) || [])[1] || '';
-  const parentArray = (parent.match(/var PRIMARY_ROUTES=\[\n([\s\S]*?)\n  \];/) || [])[1] || '';
-  if (!orderedLabels(coreArray)) errors.push('site-navigation-core.js route order is stale');
-  if (!orderedLabels(parentArray)) errors.push('site-parent-navigation-v3.js route order is stale');
-  if (!wrapper.includes('20260813-operating-axis-nav-v4')) errors.push('site-navigation.js cache-bust version is stale');
+function patchWrapper() {
+  const rel = 'site-navigation.js';
+  let src = read(rel);
+  const before = src;
+  const corePattern = /var CORE_SRC = '\/site-navigation-core\.js\?v=[^']+';/;
+  const govPattern = /var GOVERNANCE_HREF = '\/site-visual-governance-v[^']+';/;
+  assert(corePattern.test(src), 'site-navigation.js CORE_SRC not found');
+  assert(govPattern.test(src), 'site-navigation.js GOVERNANCE_HREF not found');
+  src = src.replace(corePattern, `var CORE_SRC = '/site-navigation-core.js?v=${CORE_VERSION}';`);
+  src = src.replace(govPattern, `var GOVERNANCE_HREF = '${GOV_HREF}';`);
+  if (src !== before) write(rel, src);
+  return src !== before;
+}
 
-  [
-    "if(path.indexOf('/experience/')===0)return 0;",
-    "if(path.indexOf('/capabilities/')===0)return 1;",
-    "if(path.indexOf('/projects/')===0||path.indexOf('/improvements/')===0)return 2;",
-    "if(path.indexOf('/trust/')===0)return 3;",
-    "if(path.indexOf('/cooperation/')===0)return 4;",
-    "if(path.indexOf('/knowledge/')===0||path.indexOf('/qilylean/daily')===0)return 5;"
-  ].forEach(marker => { if (!parent.includes(marker)) errors.push(`operating-axis mapping missing: ${marker}`); });
+function reorderNavBlock(block) {
+  const open = block.match(/^<nav\b[^>]*>/i);
+  if (!open || !/(?:qily-global-nav|site-nav|网站导航|QilyLean核心导视)/i.test(open[0])) return block;
+  const anchors = block.match(/<a\b[^>]*>[\s\S]*?<\/a>/gi) || [];
+  const byLabel = new Map();
+  for (const anchor of anchors) {
+    const label = anchorLabel(anchor);
+    if (LABELS.includes(label) && !byLabel.has(label)) byLabel.set(label, anchor.trim());
+  }
+  if (byLabel.size !== LABELS.length) return block;
+  const indentMatch = block.match(/\n([ \t]+)<a\b/i);
+  const indent = indentMatch ? indentMatch[1] : '      ';
+  const closeIndent = indent.slice(0, Math.max(0, indent.length - 2));
+  return `${open[0]}\n${ROUTES.map(([label]) => `${indent}${byLabel.get(label)}`).join('\n')}\n${closeIndent}</nav>`;
+}
 
-  let navCount = 0;
+function patchAxis(html) {
+  return html.replace(/<a\b[^>]*class=["'][^"']*qily-system-axis__step[^"']*["'][^>]*>[\s\S]*?<\/a>/gi, block => {
+    for (const [label, href] of AXIS) {
+      if (!block.includes(`<strong>${label}</strong>`)) continue;
+      if (/\bhref=["'][^"']*["']/i.test(block)) return block.replace(/\bhref=["'][^"']*["']/i, `href="${href}"`);
+      return block.replace(/^<a\b/i, `<a href="${href}"`);
+    }
+    return block;
+  });
+}
+
+function installGovernance(html) {
+  let out = html.replace(/\s*<link\b[^>]*(?:id=["']qilyVisualGovernanceV1["']|href=["'][^"']*\/site-visual-governance-v2\.css(?:\?v=[^"']*)?["'])[^>]*>\s*/gi, '\n');
+  assert(/<\/head>/i.test(out), 'public HTML head closing tag missing');
+  return out.replace(/<\/head>/i, `  ${GOV_TAG}\n</head>`);
+}
+
+function patchPublicHtml(rel) {
+  let html = read(rel);
+  if (!isPublicHtml(html)) return false;
+  const before = html;
+  html = html.replace(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi, reorderNavBlock);
+  html = patchAxis(html);
+  html = html.replace(/\/site-navigation\.js\?v=[^"']+/g, `/site-navigation.js?v=${NAV_JS_VERSION}`);
+  html = html.replace(/(<script\b[^>]*data-qily-r2-first-paint[^>]*>[\s\S]*?\bvar BUILD=')[^']+('[\s\S]*?<\/script>)/gi, `$1${BUILD}$2`);
+  html = installGovernance(html);
+  if (html !== before) write(rel, html);
+  return html !== before;
+}
+
+function patchAllHtml() {
+  let checked = 0;
+  let changed = 0;
   for (const rel of trackedHtml()) {
     let html;
     try { html = read(rel); } catch (_) { continue; }
+    if (!isPublicHtml(html)) continue;
+    checked += 1;
+    if (patchPublicHtml(rel)) changed += 1;
+  }
+  return { checked, changed };
+}
+
+function validate() {
+  const core = read('site-navigation-core.js');
+  const wrapper = read('site-navigation.js');
+  const css = read('site-visual-governance-v2.css');
+  const coreArray = (core.match(/var routes = \[\n([\s\S]*?)\n  \];/) || [])[1] || '';
+  assert(orderedLabels(coreArray), 'runtime primary navigation order is stale');
+  assert(!coreArray.includes('友情链接'), '友情链接 must not remain in primary navigation');
+  assert(!core.includes('font-size:11.5px!important'), '11.5px mobile nav regression detected');
+  assert(!core.includes('font-size:12.5px!important'), '12.5px mobile nav regression detected');
+  assert(wrapper.includes(`/site-navigation-core.js?v=${CORE_VERSION}`), 'core cache version is stale');
+  assert(wrapper.includes(GOV_HREF), 'visual governance runtime version is stale');
+  assert(css.includes('--qily-readable-floor:16px'), 'readability floor missing');
+  assert(css.includes('font-size:16.5px!important'), 'mobile navigation readability rule missing');
+
+  let publicCount = 0;
+  let navCount = 0;
+  let axisCount = 0;
+  for (const rel of trackedHtml()) {
+    let html;
+    try { html = read(rel); } catch (_) { continue; }
+    if (!isPublicHtml(html)) continue;
+    publicCount += 1;
+    assert(html.includes(GOV_HREF), `${rel}: V2 visual governance link missing`);
+    assert(html.includes(`/site-navigation.js?v=${NAV_JS_VERSION}`), `${rel}: navigation cache version stale`);
     const navs = html.match(/<nav\b[^>]*>[\s\S]*?<\/nav>/gi) || [];
     for (const nav of navs) {
-      if (!/(?:qily-global-nav|site-nav)/i.test(nav)) continue;
-      if (!LABELS.every(label => nav.includes(`>${label}<`) || nav.includes(`>${label}</a>`))) continue;
+      if (!/(?:qily-global-nav|site-nav|网站导航|QilyLean核心导视)/i.test(nav)) continue;
+      if (!LABELS.every(label => nav.includes(label))) continue;
       navCount += 1;
-      if (!orderedLabels(nav)) errors.push(`${rel}: primary navigation order is stale`);
+      assert(orderedLabels(nav), `${rel}: primary navigation order stale`);
+      assert(!nav.includes('友情链接'), `${rel}: 友情链接 leaked into primary navigation`);
+    }
+    const steps = html.match(/<a\b[^>]*class=["'][^"']*qily-system-axis__step[^"']*["'][^>]*>[\s\S]*?<\/a>/gi) || [];
+    for (const step of steps) {
+      for (const [label, href] of AXIS) {
+        if (!step.includes(`<strong>${label}</strong>`)) continue;
+        axisCount += 1;
+        assert(step.includes(`href="${href}"`) || step.includes(`href='${href}'`), `${rel}: ${label} target must be ${href}`);
+      }
     }
   }
-
-  const docs = read('docs/QILYLEAN_SITE_SYSTEM_V3.md');
-  if (!docs.includes('- 履历主线（01｜现场事实）') || !docs.includes('- 知识资产（06｜标准、模板、证据与复制）')) errors.push('Site System V3 docs are stale');
-
-  if (errors.length) throw new Error(errors.join('\n'));
-  process.stdout.write(`Navigation operating-axis validation passed. ${navCount} static primary navigation blocks follow: ${EXPECTED}.\n`);
+  assert(publicCount > 0, 'No public HTML pages discovered');
+  assert(navCount > 0, 'No primary navigation blocks validated');
+  assert(axisCount > 0, 'No operating-axis steps validated');
+  process.stdout.write(`PASS: ${publicCount} public pages; ${navCount} primary navs follow ${EXPECTED}; ${axisCount} operating-axis steps map to their corresponding modules.\n`);
 }
 
 function main() {
-  const central = patchCentralSources();
-  const html = patchHtmlNavs();
-  const docs = patchDocs();
+  const coreChanged = patchCore();
+  const wrapperChanged = patchWrapper();
+  const html = patchAllHtml();
   if (APPLY) validate();
-  process.stdout.write(`${APPLY ? 'Applied' : 'Would apply'} operating-axis navigation alignment: ${central + docs} central/doc files, ${html.changedFiles} HTML files, ${html.touchedNavs} primary nav blocks.\n`);
+  process.stdout.write(`${APPLY ? 'Applied' : 'Would apply'} operating-axis/readability baseline: core=${coreChanged ? 1 : 0}, wrapper=${wrapperChanged ? 1 : 0}, public HTML ${html.changed}/${html.checked}.\n`);
 }
 
 main();
