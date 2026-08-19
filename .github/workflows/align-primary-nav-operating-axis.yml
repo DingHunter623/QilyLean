@@ -51,9 +51,12 @@ jobs:
         run: |
           node scripts/align-primary-nav-operating-axis.js --apply
           node scripts/enforce-home-hero-layout.js --apply
-          grep -q -- '--qily-readable-floor:17px' site-visual-governance-v2.css
+          grep -q -- '--qily-readable-floor:18px' site-visual-governance-v2.css
           grep -q -- '--qily-readable-small:18px' site-visual-governance-v2.css
-          grep -q -- 'font-size:17.5px!important' site-visual-governance-v2.css
+          grep -q -- '.qily-principle span' site-visual-governance-v2.css
+          grep -q -- '.qily-value-card p' site-visual-governance-v2.css
+          grep -q -- '.qily-proof-item span' site-visual-governance-v2.css
+          grep -q -- '.qily-secondary-links span' site-visual-governance-v2.css
           grep -q -- '.trust-strip span' site-visual-governance-v2.css
           grep -q -- '.core-contract-viewer-note' site-visual-governance-v2.css
           grep -q -- '.attachment-size' site-visual-governance-v2.css
@@ -67,9 +70,10 @@ jobs:
           ! grep -q 'font-size:11.5px!important' site-navigation-core.js
           ! grep -q 'font-size:12.5px!important' site-navigation-core.js
           ! grep -q 'font-size:16.5px!important' site-navigation-core.js
+          ! grep -q 'font-size:17.5px!important' site-navigation-core.js
           grep -q -- 'qilyHomeHeroTuneV1' index.html
-          grep -q -- '20260819-home-hero-align-v1' index.html
-          grep -q -- 'font-size:clamp(48px,4.35vw,64px)!important' site-home-hero-tune-v1.css
+          grep -q -- '20260819-home-hero-align-v2' index.html
+          grep -q -- 'font-size:clamp(44px,4vw,56px)!important' site-home-hero-tune-v1.css
           grep -q -- 'grid-template-columns:minmax(0,1fr) minmax(330px,360px)!important' site-home-hero-tune-v1.css
           grep -q -- '.qily-home-thesis' site-home-hero-tune-v1.css
           grep -q -- '.qily-home-actions' site-home-hero-tune-v1.css
@@ -84,6 +88,6 @@ jobs:
             echo 'Navigation/readability/homepage hero baseline already materialized.'
             exit 0
           fi
-          git commit -m 'fix: materialize navigation readability and homepage hero [skip ci]'
+          git commit -m 'fix: materialize 18px readability floor and homepage hero v2 [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
