@@ -27,18 +27,21 @@ const core = read('site-navigation-core.js');
   'background:var(--qily-dock-bg)!important'
 ].forEach((token) => assert(dock.includes(token), 'dock standard missing: ' + token));
 
+/* The dock markup is stored inside JS strings; normalize optional escaped quotes
+ * before checking the semantic action order so the validator is source-style agnostic. */
+const normalizedCore = core.replace(/\\"/g, '"');
 const order = [
-  'data-action=\\"home\\"',
-  'data-action=\\"top\\"',
-  'data-action=\\"search\\"',
-  'data-action=\\"back\\"',
-  'data-action=\\"current\\"',
-  'data-action=\\"share\\"',
-  'data-action=\\"contact\\"'
+  'data-action="home"',
+  'data-action="top"',
+  'data-action="search"',
+  'data-action="back"',
+  'data-action="current"',
+  'data-action="share"',
+  'data-action="contact"'
 ];
 let cursor = -1;
 order.forEach((token) => {
-  const next = core.indexOf(token, cursor + 1);
+  const next = normalizedCore.indexOf(token, cursor + 1);
   assert(next > cursor, 'dock action order drifted at ' + token);
   cursor = next;
 });
