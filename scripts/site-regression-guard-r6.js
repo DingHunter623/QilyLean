@@ -57,7 +57,7 @@ const prefetch = read('site-native-prefetch-v1.js');
   "d.addEventListener('focusin'",
   "d.addEventListener('touchstart'"
 ].forEach((m) => assert(prefetch.includes(m), 'R6 prefetch missing: ' + m));
-assert(!/DOMParser\(|history\.pushState|innerHTML\s*=|replaceChildren\(|fetch\s*\(/.test(prefetch), 'R6 prefetch may not swap/rewrite/fetch documents itself');
+assert(!/DOMParser\(|history\.pushState|innerHTML\s*=|replaceChildren\(|\bfetch\s*\(/.test(prefetch), 'R6 prefetch may not swap/rewrite/fetch documents itself');
 
 let scanned = 0;
 function walk(dir) {
