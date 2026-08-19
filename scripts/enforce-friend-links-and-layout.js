@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean 友情链接 + 版式永久防回退｜2026-08-17
- * 1) 友情链接保留为独立模块，不进入八大一级导航；
- * 2) 首页辅助资产必须保留“友情链接”直达 /links/；
- * 3) /links/ 保留“友情链接｜全球科技企业100强”身份，同时继续承载产业资源协同内容；
+/* QilyLean 友情链接 + 版式永久防回退｜2026-08-20
+ * 1) /links/ 保留为独立资源模块；一级导航显示名统一为“资源协同”；
+ * 2) 首页辅助资产继续保留“友情链接”直达 /links/，用于明确全球科技企业官网入口属性；
+ * 3) /links/ 页面保留“友情链接｜全球科技企业100强”身份，同时继续承载产业资源协同内容；
  * 4) 本页内容轴统一到全站 1240px 主内容宽度。
  */
 const fs=require('fs');
@@ -46,4 +46,4 @@ function patchLinks(){
 
 patchHome();
 patchLinks();
-process.stdout.write('Friend-links module preserved: homepage direct entry restored, /links/ identity restored, resource network retained, and links content axis normalized to 1240px.\n');
+process.stdout.write('Resource-collaboration navigation preserved: /links/ uses 资源协同 in the primary nav while homepage card and page identity remain 友情链接; resource network is retained and links content axis remains 1240px.\n');
