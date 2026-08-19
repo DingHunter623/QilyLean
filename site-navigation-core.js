@@ -427,7 +427,7 @@
       '<button class="qily-float-btn qily-float-search" data-action="search" type="button">本站<br>搜索</button>',
       '<button class="qily-float-btn qily-float-back" data-action="back" type="button">返回<br>上一层</button>',
       '<button class="qily-float-btn qily-float-current" data-action="current" type="button">分享<br>当前页</button>',
-      '<button class="qily-float-btn qily-float-share" data-action="share" type="button">分享</button>',
+      '<button class="qily-float-btn qily-float-share" data-action="share" type="button"><span class="qily-share-label-line qily-share-label-primary">分享</span><span class="qily-share-label-line qily-share-label-url">官网</span></button>',
       '<button class="qily-float-btn qily-float-contact" data-action="contact" type="button">交流</button>'
     ].join('');
     document.body.appendChild(dock);
@@ -485,26 +485,79 @@
     var down = false;
     var moved = false;
     var pointerId = null;
+    var startX = 0;
     var startY = 0;
+    var startLeft = 0;
     var startTop = 0;
     var action = '';
+    var DOCK_POSITION_KEY = 'qilyDockPositionV2';
+    var userPositioned = false;
 
-    function clampTop(value) {
-      return Math.max(8, Math.min(window.innerHeight - dock.offsetHeight - 8, value));
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
     }
 
-    function setDockTop(value) {
-      dock.style.top = clampTop(value) + 'px';
-      dock.style.right = 'max(10px, env(safe-area-inset-right))';
-      dock.style.bottom = 'auto';
-      dock.style.left = 'auto';
+    function dockLimits() {
+      return {
+        minLeft: 8,
+        minTop: 8,
+        maxLeft: Math.max(8, window.innerWidth - dock.offsetWidth - 8),
+        maxTop: Math.max(8, window.innerHeight - dock.offsetHeight - 8)
+      };
     }
 
-    requestAnimationFrame(function () {
-      var stored = NaN;
-      try { stored = parseFloat(localStorage.getItem('qilyDockTop')); } catch (error) {}
-      setDockTop(Number.isFinite(stored) ? stored : Math.max(92, window.innerHeight * 0.2));
-    });
+    function setDockPosition(left, top, free) {
+      var limits = dockLimits();
+      var safeTop = clamp(top, limits.minTop, limits.maxTop);
+      dock.style.setProperty('top', safeTop + 'px', 'important');
+      dock.style.setProperty('bottom', 'auto', 'important');
+      if (free) {
+        var safeLeft = clamp(left, limits.minLeft, limits.maxLeft);
+        dock.style.setProperty('left', safeLeft + 'px', 'important');
+        dock.style.setProperty('right', 'auto', 'important');
+        userPositioned = true;
+      } else {
+        dock.style.setProperty('left', 'auto', 'important');
+        dock.style.setProperty('right', 'max(10px, env(safe-area-inset-right))', 'important');
+        userPositioned = false;
+      }
+    }
+
+    function positionRatios(left, top) {
+      var limits = dockLimits();
+      var xRange = Math.max(1, limits.maxLeft - limits.minLeft);
+      var yRange = Math.max(1, limits.maxTop - limits.minTop);
+      return {
+        x: clamp((left - limits.minLeft) / xRange, 0, 1),
+        y: clamp((top - limits.minTop) / yRange, 0, 1)
+      };
+    }
+
+    function saveDockPosition() {
+      var rect = dock.getBoundingClientRect();
+      var ratios = positionRatios(rect.left, rect.top);
+      try {
+        localStorage.setItem(DOCK_POSITION_KEY, JSON.stringify({ x: ratios.x, y: ratios.y }));
+        localStorage.removeItem('qilyDockTop');
+      } catch (error) {}
+    }
+
+    function restoreDockPosition() {
+      var stored = null;
+      try { stored = JSON.parse(localStorage.getItem(DOCK_POSITION_KEY) || 'null'); } catch (error) {}
+      if (stored && Number.isFinite(stored.x) && Number.isFinite(stored.y)) {
+        var limits = dockLimits();
+        var left = limits.minLeft + clamp(stored.x, 0, 1) * Math.max(1, limits.maxLeft - limits.minLeft);
+        var top = limits.minTop + clamp(stored.y, 0, 1) * Math.max(1, limits.maxTop - limits.minTop);
+        setDockPosition(left, top, true);
+        return;
+      }
+      var legacyTop = NaN;
+      try { legacyTop = parseFloat(localStorage.getItem('qilyDockTop')); } catch (error) {}
+      setDockPosition(0, Number.isFinite(legacyTop) ? legacyTop : Math.max(92, window.innerHeight * 0.2), false);
+    }
+
+    requestAnimationFrame(restoreDockPosition);
 
     dock.addEventListener('pointerdown', function (event) {
       var button = event.target.closest('.qily-float-btn');
@@ -513,18 +566,25 @@
       moved = false;
       pointerId = event.pointerId;
       action = button.getAttribute('data-action') || '';
+      startX = event.clientX;
       startY = event.clientY;
-      startTop = dock.getBoundingClientRect().top;
+      var rect = dock.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
       if (dock.setPointerCapture) dock.setPointerCapture(pointerId);
       event.preventDefault();
     }, { passive: false });
 
     dock.addEventListener('pointermove', function (event) {
       if (!down || event.pointerId !== pointerId) return;
-      var distance = event.clientY - startY;
-      if (!moved && Math.abs(distance) > 8) moved = true;
+      var dx = event.clientX - startX;
+      var dy = event.clientY - startY;
+      if (!moved && Math.hypot(dx, dy) > 7) {
+        moved = true;
+        dock.classList.add('qily-dock-dragging');
+      }
       if (!moved) return;
-      setDockTop(startTop + distance);
+      setDockPosition(startLeft + dx, startTop + dy, true);
       event.preventDefault();
     }, { passive: false });
 
@@ -532,9 +592,8 @@
       if (!down || event.pointerId !== pointerId) return;
       down = false;
       try { if (dock.releasePointerCapture) dock.releasePointerCapture(pointerId); } catch (error) {}
-      if (moved) {
-        try { localStorage.setItem('qilyDockTop', String(dock.getBoundingClientRect().top)); } catch (error) {}
-      }
+      dock.classList.remove('qily-dock-dragging');
+      if (moved) saveDockPosition();
       if (!cancelled && !moved) runAction(action);
       pointerId = null;
     }
