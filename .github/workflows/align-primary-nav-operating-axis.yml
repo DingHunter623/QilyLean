@@ -22,18 +22,19 @@ permissions:
   contents: write
 
 concurrency:
-  group: qily-site-operating-axis-readability
-  cancel-in-progress: false
+  group: qily-site-operating-axis-readability-v2
+  cancel-in-progress: true
 
 jobs:
   enforce:
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
         with:
           ref: main
-          fetch-depth: 3
+          fetch-depth: 1
 
       - uses: actions/setup-node@v5
         with:
