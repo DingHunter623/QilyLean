@@ -1,13 +1,13 @@
-/* QilyLean atomic first-paint navigation runtime v26｜2026-08-19
+/* QilyLean atomic first-paint navigation runtime v27｜2026-08-19
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
  * 性能：普通页面直达 core；仅合作/资源页面按需加载 legacy，避免全站下载报价与资源逻辑。
  * 可视化：中文正文启用 pretty wrap / strict line-break，标题平衡换行；悬浮栏“分享官方网址”固定两行完整显示。
- * V26：在统一内容轴基础上增加全站视觉几何闭环，自动收紧流程图无效留白并修复直线箭头与目标框的小间隙。
+ * V27：全站箭头几何升级为V3，箭头尖端保留安全间距，marker端点计入三角头外伸量，分离三角与线自动贴合，禁止脱离或压框。
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV26) return;
-  w.__qilyStaticFirstNavigationV26 = true;
+  if (w.__qilyStaticFirstNavigationV27) return;
+  w.__qilyStaticFirstNavigationV27 = true;
 
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260817-atomic-first-paint-v8';
   var CORE_SRC = '/site-navigation-core.js?v=20260819-operating-axis-nav-v22';
@@ -16,7 +16,7 @@
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6';
   var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260819-unified-content-axis-v1';
   var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2';
-  var GEOMETRY_SRC = '/site-visual-geometry-v1.js?v=20260819-geometry-closure-v1';
+  var GEOMETRY_SRC = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v3';
 
   function installVisualGovernanceLink() {
     var continuity = d.querySelector('link[href*="/site-interaction-continuity-v1.css"]');
@@ -87,11 +87,13 @@
   }
 
   function loadVisualGeometry() {
-    if (w.__qilyVisualGeometryV1 || d.querySelector('script[data-qily-visual-geometry],script[src*="/site-visual-geometry-v1.js"]')) return;
+    if (w.__qilyVisualGeometryV3 || d.querySelector('script[data-qily-visual-geometry="v3"],script[src*="/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v3"]')) return;
+    var stale = d.querySelector('script[data-qily-visual-geometry],script[src*="/site-visual-geometry-v1.js"]');
+    if (stale && !w.__qilyVisualGeometryV3) stale.remove();
     var script = d.createElement('script');
     script.src = GEOMETRY_SRC;
     script.async = false;
-    script.setAttribute('data-qily-visual-geometry', 'v1');
+    script.setAttribute('data-qily-visual-geometry', 'v3');
     (d.head || d.documentElement).appendChild(script);
   }
 
@@ -108,7 +110,7 @@
     var script = d.createElement('script');
     script.src = legacy ? LEGACY_SRC : CORE_SRC;
     script.async = false;
-    script.setAttribute(attr, 'atomic-first-paint-v26');
+    script.setAttribute(attr, 'atomic-first-paint-v27');
     (d.head || d.documentElement).appendChild(script);
   }
 
@@ -160,7 +162,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v26',
+  mode: 'atomic-first-paint-v27',
   staticHtmlAuthority: true,
   atomicFirstPaint: true,
   runtimeDependencyWaterfall: false,
@@ -178,6 +180,9 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   visualGeometryClosure: true,
   sceneSvgWhitespaceTightening: true,
   flowArrowSnap: true,
+  markerArrowSafeGap: true,
+  separateTriangleLineJoin: true,
+  arrowFrameCollisionPrevention: true,
   homepageHeroTune: true,
   dockOfficialUrlTwoLine: true,
   dockActions: [
