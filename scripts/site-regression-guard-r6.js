@@ -2,7 +2,7 @@
 'use strict';
 
 /* QilyLean R6 regression guard｜2026-08-19
- * 保护现行“静态首屏即当前版 + 原生整页导航 + 同源低优先级预取”。
+ * 保护现行“静态首屏即当前版 + 原生整页导航 + 同源低优先级预取 + 全站统一悬浮栏 + 一体化箭头”。
  * 历史 R2 v22 Guard 仅保留追溯，不再作为现行生产门禁。
  */
 const fs = require('fs');
@@ -13,6 +13,8 @@ const GOVERNANCE = '/site-visual-governance-v2.css?v=20260819-readable-floor-plu
 const CONTENT_AXIS = '/site-content-axis-v1.css?v=20260819-unified-content-axis-v1';
 const HOME_HERO = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2';
 const PREFETCH = '/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1';
+const DOCK = '/site-floating-dock-standard-v1.css?v=20260819-sitewide-dock-v1';
+const GEOMETRY = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';
 
 function read(rel) { return fs.readFileSync(path.join(root, rel), 'utf8'); }
 function assert(ok, msg) { if (!ok) throw new Error(msg); }
@@ -20,7 +22,7 @@ function count(source, needle) { return source.split(needle).length - 1; }
 
 const wrapper = read('site-navigation.js');
 [
-  "mode: 'atomic-first-paint-v27'",
+  "mode: 'atomic-first-paint-v28'",
   'staticHtmlAuthority: true',
   'atomicFirstPaint: true',
   'runtimeDependencyWaterfall: false',
@@ -30,8 +32,39 @@ const wrapper = read('site-navigation.js');
   'routeScopedLegacy: true',
   'ordinaryPagesDirectCore: true',
   'unifiedContentAxis: true',
-  'unifiedContentAxisWidth: 1560'
+  'unifiedContentAxisWidth: 1560',
+  'dockUniformVisualContract: true',
+  'dockUniformSize: 62',
+  'unifiedOnePieceArrows: true',
+  'markerUnitsOverhangEliminated: true',
+  'separateTriangleLineEliminated: true',
+  'symmetricBidirectionalSceneArrows: true',
+  DOCK,
+  GEOMETRY
 ].forEach((m) => assert(wrapper.includes(m), 'R6 navigation wrapper missing: ' + m));
+
+const dockCss = read('site-floating-dock-standard-v1.css');
+[
+  '--qily-dock-size:62px',
+  '#floatDock.qily-float-dock .qily-float-btn',
+  '.qily-float-btn[data-action="share"]',
+  'border:1.5px solid var(--qily-dock-border)!important',
+  'background:var(--qily-dock-bg)!important'
+].forEach((m) => assert(dockCss.includes(m), 'sitewide dock standard missing: ' + m));
+
+const geometry = read('site-visual-geometry-v1.js');
+[
+  '__qilyVisualGeometryV4',
+  "data-qily-unified-arrow', 'v4'",
+  'convertMarkerArrow',
+  'convertSeparateArrows',
+  'normalizeLeanBidirectionalScene',
+  "{ x: 600, y: 252 }",
+  "{ x: 600, y: 308 }",
+  "{ x: 600, y: 503 }",
+  "{ x: 600, y: 447 }"
+].forEach((m) => assert(geometry.includes(m), 'arrow geometry v4 missing: ' + m));
+assert(!geometry.includes('JOIN_OVERLAP'), 'legacy line/triangle overlap join returned');
 
 const nativeNav = read('site-music-persistent-navigation-v1.js');
 [
@@ -92,4 +125,4 @@ const home = read('index.html');
 assert(count(home, HOME_HERO) === 1, 'homepage hero tune must be exactly once');
 assert(count(home, 'id="qilyR6HomeFirstPaintParity"') === 1, 'homepage first-paint parity style must be exactly once');
 
-process.stdout.write(`R6 regression guard PASS: ${scanned} HTML pages use static visual V6 + 1560px axis + native prefetch; homepage hero first paint matches current design.\n`);
+process.stdout.write(`R6 regression guard PASS: ${scanned} HTML pages use static visual V6 + 1560px axis + native prefetch; runtime enforces one dock visual contract and one-piece arrow geometry v4.\n`);

@@ -1,28 +1,29 @@
-/* QilyLean visual geometry closure v3｜2026-08-19
+/* QilyLean visual geometry closure v4｜2026-08-19
  * Purpose: sitewide geometry closure for SVG arrows, diagram whitespace, tables and visual-card density.
- * V3 arrow contract:
- * - marker arrow tip keeps a safe visual gap from the target frame;
- * - marker line endpoint accounts for marker tip overhang, so the triangle never presses into the frame;
- * - separate triangle + line arrows are paired geometrically and joined with a small overlap, never detached;
- * - vertical/horizontal arrows remain centered on the target module axis.
+ * V4 arrow contract:
+ * - simple marker arrows are converted to one-piece filled vector paths in user-space units;
+ * - separate line + triangle arrows are converted to one-piece filled vector paths;
+ * - no shaft is allowed to protrude through an arrow tip;
+ * - arrowheads use bounded dimensions independent of markerUnits/strokeWidth multiplication;
+ * - target-frame gap is explicit and consistent;
+ * - the 2026-08-14 bidirectional reform/improvement scene uses symmetric, smaller arrows.
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyVisualGeometryV3) return;
-  w.__qilyVisualGeometryV3 = true;
+  if (w.__qilyVisualGeometryV4) return;
+  w.__qilyVisualGeometryV4 = true;
 
-  var SAFE_GAP = 4;
-  var JOIN_OVERLAP = 1.25;
-  var MAX_MARKER_TARGET_GAP = 42;
-  var MAX_SEPARATE_TARGET_GAP = 52;
-  var AXIS_TOLERANCE = 5;
+  var SVG_NS = 'http://www.w3.org/2000/svg';
+  var SAFE_GAP = 10;
+  var MAX_TARGET_GAP = 96;
+  var AXIS_TOLERANCE = 6;
 
   function installDensityStyles() {
-    if (d.getElementById('qilyVisualDensityClosureV3')) return;
-    var old = d.getElementById('qilyVisualDensityClosureV2');
+    if (d.getElementById('qilyVisualDensityClosureV4')) return;
+    var old = d.getElementById('qilyVisualDensityClosureV3') || d.getElementById('qilyVisualDensityClosureV2');
     if (old) old.remove();
     var style = d.createElement('style');
-    style.id = 'qilyVisualDensityClosureV3';
+    style.id = 'qilyVisualDensityClosureV4';
     style.textContent = [
       'html body main table{height:auto!important;min-height:0!important;table-layout:auto!important}',
       'html body main table tr{height:auto!important;min-height:0!important}',
@@ -43,6 +44,10 @@
   function number(value) {
     var n = parseFloat(value);
     return Number.isFinite(n) ? n : 0;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
   }
 
   function parseViewBox(svg) {
@@ -93,7 +98,7 @@
   }
 
   function tightenSceneSvg(svg) {
-    if (!svg || svg.dataset.qilyGeometryTightened === '3') return;
+    if (!svg || svg.dataset.qilyGeometryTightened === '4') return;
     var viewBox = parseViewBox(svg);
     if (!viewBox) return;
 
@@ -108,7 +113,7 @@
 
     var usage = content.width / viewBox.width;
     if (usage >= 0.925) {
-      svg.dataset.qilyGeometryTightened = '3';
+      svg.dataset.qilyGeometryTightened = '4';
       return;
     }
 
@@ -118,7 +123,7 @@
     var nextWidth = right - left;
 
     if (nextWidth < viewBox.width * 0.74 || nextWidth >= viewBox.width * 0.96) {
-      svg.dataset.qilyGeometryTightened = '3';
+      svg.dataset.qilyGeometryTightened = '4';
       return;
     }
 
@@ -130,20 +135,13 @@
 
     svg.setAttribute('viewBox', [left, viewBox.y, nextWidth, viewBox.height].join(' '));
     svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-    svg.dataset.qilyGeometryTightened = '3';
+    svg.dataset.qilyGeometryTightened = '4';
   }
 
   function usefulRects(svg, viewBox) {
     return Array.prototype.slice.call(svg.querySelectorAll('rect')).filter(function (rect) {
       return !isBackgroundRect(rect, viewBox);
     }).map(rectBox);
-  }
-
-  function targetEdge(rect, direction) {
-    if (direction === 'down') return rect.y;
-    if (direction === 'up') return rect.y + rect.height;
-    if (direction === 'right') return rect.x;
-    return rect.x + rect.width;
   }
 
   function nearestRectForEndpoint(rects, x, y, direction, maxGap) {
@@ -159,73 +157,119 @@
     return best;
   }
 
-  function markerFromElement(element) {
-    var raw = element.getAttribute('marker-end') || '';
-    var match = raw.match(/url\(["']?#([^"')]+)["']?\)/);
-    if (!match) return null;
-    return element.ownerSVGElement ? element.ownerSVGElement.querySelector('#' + CSS.escape(match[1])) : null;
+  function targetTip(rect, direction) {
+    if (direction === 'down') return rect.y - SAFE_GAP;
+    if (direction === 'up') return rect.y + rect.height + SAFE_GAP;
+    if (direction === 'right') return rect.x - SAFE_GAP;
+    return rect.x + rect.width + SAFE_GAP;
   }
 
-  function markerTipOverhang(element) {
-    var marker = markerFromElement(element);
-    if (!marker) return Math.max(2, number(element.getAttribute('stroke-width')) || 1);
-    var refX = number(marker.getAttribute('refX'));
-    var maxX = refX;
-    Array.prototype.forEach.call(marker.children, function (node) {
-      var box = visibleBBox(node);
-      if (box) maxX = Math.max(maxX, box.x + box.width);
-    });
-    var units = (marker.getAttribute('markerUnits') || 'strokeWidth').toLowerCase();
-    var scale = units === 'userspaceonuse' ? 1 : Math.max(1, number(element.getAttribute('stroke-width')) || 1);
-    var overhang = Math.max(0, maxX - refX) * scale;
-    return Math.max(1, overhang);
+  function colorOf(element) {
+    var color = element.getAttribute('stroke') || element.getAttribute('fill') || '';
+    if (!color || color === 'none' || color === 'currentColor') {
+      try {
+        var style = w.getComputedStyle(element);
+        color = style.stroke && style.stroke !== 'none' ? style.stroke : style.fill;
+      } catch (error) {}
+    }
+    return color && color !== 'none' ? color : '#0f4b5a';
   }
 
-  function markerEndpointForTarget(element, rect, direction) {
-    var edge = targetEdge(rect, direction);
-    var overhang = markerTipOverhang(element);
-    if (direction === 'down' || direction === 'right') return edge - SAFE_GAP - overhang;
-    return edge + SAFE_GAP + overhang;
+  function strokeWidthOf(element) {
+    var value = number(element.getAttribute('stroke-width'));
+    if (value > 0) return value;
+    try {
+      value = number(w.getComputedStyle(element).strokeWidth);
+    } catch (error) {}
+    return value > 0 ? value : 6;
   }
 
-  function snapMarkerLine(line, rects) {
-    if (!line.hasAttribute('marker-end')) return;
-    var x1 = number(line.getAttribute('x1'));
-    var y1 = number(line.getAttribute('y1'));
-    var x2 = number(line.getAttribute('x2'));
-    var y2 = number(line.getAttribute('y2'));
+  function pathForArrow(start, tip, direction, shaftWidth, headLength, headHalf) {
+    var sh = shaftWidth / 2;
+    if (direction === 'down') {
+      var baseDown = Math.max(start.y + 2, tip.y - headLength);
+      return 'M' + (start.x - sh) + ' ' + start.y + ' H' + (start.x + sh) + ' V' + baseDown + ' H' + (start.x + headHalf) + ' L' + tip.x + ' ' + tip.y + ' L' + (start.x - headHalf) + ' ' + baseDown + ' H' + (start.x - sh) + ' Z';
+    }
+    if (direction === 'up') {
+      var baseUp = Math.min(start.y - 2, tip.y + headLength);
+      return 'M' + (start.x - sh) + ' ' + start.y + ' H' + (start.x + sh) + ' V' + baseUp + ' H' + (start.x + headHalf) + ' L' + tip.x + ' ' + tip.y + ' L' + (start.x - headHalf) + ' ' + baseUp + ' H' + (start.x - sh) + ' Z';
+    }
+    if (direction === 'right') {
+      var baseRight = Math.max(start.x + 2, tip.x - headLength);
+      return 'M' + start.x + ' ' + (start.y - sh) + ' V' + (start.y + sh) + ' H' + baseRight + ' V' + (start.y + headHalf) + ' L' + tip.x + ' ' + tip.y + ' L' + baseRight + ' ' + (start.y - headHalf) + ' V' + (start.y - sh) + ' Z';
+    }
+    var baseLeft = Math.min(start.x - 2, tip.x + headLength);
+    return 'M' + start.x + ' ' + (start.y - sh) + ' V' + (start.y + sh) + ' H' + baseLeft + ' V' + (start.y + headHalf) + ' L' + tip.x + ' ' + tip.y + ' L' + baseLeft + ' ' + (start.y - headHalf) + ' V' + (start.y - sh) + ' Z';
+  }
+
+  function insertOnePieceArrow(reference, start, tip, direction, color, strokeWidth) {
+    var shaft = clamp(strokeWidth || 6, 4, 8);
+    var headLength = clamp(shaft * 2.25, 11, 17);
+    var headHalf = clamp(shaft * 1.65, 7.5, 12.5);
+    var path = d.createElementNS(SVG_NS, 'path');
+    path.setAttribute('d', pathForArrow(start, tip, direction, shaft, headLength, headHalf));
+    path.setAttribute('fill', color);
+    path.setAttribute('stroke', 'none');
+    path.setAttribute('data-qily-unified-arrow', 'v4');
+    if (reference && reference.getAttribute('opacity')) path.setAttribute('opacity', reference.getAttribute('opacity'));
+    if (reference && reference.parentNode) reference.parentNode.insertBefore(path, reference);
+    return path;
+  }
+
+  function simpleArrowGeometry(element) {
+    var tag = (element.tagName || '').toLowerCase();
+    var x1, y1, x2, y2;
+    if (tag === 'line') {
+      x1 = number(element.getAttribute('x1'));
+      y1 = number(element.getAttribute('y1'));
+      x2 = number(element.getAttribute('x2'));
+      y2 = number(element.getAttribute('y2'));
+    } else if (tag === 'path') {
+      var value = (element.getAttribute('d') || '').trim();
+      var vertical = value.match(/^M\s*(-?\d+(?:\.\d+)?)\s*[ ,]+\s*(-?\d+(?:\.\d+)?)\s+V\s*(-?\d+(?:\.\d+)?)\s*$/i);
+      var horizontal = value.match(/^M\s*(-?\d+(?:\.\d+)?)\s*[ ,]+\s*(-?\d+(?:\.\d+)?)\s+H\s*(-?\d+(?:\.\d+)?)\s*$/i);
+      var direct = value.match(/^M\s*(-?\d+(?:\.\d+)?)\s*[ ,]+\s*(-?\d+(?:\.\d+)?)\s+L\s*(-?\d+(?:\.\d+)?)\s*[ ,]+\s*(-?\d+(?:\.\d+)?)\s*$/i);
+      if (vertical) {
+        x1 = number(vertical[1]); y1 = number(vertical[2]); x2 = x1; y2 = number(vertical[3]);
+      } else if (horizontal) {
+        x1 = number(horizontal[1]); y1 = number(horizontal[2]); x2 = number(horizontal[3]); y2 = y1;
+      } else if (direct) {
+        x1 = number(direct[1]); y1 = number(direct[2]); x2 = number(direct[3]); y2 = number(direct[4]);
+      } else return null;
+    } else return null;
+
     var dx = x2 - x1, dy = y2 - y1;
-    var direction;
-    if (Math.abs(dx) < 0.5 && Math.abs(dy) > 0.5) direction = dy > 0 ? 'down' : 'up';
-    else if (Math.abs(dy) < 0.5 && Math.abs(dx) > 0.5) direction = dx > 0 ? 'right' : 'left';
-    else return;
-    var hit = nearestRectForEndpoint(rects, x2, y2, direction, MAX_MARKER_TARGET_GAP);
-    if (!hit) return;
-    var target = markerEndpointForTarget(line, hit.rect, direction);
-    if (direction === 'down' || direction === 'up') line.setAttribute('y2', String(target));
-    else line.setAttribute('x2', String(target));
+    var direction = '';
+    if (Math.abs(dx) <= 0.75 && Math.abs(dy) > 1) direction = dy > 0 ? 'down' : 'up';
+    else if (Math.abs(dy) <= 0.75 && Math.abs(dx) > 1) direction = dx > 0 ? 'right' : 'left';
+    else return null;
+    return { start: { x: x1, y: y1 }, end: { x: x2, y: y2 }, direction: direction };
   }
 
-  function snapMarkerPath(path, rects) {
-    if (!path.hasAttribute('marker-end')) return;
-    var value = (path.getAttribute('d') || '').trim();
-    var vertical = value.match(/^M\s*(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)\s+V\s*(-?\d+(?:\.\d+)?)$/i);
-    var horizontal = value.match(/^M\s*(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)\s+H\s*(-?\d+(?:\.\d+)?)$/i);
-    if (vertical) {
-      var x = number(vertical[1]), y1 = number(vertical[2]), y2 = number(vertical[3]);
-      var direction = y2 > y1 ? 'down' : 'up';
-      var hit = nearestRectForEndpoint(rects, x, y2, direction, MAX_MARKER_TARGET_GAP);
-      if (!hit) return;
-      path.setAttribute('d', 'M' + x + ' ' + y1 + ' V' + markerEndpointForTarget(path, hit.rect, direction));
-      return;
+  function convertMarkerArrow(element, rects) {
+    if (!element.hasAttribute('marker-end') || element.dataset.qilyUnifiedArrow === 'v4') return;
+    var geometry = simpleArrowGeometry(element);
+    if (!geometry) return;
+    var hit = nearestRectForEndpoint(rects, geometry.end.x, geometry.end.y, geometry.direction, MAX_TARGET_GAP);
+    var tip = { x: geometry.end.x, y: geometry.end.y };
+    if (hit) {
+      var t = targetTip(hit.rect, geometry.direction);
+      if (geometry.direction === 'down' || geometry.direction === 'up') tip.y = t;
+      else tip.x = t;
     }
-    if (horizontal) {
-      var x1 = number(horizontal[1]), y = number(horizontal[2]), x2 = number(horizontal[3]);
-      var hDirection = x2 > x1 ? 'right' : 'left';
-      var hHit = nearestRectForEndpoint(rects, x2, y, hDirection, MAX_MARKER_TARGET_GAP);
-      if (!hHit) return;
-      path.setAttribute('d', 'M' + x1 + ' ' + y + ' H' + markerEndpointForTarget(path, hHit.rect, hDirection));
+    insertOnePieceArrow(element, geometry.start, tip, geometry.direction, colorOf(element), strokeWidthOf(element));
+    element.remove();
+  }
+
+  function translationOf(element) {
+    var transform = element.getAttribute('transform') || '';
+    var tx = 0, ty = 0, match;
+    var re = /translate\(\s*(-?\d+(?:\.\d+)?)\s*(?:[, ]\s*(-?\d+(?:\.\d+)?))?\s*\)/ig;
+    while ((match = re.exec(transform))) {
+      tx += number(match[1]);
+      ty += match[2] == null ? 0 : number(match[2]);
     }
+    return { x: tx, y: ty };
   }
 
   function parseTriangle(polygon) {
@@ -233,10 +277,11 @@
     if (!raw) return null;
     var values = raw.split(/[ ,]+/).map(number);
     if (values.length !== 6) return null;
+    var shift = translationOf(polygon);
     var points = [
-      { x: values[0], y: values[1] },
-      { x: values[2], y: values[3] },
-      { x: values[4], y: values[5] }
+      { x: values[0] + shift.x, y: values[1] + shift.y },
+      { x: values[2] + shift.x, y: values[3] + shift.y },
+      { x: values[4] + shift.x, y: values[5] + shift.y }
     ];
     var eps = 1.5;
     var pairs = [[0,1,2],[0,2,1],[1,2,0]];
@@ -244,57 +289,14 @@
       var a = points[pairs[i][0]], b = points[pairs[i][1]], tip = points[pairs[i][2]];
       if (Math.abs(a.y - b.y) <= eps) {
         var baseY = (a.y + b.y) / 2;
-        return {
-          polygon: polygon,
-          direction: tip.y < baseY ? 'up' : 'down',
-          tip: tip,
-          baseCenter: { x: (a.x + b.x) / 2, y: baseY },
-          baseA: a,
-          baseB: b
-        };
+        return { polygon: polygon, direction: tip.y < baseY ? 'up' : 'down', tip: tip, baseCenter: { x: (a.x + b.x) / 2, y: baseY } };
       }
       if (Math.abs(a.x - b.x) <= eps) {
         var baseX = (a.x + b.x) / 2;
-        return {
-          polygon: polygon,
-          direction: tip.x < baseX ? 'left' : 'right',
-          tip: tip,
-          baseCenter: { x: baseX, y: (a.y + b.y) / 2 },
-          baseA: a,
-          baseB: b
-        };
+        return { polygon: polygon, direction: tip.x < baseX ? 'left' : 'right', tip: tip, baseCenter: { x: baseX, y: (a.y + b.y) / 2 } };
       }
     }
     return null;
-  }
-
-  function triangleTarget(rects, triangle) {
-    return nearestRectForEndpoint(rects, triangle.tip.x, triangle.tip.y, triangle.direction, MAX_SEPARATE_TARGET_GAP);
-  }
-
-  function translateTriangle(triangle, delta) {
-    var poly = triangle.polygon;
-    var transform = poly.getAttribute('transform') || '';
-    var dx = 0, dy = 0;
-    if (triangle.direction === 'up' || triangle.direction === 'down') dy = delta;
-    else dx = delta;
-    poly.setAttribute('transform', (transform + ' translate(' + dx + ' ' + dy + ')').trim());
-    triangle.tip.x += dx;
-    triangle.tip.y += dy;
-    triangle.baseCenter.x += dx;
-    triangle.baseCenter.y += dy;
-  }
-
-  function placeTriangleAtSafeGap(triangle, rects) {
-    var hit = triangleTarget(rects, triangle);
-    if (!hit) return;
-    var desired;
-    if (triangle.direction === 'down') desired = hit.rect.y - SAFE_GAP;
-    else if (triangle.direction === 'up') desired = hit.rect.y + hit.rect.height + SAFE_GAP;
-    else if (triangle.direction === 'right') desired = hit.rect.x - SAFE_GAP;
-    else desired = hit.rect.x + hit.rect.width + SAFE_GAP;
-    var actual = triangle.direction === 'up' || triangle.direction === 'down' ? triangle.tip.y : triangle.tip.x;
-    translateTriangle(triangle, desired - actual);
   }
 
   function lineData(line) {
@@ -307,10 +309,10 @@
     };
   }
 
-  function pairLineToTriangle(lines, triangle) {
+  function pairLineToTriangle(lines, triangle, used) {
     var best = null;
     lines.forEach(function (line) {
-      if (line.node.hasAttribute('marker-end') || line.node.hasAttribute('marker-start')) return;
+      if (used.has(line.node) || line.node.hasAttribute('marker-end') || line.node.hasAttribute('marker-start')) return;
       var vertical = Math.abs(line.x1 - line.x2) < 0.75;
       var horizontal = Math.abs(line.y1 - line.y2) < 0.75;
       if ((triangle.direction === 'up' || triangle.direction === 'down') && !vertical) return;
@@ -320,54 +322,103 @@
       var d1 = Math.hypot(line.x1 - triangle.baseCenter.x, line.y1 - triangle.baseCenter.y);
       var d2 = Math.hypot(line.x2 - triangle.baseCenter.x, line.y2 - triangle.baseCenter.y);
       var distance = Math.min(d1, d2);
-      if (distance <= 28 && (!best || distance < best.distance)) best = { line: line, distance: distance, end: d1 <= d2 ? 1 : 2 };
+      if (distance <= 34 && (!best || distance < best.distance)) best = { line: line, distance: distance, end: d1 <= d2 ? 1 : 2 };
     });
     return best;
   }
 
-  function joinSeparateArrows(svg, rects) {
+  function convertSeparateArrows(svg, rects) {
+    var used = new Set();
     var lines = Array.prototype.slice.call(svg.querySelectorAll('line')).map(lineData);
     var triangles = Array.prototype.slice.call(svg.querySelectorAll('polygon')).map(parseTriangle).filter(Boolean).filter(function (triangle) {
       var box = visibleBBox(triangle.polygon);
-      return box && box.width <= 72 && box.height <= 72;
+      return box && box.width <= 80 && box.height <= 80;
     });
 
     triangles.forEach(function (triangle) {
-      placeTriangleAtSafeGap(triangle, rects);
-      var pair = pairLineToTriangle(lines, triangle);
+      var pair = pairLineToTriangle(lines, triangle, used);
       if (!pair) return;
-      var line = pair.line.node;
-      var bx = triangle.baseCenter.x;
-      var by = triangle.baseCenter.y;
-      if (triangle.direction === 'up') by += JOIN_OVERLAP;
-      if (triangle.direction === 'down') by -= JOIN_OVERLAP;
-      if (triangle.direction === 'left') bx += JOIN_OVERLAP;
-      if (triangle.direction === 'right') bx -= JOIN_OVERLAP;
-      if (pair.end === 1) {
-        line.setAttribute('x1', String(bx));
-        line.setAttribute('y1', String(by));
-      } else {
-        line.setAttribute('x2', String(bx));
-        line.setAttribute('y2', String(by));
+      var line = pair.line;
+      var start = pair.end === 1 ? { x: line.x2, y: line.y2 } : { x: line.x1, y: line.y1 };
+      var tip = { x: triangle.tip.x, y: triangle.tip.y };
+      var hit = nearestRectForEndpoint(rects, tip.x, tip.y, triangle.direction, MAX_TARGET_GAP);
+      if (hit) {
+        var t = targetTip(hit.rect, triangle.direction);
+        if (triangle.direction === 'up' || triangle.direction === 'down') tip.y = t;
+        else tip.x = t;
       }
+      insertOnePieceArrow(line.node, start, tip, triangle.direction, colorOf(triangle.polygon), strokeWidthOf(line.node));
+      used.add(line.node);
+      line.node.remove();
+      triangle.polygon.remove();
     });
   }
 
+  function removeLeanSceneLegacyArrows(svg) {
+    Array.prototype.forEach.call(svg.querySelectorAll('path[marker-end]'), function (path) {
+      var g = simpleArrowGeometry(path);
+      if (g && Math.abs(g.start.x - 600) < 3 && g.start.y >= 235 && g.end.y <= 325) path.remove();
+    });
+    Array.prototype.forEach.call(svg.querySelectorAll('line'), function (line) {
+      var g = simpleArrowGeometry(line);
+      if (g && Math.abs(g.start.x - 600) < 3 && Math.abs(g.end.x - 600) < 3 && Math.min(g.start.y, g.end.y) >= 430 && Math.max(g.start.y, g.end.y) <= 520) line.remove();
+    });
+    Array.prototype.forEach.call(svg.querySelectorAll('polygon'), function (polygon) {
+      var triangle = parseTriangle(polygon);
+      if (triangle && Math.abs(triangle.tip.x - 600) < 20 && triangle.tip.y >= 430 && triangle.tip.y <= 475) polygon.remove();
+    });
+  }
+
+  function normalizeLeanBidirectionalScene(svg) {
+    var label = svg.getAttribute('aria-label') || '';
+    if (label.indexOf('改革自上而下改善自下而上的双向治理机制图') === -1 || svg.dataset.qilyBidirectionalArrow === 'v4') return false;
+    removeLeanSceneLegacyArrows(svg);
+
+    var anchor = svg.querySelector('rect[x="170"][y="320"]') || svg.querySelector('rect');
+    var down = d.createElementNS(SVG_NS, 'path');
+    down.setAttribute('d', pathForArrow({ x: 600, y: 252 }, { x: 600, y: 308 }, 'down', 7, 16, 10));
+    down.setAttribute('fill', '#caa15f');
+    down.setAttribute('stroke', 'none');
+    down.setAttribute('data-qily-unified-arrow', 'v4');
+    down.setAttribute('data-qily-scene-arrow', 'reform-down');
+
+    var up = d.createElementNS(SVG_NS, 'path');
+    up.setAttribute('d', pathForArrow({ x: 600, y: 503 }, { x: 600, y: 447 }, 'up', 7, 16, 10));
+    up.setAttribute('fill', '#178b94');
+    up.setAttribute('stroke', 'none');
+    up.setAttribute('data-qily-unified-arrow', 'v4');
+    up.setAttribute('data-qily-scene-arrow', 'improvement-up');
+
+    if (anchor && anchor.parentNode) {
+      anchor.parentNode.insertBefore(down, anchor);
+      anchor.parentNode.insertBefore(up, anchor);
+    } else {
+      svg.appendChild(down);
+      svg.appendChild(up);
+    }
+    svg.dataset.qilyBidirectionalArrow = 'v4';
+    return true;
+  }
+
   function normalizeSvg(svg) {
-    if (!svg) return;
+    if (!svg || svg.dataset.qilyArrowClosure === 'v4') return;
     var viewBox = parseViewBox(svg);
     if (!viewBox) return;
     var rects = usefulRects(svg, viewBox);
-    Array.prototype.forEach.call(svg.querySelectorAll('line[marker-end]'), function (line) { snapMarkerLine(line, rects); });
-    Array.prototype.forEach.call(svg.querySelectorAll('path[marker-end]'), function (path) { snapMarkerPath(path, rects); });
-    joinSeparateArrows(svg, rects);
-    tightenSceneSvg(svg);
-    svg.dataset.qilyArrowClosure = 'v3';
+
+    normalizeLeanBidirectionalScene(svg);
+    Array.prototype.forEach.call(svg.querySelectorAll('line[marker-end],path[marker-end]'), function (element) {
+      convertMarkerArrow(element, rects);
+    });
+    convertSeparateArrows(svg, rects);
+
+    if (svg.matches('svg.brief-scene-svg') || svg.closest('.engineering-flow,.visual')) tightenSceneSvg(svg);
+    svg.dataset.qilyArrowClosure = 'v4';
   }
 
   function run() {
     installDensityStyles();
-    var svgs = d.querySelectorAll('figure svg.brief-scene-svg, .engineering-flow svg[viewBox], .visual svg[viewBox]');
+    var svgs = d.querySelectorAll('main svg[viewBox]');
     Array.prototype.forEach.call(svgs, normalizeSvg);
   }
 
@@ -375,5 +426,6 @@
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', function () { requestAnimationFrame(run); }, { once: true });
   else requestAnimationFrame(run);
   w.addEventListener('load', run, { once: true });
+  w.addEventListener('pageshow', run);
   d.addEventListener('qily:shell-ready', run);
 })(document, window);
