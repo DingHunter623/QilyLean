@@ -6,6 +6,9 @@ on:
     paths:
       - '**/*.html'
       - 'site-navigation.js'
+      - 'site-navigation-core.js'
+      - 'site-navigation-legacy-20260802.js'
+      - 'site-floating-dock-standard-v1.css'
       - 'site-visual-governance-v2.css'
       - 'site-content-axis-v1.css'
       - 'site-home-hero-tune-v1.css'
@@ -17,6 +20,9 @@ on:
     paths:
       - '**/*.html'
       - 'site-navigation.js'
+      - 'site-navigation-core.js'
+      - 'site-navigation-legacy-20260802.js'
+      - 'site-floating-dock-standard-v1.css'
       - 'site-visual-governance-v2.css'
       - 'site-content-axis-v1.css'
       - 'site-home-hero-tune-v1.css'
@@ -50,15 +56,21 @@ jobs:
       - name: Validate R6 performance sources
         run: |
           node --check site-native-prefetch-v1.js
+          node --check site-navigation.js
+          node --check site-navigation-core.js
+          node --check site-navigation-legacy-20260802.js
           node --check scripts/enforce-r6-first-paint-performance.js
 
       - name: Materialize current visual baseline before first paint
         run: node scripts/enforce-r6-first-paint-performance.js
 
-      - name: Verify R6 native navigation boundary
+      - name: Verify R6 native navigation and dock boundary
         shell: bash
         run: |
           set -euo pipefail
+          node --check site-navigation.js
+          node --check site-navigation-core.js
+          node --check site-navigation-legacy-20260802.js
           grep -q "domSwap: false" site-native-prefetch-v1.js
           grep -q "historyRewrite: false" site-native-prefetch-v1.js
           grep -q "sameOriginOnly: true" site-native-prefetch-v1.js
@@ -69,9 +81,15 @@ jobs:
           grep -q '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2' index.html
           grep -q 'qilyR6HomeFirstPaintParity' index.html
           grep -q '/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1' index.html
+          grep -q '/site-floating-dock-standard-v1.css?v=20260819-free-drag-uniform-font-v2' index.html
+          grep -q '/site-navigation.js?v=20260819-dock-free-drag-v29' index.html
+          grep -q "var DOCK_POSITION_KEY = 'qilyDockPositionV2'" site-navigation-core.js
+          grep -q 'Math.hypot(dx, dy) > 7' site-navigation-core.js
+          ! grep -q 'var distance = event.clientY - startY;' site-navigation-core.js
           git diff --check
 
-      - name: Commit R6 materialized public pages
+      - name: Commit R6 materialized public pages on main only
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
@@ -82,10 +100,10 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'perf: materialize R6 static first paint and prefetch [skip ci]'
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
-          else
-            git pull --rebase origin main
-            git push origin HEAD:main
-          fi
+          git commit -m 'perf: materialize R6 static first paint and dock V2 [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: PR writer ownership note
+        if: github.event_name == 'pull_request'
+        run: echo 'PR materialization commits are owned by materialize-sitewide-interaction-v5.yml to prevent concurrent branch push races.'

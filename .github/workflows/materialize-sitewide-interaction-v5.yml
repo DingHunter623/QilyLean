@@ -44,23 +44,27 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate R6 production sources
+      - name: Validate R6 materializer sources
         run: |
           node --check scripts/enforce-r6-first-paint-performance.js
           node --check scripts/site-regression-guard.js
           node --check scripts/site-regression-guard-r6.js
           node --check scripts/validate-sitewide-dock-arrow-v4.js
           node --check site-navigation.js
+          node --check site-navigation-core.js
+          node --check site-navigation-legacy-20260802.js
           node --check site-visual-geometry-v1.js
           node --check site-music-persistent-navigation-v1.js
           node --check site-native-prefetch-v1.js
-          node scripts/validate-sitewide-dock-arrow-v4.js
 
-      - name: Materialize R6 static first paint
+      - name: Materialize R6 static first paint and dock V2
         run: node scripts/enforce-r6-first-paint-performance.js
 
-      - name: Run R6 regression guard
+      - name: Validate generated runtime and R6 guards
         run: |
+          node --check site-navigation.js
+          node --check site-navigation-core.js
+          node --check site-navigation-legacy-20260802.js
           node scripts/site-regression-guard.js
           node scripts/validate-sitewide-dock-arrow-v4.js
           git diff --check
@@ -74,7 +78,7 @@ jobs:
           git diff --binary > /tmp/r6-after.diff
           cmp /tmp/r6-before.diff /tmp/r6-after.diff
 
-      - name: Verify R6 first-paint performance boundary
+      - name: Verify R6 dock and performance boundary
         shell: bash
         run: |
           set -euo pipefail
@@ -83,10 +87,19 @@ jobs:
           grep -q '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2' index.html
           grep -q 'qilyR6HomeFirstPaintParity' index.html
           grep -q '/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1' index.html
-          grep -q '/site-floating-dock-standard-v1.css?v=20260819-sitewide-dock-v1' site-navigation.js
+          grep -q '/site-floating-dock-standard-v1.css?v=20260819-free-drag-uniform-font-v2' index.html
+          grep -q '/site-navigation.js?v=20260819-dock-free-drag-v29' index.html
+          grep -q '/site-navigation-core.js?v=20260819-free-drag-dock-v23' site-navigation.js
+          grep -q '/site-navigation-legacy-20260802.js?v=20260819-free-drag-dock-v19' site-navigation.js
+          grep -q "var DOCK_POSITION_KEY = 'qilyDockPositionV2'" site-navigation-core.js
+          grep -q 'Math.hypot(dx, dy) > 7' site-navigation-core.js
+          grep -q "setProperty('left', safeLeft + 'px', 'important')" site-navigation-core.js
+          grep -q -- '--qily-dock-font-size:15px' site-floating-dock-standard-v1.css
+          grep -q -- '--qily-dock-font-size:14px' site-floating-dock-standard-v1.css
           grep -q '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4' site-navigation.js
           grep -q 'convertSeparateArrows' site-visual-geometry-v1.js
           grep -q 'normalizeLeanBidirectionalScene' site-visual-geometry-v1.js
+          ! grep -q 'var distance = event.clientY - startY;' site-navigation-core.js
           ! grep -q 'JOIN_OVERLAP' site-visual-geometry-v1.js
           ! grep -q 'DOMParser' site-native-prefetch-v1.js
           ! grep -q 'history.pushState' site-native-prefetch-v1.js
@@ -102,5 +115,13 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -A
-          git commit -m 'R6: materialize static first paint and native prefetch'
+          git commit -m 'R6: materialize dock V2 free drag and current first paint'
+          git fetch origin ${{ github.event.pull_request.head.ref }}
+          git rebase origin/${{ github.event.pull_request.head.ref }} || {
+            git rebase --abort || true
+            git reset --hard origin/${{ github.event.pull_request.head.ref }}
+            node scripts/enforce-r6-first-paint-performance.js
+            git add -A
+            git commit -m 'R6: materialize dock V2 free drag and current first paint' || true
+          }
           git push origin HEAD:${{ github.event.pull_request.head.ref }}

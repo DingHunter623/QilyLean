@@ -1,4 +1,4 @@
-/* QilyLean atomic first-paint navigation runtime v28｜2026-08-19
+/* QilyLean atomic first-paint navigation runtime v29｜2026-08-19
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
  * 性能：普通页面直达 core；仅合作/资源页面按需加载 legacy，避免全站下载报价与资源逻辑。
  * 可视化：中文正文启用 pretty wrap / strict line-break；悬浮功能区执行全站唯一视觉标准。
@@ -6,17 +6,17 @@
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV28) return;
-  w.__qilyStaticFirstNavigationV28 = true;
+  if (w.__qilyStaticFirstNavigationV29) return;
+  w.__qilyStaticFirstNavigationV29 = true;
 
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260817-atomic-first-paint-v8';
-  var CORE_SRC = '/site-navigation-core.js?v=20260819-operating-axis-nav-v22';
-  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18';
+  var CORE_SRC = '/site-navigation-core.js?v=20260819-free-drag-dock-v23';
+  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260819-free-drag-dock-v19';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6';
   var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260819-unified-content-axis-v1';
   var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2';
-  var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-sitewide-dock-v1';
+  var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-free-drag-uniform-font-v2';
   var GEOMETRY_SRC = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';
 
   function installVisualGovernanceLink() {
@@ -131,7 +131,7 @@
     var script = d.createElement('script');
     script.src = legacy ? LEGACY_SRC : CORE_SRC;
     script.async = false;
-    script.setAttribute(attr, 'atomic-first-paint-v28');
+    script.setAttribute(attr, 'atomic-first-paint-v29');
     (d.head || d.documentElement).appendChild(script);
   }
 
@@ -184,7 +184,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v28',
+  mode: 'atomic-first-paint-v29',
   staticHtmlAuthority: true,
   atomicFirstPaint: true,
   runtimeDependencyWaterfall: false,
@@ -208,6 +208,11 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   homepageHeroTune: true,
   dockUniformVisualContract: true,
   dockUniformSize: 62,
+  dockFreeDragXY: true,
+  dockPositionPersistence: true,
+  dockViewportBoundaryClamp: true,
+  dockMobileDesktopParity: true,
+  dockUniformFontSize: true,
   dockOfficialUrlTwoLine: true,
   dockActions: [
     'data-action="home"', 'data-action="top"', 'data-action="back"',

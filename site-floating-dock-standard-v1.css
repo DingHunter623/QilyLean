@@ -1,6 +1,6 @@
-/* QilyLean sitewide floating dock standard v1｜2026-08-19
- * One visual contract for every public page.
- * Overrides legacy per-page/share-only sizing without changing dock actions.
+/* QilyLean sitewide floating dock standard v2｜2026-08-19
+ * One visual contract for every public page, desktop and mobile.
+ * V2 restores free X/Y dragging, preserves viewport boundaries, and gives every dock label the same visual font size.
  */
 :root{
   --qily-dock-size:62px;
@@ -8,6 +8,7 @@
   --qily-dock-bg:#0f4b5a;
   --qily-dock-bg-hover:#12606f;
   --qily-dock-border:#caa15f;
+  --qily-dock-font-size:15px;
 }
 
 html body #floatDock.qily-float-dock{
@@ -26,6 +27,10 @@ html body #floatDock.qily-float-dock{
   background:transparent!important;
   box-shadow:none!important;
   transform:none!important;
+  touch-action:none!important;
+  user-select:none!important;
+  -webkit-user-select:none!important;
+  cursor:grab!important;
 }
 
 html body #floatDock.qily-float-dock .qily-float-btn,
@@ -51,7 +56,7 @@ html body #floatDock.qily-float-dock .qily-float-btn[data-action="share"]{
   box-shadow:0 8px 20px rgba(7,60,71,.22)!important;
   filter:none!important;
   font:inherit!important;
-  font-size:15px!important;
+  font-size:var(--qily-dock-font-size)!important;
   font-weight:900!important;
   line-height:1.08!important;
   letter-spacing:0!important;
@@ -59,7 +64,10 @@ html body #floatDock.qily-float-dock .qily-float-btn[data-action="share"]{
   text-shadow:none!important;
   white-space:normal!important;
   overflow:hidden!important;
-  cursor:pointer!important;
+  cursor:grab!important;
+  touch-action:none!important;
+  user-select:none!important;
+  -webkit-user-select:none!important;
   transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease!important;
 }
 
@@ -80,24 +88,51 @@ html body #floatDock.qily-float-dock .qily-float-btn[data-qily-pressed="true"]{
   transform:scale(.96)!important;
 }
 
+html body #floatDock.qily-float-dock.qily-dock-dragging,
+html body #floatDock.qily-float-dock.qily-dock-dragging .qily-float-btn{
+  cursor:grabbing!important;
+}
+html body #floatDock.qily-float-dock.qily-dock-dragging .qily-float-btn{
+  transform:none!important;
+}
+
 html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-line{
   display:block!important;
   margin:0!important;
   padding:0!important;
+  font-size:var(--qily-dock-font-size)!important;
+  font-weight:900!important;
   line-height:1.02!important;
+  letter-spacing:0!important;
   text-align:center!important;
   white-space:nowrap!important;
 }
-html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-primary{font-size:15px!important;}
-html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url{font-size:11px!important;letter-spacing:-.02em!important;}
+html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-primary,
+html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url{
+  font-size:var(--qily-dock-font-size)!important;
+  font-weight:900!important;
+  letter-spacing:0!important;
+}
 
 @media(max-width:640px){
-  :root{--qily-dock-size:58px;--qily-dock-gap:7px;}
-  html body #floatDock.qily-float-dock{right:max(8px,env(safe-area-inset-right))!important;top:clamp(76px,16vh,132px)!important;}
+  :root{
+    --qily-dock-size:58px;
+    --qily-dock-gap:7px;
+    --qily-dock-font-size:14px;
+  }
+  html body #floatDock.qily-float-dock{
+    right:max(8px,env(safe-area-inset-right))!important;
+    top:clamp(76px,16vh,132px)!important;
+  }
   html body #floatDock.qily-float-dock .qily-float-btn,
-  html body #floatDock.qily-float-dock .qily-float-btn[data-action="share"]{padding:4px!important;font-size:14px!important;}
-  html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-primary{font-size:14px!important;}
-  html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url{font-size:10px!important;}
+  html body #floatDock.qily-float-dock .qily-float-btn[data-action="share"]{
+    padding:4px!important;
+    font-size:var(--qily-dock-font-size)!important;
+  }
+  html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-primary,
+  html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url{
+    font-size:var(--qily-dock-font-size)!important;
+  }
 }
 
 @media(prefers-reduced-motion:reduce){
