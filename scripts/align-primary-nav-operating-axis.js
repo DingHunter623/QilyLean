@@ -3,8 +3,8 @@
 
 /* QilyLean 一级导视 + 制造运营闭环 + 移动可读性永久物化器｜2026-08-19
  * 目的：消除“静态 HTML / 运行时 / 缓存 / 自动发布器”之间的回退。
- * 固定一级导视：
- * 首页 → 履历主线 → 能力体系 → 改善方法 → 代表项目 → 信任中心 → 项目合作 → 知识资产
+ * 一级导视：核心制造运营链保持顺序，友情链接作为长期保留的扩展导航放在末位：
+ * 首页 → 履历主线 → 能力体系 → 改善方法 → 代表项目 → 信任中心 → 项目合作 → 知识资产 → 友情链接
  * 制造运营闭环映射：
  * 01 履历主线 → 02 能力体系 → 03 改善方法（代表项目用于验证）→ 04 信任中心 → 05 项目合作 → 06 知识资产
  */
@@ -14,10 +14,10 @@ const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const APPLY = process.argv.includes('--apply');
-const BUILD = '20260819-operating-axis-readable-v1';
-const NAV_JS_VERSION = '20260819-operating-axis-readable-v25';
-const CORE_VERSION = '20260819-operating-axis-nav-v19';
-const GOV_VERSION = '20260819-readable-mobile-v2';
+const BUILD = '20260819-operating-axis-readable-v2';
+const NAV_JS_VERSION = '20260819-operating-axis-readable-v26';
+const CORE_VERSION = '20260819-operating-axis-nav-v20';
+const GOV_VERSION = '20260819-readable-mobile-axis-v3';
 const GOV_HREF = `/site-visual-governance-v2.css?v=${GOV_VERSION}`;
 const GOV_TAG = `<link id="qilyVisualGovernanceV1" rel="stylesheet" href="${GOV_HREF}">`;
 
@@ -29,7 +29,8 @@ const ROUTES = [
   ['代表项目', '/projects/'],
   ['信任中心', '/trust/'],
   ['项目合作', '/cooperation/'],
-  ['知识资产', '/knowledge/']
+  ['知识资产', '/knowledge/'],
+  ['友情链接', '/links/']
 ];
 const LABELS = ROUTES.map(([label]) => label);
 const EXPECTED = LABELS.join(' > ');
@@ -117,11 +118,15 @@ function reorderNavBlock(block) {
     const label = anchorLabel(anchor);
     if (LABELS.includes(label) && !byLabel.has(label)) byLabel.set(label, anchor.trim());
   }
-  if (byLabel.size !== LABELS.length) return block;
   const indentMatch = block.match(/\n([ \t]+)<a\b/i);
   const indent = indentMatch ? indentMatch[1] : '      ';
   const closeIndent = indent.slice(0, Math.max(0, indent.length - 2));
-  return `${open[0]}\n${ROUTES.map(([label]) => `${indent}${byLabel.get(label)}`).join('\n')}\n${closeIndent}</nav>`;
+  const body = ROUTES.map(([label, href]) => {
+    let anchor = byLabel.get(label) || `<a href="${href}">${label}</a>`;
+    if (/\bhref=["'][^"']*["']/i.test(anchor)) anchor = anchor.replace(/\bhref=["'][^"']*["']/i, `href="${href}"`);
+    return `${indent}${anchor}`;
+  }).join('\n');
+  return `${open[0]}\n${body}\n${closeIndent}</nav>`;
 }
 
 function patchAxis(html) {
@@ -173,13 +178,17 @@ function validate() {
   const css = read('site-visual-governance-v2.css');
   const coreArray = (core.match(/var routes = \[\n([\s\S]*?)\n  \];/) || [])[1] || '';
   assert(orderedLabels(coreArray), 'runtime primary navigation order is stale');
-  assert(!coreArray.includes('友情链接'), '友情链接 must not remain in primary navigation');
+  assert(coreArray.includes("['友情链接', '/links/']"), '友情链接 missing from primary navigation');
   assert(!core.includes('font-size:11.5px!important'), '11.5px mobile nav regression detected');
   assert(!core.includes('font-size:12.5px!important'), '12.5px mobile nav regression detected');
   assert(wrapper.includes(`/site-navigation-core.js?v=${CORE_VERSION}`), 'core cache version is stale');
   assert(wrapper.includes(GOV_HREF), 'visual governance runtime version is stale');
   assert(css.includes('--qily-readable-floor:16px'), 'readability floor missing');
   assert(css.includes('font-size:16.5px!important'), 'mobile navigation readability rule missing');
+  assert(css.includes('.qily-system-axis__step:hover'), 'operating-axis hover feedback missing');
+  assert(css.includes('.qily-system-axis__step:focus-visible'), 'operating-axis focus feedback missing');
+  assert(css.includes('.qily-system-axis__step:active'), 'operating-axis touch/active feedback missing');
+  assert(css.includes('header a[href="/trust/"][aria-current="page"]'), 'operating-axis current-module visual mapping missing');
 
   let publicCount = 0;
   let navCount = 0;
@@ -197,7 +206,7 @@ function validate() {
       if (!LABELS.every(label => nav.includes(label))) continue;
       navCount += 1;
       assert(orderedLabels(nav), `${rel}: primary navigation order stale`);
-      assert(!nav.includes('友情链接'), `${rel}: 友情链接 leaked into primary navigation`);
+      assert(nav.includes('友情链接'), `${rel}: 友情链接 missing from primary navigation`);
     }
     const steps = html.match(/<a\b[^>]*class=["'][^"']*qily-system-axis__step[^"']*["'][^>]*>[\s\S]*?<\/a>/gi) || [];
     for (const step of steps) {
@@ -211,7 +220,7 @@ function validate() {
   assert(publicCount > 0, 'No public HTML pages discovered');
   assert(navCount > 0, 'No primary navigation blocks validated');
   assert(axisCount > 0, 'No operating-axis steps validated');
-  process.stdout.write(`PASS: ${publicCount} public pages; ${navCount} primary navs follow ${EXPECTED}; ${axisCount} operating-axis steps map to their corresponding modules.\n`);
+  process.stdout.write(`PASS: ${publicCount} public pages; ${navCount} primary navs follow ${EXPECTED}; ${axisCount} operating-axis steps retain hover/focus/touch/current visual feedback.\n`);
 }
 
 function main() {
