@@ -5,11 +5,11 @@ if(!card)return;
 var datePattern=/^\d{4}-\d{2}-\d{2}$/;
 var stamp=Date.now();
 var releaseCandidate={
-  date:'2026-08-12',
-  theme:'汽车座椅开关PMO项目管理',
-  title:'汽车座椅开关PMO：从职能架构到量产交付的项目管理闭环',
-  summary:'汽车座椅开关项目不是研发部门单独完成的一组任务，而是一条把客户要求、产品设计、模具与设备、供应链、过程质量、产能爬坡和量产移交连成一体的交付链。PMO的价值，是建立统一目标、阶段门、责任界面和升级机制，让跨职能团队围绕同一基线做决策。',
-  href:'/qilylean/daily/2026-08-12.html'
+  date:'2026-08-19',
+  theme:'精益交付与工程闭环',
+  title:'谁能更快把问题看懂、把方案做对、把成果交付出来',
+  summary:'制造改善真正拉开差距的，不是谁会的工具更多，而是谁能更快从现场事实中识别关键矛盾，用工程方法形成正确方案，再把方案转化为可验收、可复用、可持续的经营成果。速度，不只是执行速度，更是洞察速度、决策速度与交付速度。',
+  href:'/qilylean/daily/2026-08-19.html'
 };
 
 function request(url,type){
@@ -86,7 +86,7 @@ function render(latest){
   var title=card.querySelector('[data-latest-brief-title]');
   var summary=card.querySelector('[data-latest-brief-summary]');
   var link=card.querySelector('[data-latest-brief-link]');
-  if(meta)meta.textContent='最新：'+latest.date+'｜'+(latest.theme||'今日简报');
+  if(meta)meta.textContent='最新：'+latest.date+'｜'+(latest.theme||'精选简报');
   if(title&&latest.title)title.textContent=latest.title;
   if(summary&&latest.summary)summary.textContent=latest.summary;
   if(link)link.setAttribute('href',latest.href||('/qilylean/daily/'+latest.date+'.html'));
