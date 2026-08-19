@@ -13,7 +13,7 @@
   var CORE_SRC = '/site-navigation-core.js?v=20260819-operating-axis-nav-v22';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
-  var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v5';
+  var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6';
   var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260819-unified-content-axis-v1';
   var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2';
 
@@ -30,7 +30,7 @@
       continuity.setAttribute('href', CONTINUITY_HREF);
     }
 
-    var governance = d.getElementById('qilyVisualGovernanceV1') || d.querySelector('link[href*="/site-visual-governance-v1.css"]');
+    var governance = d.getElementById('qilyVisualGovernanceV1') || d.querySelector('link[href*="/site-visual-governance-v1.css"],link[href*="/site-visual-governance-v2.css"]');
     if (!governance) {
       governance = d.createElement('link');
       governance.id = 'qilyVisualGovernanceV1';
