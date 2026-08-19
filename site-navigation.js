@@ -14,6 +14,7 @@
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v4';
+  var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v1';
 
   function installVisualGovernanceLink() {
     var continuity = d.querySelector('link[href*="/site-interaction-continuity-v1.css"]');
@@ -38,6 +39,22 @@
     } else if (governance.getAttribute('href') !== GOVERNANCE_HREF) {
       governance.id = 'qilyVisualGovernanceV1';
       governance.setAttribute('href', GOVERNANCE_HREF);
+    }
+  }
+
+  function installHomeHeroTune() {
+    var path = (location.pathname || '/').replace(/\/index\.html$/, '/');
+    if (path !== '/') return;
+    var tune = d.getElementById('qilyHomeHeroTuneV1') || d.querySelector('link[href*="/site-home-hero-tune-v1.css"]');
+    if (!tune) {
+      tune = d.createElement('link');
+      tune.id = 'qilyHomeHeroTuneV1';
+      tune.rel = 'stylesheet';
+      tune.href = HOME_HERO_HREF;
+      (d.head || d.documentElement).appendChild(tune);
+    } else if (tune.getAttribute('href') !== HOME_HERO_HREF) {
+      tune.id = 'qilyHomeHeroTuneV1';
+      tune.setAttribute('href', HOME_HERO_HREF);
     }
   }
 
@@ -108,6 +125,7 @@
   }
 
   installVisualGovernanceLink();
+  installHomeHeroTune();
   installTypographyPolish();
   loadConsistencyGuard();
   if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', bindDock, { once: true });
@@ -129,6 +147,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   chineseWrapPolish: true,
   visualGovernanceCacheBust: true,
   visualGovernanceFinalCascade: true,
+  homepageHeroTune: true,
   dockOfficialUrlTwoLine: true,
   dockActions: [
     'data-action="home"', 'data-action="top"', 'data-action="back"',
