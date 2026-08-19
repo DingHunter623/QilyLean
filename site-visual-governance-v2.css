@@ -13,6 +13,12 @@
   --qily-readable-floor:16px;
   --qily-readable-small:17px;
   --qily-readable-body-note:18px;
+  --qily-axis-green:#0f4b5a;
+  --qily-axis-green-hover:#12606f;
+  --qily-axis-gold:#caa15f;
+  --qily-axis-gold-soft:#fff5d2;
+  --qily-axis-paper:#f4f9f8;
+  --qily-axis-ink:#17322d;
 }
 
 /* 01｜全站最小号文字：默认不低于 17px；保留原有更大字号。 */
@@ -41,6 +47,85 @@ html body .qily-system-axis__step strong{
 html body .qily-system-axis__step span{
   font-size:16.5px!important;
   line-height:1.38!important;
+}
+
+/* 02A｜制造运营资产闭环交互永久基线：默认 / hover / focus / touch / 当前模块全部可辨识。 */
+html body .qily-system-axis__step{
+  color:var(--qily-axis-ink)!important;
+  background:var(--qily-axis-paper)!important;
+  border:1.5px solid #bfd6d2!important;
+  box-shadow:0 2px 7px rgba(15,75,90,.06)!important;
+  cursor:pointer!important;
+  -webkit-tap-highlight-color:rgba(202,161,95,.25)!important;
+  transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease,border-color .18s ease,color .18s ease!important;
+}
+html body .qily-system-axis__step :is(strong,span){
+  transition:color .18s ease!important;
+}
+@media (hover:hover) and (pointer:fine){
+  html body .qily-system-axis__step:hover{
+    color:#fff!important;
+    -webkit-text-fill-color:#fff!important;
+    background:var(--qily-axis-green-hover)!important;
+    border-color:var(--qily-axis-gold)!important;
+    box-shadow:0 12px 26px rgba(15,75,90,.23)!important;
+    transform:translateY(-3px)!important;
+  }
+  html body .qily-system-axis__step:hover :is(strong,span){
+    color:#fff!important;
+    -webkit-text-fill-color:#fff!important;
+  }
+}
+html body .qily-system-axis__step:focus-visible{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-axis-green-hover)!important;
+  border-color:var(--qily-axis-gold)!important;
+  box-shadow:0 12px 26px rgba(15,75,90,.23)!important;
+  outline:3px solid rgba(202,161,95,.38)!important;
+  outline-offset:3px!important;
+  transform:translateY(-2px)!important;
+}
+html body .qily-system-axis__step:focus-visible :is(strong,span){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+html body .qily-system-axis__step:active{
+  color:var(--qily-axis-green)!important;
+  -webkit-text-fill-color:var(--qily-axis-green)!important;
+  background:var(--qily-axis-gold-soft)!important;
+  border-color:var(--qily-axis-gold)!important;
+  box-shadow:0 4px 11px rgba(15,75,90,.16)!important;
+  transform:translateY(0) scale(.975)!important;
+}
+html body .qily-system-axis__step:active :is(strong,span){
+  color:var(--qily-axis-green)!important;
+  -webkit-text-fill-color:var(--qily-axis-green)!important;
+}
+
+/* 当前页面对应的运营资产必须像顶部导航一样稳定高亮；代表项目归入 03 精益改善验证。 */
+html body:has(header a[href="/experience/"][aria-current="page"]) .qily-system-axis__step[href="/experience/"],
+html body:has(header a[href="/capabilities/"][aria-current="page"]) .qily-system-axis__step[href="/capabilities/"],
+html body:has(header a[href="/improvements/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"],
+html body:has(header a[href="/projects/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"],
+html body:has(header a[href="/trust/"][aria-current="page"]) .qily-system-axis__step[href="/trust/"],
+html body:has(header a[href="/cooperation/"][aria-current="page"]) .qily-system-axis__step[href="/cooperation/"],
+html body:has(header a[href="/knowledge/"][aria-current="page"]) .qily-system-axis__step[href="/knowledge/"]{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-axis-green)!important;
+  border:2px solid var(--qily-axis-gold)!important;
+  box-shadow:0 8px 20px rgba(15,75,90,.24)!important;
+}
+html body:has(header a[href="/experience/"][aria-current="page"]) .qily-system-axis__step[href="/experience/"] :is(strong,span),
+html body:has(header a[href="/capabilities/"][aria-current="page"]) .qily-system-axis__step[href="/capabilities/"] :is(strong,span),
+html body:has(header a[href="/improvements/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"] :is(strong,span),
+html body:has(header a[href="/projects/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"] :is(strong,span),
+html body:has(header a[href="/trust/"][aria-current="page"]) .qily-system-axis__step[href="/trust/"] :is(strong,span),
+html body:has(header a[href="/cooperation/"][aria-current="page"]) .qily-system-axis__step[href="/cooperation/"] :is(strong,span),
+html body:has(header a[href="/knowledge/"][aria-current="page"]) .qily-system-axis__step[href="/knowledge/"] :is(strong,span){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
 }
 
 /* 03｜模块内的小导航、状态、卡片辅助说明统一抬高。 */
@@ -86,7 +171,7 @@ html body :is(.breadcrumb,.breadcrumbs,.qily-breadcrumb,.site-footer,footer,.foo
   line-height:1.55!important;
 }
 
-/* 07｜移动端只重排，不缩小信息。 */
+/* 07｜移动端只重排，不缩小信息；运营轴保留按压反馈，不依赖 hover。 */
 @media(max-width:900px){
   html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav)>a[href],
   html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav)>a[href]{
@@ -105,6 +190,7 @@ html body :is(.breadcrumb,.breadcrumbs,.qily-breadcrumb,.site-footer,footer,.foo
   }
   html body .qily-system-axis__step strong{font-size:16.5px!important}
   html body .qily-system-axis__step span{font-size:16px!important}
+  html body .qily-system-axis__step{min-height:64px!important}
   html body #floatDock .qily-float-btn,
   html body #floatDock .qily-share-label-line{font-size:16px!important}
 }
