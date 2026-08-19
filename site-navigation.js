@@ -1,19 +1,20 @@
-/* QilyLean atomic first-paint navigation runtime v24｜2026-08-18
+/* QilyLean atomic first-paint navigation runtime v25｜2026-08-19
  * 原则：静态 HTML 是唯一正文权威源；运行时只负责导航/悬浮工具所必需的增强。
  * 性能：普通页面直达 core；仅合作/资源页面按需加载 legacy，避免全站下载报价与资源逻辑。
  * 可视化：中文正文启用 pretty wrap / strict line-break，标题平衡换行；悬浮栏“分享官方网址”固定两行完整显示。
- * V24：统一刷新交互样式，并把视觉治理层放到最终级联，锁定三主色、字号与反馈一致性。
+ * V25：在既有视觉治理层之外，增加全站 1560px 统一内容窗口轴，消除上下模块 1240/1560px 混用。
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV24) return;
-  w.__qilyStaticFirstNavigationV24 = true;
+  if (w.__qilyStaticFirstNavigationV25) return;
+  w.__qilyStaticFirstNavigationV25 = true;
 
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260817-atomic-first-paint-v8';
   var CORE_SRC = '/site-navigation-core.js?v=20260819-operating-axis-nav-v22';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v5';
+  var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260819-unified-content-axis-v1';
   var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2';
 
   function installVisualGovernanceLink() {
@@ -39,6 +40,20 @@
     } else if (governance.getAttribute('href') !== GOVERNANCE_HREF) {
       governance.id = 'qilyVisualGovernanceV1';
       governance.setAttribute('href', GOVERNANCE_HREF);
+    }
+  }
+
+  function installContentAxisLink() {
+    var axis = d.getElementById('qilyContentAxisV1') || d.querySelector('link[href*="/site-content-axis-v1.css"]');
+    if (!axis) {
+      axis = d.createElement('link');
+      axis.id = 'qilyContentAxisV1';
+      axis.rel = 'stylesheet';
+      axis.href = CONTENT_AXIS_HREF;
+      (d.head || d.documentElement).appendChild(axis);
+    } else if (axis.getAttribute('href') !== CONTENT_AXIS_HREF) {
+      axis.id = 'qilyContentAxisV1';
+      axis.setAttribute('href', CONTENT_AXIS_HREF);
     }
   }
 
@@ -83,7 +98,7 @@
     var script = d.createElement('script');
     script.src = legacy ? LEGACY_SRC : CORE_SRC;
     script.async = false;
-    script.setAttribute(attr, 'atomic-first-paint-v24');
+    script.setAttribute(attr, 'atomic-first-paint-v25');
     (d.head || d.documentElement).appendChild(script);
   }
 
@@ -124,6 +139,7 @@
   }
 
   installVisualGovernanceLink();
+  installContentAxisLink();
   installHomeHeroTune();
   installTypographyPolish();
   loadConsistencyGuard();
@@ -133,7 +149,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v24',
+  mode: 'atomic-first-paint-v25',
   staticHtmlAuthority: true,
   atomicFirstPaint: true,
   runtimeDependencyWaterfall: false,
@@ -146,6 +162,8 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   chineseWrapPolish: true,
   visualGovernanceCacheBust: true,
   visualGovernanceFinalCascade: true,
+  unifiedContentAxis: true,
+  unifiedContentAxisWidth: 1560,
   homepageHeroTune: true,
   dockOfficialUrlTwoLine: true,
   dockActions: [
