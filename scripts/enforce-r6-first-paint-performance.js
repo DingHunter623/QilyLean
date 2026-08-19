@@ -4,7 +4,8 @@
 /* QilyLean R6 static-first performance materializer｜2026-08-19
  * 根因治理：最终视觉CSS不得等待 defer JS 再改 href/补挂；首屏静态HTML直接引用当前受保护版本。
  * 导航治理：继续使用浏览器原生整页导航，并静态加载同源低优先级预取增强。
- * Dock V2：全站悬浮功能区恢复 X/Y 自由拖动、位置记忆、视口防越界；PC/手机字号与按钮视觉统一。
+ * Dock V3：全站悬浮功能区支持按住时 X/Y 自由拖动，松手/取消/缩放后自动归位右下角；不再记忆任意停靠位置。
+ * Hero V3：首页头号主标题在上一版基础上再缩小一号，同时保持首屏静态一致。
  * Arrow V4：继续保护一体化箭头与场景简图02对称几何。
  */
 const fs = require('fs');
@@ -13,19 +14,19 @@ const root = path.resolve(__dirname, '..');
 
 const GOVERNANCE = '<link id="qilyVisualGovernanceV1" rel="stylesheet" href="/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6">';
 const CONTENT_AXIS = '<link id="qilyContentAxisV1" rel="stylesheet" href="/site-content-axis-v1.css?v=20260819-unified-content-axis-v1">';
-const HOME_HERO = '<link id="qilyHomeHeroTuneV1" rel="stylesheet" href="/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2">';
+const HOME_HERO = '<link id="qilyHomeHeroTuneV1" rel="stylesheet" href="/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3">';
 const PREFETCH = '<script defer id="qilyR6NativePrefetchV1" data-qily-native-prefetch="v1" src="/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1"></script>';
-const DOCK = '<link id="qilyFloatingDockStandardV1" rel="stylesheet" href="/site-floating-dock-standard-v1.css?v=20260819-free-drag-uniform-font-v2">';
+const DOCK = '<link id="qilyFloatingDockStandardV1" rel="stylesheet" href="/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3">';
 const GEOMETRY = '<script defer data-qily-visual-geometry="v4" src="/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4"></script>';
-const NAVIGATION = '<script defer src="/site-navigation.js?v=20260819-dock-free-drag-v29"></script>';
-const HOME_PARITY = '<style id="qilyR6HomeFirstPaintParity">@media(min-width:981px){html body.qily-home-v3 .hero .hero-grid{width:min(1540px,100%)!important;grid-template-columns:minmax(0,1fr) minmax(330px,360px)!important;column-gap:clamp(52px,4.5vw,76px)!important}html body.qily-home-v3 .hero h1.qily-home-hero-title{font-size:clamp(44px,4vw,56px)!important;line-height:1.08!important;letter-spacing:-.022em!important}html body.qily-home-v3 .hero .hero-grid>aside,html body.qily-home-v3 .hero .portrait-frame{max-width:360px!important}}@media(min-width:981px) and (max-width:1280px){html body.qily-home-v3 .hero h1.qily-home-hero-title{font-size:clamp(40px,4.2vw,52px)!important}}@media(max-width:980px){html body.qily-home-v3 .hero h1.qily-home-hero-title{font-size:clamp(34px,6.6vw,48px)!important;line-height:1.08!important}}@media(max-width:620px){html body.qily-home-v3 .hero h1.qily-home-hero-title{font-size:clamp(28px,8vw,36px)!important;line-height:1.1!important}}</style>';
+const NAVIGATION = '<script defer src="/site-navigation.js?v=20260819-dock-snapback-v30"></script>';
+const HOME_PARITY = '<style id="qilyR6HomeFirstPaintParity">@media(min-width:981px){html body.qily-home-v3 .hero .hero-grid{width:min(1540px,100%)!important;grid-template-columns:minmax(0,1fr) minmax(330px,360px)!important;column-gap:clamp(52px,4.5vw,76px)!important}html body.qily-home-v3 .hero h1.qily-home-hero-title{font-size:clamp(40px,3.6vw,52px)!important;line-height:1.08!important;letter-spacing:-.022em!important}html body.qily-home-v3 .hero .hero-grid>aside,html body.qily-home-v3 .hero .portrait-frame{max-width:360px!important}}@media(min-width:981px) and (max-width:1280px){html body.qily-home-v3 .hero h1.qily-home-hero-title{font-size:clamp(38px,4vw,48px)!important}}@media(max-width:980px){html body.qily-home-v3 .hero h1.qily-home-hero-title{font-size:clamp(34px,6.6vw,48px)!important;line-height:1.08!important}}@media(max-width:620px){html body.qily-home-v3 .hero h1.qily-home-hero-title{font-size:clamp(28px,8vw,36px)!important;line-height:1.1!important}}</style>';
 
 const SCENE02_OLD_DOWN = '<path d="M600 245 V315" stroke="#caa15f" stroke-width="7" marker-end="url(#a2)"/>';
 const SCENE02_NEW_DOWN = '<path d="M596.5 252 H603.5 V292 H610 L600 308 L590 292 H596.5 Z" fill="#caa15f" stroke="none" data-qily-unified-arrow="v4" data-qily-scene-arrow="reform-down"/>';
 const SCENE02_OLD_UP = '<line x1="600" y1="515" x2="600" y2="462" stroke="#178b94" stroke-width="8" stroke-linecap="round"/><polygon points="600,438 584,466 616,466" fill="#178b94"/>';
 const SCENE02_NEW_UP = '<path d="M596.5 503 H603.5 V463 H610 L600 447 L590 463 H596.5 Z" fill="#178b94" stroke="none" data-qily-unified-arrow="v4" data-qily-scene-arrow="improvement-up"/>';
 
-const CORE_DRAG_V2 = `    var down = false;
+const CORE_DRAG_V3 = `    var down = false;
     var moved = false;
     var pointerId = null;
     var startX = 0;
@@ -33,8 +34,6 @@ const CORE_DRAG_V2 = `    var down = false;
     var startLeft = 0;
     var startTop = 0;
     var action = '';
-    var DOCK_POSITION_KEY = 'qilyDockPositionV2';
-    var userPositioned = false;
 
     function clamp(value, min, max) {
       return Math.max(min, Math.min(max, value));
@@ -49,58 +48,32 @@ const CORE_DRAG_V2 = `    var down = false;
       };
     }
 
-    function setDockPosition(left, top, free) {
+    function setDockFreePosition(left, top) {
       var limits = dockLimits();
-      var safeTop = clamp(top, limits.minTop, limits.maxTop);
-      dock.style.setProperty('top', safeTop + 'px', 'important');
+      dock.style.setProperty('left', clamp(left, limits.minLeft, limits.maxLeft) + 'px', 'important');
+      dock.style.setProperty('right', 'auto', 'important');
+      dock.style.setProperty('top', clamp(top, limits.minTop, limits.maxTop) + 'px', 'important');
       dock.style.setProperty('bottom', 'auto', 'important');
-      if (free) {
-        var safeLeft = clamp(left, limits.minLeft, limits.maxLeft);
-        dock.style.setProperty('left', safeLeft + 'px', 'important');
-        dock.style.setProperty('right', 'auto', 'important');
-        userPositioned = true;
-      } else {
-        dock.style.setProperty('left', 'auto', 'important');
-        dock.style.setProperty('right', 'max(10px, env(safe-area-inset-right))', 'important');
-        userPositioned = false;
-      }
+      dock.dataset.qilyDockHome = 'dragging';
     }
 
-    function positionRatios(left, top) {
-      var limits = dockLimits();
-      var xRange = Math.max(1, limits.maxLeft - limits.minLeft);
-      var yRange = Math.max(1, limits.maxTop - limits.minTop);
-      return {
-        x: clamp((left - limits.minLeft) / xRange, 0, 1),
-        y: clamp((top - limits.minTop) / yRange, 0, 1)
-      };
-    }
-
-    function saveDockPosition() {
-      var rect = dock.getBoundingClientRect();
-      var ratios = positionRatios(rect.left, rect.top);
+    function clearLegacyDockPosition() {
       try {
-        localStorage.setItem(DOCK_POSITION_KEY, JSON.stringify({ x: ratios.x, y: ratios.y }));
+        localStorage.removeItem('qilyDockPositionV2');
         localStorage.removeItem('qilyDockTop');
       } catch (error) {}
     }
 
-    function restoreDockPosition() {
-      var stored = null;
-      try { stored = JSON.parse(localStorage.getItem(DOCK_POSITION_KEY) || 'null'); } catch (error) {}
-      if (stored && Number.isFinite(stored.x) && Number.isFinite(stored.y)) {
-        var limits = dockLimits();
-        var left = limits.minLeft + clamp(stored.x, 0, 1) * Math.max(1, limits.maxLeft - limits.minLeft);
-        var top = limits.minTop + clamp(stored.y, 0, 1) * Math.max(1, limits.maxTop - limits.minTop);
-        setDockPosition(left, top, true);
-        return;
-      }
-      var legacyTop = NaN;
-      try { legacyTop = parseFloat(localStorage.getItem('qilyDockTop')); } catch (error) {}
-      setDockPosition(0, Number.isFinite(legacyTop) ? legacyTop : Math.max(92, window.innerHeight * 0.2), false);
+    function snapDockHome() {
+      clearLegacyDockPosition();
+      dock.style.setProperty('left', 'auto', 'important');
+      dock.style.setProperty('right', 'max(var(--qily-dock-edge), env(safe-area-inset-right))', 'important');
+      dock.style.setProperty('top', 'auto', 'important');
+      dock.style.setProperty('bottom', 'max(var(--qily-dock-edge), env(safe-area-inset-bottom))', 'important');
+      dock.dataset.qilyDockHome = 'bottom-right';
     }
 
-    requestAnimationFrame(restoreDockPosition);
+    requestAnimationFrame(snapDockHome);
 
     dock.addEventListener('pointerdown', function (event) {
       var button = event.target.closest('.qily-float-btn');
@@ -127,7 +100,7 @@ const CORE_DRAG_V2 = `    var down = false;
         dock.classList.add('qily-dock-dragging');
       }
       if (!moved) return;
-      setDockPosition(startLeft + dx, startTop + dy, true);
+      setDockFreePosition(startLeft + dx, startTop + dy);
       event.preventDefault();
     }, { passive: false });
 
@@ -136,7 +109,7 @@ const CORE_DRAG_V2 = `    var down = false;
       down = false;
       try { if (dock.releasePointerCapture) dock.releasePointerCapture(pointerId); } catch (error) {}
       dock.classList.remove('qily-dock-dragging');
-      if (moved) saveDockPosition();
+      snapDockHome();
       if (!cancelled && !moved) runAction(action);
       pointerId = null;
     }
@@ -153,6 +126,9 @@ const CORE_RESIZE_V2 = `    window.addEventListener('resize', function () {
         setDockPosition(0, rect.top, false);
       }
     }, { passive: true });`;
+
+const CORE_RESIZE_V3 = `    window.addEventListener('resize', snapDockHome, { passive: true });
+    window.addEventListener('pageshow', snapDockHome, { passive: true });`;
 
 function read(rel) { return fs.readFileSync(path.join(root, rel), 'utf8'); }
 function writeIfChanged(rel, source, next) {
@@ -174,33 +150,44 @@ function materializeRuntimeSources() {
     '<button class="qily-float-btn qily-float-share" data-action="share" type="button"><span class="qily-share-label-line qily-share-label-primary">分享</span><span class="qily-share-label-line qily-share-label-url">官网</span></button>',
     'two-line 分享官网 dock label'
   );
-  if (!core.includes("var DOCK_POSITION_KEY = 'qilyDockPositionV2';")) {
+  if (!core.includes('function snapDockHome()')) {
     const dragPattern = /    var down = false;[\s\S]*?    dock\.addEventListener\('pointercancel', function \(event\) \{ finish\(event, true\); \}\);/;
-    if (!dragPattern.test(core)) throw new Error('R6 runtime materializer cannot find legacy vertical-only dock drag block');
-    core = core.replace(dragPattern, CORE_DRAG_V2);
+    if (!dragPattern.test(core)) throw new Error('R6 runtime materializer cannot find dock drag block');
+    core = core.replace(dragPattern, CORE_DRAG_V3);
   }
-  core = assertReplace(
-    core,
-    "    window.addEventListener('resize', function () { setDockTop(dock.getBoundingClientRect().top); }, { passive: true });",
-    CORE_RESIZE_V2,
-    'legacy dock resize handler'
-  );
+  if (!core.includes("window.addEventListener('pageshow', snapDockHome")) {
+    if (core.includes(CORE_RESIZE_V2)) core = core.replace(CORE_RESIZE_V2, CORE_RESIZE_V3);
+    else {
+      const resizePattern = /    window\.addEventListener\('resize', function \(\) \{[\s\S]*?    \}, \{ passive: true \}\);/;
+      if (!resizePattern.test(core)) throw new Error('R6 runtime materializer cannot find dock resize handler');
+      core = core.replace(resizePattern, CORE_RESIZE_V3);
+    }
+  }
   writeIfChanged('site-navigation-core.js', read('site-navigation-core.js'), core);
 
   let legacy = read('site-navigation-legacy-20260802.js');
-  legacy = legacy.replace("var CORE_SRC = '/site-navigation-core.js?v=20260817-atomic-first-paint-v18';", "var CORE_SRC = '/site-navigation-core.js?v=20260819-free-drag-dock-v23';");
+  legacy = legacy.replace("var CORE_SRC = '/site-navigation-core.js?v=20260819-free-drag-dock-v23';", "var CORE_SRC = '/site-navigation-core.js?v=20260819-dock-snapback-v24';");
+  legacy = legacy.replace("var CORE_SRC = '/site-navigation-core.js?v=20260817-atomic-first-paint-v18';", "var CORE_SRC = '/site-navigation-core.js?v=20260819-dock-snapback-v24';");
   writeIfChanged('site-navigation-legacy-20260802.js', read('site-navigation-legacy-20260802.js'), legacy);
 
   let nav = read('site-navigation.js');
-  nav = nav.replace('navigation runtime v28', 'navigation runtime v29');
-  nav = nav.replace('if (w.__qilyStaticFirstNavigationV28) return;', 'if (w.__qilyStaticFirstNavigationV29) return;');
-  nav = nav.replace('w.__qilyStaticFirstNavigationV28 = true;', 'w.__qilyStaticFirstNavigationV29 = true;');
-  nav = nav.replace("var CORE_SRC = '/site-navigation-core.js?v=20260819-operating-axis-nav-v22';", "var CORE_SRC = '/site-navigation-core.js?v=20260819-free-drag-dock-v23';");
-  nav = nav.replace("var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18';", "var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260819-free-drag-dock-v19';");
-  nav = nav.replace("var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-sitewide-dock-v1';", "var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-free-drag-uniform-font-v2';");
-  nav = nav.replace(/atomic-first-paint-v28/g, 'atomic-first-paint-v29');
+  nav = nav.replace('navigation runtime v29', 'navigation runtime v30');
+  nav = nav.replace('navigation runtime v28', 'navigation runtime v30');
+  nav = nav.replace('if (w.__qilyStaticFirstNavigationV29) return;', 'if (w.__qilyStaticFirstNavigationV30) return;');
+  nav = nav.replace('w.__qilyStaticFirstNavigationV29 = true;', 'w.__qilyStaticFirstNavigationV30 = true;');
+  nav = nav.replace('if (w.__qilyStaticFirstNavigationV28) return;', 'if (w.__qilyStaticFirstNavigationV30) return;');
+  nav = nav.replace('w.__qilyStaticFirstNavigationV28 = true;', 'w.__qilyStaticFirstNavigationV30 = true;');
+  nav = nav.replace("var CORE_SRC = '/site-navigation-core.js?v=20260819-free-drag-dock-v23';", "var CORE_SRC = '/site-navigation-core.js?v=20260819-dock-snapback-v24';");
+  nav = nav.replace("var CORE_SRC = '/site-navigation-core.js?v=20260819-operating-axis-nav-v22';", "var CORE_SRC = '/site-navigation-core.js?v=20260819-dock-snapback-v24';");
+  nav = nav.replace("var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260819-free-drag-dock-v19';", "var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260819-dock-snapback-v20';");
+  nav = nav.replace("var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18';", "var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260819-dock-snapback-v20';");
+  nav = nav.replace("var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-free-drag-uniform-font-v2';", "var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3';");
+  nav = nav.replace("var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-sitewide-dock-v1';", "var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3';");
+  nav = nav.replace(/atomic-first-paint-v29/g, 'atomic-first-paint-v30');
+  nav = nav.replace(/atomic-first-paint-v28/g, 'atomic-first-paint-v30');
+  nav = nav.replace('  dockPositionPersistence: true,', "  dockPositionPersistence: false,\n  dockAutoHome: 'bottom-right',");
   if (!nav.includes('dockFreeDragXY: true')) {
-    nav = nav.replace('  dockUniformSize: 62,\n  dockOfficialUrlTwoLine: true,', '  dockUniformSize: 62,\n  dockFreeDragXY: true,\n  dockPositionPersistence: true,\n  dockViewportBoundaryClamp: true,\n  dockMobileDesktopParity: true,\n  dockUniformFontSize: true,\n  dockOfficialUrlTwoLine: true,');
+    nav = nav.replace('  dockUniformSize: 62,\n  dockOfficialUrlTwoLine: true,', "  dockUniformSize: 62,\n  dockFreeDragXY: true,\n  dockPositionPersistence: false,\n  dockAutoHome: 'bottom-right',\n  dockViewportBoundaryClamp: true,\n  dockMobileDesktopParity: true,\n  dockUniformFontSize: true,\n  dockOfficialUrlTwoLine: true,");
   }
   writeIfChanged('site-navigation.js', read('site-navigation.js'), nav);
 }
@@ -240,7 +227,6 @@ function normalize(html, rel) {
     out = strip(out, /\s*<link\b[^>]*(?:id=["']qilyHomeHeroTuneV1["']|href=["'][^"']*\/site-home-hero-tune-v1\.css(?:\?[^"']*)?["'])[^>]*>\s*/gi);
     out = beforeHeadEnd(out, HOME_PARITY + '\n' + HOME_HERO);
   }
-
   out = normalizeScene02(out, rel);
   return out;
 }
@@ -274,10 +260,10 @@ const home = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 [
   '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6',
   '/site-content-axis-v1.css?v=20260819-unified-content-axis-v1',
-  '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2',
-  '/site-floating-dock-standard-v1.css?v=20260819-free-drag-uniform-font-v2',
+  '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3',
+  '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3',
   '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4',
-  '/site-navigation.js?v=20260819-dock-free-drag-v29',
+  '/site-navigation.js?v=20260819-dock-snapback-v30',
   'qilyR6HomeFirstPaintParity',
   '/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1'
 ].forEach((marker) => {
@@ -286,16 +272,16 @@ const home = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 
 const core = fs.readFileSync(path.join(root, 'site-navigation-core.js'), 'utf8');
 [
-  "var DOCK_POSITION_KEY = 'qilyDockPositionV2';",
+  'function snapDockHome()',
   'Math.hypot(dx, dy) > 7',
-  "localStorage.setItem(DOCK_POSITION_KEY",
-  "dock.style.setProperty('left', safeLeft + 'px', 'important')",
-  "if (userPositioned) {",
-  "saveDockPosition();",
+  "localStorage.removeItem('qilyDockPositionV2')",
+  "dock.style.setProperty('bottom', 'max(var(--qily-dock-edge), env(safe-area-inset-bottom))', 'important')",
+  "window.addEventListener('pageshow', snapDockHome",
   'qily-share-label-url">官网</span>'
 ].forEach((marker) => {
-  if (!core.includes(marker)) throw new Error('dock free-drag runtime missing: ' + marker);
+  if (!core.includes(marker)) throw new Error('dock snapback runtime missing: ' + marker);
 });
+if (core.includes("localStorage.setItem('qilyDockPositionV2'") || core.includes('saveDockPosition()')) throw new Error('dock arbitrary-position persistence returned');
 if (core.includes('setDockTop(')) throw new Error('legacy dock resize/top-only helper reference returned');
 
 const brief = fs.readFileSync(path.join(root, 'qilylean/daily/2026-08-14.html'), 'utf8');
@@ -307,5 +293,5 @@ const brief = fs.readFileSync(path.join(root, 'qilylean/daily/2026-08-14.html'),
 });
 if (brief.includes(SCENE02_OLD_DOWN) || brief.includes(SCENE02_OLD_UP)) throw new Error('2026-08-14 scene02 legacy split/marker arrow returned');
 
-process.stdout.write(`R6 first-paint/performance materialized: scanned ${scanned} public HTML, changed ${changed}; dock uses free X/Y drag + persistent bounded position + uniform typography.\n`);
+process.stdout.write(`R6 first-paint/performance materialized: scanned ${scanned} public HTML, changed ${changed}; dock supports free X/Y drag and auto-homes to bottom-right; homepage hero uses v3 reduced headline scale.\n`);
 if (changedFiles.length) process.stdout.write(changedFiles.join('\n') + '\n');
