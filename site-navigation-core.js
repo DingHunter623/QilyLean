@@ -605,7 +605,15 @@
       var button = event.target.closest('.qily-float-btn');
       if (button) runAction(button.getAttribute('data-action') || '');
     });
-    window.addEventListener('resize', function () { setDockTop(dock.getBoundingClientRect().top); }, { passive: true });
+    window.addEventListener('resize', function () {
+      var rect = dock.getBoundingClientRect();
+      if (userPositioned) {
+        setDockPosition(rect.left, rect.top, true);
+        saveDockPosition();
+      } else {
+        setDockPosition(0, rect.top, false);
+      }
+    }, { passive: true });
     document.addEventListener('keydown', function (event) {
       if (event.key !== 'Escape') return;
       closeMask(shareMask);
