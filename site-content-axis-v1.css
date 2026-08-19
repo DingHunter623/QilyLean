@@ -1,0 +1,91 @@
+/* QilyLean 全站内容窗口统一轴 V1｜2026-08-19
+ * 目标：消除上下模块、不同页面之间 1080/1220/1240/1560px 内容窗口混用造成的浪费与错位。
+ * 原则：统一内容窗口，不把弹窗/二维码/媒体等功能组件粗暴拉宽；移动端只重排，不通过缩字或横向溢出解决布局。
+ */
+:root{
+  --qily-content-axis:1560px;
+  --qily-container:1560px!important;
+  --qily-wide-content:1560px;
+  --qily-content-axis-gutter:clamp(18px,4vw,56px);
+}
+
+/* 01｜全站主要内容窗口统一使用同一条 1560px 轴。 */
+html body :is(
+  .qily-asset-inner,
+  .qily-system-axis__inner,
+  .qily-ia-inner,
+  .module-inner,
+  .section-inner,
+  .page-inner,
+  .content-inner,
+  .archive-inner,
+  .knowledge-inner,
+  .project-inner,
+  .tool-inner,
+  .daily-inner,
+  .main-inner,
+  .footer-inner
+){
+  width:min(var(--qily-content-axis),100%)!important;
+  max-width:var(--qily-content-axis)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+
+/* 02｜首页资产卡、制造运营轴与商业内容模块必须同宽，不得再出现 1240px 对 1560px 的上下错位。 */
+html body :is(
+  .qily-principle-grid,
+  .qily-six-grid,
+  .qily-proof-strip,
+  .qily-secondary-links,
+  .qily-system-axis__steps,
+  .qily-ia-grid,
+  .qily-ia-delivery-summary,
+  .module-grid
+){
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+
+/* 03｜标题/说明窗口跟随所在内容轴，避免“卡片已放宽、标题仍锁在窄框”。 */
+html body :is(
+  .qily-asset-heading,
+  .qily-ia-heading,
+  .module-heading,
+  .section-heading,
+  .page-heading,
+  .section-head
+){
+  width:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+
+/* 04｜首页首屏由专项 Hero 规则控制，不在此处改变人物列比例；仅保证正文模块同轴。 */
+html body.qily-home-v3 main :is(
+  .qily-asset-inner,
+  .qily-system-axis__inner,
+  .qily-ia-inner
+){
+  width:min(var(--qily-content-axis),100%)!important;
+  max-width:var(--qily-content-axis)!important;
+}
+
+/* 05｜平板/手机保持同一逻辑：占满可用宽度，不制造额外窄框。 */
+@media(max-width:900px){
+  html body :is(
+    .qily-asset-inner,.qily-system-axis__inner,.qily-ia-inner,
+    .module-inner,.section-inner,.page-inner,.content-inner,
+    .archive-inner,.knowledge-inner,.project-inner,.tool-inner,
+    .daily-inner,.main-inner,.footer-inner
+  ){
+    width:100%!important;
+    max-width:100%!important;
+  }
+}
+
+@media(max-width:620px){
+  :root{--qily-content-axis-gutter:15px;}
+}
