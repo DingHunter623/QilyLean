@@ -5,9 +5,11 @@ on:
     branches: [main]
     paths:
       - 'scripts/align-primary-nav-operating-axis.js'
+      - 'scripts/enforce-home-hero-layout.js'
       - 'site-navigation-core.js'
       - 'site-navigation.js'
       - 'site-visual-governance-v2.css'
+      - 'site-home-hero-tune-v1.css'
       - '*.html'
       - '**/*.html'
       - '.github/workflows/align-primary-nav-operating-axis.yml'
@@ -34,18 +36,21 @@ jobs:
         with:
           node-version: 24
 
-      - name: Materialize unified site baseline
+      - name: Materialize unified site baseline and homepage hero correction
         run: |
           node --check scripts/align-primary-nav-operating-axis.js
+          node --check scripts/enforce-home-hero-layout.js
           node scripts/align-primary-nav-operating-axis.js --apply
+          node scripts/enforce-home-hero-layout.js --apply
           node --check site-navigation-core.js
           node --check site-navigation.js
           git diff --check
 
-      - name: Validate navigation, friend links, interaction and raised typography floor
+      - name: Validate navigation, friend links, interaction, typography and homepage hero
         shell: bash
         run: |
           node scripts/align-primary-nav-operating-axis.js --apply
+          node scripts/enforce-home-hero-layout.js --apply
           grep -q -- '--qily-readable-floor:17px' site-visual-governance-v2.css
           grep -q -- '--qily-readable-small:18px' site-visual-governance-v2.css
           grep -q -- 'font-size:17.5px!important' site-visual-governance-v2.css
@@ -62,17 +67,23 @@ jobs:
           ! grep -q 'font-size:11.5px!important' site-navigation-core.js
           ! grep -q 'font-size:12.5px!important' site-navigation-core.js
           ! grep -q 'font-size:16.5px!important' site-navigation-core.js
+          grep -q -- 'qilyHomeHeroTuneV1' index.html
+          grep -q -- '20260819-home-hero-align-v1' index.html
+          grep -q -- 'font-size:clamp(48px,4.35vw,64px)!important' site-home-hero-tune-v1.css
+          grep -q -- 'grid-template-columns:minmax(0,1fr) minmax(330px,360px)!important' site-home-hero-tune-v1.css
+          grep -q -- '.qily-home-thesis' site-home-hero-tune-v1.css
+          grep -q -- '.qily-home-actions' site-home-hero-tune-v1.css
 
       - name: Commit self-healed public baseline
         shell: bash
         run: |
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
-          git add site-navigation-core.js site-navigation.js '*.html' '**/*.html'
+          git add site-navigation-core.js site-navigation.js index.html '*.html' '**/*.html'
           if git diff --cached --quiet; then
-            echo 'Navigation/readability/interaction baseline already materialized.'
+            echo 'Navigation/readability/homepage hero baseline already materialized.'
             exit 0
           fi
-          git commit -m 'fix: materialize raised sitewide minimum typography [skip ci]'
+          git commit -m 'fix: materialize navigation readability and homepage hero [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
