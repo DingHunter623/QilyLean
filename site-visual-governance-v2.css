@@ -136,7 +136,7 @@ html body:has(header a[href="/knowledge/"][aria-current="page"]) .qily-system-ax
 }
 html body:has(header a[href="/experience/"][aria-current="page"]) .qily-system-axis__step[href="/experience/"] :is(strong,span),
 html body:has(header a[href="/capabilities/"][aria-current="page"]) .qily-system-axis__step[href="/capabilities/"] :is(strong,span),
-html body:has(header a[href="/improvements/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"],
+html body:has(header a[href="/improvements/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"] :is(strong,span),
 html body:has(header a[href="/projects/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"] :is(strong,span),
 html body:has(header a[href="/trust/"][aria-current="page"]) .qily-system-axis__step[href="/trust/"] :is(strong,span),
 html body:has(header a[href="/cooperation/"][aria-current="page"]) .qily-system-axis__step[href="/cooperation/"] :is(strong,span),
