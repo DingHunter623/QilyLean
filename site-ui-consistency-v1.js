@@ -85,7 +85,7 @@
   },true);
 
   function ensureDockPolish(){
-    if(d.getElementById('qilyDockOfficialUrlPolishV3')||d.getElementById('qilyDockCriticalV6'))return;
+    if(d.getElementById('qilyDockOfficialUrlPolishV3'))return;
     var style=d.createElement('style');
     style.id='qilyDockOfficialUrlPolishV3';
     style.textContent=[
