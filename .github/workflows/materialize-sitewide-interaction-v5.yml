@@ -1,11 +1,10 @@
-name: Materialize sitewide interaction R2 clean
+name: Materialize R6 static first-paint baseline
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - 'site-r2-stability-fixes-v1.css'
-      - 'site-footer-standard-v28.js'
+      - '**/*.html'
       - 'site-navigation.js'
       - 'site-navigation-core.js'
       - 'site-navigation-legacy-20260802.js'
@@ -14,58 +13,60 @@ on:
       - 'site-visual-governance-v2.css'
       - 'site-content-axis-v1.css'
       - 'site-home-hero-tune-v1.css'
-      - 'scripts/publish-r2-runtime-stability.js'
-      - 'scripts/publish-r2-runtime-stability-v2.js'
-      - 'scripts/publish-r2-clean-runtime-v3.js'
-      - 'scripts/publish-primary-contrast-music-continuity.js'
       - 'scripts/enforce-r6-first-paint-performance.js'
       - 'scripts/site-regression-guard.js'
-      - 'scripts/site-regression-guard-v2.js'
-      - 'scripts/apply-site-poka-yoke-v2.js'
+      - 'scripts/site-regression-guard-r6.js'
+      - 'scripts/site-friend-links-layout-guard.js'
       - '.github/workflows/materialize-sitewide-interaction-v5.yml'
 
 permissions:
   contents: write
 
 concurrency:
-  group: materialize-sitewide-interaction-r2-clean-${{ github.event.pull_request.number }}
+  group: materialize-r6-first-paint-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
   materialize:
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
-      - uses: actions/setup-node@v4
+
+      - uses: actions/setup-node@v5
         with:
           node-version: '24'
-      - name: Validate R2 clean runtime sources
+
+      - name: Validate R6 production sources
         run: |
-          node --check scripts/publish-r2-runtime-stability.js
-          node --check scripts/publish-r2-runtime-stability-v2.js
-          node --check scripts/publish-r2-clean-runtime-v3.js
-          node --check scripts/publish-primary-contrast-music-continuity.js
           node --check scripts/enforce-r6-first-paint-performance.js
-          node --check scripts/apply-site-poka-yoke-v2.js
           node --check scripts/site-regression-guard.js
-          node --check scripts/site-regression-guard-v2.js
+          node --check scripts/site-regression-guard-r6.js
           node --check site-navigation.js
-          node --check site-footer-standard-v28.js
           node --check site-music-persistent-navigation-v1.js
           node --check site-native-prefetch-v1.js
-      - name: Materialize R2 stable shell then R6 static first paint
-        run: |
-          node scripts/publish-r2-runtime-stability.js
-          node scripts/publish-r2-clean-runtime-v3.js
-          node scripts/enforce-r6-first-paint-performance.js
-      - name: Run R2 clean regression guard
+
+      - name: Materialize R6 static first paint
+        run: node scripts/enforce-r6-first-paint-performance.js
+
+      - name: Run R6 regression guard
         run: |
           node scripts/site-regression-guard.js
           git diff --check
+
+      - name: Verify deterministic idempotency
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --binary > /tmp/r6-before.diff
+          node scripts/enforce-r6-first-paint-performance.js
+          git diff --binary > /tmp/r6-after.diff
+          cmp /tmp/r6-before.diff /tmp/r6-after.diff
+
       - name: Verify R6 first-paint performance boundary
         shell: bash
         run: |
@@ -77,10 +78,13 @@ jobs:
           grep -q '/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1' index.html
           ! grep -q 'DOMParser' site-native-prefetch-v1.js
           ! grep -q 'history.pushState' site-native-prefetch-v1.js
-      - name: Commit materialized R2 clean references
+
+      - name: Commit only genuine R6 materialization changes
+        shell: bash
         run: |
+          set -euo pipefail
           if git diff --quiet; then
-            echo 'All public pages already use the R2/R6 static-first baseline.'
+            echo 'R6 baseline is already fully materialized; zero generated diff.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
