@@ -3,7 +3,7 @@
 
 /* QilyLean R6 regression guard｜2026-08-19
  * 保护现行“静态首屏即当前版 + 原生整页导航 + 同源低优先级预取 + 全站统一悬浮栏 + 一体化箭头”。
- * 历史 R2 v22 Guard 仅保留追溯，不再作为现行生产门禁。
+ * Dock/Arrow V4 必须静态进入每个公开 HTML，禁止依赖旧 navigation query cache 或 share-only critical 覆盖。
  */
 const fs = require('fs');
 const path = require('path');
@@ -15,6 +15,7 @@ const HOME_HERO = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2';
 const PREFETCH = '/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1';
 const DOCK = '/site-floating-dock-standard-v1.css?v=20260819-sitewide-dock-v1';
 const GEOMETRY = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';
+const NAVIGATION = '/site-navigation.js?v=20260819-sitewide-dock-arrow-v28';
 
 function read(rel) { return fs.readFileSync(path.join(root, rel), 'utf8'); }
 function assert(ok, msg) { if (!ok) throw new Error(msg); }
@@ -46,6 +47,7 @@ const wrapper = read('site-navigation.js');
 const dockCss = read('site-floating-dock-standard-v1.css');
 [
   '--qily-dock-size:62px',
+  '--qily-dock-size:58px',
   '#floatDock.qily-float-dock .qily-float-btn',
   '.qily-float-btn[data-action="share"]',
   'border:1.5px solid var(--qily-dock-border)!important',
@@ -107,6 +109,11 @@ function walk(dir) {
     assert(count(html, GOVERNANCE) === 1, `${rel}: governance V6 must be exactly once`);
     assert(count(html, CONTENT_AXIS) === 1, `${rel}: 1560px content-axis must be exactly once`);
     assert(count(html, PREFETCH) === 1, `${rel}: native prefetch must be exactly once`);
+    assert(count(html, DOCK) === 1, `${rel}: dock visual standard must be exactly once`);
+    assert(count(html, GEOMETRY) === 1, `${rel}: arrow geometry v4 must be exactly once`);
+    assert(count(html, NAVIGATION) === 1, `${rel}: navigation v28 cache-bust must be exactly once`);
+    assert(!/id=["']qilyDockCriticalV6["']/i.test(html), `${rel}: legacy share-only dock critical returned`);
+    assert(!/site-navigation\.js\?v=20260819-readable-floor-plus1-v27/i.test(html), `${rel}: stale navigation v27 reference returned`);
   }
 }
 walk(root);
@@ -118,6 +125,9 @@ const home = read('index.html');
   CONTENT_AXIS,
   HOME_HERO,
   PREFETCH,
+  DOCK,
+  GEOMETRY,
+  NAVIGATION,
   'id="qilyR6HomeFirstPaintParity"',
   'font-size:clamp(44px,4vw,56px)!important',
   'width:min(1540px,100%)!important'
@@ -125,4 +135,15 @@ const home = read('index.html');
 assert(count(home, HOME_HERO) === 1, 'homepage hero tune must be exactly once');
 assert(count(home, 'id="qilyR6HomeFirstPaintParity"') === 1, 'homepage first-paint parity style must be exactly once');
 
-process.stdout.write(`R6 regression guard PASS: ${scanned} HTML pages use static visual V6 + 1560px axis + native prefetch; runtime enforces one dock visual contract and one-piece arrow geometry v4.\n`);
+const brief = read('qilylean/daily/2026-08-14.html');
+[
+  'data-qily-scene-arrow="reform-down"',
+  'data-qily-scene-arrow="improvement-up"',
+  'M596.5 252 H603.5 V292 H610 L600 308 L590 292 H596.5 Z',
+  'M596.5 503 H603.5 V463 H610 L600 447 L590 463 H596.5 Z'
+].forEach((m) => assert(brief.includes(m), '2026-08-14 static scene02 arrow missing: ' + m));
+assert(!brief.includes('<path d="M600 245 V315" stroke="#caa15f"'), '2026-08-14 oversized marker arrow returned');
+assert(!brief.includes('<line x1="600" y1="515" x2="600" y2="462"'), '2026-08-14 split line arrow returned');
+assert(!brief.includes('<polygon points="600,438 584,466 616,466"'), '2026-08-14 split triangle arrow returned');
+
+process.stdout.write(`R6 regression guard PASS: ${scanned} public HTML pages statically use visual V6 + 1560px axis + uniform dock + arrow geometry v4 + navigation v28; scene02 arrows are source-level symmetric one-piece paths.\n`);
