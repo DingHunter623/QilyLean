@@ -1,13 +1,13 @@
-/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V7｜2026-08-17
+/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V8｜2026-08-19
  * 目标：
  * 1) 项目合作页直接使用已经物化的静态六类能力/边界，不再运行时重复插入正文；
- * 2) “分享官方网址”直接输出最终两行结构，禁止任何“分享官网”旧文案；
+ * 2) 悬浮分享入口统一为“分享官网”，尺寸由全站Dock规则统一，不再使用长文案放大按钮；
  * 3) 删除延时重试，改用静态DOM就绪与shell-ready事件，避免首屏后再次改变布局。
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyCoreServiceDockClosureV7)return;
-  w.__qilyCoreServiceDockClosureV7=true;
+  if(w.__qilyCoreServiceDockClosureV8)return;
+  w.__qilyCoreServiceDockClosureV8=true;
 
   function groupByVisualRow(nodes){
     var rows=[];
@@ -82,14 +82,14 @@
     if(!dock)return false;
 
     var top=ensureBackToTop(dock);
-    var shareHtml='<span class="qily-share-label-line qily-share-label-primary">分享</span><span class="qily-share-label-line qily-share-label-url">官方网址</span>';
+    var shareHtml='<span class="qily-share-label-line qily-share-label-primary">分享</span><span class="qily-share-label-line qily-share-label-url">官网</span>';
     var labels={
       home:{html:'首页',aria:'首页'},
       top:{html:'回<br>顶部',aria:'回顶部'},
       back:{html:'回<br>上一层',aria:'回上一层'},
       search:{html:'本站<br>搜索',aria:'本站搜索'},
       current:{html:'分享<br>当前页',aria:'分享当前页'},
-      share:{html:shareHtml,aria:'分享官方网址'},
+      share:{html:shareHtml,aria:'分享官网'},
       contact:{html:'交流',aria:'交流'}
     };
     var order=['home','top','back','search','current','share','contact'];
