@@ -3,7 +3,8 @@
 
 /* QilyLean R6 regression guard｜2026-08-19
  * 保护现行“静态首屏即当前版 + 原生整页导航 + 同源低优先级预取 + 全站统一悬浮栏 + 一体化箭头”。
- * Dock V2 必须支持 PC/手机 X/Y 自由拖动、位置记忆、视口防越界以及全按钮同级字号。
+ * Dock V3 必须支持 PC/手机按住时 X/Y 自由拖动、视口防越界、释放后自动归位右下角，不得继续记忆任意停靠位置。
+ * Hero V3 必须在首页静态首屏直接使用缩小一号后的标题字号。
  * Arrow V4 必须静态进入每个公开 HTML，禁止依赖旧 navigation query cache 或 share-only critical 覆盖。
  */
 const fs = require('fs');
@@ -12,11 +13,11 @@ const root = path.resolve(__dirname, '..');
 
 const GOVERNANCE = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6';
 const CONTENT_AXIS = '/site-content-axis-v1.css?v=20260819-unified-content-axis-v1';
-const HOME_HERO = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2';
+const HOME_HERO = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3';
 const PREFETCH = '/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1';
-const DOCK = '/site-floating-dock-standard-v1.css?v=20260819-free-drag-uniform-font-v2';
+const DOCK = '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3';
 const GEOMETRY = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';
-const NAVIGATION = '/site-navigation.js?v=20260819-dock-free-drag-v29';
+const NAVIGATION = '/site-navigation.js?v=20260819-dock-snapback-v30';
 
 function read(rel) { return fs.readFileSync(path.join(root, rel), 'utf8'); }
 function assert(ok, msg) { if (!ok) throw new Error(msg); }
@@ -24,7 +25,7 @@ function count(source, needle) { return source.split(needle).length - 1; }
 
 const wrapper = read('site-navigation.js');
 [
-  "mode: 'atomic-first-paint-v29'",
+  "mode: 'atomic-first-paint-v30'",
   'staticHtmlAuthority: true',
   'atomicFirstPaint: true',
   'runtimeDependencyWaterfall: false',
@@ -38,7 +39,8 @@ const wrapper = read('site-navigation.js');
   'dockUniformVisualContract: true',
   'dockUniformSize: 62',
   'dockFreeDragXY: true',
-  'dockPositionPersistence: true',
+  'dockPositionPersistence: false',
+  "dockAutoHome: 'bottom-right'",
   'dockViewportBoundaryClamp: true',
   'dockMobileDesktopParity: true',
   'dockUniformFontSize: true',
@@ -48,45 +50,57 @@ const wrapper = read('site-navigation.js');
   'symmetricBidirectionalSceneArrows: true',
   DOCK,
   GEOMETRY,
-  '/site-navigation-core.js?v=20260819-free-drag-dock-v23',
-  '/site-navigation-legacy-20260802.js?v=20260819-free-drag-dock-v19'
+  '/site-navigation-core.js?v=20260819-dock-snapback-v24',
+  '/site-navigation-legacy-20260802.js?v=20260819-dock-snapback-v20'
 ].forEach((m) => assert(wrapper.includes(m), 'R6 navigation wrapper missing: ' + m));
 
 const dockCss = read('site-floating-dock-standard-v1.css');
 [
+  'floating dock standard v3',
   '--qily-dock-size:62px',
   '--qily-dock-size:58px',
   '--qily-dock-font-size:15px',
   '--qily-dock-font-size:14px',
+  '--qily-dock-edge:12px',
+  '--qily-dock-edge:8px',
   'touch-action:none!important',
   'cursor:grab!important',
   'qily-dock-dragging',
+  'top:auto!important',
+  'bottom:max(var(--qily-dock-edge),env(safe-area-inset-bottom))!important',
   '.qily-share-label-primary,',
   '.qily-share-label-url{',
   'font-size:var(--qily-dock-font-size)!important',
   'border:1.5px solid var(--qily-dock-border)!important',
   'background:var(--qily-dock-bg)!important'
-].forEach((m) => assert(dockCss.includes(m), 'sitewide dock V2 standard missing: ' + m));
+].forEach((m) => assert(dockCss.includes(m), 'sitewide dock V3 standard missing: ' + m));
 assert(!/qily-share-label-url\{[^}]*font-size:(?:10|11|12)px!important/.test(dockCss), '分享官网二级小字号规则不得回归');
 
 const core = read('site-navigation-core.js');
 [
-  "var DOCK_POSITION_KEY = 'qilyDockPositionV2';",
+  'function setDockFreePosition(left, top)',
+  'function clearLegacyDockPosition()',
+  'function snapDockHome()',
   'startX = event.clientX;',
   'startY = event.clientY;',
   'Math.hypot(dx, dy) > 7',
-  "dock.style.setProperty('left', safeLeft + 'px', 'important')",
-  "dock.style.setProperty('top', safeTop + 'px', 'important')",
-  "localStorage.setItem(DOCK_POSITION_KEY",
+  "dock.style.setProperty('left', clamp(left, limits.minLeft, limits.maxLeft) + 'px', 'important')",
+  "dock.style.setProperty('top', clamp(top, limits.minTop, limits.maxTop) + 'px', 'important')",
+  "localStorage.removeItem('qilyDockPositionV2')",
   "localStorage.removeItem('qilyDockTop')",
+  "dock.dataset.qilyDockHome = 'bottom-right'",
+  "window.addEventListener('resize', snapDockHome",
+  "window.addEventListener('pageshow', snapDockHome",
   "dock.classList.add('qily-dock-dragging')",
   'qily-share-label-primary">分享</span>',
   'qily-share-label-url">官网</span>'
-].forEach((m) => assert(core.includes(m), 'dock free-drag core missing: ' + m));
+].forEach((m) => assert(core.includes(m), 'dock snapback core missing: ' + m));
+assert(!core.includes("localStorage.setItem('qilyDockPositionV2'"), 'dock arbitrary-position persistence returned');
+assert(!core.includes('saveDockPosition()'), 'dock save-position helper returned');
 assert(!core.includes('var distance = event.clientY - startY;'), 'legacy vertical-only dock drag returned');
 
 const legacy = read('site-navigation-legacy-20260802.js');
-assert(legacy.includes("var CORE_SRC = '/site-navigation-core.js?v=20260819-free-drag-dock-v23';"), 'legacy cooperation/links runtime must load current free-drag core');
+assert(legacy.includes("var CORE_SRC = '/site-navigation-core.js?v=20260819-dock-snapback-v24';"), 'legacy cooperation/links runtime must load current snapback core');
 
 const geometry = read('site-visual-geometry-v1.js');
 [
@@ -143,12 +157,12 @@ function walk(dir) {
     assert(count(html, GOVERNANCE) === 1, `${rel}: governance V6 must be exactly once`);
     assert(count(html, CONTENT_AXIS) === 1, `${rel}: 1560px content-axis must be exactly once`);
     assert(count(html, PREFETCH) === 1, `${rel}: native prefetch must be exactly once`);
-    assert(count(html, DOCK) === 1, `${rel}: dock V2 visual standard must be exactly once`);
+    assert(count(html, DOCK) === 1, `${rel}: dock V3 visual standard must be exactly once`);
     assert(count(html, GEOMETRY) === 1, `${rel}: arrow geometry v4 must be exactly once`);
-    assert(count(html, NAVIGATION) === 1, `${rel}: navigation v29 cache-bust must be exactly once`);
+    assert(count(html, NAVIGATION) === 1, `${rel}: navigation v30 cache-bust must be exactly once`);
     assert(!/id=["']qilyDockCriticalV6["']/i.test(html), `${rel}: legacy share-only dock critical returned`);
-    assert(!/site-navigation\.js\?v=20260819-(?:readable-floor-plus1-v27|sitewide-dock-arrow-v28)/i.test(html), `${rel}: stale navigation v27/v28 reference returned`);
-    assert(!/site-floating-dock-standard-v1\.css\?v=20260819-sitewide-dock-v1/i.test(html), `${rel}: stale dock V1 reference returned`);
+    assert(!/site-navigation\.js\?v=20260819-(?:readable-floor-plus1-v27|sitewide-dock-arrow-v28|dock-free-drag-v29)/i.test(html), `${rel}: stale navigation v27/v28/v29 reference returned`);
+    assert(!/site-floating-dock-standard-v1\.css\?v=20260819-(?:sitewide-dock-v1|free-drag-uniform-font-v2)/i.test(html), `${rel}: stale dock V1/V2 reference returned`);
   }
 }
 walk(root);
@@ -164,11 +178,12 @@ const home = read('index.html');
   GEOMETRY,
   NAVIGATION,
   'id="qilyR6HomeFirstPaintParity"',
-  'font-size:clamp(44px,4vw,56px)!important',
+  'font-size:clamp(40px,3.6vw,52px)!important',
   'width:min(1540px,100%)!important'
 ].forEach((m) => assert(home.includes(m), 'homepage first-paint parity missing: ' + m));
 assert(count(home, HOME_HERO) === 1, 'homepage hero tune must be exactly once');
 assert(count(home, 'id="qilyR6HomeFirstPaintParity"') === 1, 'homepage first-paint parity style must be exactly once');
+assert(!home.includes('/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2'), 'homepage stale Hero V2 reference returned');
 
 const brief = read('qilylean/daily/2026-08-14.html');
 [
@@ -181,4 +196,4 @@ assert(!brief.includes('<path d="M600 245 V315" stroke="#caa15f"'), '2026-08-14 
 assert(!brief.includes('<line x1="600" y1="515" x2="600" y2="462"'), '2026-08-14 split line arrow returned');
 assert(!brief.includes('<polygon points="600,438 584,466 616,466"'), '2026-08-14 split triangle arrow returned');
 
-process.stdout.write(`R6 regression guard PASS: ${scanned} public HTML pages use static visual V6 + 1560px axis + dock V2 free X/Y drag + uniform typography + arrow geometry V4 + navigation V29.\n`);
+process.stdout.write(`R6 regression guard PASS: ${scanned} public HTML pages use static visual V6 + 1560px axis + Hero V3 reduced headline + Dock V3 free drag with bottom-right auto-home + arrow geometry V4 + navigation V30.\n`);
