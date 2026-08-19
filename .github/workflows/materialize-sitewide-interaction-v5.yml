@@ -10,6 +10,8 @@ on:
       - 'site-navigation-legacy-20260802.js'
       - 'site-music-persistent-navigation-v1.js'
       - 'site-native-prefetch-v1.js'
+      - 'site-visual-geometry-v1.js'
+      - 'site-floating-dock-standard-v1.css'
       - 'site-visual-governance-v2.css'
       - 'site-content-axis-v1.css'
       - 'site-home-hero-tune-v1.css'
@@ -47,6 +49,7 @@ jobs:
           node --check scripts/site-regression-guard.js
           node --check scripts/site-regression-guard-r6.js
           node --check site-navigation.js
+          node --check site-visual-geometry-v1.js
           node --check site-music-persistent-navigation-v1.js
           node --check site-native-prefetch-v1.js
 
@@ -76,6 +79,11 @@ jobs:
           grep -q '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2' index.html
           grep -q 'qilyR6HomeFirstPaintParity' index.html
           grep -q '/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1' index.html
+          grep -q '/site-floating-dock-standard-v1.css?v=20260819-sitewide-dock-v1' site-navigation.js
+          grep -q '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4' site-navigation.js
+          grep -q 'convertSeparateArrows' site-visual-geometry-v1.js
+          grep -q 'normalizeLeanBidirectionalScene' site-visual-geometry-v1.js
+          ! grep -q 'JOIN_OVERLAP' site-visual-geometry-v1.js
           ! grep -q 'DOMParser' site-native-prefetch-v1.js
           ! grep -q 'history.pushState' site-native-prefetch-v1.js
 
