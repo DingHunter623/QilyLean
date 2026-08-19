@@ -6,10 +6,12 @@ on:
     paths:
       - 'scripts/align-primary-nav-operating-axis.js'
       - 'scripts/enforce-home-hero-layout.js'
+      - 'scripts/enforce-unified-content-axis.js'
       - 'site-navigation-core.js'
       - 'site-navigation.js'
       - 'site-visual-governance-v2.css'
       - 'site-home-hero-tune-v1.css'
+      - 'site-content-axis-v1.css'
       - '*.html'
       - '**/*.html'
       - '.github/workflows/align-primary-nav-operating-axis.yml'
@@ -36,21 +38,24 @@ jobs:
         with:
           node-version: 24
 
-      - name: Materialize unified site baseline and homepage hero correction
+      - name: Materialize unified site baseline, homepage hero and content axis
         run: |
           node --check scripts/align-primary-nav-operating-axis.js
           node --check scripts/enforce-home-hero-layout.js
+          node --check scripts/enforce-unified-content-axis.js
           node scripts/align-primary-nav-operating-axis.js --apply
           node scripts/enforce-home-hero-layout.js --apply
+          node scripts/enforce-unified-content-axis.js --apply
           node --check site-navigation-core.js
           node --check site-navigation.js
           git diff --check
 
-      - name: Validate navigation, friend links, interaction, typography and homepage hero
+      - name: Validate navigation, interaction, typography, homepage hero and unified content axis
         shell: bash
         run: |
           node scripts/align-primary-nav-operating-axis.js --apply
           node scripts/enforce-home-hero-layout.js --apply
+          node scripts/enforce-unified-content-axis.js --apply
           grep -q -- '--qily-readable-floor:18px' site-visual-governance-v2.css
           grep -q -- '--qily-readable-small:18px' site-visual-governance-v2.css
           grep -q -- '.qily-principle span' site-visual-governance-v2.css
@@ -77,6 +82,14 @@ jobs:
           grep -q -- 'grid-template-columns:minmax(0,1fr) minmax(330px,360px)!important' site-home-hero-tune-v1.css
           grep -q -- '.qily-home-thesis' site-home-hero-tune-v1.css
           grep -q -- '.qily-home-actions' site-home-hero-tune-v1.css
+          grep -q -- '--qily-content-axis:1560px' site-content-axis-v1.css
+          grep -q -- '.qily-asset-inner' site-content-axis-v1.css
+          grep -q -- '.qily-system-axis__inner' site-content-axis-v1.css
+          grep -q -- '.qily-ia-inner' site-content-axis-v1.css
+          grep -q -- 'qilyContentAxisV1' index.html
+          grep -q -- '20260819-unified-content-axis-v1' index.html
+          grep -q -- 'CONTENT_AXIS_HREF' site-navigation.js
+          grep -q -- 'unifiedContentAxis: true' site-navigation.js
 
       - name: Commit self-healed public baseline
         shell: bash
@@ -85,9 +98,9 @@ jobs:
           git config user.email 'DingHunter623@gmail.com'
           git add site-navigation-core.js site-navigation.js index.html '*.html' '**/*.html'
           if git diff --cached --quiet; then
-            echo 'Navigation/readability/homepage hero baseline already materialized.'
+            echo 'Navigation/readability/homepage hero/content-axis baseline already materialized.'
             exit 0
           fi
-          git commit -m 'fix: materialize 18px readability floor and homepage hero v2 [skip ci]'
+          git commit -m 'fix: materialize unified visual baseline and 1560px content axis [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
