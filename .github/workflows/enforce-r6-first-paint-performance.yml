@@ -1,0 +1,91 @@
+name: Enforce R6 static first paint and navigation performance
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - '**/*.html'
+      - 'site-navigation.js'
+      - 'site-visual-governance-v2.css'
+      - 'site-content-axis-v1.css'
+      - 'site-home-hero-tune-v1.css'
+      - 'site-native-prefetch-v1.js'
+      - 'scripts/enforce-r6-first-paint-performance.js'
+      - '.github/workflows/enforce-r6-first-paint-performance.yml'
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - 'site-navigation.js'
+      - 'site-visual-governance-v2.css'
+      - 'site-content-axis-v1.css'
+      - 'site-home-hero-tune-v1.css'
+      - 'site-native-prefetch-v1.js'
+      - 'scripts/enforce-r6-first-paint-performance.js'
+      - '.github/workflows/enforce-r6-first-paint-performance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: r6-first-paint-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || 'main' }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Validate R6 performance sources
+        run: |
+          node --check site-native-prefetch-v1.js
+          node --check scripts/enforce-r6-first-paint-performance.js
+
+      - name: Materialize current visual baseline before first paint
+        run: node scripts/enforce-r6-first-paint-performance.js
+
+      - name: Verify R6 native navigation boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "domSwap: false" site-native-prefetch-v1.js
+          grep -q "historyRewrite: false" site-native-prefetch-v1.js
+          grep -q "sameOriginOnly: true" site-native-prefetch-v1.js
+          ! grep -q 'DOMParser' site-native-prefetch-v1.js
+          ! grep -q 'history.pushState' site-native-prefetch-v1.js
+          grep -q '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6' index.html
+          grep -q '/site-content-axis-v1.css?v=20260819-unified-content-axis-v1' index.html
+          grep -q '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v2' index.html
+          grep -q 'qilyR6HomeFirstPaintParity' index.html
+          grep -q '/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1' index.html
+          git diff --check
+
+      - name: Commit R6 materialized public pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'R6 first-paint and navigation performance baseline already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'perf: materialize R6 static first paint and prefetch [skip ci]'
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          else
+            git pull --rebase origin main
+            git push origin HEAD:main
+          fi
