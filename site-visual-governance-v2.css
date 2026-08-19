@@ -1,8 +1,10 @@
-/* QilyLean 全站可读性治理层 V3｜2026-08-19
+/* QilyLean 全站可读性治理层 V4｜2026-08-19
  * 目的：永久落实“全站最小字号统一再放大一号”，重点保护手机端、高层/股东浏览场景。
+ * V4：同时把 1560px 统一内容窗口轴纳入最终视觉治理级联，消除上下模块 1240/1560px 混用。
  * 原则：保持标题层级差异；抬高最小可读基线，并覆盖历史页面、局部样式、导航、制造运营轴、六项竞争力卡片、状态说明、Dock、表格、表单与数字产品等小字号盲区。
  */
 @import url("/site-visual-governance-v1.css?v=20260818-v1");
+@import url("/site-content-axis-v1.css?v=20260819-unified-content-axis-v1");
 
 :root{
   --qily-type-nav-1:19px!important;
@@ -134,7 +136,7 @@ html body:has(header a[href="/knowledge/"][aria-current="page"]) .qily-system-ax
 }
 html body:has(header a[href="/experience/"][aria-current="page"]) .qily-system-axis__step[href="/experience/"] :is(strong,span),
 html body:has(header a[href="/capabilities/"][aria-current="page"]) .qily-system-axis__step[href="/capabilities/"] :is(strong,span),
-html body:has(header a[href="/improvements/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"] :is(strong,span),
+html body:has(header a[href="/improvements/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"],
 html body:has(header a[href="/projects/"][aria-current="page"]) .qily-system-axis__step[href="/improvements/"] :is(strong,span),
 html body:has(header a[href="/trust/"][aria-current="page"]) .qily-system-axis__step[href="/trust/"] :is(strong,span),
 html body:has(header a[href="/cooperation/"][aria-current="page"]) .qily-system-axis__step[href="/cooperation/"] :is(strong,span),
