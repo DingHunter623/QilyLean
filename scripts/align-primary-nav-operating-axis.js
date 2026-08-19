@@ -7,6 +7,7 @@
  * 首页 → 履历主线 → 能力体系 → 改善方法 → 代表项目 → 信任中心 → 项目合作 → 知识资产 → 友情链接
  * 制造运营闭环映射：
  * 01 履历主线 → 02 能力体系 → 03 改善方法（代表项目用于验证）→ 04 信任中心 → 05 项目合作 → 06 知识资产
+ * 可读性：全站最小可见字号再统一上调一档；手机端禁止通过缩字解决布局问题。
  */
 const fs = require('fs');
 const path = require('path');
@@ -14,10 +15,10 @@ const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const APPLY = process.argv.includes('--apply');
-const BUILD = '20260819-operating-axis-readable-v2';
-const NAV_JS_VERSION = '20260819-operating-axis-readable-v26';
-const CORE_VERSION = '20260819-operating-axis-nav-v20';
-const GOV_VERSION = '20260819-readable-mobile-axis-v3';
+const BUILD = '20260819-readable-floor-plus1-v3';
+const NAV_JS_VERSION = '20260819-readable-floor-plus1-v27';
+const CORE_VERSION = '20260819-operating-axis-nav-v21';
+const GOV_VERSION = '20260819-readable-floor-plus1-v4';
 const GOV_HREF = `/site-visual-governance-v2.css?v=${GOV_VERSION}`;
 const GOV_TAG = `<link id="qilyVisualGovernanceV1" rel="stylesheet" href="${GOV_HREF}">`;
 
@@ -88,9 +89,10 @@ function patchCore() {
   const routePattern = /var routes = \[\n[\s\S]*?\n  \];/;
   assert(routePattern.test(src), 'site-navigation-core.js route array not found');
   src = src.replace(routePattern, routeArray());
-  src = src.replace(/font-size:12\.5px!important/g, 'font-size:16.5px!important');
-  src = src.replace(/font-size:11\.5px!important/g, 'font-size:16.5px!important');
-  src = src.replace(/font-size:17\.5px!important/g, 'font-size:18px!important');
+  src = src.replace(/font-size:12\.5px!important/g, 'font-size:17.5px!important');
+  src = src.replace(/font-size:11\.5px!important/g, 'font-size:17.5px!important');
+  src = src.replace(/font-size:16\.5px!important/g, 'font-size:17.5px!important');
+  src = src.replace(/font-size:17\.5px!important/g, 'font-size:17.5px!important');
   if (src !== before) write(rel, src);
   return src !== before;
 }
@@ -183,8 +185,12 @@ function validate() {
   assert(!core.includes('font-size:12.5px!important'), '12.5px mobile nav regression detected');
   assert(wrapper.includes(`/site-navigation-core.js?v=${CORE_VERSION}`), 'core cache version is stale');
   assert(wrapper.includes(GOV_HREF), 'visual governance runtime version is stale');
-  assert(css.includes('--qily-readable-floor:16px'), 'readability floor missing');
-  assert(css.includes('font-size:16.5px!important'), 'mobile navigation readability rule missing');
+  assert(css.includes('--qily-readable-floor:17px'), '17px readability floor missing');
+  assert(css.includes('--qily-readable-small:18px'), '18px small-text baseline missing');
+  assert(css.includes('font-size:17.5px!important'), 'mobile navigation +1 readability rule missing');
+  assert(css.includes('.trust-strip span'), 'cooperation small-text gap missing');
+  assert(css.includes('.attachment-size'), 'digital-product small-text gap missing');
+  assert(css.includes('.core-contract-viewer-note'), 'contract viewer small-text gap missing');
   assert(css.includes('.qily-system-axis__step:hover'), 'operating-axis hover feedback missing');
   assert(css.includes('.qily-system-axis__step:focus-visible'), 'operating-axis focus feedback missing');
   assert(css.includes('.qily-system-axis__step:active'), 'operating-axis touch/active feedback missing');
@@ -220,7 +226,7 @@ function validate() {
   assert(publicCount > 0, 'No public HTML pages discovered');
   assert(navCount > 0, 'No primary navigation blocks validated');
   assert(axisCount > 0, 'No operating-axis steps validated');
-  process.stdout.write(`PASS: ${publicCount} public pages; ${navCount} primary navs follow ${EXPECTED}; ${axisCount} operating-axis steps retain hover/focus/touch/current visual feedback.\n`);
+  process.stdout.write(`PASS: ${publicCount} public pages; ${navCount} primary navs follow ${EXPECTED}; minimum typography is +1; ${axisCount} operating-axis steps retain hover/focus/touch/current visual feedback.\n`);
 }
 
 function main() {
