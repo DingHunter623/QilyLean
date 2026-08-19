@@ -20,7 +20,7 @@
   if (window.__qilyLeanSiteNavigationLoaderV4) return;
   window.__qilyLeanSiteNavigationLoaderV4 = true;
 
-  var CORE_SRC = '/site-navigation-core.js?v=20260819-free-drag-dock-v23';
+  var CORE_SRC = '/site-navigation-core.js?v=20260819-dock-snapback-v24';
   var LINKS_PATH = '/links/';
   var ONBOARDING_PATH = '/links/onboarding/';
   var PRICING_ACCESS_KEY = 'qily_pricing_access_v1';
