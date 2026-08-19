@@ -1,6 +1,6 @@
-/* QilyLean sitewide floating dock standard v2｜2026-08-19
+/* QilyLean sitewide floating dock standard v3｜2026-08-19
  * One visual contract for every public page, desktop and mobile.
- * V2 restores free X/Y dragging, preserves viewport boundaries, and gives every dock label the same visual font size.
+ * V3 keeps free X/Y dragging while the pointer is held, then automatically returns the dock to the viewport bottom-right home position.
  */
 :root{
   --qily-dock-size:62px;
@@ -9,19 +9,21 @@
   --qily-dock-bg-hover:#12606f;
   --qily-dock-border:#caa15f;
   --qily-dock-font-size:15px;
+  --qily-dock-edge:12px;
 }
 
 html body #floatDock.qily-float-dock{
   position:fixed!important;
-  right:max(12px,env(safe-area-inset-right))!important;
+  right:max(var(--qily-dock-edge),env(safe-area-inset-right))!important;
   left:auto!important;
-  top:clamp(84px,18vh,160px)!important;
-  bottom:auto!important;
+  top:auto!important;
+  bottom:max(var(--qily-dock-edge),env(safe-area-inset-bottom))!important;
   z-index:9000!important;
   display:flex!important;
   flex-direction:column!important;
   align-items:center!important;
   gap:var(--qily-dock-gap)!important;
+  max-height:calc(100dvh - 16px)!important;
   margin:0!important;
   padding:0!important;
   background:transparent!important;
@@ -92,6 +94,9 @@ html body #floatDock.qily-float-dock.qily-dock-dragging,
 html body #floatDock.qily-float-dock.qily-dock-dragging .qily-float-btn{
   cursor:grabbing!important;
 }
+html body #floatDock.qily-float-dock.qily-dock-dragging{
+  will-change:left,top!important;
+}
 html body #floatDock.qily-float-dock.qily-dock-dragging .qily-float-btn{
   transform:none!important;
 }
@@ -119,10 +124,12 @@ html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url
     --qily-dock-size:58px;
     --qily-dock-gap:7px;
     --qily-dock-font-size:14px;
+    --qily-dock-edge:8px;
   }
   html body #floatDock.qily-float-dock{
-    right:max(8px,env(safe-area-inset-right))!important;
-    top:clamp(76px,16vh,132px)!important;
+    right:max(var(--qily-dock-edge),env(safe-area-inset-right))!important;
+    bottom:max(var(--qily-dock-edge),env(safe-area-inset-bottom))!important;
+    top:auto!important;
   }
   html body #floatDock.qily-float-dock .qily-float-btn,
   html body #floatDock.qily-float-dock .qily-float-btn[data-action="share"]{
