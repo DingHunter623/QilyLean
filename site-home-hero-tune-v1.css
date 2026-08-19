@@ -1,6 +1,6 @@
-/* QilyLean 首页首屏专项校准 v2｜2026-08-19
+/* QilyLean 首页首屏专项校准 v3｜2026-08-19
  * 用户图示要求：
- * 1) 首页主标题在上一轮基础上再缩小一号，保留三行语义与冲击力；
+ * 1) 首页主标题在 v2 基础上再缩小一号，保留三行语义与冲击力；
  * 2) 左侧标题/正文/身份说明/闭环说明/按钮组统一内容框右边界；
  * 3) 右侧职业形象照保持独立固定列，不挤压左侧内容；
  * 4) 不改变导航、运营资产闭环、文案和全站字号治理基线。
@@ -32,10 +32,10 @@
     max-width:none!important;
   }
 
-  /* 主标题再缩小一号：64px 档降至 56px 档。 */
+  /* v3：56px 档再降一号到 52px 档。 */
   html body.qily-home-v3 .hero h1.qily-home-hero-title{
     margin:12px 0 18px!important;
-    font-size:clamp(44px,4vw,56px)!important;
+    font-size:clamp(40px,3.6vw,52px)!important;
     line-height:1.08!important;
     letter-spacing:-.022em!important;
   }
@@ -69,7 +69,7 @@
 
 @media (min-width:981px) and (max-width:1280px){
   html body.qily-home-v3 .hero h1.qily-home-hero-title{
-    font-size:clamp(40px,4.2vw,52px)!important;
+    font-size:clamp(38px,4vw,48px)!important;
   }
 }
 
@@ -93,4 +93,4 @@
   }
 }
 
-/* materialization-trigger: 20260819-home-hero-align-v2 */
+/* materialization-trigger: 20260819-home-hero-align-v3 */
