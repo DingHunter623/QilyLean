@@ -42,12 +42,16 @@ jobs:
           node --check site-navigation.js
           git diff --check
 
-      - name: Validate navigation, friend links and operating-axis feedback
+      - name: Validate navigation, friend links, interaction and raised typography floor
         shell: bash
         run: |
           node scripts/align-primary-nav-operating-axis.js --apply
-          grep -q -- '--qily-readable-floor:16px' site-visual-governance-v2.css
-          grep -q -- 'font-size:16.5px!important' site-visual-governance-v2.css
+          grep -q -- '--qily-readable-floor:17px' site-visual-governance-v2.css
+          grep -q -- '--qily-readable-small:18px' site-visual-governance-v2.css
+          grep -q -- 'font-size:17.5px!important' site-visual-governance-v2.css
+          grep -q -- '.trust-strip span' site-visual-governance-v2.css
+          grep -q -- '.core-contract-viewer-note' site-visual-governance-v2.css
+          grep -q -- '.attachment-size' site-visual-governance-v2.css
           grep -q -- '.qily-system-axis__step:hover' site-visual-governance-v2.css
           grep -q -- '.qily-system-axis__step:focus-visible' site-visual-governance-v2.css
           grep -q -- '.qily-system-axis__step:active' site-visual-governance-v2.css
@@ -57,6 +61,7 @@ jobs:
           grep -q -- "['友情链接', '/links/']" site-navigation-core.js
           ! grep -q 'font-size:11.5px!important' site-navigation-core.js
           ! grep -q 'font-size:12.5px!important' site-navigation-core.js
+          ! grep -q 'font-size:16.5px!important' site-navigation-core.js
 
       - name: Commit self-healed public baseline
         shell: bash
@@ -68,6 +73,6 @@ jobs:
             echo 'Navigation/readability/interaction baseline already materialized.'
             exit 0
           fi
-          git commit -m 'fix: restore friend links and operating-axis interaction baseline [skip ci]'
+          git commit -m 'fix: materialize raised sitewide minimum typography [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
