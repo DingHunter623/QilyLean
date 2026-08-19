@@ -19,6 +19,7 @@ on:
       - 'scripts/site-regression-guard.js'
       - 'scripts/site-regression-guard-r6.js'
       - 'scripts/site-friend-links-layout-guard.js'
+      - 'scripts/validate-sitewide-dock-arrow-v4.js'
       - '.github/workflows/materialize-sitewide-interaction-v5.yml'
 
 permissions:
@@ -48,10 +49,12 @@ jobs:
           node --check scripts/enforce-r6-first-paint-performance.js
           node --check scripts/site-regression-guard.js
           node --check scripts/site-regression-guard-r6.js
+          node --check scripts/validate-sitewide-dock-arrow-v4.js
           node --check site-navigation.js
           node --check site-visual-geometry-v1.js
           node --check site-music-persistent-navigation-v1.js
           node --check site-native-prefetch-v1.js
+          node scripts/validate-sitewide-dock-arrow-v4.js
 
       - name: Materialize R6 static first paint
         run: node scripts/enforce-r6-first-paint-performance.js
@@ -59,6 +62,7 @@ jobs:
       - name: Run R6 regression guard
         run: |
           node scripts/site-regression-guard.js
+          node scripts/validate-sitewide-dock-arrow-v4.js
           git diff --check
 
       - name: Verify deterministic idempotency
