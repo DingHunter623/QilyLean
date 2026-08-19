@@ -8,6 +8,7 @@ on:
       - 'scripts/enforce-home-hero-layout.js'
       - 'scripts/enforce-unified-content-axis.js'
       - 'site-navigation-core.js'
+      - 'site-navigation-legacy-20260802.js'
       - 'site-navigation.js'
       - 'site-visual-governance-v2.css'
       - 'site-home-hero-tune-v1.css'
@@ -38,7 +39,7 @@ jobs:
         with:
           node-version: 24
 
-      - name: Materialize unified site baseline, homepage hero and content axis
+      - name: Materialize unified site baseline, primary navigation, homepage hero and content axis
         run: |
           node --check scripts/align-primary-nav-operating-axis.js
           node --check scripts/enforce-home-hero-layout.js
@@ -47,12 +48,14 @@ jobs:
           node scripts/enforce-home-hero-layout.js --apply
           node scripts/enforce-unified-content-axis.js --apply
           node --check site-navigation-core.js
+          node --check site-navigation-legacy-20260802.js
           node --check site-navigation.js
           git diff --check
 
       - name: Validate navigation, interaction, typography, homepage hero and unified content axis
         shell: bash
         run: |
+          set -euo pipefail
           node scripts/align-primary-nav-operating-axis.js --apply
           node scripts/enforce-home-hero-layout.js --apply
           node scripts/enforce-unified-content-axis.js --apply
@@ -71,14 +74,19 @@ jobs:
           grep -q -- 'header a\[href="/trust/"\]\[aria-current="page"\]' site-visual-governance-v2.css
           grep -q -- "['履历主线', '/experience/']" site-navigation-core.js
           grep -q -- "['信任中心', '/trust/']" site-navigation-core.js
-          grep -q -- "['友情链接', '/links/']" site-navigation-core.js
+          grep -q -- "['资源协同', '/links/']" site-navigation-core.js
+          ! grep -q -- "['友情链接', '/links/']" site-navigation-core.js
+          grep -q -- "link.textContent = '资源协同';" site-navigation-legacy-20260802.js
+          ! grep -q -- "link.textContent = '友情链接';" site-navigation-legacy-20260802.js
+          grep -q -- '20260820-resource-collaboration-v25' site-navigation.js
+          grep -q -- '20260820-resource-collaboration-v25' site-navigation-legacy-20260802.js
           ! grep -q 'font-size:11.5px!important' site-navigation-core.js
           ! grep -q 'font-size:12.5px!important' site-navigation-core.js
           ! grep -q 'font-size:16.5px!important' site-navigation-core.js
           ! grep -q 'font-size:17.5px!important' site-navigation-core.js
           grep -q -- 'qilyHomeHeroTuneV1' index.html
-          grep -q -- '20260819-home-hero-align-v2' index.html
-          grep -q -- 'font-size:clamp(44px,4vw,56px)!important' site-home-hero-tune-v1.css
+          grep -q -- '20260819-home-hero-align-v3' index.html
+          grep -q -- 'font-size:clamp(40px,3.6vw,52px)!important' site-home-hero-tune-v1.css
           grep -q -- 'grid-template-columns:minmax(0,1fr) minmax(330px,360px)!important' site-home-hero-tune-v1.css
           grep -q -- '.qily-home-thesis' site-home-hero-tune-v1.css
           grep -q -- '.qily-home-actions' site-home-hero-tune-v1.css
@@ -88,6 +96,7 @@ jobs:
           grep -q -- '.qily-ia-inner' site-content-axis-v1.css
           grep -q -- 'qilyContentAxisV1' index.html
           grep -q -- '20260819-unified-content-axis-v1' index.html
+          grep -q -- '20260820-resource-collaboration-v31' index.html
           grep -q -- 'CONTENT_AXIS_HREF' site-navigation.js
           grep -q -- 'unifiedContentAxis: true' site-navigation.js
 
@@ -96,11 +105,11 @@ jobs:
         run: |
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
-          git add site-navigation-core.js site-navigation.js index.html '*.html' '**/*.html'
+          git add site-navigation-core.js site-navigation-legacy-20260802.js site-navigation.js index.html '*.html' '**/*.html'
           if git diff --cached --quiet; then
-            echo 'Navigation/readability/homepage hero/content-axis baseline already materialized.'
+            echo 'Primary navigation/resource collaboration/readability/homepage hero/content-axis baseline already materialized.'
             exit 0
           fi
-          git commit -m 'fix: materialize unified visual baseline and 1560px content axis [skip ci]'
+          git commit -m 'fix: materialize 资源协同 primary navigation [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
