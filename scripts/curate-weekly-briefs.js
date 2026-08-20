@@ -143,11 +143,34 @@ function adjacentNav(record, records, index, className) {
   return `<nav class="${className}" aria-label="简报翻页">${olderLink}<a class="directory" href="/qilylean/daily-insights.html">返回精选简报目录</a>${newerLink}</nav>`;
 }
 
+function briefFeedback(record) {
+  const url = `${baseUrl}/qilylean/daily/${record.date}.html`;
+  return `<section class="brief-feedback brief-message-only" data-brief-feedback data-brief-date="${record.date}" data-brief-title="${esc(record.title)}" data-brief-url="${url}" aria-labelledby="briefMessageTitle"><div class="brief-feedback-heading"><span>MESSAGE / DISCUSSION</span><h2 id="briefMessageTitle">留言交流</h2><p>可就本期简报留下观点、疑问或建议；如需回复，可留下称谓与联系方式。</p></div><form class="brief-inline-message" data-brief-message-form><div class="brief-inline-message-heading"><strong>本期留言</strong><span>来源简报：${record.date}｜${esc(record.title)}</span></div><label>称谓（选填）<input name="name" autocomplete="name" maxlength="120" placeholder="怎么称呼你"></label><label>联系方式（选填）<input name="contact" autocomplete="email" maxlength="180" placeholder="需要回复时填写手机、微信或邮箱"></label><label class="full">留言内容<textarea name="message" minlength="4" maxlength="1800" required placeholder="写下你的观点、疑问、建议，或希望深入探讨的话题"></textarea></label><label class="brief-website-field" aria-hidden="true">网站<input name="website" tabindex="-1" autocomplete="off"></label><div class="brief-inline-message-actions"><button type="submit">提交留言</button><a href="/cooperation/">需要结合现场深入交流？进入合作咨询</a></div></form><div class="brief-feedback-status" data-brief-feedback-status role="status" aria-live="polite"></div><p class="brief-feedback-privacy">留言正文不会在公开页面展示，仅用于回复与后续交流。</p></section>`;
+}
+
+function ensureBriefFeedback(html, record) {
+  let next = html;
+  if (!next.includes('data-brief-message-form')) {
+    const articleStart = next.search(/<article\b[^>]*class="[^"]*\bpost\b[^"]*"/i);
+    const articleEnd = articleStart >= 0 ? next.indexOf('</article>', articleStart) : -1;
+    if (articleEnd < 0) throw new Error(`Cannot insert brief feedback after article: ${record.date}`);
+    const insertAt = articleEnd + '</article>'.length;
+    next = `${next.slice(0, insertAt)}\n${briefFeedback(record)}${next.slice(insertAt)}`;
+  }
+  if (/src="\/qilylean\/daily-feedback\.js\?v=[^"]+"/.test(next)) {
+    next = next.replace(/(?:defer\s+)?src="\/qilylean\/daily-feedback\.js\?v=[^"]+"/g, 'src="/qilylean/daily-feedback.js?v=20260729-message-only-v4"');
+  } else if (!next.includes('/qilylean/daily-feedback.js')) {
+    next = next.replace('</body>', '<script src="/qilylean/daily-feedback.js?v=20260729-message-only-v4"></script>\n</body>');
+  }
+  return next;
+}
+
 function updateKeptPages(records) {
   records.forEach((record, index) => {
     let html = record.html;
     html = html.replace(/<nav class="(brief-adjacent(?:\s+(?:top|bottom))?)"[^>]*>[\s\S]*?<\/nav>/gi, (_match, className) => adjacentNav(record, records, index, className));
     html = html.replace(/<h1>今日简报<\/h1>/g, '<h1>精选简报</h1>');
+    html = ensureBriefFeedback(html, record);
     fs.writeFileSync(path.join(dailyDir, `${record.date}.html`), html);
   });
 }
@@ -178,8 +201,12 @@ function buildCareerTimeline() {
   return '<section class="engineering-checklist career-track" aria-labelledby="careerTrackTitle"><h2 id="careerTrackTitle">主要项目履历</h2><p>以下按最近至最早汇总制造项目领域；精选简报贯通PE、IE、NPI、ME、精益运营与项目交付方法。</p><table class="rule-table career-table"><colgroup><col class="career-year-col"><col></colgroup><thead><tr><th>年份</th><th>主要制造项目</th></tr></thead><tbody>' + rows + '</tbody></table></section>';
 }
 
+function buildDirectoryCards(records) {
+  return records.map((record) => `<article class="brief-index-card" data-date="${record.date}" data-search="${esc(`${record.date} ${record.theme} ${record.title} ${record.summary}`)}"><div class="brief-index-meta"><time datetime="${record.date}">${record.date}</time><span>${esc(record.theme)}</span></div><h2><a href="/qilylean/daily/${record.date}.html">${esc(record.title)}</a></h2><p class="brief-index-summary">${esc(record.summary)}</p><div class="brief-index-actions"><a class="brief-open" href="/qilylean/daily/${record.date}.html">打开本期精选</a></div></article>`).join('\n');
+}
+
 function buildDirectory(records) {
-  const cards = records.map((record) => `<article class="brief-index-card" data-date="${record.date}" data-search="${esc(`${record.date} ${record.theme} ${record.title} ${record.summary}`)}"><div class="brief-index-meta"><time datetime="${record.date}">${record.date}</time><span>${esc(record.theme)}</span></div><h2><a href="/qilylean/daily/${record.date}.html">${esc(record.title)}</a></h2><p class="brief-index-summary">${esc(record.summary)}</p><div class="brief-index-actions"><a class="brief-open" href="/qilylean/daily/${record.date}.html">打开本期精选</a></div></article>`).join('\n');
+  const cards = buildDirectoryCards(records);
   const latest = records[0];
   const earliest = records[records.length - 1];
   return `<!doctype html>
@@ -195,7 +222,7 @@ function buildDirectory(records) {
 <link rel="stylesheet" href="/site-shell.css?v=20260814-contact-v12">
 <link rel="stylesheet" href="/site-typography-v1.css?v=20260729-hierarchy-v4">
 <link rel="stylesheet" href="/qilylean/daily-briefs.css?v=20260812-weekly-curated-v1">
-<script defer src="/site-navigation.js?v=20260813-r2-clean-v4"></script>
+<script defer src="/site-navigation.js?v=20260820-resource-collab-dock-home-v31"></script>
 <script defer id="qilyFastNativeNavigationV5" data-qily-fast-native-navigation="v5" src="/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5"></script>
 <link id="qilyVisualReadabilityV4Stylesheet" rel="stylesheet" href="/site-visual-readability-v4.css?v=20260813-visual-readability-v4">
 </head>
@@ -213,6 +240,23 @@ ${buildCareerTimeline()}
 </main>
 <script>(function(){var params=new URLSearchParams(location.search),year=(params.get('year')||'').trim(),input=document.getElementById('briefSearch'),grid=document.getElementById('briefCuratedGrid'),status=document.getElementById('briefFilterStatus');if(!grid)return;var cards=Array.prototype.slice.call(grid.querySelectorAll('.brief-index-card'));function apply(){var q=(input&&input.value||'').trim().toLocaleLowerCase('zh-CN'),n=0;cards.forEach(function(card){var d=card.getAttribute('data-date')||'',s=(card.getAttribute('data-search')||'').toLocaleLowerCase('zh-CN'),hitYear=!year||d.indexOf(year+'-')===0,hitSearch=!q||s.includes(q),hit=hitYear&&hitSearch;card.hidden=!hit;if(hit)n+=1;});document.querySelectorAll('[data-year-filter]').forEach(function(link){var active=!!year&&link.getAttribute('data-year-filter')===year;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','true');else link.removeAttribute('aria-current');});if(status){if(year&&q)status.innerHTML=year+'年｜找到 '+n+' 篇相关精选　<a href="/qilylean/daily-insights.html#brief-directory">查看全部年份</a>';else if(year)status.innerHTML=year+'年｜当前 '+n+' 篇精选　<a href="/qilylean/daily-insights.html#brief-directory">查看全部年份</a>';else status.textContent=q?'找到 '+n+' 篇相关精选':'当前 ${records.length} 篇精选';}}if(input)input.addEventListener('input',apply);apply();})();</script>
 </body></html>\n`;
+}
+
+function updateDirectory(records) {
+  const file = path.join(qily, 'daily-insights.html');
+  const latest = records[0];
+  const earliest = records[records.length - 1];
+  let html = fs.readFileSync(file, 'utf8');
+  const heading = `<div class="daily-index-heading"><div><h2>精选简报目录</h2><p>${earliest.date}—${latest.date}｜现存 ${records.length} 篇｜周度精选、最新优先</p></div><a href="/qilylean/daily/${latest.date}.html">打开最新精选</a></div>`;
+  const headingPattern = /<div class="daily-index-heading"><div><h2>[\s\S]*?<\/h2><p>[\s\S]*?<\/p><\/div><a\b[^>]*>[\s\S]*?<\/a><\/div>/;
+  if (!headingPattern.test(html)) throw new Error('Cannot locate the curated directory heading.');
+  html = html.replace(headingPattern, heading);
+
+  const gridPattern = /<div class="brief-grid" id="briefCuratedGrid">[\s\S]*?<\/article><\/div>/;
+  if (!gridPattern.test(html)) throw new Error('Cannot locate the curated directory card grid.');
+  html = html.replace(gridPattern, `<div class="brief-grid" id="briefCuratedGrid">${buildDirectoryCards(records)}</div>`);
+  html = html.replace(/当前 \d+ 篇精选/g, `当前 ${records.length} 篇精选`);
+  fs.writeFileSync(file, html.endsWith('\n') ? html : `${html}\n`, 'utf8');
 }
 
 function buildFeed(records) {
@@ -255,13 +299,13 @@ function main() {
   pruneFiles(keepDates);
   const publicIndex = selected.map(({ date, title, summary, theme }) => ({ date, title, summary, dayNo: '', theme }));
   fs.writeFileSync(path.join(dailyDir, 'index.json'), `${JSON.stringify(publicIndex, null, 2)}\n`);
-  fs.writeFileSync(path.join(qily, 'daily-insights.html'), buildDirectory(selected));
+  updateDirectory(selected);
   fs.writeFileSync(path.join(dailyDir, 'feed.xml'), buildFeed(selected));
   updateSitemap(selected);
   updateHomepage(selected);
   const report = {
     policy_version: policy.version,
-    generated_at: new Date().toISOString(),
+    generated_at: process.env.QILY_GENERATED_AT || `${selected[0].date}T00:00:00.000Z`,
     total_before: all.length,
     total_after: selected.length,
     removed: all.length - selected.length,

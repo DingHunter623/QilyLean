@@ -1,32 +1,9 @@
 name: Sync unified site metadata
 
+# Superseded by build-daily-archive.yml + publish-curated-daily.js. The old
+# daily-volume generator remains manual-only to prevent it from overwriting the
+# weekly curated index and current no-trailing-slash metadata.
 on:
-  push:
-    branches: [main]
-    paths:
-      - ".github/workflows/sync-site-metadata.yml"
-      - "scripts/apply-integrity-upgrade.js"
-      - "scripts/build-site-metadata.js"
-      - "scripts/sync-daily-index-source.js"
-      - "scripts/build-trust-search-sync.js"
-      - "scripts/ensure-footer-v21-source.js"
-      - "scripts/patch-trust-live-status.js"
-      - "trust/live-status.js"
-      - "site-visual-closure-v1.js"
-      - "index.html"
-      - "knowledge/index.html"
-      - "capabilities/index.html"
-      - "projects/index.html"
-      - "cooperation/index.html"
-      - "qilylean/daily/index.json"
-      - "qilylean/daily/*.html"
-      - "qilylean/daily-insights.html"
-      - "site-search.js"
-      - "sitemap.xml"
-      - "sitemap-core.xml"
-  workflow_run:
-    workflows: ["Build daily engineering brief archive"]
-    types: [completed]
   workflow_dispatch:
 
 permissions:

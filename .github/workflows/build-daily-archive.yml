@@ -19,8 +19,8 @@ on:
       - 'knowledge/terminology.html'
       - 'knowledge/terminology/*.html'
       - 'scripts/curate-weekly-briefs.js'
+      - 'scripts/publish-curated-daily.js'
       - 'scripts/validate-weekly-brief-curation.js'
-      - 'scripts/enforce-six-core-static-source.js'
       - 'scripts/sync-curated-site-metadata.js'
       - 'scripts/sync-search-brief-metadata.js'
       - 'scripts/sync-trust-brief-metadata.js'
@@ -28,14 +28,23 @@ on:
       - 'scripts/audit-daily-terminology.js'
       - 'scripts/audit-daily-quality-linkage.js'
       - 'scripts/remove-daily-directory-consultation.js'
-      - 'scripts/normalize-daily-visual-closure.js'
-      - 'scripts/publish-r2-clean-runtime-v3.js'
       - 'scripts/validate-current-daily-publication.js'
       - 'index.html'
       - 'knowledge/index.html'
       - 'trust/index.html'
       - 'sitemap.xml'
       - 'sitemap-core.xml'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-daily-archive.yml'
+      - 'qilylean/daily/*.html'
+      - 'qilylean/brief-curation-policy.json'
+      - 'scripts/curate-weekly-briefs.js'
+      - 'scripts/publish-curated-daily.js'
+      - 'scripts/remove-daily-directory-consultation.js'
+      - 'scripts/validate-weekly-brief-curation.js'
+      - 'scripts/validate-current-daily-publication.js'
   workflow_dispatch:
 
 permissions:
@@ -47,13 +56,13 @@ concurrency:
 
 jobs:
   publish:
-    if: github.actor != 'github-actions[bot]'
+    if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: main
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'main' }}
           fetch-depth: 1
 
       - uses: actions/setup-node@v5
@@ -62,9 +71,9 @@ jobs:
 
       - name: Validate curated publisher syntax
         run: |
+          node --check scripts/publish-curated-daily.js
           node --check scripts/curate-weekly-briefs.js
           node --check scripts/validate-weekly-brief-curation.js
-          node --check scripts/enforce-six-core-static-source.js
           node --check scripts/sync-curated-site-metadata.js
           node --check scripts/sync-search-brief-metadata.js
           node --check scripts/sync-trust-brief-metadata.js
@@ -72,38 +81,15 @@ jobs:
           node --check scripts/audit-daily-terminology.js
           node --check scripts/audit-daily-quality-linkage.js
           node --check scripts/remove-daily-directory-consultation.js
-          node --check scripts/normalize-daily-visual-closure.js
-          node --check scripts/publish-r2-clean-runtime-v3.js
           node --check scripts/validate-current-daily-publication.js
 
-      - name: Curate current candidate archive by weekly value
-        run: node scripts/curate-weekly-briefs.js
-
-      - name: Normalize retained knowledge and brief quality
+      - name: Synchronize and validate the daily publication SSOT
         run: |
-          node scripts/remove-daily-directory-consultation.js
-          node scripts/normalize-daily-visual-closure.js
-          node scripts/sync-daily-terminology.js
-          node scripts/sync-daily-terminology.js --check
-          node scripts/audit-daily-terminology.js
-          node scripts/audit-daily-quality-linkage.js
-
-      - name: Synchronize six-core source, search, trust and R2 runtime
-        run: |
-          node scripts/sync-curated-site-metadata.js
-          node scripts/enforce-six-core-static-source.js
-          node scripts/sync-search-brief-metadata.js
-          node scripts/sync-trust-brief-metadata.js
-          node scripts/publish-r2-clean-runtime-v3.js
-
-      - name: Validate curated publication contracts
-        run: |
-          node scripts/sync-trust-brief-metadata.js --check
-          node scripts/validate-weekly-brief-curation.js
-          node scripts/validate-current-daily-publication.js
+          node scripts/publish-curated-daily.js
           git diff --check
 
       - name: Commit curated production output
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           if git diff --quiet; then
@@ -112,7 +98,20 @@ jobs:
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
+          git add -- \
+            index.html \
+            knowledge/index.html \
+            knowledge/terminology.html \
+            trust/index.html \
+            sitemap.xml \
+            qilylean/daily-insights.html \
+            qilylean/daily/*.html \
+            qilylean/daily/index.json \
+            qilylean/daily/feed.xml \
+            qilylean/daily/curation-report.json \
+            qilylean/daily/terminology-audit-latest.json \
+            qilylean/site-data.json \
+            qilylean/site-search-index.json
           git commit -m 'build: publish curated weekly engineering archive [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main

@@ -1,8 +1,8 @@
 {
   "policy_version": "2026-08-14-r4.1",
-  "generated_at": "2026-08-17T04:55:54.635Z",
-  "total_before": 373,
-  "total_after": 373,
+  "generated_at": "2026-08-19T00:00:00.000Z",
+  "total_before": 374,
+  "total_after": 374,
   "removed": 0,
   "protected_dates": [
     "2026-07-29",
@@ -4843,6 +4843,19 @@
           "title": "高可靠控制组件PMO：从职能架构到量产交付的项目管理闭环",
           "score": 10348,
           "protected": true
+        }
+      ],
+      "removed_count": 0
+    },
+    {
+      "week": "2026-08-17",
+      "candidates": 1,
+      "kept": [
+        {
+          "date": "2026-08-19",
+          "title": "谁能更快把问题看懂、把方案做对、把成果交付出来",
+          "score": 241,
+          "protected": false
         }
       ],
       "removed_count": 0

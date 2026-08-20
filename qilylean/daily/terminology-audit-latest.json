@@ -1,32 +1,26 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-08-14",
-  "briefPath": "qilylean/daily/2026-08-14.html",
-  "checkedAt": "2026-08-17T04:55:55.162Z",
+  "briefDate": "2026-08-19",
+  "briefPath": "qilylean/daily/2026-08-19.html",
+  "checkedAt": "2026-08-19T00:00:00.000Z",
   "candidates": [
     {
-      "term": "A",
-      "explanation": "Accountable",
-      "explicit": true,
-      "source": "A（Accountable）"
-    },
-    {
-      "term": "A3",
+      "term": "AI",
       "explanation": "",
       "explicit": false,
-      "source": "A3/PDCA"
+      "source": "AI"
     },
     {
-      "term": "BOM",
+      "term": "CAD",
       "explanation": "",
       "explicit": false,
-      "source": "BOM"
+      "source": "CAD"
     },
     {
-      "term": "COPQ",
-      "explanation": "质量成本",
-      "explicit": true,
-      "source": "COPQ（质量成本）"
+      "term": "CORE",
+      "explanation": "",
+      "explicit": false,
+      "source": "CORE"
     },
     {
       "term": "CT",
@@ -35,22 +29,40 @@
       "source": "CT"
     },
     {
-      "term": "FPY",
+      "term": "DELIVERY",
       "explanation": "",
       "explicit": false,
-      "source": "FPY"
+      "source": "DELIVERY"
+    },
+    {
+      "term": "ECRS",
+      "explanation": "",
+      "explicit": false,
+      "source": "ECRS"
     },
     {
       "term": "IE",
       "explanation": "",
       "explicit": false,
-      "source": "IE/PE"
+      "source": "IE"
     },
     {
-      "term": "Lean",
-      "explanation": "精益",
-      "explicit": true,
-      "source": "Lean（精益）"
+      "term": "LEAN",
+      "explanation": "",
+      "explicit": false,
+      "source": "LEAN"
+    },
+    {
+      "term": "LT",
+      "explanation": "",
+      "explicit": false,
+      "source": "LT"
+    },
+    {
+      "term": "ME",
+      "explanation": "",
+      "explicit": false,
+      "source": "IE/PE/ME"
     },
     {
       "term": "OEE",
@@ -59,16 +71,10 @@
       "source": "OEE"
     },
     {
-      "term": "PDCA",
-      "explanation": "",
-      "explicit": false,
-      "source": "PDCA"
-    },
-    {
       "term": "PE",
       "explanation": "",
       "explicit": false,
-      "source": "IE/PE"
+      "source": "IE/PE/ME"
     },
     {
       "term": "PMC",
@@ -77,46 +83,28 @@
       "source": "PMC"
     },
     {
-      "term": "PQCD",
+      "term": "QILYLEAN",
       "explanation": "",
       "explicit": false,
-      "source": "PQCD"
-    },
-    {
-      "term": "RACI",
-      "explanation": "",
-      "explicit": false,
-      "source": "RACI"
-    },
-    {
-      "term": "SMED",
-      "explanation": "",
-      "explicit": false,
-      "source": "SMED"
-    },
-    {
-      "term": "SOP",
-      "explanation": "",
-      "explicit": false,
-      "source": "SOP/SWI"
-    },
-    {
-      "term": "SWI",
-      "explanation": "",
-      "explicit": false,
-      "source": "SOP/SWI"
-    },
-    {
-      "term": "TT",
-      "explanation": "",
-      "explicit": false,
-      "source": "TT"
+      "source": "QILYLEAN"
     },
     {
       "term": "UPPH",
       "explanation": "",
       "explicit": false,
       "source": "UPPH"
+    },
+    {
+      "term": "VAR",
+      "explanation": "",
+      "explicit": false,
+      "source": "VAT/VAR"
+    },
+    {
+      "term": "VAT",
+      "explanation": "",
+      "explicit": false,
+      "source": "VAT/VAR"
     },
     {
       "term": "VSM",
@@ -132,25 +120,23 @@
     }
   ],
   "coveredTerms": [
-    "A",
-    "A3",
-    "BOM",
-    "COPQ",
+    "AI",
+    "CAD",
+    "CORE",
     "CT",
-    "FPY",
+    "DELIVERY",
+    "ECRS",
     "IE",
-    "Lean",
+    "LEAN",
+    "LT",
+    "ME",
     "OEE",
-    "PDCA",
     "PE",
     "PMC",
-    "PQCD",
-    "RACI",
-    "SMED",
-    "SOP",
-    "SWI",
-    "TT",
+    "QILYLEAN",
     "UPPH",
+    "VAR",
+    "VAT",
     "VSM",
     "WIP"
   ],
@@ -158,10 +144,7 @@
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
   "featuredTerms": [
-    "COPQ",
-    "Lean",
-    "Kaizen",
-    "Standard Work"
+    "精益交付与工程闭环"
   ],
   "status": "passed"
 }

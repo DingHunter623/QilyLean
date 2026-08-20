@@ -36,13 +36,13 @@ assert(!core.includes('saveDockPosition()'), 'dock save-position helper must be 
 const navigation = read('site-navigation.js');
 assert(navigation.includes("dockPositionPersistence: false"), 'navigation feature contract still enables dock position persistence');
 assert(navigation.includes("dockAutoHome: 'bottom-right'"), 'navigation feature contract does not declare bottom-right auto-home');
-assert(navigation.includes('/site-navigation-core.js?v=20260819-dock-snapback-v24'), 'navigation core cache version is not snapback v24');
+assert(navigation.includes('/site-navigation-core.js?v=20260820-resource-collab-dock-home-v25'), 'navigation core cache version is not V31 snapback v25');
 assert(navigation.includes('/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3'), 'navigation dock stylesheet cache version is not snapback v3');
 
 const home = read('index.html');
 assert(home.includes('/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3'), 'homepage does not reference Hero V3');
 assert(home.includes('/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3'), 'homepage does not reference Dock Snapback V3');
-assert(home.includes('/site-navigation.js?v=20260819-dock-snapback-v30'), 'homepage does not reference Navigation V30');
+assert(home.includes('/site-navigation.js?v=20260820-resource-collab-dock-home-v31'), 'homepage does not reference Navigation V31');
 assert(home.includes('font-size:clamp(40px,3.6vw,52px)!important'), 'homepage first-paint parity is not using the reduced hero headline tier');
 
 process.stdout.write('PASS: homepage Hero V3 is one tier smaller; floating Dock V3 is freely draggable during pointer hold and automatically returns to bottom-right without arbitrary-position persistence.\n');

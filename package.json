@@ -2,11 +2,11 @@
   "name": "qilylean",
   "private": true,
   "scripts": {
-    "build:daily": "node scripts/build-daily-archive.js && node scripts/enhance-daily-archive.js && node scripts/bump-daily-css-version.js",
-    "test:daily": "node scripts/validate-daily-archive.js",
+    "build:daily": "node scripts/publish-curated-daily.js",
+    "test:daily": "node scripts/validate-weekly-brief-curation.js && node scripts/validate-current-daily-publication.js",
     "test:seo": "node scripts/validate-seo-indexability.js",
-    "test:visual": "node scripts/validate-sitewide-interaction-clarity.js",
-    "test:first-paint": "node scripts/test-bounded-first-paint-guard.js",
+    "test:visual": "node scripts/validate-public-shell-v31.js && node scripts/validate-home-hero-dock-snapback-v1.js",
+    "test:first-paint": "node scripts/validate-home-hero-dock-snapback-v1.js",
     "deploy:worker": "wrangler deploy",
     "test:maintenance": "node scripts/test-maintenance-fixes.js",
     "test:audit": "node scripts/validate-public-audit-optimization-20260816.js"

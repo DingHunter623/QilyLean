@@ -1,17 +1,8 @@
 name: Enforce QilyLean business hierarchy v3
 
+# Legacy hierarchy writer retained for explicit recovery only; automatic
+# homepage updates are owned by the curated metadata publication pipeline.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'index.html'
-      - 'cooperation/index.html'
-      - 'docs/QilyLean全站业务口径规范_20260809.md'
-      - 'scripts/enforce-business-hierarchy-v3.js'
-      - 'scripts/fix-business-hierarchy-seo-v1.js'
-      - 'scripts/fix-cooperation-enabler-dup-v1.js'
-      - 'scripts/bump-public-build-20260818.js'
-      - '.github/workflows/enforce-business-hierarchy-v3.yml'
   workflow_dispatch:
 
 permissions:

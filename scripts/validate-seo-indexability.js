@@ -56,14 +56,14 @@ const protectedNoindex = [
 
 const redirectPages = {
   'tools.html': 'https://qilylean.com/qilylean/lean-tools.html',
-  'papers.html': 'https://qilylean.com/improvements/',
-  'moments.html': 'https://qilylean.com/moments/',
-  'knowledge.html': 'https://qilylean.com/knowledge/',
+  'papers.html': 'https://qilylean.com/improvements',
+  'moments.html': 'https://qilylean.com/moments',
+  'knowledge.html': 'https://qilylean.com/knowledge',
   'execution.html': 'https://qilylean.com/qilylean/execution-loop.html',
   'qilylean/home.html': 'https://qilylean.com',
   'qilylean/index.html': 'https://qilylean.com',
   'daily-insights.html': 'https://qilylean.com/qilylean/daily-insights.html',
-  'qilylean/papers.html': 'https://qilylean.com/improvements/',
+  'qilylean/papers.html': 'https://qilylean.com/improvements',
   'qilylean/home-fixed.html': 'https://qilylean.com',
   'qilylean/home-live.html': 'https://qilylean.com'
 };
@@ -71,6 +71,15 @@ const redirectPages = {
 const htmlFiles = walk(ROOT).filter(file => file.endsWith('.html'));
 for (const file of htmlFiles) {
   const html = read(file);
+  const publicMetadataUrls = [
+    ...Array.from(html.matchAll(/<link\b[^>]*rel=["']canonical["'][^>]*href=["'](https:\/\/(?:www\.)?qilylean\.com[^"']*)["']/gi), (match) => match[1]),
+    ...Array.from(html.matchAll(/<link\b[^>]*href=["'](https:\/\/(?:www\.)?qilylean\.com[^"']*)["'][^>]*rel=["']canonical["']/gi), (match) => match[1]),
+    ...Array.from(html.matchAll(/<meta\b[^>]*property=["']og:url["'][^>]*content=["'](https:\/\/(?:www\.)?qilylean\.com[^"']*)["']/gi), (match) => match[1]),
+    ...Array.from(html.matchAll(/<meta\b[^>]*content=["'](https:\/\/(?:www\.)?qilylean\.com[^"']*)["'][^>]*property=["']og:url["']/gi), (match) => match[1])
+  ];
+  for (const url of publicMetadataUrls) {
+    if (url.endsWith('/')) errors.push(`${file}: canonical/og:url must omit trailing slash (${url})`);
+  }
   if (!hasNoindex(html)) continue;
   if (!protectedNoindex.some(pattern => pattern.test(file))) {
     errors.push(`${file}: unexpected noindex on a public or legacy page`);
@@ -98,7 +107,9 @@ for (const [file, canonical] of Object.entries(redirectPages)) {
 const sitemapFiles = ['sitemap.xml', 'sitemap-core.xml'];
 const allSitemapUrls = [];
 for (const sitemap of sitemapFiles) {
-  for (const url of sitemapUrls(sitemap)) {
+  const urls = sitemapUrls(sitemap);
+  if (new Set(urls).size !== urls.length) warnings.push(`${sitemap}: duplicate canonical URLs detected`);
+  for (const url of urls) {
     allSitemapUrls.push(url);
     const localFile = localFileForUrl(url);
     if (!exists(localFile)) {
@@ -120,10 +131,9 @@ if (!/^Sitemap:\s*https:\/\/qilylean\.com\/sitemap-core\.xml$/mi.test(robots)) {
   warnings.push('robots.txt: sitemap-core.xml has not been declared');
 }
 
+// sitemap-core.xml is intentionally a focused subset of sitemap.xml. Overlap
+// between the two files is valid; only duplicates inside one sitemap are noisy.
 const uniqueSitemapUrls = new Set(allSitemapUrls);
-if (uniqueSitemapUrls.size !== allSitemapUrls.length) {
-  warnings.push('sitemaps: duplicate canonical URLs detected');
-}
 
 if (warnings.length) {
   console.warn('\nSEO warnings:');

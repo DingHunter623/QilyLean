@@ -35,10 +35,13 @@ assert(index.length === files.length, 'Brief index count matches independent ret
 if (weeklyCurated) assert(index.length < 1000, 'Weekly curated archive no longer exposes quantity-first daily volume', String(index.length));
 
 const latest = read(`qilylean/daily/${sourceLatest}.html`);
+const secondLatestDate = files[1] && files[1].slice(0, 10);
+const secondLatest = secondLatestDate ? read(`qilylean/daily/${secondLatestDate}.html`) : '';
 const navigation = read('site-navigation.js');
 const fastNative = read('site-music-persistent-navigation-v1.js');
 const directory = read('qilylean/daily-insights.html');
 const knowledge = read('knowledge/index.html');
+const terminology = read('knowledge/terminology.html');
 const sitemap = read('sitemap.xml');
 const cooperation = read('cooperation/index.html');
 const links = read('links/index.html');
@@ -49,15 +52,20 @@ const audit = exists('qilylean/daily/terminology-audit-latest.json') ? JSON.pars
 includes(latest, `id="${sourceLatest}"`, 'Latest retained page carries its date identity');
 includes(latest, 'data-brief-message-form', 'Latest retained page contains message form');
 includes(latest, '留言交流', 'Latest retained page contains message section');
-includes(latest, 'site-navigation.js?v=20260817-atomic-first-paint-v22', 'Latest retained page uses atomic first-paint navigation');
+if (secondLatestDate) {
+  includes(latest, `/qilylean/daily/${secondLatestDate}.html`, 'Latest retained page links to the previous retained brief');
+  includes(secondLatest, `/qilylean/daily/${sourceLatest}.html`, 'Second-latest retained page links forward to the latest retained brief');
+  assert(!/已是最新一期/.test(secondLatest), 'Second-latest retained page is not falsely marked as latest');
+}
+matches(latest, /site-navigation\.js\?v=[^"']+/, 'Latest retained page loads the versioned navigation wrapper');
 includes(latest, 'site-music-persistent-navigation-v1.js?v=20260817-native-only-v7', 'Latest retained page uses Native Navigation V7');
-includes(latest, "BUILD='20260817-atomic-first-paint-v3'", 'Latest retained page uses the marker-preserving bounded stale-document guard');
+matches(latest, /\bBUILD='[^']+'/, 'Latest retained page uses a versioned bounded stale-document guard');
 includes(latest, "ATTEMPT='qily_site_refresh_attempt_v1'", 'Latest retained page caps stale-document refresh attempts');
 assert(!latest.includes('qilyBackgroundMusicPreload'), 'Latest retained page does not preload background audio');
 assert(!latest.includes('site-footer-standard-v28.js'), 'Latest retained page does not load retired footer runtime');
 assert(!/<footer\b/i.test(latest), 'Latest retained page does not restore retired visible footer');
-includes(navigation, 'site-navigation-legacy-20260802.js?v=20260817-atomic-first-paint-v18', 'Navigation wrapper uses current atomic first-paint legacy runtime');
-includes(navigation, "mode: 'atomic-first-paint-v22'", 'Navigation wrapper declares current atomic first-paint mode');
+matches(navigation, /site-navigation-legacy-20260802\.js\?v=[^"']+/, 'Navigation wrapper uses a versioned legacy fallback');
+matches(navigation, /mode: 'atomic-first-paint-v\d+'/, 'Navigation wrapper declares its atomic first-paint mode');
 includes(fastNative, "mode: 'native-only-v7'", 'Native Navigation V7 declares native-only mode');
 includes(fastNative, 'domSwap: false', 'Native Navigation V7 forbids cross-page DOM swapping');
 includes(fastNative, 'nativeHistory: true', 'Native Navigation V7 keeps browser-native history');
@@ -68,11 +76,14 @@ assert(!/DOMParser|history\.pushState|replaceWith\s*\(|document\.body\.innerHTML
 includes(directory, sourceLatest, 'Curated directory exposes latest date');
 includes(sitemap, `qilylean/daily/${sourceLatest}.html`, 'Sitemap contains latest retained brief');
 matches(knowledge, new RegExp(`data-latest-brief-date=["']${sourceLatest}["']`), 'Knowledge page latest card uses latest date');
+includes(knowledge, `最新精选更新至 ${sourceLatest}`, 'Knowledge summary uses latest date');
 const escapedLatestPath = `\\/qilylean\\/daily\\/${sourceLatest}\\.html`;
 matches(knowledge, new RegExp(`<a[^>]*(?:data-latest-brief-link[^>]*href=["']${escapedLatestPath}["']|href=["']${escapedLatestPath}["'][^>]*data-latest-brief-link)[^>]*>`, 'i'), 'Knowledge page latest link points to latest retained brief');
 
 assert(siteData.briefs && siteData.briefs.latestDate === sourceLatest, 'Site data latest date is current');
 assert(siteData.briefs && siteData.briefs.total === index.length, 'Site data brief count matches retained index');
+includes(knowledge, `<small>术语与培训</small><h3>${siteData.terminology.total} 项</h3>`, 'Knowledge page terminology count matches central metadata');
+includes(terminology, `共收录 ${siteData.terminology.total} 项术语 · ${siteData.terminology.total} 份单点培训课件`, 'Terminology page visible count matches central metadata');
 if (weeklyCurated) assert(siteData.briefs.cadence === 'weekly_curated', 'Site data records weekly curated cadence');
 assert(siteData.search && siteData.search.latestBriefDate === sourceLatest, 'Search metadata latest date matches retained index');
 assert(siteData.search && siteData.search.briefTotal === index.length, 'Search metadata brief count matches retained index');

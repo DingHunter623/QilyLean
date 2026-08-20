@@ -17,6 +17,8 @@ const ROOT = path.resolve(__dirname, '..');
 const CONSISTENCY_VERSION = '20260820-dock-share-functional-v11';
 const CORE_SERVICE_VERSION = '20260820-cooperation-dock-v9';
 const SHARE_RUNTIME_VERSION = '20260820-dock-share-runtime-v1';
+const NAVIGATION_VERSION = '20260820-resource-collab-dock-home-v31';
+const DOCK_STYLESHEET_VERSION = '20260819-dock-snapback-v3';
 const SHARE_HTML = '分享<br>官网';
 const SHARE_RUNTIME_TAG = `<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=${SHARE_RUNTIME_VERSION}"></script>`;
 const CRITICAL_STYLE = '<style id="qilyDockCriticalV6">#floatDock [data-action="share"]{width:62px!important;min-width:62px!important;height:62px!important;min-height:62px!important;padding:4px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;line-height:1.08!important;white-space:normal!important;overflow:hidden!important;box-sizing:border-box!important}</style>';
@@ -35,6 +37,7 @@ function trackedHtml(){
     .split(/\r?\n/).filter(Boolean);
 }
 function isDockPage(html){ return /id=["']floatDock["']|data-action=["']share["']/.test(html); }
+function isNavigationPage(html){ return /\/site-navigation\.js(?:\?v=[^"']*)?/.test(html); }
 function patchShareButton(html){
   return html.replace(/(<(?:button|a)\b[^>]*data-action=["']share["'][^>]*>)[\s\S]*?(<\/(?:button|a)>)/i, function(all, open, close){
     open = open.replace(/\s+(?:aria-label|title)=["'][^"']*["']/gi, '');
@@ -62,12 +65,18 @@ function patchRuntime(html){
 }
 function patchVersions(html){
   return html
+    .replace(/\/site-navigation\.js\?v=[^"'\s<]+/g, '/site-navigation.js?v=' + NAVIGATION_VERSION)
+    .replace(/\/site-floating-dock-standard-v1\.css\?v=[^"'\s<]+/g, '/site-floating-dock-standard-v1.css?v=' + DOCK_STYLESHEET_VERSION)
     .replace(/(data-qily-ui-consistency=)["'][^"']*["']/gi, '$1"dock-share-functional-v11"')
     .replace(/\/site-ui-consistency-v1\.js\?v=[^"'\s<]+/g, '/site-ui-consistency-v1.js?v=' + CONSISTENCY_VERSION)
     .replace(/(data-qily-core-service-dock-closure=)["'][^"']*["']/gi, '$1"v9"')
     .replace(/\/site-core-service-dock-closure-v1\.js\?v=[^"'\s<]+/g, '/site-core-service-dock-closure-v1.js?v=' + CORE_SERVICE_VERSION);
 }
 function validate(rel, html){
+  if (isNavigationPage(html) && !html.includes('/site-navigation.js?v=' + NAVIGATION_VERSION)) {
+    throw new Error(rel + ': 公共导航仍使用旧缓存版本');
+  }
+  if (!isDockPage(html)) return;
   const share = (html.match(/<(?:button|a)\b[^>]*data-action=["']share["'][^>]*>[\s\S]*?<\/(?:button|a)>/i) || [])[0] || '';
   if (share) {
     if (!/分享\s*<br\s*\/?>\s*官网/i.test(share)) throw new Error(rel + ': 分享官网未使用统一两行按钮结构');
@@ -88,15 +97,18 @@ let checked = 0, changed = 0;
 for (const rel of trackedHtml()) {
   let html;
   try { html = read(rel); } catch (_) { continue; }
-  if (!isDockPage(html)) continue;
+  if (!isDockPage(html) && !isNavigationPage(html)) continue;
   checked += 1;
-  let out = patchShareButton(html);
-  out = patchCriticalStyle(out);
-  out = patchLock(out);
-  out = patchRuntime(out);
+  let out = html;
+  if (isDockPage(out)) {
+    out = patchShareButton(out);
+    out = patchCriticalStyle(out);
+    out = patchLock(out);
+    out = patchRuntime(out);
+  }
   out = patchVersions(out);
   validate(rel, out);
   if (out !== html && write(rel, out)) changed += 1;
 }
 if (!checked) throw new Error('未发现悬浮Dock页面');
-process.stdout.write(`PASS: 悬浮“分享官网”功能与字体统一整改 ${changed}/${checked} 个页面；分享输出为无末尾斜杠纯网址。\n`);
+process.stdout.write(`PASS: 公共导航缓存与悬浮“分享官网”功能/字体统一整改 ${changed}/${checked} 个页面；分享输出为无末尾斜杠纯网址。\n`);
