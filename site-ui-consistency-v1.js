@@ -1,14 +1,15 @@
-/* QilyLean 轻量父级导航与外壳一致性 v3.0｜2026-08-20
+/* QilyLean 轻量父级导航与外壳一致性 v3.1｜2026-08-20
  * 性能原则：静态HTML首帧即正确；运行时只校正导航和悬浮栏，不扫描或改写正文。
- * 本轮将悬浮Dock“分享官网”改为与其它按钮完全相同的文字结构；正文中的“官方网址”术语不改。
+ * 本轮将悬浮Dock“分享官网”改为与其它按钮完全相同的文字结构，并在公共外壳层直接提供系统分享/复制网址回退。
  */
 (function(d,w){
   'use strict';
   if(w.__qilyUiConsistencyV2)return;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260820-dock-share-functional-v10';
+  var BUILD_ID='20260820-dock-share-functional-v11';
   var BUILD_KEY='qily_site_ui_build_v1';
+  var OFFICIAL_HOME='https://qilylean.com';
 
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
 
@@ -84,6 +85,71 @@
     if(Date.now()-handledAt<600)return;navigateParent();
   },true);
 
+  function normalizePublicUrl(value){
+    if(w.QilyLeanNormalizePublicUrl)return w.QilyLeanNormalizePublicUrl(value);
+    var text=String(value==null?'':value).trim();
+    if(!text)return text;
+    try{
+      var u=new URL(text,w.location.origin);
+      if(u.hostname!=='qilylean.com'&&u.hostname!=='www.qilylean.com')return text;
+      var pathname=u.pathname||'';
+      pathname=pathname==='/'?'':pathname.replace(/\/+$/,'');
+      return u.protocol+'//'+u.host+pathname+u.search+u.hash;
+    }catch(error){return text.replace(/\/(?=(?:[?#]|$))/,'');}
+  }
+
+  function copyText(text){
+    if(navigator.clipboard&&w.isSecureContext)return navigator.clipboard.writeText(text);
+    var field=d.createElement('textarea');
+    field.value=text;field.setAttribute('readonly','');field.style.position='fixed';field.style.left='-9999px';
+    d.body.appendChild(field);field.select();d.execCommand('copy');field.remove();return Promise.resolve();
+  }
+
+  function showToast(message){
+    var toast=d.getElementById('qilyDockToast');
+    if(!toast)return;
+    toast.textContent=message;toast.classList.add('show');w.clearTimeout(showToast.timer);
+    showToast.timer=w.setTimeout(function(){toast.classList.remove('show');},2400);
+  }
+
+  function shareOfficialSite(){
+    var url=normalizePublicUrl(OFFICIAL_HOME);
+    var mask=d.getElementById('shareMask');if(mask)mask.classList.remove('show');
+    if(navigator.share){
+      return navigator.share({url:url}).then(function(){showToast('已调起系统分享');}).catch(function(error){
+        if(error&&error.name==='AbortError')return;
+        return copyText(url).then(function(){showToast('官网网址已复制');});
+      });
+    }
+    return copyText(url).then(function(){showToast('官网网址已复制');});
+  }
+  w.__qilyShareOfficialSite=shareOfficialSite;
+
+  var sharePointer=null;
+  var shareHandledAt=0;
+  d.addEventListener('pointerdown',function(event){
+    var button=event.target&&event.target.closest?event.target.closest('#floatDock [data-action="share"]'):null;
+    if(!button){sharePointer=null;return;}
+    sharePointer={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false};
+  },true);
+  d.addEventListener('pointermove',function(event){
+    if(!sharePointer||sharePointer.id!==event.pointerId)return;
+    if(Math.hypot(event.clientX-sharePointer.x,event.clientY-sharePointer.y)>7)sharePointer.moved=true;
+  },true);
+  d.addEventListener('pointerup',function(event){
+    if(!sharePointer||sharePointer.id!==event.pointerId)return;
+    var go=!sharePointer.moved;sharePointer=null;if(!go)return;
+    shareHandledAt=Date.now();event.preventDefault();event.stopImmediatePropagation();shareOfficialSite();
+  },true);
+  d.addEventListener('pointercancel',function(event){if(sharePointer&&sharePointer.id===event.pointerId)sharePointer=null;},true);
+  d.addEventListener('click',function(event){
+    var button=event.target&&event.target.closest?event.target.closest('#floatDock [data-action="share"]'):null;
+    if(!button)return;
+    event.preventDefault();event.stopImmediatePropagation();
+    if(Date.now()-shareHandledAt<600)return;
+    shareHandledAt=Date.now();shareOfficialSite();
+  },true);
+
   function ensureDockPolish(){
     if(d.getElementById('qilyDockOfficialUrlPolishV4'))return;
     var style=d.createElement('style');
@@ -139,11 +205,7 @@
           link.setAttribute('aria-current','page');
           link.setAttribute('data-qily-primary-current','true');
         }else{
-          link.removeAttribute('aria-current');
-          link.removeAttribute('aria-selected');
-          link.removeAttribute('data-current');
-          link.removeAttribute('data-active');
-          link.removeAttribute('data-qily-primary-current');
+          link.removeAttribute('aria-current');link.removeAttribute('aria-selected');link.removeAttribute('data-current');link.removeAttribute('data-active');link.removeAttribute('data-qily-primary-current');
           link.classList.remove('active','current','is-active','selected');
         }
       });
@@ -155,35 +217,23 @@
     if(!dock)return false;
     ensureDockPolish();
     var back=dock.querySelector('[data-action="back"]');
-    if(back){
-      back.setAttribute('data-parent-route',parentRoute(location.pathname));
-      back.setAttribute('title','返回当前页面所属的上一级有效页面');
-      back.setAttribute('aria-label','返回上一级有效页面');
-    }
+    if(back){back.setAttribute('data-parent-route',parentRoute(location.pathname));back.setAttribute('title','返回当前页面所属的上一级有效页面');back.setAttribute('aria-label','返回上一级有效页面');}
     var share=dock.querySelector('[data-action="share"]');
     if(share){
-      var html='分享<br>官网';
-      if(share.innerHTML!==html)share.innerHTML=html;
+      var html='分享<br>官网';if(share.innerHTML!==html)share.innerHTML=html;
       if(share.getAttribute('title')!=='分享官网')share.setAttribute('title','分享官网');
       if(share.getAttribute('aria-label')!=='分享官网')share.setAttribute('aria-label','分享官网');
     }
     return true;
   }
 
-  function reconcileFast(){
-    normalizePrimaryNav();
-    normalizeDock();
-  }
-
-  function boot(){
-    rememberBuild();
-    ensureDockPolish();
-    reconcileFast();
-  }
+  function reconcileFast(){normalizePrimaryNav();normalizeDock();}
+  function boot(){rememberBuild();ensureDockPolish();reconcileFast();}
 
   d.addEventListener('qily:shell-ready',reconcileFast);
   w.addEventListener('pageshow',reconcileFast);
 
   w.__qilyParentNavigationV3=true;
+  w.__qilyDockShareImmediateContract=Object.freeze({action:'native-share-or-copy-url',payload:'url-only',homeUrl:OFFICIAL_HOME,trailingSlash:false,version:'20260820-dock-share-functional-v11'});
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })(document,window);
