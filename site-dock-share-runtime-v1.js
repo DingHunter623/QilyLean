@@ -2,7 +2,8 @@
  * 目标：
  * 1) “分享官网”与其它 Dock 按钮使用完全相同的文字结构与字号继承；
  * 2) 点击/轻触“分享官网”直接调用系统分享，失败时仅复制官网网址；
- * 3) 分享网址统一去除末尾斜杠，只保留可直接打开的简洁 URL。
+ * 3) 分享网址统一去除末尾斜杠，只保留可直接打开的简洁 URL；
+ * 4) 历史运行时若重建 Dock，自动恢复当前受保护结构，不允许旧 span 字号回灌。
  */
 (function (d, w) {
   'use strict';
@@ -11,6 +12,7 @@
 
   var HOME_URL = 'https://qilylean.com';
   var pointer = null;
+  var reconcileQueued = false;
 
   function normalizeUrl(value) {
     if (w.QilyLeanNormalizePublicUrl) return w.QilyLeanNormalizePublicUrl(value);
@@ -119,10 +121,44 @@
     closeLegacyShareMask();
   }
 
+  function queueReconcile() {
+    if (reconcileQueued) return;
+    reconcileQueued = true;
+    w.requestAnimationFrame(function () {
+      reconcileQueued = false;
+      normalizeLabel();
+    });
+  }
+
+  function installDockObserver() {
+    if (!w.MutationObserver || !d.body || w.__qilyDockShareObserverV1) return;
+    w.__qilyDockShareObserverV1 = true;
+    var observer = new MutationObserver(function (records) {
+      var relevant = records.some(function (record) {
+        var target = record.target;
+        if (target && target.closest && target.closest('#floatDock')) return true;
+        return Array.from(record.addedNodes || []).some(function (node) {
+          if (!node || node.nodeType !== 1) return false;
+          if (node.id === 'floatDock') return true;
+          return !!(node.querySelector && node.querySelector('#floatDock,[data-action="share"]'));
+        });
+      });
+      if (relevant) queueReconcile();
+    });
+    observer.observe(d.body, { childList: true, subtree: true });
+  }
+
   d.addEventListener('qily:shell-ready', reconcile);
   w.addEventListener('pageshow', reconcile);
-  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', reconcile, { once: true });
-  else reconcile();
+  if (d.readyState === 'loading') {
+    d.addEventListener('DOMContentLoaded', function () {
+      reconcile();
+      installDockObserver();
+    }, { once: true });
+  } else {
+    reconcile();
+    installDockObserver();
+  }
 
   w.__qilyDockShareContract = Object.freeze({
     label: '分享官网',
@@ -131,6 +167,7 @@
     payload: 'url-only',
     homeUrl: HOME_URL,
     trailingSlash: false,
+    oldLabelStructureBlocked: true,
     version: '20260820-dock-share-runtime-v1'
   });
 })(document, window);
