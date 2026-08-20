@@ -1,10 +1,12 @@
-name: Enforce compact 分享官网 dock label
+name: Enforce functional 分享官网 dock
 
 on:
   push:
     branches: [main]
     paths:
+      - '**/*.html'
       - 'scripts/enforce-dock-share-label-v1.js'
+      - 'site-dock-share-runtime-v1.js'
       - 'site-ui-consistency-v1.js'
       - 'site-core-service-dock-closure-v1.js'
       - 'scripts/publish-dock-label-polish-v1.js'
@@ -34,25 +36,35 @@ jobs:
         with:
           node-version: 24
 
-      - name: Validate scoped dock enforcer
-        run: node --check scripts/enforce-dock-share-label-v1.js
+      - name: Validate dock share sources
+        run: |
+          node --check scripts/enforce-dock-share-label-v1.js
+          node --check site-dock-share-runtime-v1.js
+          node --check site-ui-consistency-v1.js
+          node --check site-core-service-dock-closure-v1.js
 
-      - name: Materialize compact 分享官网 across public pages
+      - name: Materialize functional 分享官网 across public pages
         run: node scripts/enforce-dock-share-label-v1.js
 
-      - name: Verify no oversized share button regression
+      - name: Verify share function, typography and URL contract
         shell: bash
         run: |
           set -euo pipefail
-          grep -q '分享官网' site-ui-consistency-v1.js
-          grep -q '分享官网' site-core-service-dock-closure-v1.js
-          ! grep -q '分享官方网址' site-ui-consistency-v1.js
-          ! grep -q '分享官方网址' site-core-service-dock-closure-v1.js
+          grep -q "分享<br>官网" site-ui-consistency-v1.js
+          grep -q "分享<br>官网" site-core-service-dock-closure-v1.js
+          ! grep -q 'qily-share-label-line' site-ui-consistency-v1.js
+          ! grep -q 'qily-share-label-line' site-core-service-dock-closure-v1.js
+          grep -q "var HOME_URL = 'https://qilylean.com';" site-dock-share-runtime-v1.js
+          grep -q "navigator.share({ url: url })" site-dock-share-runtime-v1.js
+          grep -q "payload: 'url-only'" site-dock-share-runtime-v1.js
           grep -q 'width:62px!important' index.html
           grep -q 'height:62px!important' index.html
+          grep -q '分享<br>官网' index.html
+          grep -q 'aria-label="分享官网"' index.html
+          grep -q 'site-dock-share-runtime-v1.js?v=20260820-dock-share-runtime-v1' index.html
+          ! grep -q 'qily-share-label-line' index.html
           ! grep -q 'width:76px!important' index.html
           ! grep -q 'width:72px!important' index.html
-          grep -q 'aria-label="分享官网"' index.html
           git diff --check
 
       - name: Commit scoped dock normalization
@@ -60,12 +72,12 @@ jobs:
         run: |
           set -euo pipefail
           if git diff --quiet; then
-            echo 'Dock share label already compliant.'
+            echo 'Dock share contract already compliant.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add '*.html' '**/*.html'
-          git commit -m 'UX: compact floating 分享官网 button [skip ci]'
+          git commit -m 'UX: functional uniform 分享官网 dock [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
