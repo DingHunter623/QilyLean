@@ -1,10 +1,14 @@
-/* QilyLean floating-service behavior v2｜2026-08-17
- * 静态 HTML 是内容权威源；本文件仅保留用户主动触发的文章分享行为。
+/* QilyLean floating-service behavior v2.1｜2026-08-20
+ * 分享链接统一规范：域名及页面路径末尾不保留斜杠。
  */
 (function (d, w) {
   'use strict';
   if (w.__qilyFloatingServiceBehaviorV2) return;
   w.__qilyFloatingServiceBehaviorV2 = true;
+
+  function normalizeUrl(url) {
+    return String(url || '').replace(/\/+$/, '');
+  }
 
   function copyText(text) {
     if (navigator.clipboard && w.isSecureContext) return navigator.clipboard.writeText(text);
@@ -34,7 +38,7 @@
     var name = (location.pathname.split('/').pop() || 'home.html').toLowerCase();
     var shortPath = Object.prototype.hasOwnProperty.call(map, name) ? map[name] : name;
     var hash = typeof hashOverride === 'string' ? hashOverride : (location.hash || '');
-    return 'https://qilylean.com' + (shortPath ? '/' + shortPath.replace(/^\/+/, '') : '') + (location.search || '') + hash;
+    return normalizeUrl('https://qilylean.com' + (shortPath ? '/' + shortPath.replace(/^\/+/, '') : '') + (location.search || '') + hash);
   }
 
   d.addEventListener('click', function (event) {
@@ -45,7 +49,7 @@
     event.preventDefault();
     event.stopImmediatePropagation();
     var title = button.dataset.title || d.title || 'QilyLean';
-    var url = shortShareUrl('#' + article.id);
+    var url = normalizeUrl(shortShareUrl('#' + article.id));
     var status = article.querySelector('.status');
     var done = function () {
       if (status) status.textContent = '短链接已复制';
@@ -63,6 +67,7 @@
   w.__qilyFloatingServiceContract = Object.freeze({
     staticHtmlAuthority: true,
     runtimeContentRewrite: false,
-    behaviorOnly: true
+    behaviorOnly: true,
+    urlNormalize: true
   });
 })(document, window);
