@@ -24,7 +24,7 @@ on:
       - '.github/workflows/materialize-sitewide-interaction-v5.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: materialize-r6-first-paint-${{ github.event.pull_request.number }}
@@ -45,92 +45,16 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate R6 materializer sources
+      - name: Validate current V31 shell sources
         run: |
-          node --check scripts/enforce-r6-first-paint-performance.js
-          node --check scripts/site-regression-guard.js
-          node --check scripts/site-regression-guard-r6.js
-          node --check scripts/validate-sitewide-dock-arrow-v4.js
+          node --check scripts/validate-public-shell-v31.js
           node --check scripts/validate-home-hero-dock-snapback-v1.js
           node --check site-navigation.js
           node --check site-navigation-core.js
-          node --check site-navigation-legacy-20260802.js
-          node --check site-visual-geometry-v1.js
-          node --check site-music-persistent-navigation-v1.js
-          node --check site-native-prefetch-v1.js
 
-      - name: Materialize R6 static first paint, Hero V3 and Dock V3
-        run: node scripts/enforce-r6-first-paint-performance.js
-
-      - name: Validate generated runtime and R6 guards
+      - name: Validate current V31 first-paint and Dock contracts
         run: |
-          node --check site-navigation.js
-          node --check site-navigation-core.js
-          node --check site-navigation-legacy-20260802.js
-          node scripts/site-regression-guard.js
-          node scripts/validate-sitewide-dock-arrow-v4.js
+          node scripts/validate-public-shell-v31.js
           node scripts/validate-home-hero-dock-snapback-v1.js
+          git diff --exit-code
           git diff --check
-
-      - name: Verify deterministic idempotency
-        shell: bash
-        run: |
-          set -euo pipefail
-          git diff --binary > /tmp/r6-before.diff
-          node scripts/enforce-r6-first-paint-performance.js
-          git diff --binary > /tmp/r6-after.diff
-          cmp /tmp/r6-before.diff /tmp/r6-after.diff
-
-      - name: Verify R6 hero, dock and performance boundary
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -q '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6' index.html
-          grep -q '/site-content-axis-v1.css?v=20260819-unified-content-axis-v1' index.html
-          grep -q '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3' index.html
-          grep -q 'font-size:clamp(40px,3.6vw,52px)!important' index.html
-          grep -q 'qilyR6HomeFirstPaintParity' index.html
-          grep -q '/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1' index.html
-          grep -q '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3' index.html
-          grep -q '/site-navigation.js?v=20260819-dock-snapback-v30' index.html
-          grep -q '/site-navigation-core.js?v=20260819-dock-snapback-v24' site-navigation.js
-          grep -q '/site-navigation-legacy-20260802.js?v=20260819-dock-snapback-v20' site-navigation.js
-          grep -q 'function snapDockHome()' site-navigation-core.js
-          grep -q 'function setDockFreePosition(left, top)' site-navigation-core.js
-          grep -q 'Math.hypot(dx, dy) > 7' site-navigation-core.js
-          grep -q "localStorage.removeItem('qilyDockPositionV2')" site-navigation-core.js
-          grep -q "dock.dataset.qilyDockHome = 'bottom-right'" site-navigation-core.js
-          ! grep -q "localStorage.setItem('qilyDockPositionV2'" site-navigation-core.js
-          ! grep -q 'saveDockPosition()' site-navigation-core.js
-          grep -q -- '--qily-dock-font-size:15px' site-floating-dock-standard-v1.css
-          grep -q -- '--qily-dock-font-size:14px' site-floating-dock-standard-v1.css
-          grep -q 'bottom:max(var(--qily-dock-edge),env(safe-area-inset-bottom))!important' site-floating-dock-standard-v1.css
-          grep -q '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4' site-navigation.js
-          grep -q 'convertSeparateArrows' site-visual-geometry-v1.js
-          grep -q 'normalizeLeanBidirectionalScene' site-visual-geometry-v1.js
-          ! grep -q 'var distance = event.clientY - startY;' site-navigation-core.js
-          ! grep -q 'JOIN_OVERLAP' site-visual-geometry-v1.js
-          ! grep -q 'DOMParser' site-native-prefetch-v1.js
-          ! grep -q 'history.pushState' site-native-prefetch-v1.js
-
-      - name: Commit only genuine R6 materialization changes
-        shell: bash
-        run: |
-          set -euo pipefail
-          if git diff --quiet; then
-            echo 'R6 baseline is already fully materialized; zero generated diff.'
-            exit 0
-          fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'R6: materialize Hero V3 and Dock Snapback V3'
-          git fetch origin ${{ github.event.pull_request.head.ref }}
-          git rebase origin/${{ github.event.pull_request.head.ref }} || {
-            git rebase --abort || true
-            git reset --hard origin/${{ github.event.pull_request.head.ref }}
-            node scripts/enforce-r6-first-paint-performance.js
-            git add -A
-            git commit -m 'R6: materialize Hero V3 and Dock Snapback V3' || true
-          }
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
