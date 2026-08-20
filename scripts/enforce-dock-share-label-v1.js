@@ -5,7 +5,7 @@
  * 处理右侧悬浮 Dock 的“分享官网”按钮：
  * - 文案结构：与其它按钮一致，统一为 分享<br>官网，不再使用独立 span 字号；
  * - 尺寸：与其它悬浮按钮统一 62×62；
- * - 功能：全站注入直接分享运行时，移动端调起系统分享，失败时复制纯网址；
+ * - 功能：公共外壳直接提供系统分享，同时全站注入分享运行时作为防回退；
  * - 网址：分享输出统一去除末尾斜杠；
  * - 不修改正文中的“官方网址”术语，不触碰业务文案、导航或其它组件。
  */
@@ -14,7 +14,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const CONSISTENCY_VERSION = '20260820-dock-share-functional-v10';
+const CONSISTENCY_VERSION = '20260820-dock-share-functional-v11';
 const CORE_SERVICE_VERSION = '20260820-cooperation-dock-v9';
 const SHARE_RUNTIME_VERSION = '20260820-dock-share-runtime-v1';
 const SHARE_HTML = '分享<br>官网';
@@ -62,7 +62,7 @@ function patchRuntime(html){
 }
 function patchVersions(html){
   return html
-    .replace(/(data-qily-ui-consistency=)["'][^"']*["']/gi, '$1"dock-share-functional-v10"')
+    .replace(/(data-qily-ui-consistency=)["'][^"']*["']/gi, '$1"dock-share-functional-v11"')
     .replace(/\/site-ui-consistency-v1\.js\?v=[^"'\s<]+/g, '/site-ui-consistency-v1.js?v=' + CONSISTENCY_VERSION)
     .replace(/(data-qily-core-service-dock-closure=)["'][^"']*["']/gi, '$1"v9"')
     .replace(/\/site-core-service-dock-closure-v1\.js\?v=[^"'\s<]+/g, '/site-core-service-dock-closure-v1.js?v=' + CORE_SERVICE_VERSION);
