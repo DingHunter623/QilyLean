@@ -1,17 +1,8 @@
 name: Enforce sitewide interaction feedback
 
+# Legacy V2 materializer retained for explicit recovery only. Current V31
+# publication validation is non-mutating and has a single workflow owner.
 on:
-  push:
-    branches: [main]
-    paths:
-      - '**/*.html'
-      - 'site-interaction-continuity-v1.css'
-      - 'scripts/enforce-sitewide-interaction-feedback.js'
-      - 'scripts/site-regression-guard-v2.js'
-      - 'scripts/apply-site-poka-yoke-v2.js'
-      - 'docs/QILYLEAN_SITE_INTERACTION_STANDARD_V1.md'
-      - '.github/workflows/enforce-sitewide-interaction-feedback.yml'
-      - '.github/workflows/site-regression-poka-yoke.yml'
   workflow_dispatch:
 
 permissions:

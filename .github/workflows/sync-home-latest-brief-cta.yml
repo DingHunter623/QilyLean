@@ -1,17 +1,8 @@
 name: Sync homepage latest brief CTA
 
+# Superseded by publish-curated-daily.js. Retained only for manual recovery of
+# the historical CTA block; normal publications have one SSOT writer.
 on:
-  push:
-    branches: [main]
-    paths:
-      - "index.html"
-      - "qilylean/site-data.json"
-      - "qilylean/daily/index.json"
-      - "site-static-core-interactions-v1.js"
-      - "site-information-architecture-v1.js"
-      - "scripts/materialize-static-core-pages.js"
-      - "scripts/sync-home-latest-brief-cta.js"
-      - ".github/workflows/sync-home-latest-brief-cta.yml"
   workflow_dispatch:
 
 permissions:

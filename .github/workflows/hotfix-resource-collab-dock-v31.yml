@@ -1,8 +1,7 @@
 name: One-shot materialize resource collaboration and dock v31
 
+# One-shot writer: never run automatically after unrelated publications.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:

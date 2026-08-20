@@ -1,36 +1,8 @@
 name: Enforce R6 static first paint and navigation performance
 
+# Legacy V30 materializer retained for explicit recovery only. It must not
+# rewrite V31 public pages on every HTML publication.
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
-    paths:
-      - '**/*.html'
-      - 'site-navigation.js'
-      - 'site-navigation-core.js'
-      - 'site-navigation-legacy-20260802.js'
-      - 'site-floating-dock-standard-v1.css'
-      - 'site-visual-governance-v2.css'
-      - 'site-content-axis-v1.css'
-      - 'site-home-hero-tune-v1.css'
-      - 'site-native-prefetch-v1.js'
-      - 'scripts/enforce-r6-first-paint-performance.js'
-      - 'scripts/validate-home-hero-dock-snapback-v1.js'
-      - '.github/workflows/enforce-r6-first-paint-performance.yml'
-  push:
-    branches: [main]
-    paths:
-      - '**/*.html'
-      - 'site-navigation.js'
-      - 'site-navigation-core.js'
-      - 'site-navigation-legacy-20260802.js'
-      - 'site-floating-dock-standard-v1.css'
-      - 'site-visual-governance-v2.css'
-      - 'site-content-axis-v1.css'
-      - 'site-home-hero-tune-v1.css'
-      - 'site-native-prefetch-v1.js'
-      - 'scripts/enforce-r6-first-paint-performance.js'
-      - 'scripts/validate-home-hero-dock-snapback-v1.js'
-      - '.github/workflows/enforce-r6-first-paint-performance.yml'
   workflow_dispatch:
 
 permissions:

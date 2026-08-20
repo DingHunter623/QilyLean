@@ -427,7 +427,7 @@
       '<button class="qily-float-btn qily-float-search" data-action="search" type="button">本站<br>搜索</button>',
       '<button class="qily-float-btn qily-float-back" data-action="back" type="button">返回<br>上一层</button>',
       '<button class="qily-float-btn qily-float-current" data-action="current" type="button">分享<br>当前页</button>',
-      '<button class="qily-float-btn qily-float-share" data-action="share" type="button"><span class="qily-share-label-line qily-share-label-primary">分享</span><span class="qily-share-label-line qily-share-label-url">官网</span></button>',
+      '<button class="qily-float-btn qily-float-share" data-action="share" type="button" aria-label="分享官网" title="分享官网">分享<br>官网</button>',
       '<button class="qily-float-btn qily-float-contact" data-action="contact" type="button">交流</button>'
     ].join('');
     document.body.appendChild(dock);
@@ -490,9 +490,6 @@
     var startLeft = 0;
     var startTop = 0;
     var action = '';
-    var DOCK_POSITION_KEY = 'qilyDockPositionV2';
-    var userPositioned = false;
-
     function clamp(value, min, max) {
       return Math.max(min, Math.min(max, value));
     }
@@ -506,58 +503,30 @@
       };
     }
 
-    function setDockPosition(left, top, free) {
+    function setDockFreePosition(left, top) {
       var limits = dockLimits();
       var safeTop = clamp(top, limits.minTop, limits.maxTop);
+      var safeLeft = clamp(left, limits.minLeft, limits.maxLeft);
+      dock.style.setProperty('left', safeLeft + 'px', 'important');
+      dock.style.setProperty('right', 'auto', 'important');
       dock.style.setProperty('top', safeTop + 'px', 'important');
       dock.style.setProperty('bottom', 'auto', 'important');
-      if (free) {
-        var safeLeft = clamp(left, limits.minLeft, limits.maxLeft);
-        dock.style.setProperty('left', safeLeft + 'px', 'important');
-        dock.style.setProperty('right', 'auto', 'important');
-        userPositioned = true;
-      } else {
-        dock.style.setProperty('left', 'auto', 'important');
-        dock.style.setProperty('right', 'max(10px, env(safe-area-inset-right))', 'important');
-        userPositioned = false;
-      }
+      dock.dataset.qilyDockHome = 'dragging';
     }
 
-    function positionRatios(left, top) {
-      var limits = dockLimits();
-      var xRange = Math.max(1, limits.maxLeft - limits.minLeft);
-      var yRange = Math.max(1, limits.maxTop - limits.minTop);
-      return {
-        x: clamp((left - limits.minLeft) / xRange, 0, 1),
-        y: clamp((top - limits.minTop) / yRange, 0, 1)
-      };
-    }
-
-    function saveDockPosition() {
-      var rect = dock.getBoundingClientRect();
-      var ratios = positionRatios(rect.left, rect.top);
+    function snapDockHome() {
       try {
-        localStorage.setItem(DOCK_POSITION_KEY, JSON.stringify({ x: ratios.x, y: ratios.y }));
+        localStorage.removeItem('qilyDockPositionV2');
         localStorage.removeItem('qilyDockTop');
       } catch (error) {}
+      dock.style.setProperty('left', 'auto', 'important');
+      dock.style.setProperty('right', 'max(var(--qily-dock-edge, 12px), env(safe-area-inset-right))', 'important');
+      dock.style.setProperty('top', 'auto', 'important');
+      dock.style.setProperty('bottom', 'max(var(--qily-dock-edge, 12px), env(safe-area-inset-bottom))', 'important');
+      dock.dataset.qilyDockHome = 'bottom-right';
     }
 
-    function restoreDockPosition() {
-      var stored = null;
-      try { stored = JSON.parse(localStorage.getItem(DOCK_POSITION_KEY) || 'null'); } catch (error) {}
-      if (stored && Number.isFinite(stored.x) && Number.isFinite(stored.y)) {
-        var limits = dockLimits();
-        var left = limits.minLeft + clamp(stored.x, 0, 1) * Math.max(1, limits.maxLeft - limits.minLeft);
-        var top = limits.minTop + clamp(stored.y, 0, 1) * Math.max(1, limits.maxTop - limits.minTop);
-        setDockPosition(left, top, true);
-        return;
-      }
-      var legacyTop = NaN;
-      try { legacyTop = parseFloat(localStorage.getItem('qilyDockTop')); } catch (error) {}
-      setDockPosition(0, Number.isFinite(legacyTop) ? legacyTop : Math.max(92, window.innerHeight * 0.2), false);
-    }
-
-    requestAnimationFrame(restoreDockPosition);
+    requestAnimationFrame(snapDockHome);
 
     dock.addEventListener('pointerdown', function (event) {
       var button = event.target.closest('.qily-float-btn');
@@ -584,7 +553,7 @@
         dock.classList.add('qily-dock-dragging');
       }
       if (!moved) return;
-      setDockPosition(startLeft + dx, startTop + dy, true);
+      setDockFreePosition(startLeft + dx, startTop + dy);
       event.preventDefault();
     }, { passive: false });
 
@@ -593,7 +562,7 @@
       down = false;
       try { if (dock.releasePointerCapture) dock.releasePointerCapture(pointerId); } catch (error) {}
       dock.classList.remove('qily-dock-dragging');
-      if (moved) saveDockPosition();
+      if (moved || cancelled) requestAnimationFrame(snapDockHome);
       if (!cancelled && !moved) runAction(action);
       pointerId = null;
     }
@@ -605,15 +574,8 @@
       var button = event.target.closest('.qily-float-btn');
       if (button) runAction(button.getAttribute('data-action') || '');
     });
-    window.addEventListener('resize', function () {
-      var rect = dock.getBoundingClientRect();
-      if (userPositioned) {
-        setDockPosition(rect.left, rect.top, true);
-        saveDockPosition();
-      } else {
-        setDockPosition(0, rect.top, false);
-      }
-    }, { passive: true });
+    window.addEventListener('resize', snapDockHome, { passive: true });
+    window.addEventListener('pageshow', snapDockHome, { passive: true });
     document.addEventListener('keydown', function (event) {
       if (event.key !== 'Escape') return;
       closeMask(shareMask);

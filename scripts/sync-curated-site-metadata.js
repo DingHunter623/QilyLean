@@ -93,11 +93,21 @@ function updateKnowledge(data) {
   const resourceCount = data.knowledge && Number.isInteger(data.knowledge.resourceCount) ? data.knowledge.resourceCount : 0;
   html = html.replace(/<meta name="description" content="[^"]*">/i, `<meta name="description" content="QilyLean知识资产：收录${data.terminology.total}项制造管理与工程术语、${b.total}篇精选制造工程简报及${resourceCount}项精益工具、知识专题和程序文件／参考资料；最新精选更新至${b.latestDate}。">`);
   html = html.replace(/<small>全站术语词典｜\d+项<\/small>/, `<small>全站术语词典｜${data.terminology.total}项</small>`);
+  html = html.replace(/(<small>术语与培训<\/small>\s*<h3>)\d+\s*项(<\/h3>)/, `$1${data.terminology.total} 项$2`);
   html = html.replace(/<article class="module-card" data-latest-brief-card(?: data-latest-brief-date="[^"]*")?(?: data-site-metadata-source="[^"]*")?>[\s\S]*?<\/article>/, latestCard(data));
   html = html.replace(/(<small>)(?:今日简报|精选简报)(<\/small>\s*<h3>)\d+\s*(?:期|篇)(<\/h3>)/i, `$1精选简报$2${b.total} 篇$3`);
-  html = html.replace(/最新更新至\s*\d{4}-\d{2}-\d{2}，按日期连续归档。/g, `最新精选更新至 ${b.latestDate}；默认每周保留一篇高价值制造工程动态。`);
+  html = html.replace(/最新(?:精选)?更新至\s*\d{4}-\d{2}-\d{2}(?:，按日期连续归档。|；默认每周保留一篇高价值制造工程动态。)/g, `最新精选更新至 ${b.latestDate}；默认每周保留一篇高价值制造工程动态。`);
   html = html.replace(/今日简报/g, '精选简报');
   writeIfChanged(knowledgeFile, html);
+}
+function updateTerminology(termTotal) {
+  let html = read(terminologyFile);
+  html = html.replace(
+    /<meta name="description" content="QilyLean全站制造管理与工程专业术语词典：\d+项中文诠释与应用场景，每个术语代码配套单点培训课件，支持直接打开、链接分享与下载\/保存PDF。">/,
+    `<meta name="description" content="QilyLean全站制造管理与工程专业术语词典：${termTotal}项中文诠释与应用场景，每个术语代码配套单点培训课件，支持直接打开、链接分享与下载/保存PDF。">`
+  );
+  html = html.replace(/共收录\s*\d+\s*项术语\s*·\s*\d+\s*份单点培训课件/, `共收录 ${termTotal} 项术语 · ${termTotal} 份单点培训课件`);
+  writeIfChanged(terminologyFile, html);
 }
 function validate(data) {
   const home = read(homeFile);
@@ -106,6 +116,10 @@ function validate(data) {
   if (!home.includes(`${data.briefs.total}篇`)) throw new Error('Homepage curated brief count is stale.');
   if (!home.includes(data.briefs.latestDate)) throw new Error('Homepage latest curated date is stale.');
   if (!knowledge.includes(`data-latest-brief-date="${data.briefs.latestDate}"`)) throw new Error('Knowledge latest curated card is stale.');
+  if (!knowledge.includes(`<small>术语与培训</small><h3>${data.terminology.total} 项</h3>`)) throw new Error('Knowledge terminology count is stale.');
+  if (!knowledge.includes(`最新精选更新至 ${data.briefs.latestDate}`)) throw new Error('Knowledge brief summary date is stale.');
+  const terminology = read(terminologyFile);
+  if (!terminology.includes(`共收录 ${data.terminology.total} 项术语 · ${data.terminology.total} 份单点培训课件`)) throw new Error('Terminology visible count is stale.');
   if (!knowledge.includes('精选简报')) throw new Error('Knowledge page still lacks curated-brief wording.');
   if (!central.briefs || central.briefs.total !== data.briefs.total || central.briefs.cadence !== 'weekly_curated') throw new Error('Central curated metadata is stale.');
 }
@@ -113,6 +127,7 @@ function main() {
   const items = loadIndex();
   const terms = countTerms();
   const data = updateSiteData(items, terms);
+  updateTerminology(terms);
   updateHome(data);
   updateKnowledge(data);
   validate(data);

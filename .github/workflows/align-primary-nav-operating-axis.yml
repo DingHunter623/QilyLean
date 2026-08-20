@@ -1,21 +1,8 @@
 name: Enforce primary navigation, operating-axis mapping and mobile readability
 
+# Legacy materializer retained for explicit recovery only. Current public shell
+# output is owned by enforce-dock-share-label.yml and the V31 source files.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/align-primary-nav-operating-axis.js'
-      - 'scripts/enforce-home-hero-layout.js'
-      - 'scripts/enforce-unified-content-axis.js'
-      - 'site-navigation-core.js'
-      - 'site-navigation-legacy-20260802.js'
-      - 'site-navigation.js'
-      - 'site-visual-governance-v2.css'
-      - 'site-home-hero-tune-v1.css'
-      - 'site-content-axis-v1.css'
-      - '*.html'
-      - '**/*.html'
-      - '.github/workflows/align-primary-nav-operating-axis.yml'
   workflow_dispatch:
 
 permissions:

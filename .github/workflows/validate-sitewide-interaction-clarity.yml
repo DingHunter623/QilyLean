@@ -10,6 +10,8 @@ on:
       - 'site-navigation.js'
       - 'scripts/publish-number-badge-contrast.js'
       - 'scripts/validate-sitewide-interaction-clarity.js'
+      - 'scripts/validate-public-shell-v31.js'
+      - 'scripts/validate-home-hero-dock-snapback-v1.js'
       - 'scripts/validate-current-daily-publication.js'
       - 'scripts/nda-source/nda-preview-template.html'
       - '**/*.html'
@@ -38,6 +40,8 @@ jobs:
           node --check site-navigation.js
           node --check scripts/publish-number-badge-contrast.js
           node --check scripts/validate-sitewide-interaction-clarity.js
+          node --check scripts/validate-public-shell-v31.js
+          node --check scripts/validate-home-hero-dock-snapback-v1.js
 
       - name: Validate interaction states, contrast and materialization
         run: npm run test:visual

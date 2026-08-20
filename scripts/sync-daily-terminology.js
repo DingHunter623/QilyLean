@@ -238,14 +238,16 @@ function noteBlock(date, parts, matched) {
   ].join('\n');
 }
 
-function injectNote(html, block) {
+function injectNote(html, block, date) {
   const quote = /(<div class="quote"[^>]*>[\s\S]*?<\/div>)/i;
   if (quote.test(html)) return html.replace(quote, `$1\n${block}\n`);
   const firstParagraph = /(<div class="content"[^>]*>[\s\S]*?<p\b[^>]*>[\s\S]*?<\/p>)/i;
   if (firstParagraph.test(html)) return html.replace(firstParagraph, `$1\n${block}\n`);
+  const articleFirstParagraph = /(<article\b[^>]*class="[^"]*\bpost\b[^"]*"[^>]*>[\s\S]*?<p\b[^>]*>[\s\S]*?<\/p>)/i;
+  if (articleFirstParagraph.test(html)) return html.replace(articleFirstParagraph, `$1\n${block}\n`);
   const contentStart = /(<div class="content"[^>]*>)/i;
   if (contentStart.test(html)) return html.replace(contentStart, `$1\n${block}\n`);
-  throw new Error('Cannot locate a Daily Brief content insertion point.');
+  throw new Error(`${date}: cannot locate a Daily Brief content insertion point.`);
 }
 
 function assertSynchronized(html, date) {
@@ -289,7 +291,7 @@ function main() {
     const clean = removeExistingNote(original);
     const parts = articleParts(clean);
     const matched = matchTerms(parts, terms);
-    const next = injectNote(clean, noteBlock(date, parts, matched));
+    const next = injectNote(clean, noteBlock(date, parts, matched), date);
     assertSynchronized(next, date);
     if (matched.length) matchedPages += 1;
     else fallbackPages += 1;

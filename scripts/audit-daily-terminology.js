@@ -28,7 +28,8 @@ const reportPath = path.join(dailyDir, 'terminology-audit-latest.json');
 const UI_ALLOWLIST = new Set([
   'DAILY', 'ENGINEERING', 'BRIEF', 'CURATED', 'SINGLE', 'POINT', 'LESSON',
   'QilyLean', 'PPT', 'PDF', 'DOC', 'DOCX', 'HTML', 'CSS', 'SVG',
-  'URL', 'QR', 'V1', 'V2', 'L1', 'L2', 'L3', 'L4', 'MESSAGE', 'DISCUSSION'
+  'URL', 'QR', 'V1', 'V2', 'L1', 'L2', 'L3', 'L4', 'MESSAGE', 'DISCUSSION',
+  'ENGINE'
 ]);
 
 function read(file) {
@@ -268,7 +269,7 @@ function main() {
     schemaVersion: 1,
     briefDate: date,
     briefPath: path.relative(root, briefPath).replace(/\\/g, '/'),
-    checkedAt: new Date().toISOString(),
+    checkedAt: process.env.QILY_AUDIT_AT || `${date}T00:00:00.000Z`,
     candidates,
     coveredTerms: knownTerms.map((item) => item.term),
     unknownTerms: unknownTerms.map((item) => item.term),

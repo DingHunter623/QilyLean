@@ -1,13 +1,8 @@
 name: Enforce homepage hero title scale and content alignment
 
+# Legacy hero writer retained for explicit recovery only. It validates an
+# older cache contract and must not rewrite normal homepage publications.
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'site-home-hero-tune-v1.css'
-      - 'scripts/enforce-home-hero-layout.js'
-      - 'index.html'
-      - '.github/workflows/enforce-home-hero-layout.yml'
   workflow_dispatch:
 
 permissions:
