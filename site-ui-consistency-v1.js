@@ -1,13 +1,13 @@
-/* QilyLean 轻量父级导航与外壳一致性 v2.9｜2026-08-19
+/* QilyLean 轻量父级导航与外壳一致性 v3.0｜2026-08-20
  * 性能原则：静态HTML首帧即正确；运行时只校正导航和悬浮栏，不扫描或改写正文。
- * 本轮仅调整悬浮Dock“分享官网”按钮；正文中的“官方网址”术语不改。
+ * 本轮将悬浮Dock“分享官网”改为与其它按钮完全相同的文字结构；正文中的“官方网址”术语不改。
  */
 (function(d,w){
   'use strict';
   if(w.__qilyUiConsistencyV2)return;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260819-dock-share-site-v9';
+  var BUILD_ID='20260820-dock-share-functional-v10';
   var BUILD_KEY='qily_site_ui_build_v1';
 
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
@@ -85,13 +85,10 @@
   },true);
 
   function ensureDockPolish(){
-    if(d.getElementById('qilyDockOfficialUrlPolishV3'))return;
+    if(d.getElementById('qilyDockOfficialUrlPolishV4'))return;
     var style=d.createElement('style');
-    style.id='qilyDockOfficialUrlPolishV3';
-    style.textContent=[
-      '#floatDock [data-action="share"]{width:62px!important;min-width:62px!important;height:62px!important;min-height:62px!important;padding:4px!important;border-radius:50%!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:0!important;line-height:1!important;white-space:nowrap!important;overflow:hidden!important;box-sizing:border-box!important}',
-      '#floatDock [data-action="share"] .qily-share-label-line{display:block!important;margin:0!important;padding:0!important;white-space:nowrap!important;text-align:center!important;font-size:18px!important;line-height:1.08!important;letter-spacing:0!important}'
-    ].join('');
+    style.id='qilyDockOfficialUrlPolishV4';
+    style.textContent='#floatDock [data-action="share"]{width:62px!important;min-width:62px!important;height:62px!important;min-height:62px!important;padding:4px!important;border-radius:50%!important;display:flex!important;align-items:center!important;justify-content:center!important;line-height:1.08!important;white-space:normal!important;overflow:hidden!important;box-sizing:border-box!important}';
     (d.head||d.documentElement).appendChild(style);
   }
 
@@ -165,7 +162,7 @@
     }
     var share=dock.querySelector('[data-action="share"]');
     if(share){
-      var html='<span class="qily-share-label-line qily-share-label-primary">分享</span><span class="qily-share-label-line qily-share-label-url">官网</span>';
+      var html='分享<br>官网';
       if(share.innerHTML!==html)share.innerHTML=html;
       if(share.getAttribute('title')!=='分享官网')share.setAttribute('title','分享官网');
       if(share.getAttribute('aria-label')!=='分享官网')share.setAttribute('aria-label','分享官网');
