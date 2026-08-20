@@ -7,14 +7,20 @@ const root = path.resolve(__dirname, '..');
 const target = path.join(root, 'index.html');
 let html = fs.readFileSync(target, 'utf8');
 
-// C919 strategic flight map is intentionally OFFLINE until the aircraft model is optimized and approved again.
-// Keep the artwork files in the repository for future reuse, but remove all homepage rendering hooks.
+const start = '<!-- QILY-C919-STRATEGY-HERO:START -->';
+const end = '<!-- QILY-C919-STRATEGY-HERO:END -->';
+
+const hero = `${start}
+<section class="qily-c919-strategy-hero" aria-label="QilyLean C919战略视觉">
+  <img src="/qilylean/c919-strategy-hero-v10.svg" alt="QilyLean C919战略飞机模型" loading="eager">
+</section>
+${end}`;
+
 html = html.replace(/\n?<!-- QILY-C919-STRATEGY-HERO:START -->[\s\S]*?<!-- QILY-C919-STRATEGY-HERO:END -->\n?/gi, '\n');
-html = html.replace(/\n?<!-- QILY-C919-HERO-STYLES:START -->[\s\S]*?<!-- QILY-C919-HERO-STYLES:END -->\n?/gi, '\n');
-html = html.replace(/\s*<link[^>]+rel=["']preload["'][^>]+href=["'][^"']*c919-strategy-hero[^"']*["'][^>]*>\s*/gi, '\n');
-html = html.replace(/\s*<meta\s+property=["']og:image["'][^>]*content=["'][^"']*c919-strategy-hero[^"']*["'][^>]*>\s*/gi, '\n');
-html = html.replace(/\s*<meta\s+name=["']twitter:image["'][^>]*content=["'][^"']*c919-strategy-hero[^"']*["'][^>]*>\s*/gi, '\n');
-html = html.replace(/\n{4,}/g, '\n\n\n');
+
+if (html.includes('</section>')) {
+  html = html.replace('</main>', `${hero}\n</main>`);
+}
 
 fs.writeFileSync(target, html.endsWith('\n') ? html : html + '\n', 'utf8');
-console.log('C919 homepage head-position model and overview are intentionally offline; artwork files retained for future optimized release.');
+console.log('C919 strategic hero enabled.');
