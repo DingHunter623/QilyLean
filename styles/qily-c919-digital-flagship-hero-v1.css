@@ -1,12 +1,22 @@
-/* QilyLean C919 Digital Flagship Hero V1 */
+/* QilyLean C919 Digital Flagship Hero V2 | Issue #239 */
+/*
+ * Fix goals:
+ * - Keep C919 hero as first visual element.
+ * - Reserve readable area around aircraft nose for six business themes.
+ * - Prevent legacy hero assets from clipping the new composition.
+ * - Avoid screenshot-only patches; shared hero container rules only.
+ */
+
 .qily-c919-digital-flagship-hero {
   width: min(1560px, calc(100% - 80px));
   margin: 0 auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  position: relative;
+  overflow: visible;
   padding: 24px 0;
+  isolation: isolate;
 }
 
 .qily-c919-digital-flagship-hero img {
@@ -15,6 +25,26 @@
   max-width: 1440px;
   height: auto;
   object-fit: contain;
+  position: relative;
+  z-index: 1;
+}
+
+.qily-c919-digital-flagship-hero .qily-c919-business-themes,
+.qily-c919-digital-flagship-hero [data-qily-business-theme] {
+  position: relative;
+  z-index: 2;
+}
+
+/* Shared text safety for hero/card descendants */
+.qily-c919-digital-flagship-hero,
+.qily-c919-digital-flagship-hero * {
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .qily-c919-digital-flagship-hero {
+    width: calc(100% - 48px);
+  }
 }
 
 @media (max-width: 768px) {
@@ -25,5 +55,11 @@
 
   .qily-c919-digital-flagship-hero img {
     width: 100%;
+  }
+}
+
+@media (max-width: 430px) {
+  .qily-c919-digital-flagship-hero {
+    width: calc(100% - 24px);
   }
 }
