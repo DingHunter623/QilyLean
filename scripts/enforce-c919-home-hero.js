@@ -22,7 +22,7 @@ const end = '<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V1:END -->';
 
 const hero = `${start}
 <section class="qily-c919-digital-flagship-hero" aria-label="QilyLean C919 Digital Flagship Hero V1">
-  <img src="/qilylean/c919-strategy-hero-v10.svg" alt="QilyLean C919 Digital Flagship Hero V1" loading="eager">
+  <img src="/qilylean/c919-strategy-hero-v12.webp" alt="QilyLean C919 Digital Flagship Hero V1" loading="eager">
 </section>
 ${end}`;
 

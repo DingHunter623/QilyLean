@@ -1,0 +1,29 @@
+/* QilyLean C919 Digital Flagship Hero V1 */
+.qily-c919-digital-flagship-hero {
+  width: min(1560px, calc(100% - 80px));
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding: 24px 0;
+}
+
+.qily-c919-digital-flagship-hero img {
+  display: block;
+  width: 100%;
+  max-width: 1440px;
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .qily-c919-digital-flagship-hero {
+    width: calc(100% - 32px);
+    padding: 16px 0;
+  }
+
+  .qily-c919-digital-flagship-hero img {
+    width: 100%;
+  }
+}
