@@ -1,4 +1,4 @@
-/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V9｜2026-08-20
+/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V10｜2026-08-22
  * 目标：
  * 1) 项目合作页直接使用已经物化的静态六类能力/边界，不再运行时重复插入正文；
  * 2) 删除重复的“分享官网”，保留“分享当前页”；
@@ -6,8 +6,8 @@
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyCoreServiceDockClosureV9)return;
-  w.__qilyCoreServiceDockClosureV9=true;
+  if(w.__qilyCoreServiceDockClosureV10)return;
+  w.__qilyCoreServiceDockClosureV10=true;
 
   function groupByVisualRow(nodes){
     var rows=[];
@@ -85,7 +85,7 @@
     var labels={
       home:{html:'首页',aria:'首页'},
       top:{html:'回<br>顶部',aria:'回顶部'},
-      back:{html:'返回<br>上一层',aria:'返回上一层'},
+      back:{html:'回<br>上一层',aria:'回上一层'},
       search:{html:'本站<br>搜索',aria:'本站搜索'},
       current:{html:'分享<br>当前页',aria:'分享当前页'},
       contact:{html:'交流',aria:'交流'}

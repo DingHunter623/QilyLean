@@ -8,10 +8,10 @@ const { execFileSync } = require('child_process');
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
 const versions = {
-  navigation: '/site-navigation.js?v=20260822-sitewide-remediation-v33',
+  navigation: '/site-navigation.js?v=20260822-dock-back-label-v34',
   contentAxis: '/site-content-axis-v1.css?v=20260822-unified-content-axis-v3',
-  consistency: '/site-ui-consistency-v1.js?v=20260822-remediation-v12',
-  dockOrder: '/site-dock-share-runtime-v1.js?v=20260822-dock-order-v2'
+  consistency: '/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13',
+  dockOrder: '/site-dock-share-runtime-v1.js?v=20260822-dock-back-label-v3'
 };
 
 function trackedHtml() {

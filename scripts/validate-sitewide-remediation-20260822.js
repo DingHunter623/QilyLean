@@ -7,10 +7,10 @@ const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const versions = {
-  navigation: '/site-navigation.js?v=20260822-sitewide-remediation-v33',
+  navigation: '/site-navigation.js?v=20260822-dock-back-label-v34',
   contentAxis: '/site-content-axis-v1.css?v=20260822-unified-content-axis-v3',
-  consistency: '/site-ui-consistency-v1.js?v=20260822-remediation-v12',
-  dockOrder: '/site-dock-share-runtime-v1.js?v=20260822-dock-order-v2'
+  consistency: '/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13',
+  dockOrder: '/site-dock-share-runtime-v1.js?v=20260822-dock-back-label-v3'
 };
 const requiredDockOrder = ['home', 'top', 'back', 'search', 'current', 'contact'];
 
@@ -24,16 +24,28 @@ function trackedHtml() {
 const navigation = read('site-navigation.js');
 const core = read('site-navigation-core.js');
 const dockClosure = read('site-dock-share-runtime-v1.js');
+const cooperationDockClosure = read('site-core-service-dock-closure-v1.js');
+const consistency = read('site-ui-consistency-v1.js');
 const contentAxis = read('site-content-axis-v1.css');
 const home = read('index.html');
 const experience = read('experience/index.html');
 
-assert(navigation.includes("mode: 'atomic-first-paint-v33'"), 'Navigation wrapper is not V33.');
+assert(navigation.includes("mode: 'atomic-first-paint-v34'"), 'Navigation wrapper is not V34.');
 assert(navigation.includes("dockOrder: ['home','top','back','search','current','contact']"), 'Navigation contract has the wrong Dock order.');
-assert(navigation.includes('/site-navigation-core.js?v=20260822-remediation-v26'), 'Navigation core cache key is stale.');
+assert(navigation.includes('/site-navigation-core.js?v=20260822-dock-back-label-v27'), 'Navigation core cache key is stale.');
+assert(navigation.includes('/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23'), 'Navigation legacy cache key is stale.');
+assert(read('site-navigation-legacy-20260802.js').includes('/site-navigation-core.js?v=20260822-dock-back-label-v27'), 'Legacy navigation core cache key is stale.');
 assert(navigation.includes('/site-content-axis-v1.css?v=20260822-unified-content-axis-v3'), 'Content-axis cache key is stale.');
 assert(dockClosure.includes("var order = ['home', 'top', 'back', 'search', 'current', 'contact'];"), 'Dock closure order is stale.');
 assert(!core.includes('data-action="share"'), 'Duplicate official-site share button returned to the core Dock.');
+assert(core.includes('data-action="back" type="button">回<br>上一层</button>'), 'Core Dock back label is not 回上一层.');
+assert(!core.includes('返回<br>上一层'), 'Core Dock returned to the retired 返回上一层 label.');
+assert(dockClosure.includes("back: '回<br>上一层'"), 'Dock closure back label is not 回上一层.');
+assert(!dockClosure.includes('返回<br>上一层'), 'Dock closure returned to the retired 返回上一层 label.');
+assert(cooperationDockClosure.includes("back:{html:'回<br>上一层',aria:'回上一层'}"), 'Cooperation Dock back label is not 回上一层.');
+assert(!cooperationDockClosure.includes('返回<br>上一层'), 'Cooperation Dock returned to the retired 返回上一层 label.');
+assert(consistency.includes("setAttribute('aria-label','回上一层')"), 'Dock accessibility label is not 回上一层.');
+assert(!consistency.includes('返回上一级有效页面'), 'Dock accessibility label returned to the retired wording.');
 
 let last = -1;
 for (const action of requiredDockOrder) {

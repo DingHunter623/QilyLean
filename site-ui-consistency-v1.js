@@ -143,7 +143,7 @@
     var dock=d.getElementById('floatDock');
     if(!dock)return false;
     var back=dock.querySelector('[data-action="back"]');
-    if(back){back.setAttribute('data-parent-route',parentRoute(location.pathname));back.setAttribute('title','返回当前页面所属的上一级有效页面');back.setAttribute('aria-label','返回上一级有效页面');}
+    if(back){back.setAttribute('data-parent-route',parentRoute(location.pathname));back.setAttribute('title','回到当前页面所属的上一级有效页面');back.setAttribute('aria-label','回上一层');}
     dock.querySelectorAll('[data-action="share"]').forEach(function(button){button.remove();});
     return true;
   }

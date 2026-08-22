@@ -1,11 +1,11 @@
-/* QilyLean floating Dock order closure v2｜2026-08-22
- * 最终顺序：首页、回顶部、返回上一层、本站搜索、分享当前页、交流。
+/* QilyLean floating Dock order closure v3｜2026-08-22
+ * 最终顺序：首页、回顶部、回上一层、本站搜索、分享当前页、交流。
  * 删除重复功能“分享官网”，保留“分享当前页”。
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyDockOrderClosureV2) return;
-  w.__qilyDockOrderClosureV2 = true;
+  if (w.__qilyDockOrderClosureV3) return;
+  w.__qilyDockOrderClosureV3 = true;
 
   function normalizeDock() {
     var dock = d.getElementById('floatDock');
@@ -21,7 +21,7 @@
     var labels = {
       home: '首页',
       top: '回<br>顶部',
-      back: '返回<br>上一层',
+      back: '回<br>上一层',
       search: '本站<br>搜索',
       current: '分享<br>当前页',
       contact: '交流'
@@ -45,8 +45,8 @@
   }
 
   function installObserver() {
-    if (!w.MutationObserver || w.__qilyDockOrderClosureObserverV2) return;
-    w.__qilyDockOrderClosureObserverV2 = true;
+    if (!w.MutationObserver || w.__qilyDockOrderClosureObserverV3) return;
+    w.__qilyDockOrderClosureObserverV3 = true;
     new MutationObserver(normalizeDock).observe(d.body, { childList: true, subtree: true });
   }
 

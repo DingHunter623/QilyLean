@@ -1,5 +1,5 @@
 /* QilyLean 悬浮栏父级导航轻量版 v4.1｜2026-08-15
- * 仅负责“返回上一层”与导航当前态；禁止运行时重写首页、插入区块、循环扫描 DOM。
+ * 仅负责“回上一层”与导航当前态；禁止运行时重写首页、插入区块、循环扫描 DOM。
  */
 (function(d,w){
   'use strict';
@@ -95,8 +95,8 @@
   function labelBack(){
     var button=d.querySelector('[data-action="back"]');
     if(!button)return false;
-    button.setAttribute('title','返回当前页面所属的上一级有效页面');
-    button.setAttribute('aria-label','返回上一级有效页面');
+    button.setAttribute('title','回到当前页面所属的上一级有效页面');
+    button.setAttribute('aria-label','回上一层');
     button.setAttribute('data-parent-route',parentRoute(location.pathname));
     return true;
   }
