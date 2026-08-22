@@ -46,7 +46,7 @@ assert(contentAxis.includes('--qily-content-axis:1560px'), 'Unified 1560px conte
 assert(contentAxis.includes('overflow-wrap:anywhere!important'), 'Long-content wrapping guard is missing.');
 assert(home.includes('<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START -->'), 'Homepage C919 V4 start marker missing.');
 assert(home.indexOf('QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START') < home.indexOf('<section class="hero">'), 'C919 is not the first homepage content visual.');
-assert(home.includes('/qilylean/c919-strategy-hero-v12.webp'), 'Homepage C919 visual asset missing.');
+assert(home.includes('/qilylean/c919-strategy-hero-v14.png'), 'Homepage latest V14 aircraft visual asset missing.');
 
 const officialUrls = [
   'https://www.jinggon.com/',

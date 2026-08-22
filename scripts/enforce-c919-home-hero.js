@@ -20,13 +20,13 @@ let html = fs.readFileSync(target, 'utf8');
 
 const start = '<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START -->';
 const end = '<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:END -->';
-const stylesheet = '<link id="qilyC919DigitalFlagshipHeroV4" rel="stylesheet" href="/styles/qily-c919-digital-flagship-hero-v1.css?v=20260822-c919-remediation-v6">';
+const stylesheet = '<link id="qilyC919DigitalFlagshipHeroV4" rel="stylesheet" href="/styles/qily-c919-digital-flagship-hero-v1.css?v=20260822-latest-aircraft-v7">';
 
 const hero = `${start}
-<section class="qily-c919-digital-flagship-hero" aria-label="QilyLean C919 数字品牌旗舰主视觉">
+<section class="qily-c919-digital-flagship-hero" aria-label="QilyLean 最新飞机数字品牌旗舰主视觉">
   <figure>
-    <img src="/qilylean/c919-strategy-hero-v12.webp" alt="QilyLean C919 数字品牌旗舰主视觉，展示新工厂和新产线规划、精益改善项目交付、目视化项目设计与交付、数字化工厂、APP软件开发及官网建设六大业务" width="1672" height="941" loading="eager" decoding="async" fetchpriority="high">
-    <figcaption><strong>QilyLean C919 数字品牌旗舰</strong><span>制造／精益工程直接交付 × 数字化／智能化能力增强</span></figcaption>
+    <img src="/qilylean/c919-strategy-hero-v14.png" alt="QilyLean 最新飞机主视觉，俯视爬升机型的左右机翼展示新工厂和新产线规划、精益改善项目交付、目视化项目设计与交付、数字化工厂、APP软件开发、官网建设六项业务，右下角为官网二维码" width="1672" height="941" loading="eager" decoding="async" fetchpriority="high">
+    <figcaption><strong>QilyLean 最新飞机数字品牌旗舰</strong><span>制造／精益工程直接交付 × 数字化／智能化能力增强</span></figcaption>
   </figure>
 </section>
 ${end}`;
