@@ -20,7 +20,7 @@ let html = fs.readFileSync(target, 'utf8');
 
 const start = '<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START -->';
 const end = '<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:END -->';
-const stylesheet = '<link id="qilyC919DigitalFlagshipHeroV4" rel="stylesheet" href="/styles/qily-c919-digital-flagship-hero-v1.css?v=20260822-c919-remediation-v4">';
+const stylesheet = '<link id="qilyC919DigitalFlagshipHeroV4" rel="stylesheet" href="/styles/qily-c919-digital-flagship-hero-v1.css?v=20260822-c919-remediation-v6">';
 
 const hero = `${start}
 <section class="qily-c919-digital-flagship-hero" aria-label="QilyLean C919 数字品牌旗舰主视觉">

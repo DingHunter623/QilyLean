@@ -1,4 +1,4 @@
-/* QilyLean C919 Digital Flagship Hero V4 | 2026-08-22 remediation */
+/* QilyLean C919 Digital Flagship Hero V6 | 2026-08-22 remediation */
 /*
  * Goals:
  * - C919 remains homepage first visual entry.
@@ -49,15 +49,34 @@
   justify-content: space-between;
   gap: 12px 22px;
   padding: 12px clamp(14px, 2vw, 24px);
-  color: #eaf7f5;
-  background: linear-gradient(90deg, #0b4259, #0f5968);
+  color: #eaf7f5 !important;
+  -webkit-text-fill-color: #eaf7f5 !important;
+  background: linear-gradient(90deg, #0b4259, #0f5968) !important;
   font-size: 15px;
   line-height: 1.55;
 }
 
 .qily-c919-digital-flagship-hero figcaption strong {
-  color: #ffe39b;
+  color: #ffe39b !important;
+  -webkit-text-fill-color: #ffe39b !important;
   font-weight: 950;
+}
+
+.qily-c919-digital-flagship-hero figcaption span {
+  color: inherit !important;
+  -webkit-text-fill-color: #eaf7f5 !important;
+}
+
+/* 公共文字治理层具有更高选择器优先级，旗舰图注在首页语境中显式锁定可读对比度。 */
+html body.qily-home-v3 main .qily-c919-digital-flagship-hero figcaption,
+html body.qily-home-v3 main .qily-c919-digital-flagship-hero figcaption span {
+  color: #eaf7f5 !important;
+  -webkit-text-fill-color: #eaf7f5 !important;
+}
+
+html body.qily-home-v3 main .qily-c919-digital-flagship-hero figcaption strong {
+  color: #ffe39b !important;
+  -webkit-text-fill-color: #ffe39b !important;
 }
 
 /* Legacy hero containers cannot cover flagship hero */

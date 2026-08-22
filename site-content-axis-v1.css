@@ -1,4 +1,4 @@
-/* QilyLean 全站内容窗口统一轴 V2｜2026-08-22
+/* QilyLean 全站内容窗口统一轴 V3｜2026-08-22
  * 目标：消除上下模块、不同页面之间 1080/1220/1240/1560px 内容窗口混用造成的浪费与错位。
  * 原则：统一内容窗口，不把弹窗/二维码/媒体等功能组件粗暴拉宽；移动端只重排，不通过缩字或横向溢出解决布局。
  */
@@ -18,6 +18,15 @@ html body main>section{
   padding-left:var(--qily-content-axis-gutter)!important;
   padding-right:var(--qily-content-axis-gutter)!important;
   box-sizing:border-box!important;
+}
+
+/* 已有模块类可能自带更高优先级的响应式 padding；在公共壳层明确覆盖，保证平板与手机仍共用同一轴。 */
+html body main> :is(
+  .module-hero,.module-section,.qily-asset-section,.qily-system-axis,
+  .qily-ia-section,.daily-section,.section
+){
+  padding-left:var(--qily-content-axis-gutter)!important;
+  padding-right:var(--qily-content-axis-gutter)!important;
 }
 
 /* 02｜全站主要内容窗口统一使用同一条 1560px 轴。 */
