@@ -1,0 +1,47 @@
+name: Verify Pure DDZ Live
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/verify-pure-ddz-live.yml'
+      - 'tools/pure-ddz/**'
+      - 'times26001-home-card.js'
+  workflow_dispatch:
+
+jobs:
+  verify-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify QilyLean game page is live
+        run: |
+          ok=0
+          for i in {1..30}; do
+            if curl -fsSL --max-time 20 'https://qilylean.com/tools/pure-ddz/?verify=20260823' -o /tmp/pure-ddz.html; then
+              if grep -q '纯净斗地主' /tmp/pure-ddz.html && grep -q 'QilyLean' /tmp/pure-ddz.html; then
+                ok=1
+                break
+              fi
+            fi
+            sleep 10
+          done
+          test "$ok" = 1
+          grep -q 'Android APK 下载' /tmp/pure-ddz.html
+          grep -q 'Pure-DDZ-Classic-v1.0.0.apk' /tmp/pure-ddz.html
+      - name: Verify homepage module script is deployed
+        run: |
+          curl -fsSL --max-time 20 'https://qilylean.com/times26001-home-card.js?verify=20260823' -o /tmp/home-card.js
+          grep -q 'pureDdzHomeSection' /tmp/home-card.js
+          grep -q '纯净斗地主｜在线玩' /tmp/home-card.js
+      - name: Verify playable upstream web game
+        run: |
+          curl -fsSL --max-time 20 'https://cdn.jsdelivr.net/gh/DingHunter623/Pure-DDZ-Classic@main/web/index.html?verify=20260823' -o /tmp/game.html
+          grep -q 'QilyLean 启力精益主题版' /tmp/game.html
+          grep -q 'qilylean-theme.css' /tmp/game.html
+      - name: Verify Android release APK download
+        run: |
+          curl -fsSL --max-time 60 'https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.0/Pure-DDZ-Classic-v1.0.0.apk' -o /tmp/pure-ddz.apk
+          test -s /tmp/pure-ddz.apk
+          test "$(head -c 2 /tmp/pure-ddz.apk)" = 'PK'
+          echo "APK bytes: $(wc -c </tmp/pure-ddz.apk)"
