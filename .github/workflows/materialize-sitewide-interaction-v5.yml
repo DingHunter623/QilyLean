@@ -21,6 +21,7 @@ on:
       - 'scripts/site-friend-links-layout-guard.js'
       - 'scripts/validate-sitewide-dock-arrow-v4.js'
       - 'scripts/validate-home-hero-dock-snapback-v1.js'
+      - 'scripts/validate-sitewide-remediation-20260822.js'
       - '.github/workflows/materialize-sitewide-interaction-v5.yml'
 
 permissions:
@@ -45,14 +46,14 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate current V31 shell sources
+      - name: Validate current V33 shell sources
         run: |
           node --check scripts/validate-public-shell-v31.js
           node --check scripts/validate-home-hero-dock-snapback-v1.js
           node --check site-navigation.js
           node --check site-navigation-core.js
 
-      - name: Validate current V31 first-paint and Dock contracts
+      - name: Validate current V33 first-paint and Dock contracts
         run: |
           node scripts/validate-public-shell-v31.js
           node scripts/validate-home-hero-dock-snapback-v1.js
