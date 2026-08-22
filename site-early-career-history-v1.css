@@ -1,18 +1,23 @@
-/* QilyLean｜职业履历公司主体、官网与锚点联动｜V2026.08.05 R4 */
+/* QilyLean｜职业履历公司主体、官网与锚点联动｜V2026.08.23 R5 */
 .career-table .career-year-col{
-  width:168px!important;
-  min-width:168px!important;
+  width:190px!important;
+  min-width:190px!important;
+  max-width:190px!important;
 }
 .career-table th:first-child,
 .career-table td:first-child{
-  width:168px!important;
-  min-width:168px!important;
+  width:190px!important;
+  min-width:190px!important;
+  max-width:190px!important;
   white-space:nowrap!important;
   overflow-wrap:normal!important;
   word-break:keep-all!important;
 }
 .career-table .career-year-link{
+  display:inline-block;
   white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  word-break:keep-all!important;
 }
 .career-table .career-row-title{
   display:block;
@@ -144,13 +149,15 @@
 }
 @media(max-width:760px){
   .career-table .career-year-col{
-    width:132px!important;
-    min-width:132px!important;
+    width:140px!important;
+    min-width:140px!important;
+    max-width:140px!important;
   }
   .career-table th:first-child,
   .career-table td:first-child{
-    width:132px!important;
-    min-width:132px!important;
+    width:140px!important;
+    min-width:140px!important;
+    max-width:140px!important;
   }
   #career-2019-2025,
   #career-2015-2019,
@@ -169,12 +176,14 @@
 }
 @media(max-width:420px){
   .career-table .career-year-col{
-    width:122px!important;
-    min-width:122px!important;
+    width:130px!important;
+    min-width:130px!important;
+    max-width:130px!important;
   }
   .career-table th:first-child,
   .career-table td:first-child{
-    width:122px!important;
-    min-width:122px!important;
+    width:130px!important;
+    min-width:130px!important;
+    max-width:130px!important;
   }
 }
