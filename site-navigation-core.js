@@ -424,7 +424,7 @@
     dock.innerHTML = [
       '<button class="qily-float-btn qily-float-home" data-action="home" type="button">首页</button>',
       '<button class="qily-float-btn qily-float-top" data-action="top" type="button">回<br>顶部</button>',
-      '<button class="qily-float-btn qily-float-back" data-action="back" type="button">返回<br>上一层</button>',
+      '<button class="qily-float-btn qily-float-back" data-action="back" type="button">回<br>上一层</button>',
       '<button class="qily-float-btn qily-float-search" data-action="search" type="button">本站<br>搜索</button>',
       '<button class="qily-float-btn qily-float-current" data-action="current" type="button">分享<br>当前页</button>',
       '<button class="qily-float-btn qily-float-contact" data-action="contact" type="button">交流</button>'

@@ -21,7 +21,7 @@ const MUSIC_WRAPPER_HREF = '/homepage-music.js?v=20260810-demand-music-wrapper-v
 const STATIC_INTERACTIONS_HREF = '/site-static-core-interactions-v1.js?v=20260810-no-new-badge-v3';
 const VISUAL_CLOSURE_HREF = '/site-visual-closure-v1.js?v=20260810-stable-layout-v5';
 const WIDE_LAYOUT_HREF = '/site-wide-layout-v1.css?v=20260810-content-axis-v8';
-const CORE_DOCK_HREF = '/site-core-service-dock-closure-v1.js?v=20260810-stable-dock-v5';
+const CORE_DOCK_HREF = '/site-core-service-dock-closure-v1.js?v=20260822-cooperation-dock-v10';
 const FLOATING_SERVICE_HREF = '/qilylean/floating-service.js?v=20260810-native-navigation-dedupe-v1';
 const REQUIRED_SOURCE_HTML = [
   'scripts/nda-source/nda-preview-template.html',
