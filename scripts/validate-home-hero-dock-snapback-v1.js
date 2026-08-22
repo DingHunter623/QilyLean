@@ -42,7 +42,7 @@ assert(navigation.includes('/site-floating-dock-standard-v1.css?v=20260819-dock-
 const home = read('index.html');
 assert(home.includes('/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3'), 'homepage does not reference Hero V3');
 assert(home.includes('/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3'), 'homepage does not reference Dock Snapback V3');
-assert(home.includes('/site-navigation.js?v=20260822-sitewide-visual-axis-v35'), 'homepage does not reference Navigation V35');
+assert(home.includes('/site-navigation.js?v=20260822-sitewide-visual-axis-v36'), 'homepage does not reference Navigation V36');
 assert(home.includes('font-size:clamp(40px,3.6vw,52px)!important'), 'homepage first-paint parity is not using the reduced hero headline tier');
 
 process.stdout.write('PASS: homepage Hero V3 is one tier smaller; floating Dock V3 is freely draggable during pointer hold and automatically returns to bottom-right without arbitrary-position persistence.\n');

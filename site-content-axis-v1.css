@@ -1,7 +1,8 @@
-/* QilyLean 全站内容窗口统一轴 V4｜2026-08-22
+/* QilyLean 全站内容窗口统一轴 V5｜2026-08-22
  * 目标：消除上下模块、不同页面之间 1080/1220/1240/1560px 内容窗口混用造成的浪费与错位。
  * 原则：统一内容窗口，不把弹窗/二维码/媒体等功能组件粗暴拉宽；移动端只重排，不通过缩字或横向溢出解决布局。
  * V4：封堵旧 Hero/专题页 1080/1180px 高优先级回退，并恢复编号徽章深底白字。
+ * V5：统一合作页 01–06 编号的尺寸、品牌青底、白字、白色内描边与品牌金外圈。
  */
 :root{
   --qily-content-axis:1560px;
@@ -209,8 +210,8 @@ html:root body main :is(.process,.process-grid,.steps,.workflow,.workflow-grid,.
   :is(.step,.process-step,.workflow-step,.timeline-step)>b:first-child{
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
-  background:#073c47!important;
-  background-color:#073c47!important;
+  background:#0f6570!important;
+  background-color:#0f6570!important;
   background-image:none!important;
   border-color:#fff!important;
   box-shadow:0 0 0 2px #caa15f,0 5px 13px rgba(7,60,71,.22)!important;
@@ -218,6 +219,24 @@ html:root body main :is(.process,.process-grid,.steps,.workflow,.workflow-grid,.
   filter:none!important;
   mix-blend-mode:normal!important;
   text-shadow:none!important;
+}
+
+/* 合作页历史规则按两个分区分别着色；在最终层统一六类服务编号。 */
+html:root body.cooperation-page main :is(#services,#engineering-enablers) .service-card .service-number{
+  width:48px!important;
+  height:48px!important;
+  min-width:48px!important;
+  min-height:48px!important;
+  padding:0!important;
+  border:2px solid #fff!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#0f6570!important;
+  background-color:#0f6570!important;
+  background-image:none!important;
+  box-shadow:0 0 0 2px #caa15f,0 5px 13px rgba(7,60,71,.22)!important;
+  font-size:18px!important;
+  line-height:1!important;
 }
 
 html:root body main :is(a[href],button,[role="button"],[role="link"])> :is(

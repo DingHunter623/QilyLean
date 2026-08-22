@@ -7,8 +7,8 @@ const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const versions = {
-  navigation: '/site-navigation.js?v=20260822-sitewide-visual-axis-v35',
-  contentAxis: '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v4',
+  navigation: '/site-navigation.js?v=20260822-sitewide-visual-axis-v36',
+  contentAxis: '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5',
   consistency: '/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13',
   dockOrder: '/site-dock-share-runtime-v1.js?v=20260822-dock-back-label-v3'
 };
@@ -30,12 +30,12 @@ const contentAxis = read('site-content-axis-v1.css');
 const home = read('index.html');
 const experience = read('experience/index.html');
 
-assert(navigation.includes("mode: 'atomic-first-paint-v35'"), 'Navigation wrapper is not V35.');
+assert(navigation.includes("mode: 'atomic-first-paint-v36'"), 'Navigation wrapper is not V36.');
 assert(navigation.includes("dockOrder: ['home','top','back','search','current','contact']"), 'Navigation contract has the wrong Dock order.');
 assert(navigation.includes('/site-navigation-core.js?v=20260822-dock-back-label-v27'), 'Navigation core cache key is stale.');
 assert(navigation.includes('/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23'), 'Navigation legacy cache key is stale.');
 assert(read('site-navigation-legacy-20260802.js').includes('/site-navigation-core.js?v=20260822-dock-back-label-v27'), 'Legacy navigation core cache key is stale.');
-assert(navigation.includes('/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v4'), 'Content-axis cache key is stale.');
+assert(navigation.includes('/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5'), 'Content-axis cache key is stale.');
 assert(dockClosure.includes("var order = ['home', 'top', 'back', 'search', 'current', 'contact'];"), 'Dock closure order is stale.');
 assert(!core.includes('data-action="share"'), 'Duplicate official-site share button returned to the core Dock.');
 assert(core.includes('data-action="back" type="button">回<br>上一层</button>'), 'Core Dock back label is not 回上一层.');
@@ -61,7 +61,8 @@ assert(contentAxis.includes('.article-hub-inner'), 'Article-hub content axis gua
 assert(contentAxis.includes('.daily-hero,.daily-index-section,.daily-single-section'), 'Daily hero/content alignment guard is missing.');
 assert(contentAxis.includes('html:root body main :is('), 'Final number-badge contrast guard is missing.');
 assert(contentAxis.includes('-webkit-text-fill-color:#fff!important'), 'Number-badge white text guard is missing.');
-assert(contentAxis.includes('background-color:#073c47!important'), 'Number-badge dark background guard is missing.');
+assert(contentAxis.includes('background-color:#0f6570!important'), 'Number-badge brand-teal background guard is missing.');
+assert(contentAxis.includes('body.cooperation-page main :is(#services,#engineering-enablers) .service-card .service-number'), 'Cooperation 01–06 badge unification guard is missing.');
 assert(home.includes('<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START -->'), 'Homepage C919 V4 start marker missing.');
 assert(home.indexOf('QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START') < home.indexOf('<section class="hero">'), 'C919 is not the first homepage content visual.');
 assert(home.includes('/qilylean/c919-strategy-hero-v14.png'), 'Homepage latest V14 aircraft visual asset missing.');
