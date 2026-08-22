@@ -8,8 +8,8 @@ const { execFileSync } = require('child_process');
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
 const versions = {
-  navigation: '/site-navigation.js?v=20260822-sitewide-remediation-v32',
-  contentAxis: '/site-content-axis-v1.css?v=20260822-unified-content-axis-v2',
+  navigation: '/site-navigation.js?v=20260822-sitewide-remediation-v33',
+  contentAxis: '/site-content-axis-v1.css?v=20260822-unified-content-axis-v3',
   consistency: '/site-ui-consistency-v1.js?v=20260822-remediation-v12',
   dockOrder: '/site-dock-share-runtime-v1.js?v=20260822-dock-order-v2'
 };

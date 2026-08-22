@@ -7,8 +7,8 @@ const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const versions = {
-  navigation: '/site-navigation.js?v=20260822-sitewide-remediation-v32',
-  contentAxis: '/site-content-axis-v1.css?v=20260822-unified-content-axis-v2',
+  navigation: '/site-navigation.js?v=20260822-sitewide-remediation-v33',
+  contentAxis: '/site-content-axis-v1.css?v=20260822-unified-content-axis-v3',
   consistency: '/site-ui-consistency-v1.js?v=20260822-remediation-v12',
   dockOrder: '/site-dock-share-runtime-v1.js?v=20260822-dock-order-v2'
 };
@@ -28,10 +28,10 @@ const contentAxis = read('site-content-axis-v1.css');
 const home = read('index.html');
 const experience = read('experience/index.html');
 
-assert(navigation.includes("mode: 'atomic-first-paint-v32'"), 'Navigation wrapper is not V32.');
+assert(navigation.includes("mode: 'atomic-first-paint-v33'"), 'Navigation wrapper is not V33.');
 assert(navigation.includes("dockOrder: ['home','top','back','search','current','contact']"), 'Navigation contract has the wrong Dock order.');
 assert(navigation.includes('/site-navigation-core.js?v=20260822-remediation-v26'), 'Navigation core cache key is stale.');
-assert(navigation.includes('/site-content-axis-v1.css?v=20260822-unified-content-axis-v2'), 'Content-axis cache key is stale.');
+assert(navigation.includes('/site-content-axis-v1.css?v=20260822-unified-content-axis-v3'), 'Content-axis cache key is stale.');
 assert(dockClosure.includes("var order = ['home', 'top', 'back', 'search', 'current', 'contact'];"), 'Dock closure order is stale.');
 assert(!core.includes('data-action="share"'), 'Duplicate official-site share button returned to the core Dock.');
 

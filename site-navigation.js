@@ -1,4 +1,4 @@
-/* QilyLean navigation runtime v32｜2026-08-22
+/* QilyLean navigation runtime v33｜2026-08-22
  * Hotfix closure:
  * 1) top-level /links/ navigation label is always “资源协同”;
  * 2) floating dock remains freely draggable while pressed and always returns to bottom-right after release/cancel/resize/pageshow;
@@ -7,15 +7,15 @@
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV32) return;
-  w.__qilyStaticFirstNavigationV32 = true;
+  if (w.__qilyStaticFirstNavigationV33) return;
+  w.__qilyStaticFirstNavigationV33 = true;
 
   var CORE_SRC = '/site-navigation-core.js?v=20260822-remediation-v26';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260822-remediation-v22';
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260822-remediation-v12';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6';
-  var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260822-unified-content-axis-v2';
+  var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260822-unified-content-axis-v3';
   var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3';
   var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3';
   var GEOMETRY_SRC = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';
@@ -91,8 +91,8 @@
   }
 
   function bindPermanentClosure() {
-    if (w.__qilyResourceCollabDockHomeBoundV32) return;
-    w.__qilyResourceCollabDockHomeBoundV32 = true;
+    if (w.__qilyResourceCollabDockHomeBoundV33) return;
+    w.__qilyResourceCollabDockHomeBoundV33 = true;
 
     d.addEventListener('pointerup', function () { w.requestAnimationFrame(snapDockHome); }, false);
     d.addEventListener('pointercancel', function () { w.requestAnimationFrame(snapDockHome); }, false);
@@ -166,7 +166,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v32',
+  mode: 'atomic-first-paint-v33',
   staticHtmlAuthority: true,
   runtimeDependencyWaterfall: false,
   routeScopedLegacy: true,
@@ -185,5 +185,5 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   resourceCollaborationPrimaryLabel: true,
   friendLinksPageIdentityPreserved: true,
   unifiedOnePieceArrows: true,
-  version: '20260822-sitewide-remediation-v32'
+  version: '20260822-sitewide-remediation-v33'
 });

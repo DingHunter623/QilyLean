@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 'use strict';
 
+// Compatibility entry point for workflows retained under the historical V31 filename.
+// The authoritative contract is Navigation V33 + the six-action Dock remediation.
+require('./validate-sitewide-remediation-20260822');
+process.exit(0);
+
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
