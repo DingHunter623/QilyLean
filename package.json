@@ -5,7 +5,7 @@
     "build:daily": "node scripts/publish-curated-daily.js",
     "test:daily": "node scripts/validate-weekly-brief-curation.js && node scripts/validate-current-daily-publication.js",
     "test:seo": "node scripts/validate-seo-indexability.js",
-    "test:visual": "node scripts/validate-public-shell-v31.js && node scripts/validate-home-hero-dock-snapback-v1.js",
+    "test:visual": "node scripts/validate-sitewide-remediation-20260822.js && node scripts/validate-home-hero-dock-snapback-v1.js && node scripts/site-regression-guard-c919-hero.js && node scripts/publish-early-career-history.js --check && node scripts/publish-sitewide-remediation-20260822.js --check",
     "test:first-paint": "node scripts/validate-home-hero-dock-snapback-v1.js",
     "deploy:worker": "wrangler deploy",
     "test:maintenance": "node scripts/test-maintenance-fixes.js",

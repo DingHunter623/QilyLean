@@ -1,7 +1,7 @@
 /* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V9｜2026-08-20
  * 目标：
  * 1) 项目合作页直接使用已经物化的静态六类能力/边界，不再运行时重复插入正文；
- * 2) 悬浮“分享官网”与其它 Dock 按钮采用相同文字结构与字号继承；
+ * 2) 删除重复的“分享官网”，保留“分享当前页”；
  * 3) 删除延时重试，改用静态DOM就绪与shell-ready事件，避免首屏后再次改变布局。
  */
 (function(d,w){
@@ -85,13 +85,14 @@
     var labels={
       home:{html:'首页',aria:'首页'},
       top:{html:'回<br>顶部',aria:'回顶部'},
-      back:{html:'回<br>上一层',aria:'回上一层'},
+      back:{html:'返回<br>上一层',aria:'返回上一层'},
       search:{html:'本站<br>搜索',aria:'本站搜索'},
       current:{html:'分享<br>当前页',aria:'分享当前页'},
-      share:{html:'分享<br>官网',aria:'分享官网'},
       contact:{html:'交流',aria:'交流'}
     };
-    var order=['home','top','back','search','current','share','contact'];
+    var order=['home','top','back','search','current','contact'];
+
+    dock.querySelectorAll('[data-action="share"]').forEach(function(button){button.remove();});
 
     var buttons=order.map(function(action){
       var button=action==='top'?top:dock.querySelector('[data-action="'+action+'"]');

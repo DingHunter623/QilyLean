@@ -8,7 +8,7 @@ const { materializeExperienceCareerBaseline } = require('./site-career-baseline-
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20260811-cooper-bussmann-v4';
+const version = '20260822-company-links-v5';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
@@ -44,7 +44,7 @@ const companies = {
   cooper: {
     english: 'Dongguan Cooper Electronics Co., Ltd.',
     chinese: '东莞库柏电子有限公司｜Cooper Bussmann（现 Eaton Bussmann）保险丝制造',
-    website: 'https://www.eaton.com.cn/cn/zh-cn.html',
+    website: 'https://www.eaton.com.cn/cn/zh-cn/products/electronic-components/circuit-protection/fuses.html',
     websiteLabel: '现集团官方网站：Eaton｜伊顿（Bussmann 系列）'
   },
   flex: {
@@ -132,7 +132,7 @@ function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
 
-function validate(archive, experience, enhancer) {
+function validate(archive, experience, careerResume, enhancer) {
   [archive, experience].forEach((content, index) => {
     const label = index === 0 ? 'daily-insights' : 'experience';
     assert(content.includes('site-early-career-history-v1.css?v=' + version), `${label}: stylesheet missing`);
@@ -163,6 +163,16 @@ function validate(archive, experience, enhancer) {
     assert(enhancer.includes(company.website), `enhancer: ${key} official website missing`);
   });
 
+  ['jinggon', 'gaosheng', 'mason', 'hengrun', 'cooper', 'flex'].forEach((key) => {
+    const company = companies[key];
+    assert(experience.includes(company.english), `experience: ${key} English company name missing`);
+    assert(experience.includes(company.chinese), `experience: ${key} Chinese company name missing`);
+    assert(experience.includes(`href="${company.website}"`), `experience: ${key} official website missing`);
+    assert(careerResume.includes(company.english), `career resume: ${key} English company name missing`);
+    assert(careerResume.includes(company.chinese), `career resume: ${key} Chinese company name missing`);
+    assert(careerResume.includes(`href="${company.website}"`), `career resume: ${key} official website missing`);
+  });
+
   assert(enhancer.includes('Cooper Bussmann（现 Eaton Bussmann）'), 'enhancer: Cooper Bussmann brand history missing');
   assert(enhancer.includes('2019.07—2025.08｜广东精工智能系统 / 广东高胜互联科技（集团内调动）'), 'enhancer: 2019-2025 exact career period missing');
   assert(enhancer.includes('2015.07—2019.06｜深圳万润科技·广东恒润光电有限公司（上市公司：万润科技）'), 'enhancer: 2015-2019 exact career period missing');
@@ -173,18 +183,22 @@ function validate(archive, experience, enhancer) {
 
 const archivePath = 'qilylean/daily-insights.html';
 const experiencePath = 'experience/index.html';
+const careerResumePath = 'qilylean/career-resume-full.js';
 const enhancerPath = 'site-early-career-history-v1.js';
 const originalArchive = read(archivePath);
 const originalExperience = read(experiencePath);
+const originalCareerResume = read(careerResumePath);
 const enhancer = read(enhancerPath);
 const nextArchive = updateCareerTable(injectResources(originalArchive, archivePath));
 const nextExperience = materializeExperienceCareerBaseline(injectResources(originalExperience, experiencePath));
+const nextCareerResume = materializeExperienceCareerBaseline(originalCareerResume);
 
-validate(nextArchive, nextExperience, enhancer);
+validate(nextArchive, nextExperience, nextCareerResume, enhancer);
 
 const changes = [];
 if (nextArchive !== originalArchive) changes.push(archivePath);
 if (nextExperience !== originalExperience) changes.push(experiencePath);
+if (nextCareerResume !== originalCareerResume) changes.push(careerResumePath);
 
 if (checkOnly) {
   if (changes.length) {
@@ -196,4 +210,5 @@ if (checkOnly) {
 
 if (nextArchive !== originalArchive) write(archivePath, nextArchive);
 if (nextExperience !== originalExperience) write(experiencePath, nextExperience);
+if (nextCareerResume !== originalCareerResume) write(careerResumePath, nextCareerResume);
 process.stdout.write(`Career company websites updated ${changes.length} file(s): ${changes.join(', ') || 'none'}.\n`);
