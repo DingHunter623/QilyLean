@@ -1,6 +1,7 @@
-/* QilyLean 全站内容窗口统一轴 V3｜2026-08-22
+/* QilyLean 全站内容窗口统一轴 V4｜2026-08-22
  * 目标：消除上下模块、不同页面之间 1080/1220/1240/1560px 内容窗口混用造成的浪费与错位。
  * 原则：统一内容窗口，不把弹窗/二维码/媒体等功能组件粗暴拉宽；移动端只重排，不通过缩字或横向溢出解决布局。
+ * V4：封堵旧 Hero/专题页 1080/1180px 高优先级回退，并恢复编号徽章深底白字。
  */
 :root{
   --qily-content-axis:1560px;
@@ -23,7 +24,8 @@ html body main>section{
 /* 已有模块类可能自带更高优先级的响应式 padding；在公共壳层明确覆盖，保证平板与手机仍共用同一轴。 */
 html body main> :is(
   .module-hero,.module-section,.qily-asset-section,.qily-system-axis,
-  .qily-ia-section,.daily-section,.section
+  .qily-ia-section,.daily-hero,.daily-index-section,.daily-single-section,
+  .daily-section,.article-hub,.tool-hero,.tool-section,.section
 ){
   padding-left:var(--qily-content-axis-gutter)!important;
   padding-right:var(--qily-content-axis-gutter)!important;
@@ -35,6 +37,7 @@ html body :is(
   .qily-system-axis__inner,
   .qily-ia-inner,
   .module-inner,
+  .article-hub-inner,
   .section-inner,
   .page-inner,
   .content-inner,
@@ -48,6 +51,30 @@ html body :is(
 ){
   width:min(var(--qily-content-axis),100%)!important;
   max-width:var(--qily-content-axis)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+
+/*
+ * 旧页面常用“外层类 > 内层类”并带 !important，单类公共选择器无法赢得级联。
+ * 这里以 main 直属模块为作用域提高精确度，使 Hero、正文、目录与卡片区真正共用同一左右边界。
+ */
+html body main> :is(
+  .module-hero,.module-section,.qily-asset-section,.qily-system-axis,
+  .qily-ia-section,.daily-hero,.daily-index-section,.daily-single-section,
+  .daily-section,.article-hub,.tool-hero,.tool-section,.section,
+  .qily-resource-network,.qtc-section
+)> :is(
+  .qily-asset-inner,.qily-system-axis__inner,.qily-ia-inner,
+  .module-inner,.article-hub-inner,.section-inner,.daily-inner,
+  .tool-inner,.qily-resource-network__inner,.qtc-inner,
+  .page-inner,.content-inner,.archive-inner,.knowledge-inner,
+  .project-inner,.main-inner,.inner,.wrap,.container
+){
+  width:min(var(--qily-content-axis),100%)!important;
+  max-width:var(--qily-content-axis)!important;
+  min-width:0!important;
   margin-left:auto!important;
   margin-right:auto!important;
   box-sizing:border-box!important;
@@ -126,6 +153,38 @@ html body main :is(
   word-break:normal!important;
 }
 
+/* 内容本身决定换行；历史 nowrap 不能再把标题、说明、标签或操作项撑出模块。 */
+html body main>section :is(
+  .module-inner,.article-hub-inner,.section-inner,.daily-inner,.tool-inner,
+  .qily-system-axis__inner,.qily-ia-inner,.qily-resource-network__inner,
+  .qtc-inner,.page-inner,.content-inner,.archive-inner,.knowledge-inner,
+  .project-inner,.main-inner,.inner,.wrap,.container
+) :is(h1,h2,h3,h4,h5,h6,p,li,dd,dt,a,button,span,strong,small,th,td,label):not(.qily-no-break){
+  min-width:0!important;
+  max-width:100%!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+
+html body main>section :is(
+  .module-inner,.article-hub-inner,.section-inner,.daily-inner,.tool-inner,
+  .qily-system-axis__inner,.qily-ia-inner,.qily-resource-network__inner,
+  .qtc-inner,.page-inner,.content-inner,.archive-inner,.knowledge-inner,
+  .project-inner,.main-inner,.inner,.wrap,.container
+) :is(h1,h2,h3,h4,h5,h6,p,li,dd,dt,a,button,span,strong,small,label):not(.qily-no-break){
+  white-space:normal!important;
+}
+
+html body main :is(
+  .article-links,.module-subnav,.hero-actions,.module-actions,.card-actions,
+  .brief-adjacent,.daily-index-heading,.qily-ia-actions
+){
+  max-width:100%!important;
+  min-width:0!important;
+  flex-wrap:wrap!important;
+  box-sizing:border-box!important;
+}
+
 /* 07｜轻色内容模块统一底色和文字色；深色 Hero/图表仍由各自语义样式控制。 */
 html body main> :is(.module-section,.qily-asset-section,.qily-ia-section,.daily-section,.section){
   color:var(--qily-ink,#182420)!important;
@@ -141,11 +200,43 @@ html body main :is(.module-section,.qily-asset-section,.qily-ia-section,.daily-s
   color:var(--qily-content-copy);
 }
 
+/* 07A｜编号徽章最终保险层：深青实底、纯白文字、白色内描边、品牌金外圈。 */
+html:root body main :is(
+  .service-number,.step-number,.step-index,.sequence-number,.process-number,
+  .number-badge,.workflow-number,.timeline-number
+),
+html:root body main :is(.process,.process-grid,.steps,.workflow,.workflow-grid,.timeline,.flow-grid)
+  :is(.step,.process-step,.workflow-step,.timeline-step)>b:first-child{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#073c47!important;
+  background-color:#073c47!important;
+  background-image:none!important;
+  border-color:#fff!important;
+  box-shadow:0 0 0 2px #caa15f,0 5px 13px rgba(7,60,71,.22)!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+
+html:root body main :is(a[href],button,[role="button"],[role="link"])> :is(
+  .service-number,.step-number,.step-index,.sequence-number,.process-number,
+  .number-badge,.workflow-number,.timeline-number
+),
+html:root body main :is(
+  .service-number,.step-number,.step-index,.sequence-number,.process-number,
+  .number-badge,.workflow-number,.timeline-number
+) *{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
 /* 08｜平板/手机保持同一逻辑：占满可用宽度，不制造额外窄框。 */
 @media(max-width:900px){
   html body :is(
     .qily-asset-inner,.qily-system-axis__inner,.qily-ia-inner,
-    .module-inner,.section-inner,.page-inner,.content-inner,
+    .module-inner,.article-hub-inner,.section-inner,.page-inner,.content-inner,
     .archive-inner,.knowledge-inner,.project-inner,.tool-inner,
     .daily-inner,.main-inner,.footer-inner
   ){
