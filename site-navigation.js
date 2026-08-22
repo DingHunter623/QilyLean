@@ -1,21 +1,21 @@
-/* QilyLean navigation runtime v35｜2026-08-22
+/* QilyLean navigation runtime v36｜2026-08-22
  * Hotfix closure:
  * 1) top-level /links/ navigation label is always “资源协同”;
  * 2) floating dock remains freely draggable while pressed and always returns to bottom-right after release/cancel/resize/pageshow;
  * 3) legacy persisted dock positions are removed;
- * 4) current V4 content-axis / dock / Hero / geometry assets are loaded with fresh cache keys.
+ * 4) current V5 content-axis / dock / Hero / geometry assets are loaded with fresh cache keys.
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV35) return;
-  w.__qilyStaticFirstNavigationV35 = true;
+  if (w.__qilyStaticFirstNavigationV36) return;
+  w.__qilyStaticFirstNavigationV36 = true;
 
   var CORE_SRC = '/site-navigation-core.js?v=20260822-dock-back-label-v27';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23';
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6';
-  var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v4';
+  var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5';
   var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3';
   var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3';
   var GEOMETRY_SRC = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';
@@ -166,7 +166,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v35',
+  mode: 'atomic-first-paint-v36',
   staticHtmlAuthority: true,
   runtimeDependencyWaterfall: false,
   routeScopedLegacy: true,
@@ -185,5 +185,5 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   resourceCollaborationPrimaryLabel: true,
   friendLinksPageIdentityPreserved: true,
   unifiedOnePieceArrows: true,
-  version: '20260822-sitewide-visual-axis-v35'
+  version: '20260822-sitewide-visual-axis-v36'
 });
