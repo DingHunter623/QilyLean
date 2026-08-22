@@ -5,25 +5,21 @@ const fs = require('fs');
 const path = require('path');
 const root = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const retainedAssets = [
-  path.join(root, 'qilylean', 'c919-strategy-hero-approved-20260818.png'),
-  path.join(root, 'qilylean', 'c919-strategy-hero-v13.png')
-];
+const asset = path.join(root, 'qilylean', 'c919-strategy-hero-v12.webp');
+const css = fs.readFileSync(path.join(root, 'styles', 'qily-c919-digital-flagship-hero-v1.css'), 'utf8');
 
 function assert(ok, msg) {
   if (!ok) throw new Error(msg);
 }
 
-// Temporary release policy: retain C919 artwork sources, but do not render the model or its overview anywhere on the homepage.
-assert(!html.includes('<!-- QILY-C919-STRATEGY-HERO:START -->'), 'C919 homepage hero start marker must remain offline');
-assert(!html.includes('<!-- QILY-C919-STRATEGY-HERO:END -->'), 'C919 homepage hero end marker must remain offline');
-assert(!html.includes('<!-- QILY-C919-HERO-STYLES:START -->'), 'C919 homepage hero styles must remain offline');
-assert(!html.includes('<!-- QILY-C919-HERO-STYLES:END -->'), 'C919 homepage hero styles must remain offline');
-assert(!/qily-c919-flightmap/i.test(html), 'C919 homepage flight-map markup unexpectedly returned');
-assert(!/c919-strategy-hero/i.test(html), 'Homepage still contains a C919 model reference, preload, or social-image hook');
+assert(html.includes('<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START -->'), 'C919 V4 homepage start marker missing');
+assert(html.includes('<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:END -->'), 'C919 V4 homepage end marker missing');
+assert(html.includes('/styles/qily-c919-digital-flagship-hero-v1.css?v=20260822-c919-remediation-v4'), 'C919 V4 stylesheet missing');
+assert(html.includes('/qilylean/c919-strategy-hero-v12.webp'), 'C919 V12 model asset is not rendered');
+assert(html.indexOf('QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START') < html.indexOf('<section class="hero">'), 'C919 is not the first homepage content visual');
+assert(!html.includes('QILY-C919-DIGITAL-FLAGSHIP-HERO-V1'), 'Retired C919 V1 markup returned');
+assert(!html.includes('QILY-C919-DIGITAL-FLAGSHIP-HERO-V2'), 'Retired C919 V2 markup returned');
+assert(fs.existsSync(asset), `C919 V12 asset is missing: ${path.basename(asset)}`);
+assert(css.includes('C919 Digital Flagship Hero V4'), 'C919 stylesheet is not V4');
 
-for (const asset of retainedAssets) {
-  assert(fs.existsSync(asset), `Retained C919 source asset is missing: ${path.basename(asset)}`);
-}
-
-console.log('C919 homepage guard passed: model and overview remain offline; source artwork retained for future optimized release.');
+console.log('PASS: C919 V4 is the homepage first content visual and the V12 asset is present.');

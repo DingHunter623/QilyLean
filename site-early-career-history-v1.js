@@ -38,7 +38,7 @@
     cooper: {
       english: 'Dongguan Cooper Electronics Co., Ltd.',
       chinese: '东莞库柏电子有限公司｜Cooper Bussmann（现 Eaton Bussmann）保险丝制造',
-      website: 'https://www.eaton.com.cn/cn/zh-cn.html',
+      website: 'https://www.eaton.com.cn/cn/zh-cn/products/electronic-components/circuit-protection/fuses.html',
       websiteLabel: '现集团官方网站：Eaton｜伊顿（Bussmann 系列）'
     },
     flex: {

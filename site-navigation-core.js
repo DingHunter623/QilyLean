@@ -410,7 +410,7 @@
   }
 
   function buildDock() {
-    ['floatDock', 'wxMask', 'shareMask', 'qilySearchMask', 'qilyDockToast'].forEach(function (id) {
+    ['floatDock', 'wxMask', 'qilySearchMask', 'qilyDockToast'].forEach(function (id) {
       var old = document.getElementById(id);
       if (old) old.remove();
     });
@@ -424,19 +424,12 @@
     dock.innerHTML = [
       '<button class="qily-float-btn qily-float-home" data-action="home" type="button">首页</button>',
       '<button class="qily-float-btn qily-float-top" data-action="top" type="button">回<br>顶部</button>',
-      '<button class="qily-float-btn qily-float-search" data-action="search" type="button">本站<br>搜索</button>',
       '<button class="qily-float-btn qily-float-back" data-action="back" type="button">返回<br>上一层</button>',
+      '<button class="qily-float-btn qily-float-search" data-action="search" type="button">本站<br>搜索</button>',
       '<button class="qily-float-btn qily-float-current" data-action="current" type="button">分享<br>当前页</button>',
-      '<button class="qily-float-btn qily-float-share" data-action="share" type="button" aria-label="分享官网" title="分享官网">分享<br>官网</button>',
       '<button class="qily-float-btn qily-float-contact" data-action="contact" type="button">交流</button>'
     ].join('');
     document.body.appendChild(dock);
-
-    var shareMask = document.createElement('div');
-    shareMask.id = 'shareMask';
-    shareMask.className = 'qily-modal-mask';
-    shareMask.innerHTML = '<div class="qily-modal-panel" role="dialog" aria-modal="true" aria-labelledby="qilyShareTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><div class="qily-modal-brand">QilyLean</div><h3 id="qilyShareTitle">分享“启力精益”官网</h3><img class="qily-share-qr" src="' + HOME_QR_SRC + '" alt="QilyLean官网二维码" loading="eager"><span class="qily-share-url">' + HOME_URL + '</span><div class="qily-modal-actions"><button type="button" data-share="system">系统分享</button><button type="button" data-share="copy">复制网址</button></div><p class="qily-modal-note">扫码或复制官网地址访问 “QilyLean 启力精益”</p></div>';
-    document.body.appendChild(shareMask);
 
     var contactMask = document.createElement('div');
     contactMask.id = 'wxMask';
@@ -464,20 +457,11 @@
       }
       else if (action === 'back') location.href = backUrl;
       else if (action === 'current') shareCurrentPage();
-      else if (action === 'share') shareMask.classList.add('show');
       else if (action === 'contact') contactMask.classList.add('show');
     }
 
-    shareMask.querySelector('.qily-modal-close').addEventListener('click', function () { closeMask(shareMask); });
     contactMask.querySelector('.qily-modal-close').addEventListener('click', function () { closeMask(contactMask); });
-    shareMask.addEventListener('click', function (event) { if (event.target === shareMask) closeMask(shareMask); });
     contactMask.addEventListener('click', function (event) { if (event.target === contactMask) closeMask(contactMask); });
-    shareMask.querySelector('[data-share="copy"]').addEventListener('click', function () {
-      copyText(HOME_URL).then(function () { showToast('官方网址已复制'); closeMask(shareMask); });
-    });
-    shareMask.querySelector('[data-share="system"]').addEventListener('click', function () {
-      shareUrl('QilyLean｜制造改善与项目实践主页', HOME_URL, '官方网址已复制');
-    });
     contactMask.querySelector('.qily-copy-email').addEventListener('click', function () {
       copyText(CONTACT_EMAIL).then(function () { showToast('官网邮箱已复制'); });
     });
@@ -578,7 +562,6 @@
     window.addEventListener('pageshow', snapDockHome, { passive: true });
     document.addEventListener('keydown', function (event) {
       if (event.key !== 'Escape') return;
-      closeMask(shareMask);
       closeMask(contactMask);
       closeMask(document.getElementById('qilySearchMask'));
     });

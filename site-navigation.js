@@ -1,4 +1,4 @@
-/* QilyLean navigation runtime v31｜2026-08-20
+/* QilyLean navigation runtime v32｜2026-08-22
  * Hotfix closure:
  * 1) top-level /links/ navigation label is always “资源协同”;
  * 2) floating dock remains freely draggable while pressed and always returns to bottom-right after release/cancel/resize/pageshow;
@@ -7,15 +7,15 @@
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV31) return;
-  w.__qilyStaticFirstNavigationV31 = true;
+  if (w.__qilyStaticFirstNavigationV32) return;
+  w.__qilyStaticFirstNavigationV32 = true;
 
-  var CORE_SRC = '/site-navigation-core.js?v=20260820-resource-collab-dock-home-v25';
-  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260820-resource-collab-dock-home-v21';
-  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260817-atomic-first-paint-v8';
+  var CORE_SRC = '/site-navigation-core.js?v=20260822-remediation-v26';
+  var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260822-remediation-v22';
+  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260822-remediation-v12';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6';
-  var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260819-unified-content-axis-v1';
+  var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260822-unified-content-axis-v2';
   var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3';
   var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3';
   var GEOMETRY_SRC = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';
@@ -91,8 +91,8 @@
   }
 
   function bindPermanentClosure() {
-    if (w.__qilyResourceCollabDockHomeBoundV31) return;
-    w.__qilyResourceCollabDockHomeBoundV31 = true;
+    if (w.__qilyResourceCollabDockHomeBoundV32) return;
+    w.__qilyResourceCollabDockHomeBoundV32 = true;
 
     d.addEventListener('pointerup', function () { w.requestAnimationFrame(snapDockHome); }, false);
     d.addEventListener('pointercancel', function () { w.requestAnimationFrame(snapDockHome); }, false);
@@ -147,10 +147,10 @@
     loadScript('qilySiteNavigationCoreScript', CORE_SRC, function () {
       closeRuntimeGap();
       if (needsLegacyRuntime()) {
-        loadScript('qilySiteNavigationLegacyScriptV31', LEGACY_SRC, closeRuntimeGap);
+        loadScript('qilySiteNavigationLegacyScriptV32', LEGACY_SRC, closeRuntimeGap);
       }
-      if (!w.__qilyUiConsistencyV2 && !d.querySelector('script[src*="/site-ui-consistency-v1.js"]')) {
-        loadScript('qilyUiConsistencyRuntimeV31', CONSISTENCY_SRC, closeRuntimeGap);
+      if (!w.__qilyUiConsistencyV3 && !d.querySelector('script[src*="/site-ui-consistency-v1.js"]')) {
+        loadScript('qilyUiConsistencyRuntimeV32', CONSISTENCY_SRC, closeRuntimeGap);
       }
     });
   }
@@ -166,7 +166,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v31',
+  mode: 'atomic-first-paint-v32',
   staticHtmlAuthority: true,
   runtimeDependencyWaterfall: false,
   routeScopedLegacy: true,
@@ -180,9 +180,10 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   dockAutoHome: 'bottom-right',
   dockViewportBoundaryClamp: true,
   dockMobileDesktopParity: true,
+  dockOrder: ['home','top','back','search','current','contact'],
   dockUniformFontSize: true,
   resourceCollaborationPrimaryLabel: true,
   friendLinksPageIdentityPreserved: true,
   unifiedOnePieceArrows: true,
-  version: '20260820-resource-collab-dock-home-v31'
+  version: '20260822-sitewide-remediation-v32'
 });

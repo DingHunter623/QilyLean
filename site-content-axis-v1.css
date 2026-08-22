@@ -1,4 +1,4 @@
-/* QilyLean 全站内容窗口统一轴 V1｜2026-08-19
+/* QilyLean 全站内容窗口统一轴 V2｜2026-08-22
  * 目标：消除上下模块、不同页面之间 1080/1220/1240/1560px 内容窗口混用造成的浪费与错位。
  * 原则：统一内容窗口，不把弹窗/二维码/媒体等功能组件粗暴拉宽；移动端只重排，不通过缩字或横向溢出解决布局。
  */
@@ -6,10 +6,21 @@
   --qily-content-axis:1560px;
   --qily-container:1560px!important;
   --qily-wide-content:1560px;
-  --qily-content-axis-gutter:clamp(18px,4vw,56px);
+  --qily-content-axis-gutter:clamp(18px,2.2vw,56px);
+  --qily-content-surface:#ffffff;
+  --qily-content-surface-alt:#f3f8f7;
+  --qily-content-heading:#0f4b5a;
+  --qily-content-copy:#526967;
 }
 
-/* 01｜全站主要内容窗口统一使用同一条 1560px 轴。 */
+/* 01｜所有 main 直属模块使用同一水平 gutter，消除 Hero、运营轴、正文与卡片左右错位。 */
+html body main>section{
+  padding-left:var(--qily-content-axis-gutter)!important;
+  padding-right:var(--qily-content-axis-gutter)!important;
+  box-sizing:border-box!important;
+}
+
+/* 02｜全站主要内容窗口统一使用同一条 1560px 轴。 */
 html body :is(
   .qily-asset-inner,
   .qily-system-axis__inner,
@@ -33,7 +44,16 @@ html body :is(
   box-sizing:border-box!important;
 }
 
-/* 02｜首页资产卡、制造运营轴与商业内容模块必须同宽，不得再出现 1240px 对 1560px 的上下错位。 */
+/* 通用 .inner 只在 main 直属模块内接管，避免弹窗和局部组件被误拉宽。 */
+html body main>section>:is(.inner,.wrap,.container){
+  width:min(var(--qily-content-axis),100%)!important;
+  max-width:var(--qily-content-axis)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+
+/* 03｜首页资产卡、制造运营轴与商业内容模块必须同宽，不得再出现 1240px 对 1560px 的上下错位。 */
 html body :is(
   .qily-principle-grid,
   .qily-six-grid,
@@ -49,7 +69,7 @@ html body :is(
   box-sizing:border-box!important;
 }
 
-/* 03｜标题/说明窗口跟随所在内容轴，避免“卡片已放宽、标题仍锁在窄框”。 */
+/* 04｜标题/说明窗口跟随所在内容轴，避免“卡片已放宽、标题仍锁在窄框”。 */
 html body :is(
   .qily-asset-heading,
   .qily-ia-heading,
@@ -63,8 +83,9 @@ html body :is(
   box-sizing:border-box!important;
 }
 
-/* 04｜首页首屏由专项 Hero 规则控制，不在此处改变人物列比例；仅保证正文模块同轴。 */
+/* 05｜首页首屏由专项 Hero 规则控制，不改变人物列比例；只统一左右边界。 */
 html body.qily-home-v3 main :is(
+  .hero-grid,
   .qily-asset-inner,
   .qily-system-axis__inner,
   .qily-ia-inner
@@ -73,7 +94,45 @@ html body.qily-home-v3 main :is(
   max-width:var(--qily-content-axis)!important;
 }
 
-/* 05｜平板/手机保持同一逻辑：占满可用宽度，不制造额外窄框。 */
+/* 06｜所有网格子项允许按内容自然换行，长中英文、链接和标签不得撑破内容框。 */
+html body main :is(
+  .qily-six-grid,.qily-principle-grid,.qily-proof-strip,.qily-secondary-links,
+  .qily-system-axis__steps,.qily-ia-grid,.module-grid,.project-grid,
+  .career-full-grid,.service-grid,.brief-highlight-grid,.brief-one-point-grid,
+  .formula-grid,.owner-grid,.status-grid,.brief-learning-grid
+)>*{
+  min-width:0!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+
+html body main :is(
+  .qily-value-card,.qily-principle,.qily-proof-item,.qily-secondary-links>a,
+  .qily-system-axis__step,.module-card,.project-card,.career-full-card,.service-card,
+  .brief-card,.paper,.post,.article,.record,.contact-card
+) :is(h1,h2,h3,h4,h5,h6,p,li,a,span,strong,small,td,th){
+  min-width:0!important;
+  max-width:100%!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+
+/* 07｜轻色内容模块统一底色和文字色；深色 Hero/图表仍由各自语义样式控制。 */
+html body main> :is(.module-section,.qily-asset-section,.qily-ia-section,.daily-section,.section){
+  color:var(--qily-ink,#182420)!important;
+  background-color:var(--qily-content-surface)!important;
+}
+html body main> :is(.module-section,.qily-asset-section,.qily-ia-section,.daily-section,.section).alt{
+  background-color:var(--qily-content-surface-alt)!important;
+}
+html body main :is(.module-section,.qily-asset-section,.qily-ia-section,.daily-section,.section) :is(h1,h2,h3,h4){
+  color:var(--qily-content-heading)!important;
+}
+html body main :is(.module-section,.qily-asset-section,.qily-ia-section,.daily-section,.section) :is(p,li,dd,td){
+  color:var(--qily-content-copy);
+}
+
+/* 08｜平板/手机保持同一逻辑：占满可用宽度，不制造额外窄框。 */
 @media(max-width:900px){
   html body :is(
     .qily-asset-inner,.qily-system-axis__inner,.qily-ia-inner,
