@@ -1,0 +1,60 @@
+name: Fix capability visuals 20260824
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-capabilities-visuals-20260824.yml'
+      - 'scripts/fix-capabilities-visuals-20260824.js'
+      - 'assets/tools/times26001-overview.svg'
+      - 'pure-ddz-capability-visual-v2.css'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fix-capabilities-visuals-20260824-main
+  cancel-in-progress: false
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate patch script
+        run: node --check scripts/fix-capabilities-visuals-20260824.js
+      - name: Apply capability visual fixes
+        run: node scripts/fix-capabilities-visuals-20260824.js
+      - name: Validate output
+        shell: bash
+        run: |
+          test -f assets/tools/times26001-overview.svg
+          grep -q '/assets/tools/times26001-overview.svg?v=20260824-capability-visual-fix-v1' capabilities/index.html
+          grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-title-contrast-v4' capabilities/index.html
+          grep -q 'capability-ddz-title" style="color:#fff!important' capabilities/index.html
+          grep -q 'capability-ddz-sub" style="color:#ffe39b!important' capabilities/index.html
+          if grep -q '/times26001/times26001-showcase.svg' capabilities/index.html; then
+            echo 'Broken Times26001 path still present' >&2
+            exit 1
+          fi
+      - name: Commit capability visual fixes
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Capability visuals already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add capabilities/index.html
+          git commit -m "fix: restore Times26001 visual and DDZ title contrast [skip ci]"
+          git pull --rebase origin main
+          git push origin main
