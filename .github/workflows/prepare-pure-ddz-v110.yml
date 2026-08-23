@@ -1,0 +1,110 @@
+name: Prepare Pure DDZ v1.1.0 Website Runtime
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/prepare-pure-ddz-v110.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Vendor tested v1.1.0 runtime and canonical Joker assets
+        run: |
+          set -euo pipefail
+          SOURCE_SHA='01a42de93e15d83436b7161a53facb8089a7a4a7'
+          BASE="https://raw.githubusercontent.com/DingHunter623/Pure-DDZ-Classic/${SOURCE_SHA}/web"
+          mkdir -p tools/pure-ddz/game/css tools/pure-ddz/game/js tools/pure-ddz/game/assets/pure-ddz
+          curl -fL --retry 6 "$BASE/css/style.css" -o tools/pure-ddz/game/css/style.css
+          curl -fL --retry 6 "$BASE/css/qilylean-theme.css" -o tools/pure-ddz/game/css/qilylean-theme.css
+          curl -fL --retry 6 "$BASE/js/qilylean-theme.js" -o tools/pure-ddz/game/js/qilylean-theme.js
+          curl -fL --retry 6 "$BASE/js/card-theme.js" -o tools/pure-ddz/game/js/card-theme.js
+          curl -fL --retry 6 "$BASE/js/ai-expert.js" -o tools/pure-ddz/game/js/ai-expert.js
+          curl -fL --retry 6 "$BASE/js/game.js" -o tools/pure-ddz/game/js/game.js
+          curl -fL --retry 6 "$BASE/assets/pure-ddz/avatar-king.webp" -o tools/pure-ddz/game/assets/pure-ddz/avatar-king.webp
+          curl -fL --retry 6 "$BASE/assets/pure-ddz/airplane-joker.png" -o tools/pure-ddz/game/assets/pure-ddz/airplane-joker.png
+          node --check tools/pure-ddz/game/js/card-theme.js
+          node --check tools/pure-ddz/game/js/ai-expert.js
+          node --check tools/pure-ddz/game/js/game.js
+          grep -q "const VERSION = '1.1.0'" tools/pure-ddz/game/js/game.js
+          grep -q "difficulty:'expert'" tools/pure-ddz/game/js/game.js
+          grep -q 'PublicCardMemory' tools/pure-ddz/game/js/ai-expert.js
+          grep -q 'avatar-king.webp' tools/pure-ddz/game/js/card-theme.js
+          grep -q 'airplane-joker.png' tools/pure-ddz/game/js/card-theme.js
+          test "$(head -c 4 tools/pure-ddz/game/assets/pure-ddz/avatar-king.webp)" = 'RIFF'
+          test "$(xxd -p -l 8 tools/pure-ddz/game/assets/pure-ddz/airplane-joker.png)" = '89504e470d0a1a0a'
+
+      - name: Upgrade QilyLean direct game page and homepage entry
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          page = Path('tools/pure-ddz/index.html')
+          text = page.read_text(encoding='utf-8')
+          text = text.replace('v1.0.3', 'v1.1.0').replace('1.0.3', '1.1.0').replace('20260823-v103', '20260823-v110')
+          text = text.replace('Pure-DDZ-Classic@v1.0.3', 'Pure-DDZ-Classic@v1.1.0')
+          text = text.replace('AI 智能提示', '专家 AI 提示')
+          text = text.replace('立即开始</button>', '专家模式开局</button>')
+          text = text.replace('先调整字体和声音', '先调整难度、字体和声音')
+          text = text.replace(
+              '<option value="easy">轻松</option><option value="normal">标准</option><option value="smart">稳健</option>',
+              '<option value="easy">轻松｜休闲</option><option value="normal">标准</option><option value="smart">稳健</option><option value="expert" selected>专家｜默认高强度</option><option value="challenge">挑战｜残局高压</option>'
+          )
+          text = text.replace(
+              '没有广告弹窗，不用注册登录，没有付费套路。打开就能玩，字大、按钮大、提示清楚。牌桌视觉融入“现场事实、工程数据、精益改善、质量保证、数智固化、知识资产”六大业务主旨。',
+              '没有广告弹窗，不用注册登录，没有付费套路。默认 Expert 专家级电脑对手，以公开出牌进行记牌、控牌、残局压制与农民协同；整副牌融入 QilyLean 制造运营技能与业务主旨，大王使用个人头像，小王使用六大业务 C919 飞机模型。'
+          )
+          old_loader = """load('js/qilylean-theme.js',0,()=>{\n        load('js/game.js',0,()=>{\n          status.textContent='牌桌已加载';\n          status.className='ready';\n        });\n      });"""
+          new_loader = """load('js/qilylean-theme.js',0,()=>{\n        load('js/card-theme.js',0,()=>{\n          load('js/ai-expert.js',0,()=>{\n            load('js/game.js',0,()=>{\n              status.textContent='v1.1.0 专家主题牌桌已加载';\n              status.className='ready';\n            });\n          });\n        });\n      });"""
+          if old_loader not in text:
+              raise SystemExit('Could not locate current Pure DDZ loader')
+          text = text.replace(old_loader, new_loader)
+          page.write_text(text, encoding='utf-8')
+
+          ui = Path('site-ui-consistency-v1.js')
+          ui_text = ui.read_text(encoding='utf-8')
+          ui_text = ui_text.replace('1.0.3', '1.1.0')
+          ui_text = ui_text.replace('20260823-pure-ddz-entry-v14', '20260823-pure-ddz-entry-v15')
+          ui_text = ui_text.replace('pure-ddz-stable-entry-v2', 'pure-ddz-stable-entry-v3')
+          ui_text = ui_text.replace(
+              '三人叫地主、经典牌型、AI电脑对手、智能提示、积分战绩与中文语音。',
+              '默认 Expert 专家级 AI，公开信息记牌、牌型保护、残局压制、农民协同，并保留智能提示、积分战绩与中文语音。'
+          )
+          ui_text = ui_text.replace(
+              '现场事实、工程数据、精益改善、质量保证、数智固化、知识资产作为桌面与牌背视觉寓意。',
+              '54张牌以现场事实、工程数据、精益改善、质量保证、数智固化、知识资产及IE/ECRS/SMED/VSM/TPM/OEE等技能为主题；大王为个人头像，小王为C919六大业务飞机模型。'
+          )
+          ui_text = ui_text.replace('<h3>六大业务主题</h3>', '<h3>技能主题牌面</h3>')
+          ui.write_text(ui_text, encoding='utf-8')
+          PY
+          grep -q 'Pure-DDZ-Classic-v1.1.0.apk' tools/pure-ddz/index.html
+          grep -q "load('js/card-theme.js'" tools/pure-ddz/index.html
+          grep -q "load('js/ai-expert.js'" tools/pure-ddz/index.html
+          grep -q 'value="expert" selected' tools/pure-ddz/index.html
+          grep -q 'value="challenge"' tools/pure-ddz/index.html
+          grep -q 'Pure-DDZ-Classic-v1.1.0.apk' site-ui-consistency-v1.js
+          git diff --check
+
+      - name: Commit prepared v1.1.0 website runtime
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean Release Bot'
+          git config user.email 'DingHunter623@gmail.com'
+          git add tools/pure-ddz/game tools/pure-ddz/index.html site-ui-consistency-v1.js
+          if git diff --cached --quiet; then
+            echo 'v1.1.0 website runtime already prepared'
+          else
+            git commit -m 'feat: prepare Pure DDZ v1.1.0 expert themed runtime'
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
