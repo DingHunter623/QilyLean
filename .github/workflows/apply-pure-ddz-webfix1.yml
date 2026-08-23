@@ -1,0 +1,71 @@
+name: Apply Pure DDZ Webfix1
+
+on:
+  pull_request:
+    paths:
+      - 'tools/pure-ddz/game/js/card-theme.js'
+      - 'tools/pure-ddz/game/js/visual-v120.js'
+      - 'tools/pure-ddz/game/css/visual-v120.css'
+      - '.github/workflows/apply-pure-ddz-webfix1.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Apply latest web-only copy and release hold
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          page=Path('tools/pure-ddz/index.html')
+          s=page.read_text(encoding='utf-8')
+          s=s.replace('20260823-v120-visual','20260823-v120-webfix1')
+          s=s.replace('<span><strong>纯净斗地主</strong><small>QilyLean｜启力精益主题版</small></span>','<span><strong>启力精益斗地主</strong><small>QilyLean｜简单娱乐 · 益智生活</small></span>')
+          s=s.replace('<button id="hint" class="control-btn hint-btn" type="button">启力托管：关</button>','<button id="hint" class="control-btn hint-btn" type="button">启力提示</button>')
+          s=s.replace('自主判断后点“出牌”；需要休息时可开启“启力托管”。','自主判断优先；需要参考时点“启力提示”，最终仍由你手动点“出牌”。')
+          s=s.replace('<h1 id="welcome-title">纯净斗地主</h1>','<h1 id="welcome-title">启力精益斗地主</h1>')
+          s=s.replace('<li><b>语音、音乐、启力托管</b><span>启力托管默认关闭，按需开启自动出牌</span></li>','<li><b>语音、音乐、启力提示</b><span>启力提示仅给出建议，最终出牌始终由你手动确认</span></li>')
+          s=s.replace('启力托管','启力提示')
+          s=s.replace('开启后由启力 AI 自动叫分和出牌。','开启后仅推荐出牌，不会自动叫地主、不会自动出牌。')
+          s=s.replace('默认关闭，由你自主判断和出牌；需要休息时可开启启力提示，由启力 AI 自动叫分、选牌与出牌。','可在设置中开/关。启力提示只推荐应该出什么牌并替你选中，是否采用、何时出牌都由你手动决定。')
+          s=s.replace('<a class="apk-inline" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk">Android v1.2.0</a>','<span class="apk-inline apk-hold">安装包待验证后发布</span>')
+          s=s.replace('纯净斗地主 Web · Android v1.2.0','启力精益斗地主 Web｜安装包待验证')
+          s=s.replace('<span>Android：1.2.0</span>','<span>Android：待验证后发布</span>')
+          page.write_text(s,encoding='utf-8')
+
+          ui=Path('site-ui-consistency-v1.js')
+          u=ui.read_text(encoding='utf-8')
+          u=u.replace('<a class="qily-ia-button" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk">下载 Android v1.2.0</a>','<span class="qily-ia-button" aria-disabled="true">Android 安装包待网页版验证后发布</span>')
+          u=u.replace('ANDROID｜v1.2.0','ANDROID｜待验证')
+          u=u.replace('v1.2.0 已通过 Android 35 模拟器真实安装、MainActivity 启动、5 秒进程存活及崩溃检查。','当前仅开放网页版继续打磨；Android 安装包待网页版验证确认 OK 后再重新发布。')
+          ui.write_text(u,encoding='utf-8')
+          PY
+          grep -q '启力精益斗地主' tools/pure-ddz/index.html
+          grep -q '>启力提示</button>' tools/pure-ddz/index.html
+          ! grep -q '启力托管' tools/pure-ddz/index.html
+          grep -q '安装包待验证后发布' tools/pure-ddz/index.html
+          ! grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' tools/pure-ddz/index.html site-ui-consistency-v1.js
+          git diff --check
+
+      - name: Commit transformed web shell
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean Webfix Bot'
+          git config user.email 'DingHunter623@gmail.com'
+          git add tools/pure-ddz/index.html site-ui-consistency-v1.js
+          if git diff --cached --quiet; then
+            echo 'Web shell already aligned'
+          else
+            git commit -m 'fix: align Pure DDZ web shell with manual hint mode'
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
