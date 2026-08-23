@@ -1,0 +1,113 @@
+/* QilyLean｜启力精益 六大业务主旨主题层
+   保持斗地主牌面识别优先，仅强化牌背、桌面与品牌信息。 */
+:root{
+  --qily-navy:#0f4b5a;
+  --qily-teal:#178b94;
+  --qily-mint:#dff3ef;
+  --qily-sand:#f4dfaa;
+  --qily-ink:#173b38;
+}
+
+.table-wrap{
+  background:
+    radial-gradient(circle at 50% 44%,rgba(255,255,255,.08),transparent 34%),
+    linear-gradient(135deg,rgba(15,75,90,.22),transparent 44%),
+    repeating-linear-gradient(35deg,rgba(255,255,255,.012) 0 2px,transparent 2px 8px);
+}
+.table-wrap:after{
+  content:"QilyLean · 现场事实 · 工程数据 · 精益改善 · 质量保证 · 数智固化 · 知识资产";
+  position:absolute;
+  left:50%;top:73px;
+  transform:translateX(-50%);
+  width:min(780px,calc(100% - 520px));
+  padding:7px 16px;
+  border:1px solid rgba(255,227,155,.28);
+  border-radius:999px;
+  color:rgba(255,244,210,.82);
+  background:rgba(2,37,39,.44);
+  font-size:13px;
+  font-weight:850;
+  letter-spacing:.04em;
+  text-align:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  pointer-events:none;
+}
+
+.table-decoration span{font-size:0}
+.table-decoration span:before{
+  content:"Q";
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:142px;
+  font-weight:900;
+  color:rgba(255,227,155,.11);
+}
+
+.card-back,.bottom-back{
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(45deg,transparent 42%,rgba(255,255,255,.14) 42% 48%,transparent 48% 52%,rgba(255,255,255,.14) 52% 58%,transparent 58%),
+    linear-gradient(145deg,var(--qily-navy),var(--qily-teal));
+  border-color:#f7eed4;
+}
+.card-back:after,.bottom-back:after{
+  content:"Q";
+  position:absolute;
+  inset:6px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(244,223,170,.64);
+  border-radius:5px;
+  color:#fff3c9;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:18px;
+  font-weight:900;
+}
+
+.brand-mark{
+  background:linear-gradient(160deg,#fff,#eef9f7);
+  border-color:var(--qily-sand);
+}
+.brand small:after{
+  content:" · QilyLean 六大业务主题";
+}
+
+.qily-business-strip{
+  position:absolute;
+  z-index:3;
+  left:50%;
+  top:18px;
+  transform:translateX(-50%);
+  width:min(860px,calc(100% - 520px));
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:6px;
+  pointer-events:none;
+}
+.qily-business-strip span{
+  min-width:0;
+  padding:6px 7px;
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:10px;
+  color:#ecfaf6;
+  background:linear-gradient(145deg,rgba(15,75,90,.68),rgba(23,139,148,.42));
+  font-size:12px;
+  font-weight:850;
+  text-align:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+@media(max-width:1050px){
+  .qily-business-strip,.table-wrap:after{width:calc(100% - 40px)}
+  .qily-business-strip{top:10px;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .table-wrap:after{top:80px}
+}
+@media(max-width:680px){
+  .qily-business-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+  .qily-business-strip span{font-size:11px;padding:5px 4px}
+  .table-wrap:after{display:none}
+}
