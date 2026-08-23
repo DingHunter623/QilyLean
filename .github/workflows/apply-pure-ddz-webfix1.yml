@@ -30,17 +30,22 @@ jobs:
           page=Path('tools/pure-ddz/index.html')
           s=page.read_text(encoding='utf-8')
           s=s.replace('20260823-v120-visual','20260823-v120-webfix1')
+          s=s.replace("const roots=['./game/','https://cdn.jsdelivr.net/gh/DingHunter623/Pure-DDZ-Classic@v1.2.0/web/','https://raw.githack.com/DingHunter623/Pure-DDZ-Classic/v1.2.0/web/'];","const roots=['./game/'];")
           s=s.replace('<span><strong>纯净斗地主</strong><small>QilyLean｜启力精益主题版</small></span>','<span><strong>启力精益斗地主</strong><small>QilyLean｜简单娱乐 · 益智生活</small></span>')
           s=s.replace('<button id="hint" class="control-btn hint-btn" type="button">启力托管：关</button>','<button id="hint" class="control-btn hint-btn" type="button">启力提示</button>')
           s=s.replace('自主判断后点“出牌”；需要休息时可开启“启力托管”。','自主判断优先；需要参考时点“启力提示”，最终仍由你手动点“出牌”。')
           s=s.replace('<h1 id="welcome-title">纯净斗地主</h1>','<h1 id="welcome-title">启力精益斗地主</h1>')
           s=s.replace('<li><b>语音、音乐、启力托管</b><span>启力托管默认关闭，按需开启自动出牌</span></li>','<li><b>语音、音乐、启力提示</b><span>启力提示仅给出建议，最终出牌始终由你手动确认</span></li>')
           s=s.replace('启力托管','启力提示')
+          s=s.replace('轮到你时点击“专家 AI 提示”，系统会优先推荐节省炸弹、便于走牌的组合。','轮到你时点击“启力提示”，系统只推荐并选中建议牌；是否采用、何时出牌都由你手动决定。')
+          s=s.replace('<h3>智能辅助提示</h3>','<h3>启力提示</h3>')
           s=s.replace('开启后由启力 AI 自动叫分和出牌。','开启后仅推荐出牌，不会自动叫地主、不会自动出牌。')
           s=s.replace('默认关闭，由你自主判断和出牌；需要休息时可开启启力提示，由启力 AI 自动叫分、选牌与出牌。','可在设置中开/关。启力提示只推荐应该出什么牌并替你选中，是否采用、何时出牌都由你手动决定。')
           s=s.replace('<a class="apk-inline" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk">Android v1.2.0</a>','<span class="apk-inline apk-hold">安装包待验证后发布</span>')
           s=s.replace('纯净斗地主 Web · Android v1.2.0','启力精益斗地主 Web｜安装包待验证')
           s=s.replace('<span>Android：1.2.0</span>','<span>Android：待验证后发布</span>')
+          s=s.replace("status.textContent='牌桌脚本加载失败，请检查网络后刷新；Android 用户可下载安装离线版 v1.2.0。';","status.textContent='牌桌脚本加载失败，请检查网络后刷新；安装包暂不开放，待网页版验证后发布。';")
+          s=s.replace("status.textContent='v1.2.0 大牌面专家主题牌桌已加载';","status.textContent='启力精益斗地主网页验证版已加载';")
           page.write_text(s,encoding='utf-8')
 
           ui=Path('site-ui-consistency-v1.js')
@@ -52,7 +57,9 @@ jobs:
           PY
           grep -q '启力精益斗地主' tools/pure-ddz/index.html
           grep -q '>启力提示</button>' tools/pure-ddz/index.html
-          ! grep -q '启力托管' tools/pure-ddz/index.html
+          grep -q '<h3>启力提示</h3>' tools/pure-ddz/index.html
+          ! grep -q '启力托管\|专家 AI 提示' tools/pure-ddz/index.html
+          grep -q "const roots=\['./game/'\];" tools/pure-ddz/index.html
           grep -q '安装包待验证后发布' tools/pure-ddz/index.html
           ! grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' tools/pure-ddz/index.html site-ui-consistency-v1.js
           git diff --check
