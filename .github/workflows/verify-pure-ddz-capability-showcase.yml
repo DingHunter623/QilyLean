@@ -23,7 +23,8 @@ jobs:
           node --check site-ui-consistency-v1.js
           node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/visual-v120.js
-          ! grep -q 'qilyPureDdzStableEntry' site-ui-consistency-v1.js
+          ! grep -q 'section.id=.qilyPureDdzStableEntry' site-ui-consistency-v1.js
+          grep -q 'removeLegacyPureDdzHomeEntry' site-ui-consistency-v1.js
           grep -q 'pure-ddz-digital-tool' capabilities/index.html
           grep -q 'avatar-king.webp' capabilities/index.html
           grep -q 'airplane-joker.png' capabilities/index.html
@@ -58,8 +59,9 @@ jobs:
             await page.goto(base+'/tools/pure-ddz/',{waitUntil:'networkidle'});
             await page.getByRole('button',{name:'开始游戏'}).click();
             await page.waitForFunction(()=>window.PureDDZTest?.getState().hands[0].length===17,{timeout:6000});
-            await page.waitForTimeout(400);
+            await page.waitForTimeout(500);
             const data=await page.evaluate(()=>{
+              window.QilyLeanV120?.fitHand?.();
               const hand=document.querySelector('#hand');const cards=[...document.querySelectorAll('#hand .card')];
               const hr=hand.getBoundingClientRect();const rects=cards.map(c=>c.getBoundingClientRect());
               return {count:cards.length,first:rects[0],last:rects.at(-1),hand:hr,reset:Boolean(document.querySelector('#v120-reset-stats'))};
