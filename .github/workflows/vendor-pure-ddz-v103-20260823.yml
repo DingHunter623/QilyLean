@@ -1,9 +1,10 @@
 name: Vendor Pure DDZ v1.0.3 Web Assets
 
 on:
-  push:
+  pull_request:
     paths:
       - '.github/workflows/vendor-pure-ddz-v103-20260823.yml'
+      - 'tools/pure-ddz/**'
   workflow_dispatch:
 
 permissions:
@@ -16,6 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - name: Vendor same-origin game runtime from tagged v1.0.3
@@ -36,36 +38,23 @@ jobs:
           grep -q 'function createDeck' tools/pure-ddz/game/js/game.js
           grep -q 'function analyze' tools/pure-ddz/game/js/game.js
 
-      - name: Switch all public Pure DDZ version references to 1.0.3
+      - name: Verify public v1.0.3 references
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          paths = [
-              Path('tools/pure-ddz/index.html'),
-              Path('times26001-home-card.js'),
-              Path('site-ui-consistency-v1.js'),
-              Path('.github/workflows/verify-pure-ddz-live.yml'),
-          ]
-          for path in paths:
-              text = path.read_text(encoding='utf-8')
-              path.write_text(text.replace('1.0.2', '1.0.3'), encoding='utf-8')
-          PY
           grep -q 'Pure-DDZ-Classic-v1.0.3.apk' tools/pure-ddz/index.html
           grep -q 'Pure-DDZ-Classic-v1.0.3.apk' site-ui-consistency-v1.js
-          ! grep -R --line-number --fixed-strings 'Pure-DDZ-Classic-v1.0.2.apk' \
-            tools/pure-ddz/index.html times26001-home-card.js site-ui-consistency-v1.js .github/workflows/verify-pure-ddz-live.yml
+          ! grep -R --line-number --fixed-strings 'Pure-DDZ-Classic-v1.0.2.apk' tools/pure-ddz/index.html site-ui-consistency-v1.js .github/workflows/verify-pure-ddz-live.yml
           git diff --check
 
-      - name: Commit same-origin runtime and v1.0.3 links
+      - name: Commit vendored runtime to PR branch
         run: |
           set -euo pipefail
           git config user.name 'QilyLean Release Bot'
           git config user.email 'DingHunter623@gmail.com'
-          git add tools/pure-ddz/game tools/pure-ddz/index.html times26001-home-card.js site-ui-consistency-v1.js .github/workflows/verify-pure-ddz-live.yml
+          git add tools/pure-ddz/game
           if git diff --cached --quiet; then
-            echo 'No changes needed'
+            echo 'Same-origin runtime already present'
           else
-            git commit -m 'fix: vendor Pure DDZ v1.0.3 runtime and switch website links'
-            git push origin HEAD:main
+            git commit -m 'fix: vendor Pure DDZ v1.0.3 same-origin runtime'
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
           fi
