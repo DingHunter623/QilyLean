@@ -1,0 +1,71 @@
+name: Prepare Pure DDZ v1.2.0 APK Website Sync
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/prepare-pure-ddz-v120-apk.yml'
+      - 'tools/pure-ddz/**'
+      - 'site-ui-consistency-v1.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          fetch-depth: 0
+
+      - name: Require real v1.2.0 release APK before switching website links
+        run: |
+          set -euo pipefail
+          APK_URL='https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk'
+          curl -fL --retry 8 --retry-delay 5 --max-time 60 "$APK_URL" -o /tmp/Pure-DDZ-Classic-v1.2.0.apk
+          test "$(head -c 2 /tmp/Pure-DDZ-Classic-v1.2.0.apk)" = 'PK'
+          unzip -l /tmp/Pure-DDZ-Classic-v1.2.0.apk | grep -q 'assets/www/index.html'
+          unzip -l /tmp/Pure-DDZ-Classic-v1.2.0.apk | grep -q 'assets/www/css/visual-v120.css'
+          unzip -l /tmp/Pure-DDZ-Classic-v1.2.0.apk | grep -q 'assets/www/js/visual-v120.js'
+          unzip -l /tmp/Pure-DDZ-Classic-v1.2.0.apk | grep -q 'classes.dex'
+
+      - name: Switch QilyLean website download surfaces to v1.2.0
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          targets = [
+              Path('tools/pure-ddz/index.html'),
+              Path('site-ui-consistency-v1.js'),
+          ]
+          for p in targets:
+              s = p.read_text(encoding='utf-8')
+              s = s.replace('Pure-DDZ-Classic@v1.1.0', 'Pure-DDZ-Classic@v1.2.0')
+              s = s.replace('Pure-DDZ-Classic-v1.1.0.apk', 'Pure-DDZ-Classic-v1.2.0.apk')
+              s = s.replace('/download/v1.1.0/', '/download/v1.2.0/')
+              s = s.replace('Android v1.1.0', 'Android v1.2.0')
+              s = s.replace('Android：1.1.0', 'Android：1.2.0')
+              s = s.replace('Web · Android v1.1.0', 'Web · Android v1.2.0')
+              p.write_text(s, encoding='utf-8')
+          PY
+          grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' tools/pure-ddz/index.html
+          grep -q 'Android v1.2.0' tools/pure-ddz/index.html
+          grep -q 'Pure-DDZ-Classic-v1.2.0.apk' site-ui-consistency-v1.js
+          ! grep -q 'Pure-DDZ-Classic-v1.1.0.apk' tools/pure-ddz/index.html site-ui-consistency-v1.js
+          git diff --check
+
+      - name: Commit website v1.2.0 APK links
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean Release Bot'
+          git config user.email 'DingHunter623@gmail.com'
+          git add tools/pure-ddz/index.html site-ui-consistency-v1.js
+          if git diff --cached --quiet; then
+            echo 'v1.2.0 APK links already synchronized'
+          else
+            git commit -m 'release: sync Pure DDZ Android v1.2.0 download links'
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
