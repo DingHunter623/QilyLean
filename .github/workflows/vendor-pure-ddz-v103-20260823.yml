@@ -1,10 +1,6 @@
-name: Vendor Pure DDZ v1.0.3 Web Assets
+name: Vendor Pure DDZ v1.0.3 Web Assets (Legacy Manual Only)
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/vendor-pure-ddz-v103-20260823.yml'
-      - 'tools/pure-ddz/**'
   workflow_dispatch:
 
 permissions:
@@ -17,44 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
-      - name: Vendor same-origin game runtime from tagged v1.0.3
+      - name: Legacy manual-only v1.0.3 vendor guard
         run: |
-          set -euo pipefail
-          mkdir -p tools/pure-ddz/game/css tools/pure-ddz/game/js
-          base='https://raw.githubusercontent.com/DingHunter623/Pure-DDZ-Classic/v1.0.3/web'
-          curl -fL --retry 6 "$base/css/style.css" -o tools/pure-ddz/game/css/style.css
-          curl -fL --retry 6 "$base/css/qilylean-theme.css" -o tools/pure-ddz/game/css/qilylean-theme.css
-          curl -fL --retry 6 "$base/js/game.js" -o tools/pure-ddz/game/js/game.js
-          curl -fL --retry 6 "$base/js/qilylean-theme.js" -o tools/pure-ddz/game/js/qilylean-theme.js
-          test -s tools/pure-ddz/game/css/style.css
-          test -s tools/pure-ddz/game/css/qilylean-theme.css
-          test -s tools/pure-ddz/game/js/game.js
-          test -s tools/pure-ddz/game/js/qilylean-theme.js
-          node --check tools/pure-ddz/game/js/game.js
-          node --check tools/pure-ddz/game/js/qilylean-theme.js
-          grep -q 'function createDeck' tools/pure-ddz/game/js/game.js
-          grep -q 'function analyze' tools/pure-ddz/game/js/game.js
-
-      - name: Verify public v1.0.3 references
-        run: |
-          set -euo pipefail
-          grep -q 'Pure-DDZ-Classic-v1.0.3.apk' tools/pure-ddz/index.html
-          grep -q 'Pure-DDZ-Classic-v1.0.3.apk' site-ui-consistency-v1.js
-          ! grep -R --line-number --fixed-strings 'Pure-DDZ-Classic-v1.0.2.apk' tools/pure-ddz/index.html site-ui-consistency-v1.js .github/workflows/verify-pure-ddz-live.yml
-          git diff --check
-
-      - name: Commit vendored runtime to PR branch
-        run: |
-          set -euo pipefail
-          git config user.name 'QilyLean Release Bot'
-          git config user.email 'DingHunter623@gmail.com'
-          git add tools/pure-ddz/game
-          if git diff --cached --quiet; then
-            echo 'Same-origin runtime already present'
-          else
-            git commit -m 'fix: vendor Pure DDZ v1.0.3 same-origin runtime'
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
-          fi
+          echo 'This workflow is retained only for historical/manual recovery.'
+          echo 'Automatic PR vendoring is disabled so newer Pure DDZ runtimes cannot be overwritten by v1.0.3.'

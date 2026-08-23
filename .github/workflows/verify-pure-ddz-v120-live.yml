@@ -1,0 +1,74 @@
+name: Verify Pure DDZ v1.2 Visual Live
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/verify-pure-ddz-v120-live.yml'
+      - 'tools/pure-ddz/**'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-pure-ddz-v120-live.yml'
+      - 'tools/pure-ddz/**'
+  workflow_dispatch:
+
+jobs:
+  verify-v120:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify repository v1.2 visual-first contract
+        run: |
+          set -euo pipefail
+          node --check tools/pure-ddz/game/js/card-theme.js
+          node --check tools/pure-ddz/game/js/visual-v120.js
+          grep -q '20260823-v120-visual' tools/pure-ddz/index.html
+          ! grep -q "loadStyle('css/card-size-v2.css')" tools/pure-ddz/index.html
+          grep -q '启力托管：关' tools/pure-ddz/index.html
+          grep -q '>出牌</button>' tools/pure-ddz/index.html
+          grep -q 'flex:0 0 120px' tools/pure-ddz/game/css/visual-v120.css
+          grep -q 'height:178px' tools/pure-ddz/game/css/visual-v120.css
+          grep -q 'font-size:33px' tools/pure-ddz/game/css/visual-v120.css
+          grep -q 'font-size:27px' tools/pure-ddz/game/css/visual-v120.css
+          grep -q 'v120-play-stage' tools/pure-ddz/game/css/visual-v120.css
+          grep -q "CARD_SITE='启力精益 | https://qilylean.com'" tools/pure-ddz/game/js/card-theme.js
+          grep -q "VISUAL_HOLD_MS=900" tools/pure-ddz/game/js/visual-v120.js
+          grep -q '启力托管' tools/pure-ddz/game/js/visual-v120.js
+          grep -q 'requestLandscape' tools/pure-ddz/game/js/visual-v120.js
+          grep -q 'visualQueue' tools/pure-ddz/game/js/visual-v120.js
+          grep -q 'Legacy Manual Only' .github/workflows/vendor-pure-ddz-v103-20260823.yml
+          git diff --check
+
+      - name: Verify deployed v1.2 visual UX from public Internet
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          ok=0
+          for i in {1..48}; do
+            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260823-v120-visual' -o /tmp/page.html \
+              && grep -q '20260823-v120-visual' /tmp/page.html \
+              && grep -q '启力托管：关' /tmp/page.html \
+              && grep -q '>出牌</button>' /tmp/page.html; then
+              ok=1
+              break
+            fi
+            echo "Waiting for QilyLean v1.2 deployment: $i/48"
+            sleep 10
+          done
+          test "$ok" = 1
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/visual-v120.css?verify=20260823-v120' -o /tmp/visual.css
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260823-v120' -o /tmp/card-theme.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260823-v120' -o /tmp/visual.js
+          node --check /tmp/card-theme.js
+          node --check /tmp/visual.js
+          grep -q 'flex:0 0 120px' /tmp/visual.css
+          grep -q 'height:178px' /tmp/visual.css
+          grep -q 'font-size:33px' /tmp/visual.css
+          grep -q 'v120-play-stage' /tmp/visual.css
+          grep -q '启力精益 | https://qilylean.com' /tmp/card-theme.js
+          grep -q 'VISUAL_HOLD_MS=900' /tmp/visual.js
+          grep -q '启力托管' /tmp/visual.js
+          grep -q 'requestLandscape' /tmp/visual.js
+          grep -q 'visualQueue' /tmp/visual.js
+          echo 'PURE_DDZ_V120_PUBLIC_OK'

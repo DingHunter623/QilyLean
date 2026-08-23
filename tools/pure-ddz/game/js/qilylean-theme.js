@@ -1,10 +1,6 @@
 (() => {
   'use strict';
 
-  const scriptUrl=document.currentScript?.src||'';
-  const runtimeRoot=scriptUrl?new URL('../',scriptUrl):new URL('./',window.location.href);
-  const largeCardCssUrl=new URL('css/card-size-v2.css?v=20260823-large-card-v2',runtimeRoot).href;
-
   const items = [
     ['01','现场事实'],
     ['02','工程数据'],
@@ -28,15 +24,6 @@
       </div>
     </details>`;
 
-  function ensureLargeCardStyle(){
-    if(document.getElementById('qily-large-card-readability-v2')) return;
-    const link=document.createElement('link');
-    link.id='qily-large-card-readability-v2';
-    link.rel='stylesheet';
-    link.href=largeCardCssUrl;
-    document.head.appendChild(link);
-  }
-
   function ensureStyle(){
     if(document.getElementById('qily-product-overview-style')) return;
     const style=document.createElement('style');
@@ -58,8 +45,6 @@
   }
 
   function mount(){
-    ensureLargeCardStyle();
-
     const table=document.querySelector('.table-wrap');
     if(table && !table.querySelector('.qily-business-strip')){
       const strip=document.createElement('div');
@@ -68,23 +53,15 @@
       strip.innerHTML=items.map(([n,t])=>`<span>${n}｜${t}</span>`).join('');
       table.appendChild(strip);
     }
-
     ensureStyle();
     const main=document.querySelector('.game-main');
     const promise=document.querySelector('.clean-promise');
-    if(main && promise && !document.querySelector('.qily-product-overview')){
-      promise.insertAdjacentHTML('afterend',overviewHtml);
-    }
-
+    if(main && promise && !document.querySelector('.qily-product-overview')) promise.insertAdjacentHTML('afterend',overviewHtml);
     const welcomeCopy=document.querySelector('.welcome-copy');
-    if(welcomeCopy){
-      welcomeCopy.innerHTML='这款游戏源于一个真实的家庭需求：减少实名注册、账号登录、验证码等操作门槛，让父母辈打开即可轻松娱乐；同时也为长期面对复杂分析、工程改善和项目管理的成年人提供一个保持思考、适度放松的益智方式。<strong>简单、高效、友好</strong>，是这款数字产品延续的设计理念。';
-    }
-
+    if(welcomeCopy) welcomeCopy.innerHTML='这款游戏源于一个真实的家庭需求：减少实名注册、账号登录、验证码等操作门槛，让父母辈打开即可轻松娱乐；同时也为长期面对复杂分析、工程改善和项目管理的成年人提供一个保持思考、适度放松的益智方式。<strong>简单、高效、友好</strong>，是这款数字产品延续的设计理念。';
     const eyebrow=document.querySelector('.welcome-modal .eyebrow');
     if(eyebrow) eyebrow.textContent='QilyLean 无广告斗地主｜简单娱乐，益智生活';
   }
 
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount,{once:true});
-  else mount();
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount,{once:true}); else mount();
 })();
