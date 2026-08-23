@@ -1,159 +1,20 @@
-/* QilyLean｜启力精益 六大业务主旨主题层
-   v1.1.0：保持斗地主规则角标清晰，同时把牌面主体替换为制造运营技能/业务主题。 */
-:root{
-  --qily-navy:#0f4b5a;
-  --qily-teal:#178b94;
-  --qily-mint:#dff3ef;
-  --qily-sand:#f4dfaa;
-  --qily-ink:#173b38;
-}
-
-.table-wrap{
-  background:
-    radial-gradient(circle at 50% 44%,rgba(255,255,255,.08),transparent 34%),
-    linear-gradient(135deg,rgba(15,75,90,.22),transparent 44%),
-    repeating-linear-gradient(35deg,rgba(255,255,255,.012) 0 2px,transparent 2px 8px);
-}
-.table-wrap:after{
-  content:"QilyLean · 现场事实 · 工程数据 · 精益改善 · 质量保证 · 数智固化 · 知识资产";
-  position:absolute;
-  left:50%;top:73px;
-  transform:translateX(-50%);
-  width:min(780px,calc(100% - 520px));
-  padding:7px 16px;
-  border:1px solid rgba(255,227,155,.28);
-  border-radius:999px;
-  color:rgba(255,244,210,.82);
-  background:rgba(2,37,39,.44);
-  font-size:13px;
-  font-weight:850;
-  letter-spacing:.04em;
-  text-align:center;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  pointer-events:none;
-}
-
-.table-decoration span{font-size:0}
-.table-decoration span:before{
-  content:"Q";
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:142px;
-  font-weight:900;
-  color:rgba(255,227,155,.11);
-}
-
-.card-back,.bottom-back{
-  position:relative;
-  overflow:hidden;
-  background:
-    linear-gradient(45deg,transparent 42%,rgba(255,255,255,.14) 42% 48%,transparent 48% 52%,rgba(255,255,255,.14) 52% 58%,transparent 58%),
-    linear-gradient(145deg,var(--qily-navy),var(--qily-teal));
-  border-color:#f7eed4;
-}
-.card-back:after,.bottom-back:after{
-  content:"Q";
-  position:absolute;
-  inset:6px;
-  display:grid;
-  place-items:center;
-  border:1px solid rgba(244,223,170,.64);
-  border-radius:5px;
-  color:#fff3c9;
-  font-family:Georgia,"Times New Roman",serif;
-  font-size:18px;
-  font-weight:900;
-}
-
-.brand-mark{
-  background:linear-gradient(160deg,#fff,#eef9f7);
-  border-color:var(--qily-sand);
-}
+/* QilyLean｜启力精益 六大业务主旨主题层 */
+:root{--qily-navy:#0f4b5a;--qily-teal:#178b94;--qily-mint:#dff3ef;--qily-sand:#f4dfaa;--qily-ink:#173b38}
+.table-wrap{background:radial-gradient(circle at 50% 44%,rgba(255,255,255,.08),transparent 34%),linear-gradient(135deg,rgba(15,75,90,.22),transparent 44%),repeating-linear-gradient(35deg,rgba(255,255,255,.012) 0 2px,transparent 2px 8px)}
+.table-wrap:after{display:none!important;content:none!important}
+.table-decoration span{font-size:0}.table-decoration span:before{content:"Q";font-family:Georgia,"Times New Roman",serif;font-size:142px;font-weight:900;color:rgba(255,227,155,.11)}
+.card-back,.bottom-back{position:relative;overflow:hidden;background:linear-gradient(45deg,transparent 42%,rgba(255,255,255,.14) 42% 48%,transparent 48% 52%,rgba(255,255,255,.14) 52% 58%,transparent 58%),linear-gradient(145deg,var(--qily-navy),var(--qily-teal));border-color:#f7eed4}
+.card-back:after,.bottom-back:after{content:"Q";position:absolute;inset:6px;display:grid;place-items:center;border:1px solid rgba(244,223,170,.64);border-radius:5px;color:#fff3c9;font-family:Georgia,"Times New Roman",serif;font-size:18px;font-weight:900}
+.brand-mark{background:linear-gradient(160deg,#fff,#eef9f7);border-color:var(--qily-sand)}
 .brand small:after{content:" · QilyLean 智力强化主题"}
-
-.qily-business-strip{
-  position:absolute;
-  z-index:3;
-  left:50%;top:18px;
-  transform:translateX(-50%);
-  width:min(860px,calc(100% - 520px));
-  display:grid;
-  grid-template-columns:repeat(6,minmax(0,1fr));
-  gap:6px;
-  pointer-events:none;
-}
-.qily-business-strip span{
-  min-width:0;padding:6px 7px;
-  border:1px solid rgba(255,255,255,.15);
-  border-radius:10px;color:#ecfaf6;
-  background:linear-gradient(145deg,rgba(15,75,90,.68),rgba(23,139,148,.42));
-  font-size:12px;font-weight:850;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-
-/* 主题正面牌：外围 .card 仍保留原有尺寸、选牌位移和点击行为。 */
-.qily-card{
-  position:absolute;inset:0;display:block;overflow:hidden;border-radius:inherit;
-  color:#123d43;
-  background:radial-gradient(circle at 68% 26%,rgba(23,139,148,.13),transparent 33%),linear-gradient(155deg,#fff,#eef8f6);
-}
-.qily-card:after{
-  content:"QilyLean";position:absolute;right:-20px;bottom:18px;transform:rotate(-90deg);
-  color:rgba(15,75,90,.14);font-size:10px;font-weight:900;letter-spacing:.08em;pointer-events:none;
-}
-.qily-card-corner{
-  position:absolute;left:5px;top:5px;z-index:4;display:flex;flex-direction:column;line-height:1;color:#073c47;text-align:left;
-}
-.qily-card-corner b{font-size:18px;font-weight:1000}
-.qily-card-corner i{margin-top:2px;color:#178b94;font-size:12px;font-style:normal;font-weight:900}
-.qily-rule-red .qily-card-corner{color:#c83d35}
-.qily-rule-red .qily-card-corner i{color:#c83d35}
-.qily-card-theme{
-  position:absolute;inset:25px 5px 17px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.12;
-}
-.qily-card-theme small{color:#688c8c;font-size:6.5px;font-weight:900;letter-spacing:.04em;max-width:100%;overflow:hidden;text-overflow:ellipsis}
-.qily-card-theme>strong{margin-top:3px;color:#0f4b5a;font-size:15px;line-height:1;font-weight:1000}
-.qily-card-theme>b{margin-top:4px;color:#173b38;font-size:9px;white-space:nowrap}
-.qily-card-theme>em{margin-top:5px;color:#87712f;font-size:6.5px;font-style:normal;max-width:100%}
-.qily-card-footer{
-  position:absolute;left:3px;right:3px;bottom:4px;display:flex;gap:2px;align-items:center;justify-content:center;
-  overflow:hidden;color:#567576;font-size:6px;font-weight:800;white-space:nowrap;
-}
-.qily-card-footer i{font-style:normal;color:#178b94}
-
-/* 大小王：大王使用官网头像，小王使用官网六大业务飞机模型。 */
-.qily-card--joker{
-  background:radial-gradient(circle at 50% 32%,rgba(255,227,155,.43),transparent 36%),linear-gradient(145deg,#073c47,#0f6570);
-  color:#fff;
-}
-.qily-card--joker:after{color:rgba(255,227,155,.2)}
-.qily-card--joker .qily-card-corner{color:#ffe39b}
-.qily-card--joker .qily-card-corner i{color:#dff3ef;font-size:6px;letter-spacing:.06em}
-.qily-joker-visual{
-  position:absolute;left:50%;top:47%;width:72%;height:58%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;
-}
-.qily-joker-visual img{display:block;max-width:100%;max-height:100%;object-fit:contain;border-radius:9px}
-.big-joker .qily-joker-visual img{border:2px solid rgba(255,227,155,.8);box-shadow:0 7px 18px rgba(0,0,0,.28),0 0 0 3px rgba(255,255,255,.1)}
-.small-joker .qily-joker-visual{width:84%}
-.small-joker .qily-joker-visual img{border-radius:0;filter:drop-shadow(0 5px 7px rgba(0,0,0,.34))}
-.qily-card-main{position:absolute;left:3px;right:3px;bottom:5px;text-align:center;line-height:1.05}
-.qily-card-main strong{display:block;color:#ffe39b;font-size:9px;font-weight:1000}
-.qily-card-main em{display:block;margin-top:2px;color:#dff3ef;font-size:5.5px;font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-
-.qily-mini-business{display:inline-flex!important;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
-.qily-mini-business b{font-size:12px}.qily-mini-business small{font-size:6px;color:#0f6570;font-weight:900}
-.qily-mini-joker{display:inline-flex!important;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:2px!important}
-.qily-mini-joker img{width:28px;height:23px;object-fit:contain;border-radius:3px}
-.qily-mini-joker b{font-size:7px;line-height:1;margin-top:1px}
-
-@media(max-width:1050px){
-  .qily-business-strip,.table-wrap:after{width:calc(100% - 40px)}
-  .qily-business-strip{top:10px;grid-template-columns:repeat(3,minmax(0,1fr))}
-  .table-wrap:after{top:80px}
-}
-@media(max-width:680px){
-  .qily-business-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
-  .qily-business-strip span{font-size:11px;padding:5px 4px}
-  .table-wrap:after{display:none}
-  .qily-card-theme>strong{font-size:13px}.qily-card-theme>b{font-size:8px}.qily-card-theme>em{display:none}
-}
+.qily-business-strip{position:absolute;z-index:3;left:50%;top:18px;transform:translateX(-50%);width:min(860px,calc(100% - 520px));display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;pointer-events:none}
+.qily-business-strip span{min-width:0;padding:6px 7px;border:1px solid rgba(255,255,255,.15);border-radius:10px;color:#ecfaf6;background:linear-gradient(145deg,rgba(15,75,90,.68),rgba(23,139,148,.42));font-size:12px;font-weight:850;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qily-card{position:absolute;inset:0;display:block;overflow:hidden;border-radius:inherit;color:#123d43;background:radial-gradient(circle at 68% 26%,rgba(23,139,148,.13),transparent 33%),linear-gradient(155deg,#fff,#eef8f6)}
+.qily-card:after{content:"QilyLean";position:absolute;right:-20px;bottom:18px;transform:rotate(-90deg);color:rgba(15,75,90,.14);font-size:10px;font-weight:900;letter-spacing:.08em;pointer-events:none}
+.qily-card-corner{position:absolute;left:5px;top:5px;z-index:4;display:flex;flex-direction:column;line-height:1;color:#073c47;text-align:left}.qily-card-corner b{font-size:18px;font-weight:1000}.qily-card-corner i{margin-top:2px;color:#178b94;font-size:12px;font-style:normal;font-weight:900}.qily-rule-red .qily-card-corner{color:#c83d35}.qily-rule-red .qily-card-corner i{color:#c83d35}
+.qily-card-theme{position:absolute;inset:25px 5px 17px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:1.12}.qily-card-theme small{color:#688c8c;font-size:6.5px;font-weight:900;letter-spacing:.04em;max-width:100%;overflow:hidden;text-overflow:ellipsis}.qily-card-theme>strong{margin-top:3px;color:#0f4b5a;font-size:15px;line-height:1;font-weight:1000}.qily-card-theme>b{margin-top:4px;color:#173b38;font-size:9px;white-space:nowrap}.qily-card-theme>em{margin-top:5px;color:#87712f;font-size:6.5px;font-style:normal;max-width:100%}
+.qily-card--joker{background:radial-gradient(circle at 50% 32%,rgba(255,227,155,.43),transparent 36%),linear-gradient(145deg,#073c47,#0f6570);color:#fff}.qily-card--joker:after{color:rgba(255,227,155,.2)}.qily-card--joker .qily-card-corner{color:#ffe39b}.qily-card--joker .qily-card-corner i{color:#dff3ef;font-size:6px;letter-spacing:.06em}.qily-joker-visual{position:absolute;left:50%;top:47%;width:72%;height:58%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center}.qily-joker-visual img{display:block;max-width:100%;max-height:100%;object-fit:contain;border-radius:9px}.big-joker .qily-joker-visual img{border:2px solid rgba(255,227,155,.8);box-shadow:0 7px 18px rgba(0,0,0,.28),0 0 0 3px rgba(255,255,255,.1)}.small-joker .qily-joker-visual{width:84%}.small-joker .qily-joker-visual img{border-radius:0;filter:drop-shadow(0 5px 7px rgba(0,0,0,.34))}.qily-card-main{position:absolute;left:3px;right:3px;bottom:5px;text-align:center;line-height:1.05}.qily-card-main strong{display:block;color:#ffe39b;font-size:9px;font-weight:1000}.qily-card-main em{display:block;margin-top:2px;color:#dff3ef;font-size:5.5px;font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qily-mini-business{display:inline-flex!important;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}.qily-mini-business b{font-size:16px}.qily-mini-business small{font-size:8px;color:#0f6570;font-weight:900}.qily-mini-joker{display:inline-flex!important;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;padding:3px!important}.qily-mini-joker img{width:38px;height:32px;object-fit:contain;border-radius:3px}.qily-mini-joker b{font-size:10px;line-height:1;margin-top:2px}
+.bottom-zone{margin-top:8px}.bottom-cards{min-height:82px;gap:8px}.bottom-cards .mini-card,.bottom-cards .bottom-back{min-width:58px!important;width:58px!important;height:82px!important;margin:0!important;border-radius:10px!important}.bottom-cards .bottom-back:after{font-size:28px;inset:7px}.bottom-cards .qily-mini-business b{font-size:18px}.bottom-cards .qily-mini-business small{font-size:9px}.bottom-cards .qily-mini-joker img{width:42px;height:36px}.bottom-cards .qily-mini-joker b{font-size:10px}
+@media(max-width:1050px){.qily-business-strip{width:calc(100% - 40px);top:10px;grid-template-columns:repeat(3,minmax(0,1fr))}.bottom-cards .mini-card,.bottom-cards .bottom-back{min-width:52px!important;width:52px!important;height:74px!important}}
+@media(max-width:680px){.qily-business-strip{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}.qily-business-strip span{font-size:11px;padding:5px 4px}.qily-card-theme>strong{font-size:13px}.qily-card-theme>b{font-size:8px}.qily-card-theme>em{display:none}.bottom-cards .mini-card,.bottom-cards .bottom-back{min-width:48px!important;width:48px!important;height:68px!important}}
