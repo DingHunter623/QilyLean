@@ -59,7 +59,7 @@ jobs:
             const page=await browser.newPage({viewport});
             const errors=[];page.on('pageerror',e=>errors.push(String(e)));
             await page.goto(base+'/tools/pure-ddz/',{waitUntil:'networkidle'});
-            await page.getByRole('button',{name:'开始游戏'}).click();
+            await page.locator('#welcome-start').click();
             await page.waitForFunction(()=>window.PureDDZTest?.getState().hands[0].length===17,{timeout:6000});
             await page.waitForTimeout(500);
             const data=await page.evaluate(()=>{
