@@ -40,11 +40,8 @@ jobs:
           targets = [
               Path('tools/pure-ddz/index.html'),
               Path('site-ui-consistency-v1.js'),
-              Path('.github/workflows/sync-pure-ddz-product-overview.yml'),
           ]
           for p in targets:
-              if not p.exists():
-                  continue
               s = p.read_text(encoding='utf-8')
               s = s.replace('Pure-DDZ-Classic@v1.1.0', 'Pure-DDZ-Classic@v1.2.0')
               s = s.replace('Pure-DDZ-Classic-v1.1.0.apk', 'Pure-DDZ-Classic-v1.2.0.apk')
@@ -65,7 +62,7 @@ jobs:
           set -euo pipefail
           git config user.name 'QilyLean Release Bot'
           git config user.email 'DingHunter623@gmail.com'
-          git add tools/pure-ddz/index.html site-ui-consistency-v1.js .github/workflows/sync-pure-ddz-product-overview.yml
+          git add tools/pure-ddz/index.html site-ui-consistency-v1.js
           if git diff --cached --quiet; then
             echo 'v1.2.0 APK links already synchronized'
           else
