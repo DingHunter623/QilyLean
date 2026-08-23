@@ -1,0 +1,70 @@
+name: Verify Pure DDZ Public Start Fix
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/verify-pure-ddz-public-startfix.yml'
+  workflow_dispatch:
+
+jobs:
+  public-start:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Wait for deployed fixed runtime
+        run: |
+          set -euo pipefail
+          ok=0
+          for i in {1..48}; do
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=startfix-20260823' -o /tmp/page.html || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=startfix-20260823' -o /tmp/game.js || true
+            if grep -q "let now=0" /tmp/game.js 2>/dev/null \
+              && grep -q "render();try{startMusic();}" /tmp/game.js 2>/dev/null \
+              && grep -q "js/visual-v120.js" /tmp/page.html 2>/dev/null; then
+              ok=1
+              break
+            fi
+            sleep 10
+          done
+          test "$ok" = 1
+          node --check /tmp/game.js
+      - name: Install Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --silent @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Public desktop and mobile start smoke
+        run: |
+          node <<'NODE'
+          const { chromium } = require('@playwright/test');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            for(const viewport of [{width:1440,height:900},{width:844,height:390}]){
+              const page=await browser.newPage({viewport});
+              const errors=[]; const dialogs=[];
+              page.on('pageerror',e=>errors.push(e.stack||String(e)));
+              page.on('dialog',async d=>{dialogs.push(d.message());await d.dismiss();});
+              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=startfix-20260823',{waitUntil:'networkidle',timeout:60000});
+              await page.evaluate(()=>localStorage.clear());
+              await page.reload({waitUntil:'networkidle',timeout:60000});
+              await page.waitForFunction(()=>Boolean(window.PureDDZTest),null,{timeout:10000});
+              const welcome=page.locator('#welcome');
+              if(await welcome.isVisible().catch(()=>false)) await page.locator('#welcome-start').click();
+              else await page.locator('#start').click();
+              await page.waitForTimeout(1500);
+              const result=await page.evaluate(()=>({phase:window.PureDDZTest.getState().phase,stateHand:window.PureDDZTest.getState().hands[0].length,domHand:document.querySelectorAll('#hand .card').length,strips:document.querySelectorAll('.qily-business-strip').length}));
+              console.log({viewport,result,errors,dialogs});
+              if(dialogs.length) throw new Error('unexpected initial dialog '+dialogs.join('|'));
+              if(result.stateHand<17||result.domHand<17) throw new Error('cards not visible '+JSON.stringify(result));
+              if(!['bidding','playing'].includes(result.phase)) throw new Error('bad phase '+JSON.stringify(result));
+              if(result.strips!==0) throw new Error('business strip present');
+              if(errors.length) throw new Error(errors.join('\n'));
+              await page.close();
+            }
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
