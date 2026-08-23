@@ -1,4 +1,5 @@
 name: Verify Pure DDZ Large Cards
+# Public verification retrigger: 2026-08-23 large-card-v2 closure.
 
 on:
   pull_request:
