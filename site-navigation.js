@@ -1,18 +1,20 @@
-/* QilyLean navigation runtime v36｜2026-08-22
+/* QilyLean navigation runtime v37｜2026-08-24
  * Hotfix closure:
  * 1) top-level /links/ navigation label is always “资源协同”;
  * 2) floating dock remains freely draggable while pressed and always returns to bottom-right after release/cancel/resize/pageshow;
  * 3) legacy persisted dock positions are removed;
- * 4) current V5 content-axis / dock / Hero / geometry assets are loaded with fresh cache keys.
+ * 4) current V5 content-axis / dock / Hero / geometry assets are loaded with fresh cache keys;
+ * 5) public integrity hotfix keeps terminology counts current and certificate verification boundaries explicit.
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV36) return;
-  w.__qilyStaticFirstNavigationV36 = true;
+  if (w.__qilyStaticFirstNavigationV37) return;
+  w.__qilyStaticFirstNavigationV37 = true;
 
   var CORE_SRC = '/site-navigation-core.js?v=20260822-dock-back-label-v27';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23';
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13';
+  var INTEGRITY_SRC = '/site-integrity-hotfix-v1.js?v=20260824-public-integrity-v1';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6';
   var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5';
@@ -144,6 +146,7 @@
   }
 
   function loadRuntime() {
+    loadScript('qilyPublicIntegrityHotfixV1', INTEGRITY_SRC);
     loadScript('qilySiteNavigationCoreScript', CORE_SRC, function () {
       closeRuntimeGap();
       if (needsLegacyRuntime()) {
@@ -166,13 +169,16 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v36',
+  mode: 'atomic-first-paint-v37',
   staticHtmlAuthority: true,
   runtimeDependencyWaterfall: false,
   routeScopedLegacy: true,
   ordinaryPagesDirectCore: true,
   homepageHeroTune: true,
   unifiedContentAxis: true,
+  publicIntegrityHotfix: true,
+  terminologyLiveSource: '/qilylean/site-data.json',
+  certificateVerificationBoundary: true,
   dockUniformVisualContract: true,
   dockUniformSize: 62,
   dockFreeDragXY: true,
@@ -185,5 +191,5 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   resourceCollaborationPrimaryLabel: true,
   friendLinksPageIdentityPreserved: true,
   unifiedOnePieceArrows: true,
-  version: '20260822-sitewide-visual-axis-v36'
+  version: '20260824-public-integrity-v37'
 });
