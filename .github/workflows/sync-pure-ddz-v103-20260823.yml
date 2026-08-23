@@ -1,0 +1,90 @@
+name: Sync Pure DDZ v1.0.3
+
+on:
+  push:
+    paths:
+      - '.github/workflows/sync-pure-ddz-v103-20260823.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify v1.0.3 release APK before website switch
+        run: |
+          set -euo pipefail
+          curl -fL --retry 8 --retry-delay 5 --max-time 180 \
+            'https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.3/Pure-DDZ-Classic-v1.0.3.apk' \
+            -o /tmp/Pure-DDZ-Classic-v1.0.3.apk
+          test -s /tmp/Pure-DDZ-Classic-v1.0.3.apk
+          test "$(head -c 2 /tmp/Pure-DDZ-Classic-v1.0.3.apk)" = 'PK'
+          unzip -l /tmp/Pure-DDZ-Classic-v1.0.3.apk | grep -q 'assets/www/index.html'
+          unzip -l /tmp/Pure-DDZ-Classic-v1.0.3.apk | grep -q 'assets/www/js/game.js'
+          unzip -l /tmp/Pure-DDZ-Classic-v1.0.3.apk | grep -q 'classes.dex'
+
+      - name: Replace every current website v1.0.2 reference with v1.0.3
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          files = [
+              Path('tools/pure-ddz/index.html'),
+              Path('times26001-home-card.js'),
+              Path('site-ui-consistency-v1.js'),
+              Path('.github/workflows/verify-pure-ddz-live.yml'),
+          ]
+          changed = []
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+              updated = text.replace('1.0.2', '1.0.3')
+              if updated != text:
+                  path.write_text(updated, encoding='utf-8')
+                  changed.append(str(path))
+          if not changed:
+              raise SystemExit('No v1.0.2 website references found to update')
+          print('Updated:')
+          print('\n'.join(changed))
+          PY
+          git diff --check
+          ! grep -R --line-number --fixed-strings 'Pure-DDZ-Classic-v1.0.2.apk' \
+            tools/pure-ddz/index.html times26001-home-card.js site-ui-consistency-v1.js .github/workflows/verify-pure-ddz-live.yml
+          grep -q 'Pure-DDZ-Classic-v1.0.3.apk' tools/pure-ddz/index.html
+          grep -q 'Pure-DDZ-Classic-v1.0.3.apk' site-ui-consistency-v1.js
+          grep -q 'Pure-DDZ-Classic-v1.0.3.apk' .github/workflows/verify-pure-ddz-live.yml
+
+      - name: Commit website v1.0.3 switch
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean Release Bot'
+          git config user.email 'DingHunter623@gmail.com'
+          git add tools/pure-ddz/index.html times26001-home-card.js site-ui-consistency-v1.js .github/workflows/verify-pure-ddz-live.yml
+          git commit -m 'fix: switch Pure DDZ website and APK links to v1.0.3'
+          git push origin HEAD:main
+
+      - name: Verify deployed QilyLean page and homepage runtime
+        run: |
+          set -euo pipefail
+          ok=0
+          for i in {1..36}; do
+            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260823-v103' -o /tmp/pure-ddz-live.html \
+              && grep -q 'Pure-DDZ-Classic-v1.0.3.apk' /tmp/pure-ddz-live.html \
+              && grep -q 'id="start"' /tmp/pure-ddz-live.html \
+              && grep -q 'id="hand"' /tmp/pure-ddz-live.html; then
+              ok=1
+              break
+            fi
+            sleep 10
+          done
+          test "$ok" = 1
+          curl -fsSL --max-time 25 'https://qilylean.com/site-ui-consistency-v1.js?verify=20260823-v103' -o /tmp/site-ui.js
+          grep -q 'Pure-DDZ-Classic-v1.0.3.apk' /tmp/site-ui.js
+          grep -q '纯净斗地主｜在线玩' /tmp/site-ui.js
+          echo 'PURE_DDZ_V103_QILYLEAN_LIVE_OK'
