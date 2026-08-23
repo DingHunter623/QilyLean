@@ -1,0 +1,70 @@
+name: Verify Pure DDZ Start Flow
+
+on:
+  pull_request:
+    paths:
+      - 'tools/pure-ddz/**'
+      - '.github/workflows/verify-pure-ddz-start-flow.yml'
+  workflow_dispatch:
+
+jobs:
+  start-flow:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Static contract
+        run: |
+          set -euo pipefail
+          node --check tools/pure-ddz/game/js/game.js
+          node --check tools/pure-ddz/game/js/qilylean-theme.js
+          grep -q 'function shouldConfirmRestart' tools/pure-ddz/game/js/game.js
+          grep -q "state.phase==='bidding'||state.phase==='playing'" tools/pure-ddz/game/js/game.js
+          ! grep -q "table.appendChild(strip)" tools/pure-ddz/game/js/qilylean-theme.js
+          grep -q "querySelectorAll('.qily-business-strip').forEach(node=>node.remove())" tools/pure-ddz/game/js/qilylean-theme.js
+      - name: Install browser smoke deps
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --silent @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start web server
+        run: |
+          nohup python3 -m http.server 4173 --directory tools/pure-ddz >/tmp/ddz-start-http.log 2>&1 &
+          for i in {1..20}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/ddz-start-http.log || true
+          exit 1
+      - name: Click Start Game and verify real deal
+        run: |
+          node <<'NODE'
+          const { chromium } = require('@playwright/test');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            for (const viewport of [{width:1440,height:900},{width:844,height:390}]) {
+              const page=await browser.newPage({viewport});
+              let dialogs=[];
+              page.on('dialog', async dialog=>{dialogs.push(dialog.message()); await dialog.dismiss();});
+              await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'});
+              await page.evaluate(()=>localStorage.clear());
+              await page.reload({waitUntil:'networkidle'});
+              const welcome=page.locator('#welcome');
+              if(await welcome.isVisible().catch(()=>false)) await page.locator('#welcome-start').click();
+              else await page.locator('#start').click();
+              await page.waitForTimeout(1200);
+              const result=await page.evaluate(()=>({
+                phase:window.PureDDZTest?.getState().phase,
+                hand:document.querySelectorAll('#hand .card').length,
+                strips:document.querySelectorAll('.qily-business-strip').length,
+                startText:document.querySelector('#start')?.textContent?.trim()
+              }));
+              if(dialogs.length) throw new Error('Unexpected confirm/dialog on initial start: '+dialogs.join(' | '));
+              if(result.phase!=='bidding'&&result.phase!=='playing') throw new Error('Game did not start: '+JSON.stringify(result));
+              if(result.hand<17) throw new Error('Cards were not dealt: '+JSON.stringify(result));
+              if(result.strips!==0) throw new Error('Business strip still present: '+JSON.stringify(result));
+              await page.close();
+            }
+            await browser.close();
+          })().catch(err=>{console.error(err);process.exit(1)});
+          NODE
