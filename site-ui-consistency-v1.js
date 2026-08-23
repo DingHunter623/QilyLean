@@ -1,6 +1,6 @@
-/* QilyLean 轻量父级导航与外壳一致性 v3.2｜2026-08-22
- * 性能原则：静态HTML首帧即正确；运行时只校正导航和悬浮栏，不扫描或改写正文。
- * 本轮关闭重复的“分享官网”动作，固定六项 Dock 顺序并保持父级导航语义。
+/* QilyLean 轻量父级导航与外壳一致性 v3.3｜2026-08-23
+ * 性能原则：静态HTML首帧即正确；运行时只校正导航、悬浮栏及首页关键数字产品入口。
+ * 本轮追加 Pure DDZ 首页稳定入口，不改写既有首页业务正文。
  */
 (function(d,w){
   'use strict';
@@ -8,7 +8,7 @@
   w.__qilyUiConsistencyV3=true;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260822-remediation-v12';
+  var BUILD_ID='20260823-pure-ddz-entry-v13';
   var BUILD_KEY='qily_site_ui_build_v1';
 
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
@@ -148,13 +148,36 @@
     return true;
   }
 
-  function reconcileFast(){normalizePrimaryNav();normalizeDock();}
+  function ensurePureDdzHomeEntry(){
+    if(normalizedPath(location.pathname)!=='/'||d.getElementById('qilyPureDdzStableEntry'))return;
+
+    var heroActions=d.querySelector('.qily-home-actions,.hero .actions,.hero-actions');
+    if(heroActions&&!heroActions.querySelector('[href="/tools/pure-ddz/"]')){
+      var heroLink=d.createElement('a');
+      heroLink.href='/tools/pure-ddz/';
+      heroLink.textContent='纯净斗地主｜在线玩';
+      heroLink.setAttribute('data-qily-pure-ddz-entry','hero');
+      heroActions.appendChild(heroLink);
+    }
+
+    var anchor=d.getElementById('qily-digital-enablers')||d.getElementById('qily-core-services');
+    if(!anchor||!anchor.parentNode)return;
+
+    var section=d.createElement('section');
+    section.id='qilyPureDdzStableEntry';
+    section.className='qily-ia-section';
+    section.setAttribute('data-qily-static-source','pure-ddz-stable-entry-v1');
+    section.innerHTML='<div class="qily-ia-inner"><div class="qily-ia-heading"><span class="qily-ia-kicker">DIGITAL PRODUCT｜休闲数字作品</span><h2>Pure DDZ Classic｜纯净斗地主</h2><p>QilyLean制造运营六大业务主旨主题版。无广告、无注册、无登录、无支付；网页版直接开局，Android v1.0.2 支持离线安装。</p></div><div class="qily-ia-grid"><article class="qily-ia-card"><small>WEB GAME｜ONLINE</small><h3>网页版直接玩</h3><p>三人叫地主、经典牌型、AI电脑对手、智能提示、积分战绩与中文语音。</p><div class="qily-ia-result">点击即进入牌桌，无需账号</div></article><article class="qily-ia-card"><small>ANDROID｜v1.0.2</small><h3>离线安装版</h3><p>游戏核心资源随APK打包，启动失败增加原生兜底页，构建阶段校验牌桌资源与classes.dex。</p><div class="qily-ia-result">Android 8及以上｜离线可用</div></article><article class="qily-ia-card"><small>QILYLEAN THEME｜06</small><h3>六大业务主题</h3><p>现场事实、工程数据、精益改善、质量保证、数智固化、知识资产作为桌面与牌背视觉寓意。</p><div class="qily-ia-result">传统牌面识别规则保持清晰</div></article></div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/tools/pure-ddz/">立即在线玩斗地主</a><a class="qily-ia-button" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.2/Pure-DDZ-Classic-v1.0.2.apk">下载 Android v1.0.2</a></div></div>';
+    anchor.parentNode.insertBefore(section,anchor.nextSibling);
+  }
+
+  function reconcileFast(){normalizePrimaryNav();normalizeDock();ensurePureDdzHomeEntry();}
   function boot(){rememberBuild();reconcileFast();}
 
   d.addEventListener('qily:shell-ready',reconcileFast);
   w.addEventListener('pageshow',reconcileFast);
 
   w.__qilyParentNavigationV3=true;
-  w.__qilyDockOrderContract=Object.freeze({order:['home','top','back','search','current','contact'],version:'20260822-remediation-v12'});
+  w.__qilyDockOrderContract=Object.freeze({order:['home','top','back','search','current','contact'],version:'20260823-pure-ddz-entry-v13'});
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })(document,window);
