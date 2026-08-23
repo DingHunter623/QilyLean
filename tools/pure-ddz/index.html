@@ -23,7 +23,7 @@
           if(i>=roots.length)return;
           const link=document.createElement('link');
           link.rel='stylesheet';
-          link.href=roots[i++]+path+'?v=20260823-v110';
+          link.href=roots[i++]+path+'?v=20260823-large-card-v2';
           link.onerror=()=>{link.remove();next();};
           document.head.appendChild(link);
         };
@@ -31,6 +31,7 @@
       };
       loadStyle('css/style.css');
       loadStyle('css/qilylean-theme.css');
+      loadStyle('css/card-size-v2.css');
       window.__PURE_DDZ_ROOTS__=roots;
     })();
   </script>
@@ -207,7 +208,7 @@
           return;
         }
         const script=document.createElement('script');
-        script.src=roots[index]+path+'?v=20260823-v110';
+        script.src=roots[index]+path+'?v=20260823-large-card-v2';
         script.onload=done;
         script.onerror=()=>{script.remove();load(path,index+1,done);};
         document.body.appendChild(script);
@@ -216,7 +217,7 @@
         load('js/card-theme.js',0,()=>{
           load('js/ai-expert.js',0,()=>{
             load('js/game.js',0,()=>{
-              status.textContent='v1.1.0 专家主题牌桌已加载';
+              status.textContent='v1.1.0 大牌面专家主题牌桌已加载';
               status.className='ready';
             });
           });
