@@ -1,6 +1,6 @@
 /* QilyLean 轻量父级导航与外壳一致性 v3.4｜2026-08-23
  * 性能原则：静态HTML首帧即正确；运行时只校正导航、悬浮栏及首页关键数字产品入口。
- * 本轮将 Pure DDZ 首页入口切换到通过 Android 35 真启动门禁的 v1.2.0。
+ * 本轮将 Pure DDZ 首页入口统一命名为“启力精益斗地主”。
  */
 (function(d,w){
   'use strict';
@@ -8,7 +8,7 @@
   w.__qilyUiConsistencyV3=true;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260823-pure-ddz-overview-v16';
+  var BUILD_ID='20260823-pure-ddz-home-name-v17';
   var BUILD_KEY='qily_site_ui_build_v1';
 
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
@@ -155,7 +155,7 @@
     if(heroActions&&!heroActions.querySelector('[href="/tools/pure-ddz/"]')){
       var heroLink=d.createElement('a');
       heroLink.href='/tools/pure-ddz/';
-      heroLink.textContent='纯净斗地主｜在线玩';
+      heroLink.textContent='启力精益斗地主｜在线玩';
       heroLink.setAttribute('data-qily-pure-ddz-entry','hero');
       heroActions.appendChild(heroLink);
     }
@@ -166,8 +166,8 @@
     var section=d.createElement('section');
     section.id='qilyPureDdzStableEntry';
     section.className='qily-ia-section';
-    section.setAttribute('data-qily-static-source','pure-ddz-stable-entry-v4');
-    section.innerHTML='<div class="qily-ia-inner"><div class="qily-ia-heading"><span class="qily-ia-kicker">DIGITAL PRODUCT｜休闲数字作品</span><h2>Pure DDZ Classic｜纯净斗地主</h2><p>QilyLean 无广告斗地主｜简单娱乐，益智生活。源于父母辈真实使用需求：减少实名注册、账号登录和验证码等操作门槛，打开即可轻松娱乐；也适合成年人于高强度工作之外放松思考。</p></div><div class="qily-ia-grid"><article class="qily-ia-card"><small>WEB GAME｜ONLINE</small><h3>无广告 · 打开即玩</h3><p>默认 Expert 专家级 AI，公开信息记牌、牌型保护、残局压制、农民协同，并保留智能提示、积分战绩与中文语音。</p><div class="qily-ia-result">点击即进入牌桌，无需账号</div></article><article class="qily-ia-card"><small>ANDROID｜待验证</small><h3>离线安装版</h3><p>当前仅开放网页版继续打磨；Android 安装包待网页版验证确认 OK 后再重新发布。</p><div class="qily-ia-result">Android 8及以上｜离线可用</div></article><article class="qily-ia-card"><small>QILYLEAN THEME｜06</small><h3>技能主题牌面</h3><p>54张牌以现场事实、工程数据、精益改善、质量保证、数智固化、知识资产及IE/ECRS/SMED/VSM/TPM/OEE等技能为主题；大王为个人头像，小王为C919六大业务飞机模型。</p><div class="qily-ia-result">传统牌面识别规则保持清晰</div></article></div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/tools/pure-ddz/">立即在线玩斗地主</a><span class="qily-ia-button" aria-disabled="true">Android 安装包待网页版验证后发布</span></div></div>';
+    section.setAttribute('data-qily-static-source','pure-ddz-stable-entry-v5');
+    section.innerHTML='<div class="qily-ia-inner"><div class="qily-ia-heading"><span class="qily-ia-kicker">DIGITAL PRODUCT｜休闲数字作品</span><h2>启力精益斗地主</h2><p>QilyLean 无广告斗地主｜简单娱乐，益智生活。源于父母辈真实使用需求：减少实名注册、账号登录和验证码等操作门槛，打开即可轻松娱乐；也适合成年人于高强度工作之外放松思考。</p></div><div class="qily-ia-grid"><article class="qily-ia-card"><small>WEB GAME｜ONLINE</small><h3>无广告 · 打开即玩</h3><p>默认 Expert 专家级 AI，公开信息记牌、牌型保护、残局压制、农民协同，并保留智能提示、积分战绩与中文语音。</p><div class="qily-ia-result">点击即进入牌桌，无需账号</div></article><article class="qily-ia-card"><small>ANDROID｜待验证</small><h3>离线安装版</h3><p>当前仅开放网页版继续打磨；Android 安装包待网页版验证确认 OK 后再重新发布。</p><div class="qily-ia-result">Android 8及以上｜离线可用</div></article><article class="qily-ia-card"><small>QILYLEAN THEME</small><h3>技能主题牌面</h3><p>54张牌以现场事实、工程数据、精益改善、质量保证、数智固化、知识资产及IE/ECRS/SMED/VSM/TPM/OEE等技能为主题；大王为个人头像，小王为C919六大业务飞机模型。</p><div class="qily-ia-result">传统牌面识别规则保持清晰</div></article></div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/tools/pure-ddz/">立即在线玩斗地主</a><span class="qily-ia-button" aria-disabled="true">Android 安装包待网页版验证后发布</span></div></div>';
     anchor.parentNode.insertBefore(section,anchor.nextSibling);
   }
 
@@ -178,6 +178,6 @@
   w.addEventListener('pageshow',reconcileFast);
 
   w.__qilyParentNavigationV3=true;
-  w.__qilyDockOrderContract=Object.freeze({order:['home','top','back','search','current','contact'],version:'20260823-pure-ddz-overview-v16'});
+  w.__qilyDockOrderContract=Object.freeze({order:['home','top','back','search','current','contact'],version:'20260823-pure-ddz-home-name-v17'});
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })(document,window);
