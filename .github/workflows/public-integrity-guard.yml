@@ -1,0 +1,40 @@
+name: Public integrity guard
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'knowledge/terminology.html'
+      - 'capabilities/index.html'
+      - 'trust/index.html'
+      - 'qilylean/site-data.json'
+      - 'site-navigation.js'
+      - 'site-integrity-hotfix-v1.js'
+      - 'scripts/check-public-integrity-v1.js'
+  pull_request:
+    paths:
+      - 'knowledge/terminology.html'
+      - 'capabilities/index.html'
+      - 'trust/index.html'
+      - 'qilylean/site-data.json'
+      - 'site-navigation.js'
+      - 'site-integrity-hotfix-v1.js'
+      - 'scripts/check-public-integrity-v1.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Syntax check integrity runtime
+        run: node --check site-integrity-hotfix-v1.js
+      - name: Validate public integrity rules
+        run: node scripts/check-public-integrity-v1.js
