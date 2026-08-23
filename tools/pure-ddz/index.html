@@ -1,37 +1,224 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="zh-CN" data-font="large">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0f4b5a">
-  <title>纯净斗地主｜QilyLean 启力精益</title>
-  <meta name="description" content="QilyLean｜启力精益推出的纯净斗地主：无广告、无登录、无支付，支持网页版直接玩与 Android 离线安装。">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#073c47">
+  <meta name="description" content="QilyLean｜启力精益纯净斗地主：无广告、无登录、无支付，网页版直接玩，Android 离线安装。">
   <link rel="canonical" href="https://qilylean.com/tools/pure-ddz/">
+  <title>纯净斗地主｜QilyLean 启力精益主题版</title>
   <style>
-    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;background:#eef7f5;color:#173b38}
-    body{display:flex;flex-direction:column;min-height:100vh}.top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:12px clamp(14px,3vw,34px);background:linear-gradient(90deg,#0f4b5a,#178b94);color:#fff;box-shadow:0 8px 24px rgba(15,75,90,.22)}
-    .brand{text-decoration:none;color:#fff;font-weight:900;font-size:20px}.copy{font-size:13px;color:#e7f7f4;font-weight:700}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:8px 14px;border-radius:12px;text-decoration:none;font-weight:900}.web{color:#0f4b5a;background:#fff}.apk{color:#4e3000;background:linear-gradient(145deg,#ffe39b,#efb73e)}
-    .business{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:7px;padding:9px clamp(14px,3vw,34px);background:#fff;border-bottom:1px solid #cfe2df}.business span{padding:7px 5px;border-radius:10px;background:#e9f6f4;color:#0f4b5a;text-align:center;font-size:12px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .frame-wrap{flex:1;min-height:820px;background:#073c47}.frame{display:block;width:100%;height:calc(100vh - 111px);min-height:820px;border:0;background:#073c47}
-    .fallback{padding:12px 18px;text-align:center;background:#fff;color:#5f7474;font-size:13px}.fallback a{color:#0f6d75;font-weight:800}
-    @media(max-width:900px){.business{grid-template-columns:repeat(3,minmax(0,1fr))}.frame{height:calc(100vh - 150px)}}
-    @media(max-width:580px){.top{align-items:flex-start}.copy{width:100%}.business{grid-template-columns:repeat(2,minmax(0,1fr))}.frame{height:calc(100vh - 190px);min-height:760px}}
+    html,body{margin:0;min-height:100%;background:#073c47;color:#fff;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif}
+    #boot-status{position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:200;max-width:92vw;padding:8px 14px;border-radius:999px;background:rgba(3,36,43,.94);color:#ffe39b;font-size:13px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+    #boot-status.ready{display:none}
+    #boot-status.error{border:1px solid #ffcf7d;color:#fff;background:#8d322d}
+    .apk-inline{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:9px 14px;border:1px solid rgba(255,255,255,.28);border-radius:13px;color:#4e3000!important;background:linear-gradient(145deg,#ffe39b,#efb73e)!important;font-weight:900;text-decoration:none!important}
   </style>
+  <script>
+    (()=>{
+      const roots=['./game/','https://cdn.jsdelivr.net/gh/DingHunter623/Pure-DDZ-Classic@main/web/','https://raw.githack.com/DingHunter623/Pure-DDZ-Classic/main/web/'];
+      const loadStyle=(path)=>{
+        let i=0;
+        const next=()=>{
+          if(i>=roots.length)return;
+          const link=document.createElement('link');
+          link.rel='stylesheet';
+          link.href=roots[i++]+path+'?v=20260823-v2';
+          link.onerror=()=>{link.remove();next();};
+          document.head.appendChild(link);
+        };
+        next();
+      };
+      loadStyle('css/style.css');
+      loadStyle('css/qilylean-theme.css');
+      window.__PURE_DDZ_ROOTS__=roots;
+    })();
+  </script>
 </head>
 <body>
-  <header class="top">
-    <div><a class="brand" href="/">QilyLean｜启力精益 · 纯净斗地主</a><div class="copy">网页版直接玩 · Android 离线安装 · 无广告 / 无登录 / 无支付</div></div>
-    <nav class="actions" aria-label="游戏入口">
-      <a class="web" href="#game">立即在线玩</a>
-      <a class="apk" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.0/Pure-DDZ-Classic-v1.0.0.apk">Android APK 下载</a>
-    </nav>
-  </header>
-  <section class="business" aria-label="QilyLean六大业务主旨">
-    <span>01｜现场事实</span><span>02｜工程数据</span><span>03｜精益改善</span><span>04｜质量保证</span><span>05｜数智固化</span><span>06｜知识资产</span>
-  </section>
-  <main id="game" class="frame-wrap">
-    <iframe class="frame" title="QilyLean 纯净斗地主网页版" loading="eager" allow="autoplay" src="https://cdn.jsdelivr.net/gh/DingHunter623/Pure-DDZ-Classic@main/web/index.html"></iframe>
-  </main>
-  <div class="fallback">如嵌入页面因网络缓存暂未更新，可直接访问 <a href="https://github.com/DingHunter623/Pure-DDZ-Classic" target="_blank" rel="noopener">Pure-DDZ-Classic 项目页</a>。</div>
+  <div id="boot-status">正在加载 QilyLean 纯净斗地主牌桌…</div>
+  <div class="game-shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="返回 QilyLean 官网">
+        <span class="brand-mark" aria-hidden="true"><i>♠</i><i>♥</i></span>
+        <span><strong>纯净斗地主</strong><small>QilyLean｜启力精益主题版</small></span>
+      </a>
+      <section class="scoreboard" aria-label="本机积分与战绩">
+        <div><small>安心积分</small><strong id="score">1000</strong></div>
+        <div><small>胜 / 负</small><strong><span id="wins">0</span> / <span id="losses">0</span></strong></div>
+        <div><small>连胜</small><strong id="streak">0</strong></div>
+      </section>
+      <nav class="top-actions" aria-label="游戏操作">
+        <button id="audio-toggle" class="icon-btn" type="button" aria-label="切换音乐与语音">🔊 <span>声音开</span></button>
+        <button id="help-open" class="icon-btn" type="button">玩法</button>
+        <button id="settings-open" class="icon-btn" type="button">设置</button>
+        <a class="apk-inline" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.2/Pure-DDZ-Classic-v1.0.2.apk">Android v1.0.2</a>
+        <button id="start" class="start-btn" type="button">开始游戏</button>
+      </nav>
+    </header>
+
+    <main class="game-main">
+      <aside class="clean-promise" aria-label="纯净承诺">
+        <strong>永久免费</strong><span>无广告 · 无注册 · 无登录 · 无支付 · 不收集个人信息</span>
+      </aside>
+
+      <section class="table-wrap" aria-label="斗地主牌桌">
+        <div class="table-decoration" aria-hidden="true"><span>福</span></div>
+
+        <section id="left-panel" class="player-panel ai left-player" aria-label="左家电脑玩家">
+          <div class="avatar" aria-hidden="true">👴</div>
+          <div class="player-name">左家 · 电脑</div>
+          <div id="left-role" class="role">等待开局</div>
+          <div id="left-count" class="count">17 张</div>
+          <div id="left-bid" class="bid-tag" aria-live="polite"></div>
+          <div id="left-backs" class="card-backs" aria-hidden="true"></div>
+        </section>
+
+        <section id="right-panel" class="player-panel ai right-player" aria-label="右家电脑玩家">
+          <div class="avatar" aria-hidden="true">👵</div>
+          <div class="player-name">右家 · 电脑</div>
+          <div id="right-role" class="role">等待开局</div>
+          <div id="right-count" class="count">17 张</div>
+          <div id="right-bid" class="bid-tag" aria-live="polite"></div>
+          <div id="right-backs" class="card-backs" aria-hidden="true"></div>
+        </section>
+
+        <section class="center-area" aria-live="polite">
+          <div class="round-meta">
+            <span>第 <b id="round-number">0</b> 局</span>
+            <span>底分 <b id="base-score">1</b></span>
+            <span>倍数 <b id="multiplier">×1</b></span>
+          </div>
+          <div class="bottom-zone">
+            <span class="bottom-label">三张底牌</span>
+            <div id="bottom-cards" class="bottom-cards"></div>
+          </div>
+          <div id="status" class="status">准备开始</div>
+          <div id="center-play" class="center-play">
+            <div class="center-tip">点击“开始游戏”，无需登录即可游玩</div>
+          </div>
+        </section>
+
+        <section id="me-panel" class="player-panel me-player" aria-label="我的手牌与操作">
+          <div class="me-meta">
+            <span class="avatar" aria-hidden="true">🙂</span>
+            <span class="player-name">我</span>
+            <span id="me-role" class="role">等待开局</span>
+            <span id="me-count" class="count">17 张</span>
+            <span id="me-bid" class="bid-tag"></span>
+          </div>
+          <div id="hand" class="hand" aria-label="我的手牌"></div>
+          <div id="bid-controls" class="controls bid-controls hidden" aria-label="叫地主">
+            <button class="control-btn quiet-btn" type="button" data-bid="0">不叫</button>
+            <button class="control-btn bid-btn" type="button" data-bid="1">1 分</button>
+            <button class="control-btn bid-btn" type="button" data-bid="2">2 分</button>
+            <button class="control-btn bid-btn strong" type="button" data-bid="3">3 分抢地主</button>
+          </div>
+          <div id="play-controls" class="controls hidden" aria-label="出牌操作">
+            <button id="hint" class="control-btn hint-btn" type="button">AI 智能提示</button>
+            <button id="pass" class="control-btn pass-btn" type="button">不要</button>
+            <button id="play" class="control-btn play-btn" type="button">确认出牌</button>
+          </div>
+          <p id="hint-message" class="hint-message">选牌后点“确认出牌”；看不准时可使用 AI 提示。</p>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>纯净斗地主 Web · Android v1.0.2</span>
+      <span>QilyLean｜启力精益 开发</span>
+      <a href="/">返回官网首页</a>
+    </footer>
+  </div>
+
+  <div id="welcome" class="modal welcome-modal" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+    <div class="modal-card welcome-card">
+      <div class="welcome-mark" aria-hidden="true">♠ <b>♥</b></div>
+      <p class="eyebrow">QilyLean 六大业务主旨主题 · 为父母辈打造，也适合成年人休闲养神</p>
+      <h1 id="welcome-title">纯净斗地主</h1>
+      <p class="welcome-copy">没有广告弹窗，不用注册登录，没有付费套路。打开就能玩，字大、按钮大、提示清楚。牌桌视觉融入“现场事实、工程数据、精益改善、质量保证、数智固化、知识资产”六大业务主旨。</p>
+      <ul class="feature-list">
+        <li><b>无广告纯单机</b><span>网页直接玩，Android 可离线使用</span></li>
+        <li><b>大字体适老化</b><span>高对比牌面与大按钮</span></li>
+        <li><b>积分与胜局奖励</b><span>战绩只保存在本机</span></li>
+        <li><b>语音、音乐、AI提示</b><span>按需开关，不会强制打扰</span></li>
+      </ul>
+      <button id="welcome-start" class="start-btn hero-start" type="button">立即开始</button>
+      <button id="welcome-settings" class="text-btn" type="button">先调整字体和声音</button>
+    </div>
+  </div>
+
+  <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="modal-card settings-card">
+      <div class="modal-head"><div><p class="eyebrow">安心、简单、看得清</p><h2 id="settings-title">游戏设置</h2></div><button class="close-btn" type="button" data-close="settings-modal" aria-label="关闭设置">×</button></div>
+      <div class="settings-grid">
+        <label class="setting-row"><span><b>经典背景音乐</b><small>原创五声音阶旋律，可随时关闭</small></span><input id="setting-music" type="checkbox" checked></label>
+        <label class="setting-row"><span><b>中文语音提示</b><small>叫分、出牌、输赢均有语音提醒</small></span><input id="setting-voice" type="checkbox" checked></label>
+        <label class="setting-row"><span><b>出牌音效</b><small>保留轻柔的选择与出牌反馈</small></span><input id="setting-effects" type="checkbox" checked></label>
+        <label class="setting-select"><span><b>字体大小</b><small>可根据视力习惯随时调整</small></span><select id="setting-font"><option value="normal">标准大字</option><option value="large">舒适大字</option><option value="xlarge">特大字</option></select></label>
+        <label class="setting-select"><span><b>电脑难度</b><small>电脑只使用公开牌桌信息，不看你的手牌</small></span><select id="setting-difficulty"><option value="easy">轻松</option><option value="normal">标准</option><option value="smart">稳健</option></select></label>
+      </div>
+      <section class="official-info" aria-label="官方信息">
+        <h3>QilyLean 官方信息</h3>
+        <a href="/"><span>官方网址</span><b>https://qilylean.com</b></a>
+        <a href="mailto:admin@qilylean.com"><span>企业邮箱</span><b>admin@qilylean.com</b></a>
+        <p><span>Android：1.0.2</span><span>微信：Qily259</span></p>
+      </section>
+      <button class="start-btn modal-done" type="button" data-close="settings-modal">保存并返回</button>
+    </div>
+  </div>
+
+  <div id="help-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="help-title">
+    <div class="modal-card help-card">
+      <div class="modal-head"><div><p class="eyebrow">三分钟轻松上手</p><h2 id="help-title">玩法说明</h2></div><button class="close-btn" type="button" data-close="help-modal" aria-label="关闭玩法说明">×</button></div>
+      <div class="help-sections">
+        <section><b>1</b><div><h3>先叫地主</h3><p>三位玩家依次选择不叫或 1–3 分，分数最高者成为地主并获得三张底牌。</p></div></section>
+        <section><b>2</b><div><h3>按牌型出牌</h3><p>支持单牌、对子、三带、顺子、连对、飞机、四带二、炸弹和王炸等经典牌型。</p></div></section>
+        <section><b>3</b><div><h3>先出完者获胜</h3><p>地主单独一方，另外两位农民同队。炸弹、王炸与春天会增加倍数和积分。</p></div></section>
+        <section><b>AI</b><div><h3>智能辅助提示</h3><p>轮到你时点击“AI 智能提示”，系统会优先推荐节省炸弹、便于走牌的组合。</p></div></section>
+      </div>
+      <p class="privacy-note">本游戏无广告、无账号、无支付；积分与设置只保存在当前设备。</p>
+      <button class="start-btn modal-done" type="button" data-close="help-modal">我知道了</button>
+    </div>
+  </div>
+
+  <div id="result" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="result-title">
+    <div class="modal-card result-card">
+      <div id="result-icon" class="result-icon" aria-hidden="true">🏆</div>
+      <p class="eyebrow">本局结算</p>
+      <h2 id="result-title">本局结束</h2>
+      <p id="result-text"></p>
+      <div class="result-stats"><span>积分变化 <b id="result-score">+0</b></span><span>最终倍数 <b id="result-multiplier">×1</b></span></div>
+      <button id="again" class="start-btn hero-start" type="button">再来一局</button>
+      <button id="result-close" class="text-btn" type="button">先休息一下</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="assertive"></div>
+
+  <script>
+    (()=>{
+      const roots=window.__PURE_DDZ_ROOTS__||[];
+      const status=document.getElementById('boot-status');
+      const load=(path,index,done)=>{
+        if(index>=roots.length){
+          status.textContent='牌桌脚本加载失败，请检查网络后刷新；Android 用户可下载安装离线版 v1.0.2。';
+          status.className='error';
+          return;
+        }
+        const script=document.createElement('script');
+        script.src=roots[index]+path+'?v=20260823-v2';
+        script.onload=done;
+        script.onerror=()=>{script.remove();load(path,index+1,done);};
+        document.body.appendChild(script);
+      };
+      load('js/qilylean-theme.js',0,()=>{
+        load('js/game.js',0,()=>{
+          status.textContent='牌桌已加载';
+          status.className='ready';
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
