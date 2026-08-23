@@ -1,0 +1,88 @@
+name: Verify Pure DDZ Capability Showcase
+
+on:
+  pull_request:
+    paths:
+      - 'capabilities/index.html'
+      - 'site-ui-consistency-v1.js'
+      - 'tools/pure-ddz/**'
+      - '.github/workflows/verify-pure-ddz-capability-showcase.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Verify repository contract
+        run: |
+          set -euo pipefail
+          node --check site-ui-consistency-v1.js
+          node --check tools/pure-ddz/game/js/game.js
+          node --check tools/pure-ddz/game/js/visual-v120.js
+          ! grep -q 'qilyPureDdzStableEntry' site-ui-consistency-v1.js
+          grep -q 'pure-ddz-digital-tool' capabilities/index.html
+          grep -q 'avatar-king.webp' capabilities/index.html
+          grep -q 'airplane-joker.png' capabilities/index.html
+          grep -q 'A♠' capabilities/index.html
+          grep -q 'K♣' capabilities/index.html
+          grep -q 'Q♥' capabilities/index.html
+          grep -q 'v120-reset-stats' tools/pure-ddz/game/js/visual-v120.js
+          grep -q 'fitHand' tools/pure-ddz/game/js/visual-v120.js
+          grep -q "musicMode='normal'" tools/pure-ddz/game/js/game.js
+          grep -q "musicMode='exciting'" tools/pure-ddz/game/js/game.js
+          grep -q "musicMode=humanWon?'win':'lose'" tools/pure-ddz/game/js/game.js
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev @playwright/test@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium
+      - name: Start local site
+        run: |
+          nohup python3 -m http.server 4173 >/tmp/qily-ddz-showcase.log 2>&1 &
+          for i in {1..20}; do curl -fsS http://127.0.0.1:4173/tools/pure-ddz/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/qily-ddz-showcase.log || true
+          exit 1
+      - name: Verify homepage placement, capability showcase, and visible hands
+        run: |
+          cat > /tmp/verify.mjs <<'EOF'
+          import { chromium } from '@playwright/test';
+          const browser=await chromium.launch({headless:true});
+          const base='http://127.0.0.1:4173';
+          async function check(viewport){
+            const page=await browser.newPage({viewport});
+            const errors=[];page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto(base+'/tools/pure-ddz/',{waitUntil:'networkidle'});
+            await page.getByRole('button',{name:'开始游戏'}).click();
+            await page.waitForFunction(()=>window.PureDDZTest?.getState().hands[0].length===17,{timeout:6000});
+            await page.waitForTimeout(400);
+            const data=await page.evaluate(()=>{
+              const hand=document.querySelector('#hand');const cards=[...document.querySelectorAll('#hand .card')];
+              const hr=hand.getBoundingClientRect();const rects=cards.map(c=>c.getBoundingClientRect());
+              return {count:cards.length,first:rects[0],last:rects.at(-1),hand:hr,reset:Boolean(document.querySelector('#v120-reset-stats'))};
+            });
+            if(data.count!==17) throw new Error('Expected 17 visible cards, got '+data.count);
+            if(!data.reset) throw new Error('Stats reset button missing');
+            if(data.first.left < data.hand.left-2 || data.last.right > data.hand.right+2) throw new Error('Hand cards overflow visible hand area');
+            if(errors.length) throw new Error('pageerror: '+errors.join('\n'));
+            await page.close();
+          }
+          const home=await browser.newPage({viewport:{width:1440,height:900}});
+          await home.goto(base+'/',{waitUntil:'networkidle'});
+          if(await home.locator('#qilyPureDdzStableEntry').count()) throw new Error('Legacy home DDZ section still exists');
+          await home.close();
+          const cap=await browser.newPage({viewport:{width:1440,height:900}});
+          await cap.goto(base+'/capabilities/',{waitUntil:'networkidle'});
+          if(await cap.locator('#pure-ddz-digital-tool').count()!==1) throw new Error('Capability DDZ digital tool missing');
+          if(await cap.locator('.capability-ddz-joker').count()!==2) throw new Error('Joker showcase incomplete');
+          if(await cap.locator('.capability-ddz-card').count()!==3) throw new Error('Representative card showcase incomplete');
+          await cap.close();
+          await check({width:1440,height:900});
+          await check({width:844,height:390});
+          await browser.close();
+          console.log('PURE_DDZ_CAPABILITY_AND_HAND_VISIBILITY_OK');
+          EOF
+          node /tmp/verify.mjs
