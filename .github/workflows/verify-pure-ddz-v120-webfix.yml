@@ -28,8 +28,8 @@ jobs:
           grep -q '启力精益斗地主' tools/pure-ddz/index.html
           grep -q '>启力提示</button>' tools/pure-ddz/index.html
           ! grep -q '启力托管' tools/pure-ddz/index.html tools/pure-ddz/game/js/visual-v120.js
-          grep -q "CARD_SITE='启力精益'" tools/pure-ddz/game/js/card-theme.js
-          ! grep -q "CARD_SITE='启力精益 | https://qilylean.com'" tools/pure-ddz/game/js/card-theme.js
+          ! grep -q "CARD_SITE=" tools/pure-ddz/game/js/card-theme.js
+          ! grep -q 'qily-card-site' tools/pure-ddz/game/js/card-theme.js
           grep -q 'v120-scroll-cue' tools/pure-ddz/game/css/visual-v120.css
           grep -q '启力提示功能' tools/pure-ddz/game/js/visual-v120.js
           grep -q 'chooseAiPlay(0)' tools/pure-ddz/game/js/visual-v120.js
@@ -45,7 +45,7 @@ jobs:
           set -euo pipefail
           ok=0
           for i in {1..60}; do
-            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260823-webfix1' -o /tmp/page.html \
+            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260823-webfix2' -o /tmp/page.html \
               && grep -q '启力精益斗地主' /tmp/page.html \
               && grep -q '>启力提示</button>' /tmp/page.html \
               && grep -q '安装包待验证后发布' /tmp/page.html \
@@ -58,14 +58,14 @@ jobs:
           done
           test "$ok" = 1
 
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260823-webfix1' -o /tmp/card-theme.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260823-webfix1' -o /tmp/visual.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/visual-v120.css?verify=20260823-webfix1' -o /tmp/visual.css
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260823-webfix2' -o /tmp/card-theme.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260823-webfix2' -o /tmp/visual.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/visual-v120.css?verify=20260823-webfix2' -o /tmp/visual.css
 
           node --check /tmp/card-theme.js
           node --check /tmp/visual.js
-          grep -q "CARD_SITE='启力精益'" /tmp/card-theme.js
-          ! grep -q 'https://qilylean.com' /tmp/card-theme.js
+          ! grep -q "CARD_SITE=" /tmp/card-theme.js
+          ! grep -q 'qily-card-site' /tmp/card-theme.js
           grep -q '启力提示功能' /tmp/visual.js
           grep -q 'chooseAiPlay(0)' /tmp/visual.js
           ! grep -q 'play.click()' /tmp/visual.js
