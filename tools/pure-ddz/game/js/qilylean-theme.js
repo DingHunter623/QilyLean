@@ -1,6 +1,10 @@
 (() => {
   'use strict';
 
+  const scriptUrl=document.currentScript?.src||'';
+  const runtimeRoot=scriptUrl?new URL('../',scriptUrl):new URL('./',window.location.href);
+  const largeCardCssUrl=new URL('css/card-size-v2.css?v=20260823-large-card-v2',runtimeRoot).href;
+
   const items = [
     ['01','现场事实'],
     ['02','工程数据'],
@@ -24,6 +28,15 @@
       </div>
     </details>`;
 
+  function ensureLargeCardStyle(){
+    if(document.getElementById('qily-large-card-readability-v2')) return;
+    const link=document.createElement('link');
+    link.id='qily-large-card-readability-v2';
+    link.rel='stylesheet';
+    link.href=largeCardCssUrl;
+    document.head.appendChild(link);
+  }
+
   function ensureStyle(){
     if(document.getElementById('qily-product-overview-style')) return;
     const style=document.createElement('style');
@@ -45,6 +58,8 @@
   }
 
   function mount(){
+    ensureLargeCardStyle();
+
     const table=document.querySelector('.table-wrap');
     if(table && !table.querySelector('.qily-business-strip')){
       const strip=document.createElement('div');
