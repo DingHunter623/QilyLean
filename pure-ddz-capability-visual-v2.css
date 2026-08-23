@@ -1,9 +1,22 @@
-/* Pure DDZ capability showcase readability override */
+/* Pure DDZ capability showcase readability override + unified Digital Tool Works alignment */
+#digital .capability-digital-tools{gap:30px}
+#digital .capability-digital-tool{align-items:start!important;grid-template-columns:minmax(320px,.96fr) minmax(0,1.04fr)!important;gap:26px!important;padding:18px!important;border:1px solid #cfe0df!important;border-left:4px solid #caa15f!important;border-radius:18px!important;background:#fff!important;box-shadow:0 14px 34px rgba(15,75,90,.08)!important}
+#digital .capability-digital-visual,#digital .capability-home-visual,#digital .capability-ddz-visual{align-self:start!important;margin:0!important;min-height:0!important;border-radius:15px!important;overflow:hidden!important}
+#digital .capability-digital-content{align-self:start!important;padding:2px 2px 0!important;margin:0!important}
+#digital .capability-digital-content>small{display:block!important;margin:0 0 7px!important;color:#456869!important;font-size:15px!important;line-height:1.25!important;font-weight:900!important}
+#digital .capability-digital-content>h3{margin:0 0 12px!important;color:#0d4651!important;font-size:clamp(26px,2.1vw,34px)!important;line-height:1.16!important}
+#digital .capability-digital-content>p{margin:0 0 14px!important;color:#365556!important;font-size:17px!important;line-height:1.72!important}
+#digital .capability-digital-content .module-result{margin:12px 0 15px!important;padding:14px 16px!important;color:#183f40!important;background:#eef8f6!important;font-size:16px!important;line-height:1.6!important}
+#digital .capability-digital-content .module-actions{margin-top:8px!important}
+#digital .capability-digital-tool:first-child .capability-digital-visual{background:linear-gradient(145deg,#f8fbfa,#eef7f5)!important}
+#digital .capability-home-visual{padding:26px!important;background:linear-gradient(145deg,#f7fbfa,#fffaf0)!important}
+#digital .capability-home-screen{box-shadow:0 16px 36px rgba(15,75,90,.18)!important}
+
 #pure-ddz-digital-tool{grid-template-columns:minmax(390px,1fr) minmax(0,1fr);gap:30px}
-#pure-ddz-digital-tool .capability-ddz-visual{padding:clamp(26px,4vw,42px);background:radial-gradient(circle at 50% 28%,rgba(56,198,141,.34),transparent 42%),linear-gradient(145deg,#052f2d,#0b5964)}
-#pure-ddz-digital-tool .capability-ddz-board{width:min(620px,100%);padding:28px 26px 26px;border:2px solid rgba(255,227,155,.94);border-radius:26px;background:linear-gradient(180deg,rgba(1,43,43,.98),rgba(1,31,36,.98));box-shadow:0 24px 58px rgba(0,0,0,.36),inset 0 0 0 1px rgba(255,255,255,.06)}
-#pure-ddz-digital-tool .capability-ddz-title{margin:0 0 10px!important;color:#fff!important;text-shadow:0 2px 6px rgba(0,0,0,.52);font-size:clamp(32px,3.3vw,44px)!important;line-height:1.1!important;font-weight:1000!important}
-#pure-ddz-digital-tool .capability-ddz-sub{margin:0 0 22px!important;color:#ffe39b!important;text-shadow:0 2px 4px rgba(0,0,0,.45);font-size:19px!important;line-height:1.25!important;font-weight:1000!important}
+#pure-ddz-digital-tool .capability-ddz-visual{padding:28px!important;background:radial-gradient(circle at 50% 24%,rgba(66,202,148,.40),transparent 43%),linear-gradient(145deg,#0b5f58,#137783)!important}
+#pure-ddz-digital-tool .capability-ddz-board{width:min(620px,100%);margin:0 auto!important;padding:28px 26px 26px;border:2px solid rgba(255,227,155,.94);border-radius:26px;background:linear-gradient(180deg,rgba(7,69,67,.96),rgba(5,48,53,.98))!important;box-shadow:0 24px 58px rgba(0,0,0,.36),inset 0 0 0 1px rgba(255,255,255,.06);text-align:center}
+#pure-ddz-digital-tool .capability-ddz-title{margin:0 0 10px!important;color:#fff!important;text-shadow:0 2px 8px rgba(0,0,0,.55)!important;font-size:clamp(32px,3.3vw,44px)!important;line-height:1.1!important;font-weight:1000!important}
+#pure-ddz-digital-tool .capability-ddz-sub{margin:0 0 22px!important;color:#ffe39b!important;text-shadow:0 2px 6px rgba(0,0,0,.50)!important;font-size:19px!important;line-height:1.25!important;font-weight:1000!important}
 #pure-ddz-digital-tool .capability-ddz-jokers{gap:18px;margin-bottom:20px}
 #pure-ddz-digital-tool .capability-ddz-joker{width:118px;height:164px;padding:8px;border:2px solid #f7e8bc;border-radius:15px;background:#fff;box-shadow:0 10px 24px rgba(0,0,0,.36);overflow:hidden}
 #pure-ddz-digital-tool .capability-ddz-joker img{display:block;max-width:100%;max-height:112px;object-fit:contain}
@@ -20,5 +33,5 @@
 #pure-ddz-digital-tool .capability-digital-content p{font-size:18px!important;line-height:1.78!important;color:#2d4d4e!important}
 #pure-ddz-digital-tool .capability-digital-content .module-result{font-size:17px!important;line-height:1.65!important;color:#183f40!important;background:#eef8f6!important}
 #pure-ddz-digital-tool .capability-digital-content .module-actions{font-size:16px!important}
-@media(max-width:1100px){#pure-ddz-digital-tool{grid-template-columns:minmax(340px,.95fr) minmax(0,1.05fr)}#pure-ddz-digital-tool .capability-ddz-card{width:100px;height:136px}#pure-ddz-digital-tool .capability-ddz-card b{font-size:16px!important}#pure-ddz-digital-tool .capability-digital-content p{font-size:17px!important}}
-@media(max-width:860px){#pure-ddz-digital-tool{grid-template-columns:1fr}#pure-ddz-digital-tool .capability-ddz-joker{width:104px;height:150px}#pure-ddz-digital-tool .capability-ddz-card{width:98px;height:132px}#pure-ddz-digital-tool .capability-ddz-title{font-size:32px!important}#pure-ddz-digital-tool .capability-ddz-sub{font-size:17px!important}#pure-ddz-digital-tool .capability-digital-content h3{font-size:28px!important}}
+@media(max-width:1100px){#digital .capability-digital-tool{grid-template-columns:minmax(280px,.92fr) minmax(0,1.08fr)!important;gap:20px!important;padding:15px!important}#digital .capability-digital-content>p{font-size:16px!important}#pure-ddz-digital-tool .capability-ddz-card{width:100px;height:136px}#pure-ddz-digital-tool .capability-ddz-card b{font-size:16px!important}#pure-ddz-digital-tool .capability-digital-content p{font-size:17px!important}}
+@media(max-width:860px){#digital .capability-digital-tool{grid-template-columns:1fr!important;padding:14px!important}#digital .capability-digital-content{padding-top:0!important}#digital .capability-digital-content>h3{font-size:27px!important}#pure-ddz-digital-tool{grid-template-columns:1fr}#pure-ddz-digital-tool .capability-ddz-joker{width:104px;height:150px}#pure-ddz-digital-tool .capability-ddz-card{width:98px;height:132px}#pure-ddz-digital-tool .capability-ddz-title{font-size:32px!important}#pure-ddz-digital-tool .capability-ddz-sub{font-size:17px!important}#pure-ddz-digital-tool .capability-digital-content h3{font-size:28px!important}}
