@@ -9,6 +9,8 @@
   <title>启力精益斗地主｜简单娱乐，益智生活</title>
   <style>
     html,body{margin:0;min-height:100%;background:#073c47;color:#fff;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif}
+    html:not(.ddz-ready) .game-shell{visibility:hidden!important;opacity:0!important}
+    html.ddz-ready .game-shell{visibility:visible!important;opacity:1!important;transition:opacity .12s ease-out}
     #boot-status{position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:200;max-width:92vw;padding:8px 14px;border-radius:999px;background:rgba(3,36,43,.94);color:#ffe39b;font-size:13px;font-weight:800;box-shadow:0 6px 18px rgba(0,0,0,.25)}
     #boot-status.ready{display:none}
     #boot-status.error{border:1px solid #ffcf7d;color:#fff;background:#8d322d}
@@ -17,16 +19,20 @@
   <script>
     (()=>{
       const root='./game/';
-      const version='20260823-v120-startfix2';
-      const loadStyle=(path)=>{
+      const version='20260824-mobile-hotfix1';
+      const loadStyle=(path)=>new Promise((resolve,reject)=>{
         const link=document.createElement('link');
         link.rel='stylesheet';
         link.href=root+path+'?v='+version;
+        link.onload=resolve;
+        link.onerror=reject;
         document.head.appendChild(link);
-      };
-      loadStyle('css/style.css');
-      loadStyle('css/qilylean-theme.css');
-      loadStyle('css/visual-v120.css');
+      });
+      window.__PURE_DDZ_STYLE_READY__=Promise.all([
+        loadStyle('css/style.css'),
+        loadStyle('css/qilylean-theme.css'),
+        loadStyle('css/visual-v120.css')
+      ]);
       window.__PURE_DDZ_ROOT__=root;
       window.__PURE_DDZ_CACHE_KEY__=version;
     })();
@@ -61,11 +67,11 @@
 
       <section class="table-wrap" aria-label="斗地主牌桌">
         <div class="table-decoration" aria-hidden="true"><span>福</span></div>
-        <section id="left-panel" class="player-panel ai left-player" aria-label="左家电脑玩家">
-          <div class="avatar" aria-hidden="true">👴</div><div class="player-name">左家 · 电脑</div><div id="left-role" class="role">等待开局</div><div id="left-count" class="count">17 张</div><div id="left-bid" class="bid-tag" aria-live="polite"></div><div id="left-backs" class="card-backs" aria-hidden="true"></div>
+        <section id="left-panel" class="player-panel ai left-player" aria-label="左家玩家">
+          <div class="avatar" aria-hidden="true">👴</div><div class="player-name">左家</div><div id="left-role" class="role">等待开局</div><div id="left-count" class="count">17 张</div><div id="left-bid" class="bid-tag" aria-live="polite"></div><div id="left-backs" class="card-backs" aria-hidden="true"></div>
         </section>
-        <section id="right-panel" class="player-panel ai right-player" aria-label="右家电脑玩家">
-          <div class="avatar" aria-hidden="true">👵</div><div class="player-name">右家 · 电脑</div><div id="right-role" class="role">等待开局</div><div id="right-count" class="count">17 张</div><div id="right-bid" class="bid-tag" aria-live="polite"></div><div id="right-backs" class="card-backs" aria-hidden="true"></div>
+        <section id="right-panel" class="player-panel ai right-player" aria-label="右家玩家">
+          <div class="avatar" aria-hidden="true">👵</div><div class="player-name">右家</div><div id="right-role" class="role">等待开局</div><div id="right-count" class="count">17 张</div><div id="right-bid" class="bid-tag" aria-live="polite"></div><div id="right-backs" class="card-backs" aria-hidden="true"></div>
         </section>
         <section class="center-area" aria-live="polite">
           <div class="round-meta"><span>第 <b id="round-number">0</b> 局</span><span>底分 <b id="base-score">1</b></span><span>倍数 <b id="multiplier">×1</b></span></div>
@@ -100,15 +106,22 @@
   <script>
     (()=>{
       const root=window.__PURE_DDZ_ROOT__||'./game/';
-      const version=window.__PURE_DDZ_CACHE_KEY__||'20260823-v120-startfix2';
+      const version=window.__PURE_DDZ_CACHE_KEY__||'20260824-mobile-hotfix1';
       const status=document.getElementById('boot-status');
       const chain=['js/qilylean-theme.js','js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];
       const loadAt=index=>{
-        if(index>=chain.length){status.textContent='启力精益斗地主牌桌已加载';status.className='ready';return;}
+        if(index>=chain.length){
+          Promise.resolve(window.__PURE_DDZ_STYLE_READY__).catch(()=>{}).finally(()=>{
+            document.documentElement.classList.add('ddz-ready');
+            status.textContent='启力精益斗地主牌桌已加载';
+            status.className='ready';
+          });
+          return;
+        }
         const script=document.createElement('script');
         script.src=root+chain[index]+'?v='+version;
         script.onload=()=>loadAt(index+1);
-        script.onerror=()=>{status.textContent='牌桌脚本加载失败，请刷新页面重试。';status.className='error';};
+        script.onerror=()=>{document.documentElement.classList.add('ddz-ready');status.textContent='牌桌脚本加载失败，请刷新页面重试。';status.className='error';};
         document.body.appendChild(script);
       };
       loadAt(0);
