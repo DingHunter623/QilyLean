@@ -1,15 +1,6 @@
 (() => {
   'use strict';
 
-  const items = [
-    ['01','现场事实'],
-    ['02','工程数据'],
-    ['03','精益改善'],
-    ['04','质量保证'],
-    ['05','数智固化'],
-    ['06','知识资产']
-  ];
-
   const overviewHtml = `
     <details class="qily-product-overview">
       <summary><strong>QilyLean 无广告斗地主｜简单娱乐，益智生活</strong><span>查看开发缘起与产品理念</span></summary>
@@ -45,14 +36,7 @@
   }
 
   function mount(){
-    const table=document.querySelector('.table-wrap');
-    if(table && !table.querySelector('.qily-business-strip')){
-      const strip=document.createElement('div');
-      strip.className='qily-business-strip';
-      strip.setAttribute('aria-label','QilyLean 六大业务主旨');
-      strip.innerHTML=items.map(([n,t])=>`<span>${n}｜${t}</span>`).join('');
-      table.appendChild(strip);
-    }
+    document.querySelectorAll('.qily-business-strip').forEach(node=>node.remove());
     ensureStyle();
     const main=document.querySelector('.game-main');
     const promise=document.querySelector('.clean-promise');
