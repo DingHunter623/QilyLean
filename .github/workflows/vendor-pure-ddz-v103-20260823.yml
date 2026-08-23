@@ -1,0 +1,71 @@
+name: Vendor Pure DDZ v1.0.3 Web Assets
+
+on:
+  push:
+    paths:
+      - '.github/workflows/vendor-pure-ddz-v103-20260823.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  vendor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Vendor same-origin game runtime from tagged v1.0.3
+        run: |
+          set -euo pipefail
+          mkdir -p tools/pure-ddz/game/css tools/pure-ddz/game/js
+          base='https://raw.githubusercontent.com/DingHunter623/Pure-DDZ-Classic/v1.0.3/web'
+          curl -fL --retry 6 "$base/css/style.css" -o tools/pure-ddz/game/css/style.css
+          curl -fL --retry 6 "$base/css/qilylean-theme.css" -o tools/pure-ddz/game/css/qilylean-theme.css
+          curl -fL --retry 6 "$base/js/game.js" -o tools/pure-ddz/game/js/game.js
+          curl -fL --retry 6 "$base/js/qilylean-theme.js" -o tools/pure-ddz/game/js/qilylean-theme.js
+          test -s tools/pure-ddz/game/css/style.css
+          test -s tools/pure-ddz/game/css/qilylean-theme.css
+          test -s tools/pure-ddz/game/js/game.js
+          test -s tools/pure-ddz/game/js/qilylean-theme.js
+          node --check tools/pure-ddz/game/js/game.js
+          node --check tools/pure-ddz/game/js/qilylean-theme.js
+          grep -q 'function createDeck' tools/pure-ddz/game/js/game.js
+          grep -q 'function analyze' tools/pure-ddz/game/js/game.js
+
+      - name: Switch all public Pure DDZ version references to 1.0.3
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          paths = [
+              Path('tools/pure-ddz/index.html'),
+              Path('times26001-home-card.js'),
+              Path('site-ui-consistency-v1.js'),
+              Path('.github/workflows/verify-pure-ddz-live.yml'),
+          ]
+          for path in paths:
+              text = path.read_text(encoding='utf-8')
+              path.write_text(text.replace('1.0.2', '1.0.3'), encoding='utf-8')
+          PY
+          grep -q 'Pure-DDZ-Classic-v1.0.3.apk' tools/pure-ddz/index.html
+          grep -q 'Pure-DDZ-Classic-v1.0.3.apk' site-ui-consistency-v1.js
+          ! grep -R --line-number --fixed-strings 'Pure-DDZ-Classic-v1.0.2.apk' \
+            tools/pure-ddz/index.html times26001-home-card.js site-ui-consistency-v1.js .github/workflows/verify-pure-ddz-live.yml
+          git diff --check
+
+      - name: Commit same-origin runtime and v1.0.3 links
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean Release Bot'
+          git config user.email 'DingHunter623@gmail.com'
+          git add tools/pure-ddz/game tools/pure-ddz/index.html times26001-home-card.js site-ui-consistency-v1.js .github/workflows/verify-pure-ddz-live.yml
+          if git diff --cached --quiet; then
+            echo 'No changes needed'
+          else
+            git commit -m 'fix: vendor Pure DDZ v1.0.3 runtime and switch website links'
+            git push origin HEAD:main
+          fi
