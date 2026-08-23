@@ -25,13 +25,14 @@ jobs:
 
       - name: Verify direct playable QilyLean game page
         run: |
+          set -euo pipefail
           ok=0
-          for i in {1..30}; do
-            if curl -fsSL --max-time 20 'https://qilylean.com/tools/pure-ddz/?verify=20260823-v102' -o /tmp/pure-ddz.html; then
+          for i in {1..36}; do
+            if curl -fsSL --max-time 20 'https://qilylean.com/tools/pure-ddz/?verify=20260823-v103' -o /tmp/pure-ddz.html; then
               if grep -q 'id="start"' /tmp/pure-ddz.html \
                 && grep -q 'id="hand"' /tmp/pure-ddz.html \
                 && grep -q '__PURE_DDZ_ROOTS__' /tmp/pure-ddz.html \
-                && grep -q 'Pure-DDZ-Classic-v1.0.2.apk' /tmp/pure-ddz.html; then
+                && grep -q 'Pure-DDZ-Classic-v1.0.3.apk' /tmp/pure-ddz.html; then
                 ok=1
                 break
               fi
@@ -46,22 +47,30 @@ jobs:
 
       - name: Verify homepage stable game entry runtime
         run: |
-          curl -fsSL --max-time 20 'https://qilylean.com/site-ui-consistency-v1.js?verify=20260823-v13' -o /tmp/ui.js
+          set -euo pipefail
+          curl -fsSL --max-time 20 'https://qilylean.com/site-ui-consistency-v1.js?verify=20260823-v14' -o /tmp/ui.js
           grep -q 'ensurePureDdzHomeEntry' /tmp/ui.js
           grep -q '纯净斗地主｜在线玩' /tmp/ui.js
-          grep -q 'Pure-DDZ-Classic-v1.0.2.apk' /tmp/ui.js
+          grep -q 'Pure-DDZ-Classic-v1.0.3.apk' /tmp/ui.js
 
-      - name: Verify playable upstream web assets
+      - name: Verify same-origin web game runtime
         run: |
-          curl -fsSL --max-time 20 'https://cdn.jsdelivr.net/gh/DingHunter623/Pure-DDZ-Classic@main/web/index.html?verify=20260823-v102' -o /tmp/game.html
-          curl -fsSL --max-time 20 'https://cdn.jsdelivr.net/gh/DingHunter623/Pure-DDZ-Classic@main/web/js/game.js?verify=20260823-v102' -o /tmp/game.js
-          grep -q 'QilyLean 启力精益主题版' /tmp/game.html
+          set -euo pipefail
+          curl -fsSL --max-time 20 'https://qilylean.com/tools/pure-ddz/game/css/style.css?verify=20260823-v103' -o /tmp/style.css
+          curl -fsSL --max-time 20 'https://qilylean.com/tools/pure-ddz/game/css/qilylean-theme.css?verify=20260823-v103' -o /tmp/theme.css
+          curl -fsSL --max-time 20 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260823-v103' -o /tmp/theme.js
+          curl -fsSL --max-time 20 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260823-v103' -o /tmp/game.js
+          test -s /tmp/style.css
+          test -s /tmp/theme.css
           grep -q 'function createDeck' /tmp/game.js
           grep -q 'function analyze' /tmp/game.js
+          node --check /tmp/game.js
+          node --check /tmp/theme.js
 
-      - name: Verify Android v1.0.2 release APK download and contents
+      - name: Verify Android v1.0.3 release APK download and contents
         run: |
-          curl -fL --retry 6 --retry-delay 5 --max-time 120 'https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.2/Pure-DDZ-Classic-v1.0.2.apk' -o /tmp/pure-ddz.apk
+          set -euo pipefail
+          curl -fL --retry 8 --retry-delay 5 --max-time 180 'https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.3/Pure-DDZ-Classic-v1.0.3.apk' -o /tmp/pure-ddz.apk
           test -s /tmp/pure-ddz.apk
           test "$(head -c 2 /tmp/pure-ddz.apk)" = 'PK'
           unzip -l /tmp/pure-ddz.apk | grep -q 'assets/www/index.html'
