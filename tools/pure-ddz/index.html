@@ -23,7 +23,7 @@
           if(i>=roots.length)return;
           const link=document.createElement('link');
           link.rel='stylesheet';
-          link.href=roots[i++]+path+'?v=20260823-large-card-v2';
+          link.href=roots[i++]+path+'?v=20260823-v120-visual';
           link.onerror=()=>{link.remove();next();};
           document.head.appendChild(link);
         };
@@ -31,7 +31,6 @@
       };
       loadStyle('css/style.css');
       loadStyle('css/qilylean-theme.css');
-      loadStyle('css/card-size-v2.css');
       window.__PURE_DDZ_ROOTS__=roots;
     })();
   </script>
@@ -116,11 +115,11 @@
             <button class="control-btn bid-btn strong" type="button" data-bid="3">3 分抢地主</button>
           </div>
           <div id="play-controls" class="controls hidden" aria-label="出牌操作">
-            <button id="hint" class="control-btn hint-btn" type="button">专家 AI 提示</button>
+            <button id="hint" class="control-btn hint-btn" type="button">启力托管：关</button>
             <button id="pass" class="control-btn pass-btn" type="button">不要</button>
-            <button id="play" class="control-btn play-btn" type="button">确认出牌</button>
+            <button id="play" class="control-btn play-btn" type="button">出牌</button>
           </div>
-          <p id="hint-message" class="hint-message">选牌后点“确认出牌”；看不准时可使用 AI 提示。</p>
+          <p id="hint-message" class="hint-message">自主判断后点“出牌”；需要休息时可开启“启力托管”。</p>
         </section>
       </section>
     </main>
@@ -142,7 +141,7 @@
         <li><b>无广告纯单机</b><span>网页直接玩，Android 可离线使用</span></li>
         <li><b>大字体适老化</b><span>高对比牌面与大按钮</span></li>
         <li><b>积分与胜局奖励</b><span>战绩只保存在本机</span></li>
-        <li><b>语音、音乐、AI提示</b><span>按需开关，不会强制打扰</span></li>
+        <li><b>语音、音乐、启力托管</b><span>启力托管默认关闭，按需开启自动出牌</span></li>
       </ul>
       <button id="welcome-start" class="start-btn hero-start" type="button">专家模式开局</button>
       <button id="welcome-settings" class="text-btn" type="button">先调整难度、字体和声音</button>
@@ -208,7 +207,7 @@
           return;
         }
         const script=document.createElement('script');
-        script.src=roots[index]+path+'?v=20260823-large-card-v2';
+        script.src=roots[index]+path+'?v=20260823-v120-visual';
         script.onload=done;
         script.onerror=()=>{script.remove();load(path,index+1,done);};
         document.body.appendChild(script);
