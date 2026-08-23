@@ -1,0 +1,92 @@
+name: Sync Pure DDZ Product Overview Copy
+
+on:
+  push:
+    paths:
+      - '.github/workflows/sync-pure-ddz-product-overview.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-copy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Unify website and homepage Pure DDZ copy
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          page = Path('tools/pure-ddz/index.html')
+          text = page.read_text(encoding='utf-8')
+          text = text.replace(
+              'QilyLean｜启力精益纯净斗地主：无广告、无登录、无支付，网页版直接玩，Android 离线安装。',
+              'QilyLean 无广告斗地主｜简单娱乐，益智生活：无广告、无强制注册、操作简单，打开即可畅玩；为父母辈提供轻松便捷的休闲益智体验，也适合成年人放松思考。'
+          )
+          text = text.replace(
+              '<title>纯净斗地主｜QilyLean 启力精益主题版</title>',
+              '<title>QilyLean 无广告斗地主｜简单娱乐，益智生活</title>'
+          )
+          text = text.replace(
+              '<strong>永久免费</strong><span>无广告 · 无注册 · 无登录 · 无支付 · 不收集个人信息</span>',
+              '<strong>简单娱乐 · 益智生活</strong><span>无广告 · 无强制注册 · 操作简单 · 打开即玩 · 不收集个人信息</span>'
+          )
+          text = text.replace(
+              '<p class="eyebrow">QilyLean 六大业务主旨主题 · 为父母辈打造，也适合成年人休闲养神</p>',
+              '<p class="eyebrow">QilyLean 无广告斗地主｜简单娱乐，益智生活</p>'
+          )
+          old_copy = '没有广告弹窗，不用注册登录，没有付费套路。默认 Expert 专家级电脑对手，以公开出牌进行记牌、控牌、残局压制与农民协同；整副牌融入 QilyLean 制造运营技能与业务主旨，大王使用个人头像，小王使用六大业务 C919 飞机模型。'
+          new_copy = '这款游戏源于一个真实的家庭需求：减少实名注册、账号登录、验证码等操作门槛，让父母辈打开即可轻松娱乐；同时也为长期面对复杂问题分析、工程改善、项目管理和高强度思考的成年人提供一个保持思考、适度放松的益智方式。简单、高效、友好，是这款数字产品延续的设计理念。'
+          text = text.replace(old_copy, new_copy)
+          page.write_text(text, encoding='utf-8')
+
+          ui = Path('site-ui-consistency-v1.js')
+          ui_text = ui.read_text(encoding='utf-8')
+          ui_text = ui_text.replace("var BUILD_ID='20260823-pure-ddz-entry-v15';", "var BUILD_ID='20260823-pure-ddz-overview-v16';")
+          ui_text = ui_text.replace("version:'20260823-pure-ddz-entry-v15'", "version:'20260823-pure-ddz-overview-v16'")
+          ui_text = ui_text.replace('pure-ddz-stable-entry-v3', 'pure-ddz-stable-entry-v4')
+          ui_text = ui_text.replace(
+              'QilyLean制造运营六大业务主旨主题版。无广告、无注册、无登录、无支付；网页版直接开局，Android v1.1.0 支持离线安装。',
+              'QilyLean 无广告斗地主｜简单娱乐，益智生活。源于父母辈真实使用需求：减少实名注册、账号登录和验证码等操作门槛，打开即可轻松娱乐；也适合成年人于高强度工作之外放松思考。'
+          )
+          ui_text = ui_text.replace(
+              '<small>WEB GAME｜ONLINE</small><h3>网页版直接玩</h3>',
+              '<small>WEB GAME｜ONLINE</small><h3>无广告 · 打开即玩</h3>'
+          )
+          ui.write_text(ui_text, encoding='utf-8')
+
+          card = Path('times26001-home-card.js')
+          card_text = card.read_text(encoding='utf-8')
+          old_positioning = "var PURE_DDZ_POSITIONING='以QilyLean制造运营六大业务主旨为视觉寓意的纯净单机斗地主：无广告、无登录、无支付，网页版直接玩，Android可离线安装。';"
+          new_positioning = "var PURE_DDZ_POSITIONING='QilyLean 无广告斗地主｜简单娱乐，益智生活。源于父母辈真实使用需求，无广告、无强制注册、操作简单、打开即玩；也适合成年人放松思考，在轻松游戏中保持活力与智慧。';"
+          if old_positioning in card_text:
+              card_text = card_text.replace(old_positioning, new_positioning)
+          card_text = card_text.replace('QilyLean｜启力精益 六大业务主题', '简单娱乐 · 益智生活｜QilyLean 主题牌面')
+          card.write_text(card_text, encoding='utf-8')
+          PY
+
+          grep -q 'QilyLean 无广告斗地主｜简单娱乐，益智生活' tools/pure-ddz/index.html
+          grep -q '父母辈真实使用需求' site-ui-consistency-v1.js
+          grep -q '无强制注册、操作简单、打开即玩' times26001-home-card.js
+          git diff --check
+
+      - name: Commit unified public copy
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean Release Bot'
+          git config user.email 'DingHunter623@gmail.com'
+          git add tools/pure-ddz/index.html site-ui-consistency-v1.js times26001-home-card.js
+          if git diff --cached --quiet; then
+            echo 'Pure DDZ public copy already unified'
+          else
+            git commit -m 'content: unify Pure DDZ simple entertainment overview'
+            git push origin HEAD:main
+          fi
