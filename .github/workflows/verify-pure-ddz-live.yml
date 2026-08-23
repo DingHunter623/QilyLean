@@ -1,25 +1,37 @@
 name: Verify Pure DDZ Live
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-pure-ddz-live.yml'
+      - 'tools/pure-ddz/**'
+      - 'site-ui-consistency-v1.js'
+      - 'times26001-home-card.js'
   pull_request:
     paths:
       - '.github/workflows/verify-pure-ddz-live.yml'
       - 'tools/pure-ddz/**'
+      - 'site-ui-consistency-v1.js'
       - 'times26001-home-card.js'
   workflow_dispatch:
 
 jobs:
   verify-live:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Verify QilyLean game page is live
+
+      - name: Verify direct playable QilyLean game page
         run: |
           ok=0
           for i in {1..30}; do
-            if curl -fsSL --max-time 20 'https://qilylean.com/tools/pure-ddz/?verify=20260823' -o /tmp/pure-ddz.html; then
-              if grep -q '纯净斗地主' /tmp/pure-ddz.html && grep -q 'QilyLean' /tmp/pure-ddz.html; then
+            if curl -fsSL --max-time 20 'https://qilylean.com/tools/pure-ddz/?verify=20260823-v102' -o /tmp/pure-ddz.html; then
+              if grep -q 'id="start"' /tmp/pure-ddz.html \
+                && grep -q 'id="hand"' /tmp/pure-ddz.html \
+                && grep -q '__PURE_DDZ_ROOTS__' /tmp/pure-ddz.html \
+                && grep -q 'Pure-DDZ-Classic-v1.0.2.apk' /tmp/pure-ddz.html; then
                 ok=1
                 break
               fi
@@ -27,21 +39,33 @@ jobs:
             sleep 10
           done
           test "$ok" = 1
-          grep -q 'Android APK 下载' /tmp/pure-ddz.html
-          grep -q 'Pure-DDZ-Classic-v1.0.0.apk' /tmp/pure-ddz.html
-      - name: Verify homepage module script is deployed
+          if grep -q '<iframe[^>]*Pure-DDZ-Classic' /tmp/pure-ddz.html; then
+            echo 'ERROR: game page is still iframe-only'
+            exit 1
+          fi
+
+      - name: Verify homepage stable game entry runtime
         run: |
-          curl -fsSL --max-time 20 'https://qilylean.com/times26001-home-card.js?verify=20260823' -o /tmp/home-card.js
-          grep -q 'pureDdzHomeSection' /tmp/home-card.js
-          grep -q '纯净斗地主｜在线玩' /tmp/home-card.js
-      - name: Verify playable upstream web game
+          curl -fsSL --max-time 20 'https://qilylean.com/site-ui-consistency-v1.js?verify=20260823-v13' -o /tmp/ui.js
+          grep -q 'ensurePureDdzHomeEntry' /tmp/ui.js
+          grep -q '纯净斗地主｜在线玩' /tmp/ui.js
+          grep -q 'Pure-DDZ-Classic-v1.0.2.apk' /tmp/ui.js
+
+      - name: Verify playable upstream web assets
         run: |
-          curl -fsSL --max-time 20 'https://cdn.jsdelivr.net/gh/DingHunter623/Pure-DDZ-Classic@main/web/index.html?verify=20260823' -o /tmp/game.html
+          curl -fsSL --max-time 20 'https://cdn.jsdelivr.net/gh/DingHunter623/Pure-DDZ-Classic@main/web/index.html?verify=20260823-v102' -o /tmp/game.html
+          curl -fsSL --max-time 20 'https://cdn.jsdelivr.net/gh/DingHunter623/Pure-DDZ-Classic@main/web/js/game.js?verify=20260823-v102' -o /tmp/game.js
           grep -q 'QilyLean 启力精益主题版' /tmp/game.html
-          grep -q 'qilylean-theme.css' /tmp/game.html
-      - name: Verify Android release APK download
+          grep -q 'function createDeck' /tmp/game.js
+          grep -q 'function analyze' /tmp/game.js
+
+      - name: Verify Android v1.0.2 release APK download and contents
         run: |
-          curl -fsSL --max-time 60 'https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.0/Pure-DDZ-Classic-v1.0.0.apk' -o /tmp/pure-ddz.apk
+          curl -fL --retry 6 --retry-delay 5 --max-time 120 'https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.2/Pure-DDZ-Classic-v1.0.2.apk' -o /tmp/pure-ddz.apk
           test -s /tmp/pure-ddz.apk
           test "$(head -c 2 /tmp/pure-ddz.apk)" = 'PK'
+          unzip -l /tmp/pure-ddz.apk | grep -q 'assets/www/index.html'
+          unzip -l /tmp/pure-ddz.apk | grep -q 'assets/www/css/style.css'
+          unzip -l /tmp/pure-ddz.apk | grep -q 'assets/www/js/game.js'
+          unzip -l /tmp/pure-ddz.apk | grep -q 'classes.dex'
           echo "APK bytes: $(wc -c </tmp/pure-ddz.apk)"
