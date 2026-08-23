@@ -1,0 +1,54 @@
+name: Verify Pure DDZ Large Cards
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/verify-pure-ddz-large-cards.yml'
+  workflow_dispatch:
+
+jobs:
+  verify-public:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify repository card readability contract
+        run: |
+          set -euo pipefail
+          grep -q 'flex:0 0 104px' tools/pure-ddz/game/css/card-size-v2.css
+          grep -q 'height:154px' tools/pure-ddz/game/css/card-size-v2.css
+          grep -q 'font-size:27px' tools/pure-ddz/game/css/card-size-v2.css
+          grep -q 'font-size:23px' tools/pure-ddz/game/css/card-size-v2.css
+          ! grep -q 'qily-card-footer' tools/pure-ddz/game/js/card-theme.js
+          grep -q "card-size-v2.css" tools/pure-ddz/index.html
+          grep -q '20260823-large-card-v2' tools/pure-ddz/index.html
+
+      - name: Wait for public QilyLean deployment and verify large cards
+        run: |
+          set -euo pipefail
+          ok=0
+          for i in {1..42}; do
+            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=large-card-v2' -o /tmp/page.html \
+              && grep -q 'card-size-v2.css' /tmp/page.html \
+              && grep -q '20260823-large-card-v2' /tmp/page.html; then
+              ok=1
+              break
+            fi
+            echo "Waiting for QilyLean deployment: $i/42"
+            sleep 10
+          done
+          test "$ok" = 1
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/card-size-v2.css?verify=large-card-v2' -o /tmp/card-size.css
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=large-card-v2' -o /tmp/card-theme.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=large-card-v2' -o /tmp/qily-theme.js
+          grep -q 'flex:0 0 104px' /tmp/card-size.css
+          grep -q 'height:154px' /tmp/card-size.css
+          grep -q 'font-size:27px' /tmp/card-size.css
+          grep -q 'font-size:23px' /tmp/card-size.css
+          grep -q 'card-size-v2.css' /tmp/qily-theme.js
+          if grep -q 'qily-card-footer' /tmp/card-theme.js; then
+            echo 'ERROR: repeated footer labels still rendered in public card-theme.js'
+            exit 1
+          fi
+          echo 'PURE_DDZ_LARGE_CARD_PUBLIC_OK'
