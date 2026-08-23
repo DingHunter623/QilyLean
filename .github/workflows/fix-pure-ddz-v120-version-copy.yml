@@ -1,0 +1,52 @@
+name: Fix Pure DDZ v1.2.0 Version Copy
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/fix-pure-ddz-v120-version-copy.yml'
+      - 'tools/pure-ddz/**'
+      - 'site-ui-consistency-v1.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix-copy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
+          fetch-depth: 0
+      - name: Remove stale v1.1.0 Pure DDZ references
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          for name in ['tools/pure-ddz/index.html','site-ui-consistency-v1.js']:
+              p=Path(name)
+              s=p.read_text(encoding='utf-8')
+              s=s.replace('v1.1.0','v1.2.0')
+              p.write_text(s,encoding='utf-8')
+          PY
+          ! grep -q 'v1.1.0' tools/pure-ddz/index.html site-ui-consistency-v1.js
+          grep -q 'raw.githack.com/DingHunter623/Pure-DDZ-Classic/v1.2.0/web/' tools/pure-ddz/index.html
+          grep -q 'ANDROID｜v1.2.0' site-ui-consistency-v1.js
+          grep -q 'v1.2.0 已通过 Android 35' site-ui-consistency-v1.js
+          grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' tools/pure-ddz/index.html
+          grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' site-ui-consistency-v1.js
+          git diff --check
+      - name: Commit v1.2.0 version copy
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean Release Bot'
+          git config user.email 'DingHunter623@gmail.com'
+          git add tools/pure-ddz/index.html site-ui-consistency-v1.js
+          if git diff --cached --quiet; then
+            echo 'Pure DDZ version copy already clean'
+          else
+            git commit -m 'fix: align all Pure DDZ website copy to v1.2.0'
+            git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          fi
