@@ -61,8 +61,26 @@ function addStyles(){
   document.head.appendChild(style);
 }
 
+function findHeroActions(){
+  return document.querySelector('.hero .actions,.qily-home-actions,.hero-actions');
+}
+
+function appendHomeSection(section){
+  var results=document.getElementById('results');
+  if(results&&results.parentNode){
+    results.parentNode.insertBefore(section,results);
+    return true;
+  }
+  var home=document.querySelector('main.qily-home-v3,.qily-home-v3,main');
+  if(home){
+    home.appendChild(section);
+    return true;
+  }
+  return false;
+}
+
 function addHeroLink(){
-  var actions=document.querySelector('.hero .actions');
+  var actions=findHeroActions();
   if(!actions||actions.querySelector('.times26001-hero-link'))return;
   var link=document.createElement('a');
   link.className='button times26001-hero-link';
@@ -72,7 +90,7 @@ function addHeroLink(){
 }
 
 function addPureDdzHeroLink(){
-  var actions=document.querySelector('.hero .actions');
+  var actions=findHeroActions();
   if(!actions||actions.querySelector('.pure-ddz-hero-link'))return;
   var link=document.createElement('a');
   link.className='button pure-ddz-hero-link';
@@ -83,13 +101,11 @@ function addPureDdzHeroLink(){
 
 function addSection(){
   if(document.getElementById('times26001HomeSection'))return;
-  var results=document.getElementById('results');
-  if(!results||!results.parentNode)return;
   var section=document.createElement('section');
   section.id='times26001HomeSection';
   section.className='times26001-home-section';
   section.innerHTML='<div class="times26001-home-inner"><div class="times26001-home-head"><h2>数字化工具作品</h2><p>Times26001聚焦工业工程时间研究与制造现场测时，形成可直接使用、可持续迭代的移动端专业工具；同时保留日常时间管理辅助能力。</p></div><article class="times26001-home-card"><figure class="times26001-home-visual"><a href="/tools/times26001/" aria-label="查看Times26001应用介绍"><img src="/assets/tools/times26001-overview.svg?v=20260805-android-v114" alt="Times26001工业工程时间研究与IE现场测时工具功能概览" width="1200" height="720" loading="lazy" decoding="async"></a></figure><div class="times26001-home-content"><small>移动端APP｜工业工程时间研究＋IE现场测时</small><h3>Times26001</h3><p><strong>'+TIMES26001_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、文本复制、倒计时、闹钟、北京时间、万年历、农历、黄历与节气信息，可用于标准工时测量、工序分析和改善前后对比。</p><ul class="times26001-feature-list"><li>IE秒表分段、本段时间与累计总时长</li><li>测时记录复制到Excel/WPS等工程工具</li><li>预设／自定义倒计时及离线通知</li><li>一次性、工作日、周末及自定义提醒</li><li>北京时间、阳历、农历、节气与节假日</li><li>当前手机试用版 v1.1.13 / versionCode 16 / API 36</li></ul><div class="times26001-home-actions"><a class="download" href="/Times26001-Android-v1.1.13-Standard-Website-Logo.apk?build=efe5e188" download>下载 v1.1.13 官网标准LOGO统一修正版</a><a class="secondary" href="/tools/times26001/">查看APP介绍与发布状态</a><button class="secondary" type="button" data-copy-times26001>复制分享简介</button><span class="times26001-home-status" aria-live="polite"></span></div></div></article></div>';
-  results.parentNode.insertBefore(section,results);
+  if(!appendHomeSection(section))return;
   var button=section.querySelector('[data-copy-times26001]');
   var status=section.querySelector('.times26001-home-status');
   button.addEventListener('click',function(){
@@ -100,13 +116,11 @@ function addSection(){
 
 function addPureDdzSection(){
   if(document.getElementById('pureDdzHomeSection'))return;
-  var results=document.getElementById('results');
-  if(!results||!results.parentNode)return;
   var section=document.createElement('section');
   section.id='pureDdzHomeSection';
   section.className='pure-ddz-home-section';
-  section.innerHTML='<div class="pure-ddz-home-inner"><article class="pure-ddz-home-card"><div class="pure-ddz-home-visual" aria-label="QilyLean六大业务主题斗地主牌桌示意"><div class="pure-ddz-table"><div class="pure-ddz-cards"><i>Q</i><i>Q</i><i>Q</i></div><strong>纯净斗地主</strong><span>QilyLean｜启力精益 六大业务主题</span><div class="pure-ddz-business"><b>现场事实</b><b>工程数据</b><b>精益改善</b><b>质量保证</b><b>数智固化</b><b>知识资产</b></div></div></div><div class="pure-ddz-home-content"><small>网页游戏＋Android APP｜休闲数字产品</small><h3>Pure DDZ Classic｜纯净斗地主</h3><p><strong>'+PURE_DDZ_POSITIONING+'</strong> 完整支持三人叫地主、经典牌型、AI电脑对手、智能提示、积分战绩、中文语音及横竖屏适配；牌面识别保持传统规则，QilyLean业务元素主要用于牌背与桌面视觉。</p><ul class="pure-ddz-feature-list"><li>完整三人斗地主、叫分、地主与胜负结算</li><li>单牌、对子、顺子、连对、飞机、炸弹、王炸等完整牌型</li><li>AI电脑对手与AI智能提示</li><li>无广告、无注册、无登录、无支付</li><li>网页版直接游玩，手机/平板/电脑自适应</li><li>Android v1.0.0 离线安装包</li></ul><div class="pure-ddz-home-actions"><a class="play" href="/tools/pure-ddz/">立即在线玩</a><a class="apk" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.0/Pure-DDZ-Classic-v1.0.0.apk">下载 Android APK</a><a class="secondary" href="https://github.com/DingHunter623/Pure-DDZ-Classic" target="_blank" rel="noopener">查看项目仓库</a><button class="secondary" type="button" data-copy-pure-ddz>复制分享简介</button><span class="times26001-home-status" aria-live="polite"></span></div></div></article></div>';
-  results.parentNode.insertBefore(section,results);
+  section.innerHTML='<div class="pure-ddz-home-inner"><article class="pure-ddz-home-card"><div class="pure-ddz-home-visual" aria-label="QilyLean六大业务主题斗地主牌桌示意"><div class="pure-ddz-table"><div class="pure-ddz-cards"><i>Q</i><i>Q</i><i>Q</i></div><strong>纯净斗地主</strong><span>QilyLean｜启力精益 六大业务主题</span><div class="pure-ddz-business"><b>现场事实</b><b>工程数据</b><b>精益改善</b><b>质量保证</b><b>数智固化</b><b>知识资产</b></div></div></div><div class="pure-ddz-home-content"><small>网页游戏＋Android APP｜休闲数字产品</small><h3>Pure DDZ Classic｜纯净斗地主</h3><p><strong>'+PURE_DDZ_POSITIONING+'</strong> 完整支持三人叫地主、经典牌型、AI电脑对手、智能提示、积分战绩、中文语音及横竖屏适配；牌面识别保持传统规则，QilyLean业务元素主要用于牌背与桌面视觉。</p><ul class="pure-ddz-feature-list"><li>完整三人斗地主、叫分、地主与胜负结算</li><li>单牌、对子、顺子、连对、飞机、炸弹、王炸等完整牌型</li><li>AI电脑对手与AI智能提示</li><li>无广告、无注册、无登录、无支付</li><li>网页版直接游玩，手机/平板/电脑自适应</li><li>Android v1.0.2 启动修复版离线安装包</li></ul><div class="pure-ddz-home-actions"><a class="play" href="/tools/pure-ddz/">立即在线玩</a><a class="apk" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.2/Pure-DDZ-Classic-v1.0.2.apk">下载 Android v1.0.2</a><a class="secondary" href="https://github.com/DingHunter623/Pure-DDZ-Classic" target="_blank" rel="noopener">查看项目仓库</a><button class="secondary" type="button" data-copy-pure-ddz>复制分享简介</button><span class="times26001-home-status" aria-live="polite"></span></div></div></article></div>';
+  if(!appendHomeSection(section))return;
   var button=section.querySelector('[data-copy-pure-ddz]');
   var status=section.querySelector('.times26001-home-status');
   button.addEventListener('click',function(){
