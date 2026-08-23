@@ -43,7 +43,7 @@ jobs:
             const browser=await chromium.launch({headless:true});
             for (const viewport of [{width:1440,height:900},{width:844,height:390}]) {
               const page=await browser.newPage({viewport});
-              let dialogs=[]; const pageErrors=[];
+              const dialogs=[]; const pageErrors=[];
               page.on('dialog', async dialog=>{dialogs.push(dialog.message()); await dialog.dismiss();});
               page.on('pageerror', error=>pageErrors.push(String(error)));
               await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'});
@@ -69,9 +69,9 @@ jobs:
                 strips:document.querySelectorAll('.qily-business-strip').length,
                 startText:document.querySelector('#start')?.textContent?.trim(),
                 hasTheme:Boolean(window.QilyLeanCardTheme),
-                hasVisual:Boolean(window.QilyLeanV120),
-                pageErrors
+                hasVisual:Boolean(window.QilyLeanV120)
               }));
+              result.pageErrors=[...pageErrors];
               console.log(JSON.stringify({viewport,before,result,dialogs},null,2));
               if(dialogs.length) throw new Error('Unexpected confirm/dialog on initial start: '+dialogs.join(' | '));
               if(result.phase!=='bidding'&&result.phase!=='playing') throw new Error('Game did not start: '+JSON.stringify(result));
