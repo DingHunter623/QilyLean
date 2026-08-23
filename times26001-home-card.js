@@ -2,7 +2,7 @@
 'use strict';
 
 var TIMES26001_POSITIONING='面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。';
-var PURE_DDZ_POSITIONING='以QilyLean制造运营六大业务主旨为视觉寓意的纯净单机斗地主：无广告、无登录、无支付，网页版直接玩，Android可离线安装。';
+var PURE_DDZ_POSITIONING='QilyLean 无广告斗地主｜简单娱乐，益智生活。源于父母辈真实使用需求，无广告、无强制注册、操作简单、打开即玩；也适合成年人放松思考，在轻松游戏中保持活力与智慧。';
 
 function copyText(text){
   if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);
@@ -119,7 +119,7 @@ function addPureDdzSection(){
   var section=document.createElement('section');
   section.id='pureDdzHomeSection';
   section.className='pure-ddz-home-section';
-  section.innerHTML='<div class="pure-ddz-home-inner"><article class="pure-ddz-home-card"><div class="pure-ddz-home-visual" aria-label="QilyLean六大业务主题斗地主牌桌示意"><div class="pure-ddz-table"><div class="pure-ddz-cards"><i>Q</i><i>Q</i><i>Q</i></div><strong>纯净斗地主</strong><span>QilyLean｜启力精益 六大业务主题</span><div class="pure-ddz-business"><b>现场事实</b><b>工程数据</b><b>精益改善</b><b>质量保证</b><b>数智固化</b><b>知识资产</b></div></div></div><div class="pure-ddz-home-content"><small>网页游戏＋Android APP｜休闲数字产品</small><h3>Pure DDZ Classic｜纯净斗地主</h3><p><strong>'+PURE_DDZ_POSITIONING+'</strong> 完整支持三人叫地主、经典牌型、AI电脑对手、智能提示、积分战绩、中文语音及横竖屏适配；牌面识别保持传统规则，QilyLean业务元素主要用于牌背与桌面视觉。</p><ul class="pure-ddz-feature-list"><li>完整三人斗地主、叫分、地主与胜负结算</li><li>单牌、对子、顺子、连对、飞机、炸弹、王炸等完整牌型</li><li>AI电脑对手与AI智能提示</li><li>无广告、无注册、无登录、无支付</li><li>网页版直接游玩，手机/平板/电脑自适应</li><li>Android v1.0.2 启动修复版离线安装包</li></ul><div class="pure-ddz-home-actions"><a class="play" href="/tools/pure-ddz/">立即在线玩</a><a class="apk" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.2/Pure-DDZ-Classic-v1.0.2.apk">下载 Android v1.0.2</a><a class="secondary" href="https://github.com/DingHunter623/Pure-DDZ-Classic" target="_blank" rel="noopener">查看项目仓库</a><button class="secondary" type="button" data-copy-pure-ddz>复制分享简介</button><span class="times26001-home-status" aria-live="polite"></span></div></div></article></div>';
+  section.innerHTML='<div class="pure-ddz-home-inner"><article class="pure-ddz-home-card"><div class="pure-ddz-home-visual" aria-label="QilyLean六大业务主题斗地主牌桌示意"><div class="pure-ddz-table"><div class="pure-ddz-cards"><i>Q</i><i>Q</i><i>Q</i></div><strong>纯净斗地主</strong><span>简单娱乐 · 益智生活｜QilyLean 主题牌面</span><div class="pure-ddz-business"><b>现场事实</b><b>工程数据</b><b>精益改善</b><b>质量保证</b><b>数智固化</b><b>知识资产</b></div></div></div><div class="pure-ddz-home-content"><small>网页游戏＋Android APP｜休闲数字产品</small><h3>Pure DDZ Classic｜纯净斗地主</h3><p><strong>'+PURE_DDZ_POSITIONING+'</strong> 完整支持三人叫地主、经典牌型、AI电脑对手、智能提示、积分战绩、中文语音及横竖屏适配；牌面识别保持传统规则，QilyLean业务元素主要用于牌背与桌面视觉。</p><ul class="pure-ddz-feature-list"><li>完整三人斗地主、叫分、地主与胜负结算</li><li>单牌、对子、顺子、连对、飞机、炸弹、王炸等完整牌型</li><li>AI电脑对手与AI智能提示</li><li>无广告、无注册、无登录、无支付</li><li>网页版直接游玩，手机/平板/电脑自适应</li><li>Android v1.0.2 启动修复版离线安装包</li></ul><div class="pure-ddz-home-actions"><a class="play" href="/tools/pure-ddz/">立即在线玩</a><a class="apk" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.2/Pure-DDZ-Classic-v1.0.2.apk">下载 Android v1.0.2</a><a class="secondary" href="https://github.com/DingHunter623/Pure-DDZ-Classic" target="_blank" rel="noopener">查看项目仓库</a><button class="secondary" type="button" data-copy-pure-ddz>复制分享简介</button><span class="times26001-home-status" aria-live="polite"></span></div></div></article></div>';
   if(!appendHomeSection(section))return;
   var button=section.querySelector('[data-copy-pure-ddz]');
   var status=section.querySelector('.times26001-home-status');
