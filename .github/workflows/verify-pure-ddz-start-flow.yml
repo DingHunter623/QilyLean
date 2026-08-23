@@ -45,7 +45,7 @@ jobs:
               const page=await browser.newPage({viewport});
               const dialogs=[]; const pageErrors=[];
               page.on('dialog', async dialog=>{dialogs.push(dialog.message()); await dialog.dismiss();});
-              page.on('pageerror', error=>pageErrors.push(String(error)));
+              page.on('pageerror', error=>pageErrors.push(error.stack || `${error.name}: ${error.message}`));
               await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'});
               await page.evaluate(()=>localStorage.clear());
               await page.reload({waitUntil:'networkidle'});
