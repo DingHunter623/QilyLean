@@ -24,7 +24,6 @@ jobs:
           grep -q 'function shouldConfirmRestart' tools/pure-ddz/game/js/game.js
           grep -q "state.phase==='bidding'||state.phase==='playing'" tools/pure-ddz/game/js/game.js
           ! grep -q "table.appendChild(strip)" tools/pure-ddz/game/js/qilylean-theme.js
-          grep -q "querySelectorAll('.qily-business-strip').forEach(node=>node.remove())" tools/pure-ddz/game/js/qilylean-theme.js
       - name: Install browser smoke deps
         run: |
           npm init -y >/dev/null 2>&1
@@ -36,7 +35,7 @@ jobs:
           for i in {1..20}; do curl -fsS http://127.0.0.1:4173/ >/dev/null && exit 0; sleep 1; done
           cat /tmp/ddz-start-http.log || true
           exit 1
-      - name: Click Start Game and verify real deal
+      - name: Diagnose start/deal state and DOM
         run: |
           node <<'NODE'
           const { chromium } = require('@playwright/test');
@@ -44,25 +43,42 @@ jobs:
             const browser=await chromium.launch({headless:true});
             for (const viewport of [{width:1440,height:900},{width:844,height:390}]) {
               const page=await browser.newPage({viewport});
-              let dialogs=[];
+              let dialogs=[]; const pageErrors=[];
               page.on('dialog', async dialog=>{dialogs.push(dialog.message()); await dialog.dismiss();});
+              page.on('pageerror', error=>pageErrors.push(String(error)));
               await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'});
               await page.evaluate(()=>localStorage.clear());
               await page.reload({waitUntil:'networkidle'});
+              await page.waitForFunction(()=>Boolean(window.PureDDZTest),null,{timeout:5000});
+              const before=await page.evaluate(()=>({
+                phase:window.PureDDZTest.getState().phase,
+                stateHand:window.PureDDZTest.getState().hands?.[0]?.length,
+                domHand:document.querySelectorAll('#hand .card').length,
+                hasTheme:Boolean(window.QilyLeanCardTheme),
+                hasVisual:Boolean(window.QilyLeanV120)
+              }));
               const welcome=page.locator('#welcome');
               if(await welcome.isVisible().catch(()=>false)) await page.locator('#welcome-start').click();
               else await page.locator('#start').click();
               await page.waitForTimeout(1200);
               const result=await page.evaluate(()=>({
                 phase:window.PureDDZTest?.getState().phase,
-                hand:document.querySelectorAll('#hand .card').length,
+                stateHand:window.PureDDZTest?.getState().hands?.[0]?.length,
+                domHand:document.querySelectorAll('#hand .card').length,
+                handHtml:document.querySelector('#hand')?.innerHTML?.slice(0,500),
                 strips:document.querySelectorAll('.qily-business-strip').length,
-                startText:document.querySelector('#start')?.textContent?.trim()
+                startText:document.querySelector('#start')?.textContent?.trim(),
+                hasTheme:Boolean(window.QilyLeanCardTheme),
+                hasVisual:Boolean(window.QilyLeanV120),
+                pageErrors
               }));
+              console.log(JSON.stringify({viewport,before,result,dialogs},null,2));
               if(dialogs.length) throw new Error('Unexpected confirm/dialog on initial start: '+dialogs.join(' | '));
               if(result.phase!=='bidding'&&result.phase!=='playing') throw new Error('Game did not start: '+JSON.stringify(result));
-              if(result.hand<17) throw new Error('Cards were not dealt: '+JSON.stringify(result));
+              if(result.stateHand<17) throw new Error('State did not receive cards: '+JSON.stringify(result));
+              if(result.domHand<17) throw new Error('State has cards but DOM does not: '+JSON.stringify(result));
               if(result.strips!==0) throw new Error('Business strip still present: '+JSON.stringify(result));
+              if(result.pageErrors.length) throw new Error('Page errors: '+result.pageErrors.join(' | '));
               await page.close();
             }
             await browser.close();
