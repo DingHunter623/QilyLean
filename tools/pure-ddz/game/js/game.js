@@ -1,0 +1,468 @@
+(() => {
+  'use strict';
+
+  const VERSION = '1.0.0';
+  const PROFILE_KEY = 'pure_ddz_profile_v1';
+  const SETTINGS_KEY = 'pure_ddz_settings_v1';
+  const RANK_TEXT = {3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',10:'10',11:'J',12:'Q',13:'K',14:'A',15:'2',16:'小王',17:'大王'};
+  const SUITS = ['♠','♥','♣','♦'];
+  const COMBO_TEXT = {
+    single:'单牌',pair:'对子',triple:'三张',triple1:'三带一',triple2:'三带二',straight:'顺子',
+    pairStraight:'连对',airplane:'飞机',airplane1:'飞机带单',airplane2:'飞机带对',
+    four2:'四带二',four2pair:'四带两对',bomb:'炸弹',rocket:'王炸'
+  };
+  const DEFAULT_PROFILE = {score:1000,wins:0,losses:0,streak:0,bestStreak:0,games:0,lastRewardDate:''};
+  const DEFAULT_SETTINGS = {music:true,voice:true,effects:true,font:'large',difficulty:'normal'};
+  const state = {
+    phase:'idle',hands:[[],[],[]],bottom:[],landlord:null,current:0,lastPlay:null,passCount:0,
+    selected:new Set(),winner:null,bids:[null,null,null],bidStart:0,bidTurns:0,highestBid:0,highestBidder:null,
+    baseScore:1,multiplier:1,playCounts:[0,0,0],roundNumber:0,turnTimer:null,musicTimer:null,audioCtx:null,
+    profile:loadJson(PROFILE_KEY,DEFAULT_PROFILE),settings:loadJson(SETTINGS_KEY,DEFAULT_SETTINGS)
+  };
+
+  const $ = id => document.getElementById(id);
+  const nextPlayer = player => (player + 1) % 3;
+  const playerName = player => player === 0 ? '我' : (player === 1 ? '左家电脑' : '右家电脑');
+  const deepCopy = value => JSON.parse(JSON.stringify(value));
+
+  function loadJson(key, fallback){
+    try{
+      const parsed=JSON.parse(localStorage.getItem(key)||'null');
+      return parsed && typeof parsed==='object' ? {...fallback,...parsed} : {...fallback};
+    }catch(_error){ return {...fallback}; }
+  }
+
+  function saveProfile(){
+    try{ localStorage.setItem(PROFILE_KEY,JSON.stringify(state.profile)); }catch(_error){}
+    renderProfile();
+  }
+
+  function saveSettings(){
+    try{ localStorage.setItem(SETTINGS_KEY,JSON.stringify(state.settings)); }catch(_error){}
+    applySettings();
+  }
+
+  function createDeck(){
+    const deck=[]; let id=0;
+    for(let rank=3;rank<=15;rank++) for(const suit of SUITS) deck.push({id:id++,rank,suit});
+    deck.push({id:id++,rank:16,suit:'🃏'}); deck.push({id:id++,rank:17,suit:'🃏'});
+    return deck;
+  }
+
+  function shuffle(deck){
+    for(let i=deck.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; }
+    return deck;
+  }
+
+  function sortHand(hand){ hand.sort((a,b)=>b.rank-a.rank || a.suit.localeCompare(b.suit)); }
+
+  function countRanks(cards){
+    const map=new Map(); cards.forEach(card=>map.set(card.rank,(map.get(card.rank)||0)+1)); return map;
+  }
+
+  function consecutive(ranks){
+    if(!ranks.length || ranks[ranks.length-1]>14) return false;
+    for(let i=1;i<ranks.length;i++) if(ranks[i]!==ranks[i-1]+1) return false;
+    return true;
+  }
+
+  function sequenceWindows(ranks,minLength){
+    const sorted=[...new Set(ranks)].sort((a,b)=>a-b).filter(rank=>rank<=14); const windows=[];
+    for(let start=0;start<sorted.length;start++){
+      for(let end=start+minLength-1;end<sorted.length;end++){
+        const seq=sorted.slice(start,end+1); if(consecutive(seq)) windows.push(seq); else break;
+      }
+    }
+    return windows;
+  }
+
+  function analyze(cards){
+    if(!cards?.length) return null;
+    const n=cards.length, map=countRanks(cards), entries=[...map.entries()].sort((a,b)=>a[0]-b[0]);
+    const ranks=entries.map(([rank])=>rank), byCount=count=>entries.filter(([,size])=>size===count).map(([rank])=>rank);
+    if(n===1) return {type:'single',main:ranks[0],len:1};
+    if(n===2 && ranks.length===2 && ranks[0]===16 && ranks[1]===17) return {type:'rocket',main:17,len:2};
+    if(n===2 && ranks.length===1) return {type:'pair',main:ranks[0],len:2};
+    if(n===3 && ranks.length===1) return {type:'triple',main:ranks[0],len:3};
+    if(n===4 && ranks.length===1) return {type:'bomb',main:ranks[0],len:4};
+    if(n===4 && byCount(3).length===1) return {type:'triple1',main:byCount(3)[0],len:4};
+    if(n===5 && byCount(3).length===1 && byCount(2).length===1) return {type:'triple2',main:byCount(3)[0],len:5};
+    if(n>=5 && ranks.length===n && consecutive(ranks)) return {type:'straight',main:ranks.at(-1),len:n};
+    if(n>=6 && n%2===0 && ranks.length===n/2 && entries.every(([,size])=>size===2) && consecutive(ranks)) return {type:'pairStraight',main:ranks.at(-1),len:n};
+
+    const tripleRanks=entries.filter(([rank,size])=>rank<=14 && size>=3).map(([rank])=>rank);
+    for(const seq of sequenceWindows(tripleRanks,2).sort((a,b)=>b.length-a.length)){
+      const remain=new Map(entries);
+      seq.forEach(rank=>remain.set(rank,remain.get(rank)-3));
+      const remaining=[...remain.entries()].filter(([,size])=>size>0);
+      const remainingCount=remaining.reduce((sum,[,size])=>sum+size,0);
+      if(n===seq.length*3 && remainingCount===0) return {type:'airplane',main:seq.at(-1),len:n,seq:seq.length};
+      if(n===seq.length*4 && remainingCount===seq.length) return {type:'airplane1',main:seq.at(-1),len:n,seq:seq.length};
+      if(n===seq.length*5 && remaining.length===seq.length && remaining.every(([,size])=>size===2)) return {type:'airplane2',main:seq.at(-1),len:n,seq:seq.length};
+    }
+
+    if(n===6 && byCount(4).length===1) return {type:'four2',main:byCount(4)[0],len:6};
+    if(n===8 && byCount(4).length===1){
+      const four=byCount(4)[0], others=entries.filter(([rank])=>rank!==four);
+      if(others.length===2 && others.every(([,size])=>size===2)) return {type:'four2pair',main:four,len:8};
+    }
+    return null;
+  }
+
+  function canBeat(candidate,target){
+    if(!candidate) return false; if(!target) return true;
+    if(candidate.type==='rocket') return true; if(target.type==='rocket') return false;
+    if(candidate.type==='bomb' && target.type!=='bomb') return true;
+    if(candidate.type!=='bomb' && target.type==='bomb') return false;
+    return candidate.type===target.type && candidate.len===target.len && (candidate.seq||0)===(target.seq||0) && candidate.main>target.main;
+  }
+
+  function rankGroups(hand){
+    const groups=new Map();
+    hand.forEach(card=>{ if(!groups.has(card.rank)) groups.set(card.rank,[]); groups.get(card.rank).push(card); });
+    return groups;
+  }
+
+  function uniqueCandidates(list){
+    const seen=new Set();
+    return list.filter(cards=>{
+      const key=cards.map(card=>card.id).sort((a,b)=>a-b).join('-');
+      if(seen.has(key)) return false; seen.add(key); return Boolean(analyze(cards));
+    });
+  }
+
+  function generateCandidates(hand){
+    const groups=rankGroups(hand), ranks=[...groups.keys()].sort((a,b)=>a-b), candidates=[];
+    ranks.forEach(rank=>{
+      const cards=groups.get(rank); candidates.push(cards.slice(0,1));
+      if(cards.length>=2) candidates.push(cards.slice(0,2));
+      if(cards.length>=3) candidates.push(cards.slice(0,3));
+      if(cards.length===4) candidates.push(cards.slice(0,4));
+    });
+    if(groups.has(16)&&groups.has(17)) candidates.push([groups.get(16)[0],groups.get(17)[0]]);
+
+    ranks.filter(rank=>groups.get(rank).length>=3).forEach(tripleRank=>{
+      const triple=groups.get(tripleRank).slice(0,3);
+      ranks.filter(rank=>rank!==tripleRank).forEach(rank=>candidates.push([...triple,groups.get(rank)[0]]));
+      ranks.filter(rank=>rank!==tripleRank&&groups.get(rank).length>=2).forEach(rank=>candidates.push([...triple,...groups.get(rank).slice(0,2)]));
+    });
+
+    sequenceWindows(ranks.filter(rank=>groups.get(rank).length>=1),5).forEach(seq=>candidates.push(seq.map(rank=>groups.get(rank)[0])));
+    sequenceWindows(ranks.filter(rank=>groups.get(rank).length>=2),3).forEach(seq=>candidates.push(seq.flatMap(rank=>groups.get(rank).slice(0,2))));
+
+    const tripleRanks=ranks.filter(rank=>rank<=14&&groups.get(rank).length>=3);
+    sequenceWindows(tripleRanks,2).forEach(seq=>{
+      const core=seq.flatMap(rank=>groups.get(rank).slice(0,3)); candidates.push(core);
+      const outsideRanks=ranks.filter(rank=>!seq.includes(rank));
+      const singles=outsideRanks.flatMap(rank=>groups.get(rank));
+      if(singles.length>=seq.length) candidates.push([...core,...singles.slice(0,seq.length)]);
+      const pairs=outsideRanks.filter(rank=>groups.get(rank).length>=2);
+      if(pairs.length>=seq.length) candidates.push([...core,...pairs.slice(0,seq.length).flatMap(rank=>groups.get(rank).slice(0,2))]);
+    });
+
+    ranks.filter(rank=>groups.get(rank).length===4).forEach(fourRank=>{
+      const core=groups.get(fourRank).slice(0,4), outside=ranks.filter(rank=>rank!==fourRank);
+      const singles=outside.flatMap(rank=>groups.get(rank));
+      if(singles.length>=2) candidates.push([...core,...singles.slice(0,2)]);
+      const pairs=outside.filter(rank=>groups.get(rank).length>=2);
+      if(pairs.length>=2) candidates.push([...core,...pairs.slice(0,2).flatMap(rank=>groups.get(rank).slice(0,2))]);
+    });
+    return uniqueCandidates(candidates);
+  }
+
+  function candidateScore(option,target,player){
+    const {cards,combo}=option, bomb=['bomb','rocket'].includes(combo.type), nextHand=state.hands[nextPlayer(player)]?.length||17;
+    let score=combo.main+(bomb?130:0)-cards.length*7;
+    if(!target) score-=cards.length*11;
+    if(state.settings.difficulty==='easy') score+=Math.random()*45;
+    if(state.settings.difficulty==='smart'){
+      if(nextHand<=2 && bomb) score-=90;
+      if(cards.length===state.hands[player].length) score-=300;
+      if(player!==state.landlord && state.landlord!==null && state.hands[state.landlord].length<=2) score-=cards.length*9;
+    }
+    return score;
+  }
+
+  function chooseAiPlay(player){
+    const target=state.lastPlay && state.lastPlay.player!==player ? state.lastPlay.combo : null;
+    const options=generateCandidates(state.hands[player]).map(cards=>({cards,combo:analyze(cards)})).filter(option=>!target||canBeat(option.combo,target));
+    if(!options.length) return null;
+    options.sort((a,b)=>candidateScore(a,target,player)-candidateScore(b,target,player));
+    return options[0];
+  }
+
+  function removeCards(hand,cards){ const ids=new Set(cards.map(card=>card.id)); return hand.filter(card=>!ids.has(card.id)); }
+  function comboText(combo){ return COMBO_TEXT[combo?.type]||'出牌'; }
+  function cardLabel(card){ return card.rank>=16?RANK_TEXT[card.rank]:`${RANK_TEXT[card.rank]}${card.suit}`; }
+  function isRed(card){ return card.suit==='♥'||card.suit==='♦'||card.rank===17; }
+
+  function renderProfile(){
+    $('score').textContent=state.profile.score; $('wins').textContent=state.profile.wins; $('losses').textContent=state.profile.losses; $('streak').textContent=state.profile.streak;
+  }
+
+  function roleText(player){
+    if(state.landlord===null) return state.phase==='bidding'?'叫地主':'等待开局'; return state.landlord===player?'地主':'农民';
+  }
+
+  function updateRole(id,player){
+    const el=$(id); el.textContent=roleText(player); el.classList.toggle('landlord',state.landlord===player); el.classList.toggle('farmer',state.landlord!==null&&state.landlord!==player);
+  }
+
+  function renderBacks(id,count){
+    const visible=Math.min(7,Math.max(0,count)); $(id).innerHTML=Array.from({length:visible},()=>'<i class="card-back"></i>').join('');
+  }
+
+  function renderBottomCards(){
+    const reveal=state.landlord!==null&&state.phase!=='idle';
+    $('bottom-cards').innerHTML=reveal?state.bottom.map(card=>`<span class="mini-card${isRed(card)?' red':''}">${cardLabel(card)}</span>`).join(''):Array.from({length:3},()=>'<i class="bottom-back"></i>').join('');
+  }
+
+  function renderHand(){
+    const hand=$('hand'); hand.innerHTML='';
+    state.hands[0].forEach(card=>{
+      const button=document.createElement('button'), selected=state.selected.has(card.id);
+      button.type='button'; button.className=`card${selected?' selected':''}${isRed(card)?' red':''}${card.rank>=16?' joker':''}`; button.dataset.id=String(card.id);
+      button.setAttribute('aria-label',`${cardLabel(card)}${selected?'，已选择':'，未选择'}`); button.setAttribute('aria-pressed',String(selected));
+      button.innerHTML=card.rank>=16?`<strong>${RANK_TEXT[card.rank]}</strong>`:`<strong>${RANK_TEXT[card.rank]}</strong><span>${card.suit}</span>`;
+      button.addEventListener('click',()=>toggleSelect(card.id)); hand.appendChild(button);
+    });
+  }
+
+  function renderLastPlay(){
+    if(state.lastPlay){
+      const last=state.lastPlay;
+      $('center-play').innerHTML=`<div class="play-owner">${playerName(last.player)} · ${comboText(last.combo)}</div><div class="played-cards">${last.cards.map(card=>`<span class="mini-card${isRed(card)?' red':''}">${cardLabel(card)}</span>`).join('')}</div>`;
+      return;
+    }
+    const copy=state.phase==='bidding'?'正在叫地主，分数最高者获得三张底牌':state.phase==='playing'?'新一轮，领出玩家可以出任意合规牌型':'点击“开始游戏”，无需登录即可游玩';
+    $('center-play').innerHTML=`<div class="center-tip">${copy}</div>`;
+  }
+
+  function renderStatus(){
+    if(state.phase==='idle') $('status').textContent='准备开始';
+    else if(state.phase==='bidding') $('status').textContent=state.current===0?'轮到你叫地主':`${playerName(state.current)} 正在考虑叫分…`;
+    else if(state.phase==='ended') $('status').textContent=state.winner===0?'🎉 你先出完了！':`${playerName(state.winner)} 先出完了`;
+    else $('status').textContent=state.current===0?'轮到你出牌':`${playerName(state.current)} 正在思考…`;
+  }
+
+  function renderControls(){
+    const humanBid=state.phase==='bidding'&&state.current===0, humanTurn=state.phase==='playing'&&state.current===0;
+    $('bid-controls').classList.toggle('hidden',!humanBid); $('play-controls').classList.toggle('hidden',state.phase!=='playing');
+    $('play').disabled=!humanTurn; $('hint').disabled=!humanTurn; $('pass').disabled=!humanTurn||!state.lastPlay||state.lastPlay.player===0;
+    document.querySelectorAll('[data-bid]').forEach(button=>{ button.disabled=!humanBid||Number(button.dataset.bid)<=state.highestBid&&Number(button.dataset.bid)!==0; });
+  }
+
+  function renderActivePlayer(){
+    document.querySelectorAll('.player-panel').forEach(panel=>panel.classList.remove('active'));
+    if(!['bidding','playing'].includes(state.phase)) return;
+    $(state.current===0?'me-panel':state.current===1?'left-panel':'right-panel').classList.add('active');
+  }
+
+  function render(){
+    const sizes=state.hands.map(hand=>hand.length);
+    $('left-count').textContent=`${sizes[1]||0} 张`; $('right-count').textContent=`${sizes[2]||0} 张`; $('me-count').textContent=`${sizes[0]||0} 张`;
+    updateRole('left-role',1); updateRole('right-role',2); updateRole('me-role',0);
+    ['me','left','right'].forEach((key,index)=>{ const bid=state.bids[index]; $(`${key}-bid`).textContent=bid===null?'':bid===0?'不叫':`${bid} 分`; });
+    renderBacks('left-backs',sizes[1]); renderBacks('right-backs',sizes[2]); renderBottomCards(); renderHand(); renderLastPlay(); renderStatus(); renderControls(); renderActivePlayer();
+    $('round-number').textContent=state.roundNumber; $('base-score').textContent=state.baseScore; $('multiplier').textContent=`×${state.multiplier}`;
+    $('start').textContent=state.phase==='idle'?'开始游戏':'重新开局'; renderProfile();
+  }
+
+  function toggleSelect(id){
+    if(state.phase!=='playing'||state.current!==0) return;
+    state.selected.has(id)?state.selected.delete(id):state.selected.add(id); playEffect('select'); render();
+  }
+
+  function handStrength(hand){
+    const groups=rankGroups(hand); let value=0;
+    hand.forEach(card=>{ if(card.rank===17)value+=5; else if(card.rank===16)value+=4; else if(card.rank===15)value+=2.2; else if(card.rank===14)value+=1.2; });
+    groups.forEach(cards=>{ if(cards.length===4)value+=5; else if(cards.length===3)value+=1.4; }); return value;
+  }
+
+  function chooseAiBid(player){
+    const strength=handStrength(state.hands[player]), jitter=Math.random()*2.3; let bid=0;
+    if(strength+jitter>13) bid=3; else if(strength+jitter>9) bid=2; else if(strength+jitter>6) bid=1;
+    if(state.settings.difficulty==='easy'&&Math.random()<.25) bid=Math.max(0,bid-1);
+    if(bid<=state.highestBid) bid=0; return bid;
+  }
+
+  function startRound(){
+    clearTimeout(state.turnTimer); closeModal('welcome'); closeModal('result');
+    state.phase='bidding'; state.hands=[[],[],[]]; state.bottom=[]; state.landlord=null; state.lastPlay=null; state.passCount=0; state.selected.clear(); state.winner=null;
+    state.bids=[null,null,null]; state.bidTurns=0; state.highestBid=0; state.highestBidder=null; state.baseScore=1; state.multiplier=1; state.playCounts=[0,0,0];
+    const deck=shuffle(createDeck()); state.hands=[deck.slice(0,17),deck.slice(17,34),deck.slice(34,51)]; state.bottom=deck.slice(51); state.hands.forEach(sortHand);
+    state.bidStart=Math.floor(Math.random()*3); state.current=state.bidStart; state.roundNumber=state.profile.games+1;
+    $('hint-message').textContent='请根据手牌选择叫分；不熟悉时可以先点“不叫”。';
+    startMusic(); render(); speak('开始叫地主'); scheduleTurn();
+  }
+
+  function placeBid(player,bid){
+    if(state.phase!=='bidding'||state.current!==player) return;
+    const safeBid=Number(bid); state.bids[player]=safeBid; state.bidTurns++;
+    if(safeBid>state.highestBid){ state.highestBid=safeBid; state.highestBidder=player; }
+    playEffect(safeBid?'confirm':'pass'); speak(safeBid?`${playerName(player)}叫${safeBid}分`:`${playerName(player)}不叫`);
+    render();
+    if(safeBid===3||state.bidTurns>=3){ setTimeout(finishBidding,430); return; }
+    state.current=nextPlayer(player); render(); scheduleTurn();
+  }
+
+  function finishBidding(){
+    if(state.phase!=='bidding') return;
+    if(state.highestBidder===null){ flash('本轮都不叫，自动重新发牌'); speak('都不叫，重新发牌'); setTimeout(startRound,900); return; }
+    state.landlord=state.highestBidder; state.baseScore=Math.max(1,state.highestBid); state.hands[state.landlord].push(...state.bottom); sortHand(state.hands[state.landlord]); state.current=state.landlord; state.phase='playing';
+    $('hint-message').textContent=state.current===0?'你是本轮首出，可以出任意合规牌型。':'请留意牌桌，轮到你时会有明显提示。';
+    speak(`${playerName(state.landlord)}当地主，游戏开始`); playEffect('start'); render(); scheduleTurn();
+  }
+
+  function humanBid(bid){ placeBid(0,bid); }
+
+  function scheduleTurn(){
+    clearTimeout(state.turnTimer);
+    if(!['bidding','playing'].includes(state.phase)||state.current===0) return;
+    state.turnTimer=setTimeout(()=>{
+      const player=state.current;
+      if(state.phase==='bidding') placeBid(player,chooseAiBid(player));
+      else{ const choice=chooseAiPlay(player); choice?commitPlay(player,choice.cards):pass(player); }
+    },state.settings.difficulty==='easy'?950:680+Math.random()*350);
+  }
+
+  function commitPlay(player,cards){
+    if(state.phase!=='playing'||state.current!==player) return {ok:false,message:'现在不能出牌'};
+    const combo=analyze(cards); if(!combo) return {ok:false,message:'这组牌不符合斗地主牌型'};
+    const target=state.lastPlay&&state.lastPlay.player!==player?state.lastPlay.combo:null;
+    if(target&&!canBeat(combo,target)) return {ok:false,message:'这组牌压不过上一手'};
+    state.hands[player]=removeCards(state.hands[player],cards); state.lastPlay={player,cards:[...cards],combo}; state.passCount=0; state.playCounts[player]++;
+    if(['bomb','rocket'].includes(combo.type)) state.multiplier*=2;
+    playEffect(['bomb','rocket'].includes(combo.type)?'bomb':'play'); speak(['bomb','rocket'].includes(combo.type)?comboText(combo):`${playerName(player)}，${comboText(combo)}`);
+    render(); if(finishIfNeeded(player)) return {ok:true,finished:true};
+    state.current=nextPlayer(player); render(); scheduleTurn(); return {ok:true};
+  }
+
+  function playSelected(){
+    if(state.phase!=='playing'||state.current!==0) return;
+    const cards=state.hands[0].filter(card=>state.selected.has(card.id));
+    if(!cards.length){ flash('请先选择要出的牌'); speak('请先选牌'); return; }
+    const result=commitPlay(0,cards);
+    if(!result.ok){ flash(result.message); speak('这样不能出'); return; }
+    state.selected.clear(); $('hint-message').textContent=`已出：${comboText(analyze(cards))}。`;
+  }
+
+  function pass(player=0){
+    if(state.phase!=='playing'||state.current!==player) return;
+    if(!state.lastPlay||state.lastPlay.player===player){ if(player===0) flash('你是本轮首出，不能选择“不要”'); return; }
+    state.passCount++; playEffect('pass'); speak(player===0?'不要':`${playerName(player)}要不起`);
+    if(state.passCount>=2){ const leader=state.lastPlay.player; state.lastPlay=null; state.passCount=0; state.current=leader; }
+    else state.current=nextPlayer(player);
+    render(); scheduleTurn();
+  }
+
+  function hint(){
+    if(state.phase!=='playing'||state.current!==0) return;
+    const target=state.lastPlay&&state.lastPlay.player!==0?state.lastPlay.combo:null;
+    const options=generateCandidates(state.hands[0]).map(cards=>({cards,combo:analyze(cards)})).filter(option=>!target||canBeat(option.combo,target));
+    if(!options.length){ state.selected.clear(); render(); flash('没有能压过的牌，建议点“不要”'); $('hint-message').textContent='AI 建议：当前没有合适组合，可以选择“不要”。'; speak('没有能出的牌'); return; }
+    options.sort((a,b)=>candidateScore(a,target,0)-candidateScore(b,target,0)); state.selected.clear(); options[0].cards.forEach(card=>state.selected.add(card.id)); render();
+    $('hint-message').textContent=`AI 建议：出“${comboText(options[0].combo)}”，已替你选好 ${options[0].cards.length} 张牌。`; flash(`AI 已选好：${comboText(options[0].combo)}`); speak(`建议出${comboText(options[0].combo)}`);
+  }
+
+  function finishIfNeeded(player){
+    if(state.hands[player].length!==0) return false;
+    state.winner=player; state.phase='ended';
+    const landlordWon=player===state.landlord, humanWon=state.landlord===0?landlordWon:!landlordWon;
+    const spring=landlordWon?(state.playCounts.filter((_,index)=>index!==state.landlord).reduce((a,b)=>a+b,0)===0):(state.playCounts[state.landlord]<=1);
+    if(spring) state.multiplier*=2;
+    const roleFactor=state.landlord===0?2:1, raw=Math.max(10,state.baseScore*state.multiplier*10*roleFactor), delta=humanWon?raw:-raw;
+    state.profile.games++; state.profile.score=Math.max(0,state.profile.score+delta);
+    if(humanWon){ state.profile.wins++; state.profile.streak++; state.profile.bestStreak=Math.max(state.profile.bestStreak,state.profile.streak); }
+    else{ state.profile.losses++; state.profile.streak=0; }
+    let reward=0, today=new Date().toLocaleDateString('en-CA');
+    if(humanWon&&state.profile.lastRewardDate!==today){ reward=50; state.profile.score+=reward; state.profile.lastRewardDate=today; }
+    saveProfile(); render();
+    $('result-icon').textContent=humanWon?'🏆':'🌱'; $('result-title').textContent=humanWon?'恭喜，我们赢了！':'这一局惜败，再来一局';
+    $('result-text').textContent=`${state.landlord===0?'你是地主':'你与另一位农民同队'}；${spring?'本局触发“春天”，倍数翻倍。':'本局牌局已正常结算。'}${reward?' 今日首胜再奖励 50 安心积分。':''}`;
+    $('result-score').textContent=`${delta+reward>=0?'+':''}${delta+reward}`; $('result-multiplier').textContent=`×${state.multiplier}`; $('result-score').style.color=delta+reward>=0?'#18724b':'#b23c35';
+    setTimeout(()=>openModal('result'),550); playEffect(humanWon?'win':'lose'); speak(humanWon?'恭喜，我们赢了':'这一局惜败，休息一下再来'); return true;
+  }
+
+  function flash(message){
+    const toast=$('toast'); toast.textContent=message; toast.classList.add('show'); clearTimeout(flash.timer); flash.timer=setTimeout(()=>toast.classList.remove('show'),1800);
+  }
+
+  function nativeSpeak(text){
+    try{ if(window.QilyLeanAndroid?.speak){ window.QilyLeanAndroid.speak(String(text)); return true; } }catch(_error){}
+    return false;
+  }
+
+  function speak(text){
+    if(!state.settings.voice) return; if(nativeSpeak(text)) return;
+    try{
+      if(!('speechSynthesis' in window)) return; speechSynthesis.cancel(); const utterance=new SpeechSynthesisUtterance(text); utterance.lang='zh-CN'; utterance.rate=.92; utterance.pitch=1; utterance.volume=.9; speechSynthesis.speak(utterance);
+    }catch(_error){}
+  }
+
+  function audioContext(){
+    try{ const Ctx=window.AudioContext||window.webkitAudioContext; if(!Ctx) return null; state.audioCtx=state.audioCtx||new Ctx(); if(state.audioCtx.state==='suspended') state.audioCtx.resume(); return state.audioCtx; }catch(_error){ return null; }
+  }
+
+  function playNote(frequency,duration=.22,volume=.035,type='triangle',delay=0){
+    const ctx=audioContext(); if(!ctx) return; const oscillator=ctx.createOscillator(), gain=ctx.createGain(), start=ctx.currentTime+delay;
+    oscillator.type=type; oscillator.frequency.value=frequency; gain.gain.setValueAtTime(.0001,start); gain.gain.exponentialRampToValueAtTime(volume,start+.02); gain.gain.exponentialRampToValueAtTime(.0001,start+duration); oscillator.connect(gain).connect(ctx.destination); oscillator.start(start); oscillator.stop(start+duration+.03);
+  }
+
+  function playEffect(kind){
+    if(!state.settings.effects) return;
+    const notes={select:[[520,.08,.025]],confirm:[[440,.1,.03],[660,.14,.03,.08]],pass:[[260,.12,.02]],play:[[420,.1,.028],[520,.12,.025,.06]],bomb:[[170,.26,.055],[110,.35,.045,.05]],start:[[392,.1,.03],[523,.14,.035,.08],[659,.18,.035,.16]],win:[[523,.12,.04],[659,.12,.04,.1],[784,.26,.05,.2]],lose:[[392,.16,.03],[330,.24,.028,.12]]};
+    (notes[kind]||notes.play).forEach(([f,d,v,delay=0])=>playNote(f,d,v,kind==='bomb'?'sawtooth':'triangle',delay));
+  }
+
+  function startMusic(){
+    if(!state.settings.music||state.musicTimer) return; const melody=[262,330,392,523,440,392,330,294,349,440,587,523,440,392,330,294]; let index=0;
+    playNote(melody[index++],.34,.018,'sine'); state.musicTimer=setInterval(()=>{ if(state.settings.music) playNote(melody[index++%melody.length],.34,.018,'sine'); },620);
+  }
+
+  function stopMusic(){ clearInterval(state.musicTimer); state.musicTimer=null; }
+
+  function applySettings(){
+    document.documentElement.dataset.font=state.settings.font; $('setting-music').checked=state.settings.music; $('setting-voice').checked=state.settings.voice; $('setting-effects').checked=state.settings.effects; $('setting-font').value=state.settings.font; $('setting-difficulty').value=state.settings.difficulty;
+    const soundOn=state.settings.music||state.settings.voice||state.settings.effects; $('audio-toggle').innerHTML=`${soundOn?'🔊':'🔇'} <span>${soundOn?'声音开':'声音关'}</span>`;
+    if(state.settings.music&&state.phase!=='idle') startMusic(); else if(!state.settings.music) stopMusic();
+  }
+
+  function toggleAllAudio(){
+    const next=!(state.settings.music||state.settings.voice||state.settings.effects); state.settings.music=next; state.settings.voice=next; state.settings.effects=next; saveSettings(); if(next){ startMusic(); speak('声音已开启'); } else stopMusic();
+  }
+
+  function openModal(id){ $(id)?.classList.remove('hidden'); }
+  function closeModal(id){ $(id)?.classList.add('hidden'); }
+
+  function bindEvents(){
+    $('start').addEventListener('click',()=>{ if(state.phase!=='idle'&&!window.confirm('确定要重新发牌吗？当前这一局不会计分。')) return; startRound(); });
+    $('welcome-start').addEventListener('click',startRound); $('welcome-settings').addEventListener('click',()=>{ closeModal('welcome'); openModal('settings-modal'); });
+    $('again').addEventListener('click',startRound); $('result-close').addEventListener('click',()=>closeModal('result'));
+    $('play').addEventListener('click',playSelected); $('pass').addEventListener('click',()=>pass(0)); $('hint').addEventListener('click',hint);
+    $('audio-toggle').addEventListener('click',toggleAllAudio); $('settings-open').addEventListener('click',()=>openModal('settings-modal')); $('help-open').addEventListener('click',()=>openModal('help-modal'));
+    document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>closeModal(button.dataset.close)));
+    document.querySelectorAll('[data-bid]').forEach(button=>button.addEventListener('click',()=>humanBid(Number(button.dataset.bid))));
+    $('setting-music').addEventListener('change',event=>{ state.settings.music=event.target.checked; saveSettings(); });
+    $('setting-voice').addEventListener('change',event=>{ state.settings.voice=event.target.checked; saveSettings(); });
+    $('setting-effects').addEventListener('change',event=>{ state.settings.effects=event.target.checked; saveSettings(); });
+    $('setting-font').addEventListener('change',event=>{ state.settings.font=event.target.value; saveSettings(); });
+    $('setting-difficulty').addEventListener('change',event=>{ state.settings.difficulty=event.target.value; saveSettings(); });
+    document.addEventListener('visibilitychange',()=>{ if(document.hidden) stopMusic(); else if(state.settings.music&&state.phase!=='idle') startMusic(); });
+  }
+
+  window.PureDDZNativeBack=()=>{
+    for(const id of ['settings-modal','help-modal','result','welcome']) if(!$(id).classList.contains('hidden')){ closeModal(id); return true; }
+    return false;
+  };
+
+  window.PureDDZTest=Object.freeze({
+    version:VERSION,start:startRound,bid:humanBid,hint,analyze,canBeat,generateCandidates,
+    getState:()=>deepCopy({...state,selected:[...state.selected],turnTimer:null,musicTimer:null,audioCtx:null}),
+    analyzeRanks:ranks=>analyze(ranks.map((rank,index)=>({id:index,rank,suit:'♠'}))),
+    stop:()=>{ clearTimeout(state.turnTimer); stopMusic(); }
+  });
+
+  bindEvents(); applySettings(); render();
+  if(location.protocol==='http:'||location.protocol==='https:') window.addEventListener('load',()=>navigator.serviceWorker?.register('./sw.js').catch(()=>{}));
+})();
