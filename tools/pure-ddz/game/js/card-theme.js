@@ -65,7 +65,6 @@
     return `<span class="qily-card qily-card--normal${red?' qily-rule-red':''}">
       <span class="qily-card-corner"><b>${escapeHtml(ruleRankText(card))}</b><i>${escapeHtml(card.suit)}</i></span>
       <span class="qily-card-theme"><small>${escapeHtml(theme.suit.code)}</small><strong>${escapeHtml(theme.code)}</strong><b>${escapeHtml(theme.title)}</b><em>${escapeHtml(theme.skill)}</em></span>
-      <span class="qily-card-footer"><i>${escapeHtml(theme.suit.icon)}</i>${escapeHtml(theme.suit.title)}</span>
     </span>`;
   }
 
