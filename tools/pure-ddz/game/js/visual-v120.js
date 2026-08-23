@@ -4,113 +4,47 @@
   let hintEnabled=localStorage.getItem(HINT_KEY)!=='0',previousState=null,stageSignature='',stageBusy=false,stageTimer=null;
   const visualQueue=[],queuedSignatures=new Set(),$=id=>document.getElementById(id);
   const comboText={single:'单牌',pair:'对子',triple:'三张',triple1:'三带一',triple2:'三带二',straight:'顺子',pairStraight:'连对',airplane:'飞机',airplane1:'飞机带单',airplane2:'飞机带对',four2:'四带二',four2pair:'四带两对',bomb:'炸弹',rocket:'王炸'};
-
   try{localStorage.removeItem('pure_ddz_qily_autoplay_v1')}catch(_error){}
-
-  function isTouchMobile(){return (navigator.maxTouchPoints||0)>0&&window.matchMedia('(max-width:1180px)').matches}
+  function isTouchMobile(){return(navigator.maxTouchPoints||0)>0&&window.matchMedia('(max-width:1180px)').matches}
   function playSignature(play){return !play?.cards?.length?'':`${play.player}|${play.combo?.type||''}|${play.cards.map(card=>card.id).join('-')}`}
   function snapshotPlay(play){return {player:play.player,combo:{...(play.combo||{})},cards:play.cards.map(card=>({...card}))}}
   function toast(message){const el=$('toast');if(!el)return;el.textContent=message;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),1900)}
-
-  function ensureVisualStage(){
-    const table=document.querySelector('.table-wrap');if(!table)return;
-    if(!$('v120-play-stage')){const stage=document.createElement('div');stage.id='v120-play-stage';stage.className='v120-play-stage';stage.setAttribute('aria-live','assertive');stage.setAttribute('aria-label','本次出牌视觉反馈');table.appendChild(stage)}
-    if(!$('v120-pass-flash')){const bubble=document.createElement('div');bubble.id='v120-pass-flash';bubble.className='v120-pass-flash';table.appendChild(bubble)}
-  }
-
-  function ensureOrientationNotice(){
-    if($('v120-orientation-notice'))return;
-    const notice=document.createElement('div');notice.id='v120-orientation-notice';notice.className='v120-orientation-notice';
-    notice.innerHTML='<div class="v120-orientation-card"><b>横屏牌桌 · 可视化优先</b><p>手机/平板使用横屏可获得更大的扑克牌与更清晰的出牌反馈。进入横屏后页面仍可上下滑动，右侧会显示滑动提示。</p><button id="v120-landscape-now" type="button">进入横屏牌桌</button></div>';
-    document.body.appendChild(notice);$('v120-landscape-now').addEventListener('click',requestLandscape)
-  }
-
-  function ensureScrollCue(){
-    if($('v120-scroll-cue'))return;
-    const cue=document.createElement('div');cue.id='v120-scroll-cue';cue.className='v120-scroll-cue';cue.setAttribute('aria-label','页面可上下滑动');cue.innerHTML='<span>↑</span><b>上下滑动</b><span>↓</span>';document.body.appendChild(cue)
-  }
-
-  function updateOrientationUi(){
-    ensureOrientationNotice();ensureScrollCue();
-    const portrait=isTouchMobile()&&window.matchMedia('(orientation:portrait)').matches;
-    $('v120-orientation-notice')?.classList.toggle('show',portrait);
-    const scrollable=document.documentElement.scrollHeight>window.innerHeight+12;
-    $('v120-scroll-cue')?.classList.toggle('show',isTouchMobile()&&!portrait&&scrollable)
-  }
-
-  async function requestLandscape(){
-    if(!isTouchMobile())return false;
-    try{
-      if(!document.fullscreenElement&&document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{});
-      if(screen.orientation?.lock){await screen.orientation.lock('landscape');updateOrientationUi();return true}
-    }catch(_error){}
-    updateOrientationUi();return false
-  }
-
+  function ensureVisualStage(){const table=document.querySelector('.table-wrap');if(!table)return;if(!$('v120-play-stage')){const stage=document.createElement('div');stage.id='v120-play-stage';stage.className='v120-play-stage';stage.setAttribute('aria-live','assertive');stage.setAttribute('aria-label','本次出牌视觉反馈');table.appendChild(stage)}if(!$('v120-pass-flash')){const bubble=document.createElement('div');bubble.id='v120-pass-flash';bubble.className='v120-pass-flash';table.appendChild(bubble)}}
+  function ensureOrientationNotice(){if($('v120-orientation-notice'))return;const notice=document.createElement('div');notice.id='v120-orientation-notice';notice.className='v120-orientation-notice';notice.innerHTML='<div class="v120-orientation-card"><b>横屏牌桌 · 可视化优先</b><p>手机/平板使用横屏可获得更大的扑克牌与更清晰的出牌反馈。进入横屏后页面仍可上下滑动，右侧会显示滑动提示。</p><button id="v120-landscape-now" type="button">进入横屏牌桌</button></div>';document.body.appendChild(notice);$('v120-landscape-now').addEventListener('click',requestLandscape)}
+  function ensureScrollCue(){if($('v120-scroll-cue'))return;const cue=document.createElement('div');cue.id='v120-scroll-cue';cue.className='v120-scroll-cue';cue.setAttribute('aria-label','页面可上下滑动');cue.innerHTML='<span>↑</span><b>上下滑动</b><span>↓</span>';document.body.appendChild(cue)}
+  function updateOrientationUi(){ensureOrientationNotice();ensureScrollCue();const portrait=isTouchMobile()&&window.matchMedia('(orientation:portrait)').matches;$('v120-orientation-notice')?.classList.toggle('show',portrait);const scrollable=document.documentElement.scrollHeight>window.innerHeight+12;$('v120-scroll-cue')?.classList.toggle('show',isTouchMobile()&&!portrait&&scrollable)}
+  async function requestLandscape(){if(!isTouchMobile())return false;try{if(!document.fullscreenElement&&document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{});if(screen.orientation?.lock){await screen.orientation.lock('landscape');updateOrientationUi();return true}}catch(_error){}updateOrientationUi();return false}
   function playerName(player){return player===0?'我':player===1?'左家 · 电脑':'右家 · 电脑'}
   function renderLargeCard(card){return window.QilyLeanCardTheme?.renderCard?`<span class="v120-play-card">${window.QilyLeanCardTheme.renderCard(card)}</span>`:`<span class="v120-play-card">${String(card.rank)}</span>`}
-  function renderStage(play){
-    ensureVisualStage();const stage=$('v120-play-stage');if(!stage)return;
-    stageSignature=playSignature(play);const text=comboText[play.combo?.type]||'出牌';stage.classList.remove('show','is-bomb');void stage.offsetWidth;
-    stage.innerHTML=`<div class="v120-play-owner">${playerName(play.player)} · ${text} · ${play.cards.length} 张</div><div class="v120-play-cards">${play.cards.map(renderLargeCard).join('')}</div>`;
-    stage.classList.toggle('is-bomb',['bomb','rocket'].includes(play.combo?.type));stage.classList.add('show');stageBusy=true;
-    if(stageTimer)clearTimeout(stageTimer);stageTimer=setTimeout(()=>{stageBusy=false;stageTimer=null;processVisualQueue()},VISUAL_HOLD_MS)
-  }
+  function renderStage(play){ensureVisualStage();const stage=$('v120-play-stage');if(!stage)return;stageSignature=playSignature(play);const text=comboText[play.combo?.type]||'出牌';stage.classList.remove('show','is-bomb');void stage.offsetWidth;stage.innerHTML=`<div class="v120-play-owner">${playerName(play.player)} · ${text} · ${play.cards.length} 张</div><div class="v120-play-cards">${play.cards.map(renderLargeCard).join('')}</div>`;stage.classList.toggle('is-bomb',['bomb','rocket'].includes(play.combo?.type));stage.classList.add('show');stageBusy=true;if(stageTimer)clearTimeout(stageTimer);stageTimer=setTimeout(()=>{stageBusy=false;stageTimer=null;processVisualQueue()},VISUAL_HOLD_MS)}
   function processVisualQueue(){if(stageBusy||!visualQueue.length)return;const play=visualQueue.shift();queuedSignatures.delete(playSignature(play));renderStage(play)}
   function showPlay(play){if(!play?.cards?.length)return;const signature=playSignature(play);if(signature===stageSignature||queuedSignatures.has(signature))return;const copy=snapshotPlay(play);visualQueue.push(copy);queuedSignatures.add(signature);processVisualQueue()}
   function clearPlayStage(force=false){if(!force&&(stageBusy||visualQueue.length))return;const stage=$('v120-play-stage');if(stage){stage.classList.remove('show','is-bomb');stage.innerHTML=''}stageSignature='';if(force){visualQueue.length=0;queuedSignatures.clear();stageBusy=false;if(stageTimer){clearTimeout(stageTimer);stageTimer=null}}}
   function showPass(player){ensureVisualStage();const bubble=$('v120-pass-flash');if(!bubble)return;bubble.className=`v120-pass-flash ${player===0?'me':player===1?'left':'right'}`;bubble.textContent=`${playerName(player)} · 不要`;void bubble.offsetWidth;bubble.classList.add('show');setTimeout(()=>bubble.classList.remove('show'),920)}
-
   function clearSelected(){document.querySelectorAll('#hand .card.selected').forEach(button=>button.click())}
-  function runHint(){
-    if(!hintEnabled){toast('启力提示已关闭，可在设置中开启');return}
-    if(!window.PureDDZTest)return;
-    const state=window.PureDDZTest.getState();
-    if(state.phase!=='playing'||state.current!==0){toast('当前不是你的出牌回合，请自主判断');return}
-    clearSelected();
-    const choice=window.PureDDZTest.chooseAiPlay(0);
-    const message=$('hint-message');
-    if(!choice?.cards?.length){if(message)message.textContent='启力提示：当前建议“不要”，是否采用由你决定。';toast('启力提示：建议不要');return}
-    choice.cards.forEach(card=>{const button=document.querySelector(`#hand .card[data-id="${card.id}"]`);if(button&&!button.classList.contains('selected'))button.click()});
-    const type=comboText[choice.combo?.type]||'这组牌';
-    if(message)message.textContent=`启力提示：建议出“${type}”，已帮你选中 ${choice.cards.length} 张；请你自行判断后点击“出牌”。`;
-    toast(`启力提示：建议 ${type}，请自行确认`)
-  }
-
-  function ensureHintControl(){
-    const old=$('hint');if(!old)return null;
-    if(old.dataset.qilyHint==='1')return old;
-    const button=old.cloneNode(true);button.id='hint';button.dataset.qilyHint='1';button.classList.remove('autoplay-btn','on');button.classList.add('qily-hint-btn');old.replaceWith(button);button.addEventListener('click',runHint);return button
-  }
-
-  function ensureSettingsToggle(){
-    const grid=document.querySelector('.settings-grid');if(!grid||$('setting-qily-hint'))return;
-    const row=document.createElement('label');row.className='setting-row';row.innerHTML='<span><b>启力提示功能</b><small>可开/关。开启后仅推荐出牌，不会自动叫地主、不会自动出牌。</small></span><input id="setting-qily-hint" type="checkbox">';
-    const difficulty=grid.querySelector('.setting-select:last-of-type');grid.insertBefore(row,difficulty||null);$('setting-qily-hint').addEventListener('change',event=>setHintEnabled(event.target.checked,true))
-  }
-
+  function runHint(){if(!hintEnabled){toast('启力提示已关闭，可在设置中开启');return}if(!window.PureDDZTest)return;const state=window.PureDDZTest.getState();if(state.phase!=='playing'||state.current!==0){toast('当前不是你的出牌回合，请自主判断');return}clearSelected();const choice=window.PureDDZTest.chooseAiPlay(0);const message=$('hint-message');if(!choice?.cards?.length){if(message)message.textContent='启力提示：当前建议“不要”，是否采用由你决定。';toast('启力提示：建议不要');return}choice.cards.forEach(card=>{const button=document.querySelector(`#hand .card[data-id="${card.id}"]`);if(button&&!button.classList.contains('selected'))button.click()});const type=comboText[choice.combo?.type]||'这组牌';if(message)message.textContent=`启力提示：建议出“${type}”，已帮你选中 ${choice.cards.length} 张；请你自行判断后点击“出牌”。`;toast(`启力提示：建议 ${type}，请自行确认`)}
+  function ensureHintControl(){const old=$('hint');if(!old)return null;if(old.dataset.qilyHint==='1')return old;const button=old.cloneNode(true);button.id='hint';button.dataset.qilyHint='1';button.classList.remove('autoplay-btn','on');button.classList.add('qily-hint-btn');old.replaceWith(button);button.addEventListener('click',runHint);return button}
+  function ensureSettingsToggle(){const grid=document.querySelector('.settings-grid');if(!grid||$('setting-qily-hint'))return;const row=document.createElement('label');row.className='setting-row';row.innerHTML='<span><b>启力提示功能</b><small>可开/关。开启后仅推荐出牌，不会自动叫地主、不会自动出牌。</small></span><input id="setting-qily-hint" type="checkbox">';const difficulty=grid.querySelector('.setting-select:last-of-type');grid.insertBefore(row,difficulty||null);$('setting-qily-hint').addEventListener('change',event=>setHintEnabled(event.target.checked,true))}
   function setHintEnabled(next,announce=false){hintEnabled=Boolean(next);try{localStorage.setItem(HINT_KEY,hintEnabled?'1':'0')}catch(_error){}updateHintUi();if(announce)toast(hintEnabled?'启力提示已开启：仅给建议，由你手动出牌':'启力提示已关闭')}
-  function updateHintUi(state){
-    const button=ensureHintControl();
-    if(button){button.textContent='启力提示';button.title='点击后仅推荐并选中建议牌，不会自动出牌';button.setAttribute('aria-pressed','false');if(state)button.disabled=!hintEnabled||state.phase!=='playing'||state.current!==0}
-    const setting=$('setting-qily-hint');if(setting)setting.checked=hintEnabled;
-    const play=$('play');if(play)play.textContent='出牌'
+  function updateHintUi(state){const button=ensureHintControl();if(button){button.textContent='启力提示';button.title='点击后仅推荐并选中建议牌，不会自动出牌';button.setAttribute('aria-pressed','false');if(state)button.disabled=!hintEnabled||state.phase!=='playing'||state.current!==0}const setting=$('setting-qily-hint');if(setting)setting.checked=hintEnabled;const play=$('play');if(play)play.textContent='出牌'}
+  function normalizeCopy(){document.title='启力精益斗地主｜简单娱乐，益智生活';const brand=document.querySelector('.brand strong');if(brand)brand.textContent='启力精益斗地主';const welcome=$('welcome-title');if(welcome)welcome.textContent='启力精益斗地主';const apk=document.querySelector('.apk-inline');if(apk&&!apk.classList.contains('apk-hold')){const badge=document.createElement('span');badge.className='apk-inline apk-hold';badge.textContent='安装包待验证后发布';apk.replaceWith(badge)}document.querySelectorAll('.feature-list li').forEach(li=>{if(li.textContent.includes('启力托管'))li.innerHTML='<b>语音、音乐、启力提示</b><span>启力提示仅给出建议，最终出牌始终由你手动确认</span>'});const help=$('help-modal');if(help){const eyebrow=help.querySelector('.eyebrow');if(eyebrow)eyebrow.textContent='自主思考优先，AI 只做提示';const ai=[...help.querySelectorAll('.help-sections section')].find(section=>section.querySelector('b')?.textContent.trim()==='AI');if(ai){const title=ai.querySelector('h3'),copy=ai.querySelector('p');if(title)title.textContent='启力提示';if(copy)copy.textContent='可在设置中开/关。启力提示只推荐应该出什么牌并替你选中，是否采用、何时出牌都由你手动决定。'}}const hint=$('hint-message');if(hint&&!hint.textContent.startsWith('启力提示：'))hint.textContent='自主判断优先；需要参考时点“启力提示”，最终仍由你手动点“出牌”。'}
+  function ensureStatsReset(){const board=document.querySelector('.scoreboard');if(!board||$('v120-reset-stats'))return;const button=document.createElement('button');button.id='v120-reset-stats';button.className='v120-reset-stats';button.type='button';button.textContent='清零';button.title='清零安心积分、胜负和连胜统计';button.addEventListener('click',()=>{if(!window.confirm('确定清零安心积分、胜负和连胜统计吗？游戏设置不会改变。'))return;try{localStorage.setItem('pure_ddz_profile_v1',JSON.stringify({score:1000,wins:0,losses:0,streak:0,bestStreak:0,games:0,lastRewardDate:''}))}catch(_error){}location.reload()});board.appendChild(button)}
+  function fitHand(){
+    const hand=$('hand');if(!hand)return;const cards=[...hand.querySelectorAll('.card')];if(!cards.length)return;
+    cards.forEach((card,index)=>{if(index)card.style.removeProperty('margin-left')});
+    const styles=getComputedStyle(hand),paddingLeft=parseFloat(styles.paddingLeft)||0,paddingRight=parseFloat(styles.paddingRight)||0;
+    const available=Math.max(120,hand.clientWidth-paddingLeft-paddingRight-4),cardWidth=cards[0].getBoundingClientRect().width,count=cards.length;
+    if(count<=1){hand.style.justifyContent='center';return}
+    const natural=cardWidth*count;
+    if(natural<=available){hand.style.justifyContent='center';return}
+    const exactStep=Math.max(1,(available-cardWidth)/(count-1));
+    const overlap=Math.max(0,cardWidth-exactStep);
+    cards.forEach((card,index)=>{if(index)card.style.marginLeft=`-${overlap.toFixed(2)}px`});
+    hand.style.justifyContent='center';
   }
-
-  function normalizeCopy(){
-    document.title='启力精益斗地主｜简单娱乐，益智生活';
-    const brand=document.querySelector('.brand strong');if(brand)brand.textContent='启力精益斗地主';
-    const welcome=$('welcome-title');if(welcome)welcome.textContent='启力精益斗地主';
-    const apk=document.querySelector('.apk-inline');if(apk){const badge=document.createElement('span');badge.className='apk-inline apk-hold';badge.textContent='安装包待验证后发布';apk.replaceWith(badge)}
-    document.querySelectorAll('.feature-list li').forEach(li=>{if(li.textContent.includes('启力托管'))li.innerHTML='<b>语音、音乐、启力提示</b><span>启力提示仅给出建议，最终出牌始终由你手动确认</span>'});
-    const help=$('help-modal');if(help){const eyebrow=help.querySelector('.eyebrow');if(eyebrow)eyebrow.textContent='自主思考优先，AI 只做提示';const ai=[...help.querySelectorAll('.help-sections section')].find(section=>section.querySelector('b')?.textContent.trim()==='AI');if(ai){const title=ai.querySelector('h3'),copy=ai.querySelector('p');if(title)title.textContent='启力提示';if(copy)copy.textContent='可在设置中开/关。启力提示只推荐应该出什么牌并替你选中，是否采用、何时出牌都由你手动决定。'}}
-    const hint=$('hint-message');if(hint&&!hint.textContent.startsWith('启力提示：'))hint.textContent='自主判断优先；需要参考时点“启力提示”，最终仍由你手动点“出牌”。'
-  }
-
   function detectPass(prev,next){if(!prev||prev.phase!=='playing'||next.phase!=='playing'||prev.current===next.current)return;const beforeSig=playSignature(prev.lastPlay),afterSig=playSignature(next.lastPlay);if(beforeSig===afterSig&&beforeSig){showPass(prev.current);return}if(beforeSig&&!afterSig&&next.current===prev.lastPlay?.player)showPass(prev.current)}
-  function refresh(){if(!window.PureDDZTest)return;ensureVisualStage();ensureSettingsToggle();normalizeCopy();updateOrientationUi();const state=window.PureDDZTest.getState();updateHintUi(state);detectPass(previousState,state);const signature=playSignature(state.lastPlay);if(signature)showPlay(state.lastPlay);else if(state.phase!=='bidding')clearPlayStage();previousState=state}
-  function start(){ensureVisualStage();ensureOrientationNotice();ensureScrollCue();ensureSettingsToggle();normalizeCopy();updateOrientationUi();window.addEventListener('orientationchange',()=>setTimeout(updateOrientationUi,160));window.addEventListener('resize',updateOrientationUi);window.addEventListener('scroll',updateOrientationUi,{passive:true});['welcome-start','start','again'].forEach(id=>$(id)?.addEventListener('click',()=>{if(isTouchMobile())requestLandscape()},{passive:true}));document.addEventListener('pointerdown',()=>{if(isTouchMobile()&&window.matchMedia('(orientation:portrait)').matches)requestLandscape()},{once:true,passive:true});setInterval(refresh,120)}
-
-  window.QilyLeanV120=Object.freeze({version:'1.2.0-webfix1',visualHoldMs:VISUAL_HOLD_MS,get hintEnabled(){return hintEnabled},setHintEnabled,runHint,requestLandscape,refresh});
+  function refresh(){if(!window.PureDDZTest)return;ensureVisualStage();ensureSettingsToggle();ensureStatsReset();normalizeCopy();updateOrientationUi();const state=window.PureDDZTest.getState();updateHintUi(state);detectPass(previousState,state);const signature=playSignature(state.lastPlay);if(signature)showPlay(state.lastPlay);else if(state.phase!=='bidding')clearPlayStage();previousState=state;fitHand()}
+  function start(){ensureVisualStage();ensureOrientationNotice();ensureScrollCue();ensureSettingsToggle();ensureStatsReset();normalizeCopy();updateOrientationUi();window.addEventListener('orientationchange',()=>setTimeout(()=>{updateOrientationUi();fitHand()},160));window.addEventListener('resize',()=>{updateOrientationUi();fitHand()});window.addEventListener('scroll',updateOrientationUi,{passive:true});['welcome-start','start','again'].forEach(id=>$(id)?.addEventListener('click',()=>{if(isTouchMobile())requestLandscape()},{passive:true}));document.addEventListener('pointerdown',()=>{if(isTouchMobile()&&window.matchMedia('(orientation:portrait)').matches)requestLandscape()},{once:true,passive:true});setInterval(refresh,120)}
+  window.QilyLeanV120=Object.freeze({version:'1.2.0-webfix3',visualHoldMs:VISUAL_HOLD_MS,get hintEnabled(){return hintEnabled},setHintEnabled,runHint,requestLandscape,refresh,fitHand});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

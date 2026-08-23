@@ -29,42 +29,30 @@
   .capability-certificate-visual img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:contain;background:#edf4f2}
   .capability-certificate-visual figcaption{padding:12px 16px;color:#5f7474;font-size:15px;line-height:1.6;border-top:1px solid #d5e4e3}
   .capability-digital-content p{margin-top:0}
+  .capability-ddz-visual{min-height:100%;display:grid;place-items:center;padding:clamp(22px,4vw,38px);background:radial-gradient(circle at 50% 32%,rgba(29,151,101,.28),transparent 42%),linear-gradient(145deg,#063f35,#0f6570)}
+  .capability-ddz-board{width:min(560px,100%);padding:22px;border:1px solid rgba(255,227,155,.72);border-radius:24px;background:rgba(2,45,44,.86);box-shadow:0 22px 54px rgba(0,0,0,.28);text-align:center}
+  .capability-ddz-title{margin:0 0 14px;color:#fff;font-size:clamp(24px,3vw,36px);font-weight:950}.capability-ddz-sub{margin:-6px 0 18px;color:#ffe39b;font-size:14px;font-weight:850}
+  .capability-ddz-jokers{display:flex;justify-content:center;align-items:flex-end;gap:14px;margin-bottom:16px}.capability-ddz-joker{width:104px;height:142px;padding:7px;border:2px solid #f5e7c0;border-radius:14px;background:#fff;box-shadow:0 10px 22px rgba(0,0,0,.34);display:flex;flex-direction:column;align-items:center;justify-content:center}.capability-ddz-joker img{max-width:100%;max-height:98px;object-fit:contain}.capability-ddz-joker b{margin-top:5px;color:#0f4b5a;font-size:14px}.capability-ddz-joker.big img{width:78px;height:78px;border-radius:10px;object-fit:cover}
+  .capability-ddz-cards{display:flex;justify-content:center;gap:10px}.capability-ddz-card{width:82px;height:118px;border:2px solid #e4ded0;border-radius:12px;background:linear-gradient(160deg,#fff,#eef8f6);box-shadow:0 8px 16px rgba(0,0,0,.26);padding:8px;text-align:left}.capability-ddz-card strong{display:block;color:#0f4b5a;font-size:27px;line-height:1}.capability-ddz-card.red strong{color:#c83d35}.capability-ddz-card small{display:block;margin-top:5px;color:#178b94;font-weight:900}.capability-ddz-card b{display:block;margin-top:13px;color:#173b38;font-size:17px;text-align:center}.capability-ddz-card em{display:block;margin-top:5px;color:#87712f;font-size:10px;font-style:normal;text-align:center}
   .evidence-note{margin:0 0 22px;padding:16px 18px;border-left:4px solid #caa15f;background:#f7fbfa;color:#496565;line-height:1.75}
-  .evidence-card{display:flex;flex-direction:column;min-height:100%}
-  .evidence-card .module-actions{margin-top:auto}
-  .evidence-meta{margin:12px 0 18px;color:#5f7474;font-size:15px;line-height:1.7}
-  @media(max-width:860px){.capability-digital-tool,.capability-certificate{grid-template-columns:1fr}.capability-digital-visual{max-width:820px;margin:auto}.capability-certificate-visual{width:min(420px,100%);margin:auto}}
+  .evidence-card{display:flex;flex-direction:column;min-height:100%}.evidence-card .module-actions{margin-top:auto}.evidence-meta{margin:12px 0 18px;color:#5f7474;font-size:15px;line-height:1.7}
+  @media(max-width:860px){.capability-digital-tool,.capability-certificate{grid-template-columns:1fr}.capability-digital-visual{max-width:820px;margin:auto}.capability-certificate-visual{width:min(420px,100%);margin:auto}.capability-ddz-joker{width:88px;height:126px}.capability-ddz-card{width:72px;height:108px}}
   </style>
 
-
-
-
-
 <link id="qilyGlobalLinkStandardStylesheet" rel="stylesheet" href="/site-link-standard-v2.css?v=20260816-nav-current-v7">
-  <link id="qilyNavigationFourBorderStylesheet" rel="stylesheet" href="/site-navigation-four-border-v3.css?v=20260803-four-border-v3">
-  <link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="/site-dark-surface-contrast-v1.css?v=20260813-readability-v4">
-
-
-
-
-
-
-
+<link id="qilyNavigationFourBorderStylesheet" rel="stylesheet" href="/site-navigation-four-border-v3.css?v=20260803-four-border-v3">
+<link id="qilyDarkSurfaceContrastStylesheet" rel="stylesheet" href="/site-dark-surface-contrast-v1.css?v=20260813-readability-v4">
 <link id="qilyBottomAlignmentStylesheet" rel="stylesheet" href="/site-bottom-alignment-v1.css?v=20260804-bottom-align-v1">
-  <link id="qilyClosureBundleV24Stylesheet" rel="stylesheet" href="/site-closure-bundle-v24.css?v=20260810-footer-one-line-v25">
-<!-- QILY-NUMBER-BADGE-CONTRAST:START -->
-<!-- QILY-NUMBER-BADGE-CONTRAST:END -->
+<link id="qilyClosureBundleV24Stylesheet" rel="stylesheet" href="/site-closure-bundle-v24.css?v=20260810-footer-one-line-v25">
 <link id="qilyCoreVisualBundleV1" rel="stylesheet" href="/site-core-visual-bundle-v1.css?v=20260815-core-visual-v1">
 <link id="qilyVisualClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2">
-  <link id="qilyBoundaryLinksClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v2.css?v=20260803-boundary-links-v2">
-<script defer data-qily-ui-consistency="dock-share-functional-v11" src="/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13"></script><link id="qilyAppDownloadShareStylesheet" rel="stylesheet" href="/app-download-share-v1.css?v=20260808-share-v1">
+<link id="qilyBoundaryLinksClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v2.css?v=20260803-boundary-links-v2">
+<script defer data-qily-ui-consistency="dock-share-functional-v11" src="/site-ui-consistency-v1.js?v=20260823-pure-ddz-capability-v18"></script><link id="qilyAppDownloadShareStylesheet" rel="stylesheet" href="/app-download-share-v1.css?v=20260808-share-v1">
 <link id="qilyVisualReadabilityV4Stylesheet" rel="stylesheet" href="/site-visual-readability-v4.css?v=20260813-visual-readability-v4">
 <link id="qilyContactFieldHierarchyV1Stylesheet" rel="stylesheet" href="/site-contact-field-hierarchy-v1.css?v=20260814-contact-field-hierarchy-v1">
-<!-- QILY-R2-PRIMARY-CONTRAST-NAV:START -->
-  <link id="qilyHeroPrimaryContrastStylesheet" rel="stylesheet" href="/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1">
-<!-- QILY-R2-PRIMARY-CONTRAST-NAV:END -->
-  <script defer id="qilyFastNativeNavigationV7" data-qily-fast-native-navigation="v7" src="/site-music-persistent-navigation-v1.js?v=20260817-native-only-v7"></script><link id="qilyInteractionContinuityV2" rel="stylesheet" href="/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3">
-  <link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=20260818-visual-readability-v5"><link id="qilyVisualGovernanceV1" rel="stylesheet" href="/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6">
+<link id="qilyHeroPrimaryContrastStylesheet" rel="stylesheet" href="/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1">
+<script defer id="qilyFastNativeNavigationV7" data-qily-fast-native-navigation="v7" src="/site-music-persistent-navigation-v1.js?v=20260817-native-only-v7"></script><link id="qilyInteractionContinuityV2" rel="stylesheet" href="/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3">
+<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=20260818-visual-readability-v5"><link id="qilyVisualGovernanceV1" rel="stylesheet" href="/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6">
 <link id="qilyContentAxisV1" rel="stylesheet" href="/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5">
 <link id="qilyFloatingDockStandardV1" rel="stylesheet" href="/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3">
 <script defer id="qilyR6NativePrefetchV1" data-qily-native-prefetch="v1" src="/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1"></script>
@@ -72,170 +60,27 @@
 <script defer src="/site-navigation.js?v=20260822-sitewide-visual-axis-v36"></script>
 </head>
 <body class="module-page qily-pro-v24">
-  <header class="qily-site-header">
-    <a class="qily-brand" href="/">QilyLean | 启力精益</a>
-    <nav class="site-nav" aria-label="QilyLean核心导视">
-      <a href="/">首页</a>
-      <a href="/experience/">履历主线</a>
-      <a href="/capabilities/" aria-current="page">能力体系</a>
-      <a href="/improvements/">改善方法</a>
-      <a href="/projects/">代表项目</a>
-      <a href="/trust/">信任中心</a>
-      <a href="/cooperation/">项目合作</a>
-      <a href="/knowledge/">知识资产</a>
-      <a href="/links/">友情链接</a>
-    </nav>
-  </header>
-
+  <header class="qily-site-header"><a class="qily-brand" href="/">QilyLean | 启力精益</a><nav class="site-nav" aria-label="QilyLean核心导视"><a href="/">首页</a><a href="/experience/">履历主线</a><a href="/capabilities/" aria-current="page">能力体系</a><a href="/improvements/">改善方法</a><a href="/projects/">代表项目</a><a href="/trust/">信任中心</a><a href="/cooperation/">项目合作</a><a href="/knowledge/">知识资产</a><a href="/links/">友情链接</a></nav></header>
   <main>
-    <section class="module-hero">
-      <div class="module-inner">
-        <span class="module-eyebrow">Capability Map / Lean / IE / Smart Factory</span>
-        <h1>能力画像</h1>
-        <p class="module-lead">从现场诊断、系统数据到机制固化与经营结果，以代表项目、自主数字工具作品和公开脱敏佐证呈现方法路径与交付成果。</p>
-        <nav class="module-subnav" aria-label="能力子模块">
-          <a href="#flow">流程与交付</a>
-          <a href="#data">数据与产能</a>
-          <a href="#equipment">设备与换型</a>
-          <a href="#quality">质量与异常</a>
-          <a href="#layout">布局与物流</a>
-          <a href="#management">管理与固化</a>
-          <a href="#digital">数智化协同</a>
-          <a href="#mechanism">项目机制</a>
-          <a href="#project-evidence">项目佐证</a>
-          <a href="#digital-tools">数字工具作品</a>
-          <a href="#ai-certificate">AI应用证书</a>
-          <a href="/projects/">代表项目</a>
-        </nav>
-      </div>
-    </section>
+    <section class="module-hero"><div class="module-inner"><span class="module-eyebrow">Capability Map / Lean / IE / Smart Factory</span><h1>能力画像</h1><p class="module-lead">从现场诊断、系统数据到机制固化与经营结果，以代表项目、自主数字工具作品和公开脱敏佐证呈现方法路径与交付成果。</p><nav class="module-subnav" aria-label="能力子模块"><a href="#flow">流程与交付</a><a href="#data">数据与产能</a><a href="#equipment">设备与换型</a><a href="#quality">质量与异常</a><a href="#layout">布局与物流</a><a href="#management">管理与固化</a><a href="#digital">数智化协同</a><a href="#mechanism">项目机制</a><a href="#project-evidence">项目佐证</a><a href="#digital-tools">数字工具作品</a><a href="#ai-certificate">AI应用证书</a><a href="/projects/">代表项目</a></nav></div></section>
 
-<!-- QILY-SYSTEM-AXIS:START -->
-    <section class="qily-system-axis" aria-label="QilyLean制造运营资产闭环" data-qily-operating-axis="static-v1">
-      <div class="qily-system-axis__inner">
-        <p class="qily-system-axis__title">QILYLEAN OPERATING LOGIC｜制造运营资产闭环</p>
-        <div class="qily-system-axis__steps">
-          <a class="qily-system-axis__step" href="/experience/"><strong>01｜现场事实</strong><span>Gemba／问题／约束</span></a>
-          <a class="qily-system-axis__step" href="/capabilities/"><strong>02｜工程数据</strong><span>CT／TT／WIP／产能</span></a>
-          <a class="qily-system-axis__step" href="/improvements/"><strong>03｜精益改善</strong><span>流动／节拍／损失</span></a>
-          <a class="qily-system-axis__step" href="/trust/"><strong>04｜质量保证</strong><span>标准／防错／闭环</span></a>
-          <a class="qily-system-axis__step" href="/cooperation/"><strong>05｜数智固化</strong><span>ERP／MES／APS／看板</span></a>
-          <a class="qily-system-axis__step" href="/knowledge/"><strong>06｜知识资产</strong><span>SOP／模板／证据／复制</span></a>
-        </div>
-      </div>
-    </section>
-<!-- QILY-SYSTEM-AXIS:END -->
+    <section class="qily-system-axis" aria-label="QilyLean制造运营资产闭环" data-qily-operating-axis="static-v1"><div class="qily-system-axis__inner"><p class="qily-system-axis__title">QILYLEAN OPERATING LOGIC｜制造运营资产闭环</p><div class="qily-system-axis__steps"><a class="qily-system-axis__step" href="/experience/"><strong>01｜现场事实</strong><span>Gemba／问题／约束</span></a><a class="qily-system-axis__step" href="/capabilities/"><strong>02｜工程数据</strong><span>CT／TT／WIP／产能</span></a><a class="qily-system-axis__step" href="/improvements/"><strong>03｜精益改善</strong><span>流动／节拍／损失</span></a><a class="qily-system-axis__step" href="/trust/"><strong>04｜质量保证</strong><span>标准／防错／闭环</span></a><a class="qily-system-axis__step" href="/cooperation/"><strong>05｜数智固化</strong><span>ERP／MES／APS／看板</span></a><a class="qily-system-axis__step" href="/knowledge/"><strong>06｜知识资产</strong><span>SOP／模板／证据／复制</span></a></div></div></section>
 
-<section class="module-section">
-      <div class="module-inner">
-        <div class="module-heading">
-          <h2>制造改善方法体系图谱</h2>
-          <p>八个能力域分别对应典型问题、核心方法和标准输出，便于企业负责人、项目经理及制造团队快速判断专业匹配度。</p>
-        </div>
-        <div class="module-grid four capability-map">
-          <article class="module-card" id="flow"><small>流程与交付</small><h3>VSM / LT / WIP</h3><p>识别订单信息流、物料流、生产节拍、等待、库存和发货节奏之间的断点。重点不是画图，而是形成改善优先级、责任边界和跨部门行动。</p><div class="module-result">输出：现状图、未来态、LT结构、WIP控制和交付改善路径。</div></article>
-          <article class="module-card" id="data"><small>数据与产能</small><h3>标准工时 / UPPH / 线平衡</h3><p><strong>IE 7 Tools · ECRS · 动作经济原则</strong><br>运用IE七大手法识别作业、流程、动线与浪费，再以ECRS（取消、合并、重排、简化）及动作经济原则重构作业方法；用标准工时、UPPH和线平衡验证改善成效，支撑产能、排程、报价、成本及ERP/MES参数。</p><div class="module-result">输出：工时版本、标准产能、线平衡方案、ECRS改善清单、人机配置、节拍和排程基础数据。</div></article>
-          <article class="module-card" id="equipment"><small>设备与换型</small><h3>OEE / SMED / TPM</h3><p>把停机、速度损失、换型等待、首件确认、不良返工和物料准备纳入统一损失结构。SMED不是催人更快，而是标准化换型系统。</p><div class="module-result">输出：损失结构、换型流程、工具定置、参数基准和首件确认。</div></article>
-          <article class="module-card" id="quality"><small>质量与异常</small><h3>IATF 16949 / 六大工具</h3><p><strong>APQP · PPAP · FMEA · MSA · SPC · CP</strong><br>以汽车质量管理体系贯穿产品与过程策划、风险预防、测量系统、统计控制和量产批准；再用5M2E识别要因、8D解决跨部门异常、PDCA验证并固化改善，避免只在问题发生后被动纠正。</p><div class="module-result">输出：APQP/PPAP文件链、FMEA与控制计划、MSA/SPC验证、8D闭环、Poka-Yoke和过程控制机制。</div></article>
-          <article class="module-card" id="layout"><small>布局与物流</small><h3>Factory Layout / 精益物流</h3><p>新工厂设计规划不是先画漂亮Layout，而是先定义产品、产能、工艺、物流、人员、设备、公辅、品质和扩展边界。</p><div class="module-result">输出：人流物流动线、库位、配送频次、WIP控制和扩展弹性。</div></article>
-          <article class="module-card" id="management"><small>管理与固化</small><h3>DMS / 6S / 目视化</h3><p>目视化不是贴标识，而是把状态、边界、责任、异常、标准和节奏变成现场共同语言。</p><div class="module-result">输出：DMS、6S红线、点检、看板、表单和复盘机制。</div></article>
-          <article class="module-card" id="digital"><small>数智化协同</small><h3>ERP / MES / APS</h3><p>数智化工厂先做数据地基，再谈软件、大屏和自动化；否则系统只会放大现场混乱。</p><div class="module-result">输出：BOM、路线、工时、产能、计划、实绩和库存口径统一。</div></article>
-          <article class="module-card" id="mechanism"><small>项目机制</small><h3>PMO / 阶段门 / 横向复制</h3><p>以项目机制推动改善，不依赖个人英雄主义；用阶段门管理范围、风险、责任、验证和复制。</p><div class="module-result">输出：试点验证、培训稽核、复盘沉淀和横向复制。</div></article>
-        </div>
-      </div>
-    </section>
+<section class="module-section"><div class="module-inner"><div class="module-heading"><h2>制造改善方法体系图谱</h2><p>八个能力域分别对应典型问题、核心方法和标准输出，便于企业负责人、项目经理及制造团队快速判断专业匹配度。</p></div><div class="module-grid four capability-map"><article class="module-card" id="flow"><small>流程与交付</small><h3>VSM / LT / WIP</h3><p>识别订单信息流、物料流、生产节拍、等待、库存和发货节奏之间的断点。重点不是画图，而是形成改善优先级、责任边界和跨部门行动。</p><div class="module-result">输出：现状图、未来态、LT结构、WIP控制和交付改善路径。</div></article><article class="module-card" id="data"><small>数据与产能</small><h3>标准工时 / UPPH / 线平衡</h3><p><strong>IE 7 Tools · ECRS · 动作经济原则</strong><br>运用IE七大手法识别作业、流程、动线与浪费，再以ECRS（取消、合并、重排、简化）及动作经济原则重构作业方法；用标准工时、UPPH和线平衡验证改善成效，支撑产能、排程、报价、成本及ERP/MES参数。</p><div class="module-result">输出：工时版本、标准产能、线平衡方案、ECRS改善清单、人机配置、节拍和排程基础数据。</div></article><article class="module-card" id="equipment"><small>设备与换型</small><h3>OEE / SMED / TPM</h3><p>把停机、速度损失、换型等待、首件确认、不良返工和物料准备纳入统一损失结构。SMED不是催人更快，而是标准化换型系统。</p><div class="module-result">输出：损失结构、换型流程、工具定置、参数基准和首件确认。</div></article><article class="module-card" id="quality"><small>质量与异常</small><h3>IATF 16949 / 六大工具</h3><p><strong>APQP · PPAP · FMEA · MSA · SPC · CP</strong><br>以汽车质量管理体系贯穿产品与过程策划、风险预防、测量系统、统计控制和量产批准；再用5M2E识别要因、8D解决跨部门异常、PDCA验证并固化改善，避免只在问题发生后被动纠正。</p><div class="module-result">输出：APQP/PPAP文件链、FMEA与控制计划、MSA/SPC验证、8D闭环、Poka-Yoke和过程控制机制。</div></article><article class="module-card" id="layout"><small>布局与物流</small><h3>Factory Layout / 精益物流</h3><p>新工厂设计规划不是先画漂亮Layout，而是先定义产品、产能、工艺、物流、人员、设备、公辅、品质和扩展边界。</p><div class="module-result">输出：人流物流动线、库位、配送频次、WIP控制和扩展弹性。</div></article><article class="module-card" id="management"><small>管理与固化</small><h3>DMS / 6S / 目视化</h3><p>目视化不是贴标识，而是把状态、边界、责任、异常、标准和节奏变成现场共同语言。</p><div class="module-result">输出：DMS、6S红线、点检、看板、表单和复盘机制。</div></article><article class="module-card" id="digital"><small>数智化协同</small><h3>ERP / MES / APS</h3><p>数智化工厂先做数据地基，再谈软件、大屏和自动化；否则系统只会放大现场混乱。</p><div class="module-result">输出：BOM、路线、工时、产能、计划、实绩和库存口径统一。</div></article><article class="module-card" id="mechanism"><small>项目机制</small><h3>PMO / 阶段门 / 横向复制</h3><p>以项目机制推动改善，不依赖个人英雄主义；用阶段门管理范围、风险、责任、验证和复制。</p><div class="module-result">输出：试点验证、培训稽核、复盘沉淀和横向复制。</div></article></div></div></section>
 
-    <section class="module-section alt" id="project-evidence">
-      <div class="module-inner">
-        <div class="module-heading">
-          <h2>2022年度某制造企业｜制造改善项目佐证资料</h2>
-          <p>以下资料来自2022年度某制造企业的制造改善项目，包括第三季度课题效益评审、第四季度项目结案评审，以及年度／月度6S评比、每周稽核整改与奖励兑现记录，用于补充验证项目组织推进与成果闭环。</p>
-        </div>
-        <div class="evidence-note"><strong>财务认可与脱敏说明：</strong>第三季度8项改善课题可量化年度财务贡献约357.91万元，该项效益经本土企业财务核算确认，并获总部财务复核认可。第四季度资料对应项目结案评审环节，现有公开照片主要记录会议签到、多评委评分与风险评价，配套效益核算单未在本次拍摄资料中体现；预估年度改善效益约350～400万元，为阶段性估算，不作为已核定财务贡献口径。资料仅对企业名称、内部编号、第三方姓名与签名及人物面部进行脱敏；日期、课题、评审结构、评分及已核定财务贡献口径按原材料保留。<br><strong>案例核验方式：</strong>公开端展示脱敏佐证；正式洽谈阶段可依据企业需求，在保密约定下投屏分享匹配案例、改善前后数据、结案绩效及验收材料。涉及客户名称、合同、成本、工艺及内部经营数据的内容，仅限现场核验。</div>
-        <div class="module-grid three">
-          <article class="module-card evidence-card">
-            <small>2022年第三季度｜5页</small>
-            <h3>课题改善效益评审及激励申请报告</h3>
-            <p>覆盖费用报销、改善效益评审、时间管理计划、会议签到与审批记录。8项课题经内部评审，可量化年度财务贡献合计约357.91万元。</p>
-            <div class="evidence-meta">证据链：课题立项与推进 → 效果确认 → 财务贡献核定 → 本土企业及总部财务认可 → 管理层审批 → 改善激励。</div>
-            <div class="module-actions"><a href="/projects/lean-improvement-evidence/q3-online-view.html">在线预览</a></div>
-          </article>
-          <article class="module-card evidence-card">
-            <small>2022年第四季度｜9页</small>
-            <h3>精益课题改善结案评审记录</h3>
-            <p>本资料对应精益课题项目结案评审环节，包含会议签到、多个评委评分记录及风险评价表，展示课题从采纳评审、五维评分到七类风险确认的系统评价过程。</p>
-            <div class="evidence-meta">证据链：会议组织 → 多评委评分 → 风险评价 → 课题采纳与排序 → 结案评审；效益核算单未在现有拍摄资料中体现，预估年度效益约350～400万元（阶段性估算，非财务核定值）。</div>
-            <div class="module-actions"><a href="/projects/lean-improvement-evidence/q4-online-view.html">在线预览</a></div>
-          </article>
-          <article class="module-card evidence-card">
-            <small>6S评比与改善激励｜3页</small>
-            <h3>年度／月度6S评比与激励兑现</h3>
-            <p>记录年度及月度6S评比激励、获奖合照与对应奖励红包；年度与月度奖金标准同额，月度设置流动红旗／黑旗，并通过每周稽核通报推动整改与复核。</p>
-            <div class="evidence-meta">闭环机制：年度／月度评比 → 流动红旗／黑旗 → 每周稽核通报 → 限期整改 → 复核确认与现场佐证 → 奖励兑现。</div>
-            <div class="module-actions"><a href="/projects/lean-improvement-evidence/award-online-view.html">在线预览</a></div>
-          </article>
-        </div>
-        <div class="module-actions"><a href="/projects/lean-improvement-evidence/">进入项目佐证独立页面</a><a class="secondary" href="/projects/">返回代表项目</a></div>
-      </div>
-    </section>
+    <section class="module-section alt" id="project-evidence"><div class="module-inner"><div class="module-heading"><h2>2022年度某制造企业｜制造改善项目佐证资料</h2><p>以下资料来自2022年度某制造企业的制造改善项目，包括第三季度课题效益评审、第四季度项目结案评审，以及年度／月度6S评比、每周稽核整改与奖励兑现记录，用于补充验证项目组织推进与成果闭环。</p></div><div class="evidence-note"><strong>财务认可与脱敏说明：</strong>第三季度8项改善课题可量化年度财务贡献约357.91万元，该项效益经本土企业财务核算确认，并获总部财务复核认可。第四季度资料对应项目结案评审环节，现有公开照片主要记录会议签到、多评委评分与风险评价，配套效益核算单未在本次拍摄资料中体现；预估年度改善效益约350～400万元，为阶段性估算，不作为已核定财务贡献口径。资料仅对企业名称、内部编号、第三方姓名与签名及人物面部进行脱敏；日期、课题、评审结构、评分及已核定财务贡献口径按原材料保留。<br><strong>案例核验方式：</strong>公开端展示脱敏佐证；正式洽谈阶段可依据企业需求，在保密约定下投屏分享匹配案例、改善前后数据、结案绩效及验收材料。涉及客户名称、合同、成本、工艺及内部经营数据的内容，仅限现场核验。</div><div class="module-grid three"><article class="module-card evidence-card"><small>2022年第三季度｜5页</small><h3>课题改善效益评审及激励申请报告</h3><p>覆盖费用报销、改善效益评审、时间管理计划、会议签到与审批记录。8项课题经内部评审，可量化年度财务贡献合计约357.91万元。</p><div class="evidence-meta">证据链：课题立项与推进 → 效果确认 → 财务贡献核定 → 本土企业及总部财务认可 → 管理层审批 → 改善激励。</div><div class="module-actions"><a href="/projects/lean-improvement-evidence/q3-online-view.html">在线预览</a></div></article><article class="module-card evidence-card"><small>2022年第四季度｜9页</small><h3>精益课题改善结案评审记录</h3><p>本资料对应精益课题项目结案评审环节，包含会议签到、多个评委评分记录及风险评价表，展示课题从采纳评审、五维评分到七类风险确认的系统评价过程。</p><div class="evidence-meta">证据链：会议组织 → 多评委评分 → 风险评价 → 课题采纳与排序 → 结案评审；效益核算单未在现有拍摄资料中体现，预估年度效益约350～400万元（阶段性估算，非财务核定值）。</div><div class="module-actions"><a href="/projects/lean-improvement-evidence/q4-online-view.html">在线预览</a></div></article><article class="module-card evidence-card"><small>6S评比与改善激励｜3页</small><h3>年度／月度6S评比与激励兑现</h3><p>记录年度及月度6S评比激励、获奖合照与对应奖励红包；年度与月度奖金标准同额，月度设置流动红旗／黑旗，并通过每周稽核通报推动整改与复核。</p><div class="evidence-meta">闭环机制：年度／月度评比 → 流动红旗／黑旗 → 每周稽核通报 → 限期整改 → 复核确认与现场佐证 → 奖励兑现。</div><div class="module-actions"><a href="/projects/lean-improvement-evidence/award-online-view.html">在线预览</a></div></article></div><div class="module-actions"><a href="/projects/lean-improvement-evidence/">进入项目佐证独立页面</a><a class="secondary" href="/projects/">返回代表项目</a></div></div></section>
 
-    <section class="module-section" id="digital-tools">
-      <div class="module-inner">
-        <div class="module-heading"><h2>数字工具作品</h2><p>将工业工程现场需求与QilyLean全站服务入口转化为可直接使用、可持续迭代的数字工具；同时明确产品边界，并把现场采集连接到工时版本、产能、排程与改善复验。</p></div>
-        <div class="capability-digital-tools">
-          <div class="capability-digital-tool">
-            <figure class="capability-digital-visual"><a href="/tools/times26001/" aria-label="查看Times26001应用介绍"><img src="/assets/tools/times26001-overview.svg?v=20260808-times26001-ie-v1" alt="Times26001与IE分段计时工具功能概览" width="1200" height="720" loading="lazy" decoding="async"></a></figure>
-            <article class="module-card capability-digital-content"><small>数字工具作品｜工业工程时间研究＋IE现场测时</small><h3>Times26001</h3><p><strong>面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。</strong> 以IE现场分段测时、累计总时长与数据复制为核心，配套倒计时、闹钟、北京时间、万年历、农历、黄历、节气与天气预报，可查看当前位置或指定城市的当前实况及未来7天趋势，并用于标准工时测量、工序分析和改善前后对比。</p><div class="module-result">手机试用版：v1.1.13 / versionCode 16 / API 36｜新增天气预报｜当前位置/城市搜索｜当前实况＋未来7天｜IE分段测时｜累计总时长</div><div class="module-actions"><a href="/Times26001-Android-v1.1.13-Standard-Website-Logo.apk?build=efe5e188" download>下载 Android APK</a><a class="secondary" href="/tools/times26001/#android-download">下载说明</a><button type="button" class="app-share-trigger" data-app-share-qr="times26001">扫码下载</button><button type="button" class="app-link-share-trigger" data-app-share-link="times26001">分享下载页</button><a class="secondary" href="/legal/times26001/privacy/">隐私政策</a><a class="secondary" href="/legal/times26001/terms/">用户协议</a><a class="secondary" href="/app-support/">技术支持</a></div></article>
-          </div>
-          <div class="capability-digital-tool">
-            <figure class="capability-digital-visual capability-home-visual" aria-label="QilyLean Home安卓通用品牌桌面功能概览">
-              <div class="capability-home-screen">
-                <div class="capability-home-icon" aria-hidden="true"><img src="/assets/tools/qilylean-unified-app-icon.svg?v=20260805-unified-app-icon-v1" alt="" decoding="async" loading="lazy"></div>
-                <h3>QilyLean Home</h3><p>Android 当前官网APK v2.2（历史归档）｜最新构建 v2.3.1 / API 36（待正式签名）</p>
-                <div class="capability-home-clock">08:05:32</div>
-                <div class="capability-home-date">2026年8月5日 星期三 · 第32周<br>农历 六月廿三</div>
-                <div class="capability-home-shortcuts"><span>首页</span><span>能力画像</span><span>履历主线</span><span>代表项目</span><span>改善经验</span><span>QilyLean AI</span><span>知识分享</span><span>行走印记</span><span>项目合作</span><span>今日简报</span><span>Times26001</span><span>系统设置</span><span>应用抽屉</span></div>
-              </div>
-            </figure>
-            <article class="module-card capability-digital-content"><small>数字工具作品｜安卓通用品牌桌面</small><h3>QilyLean Home｜官网通用安装包</h3><p><strong>“QilyLean｜启力精益”面向常见安卓手机自主开发的免Root品牌桌面。</strong> 按照QilyLean官网当前首页导航重构移动端入口，桌面时钟升级为“小时：分钟：秒钟”并按秒刷新，日期同步显示公历、星期、中国农历与年度周次；新增“Times26001”直达入口，已安装Times26001时直接启动，用于查看黄历、IE分段计时、闹钟和倒计时，未安装时自动进入官网安装与使用页。将首页、能力画像、履历主线、代表项目、改善经验、QilyLean AI、知识分享、行走印记和项目合作完整集中到手机桌面；同时保留今日简报、全站术语、友情链接等重点直达入口，并提供网络、电池、显示、声音、壁纸、应用、安全、语言与输入等通用设置及全部应用抽屉，便于随时进入QilyLean持续更新的全站内容与服务。</p><p><strong>安全边界：</strong>不读取、不展示手机品牌、型号或设备名称；不解锁Bootloader、不刷Recovery，不修改系统分区、基带、IMEI、EFS或通信底层，可随时切回原系统桌面。</p><div class="module-result">当前官网可下载APK：v2.2（历史归档／旧Debug签名）｜最新构建：v2.3.1 / API 36（待正式签名发布，不作为当前覆盖升级包）｜秒级时钟｜公历＋农历＋周次｜Times26001直达｜免Root</div><div class="module-actions"><a href="/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1" download data-qilylean-home-direct-download="1">下载 Android APK（v2.2）</a><button type="button" class="app-share-trigger" data-app-share-qr="qilyleanHome">扫码下载</button><button type="button" class="app-link-share-trigger" data-app-share-link="qilyleanHome">分享下载页</button><a class="secondary" href="/QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt">SHA-256校验</a><a class="secondary" href="/trust/#data">查看资料保密说明</a><a class="secondary" href="/legal/qilylean-home/privacy/">隐私政策</a><a class="secondary" href="/legal/qilylean-home/terms/">用户协议</a><a class="secondary" href="/app-support/">技术支持</a></div></article>
-          </div>
-        </div>
-      </div>
-    </section>
+    <section class="module-section" id="digital-tools"><div class="module-inner"><div class="module-heading"><h2>数字工具作品</h2><p>将工业工程现场需求、QilyLean全站服务入口与适度休闲益智需求转化为可直接使用、可持续迭代的数字工具；不同作品分别承担现场测时、品牌入口与轻量益智体验，产品边界独立说明。</p></div><div class="capability-digital-tools">
+      <div class="capability-digital-tool"><figure class="capability-digital-visual"><a href="/tools/times26001/" aria-label="查看Times26001应用介绍"><img src="/assets/tools/times26001-overview.svg?v=20260808-times26001-ie-v1" alt="Times26001与IE分段计时工具功能概览" width="1200" height="720" loading="lazy" decoding="async"></a></figure><article class="module-card capability-digital-content"><small>数字工具作品｜工业工程时间研究＋IE现场测时</small><h3>Times26001</h3><p><strong>面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。</strong> 以IE现场分段测时、累计总时长与数据复制为核心，配套倒计时、闹钟、北京时间、万年历、农历、黄历、节气与天气预报，可查看当前位置或指定城市的当前实况及未来7天趋势，并用于标准工时测量、工序分析和改善前后对比。</p><div class="module-result">手机试用版：v1.1.13 / versionCode 16 / API 36｜当前位置/城市搜索｜当前实况＋未来7天｜IE分段测时｜累计总时长</div><div class="module-actions"><a href="/Times26001-Android-v1.1.13-Standard-Website-Logo.apk?build=efe5e188" download>下载 Android APK</a><a class="secondary" href="/tools/times26001/#android-download">下载说明</a><button type="button" class="app-share-trigger" data-app-share-qr="times26001">扫码下载</button><button type="button" class="app-link-share-trigger" data-app-share-link="times26001">分享下载页</button><a class="secondary" href="/legal/times26001/privacy/">隐私政策</a><a class="secondary" href="/legal/times26001/terms/">用户协议</a><a class="secondary" href="/app-support/">技术支持</a></div></article></div>
+      <div class="capability-digital-tool"><figure class="capability-digital-visual capability-home-visual" aria-label="QilyLean Home安卓通用品牌桌面功能概览"><div class="capability-home-screen"><div class="capability-home-icon" aria-hidden="true"><img src="/assets/tools/qilylean-unified-app-icon.svg?v=20260805-unified-app-icon-v1" alt="" decoding="async" loading="lazy"></div><h3>QilyLean Home</h3><p>Android 当前官网APK v2.2（历史归档）｜最新构建 v2.3.1 / API 36（待正式签名）</p><div class="capability-home-clock">08:05:32</div><div class="capability-home-date">2026年8月5日 星期三 · 第32周<br>农历 六月廿三</div><div class="capability-home-shortcuts"><span>首页</span><span>能力画像</span><span>履历主线</span><span>代表项目</span><span>改善经验</span><span>QilyLean AI</span><span>知识分享</span><span>行走印记</span><span>项目合作</span><span>今日简报</span><span>Times26001</span><span>系统设置</span><span>应用抽屉</span></div></div></figure><article class="module-card capability-digital-content"><small>数字工具作品｜安卓通用品牌桌面</small><h3>QilyLean Home｜官网通用安装包</h3><p><strong>“QilyLean｜启力精益”面向常见安卓手机自主开发的免Root品牌桌面。</strong> 按照QilyLean官网当前首页导航重构移动端入口，提供秒级时钟、公历、农历、周次、Times26001直达与常用官网模块入口，并保留通用系统设置和应用抽屉。</p><div class="module-result">当前官网可下载APK：v2.2（历史归档／旧Debug签名）｜最新构建：v2.3.1 / API 36（待正式签名发布）｜Times26001直达｜免Root</div><div class="module-actions"><a href="/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1" download data-qilylean-home-direct-download="1">下载 Android APK（v2.2）</a><button type="button" class="app-share-trigger" data-app-share-qr="qilyleanHome">扫码下载</button><button type="button" class="app-link-share-trigger" data-app-share-link="qilyleanHome">分享下载页</button><a class="secondary" href="/QilyLean_Home_v2.3.3_API36_INSTALL.sha256.txt">SHA-256校验</a><a class="secondary" href="/trust/#data">查看资料保密说明</a><a class="secondary" href="/legal/qilylean-home/privacy/">隐私政策</a><a class="secondary" href="/legal/qilylean-home/terms/">用户协议</a><a class="secondary" href="/app-support/">技术支持</a></div></article></div>
+      <div class="capability-digital-tool" id="pure-ddz-digital-tool"><figure class="capability-digital-visual capability-ddz-visual"><a href="/tools/pure-ddz/" aria-label="进入启力精益斗地主网页版"><div class="capability-ddz-board"><h3 class="capability-ddz-title">启力精益斗地主</h3><p class="capability-ddz-sub">简单娱乐 · 益智生活 · 无广告</p><div class="capability-ddz-jokers"><div class="capability-ddz-joker big"><img src="/tools/pure-ddz/game/assets/pure-ddz/avatar-king.webp" alt="大王：QilyLean头像"><b>大王</b></div><div class="capability-ddz-joker"><img src="/tools/pure-ddz/game/assets/pure-ddz/airplane-joker.png" alt="小王：C919六大业务飞机模型"><b>小王 · C919</b></div></div><div class="capability-ddz-cards" aria-label="代表主题牌 A K Q"><div class="capability-ddz-card"><strong>A♠</strong><small>OEE</small><b>综合效率</b><em>效率损失分析</em></div><div class="capability-ddz-card"><strong>K♣</strong><small>TPM</small><b>设备效率</b><em>全员生产维护</em></div><div class="capability-ddz-card red"><strong>Q♥</strong><small>VSM</small><b>价值流</b><em>端到端分析</em></div></div></div></a></figure><article class="module-card capability-digital-content"><small>数字工具作品｜休闲益智＋QilyLean技能主题牌面</small><h3>启力精益斗地主</h3><p><strong>源于父母辈真实使用需求开发的无广告斗地主。</strong> 减少实名注册、账号登录和验证码等操作门槛，网页打开即玩；也适合成年人在高强度工作之外放松思考。牌面融入现场事实、工程数据、精益改善、质量保证、数智固化、知识资产及 IE/ECRS/SMED/VSM/TPM/OEE 等技能主题。</p><div class="module-result">网页版持续打磨｜启力提示仅给建议、不自动出牌｜大王为个人头像｜小王为C919六大业务飞机模型｜Android安装包待网页版验证确认OK后再发布</div><div class="module-actions"><a href="/tools/pure-ddz/">立即在线玩</a><span class="secondary" aria-disabled="true">Android 安装包待验证</span></div></article></div>
+    </div></div></section>
 
-    <section class="module-section alt" id="digital-engineering-loop">
-      <div class="module-inner">
-        <div class="module-heading"><span class="module-eyebrow">DIGITAL × MANUFACTURING｜从工具作品到制造工程闭环</span><h2>数字工具必须回到标准工时、产能、排程与改善验证</h2><p>当前公开作品承担“现场时间采集入口”和“全站服务入口”；制造数据治理、系统接口与工程验收则通过项目方法交付。两类能力边界分开说明，再以同一数据链连接。</p></div>
-        <div class="module-grid four">
-          <article class="module-card"><small>01｜CAPTURE</small><h3>现场采集</h3><p>Times26001用于IE分段测时、累计时长和数据复制，保留现场观察的最小时间事实。</p><div class="module-result">当前边界：测时工具，不自动替代样本设计、异常判定或标准审批。</div></article>
-          <article class="module-card"><small>02｜REVIEW</small><h3>工程复核</h3><p>按产品／工序／版本、有效循环、评比、宽放和异常边界重算正常时间与标准时间。</p><div class="module-result">输出：原始循环、排除理由、计算链、适用条件和工时版本。</div></article>
-          <article class="module-card"><small>03｜PUBLISH</small><h3>系统发布</h3><p>将已批准的标准工时关联MBOM、路线、工序、资源和产能日历，再进入ERP／APS／MES。</p><div class="module-result">控制：Owner、生效日、单位、版本、接口契约与旧版失效。</div></article>
-          <article class="module-card"><small>04｜VERIFY</small><h3>改善复验</h3><p>以线平衡、UPPH、负荷率、VSM、OEE和计划达成复验改善，并保留质量与安全守门。</p><div class="module-result">闭环：采集 → 复核 → 发布 → 使用 → 偏差触发重新测定。</div></article>
-        </div>
-        <div class="evidence-note"><strong>产品能力边界：</strong>Times26001与QilyLean Home目前是公开可验证的移动端作品，不表述为MES、APS或设备采集平台。工业系统分层、数据契约、接口、安全恢复和业务验收属于数智工厂项目能力，需按企业现场重新定义与实施。</div>
-        <div class="module-actions"><a href="/improvements/standard-time/">查看标准工时计算与数据合同</a><a class="secondary" href="/projects/digital-factory/">查看数智工厂工程架构</a><a class="secondary" href="/projects/visual-management/">查看现场目视化系统</a></div>
-      </div>
-    </section>
+    <section class="module-section alt" id="digital-engineering-loop"><div class="module-inner"><div class="module-heading"><span class="module-eyebrow">DIGITAL × MANUFACTURING｜从工具作品到制造工程闭环</span><h2>数字工具必须回到标准工时、产能、排程与改善验证</h2><p>当前公开作品承担“现场时间采集入口”和“全站服务入口”；制造数据治理、系统接口与工程验收则通过项目方法交付。两类能力边界分开说明，再以同一数据链连接。</p></div><div class="module-grid four"><article class="module-card"><small>01｜CAPTURE</small><h3>现场采集</h3><p>Times26001用于IE分段测时、累计时长和数据复制，保留现场观察的最小时间事实。</p><div class="module-result">当前边界：测时工具，不自动替代样本设计、异常判定或标准审批。</div></article><article class="module-card"><small>02｜REVIEW</small><h3>工程复核</h3><p>按产品／工序／版本、有效循环、评比、宽放和异常边界重算正常时间与标准时间。</p><div class="module-result">输出：原始循环、排除理由、计算链、适用条件和工时版本。</div></article><article class="module-card"><small>03｜PUBLISH</small><h3>系统发布</h3><p>将已批准的标准工时关联MBOM、路线、工序、资源和产能日历，再进入ERP／APS／MES。</p><div class="module-result">控制：Owner、生效日、单位、版本、接口契约与旧版失效。</div></article><article class="module-card"><small>04｜VERIFY</small><h3>改善复验</h3><p>以线平衡、UPPH、负荷率、VSM、OEE和计划达成复验改善，并保留质量与安全守门。</p><div class="module-result">闭环：采集 → 复核 → 发布 → 使用 → 偏差触发重新测定。</div></article></div><div class="evidence-note"><strong>产品能力边界：</strong>Times26001、QilyLean Home与启力精益斗地主均是公开可验证的自主数字作品；其中斗地主属于轻量休闲益智产品，不表述为制造执行系统或工程软件。工业系统分层、数据契约、接口、安全恢复和业务验收属于数智工厂项目能力，需按企业现场重新定义与实施。</div><div class="module-actions"><a href="/improvements/standard-time/">查看标准工时计算与数据合同</a><a class="secondary" href="/projects/digital-factory/">查看数智工厂工程架构</a><a class="secondary" href="/projects/visual-management/">查看现场目视化系统</a></div></div></section>
 
-    <section class="module-section" id="ai-certificate">
-      <div class="module-inner">
-        <div class="module-heading"><h2>AI应用与精益实践</h2><p>以持续学习、真实应用和成果沉淀为主线，将人工智能工具用于制造改善、数据分析、代码与网页资产生成及知识库建设。</p></div>
-        <div class="capability-certificate">
-          <figure class="capability-certificate-visual"><a href="/certificates/chatgpt-lean/" aria-label="进入ChatGPT应用与精益生产实践证书独立详情页"><img src="/qilylean/chatgpt-lean-certificate-web.jpg?v=20260728-thumbnail-v2" alt="丁启利ChatGPT应用与精益生产实践学习成果纪念证书缩略图" loading="lazy" decoding="async"></a><figcaption>证书缩略图｜点击进入独立详情页查看高清原图</figcaption></figure>
-          <article class="module-card"><small>AI × Lean Manufacturing</small><h3>ChatGPT应用与精益生产实践</h3><p>自ChatGPT首次公开发布以来持续学习并实践人工智能工具应用，将ChatGPT、Codex等工具用于流程优化、效率提升、数据分析、程序文件编制、代码与网页资产生成，以及制造改善知识沉淀。</p><div class="module-result">证书编号：GPT-LE-2025-0422｜颁发日期：2025年4月22日。该页面记录个人学习与应用实践，不构成OpenAI官方认证、授权资质或职业资格证明</div><div class="module-actions"><a href="/certificates/chatgpt-lean/">查看证书详情与原图</a><a class="secondary" href="/ai.html">进入 QilyLean AI</a></div></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="module-section alt">
-      <div class="module-inner">
-        <div class="module-heading"><h2>相关模块</h2><p>需要核对能力的项目证据或方法沉淀时，可进入相应独立页面。</p></div>
-        <div class="module-actions"><a href="/cooperation/">项目合作／预约诊断</a><a class="secondary" href="/projects/">查看代表项目</a><a class="secondary" href="/improvements/">查看改善经验</a><a class="secondary" href="/ai.html">进入 QilyLean AI</a></div>
-      </div>
-    </section>
+    <section class="module-section" id="ai-certificate"><div class="module-inner"><div class="module-heading"><h2>AI应用与精益实践</h2><p>以持续学习、真实应用和成果沉淀为主线，将人工智能工具用于制造改善、数据分析、代码与网页资产生成及知识库建设。</p></div><div class="capability-certificate"><figure class="capability-certificate-visual"><a href="/certificates/chatgpt-lean/" aria-label="进入ChatGPT应用与精益生产实践证书独立详情页"><img src="/qilylean/chatgpt-lean-certificate-web.jpg?v=20260728-thumbnail-v2" alt="丁启利ChatGPT应用与精益生产实践学习成果纪念证书缩略图" loading="lazy" decoding="async"></a><figcaption>证书缩略图｜点击进入独立详情页查看高清原图</figcaption></figure><article class="module-card"><small>AI × Lean Manufacturing</small><h3>ChatGPT应用与精益生产实践</h3><p>自ChatGPT首次公开发布以来持续学习并实践人工智能工具应用，将ChatGPT、Codex等工具用于流程优化、效率提升、数据分析、程序文件编制、代码与网页资产生成，以及制造改善知识沉淀。</p><div class="module-result">证书编号：GPT-LE-2025-0422｜颁发日期：2025年4月22日。该页面记录个人学习与应用实践，不构成OpenAI官方认证、授权资质或职业资格证明</div><div class="module-actions"><a href="/certificates/chatgpt-lean/">查看证书详情与原图</a><a class="secondary" href="/ai.html">进入 QilyLean AI</a></div></article></div></div></section>
+    <section class="module-section alt"><div class="module-inner"><div class="module-heading"><h2>相关模块</h2><p>需要核对能力的项目证据或方法沉淀时，可进入相应独立页面。</p></div><div class="module-actions"><a href="/cooperation/">项目合作／预约诊断</a><a class="secondary" href="/projects/">查看代表项目</a><a class="secondary" href="/improvements/">查看改善经验</a><a class="secondary" href="/ai.html">进入 QilyLean AI</a></div></div></section>
   </main>
-
-  <script defer id="qilyAppDownloadShareScript" src="/app-download-share-v1.js?v=20260809-qilylean-home-download-v3"></script>
-<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260822-dock-back-label-v3"></script>
+  <script defer id="qilyAppDownloadShareScript" src="/app-download-share-v1.js?v=20260809-qilylean-home-download-v3"></script><script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260822-dock-back-label-v3"></script>
 </body>
 </html>
