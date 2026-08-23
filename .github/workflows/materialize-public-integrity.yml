@@ -1,0 +1,49 @@
+name: Materialize public integrity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/materialize-public-integrity.yml'
+      - 'scripts/materialize-public-integrity-v1.js'
+      - 'qilylean/site-data.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: materialize-public-integrity-main
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check materializer syntax
+        run: node --check scripts/materialize-public-integrity-v1.js
+      - name: Materialize current public integrity copy
+        run: node scripts/materialize-public-integrity-v1.js
+      - name: Validate public integrity output
+        run: node scripts/check-public-integrity-v1.js
+      - name: Commit materialized pages
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Public integrity copy already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add knowledge/terminology.html capabilities/index.html certificates/chatgpt-lean/index.html trust/index.html
+          git commit -m "fix: materialize terminology and certificate integrity [skip ci]"
+          git pull --rebase origin main
+          git push origin main
