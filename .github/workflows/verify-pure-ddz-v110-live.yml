@@ -1,0 +1,91 @@
+name: Verify Pure DDZ v1.1.0 Live
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/verify-pure-ddz-v110-live.yml'
+      - 'tools/pure-ddz/**'
+      - 'site-ui-consistency-v1.js'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-pure-ddz-v110-live.yml'
+      - 'tools/pure-ddz/**'
+      - 'site-ui-consistency-v1.js'
+  workflow_dispatch:
+
+jobs:
+  verify-v110:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify prepared same-origin Expert theme runtime
+        run: |
+          set -euo pipefail
+          node --check tools/pure-ddz/game/js/card-theme.js
+          node --check tools/pure-ddz/game/js/ai-expert.js
+          node --check tools/pure-ddz/game/js/game.js
+          grep -q "const VERSION = '1.1.0'" tools/pure-ddz/game/js/game.js
+          grep -q "difficulty:'expert'" tools/pure-ddz/game/js/game.js
+          grep -q 'PublicCardMemory' tools/pure-ddz/game/js/ai-expert.js
+          grep -q 'avatar-king.webp' tools/pure-ddz/game/js/card-theme.js
+          grep -q 'airplane-joker.png' tools/pure-ddz/game/js/card-theme.js
+          grep -q "load('js/card-theme.js'" tools/pure-ddz/index.html
+          grep -q "load('js/ai-expert.js'" tools/pure-ddz/index.html
+          grep -q 'Pure-DDZ-Classic-v1.1.0.apk' tools/pure-ddz/index.html
+          grep -q 'Pure-DDZ-Classic-v1.1.0.apk' site-ui-consistency-v1.js
+          test -s tools/pure-ddz/game/assets/pure-ddz/avatar-king.webp
+          test -s tools/pure-ddz/game/assets/pure-ddz/airplane-joker.png
+
+      - name: Validate upstream v1.1.0 Release APK
+        run: |
+          set -euo pipefail
+          URL='https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.1.0/Pure-DDZ-Classic-v1.1.0.apk'
+          curl -fL --retry 10 --retry-delay 5 --max-time 180 "$URL" -o /tmp/pure-ddz-v110.apk
+          test -s /tmp/pure-ddz-v110.apk
+          test "$(head -c 2 /tmp/pure-ddz-v110.apk)" = 'PK'
+          for packaged in \
+            'assets/www/index.html' \
+            'assets/www/js/card-theme.js' \
+            'assets/www/js/ai-expert.js' \
+            'assets/www/js/game.js' \
+            'assets/www/assets/pure-ddz/avatar-king.webp' \
+            'assets/www/assets/pure-ddz/airplane-joker.png' \
+            'classes.dex'; do
+            unzip -l /tmp/pure-ddz-v110.apk | grep -q "$packaged"
+          done
+
+      - name: Verify deployed QilyLean v1.1.0 from public Internet
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          ok=0
+          for i in {1..48}; do
+            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260823-v110' -o /tmp/page.html \
+              && grep -q 'Pure-DDZ-Classic-v1.1.0.apk' /tmp/page.html \
+              && grep -q "load('js/card-theme.js'" /tmp/page.html \
+              && grep -q "load('js/ai-expert.js'" /tmp/page.html; then
+              ok=1
+              break
+            fi
+            sleep 10
+          done
+          test "$ok" = 1
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260823-v110' -o /tmp/card-theme.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/ai-expert.js?verify=20260823-v110' -o /tmp/ai-expert.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260823-v110' -o /tmp/game.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/assets/pure-ddz/avatar-king.webp?verify=20260823-v110' -o /tmp/avatar.webp
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/assets/pure-ddz/airplane-joker.png?verify=20260823-v110' -o /tmp/airplane.png
+          node --check /tmp/card-theme.js
+          node --check /tmp/ai-expert.js
+          node --check /tmp/game.js
+          grep -q 'PublicCardMemory' /tmp/ai-expert.js
+          grep -q "difficulty:'expert'" /tmp/game.js
+          test "$(head -c 4 /tmp/avatar.webp)" = 'RIFF'
+          test "$(xxd -p -l 8 /tmp/airplane.png)" = '89504e470d0a1a0a'
+          curl -fsSL --max-time 25 'https://qilylean.com/site-ui-consistency-v1.js?verify=20260823-v110' -o /tmp/ui.js
+          grep -q 'Pure-DDZ-Classic-v1.1.0.apk' /tmp/ui.js
+          grep -q '默认 Expert 专家级 AI' /tmp/ui.js
+          echo 'PURE_DDZ_V110_QILYLEAN_PUBLIC_OK'
