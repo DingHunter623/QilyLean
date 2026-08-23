@@ -16,7 +16,7 @@
   </style>
   <script>
     (()=>{
-      const roots=['./game/','https://cdn.jsdelivr.net/gh/DingHunter623/Pure-DDZ-Classic@v1.2.0/web/','https://raw.githack.com/DingHunter623/Pure-DDZ-Classic/v1.1.0/web/'];
+      const roots=['./game/','https://cdn.jsdelivr.net/gh/DingHunter623/Pure-DDZ-Classic@v1.2.0/web/','https://raw.githack.com/DingHunter623/Pure-DDZ-Classic/v1.2.0/web/'];
       const loadStyle=(path)=>{
         let i=0;
         const next=()=>{
@@ -202,7 +202,7 @@
       const status=document.getElementById('boot-status');
       const load=(path,index,done)=>{
         if(index>=roots.length){
-          status.textContent='牌桌脚本加载失败，请检查网络后刷新；Android 用户可下载安装离线版 v1.1.0。';
+          status.textContent='牌桌脚本加载失败，请检查网络后刷新；Android 用户可下载安装离线版 v1.2.0。';
           status.className='error';
           return;
         }
@@ -216,7 +216,7 @@
         load('js/card-theme.js',0,()=>{
           load('js/ai-expert.js',0,()=>{
             load('js/game.js',0,()=>{
-              status.textContent='v1.1.0 大牌面专家主题牌桌已加载';
+              status.textContent='v1.2.0 大牌面专家主题牌桌已加载';
               status.className='ready';
             });
           });
