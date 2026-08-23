@@ -1,0 +1,34 @@
+name: Verify Pure DDZ Webfix
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/verify-pure-ddz-v120-webfix.yml'
+      - 'tools/pure-ddz/**'
+      - 'site-ui-consistency-v1.js'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify web-only refinement contract
+        run: |
+          set -euo pipefail
+          node --check tools/pure-ddz/game/js/card-theme.js
+          node --check tools/pure-ddz/game/js/visual-v120.js
+          grep -q '启力精益斗地主' tools/pure-ddz/index.html
+          grep -q '>启力提示</button>' tools/pure-ddz/index.html
+          ! grep -q '启力托管' tools/pure-ddz/index.html tools/pure-ddz/game/js/visual-v120.js
+          grep -q "CARD_SITE='启力精益'" tools/pure-ddz/game/js/card-theme.js
+          ! grep -q "CARD_SITE='启力精益 | https://qilylean.com'" tools/pure-ddz/game/js/card-theme.js
+          grep -q 'v120-scroll-cue' tools/pure-ddz/game/css/visual-v120.css
+          grep -q '启力提示功能' tools/pure-ddz/game/js/visual-v120.js
+          grep -q 'chooseAiPlay(0)' tools/pure-ddz/game/js/visual-v120.js
+          ! grep -q 'play.click()' tools/pure-ddz/game/js/visual-v120.js
+          ! grep -q 'chooseAiBid(0)' tools/pure-ddz/game/js/visual-v120.js
+          ! grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' tools/pure-ddz/index.html site-ui-consistency-v1.js
+          grep -q '安装包待验证后发布' tools/pure-ddz/index.html
+          git diff --check
