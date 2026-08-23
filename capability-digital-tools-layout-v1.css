@@ -1,0 +1,98 @@
+/* Digital Tool Works unified visual alignment — 2026-08-24 */
+#digital .capability-digital-tools{gap:30px}
+#digital .capability-digital-tool{
+  align-items:start!important;
+  grid-template-columns:minmax(320px,.96fr) minmax(0,1.04fr)!important;
+  gap:26px!important;
+  padding:18px!important;
+  border:1px solid #cfe0df!important;
+  border-left:4px solid #caa15f!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  box-shadow:0 14px 34px rgba(15,75,90,.08)!important;
+}
+#digital .capability-digital-visual,
+#digital .capability-home-visual,
+#digital .capability-ddz-visual{
+  align-self:start!important;
+  margin:0!important;
+  min-height:0!important;
+  border-radius:15px!important;
+  overflow:hidden!important;
+}
+#digital .capability-digital-content{
+  align-self:start!important;
+  padding:2px 2px 0!important;
+  margin:0!important;
+}
+#digital .capability-digital-content>small{
+  display:block!important;
+  margin:0 0 7px!important;
+  color:#456869!important;
+  font-size:15px!important;
+  line-height:1.25!important;
+  font-weight:900!important;
+}
+#digital .capability-digital-content>h3{
+  margin:0 0 12px!important;
+  color:#0d4651!important;
+  font-size:clamp(26px,2.1vw,34px)!important;
+  line-height:1.16!important;
+}
+#digital .capability-digital-content>p{
+  margin:0 0 14px!important;
+  color:#365556!important;
+  font-size:17px!important;
+  line-height:1.72!important;
+}
+#digital .capability-digital-content .module-result{
+  margin:12px 0 15px!important;
+  padding:14px 16px!important;
+  color:#183f40!important;
+  background:#eef8f6!important;
+  font-size:16px!important;
+  line-height:1.6!important;
+}
+#digital .capability-digital-content .module-actions{margin-top:8px!important}
+
+/* Times26001: keep the artwork light and visually separated from the copy. */
+#digital .capability-digital-tool:first-child .capability-digital-visual{
+  background:linear-gradient(145deg,#f8fbfa,#eef7f5)!important;
+}
+
+/* QilyLean Home: lighten the outside canvas while keeping the device screen brand dark. */
+#digital .capability-home-visual{
+  padding:26px!important;
+  background:linear-gradient(145deg,#f7fbfa,#fffaf0)!important;
+}
+#digital .capability-home-screen{
+  box-shadow:0 16px 36px rgba(15,75,90,.18)!important;
+}
+
+/* Pure DDZ: visual clarity first. */
+#pure-ddz-digital-tool .capability-ddz-visual{
+  padding:28px!important;
+  background:radial-gradient(circle at 50% 24%,rgba(66,202,148,.40),transparent 43%),linear-gradient(145deg,#0b5f58,#137783)!important;
+}
+#pure-ddz-digital-tool .capability-ddz-board{
+  margin:0 auto!important;
+  background:linear-gradient(180deg,rgba(7,69,67,.96),rgba(5,48,53,.98))!important;
+}
+#pure-ddz-digital-tool .capability-ddz-title{
+  color:#fff!important;
+  text-shadow:0 2px 8px rgba(0,0,0,.55)!important;
+}
+#pure-ddz-digital-tool .capability-ddz-sub{
+  color:#ffe39b!important;
+  text-shadow:0 2px 6px rgba(0,0,0,.50)!important;
+}
+
+@media(max-width:980px){
+  #digital .capability-digital-tool{grid-template-columns:minmax(280px,.92fr) minmax(0,1.08fr)!important;gap:20px!important;padding:15px!important}
+  #digital .capability-digital-content>p{font-size:16px!important}
+}
+@media(max-width:760px){
+  #digital .capability-digital-tool{grid-template-columns:1fr!important;padding:14px!important}
+  #digital .capability-digital-content{padding-top:0!important}
+  #digital .capability-digital-content>h3{font-size:27px!important}
+}
