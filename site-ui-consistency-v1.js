@@ -1,6 +1,6 @@
 /* QilyLean 轻量父级导航与外壳一致性 v3.4｜2026-08-23
  * 性能原则：静态HTML首帧即正确；运行时只校正导航、悬浮栏及首页关键数字产品入口。
- * 本轮将 Pure DDZ 首页入口切换到通过 Android 35 真启动门禁的 v1.0.3。
+ * 本轮将 Pure DDZ 首页入口切换到通过 Android 35 真启动门禁的 v1.1.0。
  */
 (function(d,w){
   'use strict';
@@ -8,7 +8,7 @@
   w.__qilyUiConsistencyV3=true;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260823-pure-ddz-entry-v14';
+  var BUILD_ID='20260823-pure-ddz-entry-v15';
   var BUILD_KEY='qily_site_ui_build_v1';
 
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
@@ -166,8 +166,8 @@
     var section=d.createElement('section');
     section.id='qilyPureDdzStableEntry';
     section.className='qily-ia-section';
-    section.setAttribute('data-qily-static-source','pure-ddz-stable-entry-v2');
-    section.innerHTML='<div class="qily-ia-inner"><div class="qily-ia-heading"><span class="qily-ia-kicker">DIGITAL PRODUCT｜休闲数字作品</span><h2>Pure DDZ Classic｜纯净斗地主</h2><p>QilyLean制造运营六大业务主旨主题版。无广告、无注册、无登录、无支付；网页版直接开局，Android v1.0.3 支持离线安装。</p></div><div class="qily-ia-grid"><article class="qily-ia-card"><small>WEB GAME｜ONLINE</small><h3>网页版直接玩</h3><p>三人叫地主、经典牌型、AI电脑对手、智能提示、积分战绩与中文语音。</p><div class="qily-ia-result">点击即进入牌桌，无需账号</div></article><article class="qily-ia-card"><small>ANDROID｜v1.0.3</small><h3>离线安装版</h3><p>v1.0.3 已通过 Android 35 模拟器真实安装、MainActivity 启动、5 秒进程存活及崩溃检查。</p><div class="qily-ia-result">Android 8及以上｜离线可用</div></article><article class="qily-ia-card"><small>QILYLEAN THEME｜06</small><h3>六大业务主题</h3><p>现场事实、工程数据、精益改善、质量保证、数智固化、知识资产作为桌面与牌背视觉寓意。</p><div class="qily-ia-result">传统牌面识别规则保持清晰</div></article></div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/tools/pure-ddz/">立即在线玩斗地主</a><a class="qily-ia-button" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.0.3/Pure-DDZ-Classic-v1.0.3.apk">下载 Android v1.0.3</a></div></div>';
+    section.setAttribute('data-qily-static-source','pure-ddz-stable-entry-v3');
+    section.innerHTML='<div class="qily-ia-inner"><div class="qily-ia-heading"><span class="qily-ia-kicker">DIGITAL PRODUCT｜休闲数字作品</span><h2>Pure DDZ Classic｜纯净斗地主</h2><p>QilyLean制造运营六大业务主旨主题版。无广告、无注册、无登录、无支付；网页版直接开局，Android v1.1.0 支持离线安装。</p></div><div class="qily-ia-grid"><article class="qily-ia-card"><small>WEB GAME｜ONLINE</small><h3>网页版直接玩</h3><p>默认 Expert 专家级 AI，公开信息记牌、牌型保护、残局压制、农民协同，并保留智能提示、积分战绩与中文语音。</p><div class="qily-ia-result">点击即进入牌桌，无需账号</div></article><article class="qily-ia-card"><small>ANDROID｜v1.1.0</small><h3>离线安装版</h3><p>v1.1.0 已通过 Android 35 模拟器真实安装、MainActivity 启动、5 秒进程存活及崩溃检查。</p><div class="qily-ia-result">Android 8及以上｜离线可用</div></article><article class="qily-ia-card"><small>QILYLEAN THEME｜06</small><h3>技能主题牌面</h3><p>54张牌以现场事实、工程数据、精益改善、质量保证、数智固化、知识资产及IE/ECRS/SMED/VSM/TPM/OEE等技能为主题；大王为个人头像，小王为C919六大业务飞机模型。</p><div class="qily-ia-result">传统牌面识别规则保持清晰</div></article></div><div class="qily-ia-actions"><a class="qily-ia-button primary" href="/tools/pure-ddz/">立即在线玩斗地主</a><a class="qily-ia-button" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.1.0/Pure-DDZ-Classic-v1.1.0.apk">下载 Android v1.1.0</a></div></div>';
     anchor.parentNode.insertBefore(section,anchor.nextSibling);
   }
 
@@ -178,6 +178,6 @@
   w.addEventListener('pageshow',reconcileFast);
 
   w.__qilyParentNavigationV3=true;
-  w.__qilyDockOrderContract=Object.freeze({order:['home','top','back','search','current','contact'],version:'20260823-pure-ddz-entry-v14'});
+  w.__qilyDockOrderContract=Object.freeze({order:['home','top','back','search','current','contact'],version:'20260823-pure-ddz-entry-v15'});
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })(document,window);

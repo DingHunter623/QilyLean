@@ -1,9 +1,9 @@
 (() => {
   'use strict';
 
-  const VERSION = '1.0.0';
+  const VERSION = '1.1.0';
   const PROFILE_KEY = 'pure_ddz_profile_v1';
-  const SETTINGS_KEY = 'pure_ddz_settings_v1';
+  const SETTINGS_KEY = 'pure_ddz_settings_v2';
   const RANK_TEXT = {3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',10:'10',11:'J',12:'Q',13:'K',14:'A',15:'2',16:'小王',17:'大王'};
   const SUITS = ['♠','♥','♣','♦'];
   const COMBO_TEXT = {
@@ -12,7 +12,7 @@
     four2:'四带二',four2pair:'四带两对',bomb:'炸弹',rocket:'王炸'
   };
   const DEFAULT_PROFILE = {score:1000,wins:0,losses:0,streak:0,bestStreak:0,games:0,lastRewardDate:''};
-  const DEFAULT_SETTINGS = {music:true,voice:true,effects:true,font:'large',difficulty:'normal'};
+  const DEFAULT_SETTINGS = {music:true,voice:true,effects:true,font:'large',difficulty:'expert'};
   const state = {
     phase:'idle',hands:[[],[],[]],bottom:[],landlord:null,current:0,lastPlay:null,passCount:0,
     selected:new Set(),winner:null,bids:[null,null,null],bidStart:0,bidTurns:0,highestBid:0,highestBidder:null,
@@ -183,7 +183,12 @@
     return score;
   }
 
+  function advancedAiEnabled(){ return ['expert','challenge'].includes(state.settings.difficulty)&&window.QilyLeanExpertAI; }
+
   function chooseAiPlay(player){
+    if(advancedAiEnabled()){
+      return window.QilyLeanExpertAI.chooseAdvancedPlay({state,player,generateCandidates,analyze,canBeat,removeCards});
+    }
     const target=state.lastPlay && state.lastPlay.player!==player ? state.lastPlay.combo : null;
     const options=generateCandidates(state.hands[player]).map(cards=>({cards,combo:analyze(cards)})).filter(option=>!target||canBeat(option.combo,target));
     if(!options.length) return null;
@@ -195,6 +200,10 @@
   function comboText(combo){ return COMBO_TEXT[combo?.type]||'出牌'; }
   function cardLabel(card){ return card.rank>=16?RANK_TEXT[card.rank]:`${RANK_TEXT[card.rank]}${card.suit}`; }
   function isRed(card){ return card.suit==='♥'||card.suit==='♦'||card.rank===17; }
+  function renderMiniCard(card){
+    if(window.QilyLeanCardTheme) return window.QilyLeanCardTheme.renderMiniCard(card);
+    return `<span class="mini-card${isRed(card)?' red':''}">${cardLabel(card)}</span>`;
+  }
 
   function renderProfile(){
     $('score').textContent=state.profile.score; $('wins').textContent=state.profile.wins; $('losses').textContent=state.profile.losses; $('streak').textContent=state.profile.streak;
@@ -214,7 +223,7 @@
 
   function renderBottomCards(){
     const reveal=state.landlord!==null&&state.phase!=='idle';
-    $('bottom-cards').innerHTML=reveal?state.bottom.map(card=>`<span class="mini-card${isRed(card)?' red':''}">${cardLabel(card)}</span>`).join(''):Array.from({length:3},()=>'<i class="bottom-back"></i>').join('');
+    $('bottom-cards').innerHTML=reveal?state.bottom.map(renderMiniCard).join(''):Array.from({length:3},()=>'<i class="bottom-back"></i>').join('');
   }
 
   function renderHand(){
@@ -223,7 +232,7 @@
       const button=document.createElement('button'), selected=state.selected.has(card.id);
       button.type='button'; button.className=`card${selected?' selected':''}${isRed(card)?' red':''}${card.rank>=16?' joker':''}`; button.dataset.id=String(card.id);
       button.setAttribute('aria-label',`${cardLabel(card)}${selected?'，已选择':'，未选择'}`); button.setAttribute('aria-pressed',String(selected));
-      button.innerHTML=card.rank>=16?`<strong>${RANK_TEXT[card.rank]}</strong>`:`<strong>${RANK_TEXT[card.rank]}</strong><span>${card.suit}</span>`;
+      button.innerHTML=window.QilyLeanCardTheme?window.QilyLeanCardTheme.renderCard(card):(card.rank>=16?`<strong>${RANK_TEXT[card.rank]}</strong>`:`<strong>${RANK_TEXT[card.rank]}</strong><span>${card.suit}</span>`);
       button.addEventListener('click',()=>toggleSelect(card.id)); hand.appendChild(button);
     });
   }
@@ -231,7 +240,7 @@
   function renderLastPlay(){
     if(state.lastPlay){
       const last=state.lastPlay;
-      $('center-play').innerHTML=`<div class="play-owner">${playerName(last.player)} · ${comboText(last.combo)}</div><div class="played-cards">${last.cards.map(card=>`<span class="mini-card${isRed(card)?' red':''}">${cardLabel(card)}</span>`).join('')}</div>`;
+      $('center-play').innerHTML=`<div class="play-owner">${playerName(last.player)} · ${comboText(last.combo)}</div><div class="played-cards">${last.cards.map(renderMiniCard).join('')}</div>`;
       return;
     }
     const copy=state.phase==='bidding'?'正在叫地主，分数最高者获得三张底牌':state.phase==='playing'?'新一轮，领出玩家可以出任意合规牌型':'点击“开始游戏”，无需登录即可游玩';
@@ -280,6 +289,7 @@
   }
 
   function chooseAiBid(player){
+    if(advancedAiEnabled()) return window.QilyLeanExpertAI.chooseExpertBid(state.hands[player],state.highestBid,state.settings.difficulty);
     const strength=handStrength(state.hands[player]), jitter=Math.random()*2.3; let bid=0;
     if(strength+jitter>13) bid=3; else if(strength+jitter>9) bid=2; else if(strength+jitter>6) bid=1;
     if(state.settings.difficulty==='easy'&&Math.random()<.25) bid=Math.max(0,bid-1);
@@ -288,11 +298,12 @@
 
   function startRound(){
     clearTimeout(state.turnTimer); closeModal('welcome'); closeModal('result');
+    if(window.QilyLeanExpertAI) window.QilyLeanExpertAI.memory.reset();
     state.phase='bidding'; state.hands=[[],[],[]]; state.bottom=[]; state.landlord=null; state.lastPlay=null; state.passCount=0; state.selected.clear(); state.winner=null;
     state.bids=[null,null,null]; state.bidTurns=0; state.highestBid=0; state.highestBidder=null; state.baseScore=1; state.multiplier=1; state.playCounts=[0,0,0];
     const deck=shuffle(createDeck()); state.hands=[deck.slice(0,17),deck.slice(17,34),deck.slice(34,51)]; state.bottom=deck.slice(51); state.hands.forEach(sortHand);
     state.bidStart=Math.floor(Math.random()*3); state.current=state.bidStart; state.roundNumber=state.profile.games+1;
-    $('hint-message').textContent='请根据手牌选择叫分；不熟悉时可以先点“不叫”。';
+    $('hint-message').textContent=advancedAiEnabled()?'专家模式：电脑会根据公开出牌记牌、保护牌型并加强残局压制。':'请根据手牌选择叫分；不熟悉时可以先点“不叫”。';
     startMusic(); render(); speak('开始叫地主'); scheduleTurn();
   }
 
@@ -319,11 +330,12 @@
   function scheduleTurn(){
     clearTimeout(state.turnTimer);
     if(!['bidding','playing'].includes(state.phase)||state.current===0) return;
+    const delay=state.settings.difficulty==='easy'?950:state.settings.difficulty==='challenge'?400+Math.random()*180:state.settings.difficulty==='expert'?500+Math.random()*220:680+Math.random()*350;
     state.turnTimer=setTimeout(()=>{
       const player=state.current;
       if(state.phase==='bidding') placeBid(player,chooseAiBid(player));
       else{ const choice=chooseAiPlay(player); choice?commitPlay(player,choice.cards):pass(player); }
-    },state.settings.difficulty==='easy'?950:680+Math.random()*350);
+    },delay);
   }
 
   function commitPlay(player,cards){
@@ -332,6 +344,7 @@
     const target=state.lastPlay&&state.lastPlay.player!==player?state.lastPlay.combo:null;
     if(target&&!canBeat(combo,target)) return {ok:false,message:'这组牌压不过上一手'};
     state.hands[player]=removeCards(state.hands[player],cards); state.lastPlay={player,cards:[...cards],combo}; state.passCount=0; state.playCounts[player]++;
+    if(window.QilyLeanExpertAI) window.QilyLeanExpertAI.memory.observe(player,cards,combo);
     if(['bomb','rocket'].includes(combo.type)) state.multiplier*=2;
     playEffect(['bomb','rocket'].includes(combo.type)?'bomb':'play'); speak(['bomb','rocket'].includes(combo.type)?comboText(combo):`${playerName(player)}，${comboText(combo)}`);
     render(); if(finishIfNeeded(player)) return {ok:true,finished:true};
@@ -358,6 +371,12 @@
 
   function hint(){
     if(state.phase!=='playing'||state.current!==0) return;
+    if(advancedAiEnabled()){
+      const choice=window.QilyLeanExpertAI.chooseAdvancedPlay({state,player:0,generateCandidates,analyze,canBeat,removeCards});
+      if(!choice){ state.selected.clear(); render(); flash('没有能压过的牌，建议点“不要”'); $('hint-message').textContent='专家建议：当前没有合适组合，可以选择“不要”。'; speak('没有能出的牌'); return; }
+      state.selected.clear(); choice.cards.forEach(card=>state.selected.add(card.id)); render();
+      $('hint-message').textContent=`专家建议：出“${comboText(choice.combo)}”，已选好 ${choice.cards.length} 张牌。`; flash(`专家提示：${comboText(choice.combo)}`); speak(`建议出${comboText(choice.combo)}`); return;
+    }
     const target=state.lastPlay&&state.lastPlay.player!==0?state.lastPlay.combo:null;
     const options=generateCandidates(state.hands[0]).map(cards=>({cards,combo:analyze(cards)})).filter(option=>!target||canBeat(option.combo,target));
     if(!options.length){ state.selected.clear(); render(); flash('没有能压过的牌，建议点“不要”'); $('hint-message').textContent='AI 建议：当前没有合适组合，可以选择“不要”。'; speak('没有能出的牌'); return; }
@@ -457,9 +476,10 @@
   };
 
   window.PureDDZTest=Object.freeze({
-    version:VERSION,start:startRound,bid:humanBid,hint,analyze,canBeat,generateCandidates,
+    version:VERSION,start:startRound,bid:humanBid,hint,analyze,canBeat,generateCandidates,chooseAiBid,chooseAiPlay,
     getState:()=>deepCopy({...state,selected:[...state.selected],turnTimer:null,musicTimer:null,audioCtx:null}),
     analyzeRanks:ranks=>analyze(ranks.map((rank,index)=>({id:index,rank,suit:'♠'}))),
+    expertMemory:()=>window.QilyLeanExpertAI?{history:deepCopy(window.QilyLeanExpertAI.memory.playHistory),controls:window.QilyLeanExpertAI.memory.controlCardsRemaining()}:null,
     stop:()=>{ clearTimeout(state.turnTimer); stopMusic(); }
   });
 
