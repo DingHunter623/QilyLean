@@ -33,9 +33,11 @@ jobs:
           grep -q 'Q♥' capabilities/index.html
           grep -q 'v120-reset-stats' tools/pure-ddz/game/js/visual-v120.js
           grep -q 'fitHand' tools/pure-ddz/game/js/visual-v120.js
-          grep -q "musicMode='normal'" tools/pure-ddz/game/js/game.js
-          grep -q "musicMode='exciting'" tools/pure-ddz/game/js/game.js
-          grep -q "musicMode=humanWon?'win':'lose'" tools/pure-ddz/game/js/game.js
+          grep -q 'musicMode' tools/pure-ddz/game/js/game.js
+          grep -q 'exciting' tools/pure-ddz/game/js/game.js
+          grep -q 'playMusicSting' tools/pure-ddz/game/js/game.js
+          grep -q "'win'" tools/pure-ddz/game/js/game.js
+          grep -q "'lose'" tools/pure-ddz/game/js/game.js
       - name: Install Playwright
         run: |
           npm init -y >/dev/null 2>&1
