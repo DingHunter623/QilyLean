@@ -23,7 +23,7 @@
           if(i>=roots.length)return;
           const link=document.createElement('link');
           link.rel='stylesheet';
-          link.href=roots[i++]+path+'?v=20260823-v120-visual';
+          link.href=roots[i++]+path+'?v=20260823-v120-webfix1';
           link.onerror=()=>{link.remove();next();};
           document.head.appendChild(link);
         };
@@ -41,7 +41,7 @@
     <header class="topbar">
       <a class="brand" href="/" aria-label="返回 QilyLean 官网">
         <span class="brand-mark" aria-hidden="true"><i>♠</i><i>♥</i></span>
-        <span><strong>纯净斗地主</strong><small>QilyLean｜启力精益主题版</small></span>
+        <span><strong>启力精益斗地主</strong><small>QilyLean｜简单娱乐 · 益智生活</small></span>
       </a>
       <section class="scoreboard" aria-label="本机积分与战绩">
         <div><small>安心积分</small><strong id="score">1000</strong></div>
@@ -52,7 +52,7 @@
         <button id="audio-toggle" class="icon-btn" type="button" aria-label="切换音乐与语音">🔊 <span>声音开</span></button>
         <button id="help-open" class="icon-btn" type="button">玩法</button>
         <button id="settings-open" class="icon-btn" type="button">设置</button>
-        <a class="apk-inline" href="https://github.com/DingHunter623/Pure-DDZ-Classic/releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk">Android v1.2.0</a>
+        <span class="apk-inline apk-hold">安装包待验证后发布</span>
         <button id="start" class="start-btn" type="button">开始游戏</button>
       </nav>
     </header>
@@ -115,17 +115,17 @@
             <button class="control-btn bid-btn strong" type="button" data-bid="3">3 分抢地主</button>
           </div>
           <div id="play-controls" class="controls hidden" aria-label="出牌操作">
-            <button id="hint" class="control-btn hint-btn" type="button">启力托管：关</button>
+            <button id="hint" class="control-btn hint-btn" type="button">启力提示</button>
             <button id="pass" class="control-btn pass-btn" type="button">不要</button>
             <button id="play" class="control-btn play-btn" type="button">出牌</button>
           </div>
-          <p id="hint-message" class="hint-message">自主判断后点“出牌”；需要休息时可开启“启力托管”。</p>
+          <p id="hint-message" class="hint-message">自主判断优先；需要参考时点“启力提示”，最终仍由你手动点“出牌”。</p>
         </section>
       </section>
     </main>
 
     <footer class="site-footer">
-      <span>纯净斗地主 Web · Android v1.2.0</span>
+      <span>启力精益斗地主 Web｜安装包待验证</span>
       <span>QilyLean｜启力精益 开发</span>
       <a href="/">返回官网首页</a>
     </footer>
@@ -135,13 +135,13 @@
     <div class="modal-card welcome-card">
       <div class="welcome-mark" aria-hidden="true">♠ <b>♥</b></div>
       <p class="eyebrow">QilyLean 无广告斗地主｜简单娱乐，益智生活</p>
-      <h1 id="welcome-title">纯净斗地主</h1>
+      <h1 id="welcome-title">启力精益斗地主</h1>
       <p class="welcome-copy">这款游戏源于一个真实的家庭需求：减少实名注册、账号登录、验证码等操作门槛，让父母辈打开即可轻松娱乐；同时也为长期面对复杂问题分析、工程改善、项目管理和高强度思考的成年人提供一个保持思考、适度放松的益智方式。简单、高效、友好，是这款数字产品延续的设计理念。</p>
       <ul class="feature-list">
         <li><b>无广告纯单机</b><span>网页直接玩，Android 可离线使用</span></li>
         <li><b>大字体适老化</b><span>高对比牌面与大按钮</span></li>
         <li><b>积分与胜局奖励</b><span>战绩只保存在本机</span></li>
-        <li><b>语音、音乐、启力托管</b><span>启力托管默认关闭，按需开启自动出牌</span></li>
+        <li><b>语音、音乐、启力提示</b><span>启力提示仅给出建议，最终出牌始终由你手动确认</span></li>
       </ul>
       <button id="welcome-start" class="start-btn hero-start" type="button">专家模式开局</button>
       <button id="welcome-settings" class="text-btn" type="button">先调整难度、字体和声音</button>
@@ -162,7 +162,7 @@
         <h3>QilyLean 官方信息</h3>
         <a href="/"><span>官方网址</span><b>https://qilylean.com</b></a>
         <a href="mailto:admin@qilylean.com"><span>企业邮箱</span><b>admin@qilylean.com</b></a>
-        <p><span>Android：1.2.0</span><span>微信：Qily259</span></p>
+        <p><span>Android：待验证后发布</span><span>微信：Qily259</span></p>
       </section>
       <button class="start-btn modal-done" type="button" data-close="settings-modal">保存并返回</button>
     </div>
@@ -207,7 +207,7 @@
           return;
         }
         const script=document.createElement('script');
-        script.src=roots[index]+path+'?v=20260823-v120-visual';
+        script.src=roots[index]+path+'?v=20260823-v120-webfix1';
         script.onload=done;
         script.onerror=()=>{script.remove();load(path,index+1,done);};
         document.body.appendChild(script);
