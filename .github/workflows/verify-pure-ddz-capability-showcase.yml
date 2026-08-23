@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'capabilities/index.html'
+      - 'pure-ddz-capability-visual-v2.css'
       - 'site-ui-consistency-v1.js'
       - 'tools/pure-ddz/**'
       - '.github/workflows/verify-pure-ddz-capability-showcase.yml'
@@ -26,11 +27,17 @@ jobs:
           ! grep -q 'section.id=.qilyPureDdzStableEntry' site-ui-consistency-v1.js
           grep -q 'removeLegacyPureDdzHomeEntry' site-ui-consistency-v1.js
           grep -q 'pure-ddz-digital-tool' capabilities/index.html
-          grep -q 'avatar-king.webp' capabilities/index.html
-          grep -q 'airplane-joker.png' capabilities/index.html
+          grep -q 'ding-qili-ai-avatar-560.webp' capabilities/index.html
+          grep -q 'c919-strategy-hero-v14.png' capabilities/index.html
+          grep -q 'qilyPureDdzCapabilityVisualV2' capabilities/index.html
+          grep -q 'object-fit:contain!important' pure-ddz-capability-visual-v2.css
           grep -q 'A♠' capabilities/index.html
           grep -q 'K♣' capabilities/index.html
           grep -q 'Q♥' capabilities/index.html
+          grep -q "player === 1 ? '左家' : '右家'" tools/pure-ddz/game/js/game.js
+          ! grep -q '左家电脑' tools/pure-ddz/game/js/game.js
+          ! grep -q '右家电脑' tools/pure-ddz/game/js/game.js
+          grep -q "positionClass(player)" tools/pure-ddz/game/js/visual-v120.js
           grep -q 'v120-reset-stats' tools/pure-ddz/game/js/visual-v120.js
           grep -q 'fitHand' tools/pure-ddz/game/js/visual-v120.js
           grep -q 'musicMode' tools/pure-ddz/game/js/game.js
@@ -66,11 +73,13 @@ jobs:
               window.QilyLeanV120?.fitHand?.();
               const hand=document.querySelector('#hand');const cards=[...document.querySelectorAll('#hand .card')];
               const hr=hand.getBoundingClientRect();const rects=cards.map(c=>c.getBoundingClientRect());
-              return {count:cards.length,first:rects[0],last:rects.at(-1),hand:hr,reset:Boolean(document.querySelector('#v120-reset-stats'))};
+              return {count:cards.length,first:rects[0],last:rects.at(-1),hand:hr,reset:Boolean(document.querySelector('#v120-reset-stats')),leftName:document.querySelector('#left-panel .player-name')?.textContent.trim(),rightName:document.querySelector('#right-panel .player-name')?.textContent.trim(),ready:document.documentElement.classList.contains('ddz-ready')};
             });
             if(data.count!==17) throw new Error('Expected 17 visible cards, got '+data.count);
             if(!data.reset) throw new Error('Stats reset button missing');
             if(data.first.left < data.hand.left-2 || data.last.right > data.hand.right+2) throw new Error('Hand cards overflow visible hand area');
+            if(data.leftName!=='左家'||data.rightName!=='右家') throw new Error('Player labels not simplified');
+            if(!data.ready) throw new Error('First-paint ready class missing');
             if(errors.length) throw new Error('pageerror: '+errors.join('\n'));
             await page.close();
           }
@@ -81,8 +90,11 @@ jobs:
           const cap=await browser.newPage({viewport:{width:1440,height:900}});
           await cap.goto(base+'/capabilities/',{waitUntil:'networkidle'});
           if(await cap.locator('#pure-ddz-digital-tool').count()!==1) throw new Error('Capability DDZ digital tool missing');
+          if(await cap.locator('#qilyPureDdzCapabilityVisualV2').count()!==1) throw new Error('Capability visual override not mounted');
           if(await cap.locator('.capability-ddz-joker').count()!==2) throw new Error('Joker showcase incomplete');
           if(await cap.locator('.capability-ddz-card').count()!==3) throw new Error('Representative card showcase incomplete');
+          const jokerFit=await cap.locator('.capability-ddz-joker.big img').evaluate(el=>getComputedStyle(el).objectFit);
+          if(jokerFit!=='contain') throw new Error('Big joker avatar is still cropped');
           await cap.close();
           await check({width:1440,height:900});
           await check({width:844,height:390});
