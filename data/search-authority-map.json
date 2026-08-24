@@ -1,0 +1,91 @@
+{
+  "version": "2026-08-24",
+  "site": "https://qilylean.com",
+  "strategy": {
+    "principle": "品牌词与自有项目词建立唯一官方入口；专业组合词建立主题集群；行业核心词通过专题总页、方法页、项目页和知识页持续积累主题权威。",
+    "content_contract": [
+      "visual_first",
+      "engineering_logic_first",
+      "first_hand_project_evidence",
+      "unique_canonical_url",
+      "clear_search_intent",
+      "internal_link_cluster",
+      "indexable_static_html"
+    ]
+  },
+  "targets": [
+    {
+      "keyword": "QilyLean",
+      "class": "brand_owned",
+      "url": "https://qilylean.com",
+      "priority": "S"
+    },
+    {
+      "keyword": "启力精益",
+      "class": "brand_owned",
+      "url": "https://qilylean.com",
+      "priority": "S"
+    },
+    {
+      "keyword": "Times26001",
+      "class": "product_owned",
+      "url": "https://qilylean.com/tools/times26001",
+      "priority": "S"
+    },
+    {
+      "keyword": "精益生产",
+      "class": "industry_core",
+      "url": "https://qilylean.com/lean-production",
+      "priority": "S",
+      "pillar": true
+    },
+    {
+      "keyword": "精益生产管理",
+      "class": "professional_cluster",
+      "url": "https://qilylean.com/lean-production",
+      "priority": "A"
+    },
+    {
+      "keyword": "汽车电子精益生产",
+      "class": "industry_vertical",
+      "url": "https://qilylean.com/projects/automotive-lean",
+      "priority": "A"
+    },
+    {
+      "keyword": "VSM价值流",
+      "class": "professional_cluster",
+      "url": "https://qilylean.com/improvements/vsm",
+      "priority": "A"
+    },
+    {
+      "keyword": "标准工时",
+      "class": "professional_cluster",
+      "url": "https://qilylean.com/improvements/standard-time",
+      "priority": "A"
+    },
+    {
+      "keyword": "SMED快速换模",
+      "class": "professional_cluster",
+      "url": "https://qilylean.com/improvements/smed",
+      "priority": "A"
+    },
+    {
+      "keyword": "IE工业工程",
+      "class": "professional_cluster",
+      "url": "https://qilylean.com/improvements/ie-data",
+      "priority": "A"
+    },
+    {
+      "keyword": "数字化工厂",
+      "class": "professional_cluster",
+      "url": "https://qilylean.com/projects/digital-factory",
+      "priority": "A"
+    },
+    {
+      "keyword": "目视化管理",
+      "class": "professional_cluster",
+      "url": "https://qilylean.com/projects/visual-management",
+      "priority": "A"
+    }
+  ]
+}
