@@ -1,0 +1,91 @@
+name: Verify Capability Public 20260824
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/verify-capability-public-20260824.yml'
+
+jobs:
+  public-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Wait for production runtime deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          nav='https://qilylean.com/site-navigation.js?v=20260822-sitewide-visual-axis-v36'
+          css='https://qilylean.com/pure-ddz-capability-visual-v2.css?v=20260824-readable-light-v5'
+          share='https://qilylean.com/app-download-share-v1.js?v=20260824-capability-home-actions-v2'
+          for i in $(seq 1 48); do
+            nav_body="$(curl -fsSL --retry 2 --connect-timeout 8 "$nav" || true)"
+            css_body="$(curl -fsSL --retry 2 --connect-timeout 8 "$css" || true)"
+            share_body="$(curl -fsSL --retry 2 --connect-timeout 8 "$share" || true)"
+            if printf '%s' "$nav_body" | grep -q 'capabilitySelfHeal: true' \
+              && printf '%s' "$nav_body" | grep -q '20260824-capability-self-heal-v38' \
+              && printf '%s' "$css_body" | grep -q '#dff3ed' \
+              && printf '%s' "$css_body" | grep -q '\-webkit-text-fill-color:#fff!important' \
+              && printf '%s' "$share_body" | grep -q "qilyHomeActions='20260824-v2'\|qilyHomeActions=\"20260824-v2\""; then
+              echo 'Production runtime assets are current.'
+              exit 0
+            fi
+            echo "Waiting for production deployment: attempt $i/48"
+            sleep 10
+          done
+          echo 'Production runtime assets did not become current in time.' >&2
+          exit 1
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev @playwright/test@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium
+      - name: Verify public desktop and mobile capability page
+        run: |
+          cat > verify-public.mjs <<'EOF'
+          import { chromium } from '@playwright/test';
+          const browser=await chromium.launch({headless:true});
+          const expected=['下载 Android APK','下载说明','扫码下载','分享下载页','隐私政策','用户协议','技术支持'];
+          for (const viewport of [{width:1440,height:900},{width:390,height:844}]) {
+            const page=await browser.newPage({viewport});
+            const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto('https://qilylean.com/capabilities/?verify=20260824-capability-public',{waitUntil:'networkidle',timeout:45000});
+            await page.waitForFunction(()=>document.querySelector('#qilylean-home .module-actions')?.dataset.qilyHomeActions==='20260824-v2',{timeout:10000});
+            const data=await page.evaluate(()=>{
+              const actions=[...document.querySelectorAll('#qilylean-home .module-actions > a')].map(el=>(el.textContent||'').trim());
+              const title=getComputedStyle(document.querySelector('.capability-ddz-title'));
+              const sub=getComputedStyle(document.querySelector('.capability-ddz-sub'));
+              const visual=getComputedStyle(document.querySelector('#pure-ddz-digital-tool .capability-ddz-visual'));
+              const board=getComputedStyle(document.querySelector('#pure-ddz-digital-tool .capability-ddz-board'));
+              const css=document.querySelector('link[href*="pure-ddz-capability-visual-v2.css"]')?.getAttribute('href')||'';
+              const shareScript=document.querySelector('script[src*="app-download-share-v1.js"]')?.getAttribute('src')||'';
+              return {actions,titleColor:title.color,titleFill:title.webkitTextFillColor,subColor:sub.color,subFill:sub.webkitTextFillColor,visualBg:visual.backgroundImage,boardBg:board.backgroundImage,css,shareScript};
+            });
+            if(JSON.stringify(data.actions)!==JSON.stringify(expected)) throw new Error('Public QHome actions wrong: '+JSON.stringify(data));
+            if(!data.css.includes('20260824-readable-light-v5')) throw new Error('Public DDZ CSS stale: '+data.css);
+            if(!data.shareScript.includes('20260824-capability-home-actions-v2')) throw new Error('Public QHome share runtime stale: '+data.shareScript);
+            if(data.titleColor!=='rgb(255, 255, 255)'||data.titleFill!=='rgb(255, 255, 255)') throw new Error('Public DDZ title not white: '+JSON.stringify(data));
+            if(data.subColor!=='rgb(255, 227, 155)'||data.subFill!=='rgb(255, 227, 155)') throw new Error('Public DDZ subtitle not gold: '+JSON.stringify(data));
+            if(!data.visualBg.includes('rgb(223, 243, 237)')||!data.boardBg.includes('rgb(19, 122, 113)')) throw new Error('Public DDZ palette not approved: '+JSON.stringify(data));
+            await page.locator('#qilylean-home [data-app-share-qr="qilyleanHome"]').click();
+            await page.waitForSelector('#qilyAppShareDialog[open]',{timeout:4000});
+            const qr=await page.locator('#qilyAppShareQr').getAttribute('src');
+            if(!qr?.includes('qr-qilylean-home-download.svg')) throw new Error('Public QHome QR wrong: '+qr);
+            await page.locator('.app-share-close').click();
+            const hrefs=await page.locator('#qilylean-home .module-actions > a').evaluateAll(els=>els.map(el=>el.getAttribute('href')));
+            if(!hrefs[0]?.includes('QilyLean_Home_v2.3.3_API36_INSTALL.apk')) throw new Error('APK link wrong: '+hrefs[0]);
+            if(hrefs[1]!=='/app-support/') throw new Error('Download help link wrong: '+hrefs[1]);
+            if(hrefs[4]!=='/legal/qilylean-home/privacy/') throw new Error('Privacy link wrong: '+hrefs[4]);
+            if(hrefs[5]!=='/legal/qilylean-home/terms/') throw new Error('Terms link wrong: '+hrefs[5]);
+            if(!hrefs[6]?.startsWith('mailto:admin@qilylean.com')) throw new Error('Support mail link wrong: '+hrefs[6]);
+            if(errors.length) throw new Error('Public pageerror: '+errors.join('\n'));
+            await page.close();
+          }
+          await browser.close();
+          console.log('QILYLEAN_CAPABILITY_PUBLIC_OK');
+          EOF
+          node verify-public.mjs
+          rm -f verify-public.mjs
