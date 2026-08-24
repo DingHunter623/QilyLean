@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, '..');
 const capabilitiesFile = path.join(root, 'capabilities', 'index.html');
 const timesAsset = path.join(root, 'assets', 'tools', 'times26001-overview.svg');
 
-const DDZ_STYLE_VERSION = '20260824-joker-order-v6';
+const DDZ_STYLE_VERSION = '20260824-heart-a-v7';
 const APP_SHARE_VERSION = '20260824-capability-home-actions-v2';
 const QHOME_ACTIONS = '<div class="module-actions" data-qily-home-actions="20260824-v2">'
   + '<a data-qilylean-home-direct-download="1" href="/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=20260824-qhome-v233" download>下载 Android APK</a>'
@@ -50,6 +50,13 @@ page = page.replace(
   '<p class="capability-ddz-sub" style="color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;text-shadow:0 2px 4px rgba(0,0,0,.34)!important">简单娱乐 · 益智生活 · 无广告</p>'
 );
 
+// Representative cards follow real playing-card visual grammar: rank + suit stay together.
+// User-defined showcase ace is specifically the red-heart Ace.
+page = page.replace(
+  /<article class="capability-ddz-card(?: red)?"><strong>A[♠♥♦♣]<\/strong>/g,
+  '<article class="capability-ddz-card red"><strong>A♥</strong>'
+);
+
 const homePattern = /(<article class="module-card capability-digital-tool" id="qilylean-home"[\s\S]*?)(?=\s*<article class="module-card capability-digital-tool" id="pure-ddz-digital-tool")/;
 const homeMatch = page.match(homePattern);
 if (!homeMatch) fail('QilyLean Home capability card not found');
@@ -70,6 +77,8 @@ if (!page.includes('/assets/tools/times26001-overview.svg?v=20260824-capability-
 if (!page.includes(`/pure-ddz-capability-visual-v2.css?v=${DDZ_STYLE_VERSION}`)) fail('DDZ fresh readability stylesheet version not materialized');
 if (!page.includes('capability-ddz-title" style="color:#fff!important;-webkit-text-fill-color:#fff!important')) fail('DDZ title white contrast safeguard missing');
 if (!page.includes('capability-ddz-sub" style="color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important')) fail('DDZ subtitle gold contrast safeguard missing');
+if (!page.includes('<article class="capability-ddz-card red"><strong>A♥</strong>')) fail('DDZ representative heart Ace missing');
+if (page.includes('<strong>A♠</strong>')) fail('Legacy spade Ace still present in DDZ capability showcase');
 if (!page.includes('data-qily-home-actions="20260824-v2"')) fail('QilyLean Home complete action set missing');
 for (const label of ['下载 Android APK','下载说明','扫码下载','分享下载页','隐私政策','用户协议','技术支持']) {
   if (!homeBlock.includes(label)) fail(`QilyLean Home action missing: ${label}`);
@@ -78,7 +87,7 @@ if (!page.includes(`/app-download-share-v1.js?v=${APP_SHARE_VERSION}`)) fail('AP
 
 if (page !== before) {
   fs.writeFileSync(capabilitiesFile, page.endsWith('\n') ? page : page + '\n');
-  console.log('Updated capabilities/index.html with complete QilyLean Home actions and DDZ readability fix');
+  console.log('Updated capabilities/index.html with complete QilyLean Home actions, heart Ace and DDZ readability fix');
 } else {
   console.log('Capability visual/action fixes already current.');
 }
