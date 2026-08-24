@@ -1,4 +1,4 @@
-/* QilyLean navigation runtime v39｜2026-08-24
+/* QilyLean navigation runtime v38｜2026-08-24
  * Hotfix closure:
  * 1) top-level /links/ navigation label is always “资源协同”;
  * 2) floating dock remains freely draggable while pressed and always returns to bottom-right after release/cancel/resize/pageshow;
@@ -10,8 +10,8 @@
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV39) return;
-  w.__qilyStaticFirstNavigationV39 = true;
+  if (w.__qilyStaticFirstNavigationV38) return;
+  w.__qilyStaticFirstNavigationV38 = true;
 
   var CORE_SRC = '/site-navigation-core.js?v=20260822-dock-back-label-v27';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23';
@@ -135,8 +135,8 @@
   }
 
   function bindPermanentClosure() {
-    if (w.__qilyResourceCollabDockHomeBoundV39) return;
-    w.__qilyResourceCollabDockHomeBoundV39 = true;
+    if (w.__qilyResourceCollabDockHomeBoundV33) return;
+    w.__qilyResourceCollabDockHomeBoundV33 = true;
 
     d.addEventListener('pointerup', function () { w.requestAnimationFrame(snapDockHome); }, false);
     d.addEventListener('pointercancel', function () { w.requestAnimationFrame(snapDockHome); }, false);
@@ -231,7 +231,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v39',
+  mode: 'atomic-first-paint-v38',
   staticHtmlAuthority: true,
   runtimeDependencyWaterfall: false,
   routeScopedLegacy: true,
@@ -259,5 +259,5 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   searchAuthorityRoute: '/lean-production/',
   searchAuthorityLabel: '精益生产',
   searchAuthoritySitewide: true,
-  version: '20260824-search-authority-v39'
+  version: '20260824-capability-self-heal-v38'
 });
