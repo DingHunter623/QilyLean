@@ -1,0 +1,3 @@
+QilyLean Global Language V2 deployment trigger
+Date: 2026-08-25
+Purpose: ensure the current worker-social.js /translate route is redeployed on main after the frontend translation runtime hotfix.
