@@ -1,6 +1,18 @@
 name: Materialize QilyLean NORTH
 
 on:
+  pull_request:
+    paths:
+      - 'scripts/materialize-qilylean-north-20260824.js'
+      - 'scripts/enforce-qilylean-north-funnel-v1.js'
+      - 'scripts/north-factory-diagnosis-v1.js'
+      - 'styles/qily-north-v1.css'
+      - 'styles/qily-north-diagnosis-v1.css'
+      - '.github/workflows/materialize-qilylean-north-20260824.yml'
+      - 'index.html'
+      - 'projects/lean-improvement-evidence/index.html'
+      - 'sitemap.xml'
+      - 'north/**'
   push:
     branches:
       - main
@@ -69,6 +81,7 @@ jobs:
           git diff --check
 
       - name: Commit materialized public files
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
           set -euo pipefail
