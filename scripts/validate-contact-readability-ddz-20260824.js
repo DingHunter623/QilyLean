@@ -4,7 +4,7 @@
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
-const NAV='/site-navigation.js?v=20260824-contact-readable-v40';
+const NAV='/site-navigation.js?v=20260824-contact-readable-v41';
 const GOV='/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7';
 const BUILD="BUILD='20260824-readable-floor-plus2-v4'";
 
@@ -32,6 +32,8 @@ const core=read('site-navigation-core.js');
   "label+'已复制，是否打开'",
   "label==='官网邮箱'?'打开邮件':'立即打开'"
 ].forEach(marker=>assert(core.includes(marker),'交流双列复制/打开契约缺失：'+marker));
+assert(core.includes("navigator.clipboard.writeText(text).catch(function () { return legacyCopyText(text); })"),'交流复制缺少剪贴板拒绝后的兼容回退');
+assert(core.includes("p.classList.remove('show');p.style.pointerEvents='none'"),'交流提示关闭后未解除点击拦截');
 
 const governance=read('site-visual-governance-v2.css');
 [

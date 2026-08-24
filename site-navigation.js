@@ -13,7 +13,7 @@
   if (w.__qilyStaticFirstNavigationV40) return;
   w.__qilyStaticFirstNavigationV40 = true;
 
-  var CORE_SRC = '/site-navigation-core.js?v=20260824-contact-channel-v29';
+  var CORE_SRC = '/site-navigation-core.js?v=20260824-contact-channel-v30';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23';
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13';
   var INTEGRITY_SRC = '/site-integrity-hotfix-v1.js?v=20260824-public-integrity-v1';
@@ -259,5 +259,5 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   searchAuthorityRoute: '/lean-production/',
   searchAuthorityLabel: '精益生产',
   searchAuthoritySitewide: true,
-  version: '20260824-contact-readable-v40'
+  version: '20260824-contact-readable-v41'
 });

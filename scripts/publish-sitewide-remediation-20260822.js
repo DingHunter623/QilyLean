@@ -8,7 +8,7 @@ const { execFileSync } = require('child_process');
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
 const versions = {
-  navigation: '/site-navigation.js?v=20260824-contact-readable-v40',
+  navigation: '/site-navigation.js?v=20260824-contact-readable-v41',
   governance: '/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7',
   firstPaintBuild: '20260824-readable-floor-plus2-v4',
   contentAxis: '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5',

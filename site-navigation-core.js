@@ -244,8 +244,7 @@
   window.QilyLeanNormalizePublicUrl = normalizePublicUrl;
   window.QilyLeanNormalizePublicUrlText = normalizePublicUrlText;
 
-  function copyText(text) {
-    text = normalizePublicUrlText(text);    if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+  function legacyCopyText(text) {
     var field = document.createElement('textarea');
     field.value = text;
     field.setAttribute('readonly', '');
@@ -253,9 +252,16 @@
     field.style.left = '-9999px';
     document.body.appendChild(field);
     field.select();
-    document.execCommand('copy');
+    try { document.execCommand('copy'); } catch (error) {}
     field.remove();
     return Promise.resolve();
+  }
+  function copyText(text) {
+    text = normalizePublicUrlText(text);
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(text).catch(function () { return legacyCopyText(text); });
+    }
+    return legacyCopyText(text);
   }
 
   function showToast(message) {
@@ -298,15 +304,16 @@
   function ensureContactLinkPrompt(){
     var p=document.getElementById('qilyContactLinkPrompt');if(p)return p;
     p=document.createElement('div');p.id='qilyContactLinkPrompt';p.className='qily-phone-copy-prompt';p.setAttribute('role','status');p.setAttribute('aria-live','polite');
+    p.style.pointerEvents='none';
     p.innerHTML='<span></span><button type="button" data-qily-contact-open>立即打开</button><button type="button" data-qily-contact-cancel>取消</button>';document.body.appendChild(p);
-    p.querySelector('[data-qily-contact-cancel]').addEventListener('click',function(){p.classList.remove('show');});
-    p.querySelector('[data-qily-contact-open]').addEventListener('click',function(){var href=p.getAttribute('data-qily-contact-href')||'';p.classList.remove('show');if(href)window.location.href=href;});
+    p.querySelector('[data-qily-contact-cancel]').addEventListener('click',function(){p.classList.remove('show');p.style.pointerEvents='none';});
+    p.querySelector('[data-qily-contact-open]').addEventListener('click',function(){var href=p.getAttribute('data-qily-contact-href')||'';p.classList.remove('show');p.style.pointerEvents='none';if(href)window.location.href=href;});
     return p;
   }
   function copyContactLinkAndPrompt(anchor){
     var value=anchor.getAttribute('data-qily-contact-copy')||'',href=anchor.getAttribute('data-qily-contact-href')||'',label=anchor.getAttribute('data-qily-contact-label')||'信息';
     if(!value||!href)return Promise.resolve();
-    return copyText(value).then(function(){var p=ensureContactLinkPrompt();p.setAttribute('data-qily-contact-href',href);p.querySelector('span').textContent=label+'已复制，是否打开'+(label==='官网邮箱'?'邮件应用':'官方网址')+'？';p.querySelector('[data-qily-contact-open]').textContent=label==='官网邮箱'?'打开邮件':'立即打开';positionWechatCopyPrompt(anchor,p);p.classList.add('show');clearTimeout(copyContactLinkAndPrompt.timer);copyContactLinkAndPrompt.timer=setTimeout(function(){p.classList.remove('show');},9000);});
+    return copyText(value).then(function(){var p=ensureContactLinkPrompt();p.setAttribute('data-qily-contact-href',href);p.querySelector('span').textContent=label+'已复制，是否打开'+(label==='官网邮箱'?'邮件应用':'官方网址')+'？';p.querySelector('[data-qily-contact-open]').textContent=label==='官网邮箱'?'打开邮件':'立即打开';positionWechatCopyPrompt(anchor,p);p.style.pointerEvents='auto';p.classList.add('show');clearTimeout(copyContactLinkAndPrompt.timer);copyContactLinkAndPrompt.timer=setTimeout(function(){p.classList.remove('show');p.style.pointerEvents='none';},9000);});
   }
   window.__qilyCopyContactLinkAndPrompt=copyContactLinkAndPrompt;
   document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-qily-contact-copy]');if(!x)return;e.preventDefault();e.stopPropagation();copyContactLinkAndPrompt(x);},true);
@@ -664,9 +671,12 @@
   'use strict';
   if(window.__qilyPhoneContactV124)return;
   window.__qilyPhoneContactV124=true;
+  function legacyCopyTextV124(text){
+    var f=document.createElement('textarea');f.value=text;f.setAttribute('readonly','');f.style.position='fixed';f.style.left='-9999px';document.body.appendChild(f);f.select();try{document.execCommand('copy');}catch(e){}f.remove();return Promise.resolve();
+  }
   function copyTextV124(text){
-    if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);
-    var f=document.createElement('textarea');f.value=text;f.setAttribute('readonly','');f.style.position='fixed';f.style.left='-9999px';document.body.appendChild(f);f.select();document.execCommand('copy');f.remove();return Promise.resolve();
+    if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text).catch(function(){return legacyCopyTextV124(text);});
+    return legacyCopyTextV124(text);
   }
   function promptBox(){
     var p=document.getElementById('qilyPhoneCallPrompt');if(p)return p;
