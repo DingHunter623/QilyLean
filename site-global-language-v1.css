@@ -1,0 +1,68 @@
+/* QilyLean Global Language v1｜2026-08-25 */
+.qily-language-switcher{
+  position:relative;
+  order:999;
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  flex:0 0 auto;
+  min-height:44px;
+  margin-left:8px;
+  padding:0 7px 0 9px;
+  border:1px solid rgba(255,227,155,.68);
+  border-radius:8px;
+  background:rgba(255,255,255,.08);
+  color:inherit;
+  white-space:nowrap;
+  direction:ltr;
+  transition:border-color .16s ease,background-color .16s ease,box-shadow .16s ease,transform .12s ease;
+}
+.qily-language-switcher:hover{border-color:#ffe39b;background:rgba(255,255,255,.14);box-shadow:0 5px 14px rgba(7,60,71,.13)}
+.qily-language-switcher:active{transform:translateY(1px)}
+.qily-language-switcher:focus-within{outline:3px solid rgba(255,227,155,.55);outline-offset:2px}
+.qily-language-switcher__globe{font-size:16px;line-height:1;filter:saturate(.9)}
+.qily-language-switcher__select{
+  width:112px;
+  min-width:0;
+  height:34px;
+  padding:0 25px 0 5px;
+  border:0;
+  outline:0;
+  color:inherit;
+  background:transparent;
+  font:inherit;
+  font-size:13.5px;
+  font-weight:800;
+  line-height:1.2;
+  cursor:pointer;
+  -webkit-text-fill-color:currentColor;
+}
+.qily-language-switcher__select option{color:#17322d;background:#fff;font-weight:600}
+.qily-language-switcher__select:disabled{cursor:progress;opacity:.72}
+.qily-language-switcher__status{
+  position:absolute;
+  top:calc(100% + 7px);
+  right:0;
+  z-index:10020;
+  display:none;
+  max-width:240px;
+  padding:7px 10px;
+  border:1px solid #d5e4e3;
+  border-radius:7px;
+  color:#264541;
+  background:#fff;
+  box-shadow:0 8px 24px rgba(7,60,71,.16);
+  font-size:12px;
+  font-weight:650;
+  line-height:1.35;
+  white-space:normal;
+}
+.qily-language-switcher[data-state="loading"] .qily-language-switcher__status,
+.qily-language-switcher[data-state="error"] .qily-language-switcher__status{display:block}
+.qily-language-switcher[data-state="loading"] .qily-language-switcher__globe{animation:qily-language-spin 1.1s linear infinite}
+.qily-language-switcher[data-state="error"]{border-color:#c76a51;background:rgba(199,106,81,.10)}
+@keyframes qily-language-spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.qily-language-switcher,.qily-language-switcher__globe{transition:none!important;animation:none!important}}
+@media (max-width:1280px){.qily-language-switcher{margin-left:4px;padding-left:7px;padding-right:5px}.qily-language-switcher__select{width:96px;font-size:13px}}
+@media (max-width:980px){.qily-language-switcher{min-height:42px}.qily-language-switcher__select{width:104px}.qily-language-switcher__status{right:auto;left:0}}
+@media (max-width:430px){.qily-language-switcher{min-height:40px;border-radius:7px}.qily-language-switcher__select{width:96px;font-size:12.5px}}
