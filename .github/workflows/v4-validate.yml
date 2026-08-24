@@ -28,11 +28,11 @@ concurrency:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 2
 
       - uses: actions/setup-node@v4
         with:
@@ -46,6 +46,7 @@ jobs:
           node --check scripts/site-system-v4-sitemap-lastmod.js
           node --check scripts/site-system-v4-build-meta.js
           node --check scripts/site-system-v4-public-verify.js
+          node --check scripts/qilylean-north-v4-sitemap-contract.js
 
       - name: G1 source and SSOT validation
         run: node scripts/site-system-v4-validate.js
@@ -56,30 +57,19 @@ jobs:
       - name: Existing R6 visual and interaction gate
         run: npm run test:visual
 
-      - name: Audit workflow migration surface
+      - name: Audit active workflow migration surface
         run: node scripts/site-system-v4-workflow-audit.js
 
-      - name: Audit sitemap lastmod drift
-        run: node scripts/site-system-v4-sitemap-lastmod.js
-
-      - name: Audit repository weight and historical blobs
-        run: node scripts/site-system-v4-repository-audit.js
-
-      - name: Validate generated reports
+      - name: Validate lightweight PR audit evidence
         run: |
           test -s maintenance/site-system-v4-workflow-audit.json
-          test -s maintenance/site-system-v4-sitemap-audit.json
-          test -s maintenance/site-system-v4-repository-audit.json
           git diff --check
 
-      - name: Upload V4 audit evidence
+      - name: Upload V4 PR audit evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: qily-v4-audit-evidence
-          path: |
-            maintenance/site-system-v4-workflow-audit.json
-            maintenance/site-system-v4-sitemap-audit.json
-            maintenance/site-system-v4-repository-audit.json
+          name: qily-v4-pr-audit-evidence
+          path: maintenance/site-system-v4-workflow-audit.json
           if-no-files-found: warn
           retention-days: 14
