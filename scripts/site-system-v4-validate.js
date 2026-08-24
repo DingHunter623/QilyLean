@@ -9,6 +9,7 @@ const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 const json = (file) => JSON.parse(read(file));
 const exists = (file) => fs.existsSync(path.join(root, file));
 const fail = (message) => { throw new Error(`[V4] ${message}`); };
+const warnings = [];
 
 const config = json('data/site-system-v4.json');
 const build = json('meta/build.json');
@@ -40,6 +41,12 @@ function expectedUrl(route) {
   return `${config.production.baseUrl}${route}`;
 }
 
+function sitemapContains(xml, url) {
+  if (xml.includes(`<loc>${url}</loc>`)) return { found: true, legacySlash: false };
+  if (url !== config.production.baseUrl && xml.includes(`<loc>${url}/</loc>`)) return { found: true, legacySlash: true };
+  return { found: false, legacySlash: false };
+}
+
 for (const entry of config.coreRoutes) {
   if (!exists(entry.file)) fail(`core route source missing: ${entry.route} -> ${entry.file}`);
   const html = read(entry.file);
@@ -53,8 +60,9 @@ for (const entry of config.coreRoutes) {
   if (canonical !== expected) fail(`canonical mismatch for ${entry.route}: ${canonical} != ${expected}`);
   if (entry.route !== '/' && /\/$/.test(canonical)) fail(`trailing-slash canonical is forbidden: ${canonical}`);
 
-  const sitemapUrl = `<loc>${expected}</loc>`;
-  if (!sitemap.includes(sitemapUrl)) fail(`core route missing from sitemap.xml: ${expected}`);
+  const sitemapMatch = sitemapContains(sitemap, expected);
+  if (!sitemapMatch.found) fail(`core route missing from sitemap.xml: ${expected}`);
+  if (sitemapMatch.legacySlash) warnings.push(`legacy trailing-slash sitemap URL retained during staged migration: ${expected}/`);
 }
 
 if (!robots.includes(`Sitemap: ${config.production.baseUrl}/sitemap.xml`)) fail('robots.txt does not advertise sitemap.xml');
@@ -63,7 +71,9 @@ if (!robots.includes(`Sitemap: ${config.production.baseUrl}/sitemap-core.xml`)) 
 if (coreSitemap) {
   for (const route of ['/', '/capabilities', '/projects', '/knowledge', '/trust', '/cooperation']) {
     const url = expectedUrl(route);
-    if (!coreSitemap.includes(`<loc>${url}</loc>`)) fail(`core sitemap missing protected route: ${url}`);
+    const match = sitemapContains(coreSitemap, url);
+    if (!match.found) fail(`core sitemap missing protected route: ${url}`);
+    if (match.legacySlash) warnings.push(`legacy trailing-slash core sitemap URL retained during staged migration: ${url}/`);
   }
 }
 
@@ -85,4 +95,5 @@ if (exists(navFile)) {
   if (!nav.includes(runtimeToken)) fail(`runtime baseline ${config.runtimeBaseline} is not present in ${navFile}`);
 }
 
-console.log(`[V4] G1 source validation PASS: ${config.coreRoutes.length} core routes; SSOT=${config.sourceOfTruth.siteData}; runtime=${config.runtimeBaseline}`);
+for (const warning of warnings) console.warn(`[V4][migration-warning] ${warning}`);
+console.log(`[V4] G1 source validation PASS: ${config.coreRoutes.length} core routes; SSOT=${config.sourceOfTruth.siteData}; runtime=${config.runtimeBaseline}; migrationWarnings=${warnings.length}`);
