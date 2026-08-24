@@ -11,6 +11,7 @@ const targets = [
   { url: '/', file: 'index.html', kind: '首页' },
   { url: '/cooperation/', file: 'cooperation/index.html', kind: '项目合作' },
   { url: '/improvements/', file: 'improvements/index.html', kind: '改善方法' },
+  { url: '/lean-production/', file: 'lean-production/index.html', kind: '精益生产专题' },
   { url: '/projects/', file: 'projects/index.html', kind: '代表项目' },
   { url: '/projects/automotive-lean/', file: 'projects/automotive-lean/index.html', kind: '代表项目' },
   { url: '/projects/smed-300t/', file: 'projects/smed-300t/index.html', kind: '代表项目' },
@@ -31,11 +32,6 @@ function parseJsonAsset(file, label) {
   try {
     return JSON.parse(raw);
   } catch (initialError) {
-    /*
-     * Historical automation once persisted transport/truncation warnings before the
-     * actual JSON payload. Recover only when a complete JSON object still exists;
-     * the subsequent write removes the contamination permanently.
-     */
     const firstBrace = raw.indexOf('{');
     const lastBrace = raw.lastIndexOf('}');
     if (firstBrace < 0 || lastBrace <= firstBrace) {
@@ -104,28 +100,14 @@ function pageEntries(target) {
     || capture(clean, /<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
   const description = capture(html, /<meta\b[^>]*name=["']description["'][^>]*content=["']([^"']*)["']/i);
   const headings = Array.from(clean.matchAll(/<h[123]\b[^>]*>([\s\S]*?)<\/h[123]>/gi), (match) => decodeHtml(match[1])).join(' ｜ ');
-  const entries = [makeEntry({
-    url: target.url,
-    title,
-    description,
-    headings,
-    text: clean,
-    kind: target.kind
-  })];
+  const entries = [makeEntry({ url: target.url, title, description, headings, text: clean, kind: target.kind })];
 
   Array.from(clean.matchAll(/<article\b[^>]*class=["'][^"']*(?:qily-ia-card|module-card)[^"']*["'][^>]*>([\s\S]*?)<\/article>/gi)).forEach((match) => {
     const card = match[1];
     const cardTitle = capture(card, /<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/i);
     if (!decodeHtml(cardTitle)) return;
     const paragraph = capture(card, /<p\b[^>]*>([\s\S]*?)<\/p>/i);
-    entries.push(makeEntry({
-      url: target.url,
-      title: cardTitle,
-      description: paragraph,
-      headings: title,
-      text: card,
-      kind: target.kind
-    }));
+    entries.push(makeEntry({ url: target.url, title: cardTitle, description: paragraph, headings: title, text: card, kind: target.kind }));
   });
   return entries;
 }
@@ -159,6 +141,7 @@ if (fs.existsSync(siteDataFile)) {
 
 const home = payload.entries.find((entry) => entry.url === '/');
 const cooperation = payload.entries.find((entry) => entry.url === '/cooperation/');
+const leanProduction = payload.entries.find((entry) => entry.url === '/lean-production/');
 const daily = payload.entries.find((entry) => entry.url === '/qilylean/daily-insights.html');
 const isV3Home = !!(home && home.text.includes('现场问题，可计算') && home.text.includes('改善成果，可固化') && home.text.includes('组织能力，可复用'));
 if (!home || !(isV3Home || home.text.includes('把复杂制造问题，转化为可验证的交付结果'))) {
@@ -172,6 +155,7 @@ if (home.text.includes('职能标签') || home.text.includes('超千万元累计
 }
 if (!cooperation || !cooperation.text.includes('分阶段付款') || !cooperation.text.includes('验收边界')) throw new Error('Cooperation search entry misses the static transaction summary');
 if (cooperation.text.includes('超千万元累计项目改善收益') || cooperation.text.includes('六大核心业务') || cooperation.text.includes('六类项目合作能力')) throw new Error('Legacy cooperation claim remains in search index');
+if (!leanProduction || !leanProduction.title.includes('精益生产') || !leanProduction.text.includes('六步闭环')) throw new Error('Lean production authority page is missing from the site search index');
 if (!daily || !daily.text.includes('不等同于网页首次公开发布日期')) throw new Error('Daily archive search entry misses the static disclosure');
 
 process.stdout.write(`Refreshed final static core search entries; index now contains ${payload.entries.length} entries.\n`);
