@@ -16,14 +16,25 @@ const canonicalUrls = [
   'https://qilylean.com/north/gansu',
   'https://qilylean.com/north/diagnosis'
 ];
+const protectedSet = new Set(canonicalUrls);
 
 let xml = fs.readFileSync(sitemapFile, 'utf8');
 const before = xml;
 
 for (const canonical of canonicalUrls) {
-  const slash = `${canonical}/`;
-  xml = xml.replaceAll(`<loc>${slash}</loc>`, `<loc>${canonical}</loc>`);
+  xml = xml.replaceAll(`<loc>${canonical}/</loc>`, `<loc>${canonical}</loc>`);
 }
+
+const seen = new Set();
+xml = xml.replace(/\s*<url>([\s\S]*?)<\/url>/g, (block, inner) => {
+  const match = inner.match(/<loc>([^<]+)<\/loc>/);
+  if (!match) return block;
+  const loc = match[1].trim();
+  if (!protectedSet.has(loc)) return block;
+  if (seen.has(loc)) return '';
+  seen.add(loc);
+  return block;
+});
 
 function count(haystack, needle) {
   return haystack.split(needle).length - 1;
@@ -52,8 +63,8 @@ if (check) {
 }
 
 if (xml !== before) {
-  fs.writeFileSync(sitemapFile, xml, 'utf8');
-  console.log('Normalized QilyLean NORTH sitemap URLs to no-trailing-slash canonical form.');
+  fs.writeFileSync(sitemapFile, xml.endsWith('\n') ? xml : `${xml}\n`, 'utf8');
+  console.log('Normalized and deduplicated QilyLean NORTH sitemap URLs to no-trailing-slash canonical form.');
 } else {
-  console.log('QilyLean NORTH sitemap URLs already canonical.');
+  console.log('QilyLean NORTH sitemap URLs already canonical and unique.');
 }
