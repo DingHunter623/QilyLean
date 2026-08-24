@@ -7,8 +7,9 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const capabilitiesFile = path.join(root, 'capabilities', 'index.html');
 const timesAsset = path.join(root, 'assets', 'tools', 'times26001-overview.svg');
+const ddzVisualCss = path.join(root, 'pure-ddz-capability-visual-v2.css');
 
-const DDZ_STYLE_VERSION = '20260824-card-rank-suit-v7';
+const DDZ_STYLE_VERSION = '20260824-red-heart-ace-v8';
 const APP_SHARE_VERSION = '20260824-capability-home-actions-v2';
 const QHOME_ACTIONS = '<div class="module-actions" data-qily-home-actions="20260824-v2">'
   + '<a data-qilylean-home-direct-download="1" href="/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=20260824-qhome-v233" download>下载 Android APK</a>'
@@ -27,6 +28,12 @@ function fail(message) {
 
 if (!fs.existsSync(capabilitiesFile)) fail('Missing capabilities/index.html');
 if (!fs.existsSync(timesAsset)) fail('Missing assets/tools/times26001-overview.svg');
+if (!fs.existsSync(ddzVisualCss)) fail('Missing pure-ddz-capability-visual-v2.css');
+
+const ddzCss = fs.readFileSync(ddzVisualCss, 'utf8');
+if (!ddzCss.includes('.capability-ddz-card.red strong{color:#d32f2f!important;-webkit-text-fill-color:#d32f2f!important}')) {
+  fail('Representative red-heart Ace computed-color safeguard missing from DDZ visual CSS');
+}
 
 let page = fs.readFileSync(capabilitiesFile, 'utf8');
 const before = page;
@@ -51,7 +58,7 @@ page = page.replace(
 );
 
 // Representative card follows the same poker convention as the game: rank + suit on one line; use red-heart Ace.
-page = page.replace(/<div class="capability-ddz-card(?: red)?"><strong>A[♠♥♣♦]<\/strong>/, '<div class="capability-ddz-card red"><strong>A♥</strong>');
+page = page.replace(/<div class="capability-ddz-card(?: red)?"><strong>A[♠♥♣♦]<\/strong>/, '<div class="capability-ddz-card red"><strong aria-label="红桃A">A♥</strong>');
 
 // Public copy must not expose internal release/validation process wording.
 page = page
@@ -80,7 +87,7 @@ if (!page.includes('/assets/tools/times26001-overview.svg?v=20260824-capability-
 if (!page.includes(`/pure-ddz-capability-visual-v2.css?v=${DDZ_STYLE_VERSION}`)) fail('DDZ fresh readability stylesheet version not materialized');
 if (!page.includes('capability-ddz-title" style="color:#fff!important;-webkit-text-fill-color:#fff!important')) fail('DDZ title white contrast safeguard missing');
 if (!page.includes('capability-ddz-sub" style="color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important')) fail('DDZ subtitle gold contrast safeguard missing');
-if (!page.includes('<div class="capability-ddz-card red"><strong>A♥</strong>')) fail('Representative card must use red-heart Ace with rank+suit on one line');
+if (!page.includes('<div class="capability-ddz-card red"><strong aria-label="红桃A">A♥</strong>')) fail('Representative card must use red-heart Ace with rank+suit on one line');
 for (const forbidden of ['Android安装包待网页版验证确认OK后再发布','Android 安装包待验证','Android安装包待验证','安装包待验证后发布']) {
   if (page.includes(forbidden)) fail(`Internal release wording still exposed: ${forbidden}`);
 }
