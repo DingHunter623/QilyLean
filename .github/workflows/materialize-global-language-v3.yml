@@ -20,7 +20,7 @@ concurrency:
 jobs:
   materialize:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
         with:
@@ -31,28 +31,45 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate Global Language V3 syntax
+      - name: Validate Global Language V3 sources
         run: |
           node --check site-global-language-v3.js
           node --check scripts/materialize-global-language-v3.js
 
-      - name: Materialize V3 into every tracked HTML page
-        run: node scripts/materialize-global-language-v3.js
-
-      - name: Validate materialized output
-        run: |
-          node scripts/materialize-global-language-v3.js --check
-          git diff --check
-
-      - name: Commit generated HTML updates when needed
+      - name: Materialize and publish V3 across every tracked HTML page
         shell: bash
         run: |
-          if git diff --quiet; then
-            echo 'Global Language V3 already materialized.'
-            exit 0
-          fi
+          set -euo pipefail
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
-          git add -- '*.html'
-          git commit -m 'build: materialize Global Language V3 across public HTML'
-          git push origin HEAD:main
+
+          for attempt in 1 2 3 4; do
+            echo "Materialization publish attempt ${attempt}/4"
+            git fetch origin main
+            git reset --hard origin/main
+
+            node --check site-global-language-v3.js
+            node --check scripts/materialize-global-language-v3.js
+            node scripts/materialize-global-language-v3.js
+            node scripts/materialize-global-language-v3.js --check
+            git diff --check
+
+            if git diff --quiet; then
+              echo 'Global Language V3 already materialized on latest main.'
+              exit 0
+            fi
+
+            git add -- '*.html'
+            git commit -m 'build: materialize Global Language V3 across public HTML'
+
+            if git push origin HEAD:main; then
+              echo 'Global Language V3 sitewide materialization published.'
+              exit 0
+            fi
+
+            echo 'main advanced during publish; retrying from newest main.'
+            sleep $((attempt * 3))
+          done
+
+          echo 'Unable to publish Global Language V3 after retries.'
+          exit 1
