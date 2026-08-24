@@ -3,6 +3,14 @@
   "site": "https://qilylean.com",
   "strategy": {
     "principle": "品牌词与自有项目词建立唯一官方入口；专业组合词建立主题集群；行业核心词通过专题总页、方法页、项目页和知识页持续积累主题权威。",
+    "ranking_objectives": {
+      "brand_owned": "TOP_1",
+      "product_owned": "TOP_1",
+      "project_owned": "TOP_1",
+      "professional_cluster": "TOP_3",
+      "industry_vertical": "TOP_3_TO_10",
+      "industry_core": "TOP_10_THEN_TOP_5"
+    },
     "content_contract": [
       "visual_first",
       "engineering_logic_first",
