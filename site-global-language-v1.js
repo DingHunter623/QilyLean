@@ -1,14 +1,19 @@
-/* QilyLean Global Language v1｜2026-08-25
- * Default Chinese source, one-click full-page AI translation, persisted across pages.
- * The Chinese static HTML remains the authoritative source; translation is runtime enhancement only.
+/* QilyLean Global Language v2｜2026-08-25
+ * Default Chinese source, progressive one-click full-page translation, persisted across pages.
+ * Chinese static HTML remains authoritative; translation is runtime enhancement only.
+ * v2 hotfix: progressive batch apply, local translation cache, /chat emergency fallback,
+ * per-batch retry and partial-failure tolerance so one failed batch cannot blank the feature.
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyGlobalLanguageV1) return;
+  if (w.__qilyGlobalLanguageV2) return;
+  w.__qilyGlobalLanguageV2 = true;
   w.__qilyGlobalLanguageV1 = true;
 
-  var API_URL = 'https://qilylean-ai.dinghunter623.workers.dev/translate';
+  var TRANSLATE_API = 'https://qilylean-ai.dinghunter623.workers.dev/translate';
+  var CHAT_API = 'https://qilylean-ai.dinghunter623.workers.dev/chat';
   var STORAGE_KEY = 'qily_global_language_v1';
+  var CACHE_PREFIX = 'qily_translation_cache_v2_';
   var SOURCE_LANGUAGE = 'zh-CN';
   var SWITCHER_ID = 'qilyGlobalLanguageV1';
   var STATUS_ID = 'qilyGlobalLanguageStatusV1';
@@ -46,9 +51,7 @@
     try {
       var value = w.localStorage.getItem(STORAGE_KEY) || SOURCE_LANGUAGE;
       return LANGUAGES.some(function (item) { return item[0] === value; }) ? value : SOURCE_LANGUAGE;
-    } catch (error) {
-      return SOURCE_LANGUAGE;
-    }
+    } catch (error) { return SOURCE_LANGUAGE; }
   }
 
   function storeLanguage(value) {
@@ -91,9 +94,7 @@
         select.appendChild(option);
       });
       select.value = activeLanguage;
-      select.addEventListener('change', function () {
-        setLanguage(select.value, true);
-      });
+      select.addEventListener('change', function () { setLanguage(select.value, true); });
 
       var status = d.createElement('span');
       status.id = STATUS_ID;
@@ -148,33 +149,20 @@
     var start = full.indexOf(source);
     var leading = start > 0 ? full.slice(0, start) : '';
     var trailing = start >= 0 ? full.slice(start + source.length) : '';
-    return {
-      source: source,
-      apply: function (translated) {
-        if (node.isConnected) node.nodeValue = leading + translated + trailing;
-      }
-    };
+    return { source: source, apply: function (translated) { if (node.isConnected) node.nodeValue = leading + translated + trailing; } };
   }
 
   function attributeRecord(element, attribute) {
     if (isExcluded(element) || !element.hasAttribute(attribute)) return null;
     var map = ATTR_ORIGINAL.get(element);
-    if (!map) {
-      map = new Map();
-      ATTR_ORIGINAL.set(element, map);
-    }
+    if (!map) { map = new Map(); ATTR_ORIGINAL.set(element, map); }
     if (!map.has(attribute)) {
       map.set(attribute, element.getAttribute(attribute) || '');
       TRACKED_ATTR.push([element, attribute]);
     }
     var source = map.get(attribute) || '';
     if (!shouldTranslate(source)) return null;
-    return {
-      source: source,
-      apply: function (translated) {
-        if (element.isConnected) element.setAttribute(attribute, translated);
-      }
-    };
+    return { source: source, apply: function (translated) { if (element.isConnected) element.setAttribute(attribute, translated); } };
   }
 
   function collectRecords(root) {
@@ -192,7 +180,6 @@
       var record = textRecord(node);
       if (record) records.push(record);
     }
-
     var elements = [];
     if (root.nodeType === 1) elements.push(root);
     if (root.querySelectorAll) elements = elements.concat(Array.prototype.slice.call(root.querySelectorAll('[title],[aria-label],[placeholder],[alt]')));
@@ -217,63 +204,149 @@
   function makeBatches(sources) {
     var batches = [], batch = [], chars = 0;
     sources.forEach(function (source) {
-      var next = source.length + 12;
-      if (batch.length && (batch.length >= 18 || chars + next > 2600)) {
-        batches.push(batch);
-        batch = [];
-        chars = 0;
+      var next = source.length + 8;
+      if (batch.length && (batch.length >= 16 || chars + next > 2100)) {
+        batches.push(batch); batch = []; chars = 0;
       }
-      batch.push(source);
-      chars += next;
+      batch.push(source); chars += next;
     });
     if (batch.length) batches.push(batch);
     return batches;
   }
 
-  async function requestBatch(targetLanguage, texts) {
-    var response = await fetch(API_URL, {
+  function cacheKey(code) { return CACHE_PREFIX + code; }
+
+  function readCache(code) {
+    try {
+      var parsed = JSON.parse(w.localStorage.getItem(cacheKey(code)) || '{}');
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (error) { return {}; }
+  }
+
+  function writeCache(code, cache) {
+    try {
+      var keys = Object.keys(cache);
+      if (keys.length > 900) {
+        var compact = {};
+        keys.slice(keys.length - 700).forEach(function (key) { compact[key] = cache[key]; });
+        cache = compact;
+      }
+      w.localStorage.setItem(cacheKey(code), JSON.stringify(cache));
+    } catch (error) {}
+  }
+
+  function fetchWithTimeout(url, options, timeoutMs) {
+    var controller = new AbortController();
+    var timer = w.setTimeout(function () { controller.abort(); }, timeoutMs || 22000);
+    options = options || {};
+    options.signal = controller.signal;
+    return fetch(url, options).finally(function () { w.clearTimeout(timer); });
+  }
+
+  function parseTranslationArray(raw, expectedLength) {
+    var text = String(raw || '').trim();
+    if (text.indexOf('```') === 0) text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '');
+    var parsed;
+    try { parsed = JSON.parse(text); }
+    catch (error) {
+      var start = text.indexOf('['), end = text.lastIndexOf(']');
+      if (start >= 0 && end > start) {
+        try { parsed = JSON.parse(text.slice(start, end + 1)); } catch (ignore) {}
+      }
+    }
+    if (!Array.isArray(parsed) || parsed.length !== expectedLength || parsed.some(function (item) { return typeof item !== 'string'; })) {
+      throw new Error('translation_format_invalid');
+    }
+    return parsed;
+  }
+
+  async function requestDedicatedBatch(targetLanguage, texts) {
+    var response = await fetchWithTimeout(TRANSLATE_API, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        source_language: SOURCE_LANGUAGE,
-        target_language: targetLanguage,
-        texts: texts,
-        page: w.location.pathname
-      }),
-      credentials: 'omit',
-      mode: 'cors'
-    });
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ source_language: SOURCE_LANGUAGE, target_language: targetLanguage, texts: texts, page: w.location.pathname }),
+      credentials: 'omit', mode: 'cors'
+    }, 24000);
     var data = await response.json().catch(function () { return {}; });
     if (!response.ok || !data.ok || !Array.isArray(data.translations) || data.translations.length !== texts.length) {
-      throw new Error(data.error || 'translation_failed');
+      throw new Error(data.error || ('translate_http_' + response.status));
     }
     return data.translations;
   }
 
-  async function translateRecords(records, targetLanguage, generation) {
+  async function requestChatFallback(targetLanguage, texts) {
+    var prompt = 'Translate this JSON array from Chinese to ' + targetLanguage + '. Return ONLY a JSON array with the same number/order of strings. Preserve QilyLean, 启力精益, Times26001, C919, IE, PE, ME, NPI, VSM, SMED, ECRS, OEE, UPPH, ERP, APS, MES, SOP, KPI, PQCD, IATF 16949, URLs, emails, phone numbers, units and numeric values exactly. Input: ' + JSON.stringify(texts);
+    var response = await fetchWithTimeout(CHAT_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ message: prompt }),
+      credentials: 'omit', mode: 'cors'
+    }, 48000);
+    var data = await response.json().catch(function () { return {}; });
+    if (!response.ok || !data.answer) throw new Error(data.error || ('chat_http_' + response.status));
+    return parseTranslationArray(data.answer, texts.length);
+  }
+
+  async function requestBatch(targetLanguage, texts) {
+    var lastError;
+    for (var attempt = 0; attempt < 2; attempt += 1) {
+      try { return await requestDedicatedBatch(targetLanguage, texts); }
+      catch (error) { lastError = error; if (attempt === 0) await new Promise(function (resolve) { w.setTimeout(resolve, 450); }); }
+    }
+    try { return await requestChatFallback(targetLanguage, texts); }
+    catch (fallbackError) { throw fallbackError || lastError || new Error('translation_failed'); }
+  }
+
+  function applyTranslation(grouped, source, value) {
+    (grouped.get(source) || []).forEach(function (record) { record.apply(value); });
+  }
+
+  async function translateRecords(records, targetLanguage, generation, statusPrefix) {
     var grouped = groupRecords(records);
     var sources = Array.from(grouped.keys());
-    if (!sources.length) return;
-    var batches = makeBatches(sources);
-    var translated = new Map();
-    for (var i = 0; i < batches.length; i += 2) {
-      var pair = batches.slice(i, i + 2);
-      var results = await Promise.all(pair.map(function (batch) { return requestBatch(targetLanguage, batch); }));
-      if (generation !== translationGeneration) return;
-      pair.forEach(function (batch, pairIndex) {
-        batch.forEach(function (source, index) { translated.set(source, results[pairIndex][index]); });
-      });
-    }
-    if (generation !== translationGeneration) return;
-    translated.forEach(function (value, source) {
-      (grouped.get(source) || []).forEach(function (record) { record.apply(value); });
+    if (!sources.length) return { total: 0, failed: 0 };
+
+    var cache = readCache(targetLanguage);
+    var pending = [];
+    var completed = 0;
+    sources.forEach(function (source) {
+      if (typeof cache[source] === 'string' && cache[source]) {
+        applyTranslation(grouped, source, cache[source]);
+        completed += 1;
+      } else pending.push(source);
     });
+
+    if (generation !== translationGeneration) return { total: sources.length, failed: 0 };
+    if (completed) setUiState('loading', (statusPrefix || '正在翻译') + ' ' + completed + '/' + sources.length);
+
+    var batches = makeBatches(pending);
+    var failed = 0;
+    for (var i = 0; i < batches.length; i += 2) {
+      if (generation !== translationGeneration) return { total: sources.length, failed: failed };
+      var pair = batches.slice(i, i + 2);
+      var settled = await Promise.all(pair.map(function (batch) {
+        return requestBatch(targetLanguage, batch).then(function (values) { return { ok: true, batch: batch, values: values }; })
+          .catch(function (error) { return { ok: false, batch: batch, error: error }; });
+      }));
+      if (generation !== translationGeneration) return { total: sources.length, failed: failed };
+
+      settled.forEach(function (result) {
+        if (!result.ok) { failed += result.batch.length; completed += result.batch.length; return; }
+        result.batch.forEach(function (source, index) {
+          var value = result.values[index];
+          cache[source] = value;
+          applyTranslation(grouped, source, value);
+        });
+        completed += result.batch.length;
+      });
+      writeCache(targetLanguage, cache);
+      setUiState('loading', (statusPrefix || '正在翻译') + ' ' + Math.min(completed, sources.length) + '/' + sources.length);
+    }
+    return { total: sources.length, failed: failed };
   }
 
   function restoreChinese() {
-    TRACKED_TEXT.forEach(function (node) {
-      if (node.isConnected && TEXT_ORIGINAL.has(node)) node.nodeValue = TEXT_ORIGINAL.get(node);
-    });
+    TRACKED_TEXT.forEach(function (node) { if (node.isConnected && TEXT_ORIGINAL.has(node)) node.nodeValue = TEXT_ORIGINAL.get(node); });
     TRACKED_ATTR.forEach(function (pair) {
       var element = pair[0], attribute = pair[1], map = ATTR_ORIGINAL.get(element);
       if (element.isConnected && map && map.has(attribute)) element.setAttribute(attribute, map.get(attribute));
@@ -293,24 +366,37 @@
     var generation = translationGeneration;
     activeLanguage = code;
     ensureSwitcher();
-    applyLanguageSemantics(code);
 
     if (code === SOURCE_LANGUAGE) {
       restoreChinese();
+      applyLanguageSemantics(code);
       if (persist) storeLanguage(code);
       setUiState('ready', '已显示中文');
       return;
     }
 
+    restoreChinese();
+    applyLanguageSemantics(code);
     setUiState('loading', '正在翻译为 ' + languageLabel(code) + '…');
+    var records = collectRecords(d.body);
     try {
-      var records = collectRecords(d.body);
-      await translateRecords(records, code, generation);
+      var result = await translateRecords(records, code, generation, '正在翻译');
       if (generation !== translationGeneration) return;
-      if (persist) storeLanguage(code);
       activeLanguage = code;
       applyLanguageSemantics(code);
-      setUiState('ready', '已切换为 ' + languageLabel(code));
+      if (persist) storeLanguage(code);
+      if (result.total && result.failed >= result.total) {
+        restoreChinese();
+        activeLanguage = SOURCE_LANGUAGE;
+        applyLanguageSemantics(SOURCE_LANGUAGE);
+        var failedSelect = d.querySelector('#' + SWITCHER_ID + ' select');
+        if (failedSelect) failedSelect.value = SOURCE_LANGUAGE;
+        setUiState('error', '翻译服务连接失败，已保留中文');
+      } else if (result.failed) {
+        setUiState('ready', '已切换为 ' + languageLabel(code) + '；少量内容保留中文');
+      } else {
+        setUiState('ready', '已切换为 ' + languageLabel(code));
+      }
     } catch (error) {
       if (generation !== translationGeneration) return;
       restoreChinese();
@@ -335,8 +421,8 @@
         records = records.concat(collectRecords(node));
       });
       if (!records.length) return;
-      translateRecords(records, activeLanguage, generation).catch(function () {});
-    }, 450);
+      translateRecords(records, activeLanguage, generation, '').catch(function () {});
+    }, 420);
   }
 
   function bindObserver() {
