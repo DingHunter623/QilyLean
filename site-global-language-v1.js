@@ -17,6 +17,7 @@
   var SOURCE_LANGUAGE = 'zh-CN';
   var SWITCHER_ID = 'qilyGlobalLanguageV1';
   var STATUS_ID = 'qilyGlobalLanguageStatusV1';
+  var RUNTIME_VERSION = 'v2';
   var TEXT_ORIGINAL = new WeakMap();
   var ATTR_ORIGINAL = new WeakMap();
   var TRACKED_TEXT = new Set();
@@ -71,11 +72,16 @@
     var nav = primaryNav();
     if (!nav) return false;
     var wrapper = d.getElementById(SWITCHER_ID);
+    if (wrapper && wrapper.getAttribute('data-qily-language-runtime') !== RUNTIME_VERSION) {
+      wrapper.remove();
+      wrapper = null;
+    }
     if (!wrapper) {
       wrapper = d.createElement('div');
       wrapper.id = SWITCHER_ID;
       wrapper.className = 'qily-language-switcher';
       wrapper.setAttribute('data-qily-no-translate', 'true');
+      wrapper.setAttribute('data-qily-language-runtime', RUNTIME_VERSION);
       wrapper.setAttribute('role', 'group');
       wrapper.setAttribute('aria-label', '网站语言');
 
