@@ -40,14 +40,17 @@ jobs:
       - name: 校验多素材、标准Office导出与最新简报
         run: npm run test:maintenance
 
-      - name: 校验 Worker 语法与咨询接口
+      - name: 校验 Worker 语法与咨询/翻译接口
         shell: bash
         run: |
           node --check cloudflare-worker/worker.js
+          node --check cloudflare-worker/worker-social.js
           grep -q "url.pathname === '/consultations'" cloudflare-worker/worker.js
           grep -q "url.pathname === '/admin/consultations'" cloudflare-worker/worker.js
-          grep -q "url.pathname === '/brief-feedback'" cloudflare-worker/worker.js
-          grep -q "url.pathname === '/admin/brief-feedback'" cloudflare-worker/worker.js
+          grep -q "url.pathname === '/brief-feedback'" cloudflare-worker/worker-social.js
+          grep -q "url.pathname === '/admin/brief-feedback'" cloudflare-worker/worker-social.js
+          grep -q "url.pathname === '/translate'" cloudflare-worker/worker-social.js
+          grep -q "TRANSLATION_SYSTEM_INSTRUCTIONS" cloudflare-worker/worker-social.js
           grep -q "admin@qilylean.com" cloudflare-worker/worker.js
 
       - name: 校验 Cloudflare 账户 ID
@@ -67,7 +70,7 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
 
-      - name: 验证 AI 健康状态与真实回答
+      - name: 验证 AI 健康状态、翻译与真实回答
         shell: bash
         run: |
           node <<'NODE'
@@ -106,6 +109,29 @@ jobs:
               throw new Error('unexpected build ' + healthData.build_version);
             }
           });
+          await withRetry(base + ' translation', async () => {
+            const translation = await fetch(base + '/translate', {
+              method: 'POST',
+              headers: {
+                ...androidHeaders,
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+              },
+              body: JSON.stringify({
+                source_language: 'zh-CN',
+                target_language: 'en',
+                texts: ['精益生产', 'QilyLean｜启力精益']
+              }),
+              signal: AbortSignal.timeout(60000)
+            });
+            const data = await translation.json();
+            if (!translation.ok || !data.ok || !Array.isArray(data.translations) || data.translations.length !== 2) {
+              throw new Error('status ' + translation.status);
+            }
+            if (data.translations[1] !== 'QilyLean｜启力精益') {
+              throw new Error('protected brand token changed');
+            }
+          }, 3, 3000);
           await withRetry(base + ' chat', async () => {
             const chat = await fetch(base + '/chat', {
               method: 'POST',
@@ -162,5 +188,5 @@ jobs:
               console.warn(customBase + ' is pending DNS/zone activation: ' + error.message);
             }
           }
-          console.log('QilyLean AI Android Worker, real answer and male voice checks passed.');
+          console.log('QilyLean AI Worker, translation, Android chain and male voice checks passed.');
           NODE
