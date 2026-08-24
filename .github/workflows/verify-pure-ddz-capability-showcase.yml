@@ -69,11 +69,13 @@ jobs:
           grep -q 'qily-rank-suit-line' tools/pure-ddz/game/js/card-theme.js
           grep -q 'ruleRankText(card))}${escapeHtml(card.suit)}' tools/pure-ddz/game/js/card-theme.js
           grep -q '滑动查看更多' tools/pure-ddz/game/js/card-theme.js
-          grep -q "const version='20260824-card-comfort-wechat-v121';" tools/pure-ddz/index.html
-          grep -q "loadStyle('css/card-comfort-v121.css')" tools/pure-ddz/index.html
+          grep -q "const version='20260824-mobile-landscape-card-comfort-v122';" tools/pure-ddz/index.html
+          grep -q "loadStyle('css/card-comfort-v122.css')" tools/pure-ddz/index.html
+          grep -q 'name="x5-orientation" content="landscape"' tools/pure-ddz/index.html
           grep -q 'MicroMessenger' tools/pure-ddz/index.html
           grep -q '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
           grep -q 'IS_WECHAT_WEBVIEW' tools/pure-ddz/game/js/visual-v120.js
+          grep -q "screen.orientation.lock('landscape')" tools/pure-ddz/game/js/visual-v120.js
           grep -q '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/game/js/card-theme.js
           grep -q '<span>官网邮箱</span>' tools/pure-ddz/index.html
           ! grep -q '<span>企业邮箱</span>' tools/pure-ddz/index.html

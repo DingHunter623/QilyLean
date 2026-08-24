@@ -68,24 +68,28 @@ assert(buildPages>=460,'首屏缓存覆盖页数量异常：'+buildPages);
 
 const ddz=read('tools/pure-ddz/index.html');
 [
-  "const version='20260824-card-comfort-wechat-v121'",
-  "loadStyle('css/card-comfort-v121.css')",
+  "const version='20260824-mobile-landscape-card-comfort-v122'",
+  "loadStyle('css/card-comfort-v122.css')",
+  'name="screen-orientation" content="landscape"',
+  'name="x5-orientation" content="landscape"',
   'MicroMessenger',
   '__PURE_DDZ_WECHAT_WEBVIEW__',
+  '__PURE_DDZ_MOBILE_DEVICE__',
   '__PURE_DDZ_MANAGED_LOADER__',
   'pure-ddz-classic-share-1200x630.png'
 ].forEach(marker=>assert(ddz.includes(marker),'斗地主微信/舒适牌面契约缺失：'+marker));
-assert(ddz.indexOf("loadStyle('css/visual-v120.css')")<ddz.indexOf("loadStyle('css/card-comfort-v121.css')"),'舒适牌面 CSS 必须在视觉基础层之后加载');
+assert(ddz.indexOf("loadStyle('css/visual-v120.css')")<ddz.indexOf("loadStyle('css/card-comfort-v122.css')"),'舒适牌面 CSS 必须在视觉基础层之后加载');
 
 const visual=read('tools/pure-ddz/game/js/visual-v120.js');
-['IS_WECHAT_WEBVIEW','wechatWebView:IS_WECHAT_WEBVIEW','if(IS_WECHAT_WEBVIEW||!isTouchMobile())return false','if(!IS_WECHAT_WEBVIEW){'].forEach(marker=>assert(visual.includes(marker),'斗地主微信运行契约缺失：'+marker));
+['IS_WECHAT_WEBVIEW','IS_MOBILE_DEVICE','wechatWebView:IS_WECHAT_WEBVIEW','mobileDevice:IS_MOBILE_DEVICE',"screen.orientation.lock('landscape')","['welcome-start','start','again']",'手机默认横屏牌桌'].forEach(marker=>assert(visual.includes(marker),'斗地主手机横屏运行契约缺失：'+marker));
+assert(!visual.includes('if(IS_WECHAT_WEBVIEW||!isTouchMobile())return false'),'斗地主不得再禁止微信内的横屏请求');
 const theme=read('tools/pure-ddz/game/js/card-theme.js');
 assert(theme.includes('if(window.__PURE_DDZ_MANAGED_LOADER__)return'),'斗地主重复加载保护缺失');
 const game=read('tools/pure-ddz/game/js/game.js');
 assert(!game.includes("serviceWorker?.register('./sw.js')"),'斗地主不得请求不存在的 Service Worker');
 
-const comfort=read('tools/pure-ddz/game/css/card-comfort-v121.css');
-['.qily-card-theme>strong{margin-top:6px;font-size:22px','.qily-joker-visual{top:47%;width:68%','@media(max-width:900px)','font-size:11.5px'].forEach(marker=>assert(comfort.includes(marker),'斗地主牌面舒适比例缺失：'+marker));
+const comfort=read('tools/pure-ddz/game/css/card-comfort-v122.css');
+['.qily-card-theme>strong{margin-top:6px;font-size:19px','.qily-joker-visual{top:47%;width:60%','@media(max-width:900px)','font-size:9.5px'].forEach(marker=>assert(comfort.includes(marker),'斗地主牌面舒适比例缺失：'+marker));
 assert(!comfort.includes('.qily-card-corner'),'牌面舒适层不得缩小点数/花色识别区');
 
 console.log(`CONTACT_READABILITY_DDZ_OK nav=${navPages} governance=${governancePages} firstPaint=${buildPages}`);

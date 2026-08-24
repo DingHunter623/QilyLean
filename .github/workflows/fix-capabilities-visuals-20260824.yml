@@ -14,7 +14,7 @@ on:
       - 'app-download-share-v1.js'
       - 'tools/pure-ddz/game/js/card-theme.js'
       - 'tools/pure-ddz/game/js/visual-v120.js'
-      - 'tools/pure-ddz/game/css/card-comfort-v121.css'
+      - 'tools/pure-ddz/game/css/card-comfort-v122.css'
       - 'tools/pure-ddz/index.html'
   workflow_dispatch:
 
@@ -53,7 +53,7 @@ jobs:
         shell: bash
         run: |
           test -f assets/tools/times26001-overview.svg
-          test -f tools/pure-ddz/game/css/card-comfort-v121.css
+          test -f tools/pure-ddz/game/css/card-comfort-v122.css
           grep -q '/assets/tools/times26001-overview.svg?v=20260824-capability-visual-fix-v1' capabilities/index.html
           grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-red-heart-ace-v8' capabilities/index.html
           grep -Fq '.capability-ddz-card.red strong{color:#d32f2f!important;-webkit-text-fill-color:#d32f2f!important}' pure-ddz-capability-visual-v2.css
@@ -64,11 +64,13 @@ jobs:
           grep -q 'data-app-share-qr="qilyleanHome"' capabilities/index.html
           grep -q 'data-app-share-link="qilyleanHome"' capabilities/index.html
           grep -q '/app-download-share-v1.js?v=20260824-capability-home-actions-v2' capabilities/index.html
-          grep -q "const version='20260824-card-comfort-wechat-v121';" tools/pure-ddz/index.html
-          grep -q "loadStyle('css/card-comfort-v121.css')" tools/pure-ddz/index.html
+          grep -q "const version='20260824-mobile-landscape-card-comfort-v122';" tools/pure-ddz/index.html
+          grep -q "loadStyle('css/card-comfort-v122.css')" tools/pure-ddz/index.html
+          grep -q 'name="screen-orientation" content="landscape"' tools/pure-ddz/index.html
           grep -q 'MicroMessenger' tools/pure-ddz/index.html
           grep -q '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
           grep -q 'IS_WECHAT_WEBVIEW' tools/pure-ddz/game/js/visual-v120.js
+          grep -q "screen.orientation.lock('landscape')" tools/pure-ddz/game/js/visual-v120.js
           grep -q '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/game/js/card-theme.js
           grep -q '<span>官网邮箱</span>' tools/pure-ddz/index.html
           ! grep -q '<span>企业邮箱</span>' tools/pure-ddz/index.html

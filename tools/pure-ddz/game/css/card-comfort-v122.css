@@ -1,0 +1,40 @@
+/* Pure DDZ v1.2.2｜横屏舒适牌面层
+ * 牌面点数、花色与触控面积保持不变；只继续缩小 QilyLean 职能图文、说明和大小王品牌图案。
+ */
+.qily-card-theme small{font-size:7.5px;letter-spacing:.03em}
+.qily-card-theme>strong{margin-top:6px;font-size:19px;line-height:1.04}
+.qily-card-theme>b{margin-top:6px;font-size:11.5px;line-height:1.1}
+.qily-card-theme>em{margin-top:6px;font-size:7.5px;line-height:1.16}
+.qily-joker-visual{top:47%;width:60%;height:47%}
+.small-joker .qily-joker-visual{width:68%}
+.qily-card-main strong{font-size:11px}.qily-card-main em{font-size:7px}
+.qily-mini-business b{font-size:13px}.qily-mini-business small{font-size:7px}
+.qily-mini-joker img{width:33px;height:27px}.qily-mini-joker b{font-size:8px}
+.bottom-cards .qily-mini-business b{font-size:13px}.bottom-cards .qily-mini-business small{font-size:7px}
+.bottom-cards .qily-mini-joker img{width:32px;height:27px}.bottom-cards .qily-mini-joker b{font-size:8px}
+.v120-play-card .qily-card-theme small{font-size:6.2px}
+.v120-play-card .qily-card-theme>strong{font-size:15px}
+.v120-play-card .qily-card-theme>b{font-size:8.2px}
+.v120-play-card .qily-card-theme>em{font-size:6.2px}
+.v120-play-card .qily-joker-visual{width:58%;height:44%}
+
+@media(max-width:1380px){
+  .qily-card-theme small{font-size:6.7px}.qily-card-theme>strong{font-size:16px}.qily-card-theme>b{font-size:9px}.qily-card-theme>em{font-size:6.2px}
+  .qily-joker-visual{width:58%;height:45%}.small-joker .qily-joker-visual{width:66%}
+}
+@media(max-width:1180px){
+  .qily-card-theme small{font-size:5.9px}.qily-card-theme>strong{font-size:13px}.qily-card-theme>b{font-size:7px}.qily-card-theme>em{font-size:5.6px}
+  .qily-joker-visual{width:56%;height:43%}.small-joker .qily-joker-visual{width:64%}
+}
+@media(max-width:900px){
+  .qily-card-theme{inset:27px 3px 15px}
+  .qily-card-theme small{font-size:5.2px}.qily-card-theme>strong{font-size:9.5px}.qily-card-theme>b{font-size:5.8px}.qily-card-theme>em{font-size:5.2px}
+  .qily-joker-visual{width:54%;height:40%}.small-joker .qily-joker-visual{width:61%}
+  .qily-card-main strong{font-size:8.5px}.qily-card-main em{font-size:5.2px}
+  .v120-play-card .qily-card-theme>strong{font-size:12px}.v120-play-card .qily-card-theme>b{font-size:6.8px}
+}
+@media(max-height:680px) and (orientation:landscape){
+  .qily-card-theme small{font-size:5px!important}.qily-card-theme>strong{font-size:8.5px}.qily-card-theme>b{font-size:5.3px}.qily-card-theme>em{display:none}
+  .qily-joker-visual{width:52%;height:38%}.small-joker .qily-joker-visual{width:59%}
+  .welcome-modal{padding:6px}.welcome-card{width:min(820px,98vw);max-height:calc(100dvh - 12px);padding:9px 18px 10px}.welcome-mark{font-size:32px}.welcome-card .eyebrow{margin-bottom:2px;font-size:11px}.welcome-card h1{font-size:24px!important}.welcome-copy{max-width:790px;margin:4px auto 6px;font-size:12px;line-height:1.45}.feature-list{grid-template-columns:repeat(4,1fr);gap:5px;margin:5px 0 7px}.feature-list li{padding:6px 8px;border-left-width:3px;text-align:center}.feature-list b{font-size:12px}.feature-list span{display:none}.welcome-card .hero-start{min-height:40px;padding-block:5px;font-size:17px}.welcome-card .text-btn{min-height:28px;margin-top:2px;padding-block:3px;font-size:12px}
+}

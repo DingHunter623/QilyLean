@@ -36,8 +36,10 @@ jobs:
           ! grep -q 'play.click()' tools/pure-ddz/game/js/visual-v120.js
           ! grep -q 'chooseAiBid(0)' tools/pure-ddz/game/js/visual-v120.js
           ! grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' tools/pure-ddz/index.html site-ui-consistency-v1.js
-          grep -q '安装包待验证后发布' tools/pure-ddz/index.html
-          grep -q "const roots=\['./game/'\];" tools/pure-ddz/index.html
+          grep -q 'Android版暂未开放' tools/pure-ddz/index.html
+          grep -q '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
+          grep -q '20260824-mobile-landscape-card-comfort-v122' tools/pure-ddz/index.html
+          grep -q "screen.orientation.lock('landscape')" tools/pure-ddz/game/js/visual-v120.js
           git diff --check
 
       - name: Verify deployed webfix from public Internet
@@ -45,10 +47,11 @@ jobs:
           set -euo pipefail
           ok=0
           for i in {1..60}; do
-            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260823-webfix2' -o /tmp/page.html \
+            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260824-mobile-landscape-v122' -o /tmp/page.html \
               && grep -q '启力精益斗地主' /tmp/page.html \
               && grep -q '>启力提示</button>' /tmp/page.html \
-              && grep -q '安装包待验证后发布' /tmp/page.html \
+              && grep -q 'Android版暂未开放' /tmp/page.html \
+              && grep -q '20260824-mobile-landscape-card-comfort-v122' /tmp/page.html \
               && ! grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' /tmp/page.html; then
               ok=1
               break
@@ -58,9 +61,9 @@ jobs:
           done
           test "$ok" = 1
 
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260823-webfix2' -o /tmp/card-theme.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260823-webfix2' -o /tmp/visual.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/visual-v120.css?verify=20260823-webfix2' -o /tmp/visual.css
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260824-v122' -o /tmp/card-theme.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260824-v122' -o /tmp/visual.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/visual-v120.css?verify=20260824-v122' -o /tmp/visual.css
 
           node --check /tmp/card-theme.js
           node --check /tmp/visual.js

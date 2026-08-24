@@ -3,6 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="screen-orientation" content="landscape">
+  <meta name="x5-orientation" content="landscape">
+  <meta name="full-screen" content="yes">
+  <meta name="x5-fullscreen" content="true">
+  <meta name="x5-page-mode" content="app">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#073c47">
   <meta name="format-detection" content="telephone=no,email=no">
   <meta name="applicable-device" content="pc,mobile">
@@ -40,11 +47,14 @@
   <script>
     (()=>{
       const root='./game/';
-      const version='20260824-card-comfort-wechat-v121';
+      const version='20260824-mobile-landscape-card-comfort-v122';
       const isWechat=/MicroMessenger/i.test(navigator.userAgent||'');
+      const isMobile=/Android|iPhone|iPad|iPod|HarmonyOS|Mobile/i.test(navigator.userAgent||'')||(navigator.maxTouchPoints||0)>0;
       window.__PURE_DDZ_WECHAT_WEBVIEW__=isWechat;
+      window.__PURE_DDZ_MOBILE_DEVICE__=isMobile;
       window.__PURE_DDZ_MANAGED_LOADER__=true;
       document.documentElement.classList.toggle('wechat-webview',isWechat);
+      document.documentElement.classList.toggle('ddz-mobile-device',isMobile);
       const loadStyle=(path)=>new Promise((resolve,reject)=>{
         const link=document.createElement('link');
         link.rel='stylesheet';
@@ -57,7 +67,7 @@
         loadStyle('css/style.css'),
         loadStyle('css/qilylean-theme.css'),
         loadStyle('css/visual-v120.css'),
-        loadStyle('css/card-comfort-v121.css')
+        loadStyle('css/card-comfort-v122.css')
       ]);
       window.__PURE_DDZ_ROOT__=root;
       window.__PURE_DDZ_CACHE_KEY__=version;
