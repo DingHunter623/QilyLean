@@ -22,14 +22,14 @@ function assert(condition, message) {
 
 let html = fs.readFileSync(target, 'utf8');
 assert(html.includes(originalTitle), '8月8日原简报标题不存在：停止发布');
-assert(html.includes('data-brief-date="2026-08-08"'), '8月8日原简报目录卡片不存在');
+assert(/data-(?:brief-)?date="2026-08-08"/.test(html), '8月8日原简报目录卡片不存在');
 
 // 同日按“后发布优先”展示：培训纪要为第2条，因此目录位置放在原《今日简报》之前。
 // 每次重建先移除旧培训纪要卡片，再按固定位置重新注入，防止自动构建回退。
 const trainingCard = /<article class="brief-index-card training-note-card"[^>]*data-brief-training-note="2026-08-08"[\s\S]*?<\/article>\s*/g;
 html = html.replace(trainingCard, '');
 
-const originalCard = /<article class="brief-index-card(?: latest)?"[^>]*data-brief-date="2026-08-08"[\s\S]*?<\/article>/;
+const originalCard = /<article class="brief-index-card(?: latest)?"[^>]*data-(?:brief-)?date="2026-08-08"[\s\S]*?<\/article>/;
 const match = html.match(originalCard);
 assert(match, '无法定位8月8日原简报卡片');
 assert(match[0].includes(originalTitle), '8月8日原简报卡片识别异常：停止注入');

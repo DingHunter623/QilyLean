@@ -64,6 +64,10 @@ function read(route) {
   return fs.readFileSync(file, 'utf8');
 }
 
+function publicUrl(route) {
+  return `${origin}${route === '/' ? '/' : route.replace(/\/$/, '')}`;
+}
+
 function ensureSitemapEntries() {
   const sitemapFile = path.join(root, 'sitemap.xml');
   let sitemap = fs.readFileSync(sitemapFile, 'utf8');
@@ -73,16 +77,19 @@ function ensureSitemapEntries() {
   ];
 
   entries.forEach(({ route }) => {
-    const escaped = `${origin}${route}`.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    sitemap = sitemap.replace(new RegExp(`\\n  <url><loc>${escaped}<\\/loc>[^\\n]*<\\/url>`, 'g'), '');
+    const candidates = new Set([publicUrl(route), `${origin}${route}`]);
+    candidates.forEach((candidate) => {
+      const escaped = candidate.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      sitemap = sitemap.replace(new RegExp(`\\n  <url><loc>${escaped}<\\/loc>[^\\n]*<\\/url>`, 'g'), '');
+    });
   });
 
   const block = entries.map(({ route, priority }) =>
-    `  <url><loc>${origin}${route}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>${priority}</priority></url>`
+    `  <url><loc>${publicUrl(route)}</loc><lastmod>${today}</lastmod><changefreq>monthly</changefreq><priority>${priority}</priority></url>`
   ).join('\n');
 
-  const projectIndex = /(  <url><loc>https:\/\/qilylean\.com\/projects\/<\/loc>[^\n]*<\/url>)/;
-  if (!projectIndex.test(sitemap)) throw new Error('Cannot locate /projects/ entry in sitemap.xml');
+  const projectIndex = /(  <url><loc>https:\/\/qilylean\.com\/projects\/?<\/loc>[^\n]*<\/url>)/;
+  if (!projectIndex.test(sitemap)) throw new Error('Cannot locate canonical /projects entry in sitemap.xml');
   sitemap = sitemap.replace(projectIndex, `$1\n${block}`);
   fs.writeFileSync(sitemapFile, sitemap);
 }
@@ -103,7 +110,7 @@ function validateMetadata(route, html) {
 function validateGbt2828() {
   const html = read('/qilylean/gbt2828.html');
   if (!html.includes('QilyLean | 启力精益')) throw new Error('GB/T 2828 brand is not unified');
-  const labels = ['首页', 'QilyLean AI', '能力画像', '履历主线', '改善经验', '知识分享', '行走印记', '项目合作'];
+  const labels = ['首页', '履历主线', '能力体系', '改善方法', '代表项目', '信任中心', '项目合作', '知识资产', '友情链接'];
   labels.forEach((label) => {
     if (!html.includes(`>${label}<`)) throw new Error(`GB/T 2828 navigation label missing: ${label}`);
   });
@@ -111,7 +118,11 @@ function validateGbt2828() {
 }
 
 function validateGlobalDock() {
-  const source = fs.readFileSync(path.join(root, 'site-navigation.js'), 'utf8');
+  const source = [
+    fs.readFileSync(path.join(root, 'site-navigation.js'), 'utf8'),
+    fs.readFileSync(path.join(root, 'site-navigation-core.js'), 'utf8'),
+    fs.readFileSync(path.join(root, 'site-dock-share-runtime-v1.js'), 'utf8')
+  ].join('\n');
   const actions = ['data-action="home"', 'data-action="search"', 'data-action="back"', 'data-action="current"', 'data-action="share"', 'data-action="contact"'];
   actions.forEach((action) => {
     if (!source.includes(action)) throw new Error(`Global dock action missing: ${action}`);
