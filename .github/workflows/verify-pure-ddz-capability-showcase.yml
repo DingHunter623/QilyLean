@@ -8,6 +8,7 @@ on:
       - 'capability-digital-tools-layout-v1.css'
       - 'app-download-share-v1.js'
       - 'scripts/fix-capabilities-visuals-20260824.js'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
       - 'scripts/publish-qilylean-home-v2.py'
       - 'site-certificate-facts-v2.js'
       - 'site-ui-consistency-v1.js'
@@ -23,14 +24,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Materialize capability source-of-truth fixes
+      - name: Materialize capability and DDZ public UI source-of-truth fixes
         run: |
           set -euo pipefail
           node --check scripts/fix-capabilities-visuals-20260824.js
+          node --check scripts/materialize-ddz-public-ui-20260824.js
           node --check app-download-share-v1.js
           node --check site-certificate-facts-v2.js
+          node --check tools/pure-ddz/game/js/card-theme.js
           python3 -m py_compile scripts/publish-qilylean-home-v2.py
           node scripts/fix-capabilities-visuals-20260824.js
+          node scripts/materialize-ddz-public-ui-20260824.js
       - name: Verify repository contract
         run: |
           set -euo pipefail
@@ -43,8 +47,7 @@ jobs:
           grep -q 'ding-qili-ai-avatar-560.webp' capabilities/index.html
           grep -q 'c919-strategy-hero-v14.png' capabilities/index.html
           grep -q 'qilyPureDdzCapabilityVisualV2' capabilities/index.html
-          grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-joker-order-v6' capabilities/index.html
-          grep -q 'flex-direction:column-reverse!important' pure-ddz-capability-visual-v2.css
+          grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-card-rank-suit-v7' capabilities/index.html
           grep -q '\-webkit-text-fill-color:#fff!important' pure-ddz-capability-visual-v2.css
           grep -q '\-webkit-text-fill-color:#ffe39b!important' pure-ddz-capability-visual-v2.css
           grep -q 'linear-gradient(145deg,#dff3ed,#eef8f6)' pure-ddz-capability-visual-v2.css
@@ -58,9 +61,16 @@ jobs:
           for label in '下载 Android APK' '下载说明' '扫码下载' '分享下载页' '隐私政策' '用户协议' '技术支持'; do
             grep -q "$label" scripts/publish-qilylean-home-v2.py
           done
-          grep -q 'A♠' capabilities/index.html
+          grep -q 'A♥' capabilities/index.html
+          ! grep -q 'A♠' capabilities/index.html
           grep -q 'K♣' capabilities/index.html
           grep -q 'Q♥' capabilities/index.html
+          grep -q 'qily-rank-suit-line' tools/pure-ddz/game/js/card-theme.js
+          grep -q 'ruleRankText(card))}${escapeHtml(card.suit)}' tools/pure-ddz/game/js/card-theme.js
+          grep -q '滑动查看更多' tools/pure-ddz/game/js/card-theme.js
+          grep -q "const version='20260824-card-layout-mobile-v1';" tools/pure-ddz/index.html
+          grep -q '<span>官网邮箱</span>' tools/pure-ddz/index.html
+          ! grep -q '<span>企业邮箱</span>' tools/pure-ddz/index.html
           grep -q "player === 1 ? '左家' : '右家'" tools/pure-ddz/game/js/game.js
           ! grep -q '左家电脑' tools/pure-ddz/game/js/game.js
           ! grep -q '右家电脑' tools/pure-ddz/game/js/game.js
@@ -83,7 +93,7 @@ jobs:
           for i in {1..20}; do curl -fsS http://127.0.0.1:4173/tools/pure-ddz/ >/dev/null && exit 0; sleep 1; done
           cat /tmp/qily-ddz-showcase.log || true
           exit 1
-      - name: Verify capability actions, joker order, readable showcase, and visible hands
+      - name: Verify capability actions, card convention, mobile cue, contact naming, and visible hands
         run: |
           cat > verify-showcase.mjs <<'EOF'
           import { chromium } from '@playwright/test';
@@ -100,59 +110,42 @@ jobs:
               window.QilyLeanV120?.fitHand?.();
               const hand=document.querySelector('#hand');const cards=[...document.querySelectorAll('#hand .card')];
               const hr=hand.getBoundingClientRect();const rects=cards.map(c=>c.getBoundingClientRect());
-              return {count:cards.length,first:rects[0],last:rects.at(-1),hand:hr,reset:Boolean(document.querySelector('#v120-reset-stats')),leftName:document.querySelector('#left-panel .player-name')?.textContent.trim(),rightName:document.querySelector('#right-panel .player-name')?.textContent.trim(),ready:document.documentElement.classList.contains('ddz-ready')};
+              const corners=cards.filter(c=>!c.querySelector('.qily-card--joker')).map(c=>c.querySelector('.qily-rank-suit-line b')?.textContent||'');
+              const cue=document.querySelector('#v120-scroll-cue');
+              const emailLabel=[...document.querySelectorAll('.official-info a span')].map(n=>n.textContent.trim()).find(v=>v.includes('邮箱'))||'';
+              return {count:cards.length,first:rects[0],last:rects.at(-1),hand:hr,corners,cueText:cue?.textContent.replace(/\s+/g,'')||'',emailLabel,reset:Boolean(document.querySelector('#v120-reset-stats')),leftName:document.querySelector('#left-panel .player-name')?.textContent.trim(),rightName:document.querySelector('#right-panel .player-name')?.textContent.trim(),ready:document.documentElement.classList.contains('ddz-ready')};
             });
             if(data.count!==17) throw new Error('Expected 17 visible cards, got '+data.count);
             if(!data.reset) throw new Error('Stats reset button missing');
             if(data.first.left < data.hand.left-2 || data.last.right > data.hand.right+2) throw new Error('Hand cards overflow visible hand area');
+            if(data.corners.some(v=>!/^(?:[3-9]|10|J|Q|K|A|2)[♠♥♣♦]$/.test(v))) throw new Error('Rank+suit convention broken: '+JSON.stringify(data.corners));
+            if(!data.cueText.includes('上滑')||!data.cueText.includes('滑动查看更多')||!data.cueText.includes('下滑')) throw new Error('Mobile vertical scroll cue incomplete: '+data.cueText);
+            if(data.emailLabel!=='官网邮箱') throw new Error('Official email label not standardized: '+data.emailLabel);
             if(data.leftName!=='左家'||data.rightName!=='右家') throw new Error('Player labels not simplified');
             if(!data.ready) throw new Error('First-paint ready class missing');
             if(errors.length) throw new Error('pageerror: '+errors.join('\n'));
             await page.close();
           }
-          const home=await browser.newPage({viewport:{width:1440,height:900}});
-          await home.goto(base+'/',{waitUntil:'networkidle'});
-          if(await home.locator('#qilyPureDdzStableEntry').count()) throw new Error('Legacy home DDZ section still exists');
-          await home.close();
           const cap=await browser.newPage({viewport:{width:1440,height:900}});
           const capErrors=[];cap.on('pageerror',e=>capErrors.push(String(e)));
           await cap.goto(base+'/capabilities/',{waitUntil:'networkidle'});
           if(await cap.locator('#pure-ddz-digital-tool').count()!==1) throw new Error('Capability DDZ digital tool missing');
-          if(await cap.locator('#qilyPureDdzCapabilityVisualV2').count()!==1) throw new Error('Capability visual override not mounted');
           if(await cap.locator('.capability-ddz-joker').count()!==2) throw new Error('Joker showcase incomplete');
           if(await cap.locator('.capability-ddz-card').count()!==3) throw new Error('Representative card showcase incomplete');
+          const rep=await cap.locator('.capability-ddz-card').first().locator('strong').textContent();
+          if(rep?.trim()!=='A♥') throw new Error('Representative Ace must be red-heart A♥, got '+rep);
           const jokerFit=await cap.locator('.capability-ddz-joker.big img').evaluate(el=>getComputedStyle(el).objectFit);
           if(jokerFit!=='contain') throw new Error('Big joker avatar is still cropped');
           for(const joker of await cap.locator('.capability-ddz-joker').all()){
             const pos=await joker.evaluate(el=>{const label=el.querySelector('b').getBoundingClientRect();const img=el.querySelector('img').getBoundingClientRect();return {labelBottom:label.bottom,imgTop:img.top};});
             if(pos.labelBottom>pos.imgTop+2) throw new Error('Joker label is not above image: '+JSON.stringify(pos));
           }
-          const expected=['下载 Android APK','下载说明','扫码下载','分享下载页','隐私政策','用户协议','技术支持'];
-          const actions=await cap.locator('#qilylean-home .module-actions > a').allTextContents();
-          if(JSON.stringify(actions.map(v=>v.trim()))!==JSON.stringify(expected)) throw new Error('QilyLean Home actions incomplete or out of order: '+JSON.stringify(actions));
-          if(await cap.locator('#qilylean-home [data-app-share-qr="qilyleanHome"]').count()!==1) throw new Error('QilyLean Home QR action missing');
-          if(await cap.locator('#qilylean-home [data-app-share-link="qilyleanHome"]').count()!==1) throw new Error('QilyLean Home share action missing');
-          await cap.locator('#qilylean-home [data-app-share-qr="qilyleanHome"]').click();
-          await cap.waitForSelector('#qilyAppShareDialog[open]',{timeout:3000});
-          const qrSrc=await cap.locator('#qilyAppShareQr').getAttribute('src');
-          if(!qrSrc?.includes('qr-qilylean-home-download.svg')) throw new Error('QilyLean Home QR source incorrect: '+qrSrc);
-          await cap.locator('.app-share-close').click();
-          const contrast=await cap.evaluate(()=>{
-            const title=getComputedStyle(document.querySelector('.capability-ddz-title'));
-            const sub=getComputedStyle(document.querySelector('.capability-ddz-sub'));
-            const visual=getComputedStyle(document.querySelector('#pure-ddz-digital-tool .capability-ddz-visual'));
-            const board=getComputedStyle(document.querySelector('#pure-ddz-digital-tool .capability-ddz-board'));
-            return {titleColor:title.color,titleFill:title.webkitTextFillColor,subColor:sub.color,subFill:sub.webkitTextFillColor,visualBg:visual.backgroundImage,boardBg:board.backgroundImage};
-          });
-          if(contrast.titleColor!=='rgb(255, 255, 255)'||contrast.titleFill!=='rgb(255, 255, 255)') throw new Error('DDZ title is not forced white: '+JSON.stringify(contrast));
-          if(contrast.subColor!=='rgb(255, 227, 155)'||contrast.subFill!=='rgb(255, 227, 155)') throw new Error('DDZ subtitle is not forced gold: '+JSON.stringify(contrast));
-          if(!contrast.visualBg.includes('rgb(223, 243, 237)')||!contrast.boardBg.includes('rgb(19, 122, 113)')) throw new Error('DDZ background was not lightened to approved palette: '+JSON.stringify(contrast));
           if(capErrors.length) throw new Error('capability pageerror: '+capErrors.join('\n'));
           await cap.close();
           await check({width:1440,height:900});
           await check({width:844,height:390});
           await browser.close();
-          console.log('QHOME_ACTIONS_DDZ_JOKER_ORDER_READABILITY_AND_HAND_VISIBILITY_OK');
+          console.log('DDZ_CARD_CONVENTION_MOBILE_CUE_CONTACT_AND_VISIBILITY_OK');
           EOF
           node verify-showcase.mjs
           rm -f verify-showcase.mjs

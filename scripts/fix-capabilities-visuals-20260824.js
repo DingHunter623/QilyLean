@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, '..');
 const capabilitiesFile = path.join(root, 'capabilities', 'index.html');
 const timesAsset = path.join(root, 'assets', 'tools', 'times26001-overview.svg');
 
-const DDZ_STYLE_VERSION = '20260824-joker-order-v6';
+const DDZ_STYLE_VERSION = '20260824-card-rank-suit-v7';
 const APP_SHARE_VERSION = '20260824-capability-home-actions-v2';
 const QHOME_ACTIONS = '<div class="module-actions" data-qily-home-actions="20260824-v2">'
   + '<a data-qilylean-home-direct-download="1" href="/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=20260824-qhome-v233" download>下载 Android APK</a>'
@@ -50,6 +50,9 @@ page = page.replace(
   '<p class="capability-ddz-sub" style="color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;text-shadow:0 2px 4px rgba(0,0,0,.34)!important">简单娱乐 · 益智生活 · 无广告</p>'
 );
 
+// Representative card follows the same poker convention as the game: rank + suit on one line; use red-heart Ace.
+page = page.replace(/<div class="capability-ddz-card(?: red)?"><strong>A[♠♥♣♦]<\/strong>/, '<div class="capability-ddz-card red"><strong>A♥</strong>');
+
 const homePattern = /(<article class="module-card capability-digital-tool" id="qilylean-home"[\s\S]*?)(?=\s*<article class="module-card capability-digital-tool" id="pure-ddz-digital-tool")/;
 const homeMatch = page.match(homePattern);
 if (!homeMatch) fail('QilyLean Home capability card not found');
@@ -70,6 +73,7 @@ if (!page.includes('/assets/tools/times26001-overview.svg?v=20260824-capability-
 if (!page.includes(`/pure-ddz-capability-visual-v2.css?v=${DDZ_STYLE_VERSION}`)) fail('DDZ fresh readability stylesheet version not materialized');
 if (!page.includes('capability-ddz-title" style="color:#fff!important;-webkit-text-fill-color:#fff!important')) fail('DDZ title white contrast safeguard missing');
 if (!page.includes('capability-ddz-sub" style="color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important')) fail('DDZ subtitle gold contrast safeguard missing');
+if (!page.includes('<div class="capability-ddz-card red"><strong>A♥</strong>')) fail('Representative card must use red-heart Ace with rank+suit on one line');
 if (!page.includes('data-qily-home-actions="20260824-v2"')) fail('QilyLean Home complete action set missing');
 for (const label of ['下载 Android APK','下载说明','扫码下载','分享下载页','隐私政策','用户协议','技术支持']) {
   if (!homeBlock.includes(label)) fail(`QilyLean Home action missing: ${label}`);
@@ -78,7 +82,7 @@ if (!page.includes(`/app-download-share-v1.js?v=${APP_SHARE_VERSION}`)) fail('AP
 
 if (page !== before) {
   fs.writeFileSync(capabilitiesFile, page.endsWith('\n') ? page : page + '\n');
-  console.log('Updated capabilities/index.html with complete QilyLean Home actions and DDZ readability fix');
+  console.log('Updated capabilities/index.html with QilyLean Home actions, DDZ readability and red-heart Ace convention');
 } else {
   console.log('Capability visual/action fixes already current.');
 }
