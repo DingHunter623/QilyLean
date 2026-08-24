@@ -38,8 +38,9 @@ nav=Path('site-navigation.js').read_text(encoding='utf-8')
 if 'qilyOfficialContactRuntime' in nav or 'qily-official-contact-runtime' in nav:
     errors.append('全站页脚存在重复官网/官网邮箱运行时行')
 
-# R5 contact naming gate: when a URL is presented as a public contact field, use “官方网址”; email stays “官网邮箱”.
-# “官网安装包 / 官网导航 / 官网主标题 / 官网回写”等表示网站或发布渠道的业务语义，不在此处做机械替换。
+# R5 contact naming gate:
+# - 对外“字段标签”固定使用“官方网址 / 官网邮箱”。
+# - “官网首页 / 进入官网 / 官网安装包 / 官网导航 / 官网发布页 / 官网建设 / 企业域名邮箱”等业务语义允许保留，禁止机械全局替换。
 contact_targets = [
     Path('app-support/index.html'),
     Path('legal/times26001/privacy/index.html'),
@@ -65,6 +66,11 @@ for p in contact_targets:
         ('>官网</', 'HTML联系字段仍存在单独“官网”标签'),
         ('官网：`https://qilylean.com', 'Markdown联系字段仍使用“官网”标签'),
         ('官网 `https://qilylean.com`', 'Markdown联系字段仍使用“官网”标签'),
+        ('<strong>联系邮箱：</strong>', '正式联系字段“联系邮箱”应统一为“官网邮箱”'),
+        ('企业邮箱：admin@qilylean.com', '正式联系字段“企业邮箱”应统一为“官网邮箱”'),
+        ('企业邮箱：<', 'HTML正式联系字段“企业邮箱”应统一为“官网邮箱”'),
+        ('官方邮箱：admin@qilylean.com', '正式联系字段“官方邮箱”应统一为“官网邮箱”'),
+        ('官方邮箱：<', 'HTML正式联系字段“官方邮箱”应统一为“官网邮箱”'),
     ]
     for needle, message in checks:
         if needle in s:
@@ -72,11 +78,21 @@ for p in contact_targets:
     if re.search(r'统一开发者支持[^\n<]{0,40}官网\s*<a[^>]+href="https://qilylean\.com', s):
         errors.append(f'{p}: “统一开发者支持”网址字段必须命名为“官方网址”')
 
+privacy=Path('legal/times26001/privacy/index.html')
+if privacy.exists():
+    s=privacy.read_text(encoding='utf-8')
+    if '<strong>官网邮箱：</strong><a href="mailto:admin@qilylean.com">' not in s:
+        errors.append('Times26001隐私政策顶部正式邮箱字段未统一为“官网邮箱”')
+    if '<h2>五、官方网址、官网邮箱与外部链接</h2>' not in s:
+        errors.append('Times26001隐私政策联系章节标题未统一“官方网址、官网邮箱”')
+
 # Patch/generator source may legitimately contain an old token as the match-side of a migration.
 # Verify the generated/runtime target instead of flagging the migration pattern itself.
 patch=Path('scripts/sitewide_contact_core_patch_20260807.py').read_text(encoding='utf-8')
 if '<div>官方网址</div>' not in patch or '官方网址：https://qilylean.com' not in patch:
     errors.append('联系核心补丁未固化“官方网址”输出')
+if '<strong>官网邮箱：</strong>' not in patch:
+    errors.append('联系核心补丁未固化Times26001隐私政策“官网邮箱”字段')
 
 term=Path('knowledge/terminology.html').read_text(encoding='utf-8')
 sponsor=Path('knowledge/terminology-sponsor-v1.js').read_text(encoding='utf-8')
