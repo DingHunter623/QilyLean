@@ -36,6 +36,9 @@ jobs:
       - name: Validate source before materialization
         run: node scripts/site-system-v4-validate.js
 
+      - name: Normalize regional sitemap URL contract
+        run: node scripts/qilylean-north-v4-sitemap-contract.js
+
       - name: Materialize deterministic sitemap lastmod
         run: node scripts/site-system-v4-sitemap-lastmod.js --write
 
@@ -47,6 +50,7 @@ jobs:
 
       - name: Revalidate generated source
         run: |
+          node scripts/qilylean-north-v4-sitemap-contract.js --check
           node scripts/site-system-v4-validate.js
           npm run test:seo
           git diff --check
