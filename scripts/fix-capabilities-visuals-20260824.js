@@ -11,6 +11,7 @@ const ddzVisualCss = path.join(root, 'pure-ddz-capability-visual-v2.css');
 
 const DDZ_STYLE_VERSION = '20260824-red-heart-ace-v8';
 const APP_SHARE_VERSION = '20260824-capability-home-actions-v2';
+// Public materialization retrigger: ensure the static capability page consumes the red-heart Ace v8 cache key.
 const QHOME_ACTIONS = '<div class="module-actions" data-qily-home-actions="20260824-v2">'
   + '<a data-qilylean-home-direct-download="1" href="/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=20260824-qhome-v233" download>下载 Android APK</a>'
   + '<a href="/app-support/">下载说明</a>'
