@@ -8,7 +8,7 @@ const root = path.resolve(__dirname, '..');
 const capabilitiesFile = path.join(root, 'capabilities', 'index.html');
 const timesAsset = path.join(root, 'assets', 'tools', 'times26001-overview.svg');
 
-const DDZ_STYLE_VERSION = '20260824-readable-light-v5';
+const DDZ_STYLE_VERSION = '20260824-joker-order-v6';
 const APP_SHARE_VERSION = '20260824-capability-home-actions-v2';
 const QHOME_ACTIONS = '<div class="module-actions" data-qily-home-actions="20260824-v2">'
   + '<a data-qilylean-home-direct-download="1" href="/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=20260824-qhome-v233" download>下载 Android APK</a>'
@@ -31,19 +31,16 @@ if (!fs.existsSync(timesAsset)) fail('Missing assets/tools/times26001-overview.s
 let page = fs.readFileSync(capabilitiesFile, 'utf8');
 const before = page;
 
-// 1) Repair the Times26001 showcase path with an asset that actually exists.
 page = page.replace(
   /src="\/times26001\/times26001-showcase\.svg(?:\?[^\"]*)?"/g,
   'src="/assets/tools/times26001-overview.svg?v=20260824-capability-visual-fix-v1"'
 );
 
-// 2) Force a fresh DDZ capability stylesheet so the visual-first readability fix cannot be hidden by cache.
 page = page.replace(
   /href="\/pure-ddz-capability-visual-v2\.css\?v=[^"]+"/g,
   `href="/pure-ddz-capability-visual-v2.css?v=${DDZ_STYLE_VERSION}"`
 );
 
-// 3) Make the DDZ title contrast unambiguous, including browsers affected by text-fill rules.
 page = page.replace(
   /<h3 class="capability-ddz-title"(?: style="[^"]*")?>启力精益斗地主<\/h3>/g,
   '<h3 class="capability-ddz-title" style="color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;text-shadow:0 2px 6px rgba(0,0,0,.38)!important">启力精益斗地主</h3>'
@@ -53,7 +50,6 @@ page = page.replace(
   '<p class="capability-ddz-sub" style="color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;text-shadow:0 2px 4px rgba(0,0,0,.34)!important">简单娱乐 · 益智生活 · 无广告</p>'
 );
 
-// 4) Give QilyLean Home the same complete action set as Times26001, with real QR/share/support behavior.
 const homePattern = /(<article class="module-card capability-digital-tool" id="qilylean-home"[\s\S]*?)(?=\s*<article class="module-card capability-digital-tool" id="pure-ddz-digital-tool")/;
 const homeMatch = page.match(homePattern);
 if (!homeMatch) fail('QilyLean Home capability card not found');
@@ -62,7 +58,6 @@ if (!/<div class="module-actions"[^>]*>[\s\S]*?<\/div>/.test(homeBlock)) fail('Q
 homeBlock = homeBlock.replace(/<div class="module-actions"[^>]*>[\s\S]*?<\/div>/, QHOME_ACTIONS);
 page = page.replace(homePattern, homeBlock);
 
-// 5) Mount the shared APP download/share runtime on the capability page.
 const shareScript = `<script defer id="qilyAppDownloadShareRuntime" src="/app-download-share-v1.js?v=${APP_SHARE_VERSION}"></script>`;
 if (/src="\/app-download-share-v1\.js\?v=[^"]+"/.test(page)) {
   page = page.replace(/<script[^>]*src="\/app-download-share-v1\.js\?v=[^"]+"[^>]*><\/script>/, shareScript);
