@@ -23,7 +23,7 @@ home_block = '''      <article class="module-card capability-digital-tool" id="q
           <p><strong>桌面与系统能力：</strong>实时显示 HH:mm:ss、公历日期、星期、年度周次与中国农历；提供网络、电池、显示、声音、壁纸、应用、安全、语言与输入、默认桌面等系统入口，以及本机全部应用抽屉。Times26001 已安装时可直接启动，未安装时进入官方说明页。</p>
           <p><strong>安全边界：</strong>免 Root；不读取、不展示手机品牌、型号或设备名称；不解锁 Bootloader、不刷 Recovery，不修改系统分区、基带、IMEI、EFS 或通信底层；用户可随时切回原系统桌面。</p>
           <p class="module-result">当前版本：v2.3.3 | versionCode 11 | Android 16 / API 36 | R5官网最新导航 | 实时时钟 + 农历 | Times26001直达 | 通用设置 + 全部应用抽屉</p>
-          <div class="module-actions"><a href="/QilyLean_Home_v2.3.3_API36_INSTALL.apk" download>下载 Android APK</a><a href="/app-support/">安装与技术支持</a><a href="/legal/qilylean-home/privacy/">隐私政策</a><a href="/legal/qilylean-home/terms/">用户协议</a></div>
+          <div class="module-actions" data-qily-home-actions="20260824-v2"><a data-qilylean-home-direct-download="1" href="/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=20260824-qhome-v233" download>下载 Android APK</a><a href="/app-support/">下载说明</a><a href="#qilylean-home-qr" data-app-share-qr="qilyleanHome" aria-label="扫码下载 QilyLean Home">扫码下载</a><a href="https://qilylean.com/capabilities/#qilylean-home" data-app-share-link="qilyleanHome" aria-label="分享 QilyLean Home 下载页">分享下载页</a><a href="/legal/qilylean-home/privacy/">隐私政策</a><a href="/legal/qilylean-home/terms/">用户协议</a><a href="mailto:admin@qilylean.com?subject=QilyLean%20Home%20%E6%8A%80%E6%9C%AF%E6%94%AF%E6%8C%81">技术支持</a></div>
         </div>
       </article>
 '''
@@ -38,4 +38,4 @@ if len(matches) != 1:
 
 text = pattern.sub("\n" + home_block, text, count=1)
 page.write_text(text, encoding="utf-8")
-print("QilyLean Home capability card synchronized to v2.3.3 full presentation")
+print("QilyLean Home capability card synchronized to v2.3.3 full presentation and complete action set")
