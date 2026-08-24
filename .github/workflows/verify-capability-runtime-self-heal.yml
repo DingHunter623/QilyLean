@@ -1,0 +1,80 @@
+name: Verify Capability Runtime Self Heal
+
+on:
+  pull_request:
+    paths:
+      - 'site-navigation.js'
+      - 'app-download-share-v1.js'
+      - 'pure-ddz-capability-visual-v2.css'
+      - 'capabilities/index.html'
+      - '.github/workflows/verify-capability-runtime-self-heal.yml'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Verify runtime contract
+        run: |
+          set -euo pipefail
+          node --check site-navigation.js
+          node --check app-download-share-v1.js
+          grep -q "capabilitySelfHeal: true" site-navigation.js
+          grep -q "20260824-readable-light-v5" site-navigation.js
+          grep -q "20260824-capability-home-actions-v2" site-navigation.js
+          grep -q "data-qily-home-actions='20260824-v2'\|data-qily-home-actions=\"20260824-v2\"\|qilyHomeActions='20260824-v2'\|qilyHomeActions=\"20260824-v2\"" app-download-share-v1.js || grep -q "qilyHomeActions.*20260824-v2" app-download-share-v1.js
+      - name: Install Playwright
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --save-dev @playwright/test@1.55.0 >/dev/null
+          npx playwright install --with-deps chromium
+      - name: Start local site
+        run: |
+          nohup python3 -m http.server 4173 >/tmp/qily-cap-self-heal.log 2>&1 &
+          for i in {1..20}; do curl -fsS http://127.0.0.1:4173/capabilities/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/qily-cap-self-heal.log || true
+          exit 1
+      - name: Verify stale HTML self heals on desktop and mobile
+        run: |
+          cat > verify-cap-self-heal.mjs <<'EOF'
+          import { chromium } from '@playwright/test';
+          const browser=await chromium.launch({headless:true});
+          const base='http://127.0.0.1:4173';
+          const expected=['下载 Android APK','下载说明','扫码下载','分享下载页','隐私政策','用户协议','技术支持'];
+          for (const viewport of [{width:1440,height:900},{width:390,height:844}]) {
+            const page=await browser.newPage({viewport});
+            const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
+            await page.goto(base+'/capabilities/?verify=runtime-self-heal',{waitUntil:'networkidle'});
+            await page.waitForFunction(()=>document.querySelector('#qilylean-home .module-actions')?.dataset.qilyHomeActions==='20260824-v2',{timeout:6000});
+            const data=await page.evaluate(()=>{
+              const actions=[...document.querySelectorAll('#qilylean-home .module-actions > a')].map(el=>(el.textContent||'').trim());
+              const title=getComputedStyle(document.querySelector('.capability-ddz-title'));
+              const sub=getComputedStyle(document.querySelector('.capability-ddz-sub'));
+              const visual=getComputedStyle(document.querySelector('#pure-ddz-digital-tool .capability-ddz-visual'));
+              const board=getComputedStyle(document.querySelector('#pure-ddz-digital-tool .capability-ddz-board'));
+              const css=document.querySelector('link[href*="pure-ddz-capability-visual-v2.css"]')?.getAttribute('href')||'';
+              const shareScript=document.querySelector('script[src*="app-download-share-v1.js"]')?.getAttribute('src')||'';
+              return {actions,titleColor:title.color,titleFill:title.webkitTextFillColor,subColor:sub.color,subFill:sub.webkitTextFillColor,visualBg:visual.backgroundImage,boardBg:board.backgroundImage,css,shareScript};
+            });
+            if(JSON.stringify(data.actions)!==JSON.stringify(expected)) throw new Error('QHome actions wrong: '+JSON.stringify(data));
+            if(!data.css.includes('20260824-readable-light-v5')) throw new Error('DDZ CSS not self-healed: '+data.css);
+            if(!data.shareScript.includes('20260824-capability-home-actions-v2')) throw new Error('APP share runtime not self-healed: '+data.shareScript);
+            if(data.titleColor!=='rgb(255, 255, 255)'||data.titleFill!=='rgb(255, 255, 255)') throw new Error('DDZ title not white: '+JSON.stringify(data));
+            if(data.subColor!=='rgb(255, 227, 155)'||data.subFill!=='rgb(255, 227, 155)') throw new Error('DDZ subtitle not gold: '+JSON.stringify(data));
+            if(!data.visualBg.includes('rgb(223, 243, 237)')||!data.boardBg.includes('rgb(19, 122, 113)')) throw new Error('DDZ palette not lightened: '+JSON.stringify(data));
+            await page.locator('#qilylean-home [data-app-share-qr="qilyleanHome"]').click();
+            await page.waitForSelector('#qilyAppShareDialog[open]',{timeout:3000});
+            const qr=await page.locator('#qilyAppShareQr').getAttribute('src');
+            if(!qr?.includes('qr-qilylean-home-download.svg')) throw new Error('QHome QR wrong: '+qr);
+            if(errors.length) throw new Error('pageerror: '+errors.join('\n'));
+            await page.close();
+          }
+          await browser.close();
+          console.log('CAPABILITY_RUNTIME_SELF_HEAL_OK');
+          EOF
+          node verify-cap-self-heal.mjs
+          rm -f verify-cap-self-heal.mjs
