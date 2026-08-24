@@ -18,7 +18,6 @@ on:
   push:
     branches:
       - main
-      - feat/qilylean-north-diagnosis-20260824
     paths:
       - 'scripts/materialize-qilylean-north-20260824.js'
       - 'scripts/enforce-qilylean-north-funnel-v1.js'
@@ -89,7 +88,7 @@ jobs:
           git diff --check
 
       - name: Commit materialized public files
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/qilylean-north-diagnosis-20260824')
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
           set -euo pipefail
