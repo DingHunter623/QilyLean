@@ -1,4 +1,5 @@
 name: Materialize public integrity
+# 2026-08-24 retrigger certificate facts + historical image restoration
 
 on:
   push:
