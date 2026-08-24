@@ -1,0 +1,50 @@
+name: QilyLean V4 Deploy Verify
+
+on:
+  workflow_run:
+    workflows: ['QilyLean V4 Build']
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qily-v4-deploy-verify-main
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Read expected production source baseline
+        id: build
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE_COMMIT="$(node -p "require('./meta/build.json').sourceCommit")"
+          echo "source_commit=$SOURCE_COMMIT" >> "$GITHUB_OUTPUT"
+          echo "Expected source commit: $SOURCE_COMMIT"
+
+      - name: Allow Pages/CDN propagation window
+        run: sleep 30
+
+      - name: G4 public verification
+        env:
+          QILY_EXPECTED_SOURCE_COMMIT: ${{ steps.build.outputs.source_commit }}
+          QILY_VERIFY_ATTEMPTS: '12'
+          QILY_VERIFY_DELAY_MS: '15000'
+        run: node scripts/site-system-v4-public-verify.js
