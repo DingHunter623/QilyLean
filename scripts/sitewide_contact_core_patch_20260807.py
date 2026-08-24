@@ -24,6 +24,16 @@ s=p.read_text(encoding='utf-8')
 s=s.replace('独立网址 · 在线阅览','').replace('独立网址：在线阅览','')
 p.write_text(s,encoding='utf-8')
 
+# Formal public contact fields use fixed labels. Natural business prose containing “官网” is intentionally preserved.
+privacy=Path('legal/times26001/privacy/index.html')
+if privacy.exists():
+    s=privacy.read_text(encoding='utf-8')
+    s=s.replace(
+        '<strong>联系邮箱：</strong><a href="mailto:admin@qilylean.com">',
+        '<strong>官网邮箱：</strong><a href="mailto:admin@qilylean.com">'
+    )
+    privacy.write_text(s,encoding='utf-8')
+
 # Extend persistent audit to cover core associations.
 a=Path('scripts/audit-official-contact-association.py')
 if a.exists():
