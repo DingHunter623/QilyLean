@@ -6,6 +6,7 @@ on:
       - 'scripts/materialize-qilylean-north-20260824.js'
       - 'scripts/enforce-qilylean-north-funnel-v1.js'
       - 'scripts/enforce-public-canonical-no-trailing-v1.js'
+      - 'scripts/qilylean-north-v4-sitemap-contract.js'
       - 'scripts/north-factory-diagnosis-v1.js'
       - 'styles/qily-north-v1.css'
       - 'styles/qily-north-diagnosis-v1.css'
@@ -22,6 +23,7 @@ on:
       - 'scripts/materialize-qilylean-north-20260824.js'
       - 'scripts/enforce-qilylean-north-funnel-v1.js'
       - 'scripts/enforce-public-canonical-no-trailing-v1.js'
+      - 'scripts/qilylean-north-v4-sitemap-contract.js'
       - 'scripts/north-factory-diagnosis-v1.js'
       - 'styles/qily-north-v1.css'
       - 'styles/qily-north-diagnosis-v1.css'
@@ -55,6 +57,7 @@ jobs:
           node --check scripts/materialize-qilylean-north-20260824.js
           node --check scripts/enforce-qilylean-north-funnel-v1.js
           node --check scripts/enforce-public-canonical-no-trailing-v1.js
+          node --check scripts/qilylean-north-v4-sitemap-contract.js
           node --check scripts/north-factory-diagnosis-v1.js
 
       - name: Materialize regional static assets
@@ -62,6 +65,7 @@ jobs:
           node scripts/materialize-qilylean-north-20260824.js
           node scripts/enforce-qilylean-north-funnel-v1.js
           node scripts/enforce-public-canonical-no-trailing-v1.js
+          node scripts/qilylean-north-v4-sitemap-contract.js
 
       - name: Validate generated contract
         shell: bash
@@ -77,14 +81,15 @@ jobs:
           test -f scripts/north-factory-diagnosis-v1.js
           grep -q 'QILY-NORTH-HOME-V1:START' index.html
           grep -q '内蒙古某新能源负极材料制造加工厂' projects/lean-improvement-evidence/index.html
-          grep -q 'https://qilylean.com/north/inner-mongolia/' sitemap.xml
-          grep -q 'https://qilylean.com/north/diagnosis/' sitemap.xml
+          grep -q '<loc>https://qilylean.com/north/inner-mongolia</loc>' sitemap.xml
+          grep -q '<loc>https://qilylean.com/north/diagnosis</loc>' sitemap.xml
           grep -q '/north/diagnosis/' index.html
           grep -q '/north/diagnosis/' north/index.html
           grep -q 'data-qily-diagnosis-form' north/diagnosis/index.html
           grep -q 'site-interaction-continuity-v1.css' north/index.html
           grep -q '1560px' styles/qily-north-v1.css
           node scripts/enforce-public-canonical-no-trailing-v1.js --check
+          node scripts/qilylean-north-v4-sitemap-contract.js --check
           git diff --check
 
       - name: Commit materialized public files
@@ -100,4 +105,5 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sitemap.xml projects/lean-improvement-evidence/index.html north tools/pure-ddz/index.html
           git commit -m 'feat: materialize QilyLean NORTH regional funnel [skip ci]'
+          git pull --rebase origin main
           git push
