@@ -43,7 +43,7 @@ jobs:
           grep -q 'ding-qili-ai-avatar-560.webp' capabilities/index.html
           grep -q 'c919-strategy-hero-v14.png' capabilities/index.html
           grep -q 'qilyPureDdzCapabilityVisualV2' capabilities/index.html
-          grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-joker-order-v6' capabilities/index.html
+          grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-heart-a-v7' capabilities/index.html
           grep -q 'flex-direction:column-reverse!important' pure-ddz-capability-visual-v2.css
           grep -q '\-webkit-text-fill-color:#fff!important' pure-ddz-capability-visual-v2.css
           grep -q '\-webkit-text-fill-color:#ffe39b!important' pure-ddz-capability-visual-v2.css
@@ -58,7 +58,8 @@ jobs:
           for label in '下载 Android APK' '下载说明' '扫码下载' '分享下载页' '隐私政策' '用户协议' '技术支持'; do
             grep -q "$label" scripts/publish-qilylean-home-v2.py
           done
-          grep -q 'A♠' capabilities/index.html
+          grep -q 'A♥' capabilities/index.html
+          ! grep -q '<strong>A♠</strong>' capabilities/index.html
           grep -q 'K♣' capabilities/index.html
           grep -q 'Q♥' capabilities/index.html
           grep -q "player === 1 ? '左家' : '右家'" tools/pure-ddz/game/js/game.js
@@ -67,6 +68,14 @@ jobs:
           grep -q "positionClass(player)" tools/pure-ddz/game/js/visual-v120.js
           grep -q 'v120-reset-stats' tools/pure-ddz/game/js/visual-v120.js
           grep -q 'fitHand' tools/pure-ddz/game/js/visual-v120.js
+          grep -q '查看更多' tools/pure-ddz/game/js/visual-v120.js
+          grep -q '官网邮箱' tools/pure-ddz/index.html
+          ! grep -q '<span>企业邮箱</span>' tools/pure-ddz/index.html
+          ! grep -q '待验证后发布' tools/pure-ddz/index.html
+          grep -q '20260824-rankline-scroll-v2' tools/pure-ddz/index.html
+          grep -q "loadStyle('css/card-layout-v3.css')" tools/pure-ddz/index.html
+          grep -q 'flex-direction:row!important' tools/pure-ddz/game/css/card-layout-v3.css
+          grep -q 'v120-scroll-cue' tools/pure-ddz/game/css/card-layout-v3.css
           grep -q 'musicMode' tools/pure-ddz/game/js/game.js
           grep -q 'exciting' tools/pure-ddz/game/js/game.js
           grep -q 'playMusicSting' tools/pure-ddz/game/js/game.js
@@ -83,30 +92,54 @@ jobs:
           for i in {1..20}; do curl -fsS http://127.0.0.1:4173/tools/pure-ddz/ >/dev/null && exit 0; sleep 1; done
           cat /tmp/qily-ddz-showcase.log || true
           exit 1
-      - name: Verify capability actions, joker order, readable showcase, and visible hands
+      - name: Verify capability actions, card grammar, mobile cue, readable showcase, and visible hands
         run: |
           cat > verify-showcase.mjs <<'EOF'
           import { chromium } from '@playwright/test';
           const browser=await chromium.launch({headless:true});
           const base='http://127.0.0.1:4173';
           async function check(viewport){
-            const page=await browser.newPage({viewport});
+            const touch=viewport.width<=900;
+            const page=await browser.newPage({viewport,hasTouch:touch});
             const errors=[];page.on('pageerror',e=>errors.push(String(e)));
             await page.goto(base+'/tools/pure-ddz/',{waitUntil:'networkidle'});
+            const official=await page.locator('.official-info').textContent();
+            if(!official.includes('官网邮箱')||official.includes('企业邮箱')) throw new Error('Official email label is not standardized: '+official);
+            if((await page.locator('body').textContent()).includes('待验证后发布')) throw new Error('Internal validation wording leaked to public DDZ UI');
             await page.locator('#welcome-start').click();
             await page.waitForFunction(()=>window.PureDDZTest?.getState().hands[0].length===17,{timeout:6000});
-            await page.waitForTimeout(500);
+            await page.waitForTimeout(600);
             const data=await page.evaluate(()=>{
               window.QilyLeanV120?.fitHand?.();
               const hand=document.querySelector('#hand');const cards=[...document.querySelectorAll('#hand .card')];
               const hr=hand.getBoundingClientRect();const rects=cards.map(c=>c.getBoundingClientRect());
-              return {count:cards.length,first:rects[0],last:rects.at(-1),hand:hr,reset:Boolean(document.querySelector('#v120-reset-stats')),leftName:document.querySelector('#left-panel .player-name')?.textContent.trim(),rightName:document.querySelector('#right-panel .player-name')?.textContent.trim(),ready:document.documentElement.classList.contains('ddz-ready')};
+              const normal=cards.find(c=>c.querySelector('.qily-card--normal'));
+              const corner=normal?.querySelector('.qily-card-corner');
+              const rank=corner?.querySelector('b')?.getBoundingClientRect();
+              const suit=corner?.querySelector('i')?.getBoundingClientRect();
+              const cue=document.querySelector('#v120-scroll-cue');
+              return {
+                count:cards.length,first:rects[0],last:rects.at(-1),hand:hr,
+                reset:Boolean(document.querySelector('#v120-reset-stats')),
+                leftName:document.querySelector('#left-panel .player-name')?.textContent.trim(),
+                rightName:document.querySelector('#right-panel .player-name')?.textContent.trim(),
+                ready:document.documentElement.classList.contains('ddz-ready'),
+                cornerFlex:corner?getComputedStyle(corner).flexDirection:'',
+                rank:rank?{top:rank.top,bottom:rank.bottom}:null,
+                suit:suit?{top:suit.top,bottom:suit.bottom}:null,
+                cueText:cue?.textContent.replace(/\s+/g,'').trim()||'',
+                cueDisplay:cue?getComputedStyle(cue).display:''
+              };
             });
             if(data.count!==17) throw new Error('Expected 17 visible cards, got '+data.count);
             if(!data.reset) throw new Error('Stats reset button missing');
             if(data.first.left < data.hand.left-2 || data.last.right > data.hand.right+2) throw new Error('Hand cards overflow visible hand area');
             if(data.leftName!=='左家'||data.rightName!=='右家') throw new Error('Player labels not simplified');
             if(!data.ready) throw new Error('First-paint ready class missing');
+            if(data.cornerFlex!=='row') throw new Error('Rank/suit corner is not one row: '+data.cornerFlex);
+            if(!data.rank||!data.suit||Math.min(data.rank.bottom,data.suit.bottom)<=Math.max(data.rank.top,data.suit.top)) throw new Error('Rank and suit do not visually share one line: '+JSON.stringify(data));
+            if(touch&&(!data.cueText.includes('上下滑动')||!data.cueText.includes('查看更多'))) throw new Error('Mobile scroll cue copy is not explicit: '+data.cueText);
+            if(touch&&data.cueDisplay==='none') throw new Error('Mobile scroll cue is not visible on scrollable landscape viewport');
             if(errors.length) throw new Error('pageerror: '+errors.join('\n'));
             await page.close();
           }
@@ -127,6 +160,9 @@ jobs:
             const pos=await joker.evaluate(el=>{const label=el.querySelector('b').getBoundingClientRect();const img=el.querySelector('img').getBoundingClientRect();return {labelBottom:label.bottom,imgTop:img.top};});
             if(pos.labelBottom>pos.imgTop+2) throw new Error('Joker label is not above image: '+JSON.stringify(pos));
           }
+          const ace=cap.locator('.capability-ddz-card').first();
+          if((await ace.locator('strong').textContent()).trim()!=='A♥') throw new Error('Representative Ace is not heart Ace');
+          if(!(await ace.evaluate(el=>el.classList.contains('red')))) throw new Error('Heart Ace is not using red-card styling');
           const expected=['下载 Android APK','下载说明','扫码下载','分享下载页','隐私政策','用户协议','技术支持'];
           const actions=await cap.locator('#qilylean-home .module-actions > a').allTextContents();
           if(JSON.stringify(actions.map(v=>v.trim()))!==JSON.stringify(expected)) throw new Error('QilyLean Home actions incomplete or out of order: '+JSON.stringify(actions));
@@ -152,7 +188,7 @@ jobs:
           await check({width:1440,height:900});
           await check({width:844,height:390});
           await browser.close();
-          console.log('QHOME_ACTIONS_DDZ_JOKER_ORDER_READABILITY_AND_HAND_VISIBILITY_OK');
+          console.log('QHOME_ACTIONS_DDZ_CARD_GRAMMAR_MOBILE_CUE_AND_VISIBILITY_OK');
           EOF
           node verify-showcase.mjs
           rm -f verify-showcase.mjs
