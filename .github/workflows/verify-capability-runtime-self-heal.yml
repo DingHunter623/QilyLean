@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'site-navigation.js'
+      - 'site-certificate-facts-v2.js'
       - 'app-download-share-v1.js'
       - 'pure-ddz-capability-visual-v2.css'
       - 'capabilities/index.html'
@@ -22,9 +23,12 @@ jobs:
         run: |
           set -euo pipefail
           node --check site-navigation.js
+          node --check site-certificate-facts-v2.js
           node --check app-download-share-v1.js
           grep -q "capabilitySelfHeal: true" site-navigation.js
           grep -q "20260824-red-heart-ace-v8" site-navigation.js
+          grep -q "20260824-red-heart-ace-v8" site-certificate-facts-v2.js
+          ! grep -q "20260824-joker-order-v6" site-certificate-facts-v2.js
           grep -q "20260824-capability-home-actions-v2" site-navigation.js
           grep -Fq '.capability-ddz-card.red strong{color:#d32f2f!important;-webkit-text-fill-color:#d32f2f!important}' pure-ddz-capability-visual-v2.css
           grep -q 'A♥</strong>' capabilities/index.html
