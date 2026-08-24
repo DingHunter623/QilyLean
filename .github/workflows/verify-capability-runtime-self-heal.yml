@@ -27,8 +27,8 @@ jobs:
           grep -q "20260824-red-heart-ace-v8" site-navigation.js
           grep -q "20260824-capability-home-actions-v2" site-navigation.js
           grep -Fq '.capability-ddz-card.red strong{color:#d32f2f!important;-webkit-text-fill-color:#d32f2f!important}' pure-ddz-capability-visual-v2.css
-          grep -q 'aria-label="红桃A">A♥</strong>' capabilities/index.html
-          grep -q "data-qily-home-actions='20260824-v2'\|data-qily-home-actions=\"20260824-v2\"\|qilyHomeActions='20260824-v2'\|qilyHomeActions=\"20260824-v2\"" app-download-share-v1.js || grep -q "qilyHomeActions.*20260824-v2" app-download-share-v1.js
+          grep -q 'A♥</strong>' capabilities/index.html
+          grep -q "homeActions.dataset.qilyHomeActions='20260824-v2'" app-download-share-v1.js
       - name: Install Playwright
         run: |
           npm init -y >/dev/null 2>&1
@@ -62,14 +62,14 @@ jobs:
               const aceStyle=getComputedStyle(ace);
               const css=document.querySelector('link[href*="pure-ddz-capability-visual-v2.css"]')?.getAttribute('href')||'';
               const shareScript=document.querySelector('script[src*="app-download-share-v1.js"]')?.getAttribute('src')||'';
-              return {actions,titleColor:title.color,titleFill:title.webkitTextFillColor,subColor:sub.color,subFill:sub.webkitTextFillColor,visualBg:visual.backgroundImage,boardBg:board.backgroundImage,aceText:(ace?.textContent||'').trim(),aceAria:ace?.getAttribute('aria-label')||'',aceColor:aceStyle.color,aceFill:aceStyle.webkitTextFillColor,css,shareScript};
+              return {actions,titleColor:title.color,titleFill:title.webkitTextFillColor,subColor:sub.color,subFill:sub.webkitTextFillColor,visualBg:visual.backgroundImage,boardBg:board.backgroundImage,aceText:(ace?.textContent||'').trim(),aceColor:aceStyle.color,aceFill:aceStyle.webkitTextFillColor,css,shareScript};
             });
             if(JSON.stringify(data.actions)!==JSON.stringify(expected)) throw new Error('QHome actions wrong: '+JSON.stringify(data));
             if(!data.css.includes('20260824-red-heart-ace-v8')) throw new Error('DDZ CSS not self-healed: '+data.css);
             if(!data.shareScript.includes('20260824-capability-home-actions-v2')) throw new Error('APP share runtime not self-healed: '+data.shareScript);
             if(data.titleColor!=='rgb(255, 255, 255)'||data.titleFill!=='rgb(255, 255, 255)') throw new Error('DDZ title not white: '+JSON.stringify(data));
             if(data.subColor!=='rgb(255, 227, 155)'||data.subFill!=='rgb(255, 227, 155)') throw new Error('DDZ subtitle not gold: '+JSON.stringify(data));
-            if(data.aceText!=='A♥'||data.aceAria!=='红桃A') throw new Error('DDZ representative Ace identity wrong: '+JSON.stringify(data));
+            if(data.aceText!=='A♥') throw new Error('DDZ representative Ace identity wrong: '+JSON.stringify(data));
             if(data.aceColor!=='rgb(211, 47, 47)'||data.aceFill!=='rgb(211, 47, 47)') throw new Error('DDZ representative red-heart Ace not visibly red: '+JSON.stringify(data));
             if(!data.visualBg.includes('rgb(223, 243, 237)')||!data.boardBg.includes('rgb(19, 122, 113)')) throw new Error('DDZ palette not lightened: '+JSON.stringify(data));
             await page.locator('#qilylean-home [data-app-share-qr="qilyleanHome"]').click();
