@@ -5,6 +5,10 @@ on:
     paths:
       - 'capabilities/index.html'
       - 'pure-ddz-capability-visual-v2.css'
+      - 'capability-digital-tools-layout-v1.css'
+      - 'app-download-share-v1.js'
+      - 'scripts/fix-capabilities-visuals-20260824.js'
+      - 'scripts/publish-qilylean-home-v2.py'
       - 'site-ui-consistency-v1.js'
       - 'tools/pure-ddz/**'
       - '.github/workflows/verify-pure-ddz-capability-showcase.yml'
@@ -18,6 +22,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
+      - name: Materialize capability source-of-truth fixes
+        run: |
+          set -euo pipefail
+          node --check scripts/fix-capabilities-visuals-20260824.js
+          node --check app-download-share-v1.js
+          python3 -m py_compile scripts/publish-qilylean-home-v2.py
+          node scripts/fix-capabilities-visuals-20260824.js
       - name: Verify repository contract
         run: |
           set -euo pipefail
@@ -30,7 +41,20 @@ jobs:
           grep -q 'ding-qili-ai-avatar-560.webp' capabilities/index.html
           grep -q 'c919-strategy-hero-v14.png' capabilities/index.html
           grep -q 'qilyPureDdzCapabilityVisualV2' capabilities/index.html
+          grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-readable-light-v5' capabilities/index.html
+          grep -q '\-webkit-text-fill-color:#fff!important' pure-ddz-capability-visual-v2.css
+          grep -q '\-webkit-text-fill-color:#ffe39b!important' pure-ddz-capability-visual-v2.css
+          grep -q 'linear-gradient(145deg,#dff3ed,#eef8f6)' pure-ddz-capability-visual-v2.css
+          grep -q 'linear-gradient(150deg,#137a71,#187784 58%,#146b77)' pure-ddz-capability-visual-v2.css
           grep -q 'object-fit:contain!important' pure-ddz-capability-visual-v2.css
+          grep -q 'data-qily-home-actions="20260824-v2"' capabilities/index.html
+          grep -q 'data-app-share-qr="qilyleanHome"' capabilities/index.html
+          grep -q 'data-app-share-link="qilyleanHome"' capabilities/index.html
+          grep -q '/app-download-share-v1.js?v=20260824-capability-home-actions-v2' capabilities/index.html
+          grep -q "homeResult.textContent='当前版本：v2.3.3" app-download-share-v1.js
+          for label in '下载 Android APK' '下载说明' '扫码下载' '分享下载页' '隐私政策' '用户协议' '技术支持'; do
+            grep -q "$label" scripts/publish-qilylean-home-v2.py
+          done
           grep -q 'A♠' capabilities/index.html
           grep -q 'K♣' capabilities/index.html
           grep -q 'Q♥' capabilities/index.html
@@ -56,7 +80,7 @@ jobs:
           for i in {1..20}; do curl -fsS http://127.0.0.1:4173/tools/pure-ddz/ >/dev/null && exit 0; sleep 1; done
           cat /tmp/qily-ddz-showcase.log || true
           exit 1
-      - name: Verify homepage placement, capability showcase, and visible hands
+      - name: Verify capability actions, readable showcase, and visible hands
         run: |
           cat > verify-showcase.mjs <<'EOF'
           import { chromium } from '@playwright/test';
@@ -88,6 +112,7 @@ jobs:
           if(await home.locator('#qilyPureDdzStableEntry').count()) throw new Error('Legacy home DDZ section still exists');
           await home.close();
           const cap=await browser.newPage({viewport:{width:1440,height:900}});
+          const capErrors=[];cap.on('pageerror',e=>capErrors.push(String(e)));
           await cap.goto(base+'/capabilities/',{waitUntil:'networkidle'});
           if(await cap.locator('#pure-ddz-digital-tool').count()!==1) throw new Error('Capability DDZ digital tool missing');
           if(await cap.locator('#qilyPureDdzCapabilityVisualV2').count()!==1) throw new Error('Capability visual override not mounted');
@@ -95,11 +120,32 @@ jobs:
           if(await cap.locator('.capability-ddz-card').count()!==3) throw new Error('Representative card showcase incomplete');
           const jokerFit=await cap.locator('.capability-ddz-joker.big img').evaluate(el=>getComputedStyle(el).objectFit);
           if(jokerFit!=='contain') throw new Error('Big joker avatar is still cropped');
+          const expected=['下载 Android APK','下载说明','扫码下载','分享下载页','隐私政策','用户协议','技术支持'];
+          const actions=await cap.locator('#qilylean-home .module-actions > a').allTextContents();
+          if(JSON.stringify(actions.map(v=>v.trim()))!==JSON.stringify(expected)) throw new Error('QilyLean Home actions incomplete or out of order: '+JSON.stringify(actions));
+          if(await cap.locator('#qilylean-home [data-app-share-qr="qilyleanHome"]').count()!==1) throw new Error('QilyLean Home QR action missing');
+          if(await cap.locator('#qilylean-home [data-app-share-link="qilyleanHome"]').count()!==1) throw new Error('QilyLean Home share action missing');
+          await cap.locator('#qilylean-home [data-app-share-qr="qilyleanHome"]').click();
+          await cap.waitForSelector('#qilyAppShareDialog[open]',{timeout:3000});
+          const qrSrc=await cap.locator('#qilyAppShareQr').getAttribute('src');
+          if(!qrSrc?.includes('qr-qilylean-home-download.svg')) throw new Error('QilyLean Home QR source incorrect: '+qrSrc);
+          await cap.locator('.app-share-close').click();
+          const contrast=await cap.evaluate(()=>{
+            const title=getComputedStyle(document.querySelector('.capability-ddz-title'));
+            const sub=getComputedStyle(document.querySelector('.capability-ddz-sub'));
+            const visual=getComputedStyle(document.querySelector('#pure-ddz-digital-tool .capability-ddz-visual'));
+            const board=getComputedStyle(document.querySelector('#pure-ddz-digital-tool .capability-ddz-board'));
+            return {titleColor:title.color,titleFill:title.webkitTextFillColor,subColor:sub.color,subFill:sub.webkitTextFillColor,visualBg:visual.backgroundImage,boardBg:board.backgroundImage};
+          });
+          if(contrast.titleColor!=='rgb(255, 255, 255)'||contrast.titleFill!=='rgb(255, 255, 255)') throw new Error('DDZ title is not forced white: '+JSON.stringify(contrast));
+          if(contrast.subColor!=='rgb(255, 227, 155)'||contrast.subFill!=='rgb(255, 227, 155)') throw new Error('DDZ subtitle is not forced gold: '+JSON.stringify(contrast));
+          if(!contrast.visualBg.includes('rgb(223, 243, 237)')||!contrast.boardBg.includes('rgb(19, 122, 113)')) throw new Error('DDZ background was not lightened to approved palette: '+JSON.stringify(contrast));
+          if(capErrors.length) throw new Error('capability pageerror: '+capErrors.join('\n'));
           await cap.close();
           await check({width:1440,height:900});
           await check({width:844,height:390});
           await browser.close();
-          console.log('PURE_DDZ_CAPABILITY_AND_HAND_VISIBILITY_OK');
+          console.log('QHOME_ACTIONS_DDZ_READABILITY_AND_HAND_VISIBILITY_OK');
           EOF
           node verify-showcase.mjs
           rm -f verify-showcase.mjs
