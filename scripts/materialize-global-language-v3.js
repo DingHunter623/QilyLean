@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+/* release trigger: 2026-08-25 Global Language V3 sitewide materialization */
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
