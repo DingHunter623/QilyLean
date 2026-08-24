@@ -6,7 +6,10 @@ on:
       - main
     paths:
       - 'scripts/materialize-qilylean-north-20260824.js'
+      - 'scripts/enforce-qilylean-north-funnel-v1.js'
+      - 'scripts/north-factory-diagnosis-v1.js'
       - 'styles/qily-north-v1.css'
+      - 'styles/qily-north-diagnosis-v1.css'
       - '.github/workflows/materialize-qilylean-north-20260824.yml'
       - 'index.html'
       - 'projects/lean-improvement-evidence/index.html'
@@ -31,8 +34,16 @@ jobs:
         with:
           node-version: '20'
 
+      - name: Syntax checks
+        run: |
+          node --check scripts/materialize-qilylean-north-20260824.js
+          node --check scripts/enforce-qilylean-north-funnel-v1.js
+          node --check scripts/north-factory-diagnosis-v1.js
+
       - name: Materialize regional static assets
-        run: node scripts/materialize-qilylean-north-20260824.js
+        run: |
+          node scripts/materialize-qilylean-north-20260824.js
+          node scripts/enforce-qilylean-north-funnel-v1.js
 
       - name: Validate generated contract
         shell: bash
@@ -43,9 +54,16 @@ jobs:
           test -f north/shaanxi/index.html
           test -f north/ningxia/index.html
           test -f north/gansu/index.html
+          test -f north/diagnosis/index.html
+          test -f styles/qily-north-diagnosis-v1.css
+          test -f scripts/north-factory-diagnosis-v1.js
           grep -q 'QILY-NORTH-HOME-V1:START' index.html
           grep -q '内蒙古某新能源负极材料制造加工厂' projects/lean-improvement-evidence/index.html
           grep -q 'https://qilylean.com/north/inner-mongolia/' sitemap.xml
+          grep -q 'https://qilylean.com/north/diagnosis/' sitemap.xml
+          grep -q '/north/diagnosis/' index.html
+          grep -q '/north/diagnosis/' north/index.html
+          grep -q 'data-qily-diagnosis-form' north/diagnosis/index.html
           grep -q 'site-interaction-continuity-v1.css' north/index.html
           grep -q '1560px' styles/qily-north-v1.css
           git diff --check
@@ -61,5 +79,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html sitemap.xml projects/lean-improvement-evidence/index.html north
-          git commit -m 'feat: materialize QilyLean NORTH regional strategy [skip ci]'
+          git commit -m 'feat: materialize QilyLean NORTH regional funnel [skip ci]'
           git push
