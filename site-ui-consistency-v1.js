@@ -1,6 +1,7 @@
 /* QilyLean 轻量父级导航与外壳一致性 v3.4｜2026-08-23
  * 性能原则：静态HTML首帧即正确；运行时只校正导航与悬浮栏。
  * Pure DDZ 已归入 能力体系 → 数字工具作品，不再在首页单独插入大模块。
+ * 2026-08-25：加载 Qily Global Language V1；中文静态源保持权威，翻译仅作运行时增强。
  */
 (function(d,w){
   'use strict';
@@ -10,6 +11,8 @@
 
   var BUILD_ID='20260823-pure-ddz-capability-v18';
   var BUILD_KEY='qily_site_ui_build_v1';
+  var LANGUAGE_CSS='/site-global-language-v1.css?v=20260825-global-language-v1';
+  var LANGUAGE_JS='/site-global-language-v1.js?v=20260825-global-language-v1';
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
 
   function normalizedPath(path){
@@ -31,6 +34,16 @@
   function navigateParent(){var target=parentRoute(location.pathname);if(normalizedPath(target)===normalizedPath(location.pathname))target='/';location.assign(target)}
   function rememberBuild(){try{w.localStorage.setItem(BUILD_KEY,BUILD_ID)}catch(error){}d.documentElement.setAttribute('data-qily-ui-build',BUILD_ID)}
 
+  function ensureGlobalLanguageAssets(){
+    var head=d.head||d.documentElement;
+    var link=d.getElementById('qilyGlobalLanguageV1Stylesheet')||d.querySelector('link[href*="/site-global-language-v1.css"]');
+    if(!link){link=d.createElement('link');link.id='qilyGlobalLanguageV1Stylesheet';link.rel='stylesheet';head.appendChild(link)}
+    if(link.getAttribute('href')!==LANGUAGE_CSS)link.setAttribute('href',LANGUAGE_CSS);
+    if(w.__qilyGlobalLanguageV1)return;
+    var script=d.getElementById('qilyGlobalLanguageV1Script')||d.querySelector('script[src*="/site-global-language-v1.js"]');
+    if(!script){script=d.createElement('script');script.id='qilyGlobalLanguageV1Script';script.src=LANGUAGE_JS;script.async=false;script.setAttribute('data-qily-global-language','v1');head.appendChild(script)}
+  }
+
   var pointer=null,handledAt=0;
   d.addEventListener('pointerdown',function(event){var button=event.target&&event.target.closest?event.target.closest('[data-action="back"]'):null;if(!button)return;pointer={id:event.pointerId,x:event.clientX,y:event.clientY,moved:false}},true);
   d.addEventListener('pointermove',function(event){if(!pointer||event.pointerId!==pointer.id)return;if(Math.abs(event.clientX-pointer.x)>8||Math.abs(event.clientY-pointer.y)>8)pointer.moved=true},true);
@@ -44,8 +57,8 @@
   function normalizePrimaryNav(){var path=normalizedPath(location.pathname),modulePath=primaryModule(path);ensurePrimaryNavCurrentStyles();d.querySelectorAll('.qily-global-nav,nav.site-nav,nav.nav').forEach(function(nav){if(!modulePath)return;Array.from(nav.children).forEach(function(link){if(!link.matches||!link.matches('a[href]'))return;var routePath=primaryRouteForLink(link);if(!routePath)return;var active=routePath===modulePath;if(active){link.setAttribute('aria-current','page');link.setAttribute('data-qily-primary-current','true')}else{link.removeAttribute('aria-current');link.removeAttribute('aria-selected');link.removeAttribute('data-current');link.removeAttribute('data-active');link.removeAttribute('data-qily-primary-current');link.classList.remove('active','current','is-active','selected')}})})}
   function normalizeDock(){var dock=d.getElementById('floatDock');if(!dock)return false;var back=dock.querySelector('[data-action="back"]');if(back){back.setAttribute('data-parent-route',parentRoute(location.pathname));back.setAttribute('title','回到当前页面所属的上一级有效页面');back.setAttribute('aria-label','回上一层')}dock.querySelectorAll('[data-action="share"]').forEach(function(button){button.remove()});return true}
   function removeLegacyPureDdzHomeEntry(){if(normalizedPath(location.pathname)!=='/')return;d.getElementById('qilyPureDdzStableEntry')?.remove();d.querySelectorAll('[data-qily-pure-ddz-entry="hero"]').forEach(function(link){link.remove()})}
-  function reconcileFast(){normalizePrimaryNav();normalizeDock();removeLegacyPureDdzHomeEntry()}
-  function boot(){rememberBuild();reconcileFast()}
+  function reconcileFast(){ensureGlobalLanguageAssets();normalizePrimaryNav();normalizeDock();removeLegacyPureDdzHomeEntry()}
+  function boot(){rememberBuild();ensureGlobalLanguageAssets();reconcileFast()}
   d.addEventListener('qily:shell-ready',reconcileFast);w.addEventListener('pageshow',reconcileFast);
   w.__qilyParentNavigationV3=true;w.__qilyDockOrderContract=Object.freeze({order:['home','top','back','search','current','contact'],version:'20260823-pure-ddz-capability-v18'});
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
