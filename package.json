@@ -9,7 +9,14 @@
     "test:first-paint": "node scripts/validate-home-hero-dock-snapback-v1.js",
     "deploy:worker": "wrangler deploy",
     "test:maintenance": "node scripts/test-maintenance-fixes.js",
-    "test:audit": "node scripts/validate-public-audit-optimization-20260816.js"
+    "test:audit": "node scripts/validate-public-audit-optimization-20260816.js",
+    "v4:validate": "node scripts/site-system-v4-validate.js",
+    "v4:audit:workflow": "node scripts/site-system-v4-workflow-audit.js",
+    "v4:audit:repo": "node scripts/site-system-v4-repository-audit.js",
+    "v4:audit:sitemap": "node scripts/site-system-v4-sitemap-lastmod.js",
+    "v4:build:sitemap": "node scripts/site-system-v4-sitemap-lastmod.js --write",
+    "v4:build:meta": "node scripts/site-system-v4-build-meta.js",
+    "v4:verify:public": "node scripts/site-system-v4-public-verify.js"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

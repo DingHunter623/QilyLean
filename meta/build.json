@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "site": "QilyLean",
+  "build": "20260824-v4-foundation",
+  "sourceCommit": "5db5d93a9f7be1e97b5280a77075ac6c366f127a",
+  "materializedAt": "2026-08-24T13:30:00+08:00",
+  "publishedAt": null,
+  "state": "SOURCE_READY",
+  "standard": "QL-WEB-STD-001/R6",
+  "dataSource": "/qilylean/site-data.json",
+  "notes": "V4 bootstrap identity. PUBLIC_VERIFIED may only be set after the public verifier confirms production routes and this build identity."
+}

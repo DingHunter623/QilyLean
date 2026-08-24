@@ -1,0 +1,57 @@
+name: QilyLean V4 Audit
+
+on:
+  schedule:
+    - cron: '20 2 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qily-v4-audit
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: G1/G3 source system audit
+        run: |
+          node scripts/site-system-v4-validate.js
+          npm run test:seo
+          npm run test:visual
+
+      - name: Workflow and repository debt audit
+        run: |
+          node scripts/site-system-v4-workflow-audit.js
+          node scripts/site-system-v4-repository-audit.js
+          node scripts/site-system-v4-sitemap-lastmod.js
+
+      - name: G4 public production audit
+        env:
+          QILY_VERIFY_ATTEMPTS: '4'
+          QILY_VERIFY_DELAY_MS: '10000'
+        run: node scripts/site-system-v4-public-verify.js
+
+      - name: Upload V4 audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qily-v4-scheduled-audit
+          path: |
+            maintenance/site-system-v4-workflow-audit.json
+            maintenance/site-system-v4-sitemap-audit.json
+            maintenance/site-system-v4-repository-audit.json
+          if-no-files-found: warn
+          retention-days: 30
