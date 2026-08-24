@@ -256,7 +256,7 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   resourceCollaborationPrimaryLabel: true,
   friendLinksPageIdentityPreserved: true,
   unifiedOnePieceArrows: true,
-  searchAuthorityRoute: LEAN_AUTHORITY_PATH,
+  searchAuthorityRoute: '/lean-production/',
   searchAuthorityLabel: '精益生产',
   searchAuthoritySitewide: true,
   version: '20260824-search-authority-v39'
