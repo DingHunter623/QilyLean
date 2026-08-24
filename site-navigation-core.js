@@ -293,6 +293,25 @@
   window.__qilyCopyPhoneAndPrompt=copyPhoneAndPrompt;
   document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-qily-phone-copy]');if(!x)return;e.preventDefault();copyPhoneAndPrompt(x,x.getAttribute('data-qily-phone-copy'));});
 
+  /* QILY-CONTACT-LINK-ACTION-V12.5:START */
+  /* V14：官方网址与官网邮箱采用同一行双按钮；单击先复制，再询问是否打开。 */
+  function ensureContactLinkPrompt(){
+    var p=document.getElementById('qilyContactLinkPrompt');if(p)return p;
+    p=document.createElement('div');p.id='qilyContactLinkPrompt';p.className='qily-phone-copy-prompt';p.setAttribute('role','status');p.setAttribute('aria-live','polite');
+    p.innerHTML='<span></span><button type="button" data-qily-contact-open>立即打开</button><button type="button" data-qily-contact-cancel>取消</button>';document.body.appendChild(p);
+    p.querySelector('[data-qily-contact-cancel]').addEventListener('click',function(){p.classList.remove('show');});
+    p.querySelector('[data-qily-contact-open]').addEventListener('click',function(){var href=p.getAttribute('data-qily-contact-href')||'';p.classList.remove('show');if(href)window.location.href=href;});
+    return p;
+  }
+  function copyContactLinkAndPrompt(anchor){
+    var value=anchor.getAttribute('data-qily-contact-copy')||'',href=anchor.getAttribute('data-qily-contact-href')||'',label=anchor.getAttribute('data-qily-contact-label')||'信息';
+    if(!value||!href)return Promise.resolve();
+    return copyText(value).then(function(){var p=ensureContactLinkPrompt();p.setAttribute('data-qily-contact-href',href);p.querySelector('span').textContent=label+'已复制，是否打开'+(label==='官网邮箱'?'邮件应用':'官方网址')+'？';p.querySelector('[data-qily-contact-open]').textContent=label==='官网邮箱'?'打开邮件':'立即打开';positionWechatCopyPrompt(anchor,p);p.classList.add('show');clearTimeout(copyContactLinkAndPrompt.timer);copyContactLinkAndPrompt.timer=setTimeout(function(){p.classList.remove('show');},9000);});
+  }
+  window.__qilyCopyContactLinkAndPrompt=copyContactLinkAndPrompt;
+  document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('[data-qily-contact-copy]');if(!x)return;e.preventDefault();e.stopPropagation();copyContactLinkAndPrompt(x);},true);
+  /* QILY-CONTACT-LINK-ACTION-V12.5:END */
+
 
   function shareUrl(title, url, successMessage) {
     url = normalizePublicUrl(url);    if (navigator.share) {
@@ -434,7 +453,7 @@
     var contactMask = document.createElement('div');
     contactMask.id = 'wxMask';
     contactMask.className = 'qily-modal-mask';
-    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><div class="qily-wechat-row"><button class="qily-wechat-action" type="button" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259"><span>微信</span><strong>Qily259</strong></button></div><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (item) { return '<a href="tel:' + item.number + '" data-qily-phone-copy="' + item.number + '" aria-label="复制并拨打 ' + item.city + ' ' + item.number + '"><span class="qily-phone-city">' + item.city + '：</span><strong class="qily-phone-number">' + item.number + '</strong></a>'; }).join('') + '</div><div class="qily-email-list"><div>官方网址</div><a class="qily-contact-email" href="https://qilylean.com">https://qilylean.com</a></div><div class="qily-email-list"><div>官网邮箱</div><a class="qily-contact-email" href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a><div class="qily-email-actions"><button class="qily-copy-email" type="button">复制邮箱</button><a class="qily-send-email" href="mailto:' + CONTACT_EMAIL + '">发送邮件</a></div></div></div>';
+    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><div class="qily-wechat-row"><button class="qily-wechat-action" type="button" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259"><span>微信</span><strong>Qily259</strong></button></div><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (item) { return '<a href="tel:' + item.number + '" data-qily-phone-copy="' + item.number + '" aria-label="复制并拨打 ' + item.city + ' ' + item.number + '"><span class="qily-phone-city">' + item.city + '：</span><strong class="qily-phone-number">' + item.number + '</strong></a>'; }).join('') + '</div><div class="qily-contact-channel-grid" role="group" aria-label="官方网址与官网邮箱"><button class="qily-contact-channel" type="button" data-qily-contact-copy="https://qilylean.com" data-qily-contact-href="https://qilylean.com" data-qily-contact-label="官方网址" aria-label="复制官方网址并选择是否打开"><span>官方网址</span><strong>qilylean.com</strong></button><button class="qily-contact-channel" type="button" data-qily-contact-copy="' + CONTACT_EMAIL + '" data-qily-contact-href="mailto:' + CONTACT_EMAIL + '" data-qily-contact-label="官网邮箱" aria-label="复制官网邮箱并选择是否打开邮件应用"><span>官网邮箱</span><strong>admin@<wbr>qilylean.com</strong></button></div></div>';
     document.body.appendChild(contactMask);
 
     var toast = document.createElement('div');
@@ -462,10 +481,6 @@
 
     contactMask.querySelector('.qily-modal-close').addEventListener('click', function () { closeMask(contactMask); });
     contactMask.addEventListener('click', function (event) { if (event.target === contactMask) closeMask(contactMask); });
-    contactMask.querySelector('.qily-copy-email').addEventListener('click', function () {
-      copyText(CONTACT_EMAIL).then(function () { showToast('官网邮箱已复制'); });
-    });
-
     var down = false;
     var moved = false;
     var pointerId = null;

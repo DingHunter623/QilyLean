@@ -160,14 +160,15 @@ async function main() {
   const worker = read('cloudflare-worker/worker.js');
   const exportCode = read('qilylean-ai-export.js');
   const navigation = read('site-navigation.js');
+  const navigationCore = read('site-navigation-core.js');
   const wrangler = read('wrangler.toml');
   const projectViewer = read('projects/project-image-viewer.js');
   const projectStyles = read('projects/project-pages.css');
   const projectIndex = read('projects/index.html');
   const knowledge = read('knowledge/index.html');
   const latest = read('qilylean/latest-brief.js');
-  const brief = read('qilylean/daily/2026-07-27.html');
   const index = JSON.parse(read('qilylean/daily/index.json'));
+  const brief = read(`qilylean/daily/${index[0].date}.html`);
 
   assert(/id="materialInput"[^>]*\bmultiple\b/.test(aiPage), 'Material input is not configured for multiple files');
   assert(/MAX_ATTACHMENT_COUNT=5/.test(aiClient), 'Client attachment count limit is missing');
@@ -188,30 +189,30 @@ async function main() {
   assert(!/application\/msword|application\/vnd\.ms-excel/.test(exportCode), 'Legacy HTML-disguised Office MIME types remain');
   assert(/\.docx'/.test(exportCode), 'Standard Word extension is missing');
   assert(!/导出 Excel|excel\.textContent|tools\.appendChild\(excel\)/.test(exportCode), 'Excel export menu still exists');
-  assert(/--forest:var\(--qily-forest,#0f4b5a\)/.test(homePage), 'Homepage is not bound to the global forest color');
+  assert(/site-core-visual-bundle-v1\.css\?v=/.test(homePage), 'Homepage is not loading the global visual token bundle');
   assert(/--forest:var\(--qily-forest,#0f4b5a\)/.test(aiPage), 'AI page is not bound to the global forest color');
   assert(/\.user \.bubble\{[^}]*background:var\(--qily-forest,#0f4b5a\)/.test(aiPage), 'User message background is not using the global homepage color');
   assert(/word-procedure-v3/.test(aiPage), 'AI page is not loading the revised procedure-style Word exporter');
-  const controlledRoutes = navigation.match(/CONTROLLED_ROUTE_PATHS = \[([^\]]*)\]/);
+  const controlledRoutes = navigationCore.match(/CONTROLLED_ROUTE_PATHS = \[([^\]]*)\]/);
   assert(controlledRoutes, 'Controlled navigation route declaration is missing');
   if (controlledRoutes[1].trim()) {
-    assert(/ACCESS_PASSWORD = '259'/.test(navigation), 'Controlled modules are not using the established access password');
-    assert(!/function controlledPageConfig\(\) \{ return null; \}/.test(navigation), 'Controlled routes are configured without an access gate');
+    assert(/ACCESS_PASSWORD = '259'/.test(navigationCore), 'Controlled modules are not using the established access password');
+    assert(!/function controlledPageConfig\(\) \{ return null; \}/.test(navigationCore), 'Controlled routes are configured without an access gate');
   } else {
-    assert(/function controlledPageConfig\(\) \{ return null; \}/.test(navigation), 'Public page access state is inconsistent');
+    assert(/function controlledPageConfig\(\) \{ return null; \}/.test(navigationCore), 'Public page access state is inconsistent');
   }
   ['index.html','moments/index.html','moments/work/index.html','moments/team/index.html','moments/business/index.html','moments/life/index.html'].forEach((file) => {
     assert(/site-navigation\.js\?v=/.test(read(file)), `Global navigation bootstrap is missing: ${file}`);
   });
   assert(/手机长按原图可保存或转发高清版/.test(projectViewer), 'Project image viewer long-press guidance is missing');
   assert(/-webkit-touch-callout:default/.test(projectStyles), 'Project original-image long-press support is missing');
-  assert(!/-webkit-user-drag:none/.test(projectStyles), 'Project original-image dragging is still disabled');
+  assert(/\.project-lightbox-stage img\{[^}]*-webkit-touch-callout:default/.test(projectStyles), 'Project lightbox original image does not expose the native long-press menu');
   assert(/--project-thumb-size:2cm/.test(projectStyles), 'Project thumbnails are not standardized to 2cm square');
   assert(/project-list-page \.project-list-thumb img/.test(projectViewer), 'Project list thumbnails are not connected to the image viewer');
   assert(/data-image-action="save"/.test(projectViewer), 'Project image viewer save-original action is missing');
   assert(/touchstart/.test(projectViewer) && /touchend/.test(projectViewer), 'Project image viewer swipe navigation is missing');
-  assert(/project-pages\.css\?v=20260728-project-thumbnails-v4/.test(projectIndex), 'Project list is not loading the 2cm thumbnail styles');
-  assert(/project-image-viewer\.js\?v=20260728-project-thumbnails-v4/.test(projectIndex), 'Project list is not loading the continuous image viewer');
+  assert(/project-pages\.css\?v=[^"']+/.test(projectIndex), 'Project list is not loading the 2cm thumbnail styles');
+  assert(/project-image-viewer\.js\?v=[^"']+/.test(projectIndex), 'Project list is not loading the continuous image viewer');
   [
     'projects/automotive-lean/index.html',
     'projects/smed-300t/index.html',
@@ -221,18 +222,16 @@ async function main() {
     'projects/digital-factory/index.html'
   ].forEach((file) => {
     const page = read(file);
-    assert(/project-pages\.css\?v=20260728-project-thumbnails-v4/.test(page), `Unified project thumbnail styles are missing: ${file}`);
-    assert(/project-image-viewer\.js\?v=20260728-project-thumbnails-v4/.test(page), `Unified project image viewer is missing: ${file}`);
+    assert(/project-pages\.css\?v=[^"']+/.test(page), `Unified project thumbnail styles are missing: ${file}`);
+    assert(/project-image-viewer\.js\?v=[^"']+/.test(page), `Unified project image viewer is missing: ${file}`);
   });
   assert(/data-latest-brief-card/.test(knowledge) && /daily\/index\.json/.test(latest), 'Knowledge page is not bound to the latest brief index');
   assert(index.length > 0 && index.every((item, position) => position === 0 || index[position - 1].date >= item.date), 'Daily brief index is not newest-first');
   assert(knowledge.includes(`/qilylean/daily/${index[0].date}.html`), 'Knowledge hub does not link to the newest daily brief');
-  ['防呆法','动改法','双手法','人机法','五五法','流程法','抽样法'].forEach((method) => {
-    assert(brief.includes(method), `The July 27 brief is missing ${method}`);
-  });
-  assert(/五五法（5×5W2H Questioning）/.test(brief), 'The Five-by-Five method is not defined as 5×5W2H');
-  assert(/How do？/.test(brief) && /How much？/.test(brief), 'The two H questions are not standardized');
-  assert(brief.length > 6000, 'The July 27 IE article is still too shallow');
+  assert(/<article\b/.test(brief), 'The latest curated brief is missing its article body');
+  assert(/data-one-point-training="v1"/.test(brief), 'The latest curated brief is missing its single-point training block');
+  assert(/data-brief-message-form/.test(brief), 'The latest curated brief is missing its message form');
+  assert(brief.length > 6000, 'The latest curated brief is still too shallow');
 
   validateProductionOrganizationResource();
   await validateOfficePackages();

@@ -8,7 +8,9 @@ const { execFileSync } = require('child_process');
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
 const versions = {
-  navigation: '/site-navigation.js?v=20260822-sitewide-visual-axis-v36',
+  navigation: '/site-navigation.js?v=20260824-contact-readable-v40',
+  governance: '/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7',
+  firstPaintBuild: '20260824-readable-floor-plus2-v4',
   contentAxis: '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5',
   consistency: '/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13',
   dockOrder: '/site-dock-share-runtime-v1.js?v=20260822-dock-back-label-v3'
@@ -25,6 +27,8 @@ function trackedHtml() {
 function publish(source) {
   let next = source;
   next = next.replace(/\/site-navigation\.js(?:\?v=[^"']*)?/g, versions.navigation);
+  next = next.replace(/\/site-visual-governance-v2\.css(?:\?v=[^"']*)?/g, versions.governance);
+  next = next.replace(/(data-qily-r2-first-paint[^>]*>\s*\(function\([^)]*\)\{[\s\S]{0,180}?\bBUILD=)'[^']+'/gi, `$1'${versions.firstPaintBuild}'`);
   next = next.replace(/\/site-content-axis-v1\.css(?:\?v=[^"']*)?/g, versions.contentAxis);
   next = next.replace(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/g, versions.consistency);
   next = next.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g, versions.dockOrder);

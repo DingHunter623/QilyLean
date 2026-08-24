@@ -4,8 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <meta name="theme-color" content="#073c47">
+  <meta name="format-detection" content="telephone=no,email=no">
+  <meta name="applicable-device" content="pc,mobile">
+  <meta name="wechat-enable-text-zoom-em" content="true">
   <meta name="description" content="QilyLean 无广告斗地主｜简单娱乐，益智生活：无广告、无强制注册、操作简单，打开即可畅玩；为父母辈提供轻松便捷的休闲益智体验，也适合成年人放松思考。">
   <link rel="canonical" href="https://qilylean.com/tools/pure-ddz">
+<!-- QILY-CORE-SOCIAL-PREVIEW:START -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="QilyLean｜启力精益">
+<meta property="og:title" content="启力精益斗地主｜简单娱乐，益智生活">
+<meta property="og:description" content="QilyLean 无广告斗地主｜简单娱乐，益智生活：无广告、无强制注册、操作简单，打开即可畅玩；为父母辈提供轻松便捷的休闲益智体验，也适合成年人放松思考。">
+<meta property="og:url" content="https://qilylean.com/tools/pure-ddz">
+<meta property="og:image" content="https://qilylean.com/assets/social/pure-ddz-classic-share-1200x630.png">
+<meta property="og:image:secure_url" content="https://qilylean.com/assets/social/pure-ddz-classic-share-1200x630.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="纯净斗地主无广告单机长辈版功能与视觉预览">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="启力精益斗地主｜简单娱乐，益智生活">
+<meta name="twitter:description" content="QilyLean 无广告斗地主｜简单娱乐，益智生活：无广告、无强制注册、操作简单，打开即可畅玩；为父母辈提供轻松便捷的休闲益智体验，也适合成年人放松思考。">
+<meta name="twitter:image" content="https://qilylean.com/assets/social/pure-ddz-classic-share-1200x630.png">
+<meta name="twitter:image:alt" content="纯净斗地主无广告单机长辈版功能与视觉预览">
+<!-- QILY-CORE-SOCIAL-PREVIEW:END -->
   <title>启力精益斗地主｜简单娱乐，益智生活</title>
   <style>
     html,body{margin:0;min-height:100%;background:#073c47;color:#fff;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif}
@@ -19,7 +40,11 @@
   <script>
     (()=>{
       const root='./game/';
-      const version='20260824-card-layout-mobile-v1';
+      const version='20260824-card-comfort-wechat-v121';
+      const isWechat=/MicroMessenger/i.test(navigator.userAgent||'');
+      window.__PURE_DDZ_WECHAT_WEBVIEW__=isWechat;
+      window.__PURE_DDZ_MANAGED_LOADER__=true;
+      document.documentElement.classList.toggle('wechat-webview',isWechat);
       const loadStyle=(path)=>new Promise((resolve,reject)=>{
         const link=document.createElement('link');
         link.rel='stylesheet';
@@ -31,7 +56,8 @@
       window.__PURE_DDZ_STYLE_READY__=Promise.all([
         loadStyle('css/style.css'),
         loadStyle('css/qilylean-theme.css'),
-        loadStyle('css/visual-v120.css')
+        loadStyle('css/visual-v120.css'),
+        loadStyle('css/card-comfort-v121.css')
       ]);
       window.__PURE_DDZ_ROOT__=root;
       window.__PURE_DDZ_CACHE_KEY__=version;

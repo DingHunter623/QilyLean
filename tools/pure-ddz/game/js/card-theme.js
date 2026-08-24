@@ -35,6 +35,6 @@
     apply();
     if(window.MutationObserver){const observer=new MutationObserver(apply);observer.observe(document.documentElement,{childList:true,subtree:true})}
   }
-  function loadV120(){if(!document.getElementById('qily-visual-v120-css')){const link=document.createElement('link');link.id='qily-visual-v120-css';link.rel='stylesheet';link.href=runtimeUrl('css/visual-v120.css?v=20260824-rank-suit-line-v2');document.head.appendChild(link)}if(!document.querySelector('script[data-qily-visual-v120]')){const script=document.createElement('script');script.dataset.qilyVisualV120='1';script.src=runtimeUrl('js/visual-v120.js?v=20260824-rank-suit-line-v2');script.async=true;document.body.appendChild(script)}}
+  function loadV120(){if(window.__PURE_DDZ_MANAGED_LOADER__)return;if(!document.getElementById('qily-visual-v120-css')){const link=document.createElement('link');link.id='qily-visual-v120-css';link.rel='stylesheet';link.href=runtimeUrl('css/visual-v120.css?v=20260824-rank-suit-line-v2');document.head.appendChild(link)}if(!document.querySelector('script[data-qily-visual-v120]')){const script=document.createElement('script');script.dataset.qilyVisualV120='1';script.src=runtimeUrl('js/visual-v120.js?v=20260824-rank-suit-line-v2');script.async=true;document.body.appendChild(script)}}
   window.QilyLeanCardTheme=Object.freeze({getTheme,renderCard,renderMiniCard,ruleRankText,rankThemes:RANK_THEME,suitThemes:SUIT_THEME,jokerThemes:JOKER_THEME,runtimeRoot:runtimeRoot.href});installUiStandards();loadV120();
 })();

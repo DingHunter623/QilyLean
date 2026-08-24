@@ -31,6 +31,11 @@ function hasNoindex(html) {
     || /<meta\s+[^>]*content=["'][^"']*\bnoindex\b[^"']*["'][^>]*name=["'](?:robots|googlebot)["']/i.test(html);
 }
 
+function isRedirectPage(html) {
+  return /<meta\s+[^>]*http-equiv=["']refresh["']/i.test(html)
+    || /<meta\s+[^>]*content=["']0\s*;\s*url=/i.test(html);
+}
+
 function localFileForUrl(urlString) {
   const url = new URL(urlString);
   let pathname = decodeURIComponent(url.pathname);
@@ -49,6 +54,8 @@ function sitemapUrls(file) {
 const protectedNoindex = [
   /^404\.html$/,
   /^admin\.html$/,
+  /^daily\.html$/,
+  /^knowledge\/2026-07-19\.html$/,
   /^qilylean\/reference-[^/]+\.html$/,
   // Supporting viewers duplicate the indexed evidence hub and source assets.
   /^projects\/lean-improvement-evidence\/(?:award|q3|q4)-(?:online-view|preview)\.html$/
@@ -118,6 +125,9 @@ for (const sitemap of sitemapFiles) {
     }
     if (localFile.endsWith('.html') && hasNoindex(read(localFile))) {
       errors.push(`${sitemap}: ${url} is submitted for indexing but ${localFile} contains noindex`);
+    }
+    if (localFile.endsWith('.html') && isRedirectPage(read(localFile))) {
+      errors.push(`${sitemap}: ${url} is a redirect page and must not be submitted for indexing`);
     }
   }
 }

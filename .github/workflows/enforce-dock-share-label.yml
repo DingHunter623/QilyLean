@@ -7,6 +7,7 @@ on:
       - '**/*.html'
       - 'scripts/enforce-dock-share-label-v1.js'
       - 'scripts/validate-sitewide-remediation-20260822.js'
+      - 'scripts/validate-contact-readability-ddz-20260824.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-ui-consistency-v1.js'
       - 'site-core-service-dock-closure-v1.js'
@@ -19,6 +20,7 @@ on:
       - '**/*.html'
       - 'scripts/enforce-dock-share-label-v1.js'
       - 'scripts/validate-sitewide-remediation-20260822.js'
+      - 'scripts/validate-contact-readability-ddz-20260824.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-ui-consistency-v1.js'
       - 'site-core-service-dock-closure-v1.js'
@@ -51,6 +53,7 @@ jobs:
           node --check scripts/enforce-dock-share-label-v1.js
           node --check scripts/validate-public-shell-v31.js
           node --check scripts/validate-home-hero-dock-snapback-v1.js
+          node --check scripts/validate-contact-readability-ddz-20260824.js
           node --check site-dock-share-runtime-v1.js
           node --check site-ui-consistency-v1.js
           node --check site-core-service-dock-closure-v1.js
@@ -62,5 +65,6 @@ jobs:
         run: |
           node scripts/validate-public-shell-v31.js
           node scripts/validate-home-hero-dock-snapback-v1.js
+          node scripts/validate-contact-readability-ddz-20260824.js
           git diff --exit-code
           git diff --check

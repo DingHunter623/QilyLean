@@ -13,17 +13,18 @@ const improvements = read('improvements/index.html');
 const terminology = read('knowledge/terminology.html');
 const data = JSON.parse(read('qilylean/site-data.json'));
 
-assert(home.includes('<h2>三大核心业务</h2>'), 'Homepage three-core business heading is missing.');
-assert(home.includes('data-qily-three-core-services="v1"'), 'Homepage three-core service contract is missing.');
-assert(home.includes('ENGINEERING ENABLERS｜不计入核心业务'), 'Homepage engineering-enabler tier is missing.');
-assert(home.includes('官网本身作为技术实证，不列为核心业务'), 'Website evidence is not clearly excluded from core business.');
-assert(!home.includes('data-qily-six-core-services') && !home.includes('六类核心能力'), 'Homepage still exposes a six-core taxonomy.');
+assert(home.includes('三大核心业务｜先解决制造现场真正影响交付的问题'), 'Homepage three-core business heading is missing.');
+assert(home.includes('data-qily-core-business="three-v3"'), 'Homepage three-core service contract is missing.');
+assert(home.includes('DIGITAL ENABLERS｜数智化增强与数字产品能力'), 'Homepage digital-enabler tier is missing.');
+assert(home.includes('而不是把它们与核心制造项目混为一类'), 'Homepage does not separate digital enablers from core business.');
+assert(!home.includes('data-qily-six-core-services'), 'Homepage still exposes a six-core taxonomy contract.');
 assert(cooperation.includes('<h2>三大核心业务</h2>'), 'Cooperation three-core business heading is missing.');
-assert(cooperation.includes('data-qily-three-core-services="v1"'), 'Cooperation three-core service contract is missing.');
-assert(cooperation.includes('ENGINEERING ENABLERS｜非核心业务'), 'Cooperation engineering-enabler tier is missing.');
-assert(!cooperation.includes('data-qily-six-core-services') && !cooperation.includes('六类项目合作能力'), 'Cooperation still exposes a six-service taxonomy.');
-assert(!cooperation.includes('<span class="service-number">04</span>'), 'Digital factory is still numbered as a fourth core business.');
-assert(!cooperation.includes('<span class="service-number">05</span>') && !cooperation.includes('<span class="service-number">06</span>'), 'Digital works are still numbered as core businesses.');
+assert(cooperation.includes('data-qily-core-business="three-v3"'), 'Cooperation three-core service contract is missing.');
+assert(cooperation.includes('DIGITAL ENABLERS｜数智化增强与数字产品能力'), 'Cooperation digital-enabler tier is missing.');
+assert(cooperation.includes('三项增强能力，不与三大核心业务同级'), 'Cooperation does not separate digital enablers from core business.');
+assert(!cooperation.includes('data-qily-six-core-services'), 'Cooperation still exposes a six-service taxonomy contract.');
+assert(cooperation.includes('<small>Engineering Enabler</small>'), 'Digital factory is not labeled as an engineering enabler.');
+assert((cooperation.match(/<small>Digital Product<\/small>/g) || []).length === 2, 'APP and website capabilities are not labeled as digital products.');
 assert(improvements.includes('制造改善实践方法专栏') && improvements.includes('方法文章目录'), 'Academic overstatement remains in method index.');
 assert(!improvements.includes('制造改善实践论文合集') && !improvements.includes('论文目录'), 'Legacy paper naming remains.');
 

@@ -8,7 +8,7 @@
  * 说明：/links/ 页面本体仍保留“友情链接｜全球科技企业100强”身份；本次只调整一级导航显示名。
  * 制造运营闭环映射：
  * 01 履历主线 → 02 能力体系 → 03 改善方法（代表项目用于验证）→ 04 信任中心 → 05 项目合作 → 06 知识资产
- * 可读性：全站最小可见字号统一提升到 18px；手机端禁止通过缩字解决布局问题。
+ * 可读性：全站最小可见字号统一提升到 20px；手机端禁止通过缩字解决布局问题。
  * 内容轴：与 site-content-axis-v1.css 协同，公共页面统一到 1560px 内容窗口。
  */
 const fs = require('fs');
@@ -20,7 +20,7 @@ const APPLY = process.argv.includes('--apply');
 const BUILD = '20260820-resource-collaboration-v1';
 const NAV_JS_VERSION = '20260820-resource-collaboration-v31';
 const CORE_VERSION = '20260820-resource-collaboration-v25';
-const GOV_VERSION = '20260819-readable-floor-plus1-v6';
+const GOV_VERSION = '20260824-readable-floor-plus2-v7';
 const GOV_HREF = `/site-visual-governance-v2.css?v=${GOV_VERSION}`;
 const GOV_TAG = `<link id="qilyVisualGovernanceV1" rel="stylesheet" href="${GOV_HREF}">`;
 

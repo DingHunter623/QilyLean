@@ -7,7 +7,8 @@ const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const versions = {
-  navigation: '/site-navigation.js?v=20260822-sitewide-visual-axis-v36',
+  navigation: '/site-navigation.js?v=20260824-contact-readable-v40',
+  governance: '/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7',
   contentAxis: '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5',
   consistency: '/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13',
   dockOrder: '/site-dock-share-runtime-v1.js?v=20260822-dock-back-label-v3'
@@ -32,9 +33,9 @@ const experience = read('experience/index.html');
 
 assert(navigation.includes("mode: 'atomic-first-paint-v38'"), 'Navigation wrapper is not V38.');
 assert(navigation.includes("dockOrder: ['home','top','back','search','current','contact']"), 'Navigation contract has the wrong Dock order.');
-assert(navigation.includes('/site-navigation-core.js?v=20260822-dock-back-label-v27'), 'Navigation core cache key is stale.');
+assert(navigation.includes('/site-navigation-core.js?v=20260824-contact-channel-v29'), 'Navigation core cache key is stale.');
 assert(navigation.includes('/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23'), 'Navigation legacy cache key is stale.');
-assert(read('site-navigation-legacy-20260802.js').includes('/site-navigation-core.js?v=20260822-dock-back-label-v27'), 'Legacy navigation core cache key is stale.');
+assert(read('site-navigation-legacy-20260802.js').includes('/site-navigation-core.js?v=20260824-contact-channel-v29'), 'Legacy navigation core cache key is stale.');
 assert(navigation.includes('/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5'), 'Content-axis cache key is stale.');
 assert(dockClosure.includes("var order = ['home', 'top', 'back', 'search', 'current', 'contact'];"), 'Dock closure order is stale.');
 assert(!core.includes('data-action="share"'), 'Duplicate official-site share button returned to the core Dock.');
@@ -87,6 +88,7 @@ for (const relative of trackedHtml()) {
     navigationPages += 1;
     if (!html.includes(versions.navigation)) stale.push(`${relative}: navigation cache`);
   }
+  if (/\/site-visual-governance-v2\.css(?:\?v=[^"']*)?/.test(html) && !html.includes(versions.governance)) stale.push(`${relative}: readability governance cache`);
   if (/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/.test(html) && !html.includes(versions.dockOrder)) stale.push(`${relative}: Dock closure cache`);
   if (/\/site-content-axis-v1\.css(?:\?v=[^"']*)?/.test(html) && !html.includes(versions.contentAxis)) stale.push(`${relative}: content-axis cache`);
   if (/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/.test(html) && !html.includes(versions.consistency)) stale.push(`${relative}: consistency cache`);

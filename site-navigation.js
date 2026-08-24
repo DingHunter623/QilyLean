@@ -1,4 +1,4 @@
-/* QilyLean navigation runtime v38｜2026-08-24
+/* QilyLean navigation runtime v40｜2026-08-24
  * Hotfix closure:
  * 1) top-level /links/ navigation label is always “资源协同”;
  * 2) floating dock remains freely draggable while pressed and always returns to bottom-right after release/cancel/resize/pageshow;
@@ -10,15 +10,15 @@
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV38) return;
-  w.__qilyStaticFirstNavigationV38 = true;
+  if (w.__qilyStaticFirstNavigationV40) return;
+  w.__qilyStaticFirstNavigationV40 = true;
 
-  var CORE_SRC = '/site-navigation-core.js?v=20260822-dock-back-label-v27';
+  var CORE_SRC = '/site-navigation-core.js?v=20260824-contact-channel-v29';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23';
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13';
   var INTEGRITY_SRC = '/site-integrity-hotfix-v1.js?v=20260824-public-integrity-v1';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
-  var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260819-readable-floor-plus1-v6';
+  var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7';
   var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5';
   var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3';
   var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3';
@@ -259,5 +259,5 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   searchAuthorityRoute: '/lean-production/',
   searchAuthorityLabel: '精益生产',
   searchAuthoritySitewide: true,
-  version: '20260824-capability-self-heal-v38'
+  version: '20260824-contact-readable-v40'
 });
