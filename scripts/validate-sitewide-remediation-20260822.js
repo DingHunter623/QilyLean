@@ -30,7 +30,7 @@ const contentAxis = read('site-content-axis-v1.css');
 const home = read('index.html');
 const experience = read('experience/index.html');
 
-assert(navigation.includes("mode: 'atomic-first-paint-v36'"), 'Navigation wrapper is not V36.');
+assert(navigation.includes("mode: 'atomic-first-paint-v38'"), 'Navigation wrapper is not V38.');
 assert(navigation.includes("dockOrder: ['home','top','back','search','current','contact']"), 'Navigation contract has the wrong Dock order.');
 assert(navigation.includes('/site-navigation-core.js?v=20260822-dock-back-label-v27'), 'Navigation core cache key is stale.');
 assert(navigation.includes('/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23'), 'Navigation legacy cache key is stale.');
