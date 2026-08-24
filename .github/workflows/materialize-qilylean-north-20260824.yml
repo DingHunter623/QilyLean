@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feat/qilylean-north-20260824
     paths:
       - 'scripts/materialize-qilylean-north-20260824.js'
       - 'styles/qily-north-v1.css'
