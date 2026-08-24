@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/materialize-qilylean-north-20260824.js'
       - 'scripts/enforce-qilylean-north-funnel-v1.js'
+      - 'scripts/enforce-public-canonical-no-trailing-v1.js'
       - 'scripts/north-factory-diagnosis-v1.js'
       - 'styles/qily-north-v1.css'
       - 'styles/qily-north-diagnosis-v1.css'
@@ -13,12 +14,15 @@ on:
       - 'projects/lean-improvement-evidence/index.html'
       - 'sitemap.xml'
       - 'north/**'
+      - 'tools/pure-ddz/index.html'
   push:
     branches:
       - main
+      - feat/qilylean-north-diagnosis-20260824
     paths:
       - 'scripts/materialize-qilylean-north-20260824.js'
       - 'scripts/enforce-qilylean-north-funnel-v1.js'
+      - 'scripts/enforce-public-canonical-no-trailing-v1.js'
       - 'scripts/north-factory-diagnosis-v1.js'
       - 'styles/qily-north-v1.css'
       - 'styles/qily-north-diagnosis-v1.css'
@@ -27,6 +31,7 @@ on:
       - 'projects/lean-improvement-evidence/index.html'
       - 'sitemap.xml'
       - 'north/**'
+      - 'tools/pure-ddz/index.html'
   workflow_dispatch:
 
 permissions:
@@ -50,12 +55,14 @@ jobs:
         run: |
           node --check scripts/materialize-qilylean-north-20260824.js
           node --check scripts/enforce-qilylean-north-funnel-v1.js
+          node --check scripts/enforce-public-canonical-no-trailing-v1.js
           node --check scripts/north-factory-diagnosis-v1.js
 
       - name: Materialize regional static assets
         run: |
           node scripts/materialize-qilylean-north-20260824.js
           node scripts/enforce-qilylean-north-funnel-v1.js
+          node scripts/enforce-public-canonical-no-trailing-v1.js
 
       - name: Validate generated contract
         shell: bash
@@ -78,19 +85,20 @@ jobs:
           grep -q 'data-qily-diagnosis-form' north/diagnosis/index.html
           grep -q 'site-interaction-continuity-v1.css' north/index.html
           grep -q '1560px' styles/qily-north-v1.css
+          node scripts/enforce-public-canonical-no-trailing-v1.js --check
           git diff --check
 
       - name: Commit materialized public files
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/feat/qilylean-north-diagnosis-20260824')
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- index.html sitemap.xml projects/lean-improvement-evidence/index.html north; then
+          if git diff --quiet -- index.html sitemap.xml projects/lean-improvement-evidence/index.html north tools/pure-ddz/index.html; then
             echo 'No generated changes.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add index.html sitemap.xml projects/lean-improvement-evidence/index.html north
+          git add index.html sitemap.xml projects/lean-improvement-evidence/index.html north tools/pure-ddz/index.html
           git commit -m 'feat: materialize QilyLean NORTH regional funnel [skip ci]'
           git push
