@@ -12,18 +12,19 @@
 #digital .capability-home-visual{padding:26px!important;background:linear-gradient(145deg,#f7fbfa,#fffaf0)!important}
 #digital .capability-home-screen{box-shadow:0 16px 36px rgba(15,75,90,.18)!important}
 
+/* Pure DDZ showcase: visual clarity first. Keep the overall canvas light and the game board in a medium QilyLean teal. */
 #pure-ddz-digital-tool{grid-template-columns:minmax(390px,1fr) minmax(0,1fr);gap:30px}
-#pure-ddz-digital-tool .capability-ddz-visual{padding:28px!important;background:radial-gradient(circle at 50% 24%,rgba(66,202,148,.40),transparent 43%),linear-gradient(145deg,#0b5f58,#137783)!important}
-#pure-ddz-digital-tool .capability-ddz-board{width:min(620px,100%);margin:0 auto!important;padding:28px 26px 26px;border:2px solid rgba(255,227,155,.94);border-radius:26px;background:linear-gradient(180deg,rgba(7,69,67,.96),rgba(5,48,53,.98))!important;box-shadow:0 24px 58px rgba(0,0,0,.36),inset 0 0 0 1px rgba(255,255,255,.06);text-align:center}
-#pure-ddz-digital-tool .capability-ddz-title{margin:0 0 10px!important;color:#fff!important;text-shadow:0 2px 8px rgba(0,0,0,.55)!important;font-size:clamp(32px,3.3vw,44px)!important;line-height:1.1!important;font-weight:1000!important}
-#pure-ddz-digital-tool .capability-ddz-sub{margin:0 0 22px!important;color:#ffe39b!important;text-shadow:0 2px 6px rgba(0,0,0,.50)!important;font-size:19px!important;line-height:1.25!important;font-weight:1000!important}
+#pure-ddz-digital-tool .capability-ddz-visual{padding:28px!important;background:radial-gradient(circle at 50% 18%,rgba(255,232,166,.30),transparent 38%),linear-gradient(145deg,#dff3ed,#eef8f6)!important}
+#pure-ddz-digital-tool .capability-ddz-board{width:min(620px,100%);margin:0 auto!important;padding:28px 26px 26px;border:2px solid #dfbf70;border-radius:26px;background:linear-gradient(150deg,#137a71,#187784 58%,#146b77)!important;box-shadow:0 18px 38px rgba(15,75,90,.20),inset 0 0 0 1px rgba(255,255,255,.12);text-align:center}
+#pure-ddz-digital-tool .capability-ddz-title{margin:0 0 10px!important;color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;text-shadow:0 2px 5px rgba(0,42,49,.30)!important;font-size:clamp(32px,3.3vw,44px)!important;line-height:1.1!important;font-weight:1000!important}
+#pure-ddz-digital-tool .capability-ddz-sub{margin:0 0 22px!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;text-shadow:0 2px 4px rgba(0,42,49,.28)!important;font-size:19px!important;line-height:1.25!important;font-weight:1000!important}
 #pure-ddz-digital-tool .capability-ddz-jokers{gap:18px;margin-bottom:20px}
-#pure-ddz-digital-tool .capability-ddz-joker{width:118px;height:164px;padding:8px;border:2px solid #f7e8bc;border-radius:15px;background:#fff;box-shadow:0 10px 24px rgba(0,0,0,.36);overflow:hidden}
+#pure-ddz-digital-tool .capability-ddz-joker{width:118px;height:164px;padding:8px;border:2px solid #f7e8bc;border-radius:15px;background:#fff;box-shadow:0 10px 24px rgba(0,0,0,.24);overflow:hidden}
 #pure-ddz-digital-tool .capability-ddz-joker img{display:block;max-width:100%;max-height:112px;object-fit:contain}
 #pure-ddz-digital-tool .capability-ddz-joker b{margin-top:7px;color:#0b4653!important;font-size:16px!important;line-height:1.05!important;font-weight:950!important;white-space:nowrap}
 #pure-ddz-digital-tool .capability-ddz-joker.big img{width:94px;height:108px;object-fit:contain!important;object-position:center top!important;border-radius:8px}
 #pure-ddz-digital-tool .capability-ddz-cards{gap:12px;flex-wrap:nowrap;align-items:stretch}
-#pure-ddz-digital-tool .capability-ddz-card{width:110px;height:142px;padding:10px;border:2px solid #e5ddcb;border-radius:13px;background:linear-gradient(160deg,#fff,#f3fbf9);box-shadow:0 8px 18px rgba(0,0,0,.3);overflow:hidden;box-sizing:border-box}
+#pure-ddz-digital-tool .capability-ddz-card{width:110px;height:142px;padding:10px;border:2px solid #e5ddcb;border-radius:13px;background:linear-gradient(160deg,#fff,#f3fbf9);box-shadow:0 8px 18px rgba(0,0,0,.20);overflow:hidden;box-sizing:border-box}
 #pure-ddz-digital-tool .capability-ddz-card strong{display:block;font-size:31px!important;line-height:1!important;font-weight:1000!important;white-space:nowrap;overflow:hidden;text-overflow:clip}
 #pure-ddz-digital-tool .capability-ddz-card small{display:block;margin-top:7px;padding-bottom:7px;border-bottom:1px solid rgba(11,127,136,.42);color:#0b7f88!important;font-size:15px!important;line-height:1!important;font-weight:1000!important;white-space:nowrap;overflow:hidden}
 #pure-ddz-digital-tool .capability-ddz-card b{display:block;margin-top:13px;color:#173b38!important;font-size:17px!important;line-height:1.05!important;text-align:center;font-weight:1000!important;white-space:nowrap;letter-spacing:-.04em;overflow:hidden;text-overflow:clip}
