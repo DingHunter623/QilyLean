@@ -1,0 +1,84 @@
+/* Pure DDZ card layout + mobile scroll visibility v3 | 2026-08-24 */
+/* Visual-first rule: every normal card keeps rank and suit on one horizontal line. */
+.qily-card--normal .qily-card-corner{
+  display:flex!important;
+  flex-direction:row!important;
+  align-items:baseline!important;
+  justify-content:flex-start!important;
+  gap:3px!important;
+  width:max-content!important;
+  max-width:calc(100% - 8px)!important;
+  white-space:nowrap!important;
+}
+.qily-card--normal .qily-card-corner b,
+.qily-card--normal .qily-card-corner i{
+  display:inline-block!important;
+  flex:0 0 auto!important;
+  margin:0!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+.v120-play-card .qily-card--normal .qily-card-corner{gap:2px!important}
+
+/* Mobile: make the vertical scroll affordance unmistakable without covering the cards. */
+.v120-scroll-cue{
+  right:max(7px,env(safe-area-inset-right))!important;
+  width:50px!important;
+  min-height:166px!important;
+  padding:12px 5px!important;
+  gap:5px!important;
+  border:2px solid #ffe39b!important;
+  border-radius:999px!important;
+  background:linear-gradient(180deg,rgba(5,58,62,.97),rgba(3,39,45,.97))!important;
+  color:#ffe39b!important;
+  box-shadow:0 0 0 2px rgba(255,227,155,.10),0 12px 30px rgba(0,0,0,.46)!important;
+  backdrop-filter:blur(6px)!important;
+}
+.v120-scroll-cue span{
+  display:block!important;
+  color:#fff1b8!important;
+  font-size:26px!important;
+  line-height:1!important;
+  font-weight:1000!important;
+  text-shadow:0 2px 6px rgba(0,0,0,.45)!important;
+}
+.v120-scroll-cue b{
+  color:#ffe39b!important;
+  font-size:14px!important;
+  line-height:1.12!important;
+  font-weight:1000!important;
+  writing-mode:vertical-rl!important;
+  letter-spacing:.08em!important;
+}
+.v120-scroll-cue small{
+  display:block!important;
+  color:#e9fff8!important;
+  font-size:11px!important;
+  line-height:1.08!important;
+  font-weight:900!important;
+  writing-mode:vertical-rl!important;
+  letter-spacing:.06em!important;
+}
+.v120-scroll-cue.show{animation:v120-scroll-cue-emphasis 1.45s ease-in-out infinite!important}
+.v120-scroll-cue .v120-scroll-up{animation:v120-arrow-up 1.15s ease-in-out infinite!important}
+.v120-scroll-cue .v120-scroll-down{animation:v120-arrow-down 1.15s ease-in-out infinite!important}
+@keyframes v120-scroll-cue-emphasis{
+  0%,100%{opacity:.9;transform:translateY(-50%) scale(.98)}
+  50%{opacity:1;transform:translateY(-50%) scale(1.035)}
+}
+@keyframes v120-arrow-up{
+  0%,100%{transform:translateY(2px)}50%{transform:translateY(-5px)}
+}
+@keyframes v120-arrow-down{
+  0%,100%{transform:translateY(-2px)}50%{transform:translateY(5px)}
+}
+@media(max-width:680px){
+  .v120-scroll-cue{right:max(4px,env(safe-area-inset-right))!important;width:48px!important;min-height:156px!important}
+  .v120-scroll-cue b{font-size:13px!important}
+}
+@media(max-height:520px) and (orientation:landscape){
+  .v120-scroll-cue{min-height:142px!important;width:46px!important;padding:8px 4px!important}
+  .v120-scroll-cue span{font-size:23px!important}
+  .v120-scroll-cue b{font-size:12px!important}
+  .v120-scroll-cue small{font-size:10px!important}
+}
