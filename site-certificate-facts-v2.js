@@ -3,7 +3,7 @@
   'use strict';
   if(w.__qilyCertificateFactsV2)return;
   w.__qilyCertificateFactsV2=true;
-  var DDZ_STYLE='/pure-ddz-capability-visual-v2.css?v=20260824-joker-order-v6';
+  var DDZ_STYLE='/pure-ddz-capability-visual-v2.css?v=20260824-red-heart-ace-v8';
   function ensureDdzStyle(){
     var link=d.getElementById('qilyPureDdzCapabilityVisualV2')||d.querySelector('link[href*="/pure-ddz-capability-visual-v2.css"]');
     if(link&&link.getAttribute('href')!==DDZ_STYLE)link.setAttribute('href',DDZ_STYLE);
