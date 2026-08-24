@@ -22,7 +22,6 @@
     {"route": "/capabilities", "file": "capabilities/index.html"},
     {"route": "/projects", "file": "projects/index.html"},
     {"route": "/improvements", "file": "improvements/index.html"},
-    {"route": "/lean-production", "file": "lean-production/index.html", "marker": "精益生产"},
     {"route": "/knowledge", "file": "knowledge/index.html"},
     {"route": "/trust", "file": "trust/index.html"},
     {"route": "/cooperation", "file": "cooperation/index.html"},
