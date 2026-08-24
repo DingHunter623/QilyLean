@@ -19,7 +19,7 @@
   <script>
     (()=>{
       const root='./game/';
-      const version='20260824-mobile-hotfix1';
+      const version='20260824-card-layout-mobile-v1';
       const loadStyle=(path)=>new Promise((resolve,reject)=>{
         const link=document.createElement('link');
         link.rel='stylesheet';
@@ -55,7 +55,7 @@
         <button id="audio-toggle" class="icon-btn" type="button" aria-label="切换音乐与语音">🔊 <span>声音开</span></button>
         <button id="help-open" class="icon-btn" type="button">玩法</button>
         <button id="settings-open" class="icon-btn" type="button">设置</button>
-        <span class="apk-inline apk-hold">安装包待验证后发布</span>
+        <span class="apk-inline apk-hold">Android版暂未开放</span>
         <button id="start" class="start-btn" type="button">开始游戏</button>
       </nav>
     </header>
@@ -89,14 +89,14 @@
       </section>
     </main>
 
-    <footer class="site-footer"><span>启力精益斗地主 Web｜安装包待验证</span><span>QilyLean｜启力精益 开发</span><a href="/">返回官网首页</a></footer>
+    <footer class="site-footer"><span>启力精益斗地主 Web｜Android版暂未开放</span><span>QilyLean｜启力精益 开发</span><a href="/">返回官网首页</a></footer>
   </div>
 
   <div id="welcome" class="modal welcome-modal" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
     <div class="modal-card welcome-card"><div class="welcome-mark" aria-hidden="true">♠ <b>♥</b></div><p class="eyebrow">QilyLean 无广告斗地主｜简单娱乐，益智生活</p><h1 id="welcome-title">启力精益斗地主</h1><p class="welcome-copy">这款游戏源于一个真实的家庭需求：减少实名注册、账号登录、验证码等操作门槛，让父母辈打开即可轻松娱乐；同时也为长期面对复杂问题分析、工程改善、项目管理和高强度思考的成年人提供一个保持思考、适度放松的益智方式。简单、高效、友好，是这款数字产品延续的设计理念。</p><ul class="feature-list"><li><b>无广告纯单机</b><span>网页直接玩，Android 可离线使用</span></li><li><b>大字体适老化</b><span>高对比牌面与大按钮</span></li><li><b>积分与胜局奖励</b><span>战绩只保存在本机</span></li><li><b>语音、音乐、启力提示</b><span>启力提示仅给出建议，最终出牌始终由你手动确认</span></li></ul><button id="welcome-start" class="start-btn hero-start" type="button">开始游戏</button><button id="welcome-settings" class="text-btn" type="button">先调整难度、字体和声音</button></div>
   </div>
 
-  <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title"><div class="modal-card settings-card"><div class="modal-head"><div><p class="eyebrow">安心、简单、看得清</p><h2 id="settings-title">游戏设置</h2></div><button class="close-btn" type="button" data-close="settings-modal" aria-label="关闭设置">×</button></div><div class="settings-grid"><label class="setting-row"><span><b>经典背景音乐</b><small>原创传统斗地主年代感循环，可随时关闭</small></span><input id="setting-music" type="checkbox" checked></label><label class="setting-row"><span><b>中文语音提示</b><small>叫分、出牌、输赢均有语音提醒</small></span><input id="setting-voice" type="checkbox" checked></label><label class="setting-row"><span><b>出牌音效</b><small>保留轻柔的选择与出牌反馈</small></span><input id="setting-effects" type="checkbox" checked></label><label class="setting-select"><span><b>字体大小</b><small>可根据视力习惯随时调整</small></span><select id="setting-font"><option value="normal">标准大字</option><option value="large">舒适大字</option><option value="xlarge">特大字</option></select></label><label class="setting-select"><span><b>电脑难度</b><small>电脑只使用公开牌桌信息，不看你的手牌</small></span><select id="setting-difficulty"><option value="easy">轻松｜休闲</option><option value="normal">标准</option><option value="smart">稳健</option><option value="expert" selected>专家｜默认高强度</option><option value="challenge">挑战｜残局高压</option></select></label></div><section class="official-info" aria-label="官方信息"><h3>QilyLean 官方信息</h3><a href="/"><span>官方网址</span><b>https://qilylean.com</b></a><a href="mailto:admin@qilylean.com"><span>企业邮箱</span><b>admin@qilylean.com</b></a><p><span>Android：待验证后发布</span><span>微信：Qily259</span></p></section><button class="start-btn modal-done" type="button" data-close="settings-modal">保存并返回</button></div></div>
+  <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title"><div class="modal-card settings-card"><div class="modal-head"><div><p class="eyebrow">安心、简单、看得清</p><h2 id="settings-title">游戏设置</h2></div><button class="close-btn" type="button" data-close="settings-modal" aria-label="关闭设置">×</button></div><div class="settings-grid"><label class="setting-row"><span><b>经典背景音乐</b><small>原创传统斗地主年代感循环，可随时关闭</small></span><input id="setting-music" type="checkbox" checked></label><label class="setting-row"><span><b>中文语音提示</b><small>叫分、出牌、输赢均有语音提醒</small></span><input id="setting-voice" type="checkbox" checked></label><label class="setting-row"><span><b>出牌音效</b><small>保留轻柔的选择与出牌反馈</small></span><input id="setting-effects" type="checkbox" checked></label><label class="setting-select"><span><b>字体大小</b><small>可根据视力习惯随时调整</small></span><select id="setting-font"><option value="normal">标准大字</option><option value="large">舒适大字</option><option value="xlarge">特大字</option></select></label><label class="setting-select"><span><b>电脑难度</b><small>电脑只使用公开牌桌信息，不看你的手牌</small></span><select id="setting-difficulty"><option value="easy">轻松｜休闲</option><option value="normal">标准</option><option value="smart">稳健</option><option value="expert" selected>专家｜默认高强度</option><option value="challenge">挑战｜残局高压</option></select></label></div><section class="official-info" aria-label="官方信息"><h3>QilyLean 官方信息</h3><a href="/"><span>官方网址</span><b>https://qilylean.com</b></a><a href="mailto:admin@qilylean.com"><span>官网邮箱</span><b>admin@qilylean.com</b></a><p><span>Android：暂未开放下载</span><span>微信：Qily259</span></p></section><button class="start-btn modal-done" type="button" data-close="settings-modal">保存并返回</button></div></div>
 
   <div id="help-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="help-title"><div class="modal-card help-card"><div class="modal-head"><div><p class="eyebrow">三分钟轻松上手</p><h2 id="help-title">玩法说明</h2></div><button class="close-btn" type="button" data-close="help-modal" aria-label="关闭玩法说明">×</button></div><div class="help-sections"><section><b>1</b><div><h3>先叫地主</h3><p>三位玩家依次选择不叫或 1–3 分，分数最高者成为地主并获得三张底牌。</p></div></section><section><b>2</b><div><h3>按牌型出牌</h3><p>支持单牌、对子、三带、顺子、连对、飞机、四带二、炸弹和王炸等经典牌型。</p></div></section><section><b>3</b><div><h3>先出完者获胜</h3><p>地主单独一方，另外两位农民同队。炸弹、王炸与春天会增加倍数和积分。</p></div></section><section><b>AI</b><div><h3>启力提示</h3><p>轮到你时点击“启力提示”，系统只推荐并选中建议牌；是否采用、何时出牌都由你手动决定。</p></div></section></div><p class="privacy-note">本游戏无广告、无账号、无支付；积分与设置只保存在当前设备。</p><button class="start-btn modal-done" type="button" data-close="help-modal">我知道了</button></div></div>
 
