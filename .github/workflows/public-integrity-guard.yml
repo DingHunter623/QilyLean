@@ -10,7 +10,10 @@ on:
       - 'qilylean/site-data.json'
       - 'site-navigation.js'
       - 'site-integrity-hotfix-v1.js'
+      - 'site-certificate-facts-v2.js'
+      - 'scripts/materialize-public-integrity-v1.js'
       - 'scripts/check-public-integrity-v1.js'
+      - '.github/workflows/public-integrity-guard.yml'
   pull_request:
     paths:
       - 'knowledge/terminology.html'
@@ -19,7 +22,10 @@ on:
       - 'qilylean/site-data.json'
       - 'site-navigation.js'
       - 'site-integrity-hotfix-v1.js'
+      - 'site-certificate-facts-v2.js'
+      - 'scripts/materialize-public-integrity-v1.js'
       - 'scripts/check-public-integrity-v1.js'
+      - '.github/workflows/public-integrity-guard.yml'
   workflow_dispatch:
 
 permissions:
@@ -34,7 +40,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Syntax check integrity runtime
-        run: node --check site-integrity-hotfix-v1.js
+      - name: Syntax check integrity runtimes and materializer
+        run: |
+          node --check site-integrity-hotfix-v1.js
+          node --check site-certificate-facts-v2.js
+          node --check scripts/materialize-public-integrity-v1.js
+      - name: Materialize final public integrity state
+        run: node scripts/materialize-public-integrity-v1.js
       - name: Validate public integrity rules
         run: node scripts/check-public-integrity-v1.js
