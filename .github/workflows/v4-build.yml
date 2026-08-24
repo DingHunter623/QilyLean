@@ -22,12 +22,12 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       !contains(github.event.head_commit.message || '', '[v4-generated]')
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 2
 
       - uses: actions/setup-node@v4
         with:
@@ -39,7 +39,7 @@ jobs:
       - name: Normalize regional sitemap URL contract
         run: node scripts/qilylean-north-v4-sitemap-contract.js
 
-      - name: Materialize deterministic sitemap lastmod
+      - name: Materialize incremental sitemap lastmod
         run: node scripts/site-system-v4-sitemap-lastmod.js --write
 
       - name: Materialize production build identity
