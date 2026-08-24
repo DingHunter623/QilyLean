@@ -7,7 +7,10 @@ on:
       - '**/*.html'
       - 'robots.txt'
       - 'sitemap*.xml'
+      - 'site-navigation.js'
+      - 'data/search-authority-map.json'
       - 'scripts/validate-seo-indexability.js'
+      - 'scripts/validate-search-authority.js'
       - 'package.json'
       - '.github/workflows/seo-indexability.yml'
   pull_request:
@@ -15,7 +18,10 @@ on:
       - '**/*.html'
       - 'robots.txt'
       - 'sitemap*.xml'
+      - 'site-navigation.js'
+      - 'data/search-authority-map.json'
       - 'scripts/validate-seo-indexability.js'
+      - 'scripts/validate-search-authority.js'
       - 'package.json'
       - '.github/workflows/seo-indexability.yml'
   workflow_dispatch:
@@ -35,3 +41,5 @@ jobs:
           node-version: '22'
       - name: Validate sitemap and robots directives
         run: node scripts/validate-seo-indexability.js
+      - name: Validate search authority contracts
+        run: node scripts/validate-search-authority.js
