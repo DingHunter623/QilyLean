@@ -1,225 +1,28 @@
-name: Apply Sitewide Performance Visual Audit 2026-08-24
+name: Verify Sitewide Performance Visual Audit
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/apply-sitewide-audit-performance-visual-20260824.yml'
-      - 'index.html'
-      - 'capabilities/index.html'
-      - 'cooperation/index.html'
-      - 'site-navigation-core.js'
-      - 'pure-ddz-capability-visual-v2.css'
-      - 'tools/pure-ddz/**'
-      - 'qilylean/c919-strategy-hero-v14.*'
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  remediate:
+  verify-materialized-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
-          fetch-depth: 0
 
-      - name: Install loss-efficient WebP encoder
+      - name: Verify the materialized sitewide visual audit
         run: |
           set -euo pipefail
-          if ! command -v cwebp >/dev/null 2>&1; then
-            sudo apt-get update -qq
-            sudo apt-get install -y webp >/dev/null
-          fi
-
-      - name: Generate high-quality C919 WebP
-        run: |
-          set -euo pipefail
-          test -s qilylean/c919-strategy-hero-v14.png
-          cwebp -quiet -q 90 -m 6 -mt \
-            qilylean/c919-strategy-hero-v14.png \
-            -o qilylean/c919-strategy-hero-v14.webp
-          test -s qilylean/c919-strategy-hero-v14.webp
-          echo "PNG bytes:  $(stat -c%s qilylean/c919-strategy-hero-v14.png)"
-          echo "WebP bytes: $(stat -c%s qilylean/c919-strategy-hero-v14.webp)"
-
-      - name: Apply public-site remediation
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-
-          def read(path): return Path(path).read_text(encoding='utf-8')
-          def write(path, text): Path(path).write_text(text, encoding='utf-8')
-
-          # 1) Homepage C919: prioritize exact v14 WebP, retain PNG fallback, demote portrait bandwidth.
-          p = Path('index.html')
-          t = read(p)
-          avatar_preload = re.compile(r'<link rel="preload" as="image" href="/qilylean/ding-qili-ai-avatar-560\.webp[^\n]*\n')
-          t = avatar_preload.sub('', t, count=1)
-          c919_preload = '<link id="qilyC919HeroPreloadV1" rel="preload" as="image" href="/qilylean/c919-strategy-hero-v14.webp?v=20260824-sitewide-perf-v1" type="image/webp" fetchpriority="high">\n'
-          if 'id="qilyC919HeroPreloadV1"' not in t:
-            anchor = '<meta name="theme-color" content="#0f4b5a">\n'
-            if anchor not in t: raise SystemExit('homepage theme-color anchor missing')
-            t = t.replace(anchor, anchor + c919_preload, 1)
-          old_img = '<img src="/qilylean/c919-strategy-hero-v14.png" alt="QilyLean 最新飞机主视觉，俯视爬升机型的左右机翼展示新工厂和新产线规划、精益改善项目交付、目视化项目设计与交付、数字化工厂、APP软件开发、官网建设六项业务，右下角为官网二维码" width="1672" height="941" loading="eager" decoding="async" fetchpriority="high">'
-          new_img = '<picture><source srcset="/qilylean/c919-strategy-hero-v14.webp?v=20260824-sitewide-perf-v1" type="image/webp"><img src="/qilylean/c919-strategy-hero-v14.png?v=20260824-sitewide-perf-v1" alt="QilyLean 最新飞机主视觉，俯视爬升机型的左右机翼展示新工厂和新产线规划、精益改善项目交付、目视化项目设计与交付、数字化工厂、APP软件开发、官网建设六项业务，右下角为官网二维码" width="1672" height="941" loading="eager" decoding="async" fetchpriority="high"></picture>'
-          if old_img in t:
-            t = t.replace(old_img, new_img, 1)
-          elif 'c919-strategy-hero-v14.webp?v=20260824-sitewide-perf-v1' not in t:
-            raise SystemExit('homepage C919 hero anchor missing')
-          t = t.replace('loading="eager" decoding="async" fetchpriority="high">\n            </a>\n          </figure>\n        </aside>', 'loading="lazy" decoding="async" fetchpriority="low">\n            </a>\n          </figure>\n        </aside>', 1)
-          write(p, t)
-
-          # 2) Contact modal: URL/email field clicks copy first, then present explicit action prompt.
-          p = Path('site-navigation-core.js')
-          t = read(p)
-          marker = '/* QILY-CONTACT-LINK-ACTION-V12.5:START */'
-          if marker not in t:
-            addon = r'''
-
-/* QILY-CONTACT-LINK-ACTION-V12.5:START */
-(function(){
-  'use strict';
-  if(window.__qilyContactLinkActionV125)return;
-  window.__qilyContactLinkActionV125=true;
-  function copyText(text){
-    if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);
-    var f=document.createElement('textarea');f.value=text;f.setAttribute('readonly','');f.style.position='fixed';f.style.left='-9999px';document.body.appendChild(f);f.select();document.execCommand('copy');f.remove();return Promise.resolve();
-  }
-  function promptBox(){
-    var p=document.getElementById('qilyContactLinkPrompt');
-    if(p)return p;
-    p=document.createElement('div');p.id='qilyContactLinkPrompt';p.className='qily-phone-call-prompt-v124';p.setAttribute('role','status');p.setAttribute('aria-live','polite');
-    p.innerHTML='<span></span><button type="button"></button>';document.body.appendChild(p);
-    p.querySelector('button').addEventListener('click',function(){var href=p.getAttribute('data-action-href')||'';p.classList.remove('show');if(href)window.location.href=href;});
-    return p;
-  }
-  function place(anchor,p){var r=anchor.getBoundingClientRect();p.style.left='12px';p.style.top='12px';requestAnimationFrame(function(){var b=p.getBoundingClientRect(),x=r.right+10;if(x+b.width>innerWidth-12)x=Math.max(12,r.left-b.width-10);var y=Math.max(12,Math.min(r.top,innerHeight-b.height-12));p.style.left=Math.round(x)+'px';p.style.top=Math.round(y)+'px';});}
-  function copyThenPrompt(anchor,value,message,label,href){copyText(value).then(function(){var p=promptBox();p.setAttribute('data-action-href',href);p.querySelector('span').textContent=message;p.querySelector('button').textContent=label;place(anchor,p);p.classList.add('show');clearTimeout(copyThenPrompt.timer);copyThenPrompt.timer=setTimeout(function(){p.classList.remove('show');},9000);});}
-  document.addEventListener('click',function(e){
-    var a=e.target.closest&&e.target.closest('.qily-contact-panel .qily-email-list>a.qily-contact-email');
-    if(!a)return;
-    var href=a.getAttribute('href')||'';
-    if(/^https:\/\/qilylean\.com\/?$/i.test(href)){
-      e.preventDefault();e.stopPropagation();copyThenPrompt(a,'https://qilylean.com','官方网址 https://qilylean.com 已复制，是否立即打开？','立即打开','https://qilylean.com');return;
-    }
-    if(/^mailto:/i.test(href)){
-      var email=href.replace(/^mailto:/i,'').split('?')[0];e.preventDefault();e.stopPropagation();copyThenPrompt(a,email,'官网邮箱 '+email+' 已复制，是否打开邮件客户端？','打开邮件','mailto:'+email);
-    }
-  },true);
-})();
-/* QILY-CONTACT-LINK-ACTION-V12.5:END */
-'''
-            t += addon
-          write(p, t)
-
-          # 3) Restore the exact historical certificate assets and truthful historical presentation.
-          p = Path('capabilities/index.html')
-          t = read(p)
-          cert = '''<section id="ai-certificate" class="module-section"><div class="module-inner"><span class="module-eyebrow">CERTIFICATE | AI应用能力佐证</span><h2>AI应用与精益实践</h2><p class="module-lead">以持续学习、真实应用和成果沉淀为主线，将人工智能工具用于制造改善、数据分析、代码与网页资产生成及知识库建设；证书作为学习与实践经历佐证，不表述为OpenAI官方认证或授权。</p><div class="capability-certificate"><figure class="capability-certificate-visual"><a href="/qilylean/chatgpt-lean-certificate.png" target="_blank" rel="noopener" aria-label="查看ChatGPT应用与精益生产实践学习成果纪念证书原图"><img src="/qilylean/chatgpt-lean-certificate-web.jpg?v=20260824-certificate-restore-v1" alt="丁启利ChatGPT应用与精益生产实践学习成果纪念证书" loading="lazy" decoding="async"></a><figcaption>ChatGPT应用与精益生产实践学习成果纪念证书｜点击查看原图</figcaption></figure><article class="module-card evidence-card"><span class="module-eyebrow">AI / APPLICATION</span><h3>ChatGPT应用与精益生产实践</h3><p>自ChatGPT首次公开发布以来持续学习并实践人工智能工具应用，将ChatGPT、Codex等工具用于流程优化、效率提升、数据分析、程序文件编制、代码与网页资产生成，以及制造改善知识沉淀。</p><p class="module-result">证书编号：GPT-LE-2025-0422｜颁发日期：2025年4月22日｜公开定位：学习与应用实践纪念证书</p><p class="evidence-meta">能力边界 | AI用于辅助信息处理、方案生成、代码与自动化；制造结论仍以现场数据、工程标准、过程验证和人工复核为准。</p><div class="module-actions"><a href="/qilylean/chatgpt-lean-certificate.png" target="_blank" rel="noopener">查看证书原图</a><a href="/ai.html">进入 QilyLean AI</a></div></article></div></div></section>'''
-          pattern = re.compile(r'<section id="ai-certificate" class="module-section">.*?</section>\s*</main>', re.S)
-          if not pattern.search(t): raise SystemExit('AI certificate section not found')
-          t = pattern.sub(cert + '\n  </main>', t, count=1)
-          t = t.replace('/pure-ddz-capability-visual-v2.css?v=20260824-title-contrast-v4','/pure-ddz-capability-visual-v2.css?v=20260824-sitewide-audit-v5')
-          t = t.replace('Android安装包待网页版验证确认OK后再发布','Android版暂未开放下载')
-          t = t.replace('Android 安装包待验证','Android 版暂未开放下载')
-          write(p, t)
-
-          # 4) DDZ showcase: enforce final foreground/background contrast after all shared styles.
-          p = Path('pure-ddz-capability-visual-v2.css')
-          t = read(p)
-          vis_marker = '/* QILY-SITEWIDE-AUDIT-CONTRAST-V5 */'
-          if vis_marker not in t:
-            t += r'''
-
-/* QILY-SITEWIDE-AUDIT-CONTRAST-V5 */
-html body #pure-ddz-digital-tool .capability-ddz-visual{background:radial-gradient(circle at 50% 24%,rgba(68,207,156,.46),transparent 44%),linear-gradient(145deg,#0a6b66,#0d7680)!important}
-html body #pure-ddz-digital-tool .capability-ddz-board{background:linear-gradient(180deg,#083f43,#062f37)!important;border-color:#ffe39b!important;box-shadow:0 22px 54px rgba(4,30,34,.36),inset 0 0 0 1px rgba(255,255,255,.12)!important}
-html body #pure-ddz-digital-tool .capability-ddz-title{color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:0 2px 8px rgba(0,0,0,.78)!important;opacity:1!important}
-html body #pure-ddz-digital-tool .capability-ddz-sub{color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;text-shadow:0 2px 6px rgba(0,0,0,.72)!important;opacity:1!important}
-html body #pure-ddz-digital-tool .capability-ddz-card,html body #pure-ddz-digital-tool .capability-ddz-joker{background:#fff!important;color:#123f46!important}
-'''
-          write(p, t)
-
-          # 5) Cooperation hierarchy: body copy one step larger while preserving heading hierarchy.
-          p = Path('cooperation/index.html')
-          t = read(p)
-          coop_style = '''\n<style id="qilyCooperationReadableHierarchyV2">\nhtml body .cooperation-track .cooperation-boundary h4{font-size:19px!important;line-height:1.45!important}\nhtml body .cooperation-track .cooperation-boundary li{font-size:18px!important;line-height:1.74!important;margin:7px 0!important}\nhtml body .cooperation-track .cooperation-limit{font-size:18px!important;line-height:1.74!important}\nhtml body .cooperation-track>p,html body .cooperation-track .module-lead{font-size:18px!important;line-height:1.74!important}\n@media(max-width:620px){html body .cooperation-track .cooperation-boundary h4{font-size:18px!important}html body .cooperation-track .cooperation-boundary li,html body .cooperation-track .cooperation-limit{font-size:17px!important}}\n</style>\n'''
-          if 'qilyCooperationReadableHierarchyV2' not in t:
-            t = t.replace('</head>', coop_style + '</head>', 1)
-          write(p, t)
-
-          # 6) Public-facing DDZ wording: never expose internal validation/release process language.
-          public_files = [Path('tools/pure-ddz/index.html'), Path('capabilities/index.html')]
-          replacements = {
-            '安装包待验证后发布':'Android版暂未开放',
-            '安装包待验证':'Android版暂未开放',
-            'Android：待验证后发布':'Android：暂未开放下载',
-            'Android安装包待网页版验证确认OK后再发布':'Android版暂未开放下载',
-            'Android 版待验证':'Android 版暂未开放下载',
-          }
-          for fp in public_files:
-            s=read(fp)
-            for a,b in replacements.items(): s=s.replace(a,b)
-            write(fp,s)
-
-          # 7) Large-image audit: for public HTML, heavy non-hero image tags without loading policy become lazy+async.
-          heavy=[]
-          for ext in ('*.png','*.jpg','*.jpeg','*.webp'):
-            for img in Path('.').rglob(ext):
-              if any(part in {'.git','node_modules'} for part in img.parts): continue
-              try:
-                if img.stat().st_size >= 900_000: heavy.append('/'+img.as_posix())
-              except OSError: pass
-          for html in Path('.').rglob('*.html'):
-            if any(part in {'.git','node_modules','.github'} for part in html.parts): continue
-            s=read(html); changed=False
-            for asset in heavy:
-              if asset == '/qilylean/c919-strategy-hero-v14.png': continue
-              pat=re.compile(r'<img\b([^>]*?src=["\']'+re.escape(asset)+r'(?:\?[^"\']*)?["\'][^>]*)>', re.I)
-              def add_policy(m):
-                nonlocal_changed = m.group(0)
-                if 'loading=' in nonlocal_changed: return nonlocal_changed
-                attrs=m.group(1)
-                return '<img '+attrs+' loading="lazy" decoding="async">'
-              ns=pat.sub(add_policy,s)
-              if ns!=s: s=ns; changed=True
-            if changed: write(html,s)
-          PY
-
-      - name: Validate remediation contract
-        run: |
-          set -euo pipefail
-          test -s qilylean/c919-strategy-hero-v14.webp
-          WEBP=$(stat -c%s qilylean/c919-strategy-hero-v14.webp)
-          PNG=$(stat -c%s qilylean/c919-strategy-hero-v14.png)
-          test "$WEBP" -lt "$PNG"
+          node scripts/validate-contact-readability-ddz-20260824.js
+          node scripts/validate-home-hero-dock-snapback-v1.js
           grep -q 'qilyC919HeroPreloadV1' index.html
           grep -q 'c919-strategy-hero-v14.webp?v=20260824-sitewide-perf-v1' index.html
           grep -q 'QILY-CONTACT-LINK-ACTION-V12.5' site-navigation-core.js
-          grep -q '官方网址 https://qilylean.com 已复制，是否立即打开？' site-navigation-core.js
-          grep -q '官网邮箱 .* 已复制，是否打开邮件客户端？' site-navigation-core.js
-          grep -q '/qilylean/chatgpt-lean-certificate-web.jpg?v=20260824-certificate-restore-v1' capabilities/index.html
-          grep -q '/qilylean/chatgpt-lean-certificate.png' capabilities/index.html
-          ! grep -q 'ai-large-model-engineer.jpg' capabilities/index.html
           grep -q 'qilyCooperationReadableHierarchyV2' cooperation/index.html
           grep -q 'QILY-SITEWIDE-AUDIT-CONTRAST-V5' pure-ddz-capability-visual-v2.css
           ! grep -q '确认OK后再发布' capabilities/index.html
           ! grep -q '安装包待验证' tools/pure-ddz/index.html
-
-      - name: Commit remediation
-        run: |
-          set -euo pipefail
-          git config user.name 'QilyLean Site Audit Bot'
-          git config user.email 'admin@qilylean.com'
-          git add index.html capabilities/index.html cooperation/index.html site-navigation-core.js pure-ddz-capability-visual-v2.css tools/pure-ddz/index.html qilylean/c919-strategy-hero-v14.webp
-          if git diff --cached --quiet; then
-            echo 'Remediation already applied'
-          else
-            git commit -m 'fix: sitewide performance visual clarity and public interaction'
-            git push origin HEAD:${{ github.event.pull_request.head.ref }}
-          fi
+          git diff --check
