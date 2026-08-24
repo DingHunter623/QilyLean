@@ -1,0 +1,66 @@
+name: Materialize QilyLean NORTH
+
+on:
+  push:
+    branches:
+      - main
+      - feat/qilylean-north-20260824
+    paths:
+      - 'scripts/materialize-qilylean-north-20260824.js'
+      - 'styles/qily-north-v1.css'
+      - '.github/workflows/materialize-qilylean-north-20260824.yml'
+      - 'index.html'
+      - 'projects/lean-improvement-evidence/index.html'
+      - 'sitemap.xml'
+      - 'north/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Materialize regional static assets
+        run: node scripts/materialize-qilylean-north-20260824.js
+
+      - name: Validate generated contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f north/index.html
+          test -f north/inner-mongolia/index.html
+          test -f north/shaanxi/index.html
+          test -f north/ningxia/index.html
+          test -f north/gansu/index.html
+          grep -q 'QILY-NORTH-HOME-V1:START' index.html
+          grep -q '内蒙古某新能源负极材料制造加工厂' projects/lean-improvement-evidence/index.html
+          grep -q 'https://qilylean.com/north/inner-mongolia/' sitemap.xml
+          grep -q 'site-interaction-continuity-v1.css' north/index.html
+          grep -q '1560px' styles/qily-north-v1.css
+          git diff --check
+
+      - name: Commit materialized public files
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- index.html sitemap.xml projects/lean-improvement-evidence/index.html north; then
+            echo 'No generated changes.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html sitemap.xml projects/lean-improvement-evidence/index.html north
+          git commit -m 'feat: materialize QilyLean NORTH regional strategy [skip ci]'
+          git push
