@@ -69,22 +69,30 @@
   box-shadow:0 16px 36px rgba(15,75,90,.18)!important;
 }
 
-/* Pure DDZ: visual clarity first. */
+/* Pure DDZ: visual clarity first, with a lighter canvas and medium brand teal board. */
 #pure-ddz-digital-tool .capability-ddz-visual{
   padding:28px!important;
-  background:radial-gradient(circle at 50% 24%,rgba(66,202,148,.40),transparent 43%),linear-gradient(145deg,#0b5f58,#137783)!important;
+  background:radial-gradient(circle at 50% 18%,rgba(255,232,166,.30),transparent 38%),linear-gradient(145deg,#dff3ed,#eef8f6)!important;
 }
 #pure-ddz-digital-tool .capability-ddz-board{
   margin:0 auto!important;
-  background:linear-gradient(180deg,rgba(7,69,67,.96),rgba(5,48,53,.98))!important;
+  background:linear-gradient(150deg,#137a71,#187784 58%,#146b77)!important;
 }
 #pure-ddz-digital-tool .capability-ddz-title{
   color:#fff!important;
-  text-shadow:0 2px 8px rgba(0,0,0,.55)!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:0 2px 5px rgba(0,42,49,.30)!important;
 }
 #pure-ddz-digital-tool .capability-ddz-sub{
   color:#ffe39b!important;
-  text-shadow:0 2px 6px rgba(0,0,0,.50)!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:0 2px 4px rgba(0,42,49,.28)!important;
 }
 
 @media(max-width:980px){

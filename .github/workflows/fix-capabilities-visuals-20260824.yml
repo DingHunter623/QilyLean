@@ -6,8 +6,11 @@ on:
     paths:
       - '.github/workflows/fix-capabilities-visuals-20260824.yml'
       - 'scripts/fix-capabilities-visuals-20260824.js'
+      - 'scripts/publish-qilylean-home-v2.py'
       - 'assets/tools/times26001-overview.svg'
       - 'pure-ddz-capability-visual-v2.css'
+      - 'capability-digital-tools-layout-v1.css'
+      - 'app-download-share-v1.js'
   workflow_dispatch:
 
 permissions:
@@ -29,32 +32,42 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Validate patch script
-        run: node --check scripts/fix-capabilities-visuals-20260824.js
-      - name: Apply capability visual fixes
+      - name: Validate source scripts
+        run: |
+          node --check scripts/fix-capabilities-visuals-20260824.js
+          node --check app-download-share-v1.js
+          python3 -m py_compile scripts/publish-qilylean-home-v2.py
+      - name: Apply capability visual and action fixes
         run: node scripts/fix-capabilities-visuals-20260824.js
       - name: Validate output
         shell: bash
         run: |
           test -f assets/tools/times26001-overview.svg
           grep -q '/assets/tools/times26001-overview.svg?v=20260824-capability-visual-fix-v1' capabilities/index.html
-          grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-title-contrast-v4' capabilities/index.html
-          grep -q 'capability-ddz-title" style="color:#fff!important' capabilities/index.html
-          grep -q 'capability-ddz-sub" style="color:#ffe39b!important' capabilities/index.html
+          grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-readable-light-v5' capabilities/index.html
+          grep -q 'capability-ddz-title" style="color:#fff!important;-webkit-text-fill-color:#fff!important' capabilities/index.html
+          grep -q 'capability-ddz-sub" style="color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important' capabilities/index.html
+          grep -q 'data-qily-home-actions="20260824-v2"' capabilities/index.html
+          grep -q 'data-app-share-qr="qilyleanHome"' capabilities/index.html
+          grep -q 'data-app-share-link="qilyleanHome"' capabilities/index.html
+          grep -q '/app-download-share-v1.js?v=20260824-capability-home-actions-v2' capabilities/index.html
+          for label in '下载 Android APK' '下载说明' '扫码下载' '分享下载页' '隐私政策' '用户协议' '技术支持'; do
+            grep -q "$label" capabilities/index.html
+          done
           if grep -q '/times26001/times26001-showcase.svg' capabilities/index.html; then
             echo 'Broken Times26001 path still present' >&2
             exit 1
           fi
-      - name: Commit capability visual fixes
+      - name: Commit capability visual and action fixes
         shell: bash
         run: |
           if git diff --quiet; then
-            echo "Capability visuals already current."
+            echo "Capability visuals/actions already current."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add capabilities/index.html
-          git commit -m "fix: restore Times26001 visual and DDZ title contrast [skip ci]"
+          git commit -m "fix: publish QilyLean Home actions and DDZ readable visual [skip ci]"
           git pull --rebase origin main
           git push origin main

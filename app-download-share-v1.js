@@ -1,4 +1,4 @@
-/* QilyLean APP product/share normalization | 2026-08-08 */
+/* QilyLean APP product/share normalization | 2026-08-24 */
 (function(){
   'use strict';
   var TIMES_POSITIONING='面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。';
@@ -11,8 +11,8 @@
     },
     qilyleanHome:{
       name:'QilyLean Home｜官网通用安装包',
-      url:'https://qilylean.com/capabilities/#digital-tools',
-      download:'https://qilylean.com/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1',
+      url:'https://qilylean.com/capabilities/#qilylean-home',
+      download:'https://qilylean.com/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=20260824-qhome-v233',
       qr:'/assets/tools/qr-qilylean-home-download.svg?v=20260809-download-v2'
     }
   };
@@ -85,6 +85,26 @@
     });
   }
 
+  function ensureQilyLeanHomeActions(homeCard){
+    if(!homeCard)return;
+    var homeActions=homeCard.querySelector('.module-actions');
+    if(!homeActions)return;
+    var required=['下载 Android APK','下载说明','扫码下载','分享下载页','隐私政策','用户协议','技术支持'];
+    var current=[].map.call(homeActions.querySelectorAll('a,button'),function(el){return (el.textContent||'').trim();});
+    var complete=required.every(function(label){return current.indexOf(label)>=0;}) && homeActions.querySelectorAll('a,button').length===7;
+    if(!complete || homeActions.dataset.qilyHomeActions!=='20260824-v2'){
+      homeActions.dataset.qilyHomeActions='20260824-v2';
+      homeActions.innerHTML=''
+        + '<a data-qilylean-home-direct-download="1" href="/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=20260824-qhome-v233" download>下载 Android APK</a>'
+        + '<a href="/app-support/">下载说明</a>'
+        + '<a href="#qilylean-home-qr" data-app-share-qr="qilyleanHome" aria-label="扫码下载 QilyLean Home">扫码下载</a>'
+        + '<a href="https://qilylean.com/capabilities/#qilylean-home" data-app-share-link="qilyleanHome" aria-label="分享 QilyLean Home 下载页">分享下载页</a>'
+        + '<a href="/legal/qilylean-home/privacy/">隐私政策</a>'
+        + '<a href="/legal/qilylean-home/terms/">用户协议</a>'
+        + '<a href="mailto:admin@qilylean.com?subject=QilyLean%20Home%20%E6%8A%80%E6%9C%AF%E6%94%AF%E6%8C%81">技术支持</a>';
+    }
+  }
+
   function normalizeTimes26001Page(){
     var path=(location.pathname||'').replace(/\/index\.html$/,'/');
     if(path!=='/tools/times26001/')return;
@@ -101,8 +121,7 @@
     var section=document.getElementById('digital-tools');
     if(!section)return;
 
-    var cards=section.querySelectorAll('.capability-digital-tool');
-    var timesCard=cards[0];
+    var timesCard=document.getElementById('times26001');
     if(timesCard){
       var image=timesCard.querySelector('img');
       if(image)image.alt='Times26001工业工程时间研究与IE现场测时工具功能概览';
@@ -117,24 +136,11 @@
       timesCard.querySelectorAll('[data-app-share-link="times26001"]').forEach(function(btn){btn.textContent='分享下载页';});
     }
 
-    var homeCard=cards[1];
+    var homeCard=document.getElementById('qilylean-home');
     if(homeCard){
-      var homeActions=homeCard.querySelector('.module-actions');
-      if(homeActions){
-        var direct=homeActions.querySelector('[data-qilylean-home-direct-download]');
-        if(!direct){
-          direct=document.createElement('a');
-          direct.setAttribute('data-qilylean-home-direct-download','1');
-          direct.href='/QilyLean_Home_v2.3.3_API36_INSTALL.apk?build=efe5e188-qilylean-home-download-v1';
-          direct.setAttribute('download','');
-          direct.textContent='下载 Android APK（v2.2）';
-          homeActions.insertBefore(direct,homeActions.firstChild);
-        }
-        homeActions.querySelectorAll('[data-app-share-qr="qilyleanHome"]').forEach(function(btn){btn.textContent='扫码下载';});
-        homeActions.querySelectorAll('[data-app-share-link="qilyleanHome"]').forEach(function(btn){btn.textContent='分享下载页';});
-      }
+      ensureQilyLeanHomeActions(homeCard);
       var homeResult=homeCard.querySelector('.module-result');
-      if(homeResult)homeResult.textContent='当前官网可下载APK：v2.2（历史归档／旧Debug签名）｜最新构建：v2.3.1 / API 36（待正式签名发布，不作为当前覆盖升级包）｜秒级时钟｜公历＋农历＋周次｜Times26001直达｜免Root';
+      if(homeResult)homeResult.textContent='当前版本：v2.3.3 | versionCode 11 | Android 16 / API 36 | R5官网最新导航 | 实时时钟 + 农历 | Times26001直达 | 通用设置 + 全部应用抽屉';
     }
 
     replaceLeafText(section,'Times26001｜思大时间管理','Times26001');
