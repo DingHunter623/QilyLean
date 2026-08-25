@@ -38,9 +38,9 @@ requireText(materializer,'/site-translation-public-ui-v1.css?v=20260825-public-l
 requireText(materializer,'/site-translation-progress-v1.js?v=20260825-bilingual-progress-v2','Translation notice V2 materialization');
 requireText(materializer,'/site-content-contrast-guard-v1.css?v=20260825-sitewide-content-contrast-v1','Content contrast CSS materialization');
 requireText(materializer,'/site-content-contrast-guard-v1.js?v=20260825-sitewide-content-contrast-v1','Content contrast JS materialization');
-const bootstrapPos=materializer.indexOf('data-qily-translation-safety-bootstrap="inpage-v1"');
-const safePos=materializer.indexOf('data-qily-translation-safe-direct="inpage-v1"');
-const legacyPos=materializer.indexOf('data-qily-web-translate-direct="dual-route-v2"');
+const bootstrapPos=materializer.indexOf("'<script data-qily-translation-safety-bootstrap=\"inpage-v1\"");
+const safePos=materializer.indexOf('`<script data-qily-translation-safe-direct="inpage-v1"');
+const legacyPos=materializer.indexOf('`<script defer ${LEGACY_MARKER}');
 assert(bootstrapPos>=0&&safePos>bootstrapPos&&legacyPos>safePos,'Safety bootstrap/runtime must precede legacy compatibility runtime.');
 
 const publicUi = read('site-translation-public-ui-v1.js');
