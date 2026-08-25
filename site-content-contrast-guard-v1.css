@@ -1,0 +1,37 @@
+/* QilyLean Sitewide Content Contrast Guard V1｜2026-08-25
+ * Static information surfaces must remain readable independently of button/CTA contrast rules.
+ */
+html body [data-qily-content-contrast-fixed="dark"]{
+  color:#173f49!important;
+  -webkit-text-fill-color:#173f49!important;
+}
+html body [data-qily-content-contrast-fixed="light"]{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
+/* First-paint protection for known reusable light information surfaces. */
+html body #qilyTerminologyStaticCount,
+html body .engineering-checklist,
+html body .term-count,
+html body .module-section .notice,
+html body .module-section .callout,
+html body .module-section .summary,
+html body .module-section .insight,
+html body .module-section .lead{
+  color:#315f64!important;
+  -webkit-text-fill-color:#315f64!important;
+}
+html body #qilyTerminologyStaticCount strong,
+html body .engineering-checklist strong,
+html body .module-section .notice strong,
+html body .module-section .callout strong,
+html body .module-section .summary strong,
+html body .module-section .insight strong,
+html body .module-section .lead strong{
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+}
+
+/* Do not let decorative opacity make essential text effectively disappear. */
+html body [data-qily-content-contrast-fixed]{opacity:1!important}
