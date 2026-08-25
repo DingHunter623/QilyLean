@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-08-26",
+  "generatedAt": "2026-08-25",
   "schemaVersion": 1,
   "terminology": {
-    "total": 193,
-    "lessonTotal": 193,
+    "total": 192,
+    "lessonTotal": 192,
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
@@ -48,9 +48,9 @@
   "search": {
     "indexedEntries": 586,
     "indexedPages": 586,
-    "terminologyTotal": 193,
+    "terminologyTotal": 192,
     "briefTotal": 375,
     "latestBriefDate": "2026-08-25",
-    "sitemapLastmod": "2026-08-26"
+    "sitemapLastmod": "2026-08-25"
   }
 }
