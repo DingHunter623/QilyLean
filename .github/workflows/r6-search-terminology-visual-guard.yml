@@ -1,0 +1,43 @@
+name: R6 Search Terminology Visual Guard
+
+on:
+  pull_request:
+    paths:
+      - 'site-navigation.js'
+      - 'site-r6-search-terminology-visual-v1.js'
+      - 'knowledge/terminology/**'
+      - 'qilylean/site-data.json'
+      - 'qilylean/daily/**'
+      - 'scripts/validate-r6-search-terminology-visual.js'
+      - '.github/workflows/r6-search-terminology-visual-guard.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'site-navigation.js'
+      - 'site-r6-search-terminology-visual-v1.js'
+      - 'knowledge/terminology/**'
+      - 'qilylean/site-data.json'
+      - 'qilylean/daily/**'
+      - 'scripts/validate-r6-search-terminology-visual.js'
+      - '.github/workflows/r6-search-terminology-visual-guard.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: JavaScript syntax
+        run: |
+          node --check site-navigation.js
+          node --check site-r6-search-terminology-visual-v1.js
+          node --check scripts/validate-r6-search-terminology-visual.js
+      - name: R6 regression guard
+        run: node scripts/validate-r6-search-terminology-visual.js
