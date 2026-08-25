@@ -6,6 +6,8 @@ on:
     paths:
       - 'site-global-language-v3.js'
       - 'site-global-language-v1.css'
+      - 'site-translation-public-ui-v1.js'
+      - 'site-translation-public-ui-v1.css'
       - 'site-navigation.js'
       - 'site-header-axis-v1.css'
       - 'site-translation-progress-v1.js'
@@ -40,9 +42,10 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate Chinese-default translation, header axis and progress sources
+      - name: Validate Chinese-default translation, header axis and public UI sources
         run: |
           node --check site-global-language-v3.js
+          node --check site-translation-public-ui-v1.js
           node --check site-translation-progress-v1.js
           node --check site-navigation.js
           node --check site-parent-navigation-v3.js
@@ -64,6 +67,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             node --check site-global-language-v3.js
+            node --check site-translation-public-ui-v1.js
             node --check site-translation-progress-v1.js
             node --check site-navigation.js
             node --check site-parent-navigation-v3.js
@@ -75,17 +79,17 @@ jobs:
             node scripts/materialize-global-language-v3.js --check
             git diff --check
             if git diff --quiet; then
-              echo 'Global Translation / Header Axis already materialized on latest main.'
+              echo 'Global Translation / Header Axis / Public UI already materialized on latest main.'
               exit 0
             fi
             git add -- '*.html'
-            git commit -m 'build: materialize Header Axis and translation progress across public HTML'
+            git commit -m 'build: materialize translation public UI and navigation scrollbar across public HTML'
             if git push origin HEAD:main; then
-              echo 'Header Axis and translation progress sitewide materialization published.'
+              echo 'Translation public UI and navigation scrollbar sitewide materialization published.'
               exit 0
             fi
             echo 'main advanced during publish; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish Header Axis / translation progress after retries.'
+          echo 'Unable to publish translation public UI / navigation scrollbar after retries.'
           exit 1
