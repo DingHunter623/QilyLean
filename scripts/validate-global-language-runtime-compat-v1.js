@@ -68,7 +68,8 @@ const progressCss=read('site-translation-progress-v1.css');
 requireText(progressCss,'pointer-events:none','Non-blocking notice');
 
 const interaction=read('site-interaction-contrast-guard-v1.js');
-requireText(interaction,'data-qily-interaction-contrast-fixed','Interactive contrast correction');
+requireText(interaction,"setAttribute('data-qily-interaction-contrast'",'Interactive contrast correction');
+requireText(interaction,'if(current>=4.5)','Interactive WCAG AA threshold');
 const content=read('site-content-contrast-guard-v1.js');
 requireText(content,'data-qily-content-contrast-fixed','Static content contrast correction');
 requireText(content,'?3:4.5','WCAG-oriented contrast thresholds');
