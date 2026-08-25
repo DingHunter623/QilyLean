@@ -24,6 +24,7 @@ on:
       - 'scripts/validate-global-language-runtime-compat-v1.js'
       - 'scripts/validate-sitewide-safety-readability-v1.js'
       - 'scripts/validate-public-baseline-materialization-v1.js'
+      - 'scripts/validate-20260825-remediation-closure-v1.js'
       - 'scripts/validate-interaction-contrast-guard-v1.js'
       - 'scripts/validate-home-hero-dock-snapback-v1.js'
       - 'scripts/validate-sitewide-remediation-20260822.js'
@@ -34,7 +35,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 14
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
         with:
@@ -58,6 +59,7 @@ jobs:
           node --check scripts/validate-global-language-runtime-compat-v1.js
           node --check scripts/validate-sitewide-safety-readability-v1.js
           node --check scripts/validate-public-baseline-materialization-v1.js
+          node --check scripts/validate-20260825-remediation-closure-v1.js
           node --check scripts/validate-interaction-contrast-guard-v1.js
           node --check scripts/validate-home-hero-dock-snapback-v1.js
           node --check scripts/validate-sitewide-remediation-20260822.js
@@ -73,4 +75,5 @@ jobs:
           node scripts/materialize-global-language-v3.js
           node scripts/materialize-global-language-v3.js --check
           node scripts/validate-public-baseline-materialization-v1.js
+          node scripts/validate-20260825-remediation-closure-v1.js
           git diff --check
