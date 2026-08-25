@@ -46,11 +46,12 @@ assert(!cooperationDockClosure.includes('返回<br>上一层'), 'Cooperation Doc
 assert(consistency.includes("setAttribute('aria-label','回上一层')"), 'Dock accessibility label is not 回上一层.');
 assert(!consistency.includes('返回上一级有效页面'), 'Dock accessibility label returned to the retired wording.');
 
-/* Translation-sensitive cache ownership moved to Global Language V3.1. */
-assert(languageMaterializer.includes('/site-navigation.js?v=20260825-language-runtime-compat-v41'), 'V3.1 navigation cache owner missing.');
-assert(languageMaterializer.includes('/site-ui-consistency-v1.js?v=20260825-global-language-v31'), 'V3.1 consistency cache owner missing.');
-assert(languageMaterializer.includes('/site-dock-share-runtime-v1.js?v=20260825-language-runtime-compat-v31'), 'V3.1 Dock cache owner missing.');
-assert(languageMaterializer.includes('/site-global-language-v3.js?v=20260825-global-language-v31'), 'V3.1 language direct runtime missing.');
+/* Translation-sensitive cache ownership now belongs to the Chinese-default Google Translate on-demand materializer. */
+assert(languageMaterializer.includes('/site-navigation.js?v=20260825-language-runtime-compat-v41'), 'Navigation cache owner missing.');
+assert(languageMaterializer.includes('/site-ui-consistency-v1.js?v=20260825-google-translate-on-demand-v1'), 'Google on-demand consistency cache owner missing.');
+assert(languageMaterializer.includes('/site-dock-share-runtime-v1.js?v=20260825-language-runtime-compat-v31'), 'Dock cache owner missing.');
+assert(languageMaterializer.includes('/site-global-language-v3.js?v=20260825-google-translate-on-demand-v1'), 'Google on-demand direct runtime missing.');
+assert(languageMaterializer.includes('data-qily-google-translate-direct="on-demand-v1"'), 'Google on-demand direct marker missing.');
 
 let last = -1;
 for (const action of requiredDockOrder) {
@@ -95,4 +96,4 @@ for (const relative of trackedHtml()) {
 
 assert(navigationPages >= 460, `Navigation coverage unexpectedly fell to ${navigationPages} pages.`);
 assert(stale.length === 0, `Stale public shell entries: ${stale.slice(0, 20).join(', ')}`);
-process.stdout.write(`PASS: site-wide remediation validated across ${navigationPages} navigation pages; language-sensitive cache ownership delegated to Global Language V3.1.\n`);
+process.stdout.write(`PASS: site-wide remediation validated across ${navigationPages} navigation pages; translation is Chinese-default and Google on-demand.\n`);

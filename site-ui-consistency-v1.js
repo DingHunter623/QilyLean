@@ -1,6 +1,6 @@
-/* QilyLean 轻量父级导航与外壳一致性 v3.7｜2026-08-25
+/* QilyLean 轻量父级导航与外壳一致性 v3.8｜2026-08-25
  * 性能原则：静态HTML首帧即正确；运行时只校正导航、悬浮栏与全站公共增强。
- * Global Language V3.1：默认英文，中文静态HTML仍为权威源；运行时自愈不得覆盖非中文翻译结果。
+ * 翻译原则：中文静态HTML既是权威源也是默认展示；Google 翻译仅由访客主动选择后介入。
  */
 (function(d,w){
   'use strict';
@@ -8,10 +8,10 @@
   w.__qilyUiConsistencyV3=true;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260825-global-language-v31';
+  var BUILD_ID='20260825-google-translate-on-demand-v1';
   var BUILD_KEY='qily_site_ui_build_v1';
-  var LANGUAGE_CSS='/site-global-language-v1.css?v=20260825-global-language-v31';
-  var LANGUAGE_JS='/site-global-language-v3.js?v=20260825-global-language-v31';
+  var LANGUAGE_CSS='/site-global-language-v1.css?v=20260825-google-translate-on-demand-v1';
+  var LANGUAGE_JS='/site-global-language-v3.js?v=20260825-google-translate-on-demand-v1';
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
 
   function normalizedPath(path){
@@ -39,9 +39,9 @@
     var link=d.getElementById('qilyGlobalLanguageV1Stylesheet')||d.querySelector('link[href*="/site-global-language-v1.css"]');
     if(!link){link=d.createElement('link');link.id='qilyGlobalLanguageV1Stylesheet';link.rel='stylesheet';head.appendChild(link)}
     if(link.getAttribute('href')!==LANGUAGE_CSS)link.setAttribute('href',LANGUAGE_CSS);
-    if(w.__qilyGlobalLanguageV31)return;
-    var v31=d.getElementById('qilyGlobalLanguageV31Script')||d.querySelector('script[src*="/site-global-language-v3.js?v=20260825-global-language-v31"]');
-    if(!v31){v31=d.createElement('script');v31.id='qilyGlobalLanguageV31Script';v31.src=LANGUAGE_JS;v31.async=false;v31.setAttribute('data-qily-global-language','v3.1');head.appendChild(v31)}
+    if(w.__qilyGoogleTranslateOnDemandV1)return;
+    var google=d.getElementById('qilyGoogleTranslateOnDemandV1Script')||d.querySelector('script[src*="/site-global-language-v3.js?v=20260825-google-translate-on-demand-v1"]');
+    if(!google){google=d.createElement('script');google.id='qilyGoogleTranslateOnDemandV1Script';google.src=LANGUAGE_JS;google.async=false;google.setAttribute('data-qily-google-translate','on-demand-v1');head.appendChild(google)}
   }
 
   var pointer=null,handledAt=0;
@@ -60,6 +60,6 @@
   function reconcileFast(){ensureGlobalLanguageAssets();normalizePrimaryNav();normalizeDock();removeLegacyPureDdzHomeEntry()}
   function boot(){rememberBuild();ensureGlobalLanguageAssets();reconcileFast()}
   d.addEventListener('qily:shell-ready',reconcileFast);d.addEventListener('qily:language-change',reconcileFast);w.addEventListener('pageshow',reconcileFast);
-  w.__qilyParentNavigationV3=true;w.__qilyDockOrderContract=Object.freeze({order:['home','top','back','search','current','contact'],version:'20260825-global-language-v31'});
+  w.__qilyParentNavigationV3=true;w.__qilyDockOrderContract=Object.freeze({order:['home','top','back','search','current','contact'],version:'20260825-google-translate-on-demand-v1'});
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })(document,window);
