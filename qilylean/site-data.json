@@ -2,8 +2,8 @@
   "generatedAt": "2026-08-25",
   "schemaVersion": 1,
   "terminology": {
-    "total": 192,
-    "lessonTotal": 192,
+    "total": 193,
+    "lessonTotal": 193,
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
@@ -46,9 +46,9 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 586,
-    "indexedPages": 586,
-    "terminologyTotal": 192,
+    "indexedEntries": 588,
+    "indexedPages": 588,
+    "terminologyTotal": 193,
     "briefTotal": 375,
     "latestBriefDate": "2026-08-25",
     "sitemapLastmod": "2026-08-25"
