@@ -3,7 +3,7 @@
   "site": "QilyLean",
   "brand": "QilyLean｜启力精益",
   "standard": "QL-WEB-STD-001/R6",
-  "runtimeBaseline": "V38",
+  "runtimeBaseline": "V43",
   "production": {
     "baseUrl": "https://qilylean.com",
     "canonicalTrailingSlash": false,
