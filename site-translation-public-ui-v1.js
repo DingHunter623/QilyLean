@@ -29,9 +29,9 @@
     if(!select)return;
     var name=selectedName(select);
     var viewport=Math.max(d.documentElement.clientWidth||0,w.innerWidth||0);
-    var maxWidth=viewport<=1180?196:(viewport<=1500?190:220);
-    var width=Math.ceil(44+visualUnits(name)*9.2);
-    width=Math.max(124,Math.min(maxWidth,width));
+    var maxWidth=viewport<=430?210:(viewport<=1180?240:(viewport<=1500?260:280));
+    var width=Math.ceil(50+visualUnits(name)*9.8);
+    width=Math.max(128,Math.min(maxWidth,width));
     select.style.setProperty('--qily-language-select-width',width+'px');
     select.setAttribute('title',name);
     select.setAttribute('aria-label','网页翻译语言：'+name);
