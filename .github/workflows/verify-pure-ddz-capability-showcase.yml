@@ -107,10 +107,15 @@ jobs:
           import { chromium } from '@playwright/test';
           const browser=await chromium.launch({headless:true});
           const base='http://127.0.0.1:4173';
+          async function prepare(page){
+            await page.addInitScript(()=>localStorage.setItem('qily_global_language_v3','zh-CN'));
+          }
           async function check(viewport){
             const page=await browser.newPage({viewport});
+            await prepare(page);
             const errors=[];page.on('pageerror',e=>errors.push(String(e)));
-            await page.goto(base+'/tools/pure-ddz/',{waitUntil:'networkidle'});
+            await page.goto(base+'/tools/pure-ddz/',{waitUntil:'domcontentloaded'});
+            await page.waitForFunction(()=>document.documentElement.classList.contains('ddz-ready')&&Boolean(window.PureDDZTest)&&Boolean(window.QilyLeanV120),null,{timeout:8000});
             await page.locator('#welcome-start').click();
             await page.waitForFunction(()=>window.PureDDZTest?.getState().hands[0].length===17,{timeout:6000});
             await page.waitForTimeout(500);
@@ -135,8 +140,10 @@ jobs:
             await page.close();
           }
           const cap=await browser.newPage({viewport:{width:1440,height:900}});
+          await prepare(cap);
           const capErrors=[];cap.on('pageerror',e=>capErrors.push(String(e)));
-          await cap.goto(base+'/capabilities/',{waitUntil:'networkidle'});
+          await cap.goto(base+'/capabilities/',{waitUntil:'domcontentloaded'});
+          await cap.waitForSelector('#pure-ddz-digital-tool',{timeout:8000});
           if(await cap.locator('#pure-ddz-digital-tool').count()!==1) throw new Error('Capability DDZ digital tool missing');
           if(await cap.locator('.capability-ddz-joker').count()!==2) throw new Error('Joker showcase incomplete');
           if(await cap.locator('.capability-ddz-card').count()!==3) throw new Error('Representative card showcase incomplete');
