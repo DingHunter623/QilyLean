@@ -1,4 +1,4 @@
-name: Materialize Global Translation Dual Route V2 + Header Axis
+name: Materialize Global Translation + Interaction Contrast
 
 on:
   push:
@@ -8,6 +8,8 @@ on:
       - 'site-global-language-v1.css'
       - 'site-translation-public-ui-v1.js'
       - 'site-translation-public-ui-v1.css'
+      - 'site-interaction-contrast-guard-v1.js'
+      - 'site-interaction-contrast-guard-v1.css'
       - 'site-navigation.js'
       - 'site-header-axis-v1.css'
       - 'site-translation-progress-v1.js'
@@ -25,7 +27,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: materialize-global-translation-header-axis-main
+  group: materialize-global-shell-interaction-contrast-main
   cancel-in-progress: true
 
 jobs:
@@ -42,11 +44,12 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate Chinese-default translation, header axis and public UI sources
+      - name: Validate global shell and interaction contrast sources
         run: |
           node --check site-global-language-v3.js
           node --check site-translation-public-ui-v1.js
           node --check site-translation-progress-v1.js
+          node --check site-interaction-contrast-guard-v1.js
           node --check site-navigation.js
           node --check site-parent-navigation-v3.js
           node --check site-ui-consistency-v1.js
@@ -69,6 +72,7 @@ jobs:
             node --check site-global-language-v3.js
             node --check site-translation-public-ui-v1.js
             node --check site-translation-progress-v1.js
+            node --check site-interaction-contrast-guard-v1.js
             node --check site-navigation.js
             node --check site-parent-navigation-v3.js
             node --check site-ui-consistency-v1.js
@@ -79,17 +83,17 @@ jobs:
             node scripts/materialize-global-language-v3.js --check
             git diff --check
             if git diff --quiet; then
-              echo 'Global Translation / Header Axis / Public UI already materialized on latest main.'
+              echo 'Global shell / interaction contrast already materialized on latest main.'
               exit 0
             fi
             git add -- '*.html'
-            git commit -m 'build: materialize translation public UI and navigation scrollbar across public HTML'
+            git commit -m 'build: materialize sitewide interaction contrast guard across public HTML'
             if git push origin HEAD:main; then
-              echo 'Translation public UI and navigation scrollbar sitewide materialization published.'
+              echo 'Sitewide interaction contrast guard materialization published.'
               exit 0
             fi
             echo 'main advanced during publish; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish translation public UI / navigation scrollbar after retries.'
+          echo 'Unable to publish sitewide interaction contrast guard after retries.'
           exit 1
