@@ -9,26 +9,31 @@ function requireText(source, token, label) { if (!source.includes(token)) throw 
 function forbidText(source, token, label) { if (source.includes(token)) throw new Error(`${label}: forbidden stale pattern ${token}`); }
 
 const language = read('site-global-language-v3.js');
-requireText(language, '__qilyGlobalLanguageV31', 'Global Language runtime');
-requireText(language, "RUNTIME_VERSION = 'v3.1'", 'Global Language runtime');
-requireText(language, "mutation.type==='characterData'", 'Global Language mutation repair');
-requireText(language, 'changed.push(parent)', 'Global Language mutation repair');
-requireText(language, 'node.nodeValue!==next', 'Global Language idempotent text apply');
-requireText(language, 'element.getAttribute(attribute)!==translated', 'Global Language idempotent attribute apply');
-requireText(language, 'qily:language-change', 'Global Language change event');
-forbidText(language, "mutation.type==='characterData'&&mutation.target&&!TEXT_ORIGINAL.has", 'Global Language mutation repair');
+requireText(language, '__qilyGoogleTranslateOnDemandV1', 'Google Translate on-demand runtime');
+requireText(language, "defaultDisplayLanguage: SOURCE_LANGUAGE", 'Chinese default display contract');
+requireText(language, "automaticTranslation: false", 'No automatic translation contract');
+requireText(language, "setAttribute('data-qily-language', SOURCE_LANGUAGE)", 'Chinese source language state');
+requireText(language, "translate.google.com/translate?sl=auto&tl=", 'Google website translation route');
+requireText(language, "wrapper.className = 'qily-google-translate'", 'Visually distinct Google utility');
+requireText(language, "brand.textContent = 'Google 翻译'", 'Explicit Google Translate label');
+requireText(language, "badge.textContent = '按需'", 'On-demand visual badge');
+requireText(language, "w.location.assign(googleWebsiteTranslationUrl(target))", 'User-initiated translation navigation');
+requireText(language, "localStorage.removeItem('qily_global_language_v3')", 'Retired auto-language state cleanup');
+forbidText(language, 'qilylean-ai.dinghunter623.workers.dev/translate', 'Retired AI translation endpoint');
+forbidText(language, 'CHAT_API', 'Retired AI chat translation fallback');
+forbidText(language, 'MutationObserver(function () {\n      if (queued) return;\n      queued = true;\n      w.requestAnimationFrame(function () { queued = false; ensureControl(); });', '');
 
 const navigation = read('site-navigation.js');
 requireText(navigation, 'function isChineseSourceMode()', 'Navigation language gate');
 requireText(navigation, "sourceMode && (link.textContent || '').trim() !== '精益生产'", 'Lean navigation language gate');
 requireText(navigation, "sourceMode && (link.textContent || '').trim() !== '资源协同'", 'Resource navigation language gate');
 requireText(navigation, "mode: 'atomic-first-paint-v38'", 'Protected V38 navigation baseline');
-requireText(navigation, 'qily:language-change', 'Navigation language change reconciliation');
 
 const consistency = read('site-ui-consistency-v1.js');
-requireText(consistency, 'function sourceMode()', 'Shared shell language gate');
-requireText(consistency, 'if(sourceMode())', 'Shared shell Dock language gate');
-requireText(consistency, '20260825-global-language-v31', 'Shared shell V3.1 cache key');
+requireText(consistency, 'function sourceMode()', 'Shared shell source-language gate');
+requireText(consistency, 'if(sourceMode())', 'Shared shell Dock source-language gate');
+requireText(consistency, '20260825-google-translate-on-demand-v1', 'Shared shell on-demand cache key');
+requireText(consistency, '__qilyGoogleTranslateOnDemandV1', 'Shared shell on-demand runtime guard');
 
 const dock = read('site-dock-share-runtime-v1.js');
 requireText(dock, 'function sourceMode()', 'Dock order language gate');
@@ -43,6 +48,20 @@ requireText(parentNav, 'function sourceMode()', 'Parent navigation language gate
 requireText(parentNav, 'if(sourceMode())', 'Parent navigation language gate');
 
 const materializer = read('scripts/materialize-global-language-v3.js');
-['20260825-global-language-v31','20260825-language-runtime-compat-v41','20260825-language-runtime-compat-v42','20260825-language-runtime-compat-v31','20260825-language-runtime-compat-v101'].forEach((token) => requireText(materializer, token, 'Sitewide materializer'));
+[
+  '20260825-google-translate-on-demand-v1',
+  'data-qily-google-translate-direct="on-demand-v1"',
+  'data-qily-global-language-direct|data-qily-google-translate-direct',
+  '20260825-language-runtime-compat-v41',
+  '20260825-language-runtime-compat-v42',
+  '20260825-language-runtime-compat-v31',
+  '20260825-language-runtime-compat-v101'
+].forEach((token) => requireText(materializer, token, 'Sitewide materializer'));
 
-process.stdout.write('Global Language V3.1 runtime compatibility validation passed.\n');
+const css = read('site-global-language-v1.css');
+requireText(css, '.qily-google-translate{', 'Google utility styling');
+requireText(css, 'border:2px solid #4285f4', 'Google utility visual distinction');
+requireText(css, '#qilyGlobalLanguageV1,.qily-language-switcher{display:none!important}', 'Retired control suppression');
+forbidText(css, 'qily-language-spin', 'Retired automatic translation spinner');
+
+process.stdout.write('Chinese-default Google Translate on-demand runtime validation passed.\n');
