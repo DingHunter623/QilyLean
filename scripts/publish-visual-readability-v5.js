@@ -18,7 +18,8 @@ const DAILY_STYLE_ID = 'qilyDailyReadabilityClosureV8';
 const DAILY_STYLE = `<style id="${DAILY_STYLE_ID}">
 /* QILY-DAILY-READABILITY-CLOSURE-V8-20260825
  * Final rendered-page ownership: major headings use Chinese hierarchy; deep badges use white;
- * dark Hero kicker uses gold; light cards use dark copy. Loaded after every shared stylesheet.
+ * dark Hero kicker uses gold; dark Hero body copy uses white; light cards use dark copy.
+ * Loaded after every shared stylesheet.
  */
 html body.daily-single-page main article.post .section-head>.section-no{
   display:block!important;flex:0 0 auto!important;width:auto!important;height:auto!important;min-width:0!important;min-height:0!important;
@@ -28,6 +29,9 @@ html body.daily-single-page main article.post .section-head>.section-no{
 html body.daily-single-page main article.post .section-head>.section-no::before{content:none!important}
 html body.daily-single-page main article.post .hero .kicker{
   color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;background:rgba(7,60,71,.38)!important;border-color:rgba(255,227,155,.72)!important;opacity:1!important;text-shadow:none!important;
+}
+html body.daily-single-page main article.post .hero>p{
+  color:#edf9f6!important;-webkit-text-fill-color:#edf9f6!important;opacity:1!important;text-shadow:none!important;
 }
 html body.daily-single-page main article.post :is(.tag,.num,.step>b:first-child,.service-number,.step-number,.step-index,.sequence-number,.process-number,.number-badge,.workflow-number,.timeline-number,.term-opl-num){
   color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:none!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;
@@ -170,6 +174,7 @@ function verifyPages() {
       dailyCount += 1;
       assert(/<body\b[^>]*class=["'][^"']*\bdaily-single-page\b/i.test(html), `${rel}: Daily Brief body hook missing`);
       assert(html.includes(`id="${DAILY_STYLE_ID}"`), `${rel}: Daily Brief final readability closure missing`);
+      assert(html.includes('article.post .hero>p'), `${rel}: dark Hero body copy guard missing`);
       assert(!/<span\b[^>]*class=["'][^"']*\bsection-no\b[^"']*["'][^>]*>\s*0\d\s*<\/span>/i.test(html), `${rel}: major heading still uses 01/02 numeric hierarchy`);
     }
   }
