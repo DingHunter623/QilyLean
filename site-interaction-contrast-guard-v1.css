@@ -1,0 +1,84 @@
+/* QilyLean Sitewide Interaction Contrast Guard V1｜2026-08-25
+ * Rule: deep/brand controls use white text; light/gold controls use dark text.
+ * This layer is intentionally loaded late so old page-local styles cannot make CTA labels unreadable.
+ */
+:root{
+  --qily-contrast-light:#ffffff;
+  --qily-contrast-dark:#17322d;
+}
+
+/* Known dark CTA families: first-paint fallback before runtime measurement. */
+html body :is(
+  .reference-button,
+  .qily-dark-action,
+  .qily-olive-action,
+  a[href].module-action,
+  a[href].resource-action,
+  a[href].project-list-action,
+  a[href].project-card-action,
+  a[href].service-contract-link,
+  a[href].share-button,
+  .daily-index-heading>a[href],
+  .brief-index-actions a.brief-open[href]
+){
+  color:var(--qily-contrast-light)!important;
+  -webkit-text-fill-color:var(--qily-contrast-light)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html body :is(
+  .reference-button,
+  .qily-dark-action,
+  .qily-olive-action,
+  a[href].module-action,
+  a[href].resource-action,
+  a[href].project-list-action,
+  a[href].project-card-action,
+  a[href].service-contract-link,
+  a[href].share-button,
+  .daily-index-heading>a[href],
+  .brief-index-actions a.brief-open[href]
+) :is(span,strong,b,small,i,em){
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  opacity:1!important;
+}
+
+/* Runtime-measured contrast correction. */
+html body [data-qily-interaction-contrast="light"]{
+  color:var(--qily-contrast-light)!important;
+  -webkit-text-fill-color:var(--qily-contrast-light)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html body [data-qily-interaction-contrast="dark"]{
+  color:var(--qily-contrast-dark)!important;
+  -webkit-text-fill-color:var(--qily-contrast-dark)!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html body [data-qily-interaction-contrast] :is(span,strong,b,small,i,em){
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  opacity:1!important;
+}
+html body [data-qily-interaction-contrast] svg{
+  color:inherit!important;
+}
+html body [data-qily-interaction-contrast] svg[fill="currentColor"],
+html body [data-qily-interaction-contrast] svg [fill="currentColor"]{
+  fill:currentColor!important;
+}
+html body [data-qily-interaction-contrast] svg[stroke="currentColor"],
+html body [data-qily-interaction-contrast] svg [stroke="currentColor"]{
+  stroke:currentColor!important;
+}
+
+/* Keep disabled controls readable; disabled means reduced emphasis, not invisible text. */
+html body [data-qily-interaction-contrast][aria-disabled="true"],
+html body [data-qily-interaction-contrast]:disabled{
+  opacity:.62!important;
+}
