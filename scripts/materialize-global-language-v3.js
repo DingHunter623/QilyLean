@@ -43,15 +43,17 @@ function removeLegacyTranslatorScripts(source) {
   return source.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-global-language-v3\.js[^"']*["'][^>]*><\/script>\s*/gi, '\n');
 }
 function removeManagedStyles(source) {
-  const managed = [
-    'site-global-language-v1\\.css',
-    'site-header-axis-v1\\.css',
-    'site-translation-progress-v1\\.css',
-    'site-translation-public-ui-v1\\.css',
-    'site-interaction-contrast-guard-v1\\.css',
-    'site-content-contrast-guard-v1\\.css'
-  ].join('|');
-  return source.replace(new RegExp('\\s*<link\\b[^>]*href=["\\'][^"\\']*\\/(?:'+managed+')[^"\\']*["\\'][^>]*>\\s*','gi'),'\n');
+  const patterns = [
+    /\s*<link\b[^>]*href=["'][^"']*\/site-global-language-v1\.css[^"']*["'][^>]*>\s*/gi,
+    /\s*<link\b[^>]*href=["'][^"']*\/site-header-axis-v1\.css[^"']*["'][^>]*>\s*/gi,
+    /\s*<link\b[^>]*href=["'][^"']*\/site-translation-progress-v1\.css[^"']*["'][^>]*>\s*/gi,
+    /\s*<link\b[^>]*href=["'][^"']*\/site-translation-public-ui-v1\.css[^"']*["'][^>]*>\s*/gi,
+    /\s*<link\b[^>]*href=["'][^"']*\/site-interaction-contrast-guard-v1\.css[^"']*["'][^>]*>\s*/gi,
+    /\s*<link\b[^>]*href=["'][^"']*\/site-content-contrast-guard-v1\.css[^"']*["'][^>]*>\s*/gi
+  ];
+  let next = source;
+  for (const pattern of patterns) next = next.replace(pattern, '\n');
+  return next;
 }
 
 function materialize(source) {
