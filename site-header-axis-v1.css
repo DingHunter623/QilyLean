@@ -1,0 +1,110 @@
+/* QilyLean Global Header Axis V1｜2026-08-25
+ * Goal: align Logo / primary navigation / translation utility to the same 1560px site content axis.
+ * Desktop: every first-level item remains visible at 100% zoom without horizontal clipping.
+ * Narrow desktop: compress spacing first, then type size within a guarded 18–20px range; never wrap CJK labels.
+ */
+:root{
+  --qily-header-axis:var(--qily-content-axis,1560px);
+  --qily-header-gutter:var(--qily-content-axis-gutter,clamp(18px,2.2vw,56px));
+}
+
+html body header.qily-site-header,
+html body header.qily-global-header,
+html body header.topbar.qily-site-header,
+html body header.top.qily-site-header{
+  width:auto!important;
+  max-width:var(--qily-header-axis)!important;
+  margin-left:max(var(--qily-header-gutter),calc((100vw - var(--qily-header-axis))/2))!important;
+  margin-right:max(var(--qily-header-gutter),calc((100vw - var(--qily-header-axis))/2))!important;
+  padding-left:0!important;
+  padding-right:0!important;
+  box-sizing:border-box!important;
+  gap:0!important;
+  isolation:isolate;
+}
+
+/* Keep the white sticky header surface full-bleed while its content follows the governed axis. */
+html body header.qily-site-header::before,
+html body header.qily-global-header::before{
+  content:"";
+  position:absolute;
+  z-index:-1;
+  top:0;
+  bottom:0;
+  left:50%;
+  width:100vw;
+  transform:translateX(-50%);
+  background:#fff;
+  border-bottom:1px solid var(--qily-line,#d5e4e3);
+  pointer-events:none;
+}
+
+html body header.qily-site-header> :is(.brand,.qily-brand),
+html body header.qily-global-header> :is(.brand,.qily-brand){
+  flex:0 0 auto!important;
+  margin-left:0!important;
+  margin-right:clamp(8px,.85vw,16px)!important;
+  white-space:nowrap!important;
+}
+
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav),
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav){
+  display:flex!important;
+  flex:1 1 0!important;
+  min-width:0!important;
+  max-width:none!important;
+  width:auto!important;
+  margin-left:auto!important;
+  margin-right:0!important;
+  padding-left:0!important;
+  padding-right:0!important;
+  gap:clamp(0px,.18vw,4px)!important;
+  justify-content:flex-end!important;
+  align-items:center!important;
+  flex-wrap:nowrap!important;
+  overflow:visible!important;
+  white-space:nowrap!important;
+  scrollbar-width:none!important;
+}
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar,
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar{display:none!important}
+
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
+  flex:0 0 auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  padding-left:clamp(6px,.48vw,9px)!important;
+  padding-right:clamp(6px,.48vw,9px)!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+}
+
+/* 100% desktop zoom guard: fit the complete primary navigation before allowing any scroll behavior. */
+@media (min-width:1181px) and (max-width:1500px){
+  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
+  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
+    font-size:clamp(18px,1.35vw,20px)!important;
+    padding-left:5px!important;
+    padding-right:5px!important;
+  }
+  html body header.qily-site-header> :is(.brand,.qily-brand),
+  html body header.qily-global-header> :is(.brand,.qily-brand){margin-right:8px!important}
+}
+
+/* Tablet / compact layouts may scroll the navigation, but must not clip or wrap labels. */
+@media (max-width:1180px){
+  html body header.qily-site-header,
+  html body header.qily-global-header{
+    margin-left:var(--qily-header-gutter)!important;
+    margin-right:var(--qily-header-gutter)!important;
+  }
+  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav),
+  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav){
+    justify-content:flex-start!important;
+    overflow-x:auto!important;
+    overscroll-behavior-x:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+}
