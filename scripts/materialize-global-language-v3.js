@@ -4,7 +4,7 @@
 /* QilyLean Sitewide Public Baseline Materializer V1｜2026-08-25
  * Single public baseline: Chinese source + in-page safe translation + public language UI +
  * header axis + interaction/content contrast. The retired external-proxy translator is never emitted.
- * release trigger: 2026-08-25 full baseline reconciliation v1
+ * release trigger: 2026-08-25 full baseline reconciliation v2 publish
  */
 const fs = require('fs');
 const path = require('path');
