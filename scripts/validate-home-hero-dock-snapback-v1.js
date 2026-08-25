@@ -19,10 +19,13 @@ const home=read('index.html');
 const materializer=read('scripts/materialize-global-language-v3.js');
 const runtime='/site-global-language-v3.js?v=20260825-global-translation-dual-route-v2';
 const homeReady=home.includes(runtime)&&home.includes('data-qily-web-translate-direct="dual-route-v2"');
-const publishReady=materializer.includes(runtime)&&materializer.includes('data-qily-web-translate-direct="dual-route-v2"');
+const publishReady=
+  materializer.includes("const VERSION = '20260825-global-translation-dual-route-v2'")&&
+  materializer.includes('/site-global-language-v3.js?v=${VERSION}')&&
+  materializer.includes('data-qily-web-translate-direct="dual-route-v2"');
 assert(home.includes('/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3'),'homepage does not reference Hero V3');
 assert(home.includes('/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3'),'homepage does not reference Dock Snapback V3');
 assert(home.includes('/site-navigation.js?v=20260825-language-runtime-compat-v41'),'homepage does not reference language-aware Navigation V41');
 assert(homeReady||publishReady,'Global Translation Dual Route V2 contract is neither materialized nor queued');
 assert(home.includes('font-size:clamp(40px,3.6vw,52px)!important'),'homepage first-paint parity is not using the reduced hero headline tier');
-process.stdout.write('PASS: homepage Hero V3 and Dock Snapback V3 remain protected; Chinese-default Global Translation Dual Route V2 is controlled by the sitewide materializer.\n');
+process.stdout.write('PASS: homepage Hero V3 and Dock Snapback V3 remain protected; Chinese-default Global Translation Dual Route V2 is materialized or queued by the governed sitewide materializer.\n');

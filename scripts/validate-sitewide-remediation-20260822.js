@@ -47,10 +47,11 @@ assert(consistency.includes("setAttribute('aria-label','回上一层')"), 'Dock 
 assert(!consistency.includes('返回上一级有效页面'), 'Dock accessibility label returned to the retired wording.');
 
 /* Translation-sensitive cache ownership belongs to the Chinese-default Dual Route V2 materializer. */
+assert(languageMaterializer.includes("const VERSION = '20260825-global-translation-dual-route-v2'"), 'Dual-route version owner missing.');
 assert(languageMaterializer.includes('/site-navigation.js?v=20260825-language-runtime-compat-v41'), 'Navigation cache owner missing.');
-assert(languageMaterializer.includes('/site-ui-consistency-v1.js?v=20260825-global-translation-dual-route-v2'), 'Dual-route consistency cache owner missing.');
+assert(languageMaterializer.includes('/site-ui-consistency-v1.js?v=${VERSION}'), 'Dual-route consistency cache owner missing.');
 assert(languageMaterializer.includes('/site-dock-share-runtime-v1.js?v=20260825-language-runtime-compat-v31'), 'Dock cache owner missing.');
-assert(languageMaterializer.includes('/site-global-language-v3.js?v=20260825-global-translation-dual-route-v2'), 'Dual-route direct runtime missing.');
+assert(languageMaterializer.includes('/site-global-language-v3.js?v=${VERSION}'), 'Dual-route direct runtime missing.');
 assert(languageMaterializer.includes('data-qily-web-translate-direct="dual-route-v2"'), 'Dual-route direct marker missing.');
 
 let last = -1;
