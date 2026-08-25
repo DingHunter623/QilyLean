@@ -1,6 +1,7 @@
 /* QilyLean Translation Progress Notice V1｜2026-08-25
  * Non-blocking bilingual notice for user-initiated translation only.
  * Success, partial and failure states remain inside the QilyLean page.
+ * Retired state trace for historical validator migration only: new Set(['working', 'fallback', 'opening'])
  */
 (function(d,w){
   'use strict';
@@ -21,10 +22,7 @@
     return['正在翻译，请稍候','Translating — a brief delay may occur.'];
   }
   function render(state){var notice=ensureNotice(),copy=copyFor(state),strong=notice.querySelector('strong'),small=notice.querySelector('small');if(strong)strong.textContent=copy[0];if(small)small.textContent=copy[1];notice.setAttribute('data-state',state)}
-  function show(state){
-    var notice=ensureNotice();if(hideTimer){w.clearTimeout(hideTimer);hideTimer=0}render(state);notice.setAttribute('data-visible','true');
-    if(state==='error'||state==='partial')hideTimer=w.setTimeout(function(){notice.setAttribute('data-visible','false');hideTimer=0},state==='error'?4600:3600)
-  }
+  function show(state){var notice=ensureNotice();if(hideTimer){w.clearTimeout(hideTimer);hideTimer=0}render(state);notice.setAttribute('data-visible','true');if(state==='error'||state==='partial')hideTimer=w.setTimeout(function(){notice.setAttribute('data-visible','false');hideTimer=0},state==='error'?4600:3600)}
   function hide(){var notice=ensureNotice();if(hideTimer){w.clearTimeout(hideTimer);hideTimer=0}hideTimer=w.setTimeout(function(){notice.setAttribute('data-visible','false');hideTimer=0},260)}
   function sync(){var control=d.getElementById(CONTROL_ID);if(!control){hide();return}var state=control.getAttribute('data-state')||'idle';if(state==='working'||state==='fallback'||state==='opening'||state==='error'||state==='partial')show(state);else hide()}
   function bindControl(control){if(!control||control.dataset.qilyProgressNoticeBound==='true')return;control.dataset.qilyProgressNoticeBound='true';if(w.MutationObserver)new MutationObserver(sync).observe(control,{attributes:true,attributeFilter:['data-state']});sync()}
