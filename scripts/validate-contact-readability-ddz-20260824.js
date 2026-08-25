@@ -4,7 +4,7 @@
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
-const NAV='/site-navigation.js?v=20260825-language-runtime-compat-v41';
+const NAV='/site-navigation.js?v=20260825-language-runtime-compat-v42';
 const GOV='/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7';
 const BUILD="BUILD='20260824-readable-floor-plus2-v4'";
 
