@@ -2,6 +2,7 @@
 'use strict';
 
 /* release trigger: 2026-08-25 Chinese-default + Google Translate on-demand */
+/* post-merge materialization trigger: 2026-08-25T09:07+08:00 */
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
