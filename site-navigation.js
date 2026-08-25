@@ -1,13 +1,15 @@
-/* QilyLean navigation runtime v41｜2026-08-25
- * Language compatibility closure:
+/* QilyLean navigation runtime v42｜2026-08-25
+ * Language compatibility + header-axis closure:
  * 1) Chinese remains the authoritative static navigation source;
  * 2) runtime self-healing may enforce Chinese labels only while zh-CN is active;
  * 3) translated labels are never overwritten back to Chinese in English/other language modes;
- * 4) existing dock, resource collaboration, search authority and capability self-heal behavior remains intact.
+ * 4) Header / Logo / primary navigation / translation utility share the governed 1560px content axis;
+ * 5) existing dock, resource collaboration, search authority and capability self-heal behavior remains intact.
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV41) return;
+  if (w.__qilyStaticFirstNavigationV42) return;
+  w.__qilyStaticFirstNavigationV42 = true;
   w.__qilyStaticFirstNavigationV41 = true;
   w.__qilyStaticFirstNavigationV40 = true;
 
@@ -18,6 +20,7 @@
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7';
   var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5';
+  var HEADER_AXIS_HREF = '/site-header-axis-v1.css?v=20260825-header-axis-nav-fit-v1';
   var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3';
   var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3';
   var GEOMETRY_SRC = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';
@@ -49,6 +52,7 @@
     ensureStylesheet('qilyInteractionContinuityV3', CONTINUITY_HREF, 'link[href*="/site-interaction-continuity-v1.css"]');
     ensureStylesheet('qilyVisualGovernanceV1', GOVERNANCE_HREF, 'link[href*="/site-visual-governance-v1.css"],link[href*="/site-visual-governance-v2.css"]');
     ensureStylesheet('qilyContentAxisV1', CONTENT_AXIS_HREF, 'link[href*="/site-content-axis-v1.css"]');
+    ensureStylesheet('qilyHeaderAxisV1', HEADER_AXIS_HREF, 'link[href*="/site-header-axis-v1.css"]');
     ensureStylesheet('qilyFloatingDockStandardV1', DOCK_HREF, 'link[href*="/site-floating-dock-standard-v1.css"]');
     var path = currentPath();
     if (path === '/') ensureStylesheet('qilyHomeHeroTuneV1', HOME_HERO_HREF, 'link[href*="/site-home-hero-tune-v1.css"]');
@@ -115,8 +119,8 @@
     w.requestAnimationFrame(function () { ensureSearchAuthorityNavigation(); normalizeResourceCollaborationLabel(); snapDockHome(); });
   }
   function bindPermanentClosure() {
-    if (w.__qilyResourceCollabDockHomeBoundV41) return;
-    w.__qilyResourceCollabDockHomeBoundV41 = true;
+    if (w.__qilyResourceCollabDockHomeBoundV42) return;
+    w.__qilyResourceCollabDockHomeBoundV42 = true;
     d.addEventListener('pointerup', function () { w.requestAnimationFrame(snapDockHome); }, false);
     d.addEventListener('pointercancel', function () { w.requestAnimationFrame(snapDockHome); }, false);
     w.addEventListener('resize', function () { w.requestAnimationFrame(snapDockHome); }, { passive: true });
@@ -183,6 +187,9 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   ordinaryPagesDirectCore: true,
   homepageHeroTune: true,
   unifiedContentAxis: true,
+  unifiedHeaderAxis: true,
+  headerAxisWidth: 1560,
+  headerDesktopNoClip: true,
   publicIntegrityHotfix: true,
   capabilitySelfHeal: true,
   capabilityQHomeCompleteActions: true,
@@ -205,5 +212,5 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   searchAuthorityLabel: '精益生产',
   searchAuthoritySitewide: true,
   translationAwareSelfHeal: true,
-  version: '20260825-language-runtime-compat-v41'
+  version: '20260825-language-runtime-compat-v42'
 });
