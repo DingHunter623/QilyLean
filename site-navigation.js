@@ -1,21 +1,19 @@
-/* QilyLean navigation runtime v40｜2026-08-24
- * Hotfix closure:
- * 1) top-level /links/ navigation label is always “资源协同”;
- * 2) floating dock remains freely draggable while pressed and always returns to bottom-right after release/cancel/resize/pageshow;
- * 3) legacy persisted dock positions are removed;
- * 4) current V5 content-axis / dock / Hero / geometry assets are loaded with fresh cache keys;
- * 5) public integrity hotfix keeps terminology counts current and certificate verification boundaries explicit;
- * 6) /capabilities/ self-heals QilyLean Home complete action set and Pure DDZ readable light/white-gold visual even if generated HTML lags behind source;
- * 7) /lean-production/ is exposed as a first-class sitewide search-authority route without removing existing primary navigation.
+/* QilyLean navigation runtime v41｜2026-08-25
+ * Language compatibility closure:
+ * 1) Chinese remains the authoritative static navigation source;
+ * 2) runtime self-healing may enforce Chinese labels only while zh-CN is active;
+ * 3) translated labels are never overwritten back to Chinese in English/other language modes;
+ * 4) existing dock, resource collaboration, search authority and capability self-heal behavior remains intact.
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV40) return;
+  if (w.__qilyStaticFirstNavigationV41) return;
+  w.__qilyStaticFirstNavigationV41 = true;
   w.__qilyStaticFirstNavigationV40 = true;
 
   var CORE_SRC = '/site-navigation-core.js?v=20260824-contact-channel-v30';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23';
-  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13';
+  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260825-global-language-v31';
   var INTEGRITY_SRC = '/site-integrity-hotfix-v1.js?v=20260824-public-integrity-v1';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7';
@@ -29,6 +27,14 @@
 
   function currentPath() {
     return (w.location.pathname || '/').replace(/\/index\.html$/, '/');
+  }
+
+  function activeLanguage() {
+    return (d.documentElement.getAttribute('data-qily-language') || 'zh-CN').trim();
+  }
+
+  function isChineseSourceMode() {
+    return activeLanguage() === 'zh-CN';
   }
 
   function ensureStylesheet(id, href, selector) {
@@ -51,9 +57,7 @@
 
     var path = currentPath();
     if (path === '/') ensureStylesheet('qilyHomeHeroTuneV1', HOME_HERO_HREF, 'link[href*="/site-home-hero-tune-v1.css"]');
-    if (path === '/capabilities/') {
-      ensureStylesheet('qilyPureDdzCapabilityVisualV2', CAPABILITY_DDZ_HREF, 'link[href*="/pure-ddz-capability-visual-v2.css"]');
-    }
+    if (path === '/capabilities/') ensureStylesheet('qilyPureDdzCapabilityVisualV2', CAPABILITY_DDZ_HREF, 'link[href*="/pure-ddz-capability-visual-v2.css"]');
 
     if (!w.__qilyVisualGeometryV4 && !d.querySelector('script[src*="/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4"]')) {
       var geometry = d.createElement('script');
@@ -86,6 +90,7 @@
   function ensureSearchAuthorityNavigation() {
     var path = currentPath();
     var active = path === LEAN_AUTHORITY_PATH || path.indexOf(LEAN_AUTHORITY_PATH) === 0;
+    var sourceMode = isChineseSourceMode();
     var changed = false;
     d.querySelectorAll('.qily-global-nav,header nav.site-nav,header nav.nav,header nav[aria-label="网站导航"],header nav[aria-label="QilyLean核心导视"],header nav').forEach(function (nav) {
       var link = nav.querySelector('a[href="/lean-production/"],a[href="/lean-production"]');
@@ -100,11 +105,12 @@
         else nav.appendChild(link);
         changed = true;
       }
-      if ((link.textContent || '').trim() !== '精益生产') {
+      if (sourceMode && (link.textContent || '').trim() !== '精益生产') {
         link.textContent = '精益生产';
         changed = true;
       }
       link.setAttribute('data-qily-search-authority', 'lean-production');
+      if (sourceMode && link.getAttribute('aria-label') !== '精益生产专题') link.setAttribute('aria-label', '精益生产专题');
       if (active) link.setAttribute('aria-current', 'page');
       else if (link.getAttribute('aria-current') === 'page') link.removeAttribute('aria-current');
     });
@@ -113,12 +119,13 @@
 
   function normalizeResourceCollaborationLabel() {
     var changed = false;
+    var sourceMode = isChineseSourceMode();
     d.querySelectorAll('header nav a[href="/links/"],header nav a[href="/links/index.html"],.qily-global-nav a[href="/links/"],.qily-global-nav a[href="/links/index.html"]').forEach(function (link) {
-      if ((link.textContent || '').trim() !== '资源协同') {
+      if (sourceMode && (link.textContent || '').trim() !== '资源协同') {
         link.textContent = '资源协同';
         changed = true;
       }
-      link.setAttribute('aria-label', '资源协同');
+      if (sourceMode && link.getAttribute('aria-label') !== '资源协同') link.setAttribute('aria-label', '资源协同');
     });
     return changed;
   }
@@ -135,14 +142,15 @@
   }
 
   function bindPermanentClosure() {
-    if (w.__qilyResourceCollabDockHomeBoundV33) return;
-    w.__qilyResourceCollabDockHomeBoundV33 = true;
+    if (w.__qilyResourceCollabDockHomeBoundV41) return;
+    w.__qilyResourceCollabDockHomeBoundV41 = true;
 
     d.addEventListener('pointerup', function () { w.requestAnimationFrame(snapDockHome); }, false);
     d.addEventListener('pointercancel', function () { w.requestAnimationFrame(snapDockHome); }, false);
     w.addEventListener('resize', function () { w.requestAnimationFrame(snapDockHome); }, { passive: true });
     w.addEventListener('pageshow', function () { w.requestAnimationFrame(closeRuntimeGap); }, { passive: true });
     d.addEventListener('qily:shell-ready', closeRuntimeGap);
+    d.addEventListener('qily:language-change', function () { w.requestAnimationFrame(closeRuntimeGap); });
 
     var root = d.documentElement || d.body;
     if (root && w.MutationObserver) {
@@ -192,9 +200,7 @@
   function installCapabilitySelfHeal() {
     if (currentPath() !== '/capabilities/') return;
     ensureStylesheet('qilyPureDdzCapabilityVisualV2', CAPABILITY_DDZ_HREF, 'link[href*="/pure-ddz-capability-visual-v2.css"]');
-    if (!d.querySelector('script[src*="/app-download-share-v1.js?v=20260824-capability-home-actions-v2"]')) {
-      loadScript('qilyAppDownloadShareRuntime', APP_SHARE_SRC);
-    }
+    if (!d.querySelector('script[src*="/app-download-share-v1.js?v=20260824-capability-home-actions-v2"]')) loadScript('qilyAppDownloadShareRuntime', APP_SHARE_SRC);
   }
 
   function loadRuntime() {
@@ -203,12 +209,8 @@
     loadScript('qilySiteNavigationCoreScript', CORE_SRC, function () {
       closeRuntimeGap();
       installCapabilitySelfHeal();
-      if (needsLegacyRuntime()) {
-        loadScript('qilySiteNavigationLegacyScriptV32', LEGACY_SRC, closeRuntimeGap);
-      }
-      if (!w.__qilyUiConsistencyV3 && !d.querySelector('script[src*="/site-ui-consistency-v1.js"]')) {
-        loadScript('qilyUiConsistencyRuntimeV32', CONSISTENCY_SRC, closeRuntimeGap);
-      }
+      if (needsLegacyRuntime()) loadScript('qilySiteNavigationLegacyScriptV32', LEGACY_SRC, closeRuntimeGap);
+      if (!w.__qilyUiConsistencyV3 && !d.querySelector('script[src*="/site-ui-consistency-v1.js"]')) loadScript('qilyUiConsistencyRuntimeV32', CONSISTENCY_SRC, closeRuntimeGap);
     });
   }
 
@@ -220,10 +222,7 @@
   loadRuntime();
 
   if (d.readyState === 'loading') {
-    d.addEventListener('DOMContentLoaded', function () {
-      installCapabilitySelfHeal();
-      closeRuntimeGap();
-    }, { once: true });
+    d.addEventListener('DOMContentLoaded', function () { installCapabilitySelfHeal(); closeRuntimeGap(); }, { once: true });
   } else {
     installCapabilitySelfHeal();
     closeRuntimeGap();
@@ -231,7 +230,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v38',
+  mode: 'atomic-first-paint-v41',
   staticHtmlAuthority: true,
   runtimeDependencyWaterfall: false,
   routeScopedLegacy: true,
@@ -259,5 +258,6 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   searchAuthorityRoute: '/lean-production/',
   searchAuthorityLabel: '精益生产',
   searchAuthoritySitewide: true,
-  version: '20260824-contact-readable-v41'
+  translationAwareSelfHeal: true,
+  version: '20260825-language-runtime-compat-v41'
 });
