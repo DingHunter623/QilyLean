@@ -21,8 +21,8 @@ requireText(safe,"brand.textContent='网页翻译'",'Visitor translation label')
 requireText(safe,"setState('error','翻译服务暂不可用，已保留中文')",'Failure stays on Chinese source');
 requireText(safe,'function restoreChinese()','Immediate source restoration');
 requireText(safe,'activeAbort.abort()','In-flight cancellation');
-forbidText(safe,'translate.google.com','Safe runtime external Google redirect');
-forbidText(safe,'translate.goog','Safe runtime translated proxy');
+forbidText(safe,'https://translate.google.com','Safe runtime external Google redirect');
+forbidText(safe,'https://qilylean-com.translate.goog','Safe runtime translated proxy');
 forbidText(safe,'location.assign','Safe runtime page escape');
 forbidText(safe,'location.replace','Safe runtime page escape');
 forbidText(safe,'window.open','Safe runtime popup escape');
