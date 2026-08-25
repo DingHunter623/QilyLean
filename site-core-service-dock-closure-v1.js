@@ -1,13 +1,13 @@
-/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V10｜2026-08-22
- * 目标：
- * 1) 项目合作页直接使用已经物化的静态六类能力/边界，不再运行时重复插入正文；
- * 2) 删除重复的“分享官网”，保留“分享当前页”；
- * 3) 删除延时重试，改用静态DOM就绪与shell-ready事件，避免首屏后再次改变布局。
+/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V10.1｜2026-08-25
+ * 保留静态六类能力、Dock顺序与回顶部功能；中文标签仅在 zh-CN 权威源模式下强制校正。
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyCoreServiceDockClosureV10)return;
+  if(w.__qilyCoreServiceDockClosureV101)return;
+  w.__qilyCoreServiceDockClosureV101=true;
   w.__qilyCoreServiceDockClosureV10=true;
+
+  function sourceMode(){return (d.documentElement.getAttribute('data-qily-language')||'zh-CN')==='zh-CN'}
 
   function groupByVisualRow(nodes){
     var rows=[];
@@ -48,15 +48,19 @@
 
   function ensureBackToTop(dock){
     var top=dock.querySelector('[data-action="top"]');
+    var created=false;
     if(!top){
       top=d.createElement('button');
       top.type='button';
       top.className='qily-float-btn qily-float-top';
       top.setAttribute('data-action','top');
+      created=true;
     }
-    top.setAttribute('aria-label','回顶部');
-    top.setAttribute('title','回顶部');
-    top.innerHTML='回<br>顶部';
+    if(created||sourceMode()){
+      top.setAttribute('aria-label','回顶部');
+      top.setAttribute('title','回顶部');
+      top.innerHTML='回<br>顶部';
+    }
     return top;
   }
 
@@ -91,15 +95,18 @@
       contact:{html:'交流',aria:'交流'}
     };
     var order=['home','top','back','search','current','contact'];
+    var enforceChinese=sourceMode();
 
     dock.querySelectorAll('[data-action="share"]').forEach(function(button){button.remove();});
 
     var buttons=order.map(function(action){
       var button=action==='top'?top:dock.querySelector('[data-action="'+action+'"]');
       if(!button)return null;
-      if(button.innerHTML!==labels[action].html)button.innerHTML=labels[action].html;
-      if(button.getAttribute('aria-label')!==labels[action].aria)button.setAttribute('aria-label',labels[action].aria);
-      if(button.getAttribute('title')!==labels[action].aria)button.setAttribute('title',labels[action].aria);
+      if(enforceChinese){
+        if(button.innerHTML!==labels[action].html)button.innerHTML=labels[action].html;
+        if(button.getAttribute('aria-label')!==labels[action].aria)button.setAttribute('aria-label',labels[action].aria);
+        if(button.getAttribute('title')!==labels[action].aria)button.setAttribute('title',labels[action].aria);
+      }
       return button;
     }).filter(Boolean);
 
@@ -125,6 +132,7 @@
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',apply,{once:true});
   else apply();
   d.addEventListener('qily:shell-ready',apply);
+  d.addEventListener('qily:language-change',normalizeDock);
   w.addEventListener('resize',function(){
     if(resizeTimer)w.clearTimeout(resizeTimer);
     resizeTimer=w.setTimeout(alignCoreServices,100);
