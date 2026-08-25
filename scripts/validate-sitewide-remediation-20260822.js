@@ -45,21 +45,25 @@ assert(cooperationDockClosure.includes("back:{html:'回<br>上一层',aria:'回�
 assert(consistency.includes("setAttribute('aria-label','回上一层')"),'Dock accessibility label is not 回上一层.');
 
 /* One public baseline owns translation safety, full language labels, navigation scrolling and readability. */
-assert(materializer.includes("const BASELINE_VERSION = '20260825-sitewide-baseline-reconcile-v1'"),'Unified baseline version owner missing.');
+assert(materializer.includes("const BASELINE_VERSION = '20260825-mobile-navigation-recovery-v1'"),'Unified mobile recovery baseline owner missing.');
 assert(materializer.includes("const SAFE_VERSION = '20260825-translation-safe-inpage-v2'"),'Safe translation version owner missing.');
 assert(materializer.includes('/site-navigation.js?v=20260825-language-runtime-compat-v42'),'Navigation V42 cache owner missing.');
 assert(materializer.includes('/site-ui-consistency-v1.js?v=${BASELINE_VERSION}'),'Shared-shell baseline cache owner missing.');
 assert(materializer.includes('data-qily-translation-safety-bootstrap="inpage-v2"'),'Safety bootstrap missing.');
 assert(materializer.includes('data-qily-translation-safe-direct="inpage-v2"'),'Safe translation runtime missing.');
-assert(materializer.includes('/site-header-axis-v1.css?v=20260825-header-axis-nav-fit-v2'),'Header-axis materialization owner missing.');
+assert(materializer.includes('/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3'),'Mobile header-axis materialization owner missing.');
+assert(materializer.includes('/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7'),'Mobile public CSS materialization owner missing.');
 assert(materializer.includes('/site-translation-progress-v1.js?v=20260825-bilingual-progress-v3'),'Translation progress materialization owner missing.');
-assert(materializer.includes('/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6'),'Public translation UI materialization owner missing.');
+assert(materializer.includes('/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6'),'Public translation UI JS materialization owner missing.');
 assert(materializer.includes('/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2'),'Interaction contrast owner missing.');
 assert(materializer.includes('/site-content-contrast-guard-v1.js?v=20260825-sitewide-content-contrast-v2'),'Content contrast owner missing.');
 assert(materializer.includes('removeLegacyTranslatorScripts'),'Legacy translator stripping missing.');
 assert(!materializer.includes('LEGACY_LANGUAGE_SRC'),'Retired translator is still owned by public materializer.');
 assert(!materializer.includes('<script defer ${LEGACY_MARKER}'),'Retired translator is still emitted.');
+assert(consistency.includes("BUILD_ID='20260825-mobile-navigation-recovery-v1'"),'Shared shell mobile recovery build missing.');
 assert(consistency.includes("safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260825-translation-safe-inpage-v2'"),'Shared shell does not fail safe to in-page translation.');
+assert(consistency.includes("headerCss:'/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3'"),'Shared shell mobile header recovery missing.');
+assert(consistency.includes("publicCss:'/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7'"),'Shared shell mobile public CSS recovery missing.');
 assert(!consistency.includes("LANGUAGE_JS='/site-global-language-v3.js"),'Shared shell still loads retired translator.');
 
 let last=-1;
@@ -77,6 +81,10 @@ assert(headerAxis.includes('--qily-header-axis:var(--qily-content-axis,1560px)')
 assert(headerAxis.includes('max-width:var(--qily-header-axis)!important'),'Header maximum width guard missing.');
 assert(headerAxis.includes('word-break:keep-all!important'),'Navigation CJK no-break guard missing.');
 assert(headerAxis.includes('font-size:clamp(18px,1.35vw,20px)!important'),'Desktop navigation fit font guard missing.');
+assert(headerAxis.includes('@media (max-width:900px){'),'Mobile header recovery breakpoint missing.');
+assert(headerAxis.includes('flex:0 0 auto!important'),'Mobile navigation flex reset missing.');
+assert(headerAxis.includes('min-height:46px!important'),'Mobile navigation height floor missing.');
+assert(headerAxis.includes('touch-action:pan-x pan-y!important'),'Mobile navigation touch-panning contract missing.');
 
 assert(publicUi.includes("if(badge)badge.remove()"),'Internal translation badge is still exposed to visitors.');
 assert(publicUi.includes('status.hidden=true'),'Internal translation status is still exposed to visitors.');
@@ -88,6 +96,10 @@ assert(publicUiCss.includes('scrollbar-color:#0f6570 #e8f2f0!important'),'Horizo
 assert(publicUiCss.includes('::-webkit-scrollbar-thumb'),'Chromium/Safari draggable navigation thumb missing.');
 assert(publicUiCss.includes('height:10px!important'),'Desktop navigation movement bar is not visually explicit.');
 assert(publicUiCss.includes('max-width:420px!important'),'Long selected language can still be clipped on desktop.');
+assert(publicUiCss.includes('@media (max-width:900px){'),'Final mobile navigation guard missing.');
+assert(publicUiCss.includes('min-height:46px!important'),'Final mobile navigation height floor missing.');
+assert(publicUiCss.includes('touch-action:pan-x pan-y!important'),'Final mobile navigation touch-panning guard missing.');
+assert(publicUiCss.includes('::before{display:none!important}'),'Final mobile spacer removal missing.');
 
 assert(progress.includes('正在翻译，请稍候'),'Chinese translation progress copy missing.');
 assert(progress.includes('Translating — a brief delay may occur.'),'English translation progress copy missing.');
@@ -115,4 +127,4 @@ for(const relative of trackedHtml()){
 }
 assert(navigationPages>=460,`Navigation coverage unexpectedly fell to ${navigationPages} pages.`);
 assert(stale.length===0,`Stale public shell entries: ${stale.slice(0,20).join(', ')}`);
-process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages and one unified safe translation/readability baseline.\n`);
+process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages and one unified safe translation/readability/mobile-navigation baseline.\n`);

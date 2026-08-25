@@ -2,6 +2,7 @@
  * Goal: align Logo / primary navigation / translation utility to the same 1560px site content axis.
  * Desktop: every first-level item remains visible at 100% zoom without horizontal clipping.
  * Narrow desktop: compress spacing first, then type size within a guarded 18–20px range; never wrap CJK labels.
+ * Mobile recovery: column-layout navigation must reset desktop flex-basis so its row never collapses to zero height.
  */
 :root{
   --qily-header-axis:var(--qily-content-axis,1560px);
@@ -111,5 +112,66 @@ html body .qily-web-translate__select option{font-size:16px!important}
     overflow-x:auto!important;
     overscroll-behavior-x:contain!important;
     -webkit-overflow-scrolling:touch!important;
+  }
+}
+
+/* Mobile primary-navigation recovery.
+ * The base desktop nav uses flex:1 1 0. Once the header becomes a column on phones,
+ * that zero flex-basis applies to HEIGHT and can collapse the entire navigation row.
+ * Reset the main-axis flex contract and guarantee a real finger-sized horizontal scroller.
+ */
+@media (max-width:900px){
+  html body header.qily-site-header,
+  html body header.qily-global-header,
+  html body header.topbar.qily-site-header,
+  html body header.top.qily-site-header{
+    display:flex!important;
+    flex-direction:column!important;
+    align-items:stretch!important;
+    justify-content:flex-start!important;
+    gap:4px!important;
+    min-height:auto!important;
+  }
+  html body header.qily-site-header> :is(.brand,.qily-brand),
+  html body header.qily-global-header> :is(.brand,.qily-brand){
+    align-self:flex-start!important;
+    margin:0 0 3px 0!important;
+  }
+  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav),
+  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav){
+    flex:0 0 auto!important;
+    align-self:stretch!important;
+    width:100%!important;
+    min-width:100%!important;
+    max-width:100%!important;
+    min-height:46px!important;
+    height:auto!important;
+    max-height:none!important;
+    margin:0!important;
+    padding:3px 0 6px!important;
+    gap:5px!important;
+    justify-content:flex-start!important;
+    align-items:center!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    overscroll-behavior-x:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    touch-action:pan-x pan-y!important;
+    scrollbar-width:thin!important;
+    -webkit-mask-image:none!important;
+    mask-image:none!important;
+  }
+  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
+  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
+    display:inline-flex!important;
+    flex:0 0 auto!important;
+    min-height:36px!important;
+    align-items:center!important;
+  }
+  html body header.qily-global-header::after{display:none!important}
+  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar,
+  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar{
+    display:block!important;
+    height:4px!important;
   }
 }

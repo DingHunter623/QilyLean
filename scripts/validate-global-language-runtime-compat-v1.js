@@ -27,9 +27,11 @@ forbidText(safe,'国内线路','Backend term in visitor runtime');
 
 const consistency=read('site-ui-consistency-v1.js');
 requireText(consistency,'__qilyUiConsistencyV4','Shared shell V4');
-requireText(consistency,"BUILD_ID='20260825-sitewide-baseline-reconcile-v1'",'Shared baseline version');
+requireText(consistency,"BUILD_ID='20260825-mobile-navigation-recovery-v1'",'Shared mobile recovery baseline');
 requireText(consistency,"safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260825-translation-safe-inpage-v2'",'Safe runtime fallback');
-requireText(consistency,"publicCss:'/site-translation-public-ui-v1.css?v=20260825-public-language-picker-v6'",'Public UI CSS fallback');
+requireText(consistency,"publicCss:'/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7'",'Public UI mobile recovery CSS fallback');
+requireText(consistency,"publicJs:'/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6'",'Public UI JS fallback');
+requireText(consistency,"headerCss:'/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3'",'Header-axis mobile recovery fallback');
 requireText(consistency,"progressJs:'/site-translation-progress-v1.js?v=20260825-bilingual-progress-v3'",'Progress fallback');
 requireText(consistency,"contentJs:'/site-content-contrast-guard-v1.js?v=20260825-sitewide-content-contrast-v2'",'Content contrast fallback');
 requireText(consistency,'function preemptRetiredTranslation()','Retired translator preemption');
@@ -45,6 +47,10 @@ requireText(navigation,'headerAxisWidth: 1560','Header axis width');
 const headerAxis=read('site-header-axis-v1.css');
 requireText(headerAxis,'--qily-header-axis:var(--qily-content-axis,1560px)','1560px header axis');
 requireText(headerAxis,'word-break:keep-all!important','Navigation no-break');
+requireText(headerAxis,'@media (max-width:900px){','Mobile header recovery breakpoint');
+requireText(headerAxis,'flex:0 0 auto!important','Mobile navigation flex reset');
+requireText(headerAxis,'min-height:46px!important','Mobile navigation height floor');
+requireText(headerAxis,'touch-action:pan-x pan-y!important','Mobile navigation touch panning');
 
 const publicUi=read('site-translation-public-ui-v1.js');
 requireText(publicUi,'measuredTextWidth','Measured selected language');
@@ -59,6 +65,10 @@ requireText(publicCss,'overflow-x:auto!important','Horizontal navigation movemen
 requireText(publicCss,'height:10px!important','Visible horizontal scrollbar');
 requireText(publicCss,'::-webkit-scrollbar-thumb','Draggable scrollbar thumb');
 requireText(publicCss,'.qily-web-translate__status{display:none!important}','Internal status hidden');
+requireText(publicCss,'@media (max-width:900px){','Final mobile navigation guard');
+requireText(publicCss,'min-height:46px!important','Final mobile navigation height floor');
+requireText(publicCss,'touch-action:pan-x pan-y!important','Final mobile navigation touch panning');
+requireText(publicCss,'::before{display:none!important}','Mobile navigation spacer removal');
 
 const progress=read('site-translation-progress-v1.js');
 requireText(progress,'正在翻译，请稍候','Chinese progress notice');
@@ -75,8 +85,10 @@ requireText(content,'data-qily-content-contrast-fixed','Static content contrast 
 requireText(content,'?3:4.5','WCAG-oriented contrast thresholds');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
-requireText(materializer,"const BASELINE_VERSION = '20260825-sitewide-baseline-reconcile-v1'",'Materializer baseline version');
+requireText(materializer,"const BASELINE_VERSION = '20260825-mobile-navigation-recovery-v1'",'Materializer mobile recovery version');
 requireText(materializer,"const SAFE_VERSION = '20260825-translation-safe-inpage-v2'",'Materializer safe runtime version');
+requireText(materializer,"const HEADER_AXIS = '/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3'",'Materializer mobile header version');
+requireText(materializer,"const PUBLIC_UI_CSS = '/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7'",'Materializer mobile public CSS version');
 requireText(materializer,'data-qily-translation-safety-bootstrap="inpage-v2"','Static safety bootstrap');
 requireText(materializer,'data-qily-translation-safe-direct="inpage-v2"','Static safe runtime');
 requireText(materializer,'data-qily-translation-public-ui-direct="visitor-v2"','Static public UI');
@@ -90,4 +102,4 @@ requireText(dock,'function sourceMode()','Dock language gate');
 const parentNav=read('site-parent-navigation-v3.js');
 requireText(parentNav,'function sourceMode()','Parent navigation language gate');
 
-process.stdout.write('PASS: QilyLean public baseline uses safe in-page translation, complete language labels, visible navigation scrolling, and sitewide readability guards.\n');
+process.stdout.write('PASS: QilyLean public baseline uses safe in-page translation, complete language labels, mobile touch navigation, and sitewide readability guards.\n');

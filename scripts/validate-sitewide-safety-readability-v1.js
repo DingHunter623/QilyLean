@@ -25,15 +25,20 @@ forbidText(safe,'国内线路','Backend term in public runtime');
 
 const shell=read('site-ui-consistency-v1.js');
 requireText(shell,'__qilyUiConsistencyV4','Shared shell V4');
+requireText(shell,"BUILD_ID='20260825-mobile-navigation-recovery-v1'",'Mobile recovery shared shell');
 requireText(shell,'function preemptRetiredTranslation()','Retired translator preemption');
 requireText(shell,"safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260825-translation-safe-inpage-v2'",'Safe runtime shell fallback');
+requireText(shell,"publicCss:'/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7'",'Mobile recovery public CSS fallback');
+requireText(shell,"headerCss:'/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3'",'Mobile recovery header CSS fallback');
 requireText(shell,"contentCss:'/site-content-contrast-guard-v1.css?v=20260825-sitewide-content-contrast-v2'",'Content contrast shell fallback');
 forbidText(shell,"LANGUAGE_JS='/site-global-language-v3.js",'Legacy translator shell loader');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
+requireText(materializer,"const BASELINE_VERSION = '20260825-mobile-navigation-recovery-v1'",'Mobile recovery materializer baseline');
 requireText(materializer,'data-qily-translation-safety-bootstrap="inpage-v2"','Fail-closed safety bootstrap');
 requireText(materializer,'data-qily-translation-safe-direct="inpage-v2"','Safe runtime materialization');
-requireText(materializer,'/site-translation-public-ui-v1.css?v=20260825-public-language-picker-v6','Language picker V6 materialization');
+requireText(materializer,'/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3','Mobile header-axis materialization');
+requireText(materializer,'/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7','Mobile public CSS materialization');
 requireText(materializer,'/site-translation-progress-v1.js?v=20260825-bilingual-progress-v3','Translation notice V3 materialization');
 requireText(materializer,'/site-content-contrast-guard-v1.css?v=20260825-sitewide-content-contrast-v2','Content contrast CSS materialization');
 requireText(materializer,'/site-content-contrast-guard-v1.js?v=20260825-sitewide-content-contrast-v2','Content contrast JS materialization');
@@ -48,7 +53,11 @@ requireText(publicUi,"if(badge)badge.remove()",'Internal badge removal');
 const publicCss=read('site-translation-public-ui-v1.css');
 requireText(publicCss,'max-width:420px!important','Desktop long-language allowance');
 requireText(publicCss,'overflow-x:auto!important','Navigation horizontal movement');
-requireText(publicCss,'height:10px!important','Visible navigation scrollbar');
+requireText(publicCss,'height:10px!important','Visible desktop navigation scrollbar');
+requireText(publicCss,'@media (max-width:900px){','Mobile navigation final-cascade guard');
+requireText(publicCss,'flex:0 0 auto!important','Mobile navigation flex reset');
+requireText(publicCss,'min-height:46px!important','Mobile navigation height floor');
+requireText(publicCss,'touch-action:pan-x pan-y!important','Mobile navigation touch panning');
 
 const progress=read('site-translation-progress-v1.js');
 requireText(progress,'翻译服务暂不可用，已保留中文','Bilingual failure notice');
@@ -66,4 +75,4 @@ requireText(contentCss,'-webkit-text-fill-color:#fff!important','Chromium/Safari
 const terminology=read('knowledge/terminology.html');
 requireText(terminology,'id="qilyTerminologyStaticCount"','Terminology static information strip');
 
-process.stdout.write('PASS: source contracts cover fail-closed translation, complete language labels, navigation scrolling, interaction readability and static-content readability.\n');
+process.stdout.write('PASS: source contracts cover fail-closed translation, complete language labels, mobile touch navigation, interaction readability and static-content readability.\n');
