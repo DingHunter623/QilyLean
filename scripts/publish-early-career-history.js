@@ -8,12 +8,12 @@ const { materializeExperienceCareerBaseline } = require('./site-career-baseline-
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const version = '20260822-company-links-v5';
+const version = '20260825-year-range-wrap-v6';
 const startMarker = '<!-- QILY-EARLY-CAREER-HISTORY:START -->';
 const endMarker = '<!-- QILY-EARLY-CAREER-HISTORY:END -->';
 const resourceBlock = `${startMarker}
   <link id="qilyEarlyCareerHistoryStylesheet" rel="stylesheet" href="/site-early-career-history-v1.css?v=${version}">
-  <meta name="qily:early-career-history" content="static-v5">
+  <meta name="qily:early-career-history" content="static-v6">
 ${endMarker}`;
 
 const companies = {
@@ -112,8 +112,13 @@ function companyMarkup(item) {
   return `<span class="career-row-company"><b>任职公司：</b><span class="career-row-company-list">${items}</span></span>`;
 }
 
+function yearRangeMarkup(item) {
+  const [startYear, endYear] = item.key.split('-');
+  return `<span class="career-year-range-line">${startYear}～</span><br class="career-year-range-break"><span class="career-year-range-line">${endYear}年</span>`;
+}
+
 function buildRow(item) {
-  return `<tr data-career-era="${item.key}"><td><a class="career-year-link career-range-link" href="/experience/#career-${item.key}" aria-label="查看${item.label}履历主线">${item.label}</a></td><td><strong class="career-row-title">${item.title}</strong>${companyMarkup(item)}<span class="career-row-summary">${item.summary}</span></td></tr>`;
+  return `<tr data-career-era="${item.key}"><td><a class="career-year-link career-range-link" href="/experience/#career-${item.key}" aria-label="查看${item.label}履历主线">${yearRangeMarkup(item)}</a></td><td><strong class="career-row-title">${item.title}</strong>${companyMarkup(item)}<span class="career-row-summary">${item.summary}</span></td></tr>`;
 }
 
 function updateCareerTable(source) {
@@ -136,15 +141,17 @@ function validate(archive, experience, careerResume, enhancer) {
   [archive, experience].forEach((content, index) => {
     const label = index === 0 ? 'daily-insights' : 'experience';
     assert(content.includes('site-early-career-history-v1.css?v=' + version), `${label}: stylesheet missing`);
-    assert(content.includes('name="qily:early-career-history" content="static-v5"'), `${label}: static career marker missing`);
+    assert(content.includes('name="qily:early-career-history" content="static-v6"'), `${label}: static career marker missing`);
     assert(!content.includes('site-early-career-history-v1.js'), `${label}: delayed career content enhancer returned`);
     assert((content.match(/QILY-EARLY-CAREER-HISTORY:START/g) || []).length === 1, `${label}: duplicate resource block`);
   });
 
   careerRows.forEach((item) => {
+    const [startYear, endYear] = item.key.split('-');
     assert(archive.includes(`data-career-era="${item.key}"`), `archive: ${item.key} row missing`);
     assert(archive.includes(`/experience/#career-${item.key}`), `archive: ${item.key} link missing`);
-    assert(archive.includes(item.label), `archive: ${item.label} missing`);
+    assert(archive.includes(`aria-label="查看${item.label}履历主线"`), `archive: ${item.label} accessibility label missing`);
+    assert(archive.includes(`<span class="career-year-range-line">${startYear}～</span><br class="career-year-range-break"><span class="career-year-range-line">${endYear}年</span>`), `archive: ${item.key} deliberate year line break missing`);
     assert(archive.includes(item.title), `archive: ${item.title} missing`);
     assert(archive.includes(item.summary), `archive: ${item.key} summary missing`);
     item.companyKeys.forEach((key) => {
