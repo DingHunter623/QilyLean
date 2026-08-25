@@ -90,7 +90,7 @@ const progressJs = read('site-translation-progress-v1.js');
 requireText(progressJs, "var visibleStates = new Set(['working', 'fallback', 'opening'])", 'Translation progress state gate');
 requireText(progressJs, '正在翻译，请稍候', 'Chinese progress copy');
 requireText(progressJs, 'Translating — a brief delay may occur.', 'English progress copy');
-requireText(progressJs, "pointer-events", '');
+requireText(progressJs, "setAttribute('data-qily-no-translate', 'true')", 'Progress notice translation exclusion');
 
 const progressCss = read('site-translation-progress-v1.css');
 requireText(progressCss, '.qily-translation-progress{', 'Translation progress visual');
