@@ -10,18 +10,19 @@ function forbidText(source, token, label) { if (source.includes(token)) throw ne
 
 const language = read('site-global-language-v3.js');
 requireText(language, '__qilyGoogleTranslateOnDemandV1', 'Google Translate on-demand runtime');
-requireText(language, "defaultDisplayLanguage: SOURCE_LANGUAGE", 'Chinese default display contract');
-requireText(language, "automaticTranslation: false", 'No automatic translation contract');
+requireText(language, 'defaultDisplayLanguage: SOURCE_LANGUAGE', 'Chinese default display contract');
+requireText(language, 'automaticTranslation: false', 'No automatic translation contract');
 requireText(language, "setAttribute('data-qily-language', SOURCE_LANGUAGE)", 'Chinese source language state');
-requireText(language, "translate.google.com/translate?sl=auto&tl=", 'Google website translation route');
+requireText(language, 'translate.google.com/translate?sl=auto&tl=', 'Google website translation route');
 requireText(language, "wrapper.className = 'qily-google-translate'", 'Visually distinct Google utility');
 requireText(language, "brand.textContent = 'Google 翻译'", 'Explicit Google Translate label');
 requireText(language, "badge.textContent = '按需'", 'On-demand visual badge');
-requireText(language, "w.location.assign(googleWebsiteTranslationUrl(target))", 'User-initiated translation navigation');
-requireText(language, "localStorage.removeItem('qily_global_language_v3')", 'Retired auto-language state cleanup');
+requireText(language, 'w.location.assign(googleWebsiteTranslationUrl(target))', 'User-initiated translation navigation');
+requireText(language, "w.localStorage.removeItem('qily_global_language_v3')", 'Retired auto-language state cleanup');
+requireText(language, 'new MutationObserver', 'Utility persistence observer');
 forbidText(language, 'qilylean-ai.dinghunter623.workers.dev/translate', 'Retired AI translation endpoint');
 forbidText(language, 'CHAT_API', 'Retired AI chat translation fallback');
-forbidText(language, 'MutationObserver(function () {\n      if (queued) return;\n      queued = true;\n      w.requestAnimationFrame(function () { queued = false; ensureControl(); });', '');
+forbidText(language, 'fetch(', 'Automatic/runtime translation network request');
 
 const navigation = read('site-navigation.js');
 requireText(navigation, 'function isChineseSourceMode()', 'Navigation language gate');
