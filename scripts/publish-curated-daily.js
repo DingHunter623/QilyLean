@@ -7,6 +7,7 @@ const { spawnSync } = require('child_process');
 const root = path.resolve(__dirname, '..');
 const steps = [
   ['curate-weekly-briefs.js'],
+  ['publish-early-career-history.js'],
   ['remove-daily-directory-consultation.js'],
   ['sync-daily-terminology.js'],
   ['sync-daily-terminology.js', '--check'],
