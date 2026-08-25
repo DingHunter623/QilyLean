@@ -11,8 +11,8 @@
  *   index and sitemap are generated assets; this source is re-applied before the
  *   curated publication pipeline rebuilds those assets.
  * - The script is idempotent: running it twice produces no additional diff.
- * - Visible static counts are synchronized here before search-index generation so
- *   crawlers never index a stale 192 snapshot while metadata already says 193.
+ * - Visible counts and social metadata are synchronized here before search-index
+ *   generation so crawlers never index a stale count snapshot.
  */
 
 const fs = require('fs');
@@ -71,17 +71,15 @@ function terminologyTotal(html) {
   return total;
 }
 
-function synchronizeVisibleCounts(html) {
+function synchronizeTerminologyMetadata(html) {
   const total = terminologyTotal(html);
-  html = html.replace(
-    /(<p id="qilyTerminologyStaticCount"[^>]*>[\s\S]*?<strong[^>]*>当前术语库：<\/strong>)\s*\d+\s*项术语\s*·\s*\d+\s*份单点培训课件。/,
-    `$1${total} 项术语 · ${total} 份单点培训课件。`
-  );
-  html = html.replace(
-    /(<div class="term-count" id="termCount"[^>]*>)共收录\s*\d+\s*项术语\s*·\s*\d+\s*份单点培训课件(<\/div>)/,
-    `$1共收录 ${total} 项术语 · ${total} 份单点培训课件$2`
-  );
-  return { html, total };
+  const description = `QilyLean全站制造管理与工程专业术语词典：${total}项中文诠释与应用场景，每个术语代码配套单点培训课件，支持直接打开、链接分享与下载/保存PDF。`;
+  html = html.replace(/<meta name="description" content="QilyLean全站制造管理与工程专业术语词典：\d+项中文诠释与应用场景，每个术语代码配套单点培训课件，支持直接打开、链接分享与下载\/保存PDF。">/i, `<meta name="description" content="${description}">`);
+  html = html.replace(/<meta property="og:description" content="QilyLean全站制造管理与工程专业术语词典：\d+项中文诠释与应用场景，每个术语代码配套单点培训课件，支持直接打开、链接分享与下载\/保存PDF。">/i, `<meta property="og:description" content="${description}">`);
+  html = html.replace(/<meta name="twitter:description" content="QilyLean全站制造管理与工程专业术语词典：\d+项中文诠释与应用场景，每个术语代码配套单点培训课件，支持直接打开、链接分享与下载\/保存PDF。">/i, `<meta name="twitter:description" content="${description}">`);
+  html = html.replace(/(<p id="qilyTerminologyStaticCount"[^>]*>[\s\S]*?<strong[^>]*>当前术语库：<\/strong>)\s*\d+\s*项术语\s*·\s*\d+\s*份单点培训课件。/, `$1${total} 项术语 · ${total} 份单点培训课件。`);
+  html = html.replace(/(<div class="term-count" id="termCount"[^>]*>)共收录\s*\d+\s*项术语\s*·\s*\d+\s*份单点培训课件(<\/div>)/, `$1共收录 ${total} 项术语 · ${total} 份单点培训课件$2`);
+  return { html, total, description };
 }
 
 function ensureSitemap(file) {
@@ -94,12 +92,15 @@ function ensureSitemap(file) {
   return writeIfChanged(file, xml);
 }
 
-function validate(html, total) {
+function validate(html, total, description) {
   assert(html.includes(PPH_CODE), 'PPH static terminology card is missing.');
   assert(html.includes('Parts Per Hour / Pieces Per Hour'), 'PPH English definition is missing.');
   assert(html.includes('PPH与UPPH不得混用'), 'PPH/UPPH boundary statement is missing.');
   assert(html.includes('href="/knowledge/terminology/pph.html"'), 'PPH independent lesson link is missing.');
   assert(!html.includes("if(f.code.indexOf(q)>=0||cc.indexOf(qc)>=0)return 800;"), 'Unsafe acronym suffix matching is still present.');
+  assert(html.includes(`<meta name="description" content="${description}">`), 'Terminology primary description count is stale.');
+  assert(html.includes(`<meta property="og:description" content="${description}">`), 'Terminology Open Graph description count is stale.');
+  assert(html.includes(`<meta name="twitter:description" content="${description}">`), 'Terminology Twitter description count is stale.');
   assert(html.includes(`当前术语库：</strong>${total} 项术语 · ${total} 份单点培训课件。`), 'Static terminology summary count is stale.');
   assert(html.includes(`共收录 ${total} 项术语 · ${total} 份单点培训课件`), 'Search-toolbar terminology count is stale.');
   assert(fs.existsSync(lessonFile), 'Independent PPH OPL page is missing.');
@@ -111,10 +112,10 @@ function validate(html, total) {
 let terminology = read(terminologyFile);
 terminology = insertPphCard(terminology);
 terminology = hardenTerminologySearch(terminology);
-const synchronized = synchronizeVisibleCounts(terminology);
+const synchronized = synchronizeTerminologyMetadata(terminology);
 terminology = synchronized.html;
 const terminologyChanged = writeIfChanged(terminologyFile, terminology);
 const sitemapChanges = sitemapFiles.map(ensureSitemap).filter(Boolean).length;
-validate(read(terminologyFile), synchronized.total);
+validate(read(terminologyFile), synchronized.total, synchronized.description);
 
 process.stdout.write(`PPH terminology source materialized: terminology changed ${terminologyChanged}, total ${synchronized.total}, sitemap files changed ${sitemapChanges}.\n`);
