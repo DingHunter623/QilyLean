@@ -1,11 +1,15 @@
-name: Materialize Global Language V3
+name: Materialize Global Language V3.1
 
 on:
   push:
     branches: [main]
     paths:
       - 'site-global-language-v3.js'
+      - 'site-navigation.js'
+      - 'site-parent-navigation-v3.js'
       - 'site-ui-consistency-v1.js'
+      - 'site-dock-share-runtime-v1.js'
+      - 'site-core-service-dock-closure-v1.js'
       - 'scripts/materialize-global-language-v3.js'
       - '.github/workflows/materialize-global-language-v3.yml'
   workflow_dispatch:
@@ -14,7 +18,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: materialize-global-language-v3-main
+  group: materialize-global-language-v31-main
   cancel-in-progress: true
 
 jobs:
@@ -31,45 +35,48 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate Global Language V3 sources
+      - name: Validate Global Language V3.1 sources
         run: |
           node --check site-global-language-v3.js
+          node --check site-navigation.js
+          node --check site-parent-navigation-v3.js
+          node --check site-ui-consistency-v1.js
+          node --check site-dock-share-runtime-v1.js
+          node --check site-core-service-dock-closure-v1.js
           node --check scripts/materialize-global-language-v3.js
 
-      - name: Materialize and publish V3 across every tracked HTML page
+      - name: Materialize and publish V3.1 across every tracked HTML page
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
-
           for attempt in 1 2 3 4; do
             echo "Materialization publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
-
             node --check site-global-language-v3.js
+            node --check site-navigation.js
+            node --check site-parent-navigation-v3.js
+            node --check site-ui-consistency-v1.js
+            node --check site-dock-share-runtime-v1.js
+            node --check site-core-service-dock-closure-v1.js
             node --check scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
             git diff --check
-
             if git diff --quiet; then
-              echo 'Global Language V3 already materialized on latest main.'
+              echo 'Global Language V3.1 already materialized on latest main.'
               exit 0
             fi
-
             git add -- '*.html'
-            git commit -m 'build: materialize Global Language V3 across public HTML'
-
+            git commit -m 'build: materialize Global Language V3.1 across public HTML'
             if git push origin HEAD:main; then
-              echo 'Global Language V3 sitewide materialization published.'
+              echo 'Global Language V3.1 sitewide materialization published.'
               exit 0
             fi
-
             echo 'main advanced during publish; retrying from newest main.'
             sleep $((attempt * 3))
           done
-
-          echo 'Unable to publish Global Language V3 after retries.'
+          echo 'Unable to publish Global Language V3.1 after retries.'
           exit 1
