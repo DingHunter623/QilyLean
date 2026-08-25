@@ -45,7 +45,8 @@ assert(publicCss.includes('height:10px!important'),'Horizontal movement bar is n
 /* 4) Interactive and non-interactive readability must both be governed. */
 const interaction=read('site-interaction-contrast-guard-v1.js');
 const content=read('site-content-contrast-guard-v1.js');
-assert(interaction.includes('data-qily-interaction-contrast-fixed'),'Interactive contrast guard missing');
+assert(interaction.includes("setAttribute('data-qily-interaction-contrast'"),'Interactive contrast guard missing');
+assert(interaction.includes('if(current>=4.5)'),'Interactive contrast threshold guard missing');
 assert(content.includes('data-qily-content-contrast-fixed'),'Content contrast guard missing');
 assert(content.includes('?3:4.5'),'Content contrast threshold guard missing');
 const gbt=read('qilylean/gbt2828.html');
