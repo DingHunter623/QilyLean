@@ -20,6 +20,7 @@ on:
       - 'site-core-service-dock-closure-v1.js'
       - 'scripts/materialize-global-language-v3.js'
       - 'scripts/validate-global-language-runtime-compat-v1.js'
+      - 'scripts/validate-interaction-contrast-guard-v1.js'
       - 'scripts/validate-home-hero-dock-snapback-v1.js'
       - 'scripts/validate-sitewide-remediation-20260822.js'
       - '.github/workflows/validate-global-language-runtime-compat.yml'
@@ -49,10 +50,13 @@ jobs:
           node --check site-core-service-dock-closure-v1.js
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/validate-global-language-runtime-compat-v1.js
+          node --check scripts/validate-interaction-contrast-guard-v1.js
           node --check scripts/validate-home-hero-dock-snapback-v1.js
           node --check scripts/validate-sitewide-remediation-20260822.js
       - name: Validate Chinese-default translation and public navigation contract
         run: node scripts/validate-global-language-runtime-compat-v1.js
+      - name: Validate sitewide interaction contrast guard
+        run: node scripts/validate-interaction-contrast-guard-v1.js
       - name: Validate homepage, header axis and sitewide compatibility guards
         run: |
           node scripts/validate-home-hero-dock-snapback-v1.js
