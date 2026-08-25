@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean visual readability V5 publisher｜2026-08-18
+/* QilyLean visual readability publisher｜2026-08-25 V7
  * Scope: visual only. Do not rewrite business taxonomy, navigation labels, page copy or navigation cache contracts.
  */
 const fs = require('fs');
@@ -9,7 +9,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const VERSION = '20260818-visual-readability-v5';
+const VERSION = '20260825-visual-readability-v7';
 const HREF = `/site-visual-readability-v5.css?v=${VERSION}`;
 const TAG = `<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="${HREF}">`;
 
@@ -70,8 +70,11 @@ function verifyCss() {
     '#engineering-enablers',
     '#qily-digital-enablers',
     '.module-card.service-card',
-    '.qily-ia-card>small'
-  ].forEach(token => assert(css.includes(token), `V5 CSS contract missing: ${token}`));
+    '.qily-ia-card>small',
+    'QILY-DAILY-SURFACE-CONTRAST-V7-20260825',
+    'simp-chinese-informal',
+    '.term-opl-num'
+  ].forEach(token => assert(css.includes(token), `V7 CSS contract missing: ${token}`));
 }
 
 function verifyPages() {
@@ -81,7 +84,7 @@ function verifyPages() {
     try { html = read(rel); } catch (_) { continue; }
     if (!isPublicHtml(html)) continue;
     publicCount += 1;
-    assert(html.includes(HREF), `${rel}: V5 stylesheet missing`);
+    assert(html.includes(HREF), `${rel}: V7 stylesheet missing`);
   }
   assert(publicCount > 0, 'No public HTML pages discovered');
   return publicCount;
@@ -103,7 +106,7 @@ function main() {
   const result = materialize();
   const publicCount = verifyPages();
   verifyBusinessHierarchyUntouched();
-  process.stdout.write(`Visual readability V5 materialized: checked ${publicCount}, refreshed ${result.changed} public pages.\n`);
+  process.stdout.write(`Visual readability V7 materialized: checked ${publicCount}, refreshed ${result.changed} public pages.\n`);
 }
 
 main();
