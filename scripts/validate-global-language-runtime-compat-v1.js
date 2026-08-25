@@ -23,7 +23,6 @@ requireText(language, "route:'domestic'", 'Domestic route hint');
 requireText(language, 'translate.google.com/translate?sl=zh-CN&tl=', 'Google website translation route');
 requireText(language, "wrapper.className = 'qily-web-translate'", 'Visually distinct web translation utility');
 requireText(language, "brand.textContent = '网页翻译'", 'Unified translation label');
-requireText(language, "badge.textContent = '智能路由'", 'Routing visual badge');
 requireText(language, 'function restoreChinese()', 'Immediate Chinese restore');
 requireText(language, 'activeAbort.abort()', 'In-flight translation cancellation');
 requireText(language, "if (likelyMainland()) startDomesticTranslation(targetLanguage)", 'Mainland domestic routing contract');
@@ -63,22 +62,41 @@ const materializer = read('scripts/materialize-global-language-v3.js');
 [
   '20260825-global-translation-dual-route-v2',
   'data-qily-web-translate-direct="dual-route-v2"',
-  'data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct',
+  'data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct',
   '20260825-language-runtime-compat-v42',
   '20260825-language-runtime-compat-v31',
   '20260825-language-runtime-compat-v101',
   '/site-header-axis-v1.css?v=20260825-header-axis-nav-fit-v1',
   '/site-translation-progress-v1.css?v=20260825-bilingual-progress-v1',
   '/site-translation-progress-v1.js?v=20260825-bilingual-progress-v1',
-  'data-qily-translation-progress-direct="bilingual-v1"'
+  '/site-translation-public-ui-v1.css?v=20260825-public-language-picker-v4',
+  '/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v4',
+  'data-qily-translation-progress-direct="bilingual-v1"',
+  'data-qily-translation-public-ui-direct="visitor-v1"'
 ].forEach((token) => requireText(materializer, token, 'Sitewide materializer'));
 
 const css = read('site-global-language-v1.css');
 requireText(css, '.qily-web-translate{', 'Web translation utility styling');
 requireText(css, 'border:2px solid #0f6570', 'Utility visual distinction');
-requireText(css, '.qily-web-translate__badge', 'Smart-routing badge styling');
 requireText(css, '#qilyGoogleTranslateOnDemandV1,#qilyGlobalLanguageV1,.qily-google-translate,.qily-language-switcher{display:none!important}', 'Retired control suppression');
 forbidText(css, 'qily-language-spin', 'Retired automatic translation spinner');
+
+const publicUi = read('site-translation-public-ui-v1.js');
+requireText(publicUi, "control.setAttribute('aria-label','网页翻译')", 'Visitor-facing translation label');
+requireText(publicUi, "var badge=control.querySelector('.qily-web-translate__badge')", 'Internal badge cleanup');
+requireText(publicUi, 'if(badge)badge.remove()', 'Internal badge must be removed from visitor DOM');
+requireText(publicUi, "status.hidden=true", 'Internal translation status must stay out of visitor UI');
+requireText(publicUi, 'var maxWidth=viewport<=430?210:(viewport<=1180?240:(viewport<=1500?260:280))', 'Adaptive selected-language width');
+requireText(publicUi, 'revealSelectedLanguage(select)', 'Selected-language visibility guard');
+
+const publicUiCss = read('site-translation-public-ui-v1.css');
+requireText(publicUiCss, '.qily-web-translate__badge,', 'Internal badge public suppression');
+requireText(publicUiCss, '.qily-web-translate__status{display:none!important}', 'Internal status public suppression');
+requireText(publicUiCss, 'max-width:280px!important', 'Long language width allowance');
+requireText(publicUiCss, 'overflow-x:auto!important', 'Navigation horizontal movement');
+requireText(publicUiCss, 'scrollbar-color:#0f6570 #e8f2f0!important', 'Visible scrollbar contrast');
+requireText(publicUiCss, 'height:10px!important', 'Explicit scrollbar height');
+requireText(publicUiCss, '::-webkit-scrollbar-thumb', 'Draggable scrollbar thumb');
 
 const headerAxis = read('site-header-axis-v1.css');
 requireText(headerAxis, '--qily-header-axis:var(--qily-content-axis,1560px)', '1560px header axis');
@@ -97,4 +115,4 @@ requireText(progressCss, '.qily-translation-progress{', 'Translation progress vi
 requireText(progressCss, 'pointer-events:none', 'Non-blocking translation progress notice');
 requireText(progressCss, 'border-left:5px solid #caa15f', 'Progress visual distinction');
 
-process.stdout.write('Chinese-default Global Translation Dual Route V2 + Header Axis + bilingual progress validation passed.\n');
+process.stdout.write('Chinese-default translation + visitor-facing language picker + explicit horizontal navigation scrollbar validation passed.\n');
