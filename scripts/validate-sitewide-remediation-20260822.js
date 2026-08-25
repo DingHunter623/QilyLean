@@ -93,7 +93,8 @@ assert(progress.includes('正在翻译，请稍候'),'Chinese translation progre
 assert(progress.includes('Translating — a brief delay may occur.'),'English translation progress copy missing.');
 assert(progress.includes('翻译服务暂不可用，已保留中文'),'Translation failure copy missing.');
 assert(progressCss.includes('pointer-events:none'),'Translation progress notice must remain non-blocking.');
-assert(interactionContrast.includes('data-qily-interaction-contrast-fixed'),'Interactive contrast guard missing.');
+assert(interactionContrast.includes("setAttribute('data-qily-interaction-contrast'"),'Interactive contrast guard missing.');
+assert(interactionContrast.includes('if(current>=4.5)'),'Interactive contrast WCAG AA threshold missing.');
 assert(contentContrast.includes('data-qily-content-contrast-fixed'),'Static content contrast guard missing.');
 
 assert(home.includes('<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START -->'),'Homepage C919 V4 start marker missing.');
