@@ -23,12 +23,12 @@ must(js,"setAttribute('data-qily-interaction-contrast'",'Runtime correction mark
 must(js,"attributeFilter:['class','style','disabled','aria-disabled']",'Dynamic state watcher');
 must(js,"d.addEventListener('transitionend'",'Hover/focus transition recheck');
 
-must(materializer,'/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v1','Sitewide contrast CSS materialization');
-must(materializer,'/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v1','Sitewide contrast JS materialization');
-must(materializer,'data-qily-interaction-contrast-direct="v1"','Sitewide contrast direct marker');
+must(materializer,'/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2','Sitewide contrast CSS materialization');
+must(materializer,'/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2','Sitewide contrast JS materialization');
+must(materializer,'data-qily-interaction-contrast-direct="v2"','Sitewide contrast direct marker');
 
 must(gbt,'class="reference-button"','GB/T 2828 reference CTA exists');
-if(!gbt.includes('/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v1')){
-  console.warn('GB/T 2828 production HTML not yet materialized in branch; main materializer will publish it after merge.');
+if(!gbt.includes('/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2')){
+  console.warn('GB/T 2828 production HTML not yet materialized in branch; unified main materializer will publish it after merge.');
 }
-process.stdout.write('PASS: sitewide interaction contrast guard protects dark/light CTA readability and GB/T 2828 reference action.\n');
+process.stdout.write('PASS: sitewide interaction contrast guard protects dark/light CTA readability and GB/T 2828 reference action under unified baseline v2.\n');
