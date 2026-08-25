@@ -45,13 +45,14 @@ jobs:
             const browser=await chromium.launch({headless:true});
             for(const viewport of [{width:1440,height:900},{width:844,height:390}]){
               const page=await browser.newPage({viewport});
+              await page.addInitScript(()=>localStorage.setItem('qily_global_language_v3','zh-CN'));
               const errors=[]; const dialogs=[];
               page.on('pageerror',e=>errors.push(e.stack||String(e)));
               page.on('dialog',async d=>{dialogs.push(d.message());await d.dismiss();});
-              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=startfix-20260823',{waitUntil:'networkidle',timeout:60000});
-              await page.evaluate(()=>localStorage.clear());
-              await page.reload({waitUntil:'networkidle',timeout:60000});
-              await page.waitForFunction(()=>Boolean(window.PureDDZTest),null,{timeout:10000});
+              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=startfix-20260823',{waitUntil:'domcontentloaded',timeout:60000});
+              await page.evaluate(()=>{localStorage.clear();localStorage.setItem('qily_global_language_v3','zh-CN');});
+              await page.reload({waitUntil:'domcontentloaded',timeout:60000});
+              await page.waitForFunction(()=>Boolean(window.PureDDZTest)&&document.documentElement.classList.contains('ddz-ready'),null,{timeout:10000});
               const welcome=page.locator('#welcome');
               if(await welcome.isVisible().catch(()=>false)) await page.locator('#welcome-start').click();
               else await page.locator('#start').click();
