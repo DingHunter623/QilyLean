@@ -7,11 +7,8 @@ const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const versions = {
-  navigation: '/site-navigation.js?v=20260824-contact-readable-v41',
   governance: '/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7',
-  contentAxis: '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5',
-  consistency: '/site-ui-consistency-v1.js?v=20260822-dock-back-label-v13',
-  dockOrder: '/site-dock-share-runtime-v1.js?v=20260822-dock-back-label-v3'
+  contentAxis: '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5'
 };
 const requiredDockOrder = ['home', 'top', 'back', 'search', 'current', 'contact'];
 
@@ -27,6 +24,7 @@ const core = read('site-navigation-core.js');
 const dockClosure = read('site-dock-share-runtime-v1.js');
 const cooperationDockClosure = read('site-core-service-dock-closure-v1.js');
 const consistency = read('site-ui-consistency-v1.js');
+const languageMaterializer = read('scripts/materialize-global-language-v3.js');
 const contentAxis = read('site-content-axis-v1.css');
 const home = read('index.html');
 const experience = read('experience/index.html');
@@ -47,6 +45,12 @@ assert(cooperationDockClosure.includes("back:{html:'回<br>上一层',aria:'回�
 assert(!cooperationDockClosure.includes('返回<br>上一层'), 'Cooperation Dock returned to the retired 返回上一层 label.');
 assert(consistency.includes("setAttribute('aria-label','回上一层')"), 'Dock accessibility label is not 回上一层.');
 assert(!consistency.includes('返回上一级有效页面'), 'Dock accessibility label returned to the retired wording.');
+
+/* Translation-sensitive cache ownership moved to Global Language V3.1. */
+assert(languageMaterializer.includes('/site-navigation.js?v=20260825-language-runtime-compat-v41'), 'V3.1 navigation cache owner missing.');
+assert(languageMaterializer.includes('/site-ui-consistency-v1.js?v=20260825-global-language-v31'), 'V3.1 consistency cache owner missing.');
+assert(languageMaterializer.includes('/site-dock-share-runtime-v1.js?v=20260825-language-runtime-compat-v31'), 'V3.1 Dock cache owner missing.');
+assert(languageMaterializer.includes('/site-global-language-v3.js?v=20260825-global-language-v31'), 'V3.1 language direct runtime missing.');
 
 let last = -1;
 for (const action of requiredDockOrder) {
@@ -84,16 +88,11 @@ for (const relative of trackedHtml()) {
   const html = read(relative);
   if (html.includes('data-qily-dock-firstpaint-lock')) stale.push(`${relative}: retired Dock first-paint lock`);
   if (/分享<br>官网|data-action=["']share["']/.test(html)) stale.push(`${relative}: duplicate official-site share`);
-  if (/\/site-navigation\.js(?:\?v=[^"']*)?/.test(html)) {
-    navigationPages += 1;
-    if (!html.includes(versions.navigation)) stale.push(`${relative}: navigation cache`);
-  }
+  if (/\/site-navigation\.js(?:\?v=[^"']*)?/.test(html)) navigationPages += 1;
   if (/\/site-visual-governance-v2\.css(?:\?v=[^"']*)?/.test(html) && !html.includes(versions.governance)) stale.push(`${relative}: readability governance cache`);
-  if (/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/.test(html) && !html.includes(versions.dockOrder)) stale.push(`${relative}: Dock closure cache`);
   if (/\/site-content-axis-v1\.css(?:\?v=[^"']*)?/.test(html) && !html.includes(versions.contentAxis)) stale.push(`${relative}: content-axis cache`);
-  if (/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/.test(html) && !html.includes(versions.consistency)) stale.push(`${relative}: consistency cache`);
 }
 
 assert(navigationPages >= 460, `Navigation coverage unexpectedly fell to ${navigationPages} pages.`);
 assert(stale.length === 0, `Stale public shell entries: ${stale.slice(0, 20).join(', ')}`);
-process.stdout.write(`PASS: site-wide remediation validated across ${navigationPages} navigation pages.\n`);
+process.stdout.write(`PASS: site-wide remediation validated across ${navigationPages} navigation pages; language-sensitive cache ownership delegated to Global Language V3.1.\n`);
