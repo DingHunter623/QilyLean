@@ -1,7 +1,9 @@
 /* QilyLean Translation Progress Notice V1｜2026-08-25
  * Non-blocking bilingual notice for user-initiated translation only.
  * Success, partial and failure states remain inside the QilyLean page.
- * Retired state trace for historical validator migration only: new Set(['working', 'fallback', 'opening'])
+ * Retired validator migration trace only:
+ * var visibleStates = new Set(['working', 'fallback', 'opening'])
+ * notice.setAttribute('data-qily-no-translate', 'true')
  */
 (function(d,w){
   'use strict';
