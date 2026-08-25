@@ -1,11 +1,15 @@
-/* QilyLean floating Dock order closure v3｜2026-08-22
- * 最终顺序：首页、回顶部、回上一层、本站搜索、分享当前页、交流。
- * 删除重复功能“分享官网”，保留“分享当前页”。
+/* QilyLean floating Dock order closure v3.1｜2026-08-25
+ * 保持六项顺序；仅在中文权威源模式下校正中文标签，其他语言不得被运行时拉回中文。
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyDockOrderClosureV3) return;
+  if (w.__qilyDockOrderClosureV31) return;
+  w.__qilyDockOrderClosureV31 = true;
   w.__qilyDockOrderClosureV3 = true;
+
+  function sourceMode() {
+    return (d.documentElement.getAttribute('data-qily-language') || 'zh-CN') === 'zh-CN';
+  }
 
   function normalizeDock() {
     var dock = d.getElementById('floatDock');
@@ -14,10 +18,9 @@
     buttons.forEach(function (button) {
       var text = (button.textContent || '').replace(/\s+/g, '');
       var label = button.getAttribute('aria-label') || button.getAttribute('title') || '';
-      if (text.indexOf('分享官网') >= 0 || label.indexOf('分享官网') >= 0 || text === '分享官网') {
-        button.remove();
-      }
+      if (text.indexOf('分享官网') >= 0 || label.indexOf('分享官网') >= 0 || text === '分享官网') button.remove();
     });
+
     var labels = {
       home: '首页',
       top: '回<br>顶部',
@@ -32,11 +35,16 @@
     }).map(function (node) { return node.getAttribute('data-action'); });
     var needsReorder = existingOrder.join(',') !== order.join(',');
     var fragment = d.createDocumentFragment();
+    var enforceChinese = sourceMode();
+
     order.forEach(function (action) {
       var button = dock.querySelector('[data-action="' + action + '"]');
       if (!button) return;
-      if (button.innerHTML !== labels[action]) button.innerHTML = labels[action];
-      button.setAttribute('aria-label', button.textContent.replace(/\s+/g, ''));
+      if (enforceChinese) {
+        if (button.innerHTML !== labels[action]) button.innerHTML = labels[action];
+        var aria = button.textContent.replace(/\s+/g, '');
+        if (button.getAttribute('aria-label') !== aria) button.setAttribute('aria-label', aria);
+      }
       if (needsReorder) fragment.appendChild(button);
     });
     if (fragment.childNodes.length) dock.appendChild(fragment);
@@ -45,18 +53,17 @@
   }
 
   function installObserver() {
-    if (!w.MutationObserver || w.__qilyDockOrderClosureObserverV3) return;
-    w.__qilyDockOrderClosureObserverV3 = true;
+    if (!w.MutationObserver || w.__qilyDockOrderClosureObserverV31) return;
+    w.__qilyDockOrderClosureObserverV31 = true;
     new MutationObserver(normalizeDock).observe(d.body, { childList: true, subtree: true });
   }
 
-  if (d.readyState === 'loading') {
-    d.addEventListener('DOMContentLoaded', function () {
-      normalizeDock();
-      installObserver();
-    }, { once: true });
-  } else {
+  function boot() {
     normalizeDock();
     installObserver();
+    d.addEventListener('qily:language-change', normalizeDock);
   }
+
+  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot, { once: true });
+  else boot();
 })(document, window);
