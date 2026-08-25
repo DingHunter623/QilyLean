@@ -1,0 +1,48 @@
+name: Validate Global Language Runtime Compatibility
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - 'site-global-language-v3.js'
+      - 'site-navigation.js'
+      - 'site-parent-navigation-v3.js'
+      - 'site-ui-consistency-v1.js'
+      - 'site-dock-share-runtime-v1.js'
+      - 'site-core-service-dock-closure-v1.js'
+      - 'scripts/materialize-global-language-v3.js'
+      - 'scripts/validate-global-language-runtime-compat-v1.js'
+      - '.github/workflows/validate-global-language-runtime-compat.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+
+      - name: Syntax check translation-sensitive runtimes
+        run: |
+          node --check site-global-language-v3.js
+          node --check site-navigation.js
+          node --check site-parent-navigation-v3.js
+          node --check site-ui-consistency-v1.js
+          node --check site-dock-share-runtime-v1.js
+          node --check site-core-service-dock-closure-v1.js
+          node --check scripts/materialize-global-language-v3.js
+          node --check scripts/validate-global-language-runtime-compat-v1.js
+
+      - name: Validate runtime language compatibility contract
+        run: node scripts/validate-global-language-runtime-compat-v1.js
+
+      - name: Diff hygiene
+        run: git diff --check
