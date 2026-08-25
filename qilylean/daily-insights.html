@@ -35,7 +35,7 @@
 <link id="qilyVisualReadabilityV4Stylesheet" rel="stylesheet" href="/site-visual-readability-v4.css?v=20260813-visual-readability-v4">
   <link id="qilyVisualClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v1.css?v=20260804-sitewide-clarity-v2">
   <link id="qilyBoundaryLinksClosureStylesheet" rel="stylesheet" href="/site-visual-closure-v2.css?v=20260803-boundary-links-v2">
-<script defer data-qily-ui-consistency="dock-share-functional-v11" src="/site-ui-consistency-v1.js?v=20260825-global-language-v3"></script><link id="qilyR2RuntimeStabilityStylesheet" rel="stylesheet" href="/site-r2-stability-fixes-v1.css?v=20260813-r2-clean-v4">
+<script defer data-qily-ui-consistency="dock-share-functional-v11" src="/site-ui-consistency-v1.js?v=20260825-global-language-v31"></script><link id="qilyR2RuntimeStabilityStylesheet" rel="stylesheet" href="/site-r2-stability-fixes-v1.css?v=20260813-r2-clean-v4">
 <!-- QILY-EARLY-CAREER-HISTORY:START -->
   <link id="qilyEarlyCareerHistoryStylesheet" rel="stylesheet" href="/site-early-career-history-v1.css?v=20260822-company-links-v5">
   <meta name="qily:early-career-history" content="static-v5">
@@ -49,8 +49,8 @@
 <link id="qilyFloatingDockStandardV1" rel="stylesheet" href="/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3">
 <script defer id="qilyR6NativePrefetchV1" data-qily-native-prefetch="v1" src="/site-native-prefetch-v1.js?v=20260819-r6-native-prefetch-v1"></script>
 <script defer data-qily-visual-geometry="v4" src="/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4"></script>
-<script defer src="/site-navigation.js?v=20260824-contact-readable-v41"></script>
-<script defer data-qily-global-language-direct="v3" src="/site-global-language-v3.js?v=20260825-global-language-v3"></script>
+<script defer src="/site-navigation.js?v=20260825-language-runtime-compat-v41"></script>
+<script defer data-qily-global-language-direct="v3.1" src="/site-global-language-v3.js?v=20260825-global-language-v31"></script>
 </head>
 <body class="module-page daily-index-page">
 <header class="qily-site-header"><a class="qily-brand" href="/">QilyLean｜启力精益</a><nav class="site-nav" aria-label="QilyLean核心导视">
@@ -448,5 +448,5 @@
 </div></section>
 </main>
 <script>(function(){var params=new URLSearchParams(location.search),year=(params.get('year')||'').trim(),input=document.getElementById('briefSearch'),grid=document.getElementById('briefCuratedGrid'),status=document.getElementById('briefFilterStatus');if(!grid)return;var cards=Array.prototype.slice.call(grid.querySelectorAll('.brief-index-card'));function apply(){var q=(input&&input.value||'').trim().toLocaleLowerCase('zh-CN'),n=0;cards.forEach(function(card){var d=card.getAttribute('data-date')||'',s=(card.getAttribute('data-search')||'').toLocaleLowerCase('zh-CN'),hitYear=!year||d.indexOf(year+'-')===0,hitSearch=!q||s.includes(q),hit=hitYear&&hitSearch;card.hidden=!hit;if(hit)n+=1;});document.querySelectorAll('[data-year-filter]').forEach(function(link){var active=!!year&&link.getAttribute('data-year-filter')===year;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','true');else link.removeAttribute('aria-current');});if(status){if(year&&q)status.innerHTML=year+'年｜找到 '+n+' 篇相关精选　<a href="/qilylean/daily-insights.html#brief-directory">查看全部年份</a>';else if(year)status.innerHTML=year+'年｜当前 '+n+' 篇精选　<a href="/qilylean/daily-insights.html#brief-directory">查看全部年份</a>';else status.textContent=q?'找到 '+n+' 篇相关精选':'当前 374 篇精选';}}if(input)input.addEventListener('input',apply);apply();})();</script>
-<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260822-dock-back-label-v3"></script>
+<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260825-language-runtime-compat-v31"></script>
 </body></html>
