@@ -7,6 +7,9 @@ on:
       - 'site-global-language-v3.js'
       - 'site-global-language-v1.css'
       - 'site-navigation.js'
+      - 'site-header-axis-v1.css'
+      - 'site-translation-progress-v1.js'
+      - 'site-translation-progress-v1.css'
       - 'site-parent-navigation-v3.js'
       - 'site-ui-consistency-v1.js'
       - 'site-dock-share-runtime-v1.js'
@@ -29,9 +32,10 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
-      - name: Syntax check translation-sensitive runtimes
+      - name: Syntax check translation and header runtimes
         run: |
           node --check site-global-language-v3.js
+          node --check site-translation-progress-v1.js
           node --check site-navigation.js
           node --check site-parent-navigation-v3.js
           node --check site-ui-consistency-v1.js
@@ -43,7 +47,7 @@ jobs:
           node --check scripts/validate-sitewide-remediation-20260822.js
       - name: Validate Chinese-default dual-route translation contract
         run: node scripts/validate-global-language-runtime-compat-v1.js
-      - name: Validate homepage and sitewide compatibility guards
+      - name: Validate homepage, header axis and sitewide compatibility guards
         run: |
           node scripts/validate-home-hero-dock-snapback-v1.js
           node scripts/validate-sitewide-remediation-20260822.js
