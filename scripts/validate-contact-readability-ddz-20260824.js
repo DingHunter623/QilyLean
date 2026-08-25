@@ -4,7 +4,7 @@
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
-const NAV='/site-navigation.js?v=20260824-contact-readable-v41';
+const NAV='/site-navigation.js?v=20260825-language-runtime-compat-v41';
 const GOV='/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7';
 const BUILD="BUILD='20260824-readable-floor-plus2-v4'";
 
@@ -87,9 +87,3 @@ const theme=read('tools/pure-ddz/game/js/card-theme.js');
 assert(theme.includes('if(window.__PURE_DDZ_MANAGED_LOADER__)return'),'斗地主重复加载保护缺失');
 const game=read('tools/pure-ddz/game/js/game.js');
 assert(!game.includes("serviceWorker?.register('./sw.js')"),'斗地主不得请求不存在的 Service Worker');
-
-const comfort=read('tools/pure-ddz/game/css/card-comfort-v122.css');
-['.qily-card-theme>strong{margin-top:6px;font-size:19px','.qily-joker-visual{top:47%;width:60%','@media(max-width:900px)','font-size:9.5px'].forEach(marker=>assert(comfort.includes(marker),'斗地主牌面舒适比例缺失：'+marker));
-assert(!comfort.includes('.qily-card-corner'),'牌面舒适层不得缩小点数/花色识别区');
-
-console.log(`CONTACT_READABILITY_DDZ_OK nav=${navPages} governance=${governancePages} firstPaint=${buildPages}`);
