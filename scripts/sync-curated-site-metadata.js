@@ -91,7 +91,10 @@ function updateKnowledge(data) {
   let html = read(knowledgeFile);
   const b = data.briefs;
   const resourceCount = data.knowledge && Number.isInteger(data.knowledge.resourceCount) ? data.knowledge.resourceCount : 0;
-  html = html.replace(/<meta name="description" content="[^"]*">/i, `<meta name="description" content="QilyLean知识资产：收录${data.terminology.total}项制造管理与工程术语、${b.total}篇精选制造工程简报及${resourceCount}项精益工具、知识专题和程序文件／参考资料；最新精选更新至${b.latestDate}。">`);
+  const description = `QilyLean知识资产：收录${data.terminology.total}项制造管理与工程术语、${b.total}篇精选制造工程简报及${resourceCount}项精益工具、知识专题和程序文件／参考资料；最新精选更新至${b.latestDate}。`;
+  html = html.replace(/<meta name="description" content="[^"]*">/i, `<meta name="description" content="${description}">`);
+  html = html.replace(/<meta property="og:description" content="[^"]*">/i, `<meta property="og:description" content="${description}">`);
+  html = html.replace(/<meta name="twitter:description" content="[^"]*">/i, `<meta name="twitter:description" content="${description}">`);
   html = html.replace(/<small>全站术语词典｜\d+项<\/small>/, `<small>全站术语词典｜${data.terminology.total}项</small>`);
   html = html.replace(/(<small>术语与培训<\/small>\s*<h3>)\d+\s*项(<\/h3>)/, `$1${data.terminology.total} 项$2`);
   html = html.replace(/<article class="module-card" data-latest-brief-card(?: data-latest-brief-date="[^"]*")?(?: data-site-metadata-source="[^"]*")?>[\s\S]*?<\/article>/, latestCard(data));
@@ -113,11 +116,15 @@ function validate(data) {
   const home = read(homeFile);
   const knowledge = read(knowledgeFile);
   const central = JSON.parse(read(siteDataFile));
+  const knowledgeDescription = `QilyLean知识资产：收录${data.terminology.total}项制造管理与工程术语、${data.briefs.total}篇精选制造工程简报及${data.knowledge.resourceCount}项精益工具、知识专题和程序文件／参考资料；最新精选更新至${data.briefs.latestDate}。`;
   if (!home.includes(`${data.briefs.total}篇`)) throw new Error('Homepage curated brief count is stale.');
   if (!home.includes(data.briefs.latestDate)) throw new Error('Homepage latest curated date is stale.');
   if (!knowledge.includes(`data-latest-brief-date="${data.briefs.latestDate}"`)) throw new Error('Knowledge latest curated card is stale.');
   if (!knowledge.includes(`<small>术语与培训</small><h3>${data.terminology.total} 项</h3>`)) throw new Error('Knowledge terminology count is stale.');
   if (!knowledge.includes(`最新精选更新至 ${data.briefs.latestDate}`)) throw new Error('Knowledge brief summary date is stale.');
+  if (!knowledge.includes(`<meta name="description" content="${knowledgeDescription}">`)) throw new Error('Knowledge primary description is stale.');
+  if (!knowledge.includes(`<meta property="og:description" content="${knowledgeDescription}">`)) throw new Error('Knowledge Open Graph description is stale.');
+  if (!knowledge.includes(`<meta name="twitter:description" content="${knowledgeDescription}">`)) throw new Error('Knowledge Twitter description is stale.');
   const terminology = read(terminologyFile);
   if (!terminology.includes(`共收录 ${data.terminology.total} 项术语 · ${data.terminology.total} 份单点培训课件`)) throw new Error('Terminology visible count is stale.');
   if (!knowledge.includes('精选简报')) throw new Error('Knowledge page still lacks curated-brief wording.');

@@ -52,6 +52,7 @@ on:
       - 'scripts/remove-daily-directory-consultation.js'
       - 'scripts/validate-weekly-brief-curation.js'
       - 'scripts/validate-current-daily-publication.js'
+      - 'scripts/sync-curated-site-metadata.js'
   workflow_dispatch:
 
 permissions:
