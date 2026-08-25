@@ -27,6 +27,8 @@ const consistency = read('site-ui-consistency-v1.js');
 const languageMaterializer = read('scripts/materialize-global-language-v3.js');
 const contentAxis = read('site-content-axis-v1.css');
 const headerAxis = read('site-header-axis-v1.css');
+const translationPublicUi = read('site-translation-public-ui-v1.js');
+const translationPublicUiCss = read('site-translation-public-ui-v1.css');
 const translationProgress = read('site-translation-progress-v1.js');
 const translationProgressCss = read('site-translation-progress-v1.css');
 const home = read('index.html');
@@ -62,6 +64,9 @@ assert(languageMaterializer.includes('data-qily-web-translate-direct="dual-route
 assert(languageMaterializer.includes('/site-header-axis-v1.css?v=20260825-header-axis-nav-fit-v1'), 'Header-axis materialization owner missing.');
 assert(languageMaterializer.includes('/site-translation-progress-v1.css?v=20260825-bilingual-progress-v1'), 'Translation progress CSS materialization owner missing.');
 assert(languageMaterializer.includes('/site-translation-progress-v1.js?v=20260825-bilingual-progress-v1'), 'Translation progress JS materialization owner missing.');
+assert(languageMaterializer.includes('/site-translation-public-ui-v1.css?v=20260825-public-language-picker-v4'), 'Public translation UI CSS materialization owner missing.');
+assert(languageMaterializer.includes('/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v4'), 'Public translation UI JS materialization owner missing.');
+assert(languageMaterializer.includes('data-qily-translation-public-ui-direct="visitor-v1"'), 'Public translation UI direct marker missing.');
 
 let last = -1;
 for (const action of requiredDockOrder) {
@@ -85,7 +90,18 @@ assert(headerAxis.includes('max-width:var(--qily-header-axis)!important'), 'Head
 assert(headerAxis.includes('margin-left:max(var(--qily-header-gutter),calc((100vw - var(--qily-header-axis))/2))!important'), 'Header left-axis alignment guard missing.');
 assert(headerAxis.includes('word-break:keep-all!important'), 'Navigation CJK no-break guard missing.');
 assert(headerAxis.includes('font-size:clamp(18px,1.35vw,20px)!important'), 'Desktop navigation fit font guard missing.');
-assert(headerAxis.includes('overflow:visible!important'), 'Desktop navigation clipping guard missing.');
+
+/* Final visitor-facing layer must override the old no-scroll desktop shell whenever translation makes labels wider. */
+assert(translationPublicUi.includes("if(badge)badge.remove()"), 'Internal translation badge is still exposed to visitors.');
+assert(translationPublicUi.includes('status.hidden=true'), 'Internal translation route status is still exposed to visitors.');
+assert(translationPublicUi.includes('maxWidth=viewport<=430?210:(viewport<=1180?240:(viewport<=1500?260:280))'), 'Selected-language adaptive width guard missing.');
+assert(translationPublicUi.includes('revealSelectedLanguage(select)'), 'Selected-language reveal guard missing.');
+assert(translationPublicUiCss.includes('overflow-x:auto!important'), 'Navigation horizontal movement is not enabled.');
+assert(translationPublicUiCss.includes('scrollbar-width:auto!important'), 'Firefox horizontal movement bar is not explicit.');
+assert(translationPublicUiCss.includes('scrollbar-color:#0f6570 #e8f2f0!important'), 'Horizontal movement bar lacks governed contrast.');
+assert(translationPublicUiCss.includes('::-webkit-scrollbar-thumb'), 'Chromium/Safari draggable navigation thumb missing.');
+assert(translationPublicUiCss.includes('height:10px!important'), 'Desktop navigation movement bar is not visually explicit.');
+assert(translationPublicUiCss.includes('max-width:280px!important'), 'Long selected language can still be clipped on desktop.');
 
 assert(translationProgress.includes('正在翻译，请稍候'), 'Chinese translation progress copy missing.');
 assert(translationProgress.includes('Translating — a brief delay may occur.'), 'English translation progress copy missing.');
@@ -119,4 +135,4 @@ for (const relative of trackedHtml()) {
 
 assert(navigationPages >= 460, `Navigation coverage unexpectedly fell to ${navigationPages} pages.`);
 assert(stale.length === 0, `Stale public shell entries: ${stale.slice(0, 20).join(', ')}`);
-process.stdout.write(`PASS: site-wide remediation validated across ${navigationPages} navigation pages; 1560px header axis and bilingual non-blocking translation progress are governed.\n`);
+process.stdout.write(`PASS: site-wide remediation validated across ${navigationPages} navigation pages; 1560px axis, full language labels and explicit horizontal navigation movement are governed.\n`);
