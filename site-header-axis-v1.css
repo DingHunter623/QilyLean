@@ -81,6 +81,11 @@ html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav
   overflow-wrap:normal!important;
 }
 
+/* The translation utility keeps strong visual identity but gives nonessential width back to navigation. */
+html body .qily-web-translate__select,
+html body .qily-web-translate__select option{font-size:16px!important}
+@media (max-width:1700px){html body .qily-web-translate__badge{display:none!important}}
+
 /* 100% desktop zoom guard: fit the complete primary navigation before allowing any scroll behavior. */
 @media (min-width:1181px) and (max-width:1500px){
   html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
