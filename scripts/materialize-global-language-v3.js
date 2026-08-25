@@ -1,16 +1,17 @@
 #!/usr/bin/env node
 'use strict';
 
-/* release trigger: 2026-08-25 Global Language V3 sitewide materialization */
+/* release trigger: 2026-08-25 Global Language V3.1 runtime compatibility */
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260825-global-language-v3';
-const LANGUAGE_SRC = '/site-global-language-v3.js?v=20260825-global-language-v3';
-const MARKER = 'data-qily-global-language-direct="v3"';
+const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260825-global-language-v31';
+const NAVIGATION = '/site-navigation.js?v=20260825-language-runtime-compat-v41';
+const LANGUAGE_SRC = '/site-global-language-v3.js?v=20260825-global-language-v31';
+const MARKER = 'data-qily-global-language-direct="v3.1"';
 
 function trackedHtml() {
   return execFileSync('git', ['ls-files', '*.html'], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
@@ -20,6 +21,7 @@ function trackedHtml() {
 function materialize(source) {
   let next = source;
   next = next.replace(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/g, CONSISTENCY);
+  next = next.replace(/\/site-navigation\.js(?:\?v=[^"']*)?/g, NAVIGATION);
   next = next.replace(/\s*<script\b[^>]*data-qily-global-language-direct=["'][^"']+["'][^>]*><\/script>\s*/gi, '\n');
   const tag = `<script defer ${MARKER} src="${LANGUAGE_SRC}"></script>`;
   if (/<\/head>/i.test(next)) next = next.replace(/<\/head>/i, `${tag}\n</head>`);
@@ -37,7 +39,7 @@ for (const relative of trackedHtml()) {
 }
 
 if (checkOnly && changed.length) {
-  throw new Error(`Global Language V3 materialization stale: ${changed.slice(0, 30).join(', ')}${changed.length > 30 ? ` … +${changed.length - 30}` : ''}`);
+  throw new Error(`Global Language V3.1 materialization stale: ${changed.slice(0, 30).join(', ')}${changed.length > 30 ? ` … +${changed.length - 30}` : ''}`);
 }
 
-process.stdout.write(`Global Language V3 ${checkOnly ? 'check passed' : 'materialized'}: ${changed.length} tracked HTML file(s).\n`);
+process.stdout.write(`Global Language V3.1 ${checkOnly ? 'check passed' : 'materialized'}: ${changed.length} tracked HTML file(s).\n`);
