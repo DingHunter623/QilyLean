@@ -53,8 +53,9 @@ jobs:
           const expected=['下载 Android APK','下载说明','扫码下载','分享下载页','隐私政策','用户协议','技术支持'];
           for (const viewport of [{width:1440,height:900},{width:390,height:844}]) {
             const page=await browser.newPage({viewport});
+            await page.addInitScript(()=>localStorage.setItem('qily_global_language_v3','zh-CN'));
             const errors=[]; page.on('pageerror',e=>errors.push(String(e)));
-            await page.goto(base+'/capabilities/?verify=runtime-self-heal',{waitUntil:'networkidle'});
+            await page.goto(base+'/capabilities/?verify=runtime-self-heal',{waitUntil:'domcontentloaded'});
             await page.waitForFunction(()=>document.querySelector('#qilylean-home .module-actions')?.dataset.qilyHomeActions==='20260824-v2',{timeout:6000});
             const data=await page.evaluate(()=>{
               const actions=[...document.querySelectorAll('#qilylean-home .module-actions > a')].map(el=>(el.textContent||'').trim());
