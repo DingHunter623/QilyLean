@@ -6,11 +6,11 @@ const path=require('path');
 
 const root=path.resolve(__dirname,'..');
 const file=path.join(root,'knowledge','terminology.html');
-const cssHref='/knowledge/terminology-opl-readability-v8.css?v=20260825-opl-readability-v13';
+const cssHref='/knowledge/terminology-opl-readability-v8.css?v=20260825-opl-readability-v14';
 
 let html=fs.readFileSync(file,'utf8');
 
-// Load component-owned OPL readability baseline last and cache-bust every V13 lesson/PDF view.
+// Load component-owned OPL readability baseline last and cache-bust every V14 lesson/PDF view.
 html=html.replace(/\n?<link[^>]+id="qilyTerminologyOplReadabilityV8Stylesheet"[^>]*>\n?/g,'\n');
 if(!html.includes('</head>'))throw new Error('terminology </head> missing');
 html=html.replace('</head>',`<link id="qilyTerminologyOplReadabilityV8Stylesheet" rel="stylesheet" href="${cssHref}">\n</head>`);
@@ -39,7 +39,7 @@ const checks=[
   '扫码访问官方网址',
   'event.preventDefault();'
 ];
-for(const token of checks){if(!out.includes(token))throw new Error('OPL V13 token missing: '+token);}
+for(const token of checks){if(!out.includes(token))throw new Error('OPL V14 token missing: '+token);}
 if(out.includes('<button type="button" class="term-opl-copy-wechat"'))throw new Error('button-style WeChat control remains');
 if(out.includes('<br>微信：Qily259<br>'))throw new Error('legacy non-copyable WeChat line remains');
-console.log('OPL V13 PASS: cache-busted shared CSS, structural white labels and A4 print closure ready.');
+console.log('OPL V14 PASS: cache-busted shared CSS, structural white labels and no-overlap A4 print closure ready.');
