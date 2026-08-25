@@ -8,6 +8,8 @@ on:
       - 'site-global-language-v1.css'
       - 'site-translation-public-ui-v1.js'
       - 'site-translation-public-ui-v1.css'
+      - 'site-interaction-contrast-guard-v1.js'
+      - 'site-interaction-contrast-guard-v1.css'
       - 'site-navigation.js'
       - 'site-header-axis-v1.css'
       - 'site-translation-progress-v1.js'
@@ -34,11 +36,12 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
-      - name: Syntax check translation and header runtimes
+      - name: Syntax check translation, header and interaction runtimes
         run: |
           node --check site-global-language-v3.js
           node --check site-translation-public-ui-v1.js
           node --check site-translation-progress-v1.js
+          node --check site-interaction-contrast-guard-v1.js
           node --check site-navigation.js
           node --check site-parent-navigation-v3.js
           node --check site-ui-consistency-v1.js
