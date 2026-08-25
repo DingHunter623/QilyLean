@@ -1,10 +1,11 @@
-name: Validate Global Language Runtime Compatibility
+name: Validate Chinese Default + Google Translate On-Demand
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
       - 'site-global-language-v3.js'
+      - 'site-global-language-v1.css'
       - 'site-navigation.js'
       - 'site-parent-navigation-v3.js'
       - 'site-ui-consistency-v1.js'
@@ -36,7 +37,7 @@ jobs:
           node --check site-core-service-dock-closure-v1.js
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/validate-global-language-runtime-compat-v1.js
-      - name: Validate runtime language compatibility contract
+      - name: Validate Chinese-default Google translation contract
         run: node scripts/validate-global-language-runtime-compat-v1.js
       - name: Diff hygiene
         run: git diff --check
