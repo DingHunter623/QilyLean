@@ -1,4 +1,4 @@
-name: Validate Global Translation Dual Route V2
+name: Validate Global Translation Safety + Readability
 
 on:
   pull_request:
@@ -6,20 +6,24 @@ on:
     paths:
       - 'site-global-language-v3.js'
       - 'site-global-language-v1.css'
+      - 'site-translation-safe-runtime-v1.js'
       - 'site-translation-public-ui-v1.js'
       - 'site-translation-public-ui-v1.css'
-      - 'site-interaction-contrast-guard-v1.js'
-      - 'site-interaction-contrast-guard-v1.css'
-      - 'site-navigation.js'
-      - 'site-header-axis-v1.css'
       - 'site-translation-progress-v1.js'
       - 'site-translation-progress-v1.css'
+      - 'site-interaction-contrast-guard-v1.js'
+      - 'site-interaction-contrast-guard-v1.css'
+      - 'site-content-contrast-guard-v1.js'
+      - 'site-content-contrast-guard-v1.css'
+      - 'site-navigation.js'
+      - 'site-header-axis-v1.css'
       - 'site-parent-navigation-v3.js'
       - 'site-ui-consistency-v1.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-core-service-dock-closure-v1.js'
       - 'scripts/materialize-global-language-v3.js'
       - 'scripts/validate-global-language-runtime-compat-v1.js'
+      - 'scripts/validate-sitewide-safety-readability-v1.js'
       - 'scripts/validate-interaction-contrast-guard-v1.js'
       - 'scripts/validate-home-hero-dock-snapback-v1.js'
       - 'scripts/validate-sitewide-remediation-20260822.js'
@@ -29,7 +33,7 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v5
         with:
@@ -37,12 +41,14 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
-      - name: Syntax check translation, header and interaction runtimes
+      - name: Syntax check translation, header and contrast runtimes
         run: |
           node --check site-global-language-v3.js
+          node --check site-translation-safe-runtime-v1.js
           node --check site-translation-public-ui-v1.js
           node --check site-translation-progress-v1.js
           node --check site-interaction-contrast-guard-v1.js
+          node --check site-content-contrast-guard-v1.js
           node --check site-navigation.js
           node --check site-parent-navigation-v3.js
           node --check site-ui-consistency-v1.js
@@ -50,10 +56,13 @@ jobs:
           node --check site-core-service-dock-closure-v1.js
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/validate-global-language-runtime-compat-v1.js
+          node --check scripts/validate-sitewide-safety-readability-v1.js
           node --check scripts/validate-interaction-contrast-guard-v1.js
           node --check scripts/validate-home-hero-dock-snapback-v1.js
           node --check scripts/validate-sitewide-remediation-20260822.js
-      - name: Validate Chinese-default translation and public navigation contract
+      - name: Validate fail-closed translation and sitewide readability
+        run: node scripts/validate-sitewide-safety-readability-v1.js
+      - name: Validate legacy Chinese-default shell compatibility
         run: node scripts/validate-global-language-runtime-compat-v1.js
       - name: Validate sitewide interaction contrast guard
         run: node scripts/validate-interaction-contrast-guard-v1.js

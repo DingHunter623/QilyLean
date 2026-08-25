@@ -1,4 +1,4 @@
-name: Materialize Global Translation + Interaction Contrast
+name: Materialize Translation Safety + Content Readability
 
 on:
   push:
@@ -6,20 +6,24 @@ on:
     paths:
       - 'site-global-language-v3.js'
       - 'site-global-language-v1.css'
+      - 'site-translation-safe-runtime-v1.js'
       - 'site-translation-public-ui-v1.js'
       - 'site-translation-public-ui-v1.css'
-      - 'site-interaction-contrast-guard-v1.js'
-      - 'site-interaction-contrast-guard-v1.css'
-      - 'site-navigation.js'
-      - 'site-header-axis-v1.css'
       - 'site-translation-progress-v1.js'
       - 'site-translation-progress-v1.css'
+      - 'site-interaction-contrast-guard-v1.js'
+      - 'site-interaction-contrast-guard-v1.css'
+      - 'site-content-contrast-guard-v1.js'
+      - 'site-content-contrast-guard-v1.css'
+      - 'site-navigation.js'
+      - 'site-header-axis-v1.css'
       - 'site-parent-navigation-v3.js'
       - 'site-ui-consistency-v1.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-core-service-dock-closure-v1.js'
       - 'scripts/materialize-global-language-v3.js'
       - 'scripts/validate-global-language-runtime-compat-v1.js'
+      - 'scripts/validate-sitewide-safety-readability-v1.js'
       - '.github/workflows/materialize-global-language-v3.yml'
   workflow_dispatch:
 
@@ -27,7 +31,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: materialize-global-shell-interaction-contrast-main
+  group: materialize-global-translation-safety-readability-main
   cancel-in-progress: true
 
 jobs:
@@ -44,12 +48,14 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate global shell and interaction contrast sources
+      - name: Validate translation safety and readability sources
         run: |
           node --check site-global-language-v3.js
+          node --check site-translation-safe-runtime-v1.js
           node --check site-translation-public-ui-v1.js
           node --check site-translation-progress-v1.js
           node --check site-interaction-contrast-guard-v1.js
+          node --check site-content-contrast-guard-v1.js
           node --check site-navigation.js
           node --check site-parent-navigation-v3.js
           node --check site-ui-consistency-v1.js
@@ -57,6 +63,8 @@ jobs:
           node --check site-core-service-dock-closure-v1.js
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/validate-global-language-runtime-compat-v1.js
+          node --check scripts/validate-sitewide-safety-readability-v1.js
+          node scripts/validate-sitewide-safety-readability-v1.js
           node scripts/validate-global-language-runtime-compat-v1.js
 
       - name: Materialize and publish across every tracked HTML page
@@ -69,31 +77,29 @@ jobs:
             echo "Materialization publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
-            node --check site-global-language-v3.js
+            node --check site-translation-safe-runtime-v1.js
             node --check site-translation-public-ui-v1.js
             node --check site-translation-progress-v1.js
             node --check site-interaction-contrast-guard-v1.js
-            node --check site-navigation.js
-            node --check site-parent-navigation-v3.js
-            node --check site-ui-consistency-v1.js
-            node --check site-dock-share-runtime-v1.js
-            node --check site-core-service-dock-closure-v1.js
+            node --check site-content-contrast-guard-v1.js
             node --check scripts/materialize-global-language-v3.js
+            node --check scripts/validate-sitewide-safety-readability-v1.js
+            node scripts/validate-sitewide-safety-readability-v1.js
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
             git diff --check
             if git diff --quiet; then
-              echo 'Global shell / interaction contrast already materialized on latest main.'
+              echo 'Translation safety and content readability already materialized on latest main.'
               exit 0
             fi
             git add -- '*.html'
-            git commit -m 'build: materialize sitewide interaction contrast guard across public HTML'
+            git commit -m 'build: materialize translation safety and content readability across public HTML'
             if git push origin HEAD:main; then
-              echo 'Sitewide interaction contrast guard materialization published.'
+              echo 'Sitewide translation safety and content readability published.'
               exit 0
             fi
             echo 'main advanced during publish; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish sitewide interaction contrast guard after retries.'
+          echo 'Unable to publish translation safety and content readability after retries.'
           exit 1

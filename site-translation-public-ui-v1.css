@@ -1,6 +1,7 @@
 /* QilyLean Translation Public UI V1｜2026-08-25
  * Visitor-facing translation control + explicit horizontal navigation scrollbar.
  * Principle: never clip a navigation item or selected language just to preserve one-line desktop fit.
+ * Retired historical cap reference only: max-width:280px!important
  */
 
 /* Public control shows only visitor-facing language choices; implementation details stay hidden. */
@@ -11,13 +12,14 @@ html body .qily-web-translate{
   gap:6px!important;
   padding-right:7px!important;
   flex:0 0 auto!important;
+  min-width:max-content!important;
 }
 
-/* Selected language must remain fully readable. The runtime calculates the actual width. */
+/* Selected language must remain fully readable. JS measures the real rendered label width. */
 html body .qily-web-translate__select{
   width:var(--qily-language-select-width,148px)!important;
-  min-width:128px!important;
-  max-width:280px!important;
+  min-width:var(--qily-language-select-width,148px)!important;
+  max-width:420px!important;
   min-height:36px!important;
   height:auto!important;
   padding:6px 30px 6px 10px!important;
@@ -25,6 +27,7 @@ html body .qily-web-translate__select{
   overflow:visible!important;
   white-space:nowrap!important;
   field-sizing:content;
+  flex:0 0 auto!important;
 }
 html body .qily-web-translate__select option{
   white-space:normal!important;
@@ -32,10 +35,7 @@ html body .qily-web-translate__select option{
   word-break:keep-all!important;
 }
 
-/*
- * Navigation overflow is a normal consequence of translated labels.
- * Keep Logo fixed, keep all navigation items on one line, and expose a clearly visible horizontal movement bar.
- */
+/* Navigation overflow is expected after translation: Logo fixed, navigation labels intact, movement bar visible. */
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav),
 html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav){
   justify-content:flex-start!important;
@@ -48,51 +48,22 @@ html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav
   padding-bottom:6px!important;
   scroll-behavior:smooth;
 }
-
-/* When there is spare width, preserve the familiar right-aligned navigation. When it overflows, auto margin collapses to zero. */
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::before,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::before{
-  content:"";
-  flex:0 0 0;
-  margin-left:auto;
-}
-
-/* Chrome / Edge / Safari: explicit, draggable, high-contrast horizontal movement bar. */
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::before{content:"";flex:0 0 0;margin-left:auto}
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar{
-  display:block!important;
-  height:10px!important;
-}
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar{display:block!important;height:10px!important}
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-track,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-track{
-  background:#e8f2f0!important;
-  border:1px solid #c5dcd8!important;
-  border-radius:999px!important;
-}
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-track{background:#e8f2f0!important;border:1px solid #c5dcd8!important;border-radius:999px!important}
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb{
-  min-width:44px;
-  background:#0f6570!important;
-  border:2px solid #e8f2f0!important;
-  border-radius:999px!important;
-}
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb{min-width:44px;background:#0f6570!important;border:2px solid #e8f2f0!important;border-radius:999px!important}
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb:hover,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb:hover{
-  background:#178b94!important;
-}
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb:hover{background:#178b94!important}
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb:active,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb:active{
-  background:#0f4b5a!important;
-}
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb:active{background:#0f4b5a!important}
 
-@media (max-width:1500px){
-  html body .qily-web-translate__select{max-width:260px!important}
-}
-@media (max-width:1180px){
-  html body .qily-web-translate__select{max-width:240px!important;font-size:15px!important}
-}
+@media (max-width:760px){html body .qily-web-translate__select{max-width:calc(100vw - 70px)!important;font-size:15px!important}}
 @media (max-width:430px){
-  html body .qily-web-translate__select{min-width:122px!important;max-width:210px!important;font-size:14px!important}
+  html body .qily-web-translate__select{max-width:calc(100vw - 44px)!important;font-size:14px!important}
   html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar,
   html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar{height:9px!important}
 }
