@@ -1,0 +1,93 @@
+name: Public visual acceptance V1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/public-visual-qa-v1.yml'
+      - 'qilylean/daily/2026-08-25.html'
+      - 'knowledge/terminology.html'
+      - 'knowledge/terminology-opl-readability-v8.css'
+      - 'scripts/publish-visual-readability-v5.js'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: public-visual-acceptance-v1
+  cancel-in-progress: true
+
+jobs:
+  chromium-public-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Install Chromium QA runtime
+        run: |
+          npm install --no-save playwright@1.54.2
+          npx playwright install --with-deps chromium
+
+      - name: Verify live Daily Brief and OPL PDF
+        env:
+          QA_BASE: https://qilylean.com
+        run: |
+          mkdir -p qa-output
+          node <<'NODE'
+          const { chromium } = require('playwright');
+          const fs = require('fs');
+          const assert = (ok, msg) => { if (!ok) throw new Error(msg); };
+          (async () => {
+            const browser = await chromium.launch({headless:true});
+            const page = await browser.newPage({viewport:{width:1680,height:950}, deviceScaleFactor:1});
+            const stamp = Date.now();
+            await page.goto(`${process.env.QA_BASE}/qilylean/daily/2026-08-25.html?qa=${stamp}`, {waitUntil:'networkidle', timeout:120000});
+            await page.screenshot({path:'qa-output/brief-2026-08-25-full.png', fullPage:true});
+            const daily = await page.evaluate(() => ({
+              bodyClass: document.body.className,
+              sections: [...document.querySelectorAll('article.post .section-head>.section-no')].map(n => n.textContent.trim()),
+              kickerColor: getComputedStyle(document.querySelector('article.post .hero .kicker')).color,
+              kickerFill: getComputedStyle(document.querySelector('article.post .hero .kicker')).webkitTextFillColor,
+              tagColors: [...document.querySelectorAll('article.post .overview-card>.tag')].map(n => getComputedStyle(n).color),
+              tagFills: [...document.querySelectorAll('article.post .overview-card>.tag')].map(n => getComputedStyle(n).webkitTextFillColor)
+            }));
+            fs.writeFileSync('qa-output/daily-computed.json', JSON.stringify(daily,null,2));
+            assert(daily.bodyClass.split(/\s+/).includes('daily-single-page'), `live brief body hook missing: ${daily.bodyClass}`);
+            assert(JSON.stringify(daily.sections.slice(0,4)) === JSON.stringify(['一、','二、','三、','四、']), `major headings wrong: ${daily.sections.join('|')}`);
+            assert(daily.kickerColor === 'rgb(255, 227, 155)' || daily.kickerFill === 'rgb(255, 227, 155)', `hero kicker is not gold: ${daily.kickerColor}/${daily.kickerFill}`);
+            assert(daily.tagColors.length >= 8 && daily.tagColors.every(v => v === 'rgb(255, 255, 255)'), `overview numbers not white: ${daily.tagColors.join(',')}`);
+            assert(daily.tagFills.every(v => !v || v === 'rgb(255, 255, 255)'), `overview text-fill not white: ${daily.tagFills.join(',')}`);
+            const overview = page.locator('article.post .overview').first();
+            await overview.screenshot({path:'qa-output/brief-eight-wastes-overview.png'});
+
+            const opl = await browser.newPage({viewport:{width:1680,height:950}, deviceScaleFactor:1});
+            await opl.goto(`${process.env.QA_BASE}/knowledge/terminology.html?opl=6S&qa=${stamp}`, {waitUntil:'networkidle', timeout:120000});
+            await opl.waitForSelector('.term-opl-modal:not([hidden]) .term-opl-content', {timeout:30000});
+            await opl.screenshot({path:'qa-output/opl-6s-screen.png', fullPage:true});
+            const oplComputed = await opl.evaluate(() => ({
+              numbers: [...document.querySelectorAll('.term-opl-modal:not([hidden]) .term-opl-num')].map(n => ({text:n.textContent.trim(),color:getComputedStyle(n).color,fill:getComputedStyle(n).webkitTextFillColor})),
+              blocks: [...document.querySelectorAll('.term-opl-modal:not([hidden]) .term-opl-block')].map(n => ({scrollHeight:n.scrollHeight,clientHeight:n.clientHeight,overflow:getComputedStyle(n).overflow,lineHeight:getComputedStyle(n).lineHeight}))
+            }));
+            fs.writeFileSync('qa-output/opl-computed.json', JSON.stringify(oplComputed,null,2));
+            assert(oplComputed.numbers.length >= 4, 'OPL section numbers not found');
+            assert(oplComputed.numbers.every(n => n.color === 'rgb(255, 255, 255)' || n.fill === 'rgb(255, 255, 255)'), `OPL numbers not white: ${JSON.stringify(oplComputed.numbers)}`);
+            await opl.emulateMedia({media:'print'});
+            await opl.pdf({path:'qa-output/opl-6s.pdf', format:'A4', printBackground:true, preferCSSPageSize:true});
+            await browser.close();
+          })().catch(err => { console.error(err); process.exit(1); });
+          NODE
+
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-visual-acceptance-v1
+          path: qa-output/
+          if-no-files-found: error
+          retention-days: 7
