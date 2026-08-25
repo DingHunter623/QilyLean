@@ -6,7 +6,10 @@ on:
     paths:
       - 'site-global-language-v3.js'
       - 'site-navigation.js'
+      - 'site-parent-navigation-v3.js'
       - 'site-ui-consistency-v1.js'
+      - 'site-dock-share-runtime-v1.js'
+      - 'site-core-service-dock-closure-v1.js'
       - 'scripts/materialize-global-language-v3.js'
       - '.github/workflows/materialize-global-language-v3.yml'
   workflow_dispatch:
@@ -36,7 +39,10 @@ jobs:
         run: |
           node --check site-global-language-v3.js
           node --check site-navigation.js
+          node --check site-parent-navigation-v3.js
           node --check site-ui-consistency-v1.js
+          node --check site-dock-share-runtime-v1.js
+          node --check site-core-service-dock-closure-v1.js
           node --check scripts/materialize-global-language-v3.js
 
       - name: Materialize and publish V3.1 across every tracked HTML page
@@ -53,7 +59,10 @@ jobs:
 
             node --check site-global-language-v3.js
             node --check site-navigation.js
+            node --check site-parent-navigation-v3.js
             node --check site-ui-consistency-v1.js
+            node --check site-dock-share-runtime-v1.js
+            node --check site-core-service-dock-closure-v1.js
             node --check scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
