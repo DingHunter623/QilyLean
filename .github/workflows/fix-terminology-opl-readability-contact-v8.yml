@@ -1,4 +1,4 @@
-name: Fix terminology OPL readability and contact V13
+name: Fix terminology OPL readability and contact V14
 
 on:
   push:
@@ -14,8 +14,8 @@ permissions:
   contents: write
 
 concurrency:
-  group: terminology-opl-v13-main
-  cancel-in-progress: false
+  group: terminology-opl-v14-main
+  cancel-in-progress: true
 
 jobs:
   publish:
@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Apply OPL V13 structural source patch
+      - name: Apply OPL V14 structural source patch
         run: node scripts/fix-terminology-opl-readability-contact-v8.js
 
       - name: Validate final-state wording, print layout and contrast ownership
@@ -42,8 +42,7 @@ jobs:
           const html=fs.readFileSync('knowledge/terminology.html','utf8');
           const css=fs.readFileSync('knowledge/terminology-opl-readability-v8.css','utf8');
           const audit=fs.readFileSync('site-text-contrast-audit-v1.js','utf8');
-          const hrefOk=html.includes('terminology-opl-readability-v8.css?v=20260814-opl-readability-contact-v9')||html.includes('terminology-opl-readability-v8.css?v=20260825-opl-readability-v13');
-          if(!hrefOk)throw new Error('Missing approved OPL stylesheet version');
+          if(!html.includes('terminology-opl-readability-v8.css?v=20260825-opl-readability-v14'))throw new Error('Missing OPL V14 stylesheet version');
           const required=[
             'term-opl-open-label-v9',
             'class="term-opl-copy-wechat-v9" data-opl-copy-wechat="Qily259"',
@@ -52,11 +51,12 @@ jobs:
           for(const token of required){if(!html.includes(token))throw new Error('Missing OPL HTML token: '+token);}
           if(html.includes('<button type="button" class="term-opl-copy-wechat"'))throw new Error('Button-style WeChat copy control remains');
           if(!css.includes('a.term-opl-open>.term-opl-open-label-v9')||!css.includes('-webkit-text-fill-color:#fff!important'))throw new Error('Structural white CTA label lock missing');
-          if(!css.includes('QILY-OPL-PRINT-LAYOUT-CLOSURE-V13-20260825'))throw new Error('OPL print overlap closure missing');
+          if(!css.includes('QILY-OPL-PRINT-NO-OVERLAP-V14-20260825'))throw new Error('OPL V14 print no-overlap closure missing');
+          if(!css.includes('.term-opl-running-head')||!css.includes('display:none!important'))throw new Error('Repeated running header/footer is not disabled in print');
           if(!css.includes('break-inside:auto!important')||!css.includes('@page{size:A4'))throw new Error('OPL A4 pagination guard missing');
           if(!css.includes('.term-opl-num')||!css.includes('print-color-adjust:exact!important'))throw new Error('OPL number/print color ownership missing');
           if(!audit.includes("'.term-opl-open', '.term-opl-copy-wechat-v9'"))throw new Error('OPL controls not excluded from auto-contrast');
-          console.log('OPL V13 QA passed: white numbers, readable controls and A4 pagination guards present.');
+          console.log('OPL V14 QA passed: white numbers, running print decorations disabled, A4 pagination protected.');
           NODE
 
       - name: Commit production terminology template
@@ -69,6 +69,6 @@ jobs:
             echo 'No production changes to commit.'
             exit 0
           fi
-          git commit -m 'fix: publish OPL V13 print and contrast closure [skip ci]'
+          git commit -m 'fix: publish OPL V14 print no-overlap closure [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
