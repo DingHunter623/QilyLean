@@ -1,10 +1,9 @@
-name: Materialize Translation Safety + Content Readability
+name: Materialize Unified Public Baseline
 
 on:
   push:
     branches: [main]
     paths:
-      - 'site-global-language-v3.js'
       - 'site-global-language-v1.css'
       - 'site-translation-safe-runtime-v1.js'
       - 'site-translation-public-ui-v1.js'
@@ -24,6 +23,8 @@ on:
       - 'scripts/materialize-global-language-v3.js'
       - 'scripts/validate-global-language-runtime-compat-v1.js'
       - 'scripts/validate-sitewide-safety-readability-v1.js'
+      - 'scripts/validate-public-baseline-materialization-v1.js'
+      - 'scripts/validate-20260825-remediation-closure-v1.js'
       - '.github/workflows/materialize-global-language-v3.yml'
   workflow_dispatch:
 
@@ -31,13 +32,13 @@ permissions:
   contents: write
 
 concurrency:
-  group: materialize-global-translation-safety-readability-main
+  group: materialize-unified-public-baseline-main
   cancel-in-progress: true
 
 jobs:
   materialize:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v5
         with:
@@ -48,9 +49,8 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate translation safety and readability sources
+      - name: Validate unified baseline sources
         run: |
-          node --check site-global-language-v3.js
           node --check site-translation-safe-runtime-v1.js
           node --check site-translation-public-ui-v1.js
           node --check site-translation-progress-v1.js
@@ -64,42 +64,40 @@ jobs:
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/validate-global-language-runtime-compat-v1.js
           node --check scripts/validate-sitewide-safety-readability-v1.js
+          node --check scripts/validate-public-baseline-materialization-v1.js
+          node --check scripts/validate-20260825-remediation-closure-v1.js
           node scripts/validate-sitewide-safety-readability-v1.js
           node scripts/validate-global-language-runtime-compat-v1.js
 
-      - name: Materialize and publish across every tracked HTML page
+      - name: Materialize, audit and publish every tracked HTML page
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
           for attempt in 1 2 3 4; do
-            echo "Materialization publish attempt ${attempt}/4"
+            echo "Unified public baseline publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
-            node --check site-translation-safe-runtime-v1.js
-            node --check site-translation-public-ui-v1.js
-            node --check site-translation-progress-v1.js
-            node --check site-interaction-contrast-guard-v1.js
-            node --check site-content-contrast-guard-v1.js
-            node --check scripts/materialize-global-language-v3.js
-            node --check scripts/validate-sitewide-safety-readability-v1.js
             node scripts/validate-sitewide-safety-readability-v1.js
+            node scripts/validate-global-language-runtime-compat-v1.js
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
+            node scripts/validate-public-baseline-materialization-v1.js
+            node scripts/validate-20260825-remediation-closure-v1.js
             git diff --check
             if git diff --quiet; then
-              echo 'Translation safety and content readability already materialized on latest main.'
+              echo 'Unified public baseline already materialized on latest main.'
               exit 0
             fi
             git add -- '*.html'
-            git commit -m 'build: materialize translation safety and content readability across public HTML'
+            git commit -m 'build: materialize unified safe translation and readability baseline across public HTML'
             if git push origin HEAD:main; then
-              echo 'Sitewide translation safety and content readability published.'
+              echo 'Unified public baseline published and audited.'
               exit 0
             fi
             echo 'main advanced during publish; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish translation safety and content readability after retries.'
+          echo 'Unable to publish unified public baseline after retries.'
           exit 1

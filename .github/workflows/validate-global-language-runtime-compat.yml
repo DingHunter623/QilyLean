@@ -1,10 +1,9 @@
-name: Validate Global Translation Safety + Readability
+name: Validate Unified Public Baseline
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - 'site-global-language-v3.js'
       - 'site-global-language-v1.css'
       - 'site-translation-safe-runtime-v1.js'
       - 'site-translation-public-ui-v1.js'
@@ -24,16 +23,19 @@ on:
       - 'scripts/materialize-global-language-v3.js'
       - 'scripts/validate-global-language-runtime-compat-v1.js'
       - 'scripts/validate-sitewide-safety-readability-v1.js'
+      - 'scripts/validate-public-baseline-materialization-v1.js'
+      - 'scripts/validate-20260825-remediation-closure-v1.js'
       - 'scripts/validate-interaction-contrast-guard-v1.js'
       - 'scripts/validate-home-hero-dock-snapback-v1.js'
       - 'scripts/validate-sitewide-remediation-20260822.js'
       - '.github/workflows/validate-global-language-runtime-compat.yml'
+      - '.github/workflows/materialize-global-language-v3.yml'
 permissions:
   contents: read
 jobs:
   validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
         with:
@@ -41,9 +43,8 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
-      - name: Syntax check translation, header and contrast runtimes
+      - name: Syntax check shared runtimes and governance
         run: |
-          node --check site-global-language-v3.js
           node --check site-translation-safe-runtime-v1.js
           node --check site-translation-public-ui-v1.js
           node --check site-translation-progress-v1.js
@@ -57,18 +58,22 @@ jobs:
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/validate-global-language-runtime-compat-v1.js
           node --check scripts/validate-sitewide-safety-readability-v1.js
+          node --check scripts/validate-public-baseline-materialization-v1.js
+          node --check scripts/validate-20260825-remediation-closure-v1.js
           node --check scripts/validate-interaction-contrast-guard-v1.js
           node --check scripts/validate-home-hero-dock-snapback-v1.js
           node --check scripts/validate-sitewide-remediation-20260822.js
-      - name: Validate fail-closed translation and sitewide readability
-        run: node scripts/validate-sitewide-safety-readability-v1.js
-      - name: Validate legacy Chinese-default shell compatibility
-        run: node scripts/validate-global-language-runtime-compat-v1.js
-      - name: Validate sitewide interaction contrast guard
-        run: node scripts/validate-interaction-contrast-guard-v1.js
-      - name: Validate homepage, header axis and sitewide compatibility guards
+      - name: Validate source contracts
         run: |
+          node scripts/validate-sitewide-safety-readability-v1.js
+          node scripts/validate-global-language-runtime-compat-v1.js
+          node scripts/validate-interaction-contrast-guard-v1.js
           node scripts/validate-home-hero-dock-snapback-v1.js
           node scripts/validate-sitewide-remediation-20260822.js
-      - name: Diff hygiene
-        run: git diff --check
+      - name: Simulate and audit full tracked-HTML materialization
+        run: |
+          node scripts/materialize-global-language-v3.js
+          node scripts/materialize-global-language-v3.js --check
+          node scripts/validate-public-baseline-materialization-v1.js
+          node scripts/validate-20260825-remediation-closure-v1.js
+          git diff --check
