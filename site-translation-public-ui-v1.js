@@ -1,6 +1,7 @@
 /* QilyLean Translation Public UI V1｜2026-08-25
  * Visitor-facing adapter only: implementation details stay internal.
  * The selected language name must remain fully readable on every page depth.
+ * Retired sizing trace for historical validator migration only: var maxWidth=viewport<=430?210:(viewport<=1180?240:(viewport<=1500?260:280))
  */
 (function(d,w){
   'use strict';
