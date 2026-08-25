@@ -11,6 +11,8 @@
  *   index and sitemap are generated assets; this source is re-applied before the
  *   curated publication pipeline rebuilds those assets.
  * - The script is idempotent: running it twice produces no additional diff.
+ * - Visible static counts are synchronized here before search-index generation so
+ *   crawlers never index a stale 192 snapshot while metadata already says 193.
  */
 
 const fs = require('fs');
@@ -62,6 +64,26 @@ function hardenTerminologySearch(html) {
   throw new Error('Terminology search matcher drifted; R6 acronym false-positive guard could not be materialized.');
 }
 
+function terminologyTotal(html) {
+  let total = (html.match(/<article\b[^>]*\bdata-term-card\b[^>]*>/gi) || []).length;
+  if (html.includes('terminology-sponsor-v1.js') && !/<div class="term-code">Sponsor<\/div>/i.test(html)) total += 1;
+  assert(total > 0, 'Unable to calculate terminology total after PPH materialization.');
+  return total;
+}
+
+function synchronizeVisibleCounts(html) {
+  const total = terminologyTotal(html);
+  html = html.replace(
+    /(<p id="qilyTerminologyStaticCount"[^>]*>[\s\S]*?<strong[^>]*>当前术语库：<\/strong>)\s*\d+\s*项术语\s*·\s*\d+\s*份单点培训课件。/,
+    `$1${total} 项术语 · ${total} 份单点培训课件。`
+  );
+  html = html.replace(
+    /(<div class="term-count" id="termCount"[^>]*>)共收录\s*\d+\s*项术语\s*·\s*\d+\s*份单点培训课件(<\/div>)/,
+    `$1共收录 ${total} 项术语 · ${total} 份单点培训课件$2`
+  );
+  return { html, total };
+}
+
 function ensureSitemap(file) {
   if (!fs.existsSync(file)) return false;
   let xml = read(file);
@@ -72,12 +94,14 @@ function ensureSitemap(file) {
   return writeIfChanged(file, xml);
 }
 
-function validate(html) {
+function validate(html, total) {
   assert(html.includes(PPH_CODE), 'PPH static terminology card is missing.');
   assert(html.includes('Parts Per Hour / Pieces Per Hour'), 'PPH English definition is missing.');
   assert(html.includes('PPH与UPPH不得混用'), 'PPH/UPPH boundary statement is missing.');
   assert(html.includes('href="/knowledge/terminology/pph.html"'), 'PPH independent lesson link is missing.');
   assert(!html.includes("if(f.code.indexOf(q)>=0||cc.indexOf(qc)>=0)return 800;"), 'Unsafe acronym suffix matching is still present.');
+  assert(html.includes(`当前术语库：</strong>${total} 项术语 · ${total} 份单点培训课件。`), 'Static terminology summary count is stale.');
+  assert(html.includes(`共收录 ${total} 项术语 · ${total} 份单点培训课件`), 'Search-toolbar terminology count is stale.');
   assert(fs.existsSync(lessonFile), 'Independent PPH OPL page is missing.');
   const lesson = read(lessonFile);
   assert(lesson.includes('PPH｜每小时件数'), 'PPH OPL title is invalid.');
@@ -87,8 +111,10 @@ function validate(html) {
 let terminology = read(terminologyFile);
 terminology = insertPphCard(terminology);
 terminology = hardenTerminologySearch(terminology);
+const synchronized = synchronizeVisibleCounts(terminology);
+terminology = synchronized.html;
 const terminologyChanged = writeIfChanged(terminologyFile, terminology);
 const sitemapChanges = sitemapFiles.map(ensureSitemap).filter(Boolean).length;
-validate(read(terminologyFile));
+validate(read(terminologyFile), synchronized.total);
 
-process.stdout.write(`PPH terminology source materialized: terminology changed ${terminologyChanged}, sitemap files changed ${sitemapChanges}.\n`);
+process.stdout.write(`PPH terminology source materialized: terminology changed ${terminologyChanged}, total ${synchronized.total}, sitemap files changed ${sitemapChanges}.\n`);
