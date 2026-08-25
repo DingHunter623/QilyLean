@@ -172,6 +172,29 @@ html body .term-opl-contact-card .term-opl-qr>span{
   text-align:center!important;
 }
 
+/* QILY-OPL-NUMBER-CONTRAST-V12-20260825
+ * Scope: every terminology single-point lesson generated from the shared OPL template.
+ * Explicit text-fill ownership prevents later site-wide typography layers from inheriting
+ * dark text into teal number circles in Chromium/WebKit and in print/PDF output.
+ */
+html body .term-opl-num,
+html body .term-opl-block h3 > .term-opl-num{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  text-shadow:none!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+html body .term-opl-num *,
+html body .term-opl-block h3 > .term-opl-num *{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  text-shadow:none!important;
+  opacity:1!important;
+  filter:none!important;
+}
+
 @media(max-width:760px){
   html body .term-opl-brandbar>strong{width:160px!important;height:31px!important}
   html body .term-opl-contact-copy .term-opl-contact-lines{line-height:1.84!important}
@@ -190,5 +213,12 @@ html body .term-opl-contact-card .term-opl-qr>span{
     text-decoration-line:underline!important;
     text-decoration-skip-ink:none!important;
     outline:0!important;
+  }
+  html body .term-opl-num,
+  html body .term-opl-block h3 > .term-opl-num{
+    color:#fff!important;
+    -webkit-text-fill-color:#fff!important;
+    opacity:1!important;
+    filter:none!important;
   }
 }
