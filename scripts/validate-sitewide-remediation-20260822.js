@@ -26,6 +26,9 @@ const cooperationDockClosure = read('site-core-service-dock-closure-v1.js');
 const consistency = read('site-ui-consistency-v1.js');
 const languageMaterializer = read('scripts/materialize-global-language-v3.js');
 const contentAxis = read('site-content-axis-v1.css');
+const headerAxis = read('site-header-axis-v1.css');
+const translationProgress = read('site-translation-progress-v1.js');
+const translationProgressCss = read('site-translation-progress-v1.css');
 const home = read('index.html');
 const experience = read('experience/index.html');
 
@@ -35,6 +38,9 @@ assert(navigation.includes('/site-navigation-core.js?v=20260824-contact-channel-
 assert(navigation.includes('/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23'), 'Navigation legacy cache key is stale.');
 assert(read('site-navigation-legacy-20260802.js').includes('/site-navigation-core.js?v=20260824-contact-channel-v30'), 'Legacy navigation core cache key is stale.');
 assert(navigation.includes('/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5'), 'Content-axis cache key is stale.');
+assert(navigation.includes('/site-header-axis-v1.css?v=20260825-header-axis-nav-fit-v1'), 'Header-axis cache key is stale.');
+assert(navigation.includes('unifiedHeaderAxis: true'), 'Unified header axis contract missing.');
+assert(navigation.includes('headerAxisWidth: 1560'), 'Header axis is not governed at 1560px.');
 assert(dockClosure.includes("var order = ['home', 'top', 'back', 'search', 'current', 'contact'];"), 'Dock closure order is stale.');
 assert(!core.includes('data-action="share"'), 'Duplicate official-site share button returned to the core Dock.');
 assert(core.includes('data-action="back" type="button">回<br>上一层</button>'), 'Core Dock back label is not 回上一层.');
@@ -48,11 +54,14 @@ assert(!consistency.includes('返回上一级有效页面'), 'Dock accessibility
 
 /* Translation-sensitive cache ownership belongs to the Chinese-default Dual Route V2 materializer. */
 assert(languageMaterializer.includes("const VERSION = '20260825-global-translation-dual-route-v2'"), 'Dual-route version owner missing.');
-assert(languageMaterializer.includes('/site-navigation.js?v=20260825-language-runtime-compat-v41'), 'Navigation cache owner missing.');
+assert(languageMaterializer.includes('/site-navigation.js?v=20260825-language-runtime-compat-v42'), 'Navigation V42 cache owner missing.');
 assert(languageMaterializer.includes('/site-ui-consistency-v1.js?v=${VERSION}'), 'Dual-route consistency cache owner missing.');
 assert(languageMaterializer.includes('/site-dock-share-runtime-v1.js?v=20260825-language-runtime-compat-v31'), 'Dock cache owner missing.');
 assert(languageMaterializer.includes('/site-global-language-v3.js?v=${VERSION}'), 'Dual-route direct runtime missing.');
 assert(languageMaterializer.includes('data-qily-web-translate-direct="dual-route-v2"'), 'Dual-route direct marker missing.');
+assert(languageMaterializer.includes('/site-header-axis-v1.css?v=20260825-header-axis-nav-fit-v1'), 'Header-axis materialization owner missing.');
+assert(languageMaterializer.includes('/site-translation-progress-v1.css?v=20260825-bilingual-progress-v1'), 'Translation progress CSS materialization owner missing.');
+assert(languageMaterializer.includes('/site-translation-progress-v1.js?v=20260825-bilingual-progress-v1'), 'Translation progress JS materialization owner missing.');
 
 let last = -1;
 for (const action of requiredDockOrder) {
@@ -70,6 +79,19 @@ assert(contentAxis.includes('html:root body main :is('), 'Final number-badge con
 assert(contentAxis.includes('-webkit-text-fill-color:#fff!important'), 'Number-badge white text guard is missing.');
 assert(contentAxis.includes('background-color:#0f6570!important'), 'Number-badge brand-teal background guard is missing.');
 assert(contentAxis.includes('body.cooperation-page main :is(#services,#engineering-enablers) .service-card .service-number'), 'Cooperation 01–06 badge unification guard is missing.');
+
+assert(headerAxis.includes('--qily-header-axis:var(--qily-content-axis,1560px)'), 'Header does not inherit the 1560px content axis.');
+assert(headerAxis.includes('max-width:var(--qily-header-axis)!important'), 'Header maximum width guard missing.');
+assert(headerAxis.includes('margin-left:max(var(--qily-header-gutter),calc((100vw - var(--qily-header-axis))/2))!important'), 'Header left-axis alignment guard missing.');
+assert(headerAxis.includes('word-break:keep-all!important'), 'Navigation CJK no-break guard missing.');
+assert(headerAxis.includes('font-size:clamp(18px,1.35vw,20px)!important'), 'Desktop navigation fit font guard missing.');
+assert(headerAxis.includes('overflow:visible!important'), 'Desktop navigation clipping guard missing.');
+
+assert(translationProgress.includes('正在翻译，请稍候'), 'Chinese translation progress copy missing.');
+assert(translationProgress.includes('Translating — a brief delay may occur.'), 'English translation progress copy missing.');
+assert(translationProgress.includes("new Set(['working', 'fallback', 'opening'])"), 'Translation progress state gate missing.');
+assert(translationProgressCss.includes('pointer-events:none'), 'Translation progress notice must remain non-blocking.');
+
 assert(home.includes('<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START -->'), 'Homepage C919 V4 start marker missing.');
 assert(home.indexOf('QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START') < home.indexOf('<section class="hero">'), 'C919 is not the first homepage content visual.');
 assert(home.includes('/qilylean/c919-strategy-hero-v14.png'), 'Homepage latest V14 aircraft visual asset missing.');
@@ -97,4 +119,4 @@ for (const relative of trackedHtml()) {
 
 assert(navigationPages >= 460, `Navigation coverage unexpectedly fell to ${navigationPages} pages.`);
 assert(stale.length === 0, `Stale public shell entries: ${stale.slice(0, 20).join(', ')}`);
-process.stdout.write(`PASS: site-wide remediation validated across ${navigationPages} navigation pages; translation is Chinese-default with mainland domestic / global Google routing.\n`);
+process.stdout.write(`PASS: site-wide remediation validated across ${navigationPages} navigation pages; 1560px header axis and bilingual non-blocking translation progress are governed.\n`);
