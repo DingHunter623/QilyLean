@@ -1,6 +1,8 @@
-/* QilyLean Sitewide Content Contrast Guard V1｜2026-08-25
+/* QilyLean Sitewide Content Contrast Guard V3｜2026-08-25
  * Applies WCAG-oriented readable foreground correction to non-interactive public text.
- * Buttons/CTA remain owned by Interaction Contrast Guard V1.
+ * Buttons/CTA remain owned by Interaction Contrast Guard.
+ * V3: gradient/image dark surfaces are component-owned. The generic scanner must not
+ * misread their transparent background-color as white and force dark text onto dark Hero surfaces.
  */
 (function(d,w){
   'use strict';
@@ -8,7 +10,8 @@
   w.__qilyContentContrastGuardV1=true;
 
   var SELECTOR='p,li,dt,dd,td,th,label,small,span,strong,b,em,h1,h2,h3,h4,h5,h6,.module-lead,.engineering-checklist,.notice,.callout,.summary,.insight,.lead,[role="status"],[role="alert"]';
-  var EXCLUDE='header,.qily-site-header,.qily-global-header,#floatDock,.qily-floating-dock,.qily-web-translate,.qily-translation-progress,button,input,select,textarea,[role="button"],[contenteditable="true"]';
+  var COMPONENT_OWNED_DARK='.hero,.module-hero,.daily-hero,.project-hero,.cooperation-hero,.qily-ia-dark,.closing,[data-qily-dark-surface],[data-theme="dark"]';
+  var EXCLUDE='header,.qily-site-header,.qily-global-header,#floatDock,.qily-floating-dock,.qily-web-translate,.qily-translation-progress,button,input,select,textarea,[role="button"],[contenteditable="true"],'+COMPONENT_OWNED_DARK;
   var queued=false;
 
   function parseColor(value){
@@ -27,11 +30,18 @@
     return bg;
   }
   function threshold(el){var s=w.getComputedStyle(el);var size=parseFloat(s.fontSize)||16;var weight=parseInt(s.fontWeight,10)||400;return(size>=24||(size>=18.66&&weight>=700))?3:4.5}
+  function release(el){
+    if(!el)return;
+    el.removeAttribute('data-qily-content-contrast-fixed');
+  }
+  function componentOwnsContrast(el){return !!(el&&el.closest&&el.closest(COMPONENT_OWNED_DARK))}
   function fix(el){
-    if(!el||!el.isConnected||el.closest(EXCLUDE))return;
+    if(!el||!el.isConnected)return;
+    if(componentOwnsContrast(el)){release(el);return}
+    if(el.closest(EXCLUDE)){release(el);return}
     if(!String(el.textContent||'').trim())return;
     var style=w.getComputedStyle(el);if(style.visibility==='hidden'||style.display==='none'||Number(style.opacity)===0)return;
-    var fg=parseColor(style.color);if(!fg)return;var bg=effectiveBackground(el);var actual=blend(fg,bg);if(contrast(actual,bg)>=threshold(el)){el.removeAttribute('data-qily-content-contrast-fixed');return}
+    var fg=parseColor(style.color);if(!fg)return;var bg=effectiveBackground(el);var actual=blend(fg,bg);if(contrast(actual,bg)>=threshold(el)){release(el);return}
     var dark={r:23,g:63,b:73,a:1},light={r:255,g:255,b:255,a:1};var darkRatio=contrast(dark,bg),lightRatio=contrast(light,bg);el.setAttribute('data-qily-content-contrast-fixed',lightRatio>darkRatio?'light':'dark')
   }
   function scan(root){
