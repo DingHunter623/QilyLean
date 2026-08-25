@@ -163,3 +163,138 @@ html body main :is(
     font-size:18px!important;
   }
 }
+
+/* QILY-DAILY-SURFACE-CONTRAST-V6-20260825
+ * Daily Brief contrast ownership: dark badges always use white glyphs; light/tinted
+ * information surfaces always use a dark readable copy color. This deliberately
+ * overrides the generic `.tag` small-text fallback above when `.tag` is a number badge.
+ */
+html body.daily-single-page main :is(
+  .w8 .tag,
+  .w8 .num,
+  .w8 .section-no,
+  .w8 .step > b:first-child,
+  .lean-delivery-brief .section-title .no,
+  .lean-delivery-brief .flow-step > b:first-child
+){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  text-shadow:none!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+html body.daily-single-page main :is(
+  .w8 .tag,
+  .w8 .num,
+  .w8 .section-no,
+  .w8 .step > b:first-child,
+  .lean-delivery-brief .section-title .no,
+  .lean-delivery-brief .flow-step > b:first-child
+) *{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+
+/* Shared Daily Brief light surfaces: no pale-on-pale combinations. */
+html body.daily-single-page main :is(
+  .brief-one-point-training,
+  .brief-one-point-grid > div,
+  .brief-one-point-interface,
+  .brief-one-point-check,
+  .brief-learning-card,
+  .engineering-checklist,
+  .checklist,
+  .formula-card,
+  .owner-card,
+  .status-card,
+  .brief-related-grid > a,
+  .brief-action-strip > span,
+  .w8 .insight,
+  .w8 .case,
+  .w8 .scene,
+  .w8 .node,
+  .w8 .overview-card,
+  .w8 .audit > div,
+  .lean-delivery-brief .mind-card,
+  .lean-delivery-brief .tool-card,
+  .lean-delivery-brief .flow-step,
+  .lean-delivery-brief .value-card
+){
+  color:#274744!important;
+  -webkit-text-fill-color:#274744!important;
+  opacity:1!important;
+  filter:none!important;
+}
+html body.daily-single-page main :is(
+  .brief-one-point-training,
+  .brief-one-point-grid > div,
+  .brief-one-point-interface,
+  .brief-one-point-check,
+  .brief-learning-card,
+  .engineering-checklist,
+  .checklist,
+  .formula-card,
+  .owner-card,
+  .status-card,
+  .brief-related-grid > a,
+  .brief-action-strip > span,
+  .w8 .insight,
+  .w8 .case,
+  .w8 .scene,
+  .w8 .node,
+  .w8 .overview-card,
+  .w8 .audit > div,
+  .lean-delivery-brief .mind-card,
+  .lean-delivery-brief .tool-card,
+  .lean-delivery-brief .flow-step,
+  .lean-delivery-brief .value-card
+) :is(h3,h4,strong,b){
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+}
+html body.daily-single-page main :is(
+  .brief-one-point-grid > div,
+  .brief-one-point-interface,
+  .brief-one-point-check,
+  .brief-learning-card,
+  .engineering-checklist,
+  .checklist,
+  .formula-card,
+  .owner-card,
+  .status-card,
+  .brief-related-grid > a,
+  .w8 .insight,
+  .w8 .case,
+  .w8 .scene,
+  .w8 .overview-card,
+  .w8 .audit > div,
+  .lean-delivery-brief .mind-card,
+  .lean-delivery-brief .tool-card,
+  .lean-delivery-brief .value-card
+) :is(p,li,small,span){
+  color:#3a5756!important;
+  -webkit-text-fill-color:#3a5756!important;
+  opacity:1!important;
+}
+
+/* Restore white glyphs after the light-surface descendant rule above. */
+html body.daily-single-page main :is(
+  .w8 .tag,
+  .w8 .num,
+  .w8 .section-no,
+  .w8 .step > b:first-child,
+  .lean-delivery-brief .section-title .no,
+  .lean-delivery-brief .flow-step > b:first-child
+),
+html body.daily-single-page main :is(
+  .w8 .tag,
+  .w8 .num,
+  .w8 .section-no,
+  .w8 .step > b:first-child,
+  .lean-delivery-brief .section-title .no,
+  .lean-delivery-brief .flow-step > b:first-child
+) *{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
