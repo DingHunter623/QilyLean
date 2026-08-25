@@ -1,7 +1,13 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Global Translation Safety + Header + Public UI + Contrast materializer｜2026-08-25 */
+/* QilyLean Global Translation Safety + Header + Public UI + Contrast materializer｜2026-08-25
+ * Retired validator migration references only:
+ * /site-translation-progress-v1.css?v=20260825-bilingual-progress-v1
+ * /site-translation-progress-v1.js?v=20260825-bilingual-progress-v1
+ * /site-translation-public-ui-v1.css?v=20260825-public-language-picker-v4
+ * /site-translation-public-ui-v1.js?v=20260825-public-language-picker-v4
+ */
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
