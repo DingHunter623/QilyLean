@@ -1,12 +1,11 @@
-/* QilyLean Global Language V3｜2026-08-25
- * Default visitor language: English.
- * Authoritative source remains Chinese static HTML, so switching back to Chinese is instant and does not call AI.
- * V3 improves coverage for open Shadow DOM / same-origin iframes / dynamic nodes, uses larger batches,
- * six-way concurrency, resilient split retries, local cache and post-pass quality sweeps.
+/* QilyLean Global Language V3.1｜2026-08-25
+ * Chinese static HTML remains the authoritative source; English is the default visitor display language.
+ * V3.1 closes runtime conflicts where other sitewide self-healing scripts rewrite translated DOM text back to Chinese.
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyGlobalLanguageV3) return;
+  if (w.__qilyGlobalLanguageV31) return;
+  w.__qilyGlobalLanguageV31 = true;
   w.__qilyGlobalLanguageV3 = true;
   w.__qilyGlobalLanguageV2 = true;
   w.__qilyGlobalLanguageV1 = true;
@@ -19,7 +18,7 @@
   var CACHE_PREFIX = 'qily_translation_cache_v3_';
   var SWITCHER_ID = 'qilyGlobalLanguageV1';
   var STATUS_ID = 'qilyGlobalLanguageStatusV1';
-  var RUNTIME_VERSION = 'v3';
+  var RUNTIME_VERSION = 'v3.1';
   var TEXT_ORIGINAL = new WeakMap();
   var ATTR_ORIGINAL = new WeakMap();
   var TRACKED_TEXT = new Set();
@@ -54,9 +53,10 @@
   var BUILTIN_EN = Object.freeze({
     '首页':'Home','履历主线':'Experience','能力体系':'Capabilities','改善方法':'Improvement Methods','代表项目':'Projects',
     '信任中心':'Trust Center','项目合作':'Project Cooperation','知识资产':'Knowledge Assets','友情链接':'Resources','资源协同':'Resources',
-    '精益生产':'Lean Manufacturing','数字化工厂':'Digital Factory','标准工时':'Standard Time','单件流':'One-Piece Flow','线平衡':'Line Balancing',
-    '回顶部':'Back to Top','回上一层':'Up One Level','本站搜索':'Site Search','分享当前页':'Share Page','分享官网':'Share Website','交流':'Contact',
-    '查看能力体系':'View Capabilities','查看代表项目与证据':'View Projects & Evidence','进入项目合作':'Project Cooperation','了解责任与证据边界':'Responsibility & Evidence Boundaries'
+    '精益生产':'Lean Manufacturing','精益生产专题':'Lean Manufacturing','数字化工厂':'Digital Factory','标准工时':'Standard Time','单件流':'One-Piece Flow','线平衡':'Line Balancing',
+    '回顶部':'Back to Top','回上一层':'Up One Level','回到当前页面所属的上一级有效页面':'Go to the parent page','本站搜索':'Site Search',
+    '分享当前页':'Share Page','分享官网':'Share Website','交流':'Contact','查看能力体系':'View Capabilities',
+    '查看代表项目与证据':'View Projects & Evidence','进入项目合作':'Project Cooperation','了解责任与证据边界':'Responsibility & Evidence Boundaries'
   });
 
   function languageExists(code) { return LANGUAGES.some(function (item) { return item[0] === code; }); }
@@ -101,7 +101,10 @@
       select.value = activeLanguage;
       select.addEventListener('change',function(){ setLanguage(select.value,true); });
       var status = d.createElement('span');
-      status.id = STATUS_ID; status.className='qily-language-switcher__status'; status.setAttribute('role','status'); status.setAttribute('aria-live','polite');
+      status.id = STATUS_ID;
+      status.className='qily-language-switcher__status';
+      status.setAttribute('role','status');
+      status.setAttribute('aria-live','polite');
       wrapper.appendChild(globe); wrapper.appendChild(select); wrapper.appendChild(status);
     }
     if (nav.lastElementChild !== wrapper) nav.appendChild(wrapper);
@@ -129,19 +132,28 @@
     if(!TEXT_ORIGINAL.has(node)){ TEXT_ORIGINAL.set(node,node.nodeValue||''); TRACKED_TEXT.add(node); }
     var full=TEXT_ORIGINAL.get(node)||'', source=full.trim(); if(!shouldTranslate(source))return null;
     var start=full.indexOf(source), leading=start>0?full.slice(0,start):'', trailing=start>=0?full.slice(start+source.length):'';
-    return {source:source,apply:function(translated){ if(node.isConnected)node.nodeValue=leading+translated+trailing; }};
+    return {source:source,apply:function(translated){
+      if(!node.isConnected)return;
+      var next=leading+translated+trailing;
+      if(node.nodeValue!==next)node.nodeValue=next;
+    }};
   }
   function attributeRecord(element,attribute){
     if(isExcluded(element)||!element.hasAttribute(attribute))return null;
     var map=ATTR_ORIGINAL.get(element); if(!map){ map=new Map(); ATTR_ORIGINAL.set(element,map); }
     if(!map.has(attribute)){ map.set(attribute,element.getAttribute(attribute)||''); TRACKED_ATTR.push([element,attribute]); }
     var source=map.get(attribute)||''; if(!shouldTranslate(source))return null;
-    return {source:source,apply:function(translated){ if(element.isConnected)element.setAttribute(attribute,translated); }};
+    return {source:source,apply:function(translated){ if(element.isConnected&&element.getAttribute(attribute)!==translated)element.setAttribute(attribute,translated); }};
   }
 
   function collectRecords(root){
     var records=[]; if(!root)return records;
-    var doc=root.nodeType===9?root:(root.ownerDocument||d); var scope=root.nodeType===9?(root.body||root.documentElement):root; if(!scope)return records;
+    var doc=root.nodeType===9?root:(root.ownerDocument||d);
+    var scope=root.nodeType===9?(root.body||root.documentElement):root;
+    if(!scope)return records;
+    if(scope.nodeType===3){
+      var direct=textRecord(scope); if(direct)records.push(direct); return records;
+    }
     var walker=doc.createTreeWalker(scope,w.NodeFilter.SHOW_TEXT,{acceptNode:function(node){
       var parent=node.parentElement; if(!parent||isExcluded(parent))return w.NodeFilter.FILTER_REJECT;
       return shouldTranslate((node.nodeValue||'').trim())?w.NodeFilter.FILTER_ACCEPT:w.NodeFilter.FILTER_REJECT;
@@ -237,56 +249,111 @@
   }
 
   function restoreChinese(){
-    TRACKED_TEXT.forEach(function(node){ if(node.isConnected&&TEXT_ORIGINAL.has(node))node.nodeValue=TEXT_ORIGINAL.get(node); });
-    TRACKED_ATTR.forEach(function(pair){ var element=pair[0],attribute=pair[1],map=ATTR_ORIGINAL.get(element); if(element.isConnected&&map&&map.has(attribute))element.setAttribute(attribute,map.get(attribute)); });
+    TRACKED_TEXT.forEach(function(node){ if(node.isConnected&&TEXT_ORIGINAL.has(node)){ var value=TEXT_ORIGINAL.get(node); if(node.nodeValue!==value)node.nodeValue=value; } });
+    TRACKED_ATTR.forEach(function(pair){ var element=pair[0],attribute=pair[1],map=ATTR_ORIGINAL.get(element); if(element.isConnected&&map&&map.has(attribute)){ var value=map.get(attribute); if(element.getAttribute(attribute)!==value)element.setAttribute(attribute,value); } });
   }
-  function applyLanguageSemantics(code){ d.documentElement.setAttribute('lang',code); d.documentElement.setAttribute('data-qily-language',code); if(RTL.has(code))d.documentElement.setAttribute('dir','rtl'); else d.documentElement.removeAttribute('dir'); }
+  function applyLanguageSemantics(code){
+    d.documentElement.setAttribute('lang',code);
+    d.documentElement.setAttribute('data-qily-language',code);
+    d.documentElement.setAttribute('data-qily-language-runtime','v3.1');
+    if(RTL.has(code))d.documentElement.setAttribute('dir','rtl'); else d.documentElement.removeAttribute('dir');
+  }
+  function announceLanguage(code){
+    try{ d.dispatchEvent(new CustomEvent('qily:language-change',{detail:{language:code,sourceLanguage:SOURCE_LANGUAGE,runtime:'v3.1'}})); }catch(error){}
+  }
 
   function scheduleQualitySweeps(code,generation){
-    [900,2800,6500].forEach(function(delay){ w.setTimeout(async function(){
+    [500,1400,3200,6500].forEach(function(delay){ w.setTimeout(async function(){
       if(code===SOURCE_LANGUAGE||generation!==translationGeneration||activeLanguage!==code)return;
       try{ await translateRecords(collectWholePage(),code,generation,'Optimizing'); if(generation===translationGeneration)setUiState('ready',languageLabel(code)); }catch(error){}
     },delay); });
   }
 
   async function setLanguage(code,persist){
-    if(!languageExists(code))code=DEFAULT_LANGUAGE; translationGeneration+=1; var generation=translationGeneration; activeLanguage=code; ensureSwitcher();
-    if(code===SOURCE_LANGUAGE){ restoreChinese(); applyLanguageSemantics(code); if(persist)storeLanguage(code); setUiState('ready','中文'); return; }
-    restoreChinese(); applyLanguageSemantics(code); setUiState('loading',code==='en'?'Loading English…':'Translating to '+languageLabel(code)+'…');
+    if(!languageExists(code))code=DEFAULT_LANGUAGE;
+    translationGeneration+=1;
+    var generation=translationGeneration;
+    activeLanguage=code;
+    ensureSwitcher();
+    if(code===SOURCE_LANGUAGE){
+      restoreChinese(); applyLanguageSemantics(code); if(persist)storeLanguage(code); setUiState('ready','中文'); announceLanguage(code); return;
+    }
+    restoreChinese();
+    applyLanguageSemantics(code);
+    announceLanguage(code);
+    setUiState('loading',code==='en'?'Loading English…':'Translating to '+languageLabel(code)+'…');
     try{
       var result=await translateRecords(collectWholePage(),code,generation,code==='en'?'Loading English':'Translating');
-      if(generation!==translationGeneration)return; activeLanguage=code; applyLanguageSemantics(code); if(persist)storeLanguage(code);
-      if(result.total&&result.failed>=result.total){ restoreChinese(); activeLanguage=SOURCE_LANGUAGE; applyLanguageSemantics(SOURCE_LANGUAGE); var failedSelect=d.querySelector('#'+SWITCHER_ID+' select'); if(failedSelect)failedSelect.value=SOURCE_LANGUAGE; setUiState('error','Translation service unavailable'); return; }
-      setUiState('ready',result.failed?languageLabel(code)+' · partial':languageLabel(code)); scheduleQualitySweeps(code,generation);
+      if(generation!==translationGeneration)return;
+      activeLanguage=code; applyLanguageSemantics(code); if(persist)storeLanguage(code);
+      if(result.total&&result.failed>=result.total){
+        restoreChinese(); activeLanguage=SOURCE_LANGUAGE; applyLanguageSemantics(SOURCE_LANGUAGE); announceLanguage(SOURCE_LANGUAGE);
+        var failedSelect=d.querySelector('#'+SWITCHER_ID+' select'); if(failedSelect)failedSelect.value=SOURCE_LANGUAGE;
+        setUiState('error','Translation service unavailable'); return;
+      }
+      setUiState('ready',result.failed?languageLabel(code)+' · partial':languageLabel(code));
+      announceLanguage(code);
+      scheduleQualitySweeps(code,generation);
     }catch(error){
-      if(generation!==translationGeneration)return; restoreChinese(); activeLanguage=SOURCE_LANGUAGE; applyLanguageSemantics(SOURCE_LANGUAGE); var select=d.querySelector('#'+SWITCHER_ID+' select'); if(select)select.value=SOURCE_LANGUAGE; setUiState('error','Translation service unavailable'); console.warn('QilyLean Global Language V3:',error&&error.message?error.message:error);
+      if(generation!==translationGeneration)return;
+      restoreChinese(); activeLanguage=SOURCE_LANGUAGE; applyLanguageSemantics(SOURCE_LANGUAGE); announceLanguage(SOURCE_LANGUAGE);
+      var select=d.querySelector('#'+SWITCHER_ID+' select'); if(select)select.value=SOURCE_LANGUAGE;
+      setUiState('error','Translation service unavailable'); console.warn('QilyLean Global Language V3.1:',error&&error.message?error.message:error);
     }
   }
 
   function scheduleDynamic(nodes){
-    if(activeLanguage===SOURCE_LANGUAGE||!nodes||!nodes.length)return; w.clearTimeout(dynamicTimer); dynamicTimer=w.setTimeout(function(){
-      var generation=translationGeneration,records=[]; nodes.forEach(function(node){ if(!node||!node.isConnected)return; if(node.nodeType===1&&isExcluded(node))return; records=records.concat(collectRecords(node)); if(node.nodeType===1&&node.shadowRoot)records=records.concat(collectRecords(node.shadowRoot)); });
+    if(activeLanguage===SOURCE_LANGUAGE||!nodes||!nodes.length)return;
+    w.clearTimeout(dynamicTimer);
+    dynamicTimer=w.setTimeout(function(){
+      var generation=translationGeneration,records=[];
+      nodes.forEach(function(node){
+        if(!node||!node.isConnected)return;
+        if(node.nodeType===1&&isExcluded(node))return;
+        records=records.concat(collectRecords(node));
+        if(node.nodeType===1&&node.shadowRoot)records=records.concat(collectRecords(node.shadowRoot));
+      });
       if(records.length)translateRecords(records,activeLanguage,generation,'').catch(function(){});
-    },260);
+    },120);
   }
+
   function observerCallback(mutations){
-    var changed=[]; mutations.forEach(function(mutation){
-      Array.prototype.forEach.call(mutation.addedNodes||[],function(node){ if(node.nodeType===1&&node.id===SWITCHER_ID)return; changed.push(node); if(node.nodeType===1&&node.matches&&node.matches('iframe'))bindFrame(node); });
+    var changed=[];
+    mutations.forEach(function(mutation){
+      Array.prototype.forEach.call(mutation.addedNodes||[],function(node){
+        if(node.nodeType===1&&node.id===SWITCHER_ID)return;
+        changed.push(node);
+        if(node.nodeType===1&&node.matches&&node.matches('iframe'))bindFrame(node);
+      });
       if(mutation.type==='attributes'&&mutation.target)changed.push(mutation.target);
-      if(mutation.type==='characterData'&&mutation.target&&!TEXT_ORIGINAL.has(mutation.target))changed.push(mutation.target.parentElement||mutation.target);
-    }); ensureSwitcher(); scheduleDynamic(changed);
+      if(mutation.type==='characterData'&&mutation.target){
+        var parent=mutation.target.parentElement;
+        if(parent&&!isExcluded(parent))changed.push(parent);
+      }
+    });
+    ensureSwitcher();
+    if(activeLanguage!==SOURCE_LANGUAGE)scheduleDynamic(changed);
   }
+
   function observeRoot(root){
-    if(!root||OBSERVED_ROOTS.has(root)||!w.MutationObserver)return; OBSERVED_ROOTS.add(root); var observer=new MutationObserver(observerCallback); observer.observe(root,{childList:true,subtree:true,attributes:true,attributeFilter:TRANSLATABLE_ATTRS,characterData:true}); OBSERVERS.push(observer);
+    if(!root||OBSERVED_ROOTS.has(root)||!w.MutationObserver)return;
+    OBSERVED_ROOTS.add(root);
+    var observer=new MutationObserver(observerCallback);
+    observer.observe(root,{childList:true,subtree:true,attributes:true,attributeFilter:TRANSLATABLE_ATTRS,characterData:true});
+    OBSERVERS.push(observer);
   }
   function bindFrame(frame){
-    if(!frame||frame.dataset.qilyLanguageBound==='v3')return; frame.dataset.qilyLanguageBound='v3'; frame.addEventListener('load',function(){
+    if(!frame||frame.dataset.qilyLanguageBound==='v31')return;
+    frame.dataset.qilyLanguageBound='v31';
+    frame.addEventListener('load',function(){
       try{ if(frame.contentDocument&&frame.contentDocument.body){ observeRoot(frame.contentDocument.body); if(activeLanguage!==SOURCE_LANGUAGE)translateRecords(collectRecords(frame.contentDocument),activeLanguage,translationGeneration,'').catch(function(){}); } }catch(error){}
     });
     try{ if(frame.contentDocument&&frame.contentDocument.body)observeRoot(frame.contentDocument.body); }catch(error){}
   }
   function bindNestedRoots(){
-    observeRoot(d.body||d.documentElement); Array.prototype.forEach.call(d.querySelectorAll('iframe'),bindFrame); Array.prototype.forEach.call(d.querySelectorAll('*'),function(element){ if(element.shadowRoot)observeRoot(element.shadowRoot); });
+    observeRoot(d.body||d.documentElement);
+    Array.prototype.forEach.call(d.querySelectorAll('iframe'),bindFrame);
+    Array.prototype.forEach.call(d.querySelectorAll('*'),function(element){ if(element.shadowRoot)observeRoot(element.shadowRoot); });
   }
   function boot(){ activeLanguage=getStoredLanguage(); ensureSwitcher(); bindNestedRoots(); setLanguage(activeLanguage,false); }
   d.addEventListener('qily:shell-ready',function(){ ensureSwitcher(); bindNestedRoots(); });
