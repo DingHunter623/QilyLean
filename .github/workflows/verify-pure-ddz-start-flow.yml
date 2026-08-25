@@ -47,12 +47,13 @@ jobs:
             const browser=await chromium.launch({headless:true});
             for (const viewport of [{width:1440,height:900},{width:844,height:390}]) {
               const page=await browser.newPage({viewport});
+              await page.addInitScript(()=>localStorage.setItem('qily_global_language_v3','zh-CN'));
               const dialogs=[]; const pageErrors=[];
               page.on('dialog', async dialog=>{dialogs.push(dialog.message()); await dialog.dismiss();});
               page.on('pageerror', error=>pageErrors.push(error.stack || `${error.name}: ${error.message}`));
-              await page.goto('http://127.0.0.1:4173/',{waitUntil:'networkidle'});
-              await page.evaluate(()=>localStorage.clear());
-              await page.reload({waitUntil:'networkidle'});
+              await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded'});
+              await page.evaluate(()=>{localStorage.clear();localStorage.setItem('qily_global_language_v3','zh-CN');});
+              await page.reload({waitUntil:'domcontentloaded'});
               await page.waitForFunction(()=>document.documentElement.classList.contains('ddz-ready')&&Boolean(window.PureDDZTest)&&Boolean(window.QilyLeanV120),null,{timeout:8000});
               const names=await page.evaluate(()=>({left:document.querySelector('#left-panel .player-name')?.textContent?.trim(),right:document.querySelector('#right-panel .player-name')?.textContent?.trim()}));
               if(names.left!=='左家'||names.right!=='右家') throw new Error('Player labels incorrect: '+JSON.stringify(names));
