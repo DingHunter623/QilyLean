@@ -1,4 +1,4 @@
-name: Public visual acceptance V1
+name: Public visual acceptance V2
 
 on:
   push:
@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: public-visual-acceptance-v1
+  group: public-visual-acceptance-v2
   cancel-in-progress: true
 
 jobs:
@@ -49,22 +49,29 @@ jobs:
             const stamp = Date.now();
             await page.goto(`${process.env.QA_BASE}/qilylean/daily/2026-08-25.html?qa=${stamp}`, {waitUntil:'networkidle', timeout:120000});
             await page.screenshot({path:'qa-output/brief-2026-08-25-full.png', fullPage:true});
-            const daily = await page.evaluate(() => ({
-              bodyClass: document.body.className,
-              sections: [...document.querySelectorAll('article.post .section-head>.section-no')].map(n => n.textContent.trim()),
-              kickerColor: getComputedStyle(document.querySelector('article.post .hero .kicker')).color,
-              kickerFill: getComputedStyle(document.querySelector('article.post .hero .kicker')).webkitTextFillColor,
-              tagColors: [...document.querySelectorAll('article.post .overview-card>.tag')].map(n => getComputedStyle(n).color),
-              tagFills: [...document.querySelectorAll('article.post .overview-card>.tag')].map(n => getComputedStyle(n).webkitTextFillColor)
-            }));
+            const daily = await page.evaluate(() => {
+              const kicker = document.querySelector('article.post .hero .kicker');
+              const heroCopy = document.querySelector('article.post .hero>p');
+              return {
+                bodyClass: document.body.className,
+                sections: [...document.querySelectorAll('article.post .section-head>.section-no')].map(n => n.textContent.trim()),
+                kickerColor: kicker ? getComputedStyle(kicker).color : '',
+                kickerFill: kicker ? getComputedStyle(kicker).webkitTextFillColor : '',
+                heroCopyColor: heroCopy ? getComputedStyle(heroCopy).color : '',
+                heroCopyFill: heroCopy ? getComputedStyle(heroCopy).webkitTextFillColor : '',
+                tagColors: [...document.querySelectorAll('article.post .overview-card>.tag')].map(n => getComputedStyle(n).color),
+                tagFills: [...document.querySelectorAll('article.post .overview-card>.tag')].map(n => getComputedStyle(n).webkitTextFillColor)
+              };
+            });
             fs.writeFileSync('qa-output/daily-computed.json', JSON.stringify(daily,null,2));
             assert(daily.bodyClass.split(/\s+/).includes('daily-single-page'), `live brief body hook missing: ${daily.bodyClass}`);
             assert(JSON.stringify(daily.sections.slice(0,4)) === JSON.stringify(['一、','二、','三、','四、']), `major headings wrong: ${daily.sections.join('|')}`);
             assert(daily.kickerColor === 'rgb(255, 227, 155)' || daily.kickerFill === 'rgb(255, 227, 155)', `hero kicker is not gold: ${daily.kickerColor}/${daily.kickerFill}`);
+            assert(daily.heroCopyColor === 'rgb(237, 249, 246)' || daily.heroCopyFill === 'rgb(237, 249, 246)', `hero body copy is not readable white: ${daily.heroCopyColor}/${daily.heroCopyFill}`);
             assert(daily.tagColors.length >= 8 && daily.tagColors.every(v => v === 'rgb(255, 255, 255)'), `overview numbers not white: ${daily.tagColors.join(',')}`);
             assert(daily.tagFills.every(v => !v || v === 'rgb(255, 255, 255)'), `overview text-fill not white: ${daily.tagFills.join(',')}`);
-            const overview = page.locator('article.post .overview').first();
-            await overview.screenshot({path:'qa-output/brief-eight-wastes-overview.png'});
+            await page.locator('article.post .hero').first().screenshot({path:'qa-output/brief-hero.png'});
+            await page.locator('article.post .overview').first().screenshot({path:'qa-output/brief-eight-wastes-overview.png'});
 
             const opl = await browser.newPage({viewport:{width:1680,height:950}, deviceScaleFactor:1});
             await opl.goto(`${process.env.QA_BASE}/knowledge/terminology.html?opl=6S&qa=${stamp}`, {waitUntil:'networkidle', timeout:120000});
@@ -77,7 +84,18 @@ jobs:
             fs.writeFileSync('qa-output/opl-computed.json', JSON.stringify(oplComputed,null,2));
             assert(oplComputed.numbers.length >= 4, 'OPL section numbers not found');
             assert(oplComputed.numbers.every(n => n.color === 'rgb(255, 255, 255)' || n.fill === 'rgb(255, 255, 255)'), `OPL numbers not white: ${JSON.stringify(oplComputed.numbers)}`);
+
             await opl.emulateMedia({media:'print'});
+            const printComputed = await opl.evaluate(() => ({
+              running: [...document.querySelectorAll('.term-opl-running')].map(n => getComputedStyle(n).display),
+              runningHead: [...document.querySelectorAll('.term-opl-running-head')].map(n => getComputedStyle(n).display),
+              runningFoot: [...document.querySelectorAll('.term-opl-running-foot')].map(n => getComputedStyle(n).display)
+            }));
+            fs.writeFileSync('qa-output/opl-print-computed.json', JSON.stringify(printComputed,null,2));
+            assert(printComputed.running.length >= 2, 'OPL running print elements missing from DOM');
+            assert(printComputed.running.every(v => v === 'none'), `OPL repeated running elements still visible in print: ${printComputed.running.join(',')}`);
+            assert(printComputed.runningHead.every(v => v === 'none'), `OPL print running header still visible: ${printComputed.runningHead.join(',')}`);
+            assert(printComputed.runningFoot.every(v => v === 'none'), `OPL print running footer still visible: ${printComputed.runningFoot.join(',')}`);
             await opl.pdf({path:'qa-output/opl-6s.pdf', format:'A4', printBackground:true, preferCSSPageSize:true});
             await browser.close();
           })().catch(err => { console.error(err); process.exit(1); });
@@ -87,7 +105,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: public-visual-acceptance-v1
+          name: public-visual-acceptance-v2
           path: qa-output/
           if-no-files-found: error
           retention-days: 7
