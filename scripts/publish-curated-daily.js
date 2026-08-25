@@ -9,6 +9,7 @@ const steps = [
   ['curate-weekly-briefs.js'],
   ['publish-early-career-history.js'],
   ['remove-daily-directory-consultation.js'],
+  ['publish-pph-terminology.js'],
   ['sync-daily-terminology.js'],
   ['sync-daily-terminology.js', '--check'],
   ['audit-daily-terminology.js'],
