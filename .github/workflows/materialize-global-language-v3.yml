@@ -24,6 +24,7 @@ on:
       - 'scripts/validate-global-language-runtime-compat-v1.js'
       - 'scripts/validate-sitewide-safety-readability-v1.js'
       - 'scripts/validate-public-baseline-materialization-v1.js'
+      - 'scripts/validate-20260825-remediation-closure-v1.js'
       - '.github/workflows/materialize-global-language-v3.yml'
   workflow_dispatch:
 
@@ -64,6 +65,7 @@ jobs:
           node --check scripts/validate-global-language-runtime-compat-v1.js
           node --check scripts/validate-sitewide-safety-readability-v1.js
           node --check scripts/validate-public-baseline-materialization-v1.js
+          node --check scripts/validate-20260825-remediation-closure-v1.js
           node scripts/validate-sitewide-safety-readability-v1.js
           node scripts/validate-global-language-runtime-compat-v1.js
 
@@ -82,6 +84,7 @@ jobs:
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
             node scripts/validate-public-baseline-materialization-v1.js
+            node scripts/validate-20260825-remediation-closure-v1.js
             git diff --check
             if git diff --quiet; then
               echo 'Unified public baseline already materialized on latest main.'
