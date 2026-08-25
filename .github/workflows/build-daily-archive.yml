@@ -16,10 +16,13 @@ on:
       - 'qilylean/daily-briefs.css'
       - 'qilylean/daily-feedback.js'
       - 'qilylean/brief-curation-policy.json'
+      - 'site-early-career-history-v1.css'
       - 'knowledge/terminology.html'
       - 'knowledge/terminology/*.html'
       - 'scripts/curate-weekly-briefs.js'
       - 'scripts/publish-curated-daily.js'
+      - 'scripts/publish-early-career-history.js'
+      - 'scripts/site-career-baseline-lib.js'
       - 'scripts/validate-weekly-brief-curation.js'
       - 'scripts/sync-curated-site-metadata.js'
       - 'scripts/sync-search-brief-metadata.js'
@@ -30,6 +33,7 @@ on:
       - 'scripts/remove-daily-directory-consultation.js'
       - 'scripts/validate-current-daily-publication.js'
       - 'index.html'
+      - 'experience/index.html'
       - 'knowledge/index.html'
       - 'trust/index.html'
       - 'sitemap.xml'
@@ -40,8 +44,11 @@ on:
       - '.github/workflows/build-daily-archive.yml'
       - 'qilylean/daily/*.html'
       - 'qilylean/brief-curation-policy.json'
+      - 'site-early-career-history-v1.css'
       - 'scripts/curate-weekly-briefs.js'
       - 'scripts/publish-curated-daily.js'
+      - 'scripts/publish-early-career-history.js'
+      - 'scripts/site-career-baseline-lib.js'
       - 'scripts/remove-daily-directory-consultation.js'
       - 'scripts/validate-weekly-brief-curation.js'
       - 'scripts/validate-current-daily-publication.js'
@@ -73,6 +80,8 @@ jobs:
         run: |
           node --check scripts/publish-curated-daily.js
           node --check scripts/curate-weekly-briefs.js
+          node --check scripts/publish-early-career-history.js
+          node --check scripts/site-career-baseline-lib.js
           node --check scripts/validate-weekly-brief-curation.js
           node --check scripts/sync-curated-site-metadata.js
           node --check scripts/sync-search-brief-metadata.js
@@ -100,10 +109,12 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add -- \
             index.html \
+            experience/index.html \
             knowledge/index.html \
             knowledge/terminology.html \
             trust/index.html \
             sitemap.xml \
+            qilylean/career-resume-full.js \
             qilylean/daily-insights.html \
             qilylean/daily/*.html \
             qilylean/daily/index.json \
