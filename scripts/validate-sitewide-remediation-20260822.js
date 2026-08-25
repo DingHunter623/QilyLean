@@ -11,6 +11,8 @@ function read(relative){return fs.readFileSync(path.join(root,relative),'utf8')}
 function assert(ok,message){if(!ok)throw new Error(message)}
 function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean)}
 
+const runtimeBaseline=JSON.parse(read('data/site-system-v4.json')).runtimeBaseline;
+const atomicMode=`mode: 'atomic-first-paint-${String(runtimeBaseline).toLowerCase()}'`;
 const navigation=read('site-navigation.js');
 const core=read('site-navigation-core.js');
 const dockClosure=read('site-dock-share-runtime-v1.js');
@@ -28,7 +30,7 @@ const interactionContrast=read('site-interaction-contrast-guard-v1.js');
 const home=read('index.html');
 const experience=read('experience/index.html');
 
-assert(navigation.includes("mode: 'atomic-first-paint-v38'"),'Navigation wrapper is not V38.');
+assert(navigation.includes(atomicMode),`Navigation wrapper is not ${runtimeBaseline}.`);
 assert(navigation.includes("dockOrder: ['home','top','back','search','current','contact']"),'Navigation contract has the wrong Dock order.');
 assert(navigation.includes('/site-navigation-core.js?v=20260824-contact-channel-v30'),'Navigation core cache key is stale.');
 assert(navigation.includes('/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23'),'Navigation legacy cache key is stale.');
@@ -127,4 +129,4 @@ for(const relative of trackedHtml()){
 }
 assert(navigationPages>=460,`Navigation coverage unexpectedly fell to ${navigationPages} pages.`);
 assert(stale.length===0,`Stale public shell entries: ${stale.slice(0,20).join(', ')}`);
-process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages and one unified safe translation/readability/mobile-navigation baseline.\n`);
+process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages and one unified safe translation/readability/mobile-navigation baseline (${runtimeBaseline}).\n`);
