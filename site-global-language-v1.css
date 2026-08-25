@@ -1,54 +1,59 @@
-/* QilyLean Google Translate On-Demand V1｜2026-08-25 */
-.qily-google-translate{
+/* QilyLean Global Translation Dual Route V2｜2026-08-25 */
+.qily-web-translate{
   position:relative;
   order:999;
   display:inline-flex;
   align-items:center;
   gap:7px;
   flex:0 0 auto;
-  min-height:46px;
-  margin-left:10px;
-  padding:0 8px 0 11px;
-  border:2px solid #4285f4;
-  border-radius:10px;
-  background:#fff;
-  color:#1f2f2c;
-  box-shadow:0 5px 16px rgba(26,115,232,.16);
+  min-height:48px;
+  margin-left:12px;
+  padding:0 9px 0 11px;
+  border:2px solid #0f6570;
+  border-radius:11px;
+  background:#f8fffd;
+  color:#17322d;
+  box-shadow:0 6px 18px rgba(15,101,112,.16);
   white-space:nowrap;
   direction:ltr;
   isolation:isolate;
   transition:border-color .16s ease,box-shadow .16s ease,transform .12s ease,background-color .16s ease;
 }
-.qily-google-translate:hover{border-color:#1a73e8;background:#f8fbff;box-shadow:0 7px 20px rgba(26,115,232,.22)}
-.qily-google-translate:active{transform:translateY(1px)}
-.qily-google-translate:focus-within{outline:3px solid rgba(66,133,244,.30);outline-offset:2px}
-.qily-google-translate__mark{display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;background:#eef4ff;font-size:15px;line-height:1}
-.qily-google-translate__brand{color:#1a73e8;font-size:14px;font-weight:950;letter-spacing:.01em;-webkit-text-fill-color:#1a73e8}
-.qily-google-translate__badge{display:inline-flex;align-items:center;justify-content:center;min-height:20px;padding:1px 6px;border-radius:999px;background:#fff3cd;color:#775a00;font-size:11px;font-weight:900;line-height:1;-webkit-text-fill-color:#775a00}
-.qily-google-translate__select{
-  width:106px;
+.qily-web-translate:hover{border-color:#178b94;background:#fff;box-shadow:0 8px 23px rgba(15,101,112,.22)}
+.qily-web-translate:active{transform:translateY(1px)}
+.qily-web-translate:focus-within{outline:3px solid rgba(23,139,148,.25);outline-offset:2px}
+.qily-web-translate__mark{display:inline-flex;align-items:center;justify-content:center;width:27px;height:27px;border:1px solid #b9d9d4;border-radius:50%;background:#eaf8f5;font-size:16px;line-height:1}
+.qily-web-translate__brand{color:#0f6570;font-size:14px;font-weight:950;letter-spacing:.01em;-webkit-text-fill-color:#0f6570}
+.qily-web-translate__badge{display:inline-flex;align-items:center;justify-content:center;min-height:21px;padding:2px 7px;border-radius:999px;background:#ffe39b;color:#594000;font-size:11px;font-weight:950;line-height:1;-webkit-text-fill-color:#594000}
+.qily-web-translate__select{
+  width:116px;
   min-width:0;
-  height:34px;
-  padding:0 25px 0 7px;
-  border:1px solid #d7e2ef;
+  height:35px;
+  padding:0 26px 0 8px;
+  border:1px solid #b9d9d4;
   border-radius:7px;
   outline:0;
-  color:#24403a;
+  color:#17322d;
   background:#fff;
   font:inherit;
   font-size:13px;
-  font-weight:800;
+  font-weight:850;
   line-height:1.2;
   cursor:pointer;
-  -webkit-text-fill-color:#24403a;
+  -webkit-text-fill-color:#17322d;
 }
-.qily-google-translate__select:hover{border-color:#8ab4f8;background:#f8fbff}
-.qily-google-translate__select:focus-visible{outline:2px solid #4285f4;outline-offset:1px}
-.qily-google-translate__select option{color:#17322d;background:#fff;font-weight:600}
-.qily-google-translate[data-state="opening"]{border-color:#34a853;box-shadow:0 6px 18px rgba(52,168,83,.18)}
-/* Retired automatic-translation control must never remain visible beside the new utility. */
-#qilyGlobalLanguageV1,.qily-language-switcher{display:none!important}
-@media (prefers-reduced-motion:reduce){.qily-google-translate{transition:none!important}}
-@media (max-width:1380px){.qily-google-translate{gap:5px;margin-left:6px;padding-left:8px}.qily-google-translate__badge{display:none}.qily-google-translate__select{width:94px}.qily-google-translate__brand{font-size:13px}}
-@media (max-width:1080px){.qily-google-translate{min-height:42px}.qily-google-translate__brand{display:none}.qily-google-translate__select{width:102px}}
-@media (max-width:430px){.qily-google-translate{min-height:40px;border-radius:8px;padding-left:7px}.qily-google-translate__mark{width:22px;height:22px;font-size:14px}.qily-google-translate__select{width:94px;font-size:12.5px}}
+.qily-web-translate__select:hover{border-color:#178b94;background:#f8fffd}
+.qily-web-translate__select:focus-visible{outline:2px solid #178b94;outline-offset:1px}
+.qily-web-translate__select option{color:#17322d;background:#fff;font-weight:600}
+.qily-web-translate__status{display:inline-flex;align-items:center;max-width:132px;min-height:24px;padding:2px 7px;border-left:1px solid #d5e4e3;color:#496565;font-size:11px;font-weight:800;line-height:1.2;white-space:normal;-webkit-text-fill-color:#496565}
+.qily-web-translate[data-state="working"]{border-color:#c99a3e;background:#fffdf4;box-shadow:0 7px 20px rgba(201,154,62,.18)}
+.qily-web-translate[data-state="translated"]{border-color:#2f855a;background:#f4fff8}
+.qily-web-translate[data-state="partial"],.qily-web-translate[data-state="fallback"]{border-color:#d97706;background:#fffaf0}
+.qily-web-translate[data-state="opening"]{border-color:#4285f4;background:#f8fbff;box-shadow:0 7px 20px rgba(66,133,244,.18)}
+/* Retired translation controls must never remain visible beside the governed utility. */
+#qilyGoogleTranslateOnDemandV1,#qilyGlobalLanguageV1,.qily-google-translate,.qily-language-switcher{display:none!important}
+@media (prefers-reduced-motion:reduce){.qily-web-translate{transition:none!important}}
+@media (max-width:1480px){.qily-web-translate{gap:5px;margin-left:7px;padding-left:8px}.qily-web-translate__status{display:none}.qily-web-translate__select{width:104px}}
+@media (max-width:1180px){.qily-web-translate{min-height:43px}.qily-web-translate__badge{display:none}.qily-web-translate__brand{font-size:13px}.qily-web-translate__select{width:100px}}
+@media (max-width:980px){.qily-web-translate__brand{display:none}.qily-web-translate__select{width:108px}}
+@media (max-width:430px){.qily-web-translate{min-height:40px;border-radius:8px;padding-left:7px}.qily-web-translate__mark{width:23px;height:23px;font-size:14px}.qily-web-translate__select{width:96px;font-size:12.5px}}
