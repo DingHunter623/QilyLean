@@ -18,8 +18,8 @@ const LANGUAGE_SRC = `/site-global-language-v3.js?v=${VERSION}`;
 const HEADER_AXIS = '/site-header-axis-v1.css?v=20260825-header-axis-nav-fit-v1';
 const PROGRESS_CSS = '/site-translation-progress-v1.css?v=20260825-bilingual-progress-v1';
 const PROGRESS_JS = '/site-translation-progress-v1.js?v=20260825-bilingual-progress-v1';
-const PUBLIC_UI_CSS = '/site-translation-public-ui-v1.css?v=20260825-public-language-picker-v3';
-const PUBLIC_UI_JS = '/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v3';
+const PUBLIC_UI_CSS = '/site-translation-public-ui-v1.css?v=20260825-public-language-picker-v4';
+const PUBLIC_UI_JS = '/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v4';
 const MARKER = 'data-qily-web-translate-direct="dual-route-v2"';
 
 function trackedHtml() {
