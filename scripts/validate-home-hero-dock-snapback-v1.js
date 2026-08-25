@@ -7,12 +7,14 @@ const root=path.resolve(__dirname,'..');
 function read(relative){return fs.readFileSync(path.join(root,relative),'utf8')}
 function assert(ok,message){if(!ok)throw new Error(message)}
 
+const runtimeBaseline=JSON.parse(read('data/site-system-v4.json')).runtimeBaseline;
+const atomicMode=`mode: 'atomic-first-paint-${String(runtimeBaseline).toLowerCase()}'`;
 const navigation=read('site-navigation.js');
 assert(navigation.includes("dockPositionPersistence: false"),'navigation feature contract still enables dock position persistence');
 assert(navigation.includes("dockAutoHome: 'bottom-right'"),'navigation feature contract does not declare bottom-right auto-home');
 assert(navigation.includes('/site-navigation-core.js?v=20260824-contact-channel-v30'),'navigation core cache version is not contact-channel v30');
 assert(navigation.includes('/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3'),'navigation dock stylesheet cache version is not snapback v3');
-assert(navigation.includes("mode: 'atomic-first-paint-v38'"),'protected V38 navigation baseline is missing');
+assert(navigation.includes(atomicMode),`protected ${runtimeBaseline} navigation baseline is missing`);
 assert(navigation.includes('translationAwareSelfHeal: true'),'language-aware navigation self-heal contract is missing');
 assert(navigation.includes('unifiedHeaderAxis: true'),'unified header axis contract is missing');
 assert(navigation.includes('headerAxisWidth: 1560'),'1560px header axis contract is missing');
@@ -44,4 +46,4 @@ assert(ready(contentContrast),'sitewide content readability guard is neither mat
 assert(home.includes(safeRuntime)||publishReady,'safe in-page translation baseline is neither materialized nor queued');
 assert(!materializer.includes('<script defer ${LEGACY_MARKER}'),'retired external-proxy translator is still queued for publication');
 assert(home.includes('font-size:clamp(40px,3.6vw,52px)!important'),'homepage first-paint parity is not using the reduced hero headline tier');
-process.stdout.write('PASS: homepage Hero/Dock stay protected while safe translation, complete language labels, mobile touch navigation, 1560px Header Axis and content readability are materialized or queued.\n');
+process.stdout.write(`PASS: homepage Hero/Dock stay protected on ${runtimeBaseline} while safe translation, complete language labels, mobile touch navigation, 1560px Header Axis and content readability are materialized or queued.\n`);
