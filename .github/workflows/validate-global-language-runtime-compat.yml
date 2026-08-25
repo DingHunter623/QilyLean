@@ -1,4 +1,4 @@
-name: Validate Chinese Default + Google Translate On-Demand
+name: Validate Global Translation Dual Route V2
 
 on:
   pull_request:
@@ -13,6 +13,8 @@ on:
       - 'site-core-service-dock-closure-v1.js'
       - 'scripts/materialize-global-language-v3.js'
       - 'scripts/validate-global-language-runtime-compat-v1.js'
+      - 'scripts/validate-home-hero-dock-snapback-v1.js'
+      - 'scripts/validate-sitewide-remediation-20260822.js'
       - '.github/workflows/validate-global-language-runtime-compat.yml'
 permissions:
   contents: read
@@ -37,7 +39,13 @@ jobs:
           node --check site-core-service-dock-closure-v1.js
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/validate-global-language-runtime-compat-v1.js
-      - name: Validate Chinese-default Google translation contract
+          node --check scripts/validate-home-hero-dock-snapback-v1.js
+          node --check scripts/validate-sitewide-remediation-20260822.js
+      - name: Validate Chinese-default dual-route translation contract
         run: node scripts/validate-global-language-runtime-compat-v1.js
+      - name: Validate homepage and sitewide compatibility guards
+        run: |
+          node scripts/validate-home-hero-dock-snapback-v1.js
+          node scripts/validate-sitewide-remediation-20260822.js
       - name: Diff hygiene
         run: git diff --check
