@@ -8,6 +8,9 @@ function read(relative){return fs.readFileSync(path.join(root,relative),'utf8')}
 function requireText(source,token,label){if(!source.includes(token))throw new Error(`${label}: missing ${token}`)}
 function forbidText(source,token,label){if(source.includes(token))throw new Error(`${label}: forbidden ${token}`)}
 
+const runtimeBaseline=JSON.parse(read('data/site-system-v4.json')).runtimeBaseline;
+const atomicMode=`mode: 'atomic-first-paint-${String(runtimeBaseline).toLowerCase()}'`;
+
 const safe=read('site-translation-safe-runtime-v1.js');
 requireText(safe,'__qilyTranslationSafeInPageV1','Safe translation runtime');
 requireText(safe,"var SOURCE='zh-CN'",'Chinese authoritative source');
@@ -40,7 +43,7 @@ forbidText(consistency,"LANGUAGE_JS='/site-global-language-v3.js",'Shared shell 
 
 const navigation=read('site-navigation.js');
 requireText(navigation,'function isChineseSourceMode()','Navigation language gate');
-requireText(navigation,"mode: 'atomic-first-paint-v38'",'Protected navigation baseline');
+requireText(navigation,atomicMode,`Protected navigation baseline ${runtimeBaseline}`);
 requireText(navigation,'unifiedHeaderAxis: true','Unified header axis contract');
 requireText(navigation,'headerAxisWidth: 1560','Header axis width');
 
@@ -102,4 +105,4 @@ requireText(dock,'function sourceMode()','Dock language gate');
 const parentNav=read('site-parent-navigation-v3.js');
 requireText(parentNav,'function sourceMode()','Parent navigation language gate');
 
-process.stdout.write('PASS: QilyLean public baseline uses safe in-page translation, complete language labels, mobile touch navigation, and sitewide readability guards.\n');
+process.stdout.write(`PASS: QilyLean public baseline ${runtimeBaseline} uses safe in-page translation, complete language labels, mobile touch navigation, and sitewide readability guards.\n`);
