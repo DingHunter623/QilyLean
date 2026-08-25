@@ -38,6 +38,15 @@
     select.setAttribute('data-qily-selected-language',name);
   }
 
+  function revealSelectedLanguage(select){
+    var nav=select&&select.closest?select.closest('nav'):null;
+    if(!nav||nav.scrollWidth<=nav.clientWidth)return;
+    w.requestAnimationFrame(function(){
+      var target=Math.max(0,nav.scrollWidth-nav.clientWidth);
+      try{nav.scrollTo({left:target,behavior:'smooth'})}catch(error){nav.scrollLeft=target}
+    });
+  }
+
   function cleanControl(control){
     if(!control)return false;
     control.setAttribute('aria-label','网页翻译');
@@ -59,8 +68,8 @@
       fitSelect(select);
       if(select.dataset.qilyPublicUiBound!=='true'){
         select.dataset.qilyPublicUiBound='true';
-        select.addEventListener('change',function(){fitSelect(select)});
-        select.addEventListener('input',function(){fitSelect(select)});
+        select.addEventListener('change',function(){fitSelect(select);revealSelectedLanguage(select)});
+        select.addEventListener('input',function(){fitSelect(select);revealSelectedLanguage(select)});
       }
     }
     return true;
