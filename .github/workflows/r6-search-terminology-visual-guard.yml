@@ -8,6 +8,8 @@ on:
       - 'knowledge/terminology/**'
       - 'qilylean/site-data.json'
       - 'qilylean/daily/**'
+      - 'scripts/publish-curated-daily.js'
+      - 'scripts/publish-pph-terminology.js'
       - 'scripts/validate-r6-search-terminology-visual.js'
       - '.github/workflows/r6-search-terminology-visual-guard.yml'
   push:
@@ -18,6 +20,8 @@ on:
       - 'knowledge/terminology/**'
       - 'qilylean/site-data.json'
       - 'qilylean/daily/**'
+      - 'scripts/publish-curated-daily.js'
+      - 'scripts/publish-pph-terminology.js'
       - 'scripts/validate-r6-search-terminology-visual.js'
       - '.github/workflows/r6-search-terminology-visual-guard.yml'
 
@@ -38,6 +42,8 @@ jobs:
         run: |
           node --check site-navigation.js
           node --check site-r6-search-terminology-visual-v1.js
+          node --check scripts/publish-curated-daily.js
+          node --check scripts/publish-pph-terminology.js
           node --check scripts/validate-r6-search-terminology-visual.js
       - name: R6 regression guard
         run: node scripts/validate-r6-search-terminology-visual.js
