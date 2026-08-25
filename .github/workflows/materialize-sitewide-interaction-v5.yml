@@ -6,6 +6,9 @@ on:
     paths:
       - '**/*.html'
       - 'site-navigation.js'
+      - 'site-header-axis-v1.css'
+      - 'site-translation-progress-v1.js'
+      - 'site-translation-progress-v1.css'
       - 'site-navigation-core.js'
       - 'site-navigation-legacy-20260802.js'
       - 'site-music-persistent-navigation-v1.js'
@@ -50,12 +53,15 @@ jobs:
         run: |
           node --check scripts/validate-public-shell-v31.js
           node --check scripts/validate-home-hero-dock-snapback-v1.js
+          node --check scripts/validate-sitewide-remediation-20260822.js
           node --check site-navigation.js
+          node --check site-translation-progress-v1.js
           node --check site-navigation-core.js
 
-      - name: Validate current V33 first-paint and Dock contracts
+      - name: Validate current V33 first-paint, Header Axis and Dock contracts
         run: |
           node scripts/validate-public-shell-v31.js
           node scripts/validate-home-hero-dock-snapback-v1.js
+          node scripts/validate-sitewide-remediation-20260822.js
           git diff --exit-code
           git diff --check

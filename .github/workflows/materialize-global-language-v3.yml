@@ -1,4 +1,4 @@
-name: Materialize Global Translation Dual Route V2
+name: Materialize Global Translation Dual Route V2 + Header Axis
 
 on:
   push:
@@ -7,11 +7,15 @@ on:
       - 'site-global-language-v3.js'
       - 'site-global-language-v1.css'
       - 'site-navigation.js'
+      - 'site-header-axis-v1.css'
+      - 'site-translation-progress-v1.js'
+      - 'site-translation-progress-v1.css'
       - 'site-parent-navigation-v3.js'
       - 'site-ui-consistency-v1.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-core-service-dock-closure-v1.js'
       - 'scripts/materialize-global-language-v3.js'
+      - 'scripts/validate-global-language-runtime-compat-v1.js'
       - '.github/workflows/materialize-global-language-v3.yml'
   workflow_dispatch:
 
@@ -19,7 +23,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: materialize-global-translation-dual-route-v2-main
+  group: materialize-global-translation-header-axis-main
   cancel-in-progress: true
 
 jobs:
@@ -36,9 +40,10 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate Chinese-default dual-route translation sources
+      - name: Validate Chinese-default translation, header axis and progress sources
         run: |
           node --check site-global-language-v3.js
+          node --check site-translation-progress-v1.js
           node --check site-navigation.js
           node --check site-parent-navigation-v3.js
           node --check site-ui-consistency-v1.js
@@ -59,6 +64,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             node --check site-global-language-v3.js
+            node --check site-translation-progress-v1.js
             node --check site-navigation.js
             node --check site-parent-navigation-v3.js
             node --check site-ui-consistency-v1.js
@@ -69,17 +75,17 @@ jobs:
             node scripts/materialize-global-language-v3.js --check
             git diff --check
             if git diff --quiet; then
-              echo 'Global Translation Dual Route V2 already materialized on latest main.'
+              echo 'Global Translation / Header Axis already materialized on latest main.'
               exit 0
             fi
             git add -- '*.html'
-            git commit -m 'build: materialize Global Translation Dual Route V2 across public HTML'
+            git commit -m 'build: materialize Header Axis and translation progress across public HTML'
             if git push origin HEAD:main; then
-              echo 'Global Translation Dual Route V2 sitewide materialization published.'
+              echo 'Header Axis and translation progress sitewide materialization published.'
               exit 0
             fi
             echo 'main advanced during publish; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish Global Translation Dual Route V2 after retries.'
+          echo 'Unable to publish Header Axis / translation progress after retries.'
           exit 1
