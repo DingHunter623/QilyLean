@@ -1,10 +1,11 @@
-name: Materialize Global Language V3.1
+name: Materialize Chinese Default + Google Translate On-Demand
 
 on:
   push:
     branches: [main]
     paths:
       - 'site-global-language-v3.js'
+      - 'site-global-language-v1.css'
       - 'site-navigation.js'
       - 'site-parent-navigation-v3.js'
       - 'site-ui-consistency-v1.js'
@@ -18,7 +19,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: materialize-global-language-v31-main
+  group: materialize-google-translate-on-demand-main
   cancel-in-progress: true
 
 jobs:
@@ -35,7 +36,7 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate Global Language V3.1 sources
+      - name: Validate Chinese-default translation utility sources
         run: |
           node --check site-global-language-v3.js
           node --check site-navigation.js
@@ -45,7 +46,7 @@ jobs:
           node --check site-core-service-dock-closure-v1.js
           node --check scripts/materialize-global-language-v3.js
 
-      - name: Materialize and publish V3.1 across every tracked HTML page
+      - name: Materialize and publish across every tracked HTML page
         shell: bash
         run: |
           set -euo pipefail
@@ -66,17 +67,17 @@ jobs:
             node scripts/materialize-global-language-v3.js --check
             git diff --check
             if git diff --quiet; then
-              echo 'Global Language V3.1 already materialized on latest main.'
+              echo 'Chinese-default Google Translate utility already materialized on latest main.'
               exit 0
             fi
             git add -- '*.html'
-            git commit -m 'build: materialize Global Language V3.1 across public HTML'
+            git commit -m 'build: materialize Chinese default and Google Translate on-demand across public HTML'
             if git push origin HEAD:main; then
-              echo 'Global Language V3.1 sitewide materialization published.'
+              echo 'Chinese-default Google Translate on-demand sitewide materialization published.'
               exit 0
             fi
             echo 'main advanced during publish; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish Global Language V3.1 after retries.'
+          echo 'Unable to publish Chinese-default Google Translate utility after retries.'
           exit 1
