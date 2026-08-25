@@ -21,6 +21,7 @@ on:
       - 'knowledge/terminology/*.html'
       - 'scripts/curate-weekly-briefs.js'
       - 'scripts/publish-curated-daily.js'
+      - 'scripts/publish-pph-terminology.js'
       - 'scripts/publish-early-career-history.js'
       - 'scripts/site-career-baseline-lib.js'
       - 'scripts/validate-weekly-brief-curation.js'
@@ -45,14 +46,20 @@ on:
       - 'qilylean/daily/*.html'
       - 'qilylean/brief-curation-policy.json'
       - 'site-early-career-history-v1.css'
+      - 'knowledge/terminology.html'
+      - 'knowledge/terminology/*.html'
       - 'scripts/curate-weekly-briefs.js'
       - 'scripts/publish-curated-daily.js'
+      - 'scripts/publish-pph-terminology.js'
       - 'scripts/publish-early-career-history.js'
       - 'scripts/site-career-baseline-lib.js'
       - 'scripts/remove-daily-directory-consultation.js'
       - 'scripts/validate-weekly-brief-curation.js'
       - 'scripts/validate-current-daily-publication.js'
       - 'scripts/sync-curated-site-metadata.js'
+      - 'scripts/sync-search-brief-metadata.js'
+      - 'scripts/sync-trust-brief-metadata.js'
+      - 'scripts/sync-daily-terminology.js'
   workflow_dispatch:
 
 permissions:
@@ -81,6 +88,7 @@ jobs:
         run: |
           node --check scripts/publish-curated-daily.js
           node --check scripts/curate-weekly-briefs.js
+          node --check scripts/publish-pph-terminology.js
           node --check scripts/publish-early-career-history.js
           node --check scripts/site-career-baseline-lib.js
           node --check scripts/validate-weekly-brief-curation.js
@@ -115,6 +123,7 @@ jobs:
             knowledge/terminology.html \
             trust/index.html \
             sitemap.xml \
+            sitemap-core.xml \
             qilylean/career-resume-full.js \
             qilylean/daily-insights.html \
             qilylean/daily/*.html \
