@@ -30,8 +30,8 @@ const PUBLIC_UI_CSS='/site-translation-public-ui-v1.css?v=20260825-mobile-naviga
 const PUBLIC_UI_JS='/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6';
 const INTERACTION_CONTRAST_CSS='/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2';
 const INTERACTION_CONTRAST_JS='/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2';
-const CONTENT_CONTRAST_CSS='/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v7';
-const CONTENT_CONTRAST_JS='/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v7';
+const CONTENT_CONTRAST_CSS='/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6';
+const CONTENT_CONTRAST_JS='/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6';
 const UNIFIED_VISUAL_CSS='/site-unified-visual-governance-v1.css?v=20260826-contrast-closure-v2';
 const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-screenshot-closure-v1';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260826-site-shell-recovery-v4';
@@ -70,7 +70,7 @@ function materialize(source){
     `<script defer data-qily-translation-public-ui-direct="visitor-v2" src="${PUBLIC_UI_JS}"></script>`,
     `<script defer data-qily-translation-progress-direct="bilingual-v2" src="${PROGRESS_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
-    `<script defer data-qily-content-contrast-direct="v7" src="${CONTENT_CONTRAST_JS}"></script>`,
+    `<script defer data-qily-content-contrast-direct="v6" src="${CONTENT_CONTRAST_JS}"></script>`,
     `<script defer data-qily-contact-route-direct="v4" src="${CONTACT_ROUTE_JS}"></script>`
   ].join('\n');
   if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);
