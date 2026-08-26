@@ -3,7 +3,7 @@
   "site": "QilyLean",
   "brand": "QilyLean｜启力精益",
   "standard": "QL-WEB-STD-001/R6",
-  "runtimeBaseline": "V43",
+  "runtimeBaseline": "V44",
   "production": {
     "baseUrl": "https://qilylean.com",
     "canonicalTrailingSlash": false,
@@ -28,25 +28,33 @@
     {"route": "/north", "file": "north/index.html", "marker": "QILYLEAN NORTH"},
     {"route": "/north/inner-mongolia", "file": "north/inner-mongolia/index.html"},
     {"route": "/north/shaanxi", "file": "north/shaanxi/index.html"},
-    {"route": "/north/diagnosis", "file": "north/diagnosis/index.html", "marker": "data-qily-diagnosis-form"}
-  ],
-  "qualityGates": {
-    "G1": "source",
-    "G2": "build",
-    "G3": "ci",
-    "G4": "production",
-    "G5": "experience"
-  },
-  "performanceBudget": {
-    "lcpMs": 2500,
-    "cls": 0.1,
-    "inpMs": 200,
-    "warningAssetBytes": 2097152,
-    "criticalAssetBytes": 8388608
-  },
-  "repositoryPolicy": {
-    "largeReleaseAssets": ["apk", "aab", "zip", "mp4"],
-    "workflowLifecycle": ["ACTIVE", "MIGRATED", "DEPRECATED", "ARCHIVED", "DELETE"],
-    "historyRewriteRequiresSeparateApproval": true
-  }
+    {"route": "/north/gansu", "file": "north/gansu/index.html"},
+    {"route": "/north/ningxia", "file": "north/ningxia/index.html"},
+    {"route": "/north/xinjiang", "file": "north/xinjiang/index.html"},
+    {"route": "/south", "file": "south/index.html", "marker": "QILYLEAN SOUTH"},
+    {"route": "/south/guangdong", "file": "south/guangdong/index.html"},
+    {"route": "/south/guangxi", "file": "south/guangxi/index.html"},
+    {"route": "/south/fujian", "file": "south/fujian/index.html"},
+    {"route": "/south/hainan", "file": "south/hainan/index.html"},
+    {"route": "/east", "file": "east/index.html", "marker": "QILYLEAN EAST"},
+    {"route": "/east/zhejiang", "file": "east/zhejiang/index.html"},
+    {"route": "/east/jiangsu", "file": "east/jiangsu/index.html"},
+    {"route": "/east/shanghai", "file": "east/shanghai/index.html"},
+    {"route": "/east/anhui", "file": "east/anhui/index.html"},
+    {"route": "/central", "file": "central/index.html", "marker": "QILYLEAN CENTRAL"},
+    {"route": "/central/hubei", "file": "central/hubei/index.html"},
+    {"route": "/central/hunan", "file": "central/hunan/index.html"},
+    {"route": "/central/henan", "file": "central/henan/index.html"},
+    {"route": "/central/jiangxi", "file": "central/jiangxi/index.html"},
+    {"route": "/west", "file": "west/index.html", "marker": "QILYLEAN WEST"},
+    {"route": "/west/sichuan", "file": "west/sichuan/index.html"},
+    {"route": "/west/chongqing", "file": "west/chongqing/index.html"},
+    {"route": "/west/guizhou", "file": "west/guizhou/index.html"},
+    {"route": "/west/yunnan", "file": "west/yunnan/index.html"},
+    {"route": "/west/tibet", "file": "west/tibet/index.html"},
+    {"route": "/northeast", "file": "northeast/index.html", "marker": "QILYLEAN NORTHEAST"},
+    {"route": "/northeast/liaoning", "file": "northeast/liaoning/index.html"},
+    {"route": "/northeast/jilin", "file": "northeast/jilin/index.html"},
+    {"route": "/northeast/heilongjiang", "file": "northeast/heilongjiang/index.html"}
+  ]
 }
