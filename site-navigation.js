@@ -1,16 +1,18 @@
-/* QilyLean navigation runtime v43｜2026-08-26
- * R6 search relevance + terminology exact-code + hero visual closure:
+/* QilyLean navigation runtime v44｜2026-08-27
+ * R6 search relevance + terminology exact-code + primary-navigation parity closure:
  * 1) Chinese remains the authoritative static navigation source;
  * 2) runtime self-healing may enforce Chinese labels only while zh-CN is active;
  * 3) translated labels are never overwritten back to Chinese in English/other language modes;
  * 4) Header / Logo / primary navigation / translation utility share the governed 1560px content axis;
- * 5) site search navigation is preloaded before dock/core fallback, with R6 ranking remaining presentation-only;
- * 6) terminology live metadata uses one canonical strip with explicit light-surface contrast ownership;
- * 7) existing dock, resource collaboration, search authority and capability self-heal behavior remains intact.
+ * 5) primary navigation uses one sitewide typography/color contract on desktop and mobile; modules may not shrink it;
+ * 6) site search navigation is preloaded before dock/core fallback, with R6 ranking remaining presentation-only;
+ * 7) terminology live metadata uses one canonical strip with explicit light-surface contrast ownership;
+ * 8) existing dock, resource collaboration, search authority and capability self-heal behavior remains intact.
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyStaticFirstNavigationV43) return;
+  if (w.__qilyStaticFirstNavigationV44) return;
+  w.__qilyStaticFirstNavigationV44 = true;
   w.__qilyStaticFirstNavigationV43 = true;
   w.__qilyStaticFirstNavigationV42 = true;
   w.__qilyStaticFirstNavigationV41 = true;
@@ -18,14 +20,14 @@
 
   var CORE_SRC = '/site-navigation-core.js?v=20260824-contact-channel-v30';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23';
-  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260826-search-navigation-contrast-v44';
+  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260827-primary-navigation-unified-v45';
   var SEARCH_RUNTIME_SRC = '/site-search.js?v=20260826-search-navigation-v2';
   var INTEGRITY_SRC = '/site-integrity-hotfix-v1.js?v=20260826-public-integrity-v2';
   var R6_SEARCH_VISUAL_SRC = '/site-r6-search-terminology-visual-v1.js?v=20260826-r6-search-terminology-visual-v1';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7';
   var CONTENT_AXIS_HREF = '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5';
-  var HEADER_AXIS_HREF = '/site-header-axis-v1.css?v=20260825-header-axis-nav-fit-v1';
+  var HEADER_AXIS_HREF = '/site-header-axis-v1.css?v=20260827-primary-navigation-unified-v4';
   var HOME_HERO_HREF = '/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3';
   var DOCK_HREF = '/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3';
   var GEOMETRY_SRC = '/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';
@@ -124,8 +126,8 @@
     w.requestAnimationFrame(function () { ensureSearchAuthorityNavigation(); normalizeResourceCollaborationLabel(); snapDockHome(); });
   }
   function bindPermanentClosure() {
-    if (w.__qilyResourceCollabDockHomeBoundV43) return;
-    w.__qilyResourceCollabDockHomeBoundV43 = true;
+    if (w.__qilyResourceCollabDockHomeBoundV44) return;
+    w.__qilyResourceCollabDockHomeBoundV44 = true;
     d.addEventListener('pointerup', function () { w.requestAnimationFrame(snapDockHome); }, false);
     d.addEventListener('pointercancel', function () { w.requestAnimationFrame(snapDockHome); }, false);
     w.addEventListener('resize', function () { w.requestAnimationFrame(snapDockHome); }, { passive: true });
@@ -177,7 +179,7 @@
     loadScript('qilySiteNavigationCoreScript', CORE_SRC, function () {
       closeRuntimeGap(); installCapabilitySelfHeal();
       if (needsLegacyRuntime()) loadScript('qilySiteNavigationLegacyScriptV32', LEGACY_SRC, closeRuntimeGap);
-      if (!w.__qilyUiConsistencyV3 && !d.querySelector('script[src*="/site-ui-consistency-v1.js"]')) loadScript('qilyUiConsistencyRuntimeV32', CONSISTENCY_SRC, closeRuntimeGap);
+      if (!w.__qilyUiConsistencyV4 && !d.querySelector('script[src*="/site-ui-consistency-v1.js"]')) loadScript('qilyUiConsistencyRuntimeV33', CONSISTENCY_SRC, closeRuntimeGap);
     });
   }
 
@@ -187,7 +189,7 @@
 })(document, window);
 
 window.__qilyLayeredNavigationBuildContract = Object.freeze({
-  mode: 'atomic-first-paint-v43',
+  mode: 'atomic-first-paint-v44',
   staticHtmlAuthority: true,
   runtimeDependencyWaterfall: false,
   routeScopedLegacy: true,
@@ -197,6 +199,10 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   unifiedHeaderAxis: true,
   headerAxisWidth: 1560,
   headerDesktopNoClip: true,
+  primaryNavigationUnifiedVisualContract: true,
+  primaryNavigationFontSize: 20,
+  primaryNavigationFontWeight: 900,
+  mobilePrimaryNavigationMayShrinkTypography: false,
   publicIntegrityHotfix: true,
   siteSearchDirectNavigation: true,
   siteSearchRuntimeVersion: '20260826-search-navigation-v2',
@@ -224,5 +230,5 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   searchAuthorityLabel: '精益生产',
   searchAuthoritySitewide: true,
   translationAwareSelfHeal: true,
-  version: '20260826-r6-search-visual-v43'
+  version: '20260827-primary-navigation-unified-v44'
 });
