@@ -49,6 +49,9 @@ assert(interaction.includes("setAttribute('data-qily-interaction-contrast'"),'In
 assert(interaction.includes('if(current>=4.5)'),'Interactive contrast threshold guard missing');
 assert(content.includes('data-qily-content-contrast-fixed'),'Content contrast guard missing');
 assert(content.includes('?3:4.5'),'Content contrast threshold guard missing');
+assert(content.includes('function hasVisualBackground(el)'),'Gradient/image surface ownership guard missing');
+assert(content.includes("style.backgroundImage&&style.backgroundImage!=='none'"),'Gradient/image background detection missing');
+assert(content.includes('.document-hero'),'Document hero is not protected by the shared dark-surface registry');
 const gbt=read('qilylean/gbt2828.html');
 assert(gbt.includes('.reference-button'),'GB/T 2828 reference button source missing');
 assert(gbt.includes('color:#fff'),'GB/T 2828 reference button does not define white text');
@@ -63,9 +66,10 @@ for(const relative of trackedHtml()){
   assert(html.includes('/site-translation-safe-runtime-v1.js?v=20260825-translation-safe-inpage-v2'),`${relative}: safe runtime missing`);
   assert(html.includes('/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6'),`${relative}: public language UI missing`);
   assert(html.includes('/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2'),`${relative}: interaction contrast missing`);
-  assert(html.includes('/site-content-contrast-guard-v1.js?v=20260825-sitewide-content-contrast-v2'),`${relative}: content contrast missing`);
+  assert(html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v4'),`${relative}: content contrast v4 missing`);
+  assert(html.includes('data-qily-content-contrast-direct="v4"'),`${relative}: content contrast v4 marker missing`);
   assert(!html.includes('/site-global-language-v3.js'),`${relative}: retired translator still referenced`);
   assert(!html.includes('智能路由'),`${relative}: visitor-facing 智能路由 remains`);
 }
 assert(pages>=460,`Unexpected public HTML coverage: ${pages}`);
-process.stdout.write(`PASS: all reported 2026-08-25 issues are codified across ${pages} public HTML pages.\n`);
+process.stdout.write(`PASS: all reported 2026-08-25 issues plus 2026-08-26 gradient/image readability are codified across ${pages} public HTML pages.\n`);
