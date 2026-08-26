@@ -1,16 +1,18 @@
-/* QilyLean Site Shell Recovery + Contact Route V4｜2026-08-26
+/* QilyLean Site Shell Recovery + Contact Route V5｜2026-08-26
  * Recovery contract:
  * - keep the permanent six-action floating dock visible on desktop/mobile;
  * - preserve data-action="contact" compatibility with the core dock contract;
- * - route contact directly to /contact/ without a popup;
+ * - open /contact/ in a new independent tab/window from the Dock, with same-tab fallback only if blocked;
  * - remove legacy contact modal after shell creation;
  * - no MutationObserver, polling, reload or full-page DOM scan;
  * - neutralize legacy body/main flex expansion that creates abnormal blank tails.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilySiteShellRecoveryV4)return;
+  if(w.__qilySiteShellRecoveryV5)return;
+  w.__qilySiteShellRecoveryV5=true;
   w.__qilySiteShellRecoveryV4=true;
+  w.__qilyDedicatedContactRouteV4=true;
   w.__qilyDedicatedContactRouteV3=true;
   w.__qilyDedicatedContactRouteV2=true;
   w.__qilyDedicatedContactRouteV1=true;
@@ -20,9 +22,9 @@
   var LABELS={home:'首页',top:'回<br>顶部',back:'回<br>上一层',search:'本站<br>搜索',current:'分享<br>当前页',contact:'联系<br>我们'};
 
   function injectRecoveryCss(){
-    if(d.getElementById('qilySiteShellRecoveryV4Style'))return;
+    if(d.getElementById('qilySiteShellRecoveryV5Style'))return;
     var style=d.createElement('style');
-    style.id='qilySiteShellRecoveryV4Style';
+    style.id='qilySiteShellRecoveryV5Style';
     style.textContent=[
       'html,html body{height:auto!important;min-height:0!important}',
       'html body{display:block!important}',
@@ -49,7 +51,11 @@
       var button=dock.querySelector('[data-action="'+action+'"]');
       if(!button){button=createButton(action);dock.appendChild(button);}
       button.innerHTML=LABELS[action];
-      if(action==='contact'){button.setAttribute('aria-label','联系我们');button.setAttribute('title','联系我们');}
+      if(action==='contact'){
+        button.setAttribute('aria-label','联系我们');
+        button.setAttribute('title','联系我们（新窗口打开）');
+        button.setAttribute('data-qily-contact-route','new-window-v5');
+      }
       var duplicates=dock.querySelectorAll('[data-action="'+action+'"]');for(var i=1;i<duplicates.length;i+=1)duplicates[i].remove();
     });
     ACTIONS.forEach(function(action){var button=dock.querySelector('[data-action="'+action+'"]');if(button)dock.appendChild(button);});
@@ -68,6 +74,12 @@
     if(navigator.share){navigator.share({title:title,text:title,url:url}).catch(function(){});return;}
     if(navigator.clipboard&&w.isSecureContext)navigator.clipboard.writeText(title+'\n'+url).catch(function(){});
   }
+  function openContact(){
+    var child=null;
+    try{child=w.open(CONTACT_URL,'_blank');}catch(error){}
+    if(child){try{child.opener=null;}catch(error){}return;}
+    w.location.assign(CONTACT_URL);
+  }
   function runAction(action,event){
     if(event){event.preventDefault();event.stopImmediatePropagation();}
     if(action==='home')w.location.assign('/');
@@ -75,10 +87,10 @@
     else if(action==='back'){if(w.history.length>1)w.history.back();else w.location.assign('/');}
     else if(action==='search')openSearch();
     else if(action==='current')shareCurrent();
-    else if(action==='contact')w.location.assign(CONTACT_URL);
+    else if(action==='contact')openContact();
   }
   function bindDock(dock){
-    if(dock.dataset.qilyRecoveryBound==='v4')return;dock.dataset.qilyRecoveryBound='v4';
+    if(dock.dataset.qilyRecoveryBound==='v5')return;dock.dataset.qilyRecoveryBound='v5';
     dock.addEventListener('click',function(event){var button=event.target.closest&&event.target.closest('.qily-float-btn[data-action]');if(!button)return;runAction(button.getAttribute('data-action')||'',event);},true);
   }
   function recover(){

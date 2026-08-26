@@ -1,4 +1,4 @@
-name: Publish Sitewide Visual & Contact Closure V1
+name: Publish Sitewide Visual & Contact Closure V2
 
 on:
   push:
@@ -12,7 +12,9 @@ on:
       - 'site-early-career-history-v1.css'
       - 'site-core-service-dock-closure-v1.js'
       - 'site-contact-route-v1.js'
+      - 'assets/contact/wechat-contact-card.svg'
       - 'contact/index.html'
+      - 'lean-production/index.html'
       - '.github/workflows/publish-visual-regression-contact-v1.yml'
   workflow_dispatch:
 
@@ -56,6 +58,16 @@ jobs:
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
             node scripts/validate-seo-indexability.js
+            grep -q 'Site Shell Recovery + Contact Route V5' site-contact-route-v1.js
+            grep -q "w.open(CONTACT_URL,'_blank')" site-contact-route-v1.js
+            grep -q 'data-qily-contact-route=.new-window-v5.' site-contact-route-v1.js
+            grep -q 'QilyLean Sitewide Visual Regression Closure V2' site-visual-regression-closure-v1.css
+            grep -q 'background:var(--qily-fix-alt)!important' site-visual-regression-closure-v1.css
+            grep -q 'width="888" height="1131"' assets/contact/wechat-contact-card.svg
+            grep -q '东方猎手微信二维码' assets/contact/wechat-contact-card.svg
+            grep -q '20260826-official-restored-v2' contact/index.html
+            grep -q 'data-qily-contact-route-direct="v5"' contact/index.html
+            grep -q '20260826-screenshot-closure-v2' contact/index.html
             git diff --check
             if git diff --quiet; then
               echo 'Sitewide visual/contact baseline already current on latest main.'

@@ -1,14 +1,18 @@
-/* QilyLean Sitewide Visual Regression Closure V1｜2026-08-26
+/* QilyLean Sitewide Visual Regression Closure V2｜2026-08-26
  * Last stylesheet in the public baseline. It closes screenshot-confirmed cascade regressions without
- * flattening intentional page hierarchy: light chips stay dark-on-light, dark sections stay light-on-dark,
+ * flattening intentional page hierarchy: light chips stay dark-on-light, legacy content-level dark
+ * classes normalize to the standard light surface, explicit semantic dark surfaces stay dark,
  * and career year ranges receive sufficient width.
  */
 :root{
   --qily-fix-forest:#0f4b5a;
   --qily-fix-ink:#17322d;
+  --qily-fix-muted:#607574;
+  --qily-fix-plum:#9e4a34;
   --qily-fix-gold:#caa15f;
   --qily-fix-gold-soft:#ffe39b;
   --qily-fix-dark:#102a2f;
+  --qily-fix-alt:#f4faf8;
   --qily-fix-light:#fff;
   --qily-fix-line:#bfd7d4;
 }
@@ -63,18 +67,57 @@ html body :is(
   }
 }
 
-/* B｜Semantic dark sections: titles/body/callout cards use deterministic high contrast. */
-html body main :is(
-  .section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg,
-  .qily-dark-band,[data-qily-dark-band="true"],[data-qily-dark-surface="true"],[data-theme="dark"]
-){
+/* B1｜Content-level dark classes are legacy visual outliers: normalize to the site light/alt surface. */
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg){
+  color:var(--qily-fix-ink)!important;
+  background:var(--qily-fix-alt)!important;
+  background-color:var(--qily-fix-alt)!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg)
+:is(h1,h2,h3,h4,h5,h6,strong,b){
+  color:var(--qily-fix-forest)!important;
+  -webkit-text-fill-color:var(--qily-fix-forest)!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg)
+:is(p,li,span,em,dt,dd){
+  color:var(--qily-fix-ink)!important;
+  -webkit-text-fill-color:var(--qily-fix-ink)!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg)
+:is(.eyebrow,.module-eyebrow,.kicker,.section-kicker,.qily-ia-kicker,.meta,.fine){
+  color:var(--qily-fix-plum)!important;
+  -webkit-text-fill-color:var(--qily-fix-plum)!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle{
+  color:var(--qily-fix-ink)!important;
+  background:#fff!important;
+  border-left-color:var(--qily-fix-gold)!important;
+  box-shadow:0 10px 28px rgba(15,75,90,.10)!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle strong{
+  color:var(--qily-fix-forest)!important;
+  -webkit-text-fill-color:var(--qily-fix-forest)!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle span{
+  color:var(--qily-fix-muted)!important;
+  -webkit-text-fill-color:var(--qily-fix-muted)!important;
+}
+
+/* B2｜Only explicit semantic dark surfaces remain dark. */
+html body main :is(.qily-dark-band,[data-qily-dark-band="true"],[data-qily-dark-surface="true"],[data-theme="dark"]){
   color:#fff!important;
   background-color:var(--qily-fix-dark)!important;
 }
-html body main :is(
-  .section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg,
-  .qily-dark-band,[data-qily-dark-band="true"],[data-qily-dark-surface="true"],[data-theme="dark"]
-) :is(h1,h2,h3,h4,h5,h6,p,li,span,strong,b,em,small,dt,dd){
+html body main :is(.qily-dark-band,[data-qily-dark-band="true"],[data-qily-dark-surface="true"],[data-theme="dark"])
+:is(h1,h2,h3,h4,h5,h6,p,li,span,strong,b,em,small,dt,dd){
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
   opacity:1!important;
@@ -82,25 +125,10 @@ html body main :is(
   mix-blend-mode:normal!important;
   text-shadow:none!important;
 }
-html body main :is(
-  .section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg,
-  .qily-dark-band,[data-qily-dark-band="true"],[data-qily-dark-surface="true"],[data-theme="dark"]
-) :is(.eyebrow,.module-eyebrow,.kicker,.section-kicker,.qily-ia-kicker,.meta,.fine){
+html body main :is(.qily-dark-band,[data-qily-dark-band="true"],[data-qily-dark-surface="true"],[data-theme="dark"])
+:is(.eyebrow,.module-eyebrow,.kicker,.section-kicker,.qily-ia-kicker,.meta,.fine){
   color:var(--qily-fix-gold-soft)!important;
   -webkit-text-fill-color:var(--qily-fix-gold-soft)!important;
-}
-html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle{
-  color:#fff!important;
-  background:#18373d!important;
-  border-left-color:var(--qily-fix-gold)!important;
-}
-html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle strong{
-  color:var(--qily-fix-gold-soft)!important;
-  -webkit-text-fill-color:var(--qily-fix-gold-soft)!important;
-}
-html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle span{
-  color:#d8e7e3!important;
-  -webkit-text-fill-color:#d8e7e3!important;
 }
 
 /* C｜An explicit local light surface always wins inside a dark parent. */

@@ -1,20 +1,21 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V11｜2026-08-26
- * Stability recovery release:
+/* QilyLean Sitewide Public Baseline Materializer V12｜2026-08-26
+ * Stability + contact + visual closure release:
  * - Chinese remains the authoritative source.
  * - Translation assets remain deferred.
- * - legacy first-paint forced refresh/body hiding is replaced by an instant non-blocking reveal guard.
- * - six-action Dock and direct /contact/ route are restored without MutationObserver loops.
- * - static tail-gap/Dock recovery CSS loads before runtime JS.
+ * - legacy first-paint forced refresh/body hiding stays replaced by an instant non-blocking reveal guard.
+ * - six-action Dock keeps a single contact runtime; contact opens /contact/ as an independent page.
+ * - official high-resolution WeChat card is cache-busted from one authoritative asset.
+ * - final visual regression closure normalizes legacy content-level dark surfaces sitewide.
  */
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
-const BASELINE_VERSION='20260826-site-recovery-v11';
+const BASELINE_VERSION='20260826-site-recovery-v12';
 const SAFE_VERSION='20260826-translation-fast-reliable-v3';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3';
 const NAVIGATION='/site-navigation.js?v=20260826-search-navigation-contrast-v44';
@@ -33,9 +34,10 @@ const INTERACTION_CONTRAST_JS='/site-interaction-contrast-guard-v1.js?v=20260825
 const CONTENT_CONTRAST_CSS='/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6';
 const CONTENT_CONTRAST_JS='/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6';
 const UNIFIED_VISUAL_CSS='/site-unified-visual-governance-v1.css?v=20260826-contrast-closure-v2';
-const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-screenshot-closure-v1';
+const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-screenshot-closure-v2';
 const STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260826-stability-recovery-v1';
-const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260826-site-shell-recovery-v4';
+const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260826-site-shell-recovery-v5';
+const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
 
 function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean)}
 function removeScriptByMarker(source){return source.replace(/\s*<script\b[^>]*(?:data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct|data-qily-interaction-contrast-direct|data-qily-content-contrast-direct|data-qily-translation-safe-direct|data-qily-contact-route-direct|data-qily-translation-safety-bootstrap)[^>]*>[\s\S]*?<\/script>\s*/gi,'\n')}
@@ -43,7 +45,7 @@ function removeLegacyManagedScripts(source){let next=source;next=next.replace(/\
 function removeManagedStyles(source){const patterns=[/\s*<link\b[^>]*href=["'][^"']*\/site-global-language-v1\.css[^"']*["'][^>]*>\s*/gi,/\s*<link\b[^>]*href=["'][^"']*\/site-header-axis-v1\.css[^"']*["'][^>]*>\s*/gi,/\s*<link\b[^>]*href=["'][^"']*\/site-translation-progress-v1\.css[^"']*["'][^>]*>\s*/gi,/\s*<link\b[^>]*href=["'][^"']*\/site-translation-public-ui-v1\.css[^"']*["'][^>]*>\s*/gi,/\s*<link\b[^>]*href=["'][^"']*\/site-interaction-contrast-guard-v1\.css[^"']*["'][^>]*>\s*/gi,/\s*<link\b[^>]*href=["'][^"']*\/site-content-contrast-guard-v1\.css[^"']*["'][^>]*>\s*/gi,/\s*<link\b[^>]*href=["'][^"']*\/site-unified-visual-governance-v1\.css[^"']*["'][^>]*>\s*/gi,/\s*<link\b[^>]*href=["'][^"']*\/site-visual-regression-closure-v1\.css[^"']*["'][^>]*>\s*/gi,/\s*<link\b[^>]*href=["'][^"']*\/site-stability-recovery-v1\.css[^"']*["'][^>]*>\s*/gi];let next=source;for(const pattern of patterns)next=next.replace(pattern,'\n');return next}
 
 function neutralizeFirstPaint(source){
-  const safe='<!-- QILY-R2-FIRST-PAINT:START -->\n<style id="qilyR2CriticalFirstPaintGuard">html.qily-stale-document body{visibility:visible!important}</style><script data-qily-r2-first-paint>(function(d){var e=d.documentElement;e.classList.remove("qily-stale-document","qily-shell-pending","qily-r2-first-paint-pending","qily-first-paint-pending");try{localStorage.setItem("qily_site_html_build_v2","20260826-site-recovery-v11");sessionStorage.removeItem("qily_site_refresh_attempt_v1")}catch(error){}})(document);</script>\n<!-- QILY-R2-FIRST-PAINT:END -->';
+  const safe='<!-- QILY-R2-FIRST-PAINT:START -->\n<style id="qilyR2CriticalFirstPaintGuard">html.qily-stale-document body{visibility:visible!important}</style><script data-qily-r2-first-paint>(function(d){var e=d.documentElement;e.classList.remove("qily-stale-document","qily-shell-pending","qily-r2-first-paint-pending","qily-first-paint-pending");try{localStorage.setItem("qily_site_html_build_v2","20260826-site-recovery-v12");sessionStorage.removeItem("qily_site_refresh_attempt_v1")}catch(error){}})(document);</script>\n<!-- QILY-R2-FIRST-PAINT:END -->';
   if(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/i.test(source))return source.replace(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/gi,safe);
   return source;
 }
@@ -56,6 +58,7 @@ function materialize(source){
   next=next.replace(/\/site-parent-navigation-v3\.js(?:\?v=[^"']*)?/g,PARENT_NAV);
   next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK_SHARE);
   next=next.replace(/\/site-core-service-dock-closure-v1\.js(?:\?v=[^"']*)?/g,CORE_SERVICE_DOCK);
+  next=next.replace(/\/assets\/contact\/wechat-contact-card\.svg(?:\?v=[^"']*)?/g,WECHAT_CONTACT_ASSET);
   next=removeScriptByMarker(next);next=removeLegacyManagedScripts(next);next=removeManagedStyles(next);
   const tags=[
     '<script data-qily-translation-safety-bootstrap="inpage-v2">window.__qilyGlobalTranslationDualRouteV2=true;window.__qilyGoogleTranslateOnDemandV1=true;window.__qilyGlobalLanguageV31=true;window.__qilyGlobalLanguageV3=true;window.__qilyGlobalLanguageV2=true;window.__qilyGlobalLanguageV1=true;</script>',
@@ -73,7 +76,7 @@ function materialize(source){
     `<script defer data-qily-translation-progress-direct="bilingual-v2" src="${PROGRESS_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
     `<script defer data-qily-content-contrast-direct="v6" src="${CONTENT_CONTRAST_JS}"></script>`,
-    `<script defer data-qily-contact-route-direct="v4" src="${CONTACT_ROUTE_JS}"></script>`
+    `<script defer data-qily-contact-route-direct="v5" src="${CONTACT_ROUTE_JS}"></script>`
   ].join('\n');
   if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);
   return next;
