@@ -5,12 +5,18 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.qilylean.com'
 ]);
 
-const TRANSLATION_CACHE_VERSION = 'v1';
+const TRANSLATION_CACHE_VERSION = 'v2';
+const PROTECTED_TRANSLATION_TOKENS = [
+  'QilyLean｜启力精益', 'IATF 16949', 'Times26001', '启力精益', 'QilyLean', 'C919',
+  'UPPH', 'DPPM', 'COPQ', 'SMED', 'ECRS', 'PQCD', '5W2H', 'VSM', 'OEE', 'ERP', 'APS',
+  'MES', 'SOP', 'KPI', 'WIP', 'FPY', 'NPI', 'IE', 'PE', 'ME', 'CT', 'TT', '6S', '7S'
+];
+const PROTECTED_TRANSLATION_SET = new Set(PROTECTED_TRANSLATION_TOKENS);
 const TRANSLATION_SYSTEM_INSTRUCTIONS = `You are the QilyLean website translation engine.
 Translate every supplied source string faithfully into the requested target language/locale.
 Return ONLY a JSON array of translated strings, in exactly the same order and with exactly the same number of items as the input array.
 Do not add explanations, markdown, labels or commentary.
-Preserve the following brand/product/engineering tokens exactly when they occur: QilyLean, QilyLean｜启力精益, 启力精益, Times26001, C919, IE, PE, ME, NPI, VSM, SMED, ECRS, OEE, UPPH, CT, TT, WIP, FPY, DPPM, COPQ, ERP, APS, MES, SOP, KPI, PQCD, IATF 16949, 5W2H, 6S, 7S.
+Preserve placeholder tokens matching __QILY_TOKEN_*__ exactly, character-for-character.
 Preserve URLs, email addresses, phone numbers, model numbers, file paths, units, numeric values, arrows and punctuation structure. Translate normal explanatory words around protected tokens naturally and professionally for manufacturing/industrial-engineering readers.`;
 
 function cors(origin) {
@@ -78,136 +84,108 @@ function publicSummary(summary) {
     brief_date: summary.brief_date || '',
     brief_title: summary.brief_title || '',
     brief_url: summary.brief_url || '',
-    rating_average: ratingCount ? Math.round((ratingSum / ratingCount) * 10) / 10 : 0,
+    rating_average: ratingCount > 0 ? Number((ratingSum / ratingCount).toFixed(2)) : 0,
     rating_count: ratingCount,
     five_star_count: fiveStarCount,
     likes,
     dislikes,
     comments,
-    interaction_count: ratingCount + likes + dislikes + comments,
     updated_at: summary.updated_at || ''
   };
 }
 
-async function readNumber(kv, key) {
-  if (!kv) return 0;
-  return Number((await kv.get(key)) || 0);
+async function getBriefSummary(env, date) {
+  if (!env.QILY_STATS) return publicSummary(emptySummary(date));
+  const raw = await env.QILY_STATS.get(`brief:${date}`, 'json');
+  return publicSummary(raw || emptySummary(date));
 }
 
-async function increment(kv, key, ttl) {
-  if (!kv) return 0;
-  const next = (await readNumber(kv, key)) + 1;
-  await kv.put(key, String(next), ttl ? { expirationTtl: ttl } : undefined);
+async function putBriefSummary(env, date, summary) {
+  if (!env.QILY_STATS) return false;
+  await env.QILY_STATS.put(`brief:${date}`, JSON.stringify(summary));
+  return true;
+}
+
+async function readNumber(store, key) {
+  const raw = await store.get(key);
+  const value = Number(raw || 0);
+  return Number.isFinite(value) ? value : 0;
+}
+
+async function increment(store, key, ttl) {
+  const next = (await readNumber(store, key)) + 1;
+  await store.put(key, String(next), ttl ? { expirationTtl: ttl } : undefined);
   return next;
 }
 
-async function getSummary(env, briefDate) {
-  if (!env.QILY_STATS) return emptySummary(briefDate);
-  return (await env.QILY_STATS.get(`brief-feedback:summary:${briefDate}`, 'json')) || emptySummary(briefDate);
-}
+async function recordBriefFeedback(payload, request, env) {
+  const date = normalizeBriefDate(payload.brief_date);
+  if (!date) return { error: 'Invalid brief_date', status: 400 };
+  const type = clean(payload.type, 20);
+  if (!['rating', 'like', 'dislike', 'comment'].includes(type)) return { error: 'Invalid feedback type', status: 400 };
+  if (!env.QILY_STATS) return { error: 'Feedback storage is not configured', status: 503 };
+  const summaryKey = `brief:${date}`;
+  const existing = await env.QILY_STATS.get(summaryKey, 'json');
+  const summary = existing || emptySummary(date, clean(payload.brief_title, 180), clean(payload.brief_url, 500));
+  summary.brief_title = summary.brief_title || clean(payload.brief_title, 180);
+  summary.brief_url = summary.brief_url || clean(payload.brief_url, 500);
+  summary.updated_at = new Date().toISOString();
+  const visitor = clientId(request);
 
-async function voterKey(request, briefDate, action, clientToken) {
-  const raw = `${clientId(request)}|${briefDate}|${action}|${clientToken}`;
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
-  const hash = Array.from(new Uint8Array(digest)).map((value) => value.toString(16).padStart(2, '0')).join('');
-  return `brief-feedback-voter:${briefDate}:${action}:${hash}`;
-}
-
-async function checkFeedbackRateLimit(request, env) {
-  const limit = Math.max(1, Number(env.BRIEF_FEEDBACK_DAILY_IP_LIMIT || 30));
-  if (!env.QILY_STATS) return { allowed: false, limit, storage: false };
-  const key = `brief-feedback-limit:${todayUTC()}:${clientId(request)}`;
-  const used = await readNumber(env.QILY_STATS, key);
-  if (used >= limit) return { allowed: false, limit, storage: true };
-  await increment(env.QILY_STATS, key, 60 * 60 * 48);
-  return { allowed: true, limit, storage: true };
-}
-
-async function saveVote(payload, request, env) {
-  if (!env.QILY_STATS) return { error: 'Brief feedback storage is not configured', status: 503 };
-  const briefDate = normalizeBriefDate(payload.brief_date);
-  const briefTitle = clean(payload.brief_title, 220);
-  const briefUrl = clean(payload.brief_url, 300);
-  const action = clean(payload.action, 20);
-  const clientToken = clean(payload.client_token, 120);
-  if (!briefDate || !briefTitle || !briefUrl) return { error: 'Brief source is incomplete', status: 400 };
-  if (!['rating', 'sentiment'].includes(action)) return { error: 'Unsupported feedback action', status: 400 };
-  if (clientToken.length < 8) return { error: 'Feedback client token is invalid', status: 400 };
-
-  let value;
-  if (action === 'rating') {
-    value = Number(payload.value);
-    if (!Number.isInteger(value) || value < 1 || value > 5) return { error: 'Rating must be from 1 to 5', status: 400 };
-  } else {
-    value = clean(payload.value, 10);
-    if (!['good', 'bad'].includes(value)) return { error: 'Sentiment must be good or bad', status: 400 };
-  }
-
-  const rate = await checkFeedbackRateLimit(request, env);
-  if (!rate.allowed) {
-    return {
-      error: rate.storage ? 'Brief feedback submission limit reached' : 'Brief feedback storage is not configured',
-      status: rate.storage ? 429 : 503
-    };
-  }
-
-  const key = await voterKey(request, briefDate, action, clientToken);
-  const existing = await env.QILY_STATS.get(key);
-  if (existing) return { duplicate: true, summary: publicSummary(await getSummary(env, briefDate)) };
-
-  const summary = await getSummary(env, briefDate);
-  summary.brief_date = briefDate;
-  summary.brief_title = briefTitle;
-  summary.brief_url = briefUrl;
-  if (action === 'rating') {
-    summary.rating_sum = Number(summary.rating_sum || 0) + value;
+  if (type === 'rating') {
+    const rating = Number(payload.rating);
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) return { error: 'Rating must be 1 to 5', status: 400 };
+    const onceKey = `brief-rating:${date}:${visitor}`;
+    if (await env.QILY_STATS.get(onceKey)) return { error: 'Already rated', status: 409 };
+    summary.rating_sum = Number(summary.rating_sum || 0) + rating;
     summary.rating_count = Number(summary.rating_count || 0) + 1;
-    if (value === 5) summary.five_star_count = Number(summary.five_star_count || 0) + 1;
-  } else if (value === 'good') {
-    summary.likes = Number(summary.likes || 0) + 1;
+    if (rating === 5) summary.five_star_count = Number(summary.five_star_count || 0) + 1;
+    await env.QILY_STATS.put(onceKey, String(rating), { expirationTtl: 60 * 60 * 24 * 180 });
+  } else if (type === 'like' || type === 'dislike') {
+    const onceKey = `brief-vote:${date}:${visitor}`;
+    if (await env.QILY_STATS.get(onceKey)) return { error: 'Already voted', status: 409 };
+    summary[type === 'like' ? 'likes' : 'dislikes'] = Number(summary[type === 'like' ? 'likes' : 'dislikes'] || 0) + 1;
+    await env.QILY_STATS.put(onceKey, type, { expirationTtl: 60 * 60 * 24 * 180 });
   } else {
-    summary.dislikes = Number(summary.dislikes || 0) + 1;
+    const comment = clean(payload.comment, 1000);
+    if (!comment) return { error: 'Comment is required', status: 400 };
+    const rateKey = `brief-comment-limit:${todayUTC()}:${visitor}`;
+    const used = await readNumber(env.QILY_STATS, rateKey);
+    if (used >= 5) return { error: 'Daily comment limit reached', status: 429 };
+    await increment(env.QILY_STATS, rateKey, 60 * 60 * 48);
+    const commentId = `${date}:${Date.now()}:${crypto.randomUUID()}`;
+    await env.QILY_STATS.put(`brief-comment:${commentId}`, JSON.stringify({
+      id: commentId,
+      brief_date: date,
+      brief_title: summary.brief_title,
+      brief_url: summary.brief_url,
+      comment,
+      name: clean(payload.name, 80),
+      email: clean(payload.email, 160),
+      created_at: new Date().toISOString(),
+      user_agent: clean(request.headers.get('User-Agent'), 260)
+    }));
+    summary.comments = Number(summary.comments || 0) + 1;
   }
-  summary.updated_at = new Date().toISOString();
-  await Promise.all([
-    env.QILY_STATS.put(`brief-feedback:summary:${briefDate}`, JSON.stringify(summary)),
-    env.QILY_STATS.put(key, String(value), { expirationTtl: 60 * 60 * 24 * 400 })
-  ]);
-  return { duplicate: false, summary: publicSummary(summary) };
+
+  await putBriefSummary(env, date, summary);
+  return { summary: publicSummary(summary), status: 200 };
 }
 
-function briefDateFromComment(payload) {
-  const source = `${payload.source_brief || ''} ${payload.timing || ''} ${payload.source_page || ''}`;
-  const match = source.match(/\d{4}-\d{2}-\d{2}/);
-  return match ? normalizeBriefDate(match[0]) : '';
-}
-
-async function recordComment(payload, env) {
-  if (!env.QILY_STATS) return null;
-  const briefDate = briefDateFromComment(payload);
-  if (!briefDate) return null;
-  const summary = await getSummary(env, briefDate);
-  const sourceBrief = clean(payload.source_brief, 300);
-  const derivedTitle = clean(sourceBrief.replace(briefDate, '').replace(/^[\s｜|·:：-]+/, ''), 220);
-  summary.brief_date = briefDate;
-  if (derivedTitle) summary.brief_title = derivedTitle;
-  if (payload.source_page) summary.brief_url = clean(payload.source_page, 300);
-  summary.comments = Number(summary.comments || 0) + 1;
-  summary.updated_at = new Date().toISOString();
-  await env.QILY_STATS.put(`brief-feedback:summary:${briefDate}`, JSON.stringify(summary));
-  return publicSummary(summary);
-}
-
-async function listFeedback(env, limit) {
-  if (!env.QILY_STATS) return [];
-  const listed = await env.QILY_STATS.list({
-    prefix: 'brief-feedback:summary:',
-    limit: Math.min(Math.max(limit || 100, 1), 1000)
-  });
-  const values = await Promise.all(listed.keys.map((item) => env.QILY_STATS.get(item.name, 'json')));
-  return values.filter(Boolean).map(publicSummary).sort((a, b) => {
-    return b.interaction_count - a.interaction_count || String(b.updated_at).localeCompare(String(a.updated_at));
-  });
+async function listBriefFeedback(request, env) {
+  if (!env.QILY_STATS) return { error: 'Feedback storage is not configured', status: 503 };
+  if (!isAdmin(request, env)) return { error: 'Unauthorized', status: 401 };
+  const url = new URL(request.url);
+  const date = normalizeBriefDate(url.searchParams.get('brief') || '');
+  const prefix = date ? `brief-comment:${date}:` : 'brief-comment:';
+  const listed = await env.QILY_STATS.list({ prefix, limit: 100 });
+  const comments = [];
+  for (const key of listed.keys) {
+    const value = await env.QILY_STATS.get(key.name, 'json');
+    if (value) comments.push(value);
+  }
+  comments.sort((a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')));
+  return { comments, status: 200 };
 }
 
 function isAdmin(request, env) {
@@ -240,6 +218,27 @@ function parseTranslationArray(raw, expectedLength) {
     throw new Error('Translation response format is invalid');
   }
   return parsed;
+}
+
+function maskProtectedTranslationText(text, sourceIndex) {
+  let masked = text;
+  const replacements = [];
+  PROTECTED_TRANSLATION_TOKENS.forEach((token, tokenIndex) => {
+    if (!masked.includes(token)) return;
+    const placeholder = `__QILY_TOKEN_${sourceIndex}_${tokenIndex}__`;
+    masked = masked.split(token).join(placeholder);
+    replacements.push([placeholder, token]);
+  });
+  return { masked, replacements };
+}
+
+function restoreProtectedTranslationText(text, replacements) {
+  let restored = String(text || '');
+  for (const [placeholder, token] of replacements) {
+    if (!restored.includes(placeholder)) throw new Error('Protected translation placeholder changed');
+    restored = restored.split(placeholder).join(token);
+  }
+  return restored;
 }
 
 function extractOpenAIText(data) {
@@ -327,97 +326,98 @@ async function translateBatch(payload, request, env) {
   const totalChars = texts.reduce((sum, value) => sum + value.length, 0);
   if (totalChars > 8000) return { error: 'Translation batch is too large', status: 413 };
 
-  const provider = translationProvider(env);
-  if (!provider) return { error: 'Translation service is not configured', status: 503 };
-
   const cacheKey = await translationCacheKey(targetLanguage, texts);
   if (env.QILY_STATS) {
     const cached = await env.QILY_STATS.get(cacheKey, 'json');
     if (Array.isArray(cached) && cached.length === texts.length) {
-      return { translations: cached, cached: true, provider };
+      return { translations: cached, cached: true, provider: translationProvider(env) || 'cache' };
     }
   }
 
-  const rate = await checkTranslationRateLimit(request, env);
-  if (!rate.allowed) return { error: 'Daily translation limit reached', status: 429, limit: rate.limit };
-
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 55000);
-  try {
-    const translations = provider === 'qwen'
-      ? await callQwenTranslation(texts, targetLanguage, env, controller.signal)
-      : await callOpenAITranslation(texts, targetLanguage, env, controller.signal);
-    if (env.QILY_STATS) {
-      await env.QILY_STATS.put(cacheKey, JSON.stringify(translations), { expirationTtl: 60 * 60 * 24 * 90 });
-    }
-    return { translations, cached: false, provider, rate_limit: { used: rate.used, limit: rate.limit } };
-  } catch (error) {
-    const timedOut = error && error.name === 'AbortError';
-    return { error: timedOut ? 'Translation request timed out' : 'Translation service unavailable', status: timedOut ? 504 : 502 };
-  } finally {
-    clearTimeout(timeout);
+  const direct = texts.map((text) => PROTECTED_TRANSLATION_SET.has(text));
+  const prepared = texts.map((text, index) => direct[index] ? null : maskProtectedTranslationText(text, index));
+  const providerIndexes = [];
+  const providerTexts = [];
+  for (let index = 0; index < texts.length; index += 1) {
+    if (direct[index]) continue;
+    providerIndexes.push(index);
+    providerTexts.push(prepared[index].masked);
   }
+
+  const provider = translationProvider(env);
+  if (providerTexts.length && !provider) return { error: 'Translation service is not configured', status: 503 };
+  let translatedProvider = [];
+  let rate = { allowed: true, limit: Math.max(10, Number(env.TRANSLATE_DAILY_IP_LIMIT || 80)), used: 0, storage: Boolean(env.QILY_STATS) };
+
+  if (providerTexts.length) {
+    rate = await checkTranslationRateLimit(request, env);
+    if (!rate.allowed) return { error: 'Daily translation limit reached', status: 429, limit: rate.limit };
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 55000);
+    try {
+      translatedProvider = provider === 'qwen'
+        ? await callQwenTranslation(providerTexts, targetLanguage, env, controller.signal)
+        : await callOpenAITranslation(providerTexts, targetLanguage, env, controller.signal);
+    } catch (error) {
+      const timedOut = error && error.name === 'AbortError';
+      return { error: timedOut ? 'Translation request timed out' : 'Translation service unavailable', status: timedOut ? 504 : 502 };
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  const translations = texts.slice();
+  for (let i = 0; i < providerIndexes.length; i += 1) {
+    const sourceIndex = providerIndexes[i];
+    try {
+      translations[sourceIndex] = restoreProtectedTranslationText(translatedProvider[i], prepared[sourceIndex].replacements);
+    } catch {
+      return { error: 'Translation service unavailable', status: 502 };
+    }
+  }
+  if (env.QILY_STATS) {
+    await env.QILY_STATS.put(cacheKey, JSON.stringify(translations), { expirationTtl: 60 * 60 * 24 * 90 });
+  }
+  return { translations, cached: false, provider: provider || 'protected', rate_limit: { used: rate.used, limit: rate.limit } };
+}
+
+async function handleBriefFeedback(request, env) {
+  const origin = request.headers.get('Origin') || '';
+  if (request.method === 'GET') {
+    const date = normalizeBriefDate(new URL(request.url).searchParams.get('brief') || '');
+    if (!date) return json({ ok: false, error: 'Missing brief date' }, 400, origin);
+    return json({ ok: true, ...(await getBriefSummary(env, date)) }, 200, origin);
+  }
+  if (request.method !== 'POST') return json({ ok: false, error: 'Method Not Allowed' }, 405, origin);
+  const payload = await request.json().catch(() => ({}));
+  const result = await recordBriefFeedback(payload, request, env);
+  if (result.error) return json({ ok: false, error: result.error }, result.status, origin);
+  return json({ ok: true, ...result.summary }, 200, origin);
+}
+
+async function handleTranslation(request, env) {
+  const origin = request.headers.get('Origin') || '';
+  if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(origin) });
+  if (request.method !== 'POST') return json({ ok: false, error: 'Method Not Allowed' }, 405, origin);
+  const payload = await request.json().catch(() => ({}));
+  const result = await translateBatch(payload, request, env);
+  if (result.error) return json({ ok: false, error: result.error, limit: result.limit }, result.status, origin);
+  return json({ ok: true, ...result }, 200, origin);
 }
 
 export default {
   async fetch(request, env, ctx) {
-    const origin = request.headers.get('Origin') || '';
     const url = new URL(request.url);
-
     if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: cors(origin) });
+      return new Response(null, { status: 204, headers: cors(request.headers.get('Origin') || '') });
     }
-
-    if (request.method === 'POST' && url.pathname === '/translate') {
-      if (!ALLOWED_ORIGINS.has(origin)) return json({ error: 'Origin not allowed' }, 403, origin);
-      let payload;
-      try { payload = await request.json(); }
-      catch { return json({ error: 'Invalid JSON' }, 400, origin); }
-      const result = await translateBatch(payload, request, env);
-      if (result.error) return json({ error: result.error, limit: result.limit }, result.status || 400, origin);
-      return json({
-        ok: true,
-        target_language: clean(payload.target_language, 40),
-        translations: result.translations,
-        cached: result.cached,
-        provider: result.provider,
-        rate_limit: result.rate_limit || null
-      }, 200, origin);
+    if (url.pathname === '/brief-feedback') return handleBriefFeedback(request, env);
+    if (url.pathname === '/admin/brief-feedback') {
+      const result = await listBriefFeedback(request, env);
+      if (result.error) return json({ ok: false, error: result.error }, result.status, request.headers.get('Origin') || '');
+      return json({ ok: true, comments: result.comments }, 200, request.headers.get('Origin') || '');
     }
-
-    if (request.method === 'GET' && url.pathname === '/brief-feedback') {
-      const briefDate = normalizeBriefDate(url.searchParams.get('brief'));
-      if (!briefDate) return json({ error: 'Brief date is invalid' }, 400, origin);
-      return json(publicSummary(await getSummary(env, briefDate)), 200, origin);
-    }
-
-    if (request.method === 'POST' && url.pathname === '/brief-feedback') {
-      if (!ALLOWED_ORIGINS.has(origin)) return json({ error: 'Origin not allowed' }, 403, origin);
-      let payload;
-      try { payload = await request.json(); }
-      catch { return json({ error: 'Invalid JSON' }, 400, origin); }
-      const result = await saveVote(payload, request, env);
-      if (result.error) return json({ error: result.error }, result.status || 400, origin);
-      return json({ ok: true, duplicate: result.duplicate, summary: result.summary }, result.duplicate ? 200 : 201, origin);
-    }
-
-    if (request.method === 'GET' && url.pathname === '/admin/brief-feedback') {
-      if (!isAdmin(request, env)) return json({ error: 'Unauthorized' }, 401, origin);
-      const feedback = await listFeedback(env, Number(url.searchParams.get('limit') || 100));
-      return json({ ok: true, feedback }, 200, origin);
-    }
-
-    if (request.method === 'POST' && url.pathname === '/consultations') {
-      let payload = {};
-      try { payload = await request.clone().json(); } catch {}
-      const response = await baseWorker.fetch(request, env, ctx);
-      if (!response.ok || clean(payload.website, 120) || payload.industry !== '今日简报留言交流') return response;
-      const briefSummary = await recordComment(payload, env);
-      if (!briefSummary) return response;
-      const data = await response.clone().json().catch(() => ({}));
-      return json({ ...data, brief_summary: briefSummary }, response.status, origin);
-    }
-
+    if (url.pathname === '/translate') return handleTranslation(request, env);
     return baseWorker.fetch(request, env, ctx);
   }
 };
