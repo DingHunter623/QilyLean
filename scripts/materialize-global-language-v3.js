@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V9.1｜2026-08-26
+/* QilyLean Sitewide Public Baseline Materializer V9.2｜2026-08-26
  * Single public baseline: Chinese source + fast fail-closed in-page translation + public language UI +
- * header axis + interaction/content contrast + final visual regression closure + dedicated contact route.
+ * header axis + interaction/content contrast + final visual regression closure + dedicated contact page route.
  * Translation is deferred so it never blocks HTML parsing.
- * V9.1 removes any legacy unmarked contact-route script before inserting the single managed runtime.
+ * V9.2 publishes the contact-page semantic that permanently bypasses the legacy contact popup action.
  */
 const fs = require('fs');
 const path = require('path');
@@ -13,13 +13,13 @@ const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const BASELINE_VERSION = '20260826-contrast-contact-closure-v3';
+const BASELINE_VERSION = '20260826-contact-page-route-v4';
 const SAFE_VERSION = '20260826-translation-fast-reliable-v3';
 const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3';
 const NAVIGATION = '/site-navigation.js?v=20260826-search-navigation-contrast-v44';
 const PARENT_NAV = '/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE = '/site-dock-share-runtime-v1.js?v=20260825-language-runtime-compat-v31';
-const CORE_SERVICE_DOCK = '/site-core-service-dock-closure-v1.js?v=20260826-contact-route-v102';
+const CORE_SERVICE_DOCK = '/site-core-service-dock-closure-v1.js?v=20260826-contact-page-v103';
 const LANGUAGE_CSS = '/site-global-language-v1.css?v=20260825-public-translation-shell-v1';
 const SAFE_RUNTIME = `/site-translation-safe-runtime-v1.js?v=${SAFE_VERSION}`;
 const HEADER_AXIS = '/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3';
@@ -33,7 +33,7 @@ const CONTENT_CONTRAST_CSS = '/site-content-contrast-guard-v1.css?v=20260826-sit
 const CONTENT_CONTRAST_JS = '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v7';
 const UNIFIED_VISUAL_CSS = '/site-unified-visual-governance-v1.css?v=20260826-contrast-closure-v2';
 const REGRESSION_CLOSURE_CSS = '/site-visual-regression-closure-v1.css?v=20260826-screenshot-closure-v1';
-const CONTACT_ROUTE_JS = '/site-contact-route-v1.js?v=20260826-contact-page-v1';
+const CONTACT_ROUTE_JS = '/site-contact-route-v1.js?v=20260826-contact-page-v2';
 
 function trackedHtml() {
   return execFileSync('git', ['ls-files', '*.html'], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
@@ -91,7 +91,7 @@ function materialize(source) {
     `<script defer data-qily-translation-progress-direct="bilingual-v2" src="${PROGRESS_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
     `<script defer data-qily-content-contrast-direct="v7" src="${CONTENT_CONTRAST_JS}"></script>`,
-    `<script defer data-qily-contact-route-direct="v1" src="${CONTACT_ROUTE_JS}"></script>`
+    `<script defer data-qily-contact-route-direct="v2" src="${CONTACT_ROUTE_JS}"></script>`
   ].join('\n');
   if (/<\/head>/i.test(next)) next = next.replace(/<\/head>/i, `${tags}\n</head>`);
   return next;
