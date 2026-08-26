@@ -42,16 +42,22 @@ assert(publicCss.includes('max-width:420px!important'),'Long selected-language a
 assert(publicCss.includes('overflow-x:auto!important'),'Translated navigation cannot scroll horizontally');
 assert(publicCss.includes('height:10px!important'),'Horizontal movement bar is not explicit');
 
-/* 4) Interactive and non-interactive readability must both be governed. */
+/* 4) Search opening and static-content readability must be governed sitewide. */
 const interaction=read('site-interaction-contrast-guard-v1.js');
 const content=read('site-content-contrast-guard-v1.js');
+const search=read('site-search.js');
+const integrity=read('site-integrity-hotfix-v1.js');
 assert(interaction.includes("setAttribute('data-qily-interaction-contrast'"),'Interactive contrast guard missing');
 assert(interaction.includes('if(current>=4.5)'),'Interactive contrast threshold guard missing');
 assert(content.includes('data-qily-content-contrast-fixed'),'Content contrast guard missing');
 assert(content.includes('?3:4.5'),'Content contrast threshold guard missing');
-assert(content.includes('function hasVisualBackground(el)'),'Gradient/image surface ownership guard missing');
-assert(content.includes("style.backgroundImage&&style.backgroundImage!=='none'"),'Gradient/image background detection missing');
+assert(content.includes('function hasOpaqueLocalSurface(style,el)'),'Nested local-surface ownership guard missing');
+assert(content.includes("data-qily-light-surface"),'Light-surface semantic guard missing');
 assert(content.includes('.document-hero'),'Document hero is not protected by the shared dark-surface registry');
+assert(search.includes("mask.dataset.qilyR6PostRank = 'true'"),'Search modal still allows retired mutation post-ranker');
+assert(search.includes("results.addEventListener('click'"),'Search results have no deterministic click navigation');
+assert(search.includes('window.__qilyPersistentNavigate'),'Search result native/persistent navigation bridge missing');
+assert(integrity.includes("if (liveNote && liveNote !== staticNote) liveNote.remove()"),'Duplicate terminology metadata strip is not removed');
 const gbt=read('qilylean/gbt2828.html');
 assert(gbt.includes('.reference-button'),'GB/T 2828 reference button source missing');
 assert(gbt.includes('color:#fff'),'GB/T 2828 reference button does not define white text');
@@ -66,10 +72,11 @@ for(const relative of trackedHtml()){
   assert(html.includes('/site-translation-safe-runtime-v1.js?v=20260825-translation-safe-inpage-v2'),`${relative}: safe runtime missing`);
   assert(html.includes('/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6'),`${relative}: public language UI missing`);
   assert(html.includes('/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2'),`${relative}: interaction contrast missing`);
-  assert(html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v4'),`${relative}: content contrast v4 missing`);
-  assert(html.includes('data-qily-content-contrast-direct="v4"'),`${relative}: content contrast v4 marker missing`);
+  assert(html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5'),`${relative}: content contrast v5 missing`);
+  assert(html.includes('data-qily-content-contrast-direct="v5"'),`${relative}: content contrast v5 marker missing`);
+  assert(html.includes('/site-navigation.js?v=20260826-search-navigation-contrast-v44'),`${relative}: fresh site navigation/search runtime missing`);
   assert(!html.includes('/site-global-language-v3.js'),`${relative}: retired translator still referenced`);
   assert(!html.includes('智能路由'),`${relative}: visitor-facing 智能路由 remains`);
 }
 assert(pages>=460,`Unexpected public HTML coverage: ${pages}`);
-process.stdout.write(`PASS: all reported 2026-08-25 issues plus 2026-08-26 gradient/image readability are codified across ${pages} public HTML pages.\n`);
+process.stdout.write(`PASS: all reported 2026-08-25 issues plus 2026-08-26 search navigation, single terminology metadata and nested light-surface readability are codified across ${pages} public HTML pages.\n`);
