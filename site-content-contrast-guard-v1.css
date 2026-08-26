@@ -1,7 +1,16 @@
-/* QilyLean Sitewide Content Contrast Guard V3｜2026-08-26
+/* QilyLean Sitewide Content Contrast Guard V6｜2026-08-26
  * Global readability ownership: dark surfaces use light foregrounds; light surfaces use dark foregrounds.
- * This layer intentionally overrides generic typography rules that can otherwise create dark-on-dark or pale-on-pale text.
+ * V6: table/header bands and other structural dark surfaces receive deterministic light text;
+ * this layer intentionally overrides generic typography rules that can otherwise create dark-on-dark or pale-on-pale text.
  */
+:root{
+  --ql-dark-title:#fff;
+  --ql-dark-body:#e4f1ee;
+  --ql-dark-muted:#d3e5e1;
+  --ql-deep:#073c47;
+  --ql-gold:#caa15f;
+  --ql-light-gold:#ffe39b;
+}
 html body [data-qily-content-contrast-fixed="dark"]{
   color:#173f49!important;
   -webkit-text-fill-color:#173f49!important;
@@ -9,6 +18,26 @@ html body [data-qily-content-contrast-fixed="dark"]{
 html body [data-qily-content-contrast-fixed="light"]{
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
+}
+
+/* Structural dark bands: deterministic fallback before runtime measurement.
+ * The shared .rule-table family is authored with a deep teal header on every current public page.
+ * Explicit semantic hooks cover future table/title-band components without page-specific patches.
+ */
+html body main .rule-table thead :is(th,td),
+html body main .career-table thead :is(th,td),
+html body main :is(.qily-table-dark,.table-dark,[data-qily-table-theme="dark"]) thead :is(th,td),
+html body main :is(.qily-dark-band,[data-qily-dark-band="true"]) :is(h1,h2,h3,h4,h5,h6,p,li,span,strong,b,small,label,th,td){
+  color:var(--ql-dark-title)!important;
+  -webkit-text-fill-color:var(--ql-dark-title)!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+html body main :is(.qily-dark-band,[data-qily-dark-band="true"]) :is(.eyebrow,.kicker,.section-kicker,.meta,.fine,small){
+  color:var(--ql-light-gold)!important;
+  -webkit-text-fill-color:var(--ql-light-gold)!important;
 }
 
 /* Light information surfaces: always readable, including cards nested inside dark heroes. */
