@@ -1,9 +1,19 @@
-/* QilyLean Translation Public UI V1｜2026-08-25
+/* QilyLean Translation Public UI V1｜2026-08-27
  * Visitor-facing translation control + explicit horizontal navigation scrollbar.
  * Principle: never clip a navigation item or selected language just to preserve one-line desktop fit.
- * Mobile recovery: final cascade must never collapse the primary navigation row or block finger scrolling.
+ * Primary navigation is a global component: labels, typography, color and active-state geometry are identical on every module.
+ * Mobile recovery: final cascade must never collapse the primary navigation row, block finger scrolling, or shrink the primary-navigation type scale.
  * Retired historical cap reference only: max-width:280px!important
  */
+
+:root{
+  --qily-primary-nav-font-size:20px;
+  --qily-primary-nav-font-weight:900;
+  --qily-primary-nav-color:#182420;
+  --qily-primary-nav-active:#0f4b5a;
+  --qily-primary-nav-active-text:#fff;
+  --qily-primary-nav-active-border:#ffe39b;
+}
 
 /* Public control shows only visitor-facing language choices; implementation details stay hidden. */
 html body .qily-web-translate__badge,
@@ -36,6 +46,52 @@ html body .qily-web-translate__select option{
   word-break:keep-all!important;
 }
 
+/* Final owner of the sitewide primary-navigation visual contract.
+ * No page/module may redefine the first-level navigation type scale or colors.
+ */
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
+html body header.topbar nav.nav>a[href],
+html body header.top nav.nav>a[href]{
+  display:inline-flex!important;
+  flex:0 0 auto!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:42px!important;
+  padding:8px 11px!important;
+  border:1px solid transparent!important;
+  border-radius:10px!important;
+  color:var(--qily-primary-nav-color)!important;
+  -webkit-text-fill-color:var(--qily-primary-nav-color)!important;
+  background:transparent!important;
+  font-size:var(--qily-primary-nav-font-size)!important;
+  font-weight:var(--qily-primary-nav-font-weight)!important;
+  line-height:1.22!important;
+  text-decoration:none!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+}
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:hover,
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:focus-visible,
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:hover,
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:focus-visible{
+  color:var(--qily-primary-nav-active-text)!important;
+  -webkit-text-fill-color:var(--qily-primary-nav-active-text)!important;
+  background:var(--qily-primary-nav-active)!important;
+  border-color:var(--qily-primary-nav-active)!important;
+}
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"],
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"]{
+  color:var(--qily-primary-nav-active-text)!important;
+  -webkit-text-fill-color:var(--qily-primary-nav-active-text)!important;
+  background:var(--qily-primary-nav-active)!important;
+  border-color:var(--qily-primary-nav-active-border)!important;
+  font-size:var(--qily-primary-nav-font-size)!important;
+  font-weight:var(--qily-primary-nav-font-weight)!important;
+  line-height:1.22!important;
+}
+
 /* Navigation overflow is expected after translation: Logo fixed, navigation labels intact, movement bar visible. */
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav),
 html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav){
@@ -64,7 +120,7 @@ html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav
 
 /* Phone/tablet final-cascade recovery.
  * This file is materialized after the header-axis layer, so it explicitly preserves the
- * mobile flex reset and a real touch target even if older visual bundles are cached.
+ * mobile flex reset, the 20px primary-navigation contract and a real touch target even if older visual bundles are cached.
  */
 @media (max-width:900px){
   html body header.qily-site-header,
@@ -109,9 +165,23 @@ html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav
   html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
     display:inline-flex!important;
     flex:0 0 auto!important;
-    min-height:36px!important;
+    min-height:42px!important;
+    padding:8px 11px!important;
     align-items:center!important;
+    color:var(--qily-primary-nav-color)!important;
+    -webkit-text-fill-color:var(--qily-primary-nav-color)!important;
+    font-size:var(--qily-primary-nav-font-size)!important;
+    font-weight:var(--qily-primary-nav-font-weight)!important;
+    line-height:1.22!important;
     white-space:nowrap!important;
+  }
+  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"],
+  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"]{
+    color:var(--qily-primary-nav-active-text)!important;
+    -webkit-text-fill-color:var(--qily-primary-nav-active-text)!important;
+    background:var(--qily-primary-nav-active)!important;
+    border-color:var(--qily-primary-nav-active-border)!important;
+    font-size:var(--qily-primary-nav-font-size)!important;
   }
   html body header.qily-global-header::after{display:none!important}
   html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar,
