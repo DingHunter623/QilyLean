@@ -22,7 +22,8 @@ const required=[
   '/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2',
   '/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v5',
   '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5',
-  '/site-navigation.js?v=20260826-search-navigation-contrast-v44'
+  '/site-navigation.js?v=20260826-search-navigation-contrast-v44',
+  '/site-ui-consistency-v1.js?v=20260826-search-navigation-contrast-v44'
 ];
 const failures=[];
 let audited=0;
@@ -49,6 +50,7 @@ for(const sample of samples){
     if(!html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5'))failures.push(`${sample}: content contrast v5 baseline absent`);
     if(!html.includes('data-qily-content-contrast-direct="v5"'))failures.push(`${sample}: content contrast v5 marker absent`);
     if(!html.includes('/site-navigation.js?v=20260826-search-navigation-contrast-v44'))failures.push(`${sample}: search navigation cache-bust baseline absent`);
+    if(!html.includes('/site-ui-consistency-v1.js?v=20260826-search-navigation-contrast-v44'))failures.push(`${sample}: shared-shell cache-bust baseline absent`);
     if(!html.includes('/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3'))failures.push(`${sample}: mobile header-axis recovery absent`);
     if(!html.includes('/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7'))failures.push(`${sample}: final mobile navigation CSS absent`);
   }
@@ -57,4 +59,4 @@ for(const sample of samples){
 if(failures.length){
   throw new Error(`Public baseline materialization failed (${failures.length}):\n${failures.slice(0,60).join('\n')}${failures.length>60?`\n… +${failures.length-60} more`:''}`);
 }
-process.stdout.write(`PASS: ${audited} tracked HTML pages carry one unified safe translation/readability/mobile-navigation baseline with content contrast v5 and fresh search navigation; no retired external-proxy translator remains referenced.\n`);
+process.stdout.write(`PASS: ${audited} tracked HTML pages carry one unified safe translation/readability/mobile-navigation baseline with content contrast v5, fresh search navigation and fresh shared shell; no retired external-proxy translator remains referenced.\n`);
