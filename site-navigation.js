@@ -18,7 +18,7 @@
 
   var CORE_SRC = '/site-navigation-core.js?v=20260824-contact-channel-v30';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23';
-  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260825-global-language-v31';
+  var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260826-search-navigation-contrast-v44';
   var SEARCH_RUNTIME_SRC = '/site-search.js?v=20260826-search-navigation-v2';
   var INTEGRITY_SRC = '/site-integrity-hotfix-v1.js?v=20260826-public-integrity-v2';
   var R6_SEARCH_VISUAL_SRC = '/site-r6-search-terminology-visual-v1.js?v=20260826-r6-search-terminology-visual-v1';
