@@ -57,7 +57,8 @@ function cleanContactNavigation(source){
     if(panelStart>=0&&panelStart<articleEnd)blockStart=panelStart;
     else if(mapStart>=0&&mapStart<articleEnd)blockStart=mapStart;
     if(blockStart<0)throw new Error(`Contact map navigation block missing: ${target.keyword}`);
-    next=next.slice(0,blockStart)+navBlock(target.keyword,target.region)+'\n          '+next.slice(articleEnd);
+    const lineStart=next.lastIndexOf('\n',blockStart-1)+1;
+    next=next.slice(0,lineStart)+navBlock(target.keyword,target.region)+'\n          '+next.slice(articleEnd);
   }
   next=next.replace(/<iframe\b[^>]*api\.map\.baidu\.com[^>]*><\/iframe>/gi,'');
   if(/api\.map\.baidu\.com\/geocoder/i.test(next))throw new Error('Embedded Baidu geocoder iframe returned to contact page.');
