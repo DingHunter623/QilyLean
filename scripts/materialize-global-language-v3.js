@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V9｜2026-08-26
+/* QilyLean Sitewide Public Baseline Materializer V9.1｜2026-08-26
  * Single public baseline: Chinese source + fast fail-closed in-page translation + public language UI +
  * header axis + interaction/content contrast + final visual regression closure + dedicated contact route.
  * Translation is deferred so it never blocks HTML parsing.
+ * V9.1 removes any legacy unmarked contact-route script before inserting the single managed runtime.
  */
 const fs = require('fs');
 const path = require('path');
@@ -12,7 +13,7 @@ const { execFileSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
-const BASELINE_VERSION = '20260826-contrast-contact-closure-v2';
+const BASELINE_VERSION = '20260826-contrast-contact-closure-v3';
 const SAFE_VERSION = '20260826-translation-fast-reliable-v3';
 const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3';
 const NAVIGATION = '/site-navigation.js?v=20260826-search-navigation-contrast-v44';
@@ -42,8 +43,11 @@ function trackedHtml() {
 function removeScriptByMarker(source) {
   return source.replace(/\s*<script\b[^>]*(?:data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct|data-qily-interaction-contrast-direct|data-qily-content-contrast-direct|data-qily-translation-safe-direct|data-qily-contact-route-direct|data-qily-translation-safety-bootstrap)[^>]*>[\s\S]*?<\/script>\s*/gi, '\n');
 }
-function removeLegacyTranslatorScripts(source) {
-  return source.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-global-language-v3\.js[^"']*["'][^>]*><\/script>\s*/gi, '\n');
+function removeLegacyManagedScripts(source) {
+  let next = source;
+  next = next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-global-language-v3\.js[^"']*["'][^>]*><\/script>\s*/gi, '\n');
+  next = next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-contact-route-v1\.js[^"']*["'][^>]*><\/script>\s*/gi, '\n');
+  return next;
 }
 function removeManagedStyles(source) {
   const patterns = [
@@ -68,9 +72,8 @@ function materialize(source) {
   next = next.replace(/\/site-parent-navigation-v3\.js(?:\?v=[^"']*)?/g, PARENT_NAV);
   next = next.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g, DOCK_SHARE);
   next = next.replace(/\/site-core-service-dock-closure-v1\.js(?:\?v=[^"']*)?/g, CORE_SERVICE_DOCK);
-  next = next.replace(/\/site-contact-route-v1\.js(?:\?v=[^"']*)?/g, CONTACT_ROUTE_JS);
   next = removeScriptByMarker(next);
-  next = removeLegacyTranslatorScripts(next);
+  next = removeLegacyManagedScripts(next);
   next = removeManagedStyles(next);
 
   const tags = [
