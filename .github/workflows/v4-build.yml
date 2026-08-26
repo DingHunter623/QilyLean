@@ -27,29 +27,53 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 2
+          fetch-depth: 0
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Validate source before materialization
         run: node scripts/site-system-v4-validate.js
+
+      - name: Materialize approved aircraft artwork
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          git fetch --no-tags --depth=1 origin c919-approved-20260826
+          git show FETCH_HEAD:qilylean/c919-strategy-hero-v14.png > assets/qilylean-aircraft-hero-approved-20260826.png
+          node - <<'NODE'
+          const fs=require('fs');
+          const b=fs.readFileSync('assets/qilylean-aircraft-hero-approved-20260826.png');
+          const png=Buffer.from([137,80,78,71,13,10,26,10]);
+          if(!b.subarray(0,8).equals(png)) throw new Error('Approved aircraft artwork is not PNG');
+          if(b.readUInt32BE(16)!==1672||b.readUInt32BE(20)!==941) throw new Error('Approved aircraft artwork dimensions changed');
+          if(b.length<500000) throw new Error('Approved aircraft artwork is unexpectedly small');
+          console.log(`Approved aircraft artwork ready: ${b.length} bytes, 1672x941`);
+          NODE
+
       - name: Materialize approved aircraft brand hero
         run: |
           set -euo pipefail
           node --check scripts/enforce-aircraft-home-hero.js
           node scripts/enforce-aircraft-home-hero.js
           grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260826-aircraft-approved-v1' index.html
-          ! sed -n '/QILY-AIRCRAFT-BRAND-HERO-V1:START/,/QILY-AIRCRAFT-BRAND-HERO-V1:END/p' index.html | grep -Eq '<picture|<source|srcset=|data-src='
+          ! sed -n '/QILY-AIRCRAFT-BRAND-HERO-V1:START/,/QILY-AIRCRAFT-BRAND-HERO-V1:END/p' index.html | grep -Eq '<picture|<source|srcset=|data-src=|data-srcset='
           node scripts/site-regression-guard-aircraft-hero.js
+
       - name: Normalize regional sitemap URL contract
         run: node scripts/qilylean-north-v4-sitemap-contract.js
+
       - name: Materialize incremental sitemap lastmod
         run: node scripts/site-system-v4-sitemap-lastmod.js --write
+
       - name: Materialize production build identity
         env:
           QILY_SOURCE_COMMIT: ${{ github.sha }}
           QILY_BUILD_STATE: CI_PASS
         run: node scripts/site-system-v4-build-meta.js
+
       - name: Revalidate generated source
         run: |
           node scripts/qilylean-north-v4-sitemap-contract.js --check
@@ -57,18 +81,26 @@ jobs:
           node scripts/site-regression-guard-aircraft-hero.js
           npm run test:seo
           git diff --check
-      - name: Commit V4 generated metadata and aircraft hero closure
+
+      - name: Commit V4 generated metadata and approved aircraft artwork
         shell: bash
         run: |
           set -euo pipefail
-          paths=(meta/build.json sitemap.xml sitemap-core.xml index.html scripts/validate-sitewide-remediation-20260822.js)
-          if git diff --quiet -- "${paths[@]}"; then
+          paths=(
+            assets/qilylean-aircraft-hero-approved-20260826.png
+            meta/build.json
+            sitemap.xml
+            sitemap-core.xml
+            index.html
+            scripts/validate-sitewide-remediation-20260822.js
+          )
+          if git diff --quiet -- "${paths[@]}" && git ls-files --error-unmatch assets/qilylean-aircraft-hero-approved-20260826.png >/dev/null 2>&1; then
             echo 'V4 production metadata and approved aircraft hero closure already current.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "${paths[@]}"
-          git commit -m 'build(v4): materialize production metadata and approved aircraft hero closure [v4-generated]'
+          git commit -m 'build(v4): materialize approved aircraft artwork and homepage hero [v4-generated]'
           git pull --rebase origin main
           git push
