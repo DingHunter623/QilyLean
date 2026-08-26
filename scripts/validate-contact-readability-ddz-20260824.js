@@ -6,6 +6,7 @@ const path=require('path');
 const root=path.resolve(__dirname,'..');
 const NAV='/site-navigation.js?v=20260826-search-navigation-contrast-v44';
 const GOV='/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7';
+/* R7 compatibility marker only: the first-paint runtime may record this build token, but must not hide or reload the page. */
 const BUILD="BUILD='20260824-readable-floor-plus2-v4'";
 
 function read(rel){return fs.readFileSync(path.join(root,rel),'utf8')}
