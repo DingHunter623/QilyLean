@@ -1,8 +1,8 @@
-/* QilyLean Sitewide Content Contrast Guard V5｜2026-08-26
+/* QilyLean Sitewide Content Contrast Guard V6｜2026-08-26
  * Applies WCAG-oriented readable foreground correction to non-interactive public text.
  * Buttons/CTA remain owned by Interaction Contrast Guard.
- * V5: gradient/image-backed heroes retain authored light text, but opaque local cards/notes
- * nested inside those heroes are evaluated against their own surface instead of being blanket-excluded.
+ * V6: only registered hero/dark components own gradient/image contrast. Generic gradients no longer
+ * suppress runtime correction, and Chromium/Safari text-fill is evaluated as the rendered foreground.
  */
 (function(d,w){
   'use strict';
@@ -29,13 +29,18 @@
     for(var i=layers.length-1;i>=0;i-=1)bg=blend(layers[i],bg);
     return bg;
   }
+  function renderedForeground(style){
+    var fill=parseColor(style&&style.getPropertyValue&&style.getPropertyValue('-webkit-text-fill-color'));
+    if(fill&&fill.a>0)return fill;
+    return parseColor(style&&style.color);
+  }
   function threshold(el){var s=w.getComputedStyle(el);var size=parseFloat(s.fontSize)||16;var weight=parseInt(s.fontWeight,10)||400;return(size>=24||(size>=18.66&&weight>=700))?3:4.5}
   function release(el){
     if(!el)return;
     el.removeAttribute('data-qily-content-contrast-fixed');
   }
-  function isVisualSurface(el,style){
-    return !!(el&&(el.matches&&el.matches(COMPONENT_OWNED_DARK)||style&&style.backgroundImage&&style.backgroundImage!=='none'));
+  function isComponentOwnedDark(el){
+    return !!(el&&el.matches&&el.matches(COMPONENT_OWNED_DARK));
   }
   function hasOpaqueLocalSurface(style,el){
     if(el&&el.getAttribute&&el.getAttribute('data-qily-light-surface')==='true')return true;
@@ -47,7 +52,7 @@
     var current=el;var localSurface=false;
     while(current&&current.nodeType===1&&current!==d.documentElement){
       var style=w.getComputedStyle(current);
-      if(isVisualSurface(current,style))return !localSurface;
+      if(isComponentOwnedDark(current))return !localSurface;
       if(hasOpaqueLocalSurface(style,current))localSurface=true;
       if(current===d.body)break;
       current=current.parentElement;
@@ -60,7 +65,7 @@
     if(componentOwnsContrast(el)){release(el);return}
     if(!String(el.textContent||'').trim())return;
     var style=w.getComputedStyle(el);if(style.visibility==='hidden'||style.display==='none'||Number(style.opacity)===0)return;
-    var fg=parseColor(style.color);if(!fg)return;var bg=effectiveBackground(el);var actual=blend(fg,bg);if(contrast(actual,bg)>=threshold(el)){release(el);return}
+    var fg=renderedForeground(style);if(!fg)return;var bg=effectiveBackground(el);var actual=blend(fg,bg);if(contrast(actual,bg)>=threshold(el)){release(el);return}
     var dark={r:23,g:63,b:73,a:1},light={r:255,g:255,b:255,a:1};var darkRatio=contrast(dark,bg),lightRatio=contrast(light,bg);el.setAttribute('data-qily-content-contrast-fixed',lightRatio>darkRatio?'light':'dark')
   }
   function scan(root){
@@ -72,5 +77,5 @@
   function boot(){scan(d.body)}
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   d.addEventListener('qily:shell-ready',function(){schedule(d.body)});d.addEventListener('qily:language-change',function(){schedule(d.body)});w.addEventListener('pageshow',function(){schedule(d.body)},{passive:true});w.addEventListener('resize',function(){schedule(d.body)},{passive:true});
-  if(w.MutationObserver)new MutationObserver(function(records){for(var i=0;i<records.length;i+=1){var target=records[i].target&&records[i].target.nodeType===1?records[i].target:records[i].target&&records[i].target.parentElement;if(target){schedule(target);break}}}).observe(d.documentElement,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','style','data-qily-light-surface']});
+  if(w.MutationObserver)new MutationObserver(function(records){for(var i=0;i<records.length;i+=1){var target=records[i].target&&records[i].target.nodeType===1?records[i].target:records[i].target&&records[i].target.parentElement;if(target){schedule(target);break}}}).observe(d.documentElement,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:['class','style','data-qily-light-surface','data-qily-dark-surface','data-qily-dark-band','data-qily-table-theme']});
 })(document,window);
