@@ -68,8 +68,11 @@ assert(gbt.includes('color:#fff'),'GB/T 2828 reference button does not define wh
 const terminology=read('knowledge/terminology.html');
 assert(terminology.includes('id="qilyTerminologyStaticCount"'),'Terminology static-count strip identifier missing');
 
-/* 5) Post-materialization all public HTML must use the same fast, deferred baseline. */
-let pages=0;
+/* 5) Post-materialization all public HTML must use the fast deferred translation baseline.
+ * Navigation/shared-shell are audited when present because special standalone tools intentionally omit them. */
+const NAV='/site-navigation.js?v=20260826-search-navigation-contrast-v44';
+const SHELL='/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3';
+let pages=0,navigationPages=0,shellPages=0;
 for(const relative of trackedHtml()){
   const html=read(relative);if(!/<\/head>/i.test(html))continue;pages+=1;
   assert(html.includes('data-qily-translation-safety-bootstrap="inpage-v2"'),`${relative}: safety bootstrap missing`);
@@ -80,10 +83,12 @@ for(const relative of trackedHtml()){
   assert(html.includes('/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2'),`${relative}: interaction contrast missing`);
   assert(html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5'),`${relative}: content contrast v5 missing`);
   assert(html.includes('data-qily-content-contrast-direct="v5"'),`${relative}: content contrast v5 marker missing`);
-  assert(html.includes('/site-navigation.js?v=20260826-search-navigation-contrast-v44'),`${relative}: fresh site navigation/search runtime missing`);
-  assert(html.includes('/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3'),`${relative}: fast shared-shell runtime missing`);
+  if(/\/site-navigation\.js(?:\?v=[^"']*)?/.test(html)){navigationPages+=1;assert(html.includes(NAV),`${relative}: navigation/search runtime stale`)}
+  if(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/.test(html)){shellPages+=1;assert(html.includes(SHELL),`${relative}: shared-shell runtime stale`)}
   assert(!html.includes('/site-global-language-v3.js'),`${relative}: retired translator still referenced`);
   assert(!html.includes('智能路由'),`${relative}: visitor-facing 智能路由 remains`);
 }
 assert(pages>=460,`Unexpected public HTML coverage: ${pages}`);
-process.stdout.write(`PASS: fast fail-closed translation, search navigation, single terminology metadata and nested light-surface readability are codified across ${pages} public HTML pages.\n`);
+assert(navigationPages>=460,`Unexpected navigation coverage: ${navigationPages}`);
+assert(shellPages>=460,`Unexpected shared-shell coverage: ${shellPages}`);
+process.stdout.write(`PASS: fast fail-closed translation is codified across ${pages} public HTML pages; fresh navigation covers ${navigationPages}, shared shell ${shellPages}.\n`);
