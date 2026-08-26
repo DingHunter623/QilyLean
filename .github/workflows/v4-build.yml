@@ -71,6 +71,7 @@ jobs:
             sitemap.xml
             sitemap-core.xml
             index.html
+            scripts/validate-sitewide-remediation-20260822.js
           )
           if git diff --quiet -- "${paths[@]}"; then
             echo 'V4 production metadata and aircraft hero closure already current.'

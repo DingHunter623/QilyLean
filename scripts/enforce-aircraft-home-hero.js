@@ -44,4 +44,20 @@ if(!/<main\b[^>]*>/i.test(html)) throw new Error('Homepage <main> missing');
 html=html.replace(/(<main\b[^>]*>)/i,`$1\n${hero}`);
 
 fs.writeFileSync(target,html.endsWith('\n')?html:html+'\n','utf8');
+
+// Keep shared visual regression validation aligned with the neutral aircraft authority.
+const validatorPath=path.join(root,'scripts','validate-sitewide-remediation-20260822.js');
+if(fs.existsSync(validatorPath)){
+  let validator=fs.readFileSync(validatorPath,'utf8');
+  const legacy=`assert(home.includes('<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START -->'),'Homepage C919 V4 start marker missing.');
+assert(home.indexOf('QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START')<home.indexOf('<section class="hero">'),'C919 is not the first homepage content visual.');
+assert(home.includes('/qilylean/c919-strategy-hero-v14.png?v=20260826-c919-crossbrowser-v1'),'Homepage latest V14 aircraft visual asset/cache key missing.');
+assert(!home.includes('c919-strategy-hero-v14.webp'),'Homepage still references retired V14 WebP source.');`;
+  const neutral=`assert(home.includes('<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->'),'Homepage aircraft brand hero start marker missing.');
+assert(home.indexOf('QILY-AIRCRAFT-BRAND-HERO-V1:START')<home.indexOf('<section class="hero">'),'Aircraft brand visual is not the first homepage content visual.');
+assert(home.includes('/assets/qilylean-aircraft-hero-v1.webp?v=20260826-aircraft-hero-v1'),'Homepage canonical aircraft visual asset/cache key missing.');
+assert(!/<img\b[^>]+c919-strategy-hero-v14\.(?:png|webp)/i.test(home),'A retired aircraft image is still rendered on homepage.');`;
+  if(validator.includes(legacy)) validator=validator.replace(legacy,neutral);
+  fs.writeFileSync(validatorPath,validator.endsWith('\n')?validator:validator+'\n','utf8');
+}
 console.log('QilyLean neutral aircraft hero materialized from one canonical WebP asset.');
