@@ -16,18 +16,18 @@
   <meta name="theme-color" content="#0f4b5a">
   <link rel="stylesheet" href="/site-core-visual-bundle-v1.css?v=20260815-core-visual-v1">
   <link rel="stylesheet" href="/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5">
-<style>
+  <style>
     :root{--forest:#0f4b5a;--teal:#178b94;--gold:#caa15f;--gold-soft:#ffe39b;--ink:#17322d;--muted:#607574;--line:#cfe0dd;--paper:#eef7f5;--surface:#fff;--shadow:0 16px 42px rgba(15,75,90,.11)}
     *{box-sizing:border-box}
     html,body{margin:0;min-height:0!important;height:auto!important;background:#f4faf8;color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
     body{display:block!important;font-size:18px;line-height:1.7;padding-bottom:0!important}
-    .contact-page-v2{display:block!important;min-height:0!important;height:auto!important;padding:0!important;margin:0!important}
-    .contact-page-v2 *{box-sizing:border-box}
+    .contact-page-v3{display:block!important;min-height:0!important;height:auto!important;padding:0!important;margin:0!important}
+    .contact-page-v3 *{box-sizing:border-box}
     .contact-hero{padding:54px clamp(18px,5vw,72px) 48px;color:#fff;background:linear-gradient(125deg,#0a3540 0,#0f4b5a 58%,#178b94 100%)}
     .contact-inner{width:min(1180px,100%);margin:0 auto}
     .contact-kicker{display:block;margin-bottom:8px;color:var(--gold-soft);font-size:14px;font-weight:950;letter-spacing:.09em}
     .contact-hero h1{margin:0;color:#fff!important;-webkit-text-fill-color:#fff!important;font-size:clamp(42px,5.5vw,68px);line-height:1.08}
-    .contact-hero p{max-width:780px;margin:12px 0 0;color:#e9f6f3!important;-webkit-text-fill-color:#e9f6f3!important;font-size:20px}
+    .contact-hero p{max-width:820px;margin:12px 0 0;color:#e9f6f3!important;-webkit-text-fill-color:#e9f6f3!important;font-size:20px}
     .contact-section{padding:44px clamp(16px,4vw,56px)}
     .contact-section.alt{background:#eaf5f2;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
     .contact-section h2{margin:0 0 22px;color:var(--forest)!important;-webkit-text-fill-color:var(--forest)!important;font-size:clamp(28px,3.5vw,40px);line-height:1.2}
@@ -35,71 +35,94 @@
     .contact-qr-card{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:26px;border:1px solid var(--line);border-top:5px solid var(--gold);border-radius:18px;background:#fff;box-shadow:var(--shadow);text-align:center}
     .contact-qr-card h3{margin:0 0 18px;color:var(--forest)!important;-webkit-text-fill-color:var(--forest)!important;font-size:25px}
     .contact-qr-card .site-qr{display:block;width:min(270px,80%);height:auto;aspect-ratio:1;object-fit:contain;padding:10px;border:1px solid #c5dcd8;border-radius:14px;background:#fff}
-    .contact-qr-card .wechat-card-image{display:block!important;width:min(330px,88%)!important;max-width:100%!important;height:auto!important;aspect-ratio:auto!important;object-fit:contain!important;padding:0!important;border:0!important;border-radius:14px!important;background:#fff!important;visibility:visible!important;opacity:1!important}
+    .wechat-qr-action{display:flex;align-items:center;justify-content:center;width:min(330px,88%);min-height:0;padding:16px;border:1px solid #c5dcd8;border-radius:16px;background:#fff;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+    .wechat-qr-action:hover,.wechat-qr-action:focus-visible{transform:translateY(-2px);border-color:var(--gold);box-shadow:0 12px 28px rgba(15,75,90,.13);outline:3px solid rgba(202,161,95,.24);outline-offset:2px}
+    .wechat-qr-action img{display:block;width:min(295px,100%);height:auto;aspect-ratio:295/293;object-fit:contain;image-rendering:auto;background:#fff}
     .contact-label{margin:17px 0 6px;color:var(--muted)!important;-webkit-text-fill-color:var(--muted)!important;font-size:14px;font-weight:850}
     .contact-value{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:8px 18px;border:1px solid #a9cbc7;border-radius:999px;color:var(--forest)!important;-webkit-text-fill-color:var(--forest)!important;background:#f5fbf9;font-size:21px;font-weight:950;text-decoration:none;white-space:nowrap}
+    button.contact-value{font-family:inherit;cursor:pointer}
+    .contact-value:hover,.contact-value:focus-visible{color:#fff!important;-webkit-text-fill-color:#fff!important;background:var(--forest);border-color:var(--forest);outline:3px solid rgba(202,161,95,.24);outline-offset:2px}
     .phone-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px!important}
     .phone-card{display:block!important;visibility:visible!important;opacity:1!important;min-width:0;padding:22px;border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:14px;background:#fff;box-shadow:var(--shadow)}
     .phone-card strong{display:block!important;margin-bottom:7px;color:var(--forest)!important;-webkit-text-fill-color:var(--forest)!important;font-size:21px}
     .phone-card a{display:block!important;visibility:visible!important;opacity:1!important;overflow:visible!important;color:var(--forest)!important;-webkit-text-fill-color:var(--forest)!important;font-size:clamp(22px,2vw,28px)!important;font-weight:950!important;letter-spacing:.02em!important;line-height:1.35!important;text-decoration-thickness:2px;text-underline-offset:.2em;white-space:nowrap!important}
+    .phone-card a:hover,.phone-card a:focus-visible{color:var(--teal)!important;-webkit-text-fill-color:var(--teal)!important;outline:none}
     .email-row{display:grid;grid-template-columns:180px 1fr;gap:12px;align-items:center;margin-top:16px;padding:20px 22px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow)}
     .email-row strong{color:var(--forest)!important;-webkit-text-fill-color:var(--forest)!important;font-size:21px}.email-row a{color:var(--forest)!important;-webkit-text-fill-color:var(--forest)!important;font-size:22px;font-weight:950;overflow-wrap:anywhere}
-    .address-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
-    .address-card{padding:22px;border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:14px;background:#fff;box-shadow:var(--shadow)}
+    .address-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .address-card{overflow:hidden;border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:16px;background:#fff;box-shadow:var(--shadow)}
+    .address-copy{padding:20px 22px 16px}
     .address-card strong{display:block;margin-bottom:8px;color:var(--forest)!important;-webkit-text-fill-color:var(--forest)!important;font-size:21px}.address-card span{display:block;color:#315f64!important;-webkit-text-fill-color:#315f64!important;font-size:19px;line-height:1.7}
+    .map-preview{position:relative;height:250px;border-top:1px solid var(--line);background:#dceceb;overflow:hidden}
+    .map-preview iframe{display:block;width:100%;height:100%;border:0;pointer-events:none;filter:saturate(.82) contrast(1.02)}
+    .map-click{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding:18px;text-decoration:none;background:linear-gradient(180deg,rgba(15,75,90,0) 42%,rgba(6,49,58,.76) 100%)}
+    .map-click span{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 18px;border:1px solid rgba(255,227,155,.9);border-radius:999px;color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a;font-size:17px;font-weight:950;box-shadow:0 10px 24px rgba(0,0,0,.2)}
+    .map-click:hover span,.map-click:focus-visible span{background:#178b94;transform:translateY(-2px)}
+    .map-click:focus-visible{outline:3px solid var(--gold);outline-offset:-4px}
+    .contact-note{margin:14px 0 0;color:var(--muted);font-size:15px;text-align:center}
     .contact-footer{margin:0!important;padding:24px clamp(16px,4vw,56px)!important;color:#dcebe7!important;background:#101916!important}.contact-footer .contact-inner{display:flex;gap:12px;justify-content:space-between;flex-wrap:wrap}.contact-footer a{color:var(--gold-soft)!important}
     @media(max-width:820px){.contact-qr-grid,.address-grid{grid-template-columns:1fr}.phone-grid{grid-template-columns:1fr!important}.contact-qr-card{padding:22px}.email-row{grid-template-columns:1fr}.contact-footer .contact-inner{display:block}.contact-footer a{display:inline-block;margin-top:8px}}
     @media(max-width:620px){
       .contact-hero{padding:38px 16px 34px}.contact-hero h1{font-size:40px}.contact-hero p{font-size:17px;line-height:1.65}
       .contact-section{padding:32px 14px}.contact-section h2{margin-bottom:16px;font-size:28px}
-      .contact-qr-card{min-height:0!important;padding:20px 14px}.contact-qr-card .site-qr{width:min(270px,88%)}.contact-qr-card .wechat-card-image{width:min(340px,96%)!important}
+      .contact-qr-card{min-height:0!important;padding:20px 14px}.contact-qr-card .site-qr{width:min(270px,88%)}.wechat-qr-action{width:min(330px,94%);padding:12px}
       .phone-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;width:100%!important}
       .phone-card{display:block!important;width:100%!important;min-height:0!important;padding:18px!important;visibility:visible!important;opacity:1!important;overflow:visible!important}
       .phone-card strong{display:block!important;visibility:visible!important;opacity:1!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}
       .phone-card a{display:block!important;width:100%!important;visibility:visible!important;opacity:1!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font-size:24px!important;line-height:1.45!important;white-space:normal!important;word-break:keep-all!important;overflow:visible!important}
       .email-row{display:block!important;padding:18px}.email-row strong{display:block;margin-bottom:6px}.email-row a{display:block!important;font-size:20px!important}
-      .address-card{padding:18px}.address-card span{font-size:17px}
+      .address-copy{padding:18px}.address-card span{font-size:17px}.map-preview{height:220px}
     }
   </style>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"ContactPage","name":"QilyLean启力精益联系我们","url":"https://qilylean.com/contact","mainEntity":{"@type":"Organization","name":"QilyLean｜启力精益","url":"https://qilylean.com","email":"admin@qilylean.com","contactPoint":[{"@type":"ContactPoint","telephone":"+86-13450014003","areaServed":"东莞"},{"@type":"ContactPoint","telephone":"+86-15168120722","areaServed":"宁波"},{"@type":"ContactPoint","telephone":"+86-17681788259","areaServed":"乐清"}]}}</script>
   <script defer src="/site-navigation.js?v=20260826-search-navigation-contrast-v44"></script>
-<script data-qily-translation-safety-bootstrap="inpage-v2">window.__qilyGlobalTranslationDualRouteV2=true;window.__qilyGoogleTranslateOnDemandV1=true;window.__qilyGlobalLanguageV31=true;window.__qilyGlobalLanguageV3=true;window.__qilyGlobalLanguageV2=true;window.__qilyGlobalLanguageV1=true;</script>
-<link id="qilyGlobalLanguageV1Stylesheet" rel="stylesheet" href="/site-global-language-v1.css?v=20260825-public-translation-shell-v1">
-<link id="qilyHeaderAxisV1" rel="stylesheet" href="/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3">
-<link id="qilyTranslationProgressV1Stylesheet" rel="stylesheet" href="/site-translation-progress-v1.css?v=20260825-bilingual-progress-v3">
-<link id="qilyTranslationPublicUiV1Stylesheet" rel="stylesheet" href="/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7">
-<link id="qilyInteractionContrastGuardV1Stylesheet" rel="stylesheet" href="/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2">
-<link id="qilyContentContrastGuardV1Stylesheet" rel="stylesheet" href="/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6">
-<link id="qilyUnifiedVisualGovernanceV1Stylesheet" rel="stylesheet" href="/site-unified-visual-governance-v1.css?v=20260826-contrast-closure-v2">
-<link id="qilyVisualRegressionClosureV1Stylesheet" rel="stylesheet" href="/site-visual-regression-closure-v1.css?v=20260826-screenshot-closure-v2">
-<link id="qilyStabilityRecoveryV1Stylesheet" rel="stylesheet" href="/site-stability-recovery-v1.css?v=20260826-stability-recovery-v1">
-<script defer data-qily-translation-safe-direct="inpage-v2" src="/site-translation-safe-runtime-v1.js?v=20260826-translation-fast-reliable-v3"></script>
-<script defer data-qily-translation-public-ui-direct="visitor-v2" src="/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6"></script>
-<script defer data-qily-translation-progress-direct="bilingual-v2" src="/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3"></script>
-<script defer data-qily-interaction-contrast-direct="v2" src="/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2"></script>
-<script defer data-qily-content-contrast-direct="v6" src="/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6"></script>
-<script defer data-qily-contact-route-direct="v5" src="/site-contact-route-v1.js?v=20260826-site-shell-recovery-v5"></script>
+  <script defer data-qily-contact-route-direct="v6" src="/site-contact-route-v1.js?v=20260826-contact-native-newtab-map-v6"></script>
 </head>
 <body>
-  <main class="contact-page-v2">
-    <section class="contact-hero"><div class="contact-inner"><span class="contact-kicker">CONTACT QILYLEAN｜官方联系方式</span><h1>联系我们</h1><p>官网、微信、电话、邮箱与联系地址集中展示，信息清晰、可核验、可直接联系。</p></div></section>
+  <main class="contact-page-v3">
+    <section class="contact-hero"><div class="contact-inner"><span class="contact-kicker">CONTACT QILYLEAN｜官方联系方式</span><h1>联系我们</h1><p>官网、微信、电话、邮箱与联系地址集中展示；电话与微信支持先复制、再确认打开，两个联系地址可直接从地图点位进入导航。</p></div></section>
 
     <section class="contact-section"><div class="contact-inner"><h2>官网与微信</h2><div class="contact-qr-grid">
       <article class="contact-qr-card"><h3>官方网站</h3><img class="site-qr" src="/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4" alt="QilyLean官网二维码"><div class="contact-label">官方网址</div><a class="contact-value" href="https://qilylean.com">qilylean.com</a></article>
-      <article class="contact-qr-card"><h3>微信联系</h3><img class="wechat-card-image" src="/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2" alt="东方猎手微信二维码联系卡"><div class="contact-label">微信号</div><span class="contact-value">Qily259</span></article>
+      <article class="contact-qr-card"><h3>微信联系</h3><button class="wechat-qr-action" type="button" data-contact-wechat aria-label="复制微信号 Qily259 并选择是否打开微信"><img src="/qilylean/wechat-qrcode.svg?v=20260826-clean-personal-qr-v1" alt="东方猎手微信二维码"></button><div class="contact-label">微信号</div><button class="contact-value" type="button" data-contact-wechat>Qily259</button><p class="contact-note">点击二维码或微信号：复制 Qily259 → 选择是否打开微信</p></article>
     </div></div></section>
 
     <section class="contact-section alt"><div class="contact-inner"><h2>联系电话</h2><div class="phone-grid">
-      <article class="phone-card"><strong>东莞</strong><a href="tel:13450014003">134 5001 4003</a></article>
-      <article class="phone-card"><strong>宁波</strong><a href="tel:15168120722">151 6812 0722</a></article>
-      <article class="phone-card"><strong>乐清</strong><a href="tel:17681788259">176 8178 8259</a></article>
-    </div><div class="email-row"><strong>官网邮箱</strong><a href="mailto:admin@qilylean.com">admin@qilylean.com</a></div></div></section>
+      <article class="phone-card"><strong>东莞</strong><a href="tel:13450014003" data-contact-phone="13450014003">134 5001 4003</a></article>
+      <article class="phone-card"><strong>宁波</strong><a href="tel:15168120722" data-contact-phone="15168120722">151 6812 0722</a></article>
+      <article class="phone-card"><strong>乐清</strong><a href="tel:17681788259" data-contact-phone="17681788259">176 8178 8259</a></article>
+    </div><div class="email-row"><strong>官网邮箱</strong><a href="mailto:admin@qilylean.com">admin@qilylean.com</a></div><p class="contact-note">点击电话号码：自动复制号码 → 选择是否拨打电话</p></div></section>
 
     <section class="contact-section"><div class="contact-inner"><h2>联系地址</h2><div class="address-grid">
-      <div class="address-card"><strong>浙江 · 温州乐清</strong><span>浙江省温州市乐清市柳市镇苏吕工业区</span></div>
-      <div class="address-card"><strong>广东 · 东莞</strong><span>广东省东莞市东城区温塘社区皂三村工业区</span></div>
+      <article class="address-card" data-qily-map-address="浙江省温州市乐清市柳市镇苏吕工业区"><div class="address-copy"><strong>浙江 · 温州乐清</strong><span>浙江省温州市乐清市柳市镇苏吕工业区</span></div><div class="map-preview"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="浙江温州乐清联系地址地图" src="https://api.map.baidu.com/geocoder?address=浙江省温州市乐清市柳市镇苏吕工业区&amp;output=html&amp;src=QilyLean"></iframe><a class="map-click" href="https://uri.amap.com/search?keyword=浙江省温州市乐清市柳市镇苏吕工业区&amp;city=温州&amp;callnative=1" target="_blank" rel="noopener noreferrer" aria-label="导航到浙江省温州市乐清市柳市镇苏吕工业区"><span>点击地图导航到这里</span></a></div></article>
+      <article class="address-card" data-qily-map-address="广东省东莞市东城区温塘社区皂三村工业区"><div class="address-copy"><strong>广东 · 东莞</strong><span>广东省东莞市东城区温塘社区皂三村工业区</span></div><div class="map-preview"><iframe loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="广东东莞联系地址地图" src="https://api.map.baidu.com/geocoder?address=广东省东莞市东城区温塘社区皂三村工业区&amp;output=html&amp;src=QilyLean"></iframe><a class="map-click" href="https://uri.amap.com/search?keyword=广东省东莞市东城区温塘社区皂三村工业区&amp;city=东莞&amp;callnative=1" target="_blank" rel="noopener noreferrer" aria-label="导航到广东省东莞市东城区温塘社区皂三村工业区"><span>点击地图导航到这里</span></a></div></article>
     </div></div></section>
   </main>
   <footer class="contact-footer"><div class="contact-inner"><span>QilyLean｜启力精益 · 制造工程、精益改善与数智工厂</span><span><a href="/">返回首页</a>　·　<a href="/cooperation/">项目合作</a></span></div></footer>
+
+  <script>
+  (function(d,w){
+    'use strict';
+    var WECHAT_ID='Qily259';
+    function legacyCopy(text){
+      var field=d.createElement('textarea');field.value=text;field.setAttribute('readonly','');field.style.position='fixed';field.style.left='-9999px';d.body.appendChild(field);field.select();try{d.execCommand('copy');}catch(error){}field.remove();
+    }
+    function copyText(text){
+      if(navigator.clipboard&&w.isSecureContext){navigator.clipboard.writeText(text).catch(function(){legacyCopy(text);});return;}
+      legacyCopy(text);
+    }
+    function openWeChat(){
+      var started=Date.now();
+      w.location.href='weixin://';
+      w.setTimeout(function(){if(Date.now()-started<1800)w.location.href='https://weixin.qq.com/';},1200);
+    }
+    d.addEventListener('click',function(event){
+      var wechat=event.target.closest&&event.target.closest('[data-contact-wechat]');
+      if(wechat){event.preventDefault();copyText(WECHAT_ID);if(w.confirm('微信号 Qily259 已复制。是否现在打开微信？'))openWeChat();return;}
+      var phone=event.target.closest&&event.target.closest('[data-contact-phone]');
+      if(phone){event.preventDefault();var number=phone.getAttribute('data-contact-phone')||'';copyText(number);if(w.confirm('电话号码 '+number+' 已复制。是否现在拨打？'))w.location.href='tel:'+number;}
+    },false);
+  })(document,window);
+  </script>
 </body>
 </html>
