@@ -88,10 +88,10 @@ assert(!contentContrast.includes("style&&style.backgroundImage&&style.background
 assert(contentContrastCss.includes('.rule-table thead :is(th,td)'),'Shared dark table header fallback missing.');
 assert(contentContrastCss.includes('--ql-dark-title:#fff'),'Dark-surface text token missing.');
 
-assert(home.includes('<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START -->'),'Homepage C919 V4 start marker missing.');
-assert(home.indexOf('QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START')<home.indexOf('<section class="hero">'),'C919 is not the first homepage content visual.');
-assert(home.includes('/qilylean/c919-strategy-hero-v14.png?v=20260826-c919-crossbrowser-v1'),'Homepage latest V14 aircraft visual asset/cache key missing.');
-assert(!home.includes('c919-strategy-hero-v14.webp'),'Homepage still references retired V14 WebP source.');
+assert(home.includes('<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->'),'Homepage aircraft brand hero start marker missing.');
+assert(home.indexOf('QILY-AIRCRAFT-BRAND-HERO-V1:START')<home.indexOf('<section class="hero">'),'Aircraft brand visual is not the first homepage content visual.');
+assert(home.includes('/assets/qilylean-aircraft-hero-v1.webp?v=20260826-aircraft-hero-v1'),'Homepage canonical aircraft visual asset/cache key missing.');
+assert(!/<img[^>]+c919-strategy-hero-v14.(?:png|webp)/i.test(home),'A retired aircraft image is still rendered on homepage.');
 
 const officialUrls=['https://www.jinggon.com/','https://www.gdgaosheng.cn/','https://www.masonled.com/','https://www.mason-led.com/','https://www.eaton.com.cn/cn/zh-cn/products/electronic-components/circuit-protection/fuses.html','https://flex.com/zh/'];
 for(const url of officialUrls)assert(experience.includes(`href="${url}"`),`Experience official link missing: ${url}`);
