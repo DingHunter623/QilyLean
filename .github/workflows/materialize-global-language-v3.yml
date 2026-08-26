@@ -1,5 +1,6 @@
 name: Materialize Unified Public Baseline
 
+# Primary-navigation governance is materialized sitewide: no module-level typography/color exceptions.
 on:
   push:
     branches: [main]
