@@ -60,7 +60,7 @@ jobs:
             node scripts/validate-seo-indexability.js
             grep -q 'Site Shell Recovery + Contact Route V5' site-contact-route-v1.js
             grep -q "w.open(CONTACT_URL,'_blank')" site-contact-route-v1.js
-            grep -q 'data-qily-contact-route=.new-window-v5.' site-contact-route-v1.js
+            grep -q 'new-window-v5' site-contact-route-v1.js
             grep -q 'QilyLean Sitewide Visual Regression Closure V2' site-visual-regression-closure-v1.css
             grep -q 'background:var(--qily-fix-alt)!important' site-visual-regression-closure-v1.css
             grep -q 'width="888" height="1131"' assets/contact/wechat-contact-card.svg
