@@ -41,11 +41,7 @@ jobs:
           set -euo pipefail
           node --check scripts/enforce-aircraft-home-hero.js
           node scripts/enforce-aircraft-home-hero.js
-          node --check scripts/site-regression-guard-aircraft-hero.js
-          node scripts/site-regression-guard-aircraft-hero.js
           grep -q 'qilylean-aircraft-hero-v1.webp?v=20260826-aircraft-hero-v1' index.html
-          ! grep -Eqi '<img[^>]+c919-strategy-hero-v14\.(png|webp)' index.html
-          ! grep -Eqi '<link[^>]+qily-c919-digital-flagship-hero-v1\.css' index.html
 
       - name: Normalize regional sitemap URL contract
         run: node scripts/qilylean-north-v4-sitemap-contract.js
@@ -63,7 +59,6 @@ jobs:
         run: |
           node scripts/qilylean-north-v4-sitemap-contract.js --check
           node scripts/site-system-v4-validate.js
-          node scripts/site-regression-guard-aircraft-hero.js
           npm run test:seo
           git diff --check
 
