@@ -20,7 +20,7 @@ const CONSISTENCY='/site-ui-consistency-v1.js?v=20260826-translation-fast-reliab
 const NAVIGATION='/site-navigation.js?v=20260826-search-navigation-contrast-v44';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260825-language-runtime-compat-v31';
-const CORE_SERVICE_DOCK='/site-core-service-dock-closure-v1.js?v=20260826-contact-page-v103';
+const CORE_SERVICE_DOCK='/site-core-service-dock-closure-v1.js?v=20260826-site-shell-recovery-v104';
 const LANGUAGE_CSS='/site-global-language-v1.css?v=20260825-public-translation-shell-v1';
 const SAFE_RUNTIME=`/site-translation-safe-runtime-v1.js?v=${SAFE_VERSION}`;
 const HEADER_AXIS='/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3';
