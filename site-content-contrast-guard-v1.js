@@ -1,8 +1,8 @@
-/* QilyLean Sitewide Content Contrast Guard V3｜2026-08-25
+/* QilyLean Sitewide Content Contrast Guard V4｜2026-08-26
  * Applies WCAG-oriented readable foreground correction to non-interactive public text.
  * Buttons/CTA remain owned by Interaction Contrast Guard.
- * V3: gradient/image dark surfaces are component-owned. The generic scanner must not
- * misread their transparent background-color as white and force dark text onto dark Hero surfaces.
+ * V4: any gradient/image-backed surface is component-owned. The generic scanner must not
+ * infer a white background from transparent background-color and repaint authored light text dark.
  */
 (function(d,w){
   'use strict';
@@ -10,7 +10,7 @@
   w.__qilyContentContrastGuardV1=true;
 
   var SELECTOR='p,li,dt,dd,td,th,label,small,span,strong,b,em,h1,h2,h3,h4,h5,h6,.module-lead,.engineering-checklist,.notice,.callout,.summary,.insight,.lead,[role="status"],[role="alert"]';
-  var COMPONENT_OWNED_DARK='.hero,.module-hero,.daily-hero,.project-hero,.cooperation-hero,.qily-ia-dark,.closing,[data-qily-dark-surface],[data-theme="dark"]';
+  var COMPONENT_OWNED_DARK='.hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hub,.qily-ia-dark,.closing,[data-qily-dark-surface],[data-theme="dark"]';
   var EXCLUDE='header,.qily-site-header,.qily-global-header,#floatDock,.qily-floating-dock,.qily-web-translate,.qily-translation-progress,button,input,select,textarea,[role="button"],[contenteditable="true"],'+COMPONENT_OWNED_DARK;
   var queued=false;
 
@@ -34,7 +34,19 @@
     if(!el)return;
     el.removeAttribute('data-qily-content-contrast-fixed');
   }
-  function componentOwnsContrast(el){return !!(el&&el.closest&&el.closest(COMPONENT_OWNED_DARK))}
+  function hasVisualBackground(el){
+    var current=el;
+    while(current&&current.nodeType===1&&current!==d.documentElement){
+      var style=w.getComputedStyle(current);
+      if(style&&style.backgroundImage&&style.backgroundImage!=='none')return true;
+      if(current===d.body)break;
+      current=current.parentElement;
+    }
+    return false;
+  }
+  function componentOwnsContrast(el){
+    return !!(el&&el.closest&&(el.closest(COMPONENT_OWNED_DARK)||hasVisualBackground(el)));
+  }
   function fix(el){
     if(!el||!el.isConnected)return;
     if(componentOwnsContrast(el)){release(el);return}
