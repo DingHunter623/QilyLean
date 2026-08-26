@@ -23,10 +23,14 @@ const siteData=read('qilylean/site-data.json');
 assert(siteData.includes('"latestDate": "2026-08-25"')||siteData.includes('"latestDate":"2026-08-25"'),'Central SSOT latestDate is stale');
 assert(siteData.includes('2026-08-25.html'),'Central SSOT latest URL is stale');
 
-/* 2) Translation must stay on-site and visitor UI must not expose implementation terminology. */
+/* 2) Translation must stay on-site, finish cleanly, and never leave a mixed initial page. */
 const safe=read('site-translation-safe-runtime-v1.js');
 assert(!safe.includes('https://translate.google.com'),'Safe runtime still contains executable Google redirect');
 assert(!safe.includes('https://qilylean-com.translate.goog'),'Safe runtime still contains translated proxy redirect');
+assert(safe.includes("runtime:'safe-inpage-v2'"),'Fast translation runtime V2 missing');
+assert(safe.includes('function nearViewport(el)'),'Visible-first translation missing');
+assert(safe.includes("setState('error','翻译未完整完成，已恢复中文原文')"),'Initial translation does not fail closed to full Chinese');
+assert(safe.includes("setState('idle',languageName(target))"),'Successful translation does not clear working/partial state');
 for(const sourceName of ['site-translation-safe-runtime-v1.js','site-translation-public-ui-v1.js','site-translation-progress-v1.js']){
   const source=read(sourceName);
   assert(!source.includes('智能路由'),`${sourceName}: visitor runtime exposes 智能路由`);
@@ -64,19 +68,22 @@ assert(gbt.includes('color:#fff'),'GB/T 2828 reference button does not define wh
 const terminology=read('knowledge/terminology.html');
 assert(terminology.includes('id="qilyTerminologyStaticCount"'),'Terminology static-count strip identifier missing');
 
-/* 5) Post-materialization all public HTML must use the same baseline and no retired translator. */
+/* 5) Post-materialization all public HTML must use the same fast, deferred baseline. */
 let pages=0;
 for(const relative of trackedHtml()){
   const html=read(relative);if(!/<\/head>/i.test(html))continue;pages+=1;
   assert(html.includes('data-qily-translation-safety-bootstrap="inpage-v2"'),`${relative}: safety bootstrap missing`);
-  assert(html.includes('/site-translation-safe-runtime-v1.js?v=20260825-translation-safe-inpage-v2'),`${relative}: safe runtime missing`);
+  assert(html.includes('/site-translation-safe-runtime-v1.js?v=20260826-translation-fast-reliable-v3'),`${relative}: fast safe runtime missing`);
+  assert(html.includes('<script defer data-qily-translation-safe-direct="inpage-v2"'),`${relative}: translation runtime blocks document parsing`);
+  assert(html.includes('/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3'),`${relative}: deterministic progress runtime missing`);
   assert(html.includes('/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6'),`${relative}: public language UI missing`);
   assert(html.includes('/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2'),`${relative}: interaction contrast missing`);
   assert(html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5'),`${relative}: content contrast v5 missing`);
   assert(html.includes('data-qily-content-contrast-direct="v5"'),`${relative}: content contrast v5 marker missing`);
   assert(html.includes('/site-navigation.js?v=20260826-search-navigation-contrast-v44'),`${relative}: fresh site navigation/search runtime missing`);
+  assert(html.includes('/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3'),`${relative}: fast shared-shell runtime missing`);
   assert(!html.includes('/site-global-language-v3.js'),`${relative}: retired translator still referenced`);
   assert(!html.includes('智能路由'),`${relative}: visitor-facing 智能路由 remains`);
 }
 assert(pages>=460,`Unexpected public HTML coverage: ${pages}`);
-process.stdout.write(`PASS: all reported 2026-08-25 issues plus 2026-08-26 search navigation, single terminology metadata and nested light-surface readability are codified across ${pages} public HTML pages.\n`);
+process.stdout.write(`PASS: fast fail-closed translation, search navigation, single terminology metadata and nested light-surface readability are codified across ${pages} public HTML pages.\n`);
