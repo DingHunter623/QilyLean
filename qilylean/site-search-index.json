@@ -7,7 +7,9 @@
     "terminologyTotal": 193,
     "briefTotal": 375,
     "latestBriefDate": "2026-08-25",
-    "sitemapLastmod": "2026-08-25"
+    "sitemapLastmod": "2026-08-25",
+    "generatedAt": "2026-08-26",
+    "totalEntries": 781
   },
   "entries": [
     {
@@ -5889,6 +5891,1936 @@
       "text": "别让临时准备遮住瓶颈：精益生产的持续运营 面对换线后首件确认反复调整，本期先用“先把问题定义准确”校准判断，再用精益生产推进持续运营，最终把现场经验沉淀为版本、点检与复盘机制。 主题：精益生产。QilyLean精选简报，按周保留具备制造专业相关性、工程逻辑、验证与长期复用价值的内容。",
       "kind": "精选简报",
       "date": "2019-07-10"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-qilylean",
+      "title": "QilyLean｜启力精益",
+      "code": "QilyLean",
+      "description": "应用场景： Qily取“启利”谐音，Lean意为精益；用于官网品牌、制造改善知识输出与项目交流窗口。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "QilyLean Qily + Lean 启力精益 应用场景： Qily取“启利”谐音，Lean意为精益；用于官网品牌、制造改善知识输出与项目交流窗口。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-lean",
+      "title": "Lean｜精益生产／精益思想",
+      "code": "Lean",
+      "description": "应用场景： 用于识别并减少等待、库存、搬运、返工、过量生产等浪费，以客户价值拉动持续改善。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Lean Lean Production / Lean Thinking 精益生产／精益思想 应用场景： 用于识别并减少等待、库存、搬运、返工、过量生产等浪费，以客户价值拉动持续改善。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-tps",
+      "title": "TPS｜丰田生产方式／丰田生产系统",
+      "code": "TPS",
+      "description": "应用场景： 以准时化生产（JIT）和自働化（Jidoka）为两大支柱，以标准作业、生产均衡化、持续改善、目视化及尊重人为基础，追求在更短交付周期内稳定提供质量、成本和交付结果。TPS不是简单复制看板、零库存或单件流，而是围绕客户价值建立完整的制造管理系统。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "TPS Toyota Production System 丰田生产方式／丰田生产系统 应用场景： 以准时化生产（JIT）和自働化（Jidoka）为两大支柱，以标准作业、生产均衡化、持续改善、目视化及尊重人为基础，追求在更短交付周期内稳定提供质量、成本和交付结果。TPS不是简单复制看板、零库存或单件流，而是围绕客户价值建立完整的制造管理系统。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ai",
+      "title": "AI｜人工智能",
+      "code": "AI",
+      "description": "应用场景： 用于知识检索、方案辅助、数据归纳、异常分析和制造改善经验复用，不替代现场事实确认。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "AI Artificial Intelligence 人工智能 应用场景： 用于知识检索、方案辅助、数据归纳、异常分析和制造改善经验复用，不替代现场事实确认。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ai-lean",
+      "title": "AI + Lean｜人工智能与精益融合",
+      "code": "AI + Lean",
+      "description": "应用场景： 用于把精益方法、案例与企业数据连接起来，辅助诊断、生成方案并沉淀组织知识。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "AI + Lean Artificial Intelligence + Lean 人工智能与精益融合 应用场景： 用于把精益方法、案例与企业数据连接起来，辅助诊断、生成方案并沉淀组织知识。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pqcd",
+      "title": "PQCD｜效率、质量、成本、交付",
+      "code": "PQCD",
+      "description": "应用场景： 用于制造项目目标分解和改善收益评估，避免只看单一效率指标。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PQCD Productivity / Quality / Cost / Delivery 效率、质量、成本、交付 应用场景： 用于制造项目目标分解和改善收益评估，避免只看单一效率指标。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-gemba",
+      "title": "Gemba｜现场／现地现物",
+      "code": "Gemba",
+      "description": "应用场景： 用于到真实作业现场观察流程、核实数据和确认问题，不以会议室推测代替事实。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Gemba Gemba 现场／现地现物 应用场景： 用于到真实作业现场观察流程、核实数据和确认问题，不以会议室推测代替事实。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pilot",
+      "title": "Pilot｜试运行／试点项目",
+      "code": "Pilot",
+      "description": "应用场景： 用于先在小范围验证对策效果与风险，再决定是否横向复制。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Pilot Pilot Run / Pilot Project 试运行／试点项目 应用场景： 用于先在小范围验证对策效果与风险，再决定是否横向复制。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-factory-layout",
+      "title": "Factory Layout｜工厂／产线布局规划",
+      "code": "Factory Layout",
+      "description": "应用场景： 用于规划人流、物流、设备、仓储、消防与扩产空间，降低搬运和交叉干扰。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Factory Layout Factory Layout Planning 工厂／产线布局规划 应用场景： 用于规划人流、物流、设备、仓储、消防与扩产空间，降低搬运和交叉干扰。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-dms",
+      "title": "DMS｜日常管理系统",
+      "code": "DMS",
+      "description": "应用场景： 用于建立班前、日清、异常升级、责任跟踪与复盘的稳定管理节奏。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DMS Daily Management System 日常管理系统 应用场景： 用于建立班前、日清、异常升级、责任跟踪与复盘的稳定管理节奏。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-kpi",
+      "title": "KPI｜关键绩效指标",
+      "code": "KPI",
+      "description": "应用场景： 用于衡量阶段结果；改善试运行期应先暴露问题、建立基准，再谨慎设定考核值。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "KPI Key Performance Indicator 关键绩效指标 应用场景： 用于衡量阶段结果；改善试运行期应先暴露问题、建立基准，再谨慎设定考核值。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-kaizen",
+      "title": "Kaizen｜持续改善",
+      "code": "Kaizen",
+      "description": "应用场景： 用于员工提案、班组改善和跨部门项目，以小步验证、标准固化和持续迭代形成长期改善能力。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Kaizen Continuous Improvement 持续改善 应用场景： 用于员工提案、班组改善和跨部门项目，以小步验证、标准固化和持续迭代形成长期改善能力。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-5s",
+      "title": "5S｜整理、整顿、清扫、清洁、素养",
+      "code": "5S",
+      "description": "应用场景： 用于建立现场基础秩序、定置、清扫与维持标准，为质量、安全、效率和目视化提供基础。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "5S Sort-Set in Order-Shine-Standardize-Sustain 整理、整顿、清扫、清洁、素养 应用场景： 用于建立现场基础秩序、定置、清扫与维持标准，为质量、安全、效率和目视化提供基础。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-6s",
+      "title": "6S｜5S加安全",
+      "code": "6S",
+      "description": "应用场景： 用于在5S基础上纳入危险源识别、安全防护、点检和行为规范，常用于制造现场稽查与红线管理。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "6S 5S + Safety 5S加安全 应用场景： 用于在5S基础上纳入危险源识别、安全防护、点检和行为规范，常用于制造现场稽查与红线管理。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-7s",
+      "title": "7S｜5S加安全与节约",
+      "code": "7S",
+      "description": "应用场景： 用于在6S基础上强化能源、物料、工时与资源节约；不同企业对第七项定义可能不同，使用时应统一口径。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "7S 5S + Safety + Saving 5S加安全与节约 应用场景： 用于在6S基础上强化能源、物料、工时与资源节约；不同企业对第七项定义可能不同，使用时应统一口径。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-8s",
+      "title": "8S｜整理、整顿、清扫、清洁、素养、安全、节约、学习",
+      "code": "8S",
+      "description": "应用场景： 在7S基础上增加学习（Study），用于把现场秩序、安全、资源节约与员工知识技能提升结合起来。不同企业也可能把第八项定义为服务或满意，制度、看板和稽查表必须先统一本企业口径，不能只增加口号而不定义检查标准。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "8S 5S + Safety + Saving + Study 整理、整顿、清扫、清洁、素养、安全、节约、学习 应用场景： 在7S基础上增加学习（Study），用于把现场秩序、安全、资源节约与员工知识技能提升结合起来。不同企业也可能把第八项定义为服务或满意，制度、看板和稽查表必须先统一本企业口径，不能只增加口号而不定义检查标准。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-tqm",
+      "title": "TQM｜全面质量管理",
+      "code": "TQM",
+      "description": "应用场景： 用于把质量责任延伸至设计、采购、制造、交付和服务全过程，推动全员、全流程预防与持续改进。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "TQM Total Quality Management 全面质量管理 应用场景： 用于把质量责任延伸至设计、采购、制造、交付和服务全过程，推动全员、全流程预防与持续改进。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-qcc",
+      "title": "QCC｜品管圈／质量控制小组",
+      "code": "QCC",
+      "description": "应用场景： 用于一线小组围绕现场质量、效率和成本问题开展选题、分析、对策、验证与成果发表。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "QCC Quality Control Circle 品管圈／质量控制小组 应用场景： 用于一线小组围绕现场质量、效率和成本问题开展选题、分析、对策、验证与成果发表。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-cba",
+      "title": "CBA｜成本效益分析",
+      "code": "CBA",
+      "description": "应用场景： 用于比较改善方案的投入与预期收益，支持设备、自动化、工装、布局和数字化项目决策。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "CBA Cost-Benefit Analysis 成本效益分析 应用场景： 用于比较改善方案的投入与预期收益，支持设备、自动化、工装、布局和数字化项目决策。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-roi",
+      "title": "ROI｜投资回报率",
+      "code": "ROI",
+      "description": "计算公式／判定： 投资回报率＝期间净收益 ÷ 项目总投入 × 100%。净收益应扣除维护、能耗、耗材和持续运行成本。 应用场景： 用于衡量改善或投资收益相对投入的比例；应明确计算周期、收益口径和一次性／持续性成本。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ROI Return on Investment 投资回报率 计算公式／判定： 投资回报率＝期间净收益 ÷ 项目总投入 × 100%。净收益应扣除维护、能耗、耗材和持续运行成本。 应用场景： 用于衡量改善或投资收益相对投入的比例；应明确计算周期、收益口径和一次性／持续性成本。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-payback-period",
+      "title": "Payback Period｜投资回收期",
+      "code": "Payback Period",
+      "description": "应用场景： 用于判断累计净收益覆盖初始投入需要多长时间，并识别何时开始进入持续纯效益阶段。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Payback Period Investment Payback Period 投资回收期 应用场景： 用于判断累计净收益覆盖初始投入需要多长时间，并识别何时开始进入持续纯效益阶段。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ceiling",
+      "title": "Ceiling｜天花板／上限",
+      "code": "Ceiling",
+      "description": "应用场景： 用于描述岗位、能力、薪资、产能、技术或商业模式在既定条件下能够达到的上限。它不同于目标值、挑战目标和标杆值；若要突破天花板，通常需要改变资源、技术、流程、组织或其他约束条件。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Ceiling Ceiling / Upper Limit 天花板／上限 应用场景： 用于描述岗位、能力、薪资、产能、技术或商业模式在既定条件下能够达到的上限。它不同于目标值、挑战目标和标杆值；若要突破天花板，通常需要改变资源、技术、流程、组织或其他约束条件。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-smart",
+      "title": "SMART｜具体、可衡量、可实现、相关、有时限的目标原则",
+      "code": "SMART",
+      "description": "应用场景： 用于把改善目标、项目任务和行动计划转化为可检查、可追踪的结果要求，避免目标只写方向而缺少数量、责任和期限。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SMART Specific / Measurable / Achievable / Relevant / Time-bound 具体、可衡量、可实现、相关、有时限的目标原则 应用场景： 用于把改善目标、项目任务和行动计划转化为可检查、可追踪的结果要求，避免目标只写方向而缺少数量、责任和期限。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-raci",
+      "title": "RACI｜执行、负责、协商、知会责任矩阵",
+      "code": "RACI",
+      "description": "应用场景： 用于跨部门项目、程序文件和组织设计中明确谁执行、谁对结果负责、需征询谁及需通知谁；同一任务通常只设一名最终负责者。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "RACI Responsible / Accountable / Consulted / Informed 执行、负责、协商、知会责任矩阵 应用场景： 用于跨部门项目、程序文件和组织设计中明确谁执行、谁对结果负责、需征询谁及需通知谁；同一任务通常只设一名最终负责者。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pdf",
+      "title": "PDF｜便携式文档格式",
+      "code": "PDF",
+      "description": "应用场景： 用于发布版式稳定的程序文件、培训课件和参考资料，适合在线预览、打印与跨设备传阅；需要继续编辑时应同时保留源文件。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PDF Portable Document Format 便携式文档格式 应用场景： 用于发布版式稳定的程序文件、培训课件和参考资料，适合在线预览、打印与跨设备传阅；需要继续编辑时应同时保留源文件。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ppt-pptx",
+      "title": "PPT/PPTX｜演示文稿／培训课件格式",
+      "code": "PPT/PPTX",
+      "description": "应用场景： 用于管理汇报、培训授课、方案评审和项目提案；公开下载时应确认字体、图片、链接及页面比例在不同设备上正常显示。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PPT/PPTX PowerPoint Presentation 演示文稿／培训课件格式 应用场景： 用于管理汇报、培训授课、方案评审和项目提案；公开下载时应确认字体、图片、链接及页面比例在不同设备上正常显示。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-excel-xlsx",
+      "title": "Excel/XLSX｜电子表格／工作簿格式",
+      "code": "Excel/XLSX",
+      "description": "应用场景： 用于标准工时、产能、排程、KPI、人员编制和数据分析；公式、数据验证、版本与保护范围应在交付前核验。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Excel/XLSX Microsoft Excel Workbook 电子表格／工作簿格式 应用场景： 用于标准工时、产能、排程、KPI、人员编制和数据分析；公式、数据验证、版本与保护范围应在交付前核验。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ie",
+      "title": "IE｜工业工程",
+      "code": "IE",
+      "description": "应用场景： 用于标准工时、产能、人力、线平衡、物流与布局改善，是生产效率和资源配置的数据基础。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "IE Industrial Engineering 工业工程 应用场景： 用于标准工时、产能、人力、线平衡、物流与布局改善，是生产效率和资源配置的数据基础。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pe",
+      "title": "PE｜工艺工程",
+      "code": "PE",
+      "description": "应用场景： 用于工艺路线、参数、治具、作业方法、异常改善及量产稳定性管理。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PE Process Engineering 工艺工程 应用场景： 用于工艺路线、参数、治具、作业方法、异常改善及量产稳定性管理。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-te",
+      "title": "TE｜测试工程",
+      "code": "TE",
+      "description": "应用场景： 用于测试方案、测试设备、判定标准、失效定位及测试覆盖率管理。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "TE Test Engineering 测试工程 应用场景： 用于测试方案、测试设备、判定标准、失效定位及测试覆盖率管理。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-me",
+      "title": "ME｜制造工程",
+      "code": "ME",
+      "description": "应用场景： 用于设备、工装、自动化、可制造性与量产工程支持，具体职责依企业组织定义。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ME Manufacturing Engineering 制造工程 应用场景： 用于设备、工装、自动化、可制造性与量产工程支持，具体职责依企业组织定义。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-npi",
+      "title": "NPI｜新产品导入",
+      "code": "NPI",
+      "description": "应用场景： 用于从样件、EVT／DVT／PVT验证到MP转量产的跨部门协同，管控工艺、质量、产能、物料与交付风险。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "NPI New Product Introduction 新产品导入 应用场景： 用于从样件、EVT／DVT／PVT验证到MP转量产的跨部门协同，管控工艺、质量、产能、物料与交付风险。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pmc",
+      "title": "PMC｜生产与物料控制",
+      "code": "PMC",
+      "description": "应用场景： 用于订单评审、主计划、排产、齐套、欠料、在制与交付协调。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PMC Production and Material Control 生产与物料控制 应用场景： 用于订单评审、主计划、排产、齐套、欠料、在制与交付协调。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-r-d",
+      "title": "R&D｜研究与开发",
+      "code": "R&D",
+      "description": "应用场景： 用于产品、技术、材料、结构和平台开发，并与工程、质量、采购和制造共同完成量产转化。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "R&D Research and Development 研究与开发 应用场景： 用于产品、技术、材料、结构和平台开发，并与工程、质量、采购和制造共同完成量产转化。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-qa",
+      "title": "QA｜质量保证",
+      "code": "QA",
+      "description": "应用场景： 侧重质量体系、流程规则、审核监督、风险预防和放行机制，确保从研发、采购、制造到交付的全过程持续满足标准与客户要求。QA关注“体系能否稳定保证质量”，不等同于现场QC检验。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "QA Quality Assurance 质量保证 应用场景： 侧重质量体系、流程规则、审核监督、风险预防和放行机制，确保从研发、采购、制造到交付的全过程持续满足标准与客户要求。QA关注“体系能否稳定保证质量”，不等同于现场QC检验。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-qc",
+      "title": "QC｜质量控制",
+      "code": "QC",
+      "description": "应用场景： 偏重检验、监控、判定和异常处置，通过过程与结果控制防止不合格流出。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "QC Quality Control 质量控制 应用场景： 偏重检验、监控、判定和异常处置，通过过程与结果控制防止不合格流出。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-qe",
+      "title": "QE｜质量工程",
+      "code": "QE",
+      "description": "应用场景： 用于质量策划、客户要求转化、检验与控制方案设计、过程能力分析、异常根因改善、质量工具应用及跨部门闭环。QE承担工程化预防与改进职责，不只是检验判定；企业还可按阶段细分为DQE、PQE、CQE或SQE。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "QE Quality Engineering 质量工程 应用场景： 用于质量策划、客户要求转化、检验与控制方案设计、过程能力分析、异常根因改善、质量工具应用及跨部门闭环。QE承担工程化预防与改进职责，不只是检验判定；企业还可按阶段细分为DQE、PQE、CQE或SQE。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-sqe",
+      "title": "SQE｜供应商质量工程",
+      "code": "SQE",
+      "description": "应用场景： 用于供应商准入、过程审核、来料异常、改善追踪和供应链质量能力提升。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SQE Supplier Quality Engineering 供应商质量工程 应用场景： 用于供应商准入、过程审核、来料异常、改善追踪和供应链质量能力提升。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-dqe",
+      "title": "DQE｜设计质量工程",
+      "code": "DQE",
+      "description": "应用场景： 用于研发阶段的质量策划、设计风险评审、验证和客户质量要求转化。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DQE Design Quality Engineering 设计质量工程 应用场景： 用于研发阶段的质量策划、设计风险评审、验证和客户质量要求转化。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pqe",
+      "title": "PQE｜过程质量工程",
+      "code": "PQE",
+      "description": "应用场景： 用于量产过程质量控制、制程异常分析、控制计划维护和良率提升。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PQE Process Quality Engineering 过程质量工程 应用场景： 用于量产过程质量控制、制程异常分析、控制计划维护和良率提升。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pm",
+      "title": "PM｜项目管理／项目经理",
+      "code": "PM",
+      "description": "应用场景： 用于统筹范围、进度、成本、质量、风险和跨部门交付；具体含义依组织岗位定义。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PM Project Management / Project Manager 项目管理／项目经理 应用场景： 用于统筹范围、进度、成本、质量、风险和跨部门交付；具体含义依组织岗位定义。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-wbs",
+      "title": "WBS｜工作分解结构",
+      "code": "WBS",
+      "description": "应用场景： 用于把项目范围逐层分解为可估算、可分配、可验收的工作包，并作为进度、资源、成本和责任计划的共同基础。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "WBS Work Breakdown Structure 工作分解结构 应用场景： 用于把项目范围逐层分解为可估算、可分配、可验收的工作包，并作为进度、资源、成本和责任计划的共同基础。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-raid",
+      "title": "RAID｜风险、假设、问题与依赖台账",
+      "code": "RAID",
+      "description": "应用场景： 用于项目全过程集中管理潜在风险、待验证假设、已发生问题及跨任务依赖，明确Owner、时限、措施、触发条件与升级路径。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "RAID Risks / Assumptions / Issues / Dependencies 风险、假设、问题与依赖台账 应用场景： 用于项目全过程集中管理潜在风险、待验证假设、已发生问题及跨任务依赖，明确Owner、时限、措施、触发条件与升级路径。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-qcd",
+      "title": "QCD｜质量、成本与交付",
+      "code": "QCD",
+      "description": "应用场景： 用于项目和运营综合评价，避免只追进度而牺牲质量或成本；项目状态应同时呈现目标、实绩、差异和纠偏措施。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "QCD Quality / Cost / Delivery 质量、成本与交付 应用场景： 用于项目和运营综合评价，避免只追进度而牺牲质量或成本；项目状态应同时呈现目标、实绩、差异和纠偏措施。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-dv",
+      "title": "DV｜设计验证",
+      "code": "DV",
+      "description": "应用场景： 用于验证产品设计输出是否满足设计输入与技术规范，通常依据受控样件、试验计划、判定标准和结果报告完成阶段放行。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DV Design Verification 设计验证 应用场景： 用于验证产品设计输出是否满足设计输入与技术规范，通常依据受控样件、试验计划、判定标准和结果报告完成阶段放行。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pv",
+      "title": "PV｜过程／产品确认",
+      "code": "PV",
+      "description": "应用场景： 用于接近量产条件下确认产品、工艺、设备、工装、人员和检验系统能够稳定满足要求，并为PPAP和SOP放行提供证据。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PV Process / Product Validation 过程／产品确认 应用场景： 用于接近量产条件下确认产品、工艺、设备、工装、人员和检验系统能够稳定满足要求，并为PPAP和SOP放行提供证据。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-gate",
+      "title": "Gate｜项目阶段门",
+      "code": "Gate",
+      "description": "应用场景： 用于在项目关键阶段核验交付物、成熟度、风险和资源条件，并形成放行、有条件放行、退回整改或终止的受控决策。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Gate Project Phase Gate 项目阶段门 应用场景： 用于在项目关键阶段核验交付物、成熟度、风险和资源条件，并形成放行、有条件放行、退回整改或终止的受控决策。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pmo",
+      "title": "PMO｜项目管理办公室／项目管理组织",
+      "code": "PMO",
+      "description": "应用场景： 用于建立组织级项目治理、方法标准、项目组合与资源协调、节点评审、风险升级和交付监督；PM负责具体项目，PMO负责统一规则与跨项目协同。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PMO Project Management Office 项目管理办公室／项目管理组织 应用场景： 用于建立组织级项目治理、方法标准、项目组合与资源协调、节点评审、风险升级和交付监督；PM负责具体项目，PMO负责统一规则与跨项目协同。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pdca",
+      "title": "PDCA｜计划—执行—检查—处置",
+      "code": "PDCA",
+      "description": "应用场景： 用于把改善从方案推进到验证、纠偏和标准化，形成持续循环。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PDCA Plan-Do-Check-Act 计划—执行—检查—处置 应用场景： 用于把改善从方案推进到验证、纠偏和标准化，形成持续循环。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-a3",
+      "title": "A3｜A3问题解决／A3报告",
+      "code": "A3",
+      "description": "应用场景： 用于把背景与现状、目标、原因分析、对策、实施计划、效果验证和标准化压缩在一张A3逻辑主线上，推动管理者与现场围绕同一事实基线完成PDCA。A3不是“填一张表”，而是结构化问题解决与辅导机制；没有现场事实、基线数据、责任人和验证证据时，不应以A3完成代替问题关闭。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "A3 A3 Problem Solving / A3 Report A3问题解决／A3报告 应用场景： 用于把背景与现状、目标、原因分析、对策、实施计划、效果验证和标准化压缩在一张A3逻辑主线上，推动管理者与现场围绕同一事实基线完成PDCA。A3不是“填一张表”，而是结构化问题解决与辅导机制；没有现场事实、基线数据、责任人和验证证据时，不应以A3完成代替问题关闭。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-vsm",
+      "title": "VSM｜价值流图析",
+      "code": "VSM",
+      "description": "应用场景： 用于同时呈现客户需求、信息流、物料流、生产流、库存与等待，设计现状图和未来态。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "VSM Value Stream Mapping 价值流图析 应用场景： 用于同时呈现客户需求、信息流、物料流、生产流、库存与等待，设计现状图和未来态。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ct",
+      "title": "CT｜循环时间／工序周期",
+      "code": "CT",
+      "description": "应用场景： 用于测量完成一个作业循环所需时间，判断瓶颈、产能和节拍匹配。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "CT Cycle Time 循环时间／工序周期 应用场景： 用于测量完成一个作业循环所需时间，判断瓶颈、产能和节拍匹配。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-c-o",
+      "title": "C/O｜换型／换模时间",
+      "code": "C/O",
+      "description": "应用场景： 用于衡量上一型号合格品到下一型号合格品之间的停机转换时间。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "C/O Changeover Time 换型／换模时间 应用场景： 用于衡量上一型号合格品到下一型号合格品之间的停机转换时间。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-tt",
+      "title": "TT｜客户需求节拍",
+      "code": "TT",
+      "description": "计算公式／判定： 客户需求节拍＝可用生产时间 ÷ 客户需求量。时间单位与需求周期必须一致。 应用场景： 用于把可用生产时间与客户需求量关联，指导人机配置和工序平衡。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "TT Takt Time 客户需求节拍 计算公式／判定： 客户需求节拍＝可用生产时间 ÷ 客户需求量。时间单位与需求周期必须一致。 应用场景： 用于把可用生产时间与客户需求量关联，指导人机配置和工序平衡。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-lt",
+      "title": "LT｜前置时间／交付周期",
+      "code": "LT",
+      "description": "应用场景： 用于衡量从需求触发到完成交付的总历时，通常包含加工、等待、库存和流动。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "LT Lead Time 前置时间／交付周期 应用场景： 用于衡量从需求触发到完成交付的总历时，通常包含加工、等待、库存和流动。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-dlt",
+      "title": "DLT｜交付前置时间",
+      "code": "DLT",
+      "description": "应用场景： 用于衡量订单或需求到客户交付的周期，识别计划、物料和制造链断点。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DLT Delivery Lead Time 交付前置时间 应用场景： 用于衡量订单或需求到客户交付的周期，识别计划、物料和制造链断点。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-vat",
+      "title": "VAT｜增值时间",
+      "code": "VAT",
+      "description": "应用场景： 用于统计真正改变产品形态、功能且客户愿意付费的加工时间。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "VAT Value-Added Time 增值时间 应用场景： 用于统计真正改变产品形态、功能且客户愿意付费的加工时间。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-var",
+      "title": "VAR｜增值比率",
+      "code": "VAR",
+      "description": "应用场景： 用于衡量增值时间占总周期的比例，暴露等待、库存和搬运浪费。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "VAR Value-Added Ratio 增值比率 应用场景： 用于衡量增值时间占总周期的比例，暴露等待、库存和搬运浪费。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pce",
+      "title": "PCE｜流程周期效率",
+      "code": "PCE",
+      "description": "计算公式／判定： 流程周期效率＝增值时间 ÷ 总交付周期 × 100%。总周期应包含加工、等待、库存和流动。 应用场景： 通常以增值时间除以总交付周期，用于评价价值流中的时间利用质量。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PCE Process Cycle Efficiency 流程周期效率 计算公式／判定： 流程周期效率＝增值时间 ÷ 总交付周期 × 100%。总周期应包含加工、等待、库存和流动。 应用场景： 通常以增值时间除以总交付周期，用于评价价值流中的时间利用质量。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-wip",
+      "title": "WIP｜在制品",
+      "code": "WIP",
+      "description": "应用场景： 用于控制工序间库存、等待和占用；单件流或FIFO设计时需明确标准在制。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "WIP Work in Process 在制品 应用场景： 用于控制工序间库存、等待和占用；单件流或FIFO设计时需明确标准在制。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-inventory-turnover",
+      "title": "Inventory Turnover｜库存周转率",
+      "code": "Inventory Turnover",
+      "description": "计算公式／判定： 库存周转率＝期间销售成本 ÷ 平均库存；平均库存＝（期初库存＋期末库存）÷2。库存周转天数＝期间天数 ÷ 库存周转率。 应用场景： 用于衡量一定期间内库存转化为销售成本或完成出货的速度，适合PMC、采购、仓储、财务与经营管理联合评估原材料、在制品和成品占用。周转率偏低通常提示积压、呆滞、批量过大或需求预测偏差；周转率过高也可能意味着安全库存不足、供应波动或缺料风险，应与库存周转天数、呆滞金额、缺料次数、交付达成率和现金占用共同判断。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Inventory Turnover Inventory Turnover Ratio 库存周转率 计算公式／判定： 库存周转率＝期间销售成本 ÷ 平均库存；平均库存＝（期初库存＋期末库存）÷2。库存周转天数＝期间天数 ÷ 库存周转率。 应用场景： 用于衡量一定期间内库存转化为销售成本或完成出货的速度，适合PMC、采购、仓储、财务与经营管理联合评估原材料、在制品和成品占用。周转率偏低通常提示积压、呆滞、批量过大或需求预测偏差；周转率过高也可能意味着安全库存不足、供应波动或缺料风险，应与库存周转天数、呆滞金额、缺料次数、交付达成率和现金占用共同判断。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-fifo",
+      "title": "FIFO｜先进先出",
+      "code": "FIFO",
+      "description": "应用场景： 用于控制物料和在制品顺序，防止超期、混料、插单和追溯断点。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "FIFO First In, First Out 先进先出 应用场景： 用于控制物料和在制品顺序，防止超期、混料、插单和追溯断点。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-oee",
+      "title": "OEE｜设备综合效率",
+      "code": "OEE",
+      "description": "计算公式／判定： 设备综合效率＝可动率 × 性能效率 × 质量率。三项口径必须使用同一计划生产时间边界。 应用场景： 由可动率、性能效率和质量率构成，用于分析停机、降速与不良损失。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "OEE Overall Equipment Effectiveness 设备综合效率 计算公式／判定： 设备综合效率＝可动率 × 性能效率 × 质量率。三项口径必须使用同一计划生产时间边界。 应用场景： 由可动率、性能效率和质量率构成，用于分析停机、降速与不良损失。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-upph",
+      "title": "UPPH｜人均小时产出／单位人工小时产量",
+      "code": "UPPH",
+      "description": "计算公式／判定： 人均小时产出＝合格产出 ÷（直接人力 × 实际生产小时）。跨产品比较时应同步说明标准工时和工艺差异。 应用场景： 用于衡量投入人工后的生产效率，适合比较不同产线、班组、产品或改善前后的人效。UPPH的分母包含直接人数与生产小时；即使UPH相同，投入人数不同，UPPH也会不同。统计时须统一合格产出、直接人力、实际生产时间、辅助人员是否计入及异常停线口径。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "UPPH Units Per Person Hour 人均小时产出／单位人工小时产量 计算公式／判定： 人均小时产出＝合格产出 ÷（直接人力 × 实际生产小时）。跨产品比较时应同步说明标准工时和工艺差异。 应用场景： 用于衡量投入人工后的生产效率，适合比较不同产线、班组、产品或改善前后的人效。UPPH的分母包含直接人数与生产小时；即使UPH相同，投入人数不同，UPPH也会不同。统计时须统一合格产出、直接人力、实际生产时间、辅助人员是否计入及异常停线口径。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pph",
+      "title": "PPH｜每小时件数／每小时产量（按件计）",
+      "code": "PPH",
+      "description": "计算公式／判定： PPH＝合格件数 ÷ 实际生产小时。分母只包含时间，不包含投入人数；统计时须明确对象是设备、工序、产线还是班组，以及停线和换型时间口径。 应用场景： 用于衡量以“件”为计量单位的单位时间产出，常用于小时产能、设备／工序节拍和瓶颈监控。PPH与UPPH不得混用：PPH不除以人数；UPPH＝合格产出 ÷（直接人力 × 实际生产小时），用于评价人工投入后的单位人工小时产出。若产品计量单位不是“件”，优先使用UPH作为通用单位时间产出。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PPH Parts Per Hour / Pieces Per Hour 每小时件数／每小时产量（按件计） 计算公式／判定： PPH＝合格件数 ÷ 实际生产小时。分母只包含时间，不包含投入人数；统计时须明确对象是设备、工序、产线还是班组，以及停线和换型时间口径。 应用场景： 用于衡量以“件”为计量单位的单位时间产出，常用于小时产能、设备／工序节拍和瓶颈监控。PPH与UPPH不得混用：PPH不除以人数；UPPH＝合格产出 ÷（直接人力 × 实际生产小时），用于评价人工投入后的单位人工小时产出。若产品计量单位不是“件”，优先使用UPH作为通用单位时间产出。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-smed",
+      "title": "SMED｜快速换型／快速换模",
+      "code": "SMED",
+      "description": "应用场景： 用于区分内外部作业、并行准备、快换连接和首件确认，缩短停机转换时间。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SMED Single-Minute Exchange of Die 快速换型／快速换模 应用场景： 用于区分内外部作业、并行准备、快换连接和首件确认，缩短停机转换时间。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-tpm",
+      "title": "TPM｜全员生产维护",
+      "code": "TPM",
+      "description": "应用场景： 用于通过自主保全、计划保全和损失改善提升设备稳定性与综合效率。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "TPM Total Productive Maintenance 全员生产维护 应用场景： 用于通过自主保全、计划保全和损失改善提升设备稳定性与综合效率。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ecrs",
+      "title": "ECRS｜取消—合并—重排—简化",
+      "code": "ECRS",
+      "description": "应用场景： 用于系统审查动作、工序和流程，优先消除无价值工作。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ECRS Eliminate-Combine-Rearrange-Simplify 取消—合并—重排—简化 应用场景： 用于系统审查动作、工序和流程，优先消除无价值工作。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-fpy",
+      "title": "FPY｜一次通过率／直通率",
+      "code": "FPY",
+      "description": "计算公式／判定： 一次通过率＝一次合格数量 ÷ 投入数量 × 100%。返工后合格不能计入一次合格。 应用场景： 用于衡量产品不返工、不返修即一次合格通过的比例。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "FPY First Pass Yield 一次通过率／直通率 计算公式／判定： 一次通过率＝一次合格数量 ÷ 投入数量 × 100%。返工后合格不能计入一次合格。 应用场景： 用于衡量产品不返工、不返修即一次合格通过的比例。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-muda",
+      "title": "Muda｜浪费",
+      "code": "Muda",
+      "description": "应用场景： 用于识别过量生产、等待、搬运、过度加工、库存、动作、不良及人才未充分发挥等非增值活动。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Muda Waste 浪费 应用场景： 用于识别过量生产、等待、搬运、过度加工、库存、动作、不良及人才未充分发挥等非增值活动。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-mura",
+      "title": "Mura｜不均衡",
+      "code": "Mura",
+      "description": "应用场景： 用于识别订单、计划、节拍、工作负荷和物料供应的波动，避免忽忙忽闲和系统失稳。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Mura Unevenness 不均衡 应用场景： 用于识别订单、计划、节拍、工作负荷和物料供应的波动，避免忽忙忽闲和系统失稳。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-muri",
+      "title": "Muri｜过载",
+      "code": "Muri",
+      "description": "应用场景： 用于识别人、机、工装或流程超过合理能力的状态，预防疲劳、故障、质量和安全风险。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Muri Overburden 过载 应用场景： 用于识别人、机、工装或流程超过合理能力的状态，预防疲劳、故障、质量和安全风险。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-jit",
+      "title": "JIT｜准时化生产",
+      "code": "JIT",
+      "description": "应用场景： 用于在需要的时间、按需要的数量生产和配送所需物料，减少库存与等待。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "JIT Just in Time 准时化生产 应用场景： 用于在需要的时间、按需要的数量生产和配送所需物料，减少库存与等待。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-jidoka",
+      "title": "Jidoka｜自働化／带人字旁的自动化",
+      "code": "Jidoka",
+      "description": "应用场景： 用于设备或工序发现异常后自动停止、隔离和提示，防止缺陷连续制造与流出。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Jidoka Autonomation 自働化／带人字旁的自动化 应用场景： 用于设备或工序发现异常后自动停止、隔离和提示，防止缺陷连续制造与流出。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-kanban",
+      "title": "Kanban｜看板拉动",
+      "code": "Kanban",
+      "description": "应用场景： 用于传递生产、补料或搬运信号，按下游实际消耗触发上游补充。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Kanban Kanban 看板拉动 应用场景： 用于传递生产、补料或搬运信号，按下游实际消耗触发上游补充。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pull-system",
+      "title": "Pull System｜拉动式生产",
+      "code": "Pull System",
+      "description": "应用场景： 用于由客户或后工序需求触发生产，控制超前生产、在制品和库存。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Pull System Pull Production System 拉动式生产 应用场景： 用于由客户或后工序需求触发生产，控制超前生产、在制品和库存。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-heijunka",
+      "title": "Heijunka｜生产均衡化",
+      "code": "Heijunka",
+      "description": "应用场景： 用于平衡品种与数量波动，稳定节拍、人员负荷、物料供应和设备利用。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Heijunka Production Leveling 生产均衡化 应用场景： 用于平衡品种与数量波动，稳定节拍、人员负荷、物料供应和设备利用。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-andon",
+      "title": "Andon｜安灯／异常呼叫系统",
+      "code": "Andon",
+      "description": "应用场景： 用于现场即时显示停线、缺料、质量或设备异常，并触发快速响应和升级。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Andon Andon System 安灯／异常呼叫系统 应用场景： 用于现场即时显示停线、缺料、质量或设备异常，并触发快速响应和升级。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-one-piece-flow",
+      "title": "One-piece Flow｜单件流",
+      "code": "One-piece Flow",
+      "description": "应用场景： 用于产品按工艺顺序逐件连续流动，缩短等待和异常反馈时间；不适用时应设计受控小批流。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "One-piece Flow One-Piece Flow 单件流 应用场景： 用于产品按工艺顺序逐件连续流动，缩短等待和异常反馈时间；不适用时应设计受控小批流。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-standard-work",
+      "title": "Standard Work｜标准作业",
+      "code": "Standard Work",
+      "description": "应用场景： 用于规定节拍时间、作业顺序和标准在制，是稳定过程、培训员工和持续改善的基准。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Standard Work Standardized Work 标准作业 应用场景： 用于规定节拍时间、作业顺序和标准在制，是稳定过程、培训员工和持续改善的基准。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-yamazumi",
+      "title": "Yamazumi｜山积图／工序负荷图",
+      "code": "Yamazumi",
+      "description": "应用场景： 用于将各工序作业时间按节拍堆叠比较，识别瓶颈并支持线平衡。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Yamazumi Yamazumi Chart 山积图／工序负荷图 应用场景： 用于将各工序作业时间按节拍堆叠比较，识别瓶颈并支持线平衡。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-line-balancing",
+      "title": "Line Balancing｜生产线平衡",
+      "code": "Line Balancing",
+      "description": "应用场景： 用于按节拍重新分配作业内容，降低工位等待、瓶颈和人员负荷差异。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Line Balancing Production Line Balancing 生产线平衡 应用场景： 用于按节拍重新分配作业内容，降低工位等待、瓶颈和人员负荷差异。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-bottleneck",
+      "title": "Bottleneck｜瓶颈工序",
+      "code": "Bottleneck",
+      "description": "应用场景： 用于识别限制系统产出或交付的关键资源，改善时应优先保护并提升瓶颈能力。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Bottleneck Bottleneck Process 瓶颈工序 应用场景： 用于识别限制系统产出或交付的关键资源，改善时应优先保护并提升瓶颈能力。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-st",
+      "title": "ST｜标准工时",
+      "code": "ST",
+      "description": "应用场景： 用于在规定方法与正常熟练度下确定完成作业所需时间，支撑产能、人力、排程、报价与改善。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ST Standard Time 标准工时 应用场景： 用于在规定方法与正常熟练度下确定完成作业所需时间，支撑产能、人力、排程、报价与改善。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-uph",
+      "title": "UPH｜每小时产出／单位小时产量",
+      "code": "UPH",
+      "description": "计算公式／判定： 每小时产出＝合格产出 ÷ 实际生产小时。该指标不除以投入人数，须明确统计对象是产线、设备、工序还是班组。 应用场景： 用于衡量产线、设备、工序或班组在单位时间内完成的合格产量，常用于小时产能监控、节拍验证、瓶颈分析和排产能力确认。UPH只反映单位时间产出，不考虑投入人数；即使增加人力后UPH提高，也不能据此判断人效同步提高，需要评价人工效率时应使用UPPH。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "UPH Units Per Hour 每小时产出／单位小时产量 计算公式／判定： 每小时产出＝合格产出 ÷ 实际生产小时。该指标不除以投入人数，须明确统计对象是产线、设备、工序还是班组。 应用场景： 用于衡量产线、设备、工序或班组在单位时间内完成的合格产量，常用于小时产能监控、节拍验证、瓶颈分析和排产能力确认。UPH只反映单位时间产出，不考虑投入人数；即使增加人力后UPH提高，也不能据此判断人效同步提高，需要评价人工效率时应使用UPPH。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-otd",
+      "title": "OTD｜准时交付率",
+      "code": "OTD",
+      "description": "应用场景： 用于衡量订单是否在承诺日期完成交付，应统一按订单、批次或数量的计算口径。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "OTD On-Time Delivery 准时交付率 应用场景： 用于衡量订单是否在承诺日期完成交付，应统一按订单、批次或数量的计算口径。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-otif",
+      "title": "OTIF｜按时足量交付率",
+      "code": "OTIF",
+      "description": "应用场景： 用于同时衡量交付是否准时且数量完整，比只看日期更能反映客户交付表现。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "OTIF On Time In Full 按时足量交付率 应用场景： 用于同时衡量交付是否准时且数量完整，比只看日期更能反映客户交付表现。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pts",
+      "title": "PTS｜预定动作时间系统",
+      "code": "PTS",
+      "description": "应用场景： 用于把作业分解为基本动作，并依据预先建立的动作时间值计算标准时间，适合方法设计、工时制定和不同方案比较。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PTS Predetermined Time System 预定动作时间系统 应用场景： 用于把作业分解为基本动作，并依据预先建立的动作时间值计算标准时间，适合方法设计、工时制定和不同方案比较。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-mod",
+      "title": "MOD｜模特排时法／模特法",
+      "code": "MOD",
+      "description": "应用场景： 属于PTS方法，以人体动作模数评定作业时间；用于动作经济分析、标准工时制定和工位方法优化，应用时需统一动作判定规则。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MOD Modular Arrangement of Predetermined Time Standards 模特排时法／模特法 应用场景： 属于PTS方法，以人体动作模数评定作业时间；用于动作经济分析、标准工时制定和工位方法优化，应用时需统一动作判定规则。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-dfm",
+      "title": "DFM｜面向可制造性设计",
+      "code": "DFM",
+      "description": "应用场景： 用于在设计阶段评审材料、工艺、设备、装配和量产能力，降低制造难度与成本。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DFM Design for Manufacturability 面向可制造性设计 应用场景： 用于在设计阶段评审材料、工艺、设备、装配和量产能力，降低制造难度与成本。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-dfa",
+      "title": "DFA｜面向装配设计",
+      "code": "DFA",
+      "description": "应用场景： 用于减少零件、紧固、方向错误和装配动作，提升装配效率、质量与防错能力。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DFA Design for Assembly 面向装配设计 应用场景： 用于减少零件、紧固、方向错误和装配动作，提升装配效率、质量与防错能力。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-dfx",
+      "title": "DFX｜面向全生命周期设计",
+      "code": "DFX",
+      "description": "应用场景： 用于统筹可制造、可装配、可测试、可靠性、成本、维护和环保等设计要求。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DFX Design for Excellence 面向全生命周期设计 应用场景： 用于统筹可制造、可装配、可测试、可靠性、成本、维护和环保等设计要求。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-cad",
+      "title": "CAD｜计算机辅助设计",
+      "code": "CAD",
+      "description": "应用场景： 用于产品、工装、设备、产线与工厂布局的二维／三维工程设计、尺寸校核、干涉检查和受控图纸交付。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "CAD Computer-Aided Design 计算机辅助设计 应用场景： 用于产品、工装、设备、产线与工厂布局的二维／三维工程设计、尺寸校核、干涉检查和受控图纸交付。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ecr",
+      "title": "ECR｜工程变更申请",
+      "code": "ECR",
+      "description": "应用场景： 用于提出并评估图纸、材料、BOM、工艺、设备或软件变更需求及影响。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ECR Engineering Change Request 工程变更申请 应用场景： 用于提出并评估图纸、材料、BOM、工艺、设备或软件变更需求及影响。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ecn",
+      "title": "ECN｜工程变更通知",
+      "code": "ECN",
+      "description": "应用场景： 用于正式发布经批准的工程变更，明确版本、生效时间、库存处置和执行范围。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ECN Engineering Change Notice 工程变更通知 应用场景： 用于正式发布经批准的工程变更，明确版本、生效时间、库存处置和执行范围。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-eco",
+      "title": "ECO｜工程变更指令",
+      "code": "ECO",
+      "description": "应用场景： 用于授权并跟踪工程变更实施，连接审批、任务、文件更新与现场切换。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ECO Engineering Change Order 工程变更指令 应用场景： 用于授权并跟踪工程变更实施，连接审批、任务、文件更新与现场切换。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-evt",
+      "title": "EVT｜工程验证测试",
+      "code": "EVT",
+      "description": "应用场景： 用于样机阶段验证设计原理、关键功能和工程可行性，尽早暴露重大风险。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "EVT Engineering Validation Test 工程验证测试 应用场景： 用于样机阶段验证设计原理、关键功能和工程可行性，尽早暴露重大风险。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-dvt",
+      "title": "DVT｜设计验证测试",
+      "code": "DVT",
+      "description": "应用场景： 用于验证产品设计是否满足规格、可靠性、法规和使用场景要求。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DVT Design Validation Test 设计验证测试 应用场景： 用于验证产品设计是否满足规格、可靠性、法规和使用场景要求。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pvt",
+      "title": "PVT｜生产验证测试",
+      "code": "PVT",
+      "description": "应用场景： 用于试产阶段验证工艺、设备、治具、质量控制、产能和量产准备状态，为MP转量产决策提供依据。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PVT Production Validation Test 生产验证测试 应用场景： 用于试产阶段验证工艺、设备、治具、质量控制、产能和量产准备状态，为MP转量产决策提供依据。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-mp",
+      "title": "MP｜转量产／量产阶段",
+      "code": "MP",
+      "description": "应用场景： 用于PVT及试产验证完成后，确认问题闭环和量产准入条件，正式转入受控的批量生产；重点核查文件、工艺、设备、治具、质量、产能、人员、物料与供应链准备状态。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MP Mass Production 转量产／量产阶段 应用场景： 用于PVT及试产验证完成后，确认问题闭环和量产准入条件，正式转入受控的批量生产；重点核查文件、工艺、设备、治具、质量、产能、人员、物料与供应链准备状态。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ebom",
+      "title": "EBOM｜工程物料清单",
+      "code": "EBOM",
+      "description": "应用场景： 用于描述研发设计结构、零部件层级和版本，是向制造数据转化的源头。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "EBOM Engineering Bill of Materials 工程物料清单 应用场景： 用于描述研发设计结构、零部件层级和版本，是向制造数据转化的源头。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-mbom",
+      "title": "MBOM｜制造物料清单",
+      "code": "MBOM",
+      "description": "应用场景： 用于按实际制造、装配、包装和发料逻辑组织物料，支撑ERP、领料与成本核算。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MBOM Manufacturing Bill of Materials 制造物料清单 应用场景： 用于按实际制造、装配、包装和发料逻辑组织物料，支撑ERP、领料与成本核算。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-routing",
+      "title": "Routing｜工艺路线",
+      "code": "Routing",
+      "description": "应用场景： 用于定义产品经过的工序、工作中心、顺序、标准时间和外协节点，是排程与成本计算基础。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Routing Manufacturing Process Routing 工艺路线 应用场景： 用于定义产品经过的工序、工作中心、顺序、标准时间和外协节点，是排程与成本计算基础。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-csr",
+      "title": "CSR｜顾客特殊要求",
+      "code": "CSR",
+      "description": "应用场景： 用于识别并落实客户在通用体系标准之外提出的质量、开发、审核、追溯、交付和报告要求，并转化到流程、文件与证据链。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "CSR Customer-Specific Requirements 顾客特殊要求 应用场景： 用于识别并落实客户在通用体系标准之外提出的质量、开发、审核、追溯、交付和报告要求，并转化到流程、文件与证据链。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-urs",
+      "title": "URS｜用户需求规格说明",
+      "code": "URS",
+      "description": "应用场景： 用于设备、自动化和数字化项目立项阶段定义功能、性能、接口、安全、产能、验收及合规要求，是方案设计和后续验收的基准。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "URS User Requirement Specification 用户需求规格说明 应用场景： 用于设备、自动化和数字化项目立项阶段定义功能、性能、接口、安全、产能、验收及合规要求，是方案设计和后续验收的基准。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-fat",
+      "title": "FAT｜工厂验收测试",
+      "code": "FAT",
+      "description": "应用场景： 用于设备或系统出厂前在供应商场地验证功能、性能、安全、资料和异常处理，确认满足URS及合同约定后再发运。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "FAT Factory Acceptance Test 工厂验收测试 应用场景： 用于设备或系统出厂前在供应商场地验证功能、性能、安全、资料和异常处理，确认满足URS及合同约定后再发运。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-sat",
+      "title": "SAT｜现场验收测试",
+      "code": "SAT",
+      "description": "应用场景： 用于设备或系统到达使用现场并完成安装调试后，验证与真实环境、物料、人员、网络及上下游接口的适配性。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SAT Site Acceptance Test 现场验收测试 应用场景： 用于设备或系统到达使用现场并完成安装调试后，验证与真实环境、物料、人员、网络及上下游接口的适配性。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-eol",
+      "title": "EOL｜线末／终线测试",
+      "code": "EOL",
+      "description": "应用场景： 用于产线末端对成品功能、性能、外观、追溯和放行条件进行综合确认；不应代替前工序的质量内建与过程控制。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "EOL End of Line 线末／终线测试 应用场景： 用于产线末端对成品功能、性能、外观、追溯和放行条件进行综合确认；不应代替前工序的质量内建与过程控制。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-iatf-16949",
+      "title": "IATF 16949｜汽车行业质量管理体系标准",
+      "code": "IATF 16949",
+      "description": "应用场景： 用于汽车供应链质量体系建设、客户审核、过程管理与持续改进。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "IATF 16949 Automotive Quality Management System Standard 汽车行业质量管理体系标准 应用场景： 用于汽车供应链质量体系建设、客户审核、过程管理与持续改进。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-apqp",
+      "title": "APQP｜产品质量先期策划",
+      "code": "APQP",
+      "description": "应用场景： 用于从项目立项到量产分阶段管理客户要求、风险、验证与交付物。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "APQP Advanced Product Quality Planning 产品质量先期策划 应用场景： 用于从项目立项到量产分阶段管理客户要求、风险、验证与交付物。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-fmea",
+      "title": "FMEA｜失效模式及后果分析",
+      "code": "FMEA",
+      "description": "应用场景： 用于在问题发生前系统识别产品、过程或系统可能怎样失效、造成什么后果、由什么原因引起，以及现有预防与探测控制是否充分。FMEA是上位概念，常按对象展开为DFMEA、PFMEA及系统FMEA；正确缩写为FMEA，“FEMA”属于常见误写。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "FMEA Failure Mode and Effects Analysis 失效模式及后果分析 应用场景： 用于在问题发生前系统识别产品、过程或系统可能怎样失效、造成什么后果、由什么原因引起，以及现有预防与探测控制是否充分。FMEA是上位概念，常按对象展开为DFMEA、PFMEA及系统FMEA；正确缩写为FMEA，“FEMA”属于常见误写。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-dfmea",
+      "title": "DFMEA｜设计失效模式及后果分析",
+      "code": "DFMEA",
+      "description": "应用场景： 用于产品设计阶段识别功能、结构、材料、接口及使用条件中的潜在失效模式，分析失效后果与原因，并通过设计预防、验证和改进降低风险。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DFMEA Design Failure Mode and Effects Analysis 设计失效模式及后果分析 应用场景： 用于产品设计阶段识别功能、结构、材料、接口及使用条件中的潜在失效模式，分析失效后果与原因，并通过设计预防、验证和改进降低风险。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pfmea",
+      "title": "PFMEA｜过程失效模式及后果分析",
+      "code": "PFMEA",
+      "description": "应用场景： 用于制造过程策划和量产前识别人、机、料、法、测、环及工序衔接中的潜在失效，明确预防控制、探测控制与改进措施，并为控制计划提供风险输入。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PFMEA Process Failure Mode and Effects Analysis 过程失效模式及后果分析 应用场景： 用于制造过程策划和量产前识别人、机、料、法、测、环及工序衔接中的潜在失效，明确预防控制、探测控制与改进措施，并为控制计划提供风险输入。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-cp",
+      "title": "CP｜控制计划",
+      "code": "CP",
+      "description": "应用场景： 用于承接DFMEA／PFMEA识别的关键风险，定义产品与过程特性、控制方法、频次、样本量、责任和反应计划，把风险预防要求落实到现场执行。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "CP Control Plan 控制计划 应用场景： 用于承接DFMEA／PFMEA识别的关键风险，定义产品与过程特性、控制方法、频次、样本量、责任和反应计划，把风险预防要求落实到现场执行。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-msa",
+      "title": "MSA｜测量系统分析",
+      "code": "MSA",
+      "description": "应用场景： 用于验证量具和测量过程的重复性、再现性、偏倚、线性与稳定性。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MSA Measurement System Analysis 测量系统分析 应用场景： 用于验证量具和测量过程的重复性、再现性、偏倚、线性与稳定性。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-spc",
+      "title": "SPC｜统计过程控制",
+      "code": "SPC",
+      "description": "应用场景： 用于通过控制图和过程能力识别波动，防止异常流入客户。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SPC Statistical Process Control 统计过程控制 应用场景： 用于通过控制图和过程能力识别波动，防止异常流入客户。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ppap",
+      "title": "PPAP｜生产件批准程序",
+      "code": "PPAP",
+      "description": "应用场景： 用于向客户证明产品、过程和产能已满足量产要求。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PPAP Production Part Approval Process 生产件批准程序 应用场景： 用于向客户证明产品、过程和产能已满足量产要求。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-8d",
+      "title": "8D｜八步问题解决法",
+      "code": "8D",
+      "description": "应用场景： 用于客户投诉和重大异常的团队化遏制、根因、纠正、验证与防再发。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "8D Eight Disciplines Problem Solving 八步问题解决法 应用场景： 用于客户投诉和重大异常的团队化遏制、根因、纠正、验证与防再发。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-5m2e",
+      "title": "5M2E｜人、机、料、法、测、环",
+      "code": "5M2E",
+      "description": "应用场景： 用于从七类要素系统展开可能原因，是要因分析和现场排查框架。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "5M2E Man-Machine-Material-Method-Measurement-Environment 人、机、料、法、测、环 应用场景： 用于从七类要素系统展开可能原因，是要因分析和现场排查框架。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-5why",
+      "title": "5Why｜五个为什么",
+      "code": "5Why",
+      "description": "应用场景： 用于沿因果链连续追问，找到可验证、可控制的根因。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "5Why Five Whys 五个为什么 应用场景： 用于沿因果链连续追问，找到可验证、可控制的根因。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-5w2h",
+      "title": "5W2H｜执行计划七问（怎么做＋投入产出）",
+      "code": "5W2H",
+      "description": "应用场景： 用于根因验证后的行动策划与改善收益评估：What？做什么；Why？为什么做；Who？谁负责；When？何时完成；Where？在哪里实施；How do？采用什么方法／措施，具体怎么做、如何验证；How much？投入多少成本、预期产出多少收益、多久回本、何时开始产生纯效益。5W2H用于把对策转成可执行计划，不替代5M2E、鱼骨图或5Why等要因分析。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "5W2H What？ Why？ Who？ When？ Where？ How do？ How much？ 执行计划七问（怎么做＋投入产出） 应用场景： 用于根因验证后的行动策划与改善收益评估：What？做什么；Why？为什么做；Who？谁负责；When？何时完成；Where？在哪里实施；How do？采用什么方法／措施，具体怎么做、如何验证；How much？投入多少成本、预期产出多少收益、多久回本、何时开始产生纯效益。5W2H用于把对策转成可执行计划，不替代5M2E、鱼骨图或5Why等要因分析。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pareto",
+      "title": "Pareto｜柏拉图／二八分析",
+      "code": "Pareto",
+      "description": "应用场景： 用于按频次、损失或金额排序，锁定少数关键问题和优先改善对象。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Pareto Pareto Analysis 柏拉图／二八分析 应用场景： 用于按频次、损失或金额排序，锁定少数关键问题和优先改善对象。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-poka-yoke",
+      "title": "Poka-Yoke｜防错／防呆",
+      "code": "Poka-Yoke",
+      "description": "应用场景： 用于通过结构、传感、联锁、识别和顺序控制预防错误或立即检出。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Poka-Yoke Mistake Proofing 防错／防呆 应用场景： 用于通过结构、传感、联锁、识别和顺序控制预防错误或立即检出。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-aql",
+      "title": "AQL｜接收质量限",
+      "code": "AQL",
+      "description": "应用场景： 用于GB/T 2828等计数抽样方案中选择抽样表，不等同于允许生产的不良率。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "AQL Acceptance Quality Limit 接收质量限 应用场景： 用于GB/T 2828等计数抽样方案中选择抽样表，不等同于允许生产的不良率。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ac-re",
+      "title": "Ac/Re｜接收数／拒收数",
+      "code": "Ac/Re",
+      "description": "应用场景： 用于判定抽样批次接收或拒收，必须结合样本量和抽样方案使用。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Ac/Re Acceptance / Rejection Number 接收数／拒收数 应用场景： 用于判定抽样批次接收或拒收，必须结合样本量和抽样方案使用。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-gb-t-2828",
+      "title": "GB/T 2828｜计数抽样检验国家标准系列",
+      "code": "GB/T 2828",
+      "description": "应用场景： 用于来料、过程和成品批次抽样，规定检验水平、样本量和Ac/Re判定。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "GB/T 2828 Sampling Procedures for Inspection by Attributes 计数抽样检验国家标准系列 应用场景： 用于来料、过程和成品批次抽样，规定检验水平、样本量和Ac/Re判定。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ctq",
+      "title": "CTQ｜关键质量特性",
+      "code": "CTQ",
+      "description": "应用场景： 用于把客户要求转换为可测量、需重点控制的产品或过程特性。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "CTQ Critical to Quality 关键质量特性 应用场景： 用于把客户要求转换为可测量、需重点控制的产品或过程特性。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-doe",
+      "title": "DOE｜试验设计",
+      "code": "DOE",
+      "description": "应用场景： 用于多因素、多水平试验，识别主效应、交互作用和最佳工艺窗口。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DOE Design of Experiments 试验设计 应用场景： 用于多因素、多水平试验，识别主效应、交互作用和最佳工艺窗口。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-rpn",
+      "title": "RPN｜风险优先数",
+      "code": "RPN",
+      "description": "应用场景： 传统FMEA中由严重度、发生度和探测度相乘得到，用于辅助排序，不能代替专业判断。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "RPN Risk Priority Number 风险优先数 应用场景： 传统FMEA中由严重度、发生度和探测度相乘得到，用于辅助排序，不能代替专业判断。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ap",
+      "title": "AP｜措施优先级",
+      "code": "AP",
+      "description": "应用场景： AIAG-VDA FMEA中依据严重度、发生度和探测度确定高、中、低措施优先级。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "AP Action Priority 措施优先级 应用场景： AIAG-VDA FMEA中依据严重度、发生度和探测度确定高、中、低措施优先级。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-gr-r",
+      "title": "GR&R｜量具重复性与再现性",
+      "code": "GR&R",
+      "description": "应用场景： 用于评价测量设备和不同测量人员带来的变差，是MSA的重要组成。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "GR&R Gage Repeatability and Reproducibility 量具重复性与再现性 应用场景： 用于评价测量设备和不同测量人员带来的变差，是MSA的重要组成。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-cp-cpk",
+      "title": "Cp/Cpk｜过程能力／过程能力指数",
+      "code": "Cp/Cpk",
+      "description": "应用场景： Cp＝(USL−LSL)/(6σ)，反映过程波动宽度相对规格宽度的潜在能力；Cpk＝min[(USL−μ)/(3σ)，(μ−LSL)/(3σ)]，同时考虑均值偏移后的实际能力。 数据量要求： 纯数学计算至少需要2个不同数值才能估计样本标准差，但该结果不具备过程能力判定意义；初步评估宜至少取得约50个相互独立、来自稳定过程的数据；正式过程能力研究建议不少于100个数据，并覆盖正常生产中的不同时间、班次、人员、设备和材料波动。若数据全相同导致标准差为0，或过程尚未受控、量测系统不可信，则Cpk不能作为有效能力结论。常用参考：Cpk＜1.00为能力不足；1.00≤Cpk＜1.33为临界、需改善；1.33≤Cpk＜1.67通常具备一般量产能力；Cpk≥1.67表示能力较好，关键特性或新过程常采用更高目标；Cpk≥2.00表示高能力。最终判定以客户特殊要求、产品风险与企业标准为准。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Cp/Cpk Process Capability / Process Capability Index 过程能力／过程能力指数 应用场景： Cp＝(USL−LSL)/(6σ)，反映过程波动宽度相对规格宽度的潜在能力；Cpk＝min[(USL−μ)/(3σ)，(μ−LSL)/(3σ)]，同时考虑均值偏移后的实际能力。 数据量要求： 纯数学计算至少需要2个不同数值才能估计样本标准差，但该结果不具备过程能力判定意义；初步评估宜至少取得约50个相互独立、来自稳定过程的数据；正式过程能力研究建议不少于100个数据，并覆盖正常生产中的不同时间、班次、人员、设备和材料波动。若数据全相同导致标准差为0，或过程尚未受控、量测系统不可信，则Cpk不能作为有效能力结论。常用参考：Cpk＜1.00为能力不足；1.00≤Cpk＜1.33为临界、需改善；1.33≤Cpk＜1.67通常具备一般量产能力；Cpk≥1.67表示能力较好，关键特性或新过程常采用更高目标；Cpk≥2.00表示高能力。最终判定以客户特殊要求、产品风险与企业标准为准。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pp-ppk",
+      "title": "Pp/Ppk｜过程绩效指数",
+      "code": "Pp/Ppk",
+      "description": "应用场景： 用于基于总体长期波动评价过程表现，常与Cp/Cpk结合判断短期与长期差异。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Pp/Ppk Process Performance / Process Performance Index 过程绩效指数 应用场景： 用于基于总体长期波动评价过程表现，常与Cp/Cpk结合判断短期与长期差异。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-capa",
+      "title": "CAPA｜纠正与预防措施",
+      "code": "CAPA",
+      "description": "应用场景： 用于针对已发生问题消除原因，并针对潜在风险建立预防、验证和防再发机制。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "CAPA Corrective and Preventive Action 纠正与预防措施 应用场景： 用于针对已发生问题消除原因，并针对潜在风险建立预防、验证和防再发机制。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ncr",
+      "title": "NCR｜不符合报告",
+      "code": "NCR",
+      "description": "应用场景： 用于记录产品、过程或体系不符合项，并启动隔离、评审、处置与纠正。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "NCR Nonconformance Report 不符合报告 应用场景： 用于记录产品、过程或体系不符合项，并启动隔离、评审、处置与纠正。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-mrb",
+      "title": "MRB｜材料评审委员会",
+      "code": "MRB",
+      "description": "应用场景： 用于跨部门评审不合格物料或产品的返工、返修、让步接收、报废等处置。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MRB Material Review Board 材料评审委员会 应用场景： 用于跨部门评审不合格物料或产品的返工、返修、让步接收、报废等处置。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-iqc",
+      "title": "IQC｜来料质量控制／来料检验",
+      "code": "IQC",
+      "description": "应用场景： 用于供应商来料的规格核对、抽样或全检、性能与外观判定、批次追溯、隔离和异常反馈。IQC结果应与供应商质量、采购、仓储及MRB处置联动，不能只完成检验而不推动来料风险闭环。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "IQC Incoming Quality Control 来料质量控制／来料检验 应用场景： 用于供应商来料的规格核对、抽样或全检、性能与外观判定、批次追溯、隔离和异常反馈。IQC结果应与供应商质量、采购、仓储及MRB处置联动，不能只完成检验而不推动来料风险闭环。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ipqc",
+      "title": "IPQC｜制程质量控制／过程检验",
+      "code": "IPQC",
+      "description": "应用场景： 用于生产过程中的首件、中检／巡检、工艺参数、关键特性、人员与设备状态确认，并按控制计划执行异常反应。IPQC重点是及时发现过程偏移、遏制不良继续制造和流转，而不是等到终检再筛选。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "IPQC In-Process Quality Control 制程质量控制／过程检验 应用场景： 用于生产过程中的首件、中检／巡检、工艺参数、关键特性、人员与设备状态确认，并按控制计划执行异常反应。IPQC重点是及时发现过程偏移、遏制不良继续制造和流转，而不是等到终检再筛选。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-fqc",
+      "title": "FQC｜最终质量控制／成品终检",
+      "code": "FQC",
+      "description": "应用场景： 用于产品完成后、入库或转入出货环节前，依据受控标准确认尺寸、外观、功能、性能及记录完整性。FQC负责验证完工产品是否满足最终检验要求，不能用末端挑选代替过程质量控制。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "FQC Final Quality Control 最终质量控制／成品终检 应用场景： 用于产品完成后、入库或转入出货环节前，依据受控标准确认尺寸、外观、功能、性能及记录完整性。FQC负责验证完工产品是否满足最终检验要求，不能用末端挑选代替过程质量控制。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-oqc",
+      "title": "OQC｜出货质量控制／出货检验",
+      "code": "OQC",
+      "description": "应用场景： 用于产品出货前复核批次、抽样结果、标识、包装、数量、文件、客户特殊要求和授权放行状态，确保实物、记录与订单要求一致。OQC不能在证据不足或异常未关闭时以经验替代正式放行。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "OQC Outgoing Quality Control 出货质量控制／出货检验 应用场景： 用于产品出货前复核批次、抽样结果、标识、包装、数量、文件、客户特殊要求和授权放行状态，确保实物、记录与订单要求一致。OQC不能在证据不足或异常未关闭时以经验替代正式放行。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-fai",
+      "title": "FAI｜首件检验",
+      "code": "FAI",
+      "description": "应用场景： 用于换线、换模、换料、调机或工程变更后的首件确认，验证量产条件是否正确。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "FAI First Article Inspection 首件检验 应用场景： 用于换线、换模、换料、调机或工程变更后的首件确认，验证量产条件是否正确。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-term-142",
+      "title": "品质三检｜首检、中检、终检",
+      "code": "品质三检",
+      "description": "应用场景： 首检用于开线、换线、换模、换料、调机或工程变更后的首件确认；中检用于生产过程中按规定频次、批次或时间节点检查尺寸、外观、参数和关键特性；终检用于工序完结、包装或放行前确认最终质量状态。品质三检强调检验时点，不等同于“自检、互检、专检”的责任分工。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "品质三检 First / In-process / Final Inspection 首检、中检、终检 应用场景： 首检用于开线、换线、换模、换料、调机或工程变更后的首件确认；中检用于生产过程中按规定频次、批次或时间节点检查尺寸、外观、参数和关键特性；终检用于工序完结、包装或放行前确认最终质量状态。品质三检强调检验时点，不等同于“自检、互检、专检”的责任分工。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ppm",
+      "title": "PPM｜百万分率／百万分之不良数",
+      "code": "PPM",
+      "description": "计算公式／判定： PPM＝不符合数量 ÷ 总数量 × 1,000,000。使用前必须说明分子按不良件还是缺陷数统计，并遵循客户或企业统一口径。 应用场景： 用于在低不良水平下比较供应、制程或客户质量表现；不同统计对象、周期和机会数的数据不得直接混比。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PPM Parts Per Million 百万分率／百万分之不良数 计算公式／判定： PPM＝不符合数量 ÷ 总数量 × 1,000,000。使用前必须说明分子按不良件还是缺陷数统计，并遵循客户或企业统一口径。 应用场景： 用于在低不良水平下比较供应、制程或客户质量表现；不同统计对象、周期和机会数的数据不得直接混比。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-dppm",
+      "title": "DPPM｜百万分之不良品数",
+      "code": "DPPM",
+      "description": "计算公式／判定： DPPM＝不合格品数 ÷ 检验总数 × 1,000,000。同一产品即使存在多个缺陷，按不良品口径通常只计一个不合格品。 应用场景： 用于衡量每百万件产品中不合格品的数量，适合供应商绩效、制程质量和客户流出评价；必须统一不合格品定义、统计周期、分母和重复计数规则。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DPPM Defective Parts Per Million 百万分之不良品数 计算公式／判定： DPPM＝不合格品数 ÷ 检验总数 × 1,000,000。同一产品即使存在多个缺陷，按不良品口径通常只计一个不合格品。 应用场景： 用于衡量每百万件产品中不合格品的数量，适合供应商绩效、制程质量和客户流出评价；必须统一不合格品定义、统计周期、分母和重复计数规则。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-copq",
+      "title": "COPQ｜不良质量成本",
+      "code": "COPQ",
+      "description": "计算公式／判定： COPQ＝内部失效成本＋外部失效成本＋经确认纳入的不良损失；统计范围、周期和财务口径必须统一。 应用场景： 用于量化报废、返工、复检、挑选、停线、退货、索赔、保修及客户流失等质量损失，帮助确定改善优先级。COPQ不等同于全部质量成本，也不能把未经验证的机会损失直接当作财务收益。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "COPQ Cost of Poor Quality 不良质量成本 计算公式／判定： COPQ＝内部失效成本＋外部失效成本＋经确认纳入的不良损失；统计范围、周期和财务口径必须统一。 应用场景： 用于量化报废、返工、复检、挑选、停线、退货、索赔、保修及客户流失等质量损失，帮助确定改善优先级。COPQ不等同于全部质量成本，也不能把未经验证的机会损失直接当作财务收益。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-rca",
+      "title": "RCA｜根本原因分析",
+      "code": "RCA",
+      "description": "应用场景： 用于通过事实、数据和因果验证找到可控制根因，常结合5M2E、鱼骨图、5Why、FTA等方法。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "RCA Root Cause Analysis 根本原因分析 应用场景： 用于通过事实、数据和因果验证找到可控制根因，常结合5M2E、鱼骨图、5Why、FTA等方法。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-s-op",
+      "title": "S&OP｜销售与运营计划",
+      "code": "S&OP",
+      "description": "应用场景： 用于月度或滚动平衡市场需求、产能、库存、供应与经营目标，形成跨部门一致计划。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "S&OP Sales and Operations Planning 销售与运营计划 应用场景： 用于月度或滚动平衡市场需求、产能、库存、供应与经营目标，形成跨部门一致计划。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-mps",
+      "title": "MPS｜主生产计划",
+      "code": "MPS",
+      "description": "应用场景： 用于把订单和预测转换为关键产品、数量与时间计划，驱动后续物料和产能计划。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MPS Master Production Schedule 主生产计划 应用场景： 用于把订单和预测转换为关键产品、数量与时间计划，驱动后续物料和产能计划。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-rccp",
+      "title": "RCCP｜粗能力计划",
+      "code": "RCCP",
+      "description": "应用场景： 用于在主计划层面快速验证关键工作中心、人力或设备是否具备总体承接能力。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "RCCP Rough-Cut Capacity Planning 粗能力计划 应用场景： 用于在主计划层面快速验证关键工作中心、人力或设备是否具备总体承接能力。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-crp",
+      "title": "CRP｜能力需求计划",
+      "code": "CRP",
+      "description": "应用场景： 用于依据工艺路线、工时和订单负荷计算各工作中心的详细产能需求。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "CRP Capacity Requirements Planning 能力需求计划 应用场景： 用于依据工艺路线、工时和订单负荷计算各工作中心的详细产能需求。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-atp",
+      "title": "ATP｜可承诺量",
+      "code": "ATP",
+      "description": "应用场景： 用于依据库存、已排产和已有订单计算还能向客户承诺的数量与日期。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ATP Available to Promise 可承诺量 应用场景： 用于依据库存、已排产和已有订单计算还能向客户承诺的数量与日期。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ctp",
+      "title": "CTP｜可承诺能力",
+      "code": "CTP",
+      "description": "应用场景： 用于进一步考虑物料、产能和约束，判断企业是否有能力按期满足新需求。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "CTP Capable to Promise 可承诺能力 应用场景： 用于进一步考虑物料、产能和约束，判断企业是否有能力按期满足新需求。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-wms",
+      "title": "WMS｜仓储管理系统",
+      "code": "WMS",
+      "description": "应用场景： 用于库位、收发、上架、拣配、盘点、批次和条码追溯管理。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "WMS Warehouse Management System 仓储管理系统 应用场景： 用于库位、收发、上架、拣配、盘点、批次和条码追溯管理。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-scm",
+      "title": "SCM｜供应链管理",
+      "code": "SCM",
+      "description": "应用场景： 用于协同供应商、采购、物流、库存、生产和客户交付，优化端到端供应与响应。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SCM Supply Chain Management 供应链管理 应用场景： 用于协同供应商、采购、物流、库存、生产和客户交付，优化端到端供应与响应。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-sku",
+      "title": "SKU｜库存保有单位",
+      "code": "SKU",
+      "description": "应用场景： 用于区分可独立库存、销售或管理的产品／物料规格，是计划和库存分析的基本颗粒度。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SKU Stock Keeping Unit 库存保有单位 应用场景： 用于区分可独立库存、销售或管理的产品／物料规格，是计划和库存分析的基本颗粒度。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-moq",
+      "title": "MOQ｜最小订购量",
+      "code": "MOQ",
+      "description": "应用场景： 用于供应商采购、生产批量和成本评估；过高会增加库存，过低可能增加价格和换型损失。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MOQ Minimum Order Quantity 最小订购量 应用场景： 用于供应商采购、生产批量和成本评估；过高会增加库存，过低可能增加价格和换型损失。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-eoq",
+      "title": "EOQ｜经济订购量",
+      "code": "EOQ",
+      "description": "应用场景： 用于在订购成本与库存持有成本之间寻求相对经济的采购批量。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "EOQ Economic Order Quantity 经济订购量 应用场景： 用于在订购成本与库存持有成本之间寻求相对经济的采购批量。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-rop",
+      "title": "ROP｜再订货点",
+      "code": "ROP",
+      "description": "应用场景： 用于依据需求速度、采购提前期和安全库存触发补货。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ROP Reorder Point 再订货点 应用场景： 用于依据需求速度、采购提前期和安全库存触发补货。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-safety-stock",
+      "title": "Safety Stock｜安全库存",
+      "code": "Safety Stock",
+      "description": "应用场景： 用于应对需求、交期或供应波动；应基于风险与数据设定，不能掩盖流程问题。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Safety Stock Safety Stock 安全库存 应用场景： 用于应对需求、交期或供应波动；应基于风险与数据设定，不能掩盖流程问题。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-so",
+      "title": "SO｜销售订单",
+      "code": "SO",
+      "description": "应用场景： 用于记录客户、产品、数量、价格、交期和交付要求，并触发计划与供应链协同。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SO Sales Order 销售订单 应用场景： 用于记录客户、产品、数量、价格、交期和交付要求，并触发计划与供应链协同。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-mo-wo",
+      "title": "MO/WO｜生产订单／工单",
+      "code": "MO/WO",
+      "description": "应用场景： 用于下达产品、数量、工艺、日期和领料要求，是现场执行、报工和成本归集载体。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MO/WO Manufacturing / Work Order 生产订单／工单 应用场景： 用于下达产品、数量、工艺、日期和领料要求，是现场执行、报工和成本归集载体。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-plan-attainment",
+      "title": "Plan Attainment｜生产计划达成率",
+      "code": "Plan Attainment",
+      "description": "应用场景： 用于比较计划与实际完成情况，应同步区分欠产、超产、结单、延期及原因。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Plan Attainment Production Plan Attainment 生产计划达成率 应用场景： 用于比较计划与实际完成情况，应同步区分欠产、超产、结单、延期及原因。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-erp",
+      "title": "ERP｜企业资源计划",
+      "code": "ERP",
+      "description": "应用场景： 用于连接销售、计划、采购、库存、生产、成本和财务，形成企业经营主数据链。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ERP Enterprise Resource Planning 企业资源计划 应用场景： 用于连接销售、计划、采购、库存、生产、成本和财务，形成企业经营主数据链。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-mes",
+      "title": "MES｜制造执行系统",
+      "code": "MES",
+      "description": "应用场景： 用于承接计划并管理派工、报工、追溯、质量、设备与在制状态。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MES Manufacturing Execution System 制造执行系统 应用场景： 用于承接计划并管理派工、报工、追溯、质量、设备与在制状态。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-aps",
+      "title": "APS｜高级计划与排程",
+      "code": "APS",
+      "description": "应用场景： 用于在产能、物料、工艺路线、交期和换型约束下生成可执行排程。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "APS Advanced Planning and Scheduling 高级计划与排程 应用场景： 用于在产能、物料、工艺路线、交期和换型约束下生成可执行排程。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-mrp",
+      "title": "MRP｜物料需求计划",
+      "code": "MRP",
+      "description": "应用场景： 用于依据订单、BOM、库存和提前期计算物料净需求与到料计划。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MRP Material Requirements Planning 物料需求计划 应用场景： 用于依据订单、BOM、库存和提前期计算物料净需求与到料计划。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-qms",
+      "title": "QMS｜质量管理系统",
+      "code": "QMS",
+      "description": "应用场景： 用于管理检验、异常、审核、客诉、纠正预防与质量数据。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "QMS Quality Management System 质量管理系统 应用场景： 用于管理检验、异常、审核、客诉、纠正预防与质量数据。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-plm",
+      "title": "PLM｜产品生命周期管理",
+      "code": "PLM",
+      "description": "应用场景： 用于管理图纸、BOM、版本、变更和从设计到退市的产品数据。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PLM Product Lifecycle Management 产品生命周期管理 应用场景： 用于管理图纸、BOM、版本、变更和从设计到退市的产品数据。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-iot",
+      "title": "IoT｜物联网",
+      "code": "IoT",
+      "description": "应用场景： 用于连接设备、传感器与系统，采集状态、能耗、产量和异常数据。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "IoT Internet of Things 物联网 应用场景： 用于连接设备、传感器与系统，采集状态、能耗、产量和异常数据。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-bi",
+      "title": "BI｜商业智能／经营分析",
+      "code": "BI",
+      "description": "应用场景： 用于将多源数据形成指标、看板和趋势分析，支持经营与改善决策。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "BI Business Intelligence 商业智能／经营分析 应用场景： 用于将多源数据形成指标、看板和趋势分析，支持经营与改善决策。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-agv",
+      "title": "AGV｜自动导引运输车",
+      "code": "AGV",
+      "description": "应用场景： 用于按固定或可配置路径搬运物料、在制品和成品，适合路线稳定的厂内物流。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "AGV Automated Guided Vehicle 自动导引运输车 应用场景： 用于按固定或可配置路径搬运物料、在制品和成品，适合路线稳定的厂内物流。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-amr",
+      "title": "AMR｜自主移动机器人",
+      "code": "AMR",
+      "description": "应用场景： 用于自主定位、避障和动态路径规划，适合柔性物流与多点配送。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "AMR Autonomous Mobile Robot 自主移动机器人 应用场景： 用于自主定位、避障和动态路径规划，适合柔性物流与多点配送。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-plc",
+      "title": "PLC｜可编程逻辑控制器",
+      "code": "PLC",
+      "description": "应用场景： 用于设备顺序、联锁、传感器和执行机构控制，是自动化设备的核心控制单元。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PLC Programmable Logic Controller 可编程逻辑控制器 应用场景： 用于设备顺序、联锁、传感器和执行机构控制，是自动化设备的核心控制单元。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-hmi",
+      "title": "HMI｜人机界面",
+      "code": "HMI",
+      "description": "应用场景： 用于操作设备、设置参数、显示状态、报警和维护信息。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "HMI Human-Machine Interface 人机界面 应用场景： 用于操作设备、设置参数、显示状态、报警和维护信息。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-scada",
+      "title": "SCADA｜监控与数据采集系统",
+      "code": "SCADA",
+      "description": "应用场景： 用于对设备、产线或能源系统进行集中监控、数据采集、报警和趋势分析。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SCADA Supervisory Control and Data Acquisition 监控与数据采集系统 应用场景： 用于对设备、产线或能源系统进行集中监控、数据采集、报警和趋势分析。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pcba",
+      "title": "PCBA｜印制电路板组件",
+      "code": "PCBA",
+      "description": "应用场景： 用于描述完成元器件贴装、焊接与测试后的电路板总成。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PCBA Printed Circuit Board Assembly 印制电路板组件 应用场景： 用于描述完成元器件贴装、焊接与测试后的电路板总成。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-smt",
+      "title": "SMT｜表面贴装技术",
+      "code": "SMT",
+      "description": "应用场景： 用于将贴片元器件通过印刷、贴装、回流焊等工序装配到PCB。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SMT Surface Mount Technology 表面贴装技术 应用场景： 用于将贴片元器件通过印刷、贴装、回流焊等工序装配到PCB。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-dip",
+      "title": "DIP｜双列直插／插件工艺",
+      "code": "DIP",
+      "description": "应用场景： 现场通常指通孔元件插件、波峰焊或手焊等后段工艺。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "DIP Dual In-line Package / Through-hole Process 双列直插／插件工艺 应用场景： 现场通常指通孔元件插件、波峰焊或手焊等后段工艺。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-sop",
+      "title": "SOP｜标准作业程序",
+      "code": "SOP",
+      "description": "应用场景： 用于规定流程、职责、步骤、记录和异常处理，确保执行一致。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SOP Standard Operating Procedure 标准作业程序 应用场景： 用于规定流程、职责、步骤、记录和异常处理，确保执行一致。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-swi",
+      "title": "SWI｜标准作业指导书",
+      "code": "SWI",
+      "description": "应用场景： 用于在工位层面明确动作顺序、工艺参数、质量要点和安全要求。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SWI Standard Work Instruction 标准作业指导书 应用场景： 用于在工位层面明确动作顺序、工艺参数、质量要点和安全要求。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-bom",
+      "title": "BOM｜物料清单",
+      "code": "BOM",
+      "description": "应用场景： 用于定义产品层级、物料编码、单位用量和版本，是计划、领料与成本核算基础。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "BOM Bill of Materials 物料清单 应用场景： 用于定义产品层级、物料编码、单位用量和版本，是计划、领料与成本核算基础。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ehs",
+      "title": "EHS｜环境、健康与安全",
+      "code": "EHS",
+      "description": "应用场景： 用于管理职业健康、消防、环保、危险源、事故预防和合规要求。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "EHS Environment, Health and Safety 环境、健康与安全 应用场景： 用于管理职业健康、消防、环保、危险源、事故预防和合规要求。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-esd",
+      "title": "ESD｜静电放电／防静电管理",
+      "code": "ESD",
+      "description": "应用场景： 用于电子制造中控制人体、设备和物料静电，防止元器件潜在或即时损伤。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ESD Electrostatic Discharge 静电放电／防静电管理 应用场景： 用于电子制造中控制人体、设备和物料静电，防止元器件潜在或即时损伤。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-pcb",
+      "title": "PCB｜印制电路板",
+      "code": "PCB",
+      "description": "应用场景： 用于承载并电气连接电子元器件，是PCBA装配前的基础板件。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "PCB Printed Circuit Board 印制电路板 应用场景： 用于承载并电气连接电子元器件，是PCBA装配前的基础板件。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-spi",
+      "title": "SPI｜锡膏检测",
+      "code": "SPI",
+      "description": "应用场景： 用于SMT印刷后检测锡膏高度、面积、体积、偏移和连锡风险。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "SPI Solder Paste Inspection 锡膏检测 应用场景： 用于SMT印刷后检测锡膏高度、面积、体积、偏移和连锡风险。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-aoi",
+      "title": "AOI｜自动光学检测",
+      "code": "AOI",
+      "description": "应用场景： 用于通过视觉检测贴装、焊点、极性、缺件、偏移等外观缺陷。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "AOI Automated Optical Inspection 自动光学检测 应用场景： 用于通过视觉检测贴装、焊点、极性、缺件、偏移等外观缺陷。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ict",
+      "title": "ICT｜在线电路测试",
+      "code": "ICT",
+      "description": "应用场景： 用于对PCBA元件、网络连接、开短路和部分电气参数进行测试。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "ICT In-Circuit Test 在线电路测试 应用场景： 用于对PCBA元件、网络连接、开短路和部分电气参数进行测试。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-fct",
+      "title": "FCT｜功能测试",
+      "code": "FCT",
+      "description": "应用场景： 用于验证PCBA或整机在模拟实际工作条件下的功能与性能。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "FCT Functional Circuit Test 功能测试 应用场景： 用于验证PCBA或整机在模拟实际工作条件下的功能与性能。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-ipc-a-610",
+      "title": "IPC-A-610｜电子组件可接受性标准",
+      "code": "IPC-A-610",
+      "description": "应用场景： 用于PCBA焊接、装配和外观质量判定，应按客户等级与最新适用版本执行。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "IPC-A-610 Acceptability of Electronic Assemblies 电子组件可接受性标准 应用场景： 用于PCBA焊接、装配和外观质量判定，应按客户等级与最新适用版本执行。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-cnc",
+      "title": "CNC｜计算机数字控制",
+      "code": "CNC",
+      "description": "应用场景： 用于机加工设备按程序控制刀具和运动，实现零件的精密加工与重复制造。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "CNC Computer Numerical Control 计算机数字控制 应用场景： 用于机加工设备按程序控制刀具和运动，实现零件的精密加工与重复制造。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-mtbf",
+      "title": "MTBF｜平均故障间隔时间",
+      "code": "MTBF",
+      "description": "计算公式／判定： MTBF＝统计周期内设备有效运行时间 ÷ 故障次数。故障边界、运行时间和统计对象必须使用统一口径。 应用场景： 用于衡量可修复设备两次故障之间的平均稳定运行时间，评价重复故障控制、预防维护和可靠性改善效果；应与MTTR、OEE和重复故障率联合观察。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MTBF Mean Time Between Failures 平均故障间隔时间 计算公式／判定： MTBF＝统计周期内设备有效运行时间 ÷ 故障次数。故障边界、运行时间和统计对象必须使用统一口径。 应用场景： 用于衡量可修复设备两次故障之间的平均稳定运行时间，评价重复故障控制、预防维护和可靠性改善效果；应与MTTR、OEE和重复故障率联合观察。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-mttr",
+      "title": "MTTR｜平均修复时间",
+      "code": "MTTR",
+      "description": "计算公式／判定： MTTR＝从故障开始到恢复合格生产的总时间 ÷ 故障次数。完整时间应覆盖响应、诊断、等待、修复、调试和质量验证。 应用场景： 用于衡量设备故障后的完整恢复能力，识别人员响应、故障诊断、备件、权限、维修标准和首件验证等损失；应与MTBF成对观察。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "MTTR Mean Time To Repair 平均修复时间 计算公式／判定： MTTR＝从故障开始到恢复合格生产的总时间 ÷ 故障次数。完整时间应覆盖响应、诊断、等待、修复、调试和质量验证。 应用场景： 用于衡量设备故障后的完整恢复能力，识别人员响应、故障诊断、备件、权限、维修标准和首件验证等损失；应与MTBF成对观察。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
+    },
+    {
+      "url": "/knowledge/terminology.html#term-sponsor",
+      "title": "Sponsor｜项目发起人／项目主责高层",
+      "code": "Sponsor",
+      "description": "核心口径： Sponsor代表组织层面对项目进行授权与背书，负责确认项目价值、保障关键资源、主持或参与重大里程碑评审，并在跨部门障碍或重大风险超出项目经理权限时推动升级解决。 应用场景： 用于重大客户交付、质量／安全、量产爬坡、自动化、降本、工厂规划及数智化项目。Sponsor不替代项目经理做日常计划，也不等同于“出资赞助人”；在制造企业中更适合解释为“项目发起人”或“项目主责高层”。",
+      "headings": "全站术语｜精益生产｜工业工程｜制造运营",
+      "text": "Sponsor Project Sponsor 项目发起人／项目主责高层 核心口径： Sponsor代表组织层面对项目进行授权与背书，负责确认项目价值、保障关键资源、主持或参与重大里程碑评审，并在跨部门障碍或重大风险超出项目经理权限时推动升级解决。 应用场景： 用于重大客户交付、质量／安全、量产爬坡、自动化、降本、工厂规划及数智化项目。Sponsor不替代项目经理做日常计划，也不等同于“出资赞助人”；在制造企业中更适合解释为“项目发起人”或“项目主责高层”。 精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益",
+      "kind": "全站术语",
+      "date": "2026-08-26"
     }
   ]
 }
