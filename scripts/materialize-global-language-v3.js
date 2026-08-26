@@ -15,7 +15,7 @@ const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
 const BASELINE_VERSION = '20260825-mobile-navigation-recovery-v1';
 const SAFE_VERSION = '20260825-translation-safe-inpage-v2';
-const CONSISTENCY = `/site-ui-consistency-v1.js?v=${BASELINE_VERSION}`;
+const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260826-search-navigation-contrast-v44';
 const NAVIGATION = '/site-navigation.js?v=20260826-search-navigation-contrast-v44';
 const PARENT_NAV = '/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE = '/site-dock-share-runtime-v1.js?v=20260825-language-runtime-compat-v31';
