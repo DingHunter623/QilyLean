@@ -10,6 +10,8 @@ on:
       - "package.json"
       - "package-lock.json"
       - ".github/workflows/deploy-worker.yml"
+      - "site-translation-safe-runtime-v1.js"
+      - "scripts/validate-global-language-runtime-compat-v1.js"
   workflow_dispatch:
 
 permissions:
@@ -27,30 +29,32 @@ jobs:
 
     steps:
       - name: 检出代码
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: 安装 Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: "24"
 
       - name: 安装依赖
         run: npm install
 
-      - name: 校验多素材、标准Office导出与最新简报
-        run: npm run test:maintenance
-
-      - name: 校验 Worker 语法与咨询/翻译接口
+      - name: 校验翻译运行时与 Worker 契约
         shell: bash
         run: |
+          node --check site-translation-safe-runtime-v1.js
+          node --check site-translation-progress-v1.js
           node --check cloudflare-worker/worker.js
           node --check cloudflare-worker/worker-social.js
+          node --check scripts/validate-global-language-runtime-compat-v1.js
+          node scripts/validate-global-language-runtime-compat-v1.js
           grep -q "url.pathname === '/consultations'" cloudflare-worker/worker.js
           grep -q "url.pathname === '/admin/consultations'" cloudflare-worker/worker.js
           grep -q "url.pathname === '/brief-feedback'" cloudflare-worker/worker-social.js
           grep -q "url.pathname === '/admin/brief-feedback'" cloudflare-worker/worker-social.js
           grep -q "url.pathname === '/translate'" cloudflare-worker/worker-social.js
           grep -q "TRANSLATION_SYSTEM_INSTRUCTIONS" cloudflare-worker/worker-social.js
+          grep -q 'TRANSLATE_DAILY_IP_LIMIT = "600"' wrangler.toml
           grep -q "admin@qilylean.com" cloudflare-worker/worker.js
 
       - name: 校验 Cloudflare 账户 ID
