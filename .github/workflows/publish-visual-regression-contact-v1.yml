@@ -1,4 +1,4 @@
-name: Publish Sitewide Visual & Contact Closure V4
+name: Publish Sitewide Visual & Contact Closure V5
 
 on:
   push:
@@ -63,27 +63,33 @@ jobs:
             node scripts/materialize-contact-route-v6.js
             node scripts/materialize-contact-route-v6.js --check
             node scripts/validate-seo-indexability.js
-            grep -q 'Site Shell Recovery + Contact Route V7' site-contact-route-v1.js
-            grep -q 'native-new-tab-v7' site-contact-route-v1.js
+            grep -q 'Site Shell Recovery + Contact Route V8' site-contact-route-v1.js
+            grep -q 'native-new-tab-v8' site-contact-route-v1.js
             grep -q 'sanitizeContactMaps' site-contact-route-v1.js
             grep -q "anchor.target='_blank'" site-contact-route-v1.js
+            grep -q "google:'https://www.google.com/maps/dir/?api=1&destination='" site-contact-route-v1.js
+            grep -q "apple:'https://maps.apple.com/?daddr='" site-contact-route-v1.js
             grep -q 'QilyLean Sitewide Visual Regression Closure V2' site-visual-regression-closure-v1.css
             grep -q 'background:var(--qily-fix-alt)!important' site-visual-regression-closure-v1.css
             grep -q 'contact-page-v3 .map-preview iframe' site-stability-recovery-v1.css
             grep -q '/qilylean/wechat-qrcode-20260826.png?v=20260826-user-resubmitted-v2' contact/index.html
             grep -q 'data-qily-map-address="苏吕党主题公园"' contact/index.html
             grep -q 'data-qily-map-address="皂三村口 石羊街139号"' contact/index.html
-            grep -q 'data-qily-clean-map-nav="v1"' contact/index.html
+            grep -q 'data-qily-clean-map-nav="v2"' contact/index.html
             grep -q 'data-qily-map-provider="amap"' contact/index.html
             grep -q 'data-qily-map-provider="baidu"' contact/index.html
             grep -q 'data-qily-map-provider="tencent"' contact/index.html
+            grep -q 'data-qily-map-provider="google"' contact/index.html
+            grep -q 'data-qily-map-provider="apple"' contact/index.html
             grep -q 'uri.amap.com/search' contact/index.html
             grep -q 'api.map.baidu.com/place/search' contact/index.html
             grep -q 'apis.map.qq.com/uri/v1/search' contact/index.html
+            grep -q 'www.google.com/maps/dir/?api=1' contact/index.html
+            grep -q 'maps.apple.com/?daddr=' contact/index.html
             ! grep -q '<iframe' contact/index.html
             ! grep -q 'api.map.baidu.com/geocoder' contact/index.html
-            grep -q 'data-qily-contact-route-direct="v7"' contact/index.html
-            grep -q '20260826-contact-native-newtab-map-v7' contact/index.html
+            grep -q 'data-qily-contact-route-direct="v8"' contact/index.html
+            grep -q '20260826-contact-native-newtab-map-v8' contact/index.html
             git diff --check
             if git diff --quiet; then
               echo 'Sitewide visual/contact baseline already current on latest main.'
