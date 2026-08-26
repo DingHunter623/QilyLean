@@ -58,13 +58,13 @@ jobs:
             node --check scripts/materialize-global-language-v3.js
             node --check scripts/materialize-contact-route-v6.js
             node scripts/materialize-global-language-v3.js
+            node scripts/materialize-global-language-v3.js --check
             node scripts/materialize-contact-route-v6.js
             node scripts/materialize-contact-route-v6.js --check
-            node scripts/materialize-global-language-v3.js --check || true
             node scripts/validate-seo-indexability.js
             grep -q 'Site Shell Recovery + Contact Route V6' site-contact-route-v1.js
             grep -q 'native-new-tab-v6' site-contact-route-v1.js
-            grep -q 'target=.\?_blank.\?' site-contact-route-v1.js
+            grep -q "anchor.target='_blank'" site-contact-route-v1.js
             grep -q 'QilyLean Sitewide Visual Regression Closure V2' site-visual-regression-closure-v1.css
             grep -q 'background:var(--qily-fix-alt)!important' site-visual-regression-closure-v1.css
             grep -q '/qilylean/wechat-qrcode.svg?v=20260826-clean-personal-qr-v1' contact/index.html
