@@ -1,9 +1,11 @@
-/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V10.1｜2026-08-25
+/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V10.2｜2026-08-26
  * 保留静态六类能力、Dock顺序与回顶部功能；中文标签仅在 zh-CN 权威源模式下强制校正。
+ * 联系入口统一命名为“联系我们”，由全站独立联系页承接，不再表达为模糊“交流”。
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyCoreServiceDockClosureV101)return;
+  if(w.__qilyCoreServiceDockClosureV102)return;
+  w.__qilyCoreServiceDockClosureV102=true;
   w.__qilyCoreServiceDockClosureV101=true;
   w.__qilyCoreServiceDockClosureV10=true;
   function sourceMode(){return (d.documentElement.getAttribute('data-qily-language')||'zh-CN')==='zh-CN'}
@@ -32,7 +34,7 @@
   function normalizeDock(){
     var dock=d.getElementById('floatDock');if(!dock)return false;
     var top=ensureBackToTop(dock);
-    var labels={home:{html:'首页',aria:'首页'},top:{html:'回<br>顶部',aria:'回顶部'},back:{html:'回<br>上一层',aria:'回上一层'},search:{html:'本站<br>搜索',aria:'本站搜索'},current:{html:'分享<br>当前页',aria:'分享当前页'},contact:{html:'交流',aria:'交流'}};
+    var labels={home:{html:'首页',aria:'首页'},top:{html:'回<br>顶部',aria:'回顶部'},back:{html:'回<br>上一层',aria:'回上一层'},search:{html:'本站<br>搜索',aria:'本站搜索'},current:{html:'分享<br>当前页',aria:'分享当前页'},contact:{html:'联系<br>我们',aria:'联系我们'}};
     var order=['home','top','back','search','current','contact'];var enforceChinese=sourceMode();
     dock.querySelectorAll('[data-action="share"]').forEach(function(button){button.remove();});
     var buttons=order.map(function(action){var button=action==='top'?top:dock.querySelector('[data-action="'+action+'"]');if(!button)return null;if(enforceChinese){if(button.innerHTML!==labels[action].html)button.innerHTML=labels[action].html;if(button.getAttribute('aria-label')!==labels[action].aria)button.setAttribute('aria-label',labels[action].aria);if(button.getAttribute('title')!==labels[action].aria)button.setAttribute('title',labels[action].aria);}return button;}).filter(Boolean);
