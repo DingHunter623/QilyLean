@@ -1,0 +1,64 @@
+name: Publish Daily Brief Layout Guard V1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-daily-brief-layout-guard-v1.css'
+      - 'scripts/publish-daily-brief-layout-guard-v1.js'
+      - 'qilylean/npi-four-stage-series-v1.css'
+      - '.github/workflows/publish-daily-brief-layout-guard-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-daily-brief-layout-guard-v1
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Materialize shared Selected Brief layout guard
+        run: |
+          node --check scripts/publish-daily-brief-layout-guard-v1.js
+          node scripts/publish-daily-brief-layout-guard-v1.js
+          git diff --check
+
+      - name: Validate screenshot regressions and sitewide coverage
+        shell: bash
+        run: |
+          grep -q 'align-items:start!important' site-daily-brief-layout-guard-v1.css
+          grep -q 'background:transparent!important' site-daily-brief-layout-guard-v1.css
+          grep -q 'minmax(230px,230px) repeat(20,minmax(46px,46px))' site-daily-brief-layout-guard-v1.css
+          grep -q 'white-space:nowrap!important' site-daily-brief-layout-guard-v1.css
+          grep -q 'article.post .tags>.tag' site-daily-brief-layout-guard-v1.css
+          grep -q '/site-daily-brief-layout-guard-v1.css?v=20260826-daily-brief-layout-v1' qilylean/daily/2026-05-23.html
+          node scripts/publish-daily-brief-layout-guard-v1.js --check
+          npm run test:visual
+
+      - name: Commit materialized Selected Brief pages
+        shell: bash
+        run: |
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add qilylean/daily/*.html
+          if git diff --cached --quiet; then
+            echo 'Daily Brief layout guard already materialized.'
+            exit 0
+          fi
+          git commit -m 'fix: materialize sitewide daily brief layout guard'
+          git pull --rebase origin main
+          git push origin HEAD:main
