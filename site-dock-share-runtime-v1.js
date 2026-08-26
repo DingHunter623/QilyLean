@@ -1,10 +1,11 @@
-/* QilyLean floating Dock order closure v3.2｜2026-08-26
+/* QilyLean floating Dock order closure v3.3｜2026-08-26
  * Stable six-action order without MutationObserver loops.
- * Contact entry is the dedicated contact-page action and must never be rewritten to legacy contact popup semantics.
+ * Contact uses the core-compatible data-action="contact" while the recovery runtime owns direct /contact/ navigation.
  */
 (function (d, w) {
   'use strict';
-  if (w.__qilyDockOrderClosureV32) return;
+  if (w.__qilyDockOrderClosureV33) return;
+  w.__qilyDockOrderClosureV33 = true;
   w.__qilyDockOrderClosureV32 = true;
   w.__qilyDockOrderClosureV31 = true;
   w.__qilyDockOrderClosureV3 = true;
@@ -23,8 +24,8 @@
       if (text.indexOf('分享官网') >= 0 || label.indexOf('分享官网') >= 0 || text === '分享官网') button.remove();
     });
 
-    var contact = dock.querySelector('[data-action="contact-page"],[data-action="contact"]');
-    if (contact && contact.getAttribute('data-action') !== 'contact-page') contact.setAttribute('data-action', 'contact-page');
+    var contact = dock.querySelector('[data-action="contact"],[data-action="contact-page"]');
+    if (contact && contact.getAttribute('data-action') !== 'contact') contact.setAttribute('data-action', 'contact');
 
     var labels = {
       home: '首页',
@@ -32,16 +33,16 @@
       back: '回<br>上一层',
       search: '本站<br>搜索',
       current: '分享<br>当前页',
-      'contact-page': '联系<br>我们'
+      contact: '联系<br>我们'
     };
-    var order = ['home', 'top', 'back', 'search', 'current', 'contact-page'];
+    var order = ['home', 'top', 'back', 'search', 'current', 'contact'];
     var enforceChinese = sourceMode();
     var buttons = order.map(function (action) {
-      var button = action === 'contact-page' ? contact : dock.querySelector('[data-action="' + action + '"]');
+      var button = action === 'contact' ? contact : dock.querySelector('[data-action="' + action + '"]');
       if (!button) return null;
       if (enforceChinese) {
         if (button.innerHTML !== labels[action]) button.innerHTML = labels[action];
-        var aria = action === 'contact-page' ? '联系我们' : button.textContent.replace(/\s+/g, '');
+        var aria = action === 'contact' ? '联系我们' : button.textContent.replace(/\s+/g, '');
         if (button.getAttribute('aria-label') !== aria) button.setAttribute('aria-label', aria);
         if (button.getAttribute('title') !== aria) button.setAttribute('title', aria);
       }
