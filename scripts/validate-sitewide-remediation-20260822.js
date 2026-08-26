@@ -81,7 +81,7 @@ assert(progress.includes('Translation Progress Notice V2'),'Translation progress
 assert(progress.includes('if(unchanged)return'),'Translation progress notice can still endlessly reset.');
 assert(progressCss.includes('pointer-events:none'),'Translation progress notice must remain non-blocking.');
 assert(interactionContrast.includes("setAttribute('data-qily-interaction-contrast'"),'Interactive contrast guard missing.');
-assert(contentContrast.includes('Sitewide Content Contrast Guard V6'),'Static content contrast V6 runtime missing.');
+assert(contentContrast.includes('Sitewide Content Contrast Guard V7'),'Static content contrast V7 runtime missing.');
 assert(contentContrast.includes('data-qily-content-contrast-fixed'),'Static content contrast guard missing.');
 assert(contentContrast.includes('function renderedForeground(style)'),'Rendered text-fill inspection missing.');
 assert(!contentContrast.includes("style&&style.backgroundImage&&style.backgroundImage!=='none'"),'Generic gradient still bypasses contrast correction.');
@@ -106,4 +106,4 @@ for(const relative of trackedHtml()){
 }
 assert(navigationPages>=460,`Navigation coverage unexpectedly fell to ${navigationPages} pages.`);
 assert(stale.length===0,`Stale public shell entries: ${stale.slice(0,20).join(', ')}`);
-process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages plus fast fail-closed translation, content contrast V6 readable surfaces and mobile navigation (${runtimeBaseline}).\n`);
+process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages plus fast fail-closed translation, content contrast V7 readable surfaces and mobile navigation (${runtimeBaseline}).\n`);
