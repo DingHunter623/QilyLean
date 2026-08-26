@@ -1,13 +1,19 @@
-/* QilyLean Global Header Axis V1｜2026-08-26
+/* QilyLean Global Header Axis V1｜2026-08-27
  * Goal: align Logo / primary navigation / translation utility to the same 1560px site content axis.
  * Desktop: every first-level item remains visible at 100% zoom without horizontal clipping.
  * Active/current navigation keeps the exact same type scale as sibling items; highlight never shrinks labels.
+ * Mobile: primary-navigation typography is identical to desktop governance; layout may scroll, typography may not shrink.
  * Lean-production authority cards clear the hero action row instead of visually overlapping it.
- * Mobile recovery: column-layout navigation must reset desktop flex-basis so its row never collapses to zero height.
  */
 :root{
   --qily-header-axis:var(--qily-content-axis,1560px);
   --qily-header-gutter:var(--qily-content-axis-gutter,clamp(18px,2.2vw,56px));
+  --qily-primary-nav-font-size:20px;
+  --qily-primary-nav-font-weight:900;
+  --qily-primary-nav-color:#182420;
+  --qily-primary-nav-active:#0f4b5a;
+  --qily-primary-nav-active-text:#fff;
+  --qily-primary-nav-active-border:#ffe39b;
 }
 
 html body header.qily-site-header,
@@ -72,26 +78,45 @@ html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav
 
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
 html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
+  display:inline-flex!important;
   flex:0 0 auto!important;
+  align-items:center!important;
+  justify-content:center!important;
   min-width:0!important;
   max-width:none!important;
-  padding-left:clamp(6px,.48vw,9px)!important;
-  padding-right:clamp(6px,.48vw,9px)!important;
+  min-height:42px!important;
+  padding:7px clamp(6px,.48vw,9px)!important;
+  border:1px solid transparent!important;
+  border-radius:10px!important;
+  color:var(--qily-primary-nav-color)!important;
+  -webkit-text-fill-color:var(--qily-primary-nav-color)!important;
+  background:transparent!important;
+  font-size:var(--qily-primary-nav-font-size)!important;
+  line-height:1.22!important;
+  font-weight:var(--qily-primary-nav-font-weight)!important;
+  text-decoration:none!important;
   white-space:nowrap!important;
   word-break:keep-all!important;
   overflow-wrap:normal!important;
 }
-
-/* R6 current-item parity: active state changes color/background only, never typography geometry. */
-@media (min-width:1181px){
-  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
-  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
-  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"],
-  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"]{
-    font-size:clamp(18px,1.12vw,20px)!important;
-    line-height:1.2!important;
-    font-weight:850!important;
-  }
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:hover,
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:focus-visible,
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:hover,
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:focus-visible{
+  color:var(--qily-primary-nav-active-text)!important;
+  -webkit-text-fill-color:var(--qily-primary-nav-active-text)!important;
+  background:var(--qily-primary-nav-active)!important;
+  border-color:var(--qily-primary-nav-active)!important;
+}
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"],
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"]{
+  color:var(--qily-primary-nav-active-text)!important;
+  -webkit-text-fill-color:var(--qily-primary-nav-active-text)!important;
+  background:var(--qily-primary-nav-active)!important;
+  border-color:var(--qily-primary-nav-active-border)!important;
+  font-size:var(--qily-primary-nav-font-size)!important;
+  line-height:1.22!important;
+  font-weight:var(--qily-primary-nav-font-weight)!important;
 }
 
 /* Lean-production hero clearance: the 4 authority cards begin below the hero action row.
@@ -107,7 +132,7 @@ html body .qily-web-translate__select option{font-size:16px!important}
 @media (min-width:1181px) and (max-width:1500px){
   html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
   html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
-    font-size:clamp(18px,1.35vw,20px)!important;
+    font-size:var(--qily-primary-nav-font-size)!important;
     padding-left:5px!important;
     padding-right:5px!important;
   }
@@ -175,8 +200,22 @@ html body .qily-web-translate__select option{font-size:16px!important}
   html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
     display:inline-flex!important;
     flex:0 0 auto!important;
-    min-height:36px!important;
+    min-height:42px!important;
+    padding:8px 11px!important;
     align-items:center!important;
+    color:var(--qily-primary-nav-color)!important;
+    -webkit-text-fill-color:var(--qily-primary-nav-color)!important;
+    font-size:var(--qily-primary-nav-font-size)!important;
+    line-height:1.22!important;
+    font-weight:var(--qily-primary-nav-font-weight)!important;
+  }
+  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"],
+  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"]{
+    color:var(--qily-primary-nav-active-text)!important;
+    -webkit-text-fill-color:var(--qily-primary-nav-active-text)!important;
+    background:var(--qily-primary-nav-active)!important;
+    border-color:var(--qily-primary-nav-active-border)!important;
+    font-size:var(--qily-primary-nav-font-size)!important;
   }
   html body header.qily-global-header::after{display:none!important}
   html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar,
