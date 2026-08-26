@@ -1,8 +1,8 @@
-/* QilyLean Sitewide Content Contrast Guard V6｜2026-08-26
+/* QilyLean Sitewide Content Contrast Guard V7｜2026-08-26
  * Applies WCAG-oriented readable foreground correction to non-interactive public text.
  * Buttons/CTA remain owned by Interaction Contrast Guard.
- * V6: only registered hero/dark components own gradient/image contrast. Generic gradients no longer
- * suppress runtime correction, and Chromium/Safari text-fill is evaluated as the rendered foreground.
+ * V7: all semantic dark section families are registered contrast owners, preventing the runtime
+ * from painting dark foregrounds over deliberate dark panels while still respecting local light surfaces.
  */
 (function(d,w){
   'use strict';
@@ -10,7 +10,7 @@
   w.__qilyContentContrastGuardV1=true;
 
   var SELECTOR='p,li,dt,dd,td,th,label,small,span,strong,b,em,h1,h2,h3,h4,h5,h6,.module-lead,.engineering-checklist,.notice,.callout,.summary,.insight,.lead,[role="status"],[role="alert"]';
-  var COMPONENT_OWNED_DARK='.hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hub,.qily-ia-dark,.closing,[data-qily-dark-surface],[data-theme="dark"]';
+  var COMPONENT_OWNED_DARK='.hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub,.section.dark,.module-section.dark,.qily-section.dark,.qily-ia-dark,.qily-dark,.dark-bg,.qily-dark-band,.closing,.principle,[data-qily-dark-band="true"],[data-qily-dark-surface],[data-theme="dark"]';
   var EXCLUDE='header,.qily-site-header,.qily-global-header,#floatDock,.qily-floating-dock,.qily-web-translate,.qily-translation-progress,button,input,select,textarea,[role="button"],[contenteditable="true"]';
   var queued=false;
 
