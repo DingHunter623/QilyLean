@@ -4,8 +4,9 @@
  * 2) runtime self-healing may enforce Chinese labels only while zh-CN is active;
  * 3) translated labels are never overwritten back to Chinese in English/other language modes;
  * 4) Header / Logo / primary navigation / translation utility share the governed 1560px content axis;
- * 5) R6 ranked-search / terminology / legacy hero-orbit guard is loaded as a permanent sitewide runtime;
- * 6) existing dock, resource collaboration, search authority and capability self-heal behavior remains intact.
+ * 5) site search navigation is preloaded before dock/core fallback, with R6 ranking remaining presentation-only;
+ * 6) terminology live metadata uses one canonical strip with explicit light-surface contrast ownership;
+ * 7) existing dock, resource collaboration, search authority and capability self-heal behavior remains intact.
  */
 (function (d, w) {
   'use strict';
@@ -18,7 +19,8 @@
   var CORE_SRC = '/site-navigation-core.js?v=20260824-contact-channel-v30';
   var LEGACY_SRC = '/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23';
   var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260825-global-language-v31';
-  var INTEGRITY_SRC = '/site-integrity-hotfix-v1.js?v=20260824-public-integrity-v1';
+  var SEARCH_RUNTIME_SRC = '/site-search.js?v=20260826-search-navigation-v2';
+  var INTEGRITY_SRC = '/site-integrity-hotfix-v1.js?v=20260826-public-integrity-v2';
   var R6_SEARCH_VISUAL_SRC = '/site-r6-search-terminology-visual-v1.js?v=20260826-r6-search-terminology-visual-v1';
   var CONTINUITY_HREF = '/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF = '/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7';
@@ -168,6 +170,7 @@
     if (!d.querySelector('script[src*="/app-download-share-v1.js?v=20260824-capability-home-actions-v2"]')) loadScript('qilyAppDownloadShareRuntime', APP_SHARE_SRC);
   }
   function loadRuntime() {
+    loadScript('qilySiteSearchRuntimeV2', SEARCH_RUNTIME_SRC);
     loadScript('qilyR6SearchTerminologyVisualV1', R6_SEARCH_VISUAL_SRC);
     loadScript('qilyPublicIntegrityHotfixV1', INTEGRITY_SRC);
     installCapabilitySelfHeal();
@@ -195,12 +198,15 @@ window.__qilyLayeredNavigationBuildContract = Object.freeze({
   headerAxisWidth: 1560,
   headerDesktopNoClip: true,
   publicIntegrityHotfix: true,
+  siteSearchDirectNavigation: true,
+  siteSearchRuntimeVersion: '20260826-search-navigation-v2',
   r6RankedSearchTerminologyVisualGuard: true,
   r6RankedSearchTerminologyVisualVersion: '20260826-r6-search-terminology-visual-v1',
   capabilitySelfHeal: true,
   capabilityQHomeCompleteActions: true,
   capabilityDdzReadableLightPalette: true,
   terminologyLiveSource: '/qilylean/site-data.json',
+  terminologySingleCanonicalStrip: true,
   certificateVerificationBoundary: true,
   dockUniformVisualContract: true,
   dockUniformSize: 62,
