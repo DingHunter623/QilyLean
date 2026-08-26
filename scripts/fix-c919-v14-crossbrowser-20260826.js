@@ -78,7 +78,7 @@ function materializeEnforcer(){
     "html=html.replace(/\\n?<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V2:START -->[\\s\\S]*?<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V2:END -->\\n?/gi,'\\n');",
     "html=html.replace(/\\n?<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START -->[\\s\\S]*?<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:END -->\\n?/gi,'\\n');",
     "html=html.replace(/\\s*<link\\b[^>]*(?:id=[\"']qilyC919DigitalFlagshipHero[^\"']*[\"']|href=[\"'][^\"']*\\/styles\\/qily-c919-digital-flagship-hero-v1\\.css(?:\\?v=[^\"']*)?[\"'])[^>]*>\\s*/gi,'\\n');",
-    "html=html.replace(/\\s*<link\\b[^>]*(?:id=[\"']qilyC919HeroPreloadV1[\"']|href=[\"'][^\"']*c919-strategy-hero-v14\\.(?:webp|png)(?:\\?[^\"']*)?[\"'])[^>]*>\\s*/gi,'\\n');",
+    "html=html.replace(/\\s*<link\\b[^>]*(?:id=[\"']qilyC919HeroPreloadV1[\"']|href=[\"'][^\"']*c919-strategy-hero-v14\\.(?:webp|png)(?:\\?v=[^\"']*)?[\"'])[^>]*>\\s*/gi,'\\n');",
     "html=html.replace('</head>',stylesheet+'\\n'+preload+'\\n</head>');",
     "if(!html.includes(start))html=html.replace(/(<main\\b[^>]*>)/i,'$1\\n'+hero);",
     "fs.writeFileSync(target,html.endsWith('\\n')?html:html+'\\n','utf8');",
@@ -118,7 +118,7 @@ function materializeGuard(){
   write('scripts/site-regression-guard-c919-hero.js',lines.join('\n'));
 }
 
-function patchValidators(){
+function patchValidator(){
   const validator='scripts/validate-sitewide-remediation-20260822.js';
   let v=read(validator);
   const oldLine="assert(home.includes('/qilylean/c919-strategy-hero-v14.png'),'Homepage latest V14 aircraft visual asset missing.');";
@@ -128,20 +128,12 @@ function patchValidators(){
     v=v.replace(oldLine,newLines);
   }
   write(validator,v);
-
-  const audit='.github/workflows/apply-sitewide-audit-performance-visual-20260824.yml';
-  let y=read(audit);
-  if(!y.includes('c919-strategy-hero-v14.png?v=20260826-c919-crossbrowser-v1')){
-    assert(y.includes('c919-strategy-hero-v14.webp?v=20260824-sitewide-perf-v1'),'Audit workflow C919 cache baseline could not be located');
-    y=y.replace('c919-strategy-hero-v14.webp?v=20260824-sitewide-perf-v1','c919-strategy-hero-v14.png?v=20260826-c919-crossbrowser-v1');
-  }
-  write(audit,y);
 }
 
 validatePng();
 materializeHome();
 materializeEnforcer();
 materializeGuard();
-patchValidators();
+patchValidator();
 validatePng();
 console.log('C919_CROSS_BROWSER_SINGLE_SOURCE_MATERIALIZED');
