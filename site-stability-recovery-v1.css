@@ -34,10 +34,107 @@ html body>#floatDock.qily-floating-dock{
   z-index:2147482500!important;
 }
 html body>#floatDock[hidden]{display:flex!important}
+
+/* Contact navigation: never show embedded third-party map/advertising surfaces. */
+html body .contact-page-v3 .map-preview iframe{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  width:0!important;
+  height:0!important;
+}
+html body .contact-page-v3 .map-preview{
+  height:auto!important;
+  min-height:0!important;
+  padding:18px 20px!important;
+  border-top:1px solid #cfe0dd!important;
+  background:#f7fbfa!important;
+}
+html body .contact-page-v3 .map-preview .map-click{
+  position:static!important;
+  inset:auto!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:48px!important;
+  padding:0!important;
+  border:0!important;
+  background:none!important;
+  text-decoration:none!important;
+}
+html body .contact-page-v3 .map-preview .map-click span{
+  min-height:46px!important;
+  margin:0!important;
+  padding:9px 18px!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#0f4b5a!important;
+}
+html body .contact-page-v3 .qily-map-nav-panel{
+  padding:18px 20px!important;
+  border-top:1px solid #cfe0dd!important;
+  background:#f7fbfa!important;
+}
+html body .contact-page-v3 .qily-map-nav-copy strong{
+  display:block!important;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  font-size:18px!important;
+  font-weight:950!important;
+}
+html body .contact-page-v3 .qily-map-nav-copy span{
+  display:block!important;
+  margin-top:5px!important;
+  color:#607574!important;
+  -webkit-text-fill-color:#607574!important;
+  font-size:14px!important;
+  line-height:1.55!important;
+}
+html body .contact-page-v3 .qily-map-nav-actions{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  gap:9px!important;
+  margin-top:14px!important;
+}
+html body .contact-page-v3 .qily-map-nav-action{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:46px!important;
+  padding:9px 10px!important;
+  border:1px solid #a9cbc7!important;
+  border-radius:999px!important;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  background:#fff!important;
+  font-size:15px!important;
+  font-weight:950!important;
+  line-height:1.25!important;
+  text-align:center!important;
+  text-decoration:none!important;
+}
+html body .contact-page-v3 .qily-map-nav-action.primary{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#0f4b5a!important;
+  border-color:#0f4b5a!important;
+}
+html body .contact-page-v3 .qily-map-nav-action:hover,
+html body .contact-page-v3 .qily-map-nav-action:focus-visible{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#178b94!important;
+  border-color:#178b94!important;
+  outline:3px solid rgba(202,161,95,.24)!important;
+  outline-offset:2px!important;
+}
 @media(max-width:620px){
   html body>#floatDock.qily-float-dock,
   html body>#floatDock.qily-floating-dock{
     right:max(8px,env(safe-area-inset-right))!important;
     bottom:max(8px,env(safe-area-inset-bottom))!important;
   }
+  html body .contact-page-v3 .qily-map-nav-panel{padding:16px 14px!important}
+  html body .contact-page-v3 .qily-map-nav-actions{gap:6px!important}
+  html body .contact-page-v3 .qily-map-nav-action{min-height:44px!important;padding:8px 5px!important;font-size:14px!important}
 }
