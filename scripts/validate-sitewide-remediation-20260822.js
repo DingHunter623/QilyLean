@@ -27,6 +27,7 @@ const progress=read('site-translation-progress-v1.js');
 const progressCss=read('site-translation-progress-v1.css');
 const safe=read('site-translation-safe-runtime-v1.js');
 const contentContrast=read('site-content-contrast-guard-v1.js');
+const contentContrastCss=read('site-content-contrast-guard-v1.css');
 const interactionContrast=read('site-interaction-contrast-guard-v1.js');
 const home=read('index.html');
 const experience=read('experience/index.html');
@@ -50,10 +51,13 @@ assert(materializer.includes("const CONSISTENCY = '/site-ui-consistency-v1.js?v=
 assert(materializer.includes("const NAVIGATION = '/site-navigation.js?v=20260826-search-navigation-contrast-v44'"),'Navigation V44 cache owner missing.');
 assert(materializer.includes('<script defer data-qily-translation-safe-direct="inpage-v2"'),'Deferred safe translation runtime missing.');
 assert(materializer.includes('/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3'),'Deterministic translation progress owner missing.');
-assert(materializer.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5'),'Content contrast V5 owner missing.');
+assert(materializer.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'),'Content contrast V6 owner missing.');
+assert(materializer.includes('data-qily-content-contrast-direct="v6"'),'Content contrast V6 static marker missing.');
 assert(!materializer.includes('LEGACY_LANGUAGE_SRC'),'Retired translator is still owned by public materializer.');
 assert(consistency.includes("BUILD_ID='20260826-translation-fast-reliable-v3'"),'Shared shell fast translation build missing.');
 assert(consistency.includes("safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260826-translation-fast-reliable-v3'"),'Shared shell safe runtime is stale.');
+assert(consistency.includes("contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6'"),'Shared shell content contrast V6 CSS is stale.');
+assert(consistency.includes("contentJs:'/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'"),'Shared shell content contrast V6 JS is stale.');
 assert(safe.includes('function nearViewport(el)'),'Visible-first translation missing.');
 assert(safe.includes('function retryFailed('),'Targeted translation retry missing.');
 assert(safe.includes("setState('error','翻译未完整完成，已恢复中文原文')"),'Mixed initial translation is not fail-closed.');
@@ -77,7 +81,12 @@ assert(progress.includes('Translation Progress Notice V2'),'Translation progress
 assert(progress.includes('if(unchanged)return'),'Translation progress notice can still endlessly reset.');
 assert(progressCss.includes('pointer-events:none'),'Translation progress notice must remain non-blocking.');
 assert(interactionContrast.includes("setAttribute('data-qily-interaction-contrast'"),'Interactive contrast guard missing.');
+assert(contentContrast.includes('Sitewide Content Contrast Guard V6'),'Static content contrast V6 runtime missing.');
 assert(contentContrast.includes('data-qily-content-contrast-fixed'),'Static content contrast guard missing.');
+assert(contentContrast.includes('function renderedForeground(style)'),'Rendered text-fill inspection missing.');
+assert(!contentContrast.includes("style&&style.backgroundImage&&style.backgroundImage!=='none'"),'Generic gradient still bypasses contrast correction.');
+assert(contentContrastCss.includes('.rule-table thead :is(th,td)'),'Shared dark table header fallback missing.');
+assert(contentContrastCss.includes('--ql-dark-title:#fff'),'Dark-surface text token missing.');
 
 assert(home.includes('<!-- QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START -->'),'Homepage C919 V4 start marker missing.');
 assert(home.indexOf('QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START')<home.indexOf('<section class="hero">'),'C919 is not the first homepage content visual.');
@@ -97,4 +106,4 @@ for(const relative of trackedHtml()){
 }
 assert(navigationPages>=460,`Navigation coverage unexpectedly fell to ${navigationPages} pages.`);
 assert(stale.length===0,`Stale public shell entries: ${stale.slice(0,20).join(', ')}`);
-process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages plus fast fail-closed translation, readable surfaces and mobile navigation (${runtimeBaseline}).\n`);
+process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages plus fast fail-closed translation, content contrast V6 readable surfaces and mobile navigation (${runtimeBaseline}).\n`);
