@@ -36,17 +36,16 @@ jobs:
       - name: Validate source before materialization
         run: node scripts/site-system-v4-validate.js
 
-      - name: Materialize C919 cross-browser single-source closure
+      - name: Materialize canonical aircraft brand hero
         run: |
           set -euo pipefail
-          node --check scripts/fix-c919-v14-crossbrowser-20260826.js
-          node scripts/fix-c919-v14-crossbrowser-20260826.js
-          node --check scripts/enforce-c919-home-hero.js
-          node --check scripts/site-regression-guard-c919-hero.js
-          node scripts/site-regression-guard-c919-hero.js
-          grep -q 'c919-strategy-hero-v14.png?v=20260826-c919-crossbrowser-v1' index.html
-          ! grep -q 'c919-strategy-hero-v14.webp' index.html
-          ! sed -n '/QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:START/,/QILY-C919-DIGITAL-FLAGSHIP-HERO-V4:END/p' index.html | grep -q '<picture>'
+          node --check scripts/enforce-aircraft-home-hero.js
+          node scripts/enforce-aircraft-home-hero.js
+          node --check scripts/site-regression-guard-aircraft-hero.js
+          node scripts/site-regression-guard-aircraft-hero.js
+          grep -q 'qilylean-aircraft-hero-v1.webp?v=20260826-aircraft-hero-v1' index.html
+          ! grep -q 'c919-strategy-hero-v14' index.html
+          ! grep -q 'qily-c919-digital-flagship-hero' index.html
 
       - name: Normalize regional sitemap URL contract
         run: node scripts/qilylean-north-v4-sitemap-contract.js
@@ -64,11 +63,11 @@ jobs:
         run: |
           node scripts/qilylean-north-v4-sitemap-contract.js --check
           node scripts/site-system-v4-validate.js
-          node scripts/site-regression-guard-c919-hero.js
+          node scripts/site-regression-guard-aircraft-hero.js
           npm run test:seo
           git diff --check
 
-      - name: Commit V4 generated metadata and C919 closure
+      - name: Commit V4 generated metadata and aircraft hero closure
         shell: bash
         run: |
           set -euo pipefail
@@ -77,18 +76,14 @@ jobs:
             sitemap.xml
             sitemap-core.xml
             index.html
-            scripts/enforce-c919-home-hero.js
-            scripts/site-regression-guard-c919-hero.js
-            scripts/validate-sitewide-remediation-20260822.js
-            .github/workflows/apply-sitewide-audit-performance-visual-20260824.yml
           )
           if git diff --quiet -- "${paths[@]}"; then
-            echo 'V4 production metadata and C919 cross-browser closure already current.'
+            echo 'V4 production metadata and aircraft hero closure already current.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "${paths[@]}"
-          git commit -m 'build(v4): materialize production metadata and C919 cross-browser closure [v4-generated]'
+          git commit -m 'build(v4): materialize production metadata and aircraft hero closure [v4-generated]'
           git pull --rebase origin main
           git push

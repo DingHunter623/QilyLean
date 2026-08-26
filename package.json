@@ -7,7 +7,7 @@
     "test:seo": "node scripts/validate-seo-indexability.js",
     "test:quality": "node scripts/apply-core-social-metadata-20260824.js --check && node scripts/normalize-daily-search-metadata-20260824.js --check && node scripts/audit-site-quality-20260824.js --check",
     "test:live": "node scripts/audit-live-sitemap-http-20260824.js",
-    "test:visual": "node scripts/validate-sitewide-remediation-20260822.js && node scripts/validate-home-hero-dock-snapback-v1.js && node scripts/site-regression-guard-c919-hero.js && node scripts/publish-early-career-history.js --check && node scripts/publish-sitewide-remediation-20260822.js --check && node scripts/validate-contact-readability-ddz-20260824.js",
+    "test:visual": "node scripts/validate-sitewide-remediation-20260822.js && node scripts/validate-home-hero-dock-snapback-v1.js && node scripts/site-regression-guard-aircraft-hero.js && node scripts/publish-early-career-history.js --check && node scripts/publish-sitewide-remediation-20260822.js --check && node scripts/validate-contact-readability-ddz-20260824.js",
     "test:readability": "node scripts/validate-contact-readability-ddz-20260824.js",
     "test:first-paint": "node scripts/validate-home-hero-dock-snapback-v1.js",
     "deploy:worker": "wrangler deploy",
