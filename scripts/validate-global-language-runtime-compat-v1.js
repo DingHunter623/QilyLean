@@ -47,6 +47,7 @@ requireText(navigation,'function isChineseSourceMode()','Navigation language gat
 requireText(navigation,atomicMode,`Protected navigation baseline ${runtimeBaseline}`);
 requireText(navigation,'unifiedHeaderAxis: true','Unified header axis contract');
 requireText(navigation,'headerAxisWidth: 1560','Header axis width');
+requireText(navigation,"var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260826-search-navigation-contrast-v44'",'Fresh shared-shell runtime');
 requireText(navigation,"var SEARCH_RUNTIME_SRC = '/site-search.js?v=20260826-search-navigation-v2'",'Fresh direct site-search runtime');
 requireText(navigation,"var INTEGRITY_SRC = '/site-integrity-hotfix-v1.js?v=20260826-public-integrity-v2'",'Public integrity V2 runtime');
 requireText(navigation,"loadScript('qilySiteSearchRuntimeV2', SEARCH_RUNTIME_SRC)",'Site search preloads before core fallback');
@@ -114,6 +115,7 @@ requireText(content,'if(isVisualSurface(current,style))return !localSurface','Ne
 const materializer=read('scripts/materialize-global-language-v3.js');
 requireText(materializer,"const BASELINE_VERSION = '20260825-mobile-navigation-recovery-v1'",'Materializer mobile recovery version');
 requireText(materializer,"const SAFE_VERSION = '20260825-translation-safe-inpage-v2'",'Materializer safe runtime version');
+requireText(materializer,"const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260826-search-navigation-contrast-v44'",'Materializer shared-shell cache bust');
 requireText(materializer,"const NAVIGATION = '/site-navigation.js?v=20260826-search-navigation-contrast-v44'",'Materializer search navigation cache bust');
 requireText(materializer,"const HEADER_AXIS = '/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3'",'Materializer mobile header version');
 requireText(materializer,"const PUBLIC_UI_CSS = '/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7'",'Materializer mobile public CSS version');
@@ -132,4 +134,4 @@ requireText(dock,'function sourceMode()','Dock language gate');
 const parentNav=read('site-parent-navigation-v3.js');
 requireText(parentNav,'function sourceMode()','Parent navigation language gate');
 
-process.stdout.write(`PASS: QilyLean public baseline ${runtimeBaseline} uses safe in-page translation, complete language labels, deterministic search navigation, single terminology metadata, mobile touch navigation, and nested-surface readability guards.\n`);
+process.stdout.write(`PASS: QilyLean public baseline ${runtimeBaseline} uses safe in-page translation, complete language labels, deterministic search navigation, fresh shared shell, single terminology metadata, mobile touch navigation, and nested-surface readability guards.\n`);
