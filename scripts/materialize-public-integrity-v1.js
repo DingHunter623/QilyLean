@@ -35,7 +35,7 @@ function materializeTerminology() {
     .replace(/收录\s*\d+\s*个核心术语/g, `当前收录 ${total} 项核心术语`)
     .replace(/<div class="term-count" id="termCount"[^>]*>[\s\S]*?<\/div>/, `<div class="term-count" id="termCount" data-site-metadata-source="/qilylean/site-data.json">共收录 ${total} 项术语 · ${total} 份单点培训课件</div>`);
 
-  const block = `<!-- QILY-TERMINOLOGY-LIVE-COUNT:START -->\n<p id="qilyTerminologyStaticCount" style="margin:14px 0 0;padding:12px 15px;border-left:4px solid #178b94;background:#edf8f6;color:#315f64;line-height:1.7"><strong style="color:#0f4b5a">当前术语库：</strong>${total} 项术语 · ${total} 份单点培训课件。数量由统一站点数据源自动核算，页面不再维护硬编码数量。</p>\n<!-- QILY-TERMINOLOGY-LIVE-COUNT:END -->`;
+  const block = `<!-- QILY-TERMINOLOGY-LIVE-COUNT:START -->\n<p id="qilyTerminologyStaticCount" data-qily-light-surface="true" data-site-metadata-source="/qilylean/site-data.json" style="margin:14px 0 0;padding:12px 15px;border-left:4px solid #178b94;background:#edf8f6;color:#315f64;line-height:1.7"><strong style="color:#0f4b5a">当前术语库：</strong>${total} 项术语 · ${total} 份单点培训课件。数量由统一站点数据源自动核算，页面不再维护硬编码数量。</p>\n<!-- QILY-TERMINOLOGY-LIVE-COUNT:END -->`;
   page = upsertMarkedBlock(page, '<!-- QILY-TERMINOLOGY-LIVE-COUNT:START -->', '<!-- QILY-TERMINOLOGY-LIVE-COUNT:END -->', block, '<nav class="module-subnav" aria-label="术语分类">');
   return writeIfChanged('knowledge/terminology.html', page);
 }
