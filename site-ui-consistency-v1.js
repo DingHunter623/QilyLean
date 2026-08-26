@@ -1,6 +1,7 @@
-/* QilyLean 轻量父级导航与外壳一致性 v4.1｜2026-08-26
+/* QilyLean 轻量父级导航与外壳一致性 v4.2｜2026-08-27
  * 静态 HTML 首帧优先；公共运行时仅负责导航、Dock 与全站公共增强兜底。
  * 中文静态 HTML 是权威源和默认展示；翻译仅由访客主动选择后在当前 QilyLean 页面内执行。
+ * 一级导航属于全站公共组件：所有模块统一字号、字重、颜色与交互状态，不允许页面级降级。
  */
 (function(d,w){
   'use strict';
@@ -9,12 +10,12 @@
   w.__qilyUiConsistencyV3=true;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260826-translation-fast-reliable-v3';
+  var BUILD_ID='20260827-primary-navigation-unified-v4';
   var BUILD_KEY='qily_site_ui_build_v1';
   var ASSETS={
     languageCss:'/site-global-language-v1.css?v=20260825-public-translation-shell-v1',
     safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260826-translation-fast-reliable-v3',
-    publicCss:'/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7',
+    publicCss:'/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8',
     publicJs:'/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6',
     progressCss:'/site-translation-progress-v1.css?v=20260825-bilingual-progress-v3',
     progressJs:'/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3',
@@ -22,7 +23,7 @@
     interactionJs:'/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2',
     contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6',
     contentJs:'/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6',
-    headerCss:'/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3'
+    headerCss:'/site-header-axis-v1.css?v=20260827-primary-navigation-unified-v4'
   };
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
 
