@@ -12,7 +12,9 @@ let source = fs.readFileSync(sourcePath, 'utf8');
 const lines = source.split(/\r?\n/);
 const index = lines.findIndex(line => line.includes('const articleRe=new RegExp'));
 if (index < 0) throw new Error('NPI publisher article matcher was not found.');
-lines[index] = '  const articleRe=new RegExp(`(<article class="post" id="${item.date}">[\\\\s\\\\S]*?)<div class="content">[\\\\s\\\\S]*?<\\\\/div><\\\\/article>(\\\\s*<section class="brief-feedback")`);';
+/* Curated publication may add classes/attributes to <article>. Match by stable date id,
+ * preserve everything before the content block, then replace only the content body. */
+lines[index] = '  const articleRe=new RegExp(`(<article[^>]*id="${item.date}"[^>]*>[\\\\s\\\\S]*?)<div class="content">[\\\\s\\\\S]*?<\\\\/div><\\\\/article>(\\\\s*<section[^>]*class="[^"]*brief-feedback[^"]*"[^>]*>)`);';
 source = lines.join('\n');
 
 try {
