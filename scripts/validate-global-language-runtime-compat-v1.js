@@ -26,7 +26,7 @@ requireText(safe,'function retryFailed(','Targeted retry contract');
 requireText(safe,"setState('error','翻译未完整完成，已恢复中文原文')",'Fail-closed incomplete translation');
 requireText(safe,'function restoreChinese()','Immediate Chinese restore');
 requireText(safe,'activeAbort.abort()','Translation cancellation');
-requireText(safe,'select.addEventListener(\'pointerdown\',warmEndpoint','Endpoint prewarm on user intent');
+requireText(safe,"select.addEventListener('pointerdown',warmEndpoint",'Endpoint prewarm on user intent');
 forbidText(safe,'https://translate.google.com','External Google redirect');
 forbidText(safe,'https://qilylean-com.translate.goog','Translated proxy redirect');
 forbidText(safe,'location.assign','Translation page escape');
@@ -39,7 +39,8 @@ requireText(consistency,"BUILD_ID='20260826-translation-fast-reliable-v3'",'Fast
 requireText(consistency,"safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260826-translation-fast-reliable-v3'",'Fast safe runtime fallback');
 requireText(consistency,"progressJs:'/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3'",'Deterministic progress fallback');
 requireText(consistency,"publicCss:'/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7'",'Public UI CSS fallback');
-requireText(consistency,"contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v5'",'Content contrast V5 CSS fallback');
+requireText(consistency,"contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6'",'Content contrast V6 CSS fallback');
+requireText(consistency,"contentJs:'/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'",'Content contrast V6 JS fallback');
 requireText(consistency,'function preemptRetiredTranslation()','Retired translator preemption');
 forbidText(consistency,"LANGUAGE_JS='/site-global-language-v3.js",'Shared shell legacy translator loader');
 
@@ -66,19 +67,24 @@ requireText(publicCss,'overflow-x:auto!important','Horizontal navigation movemen
 const interaction=read('site-interaction-contrast-guard-v1.js');
 requireText(interaction,"setAttribute('data-qily-interaction-contrast'",'Interactive contrast correction');
 const content=read('site-content-contrast-guard-v1.js');
+requireText(content,'Sitewide Content Contrast Guard V6','Content contrast V6 runtime');
 requireText(content,'data-qily-content-contrast-fixed','Static content contrast correction');
 requireText(content,'function hasOpaqueLocalSurface(style,el)','Nested local-surface guard');
+requireText(content,'function renderedForeground(style)','Rendered foreground detection');
+forbidText(content,"style&&style.backgroundImage&&style.backgroundImage!=='none'",'Generic gradient blanket exclusion');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
 requireText(materializer,"const SAFE_VERSION = '20260826-translation-fast-reliable-v3'",'Fast materializer runtime version');
 requireText(materializer,"const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3'",'Fast shared-shell cache bust');
 requireText(materializer,"const PROGRESS_JS = '/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3'",'Fresh progress cache bust');
+requireText(materializer,"const CONTENT_CONTRAST_CSS = '/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6'",'Fresh V6 content contrast CSS');
+requireText(materializer,"const CONTENT_CONTRAST_JS = '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'",'Fresh V6 content contrast JS');
 requireText(materializer,'<script defer data-qily-translation-safe-direct="inpage-v2"','Translation runtime is non-blocking');
 requireText(materializer,'data-qily-translation-public-ui-direct="visitor-v2"','Static public UI');
-requireText(materializer,'data-qily-content-contrast-direct="v5"','Static content contrast V5');
+requireText(materializer,'data-qily-content-contrast-direct="v6"','Static content contrast V6');
 requireText(materializer,'removeLegacyTranslatorScripts','Legacy translator stripping');
 
 const wrangler=read('wrangler.toml');
 requireText(wrangler,'TRANSLATE_DAILY_IP_LIMIT = "600"','Translation capacity for multi-page browsing');
 
-process.stdout.write(`PASS: QilyLean public baseline ${runtimeBaseline} uses visible-first fail-closed in-page translation, endpoint reuse, deterministic progress, non-blocking loading, full language labels and readable surfaces.\n`);
+process.stdout.write(`PASS: QilyLean public baseline ${runtimeBaseline} uses visible-first fail-closed in-page translation, endpoint reuse, deterministic progress, non-blocking loading, full language labels and V6 readable surfaces.\n`);
