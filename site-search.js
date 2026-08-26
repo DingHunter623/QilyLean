@@ -429,6 +429,9 @@
     var mask = document.createElement('div');
     mask.id = 'qilySearchMask';
     mask.className = 'qily-modal-mask';
+    /* Core search owns ranking. This also disables the retired post-ranker that could
+       continuously re-append result nodes and interfere with normal link activation. */
+    mask.dataset.qilyR6PostRank = 'true';
     mask.innerHTML = '<div class="qily-modal-panel qily-search-panel" role="dialog" aria-modal="true" aria-labelledby="qilySearchTitle"><button class="qily-modal-close" type="button" aria-label="关闭本站搜索">×</button><div class="qily-modal-brand">QilyLean</div><h3 id="qilySearchTitle">本站搜索</h3><p class="qily-search-lead">搜索全站网页、项目、今日简报与术语词条；结果按关联度排列，点击即可进入对应网页。</p><form class="qily-search-form" role="search"><input class="qily-search-input" type="search" inputmode="search" autocomplete="off" placeholder="例如：6S、VSM、标准工时、新工厂规划" aria-label="搜索本站内容"><button class="qily-search-submit" type="submit">搜索</button></form><div class="qily-search-suggestions" aria-label="常用搜索"><button type="button">6S</button><button type="button">VSM</button><button type="button">标准工时</button><button type="button">新工厂规划</button><button type="button">目视化</button><button type="button">数智化工厂</button></div><div class="qily-search-status" role="status"></div><div class="qily-search-results"></div></div>';
     document.body.appendChild(mask);
 
@@ -439,6 +442,19 @@
     var results = mask.querySelector('.qily-search-results');
     var status = mask.querySelector('.qily-search-status');
     var timer = null;
+
+    function navigateResult(anchor, event) {
+      var target;
+      try { target = new URL(anchor.getAttribute('href') || anchor.href, location.href); } catch (error) { return; }
+      if (target.origin !== location.origin) return;
+      if (event) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+      mask.classList.remove('show');
+      if (typeof window.__qilyPersistentNavigate === 'function') window.__qilyPersistentNavigate(target.href);
+      else location.assign(target.href);
+    }
 
     function render(query) {
       state.activeQuery = normalizeText(query);
@@ -461,6 +477,7 @@
         var link = document.createElement('a');
         link.className = 'qily-search-result';
         link.href = item.entry.url;
+        link.setAttribute('data-qily-search-navigation', 'native');
         var meta = document.createElement('span');
         meta.className = 'qily-search-meta';
         var rank = document.createElement('span');
@@ -507,6 +524,14 @@
         input.focus();
       });
     });
+    results.addEventListener('click', function (event) {
+      var link = event.target && event.target.closest ? event.target.closest('a.qily-search-result[href]') : null;
+      if (!link) return;
+      if (event.defaultPrevented && !link.hasAttribute('data-qily-search-navigation')) return;
+      if (typeof event.button === 'number' && event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      navigateResult(link, event);
+    }, true);
     close.addEventListener('click', function () { mask.classList.remove('show'); });
     mask.addEventListener('click', function (event) { if (event.target === mask) mask.classList.remove('show'); });
     panel.addEventListener('click', function (event) { event.stopPropagation(); });
