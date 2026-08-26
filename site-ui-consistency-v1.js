@@ -20,8 +20,8 @@
     progressJs:'/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3',
     interactionCss:'/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2',
     interactionJs:'/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2',
-    contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v5',
-    contentJs:'/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5',
+    contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6',
+    contentJs:'/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6',
     headerCss:'/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3'
   };
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
