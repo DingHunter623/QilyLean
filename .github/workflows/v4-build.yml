@@ -36,12 +36,14 @@ jobs:
       - name: Validate source before materialization
         run: node scripts/site-system-v4-validate.js
 
-      - name: Materialize canonical aircraft brand hero
+      - name: Materialize approved aircraft brand hero
         run: |
           set -euo pipefail
           node --check scripts/enforce-aircraft-home-hero.js
           node scripts/enforce-aircraft-home-hero.js
-          grep -q 'qilylean-aircraft-hero-v1.webp?v=20260826-aircraft-hero-v1' index.html
+          grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260826-aircraft-approved-v1' index.html
+          ! sed -n '/QILY-AIRCRAFT-BRAND-HERO-V1:START/,/QILY-AIRCRAFT-BRAND-HERO-V1:END/p' index.html | grep -Eq '<picture|<source|srcset=|data-src='
+          node scripts/site-regression-guard-aircraft-hero.js
 
       - name: Normalize regional sitemap URL contract
         run: node scripts/qilylean-north-v4-sitemap-contract.js
@@ -59,6 +61,7 @@ jobs:
         run: |
           node scripts/qilylean-north-v4-sitemap-contract.js --check
           node scripts/site-system-v4-validate.js
+          node scripts/site-regression-guard-aircraft-hero.js
           npm run test:seo
           git diff --check
 
@@ -74,12 +77,12 @@ jobs:
             scripts/validate-sitewide-remediation-20260822.js
           )
           if git diff --quiet -- "${paths[@]}"; then
-            echo 'V4 production metadata and aircraft hero closure already current.'
+            echo 'V4 production metadata and approved aircraft hero closure already current.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "${paths[@]}"
-          git commit -m 'build(v4): materialize production metadata and aircraft hero closure [v4-generated]'
+          git commit -m 'build(v4): materialize production metadata and approved aircraft hero closure [v4-generated]'
           git pull --rebase origin main
           git push
