@@ -36,7 +36,8 @@ requireText(consistency,"publicCss:'/site-translation-public-ui-v1.css?v=2026082
 requireText(consistency,"publicJs:'/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6'",'Public UI JS fallback');
 requireText(consistency,"headerCss:'/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3'",'Header-axis mobile recovery fallback');
 requireText(consistency,"progressJs:'/site-translation-progress-v1.js?v=20260825-bilingual-progress-v3'",'Progress fallback');
-requireText(consistency,"contentJs:'/site-content-contrast-guard-v1.js?v=20260825-sitewide-content-contrast-v2'",'Content contrast fallback');
+requireText(consistency,"contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v4'",'Content contrast V4 CSS fallback');
+requireText(consistency,"contentJs:'/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v4'",'Content contrast V4 JS fallback');
 requireText(consistency,'function preemptRetiredTranslation()','Retired translator preemption');
 requireText(consistency,'script[src*="/site-global-language-v3.js"]','Stale translator removal');
 forbidText(consistency,"LANGUAGE_JS='/site-global-language-v3.js",'Shared shell legacy translator loader');
@@ -86,16 +87,21 @@ requireText(interaction,'if(current>=4.5)','Interactive WCAG AA threshold');
 const content=read('site-content-contrast-guard-v1.js');
 requireText(content,'data-qily-content-contrast-fixed','Static content contrast correction');
 requireText(content,'?3:4.5','WCAG-oriented contrast thresholds');
+requireText(content,'function hasVisualBackground(el)','Gradient/image ownership guard');
+requireText(content,"style.backgroundImage&&style.backgroundImage!=='none'",'Gradient/image background detection');
+requireText(content,'el.closest(COMPONENT_OWNED_DARK)||hasVisualBackground(el)','Visual surface contrast ownership');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
 requireText(materializer,"const BASELINE_VERSION = '20260825-mobile-navigation-recovery-v1'",'Materializer mobile recovery version');
 requireText(materializer,"const SAFE_VERSION = '20260825-translation-safe-inpage-v2'",'Materializer safe runtime version');
 requireText(materializer,"const HEADER_AXIS = '/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3'",'Materializer mobile header version');
 requireText(materializer,"const PUBLIC_UI_CSS = '/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7'",'Materializer mobile public CSS version');
+requireText(materializer,"const CONTENT_CONTRAST_CSS = '/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v4'",'Materializer content contrast V4 CSS');
+requireText(materializer,"const CONTENT_CONTRAST_JS = '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v4'",'Materializer content contrast V4 JS');
 requireText(materializer,'data-qily-translation-safety-bootstrap="inpage-v2"','Static safety bootstrap');
 requireText(materializer,'data-qily-translation-safe-direct="inpage-v2"','Static safe runtime');
 requireText(materializer,'data-qily-translation-public-ui-direct="visitor-v2"','Static public UI');
-requireText(materializer,'data-qily-content-contrast-direct="v2"','Static content contrast');
+requireText(materializer,'data-qily-content-contrast-direct="v4"','Static content contrast V4');
 requireText(materializer,'removeLegacyTranslatorScripts','Legacy translator stripping');
 forbidText(materializer,'<script defer ${LEGACY_MARKER}','Legacy translator emission');
 forbidText(materializer,'LEGACY_LANGUAGE_SRC','Legacy translator source ownership');
@@ -105,4 +111,4 @@ requireText(dock,'function sourceMode()','Dock language gate');
 const parentNav=read('site-parent-navigation-v3.js');
 requireText(parentNav,'function sourceMode()','Parent navigation language gate');
 
-process.stdout.write(`PASS: QilyLean public baseline ${runtimeBaseline} uses safe in-page translation, complete language labels, mobile touch navigation, and sitewide readability guards.\n`);
+process.stdout.write(`PASS: QilyLean public baseline ${runtimeBaseline} uses safe in-page translation, complete language labels, mobile touch navigation, and sitewide readability guards including gradient/image surface ownership.\n`);
