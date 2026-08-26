@@ -1,10 +1,11 @@
-/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V10.2｜2026-08-26
+/* QilyLean 项目合作页轻量对齐与悬浮入口闭环 V10.3｜2026-08-26
  * 保留静态六类能力、Dock顺序与回顶部功能；中文标签仅在 zh-CN 权威源模式下强制校正。
- * 联系入口统一命名为“联系我们”，由全站独立联系页承接，不再表达为模糊“交流”。
+ * 联系入口采用独立动作 contact-page，彻底隔离旧核心 contact 弹窗语义并统一跳转 /contact/。
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyCoreServiceDockClosureV102)return;
+  if(w.__qilyCoreServiceDockClosureV103)return;
+  w.__qilyCoreServiceDockClosureV103=true;
   w.__qilyCoreServiceDockClosureV102=true;
   w.__qilyCoreServiceDockClosureV101=true;
   w.__qilyCoreServiceDockClosureV10=true;
@@ -33,11 +34,14 @@
   }
   function normalizeDock(){
     var dock=d.getElementById('floatDock');if(!dock)return false;
+    var legacyMask=d.getElementById('wxMask');if(legacyMask)legacyMask.remove();
+    var contact=dock.querySelector('[data-action="contact-page"],[data-action="contact"]');
+    if(contact)contact.setAttribute('data-action','contact-page');
     var top=ensureBackToTop(dock);
-    var labels={home:{html:'首页',aria:'首页'},top:{html:'回<br>顶部',aria:'回顶部'},back:{html:'回<br>上一层',aria:'回上一层'},search:{html:'本站<br>搜索',aria:'本站搜索'},current:{html:'分享<br>当前页',aria:'分享当前页'},contact:{html:'联系<br>我们',aria:'联系我们'}};
-    var order=['home','top','back','search','current','contact'];var enforceChinese=sourceMode();
+    var labels={home:{html:'首页',aria:'首页'},top:{html:'回<br>顶部',aria:'回顶部'},back:{html:'回<br>上一层',aria:'回上一层'},search:{html:'本站<br>搜索',aria:'本站搜索'},current:{html:'分享<br>当前页',aria:'分享当前页'},'contact-page':{html:'联系<br>我们',aria:'联系我们'}};
+    var order=['home','top','back','search','current','contact-page'];var enforceChinese=sourceMode();
     dock.querySelectorAll('[data-action="share"]').forEach(function(button){button.remove();});
-    var buttons=order.map(function(action){var button=action==='top'?top:dock.querySelector('[data-action="'+action+'"]');if(!button)return null;if(enforceChinese){if(button.innerHTML!==labels[action].html)button.innerHTML=labels[action].html;if(button.getAttribute('aria-label')!==labels[action].aria)button.setAttribute('aria-label',labels[action].aria);if(button.getAttribute('title')!==labels[action].aria)button.setAttribute('title',labels[action].aria);}return button;}).filter(Boolean);
+    var buttons=order.map(function(action){var button=action==='top'?top:(action==='contact-page'?contact:dock.querySelector('[data-action="'+action+'"]'));if(!button)return null;if(enforceChinese){if(button.innerHTML!==labels[action].html)button.innerHTML=labels[action].html;if(button.getAttribute('aria-label')!==labels[action].aria)button.setAttribute('aria-label',labels[action].aria);if(button.getAttribute('title')!==labels[action].aria)button.setAttribute('title',labels[action].aria);}return button;}).filter(Boolean);
     var current=Array.from(dock.children).filter(function(node){return node.matches&&node.matches('.qily-float-btn[data-action]');});
     var orderChanged=current.length!==buttons.length||buttons.some(function(button,index){return current[index]!==button;});
     if(orderChanged){var fragment=d.createDocumentFragment();buttons.forEach(function(button){fragment.appendChild(button);});dock.appendChild(fragment);}
@@ -47,5 +51,6 @@
   function apply(){d.documentElement.classList.remove('qily-shell-pending','qily-first-paint-pending','qily-r2-first-paint-pending');alignCoreServices();normalizeDock();}
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',apply,{once:true});else apply();
   d.addEventListener('qily:shell-ready',apply);d.addEventListener('qily:language-change',normalizeDock);
+  w.addEventListener('pageshow',normalizeDock,{passive:true});
   w.addEventListener('resize',function(){if(resizeTimer)w.clearTimeout(resizeTimer);resizeTimer=w.setTimeout(alignCoreServices,100);},{passive:true});
 })(document,window);
