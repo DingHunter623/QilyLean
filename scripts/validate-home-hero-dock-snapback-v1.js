@@ -27,12 +27,13 @@ const headerAxis='/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery
 const progressScript='/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3';
 const publicUi='/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6';
 const publicUiCss='/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7';
-const contentContrast='/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5';
+const contentContrast='/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6';
 const sharedShell='/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3';
 const publishReady=
   materializer.includes("const SAFE_VERSION = '20260826-translation-fast-reliable-v3'")&&
   materializer.includes('data-qily-translation-safety-bootstrap="inpage-v2"')&&
   materializer.includes('<script defer data-qily-translation-safe-direct="inpage-v2"')&&
+  materializer.includes('data-qily-content-contrast-direct="v6"')&&
   !materializer.includes('LEGACY_LANGUAGE_SRC');
 function ready(token){return home.includes(token)||materializer.includes(token)}
 
@@ -43,9 +44,9 @@ assert(ready(headerAxis),'mobile-safe 1560px Header Axis is neither materialized
 assert(ready(progressScript),'deterministic translation progress notice is neither materialized nor queued');
 assert(ready(publicUi),'full-language public UI JS is neither materialized nor queued');
 assert(ready(publicUiCss),'mobile navigation recovery CSS is neither materialized nor queued');
-assert(ready(contentContrast),'sitewide content readability guard is neither materialized nor queued');
+assert(ready(contentContrast),'sitewide content readability V6 guard is neither materialized nor queued');
 assert(ready(sharedShell),'fast shared-shell runtime is neither materialized nor queued');
 assert(home.includes(safeRuntime)||publishReady,'fast safe in-page translation baseline is neither materialized nor queued');
 assert(!materializer.includes('<script defer ${LEGACY_MARKER}'),'retired external-proxy translator is still queued for publication');
 assert(home.includes('font-size:clamp(40px,3.6vw,52px)!important'),'homepage first-paint parity is not using the reduced hero headline tier');
-process.stdout.write(`PASS: homepage Hero/Dock stay protected on ${runtimeBaseline} while fast fail-closed translation, complete language labels, mobile touch navigation, 1560px Header Axis and content readability are materialized or queued.\n`);
+process.stdout.write(`PASS: homepage Hero/Dock stay protected on ${runtimeBaseline} while fast fail-closed translation, complete language labels, mobile touch navigation, 1560px Header Axis and content contrast V6 are materialized or queued.\n`);
