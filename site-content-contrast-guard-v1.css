@@ -1,5 +1,6 @@
-/* QilyLean Sitewide Content Contrast Guard V1｜2026-08-25
+/* QilyLean Sitewide Content Contrast Guard V2｜2026-08-26
  * Static information surfaces must remain readable independently of button/CTA contrast rules.
+ * Light cards/notes nested inside dark heroes explicitly keep a dark readable foreground.
  */
 html body [data-qily-content-contrast-fixed="dark"]{
   color:#173f49!important;
@@ -12,6 +13,9 @@ html body [data-qily-content-contrast-fixed="light"]{
 
 /* First-paint protection for known reusable light information surfaces. */
 html body #qilyTerminologyStaticCount,
+html body #qilyTerminologyLiveDataNote,
+html body .qily-live-data-note,
+html body [data-qily-light-surface="true"],
 html body .engineering-checklist,
 html body .term-count,
 html body .module-section .notice,
@@ -23,6 +27,9 @@ html body .module-section .lead{
   -webkit-text-fill-color:#315f64!important;
 }
 html body #qilyTerminologyStaticCount strong,
+html body #qilyTerminologyLiveDataNote strong,
+html body .qily-live-data-note strong,
+html body [data-qily-light-surface="true"] strong,
 html body .engineering-checklist strong,
 html body .module-section .notice strong,
 html body .module-section .callout strong,
