@@ -62,3 +62,42 @@ jobs:
           done
           echo 'Unable to publish terminology search authority after retries.'
           exit 1
+      - name: Submit current sitemap URLs to IndexNow engines
+        env:
+          SITE_HOST: qilylean.com
+          SITE_ORIGIN: https://qilylean.com
+          INDEXNOW_KEY: b47ed759da519bd90586a7877122d7be
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const fs=require('fs');
+          const xml=fs.readFileSync('sitemap.xml','utf8');
+          const urls=[...xml.matchAll(/<loc>(https:\/\/qilylean\.com\/[^<]*)<\/loc>/g)].map(m=>m[1]);
+          if(urls.length<400)throw new Error(`IndexNow submission refused: sitemap URL count unexpectedly low (${urls.length}).`);
+          const host=process.env.SITE_HOST;
+          const key=process.env.INDEXNOW_KEY;
+          const body={host,key,keyLocation:`${process.env.SITE_ORIGIN}/${key}.txt`,urlList:urls};
+          async function submit(){
+            const response=await fetch('https://api.indexnow.org/indexnow',{method:'POST',headers:{'content-type':'application/json; charset=utf-8'},body:JSON.stringify(body)});
+            const text=await response.text();
+            console.log(`IndexNow response: HTTP ${response.status}; ${urls.length} canonical sitemap URLs submitted.`);
+            if(!response.ok&&response.status!==202)throw new Error(`IndexNow rejected submission: HTTP ${response.status} ${text.slice(0,300)}`);
+          }
+          submit().catch(error=>{console.error(error);process.exit(1)});
+          NODE
+      - name: Submit sitemap URLs to Baidu when token is configured
+        env:
+          BAIDU_PUSH_TOKEN: ${{ secrets.BAIDU_PUSH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${BAIDU_PUSH_TOKEN:-}" ]; then
+            echo 'Baidu push token is not configured; canonical sitemap remains public for Baidu crawl discovery.'
+            exit 0
+          fi
+          python - <<'PY' > /tmp/qily-baidu-urls.txt
+          import re
+          xml=open('sitemap.xml',encoding='utf-8').read()
+          print('\n'.join(re.findall(r'<loc>(https://qilylean\.com/[^<]*)</loc>',xml)))
+          PY
+          response=$(curl --fail-with-body --retry 2 --retry-delay 3 -sS -H 'Content-Type: text/plain' --data-binary @/tmp/qily-baidu-urls.txt "https://data.zz.baidu.com/urls?site=https://qilylean.com&token=${BAIDU_PUSH_TOKEN}")
+          echo "Baidu submission response: ${response}"
