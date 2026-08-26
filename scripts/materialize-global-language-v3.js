@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V13｜2026-08-27
+/* QilyLean Sitewide Public Baseline Materializer V14｜2026-08-27
  * Primary-navigation unification release:
  * - Chinese remains the authoritative source.
  * - Translation assets remain deferred.
@@ -9,17 +9,17 @@
  * - six-action Dock keeps a single contact runtime; contact opens /contact/ as an independent page.
  * - official high-resolution WeChat card is cache-busted from one authoritative asset.
  * - final visual regression closure normalizes legacy content-level dark surfaces sitewide.
- * - header/public UI cache tokens are advanced together so every module receives the same primary-navigation type scale, colors and touch geometry.
+ * - navigation/header/public-UI/shared-shell cache tokens advance together so every module receives one primary-navigation visual contract.
  */
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
-const BASELINE_VERSION='20260827-primary-navigation-unified-v13';
+const BASELINE_VERSION='20260827-primary-navigation-unified-v14';
 const SAFE_VERSION = '20260826-translation-fast-reliable-v3';
-const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3';
-const NAVIGATION = '/site-navigation.js?v=20260826-search-navigation-contrast-v44';
+const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260827-primary-navigation-unified-v45';
+const NAVIGATION = '/site-navigation.js?v=20260827-primary-navigation-unified-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260826-stability-v33';
 const CORE_SERVICE_DOCK='/site-core-service-dock-closure-v1.js?v=20260826-site-shell-recovery-v104';
