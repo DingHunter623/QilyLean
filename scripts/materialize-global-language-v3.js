@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V4｜2026-08-26
+/* QilyLean Sitewide Public Baseline Materializer V5｜2026-08-26
  * Single public baseline: Chinese source + in-page safe translation + public language UI +
  * header axis + interaction/content contrast. The retired external-proxy translator is never emitted.
- * V4: content contrast runtime treats every gradient/image-backed surface as component-owned.
+ * V5: dark visual surfaces preserve authored light text while opaque light cards nested inside them
+ * are evaluated independently; navigation query is refreshed for deterministic site-search opening.
  */
 const fs = require('fs');
 const path = require('path');
@@ -15,7 +16,7 @@ const checkOnly = process.argv.includes('--check');
 const BASELINE_VERSION = '20260825-mobile-navigation-recovery-v1';
 const SAFE_VERSION = '20260825-translation-safe-inpage-v2';
 const CONSISTENCY = `/site-ui-consistency-v1.js?v=${BASELINE_VERSION}`;
-const NAVIGATION = '/site-navigation.js?v=20260825-language-runtime-compat-v42';
+const NAVIGATION = '/site-navigation.js?v=20260826-search-navigation-contrast-v44';
 const PARENT_NAV = '/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE = '/site-dock-share-runtime-v1.js?v=20260825-language-runtime-compat-v31';
 const CORE_SERVICE_DOCK = '/site-core-service-dock-closure-v1.js?v=20260825-language-runtime-compat-v101';
@@ -28,8 +29,8 @@ const PUBLIC_UI_CSS = '/site-translation-public-ui-v1.css?v=20260825-mobile-navi
 const PUBLIC_UI_JS = '/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6';
 const INTERACTION_CONTRAST_CSS = '/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2';
 const INTERACTION_CONTRAST_JS = '/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2';
-const CONTENT_CONTRAST_CSS = '/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v4';
-const CONTENT_CONTRAST_JS = '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v4';
+const CONTENT_CONTRAST_CSS = '/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v5';
+const CONTENT_CONTRAST_JS = '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5';
 
 function trackedHtml() {
   return execFileSync('git', ['ls-files', '*.html'], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
@@ -79,7 +80,7 @@ function materialize(source) {
     `<script defer data-qily-translation-public-ui-direct="visitor-v2" src="${PUBLIC_UI_JS}"></script>`,
     `<script defer data-qily-translation-progress-direct="bilingual-v2" src="${PROGRESS_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
-    `<script defer data-qily-content-contrast-direct="v4" src="${CONTENT_CONTRAST_JS}"></script>`
+    `<script defer data-qily-content-contrast-direct="v5" src="${CONTENT_CONTRAST_JS}"></script>`
   ].join('\n');
   if (/<\/head>/i.test(next)) next = next.replace(/<\/head>/i, `${tags}\n</head>`);
   return next;
