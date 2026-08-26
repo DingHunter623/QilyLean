@@ -1,0 +1,64 @@
+name: Publish Terminology Search Authority V1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'knowledge/terminology.html'
+      - 'scripts/materialize-terminology-search-authority-v1.js'
+      - '.github/workflows/publish-terminology-search-authority-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: terminology-search-authority-main
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[terminology-authority]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - name: Validate terminology authority materializer
+        run: |
+          node --check scripts/materialize-terminology-search-authority-v1.js
+      - name: Materialize visible terminology entities, search index and sitemap metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean Automation'
+          git config user.email 'actions@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            echo "Terminology authority publish attempt ${attempt}/4"
+            git fetch origin main
+            git reset --hard origin/main
+            node --check scripts/materialize-terminology-search-authority-v1.js
+            node scripts/materialize-terminology-search-authority-v1.js
+            node scripts/materialize-terminology-search-authority-v1.js --check
+            node scripts/validate-seo-indexability.js
+            git diff --check
+            if git diff --quiet; then
+              echo 'Terminology search authority already current on latest main.'
+              exit 0
+            fi
+            git add knowledge/terminology.html qilylean/site-search-index.json sitemap.xml sitemap-core.xml
+            git commit -m 'seo: materialize terminology entity graph and search authority [terminology-authority]'
+            if git push origin HEAD:main; then
+              echo 'Terminology entity graph, search index and sitemap metadata published.'
+              exit 0
+            fi
+            echo 'main advanced during terminology publish; retrying from newest main.'
+            sleep $((attempt * 3))
+          done
+          echo 'Unable to publish terminology search authority after retries.'
+          exit 1

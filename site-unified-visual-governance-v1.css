@@ -1,0 +1,209 @@
+/* QilyLean Unified Visual Governance V1｜2026-08-26
+ * Final public visual contract for every tracked page.
+ * Priority: visual clarity first; professional content hierarchy remains intact.
+ * Mobile navigation never solves space pressure by shrinking the active item.
+ */
+:root{
+  --qily-ui-forest:#0f4b5a;
+  --qily-ui-forest-hover:#12606f;
+  --qily-ui-teal:#178b94;
+  --qily-ui-gold:#caa15f;
+  --qily-ui-gold-soft:#ffe39b;
+  --qily-ui-ink:#17322d;
+  --qily-ui-muted:#607574;
+  --qily-ui-line:#d5e4e3;
+  --qily-ui-page:#eef7f5;
+  --qily-ui-surface:#fff;
+  --qily-ui-alt:#f4faf8;
+  --qily-ui-dark:#102a2f;
+  --qily-ui-nav-size:20px;
+  --qily-ui-body-size:20px;
+  --qily-ui-note-size:20px;
+  --qily-ui-radius:12px;
+  --qily-ui-action-height:48px;
+  --qily-ui-shadow:0 10px 28px rgba(15,75,90,.10);
+}
+
+/* 01｜Primary navigation parity: current/hover/pressed states may change colour, never typography geometry. */
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top,header.site-header)
+:is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href]{
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+  min-height:42px!important;
+  padding:8px 11px!important;
+  box-sizing:border-box!important;
+  align-items:center!important;
+  justify-content:center!important;
+  font-size:var(--qily-ui-nav-size)!important;
+  line-height:1.22!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  letter-spacing:0!important;
+}
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top,header.site-header)
+:is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href][aria-current="page"]{
+  font-size:var(--qily-ui-nav-size)!important;
+  line-height:1.22!important;
+  font-weight:900!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-ui-forest)!important;
+  border:2px solid var(--qily-ui-gold)!important;
+  text-decoration-color:var(--qily-ui-gold-soft)!important;
+  box-shadow:0 7px 18px rgba(15,75,90,.24)!important;
+  transform:none!important;
+}
+@media(max-width:900px){
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top,header.site-header)
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"]){
+    min-height:50px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    flex-wrap:nowrap!important;
+    -webkit-overflow-scrolling:touch!important;
+    scrollbar-width:thin!important;
+  }
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top,header.site-header)
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href],
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top,header.site-header)
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href][aria-current="page"]{
+    min-height:44px!important;
+    font-size:20px!important;
+    line-height:1.22!important;
+    font-weight:900!important;
+  }
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top,header.site-header)
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href]:active,
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top,header.site-header)
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href][data-qily-pressed="true"]{
+    transform:none!important;
+    filter:brightness(.94)!important;
+  }
+}
+
+/* 02｜Action contract: one geometry, two intentional colour roles. */
+html body :is(
+  a.button,button.button,a.btn,button.btn,a.qily-button,button.qily-button,a.qily-ia-button,button.qily-ia-button,
+  a.module-action,a.resource-action,a.project-list-action,a.project-card-action,a.service-contract-link,
+  a.contact-action,button.contact-action,
+  .hero-actions>a[href],.hero-actions>button,.module-actions>a[href],.module-actions>button,
+  .qily-home-actions>a[href],.qily-home-actions>button,.qily-section-actions>a[href],.qily-section-actions>button,
+  .qily-ia-actions>a[href],.qily-ia-actions>button,.article-actions>a[href],.article-actions>button,
+  .form-actions>a[href],.form-actions>button,.cta>a[href],.cta>button,.cta .button
+){
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:var(--qily-ui-action-height)!important;
+  padding:10px 18px!important;
+  border-radius:var(--qily-ui-radius)!important;
+  box-sizing:border-box!important;
+  font-size:20px!important;
+  line-height:1.35!important;
+  font-weight:900!important;
+  text-align:center!important;
+  opacity:1!important;
+}
+html body :is(
+  a.button:not(.secondary),button.button:not(.secondary),a.qily-button:not(.secondary),button.qily-button:not(.secondary),
+  a.qily-ia-button:not(.secondary),button.qily-ia-button:not(.secondary),a.module-action,a.resource-action,
+  a.project-list-action,a.project-card-action,a.service-contract-link,a.contact-action,button.contact-action,
+  .module-actions>a[href]:not(.secondary),.qily-home-actions>a[href]:not(.secondary),.qily-section-actions>a[href]:not(.secondary),
+  .qily-ia-actions>a[href]:not(.secondary),.cta>a[href]:not(.secondary),.cta .button:not(.secondary)
+){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-ui-forest)!important;
+  border:1.5px solid var(--qily-ui-forest)!important;
+  text-decoration-color:var(--qily-ui-gold-soft)!important;
+}
+html body :is(
+  a.button.secondary,button.button.secondary,a.btn.secondary,button.btn.secondary,
+  a.qily-button.secondary,button.qily-button.secondary,a.qily-ia-button.secondary,button.qily-ia-button.secondary,
+  .module-actions>a[href].secondary,.qily-home-actions>a[href].secondary,.qily-section-actions>a[href].secondary,
+  .qily-ia-actions>a[href].secondary,.cta>a[href].secondary
+){
+  color:var(--qily-ui-forest)!important;
+  -webkit-text-fill-color:var(--qily-ui-forest)!important;
+  background:var(--qily-ui-surface)!important;
+  border:1.5px solid #a9cbc7!important;
+  text-decoration-color:var(--qily-ui-teal)!important;
+}
+@media(hover:hover) and (pointer:fine){
+  html body :is(a.button,button.button,a.btn,button.btn,a.qily-button,button.qily-button,a.qily-ia-button,button.qily-ia-button,a.module-action,a.resource-action,a.project-list-action,a.project-card-action,a.service-contract-link,a.contact-action,button.contact-action):hover{
+    color:var(--qily-ui-ink)!important;
+    -webkit-text-fill-color:var(--qily-ui-ink)!important;
+    background:var(--qily-ui-gold-soft)!important;
+    border-color:var(--qily-ui-gold)!important;
+    box-shadow:0 10px 24px rgba(15,75,90,.18)!important;
+  }
+}
+html body :is(a.button,button.button,a.btn,button.btn,a.qily-button,button.qily-button,a.qily-ia-button,button.qily-ia-button,a.module-action,a.resource-action,a.project-list-action,a.project-card-action,a.service-contract-link,a.contact-action,button.contact-action):active{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#073c47!important;
+  border-color:var(--qily-ui-gold)!important;
+  transform:none!important;
+}
+
+/* 03｜Surface hierarchy: unify like-for-like modules without flattening intentional hero/engineering visuals. */
+html body{color:var(--qily-ui-ink);background:var(--qily-ui-page)}
+html body main :is(.section,.module-section,.daily-single-section,.qily-section):not(.dark):not(.qily-dark):not(.forest-bg):not(.qily-forest-bg){
+  color:var(--qily-ui-ink);
+}
+html body main :is(.section.alt,.module-section.alt,.qily-section.alt,.section.soft,.module-section.soft){background:var(--qily-ui-alt)!important}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg){color:#fff!important;background:var(--qily-ui-dark)!important}
+html body main :is(
+  .panel,.module-card,.paper-card,.service-card,.resource-card,.knowledge-card,.project-list-card,.project-card,
+  .cluster-card,.authority-item,.term-card,.trust-card,.career-full-card,.qily-value-card,.qily-ia-card
+){
+  border-color:var(--qily-ui-line)!important;
+  border-radius:var(--qily-ui-radius)!important;
+  box-shadow:var(--qily-ui-shadow)!important;
+}
+html body main :is(.panel,.module-card,.paper-card,.service-card,.resource-card,.knowledge-card,.project-list-card,.project-card,.cluster-card,.authority-item,.term-card,.trust-card,.career-full-card,.qily-value-card,.qily-ia-card):not(.dark):not(.qily-dark){
+  color:var(--qily-ui-ink)!important;
+  background:var(--qily-ui-surface)!important;
+}
+
+/* 04｜Typography hierarchy: same semantic level = same readable floor. */
+html body main :is(h1,.hero-title,.module-title){font-weight:950!important}
+html body main :is(h2,.section-title,.module-heading>h2,.section-head>h2){font-weight:950!important;line-height:1.16!important}
+html body main :is(h3,.card-title,.panel>h3,.module-card>h3){font-weight:900!important;line-height:1.3!important}
+html body main :is(p,li,dd,dt){font-size:max(19.5px,1em)!important}
+html body :is(small,.caption,.meta,.fine,.note,.status-note,.project-meta,.article-meta,.resource-meta,.source-note){font-size:max(var(--qily-ui-note-size),1em)!important;line-height:1.62!important;opacity:1!important}
+html body main :is(.panel,.module-card,.paper-card,.service-card,.resource-card,.knowledge-card,.project-list-card,.project-card,.cluster-card,.authority-item,.term-card,.trust-card,.career-full-card,.qily-value-card,.qily-ia-card) :is(h2,h3,h4,strong){color:var(--qily-ui-forest)}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) :is(h1,h2,h3,h4,strong,p,li,span){color:inherit}
+
+/* 05｜Pills/tags/status: light surface = dark copy; selected/current = dark surface + white copy. */
+html body :is(.tag,.pill,.chip,.badge,.keyword-cloud a,.qily-ia-pill-list li,.module-subnav a){
+  min-height:36px!important;
+  padding:6px 11px!important;
+  border:1px solid #bfd7d4!important;
+  border-radius:999px!important;
+  color:var(--qily-ui-forest)!important;
+  -webkit-text-fill-color:var(--qily-ui-forest)!important;
+  background:#f7fbfa!important;
+  font-size:20px!important;
+  line-height:1.3!important;
+  font-weight:850!important;
+  opacity:1!important;
+}
+html body :is(.tag,.pill,.chip,.badge,.keyword-cloud a,.qily-ia-pill-list li,.module-subnav a):is([aria-current],[aria-selected="true"],.active,.current,.is-active){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-ui-forest)!important;
+  border-color:var(--qily-ui-gold)!important;
+}
+
+/* 06｜Tables/forms retain engineering density but never fall below readable floor. */
+html body :is(th,td,label,input,select,textarea,button,option){font-size:max(20px,1em)!important}
+html body :is(input,select,textarea){color:var(--qily-ui-ink)!important;background:#fff!important;border-color:#b9d3cf!important}
+
+@media(max-width:620px){
+  html body main :is(p,li,dd,dt){font-size:20px!important}
+  html body :is(.tag,.pill,.chip,.badge,.keyword-cloud a,.qily-ia-pill-list li,.module-subnav a){font-size:20px!important}
+}
+@media(prefers-reduced-motion:reduce){html body :is(a[href],button){transition:none!important;transform:none!important}}

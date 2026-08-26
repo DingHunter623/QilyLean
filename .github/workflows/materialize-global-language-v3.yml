@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - '**.html'
       - 'site-global-language-v1.css'
       - 'site-translation-safe-runtime-v1.js'
       - 'site-translation-public-ui-v1.js'
@@ -14,6 +15,7 @@ on:
       - 'site-interaction-contrast-guard-v1.css'
       - 'site-content-contrast-guard-v1.js'
       - 'site-content-contrast-guard-v1.css'
+      - 'site-unified-visual-governance-v1.css'
       - 'site-search.js'
       - 'site-integrity-hotfix-v1.js'
       - 'site-navigation.js'
@@ -28,6 +30,7 @@ on:
       - 'scripts/validate-public-baseline-materialization-v1.js'
       - 'scripts/validate-20260825-remediation-closure-v1.js'
       - 'scripts/validate-mobile-primary-navigation-v1.js'
+      - 'scripts/validate-unified-visual-governance-v1.js'
       - '.github/workflows/materialize-global-language-v3.yml'
   workflow_dispatch:
 
@@ -72,9 +75,11 @@ jobs:
           node --check scripts/validate-public-baseline-materialization-v1.js
           node --check scripts/validate-20260825-remediation-closure-v1.js
           node --check scripts/validate-mobile-primary-navigation-v1.js
+          node --check scripts/validate-unified-visual-governance-v1.js
           node scripts/validate-sitewide-safety-readability-v1.js
           node scripts/validate-global-language-runtime-compat-v1.js
           node scripts/validate-mobile-primary-navigation-v1.js
+          node scripts/validate-unified-visual-governance-v1.js
 
       - name: Materialize, audit and publish every tracked HTML page
         shell: bash
@@ -89,20 +94,22 @@ jobs:
             node scripts/validate-sitewide-safety-readability-v1.js
             node scripts/validate-global-language-runtime-compat-v1.js
             node scripts/validate-mobile-primary-navigation-v1.js
+            node scripts/validate-unified-visual-governance-v1.js
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
             node scripts/validate-public-baseline-materialization-v1.js
             node scripts/validate-20260825-remediation-closure-v1.js
             node scripts/validate-mobile-primary-navigation-v1.js
+            node scripts/validate-unified-visual-governance-v1.js --materialized
             git diff --check
             if git diff --quiet; then
               echo 'Unified public baseline already materialized on latest main.'
               exit 0
             fi
             git add -- '*.html'
-            git commit -m 'build: materialize search navigation and contrast v5 across public HTML'
+            git commit -m 'build: materialize unified visual governance across public HTML'
             if git push origin HEAD:main; then
-              echo 'Unified public baseline with search navigation and contrast v5 published and audited.'
+              echo 'Unified public baseline with visual closure published and audited.'
               exit 0
             fi
             echo 'main advanced during publish; retrying from newest main.'
