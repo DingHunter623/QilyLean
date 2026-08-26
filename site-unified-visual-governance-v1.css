@@ -2,6 +2,7 @@
  * Final public visual contract for every tracked page.
  * Priority: visual clarity first; professional content hierarchy remains intact.
  * Mobile navigation never solves space pressure by shrinking the active item.
+ * V2 contrast closure: light pills on dark heroes keep dark copy; dark sections keep light copy.
  */
 :root{
   --qily-ui-forest:#0f4b5a;
@@ -201,6 +202,79 @@ html body :is(.tag,.pill,.chip,.badge,.keyword-cloud a,.qily-ia-pill-list li,.mo
 /* 06｜Tables/forms retain engineering density but never fall below readable floor. */
 html body :is(th,td,label,input,select,textarea,button,option){font-size:max(20px,1em)!important}
 html body :is(input,select,textarea){color:var(--qily-ui-ink)!important;background:#fff!important;border-color:#b9d3cf!important}
+
+/* 07｜Contrast closure: semantic surface owns foreground, not ancestor link rules. */
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg,.qily-dark-band,[data-qily-dark-band="true"])
+:is(h1,h2,h3,h4,h5,h6,p,li,span,strong,b,em,small,dt,dd){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg,.qily-dark-band,[data-qily-dark-band="true"])
+:is(.eyebrow,.module-eyebrow,.kicker,.section-kicker,.qily-ia-kicker,small,.meta,.fine){
+  color:var(--qily-ui-gold-soft)!important;
+  -webkit-text-fill-color:var(--qily-ui-gold-soft)!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle{
+  color:#fff!important;
+  background:#18373d!important;
+  border-left-color:var(--qily-ui-gold)!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle strong{
+  color:var(--qily-ui-gold-soft)!important;
+  -webkit-text-fill-color:var(--qily-ui-gold-soft)!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle span{
+  color:#d8e7e3!important;
+  -webkit-text-fill-color:#d8e7e3!important;
+}
+
+/* Light interactive chips inside a dark hero remain a light surface with dark copy. */
+html body :is(.hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub)
+:is(.module-subnav,.subnav,.anchor-nav,.tab-nav,.filter-nav,.index-nav) a[href],
+html body :is(.hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub)
+:is(.tag,.pill,.chip,.badge,.keyword-cloud a){
+  color:var(--qily-ui-forest)!important;
+  -webkit-text-fill-color:var(--qily-ui-forest)!important;
+  background:#fff!important;
+  border-color:#bfd7d4!important;
+  text-decoration-color:var(--qily-ui-forest)!important;
+  opacity:1!important;
+}
+html body :is(.hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub)
+:is(.module-subnav,.subnav,.anchor-nav,.tab-nav,.filter-nav,.index-nav) a[href]:is([aria-current],[aria-selected="true"],.active,.current,.is-active),
+html body :is(.hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub)
+:is(.tag,.pill,.chip,.badge,.keyword-cloud a):is([aria-current],[aria-selected="true"],.active,.current,.is-active){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-ui-forest)!important;
+  border-color:var(--qily-ui-gold)!important;
+  text-decoration-color:var(--qily-ui-gold-soft)!important;
+}
+@media(hover:hover) and (pointer:fine){
+  html body :is(.hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub)
+  :is(.module-subnav,.subnav,.anchor-nav,.tab-nav,.filter-nav,.index-nav) a[href]:not([aria-current]):hover,
+  html body :is(.hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,.improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub)
+  :is(.module-subnav,.subnav,.anchor-nav,.tab-nav,.filter-nav,.index-nav) a[href]:not([aria-current]):focus-visible{
+    color:var(--qily-ui-ink)!important;
+    -webkit-text-fill-color:var(--qily-ui-ink)!important;
+    background:var(--qily-ui-gold-soft)!important;
+    border-color:var(--qily-ui-gold)!important;
+  }
+}
+
+/* Explicit light surfaces always win even when nested in a dark section. */
+html body [data-qily-light-surface="true"],
+html body [data-qily-light-surface="true"] :is(h1,h2,h3,h4,h5,h6,p,li,span,strong,b,em,small,dt,dd){
+  color:var(--qily-ui-ink)!important;
+  -webkit-text-fill-color:var(--qily-ui-ink)!important;
+}
+html body [data-qily-light-surface="true"] :is(h1,h2,h3,h4,h5,h6,strong,b){
+  color:var(--qily-ui-forest)!important;
+  -webkit-text-fill-color:var(--qily-ui-forest)!important;
+}
 
 @media(max-width:620px){
   html body main :is(p,li,dd,dt){font-size:20px!important}
