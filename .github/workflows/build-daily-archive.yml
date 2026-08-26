@@ -14,6 +14,7 @@ on:
       - 'qilylean/assets/daily-*.svg'
       - 'qilylean/daily/assets/**'
       - 'qilylean/daily-briefs.css'
+      - 'qilylean/npi-four-stage-series-v1.css'
       - 'qilylean/daily-feedback.js'
       - 'qilylean/brief-curation-policy.json'
       - 'site-early-career-history-v1.css'
@@ -21,6 +22,7 @@ on:
       - 'knowledge/terminology/*.html'
       - 'scripts/curate-weekly-briefs.js'
       - 'scripts/publish-curated-daily.js'
+      - 'scripts/publish-npi-four-stage-series.js'
       - 'scripts/publish-pph-terminology.js'
       - 'scripts/publish-early-career-history.js'
       - 'scripts/site-career-baseline-lib.js'
@@ -44,12 +46,14 @@ on:
     paths:
       - '.github/workflows/build-daily-archive.yml'
       - 'qilylean/daily/*.html'
+      - 'qilylean/npi-four-stage-series-v1.css'
       - 'qilylean/brief-curation-policy.json'
       - 'site-early-career-history-v1.css'
       - 'knowledge/terminology.html'
       - 'knowledge/terminology/*.html'
       - 'scripts/curate-weekly-briefs.js'
       - 'scripts/publish-curated-daily.js'
+      - 'scripts/publish-npi-four-stage-series.js'
       - 'scripts/publish-pph-terminology.js'
       - 'scripts/publish-early-career-history.js'
       - 'scripts/site-career-baseline-lib.js'
@@ -88,6 +92,7 @@ jobs:
         run: |
           node --check scripts/publish-curated-daily.js
           node --check scripts/curate-weekly-briefs.js
+          node --check scripts/publish-npi-four-stage-series.js
           node --check scripts/publish-pph-terminology.js
           node --check scripts/publish-early-career-history.js
           node --check scripts/site-career-baseline-lib.js
