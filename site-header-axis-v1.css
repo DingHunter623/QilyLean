@@ -1,7 +1,8 @@
-/* QilyLean Global Header Axis V1｜2026-08-25
+/* QilyLean Global Header Axis V1｜2026-08-26
  * Goal: align Logo / primary navigation / translation utility to the same 1560px site content axis.
  * Desktop: every first-level item remains visible at 100% zoom without horizontal clipping.
- * Narrow desktop: compress spacing first, then type size within a guarded 18–20px range; never wrap CJK labels.
+ * Active/current navigation keeps the exact same type scale as sibling items; highlight never shrinks labels.
+ * Lean-production authority cards clear the hero action row instead of visually overlapping it.
  * Mobile recovery: column-layout navigation must reset desktop flex-basis so its row never collapses to zero height.
  */
 :root{
@@ -24,7 +25,6 @@ html body header.top.qily-site-header{
   isolation:isolate;
 }
 
-/* Keep the white sticky header surface full-bleed while its content follows the governed axis. */
 html body header.qily-site-header::before,
 html body header.qily-global-header::before{
   content:"";
@@ -82,12 +82,28 @@ html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav
   overflow-wrap:normal!important;
 }
 
-/* The translation utility keeps strong visual identity but gives nonessential width back to navigation. */
+/* R6 current-item parity: active state changes color/background only, never typography geometry. */
+@media (min-width:1181px){
+  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
+  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
+  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"],
+  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"]{
+    font-size:clamp(18px,1.12vw,20px)!important;
+    line-height:1.2!important;
+    font-weight:850!important;
+  }
+}
+
+/* Lean-production hero clearance: the 4 authority cards begin below the hero action row.
+ * Previous -36px negative margin caused the cards to overlap the CTA buttons; +2px is ~38px lower. */
+html body .hero + .authority-strip{
+  margin-top:2px!important;
+}
+
 html body .qily-web-translate__select,
 html body .qily-web-translate__select option{font-size:16px!important}
 @media (max-width:1700px){html body .qily-web-translate__badge{display:none!important}}
 
-/* 100% desktop zoom guard: fit the complete primary navigation before allowing any scroll behavior. */
 @media (min-width:1181px) and (max-width:1500px){
   html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
   html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
@@ -99,7 +115,6 @@ html body .qily-web-translate__select option{font-size:16px!important}
   html body header.qily-global-header> :is(.brand,.qily-brand){margin-right:8px!important}
 }
 
-/* Tablet / compact layouts may scroll the navigation, but must not clip or wrap labels. */
 @media (max-width:1180px){
   html body header.qily-site-header,
   html body header.qily-global-header{
@@ -115,11 +130,6 @@ html body .qily-web-translate__select option{font-size:16px!important}
   }
 }
 
-/* Mobile primary-navigation recovery.
- * The base desktop nav uses flex:1 1 0. Once the header becomes a column on phones,
- * that zero flex-basis applies to HEIGHT and can collapse the entire navigation row.
- * Reset the main-axis flex contract and guarantee a real finger-sized horizontal scroller.
- */
 @media (max-width:900px){
   html body header.qily-site-header,
   html body header.qily-global-header,
