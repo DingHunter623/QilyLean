@@ -20,8 +20,8 @@ const required=[
   '/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3',
   '/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2',
   '/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2',
-  '/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v5',
-  '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5'
+  '/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6',
+  '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'
 ];
 const NAV='/site-navigation.js?v=20260826-search-navigation-contrast-v44';
 const SHELL='/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3';
@@ -36,7 +36,7 @@ for(const relative of trackedHtml()){
     else if(count(html,token)!==1)failures.push(`${relative}: duplicate ${token} x${count(html,token)}`);
   }
   if(!html.includes('<script defer data-qily-translation-safe-direct="inpage-v2"'))failures.push(`${relative}: translation runtime is not deferred`);
-  if(!html.includes('data-qily-content-contrast-direct="v5"'))failures.push(`${relative}: content contrast v5 marker missing`);
+  if(!html.includes('data-qily-content-contrast-direct="v6"'))failures.push(`${relative}: content contrast v6 marker missing`);
   if(html.includes('/site-global-language-v3.js'))failures.push(`${relative}: retired external-proxy translator still referenced`);
   if(/\/site-navigation\.js(?:\?v=[^"']*)?/.test(html)){
     navigationPages+=1;if(!html.includes(NAV))failures.push(`${relative}: navigation runtime is stale`);
@@ -46,13 +46,13 @@ for(const relative of trackedHtml()){
   }
 }
 
-const samples=['index.html','knowledge/terminology.html','qilylean/gbt2828.html','qilylean/daily/2026-08-25.html','knowledge/index.html','qilylean/production-operations-organization.html'];
+const samples=['index.html','knowledge/terminology.html','qilylean/gbt2828.html','qilylean/daily/2026-08-25.html','knowledge/index.html','qilylean/production-operations-organization.html','qilylean/daily-insights.html'];
 for(const sample of samples){
   if(!fs.existsSync(path.join(root,sample)))failures.push(`${sample}: required remediation sample missing`);
   else{
     const html=read(sample);
     if(!html.includes('/site-translation-safe-runtime-v1.js?v=20260826-translation-fast-reliable-v3'))failures.push(`${sample}: fast translation runtime absent`);
-    if(!html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5'))failures.push(`${sample}: content contrast v5 baseline absent`);
+    if(!html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'))failures.push(`${sample}: content contrast v6 baseline absent`);
   }
 }
 
