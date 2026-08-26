@@ -1,0 +1,43 @@
+/* QilyLean Sitewide Stability Recovery V1｜2026-08-26
+ * Emergency regression closure after contact-route rollout.
+ * Scope: remove false document tail height and guarantee floating Dock visibility without changing business content.
+ */
+html body{
+  min-height:0!important;
+  height:auto!important;
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+html body>main{
+  flex:none!important;
+  min-height:0!important;
+  height:auto!important;
+  margin-bottom:0!important;
+  padding-bottom:0!important;
+}
+html body>:is(footer,.footer,.module-footer,.qtc-global-trust-footer){
+  flex:none!important;
+  min-height:0!important;
+  margin-bottom:0!important;
+}
+html body::after{
+  content:none!important;
+  display:none!important;
+}
+html body>#floatDock.qily-float-dock,
+html body>#floatDock.qily-floating-dock{
+  position:fixed!important;
+  display:flex!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+  z-index:2147482500!important;
+}
+html body>#floatDock[hidden]{display:flex!important}
+@media(max-width:620px){
+  html body>#floatDock.qily-float-dock,
+  html body>#floatDock.qily-floating-dock{
+    right:max(8px,env(safe-area-inset-right))!important;
+    bottom:max(8px,env(safe-area-inset-bottom))!important;
+  }
+}
