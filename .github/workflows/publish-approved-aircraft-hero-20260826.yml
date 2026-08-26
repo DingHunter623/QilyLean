@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - '官网首图.png'
       - '.github/workflows/publish-approved-aircraft-hero-20260826.yml'
       - 'scripts/enforce-aircraft-home-hero.js'
       - 'scripts/site-regression-guard-aircraft-hero.js'
@@ -30,20 +31,31 @@ jobs:
         with:
           node-version: 20
 
-      - name: Materialize the approved airplane artwork
+      - name: Materialize the user-uploaded airplane artwork
         shell: bash
         run: |
           set -euo pipefail
+          SOURCE='官网首图.png'
+          TARGET='assets/qilylean-aircraft-hero-approved-20260826.png'
+          EXPECTED_BLOB='ad2fbebc0563867a645979422575cbde4ef45f94'
+
+          test -f "$SOURCE"
+          ACTUAL_BLOB="$(git hash-object "$SOURCE")"
+          if [ "$ACTUAL_BLOB" != "$EXPECTED_BLOB" ]; then
+            echo "Unexpected airplane source blob: $ACTUAL_BLOB" >&2
+            exit 1
+          fi
+
           mkdir -p assets
-          git fetch --no-tags --depth=1 origin c919-approved-20260826
-          git show FETCH_HEAD:qilylean/c919-strategy-hero-v14.png > assets/qilylean-aircraft-hero-approved-20260826.png
+          cp "$SOURCE" "$TARGET"
+
           node - <<'NODE'
           const fs=require('fs');
           const b=fs.readFileSync('assets/qilylean-aircraft-hero-approved-20260826.png');
-          if(!b.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))) throw new Error('Approved airplane asset is not PNG');
-          if(b.readUInt32BE(16)!==1672||b.readUInt32BE(20)!==941) throw new Error('Approved airplane dimensions changed');
-          if(b.length<500000) throw new Error('Approved airplane asset unexpectedly small');
-          console.log(`Approved airplane artwork: ${b.length} bytes / 1672x941`);
+          if(!b.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))) throw new Error('Uploaded airplane asset is not PNG');
+          if(b.readUInt32BE(16)!==1672||b.readUInt32BE(20)!==941) throw new Error(`Uploaded airplane dimensions are ${b.readUInt32BE(16)}x${b.readUInt32BE(20)}, expected 1672x941`);
+          if(b.length<500000) throw new Error('Uploaded airplane asset unexpectedly small');
+          console.log(`User-uploaded airplane artwork: ${b.length} bytes / 1672x941`);
           NODE
 
       - name: Materialize homepage airplane image only
@@ -68,6 +80,6 @@ jobs:
             echo 'Approved airplane hero already materialized.'
             exit 0
           fi
-          git commit -m 'fix(home): publish approved airplane hero asset [aircraft-hero-generated]'
+          git commit -m 'fix(home): publish user-uploaded airplane hero [aircraft-hero-generated]'
           git pull --rebase origin main
           git push origin HEAD:main
