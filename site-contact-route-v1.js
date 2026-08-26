@@ -1,4 +1,4 @@
-/* QilyLean Site Shell Recovery + Contact Route V7｜2026-08-26
+/* QilyLean Site Shell Recovery + Contact Route V8｜2026-08-26
  * Contact contract:
  * - keep the permanent six-action floating dock visible on desktop/mobile;
  * - preserve data-action="contact" compatibility with the core dock contract;
@@ -7,12 +7,13 @@
  *   so the browser performs a real user-initiated independent-page navigation;
  * - remove the legacy contact modal because /contact/ is the only contact surface;
  * - never render third-party map iframes inside the contact page;
- * - provide clean outbound navigation through Amap (primary), Baidu Maps and Tencent Maps;
+ * - provide clean outbound navigation through Amap (primary), Baidu Maps, Tencent Maps, Google Maps and Apple Maps;
  * - no polling, no MutationObserver, no reload, no full-page DOM scan.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilySiteShellRecoveryV7)return;
+  if(w.__qilySiteShellRecoveryV8)return;
+  w.__qilySiteShellRecoveryV8=true;
   w.__qilySiteShellRecoveryV7=true;
   w.__qilySiteShellRecoveryV6=true;
   w.__qilySiteShellRecoveryV5=true;
@@ -27,9 +28,9 @@
   var LABELS={home:'首页',top:'回<br>顶部',back:'回<br>上一层',search:'本站<br>搜索',current:'分享<br>当前页',contact:'联系<br>我们'};
 
   function injectRecoveryCss(){
-    if(d.getElementById('qilySiteShellRecoveryV7Style'))return;
+    if(d.getElementById('qilySiteShellRecoveryV8Style'))return;
     var style=d.createElement('style');
-    style.id='qilySiteShellRecoveryV7Style';
+    style.id='qilySiteShellRecoveryV8Style';
     style.textContent=[
       'html,html body{height:auto!important;min-height:0!important}',
       'html body{display:block!important}',
@@ -41,11 +42,12 @@
       'html body .contact-page-v3 .qily-map-nav-panel{padding:18px 20px;border-top:1px solid #cfe0dd;background:#f7fbfa}',
       'html body .contact-page-v3 .qily-map-nav-copy strong{display:block;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font-size:18px;font-weight:950}',
       'html body .contact-page-v3 .qily-map-nav-copy span{display:block;margin-top:5px;color:#607574!important;-webkit-text-fill-color:#607574!important;font-size:14px;line-height:1.55}',
-      'html body .contact-page-v3 .qily-map-nav-actions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-top:14px}',
-      'html body .contact-page-v3 .qily-map-nav-action{display:flex;align-items:center;justify-content:center;min-height:46px;padding:9px 10px;border:1px solid #a9cbc7;border-radius:999px;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;background:#fff;font-size:15px;font-weight:950;text-align:center;text-decoration:none!important}',
+      'html body .contact-page-v3 .qily-map-nav-actions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:9px;margin-top:14px}',
+      'html body .contact-page-v3 .qily-map-nav-action{display:flex;align-items:center;justify-content:center;min-height:46px;padding:9px 8px;border:1px solid #a9cbc7;border-radius:999px;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;background:#fff;font-size:14px;font-weight:950;line-height:1.2;text-align:center;text-decoration:none!important}',
       'html body .contact-page-v3 .qily-map-nav-action.primary{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a;border-color:#0f4b5a}',
       'html body .contact-page-v3 .qily-map-nav-action:hover,html body .contact-page-v3 .qily-map-nav-action:focus-visible{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#178b94;border-color:#178b94;outline:3px solid rgba(202,161,95,.24);outline-offset:2px}',
-      '@media(max-width:620px){#floatDock.qily-float-dock{right:max(10px,env(safe-area-inset-right))!important;bottom:max(10px,env(safe-area-inset-bottom))!important;gap:6px!important}#floatDock.qily-float-dock .qily-float-btn{width:54px!important;height:54px!important;min-width:54px!important;min-height:54px!important;font-size:13px!important}html body .contact-page-v3 .qily-map-nav-panel{padding:16px 14px}html body .contact-page-v3 .qily-map-nav-actions{gap:6px}html body .contact-page-v3 .qily-map-nav-action{min-height:44px;padding:8px 5px;font-size:14px}}'
+      '@media(max-width:920px){html body .contact-page-v3 .qily-map-nav-actions{grid-template-columns:repeat(3,minmax(0,1fr))}}',
+      '@media(max-width:620px){#floatDock.qily-float-dock{right:max(10px,env(safe-area-inset-right))!important;bottom:max(10px,env(safe-area-inset-bottom))!important;gap:6px!important}#floatDock.qily-float-dock .qily-float-btn{width:54px!important;height:54px!important;min-width:54px!important;min-height:54px!important;font-size:13px!important}html body .contact-page-v3 .qily-map-nav-panel{padding:16px 14px}html body .contact-page-v3 .qily-map-nav-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}html body .contact-page-v3 .qily-map-nav-action{min-height:44px;padding:8px 7px;font-size:14px}html body .contact-page-v3 .qily-map-nav-action[data-qily-map-provider="apple"]{grid-column:1/-1}}'
     ].join('');
     (d.head||d.documentElement).appendChild(style);
   }
@@ -54,8 +56,8 @@
   function createButton(action){var b=d.createElement('button');b.type='button';b.className='qily-float-btn qily-float-'+action;b.setAttribute('data-action',action);b.innerHTML=LABELS[action];return b;}
 
   function bindNativeContactAnchor(anchor){
-    if(!anchor||anchor.dataset.qilyNativeContactBound==='v7')return anchor;
-    anchor.dataset.qilyNativeContactBound='v7';
+    if(!anchor||anchor.dataset.qilyNativeContactBound==='v8')return anchor;
+    anchor.dataset.qilyNativeContactBound='v8';
     function isolate(event){event.stopPropagation();}
     anchor.addEventListener('pointerdown',isolate,false);
     anchor.addEventListener('pointermove',isolate,false);
@@ -73,7 +75,7 @@
       control.rel='noopener noreferrer';
       control.setAttribute('aria-label','联系我们（新页面打开）');
       control.setAttribute('title','联系我们（新页面打开）');
-      control.setAttribute('data-qily-contact-route','native-new-tab-v7');
+      control.setAttribute('data-qily-contact-route','native-new-tab-v8');
       control.innerHTML=LABELS.contact;
       return bindNativeContactAnchor(control);
     }
@@ -85,19 +87,23 @@
     anchor.rel='noopener noreferrer';
     anchor.setAttribute('aria-label','联系我们（新页面打开）');
     anchor.setAttribute('title','联系我们（新页面打开）');
-    anchor.setAttribute('data-qily-contact-route','native-new-tab-v7');
+    anchor.setAttribute('data-qily-contact-route','native-new-tab-v8');
     anchor.innerHTML=LABELS.contact;
     control.replaceWith(anchor);
     return bindNativeContactAnchor(anchor);
   }
 
   function mapUrls(keyword,region){
+    var destination=[keyword||'',region||''].filter(Boolean).join(' ');
     var q=encodeURIComponent(keyword||'');
     var r=encodeURIComponent(region||'');
+    var daddr=encodeURIComponent(destination);
     return {
       amap:'https://uri.amap.com/search?keyword='+q+'&city='+r+'&callnative=1',
       baidu:'https://api.map.baidu.com/place/search?query='+q+'&region='+r+'&output=html&src=QilyLean',
-      tencent:'https://apis.map.qq.com/uri/v1/search?keyword='+q+'&region='+r+'&referer=QilyLean'
+      tencent:'https://apis.map.qq.com/uri/v1/search?keyword='+q+'&region='+r+'&referer=QilyLean',
+      google:'https://www.google.com/maps/dir/?api=1&destination='+daddr,
+      apple:'https://maps.apple.com/?daddr='+daddr+'&dirflg=d'
     };
   }
 
@@ -114,25 +120,27 @@
     var urls=mapUrls(keyword,region);
     var panel=d.createElement('div');
     panel.className='qily-map-nav-panel';
-    panel.setAttribute('data-qily-clean-map-nav','v1');
+    panel.setAttribute('data-qily-clean-map-nav','v2');
     panel.setAttribute('aria-label',(keyword||'联系地址')+'地图导航');
 
     var copy=d.createElement('div');copy.className='qily-map-nav-copy';
     var title=d.createElement('strong');title.textContent='地图导航';
-    var note=d.createElement('span');note.textContent='默认高德；也可选择百度或腾讯。本站不嵌入第三方地图页面，避免广告弹层。';
+    var note=d.createElement('span');note.textContent='默认高德；也可选择百度、腾讯、Google Maps 或 Apple Maps。本站不嵌入第三方地图页面，避免广告弹层。';
     copy.appendChild(title);copy.appendChild(note);panel.appendChild(copy);
 
     var actions=d.createElement('div');actions.className='qily-map-nav-actions';
     [
       ['amap','高德导航',urls.amap,true],
       ['baidu','百度导航',urls.baidu,false],
-      ['tencent','腾讯导航',urls.tencent,false]
+      ['tencent','腾讯导航',urls.tencent,false],
+      ['google','Google Maps',urls.google,false],
+      ['apple','Apple Maps',urls.apple,false]
     ].forEach(function(item){
       var link=d.createElement('a');
       link.className='qily-map-nav-action'+(item[3]?' primary':'');
       link.href=item[2];link.target='_blank';link.rel='noopener noreferrer';
       link.setAttribute('data-qily-map-provider',item[0]);
-      link.setAttribute('aria-label',item[1]+'到'+(keyword||'联系地址'));
+      link.setAttribute('aria-label',item[1]+'导航到'+(keyword||'联系地址'));
       link.textContent=item[1];actions.appendChild(link);
     });
     panel.appendChild(actions);
@@ -148,6 +156,13 @@
       var keyword=card?card.getAttribute('data-qily-map-address')||'':'';
       var region=inferRegion(card);
       preview.replaceWith(createCleanMapPanel(keyword,region));
+    });
+    page.querySelectorAll('.qily-map-nav-panel').forEach(function(panel){
+      if(panel.getAttribute('data-qily-clean-map-nav')==='v2'&&panel.querySelector('[data-qily-map-provider="google"]')&&panel.querySelector('[data-qily-map-provider="apple"]'))return;
+      var card=panel.closest('.address-card');
+      var keyword=card?card.getAttribute('data-qily-map-address')||'':'';
+      var region=inferRegion(card);
+      panel.replaceWith(createCleanMapPanel(keyword,region));
     });
     page.querySelectorAll('iframe[src*="api.map.baidu.com"]').forEach(function(frame){frame.removeAttribute('src');frame.remove();});
   }
@@ -168,7 +183,7 @@
     });
     ACTIONS.forEach(function(action){var control=dock.querySelector('[data-action="'+action+'"]');if(control)dock.appendChild(control);});
     dock.dataset.qilyStableOrder=ACTIONS.join(',');
-    dock.dataset.qilyContactNativeRoute='v7';
+    dock.dataset.qilyContactNativeRoute='v8';
     return dock;
   }
 
