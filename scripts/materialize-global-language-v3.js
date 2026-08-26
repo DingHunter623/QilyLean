@@ -1,11 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V5｜2026-08-26
- * Single public baseline: Chinese source + in-page safe translation + public language UI +
- * header axis + interaction/content contrast. The retired external-proxy translator is never emitted.
- * V5: dark visual surfaces preserve authored light text while opaque light cards nested inside them
- * are evaluated independently; navigation query is refreshed for deterministic site-search opening.
+/* QilyLean Sitewide Public Baseline Materializer V6｜2026-08-26
+ * Single public baseline: Chinese source + fast fail-closed in-page translation + public language UI +
+ * header axis + interaction/content contrast. Translation is deferred so it never blocks HTML parsing.
  */
 const fs = require('fs');
 const path = require('path');
@@ -14,8 +12,8 @@ const { execFileSync } = require('child_process');
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
 const BASELINE_VERSION = '20260825-mobile-navigation-recovery-v1';
-const SAFE_VERSION = '20260825-translation-safe-inpage-v2';
-const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260826-search-navigation-contrast-v44';
+const SAFE_VERSION = '20260826-translation-fast-reliable-v3';
+const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3';
 const NAVIGATION = '/site-navigation.js?v=20260826-search-navigation-contrast-v44';
 const PARENT_NAV = '/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE = '/site-dock-share-runtime-v1.js?v=20260825-language-runtime-compat-v31';
@@ -24,7 +22,7 @@ const LANGUAGE_CSS = '/site-global-language-v1.css?v=20260825-public-translation
 const SAFE_RUNTIME = `/site-translation-safe-runtime-v1.js?v=${SAFE_VERSION}`;
 const HEADER_AXIS = '/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3';
 const PROGRESS_CSS = '/site-translation-progress-v1.css?v=20260825-bilingual-progress-v3';
-const PROGRESS_JS = '/site-translation-progress-v1.js?v=20260825-bilingual-progress-v3';
+const PROGRESS_JS = '/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3';
 const PUBLIC_UI_CSS = '/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7';
 const PUBLIC_UI_JS = '/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6';
 const INTERACTION_CONTRAST_CSS = '/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2';
@@ -76,7 +74,7 @@ function materialize(source) {
     `<link id="qilyTranslationPublicUiV1Stylesheet" rel="stylesheet" href="${PUBLIC_UI_CSS}">`,
     `<link id="qilyInteractionContrastGuardV1Stylesheet" rel="stylesheet" href="${INTERACTION_CONTRAST_CSS}">`,
     `<link id="qilyContentContrastGuardV1Stylesheet" rel="stylesheet" href="${CONTENT_CONTRAST_CSS}">`,
-    `<script data-qily-translation-safe-direct="inpage-v2" src="${SAFE_RUNTIME}"></script>`,
+    `<script defer data-qily-translation-safe-direct="inpage-v2" src="${SAFE_RUNTIME}"></script>`,
     `<script defer data-qily-translation-public-ui-direct="visitor-v2" src="${PUBLIC_UI_JS}"></script>`,
     `<script defer data-qily-translation-progress-direct="bilingual-v2" src="${PROGRESS_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
