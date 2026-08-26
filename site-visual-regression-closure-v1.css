@@ -1,0 +1,154 @@
+/* QilyLean Sitewide Visual Regression Closure V1｜2026-08-26
+ * Last stylesheet in the public baseline. It closes screenshot-confirmed cascade regressions without
+ * flattening intentional page hierarchy: light chips stay dark-on-light, dark sections stay light-on-dark,
+ * and career year ranges receive sufficient width.
+ */
+:root{
+  --qily-fix-forest:#0f4b5a;
+  --qily-fix-ink:#17322d;
+  --qily-fix-gold:#caa15f;
+  --qily-fix-gold-soft:#ffe39b;
+  --qily-fix-dark:#102a2f;
+  --qily-fix-light:#fff;
+  --qily-fix-line:#bfd7d4;
+}
+
+/* A｜Hero/subnav pills: a white/light capsule must never inherit white text from its dark ancestor. */
+html body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub
+) :is(.module-subnav,.subnav,.anchor-nav,.tab-nav,.filter-nav,.index-nav) a[href],
+html body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub
+) :is(.tag,.pill,.chip,.badge,.keyword-cloud a){
+  color:var(--qily-fix-forest)!important;
+  -webkit-text-fill-color:var(--qily-fix-forest)!important;
+  background:#fff!important;
+  border-color:var(--qily-fix-line)!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+  text-decoration-color:var(--qily-fix-forest)!important;
+}
+html body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub
+) :is(.module-subnav,.subnav,.anchor-nav,.tab-nav,.filter-nav,.index-nav) a[href]:is([aria-current="page"],[aria-selected="true"],.active,.current,.is-active),
+html body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub
+) :is(.tag,.pill,.chip,.badge,.keyword-cloud a):is([aria-current="page"],[aria-selected="true"],.active,.current,.is-active){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-fix-forest)!important;
+  border-color:var(--qily-fix-gold)!important;
+  text-decoration-color:var(--qily-fix-gold-soft)!important;
+}
+@media(hover:hover) and (pointer:fine){
+  html body :is(
+    .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+    .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+    .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,.article-hub
+  ) :is(.module-subnav,.subnav,.anchor-nav,.tab-nav,.filter-nav,.index-nav) a[href]:not([aria-current]):is(:hover,:focus-visible){
+    color:var(--qily-fix-ink)!important;
+    -webkit-text-fill-color:var(--qily-fix-ink)!important;
+    background:var(--qily-fix-gold-soft)!important;
+    border-color:var(--qily-fix-gold)!important;
+  }
+}
+
+/* B｜Semantic dark sections: titles/body/callout cards use deterministic high contrast. */
+html body main :is(
+  .section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg,
+  .qily-dark-band,[data-qily-dark-band="true"],[data-qily-dark-surface="true"],[data-theme="dark"]
+){
+  color:#fff!important;
+  background-color:var(--qily-fix-dark)!important;
+}
+html body main :is(
+  .section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg,
+  .qily-dark-band,[data-qily-dark-band="true"],[data-qily-dark-surface="true"],[data-theme="dark"]
+) :is(h1,h2,h3,h4,h5,h6,p,li,span,strong,b,em,small,dt,dd){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+html body main :is(
+  .section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg,
+  .qily-dark-band,[data-qily-dark-band="true"],[data-qily-dark-surface="true"],[data-theme="dark"]
+) :is(.eyebrow,.module-eyebrow,.kicker,.section-kicker,.qily-ia-kicker,.meta,.fine){
+  color:var(--qily-fix-gold-soft)!important;
+  -webkit-text-fill-color:var(--qily-fix-gold-soft)!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle{
+  color:#fff!important;
+  background:#18373d!important;
+  border-left-color:var(--qily-fix-gold)!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle strong{
+  color:var(--qily-fix-gold-soft)!important;
+  -webkit-text-fill-color:var(--qily-fix-gold-soft)!important;
+}
+html body main :is(.section.dark,.module-section.dark,.qily-section.dark,.qily-dark,.dark-bg) .principle span{
+  color:#d8e7e3!important;
+  -webkit-text-fill-color:#d8e7e3!important;
+}
+
+/* C｜An explicit local light surface always wins inside a dark parent. */
+html body [data-qily-light-surface="true"],
+html body [data-qily-light-surface="true"] :is(h1,h2,h3,h4,h5,h6,p,li,span,strong,b,em,small,dt,dd){
+  color:var(--qily-fix-ink)!important;
+  -webkit-text-fill-color:var(--qily-fix-ink)!important;
+}
+html body [data-qily-light-surface="true"] :is(h1,h2,h3,h4,h5,h6,strong,b){
+  color:var(--qily-fix-forest)!important;
+  -webkit-text-fill-color:var(--qily-fix-forest)!important;
+}
+
+/* D｜Career history: desktop year ranges remain one compact readable unit, with wider first column. */
+html body .career-table .career-year-col,
+html body .career-table th:first-child,
+html body .career-table td:first-child{
+  width:150px!important;
+  min-width:150px!important;
+  max-width:150px!important;
+  overflow-wrap:normal!important;
+  word-break:keep-all!important;
+}
+html body .career-table .career-year-link,
+html body .career-table .career-range-link,
+html body .career-table .career-year-range-line{
+  white-space:nowrap!important;
+  overflow-wrap:normal!important;
+  word-break:keep-all!important;
+}
+html body .career-table .career-year-range-break{display:inline!important}
+@media(max-width:760px){
+  html body .career-table .career-year-col,
+  html body .career-table th:first-child,
+  html body .career-table td:first-child{
+    width:124px!important;
+    min-width:124px!important;
+    max-width:124px!important;
+  }
+  html body .career-table .career-range-link{white-space:normal!important}
+  html body .career-table .career-year-range-break{display:block!important}
+}
+@media(max-width:420px){
+  html body .career-table .career-year-col,
+  html body .career-table th:first-child,
+  html body .career-table td:first-child{
+    width:118px!important;
+    min-width:118px!important;
+    max-width:118px!important;
+  }
+}
