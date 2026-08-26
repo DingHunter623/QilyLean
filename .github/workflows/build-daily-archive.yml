@@ -23,6 +23,7 @@ on:
       - 'scripts/curate-weekly-briefs.js'
       - 'scripts/publish-curated-daily.js'
       - 'scripts/publish-npi-four-stage-series.js'
+      - 'scripts/publish-npi-four-stage-series-runner.js'
       - 'scripts/publish-pph-terminology.js'
       - 'scripts/publish-early-career-history.js'
       - 'scripts/site-career-baseline-lib.js'
@@ -54,6 +55,7 @@ on:
       - 'scripts/curate-weekly-briefs.js'
       - 'scripts/publish-curated-daily.js'
       - 'scripts/publish-npi-four-stage-series.js'
+      - 'scripts/publish-npi-four-stage-series-runner.js'
       - 'scripts/publish-pph-terminology.js'
       - 'scripts/publish-early-career-history.js'
       - 'scripts/site-career-baseline-lib.js'
@@ -93,6 +95,7 @@ jobs:
           node --check scripts/publish-curated-daily.js
           node --check scripts/curate-weekly-briefs.js
           node --check scripts/publish-npi-four-stage-series.js
+          node --check scripts/publish-npi-four-stage-series-runner.js
           node --check scripts/publish-pph-terminology.js
           node --check scripts/publish-early-career-history.js
           node --check scripts/site-career-baseline-lib.js
