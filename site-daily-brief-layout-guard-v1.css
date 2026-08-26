@@ -1,0 +1,99 @@
+/* QilyLean Daily Brief Layout Guard V1｜2026-08-26
+ * Scope: all dated Selected Brief pages and dense engineering visuals.
+ * Goals: remove stretched empty visual slabs, preserve readable dense tables, and guarantee tag contrast.
+ */
+
+/* 1｜Selected Brief two-column cards must size each column by its own content.
+ * The old grid stretched the left visual to the height of the much longer right article,
+ * creating the large deep-teal empty slab seen in production.
+ */
+html body main .daily-single-section .post{
+  align-items:start!important;
+}
+html body main .daily-single-section .visual{
+  align-self:start!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  background:transparent!important;
+}
+html body main .daily-single-section .visual :is(img,svg,picture,figure){
+  max-width:100%!important;
+}
+html body main .daily-single-section .visual :is(img,svg){
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+}
+
+/* 2｜Dense engineering tables: keep column headers intact and let descriptive cells wrap naturally.
+ * Horizontal scrolling is preferable to crushing engineering labels into unreadable fragments.
+ */
+html body main .npi-gantt{
+  max-width:100%!important;
+  overflow-x:auto!important;
+  overscroll-behavior-inline:contain;
+  scrollbar-gutter:stable;
+}
+html body main .npi-gantt-table{
+  grid-template-columns:minmax(230px,230px) repeat(20,minmax(46px,46px))!important;
+  width:max-content!important;
+  min-width:1150px!important;
+}
+html body main .npi-gantt-table>*{
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+html body main .npi-gantt-label{
+  white-space:normal!important;
+  word-break:normal!important;
+  overflow-wrap:anywhere!important;
+  hyphens:auto;
+}
+html body main .npi-gantt-week{
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+}
+
+/* 3｜Light Selected Brief tag/pill surfaces always use dark readable copy.
+ * This intentionally overrides older broad "all .tag are white" closure rules.
+ */
+html body main .daily-single-section article.post .tags>.tag,
+html body main article.post .tags>.tag{
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  background:#eef7f5!important;
+  border:1px solid #b9d5d1!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+  font-weight:900!important;
+}
+html body main article.post .tags>.tag *{
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+}
+
+/* 4｜Common horizontally dense assets: do not let compact headings split character-by-character. */
+html body main .daily-single-section :is(.table-scroll,.matrix-scroll,.data-table-scroll,.timeline-scroll){
+  max-width:100%!important;
+  overflow-x:auto!important;
+}
+html body main .daily-single-section :is(.table-scroll,.matrix-scroll,.data-table-scroll,.timeline-scroll) :is(th,[role="columnheader"]){
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+}
+html body main .daily-single-section :is(.table-scroll,.matrix-scroll,.data-table-scroll,.timeline-scroll) :is(td,[role="cell"]){
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+
+@media(max-width:900px){
+  html body main .npi-gantt-table{
+    grid-template-columns:minmax(210px,210px) repeat(20,minmax(44px,44px))!important;
+    min-width:1090px!important;
+  }
+}
