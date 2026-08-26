@@ -47,15 +47,19 @@ const governance=read('site-visual-governance-v2.css');
 ].forEach(marker=>assert(governance.includes(marker),'全站可读性契约缺失：'+marker));
 
 let navPages=0,governancePages=0,buildPages=0;
+const navFiles=[];
+const governanceFiles=[];
 for(const file of htmlFiles()){
   const rel=path.relative(root,file).replace(/\\/g,'/');
   const html=fs.readFileSync(file,'utf8');
   if(/site-navigation\.js\?v=/.test(html)){
     navPages+=1;
+    navFiles.push(rel);
     assert(count(html,NAV)===1,rel+'：全站导航缓存版本未唯一升级');
   }
   if(/site-visual-governance-v2\.css\?v=/.test(html)){
     governancePages+=1;
+    governanceFiles.push(rel);
     assert(count(html,GOV)===1,rel+'：全站可读性缓存版本未唯一升级');
   }
   if(html.includes('qilyR2CriticalFirstPaintGuard')){
@@ -63,8 +67,12 @@ for(const file of htmlFiles()){
     assert(count(html,BUILD)===1,rel+'：首屏构建版本未唯一升级');
   }
 }
+const governanceSet=new Set(governanceFiles);
+const navSet=new Set(navFiles);
+const missingGovernance=navFiles.filter(rel=>!governanceSet.has(rel));
+const extraGovernance=governanceFiles.filter(rel=>!navSet.has(rel));
 assert(navPages>=470,'导航覆盖页数量异常：'+navPages);
-assert(governancePages===navPages,'导航/可读性覆盖不一致：'+navPages+'/'+governancePages);
+assert(governancePages===navPages,'导航/可读性覆盖不一致：'+navPages+'/'+governancePages+'；缺少可读性='+missingGovernance.slice(0,10).join(',')+'；多余可读性='+extraGovernance.slice(0,10).join(','));
 assert(buildPages>=460,'首屏缓存覆盖页数量异常：'+buildPages);
 
 const ddz=read('tools/pure-ddz/index.html');
