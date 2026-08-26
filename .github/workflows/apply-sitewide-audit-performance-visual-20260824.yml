@@ -18,8 +18,10 @@ jobs:
           set -euo pipefail
           node scripts/validate-contact-readability-ddz-20260824.js
           node scripts/validate-home-hero-dock-snapback-v1.js
+          node scripts/site-regression-guard-c919-hero.js
           grep -q 'qilyC919HeroPreloadV1' index.html
-          grep -q 'c919-strategy-hero-v14.webp?v=20260824-sitewide-perf-v1' index.html
+          grep -q 'c919-strategy-hero-v14.png?v=20260826-c919-crossbrowser-v1' index.html
+          ! grep -q 'c919-strategy-hero-v14.webp' index.html
           grep -q 'QILY-CONTACT-LINK-ACTION-V12.5' site-navigation-core.js
           grep -q 'qilyCooperationReadableHierarchyV2' cooperation/index.html
           grep -q 'QILY-SITEWIDE-AUDIT-CONTRAST-V5' pure-ddz-capability-visual-v2.css
