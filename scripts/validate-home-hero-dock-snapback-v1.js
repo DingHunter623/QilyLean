@@ -21,29 +21,31 @@ assert(navigation.includes('headerAxisWidth: 1560'),'1560px header axis contract
 
 const home=read('index.html');
 const materializer=read('scripts/materialize-global-language-v3.js');
-const safeRuntime='/site-translation-safe-runtime-v1.js?v=20260825-translation-safe-inpage-v2';
-const navRuntime='/site-navigation.js?v=20260825-language-runtime-compat-v42';
+const safeRuntime='/site-translation-safe-runtime-v1.js?v=20260826-translation-fast-reliable-v3';
+const navRuntime='/site-navigation.js?v=20260826-search-navigation-contrast-v44';
 const headerAxis='/site-header-axis-v1.css?v=20260825-mobile-navigation-recovery-v3';
-const progressScript='/site-translation-progress-v1.js?v=20260825-bilingual-progress-v3';
+const progressScript='/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3';
 const publicUi='/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6';
 const publicUiCss='/site-translation-public-ui-v1.css?v=20260825-mobile-navigation-recovery-v7';
-const contentContrast='/site-content-contrast-guard-v1.js?v=20260825-sitewide-content-contrast-v2';
+const contentContrast='/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5';
+const sharedShell='/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3';
 const publishReady=
-  materializer.includes("const BASELINE_VERSION = '20260825-mobile-navigation-recovery-v1'")&&
+  materializer.includes("const SAFE_VERSION = '20260826-translation-fast-reliable-v3'")&&
   materializer.includes('data-qily-translation-safety-bootstrap="inpage-v2"')&&
-  materializer.includes('data-qily-translation-safe-direct="inpage-v2"')&&
+  materializer.includes('<script defer data-qily-translation-safe-direct="inpage-v2"')&&
   !materializer.includes('LEGACY_LANGUAGE_SRC');
 function ready(token){return home.includes(token)||materializer.includes(token)}
 
 assert(home.includes('/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3'),'homepage does not reference Hero V3');
 assert(home.includes('/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3'),'homepage does not reference Dock Snapback V3');
-assert(ready(navRuntime),'homepage Navigation V42 is neither materialized nor queued');
+assert(ready(navRuntime),'homepage Navigation V44 is neither materialized nor queued');
 assert(ready(headerAxis),'mobile-safe 1560px Header Axis is neither materialized nor queued');
-assert(ready(progressScript),'bilingual translation progress notice is neither materialized nor queued');
+assert(ready(progressScript),'deterministic translation progress notice is neither materialized nor queued');
 assert(ready(publicUi),'full-language public UI JS is neither materialized nor queued');
 assert(ready(publicUiCss),'mobile navigation recovery CSS is neither materialized nor queued');
 assert(ready(contentContrast),'sitewide content readability guard is neither materialized nor queued');
-assert(home.includes(safeRuntime)||publishReady,'safe in-page translation baseline is neither materialized nor queued');
+assert(ready(sharedShell),'fast shared-shell runtime is neither materialized nor queued');
+assert(home.includes(safeRuntime)||publishReady,'fast safe in-page translation baseline is neither materialized nor queued');
 assert(!materializer.includes('<script defer ${LEGACY_MARKER}'),'retired external-proxy translator is still queued for publication');
 assert(home.includes('font-size:clamp(40px,3.6vw,52px)!important'),'homepage first-paint parity is not using the reduced hero headline tier');
-process.stdout.write(`PASS: homepage Hero/Dock stay protected on ${runtimeBaseline} while safe translation, complete language labels, mobile touch navigation, 1560px Header Axis and content readability are materialized or queued.\n`);
+process.stdout.write(`PASS: homepage Hero/Dock stay protected on ${runtimeBaseline} while fast fail-closed translation, complete language labels, mobile touch navigation, 1560px Header Axis and content readability are materialized or queued.\n`);
