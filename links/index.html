@@ -95,11 +95,11 @@
     </nav>
   </header>
   <main>
-    <section class="hero"><div class="hero-inner"><span class="eyebrow">GLOBAL TECHNOLOGY DIRECTORY</span><h1>友情链接｜全球科技企业100强</h1><p class="lead">汇集人工智能、云计算、半导体、工业自动化、智能硬件、商业航天、新能源及中国硬科技代表企业的官方网址，为技术研究、行业洞察、项目对标与供应链学习提供高效入口。</p><div class="stats"><div class="stat"><strong id="totalCount">100</strong><span>科技企业官网</span></div><div class="stat"><strong>5</strong><span>产业分类</span></div><div class="stat"><strong>全球</strong><span>产业链视野</span></div></div></div></section>
+    <section class="hero"><div class="hero-inner"><span class="eyebrow">GLOBAL TECHNOLOGY DIRECTORY</span><h1>友情链接｜全球科技企业100强</h1><p class="lead">汇集人工智能、云计算、半导体、工业自动化、智能硬件、商业航天、新能源及中国硬科技代表企业的官方网址，为技术研究、行业洞察、项目对标与供应链学习提供高效入口。</p><div class="stats"><div class="stat"><strong id="totalCount">101</strong><span>官网与导航入口</span></div><div class="stat"><strong>6</strong><span>产业分类</span></div><div class="stat"><strong>全球</strong><span>产业链视野</span></div></div></div></section>
     <section class="section"><div class="inner">
       <div class="notice"><strong>收录说明：</strong>本页按技术影响力、产业链地位、全球知名度与QilyLean制造业应用价值精选，属于产业研究导航，并非证券市值或权威机构排名。中国企业侧重通信、芯片、显示、服务器、新能源与智能制造，未收录腾讯、阿里巴巴、字节跳动、京东等以互联网平台为主的企业；X 作为马斯克科技生态入口保留。</div>
       <div class="notice" id="navigationPartnerLinks"><strong>网址导航友情链接：</strong>QilyLean 已增加主流网址导航官方入口，便于访问与站点收录核验。 <a class="resource-action" href="https://www.hao123.com/" target="_blank" rel="noopener" aria-label="访问 hao123 上网导航官方网站">hao123 上网导航 ↗</a></div>
-      <div class="toolbar"><input id="searchInput" class="search" type="search" placeholder="搜索公司中文名、英文名、国家或技术领域……" aria-label="搜索友情链接"><div class="filters" id="filters"></div><p class="result" id="resultText">当前显示 100 家企业</p></div>
+      <div class="toolbar"><input id="searchInput" class="search" type="search" placeholder="搜索公司中文名、英文名、国家或技术领域……" aria-label="搜索友情链接"><div class="filters" id="filters"></div><p class="result" id="resultText">当前显示 101 个官网与导航入口</p></div>
       <div class="grid" id="companyGrid" aria-live="polite"></div><div class="empty" id="emptyState">没有匹配的企业，请调整搜索关键词或分类。</div>
       <!-- QILY-RESOURCE-NETWORK:LINKS:START -->
 <section class="qily-resource-network alt" id="industry-resource-network" data-qily-resource-network="construction-stage">
@@ -126,7 +126,8 @@
   <script>
   (function(){
     'use strict';
-    var rows=`Google / Alphabet|谷歌 / Alphabet|AI云软件|美国|https://about.google/
+    var rows=`hao123|hao123 上网导航|网址导航|中国|https://www.hao123.com/
+Google / Alphabet|谷歌 / Alphabet|AI云软件|美国|https://about.google/
 Microsoft|微软|AI云软件|美国|https://www.microsoft.com/
 OpenAI|OpenAI|AI云软件|美国|https://openai.com/
 Amazon|亚马逊|AI云软件|美国|https://www.amazon.com/
@@ -227,7 +228,7 @@ Inspur|浪潮信息|中国硬科技|中国|https://www.inspur.com/
 H3C|新华三|中国硬科技|中国|https://www.h3c.com/
 Hikvision|海康威视|中国硬科技|中国|https://www.hikvision.com/`;
     var companies=rows.trim().split('\n').map(function(row){var p=row.split('|');return{name:p[0],cn:p[1],category:p[2],country:p[3],url:p[4]};});
-    var categories=['全部','AI云软件','半导体','硬件工业','前沿科技','中国硬科技'];
+    var categories=['全部','网址导航','AI云软件','半导体','硬件工业','前沿科技','中国硬科技'];
     var active='全部';
     var input=document.getElementById('searchInput');var grid=document.getElementById('companyGrid');var filters=document.getElementById('filters');var result=document.getElementById('resultText');var empty=document.getElementById('emptyState');
     function escapeHtml(value){return value.replace(/[&<>"']/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
