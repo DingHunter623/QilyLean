@@ -1,15 +1,16 @@
-/* QilyLean public integrity hotfix v1 | 2026-08-24
+/* QilyLean public integrity hotfix v2 | 2026-08-26
  * Purpose:
  * 1) keep terminology counts aligned with /qilylean/site-data.json even when legacy HTML is cached;
- * 2) make certificate verification boundaries explicit wherever certificate material is displayed;
- * 3) prevent learning/practice records from being mistaken for official endorsements.
+ * 2) keep exactly one terminology count strip and preserve readable foreground on its light surface;
+ * 3) make certificate verification boundaries explicit wherever certificate material is displayed;
+ * 4) prevent learning/practice records from being mistaken for official endorsements.
  */
 (function (d, w) {
   'use strict';
   if (w.__qilyPublicIntegrityHotfixV1) return;
   w.__qilyPublicIntegrityHotfixV1 = true;
 
-  var BUILD = '20260824-public-integrity-v1';
+  var BUILD = '20260826-public-integrity-v2';
   var DATA_URL = '/qilylean/site-data.json?v=' + BUILD;
   var path = (w.location.pathname || '/').replace(/\/index\.html$/, '/');
 
@@ -18,8 +19,9 @@
     var style = d.createElement('style');
     style.id = 'qilyPublicIntegrityHotfixV1Style';
     style.textContent = [
-      '.qily-live-data-note{margin:14px 0 0;padding:12px 15px;border-left:4px solid #178b94;background:#edf8f6;color:#315f64;font-size:14px;line-height:1.7}',
-      '.qily-live-data-note strong{color:#0f4b5a}',
+      '.qily-live-data-note,#qilyTerminologyStaticCount{margin:14px 0 0;padding:12px 15px;border-left:4px solid #178b94;background:#edf8f6!important;color:#315f64!important;-webkit-text-fill-color:#315f64!important;font-size:14px;line-height:1.7}',
+      '.qily-live-data-note *,#qilyTerminologyStaticCount *{color:inherit!important;-webkit-text-fill-color:inherit!important}',
+      '.qily-live-data-note strong,#qilyTerminologyStaticCount strong{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}',
       '.qily-cert-verification{margin-top:18px;padding:20px;border:1px solid #d5e4e3;border-top:4px solid #caa15f;background:#fff;box-shadow:0 12px 30px rgba(15,75,90,.07)}',
       '.qily-cert-verification h3{margin:0 0 8px;color:#0f4b5a}',
       '.qily-cert-verification>p{margin:0 0 15px;color:#526b69;line-height:1.75}',
@@ -58,14 +60,29 @@
     replaceText(scope, /收录\s*\d+\s*项核心术语/g, '当前收录 ' + total + ' 项核心术语');
 
     var hero = d.querySelector('.module-hero .module-inner');
-    if (hero && !d.getElementById('qilyTerminologyLiveDataNote')) {
-      var note = d.createElement('p');
-      note.id = 'qilyTerminologyLiveDataNote';
-      note.className = 'qily-live-data-note';
-      note.innerHTML = '<strong>当前术语库：</strong>' + total + ' 项术语 · ' + total + ' 份单点培训课件。数量以统一站点数据源实时核算结果为准，不再维护页面硬编码数量。';
-      var subnav = hero.querySelector('.module-subnav');
-      hero.insertBefore(note, subnav || null);
+    if (!hero) return;
+    var staticNote = d.getElementById('qilyTerminologyStaticCount');
+    var liveNote = d.getElementById('qilyTerminologyLiveDataNote');
+    var copy = '<strong>当前术语库：</strong>' + total + ' 项术语 · ' + total + ' 份单点培训课件。数量由统一站点数据源自动核算，页面不再维护硬编码数量。';
+
+    if (staticNote) {
+      staticNote.innerHTML = copy;
+      staticNote.setAttribute('data-site-metadata-source', '/qilylean/site-data.json');
+      staticNote.setAttribute('data-qily-light-surface', 'true');
+      if (liveNote && liveNote !== staticNote) liveNote.remove();
+      return;
     }
+
+    if (!liveNote) {
+      liveNote = d.createElement('p');
+      liveNote.id = 'qilyTerminologyLiveDataNote';
+      liveNote.className = 'qily-live-data-note';
+      var subnav = hero.querySelector('.module-subnav');
+      hero.insertBefore(liveNote, subnav || null);
+    }
+    liveNote.innerHTML = copy;
+    liveNote.setAttribute('data-site-metadata-source', '/qilylean/site-data.json');
+    liveNote.setAttribute('data-qily-light-surface', 'true');
   }
 
   function buildVerificationPanel() {
