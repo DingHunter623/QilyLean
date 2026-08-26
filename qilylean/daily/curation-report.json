@@ -4413,8 +4413,8 @@
       "kept": [
         {
           "date": "2025-12-30",
-          "title": "新产品导入要把风险前移：从经营改善",
-          "score": 240,
+          "title": "NPI四阶段①｜EVT立项与工程可行性：先证明“做得出来”，再谈设计定型",
+          "score": 250,
           "protected": false
         }
       ],
@@ -4452,8 +4452,8 @@
       "kept": [
         {
           "date": "2026-01-23",
-          "title": "新产品导入要把风险前移：从长期运营",
-          "score": 240,
+          "title": "NPI四阶段②｜EVT工程样机构建：用问题清单、DFMEA与DOE把技术风险前移",
+          "score": 250,
           "protected": false
         }
       ],
@@ -4504,8 +4504,8 @@
       "kept": [
         {
           "date": "2026-02-16",
-          "title": "新产品导入要把风险前移：从异常响应",
-          "score": 240,
+          "title": "NPI四阶段③｜DVT设计定型：功能、性能、可靠性与法规必须形成验证矩阵",
+          "score": 248,
           "protected": false
         }
       ],
@@ -4543,8 +4543,8 @@
       "kept": [
         {
           "date": "2026-03-12",
-          "title": "新产品导入要把风险前移：从跨部门协同",
-          "score": 240,
+          "title": "NPI四阶段④｜DVT设计冻结与变更控制：没有基线冻结，就没有真正的PVT",
+          "score": 256,
           "protected": false
         }
       ],
@@ -4582,8 +4582,8 @@
       "kept": [
         {
           "date": "2026-04-05",
-          "title": "新产品导入要把风险前移：从标准化",
-          "score": 240,
+          "title": "NPI四阶段⑤｜PVT量产条件验证：PFMEA、Control Plan、工装设备与MSA必须一起成熟",
+          "score": 270,
           "protected": false
         }
       ],
@@ -4634,8 +4634,8 @@
       "kept": [
         {
           "date": "2026-04-29",
-          "title": "新产品导入要把风险前移：从数据闭环",
-          "score": 240,
+          "title": "NPI四阶段⑥｜PVT产能与Run@Rate：CT、OEE、瓶颈、齐套率和过程能力要用实绩证明",
+          "score": 320,
           "protected": false
         }
       ],
@@ -4673,8 +4673,8 @@
       "kept": [
         {
           "date": "2026-05-23",
-          "title": "新产品导入要把风险前移：从交付结果",
-          "score": 240,
+          "title": "NPI四阶段⑦｜MP受控爬坡：Safe Launch、分层审核与问题升级把首批风险锁住",
+          "score": 260,
           "protected": false
         }
       ],
@@ -4725,8 +4725,8 @@
       "kept": [
         {
           "date": "2026-06-16",
-          "title": "新产品导入要把风险前移：从现场稳定性",
-          "score": 240,
+          "title": "NPI四阶段⑧｜MP量产移交与NPI关闭：用30/60/90天稳定性证明项目真正结束",
+          "score": 256,
           "protected": false
         }
       ],
