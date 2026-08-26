@@ -7,6 +7,7 @@ on:
       - 'site-daily-brief-layout-guard-v1.css'
       - 'scripts/publish-daily-brief-layout-guard-v1.js'
       - 'qilylean/npi-four-stage-series-v1.css'
+      - 'qilylean/daily/*.html'
       - '.github/workflows/publish-daily-brief-layout-guard-v1.yml'
   workflow_dispatch:
 
