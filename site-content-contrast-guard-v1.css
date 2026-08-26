@@ -1,6 +1,6 @@
-/* QilyLean Sitewide Content Contrast Guard V2｜2026-08-26
- * Static information surfaces must remain readable independently of button/CTA contrast rules.
- * Light cards/notes nested inside dark heroes explicitly keep a dark readable foreground.
+/* QilyLean Sitewide Content Contrast Guard V3｜2026-08-26
+ * Global readability ownership: dark surfaces use light foregrounds; light surfaces use dark foregrounds.
+ * This layer intentionally overrides generic typography rules that can otherwise create dark-on-dark or pale-on-pale text.
  */
 html body [data-qily-content-contrast-fixed="dark"]{
   color:#173f49!important;
@@ -11,7 +11,7 @@ html body [data-qily-content-contrast-fixed="light"]{
   -webkit-text-fill-color:#fff!important;
 }
 
-/* First-paint protection for known reusable light information surfaces. */
+/* Light information surfaces: always readable, including cards nested inside dark heroes. */
 html body #qilyTerminologyStaticCount,
 html body #qilyTerminologyLiveDataNote,
 html body .qily-live-data-note,
@@ -40,5 +40,57 @@ html body .module-section .lead strong{
   -webkit-text-fill-color:#0f4b5a!important;
 }
 
-/* Do not let decorative opacity make essential text effectively disappear. */
+/* Dark hero / dark visual surfaces: generic small-text rules must never turn labels dark.
+ * Covers all current hero naming families plus explicit dark-surface semantics.
+ */
+html body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,
+  .article-hub,.qily-ia-dark,.closing,[data-qily-dark-surface],[data-theme="dark"]
+) :is(.eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,small,.meta,.fine){
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+html body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,
+  .article-hub,.qily-ia-dark,.closing,[data-qily-dark-surface],[data-theme="dark"]
+) :is(h1,h2,h3,.lead,.hero-lead,.module-lead){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+}
+
+/* If a light card is nested in a dark surface, local light-surface ownership wins. */
+html body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,
+  .article-hub,.qily-ia-dark,.closing,[data-qily-dark-surface],[data-theme="dark"]
+) [data-qily-light-surface="true"],
+html body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,
+  .article-hub,.qily-ia-dark,.closing,[data-qily-dark-surface],[data-theme="dark"]
+) [data-qily-light-surface="true"] :is(p,li,span,small,strong,b,h1,h2,h3,h4,h5,h6){
+  color:#315f64!important;
+  -webkit-text-fill-color:#315f64!important;
+}
+html body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,
+  .article-hub,.qily-ia-dark,.closing,[data-qily-dark-surface],[data-theme="dark"]
+) [data-qily-light-surface="true"] :is(strong,b,h1,h2,h3,h4,h5,h6){
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+}
+
+/* Essential text must not effectively disappear through decorative opacity. */
 html body [data-qily-content-contrast-fixed]{opacity:1!important}
