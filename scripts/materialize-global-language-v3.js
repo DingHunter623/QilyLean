@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V6｜2026-08-26
+/* QilyLean Sitewide Public Baseline Materializer V7｜2026-08-26
  * Single public baseline: Chinese source + fast fail-closed in-page translation + public language UI +
  * header axis + interaction/content contrast. Translation is deferred so it never blocks HTML parsing.
  */
@@ -27,8 +27,8 @@ const PUBLIC_UI_CSS = '/site-translation-public-ui-v1.css?v=20260825-mobile-navi
 const PUBLIC_UI_JS = '/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6';
 const INTERACTION_CONTRAST_CSS = '/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2';
 const INTERACTION_CONTRAST_JS = '/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2';
-const CONTENT_CONTRAST_CSS = '/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v5';
-const CONTENT_CONTRAST_JS = '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5';
+const CONTENT_CONTRAST_CSS = '/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6';
+const CONTENT_CONTRAST_JS = '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6';
 
 function trackedHtml() {
   return execFileSync('git', ['ls-files', '*.html'], { cwd: root, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
@@ -78,7 +78,7 @@ function materialize(source) {
     `<script defer data-qily-translation-public-ui-direct="visitor-v2" src="${PUBLIC_UI_JS}"></script>`,
     `<script defer data-qily-translation-progress-direct="bilingual-v2" src="${PROGRESS_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
-    `<script defer data-qily-content-contrast-direct="v5" src="${CONTENT_CONTRAST_JS}"></script>`
+    `<script defer data-qily-content-contrast-direct="v6" src="${CONTENT_CONTRAST_JS}"></script>`
   ].join('\n');
   if (/<\/head>/i.test(next)) next = next.replace(/<\/head>/i, `${tags}\n</head>`);
   return next;
