@@ -49,15 +49,21 @@ assert(publicCss.includes('height:10px!important'),'Horizontal movement bar is n
 /* 4) Search opening and static-content readability must be governed sitewide. */
 const interaction=read('site-interaction-contrast-guard-v1.js');
 const content=read('site-content-contrast-guard-v1.js');
+const contentCss=read('site-content-contrast-guard-v1.css');
 const search=read('site-search.js');
 const integrity=read('site-integrity-hotfix-v1.js');
 assert(interaction.includes("setAttribute('data-qily-interaction-contrast'"),'Interactive contrast guard missing');
 assert(interaction.includes('if(current>=4.5)'),'Interactive contrast threshold guard missing');
+assert(content.includes('Sitewide Content Contrast Guard V6'),'Content contrast V6 runtime missing');
 assert(content.includes('data-qily-content-contrast-fixed'),'Content contrast guard missing');
 assert(content.includes('?3:4.5'),'Content contrast threshold guard missing');
 assert(content.includes('function hasOpaqueLocalSurface(style,el)'),'Nested local-surface ownership guard missing');
 assert(content.includes("data-qily-light-surface"),'Light-surface semantic guard missing');
 assert(content.includes('.document-hero'),'Document hero is not protected by the shared dark-surface registry');
+assert(content.includes('function renderedForeground(style)'),'Rendered foreground / text-fill inspection missing');
+assert(!content.includes("style&&style.backgroundImage&&style.backgroundImage!=='none'"),'Generic gradient still suppresses contrast correction');
+assert(contentCss.includes('.rule-table thead :is(th,td)'),'Shared dark table header white-text fallback missing');
+assert(contentCss.includes('--ql-dark-title:#fff'),'Dark-surface title token missing');
 assert(search.includes("mask.dataset.qilyR6PostRank = 'true'"),'Search modal still allows retired mutation post-ranker');
 assert(search.includes("results.addEventListener('click'"),'Search results have no deterministic click navigation');
 assert(search.includes('window.__qilyPersistentNavigate'),'Search result native/persistent navigation bridge missing');
@@ -81,8 +87,8 @@ for(const relative of trackedHtml()){
   assert(html.includes('/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3'),`${relative}: deterministic progress runtime missing`);
   assert(html.includes('/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6'),`${relative}: public language UI missing`);
   assert(html.includes('/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2'),`${relative}: interaction contrast missing`);
-  assert(html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v5'),`${relative}: content contrast v5 missing`);
-  assert(html.includes('data-qily-content-contrast-direct="v5"'),`${relative}: content contrast v5 marker missing`);
+  assert(html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'),`${relative}: content contrast v6 missing`);
+  assert(html.includes('data-qily-content-contrast-direct="v6"'),`${relative}: content contrast v6 marker missing`);
   if(/\/site-navigation\.js(?:\?v=[^"']*)?/.test(html)){navigationPages+=1;assert(html.includes(NAV),`${relative}: navigation/search runtime stale`)}
   if(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/.test(html)){shellPages+=1;assert(html.includes(SHELL),`${relative}: shared-shell runtime stale`)}
   assert(!html.includes('/site-global-language-v3.js'),`${relative}: retired translator still referenced`);
@@ -91,4 +97,4 @@ for(const relative of trackedHtml()){
 assert(pages>=460,`Unexpected public HTML coverage: ${pages}`);
 assert(navigationPages>=460,`Unexpected navigation coverage: ${navigationPages}`);
 assert(shellPages>=460,`Unexpected shared-shell coverage: ${shellPages}`);
-process.stdout.write(`PASS: fast fail-closed translation is codified across ${pages} public HTML pages; fresh navigation covers ${navigationPages}, shared shell ${shellPages}.\n`);
+process.stdout.write(`PASS: fast fail-closed translation and content-contrast V6 are codified across ${pages} public HTML pages; fresh navigation covers ${navigationPages}, shared shell ${shellPages}.\n`);
