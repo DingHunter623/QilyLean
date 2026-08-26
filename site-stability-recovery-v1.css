@@ -128,6 +128,39 @@ html body .contact-page-v3 .qily-map-nav-action:focus-visible{
   outline:3px solid rgba(202,161,95,.24)!important;
   outline-offset:2px!important;
 }
+
+/* Contact page visual recovery: lock dark-hero copy to high-contrast white/gold and keep header typography identical to the site standard. */
+html body:has(.contact-page-v3) .contact-hero,
+html body:has(.contact-page-v3) .contact-hero *{
+  opacity:1!important;
+  visibility:visible!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html body:has(.contact-page-v3) .contact-hero .contact-kicker{
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+}
+html body:has(.contact-page-v3) .contact-hero h1{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+html body:has(.contact-page-v3) .contact-hero p{
+  color:#f3fffc!important;
+  -webkit-text-fill-color:#f3fffc!important;
+  font-weight:650!important;
+}
+@media (min-width:1181px){
+  html body:has(.contact-page-v3) header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
+  html body:has(.contact-page-v3) header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
+  html body:has(.contact-page-v3) header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"],
+  html body:has(.contact-page-v3) header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"]{
+    font-size:clamp(18px,1.12vw,20px)!important;
+    line-height:1.2!important;
+    font-weight:850!important;
+  }
+}
+
 @media(max-width:620px){
   html body>#floatDock.qily-float-dock,
   html body>#floatDock.qily-floating-dock{
