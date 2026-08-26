@@ -1,0 +1,73 @@
+name: Publish Approved Aircraft Hero 20260826
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-approved-aircraft-hero-20260826.yml'
+      - 'scripts/enforce-aircraft-home-hero.js'
+      - 'scripts/site-regression-guard-aircraft-hero.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-approved-aircraft-hero-20260826
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Materialize the approved airplane artwork
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets
+          git fetch --no-tags --depth=1 origin c919-approved-20260826
+          git show FETCH_HEAD:qilylean/c919-strategy-hero-v14.png > assets/qilylean-aircraft-hero-approved-20260826.png
+          node - <<'NODE'
+          const fs=require('fs');
+          const b=fs.readFileSync('assets/qilylean-aircraft-hero-approved-20260826.png');
+          if(!b.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))) throw new Error('Approved airplane asset is not PNG');
+          if(b.readUInt32BE(16)!==1672||b.readUInt32BE(20)!==941) throw new Error('Approved airplane dimensions changed');
+          if(b.length<500000) throw new Error('Approved airplane asset unexpectedly small');
+          console.log(`Approved airplane artwork: ${b.length} bytes / 1672x941`);
+          NODE
+
+      - name: Materialize homepage airplane image only
+        run: |
+          set -euo pipefail
+          node --check scripts/enforce-aircraft-home-hero.js
+          node scripts/enforce-aircraft-home-hero.js
+          node --check scripts/site-regression-guard-aircraft-hero.js
+          node scripts/site-regression-guard-aircraft-hero.js
+          grep -q '/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260826-aircraft-approved-v1' index.html
+          ! sed -n '/QILY-AIRCRAFT-BRAND-HERO-V1:START/,/QILY-AIRCRAFT-BRAND-HERO-V1:END/p' index.html | grep -Eq '<picture|<source|srcset=|data-src=|data-srcset='
+          git diff --check
+
+      - name: Commit only approved airplane asset and homepage binding
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean Automation'
+          git config user.email 'actions@users.noreply.github.com'
+          git add assets/qilylean-aircraft-hero-approved-20260826.png index.html scripts/validate-sitewide-remediation-20260822.js
+          if git diff --cached --quiet; then
+            echo 'Approved airplane hero already materialized.'
+            exit 0
+          fi
+          git commit -m 'fix(home): publish approved airplane hero asset [aircraft-hero-generated]'
+          git pull --rebase origin main
+          git push origin HEAD:main
