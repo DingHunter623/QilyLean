@@ -14,6 +14,8 @@ on:
       - 'site-interaction-contrast-guard-v1.css'
       - 'site-content-contrast-guard-v1.js'
       - 'site-content-contrast-guard-v1.css'
+      - 'site-search.js'
+      - 'site-integrity-hotfix-v1.js'
       - 'site-navigation.js'
       - 'site-header-axis-v1.css'
       - 'site-parent-navigation-v3.js'
@@ -57,6 +59,8 @@ jobs:
           node --check site-translation-progress-v1.js
           node --check site-interaction-contrast-guard-v1.js
           node --check site-content-contrast-guard-v1.js
+          node --check site-search.js
+          node --check site-integrity-hotfix-v1.js
           node --check site-navigation.js
           node --check site-parent-navigation-v3.js
           node --check site-ui-consistency-v1.js
@@ -96,9 +100,9 @@ jobs:
               exit 0
             fi
             git add -- '*.html'
-            git commit -m 'build: materialize mobile navigation recovery across public HTML'
+            git commit -m 'build: materialize search navigation and contrast v5 across public HTML'
             if git push origin HEAD:main; then
-              echo 'Unified public baseline with mobile navigation recovery published and audited.'
+              echo 'Unified public baseline with search navigation and contrast v5 published and audited.'
               exit 0
             fi
             echo 'main advanced during publish; retrying from newest main.'
