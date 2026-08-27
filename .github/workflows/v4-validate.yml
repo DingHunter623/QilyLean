@@ -49,6 +49,7 @@ jobs:
           node --check scripts/qilylean-north-v4-sitemap-contract.js
           node --check scripts/audit-knowledge-asset-v2.js
           node --check knowledge/knowledge-asset-v2.js
+          node --check knowledge/knowledge-asset-v2-opl-header.js
           node --check homepage-music.js
 
       - name: G1 source and SSOT validation
