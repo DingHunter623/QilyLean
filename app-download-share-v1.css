@@ -1,4 +1,4 @@
-/* QilyLean APP download/share controls | 2026-08-08 */
+/* QilyLean APP download/share controls | 2026-08-27 */
 .app-share-trigger,.app-link-share-trigger{
   appearance:none;
   display:inline-flex;
@@ -48,4 +48,12 @@
 .app-share-dialog-actions button{flex:1 1 160px;min-height:44px;padding:9px 14px;border:1px solid #0f4b5a;border-radius:999px;background:#0f4b5a;color:#fff;font:inherit;font-weight:850;cursor:pointer}
 .app-share-dialog-actions button.secondary{background:#fff;color:#0f4b5a}
 .app-share-toast{position:fixed;left:50%;bottom:26px;z-index:99999;transform:translateX(-50%);padding:10px 16px;border-radius:999px;background:#0f4b5a;color:#fff;font-weight:800;box-shadow:0 12px 34px rgba(8,30,32,.26)}
-@media(max-width:620px){.app-share-trigger,.app-link-share-trigger{width:100%}.app-share-inline{justify-content:stretch}.app-share-inline>*{flex:1 1 100%}}
+#times26001-real-device-gallery .tool-inner>div:nth-child(2){grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))!important}
+#times26001-real-device-gallery figure img{max-height:none;object-fit:contain}
+@media(max-width:620px){
+  .app-share-trigger,.app-link-share-trigger{width:100%}
+  .app-share-inline{justify-content:stretch}
+  .app-share-inline>*{flex:1 1 100%}
+  #times26001-real-device-gallery figure{padding:10px!important;border-radius:18px!important}
+  #times26001-real-device-gallery .tool-card{padding:19px}
+}
