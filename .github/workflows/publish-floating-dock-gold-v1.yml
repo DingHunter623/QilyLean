@@ -1,0 +1,68 @@
+name: Publish Floating Dock Gold V1
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-floating-dock-gold-v1.css'
+      - 'site-floating-dock-standard-v1.css'
+      - 'scripts/publish-floating-dock-gold-v1.js'
+      - '.github/workflows/publish-floating-dock-gold-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-floating-dock-gold-v1
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 2
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Materialize sitewide gold dock guard
+        run: node scripts/publish-floating-dock-gold-v1.js
+      - name: Validate gold visual contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/publish-floating-dock-gold-v1.js
+          grep -q -- '--qily-dock-text:#ffe39b' site-floating-dock-gold-v1.css
+          grep -q 'qilyFloatingDockGoldV1' index.html
+          git diff --check
+      - name: Validate idempotence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git diff --no-ext-diff > /tmp/dock-gold-first.diff
+          node scripts/publish-floating-dock-gold-v1.js
+          git diff --no-ext-diff > /tmp/dock-gold-second.diff
+          cmp /tmp/dock-gold-first.diff /tmp/dock-gold-second.diff
+      - name: Commit sitewide dock gold materialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean Automation'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'Dock Gold V1 already materialized.'
+            exit 0
+          fi
+          git commit -m 'style: materialize gold floating dock across public pages [dock-gold-generated]'
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((i*3))
+          done
+          exit 1
