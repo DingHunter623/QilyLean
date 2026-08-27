@@ -112,7 +112,23 @@ requireText(materializer,'data-qily-translation-public-ui-direct="visitor-v2"','
 requireText(materializer,'data-qily-content-contrast-direct="v6"','Static content contrast V6');
 requireText(materializer,'removeLegacyManagedScripts','Legacy translator stripping');
 
+/* Worker efficiency and terminology contract: cache each unique source string so adaptive browser batches reuse translations. */
+const worker=read('cloudflare-worker/worker-social.js');
+requireText(worker,"const TRANSLATION_CACHE_VERSION = 'v3'",'Per-string translation cache version');
+requireText(worker,'async function hashTranslationText(text)','Per-string cache hashing');
+requireText(worker,'async function readTranslationCache(env, targetLanguage, texts)','Per-string cache reads');
+requireText(worker,'async function writeTranslationCache(env, targetLanguage, entries)','Per-string cache writes');
+requireText(worker,'const missingTextToIndexes = new Map()','Duplicate source-string deduplication');
+requireText(worker,'const uniqueMissingTexts = [...missingTextToIndexes.keys()]','Only unique misses reach provider');
+requireText(worker,'for (const sourceIndex of indexes) translations[sourceIndex] = translated','Original-order translation reassembly');
+requireText(worker,'cache: { hits: cacheHits, misses: uniqueMissingTexts.length }','Translation cache diagnostics');
+forbidText(worker,'hashTranslationBatch(','Batch-level cache hashing must not return');
+for (const term of ['APQP','PPAP','PFMEA','DFMEA','FMEA','SPC','MSA','GR&R','DOE','DVP&R','Run@Rate','MTBF','MTTR','Kanban','Heijunka','Jidoka','Andon','CMMS']) {
+  requireText(worker,`'${term}'`,`Protected manufacturing term ${term}`);
+}
+requireText(worker,'Use established professional terminology for lean manufacturing, industrial engineering, NPI, quality engineering, production operations and digital manufacturing','Professional manufacturing translation instruction');
+
 const wrangler=read('wrangler.toml');
 requireText(wrangler,'TRANSLATE_DAILY_IP_LIMIT = "600"','Translation capacity for multi-page browsing');
 
-process.stdout.write(`PASS: QilyLean public baseline ${runtimeBaseline} uses resilient in-page translation V4: visible-first progressive translation, all-endpoint failover, adaptive batch splitting, preserved partial results, background healing, semantic Dock icons, full language labels and readable surfaces.\n`);
+process.stdout.write(`PASS: QilyLean public baseline ${runtimeBaseline} uses resilient in-page translation V4 plus Worker V3 string-level cache: visible-first progressive translation, all-endpoint failover, adaptive batch splitting, preserved partial results, background healing, cross-batch cache reuse, manufacturing glossary protection, semantic Dock icons and readable surfaces.\n`);
