@@ -6,6 +6,7 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const runtime = path.join(root, 'knowledge', 'knowledge-asset-v2.js');
+const oplHeaderRuntime = path.join(root, 'knowledge', 'knowledge-asset-v2-opl-header.js');
 const loader = path.join(root, 'homepage-music.js');
 const dailyDir = path.join(root, 'qilylean', 'daily');
 
@@ -37,11 +38,28 @@ else {
   }
 }
 
+if (!fs.existsSync(oplHeaderRuntime)) fail('knowledge/knowledge-asset-v2-opl-header.js is missing.');
+else {
+  const js = read(oplHeaderRuntime);
+  [
+    '精益生产 · 工业工程IE · PQCD改善落地',
+    'NPI · 工程开发 · 量产验证与项目交付',
+    '质量策划 · 过程能力 · 问题解决与防再发',
+    'PMC · 产能排程 · 物料与交付闭环',
+    'ERP / MES / APS · 主数据 · 数智化工厂',
+    '制造工艺 · 设备可靠性 · 安全与质量',
+    '本课管理定位：',
+    'data-opl-header-domain'
+  ].forEach((token) => { if (!js.includes(token)) fail('OPL header runtime missing required marker: ' + token); });
+}
+
 if (!fs.existsSync(loader)) fail('homepage-music.js loader is missing.');
 else {
   const js = read(loader);
   if (!js.includes('/knowledge/knowledge-asset-v2.js?v=20260828-knowledge-asset-v2')) fail('Knowledge Asset V2 runtime is not loaded by the shared page enhancement entry.');
   if (!js.includes('data-qily-knowledge-asset-v2')) fail('Knowledge Asset V2 dedupe marker is missing.');
+  if (!js.includes('/knowledge/knowledge-asset-v2-opl-header.js?v=20260828-opl-header-v2')) fail('OPL header enrichment runtime is not loaded by the shared page enhancement entry.');
+  if (!js.includes('data-qily-knowledge-asset-v2-opl-header')) fail('OPL header enrichment dedupe marker is missing.');
 }
 
 if (!fs.existsSync(dailyDir)) fail('qilylean/daily directory is missing.');
@@ -57,7 +75,7 @@ else {
   }
   if (missingTerm) fail(missingTerm + ' Daily Brief page(s) missing synchronized terminology linkage.');
   if (missingTemplate) fail(missingTemplate + ' Daily Brief page(s) missing the retained post template.');
-  if (!process.exitCode) console.log('Knowledge Asset V2 audit passed: ' + pages.length + ' Daily Brief page(s), runtime/tool cases/linkage/VI governance intact.');
+  if (!process.exitCode) console.log('Knowledge Asset V2 audit passed: ' + pages.length + ' Daily Brief page(s), runtime/tool cases/linkage/VI governance and OPL header depth intact.');
 }
 
 if (process.exitCode) process.exit(process.exitCode);
