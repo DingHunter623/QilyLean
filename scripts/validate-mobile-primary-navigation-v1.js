@@ -46,18 +46,18 @@ must(publicCss,'::before{display:none!important}','Mobile spacer removal');
 must(publicCss,'html body header.qily-global-header::after{display:none!important}','Mobile swipe-hint removal');
 mustNot(publicCss,'font-size:17.5px!important','Final primary navigation must never shrink to legacy 17.5px');
 
-must(shell,"BUILD_ID='20260827-primary-navigation-unified-v4'",'Shared shell unified primary-nav build');
+must(shell,"BUILD_ID='20260828-translation-resilience-v6'",'Shared shell resilient translation build');
 must(shell,"publicCss:'/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8'",'Shared shell unified public CSS');
 must(shell,"headerCss:'/site-header-axis-v1.css?v=20260827-primary-navigation-unified-v4'",'Shared shell unified header CSS');
 must(navigation,"var HEADER_AXIS_HREF = '/site-header-axis-v1.css?v=20260827-primary-navigation-unified-v4'",'Navigation runtime unified header owner');
-must(navigation,"var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260827-primary-navigation-unified-v45'",'Navigation runtime unified shell owner');
+must(navigation,"var CONSISTENCY_SRC = '/site-ui-consistency-v1.js?v=20260827-translation-dock-resource-v46'",'Navigation runtime shared-shell compatibility owner');
 must(navigation,'primaryNavigationUnifiedVisualContract: true','Navigation build contract declares visual parity');
 must(navigation,'mobilePrimaryNavigationMayShrinkTypography: false','Navigation build forbids mobile type shrinking');
 
-must(materializer,"const BASELINE_VERSION='20260827-primary-navigation-unified-v14'",'Primary navigation baseline owner');
-must(materializer,"const NAVIGATION = '/site-navigation.js?v=20260827-primary-navigation-unified-v45'",'Navigation cache owner');
-must(materializer,"const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260827-primary-navigation-unified-v45'",'Shared-shell cache owner');
+must(materializer,"const BASELINE_VERSION='20260828-translation-long-page-v16'",'Translation-resilient public baseline owner');
+must(materializer,"const NAVIGATION = '/site-navigation.js?v=20260827-translation-dock-resource-v46'",'Navigation cache owner');
+must(materializer,"const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260828-translation-resilience-v47'",'Shared-shell cache owner');
 must(materializer,"const HEADER_AXIS='/site-header-axis-v1.css?v=20260827-primary-navigation-unified-v4'",'Header-axis unified cache owner');
 must(materializer,"const PUBLIC_UI_CSS='/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8'",'Final public CSS unified cache owner');
 
-process.stdout.write('PASS: primary navigation keeps one 20px/900/global-color visual contract across desktop, mobile and every module; mobile only scrolls/reflows and never shrinks typography.\n');
+process.stdout.write('PASS: primary navigation keeps one 20px/900/global-color visual contract across desktop, mobile and every module while translation V4 remains cache-isolated; mobile only scrolls/reflows and never shrinks typography.\n');
