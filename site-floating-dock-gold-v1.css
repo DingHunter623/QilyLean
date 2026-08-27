@@ -1,0 +1,14 @@
+/* QilyLean Floating Dock Gold Guard V1｜2026-08-27
+ * Cache-compatible sitewide color authority for the six floating dock labels.
+ * Geometry, drag/snapback, background and interaction feedback remain owned by site-floating-dock-standard-v1.css.
+ */
+:root{--qily-dock-text:#ffe39b}
+html body #floatDock.qily-float-dock .qily-float-btn.qily-float-btn,
+html body #floatDock.qily-float-dock .qily-float-btn.qily-float-btn:is(:link,:visited,:hover,:focus-visible,:active),
+html body #floatDock.qily-float-dock .qily-float-btn.qily-float-btn *,
+html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-line,
+html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-primary,
+html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url{
+  color:var(--qily-dock-text)!important;
+  -webkit-text-fill-color:var(--qily-dock-text)!important;
+}
