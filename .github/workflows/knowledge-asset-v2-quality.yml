@@ -1,0 +1,33 @@
+name: Knowledge Asset 2.0 Quality
+
+on:
+  pull_request:
+    paths:
+      - 'qilylean/daily/**'
+      - 'knowledge/**'
+      - 'homepage-music.js'
+      - 'scripts/validate-knowledge-asset-v2.js'
+      - 'package.json'
+      - '.github/workflows/knowledge-asset-v2-quality.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'qilylean/daily/**'
+      - 'knowledge/**'
+      - 'homepage-music.js'
+      - 'scripts/validate-knowledge-asset-v2.js'
+      - 'package.json'
+
+jobs:
+  validate-knowledge-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate Knowledge Asset 2.0
+        run: npm run test:knowledge
