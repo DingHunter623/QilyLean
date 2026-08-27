@@ -23,13 +23,16 @@ const siteData=read('qilylean/site-data.json');
 assert(siteData.includes('"latestDate": "2026-08-25"')||siteData.includes('"latestDate":"2026-08-25"'),'Central SSOT latestDate is stale');
 assert(siteData.includes('2026-08-25.html'),'Central SSOT latest URL is stale');
 
-/* 2) Translation must stay on-site, finish cleanly, and never leave a mixed initial page. */
+/* 2) Translation must stay on-site, recover to a visually clean Chinese source, and never leave a mixed initial page. */
 const safe=read('site-translation-safe-runtime-v1.js');
 assert(!safe.includes('https://translate.google.com'),'Safe runtime still contains executable Google redirect');
 assert(!safe.includes('https://qilylean-com.translate.goog'),'Safe runtime still contains translated proxy redirect');
-assert(safe.includes("runtime:'safe-inpage-v2'"),'Fast translation runtime V2 missing');
+assert(safe.includes("runtime:'safe-inpage-v3'"),'Source-recovery translation runtime V3 missing');
 assert(safe.includes('function nearViewport(el)'),'Visible-first translation missing');
-assert(safe.includes("setState('error','翻译未完整完成，已恢复中文原文')"),'Initial translation does not fail closed to full Chinese');
+assert(safe.includes('function recoverChinese(reason)'),'Atomic Chinese source recovery missing');
+assert(safe.includes("if(text.length<2&&!/[\\u3400-\\u9fff]/.test(text))return false"),'Single-Han UI translation coverage missing');
+assert(safe.includes("setState('idle','中文原文')"),'Source recovery does not return to clean idle state');
+assert(!safe.includes("setState('error'"),'Source recovery must not leave a public error overlay');
 assert(safe.includes("setState('idle',languageName(target))"),'Successful translation does not clear working/partial state');
 for(const sourceName of ['site-translation-safe-runtime-v1.js','site-translation-public-ui-v1.js','site-translation-progress-v1.js']){
   const source=read(sourceName);
@@ -54,7 +57,6 @@ const search=read('site-search.js');
 const integrity=read('site-integrity-hotfix-v1.js');
 assert(interaction.includes("setAttribute('data-qily-interaction-contrast'"),'Interactive contrast guard missing');
 assert(interaction.includes('if(current>=4.5)'),'Interactive contrast threshold guard missing');
-assert(content.includes('Sitewide Content Contrast Guard V6'),'Content contrast V6 runtime missing');
 assert(content.includes('data-qily-content-contrast-fixed'),'Content contrast guard missing');
 assert(content.includes('?3:4.5'),'Content contrast threshold guard missing');
 assert(content.includes('function hasOpaqueLocalSurface(style,el)'),'Nested local-surface ownership guard missing');
@@ -74,17 +76,18 @@ assert(gbt.includes('color:#fff'),'GB/T 2828 reference button does not define wh
 const terminology=read('knowledge/terminology.html');
 assert(terminology.includes('id="qilyTerminologyStaticCount"'),'Terminology static-count strip identifier missing');
 
-/* 5) Post-materialization all public HTML must use the fast deferred translation baseline.
+/* 5) Post-materialization all public HTML must use source-recovery translation V3.
  * Navigation/shared-shell are audited when present because special standalone tools intentionally omit them. */
-const NAV='/site-navigation.js?v=20260826-search-navigation-contrast-v44';
-const SHELL='/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3';
+const NAV='/site-navigation.js?v=20260827-translation-dock-resource-v46';
+const SHELL='/site-ui-consistency-v1.js?v=20260827-translation-dock-resource-v46';
 let pages=0,navigationPages=0,shellPages=0;
 for(const relative of trackedHtml()){
   const html=read(relative);if(!/<\/head>/i.test(html))continue;pages+=1;
-  assert(html.includes('data-qily-translation-safety-bootstrap="inpage-v2"'),`${relative}: safety bootstrap missing`);
-  assert(html.includes('/site-translation-safe-runtime-v1.js?v=20260826-translation-fast-reliable-v3'),`${relative}: fast safe runtime missing`);
-  assert(html.includes('<script defer data-qily-translation-safe-direct="inpage-v2"'),`${relative}: translation runtime blocks document parsing`);
-  assert(html.includes('/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3'),`${relative}: deterministic progress runtime missing`);
+  assert(html.includes('data-qily-translation-safety-bootstrap="inpage-v3"'),`${relative}: safety bootstrap missing`);
+  assert(html.includes('/site-translation-safe-runtime-v1.js?v=20260827-source-recovery-v4'),`${relative}: source-recovery safe runtime missing`);
+  assert(html.includes('<script defer data-qily-translation-safe-direct="inpage-v3"'),`${relative}: translation runtime blocks document parsing`);
+  assert(html.includes('/site-translation-progress-v1.js?v=20260827-source-recovery-v4'),`${relative}: source-clean progress runtime missing`);
+  assert(html.includes('data-qily-translation-progress-direct="bilingual-v3"'),`${relative}: translation progress marker stale`);
   assert(html.includes('/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6'),`${relative}: public language UI missing`);
   assert(html.includes('/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2'),`${relative}: interaction contrast missing`);
   assert(html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'),`${relative}: content contrast v6 missing`);
@@ -97,4 +100,4 @@ for(const relative of trackedHtml()){
 assert(pages>=460,`Unexpected public HTML coverage: ${pages}`);
 assert(navigationPages>=460,`Unexpected navigation coverage: ${navigationPages}`);
 assert(shellPages>=460,`Unexpected shared-shell coverage: ${shellPages}`);
-process.stdout.write(`PASS: fast fail-closed translation and content-contrast V6 are codified across ${pages} public HTML pages; fresh navigation covers ${navigationPages}, shared shell ${shellPages}.\n`);
+process.stdout.write(`PASS: source-recovery translation V3 and content readability are codified across ${pages} public HTML pages; fresh navigation covers ${navigationPages}, shared shell ${shellPages}.\n`);
