@@ -1,14 +1,15 @@
 {
-  "version": "2026-08-24",
+  "version": "2026-08-27",
   "site": "https://qilylean.com",
   "strategy": {
-    "principle": "品牌词与自有项目词建立唯一官方入口；专业组合词建立主题集群；行业核心词通过专题总页、方法页、项目页和知识页持续积累主题权威。",
+    "principle": "品牌词与自有项目词建立唯一官方入口；专业组合词建立主题集群；行业核心词通过专题总页、方法页、项目页和知识页持续积累主题权威；区域词以真实项目经历与区域服务页承接。",
     "ranking_objectives": {
       "brand_owned": "TOP_1",
       "product_owned": "TOP_1",
       "project_owned": "TOP_1",
       "professional_cluster": "TOP_3",
       "industry_vertical": "TOP_3_TO_10",
+      "regional_intent": "TOP_3_TO_10",
       "industry_core": "TOP_10_THEN_TOP_5"
     },
     "content_contract": [
@@ -18,82 +19,70 @@
       "unique_canonical_url",
       "clear_search_intent",
       "internal_link_cluster",
-      "indexable_static_html"
+      "indexable_static_html",
+      "search_engine_discovery_push"
     ]
   },
   "targets": [
-    {
-      "keyword": "QilyLean",
-      "class": "brand_owned",
-      "url": "https://qilylean.com",
-      "priority": "S"
-    },
-    {
-      "keyword": "启力精益",
-      "class": "brand_owned",
-      "url": "https://qilylean.com",
-      "priority": "S"
-    },
-    {
-      "keyword": "Times26001",
-      "class": "product_owned",
-      "url": "https://qilylean.com/tools/times26001",
-      "priority": "S"
-    },
-    {
-      "keyword": "精益生产",
-      "class": "industry_core",
-      "url": "https://qilylean.com/lean-production",
-      "priority": "S",
-      "pillar": true
-    },
-    {
-      "keyword": "精益生产管理",
-      "class": "professional_cluster",
-      "url": "https://qilylean.com/lean-production",
-      "priority": "A"
-    },
-    {
-      "keyword": "汽车电子精益生产",
-      "class": "industry_vertical",
-      "url": "https://qilylean.com/projects/automotive-lean",
-      "priority": "A"
-    },
-    {
-      "keyword": "VSM价值流",
-      "class": "professional_cluster",
-      "url": "https://qilylean.com/improvements/vsm",
-      "priority": "A"
-    },
-    {
-      "keyword": "标准工时",
-      "class": "professional_cluster",
-      "url": "https://qilylean.com/improvements/standard-time",
-      "priority": "A"
-    },
-    {
-      "keyword": "SMED快速换模",
-      "class": "professional_cluster",
-      "url": "https://qilylean.com/improvements/smed",
-      "priority": "A"
-    },
-    {
-      "keyword": "IE工业工程",
-      "class": "professional_cluster",
-      "url": "https://qilylean.com/improvements/ie-data",
-      "priority": "A"
-    },
-    {
-      "keyword": "数字化工厂",
-      "class": "professional_cluster",
-      "url": "https://qilylean.com/projects/digital-factory",
-      "priority": "A"
-    },
-    {
-      "keyword": "目视化管理",
-      "class": "professional_cluster",
-      "url": "https://qilylean.com/projects/visual-management",
-      "priority": "A"
-    }
+    {"keyword":"QilyLean","class":"brand_owned","url":"https://qilylean.com","priority":"S"},
+    {"keyword":"启力精益","class":"brand_owned","url":"https://qilylean.com","priority":"S"},
+    {"keyword":"Times26001","class":"product_owned","url":"https://qilylean.com/tools/times26001","priority":"S"},
+
+    {"keyword":"精益生产","class":"industry_core","url":"https://qilylean.com/lean-production","priority":"S","pillar":true},
+    {"keyword":"精益生产管理","class":"professional_cluster","url":"https://qilylean.com/lean-production","priority":"A"},
+    {"keyword":"制造现场改善","class":"professional_cluster","url":"https://qilylean.com/lean-production","priority":"A"},
+    {"keyword":"PQCD改善","class":"professional_cluster","url":"https://qilylean.com/lean-production","priority":"A"},
+    {"keyword":"OEE","class":"professional_cluster","url":"https://qilylean.com/lean-production","priority":"A"},
+    {"keyword":"TPM","class":"professional_cluster","url":"https://qilylean.com/lean-production","priority":"A"},
+    {"keyword":"线平衡","class":"professional_cluster","url":"https://qilylean.com/lean-production","priority":"A"},
+    {"keyword":"单件流","class":"professional_cluster","url":"https://qilylean.com/lean-production","priority":"A"},
+    {"keyword":"精益改善","class":"professional_cluster","url":"https://qilylean.com/improvements","priority":"A"},
+
+    {"keyword":"VSM价值流","class":"professional_cluster","url":"https://qilylean.com/improvements/vsm","priority":"A"},
+    {"keyword":"价值流分析","class":"professional_cluster","url":"https://qilylean.com/improvements/vsm","priority":"A"},
+    {"keyword":"标准工时","class":"professional_cluster","url":"https://qilylean.com/improvements/standard-time","priority":"A"},
+    {"keyword":"标准产能","class":"professional_cluster","url":"https://qilylean.com/improvements/standard-time","priority":"A"},
+    {"keyword":"SMED快速换模","class":"professional_cluster","url":"https://qilylean.com/improvements/smed","priority":"A"},
+    {"keyword":"快速换线","class":"professional_cluster","url":"https://qilylean.com/improvements/smed","priority":"A"},
+    {"keyword":"IE工业工程","class":"professional_cluster","url":"https://qilylean.com/improvements/ie-data","priority":"A"},
+    {"keyword":"工业工程IE","class":"professional_cluster","url":"https://qilylean.com/improvements/ie-data","priority":"A"},
+    {"keyword":"工程数据治理","class":"professional_cluster","url":"https://qilylean.com/improvements/ie-data","priority":"A"},
+
+    {"keyword":"ERP MES协同","class":"professional_cluster","url":"https://qilylean.com/improvements/erp-mes","priority":"A"},
+    {"keyword":"MES系统","class":"professional_cluster","url":"https://qilylean.com/improvements/erp-mes","priority":"A"},
+    {"keyword":"ERP生产管理","class":"professional_cluster","url":"https://qilylean.com/improvements/erp-mes","priority":"B"},
+    {"keyword":"数字化工厂","class":"professional_cluster","url":"https://qilylean.com/projects/digital-factory","priority":"A"},
+    {"keyword":"数智工厂规划","class":"professional_cluster","url":"https://qilylean.com/projects/digital-factory","priority":"A"},
+    {"keyword":"智能工厂规划","class":"professional_cluster","url":"https://qilylean.com/projects/digital-factory","priority":"A"},
+
+    {"keyword":"新工厂规划","class":"professional_cluster","url":"https://qilylean.com/projects/factory-layout","priority":"A"},
+    {"keyword":"新产线规划","class":"professional_cluster","url":"https://qilylean.com/projects/factory-layout","priority":"A"},
+    {"keyword":"工厂布局","class":"professional_cluster","url":"https://qilylean.com/projects/factory-layout","priority":"A"},
+    {"keyword":"Factory Layout","class":"professional_cluster","url":"https://qilylean.com/projects/factory-layout","priority":"A"},
+    {"keyword":"精益物流","class":"professional_cluster","url":"https://qilylean.com/projects/factory-layout","priority":"A"},
+    {"keyword":"目视化管理","class":"professional_cluster","url":"https://qilylean.com/projects/visual-management","priority":"A"},
+    {"keyword":"目视化项目设计","class":"professional_cluster","url":"https://qilylean.com/projects/visual-management","priority":"A"},
+
+    {"keyword":"汽车电子精益生产","class":"industry_vertical","url":"https://qilylean.com/projects/automotive-lean","priority":"A"},
+    {"keyword":"汽车电子IE改善","class":"industry_vertical","url":"https://qilylean.com/projects/automotive-lean","priority":"A"},
+    {"keyword":"300T冲压机SMED","class":"project_owned","url":"https://qilylean.com/projects/smed-300t","priority":"A"},
+    {"keyword":"大型模具快速换模","class":"project_owned","url":"https://qilylean.com/projects/smed-300t","priority":"A"},
+    {"keyword":"模具仓库二维码追溯","class":"project_owned","url":"https://qilylean.com/projects/mold-warehouse","priority":"A"},
+
+    {"keyword":"IATF16949核心工具","class":"industry_vertical","url":"https://qilylean.com/knowledge/iatf16949-core-tools.html","priority":"A"},
+    {"keyword":"APQP","class":"professional_cluster","url":"https://qilylean.com/knowledge/iatf16949-core-tools.html","priority":"B"},
+    {"keyword":"PPAP","class":"professional_cluster","url":"https://qilylean.com/knowledge/iatf16949-core-tools.html","priority":"B"},
+    {"keyword":"FMEA","class":"professional_cluster","url":"https://qilylean.com/knowledge/iatf16949-core-tools.html","priority":"B"},
+    {"keyword":"SPC","class":"professional_cluster","url":"https://qilylean.com/knowledge/iatf16949-core-tools.html","priority":"B"},
+    {"keyword":"MSA","class":"professional_cluster","url":"https://qilylean.com/knowledge/iatf16949-core-tools.html","priority":"B"},
+    {"keyword":"GB/T 2828","class":"professional_cluster","url":"https://qilylean.com/qilylean/gbt2828.html","priority":"A"},
+    {"keyword":"AQL抽样检验","class":"professional_cluster","url":"https://qilylean.com/qilylean/gbt2828.html","priority":"A"},
+    {"keyword":"生产运营组织架构","class":"professional_cluster","url":"https://qilylean.com/qilylean/production-operations-organization.html","priority":"A"},
+    {"keyword":"人力编制KPI","class":"professional_cluster","url":"https://qilylean.com/qilylean/production-operations-organization.html","priority":"B"},
+
+    {"keyword":"内蒙古精益生产","class":"regional_intent","url":"https://qilylean.com/north/inner-mongolia","priority":"A"},
+    {"keyword":"内蒙古新工厂规划","class":"regional_intent","url":"https://qilylean.com/north/inner-mongolia","priority":"A"},
+    {"keyword":"陕西精益生产","class":"regional_intent","url":"https://qilylean.com/north/shaanxi","priority":"A"},
+    {"keyword":"陕西汽车电子IE","class":"regional_intent","url":"https://qilylean.com/north/shaanxi","priority":"A"}
   ]
 }
