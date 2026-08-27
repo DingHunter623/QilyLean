@@ -32,24 +32,34 @@ for key in ['times26001', 'qilyleanHome']:
     if not store.get('versionName') or not store.get('versionCode'):
         errors.append(f'{key} 应用市场候选版本字段不完整')
 
-# Times26001：当前官网包、最新构建与 Google Play 首发候选已统一到 v1.1.13 / code 16；
-# 官网独立分发与 Google Play 后续升级签名链仍保持边界说明。
+# Times26001：官网独立分发继续使用已公开的 v1.1.13 / code16；
+# Google Play 最新构建与封闭测试候选统一到 v1.1.14 / code17。
 t = apps['times26001']
 t_public = t['publicRelease']
 t_latest = t['latestBuild']
 t_store = t['storeCandidate']
+if (t_public['versionName'], t_public['versionCode']) != ('1.1.13', 16):
+    errors.append('times26001 官网公开包不是 v1.1.13 / versionCode 16')
 if (t_store['versionName'], t_store['versionCode']) != (t_latest['versionName'], t_latest['versionCode']):
     errors.append('times26001 最新构建与 Google Play 候选版本不一致')
-if (t_store['versionName'], t_store['versionCode']) != ('1.1.13', 16):
-    errors.append('times26001 R5基线不是 v1.1.13 / versionCode 16')
+if (t_store['versionName'], t_store['versionCode']) != ('1.1.14', 17):
+    errors.append('times26001 Google Play封闭测试候选不是 v1.1.14 / versionCode 17')
 if 'Google Play' not in (t_store.get('label', '') + t_store.get('status', '')):
-    errors.append('times26001 未明确 Google Play 首发候选状态')
+    errors.append('times26001 未明确 Google Play 封闭测试候选状态')
 if 'Upload Key' not in (t_store.get('status', '') + t_latest.get('status', '')):
     errors.append('times26001 未明确固定 Upload Key 签名状态')
 if '不作为Google Play' not in t_public.get('status', ''):
     errors.append('times26001 官网包未明确不作为 Google Play 签名基线')
 if '官方网址与官网邮箱' not in t.get('officialWebsiteLinkPolicy', ''):
     errors.append('times26001 发布清单联系字段未统一为“官方网址与官网邮箱”')
+validation = t.get('realDeviceValidation', {})
+if validation.get('versionName') != '1.1.14' or validation.get('versionCode') != 17:
+    errors.append('times26001 三星C55真机验证版本未绑定到 v1.1.14 / code17')
+if 'Samsung C55' not in validation.get('device', ''):
+    errors.append('times26001 未记录三星C55真机验证')
+for screenshot in validation.get('screenshots', []):
+    if not Path(screenshot.lstrip('/')).exists():
+        errors.append(f'times26001 真机截图不存在: {screenshot}')
 
 # QilyLean Home：官网安装包/最新构建 v2.3.3 code 11，商店候选 v2.3.2 code 10；
 # 两条链路可不同，但候选不得反向高于最新构建，且签名状态必须明确。
@@ -68,13 +78,13 @@ if h_store['versionCode'] > h_latest['versionCode']:
 if '签名' not in (h_store.get('status', '') + h_latest.get('status', '')):
     errors.append('qilyleanHome 未明确签名状态')
 
-# 关联文件按真实职责检查；版本数字来自当前R5主数据，不再复活历史硬编码。
+# 关联文件按真实职责检查：官网静态下载仍守住 v1.1.13；商店资料明确 v1.1.14 候选。
 checks = {
     'times26001-home-card.js': ['v1.1.13', 'versionCode 16', '查看APP介绍与发布状态'],
     'tools/times26001/index.html': ['Times26001', 'v1.1.13', 'API 36', 'admin@qilylean.com'],
     'capabilities/index.html': ['Times26001', 'QilyLean Home'],
     'app-support/index.html': ['Times26001', 'v1.1.13', 'v2.3.3', 'v2.3.2', '官方网址', '官网邮箱'],
-    'app-store/times26001/README.md': ['1.1.13', 'versionCode `16`', 'Upload Key', '前台粗略位置', '官方网址'],
+    'app-store/times26001/README.md': ['1.1.14', 'versionCode `17`', 'Upload Key', '前台粗略位置', '官方网址', '三星 C55'],
     'app-store/qilylean-home/README.md': ['2.3.3', 'versionCode `11`', '2.3.2', 'versionCode `10`', '官方网址'],
     'legal/times26001/privacy/index.html': ['v1.1.13', '前台位置权限', '精确位置或粗略位置', '不使用后台位置', '官方网址、官网邮箱'],
 }
@@ -93,4 +103,4 @@ if errors:
     print('\n'.join(errors))
     sys.exit(1)
 
-print('APP release association audit passed: R5 website distribution / store candidate / signing / privacy / official contact naming are consistent.')
+print('APP release association audit passed: website v1.1.13 distribution / Google Play v1.1.14 closed-test candidate / signing / real-device validation / privacy / official contact naming are consistent.')
