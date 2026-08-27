@@ -1,26 +1,27 @@
-/* QilyLean 轻量父级导航与外壳一致性 v5｜2026-08-27
+/* QilyLean 轻量父级导航与外壳一致性 v6｜2026-08-28
  * 静态 HTML 首帧优先；公共运行时仅负责导航、Dock 与全站公共增强兜底。
  * 中文静态 HTML 是权威源和默认展示；翻译仅由访客主动选择后在当前 QilyLean 页面内执行。
  * 一级导航属于全站公共组件：所有模块统一字号、字重、颜色与交互状态，不允许页面级降级。
- * V5: Dock 的“回顶部 / 回上一层”不再以可翻译的单字“回”充当图形；统一改为语言中立 SVG 图标 + 可翻译文字。
+ * V6: 翻译兜底切换至长页面容错 V4，失败批次保留已翻译内容并后台补齐；Dock 语义图标规范继续保持。
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyUiConsistencyV5)return;
+  if(w.__qilyUiConsistencyV6)return;
+  w.__qilyUiConsistencyV6=true;
   w.__qilyUiConsistencyV5=true;
   w.__qilyUiConsistencyV4=true;
   w.__qilyUiConsistencyV3=true;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260827-translation-dock-closure-v5';
+  var BUILD_ID='20260828-translation-resilience-v6';
   var BUILD_KEY='qily_site_ui_build_v1';
   var ASSETS={
     languageCss:'/site-global-language-v1.css?v=20260825-public-translation-shell-v1',
-    safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260827-source-recovery-v4',
+    safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260828-long-page-resilience-v5',
     publicCss:'/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8',
     publicJs:'/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6',
     progressCss:'/site-translation-progress-v1.css?v=20260827-source-recovery-v4',
-    progressJs:'/site-translation-progress-v1.js?v=20260827-source-recovery-v4',
+    progressJs:'/site-translation-progress-v1.js?v=20260828-long-page-resilience-v5',
     interactionCss:'/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2',
     interactionJs:'/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2',
     contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6',
