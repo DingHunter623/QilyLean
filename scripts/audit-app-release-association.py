@@ -102,12 +102,58 @@ for token in ('2026年8月27日', 'v1.1.14（versionCode 17 / API 36）', 'admin
     if token not in terms:
         errors.append(f'Times26001用户协议缺当前口径: {token}')
 
+# Shared legal/support visual governance: header and hero must not reuse the same horizontal flex behavior.
 legal_css = Path('legal/app-legal.css').read_text(encoding='utf-8')
 if '980px' in legal_css:
     errors.append('法律/协议共享样式仍残留980px旧版心')
-for token in ('--qily-content-axis-max,1560px', 'text-decoration-skip-ink:none', 'white-space:nowrap'):
+for token in (
+    '--qily-content-axis-max,1560px',
+    'text-decoration-skip-ink:none',
+    'white-space:nowrap',
+    '.top>.top-inner',
+    '.hero>.top-inner',
+    'flex-direction:column!important',
+    'align-items:flex-start!important',
+    'justify-content:flex-start!important',
+    'text-align:left!important',
+    'QILY-SHARED-HERO-LEFT-AXIS:20260827',
+):
     if token not in legal_css:
         errors.append(f'法律/协议共享治理缺失: {token}')
+
+# The historical root cause was an unscoped .top-inner horizontal flex rule that affected both header and hero.
+if re.search(r'(?<![>\w-])\.top-inner\s*\{[^}]*justify-content\s*:\s*space-between', legal_css):
+    errors.append('共享法律样式再次出现未限定作用域的 .top-inner 横向分散布局')
+
+# Every active shared-hero page must use the same DOM sequence: eyebrow -> h1 -> lead copy.
+shared_hero_pages = [Path('app-support/index.html')] + sorted(Path('legal').rglob('index.html'))
+hero_pattern = re.compile(
+    r'<section\s+class="hero"[^>]*>\s*<div\s+class="top-inner"[^>]*>\s*'
+    r'<span\s+class="eyebrow"[^>]*>.*?</span>\s*<h1[^>]*>.*?</h1>\s*<p[^>]*>.*?</p>',
+    re.S,
+)
+for p in shared_hero_pages:
+    text = p.read_text(encoding='utf-8', errors='ignore')
+    if '<section class="hero"><div class="top-inner">' in text and not hero_pattern.search(text):
+        errors.append(f'共享Hero结构未遵循眉题→H1→说明文案统一顺序: {p}')
+
+# No legal page may introduce page-specific right-alignment hacks inside inline styles.
+for p in Path('legal').rglob('index.html'):
+    text = p.read_text(encoding='utf-8', errors='ignore')
+    inline_styles = '\n'.join(re.findall(r'<style[^>]*>(.*?)</style>', text, flags=re.S | re.I))
+    risky = (
+        'text-align:right',
+        'text-align: right',
+        'margin-left:auto',
+        'margin-left: auto',
+        'align-items:flex-end',
+        'align-items: flex-end',
+        'justify-content:flex-end',
+        'justify-content: flex-end',
+    )
+    for token in risky:
+        if token in inline_styles:
+            errors.append(f'法律页存在破坏全站统一左轴的单页样式 {token}: {p}')
 
 global_links = Path('site-link-standard-v1.css').read_text(encoding='utf-8')
 for token in ('a[href^="mailto:"]', 'text-decoration-skip-ink:none', 'white-space:nowrap'):
@@ -140,4 +186,4 @@ if errors:
     print('\n'.join(errors))
     sys.exit(1)
 
-print('APP release association audit passed: current APK / store candidate / legal metadata / content axis / continuous mail underline / signing boundary are governed from current release data.')
+print('APP release association audit passed: current release data, shared 1560px axis, legal/support left-aligned hero, continuous mail underline and signing boundaries are governed consistently.')
