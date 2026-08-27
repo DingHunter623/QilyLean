@@ -1,6 +1,7 @@
-/* QilyLean Sitewide Stability Recovery V1｜2026-08-26
+/* QilyLean Sitewide Stability Recovery V2｜2026-08-28
  * Emergency regression closure after contact-route rollout.
- * Scope: remove false document tail height and guarantee floating Dock visibility without changing business content.
+ * Scope: remove false document tail height and guarantee floating Dock visibility on interactive screens
+ * without restoring the Dock during print/PDF rendering.
  */
 html body{
   min-height:0!important;
@@ -170,4 +171,19 @@ html body:has(.contact-page-v3) .contact-hero p{
   html body .contact-page-v3 .qily-map-nav-panel{padding:16px 14px!important}
   html body .contact-page-v3 .qily-map-nav-actions{gap:6px!important}
   html body .contact-page-v3 .qily-map-nav-action{min-height:44px!important;padding:8px 5px!important;font-size:14px!important}
+}
+
+/* Print/PDF is non-interactive. This rule MUST remain last so the screen stability recovery above cannot resurrect the Dock. */
+@media print{
+  html body>#floatDock,
+  html body>#floatDock.qily-float-dock,
+  html body>#floatDock.qily-floating-dock,
+  html body>#floatDock[hidden],
+  html body .qily-floating-dock,
+  html body .qily-float-dock{
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
+  }
 }
