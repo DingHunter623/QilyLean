@@ -22,40 +22,44 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: main
-          fetch-depth: 1
+          fetch-depth: 2
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 24
 
-      - name: Materialize the user-uploaded airplane artwork
+      - name: Materialize the canonical user-approved airplane artwork
         shell: bash
         run: |
           set -euo pipefail
           SOURCE='官网首图.png'
           TARGET='assets/qilylean-aircraft-hero-approved-20260826.png'
-          EXPECTED_BLOB='e67ad0ac7881da8e0fdbf6041fb9858882204ac4'
+          EXPECTED_BLOB='e67ad824312acecab66a7b93e4f9e38b85835af9'
 
           test -f "$SOURCE"
           ACTUAL_BLOB="$(git hash-object "$SOURCE")"
           if [ "$ACTUAL_BLOB" != "$EXPECTED_BLOB" ]; then
-            echo "Unexpected airplane source blob: $ACTUAL_BLOB" >&2
+            echo "Unexpected homepage airplane SSOT blob: $ACTUAL_BLOB" >&2
             exit 1
           fi
 
           mkdir -p assets
-          cp "$SOURCE" "$TARGET"
+          if ! cmp -s "$SOURCE" "$TARGET"; then
+            cp "$SOURCE" "$TARGET"
+          fi
+          cmp -s "$SOURCE" "$TARGET"
 
           node - <<'NODE'
           const fs=require('fs');
-          const b=fs.readFileSync('assets/qilylean-aircraft-hero-approved-20260826.png');
-          if(!b.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))) throw new Error('Uploaded airplane asset is not PNG');
-          if(b.readUInt32BE(16)!==1672||b.readUInt32BE(20)!==941) throw new Error(`Uploaded airplane dimensions are ${b.readUInt32BE(16)}x${b.readUInt32BE(20)}, expected 1672x941`);
-          if(b.length<500000) throw new Error('Uploaded airplane asset unexpectedly small');
-          console.log(`User-uploaded airplane artwork: ${b.length} bytes / 1672x941`);
+          const source=fs.readFileSync('官网首图.png');
+          const target=fs.readFileSync('assets/qilylean-aircraft-hero-approved-20260826.png');
+          if(!source.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]))) throw new Error('Canonical airplane asset is not PNG');
+          if(source.readUInt32BE(16)!==1672||source.readUInt32BE(20)!==941) throw new Error(`Canonical airplane dimensions are ${source.readUInt32BE(16)}x${source.readUInt32BE(20)}, expected 1672x941`);
+          if(!source.equals(target)) throw new Error('Production airplane alias differs from 官网首图.png');
+          console.log(`Canonical user-approved airplane artwork: ${source.length} bytes / 1672x941 / byte-identical production alias`);
           NODE
 
       - name: Materialize homepage airplane image only
@@ -65,11 +69,11 @@ jobs:
           node scripts/enforce-aircraft-home-hero.js
           node --check scripts/site-regression-guard-aircraft-hero.js
           node scripts/site-regression-guard-aircraft-hero.js
-          grep -q '/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260826-aircraft-approved-v1' index.html
+          grep -q '/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260827-home-original-approved-v2' index.html
           ! sed -n '/QILY-AIRCRAFT-BRAND-HERO-V1:START/,/QILY-AIRCRAFT-BRAND-HERO-V1:END/p' index.html | grep -Eq '<picture|<source|srcset=|data-src=|data-srcset='
           git diff --check
 
-      - name: Commit only approved airplane asset and homepage binding
+      - name: Commit only canonical airplane asset and homepage binding
         shell: bash
         run: |
           set -euo pipefail
@@ -77,9 +81,9 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git add assets/qilylean-aircraft-hero-approved-20260826.png index.html scripts/validate-sitewide-remediation-20260822.js
           if git diff --cached --quiet; then
-            echo 'Approved airplane hero already materialized.'
+            echo 'Canonical airplane hero already materialized.'
             exit 0
           fi
-          git commit -m 'fix(home): publish user-uploaded airplane hero [aircraft-hero-generated]'
+          git commit -m 'fix(home): publish canonical user-approved airplane hero [aircraft-hero-generated]'
           git pull --rebase origin main
           git push origin HEAD:main
