@@ -102,11 +102,22 @@
     (document.body || document.head || document.documentElement).appendChild(script);
   }
 
+  function loadKnowledgeAssetV2OplHeader() {
+    if (!/\/knowledge\/terminology(?:\.html)?\/?$/i.test(location.pathname || '')) return;
+    if (document.querySelector('script[data-qily-knowledge-asset-v2-opl-header]')) return;
+    var script = document.createElement('script');
+    script.src = '/knowledge/knowledge-asset-v2-opl-header.js?v=20260828-opl-header-v2';
+    script.async = false;
+    script.setAttribute('data-qily-knowledge-asset-v2-opl-header', 'v2');
+    (document.body || document.head || document.documentElement).appendChild(script);
+  }
+
   function initializePageEnhancements() {
     enableProjectPresentation();
     applyClientConfidentialityPolicy();
     loadProjectDeliveryTerminologySync();
     loadKnowledgeAssetV2();
+    loadKnowledgeAssetV2OplHeader();
   }
 
   if (document.readyState === 'loading') {
