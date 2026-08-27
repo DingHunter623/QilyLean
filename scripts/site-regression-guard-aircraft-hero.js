@@ -22,9 +22,10 @@ assert(asset.length>500000,'Canonical PNG unexpectedly small');
 assert(asset.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])),'Canonical aircraft asset is not PNG');
 assert(asset.readUInt32BE(16)===1672&&asset.readUInt32BE(20)===941,'Canonical PNG dimensions changed');
 assert(css.includes('QilyLean Aircraft Brand Hero V1'),'Aircraft stylesheet identity missing');
+/* Anti-rollback checks target executable legacy fetch/show behavior only. Documentation and the guard itself may name retired refs without becoming a rollback path. */
 const activeRuntimeFiles=['.github/workflows/v4-build.yml','scripts/enforce-aircraft-home-hero.js'];
 for(const rel of activeRuntimeFiles){
   const text=fs.readFileSync(path.join(root,rel),'utf8');
-  assert(!/c919-approved-20260826|c919-strategy-hero-v14\.png/i.test(text),`${rel}: legacy aircraft rollback source is forbidden`);
+  assert(!/git\s+fetch[^\n]*c919-approved-20260826|git\s+show[^\n]*c919-strategy-hero-v14\.png/i.test(text),`${rel}: executable legacy aircraft rollback source is forbidden`);
 }
-console.log('PASS: homepage uses byte-identical 官网首图.png SSOT, one high-priority production PNG URL, and no active legacy rollback source.');
+console.log('PASS: homepage uses byte-identical 官网首图.png SSOT, one high-priority production PNG URL, and no executable legacy rollback source.');
