@@ -1,54 +1,116 @@
-/* Pure DDZ v1.2.3｜横屏舒适牌面层
- * 牌面点数、花色与触控面积保持不变；继续优化长辈可视性，并按 2026-08-28 标注收紧桌面边界。
+/* Pure DDZ v1.2.4｜横屏长辈友好视觉层
+ * 2026-08-28 第二轮：头部重新分区、底牌/出牌放大、浮动导航收敛，并继续保持牌面高可读性。
  */
 .qily-card-theme small{font-size:7.5px;letter-spacing:.03em}
 .qily-card-theme>strong{margin-top:6px;font-size:19px;line-height:1.04}
 .qily-card-theme>b{margin-top:6px;font-size:11.5px;line-height:1.1}
 .qily-card-theme>em{margin-top:6px;font-size:7.5px;line-height:1.16}
-.qily-joker-visual{top:47%;width:60%;height:47%}
-.small-joker .qily-joker-visual{width:68%}
+.qily-joker-visual{top:35%;width:78%;height:58%}
+.small-joker .qily-joker-visual,.big-joker .qily-joker-visual{width:78%}
 .qily-card-main strong{font-size:11px}.qily-card-main em{font-size:7px}
 .qily-mini-business b{font-size:13px}.qily-mini-business small{font-size:7px}
-.qily-mini-joker img{width:33px;height:27px}.qily-mini-joker b{font-size:8px}
+.qily-mini-joker img{width:40px;height:34px}.qily-mini-joker b{font-size:9px}
 .bottom-cards .qily-mini-business b{font-size:13px}.bottom-cards .qily-mini-business small{font-size:7px}
-.bottom-cards .qily-mini-joker img{width:32px;height:27px}.bottom-cards .qily-mini-joker b{font-size:8px}
+.bottom-cards .qily-mini-joker img{width:46px;height:39px}.bottom-cards .qily-mini-joker b{font-size:10px}
 .v120-play-card .qily-card-theme small{font-size:6.2px}
 .v120-play-card .qily-card-theme>strong{font-size:15px}
 .v120-play-card .qily-card-theme>b{font-size:8.2px}
 .v120-play-card .qily-card-theme>em{font-size:6.2px}
-.v120-play-card .qily-joker-visual{width:58%;height:44%}
+.v120-play-card .qily-joker-visual{width:78%;height:58%;top:35%}
 
-/* 2026-08-28 长辈版视觉整改：桌面边界约收紧至原来的 80%，但关键文字、牌面与按钮反向放大。 */
+/* 斗地主页专用浮动导航：从六个孤立圆按钮改为统一的轻量操作轨。 */
+html body #floatDock.qily-float-dock.qily-float-dock{
+  right:max(16px,env(safe-area-inset-right))!important;
+  bottom:max(18px,env(safe-area-inset-bottom))!important;
+  gap:7px!important;
+  padding:9px 8px!important;
+  border:1px solid rgba(202,161,95,.72)!important;
+  border-radius:24px!important;
+  background:rgba(5,56,66,.92)!important;
+  box-shadow:0 14px 34px rgba(2,34,40,.24)!important;
+  backdrop-filter:blur(8px)!important;
+}
+html body #floatDock.qily-float-dock.qily-float-dock .qily-float-btn.qily-float-btn,
+html body #floatDock.qily-float-dock.qily-float-dock .qily-float-btn.qily-float-btn[data-action="share"]{
+  flex:0 0 50px!important;
+  width:72px!important;min-width:72px!important;max-width:72px!important;
+  height:50px!important;min-height:50px!important;max-height:50px!important;
+  padding:5px 6px!important;
+  border:1px solid rgba(255,227,155,.72)!important;
+  border-radius:15px!important;
+  background:linear-gradient(145deg,#115765,#0b4552)!important;
+  box-shadow:0 5px 12px rgba(0,0,0,.18)!important;
+  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
+  font-size:15px!important;font-weight:900!important;line-height:1.05!important;
+  white-space:normal!important;overflow:hidden!important;
+}
+html body #floatDock.qily-float-dock.qily-float-dock .qily-float-btn.qily-float-btn:is(:hover,:focus-visible){
+  background:linear-gradient(145deg,#167584,#0d5562)!important;
+  border-color:#fff0bb!important;
+  box-shadow:0 7px 16px rgba(0,0,0,.24)!important;
+  transform:translateY(-1px)!important;
+}
+html body #floatDock.qily-float-dock.qily-float-dock [data-action="share"] .qily-share-label-line,
+html body #floatDock.qily-float-dock.qily-float-dock [data-action="share"] .qily-share-label-primary,
+html body #floatDock.qily-float-dock.qily-float-dock [data-action="share"] .qily-share-label-url{
+  font-size:14px!important;line-height:1.02!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
+}
+
 @media(min-width:1181px){
   .game-shell{width:80vw;min-width:1080px;max-width:1600px;margin:0 auto;overflow:visible}
-  .topbar{min-height:86px;padding:9px 16px;grid-template-columns:minmax(250px,.95fr) auto minmax(420px,1.15fr);gap:12px}
-  .brand-mark{width:56px;height:56px;flex-basis:56px}.brand-mark i{font-size:37px}
-  .brand strong{font-size:calc(22px * var(--font-scale))}.brand small{font-size:calc(13px * var(--font-scale))}
-  .scoreboard{min-width:282px;gap:7px}.scoreboard div{padding:7px 11px}.scoreboard strong{font-size:calc(21px * var(--font-scale))}
-  .top-actions{gap:8px;flex-wrap:nowrap}
-  #audio-toggle,#help-open,#settings-open{min-height:54px;padding:9px 16px;border:2px solid rgba(255,227,155,.65);border-radius:14px;color:#fff!important;background:linear-gradient(145deg,rgba(20,95,101,.98),rgba(4,55,65,.98));box-shadow:0 5px 14px rgba(0,0,0,.24);font-size:calc(18px * var(--font-scale));opacity:1}
+  .topbar{
+    min-height:148px;padding:12px 18px 11px;
+    grid-template-columns:minmax(320px,1fr) auto minmax(220px,auto);
+    grid-template-areas:"brand score translate" "actions actions actions";
+    align-items:center;column-gap:18px;row-gap:10px;
+  }
+  .brand{grid-area:brand;min-width:0;align-self:center}
+  .brand-mark{width:58px;height:58px;flex-basis:58px}.brand-mark i{font-size:38px}
+  .brand strong{font-size:calc(23px * var(--font-scale));line-height:1.1}.brand small{font-size:calc(14px * var(--font-scale));line-height:1.25}
+
+  .scoreboard{grid-area:score;min-width:390px;display:grid!important;grid-template-columns:repeat(4,minmax(82px,1fr));align-items:stretch;gap:7px}
+  .scoreboard div{min-width:0;padding:8px 10px;border-radius:12px}
+  .scoreboard small{font-size:calc(13px * var(--font-scale));white-space:nowrap}
+  .scoreboard strong{font-size:calc(23px * var(--font-scale));white-space:nowrap}
+  #v120-reset-stats{min-width:82px!important;min-height:54px!important;margin:0!important;padding:7px 10px!important;border-radius:12px!important;align-self:stretch!important;font-size:calc(15px * var(--font-scale))!important;white-space:nowrap!important}
+
+  .topbar>#qilyGlobalTranslationDualRouteV2,.topbar>.qily-web-translate{grid-area:translate;justify-self:end;align-self:center;margin:0!important}
+  .topbar .qily-web-translate__select{max-width:190px!important;min-height:42px!important;font-size:15px!important}
+
+  .top-actions{
+    grid-area:actions;justify-self:center;justify-content:center;align-items:center;
+    width:min(900px,100%);gap:10px;flex-wrap:nowrap;
+    padding:9px 14px 0;border-top:1px solid rgba(255,227,155,.24);
+  }
+  #audio-toggle,#help-open,#settings-open{
+    min-height:52px;padding:8px 15px;border:2px solid rgba(255,227,155,.62);border-radius:14px;
+    color:#fff!important;background:linear-gradient(145deg,rgba(20,95,101,.98),rgba(4,55,65,.98));
+    box-shadow:0 5px 14px rgba(0,0,0,.22);font-size:calc(17px * var(--font-scale));opacity:1;white-space:nowrap!important;
+  }
+  #audio-toggle{min-width:126px}#help-open,#settings-open{min-width:90px}
   #audio-toggle:hover,#help-open:hover,#settings-open:hover{background:linear-gradient(145deg,#167a82,#073c47);box-shadow:0 8px 18px rgba(0,0,0,.28)}
-  .apk-inline{min-height:50px;padding:9px 15px;font-size:calc(15px * var(--font-scale))}.top-actions .start-btn{min-height:52px;padding-inline:17px}
+  .apk-inline{min-width:158px;min-height:52px;padding:8px 15px;font-size:calc(15px * var(--font-scale));white-space:nowrap!important}
+  .top-actions .start-btn{min-width:112px;min-height:52px;padding-inline:17px;white-space:nowrap!important}
 
   .qily-product-overview{width:min(980px,calc(100% - 20px))!important;margin:7px auto 9px!important}
   .qily-product-overview summary{padding:12px 16px!important}
   .qily-product-overview summary strong{font-size:17px!important}
   .qily-product-overview summary span{font-size:17px!important;line-height:1.25;color:#fff!important;font-weight:950!important}
 
-  .table-wrap{width:100%;min-height:600px;padding:14px 18px 16px}
+  .table-wrap{width:100%;min-height:620px;padding:14px 18px 16px}
   .table-wrap:before{inset:12px;border-radius:38% / 18%}
-  .ai{top:106px;width:188px;padding:14px 10px}.left-player{left:16px}.right-player{right:16px}
+  .ai{top:112px;width:188px;padding:14px 10px}.left-player{left:16px}.right-player{right:16px}
   .avatar{font-size:calc(43px * var(--font-scale))}.player-name{font-size:calc(20px * var(--font-scale))}
-  .center-area{width:min(700px,calc(100% - 400px));padding-top:2px}
+  .center-area{width:min(720px,calc(100% - 400px));padding-top:2px}
   .round-meta{gap:8px}
   .round-meta span{padding:7px 14px;border:2px solid rgba(255,255,255,.34);color:#fff!important;background:rgba(2,42,45,.78);font-size:calc(18px * var(--font-scale));font-weight:950}
   .round-meta b{color:#fff!important;font-size:1.06em}
-  .bottom-label{font-size:calc(16px * var(--font-scale))}.bottom-cards{min-height:108px}
-  .mini-card{min-width:82px;height:108px;margin:4px;padding:7px 10px;border-radius:11px}
-  .qily-mini-business b{font-size:20px}.qily-mini-business small{font-size:10px}
-  .qily-mini-joker img{width:50px;height:40px}.qily-mini-joker b{font-size:11px}
+  .bottom-label{font-size:calc(17px * var(--font-scale));font-weight:900}.bottom-cards{min-height:138px;gap:7px}
+  .bottom-cards .mini-card{min-width:98px;width:98px;height:128px;margin:4px;padding:8px 10px;border-radius:13px;border-width:2px}
+  .bottom-cards .qily-mini-business b{font-size:23px}.bottom-cards .qily-mini-business small{font-size:12px}
+  .bottom-cards .qily-mini-joker img{width:62px;height:54px}.bottom-cards .qily-mini-joker b{font-size:13px}
   .status{min-height:54px;min-width:300px;font-size:calc(24px * var(--font-scale))}
-  .center-play{min-height:145px;margin-top:5px}.center-tip{font-size:calc(17px * var(--font-scale))}
+  .center-play{min-height:150px;margin-top:5px}.center-tip{font-size:calc(17px * var(--font-scale))}
 
   .me-player{width:calc(100% - 32px);max-width:1040px;min-height:300px;bottom:12px;padding:9px 13px 12px}
   .me-meta{min-height:40px}.me-meta .player-name{font-size:calc(22px * var(--font-scale))}
@@ -57,38 +119,43 @@
   .card:first-child{margin-left:0}.card.selected{transform:translateY(-28px) scale(1.02)}
   .qily-card-corner{left:8px;top:8px}.qily-card-corner b{font-size:38px;line-height:.9}.qily-card-corner i{font-size:25px;margin-top:5px}
   .qily-card-theme{inset:49px 7px 30px}.qily-card-theme small{font-size:9px}.qily-card-theme>strong{font-size:23px}.qily-card-theme>b{font-size:13px}.qily-card-theme>em{font-size:8px}
+  .qily-card--joker .qily-joker-visual{top:34%!important;width:82%!important;height:62%!important}
+  .qily-card-main{display:none!important}
   .qily-card-site{font-size:8px}
-  .qily-joker-visual{width:66%;height:51%}.small-joker .qily-joker-visual{width:74%}
   .qily-card-main strong{font-size:14px}.qily-card-main em{font-size:8px}
   .controls{gap:10px;margin-top:6px}.control-btn{min-width:146px;min-height:56px;font-size:calc(22px * var(--font-scale))}
   .hint-message{min-height:30px;margin-top:7px;color:#fff!important;font-size:calc(18px * var(--font-scale))!important;line-height:1.45;font-weight:900;text-shadow:0 2px 4px rgba(0,0,0,.35)}
 
-  .v120-play-stage{top:168px;width:min(690px,calc(100% - 400px));min-height:178px;padding:10px 14px}
-  .v120-play-owner{font-size:26px;color:#fff;margin-bottom:8px}
-  .v120-play-card{flex-basis:102px;width:102px;height:150px;margin-left:-24px}
-  .v120-play-card .qily-card-corner b{font-size:30px}.v120-play-card .qily-card-corner i{font-size:19px}
-  .v120-play-card .qily-card-theme{inset:42px 5px 26px}.v120-play-card .qily-card-theme small{font-size:7px}.v120-play-card .qily-card-theme>strong{font-size:18px}.v120-play-card .qily-card-theme>b{font-size:10px}.v120-play-card .qily-card-theme>em{font-size:7px}
+  .v120-play-stage{top:188px;width:min(620px,calc(100% - 420px));min-height:222px;padding:12px 16px;border-radius:24px}
+  .v120-play-owner{font-size:28px;color:#fff;margin-bottom:10px}
+  .v120-play-card{flex-basis:124px;width:124px;height:178px;margin-left:-18px}
+  .v120-play-card:first-child{margin-left:0}
+  .v120-play-card .qily-card-corner b{font-size:34px}.v120-play-card .qily-card-corner i{font-size:21px}
+  .v120-play-card .qily-card-theme{inset:46px 6px 28px}.v120-play-card .qily-card-theme small{font-size:8px}.v120-play-card .qily-card-theme>strong{font-size:20px}.v120-play-card .qily-card-theme>b{font-size:11px}.v120-play-card .qily-card-theme>em{font-size:7px}
+  .v120-play-card .qily-card--joker .qily-joker-visual{top:34%!important;width:82%!important;height:62%!important}
   .v120-pass-flash{font-size:23px}
   .site-footer{padding:7px 14px 9px}
 }
 
 @media(max-width:1380px){
   .qily-card-theme small{font-size:6.7px}.qily-card-theme>strong{font-size:16px}.qily-card-theme>b{font-size:9px}.qily-card-theme>em{font-size:6.2px}
-  .qily-joker-visual{width:58%;height:45%}.small-joker .qily-joker-visual{width:66%}
+  .qily-joker-visual{width:74%;height:56%}.small-joker .qily-joker-visual,.big-joker .qily-joker-visual{width:74%}
 }
 @media(max-width:1180px){
   .qily-card-theme small{font-size:5.9px}.qily-card-theme>strong{font-size:13px}.qily-card-theme>b{font-size:7px}.qily-card-theme>em{font-size:5.6px}
-  .qily-joker-visual{width:56%;height:43%}.small-joker .qily-joker-visual{width:64%}
+  .qily-joker-visual{width:72%;height:54%}.small-joker .qily-joker-visual,.big-joker .qily-joker-visual{width:72%}
+  html body #floatDock.qily-float-dock.qily-float-dock{padding:7px 6px!important;border-radius:20px!important}
+  html body #floatDock.qily-float-dock.qily-float-dock .qily-float-btn.qily-float-btn{width:64px!important;min-width:64px!important;max-width:64px!important;height:46px!important;min-height:46px!important;max-height:46px!important;flex-basis:46px!important;font-size:14px!important}
 }
 @media(max-width:900px){
   .qily-card-theme{inset:27px 3px 15px}
   .qily-card-theme small{font-size:5.2px}.qily-card-theme>strong{font-size:9.5px}.qily-card-theme>b{font-size:5.8px}.qily-card-theme>em{font-size:5.2px}
-  .qily-joker-visual{width:54%;height:40%}.small-joker .qily-joker-visual{width:61%}
+  .qily-joker-visual{width:70%;height:52%}.small-joker .qily-joker-visual,.big-joker .qily-joker-visual{width:70%}
   .qily-card-main strong{font-size:8.5px}.qily-card-main em{font-size:5.2px}
   .v120-play-card .qily-card-theme>strong{font-size:12px}.v120-play-card .qily-card-theme>b{font-size:6.8px}
 }
 @media(max-height:680px) and (orientation:landscape){
   .qily-card-theme small{font-size:5px!important}.qily-card-theme>strong{font-size:8.5px}.qily-card-theme>b{font-size:5.3px}.qily-card-theme>em{display:none}
-  .qily-joker-visual{width:52%;height:38%}.small-joker .qily-joker-visual{width:59%}
+  .qily-joker-visual{width:68%;height:50%}.small-joker .qily-joker-visual,.big-joker .qily-joker-visual{width:68%}
   .welcome-modal{padding:6px}.welcome-card{width:min(820px,98vw);max-height:calc(100dvh - 12px);padding:9px 18px 10px}.welcome-mark{font-size:32px}.welcome-card .eyebrow{margin-bottom:2px;font-size:11px}.welcome-card h1{font-size:24px!important}.welcome-copy{max-width:790px;margin:4px auto 6px;font-size:12px;line-height:1.45}.feature-list{grid-template-columns:repeat(4,1fr);gap:5px;margin:5px 0 7px}.feature-list li{padding:6px 8px;border-left-width:3px;text-align:center}.feature-list b{font-size:12px}.feature-list span{display:none}.welcome-card .hero-start{min-height:40px;padding-block:5px;font-size:17px}.welcome-card .text-btn{min-height:28px;margin-top:2px;padding-block:3px;font-size:12px}
 }
