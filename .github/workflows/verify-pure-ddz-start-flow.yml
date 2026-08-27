@@ -26,7 +26,9 @@ jobs:
           grep -q "player===1?'左家':'右家'" tools/pure-ddz/game/js/visual-v120.js
           grep -q "function positionClass" tools/pure-ddz/game/js/visual-v120.js
           ! grep -q "table.appendChild(strip)" tools/pure-ddz/game/js/qilylean-theme.js
-          grep -q "20260824-mobile-hotfix1" tools/pure-ddz/index.html
+          grep -q "20260828-elder-ux-v123" tools/pure-ddz/index.html
+          grep -q 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
+          grep -q 'width:80vw' tools/pure-ddz/game/css/card-comfort-v122.css
           grep -q "html:not(.ddz-ready) .game-shell" tools/pure-ddz/index.html
       - name: Install browser smoke deps
         run: |
@@ -54,7 +56,7 @@ jobs:
               await page.goto('http://127.0.0.1:4173/',{waitUntil:'domcontentloaded'});
               await page.evaluate(()=>{localStorage.clear();localStorage.setItem('qily_global_language_v3','zh-CN');});
               await page.reload({waitUntil:'domcontentloaded'});
-              await page.waitForFunction(()=>document.documentElement.classList.contains('ddz-ready')&&Boolean(window.PureDDZTest)&&Boolean(window.QilyLeanV120),null,{timeout:8000});
+              await page.waitForFunction(()=>document.documentElement.classList.contains('ddz-ready')&&Boolean(window.PureDDZTest)&&Boolean(window.QilyLeanV120)&&Boolean(window.QilyLeanDDZElderV123),null,{timeout:8000});
               const names=await page.evaluate(()=>({left:document.querySelector('#left-panel .player-name')?.textContent?.trim(),right:document.querySelector('#right-panel .player-name')?.textContent?.trim()}));
               if(names.left!=='左家'||names.right!=='右家') throw new Error('Player labels incorrect: '+JSON.stringify(names));
               const welcome=page.locator('#welcome');
@@ -68,7 +70,8 @@ jobs:
                 strips:document.querySelectorAll('.qily-business-strip').length,
                 ready:document.documentElement.classList.contains('ddz-ready'),
                 hasTheme:Boolean(window.QilyLeanCardTheme),
-                hasVisual:Boolean(window.QilyLeanV120)
+                hasVisual:Boolean(window.QilyLeanV120),
+                hasElder:Boolean(window.QilyLeanDDZElderV123)
               }));
               result.pageErrors=[...pageErrors];
               console.log(JSON.stringify({viewport,result,dialogs},null,2));
@@ -76,7 +79,7 @@ jobs:
               if(result.phase!=='bidding'&&result.phase!=='playing') throw new Error('Game did not start: '+JSON.stringify(result));
               if(result.stateHand<17||result.domHand<17) throw new Error('Cards not visible: '+JSON.stringify(result));
               if(result.strips!==0) throw new Error('Business strip still present: '+JSON.stringify(result));
-              if(!result.ready||!result.hasTheme||!result.hasVisual) throw new Error('Runtime not ready: '+JSON.stringify(result));
+              if(!result.ready||!result.hasTheme||!result.hasVisual||!result.hasElder) throw new Error('Runtime not ready: '+JSON.stringify(result));
               if(result.pageErrors.length) throw new Error('Page errors: '+result.pageErrors.join(' | '));
               await page.close();
             }
