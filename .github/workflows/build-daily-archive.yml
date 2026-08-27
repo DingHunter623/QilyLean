@@ -14,14 +14,19 @@ on:
       - 'qilylean/assets/daily-*.svg'
       - 'qilylean/daily/assets/**'
       - 'qilylean/daily-briefs.css'
+      - 'qilylean/knowledge-asset-v2.css'
       - 'qilylean/npi-four-stage-series-v1.css'
       - 'qilylean/daily-feedback.js'
       - 'qilylean/brief-curation-policy.json'
       - 'site-early-career-history-v1.css'
       - 'knowledge/terminology.html'
       - 'knowledge/terminology/*.html'
+      - 'knowledge/terminology-knowledge-linkage-v2.js'
       - 'scripts/curate-weekly-briefs.js'
       - 'scripts/publish-curated-daily.js'
+      - 'scripts/upgrade-curated-brief-nutrition-v2.js'
+      - 'scripts/upgrade-opl-nutrition-v2.js'
+      - 'scripts/validate-knowledge-asset-v2.js'
       - 'scripts/publish-npi-four-stage-series.js'
       - 'scripts/publish-npi-four-stage-series-runner.js'
       - 'scripts/publish-pph-terminology.js'
@@ -47,13 +52,18 @@ on:
     paths:
       - '.github/workflows/build-daily-archive.yml'
       - 'qilylean/daily/*.html'
+      - 'qilylean/knowledge-asset-v2.css'
       - 'qilylean/npi-four-stage-series-v1.css'
       - 'qilylean/brief-curation-policy.json'
       - 'site-early-career-history-v1.css'
       - 'knowledge/terminology.html'
       - 'knowledge/terminology/*.html'
+      - 'knowledge/terminology-knowledge-linkage-v2.js'
       - 'scripts/curate-weekly-briefs.js'
       - 'scripts/publish-curated-daily.js'
+      - 'scripts/upgrade-curated-brief-nutrition-v2.js'
+      - 'scripts/upgrade-opl-nutrition-v2.js'
+      - 'scripts/validate-knowledge-asset-v2.js'
       - 'scripts/publish-npi-four-stage-series.js'
       - 'scripts/publish-npi-four-stage-series-runner.js'
       - 'scripts/publish-pph-terminology.js'
@@ -94,6 +104,10 @@ jobs:
         run: |
           node --check scripts/publish-curated-daily.js
           node --check scripts/curate-weekly-briefs.js
+          node --check scripts/upgrade-curated-brief-nutrition-v2.js
+          node --check scripts/upgrade-opl-nutrition-v2.js
+          node --check scripts/validate-knowledge-asset-v2.js
+          node --check knowledge/terminology-knowledge-linkage-v2.js
           node --check scripts/publish-npi-four-stage-series.js
           node --check scripts/publish-npi-four-stage-series-runner.js
           node --check scripts/publish-pph-terminology.js
