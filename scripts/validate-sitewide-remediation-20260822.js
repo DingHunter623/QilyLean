@@ -96,7 +96,7 @@ assert(contentContrastCss.includes('--ql-dark-title:#fff'),'Dark-surface text to
 
 assert(home.includes('<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->'),'Homepage aircraft brand hero start marker missing.');
 assert(home.indexOf('QILY-AIRCRAFT-BRAND-HERO-V1:START')<home.indexOf('<section class="hero">'),'Aircraft brand visual is not the first homepage content visual.');
-assert(home.includes('/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260827-home-original-approved-v2'),'Homepage canonical aircraft visual asset/cache key missing.');
+assert(home.includes('/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260827-home-original-approved-v3'),'Homepage canonical aircraft visual asset/cache key missing.');
 assert(!/<img\b[^>]+c919-strategy-hero-v14.(?:png|webp)/i.test(home),'A retired aircraft image is still rendered on homepage.');
 
 const officialUrls=['https://www.jinggon.com/','https://www.gdgaosheng.cn/','https://www.masonled.com/','https://www.mason-led.com/','https://www.eaton.com.cn/cn/zh-cn/products/electronic-components/circuit-protection/fuses.html','https://flex.com/zh/'];
