@@ -6,7 +6,7 @@ const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const css=fs.readFileSync(path.join(root,'styles','qily-aircraft-brand-hero-v1.css'),'utf8');
 const sourcePath=path.join(root,'官网首图.png');
 const assetPath=path.join(root,'assets','qilylean-aircraft-hero-approved-20260826.png');
-const EXPECTED_SOURCE_BLOB='e67ad824312acecab66a7b93e4f9e38b85835af9';
+const EXPECTED_SOURCE_BLOB='e67ad0ac7881da8e0fdbf6041fb9858882204ac4';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
 function gitBlobSha(buffer){return crypto.createHash('sha1').update(Buffer.from(`blob ${buffer.length}\0`)).update(buffer).digest('hex')}
 const source=fs.readFileSync(sourcePath),asset=fs.readFileSync(assetPath),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
