@@ -24,6 +24,13 @@
         .qily-card--joker .qily-joker-visual{top:35%!important;width:78%!important;height:58%!important}
         .qily-card--joker .qily-joker-visual img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important}
         .qily-card--joker .qily-card-main{display:none!important}
+        html body .game-shell .bottom-zone{transform:none!important;zoom:1!important}
+        html body .game-shell .bottom-cards{min-height:138px!important;transform:none!important;zoom:1!important}
+        html body .game-shell .bottom-cards>.mini-card{flex:0 0 98px!important;min-width:98px!important;width:98px!important;max-width:98px!important;height:128px!important;min-height:128px!important;max-height:128px!important;margin:4px!important;padding:8px 10px!important;border-radius:13px!important;border-width:2px!important;transform:none!important;zoom:1!important}
+        html body .game-shell .bottom-cards>.qily-mini-business b{font-size:23px!important;line-height:1!important}
+        html body .game-shell .bottom-cards>.qily-mini-business small{font-size:12px!important;line-height:1.15!important}
+        html body .game-shell .bottom-cards>.qily-mini-joker img{width:62px!important;height:54px!important;object-fit:contain!important}
+        html body .game-shell .bottom-cards>.qily-mini-joker b{font-size:13px!important;line-height:1.1!important}
         .v120-scroll-cue{width:56px!important;min-height:174px!important;padding:12px 6px!important;border:2px solid #ffe39b!important;background:rgba(3,47,48,.96)!important;box-shadow:0 10px 28px rgba(0,0,0,.42)!important}
         .v120-scroll-cue>span{font-size:25px!important;color:#ffe39b!important;line-height:1!important}
         .v120-scroll-cue>b{display:flex!important;flex-direction:column!important;align-items:center!important;gap:5px!important;writing-mode:initial!important;letter-spacing:0!important;color:#fff!important;font-size:12px!important;line-height:1.15!important;text-align:center!important}
