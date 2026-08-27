@@ -6,7 +6,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const HREF = '/site-contact-field-hierarchy-v1.css?v=20260814-contact-field-hierarchy-v2';
+const HREF = '/site-contact-field-hierarchy-v1.css?v=20260827-resource-contact-data-v3';
 const TAG = `<link id="qilyContactFieldHierarchyV1Stylesheet" rel="stylesheet" href="${HREF}">`;
 
 function trackedHtml() {
@@ -55,11 +55,25 @@ must(css.includes('.contact-action-value'), 'cooperation contact value emphasis 
 must(css.includes('border-bottom: 2px solid currentColor !important'), 'cooperation phone/email/wechat value underline missing');
 must(css.includes('.contact-evidence-action'), 'cooperation evidence-row border guard missing');
 
+/* Resource onboarding screenshot closure: fixed data rows are information modules, not decorated navigation links. */
+must(css.includes('QILY-RESOURCE-ONBOARDING-CONTACT-DATA-V3'), 'resource onboarding contact-data V3 marker missing');
+must(css.includes('.contact-card > a.contact-card__data'), 'resource phone/email data-row selector missing');
+must(css.includes('.contact-card > button#copyWechat'), 'resource WeChat data-row selector missing');
+must(css.includes('text-decoration-thickness: 0 !important'), 'resource fixed-data underline hard stop missing');
+must(css.includes('border: 1.5px solid rgba(255,227,155,.72) !important'), 'resource three-row complete rectangle border missing');
+must(css.includes('transform: translateY(-1px) !important'), 'resource three-row hover/focus feedback missing');
+must(css.includes('transform: translateY(0) scale(.985) !important'), 'resource three-row active feedback missing');
+
 const cooperation = fs.readFileSync(path.join(ROOT, 'cooperation/index.html'), 'utf8');
 must((cooperation.match(/qily-uniform-contact-row/g) || []).length === 4, 'cooperation contact card must contain exactly four uniform rows');
 must(cooperation.includes('contact-email-action'), 'cooperation email row missing');
 must(cooperation.includes('admin@qilylean.com'), 'cooperation official email missing');
 must(cooperation.includes('contact-phone-action') && cooperation.includes('wechat-contact-action') && cooperation.includes('contact-evidence-action'), 'cooperation four row types incomplete');
+
+const onboarding = fs.readFileSync(path.join(ROOT, 'links/onboarding/index.html'), 'utf8');
+must(onboarding.includes('class="contact-card__data" href="tel:13450014003"'), 'resource onboarding phone data row missing');
+must(onboarding.includes('class="contact-card__data" href="mailto:admin@qilylean.com"'), 'resource onboarding email data row missing');
+must(onboarding.includes('id="copyWechat"'), 'resource onboarding WeChat data row missing');
 
 let publicCount = 0;
 for (const rel of trackedHtml()) {
@@ -67,7 +81,7 @@ for (const rel of trackedHtml()) {
   try { html = fs.readFileSync(path.join(ROOT, rel), 'utf8'); } catch (_) { continue; }
   if (!isPublicQilyPage(html)) continue;
   publicCount += 1;
-  must(html.includes(HREF), `${rel}: contact field hierarchy stylesheet missing`);
+  must(html.includes(HREF), `${rel}: contact field hierarchy stylesheet missing or stale`);
 }
 
-process.stdout.write(`Contact field hierarchy V2 PASS: ${publicCount} public pages checked; ${changed} refreshed.\n`);
+process.stdout.write(`Contact field hierarchy V3 PASS: ${publicCount} public pages checked; ${changed} refreshed.\n`);
