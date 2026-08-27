@@ -1,15 +1,70 @@
 {
-  "version": "2026-08-25-r5.0",
-  "effective_date": "2026-08-25",
+  "version": "2026-08-28-r6.0-knowledge-asset-2.0",
+  "effective_date": "2026-08-28",
   "cadence": "weekly_curated",
   "timezone": "Asia/Shanghai",
   "default_publication_rule": "one_high_value_brief_per_iso_week",
   "publication_trigger": "explicit_user_approval_after_review",
   "approval_gate": {
     "required": true,
-    "workflow": "Draft → Review → Approved → Build → QA → Published",
-    "rule": "简报候选稿必须先完成内容、方法论、案例边界与可视化审核；只有用户明确批准发布后，才允许进入精选简报生产发布链。未批准内容不得自动上线。",
-    "quality_priority": "专业价值与工程逻辑为前提，可视化表达为公开页面第一体验要求"
+    "workflow": "Draft → Engineering Review → Visual Review → Relation Sync → Approved → Build → QA → Published",
+    "rule": "简报候选稿必须先完成内容、方法论、案例边界、数据口径、关联引用与可视化审核；只有用户明确批准发布后，才允许进入精选简报生产发布链。未批准内容不得自动上线。",
+    "quality_priority": "逻辑思维、信息维度、技术含金量与营养成分是内容前提；在满足专业正确和证据边界后，可视化效果作为公开页面第一体验要求。"
+  },
+  "non_negotiable_rules": [
+    "凡讲述工具或方法的应用场景，必须同时给出对应案例；案例须标明职业实践、公开案例或教学推演属性，不得混淆证据等级。",
+    "全站公开知识资产必须执行统一QilyLean VI：品牌色、字体层级、卡片、流程图、表格、指标徽标和移动端响应规则保持一致；可视化必须承载信息，不做纯装饰堆叠。",
+    "内容必须先满足逻辑闭环、信息维度、工程技术含金量和单位阅读时间营养密度，再讨论篇幅与视觉包装。",
+    "任何术语、OPL、项目案例、改善方法、业务能力或精选简报发生内容更新时，所有相关联入口、引用、反向链接、标签、目录与培训引用必须同步检查并更新。",
+    "模板特色原则上保持稳定；Knowledge Asset 2.0优先升级内容、案例、口径、图解和关系网络，不以重做页面外壳替代内容升级。"
+  ],
+  "brief_content_model": [
+    "core_judgment",
+    "manufacturing_problem_or_event",
+    "engineering_mechanism",
+    "data_and_metric_definition",
+    "tool_selection_reasoning",
+    "application_case_with_evidence_boundary",
+    "countermeasure_and_pilot",
+    "role_based_management_view",
+    "verification_and_standardization",
+    "field_self_check"
+  ],
+  "tool_application_case_gate": {
+    "required": true,
+    "minimum": "每个被重点讲解的工具至少一个与其决策点直接对应的制造场景案例",
+    "case_types": ["career_practice", "public_case", "teaching_simulation"],
+    "case_structure": "Situation → Baseline/Signal → Method → Action/Pilot → Metric → Verification/Standardization",
+    "forbidden": [
+      "只写工具定义和适用场景而无案例",
+      "虚构客户名称或把教学推演写成真实项目",
+      "只有改善结果数字而没有统计口径、边界或验证说明",
+      "案例与所讲工具无直接因果关系"
+    ]
+  },
+  "visual_governance": {
+    "priority": "first_public_experience_after_professional_correctness",
+    "vi": "QilyLean unified VI",
+    "requirements": [
+      "流程、案例、指标、矩阵、前后对比优先使用可视化表达",
+      "同类信息使用统一视觉语义：问题/风险、方法、指标、结果、证据不得随页任意换色",
+      "桌面、平板、手机保持层级完整、无横向溢出、无低对比度文字和无意义装饰",
+      "图表和卡片必须能脱离装饰理解其业务含义"
+    ]
+  },
+  "relation_sync": {
+    "required": true,
+    "graph": "Brief ⇄ OPL ⇄ Method/Tool ⇄ Project ⇄ Service",
+    "sync_targets": [
+      "daily terminology links",
+      "OPL related learning links",
+      "method pages",
+      "project evidence pages",
+      "service/cooperation routes",
+      "directory/search labels",
+      "PDF/print references where applicable"
+    ],
+    "rule": "新增、替换或修正一个核心知识节点时，不允许只更新单页；必须同步核对上下游知识链和反向入口。"
   },
   "protected_dates": [
     "2026-07-29",
@@ -31,17 +86,33 @@
     "manufacturing_professional_relevance",
     "engineering_logic_and_data",
     "problem_to_result_closure",
+    "tool_application_case_quality",
     "evidence_and_boundary_clarity",
     "originality_and_reusability",
     "search_and_training_value",
-    "visual_explanation_and_scenario_fit"
+    "visual_explanation_and_scenario_fit",
+    "cross_reference_integrity"
   ],
+  "quality_score": {
+    "professional_accuracy": 20,
+    "engineering_depth": 15,
+    "data_formula_definition": 15,
+    "case_value": 15,
+    "actionability": 15,
+    "boundary_and_misuse_control": 10,
+    "knowledge_relation": 5,
+    "visual_information_design": 5,
+    "flagship_threshold": 90,
+    "formal_curated_threshold": 85,
+    "minimum_archive_threshold": 80
+  },
   "retention_principles": [
     "优先保留有明确制造问题、工程数据、阶段门、验证方法、交付物或标准固化逻辑的内容",
     "同周主题重复时只保留专业深度、工程结构与长期复用价值最高的一篇",
     "泛职场、泛励志、低信息密度、模板化重复内容原则上不进入公开简报档案",
     "用户明确点名并审核通过的精品内容作为保护项，可形成同周多篇的唯一例外",
     "简报数量不得作为竞争力指标；公开统计以真实精选档案数量为准",
-    "公开简报的流程图、场景简图、表格、矩阵和卡片必须服务于问题识别、改善逻辑与数据验证，不以装饰替代信息表达"
+    "公开简报的流程图、场景简图、表格、矩阵和卡片必须服务于问题识别、改善逻辑与数据验证，不以装饰替代信息表达",
+    "优先提升历史简报平均营养密度；不得为增加字数而扩写。"
   ]
 }
