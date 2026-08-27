@@ -1,5 +1,5 @@
-/* Pure DDZ v1.2.2｜横屏舒适牌面层
- * 牌面点数、花色与触控面积保持不变；只继续缩小 QilyLean 职能图文、说明和大小王品牌图案。
+/* Pure DDZ v1.2.3｜横屏舒适牌面层
+ * 牌面点数、花色与触控面积保持不变；继续优化长辈可视性，并按 2026-08-28 标注收紧桌面边界。
  */
 .qily-card-theme small{font-size:7.5px;letter-spacing:.03em}
 .qily-card-theme>strong{margin-top:6px;font-size:19px;line-height:1.04}
@@ -17,6 +17,60 @@
 .v120-play-card .qily-card-theme>b{font-size:8.2px}
 .v120-play-card .qily-card-theme>em{font-size:6.2px}
 .v120-play-card .qily-joker-visual{width:58%;height:44%}
+
+/* 2026-08-28 长辈版视觉整改：桌面边界约收紧至原来的 80%，但关键文字、牌面与按钮反向放大。 */
+@media(min-width:1181px){
+  .game-shell{width:80vw;min-width:1080px;max-width:1600px;margin:0 auto;overflow:visible}
+  .topbar{min-height:86px;padding:9px 16px;grid-template-columns:minmax(250px,.95fr) auto minmax(420px,1.15fr);gap:12px}
+  .brand-mark{width:56px;height:56px;flex-basis:56px}.brand-mark i{font-size:37px}
+  .brand strong{font-size:calc(22px * var(--font-scale))}.brand small{font-size:calc(13px * var(--font-scale))}
+  .scoreboard{min-width:282px;gap:7px}.scoreboard div{padding:7px 11px}.scoreboard strong{font-size:calc(21px * var(--font-scale))}
+  .top-actions{gap:8px;flex-wrap:nowrap}
+  #audio-toggle,#help-open,#settings-open{min-height:54px;padding:9px 16px;border:2px solid rgba(255,227,155,.65);border-radius:14px;color:#fff!important;background:linear-gradient(145deg,rgba(20,95,101,.98),rgba(4,55,65,.98));box-shadow:0 5px 14px rgba(0,0,0,.24);font-size:calc(18px * var(--font-scale));opacity:1}
+  #audio-toggle:hover,#help-open:hover,#settings-open:hover{background:linear-gradient(145deg,#167a82,#073c47);box-shadow:0 8px 18px rgba(0,0,0,.28)}
+  .apk-inline{min-height:50px;padding:9px 15px;font-size:calc(15px * var(--font-scale))}.top-actions .start-btn{min-height:52px;padding-inline:17px}
+
+  .qily-product-overview{width:min(980px,calc(100% - 20px))!important;margin:7px auto 9px!important}
+  .qily-product-overview summary{padding:12px 16px!important}
+  .qily-product-overview summary strong{font-size:17px!important}
+  .qily-product-overview summary span{font-size:17px!important;line-height:1.25;color:#fff!important;font-weight:950!important}
+
+  .table-wrap{width:100%;min-height:600px;padding:14px 18px 16px}
+  .table-wrap:before{inset:12px;border-radius:38% / 18%}
+  .ai{top:106px;width:188px;padding:14px 10px}.left-player{left:16px}.right-player{right:16px}
+  .avatar{font-size:calc(43px * var(--font-scale))}.player-name{font-size:calc(20px * var(--font-scale))}
+  .center-area{width:min(700px,calc(100% - 400px));padding-top:2px}
+  .round-meta{gap:8px}
+  .round-meta span{padding:7px 14px;border:2px solid rgba(255,255,255,.34);color:#fff!important;background:rgba(2,42,45,.78);font-size:calc(18px * var(--font-scale));font-weight:950}
+  .round-meta b{color:#fff!important;font-size:1.06em}
+  .bottom-label{font-size:calc(16px * var(--font-scale))}.bottom-cards{min-height:108px}
+  .mini-card{min-width:82px;height:108px;margin:4px;padding:7px 10px;border-radius:11px}
+  .qily-mini-business b{font-size:20px}.qily-mini-business small{font-size:10px}
+  .qily-mini-joker img{width:50px;height:40px}.qily-mini-joker b{font-size:11px}
+  .status{min-height:54px;min-width:300px;font-size:calc(24px * var(--font-scale))}
+  .center-play{min-height:145px;margin-top:5px}.center-tip{font-size:calc(17px * var(--font-scale))}
+
+  .me-player{width:calc(100% - 32px);max-width:1040px;min-height:300px;bottom:12px;padding:9px 13px 12px}
+  .me-meta{min-height:40px}.me-meta .player-name{font-size:calc(22px * var(--font-scale))}
+  .hand{min-height:198px;padding:29px 8px 6px;overflow-x:hidden}
+  .card{flex:0 0 132px;height:190px;margin-left:-74px;padding:9px;border-radius:15px;border-width:3px}
+  .card:first-child{margin-left:0}.card.selected{transform:translateY(-28px) scale(1.02)}
+  .qily-card-corner{left:8px;top:8px}.qily-card-corner b{font-size:38px;line-height:.9}.qily-card-corner i{font-size:25px;margin-top:5px}
+  .qily-card-theme{inset:49px 7px 30px}.qily-card-theme small{font-size:9px}.qily-card-theme>strong{font-size:23px}.qily-card-theme>b{font-size:13px}.qily-card-theme>em{font-size:8px}
+  .qily-card-site{font-size:8px}
+  .qily-joker-visual{width:66%;height:51%}.small-joker .qily-joker-visual{width:74%}
+  .qily-card-main strong{font-size:14px}.qily-card-main em{font-size:8px}
+  .controls{gap:10px;margin-top:6px}.control-btn{min-width:146px;min-height:56px;font-size:calc(22px * var(--font-scale))}
+  .hint-message{min-height:30px;margin-top:7px;color:#fff!important;font-size:calc(18px * var(--font-scale))!important;line-height:1.45;font-weight:900;text-shadow:0 2px 4px rgba(0,0,0,.35)}
+
+  .v120-play-stage{top:168px;width:min(690px,calc(100% - 400px));min-height:178px;padding:10px 14px}
+  .v120-play-owner{font-size:26px;color:#fff;margin-bottom:8px}
+  .v120-play-card{flex-basis:102px;width:102px;height:150px;margin-left:-24px}
+  .v120-play-card .qily-card-corner b{font-size:30px}.v120-play-card .qily-card-corner i{font-size:19px}
+  .v120-play-card .qily-card-theme{inset:42px 5px 26px}.v120-play-card .qily-card-theme small{font-size:7px}.v120-play-card .qily-card-theme>strong{font-size:18px}.v120-play-card .qily-card-theme>b{font-size:10px}.v120-play-card .qily-card-theme>em{font-size:7px}
+  .v120-pass-flash{font-size:23px}
+  .site-footer{padding:7px 14px 9px}
+}
 
 @media(max-width:1380px){
   .qily-card-theme small{font-size:6.7px}.qily-card-theme>strong{font-size:16px}.qily-card-theme>b{font-size:9px}.qily-card-theme>em{font-size:6.2px}
