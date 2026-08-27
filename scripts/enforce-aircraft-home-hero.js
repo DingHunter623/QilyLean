@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 'use strict';
-/* approved aircraft hero authority; implementation intentionally stable */
+/* Homepage aircraft authority: 官网首图.png is the sole approved visual SSOT. */
 const fs=require('fs'),path=require('path');
 const root=path.resolve(__dirname,'..'),target=path.join(root,'index.html');
 let html=fs.readFileSync(target,'utf8');
 const START='<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->',END='<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->';
-const ASSET='/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260826-aircraft-approved-v1';
+const ASSET='/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260827-home-original-approved-v2';
 const CSS='/styles/qily-aircraft-brand-hero-v1.css?v=20260826-aircraft-hero-v1';
 const ALT='QilyLean｜启力精益飞机品牌主视觉，左右机翼展示新工厂与新产线规划、精益改善项目交付、目视化项目设计与交付、数字化工厂、APP软件开发、官网建设六项业务能力';
 const hero=[START,'<section class="qily-aircraft-brand-hero" aria-label="QilyLean｜启力精益飞机品牌主视觉">','  <figure>',`    <img src="${ASSET}" alt="${ALT}" width="1672" height="941" loading="eager" decoding="async" fetchpriority="high">`,'  </figure>','</section>',END].join('\n');
@@ -15,5 +15,10 @@ html=html.replace('</head>',`<link id="qilyAircraftHeroStylesheetV1" rel="styles
 html=html.replace(/(<main\b[^>]*>)/i,`$1\n${hero}`);
 fs.writeFileSync(target,html.endsWith('\n')?html:html+'\n','utf8');
 const validatorPath=path.join(root,'scripts','validate-sitewide-remediation-20260822.js');
-if(fs.existsSync(validatorPath)){let v=fs.readFileSync(validatorPath,'utf8');v=v.replace('/assets/qilylean-aircraft-hero-v1.webp?v=20260826-aircraft-hero-v1','/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260826-aircraft-approved-v1');fs.writeFileSync(validatorPath,v,'utf8');}
-console.log('QilyLean approved aircraft hero materialized from one canonical PNG asset.');
+if(fs.existsSync(validatorPath)){
+  let v=fs.readFileSync(validatorPath,'utf8');
+  v=v.replace(/\/assets\/qilylean-aircraft-hero-approved-20260826\.png\?v=20260826-aircraft-approved-v1/g,ASSET);
+  v=v.replace('/assets/qilylean-aircraft-hero-v1.webp?v=20260826-aircraft-hero-v1',ASSET);
+  fs.writeFileSync(validatorPath,v,'utf8');
+}
+console.log('QilyLean homepage aircraft hero materialized from the canonical 官网首图.png production alias, with no recompression or source swapping.');
