@@ -1,8 +1,8 @@
-/* QilyLean Sitewide Visual Regression Closure V2｜2026-08-26
+/* QilyLean Sitewide Visual Regression Closure V3｜2026-08-28
  * Last stylesheet in the public baseline. It closes screenshot-confirmed cascade regressions without
  * flattening intentional page hierarchy: light chips stay dark-on-light, legacy content-level dark
  * classes normalize to the standard light surface, explicit semantic dark surfaces stay dark,
- * and career year ranges receive sufficient width.
+ * career year ranges receive sufficient width, and authored dark-gradient content keeps readable text.
  */
 :root{
   --qily-fix-forest:#0f4b5a;
@@ -178,5 +178,71 @@ html body .career-table .career-year-range-break{display:inline!important}
     width:118px!important;
     min-width:118px!important;
     max-width:118px!important;
+  }
+}
+
+/* E｜Sitewide light-pill ownership: light/tinted tag rows must use dark readable copy.
+ * This intentionally does not target standalone semantic dark badges such as .w8 .tag.
+ */
+html body main :is(.tags,.tag-row,.chips,.chip-row,.pill-row,.badge-row) > :is(.tag,.chip,.pill,.badge):not([aria-current="page"]):not([aria-selected="true"]):not(.active):not(.current):not(.is-active){
+  color:var(--qily-fix-forest)!important;
+  -webkit-text-fill-color:var(--qily-fix-forest)!important;
+  background:var(--qily-fix-alt)!important;
+  border-color:var(--qily-fix-line)!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+html body main :is(.tags,.tag-row,.chips,.chip-row,.pill-row,.badge-row) > :is(.tag,.chip,.pill,.badge):is([aria-current="page"],[aria-selected="true"],.active,.current,.is-active){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-fix-forest)!important;
+  border-color:var(--qily-fix-gold)!important;
+}
+@media(hover:hover) and (pointer:fine){
+  html body main :is(.tags,.tag-row,.chips,.chip-row,.pill-row,.badge-row) > :is(.tag,.chip,.pill,.badge):not([aria-current="page"]):not([aria-selected="true"]):not(.active):not(.current):not(.is-active):is(:hover,:focus-visible){
+    color:var(--qily-fix-ink)!important;
+    -webkit-text-fill-color:var(--qily-fix-ink)!important;
+    background:var(--qily-fix-gold-soft)!important;
+    border-color:var(--qily-fix-gold)!important;
+  }
+}
+
+/* F｜Authored dark gradients: preserve their own foreground hierarchy instead of accepting a false light-surface correction. */
+html body.daily-single-page main article.post :is(.visual-hero,.closing-view){
+  color:#fff!important;
+}
+html body.daily-single-page main article.post :is(.visual-hero,.closing-view) :is(h1,h2,h3,h4,strong,b){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body.daily-single-page main article.post .closing-view p{
+  color:#e8f6f8!important;
+  -webkit-text-fill-color:#e8f6f8!important;
+  opacity:1!important;
+}
+html body.daily-single-page main article.post .closing-view em{
+  color:#ffd06d!important;
+  -webkit-text-fill-color:#ffd06d!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+
+/* G｜Print/PDF is a document surface, not an interactive web surface. */
+@media print{
+  html body #floatDock,
+  html body #floatDock.qily-float-dock,
+  html body .qily-floating-dock,
+  html body .qily-float-dock,
+  html body [data-qily-floating-dock]{
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
   }
 }
