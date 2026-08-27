@@ -34,6 +34,14 @@ jobs:
         with:
           node-version: 24
 
+      - name: Install WebP encoder
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends webp >/dev/null
+          cwebp -version
+
       - name: Validate source before materialization
         run: node scripts/site-system-v4-validate.js
 
@@ -42,36 +50,48 @@ jobs:
         run: |
           set -euo pipefail
           SOURCE='官网首图.png'
-          TARGET='assets/qilylean-aircraft-hero-approved-20260826.png'
+          PNG='assets/qilylean-aircraft-hero-approved-20260826.png'
+          WEBP='assets/qilylean-aircraft-hero-latest-q98.webp'
           EXPECTED_BLOB='e67ad0ac7881da8e0fdbf6041fb9858882204ac4'
           test -f "$SOURCE"
           ACTUAL_BLOB="$(git hash-object "$SOURCE")"
           test "$ACTUAL_BLOB" = "$EXPECTED_BLOB"
           mkdir -p assets
-          if ! cmp -s "$SOURCE" "$TARGET"; then
-            cp "$SOURCE" "$TARGET"
+          if ! cmp -s "$SOURCE" "$PNG"; then
+            cp "$SOURCE" "$PNG"
           fi
-          cmp -s "$SOURCE" "$TARGET"
+          cmp -s "$SOURCE" "$PNG"
+          cwebp -quiet -q 98 -m 6 -sharp_yuv "$SOURCE" -o "$WEBP"
           node - <<'NODE'
           const fs=require('fs');
           const source=fs.readFileSync('官网首图.png');
-          const target=fs.readFileSync('assets/qilylean-aircraft-hero-approved-20260826.png');
-          const png=Buffer.from([137,80,78,71,13,10,26,10]);
-          if(!source.subarray(0,8).equals(png)) throw new Error('Canonical homepage aircraft artwork is not PNG');
+          const png=fs.readFileSync('assets/qilylean-aircraft-hero-approved-20260826.png');
+          const webp=fs.readFileSync('assets/qilylean-aircraft-hero-latest-q98.webp');
+          const signature=Buffer.from([137,80,78,71,13,10,26,10]);
+          if(!source.subarray(0,8).equals(signature)) throw new Error('Canonical homepage aircraft artwork is not PNG');
           if(source.readUInt32BE(16)!==1672||source.readUInt32BE(20)!==941) throw new Error('Canonical homepage aircraft artwork dimensions changed');
-          if(!source.equals(target)) throw new Error('Production aircraft asset is not byte-identical to 官网首图.png');
-          console.log(`Canonical homepage aircraft artwork ready: ${source.length} bytes, 1672x941; no recompression or quality loss.`);
+          if(!source.equals(png)) throw new Error('Production PNG fallback is not byte-identical to 官网首图.png');
+          if(webp.subarray(0,4).toString('ascii')!=='RIFF'||webp.subarray(8,12).toString('ascii')!=='WEBP') throw new Error('Optimized aircraft derivative is not WebP');
+          if(webp.length<180000||webp.length>=1600000) throw new Error(`Optimized WebP payload outside 180KB–1.6MB budget: ${webp.length}`);
+          console.log(`Aircraft SSOT locked: PNG ${source.length} bytes; Q98 WebP transport derivative ${webp.length} bytes; 1672x941.`);
           NODE
-          ! grep -RIl --exclude-dir=.git -E 'git fetch[^\n]*c919-approved-20260826|git show[^\n]*c919-strategy-hero-v14\.png' .github scripts >/tmp/qily-old-aircraft-runtime.txt
 
       - name: Materialize approved aircraft brand hero
         run: |
           set -euo pipefail
           node --check scripts/enforce-aircraft-home-hero.js
           node scripts/enforce-aircraft-home-hero.js
-          grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260827-home-original-approved-v2' index.html
-          ! sed -n '/QILY-AIRCRAFT-BRAND-HERO-V1:START/,/QILY-AIRCRAFT-BRAND-HERO-V1:END/p' index.html | grep -Eq '<picture|<source|srcset=|data-src=|data-srcset='
+          grep -q 'qilylean-aircraft-hero-latest-q98.webp?v=20260827-home-original-approved-v3' index.html
+          grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260827-home-original-approved-v3' index.html
           node scripts/site-regression-guard-aircraft-hero.js
+
+      - name: Guard sitewide floating dock gold identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q -- '--qily-dock-text:#ffe39b' site-floating-dock-standard-v1.css
+          grep -q -- 'color:var(--qily-dock-text)!important' site-floating-dock-standard-v1.css
+          grep -q -- '-webkit-text-fill-color:var(--qily-dock-text)!important' site-floating-dock-standard-v1.css
 
       - name: Normalize regional sitemap URL contract
         run: node scripts/qilylean-north-v4-sitemap-contract.js
@@ -99,19 +119,22 @@ jobs:
           set -euo pipefail
           paths=(
             assets/qilylean-aircraft-hero-approved-20260826.png
+            assets/qilylean-aircraft-hero-latest-q98.webp
             meta/build.json
             sitemap.xml
             sitemap-core.xml
             index.html
             scripts/validate-sitewide-remediation-20260822.js
           )
-          if git diff --quiet -- "${paths[@]}" && git ls-files --error-unmatch assets/qilylean-aircraft-hero-approved-20260826.png >/dev/null 2>&1; then
+          if git diff --quiet -- "${paths[@]}" \
+            && git ls-files --error-unmatch assets/qilylean-aircraft-hero-approved-20260826.png >/dev/null 2>&1 \
+            && git ls-files --error-unmatch assets/qilylean-aircraft-hero-latest-q98.webp >/dev/null 2>&1; then
             echo 'V4 production metadata and canonical aircraft hero closure already current.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "${paths[@]}"
-          git commit -m 'build(v4): materialize canonical homepage aircraft artwork [v4-generated]'
+          git commit -m 'build(v4): materialize canonical aircraft hero and optimized transport [v4-generated]'
           git pull --rebase origin main
           git push
