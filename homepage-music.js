@@ -91,10 +91,22 @@
     (document.body || document.head || document.documentElement).appendChild(script);
   }
 
+  function loadKnowledgeAssetV2() {
+    var p = location.pathname || '/';
+    var applicable = /^\/qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html$/i.test(p) || /\/knowledge\/terminology(?:\.html)?\/?$/i.test(p);
+    if (!applicable || document.querySelector('script[data-qily-knowledge-asset-v2]')) return;
+    var script = document.createElement('script');
+    script.src = '/knowledge/knowledge-asset-v2.js?v=20260828-knowledge-asset-v2';
+    script.async = false;
+    script.setAttribute('data-qily-knowledge-asset-v2', 'v2');
+    (document.body || document.head || document.documentElement).appendChild(script);
+  }
+
   function initializePageEnhancements() {
     enableProjectPresentation();
     applyClientConfidentialityPolicy();
     loadProjectDeliveryTerminologySync();
+    loadKnowledgeAssetV2();
   }
 
   if (document.readyState === 'loading') {
