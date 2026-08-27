@@ -1,0 +1,43 @@
+/* QilyLean Knowledge Asset 2.0 · 2026-08-28
+   Preserve the established QilyLean teal / pale-blue / gold VI while increasing information hierarchy. */
+.qa-nutrition-v2{margin:28px 0;padding:0;border:1px solid var(--daily-line,#d5e4e3);border-top:6px solid var(--daily-gold,#caa15f);background:#fff;box-shadow:0 14px 36px rgba(15,75,90,.08)}
+.qa-nutrition-heading{padding:22px 24px 18px;border-bottom:1px solid var(--daily-line,#d5e4e3);background:linear-gradient(120deg,#f8fcfb,#eef7f5)}
+.qa-nutrition-heading>span,.term-opl-related-heading>span{display:block;color:var(--daily-gold,#caa15f);font-size:12px;font-weight:950;letter-spacing:.12em}
+.daily-single-section .qa-nutrition-heading h3{margin:6px 0 7px;color:var(--daily-forest,#0f4b5a);font-size:clamp(23px,2.2vw,30px)!important;line-height:1.28}
+.qa-nutrition-heading p{margin:0!important;color:var(--daily-muted,#5f7474)!important;font-size:15.5px!important;line-height:1.7!important}
+.qa-nutrition-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--daily-line,#d5e4e3)}
+.qa-nutrition-card{min-width:0;padding:20px 22px;background:#fff}
+.qa-nutrition-card.case{grid-column:1/-1;border-left:5px solid var(--daily-teal,#177f87);background:#f7fbfa}
+.qa-nutrition-card.metric{grid-column:1/-1;background:#fff8e8}
+.qa-nutrition-card>strong{display:block;margin-bottom:8px;color:var(--daily-forest,#0f4b5a);font-size:16px;font-weight:950}
+.qa-nutrition-card>p{margin:0!important;color:#344a48!important;font-size:16px!important;line-height:1.78!important}
+.qa-related-network{display:grid;gap:10px;padding:18px 22px;border-top:1px solid var(--daily-line,#d5e4e3);background:#fbfdfc}
+.qa-related-network>strong{color:var(--daily-forest,#0f4b5a);font-size:15px}
+.qa-related-chips,.term-opl-related-chips{display:flex;gap:8px;flex-wrap:wrap}
+.qa-related-chip,.term-opl-related-chip{display:inline-flex;align-items:center;min-height:34px;padding:6px 11px;border:1px solid var(--daily-line,#d5e4e3);border-radius:999px;color:var(--daily-forest,#0f4b5a);background:#fff;font-size:13px;font-weight:900;text-decoration:none;transition:transform .15s ease,border-color .15s ease,background .15s ease}
+.qa-related-chip:hover,.qa-related-chip:focus-visible,.term-opl-related-chip:hover,.term-opl-related-chip:focus-visible{transform:translateY(-1px);border-color:var(--daily-teal,#177f87);background:#eef7f5;outline:none}
+.qa-related-chip.primary,.term-opl-related-chip.primary{border-color:var(--daily-forest,#0f4b5a);color:#fff;background:var(--daily-forest,#0f4b5a)}
+
+.term-opl-related-v2{margin:28px 0 0;padding:0;border:1px solid var(--qily-line,#d5e4e3);border-top:6px solid var(--qily-gold,#caa15f);background:#fff;break-inside:avoid;box-shadow:0 12px 30px rgba(15,75,90,.06)}
+.term-opl-related-heading{padding:20px 22px 14px;background:linear-gradient(120deg,#f8fcfb,#eef7f5)}
+.term-opl-related-heading h3{margin:6px 0 7px;color:var(--qily-forest,#0f4b5a);font-size:24px;line-height:1.25}
+.term-opl-related-heading p{margin:0;color:#5f7474;font-size:15px;line-height:1.65}
+.term-opl-related-chips{padding:16px 22px 20px;border-top:1px solid var(--qily-line,#d5e4e3)}
+.term-opl-related-chip{border-color:var(--qily-line,#d5e4e3);color:var(--qily-forest,#0f4b5a)}
+.term-opl-related-chip.primary{border-color:var(--qily-forest,#0f4b5a);background:var(--qily-forest,#0f4b5a)}
+.term-opl-case-rule{margin-top:14px;padding:12px 14px;border-left:4px solid var(--qily-gold,#caa15f);color:#455b59;background:#fff8e8;font-size:14.5px;line-height:1.7}
+.term-opl-case-rule strong{color:var(--qily-forest,#0f4b5a)}
+
+@media(max-width:760px){
+  .qa-nutrition-grid{grid-template-columns:1fr}
+  .qa-nutrition-card.case,.qa-nutrition-card.metric{grid-column:auto}
+  .qa-nutrition-heading,.qa-nutrition-card,.qa-related-network{padding-left:17px;padding-right:17px}
+  .qa-nutrition-card>p{font-size:15px!important;line-height:1.72!important}
+  .term-opl-related-heading,.term-opl-related-chips{padding-left:17px;padding-right:17px}
+  .term-opl-related-heading h3{font-size:21px}
+}
+
+@media print{
+  .qa-nutrition-v2,.term-opl-related-v2{box-shadow:none;break-inside:avoid}
+  .qa-related-chip,.term-opl-related-chip{color:#0f4b5a!important;background:#fff!important}
+}
