@@ -68,7 +68,7 @@ requireText(navigation,'unifiedHeaderAxis: true','Unified header axis contract')
 requireText(navigation,'primaryNavigationUnifiedVisualContract: true','Unified primary-navigation visual contract');
 requireText(navigation,'mobilePrimaryNavigationMayShrinkTypography: false','Mobile primary navigation typography parity');
 requireText(navigation,'siteSearchDirectNavigation: true','Search navigation build contract');
-requireText(navigation,"version: '20260827-translation-dock-resource-v46'",'Translation/Dock navigation V46 contract');
+requireText(navigation,"version: '20260827-primary-navigation-unified-v44'",'Primary-navigation V44 contract');
 
 const progress=read('site-translation-progress-v1.js');
 requireText(progress,'Translation Progress Notice V4','Progress V4');
