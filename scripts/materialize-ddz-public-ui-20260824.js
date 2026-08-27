@@ -11,9 +11,9 @@ let page=fs.readFileSync(indexFile,'utf8');
 const before=page;
 
 // Keep the 2026-08-28 elder-friendly release pinned during whole-site materialization.
-// This release preserves mobile landscape support while adding the 80%-width desktop table,
-// larger cards/text/buttons and exact-card play announcements.
-page=page.replace(/const version='[^']+';/, "const version='20260828-elder-ux-v123';");
+// V1.2.4 adds a two-row header, slower AI pacing, larger table/bottom cards,
+// simplified joker faces and a cleaner floating action rail.
+page=page.replace(/const version='[^']+';/, "const version='20260828-elder-ux-v124';");
 page=page.replace(/loadStyle\('css\/card-comfort-v\d+\.css'\)/, "loadStyle('css/card-comfort-v122.css')");
 
 // Public official-contact naming follows the sitewide field standard.
@@ -24,7 +24,7 @@ page=page.replace(/安装包待验证后发布/g,'Android版暂未开放');
 page=page.replace(/安装包待验证/g,'Android版暂未开放');
 page=page.replace(/Android：待验证后发布/g,'Android：暂未开放下载');
 
-if(!page.includes("const version='20260828-elder-ux-v123';")) throw new Error('DDZ elder UX cache key not updated');
+if(!page.includes("const version='20260828-elder-ux-v124';")) throw new Error('DDZ elder UX cache key not updated');
 if(!page.includes("loadStyle('css/card-comfort-v122.css')")) throw new Error('DDZ comfort-scale stylesheet is missing');
 if(!page.includes('name="screen-orientation" content="landscape"')) throw new Error('DDZ landscape orientation metadata is missing');
 if(!page.includes('__PURE_DDZ_MOBILE_DEVICE__')) throw new Error('DDZ mobile runtime marker is missing');
@@ -35,7 +35,7 @@ if(!page.includes('<span>官网邮箱</span>')) throw new Error('官网邮箱 la
 
 if(page!==before){
   fs.writeFileSync(indexFile,page.endsWith('\n')?page:page+'\n');
-  console.log('Updated tools/pure-ddz/index.html with elder UX v1.2.3 release');
+  console.log('Updated tools/pure-ddz/index.html with elder UX v1.2.4 release');
 }else{
-  console.log('Pure DDZ elder UX v1.2.3 public UI already current.');
+  console.log('Pure DDZ elder UX v1.2.4 public UI already current.');
 }
