@@ -1,4 +1,4 @@
-name: Publish contact field hierarchy V2
+name: Publish contact field hierarchy V3
 
 on:
   push:
@@ -13,7 +13,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: publish-contact-field-hierarchy-v2
+  group: publish-contact-field-hierarchy-v3
   cancel-in-progress: false
 
 jobs:
@@ -21,15 +21,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 2
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
-          node-version: 22
+          node-version: 24
 
-      - name: Materialize contact field hierarchy
+      - name: Materialize contact field hierarchy V3
         run: node scripts/publish-contact-field-hierarchy-v1.js
 
       - name: Validate syntax and exact visual contract
@@ -43,17 +43,30 @@ jobs:
           const css=fs.readFileSync('site-contact-field-hierarchy-v1.css','utf8');
           const home=fs.readFileSync('index.html','utf8');
           const cooperation=fs.readFileSync('cooperation/index.html','utf8');
+          const onboarding=fs.readFileSync('links/onboarding/index.html','utf8');
+          const href='/site-contact-field-hierarchy-v1.css?v=20260827-resource-contact-data-v3';
           must(/\.qily-phone-list\s*>\s*a[\s\S]*?text-decoration-line:\s*none\s*!important/.test(css),'parent anchor underline hard-stop missing');
           must(/\.qily-phone-city[\s\S]*?border-bottom:\s*0\s*!important/.test(css),'city label underline guard missing');
           must(/\.qily-phone-number[\s\S]*?border-bottom:\s*1\.5px solid currentColor\s*!important/.test(css),'number-only emphasis missing');
           must(css.includes('.qily-uniform-contact-row'),'cooperation four-row contract missing');
           must(css.includes('border: 1.5px solid #f5c766 !important'),'uniform visible border missing');
-          must(css.includes('.contact-action-value') && css.includes('border-bottom: 2px solid currentColor !important'),'phone/email/wechat value underline contract missing');
+          must(css.includes('.contact-action-value') && css.includes('border-bottom: 2px solid currentColor !important'),'cooperation phone/email/wechat value underline contract missing');
           must((cooperation.match(/qily-uniform-contact-row/g)||[]).length===4,'cooperation contact card is not exactly four uniform rows');
           must(cooperation.includes('contact-email-action') && cooperation.includes('admin@qilylean.com'),'email row missing');
-          must(home.includes('/site-contact-field-hierarchy-v1.css?v=20260814-contact-field-hierarchy-v2'),'homepage V2 contact hierarchy CSS missing');
-          must(cooperation.includes('/site-contact-field-hierarchy-v1.css?v=20260814-contact-field-hierarchy-v2'),'cooperation V2 contact hierarchy CSS missing');
-          console.log('Exact contact hierarchy V2 checks passed.');
+          must(css.includes('QILY-RESOURCE-ONBOARDING-CONTACT-DATA-V3'),'resource onboarding V3 marker missing');
+          must(css.includes('.contact-card > a.contact-card__data'),'resource phone/email fixed-data selector missing');
+          must(css.includes('.contact-card > button#copyWechat'),'resource WeChat fixed-data selector missing');
+          must(css.includes('text-decoration-thickness: 0 !important'),'resource fixed-data underline hard stop missing');
+          must(css.includes('border: 1.5px solid rgba(255,227,155,.72) !important'),'resource fixed-data complete rectangle missing');
+          must(css.includes('transform: translateY(-1px) !important'),'resource hover/focus feedback missing');
+          must(css.includes('transform: translateY(0) scale(.985) !important'),'resource active feedback missing');
+          must(onboarding.includes('class="contact-card__data" href="tel:13450014003"'),'onboarding phone data row missing');
+          must(onboarding.includes('class="contact-card__data" href="mailto:admin@qilylean.com"'),'onboarding email data row missing');
+          must(onboarding.includes('id="copyWechat"'),'onboarding WeChat data row missing');
+          must(home.includes(href),'homepage V3 contact hierarchy CSS missing');
+          must(cooperation.includes(href),'cooperation V3 contact hierarchy CSS missing');
+          must(onboarding.includes(href),'resource onboarding V3 contact hierarchy CSS missing');
+          console.log('Exact contact hierarchy V3 checks passed.');
           NODE
 
       - name: Validate idempotence
@@ -77,7 +90,7 @@ jobs:
             echo 'No production changes.'
             exit 0
           fi
-          git commit -m 'fix: unify cooperation contact borders and value emphasis [skip ci]'
+          git commit -m 'fix: publish resource contact data V3 across public HTML [skip ci]'
           for i in 1 2 3; do
             if git pull --rebase origin main && git push origin HEAD:main; then
               exit 0
