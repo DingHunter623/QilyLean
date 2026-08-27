@@ -6,3 +6,4 @@ Disallow: /qilylean/reference/
 
 Sitemap: https://qilylean.com/sitemap.xml
 Sitemap: https://qilylean.com/sitemap-core.xml
+Sitemap: https://qilylean.com/sitemap-topics.xml
