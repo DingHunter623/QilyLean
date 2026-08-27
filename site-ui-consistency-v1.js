@@ -1,24 +1,26 @@
-/* QilyLean 轻量父级导航与外壳一致性 v4.2｜2026-08-27
+/* QilyLean 轻量父级导航与外壳一致性 v5｜2026-08-27
  * 静态 HTML 首帧优先；公共运行时仅负责导航、Dock 与全站公共增强兜底。
  * 中文静态 HTML 是权威源和默认展示；翻译仅由访客主动选择后在当前 QilyLean 页面内执行。
  * 一级导航属于全站公共组件：所有模块统一字号、字重、颜色与交互状态，不允许页面级降级。
+ * V5: Dock 的“回顶部 / 回上一层”不再以可翻译的单字“回”充当图形；统一改为语言中立 SVG 图标 + 可翻译文字。
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyUiConsistencyV4)return;
+  if(w.__qilyUiConsistencyV5)return;
+  w.__qilyUiConsistencyV5=true;
   w.__qilyUiConsistencyV4=true;
   w.__qilyUiConsistencyV3=true;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260827-primary-navigation-unified-v4';
+  var BUILD_ID='20260827-translation-dock-closure-v5';
   var BUILD_KEY='qily_site_ui_build_v1';
   var ASSETS={
     languageCss:'/site-global-language-v1.css?v=20260825-public-translation-shell-v1',
-    safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260826-translation-fast-reliable-v3',
+    safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260827-source-recovery-v4',
     publicCss:'/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8',
     publicJs:'/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6',
-    progressCss:'/site-translation-progress-v1.css?v=20260825-bilingual-progress-v3',
-    progressJs:'/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3',
+    progressCss:'/site-translation-progress-v1.css?v=20260827-source-recovery-v4',
+    progressJs:'/site-translation-progress-v1.js?v=20260827-source-recovery-v4',
     interactionCss:'/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2',
     interactionJs:'/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2',
     contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6',
@@ -76,9 +78,9 @@
     ensureStylesheet('qilyTranslationProgressV1Stylesheet',ASSETS.progressCss);
     ensureStylesheet('qilyInteractionContrastGuardV1Stylesheet',ASSETS.interactionCss);
     ensureStylesheet('qilyContentContrastGuardV1Stylesheet',ASSETS.contentCss);
-    if(!w.__qilyTranslationSafeInPageV1)ensureScript('qilyTranslationSafeInPageV1Script',ASSETS.safeRuntime,'data-qily-translation-safe-fallback');
+    if(!w.__qilyTranslationSafeInPageV2)ensureScript('qilyTranslationSafeInPageV2Script',ASSETS.safeRuntime,'data-qily-translation-safe-fallback');
     if(!w.__qilyTranslationPublicUiV1)ensureScript('qilyTranslationPublicUiV1Script',ASSETS.publicJs,'data-qily-translation-public-ui-fallback');
-    if(!w.__qilyTranslationProgressNoticeV1)ensureScript('qilyTranslationProgressV1Script',ASSETS.progressJs,'data-qily-translation-progress-fallback');
+    if(!w.__qilyTranslationProgressNoticeV2)ensureScript('qilyTranslationProgressV2Script',ASSETS.progressJs,'data-qily-translation-progress-fallback');
     if(!w.__qilyInteractionContrastGuardV1)ensureScript('qilyInteractionContrastGuardV1Script',ASSETS.interactionJs,'data-qily-interaction-contrast-fallback');
     if(!w.__qilyContentContrastGuardV1)ensureScript('qilyContentContrastGuardV1Script',ASSETS.contentJs,'data-qily-content-contrast-fallback');
   }
@@ -94,7 +96,10 @@
   function ensurePrimaryNavCurrentStyles(){if(d.getElementById('qilyPrimaryNavCurrentStateV7'))return;var style=d.createElement('style');style.id='qilyPrimaryNavCurrentStateV7';style.textContent='html body header :is(.qily-global-nav,nav.site-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href][aria-current="page"][data-qily-primary-current="true"]{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a!important;border:2px solid #ffe39b!important;text-decoration-color:#ffe39b!important;text-decoration-thickness:2.2px!important;box-shadow:0 7px 18px rgba(15,75,90,.24)!important}';(d.head||d.documentElement).appendChild(style)}
   function primaryRouteForLink(link){var target;try{target=new URL(link.getAttribute('href')||'',location.origin)}catch(error){return ''}if(target.origin!==location.origin)return '';var path=normalizedPath(target.pathname);return ['/','/capabilities/','/projects/','/improvements/','/knowledge/','/experience/','/links/','/cooperation/','/trust/'].indexOf(path)!==-1?path:''}
   function normalizePrimaryNav(){var path=normalizedPath(location.pathname),modulePath=primaryModule(path);ensurePrimaryNavCurrentStyles();d.querySelectorAll('.qily-global-nav,nav.site-nav,nav.nav').forEach(function(nav){if(!modulePath)return;Array.from(nav.children).forEach(function(link){if(!link.matches||!link.matches('a[href]'))return;var routePath=primaryRouteForLink(link);if(!routePath)return;var active=routePath===modulePath;if(active){link.setAttribute('aria-current','page');link.setAttribute('data-qily-primary-current','true')}else{link.removeAttribute('aria-current');link.removeAttribute('aria-selected');link.removeAttribute('data-current');link.removeAttribute('data-active');link.removeAttribute('data-qily-primary-current');link.classList.remove('active','current','is-active','selected')}})})}
-  function normalizeDock(){var dock=d.getElementById('floatDock');if(!dock)return false;var back=dock.querySelector('[data-action="back"]');if(back){back.setAttribute('data-parent-route',parentRoute(location.pathname));if(sourceMode()){back.setAttribute('title','回到当前页面所属的上一级有效页面');back.setAttribute('aria-label','回上一层')}}dock.querySelectorAll('[data-action="share"]').forEach(function(button){button.remove()});return true}
+  function ensureDockIconStyles(){if(d.getElementById('qilyDockSemanticIconV1'))return;var style=d.createElement('style');style.id='qilyDockSemanticIconV1';style.textContent='html body #floatDock [data-action="top"],html body #floatDock [data-action="back"]{flex-direction:column!important;gap:1px!important}html body #floatDock .qily-dock-semantic-icon{display:grid!important;place-items:center!important;width:17px!important;height:17px!important;flex:0 0 17px!important;line-height:1!important;color:currentColor!important}html body #floatDock .qily-dock-semantic-icon svg{display:block!important;width:16px!important;height:16px!important;fill:none!important;stroke:currentColor!important;stroke-width:2.2!important;stroke-linecap:round!important;stroke-linejoin:round!important}html body #floatDock .qily-dock-semantic-label{display:block!important;max-width:100%!important;line-height:1.02!important;text-align:center!important}';(d.head||d.documentElement).appendChild(style)}
+  function dockIconMarkup(action){return action==='top'?'<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M12 19V5"></path><path d="M6.5 10.5 12 5l5.5 5.5"></path></svg>':'<svg viewBox="0 0 24 24" focusable="false" aria-hidden="true"><path d="M8 7H5v12h12v-3"></path><path d="M9 11 18 2"></path><path d="M12 2h6v6"></path></svg>'}
+  function normalizeDockButton(button,action,label){if(!button)return;var icon=button.querySelector('.qily-dock-semantic-icon'),copy=button.querySelector('.qily-dock-semantic-label');if(!icon||!copy){button.replaceChildren();icon=d.createElement('span');icon.className='qily-dock-semantic-icon';icon.setAttribute('aria-hidden','true');icon.setAttribute('translate','no');icon.innerHTML=dockIconMarkup(action);copy=d.createElement('span');copy.className='qily-dock-semantic-label';copy.textContent=label;button.appendChild(icon);button.appendChild(copy)}if(sourceMode())copy.textContent=label}
+  function normalizeDock(){var dock=d.getElementById('floatDock');if(!dock)return false;ensureDockIconStyles();var top=dock.querySelector('[data-action="top"]'),back=dock.querySelector('[data-action="back"]');normalizeDockButton(top,'top','顶部');normalizeDockButton(back,'back','上一层');if(sourceMode()&&top){top.setAttribute('title','回到页面顶部');top.setAttribute('aria-label','回顶部')}if(back){back.setAttribute('data-parent-route',parentRoute(location.pathname));if(sourceMode()){back.setAttribute('title','回到当前页面所属的上一级有效页面');back.setAttribute('aria-label','回上一层')}}dock.querySelectorAll('[data-action="share"]').forEach(function(button){button.remove()});return true}
   function removeLegacyPureDdzHomeEntry(){if(normalizedPath(location.pathname)!=='/')return;var stable=d.getElementById('qilyPureDdzStableEntry');if(stable)stable.remove();d.querySelectorAll('[data-qily-pure-ddz-entry="hero"]').forEach(function(link){link.remove()})}
   function reconcileFast(){ensureSitewideBaselineAssets();normalizePrimaryNav();normalizeDock();removeLegacyPureDdzHomeEntry()}
   function boot(){rememberBuild();ensureSitewideBaselineAssets();reconcileFast()}
