@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-08-14",
+  "updatedAt": "2026-08-27",
   "officialWebsite": "https://qilylean.com",
   "supportEmail": "admin@qilylean.com",
   "apps": {
@@ -19,11 +19,23 @@
         "status": "用于官网直接下载与试用；不作为Google Play首发AAB的上传签名或后续升级签名基线"
       },
       "storeCandidate": {
-        "versionName": "1.1.13",
-        "versionCode": 16,
+        "versionName": "1.1.14",
+        "versionCode": 17,
         "targetSdk": 36,
-        "label": "Google Play首发候选版",
-        "status": "固定Google Play Upload Key已生成并用于AAB签名；AAB构建、包名、版本、API 36与最小定位权限校验通过；待Play Console上传、测试与审核"
+        "label": "Google Play封闭测试候选版",
+        "status": "沿用既有固定Upload Key签名；AAB构建、包名、版本、API 36与发布包校验通过；2026-08-27三星C55真机安装验证通过；进入重新创建Google Play封闭测试轨道阶段"
+      },
+      "realDeviceValidation": {
+        "date": "2026-08-27",
+        "device": "Samsung C55",
+        "versionName": "1.1.14",
+        "versionCode": 17,
+        "targetSdk": 36,
+        "result": "真机安装及代表性核心界面验证通过",
+        "screenshots": [
+          "/assets/tools/times26001-v1.1.14-home-samsung-c55.webp",
+          "/assets/tools/times26001-v1.1.14-gallery-samsung-c55.webp"
+        ]
       },
       "productPage": "https://qilylean.com/tools/times26001",
       "privacy": "https://qilylean.com/legal/times26001/privacy",
@@ -31,11 +43,11 @@
       "support": "https://qilylean.com/app-support",
       "officialWebsiteLinkPolicy": "APP可展示并由用户主动访问QilyLean官方网址与官网邮箱；用户可见、复制和分享的官方网址不带尾斜杠；真实子路径保留域名后的分隔斜杠；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK",
       "latestBuild": {
-        "versionName": "1.1.13",
-        "versionCode": 16,
+        "versionName": "1.1.14",
+        "versionCode": 17,
         "targetSdk": 36,
         "label": "最新Google Play构建",
-        "status": "按2026-08-14 R5最终口径发布：顶部LOGO统一为官网横版标准；官网邮箱统一；用户可见官方网址无尾斜杠；子路径分隔完整；保留天气定位可靠性修正；APK包名/版本/API发布链一致性复核通过",
+        "status": "v1.1.14 / code17 / API36已通过TypeScript、Vite生产构建、Android release APK/AAB构建、统一身份与品牌治理校验；已使用既有Upload Key完成Google Play AAB签名，并完成三星C55真机安装与首页、万年历、天气、计时、设置等代表性界面验证",
         "upgradeFromHistoricalPublicApk": "官网独立分发包与Google Play发布链分开管理；Google Play后续版本持续使用同一Upload Key并由Play App Signing管理最终分发签名"
       }
     },
