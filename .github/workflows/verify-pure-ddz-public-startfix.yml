@@ -27,14 +27,15 @@ jobs:
           set -euo pipefail
           ok=0
           for i in {1..48}; do
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v124' -o /tmp/page.html || true
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v124' -o /tmp/game.js || true
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v124' -o /tmp/card-theme.js || true
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v124' -o /tmp/qily-theme.js || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v124b' -o /tmp/page.html || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v124b' -o /tmp/game.js || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v124b' -o /tmp/card-theme.js || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v124b' -o /tmp/qily-theme.js || true
             if grep -Fq '20260828-elder-ux-v124' /tmp/page.html 2>/dev/null \
               && grep -Fq "const VERSION = '1.2.4'" /tmp/game.js 2>/dev/null \
               && grep -Fq "state.settings.difficulty==='expert'?1750+Math.random()*450" /tmp/game.js 2>/dev/null \
               && ! grep -Fq 'C919' /tmp/card-theme.js 2>/dev/null \
+              && grep -Fq 'bottom-cards>.mini-card' /tmp/card-theme.js 2>/dev/null \
               && grep -Fq 'QilyLeanDDZElderV123' /tmp/qily-theme.js 2>/dev/null \
               && grep -Fq 'js/visual-v120.js' /tmp/page.html 2>/dev/null; then
               ok=1
@@ -64,7 +65,7 @@ jobs:
               const errors=[]; const dialogs=[];
               page.on('pageerror',e=>errors.push(e.stack||String(e)));
               page.on('dialog',async d=>{dialogs.push(d.message());await d.dismiss();});
-              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v124',{waitUntil:'domcontentloaded',timeout:60000});
+              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v124b',{waitUntil:'domcontentloaded',timeout:60000});
               await page.evaluate(()=>{localStorage.clear();localStorage.setItem('qily_global_language_v3','zh-CN');});
               await page.reload({waitUntil:'domcontentloaded',timeout:60000});
               await page.waitForFunction(()=>Boolean(window.PureDDZTest)&&Boolean(window.QilyLeanDDZElderV123)&&Boolean(window.QilyLeanCardTheme)&&document.documentElement.classList.contains('ddz-ready'),null,{timeout:12000});
@@ -84,19 +85,19 @@ jobs:
                 await page.waitForTimeout(1000);
                 const geometry=await page.evaluate(()=>{
                   const rect=selector=>{const el=document.querySelector(selector);if(!el)return null;const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
-                  const topButtons=[...document.querySelectorAll('.top-actions>*')].map(el=>{const r=el.getBoundingClientRect();return {text:(el.textContent||'').trim(),width:r.width,height:r.height,top:r.top,bottom:r.bottom};});
-                  const bottom=document.createElement('span');bottom.className='mini-card qily-mini-business';bottom.innerHTML='<b>8♣</b><small>知识</small>';document.querySelector('#bottom-cards').appendChild(bottom);const bottomRect=bottom.getBoundingClientRect();bottom.remove();
+                  const topButtons=[...document.querySelectorAll('.top-actions>*')].map(el=>{const r=el.getBoundingClientRect();return {text:(el.textContent||'').trim(),left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};});
+                  const bottom=document.createElement('span');bottom.className='mini-card qily-mini-business';bottom.innerHTML='<b>8♣</b><small>知识</small>';document.querySelector('#bottom-cards').appendChild(bottom);const bottomRect=bottom.getBoundingClientRect();const bottomStyle=getComputedStyle(bottom);bottom.remove();
                   const played=document.createElement('div');played.className='v120-play-card';document.body.appendChild(played);const playedRect=played.getBoundingClientRect();played.remove();
                   const jokerHtml=window.QilyLeanCardTheme.renderCard({id:52,rank:16,suit:'🃏'});
                   const dock=document.querySelector('#floatDock');
                   const dockBtn=dock?.querySelector('.qily-float-btn');
                   const dockRect=dock?.getBoundingClientRect();const dockBtnRect=dockBtn?.getBoundingClientRect();
-                  return {brand:rect('.topbar .brand'),score:rect('.topbar .scoreboard'),actions:rect('.topbar .top-actions'),translate:rect('.topbar .qily-web-translate')||rect('#qilyGlobalTranslationDualRouteV2'),topButtons,bottom:{width:bottomRect.width,height:bottomRect.height},played:{width:playedRect.width,height:playedRect.height},jokerHtml,dock:dockRect?{width:dockRect.width,height:dockRect.height}:null,dockBtn:dockBtnRect?{width:dockBtnRect.width,height:dockBtnRect.height}:null};
+                  return {brand:rect('.topbar .brand'),score:rect('.topbar .scoreboard'),actions:rect('.topbar .top-actions'),translate:rect('.topbar .qily-web-translate')||rect('#qilyGlobalTranslationDualRouteV2'),topButtons,bottom:{width:bottomRect.width,height:bottomRect.height,cssWidth:bottomStyle.width,cssHeight:bottomStyle.height},played:{width:playedRect.width,height:playedRect.height},jokerHtml,dock:dockRect?{width:dockRect.width,height:dockRect.height}:null,dockBtn:dockBtnRect?{width:dockBtnRect.width,height:dockBtnRect.height}:null};
                 });
                 console.log('desktop geometry',JSON.stringify(geometry,null,2));
                 if(overlaps(geometry.brand,geometry.score)) throw new Error('header brand overlaps scoreboard '+JSON.stringify(geometry));
                 if(overlaps(geometry.brand,geometry.actions)||overlaps(geometry.score,geometry.actions)) throw new Error('header rows overlap '+JSON.stringify(geometry));
-                if(geometry.translate&&(overlaps(geometry.translate,geometry.brand)||overlaps(geometry.translate,geometry.score)||overlaps(geometry.translate,geometry.actions))) throw new Error('translation control overlaps header content '+JSON.stringify(geometry));
+                for(let i=0;i<geometry.topButtons.length;i++)for(let j=i+1;j<geometry.topButtons.length;j++)if(overlaps(geometry.topButtons[i],geometry.topButtons[j]))throw new Error('top action siblings overlap '+JSON.stringify([geometry.topButtons[i],geometry.topButtons[j]]));
                 if(geometry.topButtons.some(item=>item.height>75||item.width<78)) throw new Error('top action button collapsed/vertical '+JSON.stringify(geometry.topButtons));
                 if(geometry.bottom.width<95||geometry.bottom.height<120) throw new Error('bottom card not enlarged '+JSON.stringify(geometry.bottom));
                 if(geometry.played.width<118||geometry.played.height<170) throw new Error('played card not enlarged '+JSON.stringify(geometry.played));
