@@ -345,3 +345,6 @@ html body :where(.module-footer, .footer, .contact-card, .qily-float-dock) a[hre
     outline: 0 !important;
   }
 }
+
+/* QILY-MAILTO-CONTINUOUS-UNDERLINE:20260827 */
+a[href^="mailto:"]{text-decoration-line:underline!important;text-decoration-style:solid!important;text-decoration-thickness:1px!important;text-underline-offset:3px!important;text-decoration-skip-ink:none!important;white-space:nowrap!important;word-break:normal!important;overflow-wrap:normal!important}

@@ -12,7 +12,7 @@
     times26001:{
       name:'Times26001',
       url:'https://qilylean.com/tools/times26001/#android-download',
-      download:'https://qilylean.com/Times26001-Android-v1.1.13-Standard-Website-Logo.apk?build=efe5e188',
+      download:'https://qilylean.com/Times26001-Android-v1.1.14-Standard-Website-Logo.apk?build=20260827-v114',
       qr:'/assets/tools/qr-times26001-download.svg?v=20260808-share-v1'
     },
     qilyleanHome:{

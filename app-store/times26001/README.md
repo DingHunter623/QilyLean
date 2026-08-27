@@ -21,7 +21,7 @@
 
 ## 1. 官网与 Google Play 发布链关联
 
-- 当前官网独立分发包：`1.1.13` / versionCode `16`，用于官网直接下载与试用；
+- 当前官网独立分发包：`1.1.13` / versionCode `17`，用于官网直接下载与试用；
 - 当前 Google Play 封闭测试候选版：`1.1.14` / versionCode `17` / Android API `36`；
 - v1.1.14 Google Play AAB 已沿用既有固定 **Upload Key** 完成签名；
 - v1.1.14 已完成 TypeScript、Vite 正式构建、Android release APK/AAB、包名、版本、targetSdk、统一身份与品牌治理校验；

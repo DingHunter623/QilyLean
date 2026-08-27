@@ -11,12 +11,13 @@
       "historicalName": "思大时间管理",
       "packageName": "com.qilylean.times26001",
       "publicRelease": {
-        "versionName": "1.1.13",
-        "versionCode": 16,
-        "apk": "/Times26001-Android-v1.1.13-Standard-Website-Logo.apk",
-        "sha256": "/Times26001-Android-v1.1.13-Standard-Website-Logo.sha256.txt",
-        "label": "当前官网安装包（R5官网标准LOGO、官网邮箱与URL V14精细化统一版）",
-        "status": "用于官网直接下载与试用；不作为Google Play首发AAB的上传签名或后续升级签名基线"
+        "versionName": "1.1.14",
+        "versionCode": 17,
+        "apk": "/Times26001-Android-v1.1.14-Standard-Website-Logo.apk",
+        "sha256": "/Times26001-Android-v1.1.14-Standard-Website-Logo.sha256.txt",
+        "label": "当前官网安装包（v1.1.14 / code17 / API36 / QilyLean统一LOGO）",
+        "status": "用于官网直接下载与试用；采用官网独立测试签名分发链，与Google Play Upload Key / Play App Signing链严格分开管理；签名不同的旧测试版可能需要卸载后安装",
+        "targetSdk": 36
       },
       "storeCandidate": {
         "versionName": "1.1.14",
