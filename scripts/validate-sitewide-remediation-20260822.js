@@ -47,25 +47,32 @@ assert(consistency.includes("normalizeDockButton(top,'top','顶部')"),'Shared s
 assert(consistency.includes("normalizeDockButton(back,'back','上一层')"),'Shared shell Dock back semantic normalization missing.');
 assert(consistency.includes('qily-dock-semantic-icon'),'Language-neutral Dock semantic icon missing.');
 
-/* One public baseline owns source-clean translation recovery, navigation and readability. */
-assert(materializer.includes("const SAFE_VERSION = '20260827-source-recovery-v4'"),'Source-recovery translation version owner missing.');
-assert(materializer.includes("const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260827-translation-dock-resource-v46'"),'Translation/Dock shared-shell cache owner missing.');
+/* One public baseline owns resilient long-page translation, navigation and readability. */
+assert(materializer.includes("const SAFE_VERSION = '20260828-long-page-resilience-v5'"),'Long-page translation version owner missing.');
+assert(materializer.includes("const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260828-translation-resilience-v47'"),'Translation-resilience shared-shell cache owner missing.');
 assert(materializer.includes("const NAVIGATION = '/site-navigation.js?v=20260827-translation-dock-resource-v46'"),'Navigation V46 cache owner missing.');
-assert(materializer.includes('data-qily-translation-safe-direct="inpage-v3"'),'Deferred safe translation V3 runtime missing.');
-assert(materializer.includes('/site-translation-progress-v1.js?v=20260827-source-recovery-v4'),'Deterministic source-recovery progress owner missing.');
+assert(materializer.includes('data-qily-translation-safe-direct="inpage-v4"'),'Deferred safe translation V4 runtime missing.');
+assert(materializer.includes('/site-translation-progress-v1.js?v=20260828-long-page-resilience-v5'),'Resilient translation progress owner missing.');
 assert(materializer.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'),'Content contrast V6 owner missing.');
 assert(materializer.includes('data-qily-content-contrast-direct="v6"'),'Content contrast V6 static marker missing.');
 assert(!materializer.includes('LEGACY_LANGUAGE_SRC'),'Retired translator is still owned by public materializer.');
-assert(consistency.includes("BUILD_ID='20260827-translation-dock-closure-v5'"),'Shared shell translation/Dock closure build missing.');
-assert(consistency.includes("safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260827-source-recovery-v4'"),'Shared shell safe runtime is stale.');
+assert(consistency.includes("BUILD_ID='20260828-translation-resilience-v6'"),'Shared shell translation-resilience build missing.');
+assert(consistency.includes("safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260828-long-page-resilience-v5'"),'Shared shell safe runtime is stale.');
 assert(consistency.includes("contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6'"),'Shared shell content contrast V6 CSS is stale.');
 assert(consistency.includes("contentJs:'/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'"),'Shared shell content contrast V6 JS is stale.');
 assert(safe.includes('function nearViewport(el)'),'Visible-first translation missing.');
-assert(safe.includes('function retryFailed('),'Targeted translation retry missing.');
-assert(safe.includes('function recoverChinese(reason)'),'Atomic Chinese source recovery missing.');
+assert(safe.includes('function retryFailedAdaptive('),'Adaptive translation retry missing.');
+assert(safe.includes('function retryableStatus(status)'),'Retryable endpoint failure classification missing.');
+assert(safe.includes("setDocumentLanguage(target,'translated-partial')"),'Partial translation preservation missing.');
+assert(safe.includes('function scheduleHealing('),'Background translation healing missing.');
+assert(safe.includes('[900,2600,6200,12000]'),'Long-page healing cadence missing.');
+assert(!safe.includes('function recoverChinese(reason)'),'Whole-page rollback after translation failure must not return.');
+assert(!safe.includes("recoverChinese('visible-translation-incomplete')"),'Visible-batch whole-page rollback returned.');
+assert(!safe.includes("recoverChinese('background-translation-incomplete')"),'Background-batch whole-page rollback returned.');
+assert(!safe.includes("recoverChinese('translation-service-unavailable')"),'Service-failure whole-page rollback returned.');
 assert(safe.includes("if(text.length<2&&!/[\\u3400-\\u9fff]/.test(text))return false"),'Single-Han UI translation coverage missing.');
-assert(safe.includes("setState('idle','中文原文')"),'Source recovery does not return public state to idle.');
-assert(!safe.includes("setState('error'"),'Source recovery must not leave a public error overlay state.');
+assert(safe.includes("setState('idle','中文原文')"),'Explicit source restore does not return public state to idle.');
+assert(!safe.includes("setState('error'"),'Translation resilience must not leave a blocking public error state.');
 assert(safe.includes("ENDPOINT_KEY='qily_translation_preferred_endpoint_v2'"),'Translation endpoint reuse missing.');
 
 let last=-1;
@@ -82,9 +89,10 @@ assert(publicUi.includes('measuredTextWidth'),'Selected-language measured width 
 assert(publicUi.includes('data-qily-language-name-complete'),'Selected-language completeness state missing.');
 assert(publicUiCss.includes('overflow-x:auto!important'),'Navigation horizontal movement is not enabled.');
 assert(publicUiCss.includes('max-width:420px!important'),'Long selected language can still be clipped on desktop.');
-assert(progress.includes('Translation Progress Notice V3'),'Translation progress V3 missing.');
+assert(progress.includes('Translation Progress Notice V4'),'Translation progress V4 missing.');
 assert(progress.includes('function sourceIsSettled()'),'Source-mode progress suppression missing.');
 assert(progress.includes('hideNow();return'),'Settled Chinese source can still retain a progress notice.');
+assert(progress.includes('Translated content is preserved while remaining sections retry.'),'Partial state can still imply a rollback.');
 assert(progressCss.includes('bottom:max(16px,env(safe-area-inset-bottom))'),'Translation progress notice does not avoid the header/Hero area.');
 assert(progressCss.includes('pointer-events:none'),'Translation progress notice must remain non-blocking.');
 assert(interactionContrast.includes("setAttribute('data-qily-interaction-contrast'"),'Interactive contrast guard missing.');
@@ -113,4 +121,4 @@ for(const relative of trackedHtml()){
 }
 assert(navigationPages>=460,`Navigation coverage unexpectedly fell to ${navigationPages} pages.`);
 assert(stale.length===0,`Stale public shell entries: ${stale.slice(0,20).join(', ')}`);
-process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages plus source-clean translation recovery V3, semantic Dock icons, readable surfaces and mobile navigation (${runtimeBaseline}).\n`);
+process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages plus resilient long-page translation V4, semantic Dock icons, readable surfaces and mobile navigation (${runtimeBaseline}).\n`);
