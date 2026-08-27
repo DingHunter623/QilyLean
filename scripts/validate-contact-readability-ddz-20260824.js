@@ -77,7 +77,7 @@ assert(buildPages>=460,'首屏缓存覆盖页数量异常：'+buildPages);
 
 const ddz=read('tools/pure-ddz/index.html');
 [
-  "const version='20260828-elder-ux-v123'",
+  "const version='20260828-elder-ux-v124'",
   "loadStyle('css/card-comfort-v122.css')",
   'name="screen-orientation" content="landscape"',
   'name="x5-orientation" content="landscape"',
@@ -92,13 +92,16 @@ assert(ddz.indexOf("loadStyle('css/visual-v120.css')")<ddz.indexOf("loadStyle('c
 
 const comfort=read('tools/pure-ddz/game/css/card-comfort-v122.css');
 [
-  'width:80vw',
+  'grid-template-areas:"brand score translate" "actions actions actions"',
+  '.bottom-cards .mini-card{min-width:98px',
+  '.v120-play-card{flex-basis:124px',
+  '#floatDock.qily-float-dock.qily-float-dock',
   'font-size:38px',
   '.round-meta span',
   '.hint-message',
   '#audio-toggle,#help-open,#settings-open',
   '.qily-product-overview summary span'
-].forEach(marker=>assert(comfort.includes(marker),'斗地主长辈可视性契约缺失：'+marker));
+].forEach(marker=>assert(comfort.includes(marker),'斗地主 v1.2.4 长辈可视性契约缺失：'+marker));
 
 const qilyTheme=read('tools/pure-ddz/game/js/qilylean-theme.js');
 [
@@ -112,7 +115,14 @@ const qilyTheme=read('tools/pure-ddz/game/js/qilylean-theme.js');
 const visual=read('tools/pure-ddz/game/js/visual-v120.js');
 ['IS_WECHAT_WEBVIEW','IS_MOBILE_DEVICE','wechatWebView:IS_WECHAT_WEBVIEW','mobileDevice:IS_MOBILE_DEVICE',"screen.orientation.lock('landscape')","['welcome-start','start','again']",'手机默认横屏牌桌'].forEach(marker=>assert(visual.includes(marker),'斗地主手机横屏运行契约缺失：'+marker));
 assert(!visual.includes('if(IS_WECHAT_WEBVIEW||!isTouchMobile())return false'),'斗地主不得再禁止微信内的横屏请求');
+
 const theme=read('tools/pure-ddz/game/js/card-theme.js');
 assert(theme.includes('if(window.__PURE_DDZ_MANAGED_LOADER__)return'),'斗地主重复加载保护缺失');
+assert(!theme.includes('C919'),'斗地主牌面不得出现 C919');
+assert(theme.includes("16:{type:'small-joker',title:'小王',image:assetUrl('avatar-king.webp')}")&&theme.includes("17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}"),'小王/大王必须采用同一视觉人物图');
+assert(theme.includes('.qily-card--joker .qily-card-main{display:none!important}'),'大小王不得显示额外业务字样');
+
 const game=read('tools/pure-ddz/game/js/game.js');
 assert(!game.includes("serviceWorker?.register('./sw.js')"),'斗地主不得请求不存在的 Service Worker');
+assert(game.includes("const VERSION = '1.2.4'"),'斗地主运行时版本未升级到 1.2.4');
+assert(game.includes("state.settings.difficulty==='expert'?1750+Math.random()*450"),'专家模式出牌间隔未按长辈阅读节奏放慢');
