@@ -6,7 +6,10 @@ on:
     paths:
       - "**.html"
       - "sitemap.xml"
+      - "sitemap-core.xml"
+      - "sitemap-topics.xml"
       - "robots.txt"
+      - "data/search-authority-map.json"
   workflow_dispatch:
 
 permissions:
@@ -26,6 +29,8 @@ jobs:
       INDEXNOW_KEY: b47ed759da519bd90586a7877122d7be
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Wait for the published key
         shell: bash
@@ -40,18 +45,88 @@ jobs:
           echo "The published IndexNow key was not available in time."
           exit 1
 
-      - name: Submit canonical sitemap URLs
+      - name: Build changed authority URL list
+        id: urls
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          import subprocess
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          from urllib.parse import urlparse
+
+          origin = os.environ["SITE_ORIGIN"].rstrip("/")
+          event = os.environ.get("GITHUB_EVENT_NAME", "push")
+          namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+
+          def sitemap_urls(path):
+              file = Path(path)
+              if not file.exists():
+                  return []
+              root = ET.parse(file).getroot()
+              return [node.text.strip() for node in root.findall("sm:url/sm:loc", namespace) if node.text and node.text.strip()]
+
+          topic_urls = sitemap_urls("sitemap-topics.xml")
+          urls = set(topic_urls if event == "workflow_dispatch" else [])
+
+          try:
+              changed = subprocess.check_output(["git", "diff", "--name-only", "HEAD^", "HEAD"], text=True).splitlines()
+          except Exception:
+              changed = subprocess.check_output(["git", "show", "--pretty=", "--name-only", "HEAD"], text=True).splitlines()
+
+          for name in changed:
+              path = Path(name)
+              if name.endswith(".html") and path.exists():
+                  html = path.read_text(encoding="utf-8", errors="ignore")
+                  if re.search(r'<meta\s+[^>]*name=["\'](?:robots|googlebot)["\'][^>]*content=["\'][^"\']*\bnoindex\b', html, re.I):
+                      continue
+                  match = re.search(r'<link\b[^>]*rel=["\']canonical["\'][^>]*href=["\'](https://qilylean\.com[^"\']*)["\']', html, re.I)
+                  if not match:
+                      match = re.search(r'<link\b[^>]*href=["\'](https://qilylean\.com[^"\']*)["\'][^>]*rel=["\']canonical["\']', html, re.I)
+                  if match:
+                      urls.add(match.group(1))
+
+              if name in {"sitemap-topics.xml", "data/search-authority-map.json"}:
+                  urls.update(topic_urls)
+
+              if name in {"sitemap.xml", "sitemap-core.xml"}:
+                  try:
+                      diff = subprocess.check_output(["git", "diff", "HEAD^", "HEAD", "--", name], text=True)
+                  except Exception:
+                      diff = ""
+                  for candidate in re.findall(r'^\+.*?<loc>\s*(https://qilylean\.com[^<]+)\s*</loc>', diff, re.M):
+                      urls.add(candidate.strip())
+
+          clean = []
+          for url in sorted(urls):
+              parsed = urlparse(url)
+              if parsed.scheme == "https" and parsed.netloc == os.environ["SITE_HOST"]:
+                  clean.append(url.rstrip("/") if parsed.path != "/" else origin)
+
+          clean = list(dict.fromkeys(clean))
+          Path("search-engine-urls.txt").write_text("\n".join(clean) + ("\n" if clean else ""), encoding="utf-8")
+          Path("search-engine-urls.json").write_text(json.dumps(clean, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"count={len(clean)}\n")
+          print(f"Prepared {len(clean)} changed/high-authority URLs for discovery.")
+          for url in clean:
+              print(url)
+          PY
+
+      - name: Submit changed URLs through IndexNow
+        if: steps.urls.outputs.count != '0'
         shell: bash
         run: |
           python3 - <<'PY'
           import json
           import os
           import urllib.request
-          import xml.etree.ElementTree as ET
 
-          namespace = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
-          root = ET.parse("sitemap.xml").getroot()
-          urls = [node.text for node in root.findall("sm:url/sm:loc", namespace) if node.text]
+          with open("search-engine-urls.json", encoding="utf-8") as file:
+              urls = json.load(file)
           payload = json.dumps({
               "host": os.environ["SITE_HOST"],
               "key": os.environ["INDEXNOW_KEY"],
@@ -67,3 +142,19 @@ jobs:
           with urllib.request.urlopen(request, timeout=30) as response:
               print(f"IndexNow accepted {len(urls)} URLs with HTTP {response.status}.")
           PY
+
+      - name: Submit changed URLs to Baidu when configured
+        if: steps.urls.outputs.count != '0'
+        env:
+          BAIDU_PUSH_TOKEN: ${{ secrets.BAIDU_PUSH_TOKEN }}
+        shell: bash
+        run: |
+          if [ -z "$BAIDU_PUSH_TOKEN" ]; then
+            echo "BAIDU_PUSH_TOKEN is not configured; skipping Baidu API submission."
+            exit 0
+          fi
+          response="$(curl --fail --silent --show-error \
+            -H 'Content-Type: text/plain' \
+            --data-binary @search-engine-urls.txt \
+            "http://data.zz.baidu.com/urls?site=$SITE_ORIGIN&token=$BAIDU_PUSH_TOKEN")"
+          echo "$response"
