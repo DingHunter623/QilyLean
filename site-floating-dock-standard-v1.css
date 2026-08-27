@@ -1,6 +1,7 @@
-/* QilyLean sitewide floating dock standard v4｜2026-08-27
+/* QilyLean sitewide floating dock standard v5｜2026-08-28
  * One visual contract for every public page, desktop and mobile.
- * V4 preserves free X/Y dragging + bottom-right snapback and gives the six dock labels a governed gold identity.
+ * V5 preserves free X/Y dragging + bottom-right snapback, governs the six dock labels,
+ * and explicitly removes the interactive dock from print/PDF output.
  */
 :root{
   --qily-dock-size:62px;
@@ -153,4 +154,17 @@ html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url
 
 @media(prefers-reduced-motion:reduce){
   html body #floatDock.qily-float-dock .qily-float-btn{transition:none!important;}
+}
+
+/* Interactive navigation must never be captured into OPL/knowledge print or PDF exports. */
+@media print{
+  html body #floatDock,
+  html body #floatDock.qily-float-dock,
+  html body .qily-floating-dock,
+  html body .qily-float-dock{
+    display:none!important;
+    visibility:hidden!important;
+    opacity:0!important;
+    pointer-events:none!important;
+  }
 }
