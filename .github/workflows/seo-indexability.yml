@@ -11,6 +11,7 @@ on:
       - 'data/search-authority-map.json'
       - 'scripts/validate-seo-indexability.js'
       - 'scripts/validate-search-authority.js'
+      - 'scripts/validate-search-engine-discovery.js'
       - 'package.json'
       - '.github/workflows/seo-indexability.yml'
   pull_request:
@@ -22,6 +23,7 @@ on:
       - 'data/search-authority-map.json'
       - 'scripts/validate-seo-indexability.js'
       - 'scripts/validate-search-authority.js'
+      - 'scripts/validate-search-engine-discovery.js'
       - 'package.json'
       - '.github/workflows/seo-indexability.yml'
   workflow_dispatch:
@@ -43,3 +45,5 @@ jobs:
         run: node scripts/validate-seo-indexability.js
       - name: Validate search authority contracts
         run: node scripts/validate-search-authority.js
+      - name: Validate search engine discovery contracts
+        run: node scripts/validate-search-engine-discovery.js
