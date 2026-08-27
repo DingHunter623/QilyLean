@@ -1,29 +1,38 @@
 name: Verify Pure DDZ Public Start Fix
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-pure-ddz-public-startfix.yml'
+      - 'tools/pure-ddz/**'
   pull_request:
     paths:
       - '.github/workflows/verify-pure-ddz-public-startfix.yml'
+      - 'tools/pure-ddz/**'
   workflow_dispatch:
 
 jobs:
   public-start:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Wait for deployed fixed runtime
+      - name: Wait for deployed elder runtime
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           ok=0
           for i in {1..48}; do
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=startfix-20260823' -o /tmp/page.html || true
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=startfix-20260823' -o /tmp/game.js || true
-            if grep -q "let now=0" /tmp/game.js 2>/dev/null \
-              && grep -q "render();try{startMusic();}" /tmp/game.js 2>/dev/null \
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v123' -o /tmp/page.html || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v123' -o /tmp/game.js || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v123' -o /tmp/qily-theme.js || true
+            if grep -q '20260828-elder-ux-v123' /tmp/page.html 2>/dev/null \
+              && grep -q "let now=0" /tmp/game.js 2>/dev/null \
+              && grep -q 'QilyLeanDDZElderV123' /tmp/qily-theme.js 2>/dev/null \
               && grep -q "js/visual-v120.js" /tmp/page.html 2>/dev/null; then
               ok=1
               break
@@ -32,12 +41,13 @@ jobs:
           done
           test "$ok" = 1
           node --check /tmp/game.js
+          node --check /tmp/qily-theme.js
       - name: Install Chromium
         run: |
           npm init -y >/dev/null 2>&1
           npm install --silent @playwright/test@1.55.0
           npx playwright install --with-deps chromium
-      - name: Public desktop and mobile start smoke
+      - name: Public desktop and mobile elder start smoke
         run: |
           node <<'NODE'
           const { chromium } = require('@playwright/test');
@@ -49,23 +59,35 @@ jobs:
               const errors=[]; const dialogs=[];
               page.on('pageerror',e=>errors.push(e.stack||String(e)));
               page.on('dialog',async d=>{dialogs.push(d.message());await d.dismiss();});
-              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=startfix-20260823',{waitUntil:'domcontentloaded',timeout:60000});
+              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v123',{waitUntil:'domcontentloaded',timeout:60000});
               await page.evaluate(()=>{localStorage.clear();localStorage.setItem('qily_global_language_v3','zh-CN');});
               await page.reload({waitUntil:'domcontentloaded',timeout:60000});
-              await page.waitForFunction(()=>Boolean(window.PureDDZTest)&&document.documentElement.classList.contains('ddz-ready'),null,{timeout:10000});
+              await page.waitForFunction(()=>Boolean(window.PureDDZTest)&&Boolean(window.QilyLeanDDZElderV123)&&document.documentElement.classList.contains('ddz-ready'),null,{timeout:12000});
+              const exact=await page.evaluate(()=>{
+                const mk=(player,type,rank,count)=>({player,combo:{type,main:rank},cards:Array.from({length:count},(_,i)=>({id:player*20+i,rank}))});
+                return {
+                  rightK:window.QilyLeanDDZElderV123.describePlay(mk(2,'triple',13,3)),
+                  leftA:window.QilyLeanDDZElderV123.describePlay(mk(1,'bomb',14,4)),
+                  meRocket:window.QilyLeanDDZElderV123.describePlay({player:0,combo:{type:'rocket',main:17},cards:[{id:52,rank:16},{id:53,rank:17}]})
+                };
+              });
+              if(exact.rightK!=='右家，3个K') throw new Error('right triple announcement wrong: '+JSON.stringify(exact));
+              if(exact.leftA!=='左家，4个A，炸弹') throw new Error('left bomb announcement wrong: '+JSON.stringify(exact));
+              if(exact.meRocket!=='我，王炸') throw new Error('rocket announcement wrong: '+JSON.stringify(exact));
               const welcome=page.locator('#welcome');
               if(await welcome.isVisible().catch(()=>false)) await page.locator('#welcome-start').click();
               else await page.locator('#start').click();
               await page.waitForTimeout(1500);
-              const result=await page.evaluate(()=>({phase:window.PureDDZTest.getState().phase,stateHand:window.PureDDZTest.getState().hands[0].length,domHand:document.querySelectorAll('#hand .card').length,strips:document.querySelectorAll('.qily-business-strip').length}));
-              console.log({viewport,result,errors,dialogs});
+              const result=await page.evaluate(()=>({phase:window.PureDDZTest.getState().phase,stateHand:window.PureDDZTest.getState().hands[0].length,domHand:document.querySelectorAll('#hand .card').length,strips:document.querySelectorAll('.qily-business-strip').length,elder:Boolean(window.QilyLeanDDZElderV123)}));
+              console.log({viewport,result,exact,errors,dialogs});
               if(dialogs.length) throw new Error('unexpected initial dialog '+dialogs.join('|'));
               if(result.stateHand<17||result.domHand<17) throw new Error('cards not visible '+JSON.stringify(result));
               if(!['bidding','playing'].includes(result.phase)) throw new Error('bad phase '+JSON.stringify(result));
-              if(result.strips!==0) throw new Error('business strip present');
+              if(result.strips!==0||!result.elder) throw new Error('elder runtime not ready');
               if(errors.length) throw new Error(errors.join('\n'));
               await page.close();
             }
             await browser.close();
+            console.log('PURE_DDZ_PUBLIC_ELDER_START_AND_ANNOUNCEMENT_OK');
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
