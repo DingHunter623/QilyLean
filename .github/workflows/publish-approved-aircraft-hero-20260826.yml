@@ -37,7 +37,7 @@ jobs:
           set -euo pipefail
           SOURCE='官网首图.png'
           TARGET='assets/qilylean-aircraft-hero-approved-20260826.png'
-          EXPECTED_BLOB='e67ad824312acecab66a7b93e4f9e38b85835af9'
+          EXPECTED_BLOB='e67ad0ac7881da8e0fdbf6041fb9858882204ac4'
 
           test -f "$SOURCE"
           ACTUAL_BLOB="$(git hash-object "$SOURCE")"
