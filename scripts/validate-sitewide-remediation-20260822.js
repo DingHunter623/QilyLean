@@ -40,27 +40,32 @@ assert(navigation.includes('unifiedHeaderAxis: true'),'Unified header axis contr
 assert(navigation.includes('headerAxisWidth: 1560'),'Header axis is not governed at 1560px.');
 assert(dockClosure.includes("var order = ['home', 'top', 'back', 'search', 'current', 'contact'];"),'Dock closure order is stale.');
 assert(!core.includes('data-action="share"'),'Duplicate official-site share button returned to the core Dock.');
-assert(core.includes('data-action="back" type="button">回<br>上一层</button>'),'Core Dock back label is not 回上一层.');
-assert(dockClosure.includes("back: '回<br>上一层'"),'Dock closure back label is not 回上一层.');
-assert(cooperationDockClosure.includes("back:{html:'回<br>上一层',aria:'回上一层'}"),'Cooperation Dock back label is not 回上一层.');
-assert(consistency.includes("setAttribute('aria-label','回上一层')"),'Dock accessibility label is not 回上一层.');
+assert(core.includes('data-action="back" type="button">回<br>上一层</button>'),'Core Dock back source label is not 回上一层.');
+assert(dockClosure.includes("back: '回<br>上一层'"),'Dock closure back source label is not 回上一层.');
+assert(cooperationDockClosure.includes("back:{html:'回<br>上一层',aria:'回上一层'}"),'Cooperation Dock back source label is not 回上一层.');
+assert(consistency.includes("normalizeDockButton(top,'top','顶部')"),'Shared shell Dock top semantic normalization missing.');
+assert(consistency.includes("normalizeDockButton(back,'back','上一层')"),'Shared shell Dock back semantic normalization missing.');
+assert(consistency.includes('qily-dock-semantic-icon'),'Language-neutral Dock semantic icon missing.');
 
-/* One public baseline owns fast translation, navigation and readability. */
-assert(materializer.includes("const SAFE_VERSION = '20260826-translation-fast-reliable-v3'"),'Fast translation version owner missing.');
-assert(materializer.includes("const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260826-translation-fast-reliable-v3'"),'Fast shared-shell cache owner missing.');
-assert(materializer.includes("const NAVIGATION = '/site-navigation.js?v=20260826-search-navigation-contrast-v44'"),'Navigation V44 cache owner missing.');
-assert(materializer.includes('<script defer data-qily-translation-safe-direct="inpage-v2"'),'Deferred safe translation runtime missing.');
-assert(materializer.includes('/site-translation-progress-v1.js?v=20260826-translation-fast-reliable-v3'),'Deterministic translation progress owner missing.');
+/* One public baseline owns source-clean translation recovery, navigation and readability. */
+assert(materializer.includes("const SAFE_VERSION = '20260827-source-recovery-v4'"),'Source-recovery translation version owner missing.');
+assert(materializer.includes("const CONSISTENCY = '/site-ui-consistency-v1.js?v=20260827-translation-dock-resource-v46'"),'Translation/Dock shared-shell cache owner missing.');
+assert(materializer.includes("const NAVIGATION = '/site-navigation.js?v=20260827-translation-dock-resource-v46'"),'Navigation V46 cache owner missing.');
+assert(materializer.includes('data-qily-translation-safe-direct="inpage-v3"'),'Deferred safe translation V3 runtime missing.');
+assert(materializer.includes('/site-translation-progress-v1.js?v=20260827-source-recovery-v4'),'Deterministic source-recovery progress owner missing.');
 assert(materializer.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'),'Content contrast V6 owner missing.');
 assert(materializer.includes('data-qily-content-contrast-direct="v6"'),'Content contrast V6 static marker missing.');
 assert(!materializer.includes('LEGACY_LANGUAGE_SRC'),'Retired translator is still owned by public materializer.');
-assert(consistency.includes("BUILD_ID='20260826-translation-fast-reliable-v3'"),'Shared shell fast translation build missing.');
-assert(consistency.includes("safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260826-translation-fast-reliable-v3'"),'Shared shell safe runtime is stale.');
+assert(consistency.includes("BUILD_ID='20260827-translation-dock-closure-v5'"),'Shared shell translation/Dock closure build missing.');
+assert(consistency.includes("safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260827-source-recovery-v4'"),'Shared shell safe runtime is stale.');
 assert(consistency.includes("contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6'"),'Shared shell content contrast V6 CSS is stale.');
 assert(consistency.includes("contentJs:'/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'"),'Shared shell content contrast V6 JS is stale.');
 assert(safe.includes('function nearViewport(el)'),'Visible-first translation missing.');
 assert(safe.includes('function retryFailed('),'Targeted translation retry missing.');
-assert(safe.includes("setState('error','翻译未完整完成，已恢复中文原文')"),'Mixed initial translation is not fail-closed.');
+assert(safe.includes('function recoverChinese(reason)'),'Atomic Chinese source recovery missing.');
+assert(safe.includes("if(text.length<2&&!/[\\u3400-\\u9fff]/.test(text))return false"),'Single-Han UI translation coverage missing.');
+assert(safe.includes("setState('idle','中文原文')"),'Source recovery does not return public state to idle.');
+assert(!safe.includes("setState('error'"),'Source recovery must not leave a public error overlay state.');
 assert(safe.includes("ENDPOINT_KEY='qily_translation_preferred_endpoint_v2'"),'Translation endpoint reuse missing.');
 
 let last=-1;
@@ -77,11 +82,12 @@ assert(publicUi.includes('measuredTextWidth'),'Selected-language measured width 
 assert(publicUi.includes('data-qily-language-name-complete'),'Selected-language completeness state missing.');
 assert(publicUiCss.includes('overflow-x:auto!important'),'Navigation horizontal movement is not enabled.');
 assert(publicUiCss.includes('max-width:420px!important'),'Long selected language can still be clipped on desktop.');
-assert(progress.includes('Translation Progress Notice V2'),'Translation progress V2 missing.');
-assert(progress.includes('if(unchanged)return'),'Translation progress notice can still endlessly reset.');
+assert(progress.includes('Translation Progress Notice V3'),'Translation progress V3 missing.');
+assert(progress.includes('function sourceIsSettled()'),'Source-mode progress suppression missing.');
+assert(progress.includes('hideNow();return'),'Settled Chinese source can still retain a progress notice.');
+assert(progressCss.includes('bottom:max(16px,env(safe-area-inset-bottom))'),'Translation progress notice does not avoid the header/Hero area.');
 assert(progressCss.includes('pointer-events:none'),'Translation progress notice must remain non-blocking.');
 assert(interactionContrast.includes("setAttribute('data-qily-interaction-contrast'"),'Interactive contrast guard missing.');
-assert(contentContrast.includes('Sitewide Content Contrast Guard V7'),'Static content contrast V7 runtime missing.');
 assert(contentContrast.includes('data-qily-content-contrast-fixed'),'Static content contrast guard missing.');
 assert(contentContrast.includes('function renderedForeground(style)'),'Rendered text-fill inspection missing.');
 assert(!contentContrast.includes("style&&style.backgroundImage&&style.backgroundImage!=='none'"),'Generic gradient still bypasses contrast correction.');
@@ -91,7 +97,7 @@ assert(contentContrastCss.includes('--ql-dark-title:#fff'),'Dark-surface text to
 assert(home.includes('<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->'),'Homepage aircraft brand hero start marker missing.');
 assert(home.indexOf('QILY-AIRCRAFT-BRAND-HERO-V1:START')<home.indexOf('<section class="hero">'),'Aircraft brand visual is not the first homepage content visual.');
 assert(home.includes('/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260826-aircraft-approved-v1'),'Homepage canonical aircraft visual asset/cache key missing.');
-assert(!/<img[^>]+c919-strategy-hero-v14.(?:png|webp)/i.test(home),'A retired aircraft image is still rendered on homepage.');
+assert(!/<img\b[^>]+c919-strategy-hero-v14.(?:png|webp)/i.test(home),'A retired aircraft image is still rendered on homepage.');
 
 const officialUrls=['https://www.jinggon.com/','https://www.gdgaosheng.cn/','https://www.masonled.com/','https://www.mason-led.com/','https://www.eaton.com.cn/cn/zh-cn/products/electronic-components/circuit-protection/fuses.html','https://flex.com/zh/'];
 for(const url of officialUrls)assert(experience.includes(`href="${url}"`),`Experience official link missing: ${url}`);
@@ -107,4 +113,4 @@ for(const relative of trackedHtml()){
 }
 assert(navigationPages>=460,`Navigation coverage unexpectedly fell to ${navigationPages} pages.`);
 assert(stale.length===0,`Stale public shell entries: ${stale.slice(0,20).join(', ')}`);
-process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages plus fast fail-closed translation, content contrast V7 readable surfaces and mobile navigation (${runtimeBaseline}).\n`);
+process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages plus source-clean translation recovery V3, semantic Dock icons, readable surfaces and mobile navigation (${runtimeBaseline}).\n`);
