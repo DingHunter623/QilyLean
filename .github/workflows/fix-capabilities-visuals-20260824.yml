@@ -13,6 +13,7 @@ on:
       - 'capability-digital-tools-layout-v1.css'
       - 'app-download-share-v1.js'
       - 'tools/pure-ddz/game/js/card-theme.js'
+      - 'tools/pure-ddz/game/js/qilylean-theme.js'
       - 'tools/pure-ddz/game/js/visual-v120.js'
       - 'tools/pure-ddz/game/css/card-comfort-v122.css'
       - 'tools/pure-ddz/index.html'
@@ -42,6 +43,7 @@ jobs:
           node --check scripts/fix-capabilities-visuals-20260824.js
           node --check scripts/materialize-ddz-public-ui-20260824.js
           node --check tools/pure-ddz/game/js/card-theme.js
+          node --check tools/pure-ddz/game/js/qilylean-theme.js
           node --check tools/pure-ddz/game/js/visual-v120.js
           node --check app-download-share-v1.js
           python3 -m py_compile scripts/publish-qilylean-home-v2.py
@@ -64,7 +66,7 @@ jobs:
           grep -q 'data-app-share-qr="qilyleanHome"' capabilities/index.html
           grep -q 'data-app-share-link="qilyleanHome"' capabilities/index.html
           grep -q '/app-download-share-v1.js?v=20260824-capability-home-actions-v2' capabilities/index.html
-          grep -q "const version='20260824-mobile-landscape-card-comfort-v122';" tools/pure-ddz/index.html
+          grep -q "const version='20260828-elder-ux-v123';" tools/pure-ddz/index.html
           grep -q "loadStyle('css/card-comfort-v122.css')" tools/pure-ddz/index.html
           grep -q 'name="screen-orientation" content="landscape"' tools/pure-ddz/index.html
           grep -q 'MicroMessenger' tools/pure-ddz/index.html
@@ -72,6 +74,9 @@ jobs:
           grep -q 'IS_WECHAT_WEBVIEW' tools/pure-ddz/game/js/visual-v120.js
           grep -q "screen.orientation.lock('landscape')" tools/pure-ddz/game/js/visual-v120.js
           grep -q '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/game/js/card-theme.js
+          grep -q 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
+          grep -q 'width:80vw' tools/pure-ddz/game/css/card-comfort-v122.css
+          grep -q 'font-size:38px' tools/pure-ddz/game/css/card-comfort-v122.css
           grep -q '<span>官网邮箱</span>' tools/pure-ddz/index.html
           ! grep -q '<span>企业邮箱</span>' tools/pure-ddz/index.html
           grep -q 'qily-rank-suit-line' tools/pure-ddz/game/js/card-theme.js
@@ -98,6 +103,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add capabilities/index.html tools/pure-ddz/index.html
-          git commit -m "fix: materialize DDZ red-heart Ace and public UI [skip ci]"
+          git commit -m "fix: materialize DDZ elder UX v1.2.3 and public UI [skip ci]"
           git pull --rebase origin main
           git push origin main
