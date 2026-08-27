@@ -47,9 +47,15 @@ jobs:
           node --check scripts/site-system-v4-build-meta.js
           node --check scripts/site-system-v4-public-verify.js
           node --check scripts/qilylean-north-v4-sitemap-contract.js
+          node --check scripts/audit-knowledge-asset-v2.js
+          node --check knowledge/knowledge-asset-v2.js
+          node --check homepage-music.js
 
       - name: G1 source and SSOT validation
         run: node scripts/site-system-v4-validate.js
+
+      - name: Knowledge Asset 2.0 content, case, linkage and VI gate
+        run: node scripts/audit-knowledge-asset-v2.js
 
       - name: Existing SEO gate
         run: npm run test:seo
