@@ -5,19 +5,30 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.qilylean.com'
 ]);
 
-const TRANSLATION_CACHE_VERSION = 'v2';
+/* V3 cache is deliberately per source string rather than per request batch.
+ * The browser runtime adaptively changes batch sizes on long pages; string-level keys let the same
+ * source copy hit cache regardless of which page/batch/retry it arrived in.
+ */
+const TRANSLATION_CACHE_VERSION = 'v3';
 const PROTECTED_TRANSLATION_TOKENS = [
-  'QilyLean｜启力精益', 'IATF 16949', 'Times26001', '启力精益', 'QilyLean', 'C919',
-  'UPPH', 'DPPM', 'COPQ', 'SMED', 'ECRS', 'PQCD', '5W2H', 'VSM', 'OEE', 'ERP', 'APS',
-  'MES', 'SOP', 'KPI', 'WIP', 'FPY', 'NPI', 'IE', 'PE', 'ME', 'CT', 'TT', '6S', '7S'
-];
+  'QilyLean｜启力精益', 'IATF 16949', 'ISO 9001', 'Times26001', '启力精益', 'QilyLean', 'C919',
+  'Run@Rate', 'DVP&R', 'Phase Gate', 'Control Plan', 'Takt Time', 'One Piece Flow',
+  'APQP', 'PPAP', 'PFMEA', 'DFMEA', 'FMEA', 'SPC', 'MSA', 'GR&R', 'DOE', 'CTQ',
+  'EVT', 'DVT', 'PVT', 'NPI', 'BOM', 'ECO', 'ECN', 'SOP', 'OPL',
+  'UPPH', 'DPPM', 'COPQ', 'SMED', 'ECRS', 'PQCD', '5W2H', 'VSM', 'OEE', 'TPM', 'PCE',
+  'ERP', 'APS', 'MES', 'WMS', 'QMS', 'CMMS', 'Andon', 'Kanban', 'Heijunka', 'Jidoka',
+  'FPY', 'FTY', 'Cpk', 'Cp', 'WIP', 'KPI', 'UPH', 'MTBF', 'MTTR',
+  'IE', 'PE', 'ME', 'CT', 'TT', 'LT', 'MP', '6S', '7S'
+].sort((a, b) => b.length - a.length);
 const PROTECTED_TRANSLATION_SET = new Set(PROTECTED_TRANSLATION_TOKENS);
 const TRANSLATION_SYSTEM_INSTRUCTIONS = `You are the QilyLean website translation engine.
 Translate every supplied source string faithfully into the requested target language/locale.
 Return ONLY a JSON array of translated strings, in exactly the same order and with exactly the same number of items as the input array.
 Do not add explanations, markdown, labels or commentary.
 Preserve placeholder tokens matching __QILY_TOKEN_*__ exactly, character-for-character.
-Preserve URLs, email addresses, phone numbers, model numbers, file paths, units, numeric values, arrows and punctuation structure. Translate normal explanatory words around protected tokens naturally and professionally for manufacturing/industrial-engineering readers.`;
+Preserve URLs, email addresses, phone numbers, model numbers, file paths, units, numeric values, arrows and punctuation structure.
+Use established professional terminology for lean manufacturing, industrial engineering, NPI, quality engineering, production operations and digital manufacturing in the target locale; do not simplify technical meaning or invent claims.
+Translate normal explanatory words around protected tokens naturally and professionally for manufacturing/industrial-engineering readers.`;
 
 function cors(origin) {
   const allow = ALLOWED_ORIGINS.has(origin) ? origin : 'https://qilylean.com';
@@ -297,14 +308,34 @@ async function callQwenTranslation(texts, targetLanguage, env, signal) {
   return parseTranslationArray(data?.choices?.[0]?.message?.content, texts.length);
 }
 
-async function hashTranslationBatch(targetLanguage, texts) {
-  const raw = JSON.stringify([TRANSLATION_CACHE_VERSION, targetLanguage, texts]);
-  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
+async function hashTranslationText(text) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
   return Array.from(new Uint8Array(digest)).map((value) => value.toString(16).padStart(2, '0')).join('');
 }
 
-async function translationCacheKey(targetLanguage, texts) {
-  return `translate:${TRANSLATION_CACHE_VERSION}:${targetLanguage}:${await hashTranslationBatch(targetLanguage, texts)}`;
+async function translationCacheKey(targetLanguage, text) {
+  return `translate:${TRANSLATION_CACHE_VERSION}:${targetLanguage}:${await hashTranslationText(text)}`;
+}
+
+async function readTranslationCache(env, targetLanguage, texts) {
+  const values = new Map();
+  if (!env.QILY_STATS || !texts.length) return values;
+  const unique = [...new Set(texts)];
+  const keyed = await Promise.all(unique.map(async (text) => [text, await translationCacheKey(targetLanguage, text)]));
+  await Promise.all(keyed.map(async ([text, key]) => {
+    const cached = await env.QILY_STATS.get(key, 'json');
+    if (typeof cached === 'string' && cached.trim()) values.set(text, cached);
+  }));
+  return values;
+}
+
+async function writeTranslationCache(env, targetLanguage, entries) {
+  if (!env.QILY_STATS || !entries.length) return;
+  await Promise.all(entries.map(async ([source, translated]) => {
+    if (!translated || translated === source && !PROTECTED_TRANSLATION_SET.has(source)) return;
+    const key = await translationCacheKey(targetLanguage, source);
+    await env.QILY_STATS.put(key, JSON.stringify(translated), { expirationTtl: 60 * 60 * 24 * 90 });
+  }));
 }
 
 async function checkTranslationRateLimit(request, env) {
@@ -320,65 +351,88 @@ async function checkTranslationRateLimit(request, env) {
 async function translateBatch(payload, request, env) {
   const targetLanguage = clean(payload.target_language, 40);
   const texts = Array.isArray(payload.texts) ? payload.texts.map((value) => clean(value, 6000)) : [];
-  if (!targetLanguage || targetLanguage === 'zh-CN') return { translations: texts, cached: true, provider: 'source' };
+  if (!targetLanguage || targetLanguage === 'zh-CN') return { translations: texts, cached: true, provider: 'source', cache: { hits: texts.length, misses: 0 } };
   if (!texts.length || texts.length > 24) return { error: 'Translation batch must contain 1 to 24 strings', status: 400 };
   if (texts.some((value) => !value)) return { error: 'Translation batch contains an empty string', status: 400 };
   const totalChars = texts.reduce((sum, value) => sum + value.length, 0);
   if (totalChars > 8000) return { error: 'Translation batch is too large', status: 413 };
 
-  const cacheKey = await translationCacheKey(targetLanguage, texts);
-  if (env.QILY_STATS) {
-    const cached = await env.QILY_STATS.get(cacheKey, 'json');
-    if (Array.isArray(cached) && cached.length === texts.length) {
-      return { translations: cached, cached: true, provider: translationProvider(env) || 'cache' };
-    }
-  }
+  const translations = new Array(texts.length);
+  const cachedValues = await readTranslationCache(env, targetLanguage, texts.filter((text) => !PROTECTED_TRANSLATION_SET.has(text)));
+  const missingTextToIndexes = new Map();
+  let cacheHits = 0;
 
-  const direct = texts.map((text) => PROTECTED_TRANSLATION_SET.has(text));
-  const prepared = texts.map((text, index) => direct[index] ? null : maskProtectedTranslationText(text, index));
-  const providerIndexes = [];
-  const providerTexts = [];
   for (let index = 0; index < texts.length; index += 1) {
-    if (direct[index]) continue;
-    providerIndexes.push(index);
-    providerTexts.push(prepared[index].masked);
-  }
-
-  const provider = translationProvider(env);
-  if (providerTexts.length && !provider) return { error: 'Translation service is not configured', status: 503 };
-  let translatedProvider = [];
-  let rate = { allowed: true, limit: Math.max(10, Number(env.TRANSLATE_DAILY_IP_LIMIT || 80)), used: 0, storage: Boolean(env.QILY_STATS) };
-
-  if (providerTexts.length) {
-    rate = await checkTranslationRateLimit(request, env);
-    if (!rate.allowed) return { error: 'Daily translation limit reached', status: 429, limit: rate.limit };
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 55000);
-    try {
-      translatedProvider = provider === 'qwen'
-        ? await callQwenTranslation(providerTexts, targetLanguage, env, controller.signal)
-        : await callOpenAITranslation(providerTexts, targetLanguage, env, controller.signal);
-    } catch (error) {
-      const timedOut = error && error.name === 'AbortError';
-      return { error: timedOut ? 'Translation request timed out' : 'Translation service unavailable', status: timedOut ? 504 : 502 };
-    } finally {
-      clearTimeout(timeout);
+    const text = texts[index];
+    if (PROTECTED_TRANSLATION_SET.has(text)) {
+      translations[index] = text;
+      cacheHits += 1;
+      continue;
     }
+    if (cachedValues.has(text)) {
+      translations[index] = cachedValues.get(text);
+      cacheHits += 1;
+      continue;
+    }
+    const indexes = missingTextToIndexes.get(text) || [];
+    indexes.push(index);
+    missingTextToIndexes.set(text, indexes);
   }
 
-  const translations = texts.slice();
-  for (let i = 0; i < providerIndexes.length; i += 1) {
-    const sourceIndex = providerIndexes[i];
+  const uniqueMissingTexts = [...missingTextToIndexes.keys()];
+  if (!uniqueMissingTexts.length) {
+    return {
+      translations,
+      cached: true,
+      provider: translationProvider(env) || 'cache',
+      cache: { hits: cacheHits, misses: 0 }
+    };
+  }
+
+  const prepared = uniqueMissingTexts.map((text, index) => maskProtectedTranslationText(text, index));
+  const providerTexts = prepared.map((item) => item.masked);
+  const provider = translationProvider(env);
+  if (!provider) return { error: 'Translation service is not configured', status: 503 };
+
+  const rate = await checkTranslationRateLimit(request, env);
+  if (!rate.allowed) return { error: 'Daily translation limit reached', status: 429, limit: rate.limit };
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 55000);
+  let translatedProvider;
+  try {
+    translatedProvider = provider === 'qwen'
+      ? await callQwenTranslation(providerTexts, targetLanguage, env, controller.signal)
+      : await callOpenAITranslation(providerTexts, targetLanguage, env, controller.signal);
+  } catch (error) {
+    const timedOut = error && error.name === 'AbortError';
+    return { error: timedOut ? 'Translation request timed out' : 'Translation service unavailable', status: timedOut ? 504 : 502 };
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  const cacheEntries = [];
+  for (let i = 0; i < uniqueMissingTexts.length; i += 1) {
+    let translated;
     try {
-      translations[sourceIndex] = restoreProtectedTranslationText(translatedProvider[i], prepared[sourceIndex].replacements);
+      translated = restoreProtectedTranslationText(translatedProvider[i], prepared[i].replacements);
     } catch {
       return { error: 'Translation service unavailable', status: 502 };
     }
+    const source = uniqueMissingTexts[i];
+    const indexes = missingTextToIndexes.get(source) || [];
+    for (const sourceIndex of indexes) translations[sourceIndex] = translated;
+    cacheEntries.push([source, translated]);
   }
-  if (env.QILY_STATS) {
-    await env.QILY_STATS.put(cacheKey, JSON.stringify(translations), { expirationTtl: 60 * 60 * 24 * 90 });
-  }
-  return { translations, cached: false, provider: provider || 'protected', rate_limit: { used: rate.used, limit: rate.limit } };
+  await writeTranslationCache(env, targetLanguage, cacheEntries);
+
+  return {
+    translations,
+    cached: false,
+    provider,
+    cache: { hits: cacheHits, misses: uniqueMissingTexts.length },
+    rate_limit: { used: rate.used, limit: rate.limit }
+  };
 }
 
 async function handleBriefFeedback(request, env) {
