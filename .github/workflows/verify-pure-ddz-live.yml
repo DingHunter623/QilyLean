@@ -34,13 +34,20 @@ jobs:
           grep -q 'id="start"' tools/pure-ddz/index.html
           grep -q 'id="hand"' tools/pure-ddz/index.html
           grep -q '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
-          grep -q '20260828-elder-ux-v123' tools/pure-ddz/index.html
+          grep -q '20260828-elder-ux-v124' tools/pure-ddz/index.html
           grep -q 'name="screen-orientation" content="landscape"' tools/pure-ddz/index.html
           grep -q 'name="x5-orientation" content="landscape"' tools/pure-ddz/index.html
           grep -q 'Android版暂未开放' tools/pure-ddz/index.html
           grep -q "screen.orientation.lock('landscape')" tools/pure-ddz/game/js/visual-v120.js
-          grep -q 'width:80vw' tools/pure-ddz/game/css/card-comfort-v122.css
-          grep -q 'font-size:38px' tools/pure-ddz/game/css/card-comfort-v122.css
+          grep -q 'grid-template-areas:"brand score translate" "actions actions actions"' tools/pure-ddz/game/css/card-comfort-v122.css
+          grep -q '.bottom-cards .mini-card{min-width:98px' tools/pure-ddz/game/css/card-comfort-v122.css
+          grep -q '.v120-play-card{flex-basis:124px' tools/pure-ddz/game/css/card-comfort-v122.css
+          grep -q '#floatDock.qily-float-dock.qily-float-dock' tools/pure-ddz/game/css/card-comfort-v122.css
+          grep -q "const VERSION = '1.2.4'" tools/pure-ddz/game/js/game.js
+          grep -q "state.settings.difficulty==='expert'?1750+Math.random()*450" tools/pure-ddz/game/js/game.js
+          ! grep -q 'C919' tools/pure-ddz/game/js/card-theme.js
+          grep -q "16:{type:'small-joker',title:'小王',image:assetUrl('avatar-king.webp')}" tools/pure-ddz/game/js/card-theme.js
+          grep -q "17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}" tools/pure-ddz/game/js/card-theme.js
           grep -q 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
           grep -q '4个' tools/pure-ddz/game/js/qilylean-theme.js
           ! grep -q 'Pure-DDZ-Classic-v1.0.3.apk' tools/pure-ddz/index.html
@@ -52,8 +59,8 @@ jobs:
           set -euo pipefail
           ok=0
           for i in {1..48}; do
-            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v123' -o /tmp/page.html \
-              && grep -q '20260828-elder-ux-v123' /tmp/page.html \
+            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v124' -o /tmp/page.html \
+              && grep -q '20260828-elder-ux-v124' /tmp/page.html \
               && grep -q 'name="screen-orientation" content="landscape"' /tmp/page.html \
               && grep -q 'name="x5-orientation" content="landscape"' /tmp/page.html \
               && grep -q 'Android版暂未开放' /tmp/page.html; then
@@ -64,14 +71,23 @@ jobs:
             sleep 10
           done
           test "$ok" = 1
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v123' -o /tmp/qily-theme.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260828-v123' -o /tmp/visual.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/card-comfort-v122.css?verify=20260828-v123' -o /tmp/comfort.css
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v124' -o /tmp/qily-theme.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v124' -o /tmp/card-theme.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v124' -o /tmp/game.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260828-v124' -o /tmp/visual.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/card-comfort-v122.css?verify=20260828-v124' -o /tmp/comfort.css
           node --check /tmp/qily-theme.js
+          node --check /tmp/card-theme.js
+          node --check /tmp/game.js
           node --check /tmp/visual.js
           grep -q "screen.orientation.lock('landscape')" /tmp/visual.js
-          grep -q 'width:80vw' /tmp/comfort.css
-          grep -q 'font-size:38px' /tmp/comfort.css
+          grep -q 'grid-template-areas:"brand score translate" "actions actions actions"' /tmp/comfort.css
+          grep -q '.bottom-cards .mini-card{min-width:98px' /tmp/comfort.css
+          grep -q '#floatDock.qily-float-dock.qily-float-dock' /tmp/comfort.css
+          grep -q "const VERSION = '1.2.4'" /tmp/game.js
+          grep -q "state.settings.difficulty==='expert'?1750+Math.random()*450" /tmp/game.js
+          ! grep -q 'C919' /tmp/card-theme.js
+          grep -q 'avatar-king.webp' /tmp/card-theme.js
           grep -q 'QilyLeanDDZElderV123' /tmp/qily-theme.js
           grep -q '王炸' /tmp/qily-theme.js
-          echo 'PURE_DDZ_ELDER_V123_LIVE_OK'
+          echo 'PURE_DDZ_ELDER_V124_LIVE_OK'
