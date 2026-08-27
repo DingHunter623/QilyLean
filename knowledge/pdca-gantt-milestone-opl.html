@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PDCA项目管理 × 甘特图里程碑推进｜单点培训课件｜QilyLean</title>
+  <meta name="description" content="QilyLean单点培训课件：应用PDCA工具进行项目管理，应用甘特图进行项目推进的里程碑管理计划。覆盖Plan、Do、Check、Act、WBS、甘特图、里程碑评审、红黄绿判定与项目会议话术。">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://qilylean.com/knowledge/pdca-gantt-milestone-opl.html">
+  <link rel="stylesheet" href="/site-core-visual-bundle-v1.css?v=20260815-core-visual-v1">
+  <link rel="stylesheet" href="/site-link-standard-v2.css?v=20260816-nav-current-v7">
+  <link rel="stylesheet" href="/site-visual-readability-v5.css?v=20260825-visual-readability-v7">
+  <style>
+    :root{--opl-teal:#0f586a;--opl-teal2:#178b94;--opl-gold:#cda158;--opl-bg:#eaf1f0;--opl-card:#fff;--opl-ink:#182420;--opl-muted:#5f7474;--opl-line:#d5e4e3;--opl-red:#b84b48;--opl-yellow:#b78113;--opl-green:#397a59}
+    *{box-sizing:border-box}
+    body{margin:0;color:var(--opl-ink);background:var(--opl-bg);font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",Arial,sans-serif;line-height:1.7}
+    a{color:inherit}
+    .opl-shell{width:min(1180px,calc(100% - 34px));margin:0 auto}
+    .opl-top{padding:18px 0;border-bottom:1px solid rgba(15,88,106,.16);background:#fff}
+    .opl-top .opl-shell{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .opl-brand{font-size:20px;font-weight:950;color:var(--opl-teal);text-decoration:none}
+    .opl-back{font-size:14px;font-weight:850;color:var(--opl-teal);text-decoration:none}
+    .opl-hero{padding:56px 0 36px;background:linear-gradient(135deg,#0f586a 0%,#177f89 100%);color:#fff}
+    .opl-kicker{margin:0 0 9px;font-size:13px;font-weight:950;letter-spacing:.12em;text-transform:uppercase;opacity:.82}
+    .opl-hero h1{max-width:980px;margin:0;font-size:clamp(34px,5vw,62px);line-height:1.13;letter-spacing:-.02em}
+    .opl-lead{max-width:930px;margin:18px 0 0;font-size:18px;line-height:1.72;color:rgba(255,255,255,.9)}
+    .opl-tags{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px}
+    .opl-tag{padding:7px 11px;border:1px solid rgba(255,255,255,.34);border-radius:999px;background:rgba(255,255,255,.1);font-size:13px;font-weight:850}
+    .opl-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+    .opl-btn{display:inline-flex;min-height:42px;align-items:center;justify-content:center;padding:9px 15px;border:1px solid rgba(255,255,255,.5);border-radius:10px;background:#fff;color:var(--opl-teal);font-weight:950;text-decoration:none;cursor:pointer}
+    .opl-btn.secondary{background:transparent;color:#fff}
+    .opl-section{padding:34px 0}
+    .opl-section.alt{background:rgba(255,255,255,.42)}
+    .opl-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:18px}
+    .opl-heading h2{margin:0;color:var(--opl-teal);font-size:clamp(26px,3vw,38px);line-height:1.22}
+    .opl-heading p{max-width:640px;margin:0;color:var(--opl-muted)}
+    .opl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .opl-grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .opl-card{padding:22px;border:1px solid var(--opl-line);border-top:4px solid var(--opl-gold);border-radius:16px;background:var(--opl-card);box-shadow:0 10px 26px rgba(15,75,90,.07)}
+    .opl-card h3{margin:0 0 8px;color:var(--opl-teal);font-size:20px;line-height:1.35}
+    .opl-card p{margin:0;color:#465b58}
+    .opl-num{display:inline-flex;width:28px;height:28px;align-items:center;justify-content:center;margin-right:8px;border-radius:50%;background:var(--opl-teal2);color:#fff;font-size:12px;font-weight:950;vertical-align:2px}
+    .opl-callout{margin:18px 0 0;padding:18px 20px;border-left:5px solid var(--opl-gold);border-radius:0 12px 12px 0;background:#fff8e8;color:#493d25;font-weight:780}
+    .opl-cycle{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}
+    .opl-cycle>div{position:relative;padding:20px 17px;border-radius:16px;background:#fff;border:1px solid var(--opl-line);box-shadow:0 8px 20px rgba(15,75,90,.06)}
+    .opl-cycle strong{display:block;margin-bottom:6px;color:var(--opl-teal);font-size:22px}
+    .opl-cycle span{display:block;color:var(--opl-muted);font-size:14px;line-height:1.6}
+    .opl-cycle>div:not(:last-child)::after{content:"→";position:absolute;right:-13px;top:50%;z-index:2;transform:translateY(-50%);color:var(--opl-gold);font-size:24px;font-weight:950}
+    .opl-table-wrap{overflow:auto;border:1px solid var(--opl-line);border-radius:15px;background:#fff;box-shadow:0 10px 26px rgba(15,75,90,.06)}
+    table{width:100%;border-collapse:collapse;min-width:820px}
+    th,td{padding:11px 12px;border-bottom:1px solid var(--opl-line);border-right:1px solid var(--opl-line);text-align:center;font-size:14px}
+    th:first-child,td:first-child{text-align:left;font-weight:850;min-width:210px}
+    th{background:#f2f8f7;color:var(--opl-teal);font-weight:950}
+    tr:last-child td{border-bottom:0}
+    td:last-child,th:last-child{border-right:0}
+    .bar{display:block;height:18px;border-radius:5px;background:linear-gradient(90deg,var(--opl-teal2),var(--opl-teal));box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+    .milestone{display:inline-flex;width:17px;height:17px;transform:rotate(45deg);background:var(--opl-gold);border-radius:2px}
+    .opl-rag{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+    .opl-rag>div{padding:17px;border-radius:14px;background:#fff;border:1px solid var(--opl-line)}
+    .opl-rag strong{display:block;margin-bottom:5px;font-size:17px}
+    .red strong{color:var(--opl-red)}.yellow strong{color:var(--opl-yellow)}.green strong{color:var(--opl-green)}
+    .opl-script{padding:18px 20px;border-radius:14px;background:#fff;border:1px solid var(--opl-line);box-shadow:0 8px 20px rgba(15,75,90,.05)}
+    .opl-script b{display:block;margin-bottom:6px;color:var(--opl-teal)}
+    .opl-script q{color:#334b48;font-weight:760}
+    .opl-fields{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+    .opl-fields span{padding:7px 10px;border:1px solid var(--opl-line);border-radius:8px;background:#f5f9f8;color:var(--opl-teal);font-size:13px;font-weight:850}
+    .opl-final{padding:28px;border-radius:18px;background:var(--opl-teal);color:#fff;box-shadow:0 16px 34px rgba(15,75,90,.2)}
+    .opl-final h2{margin:0 0 10px;font-size:28px}
+    .opl-final p{margin:0;font-size:18px;color:rgba(255,255,255,.92)}
+    .opl-footer{padding:28px 0 38px;color:var(--opl-muted);font-size:13px;text-align:center}
+    @media(max-width:860px){.opl-grid,.opl-grid.four,.opl-cycle,.opl-rag{grid-template-columns:1fr}.opl-cycle>div:not(:last-child)::after{content:"↓";right:auto;left:50%;top:auto;bottom:-22px;transform:translateX(-50%)}.opl-heading{display:block}.opl-heading p{margin-top:8px}.opl-top .opl-shell{align-items:flex-start}}
+    @media print{.opl-top,.opl-actions{display:none!important}.opl-shell{width:100%}.opl-hero{padding:16mm 12mm 10mm}.opl-section{padding:8mm 12mm}.opl-card,.opl-script,.opl-table-wrap{box-shadow:none;break-inside:avoid}body{background:#fff}}
+  </style>
+</head>
+<body>
+  <header class="opl-top">
+    <div class="opl-shell"><a class="opl-brand" href="/">QilyLean｜启力精益</a><a class="opl-back" href="/knowledge/#terminology">← 返回「全站术语中文诠释与应用场景」</a></div>
+  </header>
+
+  <main>
+    <section class="opl-hero">
+      <div class="opl-shell">
+        <p class="opl-kicker">OPL / ONE POINT LESSON / 项目管理</p>
+        <h1>PDCA项目管理 × 甘特图里程碑推进</h1>
+        <p class="opl-lead">应用PDCA工具进行项目管理，应用甘特图进行项目推进的里程碑管理计划。把“想推进”变成“可计划、可执行、可检查、可复盘”的项目闭环。</p>
+        <div class="opl-tags"><span class="opl-tag">精益改善</span><span class="opl-tag">工程项目</span><span class="opl-tag">新品导入</span><span class="opl-tag">数智化工厂规划</span><span class="opl-tag">里程碑管理</span></div>
+        <div class="opl-actions"><button class="opl-btn" type="button" onclick="window.print()">打印 / 另存PDF</button><a class="opl-btn secondary" href="#template">直接看落地模板</a></div>
+      </div>
+    </section>
+
+    <section class="opl-section">
+      <div class="opl-shell">
+        <div class="opl-heading"><h2>01｜项目为什么“推着推着就散了”</h2><p>项目失控不一定是执行力单点问题，更常见的是计划、过程、复盘三个断点叠加。</p></div>
+        <div class="opl-grid">
+          <article class="opl-card"><h3><span class="opl-num">1</span>计划不清</h3><p>目标像口号：范围、交付物、负责人、节点不清，导致“都在做、没人负责”。</p></article>
+          <article class="opl-card"><h3><span class="opl-num">2</span>过程失控</h3><p>会议只汇报进度，不暴露风险；问题没有升级机制，延误到节点才被发现。</p></article>
+          <article class="opl-card"><h3><span class="opl-num">3</span>结果无复盘</h3><p>项目完成后没有标准化、横展和经验沉淀，下个项目继续从零摸索。</p></article>
+          <article class="opl-card"><h3><span class="opl-num">4</span>三件工具各司其职</h3><p>PDCA负责闭环，甘特图负责节奏，里程碑负责验收；三者组合后，项目管理才从“催进度”升级为“控交付”。</p></article>
+        </div>
+        <div class="opl-callout">讲师话术｜项目管理的第一步不是催人，而是把任务、节点、风险、验收条件晒在一张图上。</div>
+      </div>
+    </section>
+
+    <section class="opl-section alt">
+      <div class="opl-shell">
+        <div class="opl-heading"><h2>02｜PDCA：项目闭环的管理发动机</h2><p>PDCA不是四个英文单词，而是项目从定义到固化的最小管理闭环。</p></div>
+        <div class="opl-cycle">
+          <div><strong>P｜Plan 计划</strong><span>定义目标、范围、WBS、风险、资源、验收标准。</span></div>
+          <div><strong>D｜Do 执行</strong><span>按计划推进，日清问题，异常升级，保留证据。</span></div>
+          <div><strong>C｜Check 检查</strong><span>对照里程碑评审：进度、质量、成本、风险。</span></div>
+          <div><strong>A｜Act 处置</strong><span>固化标准、复盘经验、横展复制、关闭项目。</span></div>
+        </div>
+        <div class="opl-callout">讲师话术｜PDCA的价值在“每一轮都有证据”，没有证据的项目推进，最后只能靠口头解释。</div>
+      </div>
+    </section>
+
+    <section class="opl-section">
+      <div class="opl-shell">
+        <div class="opl-heading"><h2>03｜Plan：把愿望拆成可执行结构</h2><p>计划阶段的核心不是写漂亮方案，而是把目标、边界、任务、资源、风险一次性讲清楚。</p></div>
+        <div class="opl-grid">
+          <article class="opl-card"><h3>5W2H定义项目边界</h3><p><b>What</b> 交付什么｜<b>Why</b> 为什么做｜<b>Where</b> 在哪应用｜<b>When</b> 何时完成｜<b>Who</b> 谁负责｜<b>How do</b> 怎么做｜<b>How much</b> 资源/成本。</p></article>
+          <article class="opl-card"><h3>WBS拆任务颗粒度</h3><p>一级：项目阶段；二级：工作包；三级：可执行任务；四级：责任与验收。任何“跟进、协调、推进”都不是合格任务，必须拆成可交付物。</p></article>
+        </div>
+        <div class="opl-callout"><b>Plan输出物：</b>项目章程｜WBS任务清单｜风险清单｜资源需求｜里程碑验收标准。<br>讲师话术｜计划不是越细越好，而是细到责任人可以马上行动、评审人可以明确验收。</div>
+      </div>
+    </section>
+
+    <section class="opl-section alt">
+      <div class="opl-shell">
+        <div class="opl-heading"><h2>04｜甘特图：把WBS任务放到时间轴上</h2><p>甘特图不是“漂亮进度表”，而是项目节奏、前后依赖、关键路径与里程碑的可视化。</p></div>
+        <div class="opl-table-wrap">
+          <table aria-label="8周项目甘特图示例">
+            <thead><tr><th>任务 / 阶段</th><th>W1</th><th>W2</th><th>W3</th><th>W4</th><th>W5</th><th>W6</th><th>W7</th><th>W8</th></tr></thead>
+            <tbody>
+              <tr><td>项目启动 / 需求澄清</td><td><span class="bar"></span></td><td><span class="milestone" title="立项"></span></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>现状数据收集 / 测时</td><td></td><td><span class="bar"></span></td><td><span class="bar"></span></td><td></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>方案设计 / 评审冻结</td><td></td><td></td><td><span class="bar"></span></td><td><span class="milestone" title="方案冻结"></span></td><td></td><td></td><td></td><td></td></tr>
+              <tr><td>样机 / 线体 / 系统实施</td><td></td><td></td><td></td><td><span class="bar"></span></td><td><span class="bar"></span></td><td></td><td></td><td></td></tr>
+              <tr><td>试运行 / 问题闭环</td><td></td><td></td><td></td><td></td><td><span class="bar"></span></td><td><span class="milestone" title="试运行"></span></td><td></td><td></td></tr>
+              <tr><td>验收 / 标准化横展</td><td></td><td></td><td></td><td></td><td></td><td><span class="bar"></span></td><td><span class="bar"></span></td><td><span class="milestone" title="验收"></span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="opl-callout">判读要点：条形＝任务持续时间；菱形＝里程碑；空白＝缓冲/等待；重叠＝并行；前后衔接＝依赖。<br>讲师话术｜甘特图要一眼看出：当前在哪一周、卡在哪个任务、哪个里程碑要被保护。</div>
+      </div>
+    </section>
+
+    <section class="opl-section">
+      <div class="opl-shell">
+        <div class="opl-heading"><h2>05｜Do：用日清节奏防止项目失速</h2><p>执行阶段不怕暴露问题，怕的是问题已经发生却还在甘特图上显示“正常”。</p></div>
+        <div class="opl-grid four">
+          <article class="opl-card"><h3>任务日清</h3><p>当日任务必须有状态：未开始 / 进行中 / 完成 / 阻塞。</p></article>
+          <article class="opl-card"><h3>异常升级</h3><p>超过24小时未解决的问题进入升级机制，不让问题沉底。</p></article>
+          <article class="opl-card"><h3>证据留痕</h3><p>照片、数据、会议纪要、验收记录形成可追溯项目档案。</p></article>
+          <article class="opl-card"><h3>会议节奏</h3><p>10分钟站会 + 1张问题清单 + 1张甘特图版本更新。</p></article>
+        </div>
+        <div class="opl-callout">现场话术｜今天只问三件事——已完成什么、卡住什么、需要谁支持。</div>
+      </div>
+    </section>
+
+    <section class="opl-section alt">
+      <div class="opl-shell">
+        <div class="opl-heading"><h2>06｜Check：里程碑评审是“能不能过关”</h2><p>里程碑必须提前定义验收条件，否则项目评审会变成主观争论。</p></div>
+        <div class="opl-table-wrap">
+          <table aria-label="里程碑评审矩阵">
+            <thead><tr><th>里程碑</th><th>进度</th><th>质量 / 技术</th><th>成本 / 资源</th><th>风险</th></tr></thead>
+            <tbody>
+              <tr><td>M1 立项</td><td>目标/范围确认</td><td>技术路径初判</td><td>预算/资源明确</td><td>主要风险识别</td></tr>
+              <tr><td>M2 方案冻结</td><td>计划基线确认</td><td>方案评审通过</td><td>采购/人力锁定</td><td>高风险有预案</td></tr>
+              <tr><td>M3 试运行</td><td>按期进入现场</td><td>数据达到阈值</td><td>成本偏差可控</td><td>异常闭环率≥90%</td></tr>
+              <tr><td>M4 验收</td><td>交付物齐套</td><td>KPI达成</td><td>收益核算通过</td><td>遗留项有Owner</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="opl-rag">
+          <div class="red"><strong>红灯｜必须升级</strong><span>不满足关键验收条件，必须升级或调整基线。</span></div>
+          <div class="yellow"><strong>黄灯｜限时纠偏</strong><span>存在偏差但有补救方案，限定时间纠偏。</span></div>
+          <div class="green"><strong>绿灯｜阶段放行</strong><span>条件达成，可进入下一阶段。</span></div>
+        </div>
+        <div class="opl-callout">讲师话术｜里程碑评审的标准句式：证据是否充分？偏差是否可控？是否允许进入下一阶段？</div>
+      </div>
+    </section>
+
+    <section class="opl-section">
+      <div class="opl-shell">
+        <div class="opl-heading"><h2>07｜Act：把一次改善变成组织能力</h2><p>项目不是“做完就完”，而是把一次改善沉淀为标准、收益、经验和可复制能力。</p></div>
+        <div class="opl-grid four">
+          <article class="opl-card"><h3>固化标准</h3><p>SOP / 点检表 / 参数表 / 培训资料。</p></article>
+          <article class="opl-card"><h3>收益复盘</h3><p>效率、成本、质量、交付、库存等改善收益。</p></article>
+          <article class="opl-card"><h3>经验沉淀</h3><p>问题库、风险库、最佳实践、踩坑记录。</p></article>
+          <article class="opl-card"><h3>横展复制</h3><p>向相似产品线、相似工序、相似业务场景扩散。</p></article>
+        </div>
+        <div class="opl-callout"><b>关闭项目四个条件：</b>交付物齐套｜KPI达成或偏差批准｜遗留问题有Owner与期限｜标准文件已发布并培训。<br>讲师话术｜项目关闭不是“大家辛苦了”，而是确认成果、文件、问题、经验都已经落地。</div>
+      </div>
+    </section>
+
+    <section class="opl-section alt">
+      <div class="opl-shell">
+        <div class="opl-heading"><h2>08｜PDCA × 甘特图：一套推进控制逻辑</h2><p>用PDCA做闭环，用甘特图控节奏，用里程碑做阶段放行。</p></div>
+        <div class="opl-cycle">
+          <div><strong>P｜立项/计划</strong><span>目标、WBS、风险、基线。</span></div>
+          <div><strong>D｜实施推进</strong><span>任务日清、异常升级。</span></div>
+          <div><strong>C｜里程碑评审</strong><span>证据、偏差、放行。</span></div>
+          <div><strong>A｜标准化复盘</strong><span>文件、收益、横展。</span></div>
+        </div>
+        <div class="opl-grid" style="margin-top:16px">
+          <article class="opl-card"><h3>计划基线</h3><p>未经批准不随意改范围、改节点。</p></article>
+          <article class="opl-card"><h3>版本管理</h3><p>甘特图每次更新保留版本号和原因。</p></article>
+          <article class="opl-card"><h3>风险前置</h3><p>风险不等于问题；问题已发生，风险要提前防。</p></article>
+          <article class="opl-card"><h3>收益核算</h3><p>效率 / 质量 / 成本 / 交付改善必须量化。</p></article>
+        </div>
+        <div class="opl-callout">讲师话术｜项目推进不是把计划改到看起来正常，而是让事实、偏差、决策在同一张图上对齐。</div>
+      </div>
+    </section>
+
+    <section class="opl-section">
+      <div class="opl-shell">
+        <div class="opl-heading"><h2>09｜话术场景：单件流标杆线体推进</h2><p>把争论拉回事实，把责任拉回任务，把进度拉回里程碑。</p></div>
+        <div class="opl-grid">
+          <article class="opl-card"><h3>项目目标</h3><p>将装配线打造为单件流标杆线体，降低等待与在制，提升节拍稳定性与现场可视化。</p></article>
+          <article class="opl-card"><h3>PDCA对应动作</h3><p>P：现状测时 / 瓶颈识别；D：线体布局 / 工位重排；C：节拍验证 / 异常闭环；A：标准产能 / 培训横展。</p></article>
+        </div>
+        <div class="opl-script" style="margin-top:16px"><b>现场主持话术</b><q>今天我们不争论谁忙谁不忙，只看三个事实：①当前瓶颈工位在哪；②本周里程碑能否过关；③需要谁在什么时间前解决什么问题。</q></div>
+      </div>
+    </section>
+
+    <section class="opl-section alt">
+      <div class="opl-shell">
+        <div class="opl-heading"><h2>10｜三类会议话术</h2><p>项目经理的价值，不是替别人做事，而是让事实、责任、风险、决策持续透明。</p></div>
+        <div class="opl-grid">
+          <div class="opl-script"><b>启动会</b><q>本项目今天先冻结三件事：目标、边界、里程碑。没有边界的项目，后续一定会被无限加需求。</q></div>
+          <div class="opl-script"><b>周例会</b><q>请每位Owner只讲事实：上周完成什么，本周完成什么，卡点是什么，需要谁决策。</q></div>
+          <div class="opl-script"><b>评审会</b><q>我们只按验收条件判定：证据充分就放行；证据不足就限期补证；关键偏差必须升级决策。</q></div>
+          <div class="opl-script"><b>高质量提问</b><q>这个动作能否直接支持项目KPI？这个任务的Owner是谁？最晚何时提交什么结果？如果本周不解决，会影响哪个里程碑？用什么数据或现场证据证明已经完成？</q></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="opl-section" id="template">
+      <div class="opl-shell">
+        <div class="opl-heading"><h2>11｜OPL落地模板：一页带走</h2><p>任选一个真实项目，24小时内完成项目PDCA闭环表与里程碑甘特图初版。</p></div>
+        <div class="opl-grid">
+          <article class="opl-card"><h3>P 计划</h3><p>目标/KPI、WBS、风险、资源、里程碑。</p></article>
+          <article class="opl-card"><h3>D 执行</h3><p>任务清单、日清机制、异常升级、证据留痕。</p></article>
+          <article class="opl-card"><h3>C 检查</h3><p>进度、质量、成本、风险、验收条件。</p></article>
+          <article class="opl-card"><h3>A 处置</h3><p>标准化、复盘、收益核算、横展复制。</p></article>
+        </div>
+        <div class="opl-card" style="margin-top:16px"><h3>甘特里程碑必填字段</h3><div class="opl-fields"><span>任务名称</span><span>Owner</span><span>开始/结束</span><span>前置依赖</span><span>里程碑</span><span>验收条件</span><span>风险等级</span><span>当前状态</span></div></div>
+        <div class="opl-final" style="margin-top:18px"><h2>结课金句</h2><p>没有PDCA，项目容易失去闭环；没有甘特图，项目容易失去节奏；没有里程碑，项目容易失去验收标准。</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="opl-footer"><div class="opl-shell">QilyLean｜启力精益 · OPL单点培训课件 · PDCA × Gantt Milestone Control</div></footer>
+</body>
+</html>
