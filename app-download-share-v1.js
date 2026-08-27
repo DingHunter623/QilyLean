@@ -1,7 +1,13 @@
-/* QilyLean APP product/share normalization | 2026-08-24 */
+/* QilyLean APP product/share normalization | 2026-08-27 */
 (function(){
   'use strict';
   var TIMES_POSITIONING='面向工业工程、现场改善与时间研究场景的专业测时工具，由 QilyLean｜启力精益开发。';
+  var TIMES_VERSION='1.1.14';
+  var TIMES_CODE='17';
+  var TIMES_TARGET='36';
+  var TIMES_DEVICE='三星 C55';
+  var TIMES_REAL_HERO='/assets/tools/times26001-v1.1.14-home-samsung-c55.webp?v=20260827-c55-v1';
+  var TIMES_REAL_GALLERY='/assets/tools/times26001-v1.1.14-gallery-samsung-c55.webp?v=20260827-c55-v1';
   var apps={
     times26001:{
       name:'Times26001',
@@ -105,14 +111,55 @@
     }
   }
 
+  function injectTimes26001RealDeviceGallery(){
+    if(document.getElementById('times26001-real-device-gallery'))return;
+    var features=document.getElementById('features');
+    if(!features)return;
+    var section=document.createElement('section');
+    section.className='tool-section alt';
+    section.id='times26001-real-device-gallery';
+    section.setAttribute('data-times26001-real-device','20260827-samsung-c55-v114');
+    section.innerHTML=''
+      + '<div class="tool-inner">'
+      + '<div class="tool-heading"><h2>三星 C55 真机界面｜v1.1.14</h2><p><strong>2026-08-27 已完成 Android 真机安装与代表性核心界面验证。</strong> 以下全部采用实际手机截屏，不以概念图替代产品界面；验证版本为 v1.1.14 / versionCode 17 / API 36。</p></div>'
+      + '<div style="display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:clamp(20px,4vw,42px);align-items:start">'
+      + '<figure style="margin:0;padding:16px;border:1px solid #d5e4e3;border-radius:22px;background:#0d1016;box-shadow:0 16px 42px rgba(15,75,90,.12)"><img src="'+TIMES_REAL_GALLERY+'" alt="Times26001 v1.1.14 三星C55真机代表性界面：万年历、天气、计时、设置" width="720" height="936" loading="lazy" decoding="async" style="display:block;width:100%;height:auto;border-radius:14px"><figcaption style="padding:14px 5px 2px;color:#dbe8ea;font-size:15px;line-height:1.65">真实界面拼图：万年历 / 天气定位与未来7天 / 秒表与倒计时 / 个性化设置、权限、隐私与版本信息。</figcaption></figure>'
+      + '<div style="display:grid;gap:14px">'
+      + '<article class="tool-card"><small>REAL DEVICE｜首页</small><h3>北京时间与本地时间信息</h3><p>首页集中展示当前时间、日期、周次、农历、生肖、传统时辰、节假日与星座；默认按 Asia/Shanghai 处理时间与日历信息。</p></article>'
+      + '<article class="tool-card"><small>REAL DEVICE｜万年历</small><h3>月历＋农历＋宜忌信息</h3><p>支持月份切换与日期详情，展示农历、生肖/干支、节气/节日、宜忌、冲煞、星座等信息，1900—2100 年历法信息本机离线计算。</p></article>'
+      + '<article class="tool-card"><small>REAL DEVICE｜天气</small><h3>当前位置＋未来7天</h3><p>用户可主动搜索城市或使用当前位置，查看温度、体感、湿度、风速、降水与未来7天天气趋势；位置权限可在设置中重新管理。</p></article>'
+      + '<article class="tool-card"><small>REAL DEVICE｜计时</small><h3>IE分段秒表＋倒计时</h3><p>秒表支持不限次数分段，并同时保留本段与累计时间；记录可复制到 Excel/WPS。倒计时提供常用预设、自定义分钟以及响铃、震动和通知提醒。</p></article>'
+      + '<article class="tool-card"><small>REAL DEVICE｜设置</small><h3>本地优先、无账号、无广告</h3><p>支持深浅主题、多国语言、字号、色弱模式、生日星座、天气定位与隐私/协议/技术支持入口。当前版本不设账号、不投放广告，核心记录保存在本机。</p></article>'
+      + '</div></div></div>';
+    features.insertAdjacentElement('afterend',section);
+  }
+
   function normalizeTimes26001Page(){
     var path=(location.pathname||'').replace(/\/index\.html$/,'/');
     if(path!=='/tools/times26001/')return;
 
     document.title='Times26001｜工业工程时间研究与IE现场测时工具';
-    setMeta('meta[name="description"]',TIMES_POSITIONING+' Times26001提供IE秒表分段、累计总时长、倒计时、闹钟、时间日历及天气预报辅助功能。');
+    setMeta('meta[name="description"]',TIMES_POSITIONING+' Times26001提供IE秒表分段、累计总时长、倒计时、闹钟、万年历及天气定位辅助功能；v1.1.14已完成三星C55真机安装验证。');
     setMeta('meta[property="og:title"]','Times26001｜工业工程时间研究与IE现场测时工具');
-    setMeta('meta[property="og:description"]',TIMES_POSITIONING);
+    setMeta('meta[property="og:description"]',TIMES_POSITIONING+' v1.1.14已完成三星C55真机安装验证。');
+    setMeta('meta[property="og:image"]','https://qilylean.com'+TIMES_REAL_HERO.split('?')[0]);
+    setMeta('meta[name="twitter:image"]','https://qilylean.com'+TIMES_REAL_HERO.split('?')[0]);
+
+    var lead=document.querySelector('.tool-lead');
+    if(lead)lead.innerHTML='<strong>'+TIMES_POSITIONING+'</strong><br>Times26001以工业工程时间研究和制造现场测时为核心，提供IE秒表分段、累计总时长、数据复制、倒计时、闹钟、万年历及天气定位与未来7天预报辅助能力。<br><strong>当前验证版本：v'+TIMES_VERSION+' / versionCode '+TIMES_CODE+' / API '+TIMES_TARGET+'；已于2026-08-27完成'+TIMES_DEVICE+'真机安装及首页、万年历、天气、计时与设置等代表性界面验证。</strong>';
+
+    var visual=document.querySelector('.tool-visual');
+    if(visual){
+      var image=visual.querySelector('img');
+      if(image){image.src=TIMES_REAL_HERO;image.alt='Times26001 v1.1.14 三星C55真机首页截图';image.width=480;image.height=1067;}
+      if(!visual.querySelector('figcaption')){
+        var caption=document.createElement('figcaption');
+        caption.textContent='三星 C55 真机截屏｜Times26001 v1.1.14 / versionCode 17 / API 36';
+        caption.style.cssText='padding:12px 16px;color:#355;background:#f4fbfa;font-size:14px;font-weight:800;text-align:center';
+        visual.appendChild(caption);
+      }
+    }
+    injectTimes26001RealDeviceGallery();
   }
 
   function normalizeCapabilitiesCrossLinks(){
@@ -124,15 +171,15 @@
     var timesCard=document.getElementById('times26001');
     if(timesCard){
       var image=timesCard.querySelector('img');
-      if(image)image.alt='Times26001工业工程时间研究与IE现场测时工具功能概览';
+      if(image){image.src=TIMES_REAL_HERO;image.alt='Times26001 v1.1.14 三星C55真机首页截图';}
       var small=timesCard.querySelector('small');
       if(small)small.textContent='数字工具作品｜工业工程时间研究＋IE现场测时';
       var title=timesCard.querySelector('h3');
       if(title)title.textContent='Times26001';
       var paragraph=timesCard.querySelector('.capability-digital-content > p');
-      if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、数据复制、按秒倒计时、闹钟、北京时间、万年历、农历、黄历、节气与天气预报，可查看当前位置或指定城市的当前实况和未来7天趋势。';
+      if(paragraph)paragraph.innerHTML='<strong>'+TIMES_POSITIONING+'</strong> 集成IE秒表分段、累计总时长、数据复制、按秒倒计时、闹钟、北京时间、万年历、农历、黄历、节气与天气定位/未来7天预报；v1.1.14已完成三星C55真机安装与代表性界面验证。';
       var result=timesCard.querySelector('.module-result');
-      if(result)result.textContent='手机试用版：v1.1.13 / versionCode 16 / API 36｜原生定位权限｜不默认上海｜当前位置/城市搜索｜当前实况＋未来7天';
+      if(result)result.textContent='当前验证版：v1.1.14 / versionCode 17 / API 36｜三星C55真机验证｜本地优先｜当前位置/城市搜索｜当前实况＋未来7天';
       timesCard.querySelectorAll('[data-app-share-link="times26001"]').forEach(function(btn){btn.textContent='分享下载页';});
     }
 
