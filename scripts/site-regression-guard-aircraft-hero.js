@@ -1,20 +1,30 @@
 #!/usr/bin/env node
 'use strict';
-const fs=require('fs'),path=require('path');
+const fs=require('fs'),path=require('path'),crypto=require('crypto');
 const root=path.resolve(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const css=fs.readFileSync(path.join(root,'styles','qily-aircraft-brand-hero-v1.css'),'utf8');
-const asset=path.join(root,'assets','qilylean-aircraft-hero-approved-20260826.png');
+const sourcePath=path.join(root,'官网首图.png');
+const assetPath=path.join(root,'assets','qilylean-aircraft-hero-approved-20260826.png');
+const EXPECTED_SOURCE_BLOB='e67ad824312acecab66a7b93e4f9e38b85835af9';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
-const b=fs.readFileSync(asset),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
+function gitBlobSha(buffer){return crypto.createHash('sha1').update(Buffer.from(`blob ${buffer.length}\0`)).update(buffer).digest('hex')}
+const source=fs.readFileSync(sourcePath),asset=fs.readFileSync(assetPath),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
 assert(block,'Aircraft hero block missing');
-assert(block.includes('/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260826-aircraft-approved-v1'),'Approved aircraft image is not rendered');
+assert(block.includes('/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260827-home-original-approved-v2'),'Canonical aircraft image cache identity is not rendered');
 assert(!/C919/i.test(block),'Aircraft hero semantic block must not describe the aircraft as C919');
 assert(!/<picture\b|<source\b|\bsrcset\s*=|\bdata-src\s*=|\bdata-srcset\s*=/i.test(block),'Competing aircraft source chain returned');
 assert(!/<(?:img|source)\b[^>]+(?:c919-strategy-hero|qilylean-aircraft-hero-v1\.webp)/i.test(html),'Retired aircraft image source returned');
-assert((html.match(/qilylean-aircraft-hero-approved-20260826\.png/g)||[]).length>=2,'Approved preload/render chain incomplete');
-assert(b.length>500000,'Approved PNG unexpectedly small');
-assert(b.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])),'Approved aircraft asset is not PNG');
-assert(b.readUInt32BE(16)===1672&&b.readUInt32BE(20)===941,'Approved PNG dimensions changed');
+assert((html.match(/qilylean-aircraft-hero-approved-20260826\.png/g)||[]).length>=2,'Canonical preload/render chain incomplete');
+assert(gitBlobSha(source)===EXPECTED_SOURCE_BLOB,'官网首图.png is no longer the exact user-approved SSOT');
+assert(source.equals(asset),'Production aircraft PNG is not byte-identical to 官网首图.png');
+assert(asset.length>500000,'Canonical PNG unexpectedly small');
+assert(asset.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])),'Canonical aircraft asset is not PNG');
+assert(asset.readUInt32BE(16)===1672&&asset.readUInt32BE(20)===941,'Canonical PNG dimensions changed');
 assert(css.includes('QilyLean Aircraft Brand Hero V1'),'Aircraft stylesheet identity missing');
-console.log('PASS: homepage renders one approved aircraft PNG source with no fallback chain.');
+const activeRuntimeFiles=['.github/workflows/v4-build.yml','scripts/enforce-aircraft-home-hero.js'];
+for(const rel of activeRuntimeFiles){
+  const text=fs.readFileSync(path.join(root,rel),'utf8');
+  assert(!/c919-approved-20260826|c919-strategy-hero-v14\.png/i.test(text),`${rel}: legacy aircraft rollback source is forbidden`);
+}
+console.log('PASS: homepage uses byte-identical 官网首图.png SSOT, one high-priority production PNG URL, and no active legacy rollback source.');
