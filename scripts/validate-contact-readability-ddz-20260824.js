@@ -77,7 +77,7 @@ assert(buildPages>=460,'首屏缓存覆盖页数量异常：'+buildPages);
 
 const ddz=read('tools/pure-ddz/index.html');
 [
-  "const version='20260824-mobile-landscape-card-comfort-v122'",
+  "const version='20260828-elder-ux-v123'",
   "loadStyle('css/card-comfort-v122.css')",
   'name="screen-orientation" content="landscape"',
   'name="x5-orientation" content="landscape"',
@@ -85,9 +85,29 @@ const ddz=read('tools/pure-ddz/index.html');
   '__PURE_DDZ_WECHAT_WEBVIEW__',
   '__PURE_DDZ_MOBILE_DEVICE__',
   '__PURE_DDZ_MANAGED_LOADER__',
-  'pure-ddz-classic-share-1200x630.png'
-].forEach(marker=>assert(ddz.includes(marker),'斗地主微信/舒适牌面契约缺失：'+marker));
+  'pure-ddz-classic-share-1200x630.png',
+  'id="hint-message"'
+].forEach(marker=>assert(ddz.includes(marker),'斗地主微信/长辈舒适牌面契约缺失：'+marker));
 assert(ddz.indexOf("loadStyle('css/visual-v120.css')")<ddz.indexOf("loadStyle('css/card-comfort-v122.css')"),'舒适牌面 CSS 必须在视觉基础层之后加载');
+
+const comfort=read('tools/pure-ddz/game/css/card-comfort-v122.css');
+[
+  'width:80vw',
+  'font-size:38px',
+  '.round-meta span',
+  '.hint-message',
+  '#audio-toggle,#help-open,#settings-open',
+  '.qily-product-overview summary span'
+].forEach(marker=>assert(comfort.includes(marker),'斗地主长辈可视性契约缺失：'+marker));
+
+const qilyTheme=read('tools/pure-ddz/game/js/qilylean-theme.js');
+[
+  'QilyLeanDDZElderV123',
+  '3个${main}',
+  '4个${main}',
+  '王炸',
+  '一对${main}'
+].forEach(marker=>assert(qilyTheme.includes(marker),'斗地主精确出牌播报契约缺失：'+marker));
 
 const visual=read('tools/pure-ddz/game/js/visual-v120.js');
 ['IS_WECHAT_WEBVIEW','IS_MOBILE_DEVICE','wechatWebView:IS_WECHAT_WEBVIEW','mobileDevice:IS_MOBILE_DEVICE',"screen.orientation.lock('landscape')","['welcome-start','start','again']",'手机默认横屏牌桌'].forEach(marker=>assert(visual.includes(marker),'斗地主手机横屏运行契约缺失：'+marker));
