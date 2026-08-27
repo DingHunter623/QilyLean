@@ -21,19 +21,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Wait for deployed elder runtime
+      - name: Wait for deployed elder runtime v1.2.4
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           ok=0
           for i in {1..48}; do
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v123' -o /tmp/page.html || true
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v123' -o /tmp/game.js || true
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v123' -o /tmp/qily-theme.js || true
-            if grep -q '20260828-elder-ux-v123' /tmp/page.html 2>/dev/null \
-              && grep -q "let now=0" /tmp/game.js 2>/dev/null \
-              && grep -q 'QilyLeanDDZElderV123' /tmp/qily-theme.js 2>/dev/null \
-              && grep -q "js/visual-v120.js" /tmp/page.html 2>/dev/null; then
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v124' -o /tmp/page.html || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v124' -o /tmp/game.js || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v124' -o /tmp/card-theme.js || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v124' -o /tmp/qily-theme.js || true
+            if grep -Fq '20260828-elder-ux-v124' /tmp/page.html 2>/dev/null \
+              && grep -Fq "const VERSION = '1.2.4'" /tmp/game.js 2>/dev/null \
+              && grep -Fq "state.settings.difficulty==='expert'?1750+Math.random()*450" /tmp/game.js 2>/dev/null \
+              && ! grep -Fq 'C919' /tmp/card-theme.js 2>/dev/null \
+              && grep -Fq 'QilyLeanDDZElderV123' /tmp/qily-theme.js 2>/dev/null \
+              && grep -Fq 'js/visual-v120.js' /tmp/page.html 2>/dev/null; then
               ok=1
               break
             fi
@@ -41,16 +44,18 @@ jobs:
           done
           test "$ok" = 1
           node --check /tmp/game.js
+          node --check /tmp/card-theme.js
           node --check /tmp/qily-theme.js
       - name: Install Chromium
         run: |
           npm init -y >/dev/null 2>&1
           npm install --silent @playwright/test@1.55.0
           npx playwright install --with-deps chromium
-      - name: Public desktop and mobile elder start smoke
+      - name: Public desktop and mobile elder visual smoke
         run: |
           node <<'NODE'
           const { chromium } = require('@playwright/test');
+          const overlaps=(a,b)=>Boolean(a&&b&&a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top);
           (async()=>{
             const browser=await chromium.launch({headless:true});
             for(const viewport of [{width:1440,height:900},{width:844,height:390}]){
@@ -59,10 +64,10 @@ jobs:
               const errors=[]; const dialogs=[];
               page.on('pageerror',e=>errors.push(e.stack||String(e)));
               page.on('dialog',async d=>{dialogs.push(d.message());await d.dismiss();});
-              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v123',{waitUntil:'domcontentloaded',timeout:60000});
+              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v124',{waitUntil:'domcontentloaded',timeout:60000});
               await page.evaluate(()=>{localStorage.clear();localStorage.setItem('qily_global_language_v3','zh-CN');});
               await page.reload({waitUntil:'domcontentloaded',timeout:60000});
-              await page.waitForFunction(()=>Boolean(window.PureDDZTest)&&Boolean(window.QilyLeanDDZElderV123)&&document.documentElement.classList.contains('ddz-ready'),null,{timeout:12000});
+              await page.waitForFunction(()=>Boolean(window.PureDDZTest)&&Boolean(window.QilyLeanDDZElderV123)&&Boolean(window.QilyLeanCardTheme)&&document.documentElement.classList.contains('ddz-ready'),null,{timeout:12000});
               const exact=await page.evaluate(()=>{
                 const mk=(player,type,rank,count)=>({player,combo:{type,main:rank},cards:Array.from({length:count},(_,i)=>({id:player*20+i,rank}))});
                 return {
@@ -74,13 +79,40 @@ jobs:
               if(exact.rightK!=='右家，3个K') throw new Error('right triple announcement wrong: '+JSON.stringify(exact));
               if(exact.leftA!=='左家，4个A，炸弹') throw new Error('left bomb announcement wrong: '+JSON.stringify(exact));
               if(exact.meRocket!=='我，王炸') throw new Error('rocket announcement wrong: '+JSON.stringify(exact));
+
+              if(viewport.width>=1181){
+                await page.waitForTimeout(1000);
+                const geometry=await page.evaluate(()=>{
+                  const rect=selector=>{const el=document.querySelector(selector);if(!el)return null;const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+                  const topButtons=[...document.querySelectorAll('.top-actions>*')].map(el=>{const r=el.getBoundingClientRect();return {text:(el.textContent||'').trim(),width:r.width,height:r.height,top:r.top,bottom:r.bottom};});
+                  const bottom=document.createElement('span');bottom.className='mini-card qily-mini-business';bottom.innerHTML='<b>8♣</b><small>知识</small>';document.querySelector('#bottom-cards').appendChild(bottom);const bottomRect=bottom.getBoundingClientRect();bottom.remove();
+                  const played=document.createElement('div');played.className='v120-play-card';document.body.appendChild(played);const playedRect=played.getBoundingClientRect();played.remove();
+                  const jokerHtml=window.QilyLeanCardTheme.renderCard({id:52,rank:16,suit:'🃏'});
+                  const dock=document.querySelector('#floatDock');
+                  const dockBtn=dock?.querySelector('.qily-float-btn');
+                  const dockRect=dock?.getBoundingClientRect();const dockBtnRect=dockBtn?.getBoundingClientRect();
+                  return {brand:rect('.topbar .brand'),score:rect('.topbar .scoreboard'),actions:rect('.topbar .top-actions'),translate:rect('.topbar .qily-web-translate')||rect('#qilyGlobalTranslationDualRouteV2'),topButtons,bottom:{width:bottomRect.width,height:bottomRect.height},played:{width:playedRect.width,height:playedRect.height},jokerHtml,dock:dockRect?{width:dockRect.width,height:dockRect.height}:null,dockBtn:dockBtnRect?{width:dockBtnRect.width,height:dockBtnRect.height}:null};
+                });
+                console.log('desktop geometry',JSON.stringify(geometry,null,2));
+                if(overlaps(geometry.brand,geometry.score)) throw new Error('header brand overlaps scoreboard '+JSON.stringify(geometry));
+                if(overlaps(geometry.brand,geometry.actions)||overlaps(geometry.score,geometry.actions)) throw new Error('header rows overlap '+JSON.stringify(geometry));
+                if(geometry.translate&&(overlaps(geometry.translate,geometry.brand)||overlaps(geometry.translate,geometry.score)||overlaps(geometry.translate,geometry.actions))) throw new Error('translation control overlaps header content '+JSON.stringify(geometry));
+                if(geometry.topButtons.some(item=>item.height>75||item.width<78)) throw new Error('top action button collapsed/vertical '+JSON.stringify(geometry.topButtons));
+                if(geometry.bottom.width<95||geometry.bottom.height<120) throw new Error('bottom card not enlarged '+JSON.stringify(geometry.bottom));
+                if(geometry.played.width<118||geometry.played.height<170) throw new Error('played card not enlarged '+JSON.stringify(geometry.played));
+                if(geometry.jokerHtml.includes('C919')||geometry.jokerHtml.includes('QILY')) throw new Error('small joker still carries extra text '+geometry.jokerHtml);
+                if(!geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('小王')) throw new Error('small joker visual is not aligned with king image '+geometry.jokerHtml);
+                if(geometry.dockBtn&&(geometry.dockBtn.width<60||geometry.dockBtn.height>58||geometry.dockBtn.width/geometry.dockBtn.height<1.2)) throw new Error('floating dock button still circular/cramped '+JSON.stringify(geometry.dockBtn));
+              }
+
               const welcome=page.locator('#welcome');
               if(await welcome.isVisible().catch(()=>false)) await page.locator('#welcome-start').click();
               else await page.locator('#start').click();
-              await page.waitForTimeout(1500);
-              const result=await page.evaluate(()=>({phase:window.PureDDZTest.getState().phase,stateHand:window.PureDDZTest.getState().hands[0].length,domHand:document.querySelectorAll('#hand .card').length,strips:document.querySelectorAll('.qily-business-strip').length,elder:Boolean(window.QilyLeanDDZElderV123)}));
+              await page.waitForTimeout(1700);
+              const result=await page.evaluate(()=>({phase:window.PureDDZTest.getState().phase,stateHand:window.PureDDZTest.getState().hands[0].length,domHand:document.querySelectorAll('#hand .card').length,strips:document.querySelectorAll('.qily-business-strip').length,elder:Boolean(window.QilyLeanDDZElderV123),version:window.PureDDZTest.version}));
               console.log({viewport,result,exact,errors,dialogs});
               if(dialogs.length) throw new Error('unexpected initial dialog '+dialogs.join('|'));
+              if(result.version!=='1.2.4') throw new Error('wrong runtime version '+JSON.stringify(result));
               if(result.stateHand<17||result.domHand<17) throw new Error('cards not visible '+JSON.stringify(result));
               if(!['bidding','playing'].includes(result.phase)) throw new Error('bad phase '+JSON.stringify(result));
               if(result.strips!==0||!result.elder) throw new Error('elder runtime not ready');
@@ -88,6 +120,6 @@ jobs:
               await page.close();
             }
             await browser.close();
-            console.log('PURE_DDZ_PUBLIC_ELDER_START_AND_ANNOUNCEMENT_OK');
+            console.log('PURE_DDZ_PUBLIC_ELDER_V124_GEOMETRY_AND_START_OK');
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
