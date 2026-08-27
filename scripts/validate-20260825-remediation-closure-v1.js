@@ -23,16 +23,24 @@ const siteData=read('qilylean/site-data.json');
 assert(siteData.includes('"latestDate": "2026-08-25"')||siteData.includes('"latestDate":"2026-08-25"'),'Central SSOT latestDate is stale');
 assert(siteData.includes('2026-08-25.html'),'Central SSOT latest URL is stale');
 
-/* 2) Translation must stay on-site, recover to a visually clean Chinese source, and never leave a mixed initial page. */
+/* 2) Translation stays on-site, prioritizes visible content, preserves completed target-language work and heals failures progressively. */
 const safe=read('site-translation-safe-runtime-v1.js');
 assert(!safe.includes('https://translate.google.com'),'Safe runtime still contains executable Google redirect');
 assert(!safe.includes('https://qilylean-com.translate.goog'),'Safe runtime still contains translated proxy redirect');
-assert(safe.includes("runtime:'safe-inpage-v3'"),'Source-recovery translation runtime V3 missing');
+assert(safe.includes("runtime:'safe-inpage-v4'"),'Resilient translation runtime V4 missing');
 assert(safe.includes('function nearViewport(el)'),'Visible-first translation missing');
-assert(safe.includes('function recoverChinese(reason)'),'Atomic Chinese source recovery missing');
+assert(safe.includes('function retryFailedAdaptive('),'Adaptive failed-batch retry missing');
+assert(safe.includes('function retryableStatus(status)'),'Retryable endpoint classification missing');
+assert(safe.includes("setDocumentLanguage(target,'translated-partial')"),'Partial translation preservation missing');
+assert(safe.includes('function scheduleHealing('),'Background translation healing missing');
+assert(safe.includes('[900,2600,6200,12000]'),'Repeated healing cadence missing');
+assert(!safe.includes('function recoverChinese(reason)'),'Translation failure may not roll the whole page back to Chinese');
+assert(!safe.includes("recoverChinese('visible-translation-incomplete')"),'Visible-batch rollback returned');
+assert(!safe.includes("recoverChinese('background-translation-incomplete')"),'Background-batch rollback returned');
+assert(!safe.includes("recoverChinese('translation-service-unavailable')"),'Service-failure rollback returned');
 assert(safe.includes("if(text.length<2&&!/[\\u3400-\\u9fff]/.test(text))return false"),'Single-Han UI translation coverage missing');
-assert(safe.includes("setState('idle','中文原文')"),'Source recovery does not return to clean idle state');
-assert(!safe.includes("setState('error'"),'Source recovery must not leave a public error overlay');
+assert(safe.includes("setState('idle','中文原文')"),'Explicit Chinese restore does not return to clean idle state');
+assert(!safe.includes("setState('error'"),'Resilient translation must not leave a public blocking error overlay');
 assert(safe.includes("setState('idle',languageName(target))"),'Successful translation does not clear working/partial state');
 for(const sourceName of ['site-translation-safe-runtime-v1.js','site-translation-public-ui-v1.js','site-translation-progress-v1.js']){
   const source=read(sourceName);
@@ -76,18 +84,18 @@ assert(gbt.includes('color:#fff'),'GB/T 2828 reference button does not define wh
 const terminology=read('knowledge/terminology.html');
 assert(terminology.includes('id="qilyTerminologyStaticCount"'),'Terminology static-count strip identifier missing');
 
-/* 5) Post-materialization all public HTML must use source-recovery translation V3.
+/* 5) Post-materialization all public HTML must use resilient translation V4.
  * Navigation/shared-shell are audited when present because special standalone tools intentionally omit them. */
 const NAV='/site-navigation.js?v=20260827-translation-dock-resource-v46';
-const SHELL='/site-ui-consistency-v1.js?v=20260827-translation-dock-resource-v46';
+const SHELL='/site-ui-consistency-v1.js?v=20260828-translation-resilience-v47';
 let pages=0,navigationPages=0,shellPages=0;
 for(const relative of trackedHtml()){
   const html=read(relative);if(!/<\/head>/i.test(html))continue;pages+=1;
-  assert(html.includes('data-qily-translation-safety-bootstrap="inpage-v3"'),`${relative}: safety bootstrap missing`);
-  assert(html.includes('/site-translation-safe-runtime-v1.js?v=20260827-source-recovery-v4'),`${relative}: source-recovery safe runtime missing`);
-  assert(html.includes('<script defer data-qily-translation-safe-direct="inpage-v3"'),`${relative}: translation runtime blocks document parsing`);
-  assert(html.includes('/site-translation-progress-v1.js?v=20260827-source-recovery-v4'),`${relative}: source-clean progress runtime missing`);
-  assert(html.includes('data-qily-translation-progress-direct="bilingual-v3"'),`${relative}: translation progress marker stale`);
+  assert(html.includes('data-qily-translation-safety-bootstrap="inpage-v4"'),`${relative}: safety bootstrap missing`);
+  assert(html.includes('/site-translation-safe-runtime-v1.js?v=20260828-long-page-resilience-v5'),`${relative}: resilient safe runtime missing`);
+  assert(html.includes('<script defer data-qily-translation-safe-direct="inpage-v4"'),`${relative}: translation runtime blocks document parsing`);
+  assert(html.includes('/site-translation-progress-v1.js?v=20260828-long-page-resilience-v5'),`${relative}: resilient progress runtime missing`);
+  assert(html.includes('data-qily-translation-progress-direct="bilingual-v4"'),`${relative}: translation progress marker stale`);
   assert(html.includes('/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6'),`${relative}: public language UI missing`);
   assert(html.includes('/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2'),`${relative}: interaction contrast missing`);
   assert(html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'),`${relative}: content contrast v6 missing`);
@@ -100,4 +108,4 @@ for(const relative of trackedHtml()){
 assert(pages>=460,`Unexpected public HTML coverage: ${pages}`);
 assert(navigationPages>=460,`Unexpected navigation coverage: ${navigationPages}`);
 assert(shellPages>=460,`Unexpected shared-shell coverage: ${shellPages}`);
-process.stdout.write(`PASS: source-recovery translation V3 and content readability are codified across ${pages} public HTML pages; fresh navigation covers ${navigationPages}, shared shell ${shellPages}.\n`);
+process.stdout.write(`PASS: resilient translation V4 and content readability are codified across ${pages} public HTML pages; fresh navigation covers ${navigationPages}, shared shell ${shellPages}.\n`);
