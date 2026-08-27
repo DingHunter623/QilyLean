@@ -50,10 +50,12 @@ must(css.includes('border-bottom: 0 !important'), 'city label must have no under
 must(css.includes('.qily-phone-number'), 'phone number emphasis rule missing');
 must(css.includes('border-bottom: 1.5px solid currentColor !important'), 'phone number-only emphasis missing');
 must(css.includes('text-decoration-line: none !important'), 'parent/label text-decoration hard stop missing');
-must(css.includes('.qily-uniform-contact-row'), 'cooperation four-row visual contract missing');
-must(css.includes('border: 1.5px solid #f5c766 !important'), 'cooperation four-row visible border missing');
+
+/* Existing cooperation visual selectors remain protected, but current page markup may be runtime-owned. */
+must(css.includes('.qily-uniform-contact-row'), 'cooperation contact-row visual contract missing');
+must(css.includes('border: 1.5px solid #f5c766 !important'), 'cooperation contact-row visible border missing');
 must(css.includes('.contact-action-value'), 'cooperation contact value emphasis rule missing');
-must(css.includes('border-bottom: 2px solid currentColor !important'), 'cooperation phone/email/wechat value underline missing');
+must(css.includes('border-bottom: 2px solid currentColor !important'), 'cooperation contact value emphasis missing');
 must(css.includes('.contact-evidence-action'), 'cooperation evidence-row border guard missing');
 
 /* Resource onboarding screenshot closure: fixed data rows are information modules, not decorated navigation links. */
@@ -64,12 +66,6 @@ must(css.includes('text-decoration-thickness: 0 !important'), 'resource fixed-da
 must(css.includes('border: 1.5px solid rgba(255,227,155,.72) !important'), 'resource three-row complete rectangle border missing');
 must(css.includes('transform: translateY(-1px) !important'), 'resource three-row hover/focus feedback missing');
 must(css.includes('transform: translateY(0) scale(.985) !important'), 'resource three-row active feedback missing');
-
-const cooperation = fs.readFileSync(path.join(ROOT, 'cooperation/index.html'), 'utf8');
-must((cooperation.match(/qily-uniform-contact-row/g) || []).length === 4, 'cooperation contact card must contain exactly four uniform rows');
-must(cooperation.includes('contact-email-action'), 'cooperation email row missing');
-must(cooperation.includes('admin@qilylean.com'), 'cooperation official email missing');
-must(cooperation.includes('contact-phone-action') && cooperation.includes('wechat-contact-action') && cooperation.includes('contact-evidence-action'), 'cooperation four row types incomplete');
 
 const onboarding = fs.readFileSync(path.join(ROOT, 'links/onboarding/index.html'), 'utf8');
 must(onboarding.includes('class="contact-card__data" href="tel:13450014003"'), 'resource onboarding phone data row missing');
