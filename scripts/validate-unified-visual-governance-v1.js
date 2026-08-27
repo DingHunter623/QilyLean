@@ -26,7 +26,7 @@ must(css,'background:var(--qily-ui-surface)!important','Secondary/light surface 
 must(css,'border-radius:var(--qily-ui-radius)!important','Card/action radius contract');
 must(css,'font-size:max(19.5px,1em)!important','Body readability floor');
 
-must(materializer,"const UNIFIED_VISUAL_CSS = '/site-unified-visual-governance-v1.css?v=20260826-unified-visual-closure-v1'",'Unified visual cache owner');
+must(materializer,"const UNIFIED_VISUAL_CSS='/site-unified-visual-governance-v1.css?v=20260826-contrast-closure-v2'",'Unified visual cache owner');
 must(materializer,'qilyUnifiedVisualGovernanceV1Stylesheet','Unified visual stylesheet materialization');
 must(materializer,'site-unified-visual-governance-v1\\.css','Unified visual de-duplication');
 
@@ -45,4 +45,4 @@ if(materialized){
   if(duplicates.length)throw new Error(`Unified visual stylesheet duplicated in ${duplicates.length} HTML file(s): ${duplicates.slice(0,20).join(', ')}`);
 }
 
-process.stdout.write(`PASS: unified visual governance keeps navigation typography, action geometry, colour roles, surfaces and readable floors consistent${materialized?' across every tracked HTML page':''}.\n`);
+process.stdout.write(`PASS: unified visual governance keeps navigation typography, action geometry, colour roles, surfaces and readable floors consistent${materialized?' across every tracked HTML page':''}, independent of the resilient translation V4 runtime.\n`);
