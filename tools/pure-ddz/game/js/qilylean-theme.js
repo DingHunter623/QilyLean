@@ -1,6 +1,11 @@
 (() => {
   'use strict';
 
+  const RANK_TEXT={3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',10:'10',11:'J',12:'Q',13:'K',14:'A',15:'2',16:'小王',17:'大王'};
+  const GENERIC_PLAY_RE=/^(?:(?:我|左家电脑|右家电脑)，(?:单牌|对子|三张|三带一|三带二|顺子|连对|飞机|飞机带单|飞机带对|四带二|四带两对)|炸弹|王炸)$/;
+  let rawBrowserSpeak=null;
+  let lastAnnouncedPlay='';
+
   const overviewHtml = `
     <details class="qily-product-overview">
       <summary><strong>QilyLean 无广告斗地主｜简单娱乐，益智生活</strong><span>查看开发缘起与产品理念</span></summary>
@@ -35,9 +40,97 @@
     document.head.appendChild(style);
   }
 
+  function playerVoiceName(player){ return player===0?'我':player===1?'左家':'右家'; }
+  function rankText(rank){ return RANK_TEXT[rank]||String(rank??''); }
+
+  function playSignature(play){
+    if(!play?.cards?.length) return '';
+    return `${play.player}|${play.combo?.type||''}|${play.cards.map(card=>card.id).sort((a,b)=>a-b).join('-')}`;
+  }
+
+  function groupCards(cards){
+    const groups=new Map();
+    cards.forEach(card=>{ if(!groups.has(card.rank)) groups.set(card.rank,[]); groups.get(card.rank).push(card); });
+    return groups;
+  }
+
+  function describePlay(play){
+    const who=playerVoiceName(play.player), combo=play.combo||{}, type=combo.type||'', main=rankText(combo.main);
+    const groups=groupCards(play.cards||[]);
+    const otherRanks=[...groups.keys()].filter(rank=>rank!==combo.main).sort((a,b)=>a-b);
+    if(type==='rocket') return `${who}，王炸`;
+    if(type==='bomb') return `${who}，4个${main}，炸弹`;
+    if(type==='triple') return `${who}，3个${main}`;
+    if(type==='pair') return `${who}，一对${main}`;
+    if(type==='single') return `${who}，${main}`;
+    if(type==='triple1') return `${who}，3个${main}带${rankText(otherRanks[0])}`;
+    if(type==='triple2') return `${who}，3个${main}带一对${rankText(otherRanks[0])}`;
+    if(type==='straight'){
+      const ranks=[...groups.keys()].sort((a,b)=>a-b); return `${who}，顺子，${rankText(ranks[0])}到${rankText(ranks.at(-1))}`;
+    }
+    if(type==='pairStraight'){
+      const ranks=[...groups.keys()].sort((a,b)=>a-b); return `${who}，连对，${rankText(ranks[0])}到${rankText(ranks.at(-1))}`;
+    }
+    if(type==='four2') return `${who}，4个${main}带两张`;
+    if(type==='four2pair') return `${who}，4个${main}带两对`;
+    if(type==='airplane') return `${who}，飞机`;
+    if(type==='airplane1') return `${who}，飞机带单`;
+    if(type==='airplane2') return `${who}，飞机带对`;
+    return `${who}，出${play.cards.length}张牌`;
+  }
+
+  function installSpeechFilter(){
+    try{
+      const synth=window.speechSynthesis;
+      if(!synth||synth.__qilyDetailedPlayV123) return;
+      const native=synth.speak.bind(synth);
+      rawBrowserSpeak=native;
+      synth.speak=function(utterance){
+        const text=String(utterance?.text||'').trim();
+        if(GENERIC_PLAY_RE.test(text)) return;
+        return native(utterance);
+      };
+      Object.defineProperty(synth,'__qilyDetailedPlayV123',{value:true,configurable:true});
+    }catch(_error){}
+  }
+
+  function speakDetailed(text){
+    const current=window.PureDDZTest?.getState?.();
+    if(current?.settings?.voice===false) return;
+    try{
+      if(window.QilyLeanAndroid?.speak){ window.QilyLeanAndroid.speak(String(text)); return; }
+    }catch(_error){}
+    try{
+      if(!('speechSynthesis' in window)||!window.SpeechSynthesisUtterance) return;
+      speechSynthesis.cancel();
+      const utterance=new SpeechSynthesisUtterance(text);
+      utterance.lang='zh-CN'; utterance.rate=.88; utterance.pitch=1; utterance.volume=1;
+      (rawBrowserSpeak||speechSynthesis.speak.bind(speechSynthesis))(utterance);
+    }catch(_error){}
+  }
+
+  function reinforceVisualAnnouncement(text){
+    [110,260,520].forEach(delay=>setTimeout(()=>{
+      const owner=document.querySelector('.v120-play-owner');
+      if(owner) owner.textContent=text;
+    },delay));
+  }
+
+  function watchDetailedPlay(){
+    const state=window.PureDDZTest?.getState?.();
+    const play=state?.lastPlay;
+    if(!play?.cards?.length) return;
+    const signature=playSignature(play);
+    if(!signature||signature===lastAnnouncedPlay) return;
+    lastAnnouncedPlay=signature;
+    const text=describePlay(play);
+    reinforceVisualAnnouncement(text);
+    setTimeout(()=>speakDetailed(text),70);
+  }
+
   function mount(){
     document.querySelectorAll('.qily-business-strip').forEach(node=>node.remove());
-    ensureStyle();
+    ensureStyle(); installSpeechFilter();
     const main=document.querySelector('.game-main');
     const promise=document.querySelector('.clean-promise');
     if(main && promise && !document.querySelector('.qily-product-overview')) promise.insertAdjacentHTML('afterend',overviewHtml);
@@ -45,7 +138,10 @@
     if(welcomeCopy) welcomeCopy.innerHTML='这款游戏源于一个真实的家庭需求：减少实名注册、账号登录、验证码等操作门槛，让父母辈打开即可轻松娱乐；同时也为长期面对复杂分析、工程改善和项目管理的成年人提供一个保持思考、适度放松的益智方式。<strong>简单、高效、友好</strong>，是这款数字产品延续的设计理念。';
     const eyebrow=document.querySelector('.welcome-modal .eyebrow');
     if(eyebrow) eyebrow.textContent='QilyLean 无广告斗地主｜简单娱乐，益智生活';
+    setInterval(watchDetailedPlay,90);
   }
+
+  window.QilyLeanDDZElderV123=Object.freeze({describePlay,watchDetailedPlay});
 
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',mount,{once:true}); else mount();
 })();
