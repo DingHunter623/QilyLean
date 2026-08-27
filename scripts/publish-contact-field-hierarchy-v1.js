@@ -7,6 +7,7 @@ const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const HREF = '/site-contact-field-hierarchy-v1.css?v=20260827-resource-contact-data-v3';
+// V3 rollout owner: this tracked publisher change intentionally triggers main-side static materialization.
 const TAG = `<link id="qilyContactFieldHierarchyV1Stylesheet" rel="stylesheet" href="${HREF}">`;
 
 function trackedHtml() {
