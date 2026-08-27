@@ -1,6 +1,6 @@
-/* QilyLean sitewide floating dock standard v3｜2026-08-19
+/* QilyLean sitewide floating dock standard v4｜2026-08-27
  * One visual contract for every public page, desktop and mobile.
- * V3 keeps free X/Y dragging while the pointer is held, then automatically returns the dock to the viewport bottom-right home position.
+ * V4 preserves free X/Y dragging + bottom-right snapback and gives the six dock labels a governed gold identity.
  */
 :root{
   --qily-dock-size:62px;
@@ -8,6 +8,7 @@
   --qily-dock-bg:#0f4b5a;
   --qily-dock-bg-hover:#12606f;
   --qily-dock-border:#caa15f;
+  --qily-dock-text:#ffe39b;
   --qily-dock-font-size:15px;
   --qily-dock-edge:12px;
 }
@@ -52,8 +53,8 @@ html body #floatDock.qily-float-dock .qily-float-btn[data-action="share"]{
   padding:5px!important;
   border:1.5px solid var(--qily-dock-border)!important;
   border-radius:50%!important;
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
+  color:var(--qily-dock-text)!important;
+  -webkit-text-fill-color:var(--qily-dock-text)!important;
   background:var(--qily-dock-bg)!important;
   box-shadow:0 8px 20px rgba(7,60,71,.22)!important;
   filter:none!important;
@@ -73,9 +74,13 @@ html body #floatDock.qily-float-dock .qily-float-btn[data-action="share"]{
   transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease!important;
 }
 
+html body #floatDock.qily-float-dock .qily-float-btn:is(:link,:visited,:hover,:focus-visible,:active),
+html body #floatDock.qily-float-dock .qily-float-btn *{
+  color:var(--qily-dock-text)!important;
+  -webkit-text-fill-color:var(--qily-dock-text)!important;
+}
+
 html body #floatDock.qily-float-dock .qily-float-btn:is(:hover,:focus-visible){
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
   background:var(--qily-dock-bg-hover)!important;
   border-color:#ffe39b!important;
   box-shadow:0 10px 24px rgba(7,60,71,.30)!important;
@@ -105,6 +110,8 @@ html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-lin
   display:block!important;
   margin:0!important;
   padding:0!important;
+  color:var(--qily-dock-text)!important;
+  -webkit-text-fill-color:var(--qily-dock-text)!important;
   font-size:var(--qily-dock-font-size)!important;
   font-weight:900!important;
   line-height:1.02!important;
@@ -114,6 +121,8 @@ html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-lin
 }
 html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-primary,
 html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url{
+  color:var(--qily-dock-text)!important;
+  -webkit-text-fill-color:var(--qily-dock-text)!important;
   font-size:var(--qily-dock-font-size)!important;
   font-weight:900!important;
   letter-spacing:0!important;
