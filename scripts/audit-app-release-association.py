@@ -84,7 +84,7 @@ checks = {
     'tools/times26001/index.html': ['Times26001', 'v1.1.13', 'API 36', 'admin@qilylean.com'],
     'capabilities/index.html': ['Times26001', 'QilyLean Home'],
     'app-support/index.html': ['Times26001', 'v1.1.13', 'v2.3.3', 'v2.3.2', '官方网址', '官网邮箱'],
-    'app-store/times26001/README.md': ['1.1.14', 'versionCode `17`', 'Upload Key', '前台粗略位置', '官方网址', '三星 C55'],
+    'app-store/times26001/README.md': ['1.1.14', 'versionCode `17`', 'Upload Key', '近似坐标', '官方网址', '三星 C55'],
     'app-store/qilylean-home/README.md': ['2.3.3', 'versionCode `11`', '2.3.2', 'versionCode `10`', '官方网址'],
     'legal/times26001/privacy/index.html': ['v1.1.13', '前台位置权限', '精确位置或粗略位置', '不使用后台位置', '官方网址、官网邮箱'],
 }
