@@ -1,0 +1,94 @@
+name: Align Redline CI Contracts 20260828
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-redline-ci-contracts-20260828.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  align:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Sync latest main
+        run: git pull --rebase origin main
+
+      - name: Align old CI assertions with current runtime contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          files = [
+              Path('.github/workflows/verify-pure-ddz-live.yml'),
+              Path('.github/workflows/fix-capabilities-visuals-20260824.yml'),
+              Path('.github/workflows/verify-pure-ddz-public-startfix.yml'),
+          ]
+          for p in files:
+              s = p.read_text(encoding='utf-8')
+              s = s.replace('20260828-elder-ux-v126','20260828-elder-ux-v127')
+              s = s.replace('20260828-elder-v126','20260828-elder-v127')
+              s = s.replace('20260828-v126','20260828-v127')
+              s = s.replace('V126','V127').replace('v1.2.6','v1.2.7')
+              s = s.replace("grep -Fq 'qily-joker-aircraft' tools/pure-ddz/game/js/card-theme.js", "grep -Fq \"16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}\" tools/pure-ddz/game/js/card-theme.js")
+              s = s.replace("grep -Fq 'qily-joker-aircraft' /tmp/card-theme.js", "grep -Fq \"16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}\" /tmp/card-theme.js")
+              s = s.replace("if(geometry.jokerHtml.includes('C919')||!geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('qilylean-aircraft-hero-latest-q98.webp')||!geometry.jokerHtml.includes('qily-joker-aircraft'))throw new Error('small joker visual wrong '+geometry.jokerHtml);", "if(geometry.jokerHtml.includes('C919')||geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('qilylean-aircraft-hero-latest-q98.webp'))throw new Error('small joker visual wrong '+geometry.jokerHtml);")
+              p.write_text(s, encoding='utf-8')
+
+          p = Path('.github/workflows/verify-pure-ddz-capability-showcase.yml')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('c919-strategy-hero-v14.png','qilylean-aircraft-hero-latest-q98.webp')
+          s = s.replace("const version='20260824-mobile-landscape-card-comfort-v122';", "const version='20260828-elder-ux-v127';")
+          p.write_text(s, encoding='utf-8')
+
+          p = Path('.github/workflows/sync-pure-ddz-product-overview.yml')
+          s = p.read_text(encoding='utf-8')
+          s = s.replace('小王使用六大业务 C919 飞机模型','小王使用官网首图“六大业务为主翼”飞机模型')
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Verify aligned contracts
+        run: |
+          set -euo pipefail
+          grep -Fq '20260828-elder-ux-v127' .github/workflows/verify-pure-ddz-live.yml
+          grep -Fq "16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}" .github/workflows/verify-pure-ddz-live.yml
+          grep -Fq '20260828-elder-ux-v127' .github/workflows/fix-capabilities-visuals-20260824.yml
+          grep -Fq '20260828-elder-ux-v127' .github/workflows/verify-pure-ddz-public-startfix.yml
+          grep -Fq 'qilylean-aircraft-hero-latest-q98.webp' .github/workflows/verify-pure-ddz-capability-showcase.yml
+          ! grep -Fq 'c919-strategy-hero-v14.png' .github/workflows/verify-pure-ddz-capability-showcase.yml
+          git diff --check
+
+      - name: Commit CI contract alignment
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            .github/workflows/verify-pure-ddz-live.yml \
+            .github/workflows/fix-capabilities-visuals-20260824.yml \
+            .github/workflows/verify-pure-ddz-public-startfix.yml \
+            .github/workflows/verify-pure-ddz-capability-showcase.yml \
+            .github/workflows/sync-pure-ddz-product-overview.yml
+          if git diff --cached --quiet; then
+            echo 'CI contracts already aligned.'
+            exit 0
+          fi
+          git commit -m 'test: lock clarified DDZ joker and v1.2.7 contracts'
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+            sleep 2
+          done
+          exit 1
