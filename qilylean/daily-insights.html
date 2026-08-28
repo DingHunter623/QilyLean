@@ -72,7 +72,7 @@
 <script defer data-qily-interaction-contrast-direct="v2" src="/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2"></script>
 <script defer data-qily-content-contrast-direct="v6" src="/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6"></script>
 <script defer data-qily-interaction-semantics-direct="v1" src="/site-interaction-semantics-v1.js?v=20260828-r8-semantics-v1"></script>
-<script defer data-qily-contact-route-direct="v13" src="/site-contact-route-v1.js?v=20260828-dock-functional-public-v13"></script>
+<script defer data-qily-contact-route-direct="v13.1" src="/site-contact-route-v1.js?v=20260828-dock-functional-public-v131"></script>
 </head>
 <body class="module-page daily-index-page">
 <header class="qily-site-header"><a class="qily-brand" href="/">QilyLean｜启力精益</a><nav class="site-nav" aria-label="QilyLean核心导视">
@@ -471,5 +471,5 @@
 </div></section>
 </main>
 <script>(function(){var params=new URLSearchParams(location.search),year=(params.get('year')||'').trim(),input=document.getElementById('briefSearch'),grid=document.getElementById('briefCuratedGrid'),status=document.getElementById('briefFilterStatus');if(!grid)return;var cards=Array.prototype.slice.call(grid.querySelectorAll('.brief-index-card'));function apply(){var q=(input&&input.value||'').trim().toLocaleLowerCase('zh-CN'),n=0;cards.forEach(function(card){var d=card.getAttribute('data-date')||'',s=(card.getAttribute('data-search')||'').toLocaleLowerCase('zh-CN'),hitYear=!year||d.indexOf(year+'-')===0,hitSearch=!q||s.includes(q),hit=hitYear&&hitSearch;card.hidden=!hit;if(hit)n+=1;});document.querySelectorAll('[data-year-filter]').forEach(function(link){var active=!!year&&link.getAttribute('data-year-filter')===year;link.classList.toggle('active',active);if(active)link.setAttribute('aria-current','true');else link.removeAttribute('aria-current');});if(status){if(year&&q)status.innerHTML=year+'年｜找到 '+n+' 篇相关精选　<a href="/qilylean/daily-insights.html#brief-directory">查看全部年份</a>';else if(year)status.innerHTML=year+'年｜当前 '+n+' 篇精选　<a href="/qilylean/daily-insights.html#brief-directory">查看全部年份</a>';else status.textContent=q?'找到 '+n+' 篇相关精选':'当前 375 篇精选';}}if(input)input.addEventListener('input',apply);apply();})();</script>
-<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260828-authority-v5"></script>
+<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260828-authority-v51"></script>
 </body></html>
