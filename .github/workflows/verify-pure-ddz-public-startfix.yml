@@ -21,21 +21,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Wait for deployed elder runtime v1.2.4
+      - name: Wait for deployed elder runtime v1.2.5
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           ok=0
           for i in {1..48}; do
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v124b' -o /tmp/page.html || true
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v124b' -o /tmp/game.js || true
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v124b' -o /tmp/card-theme.js || true
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v124b' -o /tmp/qily-theme.js || true
-            if grep -Fq '20260828-elder-ux-v124' /tmp/page.html 2>/dev/null \
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v125b' -o /tmp/page.html || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v125b' -o /tmp/game.js || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v125b' -o /tmp/card-theme.js || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v125b' -o /tmp/qily-theme.js || true
+            if grep -Fq '20260828-elder-ux-v125' /tmp/page.html 2>/dev/null \
               && grep -Fq "const VERSION = '1.2.4'" /tmp/game.js 2>/dev/null \
               && grep -Fq "state.settings.difficulty==='expert'?1750+Math.random()*450" /tmp/game.js 2>/dev/null \
               && ! grep -Fq 'C919' /tmp/card-theme.js 2>/dev/null \
-              && grep -Fq 'bottom-cards>.mini-card' /tmp/card-theme.js 2>/dev/null \
+              && grep -Fq 'qilylean-aircraft-hero-latest-q98.webp' /tmp/card-theme.js 2>/dev/null \
+              && grep -Fq 'qily-joker-aircraft' /tmp/card-theme.js 2>/dev/null \
+              && grep -Fq '#hint-message.hint-message' /tmp/card-theme.js 2>/dev/null \
+              && grep -Fq ':has(.card:nth-child(18))' /tmp/card-theme.js 2>/dev/null \
               && grep -Fq 'QilyLeanDDZElderV123' /tmp/qily-theme.js 2>/dev/null \
               && grep -Fq 'js/visual-v120.js' /tmp/page.html 2>/dev/null; then
               ok=1
@@ -65,7 +68,7 @@ jobs:
               const errors=[]; const dialogs=[];
               page.on('pageerror',e=>errors.push(e.stack||String(e)));
               page.on('dialog',async d=>{dialogs.push(d.message());await d.dismiss();});
-              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v124b',{waitUntil:'domcontentloaded',timeout:60000});
+              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v125b',{waitUntil:'domcontentloaded',timeout:60000});
               await page.evaluate(()=>{localStorage.clear();localStorage.setItem('qily_global_language_v3','zh-CN');});
               await page.reload({waitUntil:'domcontentloaded',timeout:60000});
               await page.waitForFunction(()=>Boolean(window.PureDDZTest)&&Boolean(window.QilyLeanDDZElderV123)&&Boolean(window.QilyLeanCardTheme)&&document.documentElement.classList.contains('ddz-ready'),null,{timeout:12000});
@@ -92,7 +95,8 @@ jobs:
                   const dock=document.querySelector('#floatDock');
                   const dockBtn=dock?.querySelector('.qily-float-btn');
                   const dockRect=dock?.getBoundingClientRect();const dockBtnRect=dockBtn?.getBoundingClientRect();
-                  return {brand:rect('.topbar .brand'),score:rect('.topbar .scoreboard'),actions:rect('.topbar .top-actions'),translate:rect('.topbar .qily-web-translate')||rect('#qilyGlobalTranslationDualRouteV2'),topButtons,bottom:{width:bottomRect.width,height:bottomRect.height,cssWidth:bottomStyle.width,cssHeight:bottomStyle.height},played:{width:playedRect.width,height:playedRect.height},jokerHtml,dock:dockRect?{width:dockRect.width,height:dockRect.height}:null,dockBtn:dockBtnRect?{width:dockBtnRect.width,height:dockBtnRect.height}:null};
+                  const shell=rect('.game-shell');
+                  return {brand:rect('.topbar .brand'),score:rect('.topbar .scoreboard'),actions:rect('.topbar .top-actions'),translate:rect('.topbar .qily-web-translate')||rect('#qilyGlobalTranslationDualRouteV2'),topButtons,bottom:{width:bottomRect.width,height:bottomRect.height,cssWidth:bottomStyle.width,cssHeight:bottomStyle.height},played:{width:playedRect.width,height:playedRect.height},jokerHtml,shell,dock:dockRect?{width:dockRect.width,height:dockRect.height,right:dockRect.right}:null,dockBtn:dockBtnRect?{width:dockBtnRect.width,height:dockBtnRect.height}:null};
                 });
                 console.log('desktop geometry',JSON.stringify(geometry,null,2));
                 if(overlaps(geometry.brand,geometry.score)) throw new Error('header brand overlaps scoreboard '+JSON.stringify(geometry));
@@ -101,8 +105,9 @@ jobs:
                 if(geometry.topButtons.some(item=>item.height>75||item.width<78)) throw new Error('top action button collapsed/vertical '+JSON.stringify(geometry.topButtons));
                 if(geometry.bottom.width<95||geometry.bottom.height<120) throw new Error('bottom card not enlarged '+JSON.stringify(geometry.bottom));
                 if(geometry.played.width<118||geometry.played.height<170) throw new Error('played card not enlarged '+JSON.stringify(geometry.played));
-                if(geometry.jokerHtml.includes('C919')||geometry.jokerHtml.includes('QILY')) throw new Error('small joker still carries extra text '+geometry.jokerHtml);
-                if(!geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('小王')) throw new Error('small joker visual is not aligned with king image '+geometry.jokerHtml);
+                if(!geometry.shell||Math.abs(geometry.shell.width/viewport.width-.8)>.025) throw new Error('desktop safe view is not approximately 80% '+JSON.stringify(geometry.shell));
+                if(geometry.jokerHtml.includes('C919')) throw new Error('small joker code still carries forbidden model wording '+geometry.jokerHtml);
+                if(!geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('qilylean-aircraft-hero-latest-q98.webp')||!geometry.jokerHtml.includes('qily-joker-aircraft')||!geometry.jokerHtml.includes('小王')) throw new Error('small joker is not person + homepage aircraft '+geometry.jokerHtml);
                 if(geometry.dockBtn&&(geometry.dockBtn.width<60||geometry.dockBtn.height>58||geometry.dockBtn.width/geometry.dockBtn.height<1.2)) throw new Error('floating dock button still circular/cramped '+JSON.stringify(geometry.dockBtn));
               }
 
@@ -110,17 +115,30 @@ jobs:
               if(await welcome.isVisible().catch(()=>false)) await page.locator('#welcome-start').click();
               else await page.locator('#start').click();
               await page.waitForTimeout(1700);
-              const result=await page.evaluate(()=>({phase:window.PureDDZTest.getState().phase,stateHand:window.PureDDZTest.getState().hands[0].length,domHand:document.querySelectorAll('#hand .card').length,strips:document.querySelectorAll('.qily-business-strip').length,elder:Boolean(window.QilyLeanDDZElderV123),version:window.PureDDZTest.version}));
+              const result=await page.evaluate(()=>{
+                const cards=[...document.querySelectorAll('#hand .card')];
+                const cardRects=cards.map(card=>card.getBoundingClientRect());
+                const spacing=cardRects.length>1?cardRects[1].left-cardRects[0].left:null;
+                const firstRank=cards[0]?.querySelector('.qily-card-corner b')?.getBoundingClientRect();
+                const hint=document.querySelector('#hint-message');
+                const hintStyle=hint?getComputedStyle(hint):null;
+                return {phase:window.PureDDZTest.getState().phase,stateHand:window.PureDDZTest.getState().hands[0].length,domHand:cards.length,strips:document.querySelectorAll('.qily-business-strip').length,elder:Boolean(window.QilyLeanDDZElderV123),version:window.PureDDZTest.version,spacing,firstRankWidth:firstRank?.width||0,hintColor:hintStyle?.color||'',hintFill:hintStyle?.webkitTextFillColor||''};
+              });
               console.log({viewport,result,exact,errors,dialogs});
               if(dialogs.length) throw new Error('unexpected initial dialog '+dialogs.join('|'));
               if(result.version!=='1.2.4') throw new Error('wrong runtime version '+JSON.stringify(result));
               if(result.stateHand<17||result.domHand<17) throw new Error('cards not visible '+JSON.stringify(result));
               if(!['bidding','playing'].includes(result.phase)) throw new Error('bad phase '+JSON.stringify(result));
               if(result.strips!==0||!result.elder) throw new Error('elder runtime not ready');
+              if(viewport.width>=1181){
+                if(!(result.spacing>=55)) throw new Error('17-card visible spacing too tight '+JSON.stringify(result));
+                if(!(result.firstRankWidth>0&&result.firstRankWidth<=result.spacing+4)) throw new Error('rank/suit may be hidden by next card '+JSON.stringify(result));
+                if(!/255/.test(result.hintColor)&&!/255/.test(result.hintFill)) throw new Error('elder hint text is not high-contrast white '+JSON.stringify(result));
+              }
               if(errors.length) throw new Error(errors.join('\n'));
               await page.close();
             }
             await browser.close();
-            console.log('PURE_DDZ_PUBLIC_ELDER_V124_GEOMETRY_AND_START_OK');
+            console.log('PURE_DDZ_PUBLIC_ELDER_V125_SAFE_VIEW_AND_START_OK');
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
