@@ -1,22 +1,27 @@
-/* QilyLean Interaction Semantics Runtime V1.2｜2026-08-29
+/* QilyLean Interaction Semantics Runtime V1.3｜2026-08-29
  * Classifies public UI by actual behavior instead of visual appearance.
  * Route navigation => explicit feedback; local controls => light feedback;
- * static terminology/tools/vocabulary => visual state is frozen so hover cannot fake a link.
- * V1.2 also provides one evidence-grade mapping between Trust Center, project list and project detail pages.
+ * static terminology/tools/vocabulary => no fake link feedback.
+ * V1.3 also owns a persistent, draggable primary-navigation scroll rail so
+ * overflow is visible on desktop/mobile even when the OS hides native scrollbars.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyInteractionSemanticsV12)return;
+  if(w.__qilyInteractionSemanticsV13)return;
+  w.__qilyInteractionSemanticsV13=true;
   w.__qilyInteractionSemanticsV12=true;
   w.__qilyInteractionSemanticsV11=true;
   w.__qilyInteractionSemanticsV1=true;
 
   var STATIC_SELECTOR=[
-    '.tag','.tags>span','.chip','.chips>span','.pill','.badge',
+    '.tag','.tags>span','.tags>li','.chip','.chips>span','.chips>li','.pill','.badge',
     '.term','.term-chip','.qily-term-chip','.method-chip','.qily-method-chip',
     '.topic-chip','.keyword','.keyword-chip','.taxonomy-chip','.label-chip',
-    '.tech-tag','.tool-tag','.method-tag','.glossary-tag','.topic-tag'
+    '.tech-tag','.tool-tag','.method-tag','.glossary-tag','.topic-tag',
+    '.brief-action-strip>span','.brief-action-strip>li','.tag-row>span','.tag-row>li',
+    '.brief-tags>span','.brief-tags>li','.term-row>span','[data-qily-static-token]'
   ].join(',');
+  var PRIMARY_NAV_SELECTOR='header.qily-site-header nav.site-nav,header.qily-site-header nav.qily-global-nav,header.qily-global-header nav.site-nav,header.qily-global-header nav.qily-global-nav,header nav[aria-label="主导航"],header nav[aria-label="网站导航"],header nav[aria-label="QilyLean核心导视"]';
 
   var PROJECT_EVIDENCE={
     '/projects/smed-300t/':{level:'B',label:'已验证',reason:'改善前后数据与验证方法已公开'},
@@ -83,6 +88,50 @@
     root.querySelectorAll&&root.querySelectorAll('a[href],[data-route],[data-href],[data-url],[data-external-url],button,[role="button"],[data-tab],[data-toggle],[aria-controls],'+STATIC_SELECTOR).forEach(classifyNode);
   }
 
+  function railGeometry(nav,rail){
+    var header=nav.closest('header');if(!header)return;
+    var nr=nav.getBoundingClientRect(),hr=header.getBoundingClientRect();
+    rail.style.left=Math.max(0,nr.left-hr.left)+'px';
+    rail.style.width=Math.max(0,nr.width)+'px';
+  }
+  function syncRail(nav,rail,thumb){
+    railGeometry(nav,rail);
+    var track=Math.max(0,rail.clientWidth),scrollWidth=Math.max(nav.scrollWidth,nav.clientWidth),maxScroll=Math.max(0,scrollWidth-nav.clientWidth);
+    var thumbWidth=maxScroll>0?Math.max(56,track*(nav.clientWidth/scrollWidth)):track;
+    thumbWidth=Math.min(track,thumbWidth);
+    var maxLeft=Math.max(0,track-thumbWidth),left=maxScroll>0?(nav.scrollLeft/maxScroll)*maxLeft:0;
+    thumb.style.width=thumbWidth+'px';thumb.style.transform='translateX('+left+'px)';
+    rail.setAttribute('data-qily-nav-overflow',maxScroll>1?'true':'false');
+    rail.setAttribute('aria-valuenow',String(Math.round(maxScroll>0?(nav.scrollLeft/maxScroll)*100:0)));
+  }
+  function installPrimaryNavRail(nav){
+    if(!nav||nav.dataset.qilyNavScrollRail==='v1')return;
+    var header=nav.closest('header');if(!header)return;
+    nav.dataset.qilyNavScrollRail='v1';
+    var rail=d.createElement('div');rail.className='qily-primary-nav-scroll-rail';rail.setAttribute('role','scrollbar');rail.setAttribute('aria-label','一级导航左右滑动条');rail.setAttribute('aria-orientation','horizontal');rail.setAttribute('aria-valuemin','0');rail.setAttribute('aria-valuemax','100');rail.setAttribute('aria-valuenow','0');
+    var thumb=d.createElement('span');thumb.className='qily-primary-nav-scroll-thumb';thumb.setAttribute('aria-hidden','true');rail.appendChild(thumb);header.appendChild(rail);
+    var sync=function(){w.requestAnimationFrame(function(){syncRail(nav,rail,thumb);});};
+    nav.addEventListener('scroll',sync,{passive:true});
+    rail.addEventListener('click',function(event){
+      if(event.target===thumb)return;
+      var rect=rail.getBoundingClientRect(),maxScroll=Math.max(0,nav.scrollWidth-nav.clientWidth);if(maxScroll<=0)return;
+      var ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/Math.max(1,rect.width)));nav.scrollTo({left:ratio*maxScroll,behavior:'smooth'});
+    });
+    thumb.addEventListener('pointerdown',function(event){
+      if(nav.scrollWidth<=nav.clientWidth)return;
+      event.preventDefault();event.stopPropagation();
+      var startX=event.clientX,startScroll=nav.scrollLeft,trackWidth=Math.max(1,rail.clientWidth-thumb.getBoundingClientRect().width),maxScroll=Math.max(1,nav.scrollWidth-nav.clientWidth);
+      thumb.setPointerCapture&&thumb.setPointerCapture(event.pointerId);
+      function move(e){var dx=e.clientX-startX;nav.scrollLeft=startScroll+(dx/trackWidth)*maxScroll;}
+      function end(e){thumb.removeEventListener('pointermove',move);thumb.removeEventListener('pointerup',end);thumb.removeEventListener('pointercancel',end);try{thumb.releasePointerCapture&&thumb.releasePointerCapture(e.pointerId);}catch(error){}}
+      thumb.addEventListener('pointermove',move);thumb.addEventListener('pointerup',end);thumb.addEventListener('pointercancel',end);
+    });
+    sync();setTimeout(sync,120);setTimeout(sync,700);
+  }
+  function installPrimaryNavRails(){d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(installPrimaryNavRail);}
+  function syncPrimaryNavRails(){d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(function(nav){var header=nav.closest('header'),rail=header&&header.querySelector('.qily-primary-nav-scroll-rail');if(rail){var thumb=rail.querySelector('.qily-primary-nav-scroll-thumb');if(thumb)syncRail(nav,rail,thumb);}});}
+  if(!w.__qilyPrimaryNavRailResizeV1){w.__qilyPrimaryNavRailResizeV1=true;w.addEventListener('resize',syncPrimaryNavRails,{passive:true});}
+
   function evidenceMarkup(meta,compact){
     var link=d.createElement('a');
     link.href='/trust/#evidence-levels';
@@ -90,7 +139,7 @@
     link.setAttribute('data-qily-project-evidence',meta.level);
     link.setAttribute('aria-label','证据等级 '+meta.level+' '+meta.label+'，查看证据分级口径');
     var badge=d.createElement('b');badge.textContent=meta.level;link.appendChild(badge);
-    var text=d.createElement('span');text.textContent=compact?('证据等级：'+meta.label):('证据等级：'+meta.label);link.appendChild(text);
+    var text=d.createElement('span');text.textContent='证据等级：'+meta.label;link.appendChild(text);
     if(!compact){var note=d.createElement('small');note.textContent=meta.reason+'｜查看分级口径 →';link.appendChild(note);}
     return link;
   }
@@ -137,7 +186,7 @@
     section.dataset.qilyEvidenceLinks='v1';
   }
 
-  function boot(){scan(d);injectProjectDetailGrade();injectProjectListGrades();addTrustLinks();}
+  function boot(){scan(d);installPrimaryNavRails();injectProjectDetailGrade();injectProjectListGrades();addTrustLinks();setTimeout(syncPrimaryNavRails,30);}
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   d.addEventListener('qily:shell-ready',boot);
   d.addEventListener('qily:softnavigate',boot);
