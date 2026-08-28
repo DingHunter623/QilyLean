@@ -12,3 +12,21 @@ html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url
   color:var(--qily-dock-text)!important;
   -webkit-text-fill-color:var(--qily-dock-text)!important;
 }
+
+/* QILY-DOCK-ONE-TEMPLATE-20260828:START */
+html body #floatDock.qily-float-dock .qily-float-btn.qily-float-btn,
+html body #floatDock.qily-floating-dock .qily-float-btn.qily-float-btn,
+html body #floatDock :is(a,button).qily-float-btn.qily-float-btn{
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  background:#0f4b5a!important;
+  background-color:#0f4b5a!important;
+  background-image:none!important;
+  border-color:#caa15f!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+html body #floatDock .qily-float-btn.qily-float-btn *{color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important}
+html body #floatDock .qily-float-btn.qily-float-btn:is(:hover,:focus-visible){background:#12606f!important;background-image:none!important;border-color:#ffe39b!important}
+/* QILY-DOCK-ONE-TEMPLATE-20260828:END */

@@ -225,6 +225,62 @@ html:root body :is(
 }
 /* QILY-VI-SURFACE-FINAL-GUARD:END */
 
+/* QILY-REDLINE-CLOSURE-20260828:START */
+/* Screenshot redline closure: one final authority for contrast, width and six-button Dock visuals. */
+:root{--qily-redline-axis:1560px;--qily-redline-gutter:40px;--qily-redline-dock-bg:#0f4b5a;--qily-redline-dock-border:#caa15f;--qily-redline-dock-text:#ffe39b}
+
+/* GB/T 2828 and equivalent dark preview headers: filename/meta copy must never fall back to muted dark ink. */
+html:root body .preview-head .file-meta,
+html:root body .preview-head [class*="file-meta"],
+html:root body .preview-head>p:not(.eyebrow):not(.kicker):not(.meta):not(.fine){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+
+/* OPL is a public knowledge asset and must use the same 1560px desktop content axis as the main site. */
+html:root body .opl-shell{
+  width:min(var(--qily-redline-axis),calc(100% - (var(--qily-redline-gutter) * 2)))!important;
+  max-width:var(--qily-redline-axis)!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+
+/* Every Dock action uses one shared visual template. Share/contact may not introduce separate fills. */
+html:root body #floatDock.qily-float-dock .qily-float-btn,
+html:root body #floatDock.qily-floating-dock .qily-float-btn,
+html:root body #floatDock :is(a,button).qily-float-btn{
+  color:var(--qily-redline-dock-text)!important;
+  -webkit-text-fill-color:var(--qily-redline-dock-text)!important;
+  background:var(--qily-redline-dock-bg)!important;
+  background-color:var(--qily-redline-dock-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-redline-dock-border)!important;
+  box-shadow:0 8px 20px rgba(7,60,71,.22)!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+html:root body #floatDock .qily-float-btn *,
+html:root body #floatDock .qily-float-btn:is(:link,:visited,:hover,:focus-visible,:active){
+  color:var(--qily-redline-dock-text)!important;
+  -webkit-text-fill-color:var(--qily-redline-dock-text)!important;
+}
+html:root body #floatDock .qily-float-btn:is(:hover,:focus-visible){
+  background:#12606f!important;
+  background-color:#12606f!important;
+  background-image:none!important;
+  border-color:#ffe39b!important;
+}
+@media(max-width:900px){
+  :root{--qily-redline-gutter:15px}
+  html:root body .opl-shell{width:calc(100% - 30px)!important;max-width:100%!important}
+}
+/* QILY-REDLINE-CLOSURE-20260828:END */
+
 /* Print/PDF is non-interactive. This rule MUST remain last so the screen stability recovery above cannot resurrect the Dock. */
 @media print{
   html body>#floatDock,

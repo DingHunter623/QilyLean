@@ -267,3 +267,15 @@ html:root body main :is(
 @media(max-width:620px){
   :root{--qily-content-axis-gutter:15px;}
 }
+
+/* QILY-OPL-AXIS-CLOSURE-20260828:START */
+html body .opl-shell{
+  width:min(var(--qily-content-axis),calc(100% - (var(--qily-content-axis-gutter) * 2)))!important;
+  max-width:var(--qily-content-axis)!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:900px){html body .opl-shell{width:100%!important;max-width:100%!important}}
+/* QILY-OPL-AXIS-CLOSURE-20260828:END */

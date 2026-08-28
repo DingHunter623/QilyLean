@@ -9,23 +9,21 @@
   const RANK_THEME=Object.freeze({3:{code:'现场',title:'现场事实',subtitle:'Gemba Facts',skill:'现场观察'},4:{code:'数据',title:'工程数据',subtitle:'Engineering Data',skill:'数据采集'},5:{code:'精益',title:'精益改善',subtitle:'Lean Kaizen',skill:'消除浪费'},6:{code:'质量',title:'质量保证',subtitle:'Quality Assurance',skill:'过程质量'},7:{code:'数智',title:'数智固化',subtitle:'Digitalization',skill:'数字工厂'},8:{code:'知识',title:'知识资产',subtitle:'Knowledge Assets',skill:'知识沉淀'},9:{code:'IE',title:'工业工程',subtitle:'Industrial Engineering',skill:'IE七大手法'},10:{code:'ECRS',title:'流程改善',subtitle:'ECRS',skill:'取消·合并·重排·简化'},11:{code:'SMED',title:'快速换型',subtitle:'SMED',skill:'换线换模改善'},12:{code:'VSM',title:'价值流',subtitle:'Value Stream Mapping',skill:'端到端分析'},13:{code:'TPM',title:'设备效率',subtitle:'TPM',skill:'全员生产维护'},14:{code:'OEE',title:'综合效率',subtitle:'OEE',skill:'效率损失分析'},15:{code:'FLOW',title:'单件流',subtitle:'One Piece Flow',skill:'连续流制造'}});
   const SUIT_THEME=Object.freeze({'♠':{code:'ENGINEERING',title:'工程能力',icon:'⚙'},'♥':{code:'KAIZEN',title:'改善方法',icon:'◆'},'♣':{code:'PROJECT',title:'项目交付',icon:'▣'},'♦':{code:'DIGITAL',title:'数智赋能',icon:'◇'}});
   const HOME_AIRCRAFT=siteAssetUrl('qilylean-aircraft-hero-latest-q98.webp');
-  const JOKER_THEME=Object.freeze({16:{type:'small-joker',title:'小王',image:assetUrl('avatar-king.webp'),aircraft:HOME_AIRCRAFT},17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}});
+  const JOKER_THEME=Object.freeze({16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT},17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}});
   const RULE_RANK=Object.freeze({11:'J',12:'Q',13:'K',14:'A',15:'2',16:'小王',17:'大王'});
   function escapeHtml(value){return String(value??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
   function ruleRankText(card){return RULE_RANK[card.rank]||String(card.rank)}
   function getTheme(card){if(!card)return null;if(card.rank>=16)return {...JOKER_THEME[card.rank],rank:card.rank,joker:true};return {...RANK_THEME[card.rank],suit:SUIT_THEME[card.suit],rank:card.rank,joker:false}}
   function renderJoker(card){
     const theme=getTheme(card);
-    const aircraft=card.rank===16?`<span class="qily-joker-aircraft" aria-label="QilyLean官网首图飞机模型"><img src="${escapeHtml(theme.aircraft)}" alt="QilyLean官网首图飞机模型" draggable="false"></span>`:'';
-    return `<span class="qily-card qily-card--joker ${theme.type}"><span class="qily-card-corner"><b>${escapeHtml(theme.title)}</b><i>JOKER</i></span><span class="qily-joker-visual"><img class="qily-joker-person" src="${escapeHtml(theme.image)}" alt="${escapeHtml(theme.title)}" draggable="false">${aircraft}</span></span>`
+    return `<span class="qily-card qily-card--joker ${theme.type}"><span class="qily-card-corner"><b>${escapeHtml(theme.title)}</b><i>JOKER</i></span><span class="qily-joker-visual"><img class="qily-joker-person" src="${escapeHtml(theme.image)}" alt="${escapeHtml(theme.title)}" draggable="false"></span></span>`
   }
   function renderNormalCard(card){const theme=getTheme(card),red=card.suit==='♥'||card.suit==='♦';return `<span class="qily-card qily-card--normal${red?' qily-rule-red':''}"><span class="qily-card-corner qily-rank-suit-line"><b>${escapeHtml(ruleRankText(card))}${escapeHtml(card.suit)}</b></span><span class="qily-card-theme"><small>${escapeHtml(theme.suit.code)}</small><strong>${escapeHtml(theme.code)}</strong><b>${escapeHtml(theme.title)}</b><em>${escapeHtml(theme.skill)}</em></span></span>`}
   function renderCard(card){return card.rank>=16?renderJoker(card):renderNormalCard(card)}
   function renderMiniCard(card){
     const theme=getTheme(card);
     if(card.rank>=16){
-      const aircraft=card.rank===16?`<span class="qily-mini-joker-aircraft"><img src="${escapeHtml(theme.aircraft)}" alt="" aria-hidden="true"></span>`:'';
-      return `<span class="mini-card qily-mini-joker ${theme.type}"><span class="qily-mini-joker-person"><img src="${escapeHtml(theme.image)}" alt="${escapeHtml(theme.title)}"></span>${aircraft}<b>${escapeHtml(theme.title)}</b></span>`;
+      return `<span class="mini-card qily-mini-joker ${theme.type}"><span class="qily-mini-joker-person"><img src="${escapeHtml(theme.image)}" alt="${escapeHtml(theme.title)}"></span><b>${escapeHtml(theme.title)}</b></span>`;
     }
     return `<span class="mini-card qily-mini-business${card.suit==='♥'||card.suit==='♦'?' red':''}"><b>${escapeHtml(ruleRankText(card))}${escapeHtml(card.suit)}</b><small>${escapeHtml(theme.code)}</small></span>`
   }
@@ -38,16 +36,12 @@
         .qily-card--joker .qily-joker-visual>.qily-joker-person{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important}
         .qily-card--joker .qily-card-main{display:none!important}
 
-        /* 小王：人物 + 官网首页首图飞机模型。牌面不叠加型号、项目名或其它额外文字。 */
-        .qily-card--joker.small-joker .qily-joker-visual{top:31%!important;width:86%!important;height:66%!important;display:grid!important;grid-template-rows:minmax(0,1fr) 42%!important;gap:3px!important;align-items:center!important;overflow:hidden!important}
-        .qily-card--joker.small-joker .qily-joker-person{width:72%!important;height:100%!important;justify-self:center!important;object-fit:contain!important;object-position:center!important}
-        .qily-card--joker.small-joker .qily-joker-aircraft{display:block!important;position:relative!important;width:100%!important;height:100%!important;overflow:hidden!important;border-radius:8px!important;background:#dceeed!important;border:1px solid rgba(7,60,71,.18)!important}
-        .qily-card--joker.small-joker .qily-joker-aircraft>img{position:absolute!important;left:50%!important;top:50%!important;width:170%!important;height:170%!important;max-width:none!important;object-fit:cover!important;object-position:50% 50%!important;transform:translate(-50%,-50%)!important}
-        .qily-mini-joker.small-joker{display:grid!important;grid-template-rows:42% 38% auto!important;align-items:center!important;justify-items:center!important;gap:2px!important;overflow:hidden!important}
+        /* 小王：仅使用官网首图“六大业务为主翼”飞机模型；大王仅使用本人头像；二者保持同一扑克牌框。 */
+        .qily-card--joker.small-joker .qily-joker-visual{top:35%!important;width:86%!important;height:58%!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important}
+        .qily-card--joker.small-joker .qily-joker-person{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important}
+        .qily-mini-joker.small-joker{display:grid!important;grid-template-rows:minmax(0,1fr) auto!important;align-items:center!important;justify-items:center!important;gap:3px!important;overflow:hidden!important}
         .qily-mini-joker.small-joker .qily-mini-joker-person{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;height:100%!important}
-        .qily-mini-joker.small-joker .qily-mini-joker-person>img{width:68%!important;height:100%!important;object-fit:contain!important}
-        .qily-mini-joker.small-joker .qily-mini-joker-aircraft{display:block!important;position:relative!important;width:92%!important;height:100%!important;overflow:hidden!important;border-radius:6px!important;background:#dceeed!important}
-        .qily-mini-joker.small-joker .qily-mini-joker-aircraft>img{position:absolute!important;left:50%!important;top:50%!important;width:175%!important;height:175%!important;max-width:none!important;object-fit:cover!important;object-position:50% 50%!important;transform:translate(-50%,-50%)!important}
+        .qily-mini-joker.small-joker .qily-mini-joker-person>img{width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important}
         .qily-mini-joker.small-joker>b{font-size:13px!important;line-height:1!important;color:#073c47!important;-webkit-text-fill-color:#073c47!important}
 
         html body .game-shell .bottom-zone{transform:none!important;zoom:1!important}

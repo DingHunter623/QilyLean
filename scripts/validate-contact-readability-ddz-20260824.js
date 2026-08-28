@@ -51,11 +51,13 @@ assert(buildPages>=460,'首屏缓存覆盖页数量异常：'+buildPages);
 
 const ddz=read('tools/pure-ddz/index.html');
 [
-  "const version='20260828-elder-ux-v126'","window.__PURE_DDZ_CACHE_KEY__||'20260828-elder-ux-v126'",
+  "const version='20260828-elder-ux-v127'","window.__PURE_DDZ_CACHE_KEY__||'20260828-elder-ux-v127'",
   "loadStyle('css/card-comfort-v122.css')",'name="screen-orientation" content="landscape"','name="x5-orientation" content="landscape"',
   'MicroMessenger','__PURE_DDZ_WECHAT_WEBVIEW__','__PURE_DDZ_MOBILE_DEVICE__','__PURE_DDZ_MANAGED_LOADER__','pure-ddz-classic-share-1200x630.png','id="hint-message"'
 ].forEach(marker=>assert(ddz.includes(marker),'斗地主微信/长辈舒适牌面契约缺失：'+marker));
 assert(ddz.indexOf("loadStyle('css/visual-v120.css')")<ddz.indexOf("loadStyle('css/card-comfort-v122.css')"),'舒适牌面 CSS 必须在视觉基础层之后加载');
+assert(ddz.includes('html:not(.ddz-ready) .game-shell{visibility:visible!important;opacity:1!important}'),'斗地主首屏不得因脚本加载而隐藏整张牌桌');
+assert(ddz.includes('qilyDdzSlowLoadRevealV127'),'斗地主缺少手机/微信慢加载可见性回退');
 
 const comfort=read('tools/pure-ddz/game/css/card-comfort-v122.css');
 ['grid-template-areas:"brand score translate" "actions actions actions"','.bottom-cards .mini-card{min-width:98px','.v120-play-card{flex-basis:124px','#floatDock.qily-float-dock.qily-float-dock','font-size:38px','.round-meta span','.hint-message','#audio-toggle,#help-open,#settings-open','.qily-product-overview summary span']
@@ -73,8 +75,8 @@ const theme=read('tools/pure-ddz/game/js/card-theme.js');
 assert(theme.includes('if(window.__PURE_DDZ_MANAGED_LOADER__)return'),'斗地主重复加载保护缺失');
 assert(!theme.includes('C919'),'斗地主牌面代码不得出现 C919');
 assert(theme.includes('qilylean-aircraft-hero-latest-q98.webp'),'小王未引用官网首页首图飞机模型');
-assert(theme.includes("16:{type:'small-joker',title:'小王',image:assetUrl('avatar-king.webp'),aircraft:HOME_AIRCRAFT}")&&theme.includes("17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}"),'大小王人物/小王飞机组合视觉契约缺失');
-assert(theme.includes('qily-joker-aircraft')&&theme.includes('qily-mini-joker-aircraft'),'小王飞机模型主牌/底牌渲染契约缺失');
+assert(theme.includes("16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}")&&theme.includes("17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}"),'大小王视觉契约缺失：大王本人图像，小王官网首图飞机模型');
+assert(!theme.includes('qily-joker-aircraft')&&!theme.includes('qily-mini-joker-aircraft'),'小王不得叠加第二层飞机图；应直接以官网首图飞机模型作为牌面主体');
 assert(theme.includes('.qily-card--joker .qily-card-main{display:none!important}'),'大小王不得显示额外业务字样');
 assert(theme.includes('#hint-message.hint-message')&&theme.includes('-webkit-text-fill-color:#fff!important'),'底部启力提示未强制为高对比白字');
 assert(theme.includes('flex-basis:112px')&&theme.includes('margin-left:-48px'),'17张手牌完整点数花色间距契约缺失');
