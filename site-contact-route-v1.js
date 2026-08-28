@@ -1,6 +1,7 @@
 /* QilyLean Site Shell Recovery + Contact Route V9｜2026-08-28
  * V9 retires the obsolete lower-right floating Dock sitewide.
  * Contact-page map sanitation and native outbound navigation remain unchanged.
+ * DDZ screenshot closure: dark top controls use white text and the local hand is centered on desktop.
  */
 (function(d,w){
   'use strict';
@@ -26,6 +27,8 @@
       'html body>main{height:auto!important;min-height:0!important;flex:none!important;margin-bottom:0!important;padding-bottom:0!important}',
       'html body>footer,html body>.footer,html body>.module-footer{flex:none!important;margin-top:0!important;margin-bottom:0!important}',
       '#floatDock,.qily-float-dock,.qily-floating-dock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}',
+      'html body .topbar .top-actions :is(#audio-toggle,#help-open,#settings-open),html body .topbar .top-actions :is(#audio-toggle,#help-open,#settings-open) *{color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;text-shadow:0 1px 2px rgba(0,0,0,.24)!important}',
+      '@media(min-width:1181px){html body .table-wrap .me-player{left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(1180px,calc(100% - 64px))!important;max-width:1180px!important;margin-left:0!important;margin-right:0!important}html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important;justify-content:safe center!important;overflow-x:auto!important;overflow-y:visible!important;scroll-padding-inline:16px!important}}',
       'html body .contact-page-v3 .map-preview iframe{display:none!important;visibility:hidden!important;opacity:0!important}',
       'html body .contact-page-v3 .qily-map-nav-panel{padding:18px 20px;border-top:1px solid #cfe0dd;background:#f7fbfa}',
       'html body .contact-page-v3 .qily-map-nav-copy strong{display:block;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font-size:18px;font-weight:950}',
