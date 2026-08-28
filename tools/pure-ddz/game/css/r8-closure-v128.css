@@ -1,10 +1,10 @@
-/* Pure DDZ R9 Closure V129｜2026-08-29
- * Compatibility marker: Pure DDZ R8 Closure V128.
+/* Pure DDZ R10 Closure V130｜2026-08-29
+ * Compatibility markers: Pure DDZ R9 Closure V129 / Pure DDZ R8 Closure V128.
  * Goals:
  * - never flash/flicker the brand block while public/shared runtimes settle;
- * - center the local hand as a card group rather than centering the oversized scroll track;
- * - keep immersive DDZ free of the sitewide Dock;
- * - preserve mobile/tablet horizontal hand scrolling without clipping.
+ * - center the local hand on the table visual axis when cards fit;
+ * - only fall back to horizontal scrolling when the card group is wider than the player area;
+ * - keep immersive DDZ free of the sitewide Dock.
  */
 html:not(.ddz-ready) body{background:#073c47!important;overflow:hidden!important}
 html:not(.ddz-ready) body .game-shell{visibility:hidden!important;opacity:0!important;pointer-events:none!important}
@@ -14,7 +14,6 @@ html.ddz-ready body{overflow:auto!important}
 html.ddz-ready body .game-shell{visibility:visible!important;opacity:1!important;pointer-events:auto!important}
 html.ddz-ready body #boot-status{display:none!important}
 
-/* Brand block is static content: no shared hover/translation/healing animation may make it blink. */
 html body .game-shell .topbar .brand,
 html body .game-shell .topbar .brand *,
 html body .game-shell .topbar .brand::before,
@@ -36,17 +35,46 @@ html body #floatDock,html[data-qily-dock="disabled"] body #floatDock{display:non
 
 @media(min-width:901px){
   html body .table-wrap{position:relative!important;overflow:hidden!important}
-  html body .table-wrap .me-player{position:absolute!important;left:50%!important;right:auto!important;bottom:12px!important;transform:translateX(-50%)!important;width:min(1180px,calc(100% - 40px))!important;max-width:1180px!important;min-width:0!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box!important;overflow:visible!important}
-  html body .table-wrap .me-player .hand{display:flex!important;align-items:flex-end!important;justify-content:flex-start!important;width:max-content!important;max-width:calc(100% - 32px)!important;min-width:0!important;min-height:198px!important;margin-left:auto!important;margin-right:auto!important;padding:30px 16px 8px!important;box-sizing:border-box!important;overflow-x:auto!important;overflow-y:visible!important;overscroll-behavior-inline:contain!important;scrollbar-gutter:stable both-edges!important;scroll-padding-inline:16px!important}
+  html body .table-wrap .me-player{
+    position:absolute!important;
+    left:50%!important;
+    right:auto!important;
+    bottom:12px!important;
+    transform:translateX(-50%)!important;
+    width:calc(100% - 40px)!important;
+    max-width:1180px!important;
+    min-width:0!important;
+    margin:0!important;
+    box-sizing:border-box!important;
+    overflow:visible!important;
+  }
+  html body .table-wrap .me-player .hand{
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:center!important;
+    justify-content:safe center!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    min-height:198px!important;
+    margin:0 auto!important;
+    padding:30px 16px 8px!important;
+    box-sizing:border-box!important;
+    overflow-x:auto!important;
+    overflow-y:visible!important;
+    overscroll-behavior-inline:contain!important;
+    scrollbar-gutter:stable both-edges!important;
+    scroll-padding-inline:16px!important;
+  }
   html body .table-wrap .me-player .hand>.card:first-child{margin-left:0!important}
 }
 @media(min-width:901px) and (max-width:1280px){
   html body .table-wrap .me-player{width:calc(100% - 28px)!important;max-width:none!important}
-  html body .table-wrap .me-player .hand{width:max-content!important;max-width:calc(100% - 24px)!important;justify-content:flex-start!important;padding-inline:12px!important}
+  html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;justify-content:center!important;justify-content:safe center!important;padding-inline:12px!important}
 }
 @media(max-width:900px){
   html body .table-wrap .me-player{left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:calc(100% - 16px)!important;max-width:none!important;margin-inline:0!important}
-  html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:visible!important;justify-content:flex-start!important;padding-inline:12px!important;scroll-padding-inline:12px!important}
+  html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:visible!important;justify-content:center!important;justify-content:safe center!important;padding-inline:12px!important;scroll-padding-inline:12px!important;scrollbar-gutter:stable both-edges!important}
 }
 
 html body #welcome-start,html body #start,html body .start-btn{min-height:56px!important;font-size:18px!important;font-weight:950!important;box-shadow:0 10px 24px rgba(239,183,62,.24)!important}
