@@ -1,75 +1,43 @@
-/* QilyLean floating Dock order closure v3.3｜2026-08-26
- * Stable six-action order without MutationObserver loops.
- * Contact uses the core-compatible data-action="contact" while the recovery runtime owns direct /contact/ navigation.
+/* QilyLean Floating Dock Retirement V1｜2026-08-28
+ * The lower-right six-action floating module is retired sitewide by product decision.
+ * This runtime removes any legacy/materialized Dock node and prevents old shell scripts
+ * from resurrecting it during first paint, soft navigation, translation or pageshow.
  */
-(function (d, w) {
+(function(d,w){
   'use strict';
-  if (w.__qilyDockOrderClosureV33) return;
-  w.__qilyDockOrderClosureV33 = true;
-  w.__qilyDockOrderClosureV32 = true;
-  w.__qilyDockOrderClosureV31 = true;
-  w.__qilyDockOrderClosureV3 = true;
+  if(w.__qilyFloatingDockRetiredV1)return;
+  w.__qilyFloatingDockRetiredV1=true;
 
-  function sourceMode() {
-    return (d.documentElement.getAttribute('data-qily-language') || 'zh-CN') === 'zh-CN';
+  function isDock(node){
+    return !!(node&&node.nodeType===1&&(
+      node.id==='floatDock'||
+      (node.classList&&(node.classList.contains('qily-float-dock')||node.classList.contains('qily-floating-dock')))
+    ));
   }
 
-  function normalizeDock() {
-    var dock = d.getElementById('floatDock');
-    if (!dock) return false;
-
-    dock.querySelectorAll('[data-action="share"]').forEach(function (button) {
-      var text = (button.textContent || '').replace(/\s+/g, '');
-      var label = button.getAttribute('aria-label') || button.getAttribute('title') || '';
-      if (text.indexOf('分享官网') >= 0 || label.indexOf('分享官网') >= 0 || text === '分享官网') button.remove();
-    });
-
-    var contact = dock.querySelector('[data-action="contact"],[data-action="contact-page"]');
-    if (contact && contact.getAttribute('data-action') !== 'contact') contact.setAttribute('data-action', 'contact');
-
-    var labels = {
-      home: '首页',
-      top: '回<br>顶部',
-      back: '回<br>上一层',
-      search: '本站<br>搜索',
-      current: '分享<br>当前页',
-      contact: '联系<br>我们'
-    };
-    var order = ['home', 'top', 'back', 'search', 'current', 'contact'];
-    var enforceChinese = sourceMode();
-    var buttons = order.map(function (action) {
-      var button = action === 'contact' ? contact : dock.querySelector('[data-action="' + action + '"]');
-      if (!button) return null;
-      if (enforceChinese) {
-        if (button.innerHTML !== labels[action]) button.innerHTML = labels[action];
-        var aria = action === 'contact' ? '联系我们' : button.textContent.replace(/\s+/g, '');
-        if (button.getAttribute('aria-label') !== aria) button.setAttribute('aria-label', aria);
-        if (button.getAttribute('title') !== aria) button.setAttribute('title', aria);
-      }
-      return button;
-    }).filter(Boolean);
-
-    var current = Array.from(dock.children).filter(function (node) {
-      return node.matches && node.matches('[data-action]');
-    });
-    var needsReorder = current.length !== buttons.length || buttons.some(function (button, index) { return current[index] !== button; });
-    if (needsReorder && buttons.length === order.length) {
-      var fragment = d.createDocumentFragment();
-      buttons.forEach(function (button) { fragment.appendChild(button); });
-      dock.appendChild(fragment);
+  function removeDock(root){
+    if(isDock(root))root.remove();
+    if(root&&root.querySelectorAll){
+      root.querySelectorAll('#floatDock,.qily-float-dock,.qily-floating-dock').forEach(function(node){node.remove();});
     }
-    dock.dataset.qilyStableOrder = order.join(',');
-    return buttons.length === order.length;
   }
 
-  function boot() {
-    normalizeDock();
-    d.addEventListener('qily:shell-ready', normalizeDock);
-    d.addEventListener('qily:softnavigate', normalizeDock);
-    d.addEventListener('qily:language-change', normalizeDock);
-    w.addEventListener('pageshow', normalizeDock, { passive: true });
+  function retireNow(){removeDock(d);}
+
+  function boot(){
+    retireNow();
+    if(!w.__qilyFloatingDockRetirementObserverV1&&d.documentElement){
+      w.__qilyFloatingDockRetirementObserverV1=new MutationObserver(function(records){
+        records.forEach(function(record){record.addedNodes.forEach(removeDock);});
+      });
+      w.__qilyFloatingDockRetirementObserverV1.observe(d.documentElement,{childList:true,subtree:true});
+    }
+    d.addEventListener('qily:shell-ready',retireNow);
+    d.addEventListener('qily:softnavigate',retireNow);
+    d.addEventListener('qily:language-change',retireNow);
+    w.addEventListener('pageshow',retireNow,{passive:true});
   }
 
-  if (d.readyState === 'loading') d.addEventListener('DOMContentLoaded', boot, { once: true });
+  if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});
   else boot();
-})(document, window);
+})(document,window);
