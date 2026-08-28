@@ -1,6 +1,6 @@
-/* QilyLean Public Redline Closure V1｜2026-08-28
- * Final screenshot closure for homepage hero cleanliness and the shared six-action floating Dock.
- * One component, one visual contract, one symbol contract on desktop/tablet/mobile.
+/* QilyLean Public Redline Closure V2｜2026-08-28
+ * R7 visual baseline: unified navigation, homepage hero containment, authoritative Dock styling.
+ * Pure DDZ remains an immersive exception: Dock disabled, local hand centered by Dock V5 runtime.
  */
 
 :root{
@@ -8,26 +8,143 @@
   --qily-public-dock-hover:#12606f;
   --qily-public-dock-line:#caa15f;
   --qily-public-dock-text:#ffe39b;
+  --qily-public-axis:1560px;
+  --qily-public-gutter:clamp(16px,3vw,40px);
 }
 
-/* Homepage founder/operating-system hero: keep the QilyLean VI gradient, remove the decorative grid/texture layer. */
-html body.qily-home-v3 .hero{
-  background-color:#0f4b5a!important;
-  background-image:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))!important;
-  background-blend-mode:normal!important;
+/* --------------------------------------------------------------------------
+   Primary navigation: one size, one axis, one interaction contract.
+   -------------------------------------------------------------------------- */
+html body header.qily-site-header.qily-global-header,
+html body header.qily-global-header{
+  min-height:64px!important;
+  padding:8px var(--qily-public-gutter)!important;
+  align-items:center!important;
+  gap:18px!important;
+  background:rgba(255,255,255,.985)!important;
+  border-bottom:1px solid #d5e4e3!important;
+  box-shadow:0 5px 18px rgba(7,60,71,.06)!important;
 }
+html body header.qily-global-header>.qily-brand{
+  flex:0 0 auto!important;
+  width:clamp(165px,13vw,218px)!important;
+  height:32px!important;
+  margin:0!important;
+}
+html body header.qily-global-header>.qily-global-nav,
+html body header.qily-global-header nav.site-nav{
+  display:flex!important;
+  flex:1 1 auto!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  gap:4px!important;
+  min-width:0!important;
+  margin:0!important;
+  white-space:nowrap!important;
+}
+html body header.qily-global-header>.qily-global-nav>a,
+html body header.qily-global-header nav.site-nav>a{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:40px!important;
+  padding:7px 9px!important;
+  border:1px solid transparent!important;
+  border-radius:9px!important;
+  color:#182420!important;
+  -webkit-text-fill-color:#182420!important;
+  background:transparent!important;
+  font:850 16px/1.15 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  letter-spacing:0!important;
+  text-decoration:none!important;
+  transform:none!important;
+}
+html body header.qily-global-header>.qily-global-nav>a:hover,
+html body header.qily-global-header>.qily-global-nav>a:focus-visible,
+html body header.qily-global-header nav.site-nav>a:hover,
+html body header.qily-global-header nav.site-nav>a:focus-visible{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#0f4b5a!important;
+  border-color:#0f4b5a!important;
+  box-shadow:0 7px 16px rgba(15,75,90,.18)!important;
+  outline:3px solid rgba(202,161,95,.18)!important;
+  outline-offset:1px!important;
+}
+html body header.qily-global-header>.qily-global-nav>a[aria-current="page"],
+html body header.qily-global-header nav.site-nav>a[aria-current="page"]{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#0f4b5a!important;
+  border-color:#ffe39b!important;
+  box-shadow:0 7px 16px rgba(15,75,90,.22)!important;
+}
+@media(max-width:900px){
+  html body header.qily-site-header.qily-global-header,
+  html body header.qily-global-header{padding:7px 9px 8px!important;gap:6px!important}
+  html body header.qily-global-header>.qily-brand{width:142px!important;height:27px!important;margin-left:0!important}
+  html body header.qily-global-header>.qily-global-nav,
+  html body header.qily-global-header nav.site-nav{justify-content:flex-start!important;width:100%!important;overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important}
+  html body header.qily-global-header>.qily-global-nav>a,
+  html body header.qily-global-header nav.site-nav>a{min-height:36px!important;padding:6px 8px!important;font-size:15.5px!important}
+}
+
+/* --------------------------------------------------------------------------
+   Homepage founder/operating-system hero.
+   Remove the full-width teal slab below the aircraft banner; keep VI color inside
+   the actual content module so the visual axis is clear and no empty teal field remains.
+   -------------------------------------------------------------------------- */
+html body.qily-home-v3 .hero{
+  padding:clamp(22px,3vw,38px) var(--qily-public-gutter)!important;
+  background:#eef7f5!important;
+  background-image:none!important;
+  border-bottom:1px solid #d5e4e3!important;
+  overflow:visible!important;
+}
+html body.qily-home-v3 .hero::before,
 html body.qily-home-v3 .hero::after{
   content:none!important;
   display:none!important;
-  visibility:hidden!important;
-  opacity:0!important;
   background:none!important;
   background-image:none!important;
-  mask-image:none!important;
-  -webkit-mask-image:none!important;
 }
+html body.qily-home-v3 .hero .hero-grid{
+  width:min(var(--qily-public-axis),100%)!important;
+  max-width:var(--qily-public-axis)!important;
+  margin:0 auto!important;
+  padding:clamp(28px,3.2vw,48px)!important;
+  border:1px solid rgba(202,161,95,.55)!important;
+  border-radius:18px!important;
+  background:linear-gradient(118deg,#073c47,#0f4b5a 58%,#178b94)!important;
+  box-shadow:0 18px 46px rgba(7,60,71,.12)!important;
+  overflow:hidden!important;
+}
+html body.qily-home-v3 .hero .hero-grid::before,
+html body.qily-home-v3 .hero .hero-grid::after{content:none!important;display:none!important}
 
-/* Shared Dock: no page may introduce a special fill, font, border or effect for one action. */
+/* --------------------------------------------------------------------------
+   Capability DDZ entry: keep the official direct route above decorative layers.
+   -------------------------------------------------------------------------- */
+html body #pure-ddz-digital-tool .module-actions a[href="/tools/pure-ddz/"],
+html body #pure-ddz-digital-tool a[href="/tools/pure-ddz/"]{
+  position:relative!important;
+  z-index:5!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  cursor:pointer!important;
+}
+html body #pure-ddz-digital-tool .module-actions a[href="/tools/pure-ddz/"]:hover,
+html body #pure-ddz-digital-tool .module-actions a[href="/tools/pure-ddz/"]:focus-visible{
+  transform:translateY(-1px)!important;
+  box-shadow:0 8px 18px rgba(15,75,90,.20)!important;
+}
+html body #pure-ddz-digital-tool .module-actions a[href="/tools/pure-ddz/"]:active{transform:translateY(1px) scale(.98)!important}
+
+/* --------------------------------------------------------------------------
+   Shared Dock: six functions, one visual language, desktop/mobile parity.
+   Text contract is owned by Dock V5: 首页 / 回顶部 / 回上一层 / 本站搜索 /
+   分享当前页 / 联系我们. No arrow glyph variants are allowed.
+   -------------------------------------------------------------------------- */
 html body #floatDock.qily-float-dock,
 html body #floatDock.qily-floating-dock{
   display:flex!important;
@@ -38,6 +155,7 @@ html body #floatDock.qily-floating-dock{
   opacity:1!important;
   pointer-events:auto!important;
 }
+html[data-qily-dock="disabled"] body #floatDock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
 html body #floatDock .qily-float-btn{
   color:var(--qily-public-dock-text)!important;
   -webkit-text-fill-color:var(--qily-public-dock-text)!important;
@@ -55,44 +173,13 @@ html body #floatDock .qily-float-btn:is(:link,:visited,:active){
   color:var(--qily-public-dock-text)!important;
   -webkit-text-fill-color:var(--qily-public-dock-text)!important;
 }
-html body #floatDock .qily-float-btn:is(:hover,:focus-visible){
-  color:var(--qily-public-dock-text)!important;
-  -webkit-text-fill-color:var(--qily-public-dock-text)!important;
+html body #floatDock .qily-float-btn:hover,
+html body #floatDock .qily-float-btn:focus-visible{
   background:var(--qily-public-dock-hover)!important;
-  background-color:var(--qily-public-dock-hover)!important;
-  background-image:none!important;
   border-color:var(--qily-public-dock-text)!important;
 }
-
-/* Canonical semantic arrows. Never rotate/skew/re-map them on mobile. */
-html body #floatDock [data-action="top"],
-html body #floatDock [data-action="back"]{
-  flex-direction:column!important;
-  gap:0!important;
-  transform:none!important;
-  rotate:0deg!important;
-}
-html body #floatDock .qily-dock-semantic-icon{
-  transform:none!important;
-  rotate:0deg!important;
-  font-style:normal!important;
-  writing-mode:horizontal-tb!important;
-  text-orientation:mixed!important;
-}
-html body #floatDock [data-action="top"] .qily-dock-semantic-icon,
-html body #floatDock [data-action="back"] .qily-dock-semantic-icon{
-  transform:none!important;
-  rotate:0deg!important;
-}
-
-@media(max-width:620px){
-  html body #floatDock [data-action="top"],
-  html body #floatDock [data-action="back"],
-  html body #floatDock .qily-dock-semantic-icon{
-    transform:none!important;
-    rotate:0deg!important;
-  }
-}
+html body #floatDock .qily-float-btn:active,
+html body #floatDock .qily-float-btn[data-qily-pressed="true"]{transform:translateY(1px) scale(.97)!important}
 
 @media print{
   html body #floatDock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
