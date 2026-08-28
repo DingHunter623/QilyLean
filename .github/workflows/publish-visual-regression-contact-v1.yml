@@ -1,23 +1,15 @@
-name: Publish Sitewide Visual & Contact Closure V11
+name: Publish Sitewide Visual & Contact Closure V12
 
 on:
   push:
     branches: [main]
     paths:
-      - 'scripts/materialize-global-language-v3.js'
       - 'scripts/materialize-contact-route-v6.js'
-      - 'site-unified-visual-governance-v1.css'
-      - 'site-visual-regression-closure-v1.css'
-      - 'site-stability-recovery-v1.css'
-      - 'site-content-contrast-guard-v1.js'
-      - 'site-content-contrast-guard-v1.css'
-      - 'site-early-career-history-v1.css'
-      - 'site-core-service-dock-closure-v1.js'
+      - 'site-public-redline-closure-v1.css'
+      - 'site-core-service-dock-closure-v1.css'
       - 'site-contact-route-v1.js'
       - 'site-dock-share-runtime-v1.js'
-      - 'site-ui-consistency-v1.js'
       - 'contact/index.html'
-      - 'lean-production/index.html'
       - '.github/workflows/publish-visual-regression-contact-v1.yml'
   workflow_dispatch:
 
@@ -41,88 +33,59 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
-      - name: Validate visual and contact sources
+      - name: Validate V12 source contracts
+        shell: bash
         run: |
-          node --check scripts/materialize-global-language-v3.js
+          set -euo pipefail
           node --check scripts/materialize-contact-route-v6.js
-          node --check site-content-contrast-guard-v1.js
-          node --check site-core-service-dock-closure-v1.js
           node --check site-contact-route-v1.js
           node --check site-dock-share-runtime-v1.js
-      - name: Materialize public baseline to every tracked HTML page
+          grep -Fq 'Site Shell Recovery + Contact Route V12' site-contact-route-v1.js
+          grep -Fq '__qilySiteShellRecoveryV12' site-contact-route-v1.js
+          grep -Fq 'site-dock-share-runtime-v1.js?v=20260828-functional-public-v4' site-contact-route-v1.js
+          grep -Fq 'site-public-redline-closure-v1.css?v=20260828-home-dock-v1' site-contact-route-v1.js
+          grep -Fq 'Floating Dock Unified Runtime V4' site-dock-share-runtime-v1.js
+          grep -Fq '__qilyFloatingDockUnifiedV4' site-dock-share-runtime-v1.js
+          grep -Fq "var glyph=action==='top'?'↑':'↗'" site-dock-share-runtime-v1.js
+          grep -Fq 'installIntegrityObserver' site-dock-share-runtime-v1.js
+          grep -Fq 'body.qily-home-v3 .hero::after' site-public-redline-closure-v1.css
+          grep -Fq 'content:none!important' site-public-redline-closure-v1.css
+          grep -Fq 'data-action="top"' site-public-redline-closure-v1.css
+          grep -Fq 'rotate:0deg!important' site-public-redline-closure-v1.css
+          ! grep -Fq 'qily-float-top {' site-core-service-dock-closure-v1.css
+      - name: Materialize V12 to every tracked public HTML page
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
           for attempt in 1 2 3 4; do
-            echo "Sitewide visual/contact publish attempt ${attempt}/4"
+            echo "Sitewide V12 publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
-            node --check scripts/materialize-global-language-v3.js
             node --check scripts/materialize-contact-route-v6.js
-            node scripts/materialize-global-language-v3.js
-            node scripts/materialize-global-language-v3.js --check
             node scripts/materialize-contact-route-v6.js
             node scripts/materialize-contact-route-v6.js --check
             node scripts/validate-seo-indexability.js
-            grep -q 'Site Shell Recovery + Contact Route V11' site-contact-route-v1.js
-            grep -q '__qilySiteShellRecoveryV11' site-contact-route-v1.js
-            grep -q 'ensureDockRuntime' site-contact-route-v1.js
-            grep -q 'qilyDockUnifiedRuntimeV3Script' site-contact-route-v1.js
-            grep -q 'site-dock-share-runtime-v1.js?v=20260828-functional-public-v3' site-contact-route-v1.js
-            grep -q 'canonical shared contact panel' site-contact-route-v1.js
-            ! grep -q 'removeLegacyContactModal' site-contact-route-v1.js
-            ! grep -q 'mask.remove()' site-contact-route-v1.js
-            grep -q 'disconnectRetiredDockObserver' site-contact-route-v1.js
-            grep -q '#floatDock.qily-float-dock,#floatDock.qily-floating-dock{display:flex!important' site-contact-route-v1.js
-            ! grep -q 'installRetirementObserver' site-contact-route-v1.js
-            grep -q 'Floating Dock Unified Runtime V3' site-dock-share-runtime-v1.js
-            grep -q '__qilyFloatingDockUnifiedV3' site-dock-share-runtime-v1.js
-            grep -q 'createStandaloneDock' site-dock-share-runtime-v1.js
-            grep -q 'installStandaloneFallback' site-dock-share-runtime-v1.js
-            grep -q "action==='contact'" site-dock-share-runtime-v1.js
-            grep -q "ORDER=\['home','top','back','search','current','contact'\]" site-dock-share-runtime-v1.js
-            grep -q "semanticMarkup('top','顶部')" site-dock-share-runtime-v1.js
-            grep -q "semanticMarkup('back','上一层')" site-dock-share-runtime-v1.js
-            grep -q "action==='top'?'↑':'↗'" site-dock-share-runtime-v1.js
-            grep -q 'sanitizeContactMaps' site-contact-route-v1.js
-            grep -q "google:'https://www.google.com/maps/dir/?api=1&destination='" site-contact-route-v1.js
-            grep -q "apple:'https://maps.apple.com/?daddr='" site-contact-route-v1.js
-            grep -q 'QilyLean Sitewide Visual Regression Closure V2' site-visual-regression-closure-v1.css
-            grep -q 'background:var(--qily-fix-alt)!important' site-visual-regression-closure-v1.css
-            grep -q 'contact-page-v3 .map-preview iframe' site-stability-recovery-v1.css
-            grep -q '/qilylean/wechat-qrcode-20260826.png?v=20260826-user-resubmitted-v2' contact/index.html
-            grep -q 'data-qily-map-address="苏吕党主题公园"' contact/index.html
-            grep -q 'data-qily-map-address="皂三村口 石羊街139号"' contact/index.html
-            grep -q 'data-qily-clean-map-nav="v2"' contact/index.html
-            grep -q 'data-qily-map-provider="amap"' contact/index.html
-            grep -q 'data-qily-map-provider="baidu"' contact/index.html
-            grep -q 'data-qily-map-provider="tencent"' contact/index.html
-            grep -q 'data-qily-map-provider="google"' contact/index.html
-            grep -q 'data-qily-map-provider="apple"' contact/index.html
-            grep -q 'uri.amap.com/search' contact/index.html
-            grep -q 'api.map.baidu.com/place/search' contact/index.html
-            grep -q 'apis.map.qq.com/uri/v1/search' contact/index.html
-            grep -q 'www.google.com/maps/dir/?api=1' contact/index.html
-            grep -q 'maps.apple.com/?daddr=' contact/index.html
+            grep -Fq 'data-qily-contact-route-direct="v12"' index.html
+            grep -Fq '/site-contact-route-v1.js?v=20260828-dock-functional-public-v12' index.html
+            grep -Fq '/site-public-redline-closure-v1.css?v=20260828-home-dock-v1' index.html
+            grep -Fq 'data-qily-contact-route-direct="v12"' contact/index.html
+            grep -Fq '/site-public-redline-closure-v1.css?v=20260828-home-dock-v1' contact/index.html
             ! grep -q '<iframe' contact/index.html
-            ! grep -q 'api.map.baidu.com/geocoder' contact/index.html
-            grep -q 'data-qily-contact-route-direct="v11"' contact/index.html
-            grep -q '20260828-dock-functional-public-v11' contact/index.html
             git diff --check
             if git diff --quiet; then
-              echo 'Sitewide visual/contact baseline already current on latest main.'
+              echo 'Sitewide V12 baseline already current on latest main.'
               exit 0
             fi
             git add -- ':(glob)**/*.html'
-            git commit -m 'fix: materialize functional sitewide Dock V11 [visual-contact-materialized]'
+            git commit -m 'fix: materialize homepage and Dock V12 [visual-contact-materialized]'
             if git push origin HEAD:main; then
-              echo 'Sitewide visual/contact V11 published to tracked HTML.'
+              echo 'Sitewide homepage/Dock V12 published to tracked HTML.'
               exit 0
             fi
             echo 'main advanced during publication; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish sitewide visual/contact V11 after retries.'
+          echo 'Unable to publish sitewide V12 after retries.'
           exit 1
