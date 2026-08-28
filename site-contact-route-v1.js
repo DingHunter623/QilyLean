@@ -1,10 +1,11 @@
-/* QilyLean Site Shell Recovery + Contact Route V12｜2026-08-28
- * V12 keeps the six-action lower-right public service module functional sitewide,
- * cache-busts Dock V4, preserves #wxMask, and loads the final homepage/Dock redline stylesheet.
+/* QilyLean Site Shell Recovery + Contact Route V13｜2026-08-28
+ * V13 routes public pages to the authoritative Dock V5 runtime and redline V2 stylesheet.
+ * Pure DDZ exclusion is owned by Dock V5; #wxMask remains the canonical shared contact panel.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilySiteShellRecoveryV12)return;
+  if(w.__qilySiteShellRecoveryV13)return;
+  w.__qilySiteShellRecoveryV13=true;
   w.__qilySiteShellRecoveryV12=true;
   w.__qilySiteShellRecoveryV11=true;
   w.__qilySiteShellRecoveryV10=true;
@@ -20,7 +21,7 @@
   w.__qilyDedicatedContactRouteV1=true;
 
   function ensureRedlineCss(){
-    var href='/site-public-redline-closure-v1.css?v=20260828-home-dock-v1';
+    var href='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
     var link=d.getElementById('qilyPublicRedlineClosureV1');
     if(link){if(link.getAttribute('href')!==href)link.setAttribute('href',href);return;}
     link=d.createElement('link');link.id='qilyPublicRedlineClosureV1';link.rel='stylesheet';link.href=href;
@@ -28,18 +29,16 @@
   }
 
   function injectRecoveryCss(){
-    if(d.getElementById('qilySiteShellRecoveryV12Style'))return;
+    if(d.getElementById('qilySiteShellRecoveryV13Style'))return;
     var style=d.createElement('style');
-    style.id='qilySiteShellRecoveryV12Style';
+    style.id='qilySiteShellRecoveryV13Style';
     style.textContent=[
       'html,html body{height:auto!important;min-height:0!important}',
       'html body{display:block!important}',
       'html body>main{height:auto!important;min-height:0!important;flex:none!important;margin-bottom:0!important;padding-bottom:0!important}',
       'html body>footer,html body>.footer,html body>.module-footer{flex:none!important;margin-top:0!important;margin-bottom:0!important}',
-      '#floatDock.qily-float-dock,#floatDock.qily-floating-dock{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}',
-      'html body #floatDock [data-action="top"],html body #floatDock [data-action="back"],html body #floatDock .qily-dock-semantic-icon{transform:none!important;rotate:0deg!important}',
+      'html:not([data-qily-dock="disabled"]) body #floatDock.qily-float-dock,html:not([data-qily-dock="disabled"]) body #floatDock.qily-floating-dock{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}',
       'html body .topbar .top-actions :is(#audio-toggle,#help-open,#settings-open),html body .topbar .top-actions :is(#audio-toggle,#help-open,#settings-open) *{color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;text-shadow:0 1px 2px rgba(0,0,0,.24)!important}',
-      '@media(min-width:1181px){html body .table-wrap .me-player{left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(1180px,calc(100% - 64px))!important;max-width:1180px!important;margin-left:0!important;margin-right:0!important}html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important;justify-content:safe center!important;overflow-x:auto!important;overflow-y:visible!important;scroll-padding-inline:16px!important}}',
       'html body .contact-page-v3 .map-preview iframe{display:none!important;visibility:hidden!important;opacity:0!important}',
       'html body .contact-page-v3 .qily-map-nav-panel{padding:18px 20px;border-top:1px solid #cfe0dd;background:#f7fbfa}',
       'html body .contact-page-v3 .qily-map-nav-copy strong{display:block;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font-size:18px;font-weight:950}',
@@ -49,7 +48,7 @@
       'html body .contact-page-v3 .qily-map-nav-action.primary{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a;border-color:#0f4b5a}',
       'html body .contact-page-v3 .qily-map-nav-action:hover,html body .contact-page-v3 .qily-map-nav-action:focus-visible{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#178b94;border-color:#178b94;outline:3px solid rgba(202,161,95,.24);outline-offset:2px}',
       '@media(max-width:920px){html body .contact-page-v3 .qily-map-nav-actions{grid-template-columns:repeat(3,minmax(0,1fr))}}',
-      '@media(max-width:620px){html body #floatDock [data-action="top"],html body #floatDock [data-action="back"],html body #floatDock .qily-dock-semantic-icon{transform:none!important;rotate:0deg!important}html body .contact-page-v3 .qily-map-nav-panel{padding:16px 14px}html body .contact-page-v3 .qily-map-nav-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}html body .contact-page-v3 .qily-map-nav-action{min-height:44px;padding:8px 7px;font-size:14px}html body .contact-page-v3 .qily-map-nav-action[data-qily-map-provider="apple"]{grid-column:1/-1}}'
+      '@media(max-width:620px){html body .contact-page-v3 .qily-map-nav-panel{padding:16px 14px}html body .contact-page-v3 .qily-map-nav-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}html body .contact-page-v3 .qily-map-nav-action{min-height:44px;padding:8px 7px;font-size:14px}html body .contact-page-v3 .qily-map-nav-action[data-qily-map-provider="apple"]{grid-column:1/-1}}'
     ].join('');
     (d.head||d.documentElement).appendChild(style);
   }
@@ -62,15 +61,15 @@
   }
 
   function ensureDockRuntime(){
-    if(w.__qilyFloatingDockUnifiedV4)return;
-    var existing=d.getElementById('qilyDockUnifiedRuntimeV4Script');
+    if(w.__qilyFloatingDockUnifiedV5)return;
+    var existing=d.getElementById('qilyDockUnifiedRuntimeV5Script');
     if(existing)return;
-    var legacy=d.getElementById('qilyDockUnifiedRuntimeV3Script');if(legacy)legacy.remove();
+    ['qilyDockUnifiedRuntimeV4Script','qilyDockUnifiedRuntimeV3Script'].forEach(function(id){var legacy=d.getElementById(id);if(legacy)legacy.remove();});
     var script=d.createElement('script');
-    script.id='qilyDockUnifiedRuntimeV4Script';
-    script.src='/site-dock-share-runtime-v1.js?v=20260828-functional-public-v4';
+    script.id='qilyDockUnifiedRuntimeV5Script';
+    script.src='/site-dock-share-runtime-v1.js?v=20260828-authority-v5';
     script.async=false;
-    script.setAttribute('data-qily-dock-public-runtime','v4');
+    script.setAttribute('data-qily-dock-public-runtime','v5');
     (d.head||d.documentElement).appendChild(script);
   }
 
