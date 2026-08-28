@@ -1,0 +1,130 @@
+/* Pure DDZ R8 Closure V128｜2026-08-28
+ * Goals:
+ * - never flash the old/un-styled table before the new shell is ready;
+ * - keep the local hand centered and fully readable on desktop;
+ * - keep immersive DDZ free of the sitewide Dock;
+ * - enlarge critical game actions without changing game rules.
+ */
+
+/* First-paint gate: show one clean boot state, never the old page skeleton. */
+html:not(.ddz-ready) body{background:#073c47!important;overflow:hidden!important}
+html:not(.ddz-ready) body .game-shell{
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+html:not(.ddz-ready) body #welcome,
+html:not(.ddz-ready) body .modal{
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+html:not(.ddz-ready) body #boot-status{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  left:50%!important;
+  top:50%!important;
+  bottom:auto!important;
+  transform:translate(-50%,-50%)!important;
+  min-width:min(420px,calc(100vw - 32px))!important;
+  max-width:calc(100vw - 32px)!important;
+  min-height:64px!important;
+  padding:14px 20px!important;
+  border:1px solid rgba(255,227,155,.65)!important;
+  border-radius:18px!important;
+  background:linear-gradient(145deg,#073c47,#0f4b5a)!important;
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  font-size:16px!important;
+  line-height:1.45!important;
+  text-align:center!important;
+  box-shadow:0 18px 48px rgba(0,0,0,.28)!important;
+}
+html.ddz-ready body{overflow:auto!important}
+html.ddz-ready body .game-shell{visibility:visible!important;opacity:1!important;pointer-events:auto!important}
+html.ddz-ready body #boot-status{display:none!important}
+
+/* DDZ is immersive: never render the public-site floating Dock here. */
+html body #floatDock,
+html[data-qily-dock="disabled"] body #floatDock{
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  pointer-events:none!important;
+}
+
+/* Desktop local-hand closure: always centered on the table axis. */
+@media(min-width:901px){
+  html body .table-wrap{position:relative!important;overflow:hidden!important}
+  html body .table-wrap .me-player{
+    position:absolute!important;
+    left:50%!important;
+    right:auto!important;
+    bottom:12px!important;
+    transform:translateX(-50%)!important;
+    width:min(1180px,calc(100% - 40px))!important;
+    max-width:1180px!important;
+    min-width:0!important;
+    margin-left:0!important;
+    margin-right:0!important;
+    box-sizing:border-box!important;
+  }
+  html body .table-wrap .me-player .hand{
+    display:flex!important;
+    align-items:flex-end!important;
+    justify-content:center!important;
+    width:100%!important;
+    max-width:100%!important;
+    min-width:0!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    padding:30px 24px 8px!important;
+    box-sizing:border-box!important;
+    overflow-x:auto!important;
+    overflow-y:visible!important;
+    overscroll-behavior-inline:contain!important;
+    scrollbar-gutter:stable both-edges!important;
+    scroll-padding-inline:24px!important;
+  }
+  html body .table-wrap .me-player .hand>.card:first-child{margin-left:0!important}
+}
+
+/* Medium desktop: still centered, never pinned to left edge. */
+@media(min-width:901px) and (max-width:1280px){
+  html body .table-wrap .me-player{width:calc(100% - 28px)!important;max-width:none!important}
+  html body .table-wrap .me-player .hand{justify-content:safe center!important;padding-inline:18px!important}
+}
+
+/* Mobile/tablet: keep the full hand inside viewport and scroll rather than crop. */
+@media(max-width:900px){
+  html body .table-wrap .me-player{
+    left:50%!important;
+    right:auto!important;
+    transform:translateX(-50%)!important;
+    width:calc(100% - 16px)!important;
+    max-width:none!important;
+    margin-inline:0!important;
+  }
+  html body .table-wrap .me-player .hand{
+    width:100%!important;
+    max-width:100%!important;
+    overflow-x:auto!important;
+    overflow-y:visible!important;
+    justify-content:flex-start!important;
+    padding-inline:12px!important;
+    scroll-padding-inline:12px!important;
+  }
+}
+
+/* Increase the visual weight of critical game actions. */
+html body #welcome-start,
+html body #start,
+html body .start-btn{
+  min-height:56px!important;
+  font-size:18px!important;
+  font-weight:950!important;
+  box-shadow:0 10px 24px rgba(239,183,62,.24)!important;
+}
+html body .control-btn{min-height:54px!important;font-weight:900!important}
+html body .site-footer a[href="/"]{font-weight:950!important;text-decoration:underline!important;text-underline-offset:3px!important}
