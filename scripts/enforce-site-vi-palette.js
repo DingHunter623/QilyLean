@@ -49,7 +49,14 @@ const legacyHeroGradientPatterns = [
   /linear-gradient\(\s*125deg\s*,\s*#0a3540\s+0(?:%)?\s*,\s*#0f4b5a\s+58%\s*,\s*#178b94\s+100%\s*\)/gi,
   /linear-gradient\(\s*125deg\s*,\s*#0f4b5a\s*,\s*#177f87\s+58%\s*,\s*#296776\s*\)/gi,
   /linear-gradient\(\s*125deg\s*,\s*#0f4b5a\s*,\s*#178b94\s*\)/gi,
-  /linear-gradient\(\s*125deg\s*,\s*#073c47\s*,\s*#178b94\s*\)/gi
+  /linear-gradient\(\s*125deg\s*,\s*#073c47\s*,\s*#178b94\s*\)/gi,
+
+  /* OPL / terminology Hero family: exact legacy 135° VI treatment. */
+  /linear-gradient\(\s*135deg\s*,\s*var\(--forest\)\s*,\s*var\(--teal\)\s*\)/gi,
+  /linear-gradient\(\s*135deg\s*,\s*#073c47\s*,\s*#178b94\s*\)/gi,
+
+  /* Improvements family: exact historical Hero + decorative radial highlight. */
+  /linear-gradient\(\s*120deg\s*,\s*rgba\(14\s*,\s*76\s*,\s*91\s*,\s*\.98\)\s*,\s*rgba\(25\s*,\s*123\s*,\s*130\s*,\s*\.94\)\s+54%\s*,\s*rgba\(43\s*,\s*103\s*,\s*118\s*,\s*\.96\)\s*\)\s*,\s*radial-gradient\(\s*circle\s+at\s+82%\s+12%\s*,\s*rgba\(210\s*,\s*236\s*,\s*230\s*,\s*\.34\)\s*,\s*transparent\s+34%\s*\)/gi
 ];
 
 const replacements = [
