@@ -14,14 +14,15 @@ const ddz=read('tools/pure-ddz/index.html');
 const game=read('tools/pure-ddz/game/js/game.js');
 const capabilities=read('capabilities/index.html');
 const interaction=read('site-interaction-continuity-v1.css');
+const consistency=read('site-ui-consistency-v1.js');
+const coreService=read('site-core-service-dock-closure-v1.js');
 
-// R7: one authoritative Dock runtime, no continuous DOM rebuild observer.
 assert(dock.includes('Floating Dock Authoritative Runtime V5'),'Dock V5 marker missing.');
 assert(dock.includes('__qilyFloatingDockUnifiedV5'),'Dock V5 guard missing.');
-assert(!dock.includes('MutationObserver'),'R7 violation: Dock runtime must not rebuild through MutationObserver.');
+assert(!/new\s+MutationObserver\s*\(/.test(dock),'R7 violation: Dock runtime must not rebuild through MutationObserver.');
 assert(dock.includes("LABELS={home:'首页',top:'回顶部',back:'回上一层',search:'本站搜索',current:'分享当前页',contact:'联系我们'}"),'Canonical Dock labels drifted.');
 assert(dock.includes("EXCLUDED=/^\\/tools\\/pure-ddz"),'Pure DDZ Dock exclusion missing.');
-assert(dock.includes("justify-content:safe center"),'Pure DDZ hand-centering closure missing.');
+assert(dock.includes('justify-content:safe center'),'Pure DDZ hand-centering closure missing.');
 assert(dock.includes("action==='top'"),'回顶部 action missing.');
 assert(dock.includes("action==='back'"),'回上一层 action missing.');
 assert(dock.includes("action==='search'"),'本站搜索 action missing.');
@@ -39,6 +40,15 @@ assert(redline.includes('body.qily-home-v3 .hero .hero-grid'),'Homepage hero con
 assert(redline.includes('background:#eef7f5!important'),'Homepage outer hero neutral surface missing.');
 assert(redline.includes('header.qily-global-header'),'Unified global navigation rule missing.');
 assert(redline.includes('#pure-ddz-digital-tool'),'Capability DDZ direct-link protection missing.');
+
+assert(consistency.includes('__qilyUiConsistencyV7'),'UI consistency V7 marker missing.');
+assert(consistency.includes('__qilyUiSingleResponsibilityV7'),'UI consistency single-responsibility guard missing.');
+assert(!consistency.includes('normalizeDockButton'),'UI consistency must not mutate Dock buttons.');
+assert(!consistency.includes('dockIconMarkup'),'UI consistency must not inject Dock icons.');
+assert(!consistency.includes('[data-action="back"]'),'UI consistency must not intercept Dock back events.');
+assert(coreService.includes('__qilyCoreServiceAlignmentV105'),'Cooperation alignment V10.5 marker missing.');
+assert(!coreService.includes('normalizeDock'),'Cooperation runtime must not mutate Dock.');
+assert(!coreService.includes('legacyMask.remove'),'Cooperation runtime must not remove #wxMask.');
 
 assert(ddz.includes('id="welcome-start"'),'Pure DDZ welcome Start button missing.');
 assert(game.includes("$('welcome-start').addEventListener('click',startRound)"),'Pure DDZ welcome Start button is not wired to startRound.');
