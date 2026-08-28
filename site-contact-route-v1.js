@@ -1,18 +1,11 @@
-/* QilyLean Site Shell Recovery + Contact Route V8｜2026-08-26
- * Contact contract:
- * - keep the permanent six-action floating dock visible on desktop/mobile;
- * - preserve data-action="contact" compatibility with the core dock contract;
- * - convert the contact control to a native <a target="_blank"> after every shell build;
- * - stop the core dock's drag/click delegation only on that contact anchor, without preventDefault,
- *   so the browser performs a real user-initiated independent-page navigation;
- * - remove the legacy contact modal because /contact/ is the only contact surface;
- * - never render third-party map iframes inside the contact page;
- * - provide clean outbound navigation through Amap (primary), Baidu Maps, Tencent Maps, Google Maps and Apple Maps;
- * - no polling, no MutationObserver, no reload, no full-page DOM scan.
+/* QilyLean Site Shell Recovery + Contact Route V9｜2026-08-28
+ * V9 retires the obsolete lower-right floating Dock sitewide.
+ * Contact-page map sanitation and native outbound navigation remain unchanged.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilySiteShellRecoveryV8)return;
+  if(w.__qilySiteShellRecoveryV9)return;
+  w.__qilySiteShellRecoveryV9=true;
   w.__qilySiteShellRecoveryV8=true;
   w.__qilySiteShellRecoveryV7=true;
   w.__qilySiteShellRecoveryV6=true;
@@ -23,21 +16,16 @@
   w.__qilyDedicatedContactRouteV2=true;
   w.__qilyDedicatedContactRouteV1=true;
 
-  var CONTACT_URL='/contact/';
-  var ACTIONS=['home','top','back','search','current','contact'];
-  var LABELS={home:'首页',top:'回<br>顶部',back:'回<br>上一层',search:'本站<br>搜索',current:'分享<br>当前页',contact:'联系<br>我们'};
-
   function injectRecoveryCss(){
-    if(d.getElementById('qilySiteShellRecoveryV8Style'))return;
+    if(d.getElementById('qilySiteShellRecoveryV9Style'))return;
     var style=d.createElement('style');
-    style.id='qilySiteShellRecoveryV8Style';
+    style.id='qilySiteShellRecoveryV9Style';
     style.textContent=[
       'html,html body{height:auto!important;min-height:0!important}',
       'html body{display:block!important}',
       'html body>main{height:auto!important;min-height:0!important;flex:none!important;margin-bottom:0!important;padding-bottom:0!important}',
       'html body>footer,html body>.footer,html body>.module-footer{flex:none!important;margin-top:0!important;margin-bottom:0!important}',
-      '#floatDock.qily-float-dock{position:fixed!important;right:max(18px,env(safe-area-inset-right))!important;bottom:max(18px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important;display:flex!important;flex-direction:column!important;gap:8px!important;visibility:visible!important;opacity:1!important;z-index:9000!important;overflow:visible!important}',
-      '#floatDock.qily-float-dock .qily-float-btn{box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;width:62px!important;height:62px!important;min-width:62px!important;min-height:62px!important;padding:0!important;border-radius:50%!important;visibility:visible!important;opacity:1!important;line-height:1.18!important;text-align:center!important;text-decoration:none!important}',
+      '#floatDock,.qily-float-dock,.qily-floating-dock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}',
       'html body .contact-page-v3 .map-preview iframe{display:none!important;visibility:hidden!important;opacity:0!important}',
       'html body .contact-page-v3 .qily-map-nav-panel{padding:18px 20px;border-top:1px solid #cfe0dd;background:#f7fbfa}',
       'html body .contact-page-v3 .qily-map-nav-copy strong{display:block;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font-size:18px;font-weight:950}',
@@ -47,50 +35,26 @@
       'html body .contact-page-v3 .qily-map-nav-action.primary{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a;border-color:#0f4b5a}',
       'html body .contact-page-v3 .qily-map-nav-action:hover,html body .contact-page-v3 .qily-map-nav-action:focus-visible{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#178b94;border-color:#178b94;outline:3px solid rgba(202,161,95,.24);outline-offset:2px}',
       '@media(max-width:920px){html body .contact-page-v3 .qily-map-nav-actions{grid-template-columns:repeat(3,minmax(0,1fr))}}',
-      '@media(max-width:620px){#floatDock.qily-float-dock{right:max(10px,env(safe-area-inset-right))!important;bottom:max(10px,env(safe-area-inset-bottom))!important;gap:6px!important}#floatDock.qily-float-dock .qily-float-btn{width:54px!important;height:54px!important;min-width:54px!important;min-height:54px!important;font-size:13px!important}html body .contact-page-v3 .qily-map-nav-panel{padding:16px 14px}html body .contact-page-v3 .qily-map-nav-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}html body .contact-page-v3 .qily-map-nav-action{min-height:44px;padding:8px 7px;font-size:14px}html body .contact-page-v3 .qily-map-nav-action[data-qily-map-provider="apple"]{grid-column:1/-1}}'
+      '@media(max-width:620px){html body .contact-page-v3 .qily-map-nav-panel{padding:16px 14px}html body .contact-page-v3 .qily-map-nav-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}html body .contact-page-v3 .qily-map-nav-action{min-height:44px;padding:8px 7px;font-size:14px}html body .contact-page-v3 .qily-map-nav-action[data-qily-map-provider="apple"]{grid-column:1/-1}}'
     ].join('');
     (d.head||d.documentElement).appendChild(style);
   }
 
   function removeLegacyContactModal(){var mask=d.getElementById('wxMask');if(mask)mask.remove();}
-  function createButton(action){var b=d.createElement('button');b.type='button';b.className='qily-float-btn qily-float-'+action;b.setAttribute('data-action',action);b.innerHTML=LABELS[action];return b;}
 
-  function bindNativeContactAnchor(anchor){
-    if(!anchor||anchor.dataset.qilyNativeContactBound==='v8')return anchor;
-    anchor.dataset.qilyNativeContactBound='v8';
-    function isolate(event){event.stopPropagation();}
-    anchor.addEventListener('pointerdown',isolate,false);
-    anchor.addEventListener('pointermove',isolate,false);
-    anchor.addEventListener('pointerup',isolate,false);
-    anchor.addEventListener('pointercancel',isolate,false);
-    anchor.addEventListener('click',isolate,false);
-    return anchor;
+  function removeRetiredDock(root){
+    if(root&&root.nodeType===1&&(root.id==='floatDock'||(root.classList&&(root.classList.contains('qily-float-dock')||root.classList.contains('qily-floating-dock')))))root.remove();
+    if(root&&root.querySelectorAll)root.querySelectorAll('#floatDock,.qily-float-dock,.qily-floating-dock').forEach(function(node){node.remove();});
   }
 
-  function makeContactAnchor(control){
-    if(!control)return null;
-    if(control.tagName==='A'){
-      control.href=CONTACT_URL;
-      control.target='_blank';
-      control.rel='noopener noreferrer';
-      control.setAttribute('aria-label','联系我们（新页面打开）');
-      control.setAttribute('title','联系我们（新页面打开）');
-      control.setAttribute('data-qily-contact-route','native-new-tab-v8');
-      control.innerHTML=LABELS.contact;
-      return bindNativeContactAnchor(control);
-    }
-    var anchor=d.createElement('a');
-    anchor.className=control.className||'qily-float-btn qily-float-contact';
-    anchor.setAttribute('data-action','contact');
-    anchor.href=CONTACT_URL;
-    anchor.target='_blank';
-    anchor.rel='noopener noreferrer';
-    anchor.setAttribute('aria-label','联系我们（新页面打开）');
-    anchor.setAttribute('title','联系我们（新页面打开）');
-    anchor.setAttribute('data-qily-contact-route','native-new-tab-v8');
-    anchor.innerHTML=LABELS.contact;
-    control.replaceWith(anchor);
-    return bindNativeContactAnchor(anchor);
+  function retireDock(){removeRetiredDock(d);}
+
+  function installRetirementObserver(){
+    if(w.__qilyFloatingDockRetirementObserverV1||!d.documentElement)return;
+    w.__qilyFloatingDockRetirementObserverV1=new MutationObserver(function(records){
+      records.forEach(function(record){record.addedNodes.forEach(removeRetiredDock);});
+    });
+    w.__qilyFloatingDockRetirementObserverV1.observe(d.documentElement,{childList:true,subtree:true});
   }
 
   function mapUrls(keyword,region){
@@ -122,12 +86,10 @@
     panel.className='qily-map-nav-panel';
     panel.setAttribute('data-qily-clean-map-nav','v2');
     panel.setAttribute('aria-label',(keyword||'联系地址')+'地图导航');
-
     var copy=d.createElement('div');copy.className='qily-map-nav-copy';
     var title=d.createElement('strong');title.textContent='地图导航';
     var note=d.createElement('span');note.textContent='默认高德；也可选择百度、腾讯、Google Maps 或 Apple Maps。本站不嵌入第三方地图页面，避免广告弹层。';
     copy.appendChild(title);copy.appendChild(note);panel.appendChild(copy);
-
     var actions=d.createElement('div');actions.className='qily-map-nav-actions';
     [
       ['amap','高德导航',urls.amap,true],
@@ -154,37 +116,15 @@
     page.querySelectorAll('.map-preview').forEach(function(preview){
       var card=preview.closest('.address-card');
       var keyword=card?card.getAttribute('data-qily-map-address')||'':'';
-      var region=inferRegion(card);
-      preview.replaceWith(createCleanMapPanel(keyword,region));
+      preview.replaceWith(createCleanMapPanel(keyword,inferRegion(card)));
     });
     page.querySelectorAll('.qily-map-nav-panel').forEach(function(panel){
       if(panel.getAttribute('data-qily-clean-map-nav')==='v2'&&panel.querySelector('[data-qily-map-provider="google"]')&&panel.querySelector('[data-qily-map-provider="apple"]'))return;
       var card=panel.closest('.address-card');
       var keyword=card?card.getAttribute('data-qily-map-address')||'':'';
-      var region=inferRegion(card);
-      panel.replaceWith(createCleanMapPanel(keyword,region));
+      panel.replaceWith(createCleanMapPanel(keyword,inferRegion(card)));
     });
     page.querySelectorAll('iframe[src*="api.map.baidu.com"]').forEach(function(frame){frame.removeAttribute('src');frame.remove();});
-  }
-
-  function ensureDock(){
-    var dock=d.getElementById('floatDock');
-    if(!dock){
-      dock=d.createElement('div');dock.id='floatDock';dock.className='qily-float-dock';dock.setAttribute('aria-label','快捷服务');
-      ACTIONS.forEach(function(action){dock.appendChild(createButton(action));});(d.body||d.documentElement).appendChild(dock);
-    }
-    dock.querySelectorAll('[data-action="contact-page"]').forEach(function(button){button.setAttribute('data-action','contact');});
-    ACTIONS.forEach(function(action){
-      var control=dock.querySelector('[data-action="'+action+'"]');
-      if(!control){control=createButton(action);dock.appendChild(control);}
-      if(action==='contact')control=makeContactAnchor(control);
-      else control.innerHTML=LABELS[action];
-      var duplicates=dock.querySelectorAll('[data-action="'+action+'"]');for(var i=1;i<duplicates.length;i+=1)duplicates[i].remove();
-    });
-    ACTIONS.forEach(function(action){var control=dock.querySelector('[data-action="'+action+'"]');if(control)dock.appendChild(control);});
-    dock.dataset.qilyStableOrder=ACTIONS.join(',');
-    dock.dataset.qilyContactNativeRoute='v8';
-    return dock;
   }
 
   function recover(){
@@ -193,10 +133,12 @@
     if(d.body)d.body.style.removeProperty('visibility');
     removeLegacyContactModal();
     sanitizeContactMaps();
-    ensureDock();
+    retireDock();
+    installRetirementObserver();
   }
 
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',recover,{once:true});else recover();
   d.addEventListener('qily:shell-ready',recover);
+  d.addEventListener('qily:softnavigate',retireDock);
   w.addEventListener('pageshow',recover,{passive:true});
 })(document,window);
