@@ -1,11 +1,13 @@
-/* QilyLean Site Shell Recovery + Contact Route V9｜2026-08-28
- * V9 retires the obsolete lower-right floating Dock sitewide.
- * Contact-page map sanitation and native outbound navigation remain unchanged.
- * DDZ screenshot closure: dark top controls use white text and the local hand is centered on desktop.
+/* QilyLean Site Shell Recovery + Contact Route V10｜2026-08-28
+ * V10 restores the six-action lower-right floating service module sitewide.
+ * The module remains a shared public component; page-local styling/behavior divergence is forbidden.
+ * Top/back semantic symbols are owned by the shared Dock runtime/UI consistency layer.
+ * Contact-page map sanitation, DDZ dark-control contrast and centered local hand remain intact.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilySiteShellRecoveryV9)return;
+  if(w.__qilySiteShellRecoveryV10)return;
+  w.__qilySiteShellRecoveryV10=true;
   w.__qilySiteShellRecoveryV9=true;
   w.__qilySiteShellRecoveryV8=true;
   w.__qilySiteShellRecoveryV7=true;
@@ -18,15 +20,15 @@
   w.__qilyDedicatedContactRouteV1=true;
 
   function injectRecoveryCss(){
-    if(d.getElementById('qilySiteShellRecoveryV9Style'))return;
+    if(d.getElementById('qilySiteShellRecoveryV10Style'))return;
     var style=d.createElement('style');
-    style.id='qilySiteShellRecoveryV9Style';
+    style.id='qilySiteShellRecoveryV10Style';
     style.textContent=[
       'html,html body{height:auto!important;min-height:0!important}',
       'html body{display:block!important}',
       'html body>main{height:auto!important;min-height:0!important;flex:none!important;margin-bottom:0!important;padding-bottom:0!important}',
       'html body>footer,html body>.footer,html body>.module-footer{flex:none!important;margin-top:0!important;margin-bottom:0!important}',
-      '#floatDock,.qily-float-dock,.qily-floating-dock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}',
+      '#floatDock.qily-float-dock,#floatDock.qily-floating-dock{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}',
       'html body .topbar .top-actions :is(#audio-toggle,#help-open,#settings-open),html body .topbar .top-actions :is(#audio-toggle,#help-open,#settings-open) *{color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;text-shadow:0 1px 2px rgba(0,0,0,.24)!important}',
       '@media(min-width:1181px){html body .table-wrap .me-player{left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(1180px,calc(100% - 64px))!important;max-width:1180px!important;margin-left:0!important;margin-right:0!important}html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;margin-left:auto!important;margin-right:auto!important;justify-content:safe center!important;overflow-x:auto!important;overflow-y:visible!important;scroll-padding-inline:16px!important}}',
       'html body .contact-page-v3 .map-preview iframe{display:none!important;visibility:hidden!important;opacity:0!important}',
@@ -45,19 +47,11 @@
 
   function removeLegacyContactModal(){var mask=d.getElementById('wxMask');if(mask)mask.remove();}
 
-  function removeRetiredDock(root){
-    if(root&&root.nodeType===1&&(root.id==='floatDock'||(root.classList&&(root.classList.contains('qily-float-dock')||root.classList.contains('qily-floating-dock')))))root.remove();
-    if(root&&root.querySelectorAll)root.querySelectorAll('#floatDock,.qily-float-dock,.qily-floating-dock').forEach(function(node){node.remove();});
-  }
-
-  function retireDock(){removeRetiredDock(d);}
-
-  function installRetirementObserver(){
-    if(w.__qilyFloatingDockRetirementObserverV1||!d.documentElement)return;
-    w.__qilyFloatingDockRetirementObserverV1=new MutationObserver(function(records){
-      records.forEach(function(record){record.addedNodes.forEach(removeRetiredDock);});
-    });
-    w.__qilyFloatingDockRetirementObserverV1.observe(d.documentElement,{childList:true,subtree:true});
+  function disconnectRetiredDockObserver(){
+    var observer=w.__qilyFloatingDockRetirementObserverV1;
+    if(observer&&typeof observer.disconnect==='function')observer.disconnect();
+    try{delete w.__qilyFloatingDockRetirementObserverV1;}catch(error){w.__qilyFloatingDockRetirementObserverV1=null;}
+    w.__qilyFloatingDockRetiredV1=false;
   }
 
   function mapUrls(keyword,region){
@@ -131,17 +125,16 @@
   }
 
   function recover(){
+    disconnectRetiredDockObserver();
     injectRecoveryCss();
     d.documentElement.classList.remove('qily-stale-document','qily-shell-pending','qily-first-paint-pending','qily-r2-first-paint-pending');
     if(d.body)d.body.style.removeProperty('visibility');
     removeLegacyContactModal();
     sanitizeContactMaps();
-    retireDock();
-    installRetirementObserver();
   }
 
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',recover,{once:true});else recover();
   d.addEventListener('qily:shell-ready',recover);
-  d.addEventListener('qily:softnavigate',retireDock);
+  d.addEventListener('qily:softnavigate',recover);
   w.addEventListener('pageshow',recover,{passive:true});
 })(document,window);
