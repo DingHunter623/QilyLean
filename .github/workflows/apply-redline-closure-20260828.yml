@@ -82,3 +82,5 @@ jobs:
           git commit -m 'fix: close sitewide screenshot redline defects'
           git pull --rebase origin main
           git push origin main
+
+# manual execution trigger: 2026-08-28 redline closure
