@@ -32,24 +32,36 @@ assert(headerAxis.includes('--qily-header-axis:var(--qily-content-axis,1560px)')
 /* 2026-08-28 final product decision: retain one functional six-action public Dock sitewide. */
 assert(navigation.includes("dockOrder: ['home','top','back','search','current','contact']"),'Navigation six-action Dock order missing.');
 assert(core.includes('data-action="home"')&&core.includes('data-action="top"')&&core.includes('data-action="back"')&&core.includes('data-action="search"')&&core.includes('data-action="current"')&&core.includes('data-action="contact"'),'Core Dock actions incomplete.');
-assert(dockRuntime.includes('__qilyFloatingDockUnifiedV2'),'Unified Dock runtime V2 missing.');
+assert(dockRuntime.includes('__qilyFloatingDockUnifiedV3'),'Unified Dock runtime V3 missing.');
 assert(dockRuntime.includes("ORDER=['home','top','back','search','current','contact']"),'Unified Dock order contract missing.');
+assert(dockRuntime.includes('createStandaloneDock'),'Standalone Dock creation fallback missing.');
+assert(dockRuntime.includes('installStandaloneFallback'),'Standalone Dock functional fallback missing.');
+assert(dockRuntime.includes("action==='top'?'↑':'↗'"),'Adopted top/back semantic symbols missing.');
 assert(dockRuntime.includes("normalizeSemanticButton(controls.top,'top',LABELS.top)"),'Top semantic symbol normalization missing.');
 assert(dockRuntime.includes("normalizeSemanticButton(controls.back,'back',LABELS.back)"),'Back semantic symbol normalization missing.');
-assert(dockRuntime.includes('qilyDockSemanticUnifiedV2'),'Unified semantic-icon style missing.');
+assert(dockRuntime.includes("if(action==='contact'){location.href='/contact/';}"),'Standalone contact action missing.');
+assert(dockRuntime.includes("if(action==='search'){openSearch();return;}"),'Standalone search action missing.');
+assert(dockRuntime.includes("if(action==='current'){shareCurrent();return;}"),'Standalone share action missing.');
+assert(dockRuntime.includes('--qily-dock-v3-bg:#0f4b5a'),'Unified Dock visual token missing.');
 assert(!dockRuntime.includes('function removeDock'),'Retired Dock removal logic returned.');
 assert(!dockRuntime.includes('retireNow'),'Retired Dock runtime returned.');
 assert(consistency.includes('qily-dock-semantic-icon'),'Shared UI consistency semantic Dock icon missing.');
 assert(consistency.includes("normalizeDockButton(top,'top','顶部')"),'Shared top symbol normalization missing.');
 assert(consistency.includes("normalizeDockButton(back,'back','上一层')"),'Shared back symbol normalization missing.');
 
-assert(contactRoute.includes('__qilySiteShellRecoveryV10'),'Site Shell Recovery V10 missing.');
+assert(contactRoute.includes('__qilySiteShellRecoveryV11'),'Site Shell Recovery V11 missing.');
 assert(contactRoute.includes('disconnectRetiredDockObserver'),'Old Dock-retirement observer cleanup missing.');
+assert(contactRoute.includes('ensureDockRuntime'),'Dock V3 bootstrap missing from shared recovery.');
+assert(contactRoute.includes('qilyDockUnifiedRuntimeV3Script'),'Dock V3 bootstrap script marker missing.');
+assert(contactRoute.includes('/site-dock-share-runtime-v1.js?v=20260828-functional-public-v3'),'Dock V3 cache owner missing.');
+assert(contactRoute.includes('canonical shared contact panel'),'Canonical contact-panel preservation marker missing.');
+assert(!contactRoute.includes('removeLegacyContactModal'),'Canonical #wxMask must not be removed by shared recovery.');
+assert(!contactRoute.includes('mask.remove()'),'Shared recovery must not delete #wxMask.');
 assert(contactRoute.includes('#floatDock.qily-float-dock,#floatDock.qily-floating-dock{display:flex!important'),'Floating Dock visible recovery missing.');
 assert(!contactRoute.includes('installRetirementObserver'),'Dock retirement observer must not return.');
 assert(!contactRoute.includes('retireDock();'),'Dock retirement call must not return.');
-assert(contactMaterializer.includes('20260828-dock-functional-symbol-v10'),'Contact-route V10 cache owner missing.');
-assert(contactMaterializer.includes('data-qily-contact-route-direct="v10"'),'Contact-route V10 static marker missing.');
+assert(contactMaterializer.includes('20260828-dock-functional-public-v11'),'Contact-route V11 cache owner missing.');
+assert(contactMaterializer.includes('data-qily-contact-route-direct="v11"'),'Contact-route V11 static marker missing.');
 
 /* DDZ screenshot closure remains intact. */
 assert(contactRoute.includes('.topbar .top-actions :is(#audio-toggle,#help-open,#settings-open)'),'DDZ top-action high-contrast rule missing.');
@@ -71,10 +83,10 @@ for(const relative of trackedHtml()){
   if(/\/site-navigation\.js(?:\?v=[^"']*)?/.test(html))navigationPages+=1;
   if(/\/site-contact-route-v1\.js(?:\?v=[^"']*)?/.test(html)){
     contactPages+=1;
-    if(!html.includes('/site-contact-route-v1.js?v=20260828-dock-functional-symbol-v10')||!html.includes('data-qily-contact-route-direct="v10"'))staleContact.push(relative);
+    if(!html.includes('/site-contact-route-v1.js?v=20260828-dock-functional-public-v11')||!html.includes('data-qily-contact-route-direct="v11"'))staleContact.push(relative);
   }
 }
 assert(navigationPages>=460,`Navigation coverage unexpectedly fell to ${navigationPages} pages.`);
 assert(contactPages>=470,`Contact/shared recovery coverage unexpectedly fell to ${contactPages} pages.`);
 assert(staleContact.length===0,`Stale contact/Dock recovery pages: ${staleContact.slice(0,12).join(', ')}`);
-process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages and ${contactPages} shared recovery pages; functional six-action Dock with semantic top/back symbols retained (${runtimeBaseline}).\n`);
+process.stdout.write(`PASS: sitewide remediation validates ${navigationPages} navigation pages and ${contactPages} shared recovery pages; Dock V3 is functional both with and without the full site shell (${runtimeBaseline}).\n`);
