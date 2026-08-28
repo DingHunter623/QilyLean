@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "checkedAt": "2026-08-28T12:47:57.266Z",
+  "checkedAt": "2026-08-28T13:20:41.741Z",
   "policy": {
     "brandColors": {
       "olive": "#0f4b5a",
@@ -23,7 +23,7 @@
       "semantic diagram legends and process-route colors"
     ]
   },
-  "scannedFiles": 1235,
+  "scannedFiles": 1236,
   "changedFiles": [
     "404.html",
     "admin.html",
