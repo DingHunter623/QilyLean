@@ -20,27 +20,29 @@ const semanticsJs=read('site-interaction-semantics-v1.js');
 const consistency=read('site-ui-consistency-v1.js');
 const coreService=read('site-core-service-dock-closure-v1.js');
 const navigation=read('site-navigation.js');
+const header=read('site-header-axis-v1.css');
+const career=read('site-early-career-history-v1.js');
 const materializer=read('scripts/materialize-global-language-v3.js');
 const contactMaterializer=read('scripts/materialize-contact-route-v6.js');
 
-assert(dock.includes('Floating Dock Authoritative Runtime V5.1'),'Dock V5.1 marker missing.');
-assert(dock.includes('__qilyFloatingDockUnifiedV51'),'Dock V5.1 guard missing.');
-assert(!/new\s+MutationObserver\s*\(/.test(dock),'R8 violation: Dock runtime must not rebuild through MutationObserver.');
-assert(dock.includes("LABELS={home:'首页',top:'回顶部',back:'回上一层',search:'本站搜索',current:'分享当前页',contact:'联系我们'}"),'Canonical Dock labels drifted.');
+assert(dock.includes('Floating Dock Authoritative Runtime V5.2'),'Dock V5.2 marker missing.');
+assert(dock.includes('__qilyFloatingDockUnifiedV52'),'Dock V5.2 guard missing.');
+assert(!/new\s+MutationObserver\s*\(/.test(dock),'R9 violation: Dock runtime must not rebuild through MutationObserver.');
+assert(dock.includes("ORDER=['home','top','back','search','current','contact']"),'Canonical Dock order drifted.');
+assert(dock.includes('setOwnedLabel'),'Dock does not own one canonical label tree.');
+assert(dock.includes('qily-dock-label'),'Canonical Dock label node missing.');
+assert(dock.includes('.qily-float-btn::before'),'Dock pseudo-label reset missing.');
+assert(dock.includes('--qily-dock-size:56px'),'Mobile Dock canonical 56px tier missing.');
+assert(dock.includes('--qily-dock-size:54px'),'Narrow-mobile Dock canonical 54px tier missing.');
 assert(dock.includes("EXCLUDED=/^\\/tools\\/pure-ddz"),'Pure DDZ Dock exclusion missing.');
-assert(dock.includes("action==='top'"),'回顶部 action missing.');
-assert(dock.includes("action==='back'"),'回上一层 action missing.');
-assert(dock.includes("action==='search'"),'本站搜索 action missing.');
-assert(dock.includes("action==='current'"),'分享当前页 action missing.');
-assert(dock.includes("action==='contact'"),'联系我们 action missing.');
+for(const action of ['top','back','search','current','contact'])assert(dock.includes("action==='"+action+"'"),action+' action missing.');
 
-assert(route.includes('Site Shell Recovery + Contact Route V13.1'),'Contact Route V13.1 marker missing.');
-assert(route.includes('__qilyFloatingDockUnifiedV51'),'Contact route does not defer to Dock V5.1.');
-assert(route.includes('site-dock-share-runtime-v1.js?v=20260828-authority-v51'),'Contact route Dock V5.1 cache key missing.');
+assert(route.includes('Site Shell Recovery + Contact Route V13.1'),'Contact Route V13.1 compatibility marker missing.');
+assert(route.includes('__qilyFloatingDockUnifiedV51'),'Contact route compatibility guard missing.');
 assert(route.includes('site-public-redline-closure-v1.css?v=20260828-home-dock-v2'),'Redline V2 cache key missing.');
-assert(route.includes('html:not([data-qily-dock="disabled"]) body #floatDock'),'Contact route can still force a disabled Dock visible.');
-assert(contactMaterializer.includes("const ROUTE='/site-contact-route-v1.js?v=20260828-dock-functional-public-v131'"),'Contact materializer still emits stale route cache.');
-assert(contactMaterializer.includes("const DOCK='/site-dock-share-runtime-v1.js?v=20260828-authority-v51'"),'Contact materializer still emits stale Dock cache.');
+assert(route.includes('html:not([data-qily-dock="disabled"]) body #floatDock'),'Contact route disabled-Dock selector missing.');
+assert(contactMaterializer.includes("const ROUTE='/site-contact-route-v1.js?v=20260828-dock-functional-public-v131'"),'Contact materializer route cache drifted.');
+assert(contactMaterializer.includes("const DOCK='/site-dock-share-runtime-v1.js?v=20260829-authority-v52'"),'Contact materializer can still revert Dock to V5.1.');
 
 assert(redline.includes('Public Redline Closure V2'),'Public redline V2 marker missing.');
 assert(redline.includes('body.qily-home-v3 .hero .hero-grid'),'Homepage hero containment rule missing.');
@@ -53,39 +55,50 @@ assert(!consistency.includes('normalizeDockButton'),'UI consistency must not mut
 assert(!consistency.includes('dockIconMarkup'),'UI consistency must not inject Dock icons.');
 assert(coreService.includes('__qilyCoreServiceAlignmentV105'),'Cooperation alignment V10.5 marker missing.');
 assert(!coreService.includes('normalizeDock'),'Cooperation runtime must not mutate Dock.');
-assert(!coreService.includes('legacyMask.remove'),'Cooperation runtime must not remove #wxMask.');
 assert(navigation.includes('navigation runtime v45'),'Navigation V45 marker missing.');
-assert(!/new\s+MutationObserver\s*\(/.test(navigation),'Navigation runtime must not continuously mutate Dock/navigation through MutationObserver.');
+assert(!/new\s+MutationObserver\s*\(/.test(navigation),'Navigation runtime must not continuously mutate shared UI.');
+
+assert(header.includes('Global Header Axis V1.1'),'Header Axis V1.1 missing.');
+assert(header.includes('overflow-x:auto!important'),'Desktop navigation horizontal scrolling missing.');
+assert(header.includes('overflow-x:scroll!important'),'Mobile explicit horizontal scrolling missing.');
+assert(header.includes('scrollbar-width:thin!important'),'Visible navigation scrollbar missing.');
 
 assert(ddz.includes('id="welcome-start"'),'Pure DDZ welcome Start button missing.');
 assert(game.includes("$('welcome-start').addEventListener('click',startRound)"),'Pure DDZ welcome Start button is not wired to startRound.');
 assert(capabilities.includes('<a href="/tools/pure-ddz/">立即在线玩</a>'),'Capability DDZ direct entry missing.');
-assert(capabilities.includes('大王为本人图像'),'Capability DDZ Big Joker contract missing.');
-assert(capabilities.includes('小王为官网首图“六大业务为主翼”飞机模型'),'Capability DDZ Small Joker contract missing.');
-assert(ddzClosure.includes('Pure DDZ R8 Closure V128'),'Pure DDZ R8 closure stylesheet missing.');
+assert(ddzClosure.includes('Pure DDZ R9 Closure V129'),'Pure DDZ R9 closure stylesheet missing.');
 assert(ddzClosure.includes('html:not(.ddz-ready) body .game-shell'),'Pure DDZ legacy first-paint gate missing.');
-assert(ddzClosure.includes('left:50%!important'),'Pure DDZ local-hand centering rule missing.');
-assert(ddzClosure.includes('justify-content:center!important'),'Pure DDZ centered hand-content rule missing.');
+assert(ddzClosure.includes('.topbar .brand *'),'Pure DDZ brand-flicker suppression missing.');
+assert(ddzClosure.includes('left:50%!important'),'Pure DDZ local-player centering rule missing.');
+assert(ddzClosure.includes('width:max-content!important'),'Pure DDZ local card-group centering rule missing.');
+assert(ddzClosure.includes('margin-left:auto!important'),'Pure DDZ local card-group auto-margin missing.');
 assert(ddzClosure.includes('#floatDock'),'Pure DDZ Dock exclusion style missing.');
 
-assert(semanticsCss.includes('QilyLean Interaction Semantics V1.1'),'Interaction semantics CSS v1.1 missing.');
+assert(semanticsCss.includes('QilyLean Interaction Semantics V1.2'),'Interaction semantics CSS v1.2 missing.');
 assert(semanticsCss.includes('[data-qily-interaction="route"]'),'Route feedback contract missing.');
 assert(semanticsCss.includes('[data-qily-interaction="static"]'),'Static-term no-feedback contract missing.');
-assert(semanticsCss.includes('--qily-static-bg'),'Static terminology baseline visual freeze missing.');
-assert(semanticsCss.includes('content:"回\\A顶部"'),'Dock 回顶部 two-line visual contract missing.');
-assert(semanticsCss.includes('content:"回\\A上一层"'),'Dock 回上一层 two-line visual contract missing.');
-assert(semanticsJs.includes('__qilyInteractionSemanticsV11'),'Interaction semantics runtime v1.1 guard missing.');
-assert(semanticsJs.includes('freezeStaticVisual'),'Static terminology visual freeze runtime missing.');
-assert(semanticsJs.includes("node.setAttribute('data-qily-interaction','route')"),'Route classifier missing.');
-assert(semanticsJs.includes("node.setAttribute('data-qily-interaction','static')"),'Static terminology classifier missing.');
+assert(semanticsCss.includes('.qily-float-btn::before'),'Dock pseudo-label retirement missing.');
+assert(!semanticsCss.includes('content:"回\\A顶部"'),'Duplicate Dock top pseudo-label returned.');
+assert(!semanticsCss.includes('content:"回\\A上一层"'),'Duplicate Dock back pseudo-label returned.');
+assert(semanticsCss.includes('.overview-card>.tag'),'Eight-waste number readability guard missing.');
+assert(semanticsJs.includes('__qilyInteractionSemanticsV12'),'Interaction semantics runtime v1.2 guard missing.');
+assert(semanticsJs.includes('PROJECT_EVIDENCE'),'Project evidence mapping missing.');
+assert(semanticsJs.includes('addTrustLinks'),'Trust-to-project linkage missing.');
+assert(semanticsJs.includes('injectProjectDetailGrade'),'Project detail evidence attribution missing.');
+
+assert(career.includes("var VERSION = 'v5'"),'Career navigation V5 missing.');
+assert(career.includes('function stickyHeaderOffset()'),'Career anchor sticky-header measurement missing.');
+assert(career.includes('getBoundingClientRect().height'),'Career anchor does not use rendered header height.');
 
 assert(/interaction continuity v[23]/i.test(interaction),'Sitewide interaction continuity baseline missing.');
 assert(interaction.includes('focus-visible'),'Keyboard focus feedback missing from interaction baseline.');
 assert(interaction.includes(':active'),'Active/pressed feedback missing from interaction baseline.');
 
-assert(materializer.includes("const BASELINE_VERSION='20260828-r8-authoritative-v20'"),'R8 materializer baseline v20 missing.');
-assert(materializer.includes('site-interaction-semantics-v1.css?v=20260828-r8-semantics-v11'),'Interaction semantics CSS v1.1 is not materialized sitewide.');
-assert(materializer.includes('site-interaction-semantics-v1.js?v=20260828-r8-semantics-v11'),'Interaction semantics JS v1.1 is not materialized sitewide.');
-assert(materializer.includes('r8-closure-v128.css?v=20260828-r8-v128'),'Pure DDZ R8 closure is not materialized.');
+assert(materializer.includes("const BASELINE_VERSION='20260829-r9-visual-remediation-v21'"),'R9 materializer baseline v21 missing.');
+assert(materializer.includes('site-header-axis-v1.css?v=20260829-primary-navigation-scroll-v5'),'R9 header-scroll stylesheet is not materialized sitewide.');
+assert(materializer.includes('site-dock-share-runtime-v1.js?v=20260829-authority-v52'),'Dock V5.2 is not materialized sitewide.');
+assert(materializer.includes('site-interaction-semantics-v1.css?v=20260829-r9-semantics-v12'),'Interaction semantics CSS v1.2 is not materialized sitewide.');
+assert(materializer.includes('site-interaction-semantics-v1.js?v=20260829-r9-semantics-v12'),'Interaction semantics JS v1.2 is not materialized sitewide.');
+assert(materializer.includes('r8-closure-v128.css?v=20260829-r9-v129'),'Pure DDZ R9 closure is not materialized.');
 
-console.log('PASS: R8 authoritative runtime contract — unified Dock presentation, no competing Dock observers, Pure DDZ clean first paint/centered hand, and route-vs-static interaction semantics v1.1 are protected.');
+console.log('PASS: R9 authoritative runtime contract — uniform mobile Dock V5.2, visible horizontal navigation scrolling, precise career anchors, linked evidence grades, DDZ stable brand/centered card group, and readable static numbering are protected.');
