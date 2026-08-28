@@ -21,17 +21,20 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Wait for deployed elder runtime v1.2.6
+      - name: Wait for deployed elder runtime v1.2.7
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           ok=0
           for i in {1..48}; do
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v126b' -o /tmp/page.html || true
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v126b' -o /tmp/card-theme.js || true
-            if grep -Fq '20260828-elder-ux-v126' /tmp/page.html 2>/dev/null \
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v127b' -o /tmp/page.html || true
+            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v127b' -o /tmp/card-theme.js || true
+            if grep -Fq '20260828-elder-ux-v127' /tmp/page.html 2>/dev/null \
               && ! grep -Fq 'C919' /tmp/card-theme.js 2>/dev/null \
               && grep -Fq 'qilylean-aircraft-hero-latest-q98.webp' /tmp/card-theme.js 2>/dev/null \
+              && grep -Fq "16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}" /tmp/card-theme.js 2>/dev/null \
+              && grep -Fq "17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}" /tmp/card-theme.js 2>/dev/null \
+              && ! grep -Fq 'qily-joker-aircraft' /tmp/card-theme.js 2>/dev/null \
               && grep -Fq 'flex-basis:112px' /tmp/card-theme.js 2>/dev/null \
               && grep -Fq 'flex-basis:104px' /tmp/card-theme.js 2>/dev/null \
               && grep -Fq 'min-width:0!important' /tmp/card-theme.js 2>/dev/null; then
@@ -60,7 +63,7 @@ jobs:
               const errors=[];const dialogs=[];
               page.on('pageerror',e=>errors.push(e.stack||String(e)));
               page.on('dialog',async d=>{dialogs.push(d.message());await d.dismiss();});
-              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v126b',{waitUntil:'domcontentloaded',timeout:60000});
+              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v127b',{waitUntil:'domcontentloaded',timeout:60000});
               await page.evaluate(()=>{localStorage.clear();localStorage.setItem('qily_global_language_v3','zh-CN');});
               await page.reload({waitUntil:'domcontentloaded',timeout:60000});
               await page.waitForFunction(()=>Boolean(window.PureDDZTest)&&Boolean(window.QilyLeanDDZElderV123)&&Boolean(window.QilyLeanCardTheme)&&document.documentElement.classList.contains('ddz-ready'),null,{timeout:12000});
@@ -83,7 +86,7 @@ jobs:
                 if(overlaps(geometry.brand,geometry.score)||overlaps(geometry.brand,geometry.actions)||overlaps(geometry.score,geometry.actions))throw new Error('header overlap '+JSON.stringify(geometry));
                 if(geometry.topButtons.some(item=>item.height>75||item.width<78))throw new Error('top button collapsed '+JSON.stringify(geometry.topButtons));
                 if(!geometry.shell||Math.abs(geometry.shell.width/viewport.width-.8)>.012)throw new Error('safe view not 80% '+JSON.stringify(geometry.shell));
-                if(geometry.jokerHtml.includes('C919')||!geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('qilylean-aircraft-hero-latest-q98.webp')||!geometry.jokerHtml.includes('qily-joker-aircraft'))throw new Error('small joker visual wrong '+geometry.jokerHtml);
+                if(geometry.jokerHtml.includes('C919')||geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('qilylean-aircraft-hero-latest-q98.webp'))throw new Error('small joker visual wrong '+geometry.jokerHtml);
                 if(geometry.dockBtn&&(geometry.dockBtn.width<60||geometry.dockBtn.height>58))throw new Error('dock cramped '+JSON.stringify(geometry.dockBtn));
               }
 
@@ -115,6 +118,6 @@ jobs:
               await page.close();
             }
             await browser.close();
-            console.log('PURE_DDZ_PUBLIC_ELDER_V126_FULL_VISIBILITY_OK');
+            console.log('PURE_DDZ_PUBLIC_ELDER_V127_FULL_VISIBILITY_OK');
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE
