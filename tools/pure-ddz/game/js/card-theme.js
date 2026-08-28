@@ -58,18 +58,21 @@
         html body .game-shell .bottom-cards>.qily-mini-joker:not(.small-joker)>img{width:62px!important;height:54px!important;object-fit:contain!important}
         html body .game-shell .bottom-cards>.qily-mini-joker>b{font-size:13px!important;line-height:1.1!important}
 
-        /* 长辈手牌：优先保证点数+花色完整露出；牌越少，自动把间距拉得更宽。 */
+        /* 所有终端的底部操作提示统一为高对比白字，避免长辈在浅/深背景切换时看不清。 */
+        html body .game-shell #hint-message.hint-message{color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;font-weight:950!important;line-height:1.45!important;text-shadow:0 2px 5px rgba(0,0,0,.55)!important;background:rgba(4,55,65,.52)!important;border-radius:999px!important;padding:4px 14px!important}
+
+        /* 长辈手牌：17张与地主20张分别压缩牌宽、扩大实际露出间距，保证点数+花色完整可见。 */
         @media(min-width:1181px){
-          html body .game-shell{width:80vw!important;max-width:80vw!important;margin-left:auto!important;margin-right:auto!important;overflow:visible!important}
+          html body .game-shell{width:80vw!important;max-width:80vw!important;min-width:0!important;margin-left:auto!important;margin-right:auto!important;overflow:visible!important}
           html body .game-shell #me-panel.me-player{width:calc(100% - 12px)!important;max-width:none!important;left:6px!important;right:6px!important}
-          html body .game-shell #hand.hand{width:100%!important;max-width:100%!important;padding-left:8px!important;padding-right:8px!important;justify-content:center!important;overflow:hidden!important}
-          html body .game-shell #hand.hand .card{margin-left:-50px!important;flex-basis:120px!important;width:120px!important;max-width:120px!important}
+          html body .game-shell #hand.hand{width:100%!important;max-width:100%!important;padding-left:6px!important;padding-right:6px!important;justify-content:center!important;overflow:hidden!important}
+          html body .game-shell #hand.hand .card{margin-left:-46px!important;flex-basis:120px!important;width:120px!important;max-width:120px!important}
           html body .game-shell #hand.hand .card:first-child{margin-left:0!important}
-          html body .game-shell #hand.hand:has(.card:nth-child(15)) .card{flex-basis:116px!important;width:116px!important;max-width:116px!important;margin-left:-56px!important}
-          html body .game-shell #hand.hand:has(.card:nth-child(18)) .card{flex-basis:108px!important;width:108px!important;max-width:108px!important;height:182px!important;margin-left:-56px!important}
-          html body .game-shell #hand.hand:has(.card:nth-child(18)) .qily-card-corner b{font-size:31px!important;letter-spacing:-.08em!important}
-          html body .game-shell #hand.hand:has(.card:nth-child(15)):not(:has(.card:nth-child(18))) .qily-card-corner b{font-size:34px!important;letter-spacing:-.07em!important}
-          html body .game-shell #hint-message.hint-message{color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important;font-weight:950!important;font-size:calc(18px * var(--font-scale))!important;line-height:1.45!important;text-shadow:0 2px 5px rgba(0,0,0,.55)!important;background:rgba(4,55,65,.38)!important;border-radius:999px!important;padding:4px 14px!important}
+          html body .game-shell #hand.hand:has(.card:nth-child(15)) .card{flex-basis:112px!important;width:112px!important;max-width:112px!important;margin-left:-48px!important}
+          html body .game-shell #hand.hand:has(.card:nth-child(15)):not(:has(.card:nth-child(18))) .qily-card-corner b{font-size:31px!important;letter-spacing:-.08em!important}
+          html body .game-shell #hand.hand:has(.card:nth-child(18)) .card{flex-basis:104px!important;width:104px!important;max-width:104px!important;height:182px!important;margin-left:-50px!important}
+          html body .game-shell #hand.hand:has(.card:nth-child(18)) .qily-card-corner b{font-size:28px!important;letter-spacing:-.10em!important}
+          html body .game-shell #hint-message.hint-message{font-size:calc(18px * var(--font-scale))!important}
           html body #floatDock.qily-float-dock.qily-float-dock{right:max(28px,2.4vw,env(safe-area-inset-right))!important}
         }
 
@@ -87,6 +90,6 @@
     apply();
     if(window.MutationObserver){const observer=new MutationObserver(apply);observer.observe(document.documentElement,{childList:true,subtree:true})}
   }
-  function loadV120(){if(window.__PURE_DDZ_MANAGED_LOADER__)return;if(!document.getElementById('qily-visual-v120-css')){const link=document.createElement('link');link.id='qily-visual-v120-css';link.rel='stylesheet';link.href=runtimeUrl('css/visual-v120.css?v=20260828-elder-v125');document.head.appendChild(link)}if(!document.querySelector('script[data-qily-visual-v120]')){const script=document.createElement('script');script.dataset.qilyVisualV120='1';script.src=runtimeUrl('js/visual-v120.js?v=20260828-elder-v125');script.async=true;document.body.appendChild(script)}}
+  function loadV120(){if(window.__PURE_DDZ_MANAGED_LOADER__)return;if(!document.getElementById('qily-visual-v120-css')){const link=document.createElement('link');link.id='qily-visual-v120-css';link.rel='stylesheet';link.href=runtimeUrl('css/visual-v120.css?v=20260828-elder-v126');document.head.appendChild(link)}if(!document.querySelector('script[data-qily-visual-v120]')){const script=document.createElement('script');script.dataset.qilyVisualV120='1';script.src=runtimeUrl('js/visual-v120.js?v=20260828-elder-v126');script.async=true;document.body.appendChild(script)}}
   window.QilyLeanCardTheme=Object.freeze({getTheme,renderCard,renderMiniCard,ruleRankText,rankThemes:RANK_THEME,suitThemes:SUIT_THEME,jokerThemes:JOKER_THEME,homeAircraft:HOME_AIRCRAFT,runtimeRoot:runtimeRoot.href});installUiStandards();loadV120();
 })();
