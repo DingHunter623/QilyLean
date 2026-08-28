@@ -1,31 +1,31 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V22｜2026-08-29
- * R9 visual remediation baseline:
+/* QilyLean Sitewide Public Baseline Materializer V23｜2026-08-29
+ * R10 regression closure:
  * - Chinese remains the authoritative source and default display.
  * - translation assets remain deferred and never block first paint.
- * - navigation V45 owns navigation/search; Header Axis V1.1 owns explicit horizontal nav scrolling.
- * - Dock V5.2 alone owns Dock structure/labels/actions; all pseudo-label duplication is retired.
- * - Contact Route V13.2 can only hydrate Dock V5.2, preventing stale mobile Dock recovery.
- * - Interaction Semantics V1.2 distinguishes routes/static content and links evidence grades to projects.
- * - Pure DDZ R9 Closure V129 stabilizes brand paint and centers the local card group.
+ * - Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.3 adds a persistent draggable nav rail.
+ * - static knowledge tags/chips never fake links or pointer feedback.
+ * - Dock V5.3 alone owns Dock structure/labels/actions and opens the full contact page in a new tab.
+ * - Contact Route V13.3 can only hydrate Dock V5.3, preventing stale modal/contact recovery.
+ * - Pure DDZ R10 Closure V130 centers the local hand when it fits and scrolls only on overflow.
  */
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
-const BASELINE_VERSION='20260829-r9-visual-remediation-v22';
+const BASELINE_VERSION='20260829-r10-regression-closure-v23';
 const SAFE_VERSION='20260828-long-page-resilience-v5';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
-const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260829-authority-v52';
+const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260829-authority-v53';
 const CORE_SERVICE_DOCK='/site-core-service-dock-closure-v1.js?v=20260828-r7-alignment-v105';
 const LANGUAGE_CSS='/site-global-language-v1.css?v=20260825-public-translation-shell-v1';
 const SAFE_RUNTIME=`/site-translation-safe-runtime-v1.js?v=${SAFE_VERSION}`;
-const HEADER_AXIS='/site-header-axis-v1.css?v=20260829-primary-navigation-scroll-v5';
+const HEADER_AXIS='/site-header-axis-v1.css?v=20260829-primary-navigation-scroll-v6';
 const PROGRESS_CSS='/site-translation-progress-v1.css?v=20260827-source-recovery-v4';
 const PROGRESS_JS='/site-translation-progress-v1.js?v=20260828-long-page-resilience-v5';
 const PUBLIC_UI_CSS='/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8';
@@ -38,10 +38,10 @@ const UNIFIED_VISUAL_CSS='/site-unified-visual-governance-v1.css?v=20260826-cont
 const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-screenshot-closure-v2';
 const STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260828-vi-surface-v3';
 const PUBLIC_REDLINE_CSS='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
-const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v132';
-const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260829-r9-semantics-v12';
-const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260829-r9-semantics-v12';
-const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r9-v129';
+const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v133';
+const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260829-r10-semantics-v13';
+const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260829-r10-semantics-v13';
+const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r10-v130';
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
 
 function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean)}
@@ -85,8 +85,8 @@ function materialize(source,relative){
     `<script defer data-qily-translation-progress-direct="bilingual-v4" src="${PROGRESS_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
     `<script defer data-qily-content-contrast-direct="v6" src="${CONTENT_CONTRAST_JS}"></script>`,
-    `<script defer data-qily-interaction-semantics-direct="v1.2" src="${INTERACTION_SEMANTICS_JS}"></script>`,
-    `<script defer data-qily-contact-route-direct="v13.2" src="${CONTACT_ROUTE_JS}"></script>`
+    `<script defer data-qily-interaction-semantics-direct="v1.3" src="${INTERACTION_SEMANTICS_JS}"></script>`,
+    `<script defer data-qily-contact-route-direct="v13.3" src="${CONTACT_ROUTE_JS}"></script>`
   ].filter(Boolean).join('\n');
   if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);
   return next;
@@ -99,5 +99,5 @@ for(const relative of trackedHtml()){
   changed.push(relative);
   if(!checkOnly)fs.writeFileSync(target,next,'utf8');
 }
-if(checkOnly&&changed.length)throw new Error(`Sitewide R9 public baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
+if(checkOnly&&changed.length)throw new Error(`Sitewide R10 public baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
 process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); baseline ${BASELINE_VERSION}.\n`);
