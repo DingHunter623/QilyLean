@@ -27,7 +27,7 @@ html body :where(p,li,dd,figcaption,.summary,.description,.meta,.fine,.note){tex
 /* 恢复全站原VI首屏：深青绿底、白色正文、金色辅助信息。 */
 html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero){
   color:#fff!important;
-  background:linear-gradient(125deg,var(--qily-read-deep),var(--qily-read-teal))!important;
+  background:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))!important;
   border-color:transparent!important;
 }
 html body :is(.module-hero,.daily-hero,.hero,.project-hero,.projects-hero,.knowledge-hero,.trust-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero) :is(h1,h2,h3,h4,p,.lead,.module-lead,.summary,.subtitle){
