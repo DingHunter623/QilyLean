@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "checkedAt": "2026-08-28T11:07:55.797Z",
+  "checkedAt": "2026-08-28T11:09:03.953Z",
   "policy": {
     "brandColors": {
       "olive": "#0f4b5a",
@@ -24,34 +24,10 @@
     ]
   },
   "scannedFiles": 1234,
-  "changedFiles": [
-    "improvements/erp-mes/index.html",
-    "improvements/ie-data/index.html",
-    "improvements/index.html",
-    "improvements/smed/index.html",
-    "improvements/standard-time/index.html",
-    "improvements/visual/index.html",
-    "improvements/vsm/index.html",
-    "knowledge/terminology/mtbf.html",
-    "knowledge/terminology/mttr.html",
-    "knowledge/terminology/pph.html",
-    "knowledge/terminology/sponsor.html"
-  ],
+  "changedFiles": [],
   "injectedFiles": [],
   "finalGuardInjectedFiles": [],
-  "replacementsByFile": {
-    "improvements/erp-mes/index.html": 1,
-    "improvements/ie-data/index.html": 1,
-    "improvements/index.html": 1,
-    "improvements/smed/index.html": 1,
-    "improvements/standard-time/index.html": 1,
-    "improvements/visual/index.html": 1,
-    "improvements/vsm/index.html": 1,
-    "knowledge/terminology/mtbf.html": 1,
-    "knowledge/terminology/mttr.html": 1,
-    "knowledge/terminology/pph.html": 1,
-    "knowledge/terminology/sponsor.html": 1
-  },
+  "replacementsByFile": {},
   "violations": [],
   "missingFinalGuardLinks": [],
   "staleFinalGuardLinks": [],
