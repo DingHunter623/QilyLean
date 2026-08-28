@@ -1,0 +1,99 @@
+/* QilyLean Public Redline Closure V1｜2026-08-28
+ * Final screenshot closure for homepage hero cleanliness and the shared six-action floating Dock.
+ * One component, one visual contract, one symbol contract on desktop/tablet/mobile.
+ */
+
+:root{
+  --qily-public-dock-bg:#0f4b5a;
+  --qily-public-dock-hover:#12606f;
+  --qily-public-dock-line:#caa15f;
+  --qily-public-dock-text:#ffe39b;
+}
+
+/* Homepage founder/operating-system hero: keep the QilyLean VI gradient, remove the decorative grid/texture layer. */
+html body.qily-home-v3 .hero{
+  background-color:#0f4b5a!important;
+  background-image:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))!important;
+  background-blend-mode:normal!important;
+}
+html body.qily-home-v3 .hero::after{
+  content:none!important;
+  display:none!important;
+  visibility:hidden!important;
+  opacity:0!important;
+  background:none!important;
+  background-image:none!important;
+  mask-image:none!important;
+  -webkit-mask-image:none!important;
+}
+
+/* Shared Dock: no page may introduce a special fill, font, border or effect for one action. */
+html body #floatDock.qily-float-dock,
+html body #floatDock.qily-floating-dock{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  gap:7px!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+}
+html body #floatDock .qily-float-btn{
+  color:var(--qily-public-dock-text)!important;
+  -webkit-text-fill-color:var(--qily-public-dock-text)!important;
+  background:var(--qily-public-dock-bg)!important;
+  background-color:var(--qily-public-dock-bg)!important;
+  background-image:none!important;
+  border-color:var(--qily-public-dock-line)!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+  text-shadow:none!important;
+}
+html body #floatDock .qily-float-btn *,
+html body #floatDock .qily-float-btn:is(:link,:visited,:active){
+  color:var(--qily-public-dock-text)!important;
+  -webkit-text-fill-color:var(--qily-public-dock-text)!important;
+}
+html body #floatDock .qily-float-btn:is(:hover,:focus-visible){
+  color:var(--qily-public-dock-text)!important;
+  -webkit-text-fill-color:var(--qily-public-dock-text)!important;
+  background:var(--qily-public-dock-hover)!important;
+  background-color:var(--qily-public-dock-hover)!important;
+  background-image:none!important;
+  border-color:var(--qily-public-dock-text)!important;
+}
+
+/* Canonical semantic arrows. Never rotate/skew/re-map them on mobile. */
+html body #floatDock [data-action="top"],
+html body #floatDock [data-action="back"]{
+  flex-direction:column!important;
+  gap:0!important;
+  transform:none!important;
+  rotate:0deg!important;
+}
+html body #floatDock .qily-dock-semantic-icon{
+  transform:none!important;
+  rotate:0deg!important;
+  font-style:normal!important;
+  writing-mode:horizontal-tb!important;
+  text-orientation:mixed!important;
+}
+html body #floatDock [data-action="top"] .qily-dock-semantic-icon,
+html body #floatDock [data-action="back"] .qily-dock-semantic-icon{
+  transform:none!important;
+  rotate:0deg!important;
+}
+
+@media(max-width:620px){
+  html body #floatDock [data-action="top"],
+  html body #floatDock [data-action="back"],
+  html body #floatDock .qily-dock-semantic-icon{
+    transform:none!important;
+    rotate:0deg!important;
+  }
+}
+
+@media print{
+  html body #floatDock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+}
