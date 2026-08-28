@@ -1,7 +1,9 @@
-/* QilyLean Sitewide Content Contrast Guard V6｜2026-08-26
+/* QilyLean Sitewide Content Contrast Guard V7｜2026-08-28
  * Global readability ownership: dark surfaces use light foregrounds; light surfaces use dark foregrounds.
  * V6: table/header bands and other structural dark surfaces receive deterministic light text;
  * this layer intentionally overrides generic typography rules that can otherwise create dark-on-dark or pale-on-pale text.
+ * V7: unify all public Hero / article-hub / document and tool dark surfaces to the same QilyLean VI background;
+ * minority page-specific background declarations no longer create visible color drift between modules or languages.
  */
 :root{
   --ql-dark-title:#fff;
@@ -10,6 +12,7 @@
   --ql-deep:#073c47;
   --ql-gold:#caa15f;
   --ql-light-gold:#ffe39b;
+  --ql-vi-hero-bg:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90));
 }
 html body [data-qily-content-contrast-fixed="dark"]{
   color:#173f49!important;
@@ -123,3 +126,22 @@ html body :is(
 
 /* Essential text must not effectively disappear through decorative opacity. */
 html body [data-qily-content-contrast-fixed]{opacity:1!important}
+
+/* QILY-VI-HERO-SURFACE-GUARD:START
+ * 全站VI深色底色唯一来源：采用现行多数页面的工业工程蓝图渐变。
+ * 任何模块、语言页或历史内联样式如使用不同深青/绿色，最终由本层收口。
+ * 只接管深色 Hero/栏目首屏的底色，不触碰正文卡片、语义状态色和布局。
+ */
+html:root body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,
+  .article-hub,.tool-hero,[data-qily-hero-surface="dark"]
+){
+  background-color:#0f4b5a!important;
+  background-image:var(--ql-vi-hero-bg)!important;
+  border-bottom-color:rgba(202,161,95,.48)!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+/* QILY-VI-HERO-SURFACE-GUARD:END */
