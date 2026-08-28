@@ -13,7 +13,7 @@ const required=[
   'data-qily-translation-safety-bootstrap="inpage-v4"',
   '/site-translation-safe-runtime-v1.js?v=20260828-long-page-resilience-v5',
   '/site-global-language-v1.css?v=20260825-public-translation-shell-v1',
-  '/site-header-axis-v1.css?v=20260827-primary-navigation-unified-v4',
+  '/site-header-axis-v1.css?v=20260829-primary-navigation-scroll-v5',
   '/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8',
   '/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6',
   '/site-translation-progress-v1.css?v=20260827-source-recovery-v4',
@@ -21,15 +21,19 @@ const required=[
   '/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2',
   '/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2',
   '/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6',
-  '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'
+  '/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6',
+  '/site-interaction-semantics-v1.css?v=20260829-r9-semantics-v12',
+  '/site-interaction-semantics-v1.js?v=20260829-r9-semantics-v12'
 ];
-const NAV='/site-navigation.js?v=20260827-translation-dock-resource-v46';
-const SHELL='/site-ui-consistency-v1.js?v=20260828-translation-resilience-v47';
+const NAV='/site-navigation.js?v=20260828-r7-navigation-v45';
+const SHELL='/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7';
 const failures=[];
 let audited=0,navigationPages=0,shellPages=0;
 for(const relative of trackedHtml()){
   const html=read(relative);
   if(!/<\/head>/i.test(html))continue;
+  /* Search-engine/ownership verification files intentionally remain minimal and are not public UI pages. */
+  if(/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(relative))continue;
   audited+=1;
   for(const token of required){
     if(!html.includes(token))failures.push(`${relative}: missing ${token}`);
@@ -38,31 +42,26 @@ for(const relative of trackedHtml()){
   if(!html.includes('<script defer data-qily-translation-safe-direct="inpage-v4"'))failures.push(`${relative}: translation runtime is not deferred`);
   if(!html.includes('data-qily-translation-progress-direct="bilingual-v4"'))failures.push(`${relative}: translation progress marker is stale`);
   if(!html.includes('data-qily-content-contrast-direct="v6"'))failures.push(`${relative}: content contrast v6 marker missing`);
+  if(!html.includes('data-qily-interaction-semantics-direct="v1.2"'))failures.push(`${relative}: interaction semantics v1.2 marker missing`);
   if(html.includes('/site-global-language-v3.js'))failures.push(`${relative}: retired external-proxy translator still referenced`);
-  if(/\/site-navigation\.js(?:\?v=[^"']*)?/.test(html)){
-    navigationPages+=1;if(!html.includes(NAV))failures.push(`${relative}: navigation runtime is stale`);
-  }
-  if(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/.test(html)){
-    shellPages+=1;if(!html.includes(SHELL))failures.push(`${relative}: shared-shell runtime is stale`);
-  }
+  if(/\/site-navigation\.js(?:\?v=[^"']*)?/.test(html)){navigationPages+=1;if(!html.includes(NAV))failures.push(`${relative}: navigation runtime is stale`);}
+  if(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/.test(html)){shellPages+=1;if(!html.includes(SHELL))failures.push(`${relative}: shared-shell runtime is stale`);}
 }
 
-const samples=['index.html','knowledge/terminology.html','qilylean/gbt2828.html','qilylean/daily/2026-08-25.html','knowledge/index.html','qilylean/production-operations-organization.html','qilylean/daily-insights.html'];
+const samples=['index.html','trust/index.html','experience/index.html','projects/index.html','knowledge/terminology.html','qilylean/daily/2026-08-25.html','knowledge/index.html','qilylean/daily-insights.html'];
 for(const sample of samples){
   if(!fs.existsSync(path.join(root,sample)))failures.push(`${sample}: required remediation sample missing`);
   else{
     const html=read(sample);
-    if(!html.includes('/site-translation-safe-runtime-v1.js?v=20260828-long-page-resilience-v5'))failures.push(`${sample}: resilient translation runtime absent`);
-    if(!html.includes('/site-translation-progress-v1.js?v=20260828-long-page-resilience-v5'))failures.push(`${sample}: resilient translation progress absent`);
-    if(!html.includes('/site-header-axis-v1.css?v=20260827-primary-navigation-unified-v4'))failures.push(`${sample}: unified header-axis baseline absent`);
-    if(!html.includes('/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8'))failures.push(`${sample}: unified primary-navigation public CSS absent`);
-    if(!html.includes('/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6'))failures.push(`${sample}: content contrast v6 baseline absent`);
+    if(!html.includes('/site-header-axis-v1.css?v=20260829-primary-navigation-scroll-v5'))failures.push(`${sample}: R9 header-scroll baseline absent`);
+    if(!html.includes('/site-interaction-semantics-v1.css?v=20260829-r9-semantics-v12'))failures.push(`${sample}: R9 interaction semantics CSS absent`);
+    if(!html.includes('/site-interaction-semantics-v1.js?v=20260829-r9-semantics-v12'))failures.push(`${sample}: R9 interaction semantics JS absent`);
   }
 }
+const ddz=read('tools/pure-ddz/index.html');
+if(!ddz.includes('/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r9-v129'))failures.push('tools/pure-ddz/index.html: DDZ R9 closure cache key absent');
 
 if(navigationPages<460)failures.push(`navigation coverage unexpectedly fell to ${navigationPages}`);
 if(shellPages<460)failures.push(`shared-shell coverage unexpectedly fell to ${shellPages}`);
-if(failures.length){
-  throw new Error(`Public baseline materialization failed (${failures.length}):\n${failures.slice(0,60).join('\n')}${failures.length>60?`\n… +${failures.length-60} more`:''}`);
-}
-process.stdout.write(`PASS: ${audited} public HTML pages carry one deferred resilient translation/readability/primary-navigation baseline; ${navigationPages} use fresh navigation and ${shellPages} use the fresh shared shell.\n`);
+if(failures.length)throw new Error(`Public baseline materialization failed (${failures.length}):\n${failures.slice(0,60).join('\n')}${failures.length>60?`\n… +${failures.length-60} more`:''}`);
+process.stdout.write(`PASS: ${audited} public HTML pages carry the R9 resilient/visual baseline; ${navigationPages} use Navigation V45 and ${shellPages} use shared-shell V7.\n`);
