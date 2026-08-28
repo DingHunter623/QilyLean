@@ -21,6 +21,7 @@ const consistency=read('site-ui-consistency-v1.js');
 const coreService=read('site-core-service-dock-closure-v1.js');
 const navigation=read('site-navigation.js');
 const materializer=read('scripts/materialize-global-language-v3.js');
+const contactMaterializer=read('scripts/materialize-contact-route-v6.js');
 
 assert(dock.includes('Floating Dock Authoritative Runtime V5.1'),'Dock V5.1 marker missing.');
 assert(dock.includes('__qilyFloatingDockUnifiedV51'),'Dock V5.1 guard missing.');
@@ -38,6 +39,8 @@ assert(route.includes('__qilyFloatingDockUnifiedV51'),'Contact route does not de
 assert(route.includes('site-dock-share-runtime-v1.js?v=20260828-authority-v51'),'Contact route Dock V5.1 cache key missing.');
 assert(route.includes('site-public-redline-closure-v1.css?v=20260828-home-dock-v2'),'Redline V2 cache key missing.');
 assert(route.includes('html:not([data-qily-dock="disabled"]) body #floatDock'),'Contact route can still force a disabled Dock visible.');
+assert(contactMaterializer.includes("const ROUTE='/site-contact-route-v1.js?v=20260828-dock-functional-public-v131'"),'Contact materializer still emits stale route cache.');
+assert(contactMaterializer.includes("const DOCK='/site-dock-share-runtime-v1.js?v=20260828-authority-v51'"),'Contact materializer still emits stale Dock cache.');
 
 assert(redline.includes('Public Redline Closure V2'),'Public redline V2 marker missing.');
 assert(redline.includes('body.qily-home-v3 .hero .hero-grid'),'Homepage hero containment rule missing.');
@@ -65,12 +68,14 @@ assert(ddzClosure.includes('left:50%!important'),'Pure DDZ local-hand centering 
 assert(ddzClosure.includes('justify-content:center!important'),'Pure DDZ centered hand-content rule missing.');
 assert(ddzClosure.includes('#floatDock'),'Pure DDZ Dock exclusion style missing.');
 
-assert(semanticsCss.includes('QilyLean Interaction Semantics V1'),'Interaction semantics CSS missing.');
+assert(semanticsCss.includes('QilyLean Interaction Semantics V1.1'),'Interaction semantics CSS v1.1 missing.');
 assert(semanticsCss.includes('[data-qily-interaction="route"]'),'Route feedback contract missing.');
 assert(semanticsCss.includes('[data-qily-interaction="static"]'),'Static-term no-feedback contract missing.');
+assert(semanticsCss.includes('--qily-static-bg'),'Static terminology baseline visual freeze missing.');
 assert(semanticsCss.includes('content:"回\\A顶部"'),'Dock 回顶部 two-line visual contract missing.');
 assert(semanticsCss.includes('content:"回\\A上一层"'),'Dock 回上一层 two-line visual contract missing.');
-assert(semanticsJs.includes('__qilyInteractionSemanticsV1'),'Interaction semantics runtime guard missing.');
+assert(semanticsJs.includes('__qilyInteractionSemanticsV11'),'Interaction semantics runtime v1.1 guard missing.');
+assert(semanticsJs.includes('freezeStaticVisual'),'Static terminology visual freeze runtime missing.');
 assert(semanticsJs.includes("node.setAttribute('data-qily-interaction','route')"),'Route classifier missing.');
 assert(semanticsJs.includes("node.setAttribute('data-qily-interaction','static')"),'Static terminology classifier missing.');
 
@@ -78,9 +83,9 @@ assert(/interaction continuity v[23]/i.test(interaction),'Sitewide interaction c
 assert(interaction.includes('focus-visible'),'Keyboard focus feedback missing from interaction baseline.');
 assert(interaction.includes(':active'),'Active/pressed feedback missing from interaction baseline.');
 
-assert(materializer.includes("const BASELINE_VERSION='20260828-r8-authoritative-v19'"),'R8 materializer baseline missing.');
-assert(materializer.includes('site-interaction-semantics-v1.css?v=20260828-r8-semantics-v1'),'Interaction semantics CSS is not materialized sitewide.');
-assert(materializer.includes('site-interaction-semantics-v1.js?v=20260828-r8-semantics-v1'),'Interaction semantics JS is not materialized sitewide.');
+assert(materializer.includes("const BASELINE_VERSION='20260828-r8-authoritative-v20'"),'R8 materializer baseline v20 missing.');
+assert(materializer.includes('site-interaction-semantics-v1.css?v=20260828-r8-semantics-v11'),'Interaction semantics CSS v1.1 is not materialized sitewide.');
+assert(materializer.includes('site-interaction-semantics-v1.js?v=20260828-r8-semantics-v11'),'Interaction semantics JS v1.1 is not materialized sitewide.');
 assert(materializer.includes('r8-closure-v128.css?v=20260828-r8-v128'),'Pure DDZ R8 closure is not materialized.');
 
-console.log('PASS: R8 authoritative runtime contract — unified Dock presentation, no competing Dock observers, Pure DDZ clean first paint/centered hand, and route-vs-static interaction semantics are protected.');
+console.log('PASS: R8 authoritative runtime contract — unified Dock presentation, no competing Dock observers, Pure DDZ clean first paint/centered hand, and route-vs-static interaction semantics v1.1 are protected.');
