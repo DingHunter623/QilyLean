@@ -14,6 +14,8 @@ on:
       - 'site-translation-progress-v1.css'
       - 'site-interaction-contrast-guard-v1.js'
       - 'site-interaction-contrast-guard-v1.css'
+      - 'site-interaction-semantics-v1.js'
+      - 'site-interaction-semantics-v1.css'
       - 'site-content-contrast-guard-v1.js'
       - 'site-content-contrast-guard-v1.css'
       - 'site-unified-visual-governance-v1.css'
@@ -24,8 +26,11 @@ on:
       - 'site-parent-navigation-v3.js'
       - 'site-ui-consistency-v1.js'
       - 'site-dock-share-runtime-v1.js'
+      - 'site-contact-route-v1.js'
       - 'site-core-service-dock-closure-v1.js'
+      - 'tools/pure-ddz/game/css/r8-closure-v128.css'
       - 'scripts/materialize-global-language-v3.js'
+      - 'scripts/materialize-contact-route-v6.js'
       - 'scripts/validate-global-language-runtime-compat-v1.js'
       - 'scripts/validate-sitewide-safety-readability-v1.js'
       - 'scripts/validate-public-baseline-materialization-v1.js'
@@ -62,6 +67,7 @@ jobs:
           node --check site-translation-public-ui-v1.js
           node --check site-translation-progress-v1.js
           node --check site-interaction-contrast-guard-v1.js
+          node --check site-interaction-semantics-v1.js
           node --check site-content-contrast-guard-v1.js
           node --check site-search.js
           node --check site-integrity-hotfix-v1.js
@@ -69,8 +75,10 @@ jobs:
           node --check site-parent-navigation-v3.js
           node --check site-ui-consistency-v1.js
           node --check site-dock-share-runtime-v1.js
+          node --check site-contact-route-v1.js
           node --check site-core-service-dock-closure-v1.js
           node --check scripts/materialize-global-language-v3.js
+          node --check scripts/materialize-contact-route-v6.js
           node --check scripts/validate-global-language-runtime-compat-v1.js
           node --check scripts/validate-sitewide-safety-readability-v1.js
           node --check scripts/validate-public-baseline-materialization-v1.js
