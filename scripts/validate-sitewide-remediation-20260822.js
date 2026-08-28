@@ -47,7 +47,7 @@ assert(dockRuntime.includes("LABELS={home:'首页',top:'回顶部',back:'回上�
 assert(dockRuntime.includes("EXCLUDED=/^\\/tools\\/pure-ddz"),'Pure DDZ Dock exclusion missing.');
 assert(dockRuntime.includes('data-qily-dock="disabled"'),'Pure DDZ disabled-Dock state missing.');
 assert(dockRuntime.includes('createStandaloneDock'),'Standalone Dock fallback missing.');
-assert(dockRuntime.includes('installAuthoritativeHandlers'),'Authoritative Dock event handler missing.');
+assert(dockRuntime.includes('installAuthoritativeEvents'),'Authoritative Dock event handler missing.');
 assert(dockRuntime.includes("if(action==='top')"),'回顶部 function missing.');
 assert(dockRuntime.includes("if(action==='back')"),'回上一层 function missing.');
 assert(dockRuntime.includes("if(action==='search')"),'本站搜索 function missing.');
