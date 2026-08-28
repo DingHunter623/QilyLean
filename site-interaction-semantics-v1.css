@@ -1,9 +1,10 @@
-/* QilyLean Interaction Semantics V1.1｜2026-08-28
+/* QilyLean Interaction Semantics V1.2｜2026-08-29
  * Sitewide rule:
  * 1) true route/module navigation gets explicit hover/active/focus feedback;
  * 2) in-page controls keep lighter feedback;
  * 3) static terms/tags/chips never pretend to be links and keep their original visual state;
- * 4) shared Dock uses one visual language, with readable two-line labels for 回顶部/回上一层.
+ * 4) Dock geometry is protected here, while Dock V5.2 alone owns its text/DOM;
+ * 5) project evidence grades and critical numeric badges keep explicit readable contrast.
  */
 
 :root{
@@ -13,7 +14,6 @@
   --qily-action-focus:rgba(202,161,95,.28);
 }
 
-/* Any true route remains clearly focusable/clickable without forcing every text link to jump. */
 html body :is(a[href],[data-route],[data-href],[data-url])[data-qily-interaction="route"]{
   cursor:pointer!important;
   transition:color .15s ease,background-color .15s ease,border-color .15s ease,box-shadow .15s ease,transform .15s ease,filter .15s ease!important;
@@ -23,7 +23,6 @@ html body :is(a[href],[data-route],[data-href],[data-url])[data-qily-interaction
   outline-offset:2px!important;
 }
 
-/* Button-like route controls / module entries receive unmistakable motion and shadow feedback. */
 html body :is(.module-actions,.actions,.cta-row,.hero-actions,.card-actions,.qily-global-nav,nav) a[href][data-qily-interaction="route"],
 html body :is(.btn,.button,.cta,.primary-btn,.secondary-btn,.action-btn,.icon-link,.nav-btn)[data-qily-interaction="route"],
 html body a.qily-route-action[data-qily-route-emphasis="true"]{
@@ -42,7 +41,6 @@ html body a.qily-route-action[data-qily-route-emphasis="true"]:active{
   transform:translateY(1px) scale(.985)!important;
 }
 
-/* In-page controls: feedback remains, but is intentionally lighter than route navigation. */
 html body [data-qily-interaction="local"]{
   cursor:pointer!important;
   transition:background-color .12s ease,border-color .12s ease,box-shadow .12s ease!important;
@@ -50,7 +48,6 @@ html body [data-qily-interaction="local"]{
 html body [data-qily-interaction="local"]:hover{box-shadow:0 4px 10px rgba(15,75,90,.10)!important}
 html body [data-qily-interaction="local"]:focus-visible{outline:2px solid var(--qily-action-focus)!important;outline-offset:2px!important}
 
-/* Static terminology / tools / vocabulary: preserve baseline visual exactly; no fake hover/press. */
 html body :is(.qily-static-token,[data-qily-interaction="static"]){
   cursor:default!important;
   transition:none!important;
@@ -79,22 +76,85 @@ html body :is(.qily-static-token,[data-qily-interaction="static"]):is(:hover,:ac
 html body :is(.qily-static-token,[data-qily-interaction="static"])::before,
 html body :is(.qily-static-token,[data-qily-interaction="static"])::after{transform:none!important;filter:none!important}
 
-/* Shared Dock: same shape/typography on every public page. */
+/* Dock V5.2 safety contract: no pseudo-text, no legacy shape drift. Runtime owns labels. */
+html:not([data-qily-dock="disabled"]) body #floatDock{
+  box-sizing:border-box!important;
+}
 html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn{
-  width:64px!important;height:64px!important;min-width:64px!important;min-height:64px!important;max-width:64px!important;max-height:64px!important;
-  padding:6px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;border-radius:999px!important;
-  font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:normal!important;word-break:keep-all!important;
+  box-sizing:border-box!important;
+  flex-shrink:0!important;
+  border-radius:50%!important;
+  overflow:hidden!important;
 }
-html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="top"],
-html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="back"]{font-size:0!important}
-html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="top"]::before{
-  content:"回\A顶部";white-space:pre-line;font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;color:inherit!important;
+html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn::before,
+html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn::after{
+  content:none!important;
+  display:none!important;
+  visibility:hidden!important;
 }
-html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="back"]::before{
-  content:"回\A上一层";white-space:pre-line;font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;color:inherit!important;
+html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn>.qily-dock-label{
+  text-align:center!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow:hidden!important;
 }
+
+/* Project evidence-grade attribution: same semantics on trust, project list and project detail pages. */
+html body .qily-project-evidence-grade,
+html body .qily-project-list-grade{
+  --qily-grade-bg:#eef8f6;
+  --qily-grade-line:#9fc9c2;
+  --qily-grade-text:#0f4b5a;
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:8px!important;
+  min-height:38px!important;
+  padding:6px 12px!important;
+  border:1px solid var(--qily-grade-line)!important;
+  border-radius:999px!important;
+  color:var(--qily-grade-text)!important;
+  -webkit-text-fill-color:var(--qily-grade-text)!important;
+  background:var(--qily-grade-bg)!important;
+  text-decoration:none!important;
+  font-weight:900!important;
+  line-height:1.25!important;
+  box-shadow:0 5px 14px rgba(15,75,90,.08)!important;
+}
+html body .qily-project-evidence-grade{margin:10px 0 4px!important}
+html body .qily-project-evidence-grade b,
+html body .qily-project-list-grade b{
+  display:grid!important;place-items:center!important;flex:0 0 28px!important;width:28px!important;height:28px!important;border-radius:50%!important;
+  color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a!important;font-size:14px!important;
+}
+html body .qily-project-evidence-grade small{color:#526b69!important;-webkit-text-fill-color:#526b69!important;font-size:12px!important;font-weight:800!important}
+html body .qily-project-list-grade{margin:0 0 10px!important;font-size:13px!important}
+html body .qily-grade-b{--qily-grade-bg:#eef8f6;--qily-grade-line:#8fc6bb;--qily-grade-text:#0c5c62}
+html body .qily-grade-c{--qily-grade-bg:#fff8e9;--qily-grade-line:#d8b66c;--qily-grade-text:#74500f}
+html body .qily-grade-d{--qily-grade-bg:#f4f6f6;--qily-grade-line:#c9d5d4;--qily-grade-text:#526b69}
+html body .trust-level .trust-evidence-links{display:grid!important;gap:7px!important;margin-top:12px!important;padding-top:11px!important;border-top:1px dashed #c9dad7!important}
+html body .trust-level .trust-evidence-links>a{display:block!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font-weight:900!important;line-height:1.45!important;text-decoration:underline!important;text-underline-offset:3px!important}
+html body .trust-level .trust-evidence-links>span{color:#607574!important;-webkit-text-fill-color:#607574!important;font-size:13px!important;line-height:1.55!important}
+
+/* 2026-08-25 八大浪费序号属于信息层级，不允许被通用静态标签冻结成低对比。 */
+html body.daily-single-page main article.post.w8 .overview-card>.tag,
+html body.daily-single-page main article.post.w8 .overview-card>.tag[data-qily-interaction="static"],
+html body.daily-single-page main article.post.w8 .overview-card>.qily-static-token.tag{
+  display:inline-grid!important;
+  min-width:34px!important;
+  height:34px!important;
+  place-items:center!important;
+  opacity:1!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#0f4b5a!important;
+  background-image:none!important;
+  border:1px solid #0f4b5a!important;
+  box-shadow:none!important;
+  font-weight:950!important;
+  text-shadow:none!important;
+}
+
 @media(max-width:620px){
-  html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn{width:56px!important;height:56px!important;min-width:56px!important;min-height:56px!important;max-width:56px!important;max-height:56px!important;font-size:12px!important}
-  html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="top"]::before,
-  html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="back"]::before{font-size:12px!important}
+  html body .qily-project-evidence-grade{display:flex!important;width:fit-content!important;max-width:100%!important;flex-wrap:wrap!important}
+  html body .qily-project-evidence-grade small{width:100%!important;padding-left:36px!important}
 }
