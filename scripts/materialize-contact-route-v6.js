@@ -5,11 +5,21 @@ const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
-const ROUTE='/site-contact-route-v1.js?v=20260828-dock-functional-public-v11';
+const ROUTE='/site-contact-route-v1.js?v=20260828-dock-functional-public-v12';
+const REDLINE='/site-public-redline-closure-v1.css?v=20260828-home-dock-v1';
 const CONTACT_PATH='contact/index.html';
 
 function trackedHtml(){
   return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
+}
+
+function ensureRedlineStylesheet(source){
+  const link=`<link id="qilyPublicRedlineClosureV1" rel="stylesheet" href="${REDLINE}">`;
+  if(/<link\b[^>]*id=["']qilyPublicRedlineClosureV1["'][^>]*>/i.test(source)){
+    return source.replace(/<link\b[^>]*id=["']qilyPublicRedlineClosureV1["'][^>]*>/i,link);
+  }
+  if(/<\/head>/i.test(source))return source.replace(/<\/head>/i,link+'\n</head>');
+  throw new Error('HTML head close missing while adding public redline stylesheet.');
 }
 
 function navBlock(keyword,region){
@@ -80,20 +90,26 @@ for(const relative of trackedHtml()){
   covered+=1;
   let next=source
     .replace(/\/site-contact-route-v1\.js(?:\?v=[^"']*)?/g,ROUTE)
-    .replace(/data-qily-contact-route-direct=["'][^"']*["']/g,'data-qily-contact-route-direct="v11"');
+    .replace(/data-qily-contact-route-direct=["'][^"']*["']/g,'data-qily-contact-route-direct="v12"');
+  next=ensureRedlineStylesheet(next);
   if(relative===CONTACT_PATH)next=cleanContactNavigation(next);
   if(next!==source){fs.writeFileSync(file,next);changed+=1;}
 }
 
 if(process.argv.includes('--check')){
-  if(changed)throw new Error(`Contact V11 materialization stale on ${changed} HTML file(s).`);
+  if(changed)throw new Error(`Contact V12 materialization stale on ${changed} HTML file(s).`);
   if(covered<470)throw new Error(`Contact route coverage unexpectedly low: ${covered}.`);
   const contact=fs.readFileSync(path.join(root,CONTACT_PATH),'utf8');
   if(/api\.map\.baidu\.com\/geocoder|<iframe\b/i.test(contact))throw new Error('Contact page contains a prohibited embedded map surface.');
   for(const provider of ['amap','baidu','tencent','google','apple']){
     if(!contact.includes(`data-qily-map-provider="${provider}"`))throw new Error(`Contact clean map provider missing after materialization: ${provider}`);
   }
-  process.stdout.write(`PASS: contact route V11 cache/marker present on ${covered} tracked HTML pages; Dock V3 bootstrap is available and five-provider navigation remains iframe-free.\n`);
+  const home=fs.readFileSync(path.join(root,'index.html'),'utf8');
+  for(const [label,html] of [['contact',contact],['home',home]]){
+    if(!html.includes(ROUTE))throw new Error(`${label} does not use Contact Route V12.`);
+    if(!html.includes(REDLINE))throw new Error(`${label} does not use the public redline stylesheet.`);
+  }
+  process.stdout.write(`PASS: Contact Route V12 and public redline stylesheet are current on ${covered} tracked HTML pages; Dock V4 cache and five-provider navigation are protected.\n`);
 }else{
-  process.stdout.write(`Contact route V11 materialized on ${changed} HTML file(s); coverage ${covered}; Dock V3 bootstrap enabled.\n`);
+  process.stdout.write(`Contact Route V12 materialized on ${changed} HTML file(s); coverage ${covered}; Dock V4 cache and public redline stylesheet enabled.\n`);
 }
