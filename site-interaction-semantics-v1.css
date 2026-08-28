@@ -1,8 +1,8 @@
-/* QilyLean Interaction Semantics V1｜2026-08-28
+/* QilyLean Interaction Semantics V1.1｜2026-08-28
  * Sitewide rule:
  * 1) true route/module navigation gets explicit hover/active/focus feedback;
  * 2) in-page controls keep lighter feedback;
- * 3) static terms/tags/chips never pretend to be links.
+ * 3) static terms/tags/chips never pretend to be links and keep their original visual state;
  * 4) shared Dock uses one visual language, with readable two-line labels for 回顶部/回上一层.
  */
 
@@ -13,31 +13,33 @@
   --qily-action-focus:rgba(202,161,95,.28);
 }
 
-/* Real navigation / new page / new module. */
-html body :is(a[href], [data-route], [data-href], [data-url])[data-qily-interaction="route"]{
+/* Any true route remains clearly focusable/clickable without forcing every text link to jump. */
+html body :is(a[href],[data-route],[data-href],[data-url])[data-qily-interaction="route"]{
   cursor:pointer!important;
-  transition:transform .15s ease,box-shadow .15s ease,background-color .15s ease,border-color .15s ease,filter .15s ease!important;
+  transition:color .15s ease,background-color .15s ease,border-color .15s ease,box-shadow .15s ease,transform .15s ease,filter .15s ease!important;
 }
-html body :is(a[href], [data-route], [data-href], [data-url])[data-qily-interaction="route"]:hover{
-  transform:translateY(-1px)!important;
-  filter:saturate(1.04)!important;
-}
-html body :is(a[href], [data-route], [data-href], [data-url])[data-qily-interaction="route"]:active{
-  transform:translateY(1px) scale(.985)!important;
-}
-html body :is(a[href], [data-route], [data-href], [data-url])[data-qily-interaction="route"]:focus-visible{
+html body :is(a[href],[data-route],[data-href],[data-url])[data-qily-interaction="route"]:focus-visible{
   outline:3px solid var(--qily-action-focus)!important;
   outline-offset:2px!important;
 }
 
-/* Explicit site CTA / module-entry links need clearly visible response. */
-html body :is(.module-actions,.actions,.cta-row,.hero-actions,.card-actions) a[href][data-qily-interaction="route"],
-html body a.qily-route-action[data-qily-interaction="route"]{
+/* Button-like route controls / module entries receive unmistakable motion and shadow feedback. */
+html body :is(.module-actions,.actions,.cta-row,.hero-actions,.card-actions,.qily-global-nav,nav) a[href][data-qily-interaction="route"],
+html body :is(.btn,.button,.cta,.primary-btn,.secondary-btn,.action-btn,.icon-link,.nav-btn)[data-qily-interaction="route"],
+html body a.qily-route-action[data-qily-route-emphasis="true"]{
   box-shadow:0 4px 10px rgba(15,75,90,.08)!important;
 }
-html body :is(.module-actions,.actions,.cta-row,.hero-actions,.card-actions) a[href][data-qily-interaction="route"]:hover,
-html body a.qily-route-action[data-qily-interaction="route"]:hover{
+html body :is(.module-actions,.actions,.cta-row,.hero-actions,.card-actions,.qily-global-nav,nav) a[href][data-qily-interaction="route"]:hover,
+html body :is(.btn,.button,.cta,.primary-btn,.secondary-btn,.action-btn,.icon-link,.nav-btn)[data-qily-interaction="route"]:hover,
+html body a.qily-route-action[data-qily-route-emphasis="true"]:hover{
+  transform:translateY(-1px)!important;
+  filter:saturate(1.04)!important;
   box-shadow:0 9px 22px rgba(15,75,90,.20)!important;
+}
+html body :is(.module-actions,.actions,.cta-row,.hero-actions,.card-actions,.qily-global-nav,nav) a[href][data-qily-interaction="route"]:active,
+html body :is(.btn,.button,.cta,.primary-btn,.secondary-btn,.action-btn,.icon-link,.nav-btn)[data-qily-interaction="route"]:active,
+html body a.qily-route-action[data-qily-route-emphasis="true"]:active{
+  transform:translateY(1px) scale(.985)!important;
 }
 
 /* In-page controls: feedback remains, but is intentionally lighter than route navigation. */
@@ -48,65 +50,51 @@ html body [data-qily-interaction="local"]{
 html body [data-qily-interaction="local"]:hover{box-shadow:0 4px 10px rgba(15,75,90,.10)!important}
 html body [data-qily-interaction="local"]:focus-visible{outline:2px solid var(--qily-action-focus)!important;outline-offset:2px!important}
 
-/* Static terminology / tools / vocabulary: absolutely no fake-button affordance. */
+/* Static terminology / tools / vocabulary: preserve baseline visual exactly; no fake hover/press. */
 html body :is(.qily-static-token,[data-qily-interaction="static"]){
   cursor:default!important;
   transition:none!important;
   transform:none!important;
   filter:none!important;
+  color:var(--qily-static-color,inherit)!important;
+  -webkit-text-fill-color:var(--qily-static-color,inherit)!important;
+  background-color:var(--qily-static-bg,transparent)!important;
+  background-image:var(--qily-static-bg-image,none)!important;
+  border-color:var(--qily-static-border,transparent)!important;
+  box-shadow:var(--qily-static-shadow,none)!important;
   text-decoration:none!important;
 }
-html body :is(.qily-static-token,[data-qily-interaction="static"]):is(:hover,:active,:focus){
+html body :is(.qily-static-token,[data-qily-interaction="static"]):is(:hover,:active,:focus,:focus-visible){
   cursor:default!important;
   transform:none!important;
   filter:none!important;
-  box-shadow:inherit!important;
+  color:var(--qily-static-color,inherit)!important;
+  -webkit-text-fill-color:var(--qily-static-color,inherit)!important;
+  background-color:var(--qily-static-bg,transparent)!important;
+  background-image:var(--qily-static-bg-image,none)!important;
+  border-color:var(--qily-static-border,transparent)!important;
+  box-shadow:var(--qily-static-shadow,none)!important;
   outline:none!important;
 }
 html body :is(.qily-static-token,[data-qily-interaction="static"])::before,
-html body :is(.qily-static-token,[data-qily-interaction="static"])::after{
-  transform:none!important;
-}
+html body :is(.qily-static-token,[data-qily-interaction="static"])::after{transform:none!important;filter:none!important}
 
 /* Shared Dock: same shape/typography on every public page. */
 html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn{
-  width:64px!important;
-  height:64px!important;
-  min-width:64px!important;
-  min-height:64px!important;
-  max-width:64px!important;
-  max-height:64px!important;
-  padding:6px!important;
-  display:flex!important;
-  align-items:center!important;
-  justify-content:center!important;
-  text-align:center!important;
-  border-radius:999px!important;
-  font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
-  white-space:normal!important;
-  word-break:keep-all!important;
+  width:64px!important;height:64px!important;min-width:64px!important;min-height:64px!important;max-width:64px!important;max-height:64px!important;
+  padding:6px!important;display:flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;border-radius:999px!important;
+  font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:normal!important;word-break:keep-all!important;
 }
-/* Force the two formerly inconsistent commands into the same readable two-line treatment. */
 html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="top"],
-html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="back"]{
-  font-size:0!important;
-}
+html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="back"]{font-size:0!important}
 html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="top"]::before{
-  content:"回\A顶部";
-  white-space:pre-line;
-  font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
-  color:inherit!important;
+  content:"回\A顶部";white-space:pre-line;font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;color:inherit!important;
 }
 html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="back"]::before{
-  content:"回\A上一层";
-  white-space:pre-line;
-  font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
-  color:inherit!important;
+  content:"回\A上一层";white-space:pre-line;font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;color:inherit!important;
 }
 @media(max-width:620px){
-  html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn{
-    width:56px!important;height:56px!important;min-width:56px!important;min-height:56px!important;max-width:56px!important;max-height:56px!important;font-size:12px!important;
-  }
+  html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn{width:56px!important;height:56px!important;min-width:56px!important;min-height:56px!important;max-width:56px!important;max-height:56px!important;font-size:12px!important}
   html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="top"]::before,
   html:not([data-qily-dock="disabled"]) body #floatDock .qily-float-btn[data-action="back"]::before{font-size:12px!important}
 }
