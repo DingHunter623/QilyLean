@@ -77,7 +77,8 @@ assert(buildPages>=460,'首屏缓存覆盖页数量异常：'+buildPages);
 
 const ddz=read('tools/pure-ddz/index.html');
 [
-  "const version='20260828-elder-ux-v124'",
+  "const version='20260828-elder-ux-v125'",
+  "window.__PURE_DDZ_CACHE_KEY__||'20260828-elder-ux-v125'",
   "loadStyle('css/card-comfort-v122.css')",
   'name="screen-orientation" content="landscape"',
   'name="x5-orientation" content="landscape"',
@@ -101,7 +102,7 @@ const comfort=read('tools/pure-ddz/game/css/card-comfort-v122.css');
   '.hint-message',
   '#audio-toggle,#help-open,#settings-open',
   '.qily-product-overview summary span'
-].forEach(marker=>assert(comfort.includes(marker),'斗地主 v1.2.4 长辈可视性契约缺失：'+marker));
+].forEach(marker=>assert(comfort.includes(marker),'斗地主基础长辈可视性契约缺失：'+marker));
 
 const qilyTheme=read('tools/pure-ddz/game/js/qilylean-theme.js');
 [
@@ -118,9 +119,14 @@ assert(!visual.includes('if(IS_WECHAT_WEBVIEW||!isTouchMobile())return false'),'
 
 const theme=read('tools/pure-ddz/game/js/card-theme.js');
 assert(theme.includes('if(window.__PURE_DDZ_MANAGED_LOADER__)return'),'斗地主重复加载保护缺失');
-assert(!theme.includes('C919'),'斗地主牌面不得出现 C919');
-assert(theme.includes("16:{type:'small-joker',title:'小王',image:assetUrl('avatar-king.webp')}")&&theme.includes("17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}"),'小王/大王必须采用同一视觉人物图');
+assert(!theme.includes('C919'),'斗地主牌面代码不得出现 C919');
+assert(theme.includes("qilylean-aircraft-hero-latest-q98.webp"),'小王未引用官网首页首图飞机模型');
+assert(theme.includes("16:{type:'small-joker',title:'小王',image:assetUrl('avatar-king.webp'),aircraft:HOME_AIRCRAFT}")&&theme.includes("17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}"),'大小王人物/小王飞机组合视觉契约缺失');
+assert(theme.includes('qily-joker-aircraft')&&theme.includes('qily-mini-joker-aircraft'),'小王飞机模型主牌/底牌渲染契约缺失');
 assert(theme.includes('.qily-card--joker .qily-card-main{display:none!important}'),'大小王不得显示额外业务字样');
+assert(theme.includes('#hint-message.hint-message'),'底部启力提示未强制为长辈高对比样式');
+assert(theme.includes(':has(.card:nth-child(18))'),'地主20张手牌自适应间距契约缺失');
+assert(theme.includes('width:80vw!important'),'桌面80%安全视区契约缺失');
 
 const game=read('tools/pure-ddz/game/js/game.js');
 assert(!game.includes("serviceWorker?.register('./sw.js')"),'斗地主不得请求不存在的 Service Worker');
