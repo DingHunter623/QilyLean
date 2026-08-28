@@ -1,10 +1,11 @@
-/* QilyLean Site Shell Recovery + Contact Route V13.1｜2026-08-28
- * V13.1 routes public pages to authoritative Dock V5.1 and redline V2.
- * Pure DDZ exclusion is owned by Dock V5.1; #wxMask remains the canonical shared contact panel.
+/* QilyLean Site Shell Recovery + Contact Route V13.2｜2026-08-29
+ * V13.2 routes public pages to authoritative Dock V5.2 and redline V2.
+ * Pure DDZ exclusion is owned by Dock V5.2; #wxMask remains the canonical shared contact panel.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilySiteShellRecoveryV131)return;
+  if(w.__qilySiteShellRecoveryV132)return;
+  w.__qilySiteShellRecoveryV132=true;
   w.__qilySiteShellRecoveryV131=true;
   w.__qilySiteShellRecoveryV13=true;
   w.__qilySiteShellRecoveryV12=true;
@@ -30,9 +31,10 @@
   }
 
   function injectRecoveryCss(){
-    if(d.getElementById('qilySiteShellRecoveryV131Style'))return;
+    if(d.getElementById('qilySiteShellRecoveryV132Style'))return;
+    ['qilySiteShellRecoveryV131Style','qilySiteShellRecoveryV13Style'].forEach(function(id){var old=d.getElementById(id);if(old)old.remove();});
     var style=d.createElement('style');
-    style.id='qilySiteShellRecoveryV131Style';
+    style.id='qilySiteShellRecoveryV132Style';
     style.textContent=[
       'html,html body{height:auto!important;min-height:0!important}',
       'html body{display:block!important}',
@@ -62,15 +64,15 @@
   }
 
   function ensureDockRuntime(){
-    if(w.__qilyFloatingDockUnifiedV51)return;
-    var existing=d.getElementById('qilyDockUnifiedRuntimeV51Script');
+    if(w.__qilyFloatingDockUnifiedV52)return;
+    var existing=d.getElementById('qilyDockUnifiedRuntimeV52Script');
     if(existing)return;
-    ['qilyDockUnifiedRuntimeV5Script','qilyDockUnifiedRuntimeV4Script','qilyDockUnifiedRuntimeV3Script'].forEach(function(id){var legacy=d.getElementById(id);if(legacy)legacy.remove();});
+    ['qilyDockUnifiedRuntimeV51Script','qilyDockUnifiedRuntimeV5Script','qilyDockUnifiedRuntimeV4Script','qilyDockUnifiedRuntimeV3Script'].forEach(function(id){var legacy=d.getElementById(id);if(legacy)legacy.remove();});
     var script=d.createElement('script');
-    script.id='qilyDockUnifiedRuntimeV51Script';
-    script.src='/site-dock-share-runtime-v1.js?v=20260828-authority-v51';
+    script.id='qilyDockUnifiedRuntimeV52Script';
+    script.src='/site-dock-share-runtime-v1.js?v=20260829-authority-v52';
     script.async=false;
-    script.setAttribute('data-qily-dock-public-runtime','v5.1');
+    script.setAttribute('data-qily-dock-public-runtime','v5.2');
     (d.head||d.documentElement).appendChild(script);
   }
 
