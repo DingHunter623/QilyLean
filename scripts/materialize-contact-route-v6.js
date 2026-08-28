@@ -7,6 +7,7 @@ const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const ROUTE='/site-contact-route-v1.js?v=20260828-dock-functional-public-v13';
 const DOCK='/site-dock-share-runtime-v1.js?v=20260828-authority-v5';
+const UI='/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7';
 const REDLINE='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
 const CONTACT_PATH='contact/index.html';
 const DDZ_PATH='tools/pure-ddz/index.html';
@@ -84,7 +85,7 @@ function cleanContactNavigation(source){
   return next;
 }
 
-let changed=0,covered=0,dockCovered=0;
+let changed=0,covered=0,dockCovered=0,uiCovered=0;
 for(const relative of trackedHtml()){
   const file=path.join(root,relative);
   const source=fs.readFileSync(file,'utf8');
@@ -97,13 +98,17 @@ for(const relative of trackedHtml()){
     next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK);
     dockCovered+=1;
   }
+  if(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/.test(next)){
+    next=next.replace(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/g,UI);
+    uiCovered+=1;
+  }
   next=ensureRedlineStylesheet(next);
   if(relative===CONTACT_PATH)next=cleanContactNavigation(next);
   if(next!==source){fs.writeFileSync(file,next);changed+=1;}
 }
 
 if(process.argv.includes('--check')){
-  if(changed)throw new Error(`Contact V13 / Dock V5 materialization stale on ${changed} HTML file(s).`);
+  if(changed)throw new Error(`R7 materialization stale on ${changed} HTML file(s).`);
   if(covered<470)throw new Error(`Contact route coverage unexpectedly low: ${covered}.`);
   const contact=fs.readFileSync(path.join(root,CONTACT_PATH),'utf8');
   const home=fs.readFileSync(path.join(root,'index.html'),'utf8');
@@ -115,9 +120,10 @@ if(process.argv.includes('--check')){
   for(const [label,html] of [['contact',contact],['home',home],['pure-ddz',ddz]]){
     if(!html.includes(ROUTE))throw new Error(`${label} does not use Contact Route V13.`);
     if(!html.includes(REDLINE))throw new Error(`${label} does not use public redline V2.`);
+    if(/site-ui-consistency-v1\.js/.test(html)&&!html.includes(UI))throw new Error(`${label} still loads stale UI consistency runtime.`);
   }
   if(/site-dock-share-runtime-v1\.js/.test(ddz)&&!ddz.includes(DOCK))throw new Error('Pure DDZ direct Dock runtime is not cache-busted to authoritative V5.');
-  process.stdout.write(`PASS: Contact V13 + redline V2 are current on ${covered} tracked HTML pages; ${dockCovered} direct Dock references use V5; Pure DDZ exclusion can take effect without stale cache.\n`);
+  process.stdout.write(`PASS: R7 public baseline current on ${covered} HTML pages; direct Dock V5 refs ${dockCovered}; UI single-responsibility V7 refs ${uiCovered}.\n`);
 }else{
-  process.stdout.write(`Contact V13 / Dock V5 materialized on ${changed} HTML file(s); route coverage ${covered}; direct Dock refs ${dockCovered}.\n`);
+  process.stdout.write(`R7 materialized on ${changed} HTML file(s); route coverage ${covered}; Dock refs ${dockCovered}; UI refs ${uiCovered}.\n`);
 }
