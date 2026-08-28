@@ -34,7 +34,7 @@ const CONTENT_CONTRAST_CSS='/site-content-contrast-guard-v1.css?v=20260826-sitew
 const CONTENT_CONTRAST_JS='/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6';
 const UNIFIED_VISUAL_CSS='/site-unified-visual-governance-v1.css?v=20260826-contrast-closure-v2';
 const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-screenshot-closure-v2';
-const STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260826-stability-recovery-v1';
+const STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260828-vi-surface-v3';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260826-site-shell-recovery-v5';
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
 
