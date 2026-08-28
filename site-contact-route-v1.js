@@ -1,12 +1,13 @@
-/* QilyLean Site Shell Recovery + Contact Route V10｜2026-08-28
- * V10 restores the six-action lower-right floating service module sitewide.
- * The module remains a shared public component; page-local styling/behavior divergence is forbidden.
- * Top/back semantic symbols are owned by the shared Dock runtime/UI consistency layer.
+/* QilyLean Site Shell Recovery + Contact Route V11｜2026-08-28
+ * V11 keeps the six-action lower-right public service module functional sitewide.
+ * Critical correction: never delete #wxMask — it is the canonical contact panel owned by site-navigation-core.
+ * Special pages without the full navigation shell bootstrap the standalone Dock V3 runtime instead.
  * Contact-page map sanitation, DDZ dark-control contrast and centered local hand remain intact.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilySiteShellRecoveryV10)return;
+  if(w.__qilySiteShellRecoveryV11)return;
+  w.__qilySiteShellRecoveryV11=true;
   w.__qilySiteShellRecoveryV10=true;
   w.__qilySiteShellRecoveryV9=true;
   w.__qilySiteShellRecoveryV8=true;
@@ -20,9 +21,9 @@
   w.__qilyDedicatedContactRouteV1=true;
 
   function injectRecoveryCss(){
-    if(d.getElementById('qilySiteShellRecoveryV10Style'))return;
+    if(d.getElementById('qilySiteShellRecoveryV11Style'))return;
     var style=d.createElement('style');
-    style.id='qilySiteShellRecoveryV10Style';
+    style.id='qilySiteShellRecoveryV11Style';
     style.textContent=[
       'html,html body{height:auto!important;min-height:0!important}',
       'html body{display:block!important}',
@@ -45,13 +46,23 @@
     (d.head||d.documentElement).appendChild(style);
   }
 
-  function removeLegacyContactModal(){var mask=d.getElementById('wxMask');if(mask)mask.remove();}
-
   function disconnectRetiredDockObserver(){
     var observer=w.__qilyFloatingDockRetirementObserverV1;
     if(observer&&typeof observer.disconnect==='function')observer.disconnect();
     try{delete w.__qilyFloatingDockRetirementObserverV1;}catch(error){w.__qilyFloatingDockRetirementObserverV1=null;}
     w.__qilyFloatingDockRetiredV1=false;
+  }
+
+  function ensureDockRuntime(){
+    if(w.__qilyFloatingDockUnifiedV3)return;
+    var existing=d.getElementById('qilyDockUnifiedRuntimeV3Script');
+    if(existing)return;
+    var script=d.createElement('script');
+    script.id='qilyDockUnifiedRuntimeV3Script';
+    script.src='/site-dock-share-runtime-v1.js?v=20260828-functional-public-v3';
+    script.async=false;
+    script.setAttribute('data-qily-dock-public-runtime','v3');
+    (d.head||d.documentElement).appendChild(script);
   }
 
   function mapUrls(keyword,region){
@@ -127,9 +138,10 @@
   function recover(){
     disconnectRetiredDockObserver();
     injectRecoveryCss();
+    ensureDockRuntime();
     d.documentElement.classList.remove('qily-stale-document','qily-shell-pending','qily-first-paint-pending','qily-r2-first-paint-pending');
     if(d.body)d.body.style.removeProperty('visibility');
-    removeLegacyContactModal();
+    /* #wxMask is intentionally preserved: it is the canonical shared contact panel. */
     sanitizeContactMaps();
   }
 
