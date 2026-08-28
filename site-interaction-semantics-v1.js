@@ -1,11 +1,12 @@
-/* QilyLean Interaction Semantics Runtime V1｜2026-08-28
+/* QilyLean Interaction Semantics Runtime V1.1｜2026-08-28
  * Classifies public UI by actual behavior instead of visual appearance.
- * Route navigation => strong feedback; local controls => light feedback;
- * static terminology/tools/vocabulary => no fake clickable feedback.
+ * Route navigation => explicit feedback; local controls => light feedback;
+ * static terminology/tools/vocabulary => visual state is frozen so hover cannot fake a link.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyInteractionSemanticsV1)return;
+  if(w.__qilyInteractionSemanticsV11)return;
+  w.__qilyInteractionSemanticsV11=true;
   w.__qilyInteractionSemanticsV1=true;
 
   var STATIC_SELECTOR=[
@@ -15,27 +16,32 @@
     '.tech-tag','.tool-tag','.method-tag','.glossary-tag','.topic-tag'
   ].join(',');
 
-  function cleanHref(node){
-    var href=(node.getAttribute&&node.getAttribute('href'))||'';
-    return href.trim();
-  }
+  function cleanHref(node){var href=(node.getAttribute&&node.getAttribute('href'))||'';return href.trim();}
   function isRealRoute(node){
     if(!node||node.nodeType!==1)return false;
     if(node.matches('a[href]')){
       var href=cleanHref(node);
-      if(!href||href==='#'||href.indexOf('javascript:')===0)return false;
-      if(href.charAt(0)==='#')return false;
+      if(!href||href==='#'||href.indexOf('javascript:')===0||href.charAt(0)==='#')return false;
       return true;
     }
     return node.hasAttribute('data-route')||node.hasAttribute('data-href')||node.hasAttribute('data-url')||node.hasAttribute('data-external-url');
   }
-  function isLocalControl(node){
-    if(!node||node.nodeType!==1)return false;
-    return node.matches('button,[role="button"],[data-tab],[data-toggle],[aria-controls]');
+  function isLocalControl(node){return !!(node&&node.nodeType===1&&node.matches('button,[role="button"],[data-tab],[data-toggle],[aria-controls]'));}
+  function freezeStaticVisual(node){
+    if(node.dataset.qilyStaticVisualFrozen==='v1')return;
+    var cs=w.getComputedStyle?getComputedStyle(node):null;
+    if(cs){
+      node.style.setProperty('--qily-static-bg',cs.backgroundColor||'transparent');
+      node.style.setProperty('--qily-static-bg-image',cs.backgroundImage||'none');
+      node.style.setProperty('--qily-static-border',cs.borderColor||'transparent');
+      node.style.setProperty('--qily-static-color',cs.color||'inherit');
+      node.style.setProperty('--qily-static-shadow',cs.boxShadow||'none');
+    }
+    node.dataset.qilyStaticVisualFrozen='v1';
   }
   function classifyNode(node){
     if(!node||node.nodeType!==1)return;
-    if(node.closest&&node.closest('#floatDock'))return; // Dock has its own authority.
+    if(node.closest&&node.closest('#floatDock'))return;
     if(isRealRoute(node)){
       node.setAttribute('data-qily-interaction','route');
       node.classList.add('qily-route-action');
@@ -47,6 +53,7 @@
       return;
     }
     if(node.matches&&node.matches(STATIC_SELECTOR)){
+      freezeStaticVisual(node);
       node.setAttribute('data-qily-interaction','static');
       node.classList.add('qily-static-token');
       node.removeAttribute('tabindex');
