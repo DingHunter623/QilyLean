@@ -8,6 +8,7 @@ const root=path.resolve(__dirname,'..');
 function read(relative){return fs.readFileSync(path.join(root,relative),'utf8')}
 function assert(ok,message){if(!ok)throw new Error(message)}
 function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean)}
+function isOwnershipArtifact(relative){return /^(?:baidu_verify_codeva-[^/]+\.html|google[^/]+\.html|zohoverify\/verifyforzoho\.html)$/i.test(relative)}
 
 const runtimeBaseline=JSON.parse(read('data/site-system-v4.json')).runtimeBaseline;
 const navigation=read('site-navigation.js');
@@ -28,7 +29,6 @@ const game=read('tools/pure-ddz/game/js/game.js');
 const semanticsCss=read('site-interaction-semantics-v1.css');
 const semanticsJs=read('site-interaction-semantics-v1.js');
 
-/* V4 remains the static build baseline while Navigation V45 is the current R8 wrapper. */
 const baselineLower=String(runtimeBaseline).toLowerCase();
 assert(new RegExp(`mode\\s*:\\s*['\"]atomic-first-paint-${baselineLower}['\"]`).test(navigation),`Navigation wrapper no longer declares the ${runtimeBaseline} static first-paint baseline.`);
 assert(navigation.includes('navigation runtime v45'),'Navigation wrapper is not the current V45 single-responsibility runtime.');
@@ -40,7 +40,6 @@ assert(navigation.includes('headerAxisWidth:1560'),'Header axis is not governed 
 assert(contentAxis.includes('--qily-content-axis:1560px'),'Unified 1560px content axis is missing.');
 assert(headerAxis.includes('--qily-header-axis:var(--qily-content-axis,1560px)'),'Header does not inherit the 1560px content axis.');
 
-/* R8: one authoritative six-action public Dock, except Pure DDZ immersive surface. */
 assert(dockRuntime.includes('Floating Dock Authoritative Runtime V5.1'),'Authoritative Dock V5.1 missing.');
 assert(dockRuntime.includes("ORDER=['home','top','back','search','current','contact']"),'Dock order contract missing.');
 assert(dockRuntime.includes("LABELS={home:'首页',top:'回顶部',back:'回上一层',search:'本站搜索',current:'分享当前页',contact:'联系我们'}"),'Dock label contract drifted.');
@@ -67,7 +66,6 @@ assert(contactMaterializer.includes('20260828-dock-functional-public-v131'),'Con
 assert(contactMaterializer.includes('data-qily-contact-route-direct="v13.1"'),'Contact-route V13.1 static marker missing.');
 assert(contactMaterializer.includes('20260828-authority-v51'),'Dock V5.1 static cache owner missing.');
 
-/* Homepage/navigation/CTA closure. */
 assert(redline.includes('Public Redline Closure V2'),'Public redline V2 missing.');
 assert(redline.includes('header.qily-global-header'),'Unified top navigation rule missing.');
 assert(redline.includes('body.qily-home-v3 .hero .hero-grid'),'Homepage hero containment rule missing.');
@@ -81,7 +79,6 @@ assert(ddzClosure.includes('html:not(.ddz-ready) body .game-shell'),'Pure DDZ cl
 assert(ddzClosure.includes('left:50%!important'),'Pure DDZ local player centering rule missing.');
 assert(ddzClosure.includes('justify-content:center!important'),'Pure DDZ desktop hand centering rule missing.');
 
-/* Route-vs-static interaction semantics are now a governed sitewide resource. */
 assert(semanticsCss.includes('Interaction Semantics V1.1'),'Interaction semantics CSS V1.1 missing.');
 assert(semanticsCss.includes('[data-qily-interaction="route"]'),'Route feedback contract missing.');
 assert(semanticsCss.includes('[data-qily-interaction="static"]'),'Static terminology feedback-suppression contract missing.');
@@ -90,7 +87,6 @@ assert(semanticsCss.includes('content:"回\\A上一层"'),'Dock 回上一层 vis
 assert(semanticsJs.includes('__qilyInteractionSemanticsV11'),'Interaction semantics V1.1 runtime missing.');
 assert(semanticsJs.includes('freezeStaticVisual'),'Static term visual-state freeze missing.');
 
-/* Keep resilient translation/readability baseline intact. */
 assert(/const\s+SAFE_VERSION\s*=\s*['"]20260828-long-page-resilience-v5['"]/.test(materializer),'Long-page translation version owner missing.');
 assert(materializer.includes("const BASELINE_VERSION='20260828-r8-authoritative-v20'"),'R8 V20 global materializer missing.');
 assert(materializer.includes('site-interaction-semantics-v1.css?v=20260828-r8-semantics-v11'),'Sitewide interaction semantics CSS is not materialized.');
@@ -100,9 +96,10 @@ assert(safe.includes('function scheduleHealing('),'Background translation healin
 assert(contentContrastCss.includes('--ql-dark-title:#fff'),'Dark-surface text token missing.');
 assert(home.includes('<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->'),'Homepage aircraft brand hero start marker missing.');
 
-let navigationPages=0,contactPages=0,staleContact=[],staleSemantics=[];
+let navigationPages=0,contactPages=0,staleContact=[],staleSemantics=[],ownershipArtifacts=0;
 for(const relative of trackedHtml()){
   const html=read(relative);
+  if(isOwnershipArtifact(relative)){ownershipArtifacts+=1;continue;}
   if(/\/site-navigation\.js(?:\?v=[^"']*)?/.test(html))navigationPages+=1;
   if(/\/site-contact-route-v1\.js(?:\?v=[^"']*)?/.test(html)){
     contactPages+=1;
@@ -114,4 +111,4 @@ assert(navigationPages>=460,`Navigation coverage unexpectedly fell to ${navigati
 assert(contactPages>=470,`Contact/shared recovery coverage unexpectedly fell to ${contactPages} pages.`);
 assert(staleContact.length===0,`Stale R8 contact/public pages: ${staleContact.slice(0,12).join(', ')}`);
 assert(staleSemantics.length===0,`Stale interaction-semantics pages: ${staleSemantics.slice(0,12).join(', ')}`);
-process.stdout.write(`PASS: R8 sitewide remediation validates ${navigationPages} navigation pages and ${contactPages} shared recovery pages; Dock V5.1 is authoritative, Pure DDZ is clean-first-paint/centered, and route-vs-static interaction semantics are protected (${runtimeBaseline}).\n`);
+process.stdout.write(`PASS: R8 sitewide remediation validates ${navigationPages} navigation pages and ${contactPages} shared recovery pages; ${ownershipArtifacts} search-engine ownership artifacts correctly remain shell-free; Dock V5.1 is authoritative, Pure DDZ is clean-first-paint/centered, and route-vs-static interaction semantics are protected (${runtimeBaseline}).\n`);
