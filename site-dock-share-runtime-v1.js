@@ -1,12 +1,13 @@
-/* QilyLean Floating Dock Authoritative Runtime V5.1｜2026-08-28
- * R7 baseline: one Dock behavior authority, no continuous DOM rebuild.
+/* QilyLean Floating Dock Authoritative Runtime V5.2｜2026-08-29
+ * One authority for public Dock structure, labels and actions.
  * Canonical actions: 首页 / 回顶部 / 回上一层 / 本站搜索 / 分享当前页 / 联系我们.
- * Pure DDZ is an immersive game surface and explicitly excludes the site Dock.
- * Existing shell runtimes may create Dock/contact markup, but V5.1 owns all Dock interaction in capture phase.
+ * V5.2 removes every legacy child/pseudo-label collision by rebuilding each button label into one owned span.
+ * Pure DDZ remains an immersive surface and explicitly excludes the site Dock.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyFloatingDockUnifiedV51)return;
+  if(w.__qilyFloatingDockUnifiedV52)return;
+  w.__qilyFloatingDockUnifiedV52=true;
   w.__qilyFloatingDockUnifiedV51=true;
   w.__qilyFloatingDockUnifiedV5=true;
   w.__qilyFloatingDockUnifiedV4=true;
@@ -15,7 +16,14 @@
   w.__qilyFloatingDockRetiredV1=false;
 
   var ORDER=['home','top','back','search','current','contact'];
-  var LABELS={home:'首页',top:'回顶部',back:'回上一层',search:'本站搜索',current:'分享当前页',contact:'联系我们'};
+  var LABELS={
+    home:['首页'],
+    top:['回','顶部'],
+    back:['回','上一层'],
+    search:['本站','搜索'],
+    current:['分享','当前页'],
+    contact:['联系','我们']
+  };
   var EXCLUDED=/^\/tools\/pure-ddz(?:\/|\/index\.html)?$/;
   var handledClickAt=0;
 
@@ -29,13 +37,10 @@
 
   function disableDockForPage(){
     d.documentElement.setAttribute('data-qily-dock','disabled');
-    if(!d.getElementById('qilyDockDisabledV5Style')){
+    if(!d.getElementById('qilyDockDisabledV52Style')){
       var style=d.createElement('style');
-      style.id='qilyDockDisabledV5Style';
-      style.textContent=[
-        'html[data-qily-dock="disabled"] body #floatDock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}',
-        '@media(min-width:901px){html[data-qily-dock="disabled"] body .table-wrap .me-player{left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(1180px,calc(100% - 32px))!important;max-width:1180px!important;margin-left:0!important;margin-right:0!important}html[data-qily-dock="disabled"] body .table-wrap .me-player .hand{display:flex!important;width:100%!important;max-width:100%!important;justify-content:safe center!important;overflow-x:auto!important;overflow-y:visible!important;scroll-padding-inline:16px!important}}'
-      ].join('');
+      style.id='qilyDockDisabledV52Style';
+      style.textContent='html[data-qily-dock="disabled"] body #floatDock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}';
       (d.head||d.documentElement).appendChild(style);
     }
     var dock=d.getElementById('floatDock');if(dock)dock.remove();
@@ -58,57 +63,62 @@
   }
 
   function ensureStyles(){
-    if(d.getElementById('qilyDockUnifiedV51Style'))return;
-    var old=d.getElementById('qilyDockUnifiedV5Style');if(old)old.remove();
+    if(d.getElementById('qilyDockUnifiedV52Style'))return;
+    ['qilyDockUnifiedV51Style','qilyDockUnifiedV5Style'].forEach(function(id){var old=d.getElementById(id);if(old)old.remove();});
     var style=d.createElement('style');
-    style.id='qilyDockUnifiedV51Style';
+    style.id='qilyDockUnifiedV52Style';
     style.textContent=[
-      ':root{--qily-dock-v5-bg:#0f4b5a;--qily-dock-v5-hover:#12606f;--qily-dock-v5-line:#caa15f;--qily-dock-v5-text:#ffe39b}',
-      'html body #floatDock.qily-float-dock,html body #floatDock.qily-floating-dock{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important;z-index:2147482500!important;display:flex!important;flex-direction:column!important;align-items:center!important;gap:7px!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important}',
-      'html body #floatDock .qily-float-btn{display:flex!important;flex:0 0 64px!important;width:64px!important;height:64px!important;min-width:64px!important;min-height:64px!important;max-width:64px!important;max-height:64px!important;align-items:center!important;justify-content:center!important;margin:0!important;padding:6px!important;border:1.5px solid var(--qily-dock-v5-line)!important;border-radius:999px!important;color:var(--qily-dock-v5-text)!important;-webkit-text-fill-color:var(--qily-dock-v5-text)!important;background:var(--qily-dock-v5-bg)!important;background-image:none!important;box-shadow:0 8px 20px rgba(7,60,71,.22)!important;opacity:1!important;filter:none!important;transform:none!important;font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;letter-spacing:0!important;text-align:center!important;white-space:normal!important;text-decoration:none!important;cursor:pointer!important;appearance:none!important;-webkit-appearance:none!important;touch-action:manipulation!important}',
-      'html body #floatDock .qily-float-btn *,html body #floatDock .qily-float-btn:is(:link,:visited,:active){color:var(--qily-dock-v5-text)!important;-webkit-text-fill-color:var(--qily-dock-v5-text)!important}',
-      'html body #floatDock .qily-float-btn:hover,html body #floatDock .qily-float-btn:focus-visible{background:var(--qily-dock-v5-hover)!important;border-color:var(--qily-dock-v5-text)!important;box-shadow:0 10px 24px rgba(7,60,71,.30)!important;outline:3px solid rgba(202,161,95,.22)!important;outline-offset:2px!important;transform:translateY(-1px)!important}',
+      ':root{--qily-dock-bg:#0f4b5a;--qily-dock-hover:#12606f;--qily-dock-line:#caa15f;--qily-dock-text:#ffe39b;--qily-dock-size:64px;--qily-dock-gap:7px}',
+      'html body #floatDock.qily-float-dock,html body #floatDock.qily-floating-dock{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important;z-index:2147482500!important;display:flex!important;flex-direction:column!important;align-items:center!important;width:var(--qily-dock-size)!important;min-width:var(--qily-dock-size)!important;max-width:var(--qily-dock-size)!important;gap:var(--qily-dock-gap)!important;padding:0!important;margin:0!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;box-sizing:border-box!important}',
+      'html body #floatDock .qily-float-btn{box-sizing:border-box!important;display:grid!important;place-items:center!important;flex:0 0 var(--qily-dock-size)!important;inline-size:var(--qily-dock-size)!important;block-size:var(--qily-dock-size)!important;width:var(--qily-dock-size)!important;height:var(--qily-dock-size)!important;min-width:var(--qily-dock-size)!important;min-height:var(--qily-dock-size)!important;max-width:var(--qily-dock-size)!important;max-height:var(--qily-dock-size)!important;margin:0!important;padding:0!important;border:1.5px solid var(--qily-dock-line)!important;border-radius:50%!important;color:var(--qily-dock-text)!important;-webkit-text-fill-color:var(--qily-dock-text)!important;background:var(--qily-dock-bg)!important;background-image:none!important;box-shadow:0 8px 20px rgba(7,60,71,.22)!important;opacity:1!important;overflow:hidden!important;filter:none!important;transform:none!important;font:inherit!important;letter-spacing:0!important;text-align:center!important;text-decoration:none!important;cursor:pointer!important;appearance:none!important;-webkit-appearance:none!important;touch-action:manipulation!important;isolation:isolate!important}',
+      'html body #floatDock .qily-float-btn::before,html body #floatDock .qily-float-btn::after{content:none!important;display:none!important;visibility:hidden!important}',
+      'html body #floatDock .qily-float-btn>.qily-dock-label{box-sizing:border-box!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;padding:5px!important;margin:0!important;color:var(--qily-dock-text)!important;-webkit-text-fill-color:var(--qily-dock-text)!important;background:none!important;border:0!important;box-shadow:none!important;font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;letter-spacing:0!important;text-align:center!important;white-space:nowrap!important;word-break:keep-all!important;overflow:hidden!important;pointer-events:none!important}',
+      'html body #floatDock .qily-float-btn>.qily-dock-label>span{display:block!important;max-width:100%!important;color:inherit!important;-webkit-text-fill-color:inherit!important;line-height:1.08!important;white-space:nowrap!important}',
+      'html body #floatDock .qily-float-btn:hover,html body #floatDock .qily-float-btn:focus-visible{background:var(--qily-dock-hover)!important;border-color:var(--qily-dock-text)!important;box-shadow:0 10px 24px rgba(7,60,71,.30)!important;outline:3px solid rgba(202,161,95,.22)!important;outline-offset:2px!important;transform:translateY(-1px)!important}',
       'html body #floatDock .qily-float-btn:active,html body #floatDock .qily-float-btn[data-qily-pressed="true"]{transform:translateY(1px) scale(.97)!important;box-shadow:0 4px 10px rgba(7,60,71,.24)!important}',
-      '@media(max-width:620px){html body #floatDock.qily-float-dock,html body #floatDock.qily-floating-dock{right:max(8px,env(safe-area-inset-right))!important;bottom:max(8px,env(safe-area-inset-bottom))!important;gap:5px!important}html body #floatDock .qily-float-btn{flex-basis:56px!important;width:56px!important;height:56px!important;min-width:56px!important;min-height:56px!important;max-width:56px!important;max-height:56px!important;padding:4px!important;font-size:12px!important}}',
+      '@media(max-width:620px){:root{--qily-dock-size:56px;--qily-dock-gap:5px}html body #floatDock.qily-float-dock,html body #floatDock.qily-floating-dock{right:max(7px,env(safe-area-inset-right))!important;bottom:max(8px,env(safe-area-inset-bottom))!important}html body #floatDock .qily-float-btn>.qily-dock-label{padding:4px!important;font-size:11.5px!important;line-height:1.05!important}html body #floatDock .qily-float-btn>.qily-dock-label>span{line-height:1.05!important}}',
+      '@media(max-width:390px){:root{--qily-dock-size:54px;--qily-dock-gap:4px}html body #floatDock .qily-float-btn>.qily-dock-label{font-size:11px!important}}',
       '@media print{html body #floatDock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}}'
     ].join('');
     (d.head||d.documentElement).appendChild(style);
   }
 
   function createStandaloneDock(){
-    var dock=d.createElement('div');dock.id='floatDock';dock.className='qily-float-dock';dock.dataset.qilyStandaloneDock='v5';dock.setAttribute('aria-label','快捷服务');
-    dock.innerHTML=[
-      '<button class="qily-float-btn qily-float-home" data-action="home" type="button">首页</button>',
-      '<button class="qily-float-btn qily-float-top" data-action="top" type="button">回顶部</button>',
-      '<button class="qily-float-btn qily-float-back" data-action="back" type="button">回上一层</button>',
-      '<button class="qily-float-btn qily-float-search" data-action="search" type="button">本站<br>搜索</button>',
-      '<button class="qily-float-btn qily-float-current" data-action="current" type="button">分享<br>当前页</button>',
-      '<button class="qily-float-btn qily-float-contact" data-action="contact" type="button">联系<br>我们</button>'
-    ].join('');
+    var dock=d.createElement('div');dock.id='floatDock';dock.className='qily-float-dock';dock.dataset.qilyStandaloneDock='v5.2';dock.setAttribute('aria-label','快捷服务');
+    ORDER.forEach(function(action){var button=d.createElement('button');button.className='qily-float-btn qily-float-'+action;button.setAttribute('data-action',action);button.type='button';dock.appendChild(button);});
     (d.body||d.documentElement).appendChild(dock);return dock;
+  }
+
+  function setOwnedLabel(button,action){
+    var lines=LABELS[action]||[action],label=d.createElement('span');
+    label.className='qily-dock-label';label.setAttribute('aria-hidden','true');
+    lines.forEach(function(line){var row=d.createElement('span');row.textContent=line;label.appendChild(row);});
+    while(button.firstChild)button.removeChild(button.firstChild);
+    button.appendChild(label);
+    button.setAttribute('aria-label',lines.join(''));
+    button.setAttribute('title',lines.join(''));
+    button.setAttribute('data-qily-label-owner','dock-v5.2');
   }
 
   function normalizeDock(){
     if(isExcluded()){disableDockForPage();return false;}
     d.documentElement.setAttribute('data-qily-dock','enabled');ensureStyles();
     var dock=d.getElementById('floatDock')||createStandaloneDock();
-    dock.classList.add('qily-float-dock');dock.hidden=false;dock.removeAttribute('aria-hidden');dock.setAttribute('aria-label','快捷服务');
+    dock.className='qily-float-dock';dock.hidden=false;dock.removeAttribute('aria-hidden');dock.setAttribute('aria-label','快捷服务');
     dock.querySelectorAll('[data-action="share"]').forEach(function(node){node.remove();});
     var contactPage=dock.querySelector('[data-action="contact-page"]');if(contactPage)contactPage.setAttribute('data-action','contact');
     var controls={};ORDER.forEach(function(action){controls[action]=dock.querySelector('[data-action="'+action+'"]');});
     if(!controls.home||!controls.top||!controls.back||!controls.search||!controls.current||!controls.contact){dock.remove();dock=createStandaloneDock();controls={};ORDER.forEach(function(action){controls[action]=dock.querySelector('[data-action="'+action+'"]');});}
-    controls.home.textContent=LABELS.home;controls.top.textContent=LABELS.top;controls.back.textContent=LABELS.back;controls.search.innerHTML='本站<br>搜索';controls.current.innerHTML='分享<br>当前页';controls.contact.innerHTML='联系<br>我们';
-    controls.top.setAttribute('title','回到页面顶部');controls.top.setAttribute('aria-label','回顶部');
-    controls.back.setAttribute('title','回到当前页面所属的上一级有效页面');controls.back.setAttribute('aria-label','回上一层');controls.back.setAttribute('data-parent-route',parentRoute(location.pathname));
-    controls.home.setAttribute('aria-label','首页');controls.search.setAttribute('aria-label','本站搜索');controls.current.setAttribute('aria-label','分享当前页');controls.contact.setAttribute('aria-label','联系我们');
+    ORDER.forEach(function(action){var button=controls[action];button.className='qily-float-btn qily-float-'+action;setOwnedLabel(button,action);});
+    controls.back.setAttribute('data-parent-route',parentRoute(location.pathname));
     var fragment=d.createDocumentFragment();ORDER.forEach(function(action){fragment.appendChild(controls[action]);});dock.appendChild(fragment);
-    dock.dataset.qilyStableOrder=ORDER.join(',');dock.dataset.qilyUnifiedPublicModule='v5.1';return true;
+    dock.dataset.qilyStableOrder=ORDER.join(',');dock.dataset.qilyUnifiedPublicModule='v5.2';return true;
   }
 
   function legacyCopy(text){var area=d.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.left='-9999px';(d.body||d.documentElement).appendChild(area);area.select();try{d.execCommand('copy');}catch(error){}area.remove();return Promise.resolve();}
   function copyText(text){return navigator.clipboard&&w.isSecureContext?navigator.clipboard.writeText(text).catch(function(){return legacyCopy(text);}):legacyCopy(text);}
   function toast(message){var node=d.getElementById('qilyDockStandaloneToastV5');if(!node){node=d.createElement('div');node.id='qilyDockStandaloneToastV5';node.setAttribute('role','status');node.style.cssText='position:fixed;left:50%;bottom:22px;z-index:2147483000;transform:translateX(-50%);padding:9px 14px;border-radius:999px;background:#073c47;color:#fff;font:700 14px/1.2 sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.22);pointer-events:none;opacity:0;transition:opacity .16s';(d.body||d.documentElement).appendChild(node);}node.textContent=message;node.style.opacity='1';clearTimeout(toast.timer);toast.timer=setTimeout(function(){node.style.opacity='0';},2200);}
-  function openSearch(){if(w.QilySiteSearch&&typeof w.QilySiteSearch.open==='function'){w.QilySiteSearch.open();return;}var existing=d.getElementById('qilySiteSearchStandaloneV5');if(existing)return;var script=d.createElement('script');script.id='qilySiteSearchStandaloneV5';script.src='/site-search.js?v=20260729-ranked-search-v1';script.addEventListener('load',function(){if(w.QilySiteSearch)w.QilySiteSearch.open();else toast('本站搜索加载失败');},{once:true});script.addEventListener('error',function(){toast('本站搜索加载失败');},{once:true});(d.body||d.documentElement).appendChild(script);}
+  function openSearch(){if(w.QilySiteSearch&&typeof w.QilySiteSearch.open==='function'){w.QilySiteSearch.open();return;}var existing=d.getElementById('qilySiteSearchStandaloneV5');if(existing)return;var script=d.createElement('script');script.id='qilySiteSearchStandaloneV5';script.src='/site-search.js?v=20260826-search-navigation-v2';script.addEventListener('load',function(){if(w.QilySiteSearch)w.QilySiteSearch.open();else toast('本站搜索加载失败');},{once:true});script.addEventListener('error',function(){toast('本站搜索加载失败');},{once:true});(d.body||d.documentElement).appendChild(script);}
   function shareCurrent(){var title=d.title||'QilyLean',url=location.href,text=title+'\n'+url;if(navigator.share){navigator.share({title:title,text:title,url:url}).catch(function(error){if(error&&error.name==='AbortError')return;copyText(text).then(function(){toast('网页标题及网址已复制');});});return;}copyText(text).then(function(){toast('网页标题及网址已复制');});}
   function runAction(action){
     if(action==='home'){location.href='/';return;}
@@ -121,7 +131,7 @@
 
   function targetButton(event){var node=event.target&&event.target.closest?event.target.closest('#floatDock .qily-float-btn[data-action]'):null;return node||null;}
   function installAuthoritativeEvents(){
-    if(w.__qilyDockV51CaptureBound)return;w.__qilyDockV51CaptureBound=true;
+    if(w.__qilyDockV52CaptureBound)return;w.__qilyDockV52CaptureBound=true;
     d.addEventListener('pointerdown',function(event){if(isExcluded())return;var button=targetButton(event);if(!button)return;button.setAttribute('data-qily-pressed','true');event.stopImmediatePropagation();},{capture:true,passive:true});
     function clearPressed(event){var button=targetButton(event);if(button)button.removeAttribute('data-qily-pressed');else d.querySelectorAll('#floatDock [data-qily-pressed="true"]').forEach(function(node){node.removeAttribute('data-qily-pressed');});}
     d.addEventListener('pointerup',clearPressed,{capture:true,passive:true});d.addEventListener('pointercancel',clearPressed,{capture:true,passive:true});
