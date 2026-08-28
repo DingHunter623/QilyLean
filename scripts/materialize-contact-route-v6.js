@@ -5,7 +5,7 @@ const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
-const ROUTE='/site-contact-route-v1.js?v=20260828-dock-functional-symbol-v10';
+const ROUTE='/site-contact-route-v1.js?v=20260828-dock-functional-public-v11';
 const CONTACT_PATH='contact/index.html';
 
 function trackedHtml(){
@@ -80,20 +80,20 @@ for(const relative of trackedHtml()){
   covered+=1;
   let next=source
     .replace(/\/site-contact-route-v1\.js(?:\?v=[^"']*)?/g,ROUTE)
-    .replace(/data-qily-contact-route-direct=["'][^"']*["']/g,'data-qily-contact-route-direct="v10"');
+    .replace(/data-qily-contact-route-direct=["'][^"']*["']/g,'data-qily-contact-route-direct="v11"');
   if(relative===CONTACT_PATH)next=cleanContactNavigation(next);
   if(next!==source){fs.writeFileSync(file,next);changed+=1;}
 }
 
 if(process.argv.includes('--check')){
-  if(changed)throw new Error(`Contact V10 materialization stale on ${changed} HTML file(s).`);
+  if(changed)throw new Error(`Contact V11 materialization stale on ${changed} HTML file(s).`);
   if(covered<470)throw new Error(`Contact route coverage unexpectedly low: ${covered}.`);
   const contact=fs.readFileSync(path.join(root,CONTACT_PATH),'utf8');
   if(/api\.map\.baidu\.com\/geocoder|<iframe\b/i.test(contact))throw new Error('Contact page contains a prohibited embedded map surface.');
   for(const provider of ['amap','baidu','tencent','google','apple']){
     if(!contact.includes(`data-qily-map-provider="${provider}"`))throw new Error(`Contact clean map provider missing after materialization: ${provider}`);
   }
-  process.stdout.write(`PASS: contact route V10 cache/marker present on ${covered} tracked HTML pages; unified functional floating Dock retained and five-provider navigation remains iframe-free.\n`);
+  process.stdout.write(`PASS: contact route V11 cache/marker present on ${covered} tracked HTML pages; Dock V3 bootstrap is available and five-provider navigation remains iframe-free.\n`);
 }else{
-  process.stdout.write(`Contact route V10 materialized on ${changed} HTML file(s); coverage ${covered}; unified functional floating Dock retained.\n`);
+  process.stdout.write(`Contact route V11 materialized on ${changed} HTML file(s); coverage ${covered}; Dock V3 bootstrap enabled.\n`);
 }
