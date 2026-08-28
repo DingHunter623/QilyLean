@@ -4,16 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - "site-vi-standard-v1.css"
-      - "site-vi-contrast-restoration-v1.css"
-      - "site-content-contrast-guard-v1.css"
-      - "site-stability-recovery-v1.css"
-      - "site-unified-visual-governance-v1.css"
-      - "site-core-visual-bundle-v1.css"
-      - "site-closure-bundle-v24.css"
-      - "site-link-standard-v1.css"
-      - "site-link-standard-v2.css"
-      - "site-shell.css"
+      - "**/*.html"
+      - "**/*.css"
+      - "site-*.js"
+      - "scripts/materialize-global-language-v3.js"
       - "scripts/enforce-site-vi-palette.js"
       - ".github/workflows/enforce-site-vi-palette.yml"
   workflow_dispatch:
@@ -75,6 +69,7 @@ jobs:
           grep -q '.contact-hero' site-stability-recovery-v1.css
           grep -q '.preview-head' site-stability-recovery-v1.css
           grep -q 'site-vi-standard-v1.css' site-link-standard-v1.css
+          grep -q "STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260828-vi-surface-v3'" scripts/materialize-global-language-v3.js
 
       - name: Commit normalized site VI
         shell: bash
