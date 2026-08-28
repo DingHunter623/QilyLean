@@ -57,9 +57,24 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
+          fetch_retry() {
+            local url="$1"
+            local out="$2"
+            local label="$3"
+            for n in {1..12}; do
+              if curl -fsSL --retry 2 --retry-delay 2 --max-time 25 "$url" -o "$out"; then
+                return 0
+              fi
+              echo "Transient public fetch failure for ${label}: ${n}/12"
+              sleep 5
+            done
+            echo "Unable to fetch ${label} after retries" >&2
+            return 1
+          }
+
           ok=0
           for i in {1..48}; do
-            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v126' -o /tmp/page.html \
+            if curl -fsSL --retry 2 --retry-delay 2 --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v126' -o /tmp/page.html \
               && grep -Fq '20260828-elder-ux-v126' /tmp/page.html \
               && grep -Fq 'name="screen-orientation" content="landscape"' /tmp/page.html \
               && grep -Fq 'Android版暂未开放' /tmp/page.html; then
@@ -70,10 +85,12 @@ jobs:
             sleep 10
           done
           test "$ok" = 1
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v126' -o /tmp/qily-theme.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v126' -o /tmp/card-theme.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v126' -o /tmp/game.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260828-v126' -o /tmp/visual.js
+
+          fetch_retry 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v126' /tmp/qily-theme.js 'qilylean-theme.js'
+          fetch_retry 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v126' /tmp/card-theme.js 'card-theme.js'
+          fetch_retry 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v126' /tmp/game.js 'game.js'
+          fetch_retry 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260828-v126' /tmp/visual.js 'visual-v120.js'
+
           node --check /tmp/qily-theme.js
           node --check /tmp/card-theme.js
           node --check /tmp/game.js
