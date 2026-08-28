@@ -30,7 +30,10 @@
     if(!d.getElementById('qilyDockDisabledV5Style')){
       var style=d.createElement('style');
       style.id='qilyDockDisabledV5Style';
-      style.textContent='html[data-qily-dock="disabled"] body #floatDock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}';
+      style.textContent=[
+        'html[data-qily-dock="disabled"] body #floatDock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}',
+        '@media(min-width:901px){html[data-qily-dock="disabled"] body .table-wrap .me-player{left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(1180px,calc(100% - 32px))!important;max-width:1180px!important;margin-left:0!important;margin-right:0!important}html[data-qily-dock="disabled"] body .table-wrap .me-player .hand{display:flex!important;width:100%!important;max-width:100%!important;justify-content:safe center!important;overflow-x:auto!important;overflow-y:visible!important;scroll-padding-inline:16px!important}}'
+      ].join('');
       (d.head||d.documentElement).appendChild(style);
     }
     var dock=d.getElementById('floatDock');if(dock)dock.remove();
