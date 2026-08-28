@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V21｜2026-08-29
+/* QilyLean Sitewide Public Baseline Materializer V22｜2026-08-29
  * R9 visual remediation baseline:
  * - Chinese remains the authoritative source and default display.
  * - translation assets remain deferred and never block first paint.
  * - navigation V45 owns navigation/search; Header Axis V1.1 owns explicit horizontal nav scrolling.
  * - Dock V5.2 alone owns Dock structure/labels/actions; all pseudo-label duplication is retired.
+ * - Contact Route V13.2 can only hydrate Dock V5.2, preventing stale mobile Dock recovery.
  * - Interaction Semantics V1.2 distinguishes routes/static content and links evidence grades to projects.
  * - Pure DDZ R9 Closure V129 stabilizes brand paint and centers the local card group.
  */
@@ -15,7 +16,7 @@ const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
-const BASELINE_VERSION='20260829-r9-visual-remediation-v21';
+const BASELINE_VERSION='20260829-r9-visual-remediation-v22';
 const SAFE_VERSION='20260828-long-page-resilience-v5';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
@@ -37,7 +38,7 @@ const UNIFIED_VISUAL_CSS='/site-unified-visual-governance-v1.css?v=20260826-cont
 const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-screenshot-closure-v2';
 const STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260828-vi-surface-v3';
 const PUBLIC_REDLINE_CSS='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
-const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260828-dock-functional-public-v131';
+const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v132';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260829-r9-semantics-v12';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260829-r9-semantics-v12';
 const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r9-v129';
@@ -85,7 +86,7 @@ function materialize(source,relative){
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
     `<script defer data-qily-content-contrast-direct="v6" src="${CONTENT_CONTRAST_JS}"></script>`,
     `<script defer data-qily-interaction-semantics-direct="v1.2" src="${INTERACTION_SEMANTICS_JS}"></script>`,
-    `<script defer data-qily-contact-route-direct="v13.1" src="${CONTACT_ROUTE_JS}"></script>`
+    `<script defer data-qily-contact-route-direct="v13.2" src="${CONTACT_ROUTE_JS}"></script>`
   ].filter(Boolean).join('\n');
   if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);
   return next;
