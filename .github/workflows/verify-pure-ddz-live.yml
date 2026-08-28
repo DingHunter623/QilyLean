@@ -34,7 +34,7 @@ jobs:
           grep -Fq 'id="start"' tools/pure-ddz/index.html
           grep -Fq 'id="hand"' tools/pure-ddz/index.html
           grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
-          grep -Fq '20260828-elder-ux-v124' tools/pure-ddz/index.html
+          grep -Fq '20260828-elder-ux-v125' tools/pure-ddz/index.html
           grep -Fq 'name="screen-orientation" content="landscape"' tools/pure-ddz/index.html
           grep -Fq 'name="x5-orientation" content="landscape"' tools/pure-ddz/index.html
           grep -Fq 'Android版暂未开放' tools/pure-ddz/index.html
@@ -46,8 +46,12 @@ jobs:
           grep -Fq "const VERSION = '1.2.4'" tools/pure-ddz/game/js/game.js
           grep -Fq "state.settings.difficulty==='expert'?1750+Math.random()*450" tools/pure-ddz/game/js/game.js
           ! grep -Fq 'C919' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq "16:{type:'small-joker',title:'小王',image:assetUrl('avatar-king.webp')}" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq "qilylean-aircraft-hero-latest-q98.webp" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq "16:{type:'small-joker',title:'小王',image:assetUrl('avatar-king.webp'),aircraft:HOME_AIRCRAFT}" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq 'qily-joker-aircraft' tools/pure-ddz/game/js/card-theme.js
+          grep -Fq '#hint-message.hint-message' tools/pure-ddz/game/js/card-theme.js
+          grep -Fq ':has(.card:nth-child(18))' tools/pure-ddz/game/js/card-theme.js
           grep -Fq 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
           grep -Fq '4个' tools/pure-ddz/game/js/qilylean-theme.js
           ! grep -Fq 'Pure-DDZ-Classic-v1.0.3.apk' tools/pure-ddz/index.html
@@ -59,8 +63,8 @@ jobs:
           set -euo pipefail
           ok=0
           for i in {1..48}; do
-            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v124' -o /tmp/page.html \
-              && grep -Fq '20260828-elder-ux-v124' /tmp/page.html \
+            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v125' -o /tmp/page.html \
+              && grep -Fq '20260828-elder-ux-v125' /tmp/page.html \
               && grep -Fq 'name="screen-orientation" content="landscape"' /tmp/page.html \
               && grep -Fq 'name="x5-orientation" content="landscape"' /tmp/page.html \
               && grep -Fq 'Android版暂未开放' /tmp/page.html; then
@@ -71,11 +75,11 @@ jobs:
             sleep 10
           done
           test "$ok" = 1
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v124' -o /tmp/qily-theme.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v124' -o /tmp/card-theme.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v124' -o /tmp/game.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260828-v124' -o /tmp/visual.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/card-comfort-v122.css?verify=20260828-v124' -o /tmp/comfort.css
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v125' -o /tmp/qily-theme.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v125' -o /tmp/card-theme.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v125' -o /tmp/game.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260828-v125' -o /tmp/visual.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/card-comfort-v122.css?verify=20260828-v125' -o /tmp/comfort.css
           node --check /tmp/qily-theme.js
           node --check /tmp/card-theme.js
           node --check /tmp/game.js
@@ -87,7 +91,10 @@ jobs:
           grep -Fq "const VERSION = '1.2.4'" /tmp/game.js
           grep -Fq "state.settings.difficulty==='expert'?1750+Math.random()*450" /tmp/game.js
           ! grep -Fq 'C919' /tmp/card-theme.js
-          grep -Fq 'avatar-king.webp' /tmp/card-theme.js
+          grep -Fq 'qilylean-aircraft-hero-latest-q98.webp' /tmp/card-theme.js
+          grep -Fq 'qily-joker-aircraft' /tmp/card-theme.js
+          grep -Fq '#hint-message.hint-message' /tmp/card-theme.js
+          grep -Fq ':has(.card:nth-child(18))' /tmp/card-theme.js
           grep -Fq 'QilyLeanDDZElderV123' /tmp/qily-theme.js
           grep -Fq '王炸' /tmp/qily-theme.js
-          echo 'PURE_DDZ_ELDER_V124_LIVE_OK'
+          echo 'PURE_DDZ_ELDER_V125_LIVE_OK'
