@@ -1,10 +1,12 @@
-/* QilyLean Site Shell Recovery + Contact Route V13.2｜2026-08-29
- * V13.2 routes public pages to authoritative Dock V5.2 and redline V2.
- * Pure DDZ exclusion is owned by Dock V5.2; #wxMask remains the canonical shared contact panel.
+/* QilyLean Site Shell Recovery + Contact Route V13.3｜2026-08-29
+ * V13.3 routes public pages to authoritative Dock V5.3 and redline V2.
+ * Pure DDZ exclusion is owned by Dock V5.3; the complete /contact/ page remains the canonical contact destination.
+ * #wxMask may remain for legacy/local page use, but the floating Dock no longer opens it.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilySiteShellRecoveryV132)return;
+  if(w.__qilySiteShellRecoveryV133)return;
+  w.__qilySiteShellRecoveryV133=true;
   w.__qilySiteShellRecoveryV132=true;
   w.__qilySiteShellRecoveryV131=true;
   w.__qilySiteShellRecoveryV13=true;
@@ -31,10 +33,10 @@
   }
 
   function injectRecoveryCss(){
-    if(d.getElementById('qilySiteShellRecoveryV132Style'))return;
-    ['qilySiteShellRecoveryV131Style','qilySiteShellRecoveryV13Style'].forEach(function(id){var old=d.getElementById(id);if(old)old.remove();});
+    if(d.getElementById('qilySiteShellRecoveryV133Style'))return;
+    ['qilySiteShellRecoveryV132Style','qilySiteShellRecoveryV131Style','qilySiteShellRecoveryV13Style'].forEach(function(id){var old=d.getElementById(id);if(old)old.remove();});
     var style=d.createElement('style');
-    style.id='qilySiteShellRecoveryV132Style';
+    style.id='qilySiteShellRecoveryV133Style';
     style.textContent=[
       'html,html body{height:auto!important;min-height:0!important}',
       'html body{display:block!important}',
@@ -64,15 +66,15 @@
   }
 
   function ensureDockRuntime(){
-    if(w.__qilyFloatingDockUnifiedV52)return;
-    var existing=d.getElementById('qilyDockUnifiedRuntimeV52Script');
+    if(w.__qilyFloatingDockUnifiedV53)return;
+    var existing=d.getElementById('qilyDockUnifiedRuntimeV53Script');
     if(existing)return;
-    ['qilyDockUnifiedRuntimeV51Script','qilyDockUnifiedRuntimeV5Script','qilyDockUnifiedRuntimeV4Script','qilyDockUnifiedRuntimeV3Script'].forEach(function(id){var legacy=d.getElementById(id);if(legacy)legacy.remove();});
+    ['qilyDockUnifiedRuntimeV52Script','qilyDockUnifiedRuntimeV51Script','qilyDockUnifiedRuntimeV5Script','qilyDockUnifiedRuntimeV4Script','qilyDockUnifiedRuntimeV3Script'].forEach(function(id){var legacy=d.getElementById(id);if(legacy)legacy.remove();});
     var script=d.createElement('script');
-    script.id='qilyDockUnifiedRuntimeV52Script';
-    script.src='/site-dock-share-runtime-v1.js?v=20260829-authority-v52';
+    script.id='qilyDockUnifiedRuntimeV53Script';
+    script.src='/site-dock-share-runtime-v1.js?v=20260829-authority-v53';
     script.async=false;
-    script.setAttribute('data-qily-dock-public-runtime','v5.2');
+    script.setAttribute('data-qily-dock-public-runtime','v5.3');
     (d.head||d.documentElement).appendChild(script);
   }
 
@@ -93,7 +95,7 @@
     page.querySelectorAll('.qily-map-nav-panel').forEach(function(panel){if(panel.getAttribute('data-qily-clean-map-nav')==='v2'&&panel.querySelector('[data-qily-map-provider="google"]')&&panel.querySelector('[data-qily-map-provider="apple"]'))return;var card=panel.closest('.address-card'),keyword=card?card.getAttribute('data-qily-map-address')||'':'';panel.replaceWith(createCleanMapPanel(keyword,inferRegion(card)));});
     page.querySelectorAll('iframe[src*="api.map.baidu.com"]').forEach(function(frame){frame.removeAttribute('src');frame.remove();});
   }
-  function recover(){disconnectRetiredDockObserver();ensureRedlineCss();injectRecoveryCss();ensureDockRuntime();d.documentElement.classList.remove('qily-stale-document','qily-shell-pending','qily-first-paint-pending','qily-r2-first-paint-pending');if(d.body)d.body.style.removeProperty('visibility');/* #wxMask is intentionally preserved: it is the canonical shared contact panel. */sanitizeContactMaps();}
+  function recover(){disconnectRetiredDockObserver();ensureRedlineCss();injectRecoveryCss();ensureDockRuntime();d.documentElement.classList.remove('qily-stale-document','qily-shell-pending','qily-first-paint-pending','qily-r2-first-paint-pending');if(d.body)d.body.style.removeProperty('visibility');sanitizeContactMaps();}
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',recover,{once:true});else recover();
   d.addEventListener('qily:shell-ready',recover);d.addEventListener('qily:softnavigate',recover);w.addEventListener('pageshow',recover,{passive:true});
 })(document,window);
