@@ -1,12 +1,13 @@
-/* QilyLean Floating Dock Authoritative Runtime V5.2｜2026-08-29
+/* QilyLean Floating Dock Authoritative Runtime V5.3｜2026-08-29
  * One authority for public Dock structure, labels and actions.
  * Canonical actions: 首页 / 回顶部 / 回上一层 / 本站搜索 / 分享当前页 / 联系我们.
- * V5.2 removes every legacy child/pseudo-label collision by rebuilding each button label into one owned span.
+ * V5.3 keeps one owned label per button and routes 联系我们 directly to the complete contact page in a new tab.
  * Pure DDZ remains an immersive surface and explicitly excludes the site Dock.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyFloatingDockUnifiedV52)return;
+  if(w.__qilyFloatingDockUnifiedV53)return;
+  w.__qilyFloatingDockUnifiedV53=true;
   w.__qilyFloatingDockUnifiedV52=true;
   w.__qilyFloatingDockUnifiedV51=true;
   w.__qilyFloatingDockUnifiedV5=true;
@@ -37,9 +38,9 @@
 
   function disableDockForPage(){
     d.documentElement.setAttribute('data-qily-dock','disabled');
-    if(!d.getElementById('qilyDockDisabledV52Style')){
+    if(!d.getElementById('qilyDockDisabledV53Style')){
       var style=d.createElement('style');
-      style.id='qilyDockDisabledV52Style';
+      style.id='qilyDockDisabledV53Style';
       style.textContent='html[data-qily-dock="disabled"] body #floatDock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}';
       (d.head||d.documentElement).appendChild(style);
     }
@@ -63,10 +64,10 @@
   }
 
   function ensureStyles(){
-    if(d.getElementById('qilyDockUnifiedV52Style'))return;
-    ['qilyDockUnifiedV51Style','qilyDockUnifiedV5Style'].forEach(function(id){var old=d.getElementById(id);if(old)old.remove();});
+    if(d.getElementById('qilyDockUnifiedV53Style'))return;
+    ['qilyDockUnifiedV52Style','qilyDockUnifiedV51Style','qilyDockUnifiedV5Style'].forEach(function(id){var old=d.getElementById(id);if(old)old.remove();});
     var style=d.createElement('style');
-    style.id='qilyDockUnifiedV52Style';
+    style.id='qilyDockUnifiedV53Style';
     style.textContent=[
       ':root{--qily-dock-bg:#0f4b5a;--qily-dock-hover:#12606f;--qily-dock-line:#caa15f;--qily-dock-text:#ffe39b;--qily-dock-size:64px;--qily-dock-gap:7px}',
       'html body #floatDock.qily-float-dock,html body #floatDock.qily-floating-dock{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important;z-index:2147482500!important;display:flex!important;flex-direction:column!important;align-items:center!important;width:var(--qily-dock-size)!important;min-width:var(--qily-dock-size)!important;max-width:var(--qily-dock-size)!important;gap:var(--qily-dock-gap)!important;padding:0!important;margin:0!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;box-sizing:border-box!important}',
@@ -84,7 +85,7 @@
   }
 
   function createStandaloneDock(){
-    var dock=d.createElement('div');dock.id='floatDock';dock.className='qily-float-dock';dock.dataset.qilyStandaloneDock='v5.2';dock.setAttribute('aria-label','快捷服务');
+    var dock=d.createElement('div');dock.id='floatDock';dock.className='qily-float-dock';dock.dataset.qilyStandaloneDock='v5.3';dock.setAttribute('aria-label','快捷服务');
     ORDER.forEach(function(action){var button=d.createElement('button');button.className='qily-float-btn qily-float-'+action;button.setAttribute('data-action',action);button.type='button';dock.appendChild(button);});
     (d.body||d.documentElement).appendChild(dock);return dock;
   }
@@ -97,7 +98,7 @@
     button.appendChild(label);
     button.setAttribute('aria-label',lines.join(''));
     button.setAttribute('title',lines.join(''));
-    button.setAttribute('data-qily-label-owner','dock-v5.2');
+    button.setAttribute('data-qily-label-owner','dock-v5.3');
   }
 
   function normalizeDock(){
@@ -112,7 +113,7 @@
     ORDER.forEach(function(action){var button=controls[action];button.className='qily-float-btn qily-float-'+action;setOwnedLabel(button,action);});
     controls.back.setAttribute('data-parent-route',parentRoute(location.pathname));
     var fragment=d.createDocumentFragment();ORDER.forEach(function(action){fragment.appendChild(controls[action]);});dock.appendChild(fragment);
-    dock.dataset.qilyStableOrder=ORDER.join(',');dock.dataset.qilyUnifiedPublicModule='v5.2';return true;
+    dock.dataset.qilyStableOrder=ORDER.join(',');dock.dataset.qilyUnifiedPublicModule='v5.3';return true;
   }
 
   function legacyCopy(text){var area=d.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.left='-9999px';(d.body||d.documentElement).appendChild(area);area.select();try{d.execCommand('copy');}catch(error){}area.remove();return Promise.resolve();}
@@ -120,18 +121,25 @@
   function toast(message){var node=d.getElementById('qilyDockStandaloneToastV5');if(!node){node=d.createElement('div');node.id='qilyDockStandaloneToastV5';node.setAttribute('role','status');node.style.cssText='position:fixed;left:50%;bottom:22px;z-index:2147483000;transform:translateX(-50%);padding:9px 14px;border-radius:999px;background:#073c47;color:#fff;font:700 14px/1.2 sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.22);pointer-events:none;opacity:0;transition:opacity .16s';(d.body||d.documentElement).appendChild(node);}node.textContent=message;node.style.opacity='1';clearTimeout(toast.timer);toast.timer=setTimeout(function(){node.style.opacity='0';},2200);}
   function openSearch(){if(w.QilySiteSearch&&typeof w.QilySiteSearch.open==='function'){w.QilySiteSearch.open();return;}var existing=d.getElementById('qilySiteSearchStandaloneV5');if(existing)return;var script=d.createElement('script');script.id='qilySiteSearchStandaloneV5';script.src='/site-search.js?v=20260826-search-navigation-v2';script.addEventListener('load',function(){if(w.QilySiteSearch)w.QilySiteSearch.open();else toast('本站搜索加载失败');},{once:true});script.addEventListener('error',function(){toast('本站搜索加载失败');},{once:true});(d.body||d.documentElement).appendChild(script);}
   function shareCurrent(){var title=d.title||'QilyLean',url=location.href,text=title+'\n'+url;if(navigator.share){navigator.share({title:title,text:title,url:url}).catch(function(error){if(error&&error.name==='AbortError')return;copyText(text).then(function(){toast('网页标题及网址已复制');});});return;}copyText(text).then(function(){toast('网页标题及网址已复制');});}
+  function openContactPage(){
+    var url='/contact/';
+    var opened=null;
+    try{opened=w.open(url,'_blank','noopener,noreferrer');}catch(error){opened=null;}
+    if(opened){try{opened.opener=null;}catch(error){}return;}
+    location.href=url;
+  }
   function runAction(action){
     if(action==='home'){location.href='/';return;}
     if(action==='top'){d.documentElement.scrollTop=0;if(d.body)d.body.scrollTop=0;w.scrollTo({top:0,left:0,behavior:'smooth'});return;}
     if(action==='back'){location.href=parentRoute(location.pathname);return;}
     if(action==='search'){openSearch();return;}
     if(action==='current'){shareCurrent();return;}
-    if(action==='contact'){var mask=d.getElementById('wxMask');if(mask){mask.classList.add('show');return;}location.href='/contact/';}
+    if(action==='contact'){openContactPage();return;}
   }
 
   function targetButton(event){var node=event.target&&event.target.closest?event.target.closest('#floatDock .qily-float-btn[data-action]'):null;return node||null;}
   function installAuthoritativeEvents(){
-    if(w.__qilyDockV52CaptureBound)return;w.__qilyDockV52CaptureBound=true;
+    if(w.__qilyDockV53CaptureBound)return;w.__qilyDockV53CaptureBound=true;
     d.addEventListener('pointerdown',function(event){if(isExcluded())return;var button=targetButton(event);if(!button)return;button.setAttribute('data-qily-pressed','true');event.stopImmediatePropagation();},{capture:true,passive:true});
     function clearPressed(event){var button=targetButton(event);if(button)button.removeAttribute('data-qily-pressed');else d.querySelectorAll('#floatDock [data-qily-pressed="true"]').forEach(function(node){node.removeAttribute('data-qily-pressed');});}
     d.addEventListener('pointerup',clearPressed,{capture:true,passive:true});d.addEventListener('pointercancel',clearPressed,{capture:true,passive:true});
