@@ -1,4 +1,4 @@
-name: Publish Sitewide R7 Runtime & Visual Closure V13
+name: Publish Sitewide R8 Interaction & DDZ Closure V19
 
 on:
   push:
@@ -7,20 +7,19 @@ on:
       - 'scripts/materialize-global-language-v3.js'
       - 'scripts/materialize-contact-route-v6.js'
       - 'scripts/validate-r7-authoritative-runtime-20260828.js'
-      - 'scripts/validate-sitewide-remediation-20260822.js'
-      - 'scripts/validate-sitewide-safety-readability-v1.js'
-      - 'scripts/validate-contact-readability-ddz-20260824.js'
       - 'site-public-redline-closure-v1.css'
       - 'site-contact-route-v1.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-ui-consistency-v1.js'
       - 'site-core-service-dock-closure-v1.js'
+      - 'site-navigation.js'
       - 'site-interaction-continuity-v1.css'
-      - 'package.json'
+      - 'site-interaction-semantics-v1.css'
+      - 'site-interaction-semantics-v1.js'
+      - 'tools/pure-ddz/game/css/r8-closure-v128.css'
       - 'capabilities/index.html'
       - 'tools/pure-ddz/index.html'
       - 'tools/pure-ddz/game/js/game.js'
-      - 'contact/index.html'
       - '.github/workflows/publish-visual-regression-contact-v1.yml'
   workflow_dispatch:
 
@@ -28,12 +27,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: sitewide-r7-runtime-visual-main
+  group: sitewide-r8-interaction-ddz-main
   cancel-in-progress: true
 
 jobs:
   publish:
-    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[r7-materialized]')
+    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[r8-materialized]')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -44,63 +43,61 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
-      - name: Validate R7 authoritative source contracts
+
+      - name: Validate R8 authoritative source contracts
         shell: bash
         run: |
           set -euo pipefail
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/materialize-contact-route-v6.js
           node --check scripts/validate-r7-authoritative-runtime-20260828.js
-          node --check scripts/validate-sitewide-remediation-20260822.js
-          node --check scripts/validate-sitewide-safety-readability-v1.js
-          node --check scripts/validate-contact-readability-ddz-20260824.js
           node --check site-contact-route-v1.js
           node --check site-dock-share-runtime-v1.js
           node --check site-ui-consistency-v1.js
           node --check site-core-service-dock-closure-v1.js
+          node --check site-navigation.js
+          node --check site-interaction-semantics-v1.js
           node scripts/validate-r7-authoritative-runtime-20260828.js
-          node scripts/validate-sitewide-safety-readability-v1.js
-          grep -Fq 'Site Shell Recovery + Contact Route V13' site-contact-route-v1.js
-          grep -Fq 'Floating Dock Authoritative Runtime V5' site-dock-share-runtime-v1.js
+          grep -Fq "const BASELINE_VERSION='20260828-r8-authoritative-v19'" scripts/materialize-global-language-v3.js
+          grep -Fq 'QilyLean Interaction Semantics V1' site-interaction-semantics-v1.css
+          grep -Fq '__qilyInteractionSemanticsV1' site-interaction-semantics-v1.js
+          grep -Fq 'Pure DDZ R8 Closure V128' tools/pure-ddz/game/css/r8-closure-v128.css
           ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-dock-share-runtime-v1.js
-          grep -Fq '__qilyUiSingleResponsibilityV7' site-ui-consistency-v1.js
-          ! grep -Fq 'normalizeDockButton' site-ui-consistency-v1.js
-          grep -Fq '__qilyCoreServiceAlignmentV105' site-core-service-dock-closure-v1.js
-          ! grep -Fq 'normalizeDock' site-core-service-dock-closure-v1.js
-          grep -Fq "const BASELINE_VERSION='20260828-r7-authoritative-v17'" scripts/materialize-global-language-v3.js
-          grep -Fq 'Public Redline Closure V2' site-public-redline-closure-v1.css
-      - name: Materialize V13 to every tracked public HTML page
+          ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-navigation.js
+
+      - name: Materialize R8 to every tracked public HTML page
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
           for attempt in 1 2 3 4; do
-            echo "R7 V13 publish attempt ${attempt}/4"
+            echo "R8 V19 publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
-            node --check scripts/materialize-global-language-v3.js
-            node --check scripts/materialize-contact-route-v6.js
-            node --check scripts/validate-r7-authoritative-runtime-20260828.js
             node scripts/validate-r7-authoritative-runtime-20260828.js
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
             node scripts/materialize-contact-route-v6.js
             node scripts/materialize-contact-route-v6.js --check
             node scripts/validate-seo-indexability.js
+            grep -Fq '/site-interaction-semantics-v1.css?v=20260828-r8-semantics-v1' index.html
+            grep -Fq '/site-interaction-semantics-v1.js?v=20260828-r8-semantics-v1' knowledge/index.html
+            grep -Fq '/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260828-r8-v128' tools/pure-ddz/index.html
+            grep -Fq '/site-interaction-semantics-v1.js?v=20260828-r8-semantics-v1' capabilities/index.html
             git diff --check
             if git diff --quiet; then
-              echo 'R7 V13 public baseline already current on latest main.'
+              echo 'R8 V19 public baseline already current on latest main.'
               exit 0
             fi
             git add -- ':(glob)**/*.html'
-            git commit -m 'fix: materialize R7 authoritative baseline V13 [r7-materialized]'
+            git commit -m 'fix: materialize R8 interaction and DDZ closure V19 [r8-materialized]'
             if git push origin HEAD:main; then
-              echo 'R7 V13 authoritative baseline published to tracked public HTML.'
+              echo 'R8 V19 authoritative baseline published to tracked public HTML.'
               exit 0
             fi
             echo 'main advanced during publication; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish R7 V13 after retries.'
+          echo 'Unable to publish R8 V19 after retries.'
           exit 1
