@@ -45,7 +45,9 @@ jobs:
           grep -q 'removeLegacyPureDdzHomeEntry' site-ui-consistency-v1.js
           grep -q 'pure-ddz-digital-tool' capabilities/index.html
           grep -q 'ding-qili-ai-avatar-560.webp' capabilities/index.html
-          grep -q 'c919-strategy-hero-v14.png' capabilities/index.html
+          grep -q 'qilylean-aircraft-hero-latest-q98.webp' capabilities/index.html
+          ! grep -q '小王 · C919' capabilities/index.html
+          grep -q '大王为本人图像 | 小王为官网首图“六大业务为主翼”飞机模型' capabilities/index.html
           grep -q 'qilyPureDdzCapabilityVisualV2' capabilities/index.html
           grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-red-heart-ace-v8' capabilities/index.html
           grep -Fq '.capability-ddz-card.red strong{color:#d32f2f!important;-webkit-text-fill-color:#d32f2f!important}' pure-ddz-capability-visual-v2.css
@@ -69,11 +71,14 @@ jobs:
           grep -q 'qily-rank-suit-line' tools/pure-ddz/game/js/card-theme.js
           grep -q 'ruleRankText(card))}${escapeHtml(card.suit)}' tools/pure-ddz/game/js/card-theme.js
           grep -q '滑动查看更多' tools/pure-ddz/game/js/card-theme.js
-          grep -q "const version='20260824-mobile-landscape-card-comfort-v122';" tools/pure-ddz/index.html
+          grep -q "const version='20260828-elder-ux-v127';" tools/pure-ddz/index.html
           grep -q "loadStyle('css/card-comfort-v122.css')" tools/pure-ddz/index.html
           grep -q 'name="x5-orientation" content="landscape"' tools/pure-ddz/index.html
           grep -q 'MicroMessenger' tools/pure-ddz/index.html
           grep -q '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
+          grep -q "16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}" tools/pure-ddz/game/js/card-theme.js
+          grep -q "17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}" tools/pure-ddz/game/js/card-theme.js
+          ! grep -q 'qily-joker-aircraft' tools/pure-ddz/game/js/card-theme.js
           grep -q 'IS_WECHAT_WEBVIEW' tools/pure-ddz/game/js/visual-v120.js
           grep -q "screen.orientation.lock('landscape')" tools/pure-ddz/game/js/visual-v120.js
           grep -q '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/game/js/card-theme.js
@@ -101,7 +106,7 @@ jobs:
           for i in {1..20}; do curl -fsS http://127.0.0.1:4173/tools/pure-ddz/ >/dev/null && exit 0; sleep 1; done
           cat /tmp/qily-ddz-showcase.log || true
           exit 1
-      - name: Verify capability actions, red-heart Ace, mobile cue, contact naming, and visible hands
+      - name: Verify capability actions, Joker contract, red-heart Ace, mobile cue, contact naming, and visible hands
         run: |
           cat > verify-showcase.mjs <<'EOF'
           import { chromium } from '@playwright/test';
@@ -147,6 +152,12 @@ jobs:
           if(await cap.locator('#pure-ddz-digital-tool').count()!==1) throw new Error('Capability DDZ digital tool missing');
           if(await cap.locator('.capability-ddz-joker').count()!==2) throw new Error('Joker showcase incomplete');
           if(await cap.locator('.capability-ddz-card').count()!==3) throw new Error('Representative card showcase incomplete');
+          const bigSrc=await cap.locator('.capability-ddz-joker.big img').getAttribute('src');
+          const smallSrc=await cap.locator('.capability-ddz-joker.small img').getAttribute('src');
+          const smallLabel=(await cap.locator('.capability-ddz-joker.small b').textContent())?.trim();
+          if(!bigSrc?.includes('ding-qili-ai-avatar-560.webp')) throw new Error('Big Joker must use owner portrait: '+bigSrc);
+          if(!smallSrc?.includes('qilylean-aircraft-hero-latest-q98.webp')) throw new Error('Small Joker must use homepage six-business-wing aircraft: '+smallSrc);
+          if(smallLabel!=='小王') throw new Error('Small Joker must not expose C919 label: '+smallLabel);
           const rep=await cap.locator('.capability-ddz-card').first().locator('strong').evaluate(el=>{const s=getComputedStyle(el);return {text:el.textContent?.trim(),aria:el.getAttribute('aria-label'),color:s.color,fill:s.webkitTextFillColor};});
           if(rep.text!=='A♥'||rep.aria!=='红桃A') throw new Error('Representative Ace must be red-heart A♥ / 红桃A: '+JSON.stringify(rep));
           if(rep.color!=='rgb(211, 47, 47)'||rep.fill!=='rgb(211, 47, 47)') throw new Error('Representative red-heart Ace is not visibly red: '+JSON.stringify(rep));
@@ -161,7 +172,7 @@ jobs:
           await check({width:1440,height:900});
           await check({width:844,height:390});
           await browser.close();
-          console.log('DDZ_RED_HEART_ACE_MOBILE_CUE_CONTACT_AND_VISIBILITY_OK');
+          console.log('DDZ_JOKER_CONTRACT_RED_HEART_ACE_MOBILE_CUE_CONTACT_AND_VISIBILITY_OK');
           EOF
           node verify-showcase.mjs
           rm -f verify-showcase.mjs
