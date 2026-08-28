@@ -1,10 +1,11 @@
-/* QilyLean Site Shell Recovery + Contact Route V13｜2026-08-28
- * V13 routes public pages to the authoritative Dock V5 runtime and redline V2 stylesheet.
- * Pure DDZ exclusion is owned by Dock V5; #wxMask remains the canonical shared contact panel.
+/* QilyLean Site Shell Recovery + Contact Route V13.1｜2026-08-28
+ * V13.1 routes public pages to authoritative Dock V5.1 and redline V2.
+ * Pure DDZ exclusion is owned by Dock V5.1; #wxMask remains the canonical shared contact panel.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilySiteShellRecoveryV13)return;
+  if(w.__qilySiteShellRecoveryV131)return;
+  w.__qilySiteShellRecoveryV131=true;
   w.__qilySiteShellRecoveryV13=true;
   w.__qilySiteShellRecoveryV12=true;
   w.__qilySiteShellRecoveryV11=true;
@@ -29,9 +30,9 @@
   }
 
   function injectRecoveryCss(){
-    if(d.getElementById('qilySiteShellRecoveryV13Style'))return;
+    if(d.getElementById('qilySiteShellRecoveryV131Style'))return;
     var style=d.createElement('style');
-    style.id='qilySiteShellRecoveryV13Style';
+    style.id='qilySiteShellRecoveryV131Style';
     style.textContent=[
       'html,html body{height:auto!important;min-height:0!important}',
       'html body{display:block!important}',
@@ -61,101 +62,36 @@
   }
 
   function ensureDockRuntime(){
-    if(w.__qilyFloatingDockUnifiedV5)return;
-    var existing=d.getElementById('qilyDockUnifiedRuntimeV5Script');
+    if(w.__qilyFloatingDockUnifiedV51)return;
+    var existing=d.getElementById('qilyDockUnifiedRuntimeV51Script');
     if(existing)return;
-    ['qilyDockUnifiedRuntimeV4Script','qilyDockUnifiedRuntimeV3Script'].forEach(function(id){var legacy=d.getElementById(id);if(legacy)legacy.remove();});
+    ['qilyDockUnifiedRuntimeV5Script','qilyDockUnifiedRuntimeV4Script','qilyDockUnifiedRuntimeV3Script'].forEach(function(id){var legacy=d.getElementById(id);if(legacy)legacy.remove();});
     var script=d.createElement('script');
-    script.id='qilyDockUnifiedRuntimeV5Script';
-    script.src='/site-dock-share-runtime-v1.js?v=20260828-authority-v5';
+    script.id='qilyDockUnifiedRuntimeV51Script';
+    script.src='/site-dock-share-runtime-v1.js?v=20260828-authority-v51';
     script.async=false;
-    script.setAttribute('data-qily-dock-public-runtime','v5');
+    script.setAttribute('data-qily-dock-public-runtime','v5.1');
     (d.head||d.documentElement).appendChild(script);
   }
 
   function mapUrls(keyword,region){
-    var destination=[keyword||'',region||''].filter(Boolean).join(' ');
-    var q=encodeURIComponent(keyword||'');
-    var r=encodeURIComponent(region||'');
-    var daddr=encodeURIComponent(destination);
-    return {
-      amap:'https://uri.amap.com/search?keyword='+q+'&city='+r+'&callnative=1',
-      baidu:'https://api.map.baidu.com/place/search?query='+q+'&region='+r+'&output=html&src=QilyLean',
-      tencent:'https://apis.map.qq.com/uri/v1/search?keyword='+q+'&region='+r+'&referer=QilyLean',
-      google:'https://www.google.com/maps/dir/?api=1&destination='+daddr,
-      apple:'https://maps.apple.com/?daddr='+daddr+'&dirflg=d'
-    };
+    var destination=[keyword||'',region||''].filter(Boolean).join(' '),q=encodeURIComponent(keyword||''),r=encodeURIComponent(region||''),daddr=encodeURIComponent(destination);
+    return {amap:'https://uri.amap.com/search?keyword='+q+'&city='+r+'&callnative=1',baidu:'https://api.map.baidu.com/place/search?query='+q+'&region='+r+'&output=html&src=QilyLean',tencent:'https://apis.map.qq.com/uri/v1/search?keyword='+q+'&region='+r+'&referer=QilyLean',google:'https://www.google.com/maps/dir/?api=1&destination='+daddr,apple:'https://maps.apple.com/?daddr='+daddr+'&dirflg=d'};
   }
-
-  function inferRegion(card){
-    var title=card&&card.querySelector('.address-copy strong');
-    var text=title?title.textContent:'';
-    if(text.indexOf('温州')>=0||text.indexOf('乐清')>=0)return '温州';
-    if(text.indexOf('东莞')>=0)return '东莞';
-    if(text.indexOf('宁波')>=0)return '宁波';
-    return '';
-  }
-
+  function inferRegion(card){var title=card&&card.querySelector('.address-copy strong'),text=title?title.textContent:'';if(text.indexOf('温州')>=0||text.indexOf('乐清')>=0)return '温州';if(text.indexOf('东莞')>=0)return '东莞';if(text.indexOf('宁波')>=0)return '宁波';return '';}
   function createCleanMapPanel(keyword,region){
-    var urls=mapUrls(keyword,region);
-    var panel=d.createElement('div');
-    panel.className='qily-map-nav-panel';
-    panel.setAttribute('data-qily-clean-map-nav','v2');
-    panel.setAttribute('aria-label',(keyword||'联系地址')+'地图导航');
-    var copy=d.createElement('div');copy.className='qily-map-nav-copy';
-    var title=d.createElement('strong');title.textContent='地图导航';
-    var note=d.createElement('span');note.textContent='默认高德；也可选择百度、腾讯、Google Maps 或 Apple Maps。本站不嵌入第三方地图页面，避免广告弹层。';
-    copy.appendChild(title);copy.appendChild(note);panel.appendChild(copy);
-    var actions=d.createElement('div');actions.className='qily-map-nav-actions';
-    [
-      ['amap','高德导航',urls.amap,true],
-      ['baidu','百度导航',urls.baidu,false],
-      ['tencent','腾讯导航',urls.tencent,false],
-      ['google','Google Maps',urls.google,false],
-      ['apple','Apple Maps',urls.apple,false]
-    ].forEach(function(item){
-      var link=d.createElement('a');
-      link.className='qily-map-nav-action'+(item[3]?' primary':'');
-      link.href=item[2];link.target='_blank';link.rel='noopener noreferrer';
-      link.setAttribute('data-qily-map-provider',item[0]);
-      link.setAttribute('aria-label',item[1]+'导航到'+(keyword||'联系地址'));
-      link.textContent=item[1];actions.appendChild(link);
-    });
-    panel.appendChild(actions);
-    return panel;
+    var urls=mapUrls(keyword,region),panel=d.createElement('div');panel.className='qily-map-nav-panel';panel.setAttribute('data-qily-clean-map-nav','v2');panel.setAttribute('aria-label',(keyword||'联系地址')+'地图导航');
+    var copy=d.createElement('div');copy.className='qily-map-nav-copy';var title=d.createElement('strong');title.textContent='地图导航';var note=d.createElement('span');note.textContent='默认高德；也可选择百度、腾讯、Google Maps 或 Apple Maps。本站不嵌入第三方地图页面，避免广告弹层。';copy.appendChild(title);copy.appendChild(note);panel.appendChild(copy);
+    var actions=d.createElement('div');actions.className='qily-map-nav-actions';[['amap','高德导航',urls.amap,true],['baidu','百度导航',urls.baidu,false],['tencent','腾讯导航',urls.tencent,false],['google','Google Maps',urls.google,false],['apple','Apple Maps',urls.apple,false]].forEach(function(item){var link=d.createElement('a');link.className='qily-map-nav-action'+(item[3]?' primary':'');link.href=item[2];link.target='_blank';link.rel='noopener noreferrer';link.setAttribute('data-qily-map-provider',item[0]);link.setAttribute('aria-label',item[1]+'导航到'+(keyword||'联系地址'));link.textContent=item[1];actions.appendChild(link);});panel.appendChild(actions);return panel;
   }
-
   function sanitizeContactMaps(){
-    var page=d.querySelector('.contact-page-v3');
-    if(!page)return;
+    var page=d.querySelector('.contact-page-v3');if(!page)return;
     page.querySelectorAll('.map-preview iframe').forEach(function(frame){frame.removeAttribute('src');frame.remove();});
-    page.querySelectorAll('.map-preview').forEach(function(preview){
-      var card=preview.closest('.address-card');
-      var keyword=card?card.getAttribute('data-qily-map-address')||'':'';
-      preview.replaceWith(createCleanMapPanel(keyword,inferRegion(card)));
-    });
-    page.querySelectorAll('.qily-map-nav-panel').forEach(function(panel){
-      if(panel.getAttribute('data-qily-clean-map-nav')==='v2'&&panel.querySelector('[data-qily-map-provider="google"]')&&panel.querySelector('[data-qily-map-provider="apple"]'))return;
-      var card=panel.closest('.address-card');
-      var keyword=card?card.getAttribute('data-qily-map-address')||'':'';
-      panel.replaceWith(createCleanMapPanel(keyword,inferRegion(card)));
-    });
+    page.querySelectorAll('.map-preview').forEach(function(preview){var card=preview.closest('.address-card'),keyword=card?card.getAttribute('data-qily-map-address')||'':'';preview.replaceWith(createCleanMapPanel(keyword,inferRegion(card)));});
+    page.querySelectorAll('.qily-map-nav-panel').forEach(function(panel){if(panel.getAttribute('data-qily-clean-map-nav')==='v2'&&panel.querySelector('[data-qily-map-provider="google"]')&&panel.querySelector('[data-qily-map-provider="apple"]'))return;var card=panel.closest('.address-card'),keyword=card?card.getAttribute('data-qily-map-address')||'':'';panel.replaceWith(createCleanMapPanel(keyword,inferRegion(card)));});
     page.querySelectorAll('iframe[src*="api.map.baidu.com"]').forEach(function(frame){frame.removeAttribute('src');frame.remove();});
   }
-
-  function recover(){
-    disconnectRetiredDockObserver();
-    ensureRedlineCss();
-    injectRecoveryCss();
-    ensureDockRuntime();
-    d.documentElement.classList.remove('qily-stale-document','qily-shell-pending','qily-first-paint-pending','qily-r2-first-paint-pending');
-    if(d.body)d.body.style.removeProperty('visibility');
-    /* #wxMask is intentionally preserved: it is the canonical shared contact panel. */
-    sanitizeContactMaps();
-  }
-
+  function recover(){disconnectRetiredDockObserver();ensureRedlineCss();injectRecoveryCss();ensureDockRuntime();d.documentElement.classList.remove('qily-stale-document','qily-shell-pending','qily-first-paint-pending','qily-r2-first-paint-pending');if(d.body)d.body.style.removeProperty('visibility');/* #wxMask is intentionally preserved: it is the canonical shared contact panel. */sanitizeContactMaps();}
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',recover,{once:true});else recover();
-  d.addEventListener('qily:shell-ready',recover);
-  d.addEventListener('qily:softnavigate',recover);
-  w.addEventListener('pageshow',recover,{passive:true});
+  d.addEventListener('qily:shell-ready',recover);d.addEventListener('qily:softnavigate',recover);w.addEventListener('pageshow',recover,{passive:true});
 })(document,window);
