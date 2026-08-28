@@ -1,7 +1,9 @@
-/* QilyLean Sitewide Stability Recovery V2｜2026-08-28
+/* QilyLean Sitewide Stability Recovery V3｜2026-08-28
  * Emergency regression closure after contact-route rollout.
  * Scope: remove false document tail height and guarantee floating Dock visibility on interactive screens
  * without restoring the Dock during print/PDF rendering.
+ * V3: final-load VI surface closure. All equivalent public Hero/header surfaces use one QilyLean deep-teal
+ * blueprint background regardless of historical page-local gradients or translated-page rendering.
  */
 html body{
   min-height:0!important;
@@ -172,6 +174,56 @@ html body:has(.contact-page-v3) .contact-hero p{
   html body .contact-page-v3 .qily-map-nav-actions{gap:6px!important}
   html body .contact-page-v3 .qily-map-nav-action{min-height:44px!important;padding:8px 5px!important;font-size:14px!important}
 }
+
+/* QILY-VI-SURFACE-FINAL-GUARD:START
+ * 最终加载层只负责“同类深色首屏同一底色”。
+ * 基准采用全站多数页面现行工业工程蓝图：#073c47 → #0f4b5a → #178b94。
+ * 页面局部 125deg、两段渐变、旧青绿色以及翻译状态均不得改变最终视觉输出。
+ * 正文浅色模块、卡片、状态语义色、图片与布局不在本规则作用域。
+ */
+:root{
+  --qily-final-vi-hero-base:#0f4b5a;
+  --qily-final-vi-hero-bg:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90));
+  --qily-final-vi-hero-border:rgba(202,161,95,.48);
+}
+html:root body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,
+  .article-hub,.tool-hero,.contact-hero,.preview-head,
+  [data-qily-hero-surface="dark"]
+),
+html:root body main>section[class$="-hero"],
+html:root body main>section[class*="-hero "],
+html:root body main>header[class$="-hero"],
+html:root body main>header[class*="-hero "]{
+  background-color:var(--qily-final-vi-hero-base)!important;
+  background-image:var(--qily-final-vi-hero-bg)!important;
+  border-bottom-color:var(--qily-final-vi-hero-border)!important;
+  background-blend-mode:normal!important;
+}
+/* 保护深色首屏基本对比度；翻译只换文字，不改变 VI。 */
+html:root body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,
+  .article-hub,.tool-hero,.contact-hero,.preview-head,
+  [data-qily-hero-surface="dark"]
+) :is(h1,h2,h3,.lead,.hero-lead,.module-lead){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
+html:root body :is(
+  .hero,.module-hero,.daily-hero,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.capabilities-hero,.experience-hero,
+  .improvement-hero,.improvements-hero,.knowledge-hero,.trust-hero,.article-hero,
+  .article-hub,.tool-hero,.contact-hero,.preview-head,
+  [data-qily-hero-surface="dark"]
+) :is(.eyebrow,.module-eyebrow,.kicker,.section-kicker,.contact-kicker,small,.meta,.fine){
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+}
+/* QILY-VI-SURFACE-FINAL-GUARD:END */
 
 /* Print/PDF is non-interactive. This rule MUST remain last so the screen stability recovery above cannot resurrect the Dock. */
 @media print{
