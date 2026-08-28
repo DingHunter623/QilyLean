@@ -40,28 +40,46 @@ forbidText(shell,'[data-action="back"]','Shared shell must not intercept Dock ba
 forbidText(shell,"LANGUAGE_JS='/site-global-language-v3.js",'Legacy translator shell loader');
 
 const dock=read('site-dock-share-runtime-v1.js');
-requireText(dock,'Floating Dock Authoritative Runtime V5','Authoritative Dock V5');
+requireText(dock,'Floating Dock Authoritative Runtime V5.1','Authoritative Dock V5.1');
 requireText(dock,"LABELS={home:'首页',top:'回顶部',back:'回上一层',search:'本站搜索',current:'分享当前页',contact:'联系我们'}",'Canonical Dock labels');
 requireText(dock,"EXCLUDED=/^\\/tools\\/pure-ddz",'Pure DDZ Dock exclusion');
 requireText(dock,'data-qily-dock="disabled"','Pure DDZ Dock disabled state');
+requireText(dock,'installAuthoritativeEvents','Dock capture-phase authority');
 assert(!/new\s+MutationObserver\s*\(/.test(dock),'Authoritative Dock must not continuously rebuild DOM');
 
 const navigation=read('site-navigation.js');
-requireText(navigation,"var SEARCH_RUNTIME_SRC = '/site-search.js?v=20260826-search-navigation-v2'",'Fresh site-search runtime');
-requireText(navigation,'primaryNavigationUnifiedVisualContract: true','Primary-navigation parity contract');
-requireText(navigation,'mobilePrimaryNavigationMayShrinkTypography: false','Mobile primary navigation cannot shrink typography');
-requireText(navigation,"dockOrder: ['home','top','back','search','current','contact']",'Six-action Dock order');
+requireText(navigation,"SEARCH_RUNTIME_SRC='/site-search.js?v=20260826-search-navigation-v2'",'Fresh site-search runtime');
+requireText(navigation,'primaryNavigationUnifiedVisualContract:true','Primary-navigation parity contract');
+requireText(navigation,'mobilePrimaryNavigationMayShrinkTypography:false','Mobile primary navigation cannot shrink typography');
+requireText(navigation,"dockOrder:['home','top','back','search','current','contact']",'Six-action Dock order');
+requireText(navigation,'r7DockSingleAuthority:true','Navigation defers Dock ownership');
+requireText(navigation,'r7NoNavigationDockMutation:true','Navigation no-Dock-mutation contract');
+assert(!/new\s+MutationObserver\s*\(/.test(navigation),'Navigation must not continuously rewrite shared UI');
+
+const semanticsCss=read('site-interaction-semantics-v1.css');
+const semanticsJs=read('site-interaction-semantics-v1.js');
+requireText(semanticsCss,'Interaction Semantics V1.1','Interaction semantics CSS');
+requireText(semanticsCss,'[data-qily-interaction="route"]','Real-route feedback');
+requireText(semanticsCss,'[data-qily-interaction="static"]','Static-term feedback suppression');
+requireText(semanticsCss,'content:"回\\A顶部"','Unified 回顶部 visual');
+requireText(semanticsCss,'content:"回\\A上一层"','Unified 回上一层 visual');
+requireText(semanticsJs,'__qilyInteractionSemanticsV11','Interaction semantics runtime');
+requireText(semanticsJs,'freezeStaticVisual','Static term visual freeze');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
-requireText(materializer,"const BASELINE_VERSION='20260828-r7-authoritative-v17'",'R7 global baseline owner');
+requireText(materializer,"const BASELINE_VERSION='20260828-r8-authoritative-v20'",'R8 global baseline owner');
 requireText(materializer,"const SAFE_VERSION='20260828-long-page-resilience-v5'",'Long-page translation runtime owner');
 requireText(materializer,"const CONSISTENCY='/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7'",'R7 shared-shell cache owner');
-requireText(materializer,"const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260828-authority-v5'",'Dock V5 cache owner');
-requireText(materializer,"const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260828-dock-functional-public-v13'",'Contact V13 cache owner');
+requireText(materializer,"const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260828-authority-v51'",'Dock V5.1 cache owner');
+requireText(materializer,"const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260828-dock-functional-public-v131'",'Contact V13.1 cache owner');
 requireText(materializer,"const PUBLIC_REDLINE_CSS='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2'",'Redline V2 cache owner');
+requireText(materializer,"const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260828-r8-semantics-v11'",'Interaction semantics CSS owner');
+requireText(materializer,"const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260828-r8-semantics-v11'",'Interaction semantics JS owner');
+requireText(materializer,"const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260828-r8-v128'",'Pure DDZ R8 closure owner');
 requireText(materializer,'data-qily-translation-safe-direct="inpage-v4"','Deferred translation V4 marker');
 requireText(materializer,'data-qily-translation-progress-direct="bilingual-v4"','Progress V4 marker');
-requireText(materializer,'data-qily-contact-route-direct="v13"','Contact V13 marker');
+requireText(materializer,'data-qily-contact-route-direct="v13.1"','Contact V13.1 marker');
+requireText(materializer,'data-qily-interaction-semantics-direct="v1.1"','Interaction semantics V1.1 marker');
 requireText(materializer,'removeLegacyManagedScripts','Legacy translator stripping');
 
 const progress=read('site-translation-progress-v1.js');
@@ -82,4 +100,4 @@ requireText(contentCss,'--ql-dark-title:#fff','Dark-surface title token');
 const wrangler=read('wrangler.toml');
 requireText(wrangler,'TRANSLATE_DAILY_IP_LIMIT = "600"','Full-site translation capacity');
 
-process.stdout.write('PASS: R7 safety/readability contracts cover resilient translation, single-responsibility UI shell, authoritative Dock V5, six-action navigation and protected content contrast.\n');
+process.stdout.write('PASS: R8 safety/readability contracts cover resilient translation, single-responsibility shared UI, authoritative Dock V5.1, route-vs-static interaction semantics, DDZ closure and protected content contrast.\n');
