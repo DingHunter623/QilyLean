@@ -1,4 +1,4 @@
-name: Publish Sitewide R8 Interaction & DDZ Closure V20
+name: Publish Sitewide R10 Interaction & DDZ Closure V23
 
 on:
   push:
@@ -13,6 +13,7 @@ on:
       - 'site-ui-consistency-v1.js'
       - 'site-core-service-dock-closure-v1.js'
       - 'site-navigation.js'
+      - 'site-header-axis-v1.css'
       - 'site-interaction-continuity-v1.css'
       - 'site-interaction-semantics-v1.css'
       - 'site-interaction-semantics-v1.js'
@@ -27,12 +28,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: sitewide-r8-interaction-ddz-main
+  group: sitewide-r10-interaction-ddz-main
   cancel-in-progress: true
 
 jobs:
   publish:
-    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[r8-materialized]')
+    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[r10-materialized]')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -44,7 +45,7 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate R8 authoritative source contracts
+      - name: Validate R10 authoritative source contracts
         shell: bash
         run: |
           set -euo pipefail
@@ -58,23 +59,28 @@ jobs:
           node --check site-navigation.js
           node --check site-interaction-semantics-v1.js
           node scripts/validate-r7-authoritative-runtime-20260828.js
-          grep -Fq "const BASELINE_VERSION='20260828-r8-authoritative-v20'" scripts/materialize-global-language-v3.js
-          grep -Fq 'QilyLean Interaction Semantics V1.1' site-interaction-semantics-v1.css
-          grep -Fq '__qilyInteractionSemanticsV11' site-interaction-semantics-v1.js
-          grep -Fq 'Pure DDZ R8 Closure V128' tools/pure-ddz/game/css/r8-closure-v128.css
-          grep -Fq "const ROUTE='/site-contact-route-v1.js?v=20260828-dock-functional-public-v131'" scripts/materialize-contact-route-v6.js
-          grep -Fq "const DOCK='/site-dock-share-runtime-v1.js?v=20260828-authority-v51'" scripts/materialize-contact-route-v6.js
+          grep -Fq "const BASELINE_VERSION='20260829-r10-regression-closure-v23'" scripts/materialize-global-language-v3.js
+          grep -Fq 'QilyLean Interaction Semantics V1.3' site-interaction-semantics-v1.css
+          grep -Fq '__qilyInteractionSemanticsV13' site-interaction-semantics-v1.js
+          grep -Fq 'qily-primary-nav-scroll-rail' site-interaction-semantics-v1.js
+          grep -Fq '.brief-action-strip>span' site-interaction-semantics-v1.js
+          grep -Fq 'Pure DDZ R10 Closure V130' tools/pure-ddz/game/css/r8-closure-v128.css
+          grep -Fq 'justify-content:safe center!important' tools/pure-ddz/game/css/r8-closure-v128.css
+          grep -Fq "const ROUTE='/site-contact-route-v1.js?v=20260829-dock-functional-public-v133'" scripts/materialize-contact-route-v6.js
+          grep -Fq "const DOCK='/site-dock-share-runtime-v1.js?v=20260829-authority-v53'" scripts/materialize-contact-route-v6.js
+          grep -Fq "w.open(url,'_blank','noopener,noreferrer')" site-dock-share-runtime-v1.js
+          ! grep -Fq "mask.classList.add('show')" site-dock-share-runtime-v1.js
           ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-dock-share-runtime-v1.js
           ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-navigation.js
 
-      - name: Materialize R8 to every tracked public HTML page
+      - name: Materialize R10 to every tracked public HTML page
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
           for attempt in 1 2 3 4; do
-            echo "R8 V20 publish attempt ${attempt}/4"
+            echo "R10 V23 publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
             node scripts/validate-r7-authoritative-runtime-20260828.js
@@ -83,24 +89,25 @@ jobs:
             node scripts/materialize-contact-route-v6.js
             node scripts/materialize-contact-route-v6.js --check
             node scripts/validate-seo-indexability.js
-            grep -Fq '/site-interaction-semantics-v1.css?v=20260828-r8-semantics-v11' index.html
-            grep -Fq '/site-interaction-semantics-v1.js?v=20260828-r8-semantics-v11' knowledge/index.html
-            grep -Fq '/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260828-r8-v128' tools/pure-ddz/index.html
-            grep -Fq '/site-interaction-semantics-v1.js?v=20260828-r8-semantics-v11' capabilities/index.html
-            grep -Fq '/site-contact-route-v1.js?v=20260828-dock-functional-public-v131' tools/pure-ddz/index.html
+            grep -Fq '/site-header-axis-v1.css?v=20260829-primary-navigation-scroll-v6' index.html
+            grep -Fq '/site-interaction-semantics-v1.css?v=20260829-r10-semantics-v13' index.html
+            grep -Fq '/site-interaction-semantics-v1.js?v=20260829-r10-semantics-v13' knowledge/index.html
+            grep -Fq '/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r10-v130' tools/pure-ddz/index.html
+            grep -Fq '/site-contact-route-v1.js?v=20260829-dock-functional-public-v133' tools/pure-ddz/index.html
+            grep -Fq 'data-qily-interaction-semantics-direct="v1.3"' qilylean/daily/2026-07-29.html
             git diff --check
             if git diff --quiet; then
-              echo 'R8 V20 public baseline already current on latest main.'
+              echo 'R10 V23 public baseline already current on latest main.'
               exit 0
             fi
             git add -- ':(glob)**/*.html'
-            git commit -m 'fix: materialize R8 interaction and DDZ closure V20 [r8-materialized]'
+            git commit -m 'fix: materialize R10 interaction and DDZ closure V23 [r10-materialized]'
             if git push origin HEAD:main; then
-              echo 'R8 V20 authoritative baseline published to tracked public HTML.'
+              echo 'R10 V23 authoritative baseline published to tracked public HTML.'
               exit 0
             fi
             echo 'main advanced during publication; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish R8 V20 after retries.'
+          echo 'Unable to publish R10 V23 after retries.'
           exit 1
