@@ -1,25 +1,25 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V17｜2026-08-28
+/* QilyLean Sitewide Public Baseline Materializer V18｜2026-08-28
  * R7 authoritative baseline:
  * - Chinese remains the authoritative source and default display.
  * - translation assets remain deferred and never block first paint.
  * - site-ui-consistency V7 owns translation baseline + primary-nav current state only.
- * - Dock V5 is the sole Dock behavior/label runtime; no semantic-icon rewrite in shared shell.
- * - Contact Route V13 and Redline V2 are the protected publication baseline.
+ * - navigation V45 owns navigation/search only; Dock V5.1 owns Dock behavior/labels.
+ * - Contact Route V13.1 and Redline V2 are the protected publication baseline.
  */
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
-const BASELINE_VERSION='20260828-r7-authoritative-v17';
+const BASELINE_VERSION='20260828-r7-authoritative-v18';
 const SAFE_VERSION='20260828-long-page-resilience-v5';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7';
-const NAVIGATION='/site-navigation.js?v=20260827-translation-dock-resource-v46';
+const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
-const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260828-authority-v5';
+const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260828-authority-v51';
 const CORE_SERVICE_DOCK='/site-core-service-dock-closure-v1.js?v=20260828-r7-alignment-v105';
 const LANGUAGE_CSS='/site-global-language-v1.css?v=20260825-public-translation-shell-v1';
 const SAFE_RUNTIME=`/site-translation-safe-runtime-v1.js?v=${SAFE_VERSION}`;
@@ -36,7 +36,7 @@ const UNIFIED_VISUAL_CSS='/site-unified-visual-governance-v1.css?v=20260826-cont
 const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-screenshot-closure-v2';
 const STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260828-vi-surface-v3';
 const PUBLIC_REDLINE_CSS='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
-const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260828-dock-functional-public-v13';
+const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260828-dock-functional-public-v131';
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
 
 function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean)}
