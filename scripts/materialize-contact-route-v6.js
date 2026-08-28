@@ -5,8 +5,8 @@ const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
-const ROUTE='/site-contact-route-v1.js?v=20260828-dock-functional-public-v13';
-const DOCK='/site-dock-share-runtime-v1.js?v=20260828-authority-v5';
+const ROUTE='/site-contact-route-v1.js?v=20260828-dock-functional-public-v131';
+const DOCK='/site-dock-share-runtime-v1.js?v=20260828-authority-v51';
 const UI='/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7';
 const REDLINE='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
 const CONTACT_PATH='contact/index.html';
@@ -27,9 +27,7 @@ function ensureRedlineStylesheet(source){
 
 function navBlock(keyword,region){
   const destination=[keyword,region].filter(Boolean).join(' ');
-  const q=encodeURIComponent(keyword);
-  const r=encodeURIComponent(region);
-  const daddr=encodeURIComponent(destination);
+  const q=encodeURIComponent(keyword),r=encodeURIComponent(region),daddr=encodeURIComponent(destination);
   const amap=`https://uri.amap.com/search?keyword=${q}&city=${r}&callnative=1`;
   const baidu=`https://api.map.baidu.com/place/search?query=${q}&region=${r}&output=html&src=QilyLean`;
   const tencent=`https://apis.map.qq.com/uri/v1/search?keyword=${q}&region=${r}&referer=QilyLean`;
@@ -54,10 +52,7 @@ function navBlock(keyword,region){
 
 function cleanContactNavigation(source){
   let next=source;
-  const targets=[
-    {keyword:'苏吕党主题公园',region:'温州'},
-    {keyword:'皂三村口 石羊街139号',region:'东莞'}
-  ];
+  const targets=[{keyword:'苏吕党主题公园',region:'温州'},{keyword:'皂三村口 石羊街139号',region:'东莞'}];
   for(const target of targets){
     const articleOpen=`<article class="address-card" data-qily-map-address="${target.keyword}">`;
     const articleStart=next.indexOf(articleOpen);
@@ -76,9 +71,7 @@ function cleanContactNavigation(source){
   next=next.replace(/<iframe\b[^>]*api\.map\.baidu\.com[^>]*><\/iframe>/gi,'');
   if(/api\.map\.baidu\.com\/geocoder/i.test(next))throw new Error('Embedded Baidu geocoder iframe returned to contact page.');
   if(/<iframe\b/i.test(next))throw new Error('Contact page still contains iframe markup.');
-  for(const provider of ['amap','baidu','tencent','google','apple']){
-    if(!next.includes(`data-qily-map-provider="${provider}"`))throw new Error(`Contact clean map provider missing: ${provider}`);
-  }
+  for(const provider of ['amap','baidu','tencent','google','apple'])if(!next.includes(`data-qily-map-provider="${provider}"`))throw new Error(`Contact clean map provider missing: ${provider}`);
   if(!next.includes('data-qily-clean-map-nav="v2"'))throw new Error('Contact clean map navigation V2 marker missing.');
   if(!next.includes('www.google.com/maps/dir/?api=1'))throw new Error('Google Maps directions URL missing.');
   if(!next.includes('maps.apple.com/?daddr='))throw new Error('Apple Maps directions URL missing.');
@@ -87,20 +80,17 @@ function cleanContactNavigation(source){
 
 let changed=0,covered=0,dockCovered=0,uiCovered=0;
 for(const relative of trackedHtml()){
-  const file=path.join(root,relative);
-  const source=fs.readFileSync(file,'utf8');
+  const file=path.join(root,relative),source=fs.readFileSync(file,'utf8');
   if(!/site-contact-route-v1\.js(?:\?v=[^"']*)?/.test(source))continue;
   covered+=1;
   let next=source
     .replace(/\/site-contact-route-v1\.js(?:\?v=[^"']*)?/g,ROUTE)
-    .replace(/data-qily-contact-route-direct=["'][^"']*["']/g,'data-qily-contact-route-direct="v13"');
+    .replace(/data-qily-contact-route-direct=["'][^"']*["']/g,'data-qily-contact-route-direct="v13.1"');
   if(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/.test(next)){
-    next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK);
-    dockCovered+=1;
+    next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK);dockCovered+=1;
   }
   if(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/.test(next)){
-    next=next.replace(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/g,UI);
-    uiCovered+=1;
+    next=next.replace(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/g,UI);uiCovered+=1;
   }
   next=ensureRedlineStylesheet(next);
   if(relative===CONTACT_PATH)next=cleanContactNavigation(next);
@@ -108,22 +98,20 @@ for(const relative of trackedHtml()){
 }
 
 if(process.argv.includes('--check')){
-  if(changed)throw new Error(`R7 materialization stale on ${changed} HTML file(s).`);
+  if(changed)throw new Error(`R8 contact materialization stale on ${changed} HTML file(s).`);
   if(covered<470)throw new Error(`Contact route coverage unexpectedly low: ${covered}.`);
   const contact=fs.readFileSync(path.join(root,CONTACT_PATH),'utf8');
   const home=fs.readFileSync(path.join(root,'index.html'),'utf8');
   const ddz=fs.readFileSync(path.join(root,DDZ_PATH),'utf8');
   if(/api\.map\.baidu\.com\/geocoder|<iframe\b/i.test(contact))throw new Error('Contact page contains a prohibited embedded map surface.');
-  for(const provider of ['amap','baidu','tencent','google','apple']){
-    if(!contact.includes(`data-qily-map-provider="${provider}"`))throw new Error(`Contact clean map provider missing after materialization: ${provider}`);
-  }
+  for(const provider of ['amap','baidu','tencent','google','apple'])if(!contact.includes(`data-qily-map-provider="${provider}"`))throw new Error(`Contact clean map provider missing after materialization: ${provider}`);
   for(const [label,html] of [['contact',contact],['home',home],['pure-ddz',ddz]]){
-    if(!html.includes(ROUTE))throw new Error(`${label} does not use Contact Route V13.`);
+    if(!html.includes(ROUTE))throw new Error(`${label} does not use Contact Route V13.1.`);
     if(!html.includes(REDLINE))throw new Error(`${label} does not use public redline V2.`);
     if(/site-ui-consistency-v1\.js/.test(html)&&!html.includes(UI))throw new Error(`${label} still loads stale UI consistency runtime.`);
   }
-  if(/site-dock-share-runtime-v1\.js/.test(ddz)&&!ddz.includes(DOCK))throw new Error('Pure DDZ direct Dock runtime is not cache-busted to authoritative V5.');
-  process.stdout.write(`PASS: R7 public baseline current on ${covered} HTML pages; direct Dock V5 refs ${dockCovered}; UI single-responsibility V7 refs ${uiCovered}.\n`);
+  if(/site-dock-share-runtime-v1\.js/.test(ddz)&&!ddz.includes(DOCK))throw new Error('Pure DDZ direct Dock runtime is not cache-busted to authoritative V5.1.');
+  process.stdout.write(`PASS: R8 contact baseline current on ${covered} HTML pages; direct Dock V5.1 refs ${dockCovered}; UI single-responsibility V7 refs ${uiCovered}.\n`);
 }else{
-  process.stdout.write(`R7 materialized on ${changed} HTML file(s); route coverage ${covered}; Dock refs ${dockCovered}; UI refs ${uiCovered}.\n`);
+  process.stdout.write(`R8 contact materialized on ${changed} HTML file(s); route coverage ${covered}; Dock refs ${dockCovered}; UI refs ${uiCovered}.\n`);
 }
