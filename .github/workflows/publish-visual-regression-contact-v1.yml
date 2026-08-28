@@ -4,12 +4,19 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/materialize-global-language-v3.js'
       - 'scripts/materialize-contact-route-v6.js'
       - 'scripts/validate-r7-authoritative-runtime-20260828.js'
+      - 'scripts/validate-sitewide-remediation-20260822.js'
+      - 'scripts/validate-sitewide-safety-readability-v1.js'
+      - 'scripts/validate-contact-readability-ddz-20260824.js'
       - 'site-public-redline-closure-v1.css'
       - 'site-contact-route-v1.js'
       - 'site-dock-share-runtime-v1.js'
+      - 'site-ui-consistency-v1.js'
+      - 'site-core-service-dock-closure-v1.js'
       - 'site-interaction-continuity-v1.css'
+      - 'package.json'
       - 'capabilities/index.html'
       - 'tools/pure-ddz/index.html'
       - 'tools/pure-ddz/game/js/game.js'
@@ -28,7 +35,7 @@ jobs:
   publish:
     if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[r7-materialized]')
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
         with:
@@ -41,10 +48,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          node --check scripts/materialize-global-language-v3.js
           node --check scripts/materialize-contact-route-v6.js
           node --check scripts/validate-r7-authoritative-runtime-20260828.js
+          node --check scripts/validate-sitewide-remediation-20260822.js
+          node --check scripts/validate-sitewide-safety-readability-v1.js
+          node --check scripts/validate-contact-readability-ddz-20260824.js
           node --check site-contact-route-v1.js
           node --check site-dock-share-runtime-v1.js
+          node --check site-ui-consistency-v1.js
+          node --check site-core-service-dock-closure-v1.js
           node scripts/validate-r7-authoritative-runtime-20260828.js
           grep -Fq 'Site Shell Recovery + Contact Route V13' site-contact-route-v1.js
           grep -Fq '__qilySiteShellRecoveryV13' site-contact-route-v1.js
@@ -55,7 +68,14 @@ jobs:
           grep -Fq "top:'回顶部'" site-dock-share-runtime-v1.js
           grep -Fq "back:'回上一层'" site-dock-share-runtime-v1.js
           grep -Fq 'data-qily-dock="disabled"' site-dock-share-runtime-v1.js
-          ! grep -Fq 'MutationObserver' site-dock-share-runtime-v1.js
+          ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-dock-share-runtime-v1.js
+          grep -Fq '__qilyUiSingleResponsibilityV7' site-ui-consistency-v1.js
+          ! grep -Fq 'normalizeDockButton' site-ui-consistency-v1.js
+          grep -Fq '__qilyCoreServiceAlignmentV105' site-core-service-dock-closure-v1.js
+          ! grep -Fq 'normalizeDock' site-core-service-dock-closure-v1.js
+          grep -Fq "const BASELINE_VERSION='20260828-r7-authoritative-v17'" scripts/materialize-global-language-v3.js
+          grep -Fq "const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260828-authority-v5'" scripts/materialize-global-language-v3.js
+          grep -Fq "const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260828-dock-functional-public-v13'" scripts/materialize-global-language-v3.js
           grep -Fq 'Public Redline Closure V2' site-public-redline-closure-v1.css
           grep -Fq 'body.qily-home-v3 .hero .hero-grid' site-public-redline-closure-v1.css
           grep -Fq '#pure-ddz-digital-tool' site-public-redline-closure-v1.css
@@ -69,18 +89,22 @@ jobs:
             echo "R7 V13 publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
+            node --check scripts/materialize-global-language-v3.js
             node --check scripts/materialize-contact-route-v6.js
             node --check scripts/validate-r7-authoritative-runtime-20260828.js
             node scripts/validate-r7-authoritative-runtime-20260828.js
+            node scripts/materialize-global-language-v3.js
+            node scripts/materialize-global-language-v3.js --check
             node scripts/materialize-contact-route-v6.js
             node scripts/materialize-contact-route-v6.js --check
             node scripts/validate-seo-indexability.js
             grep -Fq 'data-qily-contact-route-direct="v13"' index.html
             grep -Fq '/site-contact-route-v1.js?v=20260828-dock-functional-public-v13' index.html
             grep -Fq '/site-public-redline-closure-v1.css?v=20260828-home-dock-v2' index.html
+            grep -Fq '/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7' index.html
             grep -Fq 'data-qily-contact-route-direct="v13"' capabilities/index.html
-            grep -Fq 'data-qily-contact-route-direct="v13"' tools/pure-ddz/index.html
             grep -Fq '/site-public-redline-closure-v1.css?v=20260828-home-dock-v2' tools/pure-ddz/index.html
+            grep -Fq '/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7' tools/pure-ddz/index.html
             ! grep -q '<iframe' contact/index.html
             git diff --check
             if git diff --quiet; then
@@ -88,9 +112,9 @@ jobs:
               exit 0
             fi
             git add -- ':(glob)**/*.html'
-            git commit -m 'fix: materialize R7 Dock V5 and visual V13 [r7-materialized]'
+            git commit -m 'fix: materialize R7 authoritative baseline V13 [r7-materialized]'
             if git push origin HEAD:main; then
-              echo 'R7 V13 published to tracked public HTML.'
+              echo 'R7 V13 authoritative baseline published to tracked public HTML.'
               exit 0
             fi
             echo 'main advanced during publication; retrying from newest main.'
