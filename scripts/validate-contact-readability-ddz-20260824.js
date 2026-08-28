@@ -26,19 +26,29 @@ assert(theme.includes("17:{type:'big-joker',title:'大王',image:assetUrl('avata
 assert(!theme.includes('qily-joker-aircraft')&&!theme.includes('qily-mini-joker-aircraft'),'小王不得叠加第二层飞机图');
 
 const contactRoute=read('site-contact-route-v1.js');
-assert(contactRoute.includes('__qilySiteShellRecoveryV9'),'Site Shell Recovery V9 missing');
+assert(contactRoute.includes('__qilySiteShellRecoveryV10'),'Site Shell Recovery V10 missing');
 assert(contactRoute.includes('.topbar .top-actions :is(#audio-toggle,#help-open,#settings-open)'),'声音/玩法/设置深底白字规则缺失');
 assert(contactRoute.includes('color:#fff!important;-webkit-text-fill-color:#fff!important'),'声音/玩法/设置未锁定高对比白字');
 assert(contactRoute.includes('.table-wrap .me-player{left:50%!important'),'本人牌区未锁定桌面中轴');
 assert(contactRoute.includes('width:min(1180px,calc(100% - 64px))!important'),'本人牌区宽度未覆盖17/20张牌安全区');
 assert(contactRoute.includes('justify-content:safe center!important'),'本人手牌未设置安全居中');
-assert(contactRoute.includes("'#floatDock,.qily-float-dock,.qily-floating-dock{display:none!important"),'浮动模块零闪烁删除规则缺失');
-assert(contactRoute.includes('installRetirementObserver'),'旧脚本重新生成浮动模块的防回退缺失');
-assert(!contactRoute.includes('function ensureDock'),'已废弃浮动模块创建器重新出现');
+assert(contactRoute.includes('#floatDock.qily-float-dock,#floatDock.qily-floating-dock{display:flex!important'),'全站悬浮模块显示恢复规则缺失');
+assert(contactRoute.includes('disconnectRetiredDockObserver'),'旧删除观察器清理缺失');
+assert(!contactRoute.includes('installRetirementObserver'),'全站悬浮模块不得再被删除观察器接管');
 
-const dockRetirement=read('site-dock-share-runtime-v1.js');
-assert(dockRetirement.includes('__qilyFloatingDockRetiredV1'),'浮动模块删除运行时缺失');
-assert(dockRetirement.includes("querySelectorAll('#floatDock,.qily-float-dock,.qily-floating-dock')"),'浮动模块DOM删除契约缺失');
+const dockRuntime=read('site-dock-share-runtime-v1.js');
+assert(dockRuntime.includes('__qilyFloatingDockUnifiedV2'),'全站悬浮模块统一运行时V2缺失');
+assert(dockRuntime.includes("ORDER=['home','top','back','search','current','contact']"),'六按钮顺序契约缺失');
+assert(dockRuntime.includes('qilyDockSemanticUnifiedV2'),'顶部/上一层符号公共样式缺失');
+assert(dockRuntime.includes("normalizeSemanticButton(controls.top,'top',LABELS.top)"),'“顶部”统一符号缺失');
+assert(dockRuntime.includes("normalizeSemanticButton(controls.back,'back',LABELS.back)"),'“上一层”统一符号缺失');
+assert(dockRuntime.includes("w.scrollTo({top:0,left:0,behavior:'smooth'})"),'顶部按钮功能兜底缺失');
+assert(!dockRuntime.includes('function removeDock'),'旧悬浮模块删除逻辑不得返回');
+
+const consistency=read('site-ui-consistency-v1.js');
+assert(consistency.includes('qily-dock-semantic-icon'),'全站公共UI语义符号契约缺失');
+assert(consistency.includes("normalizeDockButton(top,'top','顶部')"),'全站顶部符号归一缺失');
+assert(consistency.includes("normalizeDockButton(back,'back','上一层')"),'全站上一层符号归一缺失');
 
 const qilyTheme=read('tools/pure-ddz/game/js/qilylean-theme.js');
 ['QilyLeanDDZElderV123','王炸'].forEach(marker=>assert(qilyTheme.includes(marker),'斗地主播报契约缺失：'+marker));
@@ -48,4 +58,4 @@ const game=read('tools/pure-ddz/game/js/game.js');
 assert(!game.includes("serviceWorker?.register('./sw.js')"),'斗地主不得请求不存在的 Service Worker');
 assert(game.includes("const VERSION = '1.2.4'"),'斗地主运行时版本不是1.2.4');
 
-process.stdout.write('PASS: DDZ screenshot closure validated: top controls white, hand centered, floating Dock retired, Joker contract intact.\n');
+process.stdout.write('PASS: DDZ screenshot closure validated; functional six-action floating Dock retained with unified top/back semantic symbols.\n');
