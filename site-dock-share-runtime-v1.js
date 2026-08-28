@@ -123,10 +123,7 @@
   function shareCurrent(){var title=d.title||'QilyLean',url=location.href,text=title+'\n'+url;if(navigator.share){navigator.share({title:title,text:title,url:url}).catch(function(error){if(error&&error.name==='AbortError')return;copyText(text).then(function(){toast('网页标题及网址已复制');});});return;}copyText(text).then(function(){toast('网页标题及网址已复制');});}
   function openContactPage(){
     var url='/contact/';
-    var opened=null;
-    try{opened=w.open(url,'_blank','noopener,noreferrer');}catch(error){opened=null;}
-    if(opened){try{opened.opener=null;}catch(error){}return;}
-    location.href=url;
+    try{w.open(url,'_blank','noopener,noreferrer');}catch(error){location.href=url;}
   }
   function runAction(action){
     if(action==='home'){location.href='/';return;}
