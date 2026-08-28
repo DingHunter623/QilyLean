@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V19｜2026-08-28
+/* QilyLean Sitewide Public Baseline Materializer V20｜2026-08-28
  * R8 authoritative baseline:
  * - Chinese remains the authoritative source and default display.
  * - translation assets remain deferred and never block first paint.
  * - site-ui-consistency V7 owns translation baseline + primary-nav current state only.
  * - navigation V45 owns navigation/search only; Dock V5.1 owns Dock behavior/labels.
  * - Contact Route V13.1 and Redline V2 remain protected.
- * - Interaction Semantics V1 distinguishes true route controls from static terminology.
+ * - Interaction Semantics V1.1 distinguishes true route controls from static terminology.
  * - Pure DDZ R8 Closure V128 blocks legacy first-paint flash and centers the local hand.
  */
 const fs=require('fs');
@@ -16,7 +16,7 @@ const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
-const BASELINE_VERSION='20260828-r8-authoritative-v19';
+const BASELINE_VERSION='20260828-r8-authoritative-v20';
 const SAFE_VERSION='20260828-long-page-resilience-v5';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
@@ -39,8 +39,8 @@ const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-
 const STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260828-vi-surface-v3';
 const PUBLIC_REDLINE_CSS='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260828-dock-functional-public-v131';
-const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260828-r8-semantics-v1';
-const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260828-r8-semantics-v1';
+const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260828-r8-semantics-v11';
+const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260828-r8-semantics-v11';
 const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260828-r8-v128';
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
 
@@ -85,8 +85,8 @@ function materialize(source,relative){
     `<script defer data-qily-translation-progress-direct="bilingual-v4" src="${PROGRESS_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
     `<script defer data-qily-content-contrast-direct="v6" src="${CONTENT_CONTRAST_JS}"></script>`,
-    `<script defer data-qily-interaction-semantics-direct="v1" src="${INTERACTION_SEMANTICS_JS}"></script>`,
-    `<script defer data-qily-contact-route-direct="v13" src="${CONTACT_ROUTE_JS}"></script>`
+    `<script defer data-qily-interaction-semantics-direct="v1.1" src="${INTERACTION_SEMANTICS_JS}"></script>`,
+    `<script defer data-qily-contact-route-direct="v13.1" src="${CONTACT_ROUTE_JS}"></script>`
   ].filter(Boolean).join('\n');
   if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);
   return next;
