@@ -1,0 +1,84 @@
+name: Apply Sitewide Screenshot Redline Closure 20260828
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-redline-closure-20260828.yml'
+      - 'scripts/apply-redline-closure-20260828.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-redline-closure-20260828-main
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Validate patcher syntax
+        run: node --check scripts/apply-redline-closure-20260828.js
+
+      - name: Apply screenshot redline closure
+        run: node scripts/apply-redline-closure-20260828.js
+
+      - name: Validate changed runtime and contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tools/pure-ddz/game/js/card-theme.js
+          node --check scripts/materialize-ddz-public-ui-20260824.js
+          node --check scripts/validate-contact-readability-ddz-20260824.js
+          node scripts/validate-contact-readability-ddz-20260824.js
+          grep -Fq '.preview-head .file-meta' site-stability-recovery-v1.css
+          grep -Fq -- '--qily-redline-axis:1560px' site-stability-recovery-v1.css
+          grep -Fq 'background:#0f4b5a!important' site-floating-dock-gold-v1.css
+          grep -Fq '/assets/qilylean-aircraft-hero-latest-q98.webp' capabilities/index.html
+          ! grep -Fq '小王 · C919' capabilities/index.html
+          grep -Fq "16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq "17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}" tools/pure-ddz/game/js/card-theme.js
+          ! grep -Fq 'qily-joker-aircraft' tools/pure-ddz/game/js/card-theme.js
+          grep -Fq '20260828-elder-ux-v127' tools/pure-ddz/index.html
+          grep -Fq 'qilyDdzSlowLoadRevealV127' tools/pure-ddz/index.html
+          grep -Fq 'html:not(.ddz-ready) .game-shell{visibility:visible!important;opacity:1!important}' tools/pure-ddz/index.html
+          git diff --check
+
+      - name: Commit materialized fixes
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Redline closure already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            site-stability-recovery-v1.css \
+            site-content-axis-v1.css \
+            site-floating-dock-gold-v1.css \
+            capabilities/index.html \
+            tools/pure-ddz/index.html \
+            tools/pure-ddz/game/js/card-theme.js \
+            scripts/materialize-ddz-public-ui-20260824.js \
+            scripts/validate-contact-readability-ddz-20260824.js \
+            .github/workflows/verify-pure-ddz-live.yml \
+            .github/workflows/fix-capabilities-visuals-20260824.yml \
+            .github/workflows/verify-pure-ddz-public-startfix.yml \
+            .github/workflows/verify-pure-ddz-capability-showcase.yml \
+            .github/workflows/sync-pure-ddz-product-overview.yml
+          git commit -m 'fix: close sitewide screenshot redline defects'
+          git pull --rebase origin main
+          git push origin main
