@@ -81,8 +81,8 @@ jobs:
           set -euo pipefail
           node --check scripts/enforce-aircraft-home-hero.js
           node scripts/enforce-aircraft-home-hero.js
-          grep -q 'qilylean-aircraft-hero-latest-q98.webp?v=20260827-home-original-approved-v3' index.html
-          grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260827-home-original-approved-v3' index.html
+          grep -q 'qilylean-aircraft-hero-latest-q98.webp?v=20260829-official-qr-v4' index.html
+          grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260829-official-qr-v4' index.html
           node scripts/site-regression-guard-aircraft-hero.js
 
       - name: Guard sitewide floating dock gold identity

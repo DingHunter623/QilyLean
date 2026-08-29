@@ -1,4 +1,4 @@
-name: Publish Sitewide V26 Experience Closure
+name: Publish Sitewide V27 Visual Closure
 
 on:
   push:
@@ -7,6 +7,8 @@ on:
       - 'scripts/materialize-global-language-v3.js'
       - 'scripts/materialize-contact-route-v6.js'
       - 'scripts/validate-r7-authoritative-runtime-20260828.js'
+      - 'scripts/validate-sitewide-visual-closure-v27.js'
+      - 'site-visual-system-v2.css'
       - 'site-public-redline-closure-v1.css'
       - 'site-contact-route-v1.js'
       - 'site-dock-share-runtime-v1.js'
@@ -19,6 +21,11 @@ on:
       - 'site-interaction-semantics-v1.js'
       - 'tools/pure-ddz/game/css/r8-closure-v128.css'
       - 'capabilities/index.html'
+      - 'cooperation/index.html'
+      - 'lean-production/index.html'
+      - 'trust/index.html'
+      - 'assets/qilylean-aircraft-hero-approved-20260826.png'
+      - 'assets/qilylean-aircraft-hero-latest-q98.webp'
       - 'tools/pure-ddz/index.html'
       - 'tools/pure-ddz/game/js/game.js'
       - '.github/workflows/publish-visual-regression-contact-v1.yml'
@@ -28,12 +35,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: sitewide-v26-experience-main
+  group: sitewide-v27-visual-main
   cancel-in-progress: true
 
 jobs:
   publish:
-    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[r10-materialized]')
+    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[v27-materialized]')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -45,13 +52,14 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate V26 authoritative source contracts
+      - name: Validate V27 authoritative source contracts
         shell: bash
         run: |
           set -euo pipefail
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/materialize-contact-route-v6.js
           node --check scripts/validate-r7-authoritative-runtime-20260828.js
+          node --check scripts/validate-sitewide-visual-closure-v27.js
           node --check site-contact-route-v1.js
           node --check site-dock-share-runtime-v1.js
           node --check site-ui-consistency-v1.js
@@ -59,7 +67,8 @@ jobs:
           node --check site-navigation.js
           node --check site-interaction-semantics-v1.js
           node scripts/validate-r7-authoritative-runtime-20260828.js
-          grep -Fq "const BASELINE_VERSION='20260829-sitewide-experience-v26'" scripts/materialize-global-language-v3.js
+          node scripts/validate-sitewide-visual-closure-v27.js
+          grep -Fq "const BASELINE_VERSION='20260829-sitewide-visual-closure-v27'" scripts/materialize-global-language-v3.js
           grep -Fq 'QilyLean Interaction Semantics V1.4' site-interaction-semantics-v1.css
           grep -Fq '__qilyInteractionSemanticsV14' site-interaction-semantics-v1.js
           grep -Fq 'qily-primary-nav-scroll-rail' site-interaction-semantics-v1.js
@@ -73,14 +82,14 @@ jobs:
           ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-dock-share-runtime-v1.js
           ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-navigation.js
 
-      - name: Materialize V26 to every tracked public HTML page
+      - name: Materialize V27 to every tracked public HTML page
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
           for attempt in 1 2 3 4; do
-            echo "V26 publish attempt ${attempt}/4"
+            echo "V27 publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
             node scripts/validate-r7-authoritative-runtime-20260828.js
@@ -97,17 +106,17 @@ jobs:
             grep -Fq 'data-qily-interaction-semantics-direct="v1.4"' qilylean/daily/2026-07-29.html
             git diff --check
             if git diff --quiet; then
-              echo 'V26 public baseline already current on latest main.'
+              echo 'V27 public baseline already current on latest main.'
               exit 0
             fi
             git add -- ':(glob)**/*.html'
-            git commit -m 'fix: materialize V26 experience closure [v26-materialized]'
+            git commit -m 'fix: materialize V27 visual closure [v27-materialized]'
             if git push origin HEAD:main; then
-              echo 'V26 authoritative baseline published to tracked public HTML.'
+              echo 'V27 authoritative baseline published to tracked public HTML.'
               exit 0
             fi
             echo 'main advanced during publication; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish V26 after retries.'
+          echo 'Unable to publish V27 after retries.'
           exit 1

@@ -1,4 +1,4 @@
-name: Verify Pure DDZ Mobile Landscape Compatibility
+name: Verify Pure DDZ Mobile Compatibility
 
 on:
   pull_request:
@@ -33,26 +33,28 @@ jobs:
           grep -q 'avatar-king.webp' tools/pure-ddz/game/js/card-theme.js
           grep -q 'airplane-joker.png' tools/pure-ddz/game/js/card-theme.js
           grep -q "const chain=\['js/qilylean-theme.js','js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'\]" tools/pure-ddz/index.html
-          grep -q '20260828-elder-ux-v123' tools/pure-ddz/index.html
-          grep -q 'name="screen-orientation" content="landscape"' tools/pure-ddz/index.html
-          grep -q 'name="x5-orientation" content="landscape"' tools/pure-ddz/index.html
+          grep -q '20260829-ddz-mobile-ready-v132' tools/pure-ddz/index.html
+          ! grep -q 'name="screen-orientation"' tools/pure-ddz/index.html
+          ! grep -q 'name="x5-orientation"' tools/pure-ddz/index.html
           grep -q 'Android版暂未开放' tools/pure-ddz/index.html
-          grep -q "screen.orientation.lock('landscape')" tools/pure-ddz/game/js/visual-v120.js
+          grep -q "version:'1.2.3-portrait-mobile-ready'" tools/pure-ddz/game/js/visual-v120.js
+          ! grep -q "document.addEventListener('click',requestLandscape" tools/pure-ddz/game/js/visual-v120.js
           grep -q 'width:80vw' tools/pure-ddz/game/css/card-comfort-v122.css
           grep -q 'font-size:38px' tools/pure-ddz/game/css/card-comfort-v122.css
           grep -q 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
           test -s tools/pure-ddz/game/assets/pure-ddz/avatar-king.webp
           test -s tools/pure-ddz/game/assets/pure-ddz/airplane-joker.png
 
-      - name: Verify deployed QilyLean elder mobile-landscape release
+      - name: Verify deployed QilyLean portrait-ready mobile release
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           ok=0
           for i in {1..48}; do
-            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v123' -o /tmp/page.html \
-              && grep -q '20260828-elder-ux-v123' /tmp/page.html \
-              && grep -q 'name="x5-orientation" content="landscape"' /tmp/page.html \
+            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260829-v132' -o /tmp/page.html \
+              && grep -q '20260829-ddz-mobile-ready-v132' /tmp/page.html \
+              && ! grep -q 'name="screen-orientation"' /tmp/page.html \
+              && ! grep -q 'name="x5-orientation"' /tmp/page.html \
               && grep -q 'Android版暂未开放' /tmp/page.html; then
               ok=1
               break
@@ -64,7 +66,7 @@ jobs:
           curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v123' -o /tmp/card-theme.js
           curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/ai-expert.js?verify=20260828-v123' -o /tmp/ai-expert.js
           curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v123' -o /tmp/game.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260828-v123' -o /tmp/visual.js
+          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260829-v132' -o /tmp/visual.js
           curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/card-comfort-v122.css?verify=20260828-v123' -o /tmp/comfort.css
           node --check /tmp/qily-theme.js
           node --check /tmp/card-theme.js
@@ -73,8 +75,9 @@ jobs:
           node --check /tmp/visual.js
           grep -q 'PublicCardMemory' /tmp/ai-expert.js
           grep -q "difficulty:'expert'" /tmp/game.js
-          grep -q "screen.orientation.lock('landscape')" /tmp/visual.js
+          grep -q "version:'1.2.3-portrait-mobile-ready'" /tmp/visual.js
+          ! grep -q "document.addEventListener('click',requestLandscape" /tmp/visual.js
           grep -q 'width:80vw' /tmp/comfort.css
           grep -q 'font-size:38px' /tmp/comfort.css
           grep -q 'QilyLeanDDZElderV123' /tmp/qily-theme.js
-          echo 'PURE_DDZ_MOBILE_ELDER_V123_COMPATIBILITY_OK'
+          echo 'PURE_DDZ_MOBILE_V132_COMPATIBILITY_OK'

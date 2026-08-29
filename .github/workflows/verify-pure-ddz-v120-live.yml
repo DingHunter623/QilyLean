@@ -18,17 +18,17 @@ jobs:
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-      - name: Verify repository v1.2.3 elder visual contract
+      - name: Verify repository V132 portrait-ready visual contract
         run: |
           set -euo pipefail
           node --check tools/pure-ddz/game/js/qilylean-theme.js
           node --check tools/pure-ddz/game/js/card-theme.js
           node --check tools/pure-ddz/game/js/visual-v120.js
-          grep -q '20260828-elder-ux-v123' tools/pure-ddz/index.html
+          grep -q '20260829-ddz-mobile-ready-v132' tools/pure-ddz/index.html
           ! grep -q "loadStyle('css/card-size-v2.css')" tools/pure-ddz/index.html
           grep -q "loadStyle('css/card-comfort-v122.css')" tools/pure-ddz/index.html
-          grep -q 'name="screen-orientation" content="landscape"' tools/pure-ddz/index.html
-          grep -q 'name="x5-orientation" content="landscape"' tools/pure-ddz/index.html
+          ! grep -q 'name="screen-orientation"' tools/pure-ddz/index.html
+          ! grep -q 'name="x5-orientation"' tools/pure-ddz/index.html
           grep -q '>出牌</button>' tools/pure-ddz/index.html
           grep -q 'v120-play-stage' tools/pure-ddz/game/css/visual-v120.css
           grep -q 'width:80vw' tools/pure-ddz/game/css/card-comfort-v122.css
@@ -41,20 +41,22 @@ jobs:
           grep -q "VISUAL_HOLD_MS=900" tools/pure-ddz/game/js/visual-v120.js
           grep -q 'requestLandscape' tools/pure-ddz/game/js/visual-v120.js
           grep -q "screen.orientation.lock('landscape')" tools/pure-ddz/game/js/visual-v120.js
-          grep -q '手机默认横屏牌桌' tools/pure-ddz/game/js/visual-v120.js
+          grep -q "version:'1.2.3-portrait-mobile-ready'" tools/pure-ddz/game/js/visual-v120.js
+          ! grep -q "document.addEventListener('click',requestLandscape" tools/pure-ddz/game/js/visual-v120.js
           grep -q 'visualQueue' tools/pure-ddz/game/js/visual-v120.js
           grep -q 'Legacy Manual Only' .github/workflows/vendor-pure-ddz-v103-20260823.yml
           git diff --check
 
-      - name: Verify deployed v1.2.3 elder UX from public Internet
+      - name: Verify deployed V132 portrait-ready UX from public Internet
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           ok=0
           for i in {1..48}; do
-            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v123' -o /tmp/page.html \
-              && grep -q '20260828-elder-ux-v123' /tmp/page.html \
-              && grep -q 'name="x5-orientation" content="landscape"' /tmp/page.html \
+            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260829-v132' -o /tmp/page.html \
+              && grep -q '20260829-ddz-mobile-ready-v132' /tmp/page.html \
+              && ! grep -q 'name="screen-orientation"' /tmp/page.html \
+              && ! grep -q 'name="x5-orientation"' /tmp/page.html \
               && grep -q '>出牌</button>' /tmp/page.html; then
               ok=1
               break
@@ -79,6 +81,7 @@ jobs:
           grep -q '王炸' /tmp/qily-theme.js
           grep -q 'VISUAL_HOLD_MS=900' /tmp/visual.js
           grep -q 'requestLandscape' /tmp/visual.js
-          grep -q "screen.orientation.lock('landscape')" /tmp/visual.js
+          grep -q "version:'1.2.3-portrait-mobile-ready'" /tmp/visual.js
+          ! grep -q "document.addEventListener('click',requestLandscape" /tmp/visual.js
           grep -q 'visualQueue' /tmp/visual.js
-          echo 'PURE_DDZ_V123_ELDER_PUBLIC_OK'
+          echo 'PURE_DDZ_V132_PORTRAIT_READY_PUBLIC_OK'

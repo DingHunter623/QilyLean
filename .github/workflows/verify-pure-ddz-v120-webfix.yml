@@ -39,8 +39,11 @@ jobs:
           ! grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' tools/pure-ddz/index.html site-ui-consistency-v1.js
           grep -q 'Android版暂未开放' tools/pure-ddz/index.html
           grep -q '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
-          grep -q '20260828-elder-ux-v123' tools/pure-ddz/index.html
-          grep -q "screen.orientation.lock('landscape')" tools/pure-ddz/game/js/visual-v120.js
+          grep -q '20260829-ddz-mobile-ready-v132' tools/pure-ddz/index.html
+          ! grep -q 'name="screen-orientation"' tools/pure-ddz/index.html
+          ! grep -q 'name="x5-orientation"' tools/pure-ddz/index.html
+          grep -q "version:'1.2.3-portrait-mobile-ready'" tools/pure-ddz/game/js/visual-v120.js
+          ! grep -q "document.addEventListener('click',requestLandscape" tools/pure-ddz/game/js/visual-v120.js
           grep -q 'width:80vw' tools/pure-ddz/game/css/card-comfort-v122.css
           grep -q 'font-size:38px' tools/pure-ddz/game/css/card-comfort-v122.css
           grep -q 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
@@ -51,11 +54,13 @@ jobs:
           set -euo pipefail
           ok=0
           for i in {1..60}; do
-            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v123' -o /tmp/page.html \
+            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260829-v132' -o /tmp/page.html \
               && grep -q '启力精益斗地主' /tmp/page.html \
               && grep -q '>启力提示</button>' /tmp/page.html \
               && grep -q 'Android版暂未开放' /tmp/page.html \
-              && grep -q '20260828-elder-ux-v123' /tmp/page.html \
+              && grep -q '20260829-ddz-mobile-ready-v132' /tmp/page.html \
+              && ! grep -q 'name="screen-orientation"' /tmp/page.html \
+              && ! grep -q 'name="x5-orientation"' /tmp/page.html \
               && ! grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' /tmp/page.html; then
               ok=1
               break
@@ -83,4 +88,5 @@ jobs:
           grep -q 'v120-scroll-cue' /tmp/visual.css
           grep -q 'width:80vw' /tmp/comfort.css
           grep -q 'QilyLeanDDZElderV123' /tmp/qily-theme.js
-          echo 'PURE_DDZ_ELDER_WEBFIX_PUBLIC_OK'
+          grep -q "version:'1.2.3-portrait-mobile-ready'" /tmp/visual.js
+          echo 'PURE_DDZ_V132_WEBFIX_PUBLIC_OK'

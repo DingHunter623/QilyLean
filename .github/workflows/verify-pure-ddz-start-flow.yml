@@ -26,7 +26,9 @@ jobs:
           grep -q "player===1?'左家':'右家'" tools/pure-ddz/game/js/visual-v120.js
           grep -q "function positionClass" tools/pure-ddz/game/js/visual-v120.js
           ! grep -q "table.appendChild(strip)" tools/pure-ddz/game/js/qilylean-theme.js
-          grep -q "20260828-elder-ux-v123" tools/pure-ddz/index.html
+          grep -q "20260829-ddz-mobile-ready-v132" tools/pure-ddz/index.html
+          ! grep -q 'name="screen-orientation"' tools/pure-ddz/index.html
+          ! grep -q 'name="x5-orientation"' tools/pure-ddz/index.html
           grep -q 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
           grep -q 'width:80vw' tools/pure-ddz/game/css/card-comfort-v122.css
           grep -q "html:not(.ddz-ready) .game-shell" tools/pure-ddz/index.html
@@ -47,7 +49,7 @@ jobs:
           const { chromium } = require('@playwright/test');
           (async()=>{
             const browser=await chromium.launch({headless:true});
-            for (const viewport of [{width:1440,height:900},{width:844,height:390}]) {
+            for (const viewport of [{width:1440,height:900},{width:390,height:844}]) {
               const page=await browser.newPage({viewport});
               await page.addInitScript(()=>localStorage.setItem('qily_global_language_v3','zh-CN'));
               const dialogs=[]; const pageErrors=[];

@@ -46,8 +46,8 @@ assert(header.includes('overflow-x:auto!important')&&header.includes('overflow-x
 assert(header.includes('white-space:nowrap!important'),'一级导航文字完整显示契约缺失');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
-assert(materializer.includes("BASELINE_VERSION='20260829-sitewide-experience-v26'"),'Visual System V2 全站物化基线缺失');
-assert(materializer.includes("VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260829-visual-system-v2-r3'"),'Visual System V2 r3 未进入全站物化');
+assert(materializer.includes("BASELINE_VERSION='20260829-sitewide-visual-closure-v27'"),'Visual System V2 全站物化基线缺失');
+assert(materializer.includes("VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'"),'Visual System V2 r7 未进入全站物化');
 assert(materializer.includes('20260829-authority-v54'),'Dock V5.4 未进入全站物化');
 assert(materializer.includes('20260829-dock-functional-public-v134'),'Contact V13.4 未进入全站物化');
 assert(materializer.includes('20260829-r11-semantics-v14'),'Semantics V1.4 未进入全站物化');

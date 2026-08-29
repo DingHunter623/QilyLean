@@ -356,6 +356,117 @@ html body #floatDock.qily-float-dock .qily-float-btn{
   }
 }
 
+/* 15 | V27 public visual closure: common geometry from annotated live-page review. */
+/* Keep all navigation and translation-control borders inside the scroll viewport. */
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
+:is(nav.site-nav,nav.qily-global-nav,nav.nav){
+  align-items:flex-start!important;
+  padding-top:4px!important;
+  padding-bottom:18px!important;
+}
+html body .qily-web-translate{
+  align-self:flex-start!important;
+  flex:0 0 auto!important;
+  box-sizing:border-box!important;
+  min-height:44px!important;
+  margin:0 10px 4px 6px!important;
+  border:2px solid var(--qv2-forest-2)!important;
+  overflow:visible!important;
+}
+html body .qily-web-translate__select{
+  box-sizing:border-box!important;
+  min-height:36px!important;
+  border:1.5px solid #b9d9d4!important;
+  background-clip:padding-box!important;
+}
+
+/* Six-step operating axis: connectors own the gap and always paint above card surfaces. */
+html body .qily-system-axis__steps{
+  gap:18px!important;
+  overflow:visible!important;
+}
+html body .qily-system-axis__step{
+  position:relative!important;
+  overflow:visible!important;
+  isolation:isolate;
+}
+html body .qily-system-axis__step:not(:last-child)::after{
+  right:-16px!important;
+  z-index:8!important;
+  color:var(--qv2-gold)!important;
+  text-shadow:0 1px 0 #fff,0 0 5px #fff!important;
+  pointer-events:none!important;
+}
+
+/* Lean-production hero and its authority strip share the same governed content axis. */
+html:root:root:root body main>section{
+  padding-left:var(--qv2-gutter)!important;
+  padding-right:var(--qv2-gutter)!important;
+}
+html body .hero .hero-inner,
+html body main>.section>.inner{
+  width:min(var(--qv2-axis),100%)!important;
+  max-width:var(--qv2-axis)!important;
+  margin-inline:auto!important;
+  box-sizing:border-box!important;
+}
+html body .hero + .authority-strip{
+  width:min(var(--qv2-axis),calc(100% - var(--qv2-gutter) - var(--qv2-gutter)))!important;
+  max-width:var(--qv2-axis)!important;
+  margin-inline:auto!important;
+  box-sizing:border-box!important;
+}
+
+/* Cooperation boundaries are decision content, not fine print. */
+html:root body main #boundary .boundary-service-card h3{font-size:25px!important;line-height:1.28!important}
+html:root body main #boundary .boundary-type{font-size:14.5px!important;line-height:1.4!important}
+html:root body main #boundary .boundary-split strong{font-size:18px!important;line-height:1.45!important}
+html:root body main #boundary .boundary-split li{font-size:17.5px!important;line-height:1.72!important}
+html:root body main #boundary .boundary-note{font-size:17px!important;line-height:1.68!important}
+
+/* Static labels must not simulate a link. Contact links retain function without label underlines. */
+html body main :is(.tag,.chip,.pill,.badge,.keyword):not(a[href]):not(button):not([role="button"]),
+html body main :is(.tag,.chip,.pill,.badge,.keyword)[data-qily-interaction="static"]{
+  cursor:default!important;
+  transition:none!important;
+}
+@media (hover:hover) and (pointer:fine){
+  html body main :is(.tag,.chip,.pill,.badge,.keyword):not(a[href]):not(button):not([role="button"]):hover,
+  html body main :is(.tag,.chip,.pill,.badge,.keyword)[data-qily-interaction="static"]:hover{
+    transform:none!important;
+    filter:none!important;
+    box-shadow:none!important;
+  }
+}
+html:root:root body section#contact .trust-contact>a[href],
+html:root:root body section#contact .trust-contact>a[href]:is(:hover,:focus-visible,:active){
+  text-decoration:none!important;
+  text-decoration-line:none!important;
+}
+
+/* Evidence summaries can vary in length; their dashed evidence rails still share one baseline. */
+html body #evidence-levels .trust-levels{align-items:stretch!important}
+html body #evidence-levels .trust-level{
+  display:flex!important;
+  flex-direction:column!important;
+  height:100%!important;
+}
+html:root body #evidence-levels .trust-level>span{min-height:calc(1.65em * 4)!important}
+html:root body #evidence-levels .trust-level .trust-evidence-links{margin-top:12px!important}
+
+@media (max-width:1179px){
+  html:root body main #boundary .boundary-split li{font-size:17px!important}
+  html:root body main #boundary .boundary-note{font-size:16.5px!important}
+}
+@media (max-width:767px){
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav){padding-top:4px!important;padding-bottom:16px!important}
+  html body .qily-web-translate{margin-right:6px!important}
+  html:root body main #boundary .boundary-split li{font-size:16.5px!important;line-height:1.7!important}
+  html:root body main #boundary .boundary-note{font-size:16px!important}
+  html:root body #evidence-levels .trust-level>span{min-height:0!important}
+}
+
 @media (prefers-reduced-motion:reduce){
   html body *,html body *::before,html body *::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important}
 }

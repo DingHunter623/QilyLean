@@ -11,7 +11,7 @@ const route=read('site-contact-route-v1.js');must(route,'Contact Route V13.4','C
 const css=read('site-interaction-semantics-v1.css'),js=read('site-interaction-semantics-v1.js');must(css,'Interaction Semantics V1.4','Semantics');must(css,'.qily-primary-nav-scroll-rail','Persistent rail');must(css,'.brief-action-strip>span','Static brief tokens');forbid(css,'content:"回\\A顶部"','Duplicate top');forbid(css,'content:"回\\A上一层"','Duplicate back');must(css,'.overview-card>.tag','Waste number contrast');must(js,'__qilyInteractionSemanticsV14','Semantics runtime');must(js,'qily-primary-nav-scroll-thumb','Rail runtime');must(js,'PROJECT_EVIDENCE','Evidence map');
 must(read('site-early-career-history-v1.css'),'--qily-career-anchor-offset','Career anchor clearance');
 const ddz=read('tools/pure-ddz/game/css/r8-closure-v128.css');must(ddz,'Pure DDZ R12 Closure V132','DDZ R12');must(ddz,'.topbar .brand *','Brand stability');must(ddz,'justify-content:safe center!important','Safe card center');forbid(ddz,'width:max-content!important','Old hand strategy');
-const mat=read('scripts/materialize-global-language-v3.js');must(mat,"const BASELINE_VERSION='20260829-sitewide-experience-v26'",'V26');must(mat,'20260829-dock-functional-public-v134','Contact V134 materializer');
+const mat=read('scripts/materialize-global-language-v3.js');must(mat,"const BASELINE_VERSION='20260829-sitewide-visual-closure-v27'",'V27');must(mat,'20260829-dock-functional-public-v134','Contact V134 materializer');
 let pages=0,nav=0,shell=0;
 for(const file of htmlFiles()){
   const html=read(file);if(!/<\/head>/i.test(html)||ownership(file))continue;pages++;

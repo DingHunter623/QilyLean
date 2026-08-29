@@ -33,11 +33,12 @@ jobs:
           grep -Fq 'id="start"' tools/pure-ddz/index.html
           grep -Fq 'id="hand"' tools/pure-ddz/index.html
           grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
-          grep -Fq '20260828-elder-ux-v127' tools/pure-ddz/index.html
-          grep -Fq 'name="screen-orientation" content="landscape"' tools/pure-ddz/index.html
-          grep -Fq 'name="x5-orientation" content="landscape"' tools/pure-ddz/index.html
+          grep -Fq '20260829-ddz-mobile-ready-v132' tools/pure-ddz/index.html
+          ! grep -Fq 'name="screen-orientation"' tools/pure-ddz/index.html
+          ! grep -Fq 'name="x5-orientation"' tools/pure-ddz/index.html
           grep -Fq 'Android版暂未开放' tools/pure-ddz/index.html
-          grep -Fq "screen.orientation.lock('landscape')" tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq "version:'1.2.3-portrait-mobile-ready'" tools/pure-ddz/game/js/visual-v120.js
+          ! grep -Fq "document.addEventListener('click',requestLandscape" tools/pure-ddz/game/js/visual-v120.js
           grep -Fq 'grid-template-areas:"brand score translate" "actions actions actions"' tools/pure-ddz/game/css/card-comfort-v122.css
           grep -Fq '.bottom-cards .mini-card{min-width:98px' tools/pure-ddz/game/css/card-comfort-v122.css
           grep -Fq '.v120-play-card{flex-basis:124px' tools/pure-ddz/game/css/card-comfort-v122.css
@@ -76,9 +77,10 @@ jobs:
 
           ok=0
           for i in {1..48}; do
-            if curl -fsSL --retry 2 --retry-delay 2 --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260828-elder-v127' -o /tmp/page.html \
-              && grep -Fq '20260828-elder-ux-v127' /tmp/page.html \
-              && grep -Fq 'name="screen-orientation" content="landscape"' /tmp/page.html \
+            if curl -fsSL --retry 2 --retry-delay 2 --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260829-v132' -o /tmp/page.html \
+              && grep -Fq '20260829-ddz-mobile-ready-v132' /tmp/page.html \
+              && ! grep -Fq 'name="screen-orientation"' /tmp/page.html \
+              && ! grep -Fq 'name="x5-orientation"' /tmp/page.html \
               && grep -Fq 'Android版暂未开放' /tmp/page.html; then
               ok=1
               break
@@ -108,4 +110,5 @@ jobs:
           grep -Fq 'flex-basis:104px' /tmp/card-theme.js
           grep -Fq 'min-width:0!important' /tmp/card-theme.js
           grep -Fq 'QilyLeanDDZElderV123' /tmp/qily-theme.js
-          echo 'PURE_DDZ_ELDER_V127_LIVE_OK'
+          grep -Fq "version:'1.2.3-portrait-mobile-ready'" /tmp/visual.js
+          echo 'PURE_DDZ_V132_LIVE_OK'

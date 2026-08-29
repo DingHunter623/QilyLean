@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V26｜2026-08-29
- * R12 sitewide experience closure:
+/* QilyLean Sitewide Public Baseline Materializer V27｜2026-08-29
+ * R13 sitewide visual closure:
  * - Chinese remains the authoritative source and default display.
  * - translation assets remain deferred and never block first paint.
  * - Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.4 owns interaction meaning.
@@ -16,7 +16,7 @@ const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
-const BASELINE_VERSION='20260829-sitewide-experience-v26';
+const BASELINE_VERSION='20260829-sitewide-visual-closure-v27';
 const SAFE_VERSION='20260829-first-readable-v7';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
@@ -38,7 +38,7 @@ const UNIFIED_VISUAL_CSS='/site-unified-visual-governance-v1.css?v=20260826-cont
 const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-screenshot-closure-v2';
 const STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260828-vi-surface-v3';
 const PUBLIC_REDLINE_CSS='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
-const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260829-visual-system-v2-r3';
+const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260829-r11-semantics-v14';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260829-r11-semantics-v14';

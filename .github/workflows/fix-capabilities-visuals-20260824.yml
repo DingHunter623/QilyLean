@@ -67,14 +67,16 @@ jobs:
           grep -q 'data-app-share-qr="qilyleanHome"' capabilities/index.html
           grep -q 'data-app-share-link="qilyleanHome"' capabilities/index.html
           grep -q '/app-download-share-v1.js?v=20260824-capability-home-actions-v2' capabilities/index.html
-          grep -Fq "const version='20260828-elder-ux-v127';" tools/pure-ddz/index.html
-          grep -Fq "window.__PURE_DDZ_CACHE_KEY__||'20260828-elder-ux-v127'" tools/pure-ddz/index.html
+          grep -Fq "const version='20260829-ddz-mobile-ready-v132';" tools/pure-ddz/index.html
+          grep -Fq "window.__PURE_DDZ_CACHE_KEY__||'20260829-ddz-mobile-ready-v132'" tools/pure-ddz/index.html
           grep -Fq "loadStyle('css/card-comfort-v122.css')" tools/pure-ddz/index.html
-          grep -Fq 'name="screen-orientation" content="landscape"' tools/pure-ddz/index.html
+          ! grep -Fq 'name="screen-orientation"' tools/pure-ddz/index.html
+          ! grep -Fq 'name="x5-orientation"' tools/pure-ddz/index.html
           grep -Fq 'MicroMessenger' tools/pure-ddz/index.html
           grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
           grep -Fq 'IS_WECHAT_WEBVIEW' tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq "screen.orientation.lock('landscape')" tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq "version:'1.2.3-portrait-mobile-ready'" tools/pure-ddz/game/js/visual-v120.js
+          ! grep -Fq "document.addEventListener('click',requestLandscape" tools/pure-ddz/game/js/visual-v120.js
           grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/game/js/card-theme.js
           grep -Fq 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
           grep -Fq "const VERSION = '1.2.4'" tools/pure-ddz/game/js/game.js
