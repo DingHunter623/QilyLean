@@ -116,8 +116,17 @@ html body main :is(.module-card,.paper-card,.project-card,.project-list-card,.ca
   box-shadow:var(--qv2-shadow-sm)!important;
   background:var(--qv2-surface)!important;
 }
-html body main :is(.module-card,.paper-card,.project-card,.project-list-card,.career-full-card,.service-card,.resource-card,.knowledge-card,.trust-card,.qily-value-card,.qily-ia-card,.panel):hover{
-  box-shadow:var(--qv2-shadow-md)!important;
+/* Only real navigation cards receive elevation feedback. Static cards stay visually stable. */
+@media (hover:hover) and (pointer:fine){
+  html body main :is(
+    a.module-card[href],a.paper-card[href],a.project-card[href],a.project-list-card[href],
+    a.career-full-card[href],a.service-card[href],a.resource-card[href],a.knowledge-card[href],
+    a.trust-card[href],a.qily-value-card[href],a.qily-ia-card[href],
+    [role="link"].module-card,[role="link"].paper-card,[role="link"].project-card,
+    [role="link"].project-list-card,[role="link"].qily-value-card,[role="link"].qily-ia-card
+  ):hover{
+    box-shadow:var(--qv2-shadow-md)!important;
+  }
 }
 html body main :is(.module-grid,.paper-grid,.project-grid,.project-list-grid,.career-full-grid,.service-grid,.qily-ia-grid,.qily-six-grid,.qily-proof-strip,.qily-principle-grid,.qily-secondary-links){
   gap:clamp(14px,1.35vw,22px)!important;
