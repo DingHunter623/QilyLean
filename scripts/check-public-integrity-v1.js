@@ -37,7 +37,7 @@ if (!certificateGuard.includes('GPT-LE-2025-0422')) fail('Certificate fact runti
 if (!certificateGuard.includes('不表述为 OpenAI 官方颁发、认证或授权')) fail('Certificate OpenAI boundary missing');
 if (!integrity.includes('data-qily-certificate-verification')) fail('Certificate verification matrix runtime missing');
 if (!integrity.includes('/qilylean/site-data.json')) fail('Terminology live source binding missing');
-if (!navigation.includes('/site-integrity-hotfix-v1.js?v=20260824-public-integrity-v1')) fail('Sitewide integrity runtime is not loaded');
+if (!navigation.includes('/site-integrity-hotfix-v1.js?v=20260826-public-integrity-v2')) fail('Sitewide integrity runtime is not loaded');
 if (!trust.includes('搜索引擎外部摘要的刷新时间仍由各搜索平台决定')) fail('External search freshness boundary missing');
 
 console.log(JSON.stringify({ok:true,terminologyTotal:total,terminologyLiveBound:true,certificateFactsRestored:true,certificateOpenAIBoundary:true,externalSearchBoundary:true}, null, 2));

@@ -52,7 +52,7 @@ jobs:
           SOURCE='官网首图.png'
           PNG='assets/qilylean-aircraft-hero-approved-20260826.png'
           WEBP='assets/qilylean-aircraft-hero-latest-q98.webp'
-          EXPECTED_BLOB='e67ad0ac7881da8e0fdbf6041fb9858882204ac4'
+          EXPECTED_BLOB='85208c107a39724b97a07e05819ed88e6cfcdc90'
           test -f "$SOURCE"
           ACTUAL_BLOB="$(git hash-object "$SOURCE")"
           test "$ACTUAL_BLOB" = "$EXPECTED_BLOB"

@@ -37,7 +37,7 @@ jobs:
           set -euo pipefail
           SOURCE='官网首图.png'
           TARGET='assets/qilylean-aircraft-hero-approved-20260826.png'
-          EXPECTED_BLOB='e67ad0ac7881da8e0fdbf6041fb9858882204ac4'
+          EXPECTED_BLOB='85208c107a39724b97a07e05819ed88e6cfcdc90'
 
           test -f "$SOURCE"
           ACTUAL_BLOB="$(git hash-object "$SOURCE")"
@@ -69,7 +69,7 @@ jobs:
           node scripts/enforce-aircraft-home-hero.js
           node --check scripts/site-regression-guard-aircraft-hero.js
           node scripts/site-regression-guard-aircraft-hero.js
-          grep -q '/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260827-home-original-approved-v2' index.html
+          grep -q '/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260829-official-qr-v4' index.html
           ! sed -n '/QILY-AIRCRAFT-BRAND-HERO-V1:START/,/QILY-AIRCRAFT-BRAND-HERO-V1:END/p' index.html | grep -Eq '<picture|<source|srcset=|data-src=|data-srcset='
           git diff --check
 
