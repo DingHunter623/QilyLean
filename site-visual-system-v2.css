@@ -1,0 +1,345 @@
+/* QilyLean Visual System V2 | 2026-08-29
+ * Scope: visual presentation only. No business logic, SEO, content taxonomy or feature behavior.
+ * Authority order: tokens -> layout -> typography -> components -> templates -> responsive exceptions.
+ * Breakpoints: Wide Desktop >=1440 | Compact Desktop 1180-1439 | Tablet 768-1179 | Mobile <=767.
+ */
+
+:root{
+  /* Brand */
+  --qv2-forest:#0f4b5a;
+  --qv2-forest-2:#12606f;
+  --qv2-deep:#073c47;
+  --qv2-teal:#178b94;
+  --qv2-gold:#caa15f;
+  --qv2-gold-soft:#ffe39b;
+  --qv2-ink:#17322d;
+  --qv2-copy:#526967;
+  --qv2-muted:#607574;
+  --qv2-line:#d5e4e3;
+  --qv2-paper:#eef7f5;
+  --qv2-surface:#fff;
+  --qv2-alt:#f4faf8;
+  --qv2-dark:#102a2f;
+
+  /* Geometry */
+  --qv2-axis:1560px;
+  --qv2-gutter:clamp(20px,2.4vw,56px);
+  --qv2-gap-xs:8px;
+  --qv2-gap-sm:12px;
+  --qv2-gap-md:18px;
+  --qv2-gap-lg:28px;
+  --qv2-gap-xl:clamp(36px,4vw,64px);
+  --qv2-section-y:clamp(54px,5.4vw,88px);
+  --qv2-radius-sm:10px;
+  --qv2-radius-md:14px;
+  --qv2-radius-lg:20px;
+  --qv2-shadow-sm:0 7px 20px rgba(15,75,90,.08);
+  --qv2-shadow-md:0 14px 34px rgba(15,75,90,.12);
+  --qv2-shadow-lg:0 24px 64px rgba(7,60,71,.18);
+
+  /* Type */
+  --qv2-font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
+  --qv2-h1:clamp(44px,4vw,66px);
+  --qv2-h2:clamp(31px,2.7vw,45px);
+  --qv2-h3:clamp(22px,1.5vw,27px);
+  --qv2-body:18.5px;
+  --qv2-lead:clamp(20px,1.3vw,23px);
+  --qv2-note:15.5px;
+  --qv2-nav:20px;
+  --qv2-line-body:1.7;
+
+  /* Density */
+  --qv2-density-hero:clamp(34px,4vw,64px);
+  --qv2-density-standard:clamp(22px,2vw,32px);
+  --qv2-density-knowledge:clamp(16px,1.4vw,22px);
+  --qv2-density-data:14px;
+}
+
+html,body{max-width:100%;overflow-x:clip}
+html body{font-family:var(--qv2-font);color:var(--qv2-ink);background:var(--qv2-paper)}
+
+/* 01 | Layout axis and section rhythm */
+html body main>section{
+  box-sizing:border-box;
+  padding-left:var(--qv2-gutter)!important;
+  padding-right:var(--qv2-gutter)!important;
+}
+html body :is(.module-inner,.qily-ia-inner,.qily-asset-inner,.qily-system-axis__inner,.section-inner,.daily-inner,.article-hub-inner,.page-inner,.content-inner,.archive-inner,.knowledge-inner,.project-inner,.tool-inner,.main-inner,.footer-inner){
+  width:min(var(--qv2-axis),100%)!important;
+  max-width:var(--qv2-axis)!important;
+  margin-inline:auto!important;
+  box-sizing:border-box!important;
+}
+html body main> :is(.module-section,.qily-asset-section,.qily-ia-section,.daily-section,.section){
+  padding-top:var(--qv2-section-y);
+  padding-bottom:var(--qv2-section-y);
+}
+
+/* 02 | Typography: clear hierarchy, device-specific density */
+html body main :is(h1,.hero-title,.module-title){
+  font-family:var(--qv2-font)!important;
+  font-size:var(--qv2-h1)!important;
+  line-height:1.08!important;
+  font-weight:950!important;
+  letter-spacing:-.025em!important;
+  text-wrap:balance;
+}
+html body main :is(h2,.section-title,.section-heading h2,.section-head h2,.module-heading h2){
+  font-size:var(--qv2-h2)!important;
+  line-height:1.16!important;
+  font-weight:940!important;
+  letter-spacing:-.012em!important;
+  text-wrap:balance;
+}
+html body main :is(h3,.card-title,.module-card h3,.paper-card h3,.career-full-card h3){
+  font-size:var(--qv2-h3)!important;
+  line-height:1.3!important;
+  font-weight:900!important;
+}
+html body main :is(p,li,dd,dt){
+  font-size:var(--qv2-body)!important;
+  line-height:var(--qv2-line-body)!important;
+}
+html body main :is(.lead,.module-lead,.hero .lead,.daily-hero p){
+  font-size:var(--qv2-lead)!important;
+  line-height:1.64!important;
+}
+html body :is(.meta,.caption,.note,.fine,.project-meta,.article-meta,.resource-meta,.source-note){
+  font-size:var(--qv2-note)!important;
+  line-height:1.58!important;
+}
+
+/* 03 | Surface hierarchy: professional, not every block equally loud */
+html body main :is(.module-card,.paper-card,.project-card,.project-list-card,.career-full-card,.service-card,.resource-card,.knowledge-card,.trust-card,.qily-value-card,.qily-ia-card,.panel){
+  border:1px solid var(--qv2-line)!important;
+  border-radius:var(--qv2-radius-md)!important;
+  box-shadow:var(--qv2-shadow-sm)!important;
+  background:var(--qv2-surface)!important;
+}
+html body main :is(.module-card,.paper-card,.project-card,.project-list-card,.career-full-card,.service-card,.resource-card,.knowledge-card,.trust-card,.qily-value-card,.qily-ia-card,.panel):hover{
+  box-shadow:var(--qv2-shadow-md)!important;
+}
+html body main :is(.module-grid,.paper-grid,.project-grid,.project-list-grid,.career-full-grid,.service-grid,.qily-ia-grid,.qily-six-grid,.qily-proof-strip,.qily-principle-grid,.qily-secondary-links){
+  gap:clamp(14px,1.35vw,22px)!important;
+}
+
+/* 04 | Component identities: navigation != CTA != tag != status */
+html body :is(a.button,button.button,a.btn,button.btn,a.qily-button,button.qily-button,a.qily-ia-button,button.qily-ia-button,a.module-action,a.resource-action,a.project-list-action,a.project-card-action){
+  min-height:44px!important;
+  padding:9px 16px!important;
+  border-radius:var(--qv2-radius-sm)!important;
+  font-size:17px!important;
+  line-height:1.3!important;
+  font-weight:900!important;
+}
+html body main :is(.tag,.chip,.pill,.badge):not([role="button"]):not(a[href]){
+  min-height:30px!important;
+  padding:4px 9px!important;
+  border-radius:8px!important;
+  box-shadow:none!important;
+  font-size:15px!important;
+  line-height:1.3!important;
+}
+html body main :is(.status,.status-badge,.evidence-badge,.project-meta-badge){
+  border-radius:999px!important;
+}
+
+/* 05 | Primary navigation: full labels, compact rhythm, scroll rather than clip */
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top){
+  column-gap:10px!important;
+}
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
+:is(nav.site-nav,nav.qily-global-nav,nav.nav){
+  min-width:0!important;
+  flex-wrap:nowrap!important;
+  overflow-x:auto!important;
+  overflow-y:hidden!important;
+  scrollbar-width:thin!important;
+  scrollbar-color:var(--qv2-forest) #e7efee!important;
+  scroll-snap-type:x proximity;
+}
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
+:is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+  min-height:42px!important;
+  padding:7px 9px!important;
+  border-radius:9px!important;
+  font-size:var(--qv2-nav)!important;
+  line-height:1.2!important;
+  font-weight:900!important;
+  white-space:nowrap!important;
+  scroll-snap-align:start;
+}
+
+/* 06 | Hero and template rhythm */
+html body :is(.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero){
+  border-bottom:1px solid rgba(202,161,95,.35);
+}
+html body .hero-grid{gap:clamp(28px,3vw,48px)!important}
+html body .portrait-frame{border-radius:var(--qv2-radius-lg)!important;box-shadow:var(--qv2-shadow-lg)!important}
+
+/* 07 | Aircraft art direction using the approved master artwork.
+ * Same approved image asset; the viewport treatment changes by device so it remains visually dominant without wasted margins.
+ */
+html body .qily-aircraft-brand-hero{
+  padding:clamp(12px,1.5vw,22px) var(--qv2-gutter)!important;
+  background:#fff!important;
+}
+html body .qily-aircraft-brand-hero figure{
+  width:min(var(--qv2-axis),100%)!important;
+  border-radius:18px!important;
+  box-shadow:0 18px 46px rgba(7,60,71,.16)!important;
+}
+html body .qily-aircraft-brand-hero img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  object-fit:contain!important;
+}
+
+/* 08 | Tables / engineering assets retain density without becoming visually cramped */
+html body :is(table,.table,.data-table){border-collapse:separate;border-spacing:0}
+html body :is(th,td){font-size:16.5px!important;line-height:1.5!important}
+html body th{font-weight:900!important;color:var(--qv2-forest)!important;background:#edf6f4!important}
+html body td{background:#fff}
+html body :is(th,td){border-color:var(--qv2-line)!important}
+
+/* 09 | Dock visual authority: function unchanged; visual weight adapts by device */
+html body #floatDock.qily-float-dock{
+  gap:6px!important;
+  right:max(10px,env(safe-area-inset-right))!important;
+}
+html body #floatDock.qily-float-dock .qily-float-btn{
+  width:60px!important;
+  min-width:60px!important;
+  max-width:60px!important;
+  height:60px!important;
+  min-height:60px!important;
+  max-height:60px!important;
+  flex-basis:60px!important;
+  padding:5px!important;
+  border-radius:50%!important;
+  font-size:13px!important;
+  line-height:1.08!important;
+  box-shadow:0 7px 18px rgba(7,60,71,.20)!important;
+}
+
+/* 10 | Wide Desktop >= 1440 */
+@media (min-width:1440px){
+  :root{--qv2-body:18.5px;--qv2-note:15.5px;--qv2-section-y:clamp(58px,5vw,88px)}
+  html body .qily-proof-strip{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+
+/* 11 | Compact Desktop 1180-1439 */
+@media (min-width:1180px) and (max-width:1439px){
+  :root{
+    --qv2-gutter:clamp(18px,2.1vw,34px);
+    --qv2-h1:clamp(40px,4vw,56px);
+    --qv2-h2:clamp(30px,2.8vw,40px);
+    --qv2-body:18px;
+    --qv2-nav:18px;
+  }
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{padding-inline:7px!important}
+  html body .hero-grid{grid-template-columns:minmax(0,1fr) minmax(280px,330px)!important}
+}
+
+/* 12 | Tablet 768-1179: independent composition, not a squeezed desktop */
+@media (min-width:768px) and (max-width:1179px){
+  :root{
+    --qv2-gutter:clamp(18px,3vw,30px);
+    --qv2-h1:clamp(38px,5.2vw,52px);
+    --qv2-h2:clamp(29px,4vw,38px);
+    --qv2-h3:23px;
+    --qv2-body:17.5px;
+    --qv2-lead:19px;
+    --qv2-note:15px;
+    --qv2-nav:18px;
+    --qv2-section-y:48px;
+  }
+  html body .hero-grid{grid-template-columns:1fr!important}
+  html body .portrait-frame{width:min(430px,100%)!important;margin-inline:auto!important}
+  html body :is(.qily-six-grid,.qily-proof-strip,.qily-secondary-links,.qily-ia-grid){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  html body .qily-principle-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  html body .qily-aircraft-brand-hero{padding:10px 14px!important}
+  html body .qily-aircraft-brand-hero figure{width:100%!important;border-radius:14px!important}
+  html body #floatDock.qily-float-dock{gap:5px!important;right:max(8px,env(safe-area-inset-right))!important}
+  html body #floatDock.qily-float-dock .qily-float-btn{
+    width:52px!important;min-width:52px!important;max-width:52px!important;
+    height:52px!important;min-height:52px!important;max-height:52px!important;flex-basis:52px!important;
+    font-size:12px!important;padding:4px!important;
+  }
+}
+
+/* 13 | Mobile <= 767: mobile art direction and lower auxiliary visual weight */
+@media (max-width:767px){
+  :root{
+    --qv2-gutter:15px;
+    --qv2-h1:clamp(32px,9vw,42px);
+    --qv2-h2:clamp(27px,7.5vw,34px);
+    --qv2-h3:21px;
+    --qv2-body:17px;
+    --qv2-lead:18px;
+    --qv2-note:14.5px;
+    --qv2-nav:18px;
+    --qv2-section-y:40px;
+  }
+  html body main>section{padding-left:var(--qv2-gutter)!important;padding-right:var(--qv2-gutter)!important}
+  html body :is(.module-grid,.paper-grid,.project-grid,.project-list-grid,.career-full-grid,.service-grid,.qily-ia-grid,.qily-six-grid,.qily-proof-strip,.qily-principle-grid,.qily-secondary-links){grid-template-columns:1fr!important}
+  html body :is(.module-card,.paper-card,.project-card,.project-list-card,.career-full-card,.service-card,.resource-card,.knowledge-card,.trust-card,.qily-value-card,.qily-ia-card,.panel){border-radius:12px!important}
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top){padding-bottom:3px!important}
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav){padding-bottom:6px!important;gap:5px!important}
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{min-height:42px!important;padding:7px 10px!important;font-size:var(--qv2-nav)!important}
+
+  /* Approved aircraft artwork gets the maximum phone canvas instead of a desktop-style inset frame. */
+  html body .qily-aircraft-brand-hero{
+    width:100%!important;
+    padding:6px 6px 10px!important;
+  }
+  html body .qily-aircraft-brand-hero figure{
+    width:100%!important;
+    border-radius:10px!important;
+    box-shadow:0 10px 28px rgba(7,60,71,.14)!important;
+  }
+
+  /* Mobile Dock remains six actions but steps back visually from the content. */
+  html body #floatDock.qily-float-dock{
+    gap:4px!important;
+    right:max(5px,env(safe-area-inset-right))!important;
+    bottom:max(8px,env(safe-area-inset-bottom))!important;
+  }
+  html body #floatDock.qily-float-dock .qily-float-btn{
+    width:48px!important;min-width:48px!important;max-width:48px!important;
+    height:48px!important;min-height:48px!important;max-height:48px!important;flex-basis:48px!important;
+    padding:3px!important;
+    border-width:1px!important;
+    font-size:11.5px!important;
+    line-height:1.05!important;
+    box-shadow:0 5px 14px rgba(7,60,71,.17)!important;
+  }
+  html body #floatDock.qily-float-dock .qily-float-btn:is(:hover,:focus-visible){transform:none!important}
+
+  html body :is(th,td){font-size:15px!important}
+  html body :is(a.button,button.button,a.btn,button.btn,a.qily-button,button.qily-button,a.qily-ia-button,button.qily-ia-button,a.module-action,a.resource-action,a.project-list-action,a.project-card-action){font-size:16px!important}
+}
+
+/* 14 | Very narrow phones */
+@media (max-width:390px){
+  :root{--qv2-gutter:12px;--qv2-nav:17px}
+  html body #floatDock.qily-float-dock .qily-float-btn{
+    width:46px!important;min-width:46px!important;max-width:46px!important;
+    height:46px!important;min-height:46px!important;max-height:46px!important;flex-basis:46px!important;
+    font-size:11px!important;
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  html body *,html body *::before,html body *::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important}
+}
+
+@media print{
+  html body #floatDock,html body .qily-float-dock,html body .qily-floating-dock{display:none!important}
+}
