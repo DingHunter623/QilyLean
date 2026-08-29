@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "system": "QilyLean Visual System V2",
+  "scope": "visual-only",
+  "viewports": [
+    {"name":"wide-desktop-1920","platform":"desktop","width":1920,"height":1080},
+    {"name":"wide-desktop-1680","platform":"desktop","width":1680,"height":1050},
+    {"name":"compact-desktop-1440","platform":"desktop","width":1440,"height":900},
+    {"name":"tablet-landscape-1366","platform":"tablet","width":1366,"height":768},
+    {"name":"tablet-landscape-1024","platform":"tablet","width":1024,"height":768},
+    {"name":"tablet-portrait-834","platform":"tablet","width":834,"height":1194},
+    {"name":"mobile-430","platform":"mobile","width":430,"height":932},
+    {"name":"mobile-390","platform":"mobile","width":390,"height":844},
+    {"name":"mobile-375","platform":"mobile","width":375,"height":812},
+    {"name":"mobile-narrow-360","platform":"mobile","width":360,"height":800}
+  ],
+  "visualCheckpoints": [
+    "primary-navigation",
+    "translation-control",
+    "hero",
+    "aircraft-brand-hero",
+    "heading-hierarchy",
+    "body-density",
+    "card-grid",
+    "buttons",
+    "tags-and-status",
+    "tables",
+    "image-gallery",
+    "floating-dock",
+    "footer"
+  ]
+}
