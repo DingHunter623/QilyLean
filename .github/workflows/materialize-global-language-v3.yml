@@ -1,11 +1,13 @@
 name: Materialize Unified Public Baseline
 
-# Primary-navigation governance is materialized sitewide: no module-level typography/color exceptions.
+# Visual System V2 is the final visual authority; legacy visual layers remain compatibility sources only.
 on:
   push:
     branches: [main]
     paths:
       - '**.html'
+      - 'site-visual-system-v2.css'
+      - 'styles/qily-aircraft-brand-hero-v1.css'
       - 'site-global-language-v1.css'
       - 'site-translation-safe-runtime-v1.js'
       - 'site-translation-public-ui-v1.js'
@@ -31,12 +33,14 @@ on:
       - 'tools/pure-ddz/game/css/r8-closure-v128.css'
       - 'scripts/materialize-global-language-v3.js'
       - 'scripts/materialize-contact-route-v6.js'
+      - 'scripts/validate-visual-system-v2.js'
       - 'scripts/validate-global-language-runtime-compat-v1.js'
       - 'scripts/validate-sitewide-safety-readability-v1.js'
       - 'scripts/validate-public-baseline-materialization-v1.js'
       - 'scripts/validate-20260825-remediation-closure-v1.js'
       - 'scripts/validate-mobile-primary-navigation-v1.js'
       - 'scripts/validate-unified-visual-governance-v1.js'
+      - 'package.json'
       - '.github/workflows/materialize-global-language-v3.yml'
   workflow_dispatch:
 
@@ -79,12 +83,14 @@ jobs:
           node --check site-core-service-dock-closure-v1.js
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/materialize-contact-route-v6.js
+          node --check scripts/validate-visual-system-v2.js
           node --check scripts/validate-global-language-runtime-compat-v1.js
           node --check scripts/validate-sitewide-safety-readability-v1.js
           node --check scripts/validate-public-baseline-materialization-v1.js
           node --check scripts/validate-20260825-remediation-closure-v1.js
           node --check scripts/validate-mobile-primary-navigation-v1.js
           node --check scripts/validate-unified-visual-governance-v1.js
+          node scripts/validate-visual-system-v2.js
           node scripts/validate-sitewide-safety-readability-v1.js
           node scripts/validate-global-language-runtime-compat-v1.js
           node scripts/validate-mobile-primary-navigation-v1.js
@@ -97,32 +103,34 @@ jobs:
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
           for attempt in 1 2 3 4; do
-            echo "Unified public baseline publish attempt ${attempt}/4"
+            echo "Visual System V2 public baseline publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
+            node scripts/validate-visual-system-v2.js
             node scripts/validate-sitewide-safety-readability-v1.js
             node scripts/validate-global-language-runtime-compat-v1.js
             node scripts/validate-mobile-primary-navigation-v1.js
             node scripts/validate-unified-visual-governance-v1.js
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
+            node scripts/validate-visual-system-v2.js --materialized
             node scripts/validate-public-baseline-materialization-v1.js
             node scripts/validate-20260825-remediation-closure-v1.js
             node scripts/validate-mobile-primary-navigation-v1.js
             node scripts/validate-unified-visual-governance-v1.js --materialized
             git diff --check
             if git diff --quiet; then
-              echo 'Unified public baseline already materialized on latest main.'
+              echo 'Visual System V2 public baseline already materialized on latest main.'
               exit 0
             fi
             git add -- '*.html'
-            git commit -m 'build: materialize unified visual governance across public HTML'
+            git commit -m 'build: materialize Visual System V2 across public HTML'
             if git push origin HEAD:main; then
-              echo 'Unified public baseline with visual closure published and audited.'
+              echo 'Visual System V2 published and audited sitewide.'
               exit 0
             fi
             echo 'main advanced during publish; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish unified public baseline after retries.'
+          echo 'Unable to publish Visual System V2 baseline after retries.'
           exit 1
