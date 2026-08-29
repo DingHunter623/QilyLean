@@ -18,16 +18,16 @@
   var BUILD_KEY='qily_site_ui_build_v1';
   var ASSETS={
     languageCss:'/site-global-language-v1.css?v=20260825-public-translation-shell-v1',
-    safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260828-long-page-resilience-v5',
+    safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260829-first-readable-v7',
     publicCss:'/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8',
     publicJs:'/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6',
     progressCss:'/site-translation-progress-v1.css?v=20260827-source-recovery-v4',
-    progressJs:'/site-translation-progress-v1.js?v=20260828-long-page-resilience-v5',
+    progressJs:'/site-translation-progress-v1.js?v=20260829-first-readable-v7',
     interactionCss:'/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2',
     interactionJs:'/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2',
     contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6',
     contentJs:'/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6',
-    headerCss:'/site-header-axis-v1.css?v=20260827-primary-navigation-unified-v4'
+    headerCss:'/site-header-axis-v1.css?v=20260829-primary-navigation-safe-scroll-v7'
   };
 
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');

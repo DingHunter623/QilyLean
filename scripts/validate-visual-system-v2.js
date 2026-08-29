@@ -22,12 +22,13 @@ assert(css.includes('@media (min-width:768px) and (max-width:1179px)'),'missing 
 assert(css.includes('@media (max-width:767px)'),'missing Mobile composition');
 assert(css.includes('.qily-aircraft-brand-hero'),'missing aircraft visual art-direction contract');
 assert(css.includes('#floatDock.qily-float-dock'),'missing responsive Dock visual contract');
-assert(css.includes('width:48px!important'),'mobile Dock must reduce visual weight to 48px');
+assert(css.includes('width:52px!important'),'mobile Dock must preserve enough circular space for complete labels');
+assert(css.includes('width:50px!important'),'very narrow Dock must retain its protected 50px geometry');
 assert(css.includes('grid-template-columns:1fr!important'),'mobile grids must collapse cleanly');
 assert(css.includes('navigation != CTA != tag != status'),'component identity contract missing');
 assert(css.includes('Only real navigation cards receive elevation feedback'),'static-card hover governance missing');
-assert(materializer.includes("const BASELINE_VERSION='20260829-visual-system-v2-v25'"),'materializer baseline is not V25');
-assert(materializer.includes("const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260829-visual-system-v2-r2'"),'materializer does not pin V2 r2 cache key');
+assert(materializer.includes("const BASELINE_VERSION='20260829-sitewide-experience-v26'"),'materializer baseline is not V26');
+assert(materializer.includes("const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260829-visual-system-v2-r3'"),'materializer does not pin V2 r3 cache key');
 assert(materializer.includes('qilyVisualSystemV2'),'materializer does not append V2 as final visual layer');
 assert(materializer.includes("'site-visual-system-v2.css'"),'materializer does not remove stale V2 links before rematerializing');
 
@@ -56,7 +57,7 @@ for(const relative of htmlFiles){
   const matches=source.match(/id=["']qilyVisualSystemV2["']/g)||[];
   if(matches.length===1)withV2++;
   if(matches.length>1)duplicates++;
-  if(matches.length===1&&!source.includes('/site-visual-system-v2.css?v=20260829-visual-system-v2-r2'))wrongCache++;
+  if(matches.length===1&&!source.includes('/site-visual-system-v2.css?v=20260829-visual-system-v2-r3'))wrongCache++;
 }
 if(process.argv.includes('--materialized')){
   assert(publicCount>0,'no public HTML pages discovered');

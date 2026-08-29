@@ -1,13 +1,15 @@
-/* QilyLean Interaction Semantics Runtime V1.3｜2026-08-29
+/* QilyLean Interaction Semantics Runtime V1.4｜2026-08-29
  * Classifies public UI by actual behavior instead of visual appearance.
  * Route navigation => explicit feedback; local controls => light feedback;
  * static terminology/tools/vocabulary => no fake link feedback.
- * V1.3 also owns a persistent, draggable primary-navigation scroll rail so
+ * V1.4 also owns a persistent, draggable primary-navigation scroll rail plus
+ * a click-suppression guard for pointer drags started on navigation text, so
  * overflow is visible on desktop/mobile even when the OS hides native scrollbars.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyInteractionSemanticsV13)return;
+  if(w.__qilyInteractionSemanticsV14)return;
+  w.__qilyInteractionSemanticsV14=true;
   w.__qilyInteractionSemanticsV13=true;
   w.__qilyInteractionSemanticsV12=true;
   w.__qilyInteractionSemanticsV11=true;
@@ -105,9 +107,10 @@
     rail.setAttribute('aria-valuenow',String(Math.round(maxScroll>0?(nav.scrollLeft/maxScroll)*100:0)));
   }
   function installPrimaryNavRail(nav){
-    if(!nav||nav.dataset.qilyNavScrollRail==='v1')return;
+    if(!nav||nav.dataset.qilyNavScrollRail==='v1.4')return;
     var header=nav.closest('header');if(!header)return;
-    nav.dataset.qilyNavScrollRail='v1';
+    var previous=header.querySelector('.qily-primary-nav-scroll-rail');if(previous)previous.remove();
+    nav.dataset.qilyNavScrollRail='v1.4';
     var rail=d.createElement('div');rail.className='qily-primary-nav-scroll-rail';rail.setAttribute('role','scrollbar');rail.setAttribute('aria-label','一级导航左右滑动条');rail.setAttribute('aria-orientation','horizontal');rail.setAttribute('aria-valuemin','0');rail.setAttribute('aria-valuemax','100');rail.setAttribute('aria-valuenow','0');
     var thumb=d.createElement('span');thumb.className='qily-primary-nav-scroll-thumb';thumb.setAttribute('aria-hidden','true');rail.appendChild(thumb);header.appendChild(rail);
     var sync=function(){w.requestAnimationFrame(function(){syncRail(nav,rail,thumb);});};
@@ -128,7 +131,34 @@
     });
     sync();setTimeout(sync,120);setTimeout(sync,700);
   }
-  function installPrimaryNavRails(){d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(installPrimaryNavRail);}
+  function installPrimaryNavDragGuard(nav){
+    if(!nav||nav.dataset.qilyNavDragGuard==='v1')return;
+    nav.dataset.qilyNavDragGuard='v1';
+    var active=false,moved=false,startX=0,startY=0,startScroll=0,suppressUntil=0,pointerId=null;
+    nav.addEventListener('pointerdown',function(event){
+      if(event.button!==0||event.target.closest('select,option,input,button'))return;
+      active=true;moved=false;pointerId=event.pointerId;startX=event.clientX;startY=event.clientY;startScroll=nav.scrollLeft;
+    });
+    nav.addEventListener('pointermove',function(event){
+      if(!active||event.pointerId!==pointerId)return;
+      var dx=event.clientX-startX,dy=event.clientY-startY;
+      if(!moved&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){moved=true;nav.classList.add('qily-nav-pointer-dragging');}
+      if(!moved)return;
+      if(event.pointerType==='mouse'){event.preventDefault();nav.scrollLeft=startScroll-dx;}
+    },{passive:false});
+    function finish(event){
+      if(!active||(event&&event.pointerId!==pointerId))return;
+      if(moved)suppressUntil=w.performance.now()+320;
+      active=false;moved=false;pointerId=null;nav.classList.remove('qily-nav-pointer-dragging');
+    }
+    nav.addEventListener('pointerup',finish);
+    nav.addEventListener('pointercancel',finish);
+    nav.addEventListener('click',function(event){
+      if(w.performance.now()>suppressUntil||!event.target.closest('a[href]'))return;
+      event.preventDefault();event.stopImmediatePropagation();
+    },true);
+  }
+  function installPrimaryNavRails(){d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(function(nav){installPrimaryNavRail(nav);installPrimaryNavDragGuard(nav);});}
   function syncPrimaryNavRails(){d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(function(nav){var header=nav.closest('header'),rail=header&&header.querySelector('.qily-primary-nav-scroll-rail');if(rail){var thumb=rail.querySelector('.qily-primary-nav-scroll-thumb');if(thumb)syncRail(nav,rail,thumb);}});}
   if(!w.__qilyPrimaryNavRailResizeV1){w.__qilyPrimaryNavRailResizeV1=true;w.addEventListener('resize',syncPrimaryNavRails,{passive:true});}
 

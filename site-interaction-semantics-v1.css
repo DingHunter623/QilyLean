@@ -1,10 +1,10 @@
-/* QilyLean Interaction Semantics V1.3｜2026-08-29
+/* QilyLean Interaction Semantics V1.4｜2026-08-29
  * Sitewide rule:
  * 1) true route/module navigation gets explicit hover/active/focus feedback;
  * 2) in-page controls keep lighter feedback;
  * 3) static terms/tags/chips never pretend to be links and keep their original visual state;
  * 4) primary navigation gets a persistent, draggable horizontal rail independent of OS scrollbar settings;
- * 5) Dock geometry is protected here, while Dock V5.2 alone owns its text/DOM;
+ * 5) Dock geometry is protected here, while Dock V5.4 alone owns its text/DOM;
  * 6) project evidence grades and critical numeric badges keep explicit readable contrast.
  */
 
@@ -102,15 +102,15 @@ html body header.qily-site-header,
 html body header.qily-global-header{position:relative!important}
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav[aria-label="主导航"],nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"]),
 html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav[aria-label="主导航"],nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"]){
-  padding-bottom:12px!important;
+  padding-bottom:18px!important;
   scroll-behavior:smooth!important;
   scroll-padding-inline:12px!important;
 }
 html body .qily-primary-nav-scroll-rail{
   position:absolute!important;
   z-index:2147481000!important;
-  bottom:2px!important;
-  height:7px!important;
+  bottom:3px!important;
+  height:12px!important;
   min-width:60px!important;
   margin:0!important;
   padding:0!important;
@@ -121,13 +121,14 @@ html body .qily-primary-nav-scroll-rail{
   cursor:pointer!important;
   touch-action:none!important;
   overflow:hidden!important;
+  user-select:none!important;
 }
 html body .qily-primary-nav-scroll-thumb{
   display:block!important;
   position:absolute!important;
   left:0!important;
-  top:0!important;
-  height:7px!important;
+  top:2px!important;
+  height:8px!important;
   min-width:56px!important;
   border-radius:999px!important;
   background:var(--qily-nav-rail-thumb)!important;
@@ -139,7 +140,7 @@ html body .qily-primary-nav-scroll-rail:hover .qily-primary-nav-scroll-thumb,
 html body .qily-primary-nav-scroll-thumb:active{background:var(--qily-nav-rail-thumb-hover)!important}
 html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"]{opacity:.58!important}
 
-/* Dock V5.2 safety contract: no pseudo-text, no legacy shape drift. Runtime owns labels. */
+/* Dock V5.4 safety contract: no pseudo-text, no legacy shape drift. Runtime owns labels. */
 html:not([data-qily-dock="disabled"]) body #floatDock{
   box-sizing:border-box!important;
 }
@@ -218,8 +219,8 @@ html body.daily-single-page main article.post.w8 .overview-card>.qily-static-tok
 }
 
 @media(max-width:900px){
-  html body .qily-primary-nav-scroll-rail{bottom:1px!important;height:8px!important}
-  html body .qily-primary-nav-scroll-thumb{height:8px!important}
+  html body .qily-primary-nav-scroll-rail{bottom:2px!important;height:11px!important}
+  html body .qily-primary-nav-scroll-thumb{top:2px!important;height:7px!important}
 }
 @media(max-width:620px){
   html body .qily-project-evidence-grade{display:flex!important;width:fit-content!important;max-width:100%!important;flex-wrap:wrap!important}

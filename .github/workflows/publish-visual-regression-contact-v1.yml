@@ -1,4 +1,4 @@
-name: Publish Sitewide R10 Interaction & DDZ Closure V23
+name: Publish Sitewide V26 Experience Closure
 
 on:
   push:
@@ -28,7 +28,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: sitewide-r10-interaction-ddz-main
+  group: sitewide-v26-experience-main
   cancel-in-progress: true
 
 jobs:
@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate R10 authoritative source contracts
+      - name: Validate V26 authoritative source contracts
         shell: bash
         run: |
           set -euo pipefail
@@ -59,28 +59,28 @@ jobs:
           node --check site-navigation.js
           node --check site-interaction-semantics-v1.js
           node scripts/validate-r7-authoritative-runtime-20260828.js
-          grep -Fq "const BASELINE_VERSION='20260829-r10-regression-closure-v23'" scripts/materialize-global-language-v3.js
-          grep -Fq 'QilyLean Interaction Semantics V1.3' site-interaction-semantics-v1.css
-          grep -Fq '__qilyInteractionSemanticsV13' site-interaction-semantics-v1.js
+          grep -Fq "const BASELINE_VERSION='20260829-sitewide-experience-v26'" scripts/materialize-global-language-v3.js
+          grep -Fq 'QilyLean Interaction Semantics V1.4' site-interaction-semantics-v1.css
+          grep -Fq '__qilyInteractionSemanticsV14' site-interaction-semantics-v1.js
           grep -Fq 'qily-primary-nav-scroll-rail' site-interaction-semantics-v1.js
           grep -Fq '.brief-action-strip>span' site-interaction-semantics-v1.js
-          grep -Fq 'Pure DDZ R10 Closure V130' tools/pure-ddz/game/css/r8-closure-v128.css
+          grep -Fq 'Pure DDZ R12 Closure V132' tools/pure-ddz/game/css/r8-closure-v128.css
           grep -Fq 'justify-content:safe center!important' tools/pure-ddz/game/css/r8-closure-v128.css
-          grep -Fq "const ROUTE='/site-contact-route-v1.js?v=20260829-dock-functional-public-v133'" scripts/materialize-contact-route-v6.js
-          grep -Fq "const DOCK='/site-dock-share-runtime-v1.js?v=20260829-authority-v53'" scripts/materialize-contact-route-v6.js
+          grep -Fq "const ROUTE='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134'" scripts/materialize-contact-route-v6.js
+          grep -Fq "const DOCK='/site-dock-share-runtime-v1.js?v=20260829-authority-v54'" scripts/materialize-contact-route-v6.js
           grep -Fq "w.open(url,'_blank','noopener,noreferrer')" site-dock-share-runtime-v1.js
           ! grep -Fq "mask.classList.add('show')" site-dock-share-runtime-v1.js
           ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-dock-share-runtime-v1.js
           ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-navigation.js
 
-      - name: Materialize R10 to every tracked public HTML page
+      - name: Materialize V26 to every tracked public HTML page
         shell: bash
         run: |
           set -euo pipefail
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
           for attempt in 1 2 3 4; do
-            echo "R10 V23 publish attempt ${attempt}/4"
+            echo "V26 publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
             node scripts/validate-r7-authoritative-runtime-20260828.js
@@ -89,25 +89,25 @@ jobs:
             node scripts/materialize-contact-route-v6.js
             node scripts/materialize-contact-route-v6.js --check
             node scripts/validate-seo-indexability.js
-            grep -Fq '/site-header-axis-v1.css?v=20260829-primary-navigation-scroll-v6' index.html
-            grep -Fq '/site-interaction-semantics-v1.css?v=20260829-r10-semantics-v13' index.html
-            grep -Fq '/site-interaction-semantics-v1.js?v=20260829-r10-semantics-v13' knowledge/index.html
-            grep -Fq '/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r10-v130' tools/pure-ddz/index.html
-            grep -Fq '/site-contact-route-v1.js?v=20260829-dock-functional-public-v133' tools/pure-ddz/index.html
-            grep -Fq 'data-qily-interaction-semantics-direct="v1.3"' qilylean/daily/2026-07-29.html
+            grep -Fq '/site-header-axis-v1.css?v=20260829-primary-navigation-safe-scroll-v7' index.html
+            grep -Fq '/site-interaction-semantics-v1.css?v=20260829-r11-semantics-v14' index.html
+            grep -Fq '/site-interaction-semantics-v1.js?v=20260829-r11-semantics-v14' knowledge/index.html
+            grep -Fq '/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132' tools/pure-ddz/index.html
+            grep -Fq '/site-contact-route-v1.js?v=20260829-dock-functional-public-v134' tools/pure-ddz/index.html
+            grep -Fq 'data-qily-interaction-semantics-direct="v1.4"' qilylean/daily/2026-07-29.html
             git diff --check
             if git diff --quiet; then
-              echo 'R10 V23 public baseline already current on latest main.'
+              echo 'V26 public baseline already current on latest main.'
               exit 0
             fi
             git add -- ':(glob)**/*.html'
-            git commit -m 'fix: materialize R10 interaction and DDZ closure V23 [r10-materialized]'
+            git commit -m 'fix: materialize V26 experience closure [v26-materialized]'
             if git push origin HEAD:main; then
-              echo 'R10 V23 authoritative baseline published to tracked public HTML.'
+              echo 'V26 authoritative baseline published to tracked public HTML.'
               exit 0
             fi
             echo 'main advanced during publication; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish R10 V23 after retries.'
+          echo 'Unable to publish V26 after retries.'
           exit 1

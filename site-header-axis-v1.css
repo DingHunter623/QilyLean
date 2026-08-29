@@ -1,4 +1,4 @@
-/* QilyLean Global Header Axis V1.1｜2026-08-29
+/* QilyLean Global Header Axis V1.2｜2026-08-29
  * Goal: align Logo / primary navigation / translation utility to the same 1560px site content axis.
  * Desktop: first-level items stay on one line; navigation can horizontally scroll rather than clip.
  * Mobile/tablet: the horizontal scrollbar is explicit, touch-friendly and visually consistent sitewide.
@@ -64,7 +64,7 @@ html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav
   width:auto!important;
   margin-left:auto!important;
   margin-right:0!important;
-  padding:0 0 5px!important;
+  padding:0 0 18px!important;
   gap:clamp(0px,.18vw,4px)!important;
   justify-content:flex-start!important;
   align-items:center!important;
@@ -77,6 +77,15 @@ html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav
   white-space:nowrap!important;
   scrollbar-width:thin!important;
   scrollbar-color:var(--qily-nav-scroll-thumb) var(--qily-nav-scroll-track)!important;
+}
+/* Never use an auto-margin flex spacer in a scroll container. It can place the
+ * first navigation item at a negative, unreachable coordinate while reporting
+ * scrollWidth === clientWidth. */
+html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"])::before,
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"])::before{
+  content:none!important;
+  display:none!important;
+  margin:0!important;
 }
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"])::-webkit-scrollbar,
 html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"])::-webkit-scrollbar{
@@ -180,7 +189,7 @@ html body .qily-web-translate__select option{font-size:16px!important}
     height:auto!important;
     max-height:none!important;
     margin:0!important;
-    padding:3px 0 7px!important;
+    padding:3px 0 16px!important;
     gap:5px!important;
     justify-content:flex-start!important;
     align-items:center!important;

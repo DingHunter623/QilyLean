@@ -1,4 +1,4 @@
-/* Pure DDZ R10 Closure V130｜2026-08-29
+/* Pure DDZ R12 Closure V132｜2026-08-29
  * Compatibility markers: Pure DDZ R9 Closure V129 / Pure DDZ R8 Closure V128.
  * Goals:
  * - never flash/flicker the brand block while public/shared runtimes settle;
@@ -35,19 +35,21 @@ html body #floatDock,html[data-qily-dock="disabled"] body #floatDock{display:non
 
 @media(min-width:901px){
   html body .table-wrap{position:relative!important;overflow:hidden!important}
+  html body .game-shell #me-panel.me-player,
   html body .table-wrap .me-player{
     position:absolute!important;
-    left:50%!important;
-    right:auto!important;
+    left:20px!important;
+    right:20px!important;
     bottom:12px!important;
-    transform:translateX(-50%)!important;
-    width:calc(100% - 40px)!important;
-    max-width:1180px!important;
+    transform:none!important;
+    width:auto!important;
+    max-width:none!important;
     min-width:0!important;
     margin:0!important;
     box-sizing:border-box!important;
     overflow:visible!important;
   }
+  html body .game-shell #hand.hand,
   html body .table-wrap .me-player .hand{
     display:flex!important;
     align-items:flex-end!important;
@@ -66,16 +68,22 @@ html body #floatDock,html[data-qily-dock="disabled"] body #floatDock{display:non
     scrollbar-gutter:stable both-edges!important;
     scroll-padding-inline:16px!important;
   }
+  html body .game-shell #hand.hand>.card:first-child,
   html body .table-wrap .me-player .hand>.card:first-child{margin-left:0!important}
 }
 @media(min-width:901px) and (max-width:1280px){
-  html body .table-wrap .me-player{width:calc(100% - 28px)!important;max-width:none!important}
-  html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;justify-content:center!important;justify-content:safe center!important;padding-inline:12px!important}
+  html body .game-shell #me-panel.me-player,html body .table-wrap .me-player{left:14px!important;right:14px!important;width:auto!important;max-width:none!important;transform:none!important}
+  html body .game-shell #hand.hand,html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;justify-content:center!important;justify-content:safe center!important;padding-inline:12px!important}
 }
 @media(max-width:900px){
-  html body .table-wrap .me-player{left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:calc(100% - 16px)!important;max-width:none!important;margin-inline:0!important}
-  html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:visible!important;justify-content:center!important;justify-content:safe center!important;padding-inline:12px!important;scroll-padding-inline:12px!important;scrollbar-gutter:stable both-edges!important}
+  html body .game-shell #me-panel.me-player,html body .table-wrap .me-player{left:8px!important;right:8px!important;transform:none!important;width:auto!important;max-width:none!important;margin-inline:0!important}
+  html body .game-shell #hand.hand,html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:visible!important;justify-content:center!important;justify-content:safe center!important;padding-inline:12px!important;scroll-padding-inline:12px!important;scrollbar-gutter:stable both-edges!important}
 }
+
+/* Portrait phones are a supported entry surface. Cached orientation helpers must
+ * never cover the game with a full-screen rotate gate. */
+html body #v120-orientation-notice,
+html body #v120-orientation-notice.show{display:none!important;visibility:hidden!important;pointer-events:none!important}
 
 html body #welcome-start,html body #start,html body .start-btn{min-height:56px!important;font-size:18px!important;font-weight:950!important;box-shadow:0 10px 24px rgba(239,183,62,.24)!important}
 html body .control-btn{min-height:54px!important;font-weight:900!important}

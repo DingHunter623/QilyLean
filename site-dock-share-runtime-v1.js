@@ -1,12 +1,13 @@
-/* QilyLean Floating Dock Authoritative Runtime V5.3｜2026-08-29
+/* QilyLean Floating Dock Authoritative Runtime V5.4｜2026-08-29
  * One authority for public Dock structure, labels and actions.
  * Canonical actions: 首页 / 回顶部 / 回上一层 / 本站搜索 / 分享当前页 / 联系我们.
- * V5.3 keeps one owned label per button and routes 联系我们 directly to the complete contact page in a new tab.
+ * V5.4 keeps every mobile label inside its circular surface and preserves an unclipped shadow gutter.
  * Pure DDZ remains an immersive surface and explicitly excludes the site Dock.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyFloatingDockUnifiedV53)return;
+  if(w.__qilyFloatingDockUnifiedV54)return;
+  w.__qilyFloatingDockUnifiedV54=true;
   w.__qilyFloatingDockUnifiedV53=true;
   w.__qilyFloatingDockUnifiedV52=true;
   w.__qilyFloatingDockUnifiedV51=true;
@@ -38,9 +39,9 @@
 
   function disableDockForPage(){
     d.documentElement.setAttribute('data-qily-dock','disabled');
-    if(!d.getElementById('qilyDockDisabledV53Style')){
+    if(!d.getElementById('qilyDockDisabledV54Style')){
       var style=d.createElement('style');
-      style.id='qilyDockDisabledV53Style';
+      style.id='qilyDockDisabledV54Style';
       style.textContent='html[data-qily-dock="disabled"] body #floatDock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}';
       (d.head||d.documentElement).appendChild(style);
     }
@@ -64,41 +65,41 @@
   }
 
   function ensureStyles(){
-    if(d.getElementById('qilyDockUnifiedV53Style'))return;
-    ['qilyDockUnifiedV52Style','qilyDockUnifiedV51Style','qilyDockUnifiedV5Style'].forEach(function(id){var old=d.getElementById(id);if(old)old.remove();});
+    if(d.getElementById('qilyDockUnifiedV54Style'))return;
+    ['qilyDockUnifiedV53Style','qilyDockUnifiedV52Style','qilyDockUnifiedV51Style','qilyDockUnifiedV5Style'].forEach(function(id){var old=d.getElementById(id);if(old)old.remove();});
     var style=d.createElement('style');
-    style.id='qilyDockUnifiedV53Style';
+    style.id='qilyDockUnifiedV54Style';
     style.textContent=[
       ':root{--qily-dock-bg:#0f4b5a;--qily-dock-hover:#12606f;--qily-dock-line:#caa15f;--qily-dock-text:#ffe39b;--qily-dock-size:64px;--qily-dock-gap:7px}',
       'html body #floatDock.qily-float-dock,html body #floatDock.qily-floating-dock{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(12px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important;z-index:2147482500!important;display:flex!important;flex-direction:column!important;align-items:center!important;width:var(--qily-dock-size)!important;min-width:var(--qily-dock-size)!important;max-width:var(--qily-dock-size)!important;gap:var(--qily-dock-gap)!important;padding:0!important;margin:0!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;box-sizing:border-box!important}',
       'html body #floatDock .qily-float-btn{box-sizing:border-box!important;display:grid!important;place-items:center!important;flex:0 0 var(--qily-dock-size)!important;inline-size:var(--qily-dock-size)!important;block-size:var(--qily-dock-size)!important;width:var(--qily-dock-size)!important;height:var(--qily-dock-size)!important;min-width:var(--qily-dock-size)!important;min-height:var(--qily-dock-size)!important;max-width:var(--qily-dock-size)!important;max-height:var(--qily-dock-size)!important;margin:0!important;padding:0!important;border:1.5px solid var(--qily-dock-line)!important;border-radius:50%!important;color:var(--qily-dock-text)!important;-webkit-text-fill-color:var(--qily-dock-text)!important;background:var(--qily-dock-bg)!important;background-image:none!important;box-shadow:0 8px 20px rgba(7,60,71,.22)!important;opacity:1!important;overflow:hidden!important;filter:none!important;transform:none!important;font:inherit!important;letter-spacing:0!important;text-align:center!important;text-decoration:none!important;cursor:pointer!important;appearance:none!important;-webkit-appearance:none!important;touch-action:manipulation!important;isolation:isolate!important}',
       'html body #floatDock .qily-float-btn::before,html body #floatDock .qily-float-btn::after{content:none!important;display:none!important;visibility:hidden!important}',
-      'html body #floatDock .qily-float-btn>.qily-dock-label{box-sizing:border-box!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;padding:5px!important;margin:0!important;color:var(--qily-dock-text)!important;-webkit-text-fill-color:var(--qily-dock-text)!important;background:none!important;border:0!important;box-shadow:none!important;font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;letter-spacing:0!important;text-align:center!important;white-space:nowrap!important;word-break:keep-all!important;overflow:hidden!important;pointer-events:none!important}',
+      'html body #floatDock .qily-float-btn>.qily-dock-label{box-sizing:border-box!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:2.5px!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;padding:5px!important;margin:0!important;color:var(--qily-dock-text)!important;-webkit-text-fill-color:var(--qily-dock-text)!important;background:none!important;border:0!important;box-shadow:none!important;font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;letter-spacing:0!important;text-align:center!important;white-space:nowrap!important;word-break:keep-all!important;overflow:hidden!important;pointer-events:none!important}',
       'html body #floatDock .qily-float-btn>.qily-dock-label>span{display:block!important;max-width:100%!important;color:inherit!important;-webkit-text-fill-color:inherit!important;line-height:1.08!important;white-space:nowrap!important}',
       'html body #floatDock .qily-float-btn:hover,html body #floatDock .qily-float-btn:focus-visible{background:var(--qily-dock-hover)!important;border-color:var(--qily-dock-text)!important;box-shadow:0 10px 24px rgba(7,60,71,.30)!important;outline:3px solid rgba(202,161,95,.22)!important;outline-offset:2px!important;transform:translateY(-1px)!important}',
       'html body #floatDock .qily-float-btn:active,html body #floatDock .qily-float-btn[data-qily-pressed="true"]{transform:translateY(1px) scale(.97)!important;box-shadow:0 4px 10px rgba(7,60,71,.24)!important}',
-      '@media(max-width:620px){:root{--qily-dock-size:56px;--qily-dock-gap:5px}html body #floatDock.qily-float-dock,html body #floatDock.qily-floating-dock{right:max(7px,env(safe-area-inset-right))!important;bottom:max(8px,env(safe-area-inset-bottom))!important}html body #floatDock .qily-float-btn>.qily-dock-label{padding:4px!important;font-size:11.5px!important;line-height:1.05!important}html body #floatDock .qily-float-btn>.qily-dock-label>span{line-height:1.05!important}}',
-      '@media(max-width:390px){:root{--qily-dock-size:54px;--qily-dock-gap:4px}html body #floatDock .qily-float-btn>.qily-dock-label{font-size:11px!important}}',
+      '@media(max-width:620px){:root{--qily-dock-size:52px;--qily-dock-gap:5px}html body #floatDock.qily-float-dock,html body #floatDock.qily-floating-dock{right:max(7px,env(safe-area-inset-right))!important;bottom:max(8px,env(safe-area-inset-bottom))!important;overflow:visible!important}html:root:root:root body #floatDock.qily-float-dock .qily-float-btn.qily-float-btn,html:root:root:root body #floatDock.qily-floating-dock .qily-float-btn.qily-float-btn{flex:0 0 52px!important;inline-size:52px!important;block-size:52px!important;width:52px!important;height:52px!important;min-width:52px!important;min-height:52px!important;max-width:52px!important;max-height:52px!important;padding:0!important}html body #floatDock .qily-float-btn>.qily-dock-label{gap:2.5px!important;padding:3px!important;font-size:11.5px!important;line-height:1.08!important}html body #floatDock .qily-float-btn>.qily-dock-label>span{line-height:1.08!important}}',
+      '@media(max-width:390px){:root{--qily-dock-size:50px;--qily-dock-gap:4px}html:root:root:root body #floatDock.qily-float-dock .qily-float-btn.qily-float-btn,html:root:root:root body #floatDock.qily-floating-dock .qily-float-btn.qily-float-btn{flex:0 0 50px!important;inline-size:50px!important;block-size:50px!important;width:50px!important;height:50px!important;min-width:50px!important;min-height:50px!important;max-width:50px!important;max-height:50px!important}html body #floatDock .qily-float-btn>.qily-dock-label{padding:3px 2px!important;font-size:11px!important;letter-spacing:-.1px!important}}',
       '@media print{html body #floatDock{display:none!important;visibility:hidden!important;opacity:0!important;pointer-events:none!important}}'
     ].join('');
     (d.head||d.documentElement).appendChild(style);
   }
 
   function createStandaloneDock(){
-    var dock=d.createElement('div');dock.id='floatDock';dock.className='qily-float-dock';dock.dataset.qilyStandaloneDock='v5.3';dock.setAttribute('aria-label','快捷服务');
+    var dock=d.createElement('div');dock.id='floatDock';dock.className='qily-float-dock';dock.dataset.qilyStandaloneDock='v5.4';dock.setAttribute('aria-label','快捷服务');
     ORDER.forEach(function(action){var button=d.createElement('button');button.className='qily-float-btn qily-float-'+action;button.setAttribute('data-action',action);button.type='button';dock.appendChild(button);});
     (d.body||d.documentElement).appendChild(dock);return dock;
   }
 
   function setOwnedLabel(button,action){
     var lines=LABELS[action]||[action],label=d.createElement('span');
-    label.className='qily-dock-label';label.setAttribute('aria-hidden','true');
+    label.className='qily-dock-label';label.setAttribute('aria-hidden','true');label.dataset.qilyLines=String(lines.length);
     lines.forEach(function(line){var row=d.createElement('span');row.textContent=line;label.appendChild(row);});
     while(button.firstChild)button.removeChild(button.firstChild);
     button.appendChild(label);
     button.setAttribute('aria-label',lines.join(''));
     button.setAttribute('title',lines.join(''));
-    button.setAttribute('data-qily-label-owner','dock-v5.3');
+    button.setAttribute('data-qily-label-owner','dock-v5.4');
   }
 
   function normalizeDock(){
@@ -113,7 +114,7 @@
     ORDER.forEach(function(action){var button=controls[action];button.className='qily-float-btn qily-float-'+action;setOwnedLabel(button,action);});
     controls.back.setAttribute('data-parent-route',parentRoute(location.pathname));
     var fragment=d.createDocumentFragment();ORDER.forEach(function(action){fragment.appendChild(controls[action]);});dock.appendChild(fragment);
-    dock.dataset.qilyStableOrder=ORDER.join(',');dock.dataset.qilyUnifiedPublicModule='v5.3';return true;
+    dock.dataset.qilyStableOrder=ORDER.join(',');dock.dataset.qilyUnifiedPublicModule='v5.4';return true;
   }
 
   function legacyCopy(text){var area=d.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.left='-9999px';(d.body||d.documentElement).appendChild(area);area.select();try{d.execCommand('copy');}catch(error){}area.remove();return Promise.resolve();}
@@ -136,7 +137,7 @@
 
   function targetButton(event){var node=event.target&&event.target.closest?event.target.closest('#floatDock .qily-float-btn[data-action]'):null;return node||null;}
   function installAuthoritativeEvents(){
-    if(w.__qilyDockV53CaptureBound)return;w.__qilyDockV53CaptureBound=true;
+    if(w.__qilyDockV54CaptureBound)return;w.__qilyDockV54CaptureBound=true;
     d.addEventListener('pointerdown',function(event){if(isExcluded())return;var button=targetButton(event);if(!button)return;button.setAttribute('data-qily-pressed','true');event.stopImmediatePropagation();},{capture:true,passive:true});
     function clearPressed(event){var button=targetButton(event);if(button)button.removeAttribute('data-qily-pressed');else d.querySelectorAll('#floatDock [data-qily-pressed="true"]').forEach(function(node){node.removeAttribute('data-qily-pressed');});}
     d.addEventListener('pointerup',clearPressed,{capture:true,passive:true});d.addEventListener('pointercancel',clearPressed,{capture:true,passive:true});

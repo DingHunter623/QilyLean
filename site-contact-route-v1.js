@@ -1,11 +1,12 @@
-/* QilyLean Site Shell Recovery + Contact Route V13.3｜2026-08-29
- * V13.3 routes public pages to authoritative Dock V5.3 and redline V2.
- * Pure DDZ exclusion is owned by Dock V5.3; the complete /contact/ page remains the canonical contact destination.
+/* QilyLean Site Shell Recovery + Contact Route V13.4｜2026-08-29
+ * V13.4 routes public pages to authoritative Dock V5.4 and redline V2.
+ * Pure DDZ exclusion is owned by Dock V5.4; the complete /contact/ page remains the canonical contact destination.
  * #wxMask may remain for legacy/local page use, but the floating Dock no longer opens it.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilySiteShellRecoveryV133)return;
+  if(w.__qilySiteShellRecoveryV134)return;
+  w.__qilySiteShellRecoveryV134=true;
   w.__qilySiteShellRecoveryV133=true;
   w.__qilySiteShellRecoveryV132=true;
   w.__qilySiteShellRecoveryV131=true;
@@ -33,10 +34,10 @@
   }
 
   function injectRecoveryCss(){
-    if(d.getElementById('qilySiteShellRecoveryV133Style'))return;
-    ['qilySiteShellRecoveryV132Style','qilySiteShellRecoveryV131Style','qilySiteShellRecoveryV13Style'].forEach(function(id){var old=d.getElementById(id);if(old)old.remove();});
+    if(d.getElementById('qilySiteShellRecoveryV134Style'))return;
+    ['qilySiteShellRecoveryV133Style','qilySiteShellRecoveryV132Style','qilySiteShellRecoveryV131Style','qilySiteShellRecoveryV13Style'].forEach(function(id){var old=d.getElementById(id);if(old)old.remove();});
     var style=d.createElement('style');
-    style.id='qilySiteShellRecoveryV133Style';
+    style.id='qilySiteShellRecoveryV134Style';
     style.textContent=[
       'html,html body{height:auto!important;min-height:0!important}',
       'html body{display:block!important}',
@@ -66,15 +67,15 @@
   }
 
   function ensureDockRuntime(){
-    if(w.__qilyFloatingDockUnifiedV53)return;
-    var existing=d.getElementById('qilyDockUnifiedRuntimeV53Script');
+    if(w.__qilyFloatingDockUnifiedV54)return;
+    var existing=d.getElementById('qilyDockUnifiedRuntimeV54Script');
     if(existing)return;
-    ['qilyDockUnifiedRuntimeV52Script','qilyDockUnifiedRuntimeV51Script','qilyDockUnifiedRuntimeV5Script','qilyDockUnifiedRuntimeV4Script','qilyDockUnifiedRuntimeV3Script'].forEach(function(id){var legacy=d.getElementById(id);if(legacy)legacy.remove();});
+    ['qilyDockUnifiedRuntimeV53Script','qilyDockUnifiedRuntimeV52Script','qilyDockUnifiedRuntimeV51Script','qilyDockUnifiedRuntimeV5Script','qilyDockUnifiedRuntimeV4Script','qilyDockUnifiedRuntimeV3Script'].forEach(function(id){var legacy=d.getElementById(id);if(legacy)legacy.remove();});
     var script=d.createElement('script');
-    script.id='qilyDockUnifiedRuntimeV53Script';
-    script.src='/site-dock-share-runtime-v1.js?v=20260829-authority-v53';
+    script.id='qilyDockUnifiedRuntimeV54Script';
+    script.src='/site-dock-share-runtime-v1.js?v=20260829-authority-v54';
     script.async=false;
-    script.setAttribute('data-qily-dock-public-runtime','v5.3');
+    script.setAttribute('data-qily-dock-public-runtime','v5.4');
     (d.head||d.documentElement).appendChild(script);
   }
 

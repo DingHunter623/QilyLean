@@ -106,7 +106,7 @@ html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav
   scroll-behavior:smooth;
 }
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::before,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::before{content:"";flex:0 0 0;margin-left:auto}
+html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::before{content:none!important;display:none!important;flex:0 0 0;margin:0!important}
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar,
 html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar{display:block!important;height:10px!important}
 html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-track,
@@ -145,7 +145,7 @@ html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav
     height:auto!important;
     max-height:none!important;
     margin:0!important;
-    padding:3px 0 6px!important;
+    padding:3px 0 16px!important;
     gap:5px!important;
     justify-content:flex-start!important;
     align-items:center!important;

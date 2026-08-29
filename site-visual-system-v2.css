@@ -161,11 +161,19 @@ html body :is(header.qily-site-header,header.qily-global-header,header.topbar,he
 :is(nav.site-nav,nav.qily-global-nav,nav.nav){
   min-width:0!important;
   flex-wrap:nowrap!important;
+  justify-content:flex-start!important;
   overflow-x:auto!important;
   overflow-y:hidden!important;
+  padding-bottom:18px!important;
   scrollbar-width:thin!important;
   scrollbar-color:var(--qv2-forest) #e7efee!important;
   scroll-snap-type:x proximity;
+}
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
+:is(nav.site-nav,nav.qily-global-nav,nav.nav)::before{
+  content:none!important;
+  display:none!important;
+  margin:0!important;
 }
 html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
 :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
@@ -274,7 +282,8 @@ html body #floatDock.qily-float-dock .qily-float-btn{
   html body .qily-aircraft-brand-hero{padding:10px 14px!important}
   html body .qily-aircraft-brand-hero figure{width:100%!important;border-radius:14px!important}
   html body #floatDock.qily-float-dock{gap:5px!important;right:max(8px,env(safe-area-inset-right))!important}
-  html body #floatDock.qily-float-dock .qily-float-btn{
+  html body #floatDock.qily-float-dock .qily-float-btn,
+  html:root:root:root body #floatDock.qily-float-dock .qily-float-btn.qily-float-btn{
     width:52px!important;min-width:52px!important;max-width:52px!important;
     height:52px!important;min-height:52px!important;max-height:52px!important;flex-basis:52px!important;
     font-size:12px!important;padding:4px!important;
@@ -299,7 +308,7 @@ html body #floatDock.qily-float-dock .qily-float-btn{
   html body :is(.module-card,.paper-card,.project-card,.project-list-card,.career-full-card,.service-card,.resource-card,.knowledge-card,.trust-card,.qily-value-card,.qily-ia-card,.panel){border-radius:12px!important}
   html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top){padding-bottom:3px!important}
   html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
-  :is(nav.site-nav,nav.qily-global-nav,nav.nav){padding-bottom:6px!important;gap:5px!important}
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav){padding-bottom:16px!important;gap:5px!important}
   html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
   :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{min-height:42px!important;padding:7px 10px!important;font-size:var(--qv2-nav)!important}
 
@@ -320,9 +329,10 @@ html body #floatDock.qily-float-dock .qily-float-btn{
     right:max(5px,env(safe-area-inset-right))!important;
     bottom:max(8px,env(safe-area-inset-bottom))!important;
   }
-  html body #floatDock.qily-float-dock .qily-float-btn{
-    width:48px!important;min-width:48px!important;max-width:48px!important;
-    height:48px!important;min-height:48px!important;max-height:48px!important;flex-basis:48px!important;
+  html body #floatDock.qily-float-dock .qily-float-btn,
+  html:root:root:root body #floatDock.qily-float-dock .qily-float-btn.qily-float-btn{
+    width:52px!important;min-width:52px!important;max-width:52px!important;
+    height:52px!important;min-height:52px!important;max-height:52px!important;flex-basis:52px!important;
     padding:3px!important;
     border-width:1px!important;
     font-size:11.5px!important;
@@ -338,9 +348,10 @@ html body #floatDock.qily-float-dock .qily-float-btn{
 /* 14 | Very narrow phones */
 @media (max-width:390px){
   :root{--qv2-gutter:12px;--qv2-nav:17px}
-  html body #floatDock.qily-float-dock .qily-float-btn{
-    width:46px!important;min-width:46px!important;max-width:46px!important;
-    height:46px!important;min-height:46px!important;max-height:46px!important;flex-basis:46px!important;
+  html body #floatDock.qily-float-dock .qily-float-btn,
+  html:root:root:root body #floatDock.qily-float-dock .qily-float-btn.qily-float-btn{
+    width:50px!important;min-width:50px!important;max-width:50px!important;
+    height:50px!important;min-height:50px!important;max-height:50px!important;flex-basis:50px!important;
     font-size:11px!important;
   }
 }

@@ -58,13 +58,13 @@
         /* 长辈手牌：17张与地主20张分别压缩牌宽、扩大实际露出间距，保证点数+花色完整可见。 */
         @media(min-width:1181px){
           html body .game-shell{width:80vw!important;max-width:80vw!important;min-width:0!important;margin-left:auto!important;margin-right:auto!important;overflow:visible!important}
-          html body .game-shell #me-panel.me-player{width:calc(100% - 12px)!important;max-width:none!important;left:6px!important;right:6px!important}
-          html body .game-shell #hand.hand{width:100%!important;max-width:100%!important;padding-left:6px!important;padding-right:6px!important;justify-content:center!important;overflow:hidden!important}
-          html body .game-shell #hand.hand .card{margin-left:-46px!important;flex-basis:120px!important;width:120px!important;max-width:120px!important}
+          html body .game-shell #me-panel.me-player{width:auto!important;max-width:none!important;left:20px!important;right:20px!important;transform:none!important}
+          html body .game-shell #hand.hand{width:100%!important;max-width:100%!important;padding-left:16px!important;padding-right:16px!important;justify-content:safe center!important;overflow-x:auto!important;overflow-y:visible!important;scrollbar-gutter:stable both-edges!important}
+          html body .game-shell #hand.hand .card{margin-left:-46px;flex-basis:120px!important;width:120px!important;max-width:120px!important}
           html body .game-shell #hand.hand .card:first-child{margin-left:0!important}
-          html body .game-shell #hand.hand:has(.card:nth-child(15)) .card{flex-basis:112px!important;width:112px!important;max-width:112px!important;margin-left:-48px!important}
+          html body .game-shell #hand.hand:has(.card:nth-child(15)) .card{flex-basis:112px!important;width:112px!important;max-width:112px!important;margin-left:-48px}
           html body .game-shell #hand.hand:has(.card:nth-child(15)):not(:has(.card:nth-child(18))) .qily-card-corner b{font-size:31px!important;letter-spacing:-.08em!important}
-          html body .game-shell #hand.hand:has(.card:nth-child(18)) .card{flex-basis:104px!important;width:104px!important;max-width:104px!important;height:182px!important;margin-left:-50px!important}
+          html body .game-shell #hand.hand:has(.card:nth-child(18)) .card{flex-basis:104px!important;width:104px!important;max-width:104px!important;height:182px!important;margin-left:-50px}
           html body .game-shell #hand.hand:has(.card:nth-child(18)) .qily-card-corner b{font-size:28px!important;letter-spacing:-.10em!important}
           html body .game-shell #hint-message.hint-message{font-size:calc(18px * var(--font-scale))!important}
           html body #floatDock.qily-float-dock.qily-float-dock{right:max(28px,2.4vw,env(safe-area-inset-right))!important}
