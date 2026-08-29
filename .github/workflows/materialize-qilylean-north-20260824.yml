@@ -59,6 +59,8 @@ jobs:
           node --check scripts/enforce-public-canonical-no-trailing-v1.js
           node --check scripts/qilylean-north-v4-sitemap-contract.js
           node --check scripts/north-factory-diagnosis-v1.js
+          node --check scripts/materialize-global-language-v3.js
+          node --check scripts/validate-sitewide-visual-closure-v27.js
 
       - name: Materialize regional static assets
         run: |
@@ -66,6 +68,7 @@ jobs:
           node scripts/enforce-qilylean-north-funnel-v1.js
           node scripts/enforce-public-canonical-no-trailing-v1.js
           node scripts/qilylean-north-v4-sitemap-contract.js
+          node scripts/materialize-global-language-v3.js
 
       - name: Validate generated contract
         shell: bash
@@ -90,6 +93,8 @@ jobs:
           grep -q '1560px' styles/qily-north-v1.css
           node scripts/enforce-public-canonical-no-trailing-v1.js --check
           node scripts/qilylean-north-v4-sitemap-contract.js --check
+          node scripts/materialize-global-language-v3.js --check
+          node scripts/validate-sitewide-visual-closure-v27.js
           git diff --check
 
       - name: Commit materialized public files
