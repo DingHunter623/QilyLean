@@ -110,6 +110,8 @@ jobs:
           node scripts/qilylean-north-v4-sitemap-contract.js --check
           node scripts/site-system-v4-validate.js
           node scripts/site-regression-guard-aircraft-hero.js
+          node scripts/materialize-global-language-v3.js --check
+          node scripts/validate-sitewide-visual-closure-v27.js
           npm run test:seo
           git diff --check
 
