@@ -23,7 +23,7 @@ assert(dock.includes('Floating Dock Authoritative Runtime V5.3'),'Dock V5.3 缺�
 assert(dock.includes('__qilyFloatingDockUnifiedV53'),'Dock V5.3 防重复装载标记缺失');
 assert(dock.includes("ORDER=['home','top','back','search','current','contact']"),'六按钮顺序漂移');
 assert(dock.includes('setOwnedLabel'),'Dock 单一文字所有权缺失');
-assert(dock.includes('--qily-dock-size:56px')&&dock.includes('--qily-dock-size:54px'),'移动端 Dock 统一几何缺失');
+assert(dock.includes('--qily-dock-size:56px')&&dock.includes('--qily-dock-size:54px'),'移动端 Dock 源几何缺失');
 assert(dock.includes('function openContactPage()'),'联系我们完整页面路由缺失');
 assert(dock.includes("w.open(url,'_blank','noopener,noreferrer')"),'联系我们未明确新窗口/新标签打开');
 assert(dock.includes("if(action==='contact'){openContactPage();return;}"),'Dock 联系我们仍未绑定完整联系页');
@@ -46,12 +46,17 @@ assert(header.includes('overflow-x:auto!important')&&header.includes('overflow-x
 assert(header.includes('white-space:nowrap!important'),'一级导航文字完整显示契约缺失');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
-assert(materializer.includes("BASELINE_VERSION='20260829-r10-regression-closure-v23'"),'R10 全站物化基线缺失');
+assert(materializer.includes("BASELINE_VERSION='20260829-visual-system-v2-v24'"),'Visual System V2 全站物化基线缺失');
+assert(materializer.includes("VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260829-visual-system-v2-r1'"),'Visual System V2 未进入全站物化');
 assert(materializer.includes('20260829-authority-v53'),'Dock V5.3 未进入全站物化');
 assert(materializer.includes('20260829-dock-functional-public-v133'),'Contact V13.3 未进入全站物化');
 assert(materializer.includes('20260829-r10-semantics-v13'),'Semantics V1.3 未进入全站物化');
 assert(materializer.includes('20260829-r10-v130'),'DDZ R10 未进入物化');
+const visual=read('site-visual-system-v2.css');
+assert(visual.includes('QilyLean Visual System V2'),'Visual System V2 样式源缺失');
+assert(visual.includes('@media (max-width:767px)'),'Mobile Visual System V2 构图缺失');
+assert(visual.includes('width:48px!important'),'Mobile Dock 视觉降权缺失');
 
 const game=read('tools/pure-ddz/game/js/game.js');
 assert(game.includes("const VERSION = '1.2.4'")&&game.includes("$('welcome-start').addEventListener('click',startRound)"),'斗地主运行/开始按钮契约漂移');
-console.log('PASS: R10 guards persistent nav rail, inert knowledge vocabulary, Dock contact-to-full-page routing, and truly centered overflow-safe DDZ hand.');
+console.log('PASS: behavior owners remain stable while Visual System V2 owns final responsive presentation.');
