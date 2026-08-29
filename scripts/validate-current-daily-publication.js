@@ -60,12 +60,13 @@ if (secondLatestDate) {
 matches(latest, /site-navigation\.js\?v=[^"']+/, 'Latest retained page loads the versioned navigation wrapper');
 includes(latest, 'site-music-persistent-navigation-v1.js?v=20260817-native-only-v7', 'Latest retained page uses Native Navigation V7');
 matches(latest, /\bBUILD='[^']+'/, 'Latest retained page uses a versioned bounded stale-document guard');
-includes(latest, "ATTEMPT='qily_site_refresh_attempt_v1'", 'Latest retained page caps stale-document refresh attempts');
+includes(latest, 'html.qily-stale-document body{visibility:visible!important}', 'Latest retained page keeps first readable content visible');
+includes(latest, 'sessionStorage.removeItem("qily_site_refresh_attempt_v1")', 'Latest retained page clears retired refresh attempts');
 assert(!latest.includes('qilyBackgroundMusicPreload'), 'Latest retained page does not preload background audio');
 assert(!latest.includes('site-footer-standard-v28.js'), 'Latest retained page does not load retired footer runtime');
 assert(!/<footer\b/i.test(latest), 'Latest retained page does not restore retired visible footer');
 matches(navigation, /site-navigation-legacy-20260802\.js\?v=[^"']+/, 'Navigation wrapper uses a versioned legacy fallback');
-matches(navigation, /mode: 'atomic-first-paint-v\d+'/, 'Navigation wrapper declares its atomic first-paint mode');
+matches(navigation, /mode:\s*'atomic-first-paint-v\d+'/, 'Navigation wrapper declares its atomic first-paint mode');
 includes(fastNative, "mode: 'native-only-v7'", 'Native Navigation V7 declares native-only mode');
 includes(fastNative, 'domSwap: false', 'Native Navigation V7 forbids cross-page DOM swapping');
 includes(fastNative, 'nativeHistory: true', 'Native Navigation V7 keeps browser-native history');

@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: enforce-site-vi-palette-main
@@ -34,52 +34,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Normalize legacy accents and link all pages to the VI standard
-        run: node scripts/enforce-site-vi-palette.js
-
-      - name: Validate VI audit result
-        shell: bash
+      - name: Validate current V27 VI authority without mutating public pages
         run: |
-          test -s qilylean/site-vi-audit.json
-          node - <<'NODE'
-          const fs = require('fs');
-          const report = JSON.parse(fs.readFileSync('qilylean/site-vi-audit.json', 'utf8'));
-          const canonical = 'linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))';
-          if (report.status !== 'passed') throw new Error('QilyLean VI audit failed');
-          if (report.violations.length) throw new Error(`Legacy off-brand colors/hero gradients remain: ${JSON.stringify(report.violations)}`);
-          if (report.missingRequirements.length) throw new Error(`VI requirements missing: ${report.missingRequirements.join(', ')}`);
-          if (report.missingFinalGuardLinks.length) throw new Error(`Pages missing final VI guard: ${report.missingFinalGuardLinks.join(', ')}`);
-          if (report.staleFinalGuardLinks.length) throw new Error(`Pages using stale final VI guard: ${report.staleFinalGuardLinks.join(', ')}`);
-          if (report.policy.canonicalHeroGradient !== canonical) throw new Error('Canonical Hero gradient changed unexpectedly');
-          if (report.policy.finalGuardHref !== '/site-stability-recovery-v1.css?v=20260828-vi-surface-v3') {
-            throw new Error(`Unexpected final guard href: ${report.policy.finalGuardHref}`);
-          }
-          if (!report.policy.semanticExemptions.some((item) => item.includes('green background with white check'))) {
-            throw new Error('Semantic green-check exemption is missing');
-          }
-          NODE
-          grep -q -- '--qily-vi-olive:#0f4b5a' site-vi-standard-v1.css
-          grep -q -- '--qily-vi-red:#9e4a34' site-vi-standard-v1.css
-          grep -q -- '--qily-vi-gold:#caa15f' site-vi-standard-v1.css
-          grep -q 'linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))' site-vi-standard-v1.css
-          grep -q '语义通用元素豁免' site-vi-standard-v1.css
-          grep -q 'QILY-VI-SURFACE-FINAL-GUARD:START' site-stability-recovery-v1.css
-          grep -q -- '--qily-final-vi-hero-base:#0f4b5a' site-stability-recovery-v1.css
-          grep -q 'linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))' site-stability-recovery-v1.css
-          grep -q '.contact-hero' site-stability-recovery-v1.css
-          grep -q '.preview-head' site-stability-recovery-v1.css
-          grep -q 'site-vi-standard-v1.css' site-link-standard-v1.css
-          grep -q "STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260828-vi-surface-v3'" scripts/materialize-global-language-v3.js
-
-      - name: Commit normalized site VI
-        shell: bash
-        run: |
-          if git diff --quiet; then
-            echo "QilyLean site VI is already compliant."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "build: normalize QilyLean site VI palette [skip ci]"
-          git push
+          node --check scripts/materialize-global-language-v3.js
+          node --check scripts/validate-visual-system-v2.js
+          node --check scripts/validate-sitewide-visual-closure-v27.js
+          node scripts/materialize-global-language-v3.js --check
+          node scripts/validate-visual-system-v2.js --materialized
+          node scripts/validate-sitewide-visual-closure-v27.js
+          git diff --check

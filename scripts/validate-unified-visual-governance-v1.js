@@ -28,7 +28,7 @@ must(css,'font-size:max(19.5px,1em)!important','Body readability floor');
 
 must(materializer,"const UNIFIED_VISUAL_CSS='/site-unified-visual-governance-v1.css?v=20260826-contrast-closure-v2'",'Unified visual cache owner');
 must(materializer,'qilyUnifiedVisualGovernanceV1Stylesheet','Unified visual stylesheet materialization');
-must(materializer,'site-unified-visual-governance-v1\\.css','Unified visual de-duplication');
+must(materializer,"'site-unified-visual-governance-v1.css'",'Unified visual de-duplication');
 
 if(materialized){
   const html=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);

@@ -77,7 +77,10 @@ concurrency:
 
 jobs:
   publish:
-    if: github.event_name != 'push' || github.actor != 'github-actions[bot]'
+    if: >-
+      github.event_name != 'push' ||
+      (github.actor != 'github-actions[bot]' &&
+       !contains(github.event.head_commit.message || '', '[visual-closure]'))
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
