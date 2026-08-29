@@ -46,8 +46,8 @@ assert(header.includes('overflow-x:auto!important')&&header.includes('overflow-x
 assert(header.includes('white-space:nowrap!important'),'一级导航文字完整显示契约缺失');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
-assert(materializer.includes("BASELINE_VERSION='20260829-visual-system-v2-v24'"),'Visual System V2 全站物化基线缺失');
-assert(materializer.includes("VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260829-visual-system-v2-r1'"),'Visual System V2 未进入全站物化');
+assert(materializer.includes("BASELINE_VERSION='20260829-visual-system-v2-v25'"),'Visual System V2 全站物化基线缺失');
+assert(materializer.includes("VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260829-visual-system-v2-r2'"),'Visual System V2 r2 未进入全站物化');
 assert(materializer.includes('20260829-authority-v53'),'Dock V5.3 未进入全站物化');
 assert(materializer.includes('20260829-dock-functional-public-v133'),'Contact V13.3 未进入全站物化');
 assert(materializer.includes('20260829-r10-semantics-v13'),'Semantics V1.3 未进入全站物化');
@@ -56,6 +56,9 @@ const visual=read('site-visual-system-v2.css');
 assert(visual.includes('QilyLean Visual System V2'),'Visual System V2 样式源缺失');
 assert(visual.includes('@media (max-width:767px)'),'Mobile Visual System V2 构图缺失');
 assert(visual.includes('width:48px!important'),'Mobile Dock 视觉降权缺失');
+assert(visual.includes('Only real navigation cards receive elevation feedback'),'静态卡片视觉反馈治理缺失');
+const matrix=JSON.parse(read('visual-regression-matrix.json'));
+assert(matrix.scope==='visual-only'&&matrix.viewports.length>=10,'三端视觉回归矩阵缺失');
 
 const game=read('tools/pure-ddz/game/js/game.js');
 assert(game.includes("const VERSION = '1.2.4'")&&game.includes("$('welcome-start').addEventListener('click',startRound)"),'斗地主运行/开始按钮契约漂移');
