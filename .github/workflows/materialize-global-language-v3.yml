@@ -7,6 +7,7 @@ on:
     paths:
       - '**.html'
       - 'site-visual-system-v2.css'
+      - 'visual-regression-matrix.json'
       - 'styles/qily-aircraft-brand-hero-v1.css'
       - 'site-global-language-v1.css'
       - 'site-translation-safe-runtime-v1.js'
