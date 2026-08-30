@@ -13,12 +13,12 @@ const baseUrl = String(config.production?.baseUrl || 'https://qilylean.com').rep
 const trailingSlash = config.production?.canonicalTrailingSlash !== false;
 
 const routePaths = [
-  '/north',
-  '/north/inner-mongolia',
-  '/north/shaanxi',
-  '/north/ningxia',
-  '/north/gansu',
-  '/north/diagnosis'
+  '/north/',
+  '/north/inner-mongolia/',
+  '/north/shaanxi/',
+  '/north/ningxia/',
+  '/north/gansu/',
+  '/north/diagnosis/'
 ];
 const canonicalUrls = routePaths.map(route => `${baseUrl}${route}${trailingSlash ? '/' : ''}`);
 const alternateUrls = routePaths.map(route => `${baseUrl}${route}${trailingSlash ? '' : '/'}`);
