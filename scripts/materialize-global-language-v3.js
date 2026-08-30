@@ -45,7 +45,7 @@ const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260830-annota
 const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7';
 const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-mobile-containment-v1';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
-const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260829-r11-semantics-v14';
+const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260829-r11-semantics-v14-visual-0830-v2';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260829-r11-semantics-v14';
 const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132';
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
