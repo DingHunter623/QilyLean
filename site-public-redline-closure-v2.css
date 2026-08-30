@@ -1,11 +1,13 @@
-/* QilyLean Global Translation Dual Route V2.2｜2026-08-30 annotated one-pass closure */
+/* QilyLean Global Translation Dual Route V2.3｜2026-08-30 navigation visual alignment closure */
 .qily-web-translate{
   position:relative;
   order:999;
   display:inline-flex;
   align-items:center;
   gap:7px;
-  flex:0 0 auto;
+  flex:1 1 236px!important;
+  min-width:236px!important;
+  max-width:none!important;
   min-height:42px;
   margin-left:6px;
   margin-right:0;
@@ -26,18 +28,19 @@
 .qily-web-translate__mark{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border:0;border-radius:50%;background:transparent;font-size:17px;line-height:1}
 .qily-web-translate__brand,.qily-web-translate__badge,.qily-web-translate__status{display:none!important}
 .qily-web-translate__select{
-  width:118px!important;
-  min-width:118px!important;
-  max-width:118px!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:none!important;
+  flex:1 1 auto!important;
   height:34px;
-  padding:0 22px 0 7px;
+  padding:0 30px 0 10px;
   border:1px solid #c8dad8;
   border-radius:7px;
   outline:0;
   color:#17322d;
   background:#fff;
   font:inherit;
-  font-size:14px!important;
+  font-size:16px!important;
   font-weight:850;
   line-height:1.2;
   cursor:pointer;
@@ -45,17 +48,17 @@
 }
 .qily-web-translate__select:hover{border-color:#178b94;background:#f8fffd}
 .qily-web-translate__select:focus-visible{outline:2px solid #178b94;outline-offset:1px}
-.qily-web-translate__select option{color:#17322d;background:#fff;font-size:14px!important;font-weight:600}
+.qily-web-translate__select option{color:#17322d;background:#fff;font-size:16px!important;font-weight:600}
 .qily-web-translate[data-state="working"],.qily-web-translate[data-state="translated"],.qily-web-translate[data-state="partial"],.qily-web-translate[data-state="fallback"],.qily-web-translate[data-state="opening"]{border-color:#b9d9d4!important;background:#f8fffd!important;box-shadow:0 4px 12px rgba(15,101,112,.10)!important}
 #qilyGoogleTranslateOnDemandV1,#qilyGlobalLanguageV1,.qily-google-translate,.qily-language-switcher{display:none!important}
 @media (prefers-reduced-motion:reduce){.qily-web-translate{transition:none!important}}
 
-/* QILY-0830-PUBLIC-REDLINE-CLOSURE-V2.2:START */
+/* QILY-0830-PUBLIC-REDLINE-CLOSURE-V2.3:START */
 :root{
   --ql-redline-header-offset:86px;
-  --ql-redline-rail-track:#e0e9e8;
-  --ql-redline-rail-thumb:#78989d;
-  --ql-redline-rail-hover:#78989d;
+  --ql-redline-rail-track:#d5e4e3;
+  --ql-redline-rail-thumb:#0f4b5a;
+  --ql-redline-rail-hover:#12606f;
 }
 html{scroll-padding-top:calc(var(--ql-redline-header-offset) + 16px)}
 html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header){
@@ -67,10 +70,10 @@ html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qi
 }
 html body main :is(section[id],article[id],div[id]){scroll-margin-top:calc(var(--ql-redline-header-offset) + 18px)}
 
-/* Primary navigation: one geometry and one rail language across every module. */
+/* Primary navigation: one geometry and one VI rail language across every module. */
 html body :is(header.qily-site-header,header.qily-global-header) :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"],nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"]){flex:1 1 auto!important;min-width:0!important;max-width:none!important;scrollbar-width:none!important}
 html body :is(header.qily-site-header,header.qily-global-header) :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"],nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
-html body .qily-primary-nav-scroll-rail{height:9px!important;bottom:4px!important;background:var(--ql-redline-rail-track)!important;border-radius:999px!important;box-shadow:inset 0 0 0 1px rgba(15,75,90,.08)!important}
+html body .qily-primary-nav-scroll-rail{height:9px!important;bottom:4px!important;background:var(--ql-redline-rail-track)!important;border-radius:999px!important;box-shadow:inset 0 0 0 1px rgba(15,75,90,.10)!important}
 html body .qily-primary-nav-scroll-thumb{top:2px!important;height:5px!important;min-width:64px!important;background:var(--ql-redline-rail-thumb)!important;border-radius:999px!important;box-shadow:none!important}
 html body .qily-primary-nav-scroll-rail:hover .qily-primary-nav-scroll-thumb,html body .qily-primary-nav-scroll-thumb:active{background:var(--ql-redline-rail-hover)!important}
 
@@ -190,8 +193,9 @@ html body #qilyDockShareCopyToastV2{position:fixed!important;left:50%!important;
   html body .qily-contact-sheet-clean .qily-contact-qr-grid{grid-template-columns:1fr!important}
   html body main table{display:block!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
   html body main table :is(th,td){min-width:110px!important}
+  html body .qily-web-translate{flex:0 0 auto!important;min-width:0!important;max-width:none!important}
   html body .qily-web-translate__select{width:110px!important;min-width:110px!important;max-width:110px!important;font-size:13px!important}
   html body .module-hero .qily-project-evidence-grade,html body .project-hero .qily-project-evidence-grade{width:100%!important;max-width:100%!important}
   html body .contact-page-v3 .email-row a{font-size:20px!important}
 }
-/* QILY-0830-PUBLIC-REDLINE-CLOSURE-V2.2:END */
+/* QILY-0830-PUBLIC-REDLINE-CLOSURE-V2.3:END */
