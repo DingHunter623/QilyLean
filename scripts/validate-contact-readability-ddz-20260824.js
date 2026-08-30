@@ -46,7 +46,7 @@ assert(header.includes('overflow-x:auto!important')&&header.includes('overflow-x
 assert(header.includes('white-space:nowrap!important'),'一级导航文字完整显示契约缺失');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
-assert(materializer.includes("BASELINE_VERSION='20260829-sitewide-visual-closure-v27'"),'Visual System V2 全站物化基线缺失');
+assert(materializer.includes("BASELINE_VERSION='20260830-sitewide-responsive-containment-v28'"),'V28 全站物化基线缺失');
 assert(materializer.includes("VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'"),'Visual System V2 r7 未进入全站物化');
 assert(materializer.includes('20260829-authority-v54'),'Dock V5.4 未进入全站物化');
 assert(materializer.includes('20260829-dock-functional-public-v134'),'Contact V13.4 未进入全站物化');
@@ -62,4 +62,4 @@ assert(matrix.scope==='visual-only'&&matrix.viewports.length>=10,'三端视觉�
 
 const game=read('tools/pure-ddz/game/js/game.js');
 assert(game.includes("const VERSION = '1.2.4'")&&game.includes("$('welcome-start').addEventListener('click',startRound)"),'斗地主运行/开始按钮契约漂移');
-console.log('PASS: behavior owners remain stable while Visual System V2 owns final responsive presentation.');
+console.log('PASS: behavior owners remain stable on V28 baseline while Visual System V2 owns final responsive presentation.');
