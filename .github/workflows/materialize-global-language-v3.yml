@@ -8,6 +8,8 @@ on:
       - '**.html'
       - 'site-visual-system-v2.css'
       - 'site-responsive-containment-v1.css'
+      - 'site-public-redline-closure-v2.css'
+      - 'site-public-redline-closure-v2.js'
       - 'visual-regression-matrix.json'
       - 'styles/qily-aircraft-brand-hero-v1.css'
       - 'site-global-language-v1.css'
@@ -72,6 +74,7 @@ jobs:
         run: |
           node --check site-translation-safe-runtime-v1.js
           node --check site-translation-public-ui-v1.js
+          node --check site-public-redline-closure-v2.js
           node --check site-translation-progress-v1.js
           node --check site-interaction-contrast-guard-v1.js
           node --check site-interaction-semantics-v1.js
