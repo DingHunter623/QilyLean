@@ -1,22 +1,24 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V27｜2026-08-29
- * R13 sitewide visual closure:
+/* QilyLean Sitewide Public Baseline Materializer V28｜2026-08-30
+ * R14 responsive containment closure:
  * - Chinese remains the authoritative source and default display.
  * - translation assets remain deferred and never block first paint.
  * - Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.4 owns interaction meaning.
- * - Visual System V2 is the final sitewide visual authority and introduces four device compositions.
+ * - Visual System V2 remains the primary sitewide visual authority across four device compositions.
+ * - Responsive Containment V1 is the final geometry guard: legacy tables/flows scroll locally and never widen the page shell.
  * - static knowledge tags/chips/cards never fake links or pointer feedback.
- * - Dock V5.4 alone owns Dock structure/labels/actions; Visual System V2 only changes its visual weight by viewport.
- * - Pure DDZ R12 Closure V132 keeps game layout behavior; Visual System V2 does not alter game logic.
+ * - Dock V5.4 alone owns Dock structure/labels/actions; shared visual layers only change its visual weight by viewport.
+ * - Pure DDZ R12 Closure V132 keeps game layout behavior; shared visual layers do not alter game logic.
+ * - URL Contract is not owned here: directory pages keep '/', real .html files keep file URLs, SEO metadata remains untouched.
  */
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
-const BASELINE_VERSION='20260829-sitewide-visual-closure-v27';
+const BASELINE_VERSION='20260830-sitewide-responsive-containment-v28';
 const SAFE_VERSION='20260829-first-readable-v7';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
@@ -39,6 +41,7 @@ const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-
 const STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260828-vi-surface-v3';
 const PUBLIC_REDLINE_CSS='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
 const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7';
+const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-mobile-containment-v1';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260829-r11-semantics-v14';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260829-r11-semantics-v14';
@@ -49,7 +52,7 @@ function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root
 function removeScriptByMarker(source){return source.replace(/\s*<script\b[^>]*(?:data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct|data-qily-interaction-contrast-direct|data-qily-content-contrast-direct|data-qily-translation-safe-direct|data-qily-contact-route-direct|data-qily-interaction-semantics-direct|data-qily-translation-safety-bootstrap)[^>]*>[\s\S]*?<\/script>\s*/gi,'\n')}
 function removeLegacyManagedScripts(source){let next=source;next=next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-global-language-v3\.js[^"']*["'][^>]*><\/script>\s*/gi,'\n');next=next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-contact-route-v1\.js[^"']*["'][^>]*><\/script>\s*/gi,'\n');next=next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-interaction-semantics-v1\.js[^"']*["'][^>]*><\/script>\s*/gi,'\n');return next}
 function removeManagedStyles(source){
-  const paths=['site-global-language-v1.css','site-header-axis-v1.css','site-translation-progress-v1.css','site-translation-public-ui-v1.css','site-interaction-contrast-guard-v1.css','site-content-contrast-guard-v1.css','site-unified-visual-governance-v1.css','site-visual-regression-closure-v1.css','site-stability-recovery-v1.css','site-public-redline-closure-v1.css','site-interaction-semantics-v1.css','site-visual-system-v2.css','tools/pure-ddz/game/css/r8-closure-v128.css'];
+  const paths=['site-global-language-v1.css','site-header-axis-v1.css','site-translation-progress-v1.css','site-translation-public-ui-v1.css','site-interaction-contrast-guard-v1.css','site-content-contrast-guard-v1.css','site-unified-visual-governance-v1.css','site-visual-regression-closure-v1.css','site-stability-recovery-v1.css','site-public-redline-closure-v1.css','site-interaction-semantics-v1.css','site-visual-system-v2.css','site-responsive-containment-v1.css','tools/pure-ddz/game/css/r8-closure-v128.css'];
   let next=source;
   for(const file of paths){const pattern=new RegExp('\\s*<link\\b[^>]*href=["\\\'][^"\\\']*\\/'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^"\\\']*["\\\'][^>]*>\\s*','gi');next=next.replace(pattern,'\n')}
   return next;
@@ -88,7 +91,8 @@ function materialize(source,relative){
     `<script defer data-qily-content-contrast-direct="v6" src="${CONTENT_CONTRAST_JS}"></script>`,
     `<script defer data-qily-interaction-semantics-direct="v1.4" src="${INTERACTION_SEMANTICS_JS}"></script>`,
     `<script defer data-qily-contact-route-direct="v13.4" src="${CONTACT_ROUTE_JS}"></script>`,
-    `<link id="qilyVisualSystemV2" rel="stylesheet" href="${VISUAL_SYSTEM_V2}">`
+    `<link id="qilyVisualSystemV2" rel="stylesheet" href="${VISUAL_SYSTEM_V2}">`,
+    `<link id="qilyResponsiveContainmentV1" rel="stylesheet" href="${RESPONSIVE_CONTAINMENT_CSS}">`
   ].filter(Boolean).join('\n');
   if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);
   return next;
