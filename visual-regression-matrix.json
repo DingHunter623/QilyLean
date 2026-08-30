@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "system": "QilyLean Visual System V2",
+  "system": "QilyLean Visual System V2 + Responsive Containment V1",
   "scope": "visual-only",
   "viewports": [
     {"name":"wide-desktop-1920","platform":"desktop","width":1920,"height":1080},
@@ -25,6 +25,9 @@
     "buttons",
     "tags-and-status",
     "tables",
+    "flows-and-diagrams",
+    "responsive-containment",
+    "local-horizontal-scroll-only",
     "image-gallery",
     "floating-dock",
     "footer"
