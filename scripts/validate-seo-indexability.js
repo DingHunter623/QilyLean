@@ -16,6 +16,10 @@ function exists(relativePath) {
   return fs.existsSync(path.join(ROOT, relativePath));
 }
 
+function json(relativePath) {
+  return JSON.parse(read(relativePath));
+}
+
 function walk(dir, output = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name === '.git' || entry.name === 'node_modules') continue;
@@ -36,12 +40,44 @@ function isRedirectPage(html) {
     || /<meta\s+[^>]*content=["']0\s*;\s*url=/i.test(html);
 }
 
+const siteSystem = exists('data/site-system-v4.json') ? json('data/site-system-v4.json') : { production: {} };
+const baseUrl = String(siteSystem.production?.baseUrl || 'https://qilylean.com').replace(/\/+$/, '');
+const canonicalTrailingSlash = siteSystem.production?.canonicalTrailingSlash !== false;
+
+function isFileLikePath(pathname) {
+  const last = pathname.split('/').filter(Boolean).pop() || '';
+  return /\.[a-z0-9]{1,12}$/i.test(last);
+}
+
+function canonicalizePublicUrl(urlString) {
+  const url = new URL(urlString);
+  if (url.origin !== baseUrl) return urlString;
+  if (isFileLikePath(url.pathname)) return `${url.origin}${url.pathname}${url.search}${url.hash}`;
+  let pathname = url.pathname || '/';
+  if (canonicalTrailingSlash) {
+    if (!pathname.endsWith('/')) pathname += '/';
+  } else if (pathname !== '/') {
+    pathname = pathname.replace(/\/+$/, '');
+  }
+  if (!canonicalTrailingSlash && pathname === '/') pathname = '';
+  return `${url.origin}${pathname}${url.search}${url.hash}`;
+}
+
+function metadataUrlHasWrongSlashStyle(urlString) {
+  const url = new URL(urlString);
+  if (url.origin !== baseUrl || isFileLikePath(url.pathname)) return false;
+  if (canonicalTrailingSlash) return !url.pathname.endsWith('/');
+  if (url.pathname === '/') return urlString === `${baseUrl}/`;
+  return url.pathname.endsWith('/');
+}
+
 function localFileForUrl(urlString) {
   const url = new URL(urlString);
   let pathname = decodeURIComponent(url.pathname);
   if (pathname === '/') return 'index.html';
   pathname = pathname.replace(/^\//, '');
   if (pathname.endsWith('/')) return pathname + 'index.html';
+  if (!isFileLikePath(url.pathname) && exists(`${pathname}/index.html`)) return `${pathname}/index.html`;
   return pathname;
 }
 
@@ -62,17 +98,17 @@ const protectedNoindex = [
 ];
 
 const redirectPages = {
-  'tools.html': 'https://qilylean.com/qilylean/lean-tools.html',
-  'papers.html': 'https://qilylean.com/improvements',
-  'moments.html': 'https://qilylean.com/moments',
-  'knowledge.html': 'https://qilylean.com/knowledge',
-  'execution.html': 'https://qilylean.com/qilylean/execution-loop.html',
-  'qilylean/home.html': 'https://qilylean.com/',
-  'qilylean/index.html': 'https://qilylean.com/',
-  'daily-insights.html': 'https://qilylean.com/qilylean/daily-insights.html',
-  'qilylean/papers.html': 'https://qilylean.com/improvements',
-  'qilylean/home-fixed.html': 'https://qilylean.com/',
-  'qilylean/home-live.html': 'https://qilylean.com/'
+  'tools.html': `${baseUrl}/qilylean/lean-tools.html`,
+  'papers.html': canonicalizePublicUrl(`${baseUrl}/improvements`),
+  'moments.html': canonicalizePublicUrl(`${baseUrl}/moments`),
+  'knowledge.html': canonicalizePublicUrl(`${baseUrl}/knowledge`),
+  'execution.html': `${baseUrl}/qilylean/execution-loop.html`,
+  'qilylean/home.html': canonicalizePublicUrl(`${baseUrl}/`),
+  'qilylean/index.html': canonicalizePublicUrl(`${baseUrl}/`),
+  'daily-insights.html': `${baseUrl}/qilylean/daily-insights.html`,
+  'qilylean/papers.html': canonicalizePublicUrl(`${baseUrl}/improvements`),
+  'qilylean/home-fixed.html': canonicalizePublicUrl(`${baseUrl}/`),
+  'qilylean/home-live.html': canonicalizePublicUrl(`${baseUrl}/`)
 };
 
 const htmlFiles = walk(ROOT).filter(file => file.endsWith('.html'));
@@ -85,7 +121,9 @@ for (const file of htmlFiles) {
     ...Array.from(html.matchAll(/<meta\b[^>]*content=["'](https:\/\/(?:www\.)?qilylean\.com[^"']*)["'][^>]*property=["']og:url["']/gi), (match) => match[1])
   ];
   for (const url of publicMetadataUrls) {
-    if (url.endsWith('/')) errors.push(`${file}: canonical/og:url must omit trailing slash (${url})`);
+    if (metadataUrlHasWrongSlashStyle(url)) {
+      errors.push(`${file}: canonical/og:url slash style must follow SSOT canonicalTrailingSlash=${canonicalTrailingSlash} (${url})`);
+    }
   }
   if (!hasNoindex(html)) continue;
   if (!protectedNoindex.some(pattern => pattern.test(file))) {
@@ -118,6 +156,9 @@ for (const sitemap of sitemapFiles) {
   if (new Set(urls).size !== urls.length) warnings.push(`${sitemap}: duplicate canonical URLs detected`);
   for (const url of urls) {
     allSitemapUrls.push(url);
+    if (metadataUrlHasWrongSlashStyle(url)) {
+      errors.push(`${sitemap}: URL slash style must follow SSOT canonicalTrailingSlash=${canonicalTrailingSlash} (${url})`);
+    }
     const localFile = localFileForUrl(url);
     if (!exists(localFile)) {
       errors.push(`${sitemap}: ${url} maps to missing file ${localFile}`);
@@ -134,10 +175,10 @@ for (const sitemap of sitemapFiles) {
 
 const robots = read('robots.txt');
 if (!/^Allow:\s*\/$/mi.test(robots)) errors.push('robots.txt: missing Allow: /');
-if (!/^Sitemap:\s*https:\/\/qilylean\.com\/sitemap\.xml$/mi.test(robots)) {
+if (!new RegExp(`^Sitemap:\\s*${baseUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\/sitemap\\.xml$`, 'mi').test(robots)) {
   errors.push('robots.txt: primary sitemap declaration is missing');
 }
-if (!/^Sitemap:\s*https:\/\/qilylean\.com\/sitemap-core\.xml$/mi.test(robots)) {
+if (!new RegExp(`^Sitemap:\\s*${baseUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\/sitemap-core\\.xml$`, 'mi').test(robots)) {
   warnings.push('robots.txt: sitemap-core.xml has not been declared');
 }
 
@@ -156,4 +197,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`SEO indexability validation passed: ${htmlFiles.length} HTML files checked, ${uniqueSitemapUrls.size} sitemap URLs checked.`);
+console.log(`SEO indexability validation passed: ${htmlFiles.length} HTML files checked, ${uniqueSitemapUrls.size} sitemap URLs checked; canonicalTrailingSlash=${canonicalTrailingSlash}.`);
