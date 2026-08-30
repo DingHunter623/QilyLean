@@ -1,0 +1,61 @@
+name: Normalize QilyLean public URL contract
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-url-contract-v1
+  cancel-in-progress: true
+
+jobs:
+  normalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Normalize directory-backed public URLs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/normalize-url-contract.py --apply
+          python3 scripts/normalize-url-contract.py
+          git diff --check
+
+      - name: Show normalization summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'QilyLean URL contract:'
+          echo '  root URL                 -> https://qilylean.com/'
+          echo '  directory */index.html   -> trailing slash'
+          echo '  real file URLs           -> keep extension, no added slash'
+          echo
+          git status --short
+          echo
+          git diff --stat || true
+
+      - name: Commit normalized public URL references
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'URL contract already normalized.'
+            exit 0
+          fi
+          git commit -m 'fix: normalize canonical directory URLs [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
