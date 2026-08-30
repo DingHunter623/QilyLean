@@ -1,12 +1,13 @@
 name: Materialize Unified Public Baseline
 
-# Visual System V2 is the final visual authority; legacy visual layers remain compatibility sources only.
+# Visual System V2 remains the primary visual authority; Responsive Containment V1 closes tablet/mobile overflow.
 on:
   push:
     branches: [main]
     paths:
       - '**.html'
       - 'site-visual-system-v2.css'
+      - 'site-responsive-containment-v1.css'
       - 'visual-regression-matrix.json'
       - 'styles/qily-aircraft-brand-hero-v1.css'
       - 'site-global-language-v1.css'
