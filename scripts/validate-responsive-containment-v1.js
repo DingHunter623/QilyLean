@@ -34,16 +34,21 @@ must(materializer,'qilyResponsiveContainmentV1','Responsive containment material
 
 if(materialized){
   const html=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
+  const ownership=file=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(file);
   const missing=[];
   const duplicates=[];
+  let audited=0;
   for(const file of html){
     const source=read(file);
+    if(ownership(file)||!/<\/head>/i.test(source))continue;
+    audited++;
     const count=(source.match(/site-responsive-containment-v1\.css/g)||[]).length;
     if(count===0)missing.push(file);
     if(count>1)duplicates.push(file);
   }
-  if(missing.length)throw new Error(`Responsive containment missing in ${missing.length} HTML file(s): ${missing.slice(0,20).join(', ')}`);
-  if(duplicates.length)throw new Error(`Responsive containment duplicated in ${duplicates.length} HTML file(s): ${duplicates.slice(0,20).join(', ')}`);
+  if(audited<460)throw new Error(`Responsive containment public-page coverage unexpectedly low: ${audited}`);
+  if(missing.length)throw new Error(`Responsive containment missing in ${missing.length} public HTML file(s): ${missing.slice(0,20).join(', ')}`);
+  if(duplicates.length)throw new Error(`Responsive containment duplicated in ${duplicates.length} public HTML file(s): ${duplicates.slice(0,20).join(', ')}`);
 }
 
-process.stdout.write(`PASS: responsive containment keeps tablet/mobile tables, flows, diagrams and legacy visual frames inside the page shell${materialized?' across every tracked HTML page':''}.\n`);
+process.stdout.write(`PASS: responsive containment keeps tablet/mobile tables, flows, diagrams and legacy visual frames inside the page shell${materialized?' across every public HTML page':''}.\n`);
