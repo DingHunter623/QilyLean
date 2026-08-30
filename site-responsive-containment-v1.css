@@ -1,0 +1,138 @@
+/* QilyLean Responsive Containment V1 | 2026-08-30
+ * Sitewide presentation-only guard for tablet/mobile visual containment.
+ * Contract:
+ * - public sections and cards must never widen the viewport;
+ * - legacy tables/flows/diagrams may preserve engineering density, but scrolling stays local;
+ * - media scales inside its owning card/frame;
+ * - no business logic, content, SEO metadata or URL contract is changed here.
+ */
+:root{
+  --qily-containment-line:#d5e4e3;
+  --qily-containment-track:#edf5f3;
+  --qily-containment-thumb:#7aa7a4;
+}
+
+/* Flex/grid children are allowed to shrink instead of forcing page-level overflow. */
+html body main :is(
+  .module-grid,.paper-grid,.project-grid,.project-list-grid,.career-full-grid,.service-grid,
+  .resource-grid,.knowledge-grid,.trust-grid,.qily-ia-grid,.qily-six-grid,.qily-proof-strip,
+  .qily-principle-grid,.qily-secondary-links,.hero-grid,.form-layout,.process,.steps
+)>*{
+  min-width:0!important;
+  max-width:100%;
+  box-sizing:border-box;
+}
+
+/* Media belongs to its content frame. */
+html body main :is(img,video,canvas,svg,picture){
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+html body main :is(img,video){height:auto}
+html body main :is(iframe,object,embed){max-width:100%!important;box-sizing:border-box!important}
+
+/* Shared containment vocabulary for legacy and current engineering visuals. */
+html body main :is(
+  .table-wrap,.table-scroll,.table-responsive,.data-table-wrap,.data-table-scroll,
+  .matrix-wrap,.matrix-scroll,.comparison-wrap,.comparison-table-wrap,
+  .flow,.flow-wrap,.flow-scroll,.flowchart,.process-flow,.workflow,
+  .diagram,.diagram-wrap,.diagram-scroll,.chart-wrap,.visual-wrap,.visual-frame,.visual-scroll,
+  .opl-table,.opl-table-wrap,.opl-flow,.opl-flow-wrap,.viewer,.viewer-frame,.preview,.preview-frame
+){
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+
+/* Long technical strings stay inside cards instead of widening the document. */
+html body main :is(.module-card,.paper-card,.project-card,.project-list-card,.career-full-card,.service-card,
+  .resource-card,.knowledge-card,.trust-card,.qily-value-card,.qily-ia-card,.panel)
+:is(p,li,dd,dt,a,code){
+  min-width:0;
+  overflow-wrap:anywhere;
+}
+html body main pre{
+  max-width:100%!important;
+  overflow-x:auto!important;
+  overscroll-behavior-inline:contain;
+  box-sizing:border-box!important;
+}
+
+@media (max-width:1179px){
+  /* Tablet/mobile: dense engineering assets scroll within their own frame only. */
+  html body main :is(
+    .table-wrap,.table-scroll,.table-responsive,.data-table-wrap,.data-table-scroll,
+    .matrix-wrap,.matrix-scroll,.comparison-wrap,.comparison-table-wrap,
+    .flow,.flow-wrap,.flow-scroll,.flowchart,.process-flow,.workflow,
+    .diagram,.diagram-wrap,.diagram-scroll,.chart-wrap,.visual-wrap,.visual-frame,.visual-scroll,
+    .opl-table,.opl-table-wrap,.opl-flow,.opl-flow-wrap,.viewer,.viewer-frame,.preview,.preview-frame
+  ){
+    overflow-x:auto!important;
+    overflow-y:hidden;
+    overscroll-behavior-inline:contain;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+    scrollbar-color:var(--qily-containment-thumb) var(--qily-containment-track);
+  }
+  html body main :is(
+    .table-wrap,.table-scroll,.table-responsive,.data-table-wrap,.data-table-scroll,
+    .matrix-wrap,.matrix-scroll,.comparison-wrap,.comparison-table-wrap,
+    .flow,.flow-wrap,.flow-scroll,.flowchart,.process-flow,.workflow,
+    .diagram,.diagram-wrap,.diagram-scroll,.chart-wrap,.visual-wrap,.visual-frame,.visual-scroll,
+    .opl-table,.opl-table-wrap,.opl-flow,.opl-flow-wrap,.viewer,.viewer-frame,.preview,.preview-frame
+  )::-webkit-scrollbar{height:7px}
+  html body main :is(
+    .table-wrap,.table-scroll,.table-responsive,.data-table-wrap,.data-table-scroll,
+    .matrix-wrap,.matrix-scroll,.comparison-wrap,.comparison-table-wrap,
+    .flow,.flow-wrap,.flow-scroll,.flowchart,.process-flow,.workflow,
+    .diagram,.diagram-wrap,.diagram-scroll,.chart-wrap,.visual-wrap,.visual-frame,.visual-scroll,
+    .opl-table,.opl-table-wrap,.opl-flow,.opl-flow-wrap,.viewer,.viewer-frame,.preview,.preview-frame
+  )::-webkit-scrollbar-track{background:var(--qily-containment-track)}
+  html body main :is(
+    .table-wrap,.table-scroll,.table-responsive,.data-table-wrap,.data-table-scroll,
+    .matrix-wrap,.matrix-scroll,.comparison-wrap,.comparison-table-wrap,
+    .flow,.flow-wrap,.flow-scroll,.flowchart,.process-flow,.workflow,
+    .diagram,.diagram-wrap,.diagram-scroll,.chart-wrap,.visual-wrap,.visual-frame,.visual-scroll,
+    .opl-table,.opl-table-wrap,.opl-flow,.opl-flow-wrap,.viewer,.viewer-frame,.preview,.preview-frame
+  )::-webkit-scrollbar-thumb{background:var(--qily-containment-thumb);border-radius:999px}
+
+  html body main :is(input,select,textarea,button){max-width:100%;box-sizing:border-box}
+}
+
+@media (max-width:767px){
+  /* A direct legacy table without a wrapper becomes its own horizontal viewport. */
+  html body main table{
+    display:block!important;
+    width:100%!important;
+    max-width:100%!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    overscroll-behavior-inline:contain;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+    scrollbar-color:var(--qily-containment-thumb) var(--qily-containment-track);
+  }
+  html body main table::-webkit-scrollbar{height:7px}
+  html body main table::-webkit-scrollbar-track{background:var(--qily-containment-track)}
+  html body main table::-webkit-scrollbar-thumb{background:var(--qily-containment-thumb);border-radius:999px}
+
+  /* Fixed-width legacy visual blocks keep their authored detail but cannot widen the page shell. */
+  html body main :is(.flow,.flowchart,.process-flow,.workflow,.diagram,.matrix,.chart-wrap,.visual-frame,.opl-flow,.opl-table){
+    max-width:100%!important;
+    box-sizing:border-box!important;
+  }
+
+  html body main :is(.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,
+    .projects-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,
+    .knowledge-hero,.trust-hero) :is(img,svg,canvas,video){max-width:100%!important}
+}
+
+@media print{
+  html body main :is(.table-wrap,.table-scroll,.table-responsive,.data-table-wrap,.data-table-scroll,
+    .matrix-wrap,.matrix-scroll,.comparison-wrap,.comparison-table-wrap,.flow,.flow-wrap,.flow-scroll,
+    .flowchart,.process-flow,.workflow,.diagram,.diagram-wrap,.diagram-scroll,.chart-wrap,.visual-wrap,
+    .visual-frame,.visual-scroll,.opl-table,.opl-table-wrap,.opl-flow,.opl-flow-wrap,.viewer,.viewer-frame,
+    .preview,.preview-frame){overflow:visible!important}
+  html body main table{display:table!important;overflow:visible!important}
+}
