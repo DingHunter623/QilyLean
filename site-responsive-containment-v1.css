@@ -136,3 +136,96 @@ html body main pre{
     .preview,.preview-frame){overflow:visible!important}
   html body main table{display:table!important;overflow:visible!important}
 }
+
+/* QILY-0830-HEADER-INTEGRITY-V1:START
+ * The site header is the primary visual anchor. Every first-level label, active border and language-control border must remain fully visible inside the header content axis.
+ */
+:root{
+  --qily-header-rail-track:#dbe8e6;
+  --qily-header-rail-thumb:#0f4b5a;
+  --qily-header-rail-hover:#12606f;
+}
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header){
+  box-sizing:border-box!important;
+  overflow:visible!important;
+  padding-right:2px!important;
+}
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header)
+:is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"],nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"]){
+  box-sizing:border-box!important;
+  flex:1 1 auto!important;
+  min-width:0!important;
+  max-width:none!important;
+  padding-left:2px!important;
+  padding-right:10px!important;
+  scroll-padding-left:10px!important;
+  scroll-padding-right:10px!important;
+}
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header)
+:is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"],nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href]{
+  box-sizing:border-box!important;
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+  max-width:none!important;
+  overflow:visible!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  text-overflow:clip!important;
+}
+
+/* 260–300px was oversized at the right edge. This width keeps globe + selected language fully readable without pushing the frame outside the axis. */
+html body .qily-web-translate{
+  box-sizing:border-box!important;
+  flex:0 1 clamp(198px,13vw,224px)!important;
+  width:clamp(198px,13vw,224px)!important;
+  min-width:198px!important;
+  max-width:224px!important;
+  margin-left:8px!important;
+  margin-right:2px!important;
+  padding-left:7px!important;
+  padding-right:7px!important;
+  overflow:visible!important;
+}
+html body .qily-web-translate__mark{
+  flex:0 0 24px!important;
+  width:24px!important;
+  min-width:24px!important;
+}
+html body .qily-web-translate__select{
+  box-sizing:border-box!important;
+  flex:1 1 auto!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  padding-left:10px!important;
+  padding-right:28px!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+}
+
+/* Preserve the current deep-teal movement rail; do not reintroduce the gold experiment. */
+html body .qily-primary-nav-scroll-rail{
+  background:var(--qily-header-rail-track)!important;
+  box-shadow:inset 0 0 0 1px rgba(15,75,90,.12)!important;
+}
+html body .qily-primary-nav-scroll-thumb{
+  background:var(--qily-header-rail-thumb)!important;
+  box-shadow:0 1px 4px rgba(15,75,90,.22)!important;
+}
+html body .qily-primary-nav-scroll-rail:hover .qily-primary-nav-scroll-thumb,
+html body .qily-primary-nav-scroll-thumb:active{background:var(--qily-header-rail-hover)!important}
+
+@media(max-width:900px){
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header){padding-right:0!important}
+  html body .qily-web-translate{
+    flex:0 0 auto!important;
+    width:min(224px,calc(100vw - 36px))!important;
+    min-width:0!important;
+    max-width:calc(100vw - 36px)!important;
+    margin-left:0!important;
+    margin-right:0!important;
+  }
+}
+/* QILY-0830-HEADER-INTEGRITY-V1:END */
