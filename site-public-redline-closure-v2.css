@@ -1,16 +1,17 @@
-/* QilyLean Global Translation Dual Route V2.3｜2026-08-30 navigation visual alignment closure */
+/* QilyLean Global Translation Dual Route V2.4｜2026-08-30 VI gold rail + right-axis translator closure */
 .qily-web-translate{
   position:relative;
   order:999;
   display:inline-flex;
   align-items:center;
   gap:7px;
-  flex:1 1 236px!important;
-  min-width:236px!important;
-  max-width:none!important;
+  flex:0 0 clamp(260px,17vw,300px)!important;
+  width:clamp(260px,17vw,300px)!important;
+  min-width:260px!important;
+  max-width:300px!important;
   min-height:42px;
-  margin-left:6px;
-  margin-right:0;
+  margin-left:10px!important;
+  margin-right:0!important;
   padding:0 7px;
   border:1.5px solid #b9d9d4;
   border-radius:10px;
@@ -53,12 +54,12 @@
 #qilyGoogleTranslateOnDemandV1,#qilyGlobalLanguageV1,.qily-google-translate,.qily-language-switcher{display:none!important}
 @media (prefers-reduced-motion:reduce){.qily-web-translate{transition:none!important}}
 
-/* QILY-0830-PUBLIC-REDLINE-CLOSURE-V2.3:START */
+/* QILY-0830-PUBLIC-REDLINE-CLOSURE-V2.4:START */
 :root{
   --ql-redline-header-offset:86px;
-  --ql-redline-rail-track:#d5e4e3;
-  --ql-redline-rail-thumb:#0f4b5a;
-  --ql-redline-rail-hover:#12606f;
+  --ql-redline-rail-track:#f3e6cf;
+  --ql-redline-rail-thumb:#caa15f;
+  --ql-redline-rail-hover:#b88b45;
 }
 html{scroll-padding-top:calc(var(--ql-redline-header-offset) + 16px)}
 html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header){
@@ -70,10 +71,10 @@ html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qi
 }
 html body main :is(section[id],article[id],div[id]){scroll-margin-top:calc(var(--ql-redline-header-offset) + 18px)}
 
-/* Primary navigation: one geometry and one VI rail language across every module. */
+/* Primary navigation: one geometry and one VI gold rail language across every module. */
 html body :is(header.qily-site-header,header.qily-global-header) :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"],nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"]){flex:1 1 auto!important;min-width:0!important;max-width:none!important;scrollbar-width:none!important}
 html body :is(header.qily-site-header,header.qily-global-header) :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"],nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
-html body .qily-primary-nav-scroll-rail{height:9px!important;bottom:4px!important;background:var(--ql-redline-rail-track)!important;border-radius:999px!important;box-shadow:inset 0 0 0 1px rgba(15,75,90,.10)!important}
+html body .qily-primary-nav-scroll-rail{height:9px!important;bottom:4px!important;background:var(--ql-redline-rail-track)!important;border-radius:999px!important;box-shadow:inset 0 0 0 1px rgba(202,161,95,.30)!important}
 html body .qily-primary-nav-scroll-thumb{top:2px!important;height:5px!important;min-width:64px!important;background:var(--ql-redline-rail-thumb)!important;border-radius:999px!important;box-shadow:none!important}
 html body .qily-primary-nav-scroll-rail:hover .qily-primary-nav-scroll-thumb,html body .qily-primary-nav-scroll-thumb:active{background:var(--ql-redline-rail-hover)!important}
 
@@ -178,8 +179,12 @@ html body .qily-search-result[data-qily-detail-priority="high"]{border-color:#9f
 html body .qily-search-result[data-qily-detail-priority="high"] .qily-search-rank{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a!important}
 html body .qily-search-result[data-qily-direct-result="v2"]{border:1.5px solid #caa15f!important;background:#fffaf0!important;box-shadow:0 9px 22px rgba(15,75,90,.10)!important}
 html body .qily-search-result[data-qily-direct-result="v2"] .qily-search-rank{color:#17322d!important;-webkit-text-fill-color:#17322d!important;background:#ffe39b!important}
-
 html body #qilyDockShareCopyToastV2{position:fixed!important;left:50%!important;bottom:24px!important;z-index:2147483600!important;transform:translateX(-50%)!important;padding:10px 16px!important;border-radius:999px!important;color:#fff!important;background:#073c47!important;box-shadow:0 9px 24px rgba(0,0,0,.24)!important;font-size:14px!important;font-weight:800!important;pointer-events:none!important}
+
+/* Links industry resource status: keep the capsule clear of the lead copy on desktop. */
+@media(min-width:821px){
+  html body #industryResourceService .resource-status{position:relative!important;z-index:2!important;align-self:start!important;transform:translateY(-10mm)!important}
+}
 
 @media(max-width:900px){
   :root{--ql-redline-header-offset:146px}
@@ -193,9 +198,9 @@ html body #qilyDockShareCopyToastV2{position:fixed!important;left:50%!important;
   html body .qily-contact-sheet-clean .qily-contact-qr-grid{grid-template-columns:1fr!important}
   html body main table{display:block!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
   html body main table :is(th,td){min-width:110px!important}
-  html body .qily-web-translate{flex:0 0 auto!important;min-width:0!important;max-width:none!important}
+  html body .qily-web-translate{flex:0 0 auto!important;width:auto!important;min-width:0!important;max-width:none!important;margin-left:0!important}
   html body .qily-web-translate__select{width:110px!important;min-width:110px!important;max-width:110px!important;font-size:13px!important}
   html body .module-hero .qily-project-evidence-grade,html body .project-hero .qily-project-evidence-grade{width:100%!important;max-width:100%!important}
   html body .contact-page-v3 .email-row a{font-size:20px!important}
 }
-/* QILY-0830-PUBLIC-REDLINE-CLOSURE-V2.3:END */
+/* QILY-0830-PUBLIC-REDLINE-CLOSURE-V2.4:END */
