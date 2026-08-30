@@ -56,6 +56,6 @@ must(translation,'Math.min(18000,9000+chars*5)','Translation adaptive timeout');
 const visual=read('site-visual-system-v2.css');
 for(const token of ['--qv2-forest:#0f4b5a','--qv2-gold:#caa15f','--qv2-axis:1560px','width:52px!important','width:50px!important'])must(visual,token,'VI authority');
 const materializer=read('scripts/materialize-global-language-v3.js');
-for(const token of ['20260829-sitewide-visual-closure-v27','20260829-first-readable-v7','20260829-primary-navigation-safe-scroll-v7','20260829-authority-v54','20260829-r11-semantics-v14','20260829-r12-v132','20260830-visual-system-v2-r7'])must(materializer,token,'Materializer');
+for(const token of ['20260830-sitewide-responsive-containment-v28','20260829-first-readable-v7','20260829-primary-navigation-safe-scroll-v7','20260829-authority-v54','20260829-r11-semantics-v14','20260829-r12-v132','20260830-visual-system-v2-r7'])must(materializer,token,'Materializer');
 
-console.log('PASS: V26 closes reachable navigation, protected Dock typography, portrait-ready DDZ, progressive translation and unified VI authority.');
+console.log('PASS: V26 compatibility remains intact on V28 sitewide baseline: reachable navigation, protected Dock typography, portrait-ready DDZ, progressive translation and unified VI authority.');
