@@ -37,8 +37,9 @@ const ddzMaterializer=read('scripts/materialize-ddz-public-ui-20260824.js');
 must(ddzMaterializer,'20260829-ddz-mobile-ready-v132','DDZ materializer');
 must(ddzMaterializer,'forced-orientation metadata must stay removed','DDZ materializer');
 
+/* V27 remains a compatibility checkpoint, while the sitewide materializer has advanced to V28. */
 const materializer=read('scripts/materialize-global-language-v3.js');
-must(materializer,"BASELINE_VERSION='20260829-sitewide-visual-closure-v27'",'V27 baseline');
-must(materializer,"VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'",'V27 visual cache');
+must(materializer,"BASELINE_VERSION='20260830-sitewide-responsive-containment-v28'",'V28 sitewide baseline');
+must(materializer,"VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'",'V28 visual cache');
 
-console.log('PASS: V27 closes annotated public arrows, PDCA semantics, governed axes, readable boundary cards, static-token feedback, contact underlines, evidence alignment, translation borders and portrait-ready DDZ automation.');
+console.log('PASS: V27 compatibility checks remain satisfied on the V28 sitewide responsive-containment baseline, including arrows, PDCA semantics, governed axes, readable boundary cards, static-token feedback, contact underlines, evidence alignment, translation borders and portrait-ready DDZ automation.');
