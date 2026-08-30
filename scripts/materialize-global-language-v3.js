@@ -6,7 +6,8 @@
  * - translation assets remain deferred and never block first paint.
  * - Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.4 owns interaction meaning.
  * - Visual System V2 remains the primary sitewide visual authority across four device compositions.
- * - Responsive Containment V1 is the final geometry guard: legacy tables/flows scroll locally, page shells stay contained, and header labels/translation frames stay complete.
+ * - Responsive Containment V1 guards page geometry.
+ * - Header + Project Integrity V2 loads last and owns complete header framing plus project evidence readability.
  * - Public Redline Closure V2 owns the 0830 annotated shared visual/interaction corrections.
  * - static knowledge tags/chips/cards never fake links or pointer feedback.
  * - Dock V5.4 alone owns Dock structure/labels/actions; shared visual layers only change its visual weight by viewport.
@@ -44,6 +45,7 @@ const PUBLIC_REDLINE_V2_CSS='/site-public-redline-closure-v2.css?v=20260830-anno
 const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260830-annotated-v2';
 const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7';
 const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2';
+const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260830-header-project-integrity-v2';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260829-r11-semantics-v14-visual-0830-v2';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260829-r11-semantics-v14';
@@ -54,7 +56,7 @@ function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root
 function removeScriptByMarker(source){return source.replace(/\s*<script\b[^>]*(?:data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct|data-qily-interaction-contrast-direct|data-qily-content-contrast-direct|data-qily-translation-safe-direct|data-qily-contact-route-direct|data-qily-interaction-semantics-direct|data-qily-public-redline-v2-direct|data-qily-translation-safety-bootstrap)[^>]*>[\s\S]*?<\/script>\s*/gi,'\n')}
 function removeLegacyManagedScripts(source){let next=source;next=next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-global-language-v3\.js[^"']*["'][^>]*><\/script>\s*/gi,'\n');next=next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-contact-route-v1\.js[^"']*["'][^>]*><\/script>\s*/gi,'\n');next=next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-interaction-semantics-v1\.js[^"']*["'][^>]*><\/script>\s*/gi,'\n');next=next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-public-redline-closure-v2\.js[^"']*["'][^>]*><\/script>\s*/gi,'\n');return next}
 function removeManagedStyles(source){
-  const paths=['site-global-language-v1.css','site-header-axis-v1.css','site-translation-progress-v1.css','site-translation-public-ui-v1.css','site-interaction-contrast-guard-v1.css','site-content-contrast-guard-v1.css','site-unified-visual-governance-v1.css','site-visual-regression-closure-v1.css','site-stability-recovery-v1.css','site-public-redline-closure-v1.css','site-public-redline-closure-v2.css','site-interaction-semantics-v1.css','site-visual-system-v2.css','site-responsive-containment-v1.css','tools/pure-ddz/game/css/r8-closure-v128.css'];
+  const paths=['site-global-language-v1.css','site-header-axis-v1.css','site-translation-progress-v1.css','site-translation-public-ui-v1.css','site-interaction-contrast-guard-v1.css','site-content-contrast-guard-v1.css','site-unified-visual-governance-v1.css','site-visual-regression-closure-v1.css','site-stability-recovery-v1.css','site-public-redline-closure-v1.css','site-public-redline-closure-v2.css','site-interaction-semantics-v1.css','site-visual-system-v2.css','site-responsive-containment-v1.css','site-header-project-integrity-v2.css','tools/pure-ddz/game/css/r8-closure-v128.css'];
   let next=source;
   for(const file of paths){const pattern=new RegExp('\\s*<link\\b[^>]*href=["\\\'][^"\\\']*\\/'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^"\\\']*["\\\'][^>]*>\\s*','gi');next=next.replace(pattern,'\n')}
   return next;
@@ -96,7 +98,8 @@ function materialize(source,relative){
     `<script defer data-qily-interaction-semantics-direct="v1.4" src="${INTERACTION_SEMANTICS_JS}"></script>`,
     `<script defer data-qily-contact-route-direct="v13.4" src="${CONTACT_ROUTE_JS}"></script>`,
     `<link id="qilyVisualSystemV2" rel="stylesheet" href="${VISUAL_SYSTEM_V2}">`,
-    `<link id="qilyResponsiveContainmentV1" rel="stylesheet" href="${RESPONSIVE_CONTAINMENT_CSS}">`
+    `<link id="qilyResponsiveContainmentV1" rel="stylesheet" href="${RESPONSIVE_CONTAINMENT_CSS}">`,
+    `<link id="qilyHeaderProjectIntegrityV2" rel="stylesheet" href="${FINAL_INTEGRITY_CSS}">`
   ].filter(Boolean).join('\n');
   if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);
   return next;
