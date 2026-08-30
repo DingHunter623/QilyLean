@@ -29,7 +29,7 @@ assert(css.includes('navigation != CTA != tag != status'),'component identity co
 assert(css.includes('Only real navigation cards receive elevation feedback'),'static-card hover governance missing');
 assert(materializer.includes("const BASELINE_VERSION='20260830-sitewide-responsive-containment-v28'"),'materializer baseline is not V28');
 assert(materializer.includes("const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'"),'materializer does not pin V2 r7 cache key');
-assert(materializer.includes("const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-mobile-containment-v1'"),'materializer does not pin responsive containment cache key');
+assert(materializer.includes("const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2'"),'materializer does not pin current responsive containment cache key');
 assert(materializer.includes('qilyVisualSystemV2'),'materializer does not append V2 visual authority');
 assert(materializer.includes('qilyResponsiveContainmentV1'),'materializer does not append responsive containment as final geometry guard');
 assert(materializer.includes("'site-visual-system-v2.css'"),'materializer does not remove stale V2 links before rematerializing');
@@ -64,7 +64,7 @@ for(const relative of htmlFiles){
   const containmentMatches=source.match(/id=["']qilyResponsiveContainmentV1["']/g)||[];
   if(containmentMatches.length===1)withContainment++;
   if(containmentMatches.length>1)containmentDuplicates++;
-  if(containmentMatches.length===1&&!source.includes('/site-responsive-containment-v1.css?v=20260830-mobile-containment-v1'))containmentWrongCache++;
+  if(containmentMatches.length===1&&!source.includes('/site-responsive-containment-v1.css?v=20260830-header-integrity-v2'))containmentWrongCache++;
 }
 if(process.argv.includes('--materialized')){
   assert(publicCount>0,'no public HTML pages discovered');
