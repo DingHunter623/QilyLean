@@ -36,15 +36,24 @@ function hasMetaDescription(html) {
   return /<meta\s+[^>]*name=["']description["'][^>]*content=["'][^"']+["'][^>]*>/i.test(html);
 }
 
+function baseUrl() {
+  return String(config.production.baseUrl || '').replace(/\/+$/, '');
+}
+
 function expectedUrl(route) {
-  if (route === '/') return config.production.baseUrl;
-  return `${config.production.baseUrl}${route}`;
+  const base = baseUrl();
+  const slashMode = config.production.canonicalTrailingSlash !== false;
+  if (route === '/') return slashMode ? `${base}/` : base;
+  let normalized = `/${String(route || '').replace(/^\/+|\/+$/g, '')}`;
+  if (slashMode) normalized += '/';
+  return `${base}${normalized}`;
 }
 
 function sitemapContains(xml, url) {
-  if (xml.includes(`<loc>${url}</loc>`)) return { found: true, legacySlash: false };
-  if (url !== config.production.baseUrl && xml.includes(`<loc>${url}/</loc>`)) return { found: true, legacySlash: true };
-  return { found: false, legacySlash: false };
+  if (xml.includes(`<loc>${url}</loc>`)) return { found: true, alternateStyle: false };
+  const alternate = url.endsWith('/') ? url.slice(0, -1) : `${url}/`;
+  if (alternate && xml.includes(`<loc>${alternate}</loc>`)) return { found: true, alternateStyle: true, alternate };
+  return { found: false, alternateStyle: false, alternate };
 }
 
 for (const entry of config.coreRoutes) {
@@ -58,22 +67,24 @@ for (const entry of config.coreRoutes) {
   const canonical = canonicalFrom(html);
   const expected = expectedUrl(entry.route);
   if (canonical !== expected) fail(`canonical mismatch for ${entry.route}: ${canonical} != ${expected}`);
-  if (entry.route !== '/' && /\/$/.test(canonical)) fail(`trailing-slash canonical is forbidden: ${canonical}`);
+  if (config.production.canonicalTrailingSlash !== false && !canonical.endsWith('/')) fail(`trailing-slash canonical required by SSOT: ${canonical}`);
+  if (config.production.canonicalTrailingSlash === false && entry.route !== '/' && canonical.endsWith('/')) fail(`trailing-slash canonical forbidden by SSOT: ${canonical}`);
 
   const sitemapMatch = sitemapContains(sitemap, expected);
   if (!sitemapMatch.found) fail(`core route missing from sitemap.xml: ${expected}`);
-  if (sitemapMatch.legacySlash) warnings.push(`legacy trailing-slash sitemap URL retained during staged migration: ${expected}/`);
+  if (sitemapMatch.alternateStyle) warnings.push(`alternate sitemap slash style retained during staged migration: ${sitemapMatch.alternate}`);
 }
 
-if (!robots.includes(`Sitemap: ${config.production.baseUrl}/sitemap.xml`)) fail('robots.txt does not advertise sitemap.xml');
-if (!robots.includes(`Sitemap: ${config.production.baseUrl}/sitemap-core.xml`)) fail('robots.txt does not advertise sitemap-core.xml');
+const base = baseUrl();
+if (!robots.includes(`Sitemap: ${base}/sitemap.xml`)) fail('robots.txt does not advertise sitemap.xml');
+if (!robots.includes(`Sitemap: ${base}/sitemap-core.xml`)) fail('robots.txt does not advertise sitemap-core.xml');
 
 if (coreSitemap) {
   for (const route of ['/', '/capabilities/', '/projects/', '/knowledge/', '/trust/', '/cooperation/']) {
     const url = expectedUrl(route);
     const match = sitemapContains(coreSitemap, url);
     if (!match.found) fail(`core sitemap missing protected route: ${url}`);
-    if (match.legacySlash) warnings.push(`legacy trailing-slash core sitemap URL retained during staged migration: ${url}/`);
+    if (match.alternateStyle) warnings.push(`alternate core-sitemap slash style retained during staged migration: ${match.alternate}`);
   }
 }
 
@@ -96,4 +107,4 @@ if (exists(navFile)) {
 }
 
 for (const warning of warnings) console.warn(`[V4][migration-warning] ${warning}`);
-console.log(`[V4] G1 source validation PASS: ${config.coreRoutes.length} core routes; SSOT=${config.sourceOfTruth.siteData}; runtime=${config.runtimeBaseline}; migrationWarnings=${warnings.length}`);
+console.log(`[V4] G1 source validation PASS: ${config.coreRoutes.length} core routes; canonicalTrailingSlash=${config.production.canonicalTrailingSlash !== false}; SSOT=${config.sourceOfTruth.siteData}; runtime=${config.runtimeBaseline}; migrationWarnings=${warnings.length}`);
