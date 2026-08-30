@@ -56,12 +56,14 @@ must(translation,'14,3200,3','Translation background lane');
 must(translation,'Promise.all([criticalRetryPromise,visiblePromise])','Translation parallel foreground lanes');
 must(translation,'Math.min(18000,9000+chars*5)','Translation adaptive timeout');
 const publicTranslation=read('site-translation-public-ui-v1.js');
+must(publicTranslation,'Translation Public UI V1.2','Stable public picker');
 must(publicTranslation,"var PUBLIC_LANGUAGE_LABELS={'zh-CN':'中文简体','zh-TW':'中文繁体','en':'English'}",'Public language contract');
 must(publicTranslation,"var PUBLIC_LANGUAGE_ORDER=['zh-CN','zh-TW','en']",'Public language order');
+if(/new\s+MutationObserver\s*\(/.test(publicTranslation))throw new Error('Public picker document-wide MutationObserver forbidden');
 
 const visual=read('site-visual-system-v2.css');
 for(const token of ['--qv2-forest:#0f4b5a','--qv2-gold:#caa15f','--qv2-axis:1560px','width:52px!important','width:50px!important'])must(visual,token,'VI authority');
 const materializer=read('scripts/materialize-global-language-v3.js');
-for(const token of ['20260830-sitewide-responsive-containment-v28','20260829-first-readable-v7','20260829-primary-navigation-safe-scroll-v7','20260829-authority-v54','20260830-r11-semantics-v15-ios-drag','20260830-public-language-picker-v7','20260829-r12-v132','20260830-visual-system-v2-r7'])must(materializer,token,'Materializer');
+for(const token of ['20260830-sitewide-responsive-containment-v28','20260829-first-readable-v7','20260829-primary-navigation-safe-scroll-v7','20260829-authority-v54','20260830-r11-semantics-v15-ios-drag','20260830-r11-semantics-v14-visual-v3-vi-teal','20260830-public-language-picker-v8-stable','20260830-r7-single-responsibility-v8-stable-picker','20260829-r12-v132','20260830-visual-system-v2-r7'])must(materializer,token,'Materializer');
 
 console.log('PASS: V26 compatibility remains intact on V28 sitewide baseline: iOS-safe reachable navigation, three-language public picker, protected Dock typography, portrait-ready DDZ, progressive translation and unified VI authority.');

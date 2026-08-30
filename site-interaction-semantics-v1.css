@@ -13,9 +13,9 @@
   --qily-action-bg-hover:#12606f;
   --qily-action-line:#caa15f;
   --qily-action-focus:rgba(202,161,95,.28);
-  --qily-nav-rail-track:#f3e6cf;
-  --qily-nav-rail-thumb:#caa15f;
-  --qily-nav-rail-thumb-hover:#b88b45;
+  --qily-nav-rail-track:#dbe8e6;
+  --qily-nav-rail-thumb:#0f4b5a;
+  --qily-nav-rail-thumb-hover:#12606f;
 }
 
 html body :is(a[href],[data-route],[data-href],[data-url])[data-qily-interaction="route"]{
@@ -117,7 +117,7 @@ html body .qily-primary-nav-scroll-rail{
   border:0!important;
   border-radius:999px!important;
   background:var(--qily-nav-rail-track)!important;
-  box-shadow:inset 0 0 0 1px rgba(202,161,95,.30)!important;
+  box-shadow:inset 0 0 0 1px rgba(15,75,90,.12)!important;
   cursor:pointer!important;
   touch-action:none!important;
   overflow:hidden!important;
@@ -132,7 +132,7 @@ html body .qily-primary-nav-scroll-thumb{
   min-width:56px!important;
   border-radius:999px!important;
   background:var(--qily-nav-rail-thumb)!important;
-  box-shadow:0 1px 4px rgba(118,82,30,.22)!important;
+  box-shadow:0 1px 4px rgba(15,75,90,.22)!important;
   cursor:ew-resize!important;
   will-change:transform,width!important;
 }

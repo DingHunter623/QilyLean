@@ -46,8 +46,10 @@ assert(header.includes('overflow-x:auto!important')&&header.includes('overflow-x
 assert(header.includes('white-space:nowrap!important'),'一级导航文字完整显示契约缺失');
 
 const publicTranslation=read('site-translation-public-ui-v1.js');
+assert(publicTranslation.includes('Translation Public UI V1.2'),'翻译器稳定版 V1.2 缺失');
 assert(publicTranslation.includes("var PUBLIC_LANGUAGE_LABELS={'zh-CN':'中文简体','zh-TW':'中文繁体','en':'English'}"),'三语言公开标签契约缺失');
 assert(publicTranslation.includes("var PUBLIC_LANGUAGE_ORDER=['zh-CN','zh-TW','en']"),'三语言公开排序契约缺失');
+assert(!/new\s+MutationObserver\s*\(/.test(publicTranslation),'翻译器禁止全局 MutationObserver 持续重绘');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
 assert(materializer.includes("BASELINE_VERSION='20260830-sitewide-responsive-containment-v28'"),'V28 全站物化基线缺失');
@@ -55,7 +57,7 @@ assert(materializer.includes("VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=202
 assert(materializer.includes('20260829-authority-v54'),'Dock V5.4 未进入全站物化');
 assert(materializer.includes('20260829-dock-functional-public-v134'),'Contact V13.4 未进入全站物化');
 assert(materializer.includes('20260830-r11-semantics-v15-ios-drag'),'Semantics V1.5 未进入全站物化');
-assert(materializer.includes('20260830-public-language-picker-v7'),'三语言选择器 V7 未进入全站物化');
+assert(materializer.includes('20260830-public-language-picker-v8-stable'),'三语言稳定选择器 V8 未进入全站物化');
 assert(materializer.includes('20260829-r12-v132'),'DDZ R12 未进入物化');
 const visual=read('site-visual-system-v2.css');
 assert(visual.includes('QilyLean Visual System V2'),'Visual System V2 样式源缺失');

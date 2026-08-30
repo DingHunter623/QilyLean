@@ -21,7 +21,7 @@ const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 const BASELINE_VERSION='20260830-sitewide-responsive-containment-v28';
 const SAFE_VERSION='20260829-first-readable-v7';
-const CONSISTENCY='/site-ui-consistency-v1.js?v=20260828-r7-single-responsibility-v7';
+const CONSISTENCY='/site-ui-consistency-v1.js?v=20260830-r7-single-responsibility-v8-stable-picker';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260829-authority-v54';
@@ -32,7 +32,7 @@ const HEADER_AXIS='/site-header-axis-v1.css?v=20260829-primary-navigation-safe-s
 const PROGRESS_CSS='/site-translation-progress-v1.css?v=20260827-source-recovery-v4';
 const PROGRESS_JS='/site-translation-progress-v1.js?v=20260829-first-readable-v7';
 const PUBLIC_UI_CSS='/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8';
-const PUBLIC_UI_JS='/site-translation-public-ui-v1.js?v=20260830-public-language-picker-v7';
+const PUBLIC_UI_JS='/site-translation-public-ui-v1.js?v=20260830-public-language-picker-v8-stable';
 const INTERACTION_CONTRAST_CSS='/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2';
 const INTERACTION_CONTRAST_JS='/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2';
 const CONTENT_CONTRAST_CSS='/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6';
@@ -47,7 +47,7 @@ const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r
 const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2';
 const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260830-header-project-integrity-v2';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
-const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260829-r11-semantics-v14-visual-0830-v2';
+const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260830-r11-semantics-v15-ios-drag';
 const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132';
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';

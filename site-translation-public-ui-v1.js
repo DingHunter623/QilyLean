@@ -1,17 +1,19 @@
-/* QilyLean Translation Public UI V1.1｜2026-08-30
+/* QilyLean Translation Public UI V1.2｜2026-08-30
  * Visitor-facing adapter only: implementation details stay internal.
  * Public picker contract: 中文简体 / 中文繁体 / English, in that exact order.
+ * V1.2 removes the document-wide observer and never mutates options while the
+ * native picker is opening, preventing Safari/iPhone repaint and focus loops.
  * The selected language name must remain fully readable on every page depth.
  * Retired sizing trace for historical validator migration only: var maxWidth=viewport<=430?210:(viewport<=1180?240:(viewport<=1500?260:280))
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyTranslationPublicUiV11)return;
+  if(w.__qilyTranslationPublicUiV12)return;
+  w.__qilyTranslationPublicUiV12=true;
   w.__qilyTranslationPublicUiV11=true;
   w.__qilyTranslationPublicUiV1=true;
 
   var CONTROL_ID='qilyGlobalTranslationDualRouteV2';
-  var observer=null;
   var canvas=d.createElement('canvas');
   var context=canvas.getContext&&canvas.getContext('2d');
   var PUBLIC_LANGUAGE_LABELS={'zh-CN':'中文简体','zh-TW':'中文繁体','en':'English'};
@@ -82,6 +84,7 @@
     control.setAttribute('title','本站默认显示中文简体；仅支持中文繁体与 English 切换。');
     control.setAttribute('data-qily-public-language-set','zh-CN,zh-TW,en');
     control.setAttribute('data-qily-default-language','zh-CN');
+    control.setAttribute('data-qily-public-ui-version','v1.2');
 
     var badge=control.querySelector('.qily-web-translate__badge');
     if(badge)badge.remove();
@@ -93,12 +96,12 @@
     if(select){
       normalizePublicLanguageOptions(select);
       fitSelect(select);
-      if(select.dataset.qilyPublicUiBound!=='v1.1'){
-        select.dataset.qilyPublicUiBound='v1.1';
-        select.addEventListener('change',function(){normalizePublicLanguageOptions(select);fitSelect(select);revealSelectedLanguage(select)});
-        select.addEventListener('input',function(){normalizePublicLanguageOptions(select);fitSelect(select);revealSelectedLanguage(select)});
-        select.addEventListener('focus',function(){normalizePublicLanguageOptions(select);fitSelect(select)});
-        select.addEventListener('pointerdown',function(){normalizePublicLanguageOptions(select);fitSelect(select)},{passive:true});
+      if(select.dataset.qilyPublicUiBound!=='v1.2'){
+        select.dataset.qilyPublicUiBound='v1.2';
+        select.addEventListener('change',function(){fitSelect(select);revealSelectedLanguage(select)});
+        select.addEventListener('input',function(){fitSelect(select);revealSelectedLanguage(select)});
+        select.addEventListener('focus',function(){fitSelect(select)});
+        select.addEventListener('pointerdown',function(){fitSelect(select)},{passive:true});
       }
     }
     return true;
@@ -107,5 +110,4 @@
   function reconcile(){cleanControl(d.getElementById(CONTROL_ID))}
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',reconcile,{once:true});else reconcile();
   d.addEventListener('qily:shell-ready',reconcile);d.addEventListener('qily:language-change',reconcile);w.addEventListener('pageshow',reconcile,{passive:true});w.addEventListener('resize',function(){w.requestAnimationFrame(reconcile)},{passive:true});
-  if(w.MutationObserver){observer=new MutationObserver(function(){w.requestAnimationFrame(reconcile)});observer.observe(d.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['data-state','data-qily-language']})}
 })(document,window);
