@@ -4,7 +4,7 @@
 /* QilyLean Sitewide Public Baseline Materializer V28 + Public Redline Closure V2｜2026-08-30
  * - Chinese remains the authoritative source and default display.
  * - translation assets remain deferred and never block first paint.
- * - Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.4 owns interaction meaning.
+ * - Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.5 owns interaction meaning and iOS-safe navigation dragging.
  * - Visual System V2 remains the primary sitewide visual authority across four device compositions.
  * - Responsive Containment V1 guards page geometry.
  * - Header + Project Integrity V2 loads last and owns complete header framing plus project evidence readability.
@@ -32,7 +32,7 @@ const HEADER_AXIS='/site-header-axis-v1.css?v=20260829-primary-navigation-safe-s
 const PROGRESS_CSS='/site-translation-progress-v1.css?v=20260827-source-recovery-v4';
 const PROGRESS_JS='/site-translation-progress-v1.js?v=20260829-first-readable-v7';
 const PUBLIC_UI_CSS='/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8';
-const PUBLIC_UI_JS='/site-translation-public-ui-v1.js?v=20260825-public-language-picker-v6';
+const PUBLIC_UI_JS='/site-translation-public-ui-v1.js?v=20260830-public-language-picker-v7';
 const INTERACTION_CONTRAST_CSS='/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2';
 const INTERACTION_CONTRAST_JS='/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2';
 const CONTENT_CONTRAST_CSS='/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6';
@@ -48,7 +48,7 @@ const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830
 const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260830-header-project-integrity-v2';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260829-r11-semantics-v14-visual-0830-v2';
-const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260829-r11-semantics-v14';
+const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260830-r11-semantics-v15-ios-drag';
 const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132';
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
 
@@ -95,7 +95,7 @@ function materialize(source,relative){
     `<script defer data-qily-translation-progress-direct="bilingual-v4" src="${PROGRESS_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
     `<script defer data-qily-content-contrast-direct="v6" src="${CONTENT_CONTRAST_JS}"></script>`,
-    `<script defer data-qily-interaction-semantics-direct="v1.4" src="${INTERACTION_SEMANTICS_JS}"></script>`,
+    `<script defer data-qily-interaction-semantics-direct="v1.5" src="${INTERACTION_SEMANTICS_JS}"></script>`,
     `<script defer data-qily-contact-route-direct="v13.4" src="${CONTACT_ROUTE_JS}"></script>`,
     `<link id="qilyVisualSystemV2" rel="stylesheet" href="${VISUAL_SYSTEM_V2}">`,
     `<link id="qilyResponsiveContainmentV1" rel="stylesheet" href="${RESPONSIVE_CONTAINMENT_CSS}">`,
