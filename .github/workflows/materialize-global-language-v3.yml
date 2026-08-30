@@ -36,6 +36,7 @@ on:
       - 'scripts/materialize-global-language-v3.js'
       - 'scripts/materialize-contact-route-v6.js'
       - 'scripts/validate-visual-system-v2.js'
+      - 'scripts/validate-responsive-containment-v1.js'
       - 'scripts/validate-global-language-runtime-compat-v1.js'
       - 'scripts/validate-sitewide-safety-readability-v1.js'
       - 'scripts/validate-public-baseline-materialization-v1.js'
@@ -86,6 +87,7 @@ jobs:
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/materialize-contact-route-v6.js
           node --check scripts/validate-visual-system-v2.js
+          node --check scripts/validate-responsive-containment-v1.js
           node --check scripts/validate-global-language-runtime-compat-v1.js
           node --check scripts/validate-sitewide-safety-readability-v1.js
           node --check scripts/validate-public-baseline-materialization-v1.js
@@ -93,6 +95,7 @@ jobs:
           node --check scripts/validate-mobile-primary-navigation-v1.js
           node --check scripts/validate-unified-visual-governance-v1.js
           node scripts/validate-visual-system-v2.js
+          node scripts/validate-responsive-containment-v1.js
           node scripts/validate-sitewide-safety-readability-v1.js
           node scripts/validate-global-language-runtime-compat-v1.js
           node scripts/validate-mobile-primary-navigation-v1.js
@@ -109,6 +112,7 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             node scripts/validate-visual-system-v2.js
+            node scripts/validate-responsive-containment-v1.js
             node scripts/validate-sitewide-safety-readability-v1.js
             node scripts/validate-global-language-runtime-compat-v1.js
             node scripts/validate-mobile-primary-navigation-v1.js
@@ -116,6 +120,7 @@ jobs:
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
             node scripts/validate-visual-system-v2.js --materialized
+            node scripts/validate-responsive-containment-v1.js --materialized
             node scripts/validate-public-baseline-materialization-v1.js
             node scripts/validate-20260825-remediation-closure-v1.js
             node scripts/validate-mobile-primary-navigation-v1.js
