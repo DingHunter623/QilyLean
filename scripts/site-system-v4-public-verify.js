@@ -13,7 +13,13 @@ const delayMs = Number(process.env.QILY_VERIFY_DELAY_MS || 15000);
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function expectedUrl(route) {
-  return route === '/' ? config.production.baseUrl : `${config.production.baseUrl}${route}`;
+  const baseUrl = String(config.production.baseUrl || '').replace(/\/+$/, '');
+  if (route === '/') return `${baseUrl}/`;
+  const isFileRoute = /\.[a-z0-9]+$/i.test(route);
+  const pathname = isFileRoute || config.production.canonicalTrailingSlash === false
+    ? route.replace(/\/+$/, '')
+    : `${route.replace(/\/+$/, '')}/`;
+  return `${baseUrl}${pathname}`;
 }
 
 function canonicalFrom(html) {
