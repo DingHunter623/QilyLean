@@ -15,9 +15,12 @@ must(header,'content:none!important','Header spacer removal');
 must(header,'padding:0 0 18px!important','Header text-to-rail safety gap');
 
 const semantics=read('site-interaction-semantics-v1.js');
-must(semantics,'__qilyInteractionSemanticsV14','Navigation runtime');
+must(semantics,'Interaction Semantics Runtime V1.5','Navigation runtime');
+must(semantics,'__qilyInteractionSemanticsV15','Navigation runtime marker');
 must(semantics,'installPrimaryNavDragGuard','Navigation drag guard');
 must(semantics,'suppressUntil=w.performance.now()+320','Navigation click suppression');
+must(semantics,"w.addEventListener('pointermove',move,{passive:false})",'Navigation iOS rail drag');
+must(semantics,'nav.scrollLeft=startScroll-dx','Navigation direct touch drag');
 
 const dock=read('site-dock-share-runtime-v1.js');
 must(dock,'Floating Dock Authoritative Runtime V5.4','Dock runtime');
@@ -52,10 +55,13 @@ must(translation,'10,1800,3','Translation visible lane');
 must(translation,'14,3200,3','Translation background lane');
 must(translation,'Promise.all([criticalRetryPromise,visiblePromise])','Translation parallel foreground lanes');
 must(translation,'Math.min(18000,9000+chars*5)','Translation adaptive timeout');
+const publicTranslation=read('site-translation-public-ui-v1.js');
+must(publicTranslation,"var PUBLIC_LANGUAGE_LABELS={'zh-CN':'中文简体','zh-TW':'中文繁体','en':'English'}",'Public language contract');
+must(publicTranslation,"var PUBLIC_LANGUAGE_ORDER=['zh-CN','zh-TW','en']",'Public language order');
 
 const visual=read('site-visual-system-v2.css');
 for(const token of ['--qv2-forest:#0f4b5a','--qv2-gold:#caa15f','--qv2-axis:1560px','width:52px!important','width:50px!important'])must(visual,token,'VI authority');
 const materializer=read('scripts/materialize-global-language-v3.js');
-for(const token of ['20260830-sitewide-responsive-containment-v28','20260829-first-readable-v7','20260829-primary-navigation-safe-scroll-v7','20260829-authority-v54','20260829-r11-semantics-v14','20260829-r12-v132','20260830-visual-system-v2-r7'])must(materializer,token,'Materializer');
+for(const token of ['20260830-sitewide-responsive-containment-v28','20260829-first-readable-v7','20260829-primary-navigation-safe-scroll-v7','20260829-authority-v54','20260830-r11-semantics-v15-ios-drag','20260830-public-language-picker-v7','20260829-r12-v132','20260830-visual-system-v2-r7'])must(materializer,token,'Materializer');
 
-console.log('PASS: V26 compatibility remains intact on V28 sitewide baseline: reachable navigation, protected Dock typography, portrait-ready DDZ, progressive translation and unified VI authority.');
+console.log('PASS: V26 compatibility remains intact on V28 sitewide baseline: iOS-safe reachable navigation, three-language public picker, protected Dock typography, portrait-ready DDZ, progressive translation and unified VI authority.');
