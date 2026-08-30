@@ -43,7 +43,7 @@ html=html.replace(/(<a\b[^>]*class="[^"]*\bterm-opl-open\b[^"]*"[^>]*>)(?!<span 
 });
 
 // Unified visible wording and WeChat interaction: text-link appearance, not a button block.
-html=html.replace('官网：<a href="https://qilylean.com">qilylean.com</a>','官方网址：<a href="https://qilylean.com">qilylean.com</a>');
+html=html.replace('官网：<a href="https://qilylean.com/">qilylean.com</a>','官方网址：<a href="https://qilylean.com/">qilylean.com</a>');
 html=html.replace(/<br>微信：<button[^>]*data-opl-copy-wechat="Qily259"[^>]*>Qily259<\/button><br>/g,'<br>微信：<a href="#copy-wechat" class="term-opl-copy-wechat-v9" data-opl-copy-wechat="Qily259" aria-label="复制微信 Qily259">Qily259</a><br>');
 html=html.replace(/<br>微信：Qily259<br>/g,'<br>微信：<a href="#copy-wechat" class="term-opl-copy-wechat-v9" data-opl-copy-wechat="Qily259" aria-label="复制微信 Qily259">Qily259</a><br>');
 html=html.replace('扫码访问官网</span>','扫码访问官方网址</span>');

@@ -12,7 +12,7 @@ const path=require('path');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 const DATE='2026-08-26';
-const ORIGIN='https://qilylean.com';
+const ORIGIN='https://qilylean.com/';
 const PAGE='/knowledge/terminology.html';
 const SET_ID=`${ORIGIN}${PAGE}#defined-term-set`;
 

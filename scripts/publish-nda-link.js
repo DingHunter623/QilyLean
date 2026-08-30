@@ -9,8 +9,8 @@ const buildDate = process.env.QILY_BUILD_DATE || new Date().toISOString().slice(
 const pdfUrl = '/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf';
 const legacyWordUrl = '/qilylean/assets/legal/qilylean-mutual-nda-v1.docx';
 const previewUrl = '/trust/nda-preview.html';
-const publicPdfUrl = `https://qilylean.com${pdfUrl}`;
-const publicPreviewUrl = `https://qilylean.com${previewUrl}`;
+const publicPdfUrl = `https://qilylean.com/${pdfUrl}`;
+const publicPreviewUrl = `https://qilylean.com/${previewUrl}`;
 
 function read(rel) {
   return fs.readFileSync(path.join(root, rel), 'utf8');

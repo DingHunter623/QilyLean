@@ -63,8 +63,8 @@
   function ensureSearchAuthorityNavigation(){
     var path=currentPath(),active=path===LEAN_AUTHORITY_PATH||path.indexOf(LEAN_AUTHORITY_PATH)===0,sourceMode=isChineseSourceMode(),changed=false;
     d.querySelectorAll('.qily-global-nav,header nav.site-nav,header nav.nav,header nav[aria-label="网站导航"],header nav[aria-label="QilyLean核心导视"],header nav').forEach(function(nav){
-      var link=nav.querySelector('a[href="/lean-production/"],a[href="/lean-production"]');
-      if(!link){link=d.createElement('a');link.href=LEAN_AUTHORITY_PATH;link.textContent='精益生产';link.setAttribute('data-qily-search-authority','lean-production');link.setAttribute('aria-label','精益生产专题');var improvement=nav.querySelector('a[href="/improvements/"],a[href="/improvements"]');if(improvement&&improvement.nextSibling)nav.insertBefore(link,improvement.nextSibling);else nav.appendChild(link);changed=true;}
+      var link=nav.querySelector('a[href="/lean-production/"],a[href="/lean-production/"]');
+      if(!link){link=d.createElement('a');link.href=LEAN_AUTHORITY_PATH;link.textContent='精益生产';link.setAttribute('data-qily-search-authority','lean-production');link.setAttribute('aria-label','精益生产专题');var improvement=nav.querySelector('a[href="/improvements/"],a[href="/improvements/"]');if(improvement&&improvement.nextSibling)nav.insertBefore(link,improvement.nextSibling);else nav.appendChild(link);changed=true;}
       if(sourceMode&&(link.textContent||'').trim()!=='精益生产'){link.textContent='精益生产';changed=true;}
       link.setAttribute('data-qily-search-authority','lean-production');
       if(sourceMode)link.setAttribute('aria-label','精益生产专题');

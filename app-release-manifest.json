@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "updatedAt": "2026-08-27",
-  "officialWebsite": "https://qilylean.com",
+  "officialWebsite": "https://qilylean.com/",
   "supportEmail": "admin@qilylean.com",
   "apps": {
     "times26001": {
@@ -38,10 +38,10 @@
           "/assets/tools/times26001-v1.1.14-gallery-samsung-c55.webp"
         ]
       },
-      "productPage": "https://qilylean.com/tools/times26001",
-      "privacy": "https://qilylean.com/legal/times26001/privacy",
-      "terms": "https://qilylean.com/legal/times26001/terms",
-      "support": "https://qilylean.com/app-support",
+      "productPage": "https://qilylean.com/tools/times26001/",
+      "privacy": "https://qilylean.com/legal/times26001/privacy/",
+      "terms": "https://qilylean.com/legal/times26001/terms/",
+      "support": "https://qilylean.com/app-support/",
       "officialWebsiteLinkPolicy": "APP可展示并由用户主动访问QilyLean官方网址与官网邮箱；用户可见、复制和分享的官方网址不带尾斜杠；真实子路径保留域名后的分隔斜杠；Google Play及正式应用市场版不得引导用户绕过应用市场下载、更新或安装APK",
       "latestBuild": {
         "versionName": "1.1.14",
@@ -70,10 +70,10 @@
         "label": "应用市场候选版",
         "status": "生产签名待启用；签名完成后进入稳定发布链"
       },
-      "productPage": "https://qilylean.com/capabilities#digital-tools",
-      "privacy": "https://qilylean.com/legal/qilylean-home/privacy",
-      "terms": "https://qilylean.com/legal/qilylean-home/terms",
-      "support": "https://qilylean.com/app-support",
+      "productPage": "https://qilylean.com/capabilities/#digital-tools",
+      "privacy": "https://qilylean.com/legal/qilylean-home/privacy/",
+      "terms": "https://qilylean.com/legal/qilylean-home/terms/",
+      "support": "https://qilylean.com/app-support/",
       "latestBuild": {
         "versionName": "2.3.3",
         "versionCode": 11,

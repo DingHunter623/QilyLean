@@ -4,7 +4,7 @@
   if (window.__qilyLeanSiteNavigationPublicV8) return;
   window.__qilyLeanSiteNavigationPublicV8 = true;
 
-  var HOME_URL = 'https://qilylean.com';
+  var HOME_URL = 'https://qilylean.com/';
   var HOME_QR_SRC = '/qilylean/qilylean-home-qr.svg?v=20260722-navigation-v4';
   var SHARED_ASSET_VERSION = '20260814-contact-v13';
   var VISUAL_SCALE_VERSION = '20260729-hierarchy-v4';
@@ -460,7 +460,7 @@
     var contactMask = document.createElement('div');
     contactMask.id = 'wxMask';
     contactMask.className = 'qily-modal-mask';
-    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><div class="qily-wechat-row"><button class="qily-wechat-action" type="button" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259"><span>微信</span><strong>Qily259</strong></button></div><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (item) { return '<a href="tel:' + item.number + '" data-qily-phone-copy="' + item.number + '" aria-label="复制并拨打 ' + item.city + ' ' + item.number + '"><span class="qily-phone-city">' + item.city + '：</span><strong class="qily-phone-number">' + item.number + '</strong></a>'; }).join('') + '</div><div class="qily-contact-channel-grid" role="group" aria-label="官方网址与官网邮箱"><button class="qily-contact-channel" type="button" data-qily-contact-copy="https://qilylean.com" data-qily-contact-href="https://qilylean.com" data-qily-contact-label="官方网址" aria-label="复制官方网址并选择是否打开"><span>官方网址</span><strong>qilylean.com</strong></button><button class="qily-contact-channel" type="button" data-qily-contact-copy="' + CONTACT_EMAIL + '" data-qily-contact-href="mailto:' + CONTACT_EMAIL + '" data-qily-contact-label="官网邮箱" aria-label="复制官网邮箱并选择是否打开邮件应用"><span>官网邮箱</span><strong>admin@<wbr>qilylean.com</strong></button></div></div>';
+    contactMask.innerHTML = '<div class="qily-modal-panel qily-contact-panel" role="dialog" aria-modal="true" aria-labelledby="qilyContactTitle"><button class="qily-modal-close" type="button" aria-label="关闭">×</button><h3 id="qilyContactTitle">交流</h3><img class="wx-qr-image qily-contact-qr" alt="微信二维码"><div class="qily-wechat-row"><button class="qily-wechat-action" type="button" data-qily-wechat-copy="Qily259" aria-label="复制微信 Qily259"><span>微信</span><strong>Qily259</strong></button></div><div class="qily-phone-list"><div>手机号码</div>' + PHONE_NUMBERS.map(function (item) { return '<a href="tel:' + item.number + '" data-qily-phone-copy="' + item.number + '" aria-label="复制并拨打 ' + item.city + ' ' + item.number + '"><span class="qily-phone-city">' + item.city + '：</span><strong class="qily-phone-number">' + item.number + '</strong></a>'; }).join('') + '</div><div class="qily-contact-channel-grid" role="group" aria-label="官方网址与官网邮箱"><button class="qily-contact-channel" type="button" data-qily-contact-copy="https://qilylean.com/" data-qily-contact-href="https://qilylean.com/" data-qily-contact-label="官方网址" aria-label="复制官方网址并选择是否打开"><span>官方网址</span><strong>qilylean.com</strong></button><button class="qily-contact-channel" type="button" data-qily-contact-copy="' + CONTACT_EMAIL + '" data-qily-contact-href="mailto:' + CONTACT_EMAIL + '" data-qily-contact-label="官网邮箱" aria-label="复制官网邮箱并选择是否打开邮件应用"><span>官网邮箱</span><strong>admin@<wbr>qilylean.com</strong></button></div></div>';
     document.body.appendChild(contactMask);
 
     var toast = document.createElement('div');
@@ -594,7 +594,7 @@
     var block = document.createElement('div');
     block.id = 'qilyGlobalContactFooter';
     block.className = 'qily-global-contact-footer';
-    block.innerHTML = '<span>QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span><span>官方网址：</span><a href="https://qilylean.com">https://qilylean.com</a><span>官网邮箱：</span><a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>';
+    block.innerHTML = '<span>QilyLean｜技术与项目联系 / Technical &amp; Project Contact</span><span>官方网址：</span><a href="https://qilylean.com/">https://qilylean.com/</a><span>官网邮箱：</span><a href="mailto:' + CONTACT_EMAIL + '">' + CONTACT_EMAIL + '</a>';
     var footer = document.querySelector('footer');
     if (footer) footer.appendChild(block);
     else {
@@ -621,7 +621,7 @@
         var last=pages.length?pages[pages.length-1]:null;
         if(last && !last.querySelector('.qily-document-email-tail')){
           var tail=document.createElement('div'); tail.className='qily-document-email-tail';
-          tail.innerHTML='官方网址：https://qilylean.com　｜　官网邮箱：<a href="mailto:'+CONTACT_EMAIL+'">'+CONTACT_EMAIL+'</a>';
+          tail.innerHTML='官方网址：https://qilylean.com/　｜　官网邮箱：<a href="mailto:'+CONTACT_EMAIL+'">'+CONTACT_EMAIL+'</a>';
           last.appendChild(tail);
         }
       }

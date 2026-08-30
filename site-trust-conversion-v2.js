@@ -76,7 +76,7 @@
         {
           '@type': 'WebSite',
           '@id': 'https://qilylean.com/#website',
-          url: 'https://qilylean.com',
+          url: 'https://qilylean.com/',
           name: 'QilyLean｜启力精益',
           description: '精益生产、工程改善与数智工厂专业实践平台',
           inLanguage: 'zh-CN',
@@ -86,7 +86,7 @@
           '@type': 'Person',
           '@id': 'https://qilylean.com/#person',
           name: '丁启利',
-          url: 'https://qilylean.com',
+          url: 'https://qilylean.com/',
           jobTitle: '制造改善、工业工程与精益项目实践者',
           brand: { '@type': 'Brand', name: 'QilyLean｜启力精益' },
           knowsAbout: ['精益生产', '工业工程', '新工厂规划', '目视化项目', '数智化工厂', 'ERP/MES/APS制造协同']
@@ -133,7 +133,7 @@
   }
 
   function addTrustProcurementMatrix() {
-    if (path !== '/trust' && path !== '/trust/index.html') return;
+    if (path !== '/trust/' && path !== '/trust/index.html') return;
     if (d.getElementById('qtc-procurement-matrix')) return;
     var section = buildSection({
       id: 'qtc-procurement-matrix',
@@ -154,7 +154,7 @@
   }
 
   function addCooperationGate() {
-    if (path !== '/cooperation' && path !== '/cooperation/index.html') return;
+    if (path !== '/cooperation/' && path !== '/cooperation/index.html') return;
     if (d.getElementById('qtc-cooperation-gate')) return;
     var section = buildSection({
       id: 'qtc-cooperation-gate',
@@ -173,7 +173,7 @@
   }
 
   function addProjectsEvidenceArchitecture() {
-    if (path !== '/projects' && path !== '/projects/index.html') return;
+    if (path !== '/projects/' && path !== '/projects/index.html') return;
     if (d.getElementById('qtc-project-architecture')) return;
     var section = buildSection({
       id: 'qtc-project-architecture',
@@ -192,7 +192,7 @@
   }
 
   function addCommercialRecordGate() {
-    if (path.indexOf('/projects/qilylean-commercial-deliveries') !== 0) return;
+    if (path.indexOf('/projects/qilylean-commercial-deliveries/') !== 0) return;
     if (d.getElementById('qtc-commercial-record-gate')) return;
     var section = buildSection({
       id: 'qtc-commercial-record-gate',
@@ -229,7 +229,7 @@
   }
 
   function clarifyCapabilityCertificate() {
-    if (path !== '/capabilities' && path !== '/capabilities/index.html') return;
+    if (path !== '/capabilities/' && path !== '/capabilities/index.html') return;
     var headings = d.querySelectorAll('h2,h3,h4');
     headings.forEach(function (heading) {
       var text = (heading.textContent || '').trim();

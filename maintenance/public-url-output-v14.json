@@ -1,7 +1,7 @@
 {
   "version": "2026-08-14-url-v14",
   "policy": "All user-visible, copied, QR, shared, canonical and APP-facing QilyLean absolute URLs omit trailing slash; internal relative routing remains path-safe.",
-  "root_url": "https://qilylean.com",
+  "root_url": "https://qilylean.com/",
   "site_navigation_cache_version": "20260814-url-v14",
   "changed_files": [],
   "changed_file_count": 0,

@@ -22,7 +22,7 @@ function walk(dir,out=[]){
 function rel(p){return path.relative(root,p).replace(/\\/g,'/');}
 
 // Repair only a missing separator immediately after the exact hostname.
-// Root URL remains https://qilylean.com; real subpaths become https://qilylean.com/path.
+// Root URL remains https://qilylean.com/; real subpaths become https://qilylean.com/path.
 const broken=/https:\/\/qilylean\.com(?=(?:[A-Za-z0-9_-]+\/|[A-Za-z0-9_-]+[.#?]|Times26001-|QilyLean_Home_))/g;
 for(const p of walk(root)){
   const r=rel(p); if(r===self)continue;
@@ -33,16 +33,16 @@ for(const p of walk(root)){
 }
 
 const explicit=[
-  ['https://qilylean.comcapabilities/','https://qilylean.com/capabilities/'],
-  ['https://qilylean.comapp-support/','https://qilylean.com/app-support/'],
-  ['https://qilylean.comlegal/','https://qilylean.com/legal/'],
-  ['https://qilylean.comtools/','https://qilylean.com/tools/'],
-  ['https://qilylean.comassets/','https://qilylean.com/assets/'],
-  ['https://qilylean.comshare/','https://qilylean.com/share/'],
-  ['https://qilylean.comprojects/','https://qilylean.com/projects/'],
-  ['https://qilylean.comknowledge/','https://qilylean.com/knowledge/'],
-  ['https://qilylean.comQilyLean_Home_','https://qilylean.com/QilyLean_Home_'],
-  ['https://qilylean.comTimes26001-','https://qilylean.com/Times26001-']
+  ['https://qilylean.com/capabilities/','https://qilylean.com/capabilities/'],
+  ['https://qilylean.com/app-support/','https://qilylean.com/app-support/'],
+  ['https://qilylean.com/legal/','https://qilylean.com/legal/'],
+  ['https://qilylean.com/tools/','https://qilylean.com/tools/'],
+  ['https://qilylean.com/assets/','https://qilylean.com/assets/'],
+  ['https://qilylean.com/share/','https://qilylean.com/share/'],
+  ['https://qilylean.com/projects/','https://qilylean.com/projects/'],
+  ['https://qilylean.com/knowledge/','https://qilylean.com/knowledge/'],
+  ['https://qilylean.com/QilyLean_Home_','https://qilylean.com/QilyLean_Home_'],
+  ['https://qilylean.com/Times26001-','https://qilylean.com/Times26001-']
 ];
 for(const p of walk(root)){
   const r=rel(p);if(r===self)continue;
@@ -73,7 +73,7 @@ if(bad.length)throw new Error('Broken QilyLean URL path separators remain:\n'+ba
 fs.mkdirSync(path.join(root,'maintenance'),{recursive:true});
 fs.writeFileSync(path.join(root,'maintenance','public-url-path-integrity-v13.json'),JSON.stringify({
   version:'2026-08-14-v13.1',
-  root_url:'https://qilylean.com',
+  root_url:'https://qilylean.com/',
   rule:'root has no trailing slash; concrete subpaths always keep the hostname/path separator slash; runtime template routes stay dynamic',
   changed_files:[...new Set(changed)].sort(),
   changed_file_count:new Set(changed).size,

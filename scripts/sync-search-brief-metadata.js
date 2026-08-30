@@ -63,7 +63,7 @@ function urlToFile(url) {
   let pathname;
   try {
     const parsed = new URL(url);
-    if (parsed.origin !== 'https://qilylean.com') return '';
+    if (parsed.origin !== 'https://qilylean.com/') return '';
     pathname = decodeURIComponent(parsed.pathname);
   } catch (_) { return ''; }
   if (pathname === '/') return 'index.html';
@@ -117,7 +117,7 @@ function sitemapEntries() {
     let pathname;
     try {
       const parsed = new URL(absoluteUrl);
-      if (parsed.origin !== 'https://qilylean.com') continue;
+      if (parsed.origin !== 'https://qilylean.com/') continue;
       pathname = parsed.pathname;
     } catch (_) { continue; }
     if (/^\/qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html$/.test(pathname)) continue;

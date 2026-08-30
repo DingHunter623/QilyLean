@@ -16,7 +16,7 @@
         <p>同时，工作中的我们长期面对复杂的问题分析、工程改善、项目管理和高强度思考，大脑也需要适度放松与调节。斗地主不仅是一种娱乐方式，也是一种简单的益智活动，在轻松游戏过程中保持思考、缓解压力，让工作与生活更加平衡。</p>
         <p>我希望通过这款小小的游戏，解决一个真实的家庭需求，也将自己多年工程实践中追求的简单、高效、友好的理念融入数字产品设计中。</p>
         <blockquote>愿每一次出牌，都带来轻松与快乐；<br>愿每一次思考，都保持活力与智慧。</blockquote>
-        <p class="qily-product-support"><strong>统一开发者支持：</strong>官方网址 <a href="https://qilylean.com" target="_blank" rel="noopener">https://qilylean.com</a>；官网邮箱 <a href="mailto:admin@qilylean.com">admin@qilylean.com</a>。</p>
+        <p class="qily-product-support"><strong>统一开发者支持：</strong>官方网址 <a href="https://qilylean.com/" target="_blank" rel="noopener">https://qilylean.com/</a>；官网邮箱 <a href="mailto:admin@qilylean.com">admin@qilylean.com</a>。</p>
       </div>
     </details>`;
 

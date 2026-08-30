@@ -5,7 +5,7 @@
   "standard": "QL-WEB-STD-001/R6",
   "runtimeBaseline": "V44",
   "production": {
-    "baseUrl": "https://qilylean.com",
+    "baseUrl": "https://qilylean.com/",
     "canonicalTrailingSlash": false,
     "staticFirst": true
   },
@@ -19,16 +19,16 @@
   },
   "coreRoutes": [
     {"route": "/", "file": "index.html", "marker": "QILYLEAN"},
-    {"route": "/capabilities", "file": "capabilities/index.html"},
-    {"route": "/projects", "file": "projects/index.html"},
-    {"route": "/improvements", "file": "improvements/index.html"},
-    {"route": "/knowledge", "file": "knowledge/index.html"},
-    {"route": "/trust", "file": "trust/index.html"},
-    {"route": "/cooperation", "file": "cooperation/index.html"},
-    {"route": "/north", "file": "north/index.html", "marker": "QILYLEAN NORTH"},
-    {"route": "/north/inner-mongolia", "file": "north/inner-mongolia/index.html"},
-    {"route": "/north/shaanxi", "file": "north/shaanxi/index.html"},
-    {"route": "/north/diagnosis", "file": "north/diagnosis/index.html", "marker": "data-qily-diagnosis-form"}
+    {"route": "/capabilities/", "file": "capabilities/index.html"},
+    {"route": "/projects/", "file": "projects/index.html"},
+    {"route": "/improvements/", "file": "improvements/index.html"},
+    {"route": "/knowledge/", "file": "knowledge/index.html"},
+    {"route": "/trust/", "file": "trust/index.html"},
+    {"route": "/cooperation/", "file": "cooperation/index.html"},
+    {"route": "/north/", "file": "north/index.html", "marker": "QILYLEAN NORTH"},
+    {"route": "/north/inner-mongolia/", "file": "north/inner-mongolia/index.html"},
+    {"route": "/north/shaanxi/", "file": "north/shaanxi/index.html"},
+    {"route": "/north/diagnosis/", "file": "north/diagnosis/index.html", "marker": "data-qily-diagnosis-form"}
   ],
   "qualityGates": {
     "G1": "source",

@@ -310,7 +310,7 @@ function buildSearchIndex(data) {
     let url;
     try {
       const parsed = new URL(absoluteUrl);
-      if (parsed.origin !== 'https://qilylean.com') return;
+      if (parsed.origin !== 'https://qilylean.com/') return;
       url = parsed.pathname;
     } catch (error) { return; }
     if (/^\/qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html$/.test(url)) return;
@@ -409,7 +409,7 @@ function main() {
   sitemapFiles.forEach((file) => {
     upsertSitemapUrl(file, 'https://qilylean.com/trust/', buildDate, '0.8');
     upsertSitemapUrl(file, 'https://qilylean.com/cooperation/', buildDate, '0.9');
-    upsertSitemapUrl(file, 'https://qilylean.com', buildDate, '1.0');
+    upsertSitemapUrl(file, 'https://qilylean.com/', buildDate, '1.0');
   });
 
   const searchMeta = buildSearchIndex(data);

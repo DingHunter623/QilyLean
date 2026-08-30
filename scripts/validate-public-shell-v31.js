@@ -37,7 +37,7 @@ assert(core.includes("localStorage.removeItem('qilyDockPositionV2')"), 'Legacy D
 assert(!core.includes("localStorage.setItem('qilyDockPositionV2'"), 'Dock arbitrary-position persistence returned.');
 assert(!core.includes('saveDockPosition()'), 'Retired Dock save-position helper returned.');
 assert(core.includes('var url = normalizePublicUrl(location.href);'), 'Current-page share URL is not normalized at its output boundary.');
-assert(core.includes("var HOME_URL = 'https://qilylean.com';"), 'Official-site share URL is not canonical.');
+assert(core.includes("var HOME_URL = 'https://qilylean.com/';"), 'Official-site share URL is not canonical.');
 assert(dockCss.includes('--qily-dock-font-size:15px') && dockCss.includes('--qily-dock-font-size:14px'), 'Dock desktop/mobile font tokens are incomplete.');
 
 const staleNavigation = [];

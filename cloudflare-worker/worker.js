@@ -1,5 +1,5 @@
 const ALLOWED_ORIGINS = new Set([
-  'https://qilylean.com',
+  'https://qilylean.com/',
   'https://www.qilylean.com'
 ]);
 
@@ -31,7 +31,7 @@ const SYSTEM_INSTRUCTIONS = `你是 QilyLean AI，一名面向公众的通用人
 6. 默认使用清晰中文；根据用户语言自然切换。专业术语可附英文缩写。避免空泛口号、机械拒绝和过度承诺。\n7. 输出采用简洁、专业、易扫描的版式：结论先行，通常控制为3至6个要点；标题简短、段落精炼、层级不超过两级。\n8. 除非对比数据确有必要，不使用复杂表格；不使用装饰性分隔线、连续符号、花哨表情或过度加粗。\n9. 不展示内部思考过程、推理链或底层服务信息，只给出可核查的判断依据、结论与建议。\n10. 分析上传素材时，先说明识别到的素材类型与有效信息，再给出重点发现、问题判断、建议动作；无法确认的内容必须明确标注。`;
 
 function cors(origin) {
-  const allow = ALLOWED_ORIGINS.has(origin) ? origin : 'https://qilylean.com';
+  const allow = ALLOWED_ORIGINS.has(origin) ? origin : 'https://qilylean.com/';
   return {
     'Access-Control-Allow-Origin': allow,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',

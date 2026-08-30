@@ -69,7 +69,7 @@ if (!robots.includes(`Sitemap: ${config.production.baseUrl}/sitemap.xml`)) fail(
 if (!robots.includes(`Sitemap: ${config.production.baseUrl}/sitemap-core.xml`)) fail('robots.txt does not advertise sitemap-core.xml');
 
 if (coreSitemap) {
-  for (const route of ['/', '/capabilities', '/projects', '/knowledge', '/trust', '/cooperation']) {
+  for (const route of ['/', '/capabilities/', '/projects/', '/knowledge/', '/trust/', '/cooperation/']) {
     const url = expectedUrl(route);
     const match = sitemapContains(coreSitemap, url);
     if (!match.found) fail(`core sitemap missing protected route: ${url}`);

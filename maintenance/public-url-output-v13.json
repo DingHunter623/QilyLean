@@ -1,7 +1,7 @@
 {
   "version": "2026-08-14-v13",
   "policy": "user-visible, copied, QR and shared QilyLean URLs omit trailing slash; internal routes remain unchanged",
-  "root_url": "https://qilylean.com",
+  "root_url": "https://qilylean.com/",
   "changed_files": [
     "android/qilylean-home/app/src/main/java/com/qilylean/home/MainActivity.java",
     "app-release-manifest.json",

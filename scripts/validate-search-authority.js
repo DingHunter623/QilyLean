@@ -85,7 +85,7 @@ if (!pillar) {
 }
 
 const sitemap = fs.existsSync(sitemapPath) ? fs.readFileSync(sitemapPath, 'utf8') : '';
-if (!sitemap.includes('<loc>https://qilylean.com/lean-production</loc>')) {
+if (!sitemap.includes('<loc>https://qilylean.com/lean-production/</loc>')) {
   fail('sitemap-core.xml must include the lean-production pillar');
 }
 

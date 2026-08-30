@@ -130,7 +130,7 @@
   }
 
   function normalizeChatgptMemorialCertificate() {
-    if (path.indexOf('/certificates/chatgpt-lean') !== 0) return;
+    if (path.indexOf('/certificates/chatgpt-lean/') !== 0) return;
     var hero = d.querySelector('.module-hero .module-inner');
     if (!hero || d.getElementById('qilyChatgptCertificateBoundary')) return;
     var note = d.createElement('p');
@@ -142,7 +142,7 @@
   }
 
   function strengthenTrustRule() {
-    if (path.indexOf('/trust') !== 0) return;
+    if (path.indexOf('/trust/') !== 0) return;
     var section = d.getElementById('ai');
     if (!section || section.querySelector('[data-qily-cert-rule="v1"]')) return;
     var note = d.createElement('div');

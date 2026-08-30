@@ -6,7 +6,7 @@ const path = require('path');
 const root = path.resolve(process.cwd());
 const VERSION = '2026-08-14-url-v14';
 const SITE_NAV_VERSION = '20260814-url-v14';
-const ROOT_URL = 'https://qilylean.com';
+const ROOT_URL = 'https://qilylean.com/';
 const changed = new Set();
 const repairs = { normalizedAbsoluteUrls: 0, malformedJoinedHost: 0, cacheBusts: 0, runtimeRepairs: 0 };
 
@@ -79,7 +79,7 @@ const corePath = path.join(root, 'site-navigation-core.js');
 if (fs.existsSync(corePath)) {
   let s = fs.readFileSync(corePath, 'utf8');
   const before = s;
-  s = s.replace(/var HOME_URL = ['"]https:\/\/qilylean\.com\/?['"];/, "var HOME_URL = 'https://qilylean.com';");
+  s = s.replace(/var HOME_URL = ['"]https:\/\/qilylean\.com\/?['"];/, "var HOME_URL = 'https://qilylean.com/';");
   s = s.replace('var url = location.href;', 'var url = normalizePublicUrl(location.href);');
   if (!s.includes('var url = normalizePublicUrl(location.href);') && s.includes('function shareCurrentPage()')) {
     throw new Error('shareCurrentPage no-trailing-slash normalization missing');
@@ -132,8 +132,8 @@ if (fs.existsSync(floatingPath)) {
   let s = fs.readFileSync(floatingPath, 'utf8');
   const before = s;
   s = s.replace(
-    "return 'https://qilylean.com' + shortPath + (location.search || '') + hash;",
-    "return 'https://qilylean.com' + (shortPath ? '/' + shortPath.replace(/^\\/+/, '') : '') + (location.search || '') + hash;"
+    "return 'https://qilylean.com/' + shortPath + (location.search || '') + hash;",
+    "return 'https://qilylean.com/' + (shortPath ? '/' + shortPath.replace(/^\\/+/, '') : '') + (location.search || '') + hash;"
   );
   s = s.replace(/\/site-navigation\.js\?v=[^'"]+/g, `/site-navigation.js?v=${SITE_NAV_VERSION}`);
   if (s !== before) repairs.runtimeRepairs += 1;
@@ -169,7 +169,7 @@ if (bad.length) throw new Error('URL V14 validation failed:\n' + bad.join('\n'))
 const capability = path.join(root, 'capabilities/index.html');
 if (fs.existsSync(capability)) {
   const s = fs.readFileSync(capability, 'utf8');
-  if (!s.includes('rel="canonical" href="https://qilylean.com/capabilities"')) {
+  if (!s.includes('rel="canonical" href="https://qilylean.com/capabilities/"')) {
     throw new Error('capabilities canonical URL is not normalized');
   }
   if (!s.includes(`/site-navigation.js?v=${SITE_NAV_VERSION}`)) {

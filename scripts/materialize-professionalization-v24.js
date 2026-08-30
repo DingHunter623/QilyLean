@@ -293,7 +293,7 @@ function upsertDailyFreshness(html) {
   const itemList = briefs.slice(0, 10).map((brief, index) => ({
     '@type': 'ListItem',
     position: index + 1,
-    url: `https://qilylean.com${brief.href}`,
+    url: `https://qilylean.com/${brief.href}`,
     name: brief.title
   }));
   const schema = {
@@ -304,7 +304,7 @@ function upsertDailyFreshness(html) {
     description,
     dateModified: latest.date,
     temporalCoverage: `2019-07-10/${latest.date}`,
-    isPartOf: { '@type': 'WebSite', name: 'QilyLean｜启力精益', url: 'https://qilylean.com' },
+    isPartOf: { '@type': 'WebSite', name: 'QilyLean｜启力精益', url: 'https://qilylean.com/' },
     mainEntity: { '@type': 'ItemList', numberOfItems: total, itemListElement: itemList }
   };
   const block = `<!-- QILY-DAILY-FRESHNESS-V24:START -->\n<script id="qilyDailyFreshnessV24" type="application/ld+json">${JSON.stringify(schema)}</script>\n<!-- QILY-DAILY-FRESHNESS-V24:END -->`;
@@ -316,10 +316,10 @@ function upsertDailyFreshness(html) {
 
 function buildRss(briefs, latest, total) {
   const items = briefs.map((brief) => {
-    const link = `https://qilylean.com${brief.href}`;
+    const link = `https://qilylean.com/${brief.href}`;
     return `    <item>\n      <title>${escapeXml(brief.title)}</title>\n      <link>${escapeXml(link)}</link>\n      <guid isPermaLink="true">${escapeXml(link)}</guid>\n      <category>${escapeXml(brief.theme || '制造工程')}</category>\n      <description>${escapeXml(brief.summary)}</description>\n    </item>`;
   }).join('\n');
-  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n  <channel>\n    <title>QilyLean 今日简报</title>\n    <link>https://qilylean.com/qilylean/daily-insights.html</link>\n    <description>制造工程、精益生产、质量、数智化工厂与项目交付知识档案。页面日期用于知识档案排序与主题定位，不单独作为网页首次公开发布日期证明。</description>\n    <language>zh-cn</language>\n    <atom:link href="https://qilylean.com${RSS_HREF}" rel="self" type="application/rss+xml"/>\n    <lastBuildDate>${new Date(`${latest.date}T00:00:00+08:00`).toUTCString()}</lastBuildDate>\n    <generator>QilyLean professionalization V24</generator>\n    <docs>https://www.rssboard.org/rss-specification</docs>\n    <ttl>720</ttl>\n    <category>制造工程</category>\n    <copyright>QilyLean｜启力精益</copyright>\n    <!-- 当前知识档案总量：${total}；RSS仅提供最新${briefs.length}条。 -->\n${items}\n  </channel>\n</rss>\n`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n  <channel>\n    <title>QilyLean 今日简报</title>\n    <link>https://qilylean.com/qilylean/daily-insights.html</link>\n    <description>制造工程、精益生产、质量、数智化工厂与项目交付知识档案。页面日期用于知识档案排序与主题定位，不单独作为网页首次公开发布日期证明。</description>\n    <language>zh-cn</language>\n    <atom:link href="https://qilylean.com/${RSS_HREF}" rel="self" type="application/rss+xml"/>\n    <lastBuildDate>${new Date(`${latest.date}T00:00:00+08:00`).toUTCString()}</lastBuildDate>\n    <generator>QilyLean professionalization V24</generator>\n    <docs>https://www.rssboard.org/rss-specification</docs>\n    <ttl>720</ttl>\n    <category>制造工程</category>\n    <copyright>QilyLean｜启力精益</copyright>\n    <!-- 当前知识档案总量：${total}；RSS仅提供最新${briefs.length}条。 -->\n${items}\n  </channel>\n</rss>\n`;
 }
 
 function materializeHtml(relativePath) {

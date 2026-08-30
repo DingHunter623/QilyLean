@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const root = path.resolve(__dirname, '..');
-const origin = 'https://qilylean.com';
+const origin = 'https://qilylean.com/';
 const today = process.env.QILY_BUILD_DATE || new Date().toISOString().slice(0, 10);
 const dailyIndex = JSON.parse(fs.readFileSync(path.join(root, 'qilylean/daily/index.json'), 'utf8'));
 const latestDailyDate = dailyIndex[0] && dailyIndex[0].date;
@@ -89,7 +89,7 @@ function ensureSitemapEntries() {
   ).join('\n');
 
   const projectIndex = /(  <url><loc>https:\/\/qilylean\.com\/projects\/?<\/loc>[^\n]*<\/url>)/;
-  if (!projectIndex.test(sitemap)) throw new Error('Cannot locate canonical /projects entry in sitemap.xml');
+  if (!projectIndex.test(sitemap)) throw new Error('Cannot locate canonical /projects/ entry in sitemap.xml');
   sitemap = sitemap.replace(projectIndex, `$1\n${block}`);
   fs.writeFileSync(sitemapFile, sitemap);
 }

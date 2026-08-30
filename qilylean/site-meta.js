@@ -1,6 +1,6 @@
 (function(){
 'use strict';
-var ORIGIN='https://qilylean.com';
+var ORIGIN='https://qilylean.com/';
 var BRAND='QilyLean 启力精益';
 var map={'home.html':'/','daily-insights.html':'/qilylean/daily-insights.html','papers.html':'/qilylean/papers.html','lean-tools.html':'/qilylean/lean-tools.html','lean-knowledge.html':'/qilylean/lean-knowledge.html','execution-loop.html':'/qilylean/execution-loop.html','gbt2828.html':'/qilylean/gbt2828.html'};
 var name=(location.pathname.split('/').pop()||'home.html').toLowerCase();
