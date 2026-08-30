@@ -20,8 +20,8 @@ const routePaths = [
   '/north/gansu/',
   '/north/diagnosis/'
 ];
-const canonicalUrls = routePaths.map(route => `${baseUrl}${route}${trailingSlash ? '/' : ''}`);
-const alternateUrls = routePaths.map(route => `${baseUrl}${route}${trailingSlash ? '' : '/'}`);
+const canonicalUrls = routePaths.map(route => `${baseUrl}${route.replace(/\/+$/, '')}${trailingSlash ? '/' : ''}`);
+const alternateUrls = routePaths.map(route => `${baseUrl}${route.replace(/\/+$/, '')}${trailingSlash ? '' : '/'}`);
 const protectedSet = new Set([...canonicalUrls, ...alternateUrls]);
 
 let xml = fs.readFileSync(sitemapFile, 'utf8');

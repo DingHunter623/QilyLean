@@ -7,6 +7,8 @@ const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const CHECK = process.argv.includes('--check');
+const siteSystem = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/site-system-v4.json'), 'utf8'));
+const canonicalTrailingSlash = siteSystem.production?.canonicalTrailingSlash !== false;
 
 function trackedHtml() {
   return execFileSync('git', ['ls-files', '*.html'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
@@ -15,8 +17,14 @@ function trackedHtml() {
 
 function normalizeUrl(url) {
   if (!/^https:\/\/(?:www\.)?qilylean\.com(?:\/|$)/i.test(url)) return url;
-  if (!url.endsWith('/')) return url;
-  return url.slice(0, -1);
+  const parsed = new URL(url);
+  const isFileRoute = /\.[a-z0-9]+$/i.test(parsed.pathname);
+  if (isFileRoute || !canonicalTrailingSlash) {
+    parsed.pathname = parsed.pathname === '/' ? '/' : parsed.pathname.replace(/\/+$/, '');
+  } else {
+    parsed.pathname = `${parsed.pathname.replace(/\/+$/, '')}/`;
+  }
+  return parsed.toString();
 }
 
 function normalizeMetadata(html) {
@@ -38,8 +46,8 @@ for (const rel of trackedHtml()) {
 }
 
 if (CHECK && changed.length) {
-  console.error(`Canonical/og:url trailing slash remains in: ${changed.join(', ')}`);
+  console.error(`Canonical/og:url SSOT slash drift remains in: ${changed.join(', ')}`);
   process.exit(1);
 }
 
-console.log(changed.length ? `${CHECK ? 'would normalize' : 'normalized'} ${changed.length} HTML canonical/og:url files` : 'canonical/og:url normalization PASS');
+console.log(changed.length ? `${CHECK ? 'would normalize' : 'normalized'} ${changed.length} HTML canonical/og:url files to SSOT slash style` : `canonical/og:url SSOT normalization PASS; canonicalTrailingSlash=${canonicalTrailingSlash}`);

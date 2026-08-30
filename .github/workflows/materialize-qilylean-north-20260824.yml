@@ -84,8 +84,8 @@ jobs:
           test -f scripts/north-factory-diagnosis-v1.js
           grep -q 'QILY-NORTH-HOME-V1:START' index.html
           grep -q '内蒙古某新能源负极材料制造加工厂' projects/lean-improvement-evidence/index.html
-          grep -q '<loc>https://qilylean.com/north/inner-mongolia</loc>' sitemap.xml
-          grep -q '<loc>https://qilylean.com/north/diagnosis</loc>' sitemap.xml
+          grep -q '<loc>https://qilylean.com/north/inner-mongolia/</loc>' sitemap.xml
+          grep -q '<loc>https://qilylean.com/north/diagnosis/</loc>' sitemap.xml
           grep -q '/north/diagnosis/' index.html
           grep -q '/north/diagnosis/' north/index.html
           grep -q 'data-qily-diagnosis-form' north/diagnosis/index.html
