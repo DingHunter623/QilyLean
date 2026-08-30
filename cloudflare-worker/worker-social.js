@@ -1,7 +1,7 @@
 import baseWorker from './worker.js';
 
 const ALLOWED_ORIGINS = new Set([
-  'https://qilylean.com/',
+  'https://qilylean.com',
   'https://www.qilylean.com'
 ]);
 
@@ -31,7 +31,7 @@ Use established professional terminology for lean manufacturing, industrial engi
 Translate normal explanatory words around protected tokens naturally and professionally for manufacturing/industrial-engineering readers.`;
 
 function cors(origin) {
-  const allow = ALLOWED_ORIGINS.has(origin) ? origin : 'https://qilylean.com/';
+  const allow = ALLOWED_ORIGINS.has(origin) ? origin : 'https://qilylean.com';
   return {
     'Access-Control-Allow-Origin': allow,
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',

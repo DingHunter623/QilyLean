@@ -5,8 +5,8 @@
   "standard": "QL-WEB-STD-001/R6",
   "runtimeBaseline": "V44",
   "production": {
-    "baseUrl": "https://qilylean.com/",
-    "canonicalTrailingSlash": false,
+    "baseUrl": "https://qilylean.com",
+    "canonicalTrailingSlash": true,
     "staticFirst": true
   },
   "sourceOfTruth": {

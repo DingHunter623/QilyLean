@@ -130,7 +130,7 @@ function updateSearchIndex() {
 function addSitemap(file, route) {
   if (!exists(file)) return;
   let xml = read(file);
-  const loc = `https://qilylean.com/${route}`;
+  const loc = `https://qilylean.com${route}`;
   const record = `  <url><loc>${loc}</loc><lastmod>${DATE}</lastmod></url>`;
   if (!xml.includes(loc)) {
     if (!xml.includes('</urlset>')) throw new Error(`${file} is missing </urlset>.`);

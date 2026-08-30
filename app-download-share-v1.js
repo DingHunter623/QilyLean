@@ -142,8 +142,8 @@
     setMeta('meta[name="description"]',TIMES_POSITIONING+' Times26001提供IE秒表分段、累计总时长、倒计时、闹钟、万年历及天气定位辅助功能；v1.1.14已完成三星C55真机安装验证。');
     setMeta('meta[property="og:title"]','Times26001｜工业工程时间研究与IE现场测时工具');
     setMeta('meta[property="og:description"]',TIMES_POSITIONING+' v1.1.14已完成三星C55真机安装验证。');
-    setMeta('meta[property="og:image"]','https://qilylean.com/'+TIMES_REAL_HERO.split('?')[0]);
-    setMeta('meta[name="twitter:image"]','https://qilylean.com/'+TIMES_REAL_HERO.split('?')[0]);
+    setMeta('meta[property="og:image"]','https://qilylean.com'+TIMES_REAL_HERO.split('?')[0]);
+    setMeta('meta[name="twitter:image"]','https://qilylean.com'+TIMES_REAL_HERO.split('?')[0]);
 
     var lead=document.querySelector('.tool-lead');
     if(lead)lead.innerHTML='<strong>'+TIMES_POSITIONING+'</strong><br>Times26001以工业工程时间研究和制造现场测时为核心，提供IE秒表分段、累计总时长、数据复制、倒计时、闹钟、万年历及天气定位与未来7天预报辅助能力。<br><strong>当前验证版本：v'+TIMES_VERSION+' / versionCode '+TIMES_CODE+' / API '+TIMES_TARGET+'；已于2026-08-27完成'+TIMES_DEVICE+'真机安装及首页、万年历、天气、计时与设置等代表性界面验证。</strong>';

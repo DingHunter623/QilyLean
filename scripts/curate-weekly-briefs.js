@@ -9,7 +9,7 @@ const root = path.resolve(__dirname, '..');
 const qily = path.join(root, 'qilylean');
 const dailyDir = path.join(qily, 'daily');
 const policyPath = path.join(qily, 'brief-curation-policy.json');
-const baseUrl = 'https://qilylean.com/';
+const baseUrl = 'https://qilylean.com';
 const policy = JSON.parse(fs.readFileSync(policyPath, 'utf8'));
 const protectedDates = new Set(policy.protected_dates || []);
 

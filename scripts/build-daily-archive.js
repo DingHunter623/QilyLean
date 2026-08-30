@@ -13,7 +13,7 @@ const {
 const root = path.resolve(__dirname, '..');
 const qily = path.join(root, 'qilylean');
 const dailyDir = path.join(qily, 'daily');
-const baseUrl = 'https://qilylean.com/';
+const baseUrl = 'https://qilylean.com';
 const NAV_VERSION = '20260812-native-navigation-stable-v20';
 const SHELL_VERSION = '20260729-no-old-flash-v1';
 const VISUAL_VERSION = '20260729-hierarchy-v4';

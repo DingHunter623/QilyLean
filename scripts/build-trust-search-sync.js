@@ -310,7 +310,7 @@ function buildSearchIndex(data) {
     let url;
     try {
       const parsed = new URL(absoluteUrl);
-      if (parsed.origin !== 'https://qilylean.com/') return;
+      if (parsed.origin !== 'https://qilylean.com') return;
       url = parsed.pathname;
     } catch (error) { return; }
     if (/^\/qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html$/.test(url)) return;
