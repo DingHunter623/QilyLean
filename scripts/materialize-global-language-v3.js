@@ -6,7 +6,7 @@
  * - translation assets remain deferred and never block first paint.
  * - Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.4 owns interaction meaning.
  * - Visual System V2 remains the primary sitewide visual authority across four device compositions.
- * - Responsive Containment V1 is the final geometry guard: legacy tables/flows scroll locally and never widen the page shell.
+ * - Responsive Containment V1 is the final geometry guard: legacy tables/flows scroll locally, page shells stay contained, and header labels/translation frames stay complete.
  * - Public Redline Closure V2 owns the 0830 annotated shared visual/interaction corrections.
  * - static knowledge tags/chips/cards never fake links or pointer feedback.
  * - Dock V5.4 alone owns Dock structure/labels/actions; shared visual layers only change its visual weight by viewport.
@@ -43,7 +43,7 @@ const PUBLIC_REDLINE_CSS='/site-public-redline-closure-v1.css?v=20260828-home-do
 const PUBLIC_REDLINE_V2_CSS='/site-public-redline-closure-v2.css?v=20260830-annotated-v2';
 const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260830-annotated-v2';
 const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7';
-const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-mobile-containment-v1';
+const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260829-r11-semantics-v14-visual-0830-v2';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260829-r11-semantics-v14';
