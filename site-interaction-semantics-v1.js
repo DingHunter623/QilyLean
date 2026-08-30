@@ -1,14 +1,14 @@
-/* QilyLean Interaction Semantics Runtime V1.4｜2026-08-29
+/* QilyLean Interaction Semantics Runtime V1.5｜2026-08-30
  * Classifies public UI by actual behavior instead of visual appearance.
  * Route navigation => explicit feedback; local controls => light feedback;
  * static terminology/tools/vocabulary => no fake link feedback.
- * V1.4 also owns a persistent, draggable primary-navigation scroll rail plus
- * a click-suppression guard for pointer drags started on navigation text, so
- * overflow is visible on desktop/mobile even when the OS hides native scrollbars.
+ * V1.5 owns the persistent primary-navigation rail and adds an iOS-safe
+ * pointer/touch drag path for both the rail thumb and navigation text row.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyInteractionSemanticsV14)return;
+  if(w.__qilyInteractionSemanticsV15)return;
+  w.__qilyInteractionSemanticsV15=true;
   w.__qilyInteractionSemanticsV14=true;
   w.__qilyInteractionSemanticsV13=true;
   w.__qilyInteractionSemanticsV12=true;
@@ -107,10 +107,10 @@
     rail.setAttribute('aria-valuenow',String(Math.round(maxScroll>0?(nav.scrollLeft/maxScroll)*100:0)));
   }
   function installPrimaryNavRail(nav){
-    if(!nav||nav.dataset.qilyNavScrollRail==='v1.4')return;
+    if(!nav||nav.dataset.qilyNavScrollRail==='v1.5')return;
     var header=nav.closest('header');if(!header)return;
     var previous=header.querySelector('.qily-primary-nav-scroll-rail');if(previous)previous.remove();
-    nav.dataset.qilyNavScrollRail='v1.4';
+    nav.dataset.qilyNavScrollRail='v1.5';
     var rail=d.createElement('div');rail.className='qily-primary-nav-scroll-rail';rail.setAttribute('role','scrollbar');rail.setAttribute('aria-label','一级导航左右滑动条');rail.setAttribute('aria-orientation','horizontal');rail.setAttribute('aria-valuemin','0');rail.setAttribute('aria-valuemax','100');rail.setAttribute('aria-valuenow','0');
     var thumb=d.createElement('span');thumb.className='qily-primary-nav-scroll-thumb';thumb.setAttribute('aria-hidden','true');rail.appendChild(thumb);header.appendChild(rail);
     var sync=function(){w.requestAnimationFrame(function(){syncRail(nav,rail,thumb);});};
@@ -123,17 +123,25 @@
     thumb.addEventListener('pointerdown',function(event){
       if(nav.scrollWidth<=nav.clientWidth)return;
       event.preventDefault();event.stopPropagation();
-      var startX=event.clientX,startScroll=nav.scrollLeft,trackWidth=Math.max(1,rail.clientWidth-thumb.getBoundingClientRect().width),maxScroll=Math.max(1,nav.scrollWidth-nav.clientWidth);
-      thumb.setPointerCapture&&thumb.setPointerCapture(event.pointerId);
-      function move(e){var dx=e.clientX-startX;nav.scrollLeft=startScroll+(dx/trackWidth)*maxScroll;}
-      function end(e){thumb.removeEventListener('pointermove',move);thumb.removeEventListener('pointerup',end);thumb.removeEventListener('pointercancel',end);try{thumb.releasePointerCapture&&thumb.releasePointerCapture(e.pointerId);}catch(error){}}
-      thumb.addEventListener('pointermove',move);thumb.addEventListener('pointerup',end);thumb.addEventListener('pointercancel',end);
+      var pointerId=event.pointerId,startX=event.clientX,startScroll=nav.scrollLeft,trackWidth=Math.max(1,rail.clientWidth-thumb.getBoundingClientRect().width),maxScroll=Math.max(1,nav.scrollWidth-nav.clientWidth);
+      try{thumb.setPointerCapture&&thumb.setPointerCapture(pointerId);}catch(error){}
+      function move(e){if(e.pointerId!==pointerId)return;if(e.cancelable)e.preventDefault();var dx=e.clientX-startX;nav.scrollLeft=startScroll+(dx/trackWidth)*maxScroll;sync();}
+      function end(e){if(e&&e.pointerId!==pointerId)return;w.removeEventListener('pointermove',move);w.removeEventListener('pointerup',end);w.removeEventListener('pointercancel',end);try{thumb.releasePointerCapture&&thumb.releasePointerCapture(pointerId);}catch(error){}}
+      w.addEventListener('pointermove',move,{passive:false});w.addEventListener('pointerup',end,{passive:true});w.addEventListener('pointercancel',end,{passive:true});
     });
+    if(!('PointerEvent' in w))thumb.addEventListener('touchstart',function(event){
+      if(nav.scrollWidth<=nav.clientWidth||!event.touches||event.touches.length!==1)return;
+      event.preventDefault();event.stopPropagation();
+      var startX=event.touches[0].clientX,startScroll=nav.scrollLeft,trackWidth=Math.max(1,rail.clientWidth-thumb.getBoundingClientRect().width),maxScroll=Math.max(1,nav.scrollWidth-nav.clientWidth);
+      function move(e){if(!e.touches||e.touches.length!==1)return;if(e.cancelable)e.preventDefault();var dx=e.touches[0].clientX-startX;nav.scrollLeft=startScroll+(dx/trackWidth)*maxScroll;sync();}
+      function end(){w.removeEventListener('touchmove',move);w.removeEventListener('touchend',end);w.removeEventListener('touchcancel',end);}
+      w.addEventListener('touchmove',move,{passive:false});w.addEventListener('touchend',end,{passive:true});w.addEventListener('touchcancel',end,{passive:true});
+    },{passive:false});
     sync();setTimeout(sync,120);setTimeout(sync,700);
   }
   function installPrimaryNavDragGuard(nav){
-    if(!nav||nav.dataset.qilyNavDragGuard==='v1')return;
-    nav.dataset.qilyNavDragGuard='v1';
+    if(!nav||nav.dataset.qilyNavDragGuard==='v1.5')return;
+    nav.dataset.qilyNavDragGuard='v1.5';
     var active=false,moved=false,startX=0,startY=0,startScroll=0,suppressUntil=0,pointerId=null;
     nav.addEventListener('pointerdown',function(event){
       if(event.button!==0||event.target.closest('select,option,input,button'))return;
@@ -142,13 +150,15 @@
     nav.addEventListener('pointermove',function(event){
       if(!active||event.pointerId!==pointerId)return;
       var dx=event.clientX-startX,dy=event.clientY-startY;
-      if(!moved&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){moved=true;nav.classList.add('qily-nav-pointer-dragging');}
+      if(!moved&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){moved=true;nav.classList.add('qily-nav-pointer-dragging');try{nav.setPointerCapture&&nav.setPointerCapture(pointerId);}catch(error){}}
       if(!moved)return;
-      if(event.pointerType==='mouse'){event.preventDefault();nav.scrollLeft=startScroll-dx;}
+      if(event.cancelable)event.preventDefault();
+      nav.scrollLeft=startScroll-dx;
     },{passive:false});
     function finish(event){
       if(!active||(event&&event.pointerId!==pointerId))return;
       if(moved)suppressUntil=w.performance.now()+320;
+      try{nav.releasePointerCapture&&pointerId!=null&&nav.releasePointerCapture(pointerId);}catch(error){}
       active=false;moved=false;pointerId=null;nav.classList.remove('qily-nav-pointer-dragging');
     }
     nav.addEventListener('pointerup',finish);
