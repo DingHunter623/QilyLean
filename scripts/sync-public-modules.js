@@ -8,6 +8,8 @@ const root = path.resolve(__dirname, '..');
 const origin = 'https://qilylean.com';
 const today = process.env.QILY_BUILD_DATE || new Date().toISOString().slice(0, 10);
 const dailyIndex = JSON.parse(fs.readFileSync(path.join(root, 'qilylean/daily/index.json'), 'utf8'));
+const siteSystem = JSON.parse(fs.readFileSync(path.join(root, 'data/site-system-v4.json'), 'utf8'));
+const canonicalTrailingSlash = siteSystem.production?.canonicalTrailingSlash !== false;
 const latestDailyDate = dailyIndex[0] && dailyIndex[0].date;
 if (!latestDailyDate) throw new Error('Latest daily brief metadata is missing');
 // One source of truth for public-route completeness, global navigation and discoverability.
@@ -65,7 +67,10 @@ function read(route) {
 }
 
 function publicUrl(route) {
-  return `${origin}${route === '/' ? '/' : route.replace(/\/$/, '')}`;
+  if (route === '/') return `${origin}/`;
+  if (/\.[a-z0-9]+$/i.test(route)) return `${origin}${route}`;
+  const pathname = canonicalTrailingSlash ? `${route.replace(/\/+$/, '')}/` : route.replace(/\/+$/, '');
+  return `${origin}${pathname}`;
 }
 
 function ensureSitemapEntries() {

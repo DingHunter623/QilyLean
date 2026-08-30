@@ -34,11 +34,12 @@ jobs:
         with:
           node-version: 20
 
-      - name: Validate current V27 VI authority without mutating public pages
+      - name: Validate current VI authority in the ephemeral worktree
         run: |
           node --check scripts/materialize-global-language-v3.js
           node --check scripts/validate-visual-system-v2.js
           node --check scripts/validate-sitewide-visual-closure-v27.js
+          node scripts/materialize-global-language-v3.js
           node scripts/materialize-global-language-v3.js --check
           node scripts/validate-visual-system-v2.js --materialized
           node scripts/validate-sitewide-visual-closure-v27.js

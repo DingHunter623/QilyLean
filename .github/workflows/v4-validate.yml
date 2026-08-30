@@ -61,6 +61,13 @@ jobs:
       - name: Existing SEO gate
         run: npm run test:seo
 
+      - name: Materialize generated UI references in the validation worktree
+        run: |
+          node scripts/materialize-global-language-v3.js
+          node scripts/materialize-contact-route-v6.js
+          node scripts/materialize-global-language-v3.js --check
+          node scripts/materialize-contact-route-v6.js --check
+
       - name: Existing R6 visual and interaction gate
         run: npm run test:visual
 
