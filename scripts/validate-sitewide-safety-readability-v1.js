@@ -7,19 +7,23 @@ const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)}
 
 const shell=read('site-ui-consistency-v1.js');
 must(shell,'__qilyUiSingleResponsibilityV11','UI single responsibility V11');
-must(shell,'single-responsibility-v11-safe-translation','Safe-translation shell build');
+must(shell,'single-responsibility-v11-safe-translation','Translation-neutral shell build');
 forbid(shell,'function uninstallTranslationArtifacts()','Shell must not own translation removal');
 forbid(shell,'normalizeDockButton','Shell Dock mutation');
 forbid(shell,'dockIconMarkup','Shell Dock icons');
 
 const safe=read('site-translation-safe-runtime-v1.js');
-must(safe,'Safe In-Page Translation V7','Translation V7');
-must(safe,"runtime:'safe-inpage-v7'",'Translation runtime identity');
+must(safe,'Google Translate Header Runtime V1','Google Translate runtime');
+must(safe,'translate.google.com/translate_a/element.js','Google Translate embed');
+must(safe,"data-qily-translation-provider','google",'Google provider marker');
 must(safe,"data-qily-header-utility','translation'",'Translation header utility');
 must(safe,'translation is a header utility sibling','Translation/nav separation contract');
-must(safe,'automaticTranslation:false','Translation opt-in contract');
-must(safe,'noExternalProxy:true','No external page proxy');
-forbid(safe,'translate.google.com','External translation redirect');
+forbid(safe,'qilylean-ai.dinghunter623.workers.dev','Retired custom translator');
+forbid(safe,'api.qilylean.com','Retired custom translation API');
+forbid(safe,'ai-api.qilylean.com','Retired custom translation API');
+forbid(safe,'createTreeWalker','Page-wide translation scan');
+if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation MutationObserver forbidden');
+if(/location\.(?:reload|replace|assign)\s*\(/.test(safe))throw new Error('Translation reload/redirect loop forbidden');
 
 const components=read('site-visual-components-v1.css');
 must(components,'Unified Visual Components V1','Unified visual components');
@@ -71,12 +75,12 @@ must(ddz,'Pure DDZ R12 Closure V132','DDZ R12');
 must(ddz,'justify-content:safe center!important','Safe centered hand');
 
 const mat=read('scripts/materialize-global-language-v3.js');
-must(mat,"const BASELINE_VERSION='20260831-safe-translation-nav-range-v30'",'V30 baseline identity');
+must(mat,"const BASELINE_VERSION='20260831-google-translate-nav-range-v31'",'V31 baseline identity');
 must(mat,"VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components owner');
-must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-safe-inpage-v7-header-utility'",'Safe translation owner');
+must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v1'",'Google translation owner');
 must(mat,'20260831-r11-semantics-v17-native-range','Semantics V17 owner');
 must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Shell V11 owner');
-must(mat,'data-qily-translation-safe-direct="v7"','Translation V7 materialization marker');
+must(mat,'data-qily-translation-safe-direct="google-v1"','Google translation materialization marker');
 must(mat,'data-qily-interaction-semantics-direct="v1.7"','Semantics V1.7 materialization marker');
 
 const integrity=read('site-header-project-integrity-v2.css');
@@ -89,4 +93,4 @@ must(containment,'QilyLean Responsive Containment V1','Responsive containment CS
 must(containment,'overscroll-behavior-inline:contain','Local horizontal-scroll containment');
 forbid(containment,'width:100vw','Page-level viewport widening');
 
-console.log('PASS: safety/readability owners retain Dock/layout stability while Safe Translation V7 and native-range navigation are the protected public baseline.');
+console.log('PASS: safety/readability owners retain Dock/layout stability while Google Translate V1 and native-range navigation are the protected public baseline.');
