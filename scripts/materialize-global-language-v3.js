@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V28 + Public Redline Closure V2｜2026-08-30
+/* QilyLean Sitewide Public Baseline Materializer V29｜2026-08-31
  * - Chinese remains the authoritative source and default display.
  * - translation assets remain deferred and never block first paint.
  * - Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.5 owns interaction meaning and iOS-safe navigation dragging.
+ * - Translation Public UI V1.3 keeps the browser-native language picker geometry stable and never mutates it while open.
  * - Visual System V2 remains the primary sitewide visual authority across four device compositions.
  * - Responsive Containment V1 guards page geometry.
- * - Header + Project Integrity V2 loads last and owns complete header framing plus project evidence readability.
+ * - Header + Project Integrity V3 loads last and owns complete header framing plus unmistakable A/B/C/D project-evidence readability.
  * - Public Redline Closure V2 owns the 0830 annotated shared visual/interaction corrections.
  * - static knowledge tags/chips/cards never fake links or pointer feedback.
  * - Dock V5.4 alone owns Dock structure/labels/actions; shared visual layers only change its visual weight by viewport.
@@ -19,9 +20,9 @@ const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
-const BASELINE_VERSION='20260830-sitewide-responsive-containment-v28';
+const BASELINE_VERSION='20260831-native-picker-grade-readability-v29';
 const SAFE_VERSION='20260829-first-readable-v7';
-const CONSISTENCY='/site-ui-consistency-v1.js?v=20260830-r7-single-responsibility-v8-stable-picker';
+const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v9-native-picker';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260829-authority-v54';
@@ -31,8 +32,8 @@ const SAFE_RUNTIME=`/site-translation-safe-runtime-v1.js?v=${SAFE_VERSION}`;
 const HEADER_AXIS='/site-header-axis-v1.css?v=20260829-primary-navigation-safe-scroll-v7';
 const PROGRESS_CSS='/site-translation-progress-v1.css?v=20260827-source-recovery-v4';
 const PROGRESS_JS='/site-translation-progress-v1.js?v=20260829-first-readable-v7';
-const PUBLIC_UI_CSS='/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8';
-const PUBLIC_UI_JS='/site-translation-public-ui-v1.js?v=20260830-public-language-picker-v8-stable';
+const PUBLIC_UI_CSS='/site-translation-public-ui-v1.css?v=20260831-native-picker-stability-v9';
+const PUBLIC_UI_JS='/site-translation-public-ui-v1.js?v=20260831-native-picker-stability-v9';
 const INTERACTION_CONTRAST_CSS='/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2';
 const INTERACTION_CONTRAST_JS='/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2';
 const CONTENT_CONTRAST_CSS='/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6';
@@ -45,7 +46,7 @@ const PUBLIC_REDLINE_V2_CSS='/site-public-redline-closure-v2.css?v=20260830-anno
 const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260830-annotated-v2';
 const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7';
 const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2';
-const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260830-header-project-integrity-v2';
+const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260830-r11-semantics-v15-ios-drag';
