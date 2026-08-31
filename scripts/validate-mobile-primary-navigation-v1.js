@@ -53,6 +53,7 @@ must(safe,'only public translation lifecycle owner','Translator outside scrollin
 must(safe,'data-qily-header-utility','Translation header utility marker');
 must(safe,'translate.google.com/translate_a/element.js','Google Translate embed');
 must(safe,'loadGoogleAfterPage','Post-load translation scheduling');
+must(safe,'function handleAndroidLanguageChange(event)','Android translation fallback');
 forbid(safe,'createTreeWalker','Retired page-wide translation scan');
 forbid(safe,'stabilizeMobileNav','Translator must not own mobile navigation');
 forbid(safe,'matchMedia','Translator must not branch on navigation viewport');
@@ -60,7 +61,7 @@ if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation Mutatio
 
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline');
 must(mat,"const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'V17 cache');
-must(mat,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v14'",'Google translation cache');
+must(mat,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v15'",'Google translation cache');
 must(mat,"const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15'",'Google native UI cache');
 must(mat,"const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Native range visual cache');
 must(mat,"const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation'",'Shell V11 cache');
@@ -73,4 +74,4 @@ must(visual,'@media (max-width:767px)','Mobile nav composition');
 must(containment,'@media (max-width:767px)','Mobile containment composition');
 must(containment,'overscroll-behavior-inline:contain','Local mobile overflow containment');
 
-console.log('PASS: first-level navigation uses the V1.7 native range rail for Android/iPhone while post-load Google Translate V1.3 stays a separate header utility.');
+console.log('PASS: first-level navigation remains independently owned by the V1.7 native range rail while Google Translate V1.3 v15 carries only its bounded Android language fallback.');
