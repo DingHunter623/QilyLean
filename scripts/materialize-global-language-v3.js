@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V30｜2026-08-31
+/* QilyLean Sitewide Public Baseline Materializer V31｜2026-08-31
  * Chinese static HTML remains the authoritative source and default display.
- * Safe In-Page Translation V7 is the single translation behavior runtime.
+ * Google Translate Header Runtime V1 is the single public translation provider.
  * Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.7 owns interaction meaning and the native range navigation rail.
  * Visual System V2 remains the primary sitewide visual authority across four device compositions.
  * Unified Visual Components V29 closes reusable card/flow/diagram/table, Logo, evidence-grade and translation utility integrity.
@@ -18,7 +18,7 @@ const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 
-const BASELINE_VERSION='20260831-safe-translation-nav-range-v30';
+const BASELINE_VERSION='20260831-google-translate-nav-range-v31';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
@@ -39,7 +39,7 @@ const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r
 const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2';
 const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3';
 const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range';
-const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-safe-inpage-v7-header-utility';
+const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v1';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range';
@@ -94,11 +94,11 @@ function materialize(source,relative){
     `<link id="qilyResponsiveContainmentV1" rel="stylesheet" href="${RESPONSIVE_CONTAINMENT_CSS}">`,
     `<link id="qilyHeaderProjectIntegrityV2" rel="stylesheet" href="${FINAL_INTEGRITY_CSS}">`,
     `<link id="qilyVisualComponentsV1" rel="stylesheet" href="${VISUAL_COMPONENTS_CSS}">`,
-    `<script defer data-qily-translation-safe-direct="v7" src="${TRANSLATION_SAFE_JS}"></script>`
+    `<script defer data-qily-translation-safe-direct="google-v1" src="${TRANSLATION_SAFE_JS}"></script>`
   ].filter(Boolean).join('\n');
   if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);return next;
 }
 const changed=[];
 for(const relative of trackedHtml()){const target=path.join(root,relative),source=fs.readFileSync(target,'utf8'),next=materialize(source,relative);if(next===source)continue;changed.push(relative);if(!checkOnly)fs.writeFileSync(target,next,'utf8');}
-if(checkOnly&&changed.length)throw new Error(`Sitewide safe-translation/nav-range baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
-process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Safe Translation V7 + Interaction Semantics V1.7; baseline ${BASELINE_VERSION}.\n`);
+if(checkOnly&&changed.length)throw new Error(`Sitewide Google-Translate/nav-range baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
+process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1 + Interaction Semantics V1.7; baseline ${BASELINE_VERSION}.\n`);
