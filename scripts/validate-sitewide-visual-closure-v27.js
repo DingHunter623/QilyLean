@@ -26,7 +26,7 @@ must(materializer,"INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v
 
 const interactionRuntime=read('site-interaction-semantics-v1.js');
 must(interactionRuntime,'__qilyInteractionSemanticsV17','Interaction Semantics V1.7 runtime');
-must(interactionRuntime,'type="range"','Native navigation range rail');
+must(interactionRuntime,"rail.type='range'",'Native navigation range rail');
 const translationRuntime=read('site-translation-safe-runtime-v1.js');
 must(translationRuntime,"runtime:'safe-inpage-v7'",'Safe Translation V7 runtime');
 const components=read('site-visual-components-v1.css');
