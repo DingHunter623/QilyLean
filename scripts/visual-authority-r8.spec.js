@@ -3,7 +3,8 @@ const fs=require('fs');
 const path=require('path');
 
 const BASE=process.env.QILY_VISUAL_BASE||'http://127.0.0.1:4173';
-const OUT=path.resolve(process.cwd(),'.visual-r8-artifacts');
+const BASE_ORIGIN=new URL(BASE).origin;
+const OUT=path.resolve(process.cwd(),'visual-r8-artifacts');
 const routes=[
   ['home','/'],
   ['capabilities','/capabilities/'],
@@ -16,26 +17,39 @@ const routes=[
   ['contact','/contact/'],
   ['north','/north/']
 ];
+// QilyLean permanent responsive acceptance matrix.
 const viewports=[
-  {name:'desktop',width:1440,height:1000},
-  {name:'tablet',width:1024,height:900},
-  {name:'tablet-narrow',width:768,height:900},
-  {name:'mobile',width:390,height:844}
+  {name:'w1920',width:1920,height:1080},
+  {name:'w1600',width:1600,height:1000},
+  {name:'w1440',width:1440,height:1000},
+  {name:'w1366',width:1366,height:900},
+  {name:'w1024',width:1024,height:900},
+  {name:'w768',width:768,height:900},
+  {name:'w430',width:430,height:900},
+  {name:'w390',width:390,height:844},
+  {name:'w375',width:375,height:812}
 ];
 
 fs.mkdirSync(OUT,{recursive:true});
 
 test.use({reducedMotion:'reduce'});
-test.setTimeout(300000);
+test.setTimeout(600000);
 
-test('R8 representative visual geometry and screenshot audit',async({browser})=>{
+test('R8 nine-width visual geometry and screenshot audit',async({browser})=>{
   const report=[];
   const failures=[];
   const flush=()=>fs.writeFileSync(path.join(OUT,'visual-r8-report.json'),JSON.stringify({generatedAt:new Date().toISOString(),routes,viewports,failures,report},null,2));
 
   for(const vp of viewports){
     const context=await browser.newContext({viewport:{width:vp.width,height:vp.height},deviceScaleFactor:1,reducedMotion:'reduce'});
+    // Keep CI deterministic: the public shell and every audited visual asset are local; third-party translation/analytics must not block rendering evidence.
+    await context.route('**/*',async route=>{
+      const url=route.request().url();
+      if(url.startsWith(BASE_ORIGIN)||url.startsWith('data:')||url.startsWith('blob:'))return route.continue();
+      return route.abort();
+    });
     const page=await context.newPage();
+    const cdp=await context.newCDPSession(page);
 
     for(const [name,route] of routes){
       const url=BASE+route;
@@ -45,7 +59,7 @@ test('R8 representative visual geometry and screenshot audit',async({browser})=>
         flush();
         continue;
       }
-      await page.waitForTimeout(350);
+      await page.waitForTimeout(260);
 
       const data=await page.evaluate(()=>{
         const q=(s)=>document.querySelector(s);
@@ -118,8 +132,14 @@ test('R8 representative visual geometry and screenshot audit',async({browser})=>
       if(issues.length)failures.push(`${vp.name}/${name}: ${issues.join('; ')}`);
       flush();
 
-      // Geometry audit covers the whole DOM. Screenshot evidence is viewport-bounded so very long legacy pages cannot stall CI.
-      await page.screenshot({path:path.join(OUT,`${vp.name}__${name}.png`),fullPage:false,animations:'disabled',timeout:10000});
+      // CDP capture does not wait indefinitely for web-font readiness; geometry has already been measured from the rendered viewport above.
+      try{
+        const shot=await cdp.send('Page.captureScreenshot',{format:'png',fromSurface:true,captureBeyondViewport:false});
+        fs.writeFileSync(path.join(OUT,`${vp.name}__${name}.png`),Buffer.from(shot.data,'base64'));
+      }catch(error){
+        failures.push(`${vp.name}/${name}: screenshot evidence failed: ${error.message}`);
+        flush();
+      }
     }
     await context.close();
   }
