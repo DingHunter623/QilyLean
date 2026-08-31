@@ -96,15 +96,20 @@ jobs:
         run: |
           set -euo pipefail
           grep -Fq "const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'" scripts/materialize-global-language-v3.js
-          grep -Fq "const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v13'" scripts/materialize-global-language-v3.js
+          grep -Fq "const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v14'" scripts/materialize-global-language-v3.js
+          grep -Fq "const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15'" scripts/materialize-global-language-v3.js
           grep -Fq "const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'" scripts/materialize-global-language-v3.js
           grep -Fq "const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'" scripts/materialize-global-language-v3.js
           grep -Fq "data-qily-translation-safe-direct=\"google-v1\"" scripts/materialize-global-language-v3.js
           grep -Fq "rail.type='range'" site-interaction-semantics-v1.js
           grep -Fq 'Google Translate Header Runtime V1.3' site-translation-safe-runtime-v1.js
+          grep -Fq 'non-blocking Android closure' site-translation-safe-runtime-v1.js
           grep -Fq 'Public Redline Closure V2.3' site-public-redline-closure-v2.js
           grep -Fq 'translate.google.com/translate_a/element.js' site-translation-safe-runtime-v1.js
+          grep -Fq 'loadGoogleAfterPage' site-translation-safe-runtime-v1.js
           ! grep -Fq 'createTreeWalker' site-translation-safe-runtime-v1.js
+          ! grep -Fq 'stabilizeMobileNav' site-translation-safe-runtime-v1.js
+          ! grep -Fq 'setTimeout(' site-translation-safe-runtime-v1.js
           ! grep -Fq 'qilylean-ai.dinghunter623.workers.dev' site-translation-safe-runtime-v1.js
           ! grep -Fq 'google_translate_element' site-public-redline-closure-v2.js
           grep -Fq 'global shell ownership untouched' scripts/materialize-contact-route-v6.js
