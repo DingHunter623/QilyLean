@@ -39,6 +39,7 @@ const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r
 const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2';
 const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3';
 const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range';
+const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-mobile-ui-v14';
 const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v1';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal';
@@ -94,6 +95,7 @@ function materialize(source,relative){
     `<link id="qilyResponsiveContainmentV1" rel="stylesheet" href="${RESPONSIVE_CONTAINMENT_CSS}">`,
     `<link id="qilyHeaderProjectIntegrityV2" rel="stylesheet" href="${FINAL_INTEGRITY_CSS}">`,
     `<link id="qilyVisualComponentsV1" rel="stylesheet" href="${VISUAL_COMPONENTS_CSS}">`,
+    `<link id="qilyTranslationPublicUiV1" rel="stylesheet" href="${TRANSLATION_PUBLIC_CSS}" data-qily-translation-public-ui="google-v1">`,
     `<script defer data-qily-translation-safe-direct="google-v1" src="${TRANSLATION_SAFE_JS}"></script>`
   ].filter(Boolean).join('\n');
   if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);return next;
