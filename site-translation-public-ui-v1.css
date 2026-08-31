@@ -43,5 +43,29 @@ html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__sele
   transform:none!important;
 }
 
+/* Google may inject a second, page-wide toolbar after translation.
+ * Suppress only that top banner/iframe; keep the QilyLean header TranslateElement intact.
+ * Reset only Google's translated-state body offset so the site header remains at the viewport top.
+ */
+html body > iframe.goog-te-banner-frame,
+html body > iframe.skiptranslate.goog-te-banner-frame,
+html body > iframe.VIpgJd-ZVi9od-ORHb-OEVmcd,
+html.translated-ltr body > iframe.skiptranslate,
+html.translated-rtl body > iframe.skiptranslate{
+  display:none!important;
+  visibility:hidden!important;
+  width:0!important;
+  height:0!important;
+  min-height:0!important;
+  max-height:0!important;
+  border:0!important;
+  pointer-events:none!important;
+}
+
+html.translated-ltr body,
+html.translated-rtl body{
+  top:0!important;
+}
+
 @media (max-width:760px){html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__select){font-size:15px!important}}
 @media (max-width:430px){html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__select){font-size:14px!important}}
