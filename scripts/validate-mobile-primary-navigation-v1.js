@@ -56,7 +56,7 @@ if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation Mutatio
 
 must(mat,"const BASELINE_VERSION='20260831-google-translate-nav-range-v31'",'V31 baseline');
 must(mat,"const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'V17 cache');
-must(mat,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v1'",'Google translation cache');
+must(mat,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v12-visible'",'Google translation cache');
 must(mat,"const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Native range visual cache');
 must(mat,"const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation'",'Shell V11 cache');
 
@@ -68,4 +68,4 @@ must(visual,'@media (max-width:767px)','Mobile nav composition');
 must(containment,'@media (max-width:767px)','Mobile containment composition');
 must(containment,'overscroll-behavior-inline:contain','Local mobile overflow containment');
 
-console.log('PASS: first-level navigation uses the V1.7 native range rail for Android/iPhone while Google Translate V1 stays a separate header utility.');
+console.log('PASS: first-level navigation uses the V1.7 native range rail for Android/iPhone while Google Translate V1.2 stays a separate header utility.');
