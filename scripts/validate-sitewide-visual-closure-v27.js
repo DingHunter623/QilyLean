@@ -21,7 +21,7 @@ must(materializer,"BASELINE_VERSION='20260831-google-translate-single-runtime-v3
 must(materializer,"VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'",'V32 visual cache');
 must(materializer,"FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3'",'Project grade integrity cache');
 must(materializer,"VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Unified visual components cache');
-must(materializer,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v14'",'Google Translate V1.3 cache');
+must(materializer,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v15'",'Google Translate V1.3 cache');
 must(materializer,"TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15'",'Google native translation UI cache');
 must(materializer,"INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'Interaction Semantics V1.7 cache');
 
@@ -33,6 +33,7 @@ must(translationRuntime,'Google Translate Header Runtime V1.3','Google Translate
 must(translationRuntime,'non-blocking Android closure','Non-blocking translation closure');
 must(translationRuntime,'translate.google.com/translate_a/element.js','Google Translate embed');
 must(translationRuntime,'loadGoogleAfterPage','Post-load Google scheduling');
+must(translationRuntime,'function handleAndroidLanguageChange(event)','Android fallback');
 forbid(translationRuntime,'stabilizeMobileNav','Translation runtime must not own navigation');
 forbid(translationRuntime,'createTreeWalker','Retired page-wide translation scan');
 if(/new\s+MutationObserver\s*\(/.test(translationRuntime))throw new Error('Translation MutationObserver forbidden');
@@ -41,4 +42,4 @@ const translationCss=read('site-translation-public-ui-v1.css');must(translationC
 const components=read('site-visual-components-v1.css');
 for(const token of ['qily-primary-nav-scroll-rail','::-webkit-slider-thumb','.qily-project-evidence-grade','.qily-project-list-grade'])must(components,token,'V32 visual components');
 
-console.log('PASS: V27 compatibility checks remain satisfied on the V32 post-load Google-Translate/native-range baseline, including arrows, PDCA semantics, governed axes, readable evidence grades, native navigation rail, translation utility integrity and portrait-ready DDZ automation.');
+console.log('PASS: V27 compatibility checks remain satisfied on the V32 post-load Google-Translate/native-range baseline, including bounded Android cookie fallback, governed axes, readable evidence grades, native navigation rail, translation utility integrity and portrait-ready DDZ automation.');
