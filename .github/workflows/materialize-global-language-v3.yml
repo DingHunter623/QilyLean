@@ -1,15 +1,17 @@
 name: Materialize Unified Public Baseline
 
-# Public translation is intentionally uninstalled. This workflow keeps every tracked HTML page on the same non-translation baseline.
+# Chinese is the default source. Safe In-Page Translation V7 is the single public translation runtime.
 on:
   push:
     branches: [main]
     paths:
       - '**.html'
       - 'site-visual-system-v2.css'
+      - 'site-visual-components-v1.css'
       - 'site-responsive-containment-v1.css'
       - 'site-public-redline-closure-v2.css'
       - 'site-public-redline-closure-v2.js'
+      - 'site-translation-safe-runtime-v1.js'
       - 'visual-regression-matrix.json'
       - 'styles/qily-aircraft-brand-hero-v1.css'
       - 'site-interaction-contrast-guard-v1.js'
@@ -63,9 +65,10 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate translation-uninstalled baseline sources
+      - name: Validate V30 source baseline
         run: |
           node --check site-ui-consistency-v1.js
+          node --check site-translation-safe-runtime-v1.js
           node --check site-public-redline-closure-v2.js
           node --check site-interaction-contrast-guard-v1.js
           node --check site-interaction-semantics-v1.js
@@ -99,7 +102,7 @@ jobs:
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
           for attempt in 1 2 3 4; do
-            echo "Translation-uninstalled public baseline publish attempt ${attempt}/4"
+            echo "V30 safe-translation/nav-range publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
             node scripts/validate-visual-system-v2.js
@@ -117,17 +120,17 @@ jobs:
             node scripts/validate-unified-visual-governance-v1.js --materialized
             git diff --check
             if git diff --quiet; then
-              echo 'Translation-uninstalled public baseline already materialized on latest main.'
+              echo 'V30 public baseline already materialized on latest main.'
               exit 0
             fi
             git add -- '*.html'
-            git commit -m 'build: remove translator from public HTML'
+            git commit -m 'build: materialize safe translation and native nav rail'
             if git push origin HEAD:main; then
-              echo 'Translator removed and public HTML audited sitewide.'
+              echo 'Safe Translation V7 + native nav rail V1.7 materialized and audited sitewide.'
               exit 0
             fi
             echo 'main advanced during publish; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish translation-uninstalled baseline after retries.'
+          echo 'Unable to publish V30 baseline after retries.'
           exit 1
