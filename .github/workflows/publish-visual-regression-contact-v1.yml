@@ -90,7 +90,7 @@ jobs:
         run: |
           set -euo pipefail
           grep -Fq "const BASELINE_VERSION='20260831-google-translate-nav-range-v31'" scripts/materialize-global-language-v3.js
-          grep -Fq "const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v1'" scripts/materialize-global-language-v3.js
+          grep -Fq "const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v12-visible'" scripts/materialize-global-language-v3.js
           grep -Fq "const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'" scripts/materialize-global-language-v3.js
           grep -Fq "const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'" scripts/materialize-global-language-v3.js
           grep -Fq "data-qily-translation-safe-direct=\"google-v1\"" scripts/materialize-global-language-v3.js
