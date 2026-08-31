@@ -1,0 +1,26 @@
+/* QilyLean Google Translate Attribution V1 | 2026-08-31
+ * Visual-only treatment for Google's required attribution beneath the native language select.
+ * Keep attribution intact and on one readable line; no translation runtime or navigation ownership.
+ */
+html body .qily-web-translate .goog-te-gadget{
+  white-space:nowrap!important;
+  text-align:center!important;
+  font-size:10px!important;
+  line-height:1.15!important;
+}
+
+html body .qily-web-translate .goog-te-gadget > span,
+html body .qily-web-translate .goog-te-gadget a,
+html body .qily-web-translate .goog-te-gadget a > span{
+  white-space:nowrap!important;
+}
+
+html body .qily-web-translate .goog-te-gadget > span{
+  display:inline-block!important;
+  margin-inline:2px!important;
+}
+
+html body .qily-web-translate .goog-te-gadget a{
+  display:inline!important;
+  vertical-align:baseline!important;
+}
