@@ -379,3 +379,126 @@ html body :is(a[href],button,[role="button"],[role="link"]):focus-visible{
   html body *{scroll-behavior:auto!important;}
   html body main :is(a.module-card[href],a.paper-card[href],a.project-card[href],a.project-list-card[href]){transition:none!important;}
 }
+
+/* 12 | 2026-08-31 redline closure: evidence letters, route feedback, brand integrity, translator edge. */
+/* Evidence Badge: keep semantic level background, force A/B/C/D glyphs to pure white on every public variant. */
+html body :is(.qily-project-evidence-grade,.qily-project-list-grade,[data-qily-project-evidence])>b,
+html body :is(.qily-grade-a,.qily-grade-b,.qily-grade-c,.qily-grade-d)>b{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+  text-shadow:none!important;
+  mix-blend-mode:normal!important;
+}
+
+/* Navigable buttons/icons/cards: immediate positive feedback without recolouring or dimming their content. */
+html body :is(
+  header.qily-site-header nav>a[href],header.qily-global-header nav>a[href],
+  .module-actions a[href],.actions a[href],.cta-row a[href],.hero-actions a[href],.card-actions a[href],
+  .module-subnav a[href],.qily-system-axis__step[href],.qily-secondary-links a[href],
+  a.btn[href],a.button[href],a.cta[href],a.primary-btn[href],a.secondary-btn[href],a.action-btn[href],a.icon-link[href],a.nav-btn[href],
+  a.module-card[href],a.paper-card[href],a.project-card[href],a.project-list-card[href],a.resource-card[href],a.knowledge-card[href],a.qily-value-card[href],a.qily-ia-card[href],
+  a[href][aria-label]:has(>img),a[href][aria-label]:has(>svg),a[href]:has(>img.qily-icon),a[href]:has(>svg.qily-icon)
+):not(.qily-brand){
+  transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease,background-color .15s ease,color .15s ease!important;
+  will-change:transform;
+}
+@media (hover:hover) and (pointer:fine){
+  html body :is(
+    header.qily-site-header nav>a[href],header.qily-global-header nav>a[href],
+    .module-actions a[href],.actions a[href],.cta-row a[href],.hero-actions a[href],.card-actions a[href],
+    .module-subnav a[href],.qily-system-axis__step[href],.qily-secondary-links a[href],
+    a.btn[href],a.button[href],a.cta[href],a.primary-btn[href],a.secondary-btn[href],a.action-btn[href],a.icon-link[href],a.nav-btn[href],
+    a.module-card[href],a.paper-card[href],a.project-card[href],a.project-list-card[href],a.resource-card[href],a.knowledge-card[href],a.qily-value-card[href],a.qily-ia-card[href],
+    a[href][aria-label]:has(>img),a[href][aria-label]:has(>svg),a[href]:has(>img.qily-icon),a[href]:has(>svg.qily-icon)
+  ):not(.qily-brand):hover{
+    transform:translateY(-2px) scale(1.01)!important;
+    box-shadow:0 10px 24px rgba(15,75,90,.18)!important;
+    opacity:1!important;
+  }
+}
+html body :is(
+  header.qily-site-header nav>a[href],header.qily-global-header nav>a[href],
+  .module-actions a[href],.actions a[href],.cta-row a[href],.hero-actions a[href],.card-actions a[href],
+  .module-subnav a[href],.qily-system-axis__step[href],.qily-secondary-links a[href],
+  a.btn[href],a.button[href],a.cta[href],a.primary-btn[href],a.secondary-btn[href],a.action-btn[href],a.icon-link[href],a.nav-btn[href],
+  a.module-card[href],a.paper-card[href],a.project-card[href],a.project-list-card[href],a.resource-card[href],a.knowledge-card[href],a.qily-value-card[href],a.qily-ia-card[href]
+):not(.qily-brand):active{
+  transform:translateY(0) scale(.985)!important;
+}
+
+/* Brand/LOGO: feedback must be additive; never recolour or wash out the mark. */
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header)>a.qily-brand{
+  color:var(--qily-r8-forest)!important;
+  -webkit-text-fill-color:var(--qily-r8-forest)!important;
+  background:transparent!important;
+  border-color:transparent!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+  transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease,background-color .15s ease!important;
+  transform-origin:center center!important;
+}
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header)>a.qily-brand :is(img,svg){
+  opacity:1!important;
+  filter:none!important;
+}
+@media (hover:hover) and (pointer:fine){
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header)>a.qily-brand:hover{
+    color:var(--qily-r8-forest)!important;
+    -webkit-text-fill-color:var(--qily-r8-forest)!important;
+    background:rgba(255,255,255,.96)!important;
+    border-color:rgba(15,75,90,.18)!important;
+    opacity:1!important;
+    filter:none!important;
+    transform:translateY(-1px) scale(1.025)!important;
+    box-shadow:0 7px 18px rgba(15,75,90,.15)!important;
+  }
+}
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header)>a.qily-brand:focus-visible{
+  color:var(--qily-r8-forest)!important;
+  -webkit-text-fill-color:var(--qily-r8-forest)!important;
+  background:#fff!important;
+  border-color:rgba(15,75,90,.22)!important;
+  filter:none!important;
+  box-shadow:0 7px 18px rgba(15,75,90,.15)!important;
+}
+
+/* Desktop translator: its actual border edge terminates exactly on the site's right content axis. */
+@media(min-width:901px){
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header){
+    padding-right:0!important;
+  }
+  html body :is(header.qily-site-header,header.qily-global-header)
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"],nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"]){
+    padding-right:0!important;
+    scroll-padding-right:0!important;
+  }
+  html body .qily-web-translate{
+    margin-right:0!important;
+    transform:none!important;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  html body :is(
+    header.qily-site-header nav>a[href],header.qily-global-header nav>a[href],
+    .module-actions a[href],.actions a[href],.cta-row a[href],.hero-actions a[href],.card-actions a[href],
+    .module-subnav a[href],.qily-system-axis__step[href],.qily-secondary-links a[href],
+    a.btn[href],a.button[href],a.cta[href],a.primary-btn[href],a.secondary-btn[href],a.action-btn[href],a.icon-link[href],a.nav-btn[href],
+    a.module-card[href],a.paper-card[href],a.project-card[href],a.project-list-card[href],a.resource-card[href],a.knowledge-card[href],a.qily-value-card[href],a.qily-ia-card[href],
+    a.qily-brand
+  ){
+    transition:none!important;
+  }
+  html body :is(
+    header.qily-site-header nav>a[href],header.qily-global-header nav>a[href],
+    .module-actions a[href],.actions a[href],.cta-row a[href],.hero-actions a[href],.card-actions a[href],
+    .module-subnav a[href],.qily-system-axis__step[href],.qily-secondary-links a[href],
+    a.btn[href],a.button[href],a.cta[href],a.primary-btn[href],a.secondary-btn[href],a.action-btn[href],a.icon-link[href],a.nav-btn[href],
+    a.module-card[href],a.paper-card[href],a.project-card[href],a.project-list-card[href],a.resource-card[href],a.knowledge-card[href],a.qily-value-card[href],a.qily-ia-card[href],
+    a.qily-brand
+  ):hover{
+    transform:none!important;
+  }
+}
