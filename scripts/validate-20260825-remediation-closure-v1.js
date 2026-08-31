@@ -47,7 +47,7 @@ must(mat,"const BASELINE_VERSION='20260831-google-translate-nav-range-v31'",'V31
 must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Stable shell materializer');
 must(mat,'20260831-project-grade-readability-v3','Project grade materializer');
 must(mat,'20260831-r11-semantics-v17-native-range','V17 nav materializer');
-must(mat,'20260831-google-translate-header-v1','Google translation materializer');
+must(mat,'20260831-google-translate-header-v12-visible','Google translation materializer');
 must(mat,'20260831-google-translate-mobile-ui-v14','Google translation public UI materializer');
 must(mat,'20260831-unified-components-v29-native-range','Visual components materializer');
 const containment=read('site-responsive-containment-v1.css');
@@ -65,7 +65,7 @@ for(const file of htmlFiles()){
   must(html,'/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range',`${file} visual components`);
   must(html,'/site-translation-public-ui-v1.css?v=20260831-google-translate-mobile-ui-v14',`${file} Google translation public UI`);
   must(html,'data-qily-translation-public-ui="google-v1"',`${file} Google translation public UI marker`);
-  must(html,'/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v1',`${file} Google translation`);
+  must(html,'/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v12-visible',`${file} Google translation`);
   must(html,'data-qily-translation-safe-direct="google-v1"',`${file} Google translation marker`);
   must(html,'/site-contact-route-v1.js?v=20260829-dock-functional-public-v134',`${file} contact`);
   must(html,'/site-responsive-containment-v1.css?v=20260830-header-integrity-v2',`${file} responsive containment`);
@@ -75,4 +75,4 @@ for(const file of htmlFiles()){
 }
 if(pages<460||nav<460||shellPages<460)throw new Error(`coverage regression pages=${pages} nav=${nav} shell=${shellPages}`);
 must(read('tools/pure-ddz/index.html'),'/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132','DDZ R12 materialization');
-console.log(`PASS: V31 remediation closure covers ${pages} public pages — Google Translate V1, mobile-native nav, readable project grades, stable Dock and responsive containment.`);
+console.log(`PASS: V31 remediation closure covers ${pages} public pages — Google Translate V1.2, mobile-native nav, readable project grades, stable Dock and responsive containment.`);
