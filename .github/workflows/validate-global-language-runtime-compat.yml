@@ -6,10 +6,9 @@ on:
     paths:
       - 'site-global-language-v1.css'
       - 'site-translation-safe-runtime-v1.js'
-      - 'site-translation-public-ui-v1.js'
       - 'site-translation-public-ui-v1.css'
-      - 'site-translation-progress-v1.js'
       - 'site-translation-progress-v1.css'
+      - 'site-public-redline-closure-v2.js'
       - 'site-interaction-contrast-guard-v1.js'
       - 'site-interaction-contrast-guard-v1.css'
       - 'site-content-contrast-guard-v1.js'
@@ -26,6 +25,7 @@ on:
       - 'scripts/validate-public-baseline-materialization-v1.js'
       - 'scripts/validate-20260825-remediation-closure-v1.js'
       - 'scripts/validate-mobile-primary-navigation-v1.js'
+      - 'scripts/validate-translation-single-runtime-v1.js'
       - 'scripts/validate-interaction-contrast-guard-v1.js'
       - 'scripts/validate-home-hero-dock-snapback-v1.js'
       - 'scripts/validate-sitewide-remediation-20260822.js'
@@ -47,8 +47,7 @@ jobs:
       - name: Syntax check shared runtimes and governance
         run: |
           node --check site-translation-safe-runtime-v1.js
-          node --check site-translation-public-ui-v1.js
-          node --check site-translation-progress-v1.js
+          node --check site-public-redline-closure-v2.js
           node --check site-interaction-contrast-guard-v1.js
           node --check site-content-contrast-guard-v1.js
           node --check site-navigation.js
@@ -62,6 +61,7 @@ jobs:
           node --check scripts/validate-public-baseline-materialization-v1.js
           node --check scripts/validate-20260825-remediation-closure-v1.js
           node --check scripts/validate-mobile-primary-navigation-v1.js
+          node --check scripts/validate-translation-single-runtime-v1.js
           node --check scripts/validate-interaction-contrast-guard-v1.js
           node --check scripts/validate-home-hero-dock-snapback-v1.js
           node --check scripts/validate-sitewide-remediation-20260822.js
@@ -70,6 +70,7 @@ jobs:
           node scripts/validate-sitewide-safety-readability-v1.js
           node scripts/validate-global-language-runtime-compat-v1.js
           node scripts/validate-mobile-primary-navigation-v1.js
+          node scripts/validate-translation-single-runtime-v1.js
           node scripts/validate-interaction-contrast-guard-v1.js
           node scripts/validate-home-hero-dock-snapback-v1.js
           node scripts/validate-sitewide-remediation-20260822.js
@@ -80,4 +81,5 @@ jobs:
           node scripts/validate-public-baseline-materialization-v1.js
           node scripts/validate-20260825-remediation-closure-v1.js
           node scripts/validate-mobile-primary-navigation-v1.js
+          node scripts/validate-translation-single-runtime-v1.js
           git diff --check

@@ -1,16 +1,16 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V31.1｜2026-08-31
+/* QilyLean Sitewide Public Baseline Materializer V32｜2026-08-31
  * Chinese static HTML remains the authoritative source and default display.
- * Google Translate Header Runtime V1.2 is the single public translation provider.
+ * Google Translate Header Runtime V1.3 is the single public translation provider and lifecycle owner.
  * Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.7 owns interaction meaning and the native range navigation rail.
  * Visual System V2 remains the primary sitewide visual authority across four device compositions.
  * Unified Visual Components V29 closes reusable card/flow/diagram/table, Logo, evidence-grade and translation utility integrity.
  * Brand Home Feedback V1 is a narrow exception for the header Logo/home route only.
  * Responsive Containment V1 guards page geometry.
  * Header + Project Integrity V3 retains complete header framing and project-evidence layout.
- * Public Redline Closure V2 retains shared visual/professional corrections.
+ * Public Redline Closure V2.3 retains shared visual/professional corrections without translation ownership.
  * Dock V5.4 alone owns Dock structure/labels/actions.
  */
 const fs=require('fs');
@@ -19,7 +19,7 @@ const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 
-const BASELINE_VERSION='20260831-google-translate-nav-range-v31';
+const BASELINE_VERSION='20260831-google-translate-single-runtime-v32';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
@@ -35,7 +35,7 @@ const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-
 const STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260828-vi-surface-v3';
 const PUBLIC_REDLINE_CSS='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
 const PUBLIC_REDLINE_V2_CSS='/site-public-redline-closure-v2.css?v=20260830-annotated-v2';
-const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-english-label-v23';
+const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23';
 const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7';
 const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2';
 const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3';
@@ -43,7 +43,7 @@ const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-c
 const BRAND_HOME_FEEDBACK_CSS='/site-brand-home-feedback-v1.css?v=20260831-brand-home-overlay-v1';
 const BRAND_HOME_FEEDBACK_JS='/site-brand-home-feedback-v1.js?v=20260831-brand-home-overlay-v1';
 const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-mobile-ui-v14';
-const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v12-visible';
+const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v13';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range';
@@ -107,5 +107,5 @@ function materialize(source,relative){
 }
 const changed=[];
 for(const relative of trackedHtml()){const target=path.join(root,relative),source=fs.readFileSync(target,'utf8'),next=materialize(source,relative);if(next===source)continue;changed.push(relative);if(!checkOnly)fs.writeFileSync(target,next,'utf8');}
-if(checkOnly&&changed.length)throw new Error(`Sitewide Google-Translate/nav-range baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
-process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1.2 + Interaction Semantics V1.7; baseline ${BASELINE_VERSION}.\n`);
+if(checkOnly&&changed.length)throw new Error(`Sitewide Google-Translate single-runtime baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
+process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1.3 single runtime + Interaction Semantics V1.7; baseline ${BASELINE_VERSION}.\n`);

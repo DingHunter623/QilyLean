@@ -7,7 +7,7 @@ const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 
 const CSS='/site-visual-authority-r8.css?v=20260831-r8-authority-v2-redline-closure';
-const JS='/site-visual-runtime-r8.js?v=20260831-r8-runtime-v2-header-utility';
+const JS='/site-visual-runtime-r8.js?v=20260831-r8-runtime-v3-translation-neutral';
 const LINK=`<link id="qilyVisualAuthorityR8" data-qily-visual-authority="r8" rel="stylesheet" href="${CSS}">`;
 const SCRIPT=`<script defer id="qilyVisualRuntimeR8" data-qily-visual-runtime="r8" src="${JS}"></script>`;
 const CACHE_MAP=[

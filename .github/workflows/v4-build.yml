@@ -43,7 +43,9 @@ jobs:
           cwebp -version
 
       - name: Validate source before materialization
-        run: node scripts/site-system-v4-validate.js
+        run: |
+          node scripts/site-system-v4-validate.js
+          node scripts/validate-translation-single-runtime-v1.js
 
       - name: Materialize canonical homepage aircraft artwork
         shell: bash
@@ -108,12 +110,13 @@ jobs:
       - name: Revalidate V4-owned generated source
         run: |
           # The dedicated Materialize Unified Public Baseline workflow is the sole owner
-          # of the 478-page V30 shell. V4 validates V4-owned outputs only and must not
-          # race a global --check against pages that may still be awaiting materialization.
+          # of the public V32 shell. V4 validates V4-owned outputs and the translation
+          # ownership boundary without rewriting the translator.
           node scripts/qilylean-north-v4-sitemap-contract.js --check
           node scripts/site-system-v4-validate.js
           node scripts/site-regression-guard-aircraft-hero.js
           node scripts/validate-sitewide-visual-closure-v27.js
+          node scripts/validate-translation-single-runtime-v1.js
           npm run test:seo
           git diff --check
 

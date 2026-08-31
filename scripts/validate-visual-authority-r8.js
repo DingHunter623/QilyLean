@@ -28,12 +28,14 @@ must(authority,'[data-qily-card-count="5"]','Qily Visual Card');
 must(authority,'var(--qily-header-live-height,86px)','Measured anchor offset');
 
 must(runtime,'__qilyVisualRuntimeR8','R8 runtime guard');
+must(runtime,'Translation lifecycle and translator DOM remain outside this visual runtime','Translation-neutral R8 boundary');
 must(runtime,'ResizeObserver','Measured header');
 must(runtime,'wrapTables','Table wrapper');
 must(runtime,'annotateCardGrids','Card count materialization');
 must(runtime,'annotateFrames','Diagram/flow annotation');
 forbidRe(runtime,/new\s+MutationObserver\s*\(/,'R8 runtime continuous DOM mutation');
 forbid(runtime,'normalizeDockButton','R8 runtime Dock ownership');
+for(const token of ['qilyGlobalTranslationDualRouteV2','qily-web-translate','data-qily-r8-header-utility','qily:language-change'])forbid(runtime,token,'R8 runtime translation ownership');
 
 forbid(visual,'overflow-x:clip','VIS-010 page-level overflow masking');
 forbid(containment,'QILY-0830-HEADER-INTEGRITY-V1:START','Containment must not own header');

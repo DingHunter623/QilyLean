@@ -23,6 +23,7 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message || '', '[translation-only]')
     name: 部署到 Cloudflare Workers
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -43,7 +44,6 @@ jobs:
         shell: bash
         run: |
           node --check site-translation-safe-runtime-v1.js
-          node --check site-translation-progress-v1.js
           node --check cloudflare-worker/worker.js
           node --check cloudflare-worker/worker-social.js
           node --check scripts/validate-global-language-runtime-compat-v1.js

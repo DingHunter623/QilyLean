@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* V26 experience-compatibility gate on the V30 public baseline. */
+/* V26 experience-compatibility gate on the V32 public baseline. */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
@@ -25,12 +25,12 @@ must(ddzCss,'Pure DDZ R12 Closure V132','DDZ closure');must(ddzCss,'left:20px!im
 const ddzVisual=read('tools/pure-ddz/game/js/visual-v120.js');must(ddzVisual,"version:'1.2.3-portrait-mobile-ready'",'DDZ mobile runtime');forbid(ddzVisual,"document.addEventListener('click',requestLandscape",'DDZ forced landscape click');
 
 const translation=read('site-translation-safe-runtime-v1.js');
-must(translation,'Safe In-Page Translation V7','Translation runtime');must(translation,"runtime:'safe-inpage-v7'",'Translation runtime identity');must(translation,'function translationPriority(','Translation priority');must(translation,"emit(target,'first-readable',reason||'critical-lane')",'Translation first-readable event');must(translation,'data-qily-header-utility','Translation header utility');must(translation,"QilyGlobalTranslation=Object.freeze({version:'safe-inpage-v7-header-utility'",'Translation public API');forbid(translation,'translate.google.com','External translation redirect');
+must(translation,'Google Translate Header Runtime V1.3','Translation runtime');must(translation,'__qilyGoogleTranslateElementInitialized','Single translation initialization');must(translation,'function recoverRetainedControlOnce()','Bounded translation recovery');must(translation,"includedLanguages:'zh-CN,zh-TW,en'",'Public language set');must(translation,'data-qily-header-utility','Translation header utility');must(translation,'translate.google.com/translate_a/element.js','Official Google element');forbid(translation,'createTreeWalker','Page translation scan');if(/new\s+MutationObserver\s*\(/.test(translation))throw new Error('Translation MutationObserver forbidden');
 
 const visual=read('site-visual-system-v2.css');for(const token of ['--qv2-forest:#0f4b5a','--qv2-gold:#caa15f','--qv2-axis:1560px','width:52px!important','width:50px!important'])must(visual,token,'VI authority');
 const integrity=read('site-header-project-integrity-v2.css');must(integrity,'Header + Project Integrity V3','Project integrity');must(integrity,'font-size:26px!important','List grade floor');must(integrity,'font-size:29px!important','Detail grade floor');
 const components=read('site-visual-components-v1.css');must(components,'Unified Visual Components V1 | V29','Unified components');must(components,'::-webkit-slider-thumb','WebKit native rail thumb');must(components,'grid-template-areas:"qily-brand qily-translation" "qily-navigation qily-navigation"!important','Mobile translation/nav separation');must(components,'color:#fff!important','Evidence letter contrast');
 
-const materializer=read('scripts/materialize-global-language-v3.js');for(const token of ['20260831-safe-translation-nav-range-v30','20260829-primary-navigation-safe-scroll-v7','20260829-authority-v54','20260831-r11-semantics-v17-native-range','20260830-r11-semantics-v14-visual-v3-vi-teal','20260831-safe-inpage-v7-header-utility','20260831-r7-single-responsibility-v11-safe-translation','20260831-unified-components-v29-native-range','20260831-project-grade-readability-v3','20260829-r12-v132','20260830-visual-system-v2-r7'])must(materializer,token,'Materializer');forbid(materializer,'const PUBLIC_UI_JS=','Retired translation picker active injection');
+const materializer=read('scripts/materialize-global-language-v3.js');for(const token of ['20260831-google-translate-single-runtime-v32','20260829-primary-navigation-safe-scroll-v7','20260829-authority-v54','20260831-r11-semantics-v17-native-range','20260830-r11-semantics-v14-visual-v3-vi-teal','20260831-google-translate-single-runtime-v13','20260831-r7-single-responsibility-v11-safe-translation','20260831-unified-components-v29-native-range','20260831-project-grade-readability-v3','20260829-r12-v132','20260830-visual-system-v2-r7'])must(materializer,token,'Materializer');forbid(materializer,'const PUBLIC_UI_JS=','Retired translation picker active injection');
 
-console.log('PASS: V26 compatibility remains intact on V30: native-range reachable navigation, Safe Translation V7 header utility, readable project grades, protected Dock typography, portrait-ready DDZ and unified VI authority.');
+console.log('PASS: V26 compatibility remains intact on V32: native-range reachable navigation, Google Translate V1.3 header utility, readable project grades, protected Dock typography, portrait-ready DDZ and unified VI authority.');

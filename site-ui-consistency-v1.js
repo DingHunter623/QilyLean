@@ -1,6 +1,6 @@
 /* QilyLean 轻量外壳一致性 v11｜2026-08-31
  * Translation ownership is intentionally outside this shell.
- * Safe In-Page Translation V7 alone owns language selection and translation behavior.
+ * Google Translate Header Runtime V1.3 alone owns language selection and translation behavior.
  * This runtime owns primary-navigation current state and low-cost baseline fallbacks.
  * Dock markup, labels, behavior and pressed state remain owned exclusively by site-dock-share-runtime-v1.js V5.
  */

@@ -1,21 +1,14 @@
-/* QilyLean Translation Public UI V2.2｜2026-08-30
- * Visitor-facing translation UI plus the 0830 shared/public redline closure.
- * Public language choices: 中文简体 / 中文繁体 / English. Chinese simplified remains default.
- * V2.2 closes the annotated visual/professional redlines as one engineering pass.
+/* QilyLean Public Redline Closure V2.3｜2026-08-31
+ * Shared/public visual and professional corrections only.
+ * Translation lifecycle and Google-owned DOM are intentionally outside this runtime.
+ * V2.3 removes the document-wide observer and the retired language-control rewriting loop.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyTranslationPublicUiV22)return;
-  w.__qilyTranslationPublicUiV22=true;
-  w.__qilyTranslationPublicUiV21=true;
-  w.__qilyTranslationPublicUiV1=true;
+  if(w.__qilyPublicRedlineClosureV23)return;
+  w.__qilyPublicRedlineClosureV23=true;
 
-  var CONTROL_ID='qilyGlobalTranslationDualRouteV2';
-  var observer=null,searchObserver=null,searchReranking=false,lastShareAt=0;
-  var canvas=d.createElement('canvas');
-  var context=canvas.getContext&&canvas.getContext('2d');
-  var PUBLIC_LANGS={'zh-CN':'中文简体','zh-TW':'中文繁体','en':'English'};
-  var PUBLIC_ORDER=['zh-CN','zh-TW','en'];
+  var searchObserver=null,searchReranking=false,lastShareAt=0;
   var DIRECT_SEARCH_ROUTES=[
     {aliases:['pdca单点培训','pdca培训','pdca','甘特图','里程碑管理'],url:'/knowledge/pdca-gantt-milestone-opl.html',title:'PDCA＋甘特图里程碑管理｜OPL单点培训',kind:'单点培训课件'},
     {aliases:['八大浪费','制造业八大浪费'],url:'/qilylean/daily/2026-08-25.html',title:'识别制造业八大浪费｜精选简报',kind:'精选简报'},
@@ -35,63 +28,6 @@
     var value=(w.location.pathname||'/').replace(/\/index\.html$/,'/').replace(/\/{2,}/g,'/');
     if(value.length>1&&value.charAt(value.length-1)!=='/'&&!/\/[^/]+\.[^/]+$/.test(value))value+='/';
     return value;
-  }
-
-  function selectedName(select){
-    if(!select||!select.options||select.selectedIndex<0)return '中文简体';
-    var option=select.options[select.selectedIndex];
-    return (option&&option.textContent||'中文简体').trim();
-  }
-
-  function measuredTextWidth(select,text){
-    if(!context)return Math.max(64,Array.from(text||'').length*16);
-    var style=w.getComputedStyle(select);
-    context.font=[style.fontStyle,style.fontVariant,style.fontWeight,style.fontSize,style.fontFamily].filter(Boolean).join(' ');
-    return Math.ceil(context.measureText(text||'').width);
-  }
-
-  function fitSelect(select){
-    if(!select)return;
-    var name=selectedName(select),viewport=Math.max(d.documentElement.clientWidth||0,w.innerWidth||0),style=w.getComputedStyle(select);
-    var chrome=12+(parseFloat(style.paddingLeft)||0)+(parseFloat(style.paddingRight)||0)+(parseFloat(style.borderLeftWidth)||0)+(parseFloat(style.borderRightWidth)||0);
-    var required=Math.ceil(measuredTextWidth(select,name)+chrome),maxWidth=viewport<=430?Math.max(108,viewport-54):136,width=Math.max(110,Math.min(maxWidth,required));
-    select.style.setProperty('--qily-language-select-width',width+'px');
-    select.style.width=width+'px';select.style.minWidth=width+'px';select.style.maxWidth=width+'px';
-    select.setAttribute('title',name);select.setAttribute('aria-label','网页翻译语言：'+name);select.setAttribute('data-qily-selected-language',name);
-  }
-
-  function revealSelectedLanguage(select){
-    var nav=select&&select.closest?select.closest('nav'):null;
-    if(!nav||nav.scrollWidth<=nav.clientWidth)return;
-    w.requestAnimationFrame(function(){var target=Math.max(0,nav.scrollWidth-nav.clientWidth);try{nav.scrollTo({left:target,behavior:'smooth'})}catch(error){nav.scrollLeft=target}});
-  }
-
-  function prunePublicLanguages(select){
-    if(!select)return;
-    Array.from(select.options).forEach(function(option){if(!Object.prototype.hasOwnProperty.call(PUBLIC_LANGS,option.value))option.remove();else option.textContent=PUBLIC_LANGS[option.value]});
-    PUBLIC_ORDER.forEach(function(code){if(Array.from(select.options).some(function(option){return option.value===code}))return;var option=d.createElement('option');option.value=code;option.textContent=PUBLIC_LANGS[code];select.appendChild(option)});
-    var active=(d.documentElement.getAttribute('data-qily-language')||'zh-CN').trim();
-    if(!Object.prototype.hasOwnProperty.call(PUBLIC_LANGS,active))active='zh-CN';
-    select.value=active;
-  }
-
-  function cleanControl(control){
-    if(!control)return false;
-    control.setAttribute('aria-label','网页翻译');control.setAttribute('title','默认中文简体；可切换中文繁体或 English。');control.setAttribute('data-qily-public-language-set','zh-CN,zh-TW,en');control.setAttribute('data-qily-default-language','zh-CN');
-    var mark=control.querySelector('.qily-web-translate__mark');if(mark)mark.textContent='🌐';
-    var brand=control.querySelector('.qily-web-translate__brand');if(brand)brand.remove();
-    var badge=control.querySelector('.qily-web-translate__badge');if(badge)badge.remove();
-    var status=control.querySelector('.qily-web-translate__status');if(status){status.hidden=true;status.setAttribute('aria-hidden','true');status.removeAttribute('aria-live');status.removeAttribute('aria-atomic')}
-    var select=control.querySelector('.qily-web-translate__select');
-    if(select){
-      prunePublicLanguages(select);fitSelect(select);
-      if(select.dataset.qilyPublicUiBound!=='v2.2'){
-        select.dataset.qilyPublicUiBound='v2.2';
-        select.addEventListener('change',function(){prunePublicLanguages(select);fitSelect(select);revealSelectedLanguage(select)});
-        select.addEventListener('input',function(){fitSelect(select);revealSelectedLanguage(select)});
-      }
-    }
-    return true;
   }
 
   function splitTrustContact(){
@@ -235,11 +171,10 @@
   }
 
   function reconcile(){
-    cleanControl(d.getElementById(CONTROL_ID));ensureTrustVerification();polishCooperationHero();upgradeTimes26001();cleanProductionOperations();installSearchRerank();d.documentElement.setAttribute('data-qily-redline-closure','v2.2');
+    ensureTrustVerification();polishCooperationHero();upgradeTimes26001();cleanProductionOperations();installSearchRerank();d.documentElement.setAttribute('data-qily-redline-closure','v2.3');
   }
 
   d.addEventListener('click',shareClickCapture,true);d.addEventListener('keydown',shareKeyCapture,true);
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',reconcile,{once:true});else reconcile();
-  d.addEventListener('qily:shell-ready',reconcile);d.addEventListener('qily:softnavigate',reconcile);d.addEventListener('qily:language-change',function(){w.setTimeout(reconcile,0)});w.addEventListener('pageshow',reconcile,{passive:true});w.addEventListener('resize',function(){w.requestAnimationFrame(function(){cleanControl(d.getElementById(CONTROL_ID));rerankSearch()})},{passive:true});
-  if(w.MutationObserver){observer=new MutationObserver(function(records){var added=false;for(var i=0;i<records.length;i+=1){if(records[i].addedNodes&&records[i].addedNodes.length){added=true;break}}if(added)w.requestAnimationFrame(reconcile)});observer.observe(d.documentElement,{childList:true,subtree:true,attributes:true,attributeFilter:['data-state','data-qily-language']})}
+  d.addEventListener('qily:shell-ready',reconcile);d.addEventListener('qily:softnavigate',reconcile);w.addEventListener('pageshow',reconcile,{passive:true});w.addEventListener('resize',function(){w.requestAnimationFrame(rerankSearch)},{passive:true});
 })(document,window);

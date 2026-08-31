@@ -14,6 +14,7 @@ on:
       - 'site-interaction-semantics-v1.css'
       - 'scripts/apply-visual-authority-r8.js'
       - 'scripts/validate-visual-authority-r8.js'
+      - 'scripts/validate-translation-single-runtime-v1.js'
       - 'scripts/visual-authority-r8.spec.js'
       - '.github/workflows/enforce-visual-authority-r8.yml'
   pull_request:
@@ -29,6 +30,7 @@ concurrency:
 
 jobs:
   enforce-and-audit:
+    if: github.event_name != 'push' || !contains(github.event.head_commit.message || '', '[translation-only]')
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -43,6 +45,7 @@ jobs:
         run: |
           set -euo pipefail
           node scripts/validate-visual-authority-r8.js
+          node scripts/validate-translation-single-runtime-v1.js
           node scripts/validate-seo-indexability.js
           git diff --check
 
@@ -87,6 +90,7 @@ jobs:
           git reset --hard origin/main
           node scripts/apply-visual-authority-r8.js
           node scripts/validate-visual-authority-r8.js
+          node scripts/validate-translation-single-runtime-v1.js
           node scripts/validate-seo-indexability.js
           git diff --check
 

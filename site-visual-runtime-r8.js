@@ -1,12 +1,12 @@
-/* QilyLean Visual Runtime R8.3 | 2026-08-31
+/* QilyLean Visual Runtime R8.4 | 2026-08-31
  * Presentation-only runtime. One-time enhancement + measured header geometry.
  * No MutationObserver. No navigation/Dock label ownership. No business logic.
- * R8.3: normalizes legacy header shells and keeps translation as a header utility sibling,
- *        outside the horizontally scrolling primary navigation viewport.
+ * Translation lifecycle and translator DOM remain outside this visual runtime.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyVisualRuntimeR83)return;
+  if(w.__qilyVisualRuntimeR84)return;
+  w.__qilyVisualRuntimeR84=true;
   w.__qilyVisualRuntimeR83=true;
   w.__qilyVisualRuntimeR82=true;
   w.__qilyVisualRuntimeR8=true;
@@ -35,12 +35,11 @@
   function installCascadeAuthority(){
     ensureAuthorityLast();
     // Deferred legacy runtimes may inject presentation-only compatibility styles while the shell settles.
-    // Re-assert the final authority at bounded checkpoints and shell/language events; no DOM observer is used.
+    // Re-assert the final authority at bounded checkpoints and shell events; no DOM observer is used.
     w.setTimeout(ensureAuthorityLast,120);
     w.setTimeout(ensureAuthorityLast,700);
     w.setTimeout(ensureAuthorityLast,1400);
     d.addEventListener('qily:shell-ready',scheduleAuthorityLast);
-    d.addEventListener('qily:language-change',scheduleAuthorityLast);
     w.addEventListener('pageshow',scheduleAuthorityLast,{passive:true});
   }
 
@@ -58,8 +57,6 @@
     var brand=header.querySelector('a.qily-brand,a.brand,.qily-brand,.brand');
     return brand&&brand.closest('header')===header?brand:null;
   }
-
-  function translatorNode(){return d.getElementById('qilyGlobalTranslationDualRouteV2')||d.querySelector('.qily-web-translate');}
 
   function normalizeHeaderShell(){
     var header=headerNode();
@@ -82,14 +79,6 @@
       nav.setAttribute('data-qily-r8-primary-nav','true');
     }
 
-    // Translation is a sibling utility, never a child of the horizontal navigation viewport.
-    var translator=translatorNode();
-    if(translator&&nav){
-      if(translator.parentNode!==header||nav.nextElementSibling!==translator){
-        nav.insertAdjacentElement('afterend',translator);
-      }
-      translator.setAttribute('data-qily-r8-header-utility','translator');
-    }
   }
 
   function measureHeader(){
@@ -122,7 +111,6 @@
     w.setTimeout(normalizeAndMeasure,700);
     w.setTimeout(normalizeAndMeasure,1400);
     d.addEventListener('qily:shell-ready',scheduleHeaderNormalization);
-    d.addEventListener('qily:language-change',scheduleHeaderNormalization);
     w.addEventListener('pageshow',scheduleHeaderNormalization,{passive:true});
   }
 
@@ -136,7 +124,6 @@
     }
     w.addEventListener('resize',scheduleMeasure,{passive:true});
     w.addEventListener('pageshow',scheduleMeasure,{passive:true});
-    d.addEventListener('qily:language-change',scheduleMeasure);
   }
 
   function tableCellCount(table){

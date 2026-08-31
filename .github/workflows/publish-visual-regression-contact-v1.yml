@@ -1,4 +1,4 @@
-name: Validate Sitewide V31 Visual Compatibility
+name: Validate Sitewide V32 Visual Compatibility
 
 on:
   pull_request:
@@ -12,6 +12,7 @@ on:
       - 'scripts/validate-sitewide-visual-closure-v27.js'
       - 'scripts/validate-mobile-primary-navigation-v1.js'
       - 'scripts/validate-sitewide-safety-readability-v1.js'
+      - 'scripts/validate-translation-single-runtime-v1.js'
       - 'scripts/validate-20260825-remediation-closure-v1.js'
       - 'site-visual-system-v2.css'
       - 'site-visual-components-v1.css'
@@ -19,6 +20,7 @@ on:
       - 'site-header-project-integrity-v2.css'
       - 'site-public-redline-closure-v1.css'
       - 'site-public-redline-closure-v2.css'
+      - 'site-public-redline-closure-v2.js'
       - 'site-contact-route-v1.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-ui-consistency-v1.js'
@@ -31,13 +33,13 @@ on:
       - '.github/workflows/publish-visual-regression-contact-v1.yml'
   workflow_dispatch:
 
-# V31 single-authority rule: this compatibility workflow is read-only.
+# V32 single-authority rule: this compatibility workflow is read-only.
 # The only workflow allowed to write the public shell is Materialize Unified Public Baseline.
 permissions:
   contents: read
 
 concurrency:
-  group: sitewide-v31-visual-compat-${{ github.event.pull_request.number || github.ref }}
+  group: sitewide-v32-visual-compat-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -53,7 +55,7 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate V31 authoritative source contracts
+      - name: Validate V32 authoritative source contracts
         shell: bash
         run: |
           set -euo pipefail
@@ -61,14 +63,17 @@ jobs:
           node --check scripts/materialize-contact-route-v6.js
           node --check scripts/validate-r7-authoritative-runtime-20260828.js
           node --check scripts/validate-sitewide-visual-closure-v27.js
+          node --check scripts/validate-translation-single-runtime-v1.js
           node --check site-contact-route-v1.js
           node --check site-dock-share-runtime-v1.js
           node --check site-ui-consistency-v1.js
           node --check site-translation-safe-runtime-v1.js
+          node --check site-public-redline-closure-v2.js
           node --check site-navigation.js
           node --check site-interaction-semantics-v1.js
           node scripts/validate-r7-authoritative-runtime-20260828.js
           node scripts/validate-sitewide-visual-closure-v27.js
+          node scripts/validate-translation-single-runtime-v1.js
 
       - name: Prove materializers are composable and idempotent
         shell: bash
@@ -83,22 +88,25 @@ jobs:
           node scripts/validate-sitewide-safety-readability-v1.js
           node scripts/validate-20260825-remediation-closure-v1.js
           node scripts/validate-sitewide-visual-closure-v27.js
+          node scripts/validate-translation-single-runtime-v1.js
           git diff --check
 
-      - name: Assert V31 single ownership boundaries
+      - name: Assert V32 single ownership boundaries
         shell: bash
         run: |
           set -euo pipefail
-          grep -Fq "const BASELINE_VERSION='20260831-google-translate-nav-range-v31'" scripts/materialize-global-language-v3.js
-          grep -Fq "const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v12-visible'" scripts/materialize-global-language-v3.js
+          grep -Fq "const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'" scripts/materialize-global-language-v3.js
+          grep -Fq "const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v13'" scripts/materialize-global-language-v3.js
           grep -Fq "const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'" scripts/materialize-global-language-v3.js
           grep -Fq "const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'" scripts/materialize-global-language-v3.js
           grep -Fq "data-qily-translation-safe-direct=\"google-v1\"" scripts/materialize-global-language-v3.js
           grep -Fq "rail.type='range'" site-interaction-semantics-v1.js
-          grep -Fq 'Google Translate Header Runtime V1' site-translation-safe-runtime-v1.js
+          grep -Fq 'Google Translate Header Runtime V1.3' site-translation-safe-runtime-v1.js
+          grep -Fq 'Public Redline Closure V2.3' site-public-redline-closure-v2.js
           grep -Fq 'translate.google.com/translate_a/element.js' site-translation-safe-runtime-v1.js
           ! grep -Fq 'createTreeWalker' site-translation-safe-runtime-v1.js
           ! grep -Fq 'qilylean-ai.dinghunter623.workers.dev' site-translation-safe-runtime-v1.js
+          ! grep -Fq 'google_translate_element' site-public-redline-closure-v2.js
           grep -Fq 'global shell ownership untouched' scripts/materialize-contact-route-v6.js
           ! grep -Fq 'const UI=' scripts/materialize-contact-route-v6.js
           ! grep -Fq 'site-ui-consistency-v1.js' scripts/materialize-contact-route-v6.js

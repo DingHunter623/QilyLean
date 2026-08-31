@@ -13,17 +13,26 @@ forbid(shell,'normalizeDockButton','Shell Dock mutation');
 forbid(shell,'dockIconMarkup','Shell Dock icons');
 
 const safe=read('site-translation-safe-runtime-v1.js');
-must(safe,'Google Translate Header Runtime V1','Google Translate runtime');
+must(safe,'Google Translate Header Runtime V1.3','Google Translate runtime');
 must(safe,'translate.google.com/translate_a/element.js','Google Translate embed');
 must(safe,"data-qily-translation-provider','google",'Google provider marker');
 must(safe,"data-qily-header-utility','translation'",'Translation header utility');
-must(safe,'translation is a header utility sibling','Translation/nav separation contract');
+must(safe,'only public translation lifecycle owner','Single translation lifecycle owner');
+must(safe,"includedLanguages:'zh-CN,zh-TW,en'",'Restricted public languages');
+must(safe,'__qilyGoogleTranslateElementInitialized','Page-lifetime initialization guard');
+must(safe,'recoverRetainedControlOnce','Bounded retained-node recovery');
 forbid(safe,'qilylean-ai.dinghunter623.workers.dev','Retired custom translator');
 forbid(safe,'api.qilylean.com','Retired custom translation API');
 forbid(safe,'ai-api.qilylean.com','Retired custom translation API');
 forbid(safe,'createTreeWalker','Page-wide translation scan');
 if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation MutationObserver forbidden');
+if(/setInterval\s*\(/.test(safe))throw new Error('Translation polling forbidden');
 if(/location\.(?:reload|replace|assign)\s*\(/.test(safe))throw new Error('Translation reload/redirect loop forbidden');
+
+const redline=read('site-public-redline-closure-v2.js');
+must(redline,'Public Redline Closure V2.3','Translation-neutral public redline');
+for(const token of ['qilyGlobalTranslationDualRouteV2','google_translate_element','goog-te-','prunePublicLanguages','cleanControl','qily:language-change'])forbid(redline,token,'Public redline must not manage translation');
+if(/\.observe\s*\(\s*(?:d\.)?(?:documentElement|body)\b/.test(redline))throw new Error('Page-wide public-redline observer forbidden');
 
 const components=read('site-visual-components-v1.css');
 must(components,'Unified Visual Components V1','Unified visual components');
@@ -75,9 +84,10 @@ must(ddz,'Pure DDZ R12 Closure V132','DDZ R12');
 must(ddz,'justify-content:safe center!important','Safe centered hand');
 
 const mat=read('scripts/materialize-global-language-v3.js');
-must(mat,"const BASELINE_VERSION='20260831-google-translate-nav-range-v31'",'V31 baseline identity');
+must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline identity');
 must(mat,"VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components owner');
-must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v12-visible'",'Google translation owner');
+must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v13'",'Google translation owner');
+must(mat,"PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23'",'Translation-neutral public redline');
 must(mat,'20260831-r11-semantics-v17-native-range','Semantics V17 owner');
 must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Shell V11 owner');
 must(mat,'data-qily-translation-safe-direct="google-v1"','Google translation materialization marker');
@@ -93,4 +103,4 @@ must(containment,'QilyLean Responsive Containment V1','Responsive containment CS
 must(containment,'overscroll-behavior-inline:contain','Local horizontal-scroll containment');
 forbid(containment,'width:100vw','Page-level viewport widening');
 
-console.log('PASS: safety/readability owners retain Dock/layout stability while Google Translate V1.2 and native-range navigation are the protected public baseline.');
+console.log('PASS: safety/readability owners retain Dock/layout stability while Google Translate V1.3 and native-range navigation are the protected public baseline.');
