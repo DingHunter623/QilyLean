@@ -1,0 +1,66 @@
+/* QilyLean Brand Home Feedback V1 | 2026-08-31
+ * Scope: header brand/home link only.
+ * Preserve every other route/button interaction rule unchanged.
+ * Hover/focus replaces the logo artwork in-place with a clear "返回首页" label.
+ */
+html:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
+:is(a.qily-brand,a.brand){
+  position:relative!important;
+  box-sizing:border-box!important;
+}
+
+@media (hover:hover) and (pointer:fine){
+  html:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
+  :is(a.qily-brand,a.brand):hover{
+    background-color:#fff6df!important;
+    background-image:none!important;
+    border:1.5px solid #caa15f!important;
+    border-radius:8px!important;
+    box-shadow:0 7px 18px rgba(15,75,90,.14)!important;
+    filter:none!important;
+    transform:none!important;
+  }
+}
+
+html:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
+:is(a.qily-brand,a.brand):focus-visible{
+  background-color:#fff6df!important;
+  background-image:none!important;
+  border:1.5px solid #caa15f!important;
+  border-radius:8px!important;
+  box-shadow:0 0 0 3px rgba(202,161,95,.24),0 7px 18px rgba(15,75,90,.14)!important;
+  outline:none!important;
+  filter:none!important;
+  transform:none!important;
+}
+
+html:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
+:is(a.qily-brand,a.brand):is(:hover,:focus-visible)::after{
+  content:"返回首页"!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:2!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 10px!important;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  background:transparent!important;
+  font-size:clamp(16px,1.05vw,19px)!important;
+  font-weight:950!important;
+  line-height:1!important;
+  letter-spacing:.06em!important;
+  text-indent:0!important;
+  text-shadow:none!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+}
+
+@media (max-width:620px){
+  html:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
+  :is(a.qily-brand,a.brand):is(:hover,:focus-visible)::after{
+    padding:0 6px!important;
+    font-size:15px!important;
+  }
+}
