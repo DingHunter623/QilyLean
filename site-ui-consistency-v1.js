@@ -1,12 +1,14 @@
-/* QilyLean 轻量外壳一致性 v8｜2026-08-30
+/* QilyLean 轻量外壳一致性 v9｜2026-08-31
  * R7 single-responsibility correction:
  * - this runtime owns translation baseline + primary-navigation current state only;
  * - Dock markup, labels, behavior and pressed state are owned exclusively by site-dock-share-runtime-v1.js V5;
  * - no Dock pointer interception, icon replacement or DOM rebuilding is allowed here.
+ * - v9 pins the native-stable translation picker and removes geometry-churn cache fallback.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyUiConsistencyV8)return;
+  if(w.__qilyUiConsistencyV9)return;
+  w.__qilyUiConsistencyV9=true;
   w.__qilyUiConsistencyV8=true;
   w.__qilyUiConsistencyV7=true;
   w.__qilyUiConsistencyV6=true;
@@ -15,13 +17,13 @@
   w.__qilyUiConsistencyV3=true;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260830-r7-single-responsibility-v8-stable-picker';
+  var BUILD_ID='20260831-r7-single-responsibility-v9-native-picker';
   var BUILD_KEY='qily_site_ui_build_v1';
   var ASSETS={
     languageCss:'/site-global-language-v1.css?v=20260825-public-translation-shell-v1',
     safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260829-first-readable-v7',
-    publicCss:'/site-translation-public-ui-v1.css?v=20260827-primary-navigation-unified-v8',
-    publicJs:'/site-translation-public-ui-v1.js?v=20260830-public-language-picker-v8-stable',
+    publicCss:'/site-translation-public-ui-v1.css?v=20260831-native-picker-stability-v9',
+    publicJs:'/site-translation-public-ui-v1.js?v=20260831-native-picker-stability-v9',
     progressCss:'/site-translation-progress-v1.css?v=20260827-source-recovery-v4',
     progressJs:'/site-translation-progress-v1.js?v=20260829-first-readable-v7',
     interactionCss:'/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2',
@@ -145,6 +147,7 @@
   d.addEventListener('qily:shell-ready',reconcileFast);
   d.addEventListener('qily:language-change',reconcileFast);
   w.addEventListener('pageshow',reconcileFast,{passive:true});
+  w.__qilyUiSingleResponsibilityV9=true;
   w.__qilyUiSingleResponsibilityV8=true;
   w.__qilyUiSingleResponsibilityV7=true;
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
