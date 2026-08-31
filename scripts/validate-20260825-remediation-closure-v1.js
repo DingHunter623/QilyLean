@@ -15,13 +15,17 @@ must(safe,'translate.google.com/translate_a/element.js','Google Translate embed'
 must(safe,"data-qily-translation-provider','google",'Google provider marker');
 must(safe,'__qilyGoogleTranslateElementInitialized','Single TranslateElement guard');
 must(safe,'loadGoogleAfterPage','Post-load Google scheduling');
+must(safe,'function handleAndroidLanguageChange(event)','Android fallback handler');
+must(safe,'event.isTrusted!==true','Trusted Android change guard');
+must(safe,"d.cookie='googtrans='",'Google cookie fallback');
 forbid(safe,'stabilizeMobileNav','Translator must not own mobile navigation');
 forbid(safe,'matchMedia','Translator must not branch on navigation viewport');
-forbid(safe,'navigator.userAgent','Translator must not ship UA experiments');
 forbid(safe,'qilylean-ai.dinghunter623.workers.dev','Retired custom translator');
 forbid(safe,'createTreeWalker','Retired page-wide translator scan');
 if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation MutationObserver forbidden');
 if(/setTimeout\s*\(/.test(safe))throw new Error('Translation timing guess forbidden');
+if(/location\.(?:replace|assign)\s*\(/.test(safe))throw new Error('Translation redirect forbidden');
+if((safe.match(/w\.location\.reload\s*\(\s*\)/g)||[]).length!==1)throw new Error('Android fallback reload must exist exactly once');
 const shell=read('site-ui-consistency-v1.js');
 must(shell,'__qilyUiConsistencyV11','Shell V11');
 must(shell,'single-responsibility-v11-safe-translation','Shell cache identity');
@@ -53,7 +57,7 @@ must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'"
 must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Stable shell materializer');
 must(mat,'20260831-project-grade-readability-v3','Project grade materializer');
 must(mat,'20260831-r11-semantics-v17-native-range','V17 nav materializer');
-must(mat,'20260831-google-translate-single-runtime-v14','Google translation materializer');
+must(mat,'20260831-google-translate-single-runtime-v15','Google translation materializer');
 must(mat,'20260831-redline-no-translation-v23','Translation-neutral public redline materializer');
 must(mat,'20260831-google-translate-native-ui-v15','Google translation public UI materializer');
 must(mat,'20260831-unified-components-v29-native-range','Visual components materializer');
@@ -72,7 +76,7 @@ for(const file of htmlFiles()){
   must(html,'/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range',`${file} visual components`);
   must(html,'/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15',`${file} Google translation public UI`);
   must(html,'data-qily-translation-public-ui="google-v1"',`${file} Google translation public UI marker`);
-  must(html,'/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v14',`${file} Google translation`);
+  must(html,'/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v15',`${file} Google translation`);
   must(html,'data-qily-translation-safe-direct="google-v1"',`${file} Google translation marker`);
   must(html,'/site-contact-route-v1.js?v=20260829-dock-functional-public-v134',`${file} contact`);
   must(html,'/site-responsive-containment-v1.css?v=20260830-header-integrity-v2',`${file} responsive containment`);
@@ -82,4 +86,4 @@ for(const file of htmlFiles()){
 }
 if(pages<460||nav<460||shellPages<460)throw new Error(`coverage regression pages=${pages} nav=${nav} shell=${shellPages}`);
 must(read('tools/pure-ddz/index.html'),'/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132','DDZ R12 materialization');
-console.log(`PASS: V32 remediation closure covers ${pages} public pages — post-load Google Translate V1.3, independently owned mobile navigation, readable project grades, stable Dock and responsive containment.`);
+console.log(`PASS: V32 remediation closure covers ${pages} public pages — post-load Google Translate V1.3 with trusted Android cookie fallback, independently owned mobile navigation, readable project grades, stable Dock and responsive containment.`);
