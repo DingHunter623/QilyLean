@@ -1,13 +1,17 @@
-/* QilyLean Interaction Semantics Runtime V1.5｜2026-08-30
+/* QilyLean Interaction Semantics Runtime V1.7｜2026-08-31
  * Classifies public UI by actual behavior instead of visual appearance.
  * Route navigation => explicit feedback; local controls => light feedback;
  * static terminology/tools/vocabulary => no fake link feedback.
- * V1.5 owns the persistent primary-navigation rail and adds an iOS-safe
- * pointer/touch drag path for both the rail thumb and navigation text row.
+ * V1.7 uses a native range input for the persistent primary-navigation rail
+ * and adds direct pointer-to-scroll mapping on the rail for Android/iPhone.
+ * Touch/pen gestures on the nav stay native; the click-suppression drag guard
+ * remains mouse-only.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyInteractionSemanticsV15)return;
+  if(w.__qilyInteractionSemanticsV17)return;
+  w.__qilyInteractionSemanticsV17=true;
+  w.__qilyInteractionSemanticsV16=true;
   w.__qilyInteractionSemanticsV15=true;
   w.__qilyInteractionSemanticsV14=true;
   w.__qilyInteractionSemanticsV13=true;
@@ -96,69 +100,59 @@
     rail.style.left=Math.max(0,nr.left-hr.left)+'px';
     rail.style.width=Math.max(0,nr.width)+'px';
   }
-  function syncRail(nav,rail,thumb){
+  function syncRail(nav,rail){
     railGeometry(nav,rail);
-    var track=Math.max(0,rail.clientWidth),scrollWidth=Math.max(nav.scrollWidth,nav.clientWidth),maxScroll=Math.max(0,scrollWidth-nav.clientWidth);
-    var thumbWidth=maxScroll>0?Math.max(56,track*(nav.clientWidth/scrollWidth)):track;
-    thumbWidth=Math.min(track,thumbWidth);
-    var maxLeft=Math.max(0,track-thumbWidth),left=maxScroll>0?(nav.scrollLeft/maxScroll)*maxLeft:0;
-    thumb.style.width=thumbWidth+'px';thumb.style.transform='translateX('+left+'px)';
+    var track=Math.max(0,rail.clientWidth),scrollWidth=Math.max(nav.scrollWidth,nav.clientWidth),maxScroll=Math.max(0,scrollWidth-nav.clientWidth),value=maxScroll>0?(nav.scrollLeft/maxScroll)*100:0;
+    var thumbWidth=maxScroll>0?Math.max(58,track*(nav.clientWidth/scrollWidth)):track;thumbWidth=Math.min(track,thumbWidth);
+    rail.value=String(Math.max(0,Math.min(100,value)));
+    rail.style.setProperty('--qily-nav-range-thumb-width',thumbWidth+'px');
+    rail.disabled=maxScroll<=1;
     rail.setAttribute('data-qily-nav-overflow',maxScroll>1?'true':'false');
-    rail.setAttribute('aria-valuenow',String(Math.round(maxScroll>0?(nav.scrollLeft/maxScroll)*100:0)));
+    rail.setAttribute('aria-valuetext',String(Math.round(value))+'%');
   }
   function installPrimaryNavRail(nav){
-    if(!nav||nav.dataset.qilyNavScrollRail==='v1.5')return;
+    if(!nav||nav.dataset.qilyNavScrollRail==='v1.7')return;
     var header=nav.closest('header');if(!header)return;
     var previous=header.querySelector('.qily-primary-nav-scroll-rail');if(previous)previous.remove();
-    nav.dataset.qilyNavScrollRail='v1.5';
-    var rail=d.createElement('div');rail.className='qily-primary-nav-scroll-rail';rail.setAttribute('role','scrollbar');rail.setAttribute('aria-label','一级导航左右滑动条');rail.setAttribute('aria-orientation','horizontal');rail.setAttribute('aria-valuemin','0');rail.setAttribute('aria-valuemax','100');rail.setAttribute('aria-valuenow','0');
-    var thumb=d.createElement('span');thumb.className='qily-primary-nav-scroll-thumb';thumb.setAttribute('aria-hidden','true');rail.appendChild(thumb);header.appendChild(rail);
-    var sync=function(){w.requestAnimationFrame(function(){syncRail(nav,rail,thumb);});};
+    nav.dataset.qilyNavScrollRail='v1.7';
+    var rail=d.createElement('input');rail.type='range';rail.className='qily-primary-nav-scroll-rail';rail.min='0';rail.max='100';rail.step='.1';rail.value='0';rail.setAttribute('aria-label','一级导航左右滑动条');rail.setAttribute('aria-controls',nav.id||(nav.id='qilyPrimaryNavigation'));
+    header.appendChild(rail);
+    var sync=function(){w.requestAnimationFrame(function(){syncRail(nav,rail);});};
     nav.addEventListener('scroll',sync,{passive:true});
-    rail.addEventListener('click',function(event){
-      if(event.target===thumb)return;
-      var rect=rail.getBoundingClientRect(),maxScroll=Math.max(0,nav.scrollWidth-nav.clientWidth);if(maxScroll<=0)return;
-      var ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/Math.max(1,rect.width)));nav.scrollTo({left:ratio*maxScroll,behavior:'smooth'});
-    });
-    thumb.addEventListener('pointerdown',function(event){
-      if(nav.scrollWidth<=nav.clientWidth)return;
-      event.preventDefault();event.stopPropagation();
-      var pointerId=event.pointerId,startX=event.clientX,startScroll=nav.scrollLeft,trackWidth=Math.max(1,rail.clientWidth-thumb.getBoundingClientRect().width),maxScroll=Math.max(1,nav.scrollWidth-nav.clientWidth);
-      try{thumb.setPointerCapture&&thumb.setPointerCapture(pointerId);}catch(error){}
-      function move(e){if(e.pointerId!==pointerId)return;if(e.cancelable)e.preventDefault();var dx=e.clientX-startX;nav.scrollLeft=startScroll+(dx/trackWidth)*maxScroll;sync();}
-      function end(e){if(e&&e.pointerId!==pointerId)return;w.removeEventListener('pointermove',move);w.removeEventListener('pointerup',end);w.removeEventListener('pointercancel',end);try{thumb.releasePointerCapture&&thumb.releasePointerCapture(pointerId);}catch(error){}}
-      w.addEventListener('pointermove',move,{passive:false});w.addEventListener('pointerup',end,{passive:true});w.addEventListener('pointercancel',end,{passive:true});
-    });
-    if(!('PointerEvent' in w))thumb.addEventListener('touchstart',function(event){
-      if(nav.scrollWidth<=nav.clientWidth||!event.touches||event.touches.length!==1)return;
-      event.preventDefault();event.stopPropagation();
-      var startX=event.touches[0].clientX,startScroll=nav.scrollLeft,trackWidth=Math.max(1,rail.clientWidth-thumb.getBoundingClientRect().width),maxScroll=Math.max(1,nav.scrollWidth-nav.clientWidth);
-      function move(e){if(!e.touches||e.touches.length!==1)return;if(e.cancelable)e.preventDefault();var dx=e.touches[0].clientX-startX;nav.scrollLeft=startScroll+(dx/trackWidth)*maxScroll;sync();}
-      function end(){w.removeEventListener('touchmove',move);w.removeEventListener('touchend',end);w.removeEventListener('touchcancel',end);}
-      w.addEventListener('touchmove',move,{passive:false});w.addEventListener('touchend',end,{passive:true});w.addEventListener('touchcancel',end,{passive:true});
+    rail.addEventListener('input',function(){var maxScroll=Math.max(0,nav.scrollWidth-nav.clientWidth);nav.scrollLeft=(Number(rail.value)||0)*maxScroll/100},{passive:true});
+    rail.addEventListener('change',sync,{passive:true});
+    var activePointer=null;
+    function setFromPointer(event){
+      var rect=rail.getBoundingClientRect(),width=Math.max(1,rect.width),ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/width)),maxScroll=Math.max(0,nav.scrollWidth-nav.clientWidth);
+      rail.value=String(ratio*100);nav.scrollLeft=ratio*maxScroll;rail.setAttribute('aria-valuetext',String(Math.round(ratio*100))+'%');
+    }
+    rail.addEventListener('pointerdown',function(event){
+      if(event.button!==0||event.isPrimary===false||rail.disabled)return;
+      activePointer=event.pointerId;try{rail.focus({preventScroll:true});rail.setPointerCapture(activePointer);}catch(error){}setFromPointer(event);event.preventDefault();event.stopPropagation();
     },{passive:false});
+    rail.addEventListener('pointermove',function(event){if(activePointer!==event.pointerId)return;setFromPointer(event);event.preventDefault();event.stopPropagation();},{passive:false});
+    function finishPointer(event){if(activePointer!==event.pointerId)return;try{rail.releasePointerCapture(activePointer);}catch(error){}activePointer=null;sync();}
+    rail.addEventListener('pointerup',finishPointer);rail.addEventListener('pointercancel',finishPointer);
     sync();setTimeout(sync,120);setTimeout(sync,700);
   }
   function installPrimaryNavDragGuard(nav){
-    if(!nav||nav.dataset.qilyNavDragGuard==='v1.5')return;
-    nav.dataset.qilyNavDragGuard='v1.5';
+    if(!nav||nav.dataset.qilyNavDragGuard==='v1.7')return;
+    nav.dataset.qilyNavDragGuard='v1.7';
     var active=false,moved=false,startX=0,startY=0,startScroll=0,suppressUntil=0,pointerId=null;
     nav.addEventListener('pointerdown',function(event){
-      if(event.button!==0||event.target.closest('select,option,input,button'))return;
+      if((event.pointerType&&event.pointerType!=='mouse')||event.button!==0||event.target.closest('select,option,input,button'))return;
       active=true;moved=false;pointerId=event.pointerId;startX=event.clientX;startY=event.clientY;startScroll=nav.scrollLeft;
     });
     nav.addEventListener('pointermove',function(event){
       if(!active||event.pointerId!==pointerId)return;
       var dx=event.clientX-startX,dy=event.clientY-startY;
-      if(!moved&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){moved=true;nav.classList.add('qily-nav-pointer-dragging');try{nav.setPointerCapture&&nav.setPointerCapture(pointerId);}catch(error){}}
+      if(!moved&&Math.abs(dx)>8&&Math.abs(dx)>Math.abs(dy)){moved=true;nav.classList.add('qily-nav-pointer-dragging');}
       if(!moved)return;
-      if(event.cancelable)event.preventDefault();
-      nav.scrollLeft=startScroll-dx;
+      event.preventDefault();nav.scrollLeft=startScroll-dx;
     },{passive:false});
     function finish(event){
       if(!active||(event&&event.pointerId!==pointerId))return;
       if(moved)suppressUntil=w.performance.now()+320;
-      try{nav.releasePointerCapture&&pointerId!=null&&nav.releasePointerCapture(pointerId);}catch(error){}
       active=false;moved=false;pointerId=null;nav.classList.remove('qily-nav-pointer-dragging');
     }
     nav.addEventListener('pointerup',finish);
@@ -169,7 +163,7 @@
     },true);
   }
   function installPrimaryNavRails(){d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(function(nav){installPrimaryNavRail(nav);installPrimaryNavDragGuard(nav);});}
-  function syncPrimaryNavRails(){d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(function(nav){var header=nav.closest('header'),rail=header&&header.querySelector('.qily-primary-nav-scroll-rail');if(rail){var thumb=rail.querySelector('.qily-primary-nav-scroll-thumb');if(thumb)syncRail(nav,rail,thumb);}});}
+  function syncPrimaryNavRails(){d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(function(nav){var header=nav.closest('header'),rail=header&&header.querySelector('.qily-primary-nav-scroll-rail');if(rail)syncRail(nav,rail);});}
   if(!w.__qilyPrimaryNavRailResizeV1){w.__qilyPrimaryNavRailResizeV1=true;w.addEventListener('resize',syncPrimaryNavRails,{passive:true});}
 
   function evidenceMarkup(meta,compact){
