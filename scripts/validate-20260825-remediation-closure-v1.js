@@ -10,13 +10,18 @@ const ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f)
 must(read('qilylean/daily/2026-08-25.html'),'八大浪费','Eight wastes');
 const safe=read('site-translation-safe-runtime-v1.js');
 must(safe,'Google Translate Header Runtime V1.3','Google Translate V1.3');
+must(safe,'non-blocking Android closure','Non-blocking translation closure');
 must(safe,'translate.google.com/translate_a/element.js','Google Translate embed');
 must(safe,"data-qily-translation-provider','google",'Google provider marker');
-must(safe,"data-qily-mobile-nav','native-swipe",'Mobile native swipe marker');
 must(safe,'__qilyGoogleTranslateElementInitialized','Single TranslateElement guard');
+must(safe,'loadGoogleAfterPage','Post-load Google scheduling');
+forbid(safe,'stabilizeMobileNav','Translator must not own mobile navigation');
+forbid(safe,'matchMedia','Translator must not branch on navigation viewport');
+forbid(safe,'navigator.userAgent','Translator must not ship UA experiments');
 forbid(safe,'qilylean-ai.dinghunter623.workers.dev','Retired custom translator');
 forbid(safe,'createTreeWalker','Retired page-wide translator scan');
 if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation MutationObserver forbidden');
+if(/setTimeout\s*\(/.test(safe))throw new Error('Translation timing guess forbidden');
 const shell=read('site-ui-consistency-v1.js');
 must(shell,'__qilyUiConsistencyV11','Shell V11');
 must(shell,'single-responsibility-v11-safe-translation','Shell cache identity');
@@ -48,14 +53,14 @@ must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'"
 must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Stable shell materializer');
 must(mat,'20260831-project-grade-readability-v3','Project grade materializer');
 must(mat,'20260831-r11-semantics-v17-native-range','V17 nav materializer');
-must(mat,'20260831-google-translate-single-runtime-v13','Google translation materializer');
+must(mat,'20260831-google-translate-single-runtime-v14','Google translation materializer');
 must(mat,'20260831-redline-no-translation-v23','Translation-neutral public redline materializer');
-must(mat,'20260831-google-translate-mobile-ui-v14','Google translation public UI materializer');
+must(mat,'20260831-google-translate-native-ui-v15','Google translation public UI materializer');
 must(mat,'20260831-unified-components-v29-native-range','Visual components materializer');
 const containment=read('site-responsive-containment-v1.css');
 must(containment,'QilyLean Responsive Containment V1','Responsive containment');
 forbid(containment,'width:100vw','Viewport widening');
-const legacyTranslation=['data-qily-translation-safety-bootstrap','site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-translation-progress-v1.css','site-global-language-v1.css','site-global-language-v3.js','20260831-safe-inpage-v7-header-utility','data-qily-translation-safe-direct="v7"'];
+const legacyTranslation=['data-qily-translation-safety-bootstrap','site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-translation-progress-v1.css','site-global-language-v1.css','site-global-language-v3.js','20260831-safe-inpage-v7-header-utility','data-qily-translation-safe-direct="v7"','stable-diagnostic','qily_translate_debug'];
 let pages=0,nav=0,shellPages=0;
 for(const file of htmlFiles()){
   const html=read(file);if(!/<\/head>/i.test(html)||ownership(file))continue;pages++;
@@ -65,9 +70,9 @@ for(const file of htmlFiles()){
   must(html,'/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range',`${file} semantics js`);
   must(html,'data-qily-interaction-semantics-direct="v1.7"',`${file} semantics marker`);
   must(html,'/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range',`${file} visual components`);
-  must(html,'/site-translation-public-ui-v1.css?v=20260831-google-translate-mobile-ui-v14',`${file} Google translation public UI`);
+  must(html,'/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15',`${file} Google translation public UI`);
   must(html,'data-qily-translation-public-ui="google-v1"',`${file} Google translation public UI marker`);
-  must(html,'/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v13',`${file} Google translation`);
+  must(html,'/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v14',`${file} Google translation`);
   must(html,'data-qily-translation-safe-direct="google-v1"',`${file} Google translation marker`);
   must(html,'/site-contact-route-v1.js?v=20260829-dock-functional-public-v134',`${file} contact`);
   must(html,'/site-responsive-containment-v1.css?v=20260830-header-integrity-v2',`${file} responsive containment`);
@@ -77,4 +82,4 @@ for(const file of htmlFiles()){
 }
 if(pages<460||nav<460||shellPages<460)throw new Error(`coverage regression pages=${pages} nav=${nav} shell=${shellPages}`);
 must(read('tools/pure-ddz/index.html'),'/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132','DDZ R12 materialization');
-console.log(`PASS: V32 remediation closure covers ${pages} public pages — Google Translate V1.3, mobile-native nav, readable project grades, stable Dock and responsive containment.`);
+console.log(`PASS: V32 remediation closure covers ${pages} public pages — post-load Google Translate V1.3, independently owned mobile navigation, readable project grades, stable Dock and responsive containment.`);
