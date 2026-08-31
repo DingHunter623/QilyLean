@@ -2,18 +2,16 @@
 'use strict';
 
 /* QilyLean Sitewide Public Baseline Materializer V29｜2026-08-31
- * - Chinese remains the authoritative source and default display.
- * - translation assets remain deferred and never block first paint.
- * - Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.5 owns interaction meaning and iOS-safe navigation dragging.
- * - Translation Public UI V1.3 keeps the browser-native language picker geometry stable and never mutates it while open.
- * - Visual System V2 remains the primary sitewide visual authority across four device compositions.
- * - Responsive Containment V1 guards page geometry.
- * - Header + Project Integrity V3 loads last and owns complete header framing plus unmistakable A/B/C/D project-evidence readability.
- * - Public Redline Closure V2 owns the 0830 annotated shared visual/interaction corrections.
- * - static knowledge tags/chips/cards never fake links or pointer feedback.
- * - Dock V5.4 alone owns Dock structure/labels/actions; shared visual layers only change its visual weight by viewport.
- * - Pure DDZ R12 Closure V132 keeps game layout behavior; shared visual layers do not alter game logic.
- * - URL Contract is not owned here: directory pages keep '/', real .html files keep file URLs, SEO metadata remains untouched.
+ * Translation is intentionally uninstalled from the public website.
+ * Chinese static HTML is the only public language source/runtime.
+ * Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.5 owns interaction meaning and iOS-safe navigation dragging.
+ * Visual System V2 remains the primary sitewide visual authority across four device compositions.
+ * Responsive Containment V1 guards page geometry.
+ * Header + Project Integrity V3 loads last and owns complete header framing plus A/B/C/D project-evidence readability.
+ * Public Redline Closure V2 owns the 0830 annotated shared visual/interaction corrections.
+ * Dock V5.4 alone owns Dock structure/labels/actions; shared visual layers only change its visual weight by viewport.
+ * Pure DDZ R12 Closure V132 keeps game layout behavior; shared visual layers do not alter game logic.
+ * URL Contract is not owned here: directory pages keep '/', real .html files keep file URLs, SEO metadata remains untouched.
  */
 const fs=require('fs');
 const path=require('path');
@@ -21,19 +19,12 @@ const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 const BASELINE_VERSION='20260831-native-picker-grade-readability-v29';
-const SAFE_VERSION='20260829-first-readable-v7';
-const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v9-native-picker';
+const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v10-translation-uninstalled';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260829-authority-v54';
 const CORE_SERVICE_DOCK='/site-core-service-dock-closure-v1.js?v=20260828-r7-alignment-v105';
-const LANGUAGE_CSS='/site-global-language-v1.css?v=20260825-public-translation-shell-v1';
-const SAFE_RUNTIME=`/site-translation-safe-runtime-v1.js?v=${SAFE_VERSION}`;
 const HEADER_AXIS='/site-header-axis-v1.css?v=20260829-primary-navigation-safe-scroll-v7';
-const PROGRESS_CSS='/site-translation-progress-v1.css?v=20260827-source-recovery-v4';
-const PROGRESS_JS='/site-translation-progress-v1.js?v=20260829-first-readable-v7';
-const PUBLIC_UI_CSS='/site-translation-public-ui-v1.css?v=20260831-native-picker-stability-v9';
-const PUBLIC_UI_JS='/site-translation-public-ui-v1.js?v=20260831-native-picker-stability-v9';
 const INTERACTION_CONTRAST_CSS='/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2';
 const INTERACTION_CONTRAST_JS='/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2';
 const CONTENT_CONTRAST_CSS='/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6';
@@ -55,12 +46,22 @@ const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-o
 
 function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean)}
 function removeScriptByMarker(source){return source.replace(/\s*<script\b[^>]*(?:data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct|data-qily-interaction-contrast-direct|data-qily-content-contrast-direct|data-qily-translation-safe-direct|data-qily-contact-route-direct|data-qily-interaction-semantics-direct|data-qily-public-redline-v2-direct|data-qily-translation-safety-bootstrap)[^>]*>[\s\S]*?<\/script>\s*/gi,'\n')}
-function removeLegacyManagedScripts(source){let next=source;next=next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-global-language-v3\.js[^"']*["'][^>]*><\/script>\s*/gi,'\n');next=next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-contact-route-v1\.js[^"']*["'][^>]*><\/script>\s*/gi,'\n');next=next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-interaction-semantics-v1\.js[^"']*["'][^>]*><\/script>\s*/gi,'\n');next=next.replace(/\s*<script\b[^>]*src=["'][^"']*\/site-public-redline-closure-v2\.js[^"']*["'][^>]*><\/script>\s*/gi,'\n');return next}
+function removeManagedScripts(source){
+  let next=source;
+  const paths=['site-global-language-v3.js','site-translation-safe-runtime-v1.js','site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-contact-route-v1.js','site-interaction-semantics-v1.js','site-public-redline-closure-v2.js'];
+  for(const file of paths){const pattern=new RegExp('\\s*<script\\b[^>]*src=["\\\'][^"\\\']*\\/'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^"\\\']*["\\\'][^>]*><\\/script>\\s*','gi');next=next.replace(pattern,'\n')}
+  return next;
+}
 function removeManagedStyles(source){
   const paths=['site-global-language-v1.css','site-header-axis-v1.css','site-translation-progress-v1.css','site-translation-public-ui-v1.css','site-interaction-contrast-guard-v1.css','site-content-contrast-guard-v1.css','site-unified-visual-governance-v1.css','site-visual-regression-closure-v1.css','site-stability-recovery-v1.css','site-public-redline-closure-v1.css','site-public-redline-closure-v2.css','site-interaction-semantics-v1.css','site-visual-system-v2.css','site-responsive-containment-v1.css','site-header-project-integrity-v2.css','tools/pure-ddz/game/css/r8-closure-v128.css'];
   let next=source;
   for(const file of paths){const pattern=new RegExp('\\s*<link\\b[^>]*href=["\\\'][^"\\\']*\\/'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^"\\\']*["\\\'][^>]*>\\s*','gi');next=next.replace(pattern,'\n')}
   return next;
+}
+function removeTranslationMarkup(source){
+  return source
+    .replace(/\s*<[^>]+id=["']qilyGlobalTranslationDualRouteV2["'][^>]*>[\s\S]*?<\/[^>]+>\s*/gi,'\n')
+    .replace(/\s*<[^>]+class=["'][^"']*qily-web-translate[^"']*["'][^>]*>[\s\S]*?<\/[^>]+>\s*/gi,'\n');
 }
 function neutralizeFirstPaint(source){const safe='<!-- QILY-R2-FIRST-PAINT:START -->\n<style id="qilyR2CriticalFirstPaintGuard">html.qily-stale-document body{visibility:visible!important}</style><script data-qily-r2-first-paint>(function(d){var BUILD=\'20260824-readable-floor-plus2-v4\';var e=d.documentElement;e.classList.remove("qily-stale-document","qily-shell-pending","qily-r2-first-paint-pending","qily-first-paint-pending");try{localStorage.setItem("qily_site_html_build_v2",BUILD);sessionStorage.removeItem("qily_site_refresh_attempt_v1")}catch(error){}})(document);</script>\n<!-- QILY-R2-FIRST-PAINT:END -->';if(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/i.test(source))return source.replace(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/gi,safe);return source}
 function materialize(source,relative){
@@ -73,14 +74,11 @@ function materialize(source,relative){
   next=next.replace(/\/site-core-service-dock-closure-v1\.js(?:\?v=[^"']*)?/g,CORE_SERVICE_DOCK);
   next=next.replace(/\/assets\/contact\/wechat-contact-card\.svg(?:\?v=[^"']*)?/g,WECHAT_CONTACT_ASSET);
   next=removeScriptByMarker(next);
-  next=removeLegacyManagedScripts(next);
+  next=removeManagedScripts(next);
   next=removeManagedStyles(next);
+  next=removeTranslationMarkup(next);
   const tags=[
-    '<script data-qily-translation-safety-bootstrap="inpage-v5">window.__qilyGlobalTranslationDualRouteV2=true;window.__qilyGoogleTranslateOnDemandV1=true;window.__qilyGlobalLanguageV31=true;window.__qilyGlobalLanguageV3=true;window.__qilyGlobalLanguageV2=true;window.__qilyGlobalLanguageV1=true;</script>',
-    `<link id="qilyGlobalLanguageV1Stylesheet" rel="stylesheet" href="${LANGUAGE_CSS}">`,
     `<link id="qilyHeaderAxisV1" rel="stylesheet" href="${HEADER_AXIS}">`,
-    `<link id="qilyTranslationProgressV1Stylesheet" rel="stylesheet" href="${PROGRESS_CSS}">`,
-    `<link id="qilyTranslationPublicUiV1Stylesheet" rel="stylesheet" href="${PUBLIC_UI_CSS}">`,
     `<link id="qilyInteractionContrastGuardV1Stylesheet" rel="stylesheet" href="${INTERACTION_CONTRAST_CSS}">`,
     `<link id="qilyContentContrastGuardV1Stylesheet" rel="stylesheet" href="${CONTENT_CONTRAST_CSS}">`,
     `<link id="qilyUnifiedVisualGovernanceV1Stylesheet" rel="stylesheet" href="${UNIFIED_VISUAL_CSS}">`,
@@ -90,10 +88,7 @@ function materialize(source,relative){
     `<link id="qilyPublicRedlineClosureV2" rel="stylesheet" href="${PUBLIC_REDLINE_V2_CSS}">`,
     `<link id="qilyInteractionSemanticsV1Stylesheet" rel="stylesheet" href="${INTERACTION_SEMANTICS_CSS}">`,
     relative==='tools/pure-ddz/index.html'?`<link id="qilyPureDdzR8ClosureV128" rel="stylesheet" href="${DDZ_CLOSURE_CSS}">`:'',
-    `<script defer data-qily-translation-safe-direct="inpage-v5" src="${SAFE_RUNTIME}"></script>`,
-    `<script defer data-qily-translation-public-ui-direct="visitor-v2" src="${PUBLIC_UI_JS}"></script>`,
     `<script defer data-qily-public-redline-v2-direct="annotated-v2" src="${PUBLIC_REDLINE_V2_JS}"></script>`,
-    `<script defer data-qily-translation-progress-direct="bilingual-v4" src="${PROGRESS_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
     `<script defer data-qily-content-contrast-direct="v6" src="${CONTENT_CONTRAST_JS}"></script>`,
     `<script defer data-qily-interaction-semantics-direct="v1.5" src="${INTERACTION_SEMANTICS_JS}"></script>`,
@@ -114,4 +109,4 @@ for(const relative of trackedHtml()){
   if(!checkOnly)fs.writeFileSync(target,next,'utf8');
 }
 if(checkOnly&&changed.length)throw new Error(`Sitewide Visual System V2 baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
-process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); baseline ${BASELINE_VERSION}.\n`);
+process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); translation uninstalled; baseline ${BASELINE_VERSION}.\n`);

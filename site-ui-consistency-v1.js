@@ -1,13 +1,12 @@
-/* QilyLean 轻量外壳一致性 v9｜2026-08-31
- * R7 single-responsibility correction:
- * - this runtime owns translation baseline + primary-navigation current state only;
- * - Dock markup, labels, behavior and pressed state are owned exclusively by site-dock-share-runtime-v1.js V5;
- * - no Dock pointer interception, icon replacement or DOM rebuilding is allowed here.
- * - v9 pins the native-stable translation picker and removes geometry-churn cache fallback.
+/* QilyLean 轻量外壳一致性 v10｜2026-08-31
+ * Translation is intentionally uninstalled from the public website.
+ * This runtime owns primary-navigation current state and keeps the public shell free of retired translation assets.
+ * Dock markup, labels, behavior and pressed state remain owned exclusively by site-dock-share-runtime-v1.js V5.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyUiConsistencyV9)return;
+  if(w.__qilyUiConsistencyV10)return;
+  w.__qilyUiConsistencyV10=true;
   w.__qilyUiConsistencyV9=true;
   w.__qilyUiConsistencyV8=true;
   w.__qilyUiConsistencyV7=true;
@@ -17,15 +16,9 @@
   w.__qilyUiConsistencyV3=true;
   w.__qilyUiConsistencyV2=true;
 
-  var BUILD_ID='20260831-r7-single-responsibility-v9-native-picker';
+  var BUILD_ID='20260831-r7-single-responsibility-v10-translation-uninstalled';
   var BUILD_KEY='qily_site_ui_build_v1';
   var ASSETS={
-    languageCss:'/site-global-language-v1.css?v=20260825-public-translation-shell-v1',
-    safeRuntime:'/site-translation-safe-runtime-v1.js?v=20260829-first-readable-v7',
-    publicCss:'/site-translation-public-ui-v1.css?v=20260831-native-picker-stability-v9',
-    publicJs:'/site-translation-public-ui-v1.js?v=20260831-native-picker-stability-v9',
-    progressCss:'/site-translation-progress-v1.css?v=20260827-source-recovery-v4',
-    progressJs:'/site-translation-progress-v1.js?v=20260829-first-readable-v7',
     interactionCss:'/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2',
     interactionJs:'/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2',
     contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6',
@@ -34,6 +27,52 @@
   };
 
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');
+
+  function uninstallTranslationArtifacts(){
+    w.__qilyTranslationSafeInPageV2=true;
+    w.__qilyTranslationSafeInPageV1=true;
+    w.__qilyTranslationPublicUiV13=true;
+    w.__qilyTranslationPublicUiV12=true;
+    w.__qilyTranslationPublicUiV11=true;
+    w.__qilyTranslationPublicUiV1=true;
+    w.__qilyTranslationProgressNoticeV2=true;
+    w.__qilyTranslationProgressNoticeV1=true;
+    w.__qilyGlobalTranslationDualRouteV2=true;
+    w.__qilyGoogleTranslateOnDemandV1=true;
+    w.__qilyGlobalLanguageV31=true;
+    w.__qilyGlobalLanguageV3=true;
+    w.__qilyGlobalLanguageV2=true;
+    w.__qilyGlobalLanguageV1=true;
+    try{delete w.QilyGlobalTranslation}catch(error){w.QilyGlobalTranslation=undefined}
+
+    d.querySelectorAll('#qilyGlobalTranslationDualRouteV2,.qily-web-translate,#qilyTranslationProgressV1,.qily-translation-progress').forEach(function(node){node.remove();});
+    d.querySelectorAll([
+      'script[src*="/site-global-language-v3.js"]',
+      'script[src*="/site-translation-safe-runtime-v1.js"]',
+      'script[src*="/site-translation-public-ui-v1.js"]',
+      'script[src*="/site-translation-progress-v1.js"]',
+      'script[data-qily-web-translate-direct]',
+      'script[data-qily-google-translate-direct]',
+      'script[data-qily-global-language-direct]',
+      'script[data-qily-translation-safe-direct]',
+      'script[data-qily-translation-public-ui-direct]',
+      'script[data-qily-translation-progress-direct]',
+      'script[data-qily-translation-safety-bootstrap]'
+    ].join(',')).forEach(function(node){node.remove();});
+    d.querySelectorAll([
+      'link[href*="/site-global-language-v1.css"]',
+      'link[href*="/site-translation-public-ui-v1.css"]',
+      'link[href*="/site-translation-progress-v1.css"]'
+    ].join(',')).forEach(function(node){node.remove();});
+
+    d.documentElement.setAttribute('lang','zh-CN');
+    d.documentElement.setAttribute('dir','ltr');
+    d.documentElement.removeAttribute('data-qily-language');
+    d.documentElement.removeAttribute('data-qily-language-mode');
+  }
+
+  /* Run immediately so stale HTML cannot start a deferred translation runtime. */
+  uninstallTranslationArtifacts();
 
   function normalizedPath(path){
     var value=(path||'/').replace(/\/index\.html$/,'/').replace(/\/{2,}/g,'/');
@@ -45,16 +84,6 @@
   function rememberBuild(){
     try{w.localStorage.setItem(BUILD_KEY,BUILD_ID)}catch(error){}
     d.documentElement.setAttribute('data-qily-ui-build',BUILD_ID);
-  }
-
-  function preemptRetiredTranslation(){
-    w.__qilyGlobalTranslationDualRouteV2=true;
-    w.__qilyGoogleTranslateOnDemandV1=true;
-    w.__qilyGlobalLanguageV31=true;
-    w.__qilyGlobalLanguageV3=true;
-    w.__qilyGlobalLanguageV2=true;
-    w.__qilyGlobalLanguageV1=true;
-    d.querySelectorAll('script[src*="/site-global-language-v3.js"],script[data-qily-web-translate-direct],script[data-qily-google-translate-direct],script[data-qily-global-language-direct]').forEach(function(node){node.remove();});
   }
 
   function ensureStylesheet(id,href){
@@ -72,16 +101,10 @@
   }
 
   function ensureSitewideBaselineAssets(){
-    preemptRetiredTranslation();
-    ensureStylesheet('qilyGlobalLanguageV1Stylesheet',ASSETS.languageCss);
+    uninstallTranslationArtifacts();
     ensureStylesheet('qilyHeaderAxisV1',ASSETS.headerCss);
-    ensureStylesheet('qilyTranslationPublicUiV1Stylesheet',ASSETS.publicCss);
-    ensureStylesheet('qilyTranslationProgressV1Stylesheet',ASSETS.progressCss);
     ensureStylesheet('qilyInteractionContrastGuardV1Stylesheet',ASSETS.interactionCss);
     ensureStylesheet('qilyContentContrastGuardV1Stylesheet',ASSETS.contentCss);
-    if(!w.__qilyTranslationSafeInPageV2)ensureScript('qilyTranslationSafeInPageV2Script',ASSETS.safeRuntime,'data-qily-translation-safe-fallback');
-    if(!w.__qilyTranslationPublicUiV1)ensureScript('qilyTranslationPublicUiV1Script',ASSETS.publicJs,'data-qily-translation-public-ui-fallback');
-    if(!w.__qilyTranslationProgressNoticeV2)ensureScript('qilyTranslationProgressV2Script',ASSETS.progressJs,'data-qily-translation-progress-fallback');
     if(!w.__qilyInteractionContrastGuardV1)ensureScript('qilyInteractionContrastGuardV1Script',ASSETS.interactionJs,'data-qily-interaction-contrast-fallback');
     if(!w.__qilyContentContrastGuardV1)ensureScript('qilyContentContrastGuardV1Script',ASSETS.contentJs,'data-qily-content-contrast-fallback');
   }
@@ -145,8 +168,8 @@
 
   function boot(){rememberBuild();reconcileFast();}
   d.addEventListener('qily:shell-ready',reconcileFast);
-  d.addEventListener('qily:language-change',reconcileFast);
   w.addEventListener('pageshow',reconcileFast,{passive:true});
+  w.__qilyUiSingleResponsibilityV10=true;
   w.__qilyUiSingleResponsibilityV9=true;
   w.__qilyUiSingleResponsibilityV8=true;
   w.__qilyUiSingleResponsibilityV7=true;
