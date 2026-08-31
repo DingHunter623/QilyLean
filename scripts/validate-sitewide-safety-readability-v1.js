@@ -14,6 +14,7 @@ forbid(shell,'dockIconMarkup','Shell Dock icons');
 
 const safe=read('site-translation-safe-runtime-v1.js');
 must(safe,'Google Translate Header Runtime V1.3','Google Translate runtime');
+must(safe,'non-blocking Android closure','Non-blocking translation closure');
 must(safe,'translate.google.com/translate_a/element.js','Google Translate embed');
 must(safe,"data-qily-translation-provider','google",'Google provider marker');
 must(safe,"data-qily-header-utility','translation'",'Translation header utility');
@@ -21,12 +22,15 @@ must(safe,'only public translation lifecycle owner','Single translation lifecycl
 must(safe,"includedLanguages:'zh-CN,zh-TW,en'",'Restricted public languages');
 must(safe,'__qilyGoogleTranslateElementInitialized','Page-lifetime initialization guard');
 must(safe,'recoverRetainedControlOnce','Bounded retained-node recovery');
+must(safe,'loadGoogleAfterPage','Post-load Google scheduling');
 forbid(safe,'qilylean-ai.dinghunter623.workers.dev','Retired custom translator');
 forbid(safe,'api.qilylean.com','Retired custom translation API');
 forbid(safe,'ai-api.qilylean.com','Retired custom translation API');
 forbid(safe,'createTreeWalker','Page-wide translation scan');
+forbid(safe,'stabilizeMobileNav','Translation runtime must not own navigation');
 if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation MutationObserver forbidden');
 if(/setInterval\s*\(/.test(safe))throw new Error('Translation polling forbidden');
+if(/setTimeout\s*\(/.test(safe))throw new Error('Translation timing guess forbidden');
 if(/location\.(?:reload|replace|assign)\s*\(/.test(safe))throw new Error('Translation reload/redirect loop forbidden');
 
 const redline=read('site-public-redline-closure-v2.js');
@@ -86,7 +90,8 @@ must(ddz,'justify-content:safe center!important','Safe centered hand');
 const mat=read('scripts/materialize-global-language-v3.js');
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline identity');
 must(mat,"VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components owner');
-must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v13'",'Google translation owner');
+must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v14'",'Google translation owner');
+must(mat,"TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15'",'Google native translation UI owner');
 must(mat,"PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23'",'Translation-neutral public redline');
 must(mat,'20260831-r11-semantics-v17-native-range','Semantics V17 owner');
 must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Shell V11 owner');
@@ -103,4 +108,4 @@ must(containment,'QilyLean Responsive Containment V1','Responsive containment CS
 must(containment,'overscroll-behavior-inline:contain','Local horizontal-scroll containment');
 forbid(containment,'width:100vw','Page-level viewport widening');
 
-console.log('PASS: safety/readability owners retain Dock/layout stability while Google Translate V1.3 and native-range navigation are the protected public baseline.');
+console.log('PASS: safety/readability owners retain Dock/layout stability while post-load Google Translate V1.3 and native-range navigation remain separate protected public owners.');
