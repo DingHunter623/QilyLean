@@ -1,16 +1,44 @@
-/* QilyLean Visual Runtime R8 | 2026-08-31
+/* QilyLean Visual Runtime R8.2 | 2026-08-31
  * Presentation-only runtime. One-time enhancement + measured header geometry.
  * No MutationObserver. No navigation/Dock label ownership. No business logic.
+ * R8.2: keeps the single visual-authority stylesheet last in the cascade after legacy runtimes inject compatibility styles.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyVisualRuntimeR8)return;
+  if(w.__qilyVisualRuntimeR82)return;
+  w.__qilyVisualRuntimeR82=true;
   w.__qilyVisualRuntimeR8=true;
 
   var root=d.documentElement;
   var raf=0;
+  var authorityTimer=0;
 
   function px(value){var n=Math.ceil(Number(value)||0);return Math.max(0,n)+'px';}
+
+  function visualAuthorityLink(){return d.getElementById('qilyVisualAuthorityR8');}
+
+  function ensureAuthorityLast(){
+    var head=d.head,link=visualAuthorityLink();
+    if(!head||!link||link.parentNode!==head)return;
+    if(head.lastElementChild!==link)head.appendChild(link);
+    root.setAttribute('data-qily-r8-cascade','authority-last');
+  }
+
+  function scheduleAuthorityLast(){
+    if(authorityTimer)w.clearTimeout(authorityTimer);
+    authorityTimer=w.setTimeout(function(){authorityTimer=0;ensureAuthorityLast();},0);
+  }
+
+  function installCascadeAuthority(){
+    ensureAuthorityLast();
+    // Deferred legacy runtimes may inject presentation-only compatibility styles while the shell settles.
+    // Re-assert the final authority at bounded checkpoints and shell/language events; no DOM observer is used.
+    w.setTimeout(ensureAuthorityLast,120);
+    w.setTimeout(ensureAuthorityLast,700);
+    d.addEventListener('qily:shell-ready',scheduleAuthorityLast);
+    d.addEventListener('qily:language-change',scheduleAuthorityLast);
+    w.addEventListener('pageshow',scheduleAuthorityLast,{passive:true});
+  }
 
   function headerNode(){
     return d.querySelector('header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header');
@@ -119,6 +147,7 @@
     annotateCardGrids();
     annotateFrames();
     installHeaderMeasurement();
+    installCascadeAuthority();
     w.requestAnimationFrame(auditOverflow);
     w.setTimeout(auditOverflow,450);
   }
