@@ -1,15 +1,16 @@
-/* QilyLean Google Translate Header Runtime V1.1｜2026-08-31
+/* QilyLean Google Translate Header Runtime V1.2｜2026-08-31
  * Chinese static HTML remains the authoritative source and default display.
  * Google Translate is the single translation provider exposed to visitors.
  * The translation is a header utility sibling, outside the horizontally scrolling business navigation.
- * V1.1 fixes the header-build race: site-navigation-core may replace header children after this runtime starts,
- * so the Google control is reasserted on qily:shell-ready and a few bounded startup checkpoints.
+ * V1.1 fixed the header-build race: site-navigation-core may replace header children after this runtime starts.
+ * V1.2 removes the legacy .qily-google-translate class because the retired-control stylesheet intentionally hides that class.
  * Android/iPhone: native horizontal nav swiping is authoritative; the auxiliary range rail must not steal coarse-pointer gestures.
  * No page text scan, no custom translation API, no MutationObserver, no reload.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyGoogleTranslateHeaderV11)return;
+  if(w.__qilyGoogleTranslateHeaderV12)return;
+  w.__qilyGoogleTranslateHeaderV12=true;
   w.__qilyGoogleTranslateHeaderV11=true;
   w.__qilyGoogleTranslateHeaderV1=true;
 
@@ -62,7 +63,8 @@
   function buildControl(){
     var wrapper=d.createElement('div');
     wrapper.id=CONTROL_ID;
-    wrapper.className='qily-web-translate qily-google-translate';
+    wrapper.className='qily-web-translate';
+    wrapper.setAttribute('data-qily-google-translate-current','true');
     wrapper.setAttribute('data-qily-no-translate','true');
     wrapper.setAttribute('data-qily-header-utility','translation');
     wrapper.setAttribute('data-qily-translation-provider','google');
@@ -71,7 +73,9 @@
     wrapper.setAttribute('aria-label','Google 网页翻译');
     wrapper.setAttribute('title','Google 网页翻译');
     wrapper.setAttribute('data-state','loading');
-    wrapper.style.setProperty('display','inline-flex');
+    wrapper.style.setProperty('display','inline-flex','important');
+    wrapper.style.setProperty('visibility','visible','important');
+    wrapper.style.setProperty('opacity','1','important');
     wrapper.style.setProperty('align-items','center');
     wrapper.style.setProperty('gap','6px');
     wrapper.style.setProperty('flex','0 0 auto');
@@ -160,6 +164,11 @@
     stabilizeMobileNav(nav);
     var control=d.getElementById(CONTROL_ID);
     if(!control)control=buildControl();
+    control.classList.remove('qily-google-translate','qily-language-switcher');
+    control.setAttribute('data-qily-google-translate-current','true');
+    control.style.setProperty('display','inline-flex','important');
+    control.style.setProperty('visibility','visible','important');
+    control.style.setProperty('opacity','1','important');
     placeControl(control,nav);
     w[CALLBACK]=initGoogleWidget;
     if(w.google&&w.google.translate&&w.google.translate.TranslateElement)initGoogleWidget();
