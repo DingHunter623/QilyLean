@@ -72,17 +72,28 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
-      - name: Commit materialized public baseline
+      - name: Commit materialized public baseline on latest main
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
           rm -rf node_modules visual-r8-artifacts
           git config user.name 'QilyLean Visual Guard'
           git config user.email 'actions@users.noreply.github.com'
+
+          # Other deterministic builders may advance main while the 90-view visual audit runs.
+          # Publish only after rematerializing the latest remote main, so R8 never loses a push race
+          # and never overwrites a newer generated asset/build marker.
+          git fetch origin main
+          git reset --hard origin/main
+          node scripts/apply-visual-authority-r8.js
+          node scripts/validate-visual-authority-r8.js
+          node scripts/validate-seo-indexability.js
+          git diff --check
+
           if ! git diff --quiet; then
             git add -A
             git commit -m 'build(r8): materialize single visual authority [skip ci]'
-            git push
+            git push origin HEAD:main
           else
-            echo 'R8 public baseline already materialized.'
+            echo 'R8 public baseline already materialized on latest main.'
           fi
