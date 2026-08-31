@@ -3,6 +3,7 @@
  * This replaces the former Safe In-Page Translation V7 implementation completely.
  * Google Translate is the single translation provider exposed to visitors.
  * The translation is a header utility sibling, outside the horizontally scrolling business navigation.
+ * Android/iPhone: native horizontal nav swiping is authoritative; the auxiliary range rail must not steal coarse-pointer gestures.
  * No page text scan, no custom translation API, no MutationObserver, no retry loop, no reload.
  * Compatibility markers retained for existing regression guards only: runtime:'safe-inpage-v7'; data-qily-header-utility.
  */
@@ -17,7 +18,39 @@
   var CALLBACK='googleTranslateElementInit';
 
   function primaryNav(){
-    return d.querySelector('header .qily-global-nav,header nav.site-nav,header nav.nav,header nav[aria-label="QilyLean核心导视"],header nav[aria-label="网站导航"],header nav');
+    return d.querySelector('header .qily-global-nav,header nav.site-nav,header nav.nav,header nav[aria-label="QilyLean核心导视"],header nav[aria-label="主导航"],header nav[aria-label="网站导航"],header nav');
+  }
+
+  function isCoarseOrMobile(){
+    try{return !!(w.matchMedia&&w.matchMedia('(max-width: 900px), (pointer: coarse)').matches);}catch(error){return w.innerWidth<=900;}
+  }
+
+  function stabilizeMobileNav(nav){
+    if(!nav||!isCoarseOrMobile())return;
+    nav.style.setProperty('display','flex','important');
+    nav.style.setProperty('flex-wrap','nowrap','important');
+    nav.style.setProperty('width','100%','important');
+    nav.style.setProperty('min-width','0','important');
+    nav.style.setProperty('max-width','100%','important');
+    nav.style.setProperty('overflow-x','auto','important');
+    nav.style.setProperty('overflow-y','hidden','important');
+    nav.style.setProperty('-webkit-overflow-scrolling','touch','important');
+    nav.style.setProperty('touch-action','pan-x','important');
+    nav.style.setProperty('overscroll-behavior-x','contain','important');
+    nav.style.setProperty('scroll-behavior','auto','important');
+    nav.style.setProperty('scroll-snap-type','none','important');
+    Array.prototype.forEach.call(nav.children,function(child){
+      if(child&&child.style)child.style.setProperty('flex','0 0 auto','important');
+    });
+    var header=nav.closest&&nav.closest('header');
+    var rail=header&&header.querySelector('.qily-primary-nav-scroll-rail');
+    if(rail){
+      rail.style.setProperty('display','none','important');
+      rail.style.setProperty('pointer-events','none','important');
+      rail.setAttribute('aria-hidden','true');
+      rail.tabIndex=-1;
+    }
+    nav.setAttribute('data-qily-mobile-nav','native-swipe');
   }
 
   function removeLegacyControl(){
@@ -37,6 +70,11 @@
     wrapper.setAttribute('aria-label','Google 网页翻译');
     wrapper.setAttribute('title','Google 网页翻译');
     wrapper.setAttribute('data-state','loading');
+    wrapper.style.setProperty('display','inline-flex');
+    wrapper.style.setProperty('align-items','center');
+    wrapper.style.setProperty('gap','6px');
+    wrapper.style.setProperty('flex','0 0 auto');
+    wrapper.style.setProperty('max-width','100%');
 
     var mark=d.createElement('span');
     mark.className='qily-web-translate__mark';
@@ -66,18 +104,20 @@
       return;
     }
     if(nav.nextElementSibling!==control)nav.insertAdjacentElement('afterend',control);
+    header.setAttribute('data-qily-google-translate-slot','ready');
   }
 
   function decorateGoogleControl(){
     var wrapper=d.getElementById(CONTROL_ID);
     if(!wrapper)return;
     var select=wrapper.querySelector('select.goog-te-combo');
+    var simple=wrapper.querySelector('.goog-te-gadget-simple');
     if(select){
       select.classList.add('qily-web-translate__select');
       select.setAttribute('aria-label','Google 网页翻译语言');
       select.setAttribute('title','选择网页翻译语言');
-      wrapper.setAttribute('data-state','ready');
     }
+    if(select||simple)wrapper.setAttribute('data-state','ready');
   }
 
   function initGoogleWidget(){
@@ -88,8 +128,7 @@
     try{
       new w.google.translate.TranslateElement({
         pageLanguage:'zh-CN',
-        autoDisplay:false,
-        layout:w.google.translate.TranslateElement.InlineLayout.SIMPLE
+        autoDisplay:false
       },ELEMENT_ID);
       w.setTimeout(decorateGoogleControl,0);
       w.setTimeout(decorateGoogleControl,250);
@@ -117,12 +156,17 @@
 
   function init(){
     removeLegacyControl();
+    var nav=primaryNav();
+    stabilizeMobileNav(nav);
     var control=buildControl();
-    placeControl(control,primaryNav());
+    placeControl(control,nav);
     w[CALLBACK]=initGoogleWidget;
     loadGoogleScript();
   }
 
+  function refreshMobileNav(){stabilizeMobileNav(primaryNav());}
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',init,{once:true});
   else init();
+  w.addEventListener('pageshow',refreshMobileNav,{passive:true});
+  w.addEventListener('resize',refreshMobileNav,{passive:true});
 })(document,window);
