@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* V27 visual-closure compatibility checks on the current V30 public baseline. */
+/* V27 visual-closure compatibility checks on the current V31 public baseline. */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
@@ -17,19 +17,22 @@ const ddz=read('tools/pure-ddz/index.html');for(const token of ['20260829-ddz-mo
 const ddzMaterializer=read('scripts/materialize-ddz-public-ui-20260824.js');must(ddzMaterializer,'20260829-ddz-mobile-ready-v132','DDZ materializer');must(ddzMaterializer,'forced-orientation metadata must stay removed','DDZ materializer');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
-must(materializer,"BASELINE_VERSION='20260831-safe-translation-nav-range-v30'",'V30 sitewide baseline');
-must(materializer,"VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'",'V30 visual cache');
+must(materializer,"BASELINE_VERSION='20260831-google-translate-nav-range-v31'",'V31 sitewide baseline');
+must(materializer,"VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'",'V31 visual cache');
 must(materializer,"FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3'",'Project grade integrity cache');
 must(materializer,"VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Unified visual components cache');
-must(materializer,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-safe-inpage-v7-header-utility'",'Safe Translation V7 cache');
+must(materializer,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v1'",'Google Translate V1 cache');
 must(materializer,"INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'Interaction Semantics V1.7 cache');
 
 const interactionRuntime=read('site-interaction-semantics-v1.js');
 must(interactionRuntime,'__qilyInteractionSemanticsV17','Interaction Semantics V1.7 runtime');
 must(interactionRuntime,"rail.type='range'",'Native navigation range rail');
 const translationRuntime=read('site-translation-safe-runtime-v1.js');
-must(translationRuntime,"runtime:'safe-inpage-v7'",'Safe Translation V7 runtime');
+must(translationRuntime,'Google Translate Header Runtime V1','Google Translate V1 runtime');
+must(translationRuntime,'translate.google.com/translate_a/element.js','Google Translate embed');
+forbid(translationRuntime,'createTreeWalker','Retired page-wide translation scan');
+if(/new\s+MutationObserver\s*\(/.test(translationRuntime))throw new Error('Translation MutationObserver forbidden');
 const components=read('site-visual-components-v1.css');
-for(const token of ['qily-primary-nav-scroll-rail','::-webkit-slider-thumb','.qily-project-evidence-grade','.qily-project-list-grade'])must(components,token,'V30 visual components');
+for(const token of ['qily-primary-nav-scroll-rail','::-webkit-slider-thumb','.qily-project-evidence-grade','.qily-project-list-grade'])must(components,token,'V31 visual components');
 
-console.log('PASS: V27 compatibility checks remain satisfied on the V30 safe-translation/native-range baseline, including arrows, PDCA semantics, governed axes, readable evidence grades, native navigation rail, translation utility integrity and portrait-ready DDZ automation.');
+console.log('PASS: V27 compatibility checks remain satisfied on the V31 Google-Translate/native-range baseline, including arrows, PDCA semantics, governed axes, readable evidence grades, native navigation rail, translation utility integrity and portrait-ready DDZ automation.');
