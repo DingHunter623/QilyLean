@@ -37,6 +37,10 @@ if(/(?:stabilizeMobileNav|matchMedia|touch-action|overflow-x|qily-primary-nav-sc
 if(/(?:\.options\b|option\.(?:textContent|label)|decorateGoogleControl)/.test(safe))fail('Google-owned native options must not be rewritten');
 
 must(publicCss,'select.goog-te-combo','eventual native Google select selector');
+must(publicCss,'body > iframe.goog-te-banner-frame','legacy Google top banner suppression');
+must(publicCss,'body > iframe.VIpgJd-ZVi9od-ORHb-OEVmcd','current Google top banner suppression');
+must(publicCss,'html.translated-ltr body','translated LTR body offset reset');
+must(publicCss,'html.translated-rtl body','translated RTL body offset reset');
 if(/header|nav\.|qily-global-nav|site-nav|touch-action:\s*pan-x/.test(publicCss))fail('translation stylesheet must not own navigation layout or swipe behavior');
 
 const redline=read('site-public-redline-closure-v2.js');
@@ -81,4 +85,4 @@ must(materializer,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.
 must(materializer,"const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15'",'materializer native UI cache');
 must(materializer,"const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23'",'materializer redline cache');
 
-console.log(`PASS: ${audited} public pages use one post-load Google Translate V1.3 runtime; TranslateElement/script/recovery are single-shot, native options are Google-owned and no translation runtime touches navigation.`);
+console.log(`PASS: ${audited} public pages use one post-load Google Translate V1.3 runtime; TranslateElement/script/recovery are single-shot, native options are Google-owned, the injected top banner stays hidden and no translation runtime touches navigation.`);
