@@ -1,6 +1,6 @@
 /* QilyLean Translation Public UI V2.2｜2026-08-30
  * Visitor-facing translation UI plus the 0830 shared/public redline closure.
- * Public language choices: 中文简体 / 中文繁体 / 美式英语. Chinese simplified remains default.
+ * Public language choices: 中文简体 / 中文繁体 / English. Chinese simplified remains default.
  * V2.2 closes the annotated visual/professional redlines as one engineering pass.
  */
 (function(d,w){
@@ -14,7 +14,7 @@
   var observer=null,searchObserver=null,searchReranking=false,lastShareAt=0;
   var canvas=d.createElement('canvas');
   var context=canvas.getContext&&canvas.getContext('2d');
-  var PUBLIC_LANGS={'zh-CN':'中文简体','zh-TW':'中文繁体','en':'美式英语'};
+  var PUBLIC_LANGS={'zh-CN':'中文简体','zh-TW':'中文繁体','en':'English'};
   var PUBLIC_ORDER=['zh-CN','zh-TW','en'];
   var DIRECT_SEARCH_ROUTES=[
     {aliases:['pdca单点培训','pdca培训','pdca','甘特图','里程碑管理'],url:'/knowledge/pdca-gantt-milestone-opl.html',title:'PDCA＋甘特图里程碑管理｜OPL单点培训',kind:'单点培训课件'},
@@ -77,7 +77,7 @@
 
   function cleanControl(control){
     if(!control)return false;
-    control.setAttribute('aria-label','网页翻译');control.setAttribute('title','默认中文简体；可切换中文繁体或美式英语。');control.setAttribute('data-qily-public-language-set','zh-CN,zh-TW,en');control.setAttribute('data-qily-default-language','zh-CN');
+    control.setAttribute('aria-label','网页翻译');control.setAttribute('title','默认中文简体；可切换中文繁体或 English。');control.setAttribute('data-qily-public-language-set','zh-CN,zh-TW,en');control.setAttribute('data-qily-default-language','zh-CN');
     var mark=control.querySelector('.qily-web-translate__mark');if(mark)mark.textContent='🌐';
     var brand=control.querySelector('.qily-web-translate__brand');if(brand)brand.remove();
     var badge=control.querySelector('.qily-web-translate__badge');if(badge)badge.remove();
