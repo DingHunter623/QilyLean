@@ -1,6 +1,8 @@
-name: Publish Sitewide V28 Visual Closure
+name: Validate Sitewide V30 Visual Compatibility
 
 on:
+  pull_request:
+    branches: [main]
   push:
     branches: [main]
     paths:
@@ -8,7 +10,11 @@ on:
       - 'scripts/materialize-contact-route-v6.js'
       - 'scripts/validate-r7-authoritative-runtime-20260828.js'
       - 'scripts/validate-sitewide-visual-closure-v27.js'
+      - 'scripts/validate-mobile-primary-navigation-v1.js'
+      - 'scripts/validate-sitewide-safety-readability-v1.js'
+      - 'scripts/validate-20260825-remediation-closure-v1.js'
       - 'site-visual-system-v2.css'
+      - 'site-visual-components-v1.css'
       - 'site-responsive-containment-v1.css'
       - 'site-header-project-integrity-v2.css'
       - 'site-public-redline-closure-v1.css'
@@ -16,48 +22,39 @@ on:
       - 'site-contact-route-v1.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-ui-consistency-v1.js'
-      - 'site-core-service-dock-closure-v1.js'
+      - 'site-translation-safe-runtime-v1.js'
       - 'site-navigation.js'
       - 'site-header-axis-v1.css'
-      - 'site-interaction-continuity-v1.css'
       - 'site-interaction-semantics-v1.css'
       - 'site-interaction-semantics-v1.js'
       - 'tools/pure-ddz/game/css/r8-closure-v128.css'
-      - 'capabilities/index.html'
-      - 'cooperation/index.html'
-      - 'lean-production/index.html'
-      - 'projects/index.html'
-      - 'projects/automotive-lean/index.html'
-      - 'trust/index.html'
-      - 'assets/qilylean-aircraft-hero-approved-20260826.png'
-      - 'assets/qilylean-aircraft-hero-latest-q98.webp'
-      - 'tools/pure-ddz/index.html'
-      - 'tools/pure-ddz/game/js/game.js'
       - '.github/workflows/publish-visual-regression-contact-v1.yml'
   workflow_dispatch:
 
+# V30 single-authority rule: this compatibility workflow is read-only.
+# The only workflow allowed to write the 478-page public shell is
+# Materialize Unified Public Baseline.
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: sitewide-v28-visual-main
+  group: sitewide-v30-visual-compat-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
-  publish:
-    if: github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[v28-materialized]')
+  validate:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
         with:
-          ref: main
-          fetch-depth: 0
+          fetch-depth: 2
+
       - uses: actions/setup-node@v5
         with:
           node-version: '24'
 
-      - name: Validate V28 authoritative source contracts
+      - name: Validate V30 authoritative source contracts
         shell: bash
         run: |
           set -euo pipefail
@@ -68,72 +65,37 @@ jobs:
           node --check site-contact-route-v1.js
           node --check site-dock-share-runtime-v1.js
           node --check site-ui-consistency-v1.js
-          node --check site-core-service-dock-closure-v1.js
+          node --check site-translation-safe-runtime-v1.js
           node --check site-navigation.js
           node --check site-interaction-semantics-v1.js
           node scripts/validate-r7-authoritative-runtime-20260828.js
           node scripts/validate-sitewide-visual-closure-v27.js
-          grep -Fq "const BASELINE_VERSION='20260830-sitewide-responsive-containment-v28'" scripts/materialize-global-language-v3.js
-          grep -Fq "const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260830-header-project-integrity-v2'" scripts/materialize-global-language-v3.js
-          grep -Fq 'QilyLean Header + Project Integrity V2' site-header-project-integrity-v2.css
-          grep -Fq 'flex:0 0 206px!important' site-header-project-integrity-v2.css
-          grep -Fq 'project-list-card .qily-project-list-grade>b' site-header-project-integrity-v2.css
-          grep -Fq 'project-detail-page .module-hero .qily-project-evidence-grade>span' site-header-project-integrity-v2.css
-          grep -Fq 'QilyLean Interaction Semantics V1.4' site-interaction-semantics-v1.css
-          grep -Fq '__qilyInteractionSemanticsV15' site-interaction-semantics-v1.js
-          grep -Fq 'Translation Public UI V1.2' site-translation-public-ui-v1.js
-          ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-translation-public-ui-v1.js
-          grep -Fq 'qily-primary-nav-scroll-rail' site-interaction-semantics-v1.js
-          grep -Fq '.brief-action-strip>span' site-interaction-semantics-v1.js
-          grep -Fq 'Pure DDZ R12 Closure V132' tools/pure-ddz/game/css/r8-closure-v128.css
-          grep -Fq 'justify-content:safe center!important' tools/pure-ddz/game/css/r8-closure-v128.css
-          grep -Fq "const ROUTE='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134'" scripts/materialize-contact-route-v6.js
-          grep -Fq "const DOCK='/site-dock-share-runtime-v1.js?v=20260829-authority-v54'" scripts/materialize-contact-route-v6.js
-          grep -Fq "w.open(url,'_blank','noopener,noreferrer')" site-dock-share-runtime-v1.js
-          ! grep -Fq "mask.classList.add('show')" site-dock-share-runtime-v1.js
-          ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-dock-share-runtime-v1.js
-          ! grep -Eq 'new[[:space:]]+MutationObserver[[:space:]]*\(' site-navigation.js
 
-      - name: Materialize V28 to every tracked public HTML page
+      - name: Prove materializers are composable and idempotent
         shell: bash
         run: |
           set -euo pipefail
-          git config user.name 'QilyLean Automation'
-          git config user.email 'actions@users.noreply.github.com'
-          for attempt in 1 2 3 4; do
-            echo "V28 publish attempt ${attempt}/4"
-            git fetch origin main
-            git reset --hard origin/main
-            node scripts/validate-r7-authoritative-runtime-20260828.js
-            node scripts/materialize-global-language-v3.js
-            node scripts/materialize-global-language-v3.js --check
-            node scripts/materialize-contact-route-v6.js
-            node scripts/materialize-contact-route-v6.js --check
-            node scripts/validate-seo-indexability.js
-            grep -Fq '/site-header-axis-v1.css?v=20260829-primary-navigation-safe-scroll-v7' index.html
-            grep -Fq '/site-translation-public-ui-v1.js?v=20260830-public-language-picker-v8-stable' index.html
-            grep -Fq '/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal' index.html
-            grep -Fq '/site-responsive-containment-v1.css?v=20260830-header-integrity-v2' index.html
-            grep -Fq '/site-header-project-integrity-v2.css?v=20260830-header-project-integrity-v2' index.html
-            grep -Fq '/site-header-project-integrity-v2.css?v=20260830-header-project-integrity-v2' projects/index.html
-            grep -Fq '/site-header-project-integrity-v2.css?v=20260830-header-project-integrity-v2' projects/automotive-lean/index.html
-            grep -Fq '/site-interaction-semantics-v1.js?v=20260830-r11-semantics-v15-ios-drag' knowledge/index.html
-            grep -Fq '/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132' tools/pure-ddz/index.html
-            grep -Fq '/site-contact-route-v1.js?v=20260829-dock-functional-public-v134' tools/pure-ddz/index.html
-            grep -Fq 'data-qily-interaction-semantics-direct="v1.5"' qilylean/daily/2026-07-29.html
-            git diff --check
-            if git diff --quiet; then
-              echo 'V28 public baseline already current on latest main.'
-              exit 0
-            fi
-            git add -- ':(glob)**/*.html'
-            git commit -m 'fix: materialize V28 header project integrity [v28-materialized]'
-            if git push origin HEAD:main; then
-              echo 'V28 authoritative baseline published to tracked public HTML.'
-              exit 0
-            fi
-            echo 'main advanced during publication; retrying from newest main.'
-            sleep $((attempt * 3))
-          done
-          echo 'Unable to publish V28 after retries.'
-          exit 1
+          node scripts/materialize-global-language-v3.js
+          node scripts/materialize-contact-route-v6.js
+          node scripts/materialize-global-language-v3.js --check
+          node scripts/materialize-contact-route-v6.js --check
+          node scripts/validate-visual-system-v2.js --materialized
+          node scripts/validate-mobile-primary-navigation-v1.js
+          node scripts/validate-sitewide-safety-readability-v1.js
+          node scripts/validate-20260825-remediation-closure-v1.js
+          node scripts/validate-sitewide-visual-closure-v27.js
+          git diff --check
+
+      - name: Assert V30 single ownership boundaries
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq "const BASELINE_VERSION='20260831-safe-translation-nav-range-v30'" scripts/materialize-global-language-v3.js
+          grep -Fq "const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-safe-inpage-v7-header-utility'" scripts/materialize-global-language-v3.js
+          grep -Fq "const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'" scripts/materialize-global-language-v3.js
+          grep -Fq "const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'" scripts/materialize-global-language-v3.js
+          grep -Fq "rail.type='range'" site-interaction-semantics-v1.js
+          grep -Fq "runtime:'safe-inpage-v7'" site-translation-safe-runtime-v1.js
+          grep -Fq 'global shell ownership untouched' scripts/materialize-contact-route-v6.js
+          ! grep -Fq 'const UI=' scripts/materialize-contact-route-v6.js
+          ! grep -Fq 'site-ui-consistency-v1.js' scripts/materialize-contact-route-v6.js
