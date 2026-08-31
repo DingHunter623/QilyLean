@@ -188,31 +188,6 @@ html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav
   html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-track{background:#e8f2f0!important}
   html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb,
   html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb{min-width:36px!important;border-width:1px!important}
-
-  /* Narrow mobile containment: allow the translator utility to shrink with its
-   * grid track instead of preserving the retired 260px desktop minimum. This
-   * prevents Android 360/393/412px viewports from pushing the Google control
-   * outside the visible header while leaving desktop and wide mobile geometry
-   * unchanged. */
-  html body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
-  .qily-web-translate[data-qily-header-utility="translation"]{
-    box-sizing:border-box!important;
-    flex:0 1 260px!important;
-    width:min(260px,100%)!important;
-    min-width:0!important;
-    max-width:260px!important;
-    overflow:visible!important;
-  }
-  html body .qily-web-translate__google{
-    flex:1 1 auto!important;
-    min-width:0!important;
-    max-width:100%!important;
-  }
-  html body .qily-web-translate__select{
-    width:100%!important;
-    min-width:96px!important;
-    max-width:100%!important;
-  }
 }
 
 @media (max-width:760px){html body .qily-web-translate__select{font-size:15px!important}}
