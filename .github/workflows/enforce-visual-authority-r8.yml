@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
     paths:
+      - '**/*.html'
       - 'site-visual-authority-r8.css'
       - 'site-visual-runtime-r8.js'
       - 'site-visual-system-v2.css'
@@ -57,7 +58,7 @@ jobs:
           sleep 2
           curl --fail --silent http://127.0.0.1:4173/ >/dev/null
 
-      - name: Run representative browser geometry and screenshot audit
+      - name: Run nine-width browser geometry and screenshot audit
         env:
           QILY_VISUAL_BASE: http://127.0.0.1:4173
         run: npx playwright test scripts/visual-authority-r8.spec.js --reporter=line --workers=1
@@ -67,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: qily-visual-r8-${{ github.run_id }}
-          path: .visual-r8-artifacts
+          path: visual-r8-artifacts
           if-no-files-found: warn
           retention-days: 14
 
@@ -75,7 +76,7 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           set -euo pipefail
-          rm -rf node_modules .visual-r8-artifacts
+          rm -rf node_modules visual-r8-artifacts
           git config user.name 'QilyLean Visual Guard'
           git config user.email 'actions@users.noreply.github.com'
           if ! git diff --quiet; then
