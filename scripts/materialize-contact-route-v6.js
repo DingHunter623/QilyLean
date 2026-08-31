@@ -7,7 +7,7 @@ const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const ROUTE='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const DOCK='/site-dock-share-runtime-v1.js?v=20260829-authority-v54';
-const UI='/site-ui-consistency-v1.js?v=20260830-r7-single-responsibility-v8-stable-picker';
+const UI='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v9-native-picker';
 const REDLINE='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
 const CONTACT_PATH='contact/index.html';
 const DDZ_PATH='tools/pure-ddz/index.html';
@@ -64,5 +64,5 @@ if(process.argv.includes('--check')){
   for(const provider of ['amap','baidu','tencent','google','apple'])if(!contact.includes(`data-qily-map-provider="${provider}"`))throw new Error(`Contact clean map provider missing after materialization: ${provider}`);
   for(const [label,html] of [['contact',contact],['home',home],['pure-ddz',ddz]]){if(!html.includes(ROUTE))throw new Error(`${label} does not use Contact Route V13.4.`);if(!html.includes(REDLINE))throw new Error(`${label} does not use public redline V2.`);if(/site-ui-consistency-v1\.js/.test(html)&&!html.includes(UI))throw new Error(`${label} still loads stale UI consistency runtime.`);}
   if(/site-dock-share-runtime-v1\.js/.test(ddz)&&!ddz.includes(DOCK))throw new Error('Pure DDZ direct Dock runtime is not cache-busted to authoritative V5.4.');
-  process.stdout.write(`PASS: R12 contact baseline current on ${covered} HTML pages; Contact Route V13.4; direct Dock V5.4 refs ${dockCovered}; UI V8 refs ${uiCovered}.\n`);
-}else process.stdout.write(`R12 contact materialized on ${changed} HTML file(s); route coverage ${covered}; Contact V13.4; Dock V5.4 refs ${dockCovered}; UI refs ${uiCovered}.\n`);
+  process.stdout.write(`PASS: R12 contact baseline current on ${covered} HTML pages; Contact Route V13.4; direct Dock V5.4 refs ${dockCovered}; UI V9 refs ${uiCovered}.\n`);
+}else process.stdout.write(`R12 contact materialized on ${changed} HTML file(s); route coverage ${covered}; Contact V13.4; Dock V5.4 refs ${dockCovered}; UI V9 refs ${uiCovered}.\n`);
