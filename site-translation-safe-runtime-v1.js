@@ -1,15 +1,16 @@
-/* QilyLean Google Translate Header Runtime V1｜2026-08-31
+/* QilyLean Google Translate Header Runtime V1.1｜2026-08-31
  * Chinese static HTML remains the authoritative source and default display.
- * This replaces the former Safe In-Page Translation V7 implementation completely.
  * Google Translate is the single translation provider exposed to visitors.
  * The translation is a header utility sibling, outside the horizontally scrolling business navigation.
+ * V1.1 fixes the header-build race: site-navigation-core may replace header children after this runtime starts,
+ * so the Google control is reasserted on qily:shell-ready and a few bounded startup checkpoints.
  * Android/iPhone: native horizontal nav swiping is authoritative; the auxiliary range rail must not steal coarse-pointer gestures.
- * No page text scan, no custom translation API, no MutationObserver, no retry loop, no reload.
- * Compatibility markers retained for existing regression guards only: runtime:'safe-inpage-v7'; data-qily-header-utility.
+ * No page text scan, no custom translation API, no MutationObserver, no reload.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyGoogleTranslateHeaderV1)return;
+  if(w.__qilyGoogleTranslateHeaderV11)return;
+  w.__qilyGoogleTranslateHeaderV11=true;
   w.__qilyGoogleTranslateHeaderV1=true;
 
   var CONTROL_ID='qilyGlobalTranslationDualRouteV2';
@@ -100,10 +101,10 @@
     var header=nav&&nav.closest&&nav.closest('header');
     if(!header){
       if(nav)nav.appendChild(control);
-      else if(d.body)d.body.insertBefore(control,d.body.firstChild);
+      else if(d.body&&!control.isConnected)d.body.insertBefore(control,d.body.firstChild);
       return;
     }
-    if(nav.nextElementSibling!==control)nav.insertAdjacentElement('afterend',control);
+    if(control.parentNode!==header||nav.nextElementSibling!==control)nav.insertAdjacentElement('afterend',control);
     header.setAttribute('data-qily-google-translate-slot','ready');
   }
 
@@ -154,19 +155,31 @@
     (d.head||d.documentElement).appendChild(script);
   }
 
-  function init(){
-    removeLegacyControl();
+  function ensureControl(){
     var nav=primaryNav();
     stabilizeMobileNav(nav);
-    var control=buildControl();
+    var control=d.getElementById(CONTROL_ID);
+    if(!control)control=buildControl();
     placeControl(control,nav);
     w[CALLBACK]=initGoogleWidget;
-    loadGoogleScript();
+    if(w.google&&w.google.translate&&w.google.translate.TranslateElement)initGoogleWidget();
+    else loadGoogleScript();
+    return control;
   }
 
-  function refreshMobileNav(){stabilizeMobileNav(primaryNav());}
+  function init(){
+    removeLegacyControl();
+    w[CALLBACK]=initGoogleWidget;
+    ensureControl();
+    w.setTimeout(ensureControl,120);
+    w.setTimeout(ensureControl,700);
+    w.setTimeout(ensureControl,1600);
+  }
+
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',init,{once:true});
   else init();
-  w.addEventListener('pageshow',refreshMobileNav,{passive:true});
-  w.addEventListener('resize',refreshMobileNav,{passive:true});
+  d.addEventListener('qily:shell-ready',ensureControl);
+  d.addEventListener('qily:softnavigate',ensureControl);
+  w.addEventListener('pageshow',ensureControl,{passive:true});
+  w.addEventListener('resize',function(){stabilizeMobileNav(primaryNav());},{passive:true});
 })(document,window);
