@@ -44,8 +44,8 @@ html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__sele
 }
 
 /* Google may inject a second, page-wide toolbar after translation.
- * Suppress only that top banner/iframe; keep the QilyLean header TranslateElement intact.
- * Reset only Google's translated-state body offset so the site header remains at the viewport top.
+ * Suppress only that top banner/iframe; keep the QilyLean TranslateElement intact.
+ * Reset only Google's translated-state body offset so the site remains flush with the viewport top.
  */
 html body > iframe.goog-te-banner-frame,
 html body > iframe.skiptranslate.goog-te-banner-frame,
