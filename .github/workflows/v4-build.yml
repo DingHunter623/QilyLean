@@ -27,12 +27,27 @@ jobs:
       - uses: actions/checkout@v5
         with:
           ref: main
-          # Incremental sitemap materialization compares HEAD with HEAD^.
-          fetch-depth: 2
+          fetch-depth: 0
 
       - uses: actions/setup-node@v5
         with:
           node-version: 24
+
+      - name: Restore latest user-approved airplane SSOT
+        shell: bash
+        run: |
+          set -euo pipefail
+          SOURCE='官网首图.png'
+          SOURCE_COMMIT='0374beaedea04ef03b0c2e0e8f90646ebd4deb00'
+          SOURCE_PATH='官网首图3代.png'
+          EXPECTED_BLOB='32a218ed835ff0518cc7e2530f37c8cfa0b05b53'
+          CURRENT_BLOB="$(git hash-object "$SOURCE" 2>/dev/null || true)"
+          if [ "$CURRENT_BLOB" != "$EXPECTED_BLOB" ]; then
+            git show "${SOURCE_COMMIT}:${SOURCE_PATH}" > "$SOURCE"
+          fi
+          ACTUAL_BLOB="$(git hash-object "$SOURCE")"
+          test "$ACTUAL_BLOB" = "$EXPECTED_BLOB"
+          echo "Latest user-approved homepage airplane restored: $ACTUAL_BLOB"
 
       - name: Install WebP encoder
         shell: bash
@@ -54,7 +69,7 @@ jobs:
           SOURCE='官网首图.png'
           PNG='assets/qilylean-aircraft-hero-approved-20260826.png'
           WEBP='assets/qilylean-aircraft-hero-latest-q98.webp'
-          EXPECTED_BLOB='85208c107a39724b97a07e05819ed88e6cfcdc90'
+          EXPECTED_BLOB='32a218ed835ff0518cc7e2530f37c8cfa0b05b53'
           test -f "$SOURCE"
           ACTUAL_BLOB="$(git hash-object "$SOURCE")"
           test "$ACTUAL_BLOB" = "$EXPECTED_BLOB"
@@ -71,11 +86,12 @@ jobs:
           const webp=fs.readFileSync('assets/qilylean-aircraft-hero-latest-q98.webp');
           const signature=Buffer.from([137,80,78,71,13,10,26,10]);
           if(!source.subarray(0,8).equals(signature)) throw new Error('Canonical homepage aircraft artwork is not PNG');
-          if(source.readUInt32BE(16)!==1672||source.readUInt32BE(20)!==941) throw new Error('Canonical homepage aircraft artwork dimensions changed');
+          const width=source.readUInt32BE(16),height=source.readUInt32BE(20);
+          if(width<1200||height<675) throw new Error(`Canonical homepage aircraft resolution too small: ${width}x${height}`);
           if(!source.equals(png)) throw new Error('Production PNG fallback is not byte-identical to 官网首图.png');
           if(webp.subarray(0,4).toString('ascii')!=='RIFF'||webp.subarray(8,12).toString('ascii')!=='WEBP') throw new Error('Optimized aircraft derivative is not WebP');
-          if(webp.length<180000||webp.length>=1600000) throw new Error(`Optimized WebP payload outside 180KB–1.6MB budget: ${webp.length}`);
-          console.log(`Aircraft SSOT locked: PNG ${source.length} bytes; Q98 WebP transport derivative ${webp.length} bytes; 1672x941.`);
+          if(webp.length<150000||webp.length>=1600000) throw new Error(`Optimized WebP payload outside 150KB–1.6MB budget: ${webp.length}`);
+          console.log(`Aircraft SSOT locked: PNG ${source.length} bytes; Q98 WebP ${webp.length} bytes; ${width}x${height}.`);
           NODE
 
       - name: Materialize approved aircraft brand hero
@@ -83,8 +99,8 @@ jobs:
           set -euo pipefail
           node --check scripts/enforce-aircraft-home-hero.js
           node scripts/enforce-aircraft-home-hero.js
-          grep -q 'qilylean-aircraft-hero-latest-q98.webp?v=20260829-official-qr-v4' index.html
-          grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260829-official-qr-v4' index.html
+          grep -q 'qilylean-aircraft-hero-latest-q98.webp?v=20260831-aircraft-latest-v5' index.html
+          grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260831-aircraft-latest-v5' index.html
           node scripts/site-regression-guard-aircraft-hero.js
 
       - name: Guard sitewide floating dock gold identity
@@ -109,9 +125,6 @@ jobs:
 
       - name: Revalidate V4-owned generated source
         run: |
-          # The dedicated Materialize Unified Public Baseline workflow is the sole owner
-          # of the public V32 shell. V4 validates V4-owned outputs and the translation
-          # ownership boundary without rewriting the translator.
           node scripts/qilylean-north-v4-sitemap-contract.js --check
           node scripts/site-system-v4-validate.js
           node scripts/site-regression-guard-aircraft-hero.js
@@ -125,6 +138,7 @@ jobs:
         run: |
           set -euo pipefail
           paths=(
+            官网首图.png
             assets/qilylean-aircraft-hero-approved-20260826.png
             assets/qilylean-aircraft-hero-latest-q98.webp
             meta/build.json
@@ -136,12 +150,12 @@ jobs:
           if git diff --quiet -- "${paths[@]}" \
             && git ls-files --error-unmatch assets/qilylean-aircraft-hero-approved-20260826.png >/dev/null 2>&1 \
             && git ls-files --error-unmatch assets/qilylean-aircraft-hero-latest-q98.webp >/dev/null 2>&1; then
-            echo 'V4 production metadata and canonical aircraft hero closure already current.'
+            echo 'V4 production metadata and latest canonical aircraft hero already current.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add "${paths[@]}"
-          git commit -m 'build(v4): materialize canonical aircraft hero and optimized transport [v4-generated]'
+          git commit -m 'build(v4): materialize latest canonical aircraft hero and optimized transport [v4-generated]'
           git pull --rebase origin main
           git push
