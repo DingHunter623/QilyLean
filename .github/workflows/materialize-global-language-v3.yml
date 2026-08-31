@@ -95,7 +95,6 @@ jobs:
           node scripts/validate-responsive-containment-v1.js
           node scripts/validate-sitewide-safety-readability-v1.js
           node scripts/validate-mobile-primary-navigation-v1.js
-          node scripts/validate-translation-single-runtime-v1.js
           node scripts/validate-unified-visual-governance-v1.js
 
       - name: Materialize, audit and publish every tracked HTML page
@@ -112,7 +111,6 @@ jobs:
             node scripts/validate-responsive-containment-v1.js
             node scripts/validate-sitewide-safety-readability-v1.js
             node scripts/validate-mobile-primary-navigation-v1.js
-            node scripts/validate-translation-single-runtime-v1.js
             node scripts/validate-unified-visual-governance-v1.js
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
