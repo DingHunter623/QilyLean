@@ -1,12 +1,68 @@
 #!/usr/bin/env node
 'use strict';
 const fs=require('fs'),path=require('path'),root=path.resolve(__dirname,'..');
-const read=f=>fs.readFileSync(path.join(root,f),'utf8'),must=(s,t,m)=>{if(!s.includes(t))throw new Error(`${m}: missing ${t}`)},forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)};
-const header=read('site-header-axis-v1.css'),mat=read('scripts/materialize-global-language-v3.js'),nav=read('site-navigation.js'),semCss=read('site-interaction-semantics-v1.css'),semJs=read('site-interaction-semantics-v1.js'),visual=read('site-visual-system-v2.css'),containment=read('site-responsive-containment-v1.css'),shell=read('site-ui-consistency-v1.js');
-must(header,'Global Header Axis V1.2','Header axis');must(header,'--qily-primary-nav-font-size:20px','Nav 20px');must(header,'--qily-primary-nav-font-weight:900','Nav 900');must(header,'overflow-x:auto!important','Desktop scroll');must(header,'overflow-x:scroll!important','Mobile scroll');must(header,'scrollbar-width:thin!important','Native scrollbar');must(header,'white-space:nowrap!important','Full nav labels');must(header,'touch-action:pan-x pan-y!important','Touch panning');must(header,'-webkit-overflow-scrolling:touch!important','iOS scrolling');must(header,'-webkit-mask-image:none!important','No mobile mask');
-must(semCss,'Interaction Semantics V1.4','Semantics CSS');must(semCss,'.qily-primary-nav-scroll-rail','Persistent scroll rail');must(semCss,'.qily-primary-nav-scroll-thumb','Persistent rail thumb');must(semCss,'cursor:ew-resize','Draggable thumb');must(semJs,'Interaction Semantics Runtime V1.5','Semantics runtime');must(semJs,'__qilyInteractionSemanticsV15','Semantics V15 marker');must(semJs,'installPrimaryNavRail','Rail installer');must(semJs,'installPrimaryNavDragGuard','Drag click guard');must(semJs,"w.addEventListener('pointermove',move,{passive:false})",'iOS-safe rail drag');must(semJs,"if(event.cancelable)event.preventDefault();\n      nav.scrollLeft=startScroll-dx",'Touch row drag fallback');must(semJs,'aria-label','Rail accessibility');must(semJs,'一级导航左右滑动条','Rail label');
-must(nav,'navigation runtime v45','Navigation V45');must(nav,'mobilePrimaryNavigationMayShrinkTypography:false','No mobile shrink');
-must(mat,"const BASELINE_VERSION='20260831-native-picker-grade-readability-v29'",'Sitewide V29 baseline identity');must(mat,"const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'",'Visual System V2 r7 cache');must(mat,"const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2'",'Responsive containment cache');must(mat,"const HEADER_AXIS='/site-header-axis-v1.css?v=20260829-primary-navigation-safe-scroll-v7'",'Header cache');must(mat,"const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal'",'VI rail cache');must(mat,"const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260830-r11-semantics-v15-ios-drag'",'Rail runtime cache');must(mat,"const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v10-translation-uninstalled'",'Translation-uninstalled shell cache');must(mat,"const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134'",'Contact V134 cache');must(mat,"const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3'",'Project grade cache');must(mat,'function removeTranslationMarkup(source)','Translator markup remover');forbid(mat,'const PUBLIC_UI_JS=','Public picker must not be materialized');forbid(mat,'const SAFE_RUNTIME=','Translation runtime must not be materialized');forbid(mat,'const PROGRESS_JS=','Translation progress must not be materialized');
-must(shell,'function uninstallTranslationArtifacts()','Runtime translator removal guard');must(shell,'translation-uninstalled','Translation-uninstalled shell');forbid(shell,"safeRuntime:'/site-translation-safe-runtime-v1.js",'Shell translation runtime injection');forbid(shell,"publicJs:'/site-translation-public-ui-v1.js",'Shell public picker injection');forbid(shell,"progressJs:'/site-translation-progress-v1.js",'Shell translation progress injection');
-must(visual,'@media (min-width:768px) and (max-width:1179px)','Tablet nav composition');must(visual,'@media (max-width:767px)','Mobile nav composition');must(visual,'--qv2-nav:18px','Responsive nav visual scale');must(containment,'@media (max-width:767px)','Mobile containment composition');must(containment,'overscroll-behavior-inline:contain','Local mobile overflow containment');
-console.log('PASS: complete first-level navigation and iOS-safe direct drag remain intact while the public translator is uninstalled.');
+const read=f=>fs.readFileSync(path.join(root,f),'utf8');
+const must=(s,t,m)=>{if(!s.includes(t))throw new Error(`${m}: missing ${t}`)};
+const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)};
+
+const header=read('site-header-axis-v1.css');
+const mat=read('scripts/materialize-global-language-v3.js');
+const nav=read('site-navigation.js');
+const semCss=read('site-interaction-semantics-v1.css');
+const semJs=read('site-interaction-semantics-v1.js');
+const components=read('site-visual-components-v1.css');
+const visual=read('site-visual-system-v2.css');
+const containment=read('site-responsive-containment-v1.css');
+const shell=read('site-ui-consistency-v1.js');
+const safe=read('site-translation-safe-runtime-v1.js');
+
+must(header,'Global Header Axis V1.2','Header axis');
+must(header,'--qily-primary-nav-font-size:20px','Nav 20px');
+must(header,'overflow-x:auto!important','Desktop scroll');
+must(header,'overflow-x:scroll!important','Mobile scroll');
+must(header,'white-space:nowrap!important','Full nav labels');
+must(header,'touch-action:pan-x pan-y!important','Touch panning');
+must(header,'-webkit-overflow-scrolling:touch!important','iOS scrolling');
+must(header,'-webkit-mask-image:none!important','No mobile mask');
+
+must(semCss,'Interaction Semantics V1.4','Semantics CSS');
+must(semJs,'Interaction Semantics Runtime V1.7','Semantics V1.7');
+must(semJs,'__qilyInteractionSemanticsV17','Semantics V17 marker');
+must(semJs,'installPrimaryNavRail','Rail installer');
+must(semJs,'installPrimaryNavDragGuard','Mouse drag click guard');
+must(semJs,"rail.type='range'",'Native range input');
+must(semJs,"rail.addEventListener('pointerdown'",'Range pointer down');
+must(semJs,"rail.addEventListener('pointermove'",'Range pointer move');
+must(semJs,'function setFromPointer(event)','Direct pointer mapping');
+must(semJs,"event.pointerType&&event.pointerType!=='mouse'",'Touch/pen nav gestures stay native');
+must(semJs,'一级导航左右滑动条','Rail accessibility label');
+forbid(semJs,'qily-primary-nav-scroll-thumb','Legacy synthetic thumb');
+
+must(components,'input.qily-primary-nav-scroll-rail[type="range"]','Range visual component');
+must(components,'--qily-nav-range-thumb-width','Adaptive range thumb width');
+must(components,'::-webkit-slider-thumb','iOS/WebKit range thumb');
+must(components,'::-moz-range-thumb','Firefox range thumb');
+must(components,'background:var(--qily-nav-rail-thumb,#0f4b5a)!important','VI deep-teal thumb');
+
+must(nav,'navigation runtime v45','Navigation V45');
+must(nav,'mobilePrimaryNavigationMayShrinkTypography:false','No mobile shrink');
+
+must(safe,'Safe In-Page Translation V7','Safe translation V7');
+must(safe,'translation is a header utility sibling','Translator outside scrolling nav');
+must(safe,'data-qily-header-utility','Translation header utility marker');
+
+must(mat,"const BASELINE_VERSION='20260831-safe-translation-nav-range-v30'",'V30 baseline');
+must(mat,"const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'V17 cache');
+must(mat,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-safe-inpage-v7-header-utility'",'V7 translation cache');
+must(mat,"const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Native range visual cache');
+must(mat,"const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation'",'Shell V11 cache');
+
+must(shell,'__qilyUiSingleResponsibilityV11','Shell V11');
+forbid(shell,'function uninstallTranslationArtifacts()','Shell translator removal');
+
+must(visual,'@media (min-width:768px) and (max-width:1179px)','Tablet nav composition');
+must(visual,'@media (max-width:767px)','Mobile nav composition');
+must(containment,'@media (max-width:767px)','Mobile containment composition');
+must(containment,'overscroll-behavior-inline:contain','Local mobile overflow containment');
+
+console.log('PASS: first-level navigation uses the V1.7 native range rail for Android/iPhone while the translator stays a separate header utility.');
