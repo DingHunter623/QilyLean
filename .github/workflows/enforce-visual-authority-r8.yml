@@ -1,0 +1,87 @@
+name: Enforce Visual Authority R8
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-visual-authority-r8.css'
+      - 'site-visual-runtime-r8.js'
+      - 'site-visual-system-v2.css'
+      - 'site-responsive-containment-v1.css'
+      - 'site-header-axis-v1.css'
+      - 'site-public-redline-closure-v2.css'
+      - 'site-interaction-semantics-v1.css'
+      - 'scripts/apply-visual-authority-r8.js'
+      - 'scripts/validate-visual-authority-r8.js'
+      - 'scripts/visual-authority-r8.spec.js'
+      - '.github/workflows/enforce-visual-authority-r8.yml'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-visual-authority-r8-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  enforce-and-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Materialize R8 and clean conflicting visual owners
+        run: node scripts/apply-visual-authority-r8.js
+
+      - name: Validate R8 static contracts
+        run: |
+          set -euo pipefail
+          node scripts/validate-visual-authority-r8.js
+          node scripts/validate-seo-indexability.js
+          git diff --check
+
+      - name: Install browser audit dependency
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start local public-site server
+        run: |
+          python3 -m http.server 4173 >/tmp/qily-r8-http.log 2>&1 &
+          echo $! >/tmp/qily-r8-http.pid
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4173/ >/dev/null
+
+      - name: Run representative browser geometry and screenshot audit
+        env:
+          QILY_VISUAL_BASE: http://127.0.0.1:4173
+        run: npx playwright test scripts/visual-authority-r8.spec.js --reporter=line --workers=1
+
+      - name: Upload R8 visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qily-visual-r8-${{ github.run_id }}
+          path: .visual-r8-artifacts
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Commit materialized public baseline
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          set -euo pipefail
+          rm -rf node_modules .visual-r8-artifacts
+          git config user.name 'QilyLean Visual Guard'
+          git config user.email 'actions@users.noreply.github.com'
+          if ! git diff --quiet; then
+            git add -A
+            git commit -m 'build(r8): materialize single visual authority [skip ci]'
+            git push
+          else
+            echo 'R8 public baseline already materialized.'
+          fi
