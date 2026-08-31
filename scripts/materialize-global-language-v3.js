@@ -7,6 +7,7 @@
  * Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.7 owns interaction meaning and the native range navigation rail.
  * Visual System V2 remains the primary sitewide visual authority across four device compositions.
  * Unified Visual Components V29 closes reusable card/flow/diagram/table, Logo, evidence-grade and translation utility integrity.
+ * Brand Home Feedback V1 is a narrow exception for the header Logo/home route only.
  * Responsive Containment V1 guards page geometry.
  * Header + Project Integrity V3 retains complete header framing and project-evidence layout.
  * Public Redline Closure V2 retains shared visual/professional corrections.
@@ -39,6 +40,8 @@ const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r
 const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2';
 const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3';
 const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range';
+const BRAND_HOME_FEEDBACK_CSS='/site-brand-home-feedback-v1.css?v=20260831-brand-home-overlay-v1';
+const BRAND_HOME_FEEDBACK_JS='/site-brand-home-feedback-v1.js?v=20260831-brand-home-overlay-v1';
 const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-mobile-ui-v14';
 const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v1';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
@@ -48,15 +51,15 @@ const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
 
 function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);}
-function removeScriptByMarker(source){return source.replace(/\s*<script\b[^>]*(?:data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct|data-qily-interaction-contrast-direct|data-qily-content-contrast-direct|data-qily-translation-safe-direct|data-qily-contact-route-direct|data-qily-interaction-semantics-direct|data-qily-public-redline-v2-direct|data-qily-translation-safety-bootstrap)[^>]*>[\s\S]*?<\/script>\s*/gi,'\n');}
+function removeScriptByMarker(source){return source.replace(/\s*<script\b[^>]*(?:data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct|data-qily-interaction-contrast-direct|data-qily-content-contrast-direct|data-qily-translation-safe-direct|data-qily-contact-route-direct|data-qily-interaction-semantics-direct|data-qily-public-redline-v2-direct|data-qily-brand-home-feedback-direct|data-qily-translation-safety-bootstrap)[^>]*>[\s\S]*?<\/script>\s*/gi,'\n');}
 function removeManagedScripts(source){
   let next=source;
-  const paths=['site-global-language-v3.js','site-translation-safe-runtime-v1.js','site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-contact-route-v1.js','site-interaction-semantics-v1.js','site-public-redline-closure-v2.js'];
+  const paths=['site-global-language-v3.js','site-translation-safe-runtime-v1.js','site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-contact-route-v1.js','site-interaction-semantics-v1.js','site-public-redline-closure-v2.js','site-brand-home-feedback-v1.js'];
   for(const file of paths){const pattern=new RegExp('\\s*<script\\b[^>]*src=["\\\'][^"\\\']*\\/'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^"\\\']*["\\\'][^>]*><\\/script>\\s*','gi');next=next.replace(pattern,'\n');}
   return next;
 }
 function removeManagedStyles(source){
-  const paths=['site-global-language-v1.css','site-header-axis-v1.css','site-translation-progress-v1.css','site-translation-public-ui-v1.css','site-interaction-contrast-guard-v1.css','site-content-contrast-guard-v1.css','site-unified-visual-governance-v1.css','site-visual-regression-closure-v1.css','site-stability-recovery-v1.css','site-public-redline-closure-v1.css','site-public-redline-closure-v2.css','site-interaction-semantics-v1.css','site-visual-system-v2.css','site-responsive-containment-v1.css','site-header-project-integrity-v2.css','site-visual-components-v1.css','tools/pure-ddz/game/css/r8-closure-v128.css'];
+  const paths=['site-global-language-v1.css','site-header-axis-v1.css','site-translation-progress-v1.css','site-translation-public-ui-v1.css','site-interaction-contrast-guard-v1.css','site-content-contrast-guard-v1.css','site-unified-visual-governance-v1.css','site-visual-regression-closure-v1.css','site-stability-recovery-v1.css','site-public-redline-closure-v1.css','site-public-redline-closure-v2.css','site-interaction-semantics-v1.css','site-visual-system-v2.css','site-responsive-containment-v1.css','site-header-project-integrity-v2.css','site-visual-components-v1.css','site-brand-home-feedback-v1.css','tools/pure-ddz/game/css/r8-closure-v128.css'];
   let next=source;
   for(const file of paths){const pattern=new RegExp('\\s*<link\\b[^>]*href=["\\\'][^"\\\']*\\/'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^"\\\']*["\\\'][^>]*>\\s*','gi');next=next.replace(pattern,'\n');}
   return next;
@@ -95,8 +98,10 @@ function materialize(source,relative){
     `<link id="qilyResponsiveContainmentV1" rel="stylesheet" href="${RESPONSIVE_CONTAINMENT_CSS}">`,
     `<link id="qilyHeaderProjectIntegrityV2" rel="stylesheet" href="${FINAL_INTEGRITY_CSS}">`,
     `<link id="qilyVisualComponentsV1" rel="stylesheet" href="${VISUAL_COMPONENTS_CSS}">`,
+    `<link id="qilyBrandHomeFeedbackV1" rel="stylesheet" href="${BRAND_HOME_FEEDBACK_CSS}">`,
     `<link id="qilyTranslationPublicUiV1" rel="stylesheet" href="${TRANSLATION_PUBLIC_CSS}" data-qily-translation-public-ui="google-v1">`,
-    `<script defer data-qily-translation-safe-direct="google-v1" src="${TRANSLATION_SAFE_JS}"></script>`
+    `<script defer data-qily-translation-safe-direct="google-v1" src="${TRANSLATION_SAFE_JS}"></script>`,
+    `<script defer data-qily-brand-home-feedback-direct="v1" src="${BRAND_HOME_FEEDBACK_JS}"></script>`
   ].filter(Boolean).join('\n');
   if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);return next;
 }
