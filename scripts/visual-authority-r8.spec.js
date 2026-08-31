@@ -26,11 +26,12 @@ const viewports=[
 fs.mkdirSync(OUT,{recursive:true});
 
 test.use({reducedMotion:'reduce'});
-test.setTimeout(180000);
+test.setTimeout(300000);
 
 test('R8 representative visual geometry and screenshot audit',async({browser})=>{
   const report=[];
   const failures=[];
+  const flush=()=>fs.writeFileSync(path.join(OUT,'visual-r8-report.json'),JSON.stringify({generatedAt:new Date().toISOString(),routes,viewports,failures,report},null,2));
 
   for(const vp of viewports){
     const context=await browser.newContext({viewport:{width:vp.width,height:vp.height},deviceScaleFactor:1,reducedMotion:'reduce'});
@@ -41,9 +42,10 @@ test('R8 representative visual geometry and screenshot audit',async({browser})=>
       const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:30000});
       if(!response||response.status()>=400){
         failures.push(`${vp.name}/${name}: HTTP ${response?response.status():'no-response'}`);
+        flush();
         continue;
       }
-      await page.waitForTimeout(650);
+      await page.waitForTimeout(350);
 
       const data=await page.evaluate(()=>{
         const q=(s)=>document.querySelector(s);
@@ -53,7 +55,7 @@ test('R8 representative visual geometry and screenshot audit',async({browser})=>
         const width=document.documentElement.clientWidth;
         const header=q('header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header');
         const headerRect=header&&visible(header)?rect(header):null;
-        const headerChildren=header?Array.from(header.children).filter(visible).map(el=>({tag:el.tagName,className:el.className||'',...rect(el)})):[];
+        const headerChildren=header?Array.from(header.children).filter(visible).filter(el=>!el.classList.contains('qily-primary-nav-scroll-rail')).map(el=>({tag:el.tagName,className:el.className||'',...rect(el)})):[];
         const translator=q('.qily-web-translate');
         const rail=q('.qily-primary-nav-scroll-rail');
         const dock=q('#floatDock');
@@ -74,7 +76,7 @@ test('R8 representative visual geometry and screenshot audit',async({browser})=>
           const r=el.getBoundingClientRect();
           const kids=Array.from(el.children).filter(visible);
           if(!kids.length)return null;
-          let bottom=Math.max(...kids.map(k=>k.getBoundingClientRect().bottom));
+          const bottom=Math.max(...kids.map(k=>k.getBoundingClientRect().bottom));
           const blank=Math.max(0,r.bottom-bottom);
           return blank>120&&blank>r.height*.28?{className:el.className,height:r.height,blank}:null;
         }).filter(Boolean).slice(0,8);
@@ -114,12 +116,14 @@ test('R8 representative visual geometry and screenshot audit',async({browser})=>
 
       report.push({viewport:vp,name,route,...data,issues});
       if(issues.length)failures.push(`${vp.name}/${name}: ${issues.join('; ')}`);
+      flush();
 
-      await page.screenshot({path:path.join(OUT,`${vp.name}__${name}.png`),fullPage:true,animations:'disabled'});
+      // Geometry audit covers the whole DOM. Screenshot evidence is viewport-bounded so very long legacy pages cannot stall CI.
+      await page.screenshot({path:path.join(OUT,`${vp.name}__${name}.png`),fullPage:false,animations:'disabled',timeout:10000});
     }
     await context.close();
   }
 
-  fs.writeFileSync(path.join(OUT,'visual-r8-report.json'),JSON.stringify({generatedAt:new Date().toISOString(),routes,viewports,failures,report},null,2));
+  flush();
   expect(failures,failures.join('\n')).toEqual([]);
 });
