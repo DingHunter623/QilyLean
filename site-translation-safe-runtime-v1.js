@@ -29,6 +29,10 @@
     try{return !!(w.matchMedia&&w.matchMedia('(max-width: 900px), (pointer: coarse)').matches);}catch(error){return w.innerWidth<=900;}
   }
 
+  function isAndroid(){
+    return /Android/i.test((w.navigator&&w.navigator.userAgent)||'');
+  }
+
   function stabilizeMobileNav(nav){
     if(!nav||!isCoarseOrMobile())return;
     nav.style.setProperty('display','flex','important');
@@ -141,11 +145,14 @@
     w.__qilyGoogleTranslateElementInitialized=true;
     target.setAttribute('data-qily-google-initialized','true');
     try{
-      new w.google.translate.TranslateElement({
+      var options={
         pageLanguage:'zh-CN',
         includedLanguages:'zh-CN,zh-TW,en',
         autoDisplay:false
-      },ELEMENT_ID);
+      };
+      var inlineLayout=w.google.translate.TranslateElement.InlineLayout;
+      if(isAndroid()&&inlineLayout&&inlineLayout.SIMPLE)options.layout=inlineLayout.SIMPLE;
+      new w.google.translate.TranslateElement(options,ELEMENT_ID);
       w.setTimeout(decorateGoogleControlOnce,250);
     }catch(error){
       control.setAttribute('data-state','unavailable');
