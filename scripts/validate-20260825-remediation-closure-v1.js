@@ -9,9 +9,12 @@ const ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f)
 
 must(read('qilylean/daily/2026-08-25.html'),'八大浪费','Eight wastes');
 const safe=read('site-translation-safe-runtime-v1.js');
-must(safe,'Safe In-Page Translation V7','Translation V7');
-must(safe,"runtime:'safe-inpage-v7'",'Translation runtime');
-must(safe,'automaticTranslation:false','Translation opt-in');
+must(safe,'Google Translate Header Runtime V1','Google Translate V1');
+must(safe,'translate.google.com/translate_a/element.js','Google Translate embed');
+must(safe,"data-qily-translation-provider','google",'Google provider marker');
+forbid(safe,'qilylean-ai.dinghunter623.workers.dev','Retired custom translator');
+forbid(safe,'createTreeWalker','Retired page-wide translator scan');
+if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation MutationObserver forbidden');
 const shell=read('site-ui-consistency-v1.js');
 must(shell,'__qilyUiConsistencyV11','Shell V11');
 must(shell,'single-responsibility-v11-safe-translation','Shell cache identity');
@@ -39,11 +42,11 @@ must(components,'data-qily-header-utility="translation"','Translator header layo
 const ddz=read('tools/pure-ddz/game/css/r8-closure-v128.css');
 must(ddz,'Pure DDZ R12 Closure V132','DDZ R12');
 const mat=read('scripts/materialize-global-language-v3.js');
-must(mat,"const BASELINE_VERSION='20260831-safe-translation-nav-range-v30'",'V30 baseline');
-must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Safe shell materializer');
+must(mat,"const BASELINE_VERSION='20260831-google-translate-nav-range-v31'",'V31 baseline');
+must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Stable shell materializer');
 must(mat,'20260831-project-grade-readability-v3','Project grade materializer');
 must(mat,'20260831-r11-semantics-v17-native-range','V17 nav materializer');
-must(mat,'20260831-safe-inpage-v7-header-utility','Safe translation materializer');
+must(mat,'20260831-google-translate-header-v1','Google translation materializer');
 must(mat,'20260831-unified-components-v29-native-range','Visual components materializer');
 const containment=read('site-responsive-containment-v1.css');
 must(containment,'QilyLean Responsive Containment V1','Responsive containment');
@@ -58,8 +61,8 @@ for(const file of htmlFiles()){
   must(html,'/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range',`${file} semantics js`);
   must(html,'data-qily-interaction-semantics-direct="v1.7"',`${file} semantics marker`);
   must(html,'/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range',`${file} visual components`);
-  must(html,'/site-translation-safe-runtime-v1.js?v=20260831-safe-inpage-v7-header-utility',`${file} translation`);
-  must(html,'data-qily-translation-safe-direct="v7"',`${file} translation marker`);
+  must(html,'/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v1',`${file} Google translation`);
+  must(html,'data-qily-translation-safe-direct="google-v1"',`${file} Google translation marker`);
   must(html,'/site-contact-route-v1.js?v=20260829-dock-functional-public-v134',`${file} contact`);
   must(html,'/site-responsive-containment-v1.css?v=20260830-header-integrity-v2',`${file} responsive containment`);
   for(const token of legacyTranslation)forbid(html,token,`${file} legacy translation`);
@@ -68,4 +71,4 @@ for(const file of htmlFiles()){
 }
 if(pages<460||nav<460||shellPages<460)throw new Error(`coverage regression pages=${pages} nav=${nav} shell=${shellPages}`);
 must(read('tools/pure-ddz/index.html'),'/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132','DDZ R12 materialization');
-console.log(`PASS: V30 remediation closure covers ${pages} public pages — Safe Translation V7, native range nav V1.7, readable project grades, stable Dock and responsive containment.`);
+console.log(`PASS: V31 remediation closure covers ${pages} public pages — Google Translate V1, native range nav V1.7, readable project grades, stable Dock and responsive containment.`);
