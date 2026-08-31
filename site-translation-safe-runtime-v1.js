@@ -3,7 +3,8 @@
  * This file is the only public translation lifecycle owner.
  * Google Translate is initialized once, with one retained control and one bounded header recovery.
  * Android/iPhone native horizontal nav swiping remains unchanged; its existing guard stays isolated here.
- * Public language labels are normalized only at initial decoration and direct translator interaction.
+ * Public language labels are normalized only after widget initialization and completed language changes.
+ * Native select opening is never intercepted or mutated during pointer/touch activation.
  * No page text scan, custom translation API, MutationObserver, interval, retry loop, reload or redirect.
  */
 (function(d,w){
@@ -110,7 +111,6 @@
     wrapper.appendChild(mark);
     wrapper.appendChild(brand);
     wrapper.appendChild(target);
-    wrapper.addEventListener('pointerdown',decorateGoogleControlOnce,{capture:true,passive:true});
     wrapper.addEventListener('change',decorateGoogleControlOnce,true);
     return wrapper;
   }
