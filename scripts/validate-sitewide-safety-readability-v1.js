@@ -77,7 +77,7 @@ must(ddz,'justify-content:safe center!important','Safe centered hand');
 const mat=read('scripts/materialize-global-language-v3.js');
 must(mat,"const BASELINE_VERSION='20260831-google-translate-nav-range-v31'",'V31 baseline identity');
 must(mat,"VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components owner');
-must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v1'",'Google translation owner');
+must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v12-visible'",'Google translation owner');
 must(mat,'20260831-r11-semantics-v17-native-range','Semantics V17 owner');
 must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Shell V11 owner');
 must(mat,'data-qily-translation-safe-direct="google-v1"','Google translation materialization marker');
@@ -93,4 +93,4 @@ must(containment,'QilyLean Responsive Containment V1','Responsive containment CS
 must(containment,'overscroll-behavior-inline:contain','Local horizontal-scroll containment');
 forbid(containment,'width:100vw','Page-level viewport widening');
 
-console.log('PASS: safety/readability owners retain Dock/layout stability while Google Translate V1 and native-range navigation are the protected public baseline.');
+console.log('PASS: safety/readability owners retain Dock/layout stability while Google Translate V1.2 and native-range navigation are the protected public baseline.');
