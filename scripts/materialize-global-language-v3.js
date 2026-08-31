@@ -1,25 +1,25 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V29｜2026-08-31
- * Translation is intentionally uninstalled from the public website.
- * Chinese static HTML is the only public language source/runtime.
- * Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.5 owns interaction meaning and iOS-safe navigation dragging.
+/* QilyLean Sitewide Public Baseline Materializer V30｜2026-08-31
+ * Chinese static HTML remains the authoritative source and default display.
+ * Safe In-Page Translation V7 is the single translation behavior runtime.
+ * Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.7 owns interaction meaning and the native range navigation rail.
  * Visual System V2 remains the primary sitewide visual authority across four device compositions.
+ * Unified Visual Components V29 closes reusable card/flow/diagram/table, Logo, evidence-grade and translation utility integrity.
  * Responsive Containment V1 guards page geometry.
- * Header + Project Integrity V3 loads last and owns complete header framing plus A/B/C/D project-evidence readability.
- * Public Redline Closure V2 owns the 0830 annotated shared visual/interaction corrections.
- * Dock V5.4 alone owns Dock structure/labels/actions; shared visual layers only change its visual weight by viewport.
- * Pure DDZ R12 Closure V132 keeps game layout behavior; shared visual layers do not alter game logic.
- * URL Contract is not owned here: directory pages keep '/', real .html files keep file URLs, SEO metadata remains untouched.
+ * Header + Project Integrity V3 retains complete header framing and project-evidence layout.
+ * Public Redline Closure V2 retains shared visual/professional corrections.
+ * Dock V5.4 alone owns Dock structure/labels/actions.
  */
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
-const BASELINE_VERSION='20260831-native-picker-grade-readability-v29';
-const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v10-translation-uninstalled';
+
+const BASELINE_VERSION='20260831-safe-translation-nav-range-v30';
+const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260829-authority-v54';
@@ -38,45 +38,42 @@ const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260830-annota
 const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7';
 const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2';
 const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3';
+const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range';
+const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-safe-inpage-v7-header-utility';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal';
-const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260830-r11-semantics-v15-ios-drag';
+const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range';
 const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132';
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
 
-function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean)}
-function removeScriptByMarker(source){return source.replace(/\s*<script\b[^>]*(?:data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct|data-qily-interaction-contrast-direct|data-qily-content-contrast-direct|data-qily-translation-safe-direct|data-qily-contact-route-direct|data-qily-interaction-semantics-direct|data-qily-public-redline-v2-direct|data-qily-translation-safety-bootstrap)[^>]*>[\s\S]*?<\/script>\s*/gi,'\n')}
+function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);}
+function removeScriptByMarker(source){return source.replace(/\s*<script\b[^>]*(?:data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct|data-qily-interaction-contrast-direct|data-qily-content-contrast-direct|data-qily-translation-safe-direct|data-qily-contact-route-direct|data-qily-interaction-semantics-direct|data-qily-public-redline-v2-direct|data-qily-translation-safety-bootstrap)[^>]*>[\s\S]*?<\/script>\s*/gi,'\n');}
 function removeManagedScripts(source){
   let next=source;
   const paths=['site-global-language-v3.js','site-translation-safe-runtime-v1.js','site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-contact-route-v1.js','site-interaction-semantics-v1.js','site-public-redline-closure-v2.js'];
-  for(const file of paths){const pattern=new RegExp('\\s*<script\\b[^>]*src=["\\\'][^"\\\']*\\/'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^"\\\']*["\\\'][^>]*><\\/script>\\s*','gi');next=next.replace(pattern,'\n')}
+  for(const file of paths){const pattern=new RegExp('\\s*<script\\b[^>]*src=["\\\'][^"\\\']*\\/'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^"\\\']*["\\\'][^>]*><\\/script>\\s*','gi');next=next.replace(pattern,'\n');}
   return next;
 }
 function removeManagedStyles(source){
-  const paths=['site-global-language-v1.css','site-header-axis-v1.css','site-translation-progress-v1.css','site-translation-public-ui-v1.css','site-interaction-contrast-guard-v1.css','site-content-contrast-guard-v1.css','site-unified-visual-governance-v1.css','site-visual-regression-closure-v1.css','site-stability-recovery-v1.css','site-public-redline-closure-v1.css','site-public-redline-closure-v2.css','site-interaction-semantics-v1.css','site-visual-system-v2.css','site-responsive-containment-v1.css','site-header-project-integrity-v2.css','tools/pure-ddz/game/css/r8-closure-v128.css'];
+  const paths=['site-global-language-v1.css','site-header-axis-v1.css','site-translation-progress-v1.css','site-translation-public-ui-v1.css','site-interaction-contrast-guard-v1.css','site-content-contrast-guard-v1.css','site-unified-visual-governance-v1.css','site-visual-regression-closure-v1.css','site-stability-recovery-v1.css','site-public-redline-closure-v1.css','site-public-redline-closure-v2.css','site-interaction-semantics-v1.css','site-visual-system-v2.css','site-responsive-containment-v1.css','site-header-project-integrity-v2.css','site-visual-components-v1.css','tools/pure-ddz/game/css/r8-closure-v128.css'];
   let next=source;
-  for(const file of paths){const pattern=new RegExp('\\s*<link\\b[^>]*href=["\\\'][^"\\\']*\\/'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^"\\\']*["\\\'][^>]*>\\s*','gi');next=next.replace(pattern,'\n')}
+  for(const file of paths){const pattern=new RegExp('\\s*<link\\b[^>]*href=["\\\'][^"\\\']*\\/'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^"\\\']*["\\\'][^>]*>\\s*','gi');next=next.replace(pattern,'\n');}
   return next;
 }
-function removeTranslationMarkup(source){
-  return source
-    .replace(/\s*<[^>]+id=["']qilyGlobalTranslationDualRouteV2["'][^>]*>[\s\S]*?<\/[^>]+>\s*/gi,'\n')
-    .replace(/\s*<[^>]+class=["'][^"']*qily-web-translate[^"']*["'][^>]*>[\s\S]*?<\/[^>]+>\s*/gi,'\n');
+function removeTranslationMarkup(source){return source.replace(/\s*<[^>]+id=["']qilyGlobalTranslationDualRouteV2["'][^>]*>[\s\S]*?<\/[^>]+>\s*/gi,'\n').replace(/\s*<[^>]+class=["'][^"']*qily-web-translate[^"']*["'][^>]*>[\s\S]*?<\/[^>]+>\s*/gi,'\n');}
+function neutralizeFirstPaint(source){
+  const safe='<!-- QILY-R2-FIRST-PAINT:START -->\n<style id="qilyR2CriticalFirstPaintGuard">html.qily-stale-document body{visibility:visible!important}</style><script data-qily-r2-first-paint>(function(d){var BUILD=\'20260824-readable-floor-plus2-v4\';var e=d.documentElement;e.classList.remove("qily-stale-document","qily-shell-pending","qily-r2-first-paint-pending","qily-first-paint-pending");try{localStorage.setItem("qily_site_html_build_v2",BUILD);sessionStorage.removeItem("qily_site_refresh_attempt_v1")}catch(error){}})(document);</script>\n<!-- QILY-R2-FIRST-PAINT:END -->';
+  if(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/i.test(source))return source.replace(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/gi,safe);return source;
 }
-function neutralizeFirstPaint(source){const safe='<!-- QILY-R2-FIRST-PAINT:START -->\n<style id="qilyR2CriticalFirstPaintGuard">html.qily-stale-document body{visibility:visible!important}</style><script data-qily-r2-first-paint>(function(d){var BUILD=\'20260824-readable-floor-plus2-v4\';var e=d.documentElement;e.classList.remove("qily-stale-document","qily-shell-pending","qily-r2-first-paint-pending","qily-first-paint-pending");try{localStorage.setItem("qily_site_html_build_v2",BUILD);sessionStorage.removeItem("qily_site_refresh_attempt_v1")}catch(error){}})(document);</script>\n<!-- QILY-R2-FIRST-PAINT:END -->';if(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/i.test(source))return source.replace(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/gi,safe);return source}
 function materialize(source,relative){
-  let next=source;
-  next=neutralizeFirstPaint(next);
+  let next=neutralizeFirstPaint(source);
   next=next.replace(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/g,CONSISTENCY);
   next=next.replace(/\/site-navigation\.js(?:\?v=[^"']*)?/g,NAVIGATION);
   next=next.replace(/\/site-parent-navigation-v3\.js(?:\?v=[^"']*)?/g,PARENT_NAV);
   next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK_SHARE);
   next=next.replace(/\/site-core-service-dock-closure-v1\.js(?:\?v=[^"']*)?/g,CORE_SERVICE_DOCK);
   next=next.replace(/\/assets\/contact\/wechat-contact-card\.svg(?:\?v=[^"']*)?/g,WECHAT_CONTACT_ASSET);
-  next=removeScriptByMarker(next);
-  next=removeManagedScripts(next);
-  next=removeManagedStyles(next);
-  next=removeTranslationMarkup(next);
+  next=removeScriptByMarker(next);next=removeManagedScripts(next);next=removeManagedStyles(next);next=removeTranslationMarkup(next);
   const tags=[
     `<link id="qilyHeaderAxisV1" rel="stylesheet" href="${HEADER_AXIS}">`,
     `<link id="qilyInteractionContrastGuardV1Stylesheet" rel="stylesheet" href="${INTERACTION_CONTRAST_CSS}">`,
@@ -91,22 +88,17 @@ function materialize(source,relative){
     `<script defer data-qily-public-redline-v2-direct="annotated-v2" src="${PUBLIC_REDLINE_V2_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
     `<script defer data-qily-content-contrast-direct="v6" src="${CONTENT_CONTRAST_JS}"></script>`,
-    `<script defer data-qily-interaction-semantics-direct="v1.5" src="${INTERACTION_SEMANTICS_JS}"></script>`,
+    `<script defer data-qily-interaction-semantics-direct="v1.7" src="${INTERACTION_SEMANTICS_JS}"></script>`,
     `<script defer data-qily-contact-route-direct="v13.4" src="${CONTACT_ROUTE_JS}"></script>`,
     `<link id="qilyVisualSystemV2" rel="stylesheet" href="${VISUAL_SYSTEM_V2}">`,
     `<link id="qilyResponsiveContainmentV1" rel="stylesheet" href="${RESPONSIVE_CONTAINMENT_CSS}">`,
-    `<link id="qilyHeaderProjectIntegrityV2" rel="stylesheet" href="${FINAL_INTEGRITY_CSS}">`
+    `<link id="qilyHeaderProjectIntegrityV2" rel="stylesheet" href="${FINAL_INTEGRITY_CSS}">`,
+    `<link id="qilyVisualComponentsV1" rel="stylesheet" href="${VISUAL_COMPONENTS_CSS}">`,
+    `<script defer data-qily-translation-safe-direct="v7" src="${TRANSLATION_SAFE_JS}"></script>`
   ].filter(Boolean).join('\n');
-  if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);
-  return next;
+  if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);return next;
 }
-
 const changed=[];
-for(const relative of trackedHtml()){
-  const target=path.join(root,relative),source=fs.readFileSync(target,'utf8'),next=materialize(source,relative);
-  if(next===source)continue;
-  changed.push(relative);
-  if(!checkOnly)fs.writeFileSync(target,next,'utf8');
-}
-if(checkOnly&&changed.length)throw new Error(`Sitewide Visual System V2 baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
-process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); translation uninstalled; baseline ${BASELINE_VERSION}.\n`);
+for(const relative of trackedHtml()){const target=path.join(root,relative),source=fs.readFileSync(target,'utf8'),next=materialize(source,relative);if(next===source)continue;changed.push(relative);if(!checkOnly)fs.writeFileSync(target,next,'utf8');}
+if(checkOnly&&changed.length)throw new Error(`Sitewide safe-translation/nav-range baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
+process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Safe Translation V7 + Interaction Semantics V1.7; baseline ${BASELINE_VERSION}.\n`);
