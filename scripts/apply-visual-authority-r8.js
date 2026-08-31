@@ -10,12 +10,18 @@ const CSS='/site-visual-authority-r8.css?v=20260831-r8-authority-v1';
 const JS='/site-visual-runtime-r8.js?v=20260831-r8-runtime-v1';
 const LINK=`<link id="qilyVisualAuthorityR8" data-qily-visual-authority="r8" rel="stylesheet" href="${CSS}">`;
 const SCRIPT=`<script defer id="qilyVisualRuntimeR8" data-qily-visual-runtime="r8" src="${JS}"></script>`;
+const CACHE_MAP=[
+  ['/site-visual-system-v2.css?v=20260830-visual-system-v2-r7','/site-visual-system-v2.css?v=20260831-r8-observable-overflow-v1'],
+  ['/site-responsive-containment-v1.css?v=20260830-header-integrity-v2','/site-responsive-containment-v1.css?v=20260831-r8-containment-only-v1'],
+  ['/site-header-axis-v1.css?v=20260829-primary-navigation-safe-scroll-v7','/site-header-axis-v1.css?v=20260831-r8-vi-rail-v1'],
+  ['/site-public-redline-closure-v2.css?v=20260830-annotated-v2','/site-public-redline-closure-v2.css?v=20260831-r8-fallback-aligned-v1']
+];
 
 function read(file){return fs.readFileSync(path.join(root,file),'utf8');}
 function write(file,content){if(!checkOnly)fs.writeFileSync(path.join(root,file),content,'utf8');}
-function trackedHtml(){
-  return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
-}
+function tracked(patterns){return execFileSync('git',['ls-files',...patterns],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);}
+function trackedHtml(){return tracked(['*.html']);}
+function trackedText(){return tracked(['*.html','*.js','*.css','*.yml','*.yaml']);}
 function ownership(file){return /^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(file);}
 function cleanR8Refs(html){
   return html
@@ -29,7 +35,7 @@ function materializeHtml(html){
   return next;
 }
 function replaceLiteral(file,from,to,required=false){
-  let text=read(file);
+  const text=read(file);
   if(!text.includes(from)){
     if(required)throw new Error(`${file}: required source fragment missing: ${from.slice(0,90)}`);
     return 0;
@@ -48,6 +54,22 @@ function replaceRegex(file,re,to,required=false){
   const next=text.replace(re,to);
   if(next!==text){write(file,next);return 1;}
   return 0;
+}
+function alignCacheContracts(){
+  let filesChanged=0,replacements=0;
+  for(const file of trackedText()){
+    if(file==='scripts/apply-visual-authority-r8.js')continue;
+    const text=read(file);
+    let next=text;
+    for(const [from,to] of CACHE_MAP){
+      if(next.includes(from)){
+        replacements+=next.split(from).length-1;
+        next=next.split(from).join(to);
+      }
+    }
+    if(next!==text){filesChanged++;write(file,next);}
+  }
+  return {filesChanged,replacements};
 }
 
 let sourceChanges=0;
@@ -82,6 +104,9 @@ sourceChanges+=replaceLiteral('site-public-redline-closure-v2.css','max-width:30
 sourceChanges+=replaceLiteral('site-header-axis-v1.css','--qily-nav-scroll-track:#f3e6cf;','--qily-nav-scroll-track:#dbe8e6;',false);
 sourceChanges+=replaceLiteral('site-header-axis-v1.css','--qily-nav-scroll-thumb:#caa15f;','--qily-nav-scroll-thumb:#0f4b5a;',false);
 
+/* Cache-bust every changed authority source in HTML, materializers, guards and workflows so self-heal cannot restore an older visual layer. */
+const cache=alignCacheContracts();
+
 let pages=0,changed=0,skipped=0;
 for(const file of trackedHtml()){
   if(ownership(file)){skipped++;continue;}
@@ -92,7 +117,7 @@ for(const file of trackedHtml()){
   if(next!==text){changed++;write(file,next);}
 }
 
-if(checkOnly&&(changed||sourceChanges)){
-  throw new Error(`R8 materialization drift: html=${changed}, sources=${sourceChanges}. Run node scripts/apply-visual-authority-r8.js`);
+if(checkOnly&&(changed||sourceChanges||cache.filesChanged)){
+  throw new Error(`R8 materialization drift: html=${changed}, sources=${sourceChanges}, cache files=${cache.filesChanged}. Run node scripts/apply-visual-authority-r8.js`);
 }
-process.stdout.write(`R8 visual authority ${checkOnly?'check':'materialize'}: public pages=${pages}, html changed=${changed}, source cleanups=${sourceChanges}, skipped=${skipped}.\n`);
+process.stdout.write(`R8 visual authority ${checkOnly?'check':'materialize'}: public pages=${pages}, html changed=${changed}, source cleanups=${sourceChanges}, cache files=${cache.filesChanged}, cache replacements=${cache.replacements}, skipped=${skipped}.\n`);
