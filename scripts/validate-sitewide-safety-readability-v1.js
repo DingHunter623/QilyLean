@@ -23,6 +23,9 @@ must(safe,"includedLanguages:'zh-CN,zh-TW,en'",'Restricted public languages');
 must(safe,'__qilyGoogleTranslateElementInitialized','Page-lifetime initialization guard');
 must(safe,'recoverRetainedControlOnce','Bounded retained-node recovery');
 must(safe,'loadGoogleAfterPage','Post-load Google scheduling');
+must(safe,'function handleAndroidLanguageChange(event)','Android fallback handler');
+must(safe,'event.isTrusted!==true','Trusted Android user action');
+must(safe,"d.cookie='googtrans='",'Google translation cookie fallback');
 forbid(safe,'qilylean-ai.dinghunter623.workers.dev','Retired custom translator');
 forbid(safe,'api.qilylean.com','Retired custom translation API');
 forbid(safe,'ai-api.qilylean.com','Retired custom translation API');
@@ -31,7 +34,8 @@ forbid(safe,'stabilizeMobileNav','Translation runtime must not own navigation');
 if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation MutationObserver forbidden');
 if(/setInterval\s*\(/.test(safe))throw new Error('Translation polling forbidden');
 if(/setTimeout\s*\(/.test(safe))throw new Error('Translation timing guess forbidden');
-if(/location\.(?:reload|replace|assign)\s*\(/.test(safe))throw new Error('Translation reload/redirect loop forbidden');
+if(/location\.(?:replace|assign)\s*\(/.test(safe))throw new Error('Translation redirect forbidden');
+if((safe.match(/w\.location\.reload\s*\(\s*\)/g)||[]).length!==1)throw new Error('Exactly one trusted Android user reload fallback is required');
 
 const redline=read('site-public-redline-closure-v2.js');
 must(redline,'Public Redline Closure V2.3','Translation-neutral public redline');
@@ -90,7 +94,7 @@ must(ddz,'justify-content:safe center!important','Safe centered hand');
 const mat=read('scripts/materialize-global-language-v3.js');
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline identity');
 must(mat,"VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components owner');
-must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v14'",'Google translation owner');
+must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v15'",'Google translation owner');
 must(mat,"TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15'",'Google native translation UI owner');
 must(mat,"PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23'",'Translation-neutral public redline');
 must(mat,'20260831-r11-semantics-v17-native-range','Semantics V17 owner');
@@ -108,4 +112,4 @@ must(containment,'QilyLean Responsive Containment V1','Responsive containment CS
 must(containment,'overscroll-behavior-inline:contain','Local horizontal-scroll containment');
 forbid(containment,'width:100vw','Page-level viewport widening');
 
-console.log('PASS: safety/readability owners retain Dock/layout stability while post-load Google Translate V1.3 and native-range navigation remain separate protected public owners.');
+console.log('PASS: safety/readability owners retain Dock/layout stability while post-load Google Translate V1.3 uses one trusted Android cookie reload fallback and native-range navigation remains independently protected.');
