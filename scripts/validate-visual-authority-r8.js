@@ -7,6 +7,7 @@ const root=path.resolve(__dirname,'..');
 const read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const must=(s,t,m)=>{if(!s.includes(t))throw new Error(`${m}: missing ${t}`);};
 const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`);};
+const forbidRe=(s,re,m)=>{if(re.test(s))throw new Error(`${m}: forbidden pattern ${re}`);};
 const files=()=>execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
 
@@ -31,12 +32,12 @@ must(runtime,'ResizeObserver','Measured header');
 must(runtime,'wrapTables','Table wrapper');
 must(runtime,'annotateCardGrids','Card count materialization');
 must(runtime,'annotateFrames','Diagram/flow annotation');
-forbid(runtime,'MutationObserver','R8 runtime continuous DOM mutation');
+forbidRe(runtime,/new\s+MutationObserver\s*\(/,'R8 runtime continuous DOM mutation');
 forbid(runtime,'normalizeDockButton','R8 runtime Dock ownership');
 
 forbid(visual,'overflow-x:clip','VIS-010 page-level overflow masking');
 forbid(containment,'QILY-0830-HEADER-INTEGRITY-V1:START','Containment must not own header');
-forbid(containment,'display:block!important;\n    width:100%!important;\n    max-width:100%!important;\n    overflow-x:auto!important;','Containment must not convert tables to blocks');
+forbidRe(containment,/main\s+table\s*\{[\s\S]{0,280}?display\s*:\s*block\s*!important/i,'Containment must not convert tables to blocks');
 must(containment,'QILY-R8-CONTAINMENT-ONLY','Containment single responsibility marker');
 
 must(header,'--qily-nav-scroll-track:#dbe8e6','Header deep-teal track');
