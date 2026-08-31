@@ -27,7 +27,7 @@ assert(css.includes('width:50px!important'),'very narrow Dock must retain its pr
 assert(css.includes('grid-template-columns:1fr!important'),'mobile grids must collapse cleanly');
 assert(css.includes('navigation != CTA != tag != status'),'component identity contract missing');
 assert(css.includes('Only real navigation cards receive elevation feedback'),'static-card hover governance missing');
-assert(materializer.includes("const BASELINE_VERSION='20260830-sitewide-responsive-containment-v28'"),'materializer baseline is not V28');
+assert(materializer.includes("const BASELINE_VERSION='20260831-native-picker-grade-readability-v29'"),'materializer baseline is not V29');
 assert(materializer.includes("const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'"),'materializer does not pin V2 r7 cache key');
 assert(materializer.includes("const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2'"),'materializer does not pin current responsive containment cache key');
 assert(materializer.includes('qilyVisualSystemV2'),'materializer does not append V2 visual authority');
