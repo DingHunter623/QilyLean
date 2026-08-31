@@ -11,7 +11,7 @@ for(const token of ['QilyLean Responsive Containment V1','@media (max-width:1179
 for(const token of ['position:fixed','width:100vw','min-width:680px','min-width:980px'])forbid(css,token,'Responsive containment');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
-must(materializer,"BASELINE_VERSION='20260830-sitewide-responsive-containment-v28'",'V28 public baseline');
+must(materializer,"BASELINE_VERSION='20260831-native-picker-grade-readability-v29'",'V29 public baseline');
 must(materializer,"RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2'",'Responsive containment cache owner');
 must(materializer,'qilyResponsiveContainmentV1','Responsive containment materialization');
 
