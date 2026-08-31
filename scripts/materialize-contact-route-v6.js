@@ -1,13 +1,17 @@
 #!/usr/bin/env node
 'use strict';
 
+/* QilyLean Contact Route Materializer R12.1｜2026-08-31
+ * Single-responsibility boundary:
+ * - owns Contact Route V13.4 references, direct Dock V5.4 references and clean contact-map markup;
+ * - does NOT own or rewrite the global UI shell, translation runtime, navigation runtime or visual baseline.
+ */
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const ROUTE='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const DOCK='/site-dock-share-runtime-v1.js?v=20260829-authority-v54';
-const UI='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v9-native-picker';
 const REDLINE='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
 const CONTACT_PATH='contact/index.html';
 const DDZ_PATH='tools/pure-ddz/index.html';
@@ -49,20 +53,19 @@ function cleanContactNavigation(source){
   return next;
 }
 
-let changed=0,covered=0,dockCovered=0,uiCovered=0;
+let changed=0,covered=0,dockCovered=0;
 for(const relative of trackedHtml()){
   const file=path.join(root,relative),source=fs.readFileSync(file,'utf8');if(!/site-contact-route-v1\.js(?:\?v=[^"']*)?/.test(source))continue;covered+=1;
   let next=source.replace(/\/site-contact-route-v1\.js(?:\?v=[^"']*)?/g,ROUTE).replace(/data-qily-contact-route-direct=["'][^"']*["']/g,'data-qily-contact-route-direct="v13.4"');
   if(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/.test(next)){next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK);dockCovered+=1;}
-  if(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/.test(next)){next=next.replace(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/g,UI);uiCovered+=1;}
   next=ensureRedlineStylesheet(next);if(relative===CONTACT_PATH)next=cleanContactNavigation(next);if(next!==source){fs.writeFileSync(file,next);changed+=1;}
 }
 if(process.argv.includes('--check')){
-  if(changed)throw new Error(`R12 contact materialization stale on ${changed} HTML file(s).`);if(covered<470)throw new Error(`Contact route coverage unexpectedly low: ${covered}.`);
+  if(changed)throw new Error(`R12.1 contact materialization stale on ${changed} HTML file(s).`);if(covered<470)throw new Error(`Contact route coverage unexpectedly low: ${covered}.`);
   const contact=fs.readFileSync(path.join(root,CONTACT_PATH),'utf8'),home=fs.readFileSync(path.join(root,'index.html'),'utf8'),ddz=fs.readFileSync(path.join(root,DDZ_PATH),'utf8');
   if(/api\.map\.baidu\.com\/geocoder|<iframe\b/i.test(contact))throw new Error('Contact page contains a prohibited embedded map surface.');
   for(const provider of ['amap','baidu','tencent','google','apple'])if(!contact.includes(`data-qily-map-provider="${provider}"`))throw new Error(`Contact clean map provider missing after materialization: ${provider}`);
-  for(const [label,html] of [['contact',contact],['home',home],['pure-ddz',ddz]]){if(!html.includes(ROUTE))throw new Error(`${label} does not use Contact Route V13.4.`);if(!html.includes(REDLINE))throw new Error(`${label} does not use public redline V2.`);if(/site-ui-consistency-v1\.js/.test(html)&&!html.includes(UI))throw new Error(`${label} still loads stale UI consistency runtime.`);}
+  for(const [label,html] of [['contact',contact],['home',home],['pure-ddz',ddz]]){if(!html.includes(ROUTE))throw new Error(`${label} does not use Contact Route V13.4.`);if(!html.includes(REDLINE))throw new Error(`${label} does not use public redline V2.`);}
   if(/site-dock-share-runtime-v1\.js/.test(ddz)&&!ddz.includes(DOCK))throw new Error('Pure DDZ direct Dock runtime is not cache-busted to authoritative V5.4.');
-  process.stdout.write(`PASS: R12 contact baseline current on ${covered} HTML pages; Contact Route V13.4; direct Dock V5.4 refs ${dockCovered}; UI V9 refs ${uiCovered}.\n`);
-}else process.stdout.write(`R12 contact materialized on ${changed} HTML file(s); route coverage ${covered}; Contact V13.4; Dock V5.4 refs ${dockCovered}; UI V9 refs ${uiCovered}.\n`);
+  process.stdout.write(`PASS: R12.1 contact baseline current on ${covered} HTML pages; Contact Route V13.4; direct Dock V5.4 refs ${dockCovered}; global shell ownership untouched.\n`);
+}else process.stdout.write(`R12.1 contact materialized on ${changed} HTML file(s); route coverage ${covered}; Contact V13.4; Dock V5.4 refs ${dockCovered}; global shell ownership untouched.\n`);
