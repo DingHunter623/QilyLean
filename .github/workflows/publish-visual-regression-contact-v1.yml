@@ -1,4 +1,4 @@
-name: Validate Sitewide V30 Visual Compatibility
+name: Validate Sitewide V31 Visual Compatibility
 
 on:
   pull_request:
@@ -31,14 +31,13 @@ on:
       - '.github/workflows/publish-visual-regression-contact-v1.yml'
   workflow_dispatch:
 
-# V30 single-authority rule: this compatibility workflow is read-only.
-# The only workflow allowed to write the 478-page public shell is
-# Materialize Unified Public Baseline.
+# V31 single-authority rule: this compatibility workflow is read-only.
+# The only workflow allowed to write the public shell is Materialize Unified Public Baseline.
 permissions:
   contents: read
 
 concurrency:
-  group: sitewide-v30-visual-compat-${{ github.event.pull_request.number || github.ref }}
+  group: sitewide-v31-visual-compat-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -54,7 +53,7 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate V30 authoritative source contracts
+      - name: Validate V31 authoritative source contracts
         shell: bash
         run: |
           set -euo pipefail
@@ -86,16 +85,20 @@ jobs:
           node scripts/validate-sitewide-visual-closure-v27.js
           git diff --check
 
-      - name: Assert V30 single ownership boundaries
+      - name: Assert V31 single ownership boundaries
         shell: bash
         run: |
           set -euo pipefail
-          grep -Fq "const BASELINE_VERSION='20260831-safe-translation-nav-range-v30'" scripts/materialize-global-language-v3.js
-          grep -Fq "const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-safe-inpage-v7-header-utility'" scripts/materialize-global-language-v3.js
+          grep -Fq "const BASELINE_VERSION='20260831-google-translate-nav-range-v31'" scripts/materialize-global-language-v3.js
+          grep -Fq "const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-header-v1'" scripts/materialize-global-language-v3.js
           grep -Fq "const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'" scripts/materialize-global-language-v3.js
           grep -Fq "const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'" scripts/materialize-global-language-v3.js
+          grep -Fq "data-qily-translation-safe-direct=\"google-v1\"" scripts/materialize-global-language-v3.js
           grep -Fq "rail.type='range'" site-interaction-semantics-v1.js
-          grep -Fq "runtime:'safe-inpage-v7'" site-translation-safe-runtime-v1.js
+          grep -Fq 'Google Translate Header Runtime V1' site-translation-safe-runtime-v1.js
+          grep -Fq 'translate.google.com/translate_a/element.js' site-translation-safe-runtime-v1.js
+          ! grep -Fq 'createTreeWalker' site-translation-safe-runtime-v1.js
+          ! grep -Fq 'qilylean-ai.dinghunter623.workers.dev' site-translation-safe-runtime-v1.js
           grep -Fq 'global shell ownership untouched' scripts/materialize-contact-route-v6.js
           ! grep -Fq 'const UI=' scripts/materialize-contact-route-v6.js
           ! grep -Fq 'site-ui-consistency-v1.js' scripts/materialize-contact-route-v6.js
