@@ -1,17 +1,8 @@
-/* QilyLean Translation Public UI V1.3｜2026-08-31
- * Visitor-facing translation control + explicit horizontal navigation scrollbar.
- * Native picker stability rule: do not animate, resize, field-size or restyle option layout while the browser popup is active.
- * Primary navigation is a global component: labels, typography, color and active-state geometry are identical on every module.
+/* QilyLean Translation Public UI V1.3｜native Google select closure｜2026-08-31
+ * Translation-only CSS: primary navigation layout and swipe behavior belong to their existing owners.
+ * Google creates select.goog-te-combo asynchronously after its language data is ready.
+ * Target that final DOM directly so Android never depends on a timer, observer or class mutation.
  */
-
-:root{
-  --qily-primary-nav-font-size:20px;
-  --qily-primary-nav-font-weight:900;
-  --qily-primary-nav-color:#182420;
-  --qily-primary-nav-active:#0f4b5a;
-  --qily-primary-nav-active-text:#fff;
-  --qily-primary-nav-active-border:#ffe39b;
-}
 
 html body .qily-web-translate__badge,
 html body .qily-web-translate__status{display:none!important}
@@ -23,8 +14,7 @@ html body .qily-web-translate{
   min-width:max-content!important;
 }
 
-/* Browser-native select: fixed layout, no runtime width writes, no experimental field-sizing. */
-html body .qily-web-translate__select{
+html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__select){
   box-sizing:border-box!important;
   min-height:36px!important;
   height:36px!important;
@@ -43,8 +33,9 @@ html body .qily-web-translate__select{
   will-change:auto!important;
   touch-action:manipulation!important;
 }
-html body .qily-web-translate__select:focus,
-html body .qily-web-translate__select:focus-visible{
+
+html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__select):focus,
+html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__select):focus-visible{
   outline:2px solid rgba(15,75,90,.28)!important;
   outline-offset:1px!important;
   animation:none!important;
@@ -52,143 +43,5 @@ html body .qily-web-translate__select:focus-visible{
   transform:none!important;
 }
 
-html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
-html body header.topbar nav.nav>a[href],
-html body header.top nav.nav>a[href]{
-  display:inline-flex!important;
-  flex:0 0 auto!important;
-  align-items:center!important;
-  justify-content:center!important;
-  min-height:42px!important;
-  padding:8px 11px!important;
-  border:1px solid transparent!important;
-  border-radius:10px!important;
-  color:var(--qily-primary-nav-color)!important;
-  -webkit-text-fill-color:var(--qily-primary-nav-color)!important;
-  background:transparent!important;
-  font-size:var(--qily-primary-nav-font-size)!important;
-  font-weight:var(--qily-primary-nav-font-weight)!important;
-  line-height:1.22!important;
-  text-decoration:none!important;
-  white-space:nowrap!important;
-  word-break:keep-all!important;
-  overflow-wrap:normal!important;
-}
-html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:hover,
-html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:focus-visible,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:hover,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]:focus-visible{
-  color:var(--qily-primary-nav-active-text)!important;
-  -webkit-text-fill-color:var(--qily-primary-nav-active-text)!important;
-  background:var(--qily-primary-nav-active)!important;
-  border-color:var(--qily-primary-nav-active)!important;
-}
-html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"],
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"]{
-  color:var(--qily-primary-nav-active-text)!important;
-  -webkit-text-fill-color:var(--qily-primary-nav-active-text)!important;
-  background:var(--qily-primary-nav-active)!important;
-  border-color:var(--qily-primary-nav-active-border)!important;
-  font-size:var(--qily-primary-nav-font-size)!important;
-  font-weight:var(--qily-primary-nav-font-weight)!important;
-  line-height:1.22!important;
-}
-
-html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav),
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav){
-  justify-content:flex-start!important;
-  overflow-x:auto!important;
-  overflow-y:hidden!important;
-  overscroll-behavior-x:contain!important;
-  -webkit-overflow-scrolling:touch!important;
-  scrollbar-width:auto!important;
-  scrollbar-color:#0f6570 #e8f2f0!important;
-  padding-bottom:6px!important;
-  scroll-behavior:smooth;
-}
-html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::before,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::before{content:none!important;display:none!important;flex:0 0 0;margin:0!important}
-html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar{display:block!important;height:10px!important}
-html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-track,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-track{background:#e8f2f0!important;border:1px solid #c5dcd8!important;border-radius:999px!important}
-html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb{min-width:44px;background:#0f6570!important;border:2px solid #e8f2f0!important;border-radius:999px!important}
-html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb:hover,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb:hover{background:#178b94!important}
-html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb:active,
-html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb:active{background:#0f4b5a!important}
-
-@media (max-width:900px){
-  html body header.qily-site-header,
-  html body header.qily-global-header,
-  html body header.topbar.qily-site-header,
-  html body header.top.qily-site-header{
-    display:flex!important;
-    flex-direction:column!important;
-    align-items:stretch!important;
-    justify-content:flex-start!important;
-    gap:4px!important;
-    min-height:auto!important;
-  }
-  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav),
-  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav){
-    flex:0 0 auto!important;
-    align-self:stretch!important;
-    width:100%!important;
-    min-width:100%!important;
-    max-width:100%!important;
-    min-height:46px!important;
-    height:auto!important;
-    max-height:none!important;
-    margin:0!important;
-    padding:3px 0 16px!important;
-    gap:5px!important;
-    justify-content:flex-start!important;
-    align-items:center!important;
-    overflow-x:auto!important;
-    overflow-y:hidden!important;
-    overscroll-behavior-x:contain!important;
-    -webkit-overflow-scrolling:touch!important;
-    touch-action:pan-x pan-y!important;
-    scrollbar-width:thin!important;
-    scrollbar-color:#0f6570 #e8f2f0!important;
-    -webkit-mask-image:none!important;
-    mask-image:none!important;
-  }
-  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::before,
-  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::before{display:none!important}
-  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],
-  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
-    display:inline-flex!important;
-    flex:0 0 auto!important;
-    min-height:42px!important;
-    padding:8px 11px!important;
-    align-items:center!important;
-    color:var(--qily-primary-nav-color)!important;
-    -webkit-text-fill-color:var(--qily-primary-nav-color)!important;
-    font-size:var(--qily-primary-nav-font-size)!important;
-    font-weight:var(--qily-primary-nav-font-weight)!important;
-    line-height:1.22!important;
-    white-space:nowrap!important;
-  }
-  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"],
-  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href][aria-current="page"]{
-    color:var(--qily-primary-nav-active-text)!important;
-    -webkit-text-fill-color:var(--qily-primary-nav-active-text)!important;
-    background:var(--qily-primary-nav-active)!important;
-    border-color:var(--qily-primary-nav-active-border)!important;
-    font-size:var(--qily-primary-nav-font-size)!important;
-  }
-  html body header.qily-global-header::after{display:none!important}
-  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar,
-  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar{display:block!important;height:4px!important}
-  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-track,
-  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-track{background:#e8f2f0!important}
-  html body header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb,
-  html body header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)::-webkit-scrollbar-thumb{min-width:36px!important;border-width:1px!important}
-}
-
-@media (max-width:760px){html body .qily-web-translate__select{font-size:15px!important}}
-@media (max-width:430px){html body .qily-web-translate__select{font-size:14px!important}}
+@media (max-width:760px){html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__select){font-size:15px!important}}
+@media (max-width:430px){html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__select){font-size:14px!important}}
