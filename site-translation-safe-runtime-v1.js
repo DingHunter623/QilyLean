@@ -3,8 +3,6 @@
  * This file is the only public translation lifecycle owner.
  * Google Translate is initialized once, with one retained control and one bounded header recovery.
  * Android/iPhone native horizontal nav swiping remains unchanged; its existing guard stays isolated here.
- * Public language labels are normalized only after widget initialization and completed language changes.
- * Native select opening is never intercepted or mutated during pointer/touch activation.
  * No page text scan, custom translation API, MutationObserver, interval, retry loop, reload or redirect.
  */
 (function(d,w){
@@ -64,15 +62,6 @@
     if(legacy&&legacy.parentNode)legacy.parentNode.removeChild(legacy);
   }
 
-  function normalizePublicLanguageLabels(select){
-    if(!select||!select.options)return;
-    Array.prototype.forEach.call(select.options,function(option){
-      var label=PUBLIC_LANGUAGE_LABELS[option.value];
-      if(label&&option.textContent!==label)option.textContent=label;
-      if(label&&option.label!==label)option.label=label;
-    });
-  }
-
   function buildControl(){
     var wrapper=d.createElement('div');
     wrapper.id=CONTROL_ID;
@@ -111,7 +100,6 @@
     wrapper.appendChild(mark);
     wrapper.appendChild(brand);
     wrapper.appendChild(target);
-    wrapper.addEventListener('change',decorateGoogleControlOnce,true);
     return wrapper;
   }
 
@@ -133,7 +121,11 @@
     var select=control.querySelector('select.goog-te-combo');
     var simple=control.querySelector('.goog-te-gadget-simple');
     if(select){
-      normalizePublicLanguageLabels(select);
+      Array.prototype.forEach.call(select.options,function(option){
+        var label=PUBLIC_LANGUAGE_LABELS[option.value];
+        if(label&&option.textContent!==label)option.textContent=label;
+        if(label&&option.label!==label)option.label=label;
+      });
       select.classList.add('qily-web-translate__select');
       select.setAttribute('aria-label','Google 网页翻译语言');
       select.setAttribute('title','中文简体 / 中文繁体 / English');
