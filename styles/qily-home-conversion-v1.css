@@ -207,7 +207,8 @@ body[data-qily-home-conversion="v1"] #qily-core-services>.qily-ia-inner{
   margin:0 auto!important;
 }
 .qily-home-conversion-heading{
-  max-width:980px;
+  width:100%;
+  max-width:none;
   margin:0 0 30px;
 }
 .qily-home-conversion-heading h2,
@@ -229,7 +230,8 @@ body[data-qily-home-conversion="v1"] #qily-core-services .qily-ia-heading p{
 }
 
 body[data-qily-home-conversion="v1"] #qily-core-services .qily-ia-heading{
-  max-width:980px!important;
+  width:100%!important;
+  max-width:none!important;
   margin-bottom:28px!important;
 }
 body[data-qily-home-conversion="v1"] #qily-core-services .qily-ia-kicker{
