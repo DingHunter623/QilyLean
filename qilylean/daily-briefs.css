@@ -76,7 +76,7 @@ html,body{max-width:100%;overflow-x:hidden}
 .brief-index-meta span{color:var(--daily-muted)}
 .brief-index-meta b{padding:2px 8px;border:1px solid #e0c485;border-radius:999px;color:var(--daily-forest);background:#fff8e6;font-size:12px}
 .brief-index-meta i{padding:2px 8px;border:1px solid #c9ded9;border-radius:999px;color:var(--daily-forest);background:#edf7f4;font-size:12px;font-style:normal}
-.brief-index-card h2{margin:12px 0 0;color:var(--daily-forest);font-size:clamp(19px,1.45vw,22px)!important;line-height:1.38;text-wrap:balance;line-break:strict;overflow-wrap:anywhere}
+html body.daily-index-page main .brief-index-card h2{margin:12px 0 0;color:var(--daily-forest);font-size:clamp(19px,1.45vw,22px)!important;line-height:1.38;text-wrap:balance;line-break:strict;overflow-wrap:anywhere}
 .brief-index-card h2 a{text-decoration:none}
 .brief-index-card p{margin:0;color:#415b59;font-size:17px;line-height:1.75}
 .brief-index-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:auto;padding-top:20px}
