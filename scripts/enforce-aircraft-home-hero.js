@@ -18,7 +18,7 @@ const PNG='/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260831-aircr
 const WEBP='/assets/qilylean-aircraft-hero-latest-q98.webp?v=20260831-aircraft-latest-v5';
 const AIRCRAFT_CSS='/styles/qily-aircraft-brand-hero-v1.css?v=20260826-aircraft-hero-v1';
 const HOME_CSS='/styles/qily-home-conversion-v1.css?v=20260901-home-conversion-axis-v2';
-const HOME_VISUAL_FIX='/styles/qily-home-conversion-visual-fix-v2.css?v=20260901-home-visual-fix-v2';
+const HOME_VISUAL_FIX='/styles/qily-home-conversion-visual-fix-v2.css?v=20260901-home-vi-readability-v3';
 const HOME_JS='/site-home-conversion-v1.js?v=20260901-home-free-60min-diagnosis-v4';
 const OWNER_PROFILE_CSS='/styles/qily-home-owner-profile-v1.css?v=20260901-owner-profile-v3';
 const OWNER_PROFILE_JS='/site-home-owner-profile-v1.js?v=20260901-owner-profile-v3';

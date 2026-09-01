@@ -6,6 +6,7 @@ const html=fs.readFileSync(path.join(root,'index.html'),'utf8');
 const css=fs.readFileSync(path.join(root,'styles','qily-aircraft-brand-hero-v1.css'),'utf8');
 const homeCss=fs.readFileSync(path.join(root,'styles','qily-home-conversion-v1.css'),'utf8');
 const homeVisualFix=fs.readFileSync(path.join(root,'styles','qily-home-conversion-visual-fix-v2.css'),'utf8');
+const readabilityCss=fs.readFileSync(path.join(root,'site-visual-readability-v5.css'),'utf8');
 const homeJs=fs.readFileSync(path.join(root,'site-home-conversion-v1.js'),'utf8');
 const ownerProfileCss=fs.readFileSync(path.join(root,'styles','qily-home-owner-profile-v1.css'),'utf8');
 const ownerProfileJs=fs.readFileSync(path.join(root,'site-home-owner-profile-v1.js'),'utf8');
@@ -17,8 +18,9 @@ const EXPECTED_SOURCE_BYTES=2339701;
 const ASSET_VERSION='20260831-aircraft-latest-v5';
 const HOME_VERSION='20260901-home-conversion-axis-v2';
 const HOME_JS_VERSION='20260901-home-free-60min-diagnosis-v4';
-const HOME_VISUAL_FIX_VERSION='20260901-home-visual-fix-v2';
+const HOME_VISUAL_FIX_VERSION='20260901-home-vi-readability-v3';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
+const VISUAL_READABILITY_VERSION='20260901-vi-gold-static-v9';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
 function gitBlobSha(buffer){return crypto.createHash('sha1').update(Buffer.from(`blob ${buffer.length}\0`)).update(buffer).digest('hex')}
 const source=fs.readFileSync(sourcePath),png=fs.readFileSync(pngPath),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
@@ -51,8 +53,9 @@ assert(mainOpen>=0&&aircraftAt>mainOpen,'Homepage main/aircraft ordering invalid
 const between=html.slice(mainOpen,aircraftAt);
 assert(/<section\b[^>]*class=["'][^"']*\bhero\b/i.test(between),'A real homepage hero must precede the aircraft extension');
 assert(!html.includes('id="qilyAircraftHeroPreloadV1"'),'Aircraft preload must stay removed after first-screen demotion');
+assert(html.includes(`<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=${VISUAL_READABILITY_VERSION}">`),'Sitewide V9 VI/readability stylesheet is not materialized on homepage');
 assert(html.includes(`<link id="qilyHomeConversionV1Stylesheet" rel="stylesheet" href="/styles/qily-home-conversion-v1.css?v=${HOME_VERSION}">`),'Conversion homepage stylesheet is not directly materialized');
-assert(html.includes(`<link id="qilyHomeConversionVisualFixV2" rel="stylesheet" href="/styles/qily-home-conversion-visual-fix-v2.css?v=${HOME_VISUAL_FIX_VERSION}">`),'Homepage visual-fix stylesheet is not directly materialized with cache-busting');
+assert(html.includes(`<link id="qilyHomeConversionVisualFixV2" rel="stylesheet" href="/styles/qily-home-conversion-visual-fix-v2.css?v=${HOME_VISUAL_FIX_VERSION}">`),'Homepage VI/readability stylesheet is not directly materialized with cache-busting');
 assert(html.includes(`<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=${OWNER_PROFILE_VERSION}">`),'Homepage owner-profile stylesheet is not directly materialized');
 assert(html.includes(`<script defer id="qilyHomeConversionV1Runtime" src="/site-home-conversion-v1.js?v=${HOME_JS_VERSION}"></script>`),'Conversion homepage runtime is not directly materialized with the current public-copy cache version');
 assert(html.includes(`<script defer id="qilyHomeOwnerProfileV1Runtime" src="/site-home-owner-profile-v1.js?v=${OWNER_PROFILE_VERSION}"></script>`),'Homepage owner-profile runtime is not directly materialized');
@@ -61,9 +64,22 @@ assert(homeCss.includes('.qily-home-conversion-heading{\n  width:100%;\n  max-wi
 assert(homeCss.includes('#qily-core-services .qily-ia-heading{\n  width:100%!important;\n  max-width:none!important;'),'Core-delivery heading must not regress to a narrow 980px window');
 assert(!homeCss.includes('.qily-home-conversion-heading{\n  max-width:980px'),'Narrow homepage conversion heading returned');
 assert(!homeCss.includes('#qily-core-services .qily-ia-heading{\n  max-width:980px!important'),'Narrow core-delivery heading returned');
+
+/* V9 shared VI + static semantics and homepage V3 readability are protected together. */
+assert(readabilityCss.includes('QILY-STATIC-VOCABULARY-NO-FEEDBACK-V9'),'Sitewide static-vocabulary no-feedback contract missing');
+assert(readabilityCss.includes('--qily-v5-gold-text:#b88b45'),'Sitewide VI gold text token missing');
+assert(readabilityCss.includes('color:var(--qily-v5-gold-text)!important'),'Sitewide section kicker no longer uses governed VI gold');
+assert(!readabilityCss.includes('--qily-v5-red:#9e4a34'),'Retired red section-kicker token returned');
+assert(homeVisualFix.includes('QILY-HOME-VI-READABILITY-V3'),'Homepage V3 VI/readability contract missing');
 assert(homeVisualFix.includes('font-size:clamp(30px,2.75vw,44px)!important'),'Homepage hero title readable-size override missing');
 assert(homeVisualFix.includes('background:#fff3cf!important')&&homeVisualFix.includes('color:#0b3f4b!important'),'Homepage capsule high-contrast VI override missing');
+assert(homeVisualFix.includes('cursor:default!important')&&homeVisualFix.includes('transition:none!important'),'Homepage non-routing capsules must remain visually static');
+assert(homeVisualFix.includes('color:#b88b45!important')&&homeVisualFix.includes('font-size:20px!important'),'Homepage light-surface section kickers must use one VI-gold 20px hierarchy');
+assert(homeVisualFix.includes('.qily-home-card__evidence')&&homeVisualFix.includes('font-size:16px!important'),'Homepage smallest evidence labels must stay at the readable floor');
+assert(homeVisualFix.includes('#qily-core-services .qily-ia-card p')&&homeVisualFix.includes('font-size:18px!important'),'Homepage core-delivery body copy readable floor missing');
+assert(!homeVisualFix.includes('#9e4a34'),'Homepage visual closure must not reintroduce the retired red kicker color');
 assert(homeVisualFix.includes('background:rgba(7,60,71,.96)!important')&&homeVisualFix.includes('-webkit-text-fill-color:#fff!important'),'Homepage project-caption high-contrast override missing');
+
 assert(homeJs.includes('用工程数据解决工厂效率、质量、交付与布局问题'),'Approved homepage value proposition missing');
 assert(homeJs.includes('免费60分钟沟通诊断'),'Approved free 60-minute consultation/diagnosis entry missing');
 assert(!homeJs.includes('60分钟匹配沟通'),'Retired 60-minute matching-copy returned');
@@ -102,4 +118,4 @@ for(const rel of activeRuntimeFiles){
   const executable=text.split(/\r?\n/).filter(line=>!/^\s*(?:!\s*)?grep\b/.test(line)&&!line.includes("c919-approved-20260826|git show")&&!line.includes('executable legacy aircraft rollback')).join('\n');
   assert(!/git\s+fetch[^\n]*c919-approved-20260826|git\s+show[^\n]*c919-strategy-hero-v14\.png/i.test(executable),`${rel}: executable legacy aircraft rollback source is forbidden`);
 }
-console.log(`PASS: aircraft SSOT preserved as lazy extended brand asset; project-first homepage, full-width section headings, readable hero scale, high-contrast VI labels, free 60-minute diagnosis entry, public-facing homepage copy, restored owner career summary, portrait-aligned role cards and direct experience-timeline link are guarded.`);
+console.log(`PASS: aircraft SSOT preserved; V9 sitewide VI/static semantics and homepage V3 gold-kicker/readability floors are guarded together with project-first conversion, free 60-minute diagnosis, owner alignment and direct experience-timeline access.`);
