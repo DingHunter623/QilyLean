@@ -103,8 +103,10 @@ function materialize(source,relative){
     `<script defer data-qily-translation-safe-direct="google-v1" src="${TRANSLATION_SAFE_JS}"></script>`,
     `<script defer data-qily-brand-home-feedback-direct="v1" src="${BRAND_HOME_FEEDBACK_JS}"></script>`
   ].filter(Boolean).join('\n');
-  const aircraftAnchor=/<link\b[^>]*id=["']qilyAircraftHeroStylesheetV1["'][^>]*>\s*<link\b[^>]*id=["']qilyAircraftHeroPreloadV1["'][^>]*>/i;
-  if(aircraftAnchor.test(next))next=next.replace(aircraftAnchor,`\n${tags}\n$&\n`);
+  /* Homepage exception: use the existing aircraft stylesheet as a read-only insertion anchor.
+   * Do not capture, rewrite, reorder or regenerate the adjacent aircraft preload/resource tags. */
+  const aircraftStylesheetAnchor=/<link\b[^>]*id=["']qilyAircraftHeroStylesheetV1["'][^>]*>/i;
+  if(aircraftStylesheetAnchor.test(next))next=next.replace(aircraftStylesheetAnchor,`${tags}\n$&`);
   else if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);
   return next;
 }
