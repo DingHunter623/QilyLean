@@ -13,7 +13,7 @@ const webpPath=path.join(root,'assets','qilylean-aircraft-hero-latest-q98.webp')
 const EXPECTED_SOURCE_BLOB='32a218ed835ff0518cc7e2530f37c8cfa0b05b53';
 const EXPECTED_SOURCE_BYTES=2339701;
 const ASSET_VERSION='20260831-aircraft-latest-v5';
-const HOME_VERSION='20260901-home-conversion-v1';
+const HOME_VERSION='20260901-home-conversion-axis-v2';
 const HOME_JS_VERSION='20260901-home-public-brand-copy-v2';
 const HOME_VISUAL_FIX_VERSION='20260901-home-visual-fix-v2';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
@@ -52,6 +52,10 @@ assert(html.includes(`<link id="qilyHomeConversionV1Stylesheet" rel="stylesheet"
 assert(html.includes(`<link id="qilyHomeConversionVisualFixV2" rel="stylesheet" href="/styles/qily-home-conversion-visual-fix-v2.css?v=${HOME_VISUAL_FIX_VERSION}">`),'Homepage visual-fix stylesheet is not directly materialized with cache-busting');
 assert(html.includes(`<script defer id="qilyHomeConversionV1Runtime" src="/site-home-conversion-v1.js?v=${HOME_JS_VERSION}"></script>`),'Conversion homepage runtime is not directly materialized with the current public-copy cache version');
 assert(homeCss.includes('project hero -> three core deliveries -> industry scenes -> representative cases'),'Homepage conversion visual order contract missing');
+assert(homeCss.includes('.qily-home-conversion-heading{\n  width:100%;\n  max-width:none;'),'Homepage conversion heading must follow the full content axis');
+assert(homeCss.includes('#qily-core-services .qily-ia-heading{\n  width:100%!important;\n  max-width:none!important;'),'Core-delivery heading must not regress to a narrow 980px window');
+assert(!homeCss.includes('.qily-home-conversion-heading{\n  max-width:980px'),'Narrow homepage conversion heading returned');
+assert(!homeCss.includes('#qily-core-services .qily-ia-heading{\n  max-width:980px!important'),'Narrow core-delivery heading returned');
 assert(homeVisualFix.includes('font-size:clamp(30px,2.75vw,44px)!important'),'Homepage hero title readable-size override missing');
 assert(homeVisualFix.includes('background:#fff3cf!important')&&homeVisualFix.includes('color:#0b3f4b!important'),'Homepage capsule high-contrast VI override missing');
 assert(homeVisualFix.includes('background:rgba(7,60,71,.96)!important')&&homeVisualFix.includes('-webkit-text-fill-color:#fff!important'),'Homepage project-caption high-contrast override missing');
@@ -75,4 +79,4 @@ for(const rel of activeRuntimeFiles){
   const executable=text.split(/\r?\n/).filter(line=>!/^\s*(?:!\s*)?grep\b/.test(line)&&!line.includes("c919-approved-20260826|git show")&&!line.includes('executable legacy aircraft rollback')).join('\n');
   assert(!/git\s+fetch[^\n]*c919-approved-20260826|git\s+show[^\n]*c919-strategy-hero-v14\.png/i.test(executable),`${rel}: executable legacy aircraft rollback source is forbidden`);
 }
-console.log(`PASS: aircraft SSOT preserved as lazy extended brand asset; project-first homepage, readable hero scale, high-contrast VI labels and public-facing brand copy are guarded.`);
+console.log(`PASS: aircraft SSOT preserved as lazy extended brand asset; project-first homepage, full-width section headings, readable hero scale, high-contrast VI labels and public-facing brand copy are guarded.`);
