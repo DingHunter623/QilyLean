@@ -111,11 +111,14 @@
     wrapper.setAttribute('aria-label','Google 网页翻译');
     wrapper.setAttribute('title','默认中文简体；可切换中文繁体、English 或更多语言。');
     wrapper.setAttribute('data-state','loading');
-    wrapper.style.setProperty('display','inline-flex','important');
+    wrapper.style.setProperty('display','inline-grid','important');
+    wrapper.style.setProperty('grid-template-columns','24px minmax(0,1fr)');
+    wrapper.style.setProperty('grid-template-rows','auto auto');
+    wrapper.style.setProperty('column-gap','6px');
+    wrapper.style.setProperty('row-gap','0');
     wrapper.style.setProperty('visibility','visible','important');
     wrapper.style.setProperty('opacity','1','important');
     wrapper.style.setProperty('align-items','center');
-    wrapper.style.setProperty('gap','6px');
     wrapper.style.setProperty('flex','0 0 auto');
     wrapper.style.setProperty('max-width','100%');
 
