@@ -1,0 +1,22 @@
+/* QilyLean Homepage Owner Profile V1 | 2026-09-01 */
+html body[data-qily-home-conversion="v1"] .qily-home-owner-profile{
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px solid #d5e4e3;
+}
+html body[data-qily-home-conversion="v1"] .qily-home-owner-profile>strong{
+  display:block;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  font-size:15px!important;
+  font-weight:900!important;
+  line-height:1.5!important;
+}
+html body[data-qily-home-conversion="v1"] .qily-home-owner-profile>p{
+  margin:8px 0 0!important;
+  color:#526967!important;
+  -webkit-text-fill-color:#526967!important;
+  font-size:14px!important;
+  font-weight:560!important;
+  line-height:1.78!important;
+}
