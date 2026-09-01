@@ -1,6 +1,6 @@
 @import url('/site-translation-attribution-v1.css?v=20260901-google-attribution-nowrap-v2');
 
-/* QilyLean Translation Public UI V1.4｜sitewide unified Google selector frame｜2026-09-01
+/* QilyLean Translation Public UI V1.5｜sitewide unified Google selector frame｜2026-09-01
  * Translation-only CSS: primary navigation layout and swipe behavior belong to their existing owners.
  * One shared translator geometry is used across every public module.
  * Google creates select.goog-te-combo asynchronously after its language data is ready.
@@ -64,23 +64,18 @@ html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__sele
   touch-action:manipulation!important;
 }
 
-/* Google attribution remains directly under the selector and must render as one readable line. */
+/* Remove only the provider attribution row below the selector; keep the native selector itself unchanged. */
 html:root:root:root body .qily-web-translate .goog-te-gadget{
   white-space:nowrap!important;
   text-align:center!important;
-  font-size:10px!important;
-  line-height:1.35!important;
+  font-size:0!important;
+  line-height:0!important;
 }
 html:root:root:root body .qily-web-translate .goog-te-gadget > span,
 html:root:root:root body .qily-web-translate .goog-te-gadget a,
 html:root:root:root body .qily-web-translate .goog-te-gadget a > span,
 html:root:root:root body .qily-web-translate .goog-te-gadget a *{
-  display:inline!important;
-  white-space:nowrap!important;
-  word-break:keep-all!important;
-  overflow-wrap:normal!important;
-  font-size:10px!important;
-  line-height:1.35!important;
+  display:none!important;
 }
 
 html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__select):focus,
