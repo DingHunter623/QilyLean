@@ -1,7 +1,7 @@
-/* QilyLean 全站可视化清晰度 V8｜2026-09-01
+/* QilyLean 全站可视化清晰度 V9｜2026-09-01
  * 目标：落实“最小号字体统一放大一号、底色与字体高对比、编号清晰可读”。
- * V8：将全站章节级 eyebrow / kicker 统一提升为清晰可见的 20px 层级，浅色底使用 VI 深红，深色底使用高亮金色；同时纳入首页新版 conversion 标签并保持移动端可读。
- * 本层作为最终级联直接进入所有公开 HTML <head>，不改业务架构与正文口径。
+ * V9：章节级 eyebrow / kicker 统一使用 QilyLean VI 金色系；静态术语/指标胶囊统一为信息态，禁止 hover/active/focus 伪交互反馈。
+ * 本层作为最终级联直接进入所有公开 HTML <head>，不改业务架构、正文口径与真实可点击控件的交互反馈。
  */
 
 :root{
@@ -10,7 +10,7 @@
   --qily-v5-ink:#182420;
   --qily-v5-copy:#3f5e5d;
   --qily-v5-gold:#caa15f;
-  --qily-v5-red:#9e4a34;
+  --qily-v5-gold-text:#b88b45;
   --qily-v5-white:#ffffff;
   --qily-v5-soft:#f4faf8;
   --qily-v5-line:#bfd6d2;
@@ -35,7 +35,7 @@ html body main :is(
   text-shadow:none!important;
 }
 
-/* 01A｜章节级小标题：全站统一放大，并按 VI 建立清晰层级。 */
+/* 01A｜章节级小标题：同语义同字号，浅色面统一使用 VI 金色系。 */
 html body main :is(
   .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
   .resource-kicker,.qily-resource-network__kicker,
@@ -43,12 +43,54 @@ html body main :is(
 ){
   font-size:var(--qily-v5-section-kicker)!important;
   line-height:1.5!important;
-  color:var(--qily-v5-red)!important;
-  -webkit-text-fill-color:var(--qily-v5-red)!important;
+  color:var(--qily-v5-gold-text)!important;
+  -webkit-text-fill-color:var(--qily-v5-gold-text)!important;
   font-weight:950!important;
   letter-spacing:.035em!important;
   opacity:1!important;
   text-shadow:none!important;
+}
+
+/* QILY-STATIC-VOCABULARY-NO-FEEDBACK-V9
+ * 静态术语/指标是信息，不是按钮。只要本身不承担跳转或控制行为，就保持统一中性信息态，任何鼠标/触控/焦点状态都不得变色、抬升或闪烁。
+ */
+html body main :is(
+  .chip,.term-chip,.qily-term-chip,.method-chip,.qily-method-chip,.topic-chip,
+  .keyword-chip,.taxonomy-chip,.label-chip,.tech-tag,.tool-tag,.method-tag,
+  .glossary-tag,.topic-tag,.chips>span,.chips>li,.tags>span,.tags>li,
+  .brief-tags>span,.brief-tags>li,.tag-row>span,.tag-row>li,.term-row>span
+):not(a[href]):not(button):not([role="button"]):not([aria-current]):not([aria-selected="true"]):not(.active):not(.current):not(.is-active){
+  color:#315b61!important;
+  -webkit-text-fill-color:#315b61!important;
+  background:#f7fbfa!important;
+  background-image:none!important;
+  border-color:#c9ddd8!important;
+  box-shadow:none!important;
+  transform:none!important;
+  filter:none!important;
+  outline:none!important;
+  text-decoration:none!important;
+  cursor:default!important;
+  transition:none!important;
+}
+html body main :is(
+  .chip,.term-chip,.qily-term-chip,.method-chip,.qily-method-chip,.topic-chip,
+  .keyword-chip,.taxonomy-chip,.label-chip,.tech-tag,.tool-tag,.method-tag,
+  .glossary-tag,.topic-tag,.chips>span,.chips>li,.tags>span,.tags>li,
+  .brief-tags>span,.brief-tags>li,.tag-row>span,.tag-row>li,.term-row>span
+):not(a[href]):not(button):not([role="button"]):not([aria-current]):not([aria-selected="true"]):not(.active):not(.current):not(.is-active):is(:hover,:active,:focus,:focus-visible){
+  color:#315b61!important;
+  -webkit-text-fill-color:#315b61!important;
+  background:#f7fbfa!important;
+  background-image:none!important;
+  border-color:#c9ddd8!important;
+  box-shadow:none!important;
+  transform:none!important;
+  filter:none!important;
+  outline:none!important;
+  text-decoration:none!important;
+  cursor:default!important;
+  transition:none!important;
 }
 
 /* 卡片分类标签属于“最小字号中的重点信息”，再提升一级。 */

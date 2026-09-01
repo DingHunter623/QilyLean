@@ -1,25 +1,26 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean visual readability publisher｜2026-09-01 V9
+/* QilyLean visual readability publisher｜2026-09-01 V10
  * Scope: visual only. Do not rewrite business taxonomy, navigation labels, page copy or navigation cache contracts.
- * V9 publishes the V8 section-label readability contract across every public page: chapter-level eyebrow/kicker
- * labels use a larger 20px desktop hierarchy, retain readable mobile sizing, and switch VI color by surface contrast.
- * The existing V8 Daily Brief closure remains intact.
+ * V10 publishes the V9 VI/readability contract across every public page: chapter-level eyebrow/kicker labels use
+ * the shared QilyLean gold family, while non-routing vocabulary chips are frozen as static information with zero
+ * hover/active/focus visual feedback. The existing Daily Brief contrast closure remains intact.
  */
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const VERSION = '20260901-section-kicker-readability-v8';
+const VERSION = '20260901-vi-gold-static-v9';
 const HREF = `/site-visual-readability-v5.css?v=${VERSION}`;
 const TAG = `<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="${HREF}">`;
 const DAILY_STYLE_ID = 'qilyDailyReadabilityClosureV8';
 const DAILY_STYLE = `<style id="${DAILY_STYLE_ID}">
-/* QILY-DAILY-READABILITY-CLOSURE-V8-20260825
+/* QILY-DAILY-READABILITY-CLOSURE-V9-20260901
  * Final rendered-page ownership: major headings use Chinese hierarchy; deep badges use white;
  * dark Hero kicker uses gold; dark Hero body copy uses white; light cards use dark copy.
+ * Static vocabulary/metric chips are information only and never simulate clickable feedback.
  * Loaded after every shared stylesheet.
  */
 html body.daily-single-page main article.post .section-head>.section-no{
@@ -33,6 +34,14 @@ html body.daily-single-page main article.post .hero .kicker{
 }
 html body.daily-single-page main article.post .hero>p{
   color:#edf9f6!important;-webkit-text-fill-color:#edf9f6!important;opacity:1!important;text-shadow:none!important;
+}
+html body.daily-single-page main article.post :is(.chip,.chips>span,.chips>li,.brief-tags>span,.brief-tags>li,.tag-row>span,.tag-row>li,.term-row>span):not(a[href]):not(button):not([role="button"]){
+  color:#315b61!important;-webkit-text-fill-color:#315b61!important;background:#f7fbfa!important;background-image:none!important;border-color:#c9ddd8!important;
+  box-shadow:none!important;transform:none!important;filter:none!important;outline:none!important;text-decoration:none!important;cursor:default!important;transition:none!important;
+}
+html body.daily-single-page main article.post :is(.chip,.chips>span,.chips>li,.brief-tags>span,.brief-tags>li,.tag-row>span,.tag-row>li,.term-row>span):not(a[href]):not(button):not([role="button"]):is(:hover,:active,:focus,:focus-visible){
+  color:#315b61!important;-webkit-text-fill-color:#315b61!important;background:#f7fbfa!important;background-image:none!important;border-color:#c9ddd8!important;
+  box-shadow:none!important;transform:none!important;filter:none!important;outline:none!important;text-decoration:none!important;cursor:default!important;transition:none!important;
 }
 html body.daily-single-page main article.post :is(.tag,.num,.step>b:first-child,.service-number,.step-number,.step-index,.sequence-number,.process-number,.number-badge,.workflow-number,.timeline-number,.term-opl-num){
   color:#fff!important;-webkit-text-fill-color:#fff!important;text-shadow:none!important;opacity:1!important;filter:none!important;mix-blend-mode:normal!important;
@@ -150,6 +159,9 @@ function verifyCss() {
     '--qily-v5-small:17px',
     '--qily-v5-small-strong:18px',
     '--qily-v5-section-kicker:20px',
+    '--qily-v5-gold-text:#b88b45',
+    'color:var(--qily-v5-gold-text)!important',
+    'QILY-STATIC-VOCABULARY-NO-FEEDBACK-V9',
     '.qily-home-conversion-kicker',
     '.qily-home-conversion-hero__kicker',
     '.qily-home-launch-section',
@@ -163,7 +175,8 @@ function verifyCss() {
     '.qily-ia-card>small',
     'QILY-DAILY-SURFACE-CONTRAST-V7-20260825',
     '.term-opl-num'
-  ].forEach(token => assert(css.includes(token), `V8 CSS contract missing: ${token}`));
+  ].forEach(token => assert(css.includes(token), `V9 CSS contract missing: ${token}`));
+  assert(!css.includes('--qily-v5-red:#9e4a34'), 'Retired deep-red section kicker token returned');
 }
 
 function verifyPages() {
@@ -174,11 +187,12 @@ function verifyPages() {
     try { html = read(rel); } catch (_) { continue; }
     if (!isPublicHtml(html)) continue;
     publicCount += 1;
-    assert(html.includes(HREF), `${rel}: V8 stylesheet missing`);
+    assert(html.includes(HREF), `${rel}: V9 stylesheet missing`);
     if (isDatedBrief(rel)) {
       dailyCount += 1;
       assert(/<body\b[^>]*class=["'][^"']*\bdaily-single-page\b/i.test(html), `${rel}: Daily Brief body hook missing`);
       assert(html.includes(`id="${DAILY_STYLE_ID}"`), `${rel}: Daily Brief final readability closure missing`);
+      assert(html.includes('QILY-DAILY-READABILITY-CLOSURE-V9-20260901'), `${rel}: V9 Daily Brief static-feedback guard missing`);
       assert(html.includes('article.post .hero>p'), `${rel}: dark Hero body copy guard missing`);
       assert(!/<span\b[^>]*class=["'][^"']*\bsection-no\b[^"']*["'][^>]*>\s*0\d\s*<\/span>/i.test(html), `${rel}: major heading still uses 01/02 numeric hierarchy`);
     }
@@ -204,7 +218,7 @@ function main() {
   const result = materialize();
   const verified = verifyPages();
   verifyBusinessHierarchyUntouched();
-  process.stdout.write(`Visual readability V9 materialized: checked ${verified.publicCount}, dated briefs ${verified.dailyCount}, refreshed ${result.changed} public pages.\n`);
+  process.stdout.write(`Visual readability V10 materialized: checked ${verified.publicCount}, dated briefs ${verified.dailyCount}, refreshed ${result.changed} public pages with V9 VI/static semantics.\n`);
 }
 
 main();
