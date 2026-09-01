@@ -7,6 +7,8 @@ const css=fs.readFileSync(path.join(root,'styles','qily-aircraft-brand-hero-v1.c
 const homeCss=fs.readFileSync(path.join(root,'styles','qily-home-conversion-v1.css'),'utf8');
 const homeVisualFix=fs.readFileSync(path.join(root,'styles','qily-home-conversion-visual-fix-v2.css'),'utf8');
 const homeJs=fs.readFileSync(path.join(root,'site-home-conversion-v1.js'),'utf8');
+const ownerProfileCss=fs.readFileSync(path.join(root,'styles','qily-home-owner-profile-v1.css'),'utf8');
+const ownerProfileJs=fs.readFileSync(path.join(root,'site-home-owner-profile-v1.js'),'utf8');
 const sourcePath=path.join(root,'官网首图.png');
 const pngPath=path.join(root,'assets','qilylean-aircraft-hero-approved-20260826.png');
 const webpPath=path.join(root,'assets','qilylean-aircraft-hero-latest-q98.webp');
@@ -16,6 +18,7 @@ const ASSET_VERSION='20260831-aircraft-latest-v5';
 const HOME_VERSION='20260901-home-conversion-axis-v2';
 const HOME_JS_VERSION='20260901-home-public-brand-copy-v2';
 const HOME_VISUAL_FIX_VERSION='20260901-home-visual-fix-v2';
+const OWNER_PROFILE_VERSION='20260901-owner-profile-v1';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
 function gitBlobSha(buffer){return crypto.createHash('sha1').update(Buffer.from(`blob ${buffer.length}\0`)).update(buffer).digest('hex')}
 const source=fs.readFileSync(sourcePath),png=fs.readFileSync(pngPath),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
@@ -50,7 +53,9 @@ assert(/<section\b[^>]*class=["'][^"']*\bhero\b/i.test(between),'A real homepage
 assert(!html.includes('id="qilyAircraftHeroPreloadV1"'),'Aircraft preload must stay removed after first-screen demotion');
 assert(html.includes(`<link id="qilyHomeConversionV1Stylesheet" rel="stylesheet" href="/styles/qily-home-conversion-v1.css?v=${HOME_VERSION}">`),'Conversion homepage stylesheet is not directly materialized');
 assert(html.includes(`<link id="qilyHomeConversionVisualFixV2" rel="stylesheet" href="/styles/qily-home-conversion-visual-fix-v2.css?v=${HOME_VISUAL_FIX_VERSION}">`),'Homepage visual-fix stylesheet is not directly materialized with cache-busting');
+assert(html.includes(`<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=${OWNER_PROFILE_VERSION}">`),'Homepage owner-profile stylesheet is not directly materialized');
 assert(html.includes(`<script defer id="qilyHomeConversionV1Runtime" src="/site-home-conversion-v1.js?v=${HOME_JS_VERSION}"></script>`),'Conversion homepage runtime is not directly materialized with the current public-copy cache version');
+assert(html.includes(`<script defer id="qilyHomeOwnerProfileV1Runtime" src="/site-home-owner-profile-v1.js?v=${OWNER_PROFILE_VERSION}"></script>`),'Homepage owner-profile runtime is not directly materialized');
 assert(homeCss.includes('project hero -> three core deliveries -> industry scenes -> representative cases'),'Homepage conversion visual order contract missing');
 assert(homeCss.includes('.qily-home-conversion-heading{\n  width:100%;\n  max-width:none;'),'Homepage conversion heading must follow the full content axis');
 assert(homeCss.includes('#qily-core-services .qily-ia-heading{\n  width:100%!important;\n  max-width:none!important;'),'Core-delivery heading must not regress to a narrow 980px window');
@@ -70,6 +75,12 @@ assert(homeJs.includes('QILYLEAN BRAND｜启力精益品牌视觉'),'Public-faci
 assert(homeJs.includes('以制造工程为翼，让专业能力抵达更多工厂'),'Public-facing aircraft brand title missing');
 assert(!homeJs.includes('飞机模型保留，但不再占据首页首屏'),'Internal aircraft placement copy must never be public');
 assert(!homeJs.includes('不再承担第一屏转化任务'),'Internal conversion-management copy must never be public');
+assert(ownerProfileJs.includes('丁启利｜20年制造业工程技术与精益改善履历'),'Owner career summary title missing');
+assert(ownerProfileJs.includes('9年任职欧美企业'),'Owner career summary missing 9-year multinational experience');
+assert(ownerProfileJs.includes('4年担任上市公司工程部长'),'Owner career summary missing listed-company engineering leadership');
+assert(ownerProfileJs.includes('累计6年多从事咨询交付'),'Owner career summary missing consulting-delivery experience');
+assert(ownerProfileJs.includes('PQCD改善、数智化工厂规划、目视化项目交付与精益体系建设'),'Owner career focus summary missing');
+assert(ownerProfileCss.includes('.qily-home-owner-profile'),'Owner profile VI styling missing');
 assert(css.includes('QilyLean Aircraft Brand Hero V1'),'Aircraft stylesheet identity missing');
 
 /* Policy/rejection text may name retired refs; only executable fetch/show lines are prohibited. */
@@ -79,4 +90,4 @@ for(const rel of activeRuntimeFiles){
   const executable=text.split(/\r?\n/).filter(line=>!/^\s*(?:!\s*)?grep\b/.test(line)&&!line.includes("c919-approved-20260826|git show")&&!line.includes('executable legacy aircraft rollback')).join('\n');
   assert(!/git\s+fetch[^\n]*c919-approved-20260826|git\s+show[^\n]*c919-strategy-hero-v14\.png/i.test(executable),`${rel}: executable legacy aircraft rollback source is forbidden`);
 }
-console.log(`PASS: aircraft SSOT preserved as lazy extended brand asset; project-first homepage, full-width section headings, readable hero scale, high-contrast VI labels and public-facing brand copy are guarded.`);
+console.log(`PASS: aircraft SSOT preserved as lazy extended brand asset; project-first homepage, full-width section headings, readable hero scale, high-contrast VI labels, public-facing brand copy and restored owner career summary are guarded.`);
