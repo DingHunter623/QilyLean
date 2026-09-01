@@ -19,6 +19,7 @@ const EXPECTED_SOURCE_BYTES=2339701;
 const ASSET_VERSION='20260831-aircraft-latest-v5';
 const HOME_VERSION='20260901-home-conversion-axis-v2';
 const HOME_JS_VERSION='20260901-home-first-paint-v6';
+const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
 const HOME_VISUAL_FIX_VERSION='20260901-home-capability-building-v4';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
 const VISUAL_READABILITY_VERSION='20260901-vi-gold-static-v9';
@@ -64,7 +65,7 @@ assert(html.includes(`<link id="qilyVisualReadabilityV5Stylesheet" rel="styleshe
 assert(html.includes(`<link id="qilyHomeConversionV1Stylesheet" rel="stylesheet" href="/styles/qily-home-conversion-v1.css?v=${HOME_VERSION}">`),'Conversion homepage stylesheet is not directly materialized');
 assert(html.includes(`<link id="qilyHomeConversionVisualFixV2" rel="stylesheet" href="/styles/qily-home-conversion-visual-fix-v2.css?v=${HOME_VISUAL_FIX_VERSION}">`),'Homepage VI/readability stylesheet is not directly materialized with cache-busting');
 assert(html.includes(`<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=${OWNER_PROFILE_VERSION}">`),'Homepage owner-profile stylesheet is not directly materialized');
-assert(html.includes(`<script id="qilyHomeConversionV1Runtime" src="/site-home-conversion-v1.js?v=${HOME_JS_VERSION}"></script>`),'Conversion runtime must register synchronously in head with the current first-paint cache version');
+assert(html.includes(`<script id="qilyHomeConversionV1Runtime" src="${HOME_JS}"></script>`),'Conversion runtime must register synchronously in head with the current first-paint cache version');
 assert(!html.includes(`<script defer id="qilyHomeConversionV1Runtime"`),'Conversion runtime must not wait in the deferred script queue');
 assert(html.includes(`<script defer id="qilyHomeOwnerProfileV1Runtime" src="/site-home-owner-profile-v1.js?v=${OWNER_PROFILE_VERSION}"></script>`),'Homepage owner-profile runtime is not directly materialized');
 assert(homeMaterializer.includes('First paint must never expose the retired homepage Hero'),'Homepage materializer first-paint contract missing');
