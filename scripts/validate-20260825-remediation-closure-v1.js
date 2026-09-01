@@ -9,12 +9,17 @@ const ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f)
 
 must(read('qilylean/daily/2026-08-25.html'),'八大浪费','Eight wastes');
 const safe=read('site-translation-safe-runtime-v1.js');
-must(safe,'Google Translate Header Runtime V1.3','Google Translate V1.3');
-must(safe,'reload-free mobile closure','Non-blocking translation closure');
+must(safe,'Google Translate Header Runtime V1.4','Google Translate V1.4');
 must(safe,'translate.google.com/translate_a/element.js','Google Translate embed');
 must(safe,"data-qily-translation-provider','google",'Google provider marker');
 must(safe,'__qilyGoogleTranslateElementInitialized','Single TranslateElement guard');
 must(safe,'loadGoogleAfterPage','Post-load Google scheduling');
+must(safe,"addOption(select,'zh-CN','中文简体')",'Simplified Chinese primary language');
+must(safe,"addOption(select,'zh-TW','中文繁体')",'Traditional Chinese primary language');
+must(safe,"addOption(select,'en','English')",'English primary language');
+must(safe,"addOption(select,MORE_VALUE,'其他')",'More languages primary entry');
+must(safe,'function populateMoreLanguages()','Expanded Google language picker');
+forbid(safe,'includedLanguages:','Expanded language picker must not restrict Google languages');
 forbid(safe,'function handleAndroidLanguageChange(event)','Android reload fallback');
 forbid(safe,"d.cookie='googtrans='",'Translation cookie override');
 forbid(safe,'stabilizeMobileNav','Translator must not own mobile navigation');
@@ -86,4 +91,4 @@ for(const file of htmlFiles()){
 }
 if(pages<460||nav<460||shellPages<460)throw new Error(`coverage regression pages=${pages} nav=${nav} shell=${shellPages}`);
 must(read('tools/pure-ddz/index.html'),'/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132','DDZ R12 materialization');
-console.log(`PASS: V32 remediation closure covers ${pages} public pages — reload-free post-load Google Translate V1.3, browser-native mobile navigation, readable project grades, stable Dock and responsive containment.`);
+console.log(`PASS: V32 remediation closure covers ${pages} public pages — post-load Google Translate V1.4 with primary + more languages, browser-native mobile navigation, readable project grades, stable Dock and responsive containment.`);
