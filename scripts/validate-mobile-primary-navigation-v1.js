@@ -52,12 +52,14 @@ must(components,'background:var(--qily-nav-rail-thumb,#0f4b5a)!important','VI de
 must(nav,'navigation runtime v45','Navigation V45');
 must(nav,'mobilePrimaryNavigationMayShrinkTypography:false','No mobile shrink');
 
-must(safe,'Google Translate Header Runtime V1.3','Google translation V1.3');
-must(safe,'reload-free mobile closure','Non-blocking translation closure');
+must(safe,'Google Translate Header Runtime V1.4','Google translation V1.4');
 must(safe,'only public translation lifecycle owner','Translator outside scrolling nav');
 must(safe,'data-qily-header-utility','Translation header utility marker');
 must(safe,'translate.google.com/translate_a/element.js','Google Translate embed');
 must(safe,'loadGoogleAfterPage','Post-load translation scheduling');
+must(safe,"addOption(select,MORE_VALUE,'其他')",'More-language entry');
+must(safe,'function populateMoreLanguages()','More-language picker');
+forbid(safe,'includedLanguages:','Expanded translator must not restrict Google languages');
 forbid(safe,'function handleAndroidLanguageChange(event)','Android reload fallback');
 forbid(safe,'w.location.reload','Translation reload');
 forbid(safe,'createTreeWalker','Retired page-wide translation scan');
@@ -81,4 +83,4 @@ must(visual,'@media (max-width:767px)','Mobile nav composition');
 must(containment,'@media (max-width:767px)','Mobile containment composition');
 must(containment,'overscroll-behavior-inline:contain','Local mobile overflow containment');
 
-console.log('PASS: phone first-level navigation is a contained browser-native horizontal scroller; the auxiliary rail cannot intercept phone touch and Google Translate stays reload-free.');
+console.log('PASS: phone first-level navigation remains a contained browser-native horizontal scroller; the auxiliary rail cannot intercept phone touch and Google Translate V1.4 stays isolated with primary + more languages.');
