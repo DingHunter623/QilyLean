@@ -222,3 +222,39 @@ html body .qily-web-translate__select option{font-size:16px!important}
   }
   html body header.qily-global-header::after{display:none!important}
 }
+
+/* Mobile primary-navigation closure.
+ * Keep the grid/flex item inside the header's visible inline size so the nav,
+ * not the page, owns the overflow. Phone gestures then stay browser-native.
+ * The auxiliary range rail remains visual on phones but cannot intercept a
+ * touch that should begin native scrolling on the navigation viewport. */
+@media (max-width:900px){
+  html:root:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header)>
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"],nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"]){
+    box-sizing:border-box!important;
+    justify-self:stretch!important;
+    inline-size:100%!important;
+    width:100%!important;
+    min-width:0!important;
+    max-width:100%!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    overscroll-behavior-x:contain!important;
+    -webkit-overflow-scrolling:touch!important;
+    touch-action:auto!important;
+    scroll-behavior:auto!important;
+    scroll-snap-type:none!important;
+  }
+  html:root:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header)>
+  :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="主导航"],nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href]{
+    flex:0 0 auto!important;
+    min-width:max-content!important;
+    max-width:none!important;
+    overflow:visible!important;
+    white-space:nowrap!important;
+  }
+  html:root:root:root body input.qily-primary-nav-scroll-rail[type="range"]{
+    pointer-events:none!important;
+    touch-action:auto!important;
+  }
+}
