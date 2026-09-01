@@ -1,17 +1,18 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean visual readability publisher｜2026-08-25 V8
+/* QilyLean visual readability publisher｜2026-09-01 V9
  * Scope: visual only. Do not rewrite business taxonomy, navigation labels, page copy or navigation cache contracts.
- * V8 closes a real production gap: dated Daily Brief pages did not carry the body.daily-single-page hook,
- * so V7 Daily Brief contrast and heading rules never matched the rendered page.
+ * V9 publishes the V8 section-label readability contract across every public page: chapter-level eyebrow/kicker
+ * labels use a larger 20px desktop hierarchy, retain readable mobile sizing, and switch VI color by surface contrast.
+ * The existing V8 Daily Brief closure remains intact.
  */
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const VERSION = '20260825-visual-readability-v7';
+const VERSION = '20260901-section-kicker-readability-v8';
 const HREF = `/site-visual-readability-v5.css?v=${VERSION}`;
 const TAG = `<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="${HREF}">`;
 const DAILY_STYLE_ID = 'qilyDailyReadabilityClosureV8';
@@ -148,6 +149,10 @@ function verifyCss() {
   [
     '--qily-v5-small:17px',
     '--qily-v5-small-strong:18px',
+    '--qily-v5-section-kicker:20px',
+    '.qily-home-conversion-kicker',
+    '.qily-home-conversion-hero__kicker',
+    '.qily-home-launch-section',
     '.service-number',
     'font-size:18px!important',
     'background:var(--qily-v5-green-deep)!important',
@@ -158,7 +163,7 @@ function verifyCss() {
     '.qily-ia-card>small',
     'QILY-DAILY-SURFACE-CONTRAST-V7-20260825',
     '.term-opl-num'
-  ].forEach(token => assert(css.includes(token), `V7 CSS contract missing: ${token}`));
+  ].forEach(token => assert(css.includes(token), `V8 CSS contract missing: ${token}`));
 }
 
 function verifyPages() {
@@ -169,7 +174,7 @@ function verifyPages() {
     try { html = read(rel); } catch (_) { continue; }
     if (!isPublicHtml(html)) continue;
     publicCount += 1;
-    assert(html.includes(HREF), `${rel}: V7 stylesheet missing`);
+    assert(html.includes(HREF), `${rel}: V8 stylesheet missing`);
     if (isDatedBrief(rel)) {
       dailyCount += 1;
       assert(/<body\b[^>]*class=["'][^"']*\bdaily-single-page\b/i.test(html), `${rel}: Daily Brief body hook missing`);
@@ -199,7 +204,7 @@ function main() {
   const result = materialize();
   const verified = verifyPages();
   verifyBusinessHierarchyUntouched();
-  process.stdout.write(`Visual readability V8 materialized: checked ${verified.publicCount}, dated briefs ${verified.dailyCount}, refreshed ${result.changed} public pages.\n`);
+  process.stdout.write(`Visual readability V9 materialized: checked ${verified.publicCount}, dated briefs ${verified.dailyCount}, refreshed ${result.changed} public pages.\n`);
 }
 
 main();
