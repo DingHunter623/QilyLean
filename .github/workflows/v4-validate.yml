@@ -48,6 +48,7 @@ jobs:
           node --check scripts/site-system-v4-public-verify.js
           node --check scripts/qilylean-north-v4-sitemap-contract.js
           node --check scripts/audit-knowledge-asset-v2.js
+          node --check scripts/enforce-aircraft-home-hero.js
           node --check knowledge/knowledge-asset-v2.js
           node --check knowledge/knowledge-asset-v2-opl-header.js
           node --check homepage-music.js
@@ -63,6 +64,10 @@ jobs:
 
       - name: Materialize generated UI references in the validation worktree
         run: |
+          # Validation must inspect the same generated homepage shell that V4 Build will publish.
+          # Otherwise a source-level cache-version change can be misreported as a visual regression
+          # before the build materializer has had a chance to update index.html.
+          node scripts/enforce-aircraft-home-hero.js
           node scripts/materialize-global-language-v3.js
           node scripts/materialize-contact-route-v6.js
           node scripts/materialize-global-language-v3.js --check
