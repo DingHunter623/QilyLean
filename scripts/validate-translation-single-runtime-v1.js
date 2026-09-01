@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* Google Translate single-runtime / reload-free mobile gate | V32 | 2026-09-01 */
+/* Google Translate single-runtime / unified language-menu gate | V33 | 2026-09-01 */
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
@@ -14,10 +14,18 @@ const count=(source,pattern)=>(source.match(pattern)||[]).length;
 
 const safe=read('site-translation-safe-runtime-v1.js');
 const publicCss=read('site-translation-public-ui-v1.css');
-must(safe,'Google Translate Header Runtime V1.3','authoritative runtime');
-must(safe,'reload-free mobile closure','performance closure');
+must(safe,'Google Translate Header Runtime V1.4','authoritative runtime');
 must(safe,'This file is the only public translation lifecycle owner','ownership contract');
-must(safe,"includedLanguages:'zh-CN,zh-TW,en'",'public languages');
+must(safe,"addOption(select,'zh-CN','中文简体')",'Simplified Chinese primary choice');
+must(safe,"addOption(select,'zh-TW','中文繁体')",'Traditional Chinese primary choice');
+must(safe,"addOption(select,'en','English')",'English primary choice');
+must(safe,"addOption(select,MORE_VALUE,'其他')",'More-languages primary choice');
+must(safe,"var MORE_VALUE='__more__'",'More-languages sentinel');
+must(safe,'function populateMoreLanguages()','Google-supported more-language population');
+must(safe,"querySelector('select.goog-te-combo')",'Google native execution combo');
+must(safe,"pageLanguage:'zh-CN'",'Chinese authoritative source language');
+must(safe,'autoDisplay:false','Google auto display disabled');
+forbid(safe,'includedLanguages:','More-language mode must not restrict Google supported languages');
 must(safe,"+'&hl=en'",'Google-owned English label locale');
 must(safe,'__qilyGoogleTranslateElementInitialized','page-lifecycle initialization guard');
 must(safe,'function existingGoogleScript()','single script lookup');
@@ -36,25 +44,29 @@ if(/\b(?:pageshow|qily:softnavigate)\b/.test(safe))fail('page lifecycle events m
 if(/(?:createTreeWalker|replaceChildren|location\.(?:replace|assign|reload)\s*\()/.test(safe))fail('page scan, DOM replacement, redirect or reload is forbidden');
 if(/qily_translate_debug|qilyTranslationDebug|DEBUG_ENABLED/.test(safe))fail('temporary diagnostics must not ship');
 if(/(?:stabilizeMobileNav|matchMedia|touch-action|overflow-x|qily-primary-nav-scroll-rail)/.test(safe))fail('translation runtime must not own navigation behavior');
-if(/(?:\.options\b|option\.(?:textContent|label)|decorateGoogleControl)/.test(safe))fail('Google-owned native options must not be rewritten');
 
-must(publicCss,'select.goog-te-combo','eventual native Google select selector');
+must(publicCss,'.qily-web-translate__select','QilyLean primary language selector');
+must(publicCss,'select.goog-te-combo','Google native execution selector');
+must(publicCss,'clip-path:inset(50%)!important','Duplicate Google combo visually hidden only');
+must(publicCss,'.qily-language-more','More-language popover');
+must(publicCss,'.qily-language-more__grid','More-language grid');
+must(publicCss,'Google attribution is legally/brand-required','Attribution preservation contract');
+must(publicCss,'.goog-te-gadget','Google attribution selector');
+must(publicCss,'font-size:9px!important','Low-noise readable Google attribution');
 must(publicCss,'body > iframe.goog-te-banner-frame','legacy Google top banner suppression');
 must(publicCss,'body > iframe.VIpgJd-ZVi9od-ORHb-OEVmcd','current Google top banner suppression');
 must(publicCss,'body > iframe.VIpgJd-ZVi9od-xl07Ob-OEVmcd','new Google top banner suppression');
 must(publicCss,'html.translated-ltr body','translated LTR body offset reset');
 must(publicCss,'html.translated-rtl body','translated RTL body offset reset');
-must(publicCss,'min-height:38px!important','complete native select height');
-must(publicCss,'height:auto!important','non-clipping native select height');
-must(publicCss,'font-size:13px!important','slightly smaller native select font');
-must(publicCss,'line-height:20px!important','native select descender-safe line height');
+must(publicCss,'height:38px!important','complete primary select height');
 must(publicCss,'margin-top:0!important','translated body margin reset');
 must(publicCss,'20260901-google-attribution-nowrap-v2','single-line attribution cache');
-if(/nav\.|qily-global-nav|site-nav|touch-action:\s*pan-x/.test(publicCss))fail('translation stylesheet must not own navigation layout or swipe behavior');
+if(/qily-global-nav|site-nav|touch-action:\s*pan-x/.test(publicCss))fail('translation stylesheet must not own navigation layout or swipe behavior');
+if(/goog-te-gadget[\s\S]{0,240}display\s*:\s*none\s*!important/i.test(publicCss))fail('Google attribution must not be hidden');
 
 const attributionCss=read('site-translation-attribution-v1.css');
 must(attributionCss,'white-space:nowrap!important','single-line Google attribution');
-must(attributionCss,'font-size:10px!important','compact readable Google attribution');
+must(attributionCss,'font-size:10px!important','compact readable Google attribution baseline');
 must(attributionCss,'line-height:1.4!important','complete Google attribution line box');
 
 const redline=read('site-public-redline-closure-v2.js');
@@ -99,4 +111,4 @@ must(materializer,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.
 must(materializer,"const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16'",'materializer native UI cache');
 must(materializer,"const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23'",'materializer redline cache');
 
-console.log(`PASS: ${audited} public pages use one reload-free post-load Google Translate V1.3 runtime; Google assets remain single-shot, native options stay Google-owned and translation never owns navigation.`);
+console.log(`PASS: ${audited} public pages use one post-load Google Translate V1.4 runtime with three primary languages plus a Google-supported more-language picker; attribution stays visible and translation never owns navigation.`);
