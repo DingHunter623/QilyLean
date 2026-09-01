@@ -40,13 +40,16 @@ body[data-qily-home-conversion="v1"] .qily-home-conversion-hero{
 }
 
 .qily-home-conversion-hero h1{
-  max-width:920px;
+  max-width:780px;
   margin:0!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
-  font-size:clamp(38px,4.4vw,68px)!important;
-  line-height:1.08!important;
-  letter-spacing:-.028em!important;
+  font-size:clamp(34px,3.25vw,52px)!important;
+  line-height:1.16!important;
+  letter-spacing:-.02em!important;
+  text-wrap:balance;
+  word-break:keep-all;
+  overflow-wrap:normal;
 }
 
 .qily-home-conversion-hero__lead{
@@ -619,7 +622,7 @@ body[data-qily-home-conversion="v1"] .qily-home-brand-extension .qily-aircraft-b
 
 @media(max-width:560px){
   .qily-home-conversion-hero{padding-top:30px!important;padding-bottom:38px!important}
-  .qily-home-conversion-hero h1{font-size:clamp(34px,10vw,44px)!important}
+  .qily-home-conversion-hero h1{max-width:100%;font-size:clamp(28px,7.2vw,38px)!important;line-height:1.22!important;letter-spacing:-.012em!important}
   .qily-home-conversion-hero__lead{font-size:17px!important}
   .qily-home-conversion-actions a{width:100%}
   .qily-home-project-visual{grid-template-columns:1fr}
