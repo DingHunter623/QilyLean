@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* Google Translate single-runtime / bounded Android fallback gate | V32 | 2026-08-31 */
+/* Google Translate single-runtime / reload-free mobile gate | V32 | 2026-09-01 */
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
@@ -15,7 +15,7 @@ const count=(source,pattern)=>(source.match(pattern)||[]).length;
 const safe=read('site-translation-safe-runtime-v1.js');
 const publicCss=read('site-translation-public-ui-v1.css');
 must(safe,'Google Translate Header Runtime V1.3','authoritative runtime');
-must(safe,'non-blocking Android closure','performance closure');
+must(safe,'reload-free mobile closure','performance closure');
 must(safe,'This file is the only public translation lifecycle owner','ownership contract');
 must(safe,"includedLanguages:'zh-CN,zh-TW,en'",'public languages');
 must(safe,"+'&hl=en'",'Google-owned English label locale');
@@ -26,24 +26,14 @@ must(safe,'function loadGoogleAfterPage()','post-load Google scheduling');
 must(safe,"d.addEventListener('qily:shell-ready',recoverRetainedControlOnce,{once:true})",'one-shot shell recovery');
 must(safe,"w.addEventListener('load',loadGoogleScriptOnce,{once:true})",'non-blocking page-load boundary');
 
-must(safe,'function isAndroidBrowser()','Android capability gate');
-must(safe,"String(uaData.platform||'').toLowerCase()==='android'",'Android UA-CH detection');
-must(safe,"/Android/i.test(String(nav.userAgent||''))",'Android legacy-UA fallback');
-must(safe,'function writeGoogleTranslationCookie(language)','Google cookie fallback');
-must(safe,"event.isTrusted!==true",'trusted-user-event guard');
-must(safe,"select.matches('select.goog-te-combo')",'native Google select scope');
-must(safe,"d.cookie='googtrans='",'Google first-party translation cookie');
-must(safe,"data-qily-android-fallback','user-reload'",'Android fallback state marker');
-must(safe,'w.location.reload();','single user-triggered Android reload');
-
 if(count(safe,/new\s+w\.google\.translate\.TranslateElement\s*\(/g)!==1)fail('TranslateElement must be constructed at exactly one source location');
 if(count(safe,/translate\.google\.com\/translate_a\/element\.js/g)!==1)fail('official Google element URL must appear exactly once');
-if(count(safe,/w\.location\.reload\s*\(\s*\)/g)!==1)fail('Android fallback must contain exactly one user-triggered reload source');
+if(count(safe,/w\.location\.reload\s*\(\s*\)/g)!==0)fail('translation runtime must not reload the page');
 if(/\bsetTimeout\s*\(/.test(safe))fail('authoritative runtime must not use timing guesses');
 if(/new\s+MutationObserver\s*\(/.test(safe))fail('authoritative runtime must not install MutationObserver');
 if(/\bsetInterval\s*\(/.test(safe))fail('authoritative runtime must not poll');
 if(/\b(?:pageshow|qily:softnavigate)\b/.test(safe))fail('page lifecycle events must not reinitialize translation');
-if(/(?:createTreeWalker|replaceChildren|location\.(?:replace|assign)\s*\()/.test(safe))fail('page scan, DOM replacement or redirect is forbidden');
+if(/(?:createTreeWalker|replaceChildren|location\.(?:replace|assign|reload)\s*\()/.test(safe))fail('page scan, DOM replacement, redirect or reload is forbidden');
 if(/qily_translate_debug|qilyTranslationDebug|DEBUG_ENABLED/.test(safe))fail('temporary diagnostics must not ship');
 if(/(?:stabilizeMobileNav|matchMedia|touch-action|overflow-x|qily-primary-nav-scroll-rail)/.test(safe))fail('translation runtime must not own navigation behavior');
 if(/(?:\.options\b|option\.(?:textContent|label)|decorateGoogleControl)/.test(safe))fail('Google-owned native options must not be rewritten');
@@ -51,9 +41,21 @@ if(/(?:\.options\b|option\.(?:textContent|label)|decorateGoogleControl)/.test(sa
 must(publicCss,'select.goog-te-combo','eventual native Google select selector');
 must(publicCss,'body > iframe.goog-te-banner-frame','legacy Google top banner suppression');
 must(publicCss,'body > iframe.VIpgJd-ZVi9od-ORHb-OEVmcd','current Google top banner suppression');
+must(publicCss,'body > iframe.VIpgJd-ZVi9od-xl07Ob-OEVmcd','new Google top banner suppression');
 must(publicCss,'html.translated-ltr body','translated LTR body offset reset');
 must(publicCss,'html.translated-rtl body','translated RTL body offset reset');
-if(/header|nav\.|qily-global-nav|site-nav|touch-action:\s*pan-x/.test(publicCss))fail('translation stylesheet must not own navigation layout or swipe behavior');
+must(publicCss,'min-height:38px!important','complete native select height');
+must(publicCss,'height:auto!important','non-clipping native select height');
+must(publicCss,'font-size:13px!important','slightly smaller native select font');
+must(publicCss,'line-height:20px!important','native select descender-safe line height');
+must(publicCss,'margin-top:0!important','translated body margin reset');
+must(publicCss,'20260901-google-attribution-nowrap-v2','single-line attribution cache');
+if(/nav\.|qily-global-nav|site-nav|touch-action:\s*pan-x/.test(publicCss))fail('translation stylesheet must not own navigation layout or swipe behavior');
+
+const attributionCss=read('site-translation-attribution-v1.css');
+must(attributionCss,'white-space:nowrap!important','single-line Google attribution');
+must(attributionCss,'font-size:10px!important','compact readable Google attribution');
+must(attributionCss,'line-height:1.4!important','complete Google attribution line box');
 
 const redline=read('site-public-redline-closure-v2.js');
 must(redline,'Public Redline Closure V2.3','translation-neutral redline runtime');
@@ -82,8 +84,8 @@ for(const file of htmlFiles){
   audited++;
   const safeRefs=count(html,/site-translation-safe-runtime-v1\.js/g);
   if(safeRefs!==1)fail(`${file}: expected one authoritative runtime reference, found ${safeRefs}`);
-  if(!html.includes('/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v15'))fail(`${file}: authoritative runtime cache is stale`);
-  if(!html.includes('/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15'))fail(`${file}: native Google UI cache is stale`);
+  if(!html.includes('/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'))fail(`${file}: authoritative runtime cache is stale`);
+  if(!html.includes('/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16'))fail(`${file}: native Google UI cache is stale`);
   if(/(?:[?&]rev=|stable-diagnostic|qily_translate_debug)/.test(html))fail(`${file}: temporary translation diagnostics or stacked cache revision remains`);
   if(!html.includes('/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23'))fail(`${file}: translation-neutral public redline cache is stale`);
   for(const retired of retiredFiles)if(html.includes(retired))fail(`${file}: retired runtime reference ${retired}`);
@@ -93,8 +95,8 @@ if(audited<460)fail(`public-page coverage too low: ${audited}`);
 
 const materializer=read('scripts/materialize-global-language-v3.js');
 must(materializer,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'materializer baseline');
-must(materializer,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v15'",'materializer runtime cache');
-must(materializer,"const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15'",'materializer native UI cache');
+must(materializer,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'materializer runtime cache');
+must(materializer,"const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16'",'materializer native UI cache');
 must(materializer,"const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23'",'materializer redline cache');
 
-console.log(`PASS: ${audited} public pages use one post-load Google Translate V1.3 runtime with a trusted Android googtrans reload fallback; Google assets remain single-shot, native options stay Google-owned and translation never owns navigation.`);
+console.log(`PASS: ${audited} public pages use one reload-free post-load Google Translate V1.3 runtime; Google assets remain single-shot, native options stay Google-owned and translation never owns navigation.`);
