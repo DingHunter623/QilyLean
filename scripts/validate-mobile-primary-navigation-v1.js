@@ -24,6 +24,11 @@ must(header,'white-space:nowrap!important','Full nav labels');
 must(header,'touch-action:pan-x pan-y!important','Touch panning');
 must(header,'-webkit-overflow-scrolling:touch!important','iOS scrolling');
 must(header,'-webkit-mask-image:none!important','No mobile mask');
+must(header,'Mobile primary-navigation closure','Mobile native-scroll closure');
+must(header,'inline-size:100%!important','Mobile nav viewport width');
+must(header,'justify-self:stretch!important','Mobile grid-item containment');
+must(header,'touch-action:auto!important','Browser-native phone touch handling');
+must(header,'pointer-events:none!important','Phone rail cannot intercept navigation touch');
 
 must(semCss,'Interaction Semantics V1.4','Semantics CSS');
 must(semJs,'Interaction Semantics Runtime V1.7','Semantics V1.7');
@@ -48,21 +53,23 @@ must(nav,'navigation runtime v45','Navigation V45');
 must(nav,'mobilePrimaryNavigationMayShrinkTypography:false','No mobile shrink');
 
 must(safe,'Google Translate Header Runtime V1.3','Google translation V1.3');
-must(safe,'non-blocking Android closure','Non-blocking translation closure');
+must(safe,'reload-free mobile closure','Non-blocking translation closure');
 must(safe,'only public translation lifecycle owner','Translator outside scrolling nav');
 must(safe,'data-qily-header-utility','Translation header utility marker');
 must(safe,'translate.google.com/translate_a/element.js','Google Translate embed');
 must(safe,'loadGoogleAfterPage','Post-load translation scheduling');
-must(safe,'function handleAndroidLanguageChange(event)','Android translation fallback');
+forbid(safe,'function handleAndroidLanguageChange(event)','Android reload fallback');
+forbid(safe,'w.location.reload','Translation reload');
 forbid(safe,'createTreeWalker','Retired page-wide translation scan');
 forbid(safe,'stabilizeMobileNav','Translator must not own mobile navigation');
 forbid(safe,'matchMedia','Translator must not branch on navigation viewport');
 if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation MutationObserver forbidden');
 
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline');
+must(mat,"const HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8'",'Native mobile scroll cache');
 must(mat,"const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'V17 cache');
-must(mat,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v15'",'Google translation cache');
-must(mat,"const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15'",'Google native UI cache');
+must(mat,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'Google translation cache');
+must(mat,"const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16'",'Google native UI cache');
 must(mat,"const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Native range visual cache');
 must(mat,"const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation'",'Shell V11 cache');
 
@@ -74,4 +81,4 @@ must(visual,'@media (max-width:767px)','Mobile nav composition');
 must(containment,'@media (max-width:767px)','Mobile containment composition');
 must(containment,'overscroll-behavior-inline:contain','Local mobile overflow containment');
 
-console.log('PASS: first-level navigation remains independently owned by the V1.7 native range rail while Google Translate V1.3 v15 carries only its bounded Android language fallback.');
+console.log('PASS: phone first-level navigation is a contained browser-native horizontal scroller; the auxiliary rail cannot intercept phone touch and Google Translate stays reload-free.');
