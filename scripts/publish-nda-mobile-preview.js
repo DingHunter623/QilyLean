@@ -17,7 +17,7 @@ for (const required of [
   '当前页面直接读取并渲染最新上传的正式PDF',
   'pdf.js/3.11.174/pdf.min.js',
   'pdfjsLib.getDocument',
-  'qilylean-mutual-nda-v1.pdf?v=20260801-upload-v2',
+  'qilylean-mutual-nda-v1.pdf?v=20260901-official-email-v3',
   '适应宽度',
   '原始比例'
 ]) {
