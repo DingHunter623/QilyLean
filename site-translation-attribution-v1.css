@@ -6,13 +6,16 @@ html body .qily-web-translate .goog-te-gadget{
   white-space:nowrap!important;
   text-align:center!important;
   font-size:10px!important;
-  line-height:1.15!important;
+  line-height:1.4!important;
 }
 
 html body .qily-web-translate .goog-te-gadget > span,
 html body .qily-web-translate .goog-te-gadget a,
-html body .qily-web-translate .goog-te-gadget a > span{
+html body .qily-web-translate .goog-te-gadget a > span,
+html body .qily-web-translate .goog-te-gadget a *{
   white-space:nowrap!important;
+  font-size:10px!important;
+  line-height:1.4!important;
 }
 
 html body .qily-web-translate .goog-te-gadget > span{
