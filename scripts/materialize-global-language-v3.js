@@ -25,7 +25,7 @@ const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260829-authority-v54';
 const CORE_SERVICE_DOCK='/site-core-service-dock-closure-v1.js?v=20260828-r7-alignment-v105';
-const HEADER_AXIS='/site-header-axis-v1.css?v=20260829-primary-navigation-safe-scroll-v7';
+const HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8';
 const INTERACTION_CONTRAST_CSS='/site-interaction-contrast-guard-v1.css?v=20260825-sitewide-contrast-v2';
 const INTERACTION_CONTRAST_JS='/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2';
 const CONTENT_CONTRAST_CSS='/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6';
@@ -42,8 +42,8 @@ const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-proj
 const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range';
 const BRAND_HOME_FEEDBACK_CSS='/site-brand-home-feedback-v1.css?v=20260831-brand-home-overlay-v1';
 const BRAND_HOME_FEEDBACK_JS='/site-brand-home-feedback-v1.js?v=20260831-brand-home-overlay-v1';
-const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260831-google-translate-native-ui-v15';
-const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260831-google-translate-single-runtime-v15';
+const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16';
+const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range';
@@ -103,7 +103,10 @@ function materialize(source,relative){
     `<script defer data-qily-translation-safe-direct="google-v1" src="${TRANSLATION_SAFE_JS}"></script>`,
     `<script defer data-qily-brand-home-feedback-direct="v1" src="${BRAND_HOME_FEEDBACK_JS}"></script>`
   ].filter(Boolean).join('\n');
-  if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);return next;
+  const aircraftAnchor=/<link\b[^>]*id=["']qilyAircraftHeroStylesheetV1["'][^>]*>\s*<link\b[^>]*id=["']qilyAircraftHeroPreloadV1["'][^>]*>/i;
+  if(aircraftAnchor.test(next))next=next.replace(aircraftAnchor,`\n${tags}\n$&\n`);
+  else if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);
+  return next;
 }
 const changed=[];
 for(const relative of trackedHtml()){const target=path.join(root,relative),source=fs.readFileSync(target,'utf8'),next=materialize(source,relative);if(next===source)continue;changed.push(relative);if(!checkOnly)fs.writeFileSync(target,next,'utf8');}

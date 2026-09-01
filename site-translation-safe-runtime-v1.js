@@ -1,11 +1,10 @@
-/* QilyLean Google Translate Header Runtime V1.3｜non-blocking Android closure｜2026-08-31
+/* QilyLean Google Translate Header Runtime V1.3｜reload-free mobile closure｜2026-09-01
  * Chinese static HTML remains the authoritative source and default display.
  * This file is the only public translation lifecycle owner.
  * Google Translate is initialized once, with one retained control and one bounded header recovery.
  * Google-owned assets start only after window load, so they cannot delay first-paint resources.
  * Google owns the native select labels/events; CSS targets its eventual DOM without timing guesses.
- * Android gets one user-triggered googtrans cookie + reload fallback when its native Google change path stalls.
- * iPhone/desktop keep the untouched Google-native change path.
+ * Android, iPhone and desktop all keep the untouched Google-native change path.
  * Android/iPhone native horizontal nav behavior stays entirely outside this runtime.
  * No page text scan, option rewrite, MutationObserver, interval, retry loop or automatic reload loop.
  */
@@ -26,41 +25,6 @@
 
   function headerNav(){
     return d.querySelector('header .qily-global-nav,header nav.site-nav,header nav.nav,header nav[aria-label="QilyLean核心导视"],header nav[aria-label="主导航"],header nav[aria-label="网站导航"],header nav');
-  }
-
-  function isAndroidBrowser(){
-    var nav=w.navigator||{};
-    var uaData=nav.userAgentData;
-    if(uaData&&String(uaData.platform||'').toLowerCase()==='android')return true;
-    return /Android/i.test(String(nav.userAgent||''));
-  }
-
-  function qilyCookieDomain(){
-    var host=String(w.location&&w.location.hostname||'').toLowerCase();
-    if(host==='qilylean.com'||/\.qilylean\.com$/.test(host))return '.qilylean.com';
-    return '';
-  }
-
-  function writeGoogleTranslationCookie(language){
-    var reset=language==='zh-CN';
-    var value=reset?'':('/zh-CN/'+language);
-    var lifetime=reset?'; Max-Age=0; expires=Thu, 01 Jan 1970 00:00:00 GMT':'; Max-Age=31536000';
-    var secure=w.location&&w.location.protocol==='https:'?'; Secure':'';
-    var common=lifetime+'; path=/; SameSite=Lax'+secure;
-    d.cookie='googtrans='+value+common;
-    var domain=qilyCookieDomain();
-    if(domain)d.cookie='googtrans='+value+common+'; domain='+domain;
-  }
-
-  function handleAndroidLanguageChange(event){
-    if(!event||event.isTrusted!==true||!isAndroidBrowser())return;
-    var select=event.target;
-    if(!select||!select.matches||!select.matches('select.goog-te-combo'))return;
-    var language=select.value;
-    if(language!=='zh-CN'&&language!=='zh-TW'&&language!=='en')return;
-    writeGoogleTranslationCookie(language);
-    if(control)control.setAttribute('data-qily-android-fallback','user-reload');
-    w.location.reload();
   }
 
   function removeLegacyControl(){
@@ -88,8 +52,6 @@
     wrapper.style.setProperty('gap','6px');
     wrapper.style.setProperty('flex','0 0 auto');
     wrapper.style.setProperty('max-width','100%');
-    wrapper.addEventListener('change',handleAndroidLanguageChange,false);
-
     var mark=d.createElement('span');
     mark.className='qily-web-translate__mark';
     mark.setAttribute('aria-hidden','true');
