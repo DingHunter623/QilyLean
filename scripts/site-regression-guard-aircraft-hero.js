@@ -16,9 +16,9 @@ const EXPECTED_SOURCE_BLOB='32a218ed835ff0518cc7e2530f37c8cfa0b05b53';
 const EXPECTED_SOURCE_BYTES=2339701;
 const ASSET_VERSION='20260831-aircraft-latest-v5';
 const HOME_VERSION='20260901-home-conversion-axis-v2';
-const HOME_JS_VERSION='20260901-home-public-brand-copy-v3';
+const HOME_JS_VERSION='20260901-home-free-60min-diagnosis-v4';
 const HOME_VISUAL_FIX_VERSION='20260901-home-visual-fix-v2';
-const OWNER_PROFILE_VERSION='20260901-owner-profile-v2';
+const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
 function gitBlobSha(buffer){return crypto.createHash('sha1').update(Buffer.from(`blob ${buffer.length}\0`)).update(buffer).digest('hex')}
 const source=fs.readFileSync(sourcePath),png=fs.readFileSync(pngPath),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
@@ -65,7 +65,8 @@ assert(homeVisualFix.includes('font-size:clamp(30px,2.75vw,44px)!important'),'Ho
 assert(homeVisualFix.includes('background:#fff3cf!important')&&homeVisualFix.includes('color:#0b3f4b!important'),'Homepage capsule high-contrast VI override missing');
 assert(homeVisualFix.includes('background:rgba(7,60,71,.96)!important')&&homeVisualFix.includes('-webkit-text-fill-color:#fff!important'),'Homepage project-caption high-contrast override missing');
 assert(homeJs.includes('用工程数据解决工厂效率、质量、交付与布局问题'),'Approved homepage value proposition missing');
-assert(homeJs.includes('60分钟匹配沟通'),'Approved 60-minute conversion entry missing');
+assert(homeJs.includes('免费60分钟沟通诊断'),'Approved free 60-minute consultation/diagnosis entry missing');
+assert(!homeJs.includes('60分钟匹配沟通'),'Retired 60-minute matching-copy returned');
 assert(homeJs.includes('qily-home-representative-cases'),'Representative-case section missing');
 assert(homeJs.includes('以真实项目成果验证工程交付能力'),'Representative-case public-facing title missing');
 assert(homeJs.includes('聚焦高相关制造场景，让工程方法直接对应现场问题'),'Industry public-facing title missing');
@@ -89,6 +90,7 @@ assert(ownerProfileJs.includes('累计6年多从事咨询交付'),'Owner career 
 assert(ownerProfileJs.includes('PQCD改善、数智化工厂规划、目视化项目交付与精益体系建设'),'Owner career focus summary missing');
 assert(ownerProfileJs.includes('href="/experience/"')&&ownerProfileJs.includes('查看履历主线'),'Owner profile must expose a direct experience-timeline link');
 assert(ownerProfileCss.includes('.qily-home-owner-profile'),'Owner profile VI styling missing');
+assert(ownerProfileCss.includes('margin:0!important;')&&ownerProfileCss.includes('.qily-home-collaboration__portrait img')&&ownerProfileCss.includes('height:100%!important;')&&ownerProfileCss.includes('object-fit:cover!important;'),'Owner portrait must align flush with role cards and stretch to the same desktop height');
 assert(ownerProfileCss.includes('grid-template-rows:minmax(0,1fr)!important')&&ownerProfileCss.includes('.qily-home-role{'),'Owner role cards must stretch to the portrait height on desktop');
 assert(ownerProfileCss.includes('.qily-home-owner-profile__experience'),'Owner experience-link VI styling missing');
 assert(css.includes('QilyLean Aircraft Brand Hero V1'),'Aircraft stylesheet identity missing');
@@ -100,4 +102,4 @@ for(const rel of activeRuntimeFiles){
   const executable=text.split(/\r?\n/).filter(line=>!/^\s*(?:!\s*)?grep\b/.test(line)&&!line.includes("c919-approved-20260826|git show")&&!line.includes('executable legacy aircraft rollback')).join('\n');
   assert(!/git\s+fetch[^\n]*c919-approved-20260826|git\s+show[^\n]*c919-strategy-hero-v14\.png/i.test(executable),`${rel}: executable legacy aircraft rollback source is forbidden`);
 }
-console.log(`PASS: aircraft SSOT preserved as lazy extended brand asset; project-first homepage, full-width section headings, readable hero scale, high-contrast VI labels, public-facing homepage copy, restored owner career summary, portrait-aligned role cards and direct experience-timeline link are guarded.`);
+console.log(`PASS: aircraft SSOT preserved as lazy extended brand asset; project-first homepage, full-width section headings, readable hero scale, high-contrast VI labels, free 60-minute diagnosis entry, public-facing homepage copy, restored owner career summary, portrait-aligned role cards and direct experience-timeline link are guarded.`);
