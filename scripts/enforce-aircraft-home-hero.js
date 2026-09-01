@@ -47,6 +47,7 @@ html=baselineAnchor.test(html)?html.replace(baselineAnchor,homeHead+'$&'):html.r
  * This guarantees the aircraft never owns the first screen even if JS is unavailable.
  */
 html=html.replace(/<\/main>/i,`${aircraft}\n</main>`);
+html=html.replace(/[ \t]+$/gm,'');
 
 fs.writeFileSync(target,html.endsWith('\n')?html:html+'\n','utf8');
 const validatorPath=path.join(root,'scripts','validate-sitewide-remediation-20260822.js');
