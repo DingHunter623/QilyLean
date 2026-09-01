@@ -13,9 +13,11 @@ on:
 permissions:
   contents: write
 
+# This publisher and V4 Build both materialize public HTML. Use one repository-wide
+# serialization key so they cannot race while committing index.html/sitewide output.
 concurrency:
-  group: publish-visual-readability-v5
-  cancel-in-progress: true
+  group: qily-site-materialization-main
+  cancel-in-progress: false
 
 jobs:
   publish:
