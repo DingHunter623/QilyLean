@@ -1,6 +1,6 @@
-/* QilyLean 全站可视化清晰度 V7｜2026-08-25
+/* QilyLean 全站可视化清晰度 V8｜2026-09-01
  * 目标：落实“最小号字体统一放大一号、底色与字体高对比、编号清晰可读”。
- * V7：新增全站深色编号徽章白字所有权、精选简报主标题中文序号、深色Hero标签高对比、OPL独立页打印防重叠。
+ * V8：将全站章节级 eyebrow / kicker 统一提升为清晰可见的 20px 层级，浅色底使用 VI 深红，深色底使用高亮金色；同时纳入首页新版 conversion 标签并保持移动端可读。
  * 本层作为最终级联直接进入所有公开 HTML <head>，不改业务架构与正文口径。
  */
 
@@ -16,6 +16,7 @@
   --qily-v5-line:#bfd6d2;
   --qily-v5-small:17px;
   --qily-v5-small-strong:18px;
+  --qily-v5-section-kicker:20px;
 }
 
 /* 01｜最小号文字：统一放大一号并提升对比度。 */
@@ -30,6 +31,22 @@ html body main :is(
   line-height:1.62!important;
   color:var(--qily-v5-copy)!important;
   -webkit-text-fill-color:var(--qily-v5-copy)!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+
+/* 01A｜章节级小标题：全站统一放大，并按 VI 建立清晰层级。 */
+html body main :is(
+  .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
+  .resource-kicker,.qily-resource-network__kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
+){
+  font-size:var(--qily-v5-section-kicker)!important;
+  line-height:1.5!important;
+  color:var(--qily-v5-red)!important;
+  -webkit-text-fill-color:var(--qily-v5-red)!important;
+  font-weight:950!important;
+  letter-spacing:.035em!important;
   opacity:1!important;
   text-shadow:none!important;
 }
@@ -51,9 +68,10 @@ html body main :is(
   opacity:1!important;
 }
 
-/* 深色表面的小标签维持高亮金色，不被通用深色规则误覆盖。 */
-html body main :is(.hero,.module-hero,.daily-hero,.project-hero,.cooperation-hero,.qily-ia-dark) :is(
-  .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,small
+/* 深色表面的小标签维持高亮金色，不被通用浅色章节规则误覆盖。 */
+html body main :is(.hero,.module-hero,.daily-hero,.project-hero,.cooperation-hero,.qily-home-launch-section,.qily-ia-dark) :is(
+  .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker,small
 ){
   color:#ffe39b!important;
   -webkit-text-fill-color:#ffe39b!important;
@@ -155,6 +173,14 @@ html body main :is(
 @media(max-width:620px){
   html body main :is(small,figcaption,.caption,.meta,.fine,.eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,.tag,.project-meta,.article-meta){
     font-size:17px!important;
+  }
+  html body main :is(
+    .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
+    .resource-kicker,.qily-resource-network__kicker,
+    .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
+  ){
+    font-size:18px!important;
+    line-height:1.5!important;
   }
   html body main .service-number{
     width:46px!important;
