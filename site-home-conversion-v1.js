@@ -174,7 +174,7 @@
     var wrap=node(''
       +'<section class="qily-home-brand-extension" id="qily-home-brand-extension" aria-labelledby="qily-home-brand-extension-title">'
       +'<div class="qily-home-brand-extension__inner">'
-      +'<div class="qily-home-brand-extension__head"><span class="qily-home-conversion-kicker">BRAND EXTENSION｜品牌延伸资产</span><h2 id="qily-home-brand-extension-title">飞机模型保留，但不再占据首页首屏</h2><p>作为QilyLean六类业务能力的品牌视觉延伸保留在首页末端，不再承担第一屏转化任务。</p></div>'
+      +'<div class="qily-home-brand-extension__head"><span class="qily-home-conversion-kicker">QILYLEAN BRAND｜启力精益品牌视觉</span><h2 id="qily-home-brand-extension-title">以制造工程为翼，让专业能力抵达更多工厂</h2><p>新工厂／新产线规划、精益改善、目视化交付、数字化工厂、APP软件开发与官网建设，共同构成QilyLean面向制造现场的六项专业能力。</p></div>'
       +'</div></section>');
     wrap.querySelector('.qily-home-brand-extension__inner').appendChild(aircraft);
     return wrap;
