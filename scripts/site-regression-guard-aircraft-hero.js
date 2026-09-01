@@ -8,6 +8,7 @@ const homeCss=fs.readFileSync(path.join(root,'styles','qily-home-conversion-v1.c
 const homeVisualFix=fs.readFileSync(path.join(root,'styles','qily-home-conversion-visual-fix-v2.css'),'utf8');
 const readabilityCss=fs.readFileSync(path.join(root,'site-visual-readability-v5.css'),'utf8');
 const homeJs=fs.readFileSync(path.join(root,'site-home-conversion-v1.js'),'utf8');
+const homeMaterializer=fs.readFileSync(path.join(root,'scripts','enforce-aircraft-home-hero.js'),'utf8');
 const ownerProfileCss=fs.readFileSync(path.join(root,'styles','qily-home-owner-profile-v1.css'),'utf8');
 const ownerProfileJs=fs.readFileSync(path.join(root,'site-home-owner-profile-v1.js'),'utf8');
 const sourcePath=path.join(root,'官网首图.png');
@@ -17,7 +18,7 @@ const EXPECTED_SOURCE_BLOB='32a218ed835ff0518cc7e2530f37c8cfa0b05b53';
 const EXPECTED_SOURCE_BYTES=2339701;
 const ASSET_VERSION='20260831-aircraft-latest-v5';
 const HOME_VERSION='20260901-home-conversion-axis-v2';
-const HOME_JS_VERSION='20260901-home-capability-building-v5';
+const HOME_JS_VERSION='20260901-home-first-paint-v6';
 const HOME_VISUAL_FIX_VERSION='20260901-home-capability-building-v4';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
 const VISUAL_READABILITY_VERSION='20260901-vi-gold-static-v9';
@@ -47,18 +48,30 @@ const webp=fs.readFileSync(webpPath);
 assert(webp.length>=150000&&webp.length<1600000,'Optimized WebP outside governed 150KB–1.6MB payload window');
 assert(webp.subarray(0,4).toString('ascii')==='RIFF'&&webp.subarray(8,12).toString('ascii')==='WEBP','Optimized derivative is not WebP');
 
-/* First-screen contract: aircraft cannot immediately follow <main>; conversion dependencies are direct and cache-versioned. */
+/* First-screen contract: the HTML itself already owns the approved new Hero; runtime cannot be responsible for replacing an old first frame. */
 const mainOpen=html.search(/<main\b[^>]*>/i),aircraftAt=html.indexOf('<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->');
 assert(mainOpen>=0&&aircraftAt>mainOpen,'Homepage main/aircraft ordering invalid');
 const between=html.slice(mainOpen,aircraftAt);
-assert(/<section\b[^>]*class=["'][^"']*\bhero\b/i.test(between),'A real homepage hero must precede the aircraft extension');
+const staticHero=(between.match(/<section\b[^>]*class=["'][^"']*\bqily-home-conversion-hero\b[^"']*["'][^>]*>[\s\S]*?<\/section>/i)||[''])[0];
+assert(staticHero,'Approved conversion Hero must be statically materialized before first paint');
+assert(staticHero.includes('data-qily-home-conversion-hero="v1"'),'Static conversion Hero identity missing');
+assert(staticHero.includes('用工程数据解决工厂效率、质量、交付与布局问题'),'Static first-paint Hero value proposition missing');
+assert(staticHero.includes('qily-home-project-visual'),'Static first-paint project visual missing');
+assert(staticHero.includes('免费60分钟沟通诊断'),'Static first-paint diagnosis entry missing');
+assert(!between.includes('现场问题，可计算'),'Retired homepage Hero copy is still present in first-paint HTML');
 assert(!html.includes('id="qilyAircraftHeroPreloadV1"'),'Aircraft preload must stay removed after first-screen demotion');
 assert(html.includes(`<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=${VISUAL_READABILITY_VERSION}">`),'Sitewide V9 VI/readability stylesheet is not materialized on homepage');
 assert(html.includes(`<link id="qilyHomeConversionV1Stylesheet" rel="stylesheet" href="/styles/qily-home-conversion-v1.css?v=${HOME_VERSION}">`),'Conversion homepage stylesheet is not directly materialized');
 assert(html.includes(`<link id="qilyHomeConversionVisualFixV2" rel="stylesheet" href="/styles/qily-home-conversion-visual-fix-v2.css?v=${HOME_VISUAL_FIX_VERSION}">`),'Homepage VI/readability stylesheet is not directly materialized with cache-busting');
 assert(html.includes(`<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=${OWNER_PROFILE_VERSION}">`),'Homepage owner-profile stylesheet is not directly materialized');
-assert(html.includes(`<script defer id="qilyHomeConversionV1Runtime" src="/site-home-conversion-v1.js?v=${HOME_JS_VERSION}"></script>`),'Conversion homepage runtime is not directly materialized with the current public-copy cache version');
+assert(html.includes(`<script id="qilyHomeConversionV1Runtime" src="/site-home-conversion-v1.js?v=${HOME_JS_VERSION}"></script>`),'Conversion runtime must register synchronously in head with the current first-paint cache version');
+assert(!html.includes(`<script defer id="qilyHomeConversionV1Runtime"`),'Conversion runtime must not wait in the deferred script queue');
 assert(html.includes(`<script defer id="qilyHomeOwnerProfileV1Runtime" src="/site-home-owner-profile-v1.js?v=${OWNER_PROFILE_VERSION}"></script>`),'Homepage owner-profile runtime is not directly materialized');
+assert(homeMaterializer.includes('First paint must never expose the retired homepage Hero'),'Homepage materializer first-paint contract missing');
+assert(homeMaterializer.includes('const staticHero=['),'Homepage materializer must own the static approved Hero');
+assert(homeMaterializer.includes(`<script id="qilyHomeConversionV1Runtime" src="${HOME_JS}"></script>`),'Homepage materializer must keep conversion runtime outside the deferred queue');
+assert(homeJs.includes("d.addEventListener('readystatechange',onReadyState)"),'Homepage conversion runtime must run at parser-complete readyState');
+assert(!homeJs.includes("d.addEventListener('DOMContentLoaded',boot"),'Homepage conversion runtime regressed to DOMContentLoaded delay');
 assert(homeCss.includes('project hero -> three core deliveries -> industry scenes -> representative cases'),'Homepage conversion visual order contract missing');
 assert(homeCss.includes('.qily-home-conversion-heading{\n  width:100%;\n  max-width:none;'),'Homepage conversion heading must follow the full content axis');
 assert(homeCss.includes('#qily-core-services .qily-ia-heading{\n  width:100%!important;\n  max-width:none!important;'),'Core-delivery heading must not regress to a narrow 980px window');
@@ -124,4 +137,4 @@ for(const rel of activeRuntimeFiles){
   const executable=text.split(/\r?\n/).filter(line=>!/^\s*(?:!\s*)?grep\b/.test(line)&&!line.includes("c919-approved-20260826|git show")&&!line.includes('executable legacy aircraft rollback')).join('\n');
   assert(!/git\s+fetch[^\n]*c919-approved-20260826|git\s+show[^\n]*c919-strategy-hero-v14\.png/i.test(executable),`${rel}: executable legacy aircraft rollback source is forbidden`);
 }
-console.log(`PASS: aircraft SSOT preserved; V9 sitewide VI/static semantics and homepage V4 readability are guarded together with project-first conversion, capability-building statement, free 60-minute diagnosis, owner alignment and direct experience-timeline access.`);
+console.log(`PASS: first paint is the approved conversion Hero; parser-complete runtime no longer waits behind deferred scripts; aircraft SSOT, V9 VI/static semantics, capability-building statement, free 60-minute diagnosis, owner alignment and experience access remain guarded.`);
