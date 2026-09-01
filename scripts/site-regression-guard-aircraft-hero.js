@@ -18,7 +18,7 @@ const ASSET_VERSION='20260831-aircraft-latest-v5';
 const HOME_VERSION='20260901-home-conversion-axis-v2';
 const HOME_JS_VERSION='20260901-home-public-brand-copy-v2';
 const HOME_VISUAL_FIX_VERSION='20260901-home-visual-fix-v2';
-const OWNER_PROFILE_VERSION='20260901-owner-profile-v1';
+const OWNER_PROFILE_VERSION='20260901-owner-profile-v2';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
 function gitBlobSha(buffer){return crypto.createHash('sha1').update(Buffer.from(`blob ${buffer.length}\0`)).update(buffer).digest('hex')}
 const source=fs.readFileSync(sourcePath),png=fs.readFileSync(pngPath),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
@@ -80,7 +80,10 @@ assert(ownerProfileJs.includes('9年任职欧美企业'),'Owner career summary m
 assert(ownerProfileJs.includes('4年担任上市公司工程部长'),'Owner career summary missing listed-company engineering leadership');
 assert(ownerProfileJs.includes('累计6年多从事咨询交付'),'Owner career summary missing consulting-delivery experience');
 assert(ownerProfileJs.includes('PQCD改善、数智化工厂规划、目视化项目交付与精益体系建设'),'Owner career focus summary missing');
+assert(ownerProfileJs.includes('href="/experience/"')&&ownerProfileJs.includes('查看履历主线'),'Owner profile must expose a direct experience-timeline link');
 assert(ownerProfileCss.includes('.qily-home-owner-profile'),'Owner profile VI styling missing');
+assert(ownerProfileCss.includes('grid-template-rows:minmax(0,1fr)!important')&&ownerProfileCss.includes('.qily-home-role{'),'Owner role cards must stretch to the portrait height on desktop');
+assert(ownerProfileCss.includes('.qily-home-owner-profile__experience'),'Owner experience-link VI styling missing');
 assert(css.includes('QilyLean Aircraft Brand Hero V1'),'Aircraft stylesheet identity missing');
 
 /* Policy/rejection text may name retired refs; only executable fetch/show lines are prohibited. */
@@ -90,4 +93,4 @@ for(const rel of activeRuntimeFiles){
   const executable=text.split(/\r?\n/).filter(line=>!/^\s*(?:!\s*)?grep\b/.test(line)&&!line.includes("c919-approved-20260826|git show")&&!line.includes('executable legacy aircraft rollback')).join('\n');
   assert(!/git\s+fetch[^\n]*c919-approved-20260826|git\s+show[^\n]*c919-strategy-hero-v14\.png/i.test(executable),`${rel}: executable legacy aircraft rollback source is forbidden`);
 }
-console.log(`PASS: aircraft SSOT preserved as lazy extended brand asset; project-first homepage, full-width section headings, readable hero scale, high-contrast VI labels, public-facing brand copy and restored owner career summary are guarded.`);
+console.log(`PASS: aircraft SSOT preserved as lazy extended brand asset; project-first homepage, full-width section headings, readable hero scale, high-contrast VI labels, public-facing brand copy, restored owner career summary, portrait-aligned role cards and direct experience-timeline link are guarded.`);
