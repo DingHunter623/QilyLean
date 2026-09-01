@@ -50,6 +50,17 @@ const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260830-r
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range';
 const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132';
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
+const NAV_RAIL_VI_CRITICAL=`<style id="qilyNavRailViCriticalV1">
+:root{--qily-nav-rail-track:#b9d9d4;--qily-nav-rail-thumb:#0f4b5a;--qily-nav-rail-thumb-hover:#12606f}
+html:root:root body input.qily-primary-nav-scroll-rail[type="range"]{opacity:1!important;accent-color:#0f4b5a!important;background:transparent!important}
+html:root:root body input.qily-primary-nav-scroll-rail[type="range"]::-webkit-slider-runnable-track{background:#b9d9d4!important;border-color:rgba(15,75,90,.22)!important}
+html:root:root body input.qily-primary-nav-scroll-rail[type="range"]::-webkit-slider-thumb{background:#0f4b5a!important;opacity:1!important}
+html:root:root body input.qily-primary-nav-scroll-rail[type="range"]::-moz-range-track{background:#b9d9d4!important;border-color:rgba(15,75,90,.22)!important}
+html:root:root body input.qily-primary-nav-scroll-rail[type="range"]::-moz-range-thumb{background:#0f4b5a!important;opacity:1!important}
+html:root:root body input.qily-primary-nav-scroll-rail[type="range"]:is(:hover,:focus-visible)::-webkit-slider-thumb{background:#12606f!important}
+html:root:root body input.qily-primary-nav-scroll-rail[type="range"]:is(:hover,:focus-visible)::-moz-range-thumb{background:#12606f!important}
+html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:root:root body input.qily-primary-nav-scroll-rail[type="range"][disabled]{opacity:1!important}
+</style>`;
 
 function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);}
 function removeScriptByMarker(source){return source.replace(/\s*<script\b[^>]*(?:data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct|data-qily-interaction-contrast-direct|data-qily-content-contrast-direct|data-qily-translation-safe-direct|data-qily-contact-route-direct|data-qily-interaction-semantics-direct|data-qily-public-redline-v2-direct|data-qily-brand-home-feedback-direct|data-qily-translation-safety-bootstrap)[^>]*>[\s\S]*?<\/script>\s*/gi,'\n');}
@@ -65,10 +76,12 @@ function removeManagedStyles(source){
   for(const file of paths){const pattern=new RegExp('\\s*<link\\b[^>]*href=["\\\'][^"\\\']*\\/'+file.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'[^"\\\']*["\\\'][^>]*>\\s*','gi');next=next.replace(pattern,'\n');}
   return next;
 }
+function removeManagedInlineStyles(source){return source.replace(/\s*<style\b[^>]*id=["']qilyNavRailViCriticalV1["'][^>]*>[\s\S]*?<\/style>\s*/gi,'\n');}
 function removeTranslationMarkup(source){return source.replace(/\s*<[^>]+id=["']qilyGlobalTranslationDualRouteV2["'][^>]*>[\s\S]*?<\/[^>]+>\s*/gi,'\n').replace(/\s*<[^>]+class=["'][^"']*qily-web-translate[^"']*["'][^>]*>[\s\S]*?<\/[^>]+>\s*/gi,'\n');}
 function neutralizeFirstPaint(source){
-  const safe='<!-- QILY-R2-FIRST-PAINT:START -->\n<style id="qilyR2CriticalFirstPaintGuard">html.qily-stale-document body{visibility:visible!important}</style><script data-qily-r2-first-paint>(function(d){var BUILD=\'20260824-readable-floor-plus2-v4\';var e=d.documentElement;e.classList.remove("qily-stale-document","qily-shell-pending","qily-r2-first-paint-pending","qily-first-paint-pending");try{localStorage.setItem("qily_site_html_build_v2",BUILD);sessionStorage.removeItem("qily_site_refresh_attempt_v1")}catch(error){}})(document);</script>\n<!-- QILY-R2-FIRST-PAINT:END -->';
-  if(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/i.test(source))return source.replace(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/gi,safe);return source;
+  const safe='<!-- QILY-R2-FIRST-PAINT:START -->\n<style id="qilyR2CriticalFirstPaintGuard">html.qily-stale-document,html.qily-shell-pending,html.qily-r2-first-paint-pending,html.qily-first-paint-pending{min-height:100%;background:transparent!important}html.qily-stale-document body,html.qily-shell-pending body,html.qily-r2-first-paint-pending body,html.qily-first-paint-pending body{visibility:visible!important;opacity:1!important;filter:none!important}</style><script data-qily-r2-first-paint>(function(d){var BUILD=\'20260824-readable-floor-plus2-v4\';var e=d.documentElement;e.classList.remove("qily-stale-document","qily-shell-pending","qily-r2-first-paint-pending","qily-first-paint-pending");try{localStorage.setItem("qily_site_html_build_v2",BUILD);sessionStorage.removeItem("qily_site_refresh_attempt_v1")}catch(error){}})(document);</script>\n<!-- QILY-R2-FIRST-PAINT:END -->';
+  let next=source.replace(/<!-- QILY-FIRST-PAINT-GUARD:START -->[\s\S]*?<!-- QILY-FIRST-PAINT-GUARD:END -->/gi,'');
+  if(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/i.test(next))return next.replace(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/gi,safe);return next;
 }
 function materialize(source,relative){
   let next=neutralizeFirstPaint(source);
@@ -78,7 +91,7 @@ function materialize(source,relative){
   next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK_SHARE);
   next=next.replace(/\/site-core-service-dock-closure-v1\.js(?:\?v=[^"']*)?/g,CORE_SERVICE_DOCK);
   next=next.replace(/\/assets\/contact\/wechat-contact-card\.svg(?:\?v=[^"']*)?/g,WECHAT_CONTACT_ASSET);
-  next=removeScriptByMarker(next);next=removeManagedScripts(next);next=removeManagedStyles(next);next=removeTranslationMarkup(next);
+  next=removeScriptByMarker(next);next=removeManagedScripts(next);next=removeManagedStyles(next);next=removeManagedInlineStyles(next);next=removeTranslationMarkup(next);
   const tags=[
     `<link id="qilyHeaderAxisV1" rel="stylesheet" href="${HEADER_AXIS}">`,
     `<link id="qilyInteractionContrastGuardV1Stylesheet" rel="stylesheet" href="${INTERACTION_CONTRAST_CSS}">`,
@@ -99,6 +112,7 @@ function materialize(source,relative){
     `<link id="qilyResponsiveContainmentV1" rel="stylesheet" href="${RESPONSIVE_CONTAINMENT_CSS}">`,
     `<link id="qilyHeaderProjectIntegrityV2" rel="stylesheet" href="${FINAL_INTEGRITY_CSS}">`,
     `<link id="qilyVisualComponentsV1" rel="stylesheet" href="${VISUAL_COMPONENTS_CSS}">`,
+    NAV_RAIL_VI_CRITICAL,
     `<link id="qilyBrandHomeFeedbackV1" rel="stylesheet" href="${BRAND_HOME_FEEDBACK_CSS}">`,
     `<link id="qilyTranslationPublicUiV1" rel="stylesheet" href="${TRANSLATION_PUBLIC_CSS}" data-qily-translation-public-ui="google-v1">`,
     `<script defer data-qily-translation-safe-direct="google-v1" src="${TRANSLATION_SAFE_JS}&fast=${TRANSLATION_FAST_REV}"></script>`,
