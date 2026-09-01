@@ -7,16 +7,19 @@ on:
       - 'meta/build.json'
       - 'maintenance/site-system-v4-*.json'
       - 'docs/site-system-v4/**'
+      - 'site-visual-readability-v5.css'
+      - 'scripts/publish-visual-readability-v5.js'
+      - '.github/workflows/publish-visual-readability-v5.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
-# V4 build and sitewide visual publisher both materialize index.html/public HTML.
-# Serialize them on main so a concurrent publisher cannot move origin/main while V4 is committing generated output.
+# V4 owns its generated production artifacts. The sitewide readability publisher is
+# excluded above so both HTML materializers are never triggered by the same visual-only change.
 concurrency:
-  group: qily-site-materialization-main
-  cancel-in-progress: false
+  group: qily-v4-build-main
+  cancel-in-progress: true
 
 jobs:
   build:
