@@ -1,10 +1,11 @@
 @import url('/site-translation-attribution-v1.css?v=20260901-google-attribution-nowrap-v2');
 
-/* QilyLean Translation Public UI V1.6｜primary + more-language unified control｜2026-09-01
+/* QilyLean Translation Public UI V1.7｜primary + more-language unified control｜2026-09-01
  * Translation-only CSS: primary navigation layout and swipe behavior belong to their existing owners.
  * One shared translator geometry is used across every public module.
  * Visible primary choices: 中文简体 / 中文繁体 / English / 其他.
  * Google's native combo remains the execution source but is visually hidden; attribution remains readable.
+ * V1.7 narrows the shared header translator slightly so the brand mark keeps clean visual clearance on compact widths.
  */
 
 html body .qily-web-translate__badge,
@@ -13,20 +14,20 @@ html body .qily-web-translate__status{display:none!important}
 html body .qily-web-translate{
   position:relative!important;
   box-sizing:border-box!important;
-  flex:0 0 252px!important;
-  width:252px!important;
-  min-width:252px!important;
-  max-width:252px!important;
+  flex:0 0 236px!important;
+  width:236px!important;
+  min-width:236px!important;
+  max-width:236px!important;
   padding:5px 7px 4px!important;
   overflow:visible!important;
 }
 
 html:root:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
 .qily-web-translate[data-qily-header-utility="translation"]{
-  flex:0 0 252px!important;
-  width:252px!important;
-  min-width:252px!important;
-  max-width:252px!important;
+  flex:0 0 236px!important;
+  width:236px!important;
+  min-width:236px!important;
+  max-width:236px!important;
   overflow:visible!important;
 }
 
@@ -249,7 +250,7 @@ html body .qily-language-more__empty{
   html:root:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
   .qily-web-translate[data-qily-header-utility="translation"]{
     flex:0 0 auto!important;
-    width:min(252px,calc(100vw - 36px))!important;
+    width:min(236px,calc(100vw - 36px))!important;
     min-width:0!important;
     max-width:calc(100vw - 36px)!important;
   }
