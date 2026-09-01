@@ -17,8 +17,8 @@ const EXPECTED_SOURCE_BLOB='32a218ed835ff0518cc7e2530f37c8cfa0b05b53';
 const EXPECTED_SOURCE_BYTES=2339701;
 const ASSET_VERSION='20260831-aircraft-latest-v5';
 const HOME_VERSION='20260901-home-conversion-axis-v2';
-const HOME_JS_VERSION='20260901-home-free-60min-diagnosis-v4';
-const HOME_VISUAL_FIX_VERSION='20260901-home-vi-readability-v3';
+const HOME_JS_VERSION='20260901-home-capability-building-v5';
+const HOME_VISUAL_FIX_VERSION='20260901-home-capability-building-v4';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
 const VISUAL_READABILITY_VERSION='20260901-vi-gold-static-v9';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
@@ -65,12 +65,12 @@ assert(homeCss.includes('#qily-core-services .qily-ia-heading{\n  width:100%!imp
 assert(!homeCss.includes('.qily-home-conversion-heading{\n  max-width:980px'),'Narrow homepage conversion heading returned');
 assert(!homeCss.includes('#qily-core-services .qily-ia-heading{\n  max-width:980px!important'),'Narrow core-delivery heading returned');
 
-/* V9 shared VI + static semantics and homepage V3 readability are protected together. */
+/* V9 shared VI + static semantics and homepage V4 readability are protected together. */
 assert(readabilityCss.includes('QILY-STATIC-VOCABULARY-NO-FEEDBACK-V9'),'Sitewide static-vocabulary no-feedback contract missing');
 assert(readabilityCss.includes('--qily-v5-gold-text:#b88b45'),'Sitewide VI gold text token missing');
 assert(readabilityCss.includes('color:var(--qily-v5-gold-text)!important'),'Sitewide section kicker no longer uses governed VI gold');
 assert(!readabilityCss.includes('--qily-v5-red:#9e4a34'),'Retired red section-kicker token returned');
-assert(homeVisualFix.includes('QILY-HOME-VI-READABILITY-V3'),'Homepage V3 VI/readability contract missing');
+assert(homeVisualFix.includes('QILY-HOME-VI-READABILITY-V4'),'Homepage V4 VI/readability contract missing');
 assert(homeVisualFix.includes('font-size:clamp(30px,2.75vw,44px)!important'),'Homepage hero title readable-size override missing');
 assert(homeVisualFix.includes('background:#fff3cf!important')&&homeVisualFix.includes('color:#0b3f4b!important'),'Homepage capsule high-contrast VI override missing');
 assert(homeVisualFix.includes('cursor:default!important')&&homeVisualFix.includes('transition:none!important'),'Homepage non-routing capsules must remain visually static');
@@ -79,6 +79,8 @@ assert(homeVisualFix.includes('.qily-home-card__evidence')&&homeVisualFix.includ
 assert(homeVisualFix.includes('#qily-core-services .qily-ia-card p')&&homeVisualFix.includes('font-size:18px!important'),'Homepage core-delivery body copy readable floor missing');
 assert(!homeVisualFix.includes('#9e4a34'),'Homepage visual closure must not reintroduce the retired red kicker color');
 assert(homeVisualFix.includes('background:rgba(7,60,71,.96)!important')&&homeVisualFix.includes('-webkit-text-fill-color:#fff!important'),'Homepage project-caption high-contrast override missing');
+assert(homeVisualFix.includes('.qily-home-capability-building')&&homeVisualFix.includes('border-left:4px solid #d8b66e!important'),'Capability-building statement VI block missing');
+assert(homeVisualFix.includes('.qily-home-capability-building p')&&homeVisualFix.includes('font-size:20px!important'),'Capability-building statement readable body copy missing');
 
 assert(homeJs.includes('用工程数据解决工厂效率、质量、交付与布局问题'),'Approved homepage value proposition missing');
 assert(homeJs.includes('免费60分钟沟通诊断'),'Approved free 60-minute consultation/diagnosis entry missing');
@@ -87,6 +89,10 @@ assert(homeJs.includes('qily-home-representative-cases'),'Representative-case se
 assert(homeJs.includes('以真实项目成果验证工程交付能力'),'Representative-case public-facing title missing');
 assert(homeJs.includes('聚焦高相关制造场景，让工程方法直接对应现场问题'),'Industry public-facing title missing');
 assert(homeJs.includes('qily-home-six-step-method'),'Six-step method section missing');
+assert(homeJs.includes('qily-home-capability-building'),'Capability-building statement section missing');
+assert(homeJs.includes('改善的终点，不是“做完一个项目”，而是形成企业可以持续运行的能力。'),'Capability-building headline missing');
+assert(homeJs.includes('问题有没有被定义、数据有没有统一、改善有没有验证、标准有没有固化、系统有没有运行、经验能不能复制'),'Capability-building operating logic missing');
+assert(homeJs.indexOf('qily-home-six-step-method')<homeJs.indexOf('qily-home-capability-building')&&homeJs.indexOf('qily-home-capability-building')<homeJs.indexOf('qily-home-standard-deliverables'),'Capability-building statement must bridge method and standard deliverables');
 assert(homeJs.includes('qily-home-standard-deliverables'),'Standard-deliverables section missing');
 assert(homeJs.includes('qily-home-collaboration'),'Principal/collaboration section missing');
 assert(homeJs.includes('qily-home-brand-extension'),'Aircraft brand-extension relocation missing');
@@ -118,4 +124,4 @@ for(const rel of activeRuntimeFiles){
   const executable=text.split(/\r?\n/).filter(line=>!/^\s*(?:!\s*)?grep\b/.test(line)&&!line.includes("c919-approved-20260826|git show")&&!line.includes('executable legacy aircraft rollback')).join('\n');
   assert(!/git\s+fetch[^\n]*c919-approved-20260826|git\s+show[^\n]*c919-strategy-hero-v14\.png/i.test(executable),`${rel}: executable legacy aircraft rollback source is forbidden`);
 }
-console.log(`PASS: aircraft SSOT preserved; V9 sitewide VI/static semantics and homepage V3 gold-kicker/readability floors are guarded together with project-first conversion, free 60-minute diagnosis, owner alignment and direct experience-timeline access.`);
+console.log(`PASS: aircraft SSOT preserved; V9 sitewide VI/static semantics and homepage V4 readability are guarded together with project-first conversion, capability-building statement, free 60-minute diagnosis, owner alignment and direct experience-timeline access.`);
