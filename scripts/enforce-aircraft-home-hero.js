@@ -17,7 +17,7 @@ const START='<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->',END='<!-- QILY-AIRCRAFT
 const PNG='/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260831-aircraft-latest-v5';
 const WEBP='/assets/qilylean-aircraft-hero-latest-q98.webp?v=20260831-aircraft-latest-v5';
 const AIRCRAFT_CSS='/styles/qily-aircraft-brand-hero-v1.css?v=20260826-aircraft-hero-v1';
-const HOME_CSS='/styles/qily-home-conversion-v1.css?v=20260901-home-conversion-v1';
+const HOME_CSS='/styles/qily-home-conversion-v1.css?v=20260901-home-conversion-axis-v2';
 const HOME_VISUAL_FIX='/styles/qily-home-conversion-visual-fix-v2.css?v=20260901-home-visual-fix-v2';
 const HOME_JS='/site-home-conversion-v1.js?v=20260901-home-public-brand-copy-v2';
 const ALT='QilyLean｜启力精益飞机品牌延伸视觉，左右机翼展示新工厂与新产线规划、精益改善项目交付、目视化项目设计与交付、数字化工厂、APP软件开发、官网建设六项业务能力';
