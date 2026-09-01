@@ -1,7 +1,8 @@
 @import url('/site-translation-attribution-v1.css?v=20260901-google-attribution-nowrap-v2');
 
-/* QilyLean Translation Public UI V1.3｜native Google select closure｜2026-08-31
+/* QilyLean Translation Public UI V1.4｜sitewide unified Google selector frame｜2026-09-01
  * Translation-only CSS: primary navigation layout and swipe behavior belong to their existing owners.
+ * One shared translator geometry is used across every public module.
  * Google creates select.goog-te-combo asynchronously after its language data is ready.
  * Target that final DOM directly so Android never depends on a timer, observer or class mutation.
  */
@@ -9,24 +10,25 @@
 html body .qily-web-translate__badge,
 html body .qily-web-translate__status{display:none!important}
 
+/* Desktop authority: widen the shared frame to the left while keeping the right edge/header slot stable. */
 html body .qily-web-translate{
   gap:6px!important;
   box-sizing:border-box!important;
-  width:206px!important;
-  min-width:0!important;
-  max-width:100%!important;
+  flex:0 0 252px!important;
+  width:252px!important;
+  min-width:252px!important;
+  max-width:252px!important;
   padding-right:7px!important;
-  flex:0 0 auto!important;
   overflow:visible!important;
 }
 
-/* Loaded after the shared visual layers: keep only the translator's own frame
- * from inheriting their max-content minimum inside the mobile header grid. */
+/* Loaded after the shared visual layers: this is the single translator geometry owner. */
 html:root:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
 .qily-web-translate[data-qily-header-utility="translation"]{
-  width:206px!important;
-  min-width:0!important;
-  max-width:100%!important;
+  flex:0 0 252px!important;
+  width:252px!important;
+  min-width:252px!important;
+  max-width:252px!important;
 }
 
 html body .qily-web-translate__google,
@@ -62,6 +64,25 @@ html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__sele
   touch-action:manipulation!important;
 }
 
+/* Google attribution remains directly under the selector and must render as one readable line. */
+html:root:root:root body .qily-web-translate .goog-te-gadget{
+  white-space:nowrap!important;
+  text-align:center!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+}
+html:root:root:root body .qily-web-translate .goog-te-gadget > span,
+html:root:root:root body .qily-web-translate .goog-te-gadget a,
+html:root:root:root body .qily-web-translate .goog-te-gadget a > span,
+html:root:root:root body .qily-web-translate .goog-te-gadget a *{
+  display:inline!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+  font-size:10px!important;
+  line-height:1.35!important;
+}
+
 html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__select):focus,
 html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__select):focus-visible{
   outline:2px solid rgba(15,75,90,.28)!important;
@@ -69,6 +90,16 @@ html body .qily-web-translate :is(select.goog-te-combo,.qily-web-translate__sele
   animation:none!important;
   transition:none!important;
   transform:none!important;
+}
+
+@media(max-width:900px){
+  html:root:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
+  .qily-web-translate[data-qily-header-utility="translation"]{
+    flex:0 0 auto!important;
+    width:min(252px,calc(100vw - 36px))!important;
+    min-width:0!important;
+    max-width:calc(100vw - 36px)!important;
+  }
 }
 
 /* Google may inject a second, page-wide toolbar after translation.
