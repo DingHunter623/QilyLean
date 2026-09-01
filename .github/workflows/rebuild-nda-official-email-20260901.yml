@@ -1,0 +1,125 @@
+name: Rebuild NDA official email
+
+on:
+  push:
+    paths:
+      - '.github/workflows/rebuild-nda-official-email-20260901.yml'
+      - 'scripts/build-nda-documents.py'
+      - 'scripts/optimize-nda-signature.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: rebuild-nda-official-email
+  cancel-in-progress: true
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install document toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libreoffice-writer fonts-noto-cjk poppler-utils
+          python -m pip install --upgrade pip
+          python -m pip install python-docx pillow qrcode
+
+      - name: Rebuild canonical DOCX
+        run: |
+          python scripts/build-nda-documents.py
+          python scripts/optimize-nda-signature.py
+
+      - name: Convert canonical DOCX to PDF
+        run: |
+          mkdir -p build/nda/pdf
+          libreoffice --headless --convert-to pdf --outdir build/nda/pdf build/nda/qilylean-mutual-nda-v1.docx
+          test -s build/nda/pdf/qilylean-mutual-nda-v1.pdf
+          cp build/nda/pdf/qilylean-mutual-nda-v1.pdf qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
+
+      - name: Validate official email and one-page contract
+        run: |
+          pdfinfo qilylean/assets/legal/qilylean-mutual-nda-v1.pdf | tee build/nda/pdfinfo.txt
+          test "$(pdfinfo qilylean/assets/legal/qilylean-mutual-nda-v1.pdf | awk '/^Pages:/ {print $2}')" = "1"
+          pdftotext -layout qilylean/assets/legal/qilylean-mutual-nda-v1.pdf build/nda/nda.txt
+          grep -Fq 'admin@qilylean.com' build/nda/nda.txt
+          grep -Fq 'QilyLean' build/nda/nda.txt
+          grep -Fq 'QL-LEGAL-001' build/nda/nda.txt
+
+      - name: Render page for visual QA evidence
+        run: |
+          pdftoppm -png -r 180 -f 1 -singlefile qilylean/assets/legal/qilylean-mutual-nda-v1.pdf build/nda/qilylean-mutual-nda-v1-preview
+          test -s build/nda/qilylean-mutual-nda-v1-preview.png
+
+      - name: Synchronize NDA preview cache and release marker
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          old_tokens = [
+              'qilylean-mutual-nda-v1.pdf?v=20260801-upload-v2',
+              'qilylean-mutual-nda-v1.pdf?v=20260801-template-v2',
+          ]
+          new_token = 'qilylean-mutual-nda-v1.pdf?v=20260901-official-email-v3'
+          targets = [
+              'scripts/nda-source/nda-preview-template.html',
+              'trust/nda-preview.html',
+              'scripts/publish-nda-mobile-preview.js',
+              'scripts/publish-nda-link.js',
+          ]
+          for rel in targets:
+              p = Path(rel)
+              s = p.read_text(encoding='utf-8')
+              for old in old_tokens:
+                  s = s.replace(old, new_token)
+              p.write_text(s, encoding='utf-8')
+          Path('scripts/nda-source/release.marker').write_text(
+              '2026-09-01T12:31:00+08:00\n'
+              'source=canonical-qilylean-confidentiality-statement\n'
+              'version=V1.0-official-email-v3\n'
+              'officialEmail=admin@qilylean.com\n',
+              encoding='utf-8'
+          )
+          PY
+          grep -Fq 'admin@qilylean.com' scripts/build-nda-documents.py
+          grep -Fq '20260901-official-email-v3' trust/nda-preview.html
+          grep -Fq '20260901-official-email-v3' scripts/nda-source/nda-preview-template.html
+          grep -Fq '20260901-official-email-v3' scripts/publish-nda-mobile-preview.js
+
+      - name: Upload visual QA evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: nda-official-email-v3-visual-qa
+          path: |
+            build/nda/qilylean-mutual-nda-v1-preview.png
+            build/nda/pdfinfo.txt
+            build/nda/nda.txt
+          retention-days: 7
+
+      - name: Commit rebuilt public document
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            qilylean/assets/legal/qilylean-mutual-nda-v1.pdf \
+            scripts/nda-source/nda-preview-template.html \
+            trust/nda-preview.html \
+            scripts/publish-nda-mobile-preview.js \
+            scripts/publish-nda-link.js \
+            scripts/nda-source/release.marker
+          if git diff --cached --quiet; then
+            echo 'NDA already current.'
+            exit 0
+          fi
+          git commit -m 'build(nda): publish official email in confidentiality statement [skip nda rebuild]'
+          git push origin HEAD:main
