@@ -1,6 +1,6 @@
-/* QilyLean Homepage Conversion Visual Fix V3 | 2026-09-01
- * QILY-HOME-VI-READABILITY-V3
- * Scope: homepage public-facing VI, readable typography and static-chip semantics.
+/* QilyLean Homepage Conversion Visual Fix V4 | 2026-09-01
+ * QILY-HOME-VI-READABILITY-V4
+ * Scope: homepage public-facing VI, readable typography, capability-building statement and static-chip semantics.
  * Global navigation, translation, Dock, business taxonomy and conversion structure remain untouched.
  * Rule: section kickers follow the shared QilyLean gold family; public copy does not fall back to 11–15px desktop text;
  * non-routing capsules are information only and never simulate button/link feedback.
@@ -177,6 +177,48 @@ html body[data-qily-home-conversion="v1"] .qily-home-method-step span{
   line-height:1.62!important;
 }
 
+/* Capability-building statement: method -> organizational capability -> deliverables. */
+html body[data-qily-home-conversion="v1"] .qily-home-capability-building{
+  padding:clamp(44px,5vw,72px) 0!important;
+  border-top:1px solid rgba(216,182,110,.46)!important;
+  border-bottom:1px solid rgba(216,182,110,.46)!important;
+  background:linear-gradient(135deg,#073b47 0%,#0b5660 58%,#0d6664 100%)!important;
+}
+html body[data-qily-home-conversion="v1"] .qily-home-capability-building .qily-home-conversion-inner{
+  padding-left:24px!important;
+  border-left:4px solid #d8b66e!important;
+}
+html body[data-qily-home-conversion="v1"] .qily-home-capability-building__kicker{
+  display:block!important;
+  margin:0 0 10px!important;
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  font-size:20px!important;
+  font-weight:950!important;
+  line-height:1.5!important;
+  letter-spacing:.035em!important;
+}
+html body[data-qily-home-conversion="v1"] .qily-home-capability-building h2{
+  max-width:1420px!important;
+  margin:0!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  font-size:clamp(30px,2.8vw,46px)!important;
+  font-weight:860!important;
+  line-height:1.25!important;
+  letter-spacing:-.012em!important;
+  text-wrap:balance!important;
+}
+html body[data-qily-home-conversion="v1"] .qily-home-capability-building p{
+  max-width:1500px!important;
+  margin:18px 0 0!important;
+  color:#e8f5f2!important;
+  -webkit-text-fill-color:#e8f5f2!important;
+  font-size:20px!important;
+  font-weight:620!important;
+  line-height:1.82!important;
+}
+
 html body[data-qily-home-conversion="v1"] .qily-home-deliverable strong{
   font-size:19px!important;
   line-height:1.4!important;
@@ -232,6 +274,9 @@ html body[data-qily-home-conversion="v1"] .qily-home-brand-extension__head p{
   html body[data-qily-home-conversion="v1"] .qily-home-conversion-hero__lead{
     font-size:19px!important;
   }
+  html body[data-qily-home-conversion="v1"] .qily-home-capability-building h2{
+    font-size:clamp(29px,5.4vw,40px)!important;
+  }
 }
 
 @media(max-width:560px){
@@ -242,13 +287,23 @@ html body[data-qily-home-conversion="v1"] .qily-home-brand-extension__head p{
   }
   html body[data-qily-home-conversion="v1"] .qily-home-conversion-hero__kicker,
   html body[data-qily-home-conversion="v1"] .qily-home-conversion-kicker,
-  html body[data-qily-home-conversion="v1"] #qily-core-services .qily-ia-kicker{
+  html body[data-qily-home-conversion="v1"] #qily-core-services .qily-ia-kicker,
+  html body[data-qily-home-conversion="v1"] .qily-home-capability-building__kicker{
     font-size:18px!important;
   }
   html body[data-qily-home-conversion="v1"] .qily-home-conversion-hero__lead,
   html body[data-qily-home-conversion="v1"] .qily-home-conversion-heading p,
-  html body[data-qily-home-conversion="v1"] #qily-core-services .qily-ia-heading p{
+  html body[data-qily-home-conversion="v1"] #qily-core-services .qily-ia-heading p,
+  html body[data-qily-home-conversion="v1"] .qily-home-capability-building p{
     font-size:18px!important;
+  }
+  html body[data-qily-home-conversion="v1"] .qily-home-capability-building .qily-home-conversion-inner{
+    padding-left:16px!important;
+    border-left-width:3px!important;
+  }
+  html body[data-qily-home-conversion="v1"] .qily-home-capability-building h2{
+    font-size:clamp(27px,7vw,34px)!important;
+    line-height:1.3!important;
   }
   html body[data-qily-home-conversion="v1"] .qily-home-conversion-hero__chips span,
   html body[data-qily-home-conversion="v1"] .qily-home-project-visual figcaption,
