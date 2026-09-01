@@ -33,7 +33,7 @@
     if(!d.getElementById('qilyHomeConversionV1Runtime')){
       var script=d.createElement('script');
       script.id='qilyHomeConversionV1Runtime';
-      script.src='/site-home-conversion-v1.js?v=20260901-home-conversion-v1';
+      script.src='/site-home-conversion-v1.js?v=20260901-home-public-brand-copy-v2';
       script.async=false;
       d.body.appendChild(script);
     }
