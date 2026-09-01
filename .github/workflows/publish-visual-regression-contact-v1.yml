@@ -101,8 +101,10 @@ jobs:
           grep -Fq "const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'" scripts/materialize-global-language-v3.js
           grep -Fq "data-qily-translation-safe-direct=\"google-v1\"" scripts/materialize-global-language-v3.js
           grep -Fq "rail.type='range'" site-interaction-semantics-v1.js
-          grep -Fq 'Google Translate Header Runtime V1.3' site-translation-safe-runtime-v1.js
-          grep -Fq 'reload-free mobile closure' site-translation-safe-runtime-v1.js
+          grep -Fq 'Google Translate Header Runtime V1.4' site-translation-safe-runtime-v1.js
+          grep -Fq "addOption(select,MORE_VALUE,'其他')" site-translation-safe-runtime-v1.js
+          grep -Fq 'function populateMoreLanguages()' site-translation-safe-runtime-v1.js
+          ! grep -Fq 'includedLanguages:' site-translation-safe-runtime-v1.js
           ! grep -Fq 'function handleAndroidLanguageChange(event)' site-translation-safe-runtime-v1.js
           ! grep -Fq "d.cookie='googtrans='" site-translation-safe-runtime-v1.js
           ! grep -Fq 'location.reload' site-translation-safe-runtime-v1.js
