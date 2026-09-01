@@ -38,7 +38,7 @@
     if(title)title.textContent='三类项目，直接面向工厂效率、质量、交付与布局';
     if(lead)lead.textContent='从制造现场与工程数据出发，先把范围、基线、方法、交付物和验收边界说清楚，再进入设计、Pilot与实施。';
     var actions=core.querySelector('.qily-ia-actions');
-    if(actions)actions.innerHTML='<a class="qily-ia-button primary" href="/cooperation/#diagnosis">60分钟匹配沟通</a><a class="qily-ia-button" href="/projects/">查看代表案例</a>';
+    if(actions)actions.innerHTML='<a class="qily-ia-button primary" href="/cooperation/#diagnosis">免费60分钟沟通诊断</a><a class="qily-ia-button" href="/projects/">查看代表案例</a>';
   }
 
   function transformHero(hero){
@@ -52,8 +52,8 @@
       +'<h1>用工程数据解决工厂效率、质量、交付与布局问题</h1>'
       +'<p class="qily-home-conversion-hero__lead">并把有效改善固化为组织能力。QilyLean以现场事实、工程数据、Pilot验证和标准交付为主线，让方案能落地、结果可验证、经验可复制。</p>'
       +'<div class="qily-home-conversion-hero__chips"><span>新工厂／新产线规划</span><span>精益改善项目交付</span><span>目视化设计与交付</span></div>'
-      +'<div class="qily-home-conversion-actions"><a class="primary" href="/cooperation/#diagnosis">60分钟匹配沟通</a><a href="/projects/">查看代表案例</a></div>'
-      +'<p class="qily-home-conversion-hero__route">标准启动路径：60分钟匹配沟通 → 1天现场诊断 → 2周诊断／冲刺 → Pilot项目（按项目范围调整）</p>'
+      +'<div class="qily-home-conversion-actions"><a class="primary" href="/cooperation/#diagnosis">免费60分钟沟通诊断</a><a href="/projects/">查看代表案例</a></div>'
+      +'<p class="qily-home-conversion-hero__route">标准启动路径：免费60分钟沟通诊断 → 1天现场诊断 → 2周诊断／冲刺 → Pilot项目（按项目范围调整）</p>'
       +'</div>'
       +'<figure class="qily-home-project-visual" aria-label="QilyLean工厂项目与改善方案视觉">'
       +'<a href="/projects/factory-layout/" aria-label="查看新工厂与Factory Layout代表项目"><img src="/园区.png?v=20260901-home-conversion-v1" alt="新工厂与工业园区总体规划项目效果图" loading="eager" decoding="async" fetchpriority="high"><figcaption>新工厂／新产线｜Factory Layout与园区规划</figcaption></a>'
@@ -140,12 +140,12 @@
       +'<div class="qily-home-launch">'
       +'<div><div class="qily-home-conversion-heading"><span class="qily-home-conversion-kicker">START｜启动方式</span><h2 id="qily-home-launch-title">先用60分钟把问题、范围和下一步说清楚</h2><p>先确认问题、范围、数据条件与决策边界，再判断是否进入现场诊断、专项冲刺或Pilot项目。</p></div>'
       +'<div class="qily-home-launch__route">'
-      +'<article class="qily-home-launch__step"><strong>60分钟匹配沟通</strong><span>目标／痛点／范围／资料</span></article>'
+      +'<article class="qily-home-launch__step"><strong>免费60分钟沟通诊断</strong><span>目标／痛点／范围／资料</span></article>'
       +'<article class="qily-home-launch__step"><strong>1天现场诊断</strong><span>事实／约束／数据采样</span></article>'
       +'<article class="qily-home-launch__step"><strong>2周诊断／冲刺</strong><span>基线／方案／优先级</span></article>'
       +'<article class="qily-home-launch__step"><strong>Pilot项目</strong><span>试点／验证／固化／验收</span></article>'
       +'</div></div>'
-      +'<a class="qily-home-launch__cta" href="/cooperation/#diagnosis">进入60分钟匹配沟通</a>'
+      +'<a class="qily-home-launch__cta" href="/cooperation/#diagnosis">预约免费60分钟沟通诊断</a>'
       +'</div></section>');
   }
 

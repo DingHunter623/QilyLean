@@ -1,4 +1,4 @@
-/* QilyLean Homepage Owner Profile V2 | 2026-09-01 */
+/* QilyLean Homepage Owner Profile V3 | 2026-09-01 */
 html body[data-qily-home-conversion="v1"] .qily-home-owner-profile{
   margin-top:18px;
   padding-top:16px;
@@ -62,16 +62,27 @@ html body[data-qily-home-conversion="v1"] .qily-home-owner-profile__experience:f
   }
   html body[data-qily-home-conversion="v1"] #qily-home-collaboration .qily-home-collaboration__portrait,
   html body[data-qily-home-conversion="v1"] #qily-home-collaboration .qily-home-collaboration__roles{
+    margin:0!important;
+    align-self:stretch!important;
+    height:auto!important;
+    min-height:0!important;
+  }
+  html body[data-qily-home-conversion="v1"] #qily-home-collaboration .qily-home-collaboration__portrait img{
+    display:block!important;
+    width:100%!important;
     height:100%!important;
-    min-height:100%!important;
+    min-height:0!important;
+    max-height:none!important;
+    object-fit:cover!important;
+    object-position:center 22%!important;
   }
   html body[data-qily-home-conversion="v1"] #qily-home-collaboration .qily-home-collaboration__roles{
     align-items:stretch!important;
     grid-template-rows:minmax(0,1fr)!important;
   }
   html body[data-qily-home-conversion="v1"] #qily-home-collaboration .qily-home-role{
-    height:100%!important;
-    min-height:100%!important;
+    height:auto!important;
+    min-height:0!important;
     align-self:stretch!important;
     display:flex!important;
     flex-direction:column!important;
