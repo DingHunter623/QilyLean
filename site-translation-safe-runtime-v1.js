@@ -1,9 +1,10 @@
-/* QilyLean Google Translate Header Runtime V1.4｜unified primary + more languages｜2026-09-01
+/* QilyLean Google Translate Header Runtime V1.4｜fast-start primary + more languages｜2026-09-01
  * Chinese static HTML remains the authoritative source and default display.
  * This file is the only public translation lifecycle owner.
  * Primary control exposes 中文简体 / 中文繁体 / English / 其他.
  * “其他” opens a bounded language picker populated from Google's own supported options.
  * Google attribution remains visible; native Google translation events stay the execution path.
+ * Google library loading starts as soon as the parsed DOM can host the translator; window.load remains a one-shot safety fallback only.
  * No page text scan, MutationObserver, interval, retry loop or automatic reload loop.
  */
 (function(d,w){
@@ -281,8 +282,11 @@
   }
 
   function loadGoogleAfterPage(){
-    if(d.readyState==='complete')loadGoogleScriptOnce();
-    else w.addEventListener('load',loadGoogleScriptOnce,{once:true});
+    /* Fast path: start the only external translation dependency immediately after the parsed DOM can host the control.
+     * The load listener is retained only as an idempotent one-shot safety boundary; loadGoogleScriptOnce() exits when the script already exists.
+     */
+    loadGoogleScriptOnce();
+    if(d.readyState!=='complete')w.addEventListener('load',loadGoogleScriptOnce,{once:true});
   }
 
   function onDocumentPointer(event){
