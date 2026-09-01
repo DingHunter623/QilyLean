@@ -1,6 +1,8 @@
 /* QilyLean Homepage Conversion Runtime V1 | 2026-09-01
  * Home-only, one-shot structural owner for the approved conversion homepage.
  * No MutationObserver, polling, reload, or navigation/translation takeover.
+ * First-paint rule: when loaded from <head>, prepare immediately and run at parser-complete
+ * (readyState=interactive) instead of waiting behind deferred scripts for DOMContentLoaded.
  */
 (function(d,w){
   'use strict';
@@ -234,6 +236,14 @@
     try{d.dispatchEvent(new CustomEvent('qily:home-conversion-ready',{detail:{version:'v1'}}));}catch(error){}
   }
 
-  if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});
-  else boot();
+  if(d.readyState==='loading'){
+    var onReadyState=function(){
+      if(d.readyState==='loading')return;
+      d.removeEventListener('readystatechange',onReadyState);
+      boot();
+    };
+    d.addEventListener('readystatechange',onReadyState);
+  }else{
+    boot();
+  }
 })(document,window);
