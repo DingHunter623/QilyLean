@@ -13,13 +13,17 @@ forbid(shell,'normalizeDockButton','Shell Dock mutation');
 forbid(shell,'dockIconMarkup','Shell Dock icons');
 
 const safe=read('site-translation-safe-runtime-v1.js');
-must(safe,'Google Translate Header Runtime V1.3','Google Translate runtime');
-must(safe,'reload-free mobile closure','Non-blocking translation closure');
+must(safe,'Google Translate Header Runtime V1.4','Google Translate runtime');
 must(safe,'translate.google.com/translate_a/element.js','Google Translate embed');
 must(safe,"data-qily-translation-provider','google",'Google provider marker');
 must(safe,"data-qily-header-utility','translation'",'Translation header utility');
 must(safe,'only public translation lifecycle owner','Single translation lifecycle owner');
-must(safe,"includedLanguages:'zh-CN,zh-TW,en'",'Restricted public languages');
+must(safe,"addOption(select,'zh-CN','中文简体')",'Simplified Chinese primary language');
+must(safe,"addOption(select,'zh-TW','中文繁体')",'Traditional Chinese primary language');
+must(safe,"addOption(select,'en','English')",'English primary language');
+must(safe,"addOption(select,MORE_VALUE,'其他')",'More languages entry');
+must(safe,'function populateMoreLanguages()','Google-supported more languages');
+forbid(safe,'includedLanguages:','Expanded language picker must not restrict Google supported languages');
 must(safe,'__qilyGoogleTranslateElementInitialized','Page-lifetime initialization guard');
 must(safe,'recoverRetainedControlOnce','Bounded retained-node recovery');
 must(safe,'loadGoogleAfterPage','Post-load Google scheduling');
@@ -115,4 +119,4 @@ must(containment,'QilyLean Responsive Containment V1','Responsive containment CS
 must(containment,'overscroll-behavior-inline:contain','Local horizontal-scroll containment');
 forbid(containment,'width:100vw','Page-level viewport widening');
 
-console.log('PASS: safety/readability owners retain Dock/layout stability while post-load Google Translate stays single-shot and reload-free, and phone navigation remains natively scrollable.');
+console.log('PASS: safety/readability owners retain Dock/layout stability while post-load Google Translate V1.4 stays single-shot, offers primary + more languages, preserves provider attribution and leaves phone navigation natively scrollable.');
