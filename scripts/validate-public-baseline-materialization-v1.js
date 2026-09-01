@@ -21,4 +21,4 @@ for(const sample of ['index.html','trust/index.html','experience/index.html','pr
 const ddz=read('tools/pure-ddz/index.html');if(!ddz.includes('/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132'))failures.push('tools/pure-ddz/index.html: DDZ R12 closure absent');
 if(navPages<460)failures.push(`navigation coverage low: ${navPages}`);if(shellPages<460)failures.push(`shell coverage low: ${shellPages}`);
 if(failures.length)throw new Error(`Public materialization failed (${failures.length}):\n${failures.slice(0,50).join('\n')}`);
-console.log(`PASS: ${audited} public pages use reload-free post-load Google Translate V1.3 v16 + native Google UI v16, browser-native mobile navigation and no retired translation stack.`);
+console.log(`PASS: ${audited} public pages use post-load Google Translate V1.4 v16 + unified primary/more-language UI v16, browser-native mobile navigation and no retired translation stack.`);
