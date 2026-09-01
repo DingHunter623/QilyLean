@@ -70,7 +70,7 @@ assert(!html.includes(`<script defer id="qilyHomeConversionV1Runtime"`),'Convers
 assert(html.includes(`<script defer id="qilyHomeOwnerProfileV1Runtime" src="/site-home-owner-profile-v1.js?v=${OWNER_PROFILE_VERSION}"></script>`),'Homepage owner-profile runtime is not directly materialized');
 assert(homeMaterializer.includes('First paint must never expose the retired homepage Hero'),'Homepage materializer first-paint contract missing');
 assert(homeMaterializer.includes('const staticHero=['),'Homepage materializer must own the static approved Hero');
-assert(homeMaterializer.includes(`<script id="qilyHomeConversionV1Runtime" src="${HOME_JS}"></script>`),'Homepage materializer must keep conversion runtime outside the deferred queue');
+assert(homeMaterializer.includes('<script id="qilyHomeConversionV1Runtime" src="${HOME_JS}"></script>'),'Homepage materializer must keep conversion runtime outside the deferred queue');
 assert(homeJs.includes("d.addEventListener('readystatechange',onReadyState)"),'Homepage conversion runtime must run at parser-complete readyState');
 assert(!homeJs.includes("d.addEventListener('DOMContentLoaded',boot"),'Homepage conversion runtime regressed to DOMContentLoaded delay');
 assert(homeCss.includes('project hero -> three core deliveries -> industry scenes -> representative cases'),'Homepage conversion visual order contract missing');
