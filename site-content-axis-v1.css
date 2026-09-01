@@ -1,8 +1,9 @@
-/* QilyLean 全站内容窗口统一轴 V5｜2026-08-22
+/* QilyLean 全站内容窗口统一轴 V6｜2026-09-01
  * 目标：消除上下模块、不同页面之间 1080/1220/1240/1560px 内容窗口混用造成的浪费与错位。
  * 原则：统一内容窗口，不把弹窗/二维码/媒体等功能组件粗暴拉宽；移动端只重排，不通过缩字或横向溢出解决布局。
  * V4：封堵旧 Hero/专题页 1080/1180px 高优先级回退，并恢复编号徽章深底白字。
  * V5：统一合作页 01–06 编号的尺寸、品牌青底、白字、白色内描边与品牌金外圈。
+ * V6：首页新版转换模块、启动区与品牌延伸区纳入同一1560px内容轴；标题/说明窗口与正文同宽，不再锁定980px窄框。
  */
 :root{
   --qily-content-axis:1560px;
@@ -26,7 +27,8 @@ html body main>section{
 html body main> :is(
   .module-hero,.module-section,.qily-asset-section,.qily-system-axis,
   .qily-ia-section,.daily-hero,.daily-index-section,.daily-single-section,
-  .daily-section,.article-hub,.tool-hero,.tool-section,.section
+  .daily-section,.article-hub,.tool-hero,.tool-section,.section,
+  .qily-home-conversion-section,.qily-home-launch-section,.qily-home-brand-extension
 ){
   padding-left:var(--qily-content-axis-gutter)!important;
   padding-right:var(--qily-content-axis-gutter)!important;
@@ -37,6 +39,9 @@ html body :is(
   .qily-asset-inner,
   .qily-system-axis__inner,
   .qily-ia-inner,
+  .qily-home-conversion-inner,
+  .qily-home-brand-extension__inner,
+  .qily-home-launch,
   .module-inner,
   .article-hub-inner,
   .section-inner,
@@ -65,9 +70,11 @@ html body main> :is(
   .module-hero,.module-section,.qily-asset-section,.qily-system-axis,
   .qily-ia-section,.daily-hero,.daily-index-section,.daily-single-section,
   .daily-section,.article-hub,.tool-hero,.tool-section,.section,
-  .qily-resource-network,.qtc-section
+  .qily-resource-network,.qtc-section,.qily-home-conversion-section,
+  .qily-home-launch-section,.qily-home-brand-extension
 )> :is(
   .qily-asset-inner,.qily-system-axis__inner,.qily-ia-inner,
+  .qily-home-conversion-inner,.qily-home-brand-extension__inner,.qily-home-launch,
   .module-inner,.article-hub-inner,.section-inner,.daily-inner,
   .tool-inner,.qily-resource-network__inner,.qtc-inner,
   .page-inner,.content-inner,.archive-inner,.knowledge-inner,
@@ -99,6 +106,10 @@ html body :is(
   .qily-system-axis__steps,
   .qily-ia-grid,
   .qily-ia-delivery-summary,
+  .qily-home-card-grid,
+  .qily-home-method-grid,
+  .qily-home-deliverable-grid,
+  .qily-home-launch__route,
   .module-grid
 ){
   width:100%!important;
@@ -110,6 +121,9 @@ html body :is(
 html body :is(
   .qily-asset-heading,
   .qily-ia-heading,
+  .qily-home-conversion-heading,
+  .qily-home-brand-extension__head,
+  .qily-north-heading,
   .module-heading,
   .section-heading,
   .page-heading,
@@ -125,7 +139,10 @@ html body.qily-home-v3 main :is(
   .hero-grid,
   .qily-asset-inner,
   .qily-system-axis__inner,
-  .qily-ia-inner
+  .qily-ia-inner,
+  .qily-home-conversion-inner,
+  .qily-home-brand-extension__inner,
+  .qily-home-launch
 ){
   width:min(var(--qily-content-axis),100%)!important;
   max-width:var(--qily-content-axis)!important;
@@ -135,6 +152,7 @@ html body.qily-home-v3 main :is(
 html body main :is(
   .qily-six-grid,.qily-principle-grid,.qily-proof-strip,.qily-secondary-links,
   .qily-system-axis__steps,.qily-ia-grid,.module-grid,.project-grid,
+  .qily-home-card-grid,.qily-home-method-grid,.qily-home-deliverable-grid,.qily-home-launch__route,
   .career-full-grid,.service-grid,.brief-highlight-grid,.brief-one-point-grid,
   .formula-grid,.owner-grid,.status-grid,.brief-learning-grid
 )>*{
@@ -145,7 +163,8 @@ html body main :is(
 
 html body main :is(
   .qily-value-card,.qily-principle,.qily-proof-item,.qily-secondary-links>a,
-  .qily-system-axis__step,.module-card,.project-card,.career-full-card,.service-card,
+  .qily-system-axis__step,.qily-home-card,.qily-home-method-step,.qily-home-deliverable,
+  .qily-home-launch__step,.module-card,.project-card,.career-full-card,.service-card,
   .brief-card,.paper,.post,.article,.record,.contact-card
 ) :is(h1,h2,h3,h4,h5,h6,p,li,a,span,strong,small,td,th){
   min-width:0!important;
@@ -157,8 +176,9 @@ html body main :is(
 /* 内容本身决定换行；历史 nowrap 不能再把标题、说明、标签或操作项撑出模块。 */
 html body main>section :is(
   .module-inner,.article-hub-inner,.section-inner,.daily-inner,.tool-inner,
-  .qily-system-axis__inner,.qily-ia-inner,.qily-resource-network__inner,
-  .qtc-inner,.page-inner,.content-inner,.archive-inner,.knowledge-inner,
+  .qily-system-axis__inner,.qily-ia-inner,.qily-home-conversion-inner,
+  .qily-home-brand-extension__inner,.qily-home-launch,
+  .qily-resource-network__inner,.qtc-inner,.page-inner,.content-inner,.archive-inner,.knowledge-inner,
   .project-inner,.main-inner,.inner,.wrap,.container
 ) :is(h1,h2,h3,h4,h5,h6,p,li,dd,dt,a,button,span,strong,small,th,td,label):not(.qily-no-break){
   min-width:0!important;
@@ -169,8 +189,9 @@ html body main>section :is(
 
 html body main>section :is(
   .module-inner,.article-hub-inner,.section-inner,.daily-inner,.tool-inner,
-  .qily-system-axis__inner,.qily-ia-inner,.qily-resource-network__inner,
-  .qtc-inner,.page-inner,.content-inner,.archive-inner,.knowledge-inner,
+  .qily-system-axis__inner,.qily-ia-inner,.qily-home-conversion-inner,
+  .qily-home-brand-extension__inner,.qily-home-launch,
+  .qily-resource-network__inner,.qtc-inner,.page-inner,.content-inner,.archive-inner,.knowledge-inner,
   .project-inner,.main-inner,.inner,.wrap,.container
 ) :is(h1,h2,h3,h4,h5,h6,p,li,dd,dt,a,button,span,strong,small,label):not(.qily-no-break){
   white-space:normal!important;
@@ -178,7 +199,7 @@ html body main>section :is(
 
 html body main :is(
   .article-links,.module-subnav,.hero-actions,.module-actions,.card-actions,
-  .brief-adjacent,.daily-index-heading,.qily-ia-actions
+  .brief-adjacent,.daily-index-heading,.qily-ia-actions,.qily-home-conversion-actions
 ){
   max-width:100%!important;
   min-width:0!important;
@@ -255,6 +276,7 @@ html:root body main :is(
 @media(max-width:900px){
   html body :is(
     .qily-asset-inner,.qily-system-axis__inner,.qily-ia-inner,
+    .qily-home-conversion-inner,.qily-home-brand-extension__inner,.qily-home-launch,
     .module-inner,.article-hub-inner,.section-inner,.page-inner,.content-inner,
     .archive-inner,.knowledge-inner,.project-inner,.tool-inner,
     .daily-inner,.main-inner,.footer-inner
