@@ -16,7 +16,7 @@ const EXPECTED_SOURCE_BLOB='32a218ed835ff0518cc7e2530f37c8cfa0b05b53';
 const EXPECTED_SOURCE_BYTES=2339701;
 const ASSET_VERSION='20260831-aircraft-latest-v5';
 const HOME_VERSION='20260901-home-conversion-axis-v2';
-const HOME_JS_VERSION='20260901-home-public-brand-copy-v2';
+const HOME_JS_VERSION='20260901-home-public-brand-copy-v3';
 const HOME_VISUAL_FIX_VERSION='20260901-home-visual-fix-v2';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v2';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
@@ -67,6 +67,8 @@ assert(homeVisualFix.includes('background:rgba(7,60,71,.96)!important')&&homeVis
 assert(homeJs.includes('用工程数据解决工厂效率、质量、交付与布局问题'),'Approved homepage value proposition missing');
 assert(homeJs.includes('60分钟匹配沟通'),'Approved 60-minute conversion entry missing');
 assert(homeJs.includes('qily-home-representative-cases'),'Representative-case section missing');
+assert(homeJs.includes('以真实项目成果验证工程交付能力'),'Representative-case public-facing title missing');
+assert(homeJs.includes('聚焦高相关制造场景，让工程方法直接对应现场问题'),'Industry public-facing title missing');
 assert(homeJs.includes('qily-home-six-step-method'),'Six-step method section missing');
 assert(homeJs.includes('qily-home-standard-deliverables'),'Standard-deliverables section missing');
 assert(homeJs.includes('qily-home-collaboration'),'Principal/collaboration section missing');
@@ -75,6 +77,11 @@ assert(homeJs.includes('QILYLEAN BRAND｜启力精益品牌视觉'),'Public-faci
 assert(homeJs.includes('以制造工程为翼，让专业能力抵达更多工厂'),'Public-facing aircraft brand title missing');
 assert(!homeJs.includes('飞机模型保留，但不再占据首页首屏'),'Internal aircraft placement copy must never be public');
 assert(!homeJs.includes('不再承担第一屏转化任务'),'Internal conversion-management copy must never be public');
+assert(!homeJs.includes('每个案例只讲问题、方法、量化结果与证据等级'),'Internal case-selection copy must never be public');
+assert(!homeJs.includes('首页不堆项目数量'),'Internal homepage merchandising copy must never be public');
+assert(!homeJs.includes('首页只保留三个高相关行业入口'),'Internal homepage architecture copy must never be public');
+assert(!homeJs.includes('每一步只保留输入、判断和输出'),'Internal method-editing copy must never be public');
+assert(!homeJs.includes('不急着卖完整项目'),'Internal sales-strategy copy must never be public');
 assert(ownerProfileJs.includes('丁启利｜20年制造业工程技术与精益改善履历'),'Owner career summary title missing');
 assert(ownerProfileJs.includes('9年任职欧美企业'),'Owner career summary missing 9-year multinational experience');
 assert(ownerProfileJs.includes('4年担任上市公司工程部长'),'Owner career summary missing listed-company engineering leadership');
@@ -93,4 +100,4 @@ for(const rel of activeRuntimeFiles){
   const executable=text.split(/\r?\n/).filter(line=>!/^\s*(?:!\s*)?grep\b/.test(line)&&!line.includes("c919-approved-20260826|git show")&&!line.includes('executable legacy aircraft rollback')).join('\n');
   assert(!/git\s+fetch[^\n]*c919-approved-20260826|git\s+show[^\n]*c919-strategy-hero-v14\.png/i.test(executable),`${rel}: executable legacy aircraft rollback source is forbidden`);
 }
-console.log(`PASS: aircraft SSOT preserved as lazy extended brand asset; project-first homepage, full-width section headings, readable hero scale, high-contrast VI labels, public-facing brand copy, restored owner career summary, portrait-aligned role cards and direct experience-timeline link are guarded.`);
+console.log(`PASS: aircraft SSOT preserved as lazy extended brand asset; project-first homepage, full-width section headings, readable hero scale, high-contrast VI labels, public-facing homepage copy, restored owner career summary, portrait-aligned role cards and direct experience-timeline link are guarded.`);
