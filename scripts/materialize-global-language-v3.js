@@ -3,7 +3,7 @@
 
 /* QilyLean Sitewide Public Baseline Materializer V32｜2026-08-31
  * Chinese static HTML remains the authoritative source and default display.
- * Google Translate Header Runtime V1.3 is the single public translation provider and lifecycle owner.
+ * Google Translate Header Runtime V1.4 is the single public translation provider and lifecycle owner.
  * Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.7 owns interaction meaning and the native range navigation rail.
  * Visual System V2 remains the primary sitewide visual authority across four device compositions.
  * Unified Visual Components V29 closes reusable card/flow/diagram/table, Logo, evidence-grade and translation utility integrity.
@@ -113,4 +113,4 @@ function materialize(source,relative){
 const changed=[];
 for(const relative of trackedHtml()){const target=path.join(root,relative),source=fs.readFileSync(target,'utf8'),next=materialize(source,relative);if(next===source)continue;changed.push(relative);if(!checkOnly)fs.writeFileSync(target,next,'utf8');}
 if(checkOnly&&changed.length)throw new Error(`Sitewide Google-Translate single-runtime baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
-process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1.3 single runtime + Interaction Semantics V1.7; baseline ${BASELINE_VERSION}.\n`);
+process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1.4 single runtime + Interaction Semantics V1.7; baseline ${BASELINE_VERSION}.\n`);
