@@ -13,11 +13,11 @@ on:
 permissions:
   contents: write
 
-# This publisher and V4 Build both materialize public HTML. Use one repository-wide
-# serialization key so they cannot race while committing index.html/sitewide output.
+# V4 Build ignores this publisher's three owned files, so this visual materializer can
+# keep its own queue without racing V4 on visual-only publication changes.
 concurrency:
-  group: qily-site-materialization-main
-  cancel-in-progress: false
+  group: publish-visual-readability-v5
+  cancel-in-progress: true
 
 jobs:
   publish:
