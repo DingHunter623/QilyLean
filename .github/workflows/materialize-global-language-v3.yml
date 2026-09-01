@@ -33,6 +33,7 @@ on:
       - 'tools/pure-ddz/game/css/r8-closure-v128.css'
       - 'scripts/materialize-global-language-v3.js'
       - 'scripts/materialize-contact-route-v6.js'
+      - 'scripts/validate-r7-authoritative-runtime-20260828.js'
       - 'scripts/validate-visual-system-v2.js'
       - 'scripts/validate-responsive-containment-v1.js'
       - 'scripts/validate-sitewide-safety-readability-v1.js'
