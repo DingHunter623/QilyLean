@@ -2,6 +2,7 @@
 <!-- QilyLean focused search-authority sitemap; canonical topic URLs are governed by data/search-authority-map.json. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://qilylean.com/</loc></url>
+  <url><loc>https://qilylean.com/en/</loc></url>
   <url><loc>https://qilylean.com/tools/times26001/</loc></url>
   <url><loc>https://qilylean.com/lean-production/</loc></url>
   <url><loc>https://qilylean.com/improvements/</loc></url>
