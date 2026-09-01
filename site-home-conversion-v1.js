@@ -106,6 +106,16 @@
     return section;
   }
 
+  function buildCapabilityBuilding(){
+    return node(''
+      +'<section class="qily-home-capability-building" id="qily-home-capability-building" aria-labelledby="qily-home-capability-building-title">'
+      +'<div class="qily-home-conversion-inner">'
+      +'<span class="qily-home-capability-building__kicker">CAPABILITY BUILDING｜能力固化</span>'
+      +'<h2 id="qily-home-capability-building-title">改善的终点，不是“做完一个项目”，而是形成企业可以持续运行的能力。</h2>'
+      +'<p>QilyLean关注的不只是某个工具是否使用，而是问题有没有被定义、数据有没有统一、改善有没有验证、标准有没有固化、系统有没有运行、经验能不能复制。每一层都应当留下可审查、可交接、可复用的资产。</p>'
+      +'</div></section>');
+  }
+
   function buildDeliverables(){
     return node(''
       +'<section class="qily-home-conversion-section" id="qily-home-standard-deliverables" aria-labelledby="qily-home-deliverables-title">'
@@ -202,6 +212,7 @@
 
     var industry=buildIndustry();
     var cases=buildCases();
+    var capabilityBuilding=buildCapabilityBuilding();
     var deliverables=buildDeliverables();
     var collaboration=buildCollaboration();
     var launch=buildLaunch();
@@ -209,7 +220,8 @@
     core.after(industry);
     industry.after(cases);
     cases.after(method);
-    method.after(deliverables);
+    method.after(capabilityBuilding);
+    capabilityBuilding.after(deliverables);
     deliverables.after(collaboration);
     collaboration.after(launch);
 
