@@ -12,9 +12,11 @@ on:
 permissions:
   contents: write
 
+# V4 build and sitewide visual publisher both materialize index.html/public HTML.
+# Serialize them on main so a concurrent publisher cannot move origin/main while V4 is committing generated output.
 concurrency:
-  group: qily-v4-build-main
-  cancel-in-progress: true
+  group: qily-site-materialization-main
+  cancel-in-progress: false
 
 jobs:
   build:
