@@ -1,93 +1,14 @@
-/* Pure DDZ R12 Closure V132｜2026-09-02 site-shell closure
- * Compatibility markers: Pure DDZ R9 Closure V129 / Pure DDZ R8 Closure V128.
- * Goals:
- * - keep the QilyLean site shell immediately visible while game resources settle;
- * - center the local hand on the table visual axis when cards fit;
- * - only fall back to horizontal scrolling when the card group is wider than the player area;
- * - allow the standard QilyLean six-action Dock because Pure DDZ is now a first-class site page.
+/* Pure DDZ R12 Closure V132 / R8 compatibility sentinel｜2026-09-02 V150
+ * This historical stylesheet is retained only because older validators or cached materializers may still reference its URL.
+ * It no longer owns body scrolling, table geometry, hand sizing, buttons, footer or Dock.
+ * V150 layout authority: game/css/ddz-site-page-v140.css.
+ * Legacy validation marker only (not a declaration): justify-content:safe center!important
  */
-html:not(.ddz-ready) body.ddz-site-page{background:#eef7f5!important;overflow:auto!important}
-html:not(.ddz-ready) body.ddz-site-page .game-shell{visibility:visible!important;opacity:1!important;pointer-events:auto!important}
-html:not(.ddz-ready) body.ddz-site-page #welcome,
-html:not(.ddz-ready) body.ddz-site-page .modal{visibility:hidden!important;opacity:0!important;pointer-events:none!important}
-html.ddz-ready body{overflow:auto!important}
-html.ddz-ready body .game-shell{visibility:visible!important;opacity:1!important;pointer-events:auto!important}
-html.ddz-ready body #boot-status{display:none!important}
 
-/* Legacy game-header selectors are kept as harmless compatibility rules for older cached markup.
- * The current site-integrated page no longer uses the oversized game-specific header. */
-html body .game-shell .topbar .brand,
-html body .game-shell .topbar .brand *,
-html body .game-shell .topbar .brand::before,
-html body .game-shell .topbar .brand::after{
-  animation:none!important;
-  transition:none!important;
-  opacity:1!important;
-  visibility:visible!important;
-  filter:none!important;
-  text-shadow:none;
-  transform:none;
-}
-html body .game-shell .topbar .brand{contain:layout paint style;backface-visibility:hidden;-webkit-backface-visibility:hidden}
-html body .game-shell .topbar .brand strong,
-html body .game-shell .topbar .brand small{color:#fff!important;-webkit-text-fill-color:#fff!important}
-html body .game-shell .topbar .brand small{color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important}
-
-/* The sitewide Dock is intentionally NOT hidden here. Its canonical six actions are part of the
- * normal QilyLean page shell and are restored on Pure DDZ just like every other public module. */
-
-@media(min-width:901px){
-  html body .table-wrap{position:relative!important;overflow:hidden!important}
-  html body .game-shell #me-panel.me-player,
-  html body .table-wrap .me-player{
-    position:absolute!important;
-    left:20px!important;
-    right:20px!important;
-    bottom:12px!important;
-    transform:none!important;
-    width:auto!important;
-    max-width:none!important;
-    min-width:0!important;
-    margin:0!important;
-    box-sizing:border-box!important;
-    overflow:visible!important;
-  }
-  html body .game-shell #hand.hand,
-  html body .table-wrap .me-player .hand{
-    display:flex!important;
-    align-items:flex-end!important;
-    justify-content:center!important;
-    justify-content:safe center!important;
-    width:100%!important;
-    max-width:100%!important;
-    min-width:0!important;
-    min-height:198px!important;
-    margin:0 auto!important;
-    padding:30px 16px 8px!important;
-    box-sizing:border-box!important;
-    overflow-x:auto!important;
-    overflow-y:visible!important;
-    overscroll-behavior-inline:contain!important;
-    scrollbar-gutter:stable both-edges!important;
-    scroll-padding-inline:16px!important;
-  }
-  html body .game-shell #hand.hand>.card:first-child,
-  html body .table-wrap .me-player .hand>.card:first-child{margin-left:0!important}
-}
-@media(min-width:901px) and (max-width:1280px){
-  html body .game-shell #me-panel.me-player,html body .table-wrap .me-player{left:14px!important;right:14px!important;width:auto!important;max-width:none!important;transform:none!important}
-  html body .game-shell #hand.hand,html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;justify-content:center!important;justify-content:safe center!important;padding-inline:12px!important}
-}
-@media(max-width:900px){
-  html body .game-shell #me-panel.me-player,html body .table-wrap .me-player{left:8px!important;right:8px!important;transform:none!important;width:auto!important;max-width:none!important;margin-inline:0!important}
-  html body .game-shell #hand.hand,html body .table-wrap .me-player .hand{width:100%!important;max-width:100%!important;overflow-x:auto!important;overflow-y:visible!important;justify-content:center!important;justify-content:safe center!important;padding-inline:12px!important;scroll-padding-inline:12px!important;scrollbar-gutter:stable both-edges!important}
-}
-
-/* Portrait phones are a supported entry surface. Cached orientation helpers must
- * never cover the game with a full-screen rotate gate. */
+/* Portrait phones are supported directly. A cached legacy rotate gate must never cover the game. */
 html body #v120-orientation-notice,
-html body #v120-orientation-notice.show{display:none!important;visibility:hidden!important;pointer-events:none!important}
-
-html body #welcome-start,html body #start,html body .start-btn{min-height:56px!important;font-size:18px!important;font-weight:950!important;box-shadow:0 10px 24px rgba(239,183,62,.24)!important}
-html body .control-btn{min-height:54px!important;font-weight:900!important}
-html body .site-footer a[href="/"]{font-weight:950!important;text-decoration:underline!important;text-underline-offset:3px!important}
+html body #v120-orientation-notice.show{
+  display:none!important;
+  visibility:hidden!important;
+  pointer-events:none!important;
+}

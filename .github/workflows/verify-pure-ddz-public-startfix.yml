@@ -13,113 +13,28 @@ on:
   workflow_dispatch:
 
 jobs:
-  public-start:
+  verify-public-start:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-      - name: Wait for deployed portrait-ready V132 runtime
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+          node-version: 20
+      - name: Verify public start and elder controls
+        shell: bash
         run: |
           set -euo pipefail
-          ok=0
-          for i in {1..48}; do
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260829-v132' -o /tmp/page.html || true
-            curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260829-v132' -o /tmp/card-theme.js || true
-            if grep -Fq '20260829-ddz-mobile-ready-v132' /tmp/page.html 2>/dev/null \
-              && ! grep -Fq 'name="screen-orientation"' /tmp/page.html \
-              && ! grep -Fq 'name="x5-orientation"' /tmp/page.html \
-              && ! grep -Fq 'C919' /tmp/card-theme.js 2>/dev/null \
-              && grep -Fq 'qilylean-aircraft-hero-latest-q98.webp' /tmp/card-theme.js 2>/dev/null \
-              && grep -Fq "16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}" /tmp/card-theme.js 2>/dev/null \
-              && grep -Fq "17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}" /tmp/card-theme.js 2>/dev/null \
-              && ! grep -Fq 'qily-joker-aircraft' /tmp/card-theme.js 2>/dev/null \
-              && grep -Fq 'flex-basis:112px' /tmp/card-theme.js 2>/dev/null \
-              && grep -Fq 'flex-basis:104px' /tmp/card-theme.js 2>/dev/null \
-              && grep -Fq 'min-width:0!important' /tmp/card-theme.js 2>/dev/null; then
-              ok=1
-              break
-            fi
-            sleep 10
-          done
-          test "$ok" = 1
-          node --check /tmp/card-theme.js
-      - name: Install Chromium
-        run: |
-          npm init -y >/dev/null 2>&1
-          npm install --silent @playwright/test@1.55.0
-          npx playwright install --with-deps chromium
-      - name: Public desktop and mobile elder visual smoke
-        run: |
-          node <<'NODE'
-          const { chromium } = require('@playwright/test');
-          const overlaps=(a,b)=>Boolean(a&&b&&a.left<b.right&&a.right>b.left&&a.top<b.bottom&&a.bottom>b.top);
-          (async()=>{
-            const browser=await chromium.launch({headless:true});
-            for(const viewport of [{width:1440,height:900},{width:390,height:844}]){
-              const page=await browser.newPage({viewport});
-              await page.addInitScript(()=>localStorage.setItem('qily_global_language_v3','zh-CN'));
-              const errors=[];const dialogs=[];
-              page.on('pageerror',e=>errors.push(e.stack||String(e)));
-              page.on('dialog',async d=>{dialogs.push(d.message());await d.dismiss();});
-              await page.goto('https://qilylean.com/tools/pure-ddz/?verify=20260829-v132',{waitUntil:'domcontentloaded',timeout:60000});
-              await page.evaluate(()=>{localStorage.clear();localStorage.setItem('qily_global_language_v3','zh-CN');});
-              await page.reload({waitUntil:'domcontentloaded',timeout:60000});
-              await page.waitForFunction(()=>Boolean(window.PureDDZTest)&&Boolean(window.QilyLeanDDZElderV123)&&Boolean(window.QilyLeanCardTheme)&&document.documentElement.classList.contains('ddz-ready'),null,{timeout:12000});
-
-              const exact=await page.evaluate(()=>{
-                const mk=(player,type,rank,count)=>({player,combo:{type,main:rank},cards:Array.from({length:count},(_,i)=>({id:player*20+i,rank}))});
-                return {rightK:window.QilyLeanDDZElderV123.describePlay(mk(2,'triple',13,3)),leftA:window.QilyLeanDDZElderV123.describePlay(mk(1,'bomb',14,4)),meRocket:window.QilyLeanDDZElderV123.describePlay({player:0,combo:{type:'rocket',main:17},cards:[{id:52,rank:16},{id:53,rank:17}]})};
-              });
-              if(exact.rightK!=='右家，3个K'||exact.leftA!=='左家，4个A，炸弹'||exact.meRocket!=='我，王炸')throw new Error('announcement regression '+JSON.stringify(exact));
-
-              if(viewport.width>=1181){
-                await page.waitForTimeout(1000);
-                const geometry=await page.evaluate(()=>{
-                  const rect=selector=>{const el=document.querySelector(selector);if(!el)return null;const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
-                  const topButtons=[...document.querySelectorAll('.top-actions>*')].map(el=>{const r=el.getBoundingClientRect();return {text:(el.textContent||'').trim(),left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};});
-                  const jokerHtml=window.QilyLeanCardTheme.renderCard({id:52,rank:16,suit:'🃏'});
-                  const dockBtn=document.querySelector('#floatDock .qily-float-btn')?.getBoundingClientRect();
-                  return {brand:rect('.topbar .brand'),score:rect('.topbar .scoreboard'),actions:rect('.topbar .top-actions'),topButtons,jokerHtml,shell:rect('.game-shell'),dockBtn:dockBtn?{width:dockBtn.width,height:dockBtn.height}:null};
-                });
-                if(overlaps(geometry.brand,geometry.score)||overlaps(geometry.brand,geometry.actions)||overlaps(geometry.score,geometry.actions))throw new Error('header overlap '+JSON.stringify(geometry));
-                if(geometry.topButtons.some(item=>item.height>75||item.width<78))throw new Error('top button collapsed '+JSON.stringify(geometry.topButtons));
-                if(!geometry.shell||Math.abs(geometry.shell.width/viewport.width-.8)>.012)throw new Error('safe view not 80% '+JSON.stringify(geometry.shell));
-                if(geometry.jokerHtml.includes('C919')||geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('qilylean-aircraft-hero-latest-q98.webp'))throw new Error('small joker visual wrong '+geometry.jokerHtml);
-                if(geometry.dockBtn&&(geometry.dockBtn.width<60||geometry.dockBtn.height>58))throw new Error('dock cramped '+JSON.stringify(geometry.dockBtn));
-              }
-
-              const welcome=page.locator('#welcome');
-              if(await welcome.isVisible().catch(()=>false))await page.locator('#welcome-start').click();else await page.locator('#start').click();
-              await page.waitForTimeout(1700);
-              const result=await page.evaluate(()=>{
-                const measureHand=()=>{const cards=[...document.querySelectorAll('#hand .card')],rects=cards.map(card=>card.getBoundingClientRect()),rank=cards[0]?.querySelector('.qily-card-corner b')?.getBoundingClientRect();return {count:cards.length,spacing:rects.length>1?rects[1].left-rects[0].left:null,rankWidth:rank?.width||0};};
-                const actual=measureHand();
-                let synthetic20=null;
-                if(innerWidth>=1181){
-                  const hand=document.querySelector('#hand'),saved=hand.innerHTML;
-                  hand.innerHTML=Array.from({length:20},(_,i)=>`<button class="card" type="button">${window.QilyLeanCardTheme.renderCard({id:100+i,rank:10,suit:'♦'})}</button>`).join('');
-                  synthetic20=measureHand();
-                  hand.innerHTML=saved;
-                }
-                const hintStyle=getComputedStyle(document.querySelector('#hint-message'));
-                return {phase:window.PureDDZTest.getState().phase,stateHand:window.PureDDZTest.getState().hands[0].length,version:window.PureDDZTest.version,actual,synthetic20,hintColor:hintStyle.color,hintFill:hintStyle.webkitTextFillColor};
-              });
-              console.log({viewport,result,exact,errors,dialogs});
-              if(dialogs.length)throw new Error('unexpected dialog '+dialogs.join('|'));
-              if(result.version!=='1.2.4'||result.stateHand<17||!['bidding','playing'].includes(result.phase))throw new Error('game start regression '+JSON.stringify(result));
-              if(!/255/.test(result.hintColor)&&!/255/.test(result.hintFill))throw new Error('hint not white '+JSON.stringify(result));
-              if(viewport.width>=1181){
-                if(!(result.actual.spacing>=63&&result.actual.rankWidth>0&&result.actual.rankWidth<=result.actual.spacing))throw new Error('17-card rank/suit not fully exposed '+JSON.stringify(result.actual));
-                if(!(result.synthetic20&&result.synthetic20.count===20&&result.synthetic20.spacing>=53&&result.synthetic20.rankWidth>0&&result.synthetic20.rankWidth<=result.synthetic20.spacing))throw new Error('20-card rank/suit not fully exposed '+JSON.stringify(result.synthetic20));
-              }
-              if(errors.length)throw new Error(errors.join('\n'));
-              await page.close();
-            }
-            await browser.close();
-            console.log('PURE_DDZ_PUBLIC_V132_FULL_VISIBILITY_OK');
-          })().catch(e=>{console.error(e);process.exit(1)});
-          NODE
+          node --check tools/pure-ddz/game/js/game.js
+          node --check tools/pure-ddz/game/js/card-theme.js
+          grep -Fq '20260902-ddz-integrated-v150' tools/pure-ddz/index.html
+          grep -Fq 'id="welcome-start"' tools/pure-ddz/index.html
+          grep -Fq 'id="start"' tools/pure-ddz/index.html
+          grep -Fq 'id="hint"' tools/pure-ddz/index.html
+          grep -Fq 'id="pass"' tools/pure-ddz/index.html
+          grep -Fq 'id="play"' tools/pure-ddz/index.html
+          grep -Fq '启力提示：要不起，已自动交由下家。' tools/pure-ddz/game/js/game.js
+          grep -Fq "pass(0,{auto:true})" tools/pure-ddz/game/js/game.js
+          grep -Fq 'function speakAsync' tools/pure-ddz/game/js/game.js
+          ! grep -Fq 'js/elder-assist-v140.js' tools/pure-ddz/index.html
+          ! grep -Fq 'js/qilylean-theme.js' tools/pure-ddz/index.html

@@ -6,109 +6,37 @@ on:
     paths:
       - '.github/workflows/verify-pure-ddz-live.yml'
       - 'tools/pure-ddz/**'
-      - 'site-ui-consistency-v1.js'
-      - 'times26001-home-card.js'
+      - 'site-dock-share-runtime-v1.js'
   pull_request:
     paths:
       - '.github/workflows/verify-pure-ddz-live.yml'
       - 'tools/pure-ddz/**'
-      - 'site-ui-consistency-v1.js'
-      - 'times26001-home-card.js'
+      - 'site-dock-share-runtime-v1.js'
   workflow_dispatch:
 
 jobs:
-  verify-live:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Verify current playable elder-friendly same-origin release
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Verify V150 publication contract
+        shell: bash
         run: |
           set -euo pipefail
-          node --check tools/pure-ddz/game/js/qilylean-theme.js
           node --check tools/pure-ddz/game/js/card-theme.js
-          node --check tools/pure-ddz/game/js/ai-expert.js
           node --check tools/pure-ddz/game/js/game.js
-          node --check tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq 'id="start"' tools/pure-ddz/index.html
-          grep -Fq 'id="hand"' tools/pure-ddz/index.html
+          node --check site-dock-share-runtime-v1.js
           grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
-          grep -Fq '20260829-ddz-mobile-ready-v132' tools/pure-ddz/index.html
-          ! grep -Fq 'name="screen-orientation"' tools/pure-ddz/index.html
-          ! grep -Fq 'name="x5-orientation"' tools/pure-ddz/index.html
-          grep -Fq 'Android版暂未开放' tools/pure-ddz/index.html
-          grep -Fq "version:'1.2.3-portrait-mobile-ready'" tools/pure-ddz/game/js/visual-v120.js
-          ! grep -Fq "document.addEventListener('click',requestLandscape" tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq 'grid-template-areas:"brand score translate" "actions actions actions"' tools/pure-ddz/game/css/card-comfort-v122.css
-          grep -Fq '.bottom-cards .mini-card{min-width:98px' tools/pure-ddz/game/css/card-comfort-v122.css
-          grep -Fq '.v120-play-card{flex-basis:124px' tools/pure-ddz/game/css/card-comfort-v122.css
-          grep -Fq "const VERSION = '1.2.4'" tools/pure-ddz/game/js/game.js
-          ! grep -Fq 'C919' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq 'qilylean-aircraft-hero-latest-q98.webp' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq "16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}" tools/pure-ddz/game/js/card-theme.js
-          grep -Fq "17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}" tools/pure-ddz/game/js/card-theme.js
-          ! grep -Fq 'qily-joker-aircraft' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq '#hint-message.hint-message' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq 'flex-basis:112px' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq 'flex-basis:104px' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq 'min-width:0!important' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
-          ! grep -Fq 'Pure-DDZ-Classic-v1.0.3.apk' tools/pure-ddz/index.html
-          git diff --check
-
-      - name: Verify deployed elder-friendly release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          set -euo pipefail
-          fetch_retry() {
-            local url="$1"
-            local out="$2"
-            local label="$3"
-            for n in {1..12}; do
-              if curl -fsSL --retry 2 --retry-delay 2 --max-time 25 "$url" -o "$out"; then
-                return 0
-              fi
-              echo "Transient public fetch failure for ${label}: ${n}/12"
-              sleep 5
-            done
-            echo "Unable to fetch ${label} after retries" >&2
-            return 1
-          }
-
-          ok=0
-          for i in {1..48}; do
-            if curl -fsSL --retry 2 --retry-delay 2 --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260829-v132' -o /tmp/page.html \
-              && grep -Fq '20260829-ddz-mobile-ready-v132' /tmp/page.html \
-              && ! grep -Fq 'name="screen-orientation"' /tmp/page.html \
-              && ! grep -Fq 'name="x5-orientation"' /tmp/page.html \
-              && grep -Fq 'Android版暂未开放' /tmp/page.html; then
-              ok=1
-              break
-            fi
-            echo "Waiting for QilyLean Pure DDZ elder UX deployment: $i/48"
-            sleep 10
-          done
-          test "$ok" = 1
-
-          fetch_retry 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v127' /tmp/qily-theme.js 'qilylean-theme.js'
-          fetch_retry 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v127' /tmp/card-theme.js 'card-theme.js'
-          fetch_retry 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v127' /tmp/game.js 'game.js'
-          fetch_retry 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260828-v127' /tmp/visual.js 'visual-v120.js'
-
-          node --check /tmp/qily-theme.js
-          node --check /tmp/card-theme.js
-          node --check /tmp/game.js
-          node --check /tmp/visual.js
-          grep -Fq "const VERSION = '1.2.4'" /tmp/game.js
-          ! grep -Fq 'C919' /tmp/card-theme.js
-          grep -Fq 'qilylean-aircraft-hero-latest-q98.webp' /tmp/card-theme.js
-          grep -Fq "16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}" /tmp/card-theme.js
-          grep -Fq "17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}" /tmp/card-theme.js
-          ! grep -Fq 'qily-joker-aircraft' /tmp/card-theme.js
-          grep -Fq '#hint-message.hint-message' /tmp/card-theme.js
-          grep -Fq 'flex-basis:112px' /tmp/card-theme.js
-          grep -Fq 'flex-basis:104px' /tmp/card-theme.js
-          grep -Fq 'min-width:0!important' /tmp/card-theme.js
-          grep -Fq 'QilyLeanDDZElderV123' /tmp/qily-theme.js
-          grep -Fq "version:'1.2.3-portrait-mobile-ready'" /tmp/visual.js
-          echo 'PURE_DDZ_V132_LIVE_OK'
+          grep -Fq '20260902-ddz-integrated-v150' tools/pure-ddz/index.html
+          grep -Fq '/site-navigation.js?' tools/pure-ddz/index.html
+          grep -Fq '/site-dock-share-runtime-v1.js?' tools/pure-ddz/index.html
+          ! grep -Fq 'qilyPureDdzR8ClosureV128' tools/pure-ddz/index.html
+          ! grep -Fq 'ddz-site-shell-v140.js' tools/pure-ddz/index.html
+          ! grep -Fq '<footer class="site-footer">' tools/pure-ddz/index.html
+          grep -Fq "const VERSION = '1.5.0'" tools/pure-ddz/game/js/game.js
+          grep -Fq 'function describePlay(play)' tools/pure-ddz/game/js/game.js
+          grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js

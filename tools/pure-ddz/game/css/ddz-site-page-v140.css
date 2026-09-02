@@ -1,10 +1,10 @@
-/* QilyLean Pure DDZ site-integrated page v1.4.0｜2026-09-02
- * Goal: treat Pure DDZ as a first-class QilyLean page, not an immersive exception.
- * Outer shell follows the governed 1560px site axis; the game stage uses an elder-friendly 85% desktop working width.
+/* QilyLean Pure DDZ site-integrated layout v1.5.0｜2026-09-02
+ * One page, one layout authority.
+ * The QilyLean global header / translation / Dock are owned by the site shell and are never restyled here.
+ * Pure DDZ is only a centered content module inside the normal site page.
  */
 :root{
-  --ddz-site-axis:1560px;
-  --ddz-game-desktop-ratio:.85;
+  --ddz-game-max:1180px;
   --ddz-paper:#eef7f5;
   --ddz-ink:#173c45;
   --ddz-forest:#0f4b5a;
@@ -12,193 +12,367 @@
   --ddz-gold:#caa15f;
   --ddz-line:#d5e4e3;
 }
-html:root body.qily-pro-v24.ddz-site-page{
+html body.ddz-site-page{
   min-height:100%;
   color:var(--ddz-ink)!important;
   background:var(--ddz-paper)!important;
   overflow-x:hidden!important;
 }
-html:root body.qily-pro-v24.ddz-site-page .game-shell.ddz-site-module{
-  width:min(var(--ddz-site-axis),calc(100% - 32px))!important;
-  max-width:var(--ddz-site-axis)!important;
+html body.ddz-site-page .game-shell.ddz-site-module{
+  width:min(var(--ddz-game-max),calc(100% - 36px))!important;
+  max-width:var(--ddz-game-max)!important;
   min-width:0!important;
   min-height:0!important;
-  margin:18px auto 28px!important;
+  margin:12px auto 24px!important;
   overflow:visible!important;
   color:#fff;
   background:transparent!important;
 }
-.ddz-page-heading{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;
-  padding:18px 22px 14px;margin:0 0 12px;border:1px solid var(--ddz-line);border-radius:18px;
-  background:#fff;box-shadow:0 10px 28px rgba(15,75,90,.08);color:var(--ddz-ink)
+html body.ddz-site-page .ddz-page-heading{
+  display:flex!important;
+  align-items:center!important;
+  justify-content:space-between!important;
+  gap:16px!important;
+  width:100%!important;
+  box-sizing:border-box!important;
+  padding:9px 14px!important;
+  margin:0 0 7px!important;
+  border:1px solid var(--ddz-line)!important;
+  border-radius:14px!important;
+  background:#fff!important;
+  box-shadow:0 7px 20px rgba(15,75,90,.07)!important;
+  color:var(--ddz-ink)!important;
 }
-.ddz-page-heading .ddz-eyebrow{margin:0 0 4px;color:#8e6627;font-size:13px;font-weight:950;letter-spacing:.08em}
-.ddz-page-heading h1{margin:0;color:var(--ddz-forest);font-size:clamp(25px,2.2vw,34px);line-height:1.12}
-.ddz-page-heading p{margin:6px 0 0;color:#5f7474;font-size:15px;font-weight:700;line-height:1.5}
-.ddz-page-heading .ddz-page-note{max-width:480px;color:#5f7474;font-size:14px;font-weight:750;text-align:right}
-.ddz-toolbar{
-  display:grid;grid-template-columns:minmax(330px,.9fr) minmax(480px,1.5fr);align-items:center;gap:16px;
-  min-height:82px;padding:10px 14px;margin-bottom:10px;border:1px solid rgba(202,161,95,.72);border-radius:18px;
-  background:linear-gradient(100deg,#083f4a,#0f5963);box-shadow:0 10px 26px rgba(15,75,90,.14)
+html body.ddz-site-page .ddz-page-heading .ddz-eyebrow{margin:0 0 1px!important;color:#8e6627!important;font-size:11px!important;font-weight:950!important;letter-spacing:.06em!important}
+html body.ddz-site-page .ddz-page-heading h1{margin:0!important;color:var(--ddz-forest)!important;font-size:26px!important;line-height:1.06!important}
+html body.ddz-site-page .ddz-page-heading p{margin:3px 0 0!important;color:#5f7474!important;font-size:13px!important;font-weight:750!important;line-height:1.3!important}
+html body.ddz-site-page .ddz-page-heading .ddz-page-note{max-width:430px!important;color:#5f7474!important;font-size:12px!important;font-weight:750!important;line-height:1.35!important;text-align:right!important}
+html body.ddz-site-page .ddz-toolbar{
+  display:grid!important;
+  grid-template-columns:minmax(330px,.9fr) minmax(0,1.1fr)!important;
+  grid-template-areas:none!important;
+  align-items:center!important;
+  gap:8px!important;
+  width:100%!important;
+  min-height:54px!important;
+  box-sizing:border-box!important;
+  padding:5px 7px!important;
+  margin:0 0 7px!important;
+  border:1px solid rgba(202,161,95,.65)!important;
+  border-radius:14px!important;
+  background:linear-gradient(100deg,#083f4a,#0f5963)!important;
+  box-shadow:0 8px 20px rgba(15,75,90,.11)!important;
 }
-.ddz-toolbar .scoreboard{min-width:0;grid-template-columns:repeat(3,minmax(90px,1fr));}
-.ddz-toolbar .scoreboard div{padding:7px 10px!important}
-.ddz-toolbar .scoreboard small{font-size:14px!important}.ddz-toolbar .scoreboard strong{font-size:24px!important}
-.ddz-toolbar .top-actions{justify-content:flex-end;gap:8px;flex-wrap:wrap}
-.ddz-toolbar .top-actions button,.ddz-toolbar .top-actions .apk-inline{min-height:44px!important;padding:8px 13px!important;font-size:15px!important;border-radius:12px!important}
-.ddz-toolbar .apk-inline{min-height:44px!important}
-html:root body.qily-pro-v24.ddz-site-page .game-main{
-  width:min(calc(var(--ddz-site-axis) * var(--ddz-game-desktop-ratio)),85%)!important;
-  max-width:1326px!important;
+html body.ddz-site-page .ddz-toolbar .scoreboard{
+  grid-area:auto!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(86px,1fr))!important;
+  gap:5px!important;
+  width:100%!important;
+  min-width:0!important;
+}
+html body.ddz-site-page .ddz-toolbar .scoreboard div{min-height:42px!important;padding:3px 7px!important;border-radius:9px!important}
+html body.ddz-site-page .ddz-toolbar .scoreboard small{font-size:11px!important;line-height:1.05!important}
+html body.ddz-site-page .ddz-toolbar .scoreboard strong{font-size:19px!important;line-height:1.02!important}
+html body.ddz-site-page .ddz-toolbar .top-actions{
+  grid-area:auto!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  flex-wrap:nowrap!important;
+  gap:5px!important;
+  width:auto!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+}
+html body.ddz-site-page .ddz-toolbar :is(#audio-toggle,#help-open,#settings-open,.apk-inline,.start-btn){
+  min-width:0!important;
+  min-height:38px!important;
+  height:38px!important;
+  margin:0!important;
+  padding:5px 10px!important;
+  border-radius:9px!important;
+  font-size:13px!important;
+  line-height:1!important;
+  white-space:nowrap!important;
+}
+html body.ddz-site-page .ddz-toolbar #audio-toggle{min-width:82px!important}
+html body.ddz-site-page .ddz-toolbar #help-open,
+html body.ddz-site-page .ddz-toolbar #settings-open{min-width:50px!important}
+html body.ddz-site-page .ddz-toolbar .apk-inline{min-width:118px!important;opacity:.82!important}
+html body.ddz-site-page .ddz-toolbar .start-btn{min-width:84px!important}
+html body.ddz-site-page .game-main{
+  width:100%!important;
+  max-width:100%!important;
   min-width:0!important;
   margin:0 auto!important;
   overflow:visible!important;
-  border-radius:18px;
-  box-shadow:0 12px 34px rgba(15,75,90,.12)
+  border-radius:14px!important;
+  box-shadow:0 9px 24px rgba(15,75,90,.10)!important;
 }
-html:root body.qily-pro-v24.ddz-site-page .clean-promise{
-  min-height:34px!important;padding:5px 12px!important;border-radius:16px 16px 0 0!important;
-  font-size:14px!important
+html body.ddz-site-page .clean-promise{
+  min-height:26px!important;
+  padding:3px 9px!important;
+  border-radius:14px 14px 0 0!important;
+  font-size:12px!important;
+  line-height:1.2!important;
 }
-html:root body.qily-pro-v24.ddz-site-page .clean-promise strong{font-size:14px!important}
-html:root body.qily-pro-v24.ddz-site-page .clean-promise span{font-size:14px!important}
-html:root body.qily-pro-v24.ddz-site-page .table-wrap{
-  width:100%!important;min-height:650px!important;margin:0 auto!important;padding:14px 18px 12px!important;
-  border-radius:0 0 18px 18px!important;overflow:hidden!important;
-  background:radial-gradient(circle at 50% 38%,rgba(46,161,108,.26),transparent 36%),linear-gradient(145deg,#073f43,#0a6a4f 52%,#073c47)!important
+html body.ddz-site-page .clean-promise strong,
+html body.ddz-site-page .clean-promise span{font-size:12px!important;line-height:1.2!important}
+html body.ddz-site-page .table-wrap{
+  position:relative!important;
+  width:100%!important;
+  height:clamp(470px,calc(100vh - 235px),540px)!important;
+  min-height:470px!important;
+  max-height:540px!important;
+  box-sizing:border-box!important;
+  margin:0 auto!important;
+  padding:8px 10px!important;
+  overflow:hidden!important;
+  border-radius:0 0 14px 14px!important;
+  background:radial-gradient(circle at 50% 37%,rgba(46,161,108,.22),transparent 34%),linear-gradient(145deg,#073f43,#0a6a4f 52%,#073c47)!important;
 }
-html:root body.qily-pro-v24.ddz-site-page .table-wrap:before{inset:12px!important;border-radius:42% / 20%!important}
-html:root body.qily-pro-v24.ddz-site-page .ai{top:88px!important;width:190px!important;padding:12px 10px!important}
-html:root body.qily-pro-v24.ddz-site-page .left-player{left:18px!important}
-html:root body.qily-pro-v24.ddz-site-page .right-player{right:18px!important}
-html:root body.qily-pro-v24.ddz-site-page .player-name{font-size:21px!important}
-html:root body.qily-pro-v24.ddz-site-page .avatar{font-size:40px!important}
-html:root body.qily-pro-v24.ddz-site-page .role,
-html:root body.qily-pro-v24.ddz-site-page .count,
-html:root body.qily-pro-v24.ddz-site-page .bid-tag{font-size:14px!important}
-html:root body.qily-pro-v24.ddz-site-page .center-area{
-  width:min(620px,calc(100% - 430px))!important;padding-top:2px!important
+html body.ddz-site-page .table-wrap:before{inset:8px!important;border-radius:42% / 18%!important}
+html body.ddz-site-page .ai{
+  top:66px!important;
+  width:132px!important;
+  min-height:176px!important;
+  padding:7px 6px!important;
 }
-html:root body.qily-pro-v24.ddz-site-page .round-meta span{font-size:14px!important}
-html:root body.qily-pro-v24.ddz-site-page .bottom-zone{margin-top:4px!important}
-html:root body.qily-pro-v24.ddz-site-page .bottom-label{font-size:13px!important}
-html:root body.qily-pro-v24.ddz-site-page .bottom-cards{min-height:76px!important}
-html:root body.qily-pro-v24.ddz-site-page .bottom-cards>.mini-card{
-  flex:0 0 72px!important;min-width:72px!important;width:72px!important;max-width:72px!important;
-  height:92px!important;min-height:92px!important;max-height:92px!important;margin:3px!important;padding:5px 7px!important
+html body.ddz-site-page .left-player{left:10px!important}
+html body.ddz-site-page .right-player{right:10px!important}
+html body.ddz-site-page .avatar{font-size:30px!important}
+html body.ddz-site-page .player-name{font-size:17px!important}
+html body.ddz-site-page .role,
+html body.ddz-site-page .count,
+html body.ddz-site-page .bid-tag{font-size:12px!important}
+html body.ddz-site-page .card-backs{transform:scale(.82)!important;transform-origin:center bottom!important}
+html body.ddz-site-page .center-area{
+  width:min(430px,calc(100% - 310px))!important;
+  padding-top:0!important;
 }
-html:root body.qily-pro-v24.ddz-site-page .status{
-  min-width:250px!important;min-height:42px!important;padding:6px 15px!important;font-size:20px!important
+html body.ddz-site-page .round-meta{gap:5px!important}
+html body.ddz-site-page .round-meta span{padding:4px 8px!important;font-size:12px!important;border-width:1px!important}
+html body.ddz-site-page .bottom-zone{margin-top:1px!important}
+html body.ddz-site-page .bottom-label{font-size:11px!important}
+html body.ddz-site-page .bottom-cards{min-height:62px!important;gap:3px!important}
+html body.ddz-site-page .bottom-cards>.mini-card{
+  flex:0 0 50px!important;
+  min-width:50px!important;
+  width:50px!important;
+  max-width:50px!important;
+  height:68px!important;
+  min-height:68px!important;
+  max-height:68px!important;
+  margin:1px!important;
+  padding:3px 4px!important;
+  border-radius:8px!important;
+  border-width:1.5px!important;
 }
-/* Keep the last-play stage entirely above the hand/controls zone. */
-html:root body.qily-pro-v24.ddz-site-page .v120-play-stage{
-  top:112px!important;width:min(520px,calc(100% - 430px))!important;min-height:154px!important;
-  max-height:188px!important;padding:8px 12px!important;border-radius:18px!important
+html body.ddz-site-page .bottom-cards>.qily-mini-business b{font-size:16px!important;line-height:1!important}
+html body.ddz-site-page .bottom-cards>.qily-mini-business small{font-size:7px!important;line-height:1.05!important}
+html body.ddz-site-page .status{min-width:200px!important;min-height:30px!important;padding:3px 10px!important;font-size:15px!important}
+html body.ddz-site-page .v120-play-stage{
+  top:94px!important;
+  width:min(390px,calc(100% - 310px))!important;
+  min-height:108px!important;
+  max-height:132px!important;
+  padding:6px 8px!important;
+  border-radius:13px!important;
 }
-html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.left{left:215px!important;right:auto!important;transform:none!important}
-html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.right{right:215px!important;left:auto!important;transform:none!important}
-html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.me{left:50%!important;right:auto!important;transform:translateX(-50%)!important}
-html:root body.qily-pro-v24.ddz-site-page .v120-play-owner{font-size:18px!important;margin-bottom:6px!important}
-html:root body.qily-pro-v24.ddz-site-page .v120-play-card{
-  flex:0 0 70px!important;width:70px!important;height:104px!important;margin-left:-10px!important;border-width:2px!important
+html body.ddz-site-page .v120-play-stage.left{left:145px!important;right:auto!important;transform:none!important}
+html body.ddz-site-page .v120-play-stage.right{right:145px!important;left:auto!important;transform:none!important}
+html body.ddz-site-page .v120-play-stage.me{left:50%!important;right:auto!important;transform:translateX(-50%)!important}
+html body.ddz-site-page .v120-play-owner{font-size:15px!important;margin-bottom:3px!important}
+html body.ddz-site-page .v120-play-card{
+  flex:0 0 54px!important;
+  width:54px!important;
+  height:78px!important;
+  margin-left:-6px!important;
+  border-width:1.5px!important;
 }
-html:root body.qily-pro-v24.ddz-site-page .v120-pass-flash.me{bottom:286px!important}
-html:root body.qily-pro-v24.ddz-site-page #me-panel.me-player{
-  left:18px!important;right:18px!important;bottom:12px!important;transform:none!important;
-  width:auto!important;max-width:none!important;min-height:270px!important;padding:8px 12px 10px!important
+html body.ddz-site-page .v120-play-card:first-child{margin-left:0!important}
+html body.ddz-site-page .v120-pass-flash.me{bottom:214px!important}
+html body.ddz-site-page #me-panel.me-player{
+  position:absolute!important;
+  left:8px!important;
+  right:8px!important;
+  bottom:7px!important;
+  transform:none!important;
+  width:auto!important;
+  max-width:none!important;
+  min-width:0!important;
+  min-height:205px!important;
+  height:205px!important;
+  box-sizing:border-box!important;
+  margin:0!important;
+  padding:5px 7px 6px!important;
+  overflow:visible!important;
 }
-html:root body.qily-pro-v24.ddz-site-page .me-meta{min-height:32px!important}
-html:root body.qily-pro-v24.ddz-site-page .me-meta .avatar{font-size:28px!important}
-html:root body.qily-pro-v24.ddz-site-page .me-meta .player-name{font-size:20px!important}
-html:root body.qily-pro-v24.ddz-site-page #hand.hand{
-  width:100%!important;max-width:100%!important;min-height:150px!important;height:150px!important;
-  padding:22px 12px 5px!important;justify-content:safe center!important;overflow-x:auto!important;overflow-y:visible!important;
-  scrollbar-gutter:stable both-edges!important
+html body.ddz-site-page .me-meta{min-height:24px!important;height:24px!important;gap:6px!important}
+html body.ddz-site-page .me-meta .avatar{font-size:20px!important}
+html body.ddz-site-page .me-meta .player-name{font-size:16px!important}
+html body.ddz-site-page #hand.hand{
+  display:flex!important;
+  align-items:flex-end!important;
+  justify-content:safe center!important;
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  min-height:128px!important;
+  height:128px!important;
+  box-sizing:border-box!important;
+  margin:0 auto!important;
+  padding:5px 8px 1px!important;
+  overflow-x:auto!important;
+  overflow-y:visible!important;
+  overscroll-behavior-inline:contain!important;
+  scrollbar-gutter:stable both-edges!important;
 }
-html:root body.qily-pro-v24.ddz-site-page #hand.hand .card{
-  flex:0 0 94px!important;width:94px!important;max-width:94px!important;height:138px!important;
-  margin-left:-38px!important;padding:6px!important;border-radius:11px!important;border-width:2px!important
+html body.ddz-site-page #hand.hand .card{
+  position:relative!important;
+  flex:0 0 84px!important;
+  width:84px!important;
+  min-width:84px!important;
+  max-width:84px!important;
+  height:124px!important;
+  min-height:124px!important;
+  max-height:124px!important;
+  margin-left:-37px!important;
+  padding:5px!important;
+  border-radius:9px!important;
+  border-width:1.5px!important;
+  overflow:hidden!important;
 }
-html:root body.qily-pro-v24.ddz-site-page #hand.hand .card:first-child{margin-left:0!important}
-html:root body.qily-pro-v24.ddz-site-page #hand.hand:has(.card:nth-child(18)) .card{
-  flex-basis:90px!important;width:90px!important;max-width:90px!important;height:134px!important;margin-left:-42px!important
+html body.ddz-site-page #hand.hand .card:first-child{margin-left:0!important}
+html body.ddz-site-page #hand.hand:has(.card:nth-child(18)) .card{
+  flex-basis:82px!important;
+  width:82px!important;
+  min-width:82px!important;
+  max-width:82px!important;
+  height:122px!important;
+  min-height:122px!important;
+  max-height:122px!important;
+  margin-left:-39px!important;
 }
-html:root body.qily-pro-v24.ddz-site-page #hand.hand .qily-card-corner b{font-size:25px!important}
-html:root body.qily-pro-v24.ddz-site-page #hand.hand .qily-card-theme{inset:35px 5px 17px!important}
-html:root body.qily-pro-v24.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:18px!important}
-html:root body.qily-pro-v24.ddz-site-page #hand.hand .qily-card-theme>b{font-size:11px!important}
-html:root body.qily-pro-v24.ddz-site-page #hand.hand .qily-card-theme>em{font-size:8px!important}
-html:root body.qily-pro-v24.ddz-site-page .controls{gap:9px!important;margin-top:5px!important}
-html:root body.qily-pro-v24.ddz-site-page .control-btn{
-  min-width:118px!important;min-height:44px!important;padding:7px 16px!important;font-size:17px!important;border-radius:12px!important
+html body.ddz-site-page #hand.hand .qily-card-corner{
+  position:absolute!important;
+  left:5px!important;
+  top:5px!important;
+  z-index:6!important;
+  opacity:1!important;
+  visibility:visible!important;
 }
-html:root body.qily-pro-v24.ddz-site-page #hint-message.hint-message{
-  min-height:22px!important;margin:5px auto 0!important;padding:3px 12px!important;font-size:13px!important;line-height:1.35!important
+html body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{
+  display:block!important;
+  font-size:23px!important;
+  font-weight:1000!important;
+  line-height:.95!important;
+  letter-spacing:-.07em!important;
+  color:#172126!important;
+  -webkit-text-fill-color:#172126!important;
+  text-shadow:none!important;
 }
-html:root body.qily-pro-v24.ddz-site-page .site-footer{
-  margin-top:10px;padding:10px 14px!important;border:1px solid var(--ddz-line);border-radius:14px;
-  color:#5f7474!important;background:#fff!important;font-size:13px!important
+html body.ddz-site-page #hand.hand .qily-card--normal.qily-rule-red .qily-rank-suit-line b{color:#c62828!important;-webkit-text-fill-color:#c62828!important}
+html body.ddz-site-page #hand.hand .qily-card-theme{
+  position:absolute!important;
+  inset:34px 5px 12px!important;
+  z-index:2!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:1px!important;
+  opacity:1!important;
 }
-html:root body.qily-pro-v24.ddz-site-page .site-footer a{color:var(--ddz-forest)!important}
-html:root body.qily-pro-v24.ddz-site-page .modal{z-index:9000!important}
-/* The canonical Dock owns the lower-right corner; move the game-only scroll cue away from it. */
-html:root body.qily-pro-v24.ddz-site-page .v120-scroll-cue{right:auto!important;left:8px!important}
-
-/* Site-like responsive behavior: the 85% desktop stage becomes 100% on constrained widths. */
+html body.ddz-site-page #hand.hand .qily-card-theme>small{font-size:6px!important;line-height:1!important;opacity:.82!important}
+html body.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:15px!important;line-height:1!important;font-weight:1000!important}
+html body.ddz-site-page #hand.hand .qily-card-theme>b{font-size:9px!important;line-height:1.05!important;font-weight:950!important}
+html body.ddz-site-page #hand.hand .qily-card-theme>em{font-size:7px!important;line-height:1.05!important;font-style:normal!important;font-weight:750!important}
+html body.ddz-site-page #hand.hand .qily-card--joker .qily-card-corner b{font-size:15px!important;letter-spacing:0!important}
+html body.ddz-site-page #hand.hand .qily-card--joker .qily-card-corner i{font-size:8px!important}
+html body.ddz-site-page #hand.hand .qily-card--joker .qily-joker-visual{top:30%!important;width:84%!important;height:64%!important}
+html body.ddz-site-page .v120-play-card .qily-card-corner{left:4px!important;top:4px!important;z-index:6!important}
+html body.ddz-site-page .v120-play-card .qily-card--normal .qily-rank-suit-line b{font-size:18px!important;font-weight:1000!important;line-height:.95!important;color:#172126!important;-webkit-text-fill-color:#172126!important}
+html body.ddz-site-page .v120-play-card .qily-card--normal.qily-rule-red .qily-rank-suit-line b{color:#c62828!important;-webkit-text-fill-color:#c62828!important}
+html body.ddz-site-page .v120-play-card .qily-card-theme{inset:27px 3px 9px!important;opacity:1!important}
+html body.ddz-site-page .v120-play-card .qily-card-theme>small{font-size:5px!important}
+html body.ddz-site-page .v120-play-card .qily-card-theme>strong{font-size:11px!important}
+html body.ddz-site-page .v120-play-card .qily-card-theme>b{font-size:7px!important}
+html body.ddz-site-page .v120-play-card .qily-card-theme>em{font-size:5px!important}
+html body.ddz-site-page .controls{gap:6px!important;margin-top:1px!important;min-height:38px!important}
+html body.ddz-site-page .control-btn{
+  min-width:102px!important;
+  min-height:38px!important;
+  height:38px!important;
+  padding:5px 12px!important;
+  border-radius:9px!important;
+  font-size:15px!important;
+  font-weight:900!important;
+}
+html body.ddz-site-page #hint-message.hint-message{
+  min-height:17px!important;
+  margin:1px auto 0!important;
+  padding:1px 9px!important;
+  font-size:11px!important;
+  line-height:1.2!important;
+  border-radius:999px!important;
+}
+html body.ddz-site-page .v120-scroll-cue{display:none!important}
+html body.ddz-site-page .qily-product-overview{display:none!important}
+html body.ddz-site-page .site-footer{display:none!important}
+html body.ddz-site-page .modal{z-index:2147482800!important}
 @media(max-width:1180px){
-  html:root body.qily-pro-v24.ddz-site-page .game-shell.ddz-site-module{width:min(100% - 20px,100%)!important;margin-top:10px!important}
-  .ddz-toolbar{grid-template-columns:1fr;gap:8px;padding:9px 10px}.ddz-toolbar .top-actions{justify-content:center}
-  html:root body.qily-pro-v24.ddz-site-page .game-main{width:100%!important;max-width:100%!important}
-  html:root body.qily-pro-v24.ddz-site-page .table-wrap{min-height:660px!important}
-  html:root body.qily-pro-v24.ddz-site-page #me-panel.me-player{min-height:284px!important}
-  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage{top:120px!important;width:calc(100% - 390px)!important}
-  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.left{left:175px!important}
-  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.right{right:175px!important}
+  html body.ddz-site-page .game-shell.ddz-site-module{width:min(100% - 22px,100%)!important;margin-top:9px!important}
+  html body.ddz-site-page .ddz-toolbar{grid-template-columns:1fr!important;gap:5px!important}
+  html body.ddz-site-page .ddz-toolbar .top-actions{justify-content:center!important}
+  html body.ddz-site-page .table-wrap{height:520px!important;min-height:500px!important;max-height:540px!important}
 }
 @media(max-width:900px){
-  .ddz-page-heading{padding:14px 16px}.ddz-page-heading .ddz-page-note{max-width:none;text-align:left}
-  .ddz-toolbar .scoreboard{grid-template-columns:repeat(3,minmax(78px,1fr))}
-  html:root body.qily-pro-v24.ddz-site-page .table-wrap{min-height:625px!important;padding:10px!important}
-  html:root body.qily-pro-v24.ddz-site-page .ai{top:78px!important;width:128px!important;padding:9px 6px!important}
-  html:root body.qily-pro-v24.ddz-site-page .center-area{width:calc(100% - 280px)!important}
-  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage{top:105px!important;width:calc(100% - 280px)!important;min-height:132px!important}
-  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.left{left:122px!important}
-  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.right{right:122px!important}
-  html:root body.qily-pro-v24.ddz-site-page #me-panel.me-player{left:10px!important;right:10px!important;min-height:280px!important}
-  html:root body.qily-pro-v24.ddz-site-page #hand.hand{height:142px!important;min-height:142px!important;padding-top:18px!important}
-  html:root body.qily-pro-v24.ddz-site-page #hand.hand .card{flex-basis:66px!important;width:66px!important;height:108px!important;margin-left:-10px!important}
-  html:root body.qily-pro-v24.ddz-site-page #hand.hand:has(.card:nth-child(18)) .card{flex-basis:62px!important;width:62px!important;height:104px!important;margin-left:-12px!important}
-  html:root body.qily-pro-v24.ddz-site-page .control-btn{min-width:106px!important;font-size:16px!important}
+  html body.ddz-site-page .ddz-page-heading{align-items:flex-start!important;flex-direction:column!important;gap:4px!important;padding:8px 11px!important}
+  html body.ddz-site-page .ddz-page-heading .ddz-page-note{max-width:none!important;text-align:left!important}
+  html body.ddz-site-page .ddz-toolbar .top-actions{flex-wrap:wrap!important}
+  html body.ddz-site-page .table-wrap{height:560px!important;min-height:540px!important;padding:7px!important}
+  html body.ddz-site-page .ai{top:62px!important;width:112px!important;min-height:160px!important}
+  html body.ddz-site-page .left-player{left:6px!important}
+  html body.ddz-site-page .right-player{right:6px!important}
+  html body.ddz-site-page .center-area{width:calc(100% - 244px)!important}
+  html body.ddz-site-page .v120-play-stage{top:92px!important;width:calc(100% - 244px)!important}
+  html body.ddz-site-page .v120-play-stage.left{left:110px!important}
+  html body.ddz-site-page .v120-play-stage.right{right:110px!important}
+  html body.ddz-site-page #me-panel.me-player{left:6px!important;right:6px!important;height:218px!important;min-height:218px!important}
+  html body.ddz-site-page #hand.hand{height:138px!important;min-height:138px!important}
+  html body.ddz-site-page #hand.hand .card{flex-basis:68px!important;width:68px!important;min-width:68px!important;max-width:68px!important;height:112px!important;min-height:112px!important;max-height:112px!important;margin-left:-20px!important}
+  html body.ddz-site-page #hand.hand:has(.card:nth-child(18)) .card{flex-basis:66px!important;width:66px!important;min-width:66px!important;max-width:66px!important;height:110px!important;min-height:110px!important;max-height:110px!important;margin-left:-22px!important}
+  html body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{font-size:20px!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme{inset:31px 4px 10px!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:13px!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>b{font-size:8px!important}
+  html body.ddz-site-page .control-btn{min-width:94px!important;font-size:14px!important}
 }
 @media(max-width:680px){
-  html:root body.qily-pro-v24.ddz-site-page .game-shell.ddz-site-module{width:100%!important;margin:6px 0 18px!important}
-  .ddz-page-heading{margin:0 8px 8px;border-radius:14px}.ddz-page-heading h1{font-size:23px}.ddz-page-heading p{font-size:14px}
-  .ddz-toolbar{margin:0 8px 8px;border-radius:14px}.ddz-toolbar .top-actions{justify-content:center}.ddz-toolbar .top-actions button,.ddz-toolbar .top-actions .apk-inline{flex:1 1 44%;min-width:0!important}
-  html:root body.qily-pro-v24.ddz-site-page .game-main{border-radius:0!important;box-shadow:none!important}
-  html:root body.qily-pro-v24.ddz-site-page .clean-promise{border-radius:0!important;flex-wrap:wrap;gap:5px!important}
-  html:root body.qily-pro-v24.ddz-site-page .table-wrap{min-height:610px!important;border-radius:0!important;padding:8px 6px!important}
-  html:root body.qily-pro-v24.ddz-site-page .ai{top:72px!important;width:104px!important;padding:7px 4px!important}
-  html:root body.qily-pro-v24.ddz-site-page .left-player{left:5px!important}.right-player{right:5px!important}
-  html:root body.qily-pro-v24.ddz-site-page .avatar{font-size:30px!important}.player-name{font-size:17px!important}
-  html:root body.qily-pro-v24.ddz-site-page .center-area{width:calc(100% - 216px)!important}
-  html:root body.qily-pro-v24.ddz-site-page .status{min-width:0!important;width:100%!important;font-size:16px!important}
-  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage{top:98px!important;width:calc(100% - 176px)!important;min-height:118px!important;padding:5px 6px!important}
-  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.left{left:76px!important}.v120-play-stage.right{right:76px!important}
-  html:root body.qily-pro-v24.ddz-site-page .v120-play-card{flex-basis:56px!important;width:56px!important;height:84px!important}
-  html:root body.qily-pro-v24.ddz-site-page #me-panel.me-player{left:5px!important;right:5px!important;bottom:7px!important;min-height:286px!important;padding:6px!important}
-  html:root body.qily-pro-v24.ddz-site-page #hand.hand{justify-content:flex-start!important;height:132px!important;min-height:132px!important;padding:14px 3px 4px!important;overflow-x:auto!important}
-  html:root body.qily-pro-v24.ddz-site-page #hand.hand .card,
-  html:root body.qily-pro-v24.ddz-site-page #hand.hand:has(.card:nth-child(18)) .card{flex:0 0 58px!important;width:58px!important;max-width:58px!important;height:96px!important;margin-left:0!important}
-  html:root body.qily-pro-v24.ddz-site-page .controls{gap:6px!important}.control-btn{min-width:96px!important;min-height:44px!important;padding:7px 10px!important;font-size:15px!important}
-  html:root body.qily-pro-v24.ddz-site-page .site-footer{margin:8px;border-radius:12px}
-  html:root body.qily-pro-v24.ddz-site-page .v120-scroll-cue{left:4px!important}
-}
-@media(max-width:390px){
-  .ddz-toolbar .scoreboard small{font-size:12px!important}.ddz-toolbar .scoreboard strong{font-size:20px!important}
-  html:root body.qily-pro-v24.ddz-site-page .table-wrap{min-height:600px!important}
-  html:root body.qily-pro-v24.ddz-site-page .control-btn{min-width:88px!important;font-size:14px!important}
-}
-@media(prefers-reduced-motion:reduce){
-  html:root body.qily-pro-v24.ddz-site-page *{scroll-behavior:auto!important}
+  html body.ddz-site-page .game-shell.ddz-site-module{width:100%!important;margin:6px 0 16px!important}
+  html body.ddz-site-page .ddz-page-heading{margin:0 7px 7px!important;border-radius:12px!important}
+  html body.ddz-site-page .ddz-page-heading h1{font-size:22px!important}
+  html body.ddz-site-page .ddz-toolbar{margin:0 7px 7px!important;border-radius:12px!important}
+  html body.ddz-site-page .ddz-toolbar .scoreboard{grid-template-columns:repeat(3,minmax(72px,1fr))!important}
+  html body.ddz-site-page .ddz-toolbar .top-actions :is(button,.apk-inline){flex:1 1 30%!important;min-width:0!important}
+  html body.ddz-site-page .game-main{border-radius:0!important;box-shadow:none!important}
+  html body.ddz-site-page .clean-promise{border-radius:0!important;flex-wrap:wrap!important;gap:4px!important}
+  html body.ddz-site-page .table-wrap{height:600px!important;min-height:580px!important;border-radius:0!important;padding:6px!important}
+  html body.ddz-site-page .ai{top:70px!important;width:94px!important;min-height:150px!important;padding:6px 4px!important}
+  html body.ddz-site-page .center-area{width:calc(100% - 198px)!important}
+  html body.ddz-site-page .v120-play-stage{top:102px!important;width:calc(100% - 198px)!important;min-height:104px!important;max-height:126px!important}
+  html body.ddz-site-page .v120-play-stage.left{left:91px!important}
+  html body.ddz-site-page .v120-play-stage.right{right:91px!important}
+  html body.ddz-site-page #me-panel.me-player{left:4px!important;right:4px!important;bottom:5px!important;height:246px!important;min-height:246px!important;padding:4px!important}
+  html body.ddz-site-page #hand.hand{height:160px!important;min-height:160px!important;padding-inline:4px!important;justify-content:flex-start!important}
+  html body.ddz-site-page #hand.hand .card,
+  html body.ddz-site-page #hand.hand:has(.card:nth-child(18)) .card{flex:0 0 64px!important;width:64px!important;min-width:64px!important;max-width:64px!important;height:108px!important;min-height:108px!important;max-height:108px!important;margin-left:-8px!important}
+  html body.ddz-site-page #hand.hand .card:first-child{margin-left:0!important}
+  html body.ddz-site-page .controls{flex-wrap:nowrap!important;gap:4px!important}
+  html body.ddz-site-page .control-btn{flex:1 1 0!important;min-width:0!important;height:42px!important;min-height:42px!important;padding:5px 6px!important;font-size:14px!important}
+  html body.ddz-site-page #hint-message.hint-message{font-size:10.5px!important;white-space:normal!important}
 }

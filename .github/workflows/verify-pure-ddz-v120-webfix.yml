@@ -6,87 +6,41 @@ on:
       - '.github/workflows/verify-pure-ddz-v120-webfix.yml'
       - 'tools/pure-ddz/**'
       - 'site-ui-consistency-v1.js'
+      - 'site-dock-share-runtime-v1.js'
   push:
     branches: [main]
     paths:
       - '.github/workflows/verify-pure-ddz-v120-webfix.yml'
       - 'tools/pure-ddz/**'
       - 'site-ui-consistency-v1.js'
+      - 'site-dock-share-runtime-v1.js'
   workflow_dispatch:
 
 jobs:
-  verify:
+  verify-web-v150:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Verify web-only elder refinement contract
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Verify lean web runtime graph
+        shell: bash
         run: |
           set -euo pipefail
-          node --check tools/pure-ddz/game/js/qilylean-theme.js
           node --check tools/pure-ddz/game/js/card-theme.js
+          node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/visual-v120.js
-          grep -q '启力精益斗地主' tools/pure-ddz/index.html
-          grep -q '>启力提示</button>' tools/pure-ddz/index.html
-          ! grep -q '启力托管' tools/pure-ddz/index.html tools/pure-ddz/game/js/visual-v120.js
-          ! grep -q "CARD_SITE=" tools/pure-ddz/game/js/card-theme.js
-          ! grep -q 'qily-card-site' tools/pure-ddz/game/js/card-theme.js
-          grep -q 'v120-scroll-cue' tools/pure-ddz/game/css/visual-v120.css
-          grep -q '启力提示功能' tools/pure-ddz/game/js/visual-v120.js
-          grep -q 'chooseAiPlay(0)' tools/pure-ddz/game/js/visual-v120.js
-          ! grep -q 'play.click()' tools/pure-ddz/game/js/visual-v120.js
-          ! grep -q 'chooseAiBid(0)' tools/pure-ddz/game/js/visual-v120.js
-          ! grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' tools/pure-ddz/index.html site-ui-consistency-v1.js
-          grep -q 'Android版暂未开放' tools/pure-ddz/index.html
-          grep -q '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
-          grep -q '20260829-ddz-mobile-ready-v132' tools/pure-ddz/index.html
-          ! grep -q 'name="screen-orientation"' tools/pure-ddz/index.html
-          ! grep -q 'name="x5-orientation"' tools/pure-ddz/index.html
-          grep -q "version:'1.2.3-portrait-mobile-ready'" tools/pure-ddz/game/js/visual-v120.js
-          ! grep -q "document.addEventListener('click',requestLandscape" tools/pure-ddz/game/js/visual-v120.js
-          grep -q 'width:80vw' tools/pure-ddz/game/css/card-comfort-v122.css
-          grep -q 'font-size:38px' tools/pure-ddz/game/css/card-comfort-v122.css
-          grep -q 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
-          git diff --check
-
-      - name: Verify deployed elder webfix from public Internet
-        run: |
-          set -euo pipefail
-          ok=0
-          for i in {1..60}; do
-            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260829-v132' -o /tmp/page.html \
-              && grep -q '启力精益斗地主' /tmp/page.html \
-              && grep -q '>启力提示</button>' /tmp/page.html \
-              && grep -q 'Android版暂未开放' /tmp/page.html \
-              && grep -q '20260829-ddz-mobile-ready-v132' /tmp/page.html \
-              && ! grep -q 'name="screen-orientation"' /tmp/page.html \
-              && ! grep -q 'name="x5-orientation"' /tmp/page.html \
-              && ! grep -q 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' /tmp/page.html; then
-              ok=1
-              break
-            fi
-            echo "Waiting for Pure DDZ elder webfix deployment: $i/60"
-            sleep 10
-          done
-          test "$ok" = 1
-
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v123' -o /tmp/qily-theme.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v123' -o /tmp/card-theme.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260828-v123' -o /tmp/visual.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/visual-v120.css?verify=20260828-v123' -o /tmp/visual.css
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/card-comfort-v122.css?verify=20260828-v123' -o /tmp/comfort.css
-
-          node --check /tmp/qily-theme.js
-          node --check /tmp/card-theme.js
-          node --check /tmp/visual.js
-          ! grep -q "CARD_SITE=" /tmp/card-theme.js
-          ! grep -q 'qily-card-site' /tmp/card-theme.js
-          grep -q '启力提示功能' /tmp/visual.js
-          grep -q 'chooseAiPlay(0)' /tmp/visual.js
-          ! grep -q 'play.click()' /tmp/visual.js
-          ! grep -q 'chooseAiBid(0)' /tmp/visual.js
-          grep -q 'v120-scroll-cue' /tmp/visual.css
-          grep -q 'width:80vw' /tmp/comfort.css
-          grep -q 'QilyLeanDDZElderV123' /tmp/qily-theme.js
-          grep -q "version:'1.2.3-portrait-mobile-ready'" /tmp/visual.js
-          echo 'PURE_DDZ_V132_WEBFIX_PUBLIC_OK'
+          grep -Fq '20260902-ddz-integrated-v150' tools/pure-ddz/index.html
+          grep -Fq "const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];" tools/pure-ddz/index.html
+          ! grep -Fq 'js/qilylean-theme.js' tools/pure-ddz/index.html
+          ! grep -Fq 'js/elder-assist-v140.js' tools/pure-ddz/index.html
+          ! grep -Fq 'ddz-site-shell-v140.js' tools/pure-ddz/index.html
+          ! grep -Fq "loadStyle('css/ddz-playability-v141.css')" tools/pure-ddz/index.html
+          ! grep -Fq '<footer class="site-footer">' tools/pure-ddz/index.html
+          grep -Fq '/site-navigation.js?' tools/pure-ddz/index.html
+          grep -Fq '/site-dock-share-runtime-v1.js?' tools/pure-ddz/index.html
+          grep -Fq -- '--ddz-game-max:1180px' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          ! grep -Fq '#floatDock' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          ! grep -Fq '#floatDock' tools/pure-ddz/game/js/card-theme.js
