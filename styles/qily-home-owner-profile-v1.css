@@ -1,4 +1,4 @@
-/* QilyLean Homepage Owner Profile V3 | 2026-09-01 */
+/* QilyLean Homepage Owner Profile V4 | 2026-09-02 */
 html body[data-qily-home-conversion="v1"] .qily-home-owner-profile{
   margin-top:18px;
   padding-top:16px;
@@ -8,7 +8,7 @@ html body[data-qily-home-conversion="v1"] .qily-home-owner-profile>strong{
   display:block;
   color:#0f4b5a!important;
   -webkit-text-fill-color:#0f4b5a!important;
-  font-size:15px!important;
+  font-size:18px!important;
   font-weight:900!important;
   line-height:1.5!important;
 }
@@ -16,26 +16,26 @@ html body[data-qily-home-conversion="v1"] .qily-home-owner-profile>p{
   margin:8px 0 0!important;
   color:#526967!important;
   -webkit-text-fill-color:#526967!important;
-  font-size:14px!important;
+  font-size:18px!important;
   font-weight:560!important;
-  line-height:1.78!important;
+  line-height:1.74!important;
 }
 html body[data-qily-home-conversion="v1"] .qily-home-owner-profile__experience{
   display:inline-flex;
   align-items:center;
   justify-content:center;
-  min-height:40px;
+  min-height:44px;
   margin-top:16px;
-  padding:8px 14px;
+  padding:9px 15px;
   border:1px solid #caa15f;
   border-radius:8px;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
   background:#0f4b5a;
   text-decoration:none!important;
-  font-size:14px!important;
+  font-size:17px!important;
   font-weight:900!important;
-  line-height:1.35!important;
+  line-height:1.4!important;
   box-shadow:0 5px 14px rgba(15,75,90,.14);
   transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease,transform .18s ease;
 }
@@ -91,5 +91,12 @@ html body[data-qily-home-conversion="v1"] .qily-home-owner-profile__experience:f
 @media(max-width:980px){
   html body[data-qily-home-conversion="v1"] .qily-home-owner-profile__experience{
     width:100%;
+  }
+}
+@media(max-width:560px){
+  html body[data-qily-home-conversion="v1"] .qily-home-owner-profile>strong,
+  html body[data-qily-home-conversion="v1"] .qily-home-owner-profile>p,
+  html body[data-qily-home-conversion="v1"] .qily-home-owner-profile__experience{
+    font-size:17px!important;
   }
 }
