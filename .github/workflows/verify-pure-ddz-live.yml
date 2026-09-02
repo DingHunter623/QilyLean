@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Verify V150 publication contract
+      - name: Verify V151 publication contract
         shell: bash
         run: |
           set -euo pipefail
@@ -31,12 +31,15 @@ jobs:
           node --check tools/pure-ddz/game/js/game.js
           node --check site-dock-share-runtime-v1.js
           grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
-          grep -Fq '20260902-ddz-integrated-v150' tools/pure-ddz/index.html
+          grep -Fq '20260902-ddz-integrated-v151' tools/pure-ddz/index.html
           grep -Fq '/site-navigation.js?' tools/pure-ddz/index.html
           grep -Fq '/site-dock-share-runtime-v1.js?' tools/pure-ddz/index.html
           ! grep -Fq 'qilyPureDdzR8ClosureV128' tools/pure-ddz/index.html
           ! grep -Fq 'ddz-site-shell-v140.js' tools/pure-ddz/index.html
           ! grep -Fq '<footer class="site-footer">' tools/pure-ddz/index.html
-          grep -Fq "const VERSION = '1.5.0'" tools/pure-ddz/game/js/game.js
+          ! grep -Fq 'class="ddz-page-note"' tools/pure-ddz/index.html
+          grep -Fq '<p id="hint-message" class="hint-message" aria-hidden="true"></p>' tools/pure-ddz/index.html
+          grep -Fq "const VERSION = '1.5.1'" tools/pure-ddz/game/js/game.js
           grep -Fq 'function describePlay(play)' tools/pure-ddz/game/js/game.js
+          grep -Fq "utterance.rate=.82" tools/pure-ddz/game/js/game.js
           grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js
