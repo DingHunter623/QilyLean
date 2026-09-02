@@ -56,3 +56,5 @@ jobs:
           git commit -m 'fix(ddz): materialize iOS virtual landscape V154 [skip ci]'
           git pull --rebase origin main
           git push origin main
+
+# 2026-09-03: dedicated production trigger for the iOS Safari landscape closure.
