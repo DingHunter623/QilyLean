@@ -1,6 +1,6 @@
 name: Materialize Unified Public Baseline
 
-# Chinese is the default source. Google Translate Header Runtime V1.3 is the single public translation runtime.
+# Chinese is the default source. Google Translate Header Runtime V1.4 is the single public translation runtime.
 on:
   push:
     branches: [main]
@@ -12,6 +12,8 @@ on:
       - 'site-public-redline-closure-v2.css'
       - 'site-public-redline-closure-v2.js'
       - 'site-translation-safe-runtime-v1.js'
+      - 'site-translation-public-ui-v1.css'
+      - 'site-native-prefetch-v1.js'
       - 'visual-regression-matrix.json'
       - 'styles/qily-aircraft-brand-hero-v1.css'
       - 'site-interaction-contrast-guard-v1.js'
@@ -41,6 +43,7 @@ on:
       - 'scripts/validate-20260825-remediation-closure-v1.js'
       - 'scripts/validate-mobile-primary-navigation-v1.js'
       - 'scripts/validate-translation-single-runtime-v1.js'
+      - 'scripts/validate-performance-stability-v1.js'
       - 'scripts/validate-unified-visual-governance-v1.js'
       - 'package.json'
       - '.github/workflows/materialize-global-language-v3.yml'
@@ -67,10 +70,11 @@ jobs:
         with:
           node-version: '24'
 
-      - name: Validate V32 source baseline
+      - name: Validate V32 source baseline + performance stability
         run: |
           node --check site-ui-consistency-v1.js
           node --check site-translation-safe-runtime-v1.js
+          node --check site-native-prefetch-v1.js
           node --check site-public-redline-closure-v2.js
           node --check site-interaction-contrast-guard-v1.js
           node --check site-interaction-semantics-v1.js
@@ -91,12 +95,14 @@ jobs:
           node --check scripts/validate-20260825-remediation-closure-v1.js
           node --check scripts/validate-mobile-primary-navigation-v1.js
           node --check scripts/validate-translation-single-runtime-v1.js
+          node --check scripts/validate-performance-stability-v1.js
           node --check scripts/validate-unified-visual-governance-v1.js
           node scripts/validate-visual-system-v2.js
           node scripts/validate-responsive-containment-v1.js
           node scripts/validate-sitewide-safety-readability-v1.js
           node scripts/validate-mobile-primary-navigation-v1.js
           node scripts/validate-unified-visual-governance-v1.js
+          node scripts/validate-performance-stability-v1.js
 
       - name: Materialize, audit and publish every tracked HTML page
         shell: bash
@@ -105,7 +111,7 @@ jobs:
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
           for attempt in 1 2 3 4; do
-            echo "V32 single-translation/nav-range publish attempt ${attempt}/4"
+            echo "V32 performance-stable publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
             node scripts/validate-visual-system-v2.js
@@ -113,6 +119,7 @@ jobs:
             node scripts/validate-sitewide-safety-readability-v1.js
             node scripts/validate-mobile-primary-navigation-v1.js
             node scripts/validate-unified-visual-governance-v1.js
+            node scripts/validate-performance-stability-v1.js
             node scripts/materialize-global-language-v3.js
             node scripts/materialize-global-language-v3.js --check
             node scripts/validate-visual-system-v2.js --materialized
@@ -122,19 +129,20 @@ jobs:
             node scripts/validate-mobile-primary-navigation-v1.js
             node scripts/validate-translation-single-runtime-v1.js
             node scripts/validate-unified-visual-governance-v1.js --materialized
+            node scripts/validate-performance-stability-v1.js --materialized
             git diff --check
             if git diff --quiet; then
-              echo 'V32 public baseline already materialized on latest main.'
+              echo 'V32 performance-stable public baseline already materialized on latest main.'
               exit 0
             fi
             git add -- '*.html'
-            git commit -m 'build: materialize safe translation and native nav rail'
+            git commit -m 'build: materialize stable translation and intent-prefetch navigation'
             if git push origin HEAD:main; then
-              echo 'Google Translate V1.3 + native nav rail V1.7 materialized and audited sitewide.'
+              echo 'Google Translate stable fast-path + R7 intent-prefetch materialized and audited sitewide.'
               exit 0
             fi
             echo 'main advanced during publish; retrying from newest main.'
             sleep $((attempt * 3))
           done
-          echo 'Unable to publish V32 baseline after retries.'
+          echo 'Unable to publish V32 performance-stable baseline after retries.'
           exit 1
