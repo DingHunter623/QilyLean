@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  verify-mobile-v152:
+  verify-mobile-v153:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Verify portrait-ready integrated runtime
+      - name: Verify portrait + adaptive landscape runtime
         shell: bash
         run: |
           set -euo pipefail
@@ -41,6 +41,14 @@ jobs:
           grep -Fq 'overflow-x:auto!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
           grep -Fq 'overflow-x:clip!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/card-comfort-v122.css
+          ! grep -Fq '#floatDock' tools/pure-ddz/game/css/mobile-landscape-v153.css
+          grep -Fq 'html.ddz-mobile-landscape body.ddz-site-page' tools/pure-ddz/game/css/mobile-landscape-v153.css
+          grep -Fq 'var(--ddz-mobile-vh,390px)' tools/pure-ddz/game/css/mobile-landscape-v153.css
+          grep -Fq 'env(safe-area-inset-right)' tools/pure-ddz/game/css/mobile-landscape-v153.css
+          grep -Fq 'function syncViewportProfile()' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq 'screen.orientation?.lock' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq 'document.documentElement.requestFullscreen' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq "version:'1.2.4-mobile-landscape-adaptive'" tools/pure-ddz/game/js/visual-v120.js
           grep -Fq "const VERSION = '1.5.2'" tools/pure-ddz/game/js/game.js
-          grep -Fq '20260902-ddz-integrated-v152' tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
           grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js
