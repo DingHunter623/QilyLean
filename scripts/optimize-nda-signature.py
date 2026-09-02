@@ -38,7 +38,7 @@ def set_cell_border(cell, **kwargs):
             element.set(qn(f"w:{key}"), str(value))
 
 
-def set_cell_margins(cell, top=90, start=140, bottom=90, end=140):
+def set_cell_margins(cell, top=150, start=140, bottom=150, end=140):
     tc_pr = cell._tc.get_or_add_tcPr()
     margins = tc_pr.first_child_found_in("w:tcMar")
     if margins is None:
@@ -80,8 +80,8 @@ def style_run(run, size=9.6, bold=False, color="405E5C"):
 
 
 def add_line(paragraph, label, blank, size=9.6):
-    paragraph.paragraph_format.space_after = Pt(2)
-    paragraph.paragraph_format.line_spacing = 1.15
+    paragraph.paragraph_format.space_after = Pt(6)
+    paragraph.paragraph_format.line_spacing = 1.42
     style_run(paragraph.add_run(label), size=size)
     style_run(paragraph.add_run(blank), size=size)
 
@@ -106,6 +106,7 @@ def main():
             cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
 
     qr_cell = table.cell(0, 2).merge(table.cell(1, 2))
+    set_cell_margins(qr_cell, top=110, start=55, bottom=110, end=55)
 
     for text, column in (("委托信息", 0), ("QilyLean｜启力精益", 1)):
         cell = table.cell(0, column)
@@ -124,7 +125,8 @@ def main():
     set_cell_shading(middle, "F8FBFA")
     set_cell_no_wrap(middle)
     paragraph = middle.paragraphs[0]
-    paragraph.paragraph_format.space_after = Pt(2)
+    paragraph.paragraph_format.space_after = Pt(6)
+    paragraph.paragraph_format.line_spacing = 1.42
     style_run(paragraph.add_run("项目责任人：丁启利"))
     add_line(middle.add_paragraph(), "项目责任人签名：", "____________________")
     add_line(middle.add_paragraph(), "签署日期：", "_____年___月___日")
@@ -137,7 +139,7 @@ def main():
     paragraph = qr_cell.add_paragraph()
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
     paragraph.paragraph_format.space_after = Pt(0)
-    paragraph.add_run().add_picture(str(QR_PATH), width=Cm(2.05), height=Cm(2.05))
+    paragraph.add_run().add_picture(str(QR_PATH), width=Cm(2.45), height=Cm(2.45))
     paragraph = qr_cell.add_paragraph()
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
     paragraph.paragraph_format.space_before = Pt(0)

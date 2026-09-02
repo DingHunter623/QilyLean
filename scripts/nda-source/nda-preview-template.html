@@ -11,13 +11,13 @@
 <meta name="robots" content="index,follow,max-image-preview:large">
 <link rel="canonical" href="https://qilylean.com/trust/nda-preview.html">
 <style>
-:root{--forest:#0f4b5a;--teal:#178b94;--paper:#eef7f5;--line:#c8dad8;--muted:#526b69;--gold:#caa15f}
+:root{--forest:#0f4b5a;--teal:#178b94;--paper:#eef7f5;--line:#c8dad8;--muted:#526b69;--gold:#caa15f;--qily-content-axis:1560px;--qily-content-axis-gutter:clamp(18px,2.2vw,56px)}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:#183431;background:var(--paper);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
-.preview-head{padding:20px clamp(16px,5vw,64px);color:#fff;background:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))}.preview-inner{width:min(1220px,100%);margin:auto}.preview-head small{font-weight:850;letter-spacing:.05em}.preview-head h1{margin:6px 0;font-size:clamp(28px,4vw,46px);line-height:1.15}.preview-head p{margin:0;color:#e8f6f3;line-height:1.65}
-.preview-notice{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,5vw,64px);border-bottom:1px solid var(--line);background:#fff;color:#315f64}.preview-notice strong{color:#9e4a34}.preview-notice a{color:var(--forest);font-weight:900;text-underline-offset:.25em}
+.preview-head{padding:20px var(--qily-content-axis-gutter);color:#fff;background:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))}.preview-inner{width:min(var(--qily-content-axis),100%);margin:auto}.preview-head small{font-weight:850;letter-spacing:.05em}.preview-head h1{margin:6px 0;font-size:clamp(28px,4vw,46px);line-height:1.15}.preview-head p{margin:0;color:#e8f6f3;line-height:1.65}
+.preview-notice{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px var(--qily-content-axis-gutter);border-bottom:1px solid var(--line);background:#fff;color:#315f64}.preview-notice strong{color:#9e4a34}.preview-notice a{color:var(--forest);font-weight:900;text-underline-offset:.25em}
 .viewer-tools{position:sticky;top:0;z-index:8;display:flex;justify-content:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(238,247,245,.96);backdrop-filter:blur(10px)}.viewer-tools button{min-height:40px;padding:8px 15px;border:1px solid #9fc3c0;border-radius:999px;color:var(--forest);background:#fff;font:inherit;font-weight:900;cursor:pointer}.viewer-tools button:hover,.viewer-tools button:focus-visible{color:#fff;background:var(--forest);border-color:var(--forest);outline:3px solid rgba(202,161,95,.42);outline-offset:2px}.viewer-tools button:disabled{cursor:wait;opacity:.55}
 .viewer-tip{width:min(1220px,calc(100% - 20px));margin:14px auto 0;padding:11px 15px;border-left:4px solid var(--gold);color:var(--muted);background:#fff;line-height:1.7}
-.viewer-shell{width:min(1220px,calc(100% - 20px));margin:12px auto 30px;padding:12px;overflow:auto;border:1px solid var(--line);background:#dfe9e7;box-shadow:0 18px 46px rgba(15,75,90,.14);-webkit-overflow-scrolling:touch}.document-stage{display:flex;justify-content:center;min-width:100%}.pdf-page{display:block;background:#fff;box-shadow:0 8px 28px rgba(15,75,90,.18)}.viewer-status{padding:34px 18px;color:var(--forest);font-size:17px;font-weight:850;text-align:center;background:#fff}.viewer-status.error{color:#9e4a34}
+.viewer-shell{width:min(1220px,calc(100% - 20px));margin:12px auto 30px;padding:12px;overflow:auto;border:1px solid var(--line);background:#dfe9e7;box-shadow:0 18px 46px rgba(15,75,90,.14);-webkit-overflow-scrolling:touch}.document-stage{display:flex;justify-content:center;min-width:100%}.pdf-page{display:block;background:#fff;box-shadow:0 8px 28px rgba(15,75,90,.18)}html body .pdf-page[hidden]{display:none!important}.viewer-status{padding:34px 18px;color:var(--forest);font-size:17px;font-weight:850;text-align:center;background:#fff}.viewer-status.error{color:#9e4a34}
 @media(max-width:720px){.preview-notice{align-items:flex-start;flex-direction:column}.viewer-tools{justify-content:flex-start;overflow-x:auto}.viewer-tools button{flex:0 0 auto}.viewer-shell{padding:6px}.document-stage{justify-content:flex-start}.viewer-tip{font-size:14px}}
 @media print{body{display:none!important}}
 </style>
@@ -101,12 +101,12 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 <script>
 (function(){
   'use strict';
-  var PDF_URL='/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf?v=20260901-official-email-v3';
+  var PDF_URL='/qilylean/assets/legal/qilylean-mutual-nda-v1.pdf?v=20260902-visual-closure-v4';
   var WORKER_URL='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   var shell=document.getElementById('viewerShell');
   var canvas=document.getElementById('pdfCanvas');
   var status=document.getElementById('viewerStatus');
-  var context=canvas.getContext('2d',{alpha:false});
+  var context=canvas.getContext('2d',{alpha:true});
   var pdfPage=null;
   var zoom=1;
   var fitMode=true;
