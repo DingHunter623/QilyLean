@@ -27,13 +27,14 @@ jobs:
           set -euo pipefail
           node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/card-theme.js
-          grep -Fq '20260902-ddz-integrated-v151' tools/pure-ddz/index.html
+          grep -Fq '20260902-ddz-integrated-v152' tools/pure-ddz/index.html
           grep -Fq 'id="welcome-start"' tools/pure-ddz/index.html
           grep -Fq 'id="start"' tools/pure-ddz/index.html
           grep -Fq 'id="hint"' tools/pure-ddz/index.html
           grep -Fq 'id="pass"' tools/pure-ddz/index.html
           grep -Fq 'id="play"' tools/pure-ddz/index.html
-          grep -Fq "flash('要不起，自动轮到下家')" tools/pure-ddz/game/js/game.js
+          grep -Fq "flash('不要，自动轮到下家')" tools/pure-ddz/game/js/game.js
+          grep -Fq "auto?'不要':'您不要'" tools/pure-ddz/game/js/game.js
           grep -Fq "pass(0,{auto:true})" tools/pure-ddz/game/js/game.js
           grep -Fq 'function speakAsync' tools/pure-ddz/game/js/game.js
           grep -Fq "afterNarration(narration,()=>{state.current=nextPlayer(player);render();scheduleTurn();},1100)" tools/pure-ddz/game/js/game.js

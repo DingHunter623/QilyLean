@@ -33,7 +33,7 @@ jobs:
           set -euo pipefail
           node --check tools/pure-ddz/game/js/card-theme.js
           grep -Fq 'qily-rank-suit-line' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq "ruleRankText(card))}${escapeHtml(card.suit)}" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq 'ruleRankText(card))}${escapeHtml(card.suit)}' tools/pure-ddz/game/js/card-theme.js
           grep -Fq "3:{code:'现场'" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "5:{code:'精益'" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "7:{code:'数智'" tools/pure-ddz/game/js/card-theme.js
@@ -44,10 +44,11 @@ jobs:
           grep -Fq "13:{code:'TPM'" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "14:{code:'OEE'" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "15:{code:'FLOW'" tools/pure-ddz/game/js/card-theme.js
-          grep -Fq '20260902-ddz-integrated-v151' tools/pure-ddz/index.html
+          grep -Fq '20260902-ddz-integrated-v152' tools/pure-ddz/index.html
           grep -Fq 'color:#0f4b5a!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
           grep -Fq 'color:#173c45!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
           ! grep -Fq 'width:80vw' tools/pure-ddz/game/js/card-theme.js
           ! grep -Fq '#floatDock' tools/pure-ddz/game/js/card-theme.js
+          ! grep -Fq '#floatDock' tools/pure-ddz/game/css/card-comfort-v122.css
           test -f pure-ddz-capability-visual-v2.css
           grep -Fq 'capability-ddz-card' capabilities/index.html

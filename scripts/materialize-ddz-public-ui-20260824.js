@@ -9,14 +9,14 @@ const indexFile=path.join(root,'tools','pure-ddz','index.html');
 if(!fs.existsSync(indexFile)) throw new Error('Missing tools/pure-ddz/index.html');
 let page=fs.readFileSync(indexFile,'utf8');
 const before=page;
-const CACHE='20260902-ddz-integrated-v151';
+const CACHE='20260902-ddz-integrated-v152';
 
 // Pure DDZ is a normal QilyLean public page. Keep one integrated layout authority and one core game runtime.
 page=page.replace(/const version='[^']+';/, `const version='${CACHE}';`);
 page=page.replace(/window.__PURE_DDZ_CACHE_KEY__\|\|'[^']+'/g, `window.__PURE_DDZ_CACHE_KEY__||'${CACHE}'`);
 page=page.replace(/loadStyle\('css\/card-comfort-v\d+\.css'\)/, "loadStyle('css/card-comfort-v122.css')");
 
-// Retire page-level patch stacking. V151 owns the DDZ page layout; old V141 and R8 layout closures must stay unloaded.
+// Retire page-level patch stacking. V152 owns the DDZ page layout; old V141 and R8 layout closures must stay unloaded.
 page=page.replace(/\s*,?\s*loadStyle\('css\/ddz-playability-v141\.css'\)/g,'');
 page=page.replace(/\s*<link[^>]+qilyPureDdzR8ClosureV128[^>]*>\s*/g,'\n');
 page=page.replace(/\s*<script[^>]+ddz-site-shell-v140\.js[^>]*><\/script>\s*/g,'\n');
@@ -44,7 +44,7 @@ if(page.includes("loadStyle('css/ddz-playability-v141.css')")) throw new Error('
 if(page.includes('qilyPureDdzR8ClosureV128')) throw new Error('Legacy DDZ R8 closure must stay unloaded');
 if(page.includes('ddz-site-shell-v140.js')) throw new Error('Game-specific site shell adapter must stay unloaded');
 if(page.includes('js/qilylean-theme.js')||page.includes('js/elder-assist-v140.js')) throw new Error('Legacy observer runtimes must stay unloaded');
-if(!page.includes("const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];")) throw new Error('DDZ V151 core runtime chain is missing');
+if(!page.includes("const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];")) throw new Error('DDZ V152 core runtime chain is missing');
 if(!page.includes('/site-navigation.js?')) throw new Error('Canonical QilyLean navigation runtime is missing');
 if(!page.includes('/site-dock-share-runtime-v1.js?')) throw new Error('Canonical QilyLean Dock runtime is missing');
 if(page.includes('class="ddz-page-note"')) throw new Error('Maintenance page-note must stay removed');
@@ -59,7 +59,7 @@ if(!page.includes('<span>官网邮箱</span>')) throw new Error('官网邮箱 la
 
 if(page!==before){
   fs.writeFileSync(indexFile,page.endsWith('\n')?page:page+'\n');
-  console.log('Updated tools/pure-ddz/index.html with integrated V151 public-page runtime');
+  console.log('Updated tools/pure-ddz/index.html with integrated V152 public-page runtime');
 }else{
-  console.log('Pure DDZ integrated V151 public UI already current.');
+  console.log('Pure DDZ integrated V152 public UI already current.');
 }
