@@ -16,6 +16,15 @@ page=page.replace(/const version='[^']+';/, "const version='20260829-ddz-mobile-
 page=page.replace(/window.__PURE_DDZ_CACHE_KEY__\|\|'[^']+'/g, "window.__PURE_DDZ_CACHE_KEY__||'20260829-ddz-mobile-ready-v132'");
 page=page.replace(/loadStyle\('css\/card-comfort-v\d+\.css'\)/, "loadStyle('css/card-comfort-v122.css')");
 
+// V1.4.1 desktop playability closure must always be the final DDZ stylesheet so legacy topbar/card sizing
+// cannot inflate the new site-integrated page. The filename itself is a cache boundary; the V132 base key stays intact.
+if(!page.includes("loadStyle('css/ddz-playability-v141.css')")){
+  page=page.replace(
+    "loadStyle('css/ddz-site-page-v140.css')",
+    "loadStyle('css/ddz-site-page-v140.css'),\n        loadStyle('css/ddz-playability-v141.css')"
+  );
+}
+
 page=page.replace(/<span>企业邮箱<\/span>/g,'<span>官网邮箱</span>');
 page=page.replace(/安装包待验证后发布/g,'Android版暂未开放');
 page=page.replace(/安装包待验证/g,'Android版暂未开放');
@@ -24,6 +33,8 @@ page=page.replace(/Android：待验证后发布/g,'Android：暂未开放下载'
 if(!page.includes("const version='20260829-ddz-mobile-ready-v132';")) throw new Error('DDZ portrait-ready cache key not updated');
 if(!page.includes("window.__PURE_DDZ_CACHE_KEY__||'20260829-ddz-mobile-ready-v132'")) throw new Error('DDZ fallback cache key not updated');
 if(!page.includes("loadStyle('css/card-comfort-v122.css')")) throw new Error('DDZ comfort-scale stylesheet is missing');
+if(!page.includes("loadStyle('css/ddz-site-page-v140.css')")) throw new Error('DDZ site-page stylesheet is missing');
+if(!page.includes("loadStyle('css/ddz-playability-v141.css')")) throw new Error('DDZ 100-percent playability closure is missing');
 if(page.includes('name="screen-orientation"')||page.includes('name="x5-orientation"')) throw new Error('DDZ forced-orientation metadata must stay removed');
 if(!page.includes('__PURE_DDZ_MOBILE_DEVICE__')) throw new Error('DDZ mobile runtime marker is missing');
 if(!page.includes('__PURE_DDZ_WECHAT_WEBVIEW__')) throw new Error('DDZ WeChat-webview compatibility marker is missing');
@@ -33,7 +44,7 @@ if(!page.includes('<span>官网邮箱</span>')) throw new Error('官网邮箱 la
 
 if(page!==before){
   fs.writeFileSync(indexFile,page.endsWith('\n')?page:page+'\n');
-  console.log('Updated tools/pure-ddz/index.html with portrait-ready V132 release');
+  console.log('Updated tools/pure-ddz/index.html with portrait-ready V132 + playability V141 closure');
 }else{
-  console.log('Pure DDZ portrait-ready V132 public UI already current.');
+  console.log('Pure DDZ portrait-ready V132 + playability V141 public UI already current.');
 }
