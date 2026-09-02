@@ -15,16 +15,16 @@ const capabilities=read('capabilities/index.html');for(const token of ['PDCAé¡¹ç
 const semantics=read('site-interaction-semantics-v1.css');for(const token of ['[data-qily-interaction="static"]','cursor:default!important','transform:none!important'])must(semantics,token,'Static interaction semantics');
 
 const ddz=read('tools/pure-ddz/index.html');
-for(const token of ['20260902-ddz-integrated-v150',"const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];",'/site-navigation.js?','/site-dock-share-runtime-v1.js?'])must(ddz,token,'DDZ V150');
-for(const token of ['name="screen-orientation"','name="x5-orientation"',"loadStyle('css/ddz-playability-v141.css')",'qilyPureDdzR8ClosureV128','ddz-site-shell-v140.js','js/qilylean-theme.js','js/elder-assist-v140.js','<footer class="site-footer">'])forbid(ddz,token,'DDZ retired runtime');
+for(const token of ['20260902-ddz-integrated-v151',"const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];",'/site-navigation.js?','/site-dock-share-runtime-v1.js?','<p id="hint-message" class="hint-message" aria-hidden="true"></p>'])must(ddz,token,'DDZ V151');
+for(const token of ['name="screen-orientation"','name="x5-orientation"',"loadStyle('css/ddz-playability-v141.css')",'qilyPureDdzR8ClosureV128','ddz-site-shell-v140.js','js/qilylean-theme.js','js/elder-assist-v140.js','<footer class="site-footer">','class="ddz-page-note"'])forbid(ddz,token,'DDZ retired runtime');
 const ddzMaterializer=read('scripts/materialize-ddz-public-ui-20260824.js');
-must(ddzMaterializer,'20260902-ddz-integrated-v150','DDZ materializer');
+must(ddzMaterializer,'20260902-ddz-integrated-v151','DDZ materializer');
 must(ddzMaterializer,'Legacy DDZ V141 patch must stay unloaded','DDZ materializer');
 must(ddzMaterializer,'forced-orientation metadata must stay removed','DDZ materializer');
 const ddzGame=read('tools/pure-ddz/game/js/game.js');
-for(const token of ["const VERSION = '1.5.0'",'function describePlay(play)','function speakAsync','afterNarration(narration,scheduleTurn,700)',"pass(0,{auto:true})"])must(ddzGame,token,'DDZ core flow');
+for(const token of ["const VERSION = '1.5.1'",'function describePlay(play)','function speakAsync',"afterNarration(narration,()=>{state.current=nextPlayer(player);render();scheduleTurn();},1100)","pass(0,{auto:true})","utterance.rate=.82"])must(ddzGame,token,'DDZ core flow');
 const ddzLayout=read('tools/pure-ddz/game/css/ddz-site-page-v140.css');
-must(ddzLayout,'--ddz-game-max:1180px','DDZ integrated scale');
+for(const token of ['--ddz-game-max:var(--qily-content-axis,1560px)','height:clamp(560px,calc(100vh - 260px),620px)','#hint-message.hint-message{display:none!important}'])must(ddzLayout,token,'DDZ integrated scale');
 forbid(ddzLayout,'#floatDock','DDZ CSS must not own site Dock');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
@@ -65,4 +65,4 @@ forbid(translationCss,'qily-global-nav','Translation CSS must not own navigation
 const components=read('site-visual-components-v1.css');
 for(const token of ['qily-primary-nav-scroll-rail','::-webkit-slider-thumb','.qily-project-evidence-grade','.qily-project-list-grade'])must(components,token,'V32 visual components');
 
-console.log('PASS: V27 compatibility checks remain satisfied on the V32 Google-Translate/native-range baseline, including Dock V5.5 and the site-integrated, narration-paced DDZ V150 runtime.');
+console.log('PASS: V27 compatibility checks remain satisfied on the V32 Google-Translate/native-range baseline, including Dock V5.5 and the site-integrated, elder-paced DDZ V151 runtime.');

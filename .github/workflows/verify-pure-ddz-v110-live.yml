@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  verify-mobile-v150:
+  verify-mobile-v151:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -39,5 +39,6 @@ jobs:
           ! grep -Fq 'name="x5-orientation"' tools/pure-ddz/index.html
           grep -Fq '@media(max-width:680px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
           grep -Fq 'overflow-x:auto!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
-          grep -Fq "const VERSION = '1.5.0'" tools/pure-ddz/game/js/game.js
+          grep -Fq "const VERSION = '1.5.1'" tools/pure-ddz/game/js/game.js
+          grep -Fq '20260902-ddz-integrated-v151' tools/pure-ddz/index.html
           grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js

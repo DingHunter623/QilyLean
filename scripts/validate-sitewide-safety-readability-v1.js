@@ -56,18 +56,19 @@ must(components,'::-webkit-slider-thumb','WebKit range thumb');
 must(components,'::-moz-range-thumb','Gecko range thumb');
 
 const dock=read('site-dock-share-runtime-v1.js');
-must(dock,'Floating Dock Authoritative Runtime V5.4','Dock V5.4');
-must(dock,'__qilyFloatingDockUnifiedV54','Dock V54 guard');
+must(dock,'Floating Dock Authoritative Runtime V5.5','Dock V5.5');
+must(dock,'__qilyFloatingDockUnifiedV55','Dock V55 guard');
 must(dock,"ORDER=['home','top','back','search','current','contact']",'Dock order');
 must(dock,'setOwnedLabel','Dock label owner');
 must(dock,'function openContactPage()','Full contact action');
 must(dock,"w.open(url,'_blank','noopener,noreferrer')",'Contact new tab');
+must(dock,'function isExcluded(){return false;}','Normal public pages share the same Dock');
 forbid(dock,"mask.classList.add('show')",'Dock modal');
 if(/new\s+MutationObserver\s*\(/.test(dock))throw new Error('Dock MutationObserver forbidden');
 
 const route=read('site-contact-route-v1.js');
 must(route,'Site Shell Recovery + Contact Route V13.4','Contact V13.4');
-must(route,'__qilyFloatingDockUnifiedV54','Contact Dock V54 guard');
+must(route,'__qilyFloatingDockUnifiedV54','Contact Dock backward-compatibility guard');
 
 const header=read('site-header-axis-v1.css');
 must(header,'Global Header Axis V1.2','Header Axis');
@@ -93,13 +94,17 @@ const career=read('site-early-career-history-v1.js'),careerCss=read('site-early-
 must(career,"var VERSION = 'v5'",'Career V5');
 must(careerCss,'--qily-career-anchor-offset','Anchor CSS var');
 
-const ddz=read('tools/pure-ddz/game/css/r8-closure-v128.css');
-must(ddz,'Pure DDZ R12 Closure V132','DDZ R12');
+const ddz=read('tools/pure-ddz/game/css/ddz-site-page-v140.css');
+must(ddz,'--ddz-game-max:var(--qily-content-axis,1560px)','DDZ site content axis');
 must(ddz,'justify-content:safe center!important','Safe centered hand');
+must(ddz,'overflow-x:auto!important','DDZ hand overflow safety');
+must(ddz,'#hint-message.hint-message{display:none!important}','DDZ fixed maintenance copy hidden');
+forbid(ddz,'#floatDock','DDZ local Dock ownership');
 
 const mat=read('scripts/materialize-global-language-v3.js');
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline identity');
 must(mat,"HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8'",'Native mobile navigation owner');
+must(mat,"DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260902-authority-v55'",'Dock V55 materialization owner');
 must(mat,"VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components owner');
 must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'Google translation owner');
 must(mat,"TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16'",'Google native translation UI owner');
@@ -119,4 +124,4 @@ must(containment,'QilyLean Responsive Containment V1','Responsive containment CS
 must(containment,'overscroll-behavior-inline:contain','Local horizontal-scroll containment');
 forbid(containment,'width:100vw','Page-level viewport widening');
 
-console.log('PASS: safety/readability owners retain Dock/layout stability while post-load Google Translate V1.4 stays single-shot, offers primary + more languages, preserves provider attribution and leaves phone navigation natively scrollable.');
+console.log('PASS: safety/readability owners retain Dock/layout stability while post-load Google Translate V1.4 stays single-shot, phone navigation stays native, and DDZ V151 uses the governed site axis with elder-paced controls.');
