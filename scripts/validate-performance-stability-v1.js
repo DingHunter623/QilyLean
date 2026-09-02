@@ -49,7 +49,7 @@ must(nativeNav,'staleDocumentCacheRisk: false','stale-document reuse guard');
 const materializer=read('scripts/materialize-global-language-v3.js');
 must(materializer,`const NATIVE_PREFETCH='/site-native-prefetch-v1.js?v=20260902-intent-prefetch-v2'`,'intent-prefetch cache owner');
 must(materializer,`const TRANSLATION_FAST_REV='20260902-stable-fast-path-v2'`,'translation fast-path cache revision');
-must(materializer,`next=next.replace(/\/site-native-prefetch-v1\.js`,'sitewide intent-prefetch materialization');
+must(materializer,'NATIVE_PREFETCH);','sitewide intent-prefetch materialization');
 
 const home=read('index.html');
 must(home,'qilyR2CriticalFirstPaintGuard','first-paint guard');
