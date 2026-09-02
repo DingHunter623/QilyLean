@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  verify-v151:
+  verify-v152:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Verify integrated V151 seven-issue contract
+      - name: Verify integrated V152 screenshot-follow-up contract
         shell: bash
         run: |
           set -euo pipefail
@@ -31,7 +31,7 @@ jobs:
           node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/visual-v120.js
           node --check site-dock-share-runtime-v1.js
-          grep -Fq '20260902-ddz-integrated-v151' tools/pure-ddz/index.html
+          grep -Fq '20260902-ddz-integrated-v152' tools/pure-ddz/index.html
           grep -Fq "const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];" tools/pure-ddz/index.html
           grep -Fq "loadStyle('css/ddz-site-page-v140.css')" tools/pure-ddz/index.html
           ! grep -Fq "loadStyle('css/ddz-playability-v141.css')" tools/pure-ddz/index.html
@@ -44,16 +44,22 @@ jobs:
           ! grep -Fq 'name="screen-orientation"' tools/pure-ddz/index.html
           ! grep -Fq 'name="x5-orientation"' tools/pure-ddz/index.html
           grep -Fq -- '--ddz-game-max:var(--qily-content-axis,1560px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          grep -Fq 'overflow-x:clip!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
           grep -Fq 'height:clamp(560px,calc(100vh - 260px),620px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          grep -Fq 'scoreboard :is(small,strong,span)' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          grep -Fq 'justify-self:stretch!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
           grep -Fq '#hint-message.hint-message{display:none!important}' tools/pure-ddz/game/css/ddz-site-page-v140.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          ! grep -Fq '#floatDock' tools/pure-ddz/game/css/card-comfort-v122.css
           grep -Fq 'qily-rank-suit-line' tools/pure-ddz/game/js/card-theme.js
           grep -Fq "13:{code:'TPM'" tools/pure-ddz/game/js/card-theme.js
-          grep -Fq "const VERSION = '1.5.1'" tools/pure-ddz/game/js/game.js
+          grep -Fq "const VERSION = '1.5.2'" tools/pure-ddz/game/js/game.js
           grep -Fq 'function describePlay(play)' tools/pure-ddz/game/js/game.js
           grep -Fq 'function speakAsync' tools/pure-ddz/game/js/game.js
           grep -Fq "afterNarration(narration,()=>{state.current=nextPlayer(player);render();scheduleTurn();},1100)" tools/pure-ddz/game/js/game.js
           grep -Fq "pass(0,{auto:true})" tools/pure-ddz/game/js/game.js
+          grep -Fq "auto?'不要':'您不要'" tools/pure-ddz/game/js/game.js
+          grep -Fq "flash('不要，自动轮到下家')" tools/pure-ddz/game/js/game.js
           grep -Fq "utterance.rate=.82" tools/pure-ddz/game/js/game.js
           grep -Fq '__qilyFloatingDockUnifiedV55' site-dock-share-runtime-v1.js
           grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js
