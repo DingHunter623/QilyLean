@@ -29,7 +29,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          ref: ${{ github.event_name == 'push' && 'main' || '' }}
           fetch-depth: 2
 
       - name: Set up Node.js
