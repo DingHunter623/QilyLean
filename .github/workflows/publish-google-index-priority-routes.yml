@@ -1,0 +1,88 @@
+name: Publish Google Index Priority Routes
+
+on:
+  pull_request:
+    paths:
+      - 'data/google-index-coverage-policy.json'
+      - 'scripts/materialize-google-index-priority-routes.js'
+      - '.github/workflows/publish-google-index-priority-routes.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/google-index-coverage-policy.json'
+      - 'scripts/materialize-google-index-priority-routes.js'
+      - '.github/workflows/publish-google-index-priority-routes.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-google-index-priority-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-or-publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event_name == 'push' && 'main' || '' }}
+          fetch-depth: 2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Validate existing SEO baseline
+        run: npm run test:seo
+
+      - name: Validate priority policy and page eligibility
+        run: |
+          node --check scripts/materialize-google-index-priority-routes.js
+          node scripts/materialize-google-index-priority-routes.js
+
+      - name: Materialize sitemap-only priority routes on main
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        run: |
+          node scripts/materialize-google-index-priority-routes.js --write --check
+          npm run test:seo
+          node scripts/audit-google-index-coverage-readiness.js --write
+          git diff --check
+
+      - name: Prove change boundary
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          set -euo pipefail
+          unexpected="$(git diff --name-only | grep -Ev '^(sitemap\.xml|sitemap-core\.xml|reports/|maintenance/)' || true)"
+          if [ -n "$unexpected" ]; then
+            echo 'Unexpected files changed by sitemap materialization:' >&2
+            echo "$unexpected" >&2
+            exit 1
+          fi
+          echo 'PASS: materializer did not touch HTML, content, images, CSS, JS runtimes, robots, canonical metadata, translation or Dock.'
+
+      - name: Commit generated sitemap entries
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean Automation'
+          git config user.email 'actions@users.noreply.github.com'
+          git add sitemap.xml sitemap-core.xml
+          if git diff --cached --quiet; then
+            echo 'Priority routes already materialized.'
+            exit 0
+          fi
+          git commit -m 'seo: materialize approved index-priority routes [index-priority-generated]'
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((i*3))
+          done
+          exit 1
