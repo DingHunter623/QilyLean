@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Daily Brief Layout Guard materializer V1｜2026-08-26
+/* QilyLean Daily Brief Layout Guard materializer V1｜2026-09-02
  * Installs one final shared layout/readability stylesheet on every dated Selected Brief page.
  * Business copy and media assets are not modified.
  */
@@ -11,7 +11,7 @@ const {execFileSync}=require('child_process');
 const ROOT=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 const ID='qilyDailyBriefLayoutGuardV1';
-const HREF='/site-daily-brief-layout-guard-v1.css?v=20260826-daily-brief-layout-v1';
+const HREF='/site-daily-brief-layout-guard-v1.css?v=20260902-daily-brief-light-surface-v2';
 const TAG=`<link id="${ID}" rel="stylesheet" href="${HREF}">`;
 const DATED=/^qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html$/i;
 
@@ -43,7 +43,11 @@ const css=fs.readFileSync(path.join(ROOT,'site-daily-brief-layout-guard-v1.css')
   '.npi-gantt-label',
   'overflow-wrap:anywhere!important',
   'article.post .tags>.tag',
-  '-webkit-text-fill-color:#0f4b5a!important'
+  '-webkit-text-fill-color:#0f4b5a!important',
+  'article.post>.visual>svg>rect:first-child',
+  ':is(.visual-hero,.hero,.closing,.closing-view)',
+  'background-image:none!important',
+  'backdrop-filter:none!important'
 ].forEach(token=>{if(!css.includes(token))throw new Error(`Daily Brief layout guard CSS contract missing: ${token}`)});
 
 process.stdout.write(`Daily Brief layout guard ${checkOnly?'check passed':'materialized'}: ${count} dated brief(s), ${changed.length} changed.\n`);
