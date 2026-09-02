@@ -1,9 +1,9 @@
-/* QilyLean Homepage Conversion Visual Fix V4 | 2026-09-01
- * QILY-HOME-VI-READABILITY-V4
- * Scope: homepage public-facing VI, readable typography, capability-building statement and static-chip semantics.
+/* QilyLean Homepage Conversion Visual Fix V5 | 2026-09-02
+ * QILY-HOME-VI-READABILITY-V5
+ * Scope: homepage public-facing VI, readable typography, capability-building statement, static-chip semantics and equal-height card bottom rails.
  * Global navigation, translation, Dock, business taxonomy and conversion structure remain untouched.
  * Rule: section kickers follow the shared QilyLean gold family; public copy does not fall back to 11–15px desktop text;
- * non-routing capsules are information only and never simulate button/link feedback.
+ * non-routing capsules are information only and never simulate button/link feedback; result/evidence rails in equal-height card rows align to the shared bottom baseline.
  */
 
 html body[data-qily-home-conversion="v1"] .qily-home-conversion-hero h1{
@@ -163,6 +163,38 @@ html body[data-qily-home-conversion="v1"] .qily-home-card__result{
 html body[data-qily-home-conversion="v1"] .qily-home-card__evidence{
   font-size:16px!important;
   line-height:1.45!important;
+}
+
+/* Equal-height card bottom rail: variable copy length must not leave result/evidence content floating mid-card. */
+html body[data-qily-home-conversion="v1"] .qily-home-card-grid{
+  align-items:stretch!important;
+}
+html body[data-qily-home-conversion="v1"] .qily-home-card{
+  display:flex!important;
+  flex-direction:column!important;
+  height:100%!important;
+  min-width:0!important;
+}
+html body[data-qily-home-conversion="v1"] .qily-home-card__body{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  min-width:0!important;
+}
+html body[data-qily-home-conversion="v1"] .qily-home-card-link{
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+}
+html body[data-qily-home-conversion="v1"] .qily-home-card__result{
+  margin-top:auto!important;
+  padding-top:12px!important;
+}
+html body[data-qily-home-conversion="v1"] .qily-home-card__evidence{
+  align-self:flex-start!important;
 }
 
 html body[data-qily-home-conversion="v1"] .qily-home-method-step b{
