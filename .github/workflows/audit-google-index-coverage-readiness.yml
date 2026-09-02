@@ -1,0 +1,66 @@
+name: Audit Google Index Coverage Readiness
+
+on:
+  pull_request:
+    paths:
+      - '**.html'
+      - 'robots.txt'
+      - 'sitemap*.xml'
+      - 'data/search-authority-map.json'
+      - 'scripts/validate-seo-indexability.js'
+      - 'scripts/validate-search-authority.js'
+      - 'scripts/validate-search-engine-discovery.js'
+      - 'scripts/audit-google-index-coverage-readiness.js'
+      - '.github/workflows/audit-google-index-coverage-readiness.yml'
+  push:
+    branches: [main]
+    paths:
+      - '**.html'
+      - 'robots.txt'
+      - 'sitemap*.xml'
+      - 'data/search-authority-map.json'
+      - 'scripts/validate-seo-indexability.js'
+      - 'scripts/validate-search-authority.js'
+      - 'scripts/validate-search-engine-discovery.js'
+      - 'scripts/audit-google-index-coverage-readiness.js'
+      - '.github/workflows/audit-google-index-coverage-readiness.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: google-index-coverage-readiness-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Validate existing SEO contracts
+        run: npm run test:seo
+
+      - name: Audit repository-side index coverage readiness
+        run: node scripts/audit-google-index-coverage-readiness.js --write
+
+      - name: Upload index coverage audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qily-seo-index-coverage-readiness
+          path: |
+            reports/seo-index-coverage-readiness.json
+            reports/seo-index-coverage-candidates.txt
+          if-no-files-found: warn
+          retention-days: 30
