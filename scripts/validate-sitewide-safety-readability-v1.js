@@ -96,10 +96,19 @@ must(careerCss,'--qily-career-anchor-offset','Anchor CSS var');
 
 const ddz=read('tools/pure-ddz/game/css/ddz-site-page-v140.css');
 must(ddz,'--ddz-game-max:var(--qily-content-axis,1560px)','DDZ site content axis');
+must(ddz,'overflow-x:clip!important','DDZ sticky-header-safe page containment');
 must(ddz,'justify-content:safe center!important','Safe centered hand');
 must(ddz,'overflow-x:auto!important','DDZ hand overflow safety');
+must(ddz,'scoreboard :is(small,strong,span)','DDZ status white contrast');
+must(ddz,'justify-self:stretch!important','DDZ top actions far-right alignment');
 must(ddz,'#hint-message.hint-message{display:none!important}','DDZ fixed maintenance copy hidden');
 forbid(ddz,'#floatDock','DDZ local Dock ownership');
+const ddzComfort=read('tools/pure-ddz/game/css/card-comfort-v122.css');
+forbid(ddzComfort,'#floatDock','DDZ comfort layer local Dock ownership');
+const ddzGame=read('tools/pure-ddz/game/js/game.js');
+must(ddzGame,"const VERSION = '1.5.2'",'DDZ V152 game');
+must(ddzGame,"auto?'不要':'您不要'",'DDZ auto-pass narration');
+must(ddzGame,"flash('不要，自动轮到下家')",'DDZ auto-pass visual feedback');
 
 const mat=read('scripts/materialize-global-language-v3.js');
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline identity');
@@ -124,4 +133,4 @@ must(containment,'QilyLean Responsive Containment V1','Responsive containment CS
 must(containment,'overscroll-behavior-inline:contain','Local horizontal-scroll containment');
 forbid(containment,'width:100vw','Page-level viewport widening');
 
-console.log('PASS: safety/readability owners retain Dock/layout stability while post-load Google Translate V1.4 stays single-shot, phone navigation stays native, and DDZ V151 uses the governed site axis with elder-paced controls.');
+console.log('PASS: safety/readability owners retain official sticky Header and Dock V5.5 while DDZ V152 keeps large functional controls, white status text and safe auto-pass behavior.');
