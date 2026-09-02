@@ -55,11 +55,12 @@ jobs:
         run: node scripts/audit-google-index-coverage-readiness.js --write
 
       - name: Upload index coverage audit report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: qily-seo-index-coverage-readiness
           path: |
             reports/seo-index-coverage-readiness.json
             reports/seo-index-coverage-candidates.txt
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
