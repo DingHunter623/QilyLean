@@ -1,0 +1,65 @@
+name: Materialize trust status cards
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/patch-trust-live-status.js'
+      - 'trust/live-status.js'
+      - 'qilylean/daily/index.json'
+      - 'qilylean/site-data.json'
+      - 'qilylean/site-search-index.json'
+      - '.github/workflows/materialize-trust-status.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-trust-status-main
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      !contains(github.event.head_commit.message || '', '[trust-generated]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Materialize trust status from canonical brief data
+        run: |
+          set -euo pipefail
+          node --check scripts/patch-trust-live-status.js
+          node --check trust/live-status.js
+          node scripts/patch-trust-live-status.js
+          grep -q 'data-trust-stat="earliest-date"' trust/index.html
+          grep -q 'data-trust-stat="latest-date"' trust/index.html
+          grep -q 'qilyTrustBriefDateLinksStaticV1' trust/index.html
+          grep -q 'live-status.js?v=20260902-curated-date-links-v3' trust/index.html
+          grep -q '/qilylean/daily/2019-07-10.html' trust/index.html
+          git diff --check
+
+      - name: Commit materialized trust page
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- trust/index.html qilylean/daily-insights.html; then
+            echo 'Trust status page is already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add trust/index.html qilylean/daily-insights.html
+          git commit -m 'build(trust): materialize linked earliest and latest dates [trust-generated]'
+          git pull --rebase origin main
+          git push
