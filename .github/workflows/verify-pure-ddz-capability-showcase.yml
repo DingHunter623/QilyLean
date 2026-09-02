@@ -33,7 +33,7 @@ jobs:
           set -euo pipefail
           node --check tools/pure-ddz/game/js/card-theme.js
           grep -Fq 'qily-rank-suit-line' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq "ruleRankText(card))}${escapeHtml(card.suit)}" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq 'ruleRankText(card))}${escapeHtml(card.suit)}' tools/pure-ddz/game/js/card-theme.js
           grep -Fq "3:{code:'现场'" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "5:{code:'精益'" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "7:{code:'数智'" tools/pure-ddz/game/js/card-theme.js
