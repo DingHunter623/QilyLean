@@ -67,7 +67,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell{
   box-sizing:border-box!important;
 }
 html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell>.brief-adjacent.top,
-html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell>article.post#2026-08-25,
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell>article.post[id="2026-08-25"],
 html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell>.brief-feedback{
   width:100%!important;
   max-width:100%!important;
