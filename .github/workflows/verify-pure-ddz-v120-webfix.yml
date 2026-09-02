@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  verify-web-v152:
+  verify-web-v153:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -32,8 +32,9 @@ jobs:
           node --check tools/pure-ddz/game/js/card-theme.js
           node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq '20260902-ddz-integrated-v152' tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
           grep -Fq "const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];" tools/pure-ddz/index.html
+          grep -Fq "loadStyle('css/mobile-landscape-v153.css')" tools/pure-ddz/index.html
           ! grep -Fq 'js/qilylean-theme.js' tools/pure-ddz/index.html
           ! grep -Fq 'js/elder-assist-v140.js' tools/pure-ddz/index.html
           ! grep -Fq 'ddz-site-shell-v140.js' tools/pure-ddz/index.html
@@ -47,4 +48,7 @@ jobs:
           grep -Fq 'height:clamp(560px,calc(100vh - 260px),620px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/ddz-site-page-v140.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/card-comfort-v122.css
+          ! grep -Fq '#floatDock' tools/pure-ddz/game/css/mobile-landscape-v153.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/js/card-theme.js
+          grep -Fq 'function syncViewportProfile()' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq 'window.PureDDZTest.hint()' tools/pure-ddz/game/js/visual-v120.js
