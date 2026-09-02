@@ -1,0 +1,204 @@
+/* QilyLean Pure DDZ site-integrated page v1.4.0｜2026-09-02
+ * Goal: treat Pure DDZ as a first-class QilyLean page, not an immersive exception.
+ * Outer shell follows the governed 1560px site axis; the game stage uses an elder-friendly 85% desktop working width.
+ */
+:root{
+  --ddz-site-axis:1560px;
+  --ddz-game-desktop-ratio:.85;
+  --ddz-paper:#eef7f5;
+  --ddz-ink:#173c45;
+  --ddz-forest:#0f4b5a;
+  --ddz-teal:#177f87;
+  --ddz-gold:#caa15f;
+  --ddz-line:#d5e4e3;
+}
+html:root body.qily-pro-v24.ddz-site-page{
+  min-height:100%;
+  color:var(--ddz-ink)!important;
+  background:var(--ddz-paper)!important;
+  overflow-x:hidden!important;
+}
+html:root body.qily-pro-v24.ddz-site-page .game-shell.ddz-site-module{
+  width:min(var(--ddz-site-axis),calc(100% - 32px))!important;
+  max-width:var(--ddz-site-axis)!important;
+  min-width:0!important;
+  min-height:0!important;
+  margin:18px auto 28px!important;
+  overflow:visible!important;
+  color:#fff;
+  background:transparent!important;
+}
+.ddz-page-heading{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;
+  padding:18px 22px 14px;margin:0 0 12px;border:1px solid var(--ddz-line);border-radius:18px;
+  background:#fff;box-shadow:0 10px 28px rgba(15,75,90,.08);color:var(--ddz-ink)
+}
+.ddz-page-heading .ddz-eyebrow{margin:0 0 4px;color:#8e6627;font-size:13px;font-weight:950;letter-spacing:.08em}
+.ddz-page-heading h1{margin:0;color:var(--ddz-forest);font-size:clamp(25px,2.2vw,34px);line-height:1.12}
+.ddz-page-heading p{margin:6px 0 0;color:#5f7474;font-size:15px;font-weight:700;line-height:1.5}
+.ddz-page-heading .ddz-page-note{max-width:480px;color:#5f7474;font-size:14px;font-weight:750;text-align:right}
+.ddz-toolbar{
+  display:grid;grid-template-columns:minmax(330px,.9fr) minmax(480px,1.5fr);align-items:center;gap:16px;
+  min-height:82px;padding:10px 14px;margin-bottom:10px;border:1px solid rgba(202,161,95,.72);border-radius:18px;
+  background:linear-gradient(100deg,#083f4a,#0f5963);box-shadow:0 10px 26px rgba(15,75,90,.14)
+}
+.ddz-toolbar .scoreboard{min-width:0;grid-template-columns:repeat(3,minmax(90px,1fr));}
+.ddz-toolbar .scoreboard div{padding:7px 10px!important}
+.ddz-toolbar .scoreboard small{font-size:14px!important}.ddz-toolbar .scoreboard strong{font-size:24px!important}
+.ddz-toolbar .top-actions{justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.ddz-toolbar .top-actions button,.ddz-toolbar .top-actions .apk-inline{min-height:44px!important;padding:8px 13px!important;font-size:15px!important;border-radius:12px!important}
+.ddz-toolbar .apk-inline{min-height:44px!important}
+html:root body.qily-pro-v24.ddz-site-page .game-main{
+  width:min(calc(var(--ddz-site-axis) * var(--ddz-game-desktop-ratio)),85%)!important;
+  max-width:1326px!important;
+  min-width:0!important;
+  margin:0 auto!important;
+  overflow:visible!important;
+  border-radius:18px;
+  box-shadow:0 12px 34px rgba(15,75,90,.12)
+}
+html:root body.qily-pro-v24.ddz-site-page .clean-promise{
+  min-height:34px!important;padding:5px 12px!important;border-radius:16px 16px 0 0!important;
+  font-size:14px!important
+}
+html:root body.qily-pro-v24.ddz-site-page .clean-promise strong{font-size:14px!important}
+html:root body.qily-pro-v24.ddz-site-page .clean-promise span{font-size:14px!important}
+html:root body.qily-pro-v24.ddz-site-page .table-wrap{
+  width:100%!important;min-height:650px!important;margin:0 auto!important;padding:14px 18px 12px!important;
+  border-radius:0 0 18px 18px!important;overflow:hidden!important;
+  background:radial-gradient(circle at 50% 38%,rgba(46,161,108,.26),transparent 36%),linear-gradient(145deg,#073f43,#0a6a4f 52%,#073c47)!important
+}
+html:root body.qily-pro-v24.ddz-site-page .table-wrap:before{inset:12px!important;border-radius:42% / 20%!important}
+html:root body.qily-pro-v24.ddz-site-page .ai{top:88px!important;width:190px!important;padding:12px 10px!important}
+html:root body.qily-pro-v24.ddz-site-page .left-player{left:18px!important}
+html:root body.qily-pro-v24.ddz-site-page .right-player{right:18px!important}
+html:root body.qily-pro-v24.ddz-site-page .player-name{font-size:21px!important}
+html:root body.qily-pro-v24.ddz-site-page .avatar{font-size:40px!important}
+html:root body.qily-pro-v24.ddz-site-page .role,
+html:root body.qily-pro-v24.ddz-site-page .count,
+html:root body.qily-pro-v24.ddz-site-page .bid-tag{font-size:14px!important}
+html:root body.qily-pro-v24.ddz-site-page .center-area{
+  width:min(620px,calc(100% - 430px))!important;padding-top:2px!important
+}
+html:root body.qily-pro-v24.ddz-site-page .round-meta span{font-size:14px!important}
+html:root body.qily-pro-v24.ddz-site-page .bottom-zone{margin-top:4px!important}
+html:root body.qily-pro-v24.ddz-site-page .bottom-label{font-size:13px!important}
+html:root body.qily-pro-v24.ddz-site-page .bottom-cards{min-height:76px!important}
+html:root body.qily-pro-v24.ddz-site-page .bottom-cards>.mini-card{
+  flex:0 0 72px!important;min-width:72px!important;width:72px!important;max-width:72px!important;
+  height:92px!important;min-height:92px!important;max-height:92px!important;margin:3px!important;padding:5px 7px!important
+}
+html:root body.qily-pro-v24.ddz-site-page .status{
+  min-width:250px!important;min-height:42px!important;padding:6px 15px!important;font-size:20px!important
+}
+/* Keep the last-play stage entirely above the hand/controls zone. */
+html:root body.qily-pro-v24.ddz-site-page .v120-play-stage{
+  top:112px!important;width:min(520px,calc(100% - 430px))!important;min-height:154px!important;
+  max-height:188px!important;padding:8px 12px!important;border-radius:18px!important
+}
+html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.left{left:215px!important;right:auto!important;transform:none!important}
+html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.right{right:215px!important;left:auto!important;transform:none!important}
+html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.me{left:50%!important;right:auto!important;transform:translateX(-50%)!important}
+html:root body.qily-pro-v24.ddz-site-page .v120-play-owner{font-size:18px!important;margin-bottom:6px!important}
+html:root body.qily-pro-v24.ddz-site-page .v120-play-card{
+  flex:0 0 70px!important;width:70px!important;height:104px!important;margin-left:-10px!important;border-width:2px!important
+}
+html:root body.qily-pro-v24.ddz-site-page .v120-pass-flash.me{bottom:286px!important}
+html:root body.qily-pro-v24.ddz-site-page #me-panel.me-player{
+  left:18px!important;right:18px!important;bottom:12px!important;transform:none!important;
+  width:auto!important;max-width:none!important;min-height:270px!important;padding:8px 12px 10px!important
+}
+html:root body.qily-pro-v24.ddz-site-page .me-meta{min-height:32px!important}
+html:root body.qily-pro-v24.ddz-site-page .me-meta .avatar{font-size:28px!important}
+html:root body.qily-pro-v24.ddz-site-page .me-meta .player-name{font-size:20px!important}
+html:root body.qily-pro-v24.ddz-site-page #hand.hand{
+  width:100%!important;max-width:100%!important;min-height:150px!important;height:150px!important;
+  padding:22px 12px 5px!important;justify-content:safe center!important;overflow-x:auto!important;overflow-y:visible!important;
+  scrollbar-gutter:stable both-edges!important
+}
+html:root body.qily-pro-v24.ddz-site-page #hand.hand .card{
+  flex:0 0 94px!important;width:94px!important;max-width:94px!important;height:138px!important;
+  margin-left:-38px!important;padding:6px!important;border-radius:11px!important;border-width:2px!important
+}
+html:root body.qily-pro-v24.ddz-site-page #hand.hand .card:first-child{margin-left:0!important}
+html:root body.qily-pro-v24.ddz-site-page #hand.hand:has(.card:nth-child(18)) .card{
+  flex-basis:90px!important;width:90px!important;max-width:90px!important;height:134px!important;margin-left:-42px!important
+}
+html:root body.qily-pro-v24.ddz-site-page #hand.hand .qily-card-corner b{font-size:25px!important}
+html:root body.qily-pro-v24.ddz-site-page #hand.hand .qily-card-theme{inset:35px 5px 17px!important}
+html:root body.qily-pro-v24.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:18px!important}
+html:root body.qily-pro-v24.ddz-site-page #hand.hand .qily-card-theme>b{font-size:11px!important}
+html:root body.qily-pro-v24.ddz-site-page #hand.hand .qily-card-theme>em{font-size:8px!important}
+html:root body.qily-pro-v24.ddz-site-page .controls{gap:9px!important;margin-top:5px!important}
+html:root body.qily-pro-v24.ddz-site-page .control-btn{
+  min-width:118px!important;min-height:44px!important;padding:7px 16px!important;font-size:17px!important;border-radius:12px!important
+}
+html:root body.qily-pro-v24.ddz-site-page #hint-message.hint-message{
+  min-height:22px!important;margin:5px auto 0!important;padding:3px 12px!important;font-size:13px!important;line-height:1.35!important
+}
+html:root body.qily-pro-v24.ddz-site-page .site-footer{
+  margin-top:10px;padding:10px 14px!important;border:1px solid var(--ddz-line);border-radius:14px;
+  color:#5f7474!important;background:#fff!important;font-size:13px!important
+}
+html:root body.qily-pro-v24.ddz-site-page .site-footer a{color:var(--ddz-forest)!important}
+html:root body.qily-pro-v24.ddz-site-page .modal{z-index:9000!important}
+/* The canonical Dock owns the lower-right corner; move the game-only scroll cue away from it. */
+html:root body.qily-pro-v24.ddz-site-page .v120-scroll-cue{right:auto!important;left:8px!important}
+
+/* Site-like responsive behavior: the 85% desktop stage becomes 100% on constrained widths. */
+@media(max-width:1180px){
+  html:root body.qily-pro-v24.ddz-site-page .game-shell.ddz-site-module{width:min(100% - 20px,100%)!important;margin-top:10px!important}
+  .ddz-toolbar{grid-template-columns:1fr;gap:8px;padding:9px 10px}.ddz-toolbar .top-actions{justify-content:center}
+  html:root body.qily-pro-v24.ddz-site-page .game-main{width:100%!important;max-width:100%!important}
+  html:root body.qily-pro-v24.ddz-site-page .table-wrap{min-height:660px!important}
+  html:root body.qily-pro-v24.ddz-site-page #me-panel.me-player{min-height:284px!important}
+  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage{top:120px!important;width:calc(100% - 390px)!important}
+  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.left{left:175px!important}
+  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.right{right:175px!important}
+}
+@media(max-width:900px){
+  .ddz-page-heading{padding:14px 16px}.ddz-page-heading .ddz-page-note{max-width:none;text-align:left}
+  .ddz-toolbar .scoreboard{grid-template-columns:repeat(3,minmax(78px,1fr))}
+  html:root body.qily-pro-v24.ddz-site-page .table-wrap{min-height:625px!important;padding:10px!important}
+  html:root body.qily-pro-v24.ddz-site-page .ai{top:78px!important;width:128px!important;padding:9px 6px!important}
+  html:root body.qily-pro-v24.ddz-site-page .center-area{width:calc(100% - 280px)!important}
+  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage{top:105px!important;width:calc(100% - 280px)!important;min-height:132px!important}
+  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.left{left:122px!important}
+  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.right{right:122px!important}
+  html:root body.qily-pro-v24.ddz-site-page #me-panel.me-player{left:10px!important;right:10px!important;min-height:280px!important}
+  html:root body.qily-pro-v24.ddz-site-page #hand.hand{height:142px!important;min-height:142px!important;padding-top:18px!important}
+  html:root body.qily-pro-v24.ddz-site-page #hand.hand .card{flex-basis:66px!important;width:66px!important;height:108px!important;margin-left:-10px!important}
+  html:root body.qily-pro-v24.ddz-site-page #hand.hand:has(.card:nth-child(18)) .card{flex-basis:62px!important;width:62px!important;height:104px!important;margin-left:-12px!important}
+  html:root body.qily-pro-v24.ddz-site-page .control-btn{min-width:106px!important;font-size:16px!important}
+}
+@media(max-width:680px){
+  html:root body.qily-pro-v24.ddz-site-page .game-shell.ddz-site-module{width:100%!important;margin:6px 0 18px!important}
+  .ddz-page-heading{margin:0 8px 8px;border-radius:14px}.ddz-page-heading h1{font-size:23px}.ddz-page-heading p{font-size:14px}
+  .ddz-toolbar{margin:0 8px 8px;border-radius:14px}.ddz-toolbar .top-actions{justify-content:center}.ddz-toolbar .top-actions button,.ddz-toolbar .top-actions .apk-inline{flex:1 1 44%;min-width:0!important}
+  html:root body.qily-pro-v24.ddz-site-page .game-main{border-radius:0!important;box-shadow:none!important}
+  html:root body.qily-pro-v24.ddz-site-page .clean-promise{border-radius:0!important;flex-wrap:wrap;gap:5px!important}
+  html:root body.qily-pro-v24.ddz-site-page .table-wrap{min-height:610px!important;border-radius:0!important;padding:8px 6px!important}
+  html:root body.qily-pro-v24.ddz-site-page .ai{top:72px!important;width:104px!important;padding:7px 4px!important}
+  html:root body.qily-pro-v24.ddz-site-page .left-player{left:5px!important}.right-player{right:5px!important}
+  html:root body.qily-pro-v24.ddz-site-page .avatar{font-size:30px!important}.player-name{font-size:17px!important}
+  html:root body.qily-pro-v24.ddz-site-page .center-area{width:calc(100% - 216px)!important}
+  html:root body.qily-pro-v24.ddz-site-page .status{min-width:0!important;width:100%!important;font-size:16px!important}
+  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage{top:98px!important;width:calc(100% - 176px)!important;min-height:118px!important;padding:5px 6px!important}
+  html:root body.qily-pro-v24.ddz-site-page .v120-play-stage.left{left:76px!important}.v120-play-stage.right{right:76px!important}
+  html:root body.qily-pro-v24.ddz-site-page .v120-play-card{flex-basis:56px!important;width:56px!important;height:84px!important}
+  html:root body.qily-pro-v24.ddz-site-page #me-panel.me-player{left:5px!important;right:5px!important;bottom:7px!important;min-height:286px!important;padding:6px!important}
+  html:root body.qily-pro-v24.ddz-site-page #hand.hand{justify-content:flex-start!important;height:132px!important;min-height:132px!important;padding:14px 3px 4px!important;overflow-x:auto!important}
+  html:root body.qily-pro-v24.ddz-site-page #hand.hand .card,
+  html:root body.qily-pro-v24.ddz-site-page #hand.hand:has(.card:nth-child(18)) .card{flex:0 0 58px!important;width:58px!important;max-width:58px!important;height:96px!important;margin-left:0!important}
+  html:root body.qily-pro-v24.ddz-site-page .controls{gap:6px!important}.control-btn{min-width:96px!important;min-height:44px!important;padding:7px 10px!important;font-size:15px!important}
+  html:root body.qily-pro-v24.ddz-site-page .site-footer{margin:8px;border-radius:12px}
+  html:root body.qily-pro-v24.ddz-site-page .v120-scroll-cue{left:4px!important}
+}
+@media(max-width:390px){
+  .ddz-toolbar .scoreboard small{font-size:12px!important}.ddz-toolbar .scoreboard strong{font-size:20px!important}
+  html:root body.qily-pro-v24.ddz-site-page .table-wrap{min-height:600px!important}
+  html:root body.qily-pro-v24.ddz-site-page .control-btn{min-width:88px!important;font-size:14px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html:root body.qily-pro-v24.ddz-site-page *{scroll-behavior:auto!important}
+}
