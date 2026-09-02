@@ -1,10 +1,11 @@
-/* QilyLean Google Translate Header Runtime V1.4｜fast-start primary + more languages｜2026-09-01
+/* QilyLean Google Translate Header Runtime V1.4｜stable fast-path + primary + more languages｜2026-09-02
  * Chinese static HTML remains the authoritative source and default display.
  * This file is the only public translation lifecycle owner.
  * Primary control exposes 中文简体 / 中文繁体 / English / 其他.
  * “其他” opens a bounded language picker populated from Google's own supported options.
  * Google attribution remains visible; native Google translation events stay the execution path.
  * Google library loading starts as soon as the parsed DOM can host the translator; window.load remains a one-shot safety fallback only.
+ * Stable fast-path reserves the complete translator line box before Google attribution arrives and warms only Google translation origins.
  * No page text scan, MutationObserver, interval, retry loop or automatic reload loop.
  */
 (function(d,w){
@@ -107,6 +108,7 @@
     wrapper.setAttribute('data-qily-no-translate','true');
     wrapper.setAttribute('data-qily-header-utility','translation');
     wrapper.setAttribute('data-qily-translation-provider','google');
+    wrapper.setAttribute('data-qily-translation-layout','stable-fast-path-v1');
     wrapper.setAttribute('translate','no');
     wrapper.setAttribute('role','group');
     wrapper.setAttribute('aria-label','Google 网页翻译');
@@ -114,9 +116,10 @@
     wrapper.setAttribute('data-state','loading');
     wrapper.style.setProperty('display','inline-grid','important');
     wrapper.style.setProperty('grid-template-columns','24px minmax(0,1fr)');
-    wrapper.style.setProperty('grid-template-rows','auto auto');
+    wrapper.style.setProperty('grid-template-rows','38px 13px','important');
     wrapper.style.setProperty('column-gap','6px');
     wrapper.style.setProperty('row-gap','0');
+    wrapper.style.setProperty('min-height','60px','important');
     wrapper.style.setProperty('visibility','visible','important');
     wrapper.style.setProperty('opacity','1','important');
     wrapper.style.setProperty('align-items','center');
@@ -134,6 +137,10 @@
     target.id=ELEMENT_ID;
     target.className='qily-web-translate__google';
     target.setAttribute('aria-label','Google 网页翻译服务');
+    target.style.setProperty('box-sizing','border-box','important');
+    target.style.setProperty('min-height','13px','important');
+    target.style.setProperty('height','13px','important');
+    target.style.setProperty('overflow','visible','important');
 
     morePanel=buildMorePanel();
 
@@ -170,9 +177,19 @@
     }catch(error){return'zh-CN';}
   }
 
+  function stabilizeTranslationReflow(){
+    var root=d.documentElement;
+    if(root){
+      root.setAttribute('data-qily-translation-transition','stable');
+      root.style.setProperty('scroll-behavior','auto','important');
+    }
+    if(d.body)d.body.style.setProperty('overflow-anchor','none','important');
+  }
+
   function applyLanguage(code){
     var combo=nativeCombo();
     if(!combo)return;
+    stabilizeTranslationReflow();
     combo.value=code;
     combo.dispatchEvent(new Event('change',{bubbles:true}));
     if(primarySelect)primarySelect.value=PRIMARY_CODES[code]?code:MORE_VALUE;
@@ -258,6 +275,25 @@
     }
   }
 
+  function ensureConnectionHint(rel,href,crossOrigin){
+    if(!d.head)return;
+    var key=rel+'|'+href;
+    if(d.head.querySelector('link[data-qily-translation-connection="'+key+'"]'))return;
+    var link=d.createElement('link');
+    link.rel=rel;
+    link.href=href;
+    link.setAttribute('data-qily-translation-connection',key);
+    if(crossOrigin)link.crossOrigin='anonymous';
+    d.head.appendChild(link);
+  }
+
+  function warmGoogleConnections(){
+    ensureConnectionHint('preconnect','https://translate.google.com',false);
+    ensureConnectionHint('preconnect','https://translate.googleapis.com',true);
+    ensureConnectionHint('dns-prefetch','//translate.google.com',false);
+    ensureConnectionHint('dns-prefetch','//translate.googleapis.com',false);
+  }
+
   function existingGoogleScript(){
     return d.getElementById(SCRIPT_ID)||d.querySelector('script[src^="'+GOOGLE_SCRIPT_PREFIX+'"]');
   }
@@ -265,6 +301,7 @@
   function loadGoogleScriptOnce(){
     if(w.google&&w.google.translate&&w.google.translate.TranslateElement){initGoogleWidget();return;}
     if(existingGoogleScript())return;
+    warmGoogleConnections();
     var script=d.createElement('script');
     script.id=SCRIPT_ID;
     script.async=true;
@@ -285,6 +322,7 @@
     /* Fast path: start the only external translation dependency immediately after the parsed DOM can host the control.
      * The load listener is retained only as an idempotent one-shot safety boundary; loadGoogleScriptOnce() exits when the script already exists.
      */
+    warmGoogleConnections();
     loadGoogleScriptOnce();
     if(d.readyState!=='complete')w.addEventListener('load',loadGoogleScriptOnce,{once:true});
   }
