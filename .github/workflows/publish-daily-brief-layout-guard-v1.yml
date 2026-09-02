@@ -46,7 +46,12 @@ jobs:
           grep -q 'minmax(230px,230px) repeat(20,minmax(46px,46px))' site-daily-brief-layout-guard-v1.css
           grep -q 'white-space:nowrap!important' site-daily-brief-layout-guard-v1.css
           grep -q 'article.post .tags>.tag' site-daily-brief-layout-guard-v1.css
-          grep -q '/site-daily-brief-layout-guard-v1.css?v=20260826-daily-brief-layout-v1' qilylean/daily/2026-05-23.html
+          grep -q 'article.post>.visual>svg>rect:first-child' site-daily-brief-layout-guard-v1.css
+          grep -q ':is(.visual-hero,.hero,.closing,.closing-view)' site-daily-brief-layout-guard-v1.css
+          grep -q 'backdrop-filter:none!important' site-daily-brief-layout-guard-v1.css
+          grep -q '/site-daily-brief-layout-guard-v1.css?v=20260902-daily-brief-light-surface-v2' qilylean/daily/2026-07-29.html
+          grep -q '/site-daily-brief-layout-guard-v1.css?v=20260902-daily-brief-light-surface-v2' qilylean/daily/2026-08-19.html
+          grep -q '/site-daily-brief-layout-guard-v1.css?v=20260902-daily-brief-light-surface-v2' qilylean/daily/2026-08-25.html
           node scripts/publish-daily-brief-layout-guard-v1.js --check
           npm run test:visual
 
