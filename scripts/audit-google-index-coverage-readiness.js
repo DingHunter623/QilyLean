@@ -164,7 +164,13 @@ console.log(`Public HTML: ${report.publicHtmlCount}`);
 console.log(`Unique sitemap URLs: ${report.sitemapUrlCount}`);
 for (const [key, value] of Object.entries(counts).sort()) console.log(`${key}: ${value}`);
 console.log(`High-priority repository review candidates: ${highPriorityReview.length}`);
+for (const row of highPriorityReview) {
+  console.log(`  REVIEW\t${row.classification}\t${row.pageUrl}\t${row.file}`);
+}
 console.log(`Metadata review candidates: ${metadataReview.length}`);
+for (const row of metadataReview) {
+  console.log(`  META\t${row.pageUrl}\t${row.file}\ttitle=${JSON.stringify(row.title)}\tdescriptionLength=${row.descriptionLength}`);
+}
 console.log(`Duplicate canonical groups: ${duplicateCanonicalGroups.length}`);
 
 if (WRITE) {
