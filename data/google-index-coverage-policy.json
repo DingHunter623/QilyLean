@@ -1,0 +1,114 @@
+{
+  "version": "2026-09-02-v1",
+  "purpose": "QilyLean Google 索引覆盖率治理决策 SSOT。仅治理 Sitemap 提交策略，不改正文、图片、页面结构、canonical、robots、翻译或 Dock。",
+  "rules": {
+    "submit": "页面具有独立商业、方法论、知识或项目证据价值，且当前为 index/follow + self-canonical，可进入指定 Sitemap。",
+    "discover_only": "页面仍可通过内链自然发现，但不主动进入 Sitemap；不得据此自动 noindex、重定向或删除页面。"
+  },
+  "routes": [
+    {
+      "url": "https://qilylean.com/contact/",
+      "source": "contact/index.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "changefreq": "monthly",
+      "priority": "0.8",
+      "role": "conversion",
+      "reason": "官方联系方式与项目咨询转化入口，具有品牌导航和商业转化价值。"
+    },
+    {
+      "url": "https://qilylean.com/cooperation/factory-planning/",
+      "source": "cooperation/factory-planning/index.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "changefreq": "monthly",
+      "priority": "0.9",
+      "role": "commercial",
+      "reason": "新工厂/新产线规划核心交付页，覆盖 Factory Layout、产能、物流、公辅与投产爬坡。"
+    },
+    {
+      "url": "https://qilylean.com/cooperation/lean-improvement/",
+      "source": "cooperation/lean-improvement/index.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "changefreq": "monthly",
+      "priority": "0.9",
+      "role": "commercial",
+      "reason": "精益改善项目交付核心页，承接 IE、VSM、SMED、OEE、线平衡、Poka-Yoke 与 Pilot 验证搜索意图。"
+    },
+    {
+      "url": "https://qilylean.com/cooperation/visual-management/",
+      "source": "cooperation/visual-management/index.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "changefreq": "monthly",
+      "priority": "0.9",
+      "role": "commercial",
+      "reason": "目视化项目设计与交付核心页，覆盖 5S/6S、安全、质量、设备、物流、仓储、工位与 DMS。"
+    },
+    {
+      "url": "https://qilylean.com/improvements/lean-operating-system/",
+      "source": "improvements/lean-operating-system/index.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "changefreq": "monthly",
+      "priority": "0.9",
+      "role": "pillar",
+      "reason": "精益生产运行体系长文方法论，贯通现场诊断、课题组合、PDCA、标准化、财务贡献与复制。"
+    },
+    {
+      "url": "https://qilylean.com/knowledge/pdca-gantt-milestone-opl.html",
+      "source": "knowledge/pdca-gantt-milestone-opl.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "changefreq": "monthly",
+      "priority": "0.8",
+      "role": "knowledge",
+      "reason": "PDCA、WBS、甘特图、里程碑和项目会议话术的独立单点培训知识资产。"
+    },
+    {
+      "url": "https://qilylean.com/projects/lean-improvement-evidence/",
+      "source": "projects/lean-improvement-evidence/index.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "changefreq": "monthly",
+      "priority": "0.9",
+      "role": "evidence",
+      "reason": "公开脱敏制造改善证据链，包含课题评审、效益核算、风险评价、6S 稽核与奖励兑现。"
+    },
+    {
+      "url": "https://qilylean.com/qilylean/training/2026-08-08.html",
+      "source": "qilylean/training/2026-08-08.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml"],
+      "changefreq": "monthly",
+      "priority": "0.7",
+      "role": "knowledge",
+      "reason": "团队建设与管理执行力培训纪要，覆盖 SMART、岗位、流程、SOP、结果导向与 PDCA，适合进入一般 Sitemap，但不占核心权威 Sitemap。"
+    },
+    {
+      "url": "https://qilylean.com/certificates/chatgpt-lean/",
+      "source": "certificates/chatgpt-lean/index.html",
+      "policy": "discover_only",
+      "sitemaps": [],
+      "role": "credential",
+      "reason": "证书展示属于信任佐证，但当前搜索获客优先级低；保留页面与内链自然发现，不主动占用 Sitemap。"
+    },
+    {
+      "url": "https://qilylean.com/gbt2828.html",
+      "source": "gbt2828.html",
+      "policy": "discover_only",
+      "sitemaps": [],
+      "role": "overlap_review",
+      "reason": "与已进入专题体系的 https://qilylean.com/qilylean/gbt2828.html 搜索主题高度重叠；暂不扩大双页面提交，避免稀释主题权威，且不改变现有页面内容或 canonical。"
+    },
+    {
+      "url": "https://qilylean.com/share/",
+      "source": "share/index.html",
+      "policy": "discover_only",
+      "sitemaps": [],
+      "role": "utility",
+      "reason": "官网分享工具页以扫码/复制为主，搜索独立价值低；保留正常功能，但不主动进入 Sitemap。"
+    }
+  ]
+}
