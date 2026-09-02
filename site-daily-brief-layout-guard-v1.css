@@ -1,6 +1,7 @@
-/* QilyLean Daily Brief Layout Guard V1｜2026-08-26
+/* QilyLean Daily Brief Layout Guard V1｜2026-09-02
  * Scope: all dated Selected Brief pages and dense engineering visuals.
- * Goals: remove stretched empty visual slabs, preserve readable dense tables, and guarantee tag contrast.
+ * Goals: remove stretched empty visual slabs, preserve readable dense tables,
+ * reduce large dark reading surfaces, and guarantee text/tag contrast.
  */
 
 /* 1｜Selected Brief two-column cards must size each column by its own content.
@@ -89,6 +90,109 @@ html body main .daily-single-section :is(.table-scroll,.matrix-scroll,.data-tabl
 html body main .daily-single-section :is(.table-scroll,.matrix-scroll,.data-table-scroll,.timeline-scroll) :is(td,[role="cell"]){
   white-space:normal!important;
   overflow-wrap:anywhere!important;
+}
+
+/* 5｜Rich Selected Brief reading surfaces: keep brand depth in the page header,
+ * but remove large dark slabs from the article body. This reduces visual fatigue and
+ * also removes expensive shadows/radial/backdrop effects from large scrolling areas.
+ * Small deep badges and number markers remain as VI accents.
+ */
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post>.visual{
+  padding:clamp(10px,1.2vw,16px)!important;
+  border:1px solid #d5e4e3!important;
+  border-radius:22px!important;
+  background:#f8fbfa!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post>.visual>svg{
+  border-radius:16px!important;
+  background:#f8fbfa!important;
+  box-shadow:none!important;
+  filter:none!important;
+}
+/* 2026-07-29 and any future rich brief that uses a full-canvas inline SVG.
+ * Only the SVG canvas and direct-on-canvas copy are light-themed; inner process cards
+ * keep their own fills so engineering hierarchy remains obvious.
+ */
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post>.visual>svg>rect:first-child{
+  fill:#f8fbfa!important;
+  stroke:#d5e4e3!important;
+  stroke-width:2!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post>.visual>svg>text{
+  fill:#0f4b5a!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post>.visual>svg>text[fill="#ffe3a0"],
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post>.visual>svg>text[fill="#ffe2a2"],
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post>.visual>svg>text[fill="#ffe39b"]{
+  fill:#8b6830!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post>.visual>svg>g[fill="#d8efeb"]{
+  fill:#177f87!important;
+}
+
+/* Large HTML article heroes / conclusions use a paper surface, not a dark billboard. */
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post :is(.visual-hero,.hero,.closing,.closing-view){
+  border:1px solid #cfe0dd!important;
+  background:#fff!important;
+  background-image:none!important;
+  color:#274744!important;
+  -webkit-text-fill-color:#274744!important;
+  box-shadow:none!important;
+  filter:none!important;
+  backdrop-filter:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post :is(.visual-hero,.hero,.closing,.closing-view)::before,
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post :is(.visual-hero,.hero,.closing,.closing-view)::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post :is(.visual-hero,.hero,.closing,.closing-view) :is(h2,h3,h4,strong){
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  text-shadow:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post :is(.visual-hero,.hero,.closing,.closing-view) :is(p,span,small){
+  color:#3a5756!important;
+  -webkit-text-fill-color:#3a5756!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .hero .kicker,
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .visual-hero .visual-kicker{
+  color:#8b6830!important;
+  -webkit-text-fill-color:#8b6830!important;
+  background:#fff8e8!important;
+  border-color:#dfc98f!important;
+  box-shadow:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .hero>p,
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .visual-hero>p{
+  color:#3a5756!important;
+  -webkit-text-fill-color:#3a5756!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .hero .hero-rule>div,
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .visual-hero .formula{
+  border-color:#d5e4e3!important;
+  background:#f3f8f7!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .hero .hero-rule :is(b,strong),
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .visual-hero .formula :is(b,strong){
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .visual-hero .formula strong{
+  background:#fff!important;
+  border:1px solid #d7e6e2!important;
+  box-shadow:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .visual-hero .formula b{
+  color:#a76c1f!important;
+  -webkit-text-fill-color:#a76c1f!important;
 }
 
 @media(max-width:900px){
