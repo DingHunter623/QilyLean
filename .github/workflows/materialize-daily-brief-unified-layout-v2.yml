@@ -1,0 +1,62 @@
+name: Materialize unified Selected Brief layout V2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'qilylean/daily-brief-unified-layout-v2.css'
+      - 'scripts/materialize-daily-brief-unified-layout-v2.js'
+      - '.github/workflows/materialize-daily-brief-unified-layout-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-daily-unified-layout-v2-main
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Materialize unified Selected Brief layout
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/materialize-daily-brief-unified-layout-v2.js
+          node scripts/materialize-daily-brief-unified-layout-v2.js
+          grep -q 'data-qily-daily-layout="legacy"' qilylean/daily/2019-07-10.html
+          grep -q 'data-qily-daily-layout="rich"' qilylean/daily/2026-08-25.html
+          grep -q 'daily-brief-unified-layout-v2.css?v=20260902-unified-axis-v2' qilylean/daily/2019-07-10.html
+          grep -q 'daily-brief-unified-layout-v2.css?v=20260902-unified-axis-v2' qilylean/daily/2026-08-25.html
+          if grep -q 'qilyDailyBriefLegacyVisualV1' qilylean/daily/2019-07-10.html; then
+            echo 'Legacy visual stylesheet must be retired after unified layout materialization.' >&2
+            exit 1
+          fi
+          git diff --check
+
+      - name: Commit unified Selected Brief materialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- qilylean/daily; then
+            echo 'Unified Selected Brief layout already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qilylean/daily/*.html
+          git commit -m 'build(daily): materialize unified layout v2 [daily-layout-generated]'
+          git pull --rebase origin main
+          git push
