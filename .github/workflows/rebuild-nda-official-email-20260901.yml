@@ -1,4 +1,4 @@
-name: Rebuild NDA official email
+name: Rebuild NDA canonical public document
 
 on:
   push:
@@ -12,11 +12,12 @@ permissions:
   contents: write
 
 concurrency:
-  group: rebuild-nda-official-email
+  group: rebuild-nda-canonical-public-document
   cancel-in-progress: true
 
 jobs:
   rebuild:
+    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip nda rebuild]') }}
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -36,6 +37,86 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install python-docx pillow qrcode
 
+      - name: Apply approved visual redline closure
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_or_verify(path, old, new):
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              if new in text:
+                  return
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected one legacy match, found {count}')
+              p.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          signature = 'scripts/optimize-nda-signature.py'
+          replace_or_verify(
+              signature,
+              'def set_cell_margins(cell, top=90, start=140, bottom=90, end=140):',
+              'def set_cell_margins(cell, top=150, start=140, bottom=150, end=140):',
+          )
+          replace_or_verify(
+              signature,
+              'def add_line(paragraph, label, blank, size=9.6):\n    paragraph.paragraph_format.space_after = Pt(2)\n    paragraph.paragraph_format.line_spacing = 1.15',
+              'def add_line(paragraph, label, blank, size=9.6):\n    paragraph.paragraph_format.space_after = Pt(6)\n    paragraph.paragraph_format.line_spacing = 1.42',
+          )
+          replace_or_verify(
+              signature,
+              '    qr_cell = table.cell(0, 2).merge(table.cell(1, 2))\n\n    for text, column in (("委托信息", 0), ("QilyLean｜启力精益", 1)):',
+              '    qr_cell = table.cell(0, 2).merge(table.cell(1, 2))\n    set_cell_margins(qr_cell, top=110, start=55, bottom=110, end=55)\n\n    for text, column in (("委托信息", 0), ("QilyLean｜启力精益", 1)):',
+          )
+          replace_or_verify(
+              signature,
+              '    paragraph = middle.paragraphs[0]\n    paragraph.paragraph_format.space_after = Pt(2)\n    style_run(paragraph.add_run("项目责任人：丁启利"))',
+              '    paragraph = middle.paragraphs[0]\n    paragraph.paragraph_format.space_after = Pt(6)\n    paragraph.paragraph_format.line_spacing = 1.42\n    style_run(paragraph.add_run("项目责任人：丁启利"))',
+          )
+          replace_or_verify(
+              signature,
+              '    paragraph.add_run().add_picture(str(QR_PATH), width=Cm(2.05), height=Cm(2.05))',
+              '    paragraph.add_run().add_picture(str(QR_PATH), width=Cm(2.45), height=Cm(2.45))',
+          )
+
+          for preview in ('scripts/nda-source/nda-preview-template.html', 'trust/nda-preview.html'):
+              replace_or_verify(
+                  preview,
+                  ':root{--forest:#0f4b5a;--teal:#178b94;--paper:#eef7f5;--line:#c8dad8;--muted:#526b69;--gold:#caa15f}',
+                  ':root{--forest:#0f4b5a;--teal:#178b94;--paper:#eef7f5;--line:#c8dad8;--muted:#526b69;--gold:#caa15f;--qily-content-axis:1560px;--qily-content-axis-gutter:clamp(18px,2.2vw,56px)}',
+              )
+              replace_or_verify(
+                  preview,
+                  '.preview-head{padding:20px clamp(16px,5vw,64px);color:#fff;background:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))}.preview-inner{width:min(1220px,100%);margin:auto}',
+                  '.preview-head{padding:20px var(--qily-content-axis-gutter);color:#fff;background:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))}.preview-inner{width:min(var(--qily-content-axis),100%);margin:auto}',
+              )
+              replace_or_verify(
+                  preview,
+                  'padding:12px clamp(16px,5vw,64px);border-bottom:1px solid var(--line);',
+                  'padding:12px var(--qily-content-axis-gutter);border-bottom:1px solid var(--line);',
+              )
+              replace_or_verify(
+                  preview,
+                  '.pdf-page{display:block;background:#fff;box-shadow:0 8px 28px rgba(15,75,90,.18)}.viewer-status{',
+                  '.pdf-page{display:block;background:#fff;box-shadow:0 8px 28px rgba(15,75,90,.18)}html body .pdf-page[hidden]{display:none!important}.viewer-status{',
+              )
+              replace_or_verify(
+                  preview,
+                  "  var context=canvas.getContext('2d',{alpha:false});",
+                  "  var context=canvas.getContext('2d',{alpha:true});",
+              )
+
+          sig = Path(signature).read_text(encoding='utf-8')
+          if 'width=Cm(2.45), height=Cm(2.45)' not in sig or 'line_spacing = 1.42' not in sig:
+              raise SystemExit('Signature redline closure assertion failed')
+          for preview in ('scripts/nda-source/nda-preview-template.html', 'trust/nda-preview.html'):
+              html = Path(preview).read_text(encoding='utf-8')
+              for required in ('--qily-content-axis:1560px', '.pdf-page[hidden]{display:none!important}', "getContext('2d',{alpha:true})"):
+                  if required not in html:
+                      raise SystemExit(f'{preview}: missing {required}')
+          PY
+
       - name: Rebuild canonical DOCX
         run: |
           python scripts/build-nda-documents.py
@@ -48,7 +129,7 @@ jobs:
           test -s build/nda/pdf/qilylean-mutual-nda-v1.pdf
           cp build/nda/pdf/qilylean-mutual-nda-v1.pdf qilylean/assets/legal/qilylean-mutual-nda-v1.pdf
 
-      - name: Validate official email and one-page contract
+      - name: Validate one-page contract and closure source
         run: |
           pdfinfo qilylean/assets/legal/qilylean-mutual-nda-v1.pdf | tee build/nda/pdfinfo.txt
           test "$(pdfinfo qilylean/assets/legal/qilylean-mutual-nda-v1.pdf | awk '/^Pages:/ {print $2}')" = "1"
@@ -56,21 +137,27 @@ jobs:
           grep -Fq 'admin@qilylean.com' build/nda/nda.txt
           grep -Fq 'QilyLean' build/nda/nda.txt
           grep -Fq 'QL-LEGAL-001' build/nda/nda.txt
+          grep -Fq 'width=Cm(2.45), height=Cm(2.45)' scripts/optimize-nda-signature.py
+          grep -Fq 'line_spacing = 1.42' scripts/optimize-nda-signature.py
+          grep -Fq '.pdf-page[hidden]{display:none!important}' trust/nda-preview.html
+          grep -Fq -- '--qily-content-axis:1560px' trust/nda-preview.html
 
       - name: Render page for visual QA evidence
         run: |
           pdftoppm -png -r 180 -f 1 -singlefile qilylean/assets/legal/qilylean-mutual-nda-v1.pdf build/nda/qilylean-mutual-nda-v1-preview
           test -s build/nda/qilylean-mutual-nda-v1-preview.png
 
-      - name: Synchronize NDA preview cache and release marker
+      - name: Synchronize preview cache and release marker
         run: |
           python - <<'PY'
           from pathlib import Path
+          from datetime import datetime, timezone, timedelta
           old_tokens = [
               'qilylean-mutual-nda-v1.pdf?v=20260801-upload-v2',
               'qilylean-mutual-nda-v1.pdf?v=20260801-template-v2',
+              'qilylean-mutual-nda-v1.pdf?v=20260901-official-email-v3',
           ]
-          new_token = 'qilylean-mutual-nda-v1.pdf?v=20260901-official-email-v3'
+          new_token = 'qilylean-mutual-nda-v1.pdf?v=20260902-visual-closure-v4'
           targets = [
               'scripts/nda-source/nda-preview-template.html',
               'trust/nda-preview.html',
@@ -84,22 +171,22 @@ jobs:
                   s = s.replace(old, new_token)
               p.write_text(s, encoding='utf-8')
           Path('scripts/nda-source/release.marker').write_text(
-              '2026-09-01T12:31:00+08:00\n'
+              datetime.now(timezone(timedelta(hours=8))).isoformat(timespec='seconds') + '\n'
               'source=canonical-qilylean-confidentiality-statement\n'
-              'version=V1.0-official-email-v3\n'
+              'version=V1.0-visual-closure-v4\n'
               'officialEmail=admin@qilylean.com\n',
               encoding='utf-8'
           )
           PY
           grep -Fq 'admin@qilylean.com' scripts/build-nda-documents.py
-          grep -Fq '20260901-official-email-v3' trust/nda-preview.html
-          grep -Fq '20260901-official-email-v3' scripts/nda-source/nda-preview-template.html
-          grep -Fq '20260901-official-email-v3' scripts/publish-nda-mobile-preview.js
+          grep -Fq '20260902-visual-closure-v4' trust/nda-preview.html
+          grep -Fq '20260902-visual-closure-v4' scripts/nda-source/nda-preview-template.html
+          grep -Fq '20260902-visual-closure-v4' scripts/publish-nda-mobile-preview.js
 
       - name: Upload visual QA evidence
         uses: actions/upload-artifact@v4
         with:
-          name: nda-official-email-v3-visual-qa
+          name: nda-visual-closure-v4-visual-qa
           path: |
             build/nda/qilylean-mutual-nda-v1-preview.png
             build/nda/pdfinfo.txt
@@ -111,17 +198,19 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add \
+            scripts/optimize-nda-signature.py \
             qilylean/assets/legal/qilylean-mutual-nda-v1.pdf \
             scripts/nda-source/nda-preview-template.html \
             trust/nda-preview.html \
             scripts/publish-nda-mobile-preview.js \
             scripts/publish-nda-link.js \
             scripts/nda-source/release.marker
+          git diff --cached --check
           if git diff --cached --quiet; then
             echo 'NDA already current.'
             exit 0
           fi
-          git commit -m 'build(nda): publish official email in confidentiality statement [skip nda rebuild]'
+          git commit -m 'build(nda): publish visual closure v4 [skip nda rebuild]'
           for attempt in 1 2 3 4 5; do
             git fetch origin main
             git rebase origin/main
