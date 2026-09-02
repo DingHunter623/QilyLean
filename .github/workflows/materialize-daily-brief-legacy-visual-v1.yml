@@ -1,0 +1,60 @@
+name: Materialize legacy daily brief visual refresh
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'qilylean/daily-brief-legacy-visual-v1.css'
+      - 'scripts/materialize-daily-brief-legacy-visual-v1.js'
+      - '.github/workflows/materialize-daily-brief-legacy-visual-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-daily-legacy-visual-main
+  cancel-in-progress: true
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Materialize visual-only legacy brief loader
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/materialize-daily-brief-legacy-visual-v1.js
+          node scripts/materialize-daily-brief-legacy-visual-v1.js
+          grep -q 'qilyDailyBriefLegacyVisualV1' qilylean/daily/2019-07-10.html
+          grep -q 'daily-brief-legacy-visual-v1.css?v=20260902-legacy-visual-v1' qilylean/daily/2019-07-10.html
+          if grep -q 'qilyDailyBriefLegacyVisualV1' qilylean/daily/2026-08-25.html; then
+            echo 'Custom rich brief 2026-08-25 must not inherit legacy visual stylesheet.' >&2
+            exit 1
+          fi
+          git diff --check
+
+      - name: Commit visual-only daily brief materialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- qilylean/daily; then
+            echo 'Legacy daily brief visual loader already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add qilylean/daily/*.html
+          git commit -m 'build(daily): materialize legacy visual refresh [daily-visual-generated]'
+          git pull --rebase origin main
+          git push
