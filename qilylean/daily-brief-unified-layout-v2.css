@@ -50,6 +50,31 @@ html body.daily-single-page .brief-feedback{
   box-sizing:border-box!important;
 }
 
+/* 01B | Standalone rich brief (2026-08-25) uses main.page-shell instead of
+ * daily-single-section > daily-inner. Constrain that alternate shell to the
+ * exact same 1560px site axis without changing the six rich briefs already OK.
+ */
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell{
+  width:min(var(--qily-daily-axis),calc(100% - var(--qily-daily-gutter) - var(--qily-daily-gutter)))!important;
+  max-width:var(--qily-daily-axis)!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  padding-top:clamp(28px,3.2vw,50px)!important;
+  padding-bottom:clamp(38px,4.5vw,68px)!important;
+  padding-left:0!important;
+  padding-right:0!important;
+  box-sizing:border-box!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell>.brief-adjacent.top,
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell>article.post#2026-08-25,
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell>.brief-feedback{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
+}
+
 /* 02 | Legacy generated briefs: retire the permanent left column.
  * The square historical cover remains in source/meta for sharing and archive
  * integrity, but is not allowed to consume half of the reading canvas.
@@ -251,6 +276,11 @@ html body.daily-single-page .daily-single-section :is(
 @media(max-width:620px){
   :root{--qily-daily-gutter:15px}
   html body.daily-single-page .daily-single-section{
+    padding-top:22px!important;
+    padding-bottom:34px!important;
+  }
+  html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell{
+    width:calc(100% - 30px)!important;
     padding-top:22px!important;
     padding-bottom:34px!important;
   }
