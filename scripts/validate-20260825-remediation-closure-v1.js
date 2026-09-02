@@ -40,9 +40,11 @@ must(header,'white-space:nowrap!important','Full nav text');
 must(header,'Mobile primary-navigation closure','Native mobile nav closure');
 must(header,'pointer-events:none!important','Phone rail touch isolation');
 const dock=read('site-dock-share-runtime-v1.js');
-must(dock,'Floating Dock Authoritative Runtime V5.4','Dock V5.4');
+must(dock,'Floating Dock Authoritative Runtime V5.5','Dock V5.5');
+must(dock,'__qilyFloatingDockUnifiedV55','Dock V55 guard');
 must(dock,'setOwnedLabel','Dock single label');
 must(dock,"w.open(url,'_blank','noopener,noreferrer')",'Full contact new tab');
+must(dock,'function isExcluded(){return false;}','Public Dock coverage');
 const route=read('site-contact-route-v1.js');
 must(route,'Contact Route V13.4','Contact V13.4');
 const css=read('site-interaction-semantics-v1.css'),js=read('site-interaction-semantics-v1.js'),components=read('site-visual-components-v1.css');
@@ -55,8 +57,8 @@ must(components,'qily-project-evidence-grade','Evidence component');
 must(components,'-webkit-text-fill-color:#fff!important','Evidence grade white letter');
 must(components,'input.qily-primary-nav-scroll-rail[type="range"]','Native range rail visual');
 must(components,'data-qily-header-utility="translation"','Translator header layout');
-const ddz=read('tools/pure-ddz/game/css/r8-closure-v128.css');
-must(ddz,'Pure DDZ R12 Closure V132','DDZ R12');
+const ddzIndex=read('tools/pure-ddz/index.html'),ddzLayout=read('tools/pure-ddz/game/css/ddz-site-page-v140.css'),ddzLandscape=read('tools/pure-ddz/game/css/mobile-landscape-v153.css'),ddzVisual=read('tools/pure-ddz/game/js/visual-v120.js');
+must(ddzIndex,'20260903-ddz-mobile-landscape-v153','DDZ V153 cache');must(ddzIndex,"loadStyle('css/mobile-landscape-v153.css')",'DDZ V153 landscape style');must(ddzIndex,'id="v120-landscape-toggle"','DDZ landscape toolbar entry');must(ddzIndex,'id="welcome-landscape"','DDZ landscape welcome entry');forbid(ddzIndex,'r8-closure-v128.css','Retired DDZ R12 closure');forbid(ddzIndex,'name="screen-orientation"','Forced orientation metadata');forbid(ddzIndex,'name="x5-orientation"','Forced X5 orientation metadata');must(ddzLayout,'overflow-x:clip!important','DDZ sticky-header-safe containment');forbid(ddzLayout,'#floatDock','DDZ local Dock ownership');must(ddzLandscape,'html.ddz-mobile-landscape body.ddz-site-page','DDZ landscape scoped owner');must(ddzLandscape,'var(--ddz-mobile-vh,390px)','DDZ actual viewport sizing');must(ddzLandscape,'env(safe-area-inset-right)','DDZ landscape safe area');forbid(ddzLandscape,'#floatDock','DDZ landscape Dock ownership');must(ddzVisual,"version:'1.2.4-mobile-landscape-adaptive'",'DDZ V153 visual runtime');must(ddzVisual,'screen.orientation?.lock','DDZ landscape lock');must(ddzVisual,'document.documentElement.requestFullscreen','DDZ fullscreen request');
 const mat=read('scripts/materialize-global-language-v3.js');
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline');
 must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Stable shell materializer');
@@ -66,6 +68,7 @@ must(mat,'20260901-google-translate-single-runtime-v16','Google translation mate
 must(mat,'20260831-redline-no-translation-v23','Translation-neutral public redline materializer');
 must(mat,'20260901-google-translate-mobile-ui-v16','Google translation public UI materializer');
 must(mat,'20260831-unified-components-v29-native-range','Visual components materializer');
+must(mat,'20260902-authority-v55','Dock V55 materializer');forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure materializer');
 const containment=read('site-responsive-containment-v1.css');
 must(containment,'QilyLean Responsive Containment V1','Responsive containment');
 forbid(containment,'width:100vw','Viewport widening');
@@ -90,5 +93,4 @@ for(const file of htmlFiles()){
   if(/\/site-ui-consistency-v1\.js/.test(html)){shellPages++;must(html,'/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation',`${file} shell`);}
 }
 if(pages<460||nav<460||shellPages<460)throw new Error(`coverage regression pages=${pages} nav=${nav} shell=${shellPages}`);
-must(read('tools/pure-ddz/index.html'),'/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132','DDZ R12 materialization');
-console.log(`PASS: V32 remediation closure covers ${pages} public pages — post-load Google Translate V1.4 with primary + more languages, browser-native mobile navigation, readable project grades, stable Dock and responsive containment.`);
+console.log(`PASS: V33 remediation closure covers ${pages} public pages — Google Translate V1.4, browser-native mobile navigation, Dock V5.5 runtime compatibility, responsive containment and DDZ V153 adaptive landscape mode.`);
