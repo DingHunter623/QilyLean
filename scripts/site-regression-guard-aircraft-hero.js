@@ -20,7 +20,7 @@ const ASSET_VERSION='20260831-aircraft-latest-v5';
 const HOME_VERSION='20260901-home-conversion-axis-v2';
 const HOME_JS_VERSION='20260901-home-first-paint-v6';
 const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
-const HOME_VISUAL_FIX_VERSION='20260901-home-capability-building-v4';
+const HOME_VISUAL_FIX_VERSION='20260902-card-bottom-rail-v5';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
 const VISUAL_READABILITY_VERSION='20260901-vi-gold-static-v9';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
@@ -79,12 +79,12 @@ assert(homeCss.includes('#qily-core-services .qily-ia-heading{\n  width:100%!imp
 assert(!homeCss.includes('.qily-home-conversion-heading{\n  max-width:980px'),'Narrow homepage conversion heading returned');
 assert(!homeCss.includes('#qily-core-services .qily-ia-heading{\n  max-width:980px!important'),'Narrow core-delivery heading returned');
 
-/* V9 shared VI + static semantics and homepage V4 readability are protected together. */
+/* V9 shared VI + static semantics and homepage V5 readability are protected together. */
 assert(readabilityCss.includes('QILY-STATIC-VOCABULARY-NO-FEEDBACK-V9'),'Sitewide static-vocabulary no-feedback contract missing');
 assert(readabilityCss.includes('--qily-v5-gold-text:#b88b45'),'Sitewide VI gold text token missing');
 assert(readabilityCss.includes('color:var(--qily-v5-gold-text)!important'),'Sitewide section kicker no longer uses governed VI gold');
 assert(!readabilityCss.includes('--qily-v5-red:#9e4a34'),'Retired red section-kicker token returned');
-assert(homeVisualFix.includes('QILY-HOME-VI-READABILITY-V4'),'Homepage V4 VI/readability contract missing');
+assert(homeVisualFix.includes('QILY-HOME-VI-READABILITY-V5'),'Homepage V5 VI/readability contract missing');
 assert(homeVisualFix.includes('font-size:clamp(30px,2.75vw,44px)!important'),'Homepage hero title readable-size override missing');
 assert(homeVisualFix.includes('background:#fff3cf!important')&&homeVisualFix.includes('color:#0b3f4b!important'),'Homepage capsule high-contrast VI override missing');
 assert(homeVisualFix.includes('cursor:default!important')&&homeVisualFix.includes('transition:none!important'),'Homepage non-routing capsules must remain visually static');
@@ -95,6 +95,8 @@ assert(!homeVisualFix.includes('#9e4a34'),'Homepage visual closure must not rein
 assert(homeVisualFix.includes('background:rgba(7,60,71,.96)!important')&&homeVisualFix.includes('-webkit-text-fill-color:#fff!important'),'Homepage project-caption high-contrast override missing');
 assert(homeVisualFix.includes('.qily-home-capability-building')&&homeVisualFix.includes('border-left:4px solid #d8b66e!important'),'Capability-building statement VI block missing');
 assert(homeVisualFix.includes('.qily-home-capability-building p')&&homeVisualFix.includes('font-size:20px!important'),'Capability-building statement readable body copy missing');
+assert(homeVisualFix.includes('Equal-height card bottom rail')&&homeVisualFix.includes('.qily-home-card__result')&&homeVisualFix.includes('margin-top:auto!important'),'Homepage equal-height card result rail baseline missing');
+assert(homeVisualFix.includes('.qily-home-card-link')&&homeVisualFix.includes('flex-direction:column!important')&&homeVisualFix.includes('height:100%!important'),'Homepage linked case cards must preserve full-height flex layout');
 
 assert(homeJs.includes('用工程数据解决工厂效率、质量、交付与布局问题'),'Approved homepage value proposition missing');
 assert(homeJs.includes('免费60分钟沟通诊断'),'Approved free 60-minute consultation/diagnosis entry missing');
@@ -138,4 +140,4 @@ for(const rel of activeRuntimeFiles){
   const executable=text.split(/\r?\n/).filter(line=>!/^\s*(?:!\s*)?grep\b/.test(line)&&!line.includes("c919-approved-20260826|git show")&&!line.includes('executable legacy aircraft rollback')).join('\n');
   assert(!/git\s+fetch[^\n]*c919-approved-20260826|git\s+show[^\n]*c919-strategy-hero-v14\.png/i.test(executable),`${rel}: executable legacy aircraft rollback source is forbidden`);
 }
-console.log(`PASS: first paint is the approved conversion Hero; parser-complete runtime no longer waits behind deferred scripts; aircraft SSOT, V9 VI/static semantics, capability-building statement, free 60-minute diagnosis, owner alignment and experience access remain guarded.`);
+console.log(`PASS: first paint is the approved conversion Hero; parser-complete runtime no longer waits behind deferred scripts; aircraft SSOT, V9 VI/static semantics, capability-building statement, equal-height card bottom rails, free 60-minute diagnosis, owner alignment and experience access remain guarded.`);
