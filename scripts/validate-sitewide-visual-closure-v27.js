@@ -15,19 +15,24 @@ const capabilities=read('capabilities/index.html');for(const token of ['PDCA项�
 const semantics=read('site-interaction-semantics-v1.css');for(const token of ['[data-qily-interaction="static"]','cursor:default!important','transform:none!important'])must(semantics,token,'Static interaction semantics');
 
 const ddz=read('tools/pure-ddz/index.html');
-for(const token of ['20260902-ddz-integrated-v152',"const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];",'/site-navigation.js?','/site-dock-share-runtime-v1.js?','<p id="hint-message" class="hint-message" aria-hidden="true"></p>','无牌可压时自动喊“不要”并轮到下家'])must(ddz,token,'DDZ V152');
+for(const token of ['20260903-ddz-mobile-landscape-v153',"loadStyle('css/mobile-landscape-v153.css')",'id="v120-landscape-toggle"','id="welcome-landscape"',"const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];",'/site-navigation.js?','/site-dock-share-runtime-v1.js?','<p id="hint-message" class="hint-message" aria-hidden="true"></p>','无牌可压时自动喊“不要”并轮到下家'])must(ddz,token,'DDZ V153');
 for(const token of ['name="screen-orientation"','name="x5-orientation"',"loadStyle('css/ddz-playability-v141.css')",'qilyPureDdzR8ClosureV128','ddz-site-shell-v140.js','js/qilylean-theme.js','js/elder-assist-v140.js','<footer class="site-footer">','class="ddz-page-note"'])forbid(ddz,token,'DDZ retired runtime');
 const ddzMaterializer=read('scripts/materialize-ddz-public-ui-20260824.js');
-must(ddzMaterializer,'20260902-ddz-integrated-v152','DDZ materializer');
-must(ddzMaterializer,'Legacy DDZ V141 patch must stay unloaded','DDZ materializer');
+must(ddzMaterializer,'20260903-ddz-mobile-landscape-v153','DDZ materializer');
+must(ddzMaterializer,"loadStyle('css/mobile-landscape-v153.css')",'DDZ landscape materializer');
 must(ddzMaterializer,'forced-orientation metadata must stay removed','DDZ materializer');
 const ddzGame=read('tools/pure-ddz/game/js/game.js');
 for(const token of ["const VERSION = '1.5.2'",'function describePlay(play)','function speakAsync',"afterNarration(narration,()=>{state.current=nextPlayer(player);render();scheduleTurn();},1100)","pass(0,{auto:true})","utterance.rate=.82","auto?'不要':'您不要'","flash('不要，自动轮到下家')"])must(ddzGame,token,'DDZ core flow');
+const ddzVisual=read('tools/pure-ddz/game/js/visual-v120.js');
+for(const token of ["version:'1.2.4-mobile-landscape-adaptive'",'function syncViewportProfile()','screen.orientation?.lock',"document.documentElement.requestFullscreen",'window.visualViewport?.addEventListener?.(\'resize\'',"window.PureDDZTest.hint()"] )must(ddzVisual,token,'DDZ landscape runtime');
 const ddzLayout=read('tools/pure-ddz/game/css/ddz-site-page-v140.css');
 for(const token of ['--ddz-game-max:var(--qily-content-axis,1560px)','overflow-x:clip!important','height:clamp(560px,calc(100vh - 260px),620px)','scoreboard :is(small,strong,span)','justify-self:stretch!important','font-size:18px!important;font-weight:950!important','#hint-message.hint-message{display:none!important}'])must(ddzLayout,token,'DDZ integrated scale');
 forbid(ddzLayout,'#floatDock','DDZ layout CSS must not own site Dock');
 const ddzComfort=read('tools/pure-ddz/game/css/card-comfort-v122.css');
 forbid(ddzComfort,'#floatDock','DDZ comfort CSS must not own site Dock');
+const ddzLandscape=read('tools/pure-ddz/game/css/mobile-landscape-v153.css');
+for(const token of ['--ddz-landscape-scale:1','html.ddz-mobile-landscape body.ddz-site-page','.ddz-page-heading,','var(--ddz-mobile-vh,390px)','env(safe-area-inset-right)','max-width:720px'])must(ddzLandscape,token,'DDZ mobile landscape CSS');
+forbid(ddzLandscape,'#floatDock','DDZ landscape CSS must not own site Dock');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
 must(materializer,"BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 sitewide baseline');
@@ -67,4 +72,4 @@ forbid(translationCss,'qily-global-nav','Translation CSS must not own navigation
 const components=read('site-visual-components-v1.css');
 for(const token of ['qily-primary-nav-scroll-rail','::-webkit-slider-thumb','.qily-project-evidence-grade','.qily-project-list-grade'])must(components,token,'V32 visual components');
 
-console.log('PASS: V27 compatibility checks remain satisfied on the V32 Google-Translate/native-range baseline, including Dock V5.5 and the site-integrated, sticky-header-safe DDZ V152 runtime.');
+console.log('PASS: V27 compatibility remains intact on V32, including the canonical Header/Dock and the adaptive DDZ V153 mobile-landscape mode.');

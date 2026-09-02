@@ -16,7 +16,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Verify V152 elder-paced turn sequencing
+      - name: Verify V153 elder-paced turn sequencing
         shell: bash
         run: |
           set -euo pipefail
@@ -33,4 +33,5 @@ jobs:
           grep -Fq "auto?'不要':'您不要'" tools/pure-ddz/game/js/game.js
           grep -Fq "flash('不要，自动轮到下家')" tools/pure-ddz/game/js/game.js
           grep -Fq "utterance.rate=.82" tools/pure-ddz/game/js/game.js
-          grep -Fq '20260902-ddz-integrated-v152' tools/pure-ddz/index.html
+          grep -Fq 'window.PureDDZTest.hint()' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html

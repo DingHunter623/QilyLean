@@ -27,8 +27,11 @@ jobs:
           set -euo pipefail
           node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/card-theme.js
-          grep -Fq '20260902-ddz-integrated-v152' tools/pure-ddz/index.html
+          node --check tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
           grep -Fq 'id="welcome-start"' tools/pure-ddz/index.html
+          grep -Fq 'id="welcome-landscape"' tools/pure-ddz/index.html
+          grep -Fq 'id="v120-landscape-toggle"' tools/pure-ddz/index.html
           grep -Fq 'id="start"' tools/pure-ddz/index.html
           grep -Fq 'id="hint"' tools/pure-ddz/index.html
           grep -Fq 'id="pass"' tools/pure-ddz/index.html
@@ -38,5 +41,7 @@ jobs:
           grep -Fq "pass(0,{auto:true})" tools/pure-ddz/game/js/game.js
           grep -Fq 'function speakAsync' tools/pure-ddz/game/js/game.js
           grep -Fq "afterNarration(narration,()=>{state.current=nextPlayer(player);render();scheduleTurn();},1100)" tools/pure-ddz/game/js/game.js
+          grep -Fq 'window.PureDDZTest.hint()' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq 'screen.orientation?.lock' tools/pure-ddz/game/js/visual-v120.js
           ! grep -Fq 'js/elder-assist-v140.js' tools/pure-ddz/index.html
           ! grep -Fq 'js/qilylean-theme.js' tools/pure-ddz/index.html
