@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V33｜2026-09-02 DDZ public-page closure
+/* QilyLean Sitewide Public Baseline Materializer V32｜2026-09-02 DDZ public-page closure
  * Chinese static HTML remains the authoritative source and default display.
  * Google Translate Header Runtime V1.4 is the single public translation provider and lifecycle owner.
  * Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.7 owns interaction meaning and the native range navigation rail.
@@ -20,7 +20,7 @@ const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 
-const BASELINE_VERSION='20260902-google-translate-single-runtime-v33';
+const BASELINE_VERSION='20260831-google-translate-single-runtime-v32';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
