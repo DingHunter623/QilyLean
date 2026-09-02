@@ -1,0 +1,43 @@
+name: Verify Pure DDZ iOS Virtual Landscape
+
+on:
+  pull_request:
+    paths:
+      - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - '.github/workflows/verify-pure-ddz-ios-virtual-landscape.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - '.github/workflows/verify-pure-ddz-ios-virtual-landscape.yml'
+  workflow_dispatch:
+
+jobs:
+  verify-ios-virtual-landscape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Validate V154 fallback source and materialized entry
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          node --check scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq "const VERSION='1.5.4-ios-virtual-landscape'" tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          grep -Fq "const needsVirtualFallback=isMobile&&(isIOS||isWechat||!nativeLockAvailable)" tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          grep -Fq "event.stopImmediatePropagation()" tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          grep -Fq "transform:translate(-50%,-50%) rotate(90deg)!important" tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          grep -Fq "$('welcome-start')?.click()" tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          grep -Fq "window.QilyLeanV120?.fitHand?.()" tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          node scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq 'data-qily-ddz-virtual-landscape="v154"' tools/pure-ddz/index.html
+          grep -Fq '/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154' tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
+          grep -Fq "const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];" tools/pure-ddz/index.html
+          git diff --check
