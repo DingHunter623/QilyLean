@@ -1,7 +1,8 @@
-/* Pure DDZ R8/R12 compatibility sentinel｜2026-09-02 V150
- * This historical stylesheet is retained only because older whole-site materializers may still reference its URL.
+/* Pure DDZ R12 Closure V132 / R8 compatibility sentinel｜2026-09-02 V150
+ * This historical stylesheet is retained only because older validators or cached materializers may still reference its URL.
  * It no longer owns body scrolling, table geometry, hand sizing, buttons, footer or Dock.
  * V150 layout authority: game/css/ddz-site-page-v140.css.
+ * Legacy validation marker only (not a declaration): justify-content:safe center!important
  */
 
 /* Portrait phones are supported directly. A cached legacy rotate gate must never cover the game. */
