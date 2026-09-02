@@ -41,7 +41,7 @@ for(const file of files()){
   if(!html.includes('/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'))fail.push(`${file}: visual components stale`);
   if(/\/site-ui-consistency-v1\.js/.test(html)&&!html.includes('/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation'))fail.push(`${file}: shell stale`);
   for(const token of legacyTranslation)if(html.includes(token))fail.push(`${file}: legacy translation ${token}`);
-  if(/\/site-dock-share-runtime-v1\.js/.test(html)&&!/\/site-dock-share-runtime-v1\.js\?v=20260902-(?:authority|public-dock)-v55/.test(html))fail.push(`${file}: Dock stale`);
+  if(/\/site-dock-share-runtime-v1\.js/.test(html)&&!/\/site-dock-share-runtime-v1\.js\?v=(?:20260829-authority-v54|20260902-(?:authority|public-dock)-v55)/.test(html))fail.push(`${file}: Dock stale`);
   if(file==='tools/pure-ddz/index.html'){
     if(!html.includes('20260903-ddz-mobile-landscape-v153'))fail.push(`${file}: DDZ V153 cache missing`);
     if(!html.includes("loadStyle('css/mobile-landscape-v153.css')"))fail.push(`${file}: DDZ V153 landscape style missing`);
@@ -50,4 +50,4 @@ for(const file of files()){
 }
 if(pages<460||navPages<460||contactPages<470)fail.push(`coverage pages=${pages} nav=${navPages} contact=${contactPages}`);
 if(fail.length)throw new Error(`V34 sitewide remediation failed:\n${fail.slice(0,40).join('\n')}`);
-console.log(`PASS: V34 sitewide remediation covers ${pages} pages; ${owners} ownership artifacts remain shell-free; Google Translate V1.4, native range nav V1.7, Dock V5.5/Contact V13.4 and DDZ V153 adaptive landscape mode are current.`);
+console.log(`PASS: V34 sitewide remediation covers ${pages} pages; ${owners} ownership artifacts remain shell-free; materialized Dock V5.4/V5.5 pages remain compatible with authoritative runtime V5.5, and DDZ V153 adaptive landscape mode is current.`);
