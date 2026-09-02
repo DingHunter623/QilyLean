@@ -7,15 +7,19 @@ on:
       - '.github/workflows/fix-capabilities-visuals-20260824.yml'
       - 'scripts/fix-capabilities-visuals-20260824.js'
       - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - 'scripts/materialize-global-language-v3.js'
       - 'scripts/publish-qilylean-home-v2.py'
       - 'assets/tools/times26001-overview.svg'
       - 'pure-ddz-capability-visual-v2.css'
       - 'capability-digital-tools-layout-v1.css'
       - 'app-download-share-v1.js'
+      - 'site-dock-share-runtime-v1.js'
       - 'tools/pure-ddz/game/js/card-theme.js'
-      - 'tools/pure-ddz/game/js/qilylean-theme.js'
+      - 'tools/pure-ddz/game/js/game.js'
       - 'tools/pure-ddz/game/js/visual-v120.js'
       - 'tools/pure-ddz/game/css/card-comfort-v122.css'
+      - 'tools/pure-ddz/game/css/ddz-site-page-v140.css'
+      - 'tools/pure-ddz/game/css/r8-closure-v128.css'
       - 'tools/pure-ddz/index.html'
   workflow_dispatch:
 
@@ -42,9 +46,11 @@ jobs:
         run: |
           node --check scripts/fix-capabilities-visuals-20260824.js
           node --check scripts/materialize-ddz-public-ui-20260824.js
+          node --check scripts/materialize-global-language-v3.js
           node --check tools/pure-ddz/game/js/card-theme.js
-          node --check tools/pure-ddz/game/js/qilylean-theme.js
+          node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/visual-v120.js
+          node --check site-dock-share-runtime-v1.js
           node --check app-download-share-v1.js
           python3 -m py_compile scripts/publish-qilylean-home-v2.py
       - name: Apply capability and DDZ public UI fixes
@@ -56,6 +62,7 @@ jobs:
         run: |
           test -f assets/tools/times26001-overview.svg
           test -f tools/pure-ddz/game/css/card-comfort-v122.css
+          test -f tools/pure-ddz/game/css/ddz-site-page-v140.css
           test -f assets/qilylean-aircraft-hero-latest-q98.webp
           grep -q '/assets/tools/times26001-overview.svg?v=20260824-capability-visual-fix-v1' capabilities/index.html
           grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-red-heart-ace-v8' capabilities/index.html
@@ -67,35 +74,60 @@ jobs:
           grep -q 'data-app-share-qr="qilyleanHome"' capabilities/index.html
           grep -q 'data-app-share-link="qilyleanHome"' capabilities/index.html
           grep -q '/app-download-share-v1.js?v=20260824-capability-home-actions-v2' capabilities/index.html
-          grep -Fq "const version='20260829-ddz-mobile-ready-v132';" tools/pure-ddz/index.html
-          grep -Fq "window.__PURE_DDZ_CACHE_KEY__||'20260829-ddz-mobile-ready-v132'" tools/pure-ddz/index.html
+
+          # DDZ V150: one website shell, one layout authority, one core game runtime.
+          grep -Fq "const version='20260902-ddz-integrated-v150';" tools/pure-ddz/index.html
+          grep -Fq "window.__PURE_DDZ_CACHE_KEY__||'20260902-ddz-integrated-v150'" tools/pure-ddz/index.html
           grep -Fq "loadStyle('css/card-comfort-v122.css')" tools/pure-ddz/index.html
+          grep -Fq "loadStyle('css/ddz-site-page-v140.css')" tools/pure-ddz/index.html
+          ! grep -Fq "loadStyle('css/ddz-playability-v141.css')" tools/pure-ddz/index.html
+          ! grep -Fq 'qilyPureDdzR8ClosureV128' tools/pure-ddz/index.html
+          ! grep -Fq 'ddz-site-shell-v140.js' tools/pure-ddz/index.html
+          ! grep -Fq 'js/qilylean-theme.js' tools/pure-ddz/index.html
+          ! grep -Fq 'js/elder-assist-v140.js' tools/pure-ddz/index.html
+          grep -Fq "const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];" tools/pure-ddz/index.html
+          grep -Fq '/site-navigation.js?v=20260828-r7-navigation-v45' tools/pure-ddz/index.html
+          grep -Fq '/site-dock-share-runtime-v1.js?' tools/pure-ddz/index.html
+          ! grep -Fq '<footer class="site-footer">' tools/pure-ddz/index.html
           ! grep -Fq 'name="screen-orientation"' tools/pure-ddz/index.html
           ! grep -Fq 'name="x5-orientation"' tools/pure-ddz/index.html
           grep -Fq 'MicroMessenger' tools/pure-ddz/index.html
           grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
-          grep -Fq 'IS_WECHAT_WEBVIEW' tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq "version:'1.2.3-portrait-mobile-ready'" tools/pure-ddz/game/js/visual-v120.js
-          ! grep -Fq "document.addEventListener('click',requestLandscape" tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
-          grep -Fq "const VERSION = '1.2.4'" tools/pure-ddz/game/js/game.js
-          grep -Fq "state.settings.difficulty==='expert'?1750+Math.random()*450" tools/pure-ddz/game/js/game.js
-          ! grep -Fq 'C919' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq 'qilylean-aircraft-hero-latest-q98.webp' tools/pure-ddz/game/js/card-theme.js
+
+          # Core game pacing and elder-assist behavior.
+          grep -Fq "const VERSION = '1.5.0'" tools/pure-ddz/game/js/game.js
+          grep -Fq 'function describePlay(play)' tools/pure-ddz/game/js/game.js
+          grep -Fq 'function speakAsync' tools/pure-ddz/game/js/game.js
+          grep -Fq 'afterNarration(narration,scheduleTurn,700)' tools/pure-ddz/game/js/game.js
+          grep -Fq "pass(0,{auto:true})" tools/pure-ddz/game/js/game.js
+          grep -Fq '飞机带翅膀' tools/pure-ddz/game/js/game.js
+          grep -Fq '顺子' tools/pure-ddz/game/js/game.js
+          grep -Fq '炸弹' tools/pure-ddz/game/js/game.js
+
+          # Card identity stays QilyLean-professional while rank/suit remains readable.
+          grep -Fq 'qily-rank-suit-line' tools/pure-ddz/game/js/card-theme.js
+          grep -Fq "3:{code:'现场'" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq "9:{code:'IE'" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq "11:{code:'SMED'" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq "12:{code:'VSM'" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq "13:{code:'TPM'" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq "14:{code:'OEE'" tools/pure-ddz/game/js/card-theme.js
+          grep -Fq "15:{code:'FLOW'" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}" tools/pure-ddz/game/js/card-theme.js
-          ! grep -Fq 'qily-joker-aircraft' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq '#hint-message.hint-message' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq 'flex-basis:112px' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq 'flex-basis:104px' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq 'min-width:0!important' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq 'width:80vw' tools/pure-ddz/game/css/card-comfort-v122.css
-          grep -Fq 'font-size:38px' tools/pure-ddz/game/css/card-comfort-v122.css
+          ! grep -Fq 'width:80vw' tools/pure-ddz/game/js/card-theme.js
+          ! grep -Fq '#floatDock' tools/pure-ddz/game/js/card-theme.js
+
+          # Integrated page scale and canonical Dock ownership.
+          grep -Fq -- '--ddz-game-max:1180px' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          grep -Fq 'height:clamp(470px,calc(100vh - 235px),540px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          ! grep -Fq '#floatDock' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js
+          grep -Fq '__qilyFloatingDockUnifiedV55' site-dock-share-runtime-v1.js
+          ! grep -Fq 'html.ddz-ready body{overflow:auto!important}' tools/pure-ddz/game/css/r8-closure-v128.css
+
           grep -Fq '<span>官网邮箱</span>' tools/pure-ddz/index.html
           ! grep -Fq '<span>企业邮箱</span>' tools/pure-ddz/index.html
-          grep -Fq 'qily-rank-suit-line' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq '滑动查看更多' tools/pure-ddz/game/js/card-theme.js
           grep -Fq 'Android版暂未开放下载' capabilities/index.html
           ! grep -Fq 'Android安装包待网页版验证确认OK后再发布' capabilities/index.html
           ! grep -Fq 'Android 安装包待验证' capabilities/index.html
@@ -118,6 +150,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add capabilities/index.html tools/pure-ddz/index.html
-          git commit -m "fix: materialize DDZ elder UX v1.2.7 and public UI [skip ci]"
+          git commit -m "fix: materialize DDZ integrated V150 public UI [skip ci]"
           git pull --rebase origin main
           git push origin main
