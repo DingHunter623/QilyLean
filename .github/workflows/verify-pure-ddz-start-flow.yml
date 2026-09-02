@@ -16,19 +16,19 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Verify V150 turn sequencing
+      - name: Verify V151 elder-paced turn sequencing
         shell: bash
         run: |
           set -euo pipefail
           node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq "const VERSION = '1.5.0'" tools/pure-ddz/game/js/game.js
+          grep -Fq "const VERSION = '1.5.1'" tools/pure-ddz/game/js/game.js
           grep -Fq 'flowToken:0' tools/pure-ddz/game/js/game.js
           grep -Fq 'function speakAsync' tools/pure-ddz/game/js/game.js
           grep -Fq 'function afterNarration' tools/pure-ddz/game/js/game.js
-          grep -Fq 'afterNarration(narration,scheduleTurn,700)' tools/pure-ddz/game/js/game.js
-          grep -Fq 'afterNarration(text,scheduleTurn,650)' tools/pure-ddz/game/js/game.js
+          grep -Fq "afterNarration(narration,()=>{state.current=nextPlayer(player);render();scheduleTurn();},1100)" tools/pure-ddz/game/js/game.js
+          grep -Fq "afterNarration(text,()=>{if(resetRound){state.lastPlay=null;state.passCount=0;}state.current=next;render();scheduleTurn();},1000)" tools/pure-ddz/game/js/game.js
           grep -Fq 'finishIfNeeded(player,narration)' tools/pure-ddz/game/js/game.js
           grep -Fq "pass(0,{auto:true})" tools/pure-ddz/game/js/game.js
-          grep -Fq 'speechSynthesis.cancel' tools/pure-ddz/game/js/game.js
-          grep -Fq '20260902-ddz-integrated-v150' tools/pure-ddz/index.html
+          grep -Fq "utterance.rate=.82" tools/pure-ddz/game/js/game.js
+          grep -Fq '20260902-ddz-integrated-v151' tools/pure-ddz/index.html
