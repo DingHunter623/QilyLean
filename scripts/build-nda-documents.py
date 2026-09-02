@@ -229,7 +229,7 @@ def build_document():
     paragraph.paragraph_format.space_after = Pt(2)
     add_font(paragraph.add_run("QilyLean｜启力精益"), 11, True, "0F4B5A")
     add_font(paragraph.add_run("\n项目责任人签名：____________"), 10.5)
-    add_font(paragraph.add_run("\n日期：______年____月____日"), 10.5)
+    add_font(paragraph.add_run("\n日期：_____年___月___日"), 10.5)
 
     paragraph = nested.cell(0, 1).paragraphs[0]
     paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
