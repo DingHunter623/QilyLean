@@ -6,78 +6,38 @@ on:
       - '.github/workflows/verify-pure-ddz-v110-live.yml'
       - 'tools/pure-ddz/**'
       - 'site-ui-consistency-v1.js'
+      - 'site-dock-share-runtime-v1.js'
   push:
     branches: [main]
     paths:
       - '.github/workflows/verify-pure-ddz-v110-live.yml'
       - 'tools/pure-ddz/**'
       - 'site-ui-consistency-v1.js'
+      - 'site-dock-share-runtime-v1.js'
   workflow_dispatch:
 
 jobs:
-  verify-current:
+  verify-mobile-v150:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-
-      - name: Verify current same-origin Expert elder theme runtime
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Verify portrait-ready integrated runtime
+        shell: bash
         run: |
           set -euo pipefail
-          node --check tools/pure-ddz/game/js/qilylean-theme.js
           node --check tools/pure-ddz/game/js/card-theme.js
-          node --check tools/pure-ddz/game/js/ai-expert.js
           node --check tools/pure-ddz/game/js/game.js
-          grep -q "difficulty:'expert'" tools/pure-ddz/game/js/game.js
-          grep -q 'PublicCardMemory' tools/pure-ddz/game/js/ai-expert.js
-          grep -q 'avatar-king.webp' tools/pure-ddz/game/js/card-theme.js
-          grep -q 'airplane-joker.png' tools/pure-ddz/game/js/card-theme.js
-          grep -q "const chain=\['js/qilylean-theme.js','js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'\]" tools/pure-ddz/index.html
-          grep -q '20260829-ddz-mobile-ready-v132' tools/pure-ddz/index.html
-          ! grep -q 'name="screen-orientation"' tools/pure-ddz/index.html
-          ! grep -q 'name="x5-orientation"' tools/pure-ddz/index.html
-          grep -q 'Android版暂未开放' tools/pure-ddz/index.html
-          grep -q "version:'1.2.3-portrait-mobile-ready'" tools/pure-ddz/game/js/visual-v120.js
-          ! grep -q "document.addEventListener('click',requestLandscape" tools/pure-ddz/game/js/visual-v120.js
-          grep -q 'width:80vw' tools/pure-ddz/game/css/card-comfort-v122.css
-          grep -q 'font-size:38px' tools/pure-ddz/game/css/card-comfort-v122.css
-          grep -q 'QilyLeanDDZElderV123' tools/pure-ddz/game/js/qilylean-theme.js
-          test -s tools/pure-ddz/game/assets/pure-ddz/avatar-king.webp
-          test -s tools/pure-ddz/game/assets/pure-ddz/airplane-joker.png
-
-      - name: Verify deployed QilyLean portrait-ready mobile release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          set -euo pipefail
-          ok=0
-          for i in {1..48}; do
-            if curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/?verify=20260829-v132' -o /tmp/page.html \
-              && grep -q '20260829-ddz-mobile-ready-v132' /tmp/page.html \
-              && ! grep -q 'name="screen-orientation"' /tmp/page.html \
-              && ! grep -q 'name="x5-orientation"' /tmp/page.html \
-              && grep -q 'Android版暂未开放' /tmp/page.html; then
-              ok=1
-              break
-            fi
-            sleep 10
-          done
-          test "$ok" = 1
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/qilylean-theme.js?verify=20260828-v123' -o /tmp/qily-theme.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/card-theme.js?verify=20260828-v123' -o /tmp/card-theme.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/ai-expert.js?verify=20260828-v123' -o /tmp/ai-expert.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/game.js?verify=20260828-v123' -o /tmp/game.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/js/visual-v120.js?verify=20260829-v132' -o /tmp/visual.js
-          curl -fsSL --max-time 25 'https://qilylean.com/tools/pure-ddz/game/css/card-comfort-v122.css?verify=20260828-v123' -o /tmp/comfort.css
-          node --check /tmp/qily-theme.js
-          node --check /tmp/card-theme.js
-          node --check /tmp/ai-expert.js
-          node --check /tmp/game.js
-          node --check /tmp/visual.js
-          grep -q 'PublicCardMemory' /tmp/ai-expert.js
-          grep -q "difficulty:'expert'" /tmp/game.js
-          grep -q "version:'1.2.3-portrait-mobile-ready'" /tmp/visual.js
-          ! grep -q "document.addEventListener('click',requestLandscape" /tmp/visual.js
-          grep -q 'width:80vw' /tmp/comfort.css
-          grep -q 'font-size:38px' /tmp/comfort.css
-          grep -q 'QilyLeanDDZElderV123' /tmp/qily-theme.js
-          echo 'PURE_DDZ_MOBILE_V132_COMPATIBILITY_OK'
+          node --check tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq '__PURE_DDZ_MOBILE_DEVICE__' tools/pure-ddz/index.html
+          grep -Fq '__PURE_DDZ_WECHAT_WEBVIEW__' tools/pure-ddz/index.html
+          grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
+          ! grep -Fq 'name="screen-orientation"' tools/pure-ddz/index.html
+          ! grep -Fq 'name="x5-orientation"' tools/pure-ddz/index.html
+          grep -Fq '@media(max-width:680px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          grep -Fq 'overflow-x:auto!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          grep -Fq "const VERSION = '1.5.0'" tools/pure-ddz/game/js/game.js
+          grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js
