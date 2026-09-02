@@ -1,0 +1,58 @@
+name: Materialize Pure DDZ V154
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/materialize-pure-ddz-v154.yml'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - 'tools/pure-ddz/game/js/ios-virtual-landscape-v154.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: materialize-pure-ddz-v154-main
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Materialize and validate DDZ V154 only
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/materialize-ddz-public-ui-20260824.js
+          node --check tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          node scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq 'data-qily-ddz-virtual-landscape="v154"' tools/pure-ddz/index.html
+          grep -Fq '/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154' tools/pure-ddz/index.html
+          grep -Fq "const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];" tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
+          grep -Fq 'id="welcome-landscape"' tools/pure-ddz/index.html
+          grep -Fq 'id="v120-landscape-toggle"' tools/pure-ddz/index.html
+          git diff --check
+      - name: Publish materialized DDZ entry
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- tools/pure-ddz/index.html; then
+            echo 'Pure DDZ V154 entry already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/pure-ddz/index.html
+          git commit -m 'fix(ddz): materialize iOS virtual landscape V154 [skip ci]'
+          git pull --rebase origin main
+          git push origin main
