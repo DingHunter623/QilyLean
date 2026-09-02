@@ -75,7 +75,7 @@
   <script>
     (()=>{
       const root='./game/';
-      const version='20260902-ddz-integrated-v150';
+      const version='20260902-ddz-integrated-v151';
       const isWechat=/MicroMessenger/i.test(navigator.userAgent||'');
       const isMobile=/Android|iPhone|iPad|iPod|HarmonyOS|Mobile/i.test(navigator.userAgent||'')||(navigator.maxTouchPoints||0)>0;
       window.__PURE_DDZ_WECHAT_WEBVIEW__=isWechat;
@@ -121,7 +121,6 @@
         <h1 id="ddz-page-title">启力精益斗地主</h1>
         <p>简单娱乐 · 益智生活｜无广告 · 无强制注册 · 打开即玩</p>
       </div>
-      <div class="ddz-page-note">QilyLean 官网标准页面内的休闲益智工具；电脑浏览器保持 100% 比例即可操作。</div>
     </section>
 
     <section class="ddz-toolbar" aria-label="斗地主状态与游戏操作">
@@ -163,7 +162,7 @@
           <div id="hand" class="hand" aria-label="我的手牌"></div>
           <div id="bid-controls" class="controls bid-controls hidden" aria-label="叫地主"><button class="control-btn quiet-btn" type="button" data-bid="0">不叫</button><button class="control-btn bid-btn" type="button" data-bid="1">1 分</button><button class="control-btn bid-btn" type="button" data-bid="2">2 分</button><button class="control-btn bid-btn strong" type="button" data-bid="3">3 分抢地主</button></div>
           <div id="play-controls" class="controls hidden" aria-label="出牌操作"><button id="hint" class="control-btn hint-btn" type="button">启力提示</button><button id="pass" class="control-btn pass-btn" type="button">不要</button><button id="play" class="control-btn play-btn" type="button">出牌</button></div>
-          <p id="hint-message" class="hint-message">有牌时“启力提示”只替你选牌；无牌可压时自动喊“要不起”并交由下家。</p>
+          <p id="hint-message" class="hint-message" aria-hidden="true"></p>
         </section>
       </section>
     </main>
@@ -183,7 +182,7 @@
   <script>
     (()=>{
       const root=window.__PURE_DDZ_ROOT__||'./game/';
-      const version=window.__PURE_DDZ_CACHE_KEY__||'20260902-ddz-integrated-v150';
+      const version=window.__PURE_DDZ_CACHE_KEY__||'20260902-ddz-integrated-v151';
       const status=document.getElementById('boot-status');
       const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];
       const scriptsReady=Promise.all(chain.map(path=>new Promise((resolve,reject)=>{
@@ -194,7 +193,7 @@
       }).catch(()=>{
         document.documentElement.classList.add('ddz-ready');status.textContent='部分牌桌资源未加载，请刷新页面重试。';status.className='error';
       });
-      window.qilyDdzSlowLoadRevealV150=window.setTimeout(()=>{
+      window.qilyDdzSlowLoadRevealV151=window.setTimeout(()=>{
         if(!document.documentElement.classList.contains('ddz-ready')){document.documentElement.classList.add('ddz-ready');status.textContent='牌桌加载较慢，界面已先显示；脚本仍在继续加载…';status.className='';}
       },1800);
     })();
