@@ -58,3 +58,4 @@ jobs:
           git push origin main
 
 # 2026-09-03: dedicated production trigger for the iOS Safari landscape closure.
+# Triggered through a normal PR merge so GitHub evaluates this workflow from main.
