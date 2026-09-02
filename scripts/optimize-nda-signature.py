@@ -126,7 +126,7 @@ def main():
     paragraph = middle.paragraphs[0]
     paragraph.paragraph_format.space_after = Pt(2)
     style_run(paragraph.add_run("项目责任人：丁启利"))
-    add_line(middle.add_paragraph(), "项目责任人签名：", "______________")
+    add_line(middle.add_paragraph(), "项目责任人签名：", "____________________")
     add_line(middle.add_paragraph(), "签署日期：", "_____年___月___日")
 
     set_cell_shading(qr_cell, "F8FBFA")
