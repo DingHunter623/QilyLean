@@ -1,0 +1,276 @@
+/* QilyLean Selected Brief Unified Layout V2 | 2026-09-02
+ * Scope: dated Selected Brief detail pages only.
+ * Goal: converge legacy and rich briefs on the site-wide 1560px content axis,
+ * remove legacy two-column dead space, and keep rich briefs inside the same
+ * visual width used by the public home/business modules.
+ * Visual-only: no article copy, URL, canonical, schema, navigation, or SEO changes.
+ */
+:root{
+  --qily-daily-axis:var(--qily-content-axis,1560px);
+  --qily-daily-gutter:var(--qily-content-axis-gutter,clamp(18px,2.2vw,56px));
+  --qily-daily-deep:#0f4b5a;
+  --qily-daily-teal:#177f87;
+  --qily-daily-gold:#caa15f;
+  --qily-daily-line:#d5e4e3;
+  --qily-daily-paper:#f3f8f7;
+  --qily-daily-ink:#274744;
+  --qily-daily-muted:#5f7474;
+}
+
+/* 01 | Every dated brief uses the same public-site horizontal axis. */
+html body.daily-single-page main>.daily-hero,
+html body.daily-single-page main>.daily-single-section{
+  padding-left:var(--qily-daily-gutter)!important;
+  padding-right:var(--qily-daily-gutter)!important;
+  box-sizing:border-box!important;
+}
+html body.daily-single-page main>.daily-hero>.daily-inner,
+html body.daily-single-page main>.daily-single-section>.daily-inner{
+  width:min(var(--qily-daily-axis),100%)!important;
+  max-width:var(--qily-daily-axis)!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+html body.daily-single-page .daily-single-section{
+  padding-top:clamp(28px,3.2vw,50px)!important;
+  padding-bottom:clamp(38px,4.5vw,68px)!important;
+  background:var(--qily-daily-paper)!important;
+}
+html body.daily-single-page .brief-adjacent.top{
+  width:100%!important;
+  max-width:none!important;
+  margin:0 0 22px!important;
+  box-sizing:border-box!important;
+}
+html body.daily-single-page .brief-feedback{
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+
+/* 02 | Legacy generated briefs: retire the permanent left column.
+ * The square historical cover remains in source/meta for sharing and archive
+ * integrity, but is not allowed to consume half of the reading canvas.
+ */
+html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:visible!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post>.visual{
+  display:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post>.content{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:clamp(28px,3.2vw,48px)!important;
+  border:1px solid rgba(193,216,213,.96)!important;
+  border-radius:26px!important;
+  background:#fff!important;
+  box-shadow:0 16px 44px rgba(15,75,90,.085)!important;
+  box-sizing:border-box!important;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post>.content>*{
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post .date{
+  display:inline-flex!important;
+  align-items:center!important;
+  min-height:31px!important;
+  padding:5px 11px!important;
+  border:1px solid #e3cc96!important;
+  border-radius:999px!important;
+  background:#fff7e4!important;
+  color:#8b6830!important;
+  -webkit-text-fill-color:#8b6830!important;
+  font-size:15px!important;
+  font-weight:900!important;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post .content>h2{
+  width:100%!important;
+  max-width:none!important;
+  margin:14px 0 16px!important;
+  color:var(--qily-daily-deep)!important;
+  -webkit-text-fill-color:var(--qily-daily-deep)!important;
+  font-size:clamp(32px,3.05vw,46px)!important;
+  line-height:1.18!important;
+  letter-spacing:-.02em!important;
+  text-wrap:balance;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post .content>p:first-of-type{
+  width:100%!important;
+  max-width:none!important;
+  margin:0 0 18px!important;
+  color:#3a5756!important;
+  -webkit-text-fill-color:#3a5756!important;
+  font-size:clamp(18px,1.45vw,21px)!important;
+  line-height:1.8!important;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post .quote{
+  width:100%!important;
+  max-width:none!important;
+  margin:20px 0!important;
+  padding:18px 21px!important;
+  border:1px solid #d7e6e2!important;
+  border-left:6px solid var(--qily-daily-gold)!important;
+  border-radius:0 14px 14px 0!important;
+  background:linear-gradient(135deg,#eef8f6,#fff9ec)!important;
+  box-shadow:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post .content h3{
+  width:100%!important;
+  max-width:none!important;
+  margin:32px 0 12px!important;
+  padding:12px 16px!important;
+  border-left:5px solid var(--qily-daily-teal)!important;
+  border-radius:0 12px 12px 0!important;
+  background:linear-gradient(90deg,#edf7f4,#f8fbfa)!important;
+  color:var(--qily-daily-deep)!important;
+  -webkit-text-fill-color:var(--qily-daily-deep)!important;
+  font-size:clamp(22px,1.9vw,29px)!important;
+  line-height:1.35!important;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post .content :is(p,li){
+  max-width:none!important;
+  font-size:clamp(17px,1.18vw,19px)!important;
+  line-height:1.8!important;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post :is(
+  .brief-one-point-training,.brief-learning-card,.engineering-checklist,.checklist,
+  .formula-card,.owner-card,.status-card,.brief-related-grid>a,.brief-action-strip
+){
+  border-radius:14px!important;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] .brief-one-point-training{
+  width:100%!important;
+  max-width:none!important;
+  padding:clamp(20px,2vw,28px)!important;
+  border-color:#c9ded9!important;
+  border-top-color:var(--qily-daily-gold)!important;
+  background:linear-gradient(145deg,#fbfefd,#fffaf0)!important;
+  box-shadow:0 9px 24px rgba(15,75,90,.045)!important;
+}
+html body.daily-single-page[data-qily-daily-layout="legacy"] :is(
+  .brief-one-point-grid,.brief-learning-grid,.formula-grid,.owner-grid,.status-grid,.brief-related-grid
+){
+  width:100%!important;
+  max-width:none!important;
+}
+
+/* 03 | Rich/current briefs: preserve their bespoke content, but stop viewport bleed.
+ * They inherit the same 1560px axis and gutter as the homepage/business sections.
+ */
+html body.daily-single-page[data-qily-daily-layout="rich"] .daily-single-section article.post{
+  display:block!important;
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:visible!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] .daily-single-section article.post>.content{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+  margin:0!important;
+  padding:0!important;
+  background:transparent!important;
+  box-sizing:border-box!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] .daily-single-section article.post>.visual{
+  max-width:100%!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] .w8,
+html body.daily-single-page[data-qily-daily-layout="rich"] .w8>.hero,
+html body.daily-single-page[data-qily-daily-layout="rich"] .w8 :is(.loop,.overview,.waste,.matrix-wrap,.audit,.closing){
+  width:100%!important;
+  max-width:none!important;
+  box-sizing:border-box!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] .w8>.hero{
+  border-radius:24px!important;
+}
+html body.daily-single-page[data-qily-daily-layout="rich"] .w8 .hero h2,
+html body.daily-single-page[data-qily-daily-layout="rich"] .w8 .hero>p{
+  max-width:none!important;
+}
+
+/* 04 | Dense assets use the available brief width without forcing page overflow. */
+html body.daily-single-page .daily-single-section :is(
+  .matrix-wrap,.table-scroll,.matrix-scroll,.data-table-scroll,.timeline-scroll,.engineering-flow
+){
+  width:100%!important;
+  max-width:100%!important;
+  box-sizing:border-box!important;
+}
+html body.daily-single-page .daily-single-section :is(
+  .matrix-wrap,.table-scroll,.matrix-scroll,.data-table-scroll,.timeline-scroll
+){
+  overflow-x:auto!important;
+  overscroll-behavior-inline:contain;
+}
+
+/* 05 | Tablet/mobile: keep the same logic and only reflow the inner grids. */
+@media(max-width:900px){
+  html body.daily-single-page main>.daily-hero,
+  html body.daily-single-page main>.daily-single-section{
+    padding-left:var(--qily-daily-gutter)!important;
+    padding-right:var(--qily-daily-gutter)!important;
+  }
+  html body.daily-single-page main>.daily-hero>.daily-inner,
+  html body.daily-single-page main>.daily-single-section>.daily-inner{
+    width:100%!important;
+    max-width:100%!important;
+  }
+  html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post>.content{
+    padding:clamp(22px,4vw,32px)!important;
+    border-radius:20px!important;
+  }
+  html body.daily-single-page[data-qily-daily-layout="rich"] .w8>.hero{
+    border-radius:20px!important;
+  }
+}
+@media(max-width:620px){
+  :root{--qily-daily-gutter:15px}
+  html body.daily-single-page .daily-single-section{
+    padding-top:22px!important;
+    padding-bottom:34px!important;
+  }
+  html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post>.content{
+    padding:21px 17px!important;
+    border-radius:17px!important;
+    box-shadow:0 10px 28px rgba(15,75,90,.075)!important;
+  }
+  html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post .content>h2{
+    font-size:clamp(28px,8vw,35px)!important;
+  }
+  html body.daily-single-page[data-qily-daily-layout="legacy"] .daily-single-section article.post .content h3{
+    margin-top:27px!important;
+    padding:10px 12px!important;
+    border-radius:0 10px 10px 0!important;
+  }
+  html body.daily-single-page[data-qily-daily-layout="legacy"] .brief-one-point-training{
+    padding:17px!important;
+  }
+  html body.daily-single-page[data-qily-daily-layout="rich"] .w8>.hero{
+    border-radius:16px!important;
+  }
+}
