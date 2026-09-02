@@ -19,6 +19,7 @@ on:
       - 'tools/pure-ddz/game/js/visual-v120.js'
       - 'tools/pure-ddz/game/css/card-comfort-v122.css'
       - 'tools/pure-ddz/game/css/ddz-site-page-v140.css'
+      - 'tools/pure-ddz/game/css/mobile-landscape-v153.css'
       - 'tools/pure-ddz/game/css/r8-closure-v128.css'
       - 'tools/pure-ddz/index.html'
   workflow_dispatch:
@@ -63,6 +64,7 @@ jobs:
           test -f assets/tools/times26001-overview.svg
           test -f tools/pure-ddz/game/css/card-comfort-v122.css
           test -f tools/pure-ddz/game/css/ddz-site-page-v140.css
+          test -f tools/pure-ddz/game/css/mobile-landscape-v153.css
           test -f assets/qilylean-aircraft-hero-latest-q98.webp
           grep -q '/assets/tools/times26001-overview.svg?v=20260824-capability-visual-fix-v1' capabilities/index.html
           grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-red-heart-ace-v8' capabilities/index.html
@@ -75,11 +77,14 @@ jobs:
           grep -q 'data-app-share-link="qilyleanHome"' capabilities/index.html
           grep -q '/app-download-share-v1.js?v=20260824-capability-home-actions-v2' capabilities/index.html
 
-          # DDZ V152: one website shell, one layout authority, one core game runtime.
-          grep -Fq "const version='20260902-ddz-integrated-v152';" tools/pure-ddz/index.html
-          grep -Fq "window.__PURE_DDZ_CACHE_KEY__||'20260902-ddz-integrated-v152'" tools/pure-ddz/index.html
+          # DDZ V153: one site shell, one core game runtime, one scoped mobile-landscape owner.
+          grep -Fq "const version='20260903-ddz-mobile-landscape-v153';" tools/pure-ddz/index.html
+          grep -Fq "window.__PURE_DDZ_CACHE_KEY__||'20260903-ddz-mobile-landscape-v153'" tools/pure-ddz/index.html
           grep -Fq "loadStyle('css/card-comfort-v122.css')" tools/pure-ddz/index.html
           grep -Fq "loadStyle('css/ddz-site-page-v140.css')" tools/pure-ddz/index.html
+          grep -Fq "loadStyle('css/mobile-landscape-v153.css')" tools/pure-ddz/index.html
+          grep -Fq 'id="v120-landscape-toggle"' tools/pure-ddz/index.html
+          grep -Fq 'id="welcome-landscape"' tools/pure-ddz/index.html
           ! grep -Fq "loadStyle('css/ddz-playability-v141.css')" tools/pure-ddz/index.html
           ! grep -Fq 'qilyPureDdzR8ClosureV128' tools/pure-ddz/index.html
           ! grep -Fq 'ddz-site-shell-v140.js' tools/pure-ddz/index.html
@@ -96,7 +101,7 @@ jobs:
           grep -Fq 'MicroMessenger' tools/pure-ddz/index.html
           grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
 
-          # Core game pacing and elder-assist behavior.
+          # Core game pacing / elder-assist behavior remains V152; visual runtime adds V153 landscape adaptation.
           grep -Fq "const VERSION = '1.5.2'" tools/pure-ddz/game/js/game.js
           grep -Fq 'function describePlay(play)' tools/pure-ddz/game/js/game.js
           grep -Fq 'function speakAsync' tools/pure-ddz/game/js/game.js
@@ -109,6 +114,11 @@ jobs:
           grep -Fq '飞机带翅膀' tools/pure-ddz/game/js/game.js
           grep -Fq '顺子' tools/pure-ddz/game/js/game.js
           grep -Fq '炸弹' tools/pure-ddz/game/js/game.js
+          grep -Fq "version:'1.2.4-mobile-landscape-adaptive'" tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq 'function syncViewportProfile()' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq 'screen.orientation?.lock' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq 'document.documentElement.requestFullscreen' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq 'window.PureDDZTest.hint()' tools/pure-ddz/game/js/visual-v120.js
 
           # Card identity stays QilyLean-professional while rank/suit remains readable.
           grep -Fq 'qily-rank-suit-line' tools/pure-ddz/game/js/card-theme.js
@@ -124,7 +134,7 @@ jobs:
           ! grep -Fq 'width:80vw' tools/pure-ddz/game/js/card-theme.js
           ! grep -Fq '#floatDock' tools/pure-ddz/game/js/card-theme.js
 
-          # Integrated page scale, sticky-header compatibility and canonical Dock ownership.
+          # Desktop closure remains; landscape mode is scoped and respects canonical Dock + safe areas.
           grep -Fq -- '--ddz-game-max:var(--qily-content-axis,1560px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
           grep -Fq 'overflow-x:clip!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
           grep -Fq 'height:clamp(560px,calc(100vh - 260px),620px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
@@ -133,6 +143,10 @@ jobs:
           grep -Fq '#hint-message.hint-message{display:none!important}' tools/pure-ddz/game/css/ddz-site-page-v140.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/ddz-site-page-v140.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/card-comfort-v122.css
+          grep -Fq 'html.ddz-mobile-landscape body.ddz-site-page' tools/pure-ddz/game/css/mobile-landscape-v153.css
+          grep -Fq 'var(--ddz-mobile-vh,390px)' tools/pure-ddz/game/css/mobile-landscape-v153.css
+          grep -Fq 'env(safe-area-inset-right)' tools/pure-ddz/game/css/mobile-landscape-v153.css
+          ! grep -Fq '#floatDock' tools/pure-ddz/game/css/mobile-landscape-v153.css
           grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js
           grep -Fq '__qilyFloatingDockUnifiedV55' site-dock-share-runtime-v1.js
           ! grep -Fq 'html.ddz-ready body{overflow:auto!important}' tools/pure-ddz/game/css/r8-closure-v128.css
@@ -161,6 +175,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add capabilities/index.html tools/pure-ddz/index.html
-          git commit -m "fix: materialize DDZ integrated V152 public UI [skip ci]"
+          git commit -m "fix: materialize DDZ V153 mobile landscape public UI [skip ci]"
           git pull --rebase origin main
           git push origin main
