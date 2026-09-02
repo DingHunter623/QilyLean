@@ -1,5 +1,5 @@
-/* Pure DDZ v1.2.4｜横屏长辈友好视觉层
- * 2026-08-28 第二轮：头部重新分区、底牌/出牌放大、浮动导航收敛，并继续保持牌面高可读性。
+/* Pure DDZ v1.2.5｜横屏长辈友好牌面视觉层
+ * 2026-09-02 V152：本文件只保留斗地主牌面/牌桌历史舒适度规则；官网 Header 与六功能悬浮 Dock 完全由全站权威资源负责。
  */
 .qily-card-theme small{font-size:7.5px;letter-spacing:.03em}
 .qily-card-theme>strong{margin-top:6px;font-size:19px;line-height:1.04}
@@ -17,44 +17,6 @@
 .v120-play-card .qily-card-theme>b{font-size:8.2px}
 .v120-play-card .qily-card-theme>em{font-size:6.2px}
 .v120-play-card .qily-joker-visual{width:78%;height:58%;top:35%}
-
-/* 斗地主页专用浮动导航：从六个孤立圆按钮改为统一的轻量操作轨。 */
-html body #floatDock.qily-float-dock.qily-float-dock{
-  right:max(16px,env(safe-area-inset-right))!important;
-  bottom:max(18px,env(safe-area-inset-bottom))!important;
-  gap:7px!important;
-  padding:9px 8px!important;
-  border:1px solid rgba(202,161,95,.72)!important;
-  border-radius:24px!important;
-  background:rgba(5,56,66,.92)!important;
-  box-shadow:0 14px 34px rgba(2,34,40,.24)!important;
-  backdrop-filter:blur(8px)!important;
-}
-html body #floatDock.qily-float-dock.qily-float-dock .qily-float-btn.qily-float-btn,
-html body #floatDock.qily-float-dock.qily-float-dock .qily-float-btn.qily-float-btn[data-action="share"]{
-  flex:0 0 50px!important;
-  width:72px!important;min-width:72px!important;max-width:72px!important;
-  height:50px!important;min-height:50px!important;max-height:50px!important;
-  padding:5px 6px!important;
-  border:1px solid rgba(255,227,155,.72)!important;
-  border-radius:15px!important;
-  background:linear-gradient(145deg,#115765,#0b4552)!important;
-  box-shadow:0 5px 12px rgba(0,0,0,.18)!important;
-  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
-  font-size:15px!important;font-weight:900!important;line-height:1.05!important;
-  white-space:normal!important;overflow:hidden!important;
-}
-html body #floatDock.qily-float-dock.qily-float-dock .qily-float-btn.qily-float-btn:is(:hover,:focus-visible){
-  background:linear-gradient(145deg,#167584,#0d5562)!important;
-  border-color:#fff0bb!important;
-  box-shadow:0 7px 16px rgba(0,0,0,.24)!important;
-  transform:translateY(-1px)!important;
-}
-html body #floatDock.qily-float-dock.qily-float-dock [data-action="share"] .qily-share-label-line,
-html body #floatDock.qily-float-dock.qily-float-dock [data-action="share"] .qily-share-label-primary,
-html body #floatDock.qily-float-dock.qily-float-dock [data-action="share"] .qily-share-label-url{
-  font-size:14px!important;line-height:1.02!important;color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
-}
 
 @media(min-width:1181px){
   .game-shell{width:80vw;min-width:1080px;max-width:1600px;margin:0 auto;overflow:visible}
@@ -144,8 +106,6 @@ html body #floatDock.qily-float-dock.qily-float-dock [data-action="share"] .qily
 @media(max-width:1180px){
   .qily-card-theme small{font-size:5.9px}.qily-card-theme>strong{font-size:13px}.qily-card-theme>b{font-size:7px}.qily-card-theme>em{font-size:5.6px}
   .qily-joker-visual{width:72%;height:54%}.small-joker .qily-joker-visual,.big-joker .qily-joker-visual{width:72%}
-  html body #floatDock.qily-float-dock.qily-float-dock{padding:7px 6px!important;border-radius:20px!important}
-  html body #floatDock.qily-float-dock.qily-float-dock .qily-float-btn.qily-float-btn{width:64px!important;min-width:64px!important;max-width:64px!important;height:46px!important;min-height:46px!important;max-height:46px!important;flex-basis:46px!important;font-size:14px!important}
 }
 @media(max-width:900px){
   .qily-card-theme{inset:27px 3px 15px}
