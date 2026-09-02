@@ -52,11 +52,14 @@ function main(){
   const terminologyTotal=site&&site.terminology&&site.terminology.total||0;
   const indexedEntries=search&&search.meta&&search.meta.indexedEntries||site&&site.search&&site.search.indexedEntries||0;
   const syncVersion=site&&site.generatedAt||latest.date;
+  const weekly=Boolean(site&&site.briefs&&site.briefs.cadence==='weekly_curated');
+  const briefLabel=weekly?'精选简报总数':'今日简报总数';
+  const latestLabel=weekly?'最新精选日期':'最新简报日期';
 
   let page=read(trustFile);
   const statusPattern=/<div class="trust-status">[\s\S]*?<\/div>\s*<div class="trust-callout" style="margin-top:18px">/;
   const statusBlock=`<div class="trust-status" data-trust-live-source="/qilylean/daily/index.json">
-<div><strong data-trust-stat="terminology">${terminologyTotal}</strong><span>术语及单点课件</span></div><div><strong data-trust-stat="briefs">${briefTotal}</strong><span>今日简报总数</span></div><div><strong data-trust-stat="latest-date">${escapeHtml(latest.date)}</strong><span>最新简报日期</span></div><div><strong data-trust-stat="search">${indexedEntries||'自动'}</strong><span>站内搜索索引条目</span></div>
+<div><strong data-trust-stat="terminology">${terminologyTotal}</strong><span>术语及单点课件</span></div><div><strong data-trust-stat="briefs">${briefTotal}</strong><span>${briefLabel}</span></div><div><strong data-trust-stat="latest-date">${escapeHtml(latest.date)}</strong><span>${latestLabel}</span></div><div><strong data-trust-stat="search">${indexedEntries||'自动'}</strong><span>站内搜索索引条目</span></div>
 </div><div class="trust-callout" style="margin-top:18px">`;
   if(!statusPattern.test(page))throw new Error('Trust status block not found');
   page=page.replace(statusPattern,statusBlock);
@@ -66,12 +69,12 @@ function main(){
     `$1<span data-trust-sync-version>${escapeHtml(syncVersion)}</span>$3`
   );
 
-  const scriptTag='<script defer src="/trust/live-status.js?v=20260809-live-brief-count-v1"></script>';
+  const scriptTag='<script defer src="/trust/live-status.js?v=20260902-curated-date-links-v2"></script>';
   page=page.replace(/\n?<script defer src="\/trust\/live-status\.js[^>]*><\/script>/g,'');
   page=page.replace('</body>',`${scriptTag}\n</body>`);
 
   writeIfChanged(trustFile,page);
-  process.stdout.write(`Trust live status patched: ${briefTotal} briefs, latest ${latest.date}.\n`);
+  process.stdout.write(`Trust live status patched: ${briefTotal} ${weekly?'curated ':''}briefs, latest ${latest.date}; linked date runtime v2.\n`);
 }
 
 main();
