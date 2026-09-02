@@ -91,14 +91,16 @@ for (const file of files) {
   const noindex = hasNoindex(html);
   const redirect = isRedirect(html);
   const selfCanonical = !!canUrl && canUrl === pageUrl;
-  const inSitemap = sitemapSet.has(pageUrl) || (!!canUrl && sitemapSet.has(canUrl));
+  const pageSubmitted = sitemapSet.has(pageUrl);
+  const canonicalSubmitted = !!canUrl && sitemapSet.has(canUrl);
+  const discoverableViaSitemap = selfCanonical ? pageSubmitted : canonicalSubmitted;
 
   let classification = 'indexable_candidate';
   if (noindex) classification = 'intentional_or_review_noindex';
   else if (redirect) classification = 'redirect_excluded';
   else if (!canUrl) classification = 'missing_canonical';
   else if (!selfCanonical) classification = 'alternate_canonical';
-  else if (!inSitemap) classification = 'self_canonical_not_in_sitemap';
+  else if (!pageSubmitted) classification = 'self_canonical_not_in_sitemap';
   else classification = 'self_canonical_in_sitemap';
 
   const row = {
@@ -110,7 +112,9 @@ for (const file of files) {
     noindex,
     redirect,
     selfCanonical,
-    inSitemap,
+    pageSubmitted,
+    canonicalSubmitted,
+    discoverableViaSitemap,
     classification
   };
   rows.push(row);
@@ -150,6 +154,7 @@ const report = {
   notes: [
     'alternate_canonical and redirect exclusions can be legitimate and should not be forced into the index',
     'noindex pages require intent review; protected/admin/reference pages may be correct exclusions',
+    'pageSubmitted means the exact page URL is in a sitemap; canonicalSubmitted means only its canonical target is in a sitemap',
     'Search Console exclusion reasons remain the authority for the 65 reported URLs; this audit only identifies repository-side readiness risks'
   ]
 };
@@ -173,11 +178,11 @@ if (WRITE) {
   console.log('Wrote reports/seo-index-coverage-readiness.json and reports/seo-index-coverage-candidates.txt');
 }
 
-// Only structural contradictions are CI-fatal. Review candidates are reported,
-// not auto-mutated, so existing content and page relationships remain untouched.
-const fatal = rows.filter(row => row.inSitemap && (row.noindex || row.redirect));
+// Only direct structural contradictions are CI-fatal. A redirect/alternate page
+// whose canonical target is submitted is normal and must not be misclassified.
+const fatal = rows.filter(row => row.pageSubmitted && (row.noindex || row.redirect));
 if (fatal.length) {
   console.error('\nFatal sitemap/indexability contradictions:');
-  fatal.forEach(row => console.error(`- ${row.pageUrl}: ${row.noindex ? 'noindex' : 'redirect'} but submitted in sitemap`));
+  fatal.forEach(row => console.error(`- ${row.pageUrl}: ${row.noindex ? 'noindex' : 'redirect'} but exact URL is submitted in sitemap`));
   process.exit(1);
 }
