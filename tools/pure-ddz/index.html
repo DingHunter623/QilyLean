@@ -59,7 +59,7 @@
 <script>
     (()=>{
       const root='./game/';
-      const version='20260902-ddz-site-v140';
+      const version='20260829-ddz-mobile-ready-v132';
       const isWechat=/MicroMessenger/i.test(navigator.userAgent||'');
       const isMobile=/Android|iPhone|iPad|iPod|HarmonyOS|Mobile/i.test(navigator.userAgent||'')||(navigator.maxTouchPoints||0)>0;
       window.__PURE_DDZ_WECHAT_WEBVIEW__=isWechat;
@@ -202,7 +202,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
   <script>
     (()=>{
       const root=window.__PURE_DDZ_ROOT__||'./game/';
-      const version=window.__PURE_DDZ_CACHE_KEY__||'20260902-ddz-site-v140';
+      const version=window.__PURE_DDZ_CACHE_KEY__||'20260829-ddz-mobile-ready-v132';
       const status=document.getElementById('boot-status');
       const chain=['js/qilylean-theme.js','js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js','js/elder-assist-v140.js'];
       const scriptsReady=Promise.all(chain.map(path=>new Promise((resolve,reject)=>{
