@@ -1,0 +1,404 @@
+/* QilyLean Pure DDZ playability closure v1.4.1｜2026-09-02
+ * Purpose: restore practical playability at browser 100% zoom.
+ * - compact the site-page header/tool strip so the play controls stay in the first desktop viewport;
+ * - keep the full hand readable with strong rank/suit priority;
+ * - keep the last-play layer clear of the hand;
+ * - make the DDZ Dock visually identical to the canonical QilyLean six-action Dock.
+ */
+
+:root{--ddz-play-max:1200px}
+
+@media(min-width:901px){
+  html:root:root body.ddz-site-page .game-shell.ddz-site-module{
+    width:min(var(--ddz-play-max),calc(100% - 36px))!important;
+    max-width:var(--ddz-play-max)!important;
+    margin:10px auto 20px!important;
+  }
+
+  html:root:root body.ddz-site-page .ddz-page-heading{
+    width:100%!important;
+    box-sizing:border-box!important;
+    align-items:center!important;
+    gap:14px!important;
+    padding:10px 14px!important;
+    margin:0 0 8px!important;
+    border-radius:14px!important;
+  }
+  html:root:root body.ddz-site-page .ddz-page-heading .ddz-eyebrow{font-size:12px!important;margin-bottom:2px!important}
+  html:root:root body.ddz-site-page .ddz-page-heading h1{font-size:28px!important;line-height:1.08!important}
+  html:root:root body.ddz-site-page .ddz-page-heading p{font-size:14px!important;line-height:1.35!important;margin-top:4px!important}
+  html:root:root body.ddz-site-page .ddz-page-heading .ddz-page-note{max-width:430px!important;font-size:13px!important;line-height:1.35!important}
+
+  /* Reset the old game-topbar grid-area rules that leaked into the new site toolbar. */
+  html:root:root body.ddz-site-page .ddz-toolbar{
+    width:100%!important;
+    box-sizing:border-box!important;
+    display:grid!important;
+    grid-template-columns:minmax(330px,.92fr) minmax(0,1.08fr)!important;
+    grid-template-areas:none!important;
+    grid-auto-flow:row!important;
+    grid-auto-rows:auto!important;
+    align-items:center!important;
+    gap:10px!important;
+    min-height:60px!important;
+    padding:6px 8px!important;
+    margin:0 0 8px!important;
+    border-radius:14px!important;
+  }
+  html:root:root body.ddz-site-page .ddz-toolbar .scoreboard{
+    grid-area:auto!important;
+    justify-self:stretch!important;
+    align-self:center!important;
+    min-width:0!important;
+    width:100%!important;
+    display:grid!important;
+    grid-template-columns:repeat(3,minmax(88px,1fr))!important;
+    gap:6px!important;
+  }
+  html:root:root body.ddz-site-page .ddz-toolbar .scoreboard div{min-height:46px!important;padding:4px 8px!important;border-radius:10px!important}
+  html:root:root body.ddz-site-page .ddz-toolbar .scoreboard small{font-size:12px!important;line-height:1.1!important}
+  html:root:root body.ddz-site-page .ddz-toolbar .scoreboard strong{font-size:20px!important;line-height:1.05!important}
+  html:root:root body.ddz-site-page .ddz-toolbar .top-actions{
+    grid-area:auto!important;
+    justify-self:end!important;
+    align-self:center!important;
+    width:auto!important;
+    max-width:100%!important;
+    display:flex!important;
+    justify-content:flex-end!important;
+    align-items:center!important;
+    gap:6px!important;
+    flex-wrap:nowrap!important;
+    padding:0!important;
+    margin:0!important;
+    border:0!important;
+  }
+  html:root:root body.ddz-site-page .ddz-toolbar #audio-toggle,
+  html:root:root body.ddz-site-page .ddz-toolbar #help-open,
+  html:root:root body.ddz-site-page .ddz-toolbar #settings-open,
+  html:root:root body.ddz-site-page .ddz-toolbar .apk-inline,
+  html:root:root body.ddz-site-page .ddz-toolbar .start-btn{
+    min-width:0!important;
+    min-height:42px!important;
+    height:42px!important;
+    padding:6px 11px!important;
+    margin:0!important;
+    border-radius:10px!important;
+    font-size:14px!important;
+    line-height:1.05!important;
+    white-space:nowrap!important;
+  }
+  html:root:root body.ddz-site-page .ddz-toolbar #audio-toggle{min-width:96px!important}
+  html:root:root body.ddz-site-page .ddz-toolbar #help-open,
+  html:root:root body.ddz-site-page .ddz-toolbar #settings-open{min-width:58px!important}
+  html:root:root body.ddz-site-page .ddz-toolbar .apk-inline{min-width:132px!important}
+  html:root:root body.ddz-site-page .ddz-toolbar .start-btn{min-width:88px!important}
+
+  /* Product-story copy stays available elsewhere; it must not push the controls below the fold. */
+  html:root:root body.ddz-site-page .qily-product-overview{display:none!important}
+
+  html:root:root body.ddz-site-page .game-main{
+    width:100%!important;
+    max-width:100%!important;
+    margin:0 auto!important;
+    border-radius:14px!important;
+  }
+  html:root:root body.ddz-site-page .clean-promise{
+    min-height:30px!important;
+    padding:4px 10px!important;
+    border-radius:14px 14px 0 0!important;
+    font-size:13px!important;
+  }
+  html:root:root body.ddz-site-page .clean-promise strong,
+  html:root:root body.ddz-site-page .clean-promise span{font-size:13px!important;line-height:1.2!important}
+
+  /* Desktop table: fixed usable working envelope at 100% browser zoom. */
+  html:root:root body.ddz-site-page .table-wrap{
+    width:100%!important;
+    height:570px!important;
+    min-height:570px!important;
+    max-height:570px!important;
+    padding:10px 14px!important;
+    box-sizing:border-box!important;
+    overflow:hidden!important;
+    border-radius:0 0 14px 14px!important;
+  }
+  html:root:root body.ddz-site-page .table-wrap:before{inset:10px!important;border-radius:40% / 18%!important}
+
+  html:root:root body.ddz-site-page .ai{
+    top:72px!important;
+    width:154px!important;
+    padding:9px 7px!important;
+  }
+  html:root:root body.ddz-site-page .left-player{left:14px!important}
+  html:root:root body.ddz-site-page .right-player{right:14px!important}
+  html:root:root body.ddz-site-page .avatar{font-size:34px!important}
+  html:root:root body.ddz-site-page .player-name{font-size:18px!important}
+  html:root:root body.ddz-site-page .role,
+  html:root:root body.ddz-site-page .count,
+  html:root:root body.ddz-site-page .bid-tag{font-size:13px!important}
+
+  html:root:root body.ddz-site-page .center-area{
+    width:min(480px,calc(100% - 350px))!important;
+    padding-top:0!important;
+  }
+  html:root:root body.ddz-site-page .round-meta{gap:6px!important}
+  html:root:root body.ddz-site-page .round-meta span{padding:5px 10px!important;font-size:13px!important;border-width:1px!important}
+  html:root:root body.ddz-site-page .bottom-zone{margin-top:2px!important}
+  html:root:root body.ddz-site-page .bottom-label{font-size:12px!important}
+  html:root:root body.ddz-site-page .bottom-cards{min-height:70px!important;gap:4px!important}
+  html:root:root body.ddz-site-page .bottom-cards>.mini-card{
+    flex:0 0 58px!important;
+    min-width:58px!important;
+    width:58px!important;
+    max-width:58px!important;
+    height:76px!important;
+    min-height:76px!important;
+    max-height:76px!important;
+    margin:2px!important;
+    padding:4px 5px!important;
+    border-radius:9px!important;
+  }
+  html:root:root body.ddz-site-page .bottom-cards>.qily-mini-business b{font-size:18px!important;line-height:1!important}
+  html:root:root body.ddz-site-page .bottom-cards>.qily-mini-business small{font-size:8px!important}
+  html:root:root body.ddz-site-page .status{min-width:220px!important;min-height:34px!important;padding:4px 12px!important;font-size:17px!important}
+
+  /* Last play is informative, never allowed to cover the hand or the main controls. */
+  html:root:root body.ddz-site-page .v120-play-stage{
+    top:108px!important;
+    width:min(430px,calc(100% - 350px))!important;
+    min-height:120px!important;
+    max-height:142px!important;
+    padding:7px 10px!important;
+    border-radius:15px!important;
+  }
+  html:root:root body.ddz-site-page .v120-play-stage.left{left:175px!important;right:auto!important;transform:none!important}
+  html:root:root body.ddz-site-page .v120-play-stage.right{right:175px!important;left:auto!important;transform:none!important}
+  html:root:root body.ddz-site-page .v120-play-stage.me{left:50%!important;right:auto!important;transform:translateX(-50%)!important}
+  html:root:root body.ddz-site-page .v120-play-owner{font-size:16px!important;margin-bottom:4px!important}
+  html:root:root body.ddz-site-page .v120-play-card{
+    flex:0 0 64px!important;
+    width:64px!important;
+    height:94px!important;
+    margin-left:-8px!important;
+    border-width:2px!important;
+  }
+  html:root:root body.ddz-site-page .v120-play-card:first-child{margin-left:0!important}
+
+  /* Hand area: conventional card identity first, QilyLean theme second. */
+  html:root:root body.ddz-site-page #me-panel.me-player{
+    left:12px!important;
+    right:12px!important;
+    bottom:8px!important;
+    width:auto!important;
+    max-width:none!important;
+    min-height:248px!important;
+    height:248px!important;
+    padding:6px 10px 8px!important;
+    box-sizing:border-box!important;
+  }
+  html:root:root body.ddz-site-page .me-meta{min-height:28px!important;height:28px!important}
+  html:root:root body.ddz-site-page .me-meta .avatar{font-size:24px!important}
+  html:root:root body.ddz-site-page .me-meta .player-name{font-size:18px!important}
+  html:root:root body.ddz-site-page #hand.hand{
+    width:100%!important;
+    max-width:100%!important;
+    min-height:158px!important;
+    height:158px!important;
+    padding:10px 6px 3px!important;
+    box-sizing:border-box!important;
+    justify-content:safe center!important;
+    overflow-x:auto!important;
+    overflow-y:visible!important;
+    scrollbar-gutter:stable both-edges!important;
+  }
+  html:root:root body.ddz-site-page #hand.hand .card{
+    position:relative!important;
+    flex:0 0 104px!important;
+    width:104px!important;
+    min-width:104px!important;
+    max-width:104px!important;
+    height:154px!important;
+    min-height:154px!important;
+    max-height:154px!important;
+    margin-left:-49px!important;
+    padding:6px!important;
+    border-radius:11px!important;
+    border-width:2px!important;
+    overflow:hidden!important;
+  }
+  html:root:root body.ddz-site-page #hand.hand .card:first-child{margin-left:0!important}
+  html:root:root body.ddz-site-page #hand.hand:has(.card:nth-child(18)) .card{
+    flex-basis:100px!important;
+    width:100px!important;
+    min-width:100px!important;
+    max-width:100px!important;
+    height:150px!important;
+    min-height:150px!important;
+    max-height:150px!important;
+    margin-left:-46px!important;
+  }
+  html:root:root body.ddz-site-page #hand.hand .qily-card-corner{
+    position:absolute!important;
+    left:7px!important;
+    top:7px!important;
+    z-index:8!important;
+    opacity:1!important;
+    visibility:visible!important;
+  }
+  html:root:root body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{
+    display:block!important;
+    font-size:31px!important;
+    font-weight:1000!important;
+    line-height:.95!important;
+    letter-spacing:-.08em!important;
+    color:#172126!important;
+    -webkit-text-fill-color:#172126!important;
+    text-shadow:none!important;
+  }
+  html:root:root body.ddz-site-page #hand.hand .qily-card--normal.qily-rule-red .qily-rank-suit-line b{
+    color:#c62828!important;
+    -webkit-text-fill-color:#c62828!important;
+  }
+  html:root:root body.ddz-site-page #hand.hand .qily-card-theme{
+    inset:46px 7px 19px!important;
+    z-index:2!important;
+    opacity:.82!important;
+  }
+  html:root:root body.ddz-site-page #hand.hand .qily-card-theme>small{font-size:8px!important}
+  html:root:root body.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:18px!important;line-height:1.02!important}
+  html:root:root body.ddz-site-page #hand.hand .qily-card-theme>b{font-size:11px!important}
+  html:root:root body.ddz-site-page #hand.hand .qily-card-theme>em{font-size:8px!important}
+  html:root:root body.ddz-site-page #hand.hand .qily-card--joker .qily-card-corner b{font-size:18px!important;letter-spacing:0!important}
+  html:root:root body.ddz-site-page #hand.hand .qily-card--joker .qily-card-corner i{font-size:11px!important}
+  html:root:root body.ddz-site-page #hand.hand .qily-card--joker .qily-joker-visual{top:31%!important;width:82%!important;height:62%!important}
+
+  /* Played cards also keep rank/suit highly visible. */
+  html:root:root body.ddz-site-page .v120-play-card .qily-card-corner{left:5px!important;top:5px!important;z-index:8!important}
+  html:root:root body.ddz-site-page .v120-play-card .qily-card--normal .qily-rank-suit-line b{font-size:22px!important;font-weight:1000!important;line-height:.95!important;color:#172126!important;-webkit-text-fill-color:#172126!important}
+  html:root:root body.ddz-site-page .v120-play-card .qily-card--normal.qily-rule-red .qily-rank-suit-line b{color:#c62828!important;-webkit-text-fill-color:#c62828!important}
+  html:root:root body.ddz-site-page .v120-play-card .qily-card-theme{inset:34px 4px 12px!important;opacity:.78!important}
+  html:root:root body.ddz-site-page .v120-play-card .qily-card-theme>strong{font-size:13px!important}
+  html:root:root body.ddz-site-page .v120-play-card .qily-card-theme>b{font-size:8px!important}
+  html:root:root body.ddz-site-page .v120-play-card .qily-card-theme>small,
+  html:root:root body.ddz-site-page .v120-play-card .qily-card-theme>em{font-size:6px!important}
+
+  html:root:root body.ddz-site-page .controls{gap:7px!important;margin-top:2px!important;min-height:44px!important}
+  html:root:root body.ddz-site-page .control-btn{
+    min-width:112px!important;
+    min-height:44px!important;
+    height:44px!important;
+    padding:6px 14px!important;
+    border-radius:11px!important;
+    font-size:17px!important;
+  }
+  html:root:root body.ddz-site-page #hint-message.hint-message{
+    min-height:20px!important;
+    margin:2px auto 0!important;
+    padding:2px 10px!important;
+    font-size:12px!important;
+    line-height:1.25!important;
+  }
+
+  html:root:root body.ddz-site-page .site-footer{margin-top:7px!important;padding:7px 10px!important;font-size:12px!important}
+}
+
+/* Canonical QilyLean Dock reset. DDZ must not invent its own rectangle/rail treatment. */
+html:root:root body.ddz-site-page #floatDock.qily-float-dock,
+html:root:root body.ddz-site-page #floatDock.qily-floating-dock{
+  position:fixed!important;
+  right:max(12px,env(safe-area-inset-right))!important;
+  bottom:max(12px,env(safe-area-inset-bottom))!important;
+  left:auto!important;
+  top:auto!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  width:64px!important;
+  min-width:64px!important;
+  max-width:64px!important;
+  gap:7px!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  overflow:visible!important;
+}
+html:root:root body.ddz-site-page #floatDock .qily-float-btn{
+  box-sizing:border-box!important;
+  display:grid!important;
+  place-items:center!important;
+  flex:0 0 64px!important;
+  inline-size:64px!important;
+  block-size:64px!important;
+  width:64px!important;
+  height:64px!important;
+  min-width:64px!important;
+  min-height:64px!important;
+  max-width:64px!important;
+  max-height:64px!important;
+  margin:0!important;
+  padding:0!important;
+  border:1.5px solid #caa15f!important;
+  border-radius:50%!important;
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  background:#0f4b5a!important;
+  background-image:none!important;
+  box-shadow:0 8px 20px rgba(7,60,71,.22)!important;
+  font-size:13px!important;
+  font-weight:850!important;
+  line-height:1.08!important;
+  white-space:nowrap!important;
+  overflow:hidden!important;
+}
+html:root:root body.ddz-site-page #floatDock .qily-float-btn>.qily-dock-label{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:2.5px!important;
+  width:100%!important;
+  height:100%!important;
+  padding:5px!important;
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  font:850 13px/1.08 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  white-space:nowrap!important;
+}
+html:root:root body.ddz-site-page #floatDock .qily-float-btn:hover,
+html:root:root body.ddz-site-page #floatDock .qily-float-btn:focus-visible{background:#12606f!important;border-color:#ffe39b!important;transform:translateY(-1px)!important}
+
+@media(max-width:900px){
+  /* Do not let the desktop compacting rules leak into tablet/phone layouts. */
+  html:root:root body.ddz-site-page .qily-product-overview{display:block!important}
+}
+
+@media(max-width:620px){
+  html:root:root body.ddz-site-page #floatDock.qily-float-dock,
+  html:root:root body.ddz-site-page #floatDock.qily-floating-dock{
+    right:max(7px,env(safe-area-inset-right))!important;
+    bottom:max(8px,env(safe-area-inset-bottom))!important;
+    width:52px!important;
+    min-width:52px!important;
+    max-width:52px!important;
+    gap:5px!important;
+  }
+  html:root:root body.ddz-site-page #floatDock .qily-float-btn{
+    flex:0 0 52px!important;
+    inline-size:52px!important;
+    block-size:52px!important;
+    width:52px!important;
+    height:52px!important;
+    min-width:52px!important;
+    min-height:52px!important;
+    max-width:52px!important;
+    max-height:52px!important;
+  }
+  html:root:root body.ddz-site-page #floatDock .qily-float-btn>.qily-dock-label{padding:3px!important;font-size:11.5px!important}
+}
