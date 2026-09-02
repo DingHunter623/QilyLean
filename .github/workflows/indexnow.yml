@@ -10,6 +10,8 @@ on:
       - "sitemap-topics.xml"
       - "robots.txt"
       - "data/search-authority-map.json"
+      - "data/google-index-coverage-policy.json"
+      - ".github/workflows/indexnow.yml"
   workflow_dispatch:
 
 permissions:
@@ -28,7 +30,7 @@ jobs:
       SITE_ORIGIN: https://qilylean.com
       INDEXNOW_KEY: b47ed759da519bd90586a7877122d7be
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 2
 
@@ -69,8 +71,23 @@ jobs:
               root = ET.parse(file).getroot()
               return [node.text.strip() for node in root.findall("sm:url/sm:loc", namespace) if node.text and node.text.strip()]
 
+          def approved_priority_urls():
+              file = Path("data/google-index-coverage-policy.json")
+              if not file.exists():
+                  return []
+              payload = json.loads(file.read_text(encoding="utf-8"))
+              return [
+                  item["url"].strip()
+                  for item in payload.get("routes", [])
+                  if item.get("policy") == "submit" and item.get("url")
+              ]
+
           topic_urls = sitemap_urls("sitemap-topics.xml")
-          urls = set(topic_urls if event == "workflow_dispatch" else [])
+          priority_urls = approved_priority_urls()
+          urls = set()
+          if event == "workflow_dispatch":
+              urls.update(topic_urls)
+              urls.update(priority_urls)
 
           try:
               changed = subprocess.check_output(["git", "diff", "--name-only", "HEAD^", "HEAD"], text=True).splitlines()
@@ -91,6 +108,9 @@ jobs:
 
               if name in {"sitemap-topics.xml", "data/search-authority-map.json"}:
                   urls.update(topic_urls)
+
+              if name in {"data/google-index-coverage-policy.json", ".github/workflows/indexnow.yml"}:
+                  urls.update(priority_urls)
 
               if name in {"sitemap.xml", "sitemap-core.xml"}:
                   try:
