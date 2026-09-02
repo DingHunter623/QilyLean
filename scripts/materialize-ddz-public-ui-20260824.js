@@ -10,8 +10,10 @@ if(!fs.existsSync(indexFile)) throw new Error('Missing tools/pure-ddz/index.html
 let page=fs.readFileSync(indexFile,'utf8');
 const before=page;
 const CACHE='20260903-ddz-mobile-landscape-v153';
+const IOS_VIRTUAL_FALLBACK='<script defer id="qilyDdzIosVirtualLandscapeV154" data-qily-ddz-virtual-landscape="v154" src="/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154"></script>';
 
-// Pure DDZ is a normal QilyLean public page. Keep one integrated site shell, one game runtime chain and one mobile-landscape mode owner.
+// Pure DDZ is a normal QilyLean public page. Keep one integrated site shell, one core game runtime and one native mobile-landscape owner.
+// V154 adds only an explicit capability-gated fallback for iOS/WeChat browsers that cannot honor Screen Orientation Lock.
 page=page.replace(/const version='[^']+';/, `const version='${CACHE}';`);
 page=page.replace(/window.__PURE_DDZ_CACHE_KEY__\|\|'[^']+'/g, `window.__PURE_DDZ_CACHE_KEY__||'${CACHE}'`);
 page=page.replace(/loadStyle\('css\/card-comfort-v\d+\.css'\)/, "loadStyle('css/card-comfort-v122.css')");
@@ -38,6 +40,13 @@ if(!page.includes('id="welcome-landscape"')){
   page=page.replace('<button id="welcome-settings"','<button id="welcome-landscape" class="text-btn mobile-landscape-entry" type="button" hidden aria-hidden="true">↔ 横屏游玩</button><button id="welcome-settings"');
 }
 
+// Safari on iPhone/iPad does not provide a usable Screen Orientation Lock path. Load one scoped V154 fallback that rotates only the DDZ play surface.
+if(!page.includes('data-qily-ddz-virtual-landscape="v154"')){
+  page=page.replace(/<\/head>/i,`  ${IOS_VIRTUAL_FALLBACK}\n</head>`);
+}else{
+  page=page.replace(/<script\b[^>]*data-qily-ddz-virtual-landscape=["']v154["'][^>]*><\/script>/i,IOS_VIRTUAL_FALLBACK);
+}
+
 // Screenshot-annotated maintenance copy is not a public module. Keep the internal hint node only as a silent runtime target.
 page=page.replace(/\s*<div class="ddz-page-note">[\s\S]*?<\/div>\s*/g,'\n');
 page=page.replace(/<p id="hint-message" class="hint-message">[\s\S]*?<\/p>/g,'<p id="hint-message" class="hint-message" aria-hidden="true"></p>');
@@ -58,6 +67,7 @@ if(page.includes('ddz-site-shell-v140.js')) throw new Error('Game-specific site 
 if(page.includes('js/qilylean-theme.js')||page.includes('js/elder-assist-v140.js')) throw new Error('Legacy observer runtimes must stay unloaded');
 if(!page.includes("const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];")) throw new Error('DDZ V153 core runtime chain is missing');
 if(!page.includes('id="v120-landscape-toggle"')||!page.includes('id="welcome-landscape"')) throw new Error('DDZ V153 landscape entry controls are missing');
+if(!page.includes(IOS_VIRTUAL_FALLBACK)) throw new Error('DDZ V154 iOS virtual-landscape fallback is missing');
 if(!page.includes('/site-navigation.js?')) throw new Error('Canonical QilyLean navigation runtime is missing');
 if(!page.includes('/site-dock-share-runtime-v1.js?')) throw new Error('Canonical QilyLean Dock runtime is missing');
 if(page.includes('class="ddz-page-note"')) throw new Error('Maintenance page-note must stay removed');
@@ -72,7 +82,7 @@ if(!page.includes('<span>官网邮箱</span>')) throw new Error('官网邮箱 la
 
 if(page!==before){
   fs.writeFileSync(indexFile,page.endsWith('\n')?page:page+'\n');
-  console.log('Updated tools/pure-ddz/index.html with V153 mobile-landscape public runtime');
+  console.log('Updated tools/pure-ddz/index.html with V153 native landscape + V154 iOS virtual-landscape fallback');
 }else{
-  console.log('Pure DDZ V153 mobile-landscape public UI already current.');
+  console.log('Pure DDZ V153/V154 mobile-landscape public UI already current.');
 }
