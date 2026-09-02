@@ -14,42 +14,42 @@ const forbid=(source,token,label)=>{if(source.includes(token))fail(`${label}: fo
 
 const translation=read('site-translation-safe-runtime-v1.js');
 for(const [token,label] of [
-  ['Google Translate Header Runtime V1.4','single Google runtime'],
-  ['stable fast-path','stable translation fast-path'],
-  ["data-qily-translation-layout','stable-fast-path-v1",'stable translator geometry marker'],
-  ["grid-template-rows','38px 13px','reserved translator rows'],
-  ["min-height','60px','reserved translator height'],
-  ['function warmGoogleConnections()','Google connection warm-up'],
-  ["preconnect','https://translate.google.com",'Google element preconnect'],
-  ["preconnect','https://translate.googleapis.com",'Google static preconnect'],
-  ['function stabilizeTranslationReflow()','translation reflow guard'],
-  ["overflow-anchor','none','scroll anchoring guard'],
-  ["scroll-behavior','auto','translation scroll stability'],
-  ['loadGoogleAfterPage','fast translation start']
+  [`Google Translate Header Runtime V1.4`,`single Google runtime`],
+  [`stable fast-path`,`stable translation fast-path`],
+  [`data-qily-translation-layout','stable-fast-path-v1`,`stable translator geometry marker`],
+  [`grid-template-rows','38px 13px`,`reserved translator rows`],
+  [`min-height','60px`,`reserved translator height`],
+  [`function warmGoogleConnections()`,`Google connection warm-up`],
+  [`preconnect','https://translate.google.com`,`Google element preconnect`],
+  [`preconnect','https://translate.googleapis.com`,`Google static preconnect`],
+  [`function stabilizeTranslationReflow()`,`translation reflow guard`],
+  [`overflow-anchor','none`,`scroll anchoring guard`],
+  [`scroll-behavior','auto`,`translation scroll stability`],
+  [`loadGoogleAfterPage`,`fast translation start`]
 ])must(translation,token,label);
-for(const token of ['setTimeout(','setInterval(','new MutationObserver','location.reload','location.assign(','location.replace(','createTreeWalker'])forbid(translation,token,'translation runtime');
+for(const token of [`setTimeout(`,`setInterval(`,`new MutationObserver`,`location.reload`,`location.assign(`,`location.replace(`,`createTreeWalker`])forbid(translation,token,'translation runtime');
 
 const prefetch=read('site-native-prefetch-v1.js');
 for(const [token,label] of [
-  ['R7 intent navigation prefetch V2','intent-prefetch runtime'],
-  ["mode: 'native-navigation-plus-intent-prefetch'",'intent-only contract'],
-  ['backgroundWarm: false','no background warm'],
-  ['competesWithFirstPaint: false','first-paint bandwidth contract'],
-  ["d.addEventListener('pointerover'",'desktop intent prefetch'],
-  ["d.addEventListener('touchstart'",'touch intent prefetch'],
-  ["d.addEventListener('focusin'",'keyboard intent prefetch']
+  [`R7 intent navigation prefetch V2`,`intent-prefetch runtime`],
+  [`mode: 'native-navigation-plus-intent-prefetch'`,`intent-only contract`],
+  [`backgroundWarm: false`,`no background warm`],
+  [`competesWithFirstPaint: false`,`first-paint bandwidth contract`],
+  [`d.addEventListener('pointerover'`,`desktop intent prefetch`],
+  [`d.addEventListener('touchstart'`,`touch intent prefetch`],
+  [`d.addEventListener('focusin'`,`keyboard intent prefetch`]
 ])must(prefetch,token,label);
-for(const token of ['requestIdleCallback','setTimeout(','function warmPrimary','qily-r6-prefetch'])forbid(prefetch,token,'intent-prefetch runtime');
+for(const token of [`requestIdleCallback`,`setTimeout(`,`function warmPrimary`,`qily-r6-prefetch`])forbid(prefetch,token,'intent-prefetch runtime');
 
 const nativeNav=read('site-music-persistent-navigation-v1.js');
-must(nativeNav,"mode: 'native-only-v7'",'native navigation contract');
+must(nativeNav,`mode: 'native-only-v7'`,'native navigation contract');
 must(nativeNav,'domSwap: false','no DOM swap');
 must(nativeNav,'staleDocumentCacheRisk: false','stale-document reuse guard');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
-must(materializer,"const NATIVE_PREFETCH='/site-native-prefetch-v1.js?v=20260902-intent-prefetch-v2'",'intent-prefetch cache owner');
-must(materializer,"const TRANSLATION_FAST_REV='20260902-stable-fast-path-v2'",'translation fast-path cache revision');
-must(materializer,"next=next.replace(/\\/site-native-prefetch-v1\\.js",'sitewide intent-prefetch materialization');
+must(materializer,`const NATIVE_PREFETCH='/site-native-prefetch-v1.js?v=20260902-intent-prefetch-v2'`,'intent-prefetch cache owner');
+must(materializer,`const TRANSLATION_FAST_REV='20260902-stable-fast-path-v2'`,'translation fast-path cache revision');
+must(materializer,`next=next.replace(/\/site-native-prefetch-v1\.js`,'sitewide intent-prefetch materialization');
 
 const home=read('index.html');
 must(home,'qilyR2CriticalFirstPaintGuard','first-paint guard');
