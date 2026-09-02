@@ -93,6 +93,7 @@ html body #evidence-levels .trust-levels{align-items:stretch!important}
 html body #evidence-levels .trust-level{display:flex!important;flex-direction:column!important;height:100%!important}
 html body #evidence-levels .trust-level>span:not(.trust-evidence-links){display:block!important;min-height:108px!important;padding-bottom:14px!important;border-bottom:1px dashed #c8dad8!important}
 html body #evidence-levels .trust-level .trust-evidence-links{margin-top:14px!important;padding-top:0!important;border-top:0!important}
+html body #evidence-levels .trust-level .trust-evidence-links>span{display:block!important;min-height:calc(1.55em * 2)!important}
 html body #evidence-levels .trust-level .trust-evidence-links>a{display:block!important;margin-top:5px!important}
 
 /* Evidence grade on dark project hero: readable two-line evidence contract, not a faint badge. */
