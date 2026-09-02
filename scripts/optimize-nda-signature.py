@@ -64,6 +64,13 @@ def set_cell_width(cell, width_cm):
     width.set(qn("w:type"), "dxa")
 
 
+def set_cell_no_wrap(cell):
+    tc_pr = cell._tc.get_or_add_tcPr()
+    no_wrap = tc_pr.find(qn("w:noWrap"))
+    if no_wrap is None:
+        tc_pr.append(OxmlElement("w:noWrap"))
+
+
 def style_run(run, size=9.6, bold=False, color="405E5C"):
     run.font.name = "Noto Sans CJK SC"
     run._element.get_or_add_rPr().get_or_add_rFonts().set(qn("w:eastAsia"), "Noto Sans CJK SC")
@@ -115,11 +122,12 @@ def main():
 
     middle = table.cell(1, 1)
     set_cell_shading(middle, "F8FBFA")
+    set_cell_no_wrap(middle)
     paragraph = middle.paragraphs[0]
     paragraph.paragraph_format.space_after = Pt(2)
     style_run(paragraph.add_run("项目责任人：丁启利"))
     add_line(middle.add_paragraph(), "项目责任人签名：", "______________")
-    add_line(middle.add_paragraph(), "签署日期：", "______年____月____日")
+    add_line(middle.add_paragraph(), "签署日期：", "_____年___月___日")
 
     set_cell_shading(qr_cell, "F8FBFA")
     paragraph = qr_cell.paragraphs[0]
