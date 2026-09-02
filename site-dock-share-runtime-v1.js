@@ -1,12 +1,12 @@
-/* QilyLean Floating Dock Authoritative Runtime V5.4｜2026-08-29
+/* QilyLean Floating Dock Authoritative Runtime V5.5｜2026-09-02
  * One authority for public Dock structure, labels and actions.
  * Canonical actions: 首页 / 回顶部 / 回上一层 / 本站搜索 / 分享当前页 / 联系我们.
- * V5.4 keeps every mobile label inside its circular surface and preserves an unclipped shadow gutter.
- * Pure DDZ remains an immersive surface and explicitly excludes the site Dock.
+ * V5.5 keeps every mobile label inside its circular surface and treats Pure DDZ as a normal public page.
  */
 (function(d,w){
   'use strict';
-  if(w.__qilyFloatingDockUnifiedV54)return;
+  if(w.__qilyFloatingDockUnifiedV55)return;
+  w.__qilyFloatingDockUnifiedV55=true;
   w.__qilyFloatingDockUnifiedV54=true;
   w.__qilyFloatingDockUnifiedV53=true;
   w.__qilyFloatingDockUnifiedV52=true;
@@ -26,7 +26,6 @@
     current:['分享','当前页'],
     contact:['联系','我们']
   };
-  var EXCLUDED=/^\/tools\/pure-ddz(?:\/|\/index\.html)?$/;
   var handledClickAt=0;
 
   function normalizedPath(path){
@@ -35,7 +34,7 @@
     if(value.charAt(value.length-1)!=='/'&&!/\/[^/]+\.[^/]+$/.test(value))value+='/';
     return value.replace(/\/+$/,'/');
   }
-  function isExcluded(){return EXCLUDED.test(normalizedPath(location.pathname));}
+  function isExcluded(){return false;}
 
   function disableDockForPage(){
     d.documentElement.setAttribute('data-qily-dock','disabled');
@@ -86,7 +85,7 @@
   }
 
   function createStandaloneDock(){
-    var dock=d.createElement('div');dock.id='floatDock';dock.className='qily-float-dock';dock.dataset.qilyStandaloneDock='v5.4';dock.setAttribute('aria-label','快捷服务');
+    var dock=d.createElement('div');dock.id='floatDock';dock.className='qily-float-dock';dock.dataset.qilyStandaloneDock='v5.5';dock.setAttribute('aria-label','快捷服务');
     ORDER.forEach(function(action){var button=d.createElement('button');button.className='qily-float-btn qily-float-'+action;button.setAttribute('data-action',action);button.type='button';dock.appendChild(button);});
     (d.body||d.documentElement).appendChild(dock);return dock;
   }
@@ -99,7 +98,7 @@
     button.appendChild(label);
     button.setAttribute('aria-label',lines.join(''));
     button.setAttribute('title',lines.join(''));
-    button.setAttribute('data-qily-label-owner','dock-v5.4');
+    button.setAttribute('data-qily-label-owner','dock-v5.5');
   }
 
   function normalizeDock(){
@@ -114,7 +113,7 @@
     ORDER.forEach(function(action){var button=controls[action];button.className='qily-float-btn qily-float-'+action;setOwnedLabel(button,action);});
     controls.back.setAttribute('data-parent-route',parentRoute(location.pathname));
     var fragment=d.createDocumentFragment();ORDER.forEach(function(action){fragment.appendChild(controls[action]);});dock.appendChild(fragment);
-    dock.dataset.qilyStableOrder=ORDER.join(',');dock.dataset.qilyUnifiedPublicModule='v5.4';return true;
+    dock.dataset.qilyStableOrder=ORDER.join(',');dock.dataset.qilyUnifiedPublicModule='v5.5';return true;
   }
 
   function legacyCopy(text){var area=d.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.left='-9999px';(d.body||d.documentElement).appendChild(area);area.select();try{d.execCommand('copy');}catch(error){}area.remove();return Promise.resolve();}
