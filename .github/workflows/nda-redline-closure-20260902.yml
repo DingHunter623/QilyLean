@@ -1,0 +1,162 @@
+name: NDA redline closure 2026-09-02
+
+on:
+  push:
+    paths:
+      - '.github/workflows/nda-redline-closure-20260902.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nda-redline-closure-20260902
+  cancel-in-progress: true
+
+jobs:
+  remediate:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply approved redline closure
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          ROOT = Path('.')
+
+          def replace_once(path, old, new):
+              p = ROOT / path
+              text = p.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{path}: expected exactly one match, found {count}: {old[:100]!r}')
+              p.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          # 1) Signature block: larger vertical breathing room and larger official-site QR.
+          signature = 'scripts/optimize-nda-signature.py'
+          replace_once(
+              signature,
+              'def set_cell_margins(cell, top=90, start=140, bottom=90, end=140):',
+              'def set_cell_margins(cell, top=150, start=140, bottom=150, end=140):',
+          )
+          replace_once(
+              signature,
+              'def add_line(paragraph, label, blank, size=9.6):\n    paragraph.paragraph_format.space_after = Pt(2)\n    paragraph.paragraph_format.line_spacing = 1.15',
+              'def add_line(paragraph, label, blank, size=9.6):\n    paragraph.paragraph_format.space_after = Pt(6)\n    paragraph.paragraph_format.line_spacing = 1.42',
+          )
+          replace_once(
+              signature,
+              '    qr_cell = table.cell(0, 2).merge(table.cell(1, 2))\n\n    for text, column in (("委托信息", 0), ("QilyLean｜启力精益", 1)):',
+              '    qr_cell = table.cell(0, 2).merge(table.cell(1, 2))\n    set_cell_margins(qr_cell, top=110, start=55, bottom=110, end=55)\n\n    for text, column in (("委托信息", 0), ("QilyLean｜启力精益", 1)):',
+          )
+          replace_once(
+              signature,
+              '    paragraph = middle.paragraphs[0]\n    paragraph.paragraph_format.space_after = Pt(2)\n    style_run(paragraph.add_run("项目责任人：丁启利"))',
+              '    paragraph = middle.paragraphs[0]\n    paragraph.paragraph_format.space_after = Pt(6)\n    paragraph.paragraph_format.line_spacing = 1.42\n    style_run(paragraph.add_run("项目责任人：丁启利"))',
+          )
+          replace_once(
+              signature,
+              '    paragraph.add_run().add_picture(str(QR_PATH), width=Cm(2.05), height=Cm(2.05))',
+              '    paragraph.add_run().add_picture(str(QR_PATH), width=Cm(2.45), height=Cm(2.45))',
+          )
+
+          # 2) Preview page: align hero to the global 1560px content axis and eliminate the first-paint black canvas.
+          for preview in ('scripts/nda-source/nda-preview-template.html', 'trust/nda-preview.html'):
+              replace_once(
+                  preview,
+                  ':root{--forest:#0f4b5a;--teal:#178b94;--paper:#eef7f5;--line:#c8dad8;--muted:#526b69;--gold:#caa15f}',
+                  ':root{--forest:#0f4b5a;--teal:#178b94;--paper:#eef7f5;--line:#c8dad8;--muted:#526b69;--gold:#caa15f;--qily-content-axis:1560px;--qily-content-axis-gutter:clamp(18px,2.2vw,56px)}',
+              )
+              replace_once(
+                  preview,
+                  '.preview-head{padding:20px clamp(16px,5vw,64px);color:#fff;background:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))}.preview-inner{width:min(1220px,100%);margin:auto}',
+                  '.preview-head{padding:20px var(--qily-content-axis-gutter);color:#fff;background:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90))}.preview-inner{width:min(var(--qily-content-axis),100%);margin:auto}',
+              )
+              replace_once(
+                  preview,
+                  'padding:12px clamp(16px,5vw,64px);border-bottom:1px solid var(--line);',
+                  'padding:12px var(--qily-content-axis-gutter);border-bottom:1px solid var(--line);',
+              )
+              replace_once(
+                  preview,
+                  '.pdf-page{display:block;background:#fff;box-shadow:0 8px 28px rgba(15,75,90,.18)}.viewer-status{',
+                  '.pdf-page{display:block;background:#fff;box-shadow:0 8px 28px rgba(15,75,90,.18)}html body .pdf-page[hidden]{display:none!important}.viewer-status{',
+              )
+              replace_once(
+                  preview,
+                  "  var context=canvas.getContext('2d',{alpha:false});",
+                  "  var context=canvas.getContext('2d',{alpha:true});",
+              )
+
+          # 3) Bump the PDF cache token only in the canonical rebuild workflow so the rebuilt PDF and new URL publish atomically.
+          workflow = '.github/workflows/rebuild-nda-official-email-20260901.yml'
+          replace_once(
+              workflow,
+              "          old_tokens = [\n              'qilylean-mutual-nda-v1.pdf?v=20260801-upload-v2',\n              'qilylean-mutual-nda-v1.pdf?v=20260801-template-v2',\n          ]\n          new_token = 'qilylean-mutual-nda-v1.pdf?v=20260901-official-email-v3'",
+              "          old_tokens = [\n              'qilylean-mutual-nda-v1.pdf?v=20260801-upload-v2',\n              'qilylean-mutual-nda-v1.pdf?v=20260801-template-v2',\n              'qilylean-mutual-nda-v1.pdf?v=20260901-official-email-v3',\n          ]\n          new_token = 'qilylean-mutual-nda-v1.pdf?v=20260902-visual-closure-v4'",
+          )
+          replace_once(
+              workflow,
+              "          from pathlib import Path\n          old_tokens = [",
+              "          from pathlib import Path\n          from datetime import datetime, timezone, timedelta\n          old_tokens = [",
+          )
+          replace_once(
+              workflow,
+              "              '2026-09-01T12:31:00+08:00\\n'",
+              "              datetime.now(timezone(timedelta(hours=8))).isoformat(timespec='seconds') + '\\n'",
+          )
+          replace_once(
+              workflow,
+              "              'version=V1.0-official-email-v3\\n'",
+              "              'version=V1.0-visual-closure-v4\\n'",
+          )
+          for old, new in (
+              ("grep -Fq '20260901-official-email-v3' trust/nda-preview.html", "grep -Fq '20260902-visual-closure-v4' trust/nda-preview.html"),
+              ("grep -Fq '20260901-official-email-v3' scripts/nda-source/nda-preview-template.html", "grep -Fq '20260902-visual-closure-v4' scripts/nda-source/nda-preview-template.html"),
+              ("grep -Fq '20260901-official-email-v3' scripts/publish-nda-mobile-preview.js", "grep -Fq '20260902-visual-closure-v4' scripts/publish-nda-mobile-preview.js"),
+              ('name: nda-official-email-v3-visual-qa', 'name: nda-visual-closure-v4-visual-qa'),
+              ("git commit -m 'build(nda): publish official email in confidentiality statement [skip nda rebuild]'", "git commit -m 'build(nda): publish visual closure [skip nda rebuild]'"),
+          ):
+              replace_once(workflow, old, new)
+
+          # Static closure assertions before publication.
+          sig = (ROOT / signature).read_text(encoding='utf-8')
+          if 'width=Cm(2.45), height=Cm(2.45)' not in sig or 'line_spacing = 1.42' not in sig:
+              raise SystemExit('Signature visual closure assertion failed')
+          for preview in ('scripts/nda-source/nda-preview-template.html', 'trust/nda-preview.html'):
+              html = (ROOT / preview).read_text(encoding='utf-8')
+              for required in ('--qily-content-axis:1560px', '.pdf-page[hidden]{display:none!important}', "getContext('2d',{alpha:true})"):
+                  if required not in html:
+                      raise SystemExit(f'{preview}: missing {required}')
+          print('Applied NDA visual redline closure without touching unrelated global resources.')
+          PY
+
+      - name: Commit targeted remediation
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            scripts/optimize-nda-signature.py \
+            scripts/nda-source/nda-preview-template.html \
+            trust/nda-preview.html \
+            .github/workflows/rebuild-nda-official-email-20260901.yml
+          git diff --cached --check
+          git diff --cached --quiet && { echo 'No remediation changes detected.'; exit 0; }
+          git commit -m 'fix(nda): close spacing QR axis and first-paint redlines'
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Concurrent main update detected; retrying safe rebase/push (${attempt}/5)."
+            sleep 3
+          done
+          echo 'Unable to publish NDA redline closure after five retries.' >&2
+          exit 1
