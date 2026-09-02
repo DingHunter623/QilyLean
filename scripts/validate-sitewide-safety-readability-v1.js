@@ -105,10 +105,29 @@ must(ddz,'#hint-message.hint-message{display:none!important}','DDZ fixed mainten
 forbid(ddz,'#floatDock','DDZ local Dock ownership');
 const ddzComfort=read('tools/pure-ddz/game/css/card-comfort-v122.css');
 forbid(ddzComfort,'#floatDock','DDZ comfort layer local Dock ownership');
+const ddzLandscape=read('tools/pure-ddz/game/css/mobile-landscape-v153.css');
+must(ddzLandscape,'html.ddz-mobile-landscape body.ddz-site-page','DDZ landscape scoped owner');
+must(ddzLandscape,'var(--ddz-mobile-vh,390px)','DDZ visual-viewport height sizing');
+must(ddzLandscape,'env(safe-area-inset-right)','DDZ landscape safe area');
+forbid(ddzLandscape,'#floatDock','DDZ landscape layer local Dock ownership');
 const ddzGame=read('tools/pure-ddz/game/js/game.js');
-must(ddzGame,"const VERSION = '1.5.2'",'DDZ V152 game');
+must(ddzGame,"const VERSION = '1.5.2'",'DDZ V152 game core');
 must(ddzGame,"auto?'不要':'您不要'",'DDZ auto-pass narration');
 must(ddzGame,"flash('不要，自动轮到下家')",'DDZ auto-pass visual feedback');
+const ddzVisual=read('tools/pure-ddz/game/js/visual-v120.js');
+must(ddzVisual,"version:'1.2.4-mobile-landscape-adaptive'",'DDZ V153 landscape runtime');
+must(ddzVisual,'function syncViewportProfile()','DDZ viewport profile');
+must(ddzVisual,'screen.orientation?.lock','DDZ supported-browser landscape lock');
+must(ddzVisual,'document.documentElement.requestFullscreen','DDZ user-gesture fullscreen request');
+must(ddzVisual,'window.PureDDZTest.hint()','DDZ single Hint behavior owner');
+
+const ddzIndex=read('tools/pure-ddz/index.html');
+must(ddzIndex,'20260903-ddz-mobile-landscape-v153','DDZ V153 cache');
+must(ddzIndex,"loadStyle('css/mobile-landscape-v153.css')",'DDZ landscape stylesheet load');
+must(ddzIndex,'id="v120-landscape-toggle"','DDZ toolbar landscape entry');
+must(ddzIndex,'id="welcome-landscape"','DDZ welcome landscape entry');
+forbid(ddzIndex,'name="screen-orientation"','DDZ must not rely on forced orientation metadata');
+forbid(ddzIndex,'name="x5-orientation"','DDZ must not rely on X5 forced orientation metadata');
 
 const mat=read('scripts/materialize-global-language-v3.js');
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline identity');
@@ -133,4 +152,4 @@ must(containment,'QilyLean Responsive Containment V1','Responsive containment CS
 must(containment,'overscroll-behavior-inline:contain','Local horizontal-scroll containment');
 forbid(containment,'width:100vw','Page-level viewport widening');
 
-console.log('PASS: safety/readability owners retain official sticky Header and Dock V5.5 while DDZ V152 keeps large functional controls, white status text and safe auto-pass behavior.');
+console.log('PASS: safety/readability owners retain official sticky Header and Dock V5.5 while DDZ V153 adds user-gesture landscape rotation and actual-viewport adaptive sizing.');
