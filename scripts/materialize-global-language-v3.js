@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V32｜2026-09-02 performance-stability closure
+/* QilyLean Sitewide Public Baseline Materializer V33｜2026-09-02 DDZ public-page closure
  * Chinese static HTML remains the authoritative source and default display.
  * Google Translate Header Runtime V1.4 is the single public translation provider and lifecycle owner.
  * Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.7 owns interaction meaning and the native range navigation rail.
@@ -11,7 +11,7 @@
  * Responsive Containment V1 guards page geometry.
  * Header + Project Integrity V3 retains complete header framing and project-evidence layout.
  * Public Redline Closure V2.3 retains shared visual/professional corrections without translation ownership.
- * Dock V5.4 alone owns Dock structure/labels/actions.
+ * Dock V5.5 alone owns Dock structure/labels/actions, including Pure DDZ as a normal public page.
  * R7 intent-prefetch V2 keeps native navigation fast without idle-time bandwidth competition.
  */
 const fs=require('fs');
@@ -20,11 +20,11 @@ const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 
-const BASELINE_VERSION='20260831-google-translate-single-runtime-v32';
+const BASELINE_VERSION='20260902-google-translate-single-runtime-v33';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
-const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260829-authority-v54';
+const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260902-authority-v55';
 const CORE_SERVICE_DOCK='/site-core-service-dock-closure-v1.js?v=20260828-r7-alignment-v105';
 const NATIVE_PREFETCH='/site-native-prefetch-v1.js?v=20260902-intent-prefetch-v2';
 const HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8';
@@ -50,7 +50,6 @@ const TRANSLATION_FAST_REV='20260902-stable-fast-path-v2';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal';
 const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range';
-const DDZ_CLOSURE_CSS='/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132';
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
 const NAV_RAIL_VI_CRITICAL=`<style id="qilyNavRailViCriticalV1">
 :root{--qily-nav-rail-track:#b9d9d4;--qily-nav-rail-thumb:#0f4b5a;--qily-nav-rail-thumb-hover:#12606f}
@@ -105,7 +104,6 @@ function materialize(source,relative){
     `<link id="qilyPublicRedlineClosureV1" rel="stylesheet" href="${PUBLIC_REDLINE_CSS}">`,
     `<link id="qilyPublicRedlineClosureV2" rel="stylesheet" href="${PUBLIC_REDLINE_V2_CSS}">`,
     `<link id="qilyInteractionSemanticsV1Stylesheet" rel="stylesheet" href="${INTERACTION_SEMANTICS_CSS}">`,
-    relative==='tools/pure-ddz/index.html'?`<link id="qilyPureDdzR8ClosureV128" rel="stylesheet" href="${DDZ_CLOSURE_CSS}">`:'',
     `<script defer data-qily-public-redline-v2-direct="annotated-v2" src="${PUBLIC_REDLINE_V2_JS}"></script>`,
     `<script defer data-qily-interaction-contrast-direct="v2" src="${INTERACTION_CONTRAST_JS}"></script>`,
     `<script defer data-qily-content-contrast-direct="v6" src="${CONTENT_CONTRAST_JS}"></script>`,
@@ -131,4 +129,4 @@ function materialize(source,relative){
 const changed=[];
 for(const relative of trackedHtml()){const target=path.join(root,relative),source=fs.readFileSync(target,'utf8'),next=materialize(source,relative);if(next===source)continue;changed.push(relative);if(!checkOnly)fs.writeFileSync(target,next,'utf8');}
 if(checkOnly&&changed.length)throw new Error(`Sitewide Google-Translate single-runtime baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
-process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1.4 stable fast-path + Interaction Semantics V1.7 + R7 intent-prefetch V2; baseline ${BASELINE_VERSION}.\n`);
+process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1.4 stable fast-path + Interaction Semantics V1.7 + Dock V5.5 + R7 intent-prefetch V2; baseline ${BASELINE_VERSION}.\n`);
