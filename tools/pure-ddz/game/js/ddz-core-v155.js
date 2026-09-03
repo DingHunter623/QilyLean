@@ -324,7 +324,7 @@
   const COMBO_TEXT = {single:'单牌',pair:'对子',triple:'三张',triple1:'三带一',triple2:'三带二',straight:'顺子',pairStraight:'连对',airplane:'飞机',airplane1:'飞机带单',airplane2:'飞机带对',four2:'四带二',four2pair:'四带两对',bomb:'炸弹',rocket:'王炸'};
   const DEFAULT_PROFILE = {score:1000,wins:0,losses:0,streak:0,bestStreak:0,games:0,lastRewardDate:''};
   const DEFAULT_SETTINGS = {music:true,voice:true,effects:true,font:'large',difficulty:'expert'};
-  const state = {phase:'idle',hands:[[],[],[]],bottom:[],landlord:null,current:0,lastPlay:null,passCount:0,selected:new Set(),winner:null,bids:[null,null,null],bidStart:0,bidTurns:0,highestBid:0,highestBidder:null,baseScore:1,multiplier:1,playCounts:[0,0,0],roundNumber:0,turnTimer:null,musicTimer:null,audioCtx:null,musicMode:'normal',flowToken:0,profile:loadJson(PROFILE_KEY,DEFAULT_PROFILE),settings:loadJson(SETTINGS_KEY,DEFAULT_SETTINGS)};
+  const state = {phase:'idle',hands:[[],[],[]],bottom:[],landlord:null,current:0,lastPlay:null,passCount:0,selected:new Set(),winner:null,bids:[null,null,null],bidStart:0,bidTurns:0,highestBid:0,highestBidder:null,baseScore:1,multiplier:1,playCounts:[0,0,0],roundNumber:0,turnTimer:null,humanTurnTimer:null,humanTurnInterval:null,humanDeadline:0,musicTimer:null,audioCtx:null,musicMode:'normal',flowToken:0,profile:loadJson(PROFILE_KEY,DEFAULT_PROFILE),settings:loadJson(SETTINGS_KEY,DEFAULT_SETTINGS)};
 
   const $ = id => document.getElementById(id);
   const nextPlayer = player => (player + 1) % 3;
@@ -361,35 +361,36 @@
   function renderBottomCards(){const reveal=state.landlord!==null&&state.phase!=='idle';$('bottom-cards').innerHTML=reveal?state.bottom.map(renderMiniCard).join(''):Array.from({length:3},()=>'<i class="bottom-back"></i>').join('');}
   function describePlay(play){
     if(!play?.cards?.length||!play.combo)return'';
-    const who=playerVoiceName(play.player),combo=play.combo,type=combo.type,main=rankText(combo.main),groups=countRanks(play.cards),ranks=[...groups.keys()].sort((a,b)=>a-b);
-    if(type==='rocket')return`${who}出牌：王炸`;
-    if(type==='bomb')return`${who}出牌：四个${main}，炸弹`;
-    if(type==='single')return`${who}出牌：${main}`;
-    if(type==='pair')return`${who}出牌：一对${main}`;
-    if(type==='triple')return`${who}出牌：三个${main}`;
-    if(type==='triple1'){const side=ranks.find(rank=>rank!==combo.main);return`${who}出牌：三个${main}带${rankText(side)}`;}
-    if(type==='triple2'){const side=ranks.find(rank=>rank!==combo.main);return`${who}出牌：三个${main}带一对${rankText(side)}`;}
-    if(type==='straight')return`${who}出牌：${rankText(ranks[0])}到${rankText(ranks.at(-1))}顺子`;
-    if(type==='pairStraight')return`${who}出牌：${rankText(ranks[0])}到${rankText(ranks.at(-1))}连对`;
+    const combo=play.combo,type=combo.type,main=rankText(combo.main),groups=countRanks(play.cards),ranks=[...groups.keys()].sort((a,b)=>a-b);
+    const say=body=>play.player===0?`我出${body}`:`${playerName(play.player)}出牌：${body}`;
+    if(type==='rocket')return say('王炸');
+    if(type==='bomb')return say(`四个${main}，炸弹`);
+    if(type==='single')return say(main);
+    if(type==='pair')return say(`一对${main}`);
+    if(type==='triple')return say(`三个${main}`);
+    if(type==='triple1'){const side=ranks.find(rank=>rank!==combo.main);return say(`三个${main}带${rankText(side)}`);}
+    if(type==='triple2'){const side=ranks.find(rank=>rank!==combo.main);return say(`三个${main}带一对${rankText(side)}`);}
+    if(type==='straight')return say(`${rankText(ranks[0])}到${rankText(ranks.at(-1))}顺子`);
+    if(type==='pairStraight')return say(`${rankText(ranks[0])}到${rankText(ranks.at(-1))}连对`);
     if(type==='four2'||type==='four2pair'){
       const side=ranks.filter(rank=>rank!==combo.main).map(rank=>rankText(rank)).join('、');
-      return`${who}出牌：四个${main}${type==='four2pair'?'带两对':'带两张'}${side?`，${side}`:''}`;
+      return say(`四个${main}${type==='four2pair'?'带两对':'带两张'}${side?`，${side}`:''}`);
     }
     if(type==='airplane'||type==='airplane1'||type==='airplane2'){
       const tripleRanks=ranks.filter(rank=>(groups.get(rank)||0)>=3&&rank<=14);
       const core=tripleRanks.length>1?`${rankText(tripleRanks[0])}到${rankText(tripleRanks.at(-1))}飞机`:'飞机';
-      if(type==='airplane')return`${who}出牌：${core}`;
+      if(type==='airplane')return say(core);
       const remain=[];
       groups.forEach((size,rank)=>{let left=size-(tripleRanks.includes(rank)?3:0);while(left-->0)remain.push(rankText(rank));});
-      if(type==='airplane1')return`${who}出牌：${core}带翅膀${remain.length?`，带${remain.join('、')}`:''}`;
+      if(type==='airplane1')return say(`${core}带翅膀${remain.length?`，带${remain.join('、')}`:''}`);
       const pairs=[];for(let i=0;i<remain.length;i+=2)pairs.push(remain[i]);
-      return`${who}出牌：${core}带翅膀${pairs.length?`，带${pairs.map(value=>'一对'+value).join('、')}`:''}`;
+      return say(`${core}带翅膀${pairs.length?`，带${pairs.map(value=>'一对'+value).join('、')}`:''}`);
     }
-    return`${who}出牌：${comboText(combo)}`;
+    return say(comboText(combo));
   }
   function renderHand(){const hand=$('hand');hand.innerHTML='';state.hands[0].forEach(card=>{const button=document.createElement('button'),selected=state.selected.has(card.id);button.type='button';button.className=`card${selected?' selected':''}${isRed(card)?' red':''}${card.rank>=16?' joker':''}`;button.dataset.id=String(card.id);button.setAttribute('aria-label',`${cardLabel(card)}${selected?'，已选择':'，未选择'}`);button.setAttribute('aria-pressed',String(selected));button.innerHTML=window.QilyLeanCardTheme?window.QilyLeanCardTheme.renderCard(card):(card.rank>=16?`<strong>${RANK_TEXT[card.rank]}</strong>`:`<strong>${RANK_TEXT[card.rank]}</strong><span>${card.suit}</span>`);button.addEventListener('click',()=>toggleSelect(card.id));hand.appendChild(button);});}
   function renderLastPlay(){if(state.lastPlay){const last=state.lastPlay;$('center-play').innerHTML=`<div class="play-owner">${describePlay(last)}</div><div class="played-cards">${last.cards.map(renderMiniCard).join('')}</div>`;return;}const copy=state.phase==='bidding'?'正在叫地主，分数最高者获得三张底牌':state.phase==='playing'?'新一轮，领出玩家可以出任意合规牌型':'点击“开始游戏”，无需登录即可游玩';$('center-play').innerHTML=`<div class="center-tip">${copy}</div>`;}
-  function renderStatus(){if(state.phase==='idle')$('status').textContent='准备开始';else if(state.phase==='bidding')$('status').textContent=state.current===0?'轮到你叫地主':`${playerName(state.current)} 正在考虑叫分…`;else if(state.phase==='ended')$('status').textContent=state.winner===0?'🎉 你先出完了！':`${playerName(state.winner)} 先出完了`;else $('status').textContent=state.current===0?'轮到你出牌':`${playerName(state.current)} 正在思考…`;}
+  function renderStatus(){if(state.phase==='idle')$('status').textContent='准备开始';else if(state.phase==='bidding')$('status').textContent=state.current===0?'轮到你叫地主':`${playerName(state.current)} 正在考虑叫分…`;else if(state.phase==='ended')$('status').textContent=state.winner===0?'🎉 你先出完了！':`${playerName(state.winner)} 先出完了`;else if(state.current===0)updateHumanCountdown();else $('status').textContent=`${playerName(state.current)} 正在思考…`;}
   function renderControls(){const humanBid=state.phase==='bidding'&&state.current===0,humanTurn=state.phase==='playing'&&state.current===0;$('bid-controls').classList.toggle('hidden',!humanBid);$('play-controls').classList.toggle('hidden',state.phase!=='playing');$('play').disabled=!humanTurn;$('hint').disabled=!humanTurn;$('pass').disabled=!humanTurn||!state.lastPlay||state.lastPlay.player===0;document.querySelectorAll('[data-bid]').forEach(button=>{button.disabled=!humanBid||Number(button.dataset.bid)<=state.highestBid&&Number(button.dataset.bid)!==0;});}
   function renderActivePlayer(){document.querySelectorAll('.player-panel').forEach(panel=>panel.classList.remove('active'));if(!['bidding','playing'].includes(state.phase))return;$(state.current===0?'me-panel':state.current===1?'left-panel':'right-panel').classList.add('active');}
   function render(){const sizes=state.hands.map(hand=>hand.length);$('left-count').textContent=`${sizes[1]||0} 张`;$('right-count').textContent=`${sizes[2]||0} 张`;$('me-count').textContent=`${sizes[0]||0} 张`;updateRole('left-role',1);updateRole('right-role',2);updateRole('me-role',0);['me','left','right'].forEach((key,index)=>{const bid=state.bids[index];$(`${key}-bid`).textContent=bid===null?'':bid===0?'不叫':`${bid} 分`;});renderBacks('left-backs',sizes[1]);renderBacks('right-backs',sizes[2]);renderBottomCards();renderHand();renderLastPlay();renderStatus();renderControls();renderActivePlayer();$('round-number').textContent=state.roundNumber;$('base-score').textContent=state.baseScore;$('multiplier').textContent=`×${state.multiplier}`;$('start').textContent=state.phase==='idle'?'开始游戏':'重新开局';renderProfile();}
@@ -417,14 +418,50 @@
   }
   function speak(text){void speakAsync(text,{hold:0});}
   function afterNarration(text,callback,hold){const token=state.flowToken;speakAsync(text,{hold:hold??narrationHold(text)}).then(()=>{if(token===state.flowToken)callback?.();});}
-  function startRound(){clearTimeout(state.turnTimer);state.flowToken++;try{speechSynthesis.cancel();}catch(_error){}closeModal('welcome');closeModal('result');if(window.QilyLeanExpertAI)window.QilyLeanExpertAI.memory.reset();state.phase='bidding';state.hands=[[],[],[]];state.bottom=[];state.landlord=null;state.lastPlay=null;state.passCount=0;state.selected.clear();state.winner=null;state.bids=[null,null,null];state.bidTurns=0;state.highestBid=0;state.highestBidder=null;state.baseScore=1;state.multiplier=1;state.playCounts=[0,0,0];const deck=shuffle(createDeck());state.hands=[deck.slice(0,17),deck.slice(17,34),deck.slice(34,51)];state.bottom=deck.slice(51);state.hands.forEach(sortHand);state.bidStart=Math.floor(Math.random()*3);state.current=state.bidStart;state.roundNumber=state.profile.games+1;$('hint-message').textContent='';render();try{startMusic();}catch(error){console.warn('Pure DDZ music unavailable:',error);}afterNarration('开始叫地主',scheduleTurn,500);}
+
+  function clearHumanTurnClock(){
+    clearTimeout(state.humanTurnTimer);clearInterval(state.humanTurnInterval);
+    state.humanTurnTimer=null;state.humanTurnInterval=null;state.humanDeadline=0;
+  }
+  function updateHumanCountdown(){
+    if(state.phase!=='playing'||state.current!==0){return;}
+    const remaining=state.humanDeadline?Math.max(0,Math.ceil((state.humanDeadline-Date.now())/1000)):30;
+    $('status').textContent=`轮到你出牌 · ${remaining}秒`;
+  }
+  function handleHumanTimeout(){
+    if(state.phase!=='playing'||state.current!==0)return;
+    clearHumanTurnClock();
+    if(state.lastPlay&&state.lastPlay.player!==0){
+      flash('30秒未出牌，自动不要');
+      pass(0,{auto:true});
+      return;
+    }
+    const choice=chooseAiPlay(0);
+    if(choice?.cards?.length){
+      flash('30秒未出牌，系统代出一手');
+      commitPlay(0,choice.cards);
+      return;
+    }
+    flash('请尽快出牌');
+    beginHumanTurn();
+  }
+  function beginHumanTurn(){
+    clearHumanTurnClock();
+    if(state.phase!=='playing'||state.current!==0)return;
+    state.humanDeadline=Date.now()+30000;
+    updateHumanCountdown();
+    speak('该您了');
+    state.humanTurnInterval=setInterval(updateHumanCountdown,250);
+    state.humanTurnTimer=setTimeout(handleHumanTimeout,30000);
+  }
+  function startRound(){clearTimeout(state.turnTimer);clearHumanTurnClock();state.flowToken++;try{speechSynthesis.cancel();}catch(_error){}closeModal('welcome');closeModal('result');if(window.QilyLeanExpertAI)window.QilyLeanExpertAI.memory.reset();state.phase='bidding';state.hands=[[],[],[]];state.bottom=[];state.landlord=null;state.lastPlay=null;state.passCount=0;state.selected.clear();state.winner=null;state.bids=[null,null,null];state.bidTurns=0;state.highestBid=0;state.highestBidder=null;state.baseScore=1;state.multiplier=1;state.playCounts=[0,0,0];const deck=shuffle(createDeck());state.hands=[deck.slice(0,17),deck.slice(17,34),deck.slice(34,51)];state.bottom=deck.slice(51);state.hands.forEach(sortHand);state.bidStart=Math.floor(Math.random()*3);state.current=state.bidStart;state.roundNumber=state.profile.games+1;$('hint-message').textContent='';render();try{startMusic();}catch(error){console.warn('Pure DDZ music unavailable:',error);}afterNarration('开始叫地主',scheduleTurn,500);}
   function placeBid(player,bid){if(state.phase!=='bidding'||state.current!==player)return;const safeBid=Number(bid);state.bids[player]=safeBid;state.bidTurns++;if(safeBid>state.highestBid){state.highestBid=safeBid;state.highestBidder=player;}playEffect(safeBid?'confirm':'pass');render();const text=safeBid?`${playerVoiceName(player)}叫${safeBid}分`:`${playerVoiceName(player)}不叫`;if(safeBid===3||state.bidTurns>=3){afterNarration(text,finishBidding,650);return;}afterNarration(text,()=>{state.current=nextPlayer(player);render();scheduleTurn();},650);}
   function finishBidding(){if(state.phase!=='bidding')return;if(state.highestBidder===null){flash('本轮都不叫，自动重新发牌');afterNarration('都不叫，重新发牌',startRound,900);return;}state.landlord=state.highestBidder;state.baseScore=Math.max(1,state.highestBid);state.hands[state.landlord].push(...state.bottom);sortHand(state.hands[state.landlord]);state.current=state.landlord;state.phase='playing';$('hint-message').textContent='';playEffect('start');render();afterNarration(`${playerVoiceName(state.landlord)}当地主，游戏开始`,scheduleTurn,850);}
   function humanBid(bid){placeBid(0,bid);}
-  function scheduleTurn(){clearTimeout(state.turnTimer);if(!['bidding','playing'].includes(state.phase)||state.current===0)return;const delay=state.settings.difficulty==='easy'?3000+Math.random()*500:state.settings.difficulty==='challenge'?2450+Math.random()*450:state.settings.difficulty==='expert'?2700+Math.random()*500:2900+Math.random()*550;const token=state.flowToken;state.turnTimer=setTimeout(()=>{if(token!==state.flowToken)return;const player=state.current;if(state.phase==='bidding')placeBid(player,chooseAiBid(player));else{const choice=chooseAiPlay(player);choice?commitPlay(player,choice.cards):pass(player);}},delay);}
-  function commitPlay(player,cards){if(state.phase!=='playing'||state.current!==player)return{ok:false,message:'现在不能出牌'};const combo=analyze(cards);if(!combo)return{ok:false,message:'这组牌不符合斗地主牌型'};const target=state.lastPlay&&state.lastPlay.player!==player?state.lastPlay.combo:null;if(target&&!canBeat(combo,target))return{ok:false,message:'这组牌压不过上一手'};state.hands[player]=removeCards(state.hands[player],cards);state.lastPlay={player,cards:[...cards],combo};state.passCount=0;state.playCounts[player]++;if(window.QilyLeanExpertAI)window.QilyLeanExpertAI.memory.observe(player,cards,combo);if(['bomb','rocket'].includes(combo.type))state.multiplier*=2;playEffect(['bomb','rocket'].includes(combo.type)?'bomb':'play');render();const narration=describePlay(state.lastPlay);if(state.hands[player].length===0){finishIfNeeded(player,narration);return{ok:true,finished:true};}afterNarration(narration,()=>{state.current=nextPlayer(player);render();scheduleTurn();},1100);return{ok:true};}
+  function scheduleTurn(){clearTimeout(state.turnTimer);if(!['bidding','playing'].includes(state.phase)){clearHumanTurnClock();return;}if(state.current===0){if(state.phase==='playing')beginHumanTurn();return;}clearHumanTurnClock();const delay=state.settings.difficulty==='easy'?3000+Math.random()*500:state.settings.difficulty==='challenge'?2450+Math.random()*450:state.settings.difficulty==='expert'?2700+Math.random()*500:2900+Math.random()*550;const token=state.flowToken;state.turnTimer=setTimeout(()=>{if(token!==state.flowToken)return;const player=state.current;if(state.phase==='bidding')placeBid(player,chooseAiBid(player));else{const choice=chooseAiPlay(player);choice?commitPlay(player,choice.cards):pass(player);}},delay);}
+  function commitPlay(player,cards){if(state.phase!=='playing'||state.current!==player)return{ok:false,message:'现在不能出牌'};const combo=analyze(cards);if(!combo)return{ok:false,message:'这组牌不符合斗地主牌型'};const target=state.lastPlay&&state.lastPlay.player!==player?state.lastPlay.combo:null;if(target&&!canBeat(combo,target))return{ok:false,message:'这组牌压不过上一手'};if(player===0)clearHumanTurnClock();state.hands[player]=removeCards(state.hands[player],cards);state.lastPlay={player,cards:[...cards],combo};state.passCount=0;state.playCounts[player]++;if(window.QilyLeanExpertAI)window.QilyLeanExpertAI.memory.observe(player,cards,combo);if(['bomb','rocket'].includes(combo.type))state.multiplier*=2;playEffect(['bomb','rocket'].includes(combo.type)?'bomb':'play');render();const narration=describePlay(state.lastPlay);if(state.hands[player].length===0){finishIfNeeded(player,narration);return{ok:true,finished:true};}afterNarration(narration,()=>{state.current=nextPlayer(player);render();scheduleTurn();},1100);return{ok:true};}
   function playSelected(){if(state.phase!=='playing'||state.current!==0)return;const cards=state.hands[0].filter(card=>state.selected.has(card.id));if(!cards.length){flash('请先选择要出的牌');speak('请先选牌');return;}const result=commitPlay(0,cards);if(!result.ok){flash(result.message);speak('这样不能出');return;}state.selected.clear();$('hint-message').textContent='';}
-  function pass(player=0,{auto=false}={}){if(state.phase!=='playing'||state.current!==player)return;if(!state.lastPlay||state.lastPlay.player===player){if(player===0)flash('你是本轮首出，不能选择“不要”');return;}state.passCount++;playEffect('pass');const text=player===0?(auto?'不要':'您不要'):`${playerName(player)}要不起`;const resetRound=state.passCount>=2;const next=resetRound?state.lastPlay.player:nextPlayer(player);render();afterNarration(text,()=>{if(resetRound){state.lastPlay=null;state.passCount=0;}state.current=next;render();scheduleTurn();},1000);}
+  function pass(player=0,{auto=false}={}){if(state.phase!=='playing'||state.current!==player)return;if(!state.lastPlay||state.lastPlay.player===player){if(player===0)flash('你是本轮首出，不能选择“不要”');return;}if(player===0)clearHumanTurnClock();state.passCount++;playEffect('pass');const text=player===0?(auto?'不要':'您不要'):`${playerName(player)}要不起`;const resetRound=state.passCount>=2;const next=resetRound?state.lastPlay.player:nextPlayer(player);render();afterNarration(text,()=>{if(resetRound){state.lastPlay=null;state.passCount=0;}state.current=next;render();scheduleTurn();},1000);}
   function hint(){if(state.phase!=='playing'||state.current!==0)return;if(advancedAiEnabled()){const choice=window.QilyLeanExpertAI.chooseAdvancedPlay({state,player:0,generateCandidates,analyze,canBeat,removeCards});if(!choice){state.selected.clear();render();flash('不要，自动轮到下家');$('hint-message').textContent='';pass(0,{auto:true});return;}state.selected.clear();choice.cards.forEach(card=>state.selected.add(card.id));render();$('hint-message').textContent='';flash(`启力提示：${comboText(choice.combo)}`);speak(`建议出${comboText(choice.combo)}`);return;}const target=state.lastPlay&&state.lastPlay.player!==0?state.lastPlay.combo:null;const options=generateCandidates(state.hands[0]).map(cards=>({cards,combo:analyze(cards)})).filter(option=>!target||canBeat(option.combo,target));if(!options.length){state.selected.clear();render();flash('不要，自动轮到下家');$('hint-message').textContent='';pass(0,{auto:true});return;}options.sort((a,b)=>candidateScore(a,target,0)-candidateScore(b,target,0));state.selected.clear();options[0].cards.forEach(card=>state.selected.add(card.id));render();$('hint-message').textContent='';flash(`启力提示：${comboText(options[0].combo)}`);speak(`建议出${comboText(options[0].combo)}`);}
   function finishIfNeeded(player,playNarration=''){if(state.hands[player].length!==0)return false;state.winner=player;state.phase='ended';const landlordWon=player===state.landlord,humanWon=state.landlord===0?landlordWon:!landlordWon;const spring=landlordWon?(state.playCounts.filter((_,index)=>index!==state.landlord).reduce((a,b)=>a+b,0)===0):(state.playCounts[state.landlord]<=1);if(spring)state.multiplier*=2;const roleFactor=state.landlord===0?2:1,raw=Math.max(10,state.baseScore*state.multiplier*10*roleFactor),delta=humanWon?raw:-raw;state.profile.games++;state.profile.score=Math.max(0,state.profile.score+delta);if(humanWon){state.profile.wins++;state.profile.streak++;state.profile.bestStreak=Math.max(state.profile.bestStreak,state.profile.streak);}else{state.profile.losses++;state.profile.streak=0;}let reward=0,today=new Date().toLocaleDateString('en-CA');if(humanWon&&state.profile.lastRewardDate!==today){reward=50;state.profile.score+=reward;state.profile.lastRewardDate=today;}saveProfile();render();$('result-icon').textContent=humanWon?'🏆':'🌱';$('result-title').textContent=humanWon?'恭喜，我们赢了！':'这一局惜败，再来一局';$('result-text').textContent=`${state.landlord===0?'你是地主':'你与另一位农民同队'}；${spring?'本局触发“春天”，倍数翻倍。':'本局牌局已正常结算。'}${reward?' 今日首胜再奖励 50 安心积分。':''}`;$('result-score').textContent=`${delta+reward>=0?'+':''}${delta+reward}`;$('result-multiplier').textContent=`×${state.multiplier}`;$('result-score').style.color=delta+reward>=0?'#18724b':'#b23c35';const resultVoice=humanWon?'恭喜，我们赢了':'这一局惜败，休息一下再来';afterNarration(playNarration||resultVoice,()=>{openModal('result');playMusicSting(humanWon?'win':'lose');playEffect(humanWon?'win':'lose');if(playNarration)speak(resultVoice);},900);return true;}
   function flash(message){const toast=$('toast');toast.textContent=message;toast.classList.add('show');clearTimeout(flash.timer);flash.timer=setTimeout(()=>toast.classList.remove('show'),1800);}
@@ -444,7 +481,7 @@
   function closeModal(id){$(id)?.classList.add('hidden');}
   function bindEvents(){$('start').addEventListener('click',()=>{const current=window.PureDDZTest?.getState?.();const inProgress=current&&['bidding','playing'].includes(current.phase)&&current.hands?.some(hand=>Array.isArray(hand)&&hand.length>0);if(inProgress&&!window.confirm('确定要重新发牌吗？当前这一局不会计分。'))return;startRound();});$('welcome-start').addEventListener('click',startRound);$('welcome-settings').addEventListener('click',()=>{closeModal('welcome');openModal('settings-modal');});$('again').addEventListener('click',startRound);$('result-close').addEventListener('click',()=>closeModal('result'));$('play').addEventListener('click',playSelected);$('pass').addEventListener('click',()=>pass(0));$('hint').addEventListener('click',hint);$('audio-toggle').addEventListener('click',toggleAllAudio);$('settings-open').addEventListener('click',()=>openModal('settings-modal'));$('help-open').addEventListener('click',()=>openModal('help-modal'));document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>closeModal(button.dataset.close)));document.querySelectorAll('[data-bid]').forEach(button=>button.addEventListener('click',()=>humanBid(Number(button.dataset.bid))));$('setting-music').addEventListener('change',event=>{state.settings.music=event.target.checked;saveSettings();});$('setting-voice').addEventListener('change',event=>{state.settings.voice=event.target.checked;if(!state.settings.voice){try{speechSynthesis.cancel();}catch(_error){}}saveSettings();});$('setting-effects').addEventListener('change',event=>{state.settings.effects=event.target.checked;saveSettings();});$('setting-font').addEventListener('change',event=>{state.settings.font=event.target.value;saveSettings();});$('setting-difficulty').addEventListener('change',event=>{state.settings.difficulty=event.target.value;saveSettings();});document.addEventListener('visibilitychange',()=>{if(document.hidden)stopMusic();else if(state.settings.music&&state.phase!=='idle')startMusic();});}
   window.PureDDZNativeBack=()=>{for(const id of['settings-modal','help-modal','result','welcome'])if(!$(id).classList.contains('hidden')){closeModal(id);return true;}return false;};
-  window.PureDDZTest=Object.freeze({version:VERSION,start:startRound,bid:humanBid,hint,analyze,canBeat,generateCandidates,chooseAiBid,chooseAiPlay,describePlay,getState:()=>deepCopy({...state,selected:[...state.selected],turnTimer:null,musicTimer:null,audioCtx:null}),analyzeRanks:ranks=>analyze(ranks.map((rank,index)=>({id:index,rank,suit:'♠'}))),expertMemory:()=>window.QilyLeanExpertAI?{history:deepCopy(window.QilyLeanExpertAI.memory.playHistory),controls:window.QilyLeanExpertAI.memory.controlCardsRemaining()}:null,stop:()=>{state.flowToken++;clearTimeout(state.turnTimer);try{speechSynthesis.cancel();}catch(_error){}stopMusic();}});
+  window.PureDDZTest=Object.freeze({version:VERSION,start:startRound,bid:humanBid,hint,analyze,canBeat,generateCandidates,chooseAiBid,chooseAiPlay,describePlay,getState:()=>deepCopy({...state,selected:[...state.selected],turnTimer:null,humanTurnTimer:null,humanTurnInterval:null,musicTimer:null,audioCtx:null}),analyzeRanks:ranks=>analyze(ranks.map((rank,index)=>({id:index,rank,suit:'♠'}))),expertMemory:()=>window.QilyLeanExpertAI?{history:deepCopy(window.QilyLeanExpertAI.memory.playHistory),controls:window.QilyLeanExpertAI.memory.controlCardsRemaining()}:null,stop:()=>{state.flowToken++;clearTimeout(state.turnTimer);clearHumanTurnClock();try{speechSynthesis.cancel();}catch(_error){}stopMusic();}});
   bindEvents();applySettings();render();
 })();
 

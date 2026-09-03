@@ -1187,7 +1187,7 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
 }
 
 /* ===== visual-tuning-v158.css */
-/* QilyLean Pure DDZ V161｜Nav-aligned capsule feedback + table depth + larger bottom cards｜2026-09-03
+/* QilyLean Pure DDZ V161/V162｜Nav-aligned capsule feedback + turn-information placement + larger bottom cards｜2026-09-03
  * This existing tuning source remains the single desktop visual owner and is compiled into ddz-core-v155.css.
  * V161 keeps the approved V160 structure, aligns in-game capsule feedback with the live QilyLean navigation language,
  * extends the desktop table downward, and enlarges the three bottom cards without touching gameplay or mobile-landscape geometry.
@@ -1321,13 +1321,20 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
     width:min(580px,calc(100% - 350px))!important;
     padding-top:0!important;
   }
+  /* V162 turn-information placement: lift round/base/multiplier one visual row without changing the approved table shell. */
+  html body.ddz-site-page .round-meta{
+    position:relative!important;
+    z-index:4!important;
+    transform:translateY(-14px)!important;
+    margin-bottom:-10px!important;
+  }
 
-  html body.ddz-site-page .bottom-zone{margin-top:2px!important}
+  html body.ddz-site-page .bottom-zone{margin-top:-2px!important}
   html body.ddz-site-page .bottom-label{font-size:15px!important}
   html body.ddz-site-page .bottom-cards{
-    min-height:116px!important;
+    min-height:136px!important;
     margin-top:3px!important;
-    gap:8px!important;
+    gap:14px!important;
   }
   html body.ddz-site-page .bottom-cards>.mini-card{
     flex:0 0 82px!important;
@@ -1337,13 +1344,16 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
     height:112px!important;
     min-height:112px!important;
     max-height:112px!important;
-    margin:1px!important;
+    margin:8px 6px 0!important;
     padding:6px 7px!important;
+    transform:scale(1.15)!important;
+    transform-origin:center bottom!important;
     border-radius:11px!important;
     border-width:2px!important;
   }
   html body.ddz-site-page .bottom-cards>.qily-mini-business b{font-size:23px!important;line-height:1!important}
   html body.ddz-site-page .bottom-cards>.qily-mini-business small{font-size:9.2px!important;line-height:1.05!important}
+  html body.ddz-site-page .bottom-cards>.bottom-back{width:52px!important;height:78px!important;margin:10px 7px 0!important;border-radius:9px!important}
 
   html body.ddz-site-page .v120-play-stage{
     top:110px!important;

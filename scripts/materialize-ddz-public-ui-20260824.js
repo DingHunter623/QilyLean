@@ -14,7 +14,7 @@ const jsBundleFile=path.join(jsRoot,'ddz-core-v155.js');
 if(!fs.existsSync(indexFile)) throw new Error('Missing tools/pure-ddz/index.html');
 let page=fs.readFileSync(indexFile,'utf8');
 const before=page;
-const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161';
+const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162';
 const CORE_STYLE=`<link id="qilyDdzCoreV158" data-qily-ddz-core="v158" rel="stylesheet" href="./game/css/ddz-core-v155.css?v=${CACHE}">`;
 const FAST_SHELL='<script defer id="qilyDdzFastSiteShellV155" data-qily-ddz-fast-shell="v155" src="/tools/pure-ddz/game/js/fast-site-shell-v155.js?v=20260903-ddz-fast-shell-v155"></script>';
 const IOS_VIRTUAL_FALLBACK='<script defer id="qilyDdzIosVirtualLandscapeV154" data-qily-ddz-virtual-landscape="v154" src="/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154"></script>';
@@ -199,6 +199,9 @@ if(page.includes('apk-inline apk-hold')||page.includes('Android版暂未开放')
 
 const cssBundle=fs.readFileSync(cssBundleFile,'utf8');
 const jsBundle=fs.readFileSync(jsBundleFile,'utf8');
+if(!jsBundle.includes('function beginHumanTurn(){')||!jsBundle.includes('Date.now()+30000')||!jsBundle.includes("speak('该您了')")||!jsBundle.includes('我出${body}'))throw new Error('DDZ V162 turn countdown contract is missing');
+if(!jsBundle.includes('function syncViewportProfile()')||!jsBundle.includes('window.visualViewport'))throw new Error('DDZ V162 mobile viewport adaptation contract is missing');
+if(!cssBundle.includes('transform:translateY(-14px)!important')||!cssBundle.includes('transform:scale(1.15)!important'))throw new Error('DDZ V162 center visual scale contract is missing');
 if(!cssBundle.includes('visual-tuning-v158.css'))throw new Error('DDZ current visual tuning source was not bundled');
 if(!cssBundle.includes('QilyLean Pure DDZ V161'))throw new Error('DDZ V161 visual refinements were not bundled');
 if(!cssBundle.includes('height:clamp(714px,calc(100vh - 112px),768px)!important'))throw new Error('DDZ V161 table-depth contract is missing');
