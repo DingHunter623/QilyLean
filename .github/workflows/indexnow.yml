@@ -244,22 +244,10 @@ jobs:
               exit 1
             fi
 
-            read -r success remain not_same_site not_valid <<EOF
-          $(python3 - "$response" <<'PY'
-          import json, sys
-          try:
-              data = json.loads(sys.argv[1])
-          except Exception:
-              data = {}
-          print(
-              data.get("success", 0),
-              data.get("remain", -1),
-              len(data.get("not_same_site", []) or []),
-              len(data.get("not_valid", []) or []),
-          )
-          PY
-          )
-          EOF
+            success="$(python3 -c 'import json,sys; d=json.loads(sys.argv[1]); print(d.get("success",0))' "$response" 2>/dev/null || echo 0)"
+            remain="$(python3 -c 'import json,sys; d=json.loads(sys.argv[1]); print(d.get("remain",-1))' "$response" 2>/dev/null || echo -1)"
+            not_same_site="$(python3 -c 'import json,sys; d=json.loads(sys.argv[1]); print(len(d.get("not_same_site",[]) or []))' "$response" 2>/dev/null || echo 0)"
+            not_valid="$(python3 -c 'import json,sys; d=json.loads(sys.argv[1]); print(len(d.get("not_valid",[]) or []))' "$response" 2>/dev/null || echo 0)"
             echo "Baidu accepted: $success; remaining quota: $remain; not_same_site: $not_same_site; not_valid: $not_valid"
 
             if [ "$remain" = "0" ]; then
