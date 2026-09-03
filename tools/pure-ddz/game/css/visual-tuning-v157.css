@@ -1,0 +1,220 @@
+/* QilyLean Pure DDZ V157｜Approved visual tuning source｜2026-09-03
+ * Compiled into the single ddz-core bundle; this is not an extra runtime stylesheet.
+ * Scope: move the DDZ module upward, move the action group upward, expand the felt upward/vertically,
+ * and enlarge the currently-played card face for elder-friendly recognition. Existing gameplay,
+ * narration, mobile landscape, knowledge-card mapping and loading performance are intentionally untouched.
+ */
+
+@media (min-width:1181px){
+  :root{--ddz-site-gutter:clamp(14px,1.7vw,44px)}
+
+  /* 1｜Move the complete DDZ module upward without using negative margins or changing the global Header. */
+  html body.ddz-site-page .game-shell.ddz-site-module{
+    margin-top:5px!important;
+    margin-bottom:var(--ddz-site-gutter)!important;
+  }
+  html body.ddz-site-page .ddz-page-heading{
+    margin-bottom:4px!important;
+    padding-top:8px!important;
+    padding-bottom:8px!important;
+  }
+
+  /* Keep the four status cells as the approved one-line module from V156. */
+  html body.ddz-site-page .ddz-toolbar{
+    grid-template-columns:minmax(560px,640px) minmax(0,1fr)!important;
+    min-height:50px!important;
+    padding:3px 7px!important;
+    margin-bottom:3px!important;
+    align-items:center!important;
+  }
+  html body.ddz-site-page .ddz-toolbar .scoreboard{
+    grid-template-columns:repeat(4,minmax(112px,1fr))!important;
+    align-self:center!important;
+    gap:7px!important;
+  }
+  html body.ddz-site-page .ddz-toolbar .scoreboard div,
+  html body.ddz-site-page #v120-reset-stats{
+    min-height:42px!important;
+    height:42px!important;
+    margin:0!important;
+    padding:3px 9px!important;
+    border:1px solid rgba(255,227,155,.38)!important;
+    border-radius:10px!important;
+    background:rgba(255,255,255,.075)!important;
+    box-shadow:none!important;
+  }
+  html body.ddz-site-page #v120-reset-stats{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:100%!important;
+    min-width:0!important;
+    color:#ffe39b!important;
+    -webkit-text-fill-color:#ffe39b!important;
+    font-size:15px!important;
+    font-weight:950!important;
+    line-height:1!important;
+  }
+
+  /* 2｜Move the right-side action module upward and keep a calm, even click rhythm. */
+  html body.ddz-site-page .ddz-toolbar .top-actions{
+    position:relative!important;
+    top:-2px!important;
+    align-self:center!important;
+    align-items:center!important;
+    gap:8px!important;
+  }
+  html body.ddz-site-page .ddz-toolbar :is(#audio-toggle,#help-open,#settings-open,#v120-landscape-toggle,.start-btn){
+    min-height:42px!important;
+    height:42px!important;
+    padding:6px 14px!important;
+    font-size:15px!important;
+  }
+  html body.ddz-site-page .ddz-toolbar #audio-toggle{min-width:108px!important}
+  html body.ddz-site-page .ddz-toolbar #help-open,
+  html body.ddz-site-page .ddz-toolbar #settings-open{min-width:68px!important}
+  html body.ddz-site-page .ddz-toolbar #v120-landscape-toggle{min-width:88px!important}
+  html body.ddz-site-page .ddz-toolbar .start-btn{min-width:108px!important}
+
+  /* 3｜Pull the felt upward and give the playing surface more vertical breathing room. */
+  html body.ddz-site-page .clean-promise{
+    min-height:22px!important;
+    padding:2px 9px!important;
+  }
+  html body.ddz-site-page .table-wrap{
+    height:clamp(610px,calc(100vh - 205px),665px)!important;
+    min-height:610px!important;
+    max-height:665px!important;
+    padding:7px 8px 9px!important;
+  }
+  html body.ddz-site-page .table-wrap:before{inset:8px!important}
+  html body.ddz-site-page .ai{top:76px!important}
+  html body.ddz-site-page .center-area{
+    width:min(580px,calc(100% - 350px))!important;
+    padding-top:0!important;
+  }
+
+  /* Retain the approved V156 bottom-card scale. */
+  html body.ddz-site-page .bottom-zone{margin-top:2px!important}
+  html body.ddz-site-page .bottom-label{font-size:15px!important}
+  html body.ddz-site-page .bottom-cards{
+    min-height:96px!important;
+    margin-top:3px!important;
+    gap:7px!important;
+  }
+  html body.ddz-site-page .bottom-cards>.mini-card{
+    flex:0 0 68px!important;
+    min-width:68px!important;
+    width:68px!important;
+    max-width:68px!important;
+    height:92px!important;
+    min-height:92px!important;
+    max-height:92px!important;
+    margin:1px!important;
+    padding:5px 6px!important;
+    border-radius:10px!important;
+    border-width:2px!important;
+  }
+  html body.ddz-site-page .bottom-cards>.qily-mini-business b{font-size:20px!important;line-height:1!important}
+  html body.ddz-site-page .bottom-cards>.qily-mini-business small{font-size:8.5px!important;line-height:1.05!important}
+
+  /* 4｜Enlarge the currently-played card face, not the already-approved hand-card geometry. */
+  html body.ddz-site-page .v120-play-stage{
+    top:110px!important;
+    width:min(560px,calc(100% - 360px))!important;
+    min-height:154px!important;
+    max-height:184px!important;
+    padding:9px 12px!important;
+  }
+  html body.ddz-site-page .v120-play-owner{
+    margin-bottom:7px!important;
+    font-size:20px!important;
+  }
+  html body.ddz-site-page .v120-play-card{
+    flex:0 0 78px!important;
+    width:78px!important;
+    height:114px!important;
+    margin-left:-7px!important;
+    border-width:2px!important;
+    border-radius:10px!important;
+  }
+  html body.ddz-site-page .v120-play-card:first-child{margin-left:0!important}
+  html body.ddz-site-page .v120-play-card .qily-card-corner{left:5px!important;top:5px!important}
+  html body.ddz-site-page .v120-play-card .qily-card--normal .qily-rank-suit-line b{
+    font-size:25px!important;
+    line-height:.92!important;
+  }
+  html body.ddz-site-page .v120-play-card .qily-card-theme{
+    inset:36px 4px 10px!important;
+    gap:1.5px!important;
+  }
+  html body.ddz-site-page .v120-play-card .qily-card-theme>small{font-size:5.8px!important}
+  html body.ddz-site-page .v120-play-card .qily-card-theme>strong{font-size:13px!important;line-height:1.02!important}
+  html body.ddz-site-page .v120-play-card .qily-card-theme>b{font-size:8px!important;line-height:1.05!important}
+  html body.ddz-site-page .v120-play-card .qily-card-theme>em{font-size:5.8px!important;line-height:1.05!important}
+
+  /* Hand remains the V156-approved 110×162 knowledge-card scale. */
+  html body.ddz-site-page #me-panel.me-player{
+    min-height:260px!important;
+    height:260px!important;
+  }
+  html body.ddz-site-page #hand.hand{
+    min-height:178px!important;
+    height:178px!important;
+    padding:9px 10px 2px!important;
+  }
+  html body.ddz-site-page #hand.hand .card{
+    flex:0 0 110px!important;
+    width:110px!important;
+    min-width:110px!important;
+    max-width:110px!important;
+    height:162px!important;
+    min-height:162px!important;
+    max-height:162px!important;
+    margin-left:-32px!important;
+    padding:5px!important;
+    border-radius:12px!important;
+  }
+  html body.ddz-site-page #hand.hand:has(.card:nth-child(19)) .card{
+    flex-basis:108px!important;
+    width:108px!important;
+    min-width:108px!important;
+    max-width:108px!important;
+    height:159px!important;
+    min-height:159px!important;
+    max-height:159px!important;
+    margin-left:-36px!important;
+  }
+  html body.ddz-site-page #hand.hand .qily-card-corner{left:6px!important;top:5px!important}
+  html body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{
+    font-size:32px!important;
+    line-height:.92!important;
+    letter-spacing:-.045em!important;
+  }
+  html body.ddz-site-page #hand.hand .qily-card-theme{
+    inset:46px 5px 7px!important;
+    gap:2px!important;
+  }
+  html body.ddz-site-page #hand.hand .qily-card-theme>small{font-size:6.8px!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:13.5px!important;line-height:1.02!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>b{font-size:10.8px!important;line-height:1.07!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>em{font-size:7.4px!important;line-height:1.1!important}
+}
+
+@media (min-width:901px) and (max-width:1180px){
+  html body.ddz-site-page .game-shell.ddz-site-module{margin-top:7px!important}
+  html body.ddz-site-page .ddz-page-heading{margin-bottom:5px!important}
+  html body.ddz-site-page .ddz-toolbar .scoreboard{grid-template-columns:repeat(4,minmax(86px,1fr))!important}
+  html body.ddz-site-page #v120-reset-stats{min-height:42px!important;height:42px!important;margin:0!important;padding:4px 7px!important;font-size:14px!important}
+  html body.ddz-site-page .table-wrap{min-height:600px!important;height:600px!important}
+  html body.ddz-site-page .bottom-cards{min-height:84px!important;gap:5px!important}
+  html body.ddz-site-page .bottom-cards>.mini-card{flex-basis:60px!important;min-width:60px!important;width:60px!important;max-width:60px!important;height:82px!important;min-height:82px!important;max-height:82px!important}
+  html body.ddz-site-page .v120-play-stage{min-height:138px!important;max-height:164px!important}
+  html body.ddz-site-page .v120-play-card{flex-basis:68px!important;width:68px!important;height:100px!important}
+  html body.ddz-site-page .v120-play-card .qily-card--normal .qily-rank-suit-line b{font-size:22px!important}
+  html body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{font-size:27px!important}
+}
+
+/* Proven mobile and both landscape implementations retain their dedicated geometry. */
+html.ddz-mobile-landscape body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{font-size:calc(19px * var(--ddz-ls,1))!important}
+html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{font-size:19px!important}
