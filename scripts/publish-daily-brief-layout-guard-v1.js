@@ -6,6 +6,7 @@
  * Business copy and media assets are not modified.
  * Section sequence markers are intentionally removed: no 01/02/03 badges and no 一、二、三 pseudo numbering.
  * 2026-09-03: re-materialize after isolating unrelated stale DDZ regression gating.
+ * 2026-09-03: preserve the central "精益交付力" soul marker as an intentional VI gold semantic accent.
  */
 const fs=require('fs');
 const path=require('path');
@@ -19,6 +20,8 @@ const SEQUENCE_OFF_ID='qilyDailyBriefSequenceOffV1';
 const SEQUENCE_OFF_STYLE=`<style id="${SEQUENCE_OFF_ID}">
 html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .lean-delivery-brief .section-title>.no{display:none!important}
 html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .lean-delivery-brief .section-title h3::before{content:none!important;display:none!important}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .lean-delivery-brief .mind-core span{color:#ffe3a0!important;-webkit-text-fill-color:#ffe3a0!important}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .lean-delivery-brief .mind-core strong{color:#f2b544!important;-webkit-text-fill-color:#f2b544!important;text-shadow:none!important}
 </style>`;
 const DATED=/^qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html$/i;
 
@@ -67,5 +70,7 @@ const css=fs.readFileSync(path.join(ROOT,'site-daily-brief-layout-guard-v1.css')
 
 if(!SEQUENCE_OFF_STYLE.includes('.section-title>.no{display:none!important}'))throw new Error('Daily Brief sequence-off contract missing detached badge suppression.');
 if(!SEQUENCE_OFF_STYLE.includes('.section-title h3::before{content:none!important;display:none!important}'))throw new Error('Daily Brief sequence-off contract missing pseudo-number suppression.');
+if(!SEQUENCE_OFF_STYLE.includes('.mind-core span{color:#ffe3a0!important;-webkit-text-fill-color:#ffe3a0!important}'))throw new Error('Daily Brief core accent contract missing CORE ENGINE soft-gold treatment.');
+if(!SEQUENCE_OFF_STYLE.includes('.mind-core strong{color:#f2b544!important;-webkit-text-fill-color:#f2b544!important;text-shadow:none!important}'))throw new Error('Daily Brief core accent contract missing 精益交付力 VI-gold treatment.');
 
 process.stdout.write(`Daily Brief layout guard ${checkOnly?'check passed':'materialized'}: ${count} dated brief(s), ${changed.length} changed.\n`);
