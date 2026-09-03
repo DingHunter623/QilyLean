@@ -43,12 +43,13 @@
     #boot-status.ready{display:none}
     #boot-status.error{border:1px solid #ffcf7d;color:#fff;background:#8d322d}
   </style>
+  <link id="qilyDdzCoreV158" data-qily-ddz-core="v158" rel="stylesheet" href="./game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158">
 
   <!-- QilyLean canonical site shell / VI assets: exactly the same public runtimes used by ordinary pages. -->
 <script>
     (()=>{
       const root='./game/';
-      const version='20260903-ddz-fast-knowledge-v155-v157';
+      const version='20260903-ddz-fast-knowledge-v155-v158';
       const isWechat=/MicroMessenger/i.test(navigator.userAgent||'');
       const isMobile=/Android|iPhone|iPad|iPod|HarmonyOS|Mobile/i.test(navigator.userAgent||'')||(navigator.maxTouchPoints||0)>0;
       window.__PURE_DDZ_WECHAT_WEBVIEW__=isWechat;
@@ -56,11 +57,7 @@
       window.__PURE_DDZ_MANAGED_LOADER__=true;
       document.documentElement.classList.toggle('wechat-webview',isWechat);
       document.documentElement.classList.toggle('ddz-mobile-device',isMobile);
-      const loadStyle=(path)=>new Promise((resolve,reject)=>{
-        const link=document.createElement('link');
-        link.rel='stylesheet';link.href=root+path+'?v='+version;link.onload=resolve;link.onerror=reject;document.head.appendChild(link);
-      });
-      window.__PURE_DDZ_STYLE_READY__=Promise.all([loadStyle('css/ddz-core-v155.css')]);
+      window.__PURE_DDZ_STYLE_READY__=Promise.resolve();
       window.__PURE_DDZ_ROOT__=root;
       window.__PURE_DDZ_CACHE_KEY__=version;
     })();
@@ -142,7 +139,7 @@
   <script>
     (()=>{
       const root=window.__PURE_DDZ_ROOT__||'./game/';
-      const version=window.__PURE_DDZ_CACHE_KEY__||'20260903-ddz-fast-knowledge-v155-v157';
+      const version=window.__PURE_DDZ_CACHE_KEY__||'20260903-ddz-fast-knowledge-v155-v158';
       const status=document.getElementById('boot-status');
       const chain=['js/ddz-core-v155.js'];
       const scriptsReady=Promise.all(chain.map(path=>new Promise((resolve,reject)=>{
