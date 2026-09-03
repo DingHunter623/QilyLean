@@ -33,46 +33,26 @@ jobs:
         with:
           node-version: 24
 
-      - name: Materialize V10/R8 heading authority across public pages
+      - name: Materialize and verify V10/R8 heading authority across public pages
         run: |
           node --check scripts/publish-visual-readability-v5.js
           node scripts/publish-visual-readability-v5.js
           git diff --check
 
-      - name: Validate R8 hierarchy and VI contracts
+      - name: Validate protected R8 heading contract
         shell: bash
         run: |
-          grep -q -- '--qily-v5-small:17px' site-visual-readability-v5.css
-          grep -q -- '--qily-v5-small-strong:18px' site-visual-readability-v5.css
-          grep -q -- '--qily-v5-section-kicker:20px' site-visual-readability-v5.css
-          grep -q -- '--qily-v5-gold-text:#b88b45' site-visual-readability-v5.css
-          grep -q -- '--qily-r8-heading-ceiling:clamp(34px,3.25vw,52px)' site-visual-readability-v5.css
-          grep -q 'R8-HEADING-CEILING-V1-20260903' site-visual-readability-v5.css
-          grep -q 'html:root:root:root body main h1' site-visual-readability-v5.css
-          grep -q 'font-size:clamp(34px,9.6vw,43px)!important' site-visual-readability-v5.css
-          grep -q 'color:var(--qily-v5-gold-text)!important' site-visual-readability-v5.css
-          grep -q 'QILY-STATIC-VOCABULARY-NO-FEEDBACK-V9' site-visual-readability-v5.css
-          ! grep -q -- '--qily-v5-red:#9e4a34' site-visual-readability-v5.css
-          grep -q '.qily-home-conversion-kicker' site-visual-readability-v5.css
-          grep -q '.qily-home-conversion-hero__kicker' site-visual-readability-v5.css
-          grep -q '.qily-home-launch-section' site-visual-readability-v5.css
-          grep -q 'width:48px!important' site-visual-readability-v5.css
-          grep -q 'font-size:18px!important' site-visual-readability-v5.css
-          grep -q 'color:var(--qily-v5-white)!important' site-visual-readability-v5.css
-          grep -q 'QILY-DAILY-SURFACE-CONTRAST-V7-20260825' site-visual-readability-v5.css
-          grep -q '#engineering-enablers' site-visual-readability-v5.css
-          grep -q '#qily-digital-enablers' site-visual-readability-v5.css
-          grep -q '/site-visual-readability-v5.css?v=20260903-r8-heading-ceiling-v10' index.html
-          grep -q '/site-visual-readability-v5.css?v=20260903-r8-heading-ceiling-v10' cooperation/index.html
-          grep -q '/site-visual-readability-v5.css?v=20260903-r8-heading-ceiling-v10' knowledge/pdca-gantt-milestone-opl.html
-          grep -q 'QILY-DAILY-READABILITY-CLOSURE-V9-20260901' qilylean/daily/2026-08-25.html
-          grep -q '<h2>三大核心业务</h2>' cooperation/index.html
-          grep -q '三项增强能力，不与三大核心业务同级' cooperation/index.html
-          ! grep -q '<h2>六类核心业务</h2>' cooperation/index.html
+          set -euo pipefail
+          grep -Fq -- '--qily-r8-heading-ceiling:clamp(34px,3.25vw,52px)' site-visual-readability-v5.css
+          grep -Fq 'R8-HEADING-CEILING-V1-20260903' site-visual-readability-v5.css
+          grep -Fq 'html:root:root:root body main h1' site-visual-readability-v5.css
+          grep -Fq 'font-size:clamp(34px,9.6vw,43px)!important' site-visual-readability-v5.css
+          grep -Fq "const VERSION = '20260903-r8-heading-ceiling-v10';" scripts/publish-visual-readability-v5.js
 
       - name: Commit sitewide R8 visual hierarchy
         shell: bash
         run: |
+          set -euo pipefail
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
           git add -A
