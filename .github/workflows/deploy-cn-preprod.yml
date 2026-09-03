@@ -54,7 +54,7 @@ jobs:
           chmod 600 ~/.ssh/qilylean_cn
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
-      - name: Upload release and deployment script
+      - name: Upload release and operations scripts
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -63,7 +63,19 @@ jobs:
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           scp -i ~/.ssh/qilylean_cn /tmp/qilylean-cn-site.tar.gz "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean-cn-site.tar.gz"
+          scp -i ~/.ssh/qilylean_cn cn-site/scripts/server-bootstrap.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/bootstrap-qilylean-cn.sh"
           scp -i ~/.ssh/qilylean_cn cn-site/scripts/deploy-release.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/deploy-qilylean-cn.sh"
+
+      - name: Bootstrap server when required
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+            "if [ ! -f /etc/nginx/sites-available/qilylean-cn-preprod ]; then chmod +x /tmp/bootstrap-qilylean-cn.sh && /tmp/bootstrap-qilylean-cn.sh; else echo 'Server bootstrap already present'; fi"
 
       - name: Deploy release on mainland server
         shell: bash
