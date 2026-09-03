@@ -1,10 +1,10 @@
-/* QilyLean 2026-07-29：全站一阶至三阶菜单、标题、正文与说明统一排版层级 v4 */
+/* QilyLean 2026-09-03：全站一阶至三阶菜单、标题、正文与说明统一排版层级 v5 / R8 首页头号字号权威上限 */
 :root{
   --qily-font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Arial,sans-serif;
   --qily-type-nav-1:17px;
   --qily-type-nav-2:16px;
   --qily-type-nav-3:15px;
-  --qily-type-h1:clamp(43px,4.25vw,66px);
+  --qily-type-h1:clamp(34px,3.25vw,52px);
   --qily-type-h2:clamp(32px,2.9vw,46px);
   --qily-type-h3:clamp(22px,1.55vw,26px);
   --qily-type-h4:19px;
@@ -101,7 +101,8 @@ header.top .nav>a{
   line-height:1.45!important;
 }
 
-/* 一级标题。 */
+/* 一级标题：R8 规定首页头号标题即全站最高标题尺度；所有模块 H1 不得超过首页 52px 上限。 */
+main h1,
 .module-hero h1,
 .hero h1,
 .daily-hero h1,
@@ -304,7 +305,7 @@ small,
     --qily-type-nav-1:12px;
     --qily-type-nav-2:13.5px;
     --qily-type-nav-3:13px;
-    --qily-type-h1:clamp(36px,10vw,43px);
+    --qily-type-h1:clamp(34px,9.6vw,43px);
     --qily-type-h2:clamp(29px,8vw,36px);
     --qily-type-h3:21px;
     --qily-type-h4:18px;
