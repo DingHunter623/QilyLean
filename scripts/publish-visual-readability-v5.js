@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean visual readability publisher｜2026-09-01 V10
+/* QilyLean visual readability publisher｜2026-09-03 V11
  * Scope: visual only. Do not rewrite business taxonomy, navigation labels, page copy or navigation cache contracts.
- * V10 publishes the V9 VI/readability contract across every public page: chapter-level eyebrow/kicker labels use
- * the shared QilyLean gold family, while non-routing vocabulary chips are frozen as static information with zero
- * hover/active/focus visual feedback. The existing Daily Brief contrast closure remains intact.
+ * V11 publishes the V10/R8 VI/readability contract across every public page: chapter-level eyebrow/kicker labels use
+ * the shared QilyLean gold family; non-routing vocabulary chips remain static information; and homepage H1 establishes
+ * the protected sitewide primary-heading ceiling (52px desktop / 43px mobile). Existing Daily Brief contrast closure remains intact.
  */
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const VERSION = '20260901-vi-gold-static-v9';
+const VERSION = '20260903-r8-heading-ceiling-v10';
 const HREF = `/site-visual-readability-v5.css?v=${VERSION}`;
 const TAG = `<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="${HREF}">`;
 const DAILY_STYLE_ID = 'qilyDailyReadabilityClosureV8';
@@ -160,6 +160,10 @@ function verifyCss() {
     '--qily-v5-small-strong:18px',
     '--qily-v5-section-kicker:20px',
     '--qily-v5-gold-text:#b88b45',
+    '--qily-r8-heading-ceiling:clamp(34px,3.25vw,52px)',
+    'R8-HEADING-CEILING-V1-20260903',
+    'html:root:root:root body main h1',
+    'font-size:clamp(34px,9.6vw,43px)!important',
     'color:var(--qily-v5-gold-text)!important',
     'QILY-STATIC-VOCABULARY-NO-FEEDBACK-V9',
     '.qily-home-conversion-kicker',
@@ -175,7 +179,7 @@ function verifyCss() {
     '.qily-ia-card>small',
     'QILY-DAILY-SURFACE-CONTRAST-V7-20260825',
     '.term-opl-num'
-  ].forEach(token => assert(css.includes(token), `V9 CSS contract missing: ${token}`));
+  ].forEach(token => assert(css.includes(token), `V10 CSS contract missing: ${token}`));
   assert(!css.includes('--qily-v5-red:#9e4a34'), 'Retired deep-red section kicker token returned');
 }
 
@@ -187,7 +191,7 @@ function verifyPages() {
     try { html = read(rel); } catch (_) { continue; }
     if (!isPublicHtml(html)) continue;
     publicCount += 1;
-    assert(html.includes(HREF), `${rel}: V9 stylesheet missing`);
+    assert(html.includes(HREF), `${rel}: V10 stylesheet missing`);
     if (isDatedBrief(rel)) {
       dailyCount += 1;
       assert(/<body\b[^>]*class=["'][^"']*\bdaily-single-page\b/i.test(html), `${rel}: Daily Brief body hook missing`);
@@ -218,7 +222,7 @@ function main() {
   const result = materialize();
   const verified = verifyPages();
   verifyBusinessHierarchyUntouched();
-  process.stdout.write(`Visual readability V10 materialized: checked ${verified.publicCount}, dated briefs ${verified.dailyCount}, refreshed ${result.changed} public pages with V9 VI/static semantics.\n`);
+  process.stdout.write(`Visual readability V11 materialized: checked ${verified.publicCount}, dated briefs ${verified.dailyCount}, refreshed ${result.changed} public pages with V10/R8 heading authority.\n`);
 }
 
 main();
