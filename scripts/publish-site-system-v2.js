@@ -18,7 +18,7 @@ const NAV_VERSION = '20260812-competition-upgrade-v21';
 const SHELL_VERSION = '20260729-no-old-flash-v1';
 const VISUAL_VERSION = '20260803-home-badge-wrap-v5';
 const WIDE_VERSION = '20260810-content-axis-v8';
-const TYPE_VERSION = '20260729-hierarchy-v4';
+const TYPE_VERSION = '20260903-r8-home-heading-ceiling-v5';
 const VI_VERSION = '20260812-manufacturing-asset-system-v3';
 const CONTRAST_VERSION = '20260811-text-color-standard-v2';
 const MUSIC_VERSION = '20260810-demand-music-wrapper-v6';
@@ -45,6 +45,7 @@ function validatePublicStyles() {
     [wide, '--qily-wide-content:1560px', 'Wide layout'],
     [wide, '.hero>.hero-grid', 'Homepage grid'],
     [type, '--qily-type-body:18.5px', 'Typography'],
+    [type, '--qily-type-h1:clamp(34px,3.25vw,52px)', 'R8 homepage heading ceiling'],
     [type, 'text-wrap:wrap', 'Phrase wrapping'],
     [visual, '.qily-home-balanced .portrait-badge', 'Homepage portrait'],
     [vi, '--qily-vi-olive:#0f4b5a', 'VI palette'],
