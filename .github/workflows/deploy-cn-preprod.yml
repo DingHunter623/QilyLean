@@ -1,0 +1,90 @@
+name: Deploy QilyLean CN preproduction
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - cn-site-bootstrap-20260903
+    paths:
+      - 'cn-site/**'
+      - '.github/workflows/deploy-cn-preprod.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qilylean-cn-preprod
+  cancel-in-progress: false
+
+jobs:
+  validate-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Preproduction index gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f cn-site/index.html
+          test -f cn-site/robots.txt
+          test -f cn-site/assets/site.css
+          grep -q 'noindex,nofollow' cn-site/index.html
+          grep -Eq '^Disallow:[[:space:]]*/[[:space:]]*$' cn-site/robots.txt
+
+      - name: Build release archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          tar -czf /tmp/qilylean-cn-site.tar.gz -C cn-site index.html robots.txt assets
+          sha256sum /tmp/qilylean-cn-site.tar.gz
+
+      - name: Configure SSH
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$CN_PREPROD_HOST"
+          test -n "$CN_PREPROD_SSH_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
+          chmod 600 ~/.ssh/qilylean_cn
+          ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+
+      - name: Upload release and operations scripts
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          scp -i ~/.ssh/qilylean_cn /tmp/qilylean-cn-site.tar.gz "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean-cn-site.tar.gz"
+          scp -i ~/.ssh/qilylean_cn cn-site/scripts/server-bootstrap.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/bootstrap-qilylean-cn.sh"
+          scp -i ~/.ssh/qilylean_cn cn-site/scripts/deploy-release.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/deploy-qilylean-cn.sh"
+
+      - name: Bootstrap server when required
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+            "if [ ! -f /etc/nginx/sites-available/qilylean-cn-preprod ]; then chmod +x /tmp/bootstrap-qilylean-cn.sh && /tmp/bootstrap-qilylean-cn.sh; else echo 'Server bootstrap already present'; fi"
+
+      - name: Deploy release on mainland server
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          RELEASE_ID="${GITHUB_SHA::12}"
+          ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+            "chmod +x /tmp/deploy-qilylean-cn.sh && /tmp/deploy-qilylean-cn.sh /tmp/qilylean-cn-site.tar.gz '$RELEASE_ID'"

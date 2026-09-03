@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /
+
+# BOOTSTRAP ONLY
+# Remove Disallow only after company registration, domain enterprise verification,
+# ICP filing approval, HTTPS validation, and production release gate all pass.

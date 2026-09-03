@@ -1,0 +1,52 @@
+name: CN Site Build V1
+
+on:
+  push:
+    branches:
+      - cn-site-bootstrap-20260903
+    paths:
+      - 'cn-site/**'
+      - '.github/workflows/cn-site-build-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-cn-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required files
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f cn-site/index.html
+          test -f cn-site/assets/site.css
+          test -f cn-site/robots.txt
+          test -f cn-site/nginx/qilylean.cn.conf
+          grep -q 'noindex,nofollow' cn-site/index.html
+          grep -q 'Disallow: /' cn-site/robots.txt
+          grep -q 'qilylean.cn' cn-site/index.html
+          echo 'CN site pre-ICP validation passed.'
+
+      - name: Build release package
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dist/qilylean-cn
+          cp -R cn-site/index.html cn-site/robots.txt cn-site/assets dist/qilylean-cn/
+          tar -C dist -czf dist/qilylean-cn.tar.gz qilylean-cn
+          sha256sum dist/qilylean-cn.tar.gz > dist/qilylean-cn.tar.gz.sha256
+
+      - name: Upload release package
+        uses: actions/upload-artifact@v4
+        with:
+          name: qilylean-cn-pre-icp
+          path: |
+            dist/qilylean-cn.tar.gz
+            dist/qilylean-cn.tar.gz.sha256
+          if-no-files-found: error
+          retention-days: 14
