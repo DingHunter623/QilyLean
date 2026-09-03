@@ -49,6 +49,11 @@ jobs:
           grep -q 'article.post>.visual>svg>rect:first-child' site-daily-brief-layout-guard-v1.css
           grep -q ':is(.visual-hero,.hero,.closing,.closing-view)' site-daily-brief-layout-guard-v1.css
           grep -q 'backdrop-filter:none!important' site-daily-brief-layout-guard-v1.css
+          grep -q 'counter-reset:qily-brief-section' site-daily-brief-layout-guard-v1.css
+          grep -q 'counter-increment:qily-brief-section' site-daily-brief-layout-guard-v1.css
+          grep -q '.lean-delivery-brief .section-title>.no' site-daily-brief-layout-guard-v1.css
+          grep -q 'content:counter(qily-brief-section,cjk-ideographic) "、"' site-daily-brief-layout-guard-v1.css
+          grep -q 'font-size:initial!important' site-daily-brief-layout-guard-v1.css
           grep -q '/site-daily-brief-layout-guard-v1.css?v=20260902-daily-brief-light-surface-v2' qilylean/daily/2026-07-29.html
           grep -q '/site-daily-brief-layout-guard-v1.css?v=20260902-daily-brief-light-surface-v2' qilylean/daily/2026-08-19.html
           grep -q '/site-daily-brief-layout-guard-v1.css?v=20260902-daily-brief-light-surface-v2' qilylean/daily/2026-08-25.html
