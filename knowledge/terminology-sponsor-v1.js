@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var VERSION = '20260828-knowledge-asset-2-0-v1';
+  var VERSION = '20260903-5m2e-knowledge-v1';
   var TERMINOLOGY_PATH = /\/knowledge\/terminology(?:\.html)?\/?$/i;
   if (!TERMINOLOGY_PATH.test(location.pathname || '')) return;
 
@@ -72,6 +72,7 @@
     'RACI':'某跨部门试运行项目曾出现“都参与但没人最终拍板”。团队按交付包设置唯一A、明确R/C/I，并把安全、节拍、质量、文件等验收证据绑定里程碑后，异常升级与放行责任可追溯。',
     'PILOT':'某线体改善方案只先在一个班次、一个产品族运行，预设CT、FPY、WIP和安全红线；连续达到目标且无副作用后才扩大范围，未达标则回退并修正。',
     'GANTT':'某自动化项目把“设备跟进”拆成设计冻结、FAT、到厂、SAT、Pilot、验收等里程碑，每个节点绑定责任人、前置条件和证据，周会只聚焦偏差、风险和决策。',
+    '5M2E':'某自动化工位出现间歇性停机，团队按5M2E逐项核查人员操作与培训、设备报警与保全、物料批次、工艺参数、测量／传感器校准、环境温湿度，以及电源、压缩空气与真空等能源条件，最终用数据锁定气压波动，并将供气阈值、点检与异常反应纳入标准。',
     'SPONSOR':'某自动化项目在SAT后出现安全、节拍与资源冲突，项目经理权限不足。Sponsor组织重大里程碑评审，明确风险红线、资源与再验证条件，证据齐套后再批准进入Pilot。'
   };
 
@@ -83,6 +84,7 @@
     'PDCA':[['/knowledge/pdca-gantt-milestone-opl.html','专题｜PDCA × 甘特图里程碑'],['/qilylean/daily/2026-08-19.html','精选简报｜工程闭环'],['/projects/','代表项目｜闭环证据']],
     'RACI':[['/knowledge/pdca-gantt-milestone-opl.html','专题｜项目里程碑管理'],['/qilylean/daily/2026-08-19.html','精选简报｜精益交付'],['/cooperation/','相关项目能力']],
     'PILOT':[['/qilylean/daily/2026-08-25.html','精选简报｜从问题到标准固化'],['/qilylean/daily/2026-08-19.html','精选简报｜工程交付闭环'],['/projects/','代表项目｜试点验证']],
+    '5M2E':[['/improvements/','改善方法｜要因分析与现场改善'],['/projects/','代表项目｜问题诊断与改善验证'],['/qilylean/daily-insights.html','精选简报｜制造问题解决']],
     'SPONSOR':[['/knowledge/pdca-gantt-milestone-opl.html','专题｜项目里程碑管理'],['/qilylean/daily/2026-08-19.html','精选简报｜工程交付闭环'],['/cooperation/','相关项目能力']]
   };
 
