@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* Google Translate single-runtime / unified language-menu gate | V33 | 2026-09-01 */
+/* Google Translate single-runtime / unified language-menu gate | V33 + DDZ V155 fast route | 2026-09-03 */
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
@@ -11,6 +11,7 @@ const fail=message=>{throw new Error(`Translation single-runtime validation fail
 const must=(source,token,label)=>{if(!source.includes(token))fail(`${label}: missing ${token}`);};
 const forbid=(source,token,label)=>{if(source.includes(token))fail(`${label}: forbidden ${token}`);};
 const count=(source,pattern)=>(source.match(pattern)||[]).length;
+const DDZ_FAST_PATH='tools/pure-ddz/index.html';
 
 const safe=read('site-translation-safe-runtime-v1.js');
 const publicCss=read('site-translation-public-ui-v1.css');
@@ -89,11 +90,20 @@ for(const file of siteRuntimeFiles){
 
 const htmlFiles=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=file=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(file);
-let audited=0;
+let audited=0,ddzFast=0;
 for(const file of htmlFiles){
   const html=read(file);
   if(ownership(file)||!/<\/head>/i.test(html))continue;
   audited++;
+  if(file===DDZ_FAST_PATH&&html.includes('20260903-ddz-fast-knowledge-v155')){
+    ddzFast++;
+    must(html,'data-qily-ddz-fast-shell="v155"','DDZ deferred translator shell');
+    must(html,'fast-site-shell-v155.js','DDZ deferred translator loader');
+    if(count(html,/site-translation-safe-runtime-v1\.js/g)!==0)fail('DDZ V155 must not load Google Translate during initial HTML parse');
+    if(count(html,/site-translation-public-ui-v1\.css/g)!==0)fail('DDZ V155 must not load translation CSS during initial HTML parse');
+    if(!read('tools/pure-ddz/game/js/fast-site-shell-v155.js').includes('/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'))fail('DDZ fast shell must defer to the same authoritative Google runtime');
+    continue;
+  }
   const safeRefs=count(html,/site-translation-safe-runtime-v1\.js/g);
   if(safeRefs!==1)fail(`${file}: expected one authoritative runtime reference, found ${safeRefs}`);
   if(!html.includes('/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'))fail(`${file}: authoritative runtime cache is stale`);
@@ -104,11 +114,13 @@ for(const file of htmlFiles){
   if(html.includes('translate.google.com/translate_a/element.js'))fail(`${file}: official Google script must be loaded only by the authoritative runtime`);
 }
 if(audited<460)fail(`public-page coverage too low: ${audited}`);
+if(ddzFast!==1)fail(`expected exactly one DDZ V155 deferred-translation route, found ${ddzFast}`);
 
 const materializer=read('scripts/materialize-global-language-v3.js');
 must(materializer,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'materializer baseline');
 must(materializer,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'materializer runtime cache');
 must(materializer,"const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16'",'materializer native UI cache');
 must(materializer,"const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23'",'materializer redline cache');
+must(materializer,"const DDZ_FAST_PATH='tools/pure-ddz/index.html'",'DDZ fast-route isolation');
 
-console.log(`PASS: ${audited} public pages use one post-load Google Translate V1.4 runtime with three primary languages plus a Google-supported more-language picker; attribution stays visible and translation never owns navigation.`);
+console.log(`PASS: ${audited} public pages retain one Google Translate V1.4 authority; standard pages load it post-page-load and DDZ V155 defers the same runtime until idle/user intent so translation never competes with game first load.`);

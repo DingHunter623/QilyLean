@@ -10,6 +10,7 @@ const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`);
 const forbidRe=(s,re,m)=>{if(re.test(s))throw new Error(`${m}: forbidden pattern ${re}`);};
 const files=()=>execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
+const DDZ_FAST_PATH='tools/pure-ddz/index.html';
 
 const authority=read('site-visual-authority-r8.css');
 const runtime=read('site-visual-runtime-r8.js');
@@ -50,11 +51,20 @@ must(redline,'--ql-redline-rail-thumb:#0f4b5a','Redline fallback thumb');
 must(redline,'--ql-redline-header-offset:var(--qily-header-live-height,86px)','Measured redline header offset');
 forbid(redline,'clamp(260px,17vw,300px)','Oversized translator fallback');
 
-let pages=0,covered=0,duplicates=0,fail=[];
+let pages=0,covered=0,duplicates=0,isolated=0,fail=[];
 for(const file of files()){
   if(ownership(file))continue;
   const html=read(file);
   if(!/<\/head>/i.test(html))continue;
+  if(file===DDZ_FAST_PATH&&html.includes('20260903-ddz-fast-knowledge-v155')){
+    isolated++;
+    must(html,'data-qily-ddz-fast-shell="v155"','DDZ V155 fast visual owner');
+    must(html,"loadStyle('css/ddz-core-v155.css')",'DDZ V155 bundled CSS');
+    must(html,"const chain=['js/ddz-core-v155.js'];",'DDZ V155 bundled JS');
+    forbid(html,'site-visual-authority-r8.css','DDZ fast route must not load R8 CSS');
+    forbid(html,'site-visual-runtime-r8.js','DDZ fast route must not load R8 runtime');
+    continue;
+  }
   pages++;
   const css=(html.match(/site-visual-authority-r8\.css/g)||[]).length;
   const js=(html.match(/site-visual-runtime-r8\.js/g)||[]).length;
@@ -64,6 +74,7 @@ for(const file of files()){
 }
 if(pages<450)throw new Error(`Unexpected public-page coverage floor: ${pages}`);
 if(covered!==pages)throw new Error(`R8 public coverage regression: covered=${covered}/${pages}; sample=${fail.slice(0,12).join(' | ')}`);
+if(isolated!==1)throw new Error(`DDZ V155 fast-route isolation regression: ${isolated}`);
 if(duplicates)throw new Error(`R8 duplicate authority references detected: ${duplicates}`);
 
-console.log(`PASS: R8 single visual authority covers ${covered}/${pages} public pages; 1560 axis, measured header anchors, VI deep-teal navigation rail, wrapper-owned tables, card/flow/diagram contracts and observable overflow are protected.`);
+console.log(`PASS: R8 single visual authority covers ${covered}/${pages} standard public pages; DDZ V155 remains one explicitly isolated bundled fast route; 1560 axis, measured header anchors, VI deep-teal navigation rail, wrapper-owned tables, card/flow/diagram contracts and observable overflow are protected.`);

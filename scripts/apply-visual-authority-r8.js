@@ -10,6 +10,7 @@ const CSS='/site-visual-authority-r8.css?v=20260831-r8-authority-v2-redline-clos
 const JS='/site-visual-runtime-r8.js?v=20260831-r8-runtime-v3-translation-neutral';
 const LINK=`<link id="qilyVisualAuthorityR8" data-qily-visual-authority="r8" rel="stylesheet" href="${CSS}">`;
 const SCRIPT=`<script defer id="qilyVisualRuntimeR8" data-qily-visual-runtime="r8" src="${JS}"></script>`;
+const DDZ_FAST_PATH='tools/pure-ddz/index.html';
 const CACHE_MAP=[
   ['/site-visual-system-v2.css?v=20260830-visual-system-v2-r7','/site-visual-system-v2.css?v=20260831-r8-observable-overflow-v1'],
   ['/site-responsive-containment-v1.css?v=20260830-header-integrity-v2','/site-responsive-containment-v1.css?v=20260831-r8-containment-only-v1'],
@@ -28,8 +29,11 @@ function cleanR8Refs(html){
     .replace(/\s*<link[^>]+(?:id=["']qilyVisualAuthorityR8["']|site-visual-authority-r8\.css)[^>]*>\s*/gi,'\n')
     .replace(/\s*<script[^>]+(?:id=["']qilyVisualRuntimeR8["']|site-visual-runtime-r8\.js)[^>]*><\/script>\s*/gi,'\n');
 }
-function materializeHtml(html){
+function isDdzFastRoute(file,html){return file===DDZ_FAST_PATH&&html.includes('20260903-ddz-fast-knowledge-v155')&&html.includes('data-qily-ddz-fast-shell="v155"');}
+function materializeHtml(html,file){
   let next=cleanR8Refs(html);
+  /* DDZ V155 has its own bundled visual authority. Re-adding R8 would restore the mobile load bottleneck. */
+  if(isDdzFastRoute(file,next))return next;
   if(!/<\/head>/i.test(next))return next;
   next=next.replace(/\s*<\/head>/i,`\n${LINK}\n${SCRIPT}\n</head>`);
   return next;
@@ -58,7 +62,7 @@ function replaceRegex(file,re,to,required=false){
 function alignCacheContracts(){
   let filesChanged=0,replacements=0;
   for(const file of trackedText()){
-    if(file==='scripts/apply-visual-authority-r8.js')continue;
+    if(file==='scripts/apply-visual-authority-r8.js'||file===DDZ_FAST_PATH)continue;
     const text=read(file);
     let next=text;
     for(const [from,to] of CACHE_MAP){
@@ -104,20 +108,21 @@ sourceChanges+=replaceLiteral('site-public-redline-closure-v2.css','max-width:30
 sourceChanges+=replaceLiteral('site-header-axis-v1.css','--qily-nav-scroll-track:#f3e6cf;','--qily-nav-scroll-track:#dbe8e6;',false);
 sourceChanges+=replaceLiteral('site-header-axis-v1.css','--qily-nav-scroll-thumb:#caa15f;','--qily-nav-scroll-thumb:#0f4b5a;',false);
 
-/* Cache-bust every changed authority source in HTML, materializers, guards and workflows so self-heal cannot restore an older visual layer. */
+/* Cache-bust every changed authority source except the dedicated DDZ V155 fast route. */
 const cache=alignCacheContracts();
 
-let pages=0,changed=0,skipped=0;
+let pages=0,changed=0,skipped=0,isolated=0;
 for(const file of trackedHtml()){
   if(ownership(file)){skipped++;continue;}
   const text=read(file);
   if(!/<\/head>/i.test(text)){skipped++;continue;}
-  pages++;
-  const next=materializeHtml(text);
+  if(isDdzFastRoute(file,text))isolated++;
+  else pages++;
+  const next=materializeHtml(text,file);
   if(next!==text){changed++;write(file,next);}
 }
 
 if(checkOnly&&(changed||sourceChanges||cache.filesChanged)){
   throw new Error(`R8 materialization drift: html=${changed}, sources=${sourceChanges}, cache files=${cache.filesChanged}. Run node scripts/apply-visual-authority-r8.js`);
 }
-process.stdout.write(`R8 visual authority ${checkOnly?'check':'materialize'}: public pages=${pages}, html changed=${changed}, source cleanups=${sourceChanges}, cache files=${cache.filesChanged}, cache replacements=${cache.replacements}, skipped=${skipped}.\n`);
+process.stdout.write(`R8 visual authority ${checkOnly?'check':'materialize'}: public pages=${pages}, DDZ fast isolated=${isolated}, html changed=${changed}, source cleanups=${sourceChanges}, cache files=${cache.filesChanged}, cache replacements=${cache.replacements}, skipped=${skipped}.\n`);

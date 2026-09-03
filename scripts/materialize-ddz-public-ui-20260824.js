@@ -145,6 +145,10 @@ if(!page.includes('id="welcome-landscape"')){
 page=page.replace(/\s*<div class="ddz-page-note">[\s\S]*?<\/div>\s*/g,'\n');
 page=page.replace(/<p id="hint-message" class="hint-message">[\s\S]*?<\/p>/g,'<p id="hint-message" class="hint-message" aria-hidden="true"></p>');
 page=page.replace(/<span>企业邮箱<\/span>/g,'<span>官网邮箱</span>');
+
+/* Public Android status has one source of truth until an APK is actually released. */
+page=page.replace(/Android版待网页版验证确认后开放/g,'Android版暂未开放');
+page=page.replace(/Android 可离线使用/g,'Android版暂未开放');
 page=page.replace(/安装包待验证后发布/g,'Android版暂未开放');
 page=page.replace(/安装包待验证/g,'Android版暂未开放');
 page=page.replace(/Android：待验证后发布/g,'Android：暂未开放下载');
@@ -171,6 +175,7 @@ if(page.includes('<footer class="site-footer">')) throw new Error('Game-specific
 if(page.includes('name="screen-orientation"')||page.includes('name="x5-orientation"')) throw new Error('DDZ forced-orientation metadata must stay removed');
 if(!page.includes('__PURE_DDZ_MOBILE_DEVICE__')||!page.includes('__PURE_DDZ_WECHAT_WEBVIEW__')||!page.includes('__PURE_DDZ_MANAGED_LOADER__')) throw new Error('DDZ mobile managed-loader markers are missing');
 if(page.includes('<span>企业邮箱</span>')||!page.includes('<span>官网邮箱</span>')) throw new Error('DDZ contact label contract is not current');
+if(page.includes('Android版待网页版验证确认后开放')||page.includes('Android 可离线使用')) throw new Error('DDZ Android public copy is not unified');
 
 const cssBundle=fs.readFileSync(cssBundleFile,'utf8');
 const jsBundle=fs.readFileSync(jsBundleFile,'utf8');
