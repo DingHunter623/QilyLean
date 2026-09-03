@@ -93,8 +93,8 @@ function primePureDdzV158(){
   if(document.querySelector('link[data-qily-ddz-prefetch="v158"]'))return;
   [
     ['/tools/pure-ddz/','document'],
-    ['/tools/pure-ddz/game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158-v159','style'],
-    ['/tools/pure-ddz/game/js/ddz-core-v155.js?v=20260903-ddz-fast-knowledge-v155-v158-v159','script']
+    ['/tools/pure-ddz/game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158-v159-v160','style'],
+    ['/tools/pure-ddz/game/js/ddz-core-v155.js?v=20260903-ddz-fast-knowledge-v155-v158-v159-v160','script']
   ].forEach(function(item){
     var link=document.createElement('link');
     link.rel='prefetch';
@@ -146,6 +146,8 @@ function addPureDdzSection(){
   section.className='pure-ddz-home-section';
   section.innerHTML='<div class="pure-ddz-home-inner"><article class="pure-ddz-home-card"><div class="pure-ddz-home-visual" aria-label="QilyLean六大业务主题斗地主牌桌示意"><div class="pure-ddz-table"><div class="pure-ddz-cards"><i>Q</i><i>Q</i><i>Q</i></div><strong>纯净斗地主</strong><span>简单娱乐 · 益智生活｜QilyLean 主题牌面</span><div class="pure-ddz-business"><b>现场事实</b><b>工程数据</b><b>精益改善</b><b>质量保证</b><b>数智固化</b><b>知识资产</b></div></div></div><div class="pure-ddz-home-content"><small>网页版数字产品｜适老化休闲益智</small><h3>Pure DDZ Classic｜纯净斗地主</h3><p><strong>'+PURE_DDZ_POSITIONING+'</strong> 完整支持三人叫地主、经典牌型、AI电脑对手、智能提示、积分战绩、中文语音及横竖屏适配；牌面保留传统点数与花色识别，并在普通牌面融入QilyLean专业术语、中文名称与核心释义。</p><ul class="pure-ddz-feature-list"><li>完整三人斗地主、叫分、地主与胜负结算</li><li>单牌、对子、顺子、连对、飞机、炸弹、王炸等完整牌型</li><li>AI电脑对手与AI智能提示</li><li>无广告、无注册、无登录、无支付</li><li>网页版直接游玩，手机/平板/电脑自适应</li><li>网页端直接游玩，知识牌面兼顾娱乐与制造业学习</li></ul><div class="pure-ddz-home-actions"><a class="play" href="/tools/pure-ddz/">立即在线玩</a><a class="secondary" href="https://github.com/DingHunter623/Pure-DDZ-Classic" target="_blank" rel="noopener">查看项目仓库</a><button class="secondary" type="button" data-copy-pure-ddz>复制分享简介</button><span class="times26001-home-status" aria-live="polite"></span></div></div></article></div>';
   if(!appendHomeSection(section))return;
+  var playLink=section.querySelector('.pure-ddz-home-actions .play');
+  bindPureDdzIntent(playLink);
   var playLink=section.querySelector('.pure-ddz-home-actions .play');
   bindPureDdzIntent(playLink);
   var playLink=section.querySelector('.pure-ddz-home-actions .play');

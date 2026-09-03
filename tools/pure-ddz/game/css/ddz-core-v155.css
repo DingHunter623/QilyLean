@@ -1187,19 +1187,19 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
 }
 
 /* ===== visual-tuning-v158.css */
-/* QilyLean Pure DDZ V159｜Annotated redline top-fold closure｜2026-09-03
- * This existing tuning source remains the single desktop top-fold owner and is compiled into ddz-core-v155.css.
- * V159 treats the user's annotated red area as one vertical budget: compact heading + compact toolbar + no duplicate promise band.
- * Approved V156 hand-card scale, V157 played-card scale and dedicated mobile-landscape geometry remain untouched.
+/* QilyLean Pure DDZ V160｜Capsule feedback + bottom closeout｜2026-09-03
+ * This existing tuning source remains the single desktop visual owner and is compiled into ddz-core-v155.css.
+ * V160 preserves the approved V159 layout exactly, strengthens the full interaction contract for in-game capsule controls,
+ * and closes the desktop page tail to ~30px without touching gameplay, knowledge-card scale or mobile-landscape geometry.
  */
 
 @media (min-width:1181px){
   :root{--ddz-site-gutter:clamp(14px,1.7vw,44px)}
 
-  /* 01｜Redline closure: product identity is one genuinely compact information strip. */
+  /* V159 approved top fold remains unchanged. */
   html body.ddz-site-page .game-shell.ddz-site-module{
     margin-top:2px!important;
-    margin-bottom:var(--ddz-site-gutter)!important;
+    margin-bottom:30px!important;
   }
   html body.ddz-site-page .ddz-page-heading{
     min-height:38px!important;
@@ -1246,7 +1246,6 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
     white-space:nowrap!important;
   }
 
-  /* 02｜Status + actions consume only one 40px-class rail instead of a second oversized block. */
   html body.ddz-site-page .ddz-toolbar{
     grid-template-columns:minmax(540px,620px) minmax(0,1fr)!important;
     min-height:40px!important;
@@ -1307,7 +1306,6 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
   html body.ddz-site-page .ddz-toolbar #v120-landscape-toggle{min-width:84px!important}
   html body.ddz-site-page .ddz-toolbar .start-btn{min-width:102px!important}
 
-  /* 03｜The duplicated public promise row is retired; the felt starts directly under the toolbar. */
   html body.ddz-site-page .clean-promise{display:none!important}
   html body.ddz-site-page .game-main{margin-top:0!important}
   html body.ddz-site-page .table-wrap{
@@ -1324,7 +1322,6 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
     padding-top:0!important;
   }
 
-  /* Three bottom cards keep the approved V156 size and visual hierarchy. */
   html body.ddz-site-page .bottom-zone{margin-top:2px!important}
   html body.ddz-site-page .bottom-label{font-size:15px!important}
   html body.ddz-site-page .bottom-cards{
@@ -1348,7 +1345,6 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
   html body.ddz-site-page .bottom-cards>.qily-mini-business b{font-size:20px!important;line-height:1!important}
   html body.ddz-site-page .bottom-cards>.qily-mini-business small{font-size:8.5px!important;line-height:1.05!important}
 
-  /* 04｜Retain V157 elder-friendly currently-played card scale. */
   html body.ddz-site-page .v120-play-stage{
     top:110px!important;
     width:min(560px,calc(100% - 360px))!important;
@@ -1383,7 +1379,6 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
   html body.ddz-site-page .v120-play-card .qily-card-theme>b{font-size:8px!important;line-height:1.05!important}
   html body.ddz-site-page .v120-play-card .qily-card-theme>em{font-size:5.8px!important;line-height:1.05!important}
 
-  /* Hand remains the approved 110×162 knowledge-card scale. */
   html body.ddz-site-page #me-panel.me-player{
     min-height:260px!important;
     height:260px!important;
@@ -1432,7 +1427,7 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
 }
 
 @media (min-width:901px) and (max-width:1180px){
-  html body.ddz-site-page .game-shell.ddz-site-module{margin-top:3px!important}
+  html body.ddz-site-page .game-shell.ddz-site-module{margin-top:3px!important;margin-bottom:30px!important}
   html body.ddz-site-page .ddz-page-heading{min-height:44px!important;height:44px!important;padding:3px 9px!important;margin-bottom:2px!important}
   html body.ddz-site-page .ddz-toolbar{min-height:44px!important;padding:2px 6px!important;margin-bottom:0!important}
   html body.ddz-site-page .ddz-toolbar .scoreboard{grid-template-columns:repeat(4,minmax(84px,1fr))!important}
@@ -1445,6 +1440,48 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
   html body.ddz-site-page .v120-play-card{flex-basis:68px!important;width:68px!important;height:100px!important}
   html body.ddz-site-page .v120-play-card .qily-card--normal .qily-rank-suit-line b{font-size:22px!important}
   html body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{font-size:27px!important}
+}
+
+/* V160｜Permanent interaction contract for the in-game capsule controls. */
+html body.ddz-site-page .controls .control-btn:not(:disabled){
+  border:2px solid rgba(202,161,95,.76)!important;
+  box-shadow:0 6px 14px rgba(0,0,0,.22),0 0 0 1px rgba(255,227,155,.10)!important;
+  transition:transform .14s ease,box-shadow .14s ease,filter .14s ease,border-color .14s ease,background-color .14s ease!important;
+  will-change:transform;
+}
+@media (hover:hover) and (pointer:fine){
+  html body.ddz-site-page .controls .control-btn:not(:disabled):hover{
+    transform:translateY(-3px) scale(1.025)!important;
+    filter:brightness(1.09) saturate(1.06)!important;
+    border-color:#ffe39b!important;
+    box-shadow:0 0 0 3px rgba(255,227,155,.20),0 11px 24px rgba(0,0,0,.32),0 0 22px rgba(202,161,95,.22)!important;
+  }
+}
+html body.ddz-site-page .controls .control-btn:not(:disabled):active{
+  transform:translateY(1px) scale(.985)!important;
+  filter:brightness(.96) saturate(1.03)!important;
+  border-color:#f3c75f!important;
+  box-shadow:inset 0 3px 8px rgba(7,60,71,.24),0 3px 8px rgba(0,0,0,.22),0 0 0 2px rgba(255,227,155,.18)!important;
+}
+html body.ddz-site-page .controls .control-btn:not(:disabled):focus-visible{
+  outline:3px solid #ffe39b!important;
+  outline-offset:3px!important;
+  border-color:#ffe39b!important;
+  filter:brightness(1.07)!important;
+  box-shadow:0 0 0 5px rgba(202,161,95,.26),0 10px 24px rgba(0,0,0,.30)!important;
+}
+html body.ddz-site-page .controls .control-btn:disabled{
+  opacity:.38!important;
+  cursor:not-allowed!important;
+  transform:none!important;
+  filter:saturate(.55) brightness(.88)!important;
+  border-color:rgba(255,255,255,.14)!important;
+  box-shadow:none!important;
+}
+@media (prefers-reduced-motion:reduce){
+  html body.ddz-site-page .controls .control-btn{transition:none!important}
+  html body.ddz-site-page .controls .control-btn:not(:disabled):hover,
+  html body.ddz-site-page .controls .control-btn:not(:disabled):active{transform:none!important}
 }
 
 /* Proven mobile and both landscape implementations retain their dedicated geometry. */
