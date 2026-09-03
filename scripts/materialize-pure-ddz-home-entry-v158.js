@@ -8,7 +8,7 @@ const file=path.join(root,'times26001-home-card.js');
 if(!fs.existsSync(file))throw new Error('Missing times26001-home-card.js');
 let source=fs.readFileSync(file,'utf8');
 const before=source;
-const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161';
+const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162';
 
 source=source.replace('网页游戏＋Android APP｜休闲数字产品','网页版数字产品｜适老化休闲益智');
 source=source.replace('牌面识别保持传统规则，QilyLean业务元素主要用于牌背与桌面视觉。','牌面保留传统点数与花色识别，并在普通牌面融入QilyLean专业术语、中文名称与核心释义。');
@@ -20,8 +20,8 @@ if(!source.includes('function primePureDdzV158(){')){
   source=source.replace('function addPureDdzHeroLink(){',helper+'function addPureDdzHeroLink(){');
 }
 
-/* Refresh an already-materialized V158 prefetch block to the current V161 cache key without adding another owner. */
-source=source.replace(/20260903-ddz-fast-knowledge-v155-v158(?:-v159)?(?:-v160)?(?:-v161)?/g,CACHE);
+/* Refresh an already-materialized V158 prefetch block to the current V162 cache key without adding another owner. */
+source=source.replace(/20260903-ddz-fast-knowledge-v155-v158(?:-v159)?(?:-v160)?(?:-v161)?(?:-v162)?/g,CACHE);
 
 source=source.replace(
   "  actions.appendChild(link);\n}\n\nfunction addSection(){",
@@ -39,7 +39,7 @@ source=source.replace(
 if(source.includes('网页游戏＋Android APP｜休闲数字产品'))throw new Error('Legacy DDZ Android positioning still public');
 if(source.includes('Pure-DDZ-Classic-v1.0.2.apk')||source.includes('下载 Android v1.0.2'))throw new Error('Legacy DDZ Android APK CTA still public');
 for(const token of ['function primePureDdzV158(){','data-qily-ddz-prefetch','/tools/pure-ddz/','ddz-core-v155.css?v='+CACHE,'ddz-core-v155.js?v='+CACHE]){
-  if(!source.includes(token))throw new Error(`DDZ V161 entry prefetch contract missing: ${token}`);
+  if(!source.includes(token))throw new Error(`DDZ V162 entry prefetch contract missing: ${token}`);
 }
 if(source!==before)fs.writeFileSync(file,source.endsWith('\n')?source:source+'\n');
-console.log('Pure DDZ V161 homepage entry materialized: direct route + idle/intent prefetch + current cache + current public product copy.');
+console.log('Pure DDZ V162 homepage entry materialized: direct route + idle/intent prefetch + current cache + current public product copy.');
