@@ -1,0 +1,116 @@
+name: One-time - correct 5M2E knowledge
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-5m2e-knowledge-20260903.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-fix-5m2e-knowledge-20260903
+  cancel-in-progress: true
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Correct terminology source and OPL knowledge
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          html_path = Path('knowledge/terminology.html')
+          html = html_path.read_text(encoding='utf-8')
+
+          old_card = '''<article class="term-card" data-term-card id="term-5m2e" data-term-slug="5m2e">
+  <div class="term-code">5M2E</div>
+  <div class="term-en">Man-Machine-Material-Method-Measurement-Environment</div>
+  <h3>人、机、料、法、测、环</h3>
+  <p><strong>应用场景：</strong>用于从七类要素系统展开可能原因，是要因分析和现场排查框架。</p>
+</article>'''
+          new_card = '''<article class="term-card" data-term-card id="term-5m2e" data-term-slug="5m2e">
+  <div class="term-code">5M2E</div>
+  <div class="term-en">Man / Machine / Material / Method / Measurement / Environment / Energy</div>
+  <h3>人、机、料、法、测、环、能</h3>
+  <p><strong>应用场景：</strong>用于从人员、设备、材料、方法、测量、环境、能源／动力七类要素系统展开可能原因，是质量异常、设备故障、工艺波动、效率损失与现场排查的结构化要因分析框架。能源／动力可包括电力、压缩空气、真空、冷却水、蒸汽等公用工程条件。</p>
+</article>'''
+          if old_card not in html:
+              raise SystemExit('ERROR: static 5M2E card source not found')
+          html = html.replace(old_card, new_card, 1)
+
+          old_json = '"name":"人、机、料、法、测、环","termCode":"5M2E","alternateName":"Man-Machine-Material-Method-Measurement-Environment","description":"应用场景： 用于从七类要素系统展开可能原因，是要因分析和现场排查框架。"'
+          new_json = '"name":"人、机、料、法、测、环、能","termCode":"5M2E","alternateName":"Man / Machine / Material / Method / Measurement / Environment / Energy","description":"应用场景： 用于从人员、设备、材料、方法、测量、环境、能源／动力七类要素系统展开可能原因，是质量异常、设备故障、工艺波动、效率损失与现场排查的结构化要因分析框架。能源／动力可包括电力、压缩空气、真空、冷却水、蒸汽等公用工程条件。"'
+          if old_json not in html:
+              raise SystemExit('ERROR: 5M2E JSON-LD source not found')
+          html = html.replace(old_json, new_json, 1)
+
+          old_script = '/knowledge/terminology-sponsor-v1.js?v=20260809-opl-note-clean-v2'
+          new_script = '/knowledge/terminology-sponsor-v1.js?v=20260903-5m2e-knowledge-v1'
+          if old_script not in html:
+              raise SystemExit('ERROR: terminology knowledge script reference not found')
+          html = html.replace(old_script, new_script, 1)
+          html_path.write_text(html, encoding='utf-8')
+
+          js_path = Path('knowledge/terminology-sponsor-v1.js')
+          js = js_path.read_text(encoding='utf-8')
+          old_version = "var VERSION = '20260828-knowledge-asset-2-0-v1';"
+          new_version = "var VERSION = '20260903-5m2e-knowledge-v1';"
+          if old_version not in js:
+              raise SystemExit('ERROR: terminology extension VERSION source not found')
+          js = js.replace(old_version, new_version, 1)
+
+          case_anchor = "    'SPONSOR':'某自动化项目在SAT后出现安全、节拍与资源冲突，项目经理权限不足。Sponsor组织重大里程碑评审，明确风险红线、资源与再验证条件，证据齐套后再批准进入Pilot。'"
+          case_insert = "    '5M2E':'某自动化工位出现间歇性停机，团队按5M2E逐项核查人员操作与培训、设备报警与保全、物料批次、工艺参数、测量／传感器校准、环境温湿度，以及电源、压缩空气与真空等能源条件，最终用数据锁定气压波动，并将供气阈值、点检与异常反应纳入标准。',\n" + case_anchor
+          if case_anchor not in js:
+              raise SystemExit('ERROR: 5M2E case insertion anchor not found')
+          js = js.replace(case_anchor, case_insert, 1)
+
+          rel_marker = '  var RELATIONS = {'
+          head, sep, tail = js.partition(rel_marker)
+          if not sep:
+              raise SystemExit('ERROR: RELATIONS block not found')
+          rel_anchor = "    'SPONSOR':[['/knowledge/pdca-gantt-milestone-opl.html','专题｜项目里程碑管理'],['/qilylean/daily/2026-08-19.html','精选简报｜工程交付闭环'],['/cooperation/','相关项目能力']]"
+          rel_insert = "    '5M2E':[['/improvements/','改善方法｜要因分析与现场改善'],['/projects/','代表项目｜问题诊断与改善验证'],['/qilylean/daily-insights.html','精选简报｜制造问题解决']],\n" + rel_anchor
+          if rel_anchor not in tail:
+              raise SystemExit('ERROR: 5M2E relation insertion anchor not found')
+          tail = tail.replace(rel_anchor, rel_insert, 1)
+          js = head + sep + tail
+          js_path.write_text(js, encoding='utf-8')
+          PY
+
+      - name: Validate 5M2E correction
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq '<div class="term-en">Man / Machine / Material / Method / Measurement / Environment / Energy</div>' knowledge/terminology.html
+          grep -Fq '<h3>人、机、料、法、测、环、能</h3>' knowledge/terminology.html
+          grep -Fq '能源／动力可包括电力、压缩空气、真空、冷却水、蒸汽等公用工程条件' knowledge/terminology.html
+          grep -Fq "'5M2E':'某自动化工位出现间歇性停机" knowledge/terminology-sponsor-v1.js
+          grep -Fq "var VERSION = '20260903-5m2e-knowledge-v1';" knowledge/terminology-sponsor-v1.js
+          if grep -Fq '<div class="term-en">Man-Machine-Material-Method-Measurement-Environment</div>' knowledge/terminology.html; then
+            echo 'ERROR: stale visible 5M2E English definition remains'
+            exit 1
+          fi
+
+      - name: Commit correction
+        shell: bash
+        run: |
+          if git diff --quiet -- knowledge/terminology.html knowledge/terminology-sponsor-v1.js; then
+            echo 'No changes required.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add knowledge/terminology.html knowledge/terminology-sponsor-v1.js
+          git commit -m 'fix: correct 5M2E to include Energy'
+          git push origin HEAD:main
