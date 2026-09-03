@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - cn-site-bootstrap-20260903
+      - main
     paths:
       - 'cn-site/**'
       - '.github/workflows/deploy-cn-preprod.yml'
