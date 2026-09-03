@@ -1,4 +1,4 @@
-name: Materialize Pure DDZ V154
+name: Materialize Pure DDZ V155
 
 on:
   push:
@@ -6,14 +6,20 @@ on:
     paths:
       - '.github/workflows/materialize-pure-ddz-v154.yml'
       - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - 'tools/pure-ddz/game/js/card-theme.js'
+      - 'tools/pure-ddz/game/js/ai-expert.js'
+      - 'tools/pure-ddz/game/js/game.js'
+      - 'tools/pure-ddz/game/js/visual-v120.js'
       - 'tools/pure-ddz/game/js/ios-virtual-landscape-v154.js'
+      - 'tools/pure-ddz/game/js/fast-site-shell-v155.js'
+      - 'tools/pure-ddz/game/css/**'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: materialize-pure-ddz-v154-main
+  group: materialize-pure-ddz-v155-main
   cancel-in-progress: false
 
 jobs:
@@ -28,34 +34,43 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Materialize and validate DDZ V154 only
+      - name: Materialize and validate DDZ V155 fast route
         shell: bash
         run: |
           set -euo pipefail
           node --check scripts/materialize-ddz-public-ui-20260824.js
+          node --check tools/pure-ddz/game/js/card-theme.js
+          node --check tools/pure-ddz/game/js/ai-expert.js
+          node --check tools/pure-ddz/game/js/game.js
+          node --check tools/pure-ddz/game/js/visual-v120.js
           node --check tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
           node scripts/materialize-ddz-public-ui-20260824.js
+          node --check tools/pure-ddz/game/js/ddz-core-v155.js
+          grep -Fq '20260903-ddz-fast-knowledge-v155' tools/pure-ddz/index.html
+          grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
+          grep -Fq "const chain=['js/ddz-core-v155.js'];" tools/pure-ddz/index.html
+          grep -Fq 'data-qily-ddz-fast-shell="v155"' tools/pure-ddz/index.html
           grep -Fq 'data-qily-ddz-virtual-landscape="v154"' tools/pure-ddz/index.html
-          grep -Fq '/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154' tools/pure-ddz/index.html
-          grep -Fq "const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];" tools/pure-ddz/index.html
-          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
-          grep -Fq 'id="welcome-landscape"' tools/pure-ddz/index.html
-          grep -Fq 'id="v120-landscape-toggle"' tools/pure-ddz/index.html
+          grep -Fq '/site-dock-share-runtime-v1.js?' tools/pure-ddz/index.html
+          ! grep -Fq '/site-navigation.js?' tools/pure-ddz/index.html
+          ! grep -Fq '/site-translation-safe-runtime-v1.js?' tools/pure-ddz/index.html
+          grep -Fq 'IE 7 Tools' tools/pure-ddz/game/js/ddz-core-v155.js
+          grep -Fq '5M2E' tools/pure-ddz/game/js/ddz-core-v155.js
+          grep -Fq 'Smart Factory' tools/pure-ddz/game/js/ddz-core-v155.js
+          grep -Fq 'card-knowledge-v155.css' tools/pure-ddz/game/css/ddz-core-v155.css
           git diff --check
-      - name: Publish materialized DDZ entry
+      - name: Publish materialized DDZ V155 entry and bundles
         shell: bash
         run: |
           set -euo pipefail
-          if git diff --quiet -- tools/pure-ddz/index.html; then
-            echo 'Pure DDZ V154 entry already materialized.'
+          if git diff --quiet -- tools/pure-ddz/index.html tools/pure-ddz/game/css/ddz-core-v155.css tools/pure-ddz/game/js/ddz-core-v155.js; then
+            echo 'Pure DDZ V155 entry and bundles already materialized.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add tools/pure-ddz/index.html
-          git commit -m 'fix(ddz): materialize iOS virtual landscape V154 [skip ci]'
+          git add tools/pure-ddz/index.html tools/pure-ddz/game/css/ddz-core-v155.css tools/pure-ddz/game/js/ddz-core-v155.js
+          git commit -m 'perf(ddz): materialize V155 fast route and knowledge bundles [skip ci]'
           git pull --rebase origin main
           git push origin main
-
-# 2026-09-03: dedicated production trigger for the iOS Safari landscape closure.
-# Triggered through a normal PR merge so GitHub evaluates this workflow from main.
