@@ -71,7 +71,7 @@ jobs:
               root = ET.parse(file).getroot()
               return [node.text.strip() for node in root.findall("sm:url/sm:loc", namespace) if node.text and node.text.strip()]
 
-          def approved_priority_urls():
+          def coverage_urls():
               file = Path("data/google-index-coverage-policy.json")
               if not file.exists():
                   return []
@@ -82,18 +82,42 @@ jobs:
                   if item.get("policy") == "submit" and item.get("url")
               ]
 
+          def authority_urls():
+              file = Path("data/search-authority-map.json")
+              if not file.exists():
+                  return []
+              payload = json.loads(file.read_text(encoding="utf-8"))
+              rows = []
+              for index, item in enumerate(payload.get("targets", [])):
+                  url = (item.get("url") or "").strip()
+                  priority = item.get("priority")
+                  if url and priority in {"S", "A"}:
+                      rows.append((0 if priority == "S" else 1, index, url))
+              rows.sort()
+              return [url for _, _, url in rows]
+
           topic_urls = sitemap_urls("sitemap-topics.xml")
-          priority_urls = approved_priority_urls()
-          urls = set()
+          priority_urls = coverage_urls()
+          authority_priority_urls = authority_urls()
+          candidates = []
+
+          def add_many(items):
+              candidates.extend(item for item in items if item)
+
+          # A manual run is a controlled authority refresh: brand, service, method,
+          # project and knowledge URLs are queued in priority order rather than the
+          # entire public site.
           if event == "workflow_dispatch":
-              urls.update(topic_urls)
-              urls.update(priority_urls)
+              add_many(authority_priority_urls)
+              add_many(topic_urls)
+              add_many(priority_urls)
 
           try:
               changed = subprocess.check_output(["git", "diff", "--name-only", "HEAD^", "HEAD"], text=True).splitlines()
           except Exception:
               changed = subprocess.check_output(["git", "show", "--pretty=", "--name-only", "HEAD"], text=True).splitlines()
 
+          # Changed canonical HTML is always first-class discovery material.
           for name in changed:
               path = Path(name)
               if name.endswith(".html") and path.exists():
@@ -104,13 +128,14 @@ jobs:
                   if not match:
                       match = re.search(r'<link\b[^>]*href=["\'](https://qilylean\.com[^"\']*)["\'][^>]*rel=["\']canonical["\']', html, re.I)
                   if match:
-                      urls.add(match.group(1))
+                      candidates.insert(0, match.group(1))
 
               if name in {"sitemap-topics.xml", "data/search-authority-map.json"}:
-                  urls.update(topic_urls)
+                  add_many(authority_priority_urls)
+                  add_many(topic_urls)
 
-              if name in {"data/google-index-coverage-policy.json", ".github/workflows/indexnow.yml"}:
-                  urls.update(priority_urls)
+              if name == "data/google-index-coverage-policy.json":
+                  add_many(priority_urls)
 
               if name in {"sitemap.xml", "sitemap-core.xml"}:
                   try:
@@ -118,15 +143,19 @@ jobs:
                   except Exception:
                       diff = ""
                   for candidate in re.findall(r'^\+.*?<loc>\s*(https://qilylean\.com[^<]+)\s*</loc>', diff, re.M):
-                      urls.add(candidate.strip())
+                      candidates.append(candidate.strip())
 
           clean = []
-          for url in sorted(urls):
+          seen = set()
+          for url in candidates:
               parsed = urlparse(url)
-              if parsed.scheme == "https" and parsed.netloc == os.environ["SITE_HOST"]:
-                  clean.append(url.rstrip("/") if parsed.path != "/" else origin)
+              if parsed.scheme != "https" or parsed.netloc != os.environ["SITE_HOST"]:
+                  continue
+              normalized = origin if parsed.path == "/" else url.rstrip("/")
+              if normalized not in seen:
+                  clean.append(normalized)
+                  seen.add(normalized)
 
-          clean = list(dict.fromkeys(clean))
           Path("search-engine-urls.txt").write_text("\n".join(clean) + ("\n" if clean else ""), encoding="utf-8")
           Path("search-engine-urls.json").write_text(json.dumps(clean, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
@@ -174,33 +203,68 @@ jobs:
             exit 0
           fi
 
-          # Keep Baidu batches deliberately small while the site's quota/eligibility is being verified.
-          BAIDU_BATCH_LIMIT=10
-          head -n "$BAIDU_BATCH_LIMIT" search-engine-urls.txt > baidu-urls.txt
-          submitted_count="$(grep -c . baidu-urls.txt || true)"
-          echo "Prepared $submitted_count URL(s) for Baidu API submission."
+          # Baidu is intentionally fed in small batches. A manual authority refresh
+          # can cover several batches, while quota exhaustion stops the run cleanly.
+          BAIDU_BATCH_SIZE=10
+          BAIDU_MAX_URLS=50
+          head -n "$BAIDU_MAX_URLS" search-engine-urls.txt > baidu-urls.txt
+          submitted_total="$(grep -c . baidu-urls.txt || true)"
+          echo "Prepared up to $submitted_total URL(s) for Baidu API submission."
 
-          response_file="$(mktemp)"
-          set +e
-          http_code="$(curl --silent --show-error \
-            --output "$response_file" \
-            --write-out '%{http_code}' \
-            -H 'Content-Type: text/plain' \
-            --data-binary @baidu-urls.txt \
-            "http://data.zz.baidu.com/urls?site=$SITE_ORIGIN&token=$BAIDU_PUSH_TOKEN")"
-          curl_exit=$?
-          set -e
+          split -l "$BAIDU_BATCH_SIZE" -d -a 3 baidu-urls.txt baidu-batch-
+          batch_no=0
+          for batch in baidu-batch-*; do
+            [ -s "$batch" ] || continue
+            batch_no=$((batch_no + 1))
+            batch_count="$(grep -c . "$batch" || true)"
+            echo "Submitting Baidu batch $batch_no with $batch_count URL(s)."
 
-          response="$(cat "$response_file")"
-          rm -f "$response_file"
-          echo "Baidu API HTTP status: $http_code"
-          echo "Baidu API response: $response"
+            response_file="$(mktemp)"
+            set +e
+            http_code="$(curl --silent --show-error \
+              --output "$response_file" \
+              --write-out '%{http_code}' \
+              -H 'Content-Type: text/plain' \
+              --data-binary @"$batch" \
+              "http://data.zz.baidu.com/urls?site=$SITE_ORIGIN&token=$BAIDU_PUSH_TOKEN")"
+            curl_exit=$?
+            set -e
 
-          if [ "$curl_exit" -ne 0 ]; then
-            echo "Baidu API transport failed with curl exit code $curl_exit."
-            exit "$curl_exit"
-          fi
-          if [ "$http_code" != "200" ]; then
-            echo "Baidu API rejected the submission; see the response above for the exact reason."
-            exit 1
-          fi
+            response="$(cat "$response_file")"
+            rm -f "$response_file"
+            echo "Baidu API HTTP status: $http_code"
+            echo "Baidu API response: $response"
+
+            if [ "$curl_exit" -ne 0 ]; then
+              echo "Baidu API transport failed with curl exit code $curl_exit."
+              exit "$curl_exit"
+            fi
+            if [ "$http_code" != "200" ]; then
+              echo "Baidu API rejected the submission; see the response above for the exact reason."
+              exit 1
+            fi
+
+            read -r success remain not_same_site not_valid <<EOF
+          $(python3 - "$response" <<'PY'
+          import json, sys
+          try:
+              data = json.loads(sys.argv[1])
+          except Exception:
+              data = {}
+          print(
+              data.get("success", 0),
+              data.get("remain", -1),
+              len(data.get("not_same_site", []) or []),
+              len(data.get("not_valid", []) or []),
+          )
+          PY
+          )
+          EOF
+            echo "Baidu accepted: $success; remaining quota: $remain; not_same_site: $not_same_site; not_valid: $not_valid"
+
+            if [ "$remain" = "0" ]; then
+              echo "Baidu reported no remaining quota; stopping further batches without failing the workflow."
+              break
+            fi
+            sleep 1
+          done
