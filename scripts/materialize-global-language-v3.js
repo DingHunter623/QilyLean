@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Sitewide Public Baseline Materializer V32｜2026-09-02 DDZ public-page closure
+/* QilyLean Sitewide Public Baseline Materializer V32｜2026-09-03 DDZ fast-route isolation
  * Chinese static HTML remains the authoritative source and default display.
  * Google Translate Header Runtime V1.4 is the single public translation provider and lifecycle owner.
  * Header Axis owns non-clipping horizontal navigation; Interaction Semantics V1.7 owns interaction meaning and the native range navigation rail.
@@ -11,7 +11,9 @@
  * Responsive Containment V1 guards page geometry.
  * Header + Project Integrity V3 retains complete header framing and project-evidence layout.
  * Public Redline Closure V2.3 retains shared visual/professional corrections without translation ownership.
- * Dock V5.5 alone owns Dock structure/labels/actions, including Pure DDZ as a normal public page.
+ * Dock V5.5 alone owns Dock structure/labels/actions, including Pure DDZ.
+ * Pure DDZ V155 is an explicit performance-sensitive product route: its dedicated materializer owns its lightweight Header,
+ * bundled game assets and deferred Google Translate lifecycle. The sitewide baseline must not re-expand that route.
  * R7 intent-prefetch V2 keeps native navigation fast without idle-time bandwidth competition.
  */
 const fs=require('fs');
@@ -21,6 +23,7 @@ const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 
 const BASELINE_VERSION='20260831-google-translate-single-runtime-v32';
+const DDZ_FAST_PATH='tools/pure-ddz/index.html';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
@@ -84,7 +87,13 @@ function neutralizeFirstPaint(source){
   let next=source.replace(/<!-- QILY-FIRST-PAINT-GUARD:START -->[\s\S]*?<!-- QILY-FIRST-PAINT-GUARD:END -->/gi,'');
   if(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/i.test(next))return next.replace(/<!-- QILY-R2-FIRST-PAINT:START -->[\s\S]*?<!-- QILY-R2-FIRST-PAINT:END -->/gi,safe);return next;
 }
+function isDdzFastRoute(relative,source){
+  return relative===DDZ_FAST_PATH&&source.includes("20260903-ddz-fast-knowledge-v155")&&source.includes('data-qily-ddz-fast-shell="v155"');
+}
 function materialize(source,relative){
+  /* DDZ V155 is intentionally isolated from the heavyweight sitewide shell. Keep only the canonical Dock cache aligned. */
+  if(isDdzFastRoute(relative,source))return source.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK_SHARE);
+
   let next=neutralizeFirstPaint(source);
   next=next.replace(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/g,CONSISTENCY);
   next=next.replace(/\/site-navigation\.js(?:\?v=[^"']*)?/g,NAVIGATION);
@@ -129,4 +138,4 @@ function materialize(source,relative){
 const changed=[];
 for(const relative of trackedHtml()){const target=path.join(root,relative),source=fs.readFileSync(target,'utf8'),next=materialize(source,relative);if(next===source)continue;changed.push(relative);if(!checkOnly)fs.writeFileSync(target,next,'utf8');}
 if(checkOnly&&changed.length)throw new Error(`Sitewide Google-Translate single-runtime baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
-process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1.4 stable fast-path + Interaction Semantics V1.7 + Dock V5.5 + R7 intent-prefetch V2; baseline ${BASELINE_VERSION}.\n`);
+process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1.4 stable fast-path + Interaction Semantics V1.7 + Dock V5.5 + R7 intent-prefetch V2; DDZ V155 fast route remains isolated; baseline ${BASELINE_VERSION}.\n`);
