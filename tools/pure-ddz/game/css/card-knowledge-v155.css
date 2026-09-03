@@ -1,0 +1,150 @@
+/* QilyLean Pure DDZ V155｜52-card professional knowledge visual system
+ * Single responsibility: card readability and knowledge density only.
+ * Rank/suit remains the first-reading gameplay layer; code + Chinese name + concise cue form the second-reading knowledge layer.
+ */
+
+.qily-card-theme{
+  text-align:center!important;
+}
+.qily-card-theme>small{
+  font-weight:850!important;
+  letter-spacing:.02em!important;
+  color:#5a7376!important;
+  -webkit-text-fill-color:#5a7376!important;
+}
+.qily-card-theme>strong{
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  font-weight:1000!important;
+  letter-spacing:-.02em!important;
+}
+.qily-card-theme>b{
+  color:#173c45!important;
+  -webkit-text-fill-color:#173c45!important;
+  font-weight:950!important;
+}
+.qily-card-theme>em{
+  color:#49686b!important;
+  -webkit-text-fill-color:#49686b!important;
+  font-weight:800!important;
+  font-style:normal!important;
+}
+
+/* Desktop / large tablet: enlarge the physical cards so the professional content is genuinely readable. */
+@media (min-width:1181px){
+  html body.ddz-site-page #me-panel.me-player{
+    min-height:250px!important;
+    height:250px!important;
+  }
+  html body.ddz-site-page #hand.hand{
+    min-height:168px!important;
+    height:168px!important;
+    padding:8px 10px 2px!important;
+  }
+  html body.ddz-site-page #hand.hand .card{
+    flex:0 0 104px!important;
+    width:104px!important;
+    min-width:104px!important;
+    max-width:104px!important;
+    height:154px!important;
+    min-height:154px!important;
+    max-height:154px!important;
+    margin-left:-30px!important;
+    padding:5px!important;
+    border-radius:11px!important;
+  }
+  html body.ddz-site-page #hand.hand:has(.card:nth-child(19)) .card{
+    flex-basis:102px!important;
+    width:102px!important;
+    min-width:102px!important;
+    max-width:102px!important;
+    height:151px!important;
+    min-height:151px!important;
+    max-height:151px!important;
+    margin-left:-34px!important;
+  }
+  html body.ddz-site-page #hand.hand .qily-card-corner{left:6px!important;top:6px!important}
+  html body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{font-size:25px!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme{
+    inset:39px 5px 7px!important;
+    gap:2px!important;
+  }
+  html body.ddz-site-page #hand.hand .qily-card-theme>small{font-size:6.6px!important;line-height:1!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:13px!important;line-height:1.02!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>b{font-size:10.4px!important;line-height:1.08!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>em{font-size:7.2px!important;line-height:1.12!important}
+
+  html body.ddz-site-page .v120-play-card{
+    flex-basis:66px!important;
+    width:66px!important;
+    height:96px!important;
+  }
+  html body.ddz-site-page .v120-play-card .qily-card-theme{inset:30px 3px 5px!important;gap:1px!important}
+  html body.ddz-site-page .v120-play-card .qily-card-theme>small{font-size:5px!important}
+  html body.ddz-site-page .v120-play-card .qily-card-theme>strong{font-size:9px!important;line-height:1!important}
+  html body.ddz-site-page .v120-play-card .qily-card-theme>b{font-size:6.8px!important;line-height:1.04!important}
+  html body.ddz-site-page .v120-play-card .qily-card-theme>em{font-size:4.8px!important;line-height:1.05!important}
+}
+
+/* Mid-size desktop / tablet portrait. */
+@media (min-width:901px) and (max-width:1180px){
+  html body.ddz-site-page #hand.hand .card,
+  html body.ddz-site-page #hand.hand:has(.card:nth-child(19)) .card{
+    flex-basis:92px!important;
+    width:92px!important;
+    min-width:92px!important;
+    max-width:92px!important;
+    height:138px!important;
+    min-height:138px!important;
+    max-height:138px!important;
+    margin-left:-30px!important;
+  }
+  html body.ddz-site-page #hand.hand .qily-card-theme{inset:36px 4px 6px!important;gap:1.5px!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>small{font-size:5.8px!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:11.2px!important;line-height:1.02!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>b{font-size:8.7px!important;line-height:1.06!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>em{font-size:6.2px!important;line-height:1.08!important}
+}
+
+/* Real Android/Harmony landscape mode: keep the full hand visible while maximizing each card. */
+html.ddz-mobile-landscape body.ddz-site-page #hand.hand .card,
+html.ddz-mobile-landscape body.ddz-site-page #hand.hand:has(.card:nth-child(19)) .card{
+  flex:0 0 calc(56px * var(--ddz-ls,1))!important;
+  width:calc(56px * var(--ddz-ls,1))!important;
+  min-width:calc(56px * var(--ddz-ls,1))!important;
+  max-width:calc(56px * var(--ddz-ls,1))!important;
+  height:calc(84px * var(--ddz-ls,1))!important;
+  min-height:calc(84px * var(--ddz-ls,1))!important;
+  max-height:calc(84px * var(--ddz-ls,1))!important;
+  margin-left:calc(-13px * var(--ddz-ls,1))!important;
+}
+html.ddz-mobile-landscape body.ddz-site-page #hand.hand .qily-card-theme{inset:25px 2.5px 5px!important;gap:1px!important}
+html.ddz-mobile-landscape body.ddz-site-page #hand.hand .qily-card-theme>small{font-size:calc(4.4px * var(--ddz-ls,1))!important}
+html.ddz-mobile-landscape body.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:calc(8.8px * var(--ddz-ls,1))!important;line-height:1!important}
+html.ddz-mobile-landscape body.ddz-site-page #hand.hand .qily-card-theme>b{font-size:calc(5.7px * var(--ddz-ls,1))!important;line-height:1.03!important}
+html.ddz-mobile-landscape body.ddz-site-page #hand.hand .qily-card-theme>em{font-size:calc(4.25px * var(--ddz-ls,1))!important;line-height:1.03!important}
+
+/* iPhone / WeChat virtual landscape V154: match the physical-landscape knowledge-card scale. */
+html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .card,
+html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand:has(.card:nth-child(19)) .card{
+  flex:0 0 56px!important;
+  width:56px!important;
+  min-width:56px!important;
+  max-width:56px!important;
+  height:84px!important;
+  min-height:84px!important;
+  max-height:84px!important;
+  margin-left:-13px!important;
+}
+html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme{inset:25px 2.5px 5px!important;gap:1px!important}
+html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>small{font-size:4.4px!important}
+html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:8.8px!important;line-height:1!important}
+html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>b{font-size:5.7px!important;line-height:1.03!important}
+html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em{font-size:4.25px!important;line-height:1.03!important}
+
+/* Portrait phone fallback: readable when the user chooses not to enter landscape. */
+@media (max-width:900px) and (orientation:portrait){
+  html body.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:8.8px!important;line-height:1!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>b{font-size:5.8px!important;line-height:1.04!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>em{font-size:4.5px!important;line-height:1.04!important}
+}
