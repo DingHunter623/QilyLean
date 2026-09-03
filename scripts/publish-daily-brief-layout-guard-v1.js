@@ -5,6 +5,7 @@
  * Installs one final shared layout/readability stylesheet on every dated Selected Brief page.
  * Business copy and media assets are not modified.
  * Section sequence markers are intentionally removed: no 01/02/03 badges and no 一、二、三 pseudo numbering.
+ * 2026-09-03: re-materialize after isolating unrelated stale DDZ regression gating.
  */
 const fs=require('fs');
 const path=require('path');
