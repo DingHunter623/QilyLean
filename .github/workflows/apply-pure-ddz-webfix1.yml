@@ -4,11 +4,12 @@ on:
   pull_request:
     paths:
       - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
       - '.github/workflows/apply-pure-ddz-webfix1.yml'
   workflow_dispatch:
 
-# V153 governance: this historical workflow is verification-only.
-# It must never rewrite the PR branch or reintroduce retired V1.2 copy/runtime assumptions.
+# V155 governance: this historical workflow is verification-only.
+# It must never rewrite the PR branch or reintroduce retired Android-status/runtime assumptions.
 permissions:
   contents: read
 
@@ -25,19 +26,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          node --check tools/pure-ddz/game/js/card-theme.js
-          node --check tools/pure-ddz/game/js/game.js
-          node --check tools/pure-ddz/game/js/visual-v120.js
+          node --check scripts/materialize-ddz-public-ui-20260824.js
           grep -Fq '启力精益斗地主' tools/pure-ddz/index.html
           grep -Fq '>启力提示</button>' tools/pure-ddz/index.html
           grep -Fq '<h3>启力提示</h3>' tools/pure-ddz/index.html
           ! grep -Eq '启力托管|专家 AI 提示' tools/pure-ddz/index.html
-          grep -Fq 'Android版暂未开放' tools/pure-ddz/index.html
+          ! grep -Fq 'Android版暂未开放' tools/pure-ddz/index.html
+          ! grep -Fq 'Android：暂未开放下载' tools/pure-ddz/index.html
+          ! grep -Fq 'apk-inline apk-hold' tools/pure-ddz/index.html
           ! grep -Fq 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' tools/pure-ddz/index.html
-          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
-          grep -Fq "loadStyle('css/mobile-landscape-v153.css')" tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-fast-knowledge-v155' tools/pure-ddz/index.html
+          grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
+          grep -Fq "const chain=['js/ddz-core-v155.js'];" tools/pure-ddz/index.html
           grep -Fq 'id="v120-landscape-toggle"' tools/pure-ddz/index.html
           grep -Fq 'id="welcome-landscape"' tools/pure-ddz/index.html
-          grep -Fq "version:'1.2.4-mobile-landscape-adaptive'" tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq 'window.PureDDZTest.hint()' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq 'data-qily-ddz-virtual-landscape="v154"' tools/pure-ddz/index.html
+          grep -Fq 'data-qily-ddz-fast-shell="v155"' tools/pure-ddz/index.html
           git diff --check
