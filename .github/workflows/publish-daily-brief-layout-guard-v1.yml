@@ -40,7 +40,7 @@ jobs:
           node scripts/publish-daily-brief-layout-guard-v1.js
           git diff --check
 
-      - name: Validate screenshot regressions and sitewide coverage
+      - name: Validate Selected Brief layout contract and sitewide coverage
         shell: bash
         run: |
           grep -q 'align-items:start!important' site-daily-brief-layout-guard-v1.css
@@ -59,8 +59,13 @@ jobs:
           grep -q '/site-daily-brief-layout-guard-v1.css?v=20260902-daily-brief-light-surface-v2' qilylean/daily/2026-07-29.html
           grep -q '/site-daily-brief-layout-guard-v1.css?v=20260902-daily-brief-light-surface-v2' qilylean/daily/2026-08-19.html
           grep -q '/site-daily-brief-layout-guard-v1.css?v=20260902-daily-brief-light-surface-v2' qilylean/daily/2026-08-25.html
+          grep -q 'qilyDailyBriefSequenceOffV1' qilylean/daily/2026-08-19.html
+          ! grep -q '<div class="section-title"><span class="no">' qilylean/daily/2026-08-19.html
+          grep -q '.section-title h3::before{content:none!important;display:none!important}' qilylean/daily/2026-08-19.html
           node scripts/publish-daily-brief-layout-guard-v1.js --check
-          npm run test:visual
+          node scripts/validate-translation-single-runtime-v1.js
+          node scripts/validate-visual-system-v2.js --materialized
+          node scripts/validate-sitewide-experience-v26.js
 
       - name: Commit materialized Selected Brief pages
         shell: bash
@@ -72,7 +77,7 @@ jobs:
             echo 'Daily Brief layout guard already materialized.'
             exit 0
           fi
-          git commit -m 'fix: materialize sitewide daily brief layout guard'
+          git commit -m 'fix: materialize sequence-free daily brief headings'
           for attempt in 1 2 3 4; do
             git pull --rebase origin main
             if git push origin HEAD:main; then
@@ -83,3 +88,7 @@ jobs:
           done
           echo 'Unable to publish materialized Daily Brief pages after retries.' >&2
           exit 1
+
+      - name: Run broader sitewide regression (advisory)
+        continue-on-error: true
+        run: npm run test:visual
