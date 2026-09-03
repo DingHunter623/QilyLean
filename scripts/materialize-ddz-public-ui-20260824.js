@@ -14,7 +14,7 @@ const jsBundleFile=path.join(jsRoot,'ddz-core-v155.js');
 if(!fs.existsSync(indexFile)) throw new Error('Missing tools/pure-ddz/index.html');
 let page=fs.readFileSync(indexFile,'utf8');
 const before=page;
-const CACHE='20260903-ddz-fast-knowledge-v155-v158';
+const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159';
 const CORE_STYLE=`<link id="qilyDdzCoreV158" data-qily-ddz-core="v158" rel="stylesheet" href="./game/css/ddz-core-v155.css?v=${CACHE}">`;
 const FAST_SHELL='<script defer id="qilyDdzFastSiteShellV155" data-qily-ddz-fast-shell="v155" src="/tools/pure-ddz/game/js/fast-site-shell-v155.js?v=20260903-ddz-fast-shell-v155"></script>';
 const IOS_VIRTUAL_FALLBACK='<script defer id="qilyDdzIosVirtualLandscapeV154" data-qily-ddz-virtual-landscape="v154" src="/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154"></script>';
@@ -66,14 +66,13 @@ const jsBytes=buildBundle(
 if(cssBytes>190000)throw new Error(`DDZ V155 CSS bundle unexpectedly large: ${cssBytes}`);
 if(jsBytes>150000)throw new Error(`DDZ V155 JS bundle unexpectedly large: ${jsBytes}`);
 
-/* V155/V158 cache key owns all locally bundled game resources. */
+/* V159 cache key owns all locally bundled game resources; the V158 core-loader contract stays stable. */
 page=page.replace(/const version='[^']+';/, `const version='${CACHE}';`);
 page=page.replace(/window.__PURE_DDZ_CACHE_KEY__\|\|'[^']+'/g, `window.__PURE_DDZ_CACHE_KEY__||'${CACHE}'`);
 
 /*
- * V158 first-paint closure: the one core CSS bundle is a normal Head stylesheet.
- * This deliberately trades a tiny amount of render blocking for deterministic visual integrity:
- * no legacy/unstyled game DOM can paint before the current QilyLean DDZ design arrives.
+ * V158 first-paint closure remains authoritative: the one core CSS bundle is a normal Head stylesheet.
+ * V159 only tightens the annotated top fold and never reintroduces post-parse styling.
  */
 page=page.replace(/\s*<link\b[^>]*data-qily-ddz-core=["'][^"']+["'][^>]*>\s*/gi,'\n');
 page=page.replace(/\s*<link\b[^>]*href=["'][^"']*game\/css\/ddz-core-v155\.css[^"']*["'][^>]*>\s*/gi,'\n');
@@ -154,6 +153,9 @@ page=page.replace(/\s*<div class="ddz-page-note">[\s\S]*?<\/div>\s*/g,'\n');
 page=page.replace(/<p id="hint-message" class="hint-message">[\s\S]*?<\/p>/g,'<p id="hint-message" class="hint-message" aria-hidden="true"></p>');
 page=page.replace(/<span>企业邮箱<\/span>/g,'<span>官网邮箱</span>');
 
+/* V159 annotated redline: the heading already carries the public promise, so the duplicate in-table strip is removed from DOM. */
+page=page.replace(/\s*<aside class="clean-promise"[^>]*>[\s\S]*?<\/aside>\s*/gi,'\n');
+
 /* Product governance: unreleased Android status is not a public-game control or copy block. */
 page=page.replace(/\s*<span class="apk-inline apk-hold">[\s\S]*?<\/span>\s*/gi,'\n');
 page=page.replace(/打开即玩[；;]\s*Android版(?:暂未开放|待网页版验证确认后开放)/g,'打开即玩');
@@ -168,12 +170,12 @@ page=page.replace(/Android安装包待验证/g,'');
 page=page.replace(/安装包待验证后发布/g,'');
 page=page.replace(/安装包待验证/g,'');
 
-/* V155/V158 hard gates. */
-if(!page.includes(`const version='${CACHE}';`)) throw new Error('DDZ V155/V158 cache key not updated');
-if(!page.includes(`window.__PURE_DDZ_CACHE_KEY__||'${CACHE}'`)) throw new Error('DDZ V155/V158 fallback cache key not updated');
-if(!page.includes(CORE_STYLE)) throw new Error('DDZ V158 render-blocking core stylesheet is missing');
-if(!page.includes('window.__PURE_DDZ_STYLE_READY__=Promise.resolve();')) throw new Error('DDZ V158 static style readiness contract is missing');
-if(page.includes("loadStyle('css/ddz-core-v155.css')")) throw new Error('DDZ V158 must not dynamically paint the core stylesheet');
+/* V155/V159 hard gates. */
+if(!page.includes(`const version='${CACHE}';`)) throw new Error('DDZ V159 cache key not updated');
+if(!page.includes(`window.__PURE_DDZ_CACHE_KEY__||'${CACHE}'`)) throw new Error('DDZ V159 fallback cache key not updated');
+if(!page.includes(CORE_STYLE)) throw new Error('DDZ V158/V159 render-blocking core stylesheet is missing');
+if(!page.includes('window.__PURE_DDZ_STYLE_READY__=Promise.resolve();')) throw new Error('DDZ static style readiness contract is missing');
+if(page.includes("loadStyle('css/ddz-core-v155.css')")) throw new Error('DDZ must not dynamically paint the core stylesheet');
 if(!page.includes("const chain=['js/ddz-core-v155.js'];")) throw new Error('DDZ V155 single JS bundle is missing');
 if(page.includes("loadStyle('css/style.css')")||page.includes("loadStyle('css/mobile-landscape-v153.css')")) throw new Error('DDZ historical multi-CSS chain is still public');
 if(page.includes("const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];")) throw new Error('DDZ historical multi-JS chain is still public');
@@ -187,6 +189,7 @@ if(page.includes('qilyPureDdzR8ClosureV128')) throw new Error('Legacy DDZ R8 clo
 if(page.includes('ddz-site-shell-v140.js')||page.includes('js/qilylean-theme.js')||page.includes('js/elder-assist-v140.js')) throw new Error('Legacy DDZ observer runtimes must stay unloaded');
 if(!page.includes('id="v120-landscape-toggle"')||!page.includes('id="welcome-landscape"')) throw new Error('DDZ landscape entry controls are missing');
 if(page.includes('class="ddz-page-note"')) throw new Error('Maintenance page-note must stay removed');
+if(page.includes('class="clean-promise"')) throw new Error('V159 duplicate promise band must stay removed');
 if(!page.includes('<p id="hint-message" class="hint-message" aria-hidden="true"></p>')) throw new Error('Silent hint runtime target is missing');
 if(page.includes('<footer class="site-footer">')) throw new Error('Game-specific fixed footer must stay removed');
 if(page.includes('name="screen-orientation"')||page.includes('name="x5-orientation"')) throw new Error('DDZ forced-orientation metadata must stay removed');
@@ -196,9 +199,10 @@ if(page.includes('apk-inline apk-hold')||page.includes('Android版暂未开放')
 
 const cssBundle=fs.readFileSync(cssBundleFile,'utf8');
 const jsBundle=fs.readFileSync(jsBundleFile,'utf8');
-if(!cssBundle.includes('visual-tuning-v158.css'))throw new Error('DDZ V158 approved visual tuning source was not bundled');
+if(!cssBundle.includes('visual-tuning-v158.css'))throw new Error('DDZ current visual tuning source was not bundled');
+if(!cssBundle.includes('QilyLean Pure DDZ V159'))throw new Error('DDZ V159 annotated redline rules were not bundled');
 if(cssBundle.includes('visual-tuning-v157.css'))throw new Error('DDZ V157 visual tuning source must be retired from the generated bundle');
 for(const token of ['IE 7 Tools','Kaizen','ECRS','VSM','6S','TPS','FMEA','CPK','ERP','MES','APS','PQCD','PDCA','5M2E','Smart Factory'])if(!jsBundle.includes(token))throw new Error(`DDZ V155 terminology missing from JS bundle: ${token}`);
 
 if(page!==before)fs.writeFileSync(indexFile,page.endsWith('\n')?page:page+'\n');
-console.log(`Pure DDZ V155/V158 materialized: CSS ${cssBytes} bytes / JS ${jsBytes} bytes / render-blocking current core CSS / fast Header + deferred translation / compact top fold / no unreleased Android status.`);
+console.log(`Pure DDZ V155/V159 materialized: CSS ${cssBytes} bytes / JS ${jsBytes} bytes / static first paint / redline top fold / duplicate promise retired / fast Header + deferred translation.`);
