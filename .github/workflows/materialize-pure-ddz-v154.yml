@@ -1,4 +1,4 @@
-name: Materialize Pure DDZ V158
+name: Materialize Pure DDZ V159
 
 on:
   push:
@@ -21,7 +21,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: materialize-pure-ddz-v158-main
+  group: materialize-pure-ddz-v159-main
   cancel-in-progress: false
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Materialize and validate DDZ V158 fast route
+      - name: Materialize and validate DDZ V159 fast route
         shell: bash
         run: |
           set -euo pipefail
@@ -52,9 +52,9 @@ jobs:
           node scripts/materialize-pure-ddz-home-entry-v158.js
           node --check tools/pure-ddz/game/js/ddz-core-v155.js
           node --check times26001-home-card.js
-          grep -Fq '20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158-v159' tools/pure-ddz/index.html
           grep -Fq 'data-qily-ddz-core="v158"' tools/pure-ddz/index.html
-          grep -Fq './game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq './game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158-v159' tools/pure-ddz/index.html
           grep -Fq 'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();' tools/pure-ddz/index.html
           ! grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
           grep -Fq "const chain=['js/ddz-core-v155.js'];" tools/pure-ddz/index.html
@@ -63,26 +63,32 @@ jobs:
           grep -Fq '/site-dock-share-runtime-v1.js?' tools/pure-ddz/index.html
           ! grep -Fq '/site-navigation.js?' tools/pure-ddz/index.html
           ! grep -Fq '/site-translation-safe-runtime-v1.js?' tools/pure-ddz/index.html
+          ! grep -Fq 'class="clean-promise"' tools/pure-ddz/index.html
           grep -Fq 'IE 7 Tools' tools/pure-ddz/game/js/ddz-core-v155.js
           grep -Fq '5M2E' tools/pure-ddz/game/js/ddz-core-v155.js
           grep -Fq 'Smart Factory' tools/pure-ddz/game/js/ddz-core-v155.js
           grep -Fq 'visual-tuning-v158.css' tools/pure-ddz/game/css/ddz-core-v155.css
+          grep -Fq 'QilyLean Pure DDZ V159' tools/pure-ddz/game/css/ddz-core-v155.css
+          grep -Fq 'min-height:38px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'min-height:40px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq '.clean-promise{display:none!important}' tools/pure-ddz/game/css/visual-tuning-v158.css
           ! grep -Fq 'visual-tuning-v157.css' tools/pure-ddz/game/css/ddz-core-v155.css
           grep -Fq 'function primePureDdzV158(){' times26001-home-card.js
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158-v159' times26001-home-card.js
           grep -Fq 'data-qily-ddz-prefetch' times26001-home-card.js
           ! grep -Fq 'Pure-DDZ-Classic-v1.0.2.apk' times26001-home-card.js
           git diff --check
-      - name: Publish materialized DDZ V158 entry and bundles
+      - name: Publish materialized DDZ V159 entry and bundles
         shell: bash
         run: |
           set -euo pipefail
           if git diff --quiet -- tools/pure-ddz/index.html tools/pure-ddz/game/css/ddz-core-v155.css tools/pure-ddz/game/js/ddz-core-v155.js times26001-home-card.js; then
-            echo 'Pure DDZ V158 entry and bundles already materialized.'
+            echo 'Pure DDZ V159 entry and bundles already materialized.'
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add tools/pure-ddz/index.html tools/pure-ddz/game/css/ddz-core-v155.css tools/pure-ddz/game/js/ddz-core-v155.js times26001-home-card.js
-          git commit -m 'perf(ddz): materialize V158 first-paint and homepage entry [skip ci]'
+          git commit -m 'perf(ddz): materialize V159 redline fold and cache [skip ci]'
           git pull --rebase origin main
           git push origin main
