@@ -29,7 +29,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Verify V158 fast publication contract
+      - name: Verify V159 fast publication contract
         shell: bash
         run: |
           set -euo pipefail
@@ -49,9 +49,9 @@ jobs:
           git diff --check
 
           grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
-          grep -Fq '20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158-v159' tools/pure-ddz/index.html
           grep -Fq 'data-qily-ddz-core="v158"' tools/pure-ddz/index.html
-          grep -Fq './game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq './game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158-v159' tools/pure-ddz/index.html
           grep -Fq 'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();' tools/pure-ddz/index.html
           ! grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
           grep -Fq "const chain=['js/ddz-core-v155.js'];" tools/pure-ddz/index.html
@@ -68,13 +68,17 @@ jobs:
           ! grep -Fq 'ddz-site-shell-v140.js' tools/pure-ddz/index.html
           ! grep -Fq '<footer class="site-footer">' tools/pure-ddz/index.html
           ! grep -Fq 'class="ddz-page-note"' tools/pure-ddz/index.html
+          ! grep -Fq 'class="clean-promise"' tools/pure-ddz/index.html
           ! grep -Fq 'name="screen-orientation"' tools/pure-ddz/index.html
           ! grep -Fq 'name="x5-orientation"' tools/pure-ddz/index.html
           grep -Fq '<p id="hint-message" class="hint-message" aria-hidden="true"></p>' tools/pure-ddz/index.html
 
           grep -Fq 'visual-tuning-v158.css' tools/pure-ddz/game/css/ddz-core-v155.css
+          grep -Fq 'QilyLean Pure DDZ V159' tools/pure-ddz/game/css/ddz-core-v155.css
           ! grep -Fq 'visual-tuning-v157.css' tools/pure-ddz/game/css/ddz-core-v155.css
-          grep -Fq 'min-height:50px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'min-height:38px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'min-height:40px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq '.clean-promise{display:none!important}' tools/pure-ddz/game/css/visual-tuning-v158.css
           grep -Fq 'grid-template-areas:"eyebrow title copy"' tools/pure-ddz/game/css/visual-tuning-v158.css
 
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/ddz-site-page-v140.css
@@ -111,6 +115,7 @@ jobs:
           grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js
 
           grep -Fq 'function primePureDdzV158(){' times26001-home-card.js
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158-v159' times26001-home-card.js
           grep -Fq 'data-qily-ddz-prefetch' times26001-home-card.js
           grep -Fq '网页版数字产品｜适老化休闲益智' times26001-home-card.js
           ! grep -Fq 'Pure-DDZ-Classic-v1.0.2.apk' times26001-home-card.js
