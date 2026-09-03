@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
+/* R8 authoritative heading hierarchy guard: homepage H1 is the sitewide ceiling. */
 const fs=require('fs');
 const path=require('path');
 const ROOT=path.resolve(__dirname,'..');
