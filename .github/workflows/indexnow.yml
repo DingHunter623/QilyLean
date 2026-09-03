@@ -13,6 +13,9 @@ on:
       - "data/google-index-coverage-policy.json"
       - ".github/workflows/indexnow.yml"
   workflow_dispatch:
+  schedule:
+    # 09:20 China Standard Time. GitHub scheduled runs may start a little later.
+    - cron: "20 1 * * *"
 
 permissions:
   contents: read
@@ -52,6 +55,7 @@ jobs:
         shell: bash
         run: |
           python3 - <<'PY'
+          import datetime
           import json
           import os
           import re
@@ -104,10 +108,10 @@ jobs:
           def add_many(items):
               candidates.extend(item for item in items if item)
 
-          # A manual run is a controlled authority refresh: brand, service, method,
-          # project and knowledge URLs are queued in priority order rather than the
-          # entire public site.
-          if event == "workflow_dispatch":
+          # Manual and scheduled runs refresh only high-authority, indexable routes,
+          # never the entire site. Scheduled runs rotate the queue so a small Baidu
+          # quota can cover the full authority set over several days.
+          if event in {"workflow_dispatch", "schedule"}:
               add_many(authority_priority_urls)
               add_many(topic_urls)
               add_many(priority_urls)
@@ -156,6 +160,12 @@ jobs:
                   clean.append(normalized)
                   seen.add(normalized)
 
+          if event == "schedule" and clean:
+              daily_window = 10
+              offset = ((datetime.date.today().toordinal() - 1) * daily_window) % len(clean)
+              clean = clean[offset:] + clean[:offset]
+              print(f"Scheduled Baidu rotation starts at authority offset {offset} of {len(clean)}.")
+
           Path("search-engine-urls.txt").write_text("\n".join(clean) + ("\n" if clean else ""), encoding="utf-8")
           Path("search-engine-urls.json").write_text(json.dumps(clean, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
@@ -203,10 +213,12 @@ jobs:
             exit 0
           fi
 
-          # Baidu is intentionally fed in small batches. A manual authority refresh
-          # can cover several batches, while quota exhaustion stops the run cleanly.
           BAIDU_BATCH_SIZE=10
-          BAIDU_MAX_URLS=50
+          if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
+            BAIDU_MAX_URLS=10
+          else
+            BAIDU_MAX_URLS=50
+          fi
           head -n "$BAIDU_MAX_URLS" search-engine-urls.txt > baidu-urls.txt
           submitted_total="$(grep -c . baidu-urls.txt || true)"
           echo "Prepared up to $submitted_total URL(s) for Baidu API submission."
@@ -238,6 +250,11 @@ jobs:
             if [ "$curl_exit" -ne 0 ]; then
               echo "Baidu API transport failed with curl exit code $curl_exit."
               exit "$curl_exit"
+            fi
+
+            if [ "$http_code" = "400" ] && printf '%s' "$response" | grep -qi 'over quota'; then
+              echo "Baidu daily submission quota is exhausted; deferring remaining URLs to a later run."
+              break
             fi
             if [ "$http_code" != "200" ]; then
               echo "Baidu API rejected the submission; see the response above for the exact reason."
