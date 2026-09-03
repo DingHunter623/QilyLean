@@ -1,0 +1,260 @@
+/* QilyLean Pure DDZ V158｜Top-fold + first-reading visual closure｜2026-09-03
+ * Compiled into the single ddz-core bundle; never load as an extra browser stylesheet.
+ * Scope: compact the desktop product heading, compress the status/action rail, keep the felt high,
+ * retain V157 played-card readability and V156 hand-card readability. Mobile landscape remains owned
+ * by its dedicated geometry and is intentionally not re-authored here.
+ */
+
+@media (min-width:1181px){
+  :root{--ddz-site-gutter:clamp(14px,1.7vw,44px)}
+
+  /* 01｜Use the space below the canonical Header efficiently: one compact product information band. */
+  html body.ddz-site-page .game-shell.ddz-site-module{
+    margin-top:2px!important;
+    margin-bottom:var(--ddz-site-gutter)!important;
+  }
+  html body.ddz-site-page .ddz-page-heading{
+    min-height:50px!important;
+    height:50px!important;
+    padding:4px 12px!important;
+    margin:0 0 3px!important;
+    overflow:hidden!important;
+  }
+  html body.ddz-site-page .ddz-page-heading>div{
+    display:grid!important;
+    grid-template-columns:auto auto minmax(0,1fr)!important;
+    grid-template-areas:"eyebrow title copy"!important;
+    align-items:center!important;
+    column-gap:14px!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+  html body.ddz-site-page .ddz-page-heading .ddz-eyebrow{
+    grid-area:eyebrow!important;
+    margin:0!important;
+    font-size:10px!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+  }
+  html body.ddz-site-page .ddz-page-heading h1{
+    grid-area:title!important;
+    margin:0!important;
+    font-size:22px!important;
+    line-height:1!important;
+    white-space:nowrap!important;
+  }
+  html body.ddz-site-page .ddz-page-heading>div>p:last-child{
+    grid-area:copy!important;
+    min-width:0!important;
+    margin:0!important;
+    overflow:hidden!important;
+    color:#5f7474!important;
+    font-size:12px!important;
+    line-height:1.2!important;
+    text-align:right!important;
+    text-overflow:ellipsis!important;
+    white-space:nowrap!important;
+  }
+
+  /* 02｜Four equal status cells and one right-aligned action group share one calm, compact rail. */
+  html body.ddz-site-page .ddz-toolbar{
+    grid-template-columns:minmax(560px,640px) minmax(0,1fr)!important;
+    min-height:46px!important;
+    padding:2px 7px!important;
+    margin:0 0 2px!important;
+    align-items:center!important;
+  }
+  html body.ddz-site-page .ddz-toolbar .scoreboard{
+    grid-template-columns:repeat(4,minmax(112px,1fr))!important;
+    align-self:center!important;
+    gap:7px!important;
+  }
+  html body.ddz-site-page .ddz-toolbar .scoreboard div,
+  html body.ddz-site-page #v120-reset-stats{
+    min-height:40px!important;
+    height:40px!important;
+    margin:0!important;
+    padding:2px 9px!important;
+    border:1px solid rgba(255,227,155,.38)!important;
+    border-radius:9px!important;
+    background:rgba(255,255,255,.075)!important;
+    box-shadow:none!important;
+  }
+  html body.ddz-site-page #v120-reset-stats{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:center!important;
+    width:100%!important;
+    min-width:0!important;
+    color:#ffe39b!important;
+    -webkit-text-fill-color:#ffe39b!important;
+    font-size:15px!important;
+    font-weight:950!important;
+    line-height:1!important;
+  }
+  html body.ddz-site-page .ddz-toolbar .top-actions{
+    position:relative!important;
+    top:-1px!important;
+    align-self:center!important;
+    align-items:center!important;
+    gap:8px!important;
+  }
+  html body.ddz-site-page .ddz-toolbar :is(#audio-toggle,#help-open,#settings-open,#v120-landscape-toggle,.start-btn){
+    min-height:42px!important;
+    height:42px!important;
+    padding:6px 14px!important;
+    font-size:15px!important;
+  }
+  html body.ddz-site-page .ddz-toolbar #audio-toggle{min-width:108px!important}
+  html body.ddz-site-page .ddz-toolbar #help-open,
+  html body.ddz-site-page .ddz-toolbar #settings-open{min-width:68px!important}
+  html body.ddz-site-page .ddz-toolbar #v120-landscape-toggle{min-width:88px!important}
+  html body.ddz-site-page .ddz-toolbar .start-btn{min-width:108px!important}
+
+  /* 03｜The promise band no longer wastes vertical room; the felt begins immediately below it. */
+  html body.ddz-site-page .clean-promise{
+    min-height:20px!important;
+    height:20px!important;
+    padding:1px 9px!important;
+    line-height:1!important;
+  }
+  html body.ddz-site-page .clean-promise strong,
+  html body.ddz-site-page .clean-promise span{line-height:1!important}
+  html body.ddz-site-page .table-wrap{
+    height:clamp(625px,calc(100vh - 175px),680px)!important;
+    min-height:625px!important;
+    max-height:680px!important;
+    padding:7px 8px 9px!important;
+  }
+  html body.ddz-site-page .table-wrap:before{inset:8px!important}
+  html body.ddz-site-page .ai{top:76px!important}
+  html body.ddz-site-page .center-area{
+    width:min(580px,calc(100% - 350px))!important;
+    padding-top:0!important;
+  }
+
+  /* Three bottom cards keep the approved V156 size and visual hierarchy. */
+  html body.ddz-site-page .bottom-zone{margin-top:2px!important}
+  html body.ddz-site-page .bottom-label{font-size:15px!important}
+  html body.ddz-site-page .bottom-cards{
+    min-height:96px!important;
+    margin-top:3px!important;
+    gap:7px!important;
+  }
+  html body.ddz-site-page .bottom-cards>.mini-card{
+    flex:0 0 68px!important;
+    min-width:68px!important;
+    width:68px!important;
+    max-width:68px!important;
+    height:92px!important;
+    min-height:92px!important;
+    max-height:92px!important;
+    margin:1px!important;
+    padding:5px 6px!important;
+    border-radius:10px!important;
+    border-width:2px!important;
+  }
+  html body.ddz-site-page .bottom-cards>.qily-mini-business b{font-size:20px!important;line-height:1!important}
+  html body.ddz-site-page .bottom-cards>.qily-mini-business small{font-size:8.5px!important;line-height:1.05!important}
+
+  /* 04｜Retain V157 elder-friendly currently-played card scale. */
+  html body.ddz-site-page .v120-play-stage{
+    top:110px!important;
+    width:min(560px,calc(100% - 360px))!important;
+    min-height:154px!important;
+    max-height:184px!important;
+    padding:9px 12px!important;
+  }
+  html body.ddz-site-page .v120-play-owner{
+    margin-bottom:7px!important;
+    font-size:20px!important;
+  }
+  html body.ddz-site-page .v120-play-card{
+    flex:0 0 78px!important;
+    width:78px!important;
+    height:114px!important;
+    margin-left:-7px!important;
+    border-width:2px!important;
+    border-radius:10px!important;
+  }
+  html body.ddz-site-page .v120-play-card:first-child{margin-left:0!important}
+  html body.ddz-site-page .v120-play-card .qily-card-corner{left:5px!important;top:5px!important}
+  html body.ddz-site-page .v120-play-card .qily-card--normal .qily-rank-suit-line b{
+    font-size:25px!important;
+    line-height:.92!important;
+  }
+  html body.ddz-site-page .v120-play-card .qily-card-theme{
+    inset:36px 4px 10px!important;
+    gap:1.5px!important;
+  }
+  html body.ddz-site-page .v120-play-card .qily-card-theme>small{font-size:5.8px!important}
+  html body.ddz-site-page .v120-play-card .qily-card-theme>strong{font-size:13px!important;line-height:1.02!important}
+  html body.ddz-site-page .v120-play-card .qily-card-theme>b{font-size:8px!important;line-height:1.05!important}
+  html body.ddz-site-page .v120-play-card .qily-card-theme>em{font-size:5.8px!important;line-height:1.05!important}
+
+  /* Hand remains the approved 110×162 knowledge-card scale. */
+  html body.ddz-site-page #me-panel.me-player{
+    min-height:260px!important;
+    height:260px!important;
+  }
+  html body.ddz-site-page #hand.hand{
+    min-height:178px!important;
+    height:178px!important;
+    padding:9px 10px 2px!important;
+  }
+  html body.ddz-site-page #hand.hand .card{
+    flex:0 0 110px!important;
+    width:110px!important;
+    min-width:110px!important;
+    max-width:110px!important;
+    height:162px!important;
+    min-height:162px!important;
+    max-height:162px!important;
+    margin-left:-32px!important;
+    padding:5px!important;
+    border-radius:12px!important;
+  }
+  html body.ddz-site-page #hand.hand:has(.card:nth-child(19)) .card{
+    flex-basis:108px!important;
+    width:108px!important;
+    min-width:108px!important;
+    max-width:108px!important;
+    height:159px!important;
+    min-height:159px!important;
+    max-height:159px!important;
+    margin-left:-36px!important;
+  }
+  html body.ddz-site-page #hand.hand .qily-card-corner{left:6px!important;top:5px!important}
+  html body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{
+    font-size:32px!important;
+    line-height:.92!important;
+    letter-spacing:-.045em!important;
+  }
+  html body.ddz-site-page #hand.hand .qily-card-theme{
+    inset:46px 5px 7px!important;
+    gap:2px!important;
+  }
+  html body.ddz-site-page #hand.hand .qily-card-theme>small{font-size:6.8px!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>strong{font-size:13.5px!important;line-height:1.02!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>b{font-size:10.8px!important;line-height:1.07!important}
+  html body.ddz-site-page #hand.hand .qily-card-theme>em{font-size:7.4px!important;line-height:1.1!important}
+}
+
+@media (min-width:901px) and (max-width:1180px){
+  html body.ddz-site-page .game-shell.ddz-site-module{margin-top:4px!important}
+  html body.ddz-site-page .ddz-page-heading{min-height:58px!important;padding:5px 10px!important;margin-bottom:3px!important}
+  html body.ddz-site-page .ddz-toolbar{margin-bottom:2px!important}
+  html body.ddz-site-page .ddz-toolbar .scoreboard{grid-template-columns:repeat(4,minmax(86px,1fr))!important}
+  html body.ddz-site-page #v120-reset-stats{min-height:42px!important;height:42px!important;margin:0!important;padding:4px 7px!important;font-size:14px!important}
+  html body.ddz-site-page .table-wrap{min-height:610px!important;height:610px!important}
+  html body.ddz-site-page .bottom-cards{min-height:84px!important;gap:5px!important}
+  html body.ddz-site-page .bottom-cards>.mini-card{flex-basis:60px!important;min-width:60px!important;width:60px!important;max-width:60px!important;height:82px!important;min-height:82px!important;max-height:82px!important}
+  html body.ddz-site-page .v120-play-stage{min-height:138px!important;max-height:164px!important}
+  html body.ddz-site-page .v120-play-card{flex-basis:68px!important;width:68px!important;height:100px!important}
+  html body.ddz-site-page .v120-play-card .qily-card--normal .qily-rank-suit-line b{font-size:22px!important}
+  html body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{font-size:27px!important}
+}
+
+/* Proven mobile and both landscape implementations retain their dedicated geometry. */
+html.ddz-mobile-landscape body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{font-size:calc(19px * var(--ddz-ls,1))!important}
+html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card--normal .qily-rank-suit-line b{font-size:19px!important}
