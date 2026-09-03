@@ -7,12 +7,16 @@ on:
       - '.github/workflows/verify-pure-ddz-live.yml'
       - 'tools/pure-ddz/**'
       - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - 'scripts/materialize-pure-ddz-home-entry-v158.js'
+      - 'times26001-home-card.js'
       - 'site-dock-share-runtime-v1.js'
   pull_request:
     paths:
       - '.github/workflows/verify-pure-ddz-live.yml'
       - 'tools/pure-ddz/**'
       - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - 'scripts/materialize-pure-ddz-home-entry-v158.js'
+      - 'times26001-home-card.js'
       - 'site-dock-share-runtime-v1.js'
   workflow_dispatch:
 
@@ -21,15 +25,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
-      - name: Verify V155 fast publication contract
+          node-version: 24
+      - name: Verify V158 fast publication contract
         shell: bash
         run: |
           set -euo pipefail
           node --check scripts/materialize-ddz-public-ui-20260824.js
+          node --check scripts/materialize-pure-ddz-home-entry-v158.js
           node --check tools/pure-ddz/game/js/card-theme.js
           node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
           node --check tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
@@ -38,12 +43,17 @@ jobs:
           node --check site-dock-share-runtime-v1.js
 
           node scripts/materialize-ddz-public-ui-20260824.js
+          node scripts/materialize-pure-ddz-home-entry-v158.js
           node --check tools/pure-ddz/game/js/ddz-core-v155.js
+          node --check times26001-home-card.js
           git diff --check
 
           grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
-          grep -Fq '20260903-ddz-fast-knowledge-v155' tools/pure-ddz/index.html
-          grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq 'data-qily-ddz-core="v158"' tools/pure-ddz/index.html
+          grep -Fq './game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq 'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();' tools/pure-ddz/index.html
+          ! grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
           grep -Fq "const chain=['js/ddz-core-v155.js'];" tools/pure-ddz/index.html
           grep -Fq 'data-qily-ddz-fast-shell="v155"' tools/pure-ddz/index.html
           grep -Fq 'data-qily-ddz-virtual-landscape="v154"' tools/pure-ddz/index.html
@@ -61,6 +71,11 @@ jobs:
           ! grep -Fq 'name="screen-orientation"' tools/pure-ddz/index.html
           ! grep -Fq 'name="x5-orientation"' tools/pure-ddz/index.html
           grep -Fq '<p id="hint-message" class="hint-message" aria-hidden="true"></p>' tools/pure-ddz/index.html
+
+          grep -Fq 'visual-tuning-v158.css' tools/pure-ddz/game/css/ddz-core-v155.css
+          ! grep -Fq 'visual-tuning-v157.css' tools/pure-ddz/game/css/ddz-core-v155.css
+          grep -Fq 'min-height:50px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'grid-template-areas:"eyebrow title copy"' tools/pure-ddz/game/css/visual-tuning-v158.css
 
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/ddz-site-page-v140.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/card-comfort-v122.css
@@ -94,3 +109,9 @@ jobs:
           grep -Fq 'window.PureDDZTest.hint()' tools/pure-ddz/game/js/ddz-core-v155.js
           grep -Fq "const VERSION = '1.5.2'" tools/pure-ddz/game/js/ddz-core-v155.js
           grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js
+
+          grep -Fq 'function primePureDdzV158(){' times26001-home-card.js
+          grep -Fq 'data-qily-ddz-prefetch' times26001-home-card.js
+          grep -Fq '网页版数字产品｜适老化休闲益智' times26001-home-card.js
+          ! grep -Fq 'Pure-DDZ-Classic-v1.0.2.apk' times26001-home-card.js
+          ! grep -Fq '网页游戏＋Android APP｜休闲数字产品' times26001-home-card.js
