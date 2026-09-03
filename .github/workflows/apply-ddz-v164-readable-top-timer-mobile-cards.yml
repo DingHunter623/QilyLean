@@ -1,0 +1,76 @@
+name: Apply Pure DDZ V164 Readability Closure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/apply-ddz-v164-readable-top-timer-mobile-cards.js'
+      - '.github/workflows/apply-ddz-v164-readable-top-timer-mobile-cards.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-pure-ddz-v164-main
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Apply and validate V164
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/apply-ddz-v164-readable-top-timer-mobile-cards.js
+          node scripts/apply-ddz-v164-readable-top-timer-mobile-cards.js
+          node --check tools/pure-ddz/game/js/game.js
+          node --check tools/pure-ddz/game/js/visual-v120.js
+          node --check tools/pure-ddz/game/js/ddz-core-v155.js
+          grep -Fq "className='v163-turn-timer v164-independent-timer'" tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq 'toolbar.insertBefore(timer,actions)' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq "function voiceRankText(rank){if(rank===14)return'尖';if(rank===11)return'钩';return rankText(rank);}" tools/pure-ddz/game/js/game.js
+          grep -Fq 'main=voiceRankText(combo.main)' tools/pure-ddz/game/js/game.js
+          grep -Fq 'V164｜Independent timer + larger top typography + mobile card readability' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'grid-template-columns:minmax(580px,640px) minmax(150px,1fr) auto' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq '.ddz-toolbar>.v163-turn-timer.v164-independent-timer' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'bottom-cards>.mini-card{flex:0 0 calc(52px' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'v120-play-card{flex:0 0 calc(58px' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'html.ddz-ios-virtual-landscape:root:root' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164' tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164' times26001-home-card.js
+          grep -Fq 'v164-independent-timer' tools/pure-ddz/game/js/ddz-core-v155.js
+          grep -Fq 'V164｜Independent timer + larger top typography + mobile card readability' tools/pure-ddz/game/css/ddz-core-v155.css
+          git diff --check
+      - name: Commit V164 materialized sources and bundles
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Pure DDZ V164 already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            tools/pure-ddz/game/js/game.js \
+            tools/pure-ddz/game/js/visual-v120.js \
+            tools/pure-ddz/game/css/visual-tuning-v158.css \
+            tools/pure-ddz/game/js/ddz-core-v155.js \
+            tools/pure-ddz/game/css/ddz-core-v155.css \
+            tools/pure-ddz/index.html \
+            scripts/materialize-ddz-public-ui-20260824.js \
+            scripts/materialize-pure-ddz-home-entry-v158.js \
+            times26001-home-card.js
+          git commit -m 'fix(ddz): materialize V164 readability closure [skip ci]'
+          git pull --rebase origin main
+          git push origin main
