@@ -36,6 +36,7 @@
   function removeCards(hand,cards){const ids=new Set(cards.map(card=>card.id));return hand.filter(card=>!ids.has(card.id));}
   function comboText(combo){return COMBO_TEXT[combo?.type]||'出牌';}
   function rankText(rank){return RANK_TEXT[rank]||String(rank??'');}
+  function voiceRankText(rank){if(rank===14)return'尖';if(rank===11)return'钩';return rankText(rank);}
   function cardLabel(card){return card.rank>=16?RANK_TEXT[card.rank]:`${RANK_TEXT[card.rank]}${card.suit}`;}
   function isRed(card){return card.suit==='♥'||card.suit==='♦'||card.rank===17;}
   function renderMiniCard(card){if(window.QilyLeanCardTheme)return window.QilyLeanCardTheme.renderMiniCard(card);return `<span class="mini-card${isRed(card)?' red':''}">${cardLabel(card)}</span>`;}
@@ -46,27 +47,27 @@
   function renderBottomCards(){const reveal=state.landlord!==null&&state.phase!=='idle';$('bottom-cards').innerHTML=reveal?state.bottom.map(renderMiniCard).join(''):Array.from({length:3},()=>'<i class="bottom-back"></i>').join('');}
   function describePlay(play){
     if(!play?.cards?.length||!play.combo)return'';
-    const combo=play.combo,type=combo.type,main=rankText(combo.main),groups=countRanks(play.cards),ranks=[...groups.keys()].sort((a,b)=>a-b);
+    const combo=play.combo,type=combo.type,main=voiceRankText(combo.main),groups=countRanks(play.cards),ranks=[...groups.keys()].sort((a,b)=>a-b);
     const say=body=>play.player===0?`我出${body}`:`${playerName(play.player)}出牌：${body}`;
     if(type==='rocket')return say('王炸');
     if(type==='bomb')return say(`四个${main}，炸弹`);
     if(type==='single')return say(main);
     if(type==='pair')return say(`一对${main}`);
     if(type==='triple')return say(`三个${main}`);
-    if(type==='triple1'){const side=ranks.find(rank=>rank!==combo.main);return say(`三个${main}带${rankText(side)}`);}
-    if(type==='triple2'){const side=ranks.find(rank=>rank!==combo.main);return say(`三个${main}带一对${rankText(side)}`);}
-    if(type==='straight')return say(`${rankText(ranks[0])}到${rankText(ranks.at(-1))}顺子`);
-    if(type==='pairStraight')return say(`${rankText(ranks[0])}到${rankText(ranks.at(-1))}连对`);
+    if(type==='triple1'){const side=ranks.find(rank=>rank!==combo.main);return say(`三个${main}带${voiceRankText(side)}`);}
+    if(type==='triple2'){const side=ranks.find(rank=>rank!==combo.main);return say(`三个${main}带一对${voiceRankText(side)}`);}
+    if(type==='straight')return say(`${voiceRankText(ranks[0])}到${voiceRankText(ranks.at(-1))}顺子`);
+    if(type==='pairStraight')return say(`${voiceRankText(ranks[0])}到${voiceRankText(ranks.at(-1))}连对`);
     if(type==='four2'||type==='four2pair'){
-      const side=ranks.filter(rank=>rank!==combo.main).map(rank=>rankText(rank)).join('、');
+      const side=ranks.filter(rank=>rank!==combo.main).map(rank=>voiceRankText(rank)).join('、');
       return say(`四个${main}${type==='four2pair'?'带两对':'带两张'}${side?`，${side}`:''}`);
     }
     if(type==='airplane'||type==='airplane1'||type==='airplane2'){
       const tripleRanks=ranks.filter(rank=>(groups.get(rank)||0)>=3&&rank<=14);
-      const core=tripleRanks.length>1?`${rankText(tripleRanks[0])}到${rankText(tripleRanks.at(-1))}飞机`:'飞机';
+      const core=tripleRanks.length>1?`${voiceRankText(tripleRanks[0])}到${voiceRankText(tripleRanks.at(-1))}飞机`:'飞机';
       if(type==='airplane')return say(core);
       const remain=[];
-      groups.forEach((size,rank)=>{let left=size-(tripleRanks.includes(rank)?3:0);while(left-->0)remain.push(rankText(rank));});
+      groups.forEach((size,rank)=>{let left=size-(tripleRanks.includes(rank)?3:0);while(left-->0)remain.push(voiceRankText(rank));});
       if(type==='airplane1')return say(`${core}带翅膀${remain.length?`，带${remain.join('、')}`:''}`);
       const pairs=[];for(let i=0;i<remain.length;i+=2)pairs.push(remain[i]);
       return say(`${core}带翅膀${pairs.length?`，带${pairs.map(value=>'一对'+value).join('、')}`:''}`);

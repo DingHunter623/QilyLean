@@ -8,7 +8,7 @@ const file=path.join(root,'times26001-home-card.js');
 if(!fs.existsSync(file))throw new Error('Missing times26001-home-card.js');
 let source=fs.readFileSync(file,'utf8');
 const before=source;
-const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163';
+const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164';
 
 source=source.replace('网页游戏＋Android APP｜休闲数字产品','网页版数字产品｜适老化休闲益智');
 source=source.replace('牌面识别保持传统规则，QilyLean业务元素主要用于牌背与桌面视觉。','牌面保留传统点数与花色识别，并在普通牌面融入QilyLean专业术语、中文名称与核心释义。');

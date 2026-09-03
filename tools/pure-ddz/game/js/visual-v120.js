@@ -37,10 +37,13 @@
     }
   }
   function ensureTurnTimer(){
-    let timer=$('v163-turn-timer');if(timer)return timer;
-    const actions=document.querySelector('.ddz-toolbar .top-actions');if(!actions)return null;
-    timer=document.createElement('div');timer.id='v163-turn-timer';timer.className='v163-turn-timer';timer.setAttribute('role','timer');timer.setAttribute('aria-live','polite');timer.setAttribute('aria-label','出牌倒计时');timer.textContent='⏱ 计时';
-    actions.insertBefore(timer,actions.firstChild);return timer;
+    const toolbar=document.querySelector('.ddz-toolbar'),actions=document.querySelector('.ddz-toolbar .top-actions');
+    if(!toolbar||!actions)return null;
+    let timer=$('v163-turn-timer');
+    if(!timer){timer=document.createElement('div');timer.id='v163-turn-timer';timer.className='v163-turn-timer v164-independent-timer';timer.setAttribute('role','timer');timer.setAttribute('aria-live','polite');timer.setAttribute('aria-label','出牌倒计时');timer.textContent='⏱ 计时';}
+    timer.classList.add('v164-independent-timer');
+    if(timer.parentElement!==toolbar)toolbar.insertBefore(timer,actions);
+    return timer;
   }
   function updateTurnTimer(state){
     const timer=ensureTurnTimer();if(!timer)return;
