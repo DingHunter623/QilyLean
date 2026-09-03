@@ -4,6 +4,13 @@ on:
   pull_request:
     paths:
       - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - '.github/workflows/verify-pure-ddz-start-flow.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
       - '.github/workflows/verify-pure-ddz-start-flow.yml'
   workflow_dispatch:
 
@@ -12,16 +19,18 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
-      - name: Verify V153 elder-paced turn sequencing
+          node-version: 24
+      - name: Verify current elder-paced turn sequencing and V158 entry contract
         shell: bash
         run: |
           set -euo pipefail
           node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/visual-v120.js
+          node --check scripts/materialize-ddz-public-ui-20260824.js
+          node scripts/materialize-ddz-public-ui-20260824.js
           grep -Fq "const VERSION = '1.5.2'" tools/pure-ddz/game/js/game.js
           grep -Fq 'flowToken:0' tools/pure-ddz/game/js/game.js
           grep -Fq 'function speakAsync' tools/pure-ddz/game/js/game.js
@@ -34,4 +43,10 @@ jobs:
           grep -Fq "flash('不要，自动轮到下家')" tools/pure-ddz/game/js/game.js
           grep -Fq "utterance.rate=.82" tools/pure-ddz/game/js/game.js
           grep -Fq 'window.PureDDZTest.hint()' tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq 'data-qily-ddz-core="v158"' tools/pure-ddz/index.html
+          grep -Fq 'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();' tools/pure-ddz/index.html
+          grep -Fq "const chain=['js/ddz-core-v155.js'];" tools/pure-ddz/index.html
+          ! grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
+          ! grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
+          git diff --check
