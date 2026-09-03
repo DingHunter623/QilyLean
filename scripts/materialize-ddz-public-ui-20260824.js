@@ -14,7 +14,7 @@ const jsBundleFile=path.join(jsRoot,'ddz-core-v155.js');
 if(!fs.existsSync(indexFile)) throw new Error('Missing tools/pure-ddz/index.html');
 let page=fs.readFileSync(indexFile,'utf8');
 const before=page;
-const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159';
+const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160';
 const CORE_STYLE=`<link id="qilyDdzCoreV158" data-qily-ddz-core="v158" rel="stylesheet" href="./game/css/ddz-core-v155.css?v=${CACHE}">`;
 const FAST_SHELL='<script defer id="qilyDdzFastSiteShellV155" data-qily-ddz-fast-shell="v155" src="/tools/pure-ddz/game/js/fast-site-shell-v155.js?v=20260903-ddz-fast-shell-v155"></script>';
 const IOS_VIRTUAL_FALLBACK='<script defer id="qilyDdzIosVirtualLandscapeV154" data-qily-ddz-virtual-landscape="v154" src="/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154"></script>';
@@ -66,13 +66,13 @@ const jsBytes=buildBundle(
 if(cssBytes>190000)throw new Error(`DDZ V155 CSS bundle unexpectedly large: ${cssBytes}`);
 if(jsBytes>150000)throw new Error(`DDZ V155 JS bundle unexpectedly large: ${jsBytes}`);
 
-/* V159 cache key owns all locally bundled game resources; the V158 core-loader contract stays stable. */
+/* V160 cache key owns all locally bundled game resources; the V158 core-loader contract stays stable. */
 page=page.replace(/const version='[^']+';/, `const version='${CACHE}';`);
 page=page.replace(/window.__PURE_DDZ_CACHE_KEY__\|\|'[^']+'/g, `window.__PURE_DDZ_CACHE_KEY__||'${CACHE}'`);
 
 /*
  * V158 first-paint closure remains authoritative: the one core CSS bundle is a normal Head stylesheet.
- * V159 only tightens the annotated top fold and never reintroduces post-parse styling.
+ * V159/V160 only refine the approved visual fold and interaction feedback; post-parse styling never returns.
  */
 page=page.replace(/\s*<link\b[^>]*data-qily-ddz-core=["'][^"']+["'][^>]*>\s*/gi,'\n');
 page=page.replace(/\s*<link\b[^>]*href=["'][^"']*game\/css\/ddz-core-v155\.css[^"']*["'][^>]*>\s*/gi,'\n');
@@ -170,10 +170,10 @@ page=page.replace(/Android安装包待验证/g,'');
 page=page.replace(/安装包待验证后发布/g,'');
 page=page.replace(/安装包待验证/g,'');
 
-/* V155/V159 hard gates. */
-if(!page.includes(`const version='${CACHE}';`)) throw new Error('DDZ V159 cache key not updated');
-if(!page.includes(`window.__PURE_DDZ_CACHE_KEY__||'${CACHE}'`)) throw new Error('DDZ V159 fallback cache key not updated');
-if(!page.includes(CORE_STYLE)) throw new Error('DDZ V158/V159 render-blocking core stylesheet is missing');
+/* V155/V160 hard gates. */
+if(!page.includes(`const version='${CACHE}';`)) throw new Error('DDZ V160 cache key not updated');
+if(!page.includes(`window.__PURE_DDZ_CACHE_KEY__||'${CACHE}'`)) throw new Error('DDZ V160 fallback cache key not updated');
+if(!page.includes(CORE_STYLE)) throw new Error('DDZ V158/V160 render-blocking core stylesheet is missing');
 if(!page.includes('window.__PURE_DDZ_STYLE_READY__=Promise.resolve();')) throw new Error('DDZ static style readiness contract is missing');
 if(page.includes("loadStyle('css/ddz-core-v155.css')")) throw new Error('DDZ must not dynamically paint the core stylesheet');
 if(!page.includes("const chain=['js/ddz-core-v155.js'];")) throw new Error('DDZ V155 single JS bundle is missing');
@@ -200,9 +200,11 @@ if(page.includes('apk-inline apk-hold')||page.includes('Android版暂未开放')
 const cssBundle=fs.readFileSync(cssBundleFile,'utf8');
 const jsBundle=fs.readFileSync(jsBundleFile,'utf8');
 if(!cssBundle.includes('visual-tuning-v158.css'))throw new Error('DDZ current visual tuning source was not bundled');
-if(!cssBundle.includes('QilyLean Pure DDZ V159'))throw new Error('DDZ V159 annotated redline rules were not bundled');
+if(!cssBundle.includes('QilyLean Pure DDZ V160'))throw new Error('DDZ V160 capsule-feedback rules were not bundled');
+if(!cssBundle.includes('margin-bottom:30px!important'))throw new Error('DDZ V160 bottom closeout is missing');
+if(!cssBundle.includes('.controls .control-btn:not(:disabled):focus-visible'))throw new Error('DDZ V160 focus-visible capsule feedback is missing');
 if(cssBundle.includes('visual-tuning-v157.css'))throw new Error('DDZ V157 visual tuning source must be retired from the generated bundle');
 for(const token of ['IE 7 Tools','Kaizen','ECRS','VSM','6S','TPS','FMEA','CPK','ERP','MES','APS','PQCD','PDCA','5M2E','Smart Factory'])if(!jsBundle.includes(token))throw new Error(`DDZ V155 terminology missing from JS bundle: ${token}`);
 
 if(page!==before)fs.writeFileSync(indexFile,page.endsWith('\n')?page:page+'\n');
-console.log(`Pure DDZ V155/V159 materialized: CSS ${cssBytes} bytes / JS ${jsBytes} bytes / static first paint / redline top fold / duplicate promise retired / fast Header + deferred translation.`);
+console.log(`Pure DDZ V155/V160 materialized: CSS ${cssBytes} bytes / JS ${jsBytes} bytes / static first paint / V159 layout preserved / stronger capsule feedback / ~30px desktop closeout.`);
