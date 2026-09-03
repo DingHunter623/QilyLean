@@ -1,4 +1,4 @@
-name: Validate R8 Heading Scale
+name: Publish R8 Heading Scale
 
 on:
   push:
@@ -7,23 +7,54 @@ on:
       - 'site-typography-v1.css'
       - 'styles/qily-home-conversion-v1.css'
       - 'cn-site/assets/site.css'
+      - 'scripts/publish-site-system-v2.js'
+      - 'scripts/publish-r8-heading-scale.js'
       - 'scripts/validate-r8-heading-scale.js'
       - '.github/workflows/validate-r8-heading-scale.yml'
-  pull_request:
-    paths:
-      - 'site-typography-v1.css'
-      - 'styles/qily-home-conversion-v1.css'
-      - 'cn-site/assets/site.css'
-      - 'scripts/validate-r8-heading-scale.js'
-      - '.github/workflows/validate-r8-heading-scale.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-r8-heading-scale-main
+  cancel-in-progress: true
 
 jobs:
-  validate:
+  publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 2
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Validate homepage heading ceiling
-        run: node scripts/validate-r8-heading-scale.js
+      - name: Materialize R8 heading scale and cache references
+        run: |
+          node --check scripts/publish-r8-heading-scale.js
+          node scripts/publish-r8-heading-scale.js
+          git diff --check
+      - name: Validate R8 heading hierarchy
+        run: |
+          node scripts/validate-r8-heading-scale.js
+          node scripts/publish-r8-heading-scale.js --check
+      - name: Commit materialized typography references
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add '*.html' '**/*.html' site-navigation.js
+          if git diff --cached --quiet; then
+            echo 'R8 heading-scale references already current.'
+            exit 0
+          fi
+          git commit -m 'fix: materialize R8 homepage heading ceiling sitewide'
+          for attempt in 1 2 3 4; do
+            git pull --rebase origin main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1
