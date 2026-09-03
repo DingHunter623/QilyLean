@@ -114,3 +114,5 @@ jobs:
           git add knowledge/terminology.html knowledge/terminology-sponsor-v1.js
           git commit -m 'fix: correct 5M2E to include Energy'
           git push origin HEAD:main
+
+# Triggered after workflow registration so this push is evaluated against an existing workflow.
