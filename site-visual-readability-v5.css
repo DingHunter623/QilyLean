@@ -1,6 +1,7 @@
-/* QilyLean 全站可视化清晰度 V9｜2026-09-01
+/* QilyLean 全站可视化清晰度 V10｜2026-09-03
  * 目标：落实“最小号字体统一放大一号、底色与字体高对比、编号清晰可读”。
  * V9：章节级 eyebrow / kicker 统一使用 QilyLean VI 金色系；静态术语/指标胶囊统一为信息态，禁止 hover/active/focus 伪交互反馈。
+ * V10 / R8：以首页主 Hero 标题为全站头号字体权威尺度；公开页面任何 H1 最终渲染不得超过 52px，移动端不得超过 43px。
  * 本层作为最终级联直接进入所有公开 HTML <head>，不改业务架构、正文口径与真实可点击控件的交互反馈。
  */
 
@@ -17,6 +18,23 @@
   --qily-v5-small:17px;
   --qily-v5-small-strong:18px;
   --qily-v5-section-kicker:20px;
+  --qily-r8-heading-ceiling:clamp(34px,3.25vw,52px);
+}
+
+/* R8-HEADING-CEILING-V1-20260903
+ * 首页“用工程数据解决工厂效率、质量、交付与布局问题”是全站唯一头号字号基准。
+ * 最终级联使用高权重选择器，覆盖历史模块中 58/62/66/70px 等旧局部 H1 声明；
+ * 只治理标题尺度，不改文案、颜色、布局、交互与组件结构。
+ */
+html:root:root:root body main h1{
+  font-size:var(--qily-r8-heading-ceiling)!important;
+  line-height:1.08!important;
+  letter-spacing:-.025em!important;
+}
+@media(max-width:620px){
+  html:root:root:root body main h1{
+    font-size:clamp(34px,9.6vw,43px)!important;
+  }
 }
 
 /* 01｜最小号文字：统一放大一号并提升对比度。 */
