@@ -6,10 +6,12 @@ on:
     paths:
       - '.github/workflows/verify-pure-ddz-public-startfix.yml'
       - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
   pull_request:
     paths:
       - '.github/workflows/verify-pure-ddz-public-startfix.yml'
       - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
   workflow_dispatch:
 
 jobs:
@@ -17,18 +19,21 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
-      - name: Verify public start and elder controls
+          node-version: 24
+      - name: Verify V158 public start and elder controls
         shell: bash
         run: |
           set -euo pipefail
           node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/card-theme.js
           node --check tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
+          node --check scripts/materialize-ddz-public-ui-20260824.js
+          node scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq 'data-qily-ddz-core="v158"' tools/pure-ddz/index.html
           grep -Fq 'id="welcome-start"' tools/pure-ddz/index.html
           grep -Fq 'id="welcome-landscape"' tools/pure-ddz/index.html
           grep -Fq 'id="v120-landscape-toggle"' tools/pure-ddz/index.html
@@ -43,5 +48,8 @@ jobs:
           grep -Fq "afterNarration(narration,()=>{state.current=nextPlayer(player);render();scheduleTurn();},1100)" tools/pure-ddz/game/js/game.js
           grep -Fq 'window.PureDDZTest.hint()' tools/pure-ddz/game/js/visual-v120.js
           grep -Fq 'screen.orientation?.lock' tools/pure-ddz/game/js/visual-v120.js
+          grep -Fq 'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();' tools/pure-ddz/index.html
+          ! grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
           ! grep -Fq 'js/elder-assist-v140.js' tools/pure-ddz/index.html
           ! grep -Fq 'js/qilylean-theme.js' tools/pure-ddz/index.html
+          git diff --check

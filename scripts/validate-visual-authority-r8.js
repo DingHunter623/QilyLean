@@ -59,7 +59,14 @@ for(const file of files()){
   if(file===DDZ_FAST_PATH&&html.includes('20260903-ddz-fast-knowledge-v155')){
     isolated++;
     must(html,'data-qily-ddz-fast-shell="v155"','DDZ V155 fast visual owner');
-    must(html,"loadStyle('css/ddz-core-v155.css')",'DDZ V155 bundled CSS');
+    if(html.includes('20260903-ddz-fast-knowledge-v155-v158')){
+      must(html,'data-qily-ddz-core="v158"','DDZ V158 static first-paint CSS owner');
+      must(html,'./game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158','DDZ V158 bundled CSS');
+      must(html,'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();','DDZ V158 static style readiness');
+      forbid(html,"loadStyle('css/ddz-core-v155.css')",'DDZ V158 dynamic core CSS paint');
+    }else{
+      must(html,"loadStyle('css/ddz-core-v155.css')",'DDZ V155 bundled CSS');
+    }
     must(html,"const chain=['js/ddz-core-v155.js'];",'DDZ V155 bundled JS');
     forbid(html,'site-visual-authority-r8.css','DDZ fast route must not load R8 CSS');
     forbid(html,'site-visual-runtime-r8.js','DDZ fast route must not load R8 runtime');
@@ -77,4 +84,4 @@ if(covered!==pages)throw new Error(`R8 public coverage regression: covered=${cov
 if(isolated!==1)throw new Error(`DDZ V155 fast-route isolation regression: ${isolated}`);
 if(duplicates)throw new Error(`R8 duplicate authority references detected: ${duplicates}`);
 
-console.log(`PASS: R8 single visual authority covers ${covered}/${pages} standard public pages; DDZ V155 remains one explicitly isolated bundled fast route; 1560 axis, measured header anchors, VI deep-teal navigation rail, wrapper-owned tables, card/flow/diagram contracts and observable overflow are protected.`);
+console.log(`PASS: R8 single visual authority covers ${covered}/${pages} standard public pages; DDZ V155/V158 remains one explicitly isolated bundled fast route with deterministic current first paint; 1560 axis, measured header anchors, VI deep-teal navigation rail, wrapper-owned tables, card/flow/diagram contracts and observable overflow are protected.`);

@@ -5,38 +5,46 @@ on:
     paths:
       - '.github/workflows/verify-pure-ddz-v110-live.yml'
       - 'tools/pure-ddz/**'
-      - 'site-ui-consistency-v1.js'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
       - 'site-dock-share-runtime-v1.js'
   push:
     branches: [main]
     paths:
       - '.github/workflows/verify-pure-ddz-v110-live.yml'
       - 'tools/pure-ddz/**'
-      - 'site-ui-consistency-v1.js'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
       - 'site-dock-share-runtime-v1.js'
   workflow_dispatch:
 
 jobs:
-  verify-mobile-v153:
+  verify-mobile-v158:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
-      - name: Verify portrait + adaptive landscape runtime
+          node-version: 24
+      - name: Verify portrait + adaptive landscape under V158
         shell: bash
         run: |
           set -euo pipefail
           node --check tools/pure-ddz/game/js/card-theme.js
           node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/visual-v120.js
+          node --check tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          node --check scripts/materialize-ddz-public-ui-20260824.js
+          node scripts/materialize-ddz-public-ui-20260824.js
           grep -Fq '__PURE_DDZ_MOBILE_DEVICE__' tools/pure-ddz/index.html
           grep -Fq '__PURE_DDZ_WECHAT_WEBVIEW__' tools/pure-ddz/index.html
           grep -Fq '__PURE_DDZ_MANAGED_LOADER__' tools/pure-ddz/index.html
           ! grep -Fq 'name="screen-orientation"' tools/pure-ddz/index.html
           ! grep -Fq 'name="x5-orientation"' tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq 'data-qily-ddz-core="v158"' tools/pure-ddz/index.html
+          grep -Fq 'data-qily-ddz-virtual-landscape="v154"' tools/pure-ddz/index.html
+          grep -Fq 'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();' tools/pure-ddz/index.html
+          ! grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
           grep -Fq '@media(max-width:680px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
           grep -Fq 'overflow-x:auto!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
           grep -Fq 'overflow-x:clip!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
@@ -50,5 +58,5 @@ jobs:
           grep -Fq 'document.documentElement.requestFullscreen' tools/pure-ddz/game/js/visual-v120.js
           grep -Fq "version:'1.2.4-mobile-landscape-adaptive'" tools/pure-ddz/game/js/visual-v120.js
           grep -Fq "const VERSION = '1.5.2'" tools/pure-ddz/game/js/game.js
-          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
           grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js
+          git diff --check

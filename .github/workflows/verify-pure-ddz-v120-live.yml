@@ -1,77 +1,67 @@
-name: Verify Pure DDZ v1.5 Visual Contract
+name: Verify Pure DDZ Current Visual Contract
 
 on:
   pull_request:
     paths:
       - '.github/workflows/verify-pure-ddz-v120-live.yml'
       - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
       - 'site-dock-share-runtime-v1.js'
   push:
     branches: [main]
     paths:
       - '.github/workflows/verify-pure-ddz-v120-live.yml'
       - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
       - 'site-dock-share-runtime-v1.js'
   workflow_dispatch:
 
 jobs:
-  verify-v153:
+  verify-v158:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
-      - name: Verify integrated V153 mobile-landscape contract
+          node-version: 24
+      - name: Verify V158 integrated visual contract
         shell: bash
         run: |
           set -euo pipefail
           node --check tools/pure-ddz/game/js/card-theme.js
           node --check tools/pure-ddz/game/js/game.js
           node --check tools/pure-ddz/game/js/visual-v120.js
+          node --check scripts/materialize-ddz-public-ui-20260824.js
           node --check site-dock-share-runtime-v1.js
-          grep -Fq '20260903-ddz-mobile-landscape-v153' tools/pure-ddz/index.html
-          grep -Fq "const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];" tools/pure-ddz/index.html
-          grep -Fq "loadStyle('css/ddz-site-page-v140.css')" tools/pure-ddz/index.html
-          grep -Fq "loadStyle('css/mobile-landscape-v153.css')" tools/pure-ddz/index.html
+          node scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq 'data-qily-ddz-core="v158"' tools/pure-ddz/index.html
+          grep -Fq './game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq 'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();' tools/pure-ddz/index.html
+          grep -Fq "const chain=['js/ddz-core-v155.js'];" tools/pure-ddz/index.html
+          ! grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
+          ! grep -Fq "const chain=['js/card-theme.js','js/ai-expert.js','js/game.js','js/visual-v120.js'];" tools/pure-ddz/index.html
           grep -Fq 'id="v120-landscape-toggle"' tools/pure-ddz/index.html
           grep -Fq 'id="welcome-landscape"' tools/pure-ddz/index.html
-          ! grep -Fq "loadStyle('css/ddz-playability-v141.css')" tools/pure-ddz/index.html
           ! grep -Fq 'ddz-site-shell-v140.js' tools/pure-ddz/index.html
           ! grep -Fq 'js/qilylean-theme.js' tools/pure-ddz/index.html
           ! grep -Fq 'js/elder-assist-v140.js' tools/pure-ddz/index.html
           ! grep -Fq '<footer class="site-footer">' tools/pure-ddz/index.html
           ! grep -Fq 'class="ddz-page-note"' tools/pure-ddz/index.html
           grep -Fq '<p id="hint-message" class="hint-message" aria-hidden="true"></p>' tools/pure-ddz/index.html
-          ! grep -Fq 'name="screen-orientation"' tools/pure-ddz/index.html
-          ! grep -Fq 'name="x5-orientation"' tools/pure-ddz/index.html
           grep -Fq -- '--ddz-game-max:var(--qily-content-axis,1560px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
-          grep -Fq 'overflow-x:clip!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
-          grep -Fq 'height:clamp(560px,calc(100vh - 260px),620px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
-          grep -Fq 'scoreboard :is(small,strong,span)' tools/pure-ddz/game/css/ddz-site-page-v140.css
-          grep -Fq 'justify-self:stretch!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
-          grep -Fq '#hint-message.hint-message{display:none!important}' tools/pure-ddz/game/css/ddz-site-page-v140.css
+          grep -Fq 'visual-tuning-v158.css' tools/pure-ddz/game/css/ddz-core-v155.css
+          grep -Fq 'min-height:50px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'grid-template-areas:"eyebrow title copy"' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'width:78px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'width:110px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/ddz-site-page-v140.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/card-comfort-v122.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/mobile-landscape-v153.css
           grep -Fq 'html.ddz-mobile-landscape body.ddz-site-page' tools/pure-ddz/game/css/mobile-landscape-v153.css
-          grep -Fq 'var(--ddz-mobile-vh,390px)' tools/pure-ddz/game/css/mobile-landscape-v153.css
-          grep -Fq 'env(safe-area-inset-right)' tools/pure-ddz/game/css/mobile-landscape-v153.css
           grep -Fq 'qily-rank-suit-line' tools/pure-ddz/game/js/card-theme.js
-          grep -Fq "13:{code:'TPM'" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "const VERSION = '1.5.2'" tools/pure-ddz/game/js/game.js
-          grep -Fq 'function describePlay(play)' tools/pure-ddz/game/js/game.js
-          grep -Fq 'function speakAsync' tools/pure-ddz/game/js/game.js
-          grep -Fq "afterNarration(narration,()=>{state.current=nextPlayer(player);render();scheduleTurn();},1100)" tools/pure-ddz/game/js/game.js
-          grep -Fq "pass(0,{auto:true})" tools/pure-ddz/game/js/game.js
-          grep -Fq "auto?'不要':'您不要'" tools/pure-ddz/game/js/game.js
-          grep -Fq "flash('不要，自动轮到下家')" tools/pure-ddz/game/js/game.js
-          grep -Fq "utterance.rate=.82" tools/pure-ddz/game/js/game.js
           grep -Fq "version:'1.2.4-mobile-landscape-adaptive'" tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq 'function syncViewportProfile()' tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq 'screen.orientation?.lock' tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq 'document.documentElement.requestFullscreen' tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq 'window.PureDDZTest.hint()' tools/pure-ddz/game/js/visual-v120.js
-          grep -Fq '__qilyFloatingDockUnifiedV55' site-dock-share-runtime-v1.js
           grep -Fq 'function isExcluded(){return false;}' site-dock-share-runtime-v1.js
+          git diff --check
