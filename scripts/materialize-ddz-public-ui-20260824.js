@@ -14,7 +14,7 @@ const jsBundleFile=path.join(jsRoot,'ddz-core-v155.js');
 if(!fs.existsSync(indexFile)) throw new Error('Missing tools/pure-ddz/index.html');
 let page=fs.readFileSync(indexFile,'utf8');
 const before=page;
-const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162';
+const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163';
 const CORE_STYLE=`<link id="qilyDdzCoreV158" data-qily-ddz-core="v158" rel="stylesheet" href="./game/css/ddz-core-v155.css?v=${CACHE}">`;
 const FAST_SHELL='<script defer id="qilyDdzFastSiteShellV155" data-qily-ddz-fast-shell="v155" src="/tools/pure-ddz/game/js/fast-site-shell-v155.js?v=20260903-ddz-fast-shell-v155"></script>';
 const IOS_VIRTUAL_FALLBACK='<script defer id="qilyDdzIosVirtualLandscapeV154" data-qily-ddz-virtual-landscape="v154" src="/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154"></script>';

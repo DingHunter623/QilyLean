@@ -24,6 +24,30 @@
     if(welcomeToggle){welcomeToggle.hidden=!mobile||landscape;welcomeToggle.setAttribute('aria-hidden',String(!mobile||landscape));}
     return{width,height,mobile,landscape,scale};
   }
+  function ensureRoundMetaPlacement(profile=syncViewportProfile()){
+    const meta=document.querySelector('.round-meta'),center=document.querySelector('.center-area'),heading=document.querySelector('.ddz-page-heading>div');
+    if(!meta||!center||!heading)return;
+    const useHeading=!profile.mobile&&!profile.landscape;
+    if(useHeading){
+      if(meta.parentElement!==heading){const copy=heading.querySelector(':scope>p:last-child');heading.insertBefore(meta,copy||null);}
+      meta.dataset.v163Placement='heading';
+    }else{
+      if(meta.parentElement!==center)center.insertBefore(meta,center.firstChild);
+      meta.dataset.v163Placement='table';
+    }
+  }
+  function ensureTurnTimer(){
+    let timer=$('v163-turn-timer');if(timer)return timer;
+    const actions=document.querySelector('.ddz-toolbar .top-actions');if(!actions)return null;
+    timer=document.createElement('div');timer.id='v163-turn-timer';timer.className='v163-turn-timer';timer.setAttribute('role','timer');timer.setAttribute('aria-live','polite');timer.setAttribute('aria-label','出牌倒计时');timer.textContent='⏱ 计时';
+    actions.insertBefore(timer,actions.firstChild);return timer;
+  }
+  function updateTurnTimer(state){
+    const timer=ensureTurnTimer();if(!timer)return;
+    const active=state?.phase==='playing'&&state.current===0&&Number(state.humanDeadline)>0;
+    if(active){const remaining=Math.max(0,Math.ceil((Number(state.humanDeadline)-Date.now())/1000));timer.textContent=`⏱ ${remaining}秒`;timer.classList.add('active');timer.setAttribute('aria-label',`出牌倒计时${remaining}秒`);}
+    else{timer.textContent='⏱ 计时';timer.classList.remove('active');timer.setAttribute('aria-label','出牌计时器');}
+  }
   function playSignature(play){return !play?.cards?.length?'':`${play.player}|${play.combo?.type||''}|${play.cards.map(card=>card.id).join('-')}`}
   function snapshotPlay(play){return {player:play.player,combo:{...(play.combo||{})},cards:play.cards.map(card=>({...card}))}}
   function toast(message){const el=$('toast');if(!el)return;el.textContent=message;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2200)}
@@ -60,10 +84,10 @@
   function ensureStatsReset(){const board=document.querySelector('.scoreboard');if(!board||$('v120-reset-stats'))return;const button=document.createElement('button');button.id='v120-reset-stats';button.className='v120-reset-stats';button.type='button';button.textContent='清零';button.title='清零安心积分、胜负和连胜统计';button.addEventListener('click',()=>{if(!window.confirm('确定清零安心积分、胜负和连胜统计吗？游戏设置不会改变。'))return;try{localStorage.setItem('pure_ddz_profile_v1',JSON.stringify({score:1000,wins:0,losses:0,streak:0,bestStreak:0,games:0,lastRewardDate:''}))}catch(_error){}location.reload()});board.appendChild(button)}
   function fitHand(){const hand=$('hand');if(!hand)return;const cards=[...hand.querySelectorAll('.card')];if(!cards.length)return;cards.forEach((card,index)=>{if(index)card.style.removeProperty('margin-left')});const styles=getComputedStyle(hand),paddingLeft=parseFloat(styles.paddingLeft)||0,paddingRight=parseFloat(styles.paddingRight)||0;const available=Math.max(120,hand.clientWidth-paddingLeft-paddingRight-4),cardWidth=cards[0].getBoundingClientRect().width,count=cards.length;if(count<=1){hand.style.justifyContent='center';return}const natural=cardWidth*count;if(natural<=available){hand.style.justifyContent='center';return}const exactStep=Math.max(1,(available-cardWidth)/(count-1));const overlap=Math.max(0,cardWidth-exactStep);cards.forEach((card,index)=>{if(index)card.style.marginLeft=`-${overlap.toFixed(2)}px`});hand.style.justifyContent='center'}
   function detectPass(prev,next){if(!prev||prev.phase!=='playing'||next.phase!=='playing'||prev.current===next.current)return;const beforeSig=playSignature(prev.lastPlay),afterSig=playSignature(next.lastPlay);if(beforeSig===afterSig&&beforeSig){showPass(prev.current);return}if(beforeSig&&!afterSig&&next.current===prev.lastPlay?.player)showPass(prev.current)}
-  function refresh(){if(!window.PureDDZTest)return;ensureVisualStage();ensureSettingsToggle();ensureStatsReset();normalizeCopy();updateOrientationUi();const state=window.PureDDZTest.getState();updateHintUi(state);detectPass(previousState,state);const signature=playSignature(state.lastPlay);if(signature)showPlay(state.lastPlay);else if(state.phase!=='bidding')clearPlayStage();previousState=state;fitHand()}
+  function refresh(){if(!window.PureDDZTest)return;ensureVisualStage();ensureSettingsToggle();ensureStatsReset();normalizeCopy();const profile=syncViewportProfile();ensureRoundMetaPlacement(profile);updateOrientationUi();const state=window.PureDDZTest.getState();updateTurnTimer(state);updateHintUi(state);detectPass(previousState,state);const signature=playSignature(state.lastPlay);if(signature)showPlay(state.lastPlay);else if(state.phase!=='bidding')clearPlayStage();previousState=state;fitHand()}
   function bindLandscapeControls(){const bind=id=>{const button=$(id);if(!button||button.dataset.ddzLandscapeBound==='1')return;button.dataset.ddzLandscapeBound='1';button.addEventListener('click',event=>{event.preventDefault();void requestLandscape(false)})};bind('v120-landscape-toggle');bind('welcome-landscape')}
-  function onViewportChanged(){updateOrientationUi();fitHand()}
-  function start(){ensureVisualStage();ensureScrollCue();ensureSettingsToggle();ensureStatsReset();normalizeCopy();bindLandscapeControls();updateOrientationUi();document.documentElement.classList.add('ddz-ready');window.addEventListener('orientationchange',()=>setTimeout(onViewportChanged,120));screen.orientation?.addEventListener?.('change',()=>setTimeout(onViewportChanged,100));window.addEventListener('resize',onViewportChanged,{passive:true});window.visualViewport?.addEventListener?.('resize',onViewportChanged,{passive:true});window.visualViewport?.addEventListener?.('scroll',onViewportChanged,{passive:true});document.addEventListener('fullscreenchange',()=>setTimeout(onViewportChanged,80));window.addEventListener('scroll',updateOrientationUi,{passive:true});setInterval(refresh,120)}
+  function onViewportChanged(){const profile=syncViewportProfile();ensureRoundMetaPlacement(profile);updateOrientationUi();fitHand()}
+  function start(){ensureVisualStage();ensureScrollCue();ensureSettingsToggle();ensureStatsReset();normalizeCopy();ensureTurnTimer();ensureRoundMetaPlacement(syncViewportProfile());bindLandscapeControls();updateOrientationUi();document.documentElement.classList.add('ddz-ready');window.addEventListener('orientationchange',()=>setTimeout(onViewportChanged,120));screen.orientation?.addEventListener?.('change',()=>setTimeout(onViewportChanged,100));window.addEventListener('resize',onViewportChanged,{passive:true});window.visualViewport?.addEventListener?.('resize',onViewportChanged,{passive:true});window.visualViewport?.addEventListener?.('scroll',onViewportChanged,{passive:true});document.addEventListener('fullscreenchange',()=>setTimeout(onViewportChanged,80));window.addEventListener('scroll',updateOrientationUi,{passive:true});setInterval(refresh,120)}
   window.QilyLeanV120=Object.freeze({version:'1.2.4-mobile-landscape-adaptive',visualHoldMs:VISUAL_HOLD_MS,wechatWebView:IS_WECHAT_WEBVIEW,mobileDevice:IS_MOBILE_DEVICE,get hintEnabled(){return hintEnabled},setHintEnabled,runHint,requestLandscape,refresh,fitHand,syncViewportProfile});
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();

@@ -111,7 +111,7 @@
   function updateHumanCountdown(){
     if(state.phase!=='playing'||state.current!==0){return;}
     const remaining=state.humanDeadline?Math.max(0,Math.ceil((state.humanDeadline-Date.now())/1000)):30;
-    $('status').textContent=`轮到你出牌 · ${remaining}秒`;
+    $('status').textContent='轮到你出牌';
   }
   function handleHumanTimeout(){
     if(state.phase!=='playing'||state.current!==0)return;
