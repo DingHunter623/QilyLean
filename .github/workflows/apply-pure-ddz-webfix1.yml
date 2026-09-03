@@ -8,7 +8,7 @@ on:
       - '.github/workflows/apply-pure-ddz-webfix1.yml'
   workflow_dispatch:
 
-# V155 governance: this historical workflow is verification-only.
+# V158 governance: this historical workflow is verification-only.
 # It must never rewrite the PR branch or reintroduce retired Android-status/runtime assumptions.
 permissions:
   contents: read
@@ -18,15 +18,16 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 24
       - name: Verify current web-only public contract
         shell: bash
         run: |
           set -euo pipefail
           node --check scripts/materialize-ddz-public-ui-20260824.js
+          node scripts/materialize-ddz-public-ui-20260824.js
           grep -Fq '启力精益斗地主' tools/pure-ddz/index.html
           grep -Fq '>启力提示</button>' tools/pure-ddz/index.html
           grep -Fq '<h3>启力提示</h3>' tools/pure-ddz/index.html
@@ -35,8 +36,10 @@ jobs:
           ! grep -Fq 'Android：暂未开放下载' tools/pure-ddz/index.html
           ! grep -Fq 'apk-inline apk-hold' tools/pure-ddz/index.html
           ! grep -Fq 'releases/download/v1.2.0/Pure-DDZ-Classic-v1.2.0.apk' tools/pure-ddz/index.html
-          grep -Fq '20260903-ddz-fast-knowledge-v155' tools/pure-ddz/index.html
-          grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq 'data-qily-ddz-core="v158"' tools/pure-ddz/index.html
+          grep -Fq 'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();' tools/pure-ddz/index.html
+          ! grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
           grep -Fq "const chain=['js/ddz-core-v155.js'];" tools/pure-ddz/index.html
           grep -Fq 'id="v120-landscape-toggle"' tools/pure-ddz/index.html
           grep -Fq 'id="welcome-landscape"' tools/pure-ddz/index.html
