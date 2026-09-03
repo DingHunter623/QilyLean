@@ -1187,48 +1187,49 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
 }
 
 /* ===== visual-tuning-v158.css */
-/* QilyLean Pure DDZ V158｜Top-fold + first-reading visual closure｜2026-09-03
- * Compiled into the single ddz-core bundle; never load as an extra browser stylesheet.
- * Scope: compact the desktop product heading, compress the status/action rail, keep the felt high,
- * retain V157 played-card readability and V156 hand-card readability. Mobile landscape remains owned
- * by its dedicated geometry and is intentionally not re-authored here.
+/* QilyLean Pure DDZ V159｜Annotated redline top-fold closure｜2026-09-03
+ * This existing tuning source remains the single desktop top-fold owner and is compiled into ddz-core-v155.css.
+ * V159 treats the user's annotated red area as one vertical budget: compact heading + compact toolbar + no duplicate promise band.
+ * Approved V156 hand-card scale, V157 played-card scale and dedicated mobile-landscape geometry remain untouched.
  */
 
 @media (min-width:1181px){
   :root{--ddz-site-gutter:clamp(14px,1.7vw,44px)}
 
-  /* 01｜Use the space below the canonical Header efficiently: one compact product information band. */
+  /* 01｜Redline closure: product identity is one genuinely compact information strip. */
   html body.ddz-site-page .game-shell.ddz-site-module{
     margin-top:2px!important;
     margin-bottom:var(--ddz-site-gutter)!important;
   }
   html body.ddz-site-page .ddz-page-heading{
-    min-height:50px!important;
-    height:50px!important;
-    padding:4px 12px!important;
-    margin:0 0 3px!important;
+    min-height:38px!important;
+    height:38px!important;
+    padding:2px 10px!important;
+    margin:0 0 2px!important;
     overflow:hidden!important;
+    border-radius:12px!important;
+    box-shadow:0 4px 12px rgba(15,75,90,.055)!important;
   }
   html body.ddz-site-page .ddz-page-heading>div{
     display:grid!important;
     grid-template-columns:auto auto minmax(0,1fr)!important;
     grid-template-areas:"eyebrow title copy"!important;
     align-items:center!important;
-    column-gap:14px!important;
+    column-gap:12px!important;
     width:100%!important;
     min-width:0!important;
   }
   html body.ddz-site-page .ddz-page-heading .ddz-eyebrow{
     grid-area:eyebrow!important;
     margin:0!important;
-    font-size:10px!important;
+    font-size:9.5px!important;
     line-height:1!important;
     white-space:nowrap!important;
   }
   html body.ddz-site-page .ddz-page-heading h1{
     grid-area:title!important;
     margin:0!important;
-    font-size:22px!important;
+    font-size:20px!important;
     line-height:1!important;
     white-space:nowrap!important;
   }
@@ -1238,37 +1239,42 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
     margin:0!important;
     overflow:hidden!important;
     color:#5f7474!important;
-    font-size:12px!important;
-    line-height:1.2!important;
+    font-size:11px!important;
+    line-height:1!important;
     text-align:right!important;
     text-overflow:ellipsis!important;
     white-space:nowrap!important;
   }
 
-  /* 02｜Four equal status cells and one right-aligned action group share one calm, compact rail. */
+  /* 02｜Status + actions consume only one 40px-class rail instead of a second oversized block. */
   html body.ddz-site-page .ddz-toolbar{
-    grid-template-columns:minmax(560px,640px) minmax(0,1fr)!important;
-    min-height:46px!important;
-    padding:2px 7px!important;
-    margin:0 0 2px!important;
+    grid-template-columns:minmax(540px,620px) minmax(0,1fr)!important;
+    min-height:40px!important;
+    height:40px!important;
+    padding:1px 6px!important;
+    margin:0!important;
     align-items:center!important;
+    border-radius:12px!important;
+    box-shadow:0 5px 14px rgba(15,75,90,.08)!important;
   }
   html body.ddz-site-page .ddz-toolbar .scoreboard{
-    grid-template-columns:repeat(4,minmax(112px,1fr))!important;
+    grid-template-columns:repeat(4,minmax(106px,1fr))!important;
     align-self:center!important;
-    gap:7px!important;
+    gap:6px!important;
   }
   html body.ddz-site-page .ddz-toolbar .scoreboard div,
   html body.ddz-site-page #v120-reset-stats{
-    min-height:40px!important;
-    height:40px!important;
+    min-height:34px!important;
+    height:34px!important;
     margin:0!important;
-    padding:2px 9px!important;
-    border:1px solid rgba(255,227,155,.38)!important;
-    border-radius:9px!important;
-    background:rgba(255,255,255,.075)!important;
+    padding:1px 8px!important;
+    border:1px solid rgba(255,227,155,.34)!important;
+    border-radius:8px!important;
+    background:rgba(255,255,255,.07)!important;
     box-shadow:none!important;
   }
+  html body.ddz-site-page .ddz-toolbar .scoreboard small{font-size:12px!important;line-height:1!important}
+  html body.ddz-site-page .ddz-toolbar .scoreboard strong{font-size:19px!important;line-height:1!important}
   html body.ddz-site-page #v120-reset-stats{
     display:flex!important;
     align-items:center!important;
@@ -1277,43 +1283,39 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
     min-width:0!important;
     color:#ffe39b!important;
     -webkit-text-fill-color:#ffe39b!important;
-    font-size:15px!important;
+    font-size:14px!important;
     font-weight:950!important;
     line-height:1!important;
   }
   html body.ddz-site-page .ddz-toolbar .top-actions{
     position:relative!important;
-    top:-1px!important;
+    top:0!important;
     align-self:center!important;
     align-items:center!important;
-    gap:8px!important;
+    gap:6px!important;
   }
   html body.ddz-site-page .ddz-toolbar :is(#audio-toggle,#help-open,#settings-open,#v120-landscape-toggle,.start-btn){
-    min-height:42px!important;
-    height:42px!important;
-    padding:6px 14px!important;
-    font-size:15px!important;
+    min-height:36px!important;
+    height:36px!important;
+    padding:4px 12px!important;
+    font-size:14px!important;
+    border-radius:8px!important;
   }
-  html body.ddz-site-page .ddz-toolbar #audio-toggle{min-width:108px!important}
+  html body.ddz-site-page .ddz-toolbar #audio-toggle{min-width:100px!important}
   html body.ddz-site-page .ddz-toolbar #help-open,
-  html body.ddz-site-page .ddz-toolbar #settings-open{min-width:68px!important}
-  html body.ddz-site-page .ddz-toolbar #v120-landscape-toggle{min-width:88px!important}
-  html body.ddz-site-page .ddz-toolbar .start-btn{min-width:108px!important}
+  html body.ddz-site-page .ddz-toolbar #settings-open{min-width:64px!important}
+  html body.ddz-site-page .ddz-toolbar #v120-landscape-toggle{min-width:84px!important}
+  html body.ddz-site-page .ddz-toolbar .start-btn{min-width:102px!important}
 
-  /* 03｜The promise band no longer wastes vertical room; the felt begins immediately below it. */
-  html body.ddz-site-page .clean-promise{
-    min-height:20px!important;
-    height:20px!important;
-    padding:1px 9px!important;
-    line-height:1!important;
-  }
-  html body.ddz-site-page .clean-promise strong,
-  html body.ddz-site-page .clean-promise span{line-height:1!important}
+  /* 03｜The duplicated public promise row is retired; the felt starts directly under the toolbar. */
+  html body.ddz-site-page .clean-promise{display:none!important}
+  html body.ddz-site-page .game-main{margin-top:0!important}
   html body.ddz-site-page .table-wrap{
-    height:clamp(625px,calc(100vh - 175px),680px)!important;
-    min-height:625px!important;
-    max-height:680px!important;
+    height:clamp(650px,calc(100vh - 132px),704px)!important;
+    min-height:650px!important;
+    max-height:704px!important;
     padding:7px 8px 9px!important;
+    border-radius:14px!important;
   }
   html body.ddz-site-page .table-wrap:before{inset:8px!important}
   html body.ddz-site-page .ai{top:76px!important}
@@ -1430,12 +1432,13 @@ html.ddz-ios-virtual-landscape body.ddz-site-page #hand.hand .qily-card-theme>em
 }
 
 @media (min-width:901px) and (max-width:1180px){
-  html body.ddz-site-page .game-shell.ddz-site-module{margin-top:4px!important}
-  html body.ddz-site-page .ddz-page-heading{min-height:58px!important;padding:5px 10px!important;margin-bottom:3px!important}
-  html body.ddz-site-page .ddz-toolbar{margin-bottom:2px!important}
-  html body.ddz-site-page .ddz-toolbar .scoreboard{grid-template-columns:repeat(4,minmax(86px,1fr))!important}
-  html body.ddz-site-page #v120-reset-stats{min-height:42px!important;height:42px!important;margin:0!important;padding:4px 7px!important;font-size:14px!important}
-  html body.ddz-site-page .table-wrap{min-height:610px!important;height:610px!important}
+  html body.ddz-site-page .game-shell.ddz-site-module{margin-top:3px!important}
+  html body.ddz-site-page .ddz-page-heading{min-height:44px!important;height:44px!important;padding:3px 9px!important;margin-bottom:2px!important}
+  html body.ddz-site-page .ddz-toolbar{min-height:44px!important;padding:2px 6px!important;margin-bottom:0!important}
+  html body.ddz-site-page .ddz-toolbar .scoreboard{grid-template-columns:repeat(4,minmax(84px,1fr))!important}
+  html body.ddz-site-page #v120-reset-stats{min-height:38px!important;height:38px!important;margin:0!important;padding:3px 6px!important;font-size:14px!important}
+  html body.ddz-site-page .clean-promise{display:none!important}
+  html body.ddz-site-page .table-wrap{min-height:630px!important;height:630px!important;border-radius:14px!important}
   html body.ddz-site-page .bottom-cards{min-height:84px!important;gap:5px!important}
   html body.ddz-site-page .bottom-cards>.mini-card{flex-basis:60px!important;min-width:60px!important;width:60px!important;max-width:60px!important;height:82px!important;min-height:82px!important;max-height:82px!important}
   html body.ddz-site-page .v120-play-stage{min-height:138px!important;max-height:164px!important}
