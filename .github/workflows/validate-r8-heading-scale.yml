@@ -1,0 +1,29 @@
+name: Validate R8 Heading Scale
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-typography-v1.css'
+      - 'styles/qily-home-conversion-v1.css'
+      - 'cn-site/assets/site.css'
+      - 'scripts/validate-r8-heading-scale.js'
+      - '.github/workflows/validate-r8-heading-scale.yml'
+  pull_request:
+    paths:
+      - 'site-typography-v1.css'
+      - 'styles/qily-home-conversion-v1.css'
+      - 'cn-site/assets/site.css'
+      - 'scripts/validate-r8-heading-scale.js'
+      - '.github/workflows/validate-r8-heading-scale.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Validate homepage heading ceiling
+        run: node scripts/validate-r8-heading-scale.js
