@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Validate V154 fallback inside V155 fast route
+      - name: Validate V154 fallback inside V158 fast route
         shell: bash
         run: |
           set -euo pipefail
@@ -41,9 +41,11 @@ jobs:
           node --check tools/pure-ddz/game/js/ddz-core-v155.js
           grep -Fq 'data-qily-ddz-virtual-landscape="v154"' tools/pure-ddz/index.html
           grep -Fq '/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154' tools/pure-ddz/index.html
-          grep -Fq '20260903-ddz-fast-knowledge-v155' tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
           grep -Fq "const chain=['js/ddz-core-v155.js'];" tools/pure-ddz/index.html
-          grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
+          grep -Fq 'data-qily-ddz-core="v158"' tools/pure-ddz/index.html
+          grep -Fq 'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();' tools/pure-ddz/index.html
+          ! grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
           grep -Fq 'data-qily-ddz-fast-shell="v155"' tools/pure-ddz/index.html
           grep -Fq 'html.ddz-ios-virtual-landscape body.ddz-site-page' tools/pure-ddz/game/css/card-knowledge-v155.css
           grep -Fq 'width:56px!important' tools/pure-ddz/game/css/card-knowledge-v155.css
