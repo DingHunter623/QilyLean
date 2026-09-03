@@ -14,7 +14,7 @@ const jsBundleFile=path.join(jsRoot,'ddz-core-v155.js');
 if(!fs.existsSync(indexFile)) throw new Error('Missing tools/pure-ddz/index.html');
 let page=fs.readFileSync(indexFile,'utf8');
 const before=page;
-const CACHE='20260903-ddz-fast-knowledge-v155-v156';
+const CACHE='20260903-ddz-fast-knowledge-v155-v157';
 const FAST_SHELL='<script defer id="qilyDdzFastSiteShellV155" data-qily-ddz-fast-shell="v155" src="/tools/pure-ddz/game/js/fast-site-shell-v155.js?v=20260903-ddz-fast-shell-v155"></script>';
 const IOS_VIRTUAL_FALLBACK='<script defer id="qilyDdzIosVirtualLandscapeV154" data-qily-ddz-virtual-landscape="v154" src="/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154"></script>';
 
@@ -26,7 +26,7 @@ const CSS_SOURCES=[
   'ddz-site-page-v140.css',
   'mobile-landscape-v153.css',
   'card-knowledge-v155.css',
-  'visual-tuning-v156.css'
+  'visual-tuning-v157.css'
 ];
 const JS_SOURCES=[
   'card-theme.js',
@@ -65,7 +65,7 @@ const jsBytes=buildBundle(
 if(cssBytes>190000)throw new Error(`DDZ V155 CSS bundle unexpectedly large: ${cssBytes}`);
 if(jsBytes>150000)throw new Error(`DDZ V155 JS bundle unexpectedly large: ${jsBytes}`);
 
-/* V155/V156 cache key owns all locally bundled game resources. */
+/* V155/V157 cache key owns all locally bundled game resources. */
 page=page.replace(/const version='[^']+';/, `const version='${CACHE}';`);
 page=page.replace(/window.__PURE_DDZ_CACHE_KEY__\|\|'[^']+'/g, `window.__PURE_DDZ_CACHE_KEY__||'${CACHE}'`);
 
@@ -161,9 +161,9 @@ page=page.replace(/Android安装包待验证/g,'');
 page=page.replace(/安装包待验证后发布/g,'');
 page=page.replace(/安装包待验证/g,'');
 
-/* V155/V156 hard gates. */
-if(!page.includes(`const version='${CACHE}';`)) throw new Error('DDZ V155/V156 cache key not updated');
-if(!page.includes(`window.__PURE_DDZ_CACHE_KEY__||'${CACHE}'`)) throw new Error('DDZ V155/V156 fallback cache key not updated');
+/* V155/V157 hard gates. */
+if(!page.includes(`const version='${CACHE}';`)) throw new Error('DDZ V155/V157 cache key not updated');
+if(!page.includes(`window.__PURE_DDZ_CACHE_KEY__||'${CACHE}'`)) throw new Error('DDZ V155/V157 fallback cache key not updated');
 if(!page.includes("loadStyle('css/ddz-core-v155.css')")) throw new Error('DDZ V155 single CSS bundle is missing');
 if(!page.includes("const chain=['js/ddz-core-v155.js'];")) throw new Error('DDZ V155 single JS bundle is missing');
 if(page.includes("loadStyle('css/style.css')")||page.includes("loadStyle('css/mobile-landscape-v153.css')")) throw new Error('DDZ historical multi-CSS chain is still public');
@@ -187,8 +187,8 @@ if(page.includes('apk-inline apk-hold')||page.includes('Android版暂未开放')
 
 const cssBundle=fs.readFileSync(cssBundleFile,'utf8');
 const jsBundle=fs.readFileSync(jsBundleFile,'utf8');
-if(!cssBundle.includes('visual-tuning-v156.css'))throw new Error('DDZ V156 approved visual tuning source was not bundled');
+if(!cssBundle.includes('visual-tuning-v157.css'))throw new Error('DDZ V157 approved visual tuning source was not bundled');
 for(const token of ['IE 7 Tools','Kaizen','ECRS','VSM','6S','TPS','FMEA','CPK','ERP','MES','APS','PQCD','PDCA','5M2E','Smart Factory'])if(!jsBundle.includes(token))throw new Error(`DDZ V155 terminology missing from JS bundle: ${token}`);
 
 if(page!==before)fs.writeFileSync(indexFile,page.endsWith('\n')?page:page+'\n');
-console.log(`Pure DDZ V155/V156 materialized: CSS ${cssBytes} bytes / JS ${jsBytes} bytes / fast Header + deferred translation / approved visual tuning / no unreleased Android status.`);
+console.log(`Pure DDZ V155/V157 materialized: CSS ${cssBytes} bytes / JS ${jsBytes} bytes / fast Header + deferred translation / approved visual tuning / no unreleased Android status.`);
