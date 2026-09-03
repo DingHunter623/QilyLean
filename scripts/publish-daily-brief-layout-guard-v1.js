@@ -47,7 +47,13 @@ const css=fs.readFileSync(path.join(ROOT,'site-daily-brief-layout-guard-v1.css')
   'article.post>.visual>svg>rect:first-child',
   ':is(.visual-hero,.hero,.closing,.closing-view)',
   'background-image:none!important',
-  'backdrop-filter:none!important'
+  'backdrop-filter:none!important',
+  'counter-reset:qily-brief-section',
+  'counter-increment:qily-brief-section',
+  '.lean-delivery-brief .section-title>.no',
+  'content:counter(qily-brief-section,cjk-ideographic) "、"',
+  'font-size:initial!important',
+  'text-wrap:balance'
 ].forEach(token=>{if(!css.includes(token))throw new Error(`Daily Brief layout guard CSS contract missing: ${token}`)});
 
 process.stdout.write(`Daily Brief layout guard ${checkOnly?'check passed':'materialized'}: ${count} dated brief(s), ${changed.length} changed.\n`);
