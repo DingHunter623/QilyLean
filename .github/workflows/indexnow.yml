@@ -173,8 +173,34 @@ jobs:
             echo "BAIDU_PUSH_TOKEN is not configured; skipping Baidu API submission."
             exit 0
           fi
-          response="$(curl --fail --silent --show-error \
+
+          # Keep Baidu batches deliberately small while the site's quota/eligibility is being verified.
+          BAIDU_BATCH_LIMIT=10
+          head -n "$BAIDU_BATCH_LIMIT" search-engine-urls.txt > baidu-urls.txt
+          submitted_count="$(grep -c . baidu-urls.txt || true)"
+          echo "Prepared $submitted_count URL(s) for Baidu API submission."
+
+          response_file="$(mktemp)"
+          set +e
+          http_code="$(curl --silent --show-error \
+            --output "$response_file" \
+            --write-out '%{http_code}' \
             -H 'Content-Type: text/plain' \
-            --data-binary @search-engine-urls.txt \
+            --data-binary @baidu-urls.txt \
             "http://data.zz.baidu.com/urls?site=$SITE_ORIGIN&token=$BAIDU_PUSH_TOKEN")"
-          echo "$response"
+          curl_exit=$?
+          set -e
+
+          response="$(cat "$response_file")"
+          rm -f "$response_file"
+          echo "Baidu API HTTP status: $http_code"
+          echo "Baidu API response: $response"
+
+          if [ "$curl_exit" -ne 0 ]; then
+            echo "Baidu API transport failed with curl exit code $curl_exit."
+            exit "$curl_exit"
+          fi
+          if [ "$http_code" != "200" ]; then
+            echo "Baidu API rejected the submission; see the response above for the exact reason."
+            exit 1
+          fi
