@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean Daily Brief Layout Guard materializer V1｜2026-09-02
+/* QilyLean Daily Brief Layout Guard materializer V1｜2026-09-03
  * Installs one final shared layout/readability stylesheet on every dated Selected Brief page.
  * Business copy and media assets are not modified.
+ * Section sequence markers are intentionally removed: no 01/02/03 badges and no 一、二、三 pseudo numbering.
  */
 const fs=require('fs');
 const path=require('path');
@@ -13,13 +14,20 @@ const checkOnly=process.argv.includes('--check');
 const ID='qilyDailyBriefLayoutGuardV1';
 const HREF='/site-daily-brief-layout-guard-v1.css?v=20260902-daily-brief-light-surface-v2';
 const TAG=`<link id="${ID}" rel="stylesheet" href="${HREF}">`;
+const SEQUENCE_OFF_ID='qilyDailyBriefSequenceOffV1';
+const SEQUENCE_OFF_STYLE=`<style id="${SEQUENCE_OFF_ID}">
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .lean-delivery-brief .section-title>.no{display:none!important}
+html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .lean-delivery-brief .section-title h3::before{content:none!important;display:none!important}
+</style>`;
 const DATED=/^qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html$/i;
 
 function files(){return execFileSync('git',['ls-files','qilylean/daily/*.html'],{cwd:ROOT,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean).filter(x=>DATED.test(x))}
 function install(html,rel){
   let out=html.replace(/\s*<link\b[^>]*(?:id=["']qilyDailyBriefLayoutGuardV1["']|href=["'][^"']*\/site-daily-brief-layout-guard-v1\.css(?:\?v=[^"']*)?["'])[^>]*>\s*/gi,'\n');
+  out=out.replace(/\s*<style\b[^>]*id=["']qilyDailyBriefSequenceOffV1["'][^>]*>[\s\S]*?<\/style>\s*/gi,'\n');
+  out=out.replace(/(<div\b[^>]*class=["'][^"']*\bsection-title\b[^"']*["'][^>]*>)\s*<span\b[^>]*class=["'][^"']*\bno\b[^"']*["'][^>]*>\s*\d{1,3}\s*<\/span>/gi,'$1');
   if(!/<\/head>/i.test(out))throw new Error(`${rel}: missing </head>`);
-  return out.replace(/<\/head>/i,`${TAG}\n</head>`);
+  return out.replace(/<\/head>/i,`${TAG}\n${SEQUENCE_OFF_STYLE}\n</head>`);
 }
 
 const changed=[];
@@ -55,5 +63,8 @@ const css=fs.readFileSync(path.join(ROOT,'site-daily-brief-layout-guard-v1.css')
   'font-size:initial!important',
   'text-wrap:balance'
 ].forEach(token=>{if(!css.includes(token))throw new Error(`Daily Brief layout guard CSS contract missing: ${token}`)});
+
+if(!SEQUENCE_OFF_STYLE.includes('.section-title>.no{display:none!important}'))throw new Error('Daily Brief sequence-off contract missing detached badge suppression.');
+if(!SEQUENCE_OFF_STYLE.includes('.section-title h3::before{content:none!important;display:none!important}'))throw new Error('Daily Brief sequence-off contract missing pseudo-number suppression.');
 
 process.stdout.write(`Daily Brief layout guard ${checkOnly?'check passed':'materialized'}: ${count} dated brief(s), ${changed.length} changed.\n`);
