@@ -135,7 +135,7 @@ if(!page.includes('data-qily-ddz-virtual-landscape="v154"')){
 
 /* Mobile landscape entry points remain explicit user gestures. */
 if(!page.includes('id="v120-landscape-toggle"')){
-  page=page.replace('<span class="apk-inline apk-hold">','<button id="v120-landscape-toggle" class="icon-btn" type="button" hidden aria-hidden="true" aria-label="切换横屏斗地主">↔ 横屏</button>\n        <span class="apk-inline apk-hold">');
+  page=page.replace('<button id="start"','<button id="v120-landscape-toggle" class="icon-btn" type="button" hidden aria-hidden="true" aria-label="切换横屏斗地主">↔ 横屏</button>\n        <button id="start"');
 }
 if(!page.includes('id="welcome-landscape"')){
   page=page.replace('<button id="welcome-settings"','<button id="welcome-landscape" class="text-btn mobile-landscape-entry" type="button" hidden aria-hidden="true">↔ 横屏游玩</button><button id="welcome-settings"');
@@ -146,12 +146,19 @@ page=page.replace(/\s*<div class="ddz-page-note">[\s\S]*?<\/div>\s*/g,'\n');
 page=page.replace(/<p id="hint-message" class="hint-message">[\s\S]*?<\/p>/g,'<p id="hint-message" class="hint-message" aria-hidden="true"></p>');
 page=page.replace(/<span>企业邮箱<\/span>/g,'<span>官网邮箱</span>');
 
-/* Public Android status has one source of truth until an APK is actually released. */
-page=page.replace(/Android版待网页版验证确认后开放/g,'Android版暂未开放');
-page=page.replace(/Android 可离线使用/g,'Android版暂未开放');
-page=page.replace(/安装包待验证后发布/g,'Android版暂未开放');
-page=page.replace(/安装包待验证/g,'Android版暂未开放');
-page=page.replace(/Android：待验证后发布/g,'Android：暂未开放下载');
+/* Product governance: unreleased Android status is not a public-game control or copy block. */
+page=page.replace(/\s*<span class="apk-inline apk-hold">[\s\S]*?<\/span>\s*/gi,'\n');
+page=page.replace(/打开即玩[；;]\s*Android版(?:暂未开放|待网页版验证确认后开放)/g,'打开即玩');
+page=page.replace(/<span>Android：(?:暂未开放下载|待验证后发布)<\/span>/g,'');
+page=page.replace(/Android 可离线使用/g,'');
+page=page.replace(/Android版暂未开放下载/g,'');
+page=page.replace(/Android版暂未开放/g,'');
+page=page.replace(/Android版待网页版验证确认后开放/g,'');
+page=page.replace(/Android安装包待网页版验证确认OK后再发布/g,'');
+page=page.replace(/Android 安装包待验证/g,'');
+page=page.replace(/Android安装包待验证/g,'');
+page=page.replace(/安装包待验证后发布/g,'');
+page=page.replace(/安装包待验证/g,'');
 
 /* V155 hard gates. */
 if(!page.includes(`const version='${CACHE}';`)) throw new Error('DDZ V155 cache key not updated');
@@ -175,7 +182,7 @@ if(page.includes('<footer class="site-footer">')) throw new Error('Game-specific
 if(page.includes('name="screen-orientation"')||page.includes('name="x5-orientation"')) throw new Error('DDZ forced-orientation metadata must stay removed');
 if(!page.includes('__PURE_DDZ_MOBILE_DEVICE__')||!page.includes('__PURE_DDZ_WECHAT_WEBVIEW__')||!page.includes('__PURE_DDZ_MANAGED_LOADER__')) throw new Error('DDZ mobile managed-loader markers are missing');
 if(page.includes('<span>企业邮箱</span>')||!page.includes('<span>官网邮箱</span>')) throw new Error('DDZ contact label contract is not current');
-if(page.includes('Android版待网页版验证确认后开放')||page.includes('Android 可离线使用')) throw new Error('DDZ Android public copy is not unified');
+if(page.includes('apk-inline apk-hold')||page.includes('Android版暂未开放')||page.includes('Android：暂未开放下载')) throw new Error('Unreleased Android status must stay absent from DDZ public UI');
 
 const cssBundle=fs.readFileSync(cssBundleFile,'utf8');
 const jsBundle=fs.readFileSync(jsBundleFile,'utf8');
@@ -183,4 +190,4 @@ for(const token of ['card-knowledge-v155.css','IE七大手法','数智工厂'])i
 for(const token of ['IE 7 Tools','Kaizen','ECRS','VSM','6S','TPS','FMEA','CPK','ERP','MES','APS','PQCD','PDCA','5M2E','Smart Factory'])if(!jsBundle.includes(token))throw new Error(`DDZ V155 terminology missing from JS bundle: ${token}`);
 
 if(page!==before)fs.writeFileSync(indexFile,page.endsWith('\n')?page:page+'\n');
-console.log(`Pure DDZ V155 materialized: CSS ${cssBytes} bytes / JS ${jsBytes} bytes / fast Header + deferred translation.`);
+console.log(`Pure DDZ V155 materialized: CSS ${cssBytes} bytes / JS ${jsBytes} bytes / fast Header + deferred translation / no unreleased Android status.`);
