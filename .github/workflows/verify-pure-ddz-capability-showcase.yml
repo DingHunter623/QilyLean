@@ -25,11 +25,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
-      - name: Verify V155 capability and knowledge-card identity
+          node-version: 24
+      - name: Verify V158 capability and knowledge-card identity
         shell: bash
         run: |
           set -euo pipefail
@@ -55,8 +55,11 @@ jobs:
           grep -Fq "4:{code:'MES',title:'制造执行系统'" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "5:{code:'APS',title:'高级计划与排程'" tools/pure-ddz/game/js/card-theme.js
           grep -Fq "15:{code:'Smart Factory',title:'数智工厂'" tools/pure-ddz/game/js/card-theme.js
-          grep -Fq '20260903-ddz-fast-knowledge-v155' tools/pure-ddz/index.html
-          grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
+          node scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158' tools/pure-ddz/index.html
+          grep -Fq 'data-qily-ddz-core="v158"' tools/pure-ddz/index.html
+          grep -Fq 'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();' tools/pure-ddz/index.html
+          ! grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
           grep -Fq "const chain=['js/ddz-core-v155.js'];" tools/pure-ddz/index.html
           grep -Fq 'data-qily-ddz-fast-shell="v155"' tools/pure-ddz/index.html
           grep -Fq 'color:#0f4b5a!important' tools/pure-ddz/game/css/ddz-site-page-v140.css
@@ -67,12 +70,12 @@ jobs:
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/mobile-landscape-v153.css
           test -f tools/pure-ddz/game/css/mobile-landscape-v153.css
           test -f tools/pure-ddz/game/css/card-knowledge-v155.css
+          test -f tools/pure-ddz/game/css/visual-tuning-v158.css
           test -f tools/pure-ddz/game/css/ddz-core-v155.css
           test -f tools/pure-ddz/game/js/ddz-core-v155.js
           test -f pure-ddz-capability-visual-v2.css
           grep -Fq 'capability-ddz-card' capabilities/index.html
-          node scripts/materialize-ddz-public-ui-20260824.js
-          grep -Fq 'Android版暂未开放' tools/pure-ddz/index.html
+          ! grep -Fq 'Android版暂未开放' tools/pure-ddz/index.html
           ! grep -Fq 'Android版待网页版验证确认后开放' tools/pure-ddz/index.html
           ! grep -Fq 'Android 可离线使用' tools/pure-ddz/index.html
           git diff --check
