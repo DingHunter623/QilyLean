@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  verify-v160:
+  verify-v161:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -25,7 +25,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Verify V160 integrated visual contract
+      - name: Verify V161 integrated visual contract
         shell: bash
         run: |
           set -euo pipefail
@@ -35,9 +35,9 @@ jobs:
           node --check scripts/materialize-ddz-public-ui-20260824.js
           node --check site-dock-share-runtime-v1.js
           node scripts/materialize-ddz-public-ui-20260824.js
-          grep -Fq '20260903-ddz-fast-knowledge-v155-v158-v159-v160' tools/pure-ddz/index.html
+          grep -Fq '20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161' tools/pure-ddz/index.html
           grep -Fq 'data-qily-ddz-core="v158"' tools/pure-ddz/index.html
-          grep -Fq './game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158-v159-v160' tools/pure-ddz/index.html
+          grep -Fq './game/css/ddz-core-v155.css?v=20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161' tools/pure-ddz/index.html
           grep -Fq 'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();' tools/pure-ddz/index.html
           grep -Fq "const chain=['js/ddz-core-v155.js'];" tools/pure-ddz/index.html
           ! grep -Fq "loadStyle('css/ddz-core-v155.css')" tools/pure-ddz/index.html
@@ -53,18 +53,20 @@ jobs:
           grep -Fq '<p id="hint-message" class="hint-message" aria-hidden="true"></p>' tools/pure-ddz/index.html
           grep -Fq -- '--ddz-game-max:var(--qily-content-axis,1560px)' tools/pure-ddz/game/css/ddz-site-page-v140.css
           grep -Fq 'visual-tuning-v158.css' tools/pure-ddz/game/css/ddz-core-v155.css
-          grep -Fq 'QilyLean Pure DDZ V160' tools/pure-ddz/game/css/ddz-core-v155.css
+          grep -Fq 'QilyLean Pure DDZ V161' tools/pure-ddz/game/css/ddz-core-v155.css
           grep -Fq 'min-height:38px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
           grep -Fq 'min-height:40px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
           grep -Fq '.clean-promise{display:none!important}' tools/pure-ddz/game/css/visual-tuning-v158.css
           grep -Fq 'grid-template-areas:"eyebrow title copy"' tools/pure-ddz/game/css/visual-tuning-v158.css
-          grep -Fq 'width:78px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'height:clamp(714px,calc(100vh - 112px),768px)!important' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'width:82px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
           grep -Fq 'width:110px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
-          grep -Fq 'margin-bottom:30px!important' tools/pure-ddz/game/css/visual-tuning-v158.css
           grep -Fq '.controls .control-btn:not(:disabled):hover' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'background:#0f4b5a!important' tools/pure-ddz/game/css/visual-tuning-v158.css
           grep -Fq '.controls .control-btn:not(:disabled):active' tools/pure-ddz/game/css/visual-tuning-v158.css
           grep -Fq '.controls .control-btn:not(:disabled):focus-visible' tools/pure-ddz/game/css/visual-tuning-v158.css
           grep -Fq '.controls .control-btn:disabled' tools/pure-ddz/game/css/visual-tuning-v158.css
+          grep -Fq 'opacity:.58!important' tools/pure-ddz/game/css/visual-tuning-v158.css
           grep -Fq 'prefers-reduced-motion:reduce' tools/pure-ddz/game/css/visual-tuning-v158.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/ddz-site-page-v140.css
           ! grep -Fq '#floatDock' tools/pure-ddz/game/css/card-comfort-v122.css
