@@ -1,4 +1,4 @@
-name: Close Cooperation Contrast R8 20260904
+name: Verify Cooperation Contrast R8 20260904
 
 on:
   push:
@@ -8,78 +8,155 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: qily-close-cooperation-contrast-r8
+  group: qily-verify-cooperation-contrast-r8
   cancel-in-progress: true
 
 jobs:
-  close:
+  browser-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0
+          fetch-depth: 1
 
-      - name: Materialize cache-bust on four governed cooperation pages
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Chromium audit runtime
+        run: |
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start local public site
+        run: |
+          python3 -m http.server 4173 >/tmp/qily-contrast-http.log 2>&1 &
+          echo $! >/tmp/qily-contrast-http.pid
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4173/cooperation/factory-planning/ >/dev/null
+
+      - name: Browser computed-style audit on local and production
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          from pathlib import Path
+          mkdir -p visual-cooperation-contrast
+          cat > /tmp/verify-cooperation-contrast.js <<'NODE'
+          const { chromium } = require('playwright');
+          const fs = require('fs');
 
-          detail_pages = [
-              Path('cooperation/factory-planning/index.html'),
-              Path('cooperation/lean-improvement/index.html'),
-              Path('cooperation/visual-management/index.html'),
-          ]
-          old_detail = '/cooperation/core-business-detail.css?v=20260904-r8-core-contrast-v1'
-          new_detail = '/cooperation/core-business-detail.css?v=20260904-r8-core-contrast-v2-root-selector'
-          for p in detail_pages:
-              s = p.read_text(encoding='utf-8')
-              if old_detail not in s and new_detail not in s:
-                  raise SystemExit(f'{p}: core-business CSS reference missing')
-              s = s.replace(old_detail, new_detail)
-              p.write_text(s, encoding='utf-8')
+          const expected = {
+            detailVersion: '20260904-r8-core-contrast-v2-root-selector',
+            commercialVersion: '20260904-commercial-contrast-v2-root-selector'
+          };
 
-          p = Path('cooperation/index.html')
-          s = p.read_text(encoding='utf-8')
-          old_commercial = '/site-commercial-quality-closure-v1.css?v=20260804-quality-pricing-v1'
-          new_commercial = '/site-commercial-quality-closure-v1.css?v=20260904-commercial-contrast-v2-root-selector'
-          if old_commercial not in s and new_commercial not in s:
-              raise SystemExit('cooperation/index.html: commercial CSS reference missing')
-          s = s.replace(old_commercial, new_commercial)
-          p.write_text(s, encoding='utf-8')
-          PY
+          function rgbParts(value){
+            const m = String(value).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+            return m ? m.slice(1,4).map(Number) : null;
+          }
+          function lum(rgb){
+            const a = rgb.map(v=>{v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});
+            return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
+          }
+          function contrast(fg,bg){
+            const a=rgbParts(fg), b=rgbParts(bg); if(!a||!b)return 0;
+            const l1=lum(a),l2=lum(b); return (Math.max(l1,l2)+0.05)/(Math.min(l1,l2)+0.05);
+          }
+          function assert(cond,msg){ if(!cond) throw new Error(msg); }
 
-      - name: Validate root-selector closure contracts
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -q 'body.core-business-page main .module-hero .core-business-hero-actions > a.primary' cooperation/core-business-detail.css
-          grep -q 'body.core-business-page main .core-business-process .core-business-step > b' cooperation/core-business-detail.css
-          grep -q 'body.cooperation-page main .module-hero .hero-actions > a.primary' site-commercial-quality-closure-v1.css
-          grep -q 'body.cooperation-page main .flow-grid .flow-step > b:first-child' site-commercial-quality-closure-v1.css
-          grep -q 'body.cooperation-page main .qily-system-axis__step > strong' site-commercial-quality-closure-v1.css
-          for f in cooperation/factory-planning/index.html cooperation/lean-improvement/index.html cooperation/visual-management/index.html; do
-            grep -q 'core-business-detail.css?v=20260904-r8-core-contrast-v2-root-selector' "$f"
-          done
-          grep -q 'site-commercial-quality-closure-v1.css?v=20260904-commercial-contrast-v2-root-selector' cooperation/index.html
-          git diff --check
+          async function styleOf(page, selector){
+            return page.locator(selector).first().evaluate(el=>{
+              const s=getComputedStyle(el);
+              return {color:s.color,webkitTextFillColor:s.webkitTextFillColor,backgroundColor:s.backgroundColor,backgroundImage:s.backgroundImage,borderColor:s.borderColor,fontSize:s.fontSize,opacity:s.opacity,width:s.width,height:s.height};
+            });
+          }
 
-      - name: Commit closure to main
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'QilyLean R8 Closure'
-          git config user.email 'actions@users.noreply.github.com'
-          if git diff --quiet; then
-            echo 'Contrast cache-bust already materialized.'
-            exit 0
-          fi
-          git add cooperation/index.html cooperation/factory-planning/index.html cooperation/lean-improvement/index.html cooperation/visual-management/index.html
-          git commit -m 'fix(r8): materialize cooperation contrast closure'
-          git push origin HEAD:main
+          async function auditBase(browser, base, tag){
+            for(const viewport of [{name:'desktop',width:1680,height:950},{name:'mobile',width:390,height:844}]){
+              const ctx=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},deviceScaleFactor:1});
+              const page=await ctx.newPage();
+              page.setDefaultTimeout(15000);
+
+              const detailUrl=base+'/cooperation/factory-planning/';
+              await page.goto(detailUrl,{waitUntil:'domcontentloaded',timeout:30000});
+              await page.waitForSelector('.core-business-hero-actions > a.primary');
+              const href=await page.locator('link[href*="core-business-detail.css"]').first().getAttribute('href');
+              assert(href && href.includes(expected.detailVersion), `${tag}/${viewport.name}: detail CSS cache version missing: ${href}`);
+              const cta=await styleOf(page,'.core-business-hero-actions > a.primary');
+              assert(cta.color==='rgb(23, 50, 45)', `${tag}/${viewport.name}: detail CTA color ${cta.color}`);
+              assert(cta.webkitTextFillColor==='rgb(23, 50, 45)', `${tag}/${viewport.name}: detail CTA text-fill ${cta.webkitTextFillColor}`);
+              assert(cta.backgroundImage && cta.backgroundImage!=='none', `${tag}/${viewport.name}: detail CTA gold gradient missing`);
+              const badge=await styleOf(page,'.core-business-process .core-business-step > b');
+              assert(badge.color==='rgb(255, 255, 255)', `${tag}/${viewport.name}: detail step color ${badge.color}`);
+              assert(badge.webkitTextFillColor==='rgb(255, 255, 255)', `${tag}/${viewport.name}: detail step text-fill ${badge.webkitTextFillColor}`);
+              assert(badge.backgroundColor==='rgb(7, 60, 71)', `${tag}/${viewport.name}: detail step bg ${badge.backgroundColor}`);
+              assert(parseFloat(badge.width)>=38 && parseFloat(badge.height)>=38, `${tag}/${viewport.name}: detail step size ${badge.width}x${badge.height}`);
+              await page.locator('.module-hero').screenshot({path:`visual-cooperation-contrast/${tag}-factory-hero-${viewport.name}.png`});
+              await page.locator('.core-business-process').screenshot({path:`visual-cooperation-contrast/${tag}-factory-process-${viewport.name}.png`});
+
+              const cooperationUrl=base+'/cooperation/';
+              await page.goto(cooperationUrl,{waitUntil:'domcontentloaded',timeout:30000});
+              await page.waitForSelector('.hero-actions > a.primary');
+              const commercialHref=await page.locator('link[href*="site-commercial-quality-closure-v1.css"]').first().getAttribute('href');
+              assert(commercialHref && commercialHref.includes(expected.commercialVersion), `${tag}/${viewport.name}: commercial CSS cache version missing: ${commercialHref}`);
+              const homeCta=await styleOf(page,'.hero-actions > a.primary');
+              assert(homeCta.color==='rgb(51, 33, 0)', `${tag}/${viewport.name}: cooperation CTA color ${homeCta.color}`);
+              assert(homeCta.webkitTextFillColor==='rgb(51, 33, 0)', `${tag}/${viewport.name}: cooperation CTA text-fill ${homeCta.webkitTextFillColor}`);
+              assert(homeCta.backgroundColor==='rgb(255, 211, 106)', `${tag}/${viewport.name}: cooperation CTA bg ${homeCta.backgroundColor}`);
+              await page.locator('.module-hero').screenshot({path:`visual-cooperation-contrast/${tag}-cooperation-hero-${viewport.name}.png`});
+
+              const flow=page.locator('.flow-grid .flow-step > b').first();
+              if(await flow.count()){
+                const f=await styleOf(page,'.flow-grid .flow-step > b');
+                assert(f.color==='rgb(255, 255, 255)', `${tag}/${viewport.name}: flow badge color ${f.color}`);
+                assert(f.backgroundColor==='rgb(7, 60, 71)', `${tag}/${viewport.name}: flow badge bg ${f.backgroundColor}`);
+                assert(parseFloat(f.width)>=40 && parseFloat(f.height)>=40, `${tag}/${viewport.name}: flow badge size ${f.width}x${f.height}`);
+                await page.locator('.flow-grid').first().screenshot({path:`visual-cooperation-contrast/${tag}-cooperation-flow-${viewport.name}.png`});
+              }
+
+              const axis=page.locator('.qily-system-axis__step').first();
+              if(await axis.count()){
+                const axisStrong=await styleOf(page,'.qily-system-axis__step > strong');
+                const axisParent=await styleOf(page,'.qily-system-axis__step');
+                assert(contrast(axisStrong.color,axisParent.backgroundColor)>=4.5, `${tag}/${viewport.name}: axis contrast ${contrast(axisStrong.color,axisParent.backgroundColor).toFixed(2)} (${axisStrong.color} / ${axisParent.backgroundColor})`);
+                await page.locator('.qily-system-axis').screenshot({path:`visual-cooperation-contrast/${tag}-cooperation-axis-${viewport.name}.png`});
+              }
+              await ctx.close();
+            }
+          }
+
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            try{
+              await auditBase(browser,'http://127.0.0.1:4173','local');
+              let lastErr;
+              for(let i=1;i<=8;i++){
+                try{
+                  await auditBase(browser,'https://qilylean.com','production');
+                  lastErr=null; break;
+                }catch(e){
+                  lastErr=e;
+                  console.log(`Production audit attempt ${i}/8 not ready: ${e.message}`);
+                  await new Promise(r=>setTimeout(r,15000));
+                }
+              }
+              if(lastErr) throw lastErr;
+              fs.writeFileSync('visual-cooperation-contrast/PASS.txt','Local + production computed-style audit PASS\n','utf8');
+              console.log('PASS: local + production cooperation contrast computed-style audit.');
+            } finally { await browser.close(); }
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
+          node /tmp/verify-cooperation-contrast.js
+
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cooperation-contrast-r8-${{ github.run_id }}
+          path: visual-cooperation-contrast
+          if-no-files-found: warn
+          retention-days: 7
