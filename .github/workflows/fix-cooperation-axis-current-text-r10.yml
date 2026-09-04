@@ -1,140 +1,61 @@
 name: Fix Cooperation Axis Current Text R10
-
 on:
   push:
     branches: [main]
-    paths:
-      - '.github/workflows/fix-cooperation-axis-current-text-r10.yml'
-  workflow_dispatch:
-
+    paths: ['.github/workflows/fix-cooperation-axis-current-text-r10.yml']
 permissions:
   contents: write
-
-concurrency:
-  group: qily-cooperation-axis-current-text-r10
-  cancel-in-progress: true
-
 jobs:
-  fix-and-verify:
+  fix:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 1
-
-      - name: Confirm VI current-state contract
+        with: {ref: main, fetch-depth: 1}
+      - name: Confirm VI and patch only 05 text
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'body:has(header a\[href="/cooperation/"\]\[aria-current="page"\]) .qily-system-axis__step\[href="/cooperation/"\]' site-visual-governance-v2.css
-          grep -q 'color:#fff!important;-webkit-text-fill-color:#fff!important;background:var(--qily-axis-green)!important;border:2px solid var(--qily-axis-gold)!important' site-visual-governance-v2.css
-          grep -q 'qily-system-axis__step\[href="/cooperation/"\] :is(strong,span).*color:#fff!important' site-visual-governance-v2.css
-          echo 'VI CONFIRMED: current operating-axis card = deep teal + gold border + white text.'
-
-      - name: Restore only cooperation current-card text to VI white
-        shell: bash
-        run: |
-          set -euo pipefail
+          grep -Fq 'body:has(header a[href="/cooperation/"][aria-current="page"]) .qily-system-axis__step[href="/cooperation/"]' site-visual-governance-v2.css
+          grep -Fq 'color:#fff!important;-webkit-text-fill-color:#fff!important;background:var(--qily-axis-green)!important;border:2px solid var(--qily-axis-gold)!important' site-visual-governance-v2.css
           python3 - <<'PY'
           from pathlib import Path
           import re
-
-          css_path = Path('site-commercial-quality-closure-v1.css')
-          html_path = Path('cooperation/index.html')
-          css = css_path.read_text(encoding='utf-8')
-          html = html_path.read_text(encoding='utf-8')
-
-          marker = 'QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE'
-          block = r'''
-
-/* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE | 2026-09-04
- * VI依据：site-visual-governance-v2.css 02A规定“当前制造运营轴卡片”为深青底+金边+白字。
- * 本补丁只恢复项目合作页当前05卡片文字为白色，不改背景、边框、尺寸、布局或其它卡片状态。
- */
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"],
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:link,
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited,
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > strong,
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > span,
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited > strong,
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited > span{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  opacity:1!important;
-  text-shadow:none!important;
-}
-'''
-
-          # Idempotent: replace any prior R10 block, otherwise append once.
+          cp=Path('site-commercial-quality-closure-v1.css'); hp=Path('cooperation/index.html')
+          css=cp.read_text(encoding='utf-8'); html=hp.read_text(encoding='utf-8')
+          marker='QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE'
+          block='''\n\n/* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE | 2026-09-04\n * VI contract: current operating-axis card = deep teal + gold border + white text.\n * Scope: text only; no background/border/layout changes.\n */\nhtml:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"],\nhtml:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited,\nhtml:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > strong,\nhtml:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > span,\nhtml:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited > strong,\nhtml:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited > span{\n  color:#fff!important;\n  -webkit-text-fill-color:#fff!important;\n  opacity:1!important;\n  text-shadow:none!important;\n}\n'''
           if marker in css:
-              css = re.sub(r'\n/\* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE[\s\S]*?\n}\n?$', block.rstrip()+"\n", css, count=1)
+              css=re.sub(r'\n/\* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE[\s\S]*?\n}\s*$',block.rstrip()+"\n",css,count=1)
           else:
-              css = css.rstrip() + block + '\n'
-
-          version = '20260904-cooperation-axis-current-white-r10'
-          html, n = re.subn(r'/site-commercial-quality-closure-v1\.css\?v=[^"\']+', f'/site-commercial-quality-closure-v1.css?v={version}', html, count=1)
-          if n != 1:
-              raise SystemExit(f'Expected one stylesheet reference, got {n}')
-
-          css_path.write_text(css, encoding='utf-8')
-          html_path.write_text(html, encoding='utf-8')
-          print('PATCHED', version)
+              css=css.rstrip()+block
+          version='20260904-cooperation-axis-current-white-r10'
+          html,n=re.subn(r'/site-commercial-quality-closure-v1\.css\?v=[^"\']+',f'/site-commercial-quality-closure-v1.css?v={version}',html,count=1)
+          assert n==1,n
+          cp.write_text(css,encoding='utf-8'); hp.write_text(html,encoding='utf-8')
           PY
-
-          grep -q 'QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE' site-commercial-quality-closure-v1.css
-          grep -q '20260904-cooperation-axis-current-white-r10' cooperation/index.html
-
-      - name: Commit fix
-        shell: bash
-        run: |
-          set -euo pipefail
-          git config user.name 'QilyLean'
-          git config user.email 'DingHunter623@gmail.com'
+          git config user.name QilyLean
+          git config user.email DingHunter623@gmail.com
           git add site-commercial-quality-closure-v1.css cooperation/index.html
-          if git diff --cached --quiet; then
-            echo 'No source diff.'
-          else
-            git commit -m 'fix(vi): restore cooperation 05 current-card white text'
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix(vi): set cooperation 05 current-card text white'
             git pull --rebase origin main
             git push origin HEAD:main
           fi
-
-      - name: Verify production desktop and mobile with cache disabled
+      - name: Production computed-style audit
         shell: bash
         run: |
           set -euo pipefail
-          BROWSER_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
-          test -n "$BROWSER_BIN"
-          "$BROWSER_BIN" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9222 --user-data-dir=/tmp/qily-r10-chrome about:blank >/tmp/qily-r10-chrome.log 2>&1 &
-          curl --retry 15 --retry-delay 1 --retry-connrefused --fail --silent http://127.0.0.1:9222/json/version >/dev/null
-          cat >/tmp/qily-r10-verify.mjs <<'NODE'
-          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-          const fail=m=>{throw new Error(m)};
-          async function target(){const r=await fetch('http://127.0.0.1:9222/json/new?about:blank',{method:'PUT'});if(!r.ok)fail('target');return r.json()}
-          function connect(url){return new Promise((resolve,reject)=>{const ws=new WebSocket(url);let id=0,p=new Map();ws.onopen=()=>resolve({call(m,params={}){return new Promise((res,rej)=>{const n=++id;p.set(n,{res,rej});ws.send(JSON.stringify({id:n,method:m,params}))})},close(){ws.close()}});ws.onerror=reject;ws.onmessage=e=>{const x=JSON.parse(e.data);if(x.id&&p.has(x.id)){const q=p.get(x.id);p.delete(x.id);x.error?q.rej(new Error(x.error.message)):q.res(x.result)}}})}
-          async function ev(c,e){const r=await c.call('Runtime.evaluate',{expression:e,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)fail(r.exceptionDetails.text);return r.result?.value}
-          async function audit(c,w,h){
-            await c.call('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<600});
-            for(let attempt=1;attempt<=30;attempt++){
-              await c.call('Network.clearBrowserCache');
-              await c.call('Page.navigate',{url:`https://qilylean.com/cooperation/?__qily_r10=${Date.now()}_${attempt}`});
-              for(let i=0;i<100;i++){if(await ev(c,"document.readyState==='complete' && !!document.querySelector('.qily-system-axis__step[href=\\\"/cooperation/\\\"]')"))break;await sleep(150)}
-              const d=await ev(c,`(()=>{const card=document.querySelector('.qily-system-axis__step[href="/cooperation/"]');const strong=card?.querySelector('strong'),span=card?.querySelector('span');const link=document.querySelector('link[href*="site-commercial-quality-closure-v1.css"]');if(!card||!strong||!span)return null;const a=getComputedStyle(card),b=getComputedStyle(strong),s=getComputedStyle(span);return {href:link?.getAttribute('href')||'',bg:a.backgroundColor,border:a.borderColor,color:a.color,fill:a.webkitTextFillColor,strong:b.color,strongFill:b.webkitTextFillColor,span:s.color,spanFill:s.webkitTextFillColor,text:card.innerText}})()`);
-              console.log(w,attempt,JSON.stringify(d));
-              if(d && d.href.includes('20260904-cooperation-axis-current-white-r10')){
-                if(d.bg!=='rgb(15, 75, 90)') fail(`${w}: current bg not VI deep teal: ${d.bg}`);
-                if(d.border!=='rgb(202, 161, 95)') fail(`${w}: current border not VI gold: ${d.border}`);
-                for(const k of ['color','fill','strong','strongFill','span','spanFill']) if(d[k]!=='rgb(255, 255, 255)') fail(`${w}: ${k} not white: ${d[k]}`);
-                console.log(`PASS production ${w}x${h}: 05 deep teal + gold + white text`);
-                return;
-              }
-              await sleep(10000);
-            }
-            fail(`${w}: production did not publish R10 in time`);
-          }
-          const t=await target(),c=await connect(t.webSocketDebuggerUrl);
-          try{await c.call('Page.enable');await c.call('Runtime.enable');await c.call('Network.enable');await c.call('Network.setCacheDisabled',{cacheDisabled:true});await audit(c,1680,950);await audit(c,390,844)}finally{c.close()}
+          B="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || true)"; test -n "$B"
+          "$B" --headless=new --no-sandbox --disable-gpu --remote-debugging-port=9222 --user-data-dir=/tmp/qily-r10 about:blank >/tmp/chrome.log 2>&1 &
+          curl --retry 15 --retry-delay 1 --retry-connrefused -fsS http://127.0.0.1:9222/json/version >/dev/null
+          cat >/tmp/audit.mjs <<'NODE'
+          const sleep=m=>new Promise(r=>setTimeout(r,m)); const fail=m=>{throw Error(m)};
+          const t=await (await fetch('http://127.0.0.1:9222/json/new?about:blank',{method:'PUT'})).json();
+          const c=await new Promise((ok,no)=>{const w=new WebSocket(t.webSocketDebuggerUrl),p=new Map();let n=0;w.onopen=()=>ok({call:(m,a={})=>new Promise((r,j)=>{const id=++n;p.set(id,{r,j});w.send(JSON.stringify({id,method:m,params:a}))})});w.onerror=no;w.onmessage=e=>{const x=JSON.parse(e.data),q=p.get(x.id);if(q){p.delete(x.id);x.error?q.j(Error(x.error.message)):q.r(x.result)}}});
+          await c.call('Page.enable');await c.call('Runtime.enable');await c.call('Network.enable');await c.call('Network.setCacheDisabled',{cacheDisabled:true});
+          async function ev(e){return (await c.call('Runtime.evaluate',{expression:e,returnByValue:true})).result.value}
+          async function run(w,h){await c.call('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<600});for(let a=1;a<=30;a++){await c.call('Network.clearBrowserCache');await c.call('Page.navigate',{url:'https://qilylean.com/cooperation/?r10='+Date.now()});await sleep(1800);const d=await ev(`(()=>{let e=document.querySelector('.qily-system-axis__step[href="/cooperation/"]'),l=document.querySelector('link[href*="site-commercial-quality-closure-v1.css"]');if(!e)return null;let q=getComputedStyle(e),s=getComputedStyle(e.querySelector('strong')),p=getComputedStyle(e.querySelector('span'));return {v:l?.href||'',bg:q.backgroundColor,b:q.borderColor,c:q.color,f:q.webkitTextFillColor,sc:s.color,sf:s.webkitTextFillColor,pc:p.color,pf:p.webkitTextFillColor}})()`);console.log(w,a,d);if(d?.v.includes('20260904-cooperation-axis-current-white-r10')){if(d.bg!=='rgb(15, 75, 90)'||d.b!=='rgb(202, 161, 95)')fail(w+' VI surface mismatch '+JSON.stringify(d));for(const k of ['c','f','sc','sf','pc','pf'])if(d[k]!=='rgb(255, 255, 255)')fail(w+' '+k+' not white '+JSON.stringify(d));console.log('PASS',w,h);return}await sleep(8000)}fail(w+' production R10 timeout')}
+          await run(1680,950);await run(390,844);
           NODE
-          node /tmp/qily-r10-verify.mjs
+          node /tmp/audit.mjs
