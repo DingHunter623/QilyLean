@@ -29,6 +29,7 @@ jobs:
           set -euo pipefail
           test -f cn-site/index.html
           test -f cn-site/robots.txt
+          test -f cn-site/favicon.ico
           test -f cn-site/assets/site.css
           grep -q 'noindex,nofollow' cn-site/index.html
           grep -Eq '^Disallow:[[:space:]]*/[[:space:]]*$' cn-site/robots.txt
@@ -37,7 +38,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          tar -czf /tmp/qilylean-cn-site.tar.gz -C cn-site index.html robots.txt assets
+          tar -czf /tmp/qilylean-cn-site.tar.gz -C cn-site index.html robots.txt favicon.ico assets
           sha256sum /tmp/qilylean-cn-site.tar.gz
 
       - name: Configure SSH
