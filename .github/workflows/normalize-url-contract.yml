@@ -24,6 +24,50 @@ jobs:
           ref: main
           fetch-depth: 1
 
+      - name: Restore cooperation 05 current-card text to VI white
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq 'body:has(header a[href="/cooperation/"][aria-current="page"]) .qily-system-axis__step[href="/cooperation/"]' site-visual-governance-v2.css
+          grep -Fq 'color:#fff!important;-webkit-text-fill-color:#fff!important;background:var(--qily-axis-green)!important;border:2px solid var(--qily-axis-gold)!important' site-visual-governance-v2.css
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          cp=Path('site-commercial-quality-closure-v1.css')
+          hp=Path('cooperation/index.html')
+          css=cp.read_text(encoding='utf-8')
+          html=hp.read_text(encoding='utf-8')
+          marker='QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE'
+          block='''\n\n/* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE | 2026-09-04
+ * VI依据：site-visual-governance-v2.css 02A规定当前制造运营轴卡片为深青底+金边+白字。
+ * 本补丁仅恢复项目合作页05当前卡片文字为白色，不改变背景、边框、尺寸、布局及其它卡片。
+ */
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"],
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited,
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > strong,
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > span,
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited > strong,
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited > span{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+'''
+          if marker in css:
+              css=re.sub(r'\n/\* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE[\s\S]*?\n}\s*$',block.rstrip()+"\n",css,count=1)
+          else:
+              css=css.rstrip()+block
+          version='20260904-cooperation-axis-current-white-r10'
+          html,n=re.subn(r'/site-commercial-quality-closure-v1\.css\?v=[^"\']+',f'/site-commercial-quality-closure-v1.css?v={version}',html,count=1)
+          if n != 1:
+              raise SystemExit(f'Expected one stylesheet reference, got {n}')
+          cp.write_text(css,encoding='utf-8')
+          hp.write_text(html,encoding='utf-8')
+          PY
+          grep -q 'QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE' site-commercial-quality-closure-v1.css
+          grep -q '20260904-cooperation-axis-current-white-r10' cooperation/index.html
+
       - name: Normalize directory-backed public URLs
         shell: bash
         run: |
@@ -56,6 +100,6 @@ jobs:
             echo 'URL contract already normalized.'
             exit 0
           fi
-          git commit -m 'fix: normalize canonical directory URLs [skip ci]'
+          git commit -m 'fix(vi): restore cooperation 05 white text and normalize URLs [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
