@@ -24,34 +24,13 @@ jobs:
           ref: main
           fetch-depth: 1
 
-      - name: Restore cooperation 05 current-card text to VI white
+      - name: Apply authorized cooperation 05 VI fix when staged
         shell: bash
         run: |
           set -euo pipefail
-          grep -Fq 'body:has(header a[href="/cooperation/"][aria-current="page"]) .qily-system-axis__step[href="/cooperation/"]' site-visual-governance-v2.css
-          grep -Fq 'color:#fff!important;-webkit-text-fill-color:#fff!important;background:var(--qily-axis-green)!important;border:2px solid var(--qily-axis-gold)!important' site-visual-governance-v2.css
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-          cp=Path('site-commercial-quality-closure-v1.css')
-          hp=Path('cooperation/index.html')
-          css=cp.read_text(encoding='utf-8')
-          html=hp.read_text(encoding='utf-8')
-          marker='QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE'
-          block="\n\n/* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE | 2026-09-04\n * VI contract: current operating-axis card = deep teal + gold border + white text.\n * Scope: text only; no background, border, size, layout or sibling-card changes.\n */\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"],\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"]:visited,\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"] > strong,\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"] > span,\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"]:visited > strong,\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"]:visited > span{\n  color:#fff!important;\n  -webkit-text-fill-color:#fff!important;\n  opacity:1!important;\n  text-shadow:none!important;\n}\n"
-          if marker in css:
-              css=re.sub(r'\n/\* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE[\s\S]*?\n}\s*$',block.rstrip()+"\n",css,count=1)
-          else:
-              css=css.rstrip()+block
-          version='20260904-cooperation-axis-current-white-r10'
-          html,n=re.subn(r'/site-commercial-quality-closure-v1\.css\?v=[^"\']+',f'/site-commercial-quality-closure-v1.css?v={version}',html,count=1)
-          if n != 1:
-              raise SystemExit(f'Expected one stylesheet reference, got {n}')
-          cp.write_text(css,encoding='utf-8')
-          hp.write_text(html,encoding='utf-8')
-          PY
-          grep -q 'QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE' site-commercial-quality-closure-v1.css
-          grep -q '20260904-cooperation-axis-current-white-r10' cooperation/index.html
+          if [ -f scripts/fix-cooperation-axis-current-r10.py ]; then
+            python3 scripts/fix-cooperation-axis-current-r10.py --apply
+          fi
 
       - name: Normalize directory-backed public URLs
         shell: bash
@@ -85,6 +64,6 @@ jobs:
             echo 'URL contract already normalized.'
             exit 0
           fi
-          git commit -m 'fix(vi): restore cooperation 05 white text and normalize URLs [skip ci]'
+          git commit -m 'fix: normalize canonical directory URLs [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
