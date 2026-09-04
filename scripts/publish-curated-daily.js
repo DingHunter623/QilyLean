@@ -16,8 +16,12 @@ const steps = [
   ['audit-daily-terminology.js'],
   ['audit-daily-quality-linkage.js'],
   ['sync-curated-site-metadata.js'],
+  ['materialize-global-language-v3.js', '--latest-daily'],
+  ['materialize-global-language-v3.js', '--latest-daily', '--check'],
   ['sync-search-brief-metadata.js'],
   ['sync-trust-brief-metadata.js'],
+  ['sync-search-brief-metadata.js'],
+  ['sync-search-brief-metadata.js', '--check'],
   ['sync-trust-brief-metadata.js', '--check'],
   ['validate-weekly-brief-curation.js'],
   ['validate-current-daily-publication.js']

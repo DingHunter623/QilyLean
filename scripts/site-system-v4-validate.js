@@ -89,6 +89,10 @@ if (coreSitemap) {
 }
 
 const searchMeta = searchIndex.meta || {};
+const searchEntries = Array.isArray(searchIndex.entries) ? searchIndex.entries : [];
+const searchUrls = new Set(searchEntries.map((entry) => entry && entry.url).filter(Boolean));
+if (searchMeta.indexedEntries !== searchEntries.length) fail(`search-index metadata/entry drift: ${searchMeta.indexedEntries} != ${searchEntries.length}`);
+if (searchMeta.indexedPages !== searchUrls.size) fail(`search-index metadata/URL drift: ${searchMeta.indexedPages} != ${searchUrls.size}`);
 if (siteData.search && Number.isInteger(siteData.search.indexedEntries) && Number.isInteger(searchMeta.indexedEntries)) {
   if (siteData.search.indexedEntries !== searchMeta.indexedEntries) fail(`SSOT/search-index count drift: ${siteData.search.indexedEntries} != ${searchMeta.indexedEntries}`);
 }
@@ -97,6 +101,15 @@ if (siteData.search && Number.isInteger(siteData.search.terminologyTotal) && Num
 }
 if (siteData.search && Number.isInteger(siteData.search.briefTotal) && Number.isInteger(searchMeta.briefTotal)) {
   if (siteData.search.briefTotal !== searchMeta.briefTotal) fail('brief count drift between SSOT and search index');
+}
+const aiDocuments = siteData.knowledge && siteData.knowledge.aiKnowledge && siteData.knowledge.aiKnowledge.documents;
+if (aiDocuments) {
+  if (!Array.isArray(aiDocuments) || aiDocuments.length === 0) fail('AI knowledge document registry is invalid');
+  for (const document of aiDocuments) {
+    if (!document || !document.source || !document.url) fail('AI knowledge document registry entry is incomplete');
+    if (!exists(document.source)) fail(`AI knowledge source missing: ${document.source}`);
+    if (!searchEntries.some((entry) => entry && entry.url === document.url)) fail(`AI knowledge document missing from search index: ${document.url}`);
+  }
 }
 
 const navFile = 'site-navigation.js';

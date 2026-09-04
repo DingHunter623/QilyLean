@@ -16,10 +16,10 @@ function maxIsoDate(...values) {
 function escapeRe(value) { return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 function replaceStat(page, key, labels, value, outputLabel) {
   const alternatives = labels.map(escapeRe).join('|');
-  const marked = new RegExp(`<div><strong\\b[^>]*data-trust-stat=["']${key}["'][^>]*>[^<]*<\\/strong><span>(?:${alternatives})<\\/span><\\/div>`, 'i');
+  const marked = new RegExp(`(<strong\\b[^>]*data-trust-stat=["']${key}["'][^>]*>)[^<]*(<\\/strong><span>)(?:${alternatives})(<\\/span>)`, 'i');
   const visible = new RegExp(`<div><strong(?:\\s+[^>]*)?>[^<]*<\\/strong><span>(?:${alternatives})<\\/span><\\/div>`, 'i');
   const replacement = `<div><strong data-trust-stat="${key}">${value}</strong><span>${outputLabel}</span></div>`;
-  if (marked.test(page)) return page.replace(marked, replacement);
+  if (marked.test(page)) return page.replace(marked, `$1${value}$2${outputLabel}$3`);
   if (visible.test(page)) return page.replace(visible, replacement);
   throw new Error(`Missing trust metadata target: ${key}`);
 }
@@ -35,6 +35,7 @@ function buildExpected(page, data) {
   }
   next = replaceStat(next, 'briefs', ['今日简报总数', '精选简报总数'], data.briefs.total, briefLabel);
   next = replaceStat(next, 'latest-date', ['最新简报日期', '最新精选日期'], data.briefs.latestDate, latestLabel);
+  next = next.replace(/(<a\b[^>]*class=["'][^"']*qily-trust-date-link[^"']*["'][^>]*>[\s\S]*?<strong\b[^>]*data-trust-stat=["']latest-date["'][^>]*>)[\s\S]*?<\/strong>/i, (match) => match.replace(/\d{4}-\d{2}-\d{2}/g, data.briefs.latestDate));
   if (data.search && Number.isInteger(data.search.indexedEntries)) {
     next = replaceStat(next, 'search', ['站内搜索索引条目'], data.search.indexedEntries, '站内搜索索引条目');
   }
@@ -56,7 +57,7 @@ function validate(page, data) {
   if (data.terminology && Number.isInteger(data.terminology.total)) expected.unshift(['terminology', data.terminology.total, '术语及单点课件']);
   if (data.search && Number.isInteger(data.search.indexedEntries)) expected.push(['search', data.search.indexedEntries, '站内搜索索引条目']);
   for (const [key, value, label] of expected) {
-    const re = new RegExp(`<div><strong\\b[^>]*data-trust-stat=["']${escapeRe(key)}["'][^>]*>${escapeRe(value)}<\\/strong><span>${escapeRe(label)}<\\/span><\\/div>`, 'i');
+    const re = new RegExp(`<strong\\b[^>]*data-trust-stat=["']${escapeRe(key)}["'][^>]*>${escapeRe(value)}<\\/strong><span>${escapeRe(label)}<\\/span>`, 'i');
     if (!re.test(page)) throw new Error(`Trust statistic is stale: ${key}`);
   }
   const syncVersion = maxIsoDate(data.generatedAt, data.briefs.latestDate) || data.briefs.latestDate;

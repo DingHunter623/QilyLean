@@ -1,11 +1,61 @@
 {
-  "version": "2026-09-02-v1",
+  "version": "2026-09-04-v2",
   "purpose": "QilyLean Google 索引覆盖率治理决策 SSOT。仅治理 Sitemap 提交策略，不改正文、图片、页面结构、canonical、robots、翻译或 Dock。",
   "rules": {
     "submit": "页面具有独立商业、方法论、知识或项目证据价值，且当前为 index/follow + self-canonical，可进入指定 Sitemap。",
     "discover_only": "页面仍可通过内链自然发现，但不主动进入 Sitemap；不得据此自动 noindex、重定向或删除页面。"
   },
   "routes": [
+    {
+      "url": "https://qilylean.com/capabilities/",
+      "source": "capabilities/index.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml", "sitemap-topics.xml"],
+      "changefreq": "monthly",
+      "priority": "0.9",
+      "role": "authority_hub",
+      "reason": "制造改善能力体系总览，作为专业能力主题集群的统一入口。"
+    },
+    {
+      "url": "https://qilylean.com/experience/",
+      "source": "experience/index.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml", "sitemap-topics.xml"],
+      "changefreq": "monthly",
+      "priority": "0.8",
+      "role": "authority_hub",
+      "reason": "制造工程与精益改善履历主线，承接公开经验与责任边界。"
+    },
+    {
+      "url": "https://qilylean.com/projects/",
+      "source": "projects/index.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml", "sitemap-topics.xml"],
+      "changefreq": "monthly",
+      "priority": "0.9",
+      "role": "authority_hub",
+      "reason": "代表项目与脱敏证据的聚合入口。"
+    },
+    {
+      "url": "https://qilylean.com/cooperation/",
+      "source": "cooperation/index.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml", "sitemap-topics.xml"],
+      "changefreq": "monthly",
+      "priority": "0.9",
+      "role": "commercial_hub",
+      "reason": "项目合作范围、交付边界与启动路径的统一入口。"
+    },
+    {
+      "url": "https://qilylean.com/knowledge/",
+      "source": "knowledge/index.html",
+      "policy": "submit",
+      "sitemaps": ["sitemap.xml", "sitemap-core.xml", "sitemap-topics.xml"],
+      "changefreq": "weekly",
+      "priority": "0.9",
+      "role": "knowledge_hub",
+      "reason": "术语、精选简报、课件与AI知识资产的聚合入口。"
+    },
     {
       "url": "https://qilylean.com/contact/",
       "source": "contact/index.html",

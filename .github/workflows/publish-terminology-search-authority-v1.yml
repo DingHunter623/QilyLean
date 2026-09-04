@@ -32,6 +32,8 @@ jobs:
       - name: Validate terminology authority materializer
         run: |
           node --check scripts/materialize-terminology-search-authority-v1.js
+          node --check scripts/build-trust-search-sync.js
+          node --check scripts/sync-search-brief-metadata.js
       - name: Materialize visible terminology entities, search index and sitemap metadata
         shell: bash
         run: |
@@ -45,13 +47,15 @@ jobs:
             node --check scripts/materialize-terminology-search-authority-v1.js
             node scripts/materialize-terminology-search-authority-v1.js
             node scripts/materialize-terminology-search-authority-v1.js --check
+            node scripts/build-trust-search-sync.js --search-only
+            node scripts/build-trust-search-sync.js --search-only --check
             node scripts/validate-seo-indexability.js
             git diff --check
             if git diff --quiet; then
               echo 'Terminology search authority already current on latest main.'
               exit 0
             fi
-            git add knowledge/terminology.html qilylean/site-search-index.json sitemap.xml sitemap-core.xml
+            git add knowledge/terminology.html qilylean/site-data.json qilylean/site-search-index.json sitemap.xml sitemap-core.xml
             git commit -m 'seo: materialize terminology entity graph and search authority [terminology-authority]'
             if git push origin HEAD:main; then
               echo 'Terminology entity graph, search index and sitemap metadata published.'

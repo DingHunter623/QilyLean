@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 375,
-    "latestDate": "2026-08-25",
-    "latestTheme": "精益改善与八大浪费",
-    "latestTitle": "居安思危｜识别制造业八大浪费：从看见问题到解决问题的改善闭环",
-    "latestSummary": "很多制造现场看起来很忙，却不等于持续创造价值。真正吞噬利润的，往往是长期潜伏在生产、物流、质量、工程与管理流程里的浪费。",
-    "latestUrl": "/qilylean/daily/2026-08-25.html",
+    "total": 376,
+    "latestDate": "2026-09-04",
+    "latestTheme": "AI与工业工程",
+    "latestTitle": "AI+工业工程：未来IE工程师如何重新定义制造价值",
+    "latestSummary": "从现场改善专家，到智能制造系统设计者。",
+    "latestUrl": "/qilylean/daily/2026-09-04.html",
     "directoryUrl": "/qilylean/daily-insights.html",
     "cadence": "weekly_curated"
   },
@@ -24,7 +24,7 @@
     "resourceCount": 18,
     "aiKnowledge": {
       "title": "QilyLean AI Knowledge Base",
-      "url": "/AI-Knowledge/",
+      "url": "/AI-Knowledge/README.md",
       "topics": [
         "ChatGPT基础应用",
         "AI图像生成",
@@ -32,6 +32,20 @@
         "AI代码生成",
         "Prompt Engineering",
         "AI for Manufacturing"
+      ],
+      "documents": [
+        {
+          "source": "AI-Knowledge/README.md",
+          "url": "/AI-Knowledge/README.md",
+          "title": "QilyLean AI Knowledge Base",
+          "kind": "AI知识库"
+        },
+        {
+          "source": "AI-Knowledge/NOTICE.md",
+          "url": "/AI-Knowledge/NOTICE.md",
+          "title": "QilyLean AI Knowledge Base｜开源归属说明",
+          "kind": "开源归属说明"
+        }
       ]
     }
   },
@@ -39,15 +53,30 @@
     "brandNature": "丁启利发起并运营的个人专业品牌与制造改善实践平台",
     "separateLegalEntity": false,
     "defaultContractingParty": "丁启利（自然人）",
+    "contractRule": "若具体项目由依法登记的企业、工作室或合作机构签约，以正式报价、合同首页、盖章／电子签署主体、收款账户及发票信息所载主体为准。",
+    "pricingRule": "网站服务说明与价格信息用于合作沟通和范围评估，不构成不可撤销要约；正式范围、费用、周期、税费、差旅及验收标准以合同为准。",
+    "paymentRule": "仅向正式合同或双方书面确认文件载明的账户付款；变更收款账户时须通过官网公开联系方式复核。",
+    "dataRule": "客户资料按必要、最小化和保密原则使用；涉及客户名称、工艺、成本、经营数据及人员信息的材料，仅在授权范围内处理。",
+    "evidenceRule": "已核定值、阶段性估算值、团队成果与个人职责分别标注，不将预测收益表述为已实现收益。",
+    "evidenceLevelRule": "公开成果采用A已核定、B已验证、C阶段估算、D经验陈述四级口径；该分级是QilyLean内部披露规则，不是第三方认证。",
+    "publicationRule": "历史简报依据历年制造实践、工作记录与项目经验持续整理；页面日期用于知识档案排序与主题定位，不单独证明网页在该日首次公开发布。",
+    "credentialRule": "除非页面明确列明颁发方、核验来源和适用范围，不将学习证明、平台记录或个人作品表述为政府资质、行业认证、官方授权或客户背书。",
     "aiRule": "AI用于检索、整理和方案辅助，不替代现场核实、专业评审、管理决策及法律、财税、安全等专项意见。",
+    "ndaVersion": "V1.0",
+    "ndaDocumentName": "QilyLean项目保密声明",
+    "ndaPreviewUrl": "/trust/nda-preview.html",
+    "ndaAccessRule": "官网仅开放受控在线预览，不提供Word或PDF下载入口。",
+    "ndaContentRule": "当前正式版本以用户确认的最新版PDF为准；官网仅通过受控页面在线预览，不公开Word或PDF直链。",
+    "contactPhone": "13450014003",
+    "contactEmail": "admin@qilylean.com",
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 719,
-    "indexedPages": 631,
+    "indexedEntries": 732,
+    "indexedPages": 640,
     "terminologyTotal": 193,
-    "briefTotal": 375,
-    "latestBriefDate": "2026-08-25",
+    "briefTotal": 376,
+    "latestBriefDate": "2026-09-04",
     "sitemapLastmod": "2026-09-04"
   }
 }

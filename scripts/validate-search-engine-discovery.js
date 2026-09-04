@@ -40,25 +40,32 @@ function isRedirectPage(html) {
 }
 
 if (!exists('data/search-authority-map.json')) errors.push('missing data/search-authority-map.json');
+if (!exists('data/google-index-coverage-policy.json')) errors.push('missing data/google-index-coverage-policy.json');
 if (!exists('sitemap-topics.xml')) errors.push('missing sitemap-topics.xml');
 if (!exists('.github/workflows/indexnow.yml')) errors.push('missing .github/workflows/indexnow.yml');
 
 if (!errors.length) {
   const authority = JSON.parse(read('data/search-authority-map.json'));
+  const coverage = JSON.parse(read('data/google-index-coverage-policy.json'));
   const targets = Array.isArray(authority.targets) ? authority.targets : [];
+  const coverageUrls = Array.isArray(coverage.routes)
+    ? coverage.routes.filter((route) => route && route.policy === 'submit' && route.url).map((route) => route.url)
+    : [];
   const topicUrls = sitemapUrls('sitemap-topics.xml');
   const topicSet = new Set(topicUrls);
   const governedUrls = new Set(targets.map(target => target.url));
+  const allowedUrls = new Set([...governedUrls, ...coverageUrls]);
 
   if (!targets.length) errors.push('search authority targets must not be empty');
+  if (!coverageUrls.length) errors.push('search index coverage URLs must not be empty');
+  if (coverageUrls.length !== new Set(coverageUrls).size) errors.push('search index coverage URLs contain duplicates');
   if (topicUrls.length !== topicSet.size) errors.push('sitemap-topics.xml contains duplicate URLs');
 
   for (const url of governedUrls) {
     if (!topicSet.has(url)) errors.push(`authority URL missing from sitemap-topics.xml: ${url}`);
   }
-
   for (const url of topicUrls) {
-    if (!governedUrls.has(url)) errors.push(`sitemap-topics.xml URL is not governed by search-authority-map.json: ${url}`);
+    if (!allowedUrls.has(url)) errors.push(`sitemap-topics.xml URL is not governed by search authority or index coverage: ${url}`);
     const repoPath = repoPathForUrl(url);
     if (!exists(repoPath)) {
       errors.push(`topic URL maps to missing file: ${url} -> ${repoPath}`);
@@ -80,7 +87,7 @@ if (!errors.length) {
   }
 
   const workflow = read('.github/workflows/indexnow.yml');
-  for (const required of ['sitemap-topics.xml', 'data/search-authority-map.json', 'https://api.indexnow.org/indexnow']) {
+  for (const required of ['sitemap-topics.xml', 'data/search-authority-map.json', 'data/google-index-coverage-policy.json', 'https://api.indexnow.org/indexnow']) {
     if (!workflow.includes(required)) errors.push(`IndexNow workflow missing discovery contract: ${required}`);
   }
   if (!workflow.includes('BAIDU_PUSH_TOKEN') || !workflow.includes('data.zz.baidu.com/urls')) {

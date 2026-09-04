@@ -60,7 +60,7 @@ if (secondLatestDate) {
 matches(latest, /site-navigation\.js\?v=[^"']+/, 'Latest retained page loads the versioned navigation wrapper');
 includes(latest, 'site-music-persistent-navigation-v1.js?v=20260817-native-only-v7', 'Latest retained page uses Native Navigation V7');
 matches(latest, /\bBUILD='[^']+'/, 'Latest retained page uses a versioned bounded stale-document guard');
-includes(latest, 'html.qily-stale-document body{visibility:visible!important}', 'Latest retained page keeps first readable content visible');
+matches(latest, /html\.qily-stale-document body(?:,[^{]+)?\{[^}]*visibility:visible!important/, 'Latest retained page keeps first readable content visible');
 includes(latest, 'sessionStorage.removeItem("qily_site_refresh_attempt_v1")', 'Latest retained page clears retired refresh attempts');
 assert(!latest.includes('qilyBackgroundMusicPreload'), 'Latest retained page does not preload background audio');
 assert(!latest.includes('site-footer-standard-v28.js'), 'Latest retained page does not load retired footer runtime');

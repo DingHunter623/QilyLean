@@ -1,143 +1,52 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-08-25",
-  "briefPath": "qilylean/daily/2026-08-25.html",
-  "checkedAt": "2026-08-25T00:00:00.000Z",
+  "briefDate": "2026-09-04",
+  "briefPath": "qilylean/daily/2026-09-04.html",
+  "checkedAt": "2026-09-04T00:00:00.000Z",
   "candidates": [
     {
-      "term": "COPQ",
+      "term": "AI",
       "explanation": "",
       "explicit": false,
-      "source": "COPQ"
+      "source": "AI"
     },
     {
-      "term": "CT",
+      "term": "APS",
       "explanation": "",
       "explicit": false,
-      "source": "CT"
+      "source": "APS"
     },
     {
-      "term": "DPPM",
+      "term": "ERP",
       "explanation": "",
       "explicit": false,
-      "source": "DPPM"
+      "source": "ERP"
     },
     {
-      "term": "ECRS",
+      "term": "IE",
       "explanation": "",
       "explicit": false,
-      "source": "ECRS"
+      "source": "IE"
     },
     {
-      "term": "FIFO",
+      "term": "MES",
       "explanation": "",
       "explicit": false,
-      "source": "FIFO"
-    },
-    {
-      "term": "FPY",
-      "explanation": "",
-      "explicit": false,
-      "source": "FPY"
-    },
-    {
-      "term": "OEE",
-      "explanation": "",
-      "explicit": false,
-      "source": "OEE"
-    },
-    {
-      "term": "OPL",
-      "explanation": "",
-      "explicit": false,
-      "source": "OPL"
-    },
-    {
-      "term": "PFMEA",
-      "explanation": "",
-      "explicit": false,
-      "source": "PFMEA"
-    },
-    {
-      "term": "PQCD",
-      "explanation": "",
-      "explicit": false,
-      "source": "PQCD"
-    },
-    {
-      "term": "QCC",
-      "explanation": "",
-      "explicit": false,
-      "source": "QCC"
-    },
-    {
-      "term": "RACI",
-      "explanation": "",
-      "explicit": false,
-      "source": "RACI"
-    },
-    {
-      "term": "SMED",
-      "explanation": "",
-      "explicit": false,
-      "source": "SMED"
-    },
-    {
-      "term": "SOP",
-      "explanation": "",
-      "explicit": false,
-      "source": "SOP"
-    },
-    {
-      "term": "SPC",
-      "explanation": "",
-      "explicit": false,
-      "source": "SPC"
-    },
-    {
-      "term": "TT",
-      "explanation": "",
-      "explicit": false,
-      "source": "TT"
-    },
-    {
-      "term": "VSM",
-      "explanation": "",
-      "explicit": false,
-      "source": "VSM"
-    },
-    {
-      "term": "WIP",
-      "explanation": "",
-      "explicit": false,
-      "source": "WIP"
+      "source": "MES"
     }
   ],
   "coveredTerms": [
-    "COPQ",
-    "CT",
-    "DPPM",
-    "ECRS",
-    "FIFO",
-    "FPY",
-    "OEE",
-    "OPL",
-    "PFMEA",
-    "PQCD",
-    "QCC",
-    "RACI",
-    "SMED",
-    "SOP",
-    "SPC",
-    "TT",
-    "VSM",
-    "WIP"
+    "AI",
+    "APS",
+    "ERP",
+    "IE",
+    "MES"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
   "featuredTerms": [
-    "Pilot"
+    "IE"
   ],
   "status": "passed"
 }

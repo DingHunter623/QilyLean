@@ -4,7 +4,9 @@
 /* QilyLean terminology search authority materializer V1｜2026-08-26
  * Search engines index pages and entities, not a raw keyword list.
  * This materializer turns the existing visible 193-term glossary into stable, crawlable DefinedTerm entities,
- * anchor-addressable terminology records, internal search entries and current sitemap metadata.
+ * anchor-addressable terminology records and current sitemap metadata. The shared SSOT
+ * search materializer owns site-search-index.json so terminology publishing cannot append
+ * a second, competing set of search entries.
  * No hidden text, no doorway pages, no keyword stuffing.
  */
 const fs=require('fs');
@@ -74,17 +76,6 @@ function materializeTerminology(source){
   return {html:next,terms};
 }
 
-function entriesOf(index){if(Array.isArray(index))return index;for(const key of ['entries','items','documents','pages'])if(Array.isArray(index&&index[key]))return index[key];throw new Error('Generated search index entries are missing.');}
-function materializeSearch(source,terms){
-  const index=JSON.parse(source);const entries=entriesOf(index);
-  for(const term of terms){
-    const url=`${PAGE}#${term.id}`;
-    const entry={url,title:`${term.code}${term.name?`｜${term.name}`:''}`,code:term.code,description:term.description,headings:'全站术语｜精益生产｜工业工程｜制造运营',text:[term.code,term.en,term.name,term.description,'精益生产 工业工程 IE 现场改善 制造运营 QilyLean 启力精益'].filter(Boolean).join(' '),kind:'全站术语',date:DATE};
-    const existing=entries.find(item=>item&&item.url===url);if(existing)Object.assign(existing,entry);else entries.push(entry);
-  }
-  if(!Array.isArray(index)){index.meta=index.meta||{};index.meta.generatedAt=DATE;index.meta.terminologyTotal=terms.length;index.meta.totalEntries=entries.length;}
-  return `${JSON.stringify(index,null,2)}\n`;
-}
 function materializeSitemap(source){
   const loc=`${ORIGIN}${PAGE}`;const escaped=loc.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
   const urlBlock=new RegExp(`(<url>\\s*<loc>${escaped}<\\/loc>[\\s\\S]*?<lastmod>)[^<]+(<\\/lastmod>[\\s\\S]*?<\\/url>)`,'i');
@@ -97,7 +88,6 @@ const terminologySource=read('knowledge/terminology.html');
 const result=materializeTerminology(terminologySource);
 const outputs=new Map();
 outputs.set('knowledge/terminology.html',result.html);
-if(fs.existsSync(file('qilylean/site-search-index.json')))outputs.set('qilylean/site-search-index.json',materializeSearch(read('qilylean/site-search-index.json'),result.terms));
 for(const sitemap of ['sitemap.xml','sitemap-core.xml'])if(fs.existsSync(file(sitemap)))outputs.set(sitemap,materializeSitemap(read(sitemap)));
 
 const stale=[];

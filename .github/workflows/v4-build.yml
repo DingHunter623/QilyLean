@@ -64,6 +64,9 @@ jobs:
 
       - name: Validate source before materialization
         run: |
+          node --check scripts/build-trust-search-sync.js
+          node --check scripts/sync-search-brief-metadata.js
+          node scripts/build-trust-search-sync.js --search-only
           node scripts/site-system-v4-validate.js
           node scripts/validate-translation-single-runtime-v1.js
 
@@ -151,6 +154,8 @@ jobs:
             sitemap-core.xml
             index.html
             scripts/validate-sitewide-remediation-20260822.js
+            qilylean/site-data.json
+            qilylean/site-search-index.json
           )
           if git diff --quiet -- "${paths[@]}" \
             && git ls-files --error-unmatch assets/qilylean-aircraft-hero-approved-20260826.png >/dev/null 2>&1 \

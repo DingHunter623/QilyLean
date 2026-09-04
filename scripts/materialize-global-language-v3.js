@@ -21,6 +21,7 @@ const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
+const latestDailyOnly=process.argv.includes('--latest-daily');
 
 const BASELINE_VERSION='20260831-google-translate-single-runtime-v32';
 const DDZ_FAST_PATH='tools/pure-ddz/index.html';
@@ -66,7 +67,17 @@ html:root:root body input.qily-primary-nav-scroll-rail[type="range"]:is(:hover,:
 html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:root:root body input.qily-primary-nav-scroll-rail[type="range"][disabled]{opacity:1!important}
 </style>`;
 
-function trackedHtml(){return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);}
+function trackedHtml(){
+  if(latestDailyOnly){
+    const dailyIndex=JSON.parse(fs.readFileSync(path.join(root,'qilylean','daily','index.json'),'utf8'));
+    const latest=Array.isArray(dailyIndex)&&dailyIndex[0]&&dailyIndex[0].date;
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(latest||''))throw new Error('Latest curated Daily Brief date is unavailable.');
+    const relative=`qilylean/daily/${latest}.html`;
+    if(!fs.existsSync(path.join(root,relative)))throw new Error(`Latest curated Daily Brief is missing: ${relative}`);
+    return [relative];
+  }
+  return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
+}
 function removeScriptByMarker(source){return source.replace(/\s*<script\b[^>]*(?:data-qily-global-language-direct|data-qily-google-translate-direct|data-qily-web-translate-direct|data-qily-translation-progress-direct|data-qily-translation-public-ui-direct|data-qily-interaction-contrast-direct|data-qily-content-contrast-direct|data-qily-translation-safe-direct|data-qily-contact-route-direct|data-qily-interaction-semantics-direct|data-qily-public-redline-v2-direct|data-qily-brand-home-feedback-direct|data-qily-translation-safety-bootstrap)[^>]*>[\s\S]*?<\/script>\s*/gi,'\n');}
 function removeManagedScripts(source){
   let next=source;
@@ -138,4 +149,4 @@ function materialize(source,relative){
 const changed=[];
 for(const relative of trackedHtml()){const target=path.join(root,relative),source=fs.readFileSync(target,'utf8'),next=materialize(source,relative);if(next===source)continue;changed.push(relative);if(!checkOnly)fs.writeFileSync(target,next,'utf8');}
 if(checkOnly&&changed.length)throw new Error(`Sitewide Google-Translate single-runtime baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
-process.stdout.write(`Sitewide public baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1.4 stable fast-path + Interaction Semantics V1.7 + Dock V5.5 + R7 intent-prefetch V2; DDZ V155 fast route remains isolated; baseline ${BASELINE_VERSION}.\n`);
+process.stdout.write(`${latestDailyOnly?'Latest Daily Brief':'Sitewide public'} baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1.4 stable fast-path + Interaction Semantics V1.7 + Dock V5.5 + R7 intent-prefetch V2; DDZ V155 fast route remains isolated; baseline ${BASELINE_VERSION}.\n`);

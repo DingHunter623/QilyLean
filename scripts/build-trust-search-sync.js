@@ -3,6 +3,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { spawnSync } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
 const buildDate = process.env.QILY_BUILD_DATE || new Date().toISOString().slice(0, 10);
@@ -426,4 +427,12 @@ function main() {
   process.stdout.write(`Trust center and search index synchronized: ${data.search.indexedEntries} entries, ${data.briefs.total} briefs, ${data.terminology.total} terms.\n`);
 }
 
-main();
+if (process.argv.includes('--search-only')) {
+  const args = [path.join(__dirname, 'sync-search-brief-metadata.js')];
+  if (process.argv.includes('--check')) args.push('--check');
+  const result = spawnSync(process.execPath, args, { cwd: root, env: process.env, stdio: 'inherit' });
+  if (result.error) throw result.error;
+  process.exit(result.status || 0);
+} else {
+  main();
+}

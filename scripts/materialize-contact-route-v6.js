@@ -15,6 +15,9 @@ const DOCK='/site-dock-share-runtime-v1.js?v=20260902-authority-v55';
 const REDLINE='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
 const CONTACT_PATH='contact/index.html';
 const DDZ_PATH='tools/pure-ddz/index.html';
+const DDZ_FAST_SHELL='/tools/pure-ddz/game/js/fast-site-shell-v155.js?';
+const DDZ_FAST_SOURCE_DOCK='/site-dock-share-runtime-v1.js?v=20260902-public-dock-v55';
+const checkOnly=process.argv.includes('--check');
 
 function trackedHtml(){
   return execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
@@ -58,14 +61,22 @@ for(const relative of trackedHtml()){
   const file=path.join(root,relative),source=fs.readFileSync(file,'utf8');if(!/site-contact-route-v1\.js(?:\?v=[^"']*)?/.test(source))continue;covered+=1;
   let next=source.replace(/\/site-contact-route-v1\.js(?:\?v=[^"']*)?/g,ROUTE).replace(/data-qily-contact-route-direct=["'][^"']*["']/g,'data-qily-contact-route-direct="v13.4"');
   if(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/.test(next)){next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK);dockCovered+=1;}
-  next=ensureRedlineStylesheet(next);if(relative===CONTACT_PATH)next=cleanContactNavigation(next);if(next!==source){fs.writeFileSync(file,next);changed+=1;}
+  next=ensureRedlineStylesheet(next);if(relative===CONTACT_PATH)next=cleanContactNavigation(next);if(next!==source){if(!checkOnly)fs.writeFileSync(file,next);changed+=1;}
 }
-if(process.argv.includes('--check')){
+if(checkOnly){
   if(changed)throw new Error(`R12.2 contact materialization stale on ${changed} HTML file(s).`);if(covered<470)throw new Error(`Contact route coverage unexpectedly low: ${covered}.`);
   const contact=fs.readFileSync(path.join(root,CONTACT_PATH),'utf8'),home=fs.readFileSync(path.join(root,'index.html'),'utf8'),ddz=fs.readFileSync(path.join(root,DDZ_PATH),'utf8');
   if(/api\.map\.baidu\.com\/geocoder|<iframe\b/i.test(contact))throw new Error('Contact page contains a prohibited embedded map surface.');
   for(const provider of ['amap','baidu','tencent','google','apple'])if(!contact.includes(`data-qily-map-provider="${provider}"`))throw new Error(`Contact clean map provider missing after materialization: ${provider}`);
-  for(const [label,html] of [['contact',contact],['home',home],['pure-ddz',ddz]]){if(!html.includes(ROUTE))throw new Error(`${label} does not use Contact Route V13.4.`);if(!html.includes(REDLINE))throw new Error(`${label} does not use public redline V2.`);}
-  if(/site-dock-share-runtime-v1\.js/.test(ddz)&&!ddz.includes(DOCK))throw new Error('Pure DDZ direct Dock runtime is not cache-busted to authoritative V5.5.');
+  for(const [label,html] of [['contact',contact],['home',home]]){if(!html.includes(ROUTE))throw new Error(`${label} does not use Contact Route V13.4.`);if(!html.includes(REDLINE))throw new Error(`${label} does not use public redline V2.`);}
+  const ddzFastRoute=ddz.includes('data-qily-ddz-fast-shell="v155"')&&ddz.includes('20260903-ddz-fast-knowledge-v155');
+  if(ddzFastRoute){
+    if(!ddz.includes(DDZ_FAST_SHELL))throw new Error('Pure DDZ fast route does not use the isolated V155 shell.');
+    if(!ddz.includes(DDZ_FAST_SOURCE_DOCK)&&!ddz.includes(DOCK))throw new Error('Pure DDZ fast route does not use an approved Dock V5.5 runtime.');
+  }else{
+    if(!ddz.includes(ROUTE))throw new Error('pure-ddz does not use Contact Route V13.4.');
+    if(!ddz.includes(REDLINE))throw new Error('pure-ddz does not use public redline V2.');
+    if(/site-dock-share-runtime-v1\.js/.test(ddz)&&!ddz.includes(DOCK))throw new Error('Pure DDZ direct Dock runtime is not cache-busted to authoritative V5.5.');
+  }
   process.stdout.write(`PASS: R12.2 contact baseline current on ${covered} HTML pages; Contact Route V13.4; direct Dock V5.5 refs ${dockCovered}; global shell ownership untouched.\n`);
 }else process.stdout.write(`R12.2 contact materialized on ${changed} HTML file(s); route coverage ${covered}; Contact V13.4; Dock V5.5 refs ${dockCovered}; global shell ownership untouched.\n`);

@@ -94,7 +94,7 @@ const career=read('site-early-career-history-v1.js'),careerCss=read('site-early-
 must(career,"var VERSION = 'v5'",'Career V5');
 must(careerCss,'--qily-career-anchor-offset','Anchor CSS var');
 
-const ddz=read('tools/pure-ddz/game/css/ddz-site-page-v140.css');
+const ddz=read('tools/pure-ddz/game/css/ddz-core-v155.css');
 must(ddz,'--ddz-game-max:var(--qily-content-axis,1560px)','DDZ site content axis');
 must(ddz,'overflow-x:clip!important','DDZ sticky-header-safe page containment');
 must(ddz,'justify-content:safe center!important','Safe centered hand');
@@ -103,18 +103,18 @@ must(ddz,'scoreboard :is(small,strong,span)','DDZ status white contrast');
 must(ddz,'justify-self:stretch!important','DDZ top actions far-right alignment');
 must(ddz,'#hint-message.hint-message{display:none!important}','DDZ fixed maintenance copy hidden');
 forbid(ddz,'#floatDock','DDZ local Dock ownership');
-const ddzComfort=read('tools/pure-ddz/game/css/card-comfort-v122.css');
+const ddzComfort=ddz;
 forbid(ddzComfort,'#floatDock','DDZ comfort layer local Dock ownership');
-const ddzLandscape=read('tools/pure-ddz/game/css/mobile-landscape-v153.css');
+const ddzLandscape=ddz;
 must(ddzLandscape,'html.ddz-mobile-landscape body.ddz-site-page','DDZ landscape scoped owner');
 must(ddzLandscape,'var(--ddz-mobile-vh,390px)','DDZ visual-viewport height sizing');
 must(ddzLandscape,'env(safe-area-inset-right)','DDZ landscape safe area');
 forbid(ddzLandscape,'#floatDock','DDZ landscape layer local Dock ownership');
-const ddzGame=read('tools/pure-ddz/game/js/game.js');
+const ddzGame=read('tools/pure-ddz/game/js/ddz-core-v155.js');
 must(ddzGame,"const VERSION = '1.5.2'",'DDZ V152 game core');
 must(ddzGame,"auto?'不要':'您不要'",'DDZ auto-pass narration');
 must(ddzGame,"flash('不要，自动轮到下家')",'DDZ auto-pass visual feedback');
-const ddzVisual=read('tools/pure-ddz/game/js/visual-v120.js');
+const ddzVisual=ddzGame;
 must(ddzVisual,"version:'1.2.4-mobile-landscape-adaptive'",'DDZ V153 landscape runtime');
 must(ddzVisual,'function syncViewportProfile()','DDZ viewport profile');
 must(ddzVisual,'screen.orientation?.lock','DDZ supported-browser landscape lock');
@@ -122,10 +122,16 @@ must(ddzVisual,'document.documentElement.requestFullscreen','DDZ user-gesture fu
 must(ddzVisual,'window.PureDDZTest.hint()','DDZ single Hint behavior owner');
 
 const ddzIndex=read('tools/pure-ddz/index.html');
-must(ddzIndex,'20260903-ddz-mobile-landscape-v153','DDZ V153 cache');
-must(ddzIndex,"loadStyle('css/mobile-landscape-v153.css')",'DDZ landscape stylesheet load');
+must(ddzIndex,'20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164','DDZ V155/V164 cache');
+must(ddzIndex,'data-qily-ddz-core="v158"','DDZ static bundled stylesheet');
+must(ddzIndex,'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();','DDZ static style readiness');
+must(ddzIndex,"const chain=['js/ddz-core-v155.js'];",'DDZ single JS bundle');
+must(ddzIndex,'data-qily-ddz-fast-shell="v155"','DDZ fast site shell');
+must(ddzIndex,'data-qily-ddz-virtual-landscape="v154"','DDZ iOS landscape fallback');
 must(ddzIndex,'id="v120-landscape-toggle"','DDZ toolbar landscape entry');
 must(ddzIndex,'id="welcome-landscape"','DDZ welcome landscape entry');
+forbid(ddzIndex,"loadStyle('css/ddz-core-v155.css')",'DDZ dynamic stylesheet paint');
+forbid(ddzIndex,'/site-navigation.js?','DDZ heavyweight navigation runtime');
 forbid(ddzIndex,'name="screen-orientation"','DDZ must not rely on forced orientation metadata');
 forbid(ddzIndex,'name="x5-orientation"','DDZ must not rely on X5 forced orientation metadata');
 
@@ -152,4 +158,4 @@ must(containment,'QilyLean Responsive Containment V1','Responsive containment CS
 must(containment,'overscroll-behavior-inline:contain','Local horizontal-scroll containment');
 forbid(containment,'width:100vw','Page-level viewport widening');
 
-console.log('PASS: safety/readability owners retain official sticky Header and Dock V5.5 while DDZ V153 adds user-gesture landscape rotation and actual-viewport adaptive sizing.');
+console.log('PASS: safety/readability owners retain official sticky Header and Dock V5.5 while the isolated DDZ V155/V164 route preserves bundled first paint, user-gesture landscape rotation and actual-viewport adaptive sizing.');

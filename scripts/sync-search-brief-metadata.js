@@ -9,6 +9,7 @@ const dailyIndexFile = path.join(root, 'qilylean', 'daily', 'index.json');
 const siteDataFile = path.join(root, 'qilylean', 'site-data.json');
 const searchIndexFile = path.join(root, 'qilylean', 'site-search-index.json');
 const sitemapFile = path.join(root, 'sitemap.xml');
+const checkOnly = process.argv.includes('--check');
 
 function read(file) { return fs.readFileSync(file, 'utf8'); }
 function readJson(file) { return JSON.parse(read(file)); }
@@ -16,7 +17,7 @@ function writeIfChanged(file, value) {
   const next = `${JSON.stringify(value, null, 2)}\n`;
   const current = fs.existsSync(file) ? read(file) : '';
   if (current === next) return false;
-  fs.writeFileSync(file, next, 'utf8');
+  if (!checkOnly) fs.writeFileSync(file, next, 'utf8');
   return true;
 }
 function clean(value) { return String(value == null ? '' : value).replace(/\s+/g, ' ').trim(); }
@@ -144,6 +145,67 @@ function curatedBriefEntry(item) {
     date
   });
 }
+function markdownEntry(document) {
+  const source = clean(document && document.source);
+  const url = clean(document && document.url);
+  if (!source || path.isAbsolute(source) || source.split('/').includes('..')) {
+    throw new Error(`Invalid AI knowledge source path: ${source || '(empty)'}`);
+  }
+  if (!/^\/AI-Knowledge\/[^?#]+\.md$/i.test(url)) {
+    throw new Error(`Invalid AI knowledge public URL: ${url || '(empty)'}`);
+  }
+  const sourceFile = path.join(root, source);
+  if (!fs.existsSync(sourceFile) || !fs.statSync(sourceFile).isFile()) {
+    throw new Error(`AI knowledge source is missing: ${source}`);
+  }
+  const markdown = read(sourceFile);
+  const headings = Array.from(markdown.matchAll(/^#{1,3}\s+(.+)$/gm), (match) => clean(match[1])).join(' ｜ ');
+  const plain = clean(markdown
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/^[-*+]\s+/gm, '')
+    .replace(/[*_`>#]/g, ' '));
+  const firstParagraph = markdown.split(/\n\s*\n/)
+    .map((part) => clean(part.replace(/^#{1,6}\s+/gm, '').replace(/[*_`>#]/g, ' ')))
+    .find((part) => part && !/^QilyLean AI Knowledge Base/i.test(part));
+  return entry({
+    url,
+    title: clean(document.title) || headings.split(' ｜ ')[0],
+    description: clean(document.description) || firstParagraph || plain.slice(0, 240),
+    headings,
+    text: plain,
+    kind: clean(document.kind) || 'AI知识库'
+  });
+}
+function aiKnowledgeEntries(data) {
+  const aiKnowledge = data.knowledge && data.knowledge.aiKnowledge;
+  if (!aiKnowledge) return [];
+  const documents = aiKnowledge.documents;
+  if (!Array.isArray(documents) || documents.length === 0) {
+    throw new Error('AI knowledge is registered in site-data.json but has no document sources.');
+  }
+  const urls = new Set();
+  const sitemap = read(sitemapFile);
+  const entries = documents.map((document) => {
+    const item = markdownEntry(document);
+    if (urls.has(item.url)) throw new Error(`Duplicate AI knowledge URL in SSOT: ${item.url}`);
+    urls.add(item.url);
+    if (!sitemap.includes(`<loc>https://qilylean.com${item.url}</loc>`)) {
+      throw new Error(`AI knowledge URL is missing from sitemap.xml: ${item.url}`);
+    }
+    return item;
+  });
+  if (aiKnowledge.url !== entries[0].url) {
+    throw new Error(`AI knowledge primary URL must match its first document: ${aiKnowledge.url} != ${entries[0].url}`);
+  }
+  return entries;
+}
+function latestSitemapLastmod() {
+  const dates = Array.from(read(sitemapFile).matchAll(/<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/g), (match) => match[1]);
+  return dates.sort().at(-1) || '';
+}
 function dedupe(items) {
   const seen = new Set();
   return items.filter((item) => {
@@ -164,11 +226,14 @@ const terminologyTotal = siteData.terminology && Number.isInteger(siteData.termi
 if (terminologyTotal < 1) throw new Error('Terminology total is unavailable; search index cannot be synchronized.');
 
 const staticEntries = sitemapEntries();
+const aiEntries = aiKnowledgeEntries(siteData);
 const briefEntries = sorted.map(curatedBriefEntry);
-const entries = dedupe([...staticEntries, ...briefEntries]);
+const entries = dedupe([...staticEntries, ...aiEntries, ...briefEntries]);
 const uniqueUrls = new Set(entries.map((item) => item.url).filter(Boolean));
+const sitemapLastmod = latestSitemapLastmod() || latestDate;
+const generatedAt = [clean(siteData.generatedAt), sitemapLastmod, latestDate].filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort().at(-1);
 const searchIndex = {
-  generatedAt: latestDate,
+  generatedAt,
   schemaVersion: 1,
   meta: {
     indexedEntries: entries.length,
@@ -176,7 +241,7 @@ const searchIndex = {
     terminologyTotal,
     briefTotal: sorted.length,
     latestBriefDate: latestDate,
-    sitemapLastmod: latestDate
+    sitemapLastmod
   },
   entries
 };
@@ -184,6 +249,11 @@ siteData.search = { ...searchIndex.meta };
 
 const searchChanged = writeIfChanged(searchIndexFile, searchIndex);
 const siteDataChanged = writeIfChanged(siteDataFile, siteData);
+
+if (checkOnly && (searchChanged || siteDataChanged)) {
+  const stale = [searchChanged && 'qilylean/site-search-index.json', siteDataChanged && 'qilylean/site-data.json'].filter(Boolean);
+  throw new Error(`Search-index SSOT materialization is stale: ${stale.join(', ')}`);
+}
 
 const retainedUrls = new Set(briefEntries.map((item) => item.url));
 if (retainedUrls.size !== sorted.length) throw new Error('Curated brief search URLs are not unique.');
@@ -195,4 +265,4 @@ if (siteData.briefs && siteData.briefs.cadence === 'weekly_curated' && /2591期|
   throw new Error('Homepage search document still contains retired quantity-first/daily-cadence content.');
 }
 
-process.stdout.write(`Search index rebuilt from current static pages: ${sorted.length} curated briefs, latest ${latestDate}, ${terminologyTotal} terms, ${entries.length} entries / ${uniqueUrls.size} URLs; index changed ${searchChanged}, site data changed ${siteDataChanged}.\n`);
+process.stdout.write(`Search index ${checkOnly ? 'check passed' : 'rebuilt'} from SSOT and current public sources: ${aiEntries.length} AI documents, ${sorted.length} curated briefs, latest ${latestDate}, ${terminologyTotal} terms, ${entries.length} entries / ${uniqueUrls.size} URLs; index changed ${searchChanged}, site data changed ${siteDataChanged}.\n`);

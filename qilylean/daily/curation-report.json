@@ -1,8 +1,8 @@
 {
   "policy_version": "2026-08-28-r6.0-knowledge-asset-2.0",
-  "generated_at": "2026-08-25T00:00:00.000Z",
-  "total_before": 375,
-  "total_after": 375,
+  "generated_at": "2026-09-04T00:00:00.000Z",
+  "total_before": 376,
+  "total_after": 376,
   "removed": 0,
   "protected_dates": [
     "2026-07-29",
@@ -4870,6 +4870,19 @@
           "title": "居安思危｜识别制造业八大浪费：从看见问题到解决问题的改善闭环",
           "score": 10411,
           "protected": true
+        }
+      ],
+      "removed_count": 0
+    },
+    {
+      "week": "2026-08-31",
+      "candidates": 1,
+      "kept": [
+        {
+          "date": "2026-09-04",
+          "title": "AI+工业工程：未来IE工程师如何重新定义制造价值",
+          "score": 101,
+          "protected": false
         }
       ],
       "removed_count": 0

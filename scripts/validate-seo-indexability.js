@@ -90,6 +90,9 @@ function sitemapUrls(file) {
 const protectedNoindex = [
   /^404\.html$/,
   /^admin\.html$/,
+  // Mainland preproduction is intentionally non-indexable until its independent
+  // domain, ICP and production-release gates are complete.
+  /^cn-site\/index\.html$/,
   /^daily\.html$/,
   /^knowledge\/2026-07-19\.html$/,
   /^qilylean\/reference-[^/]+\.html$/,

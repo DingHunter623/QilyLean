@@ -15,6 +15,7 @@ on:
       - 'scripts/**'
       - 'data/**'
       - 'meta/**'
+      - 'AI-Knowledge/**'
       - '.github/workflows/**'
   workflow_dispatch:
 
@@ -46,12 +47,17 @@ jobs:
           node --check scripts/site-system-v4-sitemap-lastmod.js
           node --check scripts/site-system-v4-build-meta.js
           node --check scripts/site-system-v4-public-verify.js
+          node --check scripts/build-trust-search-sync.js
+          node --check scripts/sync-search-brief-metadata.js
           node --check scripts/qilylean-north-v4-sitemap-contract.js
           node --check scripts/audit-knowledge-asset-v2.js
           node --check scripts/enforce-aircraft-home-hero.js
           node --check knowledge/knowledge-asset-v2.js
           node --check knowledge/knowledge-asset-v2-opl-header.js
           node --check homepage-music.js
+
+      - name: Verify SSOT search-index materialization
+        run: node scripts/build-trust-search-sync.js --search-only --check
 
       - name: G1 source and SSOT validation
         run: node scripts/site-system-v4-validate.js

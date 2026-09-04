@@ -22,7 +22,7 @@ const HOME_JS_VERSION='20260901-home-first-paint-v6';
 const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
 const HOME_VISUAL_FIX_VERSION='20260902-card-bottom-rail-v5';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
-const VISUAL_READABILITY_VERSION='20260901-vi-gold-static-v9';
+const VISUAL_READABILITY_VERSION='20260903-r8-heading-ceiling-v10';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
 function gitBlobSha(buffer){return crypto.createHash('sha1').update(Buffer.from(`blob ${buffer.length}\0`)).update(buffer).digest('hex')}
 const source=fs.readFileSync(sourcePath),png=fs.readFileSync(pngPath),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
@@ -61,7 +61,7 @@ assert(staticHero.includes('qily-home-project-visual'),'Static first-paint proje
 assert(staticHero.includes('免费60分钟沟通诊断'),'Static first-paint diagnosis entry missing');
 assert(!between.includes('现场问题，可计算'),'Retired homepage Hero copy is still present in first-paint HTML');
 assert(!html.includes('id="qilyAircraftHeroPreloadV1"'),'Aircraft preload must stay removed after first-screen demotion');
-assert(html.includes(`<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=${VISUAL_READABILITY_VERSION}">`),'Sitewide V9 VI/readability stylesheet is not materialized on homepage');
+assert(html.includes(`<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=${VISUAL_READABILITY_VERSION}">`),'Sitewide V10 VI/readability stylesheet is not materialized on homepage');
 assert(html.includes(`<link id="qilyHomeConversionV1Stylesheet" rel="stylesheet" href="/styles/qily-home-conversion-v1.css?v=${HOME_VERSION}">`),'Conversion homepage stylesheet is not directly materialized');
 assert(html.includes(`<link id="qilyHomeConversionVisualFixV2" rel="stylesheet" href="/styles/qily-home-conversion-visual-fix-v2.css?v=${HOME_VISUAL_FIX_VERSION}">`),'Homepage VI/readability stylesheet is not directly materialized with cache-busting');
 assert(html.includes(`<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=${OWNER_PROFILE_VERSION}">`),'Homepage owner-profile stylesheet is not directly materialized');
