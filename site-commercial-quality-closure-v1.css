@@ -332,3 +332,19 @@ html:root:root body.cooperation-page main .qily-system-axis__step:focus-visible 
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
 }
+
+/* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE | 2026-09-04
+ * VI contract: current operating-axis card = deep teal + gold border + white text.
+ * Scope: text only; no background/border/layout changes.
+ */
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"],
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited,
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > strong,
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > span,
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited > strong,
+html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited > span{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
