@@ -1,0 +1,240 @@
+name: Fix Operating Axis VI R9
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-operating-axis-vi-r9.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-r9-operating-axis-vi
+  cancel-in-progress: true
+
+jobs:
+  remediate-and-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Patch cooperation operating-axis authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          css_path = Path('site-commercial-quality-closure-v1.css')
+          html_path = Path('cooperation/index.html')
+          css = css_path.read_text(encoding='utf-8')
+          html = html_path.read_text(encoding='utf-8')
+
+          marker = '/* 制造运营资产闭环 01—06：锁定默认/已访问/当前/悬停状态文字，防止 visited 或全站文本层洗淡。 */'
+          assert marker in css, 'legacy cooperation axis override marker missing'
+
+          replacement = r'''/* QILY-R9-OPERATING-AXIS-VI-CLOSURE | 2026-09-04
+           * 根因整改：制造运营资产闭环是全站共享VI组件，不应在项目合作页被局部高优先级规则二次反相。
+           * 本页仅确保链接/visited状态不洗淡；“当前页面”不再持久深色反相，六张卡默认视觉完全一致。
+           * 交互仍遵循全站VI：默认浅纸面+深青文字；hover/focus 深青+白字；active 金色浅底+深青字。
+           */
+          html:root:root body.cooperation-page main .qily-system-axis__step,
+          html:root:root body.cooperation-page main .qily-system-axis__step:link,
+          html:root:root body.cooperation-page main .qily-system-axis__step:visited{
+            color:#17322d!important;
+            -webkit-text-fill-color:#17322d!important;
+            background:var(--qily-axis-paper,#f4f9f8)!important;
+            border:1.5px solid #bfd6d2!important;
+            box-shadow:0 2px 7px rgba(15,75,90,.06)!important;
+            opacity:1!important;
+            filter:none!important;
+            mix-blend-mode:normal!important;
+          }
+          html:root:root body.cooperation-page main .qily-system-axis__step > strong,
+          html:root:root body.cooperation-page main .qily-system-axis__step:visited > strong{
+            color:#0f4b5a!important;
+            -webkit-text-fill-color:#0f4b5a!important;
+            font-weight:950!important;
+            opacity:1!important;
+          }
+          html:root:root body.cooperation-page main .qily-system-axis__step > span,
+          html:root:root body.cooperation-page main .qily-system-axis__step:visited > span{
+            color:#315b61!important;
+            -webkit-text-fill-color:#315b61!important;
+            font-weight:800!important;
+            opacity:1!important;
+          }
+
+          /* 项目合作页对应的 05｜数智固化不再做持久反相；当前页识别由顶部一级导航承担。 */
+          html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"],
+          html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > :is(strong,span){
+            color:inherit!important;
+            -webkit-text-fill-color:currentColor!important;
+          }
+          html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]{
+            color:#17322d!important;
+            -webkit-text-fill-color:#17322d!important;
+            background:var(--qily-axis-paper,#f4f9f8)!important;
+            border:1.5px solid #bfd6d2!important;
+            box-shadow:0 2px 7px rgba(15,75,90,.06)!important;
+          }
+          html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > strong{
+            color:#0f4b5a!important;
+            -webkit-text-fill-color:#0f4b5a!important;
+          }
+          html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > span{
+            color:#315b61!important;
+            -webkit-text-fill-color:#315b61!important;
+          }
+
+          @media(hover:hover) and (pointer:fine){
+            html:root:root body.cooperation-page main .qily-system-axis__step:hover{
+              color:#fff!important;
+              -webkit-text-fill-color:#fff!important;
+              background:var(--qily-axis-green-hover,#12606f)!important;
+              border-color:var(--qily-axis-gold,#caa15f)!important;
+              box-shadow:0 12px 26px rgba(15,75,90,.23)!important;
+              transform:translateY(-3px)!important;
+            }
+            html:root:root body.cooperation-page main .qily-system-axis__step:hover > :is(strong,span){
+              color:#fff!important;
+              -webkit-text-fill-color:#fff!important;
+            }
+          }
+          html:root:root body.cooperation-page main .qily-system-axis__step:focus-visible{
+            color:#fff!important;
+            -webkit-text-fill-color:#fff!important;
+            background:var(--qily-axis-green-hover,#12606f)!important;
+            border-color:var(--qily-axis-gold,#caa15f)!important;
+            box-shadow:0 12px 26px rgba(15,75,90,.23)!important;
+            outline:3px solid rgba(202,161,95,.38)!important;
+            outline-offset:3px!important;
+            transform:translateY(-2px)!important;
+          }
+          html:root:root body.cooperation-page main .qily-system-axis__step:focus-visible > :is(strong,span){
+            color:#fff!important;
+            -webkit-text-fill-color:#fff!important;
+          }
+          html:root:root body.cooperation-page main .qily-system-axis__step:active{
+            color:var(--qily-axis-green,#0f4b5a)!important;
+            -webkit-text-fill-color:var(--qily-axis-green,#0f4b5a)!important;
+            background:var(--qily-axis-gold-soft,#fff5d2)!important;
+            border-color:var(--qily-axis-gold,#caa15f)!important;
+            box-shadow:0 4px 11px rgba(15,75,90,.16)!important;
+            transform:translateY(0) scale(.975)!important;
+          }
+          html:root:root body.cooperation-page main .qily-system-axis__step:active > :is(strong,span){
+            color:var(--qily-axis-green,#0f4b5a)!important;
+            -webkit-text-fill-color:var(--qily-axis-green,#0f4b5a)!important;
+          }
+          '''
+
+          css = css[:css.index(marker)] + replacement
+          css_path.write_text(css, encoding='utf-8')
+
+          version = '20260904-operating-axis-vi-r9'
+          new_html, n = re.subn(
+              r'/site-commercial-quality-closure-v1\.css\?v=[^"\']+',
+              f'/site-commercial-quality-closure-v1.css?v={version}',
+              html,
+              count=1,
+          )
+          assert n == 1, f'commercial CSS cache-bust replacement count={n}'
+          html_path.write_text(new_html, encoding='utf-8')
+          print('PATCHED', css_path, html_path, version)
+          PY
+
+      - name: Validate patch statically
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'QILY-R9-OPERATING-AXIS-VI-CLOSURE' site-commercial-quality-closure-v1.css
+          grep -q '20260904-operating-axis-vi-r9' cooperation/index.html
+          ! grep -q '锁定默认/已访问/当前/悬停状态文字' site-commercial-quality-closure-v1.css
+
+      - name: Commit remediation
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- site-commercial-quality-closure-v1.css cooperation/index.html; then
+            echo 'No remediation diff required.'
+          else
+            git config user.name 'QilyLean'
+            git config user.email 'DingHunter623@gmail.com'
+            git add site-commercial-quality-closure-v1.css cooperation/index.html
+            git commit -m 'fix(r9): unify cooperation operating-axis VI'
+            git push origin HEAD:main
+          fi
+
+      - name: Prepare native Chrome audit runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          BROWSER_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          test -n "$BROWSER_BIN"
+          echo "BROWSER_BIN=$BROWSER_BIN" >> "$GITHUB_ENV"
+          "$BROWSER_BIN" --version
+
+      - name: Start local site and Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 4173 >/tmp/qily-r9-http.log 2>&1 &
+          curl --retry 10 --retry-delay 1 --retry-connrefused --fail --silent http://127.0.0.1:4173/cooperation/ >/dev/null
+          "$BROWSER_BIN" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9222 --user-data-dir=/tmp/qily-r9-chrome about:blank >/tmp/qily-r9-chrome.log 2>&1 &
+          curl --retry 15 --retry-delay 1 --retry-connrefused --fail --silent http://127.0.0.1:9222/json/version >/dev/null
+
+      - name: Audit all six cards locally and in production
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p visual-operating-axis-r9
+          cat > /tmp/qily-r9-axis-audit.mjs <<'NODE'
+          import fs from 'node:fs';
+          const EXPECTED='20260904-operating-axis-vi-r9';
+          const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+          const fail=m=>{throw new Error(m)};
+          async function target(){const r=await fetch('http://127.0.0.1:9222/json/new?about:blank',{method:'PUT'});if(!r.ok)fail(`target ${r.status}`);return r.json()}
+          function connect(url){return new Promise((resolve,reject)=>{const ws=new WebSocket(url);let seq=0;const p=new Map();ws.onopen=()=>resolve({call(m,params={}){return new Promise((res,rej)=>{const id=++seq;p.set(id,{res,rej});ws.send(JSON.stringify({id,method:m,params}))})},close(){ws.close()}});ws.onerror=reject;ws.onmessage=e=>{const x=JSON.parse(e.data);if(x.id&&p.has(x.id)){const q=p.get(x.id);p.delete(x.id);x.error?q.rej(new Error(x.error.message)):q.res(x.result)}}})}
+          async function ev(c,e){const r=await c.call('Runtime.evaluate',{expression:e,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)fail(r.exceptionDetails.text);return r.result?.value}
+          async function nav(c,url,w,h){await c.call('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<600});await c.call('Page.navigate',{url});const t=Date.now();while(Date.now()-t<30000){const s=await ev(c,'document.readyState');if(s==='interactive'||s==='complete')return;await sleep(200)}fail(`nav timeout ${url}`)}
+          async function wait(c,sel){const t=Date.now();while(Date.now()-t<20000){if(await ev(c,`!!document.querySelector(${JSON.stringify(sel)})`))return;await sleep(200)}fail(`selector ${sel}`)}
+          function rgb(v){const m=String(v).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);return m?m.slice(1,4).map(Number):null}
+          function lum(a){a=a.map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*a[0]+.7152*a[1]+.0722*a[2]}
+          function ratio(f,b){f=rgb(f);b=rgb(b);if(!f||!b)return 0;const x=lum(f),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)}
+          async function audit(c,base,tag,w,h){
+            await nav(c,base+'/cooperation/',w,h);await wait(c,'.qily-system-axis__step');
+            const data=await ev(c,`(()=>{const cards=[...document.querySelectorAll('.qily-system-axis__step')];const link=[...document.querySelectorAll('link[href*="site-commercial-quality-closure-v1.css"]')][0];return {href:link?.getAttribute('href')||'',cards:cards.map((el,i)=>{const s=getComputedStyle(el),a=getComputedStyle(el.querySelector('strong')),b=getComputedStyle(el.querySelector('span'));return {i,href:el.getAttribute('href'),bg:s.backgroundColor,border:s.borderColor,color:s.color,strong:a.color,span:b.color}})}})()`);
+            if(!data.href.includes(EXPECTED))fail(`${tag}/${w}: stale commercial href ${data.href}`);
+            if(data.cards.length!==6)fail(`${tag}/${w}: card count ${data.cards.length}`);
+            const first=data.cards[0],current=data.cards.find(x=>x.href==='/cooperation/');if(!current)fail(`${tag}/${w}: current cooperation card missing`);
+            for(const x of data.cards){
+              if(x.bg!==first.bg)fail(`${tag}/${w}: card ${x.i+1} bg diverged ${x.bg} != ${first.bg}`);
+              if(x.strong!==first.strong)fail(`${tag}/${w}: card ${x.i+1} strong diverged ${x.strong} != ${first.strong}`);
+              if(x.span!==first.span)fail(`${tag}/${w}: card ${x.i+1} span diverged ${x.span} != ${first.span}`);
+              if(ratio(x.strong,x.bg)<4.5)fail(`${tag}/${w}: card ${x.i+1} strong contrast ${ratio(x.strong,x.bg).toFixed(2)}`);
+              if(ratio(x.span,x.bg)<4.5)fail(`${tag}/${w}: card ${x.i+1} span contrast ${ratio(x.span,x.bg).toFixed(2)}`);
+            }
+            if(current.bg!==first.bg||current.strong!==first.strong||current.span!==first.span)fail(`${tag}/${w}: 05 remains exceptional`);
+            const shot=await c.call('Page.captureScreenshot',{format:'png',captureBeyondViewport:false});fs.writeFileSync(`visual-operating-axis-r9/${tag}-${w}.png`,Buffer.from(shot.data,'base64'));
+            console.log('PASS',tag,w,JSON.stringify(current));
+          }
+          const t=await target();const c=await connect(t.webSocketDebuggerUrl);try{await c.call('Page.enable');await c.call('Runtime.enable');await audit(c,'http://127.0.0.1:4173','local',1680,950);await audit(c,'http://127.0.0.1:4173','local',390,844);let last;for(let i=1;i<=20;i++){try{await audit(c,'https://qilylean.com','production',1680,950);await audit(c,'https://qilylean.com','production',390,844);last=null;break}catch(e){last=e;console.log(`production attempt ${i}/20: ${e.message}`);await sleep(15000)}}if(last)throw last;fs.writeFileSync('visual-operating-axis-r9/PASS.txt','PASS all six cards uniform + readable on local and production desktop/mobile\n')}finally{c.close()}
+          NODE
+          node /tmp/qily-r9-axis-audit.mjs
+
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: operating-axis-vi-r9-${{ github.run_id }}
+          path: visual-operating-axis-r9
+          if-no-files-found: warn
+          retention-days: 7
