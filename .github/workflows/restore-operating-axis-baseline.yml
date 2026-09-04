@@ -1,0 +1,47 @@
+name: Restore Operating Axis Baseline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/restore-operating-axis-baseline.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-restore-operating-axis-baseline
+  cancel-in-progress: true
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Restore exact pre-R9 VI files
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASELINE=1ff7d98955fa9dda782d4f1ef0fc00aa9e0eea2e
+          git checkout "$BASELINE" -- cooperation/index.html site-commercial-quality-closure-v1.css
+          git diff -- cooperation/index.html site-commercial-quality-closure-v1.css
+
+      - name: Commit exact rollback
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add cooperation/index.html site-commercial-quality-closure-v1.css
+          if git diff --cached --quiet; then
+            echo 'Already at baseline'
+          else
+            git commit -m 'revert: restore cooperation operating-axis VI baseline'
+            git push origin HEAD:main
+          fi
