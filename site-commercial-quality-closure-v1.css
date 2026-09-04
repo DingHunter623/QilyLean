@@ -333,9 +333,10 @@ html:root:root body.cooperation-page main .qily-system-axis__step:focus-visible 
   -webkit-text-fill-color:#fff!important;
 }
 
+
 /* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE | 2026-09-04
  * VI contract: current operating-axis card = deep teal + gold border + white text.
- * Scope: text only; no background/border/layout changes.
+ * Scope: text only; no background, border, size, layout or sibling-card changes.
  */
 html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"],
 html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited,
