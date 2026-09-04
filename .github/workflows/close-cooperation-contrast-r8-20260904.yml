@@ -1,0 +1,85 @@
+name: Close Cooperation Contrast R8 20260904
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/close-cooperation-contrast-r8-20260904.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-close-cooperation-contrast-r8
+  cancel-in-progress: true
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Materialize cache-bust on four governed cooperation pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          detail_pages = [
+              Path('cooperation/factory-planning/index.html'),
+              Path('cooperation/lean-improvement/index.html'),
+              Path('cooperation/visual-management/index.html'),
+          ]
+          old_detail = '/cooperation/core-business-detail.css?v=20260904-r8-core-contrast-v1'
+          new_detail = '/cooperation/core-business-detail.css?v=20260904-r8-core-contrast-v2-root-selector'
+          for p in detail_pages:
+              s = p.read_text(encoding='utf-8')
+              if old_detail not in s and new_detail not in s:
+                  raise SystemExit(f'{p}: core-business CSS reference missing')
+              s = s.replace(old_detail, new_detail)
+              p.write_text(s, encoding='utf-8')
+
+          p = Path('cooperation/index.html')
+          s = p.read_text(encoding='utf-8')
+          old_commercial = '/site-commercial-quality-closure-v1.css?v=20260804-quality-pricing-v1'
+          new_commercial = '/site-commercial-quality-closure-v1.css?v=20260904-commercial-contrast-v2-root-selector'
+          if old_commercial not in s and new_commercial not in s:
+              raise SystemExit('cooperation/index.html: commercial CSS reference missing')
+          s = s.replace(old_commercial, new_commercial)
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Validate root-selector closure contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'body.core-business-page main .module-hero .core-business-hero-actions > a.primary' cooperation/core-business-detail.css
+          grep -q 'body.core-business-page main .core-business-process .core-business-step > b' cooperation/core-business-detail.css
+          grep -q 'body.cooperation-page main .module-hero .hero-actions > a.primary' site-commercial-quality-closure-v1.css
+          grep -q 'body.cooperation-page main .flow-grid .flow-step > b:first-child' site-commercial-quality-closure-v1.css
+          grep -q 'body.cooperation-page main .qily-system-axis__step > strong' site-commercial-quality-closure-v1.css
+          for f in cooperation/factory-planning/index.html cooperation/lean-improvement/index.html cooperation/visual-management/index.html; do
+            grep -q 'core-business-detail.css?v=20260904-r8-core-contrast-v2-root-selector' "$f"
+          done
+          grep -q 'site-commercial-quality-closure-v1.css?v=20260904-commercial-contrast-v2-root-selector' cooperation/index.html
+          git diff --check
+
+      - name: Commit closure to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean R8 Closure'
+          git config user.email 'actions@users.noreply.github.com'
+          if git diff --quiet; then
+            echo 'Contrast cache-bust already materialized.'
+            exit 0
+          fi
+          git add cooperation/index.html cooperation/factory-planning/index.html cooperation/lean-improvement/index.html cooperation/visual-management/index.html
+          git commit -m 'fix(r8): materialize cooperation contrast closure'
+          git push origin HEAD:main
