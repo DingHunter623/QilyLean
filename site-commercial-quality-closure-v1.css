@@ -299,7 +299,7 @@ html:root:root body.cooperation-page main :is(.process,.process-grid,.steps,.wor
   mix-blend-mode:normal!important;
 }
 
-/* QILY-R9-OPERATING-AXIS-VI-CLOSURE | 2026-09-04
+/* QILY-R9B-OPERATING-AXIS-VI-CLOSURE | 2026-09-04
  * 根因整改：制造运营资产闭环是全站共享VI组件，不应在项目合作页被局部高优先级规则二次反相。
  * 本页仅确保链接/visited状态不洗淡；“当前页面”不再持久深色反相，六张卡默认视觉完全一致。
  * 交互仍遵循全站VI：默认浅纸面+深青文字；hover/focus 深青+白字；active 金色浅底+深青字。
@@ -332,7 +332,6 @@ html:root:root body.cooperation-page main .qily-system-axis__step:visited > span
 }
 
 /* 项目合作页对应的 05｜数智固化不再做持久反相；当前页识别由顶部一级导航承担。 */
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"],
 html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > :is(strong,span){
   color:inherit!important;
   -webkit-text-fill-color:currentColor!important;
@@ -343,14 +342,6 @@ html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-cur
   background:var(--qily-axis-paper,#f4f9f8)!important;
   border:1.5px solid #bfd6d2!important;
   box-shadow:0 2px 7px rgba(15,75,90,.06)!important;
-}
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > strong{
-  color:#0f4b5a!important;
-  -webkit-text-fill-color:#0f4b5a!important;
-}
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > span{
-  color:#315b61!important;
-  -webkit-text-fill-color:#315b61!important;
 }
 
 @media(hover:hover) and (pointer:fine){
