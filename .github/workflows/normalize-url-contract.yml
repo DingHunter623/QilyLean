@@ -38,22 +38,7 @@ jobs:
           css=cp.read_text(encoding='utf-8')
           html=hp.read_text(encoding='utf-8')
           marker='QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE'
-          block='''\n\n/* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE | 2026-09-04
- * VI依据：site-visual-governance-v2.css 02A规定当前制造运营轴卡片为深青底+金边+白字。
- * 本补丁仅恢复项目合作页05当前卡片文字为白色，不改变背景、边框、尺寸、布局及其它卡片。
- */
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"],
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited,
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > strong,
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > span,
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited > strong,
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]:visited > span{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  opacity:1!important;
-  text-shadow:none!important;
-}
-'''
+          block="\n\n/* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE | 2026-09-04\n * VI contract: current operating-axis card = deep teal + gold border + white text.\n * Scope: text only; no background, border, size, layout or sibling-card changes.\n */\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"],\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"]:visited,\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"] > strong,\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"] > span,\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"]:visited > strong,\nhtml:root:root body.cooperation-page:has(header a[href=\"/cooperation/\"][aria-current=\"page\"]) main .qily-system-axis__step[href=\"/cooperation/\"]:visited > span{\n  color:#fff!important;\n  -webkit-text-fill-color:#fff!important;\n  opacity:1!important;\n  text-shadow:none!important;\n}\n"
           if marker in css:
               css=re.sub(r'\n/\* QILY-R10-COOPERATION-AXIS-CURRENT-TEXT-WHITE[\s\S]*?\n}\s*$',block.rstrip()+"\n",css,count=1)
           else:
