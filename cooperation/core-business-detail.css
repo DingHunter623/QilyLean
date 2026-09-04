@@ -42,47 +42,66 @@
 @media(max-width:720px){.core-business-grid{grid-template-columns:1fr}.core-business-panel.wide{grid-column:auto}.core-business-facts,.core-business-deliverables,.core-business-process{grid-template-columns:1fr}.core-contract-viewer-head{flex-direction:column}.core-contract-viewer-head button{width:100%}.core-contract-viewer-frame{gap:10px;padding:6px}.core-contract-page,.core-contract-page canvas{min-height:300px}.core-business-hero-actions a{width:100%}}
 @media print{.core-contract-viewer{display:none!important}}
 
-/* QILY-R8-CORE-BUSINESS-CONTRAST-CLOSURE-V1
- * 2026-09-04｜组件级根因修复：后加载的全站深色 Hero 链接/浅色内容 b 标签规则
- * 不得覆盖核心业务页主 CTA 与“四阶段交付路径”序号的前景色。
- * 该组件由 factory-planning / lean-improvement / visual-management 三个页面共用。
+/* QILY-R8-CORE-BUSINESS-CONTRAST-CLOSURE-V2
+ * 2026-09-04｜根因闭环：body 本身承载 core-business-page，旧选择器
+ * `html body .core-business-page ...` 错把它当成 body 的后代，规则实际从未命中。
+ * V2 直接锁定 body.core-business-page，并提高主 CTA 与步骤序号的最终级联权重。
  */
-html body .core-business-page .module-hero .core-business-hero-actions > a.primary,
-html body .core-business-page .module-hero .core-business-hero-actions > a.primary:visited{
+html:root:root body.core-business-page main .module-hero .core-business-hero-actions > a.primary,
+html:root:root body.core-business-page main .module-hero .core-business-hero-actions > a.primary:link,
+html:root:root body.core-business-page main .module-hero .core-business-hero-actions > a.primary:visited{
   color:#17322d!important;
   -webkit-text-fill-color:#17322d!important;
   background:linear-gradient(135deg,#ffe39b,#f5b64b)!important;
-  border-color:#ffe39b!important;
+  border:2px solid #fff0bd!important;
   text-decoration:none!important;
   text-decoration-color:transparent!important;
   text-shadow:none!important;
   opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
 }
-html body .core-business-page .module-hero .core-business-hero-actions > a.primary:is(:hover,:focus-visible){
+html:root:root body.core-business-page main .module-hero .core-business-hero-actions > a.primary *,
+html:root:root body.core-business-page main .module-hero .core-business-hero-actions > a.primary:visited *{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html:root:root body.core-business-page main .module-hero .core-business-hero-actions > a.primary:is(:hover,:focus-visible){
   color:#073c47!important;
   -webkit-text-fill-color:#073c47!important;
   background:linear-gradient(135deg,#fff0bd,#ffd36a)!important;
-  border-color:#fff0bd!important;
+  border-color:#fff!important;
   box-shadow:0 10px 24px rgba(0,0,0,.22)!important;
 }
-html body .core-business-page .module-hero .core-business-hero-actions > a.primary:active{
+html:root:root body.core-business-page main .module-hero .core-business-hero-actions > a.primary:active{
   color:#073c47!important;
   -webkit-text-fill-color:#073c47!important;
   background:linear-gradient(135deg,#f5c85f,#e8a93e)!important;
   border-color:#ffe39b!important;
 }
-html body .core-business-page .core-business-process .core-business-step > b{
+html:root:root body.core-business-page main .core-business-process .core-business-step > b{
   display:grid!important;
   place-items:center!important;
-  width:32px!important;
-  height:32px!important;
+  width:38px!important;
+  height:38px!important;
+  min-width:38px!important;
+  min-height:38px!important;
+  padding:0!important;
   border-radius:50%!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
-  background:#0f4b5a!important;
-  border:1px solid rgba(255,227,155,.72)!important;
+  background:#073c47!important;
+  border:2px solid #fff!important;
+  box-shadow:0 0 0 2px #caa15f,0 5px 12px rgba(7,60,71,.18)!important;
+  font-size:18px!important;
   font-weight:950!important;
   line-height:1!important;
+  letter-spacing:0!important;
   text-shadow:none!important;
   opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
 }
