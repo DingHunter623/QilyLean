@@ -14,20 +14,20 @@ html body .qily-web-translate__status{display:none!important}
 html body .qily-web-translate{
   position:relative!important;
   box-sizing:border-box!important;
-  flex:0 0 236px!important;
-  width:236px!important;
-  min-width:236px!important;
-  max-width:236px!important;
+  flex:0 0 206px!important;
+  width:206px!important;
+  min-width:206px!important;
+  max-width:206px!important;
   padding:5px 7px 4px!important;
   overflow:visible!important;
 }
 
 html:root:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
 .qily-web-translate[data-qily-header-utility="translation"]{
-  flex:0 0 236px!important;
-  width:236px!important;
-  min-width:236px!important;
-  max-width:236px!important;
+  flex:0 0 206px!important;
+  width:206px!important;
+  min-width:206px!important;
+  max-width:206px!important;
   overflow:visible!important;
 }
 
@@ -250,7 +250,7 @@ html body .qily-language-more__empty{
   html:root:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
   .qily-web-translate[data-qily-header-utility="translation"]{
     flex:0 0 auto!important;
-    width:min(236px,calc(100vw - 36px))!important;
+    width:min(206px,calc(100vw - 36px))!important;
     min-width:0!important;
     max-width:calc(100vw - 36px)!important;
   }
