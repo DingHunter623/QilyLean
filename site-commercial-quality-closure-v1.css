@@ -299,22 +299,12 @@ html:root:root body.cooperation-page main :is(.process,.process-grid,.steps,.wor
   mix-blend-mode:normal!important;
 }
 
-/* QILY-R9B-OPERATING-AXIS-VI-CLOSURE | 2026-09-04
- * 根因整改：制造运营资产闭环是全站共享VI组件，不应在项目合作页被局部高优先级规则二次反相。
- * 本页仅确保链接/visited状态不洗淡；“当前页面”不再持久深色反相，六张卡默认视觉完全一致。
- * 交互仍遵循全站VI：默认浅纸面+深青文字；hover/focus 深青+白字；active 金色浅底+深青字。
- */
+/* 制造运营资产闭环 01—06：锁定默认/已访问/当前/悬停状态文字，防止 visited 或全站文本层洗淡。 */
 html:root:root body.cooperation-page main .qily-system-axis__step,
-html:root:root body.cooperation-page main .qily-system-axis__step:link,
 html:root:root body.cooperation-page main .qily-system-axis__step:visited{
   color:#17322d!important;
   -webkit-text-fill-color:#17322d!important;
-  background:var(--qily-axis-paper,#f4f9f8)!important;
-  border:1.5px solid #bfd6d2!important;
-  box-shadow:0 2px 7px rgba(15,75,90,.06)!important;
   opacity:1!important;
-  filter:none!important;
-  mix-blend-mode:normal!important;
 }
 html:root:root body.cooperation-page main .qily-system-axis__step > strong,
 html:root:root body.cooperation-page main .qily-system-axis__step:visited > strong{
@@ -330,57 +320,15 @@ html:root:root body.cooperation-page main .qily-system-axis__step:visited > span
   font-weight:800!important;
   opacity:1!important;
 }
-
-/* 项目合作页对应的 05｜数智固化不再做持久反相；当前页识别由顶部一级导航承担。 */
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"] > :is(strong,span){
-  color:inherit!important;
-  -webkit-text-fill-color:currentColor!important;
-}
-html:root:root body.cooperation-page:has(header a[href="/cooperation/"][aria-current="page"]) main .qily-system-axis__step[href="/cooperation/"]{
-  color:#17322d!important;
-  -webkit-text-fill-color:#17322d!important;
-  background:var(--qily-axis-paper,#f4f9f8)!important;
-  border:1.5px solid #bfd6d2!important;
-  box-shadow:0 2px 7px rgba(15,75,90,.06)!important;
-}
-
 @media(hover:hover) and (pointer:fine){
-  html:root:root body.cooperation-page main .qily-system-axis__step:hover{
-    color:#fff!important;
-    -webkit-text-fill-color:#fff!important;
-    background:var(--qily-axis-green-hover,#12606f)!important;
-    border-color:var(--qily-axis-gold,#caa15f)!important;
-    box-shadow:0 12px 26px rgba(15,75,90,.23)!important;
-    transform:translateY(-3px)!important;
-  }
+  html:root:root body.cooperation-page main .qily-system-axis__step:hover,
   html:root:root body.cooperation-page main .qily-system-axis__step:hover > :is(strong,span){
     color:#fff!important;
     -webkit-text-fill-color:#fff!important;
   }
 }
-html:root:root body.cooperation-page main .qily-system-axis__step:focus-visible{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background:var(--qily-axis-green-hover,#12606f)!important;
-  border-color:var(--qily-axis-gold,#caa15f)!important;
-  box-shadow:0 12px 26px rgba(15,75,90,.23)!important;
-  outline:3px solid rgba(202,161,95,.38)!important;
-  outline-offset:3px!important;
-  transform:translateY(-2px)!important;
-}
+html:root:root body.cooperation-page main .qily-system-axis__step:focus-visible,
 html:root:root body.cooperation-page main .qily-system-axis__step:focus-visible > :is(strong,span){
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
-}
-html:root:root body.cooperation-page main .qily-system-axis__step:active{
-  color:var(--qily-axis-green,#0f4b5a)!important;
-  -webkit-text-fill-color:var(--qily-axis-green,#0f4b5a)!important;
-  background:var(--qily-axis-gold-soft,#fff5d2)!important;
-  border-color:var(--qily-axis-gold,#caa15f)!important;
-  box-shadow:0 4px 11px rgba(15,75,90,.16)!important;
-  transform:translateY(0) scale(.975)!important;
-}
-html:root:root body.cooperation-page main .qily-system-axis__step:active > :is(strong,span){
-  color:var(--qily-axis-green,#0f4b5a)!important;
-  -webkit-text-fill-color:var(--qily-axis-green,#0f4b5a)!important;
 }
