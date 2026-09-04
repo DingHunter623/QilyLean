@@ -229,3 +229,106 @@
   #companyGrid.grid{gap:14px!important}
   .daily-quality-throughline .quality-gates{grid-template-columns:1fr}
 }
+
+/* QILY-R8-COMMERCIAL-CONTRAST-CLOSURE-V2 | 2026-09-04
+ * 根因：后置全站 Hero 链接规则以 !important 覆盖项目合作页主 CTA 前景色；
+ * 同时流程序号受通用 b/链接语义层干扰。这里用 body.cooperation-page 精确锁定，
+ * 不扩大到其它模块，不改变业务文案和布局。
+ */
+html:root:root body.cooperation-page main .module-hero .hero-actions > a.primary,
+html:root:root body.cooperation-page main .module-hero .hero-actions > a.primary:link,
+html:root:root body.cooperation-page main .module-hero .hero-actions > a.primary:visited{
+  color:#332100!important;
+  -webkit-text-fill-color:#332100!important;
+  background:#ffd36a!important;
+  background-image:none!important;
+  border:2px solid #fff3c6!important;
+  box-shadow:0 10px 24px rgba(0,0,0,.24)!important;
+  text-decoration:none!important;
+  text-decoration-color:transparent!important;
+  text-shadow:none!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+html:root:root body.cooperation-page main .module-hero .hero-actions > a.primary *,
+html:root:root body.cooperation-page main .module-hero .hero-actions > a.primary:visited *{
+  color:#332100!important;
+  -webkit-text-fill-color:#332100!important;
+  opacity:1!important;
+  filter:none!important;
+  text-shadow:none!important;
+}
+html:root:root body.cooperation-page main .module-hero .hero-actions > a.primary:is(:hover,:focus-visible){
+  color:#201400!important;
+  -webkit-text-fill-color:#201400!important;
+  background:#ffe39b!important;
+  border-color:#fff!important;
+  box-shadow:0 15px 34px rgba(0,0,0,.30)!important;
+}
+html:root:root body.cooperation-page main .module-hero .hero-actions > a.primary:active{
+  color:#201400!important;
+  -webkit-text-fill-color:#201400!important;
+  background:#f5c85f!important;
+  border-color:#fff3c6!important;
+}
+
+/* 项目合作页下方“六步交付闭环”等流程序号：深青实底 + 白字 + 金色外圈。 */
+html:root:root body.cooperation-page main .flow-grid .flow-step > b:first-child,
+html:root:root body.cooperation-page main :is(.process,.process-grid,.steps,.workflow,.workflow-grid) :is(.step,.process-step,.workflow-step) > b:first-child{
+  display:grid!important;
+  place-items:center!important;
+  width:40px!important;
+  height:40px!important;
+  min-width:40px!important;
+  min-height:40px!important;
+  padding:0!important;
+  border:2px solid #fff!important;
+  border-radius:999px!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:#073c47!important;
+  box-shadow:0 0 0 2px #caa15f,0 5px 12px rgba(7,60,71,.18)!important;
+  font-size:18px!important;
+  font-weight:950!important;
+  line-height:1!important;
+  letter-spacing:0!important;
+  text-shadow:none!important;
+  opacity:1!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+
+/* 制造运营资产闭环 01—06：锁定默认/已访问/当前/悬停状态文字，防止 visited 或全站文本层洗淡。 */
+html:root:root body.cooperation-page main .qily-system-axis__step,
+html:root:root body.cooperation-page main .qily-system-axis__step:visited{
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  opacity:1!important;
+}
+html:root:root body.cooperation-page main .qily-system-axis__step > strong,
+html:root:root body.cooperation-page main .qily-system-axis__step:visited > strong{
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  font-weight:950!important;
+  opacity:1!important;
+}
+html:root:root body.cooperation-page main .qily-system-axis__step > span,
+html:root:root body.cooperation-page main .qily-system-axis__step:visited > span{
+  color:#315b61!important;
+  -webkit-text-fill-color:#315b61!important;
+  font-weight:800!important;
+  opacity:1!important;
+}
+@media(hover:hover) and (pointer:fine){
+  html:root:root body.cooperation-page main .qily-system-axis__step:hover,
+  html:root:root body.cooperation-page main .qily-system-axis__step:hover > :is(strong,span){
+    color:#fff!important;
+    -webkit-text-fill-color:#fff!important;
+  }
+}
+html:root:root body.cooperation-page main .qily-system-axis__step:focus-visible,
+html:root:root body.cooperation-page main .qily-system-axis__step:focus-visible > :is(strong,span){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+}
