@@ -17,7 +17,7 @@ concurrency:
 jobs:
   browser-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,15 +28,14 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Chromium audit runtime
+      - name: Prepare system Chrome audit runtime
         run: |
-          npm install --no-save --package-lock=false playwright@1.55.0
-          npx playwright install --with-deps chromium
+          npm install --no-save --package-lock=false playwright-core@1.55.0
+          command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser
 
       - name: Start local public site
         run: |
           python3 -m http.server 4173 >/tmp/qily-contrast-http.log 2>&1 &
-          echo $! >/tmp/qily-contrast-http.pid
           sleep 2
           curl --fail --silent http://127.0.0.1:4173/cooperation/factory-planning/ >/dev/null
 
@@ -45,110 +44,48 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p visual-cooperation-contrast
+          export BROWSER_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser)"
           cat > /tmp/verify-cooperation-contrast.js <<'NODE'
-          const { chromium } = require('playwright');
+          const { chromium } = require('playwright-core');
           const fs = require('fs');
+          const expected={detailVersion:'20260904-r8-core-contrast-v2-root-selector',commercialVersion:'20260904-commercial-contrast-v2-root-selector'};
+          const fail=m=>{throw new Error(m)};
+          const rgb=v=>{const m=String(v).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);return m?m.slice(1,4).map(Number):null};
+          const lum=a=>{a=a.map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)});return .2126*a[0]+.7152*a[1]+.0722*a[2]};
+          const ratio=(a,b)=>{a=rgb(a);b=rgb(b);if(!a||!b)return 0;const x=lum(a),y=lum(b);return (Math.max(x,y)+.05)/(Math.min(x,y)+.05)};
+          async function css(page,sel){return page.locator(sel).first().evaluate(el=>{const s=getComputedStyle(el);return {color:s.color,fill:s.webkitTextFillColor,bg:s.backgroundColor,bgi:s.backgroundImage,w:s.width,h:s.height}})}
+          async function one(browser,base,tag,v){
+            const c=await browser.newContext({viewport:v});const p=await c.newPage();p.setDefaultTimeout(15000);
+            await p.goto(base+'/cooperation/factory-planning/',{waitUntil:'domcontentloaded',timeout:30000});
+            await p.waitForSelector('.core-business-hero-actions>a.primary');
+            const dref=await p.locator('link[href*="core-business-detail.css"]').first().getAttribute('href');
+            if(!dref||!dref.includes(expected.detailVersion))fail(`${tag}: detail version ${dref}`);
+            const a=await css(p,'.core-business-hero-actions>a.primary');
+            if(a.color!=='rgb(23, 50, 45)'||a.fill!=='rgb(23, 50, 45)'||!a.bgi||a.bgi==='none')fail(`${tag}: detail CTA ${JSON.stringify(a)}`);
+            const b=await css(p,'.core-business-process .core-business-step>b');
+            if(b.color!=='rgb(255, 255, 255)'||b.fill!=='rgb(255, 255, 255)'||b.bg!=='rgb(7, 60, 71)'||parseFloat(b.w)<38||parseFloat(b.h)<38)fail(`${tag}: detail badge ${JSON.stringify(b)}`);
+            await p.locator('.module-hero').screenshot({path:`visual-cooperation-contrast/${tag}-factory-hero.png`});
+            await p.locator('.core-business-process').screenshot({path:`visual-cooperation-contrast/${tag}-factory-process.png`});
 
-          const expected = {
-            detailVersion: '20260904-r8-core-contrast-v2-root-selector',
-            commercialVersion: '20260904-commercial-contrast-v2-root-selector'
-          };
-
-          function rgbParts(value){
-            const m = String(value).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
-            return m ? m.slice(1,4).map(Number) : null;
+            await p.goto(base+'/cooperation/',{waitUntil:'domcontentloaded',timeout:30000});
+            await p.waitForSelector('.hero-actions>a.primary');
+            const cref=await p.locator('link[href*="site-commercial-quality-closure-v1.css"]').first().getAttribute('href');
+            if(!cref||!cref.includes(expected.commercialVersion))fail(`${tag}: commercial version ${cref}`);
+            const h=await css(p,'.hero-actions>a.primary');
+            if(h.color!=='rgb(51, 33, 0)'||h.fill!=='rgb(51, 33, 0)'||h.bg!=='rgb(255, 211, 106)')fail(`${tag}: cooperation CTA ${JSON.stringify(h)}`);
+            const f=p.locator('.flow-grid .flow-step>b').first();
+            if(await f.count()){const x=await css(p,'.flow-grid .flow-step>b');if(x.color!=='rgb(255, 255, 255)'||x.bg!=='rgb(7, 60, 71)'||parseFloat(x.w)<40||parseFloat(x.h)<40)fail(`${tag}: flow badge ${JSON.stringify(x)}`);await p.locator('.flow-grid').first().screenshot({path:`visual-cooperation-contrast/${tag}-cooperation-flow.png`})}
+            const ax=p.locator('.qily-system-axis__step').first();
+            if(await ax.count()){const s=await css(p,'.qily-system-axis__step>strong'),q=await css(p,'.qily-system-axis__step');if(ratio(s.color,q.bg)<4.5)fail(`${tag}: axis ratio ${ratio(s.color,q.bg).toFixed(2)} ${s.color}/${q.bg}`);await p.locator('.qily-system-axis').screenshot({path:`visual-cooperation-contrast/${tag}-cooperation-axis.png`})}
+            await p.locator('.module-hero').screenshot({path:`visual-cooperation-contrast/${tag}-cooperation-hero.png`});
+            await c.close();
           }
-          function lum(rgb){
-            const a = rgb.map(v=>{v/=255; return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4)});
-            return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
-          }
-          function contrast(fg,bg){
-            const a=rgbParts(fg), b=rgbParts(bg); if(!a||!b)return 0;
-            const l1=lum(a),l2=lum(b); return (Math.max(l1,l2)+0.05)/(Math.min(l1,l2)+0.05);
-          }
-          function assert(cond,msg){ if(!cond) throw new Error(msg); }
-
-          async function styleOf(page, selector){
-            return page.locator(selector).first().evaluate(el=>{
-              const s=getComputedStyle(el);
-              return {color:s.color,webkitTextFillColor:s.webkitTextFillColor,backgroundColor:s.backgroundColor,backgroundImage:s.backgroundImage,borderColor:s.borderColor,fontSize:s.fontSize,opacity:s.opacity,width:s.width,height:s.height};
-            });
-          }
-
-          async function auditBase(browser, base, tag){
-            for(const viewport of [{name:'desktop',width:1680,height:950},{name:'mobile',width:390,height:844}]){
-              const ctx=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},deviceScaleFactor:1});
-              const page=await ctx.newPage();
-              page.setDefaultTimeout(15000);
-
-              const detailUrl=base+'/cooperation/factory-planning/';
-              await page.goto(detailUrl,{waitUntil:'domcontentloaded',timeout:30000});
-              await page.waitForSelector('.core-business-hero-actions > a.primary');
-              const href=await page.locator('link[href*="core-business-detail.css"]').first().getAttribute('href');
-              assert(href && href.includes(expected.detailVersion), `${tag}/${viewport.name}: detail CSS cache version missing: ${href}`);
-              const cta=await styleOf(page,'.core-business-hero-actions > a.primary');
-              assert(cta.color==='rgb(23, 50, 45)', `${tag}/${viewport.name}: detail CTA color ${cta.color}`);
-              assert(cta.webkitTextFillColor==='rgb(23, 50, 45)', `${tag}/${viewport.name}: detail CTA text-fill ${cta.webkitTextFillColor}`);
-              assert(cta.backgroundImage && cta.backgroundImage!=='none', `${tag}/${viewport.name}: detail CTA gold gradient missing`);
-              const badge=await styleOf(page,'.core-business-process .core-business-step > b');
-              assert(badge.color==='rgb(255, 255, 255)', `${tag}/${viewport.name}: detail step color ${badge.color}`);
-              assert(badge.webkitTextFillColor==='rgb(255, 255, 255)', `${tag}/${viewport.name}: detail step text-fill ${badge.webkitTextFillColor}`);
-              assert(badge.backgroundColor==='rgb(7, 60, 71)', `${tag}/${viewport.name}: detail step bg ${badge.backgroundColor}`);
-              assert(parseFloat(badge.width)>=38 && parseFloat(badge.height)>=38, `${tag}/${viewport.name}: detail step size ${badge.width}x${badge.height}`);
-              await page.locator('.module-hero').screenshot({path:`visual-cooperation-contrast/${tag}-factory-hero-${viewport.name}.png`});
-              await page.locator('.core-business-process').screenshot({path:`visual-cooperation-contrast/${tag}-factory-process-${viewport.name}.png`});
-
-              const cooperationUrl=base+'/cooperation/';
-              await page.goto(cooperationUrl,{waitUntil:'domcontentloaded',timeout:30000});
-              await page.waitForSelector('.hero-actions > a.primary');
-              const commercialHref=await page.locator('link[href*="site-commercial-quality-closure-v1.css"]').first().getAttribute('href');
-              assert(commercialHref && commercialHref.includes(expected.commercialVersion), `${tag}/${viewport.name}: commercial CSS cache version missing: ${commercialHref}`);
-              const homeCta=await styleOf(page,'.hero-actions > a.primary');
-              assert(homeCta.color==='rgb(51, 33, 0)', `${tag}/${viewport.name}: cooperation CTA color ${homeCta.color}`);
-              assert(homeCta.webkitTextFillColor==='rgb(51, 33, 0)', `${tag}/${viewport.name}: cooperation CTA text-fill ${homeCta.webkitTextFillColor}`);
-              assert(homeCta.backgroundColor==='rgb(255, 211, 106)', `${tag}/${viewport.name}: cooperation CTA bg ${homeCta.backgroundColor}`);
-              await page.locator('.module-hero').screenshot({path:`visual-cooperation-contrast/${tag}-cooperation-hero-${viewport.name}.png`});
-
-              const flow=page.locator('.flow-grid .flow-step > b').first();
-              if(await flow.count()){
-                const f=await styleOf(page,'.flow-grid .flow-step > b');
-                assert(f.color==='rgb(255, 255, 255)', `${tag}/${viewport.name}: flow badge color ${f.color}`);
-                assert(f.backgroundColor==='rgb(7, 60, 71)', `${tag}/${viewport.name}: flow badge bg ${f.backgroundColor}`);
-                assert(parseFloat(f.width)>=40 && parseFloat(f.height)>=40, `${tag}/${viewport.name}: flow badge size ${f.width}x${f.height}`);
-                await page.locator('.flow-grid').first().screenshot({path:`visual-cooperation-contrast/${tag}-cooperation-flow-${viewport.name}.png`});
-              }
-
-              const axis=page.locator('.qily-system-axis__step').first();
-              if(await axis.count()){
-                const axisStrong=await styleOf(page,'.qily-system-axis__step > strong');
-                const axisParent=await styleOf(page,'.qily-system-axis__step');
-                assert(contrast(axisStrong.color,axisParent.backgroundColor)>=4.5, `${tag}/${viewport.name}: axis contrast ${contrast(axisStrong.color,axisParent.backgroundColor).toFixed(2)} (${axisStrong.color} / ${axisParent.backgroundColor})`);
-                await page.locator('.qily-system-axis').screenshot({path:`visual-cooperation-contrast/${tag}-cooperation-axis-${viewport.name}.png`});
-              }
-              await ctx.close();
-            }
-          }
-
-          (async()=>{
-            const browser=await chromium.launch({headless:true});
-            try{
-              await auditBase(browser,'http://127.0.0.1:4173','local');
-              let lastErr;
-              for(let i=1;i<=8;i++){
-                try{
-                  await auditBase(browser,'https://qilylean.com','production');
-                  lastErr=null; break;
-                }catch(e){
-                  lastErr=e;
-                  console.log(`Production audit attempt ${i}/8 not ready: ${e.message}`);
-                  await new Promise(r=>setTimeout(r,15000));
-                }
-              }
-              if(lastErr) throw lastErr;
-              fs.writeFileSync('visual-cooperation-contrast/PASS.txt','Local + production computed-style audit PASS\n','utf8');
-              console.log('PASS: local + production cooperation contrast computed-style audit.');
-            } finally { await browser.close(); }
-          })().catch(e=>{console.error(e);process.exit(1)});
+          (async()=>{const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_BIN,args:['--no-sandbox']});try{
+            await one(browser,'http://127.0.0.1:4173','local-desktop',{width:1680,height:950});
+            await one(browser,'http://127.0.0.1:4173','local-mobile',{width:390,height:844});
+            let e=null;for(let i=1;i<=10;i++){try{await one(browser,'https://qilylean.com','production-desktop',{width:1680,height:950});await one(browser,'https://qilylean.com','production-mobile',{width:390,height:844});e=null;break}catch(err){e=err;console.log(`production attempt ${i}/10: ${err.message}`);await new Promise(r=>setTimeout(r,12000))}}if(e)throw e;
+            fs.writeFileSync('visual-cooperation-contrast/PASS.txt','PASS local + production desktop/mobile computed-style audit\n');console.log('PASS local + production desktop/mobile computed-style audit');
+          }finally{await browser.close()}})().catch(e=>{console.error(e);process.exit(1)});
           NODE
           node /tmp/verify-cooperation-contrast.js
 
