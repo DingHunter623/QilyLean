@@ -60,10 +60,20 @@ jobs:
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
           git add -A
-          if git diff --cached --quiet; then
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix: normalize canonical directory URLs [skip ci]'
+            git pull --rebase origin main
+            git push origin HEAD:main
+          else
             echo 'URL contract already normalized.'
-            exit 0
           fi
-          git commit -m 'fix: normalize canonical directory URLs [skip ci]'
-          git pull --rebase origin main
-          git push origin HEAD:main
+
+      - name: Verify cooperation 05 production VI
+        shell: bash
+        run: |
+          set -euo pipefail
+          BROWSER_BIN="$(command -v google-chrome || command -v google-chrome-stable || command -v chromium || command -v chromium-browser || true)"
+          test -n "$BROWSER_BIN"
+          "$BROWSER_BIN" --headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=9222 --user-data-dir=/tmp/qily-r10-verify about:blank >/tmp/qily-r10-chrome.log 2>&1 &
+          curl --retry 15 --retry-delay 1 --retry-connrefused --fail --silent http://127.0.0.1:9222/json/version >/dev/null
+          node scripts/verify-cooperation-axis-current-r10.mjs
