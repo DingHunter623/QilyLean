@@ -48,10 +48,32 @@ const links = read('links/index.html');
 const searchIndex = JSON.parse(read('qilylean/site-search-index.json'));
 const siteData = JSON.parse(read('qilylean/site-data.json'));
 const audit = exists('qilylean/daily/terminology-audit-latest.json') ? JSON.parse(read('qilylean/daily/terminology-audit-latest.json')) : null;
+const aiManufacturingBriefDate = '2026-09-04';
+const aiManufacturingBrief = exists(`qilylean/daily/${aiManufacturingBriefDate}.html`) ? read(`qilylean/daily/${aiManufacturingBriefDate}.html`) : '';
 
 includes(latest, `id="${sourceLatest}"`, 'Latest retained page carries its date identity');
 includes(latest, 'data-brief-message-form', 'Latest retained page contains message form');
 includes(latest, '留言交流', 'Latest retained page contains message section');
+if (aiManufacturingBrief) {
+  const aiManufacturingRecord = index.find((item) => item.date === aiManufacturingBriefDate);
+  assert(aiManufacturingRecord && aiManufacturingRecord.title === 'AI+工业工程：未来IE工程师如何重新定义制造价值', 'AI manufacturing brief keeps its SSOT title');
+  assert(aiManufacturingRecord && aiManufacturingRecord.summary === '从现场改善专家，到智能制造系统设计者。', 'AI manufacturing brief keeps its SSOT summary');
+  assert(aiManufacturingRecord && aiManufacturingRecord.theme === 'AI与工业工程', 'AI manufacturing brief keeps its SSOT theme');
+  includes(aiManufacturingBrief, 'data-brief-title="AI+工业工程：未来IE工程师如何重新定义制造价值"', 'AI manufacturing brief exposes stable publisher metadata');
+  includes(aiManufacturingBrief, 'data-qily-knowledge-brief="ai-manufacturing-v1"', 'AI manufacturing brief declares its knowledge-asset layout');
+  includes(aiManufacturingBrief, '<header class="qily-site-header">', 'AI manufacturing brief inherits the QilyLean site header');
+  includes(aiManufacturingBrief, '<a class="qily-brand" href="/">QilyLean | 启力精益</a>', 'AI manufacturing brief inherits the QilyLean brand Logo');
+  matches(aiManufacturingBrief, /<a href="\/knowledge\/" aria-current="page">知识资产<\/a>/, 'AI manufacturing brief keeps Knowledge Assets as the active navigation module');
+  includes(aiManufacturingBrief, '/qilylean/knowledge-brief.css?v=20260905-ai-manufacturing-v1', 'AI manufacturing brief loads the knowledge-asset visual component');
+  assert(!/daily-single-page|data-qily-daily-layout=/.test(aiManufacturingBrief), 'AI manufacturing brief no longer uses the standalone blog layout');
+  const requiredKnowledgeFlow = ['id="knowledge-asset"', 'id="ai-manufacturing"', 'id="selected-brief"', 'id="current-theme"', 'id="knowledge-chain"', 'id="industrial-case"', 'id="qilylean-view"'];
+  let previousFlowIndex = -1;
+  for (const marker of requiredKnowledgeFlow) {
+    const flowIndex = aiManufacturingBrief.indexOf(marker);
+    assert(flowIndex > previousFlowIndex, 'AI manufacturing knowledge sections remain in the governed sequence', marker);
+    previousFlowIndex = flowIndex;
+  }
+}
 if (secondLatestDate) {
   includes(latest, `/qilylean/daily/${secondLatestDate}.html`, 'Latest retained page links to the previous retained brief');
   includes(secondLatest, `/qilylean/daily/${sourceLatest}.html`, 'Second-latest retained page links forward to the latest retained brief');
@@ -83,6 +105,7 @@ matches(knowledge, new RegExp(`<a[^>]*(?:data-latest-brief-link[^>]*href=["']${e
 
 assert(siteData.briefs && siteData.briefs.latestDate === sourceLatest, 'Site data latest date is current');
 assert(siteData.briefs && siteData.briefs.total === index.length, 'Site data brief count matches retained index');
+assert(siteData.briefs && siteData.briefs.earliestDate === index[index.length - 1].date, 'Site data earliest date matches retained index');
 includes(knowledge, `<small>术语与培训</small><h3>${siteData.terminology.total} 项</h3>`, 'Knowledge page terminology count matches central metadata');
 includes(terminology, `共收录 ${siteData.terminology.total} 项术语 · ${siteData.terminology.total} 份单点培训课件`, 'Terminology page visible count matches central metadata');
 if (weeklyCurated) assert(siteData.briefs.cadence === 'weekly_curated', 'Site data records weekly curated cadence');

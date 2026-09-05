@@ -14,7 +14,9 @@
     "latestSummary": "从现场改善专家，到智能制造系统设计者。",
     "latestUrl": "/qilylean/daily/2026-09-04.html",
     "directoryUrl": "/qilylean/daily-insights.html",
-    "cadence": "weekly_curated"
+    "cadence": "weekly_curated",
+    "earliestDate": "2019-07-10",
+    "earliestUrl": "/qilylean/daily/2019-07-10.html"
   },
   "knowledge": {
     "moduleCount": 7,

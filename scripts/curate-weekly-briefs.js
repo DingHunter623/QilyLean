@@ -43,6 +43,13 @@ function capture(html, re, fallback = '') {
   return match ? plain(match[1]) : fallback;
 }
 
+function briefAttribute(html, name, fallback = '') {
+  const opening = html.match(/<article\b[^>]*\bclass=["'][^"']*\bpost\b[^"']*["'][^>]*>/i);
+  if (!opening) return fallback;
+  const attribute = opening[0].match(new RegExp(`\\b${name}=["']([^"']*)["']`, 'i'));
+  return attribute ? plain(attribute[1]) : fallback;
+}
+
 function mondayKey(date) {
   const value = new Date(`${date}T00:00:00Z`);
   const day = value.getUTCDay() || 7;
@@ -99,10 +106,10 @@ function readRecords() {
     .map((name) => {
       const date = name.slice(0, 10);
       const html = fs.readFileSync(path.join(dailyDir, name), 'utf8');
-      const title = capture(html, /<h2[^>]*>([\s\S]*?)<\/h2>/i, capture(html, /<title>([\s\S]*?)<\/title>/i, date).replace(/｜今日简报.*$/, ''));
-      const summary = capture(html, /<article\b[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/i, '打开本期简报查看完整内容。');
+      const title = briefAttribute(html, 'data-brief-title', capture(html, /<h2[^>]*>([\s\S]*?)<\/h2>/i, capture(html, /<title>([\s\S]*?)<\/title>/i, date).replace(/｜今日简报.*$/, '')));
+      const summary = briefAttribute(html, 'data-brief-summary', capture(html, /<article\b[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/i, '打开本期简报查看完整内容。'));
       const dateLine = capture(html, /<div class="date"[^>]*>([\s\S]*?)<\/div>/i, date);
-      const theme = dateLine.replace(date, '').replace(/^[｜|·\s]+/, '').trim() || '制造工程';
+      const theme = briefAttribute(html, 'data-brief-theme', dateLine.replace(date, '').replace(/^[｜|·\s]+/, '').trim() || '制造工程');
       return { date, html, title, summary, theme };
     })
     .sort((a, b) => b.date.localeCompare(a.date));

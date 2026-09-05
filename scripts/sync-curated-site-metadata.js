@@ -42,6 +42,7 @@ function loadSiteData() {
 }
 function updateSiteData(items, termTotal) {
   const latest = items[0];
+  const earliest = items[items.length - 1];
   const data = loadSiteData();
   data.generatedAt = latest.date;
   data.schemaVersion = data.schemaVersion || 1;
@@ -59,6 +60,8 @@ function updateSiteData(items, termTotal) {
     latestTitle: latest.title || '',
     latestSummary: latest.summary || '',
     latestUrl: `/qilylean/daily/${latest.date}.html`,
+    earliestDate: earliest.date,
+    earliestUrl: `/qilylean/daily/${earliest.date}.html`,
     directoryUrl: '/qilylean/daily-insights.html',
     cadence: 'weekly_curated'
   };

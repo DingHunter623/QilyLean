@@ -26,6 +26,7 @@ function replaceStat(page, key, labels, value, outputLabel) {
 function buildExpected(page, data) {
   if (!data.briefs || !Number.isInteger(data.briefs.total) || data.briefs.total < 1) throw new Error('Invalid central brief total');
   if (!/^\d{4}-\d{2}-\d{2}$/.test(data.briefs.latestDate || '')) throw new Error('Invalid central latest brief date');
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(data.briefs.earliestDate || '')) throw new Error('Invalid central earliest brief date');
   const weekly = data.briefs.cadence === 'weekly_curated';
   const briefLabel = weekly ? '精选简报总数' : '今日简报总数';
   const latestLabel = weekly ? '最新精选日期' : '最新简报日期';
@@ -34,8 +35,10 @@ function buildExpected(page, data) {
     next = replaceStat(next, 'terminology', ['术语及单点课件'], data.terminology.total, '术语及单点课件');
   }
   next = replaceStat(next, 'briefs', ['今日简报总数', '精选简报总数'], data.briefs.total, briefLabel);
+  next = replaceStat(next, 'earliest-date', ['最早简报日期', '最早精选日期'], data.briefs.earliestDate, weekly ? '最早精选日期' : '最早简报日期');
   next = replaceStat(next, 'latest-date', ['最新简报日期', '最新精选日期'], data.briefs.latestDate, latestLabel);
-  next = next.replace(/(<a\b[^>]*class=["'][^"']*qily-trust-date-link[^"']*["'][^>]*>[\s\S]*?<strong\b[^>]*data-trust-stat=["']latest-date["'][^>]*>)[\s\S]*?<\/strong>/i, (match) => match.replace(/\d{4}-\d{2}-\d{2}/g, data.briefs.latestDate));
+  next = next.replace(/<a\b(?=[^>]*class=["'][^"']*qily-trust-date-link[^"']*["'])[^>]*>\s*<strong\b[^>]*data-trust-stat=["']earliest-date["'][^>]*>[^<]*<\/strong>/i, (match) => match.replace(/\d{4}-\d{2}-\d{2}/g, data.briefs.earliestDate));
+  next = next.replace(/<a\b(?=[^>]*class=["'][^"']*qily-trust-date-link[^"']*["'])[^>]*>\s*<strong\b[^>]*data-trust-stat=["']latest-date["'][^>]*>[^<]*<\/strong>/i, (match) => match.replace(/\d{4}-\d{2}-\d{2}/g, data.briefs.latestDate));
   if (data.search && Number.isInteger(data.search.indexedEntries)) {
     next = replaceStat(next, 'search', ['站内搜索索引条目'], data.search.indexedEntries, '站内搜索索引条目');
   }
@@ -52,6 +55,7 @@ function validate(page, data) {
   const weekly = data.briefs.cadence === 'weekly_curated';
   const expected = [
     ['briefs', data.briefs.total, weekly ? '精选简报总数' : '今日简报总数'],
+    ['earliest-date', data.briefs.earliestDate, weekly ? '最早精选日期' : '最早简报日期'],
     ['latest-date', data.briefs.latestDate, weekly ? '最新精选日期' : '最新简报日期']
   ];
   if (data.terminology && Number.isInteger(data.terminology.total)) expected.unshift(['terminology', data.terminology.total, '术语及单点课件']);
