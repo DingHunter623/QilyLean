@@ -414,3 +414,158 @@ html:root body.qily-knowledge-brief-page .brief-adjacent > a:active {
   .brief-adjacent a,
   .brief-adjacent span { font-size: 13.5px; }
 }
+
+/* 2026-09-04 VI closure | bring the AI/IE brief back into the same Selected
+ * Brief shell used across the site. The specialist knowledge structure remains,
+ * but the page no longer presents itself as a separate microsite.
+ */
+html body.qily-knowledge-brief-page main[data-qily-knowledge-brief]{
+  position:relative!important;
+  padding-top:184px!important;
+  background:var(--brief-paper)!important;
+}
+html body.qily-knowledge-brief-page main[data-qily-knowledge-brief]::before{
+  position:absolute!important;
+  z-index:1!important;
+  top:0!important;
+  left:0!important;
+  width:100%!important;
+  height:184px!important;
+  padding:22px max(clamp(18px,2.2vw,56px),calc((100% - var(--qily-content-axis,1560px))/2)) 0!important;
+  box-sizing:border-box!important;
+  content:"CURATED ENGINEERING BRIEF"!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:linear-gradient(102deg,#073c47 0%,#0f4b5a 48%,#168b94 100%)!important;
+  font-size:14px!important;
+  font-weight:950!important;
+  line-height:1.2!important;
+  letter-spacing:.10em!important;
+  pointer-events:none!important;
+}
+html body.qily-knowledge-brief-page main[data-qily-knowledge-brief]::after{
+  position:absolute!important;
+  z-index:2!important;
+  top:54px!important;
+  left:max(clamp(18px,2.2vw,56px),calc((100% - var(--qily-content-axis,1560px))/2))!important;
+  content:"精选简报"!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  font-size:clamp(34px,3.2vw,48px)!important;
+  font-weight:950!important;
+  line-height:1!important;
+  letter-spacing:-.02em!important;
+  pointer-events:none!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-top-nav{
+  position:static!important;
+  padding:clamp(28px,3vw,46px) clamp(18px,2.2vw,56px) 18px!important;
+  border:0!important;
+  background:var(--brief-paper)!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-top-nav::before{
+  position:absolute!important;
+  z-index:3!important;
+  top:112px!important;
+  left:max(clamp(18px,2.2vw,56px),calc((100% - var(--qily-content-axis,1560px))/2))!important;
+  content:"2026-09-04｜AI与工业工程"!important;
+  color:#edf9f6!important;
+  -webkit-text-fill-color:#edf9f6!important;
+  font-size:clamp(17px,1.5vw,20px)!important;
+  font-weight:600!important;
+  line-height:1.45!important;
+  pointer-events:none!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-top-nav>.module-inner,
+html body.qily-knowledge-brief-page .knowledge-brief-hero>.module-inner,
+html body.qily-knowledge-brief-page .knowledge-brief-map>.module-inner{
+  width:min(var(--qily-content-axis,1560px),100%)!important;
+  max-width:var(--qily-content-axis,1560px)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-hero{
+  overflow:visible!important;
+  padding:0 clamp(18px,2.2vw,56px) clamp(24px,2.5vw,36px)!important;
+  background:var(--brief-paper)!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-hero::after{
+  display:none!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-hero>.module-inner{
+  padding:clamp(28px,3.4vw,48px)!important;
+  border:1px solid #cfe0df!important;
+  border-radius:28px!important;
+  background:#fff!important;
+  box-shadow:0 16px 44px rgba(15,75,90,.085)!important;
+}
+html body.qily-knowledge-brief-page .knowledge-breadcrumbs{
+  margin:0 0 12px!important;
+  color:#6a7772!important;
+  -webkit-text-fill-color:#6a7772!important;
+  font-size:14px!important;
+}
+html body.qily-knowledge-brief-page .knowledge-breadcrumbs a{
+  color:var(--brief-forest)!important;
+  -webkit-text-fill-color:var(--brief-forest)!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-hero .module-eyebrow{
+  display:inline-flex!important;
+  width:auto!important;
+  padding:7px 12px!important;
+  border:1px solid #e4c885!important;
+  border-radius:999px!important;
+  color:#8b6830!important;
+  -webkit-text-fill-color:#8b6830!important;
+  background:#fff7e4!important;
+  font-size:15px!important;
+  font-weight:900!important;
+  letter-spacing:.04em!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-hero h1{
+  max-width:none!important;
+  margin:18px 0 14px!important;
+  color:var(--brief-forest)!important;
+  -webkit-text-fill-color:var(--brief-forest)!important;
+  font-size:clamp(32px,3.05vw,46px)!important;
+  line-height:1.18!important;
+  letter-spacing:-.02em!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-hero .module-lead{
+  max-width:none!important;
+  margin:0!important;
+  color:#3a5756!important;
+  -webkit-text-fill-color:#3a5756!important;
+  font-size:clamp(18px,1.4vw,21px)!important;
+  line-height:1.8!important;
+  font-weight:650!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-meta{
+  margin-top:18px!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-meta span{
+  min-height:34px!important;
+  padding:5px 10px!important;
+  border:1px solid #d6e5e2!important;
+  color:#315b61!important;
+  -webkit-text-fill-color:#315b61!important;
+  background:#f7fbfa!important;
+  font-size:14px!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-map{
+  padding:0 clamp(18px,2.2vw,56px) clamp(28px,3vw,44px)!important;
+  background:var(--brief-paper)!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-map a{
+  border-radius:10px!important;
+  background:#fff!important;
+}
+@media(max-width:620px){
+  html body.qily-knowledge-brief-page main[data-qily-knowledge-brief]{padding-top:158px!important}
+  html body.qily-knowledge-brief-page main[data-qily-knowledge-brief]::before{height:158px!important;padding-top:18px!important}
+  html body.qily-knowledge-brief-page main[data-qily-knowledge-brief]::after{top:48px!important;font-size:34px!important}
+  html body.qily-knowledge-brief-page .knowledge-brief-top-nav::before{top:98px!important;font-size:16px!important}
+  html body.qily-knowledge-brief-page .knowledge-brief-top-nav{padding-top:22px!important}
+  html body.qily-knowledge-brief-page .knowledge-brief-hero>.module-inner{padding:22px 18px!important;border-radius:18px!important}
+}
