@@ -1,0 +1,47 @@
+{
+  "version": "2026-09-05",
+  "site": "https://qilylean.com/",
+  "purpose": "Baidu priority discovery queue for brand terms and high-value manufacturing intent pages. Keep this list small, canonical, indexable and commercially meaningful.",
+  "targets": [
+    {
+      "keyword": "QilyLean",
+      "url": "https://qilylean.com/",
+      "priority": "S"
+    },
+    {
+      "keyword": "启力精益",
+      "url": "https://qilylean.com/",
+      "priority": "S"
+    },
+    {
+      "keyword": "模具库",
+      "url": "https://qilylean.com/projects/mold-warehouse/",
+      "priority": "S"
+    },
+    {
+      "keyword": "新工厂规划",
+      "url": "https://qilylean.com/projects/factory-layout/",
+      "priority": "S"
+    },
+    {
+      "keyword": "精益工具库",
+      "url": "https://qilylean.com/qilylean/lean-tools.html",
+      "priority": "S"
+    },
+    {
+      "keyword": "制造改善知识库",
+      "url": "https://qilylean.com/knowledge/",
+      "priority": "S"
+    },
+    {
+      "keyword": "制造改善方法体系",
+      "url": "https://qilylean.com/capabilities/",
+      "priority": "S"
+    },
+    {
+      "keyword": "精益生产",
+      "url": "https://qilylean.com/lean-production/",
+      "priority": "A"
+    }
+  ]
+}
