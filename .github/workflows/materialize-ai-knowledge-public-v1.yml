@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/materialize-ai-knowledge-public-v1.js'
+      - 'scripts/materialize-ai-knowledge-hub-entry-v1.js'
       - 'scripts/ensure-ai-knowledge-translation-v1.js'
       - '.github/workflows/materialize-ai-knowledge-public-v1.yml'
   workflow_dispatch:
@@ -30,17 +31,19 @@ jobs:
         with:
           node-version: 24
 
-      - name: Materialize formal public AI knowledge route
+      - name: Materialize formal public AI knowledge route and knowledge-hub entry
         run: |
           node --check scripts/materialize-ai-knowledge-public-v1.js
+          node --check scripts/materialize-ai-knowledge-hub-entry-v1.js
           node --check scripts/ensure-ai-knowledge-translation-v1.js
           node scripts/materialize-ai-knowledge-public-v1.js
+          node scripts/materialize-ai-knowledge-hub-entry-v1.js
           node scripts/ensure-ai-knowledge-translation-v1.js
 
       - name: Build synchronized search metadata
         run: npm run build
 
-      - name: Validate route SEO mobile runtime and repository isolation
+      - name: Validate route SEO mobile runtime hub entry and repository isolation
         shell: bash
         run: |
           set -euo pipefail
@@ -54,6 +57,11 @@ jobs:
           grep -q 'name="viewport"' AI-Knowledge/index.html
           grep -q 'canonical" href="https://qilylean.com/AI-Knowledge/"' AI-Knowledge/index.html
           grep -q '@media (max-width:640px)' AI-Knowledge/index.html
+          grep -q 'QILY-AI-KNOWLEDGE-FRONTEND:START' knowledge/index.html
+          grep -q 'href="/AI-Knowledge/"' knowledge/index.html
+          grep -q '>AI赋能制造知识库<' knowledge/index.html
+          ! grep -q 'href="/AI-Knowledge/README.md"' knowledge/index.html
+          ! grep -q '>AI Knowledge Base<' knowledge/index.html
           grep -q '"title": "AI赋能制造知识库"' qilylean/site-data.json
           grep -q '"url": "/AI-Knowledge/"' qilylean/site-data.json
           grep -q '<loc>https://qilylean.com/AI-Knowledge/</loc>' sitemap.xml
@@ -75,6 +83,7 @@ jobs:
           set -euo pipefail
           paths=(
             AI-Knowledge/index.html
+            knowledge/index.html
             qilylean/site-data.json
             qilylean/site-search-index.json
             qilylean/daily/2026-09-04.html
