@@ -8,9 +8,11 @@ on:
       - "sitemap.xml"
       - "sitemap-core.xml"
       - "sitemap-topics.xml"
+      - "sitemap-baidu.xml"
       - "robots.txt"
       - "data/search-authority-map.json"
       - "data/google-index-coverage-policy.json"
+      - "data/baidu-core-urls.json"
       - ".github/workflows/indexnow.yml"
   workflow_dispatch:
   schedule:
@@ -100,18 +102,42 @@ jobs:
               rows.sort()
               return [url for _, _, url in rows]
 
+          def baidu_core_urls():
+              file = Path("data/baidu-core-urls.json")
+              if not file.exists():
+                  return []
+              payload = json.loads(file.read_text(encoding="utf-8"))
+              rows = []
+              for index, item in enumerate(payload.get("targets", [])):
+                  url = (item.get("url") or "").strip()
+                  priority = item.get("priority")
+                  if url:
+                      rows.append((0 if priority == "S" else 1, index, url))
+              rows.sort()
+              output = []
+              seen = set()
+              for _, _, url in rows:
+                  if url not in seen:
+                      output.append(url)
+                      seen.add(url)
+              return output
+
           topic_urls = sitemap_urls("sitemap-topics.xml")
+          baidu_sitemap_urls = sitemap_urls("sitemap-baidu.xml")
           priority_urls = coverage_urls()
           authority_priority_urls = authority_urls()
+          baidu_priority_urls = baidu_core_urls()
           candidates = []
 
           def add_many(items):
               candidates.extend(item for item in items if item)
 
-          # Manual and scheduled runs refresh only high-authority, indexable routes,
-          # never the entire site. Scheduled runs rotate the queue so a small Baidu
-          # quota can cover the full authority set over several days.
+          # Manual and scheduled runs put the Baidu core queue first, then refresh
+          # the broader high-authority/indexable route set. Scheduled runs are later
+          # reduced to a fixed core plus rotating long-tail authority URLs.
           if event in {"workflow_dispatch", "schedule"}:
+              add_many(baidu_priority_urls)
+              add_many(baidu_sitemap_urls)
               add_many(authority_priority_urls)
               add_many(topic_urls)
               add_many(priority_urls)
@@ -134,6 +160,10 @@ jobs:
                   if match:
                       candidates.insert(0, match.group(1))
 
+              if name in {"sitemap-baidu.xml", "data/baidu-core-urls.json"}:
+                  add_many(baidu_priority_urls)
+                  add_many(baidu_sitemap_urls)
+
               if name in {"sitemap-topics.xml", "data/search-authority-map.json"}:
                   add_many(authority_priority_urls)
                   add_many(topic_urls)
@@ -155,16 +185,33 @@ jobs:
               parsed = urlparse(url)
               if parsed.scheme != "https" or parsed.netloc != os.environ["SITE_HOST"]:
                   continue
-              normalized = origin if parsed.path == "/" else url.rstrip("/")
+              # Preserve the exact canonical path, including trailing slash on
+              # directory routes. Do not submit redirect variants to Baidu.
+              normalized = f"{parsed.scheme}://{parsed.netloc}{parsed.path or '/'}"
               if normalized not in seen:
                   clean.append(normalized)
                   seen.add(normalized)
 
           if event == "schedule" and clean:
               daily_window = 10
-              offset = ((datetime.date.today().toordinal() - 1) * daily_window) % len(clean)
-              clean = clean[offset:] + clean[:offset]
-              print(f"Scheduled Baidu rotation starts at authority offset {offset} of {len(clean)}.")
+              fixed = []
+              for url in baidu_priority_urls:
+                  parsed = urlparse(url)
+                  normalized = f"{parsed.scheme}://{parsed.netloc}{parsed.path or '/'}"
+                  if normalized in seen and normalized not in fixed:
+                      fixed.append(normalized)
+              # Keep the seven strategic brand/industry entry URLs refreshed daily;
+              # use the remaining slots to rotate deeper authority pages.
+              fixed = fixed[:7]
+              rotating = [url for url in clean if url not in fixed]
+              slots = max(0, daily_window - len(fixed))
+              if rotating and slots:
+                  offset = ((datetime.date.today().toordinal() - 1) * slots) % len(rotating)
+                  rotated = rotating[offset:] + rotating[:offset]
+                  clean = fixed + rotated[:slots]
+                  print(f"Scheduled Baidu rotation starts at non-core offset {offset} of {len(rotating)}.")
+              else:
+                  clean = fixed[:daily_window]
 
           Path("search-engine-urls.txt").write_text("\n".join(clean) + ("\n" if clean else ""), encoding="utf-8")
           Path("search-engine-urls.json").write_text(json.dumps(clean, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
