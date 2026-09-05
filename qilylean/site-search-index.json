@@ -2,7 +2,7 @@
   "generatedAt": "2026-09-05",
   "schemaVersion": 1,
   "meta": {
-    "indexedEntries": 732,
+    "indexedEntries": 738,
     "indexedPages": 639,
     "terminologyTotal": 193,
     "briefTotal": 376,
@@ -3566,8 +3566,68 @@
       "code": "",
       "description": "QilyLean AI赋能制造知识库，面向工业工程IE、精益生产Lean、智能制造、新工厂规划与制造改善方法体系，沉淀可检索、可复用、可持续迭代的企业级制造知识资产。",
       "headings": "QilyLean AI赋能制造知识库 🤖 ｜ 制造知识体系 ｜ AI赋能工业工程 ｜ 精益生产与现场改善 ｜ 智能制造与数智工厂 ｜ 新工厂规划 ｜ 制造改善方法体系 ｜ 知识复用与AI辅助 ｜ 从知识阅读走向制造问题闭环",
-      "text": "QilyLean AI赋能制造知识库｜IE·精益生产·智能制造知识资产 QilyLean · AI Manufacturing Knowledge Asset QilyLean AI赋能制造知识库 🤖 面向工业工程 IE、精益生产 Lean、智能制造、新工厂规划、制造改善方法体系的企业级知识资产库。以制造现场问题为入口，将方法、数据、工具、案例与AI辅助能力组织为可检索、可复用、可持续迭代的知识资产。 进入知识资产总目录 制造术语与OPL 01 / Knowledge Domains 制造知识体系 围绕制造运营的关键对象建立统一知识入口，从IE基础数据到精益改善，再到数智化系统规划与AI辅助分析。 IE AI赋能工业工程 标准工时、产能、线平衡、人机配置、动作与物流分析，以及基于制造数据的工程决策。 LEAN 精益生产与现场改善 VSM、SMED、TPM、6S、单件流、标准作业与持续改善，强调问题定义、验证和标准化闭环。 SMART FACTORY 智能制造与数智工厂 ERP、MES、APS、数据看板与现场执行连接，形成从计划、资源到结果验证的数据链。 FACTORY PLANNING 新工厂规划 产能规划、布局、物流、人流、设备、公用工程与分阶段实施，服务工厂建设和搬迁决策。 METHOD SYSTEM 制造改善方法体系 把ECRS、PDCA、5W2H、DOE、OEE等方法转化为可直接进入项目的工程化分析框架。 KNOWLEDGE REUSE 知识复用与AI辅助 将术语、模板、案例、工程规则和历史经验结构化，支持检索、学习、方案生成与持续复盘。 02 / Application Logic 从知识阅读走向制造问题闭环 知识库服务于现场事实确认、工程建模、方案选择、实施验证与标准固化。AI用于检索、整理和方案辅助，不替代现场核实、专业评审与管理决策。 精益工具库 制造改善知识库 精选简报",
+      "text": "QilyLean AI赋能制造知识库｜IE·精益生产·智能制造知识资产 QilyLean · AI Manufacturing Knowledge Asset QilyLean AI赋能制造知识库 🤖 面向工业工程 IE、精益生产 Lean、智能制造、新工厂规划、制造改善方法体系的企业级知识资产库。以制造现场问题为入口，将方法、数据、工具、案例与AI辅助能力组织为可检索、可复用、可持续迭代的知识资产。 进入知识资产总目录 制造术语与OPL 01 / KNOWLEDGE DOMAINS 制造知识体系 围绕制造运营的关键对象建立统一知识入口，从IE基础数据到精益改善，再到数智化系统规划与AI辅助分析。 IE AI赋能工业工程 标准工时、产能、线平衡、人机配置、动作与物流分析，以及基于制造数据的工程决策。 LEAN 精益生产与现场改善 VSM、SMED、TPM、6S、单件流、标准作业与持续改善，强调问题定义、验证和标准化闭环。 SMART FACTORY 智能制造与数智工厂 ERP、MES、APS、数据看板与现场执行连接，形成从计划、资源到结果验证的数据链。 FACTORY PLANNING 新工厂规划 产能规划、布局、物流、人流、设备、公用工程与分阶段实施，服务工厂建设和搬迁决策。 METHOD SYSTEM 制造改善方法体系 把ECRS、PDCA、5W2H、DOE、OEE等方法转化为可直接进入项目的工程化分析框架。 KNOWLEDGE REUSE 知识复用与AI辅助 将术语、模板、案例、工程规则和历史经验结构化，支持检索、学习、方案生成与持续复盘。 02 / APPLICATION LOGIC 从知识阅读走向制造问题闭环 知识库服务于现场事实确认、工程建模、方案选择、实施验证与标准固化。AI用于检索、整理和方案辅助，不替代现场核实、专业评审与管理决策。 精益工具库 制造改善知识库 精选简报",
       "kind": "网页",
+      "date": ""
+    },
+    {
+      "url": "/AI-Knowledge/",
+      "title": "AI赋能工业工程",
+      "code": "",
+      "description": "标准工时、产能、线平衡、人机配置、动作与物流分析，以及基于制造数据的工程决策。",
+      "headings": "QilyLean AI赋能制造知识库",
+      "text": "IE AI赋能工业工程 标准工时、产能、线平衡、人机配置、动作与物流分析，以及基于制造数据的工程决策。",
+      "kind": "QilyLean AI赋能制造知识库",
+      "date": ""
+    },
+    {
+      "url": "/AI-Knowledge/",
+      "title": "精益生产与现场改善",
+      "code": "",
+      "description": "VSM、SMED、TPM、6S、单件流、标准作业与持续改善，强调问题定义、验证和标准化闭环。",
+      "headings": "QilyLean AI赋能制造知识库",
+      "text": "LEAN 精益生产与现场改善 VSM、SMED、TPM、6S、单件流、标准作业与持续改善，强调问题定义、验证和标准化闭环。",
+      "kind": "QilyLean AI赋能制造知识库",
+      "date": ""
+    },
+    {
+      "url": "/AI-Knowledge/",
+      "title": "智能制造与数智工厂",
+      "code": "",
+      "description": "ERP、MES、APS、数据看板与现场执行连接，形成从计划、资源到结果验证的数据链。",
+      "headings": "QilyLean AI赋能制造知识库",
+      "text": "SMART FACTORY 智能制造与数智工厂 ERP、MES、APS、数据看板与现场执行连接，形成从计划、资源到结果验证的数据链。",
+      "kind": "QilyLean AI赋能制造知识库",
+      "date": ""
+    },
+    {
+      "url": "/AI-Knowledge/",
+      "title": "新工厂规划",
+      "code": "",
+      "description": "产能规划、布局、物流、人流、设备、公用工程与分阶段实施，服务工厂建设和搬迁决策。",
+      "headings": "QilyLean AI赋能制造知识库",
+      "text": "FACTORY PLANNING 新工厂规划 产能规划、布局、物流、人流、设备、公用工程与分阶段实施，服务工厂建设和搬迁决策。",
+      "kind": "QilyLean AI赋能制造知识库",
+      "date": ""
+    },
+    {
+      "url": "/AI-Knowledge/",
+      "title": "制造改善方法体系",
+      "code": "",
+      "description": "把ECRS、PDCA、5W2H、DOE、OEE等方法转化为可直接进入项目的工程化分析框架。",
+      "headings": "QilyLean AI赋能制造知识库",
+      "text": "METHOD SYSTEM 制造改善方法体系 把ECRS、PDCA、5W2H、DOE、OEE等方法转化为可直接进入项目的工程化分析框架。",
+      "kind": "QilyLean AI赋能制造知识库",
+      "date": ""
+    },
+    {
+      "url": "/AI-Knowledge/",
+      "title": "知识复用与AI辅助",
+      "code": "",
+      "description": "将术语、模板、案例、工程规则和历史经验结构化，支持检索、学习、方案生成与持续复盘。",
+      "headings": "QilyLean AI赋能制造知识库",
+      "text": "KNOWLEDGE REUSE 知识复用与AI辅助 将术语、模板、案例、工程规则和历史经验结构化，支持检索、学习、方案生成与持续复盘。",
+      "kind": "QilyLean AI赋能制造知识库",
       "date": ""
     },
     {
