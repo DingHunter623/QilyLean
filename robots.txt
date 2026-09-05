@@ -9,3 +9,4 @@ Disallow: /AI-Knowledge/NOTICE.md
 Sitemap: https://qilylean.com/sitemap.xml
 Sitemap: https://qilylean.com/sitemap-core.xml
 Sitemap: https://qilylean.com/sitemap-topics.xml
+Sitemap: https://qilylean.com/sitemap-baidu.xml
