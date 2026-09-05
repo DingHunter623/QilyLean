@@ -67,7 +67,7 @@ if (aiManufacturingBrief) {
   matches(aiManufacturingBrief, /<a href="\/knowledge\/" aria-current="page">知识资产<\/a>/, 'AI manufacturing brief keeps Knowledge Assets as the active navigation module');
   includes(aiManufacturingBrief, '/qilylean/knowledge-brief.css?v=20260905-ai-manufacturing-v2', 'AI manufacturing brief loads the knowledge-asset visual component');
   assert(!/daily-single-page|data-qily-daily-layout=/.test(aiManufacturingBrief), 'AI manufacturing brief no longer uses the standalone blog layout');
-  const topNavIndex = aiManufacturingBrief.indexOf('data-qily-brief-top-nav="site-standard-v1"');
+  const topNavIndex = aiManufacturingBrief.indexOf('class="brief-adjacent top"');
   const heroIndex = aiManufacturingBrief.indexOf('class="module-hero knowledge-brief-hero"');
   assert(topNavIndex > -1 && topNavIndex < heroIndex, 'AI manufacturing brief places the standard adjacent navigation before the hero');
   assert((aiManufacturingBrief.match(/class="brief-adjacent top"/g) || []).length === 1, 'AI manufacturing brief renders exactly one top adjacent navigation');
