@@ -15,10 +15,11 @@ const unifiedHref='/qilylean/daily-brief-unified-layout-v2.css?v=20260905-unifie
 const unifiedLink=`<link id="qilyDailyBriefUnifiedLayoutV2" rel="stylesheet" href="${unifiedHref}">`;
 
 let scanned=0;
+let governed=0;
 let legacy=0;
 let rich=0;
 let changed=0;
-const samples={legacy:[],rich:[]};
+const samples={legacy:[],rich:[],governed:[]};
 
 function setLayoutAttribute(source,layout,name){
   const match=source.match(dailyBody);
@@ -33,6 +34,15 @@ for(const name of fs.readdirSync(dailyDir).filter((file)=>datePage.test(file)).s
   scanned+=1;
   const file=path.join(dailyDir,name);
   const source=fs.readFileSync(file,'utf8');
+
+  /* New knowledge-asset briefs own the canonical site shell directly and are
+   * intentionally outside the legacy/rich daily-single-page materializer. */
+  if(!dailyBody.test(source)){
+    governed+=1;
+    if(samples.governed.length<10) samples.governed.push(name.replace('.html',''));
+    continue;
+  }
+
   const layout=legacyCover.test(source)?'legacy':'rich';
   if(layout==='legacy'){
     legacy+=1;
@@ -53,7 +63,8 @@ for(const name of fs.readdirSync(dailyDir).filter((file)=>datePage.test(file)).s
   }
 }
 
-if(!scanned||!legacy||!rich) throw new Error(`Unexpected daily population: scanned=${scanned}, legacy=${legacy}, rich=${rich}`);
-process.stdout.write(`Unified daily brief layout V2: scanned=${scanned}, legacy=${legacy}, rich=${rich}, changed=${changed}.\n`);
+if(!scanned||!legacy||!rich) throw new Error(`Unexpected daily population: scanned=${scanned}, governed=${governed}, legacy=${legacy}, rich=${rich}`);
+process.stdout.write(`Unified daily brief layout V2: scanned=${scanned}, governed=${governed}, legacy=${legacy}, rich=${rich}, changed=${changed}.\n`);
+process.stdout.write(`Governed sample: ${samples.governed.join(', ')}\n`);
 process.stdout.write(`Legacy sample: ${samples.legacy.join(', ')}\n`);
 process.stdout.write(`Rich sample: ${samples.rich.join(', ')}\n`);
