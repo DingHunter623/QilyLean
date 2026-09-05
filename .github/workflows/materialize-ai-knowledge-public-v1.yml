@@ -1,0 +1,96 @@
+name: Materialize AI knowledge public frontend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/materialize-ai-knowledge-public-v1.js'
+      - 'scripts/ensure-ai-knowledge-translation-v1.js'
+      - '.github/workflows/materialize-ai-knowledge-public-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: ai-knowledge-public-main
+  cancel-in-progress: false
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Materialize formal public AI knowledge route
+        run: |
+          node --check scripts/materialize-ai-knowledge-public-v1.js
+          node --check scripts/ensure-ai-knowledge-translation-v1.js
+          node scripts/materialize-ai-knowledge-public-v1.js
+          node scripts/ensure-ai-knowledge-translation-v1.js
+
+      - name: Build synchronized search metadata
+        run: npm run build
+
+      - name: Validate route SEO mobile runtime and repository isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/sync-search-brief-metadata.js
+          node --check scripts/site-system-v4-validate.js
+          node scripts/sync-search-brief-metadata.js --check
+          node scripts/site-system-v4-validate.js
+          node scripts/validate-translation-single-runtime-v1.js
+          grep -q '<title>QilyLean AI赋能制造知识库' AI-Knowledge/index.html
+          grep -q 'name="description"' AI-Knowledge/index.html
+          grep -q 'name="viewport"' AI-Knowledge/index.html
+          grep -q 'canonical" href="https://qilylean.com/AI-Knowledge/"' AI-Knowledge/index.html
+          grep -q '@media (max-width:640px)' AI-Knowledge/index.html
+          grep -q '"title": "AI赋能制造知识库"' qilylean/site-data.json
+          grep -q '"url": "/AI-Knowledge/"' qilylean/site-data.json
+          grep -q '<loc>https://qilylean.com/AI-Knowledge/</loc>' sitemap.xml
+          grep -q 'Disallow: /AI-Knowledge/README.md' robots.txt
+          grep -q 'Disallow: /AI-Knowledge/NOTICE.md' robots.txt
+          ! grep -q '/AI-Knowledge/README.md' qilylean/daily/2026-09-04.html
+          ! grep -q '/AI-Knowledge/README.md' sitemap.xml
+          ! grep -q '/AI-Knowledge/NOTICE.md' sitemap.xml
+          ! grep -q '"url": "/AI-Knowledge/README.md"' qilylean/site-data.json
+          ! grep -q '"url": "/AI-Knowledge/README.md"' qilylean/site-search-index.json
+          ! grep -q '"url": "/AI-Knowledge/NOTICE.md"' qilylean/site-search-index.json
+          test -f AI-Knowledge/README.md
+          test -f AI-Knowledge/NOTICE.md
+          git diff --check
+
+      - name: Commit closed-loop AI knowledge frontend
+        shell: bash
+        run: |
+          set -euo pipefail
+          paths=(
+            AI-Knowledge/index.html
+            qilylean/site-data.json
+            qilylean/site-search-index.json
+            qilylean/daily/2026-09-04.html
+            sitemap.xml
+            robots.txt
+            package.json
+            scripts/sync-search-brief-metadata.js
+            scripts/site-system-v4-validate.js
+          )
+          git add "${paths[@]}"
+          if git diff --cached --quiet; then
+            echo 'AI knowledge public frontend is already closed-loop.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix: close AI manufacturing knowledge public route [ai-knowledge-generated]'
+          git pull --rebase origin main
+          git push
