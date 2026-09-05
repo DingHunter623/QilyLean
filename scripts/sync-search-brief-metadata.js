@@ -145,62 +145,49 @@ function curatedBriefEntry(item) {
     date
   });
 }
-function markdownEntry(document) {
-  const source = clean(document && document.source);
-  const url = clean(document && document.url);
-  if (!source || path.isAbsolute(source) || source.split('/').includes('..')) {
-    throw new Error(`Invalid AI knowledge source path: ${source || '(empty)'}`);
+function validateAiKnowledgeSource(source) {
+  const value = clean(source && source.source);
+  if (!value || path.isAbsolute(value) || value.split('/').includes('..')) {
+    throw new Error(`Invalid AI knowledge source path: ${value || '(empty)'}`);
   }
-  if (!/^\/AI-Knowledge\/[^?#]+\.md$/i.test(url)) {
-    throw new Error(`Invalid AI knowledge public URL: ${url || '(empty)'}`);
-  }
-  const sourceFile = path.join(root, source);
+  const sourceFile = path.join(root, value);
   if (!fs.existsSync(sourceFile) || !fs.statSync(sourceFile).isFile()) {
-    throw new Error(`AI knowledge source is missing: ${source}`);
+    throw new Error(`AI knowledge source is missing: ${value}`);
   }
-  const markdown = read(sourceFile);
-  const headings = Array.from(markdown.matchAll(/^#{1,3}\s+(.+)$/gm), (match) => clean(match[1])).join(' ｜ ');
-  const plain = clean(markdown
-    .replace(/```[\s\S]*?```/g, ' ')
-    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
-    .replace(/^#{1,6}\s+/gm, '')
-    .replace(/^[-*+]\s+/gm, '')
-    .replace(/[*_`>#]/g, ' '));
-  const firstParagraph = markdown.split(/\n\s*\n/)
-    .map((part) => clean(part.replace(/^#{1,6}\s+/gm, '').replace(/[*_`>#]/g, ' ')))
-    .find((part) => part && !/^QilyLean AI Knowledge Base/i.test(part));
-  return entry({
-    url,
-    title: clean(document.title) || headings.split(' ｜ ')[0],
-    description: clean(document.description) || firstParagraph || plain.slice(0, 240),
-    headings,
-    text: plain,
-    kind: clean(document.kind) || 'AI知识库'
-  });
+  if (source && source.visibility && source.visibility !== 'repository-management') {
+    throw new Error(`AI knowledge source must remain repository-management only: ${value}`);
+  }
+  return value;
 }
 function aiKnowledgeEntries(data) {
   const aiKnowledge = data.knowledge && data.knowledge.aiKnowledge;
   if (!aiKnowledge) return [];
-  const documents = aiKnowledge.documents;
-  if (!Array.isArray(documents) || documents.length === 0) {
-    throw new Error('AI knowledge is registered in site-data.json but has no document sources.');
+  const sources = aiKnowledge.sources;
+  if (!Array.isArray(sources) || sources.length === 0) {
+    throw new Error('AI knowledge is registered in site-data.json but has no repository-management sources.');
   }
-  const urls = new Set();
+  sources.forEach(validateAiKnowledgeSource);
+  const url = clean(aiKnowledge.url);
+  if (!url || !url.startsWith('/') || /\.md(?:$|[?#])/i.test(url)) {
+    throw new Error(`AI knowledge primary URL must be a public landing page: ${url || '(empty)'}`);
+  }
+  const absoluteUrl = `https://qilylean.com${url}`;
+  const relative = urlToFile(absoluteUrl);
+  if (!relative) throw new Error(`AI knowledge public URL cannot be materialized: ${url}`);
+  const publicFile = path.join(root, relative);
+  if (!fs.existsSync(publicFile) || !fs.statSync(publicFile).isFile()) {
+    throw new Error(`AI knowledge public page is missing: ${relative}`);
+  }
   const sitemap = read(sitemapFile);
-  const entries = documents.map((document) => {
-    const item = markdownEntry(document);
-    if (urls.has(item.url)) throw new Error(`Duplicate AI knowledge URL in SSOT: ${item.url}`);
-    urls.add(item.url);
-    if (!sitemap.includes(`<loc>https://qilylean.com${item.url}</loc>`)) {
-      throw new Error(`AI knowledge URL is missing from sitemap.xml: ${item.url}`);
-    }
-    return item;
-  });
-  if (aiKnowledge.url !== entries[0].url) {
-    throw new Error(`AI knowledge primary URL must match its first document: ${aiKnowledge.url} != ${entries[0].url}`);
+  if (!sitemap.includes(`<loc>${absoluteUrl}</loc>`)) {
+    throw new Error(`AI knowledge public URL is missing from sitemap.xml: ${url}`);
   }
-  return entries;
+  if (sitemap.includes('/AI-Knowledge/README.md') || sitemap.includes('/AI-Knowledge/NOTICE.md')) {
+    throw new Error('Repository-management AI knowledge files must not be published in sitemap.xml.');
+  }
+  const page = pageEntries(url, read(publicFile));
+  if (!page.length) throw new Error(`AI knowledge public page could not be indexed: ${url}`);
+  return [page[0]];
 }
 function latestSitemapLastmod() {
   const dates = Array.from(read(sitemapFile).matchAll(/<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/g), (match) => match[1]);

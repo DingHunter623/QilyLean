@@ -21,7 +21,8 @@
     "v4:audit:sitemap": "node scripts/site-system-v4-sitemap-lastmod.js",
     "v4:build:sitemap": "node scripts/site-system-v4-sitemap-lastmod.js --write",
     "v4:build:meta": "node scripts/site-system-v4-build-meta.js",
-    "v4:verify:public": "node scripts/site-system-v4-public-verify.js"
+    "v4:verify:public": "node scripts/site-system-v4-public-verify.js",
+    "build": "node scripts/build-trust-search-sync.js --search-only && node scripts/site-system-v4-validate.js"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"

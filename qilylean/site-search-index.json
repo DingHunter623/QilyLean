@@ -2,8 +2,8 @@
   "generatedAt": "2026-09-05",
   "schemaVersion": 1,
   "meta": {
-    "indexedEntries": 732,
-    "indexedPages": 640,
+    "indexedEntries": 731,
+    "indexedPages": 639,
     "terminologyTotal": 193,
     "briefTotal": 376,
     "latestBriefDate": "2026-09-04",
@@ -3551,23 +3551,13 @@
       "date": ""
     },
     {
-      "url": "/AI-Knowledge/README.md",
-      "title": "QilyLean AI Knowledge Base",
+      "url": "/AI-Knowledge/",
+      "title": "QilyLean AI赋能制造知识库",
       "code": "",
-      "description": "AI赋能制造业知识库",
-      "headings": "QilyLean AI Knowledge Base 🤖 ｜ AI赋能制造业知识库 ｜ 来源说明 ｜ 知识体系规划 ｜ 01 ChatGPT 基础应用 ｜ 02 AI 图像生成 ｜ 03 AI 文本生成 ｜ 04 AI 代码生成 ｜ 05 Prompt Engineering ｜ 06 AI for Manufacturing ｜ QilyLean定位",
-      "text": "QilyLean AI Knowledge Base 🤖 AI赋能制造业知识库 QilyLean AI Knowledge Base 是面向工业工程（IE）、精益生产（Lean Manufacturing）和智能制造（Smart Factory）的 AI 应用知识体系。 来源说明 本模块参考并吸收开源项目： IDouble / ChatGPT-Simple-Tutorial-Image-Text-Code-Generation 该项目采用 MIT License，原作者内容按照开源协议保留版权信息。 知识体系规划 01 ChatGPT 基础应用 AI 基础能力 大语言模型应用 工作流设计 02 AI 图像生成 工业方案示意图 工厂布局可视化 改善前后对比展示 03 AI 文本生成 改善报告 8D报告 项目方案 技术文件 04 AI 代码生成 Python 数据分析 Excel 自动化 制造数据处理 05 Prompt Engineering 工业场景 Prompt 工程师 AI 工作流 06 AI for Manufacturing AI + IE AI + Lean Manufacturing AI + MES / ERP AI + Digital Factory QilyLean定位 让 AI 成为制造工程师的数字化助手，将现场经验转化为可复制的知识资产。",
-      "kind": "AI知识库",
-      "date": ""
-    },
-    {
-      "url": "/AI-Knowledge/NOTICE.md",
-      "title": "QilyLean AI Knowledge Base｜开源归属说明",
-      "code": "",
-      "description": "Open Source Attribution",
-      "headings": "Open Source Attribution ｜ Original Project ｜ QilyLean Extension",
-      "text": "Open Source Attribution Original Project IDouble / ChatGPT-Simple-Tutorial-Image-Text-Code-Generation Repository: https://github.com/IDouble/ChatGPT-Simple-Tutorial-Image-Text-Code-Generation License: MIT License QilyLean Extension QilyLean extends the general AI tutorial concepts into practical manufacturing scenarios, including: Industrial Engineering Lean Manufacturing Digital Factory MES / ERP integration Manufacturing data analysis Original authorship and license requirements remain respected.",
-      "kind": "开源归属说明",
+      "description": "QilyLean AI赋能制造知识库，面向工业工程IE、精益生产Lean、智能制造、新工厂规划与制造改善方法体系，沉淀可检索、可复用、可持续迭代的企业级制造知识资产。",
+      "headings": "QilyLean AI赋能制造知识库 🤖 ｜ 制造知识体系 ｜ AI赋能工业工程 ｜ 精益生产与现场改善 ｜ 智能制造与数智工厂 ｜ 新工厂规划 ｜ 制造改善方法体系 ｜ 知识复用与AI辅助 ｜ 从知识阅读走向制造问题闭环",
+      "text": "QilyLean AI赋能制造知识库｜IE·精益生产·智能制造知识资产 QilyLean · AI Manufacturing Knowledge Asset QilyLean AI赋能制造知识库 🤖 面向工业工程 IE、精益生产 Lean、智能制造、新工厂规划、制造改善方法体系的企业级知识资产库。以制造现场问题为入口，将方法、数据、工具、案例与AI辅助能力组织为可检索、可复用、可持续迭代的知识资产。 进入知识资产总目录 制造术语与OPL 01 / Knowledge Domains 制造知识体系 围绕制造运营的关键对象建立统一知识入口，从IE基础数据到精益改善，再到数智化系统规划与AI辅助分析。 IE AI赋能工业工程 标准工时、产能、线平衡、人机配置、动作与物流分析，以及基于制造数据的工程决策。 LEAN 精益生产与现场改善 VSM、SMED、TPM、6S、单件流、标准作业与持续改善，强调问题定义、验证和标准化闭环。 SMART FACTORY 智能制造与数智工厂 ERP、MES、APS、数据看板与现场执行连接，形成从计划、资源到结果验证的数据链。 FACTORY PLANNING 新工厂规划 产能规划、布局、物流、人流、设备、公用工程与分阶段实施，服务工厂建设和搬迁决策。 METHOD SYSTEM 制造改善方法体系 把ECRS、PDCA、5W2H、DOE、OEE等方法转化为可直接进入项目的工程化分析框架。 KNOWLEDGE REUSE 知识复用与AI辅助 将术语、模板、案例、工程规则和历史经验结构化，支持检索、学习、方案生成与持续复盘。 02 / Application Logic 从知识阅读走向制造问题闭环 知识库服务于现场事实确认、工程建模、方案选择、实施验证与标准固化。AI用于检索、整理和方案辅助，不替代现场核实、专业评审与管理决策。 精益工具库 制造改善知识库 精选简报",
+      "kind": "网页",
       "date": ""
     },
     {

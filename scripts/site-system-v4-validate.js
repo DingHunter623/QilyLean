@@ -102,13 +102,19 @@ if (siteData.search && Number.isInteger(siteData.search.terminologyTotal) && Num
 if (siteData.search && Number.isInteger(siteData.search.briefTotal) && Number.isInteger(searchMeta.briefTotal)) {
   if (siteData.search.briefTotal !== searchMeta.briefTotal) fail('brief count drift between SSOT and search index');
 }
-const aiDocuments = siteData.knowledge && siteData.knowledge.aiKnowledge && siteData.knowledge.aiKnowledge.documents;
-if (aiDocuments) {
-  if (!Array.isArray(aiDocuments) || aiDocuments.length === 0) fail('AI knowledge document registry is invalid');
-  for (const document of aiDocuments) {
-    if (!document || !document.source || !document.url) fail('AI knowledge document registry entry is incomplete');
-    if (!exists(document.source)) fail(`AI knowledge source missing: ${document.source}`);
-    if (!searchEntries.some((entry) => entry && entry.url === document.url)) fail(`AI knowledge document missing from search index: ${document.url}`);
+const aiKnowledgeRegistry = siteData.knowledge && siteData.knowledge.aiKnowledge;
+if (aiKnowledgeRegistry) {
+  if (!aiKnowledgeRegistry.url || /\.md(?:$|[?#])/i.test(aiKnowledgeRegistry.url)) fail('AI knowledge primary URL must be the formal public landing page');
+  if (!searchEntries.some((entry) => entry && entry.url === aiKnowledgeRegistry.url)) fail(`AI knowledge public page missing from search index: ${aiKnowledgeRegistry.url}`);
+  const aiSources = aiKnowledgeRegistry.sources;
+  if (!Array.isArray(aiSources) || aiSources.length === 0) fail('AI knowledge repository-management source registry is invalid');
+  for (const source of aiSources) {
+    if (!source || !source.source) fail('AI knowledge repository-management source entry is incomplete');
+    if (source.visibility !== 'repository-management') fail(`AI knowledge source is not marked repository-management: ${source.source}`);
+    if (!exists(source.source)) fail(`AI knowledge source missing: ${source.source}`);
+    const publicSourceUrl = `/${String(source.source).replace(/^\/+/, '')}`;
+    if (searchEntries.some((entry) => entry && entry.url === publicSourceUrl)) fail(`Repository-management AI source leaked into search index: ${publicSourceUrl}`);
+    if (sitemap.includes(`<loc>${base}${publicSourceUrl}</loc>`)) fail(`Repository-management AI source leaked into sitemap: ${publicSourceUrl}`);
   }
 }
 

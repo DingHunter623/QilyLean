@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04",
+  "generatedAt": "2026-09-05",
   "schemaVersion": 1,
   "terminology": {
     "total": 193,
@@ -25,8 +25,8 @@
     "documentCount": 7,
     "resourceCount": 18,
     "aiKnowledge": {
-      "title": "QilyLean AI Knowledge Base",
-      "url": "/AI-Knowledge/README.md",
+      "title": "AI赋能制造知识库",
+      "url": "/AI-Knowledge/",
       "topics": [
         "ChatGPT基础应用",
         "AI图像生成",
@@ -35,18 +35,16 @@
         "Prompt Engineering",
         "AI for Manufacturing"
       ],
-      "documents": [
+      "sources": [
         {
           "source": "AI-Knowledge/README.md",
-          "url": "/AI-Knowledge/README.md",
-          "title": "QilyLean AI Knowledge Base",
-          "kind": "AI知识库"
+          "kind": "仓库管理文件",
+          "visibility": "repository-management"
         },
         {
           "source": "AI-Knowledge/NOTICE.md",
-          "url": "/AI-Knowledge/NOTICE.md",
-          "title": "QilyLean AI Knowledge Base｜开源归属说明",
-          "kind": "开源归属说明"
+          "kind": "仓库管理文件",
+          "visibility": "repository-management"
         }
       ]
     }
@@ -74,8 +72,8 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 732,
-    "indexedPages": 640,
+    "indexedEntries": 731,
+    "indexedPages": 639,
     "terminologyTotal": 193,
     "briefTotal": 376,
     "latestBriefDate": "2026-09-04",

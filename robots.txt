@@ -3,6 +3,8 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /qilylean/reference/
+Disallow: /AI-Knowledge/README.md
+Disallow: /AI-Knowledge/NOTICE.md
 
 Sitemap: https://qilylean.com/sitemap.xml
 Sitemap: https://qilylean.com/sitemap-core.xml
