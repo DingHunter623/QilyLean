@@ -1,0 +1,4 @@
+QilyLean AI knowledge public frontend closure marker.
+Public route: /AI-Knowledge/
+Repository-management sources remain under AI-Knowledge/*.md and are excluded from public sitemap/search.
+Closure date: 2026-09-05
