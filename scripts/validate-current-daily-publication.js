@@ -50,6 +50,7 @@ const siteData = JSON.parse(read('qilylean/site-data.json'));
 const audit = exists('qilylean/daily/terminology-audit-latest.json') ? JSON.parse(read('qilylean/daily/terminology-audit-latest.json')) : null;
 const aiManufacturingBriefDate = '2026-09-04';
 const aiManufacturingBrief = exists(`qilylean/daily/${aiManufacturingBriefDate}.html`) ? read(`qilylean/daily/${aiManufacturingBriefDate}.html`) : '';
+const knowledgeBriefCss = exists('qilylean/knowledge-brief.css') ? read('qilylean/knowledge-brief.css') : '';
 
 includes(latest, `id="${sourceLatest}"`, 'Latest retained page carries its date identity');
 includes(latest, 'data-brief-message-form', 'Latest retained page contains message form');
@@ -64,8 +65,15 @@ if (aiManufacturingBrief) {
   includes(aiManufacturingBrief, '<header class="qily-site-header">', 'AI manufacturing brief inherits the QilyLean site header');
   includes(aiManufacturingBrief, '<a class="qily-brand" href="/">QilyLean | 启力精益</a>', 'AI manufacturing brief inherits the QilyLean brand Logo');
   matches(aiManufacturingBrief, /<a href="\/knowledge\/" aria-current="page">知识资产<\/a>/, 'AI manufacturing brief keeps Knowledge Assets as the active navigation module');
-  includes(aiManufacturingBrief, '/qilylean/knowledge-brief.css?v=20260905-ai-manufacturing-v1', 'AI manufacturing brief loads the knowledge-asset visual component');
+  includes(aiManufacturingBrief, '/qilylean/knowledge-brief.css?v=20260905-ai-manufacturing-v2', 'AI manufacturing brief loads the knowledge-asset visual component');
   assert(!/daily-single-page|data-qily-daily-layout=/.test(aiManufacturingBrief), 'AI manufacturing brief no longer uses the standalone blog layout');
+  const topNavIndex = aiManufacturingBrief.indexOf('data-qily-brief-top-nav="site-standard-v1"');
+  const heroIndex = aiManufacturingBrief.indexOf('class="module-hero knowledge-brief-hero"');
+  assert(topNavIndex > -1 && topNavIndex < heroIndex, 'AI manufacturing brief places the standard adjacent navigation before the hero');
+  assert((aiManufacturingBrief.match(/class="brief-adjacent top"/g) || []).length === 1, 'AI manufacturing brief renders exactly one top adjacent navigation');
+  assert((aiManufacturingBrief.match(/class="brief-adjacent bottom"/g) || []).length === 1, 'AI manufacturing brief preserves exactly one bottom adjacent navigation');
+  assert(!knowledgeBriefCss.includes('.brief-viewpoint::before'), 'AI manufacturing viewpoint has no decorative Q glyph');
+  includes(knowledgeBriefCss, '-webkit-text-fill-color: #fff !important', 'AI manufacturing viewpoint locks readable light text on its dark surface');
   const requiredKnowledgeFlow = ['id="knowledge-asset"', 'id="ai-manufacturing"', 'id="selected-brief"', 'id="current-theme"', 'id="knowledge-chain"', 'id="industrial-case"', 'id="qilylean-view"'];
   let previousFlowIndex = -1;
   for (const marker of requiredKnowledgeFlow) {

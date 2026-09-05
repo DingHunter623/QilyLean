@@ -17,6 +17,12 @@ body.qily-knowledge-brief-page {
   background: var(--brief-paper);
 }
 
+.knowledge-brief-top-nav {
+  padding: 12px clamp(18px, 4vw, 58px);
+  border-bottom: 1px solid var(--brief-line);
+  background: #fff;
+}
+
 .knowledge-brief-hero {
   position: relative;
   overflow: hidden;
@@ -207,9 +213,28 @@ body.qily-knowledge-brief-page {
   box-shadow: var(--qily-shadow, 0 20px 55px rgba(15, 75, 90, .14));
 }
 
-.brief-viewpoint::before { color: var(--brief-gold); content: "Q"; font-size: 64px; font-weight: 950; line-height: .8; }
-.brief-viewpoint p { max-width: 980px; margin: 18px 0 0; color: #fff; font-size: clamp(23px, 3vw, 34px); font-weight: 850; line-height: 1.55; }
-.brief-viewpoint cite { display: block; margin-top: 20px; color: #b9d9d4; font-size: 14px; font-style: normal; font-weight: 900; letter-spacing: .08em; }
+html body.qily-knowledge-brief-page .module-section .brief-viewpoint p {
+  max-width: 980px;
+  margin: 0;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  opacity: 1 !important;
+  font-size: clamp(23px, 3vw, 34px);
+  font-weight: 850;
+  line-height: 1.55;
+}
+
+html body.qily-knowledge-brief-page .module-section .brief-viewpoint cite {
+  display: block;
+  margin-top: 20px;
+  color: #d8eeea !important;
+  -webkit-text-fill-color: #d8eeea !important;
+  opacity: 1 !important;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
 
 .knowledge-brief-support { padding-top: 30px; padding-bottom: 30px; background: #fff; }
 .brief-adjacent { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; }

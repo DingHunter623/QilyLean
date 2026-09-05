@@ -72,16 +72,28 @@ if (!pillar) {
   if (!html.includes('Service')) fail('pillar Service schema is missing');
 
   const requiredInternalLinks = [
+    '/lean-production/',
     '/improvements/vsm/',
     '/improvements/standard-time/',
     '/improvements/smed/',
     '/improvements/ie-data/',
     '/projects/automotive-lean/',
-    '/projects/digital-factory/'
+    '/projects/digital-factory/',
+    '/projects/visual-management/',
+    '/tools/times26001/'
   ];
   for (const href of requiredInternalLinks) {
     if (!html.includes(`href="${href}"`)) fail(`pillar missing internal cluster link: ${href}`);
   }
+  const keywordCluster = html.match(/<div class="keyword-cloud" role="navigation" data-qily-keyword-cluster="linked-v1"[\s\S]*?<\/div>/i);
+  if (!keywordCluster) {
+    fail('pillar keyword cluster must use governed linked navigation semantics');
+  } else if ((keywordCluster[0].match(/<a\s+href=/g) || []).length !== requiredInternalLinks.length) {
+    fail(`pillar keyword cluster must expose ${requiredInternalLinks.length} linked professional entries`);
+  }
+  if (!html.includes('.keyword-cloud a:hover,.keyword-cloud a:focus-visible')) fail('pillar keyword links must expose unified hover and keyboard-focus VI feedback');
+  if (!html.includes('.keyword-cloud a:active')) fail('pillar keyword links must expose a unified pressed state');
+  if (!html.includes('id="qilyLeanKeywordInteractionViV2"') || !html.includes('-webkit-text-fill-color:#fff!important')) fail('pillar keyword links must preserve readable text across VI interaction states');
 }
 
 const sitemap = fs.existsSync(sitemapPath) ? fs.readFileSync(sitemapPath, 'utf8') : '';
