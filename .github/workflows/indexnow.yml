@@ -261,11 +261,23 @@ jobs:
           fi
 
           BAIDU_BATCH_SIZE=10
-          if [ "$GITHUB_EVENT_NAME" = "schedule" ]; then
-            BAIDU_MAX_URLS=10
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            commit_subject="$(git log -1 --pretty=%s)"
+            if [[ "$commit_subject" == *"[v4-generated]"* || "$commit_subject" == *"[daily-layout-generated]"* ]]; then
+              echo "Generated materialization commit detected; IndexNow handled it and Baidu quota is preserved for strategic pages."
+              exit 0
+            fi
+            if ! git diff --name-only HEAD^ HEAD | grep -qE '\.html$'; then
+              echo "No canonical HTML changed on this push; preserving Baidu quota for scheduled core discovery."
+              exit 0
+            fi
+            # A normal content push gets one Baidu slot. The daily schedule handles
+            # the seven fixed strategic entry URLs plus three rotating authority URLs.
+            BAIDU_MAX_URLS=1
           else
-            BAIDU_MAX_URLS=50
+            BAIDU_MAX_URLS=10
           fi
+
           head -n "$BAIDU_MAX_URLS" search-engine-urls.txt > baidu-urls.txt
           submitted_total="$(grep -c . baidu-urls.txt || true)"
           echo "Prepared up to $submitted_total URL(s) for Baidu API submission."
