@@ -11,7 +11,7 @@ const legacyCover=/<div class="visual"><img\s+src="\/qilylean\/assets\/daily-[^"
 const dailyBody=/<body\b[^>]*class="[^"]*daily-single-page[^"]*"[^>]*>/i;
 const oldLegacyLink=/\n?<link id="qilyDailyBriefLegacyVisualV1"[^>]*>/g;
 const oldUnifiedLink=/\n?<link id="qilyDailyBriefUnifiedLayoutV2"[^>]*>/g;
-const unifiedHref='/qilylean/daily-brief-unified-layout-v2.css?v=20260902-unified-axis-v3';
+const unifiedHref='/qilylean/daily-brief-unified-layout-v2.css?v=20260905-unified-vi-v4';
 const unifiedLink=`<link id="qilyDailyBriefUnifiedLayoutV2" rel="stylesheet" href="${unifiedHref}">`;
 
 let scanned=0;
