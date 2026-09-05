@@ -38,8 +38,8 @@ jobs:
           node scripts/materialize-daily-brief-unified-layout-v2.js
           grep -q 'data-qily-daily-layout="legacy"' qilylean/daily/2019-07-10.html
           grep -q 'data-qily-daily-layout="rich"' qilylean/daily/2026-08-25.html
-          grep -q 'daily-brief-unified-layout-v2.css?v=20260902-unified-axis-v3' qilylean/daily/2019-07-10.html
-          grep -q 'daily-brief-unified-layout-v2.css?v=20260902-unified-axis-v3' qilylean/daily/2026-08-25.html
+          grep -q 'daily-brief-unified-layout-v2.css?v=20260905-unified-vi-v4' qilylean/daily/2019-07-10.html
+          grep -q 'daily-brief-unified-layout-v2.css?v=20260905-unified-vi-v4' qilylean/daily/2026-08-25.html
           if grep -q 'qilyDailyBriefLegacyVisualV1' qilylean/daily/2019-07-10.html; then
             echo 'Legacy visual stylesheet must be retired after unified layout materialization.' >&2
             exit 1
