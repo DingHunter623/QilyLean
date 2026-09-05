@@ -393,7 +393,7 @@ html body.daily-single-page .daily-single-section :is(
  * pager/content surface. The article keeps its engineering content, but no
  * longer behaves like an independent microsite.
  */
-html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25){
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"]){
   position:relative!important;
   width:100%!important;
   max-width:none!important;
@@ -402,7 +402,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>
   background:var(--qily-daily-paper)!important;
   box-sizing:border-box!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25)::before{
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"])::before{
   display:block!important;
   height:184px!important;
   padding:22px max(var(--qily-daily-gutter),calc((100% - var(--qily-daily-axis))/2)) 0!important;
@@ -416,7 +416,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>
   line-height:1.2!important;
   letter-spacing:.10em!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25)::after{
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"])::after{
   position:absolute!important;
   z-index:2!important;
   top:54px!important;
@@ -430,22 +430,22 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>
   letter-spacing:-.02em!important;
   pointer-events:none!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25)>.brief-adjacent.top,
-html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25)>article#2026-08-25,
-html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25)>.brief-feedback{
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"])>.brief-adjacent.top,
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"])>article[id="2026-08-25"],
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"])>.brief-feedback{
   width:min(var(--qily-daily-axis),calc(100% - var(--qily-daily-gutter) - var(--qily-daily-gutter)))!important;
   max-width:var(--qily-daily-axis)!important;
   margin-left:auto!important;
   margin-right:auto!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25)>.brief-adjacent.top{
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"])>.brief-adjacent.top{
   margin-top:clamp(28px,3vw,46px)!important;
   margin-bottom:18px!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25)>article#2026-08-25{
+html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"])>article[id="2026-08-25"]{
   position:static!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.date{
+html body.daily-single-page[data-qily-daily-layout="rich"] article[id="2026-08-25"]>.date{
   position:absolute!important;
   z-index:3!important;
   top:112px!important;
@@ -464,7 +464,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.d
   line-height:1.45!important;
   letter-spacing:0!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.hero{
+html body.daily-single-page[data-qily-daily-layout="rich"] article[id="2026-08-25"]>.hero{
   margin:0!important;
   padding:clamp(28px,3.4vw,48px)!important;
   border:1px solid #cfe0df!important;
@@ -473,10 +473,10 @@ html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.h
   background:#fff!important;
   box-shadow:0 16px 44px rgba(15,75,90,.085)!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.hero::after{
+html body.daily-single-page[data-qily-daily-layout="rich"] article[id="2026-08-25"]>.hero::after{
   display:none!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.hero>.kicker{
+html body.daily-single-page[data-qily-daily-layout="rich"] article[id="2026-08-25"]>.hero>.kicker{
   padding:7px 12px!important;
   border:1px solid #e4c885!important;
   border-radius:999px!important;
@@ -487,7 +487,7 @@ html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.h
   font-weight:900!important;
   letter-spacing:.04em!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.hero>h2{
+html body.daily-single-page[data-qily-daily-layout="rich"] article[id="2026-08-25"]>.hero>h2{
   margin:18px 0 14px!important;
   color:var(--qily-daily-deep)!important;
   -webkit-text-fill-color:var(--qily-daily-deep)!important;
@@ -495,46 +495,46 @@ html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.h
   line-height:1.18!important;
   letter-spacing:-.02em!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.hero>p{
+html body.daily-single-page[data-qily-daily-layout="rich"] article[id="2026-08-25"]>.hero>p{
   color:#3a5756!important;
   -webkit-text-fill-color:#3a5756!important;
   font-size:clamp(18px,1.4vw,21px)!important;
   line-height:1.8!important;
   font-weight:650!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25 .hero-rule>div{
+html body.daily-single-page[data-qily-daily-layout="rich"] article[id="2026-08-25"] .hero-rule>div{
   border:1px solid #d6e5e2!important;
   background:#f7fbfa!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25 .hero-rule b{
+html body.daily-single-page[data-qily-daily-layout="rich"] article[id="2026-08-25"] .hero-rule b{
   color:#8b6830!important;
   -webkit-text-fill-color:#8b6830!important;
 }
-html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25 .hero-rule strong{
+html body.daily-single-page[data-qily-daily-layout="rich"] article[id="2026-08-25"] .hero-rule strong{
   color:var(--qily-daily-deep)!important;
   -webkit-text-fill-color:var(--qily-daily-deep)!important;
 }
 @media(max-width:620px){
-  html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25){
+  html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"]){
     width:100%!important;
     padding:0 0 34px!important;
   }
-  html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25)::before{
+  html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"])::before{
     height:158px!important;
     padding-top:18px!important;
   }
-  html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25)::after{
+  html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"])::after{
     top:48px!important;
     font-size:34px!important;
   }
-  html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.date{
+  html body.daily-single-page[data-qily-daily-layout="rich"] article[id="2026-08-25"]>.date{
     top:98px!important;
     font-size:16px!important;
   }
-  html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article#2026-08-25)>.brief-adjacent.top{
+  html body.daily-single-page[data-qily-daily-layout="rich"] main.page-shell:has(>article[id="2026-08-25"])>.brief-adjacent.top{
     margin-top:22px!important;
   }
-  html body.daily-single-page[data-qily-daily-layout="rich"] article#2026-08-25>.hero{
+  html body.daily-single-page[data-qily-daily-layout="rich"] article[id="2026-08-25"]>.hero{
     padding:22px 18px!important;
     border-radius:18px!important;
   }

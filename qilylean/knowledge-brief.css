@@ -561,6 +561,30 @@ html body.qily-knowledge-brief-page .knowledge-brief-map a{
   border-radius:10px!important;
   background:#fff!important;
 }
+/* Global contrast guards load after this component and classify every
+ * .module-hero as dark. This card is intentionally white in the Selected
+ * Brief shell, so lock its text palette with higher component specificity. */
+html:root:root body.qily-knowledge-brief-page .knowledge-brief-hero .knowledge-breadcrumbs{
+  color:#6a7772!important;
+  -webkit-text-fill-color:#6a7772!important;
+}
+html:root:root body.qily-knowledge-brief-page .knowledge-brief-hero .knowledge-breadcrumbs a,
+html:root:root body.qily-knowledge-brief-page .knowledge-brief-hero h1{
+  color:var(--brief-forest)!important;
+  -webkit-text-fill-color:var(--brief-forest)!important;
+}
+html:root:root body.qily-knowledge-brief-page .knowledge-brief-hero .module-eyebrow{
+  color:#8b6830!important;
+  -webkit-text-fill-color:#8b6830!important;
+}
+html:root:root body.qily-knowledge-brief-page .knowledge-brief-hero .module-lead{
+  color:#3a5756!important;
+  -webkit-text-fill-color:#3a5756!important;
+}
+html:root:root body.qily-knowledge-brief-page .knowledge-brief-hero .knowledge-brief-meta span{
+  color:#315b61!important;
+  -webkit-text-fill-color:#315b61!important;
+}
 @media(max-width:620px){
   html body.qily-knowledge-brief-page main[data-qily-knowledge-brief]{padding-top:158px!important}
   html body.qily-knowledge-brief-page main[data-qily-knowledge-brief]::before{height:158px!important;padding-top:18px!important}

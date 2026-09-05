@@ -51,6 +51,8 @@ const audit = exists('qilylean/daily/terminology-audit-latest.json') ? JSON.pars
 const aiManufacturingBriefDate = '2026-09-04';
 const aiManufacturingBrief = exists(`qilylean/daily/${aiManufacturingBriefDate}.html`) ? read(`qilylean/daily/${aiManufacturingBriefDate}.html`) : '';
 const knowledgeBriefCss = exists('qilylean/knowledge-brief.css') ? read('qilylean/knowledge-brief.css') : '';
+const aug25Brief = exists('qilylean/daily/2026-08-25.html') ? read('qilylean/daily/2026-08-25.html') : '';
+const unifiedBriefCss = exists('qilylean/daily-brief-unified-layout-v2.css') ? read('qilylean/daily-brief-unified-layout-v2.css') : '';
 
 includes(latest, `id="${sourceLatest}"`, 'Latest retained page carries its date identity');
 includes(latest, 'data-brief-message-form', 'Latest retained page contains message form');
@@ -65,7 +67,7 @@ if (aiManufacturingBrief) {
   includes(aiManufacturingBrief, '<header class="qily-site-header">', 'AI manufacturing brief inherits the QilyLean site header');
   includes(aiManufacturingBrief, '<a class="qily-brand" href="/">QilyLean | 启力精益</a>', 'AI manufacturing brief inherits the QilyLean brand Logo');
   matches(aiManufacturingBrief, /<a href="\/knowledge\/" aria-current="page">知识资产<\/a>/, 'AI manufacturing brief keeps Knowledge Assets as the active navigation module');
-  includes(aiManufacturingBrief, '/qilylean/knowledge-brief.css?v=20260905-ai-manufacturing-v2', 'AI manufacturing brief loads the knowledge-asset visual component');
+  includes(aiManufacturingBrief, '/qilylean/knowledge-brief.css?v=20260905-ai-manufacturing-v3', 'AI manufacturing brief loads the knowledge-asset visual component');
   assert(!/daily-single-page|data-qily-daily-layout=/.test(aiManufacturingBrief), 'AI manufacturing brief no longer uses the standalone blog layout');
   const topNavIndex = aiManufacturingBrief.indexOf('class="brief-adjacent top"');
   const heroIndex = aiManufacturingBrief.indexOf('class="module-hero knowledge-brief-hero"');
@@ -74,6 +76,8 @@ if (aiManufacturingBrief) {
   assert((aiManufacturingBrief.match(/class="brief-adjacent bottom"/g) || []).length === 1, 'AI manufacturing brief preserves exactly one bottom adjacent navigation');
   assert(!knowledgeBriefCss.includes('.brief-viewpoint::before'), 'AI manufacturing viewpoint has no decorative Q glyph');
   includes(knowledgeBriefCss, '-webkit-text-fill-color: #fff !important', 'AI manufacturing viewpoint locks readable light text on its dark surface');
+  includes(knowledgeBriefCss, 'html:root:root body.qily-knowledge-brief-page .knowledge-brief-hero h1', 'AI manufacturing brief locks readable title contrast on its white VI card');
+  includes(knowledgeBriefCss, 'html:root:root body.qily-knowledge-brief-page .knowledge-brief-hero .module-lead', 'AI manufacturing brief locks readable summary contrast on its white VI card');
   const requiredKnowledgeFlow = ['id="knowledge-asset"', 'id="ai-manufacturing"', 'id="selected-brief"', 'id="current-theme"', 'id="knowledge-chain"', 'id="industrial-case"', 'id="qilylean-view"'];
   let previousFlowIndex = -1;
   for (const marker of requiredKnowledgeFlow) {
@@ -81,6 +85,12 @@ if (aiManufacturingBrief) {
     assert(flowIndex > previousFlowIndex, 'AI manufacturing knowledge sections remain in the governed sequence', marker);
     previousFlowIndex = flowIndex;
   }
+}
+if (aug25Brief) {
+  includes(aug25Brief, '/qilylean/daily-brief-unified-layout-v2.css?v=20260905-unified-vi-v5', 'Aug 25 brief loads the cache-busted unified VI component');
+  includes(unifiedBriefCss, 'main.page-shell:has(>article[id="2026-08-25"])::before', 'Aug 25 brief declares the standard curated-brief banner');
+  includes(unifiedBriefCss, 'article[id="2026-08-25"]>.hero', 'Aug 25 brief article uses the governed VI content surface');
+  assert(!unifiedBriefCss.includes('#2026-08-25'), 'Aug 25 VI selectors do not use an invalid numeric CSS ID selector');
 }
 if (secondLatestDate) {
   includes(latest, `/qilylean/daily/${secondLatestDate}.html`, 'Latest retained page links to the previous retained brief');
