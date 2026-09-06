@@ -1,4 +1,4 @@
-name: Enforce six-action floating Dock
+name: Enforce seven-action flow Dock
 
 on:
   push:
@@ -61,7 +61,7 @@ jobs:
       - name: Reject duplicate 分享官网 across public pages
         run: node scripts/enforce-dock-share-label-v1.js
 
-      - name: Verify V33 shell, six-action Dock and deterministic output
+      - name: Verify V33 shell, seven-action flow Dock and deterministic output
         run: |
           node scripts/validate-public-shell-v31.js
           node scripts/validate-home-hero-dock-snapback-v1.js
