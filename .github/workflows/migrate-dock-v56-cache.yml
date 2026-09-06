@@ -42,15 +42,36 @@ jobs:
           node scripts/validate-sitewide-safety-readability-v1.js
           git diff --check
 
-      - name: Commit cache migration
+      - name: Commit cache migration on latest main
         run: |
           set -euo pipefail
-          if git diff --quiet; then
-            echo 'Dock V5.6 cache migration already current.'
-            exit 0
-          fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'build(dock): materialize V5.6 flow-navigation cache [dock-v56-generated]'
-          git push origin HEAD:main
+          for attempt in 1 2 3 4; do
+            echo "Dock V5.6 publish attempt ${attempt}/4"
+            git fetch origin main
+            git reset --hard origin/main
+            node scripts/migrate-dock-v56-cache.js
+            node scripts/migrate-dock-v56-cache.js --check
+            node scripts/validate-dock-flow-navigation-v56.js
+            node scripts/validate-sitewide-experience-v26.js
+            node scripts/validate-sitewide-remediation-20260822.js
+            node scripts/validate-contact-readability-ddz-20260824.js
+            node scripts/validate-sitewide-visual-closure-v27.js
+            node scripts/validate-global-language-runtime-compat-v1.js
+            node scripts/validate-sitewide-safety-readability-v1.js
+            git diff --check
+            if git diff --quiet; then
+              echo 'Dock V5.6 cache migration already current on latest main.'
+              exit 0
+            fi
+            git add -A
+            git commit -m 'build(dock): materialize V5.6 flow-navigation cache [dock-v56-generated]'
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo 'main advanced during publish; retrying against the new head.'
+            sleep 2
+          done
+          echo 'Unable to publish Dock V5.6 cache migration after four attempts.' >&2
+          exit 1
