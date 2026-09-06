@@ -1,0 +1,70 @@
+name: Close Dock V5.8 State Ownership R2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/close-dock-state-ownership-r2.js'
+      - '.github/workflows/close-dock-state-ownership-r2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-dock-v58-state-ownership-r2
+  cancel-in-progress: true
+
+jobs:
+  close:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 2
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Apply final Dock state ownership
+        run: |
+          set -euo pipefail
+          node --check scripts/close-dock-state-ownership-r2.js
+          node scripts/close-dock-state-ownership-r2.js --apply
+          node scripts/close-dock-state-ownership-r2.js
+          node scripts/validate-dock-flow-navigation-v56.js
+          git diff --check
+
+      - name: Install Chromium regression dependency
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start local site
+        run: |
+          python3 -m http.server 4173 >/tmp/qily-dock-state-r2-http.log 2>&1 &
+          echo $! >/tmp/qily-dock-state-r2-http.pid
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4173/ >/dev/null
+
+      - name: Verify desktop and phone edge-border closure
+        env:
+          QILY_DOCK_V58_BASE: http://127.0.0.1:4173
+        run: npx playwright test scripts/dock-flow-navigation-v56.spec.js --reporter=line --workers=1
+
+      - name: Commit verified closure
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add site-interactive-hover-contrast-v1.css site-closure-bundle-v24.css
+          if git diff --cached --quiet; then
+            echo 'Dock state ownership already closed.'
+            exit 0
+          fi
+          git commit -m 'fix(dock): close edge-border hover focus ownership'
+          git pull --rebase origin main
+          git push origin HEAD:main
