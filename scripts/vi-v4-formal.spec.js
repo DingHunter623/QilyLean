@@ -36,7 +36,9 @@ for(const [name,url] of pages){
         const docks=[...document.querySelectorAll('#floatDock.qily-float-dock,.qily-float-dock')].filter(visible);
         const rails=[...document.querySelectorAll('.qily-primary-nav-scroll-rail,.qily-primary-nav-scroll-thumb')].filter(visible);
         const translators=[...document.querySelectorAll('.qily-web-translate')].filter(visible);
-        const heroes=[...document.querySelectorAll(heroSelector)].filter(el=>visible(el)&&!el.classList.contains('qily-aircraft-brand-hero'));
+        const heroes=[...document.querySelectorAll(heroSelector)].filter(el=>visible(el)&&!el.classList.contains('qily-aircraft-brand-hero')&&el.getAttribute('data-qily-vi-v4-surface')!=='secondary-content');
+        const secondaryBrief=document.querySelector('body.qily-knowledge-brief-page main[data-qily-knowledge-brief] > .knowledge-brief-hero.module-hero');
+        const secondaryBriefStyle=secondaryBrief&&getComputedStyle(secondaryBrief);
         return {
           rootStatus:document.documentElement.getAttribute('data-qily-vi-status'),
           overflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-window.innerWidth,
@@ -48,7 +50,10 @@ for(const [name,url] of pages){
           translatorOutsideHeader:translators.filter(el=>!el.closest('header.qily-site-header')).length,
           heroes:heroes.length,
           badHero:heroes.filter(el=>!getComputedStyle(el).backgroundImage.includes('118deg')).map(el=>el.className),
-          heroMarkers:heroes.filter(el=>el.getAttribute('data-qily-vi-v4-hero')==='118deg').length
+          heroMarkers:heroes.filter(el=>el.getAttribute('data-qily-vi-v4-hero')==='118deg').length,
+          secondaryBriefPresent:!!secondaryBrief,
+          secondaryBriefGradient:secondaryBriefStyle?secondaryBriefStyle.backgroundImage:'none',
+          secondaryBriefSurface:secondaryBrief&&secondaryBrief.getAttribute('data-qily-vi-v4-surface')
         };
       },heroSelector);
 
@@ -62,6 +67,11 @@ for(const [name,url] of pages){
       expect(result.translatorOutsideHeader,`${url} ${device} translator must live in Header`).toBe(0);
       expect(result.badHero,`${url} ${device} non-118deg Hero: ${result.badHero.join(' | ')}`).toEqual([]);
       expect(result.heroMarkers,`${url} ${device} Hero formal markers`).toBe(result.heroes);
+      if(name==='daily-20260904'){
+        expect(result.secondaryBriefPresent,'AI/IE Selected Brief content card should exist').toBeTruthy();
+        expect(result.secondaryBriefSurface,'AI/IE Selected Brief content card must be classified as secondary content').toBe('secondary-content');
+        expect(result.secondaryBriefGradient,'AI/IE Selected Brief outer surface must not render a teal/brand gradient').toBe('none');
+      }
 
       await page.screenshot({path:path.join('visual-vi-v4-artifacts',`${name}-${device}.png`),fullPage:true});
     });
