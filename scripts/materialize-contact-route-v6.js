@@ -3,7 +3,7 @@
 
 /* QilyLean Contact Route Materializer R12.2｜2026-09-03
  * Single-responsibility boundary:
- * - owns Contact Route V13.4 references, direct authoritative Dock V5.5 references and clean contact-map markup;
+ * - owns Contact Route V13.4 references, direct authoritative Dock V5.6 references and clean contact-map markup;
  * - does NOT own or rewrite the global UI shell, translation runtime, navigation runtime or visual baseline.
  */
 const fs=require('fs');
@@ -11,12 +11,12 @@ const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const ROUTE='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
-const DOCK='/site-dock-share-runtime-v1.js?v=20260902-authority-v55';
+const DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v56-flow-navigation';
 const REDLINE='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
 const CONTACT_PATH='contact/index.html';
 const DDZ_PATH='tools/pure-ddz/index.html';
 const DDZ_FAST_SHELL='/tools/pure-ddz/game/js/fast-site-shell-v155.js?';
-const DDZ_FAST_SOURCE_DOCK='/site-dock-share-runtime-v1.js?v=20260902-public-dock-v55';
+const DDZ_FAST_SOURCE_DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v56-flow-navigation';
 const checkOnly=process.argv.includes('--check');
 
 function trackedHtml(){
@@ -72,11 +72,11 @@ if(checkOnly){
   const ddzFastRoute=ddz.includes('data-qily-ddz-fast-shell="v155"')&&ddz.includes('20260903-ddz-fast-knowledge-v155');
   if(ddzFastRoute){
     if(!ddz.includes(DDZ_FAST_SHELL))throw new Error('Pure DDZ fast route does not use the isolated V155 shell.');
-    if(!ddz.includes(DDZ_FAST_SOURCE_DOCK)&&!ddz.includes(DOCK))throw new Error('Pure DDZ fast route does not use an approved Dock V5.5 runtime.');
+    if(!ddz.includes(DDZ_FAST_SOURCE_DOCK)&&!ddz.includes(DOCK))throw new Error('Pure DDZ fast route does not use an approved Dock V5.6 runtime.');
   }else{
     if(!ddz.includes(ROUTE))throw new Error('pure-ddz does not use Contact Route V13.4.');
     if(!ddz.includes(REDLINE))throw new Error('pure-ddz does not use public redline V2.');
     if(/site-dock-share-runtime-v1\.js/.test(ddz)&&!ddz.includes(DOCK))throw new Error('Pure DDZ direct Dock runtime is not cache-busted to authoritative V5.5.');
   }
-  process.stdout.write(`PASS: R12.2 contact baseline current on ${covered} HTML pages; Contact Route V13.4; direct Dock V5.5 refs ${dockCovered}; global shell ownership untouched.\n`);
-}else process.stdout.write(`R12.2 contact materialized on ${changed} HTML file(s); route coverage ${covered}; Contact V13.4; Dock V5.5 refs ${dockCovered}; global shell ownership untouched.\n`);
+  process.stdout.write(`PASS: R12.2 contact baseline current on ${covered} HTML pages; Contact Route V13.4; direct Dock V5.6 refs ${dockCovered}; global shell ownership untouched.\n`);
+}else process.stdout.write(`R12.2 contact materialized on ${changed} HTML file(s); route coverage ${covered}; Contact V13.4; Dock V5.6 refs ${dockCovered}; global shell ownership untouched.\n`);

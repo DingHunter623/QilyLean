@@ -35,7 +35,7 @@ forbid(ddzLandscape,'#floatDock','DDZ landscape CSS must not own site Dock');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
 must(materializer,"BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 sitewide baseline');
-must(materializer,"DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260902-authority-v55'",'Dock V5.5 cache');
+must(materializer,"DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260906-authority-v56-flow-navigation'",'Dock V5.6 cache');
 must(materializer,"VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'",'V32 visual cache');
 must(materializer,"FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3'",'Project grade integrity cache');
 must(materializer,"VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Unified visual components cache');
@@ -44,7 +44,7 @@ must(materializer,"TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=
 must(materializer,"INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'Interaction Semantics V1.7 cache');
 
 const dockRuntime=read('site-dock-share-runtime-v1.js');
-must(dockRuntime,'__qilyFloatingDockUnifiedV55','Dock V5.5 runtime');
+must(dockRuntime,'__qilyFloatingDockUnifiedV56','Dock V5.6 runtime');
 must(dockRuntime,'function isExcluded(){return false;}','DDZ uses canonical Dock');
 const interactionRuntime=read('site-interaction-semantics-v1.js');
 must(interactionRuntime,'__qilyInteractionSemanticsV17','Interaction Semantics V1.7 runtime');
