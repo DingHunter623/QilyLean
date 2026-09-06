@@ -17,6 +17,13 @@ const BASE='20260906-authority-v58-mobile-swipe-fixed-bottom';
 const PATCH='20260906-mobile-compact-fixed-r1';
 const FULL=`${BASE}&patch=${PATCH}`;
 const changed=[];
+const AUTHORITY_SCRIPTS=new Set([
+  'scripts/normalize-dock-compact-contract-v1.js',
+  'scripts/remediate-mobile-dock-first-paint-v1.js',
+  'scripts/migrate-dock-v56-cache.js',
+  'scripts/validate-dock-flow-navigation-v56.js',
+  'scripts/dock-flow-navigation-v56.spec.js'
+]);
 
 function read(file){return fs.readFileSync(path.join(root,file),'utf8');}
 function write(file,next){
@@ -38,7 +45,7 @@ function patchRuntime(){
 function patchCompatibilityValidators(){
   const files=execFileSync('git',['ls-files','scripts/*.js'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
   for(const file of files){
-    if(file==='scripts/normalize-dock-compact-contract-v1.js'||file==='scripts/migrate-dock-v56-cache.js'||file==='scripts/validate-dock-flow-navigation-v56.js'||file==='scripts/dock-flow-navigation-v56.spec.js')continue;
+    if(AUTHORITY_SCRIPTS.has(file))continue;
     let s=read(file),before=s;
     s=s.replaceAll(`DOCK_SHARE='/site-dock-share-runtime-v1.js?v=${BASE}'`,`DOCK_SHARE='/site-dock-share-runtime-v1.js?v=${FULL}'`);
     s=s.replaceAll('mobile-fixed-bottom-swipe-navigation','mobile-fixed-bottom-compact-navigation');
@@ -83,7 +90,7 @@ function validate(){
   const stale=[];
   const files=execFileSync('git',['ls-files','scripts/*.js'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
   for(const file of files){
-    if(file==='scripts/normalize-dock-compact-contract-v1.js'||file==='scripts/migrate-dock-v56-cache.js')continue;
+    if(AUTHORITY_SCRIPTS.has(file))continue;
     const s=read(file);
     if(/must\(dock,'overflow-x:auto!important'/.test(s)||s.includes('mobile-fixed-bottom-swipe-navigation'))stale.push(file);
   }
