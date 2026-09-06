@@ -12,7 +12,7 @@ const UX_VERSION = '20260810-footer-visual-v21';
 const NAV_VERSION = '20260812-native-navigation-stable-v20';
 const MUSIC_VERSION = '20260810-demand-music-v6';
 const NUMBER_HREF = `/site-number-badge-contrast-v1.css?v=${NUMBER_VERSION}`;
-const HOVER_HREF = `/site-interactive-hover-contrast-v1.css?v=${HOVER_VERSION}`;
+const HOVER_HREF = `/site-interactive-hover-contrast-v1.css?v=20260906-dock-state-ownership-r2`;
 const LAYOUT_HREF = `/site-layout-footer-closure-v1.css?v=${LAYOUT_VERSION}`;
 const UX_HREF = `/site-layout-typography-closure-v20.css?v=${UX_VERSION}`;
 const NAV_HREF = `/site-navigation.js?v=${NAV_VERSION}`;

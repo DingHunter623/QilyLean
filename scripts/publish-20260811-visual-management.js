@@ -71,7 +71,7 @@ const page = `<!doctype html>
   <script defer data-qily-visual-closure-loader="v1" src="/site-visual-closure-v1.js?v=20260810-stable-layout-v5"></script>
   <script defer data-qily-boundary-links-loader="v2" src="/site-visual-closure-v2.js?v=20260803-boundary-links-v2"></script>
   <script defer src="/site-navigation.js?v=20260811-mobile-layout-v20"></script>
-  <link id="qilyClosureBundleV24Stylesheet" rel="stylesheet" href="/site-closure-bundle-v24.css?v=20260810-footer-one-line-v25">
+  <link id="qilyClosureBundleV24Stylesheet" rel="stylesheet" href="/site-closure-bundle-v24.css?v=20260906-dock-state-ownership-r2">
   <link id="qilyHeroPrimaryContrastStylesheet" rel="stylesheet" href="/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1">
   <script defer id="qilyBackgroundMusicScript" data-qily-background-music="v27" src="/homepage-music-v5.js?v=20260810-gesture-music-v27"></script>
   <link id="qilyFooterStandardV28Stylesheet" rel="stylesheet" href="/site-footer-standard-v28.css?v=20260811-mobile-footer-linebreak-v34">

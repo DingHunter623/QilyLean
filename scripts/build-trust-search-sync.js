@@ -17,7 +17,7 @@ const dailyIndexFile = path.join(root, 'qilylean', 'daily', 'index.json');
 const sitemapFiles = ['sitemap.xml', 'sitemap-core.xml'].map((name) => path.join(root, name));
 const interactionClosureBlock = `<!-- QILY-NUMBER-BADGE-CONTRAST:START -->
   <link id="qilyNumberBadgeContrastStylesheet" rel="stylesheet" href="/site-number-badge-contrast-v1.css?v=20260805-number-badge-contrast-v1">
-  <link id="qilyInteractiveHoverContrastStylesheet" rel="stylesheet" href="/site-interactive-hover-contrast-v1.css?v=20260810-stable-layout-v15">
+  <link id="qilyInteractiveHoverContrastStylesheet" rel="stylesheet" href="/site-interactive-hover-contrast-v1.css?v=20260906-dock-state-ownership-r2">
   <link id="qilyLayoutFooterClosureStylesheet" rel="stylesheet" href="/site-layout-footer-closure-v1.css?v=20260812-runtime-stability-v20">
 <!-- QILY-NUMBER-BADGE-CONTRAST:END -->`;
 
