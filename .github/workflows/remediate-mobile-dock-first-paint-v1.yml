@@ -5,12 +5,19 @@ on:
     branches: [main]
     paths:
       - 'scripts/remediate-mobile-dock-first-paint-v1.js'
+      - 'scripts/normalize-dock-compact-contract-v1.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-navigation.js'
       - 'site-navigation-core.js'
       - 'site-navigation-legacy-20260802.js'
       - 'scripts/align-primary-nav-operating-axis.js'
       - 'scripts/enforce-six-core-navigation.js'
+      - 'scripts/validate-dock-flow-navigation-v56.js'
+      - 'scripts/validate-sitewide-experience-v26.js'
+      - 'scripts/validate-sitewide-remediation-20260822.js'
+      - 'scripts/validate-contact-readability-ddz-20260824.js'
+      - 'scripts/validate-r7-authoritative-runtime-20260828.js'
+      - 'scripts/validate-home-hero-dock-snapback-v1.js'
       - '**/*.html'
       - '.github/workflows/remediate-mobile-dock-first-paint-v1.yml'
   workflow_dispatch:
@@ -24,7 +31,6 @@ concurrency:
 
 jobs:
   remediate:
-    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -37,30 +43,33 @@ jobs:
         with:
           node-version: 24
 
-      - name: Repair materializer bootstrap and materialize closure
+      - name: Materialize first-paint navigation and compact Dock
         run: |
           set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('scripts/remediate-mobile-dock-first-paint-v1.js')
-          s=p.read_text()
-          s=s.replace('src=replaceRange(src,cssStart,cssEnd,cssReplacement+cssEnd);','src=replaceRange(src,cssStart,cssEnd,cssReplacement);')
-          p.write_text(s)
-          PY
           node --check scripts/remediate-mobile-dock-first-paint-v1.js
+          node --check scripts/normalize-dock-compact-contract-v1.js
           node scripts/remediate-mobile-dock-first-paint-v1.js --apply
+          node scripts/normalize-dock-compact-contract-v1.js --apply
           node --check site-dock-share-runtime-v1.js
           node --check site-navigation.js
           node --check site-navigation-core.js
           node --check site-navigation-legacy-20260802.js
           node scripts/remediate-mobile-dock-first-paint-v1.js
+          node scripts/normalize-dock-compact-contract-v1.js
           git diff --check
 
-      - name: Verify closure invariants
+      - name: Verify compact Dock and compatibility gates
         run: |
           set -euo pipefail
+          node scripts/validate-dock-flow-navigation-v56.js
+          node scripts/validate-sitewide-experience-v26.js
+          node scripts/validate-sitewide-remediation-20260822.js
+          node scripts/validate-contact-readability-ddz-20260824.js
+          node scripts/validate-r7-authoritative-runtime-20260828.js
+          node scripts/validate-home-hero-dock-snapback-v1.js
           grep -q "home:\['首页'\],top:\['顶部'\]" site-dock-share-runtime-v1.js
           grep -q "mobile-fixed-bottom-compact-navigation" site-dock-share-runtime-v1.js
+          ! grep -q "mobile-fixed-bottom-swipe-navigation" site-dock-share-runtime-v1.js
           grep -q "grid-template-columns','repeat(7,minmax(0,1fr))" site-dock-share-runtime-v1.js
           grep -q "\['精益生产', '/lean-production/'\]" site-navigation-core.js
           grep -q "\['资源协同', '/links/'\]" site-navigation-core.js
@@ -80,6 +89,6 @@ jobs:
             echo 'Mobile Dock and first-paint navigation are already closed.'
             exit 0
           fi
-          git commit -m 'fix: close mobile Dock and first-paint navigation [skip ci]'
+          git commit -m 'fix: enforce compact Dock and first-paint navigation [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
