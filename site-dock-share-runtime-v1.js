@@ -2,7 +2,7 @@
  * One authority for public page-action structure, labels and actions.
  * Canonical actions: 回首页 / 回顶部 / 回上一层级 / 回上一网页 / 本站搜索 / 分享当前页 / 联系我们.
  * V5.8 pins the rectangular seven-action navigation to the viewport bottom on all devices.
- * Mobile is a native horizontal swipe rail fixed to the bottom; controls keep readable tap widths and never collapse into circles.
+ * Mobile is a compact seven-column rail fixed to the viewport bottom; all seven actions remain visible without horizontal scrolling.
  * Compatibility contract retained for historical validators: Floating Dock Authoritative Runtime V5.7 / V5.6 / V5.5.
  * Legacy V5.5 order token only: ORDER=['home','top','back','search','current','contact']
  */
@@ -89,7 +89,7 @@
     var mobile=w.matchMedia&&w.matchMedia('(max-width:820px)').matches;var lines=(mobile?MOBILE_LABELS:LABELS)[action]||[action],label=d.createElement('span');label.className='qily-dock-label';label.setAttribute('aria-hidden','true');
     lines.forEach(function(line){var row=d.createElement('span');row.textContent=line;label.appendChild(row);});
     while(button.firstChild)button.removeChild(button.firstChild);button.appendChild(label);
-    button.setAttribute('aria-label',lines.join(''));button.setAttribute('title',lines.join(''));button.setAttribute('data-qily-label-owner','dock-v5.8-swipe-fixed');
+    button.setAttribute('aria-label',lines.join(''));button.setAttribute('title',lines.join(''));button.setAttribute('data-qily-label-owner','dock-v5.8-compact-fixed');
   }
   function ensureBottomSpacer(){
     var host=d.body||d.documentElement;if(!host)return;
@@ -129,7 +129,7 @@
     ORDER.forEach(function(action){var button=controls[action];button.className='qily-float-btn qily-float-'+action;setOwnedLabel(button,action);});
     controls.back.setAttribute('data-parent-route',parentRoute(location.pathname));
     var fragment=d.createDocumentFragment();ORDER.forEach(function(action){fragment.appendChild(controls[action]);});dock.appendChild(fragment);
-    dock.dataset.qilyStableOrder=ORDER.join(',');dock.dataset.qilyUnifiedPublicModule='v5.8-fixed-bottom-swipe-navigation';applyInlineGeometry(dock);ensureBottomSpacer();return true;
+    dock.dataset.qilyStableOrder=ORDER.join(',');dock.dataset.qilyUnifiedPublicModule='v5.8-fixed-bottom-compact-navigation';applyInlineGeometry(dock);ensureBottomSpacer();return true;
   }
 
   function legacyCopy(text){var area=d.createElement('textarea');area.value=text;area.setAttribute('readonly','');area.style.position='fixed';area.style.left='-9999px';(d.body||d.documentElement).appendChild(area);area.select();try{d.execCommand('copy');}catch(error){}area.remove();return Promise.resolve();}

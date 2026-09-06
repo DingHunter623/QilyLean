@@ -2,7 +2,7 @@
 'use strict';
 
 // Compatibility entry point for workflows retained under the historical V31 filename.
-// The authoritative contract is Navigation V33 + the seven-action fixed-bottom swipe Dock V5.8 remediation.
+// The authoritative contract is Navigation V33 + the seven-action fixed-bottom compact Dock V5.8 remediation.
 require('./validate-sitewide-remediation-20260822');
 process.exit(0);
 
