@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: 24
 
-      - name: Apply final Dock state ownership
+      - name: Apply final Dock state ownership and fresh cache
         run: |
           set -euo pipefail
           node --check scripts/close-dock-state-ownership-r2.js
@@ -55,16 +55,16 @@ jobs:
           QILY_DOCK_V58_BASE: http://127.0.0.1:4173
         run: npx playwright test scripts/dock-flow-navigation-v56.spec.js --reporter=line --workers=1
 
-      - name: Commit verified closure
+      - name: Commit verified closure and cache authority
         run: |
           set -euo pipefail
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
-          git add site-interactive-hover-contrast-v1.css site-closure-bundle-v24.css
+          git add -A
           if git diff --cached --quiet; then
-            echo 'Dock state ownership already closed.'
+            echo 'Dock state ownership and cache are already closed.'
             exit 0
           fi
-          git commit -m 'fix(dock): close edge-border hover focus ownership'
+          git commit -m 'fix(dock): publish verified border closure with fresh cache'
           git pull --rebase origin main
           git push origin HEAD:main
