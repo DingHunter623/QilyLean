@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Lucky Data｜官方开奖历史数据与走势统计｜QilyLean</title>
-  <meta name="description" content="Lucky Data 汇总中国体育彩票超级大乐透、中国福利彩票双色球、快乐8、福彩3D官方历史开奖记录，提供走势图、冷热与遗漏统计、QilyLean AI辅助分析和中奖号码核对。">
+  <meta name="description" content="Lucky Data 汇总中国体育彩票超级大乐透、中国福利彩票双色球、快乐8、福彩3D官方历史开奖记录，按彩种提供走势图、冷热遗漏、QilyLean AI辅助分析和中奖号码核对。">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <link rel="canonical" href="https://qilylean.com/tools/lucky-data/">
   <meta property="og:type" content="website">
@@ -29,21 +29,13 @@
   <script defer src="/site-navigation.js?v=20260828-r7-navigation-v45&patch=20260906-primary-first-paint-v1"></script>
   <script defer src="/tools/lucky-data/lucky-data-official-bridge.js?v=20260906-official-bridge-v1"></script>
   <script defer src="/tools/lucky-data/lucky-data.js?v=20260906-lucky-data-v2"></script>
+  <script defer src="/tools/lucky-data/lucky-data-route-v2.js?v=20260907-route-v2"></script>
 </head>
 <body class="module-page lucky-data-page" data-parent-route="/capabilities/">
   <header class="qily-site-header">
     <a class="qily-brand" href="/">QilyLean｜启力精益</a>
     <nav class="site-nav" aria-label="网站导航">
-      <a href="/">首页</a>
-      <a href="/experience/">履历主线</a>
-      <a href="/capabilities/" aria-current="page">能力体系</a>
-      <a href="/improvements/">改善方法</a>
-      <a href="/lean-production/">精益生产</a>
-      <a href="/projects/">代表项目</a>
-      <a href="/trust/">信任中心</a>
-      <a href="/cooperation/">项目合作</a>
-      <a href="/knowledge/">知识资产</a>
-      <a href="/links/">资源协同</a>
+      <a href="/">首页</a><a href="/experience/">履历主线</a><a href="/capabilities/" aria-current="page">能力体系</a><a href="/improvements/">改善方法</a><a href="/lean-production/">精益生产</a><a href="/projects/">代表项目</a><a href="/trust/">信任中心</a><a href="/cooperation/">项目合作</a><a href="/knowledge/">知识资产</a><a href="/links/">资源协同</a>
     </nav>
   </header>
 
@@ -52,130 +44,62 @@
       <div class="module-inner">
         <span class="module-eyebrow">DIGITAL TOOL WORKS | OFFICIAL DRAW DATA</span>
         <h1>Lucky Data</h1>
-        <p class="module-lead">基于中国体育彩票、中国福利彩票官方公开开奖记录，梳理大乐透、双色球、快乐8、福彩3D历史号码，提供走势图、冷热与遗漏统计、QilyLean AI 辅助观察及中奖号码核对。</p>
-        <nav class="module-subnav" aria-label="Lucky Data 子模块">
-          <a href="#trend">号码走势</a><a href="#statistics">统计分析</a><a href="#ai-analysis">QilyLean AI</a><a href="#prize-calculator">中奖计算器</a><a href="#official-sources">官方数据源</a>
-        </nav>
+        <p class="module-lead">按彩票种类独立读取官方开奖记录。您当前选择的彩种会统一驱动本页号码走势、冷热遗漏、历史明细、QilyLean AI 辅助分析和中奖号码核对。</p>
+        <nav class="module-subnav" aria-label="Lucky Data 子模块"><a href="#overview">彩票种类</a><a href="#trend">号码走势</a><a href="#statistics">统计分析</a><a href="#ai-analysis">QilyLean AI</a><a href="#prize-calculator">中奖查询</a><a href="#official-sources">官方数据源</a></nav>
       </div>
     </section>
 
     <section class="module-section" id="overview">
       <div class="module-inner">
-        <span class="module-eyebrow">LUCKY DATA | DATASET</span>
-        <h2>官方开奖记录数据集</h2>
-        <p class="module-lead lucky-copy-dark">按彩种独立维护历史开奖数据，页面优先读取 QilyLean 官方数据网关并同步中国体育彩票、中国福利彩票公开开奖记录；走势图、冷热、遗漏和计算器全部由实际开奖号码重新计算。</p>
-
-        <div class="lucky-toolbar" aria-label="彩种和统计范围">
-          <div class="lucky-game-tabs" id="gameTabs" role="tablist" aria-label="彩种选择">
+        <span class="module-eyebrow">LUCKY DATA | LOTTERY SELECTOR</span>
+        <h2>彩票种类与官方开奖数据</h2>
+        <p class="module-lead lucky-copy-dark">先选择彩票种类，再选择统计范围。后续全部模块只针对当前彩种，不混用其他彩票的号码规则、历史数据或中奖规则。</p>
+        <div class="lucky-toolbar" aria-label="彩票种类和统计范围">
+          <div class="lucky-game-tabs" id="gameTabs" role="tablist" aria-label="彩票种类选择">
             <button type="button" class="is-active" data-game="dlt" role="tab" aria-selected="true">大乐透</button>
             <button type="button" data-game="ssq" role="tab" aria-selected="false">双色球</button>
             <button type="button" data-game="kl8" role="tab" aria-selected="false">快乐8</button>
             <button type="button" data-game="fc3d" role="tab" aria-selected="false">福彩3D</button>
           </div>
           <label class="lucky-range-label">统计范围
-            <select id="rangeSelect">
-              <option value="30">最近30期</option>
-              <option value="50">最近50期</option>
-              <option value="100" selected>最近100期</option>
-              <option value="300">最近300期</option>
-              <option value="all">全部已同步期次</option>
-            </select>
+            <select id="rangeSelect"><option value="30">最近30期</option><option value="50">最近50期</option><option value="100" selected>最近100期</option><option value="300">最近300期</option><option value="all">全部已同步期次</option></select>
           </label>
         </div>
-
+        <div class="module-actions" aria-label="彩票专属页面入口">
+          <a href="/tools/lucky-data/dlt/">大乐透专属页</a><a href="/tools/lucky-data/ssq/">双色球专属页</a><a href="/tools/lucky-data/kl8/">快乐8专属页</a><a href="/tools/lucky-data/fc3d/">福彩3D专属页</a>
+        </div>
         <div class="lucky-source-status" id="sourceStatus" role="status" aria-live="polite">正在读取官方开奖数据…</div>
         <div class="lucky-metrics" id="metrics"></div>
       </div>
     </section>
 
-    <section class="module-section alt" id="trend">
-      <div class="module-inner">
-        <span class="module-eyebrow">TREND | DRAW MATRIX</span>
-        <h2 id="trendTitle">号码走势图</h2>
-        <p class="module-lead lucky-copy-dark">横向为号码，纵向为期号；命中位置高亮。走势图用于复盘历史分布，不代表下一期存在可确定规律。</p>
-        <div class="lucky-trend" id="trendView"></div>
-      </div>
-    </section>
+    <section class="module-section alt" id="trend"><div class="module-inner"><span class="module-eyebrow">TREND | DRAW MATRIX</span><h2 id="trendTitle">号码走势图</h2><p class="module-lead lucky-copy-dark"><strong data-lucky-current-game>大乐透</strong>：横向为号码，纵向为期号；命中位置高亮。走势图只复盘已开奖历史分布。</p><div class="lucky-trend" id="trendView"></div></div></section>
 
-    <section class="module-section" id="statistics">
-      <div class="module-inner">
-        <span class="module-eyebrow">STATISTICS | FREQUENCY & OMISSION</span>
-        <h2>冷热、频次与遗漏</h2>
-        <p class="module-lead lucky-copy-dark">在当前统计范围内计算出现次数、占比和当前遗漏期数；“热/冷”仅描述历史频次高低，不代表概率发生改变。</p>
-        <div class="lucky-stat-grid" id="statView"></div>
-      </div>
-    </section>
+    <section class="module-section" id="statistics"><div class="module-inner"><span class="module-eyebrow">STATISTICS | FREQUENCY & OMISSION</span><h2>冷热、频次与遗漏</h2><p class="module-lead lucky-copy-dark">全部统计均以当前所选 <strong data-lucky-current-game>大乐透</strong> 和当前统计范围为边界；“热/冷”仅描述历史频次高低。</p><div class="lucky-stat-grid" id="statView"></div></div></section>
 
-    <section class="module-section alt" id="history">
-      <div class="module-inner">
-        <span class="module-eyebrow">HISTORY | OFFICIAL RECORDS</span>
-        <h2>历史开奖明细</h2>
-        <div class="lucky-table-tools">
-          <label>期号筛选 <input id="issueSearch" type="search" inputmode="numeric" placeholder="输入期号"></label>
-          <button type="button" id="resetIssueSearch">清除筛选</button>
-        </div>
-        <div class="qily-table-scroll lucky-history-wrap">
-          <table class="lucky-history-table">
-            <thead><tr><th>期号</th><th>开奖日期</th><th>开奖号码</th><th>官方开奖信息</th></tr></thead>
-            <tbody id="historyBody"><tr><td colspan="4">正在加载…</td></tr></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+    <section class="module-section alt" id="history"><div class="module-inner"><span class="module-eyebrow">HISTORY | OFFICIAL RECORDS</span><h2><span data-lucky-current-game>大乐透</span>历史开奖明细</h2><div class="lucky-table-tools"><label>期号筛选 <input id="issueSearch" type="search" inputmode="numeric" placeholder="输入期号"></label><button type="button" id="resetIssueSearch">清除筛选</button></div><div class="qily-table-scroll lucky-history-wrap"><table class="lucky-history-table"><thead><tr><th>期号</th><th>开奖日期</th><th>开奖号码</th><th>官方开奖信息</th></tr></thead><tbody id="historyBody"><tr><td colspan="4">正在加载…</td></tr></tbody></table></div></div></section>
 
     <section class="module-section" id="ai-analysis">
       <div class="module-inner">
         <span class="module-eyebrow">QILYLEAN AI | DATA OBSERVATION</span>
         <h2>QilyLean AI 辅助分析</h2>
-        <div class="lucky-disclaimer" role="note">
-          <strong>QilyLean AI仅根据开奖号码走势提供预测，不承担任何责任。</strong>
-          <span>彩票开奖结果具有随机性；本功能只对已开奖历史数据做统计观察与娱乐性候选组合生成，不构成投注建议，不承诺中奖或收益。请理性参与，未成年人不得购彩。</span>
+        <div class="lucky-disclaimer" role="note"><strong>QilyLean AI仅根据开奖号码历史走势提供统计观察，不承担任何责任。</strong><span>彩票开奖结果具有随机性；本功能只对已开奖历史数据做统计观察与娱乐性候选组合生成，不构成投注建议，不承诺中奖或收益。请理性参与，未成年人不得购彩。</span></div>
+        <div class="lucky-toolbar" aria-label="AI分析彩票种类">
+          <label class="lucky-range-label">彩票种类
+            <select id="aiGameSelect" data-lucky-game-select><option value="dlt">大乐透</option><option value="ssq">双色球</option><option value="kl8">快乐8</option><option value="fc3d">福彩3D</option></select>
+          </label>
+          <span class="lucky-fine">当前分析对象：<strong data-lucky-current-game>大乐透</strong>；号码走势、统计摘要与候选组合全部按该彩种规则生成。</span>
         </div>
         <div class="lucky-ai-grid">
-          <div class="module-card lucky-ai-control">
-            <label for="aiPrompt">分析要求</label>
-            <textarea id="aiPrompt" rows="5">请结合当前统计范围的频次、遗漏、冷热变化与近期分布，给出趋势观察，并给出3组仅供娱乐参考的候选组合；必须明确随机性和不保证中奖。</textarea>
-            <div class="lucky-actions"><button type="button" class="lucky-primary" id="aiAnalyzeBtn">用 QilyLean AI 分析</button></div>
-            <p class="lucky-fine">发送给 QilyLean AI 的内容仅包含当前彩种的公开开奖统计摘要和您的分析要求。</p>
-          </div>
-          <div class="module-card lucky-ai-output" id="aiOutput" aria-live="polite">
-            <h3>分析结果</h3>
-            <p>选择彩种与统计范围后，点击“用 QilyLean AI 分析”。</p>
-          </div>
+          <div class="module-card lucky-ai-control"><label for="aiPrompt">分析要求</label><textarea id="aiPrompt" rows="5">请结合当前统计范围的频次、遗漏、冷热变化与近期分布，给出趋势观察，并给出3组仅供娱乐参考的候选组合；必须明确随机性和不保证中奖。</textarea><div class="lucky-actions"><button type="button" class="lucky-primary" id="aiAnalyzeBtn">用 QilyLean AI 分析</button></div><p class="lucky-fine">发送给 QilyLean AI 的内容仅包含当前彩票种类的公开开奖统计摘要和您的分析要求。</p></div>
+          <div class="module-card lucky-ai-output" id="aiOutput" aria-live="polite"><h3>分析结果</h3><p>选择彩票种类与统计范围后，点击“用 QilyLean AI 分析”。</p></div>
         </div>
       </div>
     </section>
 
-    <section class="module-section alt" id="prize-calculator">
-      <div class="module-inner">
-        <span class="module-eyebrow">PRIZE CHECK | NUMBER MATCH</span>
-        <h2>中奖计算器</h2>
-        <p class="module-lead lucky-copy-dark">选择已开奖期号并录入您的号码，系统按号码命中关系进行奖级核对；奖金金额优先读取该期官方开奖数据，无法确定时仅显示奖级。</p>
-        <div class="lucky-calculator module-card">
-          <div class="lucky-calc-grid">
-            <label>开奖期号<select id="calcIssue"></select></label>
-            <label id="playTypeWrap" hidden>玩法<select id="playType"></select></label>
-          </div>
-          <div id="calcInputs"></div>
-          <div class="lucky-actions"><button type="button" class="lucky-primary" id="calcBtn">核对中奖结果</button><button type="button" id="calcResetBtn">清空号码</button></div>
-          <div class="lucky-calc-result" id="calcResult" role="status" aria-live="polite">请选择期号并输入号码。</div>
-          <p class="lucky-fine">计算器仅做号码核对，兑奖结果、奖级、奖金、追加投注及派奖活动等均以彩票票面和对应期次官方公告为准。</p>
-        </div>
-      </div>
-    </section>
+    <section class="module-section alt" id="prize-calculator"><div class="module-inner"><span class="module-eyebrow">PRIZE CHECK | NUMBER MATCH</span><h2><span data-lucky-current-game>大乐透</span>中奖查询</h2><p class="module-lead lucky-copy-dark">本模块与当前彩票种类联动，只使用对应彩种的开奖号码结构和奖级规则进行核对。</p><div class="lucky-calculator module-card"><div class="lucky-calc-grid"><label>开奖期号<select id="calcIssue"></select></label><label id="playTypeWrap" hidden>玩法<select id="playType"></select></label></div><div id="calcInputs"></div><div class="lucky-actions"><button type="button" class="lucky-primary" id="calcBtn">核对中奖结果</button><button type="button" id="calcResetBtn">清空号码</button></div><div class="lucky-calc-result" id="calcResult" role="status" aria-live="polite">请选择期号并输入号码。</div><p class="lucky-fine">计算器仅做号码核对；兑奖结果、奖级、奖金、追加投注及派奖活动等均以彩票票面和对应期次官方公告为准。</p></div></div></section>
 
-    <section class="module-section" id="official-sources">
-      <div class="module-inner">
-        <span class="module-eyebrow">OFFICIAL SOURCES | SSOT</span>
-        <h2>官方数据来源</h2>
-        <div class="module-grid two lucky-source-cards">
-          <article class="module-card"><h3>中国体育彩票</h3><p>超级大乐透历史开奖数据以中国体育彩票官方网站公开信息为源头。</p><div class="module-actions"><a href="https://www.lottery.gov.cn/" target="_blank" rel="noopener noreferrer">访问中国体育彩票官网</a></div></article>
-          <article class="module-card"><h3>中国福利彩票</h3><p>双色球、快乐8、福彩3D历史开奖数据以中国福利彩票官方网站公开信息为源头。</p><div class="module-actions"><a href="https://www.cwl.gov.cn/" target="_blank" rel="noopener noreferrer">访问中国福利彩票官网</a></div></article>
-        </div>
-        <p class="lucky-fine lucky-source-note">Lucky Data 为 QilyLean 自主开发的数据整理与可视化工具，与中国体育彩票、中国福利彩票发行机构不存在隶属、授权或商业合作关系。官方数据如有调整，以对应官方网站公布内容为准。</p>
-      </div>
-    </section>
+    <section class="module-section" id="official-sources"><div class="module-inner"><span class="module-eyebrow">OFFICIAL SOURCES | SSOT</span><h2>官方数据来源</h2><div class="module-grid two lucky-source-cards"><article class="module-card"><h3>中国体育彩票</h3><p>超级大乐透历史开奖数据以中国体育彩票官方网站公开信息为源头。</p><div class="module-actions"><a href="https://www.lottery.gov.cn/" target="_blank" rel="noopener noreferrer">访问中国体育彩票官网</a></div></article><article class="module-card"><h3>中国福利彩票</h3><p>双色球、快乐8、福彩3D历史开奖数据以中国福利彩票官方网站公开信息为源头。</p><div class="module-actions"><a href="https://www.cwl.gov.cn/" target="_blank" rel="noopener noreferrer">访问中国福利彩票官网</a></div></article></div><p class="lucky-fine lucky-source-note">Lucky Data 为 QilyLean 自主开发的数据整理与可视化工具，与彩票发行机构不存在隶属、授权或商业合作关系。官方数据如有调整，以对应官方公告为准。</p></div></section>
   </main>
-  <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r2"></script>
 </body>
 </html>
