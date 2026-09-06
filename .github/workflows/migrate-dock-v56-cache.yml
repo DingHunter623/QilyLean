@@ -1,4 +1,4 @@
-name: Migrate Dock V5.6 Cache
+name: Migrate Dock V5.7 Cache
 
 on:
   push:
@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: migrate-dock-v56-cache-main
+  group: migrate-dock-v57-cache-main
   cancel-in-progress: false
 
 jobs:
@@ -27,7 +27,7 @@ jobs:
         with:
           node-version: 24
 
-      - name: Materialize V5.6 cache URL across tracked public sources
+      - name: Materialize V5.7 fixed-bottom cache URL across tracked public sources
         run: |
           set -euo pipefail
           node --check scripts/migrate-dock-v56-cache.js
@@ -48,7 +48,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           for attempt in 1 2 3 4; do
-            echo "Dock V5.6 publish attempt ${attempt}/4"
+            echo "Dock V5.7 publish attempt ${attempt}/4"
             git fetch origin main
             git reset --hard origin/main
             node scripts/migrate-dock-v56-cache.js
@@ -62,16 +62,16 @@ jobs:
             node scripts/validate-sitewide-safety-readability-v1.js
             git diff --check
             if git diff --quiet; then
-              echo 'Dock V5.6 cache migration already current on latest main.'
+              echo 'Dock V5.7 cache migration already current on latest main.'
               exit 0
             fi
             git add -A
-            git commit -m 'build(dock): materialize V5.6 flow-navigation cache [dock-v56-generated]'
+            git commit -m 'build(dock): materialize V5.7 fixed-bottom cache [dock-v57-generated]'
             if git push origin HEAD:main; then
               exit 0
             fi
             echo 'main advanced during publish; retrying against the new head.'
             sleep 2
           done
-          echo 'Unable to publish Dock V5.6 cache migration after four attempts.' >&2
+          echo 'Unable to publish Dock V5.7 cache migration after four attempts.' >&2
           exit 1
