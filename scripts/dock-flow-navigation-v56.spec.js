@@ -33,6 +33,7 @@ for(const [name,url,viewport,mobile] of cases){
         overflowY:ds.overflowY,
         bottomGap:Math.round(innerHeight-dr.bottom),
         dockWidth:Math.round(dr.width),
+        rootWidth:Math.round(document.documentElement.clientWidth),
         scrollWidth:dock.scrollWidth,
         clientWidth:dock.clientWidth,
         scrollLeft:dock.scrollLeft,
@@ -64,7 +65,8 @@ for(const [name,url,viewport,mobile] of cases){
       expect(result.layout).toBe('mobile-fixed-bottom-navigation');
       const moved=await page.evaluate(()=>{const d=document.querySelector('#floatDock');d.scrollTo({left:500,behavior:'instant'});return d.scrollLeft;});
       expect(moved,'mobile dock must not horizontally scroll').toBe(0);
-      expect(result.dockWidth).toBeGreaterThanOrEqual(viewport.width-2);
+      expect(result.dockWidth,'mobile dock should span the actual layout viewport').toBeGreaterThanOrEqual(result.rootWidth-2);
+      expect(result.dockWidth,'mobile dock should not exceed the actual layout viewport').toBeLessThanOrEqual(result.rootWidth+2);
     }else{
       expect(result.bottomGap,'desktop dock should remain pinned near viewport bottom').toBeGreaterThanOrEqual(8);
       expect(result.bottomGap).toBeLessThanOrEqual(16);
