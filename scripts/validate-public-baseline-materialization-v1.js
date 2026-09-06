@@ -13,7 +13,7 @@ for(const file of files()){
   for(const token of forbidden)if(html.includes(token))failures.push(`${file}: retired translator remains (${token})`);
   if(/\/site-navigation\.js(?:\?v=[^"']*)?/.test(html)){navPages++;if(!html.includes('/site-navigation.js?v=20260828-r7-navigation-v45'))failures.push(`${file}: navigation stale`);}
   if(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/.test(html)){shellPages++;if(!html.includes('/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation'))failures.push(`${file}: shared shell stale`);}
-  if(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/.test(html)&&!html.includes('/site-dock-share-runtime-v1.js?v=20260829-authority-v54'))failures.push(`${file}: direct Dock stale`);
+  if(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/.test(html)&&!html.includes('/site-dock-share-runtime-v1.js?v=20260902-authority-v55'))failures.push(`${file}: direct Dock stale`);
 }
 for(const sample of ['index.html','trust/index.html','experience/index.html','projects/index.html','qilylean/daily/2026-08-25.html','qilylean/daily/2026-07-29.html']){
   const html=read(sample);for(const token of required)if(!html.includes(token))failures.push(`${sample}: required V32 asset absent (${token})`);for(const token of forbidden)if(html.includes(token))failures.push(`${sample}: retired translator remains (${token})`);
@@ -21,4 +21,4 @@ for(const sample of ['index.html','trust/index.html','experience/index.html','pr
 const ddz=read('tools/pure-ddz/index.html');if(!ddz.includes('/tools/pure-ddz/game/css/r8-closure-v128.css?v=20260829-r12-v132'))failures.push('tools/pure-ddz/index.html: DDZ R12 closure absent');
 if(navPages<460)failures.push(`navigation coverage low: ${navPages}`);if(shellPages<460)failures.push(`shell coverage low: ${shellPages}`);
 if(failures.length)throw new Error(`Public materialization failed (${failures.length}):\n${failures.slice(0,50).join('\n')}`);
-console.log(`PASS: ${audited} public pages use post-load Google Translate V1.4 v16 + unified primary/more-language UI v16, browser-native mobile navigation and no retired translation stack.`);
+console.log(`PASS: ${audited} public pages use post-load Google Translate V1.4 v16 + unified primary/more-language UI v16, browser-native mobile navigation and Dock V5.5 authority.`);
