@@ -37,9 +37,16 @@ jobs:
         with:
           node-version: 24
 
-      - name: Materialize mobile Dock and static first-paint navigation
+      - name: Repair materializer bootstrap and materialize closure
         run: |
           set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/remediate-mobile-dock-first-paint-v1.js')
+          s=p.read_text()
+          s=s.replace('src=replaceRange(src,cssStart,cssEnd,cssReplacement+cssEnd);','src=replaceRange(src,cssStart,cssEnd,cssReplacement);')
+          p.write_text(s)
+          PY
           node --check scripts/remediate-mobile-dock-first-paint-v1.js
           node scripts/remediate-mobile-dock-first-paint-v1.js --apply
           node --check site-dock-share-runtime-v1.js
