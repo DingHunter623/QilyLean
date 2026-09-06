@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 'use strict';
 
-/* Sitewide remediation compatibility gate | V34 | 2026-09-03 */
+/* Sitewide remediation compatibility gate | V34 | 2026-09-06 formal-VI bridge */
 const fs=require('fs'),path=require('path'),{execFileSync}=require('child_process'),root=path.resolve(__dirname,'..');
 const read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const must=(s,t,m)=>{if(!s.includes(t))throw new Error(`${m}: missing ${t}`)};
 const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)};
 const files=()=>execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>/^(?:baidu_verify_codeva-[^/]+\.html|google[^/]+\.html|zohoverify\/verifyforzoho\.html)$/i.test(f);
+const preproduction=f=>/^cn-site\//i.test(f);
 
 const nav=read('site-navigation.js'),dock=read('site-dock-share-runtime-v1.js'),route=read('site-contact-route-v1.js'),header=read('site-header-axis-v1.css'),css=read('site-interaction-semantics-v1.css'),js=read('site-interaction-semantics-v1.js'),career=read('site-early-career-history-v1.js'),mat=read('scripts/materialize-global-language-v3.js'),contactMat=read('scripts/materialize-contact-route-v6.js'),safe=read('site-translation-safe-runtime-v1.js'),components=read('site-visual-components-v1.css');
 const ddzIndex=read('tools/pure-ddz/index.html'),ddzLayout=read('tools/pure-ddz/game/css/ddz-core-v155.css'),ddzComfort=ddzLayout,ddzLandscape=ddzLayout,ddzGame=read('tools/pure-ddz/game/js/ddz-core-v155.js'),ddzVisual=ddzGame;
@@ -17,10 +18,10 @@ must(dock,'Floating Dock Authoritative Runtime V5.5','Dock V5.5');must(dock,'__q
 must(route,'Contact Route V13.4','Contact V13.4');must(route,'__qilyFloatingDockUnifiedV54','Contact Dock backward-compatibility marker');must(contactMat,'20260829-dock-functional-public-v134','Contact materializer V134');must(contactMat,'20260902-authority-v55','Contact authoritative Dock entry');must(contactMat,'global shell ownership untouched','Contact ownership boundary');forbid(contactMat,'const UI=','Contact shell rewrite');
 
 must(header,'Global Header Axis V1.2','Header Axis');must(header,'overflow-x:auto!important','Desktop scroll');must(header,'overflow-x:scroll!important','Mobile scroll');must(header,'white-space:nowrap!important','Full nav labels');
-must(css,'Interaction Semantics V1.4','Semantics CSS');must(css,'--qily-nav-rail-thumb:#0f4b5a','VI deep-teal rail');must(css,'.qily-primary-nav-scroll-rail','Persistent nav rail');must(css,'.brief-action-strip>span','Static brief labels');must(css,'.tag-row>li','Static tag rows');forbid(css,'content:"回\\A顶部"','Duplicate top label');forbid(css,'content:"回\\A上一层"','Duplicate back label');must(css,'.overview-card>.tag','Waste number contrast');
-must(js,'__qilyInteractionSemanticsV17','Semantics JS V17');must(js,"rail.type='range'",'Native range nav rail');must(js,'qily-primary-nav-scroll-rail','Nav rail runtime');must(js,'.brief-action-strip>span','Static token runtime');must(js,'PROJECT_EVIDENCE','Evidence map');must(js,'addTrustLinks','Trust links');forbid(js,'qily-primary-nav-scroll-thumb','Retired synthetic thumb');
+must(css,'Interaction Semantics V1.4','Semantics CSS');must(css,'--qily-nav-rail-thumb:#0f4b5a','VI deep-teal rail');must(css,'.qily-primary-nav-scroll-rail','Persistent nav rail source retained for pre-v4 compatibility');must(css,'.brief-action-strip>span','Static brief labels');must(css,'.tag-row>li','Static tag rows');forbid(css,'content:"回\\A顶部"','Duplicate top label');forbid(css,'content:"回\\A上一层"','Duplicate back label');must(css,'.overview-card>.tag','Waste number contrast');
+must(js,'__qilyInteractionSemanticsV17','Semantics JS V17');must(js,"rail.type='range'",'Native range nav rail compatibility source');must(js,'qily-primary-nav-scroll-rail','Nav rail runtime');must(js,'.brief-action-strip>span','Static token runtime');must(js,'PROJECT_EVIDENCE','Evidence map');must(js,'addTrustLinks','Trust links');forbid(js,'qily-primary-nav-scroll-thumb','Retired synthetic thumb');
 must(safe,'Google Translate Header Runtime V1.4','Google Translate V1.4');must(safe,'__qilyGoogleTranslateElementInitialized','Single translation initialization');must(safe,"addOption(select,MORE_VALUE,'其他')",'Primary more-language entry');must(safe,'function populateMoreLanguages()','Google-supported more-language picker');must(safe,'data-qily-header-utility','Translation header utility');forbid(safe,'includedLanguages:','Expanded translator must not restrict Google languages');if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation MutationObserver forbidden');
-must(components,'input.qily-primary-nav-scroll-rail[type="range"]','Native range rail visual');must(components,'-webkit-text-fill-color:#fff!important','Evidence grade letter contrast');must(components,'grid-template-areas:"qily-brand qily-translation" "qily-navigation qily-navigation"!important','Mobile translation/nav separation');
+must(components,'input.qily-primary-nav-scroll-rail[type="range"]','Native range rail compatibility visual');must(components,'-webkit-text-fill-color:#fff!important','Evidence grade letter contrast');must(components,'grid-template-areas:"qily-brand qily-translation" "qily-navigation qily-navigation"!important','Mobile translation/nav separation');
 
 /* DDZ V155 is the one explicitly isolated performance route: its fast shell owns Header/translation loading, while the canonical Dock remains shared. */
 must(ddzIndex,"const version='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164'",'DDZ V155/V164 cache');must(ddzIndex,'data-qily-ddz-core="v158"','DDZ static bundled style');must(ddzIndex,'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();','DDZ static style readiness');must(ddzIndex,"const chain=['js/ddz-core-v155.js'];",'DDZ single JS bundle');must(ddzIndex,'data-qily-ddz-fast-shell="v155"','DDZ fast shell');must(ddzIndex,'data-qily-ddz-virtual-landscape="v154"','DDZ iOS landscape fallback');must(ddzIndex,'id="v120-landscape-toggle"','DDZ landscape toolbar entry');must(ddzIndex,'id="welcome-landscape"','DDZ landscape welcome entry');must(ddzIndex,'/site-dock-share-runtime-v1.js?','DDZ canonical Dock');for(const token of ["loadStyle('css/ddz-core-v155.css')",'/site-navigation.js?','qilyPureDdzR8ClosureV128','ddz-site-shell-v140.js','<footer class="site-footer">','class="ddz-page-note"','name="screen-orientation"','name="x5-orientation"'])forbid(ddzIndex,token,'DDZ retired shell');
@@ -29,10 +30,13 @@ must(ddzLayout,'--ddz-game-max:var(--qily-content-axis,1560px)','DDZ site conten
 must(career,'function stickyHeaderOffset()','Career anchor offset');
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32');must(mat,'20260829-dock-functional-public-v134','Contact V134 owner');must(mat,'20260902-authority-v55','Dock V55 owner');must(mat,'20260901-primary-navigation-native-scroll-v8','Header native-scroll owner');must(mat,'20260831-r11-semantics-v17-native-range','Semantics V17 owner');must(mat,'20260830-r11-semantics-v14-visual-v3-vi-teal','VI rail owner');must(mat,'20260901-google-translate-single-runtime-v16','Safe translation owner');must(mat,'20260901-google-translate-mobile-ui-v16','Translation public UI owner');must(mat,'20260831-unified-components-v29-native-range','Visual components owner');must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Shell V11 owner');must(mat,'20260831-project-grade-readability-v3','Project grade owner');forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure owner');
 
+/* cn-site is a noindex/nofollow mainland preproduction surface. It is intentionally outside the V32 production materializer, but must carry formal VI v4 directly. */
+const cn=read('cn-site/index.html');must(cn,'/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure','CN preproduction formal VI CSS');must(cn,'/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure','CN preproduction formal VI runtime');must(cn,'name="robots" content="noindex,nofollow,noarchive"','CN preproduction indexing lock');
+
 const legacyTranslation=['site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-translation-progress-v1.css','site-global-language-v1.css','site-global-language-v3.js'];
-let pages=0,navPages=0,contactPages=0,owners=0,fail=[];
+let pages=0,navPages=0,contactPages=0,owners=0,preprod=0,fail=[];
 for(const file of files()){
-  const html=read(file);if(ownership(file)){owners++;continue;}if(!/<\/head>/i.test(html))continue;pages++;
+  const html=read(file);if(ownership(file)){owners++;continue;}if(preproduction(file)){preprod++;continue;}if(!/<\/head>/i.test(html))continue;pages++;
   if(file==='tools/pure-ddz/index.html'){
     if(!html.includes('20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164'))fail.push(`${file}: DDZ V155/V164 cache missing`);
     if(!html.includes('data-qily-ddz-core="v158"')||!html.includes('data-qily-ddz-fast-shell="v155"'))fail.push(`${file}: DDZ isolated fast-route owners missing`);
@@ -52,4 +56,4 @@ for(const file of files()){
 }
 if(pages<460||navPages<460||contactPages<470)fail.push(`coverage pages=${pages} nav=${navPages} contact=${contactPages}`);
 if(fail.length)throw new Error(`V34 sitewide remediation failed:\n${fail.slice(0,40).join('\n')}`);
-console.log(`PASS: V34 sitewide remediation covers ${pages} pages; ${owners} ownership artifacts remain shell-free; standard pages use the V32 baseline and the isolated DDZ V155/V164 route retains its fast shell, bundled game surface and Dock V5.5.`);
+console.log(`PASS: V34 production remediation covers ${pages} pages; ${owners} ownership artifacts and ${preprod} noindex preproduction page(s) are correctly separated; standard pages use V32, CN preproduction uses formal VI v4, and DDZ V155/V164 retains its isolated fast shell.`);

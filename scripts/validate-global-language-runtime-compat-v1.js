@@ -1,33 +1,121 @@
 #!/usr/bin/env node
 'use strict';
 
-/* Global language/runtime compatibility gate | V34 | 2026-09-03 */
+/* Global language/runtime compatibility gate | V35 | 2026-09-06
+ * Production V32 compatibility + formal VI v4 overlay + isolated DDZ V155/V164 route.
+ */
 const fs=require('fs'),path=require('path'),root=path.resolve(__dirname,'..');
-const read=f=>fs.readFileSync(path.join(root,f),'utf8'),must=(s,t,m)=>{if(!s.includes(t))throw new Error(`${m}: missing ${t}`)},forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)};
+const read=f=>fs.readFileSync(path.join(root,f),'utf8');
+const must=(s,t,m)=>{if(!s.includes(t))throw new Error(`${m}: missing ${t}`)};
+const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)};
 const baseline=JSON.parse(read('data/site-system-v4.json')).runtimeBaseline;
 
 const safe=read('site-translation-safe-runtime-v1.js');
-must(safe,'Google Translate Header Runtime V1.4','Google translation authority');must(safe,"addOption(select,'zh-CN','中文简体')",'Simplified Chinese primary language');must(safe,"addOption(select,'zh-TW','中文繁体')",'Traditional Chinese primary language');must(safe,"addOption(select,'en','English')",'English primary language');must(safe,"addOption(select,MORE_VALUE,'其他')",'More languages entry');must(safe,'function populateMoreLanguages()','Google-supported more languages');must(safe,'__qilyGoogleTranslateElementInitialized','Single initialization guard');must(safe,'function recoverRetainedControlOnce()','Bounded header recovery');must(safe,'data-qily-header-utility','Header utility ownership');must(safe,'translate.google.com/translate_a/element.js','Official Google element');forbid(safe,'includedLanguages:','Google language picker must not be artificially restricted');forbid(safe,'createTreeWalker','Page translation scan');forbid(safe,'setInterval(','Translation polling');if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation MutationObserver forbidden');
+for(const [t,m] of [
+  ['Google Translate Header Runtime V1.4','Google translation authority'],
+  ["addOption(select,'zh-CN','中文简体')",'Simplified Chinese'],
+  ["addOption(select,'zh-TW','中文繁体')",'Traditional Chinese'],
+  ["addOption(select,'en','English')",'English'],
+  ["addOption(select,MORE_VALUE,'其他')",'More languages entry'],
+  ['function populateMoreLanguages()','More languages picker'],
+  ['__qilyGoogleTranslateElementInitialized','Single initialization guard'],
+  ['function recoverRetainedControlOnce()','Bounded Header recovery'],
+  ['data-qily-header-utility','Header translation ownership'],
+  ['translate.google.com/translate_a/element.js','Official Google element']
+])must(safe,t,m);
+for(const t of ['includedLanguages:','createTreeWalker','setInterval('])forbid(safe,t,'Google translation redline');
+if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation MutationObserver forbidden');
 
-const navigation=read('site-navigation.js');must(navigation,'navigation runtime v45','Navigation V45');must(navigation,'r7DockSingleAuthority:true','Dock authority split');must(navigation,'r7NoNavigationDockMutation:true','No nav Dock mutation');if(!new RegExp(`atomic-first-paint-${String(baseline).toLowerCase()}`).test(navigation))throw new Error('Static first-paint baseline missing');
-const shell=read('site-ui-consistency-v1.js');must(shell,'__qilyUiConsistencyV11','Shared shell V11');must(shell,'20260831-r7-single-responsibility-v11-safe-translation','Safe shell identity');must(shell,'Translation ownership is intentionally outside this shell','Translation authority split');forbid(shell,'uninstallTranslationArtifacts','Legacy translator removal');forbid(shell,'normalizeDockButton','Shell Dock mutation');
+const navigation=read('site-navigation.js');
+must(navigation,'navigation runtime v45','Navigation V45');
+must(navigation,'r7DockSingleAuthority:true','Navigation/Dock split');
+must(navigation,'r7NoNavigationDockMutation:true','Navigation cannot mutate Dock');
+if(!new RegExp(`atomic-first-paint-${String(baseline).toLowerCase()}`).test(navigation))throw new Error('Static first-paint baseline missing');
 
-const dock=read('site-dock-share-runtime-v1.js');must(dock,'Floating Dock Authoritative Runtime V5.5','Dock V5.5');must(dock,'__qilyFloatingDockUnifiedV55','Dock V55 guard');must(dock,'setOwnedLabel','Dock label ownership');must(dock,"w.open(url,'_blank','noopener,noreferrer')",'Contact new tab');must(dock,'function isExcluded(){return false;}','Normal public pages use canonical Dock');forbid(dock,"mask.classList.add('show')",'Dock modal');if(/new\s+MutationObserver\s*\(/.test(dock))throw new Error('Dock MutationObserver forbidden');
-const route=read('site-contact-route-v1.js');must(route,'Contact Route V13.4','Contact Route V13.4');must(route,'__qilyFloatingDockUnifiedV54','Contact backward compatibility guard');must(route,'20260829-authority-v54','Contact recovery compatibility cache');
-const contactMat=read('scripts/materialize-contact-route-v6.js');must(contactMat,'global shell ownership untouched','Contact materializer authority split');forbid(contactMat,'const UI=','Contact global shell mutation');
+const shell=read('site-ui-consistency-v1.js');
+must(shell,'__qilyUiConsistencyV11','Shared shell V11');
+must(shell,'Translation ownership is intentionally outside this shell','Translation authority split');
+forbid(shell,'uninstallTranslationArtifacts','Legacy translator removal');
+forbid(shell,'normalizeDockButton','Shell Dock mutation');
 
-const header=read('site-header-axis-v1.css');must(header,'Global Header Axis V1.2','Header Axis');must(header,'overflow-x:scroll!important','Mobile nav scroll');must(header,'white-space:nowrap!important','Full labels');
-const css=read('site-interaction-semantics-v1.css'),js=read('site-interaction-semantics-v1.js');must(css,'Interaction Semantics V1.4','Semantics CSS');must(css,'--qily-nav-rail-thumb:#0f4b5a','VI deep-teal rail');must(css,'.qily-primary-nav-scroll-rail','Persistent nav rail');must(css,'.brief-action-strip>span','Static vocabulary');forbid(css,'content:"回\\A顶部"','Duplicate top label');forbid(css,'content:"回\\A上一层"','Duplicate back label');must(js,'Interaction Semantics Runtime V1.7','Semantics JS V1.7');must(js,'__qilyInteractionSemanticsV17','Semantics V17 marker');must(js,"rail.type='range'",'Native range rail');must(js,'PROJECT_EVIDENCE','Evidence map');forbid(js,'qily-primary-nav-scroll-thumb','Retired synthetic rail thumb');
+const dock=read('site-dock-share-runtime-v1.js');
+must(dock,'Floating Dock Authoritative Runtime V5.5','Dock V5.5');
+must(dock,'__qilyFloatingDockUnifiedV55','Dock V55 guard');
+must(dock,'setOwnedLabel','Dock label ownership');
+must(dock,"w.open(url,'_blank','noopener,noreferrer')",'Contact new tab');
+must(dock,'function isExcluded(){return false;}','Canonical Dock availability');
+forbid(dock,"mask.classList.add('show')",'Dock modal');
+if(/new\s+MutationObserver\s*\(/.test(dock))throw new Error('Dock MutationObserver forbidden');
 
-const ddzIndex=read('tools/pure-ddz/index.html'),ddzLayout=read('tools/pure-ddz/game/css/ddz-site-page-v140.css'),ddzComfort=read('tools/pure-ddz/game/css/card-comfort-v122.css'),ddzLandscape=read('tools/pure-ddz/game/css/mobile-landscape-v153.css'),ddzGame=read('tools/pure-ddz/game/js/game.js'),ddzVisual=read('tools/pure-ddz/game/js/visual-v120.js');
-must(ddzIndex,'20260903-ddz-mobile-landscape-v153','DDZ V153');must(ddzIndex,"loadStyle('css/mobile-landscape-v153.css')",'DDZ landscape style');must(ddzIndex,'id="v120-landscape-toggle"','DDZ landscape toolbar entry');must(ddzIndex,'id="welcome-landscape"','DDZ landscape welcome entry');must(ddzIndex,'/site-dock-share-runtime-v1.js?','DDZ canonical Dock');forbid(ddzIndex,'qilyPureDdzR8ClosureV128','DDZ retired closure');forbid(ddzIndex,'name="screen-orientation"','DDZ forced orientation metadata');forbid(ddzIndex,'name="x5-orientation"','DDZ forced X5 orientation metadata');must(ddzLayout,'--ddz-game-max:var(--qily-content-axis,1560px)','DDZ content axis');must(ddzLayout,'overflow-x:clip!important','DDZ sticky-header-safe containment');must(ddzLayout,'justify-content:safe center!important','Safe card centering');forbid(ddzLayout,'#floatDock','DDZ layout Dock ownership');forbid(ddzComfort,'#floatDock','DDZ comfort Dock ownership');must(ddzLandscape,'html.ddz-mobile-landscape body.ddz-site-page','DDZ landscape scoped owner');must(ddzLandscape,'var(--ddz-mobile-vh,390px)','DDZ actual viewport sizing');must(ddzLandscape,'env(safe-area-inset-right)','DDZ landscape safe area');forbid(ddzLandscape,'#floatDock','DDZ landscape Dock ownership');must(ddzGame,"const VERSION = '1.5.2'",'DDZ game core');must(ddzGame,"auto?'不要':'您不要'",'DDZ Hint auto-pass');must(ddzVisual,"version:'1.2.4-mobile-landscape-adaptive'",'DDZ landscape runtime');must(ddzVisual,'function syncViewportProfile()','DDZ viewport profile');must(ddzVisual,'screen.orientation?.lock','DDZ landscape lock');must(ddzVisual,'document.documentElement.requestFullscreen','DDZ fullscreen request');must(ddzVisual,'window.PureDDZTest.hint()','DDZ single Hint behavior owner');
+const route=read('site-contact-route-v1.js');
+must(route,'Contact Route V13.4','Contact Route V13.4');
+must(route,'__qilyFloatingDockUnifiedV54','Contact backward compatibility guard');
 
-const mat=read('scripts/materialize-global-language-v3.js');must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline');must(mat,"const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7'",'Visual System V2 cache');must(mat,"const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2'",'Responsive containment cache');must(mat,"const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134'",'Contact V134 cache');must(mat,"const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260902-authority-v55'",'Dock V55 cache');must(mat,"const HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8'",'Header scroll cache');must(mat,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'Google Translate V1.4 cache');must(mat,"const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23'",'Translation-neutral redline cache');must(mat,"const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components cache');must(mat,"const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3'",'Project grade readability cache');must(mat,"const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'Native range cache');must(mat,'data-qily-interaction-semantics-direct="v1.7"','Semantics marker');must(mat,'data-qily-translation-safe-direct="google-v1"','Translation marker');must(mat,'id="qilyVisualSystemV2"','Visual authority marker');must(mat,'id="qilyResponsiveContainmentV1"','Responsive containment marker');forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure materialization');forbid(mat,'const PUBLIC_UI_JS=','Retired picker active injection');
+const header=read('site-header-axis-v1.css');
+must(header,'Global Header Axis V1.2','Header Axis');
+must(header,'overflow-x:scroll!important','Mobile nav native scroll');
+must(header,'white-space:nowrap!important','Full nav labels');
 
-const integrity=read('site-header-project-integrity-v2.css');must(integrity,'Header + Project Integrity V3','Project integrity V3');must(integrity,'font-size:26px!important','List grade letter floor');must(integrity,'font-size:29px!important','Detail grade letter floor');
-const components=read('site-visual-components-v1.css');must(components,'input.qily-primary-nav-scroll-rail[type="range"]','Native range visual');must(components,'::-webkit-slider-thumb','WebKit range thumb');must(components,'data-qily-header-utility="translation"','Translation header layout');must(components,'-webkit-text-fill-color:#fff!important','Evidence grade white letter');
-const visual=read('site-visual-system-v2.css');must(visual,'QilyLean Visual System V2','Visual System V2 source');must(visual,'@media (min-width:768px) and (max-width:1179px)','Tablet visual composition');must(visual,'@media (max-width:767px)','Mobile visual composition');must(visual,'Only real navigation cards receive elevation feedback','Static-card feedback governance');
-const containment=read('site-responsive-containment-v1.css');must(containment,'QilyLean Responsive Containment V1','Responsive containment source');must(containment,'overscroll-behavior-inline:contain','Local horizontal scroll');must(containment,'html body main table','Legacy table containment');
-const matrix=JSON.parse(read('visual-regression-matrix.json'));if(matrix.system!=='QilyLean Visual System V2 + Responsive Containment V1'||matrix.scope!=='visual-only')throw new Error('Visual regression matrix contract drifted');
-const worker=read('cloudflare-worker/worker-social.js');must(worker,"const TRANSLATION_CACHE_VERSION = 'v3'",'Translation string cache');for(const term of ['APQP','PPAP','PFMEA','DFMEA','FMEA','SPC','MSA','GR&R','DOE','DVP&R','Run@Rate','MTBF','MTTR','Kanban','Heijunka','Jidoka','Andon','CMMS'])must(worker,`'${term}'`,`Protected term ${term}`);
-console.log(`PASS: ${baseline} runtime compatibility preserves one Google Translate V1.4 lifecycle owner, native-range navigation V1.7, Dock V5.5/Contact and DDZ V153 adaptive landscape behavior on V32.`);
+const semanticCss=read('site-interaction-semantics-v1.css');
+const semanticJs=read('site-interaction-semantics-v1.js');
+must(semanticCss,'Interaction Semantics V1.4','Semantics CSS');
+must(semanticCss,'.qily-primary-nav-scroll-rail','Pre-v4 range compatibility source');
+must(semanticJs,'Interaction Semantics Runtime V1.7','Semantics JS V1.7');
+must(semanticJs,"rail.type='range'",'Pre-v4 native range source');
+must(semanticJs,'PROJECT_EVIDENCE','Evidence map');
+forbid(semanticJs,'qily-primary-nav-scroll-thumb','Retired synthetic thumb');
+
+/* Formal VI v4 is the public visual authority. It may retire the old visual rail while preserving native nav scrolling. */
+const viCss=read('site-vi-standard-v4.css');
+const viRuntime=read('site-vi-runtime-v4.js');
+must(viCss,'--qily-container:1240px','Formal 1240 axis');
+must(viCss,'linear-gradient(118deg','Formal 118-degree Hero');
+must(viCss,'.qily-primary-nav-scroll-rail','Formal retired rail rule');
+must(viRuntime,'retireLegacyNavRail','Formal rail retirement');
+must(viRuntime,'Translation lifecycle and translator DOM remain exclusively owned','Translation single-owner boundary');
+forbid(viRuntime,'.qily-web-translate','Formal VI must not own translator DOM');
+
+/* DDZ V155/V164 is the explicit performance-route exception. Its interior is bundled; the canonical Dock remains shared. */
+const ddzIndex=read('tools/pure-ddz/index.html');
+const ddzCoreCss=read('tools/pure-ddz/game/css/ddz-core-v155.css');
+const ddzCoreJs=read('tools/pure-ddz/game/js/ddz-core-v155.js');
+for(const [t,m] of [
+  ["const version='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164'",'DDZ V155/V164 cache'],
+  ['data-qily-ddz-core="v158"','DDZ bundled CSS owner'],
+  ['window.__PURE_DDZ_STYLE_READY__=Promise.resolve();','DDZ static style readiness'],
+  ["const chain=['js/ddz-core-v155.js'];",'DDZ single JS bundle'],
+  ['data-qily-ddz-fast-shell="v155"','DDZ fast shell'],
+  ['data-qily-ddz-virtual-landscape="v154"','DDZ iOS landscape fallback'],
+  ['id="v120-landscape-toggle"','DDZ landscape toolbar'],
+  ['id="welcome-landscape"','DDZ landscape welcome'],
+  ['/site-dock-share-runtime-v1.js?v=20260902-public-dock-v55','DDZ canonical Dock']
+])must(ddzIndex,t,m);
+for(const t of ["loadStyle('css/ddz-core-v155.css')",'/site-navigation.js?','qilyPureDdzR8ClosureV128','ddz-site-shell-v140.js','name="screen-orientation"','name="x5-orientation"'])forbid(ddzIndex,t,'DDZ retired shell');
+must(ddzCoreCss,'--ddz-game-max:var(--qily-content-axis,1560px)','DDZ content axis compatibility');
+must(ddzCoreCss,'overflow-x:clip!important','DDZ containment');
+must(ddzCoreCss,'justify-content:safe center!important','DDZ safe card centering');
+must(ddzCoreJs,"const VERSION = '1.5.2'",'DDZ game core');
+must(ddzCoreJs,"auto?'不要':'您不要'",'DDZ auto-pass narration');
+must(ddzCoreJs,"version:'1.2.4-mobile-landscape-adaptive'",'DDZ adaptive landscape runtime');
+must(ddzCoreJs,'function syncViewportProfile()','DDZ viewport profile');
+must(ddzCoreJs,'screen.orientation?.lock','DDZ landscape lock');
+must(ddzCoreJs,'window.PureDDZTest.hint()','DDZ single hint owner');
+
+const mat=read('scripts/materialize-global-language-v3.js');
+for(const [t,m] of [
+  ["const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline'],
+  ["const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260902-authority-v55'",'Dock V55 materializer'],
+  ["const HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8'",'Header native-scroll materializer'],
+  ["const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'Translation materializer'],
+  ["const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components materializer'],
+  ["const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'Semantics materializer']
+])must(mat,t,m);
+forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure materialization');
+forbid(mat,'const PUBLIC_UI_JS=','Retired picker injection');
+
+const cn=read('cn-site/index.html');
+must(cn,'name="robots" content="noindex,nofollow,noarchive"','CN preproduction indexing lock');
+must(cn,'/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure','CN formal VI CSS');
+must(cn,'/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure','CN formal VI runtime');
+
+console.log(`PASS: ${baseline} compatibility preserves one Google Translate V1.4 owner, native navigation, Dock V5.5, formal VI v4, CN noindex preproduction, and the isolated DDZ V155/V164 fast route.`);

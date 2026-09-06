@@ -1,0 +1,86 @@
+name: Enforce VI v4 Formal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-vi-standard-v4.css'
+      - 'site-vi-runtime-v4.js'
+      - 'site-brand-home-feedback-v1.js'
+      - 'scripts/enforce-site-vi-v4.js'
+      - 'scripts/vi-v4-formal.spec.js'
+      - '.github/workflows/vi-v4-formal.yml'
+      - '**/*.html'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qily-vi-v4-formal-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  formal-visual-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Static VI v4 architecture audit
+        run: |
+          set -euo pipefail
+          node --check site-vi-runtime-v4.js
+          node --check site-brand-home-feedback-v1.js
+          node --check scripts/enforce-site-vi-v4.js
+          node --check scripts/vi-v4-formal.spec.js
+          node scripts/enforce-site-vi-v4.js --write
+          git diff --check
+
+      - name: Install Chromium visual audit dependency
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start local public-site server
+        run: |
+          python3 -m http.server 4173 >/tmp/qily-vi-v4-http.log 2>&1 &
+          echo $! >/tmp/qily-vi-v4-http.pid
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4173/ >/dev/null
+
+      - name: Desktop tablet mobile formal regression
+        env:
+          QILY_VI_V4_BASE: http://127.0.0.1:4173
+        run: npx playwright test scripts/vi-v4-formal.spec.js --reporter=line --workers=1
+
+      - name: Finalize machine-readable audit
+        run: |
+          node <<'NODE'
+          const fs=require('fs');
+          const p='qilylean/site-vi-audit-v4.json';
+          const a=JSON.parse(fs.readFileSync(p,'utf8'));
+          a.status='passed';
+          a.checks.responsiveOverflow='passed';
+          a.checks.browserRegression='passed';
+          a.checks.viewports=['desktop-1440','tablet-1024','mobile-390'];
+          a.checks.releaseGate='P0=0; P1=0; VI audit=passed; cross-device visual regression=passed';
+          a.completedAt=new Date().toISOString();
+          fs.writeFileSync(p,JSON.stringify(a,null,2)+'\n');
+          console.log(JSON.stringify(a,null,2));
+          NODE
+
+      - name: Upload VI v4 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qily-vi-v4-formal-${{ github.run_id }}
+          path: |
+            qilylean/site-vi-audit-v4.json
+            visual-vi-v4-artifacts
+          if-no-files-found: warn
+          retention-days: 30

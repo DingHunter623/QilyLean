@@ -1,0 +1,260 @@
+/* QilyLean | Formal Visual Identity Authority v4.0 | 2026-09-06
+ * SSOT implementation for qilylean.com public shell.
+ * Governance: minority follows majority; local presentation follows the site shell.
+ */
+:root{
+  --qily-vi-olive:#0F4B5A;
+  --qily-vi-olive-deep:#073C47;
+  --qily-vi-olive-light:#178B94;
+  --qily-vi-red:#9E4A34;
+  --qily-vi-gold:#CAA15F;
+  --qily-vi-gold-light:#FFE39B;
+  --qily-surface:#FFFFFF;
+  --qily-surface-tint:#EEF7F5;
+  --qily-surface-soft:#F7FBFA;
+  --qily-line:#D5E4E3;
+  --qily-line-strong:#B8D6D2;
+  --qily-ink:#182420;
+  --qily-muted:#5F7474;
+  --qily-container:1240px;
+  --qily-copy:920px;
+  --qily-radius-sm:8px;
+  --qily-radius:12px;
+  --qily-radius-lg:18px;
+  --qily-shadow-sm:0 6px 20px rgba(7,60,71,.07);
+  --qily-shadow:0 16px 42px rgba(7,60,71,.10);
+  --qily-shadow-strong:0 24px 64px rgba(7,60,71,.15);
+  --qily-hero-formal:linear-gradient(118deg,rgba(7,60,71,.99),rgba(15,75,90,.97) 58%,rgba(23,139,148,.90));
+}
+
+html{max-width:100%;background:var(--qily-surface);}
+html body{
+  max-width:100%;
+  margin-inline:auto;
+  color:var(--qily-ink)!important;
+  background:var(--qily-surface)!important;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans CJK SC","PingFang SC","Microsoft YaHei",Arial,sans-serif!important;
+}
+*,*::before,*::after{box-sizing:border-box;}
+img,svg,video,canvas{max-width:100%;}
+pre,code{max-width:100%;}
+
+/* 01 | One public shell axis. */
+html body :is(
+  header.qily-site-header,header.qily-global-header,
+  .module-inner,.qily-ia-inner,.qily-asset-inner,.qily-system-axis__inner,
+  .section-inner,.daily-inner,.article-hub-inner,.page-inner,.content-inner,
+  .archive-inner,.knowledge-inner,.project-inner,.tool-inner,.main-inner,.footer-inner,
+  main>section>.inner,main>section>.wrap,main>section>.container,
+  footer>.inner,footer>.wrap,footer>.container
+){
+  width:min(var(--qily-container),calc(100% - 36px))!important;
+  max-width:var(--qily-container)!important;
+  min-width:0!important;
+  margin-inline:auto!important;
+}
+html body main>section{
+  max-width:100%!important;
+  min-width:0!important;
+  padding-left:max(18px,env(safe-area-inset-left))!important;
+  padding-right:max(18px,env(safe-area-inset-right))!important;
+}
+html body main> :is(.module-section,.qily-asset-section,.qily-ia-section,.daily-section,.section){
+  padding-top:clamp(48px,5vw,88px)!important;
+  padding-bottom:clamp(48px,5vw,88px)!important;
+}
+html body main>section:nth-of-type(even):not(:is(.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero)){
+  background:var(--qily-surface-soft);
+}
+
+/* 02 | Header: one recognizable shell. Legacy class names may remain as compatibility hooks, but qily-site-header owns presentation. */
+html body header.qily-site-header{
+  max-width:var(--qily-container)!important;
+  min-width:0!important;
+  margin-inline:auto!important;
+  background:var(--qily-surface)!important;
+  color:var(--qily-ink)!important;
+  border-color:var(--qily-line)!important;
+  box-shadow:none!important;
+}
+html body header.qily-site-header :is(.site-nav,.qily-global-nav,.nav,nav){min-width:0!important;}
+html body header.qily-site-header :is(.site-nav,.qily-global-nav,.nav)>a[href]{
+  min-height:44px!important;
+  border-radius:var(--qily-radius-sm)!important;
+  color:var(--qily-ink)!important;
+  background:transparent!important;
+  box-shadow:none!important;
+}
+html body header.qily-site-header :is(.site-nav,.qily-global-nav,.nav)>a[href][aria-current="page"]{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-vi-olive)!important;
+  border-color:var(--qily-vi-gold)!important;
+}
+/* The historical visible range/slider rail is retired; native horizontal navigation remains available. */
+html body .qily-primary-nav-scroll-rail,
+html body .qily-primary-nav-scroll-thumb{display:none!important;}
+
+/* 03 | Formal 118-degree Hero. Content may differ; the public brand shell may not. */
+html body :is(
+  .hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,
+  [data-qily-hero]
+):not(.qily-aircraft-brand-hero){
+  color:#fff!important;
+  background-color:var(--qily-vi-olive-deep)!important;
+  background-image:var(--qily-hero-formal)!important;
+  border-bottom:1px solid rgba(202,161,95,.72)!important;
+  box-shadow:none!important;
+}
+html body :is(.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,[data-qily-hero]):not(.qily-aircraft-brand-hero)
+:is(h1,h2,h3,p,.lead,.eyebrow,.meta,.kicker,.subtitle){color:inherit!important;-webkit-text-fill-color:currentColor!important;}
+html body :is(.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,[data-qily-hero]):not(.qily-aircraft-brand-hero)::before,
+html body :is(.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,[data-qily-hero]):not(.qily-aircraft-brand-hero)::after{
+  filter:none!important;
+  box-shadow:none!important;
+}
+
+/* 04 | Typography hierarchy. */
+html body main :is(h1,.hero-title,.module-title){line-height:1.08!important;font-weight:900!important;}
+html body main :is(h2,.section-title,.section-heading h2,.section-head h2,.module-heading h2){line-height:1.18!important;font-weight:850!important;}
+html body main :is(h3,.card-title,.module-card h3,.paper-card h3,.career-full-card h3){line-height:1.3!important;font-weight:800!important;}
+html body main :is(p,li,dd,dt){line-height:1.7!important;}
+html body :is(.meta,.caption,.note,.fine,.project-meta,.article-meta,.resource-meta,.source-note,figcaption){color:var(--qily-muted)!important;}
+
+/* 05 | Buttons and controls: 8px, not pills. */
+html body :is(
+  a.button,button.button,a.btn,button.btn,a.qily-button,button.qily-button,
+  a.qily-ia-button,button.qily-ia-button,a.module-action,button.module-action,
+  a.resource-action,button.resource-action,a.project-list-action,button.project-list-action,
+  a.project-card-action,button.project-card-action,[role="button"]:not(:is(.tag,.chip,.pill,.badge,.status,.status-badge))
+){
+  min-height:44px!important;
+  border-radius:var(--qily-radius-sm)!important;
+  box-shadow:none!important;
+}
+html body :is(a.button.primary,button.button.primary,a.btn.primary,button.btn.primary,a.qily-button.primary,button.qily-button.primary,.module-action.primary){
+  color:#fff!important;
+  background:var(--qily-vi-olive)!important;
+  border-color:var(--qily-vi-olive)!important;
+}
+html body :is(a.button.primary,button.button.primary,a.btn.primary,button.btn.primary,a.qily-button.primary,button.qily-button.primary,.module-action.primary):is(:hover,:focus-visible){
+  background:var(--qily-vi-olive-deep)!important;
+  border-color:var(--qily-vi-gold)!important;
+}
+html body main :is(.tag,.chip,.pill,.badge,.status,.status-badge,.evidence-badge,.project-meta-badge):not([role="button"]){border-radius:999px!important;}
+
+/* 06 | Cards / visual containers. */
+html body main :is(
+  .module-card,.paper-card,.project-card,.project-list-card,.career-full-card,.service-card,
+  .resource-card,.knowledge-card,.trust-card,.qily-value-card,.qily-ia-card,.panel,.card
+){
+  max-width:100%!important;
+  min-width:0!important;
+  border:1px solid var(--qily-line)!important;
+  border-radius:var(--qily-radius)!important;
+  background:var(--qily-surface)!important;
+  box-shadow:var(--qily-shadow-sm)!important;
+}
+html body main :is(.hero-card,.visual-frame,.qily-diagram-frame,.qily-flow-frame,.portrait-frame){border-radius:var(--qily-radius-lg)!important;}
+
+/* 07 | Tables and engineering visualizations stay locally scrollable, never page-wide. */
+html body main :is(.qily-table-scroll,.table-wrap,.table-scroll,.table-responsive,.data-table-wrap,.matrix-wrap,.diagram-scroll,.flow-scroll,.visual-scroll){
+  max-width:100%!important;
+  min-width:0!important;
+  overflow-x:auto!important;
+  overscroll-behavior-inline:contain;
+}
+html body main table{max-width:100%!important;border-color:var(--qily-line)!important;}
+html body main table thead th{
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background:var(--qily-vi-olive)!important;
+  border-color:var(--qily-line-strong)!important;
+}
+html body main table tbody tr:nth-child(even) td{background:var(--qily-surface-soft)!important;}
+
+/* 08 | Translation belongs to the Header shell. */
+html body header.qily-site-header .qily-web-translate{
+  flex:0 1 196px!important;
+  width:min(196px,100%)!important;
+  min-width:0!important;
+  max-width:196px!important;
+  margin:0 0 0 8px!important;
+  border:1px solid var(--qily-line-strong)!important;
+  border-radius:var(--qily-radius-sm)!important;
+  background:var(--qily-surface-soft)!important;
+  box-shadow:none!important;
+}
+html body header.qily-site-header .qily-web-translate__select{min-height:34px!important;min-width:0!important;max-width:100%!important;}
+
+/* 09 | Shared Dock: one instance, in document flow, no content overlay. */
+html body #floatDock.qily-float-dock,
+html body .qily-float-dock.qily-vi-v4-flow-dock{
+  position:relative!important;
+  inset:auto!important;
+  z-index:20!important;
+  display:flex!important;
+  flex-flow:row wrap!important;
+  justify-content:center!important;
+  align-items:stretch!important;
+  gap:8px!important;
+  width:min(var(--qily-container),calc(100% - 36px))!important;
+  max-width:var(--qily-container)!important;
+  height:auto!important;
+  margin:24px auto!important;
+  padding:12px!important;
+  border:1px solid var(--qily-line)!important;
+  border-radius:var(--qily-radius)!important;
+  background:var(--qily-surface)!important;
+  box-shadow:var(--qily-shadow-sm)!important;
+  transform:none!important;
+}
+html body #floatDock.qily-float-dock .qily-float-btn,
+html body .qily-float-dock.qily-vi-v4-flow-dock .qily-float-btn{
+  flex:0 1 auto!important;
+  width:auto!important;
+  min-width:44px!important;
+  max-width:none!important;
+  height:auto!important;
+  min-height:44px!important;
+  max-height:none!important;
+  padding:8px 12px!important;
+  border:1px solid var(--qily-line-strong)!important;
+  border-radius:var(--qily-radius-sm)!important;
+  color:var(--qily-vi-olive)!important;
+  background:var(--qily-surface-soft)!important;
+  box-shadow:none!important;
+}
+
+/* 10 | Footer remains the common shell. */
+html body footer{max-width:100%!important;color:var(--qily-ink);background:var(--qily-surface-soft)!important;border-top:1px solid var(--qily-line)!important;}
+
+/* 11 | Product interiors may differ. Their public shell still inherits formal tokens. */
+html body [data-qily-product-interior="true"]{--qily-product-shell-radius:var(--qily-radius);}
+
+/* 12 | Responsive: same language, only composition changes. */
+@media (max-width:1179px){
+  html body header.qily-site-header{width:calc(100% - 28px)!important;}
+  html body header.qily-site-header :is(.site-nav,.qily-global-nav,.nav,nav){overflow-x:auto!important;overflow-y:hidden!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:none!important;}
+}
+@media (max-width:767px){
+  html body :is(
+    header.qily-site-header,.module-inner,.qily-ia-inner,.qily-asset-inner,.qily-system-axis__inner,
+    .section-inner,.daily-inner,.article-hub-inner,.page-inner,.content-inner,.archive-inner,.knowledge-inner,
+    .project-inner,.tool-inner,.main-inner,.footer-inner,main>section>.inner,main>section>.wrap,main>section>.container
+  ){width:calc(100% - 24px)!important;}
+  html body main>section{padding-left:max(12px,env(safe-area-inset-left))!important;padding-right:max(12px,env(safe-area-inset-right))!important;}
+  html body header.qily-site-header{width:calc(100% - 20px)!important;}
+  html body header.qily-site-header .qily-web-translate{flex:1 1 170px!important;width:auto!important;max-width:100%!important;margin-left:0!important;}
+  html body #floatDock.qily-float-dock,
+  html body .qily-float-dock.qily-vi-v4-flow-dock{width:calc(100% - 24px)!important;margin-block:18px!important;padding:10px!important;}
+  html body #floatDock.qily-float-dock .qily-float-btn,
+  html body .qily-float-dock.qily-vi-v4-flow-dock .qily-float-btn{flex:1 1 132px!important;}
+}
+@media (max-width:360px){
+  html body header.qily-site-header,
+  html body :is(.module-inner,.qily-ia-inner,.qily-asset-inner,.section-inner,.daily-inner,.page-inner,.content-inner,.main-inner,.footer-inner){width:calc(100% - 16px)!important;}
+  html body #floatDock.qily-float-dock,
+  html body .qily-float-dock.qily-vi-v4-flow-dock{width:calc(100% - 16px)!important;}
+}
