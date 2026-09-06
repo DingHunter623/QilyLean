@@ -6,6 +6,8 @@ on:
     paths:
       - 'scripts/remediate-mobile-dock-first-paint-v1.js'
       - 'scripts/normalize-dock-compact-contract-v1.js'
+      - 'scripts/guard-first-paint-navigation-generators-v1.js'
+      - 'scripts/materialize-ai-knowledge-public-v1.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-navigation.js'
       - 'site-navigation-core.js'
@@ -48,12 +50,15 @@ jobs:
           set -euo pipefail
           node --check scripts/remediate-mobile-dock-first-paint-v1.js
           node --check scripts/normalize-dock-compact-contract-v1.js
+          node --check scripts/guard-first-paint-navigation-generators-v1.js
+          node scripts/guard-first-paint-navigation-generators-v1.js --apply
           node scripts/remediate-mobile-dock-first-paint-v1.js --apply
           node scripts/normalize-dock-compact-contract-v1.js --apply
           node --check site-dock-share-runtime-v1.js
           node --check site-navigation.js
           node --check site-navigation-core.js
           node --check site-navigation-legacy-20260802.js
+          node scripts/guard-first-paint-navigation-generators-v1.js
           node scripts/remediate-mobile-dock-first-paint-v1.js
           node scripts/normalize-dock-compact-contract-v1.js
           git diff --check
@@ -78,6 +83,8 @@ jobs:
           grep -q '20260906-primary-first-paint-legacy-v24' site-navigation.js
           grep -q '资源协同' index.html
           grep -q '精益生产' index.html
+          ! grep -q '<a href="/links/">友情链接</a>' scripts/materialize-ai-knowledge-public-v1.js
+          grep -q '<a href="/lean-production/">精益生产</a>' scripts/materialize-ai-knowledge-public-v1.js
 
       - name: Commit closed public source
         run: |
