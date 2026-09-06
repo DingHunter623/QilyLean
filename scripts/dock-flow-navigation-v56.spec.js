@@ -6,22 +6,24 @@ const base=process.env.QILY_DOCK_V58_BASE||'http://127.0.0.1:4173';
 const cases=[
   ['home-desktop','/',{width:1440,height:1000},false],
   ['home-mobile','/',{width:390,height:844},true],
+  ['contact-mobile','/contact/',{width:390,height:844},true],
   ['daily-desktop','/qilylean/daily/2026-09-04.html',{width:1440,height:1000},false],
   ['daily-mobile','/qilylean/daily/2026-09-04.html',{width:390,height:844},true]
 ];
-const expected=['回首页','回顶部','回上一层级','回上一网页','本站搜索','分享当前页','联系我们'];
+const desktopExpected=['回首页','回顶部','回上一层级','回上一网页','本站搜索','分享当前页','联系我们'];
+const mobileExpected=['首页','顶部','回上一层级','回上一网页','本站搜索','分享当前页','联系我们'];
 const out=path.join(process.cwd(),'dock-v58-artifacts');
 fs.mkdirSync(out,{recursive:true});
 
 for(const [name,url,viewport,mobile] of cases){
-  test(`${name} Dock V5.8 fixed bottom swipe navigation`,async({page})=>{
+  test(`${name} Dock V5.8 compact fixed-bottom navigation`,async({page})=>{
     await page.setViewportSize(viewport);
     const response=await page.goto(base+url,{waitUntil:'networkidle',timeout:30000});
     expect(response&&response.ok(),`${url} should resolve`).toBeTruthy();
-    await page.waitForSelector('#floatDock[data-qily-unified-public-module="v5.8-fixed-bottom-swipe-navigation"]',{state:'visible',timeout:10000});
+    await page.waitForSelector('#floatDock',{state:'visible',timeout:10000});
 
     const result=await page.evaluate(()=>{
-      const dock=document.querySelector('#floatDock[data-qily-unified-public-module="v5.8-fixed-bottom-swipe-navigation"]');
+      const dock=document.querySelector('#floatDock');
       const buttons=[...dock.querySelectorAll('.qily-float-btn[data-action]')];
       const ds=getComputedStyle(dock),dr=dock.getBoundingClientRect();
       const spacer=document.getElementById('qilyDockBottomSpacerV58');
@@ -33,57 +35,64 @@ for(const [name,url,viewport,mobile] of cases){
         overflowY:ds.overflowY,
         scrollSnapType:ds.scrollSnapType,
         bottomGap:Math.round(innerHeight-dr.bottom),
-        dockLeft:Math.round(dr.left),
-        dockRightGap:Math.round(innerWidth-dr.right),
-        dockWidth:Math.round(dr.width),
-        viewportWidth:Math.round(innerWidth),
+        dockLeft:dr.left,
+        dockRight:dr.right,
+        dockWidth:dr.width,
+        viewportWidth:innerWidth,
         scrollWidth:dock.scrollWidth,
         clientWidth:dock.clientWidth,
-        scrollLeft:dock.scrollLeft,
         layout:dock.getAttribute('data-qily-dock-layout'),
+        unified:dock.getAttribute('data-qily-unified-public-module'),
         labels:buttons.map(b=>b.getAttribute('aria-label')),
         actions:buttons.map(b=>b.getAttribute('data-action')),
-        spacerHeight:spacer?Math.round(spacer.getBoundingClientRect().height):0,
-        buttons:buttons.map(b=>{const s=getComputedStyle(b),r=b.getBoundingClientRect();return {w:r.width,h:r.height,radius:parseFloat(s.borderTopLeftRadius)||0,left:r.left,right:r.right};})
+        spacerHeight:spacer?spacer.getBoundingClientRect().height:0,
+        buttons:buttons.map(b=>{const s=getComputedStyle(b),r=b.getBoundingClientRect();return {
+          action:b.getAttribute('data-action'),w:r.width,h:r.height,left:r.left,right:r.right,
+          borderLeft:parseFloat(s.borderLeftWidth)||0,borderRight:parseFloat(s.borderRightWidth)||0,
+          radius:parseFloat(s.borderTopLeftRadius)||0
+        };})
       };
     });
 
     expect(result.position).toBe('fixed');
-    expect(result.labels).toEqual(expected);
+    expect(result.labels).toEqual(mobile?mobileExpected:desktopExpected);
     expect(result.actions).toEqual(['home','top','back','previous','search','current','contact']);
     expect(result.buttons).toHaveLength(7);
     expect(result.spacerHeight,'fixed navigation must reserve scroll clearance').toBeGreaterThanOrEqual(70);
     for(const item of result.buttons){
       expect(item.radius,'buttons must remain rectangular').toBeLessThanOrEqual(12);
-      expect(item.w,'each navigation control must preserve a readable tap width').toBeGreaterThanOrEqual(mobile?78:30);
       expect(item.h,'tap target height').toBeGreaterThanOrEqual(48);
+      expect(item.borderLeft,'left border must render').toBeGreaterThanOrEqual(1);
+      expect(item.borderRight,'right border must render').toBeGreaterThanOrEqual(1);
     }
 
     if(mobile){
-      expect(result.display).toBe('flex');
-      expect(['auto','scroll']).toContain(result.overflowX);
-      expect(result.overflowY).toBe('hidden');
-      expect(result.scrollSnapType).toContain('x');
+      expect(result.display).toBe('grid');
+      expect(result.gridColumns.split(' ').length).toBe(7);
       expect(result.bottomGap,'mobile dock must touch viewport bottom').toBeLessThanOrEqual(1);
-      expect(result.layout).toBe('mobile-fixed-bottom-swipe-navigation');
-      expect(result.scrollWidth,'mobile dock must expose horizontal swipe overflow').toBeGreaterThan(result.clientWidth+80);
-      expect(result.dockWidth/result.viewportWidth,'mobile dock should cover essentially the full viewport width').toBeGreaterThanOrEqual(.95);
-      expect(result.dockLeft,'mobile dock left gutter should remain narrow').toBeGreaterThanOrEqual(-1);
-      expect(result.dockLeft,'mobile dock left gutter should remain narrow').toBeLessThanOrEqual(8);
-      expect(result.dockRightGap,'mobile dock right gutter should remain no wider than a browser scrollbar').toBeLessThanOrEqual(16);
+      expect(result.layout).toBe('mobile-fixed-bottom-compact-navigation');
+      expect(result.scrollWidth,'mobile dock must not need horizontal scrolling').toBeLessThanOrEqual(result.clientWidth+1);
+      expect(result.dockWidth/result.viewportWidth,'mobile dock should cover the viewport width').toBeGreaterThanOrEqual(.99);
+      expect(result.dockLeft,'mobile dock must start at viewport left edge').toBeGreaterThanOrEqual(-1);
+      expect(result.dockLeft,'mobile dock must start at viewport left edge').toBeLessThanOrEqual(1);
+      expect(result.dockRight,'mobile dock must end at viewport right edge').toBeGreaterThanOrEqual(result.viewportWidth-1);
+      expect(result.dockRight,'mobile dock must not overflow viewport').toBeLessThanOrEqual(result.viewportWidth+1);
+      for(const item of result.buttons){
+        expect(item.w,'compact mobile control must retain minimum touch width').toBeGreaterThanOrEqual(44);
+        expect(item.left,'no mobile button may clip past the left viewport edge').toBeGreaterThanOrEqual(0);
+        expect(item.right,'no mobile button may clip past the right viewport edge').toBeLessThanOrEqual(result.viewportWidth);
+      }
 
-      const swipeResult=await page.evaluate(()=>{
-        const dock=document.querySelector('#floatDock');
-        const last=dock.querySelector('.qily-float-btn[data-action="contact"]');
-        const max=Math.max(0,dock.scrollWidth-dock.clientWidth);
-        dock.scrollTo({left:max,behavior:'instant'});
-        const r=last.getBoundingClientRect();
-        return {scrollLeft:dock.scrollLeft,max,lastLeft:r.left,lastRight:r.right,viewportWidth:innerWidth};
+      await page.locator('#floatDock .qily-float-btn[data-action="home"]').focus();
+      const focus=await page.evaluate(()=>{
+        const b=document.querySelector('#floatDock .qily-float-btn[data-action="home"]');
+        const s=getComputedStyle(b),r=b.getBoundingClientRect();
+        return {outline:s.outlineStyle,outlineWidth:s.outlineWidth,boxShadow:s.boxShadow,left:r.left,borderLeft:parseFloat(s.borderLeftWidth)||0};
       });
-      expect(swipeResult.max,'mobile swipe rail must have real travel').toBeGreaterThan(80);
-      expect(swipeResult.scrollLeft,'programmatic horizontal movement must succeed').toBeGreaterThan(40);
-      expect(swipeResult.lastRight,'last action must become visible after swiping').toBeLessThanOrEqual(swipeResult.viewportWidth+1);
-      expect(swipeResult.lastLeft,'last action must become visible after swiping').toBeGreaterThanOrEqual(-1);
+      expect(focus.left,'focused first button must remain fully inside the viewport').toBeGreaterThanOrEqual(0);
+      expect(focus.borderLeft,'focused first button left border must remain complete').toBeGreaterThanOrEqual(1);
+      expect(focus.outline==='none'||focus.outlineWidth==='0px','mobile focus must not use a clipped outer outline').toBeTruthy();
+      expect(focus.boxShadow,'mobile focus must use an internal visible ring').toContain('inset');
     }else{
       expect(result.display).toBe('grid');
       expect(result.gridColumns.split(' ').length).toBe(7);
