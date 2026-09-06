@@ -6,6 +6,7 @@ on:
     paths:
       - "tools/lucky-data/**"
       - "scripts/sync-lucky-data.py"
+      - "scripts/sync-lucky-data-browser.mjs"
       - ".github/workflows/lucky-data-sync.yml"
   schedule:
     - cron: "20 16 * * *"
@@ -27,12 +28,24 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+
+      - name: Install browser fetch runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --no-save playwright@1.55.0
+          npx playwright install --with-deps chromium
 
       - name: Sync official draw history
         shell: bash
@@ -42,7 +55,7 @@ jobs:
           if [[ "${{ github.event_name }}" == "push" || "${{ inputs.full_history || false }}" == "true" ]]; then
             ARGS="--full"
           fi
-          python3 scripts/sync-lucky-data.py $ARGS
+          node scripts/sync-lucky-data-browser.mjs $ARGS
 
       - name: Validate normalized datasets
         shell: bash
@@ -78,4 +91,5 @@ jobs:
             exit 0
           fi
           git commit -m "data(lucky-data): sync official draw history"
-          git push
+          git pull --rebase origin main
+          git push origin HEAD:main
