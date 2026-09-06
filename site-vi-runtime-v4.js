@@ -1,6 +1,7 @@
 /* QilyLean | Formal Visual Identity Runtime v4.0 | 2026-09-06
- * Presentation governance only: shell normalization, formal Hero marker, Header translator placement,
+ * Presentation governance only: shell normalization, formal Hero marker,
  * single in-flow shared Dock, and cross-device overflow telemetry.
+ * Translation lifecycle and translator DOM remain exclusively owned by site-translation-safe-runtime-v1.js.
  */
 (function(d,w){
   'use strict';
@@ -25,14 +26,6 @@
     h.setAttribute('data-qily-vi-v4-header','formal');
     var nav=h.querySelector('nav.qily-global-nav,nav.site-nav,nav.nav,nav[aria-label],nav');
     if(nav){nav.classList.add('site-nav','qily-global-nav');nav.setAttribute('data-qily-vi-v4-nav','formal');}
-
-    var translators=Array.prototype.slice.call(d.querySelectorAll('.qily-web-translate'));
-    var primary=translators.find(function(el){return visible(el);})||translators[0];
-    if(primary&&primary.closest('header')!==h){h.appendChild(primary);}
-    translators.forEach(function(el){
-      if(el!==primary){el.hidden=true;el.setAttribute('aria-hidden','true');el.setAttribute('data-qily-vi-v4-duplicate','suppressed');}
-    });
-    if(primary)primary.setAttribute('data-qily-vi-v4-translation','header');
   }
 
   function normalizeHeroes(){
