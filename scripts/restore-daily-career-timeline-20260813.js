@@ -68,7 +68,7 @@ function patchCurator() {
 
   // Keep future weekly rebuilds aligned with the current R2 operating-axis navigation.
   const oldNav = '<nav class="site-nav" aria-label="QilyLean核心导视"><a href="/">首页</a><a href="/capabilities/">能力体系</a><a href="/projects/">代表项目</a><a href="/improvements/">改善方法</a><a href="/knowledge/" aria-current="page">知识资产</a><a href="/experience/">履历主线</a><a href="/cooperation/">项目合作</a><a href="/trust/">信任中心</a></nav>';
-  const newNav = '<nav class="site-nav" aria-label="QilyLean核心导视"><a href="/">首页</a><a href="/experience/">履历主线</a><a href="/capabilities/">能力体系</a><a href="/improvements/">改善方法</a><a href="/projects/">代表项目</a><a href="/trust/">信任中心</a><a href="/cooperation/">项目合作</a><a href="/knowledge/" aria-current="page">知识资产</a></nav>';
+  const newNav = '<nav class="site-nav" aria-label="QilyLean核心导视"><a href="/">首页</a><a href="/experience/">履历主线</a><a href="/capabilities/">能力体系</a><a href="/improvements/">改善方法</a><a href="/lean-production/">精益生产</a><a href="/projects/">代表项目</a><a href="/trust/">信任中心</a><a href="/cooperation/">项目合作</a><a href="/knowledge/" aria-current="page">知识资产</a></nav>';
   source = source.replace(oldNav, newNav);
   source = source.replace('/site-navigation.js?v=20260812-r2-clean-v3', '/site-navigation.js?v=20260813-r2-clean-v4');
 

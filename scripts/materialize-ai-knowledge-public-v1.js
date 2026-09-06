@@ -65,7 +65,7 @@ const publicHtml = `<!doctype html>
 <header class="qily-site-header">
 <a class="qily-brand" href="/">QilyLean | 启力精益</a>
 <nav class="site-nav" aria-label="QilyLean核心导视">
-<a href="/">首页</a><a href="/experience/">履历主线</a><a href="/capabilities/">能力体系</a><a href="/improvements/">改善方法</a><a href="/projects/">代表项目</a><a href="/trust/">信任中心</a><a href="/cooperation/">项目合作</a><a href="/knowledge/" aria-current="page">知识资产</a><a href="/links/">友情链接</a>
+<a href="/">首页</a><a href="/experience/">履历主线</a><a href="/capabilities/">能力体系</a><a href="/improvements/">改善方法</a><a href="/lean-production/">精益生产</a><a href="/projects/">代表项目</a><a href="/trust/">信任中心</a><a href="/cooperation/">项目合作</a><a href="/knowledge/" aria-current="page">知识资产</a><a href="/links/">资源协同</a>
 </nav>
 </header>
 <main>
