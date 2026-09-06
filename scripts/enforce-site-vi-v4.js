@@ -29,6 +29,7 @@ const htmlFiles=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf
 const ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
 const DDZ='tools/pure-ddz/index.html';
 let governed=0,bootstrapCovered=0,duplicates=0;
+const missing=[];
 for(const file of htmlFiles){
   if(ownership(file)||file===DDZ)continue;
   const html=read(file);
@@ -36,10 +37,11 @@ for(const file of htmlFiles){
   governed++;
   const n=(html.match(/site-brand-home-feedback-v1\.js/g)||[]).length;
   if(n===1)bootstrapCovered++;
+  else if(n===0)missing.push(file);
   if(n>1)duplicates++;
 }
 assert(governed>450,`public-page coverage floor too low: ${governed}`);
-assert(bootstrapCovered===governed,`formal bootstrap reachability ${bootstrapCovered}/${governed}`);
+assert(bootstrapCovered===governed,`formal bootstrap reachability ${bootstrapCovered}/${governed}; missing=${missing.slice(0,20).join(',')}`);
 assert(duplicates===0,`duplicate formal bootstrap hosts: ${duplicates}`);
 
 const audit={
