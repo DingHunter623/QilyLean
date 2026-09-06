@@ -22,7 +22,6 @@ const heroSelector='.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.
 
 fs.mkdirSync(path.join(process.cwd(),'visual-vi-v4-artifacts'),{recursive:true});
 
-test.describe.configure({mode:'serial'});
 for(const [name,url] of pages){
   for(const [device,viewport] of viewports){
     test(`${name} ${device} formal VI v4`,async({page})=>{
