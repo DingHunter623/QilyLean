@@ -3,8 +3,9 @@
 
 /* Controlled cache + compatibility migration for Dock V5.7.
  * Purpose: make the fixed-bottom seven-action navigation immediately reachable on
- * every tracked public page and migrate compatibility gates from the V5.6 cache URL.
+ * every tracked public page and migrate compatibility gates from older Dock cache URLs.
  * Workflow files are deliberately excluded because Actions tokens may not rewrite workflows.
+ * The historical V5.4 token is replaced only in HTML so JS compatibility references remain intact.
  */
 const fs=require('fs');
 const path=require('path');
@@ -13,8 +14,10 @@ const root=path.resolve(__dirname,'..');
 const check=process.argv.includes('--check');
 const SELF='scripts/migrate-dock-v56-cache.js';
 const OLD_TOKENS=['20260906-authority-v56-flow-navigation','20260902-authority-v55','20260902-public-dock-v55'];
+const HTML_OLD_TOKENS=['20260829-authority-v54'];
 const NEXT='20260906-authority-v57-mobile-fixed-bottom';
 const textExt=/\.(?:html?|js|mjs|cjs|css|json|md|ya?ml|xml|txt)$/i;
+const htmlExt=/\.html?$/i;
 const tracked=execFileSync('git',['ls-files'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const changed=[];
 const excluded=file=>file===SELF||file.startsWith('.github/');
@@ -62,6 +65,7 @@ if(!check){
     try{source=fs.readFileSync(full,'utf8');}catch(error){continue;}
     let next=source;
     for(const old of OLD_TOKENS)next=next.split(old).join(NEXT);
+    if(htmlExt.test(file))for(const old of HTML_OLD_TOKENS)next=next.split(old).join(NEXT);
     writeIfChanged(file,source,next);
   }
 
@@ -88,7 +92,8 @@ if(check){
   for(const file of tracked){
     if(excluded(file)||!textExt.test(file))continue;
     const full=path.join(root,file);let source='';try{source=fs.readFileSync(full,'utf8');}catch(error){continue;}
-    for(const old of OLD_TOKENS)if(source.includes(old)){remaining.push(`${file}:${old}`);break;}
+    const tokens=htmlExt.test(file)?OLD_TOKENS.concat(HTML_OLD_TOKENS):OLD_TOKENS;
+    for(const old of tokens)if(source.includes(old)){remaining.push(`${file}:${old}`);break;}
   }
   if(remaining.length)throw new Error(`Dock V5.7 cache migration incomplete: ${remaining.slice(0,30).join(', ')}${remaining.length>30?` (+${remaining.length-30})`:''}`);
   const materializer=fs.readFileSync(path.join(root,'scripts/materialize-global-language-v3.js'),'utf8');
@@ -99,7 +104,7 @@ if(check){
   if(!runtime.includes('Floating Dock Authoritative Runtime V5.7')||!runtime.includes('overflow-x:hidden!important')||runtime.includes('overflow-x:auto!important'))throw new Error('Dock V5.7 cache migration: fixed-bottom no-swipe runtime contract is not authoritative');
   const experience=fs.readFileSync(path.join(root,'scripts/validate-sitewide-experience-v26.js'),'utf8');
   for(const token of ['overflow-x:hidden!important','scroll-snap-type:none!important','mobile-fixed-bottom-navigation','position:fixed!important'])if(!experience.includes(token))throw new Error(`Dock V5.7 cache migration: V26 fixed-bottom compatibility missing ${token}`);
-  console.log(`PASS: Dock V5.7 cache URL ${NEXT} is authoritative across tracked public/content sources and compatibility gates.`);
+  console.log(`PASS: Dock V5.7 cache URL ${NEXT} is authoritative across tracked public/content sources; residual V5.4 HTML references are eliminated while JS compatibility references remain intact.`);
 }else{
   console.log(`Dock V5.7 cache migration updated ${changed.length} tracked file(s).`);
 }
