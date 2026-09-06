@@ -10,6 +10,7 @@ const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const check=process.argv.includes('--check');
+const SELF='scripts/migrate-dock-v56-cache.js';
 const OLD_TOKENS=['20260902-authority-v55','20260902-public-dock-v55'];
 const NEXT='20260906-authority-v56-flow-navigation';
 const textExt=/\.(?:html?|js|mjs|cjs|css|json|md|ya?ml|xml|txt)$/i;
@@ -24,7 +25,7 @@ function writeIfChanged(file,source,next){
 
 if(!check){
   for(const file of tracked){
-    if(!textExt.test(file))continue;
+    if(file===SELF||!textExt.test(file))continue;
     const full=path.join(root,file);let source;
     try{source=fs.readFileSync(full,'utf8');}catch(error){continue;}
     let next=source;
@@ -95,7 +96,7 @@ if(!check){
 if(check){
   const remaining=[];
   for(const file of tracked){
-    if(!textExt.test(file))continue;
+    if(file===SELF||!textExt.test(file))continue;
     const full=path.join(root,file);let source='';try{source=fs.readFileSync(full,'utf8');}catch(error){continue;}
     for(const old of OLD_TOKENS)if(source.includes(old)){remaining.push(`${file}:${old}`);break;}
   }
