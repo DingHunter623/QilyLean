@@ -13,21 +13,24 @@
   <meta property="og:description" content="大乐透、双色球、快乐8、福彩3D官方开奖记录统计、走势图、AI辅助观察与中奖号码核对。">
   <meta property="og:url" content="https://qilylean.com/tools/lucky-data/">
 
-  <link rel="stylesheet" href="/site-shell.css?v=20260906-lucky-data-v1">
+  <link rel="stylesheet" href="/site-shell.css?v=20260906-lucky-data-v2">
   <link id="qilyUnifiedVisualGovernanceV1Stylesheet" rel="stylesheet" href="/site-unified-visual-governance-v1.css?v=20260826-contrast-closure-v2">
   <link id="qilyTranslationPublicUiV1" rel="stylesheet" href="/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16">
   <link id="qilyVisualAuthorityR8" data-qily-visual-authority="r8" rel="stylesheet" href="/site-visual-authority-r8.css?v=20260831-r8-authority-v2-redline-closure">
   <link id="qilyFormalViV4" rel="stylesheet" href="/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure">
-  <link rel="stylesheet" href="/tools/lucky-data/lucky-data.css?v=20260906-lucky-data-v1">
+  <link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=20260903-r8-heading-ceiling-v10">
+  <link rel="stylesheet" href="/tools/lucky-data/lucky-data.css?v=20260906-lucky-data-v2">
+  <link rel="stylesheet" href="/tools/lucky-data/lucky-data-vi-alignment.css?v=20260906-vi-alignment-v1">
 
   <script defer src="/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23"></script>
   <script defer src="/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16&fast=20260902-stable-fast-path-v2"></script>
   <script defer id="qilyVisualRuntimeR8" data-qily-visual-runtime="r8" src="/site-visual-runtime-r8.js?v=20260831-r8-runtime-v3-translation-neutral"></script>
   <script defer id="qilyFormalViRuntimeV4" src="/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure"></script>
   <script defer src="/site-navigation.js?v=20260828-r7-navigation-v45&patch=20260906-primary-first-paint-v1"></script>
-  <script defer src="/tools/lucky-data/lucky-data.js?v=20260906-lucky-data-v1"></script>
+  <script defer src="/tools/lucky-data/lucky-data-official-bridge.js?v=20260906-official-bridge-v1"></script>
+  <script defer src="/tools/lucky-data/lucky-data.js?v=20260906-lucky-data-v2"></script>
 </head>
-<body class="module-page lucky-data-page">
+<body class="module-page lucky-data-page" data-parent-route="/capabilities/">
   <header class="qily-site-header">
     <a class="qily-brand" href="/">QilyLean｜启力精益</a>
     <nav class="site-nav" aria-label="网站导航">
@@ -60,7 +63,7 @@
       <div class="module-inner">
         <span class="module-eyebrow">LUCKY DATA | DATASET</span>
         <h2>官方开奖记录数据集</h2>
-        <p class="module-lead lucky-copy-dark">按彩种独立维护历史开奖数据，自动同步官方公开记录；页面统计全部由已同步的官方号码重新计算，不使用第三方预测数据作为开奖记录来源。</p>
+        <p class="module-lead lucky-copy-dark">按彩种独立维护历史开奖数据，页面优先读取 QilyLean 官方数据网关并同步中国体育彩票、中国福利彩票公开开奖记录；走势图、冷热、遗漏和计算器全部由实际开奖号码重新计算。</p>
 
         <div class="lucky-toolbar" aria-label="彩种和统计范围">
           <div class="lucky-game-tabs" id="gameTabs" role="tablist" aria-label="彩种选择">
@@ -85,7 +88,7 @@
       </div>
     </section>
 
-    <section class="module-section module-section-alt" id="trend">
+    <section class="module-section alt" id="trend">
       <div class="module-inner">
         <span class="module-eyebrow">TREND | DRAW MATRIX</span>
         <h2 id="trendTitle">号码走势图</h2>
@@ -103,7 +106,7 @@
       </div>
     </section>
 
-    <section class="module-section module-section-alt" id="history">
+    <section class="module-section alt" id="history">
       <div class="module-inner">
         <span class="module-eyebrow">HISTORY | OFFICIAL RECORDS</span>
         <h2>历史开奖明细</h2>
@@ -143,7 +146,7 @@
       </div>
     </section>
 
-    <section class="module-section module-section-alt" id="prize-calculator">
+    <section class="module-section alt" id="prize-calculator">
       <div class="module-inner">
         <span class="module-eyebrow">PRIZE CHECK | NUMBER MATCH</span>
         <h2>中奖计算器</h2>
@@ -165,7 +168,7 @@
       <div class="module-inner">
         <span class="module-eyebrow">OFFICIAL SOURCES | SSOT</span>
         <h2>官方数据来源</h2>
-        <div class="module-grid module-grid-2 lucky-source-cards">
+        <div class="module-grid two lucky-source-cards">
           <article class="module-card"><h3>中国体育彩票</h3><p>超级大乐透历史开奖数据以中国体育彩票官方网站公开信息为源头。</p><div class="module-actions"><a href="https://www.lottery.gov.cn/" target="_blank" rel="noopener noreferrer">访问中国体育彩票官网</a></div></article>
           <article class="module-card"><h3>中国福利彩票</h3><p>双色球、快乐8、福彩3D历史开奖数据以中国福利彩票官方网站公开信息为源头。</p><div class="module-actions"><a href="https://www.cwl.gov.cn/" target="_blank" rel="noopener noreferrer">访问中国福利彩票官网</a></div></article>
         </div>
@@ -173,5 +176,6 @@
       </div>
     </section>
   </main>
+  <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r2"></script>
 </body>
 </html>
