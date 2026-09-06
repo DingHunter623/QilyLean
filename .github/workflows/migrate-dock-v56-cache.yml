@@ -35,6 +35,8 @@ jobs:
           node scripts/migrate-dock-v56-cache.js --check
           node scripts/validate-dock-flow-navigation-v56.js
           node scripts/validate-sitewide-experience-v26.js
+          node scripts/validate-sitewide-remediation-20260822.js
+          node scripts/validate-contact-readability-ddz-20260824.js
           node scripts/validate-sitewide-visual-closure-v27.js
           node scripts/validate-global-language-runtime-compat-v1.js
           node scripts/validate-sitewide-safety-readability-v1.js
