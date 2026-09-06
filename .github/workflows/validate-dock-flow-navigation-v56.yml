@@ -1,0 +1,74 @@
+name: Validate Dock V5.6 Flow Navigation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-dock-share-runtime-v1.js'
+      - 'scripts/validate-dock-flow-navigation-v56.js'
+      - 'scripts/dock-flow-navigation-v56.spec.js'
+      - '.github/workflows/validate-dock-flow-navigation-v56.yml'
+      - 'index.html'
+      - 'qilylean/daily/2026-09-04.html'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'site-dock-share-runtime-v1.js'
+      - 'scripts/validate-dock-flow-navigation-v56.js'
+      - 'scripts/dock-flow-navigation-v56.spec.js'
+      - '.github/workflows/validate-dock-flow-navigation-v56.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dock-v56-flow-navigation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dock-flow-navigation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Static Dock V5.6 contract
+        run: |
+          node --check site-dock-share-runtime-v1.js
+          node --check scripts/validate-dock-flow-navigation-v56.js
+          node --check scripts/dock-flow-navigation-v56.spec.js
+          node scripts/validate-dock-flow-navigation-v56.js
+          git diff --check
+
+      - name: Install Chromium regression dependency
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start local site
+        run: |
+          python3 -m http.server 4173 >/tmp/qily-dock-v56-http.log 2>&1 &
+          echo $! >/tmp/qily-dock-v56-http.pid
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4173/ >/dev/null
+
+      - name: Desktop and mobile flow-navigation regression
+        env:
+          QILY_DOCK_V56_BASE: http://127.0.0.1:4173
+        run: npx playwright test scripts/dock-flow-navigation-v56.spec.js --reporter=line --workers=1
+
+      - name: Upload Dock V5.6 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qily-dock-v56-${{ github.run_id }}
+          path: dock-v56-artifacts
+          if-no-files-found: warn
+          retention-days: 30
