@@ -1,0 +1,55 @@
+name: Enforce Google Search Favicon
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'favicon.ico'
+      - 'robots.txt'
+      - 'scripts/enforce-search-favicon-v1.js'
+      - '.github/workflows/enforce-search-favicon-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-search-favicon-v1
+  cancel-in-progress: true
+
+jobs:
+  enforce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Enforce stable hostname favicon declaration
+        run: |
+          set -euo pipefail
+          node --check scripts/enforce-search-favicon-v1.js
+          node scripts/enforce-search-favicon-v1.js --apply
+          node scripts/enforce-search-favicon-v1.js
+          git diff --check
+
+      - name: Commit verified favicon authority
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add index.html
+          if git diff --cached --quiet; then
+            echo 'Search favicon authority already current.'
+            exit 0
+          fi
+          git commit -m 'fix(search): declare stable Q favicon for Google'
+          git pull --rebase origin main
+          git push origin HEAD:main
