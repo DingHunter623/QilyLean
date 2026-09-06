@@ -14,13 +14,14 @@ for(const file of files()){
   for(const token of forbidden)if(html.includes(token))failures.push(`${file}: retired translator remains (${token})`);
   if(/\/site-navigation\.js(?:\?v=[^"']*)?/.test(html)){navPages++;if(!html.includes('/site-navigation.js?v=20260828-r7-navigation-v45'))failures.push(`${file}: navigation stale`);}
   if(/\/site-ui-consistency-v1\.js(?:\?v=[^"']*)?/.test(html)){shellPages++;if(!html.includes('/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation'))failures.push(`${file}: shared shell stale`);}
-  if(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/.test(html)&&!html.includes('/site-dock-share-runtime-v1.js?v=20260902-authority-v55'))failures.push(`${file}: direct Dock stale`);
+  if(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/.test(html)&&!/\/site-dock-share-runtime-v1\.js\?v=20260902-(?:authority|public-dock)-v55/.test(html))failures.push(`${file}: direct Dock stale`);
 }
 for(const sample of ['index.html','trust/index.html','experience/index.html','projects/index.html','qilylean/daily/2026-08-25.html','qilylean/daily/2026-07-29.html']){
   const html=read(sample);for(const token of required)if(!html.includes(token))failures.push(`${sample}: required V32 asset absent (${token})`);for(const token of forbidden)if(html.includes(token))failures.push(`${sample}: retired translator remains (${token})`);
 }
 const ddz=read(DDZ);
-for(const token of ['20260903-ddz-fast-knowledge-v155','data-qily-ddz-fast-shell="v155"','fast-site-shell-v155.js?v=20260903-ddz-fast-shell-v155','/site-dock-share-runtime-v1.js?v=20260902-public-dock-v55'])if(!ddz.includes(token))failures.push(`${DDZ}: missing fast-route contract ${token}`);
+for(const token of ['20260903-ddz-fast-knowledge-v155','data-qily-ddz-fast-shell="v155"','fast-site-shell-v155.js?v=20260903-ddz-fast-shell-v155'])if(!ddz.includes(token))failures.push(`${DDZ}: missing fast-route contract ${token}`);
+if(!/\/site-dock-share-runtime-v1\.js\?v=20260902-(?:authority|public-dock)-v55/.test(ddz))failures.push(`${DDZ}: missing Dock V5.5 fast-route contract`);
 if(navPages<460)failures.push(`navigation coverage low: ${navPages}`);if(shellPages<460)failures.push(`shell coverage low: ${shellPages}`);
 if(failures.length)throw new Error(`Public materialization failed (${failures.length}):\n${failures.slice(0,50).join('\n')}`);
-console.log(`PASS: ${audited} standard public pages use the V32 baseline and Dock V5.5 authority; DDZ V155/V164 remains the single explicitly isolated fast route.`);
+console.log(`PASS: ${audited} standard public pages use the V32 baseline and Dock V5.5 authority; DDZ V155/V164 remains the single explicitly isolated fast route and accepts the canonical V5.5 cache alias before/after materialization.`);
