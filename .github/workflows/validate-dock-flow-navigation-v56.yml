@@ -1,4 +1,5 @@
 name: Validate Dock V5.8 Compact Fixed Bottom Navigation
+# Closure trigger: compact seven-column footer + first/last border integrity, 2026-09-06.
 
 on:
   push:
