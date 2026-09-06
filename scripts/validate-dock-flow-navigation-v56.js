@@ -15,7 +15,7 @@ for(const label of ['回首页','回顶部','回上一层级','回上一网页',
 must("if(action==='previous'){goPreviousPage();return;}",'previous-page action');
 must('w.history.back()','browser-history previous-page behavior');
 must('placeDockInFlow','in-flow placement owner');
-must("data-qily-dock-layout','flow-navigation marker');
+must('data-qily-dock-layout','flow-navigation marker');
 must('grid-template-columns:repeat(7,minmax(0,1fr))!important','desktop seven-column modules');
 must('border-radius:8px!important','rectangular navigation geometry');
 must('overflow-x:auto!important','mobile horizontal scrolling');
