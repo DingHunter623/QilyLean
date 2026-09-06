@@ -8,6 +8,12 @@ on:
       - "scripts/sync-lucky-data.py"
       - "scripts/sync-lucky-data-browser.mjs"
       - ".github/workflows/lucky-data-sync.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/lucky-data/**"
+      - "scripts/sync-lucky-data-browser.mjs"
+      - ".github/workflows/lucky-data-sync.yml"
   schedule:
     - cron: "20 16 * * *"
   workflow_dispatch:
@@ -22,7 +28,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: lucky-data-official-sync
+  group: lucky-data-official-sync-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -52,7 +58,7 @@ jobs:
         run: |
           set -euo pipefail
           ARGS=""
-          if [[ "${{ github.event_name }}" == "push" || "${{ inputs.full_history || false }}" == "true" ]]; then
+          if [[ "${{ github.event_name }}" == "push" || "${{ github.event_name }}" == "pull_request" || "${{ inputs.full_history || false }}" == "true" ]]; then
             ARGS="--full"
           fi
           node scripts/sync-lucky-data-browser.mjs $ARGS
@@ -79,7 +85,17 @@ jobs:
           print('PASS: Lucky Data normalized official datasets')
           PY
 
+      - name: Upload normalized official datasets
+        uses: actions/upload-artifact@v4
+        with:
+          name: lucky-data-official-json
+          path: tools/lucky-data/data/*.json
+          if-no-files-found: error
+          retention-days: 2
+          overwrite: true
+
       - name: Commit data update
+        if: github.event_name != 'pull_request'
         shell: bash
         run: |
           set -euo pipefail
