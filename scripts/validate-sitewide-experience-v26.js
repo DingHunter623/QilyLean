@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 'use strict';
 
-/* V26 experience-compatibility gate on the V32 public baseline. */
+/* V26 experience-compatibility gate on the V32 public baseline.
+ * 2026-09-06: Dock presentation contract migrated from circular V5.5 to
+ * rectangular in-flow V5.6 while retaining the surrounding V32 baseline.
+ */
 const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
@@ -16,7 +19,7 @@ const semantics=read('site-interaction-semantics-v1.js');
 must(semantics,'Interaction Semantics Runtime V1.7','Navigation runtime');must(semantics,'__qilyInteractionSemanticsV17','Navigation runtime marker');must(semantics,"rail.type='range'",'Native navigation range');must(semantics,'installPrimaryNavDragGuard','Desktop navigation drag guard');must(semantics,'suppressUntil=w.performance.now()+320','Navigation click suppression');must(semantics,'nav.scrollLeft=startScroll-dx','Desktop direct drag');forbid(semantics,'qily-primary-nav-scroll-thumb','Retired synthetic rail thumb');
 
 const dock=read('site-dock-share-runtime-v1.js');
-must(dock,'Floating Dock Authoritative Runtime V5.5','Dock runtime');must(dock,'__qilyFloatingDockUnifiedV55','Dock runtime marker');must(dock,'--qily-dock-size:52px','Dock mobile geometry');must(dock,'--qily-dock-size:50px','Dock narrow geometry');must(dock,'overflow:visible!important','Dock shadow gutter');must(dock,'gap:2.5px!important','Dock two-line spacing');must(dock,'label.dataset.qilyLines=String(lines.length)','Dock line-count marker');must(dock,'function isExcluded(){return false;}','Canonical Dock public-page coverage');
+must(dock,'Floating Dock Authoritative Runtime V5.6','Dock runtime');must(dock,'__qilyFloatingDockUnifiedV56','Dock runtime marker');must(dock,"ORDER=['home','top','back','previous','search','current','contact']",'Dock seven-action order');for(const label of ['回首页','回顶部','回上一层级','回上一网页','本站搜索','分享当前页','联系我们'])must(dock,label,`Dock action ${label}`);must(dock,'grid-template-columns:repeat(7,minmax(0,1fr))!important','Dock desktop module grid');must(dock,'border-radius:8px!important','Dock rectangular geometry');must(dock,'overflow-x:auto!important','Dock mobile horizontal scroll');must(dock,'scroll-snap-type:x proximity','Dock mobile snap');must(dock,'-webkit-overflow-scrolling:touch','Dock mobile inertial scroll');must(dock,'placeDockInFlow','Dock normal-flow placement');must(dock,'function isExcluded(){return false;}','Canonical Dock public-page coverage');forbid(dock,'border-radius:50%!important','Retired circular Dock geometry');
 
 /* Pure DDZ V155 intentionally owns a lightweight bundled fast shell. The old V153
  * landscape stylesheet/runtime is no longer the public route authority and must not
@@ -35,4 +38,4 @@ const components=read('site-visual-components-v1.css');must(components,'Unified 
 
 const materializer=read('scripts/materialize-global-language-v3.js');for(const token of ['20260831-google-translate-single-runtime-v32','20260901-primary-navigation-native-scroll-v8','20260902-authority-v55','20260831-r11-semantics-v17-native-range','20260830-r11-semantics-v14-visual-v3-vi-teal','20260901-google-translate-single-runtime-v16','20260901-google-translate-mobile-ui-v16','20260831-r7-single-responsibility-v11-safe-translation','20260831-unified-components-v29-native-range','20260831-project-grade-readability-v3','20260830-visual-system-v2-r7','20260903-ddz-fast-knowledge-v155'])must(materializer,token,'Materializer');forbid(materializer,'DDZ_CLOSURE_CSS','Retired DDZ closure materialization');forbid(materializer,'const PUBLIC_UI_JS=','Retired translation picker active injection');
 
-console.log('PASS: V26 compatibility remains intact on V32: official sticky Header, native-range navigation, Google Translate V1.4, canonical Dock V5.5, DDZ V155 isolated fast shell and unified VI authority.');
+console.log('PASS: V26 compatibility remains intact on V32: official sticky Header, native-range navigation, Google Translate V1.4, rectangular in-flow Dock V5.6, DDZ V155 isolated fast shell and unified VI authority.');
