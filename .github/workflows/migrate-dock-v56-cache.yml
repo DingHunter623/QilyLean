@@ -1,0 +1,54 @@
+name: Migrate Dock V5.6 Cache
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/migrate-dock-v56-cache.js'
+      - '.github/workflows/migrate-dock-v56-cache.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: migrate-dock-v56-cache-main
+  cancel-in-progress: false
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Materialize V5.6 cache URL across tracked public sources
+        run: |
+          set -euo pipefail
+          node --check scripts/migrate-dock-v56-cache.js
+          node scripts/migrate-dock-v56-cache.js
+          node scripts/migrate-dock-v56-cache.js --check
+          node scripts/validate-dock-flow-navigation-v56.js
+          node scripts/validate-sitewide-experience-v26.js
+          node scripts/validate-sitewide-visual-closure-v27.js
+          node scripts/validate-global-language-runtime-compat-v1.js
+          node scripts/validate-sitewide-safety-readability-v1.js
+          git diff --check
+
+      - name: Commit cache migration
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Dock V5.6 cache migration already current.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'build(dock): materialize V5.6 flow-navigation cache [dock-v56-generated]'
+          git push origin HEAD:main
