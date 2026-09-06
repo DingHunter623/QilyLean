@@ -258,3 +258,16 @@ html body [data-qily-product-interior="true"]{--qily-product-shell-radius:var(--
   html body #floatDock.qily-float-dock,
   html body .qily-float-dock.qily-vi-v4-flow-dock{width:calc(100% - 16px)!important;}
 }
+
+/* 13 | Selected Brief specialist card is content, not a second brand Hero.
+ * The page already owns one formal brief banner. Keep the AI/IE knowledge card on
+ * the standard light reading surface so no teal slab appears behind the white card.
+ */
+html body.qily-knowledge-brief-page main[data-qily-knowledge-brief] > .knowledge-brief-hero.module-hero{
+  color:var(--qily-ink)!important;
+  background:var(--qily-surface-tint)!important;
+  background-color:var(--qily-surface-tint)!important;
+  background-image:none!important;
+  border-bottom:0!important;
+  box-shadow:none!important;
+}
