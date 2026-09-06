@@ -11,7 +11,7 @@ const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const check=process.argv.includes('--check');
 const BASE='20260906-authority-v58-mobile-swipe-fixed-bottom';
-const PATCH='20260906-mobile-compact-fixed-r1';
+const PATCH='20260906-mobile-compact-fixed-r2';
 const FULL=BASE+'&patch='+PATCH;
 const tracked=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 let changed=0;

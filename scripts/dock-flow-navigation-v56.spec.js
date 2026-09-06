@@ -10,8 +10,8 @@ const cases=[
   ['daily-desktop','/qilylean/daily/2026-09-04.html',{width:1440,height:1000},false],
   ['daily-mobile','/qilylean/daily/2026-09-04.html',{width:390,height:844},true]
 ];
-const desktopExpected=['回首页','回顶部','回上一层级','回上一网页','本站搜索','分享当前页','联系我们'];
-const mobileExpected=['首页','顶部','回上一层级','回上一网页','本站搜索','分享当前页','联系我们'];
+const desktopExpected=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
+const mobileExpected=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
 const out=path.join(process.cwd(),'dock-v58-artifacts');
 fs.mkdirSync(out,{recursive:true});
 
@@ -44,6 +44,7 @@ for(const [name,url,viewport,mobile] of cases){
         layout:dock.getAttribute('data-qily-dock-layout'),
         unified:dock.getAttribute('data-qily-unified-public-module'),
         labels:buttons.map(b=>b.getAttribute('aria-label')),
+        lineCounts:buttons.map(b=>b.querySelectorAll('.qily-dock-label>span').length),
         actions:buttons.map(b=>b.getAttribute('data-action')),
         spacerHeight:spacer?spacer.getBoundingClientRect().height:0,
         buttons:buttons.map(b=>{const s=getComputedStyle(b),r=b.getBoundingClientRect();return {
@@ -71,6 +72,7 @@ for(const [name,url,viewport,mobile] of cases){
       expect(result.gridColumns.split(' ').length).toBe(7);
       expect(result.bottomGap,'mobile dock must touch viewport bottom').toBeLessThanOrEqual(1);
       expect(result.layout).toBe('mobile-fixed-bottom-compact-navigation');
+      expect(result.lineCounts).toEqual([1,1,2,2,2,2,2]);
       expect(result.scrollWidth,'mobile dock must not need horizontal scrolling').toBeLessThanOrEqual(result.clientWidth+1);
       expect(result.dockWidth/result.viewportWidth,'mobile dock should cover the viewport width').toBeGreaterThanOrEqual(.99);
       expect(result.dockLeft,'mobile dock must start at viewport left edge').toBeGreaterThanOrEqual(-1);
@@ -100,6 +102,10 @@ for(const [name,url,viewport,mobile] of cases){
       expect(result.bottomGap).toBeLessThanOrEqual(16);
       expect(result.layout).toBe('fixed-bottom-navigation');
       for(const item of result.buttons)expect(item.w,'desktop navigation modules should be wider than tall').toBeGreaterThan(item.h*1.35);
+      await page.locator('#floatDock .qily-float-btn[data-action="home"]').focus();
+      const focus=await page.evaluate(()=>{const b=document.querySelector('#floatDock .qily-float-btn[data-action="home"]');const s=getComputedStyle(b),r=b.getBoundingClientRect();return {boxShadow:s.boxShadow,left:r.left,borderLeft:parseFloat(s.borderLeftWidth)||0};});
+      expect(focus.borderLeft,'desktop first button left border must remain complete').toBeGreaterThanOrEqual(1);
+      expect(focus.boxShadow,'desktop first button focus must stay internal').toContain('inset');
     }
 
     await page.screenshot({path:path.join(out,`${name}.png`),fullPage:true});

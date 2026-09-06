@@ -11,12 +11,12 @@ const path=require('path');
 const {execFileSync}=require('child_process');
 const root=path.resolve(__dirname,'..');
 const ROUTE='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
-const DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r1';
+const DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r2';
 const REDLINE='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
 const CONTACT_PATH='contact/index.html';
 const DDZ_PATH='tools/pure-ddz/index.html';
 const DDZ_FAST_SHELL='/tools/pure-ddz/game/js/fast-site-shell-v155.js?';
-const DDZ_FAST_SOURCE_DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r1';
+const DDZ_FAST_SOURCE_DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r2';
 const checkOnly=process.argv.includes('--check');
 
 function trackedHtml(){
