@@ -32,8 +32,10 @@ for(const [name,url,viewport,mobile] of cases){
         overflowX:ds.overflowX,
         overflowY:ds.overflowY,
         bottomGap:Math.round(innerHeight-dr.bottom),
+        dockLeft:Math.round(dr.left),
+        dockRightGap:Math.round(innerWidth-dr.right),
         dockWidth:Math.round(dr.width),
-        rootWidth:Math.round(document.documentElement.clientWidth),
+        viewportWidth:Math.round(innerWidth),
         scrollWidth:dock.scrollWidth,
         clientWidth:dock.clientWidth,
         scrollLeft:dock.scrollLeft,
@@ -41,7 +43,7 @@ for(const [name,url,viewport,mobile] of cases){
         labels:buttons.map(b=>b.getAttribute('aria-label')),
         actions:buttons.map(b=>b.getAttribute('data-action')),
         spacerHeight:spacer?Math.round(spacer.getBoundingClientRect().height):0,
-        buttons:buttons.map(b=>{const s=getComputedStyle(b),r=b.getBoundingClientRect();return {w:r.width,h:r.height,radius:parseFloat(s.borderTopLeftRadius)||0};})
+        buttons:buttons.map(b=>{const s=getComputedStyle(b),r=b.getBoundingClientRect();return {w:r.width,h:r.height,radius:parseFloat(s.borderTopLeftRadius)||0,left:r.left,right:r.right};})
       };
     });
 
@@ -56,6 +58,8 @@ for(const [name,url,viewport,mobile] of cases){
       expect(item.radius,'buttons must remain rectangular').toBeLessThanOrEqual(12);
       expect(item.w,'each fixed navigation column must remain visible').toBeGreaterThan(30);
       expect(item.h,'tap target height').toBeGreaterThanOrEqual(48);
+      expect(item.left,'button must stay inside the visible viewport').toBeGreaterThanOrEqual(-1);
+      expect(item.right,'button must stay inside the visible viewport').toBeLessThanOrEqual(result.viewportWidth+1);
     }
 
     if(mobile){
@@ -65,8 +69,10 @@ for(const [name,url,viewport,mobile] of cases){
       expect(result.layout).toBe('mobile-fixed-bottom-navigation');
       const moved=await page.evaluate(()=>{const d=document.querySelector('#floatDock');d.scrollTo({left:500,behavior:'instant'});return d.scrollLeft;});
       expect(moved,'mobile dock must not horizontally scroll').toBe(0);
-      expect(result.dockWidth,'mobile dock should span the actual layout viewport').toBeGreaterThanOrEqual(result.rootWidth-2);
-      expect(result.dockWidth,'mobile dock should not exceed the actual layout viewport').toBeLessThanOrEqual(result.rootWidth+2);
+      expect(result.dockWidth/result.viewportWidth,'mobile dock should cover essentially the full viewport width').toBeGreaterThanOrEqual(.95);
+      expect(result.dockLeft,'mobile dock left gutter should remain narrow').toBeGreaterThanOrEqual(-1);
+      expect(result.dockLeft,'mobile dock left gutter should remain narrow').toBeLessThanOrEqual(8);
+      expect(result.dockRightGap,'mobile dock right gutter should remain no wider than a browser scrollbar').toBeLessThanOrEqual(16);
     }else{
       expect(result.bottomGap,'desktop dock should remain pinned near viewport bottom').toBeGreaterThanOrEqual(8);
       expect(result.bottomGap).toBeLessThanOrEqual(16);
