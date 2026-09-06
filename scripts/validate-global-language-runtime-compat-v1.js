@@ -39,8 +39,8 @@ forbid(shell,'uninstallTranslationArtifacts','Legacy translator removal');
 forbid(shell,'normalizeDockButton','Shell Dock mutation');
 
 const dock=read('site-dock-share-runtime-v1.js');
-must(dock,'Floating Dock Authoritative Runtime V5.7','Dock V5.7');
-must(dock,'__qilyFloatingDockUnifiedV57','Dock V57 guard');
+must(dock,'Floating Dock Authoritative Runtime V5.8','Dock V5.8');
+must(dock,'__qilyFloatingDockUnifiedV58','Dock V58 guard');
 must(dock,'setOwnedLabel','Dock label ownership');
 must(dock,"w.open(url,'_blank','noopener,noreferrer')",'Contact new tab');
 must(dock,'function isExcluded(){return false;}','Canonical Dock availability');
@@ -88,7 +88,7 @@ for(const [t,m] of [
   ['data-qily-ddz-virtual-landscape="v154"','DDZ iOS landscape fallback'],
   ['id="v120-landscape-toggle"','DDZ landscape toolbar'],
   ['id="welcome-landscape"','DDZ landscape welcome'],
-  ['/site-dock-share-runtime-v1.js?v=20260906-authority-v57-mobile-fixed-bottom','DDZ canonical Dock']
+  ['/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom','DDZ canonical Dock']
 ])must(ddzIndex,t,m);
 for(const t of ["loadStyle('css/ddz-core-v155.css')",'/site-navigation.js?','qilyPureDdzR8ClosureV128','ddz-site-shell-v140.js','name="screen-orientation"','name="x5-orientation"'])forbid(ddzIndex,t,'DDZ retired shell');
 must(ddzCoreCss,'--ddz-game-max:var(--qily-content-axis,1560px)','DDZ content axis compatibility');
@@ -104,7 +104,7 @@ must(ddzCoreJs,'window.PureDDZTest.hint()','DDZ single hint owner');
 const mat=read('scripts/materialize-global-language-v3.js');
 for(const [t,m] of [
   ["const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline'],
-  ["const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260906-authority-v57-mobile-fixed-bottom'",'Dock V57 materializer'],
+  ["const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom'",'Dock V58 materializer'],
   ["const HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8'",'Header native-scroll materializer'],
   ["const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'Translation materializer'],
   ["const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components materializer'],
@@ -118,4 +118,4 @@ must(cn,'name="robots" content="noindex,nofollow,noarchive"','CN preproduction i
 must(cn,'/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure','CN formal VI CSS');
 must(cn,'/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure','CN formal VI runtime');
 
-console.log(`PASS: ${baseline} compatibility preserves one Google Translate V1.4 owner, native navigation, Dock V5.7, formal VI v4, CN noindex preproduction, and the isolated DDZ V155/V164 fast route.`);
+console.log(`PASS: ${baseline} compatibility preserves one Google Translate V1.4 owner, native navigation, Dock V5.8, formal VI v4, CN noindex preproduction, and the isolated DDZ V155/V164 fast route.`);

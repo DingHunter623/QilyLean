@@ -130,7 +130,7 @@ page=page.replace(/<\/head>/i,`  ${FAST_SHELL}\n</head>`);
 
 /* Keep one authoritative six-action Dock runtime. It self-contains its critical Dock styles. */
 if(!page.includes('/site-dock-share-runtime-v1.js?')){
-  page=page.replace(/<\/head>/i,'  <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v57-mobile-fixed-bottom"></script>\n</head>');
+  page=page.replace(/<\/head>/i,'  <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom"></script>\n</head>');
 }
 
 /* Preserve V154 iPhone/WeChat virtual-landscape compatibility while the V155 route stays light. */
