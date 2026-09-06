@@ -1,6 +1,6 @@
 /* QilyLean | Formal Visual Identity Runtime v4.0 | 2026-09-06
  * Presentation governance only: shell normalization, formal Hero marker,
- * single in-flow shared Dock, and cross-device overflow telemetry.
+ * retired legacy nav rail, single in-flow shared Dock, and cross-device overflow telemetry.
  * Translation lifecycle and translator DOM remain exclusively owned by site-translation-safe-runtime-v1.js.
  */
 (function(d,w){
@@ -10,6 +10,7 @@
 
   var root=d.documentElement;
   var timer=0;
+  var railObserver=null;
 
   function visible(el){
     if(!el)return false;
@@ -26,6 +27,30 @@
     h.setAttribute('data-qily-vi-v4-header','formal');
     var nav=h.querySelector('nav.qily-global-nav,nav.site-nav,nav.nav,nav[aria-label],nav');
     if(nav){nav.classList.add('site-nav','qily-global-nav');nav.setAttribute('data-qily-vi-v4-nav','formal');}
+  }
+
+  function retireLegacyNavRail(rootNode){
+    var scope=rootNode&&rootNode.querySelectorAll?rootNode:d;
+    var rails=[];
+    if(rootNode&&rootNode.nodeType===1&&rootNode.matches('.qily-primary-nav-scroll-rail,.qily-primary-nav-scroll-thumb'))rails.push(rootNode);
+    scope.querySelectorAll('.qily-primary-nav-scroll-rail,.qily-primary-nav-scroll-thumb').forEach(function(rail){rails.push(rail);});
+    rails.forEach(function(rail){
+      rail.hidden=true;
+      rail.disabled=true;
+      rail.tabIndex=-1;
+      rail.setAttribute('aria-hidden','true');
+      rail.setAttribute('data-qily-vi-v4-nav-rail','retired');
+      rail.style.setProperty('display','none','important');
+      rail.style.setProperty('pointer-events','none','important');
+    });
+  }
+
+  function observeLegacyNavRail(){
+    if(railObserver||!w.MutationObserver||!d.documentElement)return;
+    railObserver=new MutationObserver(function(records){
+      records.forEach(function(record){record.addedNodes&&record.addedNodes.forEach(function(node){if(node&&node.nodeType===1)retireLegacyNavRail(node);});});
+    });
+    railObserver.observe(d.documentElement,{childList:true,subtree:true});
   }
 
   function normalizeHeroes(){
@@ -85,6 +110,7 @@
   function apply(){
     markShell();
     normalizeHeader();
+    retireLegacyNavRail();
     normalizeHeroes();
     normalizeDock();
     w.requestAnimationFrame(auditOverflow);
@@ -96,6 +122,7 @@
   }
 
   function init(){
+    observeLegacyNavRail();
     apply();
     w.setTimeout(apply,120);
     w.setTimeout(apply,700);
