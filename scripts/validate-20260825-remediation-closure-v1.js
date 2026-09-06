@@ -36,7 +36,7 @@ for(const t of ["loadStyle('css/ddz-core-v155.css')",'qilyPureDdzR8ClosureV128',
 must(ddzCss,'overflow-x:clip!important','DDZ containment');must(ddzCss,'var(--ddz-mobile-vh,390px)','DDZ viewport sizing');must(ddzJs,"version:'1.2.4-mobile-landscape-adaptive'",'DDZ adaptive landscape runtime');must(ddzJs,'screen.orientation?.lock','DDZ landscape lock');
 
 const mat=read('scripts/materialize-global-language-v3.js');
-for(const t of ["const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'20260831-r7-single-responsibility-v11-safe-translation','20260831-project-grade-readability-v3','20260831-r11-semantics-v17-native-range','20260901-google-translate-single-runtime-v16','20260831-redline-no-translation-v23','20260901-google-translate-mobile-ui-v16','20260831-unified-components-v29-native-range','20260906-authority-v56-flow-navigation'])must(mat,t,'V32 materializer');
+for(const t of ["const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'20260831-r7-single-responsibility-v11-safe-translation','20260831-project-grade-readability-v3','20260831-r11-semantics-v17-native-range','20260901-google-translate-single-runtime-v16','20260831-redline-no-translation-v23','20260901-google-translate-mobile-ui-v16','20260831-unified-components-v29-native-range','20260906-authority-v57-mobile-fixed-bottom'])must(mat,t,'V32 materializer');
 forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure materializer');
 
 const cn=read(CN);must(cn,'name="robots" content="noindex,nofollow,noarchive"','CN indexing lock');must(cn,'/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure','CN formal CSS');must(cn,'/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure','CN formal runtime');

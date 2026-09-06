@@ -56,8 +56,8 @@ must(components,'::-webkit-slider-thumb','WebKit range thumb');
 must(components,'::-moz-range-thumb','Gecko range thumb');
 
 const dock=read('site-dock-share-runtime-v1.js');
-must(dock,'Floating Dock Authoritative Runtime V5.6','Dock V5.6');
-must(dock,'__qilyFloatingDockUnifiedV56','Dock V56 guard');
+must(dock,'Floating Dock Authoritative Runtime V5.7','Dock V5.7');
+must(dock,'__qilyFloatingDockUnifiedV57','Dock V57 guard');
 must(dock,"ORDER=['home','top','back','previous','search','current','contact']",'Dock order');
 must(dock,'setOwnedLabel','Dock label owner');
 must(dock,'function openContactPage()','Full contact action');
@@ -138,7 +138,7 @@ forbid(ddzIndex,'name="x5-orientation"','DDZ must not rely on X5 forced orientat
 const mat=read('scripts/materialize-global-language-v3.js');
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline identity');
 must(mat,"HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8'",'Native mobile navigation owner');
-must(mat,"DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260906-authority-v56-flow-navigation'",'Dock V56 materialization owner');
+must(mat,"DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260906-authority-v57-mobile-fixed-bottom'",'Dock V57 materialization owner');
 must(mat,"VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components owner');
 must(mat,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'Google translation owner');
 must(mat,"TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16'",'Google native translation UI owner');
@@ -158,4 +158,4 @@ must(containment,'QilyLean Responsive Containment V1','Responsive containment CS
 must(containment,'overscroll-behavior-inline:contain','Local horizontal-scroll containment');
 forbid(containment,'width:100vw','Page-level viewport widening');
 
-console.log('PASS: safety/readability owners retain official sticky Header and Dock V5.6 while the isolated DDZ V155/V164 route preserves bundled first paint, user-gesture landscape rotation and actual-viewport adaptive sizing.');
+console.log('PASS: safety/readability owners retain official sticky Header and Dock V5.7 while the isolated DDZ V155/V164 route preserves bundled first paint, user-gesture landscape rotation and actual-viewport adaptive sizing.');
