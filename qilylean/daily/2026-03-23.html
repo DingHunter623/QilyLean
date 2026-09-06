@@ -42,7 +42,7 @@
 <link id="qilyFloatingDockStandardV1" rel="stylesheet" href="/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3">
 <script defer id="qilyR6NativePrefetchV1" data-qily-native-prefetch="v1" src="/site-native-prefetch-v1.js?v=20260902-intent-prefetch-v2"></script>
 <script defer data-qily-visual-geometry="v4" src="/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4"></script>
-<script defer src="/site-navigation.js?v=20260828-r7-navigation-v45"></script>
+<script defer src="/site-navigation.js?v=20260828-r7-navigation-v45&patch=20260906-primary-first-paint-v1"></script>
 <link id="qilyContactFieldHierarchyV1Stylesheet" rel="stylesheet" href="/site-contact-field-hierarchy-v1.css?v=20260827-resource-contact-data-v3">
   <link id="qilyFloatingDockGoldV1" rel="stylesheet" href="/site-floating-dock-gold-v1.css?v=20260827-dock-gold-v1">
 <link id="qilyViStandardStylesheet" rel="stylesheet" href="/site-vi-standard-v1.css?v=20260801-vi-v1">
@@ -149,11 +149,12 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
       <a href="/experience/">履历主线</a>
       <a href="/capabilities/">能力体系</a>
       <a href="/improvements/">改善方法</a>
+      <a href="/lean-production/">精益生产</a>
       <a href="/projects/">代表项目</a>
       <a href="/trust/">信任中心</a>
       <a href="/cooperation/">项目合作</a>
       <a href="/knowledge/" aria-current="page">知识资产</a>
-      <a href="/links/">友情链接</a>
+      <a href="/links/">资源协同</a>
     </nav>
 </header>
 <main>
@@ -239,6 +240,6 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 (function(){var button=document.querySelector('.share');if(!button)return;var status=document.querySelector('.status');function copy(text){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(text);var area=document.createElement('textarea');area.value=text;area.style.position='fixed';area.style.left='-9999px';document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();return Promise.resolve();}function done(text){if(status)status.textContent=text;setTimeout(function(){if(status)status.textContent='';},2200);}button.addEventListener('click',function(){var url=location.href;var title=document.title;if((/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent||'')||!!(window.matchMedia&&window.matchMedia('(pointer: coarse)').matches&&innerWidth<=820))&&navigator.share){navigator.share({title:title,text:title,url:url}).then(function(){done('已调起分享');}).catch(function(error){if(error&&error.name==='AbortError')return;copy(url).then(function(){done('网址已复制');});});}else copy(url).then(function(){done('网址已复制');});});})();
 </script>
 <script src="/qilylean/daily-feedback.js?v=20260729-message-only-v4"></script>
-<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom"></script>
+<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r1"></script>
 </body>
 </html>

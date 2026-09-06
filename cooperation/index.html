@@ -180,7 +180,7 @@ body.cooperation-page .contact-card .contact-evidence-action{text-decoration:non
 <link id="qilyFloatingDockStandardV1" rel="stylesheet" href="/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3">
 <script defer id="qilyR6NativePrefetchV1" data-qily-native-prefetch="v1" src="/site-native-prefetch-v1.js?v=20260902-intent-prefetch-v2"></script>
 <script defer data-qily-visual-geometry="v4" src="/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4"></script>
-<script defer src="/site-navigation.js?v=20260828-r7-navigation-v45"></script>
+<script defer src="/site-navigation.js?v=20260828-r7-navigation-v45&patch=20260906-primary-first-paint-v1"></script>
 <link id="qilyCoreServiceDockClosureStylesheet" rel="stylesheet" href="/site-core-service-dock-closure-v1.css?v=20260804-core-service-dock-v3">
   <script defer data-qily-core-service-dock-closure="v10" src="/site-core-service-dock-closure-v1.js?v=20260828-r7-alignment-v105"></script>
 <link id="qilyContactFieldHierarchyV1Stylesheet" rel="stylesheet" href="/site-contact-field-hierarchy-v1.css?v=20260827-resource-contact-data-v3">
@@ -228,11 +228,12 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
       <a href="/experience/">履历主线</a>
       <a href="/capabilities/">能力体系</a>
       <a href="/improvements/">改善方法</a>
+      <a href="/lean-production/">精益生产</a>
       <a href="/projects/">代表项目</a>
       <a href="/trust/">信任中心</a>
       <a href="/cooperation/" aria-current="page">项目合作</a>
       <a href="/knowledge/">知识资产</a>
-      <a href="/links/">友情链接</a>
+      <a href="/links/">资源协同</a>
     </nav>
   </header>
 
@@ -402,6 +403,6 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
       copyButton.addEventListener('click',function(){if(!form.reportValidity())return;var data=payload();var text=buildBrief(data,'');showBrief(data,'');copyText(text).then(function(){setStatus('咨询需求卡已复制。','success');});});
     })();
   </script>
-<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom"></script>
+<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r1"></script>
 </body>
 </html>

@@ -48,8 +48,8 @@
     if (!link) {
       link = document.createElement('a');
       link.href = LINKS_PATH;
-      link.textContent = '友情链接';
-      link.setAttribute('aria-label', '全球科技企业友情链接与行业资源');
+      link.textContent = '资源协同';
+      link.setAttribute('aria-label', '资源协同');
     }
 
     var cooperation = nav.querySelector('a[href="/cooperation/"], a[href="/cooperation/index.html"]');

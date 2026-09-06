@@ -14,8 +14,8 @@
   w.__qilyStaticFirstNavigationV43=true;
   w.__qilyStaticFirstNavigationV42=true;
 
-  var CORE_SRC='/site-navigation-core.js?v=20260824-contact-channel-v30';
-  var LEGACY_SRC='/site-navigation-legacy-20260802.js?v=20260822-dock-back-label-v23';
+  var CORE_SRC='/site-navigation-core.js?v=20260906-primary-first-paint-core-v31';
+  var LEGACY_SRC='/site-navigation-legacy-20260802.js?v=20260906-primary-first-paint-legacy-v24';
   var CONSISTENCY_SRC='/site-ui-consistency-v1.js?v=20260830-r7-single-responsibility-v8-stable-picker';
   var SEARCH_RUNTIME_SRC='/site-search.js?v=20260826-search-navigation-v2';
   var INTEGRITY_SRC='/site-integrity-hotfix-v1.js?v=20260826-public-integrity-v2';
