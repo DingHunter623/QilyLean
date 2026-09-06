@@ -25,6 +25,36 @@ function writeIfChanged(file,source,next){
   if(!changed.includes(file))changed.push(file);
 }
 
+function migrateCompatibility(file,source){
+  let next=source
+    .replace(/Floating Dock Authoritative Runtime V5\.6/g,'Floating Dock Authoritative Runtime V5.7')
+    .replace(/__qilyFloatingDockUnifiedV56/g,'__qilyFloatingDockUnifiedV57')
+    .replace(/Dock V5\.6/g,'Dock V5.7')
+    .replace(/Dock V56/g,'Dock V57')
+    .replace(/seven-action in-flow Dock V5\.7 remediation/g,'seven-action fixed-bottom Dock V5.7 remediation')
+    .replace(/seven-action flow Dock/g,'seven-action fixed-bottom Dock');
+
+  if(file==='scripts/validate-sitewide-experience-v26.js'){
+    next=next
+      .replace('rectangular in-flow V5.7','rectangular fixed-bottom V5.7')
+      .replace("must(dock,'overflow-x:auto!important','Dock mobile horizontal scroll');","must(dock,'overflow-x:hidden!important','Dock mobile horizontal scroll disabled');")
+      .replace("must(dock,'scroll-snap-type:x proximity','Dock mobile snap');","must(dock,'scroll-snap-type:none!important','Dock mobile snap disabled');")
+      .replace("must(dock,'-webkit-overflow-scrolling:touch','Dock mobile inertial scroll');","must(dock,'mobile-fixed-bottom-navigation','Dock mobile fixed-bottom layout');")
+      .replace("must(dock,'placeDockInFlow','Dock normal-flow placement');","must(dock,'position:fixed!important','Dock fixed-bottom placement');")
+      .replace('rectangular in-flow Dock V5.7','rectangular fixed-bottom Dock V5.7');
+  }
+
+  if(file==='scripts/validate-sitewide-remediation-20260822.js'){
+    next=next.replace("must(dock,'--qily-dock-size:52px','Mobile Dock size');","must(dock,'mobile-fixed-bottom-navigation','Mobile Dock fixed-bottom layout');");
+  }
+
+  if(file==='scripts/validate-contact-readability-ddz-20260824.js'){
+    next=next.replace("assert(dock.includes('--qily-dock-size:52px')&&dock.includes('--qily-dock-size:50px'),'移动端 Dock 源几何缺失');","assert(dock.includes('overflow-x:hidden!important')&&dock.includes('mobile-fixed-bottom-navigation'),'移动端 Dock 固定底栏/禁止横向滚动契约缺失');");
+  }
+
+  return next;
+}
+
 if(!check){
   for(const file of tracked){
     if(excluded(file)||!textExt.test(file))continue;
@@ -49,14 +79,7 @@ if(!check){
   for(const file of compatibilityFiles){
     const full=path.join(root,file);if(!fs.existsSync(full))continue;
     const source=fs.readFileSync(full,'utf8');
-    const next=source
-      .replace(/Floating Dock Authoritative Runtime V5\.6/g,'Floating Dock Authoritative Runtime V5.7')
-      .replace(/__qilyFloatingDockUnifiedV56/g,'__qilyFloatingDockUnifiedV57')
-      .replace(/Dock V5\.6/g,'Dock V5.7')
-      .replace(/Dock V56/g,'Dock V57')
-      .replace(/seven-action in-flow Dock V5\.7 remediation/g,'seven-action fixed-bottom Dock V5.7 remediation')
-      .replace(/seven-action flow Dock/g,'seven-action fixed-bottom Dock');
-    writeIfChanged(file,source,next);
+    writeIfChanged(file,source,migrateCompatibility(file,source));
   }
 }
 
@@ -74,6 +97,8 @@ if(check){
   if(!remediation.includes(NEXT))throw new Error('Dock V5.7 cache migration: remediation gate still lacks the V5.7 cache contract');
   const runtime=fs.readFileSync(path.join(root,'site-dock-share-runtime-v1.js'),'utf8');
   if(!runtime.includes('Floating Dock Authoritative Runtime V5.7')||!runtime.includes('overflow-x:hidden!important')||runtime.includes('overflow-x:auto!important'))throw new Error('Dock V5.7 cache migration: fixed-bottom no-swipe runtime contract is not authoritative');
+  const experience=fs.readFileSync(path.join(root,'scripts/validate-sitewide-experience-v26.js'),'utf8');
+  for(const token of ['overflow-x:hidden!important','scroll-snap-type:none!important','mobile-fixed-bottom-navigation','position:fixed!important'])if(!experience.includes(token))throw new Error(`Dock V5.7 cache migration: V26 fixed-bottom compatibility missing ${token}`);
   console.log(`PASS: Dock V5.7 cache URL ${NEXT} is authoritative across tracked public/content sources and compatibility gates.`);
 }else{
   console.log(`Dock V5.7 cache migration updated ${changed.length} tracked file(s).`);
