@@ -1,81 +1,47 @@
-name: Migrate Dock V5.8 Cache
+name: Maintain Dock V5.8 Compact Cache
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'scripts/migrate-dock-v56-cache.js'
-      - '.github/workflows/migrate-dock-v56-cache.yml'
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: migrate-dock-v58-cache-main
-  cancel-in-progress: false
+  group: maintain-dock-v58-compact-cache-main
+  cancel-in-progress: true
 
 jobs:
-  migrate:
+  maintain:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v5
         with:
+          ref: main
           fetch-depth: 2
       - uses: actions/setup-node@v5
         with:
           node-version: 24
 
-      - name: Materialize V5.8 swipe-fixed cache URL across tracked public sources
+      - name: Maintain compact fixed-bottom cache contract
         run: |
           set -euo pipefail
           node --check scripts/migrate-dock-v56-cache.js
           node scripts/migrate-dock-v56-cache.js
           node scripts/migrate-dock-v56-cache.js --check
           node scripts/validate-dock-flow-navigation-v56.js
-          node scripts/validate-sitewide-experience-v26.js
-          node scripts/validate-sitewide-remediation-20260822.js
-          node scripts/validate-contact-readability-ddz-20260824.js
-          node scripts/validate-sitewide-visual-closure-v27.js
-          node scripts/validate-global-language-runtime-compat-v1.js
-          node scripts/validate-sitewide-safety-readability-v1.js
-          node scripts/validate-r7-authoritative-runtime-20260828.js
-          node scripts/validate-home-hero-dock-snapback-v1.js
           git diff --check
 
-      - name: Commit cache migration on latest main
+      - name: Commit cache normalization if needed
         run: |
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          for attempt in 1 2 3 4; do
-            echo "Dock V5.8 publish attempt ${attempt}/4"
-            git fetch origin main
-            git reset --hard origin/main
-            node scripts/migrate-dock-v56-cache.js
-            node scripts/migrate-dock-v56-cache.js --check
-            node scripts/validate-dock-flow-navigation-v56.js
-            node scripts/validate-sitewide-experience-v26.js
-            node scripts/validate-sitewide-remediation-20260822.js
-            node scripts/validate-contact-readability-ddz-20260824.js
-            node scripts/validate-sitewide-visual-closure-v27.js
-            node scripts/validate-global-language-runtime-compat-v1.js
-            node scripts/validate-sitewide-safety-readability-v1.js
-            node scripts/validate-r7-authoritative-runtime-20260828.js
-            node scripts/validate-home-hero-dock-snapback-v1.js
-            git diff --check
-            if git diff --quiet; then
-              echo 'Dock V5.8 cache migration already current on latest main.'
-              exit 0
-            fi
-            git add -A
-            git commit -m 'build(dock): materialize V5.8 mobile swipe fixed-bottom cache [dock-v58-generated]'
-            if git push origin HEAD:main; then
-              exit 0
-            fi
-            echo 'main advanced during publish; retrying against the new head.'
-            sleep 2
-          done
-          echo 'Unable to publish Dock V5.8 cache migration after four attempts.' >&2
-          exit 1
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'Dock V5.8 compact cache contract already current.'
+            exit 0
+          fi
+          git commit -m 'build(dock): normalize compact fixed-bottom cache [skip ci]'
+          git pull --rebase origin main
+          git push origin HEAD:main
