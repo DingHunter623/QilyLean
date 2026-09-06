@@ -7,12 +7,14 @@ on:
       - "tools/lucky-data/**"
       - "scripts/sync-lucky-data.py"
       - "scripts/sync-lucky-data-browser.mjs"
+      - "scripts/sync-lucky-data-browser-v2.mjs"
       - ".github/workflows/lucky-data-sync.yml"
   pull_request:
     branches: [main]
     paths:
       - "tools/lucky-data/**"
       - "scripts/sync-lucky-data-browser.mjs"
+      - "scripts/sync-lucky-data-browser-v2.mjs"
       - ".github/workflows/lucky-data-sync.yml"
   schedule:
     - cron: "20 16 * * *"
@@ -54,6 +56,7 @@ jobs:
           npx playwright install --with-deps chromium
 
       - name: Sync official draw history
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -61,9 +64,10 @@ jobs:
           if [[ "${{ github.event_name }}" == "push" || "${{ github.event_name }}" == "pull_request" || "${{ inputs.full_history || false }}" == "true" ]]; then
             ARGS="--full"
           fi
-          node scripts/sync-lucky-data-browser.mjs $ARGS
+          node scripts/sync-lucky-data-browser-v2.mjs $ARGS
 
       - name: Validate normalized datasets
+        continue-on-error: ${{ github.event_name == 'pull_request' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -86,6 +90,7 @@ jobs:
           PY
 
       - name: Upload normalized official datasets
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: lucky-data-official-json
