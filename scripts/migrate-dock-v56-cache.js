@@ -4,6 +4,8 @@
 /* Controlled cache + compatibility migration for Dock V5.6.
  * Purpose: make the rectangular in-flow seven-action navigation runtime immediately
  * reachable on every tracked public page and migrate validators away from V5.5 URL assumptions.
+ * Workflow files are deliberately excluded: GitHub Actions' GITHUB_TOKEN has contents
+ * permission but may not rewrite workflow files. Workflow naming is maintained directly.
  */
 const fs=require('fs');
 const path=require('path');
@@ -16,6 +18,7 @@ const NEXT='20260906-authority-v56-flow-navigation';
 const textExt=/\.(?:html?|js|mjs|cjs|css|json|md|ya?ml|xml|txt)$/i;
 const tracked=execFileSync('git',['ls-files'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const changed=[];
+const excluded=file=>file===SELF||file.startsWith('.github/');
 
 function writeIfChanged(file,source,next){
   if(next===source)return;
@@ -25,7 +28,7 @@ function writeIfChanged(file,source,next){
 
 if(!check){
   for(const file of tracked){
-    if(file===SELF||!textExt.test(file))continue;
+    if(excluded(file)||!textExt.test(file))continue;
     const full=path.join(root,file);let source;
     try{source=fs.readFileSync(full,'utf8');}catch(error){continue;}
     let next=source;
@@ -62,10 +65,6 @@ if(!check){
     ],
     'scripts/validate-public-shell-v31.js':[
       ['six-action Dock remediation','seven-action in-flow Dock V5.6 remediation']
-    ],
-    '.github/workflows/enforce-dock-share-label.yml':[
-      ['name: Enforce six-action floating Dock','name: Enforce seven-action flow Dock'],
-      ['Verify V33 shell, six-action Dock and deterministic output','Verify V33 shell, seven-action flow Dock and deterministic output']
     ]
   };
   for(const [file,rules] of Object.entries(replacements)){
@@ -96,7 +95,7 @@ if(!check){
 if(check){
   const remaining=[];
   for(const file of tracked){
-    if(file===SELF||!textExt.test(file))continue;
+    if(excluded(file)||!textExt.test(file))continue;
     const full=path.join(root,file);let source='';try{source=fs.readFileSync(full,'utf8');}catch(error){continue;}
     for(const old of OLD_TOKENS)if(source.includes(old)){remaining.push(`${file}:${old}`);break;}
   }
@@ -105,7 +104,7 @@ if(check){
   if(!materializer.includes(`DOCK_SHARE='/site-dock-share-runtime-v1.js?v=${NEXT}'`))throw new Error('Dock V5.6 cache migration: materializer does not own the V5.6 cache URL');
   const remediation=fs.readFileSync(path.join(root,'scripts/validate-sitewide-remediation-20260822.js'),'utf8');
   if(!remediation.includes('20260906-authority-v56-flow-navigation'))throw new Error('Dock V5.6 cache migration: remediation gate still lacks V5.6 cache contract');
-  console.log(`PASS: Dock V5.6 cache URL ${NEXT} is authoritative across tracked text/public sources and compatibility gates.`);
+  console.log(`PASS: Dock V5.6 cache URL ${NEXT} is authoritative across tracked public/content sources and compatibility gates.`);
 }else{
   console.log(`Dock V5.6 cache migration updated ${changed.length} tracked file(s).`);
 }
