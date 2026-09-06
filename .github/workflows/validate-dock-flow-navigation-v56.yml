@@ -1,4 +1,4 @@
-name: Validate Dock V5.7 Fixed Bottom Navigation
+name: Validate Dock V5.8 Fixed Bottom Swipe Navigation
 
 on:
   push:
@@ -23,11 +23,11 @@ permissions:
   contents: read
 
 concurrency:
-  group: dock-v57-fixed-bottom-${{ github.ref }}
+  group: dock-v58-fixed-bottom-swipe-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  dock-fixed-bottom-navigation:
+  dock-fixed-bottom-swipe-navigation:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -39,7 +39,7 @@ jobs:
         with:
           node-version: 24
 
-      - name: Static Dock V5.7 contract
+      - name: Static Dock V5.8 contract
         run: |
           node --check site-dock-share-runtime-v1.js
           node --check scripts/validate-dock-flow-navigation-v56.js
@@ -54,21 +54,21 @@ jobs:
 
       - name: Start local site
         run: |
-          python3 -m http.server 4173 >/tmp/qily-dock-v57-http.log 2>&1 &
-          echo $! >/tmp/qily-dock-v57-http.pid
+          python3 -m http.server 4173 >/tmp/qily-dock-v58-http.log 2>&1 &
+          echo $! >/tmp/qily-dock-v58-http.pid
           sleep 2
           curl --fail --silent http://127.0.0.1:4173/ >/dev/null
 
-      - name: Desktop and mobile fixed-bottom regression
+      - name: Desktop and mobile fixed-bottom swipe regression
         env:
-          QILY_DOCK_V57_BASE: http://127.0.0.1:4173
+          QILY_DOCK_V58_BASE: http://127.0.0.1:4173
         run: npx playwright test scripts/dock-flow-navigation-v56.spec.js --reporter=line --workers=1
 
-      - name: Upload Dock V5.7 evidence
+      - name: Upload Dock V5.8 evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: qily-dock-v57-${{ github.run_id }}
-          path: dock-v57-artifacts
+          name: qily-dock-v58-${{ github.run_id }}
+          path: dock-v58-artifacts
           if-no-files-found: warn
           retention-days: 30
