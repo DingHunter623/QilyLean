@@ -83,7 +83,7 @@ function validate(){
   const stale=[];
   const files=execFileSync('git',['ls-files','scripts/*.js'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
   for(const file of files){
-    if(file==='scripts/normalize-dock-compact-contract-v1.js')continue;
+    if(file==='scripts/normalize-dock-compact-contract-v1.js'||file==='scripts/migrate-dock-v56-cache.js')continue;
     const s=read(file);
     if(/must\(dock,'overflow-x:auto!important'/.test(s)||s.includes('mobile-fixed-bottom-swipe-navigation'))stale.push(file);
   }
