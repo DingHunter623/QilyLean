@@ -1,0 +1,81 @@
+name: Lucky Data official sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tools/lucky-data/**"
+      - "scripts/sync-lucky-data.py"
+      - ".github/workflows/lucky-data-sync.yml"
+  schedule:
+    - cron: "20 16 * * *"
+  workflow_dispatch:
+    inputs:
+      full_history:
+        description: "Backfill full official history"
+        required: false
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lucky-data-official-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Sync official draw history
+        shell: bash
+        run: |
+          set -euo pipefail
+          ARGS=""
+          if [[ "${{ github.event_name }}" == "push" || "${{ inputs.full_history || false }}" == "true" ]]; then
+            ARGS="--full"
+          fi
+          python3 scripts/sync-lucky-data.py $ARGS
+
+      - name: Validate normalized datasets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('tools/lucky-data/data')
+          expected={'dlt':7,'ssq':7,'kl8':20,'fc3d':3}
+          for game,total in expected.items():
+              path=root/f'{game}.json'
+              data=json.loads(path.read_text(encoding='utf-8'))
+              assert data['recordCount']==len(data['draws']) and data['recordCount']>0, game
+              issues=set()
+              for row in data['draws']:
+                  assert row['issue'] not in issues, f'{game} duplicate {row["issue"]}'
+                  issues.add(row['issue'])
+                  count=len(row.get('primary',[]))+len(row.get('secondary',[]))
+                  assert count==total, f'{game} {row["issue"]}: {count}'
+          print('PASS: Lucky Data normalized official datasets')
+          PY
+
+      - name: Commit data update
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/lucky-data/data/*.json
+          if git diff --cached --quiet; then
+            echo "No Lucky Data changes"
+            exit 0
+          fi
+          git commit -m "data(lucky-data): sync official draw history"
+          git push
