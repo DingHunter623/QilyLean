@@ -60,6 +60,11 @@
     ].join(',');
     d.querySelectorAll(selector).forEach(function(el){
       if(el.classList.contains('qily-aircraft-brand-hero'))return;
+      if(el.classList.contains('knowledge-brief-hero')&&el.closest('body.qily-knowledge-brief-page main[data-qily-knowledge-brief]')){
+        el.removeAttribute('data-qily-vi-v4-hero');
+        el.setAttribute('data-qily-vi-v4-surface','secondary-content');
+        return;
+      }
       el.setAttribute('data-qily-vi-v4-hero','118deg');
     });
   }
