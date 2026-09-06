@@ -1,0 +1,35 @@
+name: Lucky Data source health
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/lucky-data-source-health.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify deployed gateway
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://qilylean-lucky-data.dinghunter623.workers.dev'
+          for PATH_PART in \
+            '/health' \
+            '/draws?game=dlt&page=1&pageSize=3' \
+            '/draws?game=ssq&page=1&pageSize=3' \
+            '/draws?game=kl8&page=1&pageSize=3' \
+            '/draws?game=fc3d&page=1&pageSize=3'
+          do
+            echo "--- $PATH_PART"
+            BODY="$(curl -fsSL --retry 3 --retry-delay 2 --connect-timeout 10 --max-time 25 -H 'Origin: https://qilylean.com' "$BASE$PATH_PART")"
+            printf '%s\n' "$BODY" | head -c 1200
+            echo
+            printf '%s' "$BODY" | grep -q '"ok":true'
+          done
