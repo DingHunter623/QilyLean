@@ -29,7 +29,7 @@
   var GEOMETRY_SRC='/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';
   var CAPABILITY_DDZ_HREF='/pure-ddz-capability-visual-v2.css?v=20260824-red-heart-ace-v8';
   var APP_SHARE_SRC='/app-download-share-v1.js?v=20260824-capability-home-actions-v2';
-  var LUCKY_DATA_CARD_SRC='/lucky-data-capability-card-v1.js?v=20260906-lucky-data-v1';
+  var LUCKY_DATA_CARD_SRC='/lucky-data-capability-card-v1.js?v=20260907-hidden-v1';
   var LEAN_AUTHORITY_PATH='/lean-production/';
 
   function currentPath(){return (w.location.pathname||'/').replace(/\/index\.html$/,'/');}
