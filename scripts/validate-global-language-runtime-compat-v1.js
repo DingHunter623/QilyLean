@@ -15,7 +15,7 @@ for(const [t,m] of [
   ['Google Translate Header Runtime V1.4','Google translation authority'],
   ["addOption(select,'zh-CN','中文简体')",'Simplified Chinese'],
   ["addOption(select,'zh-TW','中文繁体')",'Traditional Chinese'],
-  ["addOption(select,'en','English'],
+  ["addOption(select,'en','English')",'English'],
   ["addOption(select,MORE_VALUE,'其他')",'More languages entry'],
   ['function populateMoreLanguages()','More languages picker'],
   ['__qilyGoogleTranslateElementInitialized','Single initialization guard'],
