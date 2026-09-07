@@ -3,5 +3,6 @@ main = "cloudflare-worker/lucky-data-source.js"
 compatibility_date = "2026-07-16"
 workers_dev = true
 
+# Redeploy marker: 2026-09-07 official-source gateway closure
 [observability]
 enabled = true
