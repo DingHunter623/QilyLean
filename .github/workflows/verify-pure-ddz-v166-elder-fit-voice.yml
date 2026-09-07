@@ -1,0 +1,146 @@
+name: Verify Pure DDZ V166 Elder Fit Voice
+
+on:
+  pull_request:
+    paths:
+      - 'tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js'
+      - 'tools/pure-ddz/game/js/fast-site-shell-v155.js'
+      - 'tools/pure-ddz/index.html'
+      - '.github/workflows/verify-pure-ddz-v166-elder-fit-voice.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js'
+      - 'tools/pure-ddz/game/js/fast-site-shell-v155.js'
+      - 'tools/pure-ddz/index.html'
+      - '.github/workflows/verify-pure-ddz-v166-elder-fit-voice.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Verify V166 source contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq "version:'1.6.6'" tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq 'QilyLeanDdzElderGuardV166' tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq 'voiceRate:VOICE_RATE' tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq 'const VOICE_RATE=.74' tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq "ranks.join('、')" tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq '#result.modal:not(.hidden)' tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq '#welcome.modal:not(.hidden)' tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq 'overflow:hidden!important' tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq '.v120-play-card .qily-card-corner' tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq 'top:3px!important' tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq 'transform:none!important' tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq '20260907-mobile-landscape-v166' tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq "home.href='/'" tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+      - name: Install Chromium audit dependency
+        shell: bash
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start local site
+        shell: bash
+        run: |
+          nohup python3 -m http.server 4173 >/tmp/qily-ddz-v166-http.log 2>&1 &
+          for i in {1..20}; do curl -fsS http://127.0.0.1:4173/tools/pure-ddz/ >/dev/null && exit 0; sleep 1; done
+          cat /tmp/qily-ddz-v166-http.log || true
+          exit 1
+      - name: Browser regression - one screen, original card origin, full narration
+        shell: bash
+        run: |
+          cat > verify-ddz-v166.mjs <<'EOF'
+          import { chromium } from '@playwright/test';
+          const browser=await chromium.launch({headless:true});
+          const page=await browser.newPage({
+            viewport:{width:390,height:844},
+            userAgent:'Mozilla/5.0 (Linux; Android 15; Mobile) AppleWebKit/537.36 Chrome/152 Mobile Safari/537.36',
+            hasTouch:true,
+            isMobile:true
+          });
+          await page.goto('http://127.0.0.1:4173/tools/pure-ddz/?verify=v166',{waitUntil:'domcontentloaded'});
+          await page.waitForFunction(()=>Boolean(window.QilyLeanDdzElderGuardV166&&window.QilyLeanCardTheme),{timeout:8000});
+
+          const narration=await page.evaluate(()=>window.QilyLeanDdzElderGuardV166.describeFullRankPlay({
+            player:0,
+            combo:{type:'straight'},
+            cards:[{rank:14},{rank:13},{rank:12},{rank:11},{rank:10}]
+          }));
+          if(!narration.includes('我出牌：A、K、Q、J、10')||!narration.includes('顺子'))throw new Error('Full rank narration contract failed: '+narration);
+          const voiceRate=await page.evaluate(()=>window.QilyLeanDdzElderGuardV166.voiceRate);
+          if(voiceRate>.76)throw new Error('Elder narration is too fast: '+voiceRate);
+
+          await page.evaluate(()=>{
+            const landscape=document.getElementById('welcome-landscape');
+            if(landscape){landscape.hidden=false;landscape.setAttribute('aria-hidden','false');landscape.style.display='block';}
+          });
+          await page.waitForTimeout(120);
+          const welcome=await page.evaluate(()=>{
+            const modal=document.getElementById('welcome'),card=modal?.querySelector('.welcome-card');
+            const vv=window.visualViewport||{width:innerWidth,height:innerHeight,offsetLeft:0,offsetTop:0};
+            const ids=['welcome-start','welcome-landscape','welcome-settings'];
+            const buttons=ids.map(id=>{const el=document.getElementById(id),r=el?.getBoundingClientRect();return{id,visible:!!el&&getComputedStyle(el).display!=='none',top:r?.top,bottom:r?.bottom,left:r?.left,right:r?.right};});
+            return {scroll:card?.scrollHeight,client:card?.clientHeight,buttons,vh:vv.height,vw:vv.width};
+          });
+          if(welcome.scroll>welcome.client+2)throw new Error('Portrait welcome still scrolls: '+JSON.stringify(welcome));
+          for(const b of welcome.buttons){
+            if(!b.visible)throw new Error('Welcome control hidden: '+JSON.stringify(b));
+            if(b.top<0||b.bottom>welcome.vh+2||b.left<0||b.right>welcome.vw+2)throw new Error('Welcome control outside viewport: '+JSON.stringify({b,welcome}));
+          }
+
+          await page.evaluate(()=>{
+            document.getElementById('welcome')?.classList.add('hidden');
+            const result=document.getElementById('result');
+            result?.classList.remove('hidden');
+            const t=document.getElementById('result-title');if(t)t.textContent='恭喜，我们赢了！';
+            const p=document.getElementById('result-text');if(p)p.textContent='你是地主；本局牌局已正常结算。今日首胜再奖励 50 安心积分。';
+          });
+          await page.waitForTimeout(80);
+          const portraitResult=await page.evaluate(()=>{const card=document.querySelector('#result .result-card');return{scroll:card.scrollHeight,client:card.clientHeight};});
+          if(portraitResult.scroll>portraitResult.client+2)throw new Error('Portrait result still scrolls: '+JSON.stringify(portraitResult));
+
+          await page.setViewportSize({width:844,height:390});
+          await page.waitForFunction(()=>document.documentElement.classList.contains('ddz-mobile-game-landscape'),{timeout:3000});
+          await page.waitForTimeout(100);
+          const landscapeResult=await page.evaluate(()=>{const card=document.querySelector('#result .result-card');return{scroll:card.scrollHeight,client:card.clientHeight,overflow:getComputedStyle(card).overflowY};});
+          if(landscapeResult.scroll>landscapeResult.client+2||landscapeResult.overflow==='auto'||landscapeResult.overflow==='scroll')throw new Error('Landscape result still scrolls: '+JSON.stringify(landscapeResult));
+
+          const cardFace=await page.evaluate(()=>{
+            let host=document.getElementById('v166-card-probe');
+            if(!host){host=document.createElement('div');host.id='v166-card-probe';host.className='v120-play-card';host.style.position='fixed';host.style.left='160px';host.style.top='150px';host.style.width='58px';host.style.height='84px';host.innerHTML=window.QilyLeanCardTheme.renderCard({rank:14,suit:'♥'});document.body.appendChild(host);}
+            const corner=host.querySelector('.qily-card-corner'),rank=host.querySelector('.qily-rank-suit-line>b'),theme=host.querySelector('.qily-card-theme');
+            const cs=getComputedStyle(corner),rs=getComputedStyle(rank),ts=getComputedStyle(theme);
+            return{cornerTop:cs.top,cornerLeft:cs.left,cornerTransform:cs.transform,rankTransform:rs.transform,rankLineHeight:rs.lineHeight,themeTop:ts.top,themeTransform:ts.transform};
+          });
+          if(cardFace.cornerTop!=='3px'||cardFace.cornerLeft!=='3px'||cardFace.cornerTransform!=='none'||cardFace.rankTransform!=='none'||cardFace.themeTransform!=='none')throw new Error('Played-card face origin drift: '+JSON.stringify(cardFace));
+
+          await page.setViewportSize({width:390,height:844});
+          await page.evaluate(()=>{
+            const root=document.documentElement;
+            root.classList.remove('ddz-mobile-game-landscape','ddz-mobile-landscape');
+            root.classList.add('ddz-ios-virtual-landscape');
+            root.style.setProperty('--ddz-v154-w','844px');
+            root.style.setProperty('--ddz-v154-h','390px');
+            document.getElementById('result')?.classList.remove('hidden');
+          });
+          await page.waitForTimeout(100);
+          const virtualResult=await page.evaluate(()=>{const card=document.querySelector('#result .result-card');return{scroll:card.scrollHeight,client:card.clientHeight,overflow:getComputedStyle(card).overflowY};});
+          if(virtualResult.scroll>virtualResult.client+2||virtualResult.overflow==='auto'||virtualResult.overflow==='scroll')throw new Error('iOS virtual-landscape result still scrolls: '+JSON.stringify(virtualResult));
+
+          await browser.close();
+          console.log('PURE_DDZ_V166_ELDER_FIT_VOICE_CARD_ORIGIN_OK');
+          EOF
+          node verify-ddz-v166.mjs
+          rm -f verify-ddz-v166.mjs
