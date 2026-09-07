@@ -149,6 +149,8 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git add tools/pure-ddz/game/js/fast-site-shell-v155.js scripts/materialize-ddz-public-ui-20260824.js tools/pure-ddz/index.html
           git commit -m 'chore(ddz): materialize V168 runtime [skip ci]'
+          git reset --hard HEAD
+          git clean -fd
           for attempt in 1 2 3 4; do
             git fetch origin main
             git rebase origin/main
