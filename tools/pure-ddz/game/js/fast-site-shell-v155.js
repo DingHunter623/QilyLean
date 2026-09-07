@@ -19,7 +19,7 @@
   const TRANSLATION_RUNTIME='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16&fast=20260903-ddz-idle-v155';
   const TRANSLATION_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16';
   const LANDSCAPE_PATCH='/tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js?v=20260907-mobile-landscape-v166';
-  const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v167.js?v=20260907-ddz-ux-v167';
+  const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v168.js?v=20260907-ddz-ux-v168';
   let translationRequested=false;
 
   function addShellStyle(){
@@ -126,11 +126,11 @@
   }
 
   function loadUxPatch(){
-    if(document.querySelector('script[data-qily-ddz-mobile-ux="v167"]'))return;
+    if(document.querySelector('script[data-qily-ddz-mobile-ux="v168"]'))return;
     const script=document.createElement('script');
     script.src=UX_PATCH;
     script.async=false;
-    script.dataset.qilyDdzMobileUx='v167';
+    script.dataset.qilyDdzMobileUx='v168';
     document.head.appendChild(script);
   }
 
@@ -153,5 +153,5 @@
   loadUxPatch();
   scheduleDeferredTranslation();
 
-  window.QilyLeanDdzFastShell=Object.freeze({version:'1.5.5-v167',loadTranslation});
+  window.QilyLeanDdzFastShell=Object.freeze({version:'1.5.5-v168',loadTranslation});
 })();
