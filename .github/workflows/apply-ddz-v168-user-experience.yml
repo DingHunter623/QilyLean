@@ -149,4 +149,15 @@ jobs:
           git config user.email 'actions@users.noreply.github.com'
           git add tools/pure-ddz/game/js/fast-site-shell-v155.js scripts/materialize-ddz-public-ui-20260824.js tools/pure-ddz/index.html
           git commit -m 'chore(ddz): materialize V168 runtime [skip ci]'
-          git push origin HEAD:main
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              echo "V168 materialization pushed on attempt ${attempt}."
+              exit 0
+            fi
+            echo "Concurrent main update detected; retrying ${attempt}/4..."
+            sleep 2
+          done
+          echo 'V168 materialization could not be pushed after retries.' >&2
+          exit 1
