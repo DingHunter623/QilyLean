@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict';
-/* 2026-08-25 remediation compatibility closure | V35 | 2026-09-06 */
+/* 2026-08-25 remediation compatibility closure | V35 | 2026-09-07 */
 const fs=require('fs'),path=require('path'),{execFileSync}=require('child_process'),root=path.resolve(__dirname,'..');
 const read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const must=(s,t,m)=>{if(!s.includes(t))throw new Error(`${m}: missing ${t}`)};
@@ -8,6 +8,7 @@ const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)}
 const htmlFiles=()=>execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
 const DDZ='tools/pure-ddz/index.html',CN='cn-site/index.html';
+const DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r2';
 
 must(read('qilylean/daily/2026-08-25.html'),'八大浪费','Eight wastes');
 
@@ -19,7 +20,7 @@ if(/location\.(?:replace|assign|reload)\s*\(/.test(safe))throw new Error('Transl
 
 const shell=read('site-ui-consistency-v1.js');must(shell,'__qilyUiConsistencyV11','Shell V11');must(shell,'single-responsibility-v11-safe-translation','Shell identity');forbid(shell,'function uninstallTranslationArtifacts()','Legacy translator remover');
 const header=read('site-header-axis-v1.css');must(header,'Global Header Axis V1.2','Header Axis');must(header,'overflow-x:scroll!important','Mobile nav scroll');must(header,'white-space:nowrap!important','Full nav text');must(header,'pointer-events:none!important','Phone auxiliary-rail touch isolation');
-const dock=read('site-dock-share-runtime-v1.js');must(dock,'Floating Dock Authoritative Runtime V5.5','Dock V5.5');must(dock,'__qilyFloatingDockUnifiedV55','Dock V55 guard');must(dock,'setOwnedLabel','Dock single label');must(dock,"w.open(url,'_blank','noopener,noreferrer')",'Contact new tab');
+const dock=read('site-dock-share-runtime-v1.js');must(dock,'Floating Dock Authoritative Runtime V5.8','Dock V5.8');must(dock,'__qilyFloatingDockUnifiedV58','Dock V58 guard');must(dock,'setOwnedLabel','Dock single label');must(dock,"w.open(url,'_blank','noopener,noreferrer')",'Contact new tab');
 const route=read('site-contact-route-v1.js');must(route,'Contact Route V13.4','Contact V13.4');
 const semanticCss=read('site-interaction-semantics-v1.css'),semanticJs=read('site-interaction-semantics-v1.js'),components=read('site-visual-components-v1.css');
 must(semanticCss,'Interaction Semantics V1.4','Semantics CSS');must(semanticJs,'Interaction Semantics Runtime V1.7','Semantics V1.7');must(semanticJs,"rail.type='range'",'Pre-v4 range compatibility');must(semanticJs,'PROJECT_EVIDENCE','Evidence map');must(components,'qily-project-evidence-grade','Evidence component');must(components,'input.qily-primary-nav-scroll-rail[type="range"]','Range compatibility visual');
@@ -31,12 +32,12 @@ must(viCss,'--qily-container:1240px','Formal content axis');must(viCss,'linear-g
 /* Current isolated DDZ V155/V164 contract. */
 const ddzIndex=read(DDZ),ddzCss=read('tools/pure-ddz/game/css/ddz-core-v155.css'),ddzJs=read('tools/pure-ddz/game/js/ddz-core-v155.js');
 for(const [t,m] of [["const version='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164'",'DDZ V155/V164 cache'],['data-qily-ddz-core="v158"','DDZ bundled CSS'],['data-qily-ddz-fast-shell="v155"','DDZ fast shell'],['data-qily-ddz-virtual-landscape="v154"','DDZ iOS fallback'],['id="v120-landscape-toggle"','DDZ landscape toolbar'],['id="welcome-landscape"','DDZ landscape welcome']])must(ddzIndex,t,m);
-if(!/\/site-dock-share-runtime-v1\.js\?v=20260902-(?:authority|public-dock)-v55/.test(ddzIndex))throw new Error('DDZ Dock V5.5 cache missing');
+if(!ddzIndex.includes(DOCK))throw new Error('DDZ Dock V5.8 cache missing');
 for(const t of ["loadStyle('css/ddz-core-v155.css')",'qilyPureDdzR8ClosureV128','name="screen-orientation"','name="x5-orientation"'])forbid(ddzIndex,t,'DDZ retired shell');
 must(ddzCss,'overflow-x:clip!important','DDZ containment');must(ddzCss,'var(--ddz-mobile-vh,390px)','DDZ viewport sizing');must(ddzJs,"version:'1.2.4-mobile-landscape-adaptive'",'DDZ adaptive landscape runtime');must(ddzJs,'screen.orientation?.lock','DDZ landscape lock');
 
 const mat=read('scripts/materialize-global-language-v3.js');
-for(const t of ["const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'20260831-r7-single-responsibility-v11-safe-translation','20260831-project-grade-readability-v3','20260831-r11-semantics-v17-native-range','20260901-google-translate-single-runtime-v16','20260831-redline-no-translation-v23','20260901-google-translate-mobile-ui-v16','20260831-unified-components-v29-native-range','20260906-authority-v58-mobile-swipe-fixed-bottom'])must(mat,t,'V32 materializer');
+for(const t of ["const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'20260831-r7-single-responsibility-v11-safe-translation','20260831-project-grade-readability-v3','20260831-r11-semantics-v17-native-range','20260901-google-translate-single-runtime-v16','20260831-redline-no-translation-v23','20260901-google-translate-mobile-ui-v16','20260831-unified-components-v29-native-range','20260906-authority-v58-mobile-swipe-fixed-bottom','20260906-mobile-compact-fixed-r2'])must(mat,t,'V32 materializer');
 forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure materializer');
 
 const cn=read(CN);must(cn,'name="robots" content="noindex,nofollow,noarchive"','CN indexing lock');must(cn,'/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure','CN formal CSS');must(cn,'/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure','CN formal runtime');
@@ -52,4 +53,4 @@ for(const file of htmlFiles()){
   if(/\/site-ui-consistency-v1\.js/.test(html)){shellPages++;must(html,'/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation',`${file} shell`);}
 }
 if(pages<460||nav<460||shellPages<460)throw new Error(`coverage regression pages=${pages} nav=${nav} shell=${shellPages}`);
-console.log(`PASS: V35 remediation closure covers ${pages} production pages, formal VI v4, CN noindex preproduction and DDZ V155/V164 isolated performance route.`);
+console.log(`PASS: V35 remediation closure covers ${pages} production pages, Dock V5.8, formal VI v4, CN noindex preproduction and DDZ V155/V164 isolated performance route.`);
