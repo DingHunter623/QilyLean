@@ -15,7 +15,7 @@ for(const [t,m] of [
   ['Google Translate Header Runtime V1.4','Google translation authority'],
   ["addOption(select,'zh-CN','中文简体')",'Simplified Chinese'],
   ["addOption(select,'zh-TW','中文繁体')",'Traditional Chinese'],
-  ["addOption(select,'en','English')",'English'],
+  ["addOption(select,'en','English'],
   ["addOption(select,MORE_VALUE,'其他')",'More languages entry'],
   ['function populateMoreLanguages()','More languages picker'],
   ['__qilyGoogleTranslateElementInitialized','Single initialization guard'],
@@ -104,7 +104,7 @@ must(ddzCoreJs,'window.PureDDZTest.hint()','DDZ single hint owner');
 const mat=read('scripts/materialize-global-language-v3.js');
 for(const [t,m] of [
   ["const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline'],
-  ["const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r1'",'Dock V58 materializer'],
+  ["const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r2'",'Dock V58 materializer'],
   ["const HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8'",'Header native-scroll materializer'],
   ["const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'Translation materializer'],
   ["const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components materializer'],
