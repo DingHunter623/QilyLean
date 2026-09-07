@@ -1,0 +1,95 @@
+name: Verify Pure DDZ V167 User Experience
+
+on:
+  pull_request:
+    paths:
+      - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - '.github/workflows/verify-pure-ddz-v167-user-experience.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - '.github/workflows/verify-pure-ddz-v167-user-experience.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Materialize V167 fast route
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v167' scripts/materialize-ddz-public-ui-20260824.js
+          node scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v167' tools/pure-ddz/index.html
+      - name: Verify V167 source contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tools/pure-ddz/game/js/mobile-game-ux-v167.js
+          node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq "mobile-game-ux-v167.js?v=20260907-ddz-ux-v167" tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq "#v120-play-stage{display:none!important}" tools/pure-ddz/game/js/mobile-game-ux-v167.js
+          grep -Fq "qily-rank-suit-line b{font-size:calc(24px" tools/pure-ddz/game/js/mobile-game-ux-v167.js
+          grep -Fq "Math.hypot(dx,dy)>=7" tools/pure-ddz/game/js/mobile-game-ux-v167.js
+          grep -Fq "轻柔背景音乐" tools/pure-ddz/game/js/mobile-game-ux-v167.js
+          grep -Fq "forceLegacyMusicOff" tools/pure-ddz/game/js/mobile-game-ux-v167.js
+          git diff --check
+      - name: Install Chromium audit dependency
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install chromium >/dev/null 2>&1
+      - name: Start local site
+        run: |
+          python3 -m http.server 4173 >/tmp/qily-ddz-v167-http.log 2>&1 &
+          echo $! >/tmp/qily-ddz-v167-http.pid
+      - name: Browser regression - clean table, bigger ranks, drag select, calm music replacement
+        shell: bash
+        run: |
+          node <<'NODE'
+          const {chromium}=require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage({viewport:{width:844,height:390},isMobile:true,hasTouch:true});
+            await page.goto('http://127.0.0.1:4173/tools/pure-ddz/',{waitUntil:'domcontentloaded'});
+            await page.waitForFunction(()=>document.documentElement.dataset.ddzUx==='v167',{timeout:10000});
+            const result=await page.evaluate(()=>{
+              const hand=document.getElementById('hand');
+              const music=document.getElementById('setting-music');
+              const stage=document.getElementById('v120-play-stage');
+              const legacy=JSON.parse(localStorage.getItem('pure_ddz_settings_v2')||'{}');
+              hand.innerHTML='<button class="card" data-id="a" aria-pressed="false" style="width:84px;height:110px;margin:0"></button><button class="card" data-id="b" aria-pressed="false" style="width:84px;height:110px;margin:0"></button>';
+              [...hand.querySelectorAll('.card')].forEach(btn=>btn.addEventListener('click',()=>btn.setAttribute('aria-pressed',btn.getAttribute('aria-pressed')==='true'?'false':'true')));
+              const cards=[...hand.querySelectorAll('.card')];
+              const a=cards[0].getBoundingClientRect(),b=cards[1].getBoundingClientRect();
+              return {
+                a:{x:a.left+a.width/2,y:a.top+a.height/2},
+                b:{x:b.left+b.width/2,y:b.top+b.height/2},
+                stageDisplay:stage?getComputedStyle(stage).display:null,
+                musicLabel:music?.closest('.setting-row')?.querySelector('b')?.textContent||'',
+                legacyMusic:legacy.music,
+                ux:document.documentElement.dataset.ddzUx
+              };
+            });
+            if(result.stageDisplay!=='none')throw new Error('middle play-card stage is still visible: '+result.stageDisplay);
+            if(result.musicLabel!=='轻柔背景音乐')throw new Error('music replacement label missing');
+            if(result.legacyMusic!==false)throw new Error('legacy background loop was not disabled');
+            await page.mouse.move(result.a.x,result.a.y);
+            await page.mouse.down();
+            await page.mouse.move(result.b.x,result.b.y,{steps:6});
+            await page.mouse.up();
+            const selected=await page.evaluate(()=>[...document.querySelectorAll('#hand .card')].map(el=>el.getAttribute('aria-pressed')));
+            if(selected[0]!=='true'||selected[1]!=='true')throw new Error('continuous drag selection failed: '+JSON.stringify(selected));
+            await browser.close();
+          })().catch(error=>{console.error(error);process.exit(1)});
+          NODE
