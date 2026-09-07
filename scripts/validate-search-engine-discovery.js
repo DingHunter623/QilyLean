@@ -72,7 +72,9 @@ for (const required of [
   'data/baidu-core-urls.json',
   'sitemap-topics.xml',
   'sitemap-baidu.xml',
-  '.github/workflows/indexnow.yml'
+  'sitemap-cn.xml',
+  '.github/workflows/indexnow.yml',
+  '.github/workflows/mainland-search-readiness.yml'
 ]) {
   if (!exists(required)) errors.push(`missing ${required}`);
 }
@@ -88,8 +90,10 @@ if (!errors.length) {
     : [];
   const topicUrls = sitemapUrls('sitemap-topics.xml');
   const baiduUrls = sitemapUrls('sitemap-baidu.xml');
+  const cnUrls = sitemapUrls('sitemap-cn.xml');
   const topicSet = new Set(topicUrls);
   const baiduSet = new Set(baiduUrls);
+  const cnSet = new Set(cnUrls);
   const governedUrls = new Set(targets.map(target => target.url));
   const allowedUrls = new Set([...governedUrls, ...coverageUrls]);
   const baiduTargetUrls = [...new Set(baiduTargets.map(target => target && target.url).filter(Boolean))];
@@ -101,6 +105,7 @@ if (!errors.length) {
   if (coverageUrls.length !== new Set(coverageUrls).size) errors.push('search index coverage URLs contain duplicates');
   if (topicUrls.length !== topicSet.size) errors.push('sitemap-topics.xml contains duplicate URLs');
   if (baiduUrls.length !== baiduSet.size) errors.push('sitemap-baidu.xml contains duplicate URLs');
+  if (cnUrls.length !== cnSet.size) errors.push('sitemap-cn.xml contains duplicate URLs');
 
   for (const url of governedUrls) {
     if (!topicSet.has(url)) errors.push(`authority URL missing from sitemap-topics.xml: ${url}`);
@@ -112,10 +117,15 @@ if (!errors.length) {
 
   for (const url of baiduTargetUrls) {
     if (!baiduSet.has(url)) errors.push(`Baidu core URL missing from sitemap-baidu.xml: ${url}`);
+    if (!cnSet.has(url)) errors.push(`Mainland search core URL missing from sitemap-cn.xml: ${url}`);
   }
   for (const url of baiduUrls) {
     if (!baiduTargetUrls.includes(url)) errors.push(`sitemap-baidu.xml URL is not governed by data/baidu-core-urls.json: ${url}`);
     validateCanonicalUrl(url, 'Baidu core URL');
+  }
+  for (const url of cnUrls) {
+    if (!baiduTargetUrls.includes(url)) errors.push(`sitemap-cn.xml URL is not governed by data/baidu-core-urls.json: ${url}`);
+    validateCanonicalUrl(url, 'mainland search core URL');
   }
 
   const robots = read('robots.txt');
@@ -124,6 +134,9 @@ if (!errors.length) {
   }
   if (!/^Sitemap:\s*https:\/\/qilylean\.com\/sitemap-baidu\.xml$/mi.test(robots)) {
     errors.push('robots.txt must declare sitemap-baidu.xml');
+  }
+  if (!/^Sitemap:\s*https:\/\/qilylean\.com\/sitemap-cn\.xml$/mi.test(robots)) {
+    errors.push('robots.txt must declare sitemap-cn.xml');
   }
 
   const workflow = read('.github/workflows/indexnow.yml');
@@ -140,6 +153,17 @@ if (!errors.length) {
   if (!workflow.includes('BAIDU_PUSH_TOKEN') || !workflow.includes('data.zz.baidu.com/urls')) {
     errors.push('IndexNow workflow must retain optional Baidu API submission support');
   }
+
+  const mainlandWorkflow = read('.github/workflows/mainland-search-readiness.yml');
+  for (const required of [
+    'sitemap-cn.xml',
+    'Baiduspider',
+    '360Spider',
+    'Sogou web spider',
+    'robots.txt'
+  ]) {
+    if (!mainlandWorkflow.includes(required)) errors.push(`Mainland search readiness workflow missing crawler contract: ${required}`);
+  }
 }
 
 if (errors.length) {
@@ -150,4 +174,4 @@ if (errors.length) {
 
 const authority = JSON.parse(read('data/search-authority-map.json'));
 const baidu = JSON.parse(read('data/baidu-core-urls.json'));
-console.log(`Search-engine discovery validation passed: ${authority.targets.length} keyword targets mapped to ${new Set(authority.targets.map(target => target.url)).size} canonical topic URLs; ${baidu.targets.length} Baidu core keyword targets are governed by sitemap-baidu.xml.`);
+console.log(`Search-engine discovery validation passed: ${authority.targets.length} keyword targets mapped to ${new Set(authority.targets.map(target => target.url)).size} canonical topic URLs; ${baidu.targets.length} Baidu/mainland core keyword targets are governed by sitemap-baidu.xml and sitemap-cn.xml.`);
