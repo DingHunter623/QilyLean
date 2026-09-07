@@ -1,0 +1,153 @@
+name: Apply DDZ V168 User Experience
+
+on:
+  pull_request:
+    paths:
+      - 'tools/pure-ddz/game/js/mobile-game-ux-v168.js'
+      - '.github/workflows/apply-ddz-v168-user-experience.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'tools/pure-ddz/game/js/mobile-game-ux-v168.js'
+      - '.github/workflows/apply-ddz-v168-user-experience.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify-and-materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Materialize V168 loader and cache bust
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          files = {
+              Path('tools/pure-ddz/game/js/fast-site-shell-v155.js'): [
+                  ("const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v167.js?v=20260907-ddz-ux-v167';", "const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v168.js?v=20260907-ddz-ux-v168';"),
+                  ("script[data-qily-ddz-mobile-ux=\"v167\"]", "script[data-qily-ddz-mobile-ux=\"v168\"]"),
+                  ("script.dataset.qilyDdzMobileUx='v167';", "script.dataset.qilyDdzMobileUx='v168';"),
+                  ("version:'1.5.5-v167'", "version:'1.5.5-v168'"),
+              ],
+              Path('scripts/materialize-ddz-public-ui-20260824.js'): [
+                  ('fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v167', 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v168'),
+              ],
+              Path('tools/pure-ddz/index.html'): [
+                  ('fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v167', 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v168'),
+              ],
+          }
+
+          for path, replacements in files.items():
+              text = path.read_text(encoding='utf-8')
+              changed = False
+              for old, new in replacements:
+                  if new in text:
+                      continue
+                  if old not in text:
+                      raise SystemExit(f'V168 anchor missing in {path}: {old}')
+                  text = text.replace(old, new)
+                  changed = True
+              if changed:
+                  path.write_text(text, encoding='utf-8')
+          PY
+
+          node --check tools/pure-ddz/game/js/mobile-game-ux-v168.js
+          node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
+          node --check scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq 'mobile-game-ux-v168.js?v=20260907-ddz-ux-v168' tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v168' tools/pure-ddz/index.html
+          grep -Fq 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v168' scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq "if(type==='pair')return`对${main}`" tools/pure-ddz/game/js/mobile-game-ux-v168.js
+          grep -Fq "if(type==='triple2')" tools/pure-ddz/game/js/mobile-game-ux-v168.js
+          grep -Fq "if(type==='rocket')return'王炸'" tools/pure-ddz/game/js/mobile-game-ux-v168.js
+          grep -Fq "11:'勾'" tools/pure-ddz/game/js/mobile-game-ux-v168.js
+          grep -Fq "14:'尖'" tools/pure-ddz/game/js/mobile-game-ux-v168.js
+          grep -Fq 'setPointerCapture' tools/pure-ddz/game/js/mobile-game-ux-v168.js
+          grep -Fq 'nearestCardIndex' tools/pure-ddz/game/js/mobile-game-ux-v168.js
+          grep -Fq 'ddz-desktop-game-fit' tools/pure-ddz/game/js/mobile-game-ux-v168.js
+          grep -Fq '喜庆背景音乐' tools/pure-ddz/game/js/mobile-game-ux-v168.js
+          git diff --check
+
+      - name: Install Chromium
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install chromium >/dev/null 2>&1
+
+      - name: Start local site
+        run: |
+          python3 -m http.server 4173 >/tmp/qily-ddz-v168-http.log 2>&1 &
+          echo $! >/tmp/qily-ddz-v168-http.pid
+
+      - name: Browser regression - desktop one screen and mouse drag range
+        shell: bash
+        run: |
+          node <<'NODE'
+          const {chromium}=require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage({viewport:{width:1366,height:768}});
+            await page.goto('http://127.0.0.1:4173/tools/pure-ddz/',{waitUntil:'domcontentloaded'});
+            await page.waitForFunction(()=>document.documentElement.dataset.ddzUx==='v168',{timeout:12000});
+            await page.click('#welcome-start');
+            await page.waitForTimeout(700);
+            const fit=await page.evaluate(()=>({
+              fit:document.documentElement.classList.contains('ddz-desktop-game-fit'),
+              innerHeight:innerHeight,
+              docHeight:document.documentElement.scrollHeight,
+              bodyHeight:document.body.scrollHeight,
+              music:document.getElementById('setting-music')?.closest('.setting-row')?.querySelector('b')?.textContent||'',
+              stage:document.getElementById('v120-play-stage')?getComputedStyle(document.getElementById('v120-play-stage')).display:null
+            }));
+            if(!fit.fit)throw new Error('desktop fit class missing');
+            if(fit.docHeight>fit.innerHeight+2||fit.bodyHeight>fit.innerHeight+2)throw new Error('desktop still scrolls: '+JSON.stringify(fit));
+            if(fit.music!=='喜庆背景音乐')throw new Error('festive music label missing');
+            if(fit.stage&&fit.stage!=='none')throw new Error('middle repeated play stage visible');
+
+            const points=await page.evaluate(()=>{
+              const hand=document.getElementById('hand');
+              hand.innerHTML='';
+              for(let i=0;i<5;i++){
+                const b=document.createElement('button');b.className='card';b.dataset.id='t'+i;b.setAttribute('aria-pressed','false');b.style.cssText='width:84px;height:110px;margin:0 2px;display:inline-block';
+                b.addEventListener('click',()=>b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true'));
+                hand.appendChild(b);
+              }
+              const cards=[...hand.querySelectorAll('.card')];
+              return cards.map(c=>{const r=c.getBoundingClientRect();return{x:r.left+r.width/2,y:r.top+r.height/2};});
+            });
+            await page.mouse.move(points[0].x,points[0].y);
+            await page.mouse.down();
+            await page.mouse.move(points[3].x,points[3].y,{steps:12});
+            await page.mouse.up();
+            const selected=await page.evaluate(()=>[...document.querySelectorAll('#hand .card')].map(c=>c.getAttribute('aria-pressed')));
+            if(selected.slice(0,4).some(v=>v!=='true')||selected[4]!=='false')throw new Error('continuous mouse drag failed: '+JSON.stringify(selected));
+            await browser.close();
+          })().catch(error=>{console.error(error);process.exit(1)});
+          NODE
+
+      - name: Commit V168 materialization to main
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- tools/pure-ddz/game/js/fast-site-shell-v155.js scripts/materialize-ddz-public-ui-20260824.js tools/pure-ddz/index.html; then
+            echo 'V168 loader already materialized.'
+            exit 0
+          fi
+          git config user.name 'QilyLean Automation'
+          git config user.email 'actions@users.noreply.github.com'
+          git add tools/pure-ddz/game/js/fast-site-shell-v155.js scripts/materialize-ddz-public-ui-20260824.js tools/pure-ddz/index.html
+          git commit -m 'chore(ddz): materialize V168 runtime [skip ci]'
+          git push origin HEAD:main
