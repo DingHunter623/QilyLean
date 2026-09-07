@@ -1,0 +1,32 @@
+name: Verify Capability Mobile Poker No-Wrap
+
+on:
+  pull_request:
+    paths:
+      - 'capabilities/index.html'
+      - 'pure-ddz-capability-visual-v2.css'
+      - '.github/workflows/verify-capability-mobile-nowrap.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'capabilities/index.html'
+      - 'pure-ddz-capability-visual-v2.css'
+      - '.github/workflows/verify-capability-mobile-nowrap.yml'
+  workflow_dispatch:
+
+jobs:
+  verify-nowrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify rank and suit remain one visual token
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq '<strong aria-label="红桃A">A♥</strong>' capabilities/index.html
+          grep -Fq 'white-space:nowrap!important' pure-ddz-capability-visual-v2.css
+          grep -Fq 'word-break:keep-all!important' pure-ddz-capability-visual-v2.css
+          grep -Fq 'overflow-wrap:normal!important' pure-ddz-capability-visual-v2.css
+          grep -Fq 'text-wrap:nowrap!important' pure-ddz-capability-visual-v2.css
+          git diff --check
