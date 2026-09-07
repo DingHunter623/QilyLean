@@ -26,10 +26,23 @@ must('touch-action:pan-y pinch-zoom!important','mobile vertical gesture ownershi
 must('mobile-fixed-bottom-compact-navigation','mobile compact fixed-bottom layout marker');
 must('qilyDockBottomSpacerV58','bottom content clearance spacer');
 must('border-radius:7px!important','mobile rectangular navigation geometry');
-must('box-shadow:inset 0 0 0 2px rgba(202,161,95,.55)!important','internal focus ring prevents edge clipping');
 must('.qily-float-btn:focus,','plain focus ownership');
+
+// VI v4 interaction contract: filled normal state + explicit hover/focus/pressed feedback.
+must('--qily-dock-normal:#0f4b5a','VI brand deep-teal normal fill');
+must('--qily-dock-hover:#073c47','VI deep hover fill');
+must('--qily-dock-line-strong:#caa15f','VI gold interaction border');
+must('--qily-dock-text:#fff','VI white normal text');
+must('--qily-dock-active-text:#ffe39b','VI gold-light pressed text');
+must('background:var(--qily-dock-normal)!important','filled normal button state');
+must('background:var(--qily-dock-hover)!important','hover/focus background feedback');
+must('border-color:var(--qily-dock-line-strong)!important','gold border feedback');
+must('box-shadow:inset 0 0 0 2px rgba(202,161,95,.55)!important','internal hover/focus ring');
+must('transform:translateY(1px) scale(.97)!important','pressed motion feedback');
+
+forbid('background:#fff!important','white normal button background');
 forbid('dock.scrollTo({left:max','retired horizontal swipe behavior');
 forbid('border-radius:50%!important','circular buttons');
 if(/new\s+MutationObserver\s*\(/.test(source))throw new Error('Dock V5.8 compact-fixed: MutationObserver rebuilding is forbidden');
 
-console.log('PASS: Dock V5.8 is a seven-action rectangular fixed-bottom navigation; mobile shows all seven compact actions without horizontal scrolling and uses an internal focus ring.');
+console.log('PASS: Dock V5.8 uses VI-filled deep-teal normal buttons, gold hover/focus borders, explicit pressed feedback, seven fixed-bottom actions and no mobile horizontal scrolling.');
