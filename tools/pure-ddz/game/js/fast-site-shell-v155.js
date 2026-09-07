@@ -18,6 +18,7 @@
   ];
   const TRANSLATION_RUNTIME='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16&fast=20260903-ddz-idle-v155';
   const TRANSLATION_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16';
+  const LANDSCAPE_PATCH='/tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js?v=20260907-mobile-landscape-v165';
   let translationRequested=false;
 
   function addShellStyle(){
@@ -114,6 +115,15 @@
     document.head.appendChild(script);
   }
 
+  function loadLandscapePatch(){
+    if(document.querySelector('script[data-qily-ddz-mobile-autofit="v165"]'))return;
+    const script=document.createElement('script');
+    script.src=LANDSCAPE_PATCH;
+    script.async=false;
+    script.dataset.qilyDdzMobileAutofit='v165';
+    document.head.appendChild(script);
+  }
+
   function scheduleDeferredTranslation(){
     const connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
     const slow=Boolean(connection&&(connection.saveData||/(?:^|-)2g$/.test(connection.effectiveType||'')));
@@ -129,6 +139,7 @@
 
   addShellStyle();
   buildHeader();
+  loadLandscapePatch();
   scheduleDeferredTranslation();
 
   window.QilyLeanDdzFastShell=Object.freeze({version:'1.5.5',loadTranslation});

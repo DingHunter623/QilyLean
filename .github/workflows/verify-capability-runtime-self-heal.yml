@@ -25,7 +25,7 @@ jobs:
           node --check site-navigation.js
           node --check site-certificate-facts-v2.js
           node --check app-download-share-v1.js
-          grep -q "capabilitySelfHeal: true" site-navigation.js
+          grep -q "capabilitySelfHeal:true" site-navigation.js
           grep -q "20260824-red-heart-ace-v8" site-navigation.js
           grep -q "20260824-red-heart-ace-v8" site-certificate-facts-v2.js
           ! grep -q "20260824-joker-order-v6" site-certificate-facts-v2.js

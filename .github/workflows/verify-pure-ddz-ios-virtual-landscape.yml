@@ -28,6 +28,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          node --check tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
           node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
           node --check scripts/materialize-ddz-public-ui-20260824.js
           grep -Fq "const VERSION='1.5.4-ios-virtual-landscape'" tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
@@ -36,6 +37,11 @@ jobs:
           grep -Fq "transform:translate(-50%,-50%) rotate(90deg)!important" tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
           grep -Fq "$('welcome-start')?.click()" tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
           grep -Fq "window.QilyLeanV120?.fitHand?.()" tools/pure-ddz/game/js/ios-virtual-landscape-v154.js
+          grep -Fq "const ROOT='ddz-mobile-game-landscape'" tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq "home.href='/'" tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq '#floatDock' tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq -- '--ddz-gameplay-vh' tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js
+          grep -Fq 'mobile-landscape-autofit-v165.js?v=20260907-mobile-landscape-v165' tools/pure-ddz/game/js/fast-site-shell-v155.js
 
           node scripts/materialize-ddz-public-ui-20260824.js
           node --check tools/pure-ddz/game/js/ddz-core-v155.js
