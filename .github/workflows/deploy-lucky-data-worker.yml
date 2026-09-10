@@ -1,12 +1,6 @@
-name: Deploy Lucky Data source gateway
+name: Retire Lucky Data source gateway
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "cloudflare-worker/lucky-data-source.js"
-      - "wrangler-lucky-data.toml"
-      - ".github/workflows/deploy-lucky-data-worker.yml"
   workflow_dispatch:
 
 permissions:
@@ -14,71 +8,44 @@ permissions:
 
 concurrency:
   group: deploy-lucky-data-source-gateway
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  retire:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 5
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v5
-        with:
-          node-version: "24"
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Validate worker source
-        run: |
-          node --check cloudflare-worker/lucky-data-source.js
-          grep -q "qilylean-lucky-data" wrangler-lucky-data.toml
-          grep -q "www.lottery.gov.cn" cloudflare-worker/lucky-data-source.js
-          grep -q "www.cwl.gov.cn" cloudflare-worker/lucky-data-source.js
-
-      - name: Validate Cloudflare account ID
-        shell: bash
+      - name: Delete only the retired Lucky Data Worker
         env:
           RAW_CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          ACCOUNT_ID="$(printf '%s' "$RAW_CLOUDFLARE_ACCOUNT_ID" | grep -oE '[0-9a-fA-F]{32}' | head -n 1)"
-          if [ "${#ACCOUNT_ID}" -ne 32 ]; then
-            echo "Invalid Cloudflare account ID"
-            exit 1
-          fi
-          echo "CLOUDFLARE_ACCOUNT_ID=$ACCOUNT_ID" >> "$GITHUB_ENV"
-
-      - name: Deploy source gateway
-        run: npx wrangler deploy --config wrangler-lucky-data.toml
-        env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-
-      - name: Verify health and official-source reachability
-        shell: bash
         run: |
-          node <<'NODE'
-          const base='https://qilylean-lucky-data.dinghunter623.workers.dev';
-          const wait=ms=>new Promise(r=>setTimeout(r,ms));
-          async function get(path, attempts=8){
-            let last;
-            for(let i=0;i<attempts;i++){
-              try{
-                const r=await fetch(base+path,{headers:{Origin:'https://qilylean.com'},signal:AbortSignal.timeout(20000)});
-                const text=await r.text();
-                if(!r.ok)throw new Error('HTTP '+r.status+' '+text.slice(0,200));
-                return JSON.parse(text);
-              }catch(e){last=e;if(i<attempts-1)await wait(3000);}
-            }
-            throw last;
-          }
-          const health=await get('/health');
-          if(!health.ok||health.service!=='qilylean-lucky-data')throw new Error('health contract failed');
-          for(const game of ['dlt','ssq','kl8','fc3d']){
-            const data=await get('/draws?game='+game+'&page=1&pageSize=10',3);
-            if(!data.ok||!Array.isArray(data.rows)||data.rows.length===0)throw new Error(game+' official source returned no rows');
-            console.log(game, data.rows[0].issue, data.rows.length);
-          }
-          NODE
+          python3 - <<'PY'
+          import json, os, re, urllib.request
+          match = re.search(r'[0-9a-fA-F]{32}', os.environ['RAW_CLOUDFLARE_ACCOUNT_ID'])
+          if not match:
+              raise SystemExit('Invalid Cloudflare account ID')
+          account = match.group(0)
+          target = 'qilylean-lucky-data'
+          base = f'https://api.cloudflare.com/client/v4/accounts/{account}/workers/scripts'
+          headers = {'Authorization': 'Bearer ' + os.environ['CLOUDFLARE_API_TOKEN']}
+          def scripts():
+              with urllib.request.urlopen(urllib.request.Request(base, headers=headers), timeout=30) as response:
+                  payload = json.load(response)
+              if not payload.get('success'):
+                  raise SystemExit('Cloudflare script inventory failed')
+              return {item['id'] for item in payload['result']}
+          before = scripts()
+          if target in before:
+              request = urllib.request.Request(base + '/' + target, headers=headers, method='DELETE')
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  body = response.read()
+              if body and json.loads(body).get('success') is not True:
+                  raise SystemExit('Cloudflare deletion failed')
+          after = scripts()
+          if target in after:
+              raise SystemExit('Retired Worker is still present')
+          if before - {target} - after:
+              raise SystemExit('Unexpected change in other Workers')
+          print('Verified: Lucky Data Worker absent; other Workers preserved.')
+          PY
