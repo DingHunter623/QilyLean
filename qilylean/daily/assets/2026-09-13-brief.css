@@ -1,5 +1,7 @@
+@import url("/qilylean/daily/brief-layout-standard.css?v=20260913-unified-v1");
+
 /* 2026-09-13 brief: component-only styles.
-   Page width, section spacing, typography, hero and surfaces inherit the sitewide QilyLean VI.
+   Page width, section spacing, typography, hero and surfaces inherit the canonical QilyLean brief layout.
    Do not introduce a private content axis or standalone article layout. */
 
 body.lean-operating-brief .lean-brief-toc{
