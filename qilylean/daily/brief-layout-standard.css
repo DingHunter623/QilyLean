@@ -3,11 +3,20 @@
  * - same sitewide content axis as the rest of QilyLean
  * - content may differ; page width/layout framework may not
  * - no private 920/1080/etc. article axis, no per-issue hero width, no standalone layout
+ * - typography must follow one hierarchy; body/supporting text never outranks headings
  */
 
 :root{
   --qily-brief-content-axis:var(--qily-wide-content,1560px);
   --qily-brief-gutter:var(--qily-wide-gutter,clamp(14px,2.2vw,40px));
+  --qily-brief-media-axis:1040px;
+
+  --qily-brief-font-h1:clamp(32px,2.4vw,42px);
+  --qily-brief-font-h2:clamp(24px,1.65vw,30px);
+  --qily-brief-font-h3:clamp(19px,1.25vw,22px);
+  --qily-brief-font-lead:clamp(18px,1.15vw,20px);
+  --qily-brief-font-body:clamp(16px,.95vw,18px);
+  --qily-brief-font-small:14px;
 }
 
 /* All curated-brief outer regions use the same sitewide horizontal safety gutter. */
@@ -76,14 +85,69 @@ html body.qily-knowledge-brief-page :is(
   max-inline-size:none!important;
 }
 
+/* Unified typography hierarchy: H1 > H2 > H3/card title > lead/body > caption.
+   Body, table text, callouts and diagram captions must never visually outrank their headings. */
+html body.qily-knowledge-brief-page .knowledge-brief-hero h1{
+  font-size:var(--qily-brief-font-h1)!important;
+  line-height:1.16!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-hero .module-lead{
+  font-size:var(--qily-brief-font-lead)!important;
+  line-height:1.62!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-section :is(.module-heading h2,h2){
+  font-size:var(--qily-brief-font-h2)!important;
+  line-height:1.28!important;
+}
+html body.qily-knowledge-brief-page .knowledge-brief-section :is(.module-heading h3,h3),
+html body.qily-knowledge-brief-page :is(.brief-role-shift strong,.brief-viewpoint p,.brief-chain-step strong,.brief-case-flow strong){
+  font-size:var(--qily-brief-font-h3)!important;
+  line-height:1.45!important;
+}
+html body.qily-knowledge-brief-page main[data-qily-knowledge-brief] :is(p,li,dd,dt,blockquote,td),
+html body.qily-knowledge-brief-page :is(.brief-terminology-audit,.lean-brief-case-note){
+  font-size:var(--qily-brief-font-body)!important;
+  line-height:1.72!important;
+}
+html body.qily-knowledge-brief-page :is(.lean-brief-table th,.lean-brief-toc a){
+  font-size:clamp(16px,.9vw,18px)!important;
+  line-height:1.45!important;
+}
+html body.qily-knowledge-brief-page :is(figcaption,.knowledge-brief-map small,.brief-chain-step span,.brief-viewpoint cite){
+  font-size:var(--qily-brief-font-small)!important;
+  line-height:1.6!important;
+}
+
 /* Text blocks naturally use the available column width. */
 html body.qily-knowledge-brief-page main[data-qily-knowledge-brief] :is(p,li,dd,dt,blockquote){
   max-width:none!important;
   max-inline-size:none!important;
 }
 
+/* Diagrams stay inside the unified page axis but use a shared media scale.
+   This prevents 720px SVG viewBoxes from being enlarged to the full 1560px content axis,
+   which would make embedded SVG type visually larger than site headings. */
+html body.qily-knowledge-brief-page .lean-brief-diagram{
+  width:min(100%,var(--qily-brief-media-axis))!important;
+  max-width:var(--qily-brief-media-axis)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+html body.qily-knowledge-brief-page .lean-brief-diagram img{
+  width:100%!important;
+  max-width:100%!important;
+  height:auto!important;
+}
+
 @media(max-width:620px){
-  :root{--qily-brief-gutter:15px;}
+  :root{
+    --qily-brief-gutter:15px;
+    --qily-brief-font-h1:clamp(28px,8vw,34px);
+    --qily-brief-font-h2:clamp(22px,6.2vw,27px);
+    --qily-brief-font-h3:clamp(18px,5vw,21px);
+    --qily-brief-font-lead:17px;
+    --qily-brief-font-body:16px;
+  }
   html body.qily-knowledge-brief-page :is(
     .knowledge-brief-top-nav,
     .knowledge-brief-hero,
