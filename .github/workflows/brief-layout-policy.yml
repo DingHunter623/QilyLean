@@ -1,0 +1,25 @@
+name: Curated Brief Layout Policy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'qilylean/daily/**'
+      - 'scripts/check-brief-layout-policy.js'
+      - '.github/workflows/brief-layout-policy.yml'
+  pull_request:
+    paths:
+      - 'qilylean/daily/**'
+      - 'scripts/check-brief-layout-policy.js'
+      - '.github/workflows/brief-layout-policy.yml'
+
+jobs:
+  enforce-one-layout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: Enforce curated brief layout policy
+        run: node scripts/check-brief-layout-policy.js
