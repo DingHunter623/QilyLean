@@ -8,6 +8,7 @@ const pages=[
   ['en','/en/'],
   ['daily-20260825','/qilylean/daily/2026-08-25.html'],
   ['daily-20260904','/qilylean/daily/2026-09-04.html'],
+  ['daily-20260913','/qilylean/daily/2026-09-13.html'],
   ['times26001','/tools/times26001/'],
   ['gbt2828','/gbt2828.html'],
   ['ai','/ai.html'],
@@ -67,10 +68,25 @@ for(const [name,url] of pages){
       expect(result.translatorOutsideHeader,`${url} ${device} translator must live in Header`).toBe(0);
       expect(result.badHero,`${url} ${device} non-118deg Hero: ${result.badHero.join(' | ')}`).toEqual([]);
       expect(result.heroMarkers,`${url} ${device} Hero formal markers`).toBe(result.heroes);
-      if(name==='daily-20260904'){
+      if(name==='daily-20260904'||name==='daily-20260913'){
         expect(result.secondaryBriefPresent,'AI/IE Selected Brief content card should exist').toBeTruthy();
         expect(result.secondaryBriefSurface,'AI/IE Selected Brief content card must be classified as secondary content').toBe('secondary-content');
         expect(result.secondaryBriefGradient,'AI/IE Selected Brief outer surface must not render a teal/brand gradient').toBe('none');
+      }
+
+      if(name==='daily-20260913'){
+        await expect(page.locator('article.post')).toHaveAttribute('data-brief-title','招聘一名精益负责人，企业究竟需要他建立什么？');
+        await expect(page.locator('article.post section[id]')).toHaveCount(10);
+        const diagrams=page.locator('.lean-brief-diagram img');
+        await expect(diagrams).toHaveCount(4);
+        for(let i=0;i<4;i++){
+          await diagrams.nth(i).scrollIntoViewIfNeeded();
+          await expect.poll(()=>diagrams.nth(i).evaluate(img=>img.complete&&img.naturalWidth>0)).toBeTruthy();
+          await page.screenshot({path:path.join('visual-vi-v4-artifacts',`${name}-${device}-diagram-${i+1}.png`)});
+        }
+        const banner=await page.locator('.knowledge-brief-top-nav').evaluate(el=>getComputedStyle(el,'::before').content);
+        expect(banner).toContain('2026-09-13');
+        expect(banner).toContain('制造运营体系与精益价值');
       }
 
       await page.screenshot({path:path.join('visual-vi-v4-artifacts',`${name}-${device}.png`),fullPage:true});

@@ -1,8 +1,8 @@
 {
   "policy_version": "2026-08-28-r6.0-knowledge-asset-2.0",
-  "generated_at": "2026-09-04T00:00:00.000Z",
-  "total_before": 376,
-  "total_after": 376,
+  "generated_at": "2026-09-13T00:00:00.000Z",
+  "total_before": 377,
+  "total_after": 377,
   "removed": 0,
   "protected_dates": [
     "2026-07-29",
@@ -2542,7 +2542,7 @@
         {
           "date": "2023-04-01",
           "title": "现场出现“装配节拍满足而测试工位持续排队”，先用NPI四阶段做标准固化",
-          "score": 286,
+          "score": 288,
           "protected": false
         }
       ],
@@ -4882,6 +4882,19 @@
           "date": "2026-09-04",
           "title": "AI+工业工程：未来IE工程师如何重新定义制造价值",
           "score": 232,
+          "protected": false
+        }
+      ],
+      "removed_count": 0
+    },
+    {
+      "week": "2026-09-07",
+      "candidates": 1,
+      "kept": [
+        {
+          "date": "2026-09-13",
+          "title": "招聘一名精益负责人，企业究竟需要他建立什么？",
+          "score": 243,
           "protected": false
         }
       ],

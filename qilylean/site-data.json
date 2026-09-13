@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-04",
+  "generatedAt": "2026-09-13",
   "schemaVersion": 1,
   "terminology": {
     "total": 193,
@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 376,
-    "latestDate": "2026-09-04",
-    "latestTheme": "AI与工业工程",
-    "latestTitle": "AI+工业工程：未来IE工程师如何重新定义制造价值",
-    "latestSummary": "从现场改善专家，到智能制造系统设计者。",
-    "latestUrl": "/qilylean/daily/2026-09-04.html",
+    "total": 377,
+    "latestDate": "2026-09-13",
+    "latestTheme": "制造运营体系与精益价值",
+    "latestTitle": "招聘一名精益负责人，企业究竟需要他建立什么？",
+    "latestSummary": "从系统设计、流程优化与两类标准化出发，让客户质量、制造成本与持续经营回报形成闭环。",
+    "latestUrl": "/qilylean/daily/2026-09-13.html",
     "directoryUrl": "/qilylean/daily-insights.html",
     "cadence": "weekly_curated",
     "earliestDate": "2019-07-10",
@@ -72,11 +72,11 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 738,
-    "indexedPages": 639,
+    "indexedEntries": 739,
+    "indexedPages": 640,
     "terminologyTotal": 193,
-    "briefTotal": 376,
-    "latestBriefDate": "2026-09-04",
-    "sitemapLastmod": "2026-09-07"
+    "briefTotal": 377,
+    "latestBriefDate": "2026-09-13",
+    "sitemapLastmod": "2026-09-13"
   }
 }
