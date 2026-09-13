@@ -75,8 +75,8 @@ body.lean-operating-brief .lean-brief-table :is(th,td){
 }
 
 /* Section 3｜Standardized work three elements.
-   Keep the first column comfortably wide on desktop so the three element names
-   stay on one line; preserve the remaining horizontal space for explanation. */
+   Desktop keeps the element names on one line and gives the first column
+   enough room without taking readability away from the explanation columns. */
 body.lean-operating-brief #section-3 .lean-brief-table :is(th,td):first-child{
   width:170px;
   min-width:170px;
@@ -89,25 +89,6 @@ body.lean-operating-brief #section-3 .lean-brief-table :is(th,td):nth-child(2){
 }
 body.lean-operating-brief #section-3 .lean-brief-table th:first-child{
   text-align:center;
-}
-/* Visual copy correction: the second element is formally named “标准作业时间”. */
-body.lean-operating-brief #section-3 .lean-brief-table tbody tr:nth-child(2) td:first-child{
-  position:relative;
-  color:transparent!important;
-  -webkit-text-fill-color:transparent!important;
-}
-body.lean-operating-brief #section-3 .lean-brief-table tbody tr:nth-child(2) td:first-child::after{
-  content:"标准作业时间";
-  position:absolute;
-  left:12px;
-  right:12px;
-  top:50%;
-  transform:translateY(-50%);
-  color:var(--qily-ink,#182420)!important;
-  -webkit-text-fill-color:var(--qily-ink,#182420)!important;
-  font:inherit;
-  line-height:1.7;
-  white-space:nowrap;
 }
 
 body.lean-operating-brief .lean-brief-case-note{
@@ -133,11 +114,6 @@ body.lean-operating-brief .lean-brief-case-note{
     white-space:normal;
   }
   body.lean-operating-brief #section-3 .lean-brief-table :is(th,td):nth-child(2){width:auto;}
-  body.lean-operating-brief #section-3 .lean-brief-table tbody tr:nth-child(2) td:first-child::after{
-    left:7px;
-    right:7px;
-    white-space:normal;
-  }
 }
 
 html body.lean-operating-brief .knowledge-brief-top-nav::before{
