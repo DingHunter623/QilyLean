@@ -1,34 +1,87 @@
-/* Content layout only. Brand palette, font family and shell follow formal VI v4. */
-body.lean-operating-brief .lean-brief-copy{max-width:var(--qily-copy,920px)!important;width:calc(100% - 36px)!important;margin-inline:auto!important;}
-body.lean-operating-brief .knowledge-brief-section{padding:36px 0!important;}
-body.lean-operating-brief .knowledge-brief-section:nth-of-type(even){background:var(--qily-surface-soft,#F7FBFA);}
-body.lean-operating-brief .lean-brief-copy p,body.lean-operating-brief .lean-brief-copy li{font-size:20px;line-height:1.8!important;overflow-wrap:anywhere;}
-body.lean-operating-brief .lean-brief-copy h2{font-size:clamp(26px,3vw,34px)!important;line-height:1.35!important;}
-body.lean-operating-brief .lean-brief-copy h3{margin-top:32px;font-size:24px;}
-body.lean-operating-brief .lean-brief-copy p{margin:18px 0;}
-body.lean-operating-brief .lean-brief-copy li{margin:10px 0;}
-body.lean-operating-brief .lean-brief-copy strong{color:var(--qily-vi-olive-deep,#073C47);}
-body.lean-operating-brief .module-hero h1{max-width:1050px;font-size:clamp(32px,4vw,48px)!important;line-height:1.25!important;}
-body.lean-operating-brief .module-hero .module-lead{max-width:1000px;font-size:22px;}
-body.lean-operating-brief .lean-brief-date{font-size:18px;}
-body.lean-operating-brief .lean-brief-toc{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;padding-block:24px;}
-body.lean-operating-brief .lean-brief-toc a{padding:12px 8px;border:1px solid var(--qily-line,#D5E4E3);border-radius:var(--qily-radius-sm,8px);background:var(--qily-surface,#fff);color:var(--qily-vi-olive,#0F4B5A);font-size:17px;font-weight:750;text-align:center;text-decoration:none;}
-body.lean-operating-brief .lean-brief-toc a:hover,body.lean-operating-brief .lean-brief-toc a:focus-visible{border-color:var(--qily-vi-olive,#0F4B5A);background:var(--qily-surface-tint,#EEF7F5);}
+/* 2026-09-13 brief: component-only styles.
+   Page width, section spacing, typography, hero and surfaces inherit the sitewide QilyLean VI.
+   Do not introduce a private content axis or standalone article layout. */
+
+body.lean-operating-brief .lean-brief-toc{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+  padding-block:24px;
+}
+body.lean-operating-brief .lean-brief-toc a{
+  padding:12px 8px;
+  border:1px solid var(--qily-line,#D5E4E3);
+  border-radius:var(--qily-radius-sm,8px);
+  background:var(--qily-surface,#fff);
+  color:var(--qily-vi-olive,#0F4B5A);
+  font-weight:750;
+  text-align:center;
+  text-decoration:none;
+}
+body.lean-operating-brief .lean-brief-toc a:hover,
+body.lean-operating-brief .lean-brief-toc a:focus-visible{
+  border-color:var(--qily-vi-olive,#0F4B5A);
+  background:var(--qily-surface-tint,#EEF7F5);
+}
 body.lean-operating-brief section[id]{scroll-margin-top:110px;}
-body.lean-operating-brief .lean-brief-diagram{max-width:760px;margin:32px auto;padding:0;}
-body.lean-operating-brief .lean-brief-diagram img{display:block;width:100%;height:auto;border:1px solid var(--qily-line,#D5E4E3);border-radius:var(--qily-radius,12px);}
-body.lean-operating-brief .lean-brief-diagram figcaption{margin-top:12px;font-size:17px;line-height:1.65;}
-body.lean-operating-brief .lean-brief-table{max-width:100%;overflow-x:auto;margin:24px 0;border:1px solid var(--qily-line,#D5E4E3);border-radius:var(--qily-radius,12px);}
-body.lean-operating-brief .lean-brief-table table{width:100%;min-width:0;table-layout:fixed;border-collapse:collapse;margin:0;background:var(--qily-surface,#fff);}
-body.lean-operating-brief .lean-brief-table th{background:var(--qily-vi-olive,#0F4B5A);color:#fff;-webkit-text-fill-color:#fff;}
-body.lean-operating-brief .lean-brief-table :is(th,td){padding:15px 12px;border:1px solid var(--qily-line,#D5E4E3);vertical-align:top;font-size:18px;line-height:1.7;overflow-wrap:anywhere;}
-body.lean-operating-brief .lean-brief-case-note{padding:16px 20px;border-left:4px solid var(--qily-vi-gold,#CAA15F);background:var(--qily-surface-tint,#EEF7F5);font-size:17px!important;}
-@media(max-width:600px){
- body.lean-operating-brief .lean-brief-toc{grid-template-columns:repeat(2,minmax(0,1fr));}
- body.lean-operating-brief .lean-brief-copy p,body.lean-operating-brief .lean-brief-copy li{font-size:18px;}
- body.lean-operating-brief .lean-brief-table :is(th,td){padding:10px 7px;font-size:16px;}
- body.lean-operating-brief .lean-brief-diagram{margin:24px -4px;}
- body.lean-operating-brief .module-hero .module-lead{font-size:20px;}
+
+body.lean-operating-brief .lean-brief-diagram{
+  width:100%;
+  max-width:100%;
+  margin:24px 0;
+  padding:0;
+}
+body.lean-operating-brief .lean-brief-diagram img{
+  display:block;
+  width:100%;
+  height:auto;
+  border:1px solid var(--qily-line,#D5E4E3);
+  border-radius:var(--qily-radius,12px);
+}
+body.lean-operating-brief .lean-brief-diagram figcaption{
+  margin-top:10px;
+  line-height:1.65;
 }
 
-html body.lean-operating-brief .knowledge-brief-top-nav::before{content:attr(data-brief-meta)!important;}
+body.lean-operating-brief .lean-brief-table{
+  width:100%;
+  max-width:100%;
+  overflow-x:auto;
+  margin:24px 0;
+  border:1px solid var(--qily-line,#D5E4E3);
+  border-radius:var(--qily-radius,12px);
+}
+body.lean-operating-brief .lean-brief-table table{
+  width:100%;
+  min-width:0;
+  table-layout:fixed;
+  border-collapse:collapse;
+  margin:0;
+  background:var(--qily-surface,#fff);
+}
+body.lean-operating-brief .lean-brief-table th{
+  background:var(--qily-vi-olive,#0F4B5A);
+  color:#fff;
+  -webkit-text-fill-color:#fff;
+}
+body.lean-operating-brief .lean-brief-table :is(th,td){
+  padding:12px;
+  border:1px solid var(--qily-line,#D5E4E3);
+  vertical-align:top;
+  line-height:1.7;
+  overflow-wrap:anywhere;
+}
+body.lean-operating-brief .lean-brief-case-note{
+  padding:16px 20px;
+  border-left:4px solid var(--qily-vi-gold,#CAA15F);
+  background:var(--qily-surface-tint,#EEF7F5);
+}
+
+@media(max-width:600px){
+  body.lean-operating-brief .lean-brief-toc{grid-template-columns:repeat(2,minmax(0,1fr));}
+  body.lean-operating-brief .lean-brief-table :is(th,td){padding:9px 7px;}
+}
+
+html body.lean-operating-brief .knowledge-brief-top-nav::before{
+  content:attr(data-brief-meta)!important;
+}
