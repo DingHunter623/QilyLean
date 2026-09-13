@@ -1,8 +1,8 @@
-@import url("/qilylean/daily/brief-layout-standard.css?v=20260913-unified-v1");
+@import url("/qilylean/daily/brief-layout-standard.css?v=20260913-unified-v2-typography");
 
 /* 2026-09-13 brief: component-only styles.
-   Page width, section spacing, typography, hero and surfaces inherit the canonical QilyLean brief layout.
-   Do not introduce a private content axis or standalone article layout. */
+   Page width, typography hierarchy, section spacing, hero and surfaces inherit the canonical QilyLean brief layout.
+   Do not introduce a private content axis, oversized type or standalone article layout. */
 
 body.lean-operating-brief .lean-brief-toc{
   display:grid;
@@ -28,21 +28,16 @@ body.lean-operating-brief .lean-brief-toc a:focus-visible{
 body.lean-operating-brief section[id]{scroll-margin-top:110px;}
 
 body.lean-operating-brief .lean-brief-diagram{
-  width:100%;
-  max-width:100%;
-  margin:24px 0;
+  margin-block:24px;
   padding:0;
 }
 body.lean-operating-brief .lean-brief-diagram img{
   display:block;
-  width:100%;
-  height:auto;
   border:1px solid var(--qily-line,#D5E4E3);
   border-radius:var(--qily-radius,12px);
 }
 body.lean-operating-brief .lean-brief-diagram figcaption{
   margin-top:10px;
-  line-height:1.65;
 }
 
 body.lean-operating-brief .lean-brief-table{
@@ -70,7 +65,6 @@ body.lean-operating-brief .lean-brief-table :is(th,td){
   padding:12px;
   border:1px solid var(--qily-line,#D5E4E3);
   vertical-align:top;
-  line-height:1.7;
   overflow-wrap:anywhere;
 }
 
