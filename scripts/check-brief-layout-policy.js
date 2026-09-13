@@ -34,6 +34,33 @@ const forbiddenSelectors = [
   'knowledge-brief-hero > .module-inner'
 ];
 
+function declarations(body) {
+  const out = [];
+  const re = /\b(max-width|max-inline-size|width)\s*:\s*([^;}]+)/ig;
+  let match;
+  while ((match = re.exec(body))) {
+    out.push({ property: match[1].toLowerCase(), value: match[2].trim().toLowerCase() });
+  }
+  return out;
+}
+
+function isCanonicalAxisValue(value) {
+  const normalized = value.replace(/\s+/g, '');
+  return normalized === '100%' ||
+    normalized === 'none' ||
+    normalized.startsWith('var(--qily-brief-content-axis') ||
+    normalized.startsWith('var(--qily-wide-content') ||
+    normalized.startsWith('min(var(--qily-brief-content-axis') ||
+    normalized.startsWith('min(var(--qily-wide-content');
+}
+
+function isPrivateSizedWidth(value) {
+  const normalized = value.replace(/\s+/g, '');
+  if (isCanonicalAxisValue(normalized)) return false;
+  return /^(?:calc\(|min\(|max\(|clamp\()/.test(normalized) ||
+    /^\d+(?:\.\d+)?(?:px|rem|em|vw)$/.test(normalized);
+}
+
 const errors = [];
 for (const rel of files) {
   const abs = path.join(ROOT, rel);
@@ -48,15 +75,16 @@ for (const rel of files) {
   for (const selector of forbiddenSelectors) {
     const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const blockRe = new RegExp(`[^{}]*${escaped}[^{}]*\\{([^}]*)\\}`, 'ig');
-    let m;
-    while ((m = blockRe.exec(compact))) {
-      const body = m[1];
-      if (/\b(max-width|max-inline-size)\s*:\s*(?!100%|none|var\(--qily-brief-content-axis|var\(--qily-wide-content)[^;]+/i.test(body)) {
-        errors.push(`${rel}: private max-width/max-inline-size is forbidden on ${selector}`);
-      }
-      if (/\bwidth\s*:\s*(?:calc\(|min\(|max\(|clamp\(|\d+(?:\.\d+)?(?:px|rem|em|vw))/i.test(body) &&
-          !/\bwidth\s*:\s*(?:100%|min\(var\(--qily-brief-content-axis|var\(--qily-wide-content))/i.test(body)) {
-        errors.push(`${rel}: private width is forbidden on ${selector}`);
+    let match;
+    while ((match = blockRe.exec(compact))) {
+      for (const decl of declarations(match[1])) {
+        if ((decl.property === 'max-width' || decl.property === 'max-inline-size') &&
+            !isCanonicalAxisValue(decl.value)) {
+          errors.push(`${rel}: private ${decl.property} is forbidden on ${selector}`);
+        }
+        if (decl.property === 'width' && isPrivateSizedWidth(decl.value)) {
+          errors.push(`${rel}: private width is forbidden on ${selector}`);
+        }
       }
     }
   }
@@ -64,7 +92,7 @@ for (const rel of files) {
 
 if (errors.length) {
   console.error('Brief layout policy failed:');
-  for (const e of [...new Set(errors)]) console.error(`- ${e}`);
+  for (const error of [...new Set(errors)]) console.error(`- ${error}`);
   console.error('Rule: every curated brief uses the canonical sitewide content axis; only content/components may differ.');
   process.exit(1);
 }
