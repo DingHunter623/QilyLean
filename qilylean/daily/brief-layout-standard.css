@@ -1,0 +1,97 @@
+/* QilyLean Curated Brief Unified Layout Standard
+ * Canonical rule for EVERY curated brief:
+ * - same sitewide content axis as the rest of QilyLean
+ * - content may differ; page width/layout framework may not
+ * - no private 920/1080/etc. article axis, no per-issue hero width, no standalone layout
+ */
+
+:root{
+  --qily-brief-content-axis:var(--qily-wide-content,1560px);
+  --qily-brief-gutter:var(--qily-wide-gutter,clamp(14px,2.2vw,40px));
+}
+
+/* All curated-brief outer regions use the same sitewide horizontal safety gutter. */
+html body.qily-knowledge-brief-page :is(
+  .knowledge-brief-top-nav,
+  .knowledge-brief-hero,
+  .knowledge-brief-map,
+  .knowledge-brief-section
+){
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  padding-left:var(--qily-brief-gutter)!important;
+  padding-right:var(--qily-brief-gutter)!important;
+  box-sizing:border-box!important;
+}
+
+/* One and only one content axis for hero, navigation, article sections and maps. */
+html body.qily-knowledge-brief-page :is(
+  .knowledge-brief-top-nav,
+  .knowledge-brief-hero,
+  .knowledge-brief-map,
+  .knowledge-brief-section
+) > .module-inner,
+html body.qily-knowledge-brief-page .lean-brief-toc.module-inner,
+html body.qily-knowledge-brief-page main[data-qily-knowledge-brief] > .module-inner{
+  width:min(var(--qily-brief-content-axis),100%)!important;
+  max-width:var(--qily-brief-content-axis)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+
+/* Per-issue copy classes must never create a second/narrower content axis. */
+html body.qily-knowledge-brief-page :is(
+  .lean-brief-copy,
+  .brief-copy,
+  .article-copy,
+  .post-copy,
+  .prose
+){
+  width:100%!important;
+  max-width:100%!important;
+  max-inline-size:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  box-sizing:border-box!important;
+}
+
+html body.qily-knowledge-brief-page .knowledge-brief-article{
+  width:100%!important;
+  max-width:none!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+
+/* Titles and section headings follow the same axis; do not add issue-specific width caps. */
+html body.qily-knowledge-brief-page :is(
+  .knowledge-brief-hero h1,
+  .knowledge-brief-hero .module-lead,
+  .knowledge-brief-section .module-heading
+){
+  width:100%!important;
+  max-width:100%!important;
+  max-inline-size:none!important;
+}
+
+/* Text blocks naturally use the available column width. */
+html body.qily-knowledge-brief-page main[data-qily-knowledge-brief] :is(p,li,dd,dt,blockquote){
+  max-width:none!important;
+  max-inline-size:none!important;
+}
+
+@media(max-width:620px){
+  :root{--qily-brief-gutter:15px;}
+  html body.qily-knowledge-brief-page :is(
+    .knowledge-brief-top-nav,
+    .knowledge-brief-hero,
+    .knowledge-brief-map,
+    .knowledge-brief-section
+  ) > .module-inner,
+  html body.qily-knowledge-brief-page .lean-brief-toc.module-inner{
+    width:100%!important;
+    max-width:100%!important;
+  }
+}
