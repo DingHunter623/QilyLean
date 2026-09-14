@@ -64,6 +64,14 @@ if(materialized){
     const html=read(file);
     if(ownership(file)||!/<\/head>/i.test(html))continue;
     audited++;
+    if(file==='tools/pure-ddz/index.html'){
+      // The game loads translation from its isolated fast shell, after idle/user intent.
+      const shell=read('tools/pure-ddz/game/js/fast-site-shell-v155.js');
+      must(html,'data-qily-ddz-fast-shell="v155"','DDZ isolated shell');
+      must(shell,'/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16&fast=20260903-ddz-idle-v155','DDZ deferred translation revision');
+      forbid(html,'/site-translation-safe-runtime-v1.js?','DDZ eager translator');
+      continue;
+    }
     if(html.includes('/site-native-prefetch-v1.js')&&!html.includes('/site-native-prefetch-v1.js?v=20260902-intent-prefetch-v2'))fail(`${file}: stale native-prefetch cache token`);
     must(html,'/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16&fast=20260902-stable-fast-path-v2',`${file} stable translation revision`);
   }

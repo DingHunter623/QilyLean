@@ -36,16 +36,16 @@ jobs:
 
           files = {
               Path('tools/pure-ddz/game/js/fast-site-shell-v155.js'): [
-                  ("const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v167.js?v=20260907-ddz-ux-v167';", "const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v168.js?v=20260907-ddz-ux-v168';"),
+                  ("const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v167.js?v=20260907-ddz-ux-v167';", "const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v168.js?v=20260913-ddz-played-table-v169';"),
                   ("script[data-qily-ddz-mobile-ux=\"v167\"]", "script[data-qily-ddz-mobile-ux=\"v168\"]"),
                   ("script.dataset.qilyDdzMobileUx='v167';", "script.dataset.qilyDdzMobileUx='v168';"),
                   ("version:'1.5.5-v167'", "version:'1.5.5-v168'"),
               ],
               Path('scripts/materialize-ddz-public-ui-20260824.js'): [
-                  ('fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v167', 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v168'),
+                  ('fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v167', 'fast-site-shell-v155.js?v=20260913-ddz-played-table-v169'),
               ],
               Path('tools/pure-ddz/index.html'): [
-                  ('fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v167', 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v168'),
+                  ('fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v167', 'fast-site-shell-v155.js?v=20260913-ddz-played-table-v169'),
               ],
           }
 
@@ -66,9 +66,9 @@ jobs:
           node --check tools/pure-ddz/game/js/mobile-game-ux-v168.js
           node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
           node --check scripts/materialize-ddz-public-ui-20260824.js
-          grep -Fq 'mobile-game-ux-v168.js?v=20260907-ddz-ux-v168' tools/pure-ddz/game/js/fast-site-shell-v155.js
-          grep -Fq 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v168' tools/pure-ddz/index.html
-          grep -Fq 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v168' scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq 'mobile-game-ux-v168.js?v=20260913-ddz-played-table-v169' tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq 'fast-site-shell-v155.js?v=20260913-ddz-played-table-v169' tools/pure-ddz/index.html
+          grep -Fq 'fast-site-shell-v155.js?v=20260913-ddz-played-table-v169' scripts/materialize-ddz-public-ui-20260824.js
           grep -Fq "type==='pair'" tools/pure-ddz/game/js/mobile-game-ux-v168.js
           grep -Fq "type==='triple2'" tools/pure-ddz/game/js/mobile-game-ux-v168.js
           grep -Fq "type==='rocket'" tools/pure-ddz/game/js/mobile-game-ux-v168.js
