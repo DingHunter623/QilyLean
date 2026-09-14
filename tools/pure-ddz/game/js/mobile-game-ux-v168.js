@@ -38,8 +38,8 @@
     style.id=STYLE_ID;
     style.textContent=`
       /* V168｜桌面100%一屏、喜庆音乐、自然牌型播报、稳定连续拖选 */
+      /* The persistent three-player board owns played cards; suppress only the legacy duplicate animation. */
       html body.ddz-site-page #v120-play-stage{display:none!important}
-      html body.ddz-site-page #center-play .played-cards{display:none!important}
       html body.ddz-site-page #center-play{min-height:0!important;height:auto!important;padding:0!important;margin:0!important;border:0!important;background:transparent!important;box-shadow:none!important;overflow:visible!important}
       html body.ddz-site-page #center-play .play-owner{margin:2px auto 0!important;padding:3px 8px!important;border-radius:999px!important;background:rgba(4,57,61,.58)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;font-weight:900!important;white-space:nowrap!important}
       html body.ddz-site-page #hand.hand{touch-action:none!important;-webkit-user-select:none!important;user-select:none!important;cursor:default!important}

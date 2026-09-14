@@ -15,10 +15,10 @@ const capabilities=read('capabilities/index.html');for(const token of ['PDCA项�
 const semantics=read('site-interaction-semantics-v1.css');for(const token of ['[data-qily-interaction="static"]','cursor:default!important','transform:none!important'])must(semantics,token,'Static interaction semantics');
 
 const ddz=read('tools/pure-ddz/index.html');
-for(const token of ['20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164','data-qily-ddz-core="v158"','window.__PURE_DDZ_STYLE_READY__=Promise.resolve();','data-qily-ddz-fast-shell="v155"','data-qily-ddz-virtual-landscape="v154"','id="v120-landscape-toggle"','id="welcome-landscape"',"const chain=['js/ddz-core-v155.js'];",'/site-dock-share-runtime-v1.js?','<p id="hint-message" class="hint-message" aria-hidden="true"></p>','无牌可压时自动喊“不要”并轮到下家'])must(ddz,token,'DDZ V155/V164');
+for(const token of ['20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164-v169','data-qily-ddz-core="v158"','window.__PURE_DDZ_STYLE_READY__=Promise.resolve();','data-qily-ddz-fast-shell="v155"','data-qily-ddz-virtual-landscape="v154"','id="v120-landscape-toggle"','id="welcome-landscape"',"const chain=['js/ddz-core-v155.js'];",'/site-dock-share-runtime-v1.js?','<p id="hint-message" class="hint-message" aria-hidden="true"></p>','无牌可压时自动喊“不要”并轮到下家'])must(ddz,token,'DDZ V155/V164');
 for(const token of ['name="screen-orientation"','name="x5-orientation"',"loadStyle('css/ddz-core-v155.css')","loadStyle('css/mobile-landscape-v153.css')",'/site-navigation.js?','qilyPureDdzR8ClosureV128','ddz-site-shell-v140.js','js/qilylean-theme.js','js/elder-assist-v140.js','<footer class="site-footer">','class="ddz-page-note"'])forbid(ddz,token,'DDZ retired runtime');
 const ddzMaterializer=read('scripts/materialize-ddz-public-ui-20260824.js');
-must(ddzMaterializer,'20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164','DDZ materializer');
+must(ddzMaterializer,'20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164-v169','DDZ materializer');
 must(ddzMaterializer,'data-qily-ddz-core="v158"','DDZ static stylesheet materializer');
 must(ddzMaterializer,"const chain=['js/ddz-core-v155.js'];",'DDZ single-bundle materializer');
 must(ddzMaterializer,'forced-orientation metadata must stay removed','DDZ materializer');

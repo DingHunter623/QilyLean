@@ -21,7 +21,7 @@ for(const sample of ['index.html','trust/index.html','experience/index.html','pr
   const html=read(sample);for(const token of required)if(!html.includes(token))failures.push(`${sample}: required V32 asset absent (${token})`);for(const token of forbidden)if(html.includes(token))failures.push(`${sample}: retired translator remains (${token})`);
 }
 const ddz=read(DDZ);
-for(const token of ['20260903-ddz-fast-knowledge-v155','data-qily-ddz-fast-shell="v155"','fast-site-shell-v155.js?v=20260903-ddz-fast-shell-v155'])if(!ddz.includes(token))failures.push(`${DDZ}: missing fast-route contract ${token}`);
+for(const token of ['20260903-ddz-fast-knowledge-v155','data-qily-ddz-fast-shell="v155"','fast-site-shell-v155.js?v=20260913-ddz-played-table-v169'])if(!ddz.includes(token))failures.push(`${DDZ}: missing fast-route contract ${token}`);
 if(!ddz.includes(DOCK))failures.push(`${DDZ}: missing Dock V5.8 fast-route contract`);
 if(navPages<460)failures.push(`navigation coverage low: ${navPages}`);if(shellPages<460)failures.push(`shell coverage low: ${shellPages}`);
 if(failures.length)throw new Error(`Public materialization failed (${failures.length}):\n${failures.slice(0,50).join('\n')}`);

@@ -80,7 +80,7 @@ const ddzIndex=read('tools/pure-ddz/index.html');
 const ddzCoreCss=read('tools/pure-ddz/game/css/ddz-core-v155.css');
 const ddzCoreJs=read('tools/pure-ddz/game/js/ddz-core-v155.js');
 for(const [t,m] of [
-  ["const version='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164'",'DDZ V155/V164 cache'],
+  ["const version='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164-v169'",'DDZ V155/V164 cache'],
   ['data-qily-ddz-core="v158"','DDZ bundled CSS owner'],
   ['window.__PURE_DDZ_STYLE_READY__=Promise.resolve();','DDZ static style readiness'],
   ["const chain=['js/ddz-core-v155.js'];",'DDZ single JS bundle'],

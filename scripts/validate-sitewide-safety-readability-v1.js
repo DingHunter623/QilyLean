@@ -122,7 +122,7 @@ must(ddzVisual,'document.documentElement.requestFullscreen','DDZ user-gesture fu
 must(ddzVisual,'window.PureDDZTest.hint()','DDZ single Hint behavior owner');
 
 const ddzIndex=read('tools/pure-ddz/index.html');
-must(ddzIndex,'20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164','DDZ V155/V164 cache');
+must(ddzIndex,'20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164-v169','DDZ V155/V164 cache');
 must(ddzIndex,'data-qily-ddz-core="v158"','DDZ static bundled stylesheet');
 must(ddzIndex,'window.__PURE_DDZ_STYLE_READY__=Promise.resolve();','DDZ static style readiness');
 must(ddzIndex,"const chain=['js/ddz-core-v155.js'];",'DDZ single JS bundle');

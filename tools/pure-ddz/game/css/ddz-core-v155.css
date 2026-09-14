@@ -1705,3 +1705,92 @@ html.ddz-ios-virtual-landscape:root:root body.ddz-site-page .v120-play-card .qil
 html.ddz-ios-virtual-landscape:root:root body.ddz-site-page .v120-play-card .qily-card-theme>strong{font-size:9.2px!important;line-height:1.02!important}
 html.ddz-ios-virtual-landscape:root:root body.ddz-site-page .v120-play-card .qily-card-theme>b{font-size:6.5px!important}
 html.ddz-ios-virtual-landscape:root:root body.ddz-site-page .v120-play-card .qily-card-theme>em{font-size:5px!important}
+
+/* ===== played-table-v169.css */
+/* Persistent, synchronous played cards in the open area between the status and hand. */
+html body.ddz-site-page #ddz-played-table {
+  position:absolute;z-index:8;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;box-sizing:border-box;padding:0;min-width:0;
+}
+html body.ddz-site-page #ddz-played-table[hidden]{display:none!important}
+#ddz-played-table .ddz-player-play {
+  min-width:0;min-height:0;display:flex;flex-direction:column;box-sizing:border-box;
+  padding:12px;border:1px solid rgba(231,221,181,.28);border-radius:16px;
+  background:rgba(3,49,51,.48);color:#fff;overflow:hidden;
+}
+#ddz-played-table .ddz-player-play.is-current {
+  border:2px solid #f6cf6b;padding:11px;background:rgba(5,63,62,.78);
+  box-shadow:0 0 0 3px rgba(246,207,107,.10);
+}
+#ddz-played-table .ddz-play-heading {display:flex;align-items:center;justify-content:space-between;gap:4px;font-size:clamp(14px,1.3vw,22px);line-height:1.3;white-space:nowrap}
+#ddz-played-table .ddz-play-heading strong{color:#fff;-webkit-text-fill-color:#fff}
+#ddz-played-table .ddz-play-heading small{font-size:.66em;font-weight:600;color:#cee6df;-webkit-text-fill-color:#cee6df}
+#ddz-played-table .ddz-play-badge {border-radius:999px;background:rgba(224,243,235,.12);color:#e0f3eb;-webkit-text-fill-color:#e0f3eb;padding:3px 8px;font-size:.63em;font-weight:800}
+#ddz-played-table .is-current .ddz-play-badge {color:#123d43;-webkit-text-fill-color:#123d43;background:#f6cf6b}
+#ddz-played-table .ddz-play-description{font-size:clamp(11px,1vw,16px);line-height:1.5;color:#dfebe4;-webkit-text-fill-color:#dfebe4;margin:3px 0 8px}
+#ddz-played-table .ddz-play-cards {flex:1;min-height:0;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:4px}
+#ddz-played-table .ddz-play-row {display:flex;align-items:center;justify-content:center;min-width:0;width:100%}
+#ddz-played-table .ddz-play-card {
+  flex:0 0 var(--played-w,64px);width:var(--played-w,64px);height:var(--played-h,94px);
+  margin-left:var(--played-overlap,0);box-sizing:border-box;padding:5px 3px;border:1px solid #cbd6d1;
+  border-radius:7px;background:linear-gradient(135deg,#fff,#edf6f2);color:#172f32;-webkit-text-fill-color:#172f32;
+  box-shadow:-2px 2px 5px rgba(0,0,0,.2);display:flex;flex-direction:column;align-items:flex-start;
+  font-family:Arial,'PingFang SC',sans-serif;line-height:1;overflow:hidden;
+}
+#ddz-played-table .ddz-play-card:first-child{margin-left:0}
+#ddz-played-table .ddz-play-card b {font-size:var(--played-rank,26px);font-weight:900;letter-spacing:-.06em;line-height:1}
+#ddz-played-table .ddz-play-card i {font-size:var(--played-rank,26px);font-style:normal;line-height:1.1}
+#ddz-played-table .ddz-play-card.is-red{color:#c92533;-webkit-text-fill-color:#c92533}
+#ddz-played-table .ddz-play-card.is-joker b{font-size:calc(var(--played-rank,26px) * .7);writing-mode:vertical-rl;letter-spacing:0}
+#ddz-played-table .ddz-play-empty{align-self:center;color:#d1e8df;-webkit-text-fill-color:#d1e8df;font-size:14px}
+html body.ddz-site-page #ddz-played-table.is-compact{gap:5px}
+#ddz-played-table.is-compact .ddz-player-play{padding:5px;border-radius:8px}
+#ddz-played-table.is-compact .ddz-player-play.is-current{padding:4px}
+#ddz-played-table.is-compact .ddz-play-heading{font-size:12px;line-height:15px}
+#ddz-played-table.is-compact .ddz-play-badge{padding:1px 4px;font-size:9px}
+#ddz-played-table.is-compact .ddz-play-description{font-size:10px;line-height:12px;margin:0 0 3px}
+#ddz-played-table.is-compact .ddz-play-heading small{display:none}
+#ddz-played-table.is-compact .ddz-play-card{padding:2px;border-radius:4px}
+#ddz-played-table.is-compact .ddz-play-empty{font-size:11px}
+
+/* Keep the bottom cards and narration side by side on short mobile tables. */
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page .center-area {
+  width:calc(100% - 196px)!important;max-width:none!important;padding-inline:0!important;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr)!important;
+  grid-template-rows:auto auto!important;align-items:center!important;gap:2px 6px!important;
+}
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page .center-area .round-meta{display:none!important}
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page .bottom-zone{grid-column:1!important;grid-row:1/3!important;margin:0!important}
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page .bottom-label{font-size:9px!important;line-height:11px!important}
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page #bottom-cards{gap:3px!important;min-height:44px!important;height:44px!important;margin:2px 0 0!important}
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page #bottom-cards>.mini-card,
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page #bottom-cards>.bottom-back{flex:0 0 32px!important;min-width:32px!important;width:32px!important;max-width:32px!important;height:44px!important;min-height:44px!important;max-height:44px!important;margin:0!important;padding:2px!important;transform:none!important;border-radius:5px!important}
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page #bottom-cards b{font-size:14px!important;line-height:1!important}
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page #bottom-cards small{font-size:6px!important}
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page #status{grid-column:2!important;grid-row:1!important;min-width:0!important;min-height:22px!important;width:100%!important;margin:0!important;padding:3px!important;font-size:12px!important;line-height:16px!important}
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page #center-play{grid-column:2!important;grid-row:2!important;min-width:0!important;align-self:start!important}
+html:root:root:is(.ddz-mobile-landscape,.ddz-ios-virtual-landscape,.ddz-short-table) body.ddz-site-page #center-play :is(.play-owner,.center-tip){font-size:10px!important;line-height:13px!important;white-space:normal!important;margin:0!important;padding:1px 3px!important}
+
+/* Portrait keeps normal page scrolling and gives each player a full-width row. */
+html:root:root.ddz-mobile-portrait:not(.ddz-ios-virtual-landscape) body.ddz-site-page .table-wrap:has(#ddz-played-table:not([hidden])){height:980px!important;min-height:980px!important;max-height:none!important}
+html body.ddz-site-page #ddz-played-table.is-stacked{grid-template-columns:minmax(0,1fr);grid-template-rows:repeat(3,minmax(0,1fr));gap:8px}
+#ddz-played-table.is-stacked .ddz-player-play{padding:6px 10px;border-radius:10px}
+#ddz-played-table.is-stacked .ddz-player-play.is-current{padding:5px 9px}
+#ddz-played-table.is-stacked .ddz-play-heading{font-size:14px;line-height:18px}
+#ddz-played-table.is-stacked .ddz-play-description{font-size:11px;line-height:13px;margin:0 0 4px}
+html:root:root.ddz-mobile-portrait:not(.ddz-ios-virtual-landscape) body.ddz-site-page #center-play .play-owner{max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important;font-size:12px!important;line-height:16px!important}
+
+#ddz-played-table.is-tight .ddz-play-description{display:none}
+#ddz-played-table.is-tight .ddz-play-heading{margin-bottom:3px}
+#ddz-played-table.is-tight .ddz-play-heading strong:after{content:attr(data-count);font-size:9px;font-weight:600}
+
+@media (max-height:350px) and (orientation:landscape){
+  html:root:root.ddz-mobile-landscape body.ddz-site-page .bottom-label{display:none!important}
+  html:root:root.ddz-mobile-landscape body.ddz-site-page #bottom-cards{height:34px!important;min-height:34px!important;margin:0!important}
+  html:root:root.ddz-mobile-landscape body.ddz-site-page #bottom-cards>.mini-card{height:34px!important;min-height:34px!important;max-height:34px!important}
+  html:root:root.ddz-mobile-landscape body.ddz-site-page #bottom-cards small{display:none!important}
+  html:root:root.ddz-mobile-landscape body.ddz-site-page #center-play .play-owner{display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important;font-size:9px!important;line-height:10px!important}
+  html:root:root.ddz-mobile-landscape body.ddz-site-page #status{min-height:18px!important;padding:1px!important;line-height:14px!important;font-size:10px!important}
+  #ddz-played-table.is-tight .ddz-play-card{padding:1px}
+  #ddz-played-table.is-tight .ddz-player-play{padding:3px}
+  #ddz-played-table.is-tight .ddz-player-play.is-current{padding:2px}
+}
