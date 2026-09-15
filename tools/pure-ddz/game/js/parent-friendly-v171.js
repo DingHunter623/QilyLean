@@ -3,7 +3,7 @@
   if(window.__qilyDdzParentFriendlyV171)return;
   window.__qilyDdzParentFriendlyV171=true;
 
-  const VERSION='1.7.1';
+  const VERSION='1.7.2';
   const STYLE_ID='qilyDdzParentFriendlyV171Style';
   const ROOT=document.documentElement;
   const $=id=>document.getElementById(id);
@@ -17,11 +17,18 @@
   }
   function rankText(rank){return({11:'J',12:'Q',13:'K',14:'A',15:'2',16:'小王',17:'大王'}[rank]||String(rank??''));}
   function selectedHandCards(){return[...document.querySelectorAll('#hand .card[aria-pressed="true"]')];}
+  function clearSelectedHand(){
+    const selected=selectedHandCards();
+    if(!selected.length)return;
+    internalSelectionChange=true;
+    try{selected.forEach(item=>item.click());}finally{internalSelectionChange=false;}
+  }
 
   /*
    * Parent-first selection contract:
    * 启力提示只能“建议并预选”，绝不能锁定用户的出牌选择。
    * 用户在提示后第一次手动点/拖另一张牌时，立即清掉提示预选，控制权完整交还用户。
+   * 用户点击“不要”即代表本轮放弃出牌，任何已抬起的牌必须立即回到原牌位，不能残留到下一轮。
    */
   function bindFreeSelection(){
     const hint=$('hint');
@@ -51,7 +58,10 @@
     ['play','pass','start','again','welcome-start'].forEach(id=>{
       const node=$(id);if(!node||node.dataset.qilyParentResetV171)return;
       node.dataset.qilyParentResetV171='1';
-      node.addEventListener('click',()=>{hintSelectionActive=false;},true);
+      node.addEventListener('click',()=>{
+        if(id==='pass')clearSelectedHand();
+        hintSelectionActive=false;
+      },true);
     });
   }
 
@@ -182,5 +192,5 @@
   const timer=setInterval(install,260);
   window.addEventListener('pagehide',()=>{clearInterval(timer);boardObserver?.disconnect();},{once:true});
 
-  window.QilyLeanDdzParentFriendlyV171=Object.freeze({version:VERSION,enhancePlayedCards,install});
+  window.QilyLeanDdzParentFriendlyV171=Object.freeze({version:VERSION,enhancePlayedCards,clearSelectedHand,install});
 })();
