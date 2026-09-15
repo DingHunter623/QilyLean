@@ -39,11 +39,12 @@ jobs:
           node --check tools/pure-ddz/game/js/parent-friendly-v171.js
           node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
           grep -Fq "mobile-game-ux-v168.js?v=20260913-ddz-played-table-v169" tools/pure-ddz/game/js/fast-site-shell-v155.js
-          grep -Fq "classic-voice-v170.js?v=20260915-ddz-classic-voice-v171" tools/pure-ddz/game/js/fast-site-shell-v155.js
-          grep -Fq "parent-friendly-v171.js?v=20260915-ddz-parent-friendly-v171" tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq "classic-voice-v170.js?v=20260915-ddz-classic-voice-v172-q-kou" tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq "parent-friendly-v171.js?v=20260915-ddz-parent-friendly-v172-pass-reset" tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq "12:'抠'" tools/pure-ddz/game/js/classic-voice-v170.js
           grep -Fq "return\`三个\${main}带对\${rankVoice(side)}\`" tools/pure-ddz/game/js/classic-voice-v170.js
           grep -Fq "QilyLeanCardTheme" tools/pure-ddz/game/js/parent-friendly-v171.js
-          grep -Fq "hintSelectionActive" tools/pure-ddz/game/js/parent-friendly-v171.js
+          grep -Fq "if(id==='pass')clearSelectedHand();" tools/pure-ddz/game/js/parent-friendly-v171.js
           git diff --check
       - name: Install Chromium audit dependency
         run: |
@@ -54,7 +55,7 @@ jobs:
         run: |
           python3 -m http.server 4173 >/tmp/qily-ddz-parent-http.log 2>&1 &
           echo $! >/tmp/qily-ddz-parent-http.pid
-      - name: Browser regression - hint remains optional and detailed voice is loaded
+      - name: Browser regression - free selection, pass reset and parent voice
         shell: bash
         run: |
           node <<'NODE'
@@ -64,8 +65,12 @@ jobs:
             const page=await browser.newPage({viewport:{width:1280,height:760}});
             await page.goto('http://127.0.0.1:4173/tools/pure-ddz/',{waitUntil:'domcontentloaded'});
             await page.waitForFunction(()=>window.QilyLeanDdzClassicVoiceV170&&window.QilyLeanDdzParentFriendlyV171,{timeout:10000});
-            const phrase=await page.evaluate(()=>window.QilyLeanDdzClassicVoiceV170.classicPlayBody({combo:{type:'triple2',main:5},cards:[{rank:5},{rank:5},{rank:5},{rank:9},{rank:9}]}));
-            if(phrase!=='三个5带对9')throw new Error('detailed classic voice mismatch: '+phrase);
+            const phrases=await page.evaluate(()=>({
+              triplePair:window.QilyLeanDdzClassicVoiceV170.classicPlayBody({combo:{type:'triple2',main:5},cards:[{rank:5},{rank:5},{rank:5},{rank:9},{rank:9}]}),
+              pairQ:window.QilyLeanDdzClassicVoiceV170.classicPlayBody({combo:{type:'pair',main:12},cards:[{rank:12},{rank:12}]})
+            }));
+            if(phrases.triplePair!=='三个5带对9')throw new Error('detailed classic voice mismatch: '+phrases.triplePair);
+            if(phrases.pairQ!=='对抠')throw new Error('Q pronunciation mismatch: '+phrases.pairQ);
             await page.evaluate(()=>{
               const hand=document.getElementById('hand');
               hand.innerHTML='<button class="card" data-id="6" aria-pressed="true" style="width:84px;height:110px;margin:0"></button><button class="card" data-id="2" aria-pressed="false" style="width:84px;height:110px;margin:0"></button>';
@@ -75,8 +80,11 @@ jobs:
             await page.waitForTimeout(30);
             const cards=page.locator('#hand .card');
             await cards.nth(1).click();
-            const selected=await page.evaluate(()=>[...document.querySelectorAll('#hand .card')].map(el=>el.getAttribute('aria-pressed')));
+            let selected=await page.evaluate(()=>[...document.querySelectorAll('#hand .card')].map(el=>el.getAttribute('aria-pressed')));
             if(selected[0]!=='false'||selected[1]!=='true')throw new Error('manual choice did not override hint selection: '+JSON.stringify(selected));
+            await page.evaluate(()=>window.QilyLeanDdzParentFriendlyV171.clearSelectedHand());
+            selected=await page.evaluate(()=>[...document.querySelectorAll('#hand .card')].map(el=>el.getAttribute('aria-pressed')));
+            if(selected.some(value=>value!=='false'))throw new Error('pass reset did not lower selected cards: '+JSON.stringify(selected));
             await browser.close();
           })().catch(error=>{console.error(error);process.exit(1)});
           NODE
