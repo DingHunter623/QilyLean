@@ -16,7 +16,7 @@ let page=fs.readFileSync(indexFile,'utf8');
 const before=page;
 const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164-v169';
 const CORE_STYLE=`<link id="qilyDdzCoreV158" data-qily-ddz-core="v158" rel="stylesheet" href="./game/css/ddz-core-v155.css?v=${CACHE}">`;
-const FAST_SHELL='<script defer id="qilyDdzFastSiteShellV155" data-qily-ddz-fast-shell="v155" src="/tools/pure-ddz/game/js/fast-site-shell-v155.js?v=20260913-ddz-played-table-v169"></script>';
+const FAST_SHELL='<script defer id="qilyDdzFastSiteShellV155" data-qily-ddz-fast-shell="v155" src="/tools/pure-ddz/game/js/fast-site-shell-v155.js?v=20260915-ddz-free-choice-v174"></script>';
 const IOS_VIRTUAL_FALLBACK='<script defer id="qilyDdzIosVirtualLandscapeV154" data-qily-ddz-virtual-landscape="v154" src="/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154"></script>';
 
 const CSS_SOURCES=[

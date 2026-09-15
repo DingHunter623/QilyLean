@@ -22,6 +22,7 @@
   const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v168.js?v=20260913-ddz-played-table-v169';
   const CLASSIC_VOICE_PATCH='/tools/pure-ddz/game/js/classic-voice-v170.js?v=20260915-ddz-classic-voice-v172-q-kou';
   const PARENT_FRIENDLY_PATCH='/tools/pure-ddz/game/js/parent-friendly-v171.js?v=20260915-ddz-parent-friendly-v173-free-choice';
+  const FREE_CHOICE_PATCH='/tools/pure-ddz/game/js/free-choice-v174.js?v=20260915-ddz-free-choice-v174';
   let translationRequested=false;
 
   function addShellStyle(){
@@ -154,6 +155,15 @@
     document.head.appendChild(script);
   }
 
+  function loadFreeChoicePatch(){
+    if(document.querySelector('script[data-qily-ddz-free-choice="v174"]'))return;
+    const script=document.createElement('script');
+    script.src=FREE_CHOICE_PATCH;
+    script.async=false;
+    script.dataset.qilyDdzFreeChoice='v174';
+    document.head.appendChild(script);
+  }
+
   function scheduleDeferredTranslation(){
     const connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
     const slow=Boolean(connection&&(connection.saveData||/(?:^|-)2g$/.test(connection.effectiveType||'')));
@@ -173,7 +183,8 @@
   loadUxPatch();
   loadClassicVoicePatch();
   loadParentFriendlyPatch();
+  loadFreeChoicePatch();
   scheduleDeferredTranslation();
 
-  window.QilyLeanDdzFastShell=Object.freeze({version:'1.5.5-v173',loadTranslation});
+  window.QilyLeanDdzFastShell=Object.freeze({version:'1.5.5-v174',loadTranslation});
 })();
