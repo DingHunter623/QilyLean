@@ -1,11 +1,11 @@
-name: Verify Pure DDZ V175 Free Choice
+name: Verify Pure DDZ V176 Free Choice
 
 on:
   push:
     branches: [main]
     paths:
       - '.github/workflows/verify-pure-ddz-v174-free-choice.yml'
-      - 'tools/pure-ddz/game/js/free-choice-v175.js'
+      - 'tools/pure-ddz/game/js/free-choice-v176.js'
       - 'tools/pure-ddz/game/js/fast-site-shell-v155.js'
       - 'tools/pure-ddz/index.html'
       - 'scripts/materialize-ddz-public-ui-20260824.js'
@@ -26,19 +26,19 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-      - name: Verify V175 source and cache contract
+      - name: Verify V176 source and cache contract
         shell: bash
         run: |
           set -euo pipefail
-          node --check tools/pure-ddz/game/js/free-choice-v175.js
+          node --check tools/pure-ddz/game/js/free-choice-v176.js
           node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
           node --check scripts/materialize-ddz-public-ui-20260824.js
-          grep -Fq "FREE_CHOICE_PATCH='/tools/pure-ddz/game/js/free-choice-v175.js?v=20260915-ddz-free-choice-v175'" tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq "FREE_CHOICE_PATCH='/tools/pure-ddz/game/js/free-choice-v176.js?v=20260915-ddz-free-choice-v176'" tools/pure-ddz/game/js/fast-site-shell-v155.js
           grep -Fq 'loadFreeChoicePatch();' tools/pure-ddz/game/js/fast-site-shell-v155.js
-          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v175' tools/pure-ddz/index.html
-          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v175' scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v176' tools/pure-ddz/index.html
+          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v176' scripts/materialize-ddz-public-ui-20260824.js
           node scripts/materialize-ddz-public-ui-20260824.js
-          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v175' tools/pure-ddz/index.html
+          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v176' tools/pure-ddz/index.html
           git diff --check
       - name: Install browser audit dependency
         run: |
@@ -47,9 +47,9 @@ jobs:
           npx playwright install chromium >/dev/null 2>&1
       - name: Start local site
         run: |
-          python3 -m http.server 4173 >/tmp/qily-ddz-v175-http.log 2>&1 &
-          echo $! >/tmp/qily-ddz-v175-http.pid
-      - name: Browser regression - single replacement and airplane K wing
+          python3 -m http.server 4173 >/tmp/qily-ddz-v176-http.log 2>&1 &
+          echo $! >/tmp/qily-ddz-v176-http.pid
+      - name: Browser regression - exact screenshot scenarios
         shell: bash
         run: |
           node <<'NODE'
@@ -58,16 +58,16 @@ jobs:
             const browser=await chromium.launch({headless:true});
             const page=await browser.newPage({viewport:{width:1600,height:900}});
             await page.goto('http://127.0.0.1:4173/tools/pure-ddz/',{waitUntil:'domcontentloaded'});
-            await page.waitForFunction(()=>window.PureDDZTest&&window.QilyLeanDdzFreeChoiceV175,{timeout:12000});
+            await page.waitForFunction(()=>window.PureDDZTest&&window.QilyLeanDdzFreeChoiceV176,{timeout:12000});
 
             const airplane=await page.evaluate(()=>window.PureDDZTest.analyzeRanks([7,7,7,8,8,8,9,9,9,3,6,13]));
-            if(!airplane||airplane.type!=='airplane1'||airplane.seq!==3)throw new Error('777888999 + 3 + 6 + K is not recognized as airplane1: '+JSON.stringify(airplane));
+            if(!airplane||airplane.type!=='airplane1'||airplane.seq!==3)throw new Error('777888999 + 3 + 6 + K must be legal airplane1: '+JSON.stringify(airplane));
 
             async function installFake(states){
               await page.evaluate(initial=>{
                 const hand=document.getElementById('hand');
                 const state={...initial};
-                window.__v175FakeState=state;
+                window.__v176FakeState=state;
                 function render(){
                   hand.innerHTML=Object.keys(state).map(id=>`<button type="button" class="card" data-id="${id}" aria-pressed="${state[id]?'true':'false'}">${id}</button>`).join('');
                   [...hand.querySelectorAll('.card')].forEach(btn=>btn.addEventListener('click',()=>{
@@ -78,35 +78,36 @@ jobs:
                 render();
               },states);
             }
-            const fireHint=()=>page.evaluate(()=>document.getElementById('hint').dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true})));
+            const captureHint=()=>page.evaluate(()=>window.QilyLeanDdzFreeChoiceV176.captureHint());
             const clickCard=id=>page.evaluate(value=>document.querySelector(`#hand .card[data-id="${value}"]`).click(),id);
             const values=()=>page.evaluate(()=>Object.fromEntries([...document.querySelectorAll('#hand .card')].map(el=>[el.dataset.id,el.getAttribute('aria-pressed')])));
 
             await installFake({K:true,'2':false,JOKER:false});
-            await fireHint();
-            await page.waitForTimeout(25);
+            await captureHint();
             await clickCard('2');
             await page.waitForTimeout(50);
             let v=await values();
-            if(v.K!=='false'||v['2']!=='true'||v.JOKER!=='false')throw new Error('Single hint K did not change to 2: '+JSON.stringify(v));
+            if(v.K!=='false'||v['2']!=='true'||v.JOKER!=='false')throw new Error('Screenshot 2 failed: hint K did not change to 2: '+JSON.stringify(v));
 
             await installFake({K:true,'2':false,JOKER:false});
-            await fireHint();
-            await page.waitForTimeout(25);
+            await captureHint();
             await clickCard('JOKER');
             await page.waitForTimeout(50);
             v=await values();
-            if(v.K!=='false'||v.JOKER!=='true'||v['2']!=='false')throw new Error('Single hint K did not change to joker: '+JSON.stringify(v));
+            if(v.K!=='false'||v.JOKER!=='true'||v['2']!=='false')throw new Error('Screenshot 2 failed: hint K did not change to big joker: '+JSON.stringify(v));
 
             const core=['7a','7b','7c','8a','8b','8c','9a','9b','9c','3','6'];
             const initial=Object.fromEntries([...core,'K'].map(id=>[id,core.includes(id)]));
             await installFake(initial);
-            await fireHint();
-            await page.waitForTimeout(25);
+            await captureHint();
             await clickCard('K');
             await page.waitForTimeout(50);
             v=await values();
-            if([...core,'K'].some(id=>v[id]!=='true'))throw new Error('K could not be added to multi-card airplane hint: '+JSON.stringify(v));
+            if([...core,'K'].some(id=>v[id]!=='true'))throw new Error('Screenshot 1 failed: K could not be appended to 777888999 + 3 + 6: '+JSON.stringify(v));
+
+            await page.evaluate(()=>window.QilyLeanDdzFreeChoiceV176.clearSelection());
+            v=await values();
+            if(Object.values(v).some(value=>value!=='false'))throw new Error('Pass/reset semantics failed to lower all cards: '+JSON.stringify(v));
 
             await browser.close();
           })().catch(error=>{console.error(error);process.exit(1)});
