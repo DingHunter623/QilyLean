@@ -3,28 +3,67 @@
   if(window.__qilyDdzClassicVoiceV170)return;
   window.__qilyDdzClassicVoiceV170=true;
 
-  const VERSION='1.7.0';
+  const VERSION='1.7.1';
   const rankVoice=rank=>({3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',10:'10',11:'勾',12:'Q',13:'K',14:'尖',15:'2',16:'小王',17:'大王'}[rank]||String(rank??''));
 
   function currentPlay(){
     try{return window.PureDDZTest?.getState?.()?.lastPlay||null;}catch(_error){return null;}
   }
+  function groupRanks(cards){
+    const groups=new Map();
+    (cards||[]).forEach(card=>groups.set(card.rank,(groups.get(card.rank)||0)+1));
+    return groups;
+  }
+  function expandRanks(groups,exclude=[]){
+    const out=[];
+    [...groups.keys()].sort((a,b)=>a-b).forEach(rank=>{
+      let count=groups.get(rank)||0;
+      if(exclude.includes(rank))count=Math.max(0,count-3);
+      while(count-->0)out.push(rank);
+    });
+    return out;
+  }
 
   function classicPlayBody(play){
-    const combo=play?.combo||{},type=combo.type||'',main=rankVoice(combo.main);
+    const combo=play?.combo||{},type=combo.type||'',main=rankVoice(combo.main),groups=groupRanks(play?.cards);
+    const ranks=[...groups.keys()].sort((a,b)=>a-b);
     if(type==='rocket')return'王炸';
-    if(type==='bomb')return'炸弹';
+    if(type==='bomb')return`${main}炸弹`;
     if(type==='single')return main;
     if(type==='pair')return`对${main}`;
     if(type==='triple')return`三个${main}`;
-    if(type==='triple1')return'三带一';
-    if(type==='triple2')return'三带一对';
-    if(type==='straight')return'顺子';
-    if(type==='pairStraight')return'连对';
-    if(type==='airplane')return'飞机';
-    if(type==='airplane1'||type==='airplane2')return'飞机带翅膀';
-    if(type==='four2')return'四带二';
-    if(type==='four2pair')return'四带两对';
+    if(type==='triple1'){
+      const side=ranks.find(rank=>rank!==combo.main);
+      return`三个${main}带${rankVoice(side)}`;
+    }
+    if(type==='triple2'){
+      const side=ranks.find(rank=>rank!==combo.main);
+      return`三个${main}带对${rankVoice(side)}`;
+    }
+    if(type==='straight')return`${rankVoice(ranks[0])}到${rankVoice(ranks.at(-1))}顺子`;
+    if(type==='pairStraight')return`${rankVoice(ranks[0])}到${rankVoice(ranks.at(-1))}连对`;
+    if(type==='airplane'||type==='airplane1'||type==='airplane2'){
+      const triples=ranks.filter(rank=>(groups.get(rank)||0)>=3&&rank<=14);
+      const core=triples.length>1?`${rankVoice(triples[0])}到${rankVoice(triples.at(-1))}飞机`:'飞机';
+      if(type==='airplane')return core;
+      const remain=expandRanks(groups,triples);
+      if(type==='airplane1')return`${core}带${remain.map(rankVoice).join('、')}`;
+      const pairRanks=[];
+      for(let i=0;i<remain.length;i+=2)pairRanks.push(remain[i]);
+      return`${core}带${pairRanks.map(rank=>`对${rankVoice(rank)}`).join('、')}`;
+    }
+    if(type==='four2'||type==='four2pair'){
+      const side=[];
+      ranks.filter(rank=>rank!==combo.main).forEach(rank=>{
+        const count=groups.get(rank)||0;
+        for(let i=0;i<count;i++)side.push(rank);
+      });
+      if(type==='four2pair'){
+        const pairRanks=[];for(let i=0;i<side.length;i+=2)pairRanks.push(side[i]);
+        return`四个${main}带${pairRanks.map(rank=>`对${rankVoice(rank)}`).join('、')}`;
+      }
+      return`四个${main}带${side.map(rankVoice).join('、')}`;
+    }
     return'';
   }
 
