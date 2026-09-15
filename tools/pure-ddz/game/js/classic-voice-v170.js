@@ -3,8 +3,8 @@
   if(window.__qilyDdzClassicVoiceV170)return;
   window.__qilyDdzClassicVoiceV170=true;
 
-  const VERSION='1.7.1';
-  const rankVoice=rank=>({3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',10:'10',11:'勾',12:'Q',13:'K',14:'尖',15:'2',16:'小王',17:'大王'}[rank]||String(rank??''));
+  const VERSION='1.7.2';
+  const rankVoice=rank=>({3:'3',4:'4',5:'5',6:'6',7:'7',8:'8',9:'9',10:'10',11:'勾',12:'抠',13:'K',14:'尖',15:'2',16:'小王',17:'大王'}[rank]||String(rank??''));
 
   function currentPlay(){
     try{return window.PureDDZTest?.getState?.()?.lastPlay||null;}catch(_error){return null;}
