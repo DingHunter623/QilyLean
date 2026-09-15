@@ -40,11 +40,13 @@ jobs:
           node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
           grep -Fq "mobile-game-ux-v168.js?v=20260913-ddz-played-table-v169" tools/pure-ddz/game/js/fast-site-shell-v155.js
           grep -Fq "classic-voice-v170.js?v=20260915-ddz-classic-voice-v172-q-kou" tools/pure-ddz/game/js/fast-site-shell-v155.js
-          grep -Fq "parent-friendly-v171.js?v=20260915-ddz-parent-friendly-v172-pass-reset" tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq "parent-friendly-v171.js?v=20260915-ddz-parent-friendly-v173-free-choice" tools/pure-ddz/game/js/fast-site-shell-v155.js
           grep -Fq "12:'抠'" tools/pure-ddz/game/js/classic-voice-v170.js
           grep -Fq "return\`三个\${main}带对\${rankVoice(side)}\`" tools/pure-ddz/game/js/classic-voice-v170.js
           grep -Fq "QilyLeanCardTheme" tools/pure-ddz/game/js/parent-friendly-v171.js
+          grep -Fq "clearSelectedHand(targetId);" tools/pure-ddz/game/js/parent-friendly-v171.js
           grep -Fq "if(id==='pass')clearSelectedHand();" tools/pure-ddz/game/js/parent-friendly-v171.js
+          ! grep -Fq "document.addEventListener('pointerdown'" tools/pure-ddz/game/js/parent-friendly-v171.js
           git diff --check
       - name: Install Chromium audit dependency
         run: |
@@ -55,7 +57,7 @@ jobs:
         run: |
           python3 -m http.server 4173 >/tmp/qily-ddz-parent-http.log 2>&1 &
           echo $! >/tmp/qily-ddz-parent-http.pid
-      - name: Browser regression - free selection, pass reset and parent voice
+      - name: Browser regression - free selection survives hand rerender, pass reset and parent voice
         shell: bash
         run: |
           node <<'NODE'
@@ -73,18 +75,29 @@ jobs:
             if(phrases.pairQ!=='对抠')throw new Error('Q pronunciation mismatch: '+phrases.pairQ);
             await page.evaluate(()=>{
               const hand=document.getElementById('hand');
-              hand.innerHTML='<button class="card" data-id="6" aria-pressed="true" style="width:84px;height:110px;margin:0"></button><button class="card" data-id="2" aria-pressed="false" style="width:84px;height:110px;margin:0"></button>';
-              [...hand.querySelectorAll('.card')].forEach(btn=>btn.addEventListener('click',()=>btn.setAttribute('aria-pressed',btn.getAttribute('aria-pressed')==='true'?'false':'true')));
+              window.__qilySelectionFixture=new Set(['6']);
+              window.__renderSelectionFixture=()=>{
+                hand.innerHTML='<button class="card" data-id="6" style="width:84px;height:110px;margin:0"></button><button class="card" data-id="2" style="width:84px;height:110px;margin:0"></button>';
+                [...hand.querySelectorAll('.card')].forEach(btn=>{
+                  const id=btn.dataset.id;
+                  const selected=window.__qilySelectionFixture.has(id);
+                  btn.setAttribute('aria-pressed',String(selected));
+                  btn.addEventListener('click',()=>{
+                    window.__qilySelectionFixture.has(id)?window.__qilySelectionFixture.delete(id):window.__qilySelectionFixture.add(id);
+                    window.__renderSelectionFixture();
+                  });
+                });
+              };
+              window.__renderSelectionFixture();
             });
             await page.click('#hint');
             await page.waitForTimeout(30);
-            const cards=page.locator('#hand .card');
-            await cards.nth(1).click();
-            let selected=await page.evaluate(()=>[...document.querySelectorAll('#hand .card')].map(el=>el.getAttribute('aria-pressed')));
-            if(selected[0]!=='false'||selected[1]!=='true')throw new Error('manual choice did not override hint selection: '+JSON.stringify(selected));
+            await page.locator('#hand .card[data-id="2"]').click();
+            let selected=await page.evaluate(()=>[...document.querySelectorAll('#hand .card')].filter(el=>el.getAttribute('aria-pressed')==='true').map(el=>el.dataset.id));
+            if(JSON.stringify(selected)!=='["2"]')throw new Error('manual choice did not replace hint selection after rerender: '+JSON.stringify(selected));
             await page.evaluate(()=>window.QilyLeanDdzParentFriendlyV171.clearSelectedHand());
-            selected=await page.evaluate(()=>[...document.querySelectorAll('#hand .card')].map(el=>el.getAttribute('aria-pressed')));
-            if(selected.some(value=>value!=='false'))throw new Error('pass reset did not lower selected cards: '+JSON.stringify(selected));
+            selected=await page.evaluate(()=>[...document.querySelectorAll('#hand .card')].filter(el=>el.getAttribute('aria-pressed')==='true').map(el=>el.dataset.id));
+            if(selected.length)throw new Error('pass reset did not lower selected cards: '+JSON.stringify(selected));
             await browser.close();
           })().catch(error=>{console.error(error);process.exit(1)});
           NODE
