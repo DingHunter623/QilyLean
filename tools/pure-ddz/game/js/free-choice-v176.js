@@ -49,13 +49,14 @@
   }
 
   /*
-   * V176｜玩家最终决定权（不再用定时器抢状态）
+   * V176｜玩家最终决定权
    * 1. 启力提示只是默认建议，绝不锁定手牌。
    * 2. 默认单牌 K：玩家点 2 或大王，一次点击直接换成玩家选择。
    * 3. 多牌提示：玩家点新的 K，只追加 K，不清空原组合；因此 777888999 + 3 + 6 + K 可完整选择。
    * 4. 玩家点已抬起的牌，按原生规则取消；之后继续自由增删。
    * 5. “不要”立即清空全部抬起牌。
-   * 6. 用牌局 turn-key 判断提示是否仍属于当前回合，避免跨回合残留；不用轮询定时器，防止在玩家点击前误清状态。
+   * 6. 关键修复：在 capture 阶段只记录玩家点了哪张牌，绝不重绘；等核心 card click 完成并重绘后再同步选择。
+   *    这样即使 game.js 点击后立即 render() 替换旧牌节点，玩家点击也不会在 bubble 阶段因旧节点脱离 DOM 而丢失。
    */
   document.addEventListener('click',event=>{
     if(internal)return;
@@ -90,8 +91,8 @@
     const targetWasHint=originalHint.has(targetId);
     resetHint();
 
+    /* 不在 capture 阶段改变 DOM，让 game.js 原生点击和 render() 先完整执行。 */
     if(targetWasHint)return;
-
     setTimeout(()=>{
       if(originalHint.size<=1){
         syncSelection(new Set([targetId]));
@@ -100,7 +101,7 @@
         syncSelection(originalHint);
       }
     },0);
-  },false);
+  },true);
 
   window.QilyLeanDdzFreeChoiceV176=Object.freeze({version:VERSION,captureHint,syncSelection,clearSelection,resetHint,currentTurnKey});
 })();
