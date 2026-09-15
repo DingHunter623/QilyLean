@@ -21,7 +21,7 @@
   const LANDSCAPE_PATCH='/tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js?v=20260907-mobile-landscape-v166';
   const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v168.js?v=20260913-ddz-played-table-v169';
   const CLASSIC_VOICE_PATCH='/tools/pure-ddz/game/js/classic-voice-v170.js?v=20260915-ddz-classic-voice-v172-q-kou';
-  const PARENT_FRIENDLY_PATCH='/tools/pure-ddz/game/js/parent-friendly-v171.js?v=20260915-ddz-parent-friendly-v172-pass-reset';
+  const PARENT_FRIENDLY_PATCH='/tools/pure-ddz/game/js/parent-friendly-v171.js?v=20260915-ddz-parent-friendly-v173-free-choice';
   let translationRequested=false;
 
   function addShellStyle(){
@@ -175,5 +175,5 @@
   loadParentFriendlyPatch();
   scheduleDeferredTranslation();
 
-  window.QilyLeanDdzFastShell=Object.freeze({version:'1.5.5-v172',loadTranslation});
+  window.QilyLeanDdzFastShell=Object.freeze({version:'1.5.5-v173',loadTranslation});
 })();
