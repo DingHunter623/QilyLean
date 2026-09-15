@@ -1,0 +1,112 @@
+name: Verify Pure DDZ V174 Free Choice
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-pure-ddz-v174-free-choice.yml'
+      - 'tools/pure-ddz/game/js/free-choice-v174.js'
+      - 'tools/pure-ddz/game/js/fast-site-shell-v155.js'
+      - 'tools/pure-ddz/index.html'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - 'tools/pure-ddz/game/js/game.js'
+  pull_request:
+    paths:
+      - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - '.github/workflows/verify-pure-ddz-v174-free-choice.yml'
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Verify V174 source and cache contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check tools/pure-ddz/game/js/free-choice-v174.js
+          node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
+          node --check scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq "FREE_CHOICE_PATCH='/tools/pure-ddz/game/js/free-choice-v174.js?v=20260915-ddz-free-choice-v174'" tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq 'loadFreeChoicePatch();' tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v174' tools/pure-ddz/index.html
+          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v174' scripts/materialize-ddz-public-ui-20260824.js
+          node scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v174' tools/pure-ddz/index.html
+          git diff --check
+      - name: Install browser audit dependency
+        run: |
+          npm init -y >/dev/null 2>&1
+          npm install --no-save playwright@1.55.0 >/dev/null 2>&1
+          npx playwright install chromium >/dev/null 2>&1
+      - name: Start local site
+        run: |
+          python3 -m http.server 4173 >/tmp/qily-ddz-v174-http.log 2>&1 &
+          echo $! >/tmp/qily-ddz-v174-http.pid
+      - name: Browser regression - K hint can be replaced by 2 or joker; airplane may carry K
+        shell: bash
+        run: |
+          node <<'NODE'
+          const {chromium}=require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage({viewport:{width:1600,height:900}});
+            await page.goto('http://127.0.0.1:4173/tools/pure-ddz/',{waitUntil:'domcontentloaded'});
+            await page.waitForFunction(()=>window.PureDDZTest&&window.QilyLeanDdzFreeChoiceV174,{timeout:12000});
+
+            const airplane=await page.evaluate(()=>window.PureDDZTest.analyzeRanks([7,7,7,8,8,8,9,9,9,3,6,13]));
+            if(!airplane||airplane.type!=='airplane1'||airplane.seq!==3)throw new Error('777888999 + 3 + 6 + K must be a legal airplane with single wings: '+JSON.stringify(airplane));
+
+            async function installFake(states){
+              await page.evaluate(initial=>{
+                const hand=document.getElementById('hand');
+                const state={...initial};
+                window.__v174FakeState=state;
+                function render(){
+                  hand.innerHTML=Object.keys(state).map(id=>`<button type="button" class="card" data-id="${id}" aria-pressed="${state[id]?'true':'false'}">${id}</button>`).join('');
+                  [...hand.querySelectorAll('.card')].forEach(btn=>btn.addEventListener('click',()=>{
+                    state[btn.dataset.id]=!state[btn.dataset.id];
+                    render();
+                  }));
+                }
+                render();
+                const hint=document.getElementById('hint');
+                if(hint)hint.disabled=false;
+              },states);
+            }
+            async function values(){
+              return page.evaluate(()=>Object.fromEntries([...document.querySelectorAll('#hand .card')].map(el=>[el.dataset.id,el.getAttribute('aria-pressed')])));
+            }
+
+            await installFake({K:true,'2':false,JOKER:false});
+            await page.click('#hint');
+            await page.waitForTimeout(30);
+            await page.locator('#hand .card[data-id="2"]').click();
+            await page.waitForTimeout(40);
+            let v=await values();
+            if(v.K!=='false'||v['2']!=='true')throw new Error('Hint K was not replaced by player-selected 2: '+JSON.stringify(v));
+
+            await installFake({K:true,'2':false,JOKER:false});
+            await page.click('#hint');
+            await page.waitForTimeout(30);
+            await page.locator('#hand .card[data-id="JOKER"]').click();
+            await page.waitForTimeout(40);
+            v=await values();
+            if(v.K!=='false'||v.JOKER!=='true')throw new Error('Hint K was not replaced by player-selected joker: '+JSON.stringify(v));
+
+            const ids=['7a','7b','7c','8a','8b','8c','9a','9b','9c','3','6','K'];
+            await installFake(Object.fromEntries(ids.map(id=>[id,false])));
+            for(const id of ids)await page.locator(`#hand .card[data-id="${id}"]`).click();
+            await page.waitForTimeout(30);
+            v=await values();
+            if(ids.some(id=>v[id]!=='true'))throw new Error('Manual multi-select blocked a legal airplane wing including K: '+JSON.stringify(v));
+
+            await browser.close();
+          })().catch(error=>{console.error(error);process.exit(1)});
+          NODE
