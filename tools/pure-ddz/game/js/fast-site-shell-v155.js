@@ -20,6 +20,7 @@
   const TRANSLATION_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16';
   const LANDSCAPE_PATCH='/tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js?v=20260907-mobile-landscape-v166';
   const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v168.js?v=20260913-ddz-played-table-v169';
+  const CLASSIC_VOICE_PATCH='/tools/pure-ddz/game/js/classic-voice-v170.js?v=20260915-ddz-classic-voice-v170';
   let translationRequested=false;
 
   function addShellStyle(){
@@ -134,6 +135,15 @@
     document.head.appendChild(script);
   }
 
+  function loadClassicVoicePatch(){
+    if(document.querySelector('script[data-qily-ddz-classic-voice="v170"]'))return;
+    const script=document.createElement('script');
+    script.src=CLASSIC_VOICE_PATCH;
+    script.async=false;
+    script.dataset.qilyDdzClassicVoice='v170';
+    document.head.appendChild(script);
+  }
+
   function scheduleDeferredTranslation(){
     const connection=navigator.connection||navigator.mozConnection||navigator.webkitConnection;
     const slow=Boolean(connection&&(connection.saveData||/(?:^|-)2g$/.test(connection.effectiveType||'')));
@@ -151,7 +161,8 @@
   buildHeader();
   loadLandscapePatch();
   loadUxPatch();
+  loadClassicVoicePatch();
   scheduleDeferredTranslation();
 
-  window.QilyLeanDdzFastShell=Object.freeze({version:'1.5.5-v168',loadTranslation});
+  window.QilyLeanDdzFastShell=Object.freeze({version:'1.5.5-v170',loadTranslation});
 })();
