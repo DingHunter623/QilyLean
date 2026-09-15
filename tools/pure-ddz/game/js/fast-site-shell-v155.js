@@ -19,7 +19,7 @@
   const TRANSLATION_RUNTIME='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16&fast=20260903-ddz-idle-v155';
   const TRANSLATION_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16';
   const LANDSCAPE_PATCH='/tools/pure-ddz/game/js/mobile-landscape-autofit-v165.js?v=20260907-mobile-landscape-v166';
-  const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v168.js?v=20260907-ddz-ux-v168';
+  const UX_PATCH='/tools/pure-ddz/game/js/mobile-game-ux-v168.js?v=20260913-ddz-played-table-v169';
   let translationRequested=false;
 
   function addShellStyle(){

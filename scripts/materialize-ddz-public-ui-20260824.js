@@ -14,9 +14,9 @@ const jsBundleFile=path.join(jsRoot,'ddz-core-v155.js');
 if(!fs.existsSync(indexFile)) throw new Error('Missing tools/pure-ddz/index.html');
 let page=fs.readFileSync(indexFile,'utf8');
 const before=page;
-const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164';
+const CACHE='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164-v169';
 const CORE_STYLE=`<link id="qilyDdzCoreV158" data-qily-ddz-core="v158" rel="stylesheet" href="./game/css/ddz-core-v155.css?v=${CACHE}">`;
-const FAST_SHELL='<script defer id="qilyDdzFastSiteShellV155" data-qily-ddz-fast-shell="v155" src="/tools/pure-ddz/game/js/fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v168"></script>';
+const FAST_SHELL='<script defer id="qilyDdzFastSiteShellV155" data-qily-ddz-fast-shell="v155" src="/tools/pure-ddz/game/js/fast-site-shell-v155.js?v=20260913-ddz-played-table-v169"></script>';
 const IOS_VIRTUAL_FALLBACK='<script defer id="qilyDdzIosVirtualLandscapeV154" data-qily-ddz-virtual-landscape="v154" src="/tools/pure-ddz/game/js/ios-virtual-landscape-v154.js?v=20260903-ios-virtual-v154"></script>';
 
 const CSS_SOURCES=[
@@ -27,7 +27,8 @@ const CSS_SOURCES=[
   'ddz-site-page-v140.css',
   'mobile-landscape-v153.css',
   'card-knowledge-v155.css',
-  'visual-tuning-v158.css'
+  'visual-tuning-v158.css',
+  'played-table-v169.css'
 ];
 const JS_SOURCES=[
   'card-theme.js',

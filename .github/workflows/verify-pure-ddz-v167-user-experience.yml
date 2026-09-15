@@ -28,9 +28,9 @@ jobs:
         run: |
           set -euo pipefail
           node --check scripts/materialize-ddz-public-ui-20260824.js
-          grep -Fq 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v167' scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq 'fast-site-shell-v155.js?v=20260913-ddz-played-table-v169' scripts/materialize-ddz-public-ui-20260824.js
           node scripts/materialize-ddz-public-ui-20260824.js
-          grep -Fq 'fast-site-shell-v155.js?v=20260907-ddz-fast-shell-v167' tools/pure-ddz/index.html
+          grep -Fq 'fast-site-shell-v155.js?v=20260913-ddz-played-table-v169' tools/pure-ddz/index.html
       - name: Verify V167 source contracts
         shell: bash
         run: |

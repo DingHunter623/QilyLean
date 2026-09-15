@@ -31,7 +31,7 @@ must(viCss,'--qily-container:1240px','Formal content axis');must(viCss,'linear-g
 
 /* Current isolated DDZ V155/V164 contract. */
 const ddzIndex=read(DDZ),ddzCss=read('tools/pure-ddz/game/css/ddz-core-v155.css'),ddzJs=read('tools/pure-ddz/game/js/ddz-core-v155.js');
-for(const [t,m] of [["const version='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164'",'DDZ V155/V164 cache'],['data-qily-ddz-core="v158"','DDZ bundled CSS'],['data-qily-ddz-fast-shell="v155"','DDZ fast shell'],['data-qily-ddz-virtual-landscape="v154"','DDZ iOS fallback'],['id="v120-landscape-toggle"','DDZ landscape toolbar'],['id="welcome-landscape"','DDZ landscape welcome']])must(ddzIndex,t,m);
+for(const [t,m] of [["const version='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164-v169'",'DDZ V155/V164 cache'],['data-qily-ddz-core="v158"','DDZ bundled CSS'],['data-qily-ddz-fast-shell="v155"','DDZ fast shell'],['data-qily-ddz-virtual-landscape="v154"','DDZ iOS fallback'],['id="v120-landscape-toggle"','DDZ landscape toolbar'],['id="welcome-landscape"','DDZ landscape welcome']])must(ddzIndex,t,m);
 if(!ddzIndex.includes(DOCK))throw new Error('DDZ Dock V5.8 cache missing');
 for(const t of ["loadStyle('css/ddz-core-v155.css')",'qilyPureDdzR8ClosureV128','name="screen-orientation"','name="x5-orientation"'])forbid(ddzIndex,t,'DDZ retired shell');
 must(ddzCss,'overflow-x:clip!important','DDZ containment');must(ddzCss,'var(--ddz-mobile-vh,390px)','DDZ viewport sizing');must(ddzJs,"version:'1.2.4-mobile-landscape-adaptive'",'DDZ adaptive landscape runtime');must(ddzJs,'screen.orientation?.lock','DDZ landscape lock');

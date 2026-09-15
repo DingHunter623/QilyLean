@@ -1,0 +1,52 @@
+name: 斗地主已出牌回归
+
+on:
+  pull_request:
+    paths:
+      - 'tools/pure-ddz/**'
+      - 'scripts/materialize-ddz-public-ui-20260824.js'
+      - 'scripts/verify-ddz-played-table-v169.cjs'
+      - '.github/workflows/verify-ddz-played-table.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  played-table:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Check generated game assets
+        run: |
+          node --check tools/pure-ddz/game/js/game.js
+          node --check tools/pure-ddz/game/js/mobile-game-ux-v168.js
+          node scripts/materialize-ddz-public-ui-20260824.js
+          git diff --exit-code -- tools/pure-ddz/
+          node scripts/validate-contact-readability-ddz-20260824.js
+      - name: Install browser test runtime
+        run: |
+          npm install --no-save --package-lock=false --ignore-scripts playwright@1.62.1
+          npx playwright install --with-deps chromium
+      - name: Verify cards, round transitions and desktop/mobile layouts
+        env:
+          DDZ_TEST_OUTPUT: ${{ runner.temp }}/ddz-played-table
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/ddz-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID"' EXIT
+          for attempt in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8765/tools/pure-ddz/ > /dev/null; then break; fi
+            sleep 0.25
+          done
+          node scripts/verify-ddz-played-table-v169.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ddz-played-table-screenshots
+          path: ${{ runner.temp }}/ddz-played-table
+          retention-days: 14
