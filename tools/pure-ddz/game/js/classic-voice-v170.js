@@ -44,6 +44,11 @@
     ['onstart','onend','onerror','onpause','onresume','onmark','onboundary'].forEach(key=>{try{if(from[key])to[key]=from[key];}catch(_error){}});
   }
 
+  function markProxy(proxy){
+    Object.defineProperty(proxy,'__qilyClassicVoiceV170',{value:true});
+    Object.defineProperty(proxy,'__qilyV168Natural',{value:true});
+  }
+
   function installBrowserVoice(){
     try{
       const synth=window.speechSynthesis;
@@ -59,7 +64,7 @@
         }
         return downstream(utterance);
       };
-      Object.defineProperty(proxy,'__qilyClassicVoiceV170',{value:true});
+      markProxy(proxy);
       synth.speak=proxy;
     }catch(_error){}
   }
@@ -74,7 +79,7 @@
         const classic=classicPlayText(source);
         return downstream(classic!==source?'\u2060'+classic:source);
       };
-      Object.defineProperty(proxy,'__qilyClassicVoiceV170',{value:true});
+      markProxy(proxy);
       bridge.speak=proxy;
     }catch(_error){}
   }
