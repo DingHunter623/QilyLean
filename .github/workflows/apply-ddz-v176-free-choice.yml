@@ -1,0 +1,67 @@
+name: Apply Pure DDZ V176 Free Choice
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/apply-ddz-v176-free-choice.yml'
+      - 'tools/pure-ddz/game/js/free-choice-v176.js'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-ddz-v176-free-choice-main
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Wire V176 and bump cache keys
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          fast=Path('tools/pure-ddz/game/js/fast-site-shell-v155.js')
+          text=fast.read_text()
+          text=text.replace("const FREE_CHOICE_PATCH='/tools/pure-ddz/game/js/free-choice-v175.js?v=20260915-ddz-free-choice-v175';","const FREE_CHOICE_PATCH='/tools/pure-ddz/game/js/free-choice-v176.js?v=20260915-ddz-free-choice-v176';")
+          text=text.replace('data-qily-ddz-free-choice="v175"','data-qily-ddz-free-choice="v176"')
+          text=text.replace("script.dataset.qilyDdzFreeChoice='v175';","script.dataset.qilyDdzFreeChoice='v176';")
+          text=text.replace("version:'1.5.5-v175'","version:'1.5.5-v176'")
+          if 'free-choice-v176.js?v=20260915-ddz-free-choice-v176' not in text: raise SystemExit('V176 fast-shell wiring failed')
+          fast.write_text(text)
+          old='fast-site-shell-v155.js?v=20260915-ddz-free-choice-v175'
+          new='fast-site-shell-v155.js?v=20260915-ddz-free-choice-v176'
+          index=Path('tools/pure-ddz/index.html'); page=index.read_text().replace(old,new)
+          if new not in page: raise SystemExit('Index cache bump failed')
+          index.write_text(page)
+          materialize=Path('scripts/materialize-ddz-public-ui-20260824.js'); script=materialize.read_text().replace(old,new)
+          if new not in script: raise SystemExit('Materializer cache bump failed')
+          materialize.write_text(script)
+          PY
+          node --check tools/pure-ddz/game/js/free-choice-v176.js
+          node --check tools/pure-ddz/game/js/fast-site-shell-v155.js
+          node --check scripts/materialize-ddz-public-ui-20260824.js
+          grep -Fq 'free-choice-v176.js?v=20260915-ddz-free-choice-v176' tools/pure-ddz/game/js/fast-site-shell-v155.js
+          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v176' tools/pure-ddz/index.html
+          grep -Fq 'fast-site-shell-v155.js?v=20260915-ddz-free-choice-v176' scripts/materialize-ddz-public-ui-20260824.js
+          git diff --check
+      - name: Commit V176 wiring
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- tools/pure-ddz/game/js/fast-site-shell-v155.js tools/pure-ddz/index.html scripts/materialize-ddz-public-ui-20260824.js; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/pure-ddz/game/js/fast-site-shell-v155.js tools/pure-ddz/index.html scripts/materialize-ddz-public-ui-20260824.js
+          git commit -m 'fix(ddz): wire V176 no-race free choice [skip ci]'
+          git pull --rebase origin main
+          git push origin main
