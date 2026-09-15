@@ -3,7 +3,7 @@
   if(window.__qilyDdzParentFriendlyV171)return;
   window.__qilyDdzParentFriendlyV171=true;
 
-  const VERSION='1.7.2';
+  const VERSION='1.7.3';
   const STYLE_ID='qilyDdzParentFriendlyV171Style';
   const ROOT=document.documentElement;
   const $=id=>document.getElementById(id);
@@ -17,17 +17,24 @@
   }
   function rankText(rank){return({11:'J',12:'Q',13:'K',14:'A',15:'2',16:'小王',17:'大王'}[rank]||String(rank??''));}
   function selectedHandCards(){return[...document.querySelectorAll('#hand .card[aria-pressed="true"]')];}
-  function clearSelectedHand(){
-    const selected=selectedHandCards();
-    if(!selected.length)return;
+  function clearSelectedHand(keepId=null){
     internalSelectionChange=true;
-    try{selected.forEach(item=>item.click());}finally{internalSelectionChange=false;}
+    try{
+      let guard=64;
+      while(guard-->0){
+        const selected=selectedHandCards();
+        const target=selected.find(item=>keepId===null||String(item.dataset.id)!==String(keepId));
+        if(!target)break;
+        target.click();
+      }
+    }finally{internalSelectionChange=false;}
   }
 
   /*
    * Parent-first selection contract:
    * 启力提示只能“建议并预选”，绝不能锁定用户的出牌选择。
-   * 用户在提示后第一次手动点/拖另一张牌时，立即清掉提示预选，控制权完整交还用户。
+   * 提示后，用户第一次点击另一张牌时，先让游戏原生点击完成，再只保留用户刚点的牌；
+   * 这样不会在 pointerdown 阶段重绘手牌、吃掉用户真正的 click。
    * 用户点击“不要”即代表本轮放弃出牌，任何已抬起的牌必须立即回到原牌位，不能残留到下一轮。
    */
   function bindFreeSelection(){
@@ -41,18 +48,16 @@
 
     if(!document.documentElement.dataset.qilyParentSelectionV171){
       document.documentElement.dataset.qilyParentSelectionV171='1';
-      document.addEventListener('pointerdown',event=>{
-        if(internalSelectionChange||!event.isTrusted||!hintSelectionActive)return;
+      document.addEventListener('click',event=>{
+        if(internalSelectionChange||!hintSelectionActive)return;
         const card=event.target.closest?.('#hand .card');
         if(!card)return;
+        const targetId=String(card.dataset.id||'');
         const targetWasSelected=card.getAttribute('aria-pressed')==='true';
         hintSelectionActive=false;
-        if(targetWasSelected)return;
-        const others=selectedHandCards().filter(item=>item!==card);
-        if(!others.length)return;
-        internalSelectionChange=true;
-        try{others.forEach(item=>item.click());}finally{internalSelectionChange=false;}
-      },true);
+        if(targetWasSelected||!targetId)return;
+        clearSelectedHand(targetId);
+      },false);
     }
 
     ['play','pass','start','again','welcome-start'].forEach(id=>{
