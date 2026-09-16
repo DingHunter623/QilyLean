@@ -3,6 +3,10 @@ set -euo pipefail
 
 ROOT_DIR="${1:-cn-site}"
 INDEX_FILE="$ROOT_DIR/index.html"
+ROBOTS_FILE="$ROOT_DIR/robots.txt"
+SITEMAP_FILE="$ROOT_DIR/sitemap.xml"
+BAIDU_VERIFY_FILE="$ROOT_DIR/baidu_verify_codeva-Bp0VGliFcp.html"
+INDEXNOW_FILE="$ROOT_DIR/b47ed759da519bd90586a7877122d7be.txt"
 
 mapfile -t FILES < <(find "$ROOT_DIR" -type f \( \
   -name '*.html' -o -name '*.htm' -o -name '*.xml' -o -name '*.json' -o \
@@ -50,6 +54,11 @@ if [[ ! -f "$INDEX_FILE" ]]; then
   exit 1
 fi
 
+grep -Fq '<meta name="robots" content="index,follow">' "$INDEX_FILE" || {
+  echo "ERROR: CN homepage must remain indexable."
+  exit 1
+}
+
 grep -Fq '<link rel="canonical" href="https://qilylean.cn/">' "$INDEX_FILE" || {
   echo "ERROR: CN homepage canonical must remain https://qilylean.cn/."
   exit 1
@@ -75,5 +84,50 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
   exit 1
 }
 
+# Search-engine discovery contract: keep crawl permission, sitemap discovery and verification
+# files intact so Baidu/IndexNow access cannot be accidentally broken by later site changes.
+[[ -f "$ROBOTS_FILE" ]] || { echo "ERROR: CN robots.txt is missing."; exit 1; }
+[[ -f "$SITEMAP_FILE" ]] || { echo "ERROR: CN sitemap.xml is missing."; exit 1; }
+[[ -f "$BAIDU_VERIFY_FILE" ]] || { echo "ERROR: Baidu verification file is missing."; exit 1; }
+[[ -f "$INDEXNOW_FILE" ]] || { echo "ERROR: CN IndexNow key file is missing."; exit 1; }
+
+grep -Fxq 'Allow: /' "$ROBOTS_FILE" || {
+  echo "ERROR: CN robots.txt must allow crawling."
+  exit 1
+}
+
+grep -Fxq 'Sitemap: https://qilylean.cn/sitemap.xml' "$ROBOTS_FILE" || {
+  echo "ERROR: CN robots.txt must advertise the canonical sitemap."
+  exit 1
+}
+
+grep -Fq '<urlset' "$SITEMAP_FILE" || {
+  echo "ERROR: CN sitemap.xml is not a URL set."
+  exit 1
+}
+
+grep -Fq '<loc>https://qilylean.cn/</loc>' "$SITEMAP_FILE" || {
+  echo "ERROR: CN sitemap.xml is missing the homepage."
+  exit 1
+}
+
+if grep -Eo '<loc>[^<]+</loc>' "$SITEMAP_FILE" | grep -vF '<loc>https://qilylean.cn/' >/dev/null; then
+  echo "ERROR: CN sitemap.xml contains a non-CN URL."
+  exit 1
+fi
+
+BAIDU_VERIFY_VALUE="$(tr -d '\r\n' < "$BAIDU_VERIFY_FILE")"
+[[ "$BAIDU_VERIFY_VALUE" == '8bdf47bc085187ab7717a549ec5b7904' ]] || {
+  echo "ERROR: Baidu verification file content changed."
+  exit 1
+}
+
+INDEXNOW_VALUE="$(tr -d '\r\n' < "$INDEXNOW_FILE")"
+[[ "$INDEXNOW_VALUE" == 'b47ed759da519bd90586a7877122d7be' ]] || {
+  echo "ERROR: CN IndexNow verification file content changed."
+  exit 1
+}
+
 echo "CN personal-site non-commercial content gate passed."
 echo "CN dual-site knowledge-only association contract passed."
+echo "CN search-engine discovery and verification contract passed."
