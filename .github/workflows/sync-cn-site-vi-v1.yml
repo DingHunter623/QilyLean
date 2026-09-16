@@ -1,0 +1,91 @@
+name: Sync QilyLean China site VI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'cn-site/assets/qilylean-vi-v1.css'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-cn-site-vi-v1
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Materialize China-site VI bridge across every public HTML page
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('cn-site')
+          href = '/assets/qilylean-vi-v1.css?v=20260916-cn-vi-v1'
+          link = f'  <link id="qilyCnUnifiedViV1" rel="stylesheet" href="{href}">\n'
+
+          for path in root.rglob('*.html'):
+              source = path.read_text(encoding='utf-8')
+
+              # One final VI authority layer, loaded after all China-site legacy CSS.
+              source = re.sub(r'\s*<link[^>]+id=["\']qilyCnUnifiedViV1["\'][^>]*>\s*', '\n', source, flags=re.I)
+              if '</head>' not in source.lower():
+                  continue
+              source = re.sub(r'</head>', link + '</head>', source, count=1, flags=re.I)
+
+              # Match the international-site brand-home interaction contract.
+              def brand_repl(match):
+                  attrs = match.group(1)
+                  attrs = re.sub(r'\s+(?:aria-label|title)=["\'][^"\']*["\']', '', attrs, flags=re.I)
+                  return '<a class="brand" href="/"' + attrs + ' aria-label="返回QilyLean首页" title="返回首页">'
+
+              source = re.sub(r'<a\s+class=["\']brand["\']\s+href=["\']/["\']([^>]*)>', brand_repl, source, flags=re.I)
+              path.write_text(source, encoding='utf-8')
+          PY
+
+          python - <<'PY'
+          from pathlib import Path
+          missing=[]
+          bad_brand=[]
+          html=list(Path('cn-site').rglob('*.html'))
+          for p in html:
+              s=p.read_text(encoding='utf-8')
+              if '</head>' in s.lower() and 'id="qilyCnUnifiedViV1"' not in s:
+                  missing.append(str(p))
+              if 'class="brand"' in s and 'title="返回首页"' not in s:
+                  bad_brand.append(str(p))
+          if missing:
+              raise SystemExit('VI stylesheet missing: ' + ', '.join(missing))
+          if bad_brand:
+              raise SystemExit('Brand home feedback missing: ' + ', '.join(bad_brand))
+          print(f'PASS: China-site VI applied to {len(html)} HTML files.')
+          PY
+          git diff --check
+
+      - name: Commit China-site VI materialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add cn-site
+          if git diff --cached --quiet; then
+            echo 'China-site VI already materialized.'
+            exit 0
+          fi
+          git commit -m 'style(cn): align all pages with QilyLean VI'
+          git pull --rebase origin main
+          git push origin HEAD:main
