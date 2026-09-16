@@ -13,7 +13,7 @@
 .qily-resource-network{padding:clamp(40px,5vw,72px) clamp(18px,4vw,58px);background:#fff}
 .qily-resource-network.alt{background:var(--qlrn-surface-alt)}
 .qily-resource-network.dark{color:#fff;background:linear-gradient(125deg,var(--qlrn-deep),var(--qlrn-forest) 58%,#0f6570)}
-.qily-resource-network__inner{width:min(1240px,100%);margin:0 auto}
+.qily-resource-network__inner{width:min(1180px,100%);max-width:1180px;margin:0 auto}
 .qily-resource-network__kicker{display:inline-block;color:var(--qlrn-teal);font-size:14px;font-weight:950;letter-spacing:.08em}
 .qily-resource-network.dark .qily-resource-network__kicker{color:var(--qlrn-light-gold)}
 .qily-resource-network h2{margin:9px 0 12px;color:var(--qlrn-forest);font-size:clamp(30px,3.7vw,48px);line-height:1.16}
@@ -42,165 +42,32 @@
 .qily-resource-network.dark .qily-resource-network__button.primary{border-color:var(--qlrn-light-gold);color:#17322d;background:var(--qlrn-light-gold)}
 .qily-resource-network.dark .qily-resource-network__button:not(.primary){border-color:rgba(255,255,255,.72);color:#fff;background:transparent}
 .qily-resource-network__button:hover,.qily-resource-network__button:focus-visible{box-shadow:0 0 0 3px rgba(23,139,148,.2);outline:none}
-
-/* QILY-RESOURCE-NETWORK-BUTTON-CONTRAST-V2
- * 高优先级覆盖全站通用链接规则，杜绝主按钮在常态、已访问、悬停或按下时出现深底深字。
- */
 html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary,
-html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary:visited{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background-color:var(--qlrn-forest)!important;
-  border-color:var(--qlrn-forest)!important;
-  text-decoration-color:var(--qlrn-light-gold)!important;
-  opacity:1!important;
-  filter:none!important;
-  text-shadow:none!important;
-}
+html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary:visited{color:#fff!important;-webkit-text-fill-color:#fff!important;background-color:var(--qlrn-forest)!important;border-color:var(--qlrn-forest)!important;text-decoration-color:var(--qlrn-light-gold)!important;opacity:1!important;filter:none!important;text-shadow:none!important}
 html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary:hover,
-html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary:focus-visible{
-  color:#17322d!important;
-  -webkit-text-fill-color:#17322d!important;
-  background-color:var(--qlrn-light-gold)!important;
-  border-color:#c99a3e!important;
-  text-decoration-color:#17322d!important;
-  box-shadow:0 9px 22px rgba(15,75,90,.26)!important;
-  transform:translateY(-2px)!important;
-  outline:none!important;
-}
-html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary:active{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background-color:var(--qlrn-deep)!important;
-  border-color:var(--qlrn-deep)!important;
-  text-decoration-color:var(--qlrn-light-gold)!important;
-  transform:translateY(0) scale(.98)!important;
-}
+html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary:focus-visible{color:#17322d!important;-webkit-text-fill-color:#17322d!important;background-color:var(--qlrn-light-gold)!important;border-color:#c99a3e!important;text-decoration-color:#17322d!important;box-shadow:0 9px 22px rgba(15,75,90,.26)!important;transform:translateY(-2px)!important;outline:none!important}
+html body .qily-resource-network .qily-resource-network__actions a.qily-resource-network__button.primary:active{color:#fff!important;-webkit-text-fill-color:#fff!important;background-color:var(--qlrn-deep)!important;border-color:var(--qlrn-deep)!important;text-decoration-color:var(--qlrn-light-gold)!important;transform:translateY(0) scale(.98)!important}
 html body .qily-resource-network:not(.dark) .qily-resource-network__actions a.qily-resource-network__button:not(.primary),
-html body .qily-resource-network:not(.dark) .qily-resource-network__actions a.qily-resource-network__button:not(.primary):visited{
-  color:var(--qlrn-forest)!important;
-  -webkit-text-fill-color:var(--qlrn-forest)!important;
-  background-color:#fff!important;
-  border-color:var(--qlrn-teal)!important;
-  text-decoration-color:var(--qlrn-teal)!important;
-  opacity:1!important;
-  filter:none!important;
-}
+html body .qily-resource-network:not(.dark) .qily-resource-network__actions a.qily-resource-network__button:not(.primary):visited{color:var(--qlrn-forest)!important;-webkit-text-fill-color:var(--qlrn-forest)!important;background-color:#fff!important;border-color:var(--qlrn-teal)!important;text-decoration-color:var(--qlrn-teal)!important;opacity:1!important;filter:none!important}
 html body .qily-resource-network:not(.dark) .qily-resource-network__actions a.qily-resource-network__button:not(.primary):hover,
-html body .qily-resource-network:not(.dark) .qily-resource-network__actions a.qily-resource-network__button:not(.primary):focus-visible{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background-color:var(--qlrn-forest)!important;
-  border-color:var(--qlrn-forest)!important;
-  text-decoration-color:var(--qlrn-light-gold)!important;
-  box-shadow:0 9px 22px rgba(15,75,90,.24)!important;
-  transform:translateY(-2px)!important;
-  outline:none!important;
-}
+html body .qily-resource-network:not(.dark) .qily-resource-network__actions a.qily-resource-network__button:not(.primary):focus-visible{color:#fff!important;-webkit-text-fill-color:#fff!important;background-color:var(--qlrn-forest)!important;border-color:var(--qlrn-forest)!important;text-decoration-color:var(--qlrn-light-gold)!important;box-shadow:0 9px 22px rgba(15,75,90,.24)!important;transform:translateY(-2px)!important;outline:none!important}
 .qily-resource-network__definition{margin-top:24px;padding:22px;border:1px solid #b8d9d4;background:#fff}
 .qily-resource-network__definition blockquote{margin:0;color:var(--qlrn-forest);font-size:clamp(19px,1.7vw,24px);font-weight:850;line-height:1.75}
 .qily-resource-network__definition p{margin:12px 0 0;color:var(--qlrn-muted);font-size:15px;line-height:1.7}
 @media(max-width:1080px){.qily-resource-network__grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}.qily-resource-network__loop{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:820px){.qily-resource-network__grid,.qily-resource-network__grid.four{grid-template-columns:1fr}.qily-resource-network__loop{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.qily-resource-network__loop{grid-template-columns:1fr}.qily-resource-network__actions{display:grid}.qily-resource-network__button{width:100%}}
-
-/* QILY-NETWORK-HERO-ACTION-CONTRAST-V3
- * 独立网络页首屏主按钮：浅金底必须深色字；高优先级覆盖全站深色Hero通用链接规则。
- */
 html body main section.hero .hero-actions a.primary,
-html body main section.hero .hero-actions a.primary:visited{
-  position:relative!important;
-  z-index:1!important;
-  color:#17322d!important;
-  -webkit-text-fill-color:#17322d!important;
-  background-color:#ffe39b!important;
-  border:2px solid #c99a3e!important;
-  text-decoration-color:#17322d!important;
-  font-weight:950!important;
-  opacity:1!important;
-  visibility:visible!important;
-  filter:none!important;
-  text-shadow:none!important;
-}
+html body main section.hero .hero-actions a.primary:visited{position:relative!important;z-index:1!important;color:#17322d!important;-webkit-text-fill-color:#17322d!important;background-color:#ffe39b!important;border:2px solid #c99a3e!important;text-decoration-color:#17322d!important;font-weight:950!important;opacity:1!important;visibility:visible!important;filter:none!important;text-shadow:none!important}
 html body main section.hero .hero-actions a.primary:hover,
-html body main section.hero .hero-actions a.primary:focus-visible{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background-color:#0f4b5a!important;
-  border-color:#ffe39b!important;
-  text-decoration-color:#ffe39b!important;
-  box-shadow:0 10px 24px rgba(5,42,51,.34)!important;
-  transform:translateY(-2px)!important;
-  outline:3px solid rgba(255,227,155,.32)!important;
-  outline-offset:2px!important;
-}
-html body main section.hero .hero-actions a.primary:active{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background-color:#073c47!important;
-  border-color:#ffe39b!important;
-  text-decoration-color:#ffe39b!important;
-  transform:translateY(0) scale(.98)!important;
-}
+html body main section.hero .hero-actions a.primary:focus-visible{color:#fff!important;-webkit-text-fill-color:#fff!important;background-color:#0f4b5a!important;border-color:#ffe39b!important;text-decoration-color:#ffe39b!important;box-shadow:0 10px 24px rgba(5,42,51,.34)!important;transform:translateY(-2px)!important;outline:3px solid rgba(255,227,155,.32)!important;outline-offset:2px!important}
+html body main section.hero .hero-actions a.primary:active{color:#fff!important;-webkit-text-fill-color:#fff!important;background-color:#073c47!important;border-color:#ffe39b!important;text-decoration-color:#ffe39b!important;transform:translateY(0) scale(.98)!important}
 html body main section.hero .hero-actions a:not(.primary),
-html body main section.hero .hero-actions a:not(.primary):visited{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background-color:transparent!important;
-  border-color:rgba(255,255,255,.82)!important;
-  text-decoration-color:#ffe39b!important;
-  opacity:1!important;
-  filter:none!important;
-}
+html body main section.hero .hero-actions a:not(.primary):visited{color:#fff!important;-webkit-text-fill-color:#fff!important;background-color:transparent!important;border-color:rgba(255,255,255,.82)!important;text-decoration-color:#ffe39b!important;opacity:1!important;filter:none!important}
 html body main section.hero .hero-actions a:not(.primary):hover,
-html body main section.hero .hero-actions a:not(.primary):focus-visible{
-  color:#17322d!important;
-  -webkit-text-fill-color:#17322d!important;
-  background-color:#ffe39b!important;
-  border-color:#c99a3e!important;
-  text-decoration-color:#17322d!important;
-  box-shadow:0 9px 22px rgba(5,42,51,.28)!important;
-  transform:translateY(-2px)!important;
-  outline:none!important;
-}
-
-/* QILY-NETWORK-DARK-SECONDARY-ACTION-CONTRAST-V4
- * 深色合作治理模块的次按钮：常态及已访问状态保持白字、透明浅层底和清晰白色描边；
- * 悬停/聚焦切换为浅金底深色字，按下切换为深青底白字，防止全站链接规则覆盖。
- */
+html body main section.hero .hero-actions a:not(.primary):focus-visible{color:#17322d!important;-webkit-text-fill-color:#17322d!important;background-color:#ffe39b!important;border-color:#c99a3e!important;text-decoration-color:#17322d!important;box-shadow:0 9px 22px rgba(5,42,51,.28)!important;transform:translateY(-2px)!important;outline:none!important}
 html body .qily-resource-network.dark .qily-resource-network__actions a.qily-resource-network__button:not(.primary),
-html body .qily-resource-network.dark .qily-resource-network__actions a.qily-resource-network__button:not(.primary):visited{
-  position:relative!important;
-  z-index:1!important;
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background-color:rgba(255,255,255,.06)!important;
-  border:2px solid rgba(255,255,255,.88)!important;
-  text-decoration:none!important;
-  text-decoration-color:var(--qlrn-light-gold)!important;
-  font-weight:900!important;
-  opacity:1!important;
-  visibility:visible!important;
-  filter:none!important;
-  text-shadow:none!important;
-}
+html body .qily-resource-network.dark .qily-resource-network__actions a.qily-resource-network__button:not(.primary):visited{position:relative!important;z-index:1!important;color:#fff!important;-webkit-text-fill-color:#fff!important;background-color:rgba(255,255,255,.06)!important;border:2px solid rgba(255,255,255,.88)!important;text-decoration:none!important;text-decoration-color:var(--qlrn-light-gold)!important;font-weight:900!important;opacity:1!important;visibility:visible!important;filter:none!important;text-shadow:none!important}
 html body .qily-resource-network.dark .qily-resource-network__actions a.qily-resource-network__button:not(.primary):hover,
-html body .qily-resource-network.dark .qily-resource-network__actions a.qily-resource-network__button:not(.primary):focus-visible{
-  color:#17322d!important;
-  -webkit-text-fill-color:#17322d!important;
-  background-color:var(--qlrn-light-gold)!important;
-  border-color:#c99a3e!important;
-  text-decoration:none!important;
-  box-shadow:0 9px 22px rgba(5,42,51,.32)!important;
-  transform:translateY(-2px)!important;
-  outline:3px solid rgba(255,227,155,.28)!important;
-  outline-offset:2px!important;
-}
-html body .qily-resource-network.dark .qily-resource-network__actions a.qily-resource-network__button:not(.primary):active{
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background-color:var(--qlrn-deep)!important;
-  border-color:var(--qlrn-light-gold)!important;
-  text-decoration:none!important;
-  transform:translateY(0) scale(.98)!important;
-}
+html body .qily-resource-network.dark .qily-resource-network__actions a.qily-resource-network__button:not(.primary):focus-visible{color:#17322d!important;-webkit-text-fill-color:#17322d!important;background-color:var(--qlrn-light-gold)!important;border-color:#c99a3e!important;text-decoration:none!important;box-shadow:0 9px 22px rgba(5,42,51,.32)!important;transform:translateY(-2px)!important;outline:3px solid rgba(255,227,155,.28)!important;outline-offset:2px!important}
+html body .qily-resource-network.dark .qily-resource-network__actions a.qily-resource-network__button:not(.primary):active{color:#fff!important;-webkit-text-fill-color:#fff!important;background-color:var(--qlrn-deep)!important;border-color:var(--qlrn-light-gold)!important;text-decoration:none!important;transform:translateY(0) scale(.98)!important}
