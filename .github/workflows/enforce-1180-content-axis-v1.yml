@@ -27,6 +27,7 @@ jobs:
       - name: Validate canonical 1180px authorities
         run: |
           node --check scripts/enforce-1180-content-axis-v1.js
+          node --check scripts/audit-1180-content-axis-coverage-v1.js
           grep -Fq -- '--qily-content-axis:1180px!important' site-content-axis-v1.css
           grep -Fq -- '--qily-site-content-width:1180px!important' site-content-axis-v1.css
           grep -Fq 'FINAL SITEWIDE 1180PX AXIS CLOSURE' site-header-project-integrity-v2.css
@@ -44,6 +45,9 @@ jobs:
           grep -Fq '/site-header-project-integrity-v2.css' links/index.html
           grep -Fq '/site-resource-network-v1.css' links/index.html
 
+      - name: Audit all public HTML coverage
+        run: node scripts/audit-1180-content-axis-coverage-v1.js
+
       - name: Validate DDZ exception remains isolated
         run: |
           grep -Fq "explicitExcludedPrefix = 'tools/pure-ddz/'" scripts/enforce-1180-content-axis-v1.js
@@ -52,3 +56,12 @@ jobs:
 
       - name: Validate repository diff hygiene
         run: git diff --check
+
+      - name: Upload 1180px coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qily-1180-axis-coverage
+          path: maintenance/axis-1180-coverage.json
+          if-no-files-found: error
+          retention-days: 14
