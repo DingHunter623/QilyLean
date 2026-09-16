@@ -14,20 +14,22 @@ fi
 mkdir -p "$RELEASE_DIR"
 tar -xzf "$ARCHIVE" -C "$RELEASE_DIR"
 
-if [[ ! -f "$RELEASE_DIR/index.html" || ! -f "$RELEASE_DIR/robots.txt" ]]; then
-  echo "Release validation failed: index.html or robots.txt missing" >&2
-  rm -rf "$RELEASE_DIR"
-  exit 3
-fi
+for required in index.html robots.txt sitemap.xml favicon.ico assets/site.css assets/portal.css; do
+  if [[ ! -f "$RELEASE_DIR/$required" ]]; then
+    echo "Release validation failed: missing $required" >&2
+    rm -rf "$RELEASE_DIR"
+    exit 3
+  fi
+done
 
-if ! grep -q 'noindex,nofollow' "$RELEASE_DIR/index.html"; then
-  echo "Pre-production gate failed: noindex,nofollow missing" >&2
+if ! grep -q '湘ICP备2026041143号-1' "$RELEASE_DIR/index.html"; then
+  echo "Release validation failed: ICP number missing from homepage" >&2
   rm -rf "$RELEASE_DIR"
   exit 4
 fi
 
-if ! grep -Eq '^Disallow:[[:space:]]*/[[:space:]]*$' "$RELEASE_DIR/robots.txt"; then
-  echo "Pre-production gate failed: robots.txt must disallow all" >&2
+if ! grep -q '<urlset' "$RELEASE_DIR/sitemap.xml"; then
+  echo "Release validation failed: sitemap is invalid" >&2
   rm -rf "$RELEASE_DIR"
   exit 5
 fi
@@ -44,8 +46,8 @@ ln -sfn "$RELEASE_DIR" "$SITE_ROOT/current"
 sudo nginx -t
 sudo systemctl reload nginx
 
-HTTP_CODE="$(curl -sS -o /tmp/qilylean-cn-health.html -w '%{http_code}' http://127.0.0.1:8080/ || true)"
-if [[ "$HTTP_CODE" != "200" ]]; then
+HTTP_CODE="$(curl -sS -o /tmp/qilylean-cn-health.html -w '%{http_code}' -H 'Host: qilylean.cn' http://127.0.0.1/ || true)"
+if [[ "$HTTP_CODE" != "200" && "$HTTP_CODE" != "301" && "$HTTP_CODE" != "302" ]]; then
   echo "Health check failed with HTTP $HTTP_CODE" >&2
   if [[ -L "$SITE_ROOT/previous" ]]; then
     ln -sfn "$(readlink -f "$SITE_ROOT/previous")" "$SITE_ROOT/current"
@@ -61,4 +63,4 @@ find "$SITE_ROOT/releases" -mindepth 1 -maxdepth 1 -type d -printf '%T@ %p\n' \
   | xargs -r rm -rf
 
 echo "Release deployed: $RELEASE_ID"
-echo "Health check: HTTP 200 on 127.0.0.1:8080"
+echo "Health check: HTTP $HTTP_CODE for qilylean.cn"
