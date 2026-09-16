@@ -25,7 +25,7 @@ html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-br
   font-size:20px!important;
   line-height:1.72!important;
 }
-html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,.meta,.article-meta,.status,.tag,.subnav a,.toc a,.logic span,figcaption,time,.footer-links a){
+html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,.meta,.article-meta,.status,.tag,.subnav a,.toc a,.logic span,figcaption,time,.footer-inner a){
   font-size:var(--qily-cn-small)!important;
   line-height:1.55!important;
 }
@@ -109,7 +109,7 @@ html:root body .tag{
 }
 html:root body .subnav a{padding:7px 11px!important;font-size:17px!important}
 
-/* Persistent China-site footer: fixed identity / navigation / ICP strip. */
+/* Shared fixed footer authority: one DOM pattern, one visual resource across the China site. */
 html:root body .footer{
   position:fixed!important;
   left:0!important;
@@ -136,30 +136,24 @@ html:root body .footer-inner{
   gap:14px 24px!important;
   padding:0!important;
 }
-html:root body .footer-inner>span,
-html:root body .footer-copy{
+html:root body .footer-inner>span{
   font-size:18px!important;
   line-height:1.35!important;
   font-weight:700!important;
 }
-html:root body .footer-links{
-  display:flex!important;
-  align-items:center!important;
-  flex-wrap:wrap!important;
-  gap:16px!important;
-}
-html:root body .footer-links a{
+html:root body .footer-inner a{
   color:#fff!important;
   font-size:18px!important;
   line-height:1.35!important;
   font-weight:850!important;
-  text-decoration:none!important;
-}
-html:root body .footer-links a:hover,
-html:root body .footer-links a:focus-visible{
-  color:#ffe39b!important;
   text-decoration:underline!important;
   text-underline-offset:4px!important;
+  text-decoration-thickness:1px!important;
+}
+html:root body .footer-inner a:hover,
+html:root body .footer-inner a:focus-visible{
+  color:#ffe39b!important;
+  text-decoration-thickness:2px!important;
 }
 
 @media(max-width:900px){
@@ -180,9 +174,7 @@ html:root body .footer-links a:focus-visible{
     padding:12px 0!important;
   }
   html:root body .footer-inner>span,
-  html:root body .footer-copy,
-  html:root body .footer-links a{font-size:17px!important}
-  html:root body .footer-links{gap:10px 14px!important}
+  html:root body .footer-inner a{font-size:17px!important}
 }
 @media(max-width:620px){
   :root{--qily-cn-body:19px;--qily-cn-small:17px;--qily-cn-h1:clamp(32px,9vw,41px);--qily-cn-h2:clamp(27px,7.5vw,34px)}
@@ -198,5 +190,4 @@ html:root body .footer-links a:focus-visible{
   html:root body .footer{position:static!important;box-shadow:none!important}
 }
 
-/* Production publish marker: CN fixed-footer VI V4. */
-/* Production deploy marker: fixed footer release requested after sitewide cache-bust rollout. */
+/* Production publish marker: CN fixed-footer shared-resource VI V5. */
