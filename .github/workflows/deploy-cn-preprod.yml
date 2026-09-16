@@ -31,8 +31,16 @@ jobs:
           test -f cn-site/robots.txt
           test -f cn-site/favicon.ico
           test -f cn-site/assets/site.css
+          test -f cn-site/scripts/validate-personal-content.sh
           grep -q 'noindex,nofollow' cn-site/index.html
           grep -Eq '^Disallow:[[:space:]]*/[[:space:]]*$' cn-site/robots.txt
+
+      - name: Mainland personal-site compliance gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x cn-site/scripts/validate-personal-content.sh
+          cn-site/scripts/validate-personal-content.sh cn-site
 
       - name: Build release archive
         shell: bash
