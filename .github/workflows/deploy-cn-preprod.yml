@@ -32,6 +32,8 @@ jobs:
           test -f cn-site/favicon.ico
           test -f cn-site/assets/site.css
           test -f cn-site/scripts/validate-personal-content.sh
+          test -f cn-site/scripts/activate-public-http.sh
+          test -f cn-site/nginx/qilylean.cn.conf
           grep -q 'noindex,nofollow' cn-site/index.html
           grep -Eq '^Disallow:[[:space:]]*/[[:space:]]*$' cn-site/robots.txt
 
@@ -74,6 +76,8 @@ jobs:
           scp -i ~/.ssh/qilylean_cn /tmp/qilylean-cn-site.tar.gz "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean-cn-site.tar.gz"
           scp -i ~/.ssh/qilylean_cn cn-site/scripts/server-bootstrap.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/bootstrap-qilylean-cn.sh"
           scp -i ~/.ssh/qilylean_cn cn-site/scripts/deploy-release.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/deploy-qilylean-cn.sh"
+          scp -i ~/.ssh/qilylean_cn cn-site/scripts/activate-public-http.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/activate-qilylean-cn-http.sh"
+          scp -i ~/.ssh/qilylean_cn cn-site/nginx/qilylean.cn.conf "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean.cn.conf"
 
       - name: Bootstrap server when required
         shell: bash
@@ -97,3 +101,14 @@ jobs:
           RELEASE_ID="${GITHUB_SHA::12}"
           ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
             "chmod +x /tmp/deploy-qilylean-cn.sh && /tmp/deploy-qilylean-cn.sh /tmp/qilylean-cn-site.tar.gz '$RELEASE_ID'"
+
+      - name: Activate public HTTP listener
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+            "chmod +x /tmp/activate-qilylean-cn-http.sh && /tmp/activate-qilylean-cn-http.sh /tmp/qilylean.cn.conf"
