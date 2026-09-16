@@ -1,4 +1,4 @@
-name: Upgrade QilyLean CN VI V6 Shared Footer
+name: Upgrade QilyLean CN VI V7 Shared Footer
 
 on:
   push:
@@ -28,20 +28,23 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_target = '<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v3">'
+          css_target = '<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v4">'
+          css_pattern = re.compile(r'\s*<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">\s*')
           footer_target = '<footer class="footer"><div class="footer-inner"><span>QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">湘ICP备2026041143号-1</a></span></div></footer>'
           changed = 0
           footer_count = 0
+
           for path in files:
               text = path.read_text(encoding='utf-8')
-              out = re.sub(
-                  r'<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">',
-                  css_target,
-                  text,
-              )
+              out = css_pattern.sub('\n', text)
+              if '</head>' not in out:
+                  raise SystemExit(f'Missing </head>: {path}')
+              out = out.replace('</head>', f'  {css_target}\n</head>', 1)
+
               if re.search(r'<footer class="footer">.*?</footer>', out, flags=re.S):
                   out = re.sub(r'<footer class="footer">.*?</footer>', footer_target, out, count=1, flags=re.S)
                   footer_count += 1
+
               if out != text:
                   path.write_text(out, encoding='utf-8')
                   changed += 1
@@ -64,17 +67,33 @@ jobs:
           set -euo pipefail
           test -f cn-site/assets/qilylean-vi-v1.css
           test -f cn-site/assets/qilylean-vi-v2.css
-          count=$(grep -R --include='*.html' -l 'qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v3' cn-site | wc -l)
-          test "$count" -ge 17
-          footer_count=$(grep -R --include='*.html' -l 'QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/' cn-site | wc -l)
-          test "$footer_count" -eq "$count"
-          ! grep -R --include='*.html' -n 'footer-links' cn-site
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          files = sorted(Path('cn-site').rglob('*.html'))
+          css_marker = 'qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v4'
+          footer_marker = 'QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
+          bad = []
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+              css_count = text.count(css_marker)
+              footer_count = text.count(footer_marker)
+              footer_tags = len(re.findall(r'<footer class="footer">', text))
+              if css_count != 1 or footer_count != 1 or footer_tags != 1 or 'footer-links' in text:
+                  bad.append((str(path), css_count, footer_count, footer_tags))
+          if bad:
+              raise SystemExit(f'Shared footer normalization failed: {bad}')
+          if len(files) < 17:
+              raise SystemExit(f'Expected at least 17 China HTML files, got {len(files)}')
+          print(f'One shared footer + one shared V2 link verified on {len(files)} page(s).')
+          PY
           ! grep -q 'body .footer' cn-site/assets/qilylean-vi-v1.css
           ! grep -q 'footer-links' cn-site/assets/qilylean-vi-v1.css
           grep -q "qilylean-vi-v1.css?v=20260916-cn-base-v4" cn-site/assets/qilylean-vi-v2.css
           grep -q 'Shared fixed footer authority' cn-site/assets/qilylean-vi-v2.css
           grep -q 'html:root body .footer-inner a' cn-site/assets/qilylean-vi-v2.css
-          echo "CN shared footer verification passed on $count page(s): one markup + one CSS authority."
+          echo 'CN footer authority verification passed: one component, one stylesheet owner.'
 
       - name: Commit rollout safely
         shell: bash
@@ -87,7 +106,7 @@ jobs:
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
           git add cn-site
-          git commit -m 'style(cn): keep one shared fixed-footer component'
+          git commit -m 'style(cn): deduplicate shared fixed-footer resource'
           for attempt in 1 2 3; do
             git fetch origin main
             git rebase origin/main
