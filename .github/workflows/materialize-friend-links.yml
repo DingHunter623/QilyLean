@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'scripts/enforce-friend-links-and-layout.js'
+      - 'scripts/site-friend-links-layout-guard.js'
       - '.github/workflows/materialize-friend-links.yml'
   workflow_dispatch:
 
@@ -36,14 +37,22 @@ jobs:
       - name: Materialize friend-links baseline
         run: node scripts/enforce-friend-links-and-layout.js
 
-      - name: Verify hao123 link and layout contract
+      - name: Verify friend-links, China knowledge bridge and 1180px contract
         shell: bash
         run: |
           set -euo pipefail
           grep -q 'hao123|hao123 上网导航|网址导航|中国|https://www.hao123.com/' links/index.html
           grep -q "'网址导航'" links/index.html
           grep -q '友情链接｜全球科技企业100强' links/index.html
-          grep -q 'width:min(1240px,100%)' links/index.html
+          grep -q 'id="qilyChinaKnowledgeBridge"' links/index.html
+          grep -q 'href="https://qilylean.cn/"' links/index.html
+          grep -q '不作为“全球科技企业100强”的企业收录项或排名依据' links/index.html
+          grep -q 'width:min(1180px,100%)' links/index.html
+          if grep -Eq 'width:min\((1240|1360|1560)px,100%\)' links/index.html; then
+            echo 'Legacy non-1180 content axis returned on /links/.' >&2
+            exit 1
+          fi
+          node scripts/site-friend-links-layout-guard.js
           git diff --check
 
       - name: Commit materialized friend-links page
@@ -57,6 +66,6 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add links/index.html index.html
-          git commit -m 'Links: materialize hao123 friend link [skip ci]'
+          git commit -m 'Links: materialize China knowledge bridge [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
