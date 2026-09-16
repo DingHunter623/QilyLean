@@ -1,0 +1,73 @@
+name: Fix QilyLean CN trust-card balance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/fix-cn-trust-balance-v1.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Equalize trust cards and bust China-site CSS cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          css_path = Path('cn-site/assets/site.css')
+          css = css_path.read_text(encoding='utf-8')
+          old = '.trust{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;width:100%}'
+          new = '.trust{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;width:100%;align-items:stretch}'
+          if old not in css and new not in css:
+              raise SystemExit('Expected trust-grid rule not found in site.css')
+          css = css.replace(old, new)
+          if '/* QILY-CN-TRUST-BALANCE-V1 */' not in css:
+              css += '\n/* QILY-CN-TRUST-BALANCE-V1 */\n.trust-box{height:100%}\n'
+          css_path.write_text(css, encoding='utf-8')
+
+          old_ver = '/assets/site.css?v=20260916-cn-personal-v1'
+          new_ver = '/assets/site.css?v=20260916-cn-personal-v2'
+          changed = 0
+          for path in Path('cn-site').rglob('*.html'):
+              text = path.read_text(encoding='utf-8')
+              if old_ver in text:
+                  path.write_text(text.replace(old_ver, new_ver), encoding='utf-8')
+                  changed += 1
+          if changed == 0:
+              print('Cache-bust version already current or no HTML references changed.')
+          else:
+              print(f'Updated site.css cache-bust reference in {changed} HTML files.')
+          PY
+
+      - name: Verify visual contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'grid-template-columns:repeat(2,minmax(0,1fr))' cn-site/assets/site.css
+          grep -q '/assets/site.css?v=20260916-cn-personal-v2' cn-site/index.html
+          grep -q '/assets/site.css?v=20260916-cn-personal-v2' cn-site/about/index.html
+
+      - name: Commit visual fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add cn-site/assets/site.css cn-site
+          if git diff --cached --quiet; then
+            echo 'No changes required.'
+            exit 0
+          fi
+          git commit -m 'style(cn): equalize trust cards and refresh CSS cache'
+          git push origin main
