@@ -21,10 +21,18 @@ if grep -RniE --include='*.html' --include='*.htm' --include='*.xml' --include='
   exit 1
 fi
 
-if grep -RniE --include='*.html' --include='*.htm' --include='*.xml' --include='*.json' --include='*.js' \
-  --exclude-dir='scripts' 'https?://(www\.)?qilylean\.com([/"'"'"'?#]|$)' "$ROOT_DIR"; then
-  echo "ERROR: Mainland personal site must not link to QilyLean international commercial pages."
-  exit 1
+# The CN personal site may reference exactly one curated, non-commercial bridge on the
+# international domain. Any other qilylean.com URL is treated as a commercial-routing risk.
+COM_LINKS="$(grep -RhoE --include='*.html' --include='*.htm' --include='*.xml' --include='*.json' --include='*.js' \
+  --exclude-dir='scripts' 'https?://(www\.)?qilylean\.com[^\"'"'"'<>[:space:]]*' "$ROOT_DIR" || true)"
+if [[ -n "$COM_LINKS" ]]; then
+  while IFS= read -r url; do
+    [[ -z "$url" ]] && continue
+    if [[ "$url" != "https://qilylean.com/global-knowledge/" ]]; then
+      echo "ERROR: Mainland personal site contains a non-whitelisted QilyLean international URL: $url"
+      exit 1
+    fi
+  done <<< "$COM_LINKS"
 fi
 
 if grep -RniE --include='*.html' --include='*.htm' --include='*.xml' --include='*.json' --include='*.js' \
