@@ -1,7 +1,8 @@
 /* QilyLean China Unified VI V1 | 2026-09-16
- * Final China-site visual authority layer.
+ * Base China-site visual layer.
  * Mirrors the international QilyLean VI: canonical brand logo, brand-home feedback,
- * readable typography floors, restrained heading ceiling, VI surfaces and footer colours.
+ * readable typography floors, restrained heading ceiling and VI surfaces.
+ * Footer is intentionally NOT defined here; V2 is the single footer authority.
  */
 :root{
   --qily-cn-forest:#0f4b5a;
@@ -22,7 +23,7 @@
 }
 
 /* 01 | Same public content axis as the international site. */
-html:root body :is(.header-inner,.hero-inner,.content,.footer-inner){
+html:root body :is(.header-inner,.hero-inner,.content){
   width:min(var(--qily-cn-axis),calc(100% - (var(--qily-gutter,clamp(18px,2.2vw,56px))*2)))!important;
   max-width:var(--qily-cn-axis)!important;
   margin-left:auto!important;
@@ -186,19 +187,7 @@ html:root body main .hero .btn:not(.primary){color:#fff!important;-webkit-text-f
   html:root body :is(a.btn,button.btn):hover{background:var(--qily-cn-gold-soft)!important;color:var(--qily-cn-ink)!important;-webkit-text-fill-color:var(--qily-cn-ink)!important;border-color:var(--qily-cn-gold)!important;box-shadow:0 10px 24px rgba(15,75,90,.18)!important}
 }
 
-/* 07 | Footer must use QilyLean VI blue-green, never black. */
-html:root body .footer{
-  color:#fff!important;
-  background:var(--qily-cn-forest)!important;
-  border-top:3px solid var(--qily-cn-gold)!important;
-}
-html:root body .footer-inner{min-height:84px!important;padding:24px 0!important;align-items:center!important;font-size:18px!important;line-height:1.6!important}
-html:root body .footer :is(span,a){color:#fff!important;-webkit-text-fill-color:#fff!important}
-html:root body .footer a{font-weight:850!important;text-decoration-color:var(--qily-cn-gold-soft)!important;text-underline-offset:4px!important}
-html:root body .footer a:hover,
-html:root body .footer a:focus-visible{color:var(--qily-cn-gold-soft)!important;-webkit-text-fill-color:var(--qily-cn-gold-soft)!important}
-
-/* 08 | Responsive behaviour follows the international navigation/readability contract. */
+/* 07 | Responsive behaviour follows the international navigation/readability contract. */
 @media(max-width:900px){
   html:root body .header-inner{align-items:flex-start!important;flex-direction:column!important;gap:5px!important;padding:8px 0!important}
   html:root body header.site-header .brand{width:142px!important;height:27px!important}
@@ -211,24 +200,21 @@ html:root body .footer a:focus-visible{color:var(--qily-cn-gold-soft)!important;
   html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p){font-size:19px!important}
   html:root body header.site-header .brand{width:126px!important;height:23px!important}
   html:root body header.site-header .brand:is(:hover,:focus-visible)::after{padding:0 6px!important;font-size:15px!important}
-  html:root body .footer-inner{font-size:18px!important}
 }
 
-/* 09 | Boss-readable typography floor: readability outranks density. */
+/* 08 | Boss-readable typography floor: readability outranks density. */
 html:root body{font-size:21px!important;line-height:1.78!important}
 html:root body main :is(.hero .lead,.page-hero p){font-size:clamp(21px,1.6vw,23px)!important;line-height:1.78!important}
 html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p,.callout,.formula){font-size:21px!important;line-height:1.8!important}
 html:root body main :is(.meta,.article-meta,.toc a,.notice,.status,.logic span,.portal-card .meta){font-size:19px!important;line-height:1.68!important}
 html:root body main :is(.logic b,.toc b){font-size:20px!important;line-height:1.5!important}
-html:root body :is(.breadcrumbs,.tag,.subnav a,figcaption,time,.footer-links a){font-size:18px!important;line-height:1.6!important}
+html:root body :is(.breadcrumbs,.tag,.subnav a,figcaption,time){font-size:18px!important;line-height:1.6!important}
 html:root body :is(th,td,label,input,select,textarea,button,option){font-size:20px!important;line-height:1.55!important}
-html:root body .footer-inner{font-size:19px!important;line-height:1.65!important}
 html:root body main .brand-domain{margin:3px 0 10px!important;color:var(--qily-cn-forest)!important;-webkit-text-fill-color:var(--qily-cn-forest)!important;font-size:20px!important;line-height:1.45!important;font-weight:850!important;letter-spacing:.01em!important}
 @media(max-width:620px){
   html:root body{font-size:20px!important}
   html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p,.callout,.formula){font-size:20px!important}
   html:root body main :is(.meta,.article-meta,.toc a,.notice,.status,.logic span,.portal-card .meta,.breadcrumbs,.tag,.subnav a,figcaption,time){font-size:18px!important}
-  html:root body .footer-inner{font-size:18px!important}
 }
 
 @media(prefers-reduced-motion:reduce){
