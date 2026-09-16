@@ -1,0 +1,219 @@
+/* QilyLean China Unified VI V1 | 2026-09-16
+ * Final China-site visual authority layer.
+ * Mirrors the international QilyLean VI: canonical brand logo, brand-home feedback,
+ * readable typography floors, restrained heading ceiling, VI surfaces and footer colours.
+ */
+:root{
+  --qily-cn-forest:#0f4b5a;
+  --qily-cn-deep:#073c47;
+  --qily-cn-teal:#178b94;
+  --qily-cn-gold:#caa15f;
+  --qily-cn-gold-soft:#ffe39b;
+  --qily-cn-ink:#182420;
+  --qily-cn-copy:#3f5e5d;
+  --qily-cn-line:#bfd6d2;
+  --qily-cn-page:#eef7f5;
+  --qily-cn-alt:#f4faf8;
+  --qily-cn-white:#fff;
+  --qily-cn-axis:1180px;
+  --qily-cn-radius:12px;
+  --qily-cn-shadow:0 10px 28px rgba(15,75,90,.10);
+  --qily-cn-h1:clamp(34px,3.25vw,52px);
+}
+
+/* 01 | Same public content axis as the international site. */
+html:root body :is(.header-inner,.hero-inner,.content,.footer-inner){
+  width:min(var(--qily-cn-axis),calc(100% - (var(--qily-gutter,clamp(18px,2.2vw,56px))*2)))!important;
+  max-width:var(--qily-cn-axis)!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+
+/* 02 | Canonical international-site QilyLean logo. */
+html:root body header.site-header .brand{
+  position:relative!important;
+  display:block!important;
+  flex:0 0 auto!important;
+  width:clamp(168px,14vw,226px)!important;
+  height:34px!important;
+  margin:0!important;
+  overflow:hidden!important;
+  text-indent:-9999px!important;
+  white-space:nowrap!important;
+  color:transparent!important;
+  -webkit-text-fill-color:transparent!important;
+  background-color:transparent!important;
+  background-image:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5')!important;
+  background-position:left center!important;
+  background-size:contain!important;
+  background-repeat:no-repeat!important;
+  border:1.5px solid transparent!important;
+  border-radius:8px!important;
+  box-sizing:border-box!important;
+}
+html:root body header.site-header .brand span{display:inline!important;color:inherit!important}
+
+/* Brand home feedback: hover/focus replaces logo artwork with 返回首页, matching international site. */
+@media (hover:hover) and (pointer:fine){
+  html:root body header.site-header .brand:hover{
+    background-color:#fff6df!important;
+    background-image:none!important;
+    border-color:var(--qily-cn-gold)!important;
+    box-shadow:0 7px 18px rgba(15,75,90,.14)!important;
+    filter:none!important;
+    transform:none!important;
+  }
+}
+html:root body header.site-header .brand:focus-visible{
+  background-color:#fff6df!important;
+  background-image:none!important;
+  border-color:var(--qily-cn-gold)!important;
+  box-shadow:0 0 0 3px rgba(202,161,95,.24),0 7px 18px rgba(15,75,90,.14)!important;
+  outline:none!important;
+  filter:none!important;
+  transform:none!important;
+}
+html:root body header.site-header .brand:is(:hover,:focus-visible)::after{
+  content:'返回首页'!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:2!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 10px!important;
+  color:var(--qily-cn-forest)!important;
+  -webkit-text-fill-color:var(--qily-cn-forest)!important;
+  background:transparent!important;
+  font-size:clamp(16px,1.05vw,19px)!important;
+  font-weight:950!important;
+  line-height:1!important;
+  letter-spacing:.06em!important;
+  text-indent:0!important;
+  text-shadow:none!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+}
+
+/* 03 | International-site header and navigation typography. */
+html:root body{font-size:20px!important;line-height:1.75!important;color:var(--qily-cn-ink)!important;background:var(--qily-cn-page)!important}
+html:root body .site-header{background:rgba(255,255,255,.97)!important;border-bottom:1px solid var(--qily-cn-line)!important}
+html:root body .header-inner{min-height:76px!important;gap:24px!important}
+html:root body .nav{gap:8px!important}
+html:root body .nav>a[href]{
+  min-height:42px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:8px 11px!important;
+  border-radius:8px!important;
+  font-size:20px!important;
+  line-height:1.22!important;
+  font-weight:900!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+  color:var(--qily-cn-ink)!important;
+  -webkit-text-fill-color:var(--qily-cn-ink)!important;
+}
+html:root body .nav>a[href]:hover,
+html:root body .nav>a[href]:focus-visible{
+  color:var(--qily-cn-forest)!important;
+  -webkit-text-fill-color:var(--qily-cn-forest)!important;
+  background:#e9f4f2!important;
+  outline:2px solid rgba(202,161,95,.55)!important;
+  outline-offset:1px!important;
+}
+
+/* 04 | Heading ceiling and readable body hierarchy match the international site. */
+html:root body main :is(.hero h1,.page-hero h1,h1){
+  font-size:var(--qily-cn-h1)!important;
+  line-height:1.08!important;
+  letter-spacing:-.025em!important;
+  font-weight:950!important;
+  max-width:none!important;
+}
+html:root body main :is(.hero .lead,.page-hero p){font-size:clamp(20px,1.55vw,22px)!important;line-height:1.75!important}
+html:root body main :is(.eyebrow,.section-head small,.portal-card small){
+  font-size:20px!important;
+  line-height:1.5!important;
+  color:#b88b45!important;
+  -webkit-text-fill-color:#b88b45!important;
+  font-weight:950!important;
+  letter-spacing:.035em!important;
+  opacity:1!important;
+}
+html:root body main :is(.hero,.page-hero) :is(.eyebrow,small){color:var(--qily-cn-gold-soft)!important;-webkit-text-fill-color:var(--qily-cn-gold-soft)!important}
+html:root body main :is(.section-head h2,.article-body h2){font-size:clamp(32px,3vw,48px)!important;line-height:1.16!important;font-weight:950!important}
+html:root body main :is(.portal-card h3,.article-link h3,.trust-box h3,.article-body h3){font-size:24px!important;line-height:1.35!important;font-weight:900!important}
+html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p,.callout,.formula){
+  font-size:20px!important;
+  line-height:1.75!important;
+  color:var(--qily-cn-copy)!important;
+  -webkit-text-fill-color:var(--qily-cn-copy)!important;
+}
+html:root body main :is(.meta,.article-meta,.toc a,.notice,.status,.logic span,.portal-card .meta){
+  font-size:17px!important;
+  line-height:1.62!important;
+  opacity:1!important;
+}
+html:root body main :is(.logic b,.toc b){font-size:19px!important;line-height:1.45!important}
+html:root body :is(th,td,label,input,select,textarea,button,option){font-size:20px!important}
+
+/* 05 | Same card/surface system as international QilyLean. */
+html:root body main :is(.portal-card,.card,.trust-box,.article-link,.knowledge-bridge,.toc,.formula){
+  border-color:var(--qily-cn-line)!important;
+  border-radius:var(--qily-cn-radius)!important;
+  box-shadow:var(--qily-cn-shadow)!important;
+  background:var(--qily-cn-white)!important;
+}
+html:root body main :is(.section.alt){background:var(--qily-cn-alt)!important}
+html:root body main :is(.portal-card,.trust-box,.article-link,.knowledge-bridge,.toc) :is(h2,h3,h4,strong){color:var(--qily-cn-forest)!important;-webkit-text-fill-color:var(--qily-cn-forest)!important}
+
+/* 06 | Action geometry and colour roles. */
+html:root body :is(a.btn,button.btn){
+  min-height:48px!important;
+  padding:10px 18px!important;
+  border-radius:var(--qily-cn-radius)!important;
+  font-size:20px!important;
+  line-height:1.35!important;
+  font-weight:900!important;
+  box-sizing:border-box!important;
+}
+html:root body main .hero .btn.primary{color:var(--qily-cn-ink)!important;-webkit-text-fill-color:var(--qily-cn-ink)!important;background:var(--qily-cn-gold-soft)!important;border-color:var(--qily-cn-gold)!important}
+html:root body main .hero .btn:not(.primary){color:#fff!important;-webkit-text-fill-color:#fff!important;background:transparent!important;border-color:rgba(255,227,155,.58)!important}
+@media(hover:hover) and (pointer:fine){
+  html:root body :is(a.btn,button.btn):hover{background:var(--qily-cn-gold-soft)!important;color:var(--qily-cn-ink)!important;-webkit-text-fill-color:var(--qily-cn-ink)!important;border-color:var(--qily-cn-gold)!important;box-shadow:0 10px 24px rgba(15,75,90,.18)!important}
+}
+
+/* 07 | Footer must use QilyLean VI blue-green, never black. */
+html:root body .footer{
+  color:#fff!important;
+  background:var(--qily-cn-forest)!important;
+  border-top:3px solid var(--qily-cn-gold)!important;
+}
+html:root body .footer-inner{min-height:84px!important;padding:24px 0!important;align-items:center!important;font-size:18px!important;line-height:1.6!important}
+html:root body .footer :is(span,a){color:#fff!important;-webkit-text-fill-color:#fff!important}
+html:root body .footer a{font-weight:850!important;text-decoration-color:var(--qily-cn-gold-soft)!important;text-underline-offset:4px!important}
+html:root body .footer a:hover,
+html:root body .footer a:focus-visible{color:var(--qily-cn-gold-soft)!important;-webkit-text-fill-color:var(--qily-cn-gold-soft)!important}
+
+/* 08 | Responsive behaviour follows the international navigation/readability contract. */
+@media(max-width:900px){
+  html:root body .header-inner{align-items:flex-start!important;flex-direction:column!important;gap:5px!important;padding:8px 0!important}
+  html:root body header.site-header .brand{width:142px!important;height:27px!important}
+  html:root body .nav{width:100%!important;justify-content:flex-start!important;overflow-x:auto!important;overflow-y:hidden!important;flex-wrap:nowrap!important;-webkit-overflow-scrolling:touch!important;scrollbar-width:thin!important}
+  html:root body .nav>a[href]{flex:0 0 auto!important;min-height:44px!important;font-size:20px!important}
+}
+@media(max-width:620px){
+  html:root body main :is(.hero h1,.page-hero h1,h1){font-size:clamp(34px,9.6vw,43px)!important}
+  html:root body main :is(.eyebrow,.section-head small,.portal-card small){font-size:18px!important}
+  html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p){font-size:19px!important}
+  html:root body header.site-header .brand{width:126px!important;height:23px!important}
+  html:root body header.site-header .brand:is(:hover,:focus-visible)::after{padding:0 6px!important;font-size:15px!important}
+  html:root body .footer-inner{font-size:18px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html:root body *{scroll-behavior:auto!important;transition:none!important}
+}
