@@ -1,4 +1,4 @@
-name: Upgrade QilyLean CN VI V3
+name: Upgrade QilyLean CN VI V4 Fixed Footer
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Roll V3 VI across every China HTML page
+      - name: Roll fixed-footer VI across every China HTML page
         shell: bash
         run: |
           set -euo pipefail
@@ -28,7 +28,7 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          target = '<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260916-cn-boss-vi-v3">'
+          target = '<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v1">'
           changed = 0
           for path in files:
               text = path.read_text(encoding='utf-8')
@@ -40,20 +40,21 @@ jobs:
               if out != text:
                   path.write_text(out, encoding='utf-8')
                   changed += 1
-          print(f'China VI V3 linked on {changed} page(s); scanned {len(files)} HTML files.')
+          print(f'China fixed-footer VI linked on {changed} page(s); scanned {len(files)} HTML files.')
           PY
 
-      - name: Verify China visual authority
+      - name: Verify China fixed-footer visual authority
         shell: bash
         run: |
           set -euo pipefail
           test -f cn-site/assets/qilylean-vi-v2.css
           ! grep -R --include='*.html' -n 'qilylean-vi-v1.css' cn-site
-          count=$(grep -R --include='*.html' -l 'qilylean-vi-v2.css?v=20260916-cn-boss-vi-v3' cn-site | wc -l)
+          count=$(grep -R --include='*.html' -l 'qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v1' cn-site | wc -l)
           test "$count" -ge 17
-          grep -q '标准作业顺序' cn-site/standardization/index.html
-          grep -q '同时保障客户端质量与制造端成本' cn-site/standardization/index.html
-          echo "CN VI V3 verification passed on $count page(s)."
+          grep -q 'position:fixed!important' cn-site/assets/qilylean-vi-v2.css
+          grep -q -- '--qily-cn-fixed-footer-h:78px' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'padding-bottom:calc(var(--qily-cn-fixed-footer-h)' cn-site/assets/qilylean-vi-v2.css
+          echo "CN fixed-footer VI verification passed on $count page(s)."
 
       - name: Commit rollout
         shell: bash
@@ -66,5 +67,5 @@ jobs:
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
           git add cn-site
-          git commit -m 'style(cn): apply boss-readable VI V3 sitewide'
+          git commit -m 'style(cn): roll fixed footer VI sitewide'
           git push origin HEAD:main
