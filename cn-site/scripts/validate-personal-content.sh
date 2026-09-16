@@ -2,6 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="${1:-cn-site}"
+INDEX_FILE="$ROOT_DIR/index.html"
 
 mapfile -t FILES < <(find "$ROOT_DIR" -type f \( \
   -name '*.html' -o -name '*.htm' -o -name '*.xml' -o -name '*.json' -o \
@@ -23,12 +24,13 @@ fi
 
 # The CN personal site may reference exactly one curated, non-commercial bridge on the
 # international domain. Any other qilylean.com URL is treated as a commercial-routing risk.
+ALLOWED_GLOBAL_KNOWLEDGE_URL='https://qilylean.com/global-knowledge/'
 COM_LINKS="$(grep -RhoE --include='*.html' --include='*.htm' --include='*.xml' --include='*.json' --include='*.js' \
   --exclude-dir='scripts' 'https?://(www\.)?qilylean\.com[^\"'"'"'<>[:space:]]*' "$ROOT_DIR" || true)"
 if [[ -n "$COM_LINKS" ]]; then
   while IFS= read -r url; do
     [[ -z "$url" ]] && continue
-    if [[ "$url" != "https://qilylean.com/global-knowledge/" ]]; then
+    if [[ "$url" != "$ALLOWED_GLOBAL_KNOWLEDGE_URL" ]]; then
       echo "ERROR: Mainland personal site contains a non-whitelisted QilyLean international URL: $url"
       exit 1
     fi
@@ -41,4 +43,37 @@ if grep -RniE --include='*.html' --include='*.htm' --include='*.xml' --include='
   exit 1
 fi
 
+# Dual-site relationship contract: the CN homepage must remain self-canonical and may
+# only expose the isolated Global Knowledge page as its reciprocal language/knowledge bridge.
+if [[ ! -f "$INDEX_FILE" ]]; then
+  echo "ERROR: CN homepage is missing."
+  exit 1
+fi
+
+grep -Fq '<link rel="canonical" href="https://qilylean.cn/">' "$INDEX_FILE" || {
+  echo "ERROR: CN homepage canonical must remain https://qilylean.cn/."
+  exit 1
+}
+
+grep -Fq '<link rel="alternate" hreflang="zh-CN" href="https://qilylean.cn/">' "$INDEX_FILE" || {
+  echo "ERROR: CN zh-CN hreflang is missing."
+  exit 1
+}
+
+grep -Fq '<link rel="alternate" hreflang="en" href="https://qilylean.com/global-knowledge/">' "$INDEX_FILE" || {
+  echo "ERROR: CN knowledge-only international hreflang bridge is missing."
+  exit 1
+}
+
+grep -Fq '"@type":"WebSite"' "$INDEX_FILE" || {
+  echo "ERROR: CN WebSite structured data is missing."
+  exit 1
+}
+
+grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || {
+  echo "ERROR: CN structured-data association must point only to Global Knowledge."
+  exit 1
+}
+
 echo "CN personal-site non-commercial content gate passed."
+echo "CN dual-site knowledge-only association contract passed."
