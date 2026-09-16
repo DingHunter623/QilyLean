@@ -1,13 +1,13 @@
 /* QilyLean Curated Brief Unified Layout Standard
  * Canonical rule for EVERY curated brief:
- * - same sitewide content axis as the rest of QilyLean
+ * - same sitewide 1180px content axis as the rest of QilyLean
  * - content may differ; page width/layout framework may not
- * - no private 920/1080/etc. article axis, no per-issue hero width, no standalone layout
+ * - no private 920/1080/1220/1240/1560 article axis, no per-issue hero width, no standalone layout
  * - typography must follow one hierarchy; body/supporting text never outranks headings
  */
 
 :root{
-  --qily-brief-content-axis:var(--qily-wide-content,1560px);
+  --qily-brief-content-axis:var(--qily-wide-content,1180px);
   --qily-brief-gutter:var(--qily-wide-gutter,clamp(14px,2.2vw,40px));
   --qily-brief-media-axis:1040px;
 
@@ -125,7 +125,7 @@ html body.qily-knowledge-brief-page main[data-qily-knowledge-brief] :is(p,li,dd,
 }
 
 /* Diagrams stay inside the unified page axis but use a shared media scale.
-   This prevents 720px SVG viewBoxes from being enlarged to the full 1560px content axis,
+   This prevents compact SVG viewBoxes from being enlarged to the full 1180px content axis,
    which would make embedded SVG type visually larger than site headings. */
 html body.qily-knowledge-brief-page .lean-brief-diagram{
   width:min(100%,var(--qily-brief-media-axis))!important;
