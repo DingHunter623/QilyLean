@@ -1,0 +1,4 @@
+QilyLean international deployment marker
+scope=/links/ visible qilylean.cn China knowledge bridge
+policy=knowledge association only; not part of Global Technology Top 100 ranking
+content_axis=1180px
