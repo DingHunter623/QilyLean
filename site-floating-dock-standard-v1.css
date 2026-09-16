@@ -168,3 +168,20 @@ html body #floatDock.qily-float-dock [data-action="share"] .qily-share-label-url
     pointer-events:none!important;
   }
 }
+
+/* QILY-LINKS-RESOURCE-LEAD-OVERFLOW-CLOSURE-20260916:START
+ * International site /links/ resource-service lead must wrap inside the 1180px content axis.
+ * Overrides the historical >=1480px nowrap rule without changing the existing VI, card width or status-pill layout.
+ */
+html:root:root:root body .resource-service-head>div{
+  min-width:0!important;
+  max-width:100%!important;
+}
+html:root:root:root body .resource-service .resource-service-lead{
+  min-width:0!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+}
+/* QILY-LINKS-RESOURCE-LEAD-OVERFLOW-CLOSURE-20260916:END */
