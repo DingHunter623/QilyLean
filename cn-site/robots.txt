@@ -1,6 +1,7 @@
 User-agent: *
 Disallow: /
 
-# BOOTSTRAP ONLY
-# Remove Disallow only after company registration, domain enterprise verification,
-# ICP filing approval, HTTPS validation, and production release gate all pass.
+# PRELAUNCH LOCK
+# Keep blocked until ICP number is displayed, HTTPS is valid,
+# production networking is verified, content compliance passes,
+# and the public-release checklist is complete.
