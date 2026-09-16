@@ -214,6 +214,23 @@ html:root body .footer a:focus-visible{color:var(--qily-cn-gold-soft)!important;
   html:root body .footer-inner{font-size:18px!important}
 }
 
+/* 09 | Boss-readable typography floor: readability outranks density. */
+html:root body{font-size:21px!important;line-height:1.78!important}
+html:root body main :is(.hero .lead,.page-hero p){font-size:clamp(21px,1.6vw,23px)!important;line-height:1.78!important}
+html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p,.callout,.formula){font-size:21px!important;line-height:1.8!important}
+html:root body main :is(.meta,.article-meta,.toc a,.notice,.status,.logic span,.portal-card .meta){font-size:19px!important;line-height:1.68!important}
+html:root body main :is(.logic b,.toc b){font-size:20px!important;line-height:1.5!important}
+html:root body :is(.breadcrumbs,.tag,.subnav a,figcaption,time,.footer-links a){font-size:18px!important;line-height:1.6!important}
+html:root body :is(th,td,label,input,select,textarea,button,option){font-size:20px!important;line-height:1.55!important}
+html:root body .footer-inner{font-size:19px!important;line-height:1.65!important}
+html:root body main .brand-domain{margin:3px 0 10px!important;color:var(--qily-cn-forest)!important;-webkit-text-fill-color:var(--qily-cn-forest)!important;font-size:20px!important;line-height:1.45!important;font-weight:850!important;letter-spacing:.01em!important}
+@media(max-width:620px){
+  html:root body{font-size:20px!important}
+  html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p,.callout,.formula){font-size:20px!important}
+  html:root body main :is(.meta,.article-meta,.toc a,.notice,.status,.logic span,.portal-card .meta,.breadcrumbs,.tag,.subnav a,figcaption,time){font-size:18px!important}
+  html:root body .footer-inner{font-size:18px!important}
+}
+
 @media(prefers-reduced-motion:reduce){
   html:root body *{scroll-behavior:auto!important;transition:none!important}
 }
