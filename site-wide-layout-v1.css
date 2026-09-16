@@ -1,6 +1,6 @@
-/* QilyLean 2026-08-10：全站首屏、正文、卡片、工具区与页脚统一1560px内容轴 v8 */
+/* QilyLean 2026-09-16：全站首屏、正文、卡片、工具区与页脚统一1180px内容轴 v9 */
 :root{
-  --qily-wide-content:1560px;
+  --qily-wide-content:1180px;
   --qily-wide-gutter:clamp(14px,2.2vw,40px);
   --qily-grid-gap:clamp(14px,1.25vw,22px);
 }
@@ -358,7 +358,7 @@ article :where(p,li,dd,dt,blockquote),
 }
 
 /*
- * QilyLean商业交付档案子目录：强制跟随全站1560px内容轴。
+ * QilyLean商业交付档案子目录：强制跟随全站1180px内容轴。
  * 当前三个公开页面均带有本目录专属链接，因此用结构选择器限定作用域，避免影响其它项目页。
  */
 :is(
@@ -366,10 +366,10 @@ article :where(p,li,dd,dt,blockquote),
   main.main:has(a[href="/projects/qilylean-commercial-deliveries/"])
 ){
   width:min(
-    var(--qily-wide-content,1560px),
+    var(--qily-wide-content,1180px),
     calc(100% - var(--qily-wide-gutter,40px) - var(--qily-wide-gutter,40px))
   )!important;
-  max-width:var(--qily-wide-content,1560px)!important;
+  max-width:var(--qily-wide-content,1180px)!important;
   margin-left:auto!important;
   margin-right:auto!important;
   padding-top:clamp(28px,3vw,46px)!important;
