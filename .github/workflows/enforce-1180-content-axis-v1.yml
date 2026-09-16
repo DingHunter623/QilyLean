@@ -1,0 +1,52 @@
+name: Enforce 1180px Content Axis
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: qily-1180-content-axis-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  enforce:
+    if: ${{ !contains(github.event.head_commit.message || '', '[skip 1180-axis]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Normalize all public content frames to 1180px
+        run: node scripts/enforce-1180-content-axis-v1.js
+
+      - name: Validate diff
+        run: |
+          git diff --check
+          grep -Fq -- '--qily-content-axis:1180px!important' site-content-axis-v1.css
+          grep -Fq 'width:min(1180px,100%)' lean-production/index.html
+          grep -Fq 'width:min(1180px,100%)' links/index.html
+          grep -Fq -- '--qily-content-axis:1180px' cn-site/assets/site.css
+          test -f tools/pure-ddz/game/css/ddz-core-v155.css
+
+      - name: Commit normalized content axis
+        run: |
+          if git diff --quiet; then
+            echo 'No 1180px axis drift detected.'
+            exit 0
+          fi
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A
+          git commit -m 'style: normalize all public content frames to 1180px [skip 1180-axis]'
+          git push
