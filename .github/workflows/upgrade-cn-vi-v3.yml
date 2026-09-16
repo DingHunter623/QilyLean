@@ -1,4 +1,4 @@
-name: Upgrade QilyLean CN VI V5 Shared Footer
+name: Upgrade QilyLean CN VI V6 Shared Footer
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_target = '<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v2">'
+          css_target = '<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v3">'
           footer_target = '<footer class="footer"><div class="footer-inner"><span>QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">湘ICP备2026041143号-1</a></span></div></footer>'
           changed = 0
           footer_count = 0
@@ -45,6 +45,16 @@ jobs:
               if out != text:
                   path.write_text(out, encoding='utf-8')
                   changed += 1
+
+          v2 = root / 'assets' / 'qilylean-vi-v2.css'
+          css = v2.read_text(encoding='utf-8')
+          css = re.sub(
+              r"@import url\('/assets/qilylean-vi-v1\.css\?v=[^']+'\);",
+              "@import url('/assets/qilylean-vi-v1.css?v=20260916-cn-base-v4');",
+              css,
+              count=1,
+          )
+          v2.write_text(css, encoding='utf-8')
           print(f'Canonical shared footer found on {footer_count} page(s); changed {changed}; scanned {len(files)} HTML files.')
           PY
 
@@ -52,12 +62,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          test -f cn-site/assets/qilylean-vi-v1.css
           test -f cn-site/assets/qilylean-vi-v2.css
-          count=$(grep -R --include='*.html' -l 'qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v2' cn-site | wc -l)
+          count=$(grep -R --include='*.html' -l 'qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v3' cn-site | wc -l)
           test "$count" -ge 17
           footer_count=$(grep -R --include='*.html' -l 'QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/' cn-site | wc -l)
           test "$footer_count" -eq "$count"
           ! grep -R --include='*.html' -n 'footer-links' cn-site
+          ! grep -q 'body .footer' cn-site/assets/qilylean-vi-v1.css
+          ! grep -q 'footer-links' cn-site/assets/qilylean-vi-v1.css
+          grep -q "qilylean-vi-v1.css?v=20260916-cn-base-v4" cn-site/assets/qilylean-vi-v2.css
           grep -q 'Shared fixed footer authority' cn-site/assets/qilylean-vi-v2.css
           grep -q 'html:root body .footer-inner a' cn-site/assets/qilylean-vi-v2.css
           echo "CN shared footer verification passed on $count page(s): one markup + one CSS authority."
@@ -73,5 +87,5 @@ jobs:
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
           git add cn-site
-          git commit -m 'style(cn): enforce one canonical fixed footer sitewide'
+          git commit -m 'style(cn): keep one shared fixed-footer component'
           git push origin HEAD:main
