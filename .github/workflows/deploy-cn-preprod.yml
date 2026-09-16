@@ -121,3 +121,58 @@ jobs:
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
             "chmod +x /tmp/activate-qilylean-cn-http.sh && /tmp/activate-qilylean-cn-http.sh /tmp/qilylean.cn.conf"
+
+      - name: Verify CN IndexNow key is public
+        shell: bash
+        env:
+          INDEXNOW_KEY: b47ed759da519bd90586a7877122d7be
+        run: |
+          set -euo pipefail
+          for attempt in {1..30}; do
+            body="$(curl --location --fail --silent --show-error "https://qilylean.cn/$INDEXNOW_KEY.txt?deploy=$GITHUB_SHA-$attempt" || true)"
+            if [ "$body" = "$INDEXNOW_KEY" ]; then
+              echo "QilyLean CN IndexNow key is public."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "QilyLean CN IndexNow key was not reachable in time."
+          exit 1
+
+      - name: Submit QilyLean CN sitemap URLs through IndexNow
+        shell: bash
+        env:
+          INDEXNOW_KEY: b47ed759da519bd90586a7877122d7be
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+          import xml.etree.ElementTree as ET
+
+          ns = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+          root = ET.parse('cn-site/sitemap.xml').getroot()
+          urls = []
+          seen = set()
+          for node in root.findall('sm:url/sm:loc', ns):
+              url = (node.text or '').strip()
+              if url.startswith('https://qilylean.cn/') and url not in seen:
+                  urls.append(url)
+                  seen.add(url)
+
+          payload = json.dumps({
+              'host': 'qilylean.cn',
+              'key': os.environ['INDEXNOW_KEY'],
+              'keyLocation': f"https://qilylean.cn/{os.environ['INDEXNOW_KEY']}.txt",
+              'urlList': urls,
+          }).encode('utf-8')
+          request = urllib.request.Request(
+              'https://api.indexnow.org/indexnow',
+              data=payload,
+              headers={'Content-Type': 'application/json; charset=utf-8'},
+              method='POST',
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              print(f"IndexNow accepted {len(urls)} QilyLean CN URLs with HTTP {response.status}.")
+          PY
