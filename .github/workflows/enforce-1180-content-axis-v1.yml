@@ -6,47 +6,49 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: qily-1180-content-axis-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  enforce:
-    if: ${{ !contains(github.event.head_commit.message || '', '[skip 1180-axis]') }}
+  validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Normalize all public content frames to 1180px
-        run: node scripts/enforce-1180-content-axis-v1.js
-
-      - name: Validate diff
+      - name: Validate canonical 1180px authorities
         run: |
-          git diff --check
+          node --check scripts/enforce-1180-content-axis-v1.js
           grep -Fq -- '--qily-content-axis:1180px!important' site-content-axis-v1.css
-          grep -Fq 'width:min(1180px,100%)' lean-production/index.html
-          grep -Fq 'width:min(1180px,100%)' links/index.html
+          grep -Fq -- '--qily-site-content-width:1180px!important' site-content-axis-v1.css
+          grep -Fq 'FINAL SITEWIDE 1180PX AXIS CLOSURE' site-header-project-integrity-v2.css
+          grep -Fq -- '--qily-content-axis:1180px!important' site-header-project-integrity-v2.css
+          grep -Fq 'qily-resource-network__inner{width:min(1180px,100%);max-width:1180px' site-resource-network-v1.css
+          grep -Fq '全站 1180px 主内容宽度' scripts/enforce-friend-links-and-layout.js
+          grep -Fq "width:min(1180px,100%)" scripts/enforce-friend-links-and-layout.js
           grep -Fq -- '--qily-content-axis:1180px' cn-site/assets/site.css
+
+      - name: Validate problem pages inherit late 1180px authority
+        run: |
+          grep -Fq '/site-content-axis-v1.css' lean-production/index.html
+          grep -Fq '/site-header-project-integrity-v2.css' lean-production/index.html
+          grep -Fq '/site-content-axis-v1.css' links/index.html
+          grep -Fq '/site-header-project-integrity-v2.css' links/index.html
+          grep -Fq '/site-resource-network-v1.css' links/index.html
+
+      - name: Validate DDZ exception remains isolated
+        run: |
+          grep -Fq "explicitExcludedPrefix = 'tools/pure-ddz/'" scripts/enforce-1180-content-axis-v1.js
+          test -f tools/pure-ddz/index.html
           test -f tools/pure-ddz/game/css/ddz-core-v155.css
 
-      - name: Commit normalized content axis
-        run: |
-          if git diff --quiet; then
-            echo 'No 1180px axis drift detected.'
-            exit 0
-          fi
-          git config user.name 'QilyLean'
-          git config user.email 'DingHunter623@gmail.com'
-          git add -A
-          git commit -m 'style: normalize all public content frames to 1180px [skip 1180-axis]'
-          git push
+      - name: Validate repository diff hygiene
+        run: git diff --check
