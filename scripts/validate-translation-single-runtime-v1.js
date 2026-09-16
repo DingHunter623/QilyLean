@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-/* Google Translate single-runtime / unified language-menu gate | V33 + DDZ V155 fast route | 2026-09-03 */
+/* Google Translate single-runtime / unified language-menu gate | V34 + CN production isolation | 2026-09-16 */
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
@@ -12,7 +12,7 @@ const must=(source,token,label)=>{if(!source.includes(token))fail(`${label}: mis
 const forbid=(source,token,label)=>{if(source.includes(token))fail(`${label}: forbidden ${token}`);};
 const count=(source,pattern)=>(source.match(pattern)||[]).length;
 const DDZ_FAST_PATH='tools/pure-ddz/index.html';
-const CN_PREPRODUCTION_PATH='cn-site/index.html';
+const CN_SITE_PREFIX='cn-site/';
 
 const safe=read('site-translation-safe-runtime-v1.js');
 const publicCss=read('site-translation-public-ui-v1.css');
@@ -91,17 +91,15 @@ for(const file of siteRuntimeFiles){
 
 const htmlFiles=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=file=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(file);
-let audited=0,ddzFast=0,cnPreproduction=0;
+let audited=0,ddzFast=0,cnIndependent=0;
 for(const file of htmlFiles){
   const html=read(file);
   if(ownership(file)||!/<\/head>/i.test(html))continue;
-  audited++;
-  if(file===CN_PREPRODUCTION_PATH){
-    cnPreproduction++;
-    must(html,'<meta name="robots" content="noindex,nofollow,noarchive">','Mainland preproduction indexing lock');
-    must(html,'<link rel="canonical" href="https://qilylean.cn/">','Mainland preproduction canonical');
+  if(file.startsWith(CN_SITE_PREFIX)){
+    cnIndependent++;
     continue;
   }
+  audited++;
   if(file===DDZ_FAST_PATH&&html.includes('20260903-ddz-fast-knowledge-v155')){
     ddzFast++;
     must(html,'data-qily-ddz-fast-shell="v155"','DDZ deferred translator shell');
@@ -122,7 +120,7 @@ for(const file of htmlFiles){
 }
 if(audited<460)fail(`public-page coverage too low: ${audited}`);
 if(ddzFast!==1)fail(`expected exactly one DDZ V155 deferred-translation route, found ${ddzFast}`);
-if(cnPreproduction!==1)fail(`expected exactly one independently governed mainland preproduction route, found ${cnPreproduction}`);
+if(cnIndependent<1)fail('expected independently governed qilylean.cn production pages');
 
 const materializer=read('scripts/materialize-global-language-v3.js');
 must(materializer,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'materializer baseline');
@@ -131,4 +129,4 @@ must(materializer,"const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.
 must(materializer,"const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23'",'materializer redline cache');
 must(materializer,"const DDZ_FAST_PATH='tools/pure-ddz/index.html'",'DDZ fast-route isolation');
 
-console.log(`PASS: ${audited} governed pages retain one Google Translate V1.4 authority; standard pages load it post-page-load, DDZ V155 defers it until idle/user intent, and the noindex qilylean.cn preproduction route remains independently governed.`);
+console.log(`PASS: ${audited} international governed pages retain one Google Translate V1.4 authority; ${cnIndependent} qilylean.cn production pages are independently governed; DDZ V155 remains deferred until idle/user intent.`);
