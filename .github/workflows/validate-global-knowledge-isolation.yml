@@ -1,0 +1,36 @@
+name: Validate Global Knowledge isolation
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'global-knowledge/**'
+      - 'cn-site/index.html'
+      - 'scripts/validate-global-knowledge-isolation.js'
+      - '.github/workflows/validate-global-knowledge-isolation.yml'
+  pull_request:
+    paths:
+      - 'global-knowledge/**'
+      - 'cn-site/index.html'
+      - 'scripts/validate-global-knowledge-isolation.js'
+      - '.github/workflows/validate-global-knowledge-isolation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  isolation-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate non-commercial knowledge isolation
+        run: node scripts/validate-global-knowledge-isolation.js
+      - name: Validate mainland personal-site bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x cn-site/scripts/validate-personal-content.sh
+          cn-site/scripts/validate-personal-content.sh cn-site
