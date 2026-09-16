@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 'use strict';
 
-/* Global language/runtime compatibility gate | V35 | 2026-09-06
- * Production V32 compatibility + formal VI v4 overlay + isolated DDZ V155/V164 route.
+/* Global language/runtime compatibility gate | V36 | 2026-09-16
+ * International V32 compatibility + formal VI v4 overlay + isolated DDZ route.
+ * qilylean.cn is an independently governed production knowledge site.
  */
 const fs=require('fs'),path=require('path'),root=path.resolve(__dirname,'..');
 const read=f=>fs.readFileSync(path.join(root,f),'utf8');
@@ -65,22 +66,22 @@ must(semanticJs,"rail.type='range'",'Pre-v4 native range source');
 must(semanticJs,'PROJECT_EVIDENCE','Evidence map');
 forbid(semanticJs,'qily-primary-nav-scroll-thumb','Retired synthetic thumb');
 
-/* Formal VI v4 is the public visual authority. It may retire the old visual rail while preserving native nav scrolling. */
+/* Formal VI v4 is the international public visual authority. */
 const viCss=read('site-vi-standard-v4.css');
 const viRuntime=read('site-vi-runtime-v4.js');
-must(viCss,'--qily-container:1240px','Formal 1240 axis');
+must(viCss,'--qily-container:1240px','Formal compatibility axis token');
 must(viCss,'linear-gradient(118deg','Formal 118-degree Hero');
 must(viCss,'.qily-primary-nav-scroll-rail','Formal retired rail rule');
 must(viRuntime,'retireLegacyNavRail','Formal rail retirement');
 must(viRuntime,'Translation lifecycle and translator DOM remain exclusively owned','Translation single-owner boundary');
 forbid(viRuntime,'.qily-web-translate','Formal VI must not own translator DOM');
 
-/* DDZ V155/V164 is the explicit performance-route exception. Its interior is bundled; the canonical Dock remains shared. */
+/* DDZ is the explicit performance-route exception. Its interior is bundled; the canonical Dock remains shared. */
 const ddzIndex=read('tools/pure-ddz/index.html');
 const ddzCoreCss=read('tools/pure-ddz/game/css/ddz-core-v155.css');
 const ddzCoreJs=read('tools/pure-ddz/game/js/ddz-core-v155.js');
 for(const [t,m] of [
-  ["const version='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164-v169'",'DDZ V155/V164 cache'],
+  ["const version='20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164-v169'",'DDZ cache'],
   ['data-qily-ddz-core="v158"','DDZ bundled CSS owner'],
   ['window.__PURE_DDZ_STYLE_READY__=Promise.resolve();','DDZ static style readiness'],
   ["const chain=['js/ddz-core-v155.js'];",'DDZ single JS bundle'],
@@ -113,9 +114,12 @@ for(const [t,m] of [
 forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure materialization');
 forbid(mat,'const PUBLIC_UI_JS=','Retired picker injection');
 
+/* qilylean.cn is production, indexable, and visually governed by its own final VI. */
 const cn=read('cn-site/index.html');
-must(cn,'name="robots" content="noindex,nofollow,noarchive"','CN preproduction indexing lock');
-must(cn,'/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure','CN formal VI CSS');
-must(cn,'/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure','CN formal VI runtime');
+const cnVi=read('cn-site/assets/qilylean-vi-v1.css');
+must(cn,'name="robots" content="index,follow"','CN production indexing contract');
+must(cn,'/assets/qilylean-vi-v1.css?v=20260916-cn-vi-v2','CN independent VI CSS');
+must(cnVi,'--qily-cn-axis:1180px','CN 1180px content axis');
+must(cnVi,'Boss-readable typography floor','CN boss-readable typography');
 
-console.log(`PASS: ${baseline} compatibility preserves one Google Translate V1.4 owner, native navigation, Dock V5.8, formal VI v4, CN noindex preproduction, and the isolated DDZ V155/V164 fast route.`);
+console.log(`PASS: ${baseline} compatibility preserves one Google Translate V1.4 owner, native navigation, Dock V5.8 and formal VI v4 on the international site; qilylean.cn is independently governed production; DDZ remains isolated.`);
