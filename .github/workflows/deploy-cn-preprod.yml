@@ -1,4 +1,4 @@
-name: Deploy QilyLean CN preproduction
+name: Deploy QilyLean CN knowledge site
 
 on:
   workflow_dispatch:
@@ -13,8 +13,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: qilylean-cn-preprod
-  cancel-in-progress: false
+  group: qilylean-cn-production
+  cancel-in-progress: true
 
 jobs:
   validate-and-deploy:
@@ -23,19 +23,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Preproduction index gate
+      - name: Production structure gate
         shell: bash
         run: |
           set -euo pipefail
           test -f cn-site/index.html
           test -f cn-site/robots.txt
+          test -f cn-site/sitemap.xml
           test -f cn-site/favicon.ico
           test -f cn-site/assets/site.css
+          test -f cn-site/assets/portal.css
           test -f cn-site/scripts/validate-personal-content.sh
           test -f cn-site/scripts/activate-public-http.sh
           test -f cn-site/nginx/qilylean.cn.conf
-          grep -q 'noindex,nofollow' cn-site/index.html
-          grep -Eq '^Disallow:[[:space:]]*/[[:space:]]*$' cn-site/robots.txt
+          test -f cn-site/knowledge/index.html
+          test -f cn-site/lean/index.html
+          test -f cn-site/ie/index.html
+          test -f cn-site/standardization/index.html
+          test -f cn-site/factory/index.html
+          test -f cn-site/digital/index.html
+          test -f cn-site/methods/index.html
+          grep -q '湘ICP备2026041143号-1' cn-site/index.html
+          grep -q '<urlset' cn-site/sitemap.xml
 
       - name: Mainland personal-site compliance gate
         shell: bash
@@ -44,11 +53,11 @@ jobs:
           chmod +x cn-site/scripts/validate-personal-content.sh
           cn-site/scripts/validate-personal-content.sh cn-site
 
-      - name: Build release archive
+      - name: Build complete release archive
         shell: bash
         run: |
           set -euo pipefail
-          tar -czf /tmp/qilylean-cn-site.tar.gz -C cn-site index.html robots.txt favicon.ico assets
+          tar --exclude='scripts' --exclude='nginx' --exclude='*.md' -czf /tmp/qilylean-cn-site.tar.gz -C cn-site .
           sha256sum /tmp/qilylean-cn-site.tar.gz
 
       - name: Configure SSH
@@ -102,7 +111,7 @@ jobs:
           ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
             "chmod +x /tmp/deploy-qilylean-cn.sh && /tmp/deploy-qilylean-cn.sh /tmp/qilylean-cn-site.tar.gz '$RELEASE_ID'"
 
-      - name: Activate public HTTP listener
+      - name: Ensure public HTTP/HTTPS site remains active
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
