@@ -170,25 +170,13 @@ html body.project-list-page .project-list-card .qily-project-list-grade>span{
   text-shadow:none!important;
   white-space:normal!important;
 }
-html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-a{
-  border-color:#4b9688!important;
-  background:#edf8f5!important;
-}
+html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-a{border-color:#4b9688!important;background:#edf8f5!important;}
 html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-a>b{background:#0b513f!important;box-shadow:0 0 0 2px #0b513f!important}
-html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-b{
-  border-color:#69ad9f!important;
-  background:#edf8f5!important;
-}
+html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-b{border-color:#69ad9f!important;background:#edf8f5!important;}
 html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-b>b{background:#0f4b5a!important;box-shadow:0 0 0 2px #0f4b5a!important}
-html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-c{
-  border-color:var(--qily-integrity-gold)!important;
-  background:#fff5d8!important;
-}
+html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-c{border-color:var(--qily-integrity-gold)!important;background:#fff5d8!important;}
 html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-c>b{background:#6b4900!important;box-shadow:0 0 0 2px #6b4900!important}
-html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-d{
-  border-color:#9cbab5!important;
-  background:#f3f7f6!important;
-}
+html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-d{border-color:#9cbab5!important;background:#f3f7f6!important;}
 html body.project-list-page .project-list-card .qily-project-list-grade.qily-grade-d>b{background:#314f54!important;box-shadow:0 0 0 2px #314f54!important}
 
 /* ===== 03 | PROJECT DETAIL HERO: HIGH-CONTRAST EVIDENCE CONTRACT ===== */
@@ -251,84 +239,62 @@ html body.project-detail-page .project-hero .qily-project-evidence-grade.qily-gr
 html body.project-detail-page .module-hero .qily-project-evidence-grade.qily-grade-d>b,
 html body.project-detail-page .project-hero .qily-project-evidence-grade.qily-grade-d>b{background:#314f54!important;box-shadow:0 0 0 2px #314f54!important}
 html body.project-detail-page .module-hero .qily-project-evidence-grade>span,
-html body.project-detail-page .project-hero .qily-project-evidence-grade>span{
-  grid-column:2!important;
-  grid-row:1!important;
-  color:#073c47!important;
-  -webkit-text-fill-color:#073c47!important;
-  font-size:18px!important;
-  font-weight:950!important;
-  line-height:1.35!important;
-  opacity:1!important;
-  text-shadow:none!important;
-}
+html body.project-detail-page .project-hero .qily-project-evidence-grade>span{grid-column:2!important;grid-row:1!important;color:#073c47!important;-webkit-text-fill-color:#073c47!important;font-size:18px!important;font-weight:950!important;line-height:1.35!important;opacity:1!important;text-shadow:none!important;}
 html body.project-detail-page .module-hero .qily-project-evidence-grade>small,
-html body.project-detail-page .project-hero .qily-project-evidence-grade>small{
-  grid-column:2!important;
-  grid-row:2!important;
-  display:block!important;
-  color:#315b61!important;
-  -webkit-text-fill-color:#315b61!important;
-  font-size:15.5px!important;
-  font-weight:850!important;
-  line-height:1.45!important;
-  opacity:1!important;
-  text-shadow:none!important;
-  white-space:normal!important;
-}
+html body.project-detail-page .project-hero .qily-project-evidence-grade>small{grid-column:2!important;grid-row:2!important;display:block!important;color:#315b61!important;-webkit-text-fill-color:#315b61!important;font-size:15.5px!important;font-weight:850!important;line-height:1.45!important;opacity:1!important;text-shadow:none!important;white-space:normal!important;}
 html body.project-detail-page .module-hero .module-inner>.module-lead,
-html body.project-detail-page .project-hero .module-inner>.module-lead{
-  display:block!important;
-  width:100%!important;
-  max-width:none!important;
-  margin-right:0!important;
-  padding-right:0!important;
+html body.project-detail-page .project-hero .module-inner>.module-lead{display:block!important;width:100%!important;max-width:none!important;margin-right:0!important;padding-right:0!important;}
+
+/* ===== 04 | FINAL SITEWIDE 1180PX AXIS CLOSURE =====
+ * User-approved canonical content width for BOTH international and China presentation.
+ * This late authority intentionally wins over legacy 1560/1240/1220/1080 page rules.
+ */
+:root{
+  --qily-content-axis:1180px!important;
+  --qily-wide-content:1180px!important;
+  --qily-container:1180px!important;
+  --qily-r8-axis:1180px!important;
+  --qv2-axis:1180px!important;
+  --qily-redline-axis:1180px!important;
+}
+html:root:root body main :is(
+  .hero-inner,.module-inner,.inner,.section-inner,.page-inner,.content-inner,
+  .archive-inner,.knowledge-inner,.project-inner,.tool-inner,.daily-inner,.main-inner,
+  .qily-asset-inner,.qily-system-axis__inner,.qily-ia-inner,
+  .qily-resource-network__inner,.qtc-inner,.footer-inner
+),
+html:root:root body main>.authority-strip{
+  width:min(1180px,100%)!important;
+  max-width:1180px!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+html:root:root body .qily-resource-network__inner,
+html:root:root body .qtc-inner,
+html:root:root body .footer-inner{
+  width:min(1180px,100%)!important;
+  max-width:1180px!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
 }
 
 @media(max-width:900px){
-  html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header){
-    padding-right:0!important;
-  }
-  html body .qily-web-translate{
-    flex:0 0 auto!important;
-    width:min(206px,calc(100vw - 36px))!important;
-    min-width:0!important;
-    max-width:calc(100vw - 36px)!important;
-    margin-left:0!important;
-    margin-right:0!important;
-  }
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header){padding-right:0!important;}
+  html body .qily-web-translate{flex:0 0 auto!important;width:min(206px,calc(100vw - 36px))!important;min-width:0!important;max-width:calc(100vw - 36px)!important;margin-left:0!important;margin-right:0!important;}
 }
 
 @media(max-width:620px){
-  html body.project-list-page .project-list-card .qily-project-list-grade{
-    grid-template-columns:44px minmax(0,1fr)!important;
-    min-height:60px!important;
-    padding:8px 12px!important;
-  }
-  html body.project-list-page .project-list-card .qily-project-list-grade>b{
-    width:44px!important;
-    min-width:44px!important;
-    height:44px!important;
-    min-height:44px!important;
-    font-size:24px!important;
-  }
+  html body.project-list-page .project-list-card .qily-project-list-grade{grid-template-columns:44px minmax(0,1fr)!important;min-height:60px!important;padding:8px 12px!important;}
+  html body.project-list-page .project-list-card .qily-project-list-grade>b{width:44px!important;min-width:44px!important;height:44px!important;min-height:44px!important;font-size:24px!important;}
   html body.project-detail-page .module-hero .qily-project-evidence-grade,
-  html body.project-detail-page .project-hero .qily-project-evidence-grade{
-    grid-template-columns:48px minmax(0,1fr)!important;
-    width:100%!important;
-    min-height:68px!important;
-    padding:9px 12px!important;
-  }
+  html body.project-detail-page .project-hero .qily-project-evidence-grade{grid-template-columns:48px minmax(0,1fr)!important;width:100%!important;min-height:68px!important;padding:9px 12px!important;}
   html body.project-detail-page .module-hero .qily-project-evidence-grade>b,
-  html body.project-detail-page .project-hero .qily-project-evidence-grade>b{
-    width:48px!important;
-    min-width:48px!important;
-    height:48px!important;
-    min-height:48px!important;
-    font-size:26px!important;
-  }
-  html body.project-detail-page .module-hero .qily-project-evidence-grade>span,
+  html body.project-detail-page .project-hero .qily-project-evidence-grade>b{width:48px!important;min-width:48px!important;height:48px!important;min-height:48px!important;font-size:26px!important;}
+  html body.project-detail-page .module-hero .qily-project-evidence-grade>span{font-size:16px!important}
   html body.project-detail-page .project-hero .qily-project-evidence-grade>span{font-size:16px!important}
-  html body.project-detail-page .module-hero .qily-project-evidence-grade>small,
+  html body.project-detail-page .module-hero .qily-project-evidence-grade>small{font-size:14px!important}
   html body.project-detail-page .project-hero .qily-project-evidence-grade>small{font-size:14px!important}
 }
