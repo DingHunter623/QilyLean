@@ -1,4 +1,4 @@
-name: Upgrade QilyLean CN VI V4 Fixed Footer
+name: Upgrade QilyLean CN VI V5 Shared Footer
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Roll fixed-footer VI across every China HTML page
+      - name: Normalize one shared footer across every China HTML page
         shell: bash
         run: |
           set -euo pipefail
@@ -28,33 +28,39 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          target = '<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v1">'
+          css_target = '<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v2">'
+          footer_target = '<footer class="footer"><div class="footer-inner"><span>QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">湘ICP备2026041143号-1</a></span></div></footer>'
           changed = 0
+          footer_count = 0
           for path in files:
               text = path.read_text(encoding='utf-8')
               out = re.sub(
                   r'<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">',
-                  target,
+                  css_target,
                   text,
               )
+              if re.search(r'<footer class="footer">.*?</footer>', out, flags=re.S):
+                  out = re.sub(r'<footer class="footer">.*?</footer>', footer_target, out, count=1, flags=re.S)
+                  footer_count += 1
               if out != text:
                   path.write_text(out, encoding='utf-8')
                   changed += 1
-          print(f'China fixed-footer VI linked on {changed} page(s); scanned {len(files)} HTML files.')
+          print(f'Canonical shared footer found on {footer_count} page(s); changed {changed}; scanned {len(files)} HTML files.')
           PY
 
-      - name: Verify China fixed-footer visual authority
+      - name: Verify single footer authority
         shell: bash
         run: |
           set -euo pipefail
           test -f cn-site/assets/qilylean-vi-v2.css
-          ! grep -R --include='*.html' -n 'qilylean-vi-v1.css' cn-site
-          count=$(grep -R --include='*.html' -l 'qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v1' cn-site | wc -l)
+          count=$(grep -R --include='*.html' -l 'qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v2' cn-site | wc -l)
           test "$count" -ge 17
-          grep -q 'position:fixed!important' cn-site/assets/qilylean-vi-v2.css
-          grep -q -- '--qily-cn-fixed-footer-h:78px' cn-site/assets/qilylean-vi-v2.css
-          grep -q 'padding-bottom:calc(var(--qily-cn-fixed-footer-h)' cn-site/assets/qilylean-vi-v2.css
-          echo "CN fixed-footer VI verification passed on $count page(s)."
+          footer_count=$(grep -R --include='*.html' -l 'QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/' cn-site | wc -l)
+          test "$footer_count" -eq "$count"
+          ! grep -R --include='*.html' -n 'footer-links' cn-site
+          grep -q 'Shared fixed footer authority' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'html:root body .footer-inner a' cn-site/assets/qilylean-vi-v2.css
+          echo "CN shared footer verification passed on $count page(s): one markup + one CSS authority."
 
       - name: Commit rollout
         shell: bash
@@ -67,5 +73,5 @@ jobs:
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
           git add cn-site
-          git commit -m 'style(cn): roll fixed footer VI sitewide'
+          git commit -m 'style(cn): enforce one canonical fixed footer sitewide'
           git push origin HEAD:main
