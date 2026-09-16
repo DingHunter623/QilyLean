@@ -1,0 +1,123 @@
+@import url('/assets/qilylean-vi-v1.css?v=20260916-cn-base-v3');
+
+/* QilyLean China Unified VI V2 | 2026-09-16
+ * Boss-readable closure aligned to the international-site visual rhythm.
+ * Priorities: readable type, compact information rhythm, restrained headings,
+ * 1180px content axis, high-information tables and reduced dead space.
+ */
+:root{
+  --qily-cn-axis:1180px;
+  --qily-cn-body:20px;
+  --qily-cn-small:18px;
+  --qily-cn-h1:clamp(34px,2.9vw,48px);
+  --qily-cn-h2:clamp(30px,2.35vw,38px);
+  --qily-cn-h3:clamp(23px,1.7vw,28px);
+}
+
+/* Global readable floor: no tiny body/meta/table text on China production pages. */
+html:root body{
+  font-size:var(--qily-cn-body)!important;
+  line-height:1.72!important;
+}
+html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){
+  font-size:20px!important;
+  line-height:1.72!important;
+}
+html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,.meta,.article-meta,.status,.tag,.subnav a,.toc a,.logic span,figcaption,time,.footer-links a){
+  font-size:var(--qily-cn-small)!important;
+  line-height:1.55!important;
+}
+html:root body :is(.nav>a[href],a.btn,button.btn,.logic b,.toc b){
+  font-size:19px!important;
+}
+
+/* Restrained heading hierarchy: strong enough for executives, not visually exhausting. */
+html:root body main :is(.hero h1,.page-hero h1,h1){
+  font-size:var(--qily-cn-h1)!important;
+  line-height:1.12!important;
+  letter-spacing:-.018em!important;
+}
+html:root body main :is(.section-head h2,.article-body h2){
+  font-size:var(--qily-cn-h2)!important;
+  line-height:1.2!important;
+  margin-top:30px!important;
+  margin-bottom:10px!important;
+}
+html:root body main :is(.portal-card h3,.article-link h3,.trust-box h3,.article-body h3){
+  font-size:var(--qily-cn-h3)!important;
+  line-height:1.28!important;
+}
+
+/* Reduce dead space in hero/sections and tighten long-form reading rhythm. */
+html:root body .hero-inner{padding:44px 0!important}
+html:root body .page-hero .content{padding:34px 0 36px!important}
+html:root body .section{padding:38px 0!important}
+html:root body .section.compact{padding:30px 0!important}
+html:root body .section-head{margin-bottom:22px!important}
+html:root body .article-body p{margin:0 0 13px!important}
+html:root body .article-body :is(ul,ol){margin:8px 0 16px!important}
+html:root body .article-body h2:first-child{margin-top:0!important}
+html:root body .tag-row{margin-top:14px!important;gap:9px!important}
+html:root body .article-shell{gap:30px!important}
+html:root body .toc{padding:18px!important}
+html:root body .toc a{padding:7px 0!important}
+
+/* Executive-friendly cards: preserve hierarchy while avoiding oversized empty boxes. */
+html:root body main :is(.portal-card,.card,.trust-box,.article-link,.knowledge-bridge){
+  padding:20px 22px!important;
+}
+html:root body .logic div{padding:16px!important}
+html:root body .trust{gap:18px!important}
+
+/* International-style data table: full-width, strong header, large readable cells. */
+html:root body .table-wrap{margin:18px 0 22px!important;border-radius:12px!important;overflow-x:auto!important;box-shadow:0 8px 22px rgba(15,75,90,.08)!important}
+html:root body table.data-table{width:100%!important;border-collapse:separate!important;border-spacing:0!important;background:#fff!important}
+html:root body table.data-table th,
+html:root body table.data-table td{
+  padding:16px 18px!important;
+  font-size:19px!important;
+  line-height:1.62!important;
+  border-right:1px solid #cfe0dd!important;
+  border-bottom:1px solid #cfe0dd!important;
+  vertical-align:top!important;
+}
+html:root body table.data-table th:first-child,
+html:root body table.data-table td:first-child{border-left:1px solid #cfe0dd!important}
+html:root body table.data-table thead th{
+  background:#0f4b5a!important;
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  font-size:20px!important;
+  font-weight:900!important;
+  text-align:center!important;
+  border-top:1px solid #0f4b5a!important;
+}
+html:root body table.data-table thead th:first-child{border-top-left-radius:12px!important}
+html:root body table.data-table thead th:last-child{border-top-right-radius:12px!important}
+html:root body table.data-table tbody tr:nth-child(even) td{background:#f5faf9!important}
+html:root body table.data-table tbody td:first-child{font-weight:850!important;color:#315f64!important}
+
+/* Chip readability (Value / Flow / Pull / Takt / WIP / SMED etc.). */
+html:root body .tag{
+  min-height:34px!important;
+  padding:6px 11px!important;
+  font-size:17px!important;
+  font-weight:850!important;
+  align-items:center!important;
+}
+html:root body .subnav a{padding:7px 11px!important;font-size:17px!important}
+
+@media(max-width:900px){
+  html:root body .page-hero .content{padding:30px 0!important}
+  html:root body .section{padding:32px 0!important}
+  html:root body .article-shell{gap:22px!important}
+}
+@media(max-width:620px){
+  :root{--qily-cn-body:19px;--qily-cn-small:17px;--qily-cn-h1:clamp(32px,9vw,41px);--qily-cn-h2:clamp(27px,7.5vw,34px)}
+  html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){font-size:19px!important}
+  html:root body table.data-table th,
+  html:root body table.data-table td{font-size:18px!important;padding:14px 15px!important}
+  html:root body table.data-table thead th{font-size:18px!important}
+  html:root body .hero-inner{padding:34px 0!important}
+  html:root body .section{padding:28px 0!important}
+}
