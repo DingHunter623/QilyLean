@@ -11,7 +11,7 @@ if [[ ! -f "$CONF_SRC" ]]; then
   exit 2
 fi
 
-if [[ ! -f "$CERT_DIR/fullchain.pem" || ! -f "$CERT_DIR/privkey.pem" ]]; then
+if ! sudo test -f "$CERT_DIR/fullchain.pem" || ! sudo test -f "$CERT_DIR/privkey.pem"; then
   echo "Production TLS certificate is missing: $CERT_DIR" >&2
   exit 3
 fi
