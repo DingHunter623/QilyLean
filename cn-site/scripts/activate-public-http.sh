@@ -17,7 +17,12 @@ if ! sudo test -f "$CERT_DIR/fullchain.pem" || ! sudo test -f "$CERT_DIR/privkey
 fi
 
 sudo install -m 0644 "$CONF_SRC" "$CONF_DST"
-sudo ln -sfn "$CONF_DST" "$ENABLED"
+
+# This server is dedicated to the QilyLean CN site. Remove legacy QilyLean listeners
+# (including the old pre-production/public symlinks and Certbot-modified site file)
+# so only the canonical production vhost can own ports 80/443.
+sudo find /etc/nginx/sites-enabled -maxdepth 1 \( -type f -o -type l \) -name 'qilylean*' -print -delete
+sudo ln -s "$CONF_DST" "$ENABLED"
 
 sudo nginx -t
 sudo systemctl reload nginx
