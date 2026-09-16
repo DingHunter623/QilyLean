@@ -1,0 +1,70 @@
+name: Upgrade QilyLean CN VI V3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/upgrade-cn-vi-v3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  upgrade-cn-vi:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Roll V3 VI across every China HTML page
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('cn-site')
+          files = sorted(root.rglob('*.html'))
+          target = '<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260916-cn-boss-vi-v3">'
+          changed = 0
+          for path in files:
+              text = path.read_text(encoding='utf-8')
+              out = re.sub(
+                  r'<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">',
+                  target,
+                  text,
+              )
+              if out != text:
+                  path.write_text(out, encoding='utf-8')
+                  changed += 1
+          print(f'China VI V3 linked on {changed} page(s); scanned {len(files)} HTML files.')
+          PY
+
+      - name: Verify China visual authority
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f cn-site/assets/qilylean-vi-v2.css
+          ! grep -R --include='*.html' -n 'qilylean-vi-v1.css' cn-site
+          count=$(grep -R --include='*.html' -l 'qilylean-vi-v2.css?v=20260916-cn-boss-vi-v3' cn-site | wc -l)
+          test "$count" -ge 17
+          grep -q '标准作业顺序' cn-site/standardization/index.html
+          grep -q '同时保障客户端质量与制造端成本' cn-site/standardization/index.html
+          echo "CN VI V3 verification passed on $count page(s)."
+
+      - name: Commit rollout
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'No rollout changes required.'
+            exit 0
+          fi
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add cn-site
+          git commit -m 'style(cn): apply boss-readable VI V3 sitewide'
+          git push origin HEAD:main
