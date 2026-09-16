@@ -1,0 +1,76 @@
+name: Fix international pricing overflow
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'site-pricing-overflow-closure-v1.css'
+      - '.github/workflows/fix-international-pricing-overflow-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fix-international-pricing-overflow-main
+  cancel-in-progress: false
+
+jobs:
+  materialize-and-verify:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+          fetch-depth: 1
+
+      - name: Materialize pricing overflow closure stylesheet
+        shell: python
+        run: |
+          from pathlib import Path
+
+          root = Path('.')
+          targets = [
+              root / 'cooperation' / 'index.html',
+              root / 'cooperation' / 'factory-planning' / 'index.html',
+              root / 'cooperation' / 'lean-improvement' / 'index.html',
+              root / 'cooperation' / 'visual-management' / 'index.html',
+          ]
+          link = '<link id="qilyPricingOverflowClosureV1" rel="stylesheet" href="/site-pricing-overflow-closure-v1.css?v=20260916-pricing-overflow-v1">'
+          for path in targets:
+              text = path.read_text(encoding='utf-8')
+              if 'id="qilyPricingOverflowClosureV1"' not in text:
+                  if '</head>' not in text:
+                      raise SystemExit(f'{path}: missing </head>')
+                  text = text.replace('</head>', f'{link}\n</head>', 1)
+                  path.write_text(text, encoding='utf-8')
+
+      - name: Verify overflow closure contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in cooperation/index.html cooperation/factory-planning/index.html cooperation/lean-improvement/index.html cooperation/visual-management/index.html; do
+            grep -q 'id="qilyPricingOverflowClosureV1"' "$f"
+          done
+          grep -q 'grid-template-columns:repeat(auto-fit,minmax(280px,1fr))!important' site-pricing-overflow-closure-v1.css
+          grep -q 'overflow-wrap:anywhere!important' site-pricing-overflow-closure-v1.css
+          grep -q 'writing-mode:horizontal-tb!important' site-pricing-overflow-closure-v1.css
+          grep -q 'grid-template-columns:minmax(0,1fr)!important' site-pricing-overflow-closure-v1.css
+          git diff --check
+
+      - name: Commit materialized cooperation pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'Pricing overflow closure already materialized.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add cooperation/index.html cooperation/factory-planning/index.html cooperation/lean-improvement/index.html cooperation/visual-management/index.html
+          git commit -m 'fix(ui): materialize pricing overflow closure'
+          git pull --rebase origin main
+          git push origin HEAD:main

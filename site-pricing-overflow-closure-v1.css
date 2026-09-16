@@ -1,0 +1,95 @@
+/* QilyLean International Pricing Overflow Closure V1 | 2026-09-16
+ * Goal: keep pricing/service cards readable on desktop, tablet and mobile without shrinking text.
+ * Scope: /cooperation/ and cooperation detail pages only.
+ */
+
+html body.cooperation-page :is(.price-ladder,.qily-pricing-grid),
+html body :is(.core-business-pricing) .qily-pricing-grid{
+  width:100%!important;
+  max-width:100%!important;
+  min-width:0!important;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr))!important;
+  gap:16px!important;
+}
+
+html body.cooperation-page :is(.price-ladder,.qily-pricing-grid)>*,
+html body .core-business-pricing .qily-pricing-grid>*{
+  min-width:0!important;
+  max-width:100%!important;
+}
+
+html body.cooperation-page .price-card,
+html body .core-business-pricing .price-card{
+  min-width:0!important;
+  max-width:100%!important;
+  width:auto!important;
+  overflow:visible!important;
+  padding:clamp(20px,2.2vw,26px)!important;
+}
+
+html body.cooperation-page :is(.price-card,.qily-pricing-grid>*) :is(small,h2,h3,h4,p,strong,span,.qily-price-basis),
+html body .core-business-pricing .price-card :is(small,h2,h3,h4,p,strong,span,.qily-price-basis){
+  min-width:0!important;
+  max-width:100%!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+  word-break:normal!important;
+  writing-mode:horizontal-tb!important;
+}
+
+html body.cooperation-page .price,
+html body .core-business-pricing .price-card .price{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-items:baseline!important;
+  gap:.18em .42em!important;
+  min-width:0!important;
+  max-width:100%!important;
+  margin:10px 0!important;
+  font-size:clamp(27px,2.4vw,34px)!important;
+  line-height:1.14!important;
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+
+html body.cooperation-page .price>span,
+html body .core-business-pricing .price-card .price>span{
+  flex:0 1 auto!important;
+  font-size:clamp(15px,1.25vw,18px)!important;
+  line-height:1.35!important;
+}
+
+html body.cooperation-page .qily-pricing-group,
+html body.cooperation-page .core-business-pricing{
+  min-width:0!important;
+  max-width:100%!important;
+  overflow:visible!important;
+}
+
+html body.cooperation-page .qily-pricing-group-head{
+  min-width:0!important;
+  grid-template-columns:minmax(0,1fr)!important;
+}
+
+@media (max-width:960px){
+  html body.cooperation-page :is(.price-ladder,.qily-pricing-grid),
+  html body .core-business-pricing .qily-pricing-grid{
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr))!important;
+  }
+}
+
+@media (max-width:620px){
+  html body.cooperation-page :is(.price-ladder,.qily-pricing-grid),
+  html body .core-business-pricing .qily-pricing-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+    gap:14px!important;
+  }
+  html body.cooperation-page .price-card,
+  html body .core-business-pricing .price-card{
+    padding:20px!important;
+  }
+  html body.cooperation-page .price,
+  html body .core-business-pricing .price-card .price{
+    font-size:clamp(26px,8vw,32px)!important;
+  }
+}
