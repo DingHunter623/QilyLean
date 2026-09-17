@@ -192,3 +192,63 @@ html:root body .footer-inner a:focus-visible{
 
 /* Production publish marker: CN fixed-footer shared-resource VI V5. */
 /* Deployment trigger: canonical shared footer resource. */
+
+/* 2026-09-17 | Visual-first sitewide closure.
+ * Navigation is rendered as a disciplined four-character system without changing link semantics.
+ * Table labels keep semantic words intact; local horizontal scroll absorbs narrow viewports.
+ */
+html:root body .nav>a[href="/lean/"],
+html:root body .nav>a[href="/ie/"],
+html:root body .nav>a[href="/standardization/"],
+html:root body .nav>a[href="/factory/"],
+html:root body .nav>a[href="/digital/"],
+html:root body .nav>a[href="/methods/"],
+html:root body .nav>a[href="/knowledge/"]{
+  min-width:96px!important;
+  padding-left:12px!important;
+  padding-right:12px!important;
+  font-size:0!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+}
+html:root body .nav>a[href="/lean/"]::before{content:'精益生产'}
+html:root body .nav>a[href="/ie/"]::before{content:'工业工程'}
+html:root body .nav>a[href="/standardization/"]::before{content:'标准体系'}
+html:root body .nav>a[href="/factory/"]::before{content:'工厂规划'}
+html:root body .nav>a[href="/digital/"]::before{content:'数智工厂'}
+html:root body .nav>a[href="/methods/"]::before{content:'改善方法'}
+html:root body .nav>a[href="/knowledge/"]::before{content:'知识索引'}
+html:root body .nav>a[href="/lean/"]::before,
+html:root body .nav>a[href="/ie/"]::before,
+html:root body .nav>a[href="/standardization/"]::before,
+html:root body .nav>a[href="/factory/"]::before,
+html:root body .nav>a[href="/digital/"]::before,
+html:root body .nav>a[href="/methods/"]::before,
+html:root body .nav>a[href="/knowledge/"]::before{
+  display:inline-block!important;
+  font-size:19px!important;
+  line-height:1.22!important;
+  font-weight:900!important;
+  letter-spacing:0!important;
+  color:currentColor!important;
+  -webkit-text-fill-color:currentColor!important;
+}
+html:root body :is(.nav a,.toc a){word-break:keep-all!important;overflow-wrap:normal!important}
+html:root body .table-wrap table :is(th,td){word-break:normal!important;overflow-wrap:break-word!important}
+html:root body .table-wrap table :is(th,td):first-child{
+  min-width:7.5em!important;
+  width:18%!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+}
+@media(max-width:900px){
+  html:root body .nav>a[href="/lean/"],
+  html:root body .nav>a[href="/ie/"],
+  html:root body .nav>a[href="/standardization/"],
+  html:root body .nav>a[href="/factory/"],
+  html:root body .nav>a[href="/digital/"],
+  html:root body .nav>a[href="/methods/"],
+  html:root body .nav>a[href="/knowledge/"]{min-width:94px!important}
+}
