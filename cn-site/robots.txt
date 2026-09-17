@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://qilylean.cn/sitemap.xml
-# Release closure: 20260917-brand-cta-v10
+# Release closure: 20260917-brand-cta-v10-pr
