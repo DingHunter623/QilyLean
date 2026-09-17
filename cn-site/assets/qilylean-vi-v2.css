@@ -190,7 +190,7 @@ html:root body .footer-inner a:focus-visible{
   html:root body .footer{position:static!important;box-shadow:none!important}
 }
 
-/* Production publish marker: CN shared-resource VI V6 · page-thesis closure. */
+/* Production publish marker: CN shared-resource VI V7 · brand + page-thesis + CTA closure. */
 /* Deployment trigger: canonical shared footer resource. */
 
 /* 2026-09-17 | Visual-first sitewide closure.
@@ -269,4 +269,52 @@ html:root body aside.toc>span{
   cursor:default!important;
   word-break:keep-all!important;
   overflow-wrap:normal!important;
+}
+
+
+/* QILY-CN-THESIS-NONINTERACTIVE-V1 */
+html:root body aside.toc>span{pointer-events:none!important}
+
+
+/* 2026-09-17 | CN global-knowledge CTA: VI gold + explicit interaction feedback. */
+html:root body .knowledge-bridge>a{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:46px!important;
+  margin-top:8px!important;
+  padding:8px 14px!important;
+  border:1px solid var(--qily-gold)!important;
+  border-radius:9px!important;
+  background:#fffaf0!important;
+  color:#8b6219!important;
+  -webkit-text-fill-color:#8b6219!important;
+  font-size:22px!important;
+  line-height:1.35!important;
+  font-weight:900!important;
+  text-decoration:none!important;
+  transition:transform .15s ease,background-color .15s ease,color .15s ease,box-shadow .15s ease,border-color .15s ease!important;
+}
+html:root body .knowledge-bridge>a:hover,
+html:root body .knowledge-bridge>a:focus-visible{
+  background:var(--qily-gold)!important;
+  border-color:var(--qily-gold)!important;
+  color:#17322d!important;
+  -webkit-text-fill-color:#17322d!important;
+  transform:translateY(-2px)!important;
+  box-shadow:0 10px 24px rgba(122,90,24,.22)!important;
+  outline:3px solid rgba(202,161,95,.32)!important;
+  outline-offset:2px!important;
+}
+html:root body .knowledge-bridge>a:active{
+  transform:translateY(1px)!important;
+  box-shadow:inset 0 2px 5px rgba(23,50,45,.22)!important;
+}
+@media(max-width:620px){
+  html:root body .knowledge-bridge>a{font-size:20px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html:root body .knowledge-bridge>a{transition:none!important}
+  html:root body .knowledge-bridge>a:hover,
+  html:root body .knowledge-bridge>a:active{transform:none!important}
 }
