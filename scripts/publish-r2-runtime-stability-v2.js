@@ -11,7 +11,7 @@ const R2_CSS = `/site-r2-stability-fixes-v1.css?v=${VERSION}`;
 const NATIVE_NAV = '/site-music-persistent-navigation-v1.js?v=20260812-fast-native-v5';
 const HERO_CONTRAST = '/site-hero-primary-contrast-v1.css?v=20260804-hero-primary-contrast-v1';
 const ROUTES = [
-  ['首页','/'],['能力体系','/capabilities/'],['代表项目','/projects/'],['改善方法','/improvements/'],
+  ['首页','/'],['能力体系','/capabilities/'],['代表项目','/projects/'],['改善工具','/improvements/'],
   ['知识资产','/knowledge/'],['履历主线','/experience/'],['项目合作','/cooperation/'],['信任中心','/trust/']
 ];
 

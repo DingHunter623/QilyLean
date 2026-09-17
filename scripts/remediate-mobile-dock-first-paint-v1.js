@@ -20,7 +20,7 @@ const NAV_PATCH='20260906-primary-first-paint-v1';
 const CORE_VERSION='20260906-primary-first-paint-core-v31';
 const LEGACY_VERSION='20260906-primary-first-paint-legacy-v24';
 const CANONICAL_ROUTES=[
-  ['首页','/'],['履历主线','/experience/'],['能力体系','/capabilities/'],['改善方法','/improvements/'],
+  ['首页','/'],['履历主线','/experience/'],['能力体系','/capabilities/'],['改善工具','/improvements/'],
   ['精益生产','/lean-production/'],['代表项目','/projects/'],['信任中心','/trust/'],['项目合作','/cooperation/'],
   ['知识资产','/knowledge/'],['资源协同','/links/']
 ];

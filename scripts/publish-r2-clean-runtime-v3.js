@@ -62,7 +62,7 @@ const PRIMARY_NAV = [
   ['/', '首页'],
   ['/capabilities/', '能力体系'],
   ['/projects/', '代表项目'],
-  ['/improvements/', '改善方法'],
+  ['/improvements/', '改善工具'],
   ['/knowledge/', '知识资产'],
   ['/experience/', '履历主线'],
   ['/cooperation/', '项目合作'],

@@ -187,7 +187,7 @@ function ensureKnowledgeChain(){
     return '<a href="/knowledge/terminology.html?opl='+encodeURIComponent(item.code)+'">OPL｜'+item.code+'<small>定义、口径、案例与培训确认</small></a>';
   });
   links.push('<a href="/projects/">代表项目<small>从方法进入项目证据与交付结果</small></a>');
-  links.push('<a href="/improvements/">改善方法<small>查看精益、IE与工程改善方法体系</small></a>');
+  links.push('<a href="/improvements/">改善工具<small>查看精益、IE与工程改善方法体系</small></a>');
   links.push('<a href="/cooperation/">相关项目能力<small>将知识方法连接到企业真实课题</small></a>');
   panel.innerHTML='<h3>关联知识链｜从理解到应用</h3><p>本期涉及的工具不孤立使用：先统一定义与数据口径，再结合现场案例选择方法，最后用项目证据验证并固化。</p><div class="qily-knowledge-chain-grid">'+links.join('')+'</div>';
   var lastChecklist=article.querySelector('.checklist:last-of-type');

@@ -28,7 +28,7 @@ const ROUTES = [
   ['首页', '/'],
   ['履历主线', '/experience/'],
   ['能力体系', '/capabilities/'],
-  ['改善方法', '/improvements/'],
+  ['改善工具', '/improvements/'],
   ['精益生产', '/lean-production/'],
   ['代表项目', '/projects/'],
   ['信任中心', '/trust/'],

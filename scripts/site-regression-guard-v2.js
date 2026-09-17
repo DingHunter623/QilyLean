@@ -37,7 +37,7 @@ assert(!/DOMParser\(|history\.pushState|qilySoftNavigation|qily:softnavigate|rec
 const core=read('site-navigation-core.js');
 [
   "['首页', '/']", "['能力体系', '/capabilities/']", "['代表项目', '/projects/']",
-  "['改善方法', '/improvements/']", "['知识资产', '/knowledge/']", "['履历主线', '/experience/']",
+  "['改善工具', '/improvements/']", "['知识资产', '/knowledge/']", "['履历主线', '/experience/']",
   "['项目合作', '/cooperation/']", "['信任中心', '/trust/']"
 ].forEach(marker=>assert(core.includes(marker),`navigation core: missing ${marker}`));
 assert(core.includes("if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();"),'navigation core: static-first primary navigation guard missing');
@@ -161,7 +161,7 @@ for(const rel of keyPages){
 }
 
 const primaryPages=['index.html','capabilities/index.html','projects/index.html','improvements/index.html','knowledge/index.html','experience/index.html','cooperation/index.html','trust/index.html'];
-const primaryNav=[['/','首页'],['/capabilities/','能力体系'],['/projects/','代表项目'],['/improvements/','改善方法'],['/knowledge/','知识资产'],['/experience/','履历主线'],['/cooperation/','项目合作'],['/trust/','信任中心']];
+const primaryNav=[['/','首页'],['/capabilities/','能力体系'],['/projects/','代表项目'],['/improvements/','改善工具'],['/knowledge/','知识资产'],['/experience/','履历主线'],['/cooperation/','项目合作'],['/trust/','信任中心']];
 for(const rel of primaryPages){
   const html=read(rel);
   assert((html.match(/QILY-SYSTEM-AXIS:START/g)||[]).length===1,`${rel}: shared operating axis missing or duplicated`);

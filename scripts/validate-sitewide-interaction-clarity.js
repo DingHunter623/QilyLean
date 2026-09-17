@@ -144,7 +144,7 @@ function validateLivePages() {
 }
 function validatePrimaryContinuity(){
   const routes=['index.html','capabilities/index.html','projects/index.html','improvements/index.html','knowledge/index.html','experience/index.html','cooperation/index.html','trust/index.html'];
-  const nav=[['/','首页'],['/capabilities/','能力体系'],['/projects/','代表项目'],['/improvements/','改善方法'],['/knowledge/','知识资产'],['/experience/','履历主线'],['/cooperation/','项目合作'],['/trust/','信任中心']];
+  const nav=[['/','首页'],['/capabilities/','能力体系'],['/projects/','代表项目'],['/improvements/','改善工具'],['/knowledge/','知识资产'],['/experience/','履历主线'],['/cooperation/','项目合作'],['/trust/','信任中心']];
   for(const relative of routes){
     const html=read(relative);
     assert((html.match(/QILY-SYSTEM-AXIS:START/g)||[]).length===1,`${relative}: shared operating axis is missing or duplicated.`);
