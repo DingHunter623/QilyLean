@@ -111,7 +111,7 @@ jobs:
           grep -q "content:'精益生产'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'工业工程'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'标准体系'" cn-site/assets/qilylean-vi-v2.css
-          grep -q "content:'改善方法'" cn-site/assets/qilylean-vi-v2.css
+          grep -q "content:'改善工具'" cn-site/assets/qilylean-vi-v2.css
           echo 'CN VI authority verification passed: one stylesheet owner, four-character primary labels, verification-file safe.'
 
       - name: Commit rollout safely
