@@ -31,6 +31,9 @@ jobs:
           test -f cn-site/robots.txt
           test -f cn-site/sitemap.xml
           test -f cn-site/favicon.ico
+          test -f cn-site/googleb7a991efbed3aa8a.html
+          test -f cn-site/baidu_verify_codeva-Bp0VGliFcp.html
+          test -f cn-site/b47ed759da519bd90586a7877122d7be.txt
           test -f cn-site/assets/site.css
           test -f cn-site/assets/portal.css
           test -f cn-site/scripts/validate-personal-content.sh
@@ -213,6 +216,34 @@ jobs:
           print('PASS: production closure verified on qilylean.cn About/home/VI and qilylean.com /links/.')
           PY
 
+      - name: Verify search-engine ownership files are public
+        shell: bash
+        run: |
+          set -euo pipefail
+          verify_exact() {
+            local url="$1"
+            local expected="$2"
+            local label="$3"
+            for attempt in {1..18}; do
+              body="$(curl --location --fail --silent --show-error "$url?deploy=$GITHUB_SHA-$attempt" || true)"
+              if [ "$body" = "$expected" ]; then
+                echo "$label verification file is public."
+                return 0
+              fi
+              sleep 5
+            done
+            echo "$label verification file was not reachable with the expected content." >&2
+            return 1
+          }
+          verify_exact \
+            'https://qilylean.cn/googleb7a991efbed3aa8a.html' \
+            'google-site-verification: googleb7a991efbed3aa8a.html' \
+            'Google Search Console'
+          verify_exact \
+            'https://qilylean.cn/baidu_verify_codeva-Bp0VGliFcp.html' \
+            '8bdf47bc085187ab7717a549ec5b7904' \
+            'Baidu Search Resource Platform'
+
       - name: Verify CN IndexNow key is public
         shell: bash
         env:
@@ -267,3 +298,28 @@ jobs:
           with urllib.request.urlopen(request, timeout=30) as response:
               print(f"IndexNow accepted {len(urls)} QilyLean CN URLs with HTTP {response.status}.")
           PY
+
+      - name: Submit QilyLean CN URLs to Baidu when configured
+        shell: bash
+        env:
+          BAIDU_CN_PUSH_TOKEN: ${{ secrets.BAIDU_CN_PUSH_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "$BAIDU_CN_PUSH_TOKEN" ]; then
+            echo 'BAIDU_CN_PUSH_TOKEN is not configured; Baidu API submission is prepared but skipped.'
+            exit 0
+          fi
+          python3 - <<'PY' > /tmp/qilylean-cn-baidu-urls.txt
+          import xml.etree.ElementTree as ET
+          ns = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
+          root = ET.parse('cn-site/sitemap.xml').getroot()
+          for node in root.findall('sm:url/sm:loc', ns):
+              url = (node.text or '').strip()
+              if url.startswith('https://qilylean.cn/'):
+                  print(url)
+          PY
+          response="$(curl --fail-with-body --retry 2 --retry-delay 3 -sS \
+            -H 'Content-Type: text/plain' \
+            --data-binary @/tmp/qilylean-cn-baidu-urls.txt \
+            "https://data.zz.baidu.com/urls?site=https://qilylean.cn&token=${BAIDU_CN_PUSH_TOKEN}")"
+          echo "Baidu CN submission response: ${response}"
