@@ -1,4 +1,4 @@
-@import url('/assets/qilylean-vi-v1.css?v=20260916-cn-base-v4');
+@import url('/assets/qilylean-vi-v1.css?v=20260917-cn-thesis-base-v5');
 
 /* QilyLean China Unified VI V2 | 2026-09-16
  * Boss-readable closure aligned to the international-site visual rhythm.
@@ -25,7 +25,7 @@ html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-br
   font-size:20px!important;
   line-height:1.72!important;
 }
-html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,.meta,.article-meta,.status,.tag,.subnav a,.toc a,.logic span,figcaption,time,.footer-inner a){
+html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,.meta,.article-meta,.status,.tag,.subnav a,.toc :is(a,span),.logic span,figcaption,time,.footer-inner a){
   font-size:var(--qily-cn-small)!important;
   line-height:1.55!important;
 }
@@ -62,7 +62,7 @@ html:root body .article-body h2:first-child{margin-top:0!important}
 html:root body .tag-row{margin-top:14px!important;gap:9px!important}
 html:root body .article-shell{gap:30px!important}
 html:root body .toc{padding:18px!important}
-html:root body .toc a{padding:7px 0!important}
+html:root body .toc :is(a,span){padding:7px 0!important}
 
 /* Executive-friendly cards: preserve hierarchy while avoiding oversized empty boxes. */
 html:root body main :is(.portal-card,.card,.trust-box,.article-link,.knowledge-bridge){
@@ -190,7 +190,7 @@ html:root body .footer-inner a:focus-visible{
   html:root body .footer{position:static!important;box-shadow:none!important}
 }
 
-/* Production publish marker: CN fixed-footer shared-resource VI V5. */
+/* Production publish marker: CN shared-resource VI V6 · page-thesis closure. */
 /* Deployment trigger: canonical shared footer resource. */
 
 /* 2026-09-17 | Visual-first sitewide closure.
@@ -234,7 +234,7 @@ html:root body .nav>a[href="/knowledge/"]::before{
   color:currentColor!important;
   -webkit-text-fill-color:currentColor!important;
 }
-html:root body :is(.nav a,.toc a){word-break:keep-all!important;overflow-wrap:normal!important}
+html:root body :is(.nav a,.toc :is(a,span)){word-break:keep-all!important;overflow-wrap:normal!important}
 html:root body .table-wrap table :is(th,td){word-break:normal!important;overflow-wrap:break-word!important}
 html:root body .table-wrap table :is(th,td):first-child{
   min-width:7.5em!important;
@@ -251,4 +251,22 @@ html:root body .table-wrap table :is(th,td):first-child{
   html:root body .nav>a[href="/digital/"],
   html:root body .nav>a[href="/methods/"],
   html:root body .nav>a[href="/knowledge/"]{min-width:94px!important}
+}
+
+
+/* 2026-09-17 | CN page-thesis module: descriptive, not clickable. */
+html:root body aside.toc{cursor:default!important}
+html:root body aside.toc>b{display:block!important;margin-bottom:8px!important}
+html:root body aside.toc>span{
+  display:block!important;
+  padding:7px 0!important;
+  color:var(--qily-cn-copy)!important;
+  -webkit-text-fill-color:var(--qily-cn-copy)!important;
+  font-size:var(--qily-cn-small)!important;
+  line-height:1.55!important;
+  font-weight:500!important;
+  text-decoration:none!important;
+  cursor:default!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
 }
