@@ -28,9 +28,9 @@ function isRedirect(html){
   return /http-equiv=["']refresh["']/i.test(html)||/location\.(?:replace|href)\s*=/.test(html);
 }
 function isVerificationPayload(r){
-  return /^baidu_verify_[^/]+\.html$/i.test(r)||
-    /^google[a-z0-9_-]+\.html$/i.test(r)||
-    /^zohoverify\/[^/]+\.html$/i.test(r);
+  return /^(?:.*\/)?baidu_verify_[^/]+\.html$/i.test(r)||
+    /^(?:.*\/)?google[a-z0-9_-]+\.html$/i.test(r)||
+    /^(?:.*\/)?zohoverify\/[^/]+\.html$/i.test(r);
 }
 function oldShellWidth(html){
   return /width\s*:\s*min\(\s*(?:1080|1160|1220|1240|1360|1560)px\s*,/i.test(html)||
