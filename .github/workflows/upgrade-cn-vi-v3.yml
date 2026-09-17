@@ -1,4 +1,4 @@
-name: Upgrade QilyLean CN VI V7 Shared Footer
+name: Upgrade QilyLean CN VI V8 Visual Closure
 
 on:
   push:
@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Normalize one shared footer across every China HTML page
+      - name: Normalize one shared VI resource across every China HTML page
         shell: bash
         run: |
           set -euo pipefail
@@ -28,7 +28,7 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_target = '<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v4">'
+          css_target = '<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260917-cn-visual-closure-v5">'
           css_pattern = re.compile(r'\s*<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">\s*')
           footer_target = '<footer class="footer"><div class="footer-inner"><span>QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">湘ICP备2026041143号-1</a></span></div></footer>'
           changed = 0
@@ -61,7 +61,7 @@ jobs:
           print(f'Canonical shared footer found on {footer_count} page(s); changed {changed}; scanned {len(files)} HTML files.')
           PY
 
-      - name: Verify single footer authority
+      - name: Verify single VI authority
         shell: bash
         run: |
           set -euo pipefail
@@ -72,7 +72,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260916-cn-fixed-footer-v4'
+          css_marker = 'qilylean-vi-v2.css?v=20260917-cn-visual-closure-v5'
           footer_marker = 'QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
           bad = []
           for path in files:
@@ -83,7 +83,7 @@ jobs:
               if css_count != 1 or footer_count != 1 or footer_tags != 1 or 'footer-links' in text:
                   bad.append((str(path), css_count, footer_count, footer_tags))
           if bad:
-              raise SystemExit(f'Shared footer normalization failed: {bad}')
+              raise SystemExit(f'Shared VI normalization failed: {bad}')
           if len(files) < 17:
               raise SystemExit(f'Expected at least 17 China HTML files, got {len(files)}')
           print(f'One shared footer + one shared V2 link verified on {len(files)} page(s).')
@@ -93,7 +93,11 @@ jobs:
           grep -q "qilylean-vi-v1.css?v=20260916-cn-base-v4" cn-site/assets/qilylean-vi-v2.css
           grep -q 'Shared fixed footer authority' cn-site/assets/qilylean-vi-v2.css
           grep -q 'html:root body .footer-inner a' cn-site/assets/qilylean-vi-v2.css
-          echo 'CN footer authority verification passed: one component, one stylesheet owner.'
+          grep -q "content:'精益生产'" cn-site/assets/qilylean-vi-v2.css
+          grep -q "content:'工业工程'" cn-site/assets/qilylean-vi-v2.css
+          grep -q "content:'标准体系'" cn-site/assets/qilylean-vi-v2.css
+          grep -q "content:'改善方法'" cn-site/assets/qilylean-vi-v2.css
+          echo 'CN VI authority verification passed: one component, one stylesheet owner, four-character primary labels.'
 
       - name: Commit rollout safely
         shell: bash
@@ -106,7 +110,7 @@ jobs:
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
           git add cn-site
-          git commit -m 'style(cn): deduplicate shared fixed-footer resource'
+          git commit -m 'style(cn): roll visual closure V5 across all pages'
           for attempt in 1 2 3; do
             git fetch origin main
             git rebase origin/main
@@ -116,5 +120,5 @@ jobs:
             echo "Push raced with another writer; retrying attempt $attempt/3..."
             sleep 2
           done
-          echo 'Unable to publish shared-footer rollout after 3 race-safe attempts.' >&2
+          echo 'Unable to publish shared-VI rollout after 3 race-safe attempts.' >&2
           exit 1
