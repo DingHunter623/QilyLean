@@ -19,9 +19,11 @@ function allowed(p){var n=normalized(p);return ALLOWED.some(function(x){return n
 function viewerHref(href){try{var u=new URL(href,location.origin);if(u.origin!==location.origin)return null;var p=u.pathname;if(!allowed(p))return null;return '/global-knowledge/view/?src='+encodeURIComponent(p+(u.hash||''));}catch(e){return null}}
 function sanitize(root){
 root.querySelectorAll('script,style,header,footer,nav,form,button,input,textarea,select,iframe,object,embed,[data-qily-dock],[id="floatDock"],.qily-float-dock,.site-header,.qily-site-header,.topbar').forEach(function(n){n.remove()});
-root.querySelectorAll('*').forEach(function(el){Array.from(el.attributes||[]).forEach(function(a){if(/^on/i.test(a.name))el.removeAttribute(a.name)});});
 root.querySelectorAll('a').forEach(function(a){var href=a.getAttribute('href')||'';if(/^#/.test(href))return;var tm=href.match(/\/knowledge\/terminology\.html\?(?:[^#]*&)?(?:opl|term)=([^&#]+)/i);if(tm){a.href='/global-knowledge/terminology/?opl='+tm[1];return;}var dm=href.match(/\/qilylean\/daily\/(\d{4}-\d{2}-\d{2})\.html/i);if(dm){a.href='/global-knowledge/briefs/?date='+dm[1];return;}var safe=viewerHref(href);if(safe){a.href=safe;return;}if(/\/(cooperation|links|projects|contact|trust|capabilities|experience|improvements|lean-production)\/?/i.test(href)){a.remove();return;}var span=document.createElement('span');span.innerHTML=a.innerHTML;a.replaceWith(span);});
-root.querySelectorAll('.module-actions,.actions,.card-actions,.hero-actions').forEach(function(n){if(!(n.textContent||'').trim())n.remove()});return root;
+root.querySelectorAll('.module-actions,.actions,.card-actions,.hero-actions').forEach(function(n){if(!(n.textContent||'').trim())n.remove()});
+/* Presentation firewall: white-listed documents contribute content, never source-page visual skin. */
+root.querySelectorAll('*').forEach(function(el){Array.from(el.attributes||[]).forEach(function(a){if(/^on/i.test(a.name)||a.name==='class'||a.name==='style')el.removeAttribute(a.name)});});
+return root;
 }
 var content=document.getElementById('content'),title=document.getElementById('title');
 if(!allowed(raw)){title.textContent='该资料不在知识白名单';content.innerHTML='<div class="error">为保持知识与经营功能物理隔离，本阅读器只允许访问经过审核的知识资料。</div>';return;}
