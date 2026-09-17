@@ -34,7 +34,7 @@ jobs:
 
           root = Path('.')
           exts = {'.html', '.htm', '.js', '.mjs', '.cjs', '.py', '.css', '.md', '.yml', '.yaml', '.json'}
-          skip_parts = {'.git', 'node_modules', 'dist', 'build', '.next'}
+          skip_parts = {'.git', '.github', 'node_modules', 'dist', 'build', '.next'}
           changed = []
 
           def normalize(text: str) -> str:
@@ -68,7 +68,7 @@ jobs:
                       out,
                   )
 
-              # China-site four-character pseudo-label and its CI assertion.
+              # China-site four-character pseudo-label.
               out = out.replace("content:'改善方法'", "content:'改善工具'")
               out = out.replace('content:"改善方法"', 'content:"改善工具"')
 
@@ -110,8 +110,8 @@ jobs:
           import re
 
           root = Path('.')
-          exts = {'.html', '.htm', '.js', '.mjs', '.cjs', '.py', '.css', '.yml', '.yaml', '.json'}
-          skip_parts = {'.git', 'node_modules', 'dist', 'build', '.next'}
+          exts = {'.html', '.htm', '.js', '.mjs', '.cjs', '.py', '.css', '.md', '.yml', '.yaml', '.json'}
+          skip_parts = {'.git', '.github', 'node_modules', 'dist', 'build', '.next'}
           bad = []
 
           anchor_old = re.compile(r'<a\b[^>]*\bhref\s*=\s*["\']/(?:improvements|methods)/["\'][^>]*>\s*(?:改善方法|方法)\s*</a>', re.I)
