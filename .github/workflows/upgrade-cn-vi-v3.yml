@@ -1,4 +1,4 @@
-name: Upgrade QilyLean CN VI V9 Page Thesis Closure
+name: Upgrade QilyLean CN VI V10 Brand & CTA Closure
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Normalize China brand, page thesis panels and shared VI
+      - name: Normalize China brand, page thesis panels, global CTA and shared VI
         shell: bash
         run: |
           set -euo pipefail
@@ -32,12 +32,14 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260917-cn-page-thesis-v6'
+          css_version = '20260917-cn-brand-cta-v7'
           base_version = '20260917-cn-thesis-base-v5'
+          official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
           css_pattern = re.compile(r'\s*<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">\s*')
-          footer_target = '<footer class="footer"><div class="footer-inner"><span>QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">湘ICP备2026041143号-1</a></span></div></footer>'
+          footer_target = '<footer class="footer"><div class="footer-inner"><span>QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">湘ICP备2026041143号-1</a></span></div></footer>'
           toc_pattern = re.compile(r'(<aside\b[^>]*class=["\']toc["\'][^>]*>)(.*?)(</aside>)', re.I | re.S)
+          brand_anchor_pattern = re.compile(r'(<a\b[^>]*class=["\']brand["\'][^>]*>)(.*?)(</a>)', re.I | re.S)
           changed = 0
           document_count = 0
           footer_count = 0
@@ -56,6 +58,13 @@ jobs:
               inner = re.sub(r'<a\b[^>]*>(.*?)</a>', r'<span>\1</span>', inner, flags=re.I | re.S)
               return opening + inner + closing
 
+          def normalize_brand_anchor(match):
+              opening, inner, closing = match.groups()
+              plain = re.sub(r'<[^>]+>', '', inner)
+              if 'QilyLean' not in plain:
+                  return match.group(0)
+              return opening + 'QilyLean | <span>启力精益</span>' + closing
+
           for path in files:
               text = path.read_text(encoding='utf-8')
               if '</head>' not in text or '<body' not in text.lower():
@@ -65,10 +74,15 @@ jobs:
               out = css_pattern.sub('\n', text)
               out = out.replace('</head>', f'  {css_target}\n</head>', 1)
 
-              # Official China-site brand expression: brand name must not appear as English-only in the About hero.
+              # Official China-site brand expression: visible/metadata brand spelling uses ASCII separator with spaces.
+              out = out.replace('QilyLean｜<span>启力精益</span>', 'QilyLean | <span>启力精益</span>')
+              out = out.replace('QilyLean｜启力精益', official_brand)
+              out = out.replace('QilyLean 启力精益', official_brand)
+              out = brand_anchor_pattern.sub(normalize_brand_anchor, out)
+
               if path.as_posix() == 'cn-site/about/index.html':
-                  out = out.replace('<h1>关于 QilyLean 中国知识站</h1>', '<h1>关于 QilyLean｜启力精益 中国知识站</h1>')
-                  out = out.replace('content="QilyLean 中国站为个人制造业知识与实践分享站', 'content="QilyLean｜启力精益中国站为个人制造业知识与实践分享站')
+                  out = out.replace('<h1>关于 QilyLean 中国知识站</h1>', f'<h1>关于 {official_brand} 中国知识站</h1>')
+                  out = out.replace('content="QilyLean 中国站为个人制造业知识与实践分享站', f'content="{official_brand}中国站为个人制造业知识与实践分享站')
 
               nonlocal_thesis = [0]
               out = toc_pattern.sub(normalize_thesis, out)
@@ -96,10 +110,19 @@ jobs:
               count=1,
           )
           css2 = css2.replace('.toc a', '.toc :is(a,span)')
-          css2 = css2.replace('CN fixed-footer shared-resource VI V5', 'CN shared-resource VI V6 · page-thesis closure')
+          css2 = css2.replace('CN fixed-footer shared-resource VI V5', 'CN shared-resource VI V7 · brand + page-thesis + CTA closure')
+          css2 = css2.replace('CN shared-resource VI V6 · page-thesis closure', 'CN shared-resource VI V7 · brand + page-thesis + CTA closure')
+
           thesis_marker = '/* 2026-09-17 | CN page-thesis module: descriptive, not clickable. */'
           if thesis_marker not in css2:
               css2 += f'''\n\n{thesis_marker}\nhtml:root body aside.toc{{cursor:default!important}}\nhtml:root body aside.toc>b{{display:block!important;margin-bottom:8px!important}}\nhtml:root body aside.toc>span{{\n  display:block!important;\n  padding:7px 0!important;\n  color:var(--qily-cn-copy)!important;\n  -webkit-text-fill-color:var(--qily-cn-copy)!important;\n  font-size:var(--qily-cn-small)!important;\n  line-height:1.55!important;\n  font-weight:500!important;\n  text-decoration:none!important;\n  cursor:default!important;\n  word-break:keep-all!important;\n  overflow-wrap:normal!important;\n}}\n'''
+          thesis_safety = '/* QILY-CN-THESIS-NONINTERACTIVE-V1 */'
+          if thesis_safety not in css2:
+              css2 += f'''\n\n{thesis_safety}\nhtml:root body aside.toc>span{{pointer-events:none!important}}\n'''
+
+          cta_marker = '/* 2026-09-17 | CN global-knowledge CTA: VI gold + explicit interaction feedback. */'
+          if cta_marker not in css2:
+              css2 += f'''\n\n{cta_marker}\nhtml:root body .knowledge-bridge>a{{\n  display:inline-flex!important;\n  align-items:center!important;\n  justify-content:center!important;\n  min-height:46px!important;\n  margin-top:8px!important;\n  padding:8px 14px!important;\n  border:1px solid var(--qily-gold)!important;\n  border-radius:9px!important;\n  background:#fffaf0!important;\n  color:#8b6219!important;\n  -webkit-text-fill-color:#8b6219!important;\n  font-size:22px!important;\n  line-height:1.35!important;\n  font-weight:900!important;\n  text-decoration:none!important;\n  transition:transform .15s ease,background-color .15s ease,color .15s ease,box-shadow .15s ease,border-color .15s ease!important;\n}}\nhtml:root body .knowledge-bridge>a:hover,\nhtml:root body .knowledge-bridge>a:focus-visible{{\n  background:var(--qily-gold)!important;\n  border-color:var(--qily-gold)!important;\n  color:#17322d!important;\n  -webkit-text-fill-color:#17322d!important;\n  transform:translateY(-2px)!important;\n  box-shadow:0 10px 24px rgba(122,90,24,.22)!important;\n  outline:3px solid rgba(202,161,95,.32)!important;\n  outline-offset:2px!important;\n}}\nhtml:root body .knowledge-bridge>a:active{{\n  transform:translateY(1px)!important;\n  box-shadow:inset 0 2px 5px rgba(23,50,45,.22)!important;\n}}\n@media(max-width:620px){{\n  html:root body .knowledge-bridge>a{{font-size:20px!important}}\n}}\n@media(prefers-reduced-motion:reduce){{\n  html:root body .knowledge-bridge>a{{transition:none!important}}\n  html:root body .knowledge-bridge>a:hover,\n  html:root body .knowledge-bridge>a:active{{transform:none!important}}\n}}\n'''
           v2.write_text(css2, encoding='utf-8')
 
           print(f'Document pages: {document_count}; thesis panels: {thesis_count}; canonical footer found on {footer_count}; changed HTML: {changed}; non-document HTML skipped: {len(skipped)}.')
@@ -107,7 +130,7 @@ jobs:
               print('Skipped non-document HTML: ' + ', '.join(skipped))
           PY
 
-      - name: Verify China page-thesis and brand rules
+      - name: Verify China brand, page-thesis and CTA rules
         shell: bash
         run: |
           set -euo pipefail
@@ -118,13 +141,16 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260917-cn-page-thesis-v6'
-          footer_marker = 'QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
+          css_marker = 'qilylean-vi-v2.css?v=20260917-cn-brand-cta-v7'
+          official_brand = 'QilyLean | 启力精益'
+          footer_marker = 'QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
+          brand_anchor_pattern = re.compile(r'<a\b[^>]*class=["\']brand["\'][^>]*>(.*?)</a>', re.I | re.S)
           bad = []
           documents = 0
           footered = 0
           thesis_panels = 0
+          brand_anchors = 0
 
           for path in files:
               text = path.read_text(encoding='utf-8')
@@ -136,10 +162,18 @@ jobs:
               footer_tags = len(re.findall(r'<footer class="footer">', text))
               if css_count != 1:
                   bad.append((str(path), 'css', css_count))
+              if 'QilyLean｜启力精益' in text or 'QilyLean 启力精益' in text:
+                  bad.append((str(path), 'legacy-brand-separator'))
               if footer_tags:
                   footered += 1
                   if footer_count != 1 or footer_tags != 1 or 'footer-links' in text:
                       bad.append((str(path), 'footer', footer_count, footer_tags))
+
+              for match in brand_anchor_pattern.finditer(text):
+                  brand_anchors += 1
+                  block = match.group(0)
+                  if 'QilyLean | <span>启力精益</span>' not in block:
+                      bad.append((str(path), 'brand-anchor-not-full'))
 
               for match in toc_pattern.finditer(text):
                   thesis_panels += 1
@@ -153,26 +187,37 @@ jobs:
                       bad.append((str(path), 'thesis-aria'))
 
           about = Path('cn-site/about/index.html').read_text(encoding='utf-8')
-          if '<h1>关于 QilyLean｜启力精益 中国知识站</h1>' not in about:
+          if f'<h1>关于 {official_brand} 中国知识站</h1>' not in about:
               bad.append(('cn-site/about/index.html', 'official-brand-h1'))
           if '<h1>关于 QilyLean 中国知识站</h1>' in about:
               bad.append(('cn-site/about/index.html', 'legacy-english-only-brand-h1'))
+
+          home = Path('cn-site/index.html').read_text(encoding='utf-8')
+          if '访问全球知识资料 →' not in home:
+              bad.append(('cn-site/index.html', 'global-knowledge-cta-label'))
+
           if thesis_panels < 1:
               bad.append(('cn-site', 'no-thesis-panels-found'))
+          if brand_anchors < 1:
+              bad.append(('cn-site', 'no-brand-anchors-found'))
           if bad:
-              raise SystemExit(f'CN page-thesis/brand normalization failed: {bad[:80]}')
+              raise SystemExit(f'CN brand/page-thesis/CTA normalization failed: {bad[:80]}')
           if documents < 17:
               raise SystemExit(f'Expected at least 17 China document pages, got {documents}')
-          print(f'PASS: official brand H1 verified; {thesis_panels} non-clickable 本页主旨 panel(s) verified across {documents} China document pages; canonical footer verified on {footered} page(s).')
+          print(f'PASS: {official_brand} verified; {brand_anchors} brand anchor(s), {thesis_panels} non-clickable 本页主旨 panel(s), {documents} China document pages and {footered} canonical footer(s) verified.')
           PY
           grep -q "qilylean-vi-v1.css?v=20260917-cn-thesis-base-v5" cn-site/assets/qilylean-vi-v2.css
           grep -q 'CN page-thesis module: descriptive, not clickable' cn-site/assets/qilylean-vi-v2.css
-          grep -q 'html:root body aside.toc>span' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'QILY-CN-THESIS-NONINTERACTIVE-V1' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'CN global-knowledge CTA: VI gold + explicit interaction feedback' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'html:root body .knowledge-bridge>a:hover' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'font-size:22px!important' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'background:var(--qily-gold)!important' cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'精益生产'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'工业工程'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'标准体系'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'改善工具'" cn-site/assets/qilylean-vi-v2.css
-          echo 'CN V9 closure passed: full brand identity + non-clickable 本页主旨 + shared VI.'
+          echo 'CN V10 closure passed: QilyLean | 启力精益 + non-clickable 本页主旨 + gold interactive global CTA + shared VI.'
 
       - name: Commit rollout safely
         shell: bash
@@ -185,7 +230,7 @@ jobs:
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
           git add cn-site
-          git commit -m 'style(cn): unify brand and page-thesis panels sitewide'
+          git commit -m 'style(cn): close brand, thesis and global CTA VI'
           for attempt in 1 2 3; do
             git fetch origin main
             git rebase origin/main
@@ -195,5 +240,5 @@ jobs:
             echo "Push raced with another writer; retrying attempt $attempt/3..."
             sleep 2
           done
-          echo 'Unable to publish CN page-thesis rollout after 3 race-safe attempts.' >&2
+          echo 'Unable to publish CN brand/CTA rollout after 3 race-safe attempts.' >&2
           exit 1
