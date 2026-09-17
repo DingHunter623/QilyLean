@@ -271,3 +271,46 @@ html body.qily-knowledge-brief-page main[data-qily-knowledge-brief] > .knowledge
   border-bottom:0!important;
   box-shadow:none!important;
 }
+
+/* 14 | 2026-09-17 visual-first readability closure.
+ * All micro-copy follows one larger VI step; knowledge-chain/detail cards may not fall back to 12–14px.
+ * Table labels keep complete terms intact and use local scroll rather than character-by-character wrapping.
+ */
+html:root:root body main :is(
+  small,.meta,.caption,.note,.fine,.project-meta,.article-meta,.resource-meta,.source-note,figcaption,
+  .status,.status-badge,.evidence-badge,.project-meta-badge,.qily-case-metrics span
+){
+  font-size:max(15px,.9em)!important;
+  line-height:1.58!important;
+}
+html:root:root body main .qily-application-case strong{
+  font-size:max(17px,1em)!important;
+  line-height:1.45!important;
+}
+html:root:root body main .qily-application-case p{
+  font-size:max(16px,.96em)!important;
+  line-height:1.72!important;
+}
+html:root:root body main .qily-knowledge-chain h3{
+  font-size:max(24px,1.25em)!important;
+  line-height:1.3!important;
+}
+html:root:root body main .qily-knowledge-chain>p,
+html:root:root body main .qily-knowledge-chain a{
+  font-size:max(17px,1em)!important;
+  line-height:1.58!important;
+}
+html:root:root body main .qily-knowledge-chain a small{
+  font-size:max(15px,.9em)!important;
+  line-height:1.55!important;
+}
+html:root:root body main :is(input,select,textarea,button){font-size:max(16px,1em)!important}
+html:root:root body main table :is(th,td){word-break:normal!important;overflow-wrap:break-word!important}
+html:root:root body main :is(.table-wrap,.table-scroll,.table-responsive,.qily-table-scroll,.data-table-wrap) table :is(th,td):first-child{
+  min-width:6.5em!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+}
+html:root:root body main :is(h1,h2,h3,h4){text-wrap:balance}
+html:root:root body main :is(p,li){text-wrap:pretty}
