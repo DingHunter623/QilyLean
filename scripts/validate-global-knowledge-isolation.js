@@ -53,6 +53,12 @@ const reader = fs.readFileSync(path.join(dir, 'view', 'index.html'), 'utf8');
 if (!reader.includes('var ALLOWED=[')) fail('isolated reader allowlist is missing');
 if (forbiddenRoutes.test(reader.match(/var ALLOWED=\[[\s\S]*?\];/)?.[0] || '')) fail('isolated reader allowlist contains a commercial route');
 if (!reader.includes("root.querySelectorAll('script,style,header,footer,nav,form,button,input,textarea,select,iframe,object,embed")) fail('isolated reader sanitizer is missing structural removal');
+if (!reader.includes('Presentation firewall: white-listed documents contribute content, never source-page visual skin.')) {
+  fail('generic knowledge reader presentation firewall marker is missing');
+}
+if (!reader.includes("a.name==='class'||a.name==='style'")) {
+  fail('generic knowledge reader must strip imported class/style attributes to prevent source-page VI leakage');
+}
 
 const briefs = fs.readFileSync(path.join(dir, 'briefs', 'index.html'), 'utf8');
 if (!briefs.includes('Presentation firewall: imported briefs contribute knowledge content, never their source-page visual skin.')) {
