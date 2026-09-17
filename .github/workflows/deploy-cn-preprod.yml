@@ -122,6 +122,97 @@ jobs:
           ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
             "chmod +x /tmp/activate-qilylean-cn-http.sh && /tmp/activate-qilylean-cn-http.sh /tmp/qilylean.cn.conf"
 
+      - name: Verify production brand and interaction closure
+        shell: bash
+        env:
+          VERIFY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import os
+          import re
+          import time
+          import urllib.request
+
+          sha = os.environ['VERIFY_SHA']
+
+          def fetch(url, attempts=12):
+              error = None
+              for attempt in range(1, attempts + 1):
+                  request = urllib.request.Request(
+                      url,
+                      headers={
+                          'User-Agent': 'QilyLean-Production-Closure/1.0',
+                          'Cache-Control': 'no-cache',
+                      },
+                  )
+                  try:
+                      with urllib.request.urlopen(request, timeout=20) as response:
+                          if response.status != 200:
+                              raise RuntimeError(f'HTTP {response.status}')
+                          return response.read().decode('utf-8')
+                  except Exception as exc:
+                      error = exc
+                      if attempt < attempts:
+                          time.sleep(5)
+              raise RuntimeError(f'Failed to fetch {url}: {error}')
+
+          about = fetch(f'https://qilylean.cn/about/?closure={sha}')
+          home = fetch(f'https://qilylean.cn/?closure={sha}')
+          vi = fetch(f'https://qilylean.cn/assets/qilylean-vi-v2.css?closure={sha}')
+          links = fetch(f'https://qilylean.com/links/?closure={sha}')
+
+          required_about = [
+              '关于 QilyLean | 启力精益 中国知识站',
+              'QilyLean | <span>启力精益</span>',
+              'QilyLean | 启力精益 · 个人制造业知识与实践分享',
+              'aria-label="本页主旨"',
+              '<b>本页主旨</b>',
+          ]
+          for marker in required_about:
+              if marker not in about:
+                  raise SystemExit(f'Production About page missing: {marker}')
+
+          toc_match = re.search(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', about, re.I | re.S)
+          if not toc_match:
+              raise SystemExit('Production About page missing 本页主旨 panel.')
+          toc_inner = toc_match.group(1).lower()
+          if '<a' in toc_inner or 'href=' in toc_inner:
+              raise SystemExit('Production 本页主旨 panel is still clickable.')
+          if '本页目录' in about:
+              raise SystemExit('Legacy 本页目录 label returned in production.')
+
+          if '访问全球知识资料 →' not in home:
+              raise SystemExit('Production China home missing global-knowledge CTA.')
+          if 'QilyLean | <span>启力精益</span>' not in home:
+              raise SystemExit('Production China home lost full brand in header.')
+
+          required_vi = [
+              'CN global-knowledge CTA: VI gold + explicit interaction feedback.',
+              'font-size:22px!important',
+              'background:var(--qily-gold)!important',
+              'html:root body .knowledge-bridge>a:active',
+              'QILY-CN-THESIS-NONINTERACTIVE-V1',
+              'pointer-events:none!important',
+          ]
+          for marker in required_vi:
+              if marker not in vi:
+                  raise SystemExit(f'Production China VI missing: {marker}')
+
+          required_links = [
+              '与 QilyLean | 启力精益 制造业应用价值精选',
+              '<strong>网址导航友情链接：</strong>QilyLean | 启力精益 已增加主流网址导航官方入口',
+              '<strong>QilyLean | 启力精益 中国知识站：</strong>',
+              '进入 QilyLean | 启力精益 中国知识站 ↗',
+              'qilylean.cn 为 QilyLean | 启力精益 制造知识体系',
+          ]
+          for marker in required_links:
+              if marker not in links:
+                  raise SystemExit(f'Production international links page missing full-brand context: {marker}')
+
+          print('PASS: production closure verified on qilylean.cn About/home/VI and qilylean.com /links/.')
+          PY
+
       - name: Verify CN IndexNow key is public
         shell: bash
         env:
