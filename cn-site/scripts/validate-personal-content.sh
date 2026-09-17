@@ -5,6 +5,7 @@ ROOT_DIR="${1:-cn-site}"
 INDEX_FILE="$ROOT_DIR/index.html"
 ROBOTS_FILE="$ROOT_DIR/robots.txt"
 SITEMAP_FILE="$ROOT_DIR/sitemap.xml"
+GOOGLE_VERIFY_FILE="$ROOT_DIR/googleb7a991efbed3aa8a.html"
 BAIDU_VERIFY_FILE="$ROOT_DIR/baidu_verify_codeva-Bp0VGliFcp.html"
 INDEXNOW_FILE="$ROOT_DIR/b47ed759da519bd90586a7877122d7be.txt"
 
@@ -85,9 +86,10 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
 }
 
 # Search-engine discovery contract: keep crawl permission, sitemap discovery and verification
-# files intact so Baidu/IndexNow access cannot be accidentally broken by later site changes.
+# files intact so Google, Baidu and IndexNow access cannot be accidentally broken later.
 [[ -f "$ROBOTS_FILE" ]] || { echo "ERROR: CN robots.txt is missing."; exit 1; }
 [[ -f "$SITEMAP_FILE" ]] || { echo "ERROR: CN sitemap.xml is missing."; exit 1; }
+[[ -f "$GOOGLE_VERIFY_FILE" ]] || { echo "ERROR: Google verification file is missing."; exit 1; }
 [[ -f "$BAIDU_VERIFY_FILE" ]] || { echo "ERROR: Baidu verification file is missing."; exit 1; }
 [[ -f "$INDEXNOW_FILE" ]] || { echo "ERROR: CN IndexNow key file is missing."; exit 1; }
 
@@ -116,6 +118,12 @@ if grep -Eo '<loc>[^<]+</loc>' "$SITEMAP_FILE" | grep -vF '<loc>https://qilylean
   exit 1
 fi
 
+GOOGLE_VERIFY_VALUE="$(tr -d '\r\n' < "$GOOGLE_VERIFY_FILE")"
+[[ "$GOOGLE_VERIFY_VALUE" == 'google-site-verification: googleb7a991efbed3aa8a.html' ]] || {
+  echo "ERROR: Google verification file content changed."
+  exit 1
+}
+
 BAIDU_VERIFY_VALUE="$(tr -d '\r\n' < "$BAIDU_VERIFY_FILE")"
 [[ "$BAIDU_VERIFY_VALUE" == '8bdf47bc085187ab7717a549ec5b7904' ]] || {
   echo "ERROR: Baidu verification file content changed."
@@ -130,4 +138,4 @@ INDEXNOW_VALUE="$(tr -d '\r\n' < "$INDEXNOW_FILE")"
 
 echo "CN personal-site non-commercial content gate passed."
 echo "CN dual-site knowledge-only association contract passed."
-echo "CN search-engine discovery and verification contract passed."
+echo "CN search-engine discovery and verification contract passed for Google, Baidu and IndexNow."
