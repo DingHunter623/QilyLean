@@ -54,6 +54,17 @@ if (!reader.includes('var ALLOWED=[')) fail('isolated reader allowlist is missin
 if (forbiddenRoutes.test(reader.match(/var ALLOWED=\[[\s\S]*?\];/)?.[0] || '')) fail('isolated reader allowlist contains a commercial route');
 if (!reader.includes("root.querySelectorAll('script,style,header,footer,nav,form,button,input,textarea,select,iframe,object,embed")) fail('isolated reader sanitizer is missing structural removal');
 
+const briefs = fs.readFileSync(path.join(dir, 'briefs', 'index.html'), 'utf8');
+if (!briefs.includes('Presentation firewall: imported briefs contribute knowledge content, never their source-page visual skin.')) {
+  fail('brief reader presentation firewall marker is missing');
+}
+if (!briefs.includes("a.name==='class'||a.name==='style'")) {
+  fail('brief reader must strip imported class/style attributes to prevent source-page VI leakage');
+}
+if (!briefs.includes("root.querySelectorAll('script,style,header,footer,nav,form,button,input,textarea,select,iframe')")) {
+  fail('brief reader sanitizer is missing structural removal');
+}
+
 const cn = fs.readFileSync(path.join(root, 'cn-site', 'index.html'), 'utf8');
 if (!cn.includes('https://qilylean.com/global-knowledge/')) fail('CN homepage no longer points to the isolated Global Knowledge bridge');
 if (/https:\/\/qilylean\.com\/(?!global-knowledge\/)/i.test(cn)) fail('CN homepage contains a non-isolated qilylean.com route');
