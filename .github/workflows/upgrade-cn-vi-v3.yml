@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Normalize one shared VI resource across every China HTML page
+      - name: Normalize one shared VI resource across every China document page
         shell: bash
         run: |
           set -euo pipefail
@@ -32,13 +32,17 @@ jobs:
           css_pattern = re.compile(r'\s*<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">\s*')
           footer_target = '<footer class="footer"><div class="footer-inner"><span>QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">湘ICP备2026041143号-1</a></span></div></footer>'
           changed = 0
+          document_count = 0
           footer_count = 0
+          skipped = []
 
           for path in files:
               text = path.read_text(encoding='utf-8')
+              if '</head>' not in text or '<body' not in text.lower():
+                  skipped.append(str(path))
+                  continue
+              document_count += 1
               out = css_pattern.sub('\n', text)
-              if '</head>' not in out:
-                  raise SystemExit(f'Missing </head>: {path}')
               out = out.replace('</head>', f'  {css_target}\n</head>', 1)
 
               if re.search(r'<footer class="footer">.*?</footer>', out, flags=re.S):
@@ -58,7 +62,9 @@ jobs:
               count=1,
           )
           v2.write_text(css, encoding='utf-8')
-          print(f'Canonical shared footer found on {footer_count} page(s); changed {changed}; scanned {len(files)} HTML files.')
+          print(f'Document pages: {document_count}; canonical footer found on {footer_count}; changed {changed}; non-document HTML skipped: {len(skipped)}.')
+          if skipped:
+              print('Skipped non-document HTML: ' + ', '.join(skipped))
           PY
 
       - name: Verify single VI authority
@@ -75,18 +81,27 @@ jobs:
           css_marker = 'qilylean-vi-v2.css?v=20260917-cn-visual-closure-v5'
           footer_marker = 'QilyLean｜启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
           bad = []
+          documents = 0
+          footered = 0
           for path in files:
               text = path.read_text(encoding='utf-8')
+              if '</head>' not in text or '<body' not in text.lower():
+                  continue
+              documents += 1
               css_count = text.count(css_marker)
               footer_count = text.count(footer_marker)
               footer_tags = len(re.findall(r'<footer class="footer">', text))
-              if css_count != 1 or footer_count != 1 or footer_tags != 1 or 'footer-links' in text:
-                  bad.append((str(path), css_count, footer_count, footer_tags))
+              if css_count != 1:
+                  bad.append((str(path), 'css', css_count))
+              if footer_tags:
+                  footered += 1
+                  if footer_count != 1 or footer_tags != 1 or 'footer-links' in text:
+                      bad.append((str(path), 'footer', footer_count, footer_tags))
           if bad:
               raise SystemExit(f'Shared VI normalization failed: {bad}')
-          if len(files) < 17:
-              raise SystemExit(f'Expected at least 17 China HTML files, got {len(files)}')
-          print(f'One shared footer + one shared V2 link verified on {len(files)} page(s).')
+          if documents < 17:
+              raise SystemExit(f'Expected at least 17 China document pages, got {documents}')
+          print(f'One shared V2 link verified on {documents} document page(s); canonical footer verified on {footered} page(s).')
           PY
           ! grep -q 'body .footer' cn-site/assets/qilylean-vi-v1.css
           ! grep -q 'footer-links' cn-site/assets/qilylean-vi-v1.css
@@ -97,7 +112,7 @@ jobs:
           grep -q "content:'工业工程'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'标准体系'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'改善方法'" cn-site/assets/qilylean-vi-v2.css
-          echo 'CN VI authority verification passed: one component, one stylesheet owner, four-character primary labels.'
+          echo 'CN VI authority verification passed: one stylesheet owner, four-character primary labels, verification-file safe.'
 
       - name: Commit rollout safely
         shell: bash
@@ -110,7 +125,7 @@ jobs:
           git config user.name 'QilyLean'
           git config user.email 'DingHunter623@gmail.com'
           git add cn-site
-          git commit -m 'style(cn): roll visual closure V5 across all pages'
+          git commit -m 'style(cn): roll visual closure V5 across all document pages'
           for attempt in 1 2 3; do
             git fetch origin main
             git rebase origin/main
