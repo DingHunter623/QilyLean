@@ -1,0 +1,170 @@
+name: Enforce QilyLean Improvement Tools Navigation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.html'
+      - '**/*.js'
+      - '**/*.py'
+      - '**/*.css'
+      - '**/*.md'
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  normalize-improvement-tools-nav:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Normalize navigation label to 改善工具
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('.')
+          exts = {'.html', '.htm', '.js', '.mjs', '.cjs', '.py', '.css', '.md', '.yml', '.yaml', '.json'}
+          skip_parts = {'.git', 'node_modules', 'dist', 'build', '.next'}
+          changed = []
+
+          def normalize(text: str) -> str:
+              out = text
+
+              # Public-site and generated HTML: exact navigation destinations own one label only.
+              for route in ('/improvements/', '/methods/'):
+                  direct = re.compile(
+                      rf'(<a\b[^>]*\bhref\s*=\s*["\']{re.escape(route)}["\'][^>]*>)(\s*)(?:改善方法|方法)(\s*)(</a>)',
+                      re.I,
+                  )
+                  out = direct.sub(r'\1\2改善工具\3\4', out)
+
+                  # Same markup embedded in JS/Python strings with escaped quotes.
+                  escaped = re.compile(
+                      rf'(href\s*=\s*\\?["\']{re.escape(route)}\\?["\'][^>]*>)(\s*)(?:改善方法|方法)(\s*)',
+                      re.I,
+                  )
+                  out = escaped.sub(r'\1\2改善工具\3', out)
+
+              # Route tables / navigation configuration, label-first and route-first forms.
+              for route in ('/improvements/', '/methods/'):
+                  out = re.sub(
+                      rf'(["\'])(?:改善方法|方法)\1(\s*,\s*)(["\']){re.escape(route)}\3',
+                      lambda m: f"{m.group(1)}改善工具{m.group(1)}{m.group(2)}{m.group(3)}{route}{m.group(3)}",
+                      out,
+                  )
+                  out = re.sub(
+                      rf'(["\']){re.escape(route)}\1(\s*,\s*)(["\'])(?:改善方法|方法)\3',
+                      lambda m: f"{m.group(1)}{route}{m.group(1)}{m.group(2)}{m.group(3)}改善工具{m.group(3)}",
+                      out,
+                  )
+
+              # China-site four-character pseudo-label and its CI assertion.
+              out = out.replace("content:'改善方法'", "content:'改善工具'")
+              out = out.replace('content:"改善方法"', 'content:"改善工具"')
+
+              # Navigation-only shortcut chips used by QilyLean Home / shell previews.
+              out = out.replace('<span>改善方法</span>', '<span>改善工具</span>')
+              out = out.replace('首页、履历主线、能力体系、改善方法、代表项目', '首页、履历主线、能力体系、改善工具、代表项目')
+
+              # Navigation taxonomy documentation/guards should describe the same public label.
+              out = out.replace('- 改善方法（03｜精益改善）', '- 改善工具（03｜精益改善）')
+              return out
+
+          for path in root.rglob('*'):
+              if not path.is_file() or path.suffix.lower() not in exts:
+                  continue
+              if any(part in skip_parts for part in path.parts):
+                  continue
+              try:
+                  text = path.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+              out = normalize(text)
+              if out != text:
+                  path.write_text(out, encoding='utf-8')
+                  changed.append(str(path))
+
+          print(f'Normalized 改善工具 navigation label in {len(changed)} file(s).')
+          for item in changed[:160]:
+              print(' -', item)
+          if len(changed) > 160:
+              print(f' ... plus {len(changed)-160} more file(s)')
+          PY
+
+      - name: Verify sitewide navigation terminology
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          root = Path('.')
+          exts = {'.html', '.htm', '.js', '.mjs', '.cjs', '.py', '.css', '.yml', '.yaml', '.json'}
+          skip_parts = {'.git', 'node_modules', 'dist', 'build', '.next'}
+          bad = []
+
+          anchor_old = re.compile(r'<a\b[^>]*\bhref\s*=\s*["\']/(?:improvements|methods)/["\'][^>]*>\s*(?:改善方法|方法)\s*</a>', re.I)
+          escaped_old = re.compile(r'href\s*=\s*\\?["\']/(?:improvements|methods)/\\?["\'][^>]*>\s*(?:改善方法|方法)')
+          pair_old_a = re.compile(r'(["\'])(?:改善方法|方法)\1\s*,\s*(["\'])/(?:improvements|methods)/\2')
+          pair_old_b = re.compile(r'(["\'])/(?:improvements|methods)/\1\s*,\s*(["\'])(?:改善方法|方法)\2')
+
+          for path in root.rglob('*'):
+              if not path.is_file() or path.suffix.lower() not in exts:
+                  continue
+              if any(part in skip_parts for part in path.parts):
+                  continue
+              try:
+                  text = path.read_text(encoding='utf-8')
+              except UnicodeDecodeError:
+                  continue
+              if anchor_old.search(text) or escaped_old.search(text) or pair_old_a.search(text) or pair_old_b.search(text):
+                  bad.append(str(path))
+
+          core = Path('site-navigation-core.js').read_text(encoding='utf-8')
+          cn_vi = Path('cn-site/assets/qilylean-vi-v2.css').read_text(encoding='utf-8')
+          if "['改善工具', '/improvements/']" not in core:
+              bad.append('site-navigation-core.js::missing 改善工具 route')
+          if "content:'改善工具'" not in cn_vi:
+              bad.append('cn-site/assets/qilylean-vi-v2.css::missing 改善工具 pseudo-label')
+          if "content:'改善方法'" in cn_vi:
+              bad.append('cn-site/assets/qilylean-vi-v2.css::legacy 改善方法 pseudo-label')
+
+          if bad:
+              raise SystemExit('Navigation terminology not fully normalized: ' + ', '.join(bad[:80]))
+          print('PASS: /improvements/ and /methods/ navigation label is uniformly 改善工具.')
+          PY
+
+      - name: Commit normalized navigation safely
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo 'No navigation normalization changes required.'
+            exit 0
+          fi
+          git config user.name 'QilyLean'
+          git config user.email 'DingHunter623@gmail.com'
+          git add -A
+          git commit -m 'fix(nav): normalize sitewide label to 改善工具'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "Push raced with another writer; retrying attempt $attempt/3..."
+            sleep 2
+          done
+          echo 'Unable to publish sitewide navigation normalization after 3 attempts.' >&2
+          exit 1
