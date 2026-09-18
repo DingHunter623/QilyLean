@@ -213,7 +213,7 @@ function verifyBusinessHierarchyUntouched() {
   assert(home.includes('DIGITAL ENABLERS｜数智化增强与数字产品能力'), 'Homepage digital enabler layer missing');
   assert(!home.includes('两大业务主线 · 六类核心业务'), 'Homepage regressed to six-core taxonomy');
   assert(cooperation.includes('<h2>三大核心业务</h2>'), 'Cooperation three-core heading missing');
-  assert(cooperation.includes('三项增强能力，不与三大核心业务同级'), 'Cooperation enabler hierarchy missing');
+  assert(cooperation.includes('让制造流程、数据与数字工具形成协同'), 'Cooperation enabler hierarchy missing');
   assert(!cooperation.includes('<h2>六类核心业务</h2>'), 'Cooperation regressed to six-core taxonomy');
 }
 
