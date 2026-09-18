@@ -45,6 +45,54 @@ html body a.qily-route-action[data-qily-route-emphasis="true"]:active{
   transform:translateY(1px) scale(.985)!important;
 }
 
+/* QILY-ROUTE-CARD-FEEDBACK-V2 | 2026-09-18
+ * Route-capable cards/tiles/panels must visibly react on hover, keyboard focus and press.
+ * Static information cards are excluded because the interaction runtime does not mark them as route.
+ */
+html body a[href]:is(
+  .module-card,.qily-visual-card,.portal-card,.article-link,.service-card,
+  .project-card,.project-list-card,.resource-card,.paper-card,.career-card,
+  .career-full-card,.moment-card,.case-card,.tool-card,.knowledge-card,
+  [class*="tile"],[class*="route-card"]
+){
+  border-color:var(--qily-action-line,#caa15f)!important;
+  box-shadow:0 8px 20px rgba(15,75,90,.09)!important;
+}
+@media(hover:hover) and (pointer:fine){
+  html body a[href]:is(
+    .module-card,.qily-visual-card,.portal-card,.article-link,.service-card,
+    .project-card,.project-list-card,.resource-card,.paper-card,.career-card,
+    .career-full-card,.moment-card,.case-card,.tool-card,.knowledge-card,
+    [class*="tile"],[class*="route-card"]
+  ):hover{
+    transform:translateY(-3px)!important;
+    border-color:var(--qily-action-line,#caa15f)!important;
+    box-shadow:0 16px 34px rgba(15,75,90,.18)!important;
+    filter:saturate(1.03)!important;
+  }
+}
+html body a[href]:is(
+  .module-card,.qily-visual-card,.portal-card,.article-link,.service-card,
+  .project-card,.project-list-card,.resource-card,.paper-card,.career-card,
+  .career-full-card,.moment-card,.case-card,.tool-card,.knowledge-card,
+  [class*="tile"],[class*="route-card"]
+):focus-visible{
+  transform:translateY(-2px)!important;
+  border-color:var(--qily-action-line,#caa15f)!important;
+  outline:3px solid var(--qily-action-focus,rgba(202,161,95,.28))!important;
+  outline-offset:3px!important;
+  box-shadow:0 16px 34px rgba(15,75,90,.18)!important;
+}
+html body a[href]:is(
+  .module-card,.qily-visual-card,.portal-card,.article-link,.service-card,
+  .project-card,.project-list-card,.resource-card,.paper-card,.career-card,
+  .career-full-card,.moment-card,.case-card,.tool-card,.knowledge-card,
+  [class*="tile"],[class*="route-card"]
+):active{
+  transform:translateY(1px) scale(.985)!important;
+  box-shadow:0 4px 10px rgba(15,75,90,.13)!important;
+}
+
 html body [data-qily-interaction="local"]{
   cursor:pointer!important;
   transition:background-color .12s ease,border-color .12s ease,box-shadow .12s ease!important;

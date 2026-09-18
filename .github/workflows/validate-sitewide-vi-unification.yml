@@ -1,0 +1,38 @@
+name: Validate sitewide VI unification
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'site-interaction-semantics-v1.css'
+      - 'site-visual-readability-v5.css'
+      - 'global-knowledge/**'
+      - 'cn-site/**'
+      - 'scripts/validate-sitewide-vi-unification.js'
+      - '.github/workflows/validate-sitewide-vi-unification.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'site-interaction-semantics-v1.css'
+      - 'site-visual-readability-v5.css'
+      - 'global-knowledge/**'
+      - 'cn-site/**'
+      - 'scripts/validate-sitewide-vi-unification.js'
+      - '.github/workflows/validate-sitewide-vi-unification.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  vi-unification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Verify international/CN/Global Knowledge VI authority
+        run: node scripts/validate-sitewide-vi-unification.js
+      - name: Keep public-copy governance intact
+        run: node scripts/validate-public-copy-governance.js
+      - name: Verify clean patch formatting
+        run: git diff --check

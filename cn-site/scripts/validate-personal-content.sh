@@ -10,6 +10,7 @@ BAIDU_VERIFY_FILE="$ROOT_DIR/baidu_verify_codeva-Bp0VGliFcp.html"
 INDEXNOW_FILE="$ROOT_DIR/b47ed759da519bd90586a7877122d7be.txt"
 CN_AIRCRAFT_FILE="$ROOT_DIR/assets/qilylean-aircraft-hero-cn-20260918.png"
 CN_VI_FILE="$ROOT_DIR/assets/qilylean-vi-v2.css"
+CN_NAV_RAIL_JS="$ROOT_DIR/assets/cn-nav-rail-v1.js"
 PRACTICE_PAGE="$ROOT_DIR/notes/index.html"
 PRACTICE_CSS="$ROOT_DIR/assets/practice.css"
 PRACTICE_SMED="$ROOT_DIR/assets/practice/smed-300t.svg"
@@ -107,6 +108,7 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
 [[ -f "$INDEXNOW_FILE" ]] || { echo "ERROR: CN IndexNow key file is missing."; exit 1; }
 [[ -f "$CN_AIRCRAFT_FILE" ]] || { echo "ERROR: CN approved no-QR aircraft asset is missing."; exit 1; }
 [[ -f "$CN_VI_FILE" ]] || { echo "ERROR: CN unified VI stylesheet is missing."; exit 1; }
+[[ -f "$CN_NAV_RAIL_JS" ]] || { echo "ERROR: CN primary-nav rail runtime is missing."; exit 1; }
 [[ -f "$PRACTICE_PAGE" ]] || { echo "ERROR: CN practice archive page is missing."; exit 1; }
 [[ -f "$PRACTICE_CSS" ]] || { echo "ERROR: CN practice archive stylesheet is missing."; exit 1; }
 [[ -f "$PRACTICE_SMED" ]] || { echo "ERROR: CN SMED practice visual is missing."; exit 1; }
@@ -120,7 +122,11 @@ grep -Fq '玻璃管保险丝改善后成品照片' "$PRACTICE_FUSE" || { echo "E
 [[ -f "$PRACTICE_VISUAL" ]] || { echo "ERROR: CN visual-management practice visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage approved no-QR aircraft visual is missing."; exit 1; }
-grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-aircraft-center-v8' "$INDEX_FILE" || { echo "ERROR: CN homepage aircraft-center VI cache version is missing."; exit 1; }
+grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-mobile-vi-v9' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
+grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
+grep -Fq 'QILY-CN-NAV-RAIL-V1' "$CN_VI_FILE" || { echo "ERROR: CN international-style primary-nav rail contract is missing."; exit 1; }
+grep -Fq 'qily-primary-nav-scroll-rail' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN primary-nav rail runtime contract is missing."; exit 1; }
+grep -Fq -- '--qily-cn-h3:clamp(21px,5.7vw,23px)' "$CN_VI_FILE" || { echo "ERROR: CN mobile heading hierarchy is not normalized."; exit 1; }
 grep -Fq 'QILY-CN-AIRCRAFT-CENTERED-V2' "$CN_VI_FILE" || { echo "ERROR: CN aircraft centered layout contract is missing."; exit 1; }
 grep -Fq 'object-position:50% 50%!important' "$CN_VI_FILE" || { echo "ERROR: CN aircraft image is not center-positioned."; exit 1; }
 grep -Fq 'width:100%!important;' "$CN_VI_FILE" || { echo "ERROR: CN aircraft responsive width contract is missing."; exit 1; }

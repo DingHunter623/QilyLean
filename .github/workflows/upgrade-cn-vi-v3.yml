@@ -32,10 +32,12 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260918-cn-aircraft-center-v8'
+          css_version = '20260918-cn-mobile-vi-v9'
           base_version = '20260917-cn-thesis-base-v5'
+          nav_script_version = '20260918-nav-rail-v1'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
+          nav_script_target = f'<script defer src="/assets/cn-nav-rail-v1.js?v={nav_script_version}"></script>'
           css_pattern = re.compile(r'\s*<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">\s*')
           footer_target = '<footer class="footer"><div class="footer-inner"><span>QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">湘ICP备2026041143号-1</a></span></div></footer>'
           toc_pattern = re.compile(r'(<aside\b[^>]*class=["\']toc["\'][^>]*>)(.*?)(</aside>)', re.I | re.S)
@@ -73,6 +75,8 @@ jobs:
               document_count += 1
               out = css_pattern.sub('\n', text)
               out = out.replace('</head>', f'  {css_target}\n</head>', 1)
+              out = re.sub(r'\s*<script defer src="/assets/cn-nav-rail-v1\.js\?v=[^"]+"></script>\s*', '\n', out)
+              out = out.replace('</body>', f'{nav_script_target}\n</body>', 1)
 
               # Official China-site brand expression: visible/metadata brand spelling uses ASCII separator with spaces.
               out = out.replace('QilyLean｜<span>启力精益</span>', 'QilyLean | <span>启力精益</span>')
@@ -136,12 +140,13 @@ jobs:
           set -euo pipefail
           test -f cn-site/assets/qilylean-vi-v1.css
           test -f cn-site/assets/qilylean-vi-v2.css
+          test -f cn-site/assets/cn-nav-rail-v1.js
           python3 - <<'PY'
           from pathlib import Path
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-aircraft-center-v8'
+          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-mobile-vi-v9'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = 'QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
@@ -158,10 +163,13 @@ jobs:
                   continue
               documents += 1
               css_count = text.count(css_marker)
+              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v1')
               footer_count = text.count(footer_marker)
               footer_tags = len(re.findall(r'<footer class="footer">', text))
               if css_count != 1:
                   bad.append((str(path), 'css', css_count))
+              if nav_script_count != 1:
+                  bad.append((str(path), 'nav-script', nav_script_count))
               if 'QilyLean｜启力精益' in text or 'QilyLean 启力精益' in text:
                   bad.append((str(path), 'legacy-brand-separator'))
               if footer_tags:
@@ -209,6 +217,9 @@ jobs:
           grep -q "qilylean-vi-v1.css?v=20260917-cn-thesis-base-v5" cn-site/assets/qilylean-vi-v2.css
           grep -q 'CN page-thesis module: descriptive, not clickable' cn-site/assets/qilylean-vi-v2.css
           grep -q 'QILY-CN-THESIS-NONINTERACTIVE-V1' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'QILY-CN-NAV-RAIL-V1' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'qily-primary-nav-scroll-rail' cn-site/assets/cn-nav-rail-v1.js
+          grep -q -- '--qily-cn-h3:clamp(21px,5.7vw,23px)' cn-site/assets/qilylean-vi-v2.css
           grep -q 'CN global-knowledge CTA: VI gold + explicit interaction feedback' cn-site/assets/qilylean-vi-v2.css
           grep -q 'html:root body .knowledge-bridge>a:hover' cn-site/assets/qilylean-vi-v2.css
           grep -q 'font-size:22px!important' cn-site/assets/qilylean-vi-v2.css
