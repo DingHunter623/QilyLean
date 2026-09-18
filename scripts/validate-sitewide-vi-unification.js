@@ -54,8 +54,12 @@ const cnCss=read('cn-site/assets/qilylean-vi-v2.css');
 const cnRail=read('cn-site/assets/cn-nav-rail-v1.js');
 const cnTranslate=read('cn-site/assets/cn-translate-baidu-v1.js');
 const cnTranslateCss=read('cn-site/assets/cn-translate-baidu-v1.css');
+const workerSocial=read('cloudflare-worker/worker-social.js');
+assert(workerSocial.includes("YOUDAO_TRANSLATE_URL = 'https://openapi.youdao.com/v2/api'"), 'Youdao batch API endpoint is missing from the translation worker.');
+assert(workerSocial.includes("TRANSLATION_CACHE_VERSION = 'v4-youdao'"), 'Youdao translation cache generation is missing.');
+assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation worker implementation is missing.');
 [
-  'QILY-CN-NAV-RAIL-V1',
+  'QILY-CN-NAV-RAIL-V4',
   'QILY-CN-ROUTE-FEEDBACK-V1',
   '--qily-nav-scroll-track:#b9d9d4',
   '--qily-nav-scroll-thumb:#0f4b5a',
@@ -68,11 +72,17 @@ const cnTranslateCss=read('cn-site/assets/cn-translate-baidu-v1.css');
 ].forEach(m=>assert(cnCss.includes(m),'CN unified VI missing: '+m));
 assert(cnRail.includes("rail.type='range'"), 'CN nav rail must use the international range control.');
 assert(cnRail.includes("qily-primary-nav-scroll-rail"), 'CN nav rail runtime class is missing.');
+assert(cnRail.includes('qily-cn-nav-shell'), 'CN desktop/mobile nav shell is missing.');
+assert(cnCss.includes('--qily-cn-primary-nav-font-size:20px'), 'CN primary nav type must match international 20px.');
+assert(cnCss.includes('grid-template-areas:"brand nav translate"'), 'CN desktop header three-zone layout is missing.');
+assert(cnCss.includes('grid-template-areas:"brand translate" "nav nav"'), 'CN mobile header nav row is missing.');
 assert(cnRail.includes('setFromPointer'), 'CN nav rail pointer drag is missing.');
 assert(cnRail.includes('installNavDrag'), 'CN primary nav direct drag is missing.');
 assert(!cnRail.includes('data-qily-translation-provider'), 'CN nav rail must remain translation-neutral.');
-assert(cnTranslate.includes('QilyLean CN In-Page Translation V3'), 'CN in-page translator V3 runtime is missing.');
+assert(cnTranslate.includes('QilyLean CN In-Page Translation V4'), 'CN in-page translator V3 runtime is missing.');
 assert(cnTranslate.includes("data-qily-translation-provider','qilylean-api'"), 'CN translator must declare the QilyLean in-page provider.');
+assert(cnTranslate.includes("data-qily-translation-engine','youdao'"), 'CN translator must declare Youdao as its backend engine.');
+assert(cnTranslate.includes('concurrency=3'), 'CN translator batch concurrency optimization is missing.');
 assert(cnTranslate.includes('API_BASES'), 'CN translator must use the in-page translation API.');
 assert(cnTranslate.includes("option(select,'zh-CN','中文简体')"), 'CN translator Simplified Chinese option is missing.');
 assert(cnTranslate.includes("option(select,'zh-TW','中文繁体')"), 'CN translator Traditional Chinese option is missing.');
@@ -89,10 +99,10 @@ const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*
 assert(cnPages.length>=17,'Expected at least 17 CN document pages.');
 for(const rel of cnPages){
   const html=read(rel);
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v12'), rel+' must use CN VI V12.');
-  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v3'), rel+' must load the international-style nav rail runtime.');
-  assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v3'), rel+' must load exactly one CN translator stylesheet.');
-  assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v3'), rel+' must load exactly one CN translator runtime.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v13'), rel+' must use CN VI V13.');
+  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v4'), rel+' must load the international-style nav rail runtime.');
+  assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v4-youdao'), rel+' must load exactly one CN translator stylesheet.');
+  assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v4-youdao'), rel+' must load exactly one CN translator runtime.');
 }
 
 /* 4) Previous public-copy governance remains mandatory. */

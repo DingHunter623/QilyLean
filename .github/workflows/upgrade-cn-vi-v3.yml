@@ -35,10 +35,10 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260918-cn-vi-v12'
+          css_version = '20260918-cn-vi-v13'
           base_version = '20260917-cn-thesis-base-v5'
-          nav_script_version = '20260918-nav-rail-v3'
-          translate_version = '20260918-translate-v3'
+          nav_script_version = '20260918-nav-rail-v4'
+          translate_version = '20260918-translate-v4-youdao'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
           nav_script_target = f'<script defer src="/assets/cn-nav-rail-v1.js?v={nav_script_version}"></script>'
@@ -154,7 +154,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-vi-v12'
+          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-vi-v13'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = 'QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
@@ -171,9 +171,9 @@ jobs:
                   continue
               documents += 1
               css_count = text.count(css_marker)
-              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v3')
-              translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v3')
-              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v3')
+              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v4')
+              translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v4-youdao')
+              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v4-youdao')
               footer_count = text.count(footer_marker)
               footer_tags = len(re.findall(r'<footer class="footer">', text))
               if css_count != 1:
@@ -231,16 +231,22 @@ jobs:
           grep -q "qilylean-vi-v1.css?v=20260917-cn-thesis-base-v5" cn-site/assets/qilylean-vi-v2.css
           grep -q 'CN page-thesis module: descriptive, not clickable' cn-site/assets/qilylean-vi-v2.css
           grep -q 'QILY-CN-THESIS-NONINTERACTIVE-V1' cn-site/assets/qilylean-vi-v2.css
-          grep -q 'QILY-CN-NAV-RAIL-V1' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'QILY-CN-NAV-RAIL-V4' cn-site/assets/qilylean-vi-v2.css
           grep -q 'qily-primary-nav-scroll-rail' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'qily-cn-nav-shell' cn-site/assets/cn-nav-rail-v1.js
+          grep -q -- '--qily-cn-primary-nav-font-size:20px' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'grid-template-areas:"brand nav translate"' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'grid-template-areas:"brand translate" "nav nav"' cn-site/assets/qilylean-vi-v2.css
           grep -q 'setFromPointer' cn-site/assets/cn-nav-rail-v1.js
           grep -q 'installNavDrag' cn-site/assets/cn-nav-rail-v1.js
           grep -q -- '--qily-nav-scroll-track:#b9d9d4' cn-site/assets/qilylean-vi-v2.css
           grep -q -- '--qily-nav-scroll-thumb:#0f4b5a' cn-site/assets/qilylean-vi-v2.css
           ! grep -q 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
-          grep -q 'QilyLean CN In-Page Translation V3' cn-site/assets/cn-translate-baidu-v1.js
+          grep -q 'QilyLean CN In-Page Translation V4' cn-site/assets/cn-translate-baidu-v1.js
           grep -q 'API_BASES' cn-site/assets/cn-translate-baidu-v1.js
           grep -q 'target_language:target' cn-site/assets/cn-translate-baidu-v1.js
+          grep -q "data-qily-translation-engine','youdao'" cn-site/assets/cn-translate-baidu-v1.js
+          grep -q 'concurrency=3' cn-site/assets/cn-translate-baidu-v1.js
           grep -q 'QilyLean CN In-Page Translation UI V3' cn-site/assets/cn-translate-baidu-v1.css
           grep -q -- '--qily-cn-h3:clamp(19px,5.7vw,21px)' cn-site/assets/qilylean-vi-v2.css
           grep -q 'CN global-knowledge CTA: VI gold + explicit interaction feedback' cn-site/assets/qilylean-vi-v2.css
