@@ -64,8 +64,8 @@
 
   function applyClientConfidentialityPolicy() {
     var path = normalizedPath(location.pathname);
-    var common = '<strong>客户及企业主保密说明：</strong>制造业咨询与改善项目通常涉及客户工艺、产能、成本、设备、布局、经营数据及管理人员信息。基于客户保密要求和职业操守，本站不公开客户企业名称、Logo、企业主及相关人员身份，也不展示可反向识别企业的信息。公开案例统一以行业、规模、项目场景、改善方法、量化结果和脱敏证据呈现。';
-    var verification = '<br><strong>正式洽谈核验：</strong>进入正式洽谈并确认合作意向后，可在签署NDA或双方约定的保密条件下，通过现场投屏方式展示与客户需求相匹配的案例资料、改善前后基线、实施过程、结案绩效及验收记录。投屏资料仅用于能力核验，不提供未授权复制、拍摄或外传。';
+    var common = '<strong>资料说明：</strong>制造业项目资料通常涉及工艺、产能、成本、设备、布局、经营数据及人员信息。页面以行业、规模、项目场景、改善方法与量化结果呈现，并对相关企业和人员信息进行必要的隐私处理。';
+    var verification = '<br><strong>资料核验：</strong>如需进一步了解，可在双方约定的保密条件下核对与需求相关的案例基线、实施过程、结案绩效及验收记录。';
 
     if (path === '/projects/lean-improvement-evidence/') {
       insertNotice(document.querySelector('.evidence-note'), 'qilyEvidenceClientConfidentiality', common + verification);
@@ -76,7 +76,7 @@
       return;
     }
     if (path === '/cooperation/') {
-      insertNotice(document.querySelector('#evidence .module-heading'), 'qilyCooperationClientConfidentiality', common + verification + '<br><strong>合作基线：</strong>正式合作仍须依据企业现状重新建立事实基线，不照搬既有案例结论或收益数据。');
+      insertNotice(document.querySelector('#evidence .module-heading'), 'qilyCooperationClientConfidentiality', common + verification + '<br><strong>适用条件：</strong>历史案例用于说明方法与经验，实际项目仍需依据企业现状重新建立事实基线。');
     }
   }
 
