@@ -140,22 +140,19 @@ if grep -Eo '<loc>[^<]+</loc>' "$SITEMAP_FILE" | grep -vF '<loc>https://qilylean
   exit 1
 fi
 
-GOOGLE_VERIFY_VALUE="$(tr -d '\r
-' < "$GOOGLE_VERIFY_FILE")"
+GOOGLE_VERIFY_VALUE="$(tr -d '\r\n' < "$GOOGLE_VERIFY_FILE")"
 [[ "$GOOGLE_VERIFY_VALUE" == 'google-site-verification: googleb7a991efbed3aa8a.html' ]] || {
   echo "ERROR: Google verification file content changed."
   exit 1
 }
 
-BAIDU_VERIFY_VALUE="$(tr -d '\r
-' < "$BAIDU_VERIFY_FILE")"
+BAIDU_VERIFY_VALUE="$(tr -d '\r\n' < "$BAIDU_VERIFY_FILE")"
 [[ "$BAIDU_VERIFY_VALUE" == '8bdf47bc085187ab7717a549ec5b7904' ]] || {
   echo "ERROR: Baidu verification file content changed."
   exit 1
 }
 
-INDEXNOW_VALUE="$(tr -d '\r
-' < "$INDEXNOW_FILE")"
+INDEXNOW_VALUE="$(tr -d '\r\n' < "$INDEXNOW_FILE")"
 [[ "$INDEXNOW_VALUE" == 'b47ed759da519bd90586a7877122d7be' ]] || {
   echo "ERROR: CN IndexNow verification file content changed."
   exit 1
