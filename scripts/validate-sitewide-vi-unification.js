@@ -60,6 +60,8 @@ assert(workerSocial.includes("TRANSLATION_CACHE_VERSION = 'v4-youdao'"), 'Youdao
 assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation worker implementation is missing.');
 [
   'QILY-CN-NAV-RAIL-V7',
+  'QILY-CN-STICKY-HEADER-V1',
+  'position:sticky!important',
   'QILY-CN-ROUTE-FEEDBACK-V1',
   '--qily-nav-scroll-track:#b9d9d4',
   '--qily-nav-scroll-thumb:#0f4b5a',
@@ -106,10 +108,10 @@ const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*
 assert(cnPages.length>=17,'Expected at least 17 CN document pages.');
 for(const rel of cnPages){
   const html=read(rel);
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v16'), rel+' must use CN VI V16.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v17'), rel+' must use CN VI V16.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7'), rel+' must load the international-style nav rail runtime.');
-  assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v4-youdao'), rel+' must load exactly one CN translator stylesheet.');
-  assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v4-youdao'), rel+' must load exactly one CN translator runtime.');
+  assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao'), rel+' must load exactly one CN translator stylesheet.');
+  assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao'), rel+' must load exactly one CN translator runtime.');
 }
 
 /* 4) Previous public-copy governance remains mandatory. */
