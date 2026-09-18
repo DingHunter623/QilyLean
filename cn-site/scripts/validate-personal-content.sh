@@ -126,14 +126,19 @@ grep -Fq 'object-position:50% 50%!important' "$CN_VI_FILE" || { echo "ERROR: CN 
 grep -Fq 'width:100%!important;' "$CN_VI_FILE" || { echo "ERROR: CN aircraft responsive width contract is missing."; exit 1; }
 grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' "$INDEX_FILE" || { echo "ERROR: CN homepage practice/evidence entry is missing."; exit 1; }
 grep -Fq '实践与成果：把改善结果还原成可复用的工程方法' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive positioning marker is missing."; exit 1; }
-grep -Fq '展示经历，不包装成商业案例' "$INDEX_FILE" || { echo "ERROR: CN homepage practice boundary marker is missing."; exit 1; }
-grep -Fq '团队成果按组织推进口径呈现' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive team-result boundary is missing."; exit 1; }
+grep -Fq '知识之外，更重要的是方法如何在现场落地' "$INDEX_FILE" || { echo "ERROR: CN homepage public-facing practice headline is missing."; exit 1; }
+grep -Fq '精选 8 项制造实践' "$INDEX_FILE" || { echo "ERROR: CN homepage public-facing practice summary is missing."; exit 1; }
+grep -Fq '从实践中提炼可复用方法' "$INDEX_FILE" || { echo "ERROR: CN homepage engineering-logic card is missing."; exit 1; }
+grep -Fq '从现场问题，到可复用的方法' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive public-facing method headline is missing."; exit 1; }
+grep -Fq '8项制造实践，从现场问题走向标准化沉淀' "$PRACTICE_PAGE" || { echo "ERROR: CN representative-practice public-facing headline is missing."; exit 1; }
+grep -Fq '跨部门共同推进，评审、风险确认与结果复盘构成完整闭环' "$PRACTICE_PAGE" || { echo "ERROR: CN practice collaboration wording is missing."; exit 1; }
 grep -Fq '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive must use the local award evidence asset."; exit 1; }
 grep -Fq '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2' "$PRACTICE_PAGE" || { echo "ERROR: CN fuse card must use the finished-product visual cache marker."; exit 1; }
 grep -Fq '玻璃管保险丝切口与烧口工艺改善后的成品照片' "$PRACTICE_PAGE" || { echo "ERROR: CN fuse card finished-product alt text is missing."; exit 1; }
 grep -Fq '/assets/practice.css?v=20260918-practice-visual-v2' "$PRACTICE_PAGE" || { echo "ERROR: CN practice visual V2 cache marker is missing."; exit 1; }
 grep -Fq '6S改善运行机制摘要' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism summary heading is missing."; exit 1; }
-grep -Fq '当前 8 项代表实践均在本页' "$PRACTICE_PAGE" || { echo "ERROR: CN representative-practice full-coverage statement is missing."; exit 1; }
+grep -Fq '6S改善机制：从稽核到激励的运行记录' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S public-facing section headline is missing."; exit 1; }
+grep -Fq '机制说明：' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism explanation is missing."; exit 1; }
 grep -Fq '/assets/practice/automotive-lean.svg?v=20260918-practice-map-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN automotive lean representative practice is missing."; exit 1; }
 grep -Fq '/assets/practice/factory-layout.svg?v=20260918-practice-map-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN factory planning representative practice is missing."; exit 1; }
 grep -Fq '/assets/practice/digital-factory.svg?v=20260918-practice-map-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN digital factory representative practice is missing."; exit 1; }
@@ -147,6 +152,16 @@ grep -Fq 'award-flow' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S closure flow is m
 grep -Fq 'QILY-CN-AWARD-MECHANISM-V2' "$PRACTICE_CSS" || { echo "ERROR: CN 6S award visualization V2 CSS contract is missing."; exit 1; }
 grep -Fq 'grid-template-columns:repeat(2,minmax(0,1fr));' "$PRACTICE_CSS" || { echo "ERROR: CN 6S metric grid must render as 2x2 on desktop."; exit 1; }
 grep -Fq 'white-space:nowrap;' "$PRACTICE_CSS" || { echo "ERROR: CN 6S metric values must avoid vertical wrapping."; exit 1; }
+
+PUBLIC_COPY_INTERNAL_PATTERN='国际站当前|已全部映射为中国站|不引入国际站经营功能|首页仅展示精选入口|不设置国际站商务页面导流|个人非经营知识站|页面定位：|公开边界|展示经历，不包装成商业案例|中国站采用无二维码版本|不设置图片跳转入口|颁奖照片可以展示，但必须说明它证明的是什么|公开脱敏'
+if grep -nE "$PUBLIC_COPY_INTERNAL_PATTERN" "$INDEX_FILE" "$PRACTICE_PAGE"; then
+  echo "ERROR: Public CN pages contain internal/admin-facing copy."
+  exit 1
+fi
+if grep -nE 'PUBLIC REDACTION|公开脱敏' "$PRACTICE_EVIDENCE"; then
+  echo "ERROR: Public CN evidence visual contains internal redaction wording."
+  exit 1
+fi
 
 grep -Fxq 'Allow: /' "$ROBOTS_FILE" || {
   echo "ERROR: CN robots.txt must allow crawling."
