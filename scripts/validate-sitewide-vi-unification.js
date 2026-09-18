@@ -59,7 +59,7 @@ const cnTranslateCss=read('cn-site/assets/cn-translate-baidu-v1.css');
   'QILY-CN-ROUTE-FEEDBACK-V1',
   '--qily-nav-scroll-track:#b9d9d4',
   '--qily-nav-scroll-thumb:#0f4b5a',
-  '--qily-cn-h1:clamp(30px,8.4vw,37px)',
+  '--qily-cn-h1:clamp(30px,8.4vw,38px)',
   '--qily-cn-h2:clamp(24px,6.8vw,29px)',
   '--qily-cn-h3:clamp(19px,5.7vw,21px)',
   'scrollbar-width:none!important',
@@ -89,10 +89,10 @@ const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*
 assert(cnPages.length>=17,'Expected at least 17 CN document pages.');
 for(const rel of cnPages){
   const html=read(rel);
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v11'), rel+' must use CN VI v9.');
-  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v2'), rel+' must load the international-style nav rail runtime.');
-  assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-baidu-v2'), rel+' must load exactly one CN translator stylesheet.');
-  assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-baidu-v2'), rel+' must load exactly one CN translator runtime.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v12'), rel+' must use CN VI V12.');
+  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v3'), rel+' must load the international-style nav rail runtime.');
+  assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v3'), rel+' must load exactly one CN translator stylesheet.');
+  assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v3'), rel+' must load exactly one CN translator runtime.');
 }
 
 /* 4) Previous public-copy governance remains mandatory. */
@@ -100,4 +100,4 @@ assert(fs.existsSync(path.join(root,'scripts/validate-public-copy-governance.js'
 assert(fs.existsSync(path.join(root,'.github/workflows/validate-public-copy-governance.yml')), 'Previous public-copy governance workflow must remain present.');
 
 if(process.exitCode) process.exit(process.exitCode);
-console.log('Sitewide VI governance passed: international interaction/type authority, Global Knowledge shared VI, and CN deep-teal rail and single-owner Baidu translation header are aligned.');
+console.log('Sitewide VI governance passed: international interaction/type authority, Global Knowledge shared VI, and CN deep-teal rail and single-owner in-page translation header are aligned.');
