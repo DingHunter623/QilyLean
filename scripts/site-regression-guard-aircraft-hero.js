@@ -38,7 +38,8 @@ assert(source.equals(png),'Production aircraft PNG is not byte-identical to å®˜ç
 assert(png.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])),'Canonical aircraft asset is not PNG');
 const width=png.readUInt32BE(16),height=png.readUInt32BE(20);
 assert(width>=1200&&height>=675,`Canonical aircraft resolution too small: ${width}x${height}`);
-const declaredDims=block.match(/width="(\\d+)"\\s+height="(\\d+)"/);\nif(declaredDims)assert(Number(declaredDims[1])===width&&Number(declaredDims[2])===height,'Aircraft intrinsic dimensions do not match the latest SSOT');
+const declaredDims=block.match(/width="(\d+)"\s+height="(\d+)"/);
+if(declaredDims)assert(Number(declaredDims[1])===width&&Number(declaredDims[2])===height,'Aircraft intrinsic dimensions do not match the latest SSOT');
 assert(block.includes(`qilylean-aircraft-hero-latest-q98.webp?v=${ASSET_VERSION}`),'Latest aircraft WebP cache version missing');
 assert(block.includes(`qilylean-aircraft-hero-approved-20260826.png?v=${ASSET_VERSION}`),'Latest canonical PNG fallback missing');
 assert((block.match(/<picture\b/g)||[]).length===1,'Aircraft extension must contain exactly one picture wrapper');
