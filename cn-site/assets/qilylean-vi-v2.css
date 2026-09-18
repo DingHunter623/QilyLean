@@ -13,9 +13,9 @@
   --qily-cn-h2:clamp(26px,2vw,32px);
   --qily-cn-h3:clamp(20px,1.4vw,23px);
   --qily-cn-fixed-footer-h:78px;
-  --qily-nav-scroll-track:#b9d9d4;
-  --qily-nav-scroll-thumb:#0f4b5a;
-  --qily-nav-scroll-thumb-hover:#12606f;
+  --qily-nav-scroll-track:#f3e6cf;
+  --qily-nav-scroll-thumb:#caa15f;
+  --qily-nav-scroll-thumb-hover:#b8893f;
   --qily-nav-rail-track:var(--qily-nav-scroll-track);
   --qily-nav-rail-thumb:var(--qily-nav-scroll-thumb);
   --qily-nav-rail-thumb-hover:var(--qily-nav-scroll-thumb-hover);
@@ -188,6 +188,29 @@ html:root body .footer-inner a:focus-visible{
   html:root body .footer-inner>span,
   html:root body .footer-inner a{font-size:17px!important}
 }
+@media(max-width:720px){
+  html:root body .site-header .header-inner{
+    grid-template-columns:minmax(0,1fr) max-content!important;
+    grid-template-areas:"brand translate" "nav nav"!important;
+    column-gap:10px!important;
+    row-gap:6px!important;
+    align-items:center!important;
+    padding-top:10px!important;
+    padding-bottom:7px!important;
+  }
+  html:root body .site-header .qily-cn-nav-shell{width:100%!important;min-width:0!important}
+  html:root body .site-header .qily-cn-translate{
+    position:relative!important;
+    top:auto!important;
+    right:auto!important;
+    width:150px!important;
+    min-width:150px!important;
+    max-width:150px!important;
+  }
+}
+@media(max-width:520px){
+  html:root body .site-header .qily-cn-translate{width:142px!important;min-width:142px!important;max-width:142px!important}
+}
 @media(max-width:620px){
   :root{
     --qily-cn-body:17px;
@@ -254,12 +277,44 @@ html:root body .nav>a[href="/knowledge/"]::before{
 }
 html:root body :is(.nav a,.toc :is(a,span)){word-break:keep-all!important;overflow-wrap:normal!important}
 
-/* QILY-CN-NAV-RAIL-V1 | 2026-09-18
- * Same interaction geometry as international-site primary navigation.
- * The native OS scrollbar is hidden; an explicit draggable range rail carries the visual affordance.
+/* QILY-CN-NAV-RAIL-V4 | 2026-09-18
+ * Header architecture: Brand | independent navigation scroll bay | Translation.
+ * The translation utility never consumes the nav's scroll geometry.
+ * Rail colors are the international-site VI gold pair.
  */
 html:root body .site-header{position:relative!important}
-html:root body .site-header .nav{
+html:root body .site-header .header-inner{
+  display:grid!important;
+  grid-template-columns:max-content minmax(0,1fr) max-content!important;
+  grid-template-areas:"brand nav translate"!important;
+  align-items:center!important;
+  column-gap:18px!important;
+  row-gap:0!important;
+  min-width:0!important;
+}
+html:root body .site-header .brand{grid-area:brand!important;min-width:max-content!important}
+html:root body .site-header .qily-cn-nav-shell{
+  grid-area:nav!important;
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  padding-bottom:13px!important;
+  overflow:visible!important;
+}
+html:root body .site-header .qily-cn-translate{
+  grid-area:translate!important;
+  position:relative!important;
+  top:auto!important;
+  right:auto!important;
+  left:auto!important;
+  bottom:auto!important;
+  align-self:center!important;
+}
+html:root body .site-header .qily-cn-nav-shell .nav{
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
   overflow-x:auto!important;
   overflow-y:hidden!important;
   flex-wrap:nowrap!important;
@@ -271,11 +326,14 @@ html:root body .site-header .nav{
   overscroll-behavior-x:contain!important;
   -webkit-overflow-scrolling:touch!important;
 }
-html:root body .site-header .nav::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+html:root body .site-header .qily-cn-nav-shell .nav::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
 html:root body input.qily-primary-nav-scroll-rail[type="range"]{
   position:absolute!important;
   z-index:2147481000!important;
-  bottom:4px!important;
+  left:0!important;
+  right:auto!important;
+  bottom:1px!important;
+  width:100%!important;
   height:10px!important;
   min-width:60px!important;
   margin:0!important;
@@ -294,7 +352,7 @@ html:root body input.qily-primary-nav-scroll-rail[type="range"]::-webkit-slider-
   border:0!important;
   border-radius:999px!important;
   background:var(--qily-nav-scroll-track)!important;
-  border:1px solid rgba(15,75,90,.22)!important;
+  border:0!important;
   box-shadow:none!important;
 }
 html:root body input.qily-primary-nav-scroll-rail[type="range"]::-webkit-slider-thumb{
@@ -333,7 +391,7 @@ html:root body input.qily-primary-nav-scroll-rail[type="range"]:focus-visible{
 }
 html:root body input.qily-primary-nav-scroll-rail[type="range"][data-qily-nav-overflow="false"],
 html:root body input.qily-primary-nav-scroll-rail[type="range"][disabled]{
-  opacity:0!important;
+  opacity:.62!important;
   pointer-events:none!important;
   cursor:default!important;
   filter:none!important;
@@ -347,6 +405,10 @@ html:root body .table-wrap table :is(th,td):first-child{
   overflow-wrap:normal!important;
 }
 @media(max-width:900px){
+  html:root body .site-header .header-inner{
+    grid-template-columns:max-content minmax(0,1fr) max-content!important;
+    column-gap:12px!important;
+  }
   html:root body .nav>a[href="/lean/"],
   html:root body .nav>a[href="/ie/"],
   html:root body .nav>a[href="/standardization/"],
