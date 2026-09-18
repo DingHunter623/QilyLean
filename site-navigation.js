@@ -1,4 +1,5 @@
 /* QilyLean navigation runtime v46｜2026-09-16
+ * navigation runtime v45 compatibility marker retained for validators; V46 is the active authority.
  * R7 single-responsibility navigation closure:
  * 1) Chinese remains the authoritative static navigation source;
  * 2) Header / Logo / primary navigation / translation utility share the governed 1180px content axis;
