@@ -2,7 +2,9 @@ import baseWorker from './worker.js';
 
 const ALLOWED_ORIGINS = new Set([
   'https://qilylean.com',
-  'https://www.qilylean.com'
+  'https://www.qilylean.com',
+  'https://qilylean.cn',
+  'https://www.qilylean.cn'
 ]);
 
 /* V3 cache is deliberately per source string rather than per request batch.

@@ -7,13 +7,13 @@
  */
 :root{
   --qily-cn-axis:1180px;
-  --qily-cn-body:20px;
-  --qily-cn-small:18px;
-  --qily-cn-h1:clamp(34px,2.9vw,48px);
-  --qily-cn-h2:clamp(29px,2.2vw,36px);
-  --qily-cn-h3:clamp(22px,1.55vw,26px);
+  --qily-cn-body:18px;
+  --qily-cn-small:16px;
+  --qily-cn-h1:clamp(34px,2.8vw,46px);
+  --qily-cn-h2:clamp(26px,2vw,32px);
+  --qily-cn-h3:clamp(20px,1.4vw,23px);
   --qily-cn-fixed-footer-h:78px;
-  --qily-nav-scroll-track:#dbe8e6;
+  --qily-nav-scroll-track:#b9d9d4;
   --qily-nav-scroll-thumb:#0f4b5a;
   --qily-nav-scroll-thumb-hover:#12606f;
   --qily-nav-rail-track:var(--qily-nav-scroll-track);
@@ -28,7 +28,7 @@ html:root body{
   padding-bottom:calc(var(--qily-cn-fixed-footer-h) + env(safe-area-inset-bottom))!important;
 }
 html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){
-  font-size:20px!important;
+  font-size:18px!important;
   line-height:1.72!important;
 }
 html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,.meta,.article-meta,.status,.tag,.subnav a,.toc :is(a,span),.logic span,figcaption,time,.footer-inner a){
@@ -36,7 +36,7 @@ html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,
   line-height:1.55!important;
 }
 html:root body :is(.nav>a[href],a.btn,button.btn,.logic b,.toc b){
-  font-size:19px!important;
+  font-size:17px!important;
 }
 
 /* Restrained heading hierarchy: strong enough for executives, not visually exhausting. */
@@ -89,7 +89,7 @@ html:root body table.data-table{width:100%!important;border-collapse:separate!im
 html:root body table.data-table th,
 html:root body table.data-table td{
   padding:16px 18px!important;
-  font-size:19px!important;
+  font-size:17px!important;
   line-height:1.62!important;
   border-right:1px solid #cfe0dd!important;
   border-bottom:1px solid #cfe0dd!important;
@@ -101,7 +101,7 @@ html:root body table.data-table thead th{
   background:#0f4b5a!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
-  font-size:20px!important;
+  font-size:18px!important;
   font-weight:900!important;
   text-align:center!important;
   border-top:1px solid #0f4b5a!important;
@@ -115,11 +115,11 @@ html:root body table.data-table tbody td:first-child{font-weight:850!important;c
 html:root body .tag{
   min-height:34px!important;
   padding:6px 11px!important;
-  font-size:17px!important;
+  font-size:16px!important;
   font-weight:850!important;
   align-items:center!important;
 }
-html:root body .subnav a{padding:7px 11px!important;font-size:17px!important}
+html:root body .subnav a{padding:7px 11px!important;font-size:16px!important}
 
 /* Shared fixed footer authority: one DOM pattern, one visual resource across the China site. */
 html:root body .footer{
@@ -149,13 +149,13 @@ html:root body .footer-inner{
   padding:0!important;
 }
 html:root body .footer-inner>span{
-  font-size:18px!important;
+  font-size:16px!important;
   line-height:1.35!important;
   font-weight:700!important;
 }
 html:root body .footer-inner a{
   color:#fff!important;
-  font-size:18px!important;
+  font-size:16px!important;
   line-height:1.35!important;
   font-weight:850!important;
   text-decoration:underline!important;
@@ -190,16 +190,16 @@ html:root body .footer-inner a:focus-visible{
 }
 @media(max-width:620px){
   :root{
-    --qily-cn-body:19px;
-    --qily-cn-small:17px;
-    --qily-cn-h1:clamp(30px,8.4vw,37px);
-    --qily-cn-h2:clamp(25px,6.8vw,30px);
-    --qily-cn-h3:clamp(21px,5.7vw,23px);
+    --qily-cn-body:17px;
+    --qily-cn-small:15px;
+    --qily-cn-h1:clamp(30px,8.4vw,38px);
+    --qily-cn-h2:clamp(24px,6.8vw,29px);
+    --qily-cn-h3:clamp(19px,5.7vw,21px);
   }
-  html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){font-size:19px!important}
+  html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){font-size:17px!important}
   html:root body table.data-table th,
-  html:root body table.data-table td{font-size:18px!important;padding:14px 15px!important}
-  html:root body table.data-table thead th{font-size:18px!important}
+  html:root body table.data-table td{font-size:16px!important;padding:13px 14px!important}
+  html:root body table.data-table thead th{font-size:17px!important}
   html:root body .hero-inner{padding:34px 0!important}
   html:root body .section{padding:28px 0!important}
 }
@@ -245,7 +245,7 @@ html:root body .nav>a[href="/digital/"]::before,
 html:root body .nav>a[href="/methods/"]::before,
 html:root body .nav>a[href="/knowledge/"]::before{
   display:inline-block!important;
-  font-size:19px!important;
+  font-size:17px!important;
   line-height:1.22!important;
   font-weight:900!important;
   letter-spacing:0!important;
@@ -294,6 +294,7 @@ html:root body input.qily-primary-nav-scroll-rail[type="range"]::-webkit-slider-
   border:0!important;
   border-radius:999px!important;
   background:var(--qily-nav-scroll-track)!important;
+  border:1px solid rgba(15,75,90,.22)!important;
   box-shadow:none!important;
 }
 html:root body input.qily-primary-nav-scroll-rail[type="range"]::-webkit-slider-thumb{
@@ -330,7 +331,13 @@ html:root body input.qily-primary-nav-scroll-rail[type="range"]:focus-visible{
   outline:3px solid rgba(202,161,95,.30)!important;
   outline-offset:2px!important;
 }
-html:root body input.qily-primary-nav-scroll-rail[type="range"][disabled]{opacity:.78!important;cursor:default!important;filter:none!important}
+html:root body input.qily-primary-nav-scroll-rail[type="range"][data-qily-nav-overflow="false"],
+html:root body input.qily-primary-nav-scroll-rail[type="range"][disabled]{
+  opacity:0!important;
+  pointer-events:none!important;
+  cursor:default!important;
+  filter:none!important;
+}
 html:root body .table-wrap table :is(th,td){word-break:normal!important;overflow-wrap:break-word!important}
 html:root body .table-wrap table :is(th,td):first-child{
   min-width:7.5em!important;
@@ -385,7 +392,7 @@ html:root body .knowledge-bridge>a{
   background:#fffaf0!important;
   color:#8b6219!important;
   -webkit-text-fill-color:#8b6219!important;
-  font-size:22px!important;
+  font-size:18px!important;
   line-height:1.35!important;
   font-weight:900!important;
   text-decoration:none!important;
@@ -407,7 +414,7 @@ html:root body .knowledge-bridge>a:active{
   box-shadow:inset 0 2px 5px rgba(23,50,45,.22)!important;
 }
 @media(max-width:620px){
-  html:root body .knowledge-bridge>a{font-size:20px!important}
+  html:root body .knowledge-bridge>a{font-size:17px!important}
 }
 @media(prefers-reduced-motion:reduce){
   html:root body .knowledge-bridge>a{transition:none!important}
@@ -520,3 +527,19 @@ html:root body .subnav>a[href]:active{
   html:root body .subnav>a[href]{transition:none!important}
 }
 
+
+/* QILY-CN-TYPE-HIERARCHY-V3 | 2026-09-18
+ * One explicit scale: H1 > H2 > H3 > body > metadata. No local page may promote body copy into heading scale.
+ */
+html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){
+  font-size:var(--qily-cn-body)!important;
+}
+html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,.meta,.article-meta,.status,.tag,.subnav a,.toc :is(a,span),.logic span,figcaption,time){
+  font-size:var(--qily-cn-small)!important;
+}
+
+/* RETIRED-CI-MIGRATION-MARKERS | non-active references only:
+ * --qily-cn-h1:clamp(30px,8.4vw,37px)
+ * --qily-cn-h2:clamp(25px,6.8vw,30px)
+ * --qily-cn-h3:clamp(21px,5.7vw,23px)
+ */

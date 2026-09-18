@@ -141,7 +141,7 @@ html body main pre{
  * The site header is the primary visual anchor. Every first-level label, active border and language-control border must remain fully visible inside the header content axis.
  */
 :root{
-  --qily-header-rail-track:#dbe8e6;
+  --qily-header-rail-track:#b9d9d4;
   --qily-header-rail-thumb:#0f4b5a;
   --qily-header-rail-hover:#12606f;
 }

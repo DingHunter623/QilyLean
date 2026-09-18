@@ -43,7 +43,7 @@ forbid(containment,'QILY-0830-HEADER-INTEGRITY-V1:START','Containment must not o
 forbidRe(containment,/main\s+table\s*\{[\s\S]{0,280}?display\s*:\s*block\s*!important/i,'Containment must not convert tables to blocks');
 must(containment,'QILY-R8-CONTAINMENT-ONLY','Containment single responsibility marker');
 
-must(header,'--qily-nav-scroll-track:#dbe8e6','Header deep-teal track');
+must(header,'--qily-nav-scroll-track:#b9d9d4','Header international track');
 must(header,'--qily-nav-scroll-thumb:#0f4b5a','Header deep-teal thumb');
 must(semantics,'--qily-nav-rail-thumb:#0f4b5a','Interaction deep-teal thumb');
 must(redline,'--ql-redline-rail-track:#dbe8e6','Redline fallback track');

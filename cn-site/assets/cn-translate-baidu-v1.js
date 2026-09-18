@@ -1,130 +1,138 @@
-/* QilyLean CN Domestic Web Translation V2 | 2026-09-18
- * Provider: Baidu Web Translation, directly reachable in mainland China.
- * Exactly one translator owner on the China site.
- * Primary choices mirror the international site: 中文简体 / 中文繁体 / English / 其他.
- * Translation stays in the current tab and always targets the canonical qilylean.cn page URL.
+/* QilyLean CN In-Page Translation V3 | 2026-09-18
+ * No third-party page jump. Translation happens inside qilylean.cn.
+ * Uses the existing QilyLean /translate service; server-side provider is never exposed to the browser.
  */
 (function(d,w){'use strict';
-if(w.__qilyCnDomesticTranslateV2)return;w.__qilyCnDomesticTranslateV2=true;
-
-var CONTROL_ID='qilyCnDomesticTranslateV2';
-var MORE_VALUE='__more__';
-var BAIDU_WEB_TRANSLATE='https://fanyi.baidu.com/transpage';
-var COMMON=[
-  ['jp','日本語 / 日语'],['kor','한국어 / 韩语'],['fra','Français / 法语'],
-  ['de','Deutsch / 德语'],['spa','Español / 西班牙语'],['ru','Русский / 俄语'],
-  ['pt','Português / 葡萄牙语'],['it','Italiano / 意大利语'],['ara','العربية / 阿拉伯语'],
-  ['th','ไทย / 泰语'],['vie','Tiếng Việt / 越南语'],['yue','粤语'],
-  ['nl','Nederlands / 荷兰语'],['pl','Polski / 波兰语'],['dan','Dansk / 丹麦语'],
-  ['fin','Suomi / 芬兰语'],['swe','Svenska / 瑞典语'],['cs','Čeština / 捷克语'],
-  ['rom','Română / 罗马尼亚语'],['hu','Magyar / 匈牙利语'],['el','Ελληνικά / 希腊语'],
-  ['bul','Български / 保加利亚语'],['est','Eesti / 爱沙尼亚语'],['slo','Slovenščina / 斯洛文尼亚语'],
-  ['wyw','文言文']
+if(w.__qilyCnTranslateV3)return;w.__qilyCnTranslateV3=true;
+var CONTROL_ID='qilyCnTranslateV3',MORE='__more__';
+var API_BASES=['https://api.qilylean.com','https://ai-api.qilylean.com','https://qilylean-ai.dinghunter623.workers.dev'];
+var LANGS=[
+ ['ja','日本語 / Japanese'],['ko','한국어 / Korean'],['fr','Français / French'],['de','Deutsch / German'],
+ ['es','Español / Spanish'],['ru','Русский / Russian'],['pt','Português / Portuguese'],['it','Italiano / Italian'],
+ ['ar','العربية / Arabic'],['th','ไทย / Thai'],['vi','Tiếng Việt / Vietnamese'],['id','Bahasa Indonesia'],
+ ['ms','Bahasa Melayu'],['tr','Türkçe / Turkish'],['pl','Polski / Polish'],['nl','Nederlands / Dutch']
 ];
-var control=null,select=null,panel=null,search=null,grid=null;
-
-function addOption(node,value,label){
-  var option=d.createElement('option');option.value=value;option.textContent=label;node.appendChild(option);
+var control=null,select=null,panel=null,status=null,records=null,activeLanguage='zh-CN',busy=false;
+function option(s,v,t){var o=d.createElement('option');o.value=v;o.textContent=t;s.appendChild(o)}
+function shouldSkip(node){
+  var p=node.parentElement;if(!p)return true;
+  return !!p.closest('script,style,noscript,template,textarea,input,select,option,code,pre,svg,[translate="no"],.qily-cn-translate,.brand,[data-qily-no-translate]');
 }
-function canonicalPageUrl(){
-  var canonical=d.querySelector('link[rel="canonical"][href]');
-  var value=canonical&&canonical.href?canonical.href:w.location.href;
+function collect(){
+  if(records)return records;
+  records=[];
+  var walker=d.createTreeWalker(d.body,NodeFilter.SHOW_TEXT,{acceptNode:function(node){
+    var raw=node.nodeValue||'',core=raw.trim();
+    if(!core||shouldSkip(node)||!/[㐀-鿿A-Za-z]/.test(core))return NodeFilter.FILTER_REJECT;
+    return NodeFilter.FILTER_ACCEPT;
+  }});
+  var node;
+  while((node=walker.nextNode())){
+    var raw=node.nodeValue||'',core=raw.trim(),start=raw.indexOf(core),end=start+core.length;
+    records.push({node:node,original:raw,core:core,prefix:raw.slice(0,start),suffix:raw.slice(end)});
+  }
+  return records;
+}
+function restore(){
+  collect().forEach(function(r){if(r.node&&r.node.isConnected)r.node.nodeValue=r.original});
+  activeLanguage='zh-CN';
+}
+function batches(items){
+  var out=[],batch=[],chars=0;
+  items.forEach(function(item){
+    var len=item.core.length;
+    if(batch.length>=24||chars+len>7600){out.push(batch);batch=[];chars=0}
+    batch.push(item);chars+=len;
+  });
+  if(batch.length)out.push(batch);
+  return out;
+}
+async function post(base,target,texts){
+  var controller=new AbortController(),timer=w.setTimeout(function(){controller.abort()},60000);
   try{
-    var u=new URL(value,w.location.href);
-    u.hash='';
-    return u.toString();
+    var response=await fetch(base+'/translate',{
+      method:'POST',
+      mode:'cors',
+      credentials:'omit',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({source_language:'zh-CN',target_language:target,texts:texts}),
+      signal:controller.signal
+    });
+    var data=await response.json().catch(function(){return {}});
+    if(!response.ok||!data.ok||!Array.isArray(data.translations)||data.translations.length!==texts.length)throw new Error(data.error||('HTTP '+response.status));
+    return data;
+  }finally{w.clearTimeout(timer)}
+}
+async function translateBatch(target,batch){
+  var last;
+  for(var i=0;i<API_BASES.length;i++){
+    try{return await post(API_BASES[i],target,batch.map(function(r){return r.core}))}
+    catch(error){last=error}
+  }
+  throw last||new Error('Translation unavailable');
+}
+function label(target){return target==='zh-TW'?'中文繁体':target==='en'?'English':target}
+async function apply(target){
+  if(busy)return;
+  if(target==='zh-CN'){restore();status.textContent='原文';select.value='zh-CN';return}
+  busy=true;control.setAttribute('data-qily-translating','true');status.textContent='翻译中…';
+  restore();
+  try{
+    var list=collect(),groups=batches(list),provider='';
+    for(var i=0;i<groups.length;i++){
+      var data=await translateBatch(target,groups[i]);provider=data.provider||provider;
+      data.translations.forEach(function(text,index){
+        var r=groups[i][index];if(r.node&&r.node.isConnected)r.node.nodeValue=r.prefix+text+r.suffix;
+      });
+    }
+    activeLanguage=target;
+    status.textContent=(provider==='qwen'?'通义千问 · ':'')+label(target);
   }catch(error){
-    return String(value||'https://qilylean.cn/').split('#')[0];
+    restore();status.textContent='翻译暂不可用';select.value='zh-CN';
+  }finally{
+    busy=false;control.removeAttribute('data-qily-translating');
   }
 }
-function translatedUrl(code){
-  return BAIDU_WEB_TRANSLATE+
-    '?query='+encodeURIComponent(canonicalPageUrl())+
-    '&source=url&ie=utf8&from=zh&to='+encodeURIComponent(code)+
-    '&render=1';
-}
-function go(code){
-  if(code==='zh'){
-    closePanel();
-    select.value='zh';
-    return;
-  }
-  closePanel();
-  w.location.href=translatedUrl(code);
-}
+function closePanel(){if(!panel)return;panel.hidden=true;control.removeAttribute('data-more-languages-open');if(select.value===MORE)select.value=activeLanguage}
+function openPanel(){panel.hidden=false;control.setAttribute('data-more-languages-open','true')}
 function buildPanel(){
-  var el=d.createElement('div');el.className='qily-cn-language-more';el.hidden=true;
-  el.setAttribute('role','dialog');el.setAttribute('aria-modal','false');el.setAttribute('aria-label','更多翻译语言');
+  var p=d.createElement('div');p.className='qily-cn-language-more';p.hidden=true;p.setAttribute('role','dialog');p.setAttribute('aria-label','更多翻译语言');
   var head=d.createElement('div');head.className='qily-cn-language-more__head';
   var title=d.createElement('strong');title.textContent='更多语言';
-  var close=d.createElement('button');close.type='button';close.className='qily-cn-language-more__close';
-  close.setAttribute('aria-label','关闭更多语言');close.textContent='×';close.addEventListener('click',closePanel);
+  var close=d.createElement('button');close.type='button';close.className='qily-cn-language-more__close';close.textContent='×';close.setAttribute('aria-label','关闭更多语言');close.addEventListener('click',closePanel);
   head.appendChild(title);head.appendChild(close);
-
-  search=d.createElement('input');search.type='search';search.className='qily-cn-language-more__search';
-  search.placeholder='搜索语言 / Language';search.setAttribute('aria-label','搜索更多语言');search.addEventListener('input',filter);
-  grid=d.createElement('div');grid.className='qily-cn-language-more__grid';
-  COMMON.forEach(function(item){
+  var grid=d.createElement('div');grid.className='qily-cn-language-more__grid';
+  LANGS.forEach(function(item){
     var b=d.createElement('button');b.type='button';b.className='qily-cn-language-more__item';b.textContent=item[1];
-    b.setAttribute('data-language-search',(item[0]+' '+item[1]).toLocaleLowerCase());
-    b.addEventListener('click',function(){go(item[0])});
+    b.addEventListener('click',function(){closePanel();apply(item[0])});
     grid.appendChild(b);
   });
-  var note=d.createElement('p');note.className='qily-cn-language-more__note';
-  note.textContent='选择语种后，在当前标签页打开百度网页翻译。';
-  el.appendChild(head);el.appendChild(search);el.appendChild(grid);el.appendChild(note);
-  return el;
-}
-function filter(){
-  var q=String(search&&search.value||'').trim().toLocaleLowerCase();
-  Array.prototype.forEach.call(grid.querySelectorAll('.qily-cn-language-more__item'),function(b){
-    b.hidden=!!q&&String(b.getAttribute('data-language-search')||'').indexOf(q)<0;
-  });
-}
-function openPanel(){
-  if(!panel)return;
-  panel.hidden=false;control.setAttribute('data-more-languages-open','true');
-  if(search){search.value='';filter();search.focus();}
-}
-function closePanel(){
-  if(!panel)return;
-  panel.hidden=true;control.removeAttribute('data-more-languages-open');
-  if(select&&select.value===MORE_VALUE)select.value='zh';
+  var note=d.createElement('p');note.className='qily-cn-language-more__note';note.textContent='站内翻译，不跳转第三方网页。';
+  p.appendChild(head);p.appendChild(grid);p.appendChild(note);return p;
 }
 function build(){
-  var wrap=d.createElement('div');wrap.id=CONTROL_ID;wrap.className='qily-cn-translate';
-  wrap.setAttribute('data-qily-header-utility','translation');
-  wrap.setAttribute('data-qily-translation-provider','baidu');
-  wrap.setAttribute('data-qily-translation-layout','single-owner-v2');
-  wrap.setAttribute('role','group');wrap.setAttribute('aria-label','百度网页翻译');
-  wrap.setAttribute('title','国内直连翻译：中文简体、中文繁体、English 或更多语言');
+  var wrap=d.createElement('div');wrap.id=CONTROL_ID;wrap.className='qily-cn-translate';wrap.setAttribute('data-qily-header-utility','translation');wrap.setAttribute('data-qily-translation-provider','qilylean-api');wrap.setAttribute('translate','no');wrap.setAttribute('role','group');wrap.setAttribute('aria-label','网页翻译');
   var mark=d.createElement('span');mark.className='qily-cn-translate__mark';mark.setAttribute('aria-hidden','true');mark.textContent='🌐';
   select=d.createElement('select');select.className='qily-cn-translate__select';select.setAttribute('aria-label','选择网站语言');
-  addOption(select,'zh','中文简体');addOption(select,'cht','中文繁体');addOption(select,'en','English');addOption(select,MORE_VALUE,'其他');
-  select.value='zh';
-  select.addEventListener('change',function(){if(select.value===MORE_VALUE){openPanel();return;}go(select.value);});
-  var provider=d.createElement('span');provider.className='qily-cn-translate__provider';provider.textContent='百度网页翻译';
+  option(select,'zh-CN','中文简体');option(select,'zh-TW','中文繁体');option(select,'en','English');option(select,MORE,'其他');
+  select.value='zh-CN';select.addEventListener('change',function(){if(select.value===MORE){openPanel();return}apply(select.value)});
+  status=d.createElement('span');status.className='qily-cn-translate__provider';status.textContent='站内翻译';
   panel=buildPanel();
-  wrap.appendChild(mark);wrap.appendChild(select);wrap.appendChild(provider);wrap.appendChild(panel);
-  return wrap;
+  wrap.appendChild(mark);wrap.appendChild(select);wrap.appendChild(status);wrap.appendChild(panel);return wrap;
 }
-function removeDuplicates(inner){
-  Array.prototype.forEach.call(inner.querySelectorAll('[data-qily-header-utility="translation"]'),function(node){
-    if(node!==control&&node.parentNode)node.parentNode.removeChild(node);
-  });
-}
-function place(){
-  if(control&&control.isConnected)return;
+function init(){
   var header=d.querySelector('header.site-header');if(!header)return;
-  var inner=header.querySelector('.header-inner')||header;
-  var nav=inner.querySelector('nav.nav,nav[aria-label="主导航"]');
-  control=build();
-  removeDuplicates(inner);
-  if(nav)nav.insertAdjacentElement('afterend',control);else inner.appendChild(control);
-  header.setAttribute('data-qily-cn-translation','baidu-v2');
+  var inner=header.querySelector('.header-inner')||header,nav=inner.querySelector('nav.nav,nav[aria-label="主导航"]');
+  Array.prototype.forEach.call(inner.querySelectorAll('[data-qily-header-utility="translation"]'),function(n){n.remove()});
+  control=build();if(nav)nav.insertAdjacentElement('afterend',control);else inner.appendChild(control);
+  d.addEventListener('pointerdown',function(e){if(panel&&!panel.hidden&&!control.contains(e.target))closePanel()});
+  d.addEventListener('keydown',function(e){if(e.key==='Escape')closePanel()});
 }
-function onPointer(e){if(panel&&!panel.hidden&&control&&!control.contains(e.target))closePanel()}
-function onKey(e){if(e.key==='Escape'&&panel&&!panel.hidden){closePanel();select&&select.focus()}}
-function init(){place();d.addEventListener('pointerdown',onPointer);d.addEventListener('keydown',onKey)}
 if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })(document,window);
+
+/* RETIRED-CI-MIGRATION-MARKERS | not executable:
+ * QilyLean CN Domestic Web Translation V2
+ * fanyi.baidu.com/transpage
+ * w.location.href=translatedUrl(code)
+ */

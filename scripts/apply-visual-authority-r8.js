@@ -97,7 +97,7 @@ sourceChanges+=replaceRegex(
 
 /* VIS-004 / VIS-008 / VIS-009: stale redline fallbacks must agree with R8 even before final authority loads. */
 sourceChanges+=replaceLiteral('site-public-redline-closure-v2.css','--ql-redline-header-offset:86px;','--ql-redline-header-offset:var(--qily-header-live-height,86px);',false);
-sourceChanges+=replaceLiteral('site-public-redline-closure-v2.css','--ql-redline-rail-track:#f3e6cf;','--ql-redline-rail-track:#dbe8e6;',false);
+sourceChanges+=replaceLiteral('site-public-redline-closure-v2.css','--ql-redline-rail-track:#f3e6cf;','--ql-redline-rail-track:#b9d9d4;',false);
 sourceChanges+=replaceLiteral('site-public-redline-closure-v2.css','--ql-redline-rail-thumb:#caa15f;','--ql-redline-rail-thumb:#0f4b5a;',false);
 sourceChanges+=replaceLiteral('site-public-redline-closure-v2.css','--ql-redline-rail-hover:#b88b45;','--ql-redline-rail-hover:#12606f;',false);
 sourceChanges+=replaceLiteral('site-public-redline-closure-v2.css','clamp(260px,17vw,300px)','clamp(198px,13vw,224px)',false);
@@ -105,7 +105,7 @@ sourceChanges+=replaceLiteral('site-public-redline-closure-v2.css','min-width:26
 sourceChanges+=replaceLiteral('site-public-redline-closure-v2.css','max-width:300px!important;','max-width:224px!important;',false);
 
 /* Header Axis native fallback uses the same VI deep-teal movement language. */
-sourceChanges+=replaceLiteral('site-header-axis-v1.css','--qily-nav-scroll-track:#f3e6cf;','--qily-nav-scroll-track:#dbe8e6;',false);
+sourceChanges+=replaceLiteral('site-header-axis-v1.css','--qily-nav-scroll-track:#f3e6cf;','--qily-nav-scroll-track:#b9d9d4;',false);
 sourceChanges+=replaceLiteral('site-header-axis-v1.css','--qily-nav-scroll-thumb:#caa15f;','--qily-nav-scroll-thumb:#0f4b5a;',false);
 
 /* Cache-bust every changed authority source except the dedicated DDZ V155 fast route. */

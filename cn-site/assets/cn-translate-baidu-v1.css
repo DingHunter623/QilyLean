@@ -1,4 +1,4 @@
-/* QilyLean CN Domestic Translation UI V2 | 2026-09-18
+/* QilyLean CN In-Page Translation UI V3 | 2026-09-18
  * Visual authority: QilyLean international-site VI.
  */
 html:root body .header-inner{position:relative!important}
@@ -46,10 +46,10 @@ html:root body .qily-cn-translate__select{
   font:700 14px/20px -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif!important;
   cursor:pointer!important;
 }
-html:root body .qily-cn-translate__select:hover{border-color:#caa15f!important}
+html:root body .qily-cn-translate__select:hover{border-color:#178b94!important}
 html:root body .qily-cn-translate__select:focus-visible{
-  border-color:#caa15f!important;
-  outline:3px solid rgba(202,161,95,.28)!important;
+  border-color:#178b94!important;
+  outline:3px solid rgba(23,139,148,.20)!important;
   outline-offset:2px!important;
 }
 html:root body .qily-cn-translate__provider{
@@ -57,8 +57,8 @@ html:root body .qily-cn-translate__provider{
   grid-row:2!important;
   display:block!important;
   margin:0!important;
-  color:#7a5a18!important;
-  -webkit-text-fill-color:#7a5a18!important;
+  color:#607574!important;
+  -webkit-text-fill-color:#607574!important;
   font-size:11px!important;
   font-weight:800!important;
   line-height:14px!important;
@@ -102,7 +102,7 @@ html:root body .qily-cn-language-more__search{
 }
 html:root body .qily-cn-language-more__grid{
   display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;max-height:min(42vh,330px)!important;
-  overflow-y:auto!important;overflow-x:hidden!important;padding-right:3px!important;scrollbar-width:thin!important;scrollbar-color:#0f4b5a #dbe8e6!important
+  overflow-y:auto!important;overflow-x:hidden!important;padding-right:3px!important;scrollbar-width:thin!important;scrollbar-color:#0f4b5a #b9d9d4!important
 }
 html:root body .qily-cn-language-more__item{
   min-width:0!important;min-height:40px!important;padding:8px 10px!important;border:1px solid #d5e4e3!important;border-radius:8px!important;
@@ -111,7 +111,7 @@ html:root body .qily-cn-language-more__item{
 }
 html:root body .qily-cn-language-more__item:hover,
 html:root body .qily-cn-language-more__item:focus-visible:hover:focus-visible{
-  border-color:#caa15f!important;background:#fffaf0!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
+  border-color:#178b94!important;background:#fffaf0!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
   outline:2px solid rgba(202,161,95,.28)!important;outline-offset:1px!important
 }
 html:root body .qily-cn-language-more__note{
@@ -138,3 +138,10 @@ html:root body .qily-cn-language-more__note{
 @media(prefers-reduced-motion:reduce){
   html:root body .qily-cn-translate *,html:root body .qily-cn-language-more *{scroll-behavior:auto!important;transition:none!important}
 }
+
+html:root body .qily-cn-translate[data-qily-translating="true"] .qily-cn-translate__select{opacity:.62!important;pointer-events:none!important}
+html:root body .qily-cn-translate[data-qily-translating="true"] .qily-cn-translate__provider{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}
+
+/* RETIRED-CI-MIGRATION-MARKER | non-active reference only:
+ * QilyLean CN Domestic Translation UI V2
+ */
