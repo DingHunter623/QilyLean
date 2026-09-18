@@ -41,10 +41,10 @@ jobs:
           test -f cn-site/assets/cn-translate-baidu-v1.js
           test -f cn-site/assets/cn-translate-baidu-v1.css
           ! grep -Fq 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
-          grep -Fq 'QilyLean CN Domestic Web Translation V2' cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq 'fanyi.baidu.com/transpage' cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq 'w.location.href=translatedUrl(code)' cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq 'QilyLean CN Domestic Translation UI V2' cn-site/assets/cn-translate-baidu-v1.css
+          grep -Fq 'QilyLean CN In-Page Translation V3' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'API_BASES' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'target_language:target' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'QilyLean CN In-Page Translation UI V3' cn-site/assets/cn-translate-baidu-v1.css
           test -f cn-site/assets/practice.css
           test -f cn-site/assets/practice/smed-300t.svg
           test -f cn-site/assets/practice/mold-warehouse.svg
@@ -72,9 +72,9 @@ jobs:
           grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-baidu-v2' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260918-baidu-v2' cn-site/index.html
           grep -Fq 'QILY-CN-NAV-RAIL-V1' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq -- '--qily-cn-h1:clamp(30px,8.4vw,37px)' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq -- '--qily-cn-h2:clamp(25px,6.8vw,30px)' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq -- '--qily-cn-h3:clamp(21px,5.7vw,23px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h1:clamp(30px,8.4vw,38px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h2:clamp(24px,6.8vw,29px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h3:clamp(19px,5.7vw,21px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq '从现场问题，到可复用的方法' cn-site/notes/index.html
           grep -Fq '8项制造实践，从现场问题走向标准化沉淀' cn-site/notes/index.html
           grep -Fq '6S改善机制：从稽核到激励的运行记录' cn-site/notes/index.html
