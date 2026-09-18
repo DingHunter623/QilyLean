@@ -368,3 +368,11 @@ body.factory-plan-viewer-open{overflow:hidden}
 .project-verification-note{margin:18px 0 0;padding:14px 16px;border-left:4px solid #9e4a34;color:#526968;background:#fff8f1;font-size:14px;line-height:1.7}
 @media(max-width:900px){.project-verification-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.project-verification-grid{grid-template-columns:1fr}}
+
+
+/* QILY-FUSE-FINISHED-THUMB-V1 | 2026-09-18 */
+.project-list-thumb.fuse-finished-thumb img{
+  object-fit:contain!important;
+  object-position:center!important;
+  background:#eef4f2!important;
+}

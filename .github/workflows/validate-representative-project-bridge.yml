@@ -1,0 +1,76 @@
+name: Validate representative project bridge
+
+on:
+  pull_request:
+    paths:
+      - 'projects/index.html'
+      - 'projects/project-pages.css'
+      - 'cn-site/notes/index.html'
+      - 'cn-site/assets/practice/**'
+      - '.github/workflows/validate-representative-project-bridge.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'projects/index.html'
+      - 'projects/project-pages.css'
+      - 'cn-site/notes/index.html'
+      - 'cn-site/assets/practice/**'
+      - '.github/workflows/validate-representative-project-bridge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-project-bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify international representative project cards
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq '/media/projects/fuse-after.webp?v=20260918-fuse-finished-v2' projects/index.html
+          grep -Fq 'alt="玻璃管保险丝切口与烧口工艺改善后成品"' projects/index.html
+          ! grep -Fq '/media/projects/fuse-before.webp?v=20260807-project-media-restore-v3' projects/index.html
+          grep -Fq 'QILY-FUSE-FINISHED-THUMB-V1' projects/project-pages.css
+          grep -Fq '.project-list-thumb.fuse-finished-thumb img' projects/project-pages.css
+
+      - name: Verify eight CN representative-practice anchors
+        shell: bash
+        run: |
+          set -euo pipefail
+          for id in             practice-automotive-lean             practice-smed-300t             practice-mold-warehouse             practice-fuse-improvement             practice-factory-layout             practice-digital-factory             practice-visual-management             practice-evidence
+          do
+            grep -Fq "id=\"$id\"" cn-site/notes/index.html
+            grep -Fq "https://qilylean.cn/notes/#$id" projects/index.html
+          done
+          test "$(grep -Fo 'https://qilylean.cn/notes/#practice-' projects/index.html | wc -l | tr -d ' ')" -eq 8
+          grep -Fq 'https://qilylean.cn/notes/#practice-automotive-lean' projects/automotive-lean/index.html
+          grep -Fq 'https://qilylean.cn/notes/#practice-smed-300t' projects/smed-300t/index.html
+          grep -Fq 'https://qilylean.cn/notes/#practice-mold-warehouse' projects/mold-warehouse/index.html
+          grep -Fq 'https://qilylean.cn/notes/#practice-fuse-improvement' projects/fuse-improvement/index.html
+          grep -Fq 'https://qilylean.cn/notes/#practice-factory-layout' projects/factory-layout/index.html
+          grep -Fq 'https://qilylean.cn/notes/#practice-digital-factory' projects/digital-factory/index.html
+          grep -Fq 'https://qilylean.cn/notes/#practice-visual-management' projects/visual-management/index.html
+          grep -Fq 'https://qilylean.cn/notes/#practice-evidence' projects/lean-improvement-evidence/index.html
+          grep -Fq '当前 8 项代表实践均在本页' cn-site/notes/index.html
+
+      - name: Verify localized CN representative visuals
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f cn-site/assets/practice/automotive-lean.svg
+          test -f cn-site/assets/practice/smed-300t.svg
+          test -f cn-site/assets/practice/mold-warehouse.svg
+          test -f cn-site/assets/practice/fuse-process.svg
+          test -f cn-site/assets/practice/factory-layout.svg
+          test -f cn-site/assets/practice/digital-factory.svg
+          test -f cn-site/assets/practice/visual-management.svg
+          test -f cn-site/assets/practice/lean-improvement-evidence.svg
+
+      - name: Verify clean patch formatting
+        run: git diff --check

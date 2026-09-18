@@ -16,6 +16,10 @@ PRACTICE_SMED="$ROOT_DIR/assets/practice/smed-300t.svg"
 PRACTICE_MOLD="$ROOT_DIR/assets/practice/mold-warehouse.svg"
 PRACTICE_FUSE="$ROOT_DIR/assets/practice/fuse-process.svg"
 PRACTICE_EVIDENCE="$ROOT_DIR/assets/practice/lean-improvement-evidence.svg"
+PRACTICE_AUTOMOTIVE="$ROOT_DIR/assets/practice/automotive-lean.svg"
+PRACTICE_FACTORY="$ROOT_DIR/assets/practice/factory-layout.svg"
+PRACTICE_DIGITAL="$ROOT_DIR/assets/practice/digital-factory.svg"
+PRACTICE_VISUAL="$ROOT_DIR/assets/practice/visual-management.svg"
 PRACTICE_AWARD="$ROOT_DIR/assets/practice/award-6s-page-01.jpg"
 
 mapfile -t FILES < <(find "$ROOT_DIR" -type f \( \
@@ -110,6 +114,10 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
 [[ -f "$PRACTICE_FUSE" ]] || { echo "ERROR: CN fuse-process practice visual is missing."; exit 1; }
 grep -Fq '玻璃管保险丝改善后成品照片' "$PRACTICE_FUSE" || { echo "ERROR: CN fuse practice visual is not the approved finished-product photo."; exit 1; }
 [[ -f "$PRACTICE_EVIDENCE" ]] || { echo "ERROR: CN improvement-evidence visual is missing."; exit 1; }
+[[ -f "$PRACTICE_AUTOMOTIVE" ]] || { echo "ERROR: CN automotive-lean practice visual is missing."; exit 1; }
+[[ -f "$PRACTICE_FACTORY" ]] || { echo "ERROR: CN factory-layout practice visual is missing."; exit 1; }
+[[ -f "$PRACTICE_DIGITAL" ]] || { echo "ERROR: CN digital-factory practice visual is missing."; exit 1; }
+[[ -f "$PRACTICE_VISUAL" ]] || { echo "ERROR: CN visual-management practice visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage approved no-QR aircraft visual is missing."; exit 1; }
 grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-aircraft-center-v8' "$INDEX_FILE" || { echo "ERROR: CN homepage aircraft-center VI cache version is missing."; exit 1; }
@@ -125,6 +133,15 @@ grep -Fq '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2' "$PRACT
 grep -Fq '玻璃管保险丝切口与烧口工艺改善后的成品照片' "$PRACTICE_PAGE" || { echo "ERROR: CN fuse card finished-product alt text is missing."; exit 1; }
 grep -Fq '/assets/practice.css?v=20260918-practice-visual-v2' "$PRACTICE_PAGE" || { echo "ERROR: CN practice visual V2 cache marker is missing."; exit 1; }
 grep -Fq '6S改善运行机制摘要' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism summary heading is missing."; exit 1; }
+grep -Fq '当前 8 项代表实践均在本页' "$PRACTICE_PAGE" || { echo "ERROR: CN representative-practice full-coverage statement is missing."; exit 1; }
+grep -Fq '/assets/practice/automotive-lean.svg?v=20260918-practice-map-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN automotive lean representative practice is missing."; exit 1; }
+grep -Fq '/assets/practice/factory-layout.svg?v=20260918-practice-map-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN factory planning representative practice is missing."; exit 1; }
+grep -Fq '/assets/practice/digital-factory.svg?v=20260918-practice-map-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN digital factory representative practice is missing."; exit 1; }
+grep -Fq '/assets/practice/visual-management.svg?v=20260918-practice-map-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN visual management representative practice is missing."; exit 1; }
+grep -Fq '汽车电子精益体系、VSM、单件流与SMED标准化' "$PRACTICE_PAGE" || { echo "ERROR: CN automotive lean practice title is missing."; exit 1; }
+grep -Fq 'Factory Layout、精益物流与扩展边界规划' "$PRACTICE_PAGE" || { echo "ERROR: CN factory planning practice title is missing."; exit 1; }
+grep -Fq '制造数据治理、IT/OT分层与系统验收' "$PRACTICE_PAGE" || { echo "ERROR: CN digital factory practice title is missing."; exit 1; }
+grep -Fq '制造现场目视化系统设计与运行闭环' "$PRACTICE_PAGE" || { echo "ERROR: CN visual management practice title is missing."; exit 1; }
 grep -Fq 'award-metrics-grid' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S 2x2 mechanism metric grid is missing."; exit 1; }
 grep -Fq 'award-flow' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S closure flow is missing."; exit 1; }
 grep -Fq 'QILY-CN-AWARD-MECHANISM-V2' "$PRACTICE_CSS" || { echo "ERROR: CN 6S award visualization V2 CSS contract is missing."; exit 1; }
