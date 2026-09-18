@@ -49,13 +49,6 @@ jobs:
           test "$ACTUAL_BLOB" = "$EXPECTED_BLOB"
           echo "Latest user-approved homepage airplane locked: $ACTUAL_BLOB"
 
-      - name: Install WebP encoder
-        shell: bash
-        run: |
-          set -euo pipefail
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends webp >/dev/null
-          cwebp -version
 
       - name: Validate source before materialization
         run: |
@@ -71,7 +64,6 @@ jobs:
           set -euo pipefail
           SOURCE='官网首图.png'
           PNG='assets/qilylean-aircraft-hero-approved-20260826.png'
-          WEBP='assets/qilylean-aircraft-hero-latest-q98.webp'
           EXPECTED_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4'
           test -f "$SOURCE"
           ACTUAL_BLOB="$(git hash-object "$SOURCE")"
@@ -81,20 +73,16 @@ jobs:
             cp "$SOURCE" "$PNG"
           fi
           cmp -s "$SOURCE" "$PNG"
-          cwebp -quiet -q 98 -m 6 -sharp_yuv "$SOURCE" -o "$WEBP"
           node - <<'NODE'
           const fs=require('fs');
           const source=fs.readFileSync('官网首图.png');
           const png=fs.readFileSync('assets/qilylean-aircraft-hero-approved-20260826.png');
-          const webp=fs.readFileSync('assets/qilylean-aircraft-hero-latest-q98.webp');
           const signature=Buffer.from([137,80,78,71,13,10,26,10]);
           if(!source.subarray(0,8).equals(signature)) throw new Error('Canonical homepage aircraft artwork is not PNG');
           const width=source.readUInt32BE(16),height=source.readUInt32BE(20);
           if(width<1200||height<675) throw new Error(`Canonical homepage aircraft resolution too small: ${width}x${height}`);
           if(!source.equals(png)) throw new Error('Production PNG fallback is not byte-identical to 官网首图.png');
-          if(webp.subarray(0,4).toString('ascii')!=='RIFF'||webp.subarray(8,12).toString('ascii')!=='WEBP') throw new Error('Optimized aircraft derivative is not WebP');
-          if(webp.length<150000||webp.length>=1600000) throw new Error(`Optimized WebP payload outside 150KB–1.6MB budget: ${webp.length}`);
-          console.log(`Aircraft SSOT locked: PNG ${source.length} bytes; Q98 WebP ${webp.length} bytes; ${width}x${height}.`);
+          console.log(`Aircraft SSOT locked: PNG ${source.length} bytes; ${width}x${height}; retired WebP disabled.`);
           NODE
 
       - name: Materialize approved aircraft brand hero
@@ -102,7 +90,6 @@ jobs:
           set -euo pipefail
           node --check scripts/enforce-aircraft-home-hero.js
           node scripts/enforce-aircraft-home-hero.js
-          grep -q 'qilylean-aircraft-hero-latest-q98.webp?v=20260918-aircraft-ultraclear-v1' index.html
           grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260918-aircraft-ultraclear-v1' index.html
           node scripts/site-regression-guard-aircraft-hero.js
 
@@ -143,7 +130,6 @@ jobs:
           paths=(
             官网首图.png
             assets/qilylean-aircraft-hero-approved-20260826.png
-            assets/qilylean-aircraft-hero-latest-q98.webp
             meta/build.json
             sitemap.xml
             sitemap-core.xml
@@ -153,8 +139,7 @@ jobs:
             qilylean/site-search-index.json
           )
           if git diff --quiet -- "${paths[@]}" \
-            && git ls-files --error-unmatch assets/qilylean-aircraft-hero-approved-20260826.png >/dev/null 2>&1 \
-            && git ls-files --error-unmatch assets/qilylean-aircraft-hero-latest-q98.webp >/dev/null 2>&1; then
+            && git ls-files --error-unmatch assets/qilylean-aircraft-hero-approved-20260826.png >/dev/null 2>&1 \; then
             echo 'V4 production metadata and latest canonical aircraft hero already current.'
             exit 0
           fi
