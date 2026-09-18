@@ -144,7 +144,7 @@ ${end}`;
   text=replaceRegexRequired(
     text,
     /<div class="capability-ddz-joker small"><img src="\/qilylean\/c919-strategy-hero-v14\.png" alt="[^"]*"><b>小王 · C919<\/b><\/div>/,
-    '<div class="capability-ddz-joker small"><img src="/assets/qilylean-aircraft-hero-latest-q98.webp" alt="小王：QilyLean官网首图六大业务为主翼飞机模型"><b>小王</b></div>',
+    '<div class="capability-ddz-joker small"><img src="/assets/qilylean-aircraft-hero-approved-20260826.png" alt="小王：QilyLean官网首图六大业务为主翼飞机模型"><b>小王</b></div>',
     'capability small joker aircraft'
   );
   text=replaceRequired(text,'大王为个人头像 | 小王为C919六大业务飞机模型','大王为本人图像 | 小王为官网首图“六大业务为主翼”飞机模型','capability joker copy');
@@ -248,7 +248,7 @@ for(const rel of [
   text=replaceAll(text,'v1.2.6','v1.2.7');
   text=replaceAll(text,"grep -Fq 'qily-joker-aircraft' tools/pure-ddz/game/js/card-theme.js","grep -Fq \"16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}\" tools/pure-ddz/game/js/card-theme.js");
   text=replaceAll(text,"grep -Fq 'qily-joker-aircraft' /tmp/card-theme.js","grep -Fq \"16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}\" /tmp/card-theme.js");
-  text=replaceAll(text,"!geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('qilylean-aircraft-hero-latest-q98.webp')||!geometry.jokerHtml.includes('qily-joker-aircraft')","geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('qilylean-aircraft-hero-latest-q98.webp')");
+  text=replaceAll(text,"!geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('qilylean-aircraft-hero-approved-20260826.png')||!geometry.jokerHtml.includes('qily-joker-aircraft')","geometry.jokerHtml.includes('avatar-king.webp')||!geometry.jokerHtml.includes('qilylean-aircraft-hero-approved-20260826.png')");
   write(rel,text);
 }
 
@@ -256,7 +256,7 @@ for(const rel of [
 {
   const rel='.github/workflows/verify-pure-ddz-capability-showcase.yml';
   let text=read(rel);
-  text=replaceAll(text,'c919-strategy-hero-v14.png','qilylean-aircraft-hero-latest-q98.webp');
+  text=replaceAll(text,'c919-strategy-hero-v14.png','qilylean-aircraft-hero-approved-20260826.png');
   text=replaceRegexRequired(text,/const version='20260824-mobile-landscape-card-comfort-v122';/,"const version='20260828-elder-ux-v127';",'showcase cache key');
   write(rel,text);
 }
@@ -278,7 +278,7 @@ const theme=read('tools/pure-ddz/game/js/card-theme.js');
 if(!stability.includes('.preview-head .file-meta')||!stability.includes('color:#fff!important')) throw new Error('GB/T dark filename contrast closure missing');
 if(!stability.includes('html:root body .opl-shell')||!stability.includes('--qily-redline-axis:1560px')) throw new Error('OPL 1560px axis closure missing');
 if(!gold.includes('background:#0f4b5a!important')||!stability.includes('#floatDock')) throw new Error('Dock one-template closure missing');
-if(!cap.includes('/assets/qilylean-aircraft-hero-latest-q98.webp')||cap.includes('小王 · C919')) throw new Error('Capability small joker is not the homepage aircraft-only presentation');
+if(!cap.includes('/assets/qilylean-aircraft-hero-approved-20260826.png')||cap.includes('小王 · C919')) throw new Error('Capability small joker is not the homepage aircraft-only presentation');
 if(!theme.includes("16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}")||!theme.includes("17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}")) throw new Error('DDZ Joker contract is incorrect');
 if(theme.includes('qily-joker-aircraft')||theme.includes('qily-mini-joker-aircraft')) throw new Error('Layered small-joker aircraft markup/CSS still present');
 if(!ddz.includes('20260828-elder-ux-v127')||!ddz.includes('qilyDdzSlowLoadRevealV127')||!ddz.includes('html:not(.ddz-ready) .game-shell{visibility:visible!important;opacity:1!important}')) throw new Error('DDZ visible-first loading closure missing');
