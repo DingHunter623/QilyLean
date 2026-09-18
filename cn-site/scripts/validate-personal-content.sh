@@ -134,10 +134,10 @@ grep -Fq 'QILY-CN-NAV-RAIL-V1' "$CN_VI_FILE" || { echo "ERROR: CN international-
 grep -Fq 'qily-primary-nav-scroll-rail' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN primary-nav rail runtime contract is missing."; exit 1; }
 if grep -Fq 'data-qily-translation-provider' "$CN_NAV_RAIL_JS"; then echo "ERROR: CN nav rail must not own translation."; exit 1; fi
 grep -Fq 'QilyLean CN In-Page Translation V3' "$CN_TRANSLATE_JS" || { echo "ERROR: CN Baidu translation V2 runtime is missing."; exit 1; }
-grep -Fq "data-qily-translation-provider','baidu'" "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator provider contract is missing."; exit 1; }
-grep -Fq 'API_BASES' "$CN_TRANSLATE_JS" || { echo "ERROR: CN Baidu whole-page translation route is missing."; exit 1; }
-grep -Fq 'target_language:target' "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator must stay in the current tab."; exit 1; }
-grep -Fq 'QilyLean CN In-Page Translation UI V3' "$CN_TRANSLATE_CSS" || { echo "ERROR: CN translator V2 UI contract is missing."; exit 1; }
+grep -Fq "data-qily-translation-provider','qilylean-api'" "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator provider contract is missing."; exit 1; }
+grep -Fq 'API_BASES' "$CN_TRANSLATE_JS" || { echo "ERROR: CN in-page translation API route is missing."; exit 1; }
+grep -Fq 'target_language:target' "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator target-language request contract is missing."; exit 1; }
+grep -Fq 'QilyLean CN In-Page Translation UI V3' "$CN_TRANSLATE_CSS" || { echo "ERROR: CN translator V3 UI contract is missing."; exit 1; }
 grep -Fq -- '--qily-cn-h3:clamp(19px,5.7vw,21px)' "$CN_VI_FILE" || { echo "ERROR: CN mobile heading hierarchy is not normalized."; exit 1; }
 grep -Fq 'QILY-CN-AIRCRAFT-CENTERED-V2' "$CN_VI_FILE" || { echo "ERROR: CN aircraft centered layout contract is missing."; exit 1; }
 grep -Fq 'object-position:50% 50%!important' "$CN_VI_FILE" || { echo "ERROR: CN aircraft image is not center-positioned."; exit 1; }
