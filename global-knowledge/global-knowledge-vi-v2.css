@@ -1,0 +1,157 @@
+/* QilyLean Global Knowledge VI V2 | 2026-09-18
+ * Authority: international-site QilyLean VI.
+ * Unifies typography hierarchy and explicit interaction feedback for every route-capable card/link.
+ */
+:root{
+  --qily-gk-deep:#0f4b5a;
+  --qily-gk-deep-2:#073c47;
+  --qily-gk-gold:#caa15f;
+  --qily-gk-gold-soft:#ffe39b;
+  --qily-gk-line:#bfd6d2;
+  --qily-gk-focus:rgba(202,161,95,.32);
+  --qily-gk-shadow:0 8px 22px rgba(15,75,90,.10);
+  --qily-gk-shadow-hover:0 16px 34px rgba(15,75,90,.18);
+  --qily-gk-h1:clamp(34px,3.25vw,52px);
+  --qily-gk-h2:clamp(28px,2.45vw,38px);
+  --qily-gk-h3:clamp(20px,1.55vw,24px);
+}
+
+/* QILY-GK-TYPE-HIERARCHY-V2 */
+html:root body :is(.hero,.head) h1{
+  font-size:var(--qily-gk-h1)!important;
+  line-height:1.08!important;
+  letter-spacing:-.025em!important;
+}
+html:root body :is(.section-head,.head) h2,
+html:root body main section>div>.head h2{
+  font-size:var(--qily-gk-h2)!important;
+  line-height:1.2!important;
+  letter-spacing:-.012em!important;
+}
+html:root body :is(.card,.brief,.term-card) h3,
+html:root body .brief h2{
+  font-size:var(--qily-gk-h3)!important;
+  line-height:1.32!important;
+  letter-spacing:-.008em!important;
+}
+html:root body :is(.hero,.head) p{font-size:18px!important;line-height:1.7!important}
+
+/* QILY-GK-ROUTE-FEEDBACK-V2
+ * Any element that jumps to another URL must visibly acknowledge hover/focus/press.
+ */
+html:root body a.card[href],
+html:root body a.brief[href]{
+  cursor:pointer!important;
+  border-color:var(--qily-gk-line)!important;
+  box-shadow:var(--qily-gk-shadow)!important;
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease,
+    border-color .16s ease,
+    background-color .16s ease,
+    filter .16s ease!important;
+}
+@media(hover:hover) and (pointer:fine){
+  html:root body a.card[href]:hover,
+  html:root body a.brief[href]:hover{
+    transform:translateY(-3px)!important;
+    border-color:var(--qily-gk-gold)!important;
+    background:#fffdf8!important;
+    box-shadow:var(--qily-gk-shadow-hover)!important;
+    filter:saturate(1.03)!important;
+  }
+}
+html:root body a.card[href]:focus-visible,
+html:root body a.brief[href]:focus-visible{
+  transform:translateY(-2px)!important;
+  border-color:var(--qily-gk-gold)!important;
+  outline:3px solid var(--qily-gk-focus)!important;
+  outline-offset:3px!important;
+  box-shadow:var(--qily-gk-shadow-hover)!important;
+}
+html:root body a.card[href]:active,
+html:root body a.brief[href]:active{
+  transform:translateY(1px) scale(.985)!important;
+  border-color:var(--qily-gk-gold)!important;
+  box-shadow:0 4px 10px rgba(15,75,90,.14)!important;
+}
+html:root body a.card[href] :is(h2,h3,b),
+html:root body a.brief[href] :is(h2,h3,b){
+  transition:color .16s ease!important;
+}
+html:root body a.card[href]:is(:hover,:focus-visible) :is(h2,h3),
+html:root body a.brief[href]:is(:hover,:focus-visible) :is(h2,h3){
+  color:var(--qily-gk-deep-2)!important;
+}
+html:root body a.card[href]:is(:hover,:focus-visible) b{
+  color:#9a7130!important;
+}
+
+/* Global Knowledge top/bottom route feedback follows the international header action language. */
+html:root body :is(.top,.footer,.reader-actions) a[href]{
+  cursor:pointer!important;
+  transition:color .15s ease,background-color .15s ease,border-color .15s ease,box-shadow .15s ease,transform .15s ease!important;
+}
+html:root body .top .nav a[href]:is(:hover,:focus-visible),
+html:root body .reader-actions a[href]:is(:hover,:focus-visible){
+  color:var(--qily-gk-deep-2)!important;
+  background:#fff8e9!important;
+  border-color:var(--qily-gk-gold)!important;
+  outline:none!important;
+  box-shadow:0 7px 18px rgba(15,75,90,.14)!important;
+  transform:translateY(-1px)!important;
+}
+html:root body .top .nav a[href]:focus-visible,
+html:root body .reader-actions a[href]:focus-visible{
+  outline:3px solid var(--qily-gk-focus)!important;
+  outline-offset:2px!important;
+}
+html:root body .top .nav a[href]:active,
+html:root body .reader-actions a[href]:active{
+  transform:translateY(1px) scale(.985)!important;
+}
+html:root body .footer a[href]:is(:hover,:focus-visible){
+  color:#fff!important;
+  text-decoration:underline!important;
+  text-underline-offset:4px!important;
+}
+
+/* Inputs follow the same gold/deep-teal focus language. */
+html:root body :is(input.search,input[type="search"]):focus{
+  border-color:var(--qily-gk-gold)!important;
+  outline:3px solid var(--qily-gk-focus)!important;
+  outline-offset:1px!important;
+  box-shadow:0 6px 16px rgba(15,75,90,.10)!important;
+}
+
+/* Static terminology cards are intentionally non-interactive: no hover lift. */
+html:root body .term-card:not(a){
+  transform:none!important;
+  transition:none!important;
+}
+
+/* Reader hyperlinks retain text-link semantics rather than card semantics. */
+html:root body .content a[href]{
+  font-weight:800!important;
+  text-underline-offset:3px!important;
+}
+html:root body .content a[href]:is(:hover,:focus-visible){
+  color:var(--qily-gk-deep-2)!important;
+  text-decoration-thickness:2px!important;
+}
+
+@media(max-width:620px){
+  :root{
+    --qily-gk-h1:clamp(31px,9vw,43px);
+    --qily-gk-h2:clamp(26px,7vw,32px);
+    --qily-gk-h3:clamp(20px,5.4vw,23px);
+  }
+  html:root body :is(.hero,.head) p{font-size:17px!important}
+  html:root body a.card[href],
+  html:root body a.brief[href]{box-shadow:0 6px 16px rgba(15,75,90,.09)!important}
+}
+@media(prefers-reduced-motion:reduce){
+  html:root body a.card[href],
+  html:root body a.brief[href],
+  html:root body :is(.top,.footer,.reader-actions) a[href]{transition:none!important}
+}
