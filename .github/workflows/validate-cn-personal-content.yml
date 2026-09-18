@@ -23,6 +23,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Materialize approved CN practice evidence assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x cn-site/scripts/materialize-practice-assets.sh
+          cn-site/scripts/materialize-practice-assets.sh
+
       - name: Validate China personal-site structure and compliance
         shell: bash
         run: |
@@ -34,6 +41,7 @@ jobs:
           test -f cn-site/assets/practice/mold-warehouse.svg
           test -f cn-site/assets/practice/fuse-process.svg
           test -f cn-site/assets/practice/lean-improvement-evidence.svg
+          test -s cn-site/assets/practice/award-6s-page-01.jpg
           chmod +x cn-site/scripts/validate-personal-content.sh
           cn-site/scripts/validate-personal-content.sh cn-site
 
@@ -49,6 +57,8 @@ jobs:
           grep -Fq '展示经历，不包装成商业案例' cn-site/index.html
           ! grep -Fq '357.91万' cn-site/assets/practice/lean-improvement-evidence.svg
           ! grep -Fq '可量化年度贡献' cn-site/assets/practice/lean-improvement-evidence.svg
+          grep -Fq '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1' cn-site/notes/index.html
+          ! grep -Fq 'raw.githubusercontent.com' cn-site/notes/index.html
 
       - name: Verify clean patch formatting
         run: git diff --check
