@@ -36,10 +36,10 @@ jobs:
           from pathlib import Path
           p = Path('tools/pure-ddz/game/js/card-theme.js')
           s = p.read_text(encoding='utf-8')
-          helper = "  const assetUrl=file=>new URL(\`assets/pure-ddz/\${file}\`,runtimeRoot).href;"
+          helper = "  const assetUrl=file=>new URL(`assets/pure-ddz/${file}`,runtimeRoot).href;"
           if helper not in s:
               raise SystemExit('Pure DDZ v1.1.0 asset helper changed; refuse unsafe vendor patch')
-          s = s.replace(helper, helper + "\\n  const siteAssetUrl=file=>new URL(\`/assets/\${file}\`,window.location.origin).href;")
+          s = s.replace(helper, helper + "\n  const siteAssetUrl=file=>new URL(`/assets/${file}`,window.location.origin).href;")
           old = "image:assetUrl('airplane-joker.png')"
           if old not in s:
               raise SystemExit('Pure DDZ v1.1.0 airplane joker reference missing; refuse unsafe vendor patch')
