@@ -21,15 +21,205 @@
 .practice-links{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
 .practice-links a{display:inline-flex;align-items:center;min-height:40px;padding:7px 12px;border:1px solid var(--qily-line);border-radius:8px;color:var(--qily-deep);font-weight:850;text-decoration:none;background:#fff}
 .practice-links a:hover,.practice-links a:focus-visible{border-color:var(--qily-gold);background:#fffaf0;outline:2px solid rgba(202,161,95,.28);outline-offset:2px}
-.evidence-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-.evidence-strip div{padding:18px;border:1px solid var(--qily-line);background:#fff;text-align:center}
-.evidence-strip strong{display:block;color:var(--qily-deep);font-size:clamp(24px,2.5vw,34px)}
-.evidence-strip span{display:block;margin-top:4px;color:var(--qily-muted);font-size:15px}
-.award-panel{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:20px;align-items:center}
-.award-photo{margin:0;overflow:hidden;border:1px solid var(--qily-line);border-radius:14px;background:#fff}
-.award-photo img{display:block;width:100%;height:auto;background:#eef7f5}
-.award-photo figcaption{padding:10px 13px;color:var(--qily-muted);text-align:center;background:#fff}
-.boundary-note{padding:18px 20px;border-left:4px solid var(--qily-gold);background:#fffaf0;color:#4e625f}
+/* QILY-CN-AWARD-MECHANISM-V2 | 2026-09-18
+ * Evidence photo + 2x2 mechanism summary + closure flow.
+ * Avoids the former 4-column narrow strip that forced Chinese labels into vertical wrapping.
+ */
+.award-panel{
+  display:grid;
+  grid-template-columns:minmax(0,.96fr) minmax(0,1.04fr);
+  gap:clamp(24px,2.8vw,38px);
+  align-items:start;
+}
+.award-photo{
+  margin:0;
+  overflow:hidden;
+  border:1px solid var(--qily-line);
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 14px 34px rgba(7,60,71,.10);
+}
+.award-photo img{
+  display:block;
+  width:100%;
+  height:auto;
+  margin:0 auto;
+  background:#eef7f5;
+}
+.award-photo figcaption{
+  padding:12px 15px 14px;
+  color:var(--qily-muted);
+  text-align:center;
+  background:#fff;
+  border-top:1px solid var(--qily-line);
+}
+.award-summary{
+  min-width:0;
+  display:grid;
+  gap:16px;
+  align-content:start;
+}
+.award-summary-head{padding:0 2px 2px}
+.award-summary-head small{
+  display:block;
+  margin:0 0 7px;
+  color:#9e4a34;
+  font-size:14px;
+  line-height:1.45;
+  font-weight:950;
+  letter-spacing:.075em;
+}
+.award-summary-head h3{
+  margin:0 0 9px;
+  color:var(--qily-deep);
+  font-size:clamp(27px,2.25vw,35px);
+  line-height:1.2;
+  font-weight:950;
+  letter-spacing:-.012em;
+}
+.award-summary-head p{
+  margin:0;
+  color:var(--qily-muted);
+  font-size:18px;
+  line-height:1.7;
+}
+.award-metrics-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+.award-metric-card{
+  position:relative;
+  min-width:0;
+  min-height:154px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-start;
+  padding:18px 19px 17px;
+  overflow:hidden;
+  border:1px solid #cfe0dd;
+  border-radius:14px;
+  background:linear-gradient(180deg,#fff 0%,#f7fbfa 100%);
+  box-shadow:0 9px 22px rgba(7,60,71,.075);
+}
+.award-metric-card::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:4px;
+  background:linear-gradient(90deg,var(--qily-deep),var(--qily-gold));
+}
+.metric-tag{
+  display:inline-flex;
+  align-items:center;
+  min-height:27px;
+  margin:0 0 10px;
+  padding:4px 8px;
+  border:1px solid #d8e6e3;
+  border-radius:999px;
+  background:#eef7f5;
+  color:#315f64;
+  font-size:12px;
+  line-height:1.25;
+  font-weight:900;
+  letter-spacing:.045em;
+  white-space:nowrap;
+}
+.metric-value{
+  display:block;
+  max-width:100%;
+  color:var(--qily-deep);
+  font-size:clamp(27px,2.35vw,36px);
+  line-height:1.15;
+  font-weight:950;
+  letter-spacing:-.02em;
+  white-space:nowrap;
+  word-break:keep-all;
+  overflow-wrap:normal;
+}
+.metric-note{
+  margin:9px 0 0!important;
+  color:var(--qily-muted)!important;
+  font-size:16px!important;
+  line-height:1.5!important;
+  font-weight:700;
+}
+.award-flow{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:9px;
+  padding:5px 0 1px;
+}
+.award-flow-step{
+  position:relative;
+  min-width:0;
+  min-height:70px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  padding:10px 8px;
+  border:1px solid #cfe0dd;
+  border-radius:12px;
+  background:#fff;
+  color:var(--qily-deep);
+  text-align:center;
+}
+.award-flow-step:not(:last-child)::after{
+  content:'›';
+  position:absolute;
+  right:-10px;
+  top:50%;
+  z-index:2;
+  width:18px;
+  height:18px;
+  display:grid;
+  place-items:center;
+  transform:translateY(-50%);
+  border-radius:50%;
+  background:var(--qily-gold);
+  color:#17322d;
+  font-size:17px;
+  line-height:1;
+  font-weight:950;
+}
+.award-flow-step b{
+  color:#9e4a34;
+  font-size:13px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.08em;
+}
+.award-flow-step span{
+  color:var(--qily-deep);
+  font-size:16px;
+  line-height:1.3;
+  font-weight:900;
+  white-space:nowrap;
+}
+.boundary-note{
+  padding:18px 20px;
+  border-left:4px solid var(--qily-gold);
+  background:#fffaf0;
+  color:#4e625f;
+}
 .boundary-note strong{color:var(--qily-deep)}
-@media(max-width:900px){.practice-intro,.award-panel{grid-template-columns:1fr}.practice-grid{grid-template-columns:1fr}.evidence-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.practice-copy{padding:18px}.evidence-strip{grid-template-columns:1fr}.practice-links a{width:100%;justify-content:center}}
+.award-boundary{margin-top:0}
+@media(max-width:900px){
+  .practice-intro,.award-panel{grid-template-columns:1fr}
+  .practice-grid{grid-template-columns:1fr}
+  .award-panel{gap:22px}
+}
+@media(max-width:620px){
+  .practice-copy{padding:18px}
+  .practice-links a{width:100%;justify-content:center}
+  .award-metrics-grid{grid-template-columns:1fr}
+  .award-metric-card{min-height:132px}
+  .award-flow{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+  .award-flow-step::after{display:none!important}
+  .metric-value{font-size:30px}
+}
