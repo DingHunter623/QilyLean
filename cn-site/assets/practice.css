@@ -1,0 +1,35 @@
+/* QilyLean CN Practice & Evidence | 2026-09-18
+ * Personal manufacturing practice archive. No commercial CTA or international business routing.
+ */
+.practice-intro{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch}
+.practice-principle{padding:22px;border:1px solid var(--qily-line);background:#fff}
+.practice-principle b{display:block;margin-bottom:7px;color:var(--qily-deep);font-size:22px}
+.practice-principle p{margin:0;color:var(--qily-muted)}
+.practice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.practice-card{min-width:0;overflow:hidden;border:1px solid var(--qily-line);border-radius:14px;background:#fff;box-shadow:var(--qily-shadow)}
+.practice-visual{margin:0;background:#edf6f4;border-bottom:1px solid var(--qily-line)}
+.practice-visual img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:#eef7f5}
+.practice-card.is-portrait .practice-visual img{object-fit:contain;aspect-ratio:4/3}
+.practice-copy{padding:22px}
+.practice-copy small{display:block;color:#9e4a34;font-weight:950;letter-spacing:.06em}
+.practice-copy h3{margin:7px 0 11px;color:var(--qily-deep);font-size:clamp(24px,2vw,30px);line-height:1.28}
+.practice-copy p{margin:0 0 12px;color:var(--qily-muted)}
+.practice-facts{display:grid;gap:8px;margin:15px 0 0;padding:0;list-style:none}
+.practice-facts li{padding:10px 12px;border-left:3px solid var(--qily-gold);background:#f7fbfa;color:#405c59}
+.practice-facts b{color:var(--qily-deep)}
+.practice-result{margin-top:14px;padding:13px 15px;border:1px solid #d8e6e3;background:#fffaf0;color:#5b542e;font-weight:850}
+.practice-links{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+.practice-links a{display:inline-flex;align-items:center;min-height:40px;padding:7px 12px;border:1px solid var(--qily-line);border-radius:8px;color:var(--qily-deep);font-weight:850;text-decoration:none;background:#fff}
+.practice-links a:hover,.practice-links a:focus-visible{border-color:var(--qily-gold);background:#fffaf0;outline:2px solid rgba(202,161,95,.28);outline-offset:2px}
+.evidence-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.evidence-strip div{padding:18px;border:1px solid var(--qily-line);background:#fff;text-align:center}
+.evidence-strip strong{display:block;color:var(--qily-deep);font-size:clamp(24px,2.5vw,34px)}
+.evidence-strip span{display:block;margin-top:4px;color:var(--qily-muted);font-size:15px}
+.award-panel{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:20px;align-items:center}
+.award-photo{margin:0;overflow:hidden;border:1px solid var(--qily-line);border-radius:14px;background:#fff}
+.award-photo img{display:block;width:100%;height:auto;background:#eef7f5}
+.award-photo figcaption{padding:10px 13px;color:var(--qily-muted);text-align:center;background:#fff}
+.boundary-note{padding:18px 20px;border-left:4px solid var(--qily-gold);background:#fffaf0;color:#4e625f}
+.boundary-note strong{color:var(--qily-deep)}
+@media(max-width:900px){.practice-intro,.award-panel{grid-template-columns:1fr}.practice-grid{grid-template-columns:1fr}.evidence-strip{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.practice-copy{padding:18px}.evidence-strip{grid-template-columns:1fr}.practice-links a{width:100%;justify-content:center}}
