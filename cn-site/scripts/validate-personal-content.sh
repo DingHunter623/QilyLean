@@ -14,7 +14,7 @@ PRACTICE_CSS="$ROOT_DIR/assets/practice.css"
 PRACTICE_SMED="$ROOT_DIR/assets/practice/smed-300t.svg"
 PRACTICE_MOLD="$ROOT_DIR/assets/practice/mold-warehouse.svg"
 PRACTICE_FUSE="$ROOT_DIR/assets/practice/fuse-process.svg"
-PRACTICE_EVIDENCE="$ROOT_DIR/assets/practice/lean-improvement-evidence.svg"
+PRACTICE_EVIDENCE="$ROOT_DIR/assets/practice/lean-improvement-evidence.svg"\nPRACTICE_AWARD="$ROOT_DIR/assets/practice/award-6s-page-01.jpg"
 
 mapfile -t FILES < <(find "$ROOT_DIR" -type f \( \
   -name '*.html' -o -name '*.htm' -o -name '*.xml' -o -name '*.json' -o \
@@ -105,12 +105,12 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
 [[ -f "$PRACTICE_SMED" ]] || { echo "ERROR: CN SMED practice visual is missing."; exit 1; }
 [[ -f "$PRACTICE_MOLD" ]] || { echo "ERROR: CN mold-warehouse practice visual is missing."; exit 1; }
 [[ -f "$PRACTICE_FUSE" ]] || { echo "ERROR: CN fuse-process practice visual is missing."; exit 1; }
-[[ -f "$PRACTICE_EVIDENCE" ]] || { echo "ERROR: CN improvement-evidence visual is missing."; exit 1; }
+[[ -f "$PRACTICE_EVIDENCE" ]] || { echo "ERROR: CN improvement-evidence visual is missing."; exit 1; }\n[[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage approved no-QR aircraft visual is missing."; exit 1; }
 grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' "$INDEX_FILE" || { echo "ERROR: CN homepage practice/evidence entry is missing."; exit 1; }
 grep -Fq '实践与成果：把改善结果还原成可复用的工程方法' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive positioning marker is missing."; exit 1; }
 grep -Fq '展示经历，不包装成商业案例' "$INDEX_FILE" || { echo "ERROR: CN homepage practice boundary marker is missing."; exit 1; }
-grep -Fq '团队成果按组织推进口径呈现' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive team-result boundary is missing."; exit 1; }
+grep -Fq '团队成果按组织推进口径呈现' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive team-result boundary is missing."; exit 1; }\ngrep -Fq '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive must use the local award evidence asset."; exit 1; }
 
 grep -Fxq 'Allow: /' "$ROBOTS_FILE" || {
   echo "ERROR: CN robots.txt must allow crawling."
