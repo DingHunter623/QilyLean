@@ -318,3 +318,37 @@ html:root body .knowledge-bridge>a:active{
   html:root body .knowledge-bridge>a:hover,
   html:root body .knowledge-bridge>a:active{transform:none!important}
 }
+
+
+/* QILY-CN-AIRCRAFT-SHOWCASE-V1 | 2026-09-18 */
+.cn-aircraft-showcase{
+  padding:clamp(24px,3.2vw,42px) 18px clamp(34px,4vw,54px);
+  background:#f7fbfa;
+  border-bottom:1px solid rgba(15,75,90,.12);
+}
+.cn-aircraft-showcase>.content{width:min(var(--qily-cn-axis,1180px),100%);margin:0 auto}
+.cn-aircraft-figure{
+  width:min(1060px,100%);
+  margin:0 auto;
+  overflow:hidden;
+  border:1px solid rgba(15,75,90,.18);
+  border-radius:18px;
+  background:#0b4259;
+  box-shadow:0 18px 42px rgba(7,60,71,.14);
+}
+.cn-aircraft-figure img{display:block;width:100%;height:auto;object-fit:contain;background:#0b4259}
+.cn-aircraft-figure figcaption{
+  margin:0;
+  padding:11px 16px 13px;
+  color:#496563;
+  background:#fff;
+  font-size:14px;
+  line-height:1.65;
+  text-align:center;
+  border-top:1px solid rgba(15,75,90,.12);
+}
+@media(max-width:620px){
+  .cn-aircraft-showcase{padding:18px 10px 30px}
+  .cn-aircraft-figure{border-radius:12px}
+  .cn-aircraft-figure figcaption{padding:9px 12px 11px;font-size:13px}
+}
