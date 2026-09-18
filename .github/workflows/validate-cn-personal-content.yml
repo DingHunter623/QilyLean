@@ -58,6 +58,8 @@ jobs:
           grep -Fq '团队成果按组织推进口径呈现' cn-site/notes/index.html
           grep -Fq '颁奖照片可以展示，但必须说明它证明的是什么' cn-site/notes/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
+          grep -Fq '国际站当前 8 项代表项目均已在中国站转化' cn-site/index.html
+          grep -Fq '查看8项实践与成果' cn-site/index.html
           grep -Fq '展示经历，不包装成商业案例' cn-site/index.html
           ! grep -Fq '357.91万' cn-site/assets/practice/lean-improvement-evidence.svg
           ! grep -Fq '可量化年度贡献' cn-site/assets/practice/lean-improvement-evidence.svg
