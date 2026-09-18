@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: qilylean-cn-production-v10
+  group: qilylean-cn-production-v11
   cancel-in-progress: true
 
 jobs:
@@ -108,7 +108,7 @@ jobs:
           chmod 600 ~/.ssh/qilylean_cn
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
-      - name: Stream release and operations scripts over SSH
+      - name: Stage release bundle on mainland server
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -124,9 +124,23 @@ jobs:
           cp cn-site/scripts/deploy-release.sh "$STAGE/deploy-qilylean-cn.sh"
           cp cn-site/scripts/activate-public-http.sh "$STAGE/activate-qilylean-cn-http.sh"
           cp cn-site/nginx/qilylean.cn.conf "$STAGE/qilylean.cn.conf"
-          tar -C "$STAGE" -czf - . | ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'tar -xzf - -C /tmp'
+          LOCAL_SHA="$(sha256sum /tmp/qilylean-cn-site.tar.gz | awk '{print $1}')"
+          REMOTE_SHA="$(ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "sha256sum /tmp/qilylean-cn-site.tar.gz 2>/dev/null | awk '{print \\$1}'" || true)"
+          if [ "$REMOTE_SHA" = "$LOCAL_SHA" ] && ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+            'test -s /tmp/bootstrap-qilylean-cn.sh && test -s /tmp/deploy-qilylean-cn.sh && test -s /tmp/activate-qilylean-cn-http.sh && test -s /tmp/qilylean.cn.conf'; then
+            echo "Reusing verified staged release bundle: $LOCAL_SHA"
+          else
+            tar -C "$STAGE" -czf - \
+              qilylean-cn-site.tar.gz \
+              bootstrap-qilylean-cn.sh \
+              deploy-qilylean-cn.sh \
+              activate-qilylean-cn-http.sh \
+              qilylean.cn.conf \
+              | ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+                'tar --no-same-owner --no-same-permissions -xzf - -C /tmp'
+          fi
           ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
-            'test -s /tmp/qilylean-cn-site.tar.gz && test -s /tmp/deploy-qilylean-cn.sh && echo "SSH stream upload complete."'
+            'test -s /tmp/qilylean-cn-site.tar.gz && test -s /tmp/deploy-qilylean-cn.sh && echo "Release bundle staged."'
 
       - name: Bootstrap server when required
         shell: bash
