@@ -71,15 +71,15 @@ assert(cnRail.includes("qily-primary-nav-scroll-rail"), 'CN nav rail runtime cla
 assert(cnRail.includes('setFromPointer'), 'CN nav rail pointer drag is missing.');
 assert(cnRail.includes('installNavDrag'), 'CN primary nav direct drag is missing.');
 assert(!cnRail.includes('data-qily-translation-provider'), 'CN nav rail must remain translation-neutral.');
-assert(cnTranslate.includes('QilyLean CN In-Page Translation V3'), 'CN Baidu translator V2 runtime is missing.');
-assert(cnTranslate.includes("data-qily-translation-provider','baidu'"), 'CN translator must declare Baidu as provider.');
-assert(cnTranslate.includes('API_BASES'), 'CN translator must use Baidu whole-page translation.');
-assert(cnTranslate.includes("addOption(select,'zh','中文简体')"), 'CN translator Simplified Chinese option is missing.');
-assert(cnTranslate.includes("addOption(select,'cht','中文繁体')"), 'CN translator Traditional Chinese option is missing.');
-assert(cnTranslate.includes("addOption(select,'en','English')"), 'CN translator English option is missing.');
-assert(cnTranslate.includes("addOption(select,MORE_VALUE,'其他')"), 'CN translator More option is missing.');
-assert(cnTranslate.includes('target_language:target'), 'CN translator must stay in the current tab.');
-assert(cnTranslateCss.includes('QilyLean CN In-Page Translation UI V3'), 'CN translator V2 UI is missing.');
+assert(cnTranslate.includes('QilyLean CN In-Page Translation V3'), 'CN in-page translator V3 runtime is missing.');
+assert(cnTranslate.includes("data-qily-translation-provider','qilylean-api'"), 'CN translator must declare the QilyLean in-page provider.');
+assert(cnTranslate.includes('API_BASES'), 'CN translator must use the in-page translation API.');
+assert(cnTranslate.includes("option(select,'zh-CN','中文简体')"), 'CN translator Simplified Chinese option is missing.');
+assert(cnTranslate.includes("option(select,'zh-TW','中文繁体')"), 'CN translator Traditional Chinese option is missing.');
+assert(cnTranslate.includes("option(select,'en','English')"), 'CN translator English option is missing.');
+assert(cnTranslate.includes("option(select,MORE,'其他')"), 'CN translator More option is missing.');
+assert(cnTranslate.includes('target_language:target'), 'CN translator target-language request contract is missing.');
+assert(cnTranslateCss.includes('QilyLean CN In-Page Translation UI V3'), 'CN translator V3 UI is missing.');
 
 const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*.html')])].filter(rel=>{
   if(/googleb7a|baidu_verify/.test(rel)) return false;
