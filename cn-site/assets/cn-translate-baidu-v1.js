@@ -1,4 +1,4 @@
-/* QilyLean CN In-Page Translation V4 | 2026-09-18
+/* QilyLean CN In-Page Translation V5 | 2026-09-18
  * Front-end UI stays unchanged. Translation happens inside qilylean.cn via /translate.
  * The server-side provider is Youdao Batch Translation; credentials never reach the browser.
  */
@@ -35,6 +35,8 @@ function collect(){
 }
 function restore(){
   collect().forEach(function(r){if(r.node&&r.node.isConnected)r.node.nodeValue=r.original});
+  d.documentElement.removeAttribute('data-qily-translation-language');
+  d.documentElement.lang='zh-CN';
   activeLanguage='zh-CN';
 }
 function batches(items){
@@ -90,6 +92,8 @@ async function apply(target){
     var runners=[];for(var k=0;k<Math.min(concurrency,groups.length);k++)runners.push(worker());
     await Promise.all(runners);
     activeLanguage=target;
+    d.documentElement.setAttribute('data-qily-translation-language',target);
+    d.documentElement.lang=target;
     status.textContent=label(target);
   }catch(error){
     restore();status.textContent='翻译暂不可用';select.value='zh-CN';
@@ -140,4 +144,5 @@ if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',init,{once:tru
  * fanyi.baidu.com/transpage
  * w.location.href=translatedUrl(code)
  * QilyLean CN In-Page Translation V3
+ * QilyLean CN In-Page Translation V4
  */
