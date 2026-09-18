@@ -1,4 +1,4 @@
-/* QilyLean CN Primary Navigation Rail V4 | 2026-09-18
+/* QilyLean CN Primary Navigation Rail V5 | 2026-09-18
  * International-parity desktop/mobile navigation:
  * - nav is wrapped in its own scroll bay
  * - the range rail lives inside that bay and stays independent of translation controls
@@ -6,7 +6,7 @@
  * - ResizeObserver re-syncs after translation/header reflow
  */
 (function(d,w){'use strict';
-if(w.__qilyCnNavRailV4)return;w.__qilyCnNavRailV4=true;
+if(w.__qilyCnNavRailV5)return;w.__qilyCnNavRailV5=true;
 
 function navs(){
   return Array.prototype.slice.call(d.querySelectorAll('header.site-header nav.nav,header nav[aria-label="主导航"]'));
@@ -15,7 +15,7 @@ function ensureShell(nav){
   if(nav.parentElement&&nav.parentElement.classList.contains('qily-cn-nav-shell'))return nav.parentElement;
   var shell=d.createElement('div');
   shell.className='qily-cn-nav-shell';
-  shell.setAttribute('data-qily-cn-nav-shell','v4');
+  shell.setAttribute('data-qily-cn-nav-shell','v5');
   nav.parentNode.insertBefore(shell,nav);
   shell.appendChild(nav);
   return shell;
@@ -39,10 +39,10 @@ function sync(nav,rail){
 function installRail(nav){
   if(!nav)return;
   var shell=ensureShell(nav);
-  if(nav.dataset.qilyCnNavRail==='v4'&&shell.querySelector('input.qily-primary-nav-scroll-rail'))return;
+  if(nav.dataset.qilyCnNavRail==='v5'&&shell.querySelector('input.qily-primary-nav-scroll-rail'))return;
   var previous=(nav.closest('header')||shell).querySelector('input.qily-primary-nav-scroll-rail');
   if(previous)previous.remove();
-  nav.dataset.qilyCnNavRail='v4';
+  nav.dataset.qilyCnNavRail='v5';
   if(!nav.id)nav.id='qilyCnPrimaryNavigation';
 
   var rail=d.createElement('input');
@@ -100,8 +100,8 @@ function installRail(nav){
   w.setTimeout(requestSync,1100);
 }
 function installNavDrag(nav){
-  if(!nav||nav.dataset.qilyCnNavDrag==='v4')return;
-  nav.dataset.qilyCnNavDrag='v4';
+  if(!nav||nav.dataset.qilyCnNavDrag==='v5')return;
+  nav.dataset.qilyCnNavDrag='v5';
   var active=false,moved=false,startX=0,startY=0,startScroll=0,pointerId=null,suppressUntil=0;
   nav.addEventListener('pointerdown',function(event){
     if((event.pointerType&&event.pointerType!=='mouse')||event.button!==0||event.target.closest('select,option,input,button'))return;
