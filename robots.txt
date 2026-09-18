@@ -1,7 +1,6 @@
-# QilyLean公开页面允许抓取；后台与受控资料按页面级robots规则管理。
+# QilyLean crawling directives.
 User-agent: *
 Allow: /
-Disallow: /admin.html
 Disallow: /qilylean/reference/
 Disallow: /AI-Knowledge/README.md
 Disallow: /AI-Knowledge/NOTICE.md

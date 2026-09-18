@@ -169,8 +169,8 @@
       '<article class="qily-ia-card"><small>改善方法</small><h3>VSM／SMED／OEE／ECRS</h3><p>从价值流、换型、设备损失、动作与流程重构建立可验证改善路径。</p></article>'+
       '<article class="qily-ia-card"><small>系统协同</small><h3>ERP／MES／APS／IE数据</h3><p>统一BOM、工艺路线、工时、产能、计划、实绩和库存口径。</p></article>'+
       '<article class="qily-ia-card"><small>组织机制</small><h3>PMO／阶段门／横向复制</h3><p>以责任、风险、验证、培训、稽核和复盘机制推动成果固化。</p></article>'+
-      '</div><div class="qily-ia-boundary"><strong>阅读边界：</strong>能力标签说明专业覆盖范围，不等同于每项服务均由一人独立完成，也不构成特定项目结果承诺；具体团队配置与职责以项目合同为准。</div>';
-    var section=buildSection({id:'qily-professional-labels',alt:true,kicker:'PROFESSIONAL LABELS｜原首页标签统一归档',title:'专业标签与能力边界',lead:'首页不再平铺大量缩写和工具名称；本页按工程角色、改善方法、系统协同与项目机制集中呈现。',body:labels});
+      '</div><div class="qily-ia-boundary"><strong>协同说明：</strong>这些标签用于呈现工程角色、改善方法、系统协同与项目机制之间的关系，具体项目按实际问题组合所需专业能力。</div>';
+    var section=buildSection({id:'qily-professional-labels',alt:true,kicker:'PROFESSIONAL LABELS｜专业能力标签',title:'专业标签与方法体系',lead:'从工程角色、改善方法、系统协同与项目机制四个维度，理解不同能力如何共同作用于制造问题。',body:labels});
     insertAfter(hero(),section);
   }
 

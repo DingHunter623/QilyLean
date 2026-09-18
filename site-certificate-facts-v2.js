@@ -32,7 +32,7 @@
       var result=card.querySelector('.module-result');
       if(result)result.textContent='证书编号：GPT-LE-2025-0422｜日期：2025年4月22日｜关联平台：OpenAI（ChatGPT / Codex）';
       var meta=card.querySelector('.evidence-meta');
-      if(meta)meta.textContent='能力边界 | 该证书属于学习纪念与能力佐证材料，不构成 OpenAI 官方认证、授权、政府资质或行业认证；制造结论仍以现场数据、工程标准、过程验证和人工复核为准。';
+      if(meta)meta.textContent='证书说明 | 该证书属于学习纪念与能力佐证材料，不构成 OpenAI 官方认证、授权、政府资质或行业认证；制造结论仍以现场数据、工程标准、过程验证和人工复核为准。';
     }
     var panel=section.querySelector('[data-qily-certificate-verification]');
     if(panel){
@@ -43,8 +43,8 @@
         +'<article class="module-card"><small>日期</small><h3>2025年4月22日</h3></article>'
         +'<article class="module-card"><small>OpenAI 官方网站</small><h3><a href="https://openai.com/" target="_blank" rel="noopener noreferrer">openai.com</a></h3><p>平台官方网站，非本证书核验入口。</p></article>'
         +'<article class="module-card"><small>证书原图</small><h3><a href="/qilylean/chatgpt-lean-certificate.png" target="_blank" rel="noopener">官网已公开展示</a></h3></article>'
-        +'<article class="module-card"><small>公开定位</small><h3>学习纪念 / 能力佐证</h3></article>'
-        +'</div><p class="evidence-note" style="margin:18px 0 0"><strong>公开边界：</strong>OpenAI 为所使用 ChatGPT / Codex 的关联平台；本证书不表述为 OpenAI 官方颁发、认证或授权。</p>';
+        +'<article class="module-card"><small>资料性质</small><h3>学习纪念 / 能力佐证</h3></article>'
+        +'</div><p class="evidence-note" style="margin:18px 0 0"><strong>证书说明：</strong>OpenAI 为所使用 ChatGPT / Codex 的关联平台，并非本证书的颁发或认证机构。</p>';
     }
   }
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',apply,{once:true});else apply();

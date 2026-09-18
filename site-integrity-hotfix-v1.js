@@ -100,7 +100,7 @@
         '<div><strong>颁发日期</strong><span>当前官网未公开</span></div>' +
         '<div><strong>官方核验入口</strong><span>当前官网未提供</span></div>' +
       '</div>' +
-      '<div class="qily-cert-boundary"><strong>公开边界：</strong>在上述核验信息补全前，本项仅按“专项技能证书图片／学习与应用经历佐证”展示，不表述为政府资质、行业权威认证、OpenAI官方认证或授权，也不作为客户背书。</div>';
+      '<div class="qily-cert-boundary"><strong>证书说明：</strong>本项按“专项技能证书图片／学习与应用经历佐证”展示；相关核验信息以页面当前资料为准，不表述为政府资质、行业权威认证、OpenAI官方认证或授权。</div>';
     return panel;
   }
 
@@ -120,7 +120,7 @@
       var heading = card.querySelector('h3');
       if (heading) heading.textContent = '大模型应用工程师｜专项技能证书图片';
       var meta = card.querySelector('.evidence-meta');
-      if (meta) meta.textContent = '能力边界 | AI用于辅助信息处理、方案生成、代码与自动化；制造结论仍须以现场数据、工程标准、过程验证和人工复核为准。证书核验信息未补全前，不将该图片作为官方资质证明。';
+      if (meta) meta.textContent = '证书说明 | AI用于辅助信息处理、方案生成、代码与自动化；制造结论仍须以现场数据、工程标准、过程验证和人工复核为准。';
     }
 
     var grid = section.querySelector('.capability-certificate');

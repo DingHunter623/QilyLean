@@ -65,8 +65,8 @@
     "ndaVersion": "V1.0",
     "ndaDocumentName": "QilyLean项目保密声明",
     "ndaPreviewUrl": "/trust/nda-preview.html",
-    "ndaAccessRule": "官网仅开放受控在线预览，不提供Word或PDF下载入口。",
-    "ndaContentRule": "当前正式版本以用户确认的最新版PDF为准；官网仅通过受控页面在线预览，不公开Word或PDF直链。",
+    "ndaAccessRule": "官网提供《QilyLean项目保密声明》在线预览入口。",
+    "ndaContentRule": "当前在线展示内容与最新版保密声明保持一致。",
     "contactPhone": "13450014003",
     "contactEmail": "admin@qilylean.com",
     "trustCenterUrl": "/trust/"
