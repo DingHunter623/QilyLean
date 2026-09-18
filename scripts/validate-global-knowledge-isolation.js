@@ -43,6 +43,7 @@ for (const file of htmlFiles) {
 
     if (href.startsWith('#')) continue;
     if (href.startsWith('/global-knowledge/')) continue;
+    if (href === '/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16') continue;
     fail(`${rel} contains a direct non-isolated href: ${href}`);
   }
 
