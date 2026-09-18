@@ -25,7 +25,7 @@ const canonical = after[0];
 ['<span class="service-number">04</span>','<span class="service-number">05</span>','<span class="service-number">06</span>'].forEach(token => {
   if (!canonical.includes(token)) throw new Error(`Canonical Digital Enablers block missing ${token}`);
 });
-if (!canonical.includes('三项增强能力，不与三大核心业务同级')) throw new Error('Digital Enablers hierarchy copy missing');
+if (!canonical.includes('让制造流程、数据与数字工具形成协同')) throw new Error('Digital Enablers hierarchy copy missing');
 
 const out = html.endsWith('\n') ? html : `${html}\n`;
 if (fs.readFileSync(file, 'utf8') !== out) fs.writeFileSync(file, out, 'utf8');
