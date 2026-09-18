@@ -228,7 +228,11 @@ jobs:
               '/assets/practice/fuse-process.svg?v=20260918-practice-v1',
               '/assets/practice/lean-improvement-evidence.svg?v=20260918-practice-v1',
               '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1',
+              '/assets/practice.css?v=20260918-practice-visual-v2',
               '颁奖照片可以展示，但必须说明它证明的是什么',
+              '6S改善运行机制摘要',
+              'award-metrics-grid',
+              'award-flow',
               '人物面部已处理',
               '团队成果按组织推进口径呈现',
           ]
@@ -238,7 +242,14 @@ jobs:
           required_practice_css = [
               '.practice-grid',
               '.award-panel',
+              '.award-summary',
+              '.award-metrics-grid',
+              '.award-flow',
+              '.award-flow-step',
               '.boundary-note',
+              'QILY-CN-AWARD-MECHANISM-V2',
+              'grid-template-columns:repeat(2,minmax(0,1fr));',
+              'white-space:nowrap;',
           ]
           for marker in required_practice_css:
               if marker not in practice_css:
