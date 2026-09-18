@@ -49,7 +49,7 @@ html body a.qily-route-action[data-qily-route-emphasis="true"]:active{
  * Route-capable cards/tiles/panels must visibly react on hover, keyboard focus and press.
  * Static information cards are excluded because the interaction runtime does not mark them as route.
  */
-html body a[href][data-qily-interaction="route"]:is(
+html body a[href]:is(
   .module-card,.qily-visual-card,.portal-card,.article-link,.service-card,
   .project-card,.project-list-card,.resource-card,.paper-card,.career-card,
   .career-full-card,.moment-card,.case-card,.tool-card,.knowledge-card,
@@ -59,7 +59,7 @@ html body a[href][data-qily-interaction="route"]:is(
   box-shadow:0 8px 20px rgba(15,75,90,.09)!important;
 }
 @media(hover:hover) and (pointer:fine){
-  html body a[href][data-qily-interaction="route"]:is(
+  html body a[href]:is(
     .module-card,.qily-visual-card,.portal-card,.article-link,.service-card,
     .project-card,.project-list-card,.resource-card,.paper-card,.career-card,
     .career-full-card,.moment-card,.case-card,.tool-card,.knowledge-card,
@@ -71,7 +71,7 @@ html body a[href][data-qily-interaction="route"]:is(
     filter:saturate(1.03)!important;
   }
 }
-html body a[href][data-qily-interaction="route"]:is(
+html body a[href]:is(
   .module-card,.qily-visual-card,.portal-card,.article-link,.service-card,
   .project-card,.project-list-card,.resource-card,.paper-card,.career-card,
   .career-full-card,.moment-card,.case-card,.tool-card,.knowledge-card,
@@ -83,7 +83,7 @@ html body a[href][data-qily-interaction="route"]:is(
   outline-offset:3px!important;
   box-shadow:0 16px 34px rgba(15,75,90,.18)!important;
 }
-html body a[href][data-qily-interaction="route"]:is(
+html body a[href]:is(
   .module-card,.qily-visual-card,.portal-card,.article-link,.service-card,
   .project-card,.project-list-card,.resource-card,.paper-card,.career-card,
   .career-full-card,.moment-card,.case-card,.tool-card,.knowledge-card,
