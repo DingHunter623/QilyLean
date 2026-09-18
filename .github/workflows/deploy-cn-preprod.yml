@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: qilylean-cn-production-v7
+  group: qilylean-cn-production-v9
   cancel-in-progress: true
 
 jobs:
@@ -116,11 +116,11 @@ jobs:
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes)
-          scp -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn /tmp/qilylean-cn-site.tar.gz "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean-cn-site.tar.gz"
-          scp -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/server-bootstrap.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/bootstrap-qilylean-cn.sh"
-          scp -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/deploy-release.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/deploy-qilylean-cn.sh"
-          scp -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/activate-public-http.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/activate-qilylean-cn-http.sh"
-          scp -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/nginx/qilylean.cn.conf "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean.cn.conf"
+          scp -O -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn /tmp/qilylean-cn-site.tar.gz "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean-cn-site.tar.gz"
+          scp -O -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/server-bootstrap.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/bootstrap-qilylean-cn.sh"
+          scp -O -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/deploy-release.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/deploy-qilylean-cn.sh"
+          scp -O -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/activate-public-http.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/activate-qilylean-cn-http.sh"
+          scp -O -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/nginx/qilylean.cn.conf "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean.cn.conf"
 
       - name: Bootstrap server when required
         shell: bash
