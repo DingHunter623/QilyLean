@@ -57,9 +57,9 @@
 /* QILY-0830-PUBLIC-REDLINE-CLOSURE-V2.4:START */
 :root{
   --ql-redline-header-offset:86px;
-  --ql-redline-rail-track:#f3e6cf;
-  --ql-redline-rail-thumb:#caa15f;
-  --ql-redline-rail-hover:#b88b45;
+  --ql-redline-rail-track:#b9d9d4;
+  --ql-redline-rail-thumb:#0f4b5a;
+  --ql-redline-rail-hover:#12606f;
 }
 html{scroll-padding-top:calc(var(--ql-redline-header-offset) + 16px)}
 html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header){
