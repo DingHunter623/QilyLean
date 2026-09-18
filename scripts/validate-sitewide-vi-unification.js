@@ -67,7 +67,7 @@ const cnRail=read('cn-site/assets/cn-nav-rail-v1.js');
 assert(cnRail.includes("rail.type='range'"), 'CN nav rail must use the international range control.');
 assert(cnRail.includes("qily-primary-nav-scroll-rail"), 'CN nav rail runtime class is missing.');
 
-const cnPages=tracked('cn-site/**/*.html').filter(rel=>{
+const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*.html')])].filter(rel=>{
   if(/googleb7a|baidu_verify/.test(rel)) return false;
   const html=read(rel);
   return /<body/i.test(html)&&/<\/body>/i.test(html);
