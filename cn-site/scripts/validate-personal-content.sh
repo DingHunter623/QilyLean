@@ -126,12 +126,17 @@ grep -Fq '玻璃管保险丝改善后成品照片' "$PRACTICE_FUSE" || { echo "E
 [[ -f "$PRACTICE_VISUAL" ]] || { echo "ERROR: CN visual-management practice visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage approved no-QR aircraft visual is missing."; exit 1; }
-grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v11' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
-grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v2' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
-grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-baidu-v2' "$INDEX_FILE" || { echo "ERROR: CN homepage translator stylesheet is missing."; exit 1; }
-grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260918-baidu-v2' "$INDEX_FILE" || { echo "ERROR: CN homepage translator runtime is missing."; exit 1; }
-grep -Fq 'QILY-CN-NAV-RAIL-V1' "$CN_VI_FILE" || { echo "ERROR: CN international-style primary-nav rail contract is missing."; exit 1; }
+grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v13' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
+grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v4' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
+grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v3' "$INDEX_FILE" || { echo "ERROR: CN homepage translator stylesheet is missing."; exit 1; }
+grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260918-translate-v3' "$INDEX_FILE" || { echo "ERROR: CN homepage translator runtime is missing."; exit 1; }
+grep -Fq 'QILY-CN-NAV-RAIL-V4' "$CN_VI_FILE" || { echo "ERROR: CN international-style primary-nav rail contract is missing."; exit 1; }
 grep -Fq 'qily-primary-nav-scroll-rail' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN primary-nav rail runtime contract is missing."; exit 1; }
+grep -Fq 'qily-cn-nav-shell' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN primary-nav scroll shell is missing."; exit 1; }
+grep -Fq -- '--qily-nav-scroll-track:#f3e6cf' "$CN_VI_FILE" || { echo "ERROR: CN nav rail track must match international gold VI."; exit 1; }
+grep -Fq -- '--qily-nav-scroll-thumb:#caa15f' "$CN_VI_FILE" || { echo "ERROR: CN nav rail thumb must match international gold VI."; exit 1; }
+grep -Fq 'grid-template-areas:"brand nav translate"' "$CN_VI_FILE" || { echo "ERROR: CN desktop header three-zone layout is missing."; exit 1; }
+grep -Fq 'grid-template-areas:"brand translate" "nav nav"' "$CN_VI_FILE" || { echo "ERROR: CN mobile header nav row is missing."; exit 1; }
 if grep -Fq 'data-qily-translation-provider' "$CN_NAV_RAIL_JS"; then echo "ERROR: CN nav rail must not own translation."; exit 1; fi
 grep -Fq 'QilyLean CN In-Page Translation V3' "$CN_TRANSLATE_JS" || { echo "ERROR: CN Baidu translation V2 runtime is missing."; exit 1; }
 grep -Fq "data-qily-translation-provider','qilylean-api'" "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator provider contract is missing."; exit 1; }
