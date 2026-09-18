@@ -294,7 +294,7 @@ async function callYoudaoTranslation(texts, targetLanguage, env, signal) {
   const sign = await sha256Hex(appKey + input + salt + curtime + appSecret);
   const form = new URLSearchParams();
   for (const text of texts) form.append('q', text);
-  form.set('from', 'zh-CHS');
+  form.set('from', 'auto');
   form.set('to', target);
   form.set('appKey', appKey);
   form.set('salt', salt);
