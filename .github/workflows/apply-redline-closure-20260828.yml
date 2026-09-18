@@ -39,7 +39,7 @@ jobs:
             && grep -Fq -- '--qily-redline-axis:1560px' site-stability-recovery-v1.css \
             && grep -Fq 'QILY-OPL-AXIS-CLOSURE-20260828' site-content-axis-v1.css \
             && grep -Fq 'background:#0f4b5a!important' site-floating-dock-gold-v1.css \
-            && grep -Fq '/assets/qilylean-aircraft-hero-latest-q98.webp' capabilities/index.html \
+            && grep -Fq '/assets/qilylean-aircraft-hero-approved-20260826.png' capabilities/index.html \
             && ! grep -Fq '小王 · C919' capabilities/index.html \
             && grep -Fq "16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}" tools/pure-ddz/game/js/card-theme.js \
             && grep -Fq "17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}" tools/pure-ddz/game/js/card-theme.js \
@@ -66,7 +66,7 @@ jobs:
           grep -Fq 'site-stability-recovery-v1.css?v=20260828-vi-surface-v3' gbt2828.html
           grep -Fq 'site-stability-recovery-v1.css?v=20260828-vi-surface-v3' knowledge/pdca-gantt-milestone-opl.html
           grep -Fq 'background:#0f4b5a!important' site-floating-dock-gold-v1.css
-          grep -Fq '/assets/qilylean-aircraft-hero-latest-q98.webp' capabilities/index.html
+          grep -Fq '/assets/qilylean-aircraft-hero-approved-20260826.png' capabilities/index.html
           grep -Fq '大王为本人图像 | 小王为官网首图“六大业务为主翼”飞机模型' capabilities/index.html
           ! grep -Fq '小王 · C919' capabilities/index.html
           grep -Fq "16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT}" tools/pure-ddz/game/js/card-theme.js
