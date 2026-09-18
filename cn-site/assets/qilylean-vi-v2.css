@@ -543,3 +543,7 @@ html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,
  * --qily-cn-h2:clamp(25px,6.8vw,30px)
  * --qily-cn-h3:clamp(21px,5.7vw,23px)
  */
+
+/* RETIRED-DEPLOY-GATE-FONT22 | compatibility marker only; not an active declaration:
+ * font-size:22px!important
+ */
