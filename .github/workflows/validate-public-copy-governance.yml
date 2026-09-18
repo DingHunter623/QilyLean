@@ -1,0 +1,48 @@
+name: Validate public copy governance
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '**/*.html'
+      - '**/*.htm'
+      - '**/*.svg'
+      - 'robots.txt'
+      - 'homepage-music.js'
+      - 'global-knowledge/**'
+      - 'site-information-architecture-v1.js'
+      - 'site-certificate-facts-v2.js'
+      - 'site-integrity-hotfix-v1.js'
+      - 'qilylean/site-data.json'
+      - 'scripts/validate-public-copy-governance.js'
+      - '.github/workflows/validate-public-copy-governance.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.html'
+      - '**/*.htm'
+      - '**/*.svg'
+      - 'robots.txt'
+      - 'homepage-music.js'
+      - 'global-knowledge/**'
+      - 'site-information-architecture-v1.js'
+      - 'site-certificate-facts-v2.js'
+      - 'site-integrity-hotfix-v1.js'
+      - 'qilylean/site-data.json'
+      - 'scripts/validate-public-copy-governance.js'
+      - '.github/workflows/validate-public-copy-governance.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  public-copy-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Reject operational or admin wording on public surfaces
+        run: node scripts/validate-public-copy-governance.js
+      - name: Verify clean patch formatting
+        run: git diff --check
