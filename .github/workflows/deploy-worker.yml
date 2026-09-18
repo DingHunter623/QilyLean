@@ -54,7 +54,11 @@ jobs:
           grep -q "url.pathname === '/admin/brief-feedback'" cloudflare-worker/worker-social.js
           grep -q "url.pathname === '/translate'" cloudflare-worker/worker-social.js
           grep -q "TRANSLATION_SYSTEM_INSTRUCTIONS" cloudflare-worker/worker-social.js
+          grep -q "YOUDAO_TRANSLATE_URL = 'https://openapi.youdao.com/v2/api'" cloudflare-worker/worker-social.js
+          grep -q "callYoudaoTranslation" cloudflare-worker/worker-social.js
+          grep -q "TRANSLATION_CACHE_VERSION = 'v4-youdao'" cloudflare-worker/worker-social.js
           grep -q 'TRANSLATE_DAILY_IP_LIMIT = "600"' wrangler.toml
+          grep -q 'TRANSLATE_PROVIDER = "youdao"' wrangler.toml
           grep -q "admin@qilylean.com" cloudflare-worker/worker.js
 
       - name: 校验 Cloudflare 账户 ID
@@ -68,6 +72,19 @@ jobs:
             exit 1
           fi
           echo "CLOUDFLARE_ACCOUNT_ID=$ACCOUNT_ID" >> "$GITHUB_ENV"
+
+      - name: 同步有道翻译密钥到 Cloudflare
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          YOUDAO_APP_KEY: ${{ secrets.YOUDAO_APP_KEY }}
+          YOUDAO_APP_SECRET: ${{ secrets.YOUDAO_APP_SECRET }}
+        run: |
+          set -euo pipefail
+          test -n "$YOUDAO_APP_KEY" || { echo "Missing repository secret: YOUDAO_APP_KEY"; exit 1; }
+          test -n "$YOUDAO_APP_SECRET" || { echo "Missing repository secret: YOUDAO_APP_SECRET"; exit 1; }
+          printf '%s' "$YOUDAO_APP_KEY" | npx wrangler secret put YOUDAO_APP_KEY
+          printf '%s' "$YOUDAO_APP_SECRET" | npx wrangler secret put YOUDAO_APP_SECRET
 
       - name: 部署 Worker
         run: npm run deploy:worker
@@ -112,6 +129,9 @@ jobs:
             if (healthData.build_version !== 'v1.6.0-brief-engagement') {
               throw new Error('unexpected build ' + healthData.build_version);
             }
+            if (healthData.translation_provider !== 'youdao' || healthData.youdao_available !== true) {
+              throw new Error('Youdao translation backend is not provisioned');
+            }
           });
           await withRetry(base + ' translation', async () => {
             const translation = await fetch(base + '/translate', {
@@ -131,6 +151,12 @@ jobs:
             const data = await translation.json();
             if (!translation.ok || !data.ok || !Array.isArray(data.translations) || data.translations.length !== 2) {
               throw new Error('status ' + translation.status);
+            }
+            if (data.provider !== 'youdao') {
+              throw new Error('translation provider is not Youdao: ' + String(data.provider || ''));
+            }
+            if (!String(data.translations[0] || '').trim() || data.translations[0] === '精益生产') {
+              throw new Error('Youdao did not translate the smoke-test source text');
             }
             if (data.translations[1] !== 'QilyLean｜启力精益') {
               throw new Error('protected brand token changed');

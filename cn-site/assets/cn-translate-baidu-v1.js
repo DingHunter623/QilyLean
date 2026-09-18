@@ -1,6 +1,6 @@
-/* QilyLean CN In-Page Translation V3 | 2026-09-18
- * No third-party page jump. Translation happens inside qilylean.cn.
- * Uses the existing QilyLean /translate service; server-side provider is never exposed to the browser.
+/* QilyLean CN In-Page Translation V4 | 2026-09-18
+ * Front-end UI stays unchanged. Translation happens inside qilylean.cn via /translate.
+ * The server-side provider is Youdao Batch Translation; credentials never reach the browser.
  */
 (function(d,w){'use strict';
 if(w.__qilyCnTranslateV3)return;w.__qilyCnTranslateV3=true;
@@ -41,7 +41,7 @@ function batches(items){
   var out=[],batch=[],chars=0;
   items.forEach(function(item){
     var len=item.core.length;
-    if(batch.length>=24||chars+len>7600){out.push(batch);batch=[];chars=0}
+    if(batch.length>=20||chars+len>4600){out.push(batch);batch=[];chars=0}
     batch.push(item);chars+=len;
   });
   if(batch.length)out.push(batch);
@@ -78,15 +78,19 @@ async function apply(target){
   busy=true;control.setAttribute('data-qily-translating','true');status.textContent='翻译中…';
   restore();
   try{
-    var list=collect(),groups=batches(list),provider='';
-    for(var i=0;i<groups.length;i++){
-      var data=await translateBatch(target,groups[i]);provider=data.provider||provider;
-      data.translations.forEach(function(text,index){
-        var r=groups[i][index];if(r.node&&r.node.isConnected)r.node.nodeValue=r.prefix+text+r.suffix;
-      });
+    var list=collect(),groups=batches(list),cursor=0,concurrency=3;
+    async function worker(){
+      while(cursor<groups.length){
+        var index=cursor++,group=groups[index],data=await translateBatch(target,group);
+        data.translations.forEach(function(text,translationIndex){
+          var r=group[translationIndex];if(r.node&&r.node.isConnected)r.node.nodeValue=r.prefix+text+r.suffix;
+        });
+      }
     }
+    var runners=[];for(var k=0;k<Math.min(concurrency,groups.length);k++)runners.push(worker());
+    await Promise.all(runners);
     activeLanguage=target;
-    status.textContent=(provider==='qwen'?'通义千问 · ':'')+label(target);
+    status.textContent=label(target);
   }catch(error){
     restore();status.textContent='翻译暂不可用';select.value='zh-CN';
   }finally{
@@ -111,7 +115,7 @@ function buildPanel(){
   p.appendChild(head);p.appendChild(grid);p.appendChild(note);return p;
 }
 function build(){
-  var wrap=d.createElement('div');wrap.id=CONTROL_ID;wrap.className='qily-cn-translate';wrap.setAttribute('data-qily-header-utility','translation');wrap.setAttribute('data-qily-translation-provider','qilylean-api');wrap.setAttribute('translate','no');wrap.setAttribute('role','group');wrap.setAttribute('aria-label','网页翻译');
+  var wrap=d.createElement('div');wrap.id=CONTROL_ID;wrap.className='qily-cn-translate';wrap.setAttribute('data-qily-header-utility','translation');wrap.setAttribute('data-qily-translation-provider','qilylean-api');wrap.setAttribute('data-qily-translation-engine','youdao');wrap.setAttribute('translate','no');wrap.setAttribute('role','group');wrap.setAttribute('aria-label','网页翻译');
   var mark=d.createElement('span');mark.className='qily-cn-translate__mark';mark.setAttribute('aria-hidden','true');mark.textContent='🌐';
   select=d.createElement('select');select.className='qily-cn-translate__select';select.setAttribute('aria-label','选择网站语言');
   option(select,'zh-CN','中文简体');option(select,'zh-TW','中文繁体');option(select,'en','English');option(select,MORE,'其他');
@@ -135,4 +139,5 @@ if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',init,{once:tru
  * QilyLean CN Domestic Web Translation V2
  * fanyi.baidu.com/transpage
  * w.location.href=translatedUrl(code)
+ * QilyLean CN In-Page Translation V3
  */

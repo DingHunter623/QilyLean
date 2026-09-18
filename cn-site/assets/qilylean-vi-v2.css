@@ -13,6 +13,7 @@
   --qily-cn-h2:clamp(26px,2vw,32px);
   --qily-cn-h3:clamp(20px,1.4vw,23px);
   --qily-cn-fixed-footer-h:78px;
+  --qily-cn-primary-nav-font-size:20px;
   --qily-nav-scroll-track:#b9d9d4;
   --qily-nav-scroll-thumb:#0f4b5a;
   --qily-nav-scroll-thumb-hover:#12606f;
@@ -35,9 +36,8 @@ html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,
   font-size:var(--qily-cn-small)!important;
   line-height:1.55!important;
 }
-html:root body :is(.nav>a[href],a.btn,button.btn,.logic b,.toc b){
-  font-size:17px!important;
-}
+html:root body .nav>a[href]{font-size:var(--qily-cn-primary-nav-font-size)!important}
+html:root body :is(a.btn,button.btn,.logic b,.toc b){font-size:17px!important}
 
 /* Restrained heading hierarchy: strong enough for executives, not visually exhausting. */
 html:root body main :is(.hero h1,.page-hero h1,h1){
@@ -245,7 +245,7 @@ html:root body .nav>a[href="/digital/"]::before,
 html:root body .nav>a[href="/methods/"]::before,
 html:root body .nav>a[href="/knowledge/"]::before{
   display:inline-block!important;
-  font-size:17px!important;
+  font-size:var(--qily-cn-primary-nav-font-size)!important;
   line-height:1.22!important;
   font-weight:900!important;
   letter-spacing:0!important;
@@ -254,12 +254,38 @@ html:root body .nav>a[href="/knowledge/"]::before{
 }
 html:root body :is(.nav a,.toc :is(a,span)){word-break:keep-all!important;overflow-wrap:normal!important}
 
-/* QILY-CN-NAV-RAIL-V1 | 2026-09-18
- * Same interaction geometry as international-site primary navigation.
- * The native OS scrollbar is hidden; an explicit draggable range rail carries the visual affordance.
+/* QILY-CN-NAV-RAIL-V4 | 2026-09-18
+ * Desktop/mobile parity with the international primary-navigation interaction.
+ * Header uses Brand | independent nav scroll bay | Translation, so the translation utility
+ * can never consume or hide the navigation rail geometry.
  */
 html:root body .site-header{position:relative!important}
-html:root body .site-header .nav{
+html:root body .site-header .header-inner{
+  display:grid!important;
+  grid-template-columns:max-content minmax(0,1fr) max-content!important;
+  grid-template-areas:"brand nav translate"!important;
+  align-items:center!important;
+  column-gap:18px!important;
+  row-gap:0!important;
+  min-width:0!important;
+}
+html:root body .site-header .brand{grid-area:brand!important;min-width:max-content!important}
+html:root body .site-header .qily-cn-nav-shell{
+  grid-area:nav!important;
+  position:relative!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  padding-bottom:13px!important;
+  overflow:visible!important;
+}
+html:root body .site-header .qily-cn-translate{
+  grid-area:translate!important;
+  position:relative!important;
+  top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;
+  align-self:center!important;
+}
+html:root body .site-header .qily-cn-nav-shell .nav{
   overflow-x:auto!important;
   overflow-y:hidden!important;
   flex-wrap:nowrap!important;
@@ -271,11 +297,14 @@ html:root body .site-header .nav{
   overscroll-behavior-x:contain!important;
   -webkit-overflow-scrolling:touch!important;
 }
-html:root body .site-header .nav::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+html:root body .site-header .qily-cn-nav-shell .nav::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
 html:root body input.qily-primary-nav-scroll-rail[type="range"]{
   position:absolute!important;
   z-index:2147481000!important;
-  bottom:4px!important;
+  left:0!important;
+  right:auto!important;
+  bottom:1px!important;
+  width:100%!important;
   height:10px!important;
   min-width:60px!important;
   margin:0!important;
@@ -333,7 +362,7 @@ html:root body input.qily-primary-nav-scroll-rail[type="range"]:focus-visible{
 }
 html:root body input.qily-primary-nav-scroll-rail[type="range"][data-qily-nav-overflow="false"],
 html:root body input.qily-primary-nav-scroll-rail[type="range"][disabled]{
-  opacity:0!important;
+  opacity:.52!important;
   pointer-events:none!important;
   cursor:default!important;
   filter:none!important;
@@ -347,6 +376,7 @@ html:root body .table-wrap table :is(th,td):first-child{
   overflow-wrap:normal!important;
 }
 @media(max-width:900px){
+  html:root body .site-header .header-inner{column-gap:12px!important}
   html:root body .nav>a[href="/lean/"],
   html:root body .nav>a[href="/ie/"],
   html:root body .nav>a[href="/standardization/"],
@@ -356,6 +386,23 @@ html:root body .table-wrap table :is(th,td):first-child{
   html:root body .nav>a[href="/knowledge/"]{min-width:94px!important}
 }
 
+
+@media(max-width:720px){
+  html:root body .site-header .header-inner{
+    grid-template-columns:minmax(0,1fr) max-content!important;
+    grid-template-areas:"brand translate" "nav nav"!important;
+    column-gap:10px!important;
+    row-gap:6px!important;
+    align-items:center!important;
+    padding-top:10px!important;
+    padding-bottom:7px!important;
+  }
+  html:root body .site-header .qily-cn-nav-shell{width:100%!important;min-width:0!important}
+  html:root body .site-header .qily-cn-translate{
+    position:relative!important;
+    top:auto!important;right:auto!important;bottom:auto!important;left:auto!important;
+  }
+}
 
 /* 2026-09-17 | CN page-thesis module: descriptive, not clickable. */
 html:root body aside.toc{cursor:default!important}
