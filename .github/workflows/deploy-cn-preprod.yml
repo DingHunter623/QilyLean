@@ -23,6 +23,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Materialize approved CN practice evidence assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x cn-site/scripts/materialize-practice-assets.sh
+          cn-site/scripts/materialize-practice-assets.sh
+
       - name: Production structure gate
         shell: bash
         run: |
@@ -42,6 +49,7 @@ jobs:
           test -f cn-site/assets/practice/mold-warehouse.svg
           test -f cn-site/assets/practice/fuse-process.svg
           test -f cn-site/assets/practice/lean-improvement-evidence.svg
+          test -s cn-site/assets/practice/award-6s-page-01.jpg
           test -f cn-site/notes/index.html
           test -f cn-site/scripts/validate-personal-content.sh
           test -f cn-site/scripts/activate-public-http.sh
@@ -217,6 +225,7 @@ jobs:
               '/assets/practice/mold-warehouse.svg?v=20260918-practice-v1',
               '/assets/practice/fuse-process.svg?v=20260918-practice-v1',
               '/assets/practice/lean-improvement-evidence.svg?v=20260918-practice-v1',
+              '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1',
               '颁奖照片可以展示，但必须说明它证明的是什么',
               '人物面部已处理',
               '团队成果按组织推进口径呈现',
@@ -258,6 +267,26 @@ jobs:
 
           print('PASS: production closure verified on qilylean.cn About/home/practice/VI and qilylean.com /links/.')
           PY
+
+      - name: Verify local practice award evidence is public
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp)"
+          curl --location --fail --silent --show-error \
+            "https://qilylean.cn/assets/practice/award-6s-page-01.jpg?closure=$GITHUB_SHA" \
+            --output "$tmp"
+          bytes="$(wc -c < "$tmp" | tr -d ' ')"
+          test "$bytes" -gt 10000
+          python3 - "$tmp" <<'PY'
+          import pathlib
+          import sys
+          data = pathlib.Path(sys.argv[1]).read_bytes()
+          if not data.startswith(b'\xff\xd8\xff'):
+              raise SystemExit('Production award evidence asset is not a JPEG.')
+          print(f'PASS: local CN award evidence is public ({len(data)} bytes, JPEG).')
+          PY
+          rm -f "$tmp"
 
       - name: Verify search-engine ownership files are public
         shell: bash
