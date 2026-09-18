@@ -215,9 +215,17 @@ function isAdmin(request, env) {
 
 function translationProvider(env) {
   const requested = String(env.TRANSLATE_PROVIDER || 'youdao').toLowerCase();
-  if (requested === 'youdao') return env.YOUDAO_APP_KEY && env.YOUDAO_APP_SECRET ? 'youdao' : '';
+  if (requested === 'youdao') {
+    if (env.YOUDAO_APP_KEY && env.YOUDAO_APP_SECRET) return 'youdao';
+    if (env.DASHSCOPE_API_KEY) return 'qwen';
+    if (env.OPENAI_API_KEY) return 'openai';
+    return '';
+  }
   if (requested === 'openai' && env.OPENAI_API_KEY) return 'openai';
   if ((requested === 'qwen' || requested === 'dashscope') && env.DASHSCOPE_API_KEY) return 'qwen';
+  if (env.YOUDAO_APP_KEY && env.YOUDAO_APP_SECRET) return 'youdao';
+  if (env.DASHSCOPE_API_KEY) return 'qwen';
+  if (env.OPENAI_API_KEY) return 'openai';
   return '';
 }
 
@@ -378,6 +386,7 @@ async function translationCacheKey(targetLanguage, text) {
 
 async function readTranslationCache(env, targetLanguage, texts) {
   const values = new Map();
+  if (translationProvider(env) !== 'youdao') return values;
   if (!env.QILY_STATS || !texts.length) return values;
   const unique = [...new Set(texts)];
   const keyed = await Promise.all(unique.map(async (text) => [text, await translationCacheKey(targetLanguage, text)]));
@@ -389,6 +398,7 @@ async function readTranslationCache(env, targetLanguage, texts) {
 }
 
 async function writeTranslationCache(env, targetLanguage, entries) {
+  if (translationProvider(env) !== 'youdao') return;
   if (!env.QILY_STATS || !entries.length) return;
   await Promise.all(entries.map(async ([source, translated]) => {
     if (!translated || translated === source && !PROTECTED_TRANSLATION_SET.has(source)) return;
