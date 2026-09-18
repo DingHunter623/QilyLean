@@ -283,7 +283,21 @@ html:root body :is(.nav a,.toc :is(a,span)){word-break:keep-all!important;overfl
  * Real DOM track + real DOM thumb; no native range, no pseudo-element track and
  * no PointerEvent dependency. Colors and geometry stay aligned to international VI.
  */
-html:root body .site-header{position:relative!important}
+/* QILY-CN-STICKY-HEADER-V1 | parity with international site.
+ * Sticky remains in normal document flow: content scrolls underneath the viewport,
+ * while the header itself stays pinned to the top without covering the next section.
+ */
+html:root body .site-header{
+  position:sticky!important;
+  position:-webkit-sticky!important;
+  top:0!important;
+  z-index:2200!important;
+  background:rgba(255,255,255,.96)!important;
+  -webkit-backdrop-filter:saturate(140%) blur(12px)!important;
+  backdrop-filter:saturate(140%) blur(12px)!important;
+  border-bottom:1px solid var(--qily-line,#d5e4e3)!important;
+  isolation:isolate!important;
+}
 html:root body .site-header .header-inner{
   display:grid!important;
   grid-template-columns:max-content minmax(0,1fr) max-content!important;
