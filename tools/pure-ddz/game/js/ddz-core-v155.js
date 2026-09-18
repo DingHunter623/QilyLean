@@ -84,7 +84,7 @@
     '♣':{code:'OPS · PM',title:'运营与项目',icon:'▣'},
     '♦':{code:'DIGITAL · IT',title:'数智工厂',icon:'◇'}
   });
-  const HOME_AIRCRAFT=siteAssetUrl('qilylean-aircraft-hero-latest-q98.webp');
+  const HOME_AIRCRAFT=siteAssetUrl('qilylean-aircraft-hero-approved-20260826.png');
   const JOKER_THEME=Object.freeze({
     16:{type:'small-joker',title:'小王',image:HOME_AIRCRAFT},
     17:{type:'big-joker',title:'大王',image:assetUrl('avatar-king.webp')}
