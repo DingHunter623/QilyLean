@@ -9,6 +9,7 @@ GOOGLE_VERIFY_FILE="$ROOT_DIR/googleb7a991efbed3aa8a.html"
 BAIDU_VERIFY_FILE="$ROOT_DIR/baidu_verify_codeva-Bp0VGliFcp.html"
 INDEXNOW_FILE="$ROOT_DIR/b47ed759da519bd90586a7877122d7be.txt"
 CN_AIRCRAFT_FILE="$ROOT_DIR/assets/qilylean-aircraft-hero-cn-20260918.png"
+CN_VI_FILE="$ROOT_DIR/assets/qilylean-vi-v2.css"
 PRACTICE_PAGE="$ROOT_DIR/notes/index.html"
 PRACTICE_CSS="$ROOT_DIR/assets/practice.css"
 PRACTICE_SMED="$ROOT_DIR/assets/practice/smed-300t.svg"
@@ -101,6 +102,7 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
 [[ -f "$BAIDU_VERIFY_FILE" ]] || { echo "ERROR: Baidu verification file is missing."; exit 1; }
 [[ -f "$INDEXNOW_FILE" ]] || { echo "ERROR: CN IndexNow key file is missing."; exit 1; }
 [[ -f "$CN_AIRCRAFT_FILE" ]] || { echo "ERROR: CN approved no-QR aircraft asset is missing."; exit 1; }
+[[ -f "$CN_VI_FILE" ]] || { echo "ERROR: CN unified VI stylesheet is missing."; exit 1; }
 [[ -f "$PRACTICE_PAGE" ]] || { echo "ERROR: CN practice archive page is missing."; exit 1; }
 [[ -f "$PRACTICE_CSS" ]] || { echo "ERROR: CN practice archive stylesheet is missing."; exit 1; }
 [[ -f "$PRACTICE_SMED" ]] || { echo "ERROR: CN SMED practice visual is missing."; exit 1; }
@@ -109,6 +111,10 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
 [[ -f "$PRACTICE_EVIDENCE" ]] || { echo "ERROR: CN improvement-evidence visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage approved no-QR aircraft visual is missing."; exit 1; }
+grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-aircraft-center-v8' "$INDEX_FILE" || { echo "ERROR: CN homepage aircraft-center VI cache version is missing."; exit 1; }
+grep -Fq 'QILY-CN-AIRCRAFT-CENTERED-V2' "$CN_VI_FILE" || { echo "ERROR: CN aircraft centered layout contract is missing."; exit 1; }
+grep -Fq 'object-position:50% 50%!important' "$CN_VI_FILE" || { echo "ERROR: CN aircraft image is not center-positioned."; exit 1; }
+grep -Fq 'width:100%!important;' "$CN_VI_FILE" || { echo "ERROR: CN aircraft responsive width contract is missing."; exit 1; }
 grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' "$INDEX_FILE" || { echo "ERROR: CN homepage practice/evidence entry is missing."; exit 1; }
 grep -Fq '实践与成果：把改善结果还原成可复用的工程方法' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive positioning marker is missing."; exit 1; }
 grep -Fq '展示经历，不包装成商业案例' "$INDEX_FILE" || { echo "ERROR: CN homepage practice boundary marker is missing."; exit 1; }
