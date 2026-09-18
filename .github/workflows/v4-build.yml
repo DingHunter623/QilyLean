@@ -38,21 +38,16 @@ jobs:
         with:
           node-version: 24
 
-      - name: Restore latest user-approved airplane SSOT
+      - name: Validate latest user-approved airplane SSOT
         shell: bash
         run: |
           set -euo pipefail
           SOURCE='官网首图.png'
-          SOURCE_COMMIT='0374beaedea04ef03b0c2e0e8f90646ebd4deb00'
-          SOURCE_PATH='官网首图3代.png'
-          EXPECTED_BLOB='32a218ed835ff0518cc7e2530f37c8cfa0b05b53'
-          CURRENT_BLOB="$(git hash-object "$SOURCE" 2>/dev/null || true)"
-          if [ "$CURRENT_BLOB" != "$EXPECTED_BLOB" ]; then
-            git show "${SOURCE_COMMIT}:${SOURCE_PATH}" > "$SOURCE"
-          fi
+          EXPECTED_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4'
+          test -f "$SOURCE"
           ACTUAL_BLOB="$(git hash-object "$SOURCE")"
           test "$ACTUAL_BLOB" = "$EXPECTED_BLOB"
-          echo "Latest user-approved homepage airplane restored: $ACTUAL_BLOB"
+          echo "Latest user-approved homepage airplane locked: $ACTUAL_BLOB"
 
       - name: Install WebP encoder
         shell: bash
@@ -77,7 +72,7 @@ jobs:
           SOURCE='官网首图.png'
           PNG='assets/qilylean-aircraft-hero-approved-20260826.png'
           WEBP='assets/qilylean-aircraft-hero-latest-q98.webp'
-          EXPECTED_BLOB='32a218ed835ff0518cc7e2530f37c8cfa0b05b53'
+          EXPECTED_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4'
           test -f "$SOURCE"
           ACTUAL_BLOB="$(git hash-object "$SOURCE")"
           test "$ACTUAL_BLOB" = "$EXPECTED_BLOB"
@@ -107,8 +102,8 @@ jobs:
           set -euo pipefail
           node --check scripts/enforce-aircraft-home-hero.js
           node scripts/enforce-aircraft-home-hero.js
-          grep -q 'qilylean-aircraft-hero-latest-q98.webp?v=20260831-aircraft-latest-v5' index.html
-          grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260831-aircraft-latest-v5' index.html
+          grep -q 'qilylean-aircraft-hero-latest-q98.webp?v=20260918-aircraft-ultraclear-v1' index.html
+          grep -q 'qilylean-aircraft-hero-approved-20260826.png?v=20260918-aircraft-ultraclear-v1' index.html
           node scripts/site-regression-guard-aircraft-hero.js
 
       - name: Guard sitewide floating dock gold identity
