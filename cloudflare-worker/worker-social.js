@@ -10,11 +10,16 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.qilylean.cn'
 ]);
 
-/* V3 cache is deliberately per source string rather than per request batch.
- * The browser runtime adaptively changes batch sizes on long pages; string-level keys let the same
- * source copy hit cache regardless of which page/batch/retry it arrived in.
+/* V4 cache: provider generation is part of the namespace so legacy Qwen/OpenAI
+ * translations (including partially untranslated text) cannot leak into Youdao results.
  */
-const TRANSLATION_CACHE_VERSION = 'v3';
+const TRANSLATION_CACHE_VERSION = 'v4-youdao';
+const YOUDAO_TRANSLATE_URL = 'https://openapi.youdao.com/v2/api';
+const YOUDAO_LANGUAGE_MAP = Object.freeze({
+  'zh-CN':'zh-CHS','zh-TW':'zh-CHT','en':'en','ja':'ja','ko':'ko','fr':'fr','de':'de',
+  'es':'es','ru':'ru','pt':'pt','it':'it','ar':'ar','th':'th','vi':'vi','id':'id',
+  'ms':'ms','tr':'tr','pl':'pl','nl':'nl'
+});
 const PROTECTED_TRANSLATION_TOKENS = [
   'QilyLean｜启力精益', 'IATF 16949', 'ISO 9001', 'Times26001', '启力精益', 'QilyLean', 'C919',
   'Run@Rate', 'DVP&R', 'Phase Gate', 'Control Plan', 'Takt Time', 'One Piece Flow',
@@ -209,11 +214,10 @@ function isAdmin(request, env) {
 }
 
 function translationProvider(env) {
-  const requested = String(env.AI_PROVIDER || '').toLowerCase();
+  const requested = String(env.TRANSLATE_PROVIDER || 'youdao').toLowerCase();
+  if (requested === 'youdao') return env.YOUDAO_APP_KEY && env.YOUDAO_APP_SECRET ? 'youdao' : '';
   if (requested === 'openai' && env.OPENAI_API_KEY) return 'openai';
   if ((requested === 'qwen' || requested === 'dashscope') && env.DASHSCOPE_API_KEY) return 'qwen';
-  if (env.DASHSCOPE_API_KEY) return 'qwen';
-  if (env.OPENAI_API_KEY) return 'openai';
   return '';
 }
 
@@ -266,6 +270,56 @@ function extractOpenAIText(data) {
     }
   }
   return parts.join('\n').trim();
+}
+
+function truncateYoudaoBatch(texts) {
+  const joined = texts.join('');
+  return joined.length <= 20 ? joined : joined.slice(0, 10) + joined.length + joined.slice(-10);
+}
+
+async function sha256Hex(value) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(digest)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+async function callYoudaoTranslation(texts, targetLanguage, env, signal) {
+  if (!env.YOUDAO_APP_KEY || !env.YOUDAO_APP_SECRET) throw new Error('Youdao translation credentials are not configured');
+  const target = YOUDAO_LANGUAGE_MAP[targetLanguage];
+  if (!target) throw new Error('Youdao target language is not supported');
+  const appKey = String(env.YOUDAO_APP_KEY);
+  const appSecret = String(env.YOUDAO_APP_SECRET);
+  const salt = crypto.randomUUID();
+  const curtime = String(Math.floor(Date.now() / 1000));
+  const input = truncateYoudaoBatch(texts);
+  const sign = await sha256Hex(appKey + input + salt + curtime + appSecret);
+  const form = new URLSearchParams();
+  for (const text of texts) form.append('q', text);
+  form.set('from', 'zh-CHS');
+  form.set('to', target);
+  form.set('appKey', appKey);
+  form.set('salt', salt);
+  form.set('sign', sign);
+  form.set('signType', 'v3');
+  form.set('curtime', curtime);
+  form.set('detectLevel', '1');
+  form.set('detectFilter', 'false');
+  if (env.YOUDAO_VOCAB_ID) form.set('vocabId', String(env.YOUDAO_VOCAB_ID));
+
+  const response = await fetch(YOUDAO_TRANSLATE_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 'Accept': 'application/json' },
+    body: form.toString(),
+    signal
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok || String(data.errorCode || '') !== '0') {
+    throw new Error('Youdao translation upstream ' + response.status + '/' + String(data.errorCode || 'unknown'));
+  }
+  const results = Array.isArray(data.translateResults) ? data.translateResults : [];
+  if (results.length !== texts.length || results.some((item) => typeof item?.translation !== 'string')) {
+    throw new Error('Youdao translation response format is invalid');
+  }
+  return results.map((item) => item.translation);
 }
 
 async function callOpenAITranslation(texts, targetLanguage, env, signal) {
@@ -360,7 +414,7 @@ async function translateBatch(payload, request, env) {
   if (!texts.length || texts.length > 24) return { error: 'Translation batch must contain 1 to 24 strings', status: 400 };
   if (texts.some((value) => !value)) return { error: 'Translation batch contains an empty string', status: 400 };
   const totalChars = texts.reduce((sum, value) => sum + value.length, 0);
-  if (totalChars > 8000) return { error: 'Translation batch is too large', status: 413 };
+  if (totalChars > 5000) return { error: 'Translation batch is too large', status: 413 };
 
   const translations = new Array(texts.length);
   const cachedValues = await readTranslationCache(env, targetLanguage, texts.filter((text) => !PROTECTED_TRANSLATION_SET.has(text)));
@@ -406,9 +460,11 @@ async function translateBatch(payload, request, env) {
   const timeout = setTimeout(() => controller.abort(), 55000);
   let translatedProvider;
   try {
-    translatedProvider = provider === 'qwen'
-      ? await callQwenTranslation(providerTexts, targetLanguage, env, controller.signal)
-      : await callOpenAITranslation(providerTexts, targetLanguage, env, controller.signal);
+    translatedProvider = provider === 'youdao'
+      ? await callYoudaoTranslation(providerTexts, targetLanguage, env, controller.signal)
+      : provider === 'qwen'
+        ? await callQwenTranslation(providerTexts, targetLanguage, env, controller.signal)
+        : await callOpenAITranslation(providerTexts, targetLanguage, env, controller.signal);
   } catch (error) {
     const timedOut = error && error.name === 'AbortError';
     return { error: timedOut ? 'Translation request timed out' : 'Translation service unavailable', status: timedOut ? 504 : 502 };
