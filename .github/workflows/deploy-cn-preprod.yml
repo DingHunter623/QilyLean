@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: qilylean-cn-production-v11
+  group: qilylean-cn-production-v12
   cancel-in-progress: true
 
 jobs:
@@ -124,11 +124,21 @@ jobs:
           cp cn-site/scripts/deploy-release.sh "$STAGE/deploy-qilylean-cn.sh"
           cp cn-site/scripts/activate-public-http.sh "$STAGE/activate-qilylean-cn-http.sh"
           cp cn-site/nginx/qilylean.cn.conf "$STAGE/qilylean.cn.conf"
-          LOCAL_SHA="$(sha256sum /tmp/qilylean-cn-site.tar.gz | awk '{print $1}')"
-          REMOTE_SHA="$(ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "sha256sum /tmp/qilylean-cn-site.tar.gz 2>/dev/null | awk '{print \\$1}'" || true)"
-          if [ "$REMOTE_SHA" = "$LOCAL_SHA" ] && ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
-            'test -s /tmp/bootstrap-qilylean-cn.sh && test -s /tmp/deploy-qilylean-cn.sh && test -s /tmp/activate-qilylean-cn-http.sh && test -s /tmp/qilylean.cn.conf'; then
-            echo "Reusing verified staged release bundle: $LOCAL_SHA"
+
+          REMOTE_READY="$(ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" '
+            set -e
+            test -s /tmp/qilylean-cn-site.tar.gz
+            test -s /tmp/bootstrap-qilylean-cn.sh
+            test -s /tmp/deploy-qilylean-cn.sh
+            test -s /tmp/activate-qilylean-cn-http.sh
+            test -s /tmp/qilylean.cn.conf
+            tar -xOf /tmp/qilylean-cn-site.tar.gz ./index.html | grep -Fq "/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v17"
+            tar -xOf /tmp/qilylean-cn-site.tar.gz ./index.html | grep -Fq "/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao"
+            tar -xOf /tmp/qilylean-cn-site.tar.gz ./assets/qilylean-vi-v2.css | grep -Fq "QILY-CN-STICKY-HEADER-V1"
+            echo ready
+          ' || true)"
+          if [ "$REMOTE_READY" = "ready" ]; then
+            echo "Reusing staged V17/translate-v5 release bundle already present on mainland server."
           else
             tar -C "$STAGE" -czf - \
               qilylean-cn-site.tar.gz \
