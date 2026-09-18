@@ -116,10 +116,10 @@ forbid(mat,'const PUBLIC_UI_JS=','Retired picker injection');
 
 /* qilylean.cn is production, indexable, and visually governed by its own final VI. */
 const cn=read('cn-site/index.html');
-const cnVi=read('cn-site/assets/qilylean-vi-v1.css');
+const cnVi=read('cn-site/assets/qilylean-vi-v2.css');
 must(cn,'name="robots" content="index,follow"','CN production indexing contract');
-must(cn,'/assets/qilylean-vi-v1.css?v=20260916-cn-vi-v2','CN independent VI CSS');
+must(cn,'/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v12','CN independent VI CSS');
 must(cnVi,'--qily-cn-axis:1180px','CN 1180px content axis');
-must(cnVi,'Boss-readable typography floor','CN boss-readable typography');
+must(cnVi,'QILY-CN-TYPE-HIERARCHY-V3','CN boss-readable typography');
 
 console.log(`PASS: ${baseline} compatibility preserves one Google Translate V1.4 owner, native navigation, Dock V5.8 and formal VI v4 on the international site; qilylean.cn is independently governed production; DDZ remains isolated.`);
