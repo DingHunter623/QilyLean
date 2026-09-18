@@ -108,6 +108,7 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
 [[ -f "$PRACTICE_SMED" ]] || { echo "ERROR: CN SMED practice visual is missing."; exit 1; }
 [[ -f "$PRACTICE_MOLD" ]] || { echo "ERROR: CN mold-warehouse practice visual is missing."; exit 1; }
 [[ -f "$PRACTICE_FUSE" ]] || { echo "ERROR: CN fuse-process practice visual is missing."; exit 1; }
+grep -Fq '玻璃管保险丝改善后成品照片' "$PRACTICE_FUSE" || { echo "ERROR: CN fuse practice visual is not the approved finished-product photo."; exit 1; }
 [[ -f "$PRACTICE_EVIDENCE" ]] || { echo "ERROR: CN improvement-evidence visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage approved no-QR aircraft visual is missing."; exit 1; }
@@ -120,6 +121,8 @@ grep -Fq '实践与成果：把改善结果还原成可复用的工程方法' "$
 grep -Fq '展示经历，不包装成商业案例' "$INDEX_FILE" || { echo "ERROR: CN homepage practice boundary marker is missing."; exit 1; }
 grep -Fq '团队成果按组织推进口径呈现' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive team-result boundary is missing."; exit 1; }
 grep -Fq '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive must use the local award evidence asset."; exit 1; }
+grep -Fq '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2' "$PRACTICE_PAGE" || { echo "ERROR: CN fuse card must use the finished-product visual cache marker."; exit 1; }
+grep -Fq '玻璃管保险丝切口与烧口工艺改善后的成品照片' "$PRACTICE_PAGE" || { echo "ERROR: CN fuse card finished-product alt text is missing."; exit 1; }
 grep -Fq '/assets/practice.css?v=20260918-practice-visual-v2' "$PRACTICE_PAGE" || { echo "ERROR: CN practice visual V2 cache marker is missing."; exit 1; }
 grep -Fq '6S改善运行机制摘要' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism summary heading is missing."; exit 1; }
 grep -Fq 'award-metrics-grid' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S 2x2 mechanism metric grid is missing."; exit 1; }
