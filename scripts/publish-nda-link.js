@@ -45,7 +45,7 @@ function previewPage() {
 </head>
 <body class="nda-preview-page" oncontextmenu="return false">
 <header class="nda-preview-head"><div class="nda-preview-inner"><small>QilyLean｜启力精益 · CONFIDENTIALITY STATEMENT</small><h1>QilyLean项目保密声明</h1><p>一页精简版 V1.0｜适用于精益改善、工业工程、新工厂／产线规划、目视化及数智化工厂项目。</p></div></header>
-<section class="nda-preview-notice"><span><strong>预览权限说明：</strong>本站仅开放在线预览，不提供Word或PDF下载入口，不支持网页打印。</span><a href="/trust/#nda-template">返回信任中心</a></section>
+<section class="nda-preview-notice"><span><strong>阅读说明：</strong>可直接在线查看最新版保密声明，并使用页面工具调整阅读比例。</span><a href="/trust/#nda-template">返回信任中心</a></section>
 <main class="nda-preview-frame" aria-label="QilyLean项目保密声明在线预览"><iframe title="QilyLean项目保密声明V1.0" src="${pdfUrl}?v=20260801-template-v2#toolbar=0&navpanes=0&scrollbar=1&view=FitH" loading="eager" referrerpolicy="same-origin"></iframe></main>
 <script>
 (function(){
@@ -63,7 +63,7 @@ function previewPage() {
 
 function patchTrust() {
   let html = read('trust/index.html');
-  const block = `<article class="trust-card" id="nda-template"><h3>保密声明优先</h3><p>正式项目可在现场调研或资料交换前，由QilyLean项目责任人签署保密声明；如双方另行签署合同、保密协议或专项数据条款，以双方书面约定为准。</p><p><strong>配套范本：</strong>《QilyLean项目保密声明》V1.0，为一页精简版，覆盖调研数据与产品信息、现场问题及图片、原始资料归还或销毁、商业信息、人员信息、参观管理和项目成果对外披露等事项。官网仅开放受控在线预览，不提供文件下载入口。</p><div class="module-actions"><a href="${previewUrl}" target="_blank" rel="noopener">在线预览保密声明</a></div></article>`;
+  const block = `<article class="trust-card" id="nda-template"><h3>保密声明优先</h3><p>正式项目可在现场调研或资料交换前，由QilyLean项目责任人签署保密声明；如双方另行签署合同、保密协议或专项数据条款，以双方书面约定为准。</p><p><strong>配套范本：</strong>《QilyLean项目保密声明》V1.0，为一页精简版，覆盖调研数据与产品信息、现场问题及图片、原始资料归还或销毁、商业信息、人员信息、参观管理和项目成果对外披露等事项。可在官网在线预览《QilyLean项目保密声明》V1.0。</p><div class="module-actions"><a href="${previewUrl}" target="_blank" rel="noopener">在线预览保密声明</a></div></article>`;
   const expression = /<article class="trust-card"(?: id="nda-template")?><h3>(?:保密协议优先|保密声明优先)<\/h3>[\s\S]*?<\/article>/;
   if (!expression.test(html)) throw new Error('Cannot locate the confidentiality statement card');
   html = html.replace(expression, block);
