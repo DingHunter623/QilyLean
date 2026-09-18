@@ -94,6 +94,8 @@ const protectedNoindex = [
   /^daily\.html$/,
   /^knowledge\/2026-07-19\.html$/,
   /^qilylean\/reference-[^/]+\.html$/,
+  // The isolated Global Knowledge reader is a utility shell; source documents carry indexability.
+  /^global-knowledge\/view\/index\.html$/,
   // Supporting viewers duplicate the indexed evidence hub and source assets.
   /^projects\/lean-improvement-evidence\/(?:award|q3|q4)-(?:online-view|preview)\.html$/
 ];

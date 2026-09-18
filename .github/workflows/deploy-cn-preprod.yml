@@ -37,6 +37,12 @@ jobs:
           test -f cn-site/assets/site.css
           test -f cn-site/assets/portal.css
           test -f cn-site/assets/qilylean-aircraft-hero-cn-20260918.png
+          test -f cn-site/assets/practice.css
+          test -f cn-site/assets/practice/smed-300t.svg
+          test -f cn-site/assets/practice/mold-warehouse.svg
+          test -f cn-site/assets/practice/fuse-process.svg
+          test -f cn-site/assets/practice/lean-improvement-evidence.svg
+          test -f cn-site/notes/index.html
           test -f cn-site/scripts/validate-personal-content.sh
           test -f cn-site/scripts/activate-public-http.sh
           test -f cn-site/nginx/qilylean.cn.conf
@@ -163,6 +169,8 @@ jobs:
 
           about = fetch(f'https://qilylean.cn/about/?closure={sha}')
           home = fetch(f'https://qilylean.cn/?closure={sha}')
+          practice = fetch(f'https://qilylean.cn/notes/?closure={sha}')
+          practice_css = fetch(f'https://qilylean.cn/assets/practice.css?closure={sha}')
           vi = fetch(f'https://qilylean.cn/assets/qilylean-vi-v2.css?closure={sha}')
           links = fetch(f'https://qilylean.com/links/?closure={sha}')
 
@@ -192,6 +200,38 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' not in home:
               raise SystemExit('Production China home missing approved no-QR aircraft visual.')
+          required_home_practice = [
+              'PRACTICE & EVIDENCE｜实践与成果',
+              '约14小时 → 7小时',
+              '约180㎡ · 1200+副模具',
+              '展示经历，不包装成商业案例',
+              '查看实践与成果',
+          ]
+          for marker in required_home_practice:
+              if marker not in home:
+                  raise SystemExit(f'Production China home missing practice marker: {marker}')
+
+          required_practice = [
+              '实践与成果：把改善结果还原成可复用的工程方法',
+              '/assets/practice/smed-300t.svg?v=20260918-practice-v1',
+              '/assets/practice/mold-warehouse.svg?v=20260918-practice-v1',
+              '/assets/practice/fuse-process.svg?v=20260918-practice-v1',
+              '/assets/practice/lean-improvement-evidence.svg?v=20260918-practice-v1',
+              '颁奖照片可以展示，但必须说明它证明的是什么',
+              '人物面部已处理',
+              '团队成果按组织推进口径呈现',
+          ]
+          for marker in required_practice:
+              if marker not in practice:
+                  raise SystemExit(f'Production China practice archive missing: {marker}')
+          required_practice_css = [
+              '.practice-grid',
+              '.award-panel',
+              '.boundary-note',
+          ]
+          for marker in required_practice_css:
+              if marker not in practice_css:
+                  raise SystemExit(f'Production China practice stylesheet missing: {marker}')
 
           required_vi = [
               'CN global-knowledge CTA: VI gold + explicit interaction feedback.',
@@ -216,7 +256,7 @@ jobs:
               if marker not in links:
                   raise SystemExit(f'Production international links page missing full-brand context: {marker}')
 
-          print('PASS: production closure verified on qilylean.cn About/home/VI and qilylean.com /links/.')
+          print('PASS: production closure verified on qilylean.cn About/home/practice/VI and qilylean.com /links/.')
           PY
 
       - name: Verify search-engine ownership files are public
