@@ -194,17 +194,15 @@ function main() {
 
   const worker = read('cloudflare-worker/worker.js');
   const feedbackClient = read('qilylean/daily-feedback.js');
-  const admin = read('admin.html');
-  const adminScript = read('qily-admin.js');
   assert(worker.includes("url.pathname === '/brief-feedback'"), 'Public brief feedback endpoint is missing');
-  assert(worker.includes("url.pathname === '/admin/brief-feedback'"), 'Admin brief feedback endpoint is missing');
+  assert(worker.includes("url.pathname === '/admin/brief-feedback'"), 'Protected admin brief-feedback endpoint is missing');
   assert(worker.includes('brief-feedback-voter:') && worker.includes('BRIEF_FEEDBACK_DAILY_IP_LIMIT'), 'Brief feedback duplicate or rate-limit protection is missing');
   assert(worker.includes("recordMetric(env, 'brief_comments')"), 'Brief message conversion metric is missing');
   assert(worker.includes("record.industry === '今日简报留言交流'"), 'Brief messages are not separated from enterprise consultations');
   assert(feedbackClient.includes("api+'/consultations'") && feedbackClient.includes('formsubmit.co/ajax/'), 'Message client is not connected to the backend and email fallback');
   assert(!feedbackClient.includes("api+'/brief-feedback'") && !feedbackClient.includes('qilylean_feedback_client') && !feedbackClient.includes("marker('rating')") && !feedbackClient.includes("marker('sentiment')"), 'Obsolete public rating client remains');
-  assert(admin.includes('id="briefFeedbackList"') && admin.includes('id="todayBriefRatings"') && admin.includes('id="todayBriefComments"'), 'Admin brief interaction overview is incomplete');
-  assert(adminScript.includes("request('/admin/brief-feedback?limit=100')") && adminScript.includes('今日简报留言｜'), 'Admin feedback loading or message classification is incomplete');
+  assert(!fs.existsSync(path.join(root, 'admin.html')), 'Public static admin page must not exist');
+  assert(!fs.existsSync(path.join(root, 'qily-admin.js')), 'Public static admin runtime must not exist');
 
   const latestPage = read('qilylean/daily/2026-07-29.html');
   assert((latestPage.match(/class="rule-table compact-first-col"/g) || []).length === 2, 'July 29 short-label tables were not compacted');
