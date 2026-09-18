@@ -15,9 +15,9 @@ const sourceWidth=source.readUInt32BE(16),sourceHeight=source.readUInt32BE(20);
 if(sourceWidth<1200||sourceHeight<675)throw new Error(`官网首图.png resolution is too small: ${sourceWidth}x${sourceHeight}`);
 let html=fs.readFileSync(target,'utf8');
 const START='<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->',END='<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->';
-const PNG='/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260831-aircraft-latest-v5';
-const WEBP='/assets/qilylean-aircraft-hero-latest-q98.webp?v=20260831-aircraft-latest-v5';
-const AIRCRAFT_CSS='/styles/qily-aircraft-brand-hero-v1.css?v=20260826-aircraft-hero-v1';
+const PNG='/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260918-aircraft-ultraclear-v1';
+const WEBP='/assets/qilylean-aircraft-hero-latest-q98.webp?v=20260918-aircraft-ultraclear-v1';
+const AIRCRAFT_CSS='/styles/qily-aircraft-brand-hero-v1.css?v=20260918-aircraft-hero-v2';
 const HOME_CSS='/styles/qily-home-conversion-v1.css?v=20260901-home-conversion-axis-v2';
 const HOME_VISUAL_FIX='/styles/qily-home-conversion-visual-fix-v2.css?v=20260902-card-bottom-rail-v5';
 const HOME_JS='/site-home-conversion-v1.js?v=20260901-home-first-paint-v6';
@@ -87,7 +87,7 @@ const validatorPath=path.join(root,'scripts','validate-sitewide-remediation-2026
 if(fs.existsSync(validatorPath)){
   let v=fs.readFileSync(validatorPath,'utf8');
   v=v.replace(/\/assets\/qilylean-aircraft-hero-approved-20260826\.png\?v=202608(?:26-aircraft-approved-v1|27-home-original-approved-v[23]|29-official-qr-v4|31-aircraft-latest-v5)/g,PNG);
-  v=v.replace('/assets/qilylean-aircraft-hero-v1.webp?v=20260826-aircraft-hero-v1',PNG);
+  v=v.replace('/assets/qilylean-aircraft-hero-v1.webp?v=20260918-aircraft-hero-v2',PNG);
   fs.writeFileSync(validatorPath,v,'utf8');
 }
 console.log(`QilyLean first-paint Hero materialized; aircraft SSOT preserved (${sourceWidth}x${sourceHeight}) as a lazy brand-extension asset; remaining homepage conversion runs at parser-complete.`);
