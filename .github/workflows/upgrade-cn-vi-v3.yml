@@ -35,9 +35,9 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260918-cn-vi-v14'
+          css_version = '20260918-cn-vi-v15'
           base_version = '20260917-cn-thesis-base-v5'
-          nav_script_version = '20260918-nav-rail-v5'
+          nav_script_version = '20260918-nav-rail-v6'
           translate_version = '20260918-translate-v4-youdao'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
@@ -154,7 +154,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-vi-v14'
+          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-vi-v15'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = 'QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
@@ -171,7 +171,7 @@ jobs:
                   continue
               documents += 1
               css_count = text.count(css_marker)
-              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v5')
+              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v6')
               translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v4-youdao')
               translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v4-youdao')
               footer_count = text.count(footer_marker)
@@ -231,12 +231,12 @@ jobs:
           grep -q "qilylean-vi-v1.css?v=20260917-cn-thesis-base-v5" cn-site/assets/qilylean-vi-v2.css
           grep -q 'CN page-thesis module: descriptive, not clickable' cn-site/assets/qilylean-vi-v2.css
           grep -q 'QILY-CN-THESIS-NONINTERACTIVE-V1' cn-site/assets/qilylean-vi-v2.css
-          grep -q 'QILY-CN-NAV-RAIL-V5' cn-site/assets/qilylean-vi-v2.css
-          grep -q 'qily-primary-nav-scroll-rail' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'QILY-CN-NAV-RAIL-V6' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'qily-primary-nav-scroll-rail' cn-site/assets/cn-nav-rail-v1.js\n          grep -q 'qily-primary-nav-scroll-thumb' cn-site/assets/cn-nav-rail-v1.js
           grep -q 'qily-cn-nav-shell' cn-site/assets/cn-nav-rail-v1.js
           grep -q 'justify-content:flex-start!important' cn-site/assets/qilylean-vi-v2.css # CN nav must start from the physical left edge
           grep -q 'height:9px!important' cn-site/assets/qilylean-vi-v2.css
-          grep -q 'height:7px!important' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'height:7px!important' cn-site/assets/qilylean-vi-v2.css\n          grep -q '.qily-primary-nav-scroll-thumb' cn-site/assets/qilylean-vi-v2.css
           grep -q -- '--qily-cn-primary-nav-font-size:20px' cn-site/assets/qilylean-vi-v2.css
           grep -q 'grid-template-areas:"brand nav translate"' cn-site/assets/qilylean-vi-v2.css
           grep -q 'grid-template-areas:"brand translate" "nav nav"' cn-site/assets/qilylean-vi-v2.css

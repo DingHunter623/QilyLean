@@ -59,7 +59,7 @@ assert(workerSocial.includes("YOUDAO_TRANSLATE_URL = 'https://openapi.youdao.com
 assert(workerSocial.includes("TRANSLATION_CACHE_VERSION = 'v4-youdao'"), 'Youdao translation cache generation is missing.');
 assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation worker implementation is missing.');
 [
-  'QILY-CN-NAV-RAIL-V5',
+  'QILY-CN-NAV-RAIL-V6',
   'QILY-CN-ROUTE-FEEDBACK-V1',
   '--qily-nav-scroll-track:#b9d9d4',
   '--qily-nav-scroll-thumb:#0f4b5a',
@@ -67,10 +67,12 @@ assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation worke
   '--qily-cn-h2:clamp(24px,6.8vw,29px)',
   '--qily-cn-h3:clamp(19px,5.7vw,21px)',
   'scrollbar-width:none!important',
-  '::-webkit-slider-runnable-track',
-  '::-webkit-slider-thumb'
+  '.qily-primary-nav-scroll-rail::before',
+  '.qily-primary-nav-scroll-thumb'
 ].forEach(m=>assert(cnCss.includes(m),'CN unified VI missing: '+m));
-assert(cnRail.includes("rail.type='range'"), 'CN nav rail must use the international range control.');
+assert(!cnRail.includes("rail.type='range'"), 'CN nav rail must not depend on native range behavior.');
+assert(cnRail.includes("role','scrollbar'"), 'CN nav rail must expose scrollbar semantics.');
+assert(cnRail.includes('qily-primary-nav-scroll-thumb'), 'CN custom nav thumb runtime is missing.');
 assert(cnRail.includes("qily-primary-nav-scroll-rail"), 'CN nav rail runtime class is missing.');
 assert(cnRail.includes('qily-cn-nav-shell'), 'CN desktop/mobile nav shell is missing.');
 assert(cnCss.includes('--qily-cn-primary-nav-font-size:20px'), 'CN primary nav type must match international 20px.');
@@ -99,8 +101,8 @@ const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*
 assert(cnPages.length>=17,'Expected at least 17 CN document pages.');
 for(const rel of cnPages){
   const html=read(rel);
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v14'), rel+' must use CN VI V13.');
-  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v5'), rel+' must load the international-style nav rail runtime.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v15'), rel+' must use CN VI V13.');
+  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v6'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v4-youdao'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v4-youdao'), rel+' must load exactly one CN translator runtime.');
 }
