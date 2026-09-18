@@ -8,6 +8,7 @@ SITEMAP_FILE="$ROOT_DIR/sitemap.xml"
 GOOGLE_VERIFY_FILE="$ROOT_DIR/googleb7a991efbed3aa8a.html"
 BAIDU_VERIFY_FILE="$ROOT_DIR/baidu_verify_codeva-Bp0VGliFcp.html"
 INDEXNOW_FILE="$ROOT_DIR/b47ed759da519bd90586a7877122d7be.txt"
+CN_AIRCRAFT_FILE="$ROOT_DIR/assets/qilylean-aircraft-hero-cn-20260918.png"
 
 mapfile -t FILES < <(find "$ROOT_DIR" -type f \( \
   -name '*.html' -o -name '*.htm' -o -name '*.xml' -o -name '*.json' -o \
@@ -92,6 +93,8 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
 [[ -f "$GOOGLE_VERIFY_FILE" ]] || { echo "ERROR: Google verification file is missing."; exit 1; }
 [[ -f "$BAIDU_VERIFY_FILE" ]] || { echo "ERROR: Baidu verification file is missing."; exit 1; }
 [[ -f "$INDEXNOW_FILE" ]] || { echo "ERROR: CN IndexNow key file is missing."; exit 1; }
+[[ -f "$CN_AIRCRAFT_FILE" ]] || { echo "ERROR: CN approved no-QR aircraft asset is missing."; exit 1; }
+grep -Fq '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage approved no-QR aircraft visual is missing."; exit 1; }
 
 grep -Fxq 'Allow: /' "$ROBOTS_FILE" || {
   echo "ERROR: CN robots.txt must allow crawling."
