@@ -114,11 +114,12 @@ jobs:
         run: |
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
-          scp -i ~/.ssh/qilylean_cn /tmp/qilylean-cn-site.tar.gz "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean-cn-site.tar.gz"
-          scp -i ~/.ssh/qilylean_cn cn-site/scripts/server-bootstrap.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/bootstrap-qilylean-cn.sh"
-          scp -i ~/.ssh/qilylean_cn cn-site/scripts/deploy-release.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/deploy-qilylean-cn.sh"
-          scp -i ~/.ssh/qilylean_cn cn-site/scripts/activate-public-http.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/activate-qilylean-cn-http.sh"
-          scp -i ~/.ssh/qilylean_cn cn-site/nginx/qilylean.cn.conf "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean.cn.conf"
+          SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes)
+          scp -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn /tmp/qilylean-cn-site.tar.gz "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean-cn-site.tar.gz"
+          scp -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/server-bootstrap.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/bootstrap-qilylean-cn.sh"
+          scp -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/deploy-release.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/deploy-qilylean-cn.sh"
+          scp -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/activate-public-http.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/activate-qilylean-cn-http.sh"
+          scp -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/nginx/qilylean.cn.conf "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean.cn.conf"
 
       - name: Bootstrap server when required
         shell: bash
@@ -128,7 +129,7 @@ jobs:
         run: |
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
-          ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
             "if [ ! -f /etc/nginx/sites-available/qilylean-cn-preprod ]; then chmod +x /tmp/bootstrap-qilylean-cn.sh && /tmp/bootstrap-qilylean-cn.sh; else echo 'Server bootstrap already present'; fi"
 
       - name: Deploy release on mainland server
@@ -140,7 +141,7 @@ jobs:
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           RELEASE_ID="${GITHUB_SHA::12}"
-          ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
             "chmod +x /tmp/deploy-qilylean-cn.sh && /tmp/deploy-qilylean-cn.sh /tmp/qilylean-cn-site.tar.gz '$RELEASE_ID'"
 
       - name: Ensure public HTTP/HTTPS site remains active
@@ -151,7 +152,7 @@ jobs:
         run: |
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
-          ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
             "chmod +x /tmp/activate-qilylean-cn-http.sh && /tmp/activate-qilylean-cn-http.sh /tmp/qilylean.cn.conf"
 
       - name: Verify production brand and interaction closure
