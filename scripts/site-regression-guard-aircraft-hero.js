@@ -11,10 +11,9 @@ const homeJs=fs.readFileSync(path.join(root,'site-home-conversion-v1.js'),'utf8'
 const homeMaterializer=fs.readFileSync(path.join(root,'scripts','enforce-aircraft-home-hero.js'),'utf8');
 const ownerProfileCss=fs.readFileSync(path.join(root,'styles','qily-home-owner-profile-v1.css'),'utf8');
 const ownerProfileJs=fs.readFileSync(path.join(root,'site-home-owner-profile-v1.js'),'utf8');
-const sourcePath=path.join(root,'官网首图.png');
 const pngPath=path.join(root,'assets','qilylean-aircraft-hero-approved-20260826.png');
-const EXPECTED_SOURCE_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4';
-const EXPECTED_SOURCE_BYTES=2270808;
+const EXPECTED_CANONICAL_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4';
+const EXPECTED_CANONICAL_BYTES=2270808;
 const ASSET_VERSION='20260918-aircraft-ultraclear-v1';
 const HOME_VERSION='20260901-home-conversion-axis-v2';
 const HOME_JS_VERSION='20260901-home-first-paint-v6';
@@ -24,16 +23,15 @@ const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
 const VISUAL_READABILITY_VERSION='20260903-r8-heading-ceiling-v10';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
 function gitBlobSha(buffer){return crypto.createHash('sha1').update(Buffer.from(`blob ${buffer.length}\0`)).update(buffer).digest('hex')}
-const source=fs.readFileSync(sourcePath),png=fs.readFileSync(pngPath),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
+const png=fs.readFileSync(pngPath),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
 assert(block,'Aircraft brand-extension block missing');
 assert(!/C919/i.test(block),'Aircraft semantic block must not describe the aircraft as C919');
 assert(block.includes('data-qily-home-aircraft-position="extended"'),'Aircraft must be governed as an extended brand asset');
 assert(block.includes('loading="lazy"'),'Aircraft extension image must be lazy-loaded');
 assert(block.includes('fetchpriority="low"'),'Aircraft extension image must not compete with first-screen project imagery');
 assert(!/<(?:img|source)\b[^>]+(?:c919-strategy-hero|qilylean-aircraft-hero-v1\.webp)/i.test(html),'Retired aircraft image source returned');
-assert(gitBlobSha(source)===EXPECTED_SOURCE_BLOB,'官网首图.png is no longer the exact latest user-approved SSOT');
-assert(source.length===EXPECTED_SOURCE_BYTES,'Latest 官网首图.png byte size changed unexpectedly');
-assert(source.equals(png),'Production aircraft PNG is not byte-identical to 官网首图.png');
+assert(gitBlobSha(png)===EXPECTED_CANONICAL_BLOB,'Canonical aircraft PNG is no longer the exact user-approved SSOT');
+assert(png.length===EXPECTED_CANONICAL_BYTES,'Canonical aircraft PNG byte size changed unexpectedly');
 assert(png.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])),'Canonical aircraft asset is not PNG');
 const width=png.readUInt32BE(16),height=png.readUInt32BE(20);
 assert(width>=1200&&height>=675,`Canonical aircraft resolution too small: ${width}x${height}`);
