@@ -225,7 +225,7 @@ jobs:
               '实践与成果：把改善结果还原成可复用的工程方法',
               '/assets/practice/smed-300t.svg?v=20260918-practice-v1',
               '/assets/practice/mold-warehouse.svg?v=20260918-practice-v1',
-              '/assets/practice/fuse-process.svg?v=20260918-practice-v1',
+              '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2',
               '/assets/practice/lean-improvement-evidence.svg?v=20260918-practice-v1',
               '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1',
               '/assets/practice.css?v=20260918-practice-visual-v2',
@@ -235,6 +235,7 @@ jobs:
               'award-flow',
               '人物面部已处理',
               '团队成果按组织推进口径呈现',
+              '玻璃管保险丝切口与烧口工艺改善后的成品照片',
           ]
           for marker in required_practice:
               if marker not in practice:
