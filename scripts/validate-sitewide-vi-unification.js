@@ -59,7 +59,7 @@ assert(workerSocial.includes("YOUDAO_TRANSLATE_URL = 'https://openapi.youdao.com
 assert(workerSocial.includes("TRANSLATION_CACHE_VERSION = 'v4-youdao'"), 'Youdao translation cache generation is missing.');
 assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation worker implementation is missing.');
 [
-  'QILY-CN-NAV-RAIL-V4',
+  'QILY-CN-NAV-RAIL-V5',
   'QILY-CN-ROUTE-FEEDBACK-V1',
   '--qily-nav-scroll-track:#b9d9d4',
   '--qily-nav-scroll-thumb:#0f4b5a',
@@ -99,8 +99,8 @@ const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*
 assert(cnPages.length>=17,'Expected at least 17 CN document pages.');
 for(const rel of cnPages){
   const html=read(rel);
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v13'), rel+' must use CN VI V13.');
-  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v4'), rel+' must load the international-style nav rail runtime.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v14'), rel+' must use CN VI V13.');
+  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v5'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v4-youdao'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v4-youdao'), rel+' must load exactly one CN translator runtime.');
 }
