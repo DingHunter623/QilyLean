@@ -208,6 +208,8 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' not in home:
               raise SystemExit('Production China home missing approved no-QR aircraft visual.')
+          if '/assets/qilylean-vi-v2.css?v=20260918-cn-aircraft-center-v8' not in home:
+              raise SystemExit('Production China home missing centered-aircraft VI cache version.')
           required_home_practice = [
               'PRACTICE & EVIDENCE｜实践与成果',
               '约14小时 → 7小时',
@@ -243,6 +245,8 @@ jobs:
                   raise SystemExit(f'Production China practice stylesheet missing: {marker}')
 
           required_vi = [
+              'QILY-CN-AIRCRAFT-CENTERED-V2',
+              'object-position:50% 50%!important',
               'CN global-knowledge CTA: VI gold + explicit interaction feedback.',
               'font-size:22px!important',
               'background:var(--qily-gold)!important',
