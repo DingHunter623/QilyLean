@@ -16,7 +16,6 @@ if(sourceWidth<1200||sourceHeight<675)throw new Error(`官网首图.png resoluti
 let html=fs.readFileSync(target,'utf8');
 const START='<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->',END='<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->';
 const PNG='/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260918-aircraft-ultraclear-v1';
-const WEBP='/assets/qilylean-aircraft-hero-latest-q98.webp?v=20260918-aircraft-ultraclear-v1';
 const AIRCRAFT_CSS='/styles/qily-aircraft-brand-hero-v1.css?v=20260918-aircraft-hero-v2';
 const HOME_CSS='/styles/qily-home-conversion-v1.css?v=20260901-home-conversion-axis-v2';
 const HOME_VISUAL_FIX='/styles/qily-home-conversion-visual-fix-v2.css?v=20260902-card-bottom-rail-v5';
@@ -24,7 +23,7 @@ const HOME_JS='/site-home-conversion-v1.js?v=20260901-home-first-paint-v6';
 const OWNER_PROFILE_CSS='/styles/qily-home-owner-profile-v1.css?v=20260901-owner-profile-v3';
 const OWNER_PROFILE_JS='/site-home-owner-profile-v1.js?v=20260901-owner-profile-v3';
 const ALT='QilyLean｜启力精益飞机品牌延伸视觉，左右机翼展示新工厂与新产线规划、精益改善项目交付、目视化项目设计与交付、数字化工厂、APP软件开发、官网建设六项业务能力';
-const aircraft=[START,'<section class="qily-aircraft-brand-hero" aria-label="QilyLean｜启力精益品牌延伸视觉资产" data-qily-home-aircraft-position="extended">','  <figure>','    <picture>',`      <source type="image/webp" srcset="${WEBP}">`,`      <img src="${PNG}" alt="${ALT}" width="${sourceWidth}" height="${sourceHeight}" loading="lazy" decoding="async" fetchpriority="low">`,'    </picture>','  </figure>','</section>',END].join('\n');
+const aircraft=[START,'<section class="qily-aircraft-brand-hero" aria-label="QilyLean｜启力精益品牌延伸视觉资产" data-qily-home-aircraft-position="extended">','  <figure>','    <picture>',`      <img src="${PNG}" alt="${ALT}" width="${sourceWidth}" height="${sourceHeight}" loading="lazy" decoding="async" fetchpriority="low">`,'    </picture>','  </figure>','</section>',END].join('\n');
 const staticHero=[
   '<section class="hero qily-home-conversion-hero" data-qily-home-conversion-hero="v1">',
   '  <div class="qily-home-conversion-hero__inner">',
