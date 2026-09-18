@@ -14,11 +14,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: qilylean-cn-production
+  group: qilylean-cn-production-v7
   cancel-in-progress: true
 
 jobs:
   validate-and-deploy:
+    timeout-minutes: 12
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
