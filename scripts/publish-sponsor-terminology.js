@@ -81,7 +81,7 @@ data.compliance = {
   ndaVersion: 'V1.0',
   ndaContentRule: '网站在线阅读版与正式存档PDF／Word内容保持一致；官网不公开存档文件下载入口。',
   ndaPreviewUrl: '/trust/nda-preview.html',
-  ndaAccessRule: '官网仅开放受控在线预览，不提供Word或PDF下载入口。',
+  ndaAccessRule: '官网提供《QilyLean项目保密声明》在线预览入口。',
   ndaDocumentName: 'QilyLean项目保密声明',
   ...(data.compliance || {})
 };
