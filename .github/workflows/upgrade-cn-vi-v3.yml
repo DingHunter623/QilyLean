@@ -32,7 +32,7 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260917-cn-brand-cta-v7'
+          css_version = '20260918-cn-aircraft-center-v8'
           base_version = '20260917-cn-thesis-base-v5'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
@@ -141,7 +141,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260917-cn-brand-cta-v7'
+          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-aircraft-center-v8'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = 'QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
