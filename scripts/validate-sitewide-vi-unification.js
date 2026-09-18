@@ -54,6 +54,7 @@ const cnCss=read('cn-site/assets/qilylean-vi-v2.css');
 const cnRail=read('cn-site/assets/cn-nav-rail-v1.js');
 [
   'QILY-CN-NAV-RAIL-V1',
+  'QILY-CN-ROUTE-FEEDBACK-V1',
   '--qily-nav-rail-track:#dbe8e6',
   '--qily-nav-rail-thumb:#0f4b5a',
   '--qily-cn-h1:clamp(30px,8.4vw,37px)',
