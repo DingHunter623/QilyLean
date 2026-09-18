@@ -41,6 +41,10 @@ jobs:
           test -f cn-site/assets/practice/mold-warehouse.svg
           test -f cn-site/assets/practice/fuse-process.svg
           test -f cn-site/assets/practice/lean-improvement-evidence.svg
+          test -f cn-site/assets/practice/automotive-lean.svg
+          test -f cn-site/assets/practice/factory-layout.svg
+          test -f cn-site/assets/practice/digital-factory.svg
+          test -f cn-site/assets/practice/visual-management.svg
           test -s cn-site/assets/practice/award-6s-page-01.jpg
           chmod +x cn-site/scripts/validate-personal-content.sh
           cn-site/scripts/validate-personal-content.sh cn-site
@@ -63,6 +67,15 @@ jobs:
           grep -Fq '玻璃管保险丝改善后成品照片' cn-site/assets/practice/fuse-process.svg
           grep -Fq '/assets/practice.css?v=20260918-practice-visual-v2' cn-site/notes/index.html
           grep -Fq '6S改善运行机制摘要' cn-site/notes/index.html
+          grep -Fq '当前 8 项代表实践均在本页' cn-site/notes/index.html
+          grep -Fq '/assets/practice/automotive-lean.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
+          grep -Fq '/assets/practice/factory-layout.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
+          grep -Fq '/assets/practice/digital-factory.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
+          grep -Fq '/assets/practice/visual-management.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
+          grep -Fq '汽车电子精益体系、VSM、单件流与SMED标准化' cn-site/notes/index.html
+          grep -Fq 'Factory Layout、精益物流与扩展边界规划' cn-site/notes/index.html
+          grep -Fq '制造数据治理、IT/OT分层与系统验收' cn-site/notes/index.html
+          grep -Fq '制造现场目视化系统设计与运行闭环' cn-site/notes/index.html
           grep -Fq 'award-metrics-grid' cn-site/notes/index.html
           grep -Fq 'award-flow' cn-site/notes/index.html
           grep -Fq 'QILY-CN-AWARD-MECHANISM-V2' cn-site/assets/practice.css
