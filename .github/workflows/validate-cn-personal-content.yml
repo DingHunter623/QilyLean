@@ -67,11 +67,16 @@ jobs:
           grep -Fq '精选 8 项制造实践' cn-site/index.html
           grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
-          grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v11' cn-site/index.html
-          grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v2' cn-site/index.html
-          grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-baidu-v2' cn-site/index.html
-          grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260918-baidu-v2' cn-site/index.html
-          grep -Fq 'QILY-CN-NAV-RAIL-V1' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v13' cn-site/index.html
+          grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v4' cn-site/index.html
+          grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v3' cn-site/index.html
+          grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260918-translate-v3' cn-site/index.html
+          grep -Fq 'QILY-CN-NAV-RAIL-V4' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'qily-cn-nav-shell' cn-site/assets/cn-nav-rail-v1.js
+          grep -Fq -- '--qily-nav-scroll-track:#f3e6cf' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-nav-scroll-thumb:#caa15f' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'grid-template-areas:"brand nav translate"' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'grid-template-areas:"brand translate" "nav nav"' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h1:clamp(30px,8.4vw,38px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h2:clamp(24px,6.8vw,29px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h3:clamp(19px,5.7vw,21px)' cn-site/assets/qilylean-vi-v2.css
