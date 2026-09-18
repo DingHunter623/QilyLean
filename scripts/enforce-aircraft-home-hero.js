@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 'use strict';
-/* Homepage visual authority: 官网首图.png remains the sole approved aircraft artwork SSOT,
+/* Homepage visual authority: assets/qilylean-aircraft-hero-approved-20260826.png is the sole approved aircraft artwork SSOT,
  * but the aircraft is now a brand-extension asset, not the homepage first-screen conversion visual.
  * The homepage conversion module and owner-profile supplement are materialized as direct, cache-versioned dependencies.
  * First-paint contract: index.html must already contain the approved conversion Hero; runtime only enhances the remaining homepage structure.
  */
 const fs=require('fs'),path=require('path');
 const root=path.resolve(__dirname,'..'),target=path.join(root,'index.html');
-const sourcePath=path.join(root,'官网首图.png');
+const sourcePath=path.join(root,'assets','qilylean-aircraft-hero-approved-20260826.png');
 const source=fs.readFileSync(sourcePath);
 const PNG_SIGNATURE=Buffer.from([137,80,78,71,13,10,26,10]);
-if(!source.subarray(0,8).equals(PNG_SIGNATURE))throw new Error('官网首图.png is not a valid PNG');
+if(!source.subarray(0,8).equals(PNG_SIGNATURE))throw new Error('Canonical aircraft SSOT is not a valid PNG');
 const sourceWidth=source.readUInt32BE(16),sourceHeight=source.readUInt32BE(20);
-if(sourceWidth<1200||sourceHeight<675)throw new Error(`官网首图.png resolution is too small: ${sourceWidth}x${sourceHeight}`);
+if(sourceWidth<1200||sourceHeight<675)throw new Error(`Canonical aircraft SSOT resolution is too small: ${sourceWidth}x${sourceHeight}`);
 let html=fs.readFileSync(target,'utf8');
 const START='<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->',END='<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->';
 const PNG='/assets/qilylean-aircraft-hero-approved-20260826.png?v=20260918-aircraft-ultraclear-v1';
