@@ -59,7 +59,7 @@ assert(workerSocial.includes("YOUDAO_TRANSLATE_URL = 'https://openapi.youdao.com
 assert(workerSocial.includes("TRANSLATION_CACHE_VERSION = 'v4-youdao'"), 'Youdao translation cache generation is missing.');
 assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation worker implementation is missing.');
 [
-  'QILY-CN-NAV-RAIL-V6',
+  'QILY-CN-NAV-RAIL-V7',
   'QILY-CN-ROUTE-FEEDBACK-V1',
   '--qily-nav-scroll-track:#b9d9d4',
   '--qily-nav-scroll-thumb:#0f4b5a',
@@ -67,7 +67,9 @@ assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation worke
   '--qily-cn-h2:clamp(24px,6.8vw,29px)',
   '--qily-cn-h3:clamp(19px,5.7vw,21px)',
   'scrollbar-width:none!important',
-  '.qily-primary-nav-scroll-rail::before',
+  'background:#b9d9d4!important',
+  'background:#0f4b5a!important',
+  'min-width:104px!important',
   '.qily-primary-nav-scroll-thumb'
 ].forEach(m=>assert(cnCss.includes(m),'CN unified VI missing: '+m));
 assert(!cnRail.includes("rail.type='range'"), 'CN nav rail must not depend on native range behavior.');
@@ -78,8 +80,11 @@ assert(cnRail.includes('qily-cn-nav-shell'), 'CN desktop/mobile nav shell is mis
 assert(cnCss.includes('--qily-cn-primary-nav-font-size:20px'), 'CN primary nav type must match international 20px.');
 assert(cnCss.includes('grid-template-areas:"brand nav translate"'), 'CN desktop header three-zone layout is missing.');
 assert(cnCss.includes('grid-template-areas:"brand translate" "nav nav"'), 'CN mobile header nav row is missing.');
-assert(cnRail.includes('setFromPointer'), 'CN nav rail pointer drag is missing.');
-assert(cnRail.includes('installNavDrag'), 'CN primary nav direct drag is missing.');
+assert(cnRail.includes('mousedown'), 'CN nav rail mouse drag is missing.');
+assert(cnRail.includes('mousemove'), 'CN nav rail mouse move runtime is missing.');
+assert(cnRail.includes('touchstart'), 'CN nav rail touch drag is missing.');
+assert(cnRail.includes('installNavMouseDrag'), 'CN primary nav direct mouse drag is missing.');
+assert(!cnRail.includes('pointerdown'), 'CN nav rail must not depend on PointerEvent drag.');
 assert(!cnRail.includes('data-qily-translation-provider'), 'CN nav rail must remain translation-neutral.');
 assert(cnTranslate.includes('QilyLean CN In-Page Translation V4'), 'CN in-page translator V3 runtime is missing.');
 assert(cnTranslate.includes("data-qily-translation-provider','qilylean-api'"), 'CN translator must declare the QilyLean in-page provider.');
@@ -101,8 +106,8 @@ const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*
 assert(cnPages.length>=17,'Expected at least 17 CN document pages.');
 for(const rel of cnPages){
   const html=read(rel);
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v15'), rel+' must use CN VI V13.');
-  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v6'), rel+' must load the international-style nav rail runtime.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v16'), rel+' must use CN VI V16.');
+  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v4-youdao'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v4-youdao'), rel+' must load exactly one CN translator runtime.');
 }
