@@ -278,10 +278,10 @@ html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"
 }
 html:root body :is(.nav a,.toc :is(a,span)){word-break:keep-all!important;overflow-wrap:normal!important}
 
-/* QILY-CN-NAV-RAIL-V5 | 2026-09-18
- * Exact international-site primary-navigation rail parity.
- * Root-cause closure: legacy CN .nav inherited justify-content:flex-end, which
- * can create unreachable left overflow and make scrollWidth/clientWidth appear equal.
+/* QILY-CN-NAV-RAIL-V6 | 2026-09-18
+ * Safari-safe custom scrollbar with international-site visual parity.
+ * The rail is no longer a native input range: track + thumb geometry is explicit,
+ * while JS maps pointer movement directly to nav.scrollLeft.
  */
 html:root body .site-header{position:relative!important}
 html:root body .site-header .header-inner{
@@ -343,7 +343,7 @@ html:root body .site-header .qily-cn-nav-shell .nav>a[href]{
   white-space:nowrap!important;
 }
 html:root body .site-header .qily-cn-nav-shell .nav::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
-html:root body input.qily-primary-nav-scroll-rail[type="range"]{
+html:root body .qily-primary-nav-scroll-rail{
   position:absolute!important;
   z-index:2147481000!important;
   left:0!important;
@@ -357,56 +357,52 @@ html:root body input.qily-primary-nav-scroll-rail[type="range"]{
   border:0!important;
   border-radius:999px!important;
   background:transparent!important;
-  appearance:none!important;
-  -webkit-appearance:none!important;
+  box-shadow:none!important;
   overflow:visible!important;
-  cursor:pointer!important;
+  cursor:ew-resize!important;
   touch-action:none!important;
-  accent-color:var(--qily-nav-scroll-thumb,#0f4b5a)!important;
+  user-select:none!important;
+  -webkit-user-select:none!important;
 }
-html:root body input.qily-primary-nav-scroll-rail[type="range"]::-webkit-slider-runnable-track{
+html:root body .qily-primary-nav-scroll-rail::before{
+  content:""!important;
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  top:50%!important;
   height:9px!important;
+  transform:translateY(-50%)!important;
   border:1px solid rgba(15,75,90,.12)!important;
   border-radius:999px!important;
   background:var(--qily-nav-scroll-track,#b9d9d4)!important;
   box-shadow:inset 0 0 0 1px rgba(15,75,90,.06)!important;
+  pointer-events:none!important;
 }
-html:root body input.qily-primary-nav-scroll-rail[type="range"]::-webkit-slider-thumb{
-  -webkit-appearance:none!important;
-  appearance:none!important;
-  width:var(--qily-nav-range-thumb-width,58px)!important;
+html:root body .qily-primary-nav-scroll-thumb{
+  position:absolute!important;
+  z-index:1!important;
+  left:0!important;
+  top:50%!important;
+  width:58px;
   height:7px!important;
-  margin-top:0!important;
+  transform:translate3d(0,-50%,0);
   border:0!important;
   border-radius:999px!important;
   background:var(--qily-nav-scroll-thumb,#0f4b5a)!important;
   box-shadow:0 1px 4px rgba(15,75,90,.22)!important;
   cursor:ew-resize!important;
+  pointer-events:auto!important;
+  will-change:transform,width;
 }
-html:root body input.qily-primary-nav-scroll-rail[type="range"]::-moz-range-track{
-  height:9px!important;
-  border:1px solid rgba(15,75,90,.12)!important;
-  border-radius:999px!important;
-  background:var(--qily-nav-scroll-track,#b9d9d4)!important;
-  box-shadow:inset 0 0 0 1px rgba(15,75,90,.06)!important;
+html:root body .qily-primary-nav-scroll-rail:is(:hover,:focus-visible) .qily-primary-nav-scroll-thumb{
+  background:var(--qily-nav-scroll-thumb-hover,#12606f)!important;
 }
-html:root body input.qily-primary-nav-scroll-rail[type="range"]::-moz-range-thumb{
-  width:var(--qily-nav-range-thumb-width,58px)!important;
-  height:7px!important;
-  border:0!important;
-  border-radius:999px!important;
-  background:var(--qily-nav-scroll-thumb,#0f4b5a)!important;
-  box-shadow:0 1px 4px rgba(15,75,90,.22)!important;
-  cursor:ew-resize!important;
-}
-html:root body input.qily-primary-nav-scroll-rail[type="range"]:is(:hover,:focus-visible)::-webkit-slider-thumb{background:var(--qily-nav-scroll-thumb-hover,#12606f)!important}
-html:root body input.qily-primary-nav-scroll-rail[type="range"]:is(:hover,:focus-visible)::-moz-range-thumb{background:var(--qily-nav-scroll-thumb-hover,#12606f)!important}
-html:root body input.qily-primary-nav-scroll-rail[type="range"]:focus-visible{
+html:root body .qily-primary-nav-scroll-rail:focus-visible{
   outline:3px solid rgba(202,161,95,.30)!important;
   outline-offset:2px!important;
 }
-html:root body input.qily-primary-nav-scroll-rail[type="range"][data-qily-nav-overflow="false"],
-html:root body input.qily-primary-nav-scroll-rail[type="range"][disabled]{
+html:root body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],
+html:root body .qily-primary-nav-scroll-rail[aria-disabled="true"]{
   opacity:1!important;
   pointer-events:none!important;
   cursor:default!important;
