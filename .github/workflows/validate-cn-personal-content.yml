@@ -1,0 +1,54 @@
+name: Validate QilyLean CN personal-site boundary
+
+on:
+  pull_request:
+    paths:
+      - 'cn-site/**'
+      - '.github/workflows/validate-cn-personal-content.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'cn-site/**'
+      - '.github/workflows/validate-cn-personal-content.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-cn-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate China personal-site structure and compliance
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f cn-site/index.html
+          test -f cn-site/notes/index.html
+          test -f cn-site/assets/practice.css
+          test -f cn-site/assets/practice/smed-300t.svg
+          test -f cn-site/assets/practice/mold-warehouse.svg
+          test -f cn-site/assets/practice/fuse-process.svg
+          test -f cn-site/assets/practice/lean-improvement-evidence.svg
+          chmod +x cn-site/scripts/validate-personal-content.sh
+          cn-site/scripts/validate-personal-content.sh cn-site
+
+      - name: Verify practice archive semantic boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq '实践与成果：把改善结果还原成可复用的工程方法' cn-site/notes/index.html
+          grep -Fq '历史结果也不代表其他场景必然取得相同结果' cn-site/notes/index.html
+          grep -Fq '团队成果按组织推进口径呈现' cn-site/notes/index.html
+          grep -Fq '颁奖照片可以展示，但必须说明它证明的是什么' cn-site/notes/index.html
+          grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
+          grep -Fq '展示经历，不包装成商业案例' cn-site/index.html
+          ! grep -Fq '357.91万' cn-site/assets/practice/lean-improvement-evidence.svg
+          ! grep -Fq '可量化年度贡献' cn-site/assets/practice/lean-improvement-evidence.svg
+
+      - name: Verify clean patch formatting
+        run: git diff --check
