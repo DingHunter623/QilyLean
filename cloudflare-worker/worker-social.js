@@ -1,5 +1,6 @@
 import baseWorker from './worker.js';
 
+/* CN_IN_PAGE_TRANSLATION_CORS_V1: qilylean.cn is an approved browser origin for /translate. */
 const ALLOWED_ORIGINS = new Set([
   'https://qilylean.com',
   'https://www.qilylean.com',
