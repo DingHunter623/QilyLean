@@ -67,10 +67,12 @@ assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation worke
   '--qily-cn-h2:clamp(24px,6.8vw,29px)',
   '--qily-cn-h3:clamp(19px,5.7vw,21px)',
   'scrollbar-width:none!important',
-  '::-webkit-slider-runnable-track',
-  '::-webkit-slider-thumb'
+  '.qily-primary-nav-scroll-rail::before',
+  '.qily-primary-nav-scroll-thumb'
 ].forEach(m=>assert(cnCss.includes(m),'CN unified VI missing: '+m));
-assert(cnRail.includes("rail.type='range'"), 'CN nav rail must use the international range control.');
+assert(!cnRail.includes("rail.type='range'"), 'CN nav rail must not depend on native range behavior.');
+assert(cnRail.includes("role','scrollbar'"), 'CN nav rail must expose scrollbar semantics.');
+assert(cnRail.includes('qily-primary-nav-scroll-thumb'), 'CN custom nav thumb runtime is missing.');
 assert(cnRail.includes("qily-primary-nav-scroll-rail"), 'CN nav rail runtime class is missing.');
 assert(cnRail.includes('qily-cn-nav-shell'), 'CN desktop/mobile nav shell is missing.');
 assert(cnCss.includes('--qily-cn-primary-nav-font-size:20px'), 'CN primary nav type must match international 20px.');
