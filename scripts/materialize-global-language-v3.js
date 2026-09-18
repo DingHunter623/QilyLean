@@ -101,7 +101,14 @@ function neutralizeFirstPaint(source){
 function isDdzFastRoute(relative,source){
   return relative===DDZ_FAST_PATH&&source.includes("20260903-ddz-fast-knowledge-v155")&&source.includes('data-qily-ddz-fast-shell="v155"');
 }
+function isIndependentPublicSurface(relative){
+  return /^(?:cn-site|global-knowledge)\//i.test(relative);
+}
 function materialize(source,relative){
+  /* qilylean.cn and Global Knowledge have dedicated VI / translation / validation owners.
+   * The international Google/runtime materializer must never rewrite those independent surfaces.
+   */
+  if(isIndependentPublicSurface(relative))return source;
   /* DDZ V155 is intentionally isolated from the heavyweight sitewide shell. Keep only the canonical Dock cache aligned. */
   if(isDdzFastRoute(relative,source))return source.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK_SHARE);
 
@@ -149,4 +156,4 @@ function materialize(source,relative){
 const changed=[];
 for(const relative of trackedHtml()){const target=path.join(root,relative),source=fs.readFileSync(target,'utf8'),next=materialize(source,relative);if(next===source)continue;changed.push(relative);if(!checkOnly)fs.writeFileSync(target,next,'utf8');}
 if(checkOnly&&changed.length)throw new Error(`Sitewide Google-Translate single-runtime baseline stale: ${changed.slice(0,30).join(', ')}${changed.length>30?` … +${changed.length-30}`:''}`);
-process.stdout.write(`${latestDailyOnly?'Latest Daily Brief':'Sitewide public'} baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s); Google Translate V1.4 stable fast-path + Interaction Semantics V1.7 + Dock V5.8 + R7 intent-prefetch V2; DDZ V155 fast route remains isolated; baseline ${BASELINE_VERSION}.\n`);
+process.stdout.write(`${latestDailyOnly?'Latest Daily Brief':'International public'} baseline ${checkOnly?'check passed':'materialized'}: ${changed.length} tracked HTML file(s) changed; Google Translate V1.4 + Interaction Semantics V1.7 + Dock V5.8 + R7 intent-prefetch V2; CN and Global Knowledge are independently governed; DDZ V155 remains isolated; baseline ${BASELINE_VERSION}.\n`);
