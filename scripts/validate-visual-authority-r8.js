@@ -46,7 +46,7 @@ must(containment,'QILY-R8-CONTAINMENT-ONLY','Containment single responsibility m
 must(header,'--qily-nav-scroll-track:#b9d9d4','Header international track');
 must(header,'--qily-nav-scroll-thumb:#0f4b5a','Header deep-teal thumb');
 must(semantics,'--qily-nav-rail-thumb:#0f4b5a','Interaction deep-teal thumb');
-must(redline,'--ql-redline-rail-track:#dbe8e6','Redline fallback track');
+must(redline,'--ql-redline-rail-track:#b9d9d4','Redline fallback track');
 must(redline,'--ql-redline-rail-thumb:#0f4b5a','Redline fallback thumb');
 must(redline,'--ql-redline-header-offset:var(--qily-header-live-height,86px)','Measured redline header offset');
 forbid(redline,'clamp(260px,17vw,300px)','Oversized translator fallback');
