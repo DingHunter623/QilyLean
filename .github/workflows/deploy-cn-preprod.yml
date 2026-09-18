@@ -36,6 +36,7 @@ jobs:
           test -f cn-site/b47ed759da519bd90586a7877122d7be.txt
           test -f cn-site/assets/site.css
           test -f cn-site/assets/portal.css
+          test -f cn-site/assets/qilylean-aircraft-hero-cn-20260918.png
           test -f cn-site/scripts/validate-personal-content.sh
           test -f cn-site/scripts/activate-public-http.sh
           test -f cn-site/nginx/qilylean.cn.conf
@@ -189,6 +190,8 @@ jobs:
               raise SystemExit('Production China home missing global-knowledge CTA.')
           if 'QilyLean | <span>启力精益</span>' not in home:
               raise SystemExit('Production China home lost full brand in header.')
+          if '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' not in home:
+              raise SystemExit('Production China home missing approved no-QR aircraft visual.')
 
           required_vi = [
               'CN global-knowledge CTA: VI gold + explicit interaction feedback.',
