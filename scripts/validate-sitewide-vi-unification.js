@@ -55,7 +55,7 @@ const cnRail=read('cn-site/assets/cn-nav-rail-v1.js');
 [
   'QILY-CN-NAV-RAIL-V1',
   'QILY-CN-ROUTE-FEEDBACK-V1',
-  '--qily-nav-rail-track:#dbe8e6',
+  '--qily-nav-rail-track:#b9d9d4',
   '--qily-nav-rail-thumb:#0f4b5a',
   '--qily-cn-h1:clamp(30px,8.4vw,37px)',
   '--qily-cn-h2:clamp(25px,6.8vw,30px)',
@@ -66,6 +66,13 @@ const cnRail=read('cn-site/assets/cn-nav-rail-v1.js');
 ].forEach(m=>assert(cnCss.includes(m),'CN unified VI missing: '+m));
 assert(cnRail.includes("rail.type='range'"), 'CN nav rail must use the international range control.');
 assert(cnRail.includes("qily-primary-nav-scroll-rail"), 'CN nav rail runtime class is missing.');
+assert(cnCss.includes('QILY-CN-BAIDU-TRANSLATE-V2'), 'CN Baidu translator VI contract is missing.');
+assert(cnRail.includes("data-qily-translation-provider','baidu'"), 'CN translator must declare Baidu as the mainland provider.');
+assert(cnRail.includes('fanyi.baidu.com/transpage'), 'CN translator must use Baidu whole-page URL translation.');
+assert(cnRail.includes("addOption(select,'zh','中文简体')"), 'CN translator primary Simplified Chinese option is missing.');
+assert(cnRail.includes("addOption(select,'cht','中文繁体')"), 'CN translator primary Traditional Chinese option is missing.');
+assert(cnRail.includes("addOption(select,'en','English')"), 'CN translator primary English option is missing.');
+assert(cnRail.includes("addOption(select,MORE_VALUE,'其他')"), 'CN translator primary More option is missing.');
 
 const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*.html')])].filter(rel=>{
   if(/googleb7a|baidu_verify/.test(rel)) return false;
@@ -75,8 +82,8 @@ const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*
 assert(cnPages.length>=17,'Expected at least 17 CN document pages.');
 for(const rel of cnPages){
   const html=read(rel);
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-mobile-vi-v9'), rel+' must use CN VI v9.');
-  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v1'), rel+' must load the international-style nav rail runtime.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-header-translate-v10'), rel+' must use CN VI v9.');
+  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-baidu-translate-v2'), rel+' must load the international-style nav rail runtime.');
 }
 
 /* 4) Previous public-copy governance remains mandatory. */
@@ -84,4 +91,4 @@ assert(fs.existsSync(path.join(root,'scripts/validate-public-copy-governance.js'
 assert(fs.existsSync(path.join(root,'.github/workflows/validate-public-copy-governance.yml')), 'Previous public-copy governance workflow must remain present.');
 
 if(process.exitCode) process.exit(process.exitCode);
-console.log('Sitewide VI governance passed: international interaction/type authority, Global Knowledge shared VI, and CN mobile rail/type hierarchy are aligned.');
+console.log('Sitewide VI governance passed: international interaction/type authority, Global Knowledge shared VI, and CN rail/type/Baidu translation header are aligned.');

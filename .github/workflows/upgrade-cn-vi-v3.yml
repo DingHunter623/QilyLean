@@ -7,6 +7,7 @@ on:
       - 'cn-site/**/*.html'
       - 'cn-site/assets/qilylean-vi-v1.css'
       - 'cn-site/assets/qilylean-vi-v2.css'
+      - 'cn-site/assets/cn-nav-rail-v1.js'
       - '.github/workflows/upgrade-cn-vi-v3.yml'
   workflow_dispatch:
 
@@ -32,9 +33,9 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260918-cn-mobile-vi-v9'
+          css_version = '20260918-cn-header-translate-v10'
           base_version = '20260917-cn-thesis-base-v5'
-          nav_script_version = '20260918-nav-rail-v1'
+          nav_script_version = '20260918-nav-baidu-translate-v2'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
           nav_script_target = f'<script defer src="/assets/cn-nav-rail-v1.js?v={nav_script_version}"></script>'
@@ -146,7 +147,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-mobile-vi-v9'
+          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-header-translate-v10'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = 'QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
@@ -163,7 +164,7 @@ jobs:
                   continue
               documents += 1
               css_count = text.count(css_marker)
-              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v1')
+              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-baidu-translate-v2')
               footer_count = text.count(footer_marker)
               footer_tags = len(re.findall(r'<footer class="footer">', text))
               if css_count != 1:
@@ -219,6 +220,9 @@ jobs:
           grep -q 'QILY-CN-THESIS-NONINTERACTIVE-V1' cn-site/assets/qilylean-vi-v2.css
           grep -q 'QILY-CN-NAV-RAIL-V1' cn-site/assets/qilylean-vi-v2.css
           grep -q 'qily-primary-nav-scroll-rail' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'qily-cn-web-translate' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'fanyi.baidu.com/transpage' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'QILY-CN-BAIDU-TRANSLATE-V2' cn-site/assets/qilylean-vi-v2.css
           grep -q -- '--qily-cn-h3:clamp(21px,5.7vw,23px)' cn-site/assets/qilylean-vi-v2.css
           grep -q 'CN global-knowledge CTA: VI gold + explicit interaction feedback' cn-site/assets/qilylean-vi-v2.css
           grep -q 'html:root body .knowledge-bridge>a:hover' cn-site/assets/qilylean-vi-v2.css

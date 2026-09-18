@@ -44,6 +44,9 @@ jobs:
           test -f cn-site/assets/site.css
           test -f cn-site/assets/qilylean-vi-v2.css
           test -f cn-site/assets/cn-nav-rail-v1.js
+          grep -Fq 'qily-cn-web-translate' cn-site/assets/cn-nav-rail-v1.js
+          grep -Fq 'fanyi.baidu.com/transpage' cn-site/assets/cn-nav-rail-v1.js
+          grep -Fq 'QILY-CN-BAIDU-TRANSLATE-V2' cn-site/assets/qilylean-vi-v2.css
           test -f cn-site/assets/portal.css
           test -f cn-site/assets/qilylean-aircraft-hero-cn-20260918.png
           test -f cn-site/assets/practice.css
@@ -214,9 +217,9 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' not in home:
               raise SystemExit('Production China home missing approved no-QR aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260918-cn-mobile-vi-v9' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20260918-cn-header-translate-v10' not in home:
               raise SystemExit('Production China home missing unified mobile VI cache version.')
-          if '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v1' not in home:
+          if '/assets/cn-nav-rail-v1.js?v=20260918-nav-baidu-translate-v2' not in home:
               raise SystemExit('Production China home missing international-style nav rail runtime.')
           required_home_practice = [
               'PRACTICE & EVIDENCE｜实践与成果',
