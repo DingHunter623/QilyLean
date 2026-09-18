@@ -35,10 +35,10 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260918-cn-vi-v11'
+          css_version = '20260918-cn-vi-v12'
           base_version = '20260917-cn-thesis-base-v5'
-          nav_script_version = '20260918-nav-rail-v2'
-          translate_version = '20260918-baidu-v2'
+          nav_script_version = '20260918-nav-rail-v3'
+          translate_version = '20260918-translate-v3'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
           nav_script_target = f'<script defer src="/assets/cn-nav-rail-v1.js?v={nav_script_version}"></script>'
@@ -134,7 +134,7 @@ jobs:
 
           cta_marker = '/* 2026-09-17 | CN global-knowledge CTA: VI gold + explicit interaction feedback. */'
           if cta_marker not in css2:
-              css2 += f'''\n\n{cta_marker}\nhtml:root body .knowledge-bridge>a{{\n  display:inline-flex!important;\n  align-items:center!important;\n  justify-content:center!important;\n  min-height:46px!important;\n  margin-top:8px!important;\n  padding:8px 14px!important;\n  border:1px solid var(--qily-gold)!important;\n  border-radius:9px!important;\n  background:#fffaf0!important;\n  color:#8b6219!important;\n  -webkit-text-fill-color:#8b6219!important;\n  font-size:22px!important;\n  line-height:1.35!important;\n  font-weight:900!important;\n  text-decoration:none!important;\n  transition:transform .15s ease,background-color .15s ease,color .15s ease,box-shadow .15s ease,border-color .15s ease!important;\n}}\nhtml:root body .knowledge-bridge>a:hover,\nhtml:root body .knowledge-bridge>a:focus-visible{{\n  background:var(--qily-gold)!important;\n  border-color:var(--qily-gold)!important;\n  color:#17322d!important;\n  -webkit-text-fill-color:#17322d!important;\n  transform:translateY(-2px)!important;\n  box-shadow:0 10px 24px rgba(122,90,24,.22)!important;\n  outline:3px solid rgba(202,161,95,.32)!important;\n  outline-offset:2px!important;\n}}\nhtml:root body .knowledge-bridge>a:active{{\n  transform:translateY(1px)!important;\n  box-shadow:inset 0 2px 5px rgba(23,50,45,.22)!important;\n}}\n@media(max-width:620px){{\n  html:root body .knowledge-bridge>a{{font-size:20px!important}}\n}}\n@media(prefers-reduced-motion:reduce){{\n  html:root body .knowledge-bridge>a{{transition:none!important}}\n  html:root body .knowledge-bridge>a:hover,\n  html:root body .knowledge-bridge>a:active{{transform:none!important}}\n}}\n'''
+              css2 += f'''\n\n{cta_marker}\nhtml:root body .knowledge-bridge>a{{\n  display:inline-flex!important;\n  align-items:center!important;\n  justify-content:center!important;\n  min-height:46px!important;\n  margin-top:8px!important;\n  padding:8px 14px!important;\n  border:1px solid var(--qily-gold)!important;\n  border-radius:9px!important;\n  background:#fffaf0!important;\n  color:#8b6219!important;\n  -webkit-text-fill-color:#8b6219!important;\n  font-size:18px!important;\n  line-height:1.35!important;\n  font-weight:900!important;\n  text-decoration:none!important;\n  transition:transform .15s ease,background-color .15s ease,color .15s ease,box-shadow .15s ease,border-color .15s ease!important;\n}}\nhtml:root body .knowledge-bridge>a:hover,\nhtml:root body .knowledge-bridge>a:focus-visible{{\n  background:var(--qily-gold)!important;\n  border-color:var(--qily-gold)!important;\n  color:#17322d!important;\n  -webkit-text-fill-color:#17322d!important;\n  transform:translateY(-2px)!important;\n  box-shadow:0 10px 24px rgba(122,90,24,.22)!important;\n  outline:3px solid rgba(202,161,95,.32)!important;\n  outline-offset:2px!important;\n}}\nhtml:root body .knowledge-bridge>a:active{{\n  transform:translateY(1px)!important;\n  box-shadow:inset 0 2px 5px rgba(23,50,45,.22)!important;\n}}\n@media(max-width:620px){{\n  html:root body .knowledge-bridge>a{{font-size:20px!important}}\n}}\n@media(prefers-reduced-motion:reduce){{\n  html:root body .knowledge-bridge>a{{transition:none!important}}\n  html:root body .knowledge-bridge>a:hover,\n  html:root body .knowledge-bridge>a:active{{transform:none!important}}\n}}\n'''
           v2.write_text(css2, encoding='utf-8')
 
           print(f'Document pages: {document_count}; thesis panels: {thesis_count}; canonical footer found on {footer_count}; changed HTML: {changed}; non-document HTML skipped: {len(skipped)}.')
@@ -154,7 +154,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-vi-v11'
+          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-vi-v12'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = 'QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
@@ -171,9 +171,9 @@ jobs:
                   continue
               documents += 1
               css_count = text.count(css_marker)
-              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v2')
-              translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260918-baidu-v2')
-              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260918-baidu-v2')
+              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v3')
+              translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v3')
+              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v3')
               footer_count = text.count(footer_marker)
               footer_tags = len(re.findall(r'<footer class="footer">', text))
               if css_count != 1:
@@ -233,15 +233,19 @@ jobs:
           grep -q 'QILY-CN-THESIS-NONINTERACTIVE-V1' cn-site/assets/qilylean-vi-v2.css
           grep -q 'QILY-CN-NAV-RAIL-V1' cn-site/assets/qilylean-vi-v2.css
           grep -q 'qily-primary-nav-scroll-rail' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'setFromPointer' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'installNavDrag' cn-site/assets/cn-nav-rail-v1.js
+          grep -q -- '--qily-nav-scroll-track:#b9d9d4' cn-site/assets/qilylean-vi-v2.css
+          grep -q -- '--qily-nav-scroll-thumb:#0f4b5a' cn-site/assets/qilylean-vi-v2.css
           ! grep -q 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
-          grep -q 'QilyLean CN Domestic Web Translation V2' cn-site/assets/cn-translate-baidu-v1.js
-          grep -q 'fanyi.baidu.com/transpage' cn-site/assets/cn-translate-baidu-v1.js
-          grep -q 'w.location.href=translatedUrl(code)' cn-site/assets/cn-translate-baidu-v1.js
-          grep -q 'QilyLean CN Domestic Translation UI V2' cn-site/assets/cn-translate-baidu-v1.css
-          grep -q -- '--qily-cn-h3:clamp(21px,5.7vw,23px)' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'QilyLean CN In-Page Translation V3' cn-site/assets/cn-translate-baidu-v1.js
+          grep -q 'API_BASES' cn-site/assets/cn-translate-baidu-v1.js
+          grep -q 'target_language:target' cn-site/assets/cn-translate-baidu-v1.js
+          grep -q 'QilyLean CN In-Page Translation UI V3' cn-site/assets/cn-translate-baidu-v1.css
+          grep -q -- '--qily-cn-h3:clamp(19px,5.7vw,21px)' cn-site/assets/qilylean-vi-v2.css
           grep -q 'CN global-knowledge CTA: VI gold + explicit interaction feedback' cn-site/assets/qilylean-vi-v2.css
           grep -q 'html:root body .knowledge-bridge>a:hover' cn-site/assets/qilylean-vi-v2.css
-          grep -q 'font-size:22px!important' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'font-size:18px!important' cn-site/assets/qilylean-vi-v2.css
           grep -q 'background:var(--qily-gold)!important' cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'精益生产'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'工业工程'" cn-site/assets/qilylean-vi-v2.css
