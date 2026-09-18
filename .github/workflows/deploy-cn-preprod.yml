@@ -252,6 +252,7 @@ jobs:
               '跨部门共同推进，评审、风险确认与结果复盘构成完整闭环',
               '玻璃管保险丝切口与烧口工艺改善后的成品照片',
               '8项制造实践，从现场问题走向标准化沉淀',
+              'PRACTICE REPRESENTATIVE｜实践代表',
               '汽车电子精益体系、VSM、单件流与SMED标准化',
               'Factory Layout、精益物流与扩展边界规划',
               '制造数据治理、IT/OT分层与系统验收',
@@ -260,6 +261,8 @@ jobs:
           for marker in required_practice:
               if marker not in practice:
                   raise SystemExit(f'Production China practice archive missing: {marker}')
+          if 'REPRESENTATIVE PRACTICE｜代表实践' in practice:
+              raise SystemExit('Legacy representative-practice wording returned in production.')
           required_practice_css = [
               '.practice-grid',
               '.award-panel',
@@ -327,6 +330,68 @@ jobs:
           print(f'PASS: local CN award evidence is public ({len(data)} bytes, JPEG).')
           PY
           rm -f "$tmp"
+
+      - name: Verify Baiduspider PC and mobile reachability
+        shell: bash
+        run: |
+          set -euo pipefail
+          uas=(
+            'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)'
+            'Mozilla/5.0 (Linux; Android 12; Mobile; compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)'
+          )
+          urls=(
+            'https://qilylean.cn/'
+            'https://qilylean.cn/ie/'
+            'https://qilylean.cn/lean/'
+            'https://qilylean.cn/knowledge/'
+            'https://qilylean.cn/robots.txt'
+            'https://qilylean.cn/sitemap.xml'
+          )
+          for ua in "${uas[@]}"; do
+            for url in "${urls[@]}"; do
+              code=''
+              for attempt in {1..6}; do
+                code="$(curl --location --silent --show-error \
+                  --max-time 20 \
+                  --connect-timeout 8 \
+                  --user-agent "$ua" \
+                  --header 'Cache-Control: no-cache' \
+                  --output /tmp/qily-baidu-probe-body \
+                  --dump-header /tmp/qily-baidu-probe-headers \
+                  --write-out '%{http_code}' \
+                  "$url?baidu_probe=$GITHUB_SHA-$attempt" || true)"
+                if [ "$code" = "200" ]; then
+                  break
+                fi
+                sleep 5
+              done
+              if [ "$code" != "200" ]; then
+                echo "Baiduspider reachability failed: $url returned HTTP ${code:-transport-error}" >&2
+                exit 1
+              fi
+              if grep -Eiq '^X-Robots-Tag:.*noindex' /tmp/qily-baidu-probe-headers; then
+                echo "Baiduspider indexing blocked by X-Robots-Tag on $url" >&2
+                exit 1
+              fi
+              echo "PASS: Baiduspider can fetch $url"
+            done
+          done
+
+          robots_body="$(curl --location --fail --silent --show-error \
+            --max-time 20 \
+            --user-agent 'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)' \
+            "https://qilylean.cn/robots.txt?baidu_probe=$GITHUB_SHA")"
+          grep -Fxq 'Allow: /' <<<"$robots_body"
+          grep -Fq 'Sitemap: https://qilylean.cn/sitemap.xml' <<<"$robots_body"
+
+          sitemap_body="$(curl --location --fail --silent --show-error \
+            --max-time 20 \
+            --user-agent 'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)' \
+            "https://qilylean.cn/sitemap.xml?baidu_probe=$GITHUB_SHA")"
+          for required_url in '/' '/ie/' '/lean/' '/knowledge/'; do
+            grep -Fq "<loc>https://qilylean.cn${required_url}</loc>" <<<"$sitemap_body"
+          done
+          echo 'PASS: QilyLean CN is crawlable by Baiduspider PC/mobile user agents and discovery files are consistent.'
 
       - name: Verify search-engine ownership files are public
         shell: bash
