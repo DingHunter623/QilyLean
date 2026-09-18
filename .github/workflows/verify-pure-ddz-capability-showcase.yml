@@ -75,6 +75,7 @@ jobs:
           test -f tools/pure-ddz/game/js/ddz-core-v155.js
           test -f pure-ddz-capability-visual-v2.css
           grep -Fq 'capability-ddz-card' capabilities/index.html
+          grep -Fq '/assets/qilylean-aircraft-hero-approved-20260826.png' capabilities/index.html
           ! grep -Fq 'Android版暂未开放' tools/pure-ddz/index.html
           ! grep -Fq 'Android版待网页版验证确认后开放' tools/pure-ddz/index.html
           ! grep -Fq 'Android 可离线使用' tools/pure-ddz/index.html
