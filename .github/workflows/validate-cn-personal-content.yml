@@ -73,11 +73,13 @@ jobs:
           grep -Fq '精选 8 项制造实践' cn-site/index.html
           grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
-          grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v15' cn-site/index.html
-          grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v6' cn-site/index.html
+          grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v16' cn-site/index.html
+          grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v4-youdao' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260918-translate-v4-youdao' cn-site/index.html
-          grep -Fq 'QILY-CN-NAV-RAIL-V6' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'QILY-CN-NAV-RAIL-V7' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'qily-primary-nav-scroll-thumb' cn-site/assets/cn-nav-rail-v1.js
+          grep -Fq 'mousedown' cn-site/assets/cn-nav-rail-v1.js
           grep -Fq -- '--qily-cn-h1:clamp(30px,8.4vw,38px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h2:clamp(24px,6.8vw,29px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h3:clamp(19px,5.7vw,21px)' cn-site/assets/qilylean-vi-v2.css

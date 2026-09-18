@@ -126,13 +126,16 @@ grep -Fq '玻璃管保险丝改善后成品照片' "$PRACTICE_FUSE" || { echo "E
 [[ -f "$PRACTICE_VISUAL" ]] || { echo "ERROR: CN visual-management practice visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage approved no-QR aircraft visual is missing."; exit 1; }
-grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v15' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
-grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v6' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
+grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v16' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
+grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
 grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v4-youdao' "$INDEX_FILE" || { echo "ERROR: CN homepage translator stylesheet is missing."; exit 1; }
 grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260918-translate-v4-youdao' "$INDEX_FILE" || { echo "ERROR: CN homepage translator runtime is missing."; exit 1; }
-grep -Fq 'QILY-CN-NAV-RAIL-V6' "$CN_VI_FILE" || { echo "ERROR: CN international-style primary-nav rail contract is missing."; exit 1; }
+grep -Fq 'QILY-CN-NAV-RAIL-V7' "$CN_VI_FILE" || { echo "ERROR: CN international-style primary-nav rail contract is missing."; exit 1; }
 grep -Fq 'qily-primary-nav-scroll-rail' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN primary-nav rail runtime contract is missing."; exit 1; }
 grep -Fq 'qily-cn-nav-shell' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN desktop/mobile nav shell is missing."; exit 1; }
+grep -Fq 'qily-primary-nav-scroll-thumb' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN custom navigation thumb runtime is missing."; exit 1; }
+grep -Fq 'mousedown' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN mouse drag runtime is missing."; exit 1; }
+grep -Fq 'touchstart' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN touch drag runtime is missing."; exit 1; }
 grep -Fq -- '--qily-cn-primary-nav-font-size:20px' "$CN_VI_FILE" || { echo "ERROR: CN primary-nav font size must match international 20px."; exit 1; }
 grep -Fq 'grid-template-areas:"brand nav translate"' "$CN_VI_FILE" || { echo "ERROR: CN desktop header three-zone layout is missing."; exit 1; }
 grep -Fq 'grid-template-areas:"brand translate" "nav nav"' "$CN_VI_FILE" || { echo "ERROR: CN mobile header nav row is missing."; exit 1; }

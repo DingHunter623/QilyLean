@@ -223,9 +223,9 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' not in home:
               raise SystemExit('Production China home missing approved no-QR aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v15' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v16' not in home:
               raise SystemExit('Production China home missing unified mobile VI cache version.')
-          if '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v6' not in home:
+          if '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7' not in home:
               raise SystemExit('Production China home missing international-style nav rail runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v4-youdao' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
@@ -294,7 +294,10 @@ jobs:
 
           required_vi = [
               'QILY-CN-AIRCRAFT-CENTERED-V2',
-              'QILY-CN-NAV-RAIL-V6',
+              'QILY-CN-NAV-RAIL-V7',
+              'background:#b9d9d4!important',
+              'background:#0f4b5a!important',
+              'min-width:104px!important',
               '--qily-cn-primary-nav-font-size:20px',
               '--qily-cn-h1:clamp(30px,8.4vw,38px)',
               '--qily-cn-h2:clamp(24px,6.8vw,29px)',
@@ -311,7 +314,7 @@ jobs:
           for marker in required_vi:
               if marker not in vi:
                   raise SystemExit(f'Production China VI missing: {marker}')
-          for marker in ['QilyLean CN Primary Navigation Rail V4', 'qily-cn-nav-shell', 'ResizeObserver']:
+          for marker in ['QilyLean CN Primary Navigation Rail V7', 'qily-cn-nav-shell', 'qily-primary-nav-scroll-thumb', 'mousedown', 'mousemove', 'touchstart', 'ResizeObserver']:
               if marker not in nav_runtime:
                   raise SystemExit(f'Production China nav runtime missing: {marker}')
           for marker in ['QilyLean CN In-Page Translation V4', "data-qily-translation-engine','youdao'", 'concurrency=3']:
