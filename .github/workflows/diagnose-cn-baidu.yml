@@ -1,0 +1,76 @@
+name: Diagnose QilyLean CN Baidu crawl path
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/diagnose-cn-baidu.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure SSH
+        shell: bash
+        env:
+          CN_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$CN_HOST"
+          test -n "$CN_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CN_KEY" > ~/.ssh/qilylean_cn
+          chmod 600 ~/.ssh/qilylean_cn
+          ssh-keyscan -H "$CN_HOST" >> ~/.ssh/known_hosts
+
+      - name: Inspect server-side Baidu reachability evidence
+        shell: bash
+        env:
+          CN_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_USER:-ubuntu}"
+          ssh -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_HOST" 'bash -s' <<'REMOTE'
+          set -euo pipefail
+
+          echo "=== UTC NOW ==="
+          date -u
+
+          echo "=== LISTENERS 80/443 ==="
+          sudo ss -ltnp | awk 'NR==1 || /:80 |:443 /'
+
+          echo "=== UFW STATUS ==="
+          sudo ufw status verbose || true
+
+          echo "=== NGINX CONFIG ACCESS CONTROLS ==="
+          sudo nginx -T 2>/dev/null | grep -Ei 'server_name|listen |deny |allow |geo |map .*http_user_agent|limit_req|limit_conn' | head -n 200 || true
+
+          echo "=== RECENT BAIDUSPIDER ACCESS COUNT ==="
+          if sudo test -f /var/log/nginx/access.log; then
+            total="$(sudo grep -ci 'Baiduspider' /var/log/nginx/access.log || true)"
+            echo "baiduspider_access_count=$total"
+            echo "=== RECENT BAIDUSPIDER ACCESS (IP REDACTED) ==="
+            sudo grep -i 'Baiduspider' /var/log/nginx/access.log 2>/dev/null | tail -n 30 | sed -E 's/^[^ ]+/<ip-redacted>/' || true
+            echo "=== BAIDUSPIDER STATUS SUMMARY ==="
+            sudo grep -i 'Baiduspider' /var/log/nginx/access.log 2>/dev/null | awk '{count[$9]++} END {for (s in count) print s, count[s]}' | sort || true
+          else
+            echo "access.log missing"
+          fi
+
+          echo "=== NGINX ERROR SUMMARY (NO RAW CLIENT IPS) ==="
+          if sudo test -f /var/log/nginx/error.log; then
+            sudo tail -n 5000 /var/log/nginx/error.log |               sed -E 's/client: [0-9a-fA-F:.]+/client: <ip-redacted>/g' |               grep -Ei 'limiting requests|access forbidden|connect|timeout|SSL|handshake|refused|reset|no live upstream|too many open files' |               tail -n 80 || true
+          fi
+
+          echo "=== LOCAL CANONICAL HEALTH ==="
+          curl -sS -o /dev/null -w 'http_root=%{http_code}\n' -H 'Host: qilylean.cn' http://127.0.0.1/
+          curl -sS -o /dev/null -w 'https_root=%{http_code}\n' --resolve qilylean.cn:443:127.0.0.1 https://qilylean.cn/
+          curl -sS -o /dev/null -w 'https_lean=%{http_code}\n' --resolve qilylean.cn:443:127.0.0.1 https://qilylean.cn/lean/
+          curl -sS -o /dev/null -w 'https_digital=%{http_code}\n' --resolve qilylean.cn:443:127.0.0.1 https://qilylean.cn/digital/
+          REMOTE
