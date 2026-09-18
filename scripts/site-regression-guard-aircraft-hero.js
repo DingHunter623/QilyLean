@@ -13,7 +13,6 @@ const ownerProfileCss=fs.readFileSync(path.join(root,'styles','qily-home-owner-p
 const ownerProfileJs=fs.readFileSync(path.join(root,'site-home-owner-profile-v1.js'),'utf8');
 const sourcePath=path.join(root,'官网首图.png');
 const pngPath=path.join(root,'assets','qilylean-aircraft-hero-approved-20260826.png');
-const webpPath=path.join(root,'assets','qilylean-aircraft-hero-latest-q98.webp');
 const EXPECTED_SOURCE_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4';
 const EXPECTED_SOURCE_BYTES=2270808;
 const ASSET_VERSION='20260918-aircraft-ultraclear-v1';
@@ -40,15 +39,10 @@ const width=png.readUInt32BE(16),height=png.readUInt32BE(20);
 assert(width>=1200&&height>=675,`Canonical aircraft resolution too small: ${width}x${height}`);
 const declaredDims=block.match(/width="(\d+)"\s+height="(\d+)"/);
 if(declaredDims)assert(Number(declaredDims[1])===width&&Number(declaredDims[2])===height,'Aircraft intrinsic dimensions do not match the latest SSOT');
-assert(block.includes(`qilylean-aircraft-hero-latest-q98.webp?v=${ASSET_VERSION}`),'Latest aircraft WebP cache version missing');
 assert(block.includes(`qilylean-aircraft-hero-approved-20260826.png?v=${ASSET_VERSION}`),'Latest canonical PNG fallback missing');
 assert((block.match(/<picture\b/g)||[]).length===1,'Aircraft extension must contain exactly one picture wrapper');
-assert((block.match(/<source\b/g)||[]).length===1,'Aircraft extension must contain exactly one optimized source');
+assert((block.match(/<source\b/g)||[]).length===0,'Aircraft extension must not reference the retired WebP source');
 assert((block.match(/<img\b/g)||[]).length===1,'Aircraft extension must contain exactly one PNG fallback');
-assert(fs.existsSync(webpPath),'Optimized WebP derivative missing');
-const webp=fs.readFileSync(webpPath);
-assert(webp.length>=150000&&webp.length<1600000,'Optimized WebP outside governed 150KB–1.6MB payload window');
-assert(webp.subarray(0,4).toString('ascii')==='RIFF'&&webp.subarray(8,12).toString('ascii')==='WEBP','Optimized derivative is not WebP');
 
 /* First-screen contract: the HTML itself already owns the approved new Hero; runtime cannot be responsible for replacing an old first frame. */
 const mainOpen=html.search(/<main\b[^>]*>/i),aircraftAt=html.indexOf('<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->');
