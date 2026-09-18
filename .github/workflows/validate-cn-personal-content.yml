@@ -49,27 +49,29 @@ jobs:
           chmod +x cn-site/scripts/validate-personal-content.sh
           cn-site/scripts/validate-personal-content.sh cn-site
 
-      - name: Verify practice archive semantic boundary
+      - name: Verify practice archive public-facing semantics
         shell: bash
         run: |
           set -euo pipefail
           grep -Fq '实践与成果：把改善结果还原成可复用的工程方法' cn-site/notes/index.html
-          grep -Fq '历史结果也不代表其他场景必然取得相同结果' cn-site/notes/index.html
-          grep -Fq '团队成果按组织推进口径呈现' cn-site/notes/index.html
-          grep -Fq '颁奖照片可以展示，但必须说明它证明的是什么' cn-site/notes/index.html
+          grep -Fq '知识之外，更重要的是方法如何在现场落地' cn-site/index.html
+          grep -Fq '精选 8 项制造实践' cn-site/index.html
+          grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
-          grep -Fq '国际站当前 8 项代表项目均已在中国站转化' cn-site/index.html
-          grep -Fq '查看8项实践与成果' cn-site/index.html
-          grep -Fq '展示经历，不包装成商业案例' cn-site/index.html
+          grep -Fq '从现场问题，到可复用的方法' cn-site/notes/index.html
+          grep -Fq '8项制造实践，从现场问题走向标准化沉淀' cn-site/notes/index.html
+          grep -Fq '6S改善机制：从稽核到激励的运行记录' cn-site/notes/index.html
+          grep -Fq '机制说明：' cn-site/notes/index.html
           ! grep -Fq '357.91万' cn-site/assets/practice/lean-improvement-evidence.svg
           ! grep -Fq '可量化年度贡献' cn-site/assets/practice/lean-improvement-evidence.svg
+          ! grep -Fq 'PUBLIC REDACTION' cn-site/assets/practice/lean-improvement-evidence.svg
+          ! grep -Fq '公开脱敏' cn-site/assets/practice/lean-improvement-evidence.svg
           grep -Fq '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1' cn-site/notes/index.html
           grep -Fq '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2' cn-site/notes/index.html
           grep -Fq '玻璃管保险丝切口与烧口工艺改善后的成品照片' cn-site/notes/index.html
           grep -Fq '玻璃管保险丝改善后成品照片' cn-site/assets/practice/fuse-process.svg
           grep -Fq '/assets/practice.css?v=20260918-practice-visual-v2' cn-site/notes/index.html
           grep -Fq '6S改善运行机制摘要' cn-site/notes/index.html
-          grep -Fq '当前 8 项代表实践均在本页' cn-site/notes/index.html
           grep -Fq '/assets/practice/automotive-lean.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
           grep -Fq '/assets/practice/factory-layout.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
           grep -Fq '/assets/practice/digital-factory.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
