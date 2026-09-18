@@ -1,17 +1,15 @@
-/* QilyLean CN Domestic Web Translation V1 | 2026-09-18
- * Provider: Baidu Web Translation (mainland-accessible, no client-side API secret).
- * Public primary language choices mirror the international site:
- * 中文简体 / 中文繁体 / English / 其他.
- * "其他" provides a common-language picker plus a full-language Baidu entry.
+/* QilyLean CN Domestic Web Translation V2 | 2026-09-18
+ * Provider: Baidu Web Translation, directly reachable in mainland China.
+ * Exactly one translator owner on the China site.
+ * Primary choices mirror the international site: 中文简体 / 中文繁体 / English / 其他.
+ * Translation stays in the current tab and always targets the canonical qilylean.cn page URL.
  */
 (function(d,w){'use strict';
-if(w.__qilyCnDomesticTranslateV1)return;w.__qilyCnDomesticTranslateV1=true;
+if(w.__qilyCnDomesticTranslateV2)return;w.__qilyCnDomesticTranslateV2=true;
 
-var CONTROL_ID='qilyCnDomesticTranslateV1';
+var CONTROL_ID='qilyCnDomesticTranslateV2';
 var MORE_VALUE='__more__';
-var ALL_VALUE='__all__';
 var BAIDU_WEB_TRANSLATE='https://fanyi.baidu.com/transpage';
-var BAIDU_HOME='https://fanyi.baidu.com/';
 var COMMON=[
   ['jp','日本語 / 日语'],['kor','한국어 / 韩语'],['fra','Français / 法语'],
   ['de','Deutsch / 德语'],['spa','Español / 西班牙语'],['ru','Русский / 俄语'],
@@ -28,19 +26,22 @@ var control=null,select=null,panel=null,search=null,grid=null;
 function addOption(node,value,label){
   var option=d.createElement('option');option.value=value;option.textContent=label;node.appendChild(option);
 }
-function cleanPageUrl(){
-  var u=new URL(w.location.href);
-  u.hash='';
-  return u.toString();
+function canonicalPageUrl(){
+  var canonical=d.querySelector('link[rel="canonical"][href]');
+  var value=canonical&&canonical.href?canonical.href:w.location.href;
+  try{
+    var u=new URL(value,w.location.href);
+    u.hash='';
+    return u.toString();
+  }catch(error){
+    return String(value||'https://qilylean.cn/').split('#')[0];
+  }
 }
 function translatedUrl(code){
-  var p=new URLSearchParams();
-  p.set('query',cleanPageUrl());
-  p.set('from','auto');
-  p.set('to',code||'auto');
-  p.set('source','url');
-  p.set('render','1');
-  return BAIDU_WEB_TRANSLATE+'?'+p.toString();
+  return BAIDU_WEB_TRANSLATE+
+    '?query='+encodeURIComponent(canonicalPageUrl())+
+    '&source=url&ie=utf8&from=zh&to='+encodeURIComponent(code)+
+    '&render=1';
 }
 function go(code){
   if(code==='zh'){
@@ -48,28 +49,30 @@ function go(code){
     select.value='zh';
     return;
   }
-  if(code===ALL_VALUE){
-    w.location.assign(translatedUrl('auto'));
-    return;
-  }
-  w.location.assign(translatedUrl(code));
+  closePanel();
+  w.location.href=translatedUrl(code);
 }
 function buildPanel(){
-  var el=d.createElement('div');el.className='qily-cn-language-more';el.hidden=true;el.setAttribute('role','dialog');el.setAttribute('aria-modal','false');el.setAttribute('aria-label','更多翻译语言');
+  var el=d.createElement('div');el.className='qily-cn-language-more';el.hidden=true;
+  el.setAttribute('role','dialog');el.setAttribute('aria-modal','false');el.setAttribute('aria-label','更多翻译语言');
   var head=d.createElement('div');head.className='qily-cn-language-more__head';
   var title=d.createElement('strong');title.textContent='更多语言';
-  var close=d.createElement('button');close.type='button';close.className='qily-cn-language-more__close';close.setAttribute('aria-label','关闭更多语言');close.textContent='×';close.addEventListener('click',closePanel);
+  var close=d.createElement('button');close.type='button';close.className='qily-cn-language-more__close';
+  close.setAttribute('aria-label','关闭更多语言');close.textContent='×';close.addEventListener('click',closePanel);
   head.appendChild(title);head.appendChild(close);
-  search=d.createElement('input');search.type='search';search.className='qily-cn-language-more__search';search.placeholder='搜索语言 / Language';search.setAttribute('aria-label','搜索更多语言');search.addEventListener('input',filter);
+
+  search=d.createElement('input');search.type='search';search.className='qily-cn-language-more__search';
+  search.placeholder='搜索语言 / Language';search.setAttribute('aria-label','搜索更多语言');search.addEventListener('input',filter);
   grid=d.createElement('div');grid.className='qily-cn-language-more__grid';
   COMMON.forEach(function(item){
     var b=d.createElement('button');b.type='button';b.className='qily-cn-language-more__item';b.textContent=item[1];
     b.setAttribute('data-language-search',(item[0]+' '+item[1]).toLocaleLowerCase());
-    b.addEventListener('click',function(){go(item[0])});grid.appendChild(b);
+    b.addEventListener('click',function(){go(item[0])});
+    grid.appendChild(b);
   });
-  var all=d.createElement('button');all.type='button';all.className='qily-cn-language-more__all';all.textContent='全部语种｜百度网页翻译';all.addEventListener('click',function(){go(ALL_VALUE)});
-  var note=d.createElement('p');note.className='qily-cn-language-more__note';note.textContent='国内直连；翻译页由百度翻译提供。';
-  el.appendChild(head);el.appendChild(search);el.appendChild(grid);el.appendChild(all);el.appendChild(note);
+  var note=d.createElement('p');note.className='qily-cn-language-more__note';
+  note.textContent='选择语种后，在当前标签页打开百度网页翻译。';
+  el.appendChild(head);el.appendChild(search);el.appendChild(grid);el.appendChild(note);
   return el;
 }
 function filter(){
@@ -89,19 +92,26 @@ function closePanel(){
   if(select&&select.value===MORE_VALUE)select.value='zh';
 }
 function build(){
-  var wrap=d.createElement('div');wrap.id=CONTROL_ID;wrap.className='qily-cn-translate';wrap.setAttribute('data-qily-header-utility','translation');wrap.setAttribute('data-qily-translation-provider','baidu');wrap.setAttribute('role','group');wrap.setAttribute('aria-label','百度网页翻译');wrap.setAttribute('title','国内直连翻译：中文简体、中文繁体、English 或更多语言');
+  var wrap=d.createElement('div');wrap.id=CONTROL_ID;wrap.className='qily-cn-translate';
+  wrap.setAttribute('data-qily-header-utility','translation');
+  wrap.setAttribute('data-qily-translation-provider','baidu');
+  wrap.setAttribute('data-qily-translation-layout','single-owner-v2');
+  wrap.setAttribute('role','group');wrap.setAttribute('aria-label','百度网页翻译');
+  wrap.setAttribute('title','国内直连翻译：中文简体、中文繁体、English 或更多语言');
   var mark=d.createElement('span');mark.className='qily-cn-translate__mark';mark.setAttribute('aria-hidden','true');mark.textContent='🌐';
   select=d.createElement('select');select.className='qily-cn-translate__select';select.setAttribute('aria-label','选择网站语言');
   addOption(select,'zh','中文简体');addOption(select,'cht','中文繁体');addOption(select,'en','English');addOption(select,MORE_VALUE,'其他');
   select.value='zh';
-  select.addEventListener('change',function(){
-    if(select.value===MORE_VALUE){openPanel();return;}
-    go(select.value);
-  });
+  select.addEventListener('change',function(){if(select.value===MORE_VALUE){openPanel();return;}go(select.value);});
   var provider=d.createElement('span');provider.className='qily-cn-translate__provider';provider.textContent='百度网页翻译';
   panel=buildPanel();
   wrap.appendChild(mark);wrap.appendChild(select);wrap.appendChild(provider);wrap.appendChild(panel);
   return wrap;
+}
+function removeDuplicates(inner){
+  Array.prototype.forEach.call(inner.querySelectorAll('[data-qily-header-utility="translation"]'),function(node){
+    if(node!==control&&node.parentNode)node.parentNode.removeChild(node);
+  });
 }
 function place(){
   if(control&&control.isConnected)return;
@@ -109,11 +119,12 @@ function place(){
   var inner=header.querySelector('.header-inner')||header;
   var nav=inner.querySelector('nav.nav,nav[aria-label="主导航"]');
   control=build();
+  removeDuplicates(inner);
   if(nav)nav.insertAdjacentElement('afterend',control);else inner.appendChild(control);
-  header.setAttribute('data-qily-cn-translation','baidu-v1');
+  header.setAttribute('data-qily-cn-translation','baidu-v2');
 }
-function onPointer(e){if(panel&&!panel.hidden&&control&&!control.contains(e.target))closePanel();}
-function onKey(e){if(e.key==='Escape'&&panel&&!panel.hidden){closePanel();select&&select.focus();}}
-function init(){place();d.addEventListener('pointerdown',onPointer);d.addEventListener('keydown',onKey);}
+function onPointer(e){if(panel&&!panel.hidden&&control&&!control.contains(e.target))closePanel()}
+function onKey(e){if(e.key==='Escape'&&panel&&!panel.hidden){closePanel();select&&select.focus()}}
+function init(){place();d.addEventListener('pointerdown',onPointer);d.addEventListener('keydown',onKey)}
 if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })(document,window);

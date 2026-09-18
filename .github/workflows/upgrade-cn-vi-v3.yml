@@ -8,6 +8,8 @@ on:
       - 'cn-site/assets/qilylean-vi-v1.css'
       - 'cn-site/assets/qilylean-vi-v2.css'
       - 'cn-site/assets/cn-nav-rail-v1.js'
+      - 'cn-site/assets/cn-translate-baidu-v1.js'
+      - 'cn-site/assets/cn-translate-baidu-v1.css'
       - '.github/workflows/upgrade-cn-vi-v3.yml'
   workflow_dispatch:
 
@@ -33,12 +35,15 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260918-cn-header-translate-v10'
+          css_version = '20260918-cn-vi-v11'
           base_version = '20260917-cn-thesis-base-v5'
-          nav_script_version = '20260918-nav-baidu-translate-v2'
+          nav_script_version = '20260918-nav-rail-v2'
+          translate_version = '20260918-baidu-v2'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
           nav_script_target = f'<script defer src="/assets/cn-nav-rail-v1.js?v={nav_script_version}"></script>'
+          translate_css_target = f'<link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v={translate_version}">'
+          translate_js_target = f'<script defer src="/assets/cn-translate-baidu-v1.js?v={translate_version}"></script>'
           css_pattern = re.compile(r'\s*<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">\s*')
           footer_target = '<footer class="footer"><div class="footer-inner"><span>QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">湘ICP备2026041143号-1</a></span></div></footer>'
           toc_pattern = re.compile(r'(<aside\b[^>]*class=["\']toc["\'][^>]*>)(.*?)(</aside>)', re.I | re.S)
@@ -75,9 +80,11 @@ jobs:
                   continue
               document_count += 1
               out = css_pattern.sub('\n', text)
-              out = out.replace('</head>', f'  {css_target}\n</head>', 1)
+              out = re.sub(r'\s*<link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1\.css\?v=[^"]+">\s*', '\n', out)
+              out = out.replace('</head>', f'{translate_css_target}\n  {css_target}\n</head>', 1)
+              out = re.sub(r'\s*<script defer src="/assets/cn-translate-baidu-v1\.js\?v=[^"]+"></script>\s*', '\n', out)
               out = re.sub(r'\s*<script defer src="/assets/cn-nav-rail-v1\.js\?v=[^"]+"></script>\s*', '\n', out)
-              out = out.replace('</body>', f'{nav_script_target}\n</body>', 1)
+              out = out.replace('</body>', f'{translate_js_target}\n{nav_script_target}\n</body>', 1)
 
               # Official China-site brand expression: visible/metadata brand spelling uses ASCII separator with spaces.
               out = out.replace('QilyLean｜<span>启力精益</span>', 'QilyLean | <span>启力精益</span>')
@@ -147,7 +154,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-header-translate-v10'
+          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-vi-v11'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = 'QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
@@ -164,13 +171,19 @@ jobs:
                   continue
               documents += 1
               css_count = text.count(css_marker)
-              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-baidu-translate-v2')
+              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v2')
+              translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260918-baidu-v2')
+              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260918-baidu-v2')
               footer_count = text.count(footer_marker)
               footer_tags = len(re.findall(r'<footer class="footer">', text))
               if css_count != 1:
                   bad.append((str(path), 'css', css_count))
               if nav_script_count != 1:
                   bad.append((str(path), 'nav-script', nav_script_count))
+              if translate_css_count != 1:
+                  bad.append((str(path), 'translate-css', translate_css_count))
+              if translate_js_count != 1:
+                  bad.append((str(path), 'translate-js', translate_js_count))
               if 'QilyLean｜启力精益' in text or 'QilyLean 启力精益' in text:
                   bad.append((str(path), 'legacy-brand-separator'))
               if footer_tags:
@@ -220,9 +233,11 @@ jobs:
           grep -q 'QILY-CN-THESIS-NONINTERACTIVE-V1' cn-site/assets/qilylean-vi-v2.css
           grep -q 'QILY-CN-NAV-RAIL-V1' cn-site/assets/qilylean-vi-v2.css
           grep -q 'qily-primary-nav-scroll-rail' cn-site/assets/cn-nav-rail-v1.js
-          grep -q 'qily-cn-web-translate' cn-site/assets/cn-nav-rail-v1.js
-          grep -q 'fanyi.baidu.com/transpage' cn-site/assets/cn-nav-rail-v1.js
-          grep -q 'QILY-CN-BAIDU-TRANSLATE-V2' cn-site/assets/qilylean-vi-v2.css
+          ! grep -q 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'QilyLean CN Domestic Web Translation V2' cn-site/assets/cn-translate-baidu-v1.js
+          grep -q 'fanyi.baidu.com/transpage' cn-site/assets/cn-translate-baidu-v1.js
+          grep -q 'w.location.href=translatedUrl(code)' cn-site/assets/cn-translate-baidu-v1.js
+          grep -q 'QilyLean CN Domestic Translation UI V2' cn-site/assets/cn-translate-baidu-v1.css
           grep -q -- '--qily-cn-h3:clamp(21px,5.7vw,23px)' cn-site/assets/qilylean-vi-v2.css
           grep -q 'CN global-knowledge CTA: VI gold + explicit interaction feedback' cn-site/assets/qilylean-vi-v2.css
           grep -q 'html:root body .knowledge-bridge>a:hover' cn-site/assets/qilylean-vi-v2.css

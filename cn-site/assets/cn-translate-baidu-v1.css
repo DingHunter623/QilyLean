@@ -1,4 +1,4 @@
-/* QilyLean CN Domestic Translation UI V1 | 2026-09-18
+/* QilyLean CN Domestic Translation UI V2 | 2026-09-18
  * Visual authority: QilyLean international-site VI.
  */
 html:root body .header-inner{position:relative!important}
@@ -102,23 +102,17 @@ html:root body .qily-cn-language-more__search{
 }
 html:root body .qily-cn-language-more__grid{
   display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;max-height:min(42vh,330px)!important;
-  overflow-y:auto!important;overflow-x:hidden!important;padding-right:3px!important;scrollbar-width:thin!important;scrollbar-color:#caa15f #f3e6cf!important
+  overflow-y:auto!important;overflow-x:hidden!important;padding-right:3px!important;scrollbar-width:thin!important;scrollbar-color:#0f4b5a #dbe8e6!important
 }
-html:root body .qily-cn-language-more__item,
-html:root body .qily-cn-language-more__all{
+html:root body .qily-cn-language-more__item{
   min-width:0!important;min-height:40px!important;padding:8px 10px!important;border:1px solid #d5e4e3!important;border-radius:8px!important;
   background:#fff!important;color:#244c4e!important;-webkit-text-fill-color:#244c4e!important;font-size:13px!important;font-weight:800!important;
   line-height:1.35!important;text-align:left!important;cursor:pointer!important;box-sizing:border-box!important
 }
 html:root body .qily-cn-language-more__item:hover,
-html:root body .qily-cn-language-more__item:focus-visible,
-html:root body .qily-cn-language-more__all:hover,
-html:root body .qily-cn-language-more__all:focus-visible{
+html:root body .qily-cn-language-more__item:focus-visible:hover:focus-visible{
   border-color:#caa15f!important;background:#fffaf0!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
   outline:2px solid rgba(202,161,95,.28)!important;outline-offset:1px!important
-}
-html:root body .qily-cn-language-more__all{
-  width:100%!important;margin-top:10px!important;text-align:center!important;background:#fff7df!important;color:#7a5a18!important;-webkit-text-fill-color:#7a5a18!important
 }
 html:root body .qily-cn-language-more__note{
   margin:8px 0 0!important;color:#607574!important;-webkit-text-fill-color:#607574!important;font-size:12px!important;line-height:1.45!important;text-align:center!important

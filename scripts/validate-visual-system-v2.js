@@ -17,10 +17,10 @@ for(const token of ['--qily-container:1240px','--qily-copy:920px','--qily-radius
 for(const token of ['data-qily-vi-version','data-qily-vi-status','retireLegacyNavRail','normalizeHeroes','normalizeDock'])assert(formalRuntime.includes(token),`formal runtime missing ${token}`);
 
 /* qilylean.cn is a separately deployed production knowledge site with its own final VI authority. */
-const cnIndex=read('cn-site/index.html'),cnVi=read('cn-site/assets/qilylean-vi-v1.css');
+const cnIndex=read('cn-site/index.html'),cnVi=read('cn-site/assets/qilylean-vi-v2.css');
 assert(cnIndex.includes('<meta name="robots" content="index,follow">'),'CN production indexing contract missing');
-assert(cnIndex.includes('/assets/qilylean-vi-v1.css?v=20260916-cn-vi-v2'),'CN production VI CSS reference missing');
-for(const token of ['--qily-cn-axis:1180px','Boss-readable typography floor','QilyLean China Unified VI V1'])assert(cnVi.includes(token),`CN production VI missing ${token}`);
+assert(cnIndex.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v11'),'CN production VI CSS reference missing');
+for(const token of ['--qily-cn-axis:1180px','Boss-readable closure aligned','QilyLean China Unified VI V2'])assert(cnVi.includes(token),`CN production VI missing ${token}`);
 
 const htmlFiles=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean),ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);let pages=0,v2=0,contain=0,comp=0,dup=0,cnPages=0;
 for(const file of htmlFiles){const s=read(file);if(ownership(file)||!/<\/head>/i.test(s)||file===DDZ_FAST_PATH)continue;if(file.startsWith(CN_SITE_PREFIX)){cnPages++;continue;}pages++;const a=(s.match(/id=["']qilyVisualSystemV2["']/g)||[]),b=(s.match(/id=["']qilyResponsiveContainmentV1["']/g)||[]),c=(s.match(/id=["']qilyVisualComponentsV1["']/g)||[]);if(a.length===1)v2++;if(b.length===1)contain++;if(c.length===1)comp++;if(a.length>1||b.length>1||c.length>1)dup++;}

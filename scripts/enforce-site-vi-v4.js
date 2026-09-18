@@ -26,7 +26,7 @@ for(const token of ['__qilyViRuntimeV4','data-qily-vi-version','4.0','data-qily-
 for(const token of ['/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure','/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure','ensureFormalVi','data-qily-vi-loader'])must(bootstrap,token,'sitewide bootstrap');
 
 const htmlFiles=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
-const ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
+const ownership=f=>f.startsWith('cn-site/')||f.startsWith('global-knowledge/')||/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
 const DDZ='tools/pure-ddz/index.html';
 let governed=0,formalCovered=0,duplicateBootstraps=0;
 const missing=[];

@@ -38,9 +38,13 @@ jobs:
           test -f cn-site/notes/index.html
           test -f cn-site/assets/qilylean-vi-v2.css
           test -f cn-site/assets/cn-nav-rail-v1.js
-          grep -Fq 'qily-cn-web-translate' cn-site/assets/cn-nav-rail-v1.js
-          grep -Fq 'fanyi.baidu.com/transpage' cn-site/assets/cn-nav-rail-v1.js
-          grep -Fq 'QILY-CN-BAIDU-TRANSLATE-V2' cn-site/assets/qilylean-vi-v2.css
+          test -f cn-site/assets/cn-translate-baidu-v1.js
+          test -f cn-site/assets/cn-translate-baidu-v1.css
+          ! grep -Fq 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
+          grep -Fq 'QilyLean CN Domestic Web Translation V2' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'fanyi.baidu.com/transpage' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'w.location.href=translatedUrl(code)' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'QilyLean CN Domestic Translation UI V2' cn-site/assets/cn-translate-baidu-v1.css
           test -f cn-site/assets/practice.css
           test -f cn-site/assets/practice/smed-300t.svg
           test -f cn-site/assets/practice/mold-warehouse.svg
@@ -63,8 +67,10 @@ jobs:
           grep -Fq '精选 8 项制造实践' cn-site/index.html
           grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
-          grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-header-translate-v10' cn-site/index.html
-          grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-baidu-translate-v2' cn-site/index.html
+          grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v11' cn-site/index.html
+          grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v2' cn-site/index.html
+          grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-baidu-v2' cn-site/index.html
+          grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260918-baidu-v2' cn-site/index.html
           grep -Fq 'QILY-CN-NAV-RAIL-V1' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h1:clamp(30px,8.4vw,37px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h2:clamp(25px,6.8vw,30px)' cn-site/assets/qilylean-vi-v2.css
