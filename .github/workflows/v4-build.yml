@@ -42,7 +42,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          SOURCE='官网首图.png'
+          SOURCE='assets/qilylean-aircraft-hero-approved-20260826.png'
           EXPECTED_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4'
           test -f "$SOURCE"
           ACTUAL_BLOB="$(git hash-object "$SOURCE")"
@@ -58,31 +58,23 @@ jobs:
           node scripts/site-system-v4-validate.js
           node scripts/validate-translation-single-runtime-v1.js
 
-      - name: Materialize canonical homepage aircraft artwork
+      - name: Validate canonical homepage aircraft artwork
         shell: bash
         run: |
           set -euo pipefail
-          SOURCE='官网首图.png'
-          PNG='assets/qilylean-aircraft-hero-approved-20260826.png'
+          SOURCE='assets/qilylean-aircraft-hero-approved-20260826.png'
           EXPECTED_BLOB='9792c9a07a0304ebb925d4518b8e01fdb3d982b4'
           test -f "$SOURCE"
           ACTUAL_BLOB="$(git hash-object "$SOURCE")"
           test "$ACTUAL_BLOB" = "$EXPECTED_BLOB"
-          mkdir -p assets
-          if ! cmp -s "$SOURCE" "$PNG"; then
-            cp "$SOURCE" "$PNG"
-          fi
-          cmp -s "$SOURCE" "$PNG"
           node - <<'NODE'
           const fs=require('fs');
-          const source=fs.readFileSync('官网首图.png');
-          const png=fs.readFileSync('assets/qilylean-aircraft-hero-approved-20260826.png');
+          const source=fs.readFileSync('assets/qilylean-aircraft-hero-approved-20260826.png');
           const signature=Buffer.from([137,80,78,71,13,10,26,10]);
           if(!source.subarray(0,8).equals(signature)) throw new Error('Canonical homepage aircraft artwork is not PNG');
           const width=source.readUInt32BE(16),height=source.readUInt32BE(20);
           if(width<1200||height<675) throw new Error(`Canonical homepage aircraft resolution too small: ${width}x${height}`);
-          if(!source.equals(png)) throw new Error('Production PNG fallback is not byte-identical to 官网首图.png');
-          console.log(`Aircraft SSOT locked: PNG ${source.length} bytes; ${width}x${height}; retired WebP disabled.`);
+          console.log(`Aircraft SSOT locked: PNG ${source.length} bytes; ${width}x${height}; single canonical path enforced.`);
           NODE
 
       - name: Materialize approved aircraft brand hero
@@ -128,7 +120,6 @@ jobs:
         run: |
           set -euo pipefail
           paths=(
-            官网首图.png
             assets/qilylean-aircraft-hero-approved-20260826.png
             meta/build.json
             sitemap.xml
