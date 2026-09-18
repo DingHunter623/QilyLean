@@ -141,13 +141,18 @@ ${end}`;
 {
   const rel='capabilities/index.html';
   let text=read(rel);
-  text=replaceRegexRequired(
-    text,
-    /<div class="capability-ddz-joker small"><img src="\/qilylean\/c919-strategy-hero-v14\.png" alt="[^"]*"><b>小王 · C919<\/b><\/div>/,
-    '<div class="capability-ddz-joker small"><img src="/assets/qilylean-aircraft-hero-approved-20260826.png" alt="小王：QilyLean官网首图六大业务为主翼飞机模型"><b>小王</b></div>',
-    'capability small joker aircraft'
-  );
-  text=replaceRequired(text,'大王为个人头像 | 小王为C919六大业务飞机模型','大王为本人图像 | 小王为官网首图“六大业务为主翼”飞机模型','capability joker copy');
+  const currentAircraft='<div class="capability-ddz-joker small"><img src="/assets/qilylean-aircraft-hero-approved-20260826.png" alt="小王：QilyLean官网首图六大业务为主翼飞机模型"><b>小王</b></div>';
+  if(!text.includes(currentAircraft)){
+    text=replaceRegexRequired(
+      text,
+      /<div class="capability-ddz-joker small"><img src="\/qilylean\/c919-strategy-hero-v14\.png" alt="[^"]*"><b>小王 · C919<\/b><\/div>/,
+      currentAircraft,
+      'capability small joker aircraft'
+    );
+  }
+  if(text.includes('大王为个人头像 | 小王为C919六大业务飞机模型')){
+    text=replaceRequired(text,'大王为个人头像 | 小王为C919六大业务飞机模型','大王为本人图像 | 小王为官网首图“六大业务为主翼”飞机模型','capability joker copy');
+  }
   write(rel,text);
 }
 
