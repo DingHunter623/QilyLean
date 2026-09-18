@@ -65,7 +65,7 @@ jobs:
           test -f tools/pure-ddz/game/css/card-comfort-v122.css
           test -f tools/pure-ddz/game/css/ddz-site-page-v140.css
           test -f tools/pure-ddz/game/css/mobile-landscape-v153.css
-          test -f assets/qilylean-aircraft-hero-latest-q98.webp
+          test -f assets/qilylean-aircraft-hero-approved-20260826.png
           grep -q '/assets/tools/times26001-overview.svg?v=20260824-capability-visual-fix-v1' capabilities/index.html
           grep -q '/pure-ddz-capability-visual-v2.css?v=20260824-red-heart-ace-v8' capabilities/index.html
           grep -Fq '.capability-ddz-card.red strong{color:#d32f2f!important;-webkit-text-fill-color:#d32f2f!important}' pure-ddz-capability-visual-v2.css
