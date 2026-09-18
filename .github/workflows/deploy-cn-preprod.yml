@@ -47,10 +47,10 @@ jobs:
           test -f cn-site/assets/cn-translate-baidu-v1.js
           test -f cn-site/assets/cn-translate-baidu-v1.css
           ! grep -Fq 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
-          grep -Fq 'QilyLean CN Domestic Web Translation V2' cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq 'fanyi.baidu.com/transpage' cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq 'w.location.href=translatedUrl(code)' cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq 'QilyLean CN Domestic Translation UI V2' cn-site/assets/cn-translate-baidu-v1.css
+          grep -Fq 'QilyLean CN In-Page Translation V4' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq "data-qily-translation-engine','youdao'" cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'concurrency=3' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'QilyLean CN In-Page Translation UI V3' cn-site/assets/cn-translate-baidu-v1.css
           test -f cn-site/assets/portal.css
           test -f cn-site/assets/qilylean-aircraft-hero-cn-20260918.png
           test -f cn-site/assets/practice.css
@@ -193,6 +193,8 @@ jobs:
           practice = fetch(f'https://qilylean.cn/notes/?closure={sha}')
           practice_css = fetch(f'https://qilylean.cn/assets/practice.css?closure={sha}')
           vi = fetch(f'https://qilylean.cn/assets/qilylean-vi-v2.css?closure={sha}')
+          nav_runtime = fetch(f'https://qilylean.cn/assets/cn-nav-rail-v1.js?closure={sha}')
+          translate_runtime = fetch(f'https://qilylean.cn/assets/cn-translate-baidu-v1.js?closure={sha}')
           links = fetch(f'https://qilylean.com/links/?closure={sha}')
 
           required_about = [
@@ -221,14 +223,14 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' not in home:
               raise SystemExit('Production China home missing approved no-QR aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v11' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v13' not in home:
               raise SystemExit('Production China home missing unified mobile VI cache version.')
-          if '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v2' not in home:
+          if '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v4' not in home:
               raise SystemExit('Production China home missing international-style nav rail runtime.')
-          if '/assets/cn-translate-baidu-v1.css?v=20260918-baidu-v2' not in home:
-              raise SystemExit('Production China home missing Baidu translator stylesheet.')
-          if '/assets/cn-translate-baidu-v1.js?v=20260918-baidu-v2' not in home:
-              raise SystemExit('Production China home missing Baidu translator runtime.')
+          if '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v4-youdao' not in home:
+              raise SystemExit('Production China home missing in-page translator stylesheet.')
+          if '/assets/cn-translate-baidu-v1.js?v=20260918-translate-v4-youdao' not in home:
+              raise SystemExit('Production China home missing in-page translator runtime.')
           required_home_practice = [
               'PRACTICE & EVIDENCE｜实践与成果',
               '约14小时 → 7小时',
@@ -292,13 +294,15 @@ jobs:
 
           required_vi = [
               'QILY-CN-AIRCRAFT-CENTERED-V2',
-              'QILY-CN-NAV-RAIL-V1',
-              '--qily-cn-h1:clamp(30px,8.4vw,37px)',
-              '--qily-cn-h2:clamp(25px,6.8vw,30px)',
-              '--qily-cn-h3:clamp(21px,5.7vw,23px)',
+              'QILY-CN-NAV-RAIL-V4',
+              '--qily-cn-primary-nav-font-size:20px',
+              '--qily-cn-h1:clamp(30px,8.4vw,38px)',
+              '--qily-cn-h2:clamp(24px,6.8vw,29px)',
+              '--qily-cn-h3:clamp(19px,5.7vw,21px)',
+              'grid-template-areas:"brand nav translate"',
+              'grid-template-areas:"brand translate" "nav nav"',
               'object-position:50% 50%!important',
               'CN global-knowledge CTA: VI gold + explicit interaction feedback.',
-              'font-size:22px!important',
               'background:var(--qily-gold)!important',
               'html:root body .knowledge-bridge>a:active',
               'QILY-CN-THESIS-NONINTERACTIVE-V1',
@@ -307,6 +311,12 @@ jobs:
           for marker in required_vi:
               if marker not in vi:
                   raise SystemExit(f'Production China VI missing: {marker}')
+          for marker in ['QilyLean CN Primary Navigation Rail V4', 'qily-cn-nav-shell', 'ResizeObserver']:
+              if marker not in nav_runtime:
+                  raise SystemExit(f'Production China nav runtime missing: {marker}')
+          for marker in ['QilyLean CN In-Page Translation V4', "data-qily-translation-engine','youdao'", 'concurrency=3']:
+              if marker not in translate_runtime:
+                  raise SystemExit(f'Production China translation runtime missing: {marker}')
 
           required_links = [
               '与 QilyLean | 启力精益 制造业应用价值精选',
