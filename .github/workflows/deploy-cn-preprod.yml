@@ -206,7 +206,7 @@ jobs:
           if '本页目录' in about:
               raise SystemExit('Legacy 本页目录 label returned in production.')
 
-          if '访问全球知识资料 →' not in home:
+          if '进入 Global Knowledge →' not in home:
               raise SystemExit('Production China home missing global-knowledge CTA.')
           if 'QilyLean | <span>启力精益</span>' not in home:
               raise SystemExit('Production China home lost full brand in header.')
@@ -218,8 +218,10 @@ jobs:
               'PRACTICE & EVIDENCE｜实践与成果',
               '约14小时 → 7小时',
               '约180㎡ · 1200+副模具',
-              '展示经历，不包装成商业案例',
-              '查看8项实践与成果',
+              '知识之外，更重要的是方法如何在现场落地',
+              '精选 8 项制造实践',
+              '从实践中提炼可复用方法',
+              '查看全部实践成果',
           ]
           for marker in required_home_practice:
               if marker not in home:
@@ -227,6 +229,7 @@ jobs:
 
           required_practice = [
               '实践与成果：把改善结果还原成可复用的工程方法',
+              '从现场问题，到可复用的方法',
               '/assets/practice/automotive-lean.svg?v=20260918-practice-map-v1',
               '/assets/practice/smed-300t.svg?v=20260918-practice-v1',
               '/assets/practice/mold-warehouse.svg?v=20260918-practice-v1',
@@ -237,14 +240,14 @@ jobs:
               '/assets/practice/lean-improvement-evidence.svg?v=20260918-practice-v1',
               '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1',
               '/assets/practice.css?v=20260918-practice-visual-v2',
-              '颁奖照片可以展示，但必须说明它证明的是什么',
+              '6S改善机制：从稽核到激励的运行记录',
               '6S改善运行机制摘要',
               'award-metrics-grid',
               'award-flow',
-              '人物面部已处理',
-              '团队成果按组织推进口径呈现',
+              '机制说明：',
+              '跨部门共同推进，评审、风险确认与结果复盘构成完整闭环',
               '玻璃管保险丝切口与烧口工艺改善后的成品照片',
-              '当前 8 项代表实践均在本页',
+              '8项制造实践，从现场问题走向标准化沉淀',
               '汽车电子精益体系、VSM、单件流与SMED标准化',
               'Factory Layout、精益物流与扩展边界规划',
               '制造数据治理、IT/OT分层与系统验收',

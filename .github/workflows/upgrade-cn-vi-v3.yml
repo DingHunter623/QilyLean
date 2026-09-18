@@ -193,7 +193,7 @@ jobs:
               bad.append(('cn-site/about/index.html', 'legacy-english-only-brand-h1'))
 
           home = Path('cn-site/index.html').read_text(encoding='utf-8')
-          if '访问全球知识资料 →' not in home:
+          if '进入 Global Knowledge →' not in home:
               bad.append(('cn-site/index.html', 'global-knowledge-cta-label'))
 
           if thesis_panels < 1:
