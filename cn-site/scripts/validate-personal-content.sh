@@ -120,6 +120,13 @@ grep -Fq '实践与成果：把改善结果还原成可复用的工程方法' "$
 grep -Fq '展示经历，不包装成商业案例' "$INDEX_FILE" || { echo "ERROR: CN homepage practice boundary marker is missing."; exit 1; }
 grep -Fq '团队成果按组织推进口径呈现' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive team-result boundary is missing."; exit 1; }
 grep -Fq '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive must use the local award evidence asset."; exit 1; }
+grep -Fq '/assets/practice.css?v=20260918-practice-visual-v2' "$PRACTICE_PAGE" || { echo "ERROR: CN practice visual V2 cache marker is missing."; exit 1; }
+grep -Fq '6S改善运行机制摘要' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism summary heading is missing."; exit 1; }
+grep -Fq 'award-metrics-grid' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S 2x2 mechanism metric grid is missing."; exit 1; }
+grep -Fq 'award-flow' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S closure flow is missing."; exit 1; }
+grep -Fq 'QILY-CN-AWARD-MECHANISM-V2' "$PRACTICE_CSS" || { echo "ERROR: CN 6S award visualization V2 CSS contract is missing."; exit 1; }
+grep -Fq 'grid-template-columns:repeat(2,minmax(0,1fr));' "$PRACTICE_CSS" || { echo "ERROR: CN 6S metric grid must render as 2x2 on desktop."; exit 1; }
+grep -Fq 'white-space:nowrap;' "$PRACTICE_CSS" || { echo "ERROR: CN 6S metric values must avoid vertical wrapping."; exit 1; }
 
 grep -Fxq 'Allow: /' "$ROBOTS_FILE" || {
   echo "ERROR: CN robots.txt must allow crawling."
