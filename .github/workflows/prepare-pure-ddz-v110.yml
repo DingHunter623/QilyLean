@@ -32,7 +32,20 @@ jobs:
           curl -fL --retry 6 "$BASE/js/ai-expert.js" -o tools/pure-ddz/game/js/ai-expert.js
           curl -fL --retry 6 "$BASE/js/game.js" -o tools/pure-ddz/game/js/game.js
           curl -fL --retry 6 "$BASE/assets/pure-ddz/avatar-king.webp" -o tools/pure-ddz/game/assets/pure-ddz/avatar-king.webp
-          curl -fL --retry 6 "$BASE/assets/pure-ddz/airplane-joker.png" -o tools/pure-ddz/game/assets/pure-ddz/airplane-joker.png
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('tools/pure-ddz/game/js/card-theme.js')
+          s = p.read_text(encoding='utf-8')
+          helper = "  const assetUrl=file=>new URL(\`assets/pure-ddz/\${file}\`,runtimeRoot).href;"
+          if helper not in s:
+              raise SystemExit('Pure DDZ v1.1.0 asset helper changed; refuse unsafe vendor patch')
+          s = s.replace(helper, helper + "\\n  const siteAssetUrl=file=>new URL(\`/assets/\${file}\`,window.location.origin).href;")
+          old = "image:assetUrl('airplane-joker.png')"
+          if old not in s:
+              raise SystemExit('Pure DDZ v1.1.0 airplane joker reference missing; refuse unsafe vendor patch')
+          s = s.replace(old, "image:siteAssetUrl('qilylean-aircraft-hero-approved-20260826.png')")
+          p.write_text(s, encoding='utf-8')
+          PY
           node --check tools/pure-ddz/game/js/card-theme.js
           node --check tools/pure-ddz/game/js/ai-expert.js
           node --check tools/pure-ddz/game/js/game.js
@@ -40,9 +53,9 @@ jobs:
           grep -q "difficulty:'expert'" tools/pure-ddz/game/js/game.js
           grep -q 'PublicCardMemory' tools/pure-ddz/game/js/ai-expert.js
           grep -q 'avatar-king.webp' tools/pure-ddz/game/js/card-theme.js
-          grep -q 'airplane-joker.png' tools/pure-ddz/game/js/card-theme.js
+          grep -q 'qilylean-aircraft-hero-approved-20260826.png' tools/pure-ddz/game/js/card-theme.js
+          ! grep -q 'airplane-joker.png' tools/pure-ddz/game/js/card-theme.js
           test "$(head -c 4 tools/pure-ddz/game/assets/pure-ddz/avatar-king.webp)" = 'RIFF'
-          test "$(xxd -p -l 8 tools/pure-ddz/game/assets/pure-ddz/airplane-joker.png)" = '89504e470d0a1a0a'
 
       - name: Upgrade QilyLean direct game page and homepage entry
         run: |
