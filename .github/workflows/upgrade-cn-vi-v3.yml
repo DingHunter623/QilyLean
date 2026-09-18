@@ -35,9 +35,9 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260918-cn-vi-v12'
+          css_version = '20260918-cn-vi-v13'
           base_version = '20260917-cn-thesis-base-v5'
-          nav_script_version = '20260918-nav-rail-v3'
+          nav_script_version = '20260918-nav-rail-v4'
           translate_version = '20260918-translate-v3'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
@@ -154,7 +154,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-vi-v12'
+          css_marker = 'qilylean-vi-v2.css?v=20260918-cn-vi-v13'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = 'QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span><a href="https://beian.miit.gov.cn/'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
@@ -171,7 +171,7 @@ jobs:
                   continue
               documents += 1
               css_count = text.count(css_marker)
-              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v3')
+              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v4')
               translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v3')
               translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v3')
               footer_count = text.count(footer_marker)
@@ -231,12 +231,12 @@ jobs:
           grep -q "qilylean-vi-v1.css?v=20260917-cn-thesis-base-v5" cn-site/assets/qilylean-vi-v2.css
           grep -q 'CN page-thesis module: descriptive, not clickable' cn-site/assets/qilylean-vi-v2.css
           grep -q 'QILY-CN-THESIS-NONINTERACTIVE-V1' cn-site/assets/qilylean-vi-v2.css
-          grep -q 'QILY-CN-NAV-RAIL-V1' cn-site/assets/qilylean-vi-v2.css
+          grep -q 'QILY-CN-NAV-RAIL-V4' cn-site/assets/qilylean-vi-v2.css
           grep -q 'qily-primary-nav-scroll-rail' cn-site/assets/cn-nav-rail-v1.js
           grep -q 'setFromPointer' cn-site/assets/cn-nav-rail-v1.js
           grep -q 'installNavDrag' cn-site/assets/cn-nav-rail-v1.js
-          grep -q -- '--qily-nav-scroll-track:#b9d9d4' cn-site/assets/qilylean-vi-v2.css
-          grep -q -- '--qily-nav-scroll-thumb:#0f4b5a' cn-site/assets/qilylean-vi-v2.css
+          grep -q -- '--qily-nav-scroll-track:#f3e6cf' cn-site/assets/qilylean-vi-v2.css
+          grep -q -- '--qily-nav-scroll-thumb:#caa15f' cn-site/assets/qilylean-vi-v2.css
           ! grep -q 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
           grep -q 'QilyLean CN In-Page Translation V3' cn-site/assets/cn-translate-baidu-v1.js
           grep -q 'API_BASES' cn-site/assets/cn-translate-baidu-v1.js
