@@ -30,8 +30,16 @@ must(ddzLayout,'--ddz-game-max:var(--qily-content-axis,1560px)','DDZ site conten
 must(career,'function stickyHeaderOffset()','Career anchor offset');
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32');must(mat,'20260829-dock-functional-public-v134','Contact V134 owner');must(mat,'20260906-authority-v58-mobile-swipe-fixed-bottom','Dock V58 owner');must(mat,'20260901-primary-navigation-native-scroll-v8','Header native-scroll owner');must(mat,'20260831-r11-semantics-v17-native-range','Semantics V17 owner');must(mat,'20260830-r11-semantics-v14-visual-v3-vi-teal','VI rail owner');must(mat,'20260901-google-translate-single-runtime-v16','Safe translation owner');must(mat,'20260901-google-translate-mobile-ui-v16','Translation public UI owner');must(mat,'20260831-unified-components-v29-native-range','Visual components owner');must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Shell V11 owner');must(mat,'20260831-project-grade-readability-v3','Project grade owner');forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure owner');
 
-/* cn-site is a noindex/nofollow mainland preproduction surface. It is intentionally outside the V32 production materializer, but must carry formal VI v4 directly. */
-const cn=read('cn-site/index.html');must(cn,'/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure','CN preproduction formal VI CSS');must(cn,'/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure','CN preproduction formal VI runtime');must(cn,'name="robots" content="noindex,nofollow,noarchive"','CN preproduction indexing lock');
+/* qilylean.cn is an independently governed mainland production surface.
+ * It does not inherit the international Google/runtime shell; it must carry the CN VI, nav shell and in-page translator directly.
+ */
+const cn=read('cn-site/index.html');
+must(cn,'/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v13','CN production VI V13');
+must(cn,'/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v4','CN production nav rail V4');
+must(cn,'/assets/cn-translate-baidu-v1.css?v=20260918-translate-v3','CN production translation UI V3');
+must(cn,'/assets/cn-translate-baidu-v1.js?v=20260918-translate-v3','CN production translation runtime V3');
+must(cn,'name="robots" content="index,follow"','CN production indexing policy');
+forbid(cn,'noindex,nofollow','CN retired preproduction indexing lock');
 
 const legacyTranslation=['site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-translation-progress-v1.css','site-global-language-v1.css','site-global-language-v3.js'];
 let pages=0,navPages=0,contactPages=0,owners=0,preprod=0,fail=[];
@@ -56,4 +64,4 @@ for(const file of files()){
 }
 if(pages<460||navPages<460||contactPages<470)fail.push(`coverage pages=${pages} nav=${navPages} contact=${contactPages}`);
 if(fail.length)throw new Error(`V34 sitewide remediation failed:\n${fail.slice(0,40).join('\n')}`);
-console.log(`PASS: V34 production remediation covers ${pages} pages; ${owners} ownership artifacts and ${preprod} noindex preproduction page(s) are correctly separated; standard pages use V32, CN preproduction uses formal VI v4, and DDZ V155/V164 retains its isolated fast shell.`);
+console.log(`PASS: V34 production remediation covers ${pages} international pages; ${owners} ownership artifacts and ${preprod} independently governed CN page(s) are separated; international pages use V32, CN uses VI V13/Nav V4/Translation V3, and DDZ V155/V164 retains its isolated fast shell.`);
