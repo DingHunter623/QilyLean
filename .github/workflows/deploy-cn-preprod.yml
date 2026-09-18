@@ -219,7 +219,7 @@ jobs:
               '约14小时 → 7小时',
               '约180㎡ · 1200+副模具',
               '展示经历，不包装成商业案例',
-              '查看实践与成果',
+              '查看8项实践与成果',
           ]
           for marker in required_home_practice:
               if marker not in home:
