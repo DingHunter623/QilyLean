@@ -478,3 +478,40 @@ html:root body .cn-aircraft-figure figcaption{
   html:root body .cn-aircraft-showcase{padding:8px var(--qily-gutter,8px)!important}
   html:root body .cn-aircraft-figure{border-radius:10px!important}
 }
+
+
+/* QILY-CN-ROUTE-FEEDBACK-V1 | 2026-09-18 */
+html:root body a[href]:is(.portal-card,.article-link,.btn),
+html:root body .practice-links>a[href],
+html:root body .subnav>a[href]{
+  cursor:pointer!important;
+  transition:transform .15s ease,border-color .15s ease,background-color .15s ease,box-shadow .15s ease,color .15s ease!important;
+}
+@media(hover:hover) and (pointer:fine){
+  html:root body a[href]:is(.portal-card,.article-link,.btn):hover,
+  html:root body .practice-links>a[href]:hover,
+  html:root body .subnav>a[href]:hover{
+    transform:translateY(-2px)!important;
+    border-color:var(--qily-gold,#caa15f)!important;
+    box-shadow:0 12px 28px rgba(15,75,90,.16)!important;
+  }
+}
+html:root body a[href]:is(.portal-card,.article-link,.btn):focus-visible,
+html:root body .practice-links>a[href]:focus-visible,
+html:root body .subnav>a[href]:focus-visible{
+  border-color:var(--qily-gold,#caa15f)!important;
+  outline:3px solid rgba(202,161,95,.30)!important;
+  outline-offset:2px!important;
+  box-shadow:0 12px 28px rgba(15,75,90,.16)!important;
+}
+html:root body a[href]:is(.portal-card,.article-link,.btn):active,
+html:root body .practice-links>a[href]:active,
+html:root body .subnav>a[href]:active{
+  transform:translateY(1px) scale(.985)!important;
+  box-shadow:0 3px 8px rgba(15,75,90,.13)!important;
+}
+@media(prefers-reduced-motion:reduce){
+  html:root body a[href]:is(.portal-card,.article-link,.btn),
+  html:root body .practice-links>a[href],
+  html:root body .subnav>a[href]{transition:none!important}
+}
