@@ -248,8 +248,11 @@ jobs:
           grep -q -- '--qily-cn-primary-nav-font-size:20px' cn-site/assets/qilylean-vi-v2.css
           grep -q 'grid-template-areas:"brand nav translate"' cn-site/assets/qilylean-vi-v2.css
           grep -q 'grid-template-areas:"brand translate" "nav nav"' cn-site/assets/qilylean-vi-v2.css
-          grep -q 'setFromPointer' cn-site/assets/cn-nav-rail-v1.js
-          grep -q 'installNavDrag' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'mousedown' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'mousemove' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'touchstart' cn-site/assets/cn-nav-rail-v1.js
+          grep -q 'installNavMouseDrag' cn-site/assets/cn-nav-rail-v1.js
+          ! grep -q 'pointerdown' cn-site/assets/cn-nav-rail-v1.js
           grep -q -- '--qily-nav-scroll-track:#b9d9d4' cn-site/assets/qilylean-vi-v2.css
           grep -q -- '--qily-nav-scroll-thumb:#0f4b5a' cn-site/assets/qilylean-vi-v2.css
           ! grep -q 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
