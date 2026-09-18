@@ -57,27 +57,29 @@ const cnTranslateCss=read('cn-site/assets/cn-translate-baidu-v1.css');
 [
   'QILY-CN-NAV-RAIL-V1',
   'QILY-CN-ROUTE-FEEDBACK-V1',
-  '--qily-nav-scroll-track:#dbe8e6',
+  '--qily-nav-scroll-track:#b9d9d4',
   '--qily-nav-scroll-thumb:#0f4b5a',
   '--qily-cn-h1:clamp(30px,8.4vw,37px)',
-  '--qily-cn-h2:clamp(25px,6.8vw,30px)',
-  '--qily-cn-h3:clamp(21px,5.7vw,23px)',
+  '--qily-cn-h2:clamp(24px,6.8vw,29px)',
+  '--qily-cn-h3:clamp(19px,5.7vw,21px)',
   'scrollbar-width:none!important',
   '::-webkit-slider-runnable-track',
   '::-webkit-slider-thumb'
 ].forEach(m=>assert(cnCss.includes(m),'CN unified VI missing: '+m));
 assert(cnRail.includes("rail.type='range'"), 'CN nav rail must use the international range control.');
 assert(cnRail.includes("qily-primary-nav-scroll-rail"), 'CN nav rail runtime class is missing.');
+assert(cnRail.includes('setFromPointer'), 'CN nav rail pointer drag is missing.');
+assert(cnRail.includes('installNavDrag'), 'CN primary nav direct drag is missing.');
 assert(!cnRail.includes('data-qily-translation-provider'), 'CN nav rail must remain translation-neutral.');
-assert(cnTranslate.includes('QilyLean CN Domestic Web Translation V2'), 'CN Baidu translator V2 runtime is missing.');
+assert(cnTranslate.includes('QilyLean CN In-Page Translation V3'), 'CN Baidu translator V2 runtime is missing.');
 assert(cnTranslate.includes("data-qily-translation-provider','baidu'"), 'CN translator must declare Baidu as provider.');
-assert(cnTranslate.includes('fanyi.baidu.com/transpage'), 'CN translator must use Baidu whole-page translation.');
+assert(cnTranslate.includes('API_BASES'), 'CN translator must use Baidu whole-page translation.');
 assert(cnTranslate.includes("addOption(select,'zh','中文简体')"), 'CN translator Simplified Chinese option is missing.');
 assert(cnTranslate.includes("addOption(select,'cht','中文繁体')"), 'CN translator Traditional Chinese option is missing.');
 assert(cnTranslate.includes("addOption(select,'en','English')"), 'CN translator English option is missing.');
 assert(cnTranslate.includes("addOption(select,MORE_VALUE,'其他')"), 'CN translator More option is missing.');
-assert(cnTranslate.includes('w.location.href=translatedUrl(code)'), 'CN translator must stay in the current tab.');
-assert(cnTranslateCss.includes('QilyLean CN Domestic Translation UI V2'), 'CN translator V2 UI is missing.');
+assert(cnTranslate.includes('target_language:target'), 'CN translator must stay in the current tab.');
+assert(cnTranslateCss.includes('QilyLean CN In-Page Translation UI V3'), 'CN translator V2 UI is missing.');
 
 const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*.html')])].filter(rel=>{
   if(/googleb7a|baidu_verify/.test(rel)) return false;
