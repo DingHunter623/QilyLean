@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: qilylean-cn-production-v9
+  group: qilylean-cn-production-v10
   cancel-in-progress: true
 
 jobs:
@@ -108,7 +108,7 @@ jobs:
           chmod 600 ~/.ssh/qilylean_cn
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
-      - name: Upload release and operations scripts
+      - name: Stream release and operations scripts over SSH
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -117,11 +117,16 @@ jobs:
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes)
-          scp -O -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn /tmp/qilylean-cn-site.tar.gz "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean-cn-site.tar.gz"
-          scp -O -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/server-bootstrap.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/bootstrap-qilylean-cn.sh"
-          scp -O -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/deploy-release.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/deploy-qilylean-cn.sh"
-          scp -O -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/scripts/activate-public-http.sh "$USER_NAME@$CN_PREPROD_HOST:/tmp/activate-qilylean-cn-http.sh"
-          scp -O -C "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/nginx/qilylean.cn.conf "$USER_NAME@$CN_PREPROD_HOST:/tmp/qilylean.cn.conf"
+          STAGE="$(mktemp -d)"
+          trap 'rm -rf "$STAGE"' EXIT
+          cp /tmp/qilylean-cn-site.tar.gz "$STAGE/qilylean-cn-site.tar.gz"
+          cp cn-site/scripts/server-bootstrap.sh "$STAGE/bootstrap-qilylean-cn.sh"
+          cp cn-site/scripts/deploy-release.sh "$STAGE/deploy-qilylean-cn.sh"
+          cp cn-site/scripts/activate-public-http.sh "$STAGE/activate-qilylean-cn-http.sh"
+          cp cn-site/nginx/qilylean.cn.conf "$STAGE/qilylean.cn.conf"
+          tar -C "$STAGE" -czf - . | ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'tar -xzf - -C /tmp'
+          ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+            'test -s /tmp/qilylean-cn-site.tar.gz && test -s /tmp/deploy-qilylean-cn.sh && echo "SSH stream upload complete."'
 
       - name: Bootstrap server when required
         shell: bash
