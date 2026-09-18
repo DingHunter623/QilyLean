@@ -252,6 +252,30 @@ html:root body .nav>a[href="/knowledge/"]::before{
   color:currentColor!important;
   -webkit-text-fill-color:currentColor!important;
 }
+
+/* QILY-CN-TRANSLATED-NAV-V1
+ * Pseudo labels are a zh-CN-only visual normalization. Once the page is translated,
+ * show the real translated DOM text so no navigation item remains Chinese.
+ */
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/lean/"],
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/ie/"],
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/standardization/"],
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/factory/"],
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/digital/"],
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/methods/"],
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/knowledge/"]{
+  font-size:var(--qily-cn-primary-nav-font-size)!important;
+}
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/lean/"]::before,
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/ie/"]::before,
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/standardization/"]::before,
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/factory/"]::before,
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/digital/"]::before,
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/methods/"]::before,
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/knowledge/"]::before{
+  content:none!important;
+  display:none!important;
+}
 html:root body :is(.nav a,.toc :is(a,span)){word-break:keep-all!important;overflow-wrap:normal!important}
 
 /* QILY-CN-NAV-RAIL-V4 | 2026-09-18
