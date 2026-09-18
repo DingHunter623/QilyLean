@@ -26,6 +26,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Materialize CN practice evidence used by bridge validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          chmod +x cn-site/scripts/materialize-practice-assets.sh
+          cn-site/scripts/materialize-practice-assets.sh
+
       - name: Validate non-commercial knowledge isolation
         run: node scripts/validate-global-knowledge-isolation.js
       - name: Validate mainland personal-site bridge
