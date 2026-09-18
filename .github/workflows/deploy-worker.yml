@@ -142,6 +142,12 @@ jobs:
             if (!healthData.youdao_available && !healthData.qwen_available && !healthData.openai_available) {
               throw new Error('no translation backend is provisioned');
             }
+            console.log('Translation health:', JSON.stringify({
+              preferred: healthData.translation_provider,
+              youdao_available: healthData.youdao_available,
+              qwen_available: healthData.qwen_available,
+              openai_available: healthData.openai_available
+            }));
           });
           await withRetry(base + ' translation', async () => {
             const translation = await fetch(base + '/translate', {
@@ -175,6 +181,7 @@ jobs:
             if (data.translations[1] !== 'QilyLean｜启力精益') {
               throw new Error('protected brand token changed');
             }
+            console.log('Translation smoke provider:', String(data.provider || 'unknown'));
           }, 3, 3000);
           await withRetry(base + ' chat', async () => {
             const chat = await fetch(base + '/chat', {
