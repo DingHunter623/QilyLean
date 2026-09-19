@@ -108,7 +108,7 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
 [[ -f "$GOOGLE_VERIFY_FILE" ]] || { echo "ERROR: Google verification file is missing."; exit 1; }
 [[ -f "$BAIDU_VERIFY_FILE" ]] || { echo "ERROR: Baidu verification file is missing."; exit 1; }
 [[ -f "$INDEXNOW_FILE" ]] || { echo "ERROR: CN IndexNow key file is missing."; exit 1; }
-[[ -f "$CN_AIRCRAFT_FILE" ]] || { echo "ERROR: CN approved no-QR aircraft asset is missing."; exit 1; }
+[[ -f "$CN_AIRCRAFT_FILE" ]] || { echo "ERROR: CN approved aircraft asset is missing."; exit 1; }
 [[ -f "$CN_VI_FILE" ]] || { echo "ERROR: CN unified VI stylesheet is missing."; exit 1; }
 [[ -f "$CN_NAV_RAIL_JS" ]] || { echo "ERROR: CN primary-nav rail runtime is missing."; exit 1; }
 [[ -f "$CN_TRANSLATE_JS" ]] || { echo "ERROR: CN in-page translation runtime is missing."; exit 1; }
@@ -125,7 +125,7 @@ grep -Fq '玻璃管保险丝改善后成品照片' "$PRACTICE_FUSE" || { echo "E
 [[ -f "$PRACTICE_DIGITAL" ]] || { echo "ERROR: CN digital-factory practice visual is missing."; exit 1; }
 [[ -f "$PRACTICE_VISUAL" ]] || { echo "ERROR: CN visual-management practice visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
-grep -Fq '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260918-cn-aircraft-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage approved no-QR aircraft visual is missing."; exit 1; }
+grep -Fq '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260919-cn-aircraft-v2' "$INDEX_FILE" || { echo "ERROR: CN homepage approved CN aircraft visual is missing."; exit 1; }
 grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v17' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
 grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
 grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao' "$INDEX_FILE" || { echo "ERROR: CN homepage translator stylesheet is missing."; exit 1; }
