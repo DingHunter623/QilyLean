@@ -10,6 +10,8 @@ on:
     paths:
       - 'cn-site/**'
       - '.github/workflows/deploy-cn-preprod.yml'
+      - 'scripts/cn-search-discovery.py'
+      - 'scripts/test-cn-search-discovery.py'
 
 permissions:
   contents: read
@@ -20,11 +22,14 @@ concurrency:
 
 jobs:
   validate-and-deploy:
-    timeout-minutes: 12
+    timeout-minutes: 18
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Test CN search submission failure handling
+        run: python3 scripts/test-cn-search-discovery.py
 
       - name: Materialize approved CN practice evidence assets
         shell: bash
@@ -392,172 +397,16 @@ jobs:
           PY
           rm -f "$tmp"
 
-      - name: Verify Baiduspider PC and mobile reachability
-        shell: bash
-        run: |
-          set -euo pipefail
-          uas=(
-            'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)'
-            'Mozilla/5.0 (Linux; Android 12; Mobile; compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)'
-          )
-          urls=(
-            'https://qilylean.cn/'
-            'https://qilylean.cn/ie/'
-            'https://qilylean.cn/lean/'
-            'https://qilylean.cn/knowledge/'
-            'https://qilylean.cn/robots.txt'
-            'https://qilylean.cn/sitemap.xml'
-          )
-          for ua in "${uas[@]}"; do
-            for url in "${urls[@]}"; do
-              code=''
-              for attempt in {1..6}; do
-                code="$(curl --location --silent --show-error \
-                  --max-time 20 \
-                  --connect-timeout 8 \
-                  --user-agent "$ua" \
-                  --header 'Cache-Control: no-cache' \
-                  --output /tmp/qily-baidu-probe-body \
-                  --dump-header /tmp/qily-baidu-probe-headers \
-                  --write-out '%{http_code}' \
-                  "$url?baidu_probe=$GITHUB_SHA-$attempt" || true)"
-                if [ "$code" = "200" ]; then
-                  break
-                fi
-                sleep 5
-              done
-              if [ "$code" != "200" ]; then
-                echo "Baiduspider reachability failed: $url returned HTTP ${code:-transport-error}" >&2
-                exit 1
-              fi
-              if grep -Eiq '^X-Robots-Tag:.*noindex' /tmp/qily-baidu-probe-headers; then
-                echo "Baiduspider indexing blocked by X-Robots-Tag on $url" >&2
-                exit 1
-              fi
-              echo "PASS: Baiduspider can fetch $url"
-            done
-          done
-
-          robots_body="$(curl --location --fail --silent --show-error \
-            --max-time 20 \
-            --user-agent 'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)' \
-            "https://qilylean.cn/robots.txt?baidu_probe=$GITHUB_SHA")"
-          grep -Fxq 'Allow: /' <<<"$robots_body"
-          grep -Fq 'Sitemap: https://qilylean.cn/sitemap.xml' <<<"$robots_body"
-
-          sitemap_body="$(curl --location --fail --silent --show-error \
-            --max-time 20 \
-            --user-agent 'Mozilla/5.0 (compatible; Baiduspider/2.0; +http://www.baidu.com/search/spider.html)' \
-            "https://qilylean.cn/sitemap.xml?baidu_probe=$GITHUB_SHA")"
-          for required_url in '/' '/ie/' '/lean/' '/knowledge/'; do
-            grep -Fq "<loc>https://qilylean.cn${required_url}</loc>" <<<"$sitemap_body"
-          done
-          echo 'PASS: QilyLean CN is crawlable by Baiduspider PC/mobile user agents and discovery files are consistent.'
-
-      - name: Verify search-engine ownership files are public
-        shell: bash
-        run: |
-          set -euo pipefail
-          verify_exact() {
-            local url="$1"
-            local expected="$2"
-            local label="$3"
-            for attempt in {1..18}; do
-              body="$(curl --location --fail --silent --show-error "$url?deploy=$GITHUB_SHA-$attempt" || true)"
-              if [ "$body" = "$expected" ]; then
-                echo "$label verification file is public."
-                return 0
-              fi
-              sleep 5
-            done
-            echo "$label verification file was not reachable with the expected content." >&2
-            return 1
-          }
-          verify_exact \
-            'https://qilylean.cn/googleb7a991efbed3aa8a.html' \
-            'google-site-verification: googleb7a991efbed3aa8a.html' \
-            'Google Search Console'
-          verify_exact \
-            'https://qilylean.cn/baidu_verify_codeva-Bp0VGliFcp.html' \
-            '8bdf47bc085187ab7717a549ec5b7904' \
-            'Baidu Search Resource Platform'
-
-      - name: Verify CN IndexNow key is public
-        shell: bash
-        env:
-          INDEXNOW_KEY: b47ed759da519bd90586a7877122d7be
-        run: |
-          set -euo pipefail
-          for attempt in {1..30}; do
-            body="$(curl --location --fail --silent --show-error "https://qilylean.cn/$INDEXNOW_KEY.txt?deploy=$GITHUB_SHA-$attempt" || true)"
-            if [ "$body" = "$INDEXNOW_KEY" ]; then
-              echo "QilyLean CN IndexNow key is public."
-              exit 0
-            fi
-            sleep 10
-          done
-          echo "QilyLean CN IndexNow key was not reachable in time."
-          exit 1
-
-      - name: Submit QilyLean CN sitemap URLs through IndexNow
-        shell: bash
-        env:
-          INDEXNOW_KEY: b47ed759da519bd90586a7877122d7be
-        run: |
-          set -euo pipefail
-          python3 - <<'PY'
-          import json
-          import os
-          import urllib.request
-          import xml.etree.ElementTree as ET
-
-          ns = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
-          root = ET.parse('cn-site/sitemap.xml').getroot()
-          urls = []
-          seen = set()
-          for node in root.findall('sm:url/sm:loc', ns):
-              url = (node.text or '').strip()
-              if url.startswith('https://qilylean.cn/') and url not in seen:
-                  urls.append(url)
-                  seen.add(url)
-
-          payload = json.dumps({
-              'host': 'qilylean.cn',
-              'key': os.environ['INDEXNOW_KEY'],
-              'keyLocation': f"https://qilylean.cn/{os.environ['INDEXNOW_KEY']}.txt",
-              'urlList': urls,
-          }).encode('utf-8')
-          request = urllib.request.Request(
-              'https://api.indexnow.org/indexnow',
-              data=payload,
-              headers={'Content-Type': 'application/json; charset=utf-8'},
-              method='POST',
-          )
-          with urllib.request.urlopen(request, timeout=30) as response:
-              print(f"IndexNow accepted {len(urls)} QilyLean CN URLs with HTTP {response.status}.")
-          PY
-
-      - name: Submit QilyLean CN URLs to Baidu when configured
-        shell: bash
+      - name: Audit CN search readiness and record submission receipts
         env:
           BAIDU_CN_PUSH_TOKEN: ${{ secrets.BAIDU_CN_PUSH_TOKEN }}
-        run: |
-          set -euo pipefail
-          if [ -z "$BAIDU_CN_PUSH_TOKEN" ]; then
-            echo 'BAIDU_CN_PUSH_TOKEN is not configured; Baidu API submission is prepared but skipped.'
-            exit 0
-          fi
-          python3 - <<'PY' > /tmp/qilylean-cn-baidu-urls.txt
-          import xml.etree.ElementTree as ET
-          ns = {'sm': 'http://www.sitemaps.org/schemas/sitemap/0.9'}
-          root = ET.parse('cn-site/sitemap.xml').getroot()
-          for node in root.findall('sm:url/sm:loc', ns):
-              url = (node.text or '').strip()
-              if url.startswith('https://qilylean.cn/'):
-                  print(url)
-          PY
-          response="$(curl --fail-with-body --retry 2 --retry-delay 3 -sS \
-            -H 'Content-Type: text/plain' \
-            --data-binary @/tmp/qilylean-cn-baidu-urls.txt \
-            "https://data.zz.baidu.com/urls?site=https://qilylean.cn&token=${BAIDU_CN_PUSH_TOKEN}")"
-          echo "Baidu CN submission response: ${response}"
+        run: python3 scripts/cn-search-discovery.py --submit both --output-dir "$RUNNER_TEMP/cn-search-discovery"
+
+      - name: Preserve CN search audit and submission receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-search-discovery-${{ github.run_id }}
+          path: ${{ runner.temp }}/cn-search-discovery/
+          if-no-files-found: warn
+          retention-days: 30
