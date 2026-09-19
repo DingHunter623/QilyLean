@@ -55,7 +55,7 @@ jobs:
           grep -Fq 'concurrency=3' cn-site/assets/cn-translate-baidu-v1.js
           grep -Fq 'QilyLean CN In-Page Translation UI V3' cn-site/assets/cn-translate-baidu-v1.css
           test -f cn-site/assets/portal.css
-          test -f cn-site/assets/qilylean-aircraft-hero-cn-20260918.png
+          test -f cn-site/assets/qilylean-aircraft-hero-cn-v2-20260919.png
           test -f cn-site/assets/practice.css
           test -f cn-site/assets/practice/smed-300t.svg
           test -f cn-site/assets/practice/mold-warehouse.svg
@@ -254,7 +254,7 @@ jobs:
               raise SystemExit('Production China home missing global-knowledge CTA.')
           if 'QilyLean | <span>启力精益</span>' not in home:
               raise SystemExit('Production China home lost full brand in header.')
-          if '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260919-cn-aircraft-v2' not in home:
+          if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
           if '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v17' not in home:
               raise SystemExit('Production China home missing unified mobile VI cache version.')
