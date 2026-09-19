@@ -134,11 +134,13 @@ jobs:
             test -s /tmp/qilylean.cn.conf
             tar -xOf /tmp/qilylean-cn-site.tar.gz ./index.html | grep -Fq "/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v17"
             tar -xOf /tmp/qilylean-cn-site.tar.gz ./index.html | grep -Fq "/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao"
+            tar -xOf /tmp/qilylean-cn-site.tar.gz ./index.html | grep -Fq "/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3"
+            tar -tzf /tmp/qilylean-cn-site.tar.gz | grep -Fxq "./assets/qilylean-aircraft-hero-cn-v2-20260919.png"
             tar -xOf /tmp/qilylean-cn-site.tar.gz ./assets/qilylean-vi-v2.css | grep -Fq "QILY-CN-STICKY-HEADER-V1"
             echo ready
           ' || true)"
           if [ "$REMOTE_READY" = "ready" ]; then
-            echo "Reusing staged V17/translate-v5 release bundle already present on mainland server."
+            echo "Reusing staged release bundle with latest 20260919 CN aircraft visual."
           else
             tar -C "$STAGE" -czf - \
               qilylean-cn-site.tar.gz \
