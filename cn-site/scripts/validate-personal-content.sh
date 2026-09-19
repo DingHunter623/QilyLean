@@ -8,7 +8,7 @@ SITEMAP_FILE="$ROOT_DIR/sitemap.xml"
 GOOGLE_VERIFY_FILE="$ROOT_DIR/googleb7a991efbed3aa8a.html"
 BAIDU_VERIFY_FILE="$ROOT_DIR/baidu_verify_codeva-Bp0VGliFcp.html"
 INDEXNOW_FILE="$ROOT_DIR/b47ed759da519bd90586a7877122d7be.txt"
-CN_AIRCRAFT_FILE="$ROOT_DIR/assets/qilylean-aircraft-hero-cn-20260918.png"
+CN_AIRCRAFT_FILE="$ROOT_DIR/assets/qilylean-aircraft-hero-cn-v2-20260919.png"
 CN_VI_FILE="$ROOT_DIR/assets/qilylean-vi-v2.css"
 CN_NAV_RAIL_JS="$ROOT_DIR/assets/cn-nav-rail-v1.js"
 CN_TRANSLATE_JS="$ROOT_DIR/assets/cn-translate-baidu-v1.js"
@@ -125,7 +125,7 @@ grep -Fq '玻璃管保险丝改善后成品照片' "$PRACTICE_FUSE" || { echo "E
 [[ -f "$PRACTICE_DIGITAL" ]] || { echo "ERROR: CN digital-factory practice visual is missing."; exit 1; }
 [[ -f "$PRACTICE_VISUAL" ]] || { echo "ERROR: CN visual-management practice visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
-grep -Fq '/assets/qilylean-aircraft-hero-cn-20260918.png?v=20260919-cn-aircraft-v2' "$INDEX_FILE" || { echo "ERROR: CN homepage approved CN aircraft visual is missing."; exit 1; }
+grep -Fq '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' "$INDEX_FILE" || { echo "ERROR: CN homepage approved CN aircraft visual is missing."; exit 1; }
 grep -Fq '/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v17' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
 grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
 grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao' "$INDEX_FILE" || { echo "ERROR: CN homepage translator stylesheet is missing."; exit 1; }
