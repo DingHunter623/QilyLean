@@ -1,0 +1,56 @@
+name: QilyLean CN search discovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      submission:
+        description: 'audit only (none), IndexNow, Baidu, or both; receipts do not imply indexing'
+        type: choice
+        default: none
+        options: [none, indexnow, baidu, both]
+      baidu_start_index:
+        description: 'Resume at next_start_index from a prior receipt after checking quota and the URL list'
+        type: number
+        default: 0
+  pull_request:
+    paths:
+      - 'scripts/cn-search-discovery.py'
+      - 'scripts/test-cn-search-discovery.py'
+      - '.github/workflows/cn-search-discovery.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/cn-search-discovery.py'
+      - 'scripts/test-cn-search-discovery.py'
+      - '.github/workflows/cn-search-discovery.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cn-search-discovery-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test submission failure and quota handling
+        run: python3 scripts/test-cn-search-discovery.py
+      - name: Audit CN URLs and optionally submit
+        if: github.event_name != 'pull_request'
+        env:
+          SUBMISSION: ${{ inputs.submission || 'none' }}
+          BAIDU_START_INDEX: ${{ inputs.baidu_start_index || 0 }}
+          BAIDU_CN_PUSH_TOKEN: ${{ secrets.BAIDU_CN_PUSH_TOKEN }}
+        run: python3 scripts/cn-search-discovery.py --submit "$SUBMISSION" --baidu-start-index "$BAIDU_START_INDEX" --output-dir "$RUNNER_TEMP/cn-search-discovery"
+      - name: Preserve audit and submission receipts
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cn-search-discovery-${{ github.run_id }}
+          path: ${{ runner.temp }}/cn-search-discovery/
+          if-no-files-found: warn
+          retention-days: 30
