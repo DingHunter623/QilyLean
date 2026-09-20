@@ -51,7 +51,7 @@ for(const rel of gkPages){
   const html=read(rel);
   assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260920-gk-header-v3'), rel+' must load shared Global Knowledge VI after its local skin.');
   assert(/<header class="top">[\s\S]*?<a(?: class="brand")? href="\/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge<\/a>/.test(html), rel+' Global Knowledge brand must return to site home.');
-  assert(html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>'), rel+' must expose the bilingual China Knowledge route to qilylean.cn.');
+  assert(html.includes('href="https://qilylean.cn/" rel="noopener">精益制造经验分享</a>'), rel+' must use the exact filed China-site name for the qilylean.cn route.');
   assert(!html.includes('>中国知识站</a>'), rel+' must not expose the retired China-site name.');
 }
 
@@ -124,6 +124,9 @@ for(const rel of cnPages){
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao'), rel+' must load exactly one CN translator runtime.');
   assert(html.includes(cnFooterName), rel+' must display the filed China-site name in the footer.');
   assert(!html.includes('QilyLean | 启力精益 · 个人制造业知识与实践分享'), rel+' must not restore the retired footer name.');
+  assert(!html.includes('个人制造业知识与实践分享'), rel+' must not expose the retired China-site name.');
+  const title=(html.match(/<title>([^<]*)<\/title>/i)||[])[1]||'';
+  assert(title.includes(cnFiledName), rel+' title must include the filed China-site name.');
   // Filing records remain official external links after shared-footer regeneration.
   const filingLinks=[...html.matchAll(/<a\b[^>]*href=["']https:\/\/beian\.(?:miit|mps)\.gov\.cn\/[^"']*["'][^>]*>/g)];
   assert(filingLinks.length>=2, rel+' must retain both official filing links.');
@@ -138,10 +141,11 @@ const cnHome=read('cn-site/index.html');
 for(const marker of [
   '<title>精益制造经验分享｜QilyLean | 启力精益｜制造工程、精益生产与数智工厂知识站</title>',
   '"name":"精益制造经验分享"',
-  'QILYLEAN CHINA｜精益制造经验分享',
+  '<p class="eyebrow">精益制造经验分享</p>',
   '<h2>精益制造经验分享</h2>'
 ]) assert(cnHome.includes(marker),'CN home filed-name marker missing: '+marker);
-assert(!cnHome.includes('QILYLEAN CHINA｜个人制造业知识与实践分享'),'CN home retired hero name returned.');
+assert(!cnHome.includes('QILYLEAN CHINA｜'),'CN home must not prefix the filed site name with a retired alias.');
+assert(!cnHome.includes('个人制造业知识与实践分享'),'CN home retired site name returned.');
 
 const cnAbout=read('cn-site/about/index.html');
 assert(cnAbout.includes('<h1>关于“精益制造经验分享”</h1>'),'CN About must use the filed site name.');
