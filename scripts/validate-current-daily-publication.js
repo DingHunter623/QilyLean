@@ -152,6 +152,8 @@ if (audit) {
 
 /* 2026-09-20 visual closure: keep the annotated failure modes governed. */
 includes(briefLayoutStandard, '--qily-brief-font-h1:clamp(30px,2.05vw,36px);', 'Curated brief H1 uses the restrained title scale');
+includes(briefLayoutStandard, 'QILY-BRIEF-FEEDBACK-AXIS-V3', 'Curated brief message panel is governed by the canonical content axis');
+includes(briefLayoutStandard, 'width:min(var(--qily-brief-content-axis),calc(100% - var(--qily-brief-gutter) - var(--qily-brief-gutter)))!important;', 'Curated brief message panel outer border aligns with the 1180px article axis');
 includes(dailyFeedback, 'max-width:var(--qily-brief-content-axis,1180px)', 'Injected knowledge-chain panel is capped to the canonical brief axis');
 includes(trustPage, 'white-space:nowrap!important', 'Trust curated-date cards prevent desktop date wrapping');
 includes(trustRuntime, 'white-space:nowrap!important', 'Trust live runtime preserves single-line curated dates');
@@ -159,29 +161,26 @@ includes(globalKnowledge, `<strong id="briefTotal">${siteData.briefs.total}</str
 includes(globalKnowledge, `<h3>${siteData.briefs.total}篇精选简报</h3>`, 'Global Knowledge asset-card count matches central metadata');
 includes(globalKnowledge, `最新更新：${siteData.briefs.latestDate}｜${siteData.briefs.latestTitle}。`, 'Global Knowledge latest brief matches central metadata');
 if (sep20Brief) {
-  includes(sep20Brief, '/qilylean/daily/assets/2026-09-20-brief.css?v=20260920-capacity-thread-v2', 'Sep 20 brief loads the closed visual revision');
-  includes(sep20Brief, 'id="arr20aFeedback"', 'Sep 20 capacity thread has a dedicated feedback arrow marker');
-  includes(sep20Brief, 'id="arr20bFeedback"', 'Sep 20 daily loop has a dedicated feedback arrow marker');
-  includes(sep20Brief, 'd="M0 0 L10 5 L0 10 Z" fill="#0f4b5a"', 'Sep 20 primary arrowheads use the VI deep-teal filled triangle');
-  includes(sep20Brief, 'd="M0 0 L10 5 L0 10 Z" fill="#caa15f"', 'Sep 20 feedback arrowheads use the VI gold filled triangle');
-  includes(sep20Brief, 'class="feedback-label-bg"', 'Sep 20 feedback labels use a dedicated background clearance zone');
-  includes(sep20Brief, 'C1087 262, 372 262', 'Sep 20 capacity-thread feedback line is vertically separated from its label');
-  includes(sep20Brief, 'C1042 278, 122 278', 'Sep 20 loop feedback line is vertically separated from its label');
+  includes(sep20Brief, '/qilylean/daily/assets/2026-09-20-brief.css?v=20260921-capacity-thread-v3', 'Sep 20 brief loads the VI-v4 flow revision');
+  assert((sep20Brief.match(/data-qily-unified-arrow="v4"/g) || []).length >= 13, 'Sep 20 diagrams use integrated VI v4 solid arrows for all primary and feedback connectors');
+  includes(sep20Brief, 'class="vi-feedback-return"', 'Sep 20 diagrams use a dedicated VI feedback rail');
+  includes(sep20Brief, 'class="vi-feedback-arrow"', 'Sep 20 feedback return uses an integrated solid arrow');
+  includes(sep20Brief, 'M1087 144 V258 H372 V166', 'Sep 20 capacity-thread feedback rail clears its label');
+  includes(sep20Brief, 'M1042 164 V278 H122 V188', 'Sep 20 daily-loop feedback rail clears its label');
+  includes(sep20BriefCss, 'QILY-SEP20-FLOW-VI-V4', 'Sep 20 diagram arrows follow the official QilyLean VI v4 geometry');
+  includes(sep20BriefCss, 'stroke-width:6;stroke-linecap:round;stroke-linejoin:round', 'Sep 20 feedback rail uses the VI rounded heavy-line treatment');
   includes(sep20BriefCss, 'QILY-SEP20-EQUAL-CARD-WIDTH-V2', 'Sep 20 content cards keep equal width/height');
-  includes(sep20BriefCss, 'stroke:#0f4b5a;stroke-width:2.2', 'Sep 20 primary connectors use VI deep teal');
-  includes(sep20BriefCss, 'stroke:#caa15f;stroke-width:2.6', 'Sep 20 feedback connectors use VI gold');
-  assert(!sep20Brief.includes('M1 1 L7.5 4 L1 7'), 'Sep 20 diagrams no longer use the non-VI open-chevron arrowhead');
-  assert(!sep20Brief.includes('M145 96H160M290'), 'Sep 20 flow connectors are separate paths so every arrowhead renders');
+  assert(!/<marker\b|marker-end=/.test(sep20Brief), 'Sep 20 diagrams no longer use detached SVG marker arrowheads');
 }
 if (cnCapacityBrief) {
-  includes(cnCapacityBrief, '/assets/knowledge-visual-v1.css?v=20260920-visual-brief-v2', 'CN synchronized Sep 20 brief loads the closed visual revision');
-  includes(cnCapacityBrief, 'id="cnA1Feedback"', 'CN capacity thread has a dedicated feedback arrow marker');
-  includes(cnCapacityBrief, 'id="cnA2Feedback"', 'CN daily loop has a dedicated feedback arrow marker');
-  includes(cnCapacityBrief, 'd="M0 0 L10 5 L0 10 Z" fill="#0f4b5a"', 'CN primary arrowheads use the VI deep-teal filled triangle');
-  includes(cnCapacityBrief, 'd="M0 0 L10 5 L0 10 Z" fill="#caa15f"', 'CN feedback arrowheads use the VI gold filled triangle');
-  includes(cnCapacityBrief, 'fill="#fffaf0" stroke="#caa15f" stroke-width="1.2"', 'CN feedback labels have a dedicated background clearance zone');
+  includes(cnCapacityBrief, '/assets/knowledge-visual-v1.css?v=20260921-visual-brief-v3', 'CN synchronized Sep 20 brief loads the VI-v4 flow revision');
+  assert((cnCapacityBrief.match(/data-qily-unified-arrow="v4"/g) || []).length >= 13, 'CN synchronized diagrams use integrated VI v4 solid arrows');
+  includes(cnCapacityBrief, 'data-qily-feedback-rail="v4"', 'CN feedback return uses the VI rounded heavy-line rail');
+  includes(cnCapacityBrief, 'M1091 141 V254 H378 V164', 'CN capacity-thread feedback rail clears its label');
+  includes(cnCapacityBrief, 'M1030 146 V266 H130 V182', 'CN daily-loop feedback rail clears its label');
+  includes(cnCapacityVisualCss, 'QILY-CN-FLOW-VI-V4', 'CN synchronized diagrams are locked to the same VI v4 geometry');
   includes(cnCapacityVisualCss, 'QILY-CN-BRIEF-EQUAL-CARD-WIDTH-V2', 'CN synchronized brief cards keep equal width/height');
-  assert(!cnCapacityBrief.includes('M1 1 L7.5 4 L1 7'), 'CN diagrams no longer use the non-VI open-chevron arrowhead');
+  assert(!/<marker\b|marker-end=/.test(cnCapacityBrief), 'CN synchronized diagrams no longer use detached SVG marker arrowheads');
 }
 if (cnHome) {
   includes(cnHome, '/knowledge/capacity-digital-thread/', 'CN homepage exposes the current synchronized capacity brief');
