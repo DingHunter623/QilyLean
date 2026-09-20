@@ -8,7 +8,7 @@ const must=(s,t,m)=>{if(!s.includes(t))throw new Error(`${m}: missing ${t}`)};
 const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)};
 const files=()=>execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>/^(?:baidu_verify_codeva-[^/]+\.html|google[^/]+\.html|zohoverify\/verifyforzoho\.html)$/i.test(f);
-const preproduction=f=>/^cn-site\//i.test(f);
+const chinaSite=f=>/^cn-site\//i.test(f);
 
 const nav=read('site-navigation.js'),dock=read('site-dock-share-runtime-v1.js'),route=read('site-contact-route-v1.js'),header=read('site-header-axis-v1.css'),css=read('site-interaction-semantics-v1.css'),js=read('site-interaction-semantics-v1.js'),career=read('site-early-career-history-v1.js'),mat=read('scripts/materialize-global-language-v3.js'),contactMat=read('scripts/materialize-contact-route-v6.js'),safe=read('site-translation-safe-runtime-v1.js'),components=read('site-visual-components-v1.css');
 const ddzIndex=read('tools/pure-ddz/index.html'),ddzLayout=read('tools/pure-ddz/game/css/ddz-core-v155.css'),ddzComfort=ddzLayout,ddzLandscape=ddzLayout,ddzGame=read('tools/pure-ddz/game/js/ddz-core-v155.js'),ddzVisual=ddzGame;
@@ -30,13 +30,18 @@ must(ddzLayout,'--ddz-game-max:var(--qily-content-axis,1560px)','DDZ site conten
 must(career,'function stickyHeaderOffset()','Career anchor offset');
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32');must(mat,'20260829-dock-functional-public-v134','Contact V134 owner');must(mat,'20260906-authority-v58-mobile-swipe-fixed-bottom','Dock V58 owner');must(mat,'20260901-primary-navigation-native-scroll-v8','Header native-scroll owner');must(mat,'20260831-r11-semantics-v17-native-range','Semantics V17 owner');must(mat,'20260830-r11-semantics-v14-visual-v3-vi-teal','VI rail owner');must(mat,'20260901-google-translate-single-runtime-v16','Safe translation owner');must(mat,'20260901-google-translate-mobile-ui-v16','Translation public UI owner');must(mat,'20260831-unified-components-v29-native-range','Visual components owner');must(mat,'20260831-r7-single-responsibility-v11-safe-translation','Shell V11 owner');must(mat,'20260831-project-grade-readability-v3','Project grade owner');forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure owner');
 
-/* cn-site is a noindex/nofollow mainland preproduction surface. It is intentionally outside the V32 production materializer, but must carry formal VI v4 directly. */
-const cn=read('cn-site/index.html');must(cn,'/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure','CN preproduction formal VI CSS');must(cn,'/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure','CN preproduction formal VI runtime');must(cn,'name="robots" content="noindex,nofollow,noarchive"','CN preproduction indexing lock');
+/* China production has its own shared VI and translation runtime; the international V32 materializer must not overwrite it. */
+const cn=read('cn-site/index.html');
+must(cn,'/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback','CN production shared VI');
+must(cn,'/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7','CN production navigation runtime');
+must(cn,'/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao','CN production translation runtime');
+must(cn,'name="robots" content="index,follow"','CN production indexing contract');
+must(read('cn-site/assets/qilylean-vi-v2.css'),'QILY-CN-FILING-FEEDBACK-V2','CN filing link interaction contract');
 
 const legacyTranslation=['site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-translation-progress-v1.css','site-global-language-v1.css','site-global-language-v3.js'];
-let pages=0,navPages=0,contactPages=0,owners=0,preprod=0,fail=[];
+let pages=0,navPages=0,contactPages=0,owners=0,cnPages=0,fail=[];
 for(const file of files()){
-  const html=read(file);if(ownership(file)){owners++;continue;}if(preproduction(file)){preprod++;continue;}if(!/<\/head>/i.test(html))continue;pages++;
+  const html=read(file);if(ownership(file)){owners++;continue;}if(chinaSite(file)){cnPages++;continue;}if(!/<\/head>/i.test(html))continue;pages++;
   if(file==='tools/pure-ddz/index.html'){
     if(!html.includes('20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164-v169'))fail.push(`${file}: DDZ V155/V164 cache missing`);
     if(!html.includes('data-qily-ddz-core="v158"')||!html.includes('data-qily-ddz-fast-shell="v155"'))fail.push(`${file}: DDZ isolated fast-route owners missing`);
@@ -56,4 +61,4 @@ for(const file of files()){
 }
 if(pages<460||navPages<460||contactPages<470)fail.push(`coverage pages=${pages} nav=${navPages} contact=${contactPages}`);
 if(fail.length)throw new Error(`V34 sitewide remediation failed:\n${fail.slice(0,40).join('\n')}`);
-console.log(`PASS: V34 production remediation covers ${pages} pages; ${owners} ownership artifacts and ${preprod} noindex preproduction page(s) are correctly separated; standard pages use V32, CN preproduction uses formal VI v4, and DDZ V155/V164 retains its isolated fast shell.`);
+console.log(`PASS: V34 production remediation covers ${pages} pages; ${owners} ownership artifacts and ${cnPages} China-site files are correctly separated; international pages use V32, China production uses its independent shared VI, and DDZ V155/V164 retains its isolated fast shell.`);
