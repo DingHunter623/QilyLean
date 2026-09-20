@@ -142,8 +142,8 @@ html:root body .content a[href]:is(:hover,:focus-visible){
 
 @media(max-width:620px){
   :root{
-    --qily-gk-h1:clamp(31px,9vw,43px);
-    --qily-gk-h2:clamp(26px,7vw,32px);
+    --qily-gk-h1:clamp(29px,8vw,38px);
+    --qily-gk-h2:clamp(24px,6.5vw,30px);
     --qily-gk-h3:clamp(20px,5.4vw,23px);
   }
   html:root body :is(.hero,.head) p{font-size:17px!important}
