@@ -19,7 +19,7 @@
 <link rel="stylesheet" href="/site-shell.css?v=20260814-contact-v13">
 <link rel="stylesheet" href="/qilylean/knowledge-brief.css?v=20260905-ai-manufacturing-v3">
 <link rel="stylesheet" href="/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure">
-<link rel="stylesheet" href="/qilylean/daily/assets/2026-09-20-brief.css?v=20260920-capacity-thread-v1">
+<link rel="stylesheet" href="/qilylean/daily/assets/2026-09-20-brief.css?v=20260920-capacity-thread-v2">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"别再只用UPH排产：从订单到设备，建立可执行的产能数字主线","description":"把订单需求、工艺路线、标准CT、工装模具、设备资格、有效工时和实绩反馈连成一条主数据链；排产先算被设备约束的工时负荷，再谈日产量与系统算法。","datePublished":"2026-09-20","dateModified":"2026-09-20","inLanguage":"zh-CN","mainEntityOfPage":"https://qilylean.com/qilylean/daily/2026-09-20.html","author":{"@type":"Organization","name":"QilyLean｜启力精益","url":"https://qilylean.com/"},"publisher":{"@type":"Organization","name":"QilyLean｜启力精益","url":"https://qilylean.com/"},"image":["https://qilylean.com/assets/social/qilylean-home-share-1200x630.png"]}</script>
 <link id="qilyFloatingDockGoldV1" rel="stylesheet" href="/site-floating-dock-gold-v1.css?v=20260827-dock-gold-v1">
   <link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=20260903-r8-heading-ceiling-v10">
@@ -165,12 +165,12 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 </div>
 
 <figure class="capacity-figure capacity-thread-figure">
-<svg class="capacity-svg" viewBox="0 0 1160 250" role="img" aria-labelledby="threadTitle threadDesc">
+<svg class="capacity-svg" viewBox="0 0 1160 285" role="img" aria-labelledby="threadTitle threadDesc">
 <title id="threadTitle">从订单到排产的产能数字主线</title>
 <desc id="threadDesc">订单需求依次连接产品工艺、标准时间、工装模具、设备资格、有效工时、负荷排程和实绩反馈，实绩再返回主数据校准。</desc>
 <defs>
-<marker id="arr20aFlow" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 9 8"><path d="M1 1 L7.5 4 L1 7" fill="none" stroke="#5a8f88" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
-<marker id="arr20aFeedback" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 9 8"><path d="M1 1 L7.5 4 L1 7" fill="none" stroke="#c99935" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arr20aFlow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 10 10"><path d="M0 0 L10 5 L0 10 Z" fill="#0f4b5a"/></marker>
+<marker id="arr20aFeedback" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 10 10"><path d="M0 0 L10 5 L0 10 Z" fill="#caa15f"/></marker>
 </defs>
 <g class="svg-flow">
 <rect x="20" y="58" width="125" height="76" rx="14"/><text x="82" y="86" text-anchor="middle">订单需求</text><text x="82" y="111" text-anchor="middle" class="sub">数量·交期</text>
@@ -188,8 +188,9 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 <path d="M725 96H738" marker-end="url(#arr20aFlow)"/>
 <path d="M870 96H883" marker-end="url(#arr20aFlow)"/>
 <path d="M1015 96H1028" marker-end="url(#arr20aFlow)"/>
-<path class="feedback" d="M1087 146 C1087 232, 372 232, 372 148" marker-end="url(#arr20aFeedback)"/>
-<text x="730" y="207" text-anchor="middle" class="feedback-label">计划实绩差异 → 参数复核 → 版本更新 → 再排程</text>
+<path class="feedback" d="M1087 134 C1087 262, 372 262, 372 134" marker-end="url(#arr20aFeedback)"/>
+<rect x="438" y="190" width="584" height="40" rx="20" class="feedback-label-bg"/>
+<text x="730" y="216" text-anchor="middle" class="feedback-label">计划实绩差异 → 参数复核 → 版本更新 → 再排程</text>
 </g>
 </svg>
 <figcaption>图1｜可执行排产不是一张产能表，而是一条可追溯的主数据链。</figcaption>
@@ -312,12 +313,12 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 <section class="module-section knowledge-brief-section" id="section-7"><div class="module-inner lean-brief-copy">
 <div class="module-heading"><span class="module-eyebrow">07 / 实绩闭环</span><h2>七、计划不能只下发：每天都要用实绩校准模型</h2></div>
 <figure class="capacity-figure">
-<svg class="capacity-svg" viewBox="0 0 1160 260" role="img" aria-labelledby="loopTitle loopDesc">
+<svg class="capacity-svg" viewBox="0 0 1160 305" role="img" aria-labelledby="loopTitle loopDesc">
 <title id="loopTitle">产能模型日常闭环</title>
 <desc id="loopDesc">排程冻结后执行生产，采集实绩，分解偏差，确认根因，更新主数据或改善措施，再进入下一轮排程。</desc>
 <defs>
-<marker id="arr20bFlow" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 9 8"><path d="M1 1 L7.5 4 L1 7" fill="none" stroke="#5a8f88" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
-<marker id="arr20bFeedback" markerWidth="9" markerHeight="8" refX="7.5" refY="4" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 9 8"><path d="M1 1 L7.5 4 L1 7" fill="none" stroke="#c99935" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<marker id="arr20bFlow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 10 10"><path d="M0 0 L10 5 L0 10 Z" fill="#0f4b5a"/></marker>
+<marker id="arr20bFeedback" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse" viewBox="0 0 10 10"><path d="M0 0 L10 5 L0 10 Z" fill="#caa15f"/></marker>
 </defs>
 <g class="loop-chart">
 <rect x="40" y="78" width="165" height="84" rx="16"/><text x="122" y="110" text-anchor="middle">冻结计划</text><text x="122" y="136" text-anchor="middle" class="sub">订单·设备·时段</text>
@@ -329,8 +330,9 @@ html body.daily-single-page[data-qily-daily-layout="rich"] main article.post .le
 <path d="M435 120H490" marker-end="url(#arr20bFlow)"/>
 <path d="M665 120H720" marker-end="url(#arr20bFlow)"/>
 <path d="M895 120H950" marker-end="url(#arr20bFlow)"/>
-<path class="feedback" d="M1042 174 C1042 246, 122 246, 122 172" marker-end="url(#arr20bFeedback)"/>
-<text x="582" y="220" text-anchor="middle" class="feedback-label">稳定偏差进入主数据；偶发异常进入问题关闭链；改善成果重新固化标准</text>
+<path class="feedback" d="M1042 162 C1042 278, 122 278, 122 162" marker-end="url(#arr20bFeedback)"/>
+<rect x="240" y="204" width="684" height="40" rx="20" class="feedback-label-bg"/>
+<text x="582" y="230" text-anchor="middle" class="feedback-label">稳定偏差进入主数据；偶发异常进入问题关闭链；改善成果重新固化标准</text>
 </g>
 </svg>
 <figcaption>图3｜计划准确率不是靠“催计划员”，而是靠持续缩小模型与现场之间的偏差。</figcaption>

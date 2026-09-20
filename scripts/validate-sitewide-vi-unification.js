@@ -30,6 +30,8 @@ const gkCss=read('global-knowledge/global-knowledge-vi-v2.css');
   'QILY-GK-TYPE-HIERARCHY-V2',
   'QILY-GK-ROUTE-FEEDBACK-V2',
   'QILY-GK-HEADER-ALIGN-V3',
+  'QILY-GK-NAV-TYPE-PARITY-V4',
+  '--qily-gk-primary-nav-font-size:20px',
   'grid-template-columns:max-content minmax(0,1fr) 206px!important',
   "content:'返回首页'!important",
   '--qily-gk-h1:clamp(30px,2.65vw,44px)',
@@ -40,6 +42,10 @@ const gkCss=read('global-knowledge/global-knowledge-vi-v2.css');
   'a.brief[href]:active'
 ].forEach(m=>assert(gkCss.includes(m),'Global Knowledge VI missing: '+m));
 
+const gkReader=read('global-knowledge/view/index.html');
+assert(gkReader.includes('qily-reader-link-cluster'), 'Global Knowledge reader imported-link cluster normalization is missing.');
+assert(gkReader.includes('column-gap:3ch!important'), 'Global Knowledge reader link clusters must preserve a three-character gap.');
+
 const gkPages=[
   'global-knowledge/index.html',
   'global-knowledge/terminology/index.html',
@@ -49,7 +55,7 @@ const gkPages=[
 ];
 for(const rel of gkPages){
   const html=read(rel);
-  assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260920-gk-header-v3'), rel+' must load shared Global Knowledge VI after its local skin.');
+  assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260920-gk-vi-v4'), rel+' must load shared Global Knowledge VI after its local skin.');
   assert(/<header class="top">[\s\S]*?<a(?: class="brand")? href="https:\/\/qilylean\.com\/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge<\/a>/.test(html), rel+' Global Knowledge brand must return to the canonical qilylean.com home.');
   assert(html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>'), rel+' must expose China Knowledge with the exact filed China-site name for the qilylean.cn route.');
   assert(!html.includes('>中国知识站</a>'), rel+' must not expose the retired China-site name.');
