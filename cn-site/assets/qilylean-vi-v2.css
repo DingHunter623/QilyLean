@@ -26,7 +26,7 @@
 html:root body{
   font-size:var(--qily-cn-body)!important;
   line-height:1.72!important;
-  padding-bottom:calc(var(--qily-cn-fixed-footer-h) + env(safe-area-inset-bottom))!important;
+  padding-bottom:calc(var(--qily-cn-fixed-footer-h) + 3px + env(safe-area-inset-bottom))!important;
 }
 html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){
   font-size:18px!important;
@@ -168,12 +168,34 @@ html:root body .footer-inner a:focus-visible{
   text-decoration-thickness:2px!important;
 }
 
+/* QILY-CN-FILING-V1 | ICP and approved public-security filing, 2026-09-20. */
+html:root body .footer-records{
+  display:flex!important;
+  align-items:center!important;
+  flex-wrap:wrap!important;
+  gap:8px 20px!important;
+  min-width:0!important;
+}
+html:root body .footer-records>a{
+  display:inline-flex!important;
+  align-items:center!important;
+  gap:6px!important;
+  white-space:nowrap!important;
+}
+html:root body .police-record img{
+  display:block!important;
+  width:18px!important;
+  height:20px!important;
+  flex:0 0 18px!important;
+  object-fit:contain!important;
+}
+
 @media(max-width:900px){
   html:root body .page-hero .content{padding:30px 0!important}
   html:root body .section{padding:32px 0!important}
   html:root body .article-shell{gap:22px!important}
 }
-@media(max-width:760px){
+@media(max-width:1040px){
   :root{--qily-cn-fixed-footer-h:116px}
   html:root body .footer-inner{
     width:min(var(--qily-cn-axis),calc(100% - 32px))!important;
@@ -185,8 +207,13 @@ html:root body .footer-inner a:focus-visible{
     gap:8px!important;
     padding:12px 0!important;
   }
+}
+@media(max-width:760px){
   html:root body .footer-inner>span,
   html:root body .footer-inner a{font-size:17px!important}
+}
+@media(max-width:480px){
+  :root{--qily-cn-fixed-footer-h:144px}
 }
 @media(max-width:620px){
   :root{
