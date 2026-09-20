@@ -15,8 +15,8 @@ function tracked(pattern){
 
 /* 1) International VI authority */
 const readability=read('site-visual-readability-v5.css');
-assert(readability.includes('--qily-r8-heading-ceiling:clamp(34px,3.25vw,52px)'), 'International heading ceiling must remain 52px.');
-assert(readability.includes('font-size:clamp(34px,9.6vw,43px)!important'), 'International mobile H1 ceiling must remain 43px.');
+assert(readability.includes('--qily-r8-heading-ceiling:clamp(30px,2.65vw,44px)'), 'International heading ceiling must remain 44px.');
+assert(readability.includes('font-size:clamp(30px,8.2vw,38px)!important'), 'International mobile H1 ceiling must remain 38px.');
 
 const interaction=read('site-interaction-semantics-v1.css');
 assert(interaction.includes('QILY-ROUTE-CARD-FEEDBACK-V2'), 'International route-card feedback contract is missing.');
