@@ -248,9 +248,9 @@ jobs:
           links = fetch(f'https://qilylean.com/links/?closure={sha}')
 
           required_about = [
-              '关于 QilyLean | 启力精益 中国知识站',
+              '关于“精益制造经验分享”',
               'QilyLean | <span>启力精益</span>',
-              'QilyLean | 启力精益 · 个人制造业知识与实践分享',
+              'QilyLean | 启力精益 · 精益制造经验分享',
               '湘公网安备43020002000443号',
               'https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443',
               '/assets/mps-beian.png',
@@ -384,9 +384,9 @@ jobs:
           required_links = [
               '与 QilyLean | 启力精益 制造业应用价值精选',
               '<strong>网址导航友情链接：</strong>QilyLean | 启力精益 已增加主流网址导航官方入口',
-              '<strong>QilyLean | 启力精益 中国知识站：</strong>',
-              '进入 QilyLean | 启力精益 中国知识站 ↗',
-              'qilylean.cn 为 QilyLean | 启力精益 制造知识体系',
+              '<strong>精益制造经验分享（QilyLean | 启力精益中国站）：</strong>',
+              '进入精益制造经验分享 ↗',
+              'qilylean.cn 网站名称为“精益制造经验分享”',
           ]
           for marker in required_links:
               if marker not in links:
