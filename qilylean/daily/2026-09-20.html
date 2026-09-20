@@ -168,7 +168,10 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 <svg class="capacity-svg" viewBox="0 0 1160 250" role="img" aria-labelledby="threadTitle threadDesc">
 <title id="threadTitle">从订单到排产的产能数字主线</title>
 <desc id="threadDesc">订单需求依次连接产品工艺、标准时间、工装模具、设备资格、有效工时、负荷排程和实绩反馈，实绩再返回主数据校准。</desc>
-<defs><marker id="arr20a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" class="svg-arrow-head"/></marker></defs>
+<defs>
+<marker id="arr20aFlow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L9,3 L0,6 Z" fill="#5a8f88"/></marker>
+<marker id="arr20aFeedback" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L9,3 L0,6 Z" fill="#c99935"/></marker>
+</defs>
 <g class="svg-flow">
 <rect x="20" y="58" width="125" height="76" rx="14"/><text x="82" y="86" text-anchor="middle">订单需求</text><text x="82" y="111" text-anchor="middle" class="sub">数量·交期</text>
 <rect x="165" y="58" width="125" height="76" rx="14"/><text x="227" y="86" text-anchor="middle">产品/工艺</text><text x="227" y="111" text-anchor="middle" class="sub">路线·工序</text>
@@ -178,9 +181,15 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 <rect x="745" y="58" width="125" height="76" rx="14"/><text x="807" y="86" text-anchor="middle">有效工时</text><text x="807" y="111" text-anchor="middle" class="sub">日历·损失</text>
 <rect x="890" y="58" width="125" height="76" rx="14"/><text x="952" y="86" text-anchor="middle">负荷排程</text><text x="952" y="111" text-anchor="middle" class="sub">小时·顺序</text>
 <rect x="1035" y="58" width="105" height="76" rx="14"/><text x="1087" y="86" text-anchor="middle">实绩</text><text x="1087" y="111" text-anchor="middle" class="sub">偏差·原因</text>
-<path d="M145 96H160M290 96H305M435 96H450M580 96H595M725 96H740M870 96H885M1015 96H1030" marker-end="url(#arr20a)"/>
-<path class="feedback" d="M1087 142 C1087 210, 372 210, 372 145" marker-end="url(#arr20a)"/>
-<text x="730" y="202" text-anchor="middle" class="feedback-label">计划实绩差异 → 参数复核 → 版本更新 → 再排程</text>
+<path d="M145 96H158" marker-end="url(#arr20aFlow)"/>
+<path d="M290 96H303" marker-end="url(#arr20aFlow)"/>
+<path d="M435 96H448" marker-end="url(#arr20aFlow)"/>
+<path d="M580 96H593" marker-end="url(#arr20aFlow)"/>
+<path d="M725 96H738" marker-end="url(#arr20aFlow)"/>
+<path d="M870 96H883" marker-end="url(#arr20aFlow)"/>
+<path d="M1015 96H1028" marker-end="url(#arr20aFlow)"/>
+<path class="feedback" d="M1087 146 C1087 232, 372 232, 372 148" marker-end="url(#arr20aFeedback)"/>
+<text x="730" y="207" text-anchor="middle" class="feedback-label">计划实绩差异 → 参数复核 → 版本更新 → 再排程</text>
 </g>
 </svg>
 <figcaption>图1｜可执行排产不是一张产能表，而是一条可追溯的主数据链。</figcaption>
@@ -306,16 +315,22 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 <svg class="capacity-svg" viewBox="0 0 1160 260" role="img" aria-labelledby="loopTitle loopDesc">
 <title id="loopTitle">产能模型日常闭环</title>
 <desc id="loopDesc">排程冻结后执行生产，采集实绩，分解偏差，确认根因，更新主数据或改善措施，再进入下一轮排程。</desc>
-<defs><marker id="arr20b" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" class="svg-arrow-head"/></marker></defs>
+<defs>
+<marker id="arr20bFlow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L9,3 L0,6 Z" fill="#5a8f88"/></marker>
+<marker id="arr20bFeedback" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L9,3 L0,6 Z" fill="#c99935"/></marker>
+</defs>
 <g class="loop-chart">
 <rect x="40" y="78" width="165" height="84" rx="16"/><text x="122" y="110" text-anchor="middle">冻结计划</text><text x="122" y="136" text-anchor="middle" class="sub">订单·设备·时段</text>
 <rect x="270" y="78" width="165" height="84" rx="16"/><text x="352" y="110" text-anchor="middle">现场执行</text><text x="352" y="136" text-anchor="middle" class="sub">产出·停机·换型</text>
 <rect x="500" y="78" width="165" height="84" rx="16"/><text x="582" y="110" text-anchor="middle">偏差分解</text><text x="582" y="136" text-anchor="middle" class="sub">CT·良率·齐套</text>
 <rect x="730" y="78" width="165" height="84" rx="16"/><text x="812" y="110" text-anchor="middle">原因确认</text><text x="812" y="136" text-anchor="middle" class="sub">异常 or 主数据</text>
 <rect x="960" y="78" width="165" height="84" rx="16"/><text x="1042" y="110" text-anchor="middle">更新/改善</text><text x="1042" y="136" text-anchor="middle" class="sub">版本·对策·验证</text>
-<path d="M205 120H262M435 120H492M665 120H722M895 120H952" marker-end="url(#arr20b)"/>
-<path class="feedback" d="M1042 174 C1042 230, 122 230, 122 170" marker-end="url(#arr20b)"/>
-<text x="582" y="224" text-anchor="middle" class="feedback-label">稳定偏差进入主数据；偶发异常进入问题关闭链；改善成果重新固化标准</text>
+<path d="M205 120H260" marker-end="url(#arr20bFlow)"/>
+<path d="M435 120H490" marker-end="url(#arr20bFlow)"/>
+<path d="M665 120H720" marker-end="url(#arr20bFlow)"/>
+<path d="M895 120H950" marker-end="url(#arr20bFlow)"/>
+<path class="feedback" d="M1042 174 C1042 246, 122 246, 122 172" marker-end="url(#arr20bFeedback)"/>
+<text x="582" y="220" text-anchor="middle" class="feedback-label">稳定偏差进入主数据；偶发异常进入问题关闭链；改善成果重新固化标准</text>
 </g>
 </svg>
 <figcaption>图3｜计划准确率不是靠“催计划员”，而是靠持续缩小模型与现场之间的偏差。</figcaption>
