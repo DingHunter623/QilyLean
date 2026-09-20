@@ -36,7 +36,7 @@ for (const file of htmlFiles) {
     if (forbiddenRoutes.test(href)) fail(`${rel} links to a commercial/main-site route: ${href}`);
 
     if (/^https?:\/\//i.test(href)) {
-      if (href === 'https://qilylean.cn/' || /^https:\/\/qilylean\.com\/global-knowledge\//i.test(href)) continue;
+      if (href === 'https://qilylean.com/' || href === 'https://qilylean.cn/' || /^https:\/\/qilylean\.com\/global-knowledge\//i.test(href)) continue;
       fail(`${rel} contains non-isolated external link: ${href}`);
       continue;
     }
@@ -48,6 +48,8 @@ for (const file of htmlFiles) {
   }
 
   if (/\b(?:mailto:|tel:|weixin:|whatsapp:)/i.test(html)) fail(`${rel} contains a direct contact scheme`);
+  if (!html.includes('<a class="brand" href="https://qilylean.com/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge</a>')) fail(`${rel} brand must return to the canonical qilylean.com homepage`);
+  if (!html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>')) fail(`${rel} must expose the filed China knowledge route`);
 }
 
 const reader = fs.readFileSync(path.join(dir, 'view', 'index.html'), 'utf8');
