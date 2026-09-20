@@ -155,3 +155,170 @@ html:root body .content a[href]:is(:hover,:focus-visible){
   html:root body a.brief[href],
   html:root body :is(.top,.footer,.reader-actions) a[href]{transition:none!important}
 }
+
+
+/* QILY-GK-HEADER-ALIGN-V3 | 2026-09-20
+ * Global Knowledge header closure:
+ * 1) keep the canonical QilyLean logo at the left;
+ * 2) make the logo behave like the China-site home control (hover/focus -> 返回首页);
+ * 3) reserve the translator column and right-align the knowledge navigation beside it;
+ * 4) keep the mobile header stable with brand + translator above a horizontally scrollable nav row.
+ */
+html:root body header.top>.wrap{
+  display:grid!important;
+  grid-template-columns:max-content minmax(0,1fr) 206px!important;
+  align-items:center!important;
+  column-gap:14px!important;
+  row-gap:0!important;
+  min-width:0!important;
+  flex-wrap:unset!important;
+}
+html:root body header.top>.wrap>a:first-child{
+  grid-column:1!important;
+  position:relative!important;
+  display:block!important;
+  width:clamp(168px,14vw,226px)!important;
+  height:34px!important;
+  min-width:0!important;
+  margin:0!important;
+  overflow:hidden!important;
+  text-indent:-9999px!important;
+  white-space:nowrap!important;
+  color:transparent!important;
+  -webkit-text-fill-color:transparent!important;
+  background-color:transparent!important;
+  background-image:url('/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5')!important;
+  background-position:left center!important;
+  background-size:contain!important;
+  background-repeat:no-repeat!important;
+  border:1.5px solid transparent!important;
+  border-radius:8px!important;
+  box-sizing:border-box!important;
+}
+html:root body header.top>.wrap>.nav{
+  grid-column:2!important;
+  justify-self:end!important;
+  align-self:center!important;
+  width:max-content!important;
+  max-width:100%!important;
+  min-width:0!important;
+  margin:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:flex-end!important;
+  flex-wrap:nowrap!important;
+  gap:8px!important;
+}
+html:root body header.top>.wrap>.qily-web-translate[data-qily-header-utility="translation"]{
+  grid-column:3!important;
+  justify-self:end!important;
+  align-self:center!important;
+  margin:0!important;
+}
+@media(hover:hover) and (pointer:fine){
+  html:root body header.top>.wrap>a:first-child:hover{
+    background-color:#fff6df!important;
+    background-image:none!important;
+    border-color:var(--qily-gk-gold)!important;
+    box-shadow:0 7px 18px rgba(15,75,90,.14)!important;
+    filter:none!important;
+    transform:none!important;
+  }
+}
+html:root body header.top>.wrap>a:first-child:focus-visible{
+  background-color:#fff6df!important;
+  background-image:none!important;
+  border-color:var(--qily-gk-gold)!important;
+  box-shadow:0 0 0 3px rgba(202,161,95,.24),0 7px 18px rgba(15,75,90,.14)!important;
+  outline:none!important;
+  filter:none!important;
+  transform:none!important;
+}
+html:root body header.top>.wrap>a:first-child:is(:hover,:focus-visible)::after{
+  content:'返回首页'!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:2!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 10px!important;
+  color:var(--qily-gk-deep)!important;
+  -webkit-text-fill-color:var(--qily-gk-deep)!important;
+  background:transparent!important;
+  font-size:clamp(16px,1.05vw,19px)!important;
+  font-weight:950!important;
+  line-height:1!important;
+  letter-spacing:.06em!important;
+  text-indent:0!important;
+  text-shadow:none!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+}
+html:root body header.top>.wrap>a:first-child:active{
+  transform:translateY(1px) scale(.985)!important;
+}
+@media(max-width:900px){
+  html:root body header.top>.wrap{
+    grid-template-columns:minmax(126px,1fr) 206px!important;
+    grid-template-areas:"brand translate" "nav nav"!important;
+    column-gap:10px!important;
+    row-gap:7px!important;
+    align-items:center!important;
+  }
+  html:root body header.top>.wrap>a:first-child{
+    grid-area:brand!important;
+    width:142px!important;
+    height:27px!important;
+  }
+  html:root body header.top>.wrap>.qily-web-translate[data-qily-header-utility="translation"]{
+    grid-area:translate!important;
+  }
+  html:root body header.top>.wrap>.nav{
+    grid-area:nav!important;
+    justify-self:stretch!important;
+    width:100%!important;
+    max-width:100%!important;
+    justify-content:flex-start!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    flex-wrap:nowrap!important;
+    padding:2px 0 4px!important;
+    scrollbar-width:thin!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-x:contain!important;
+  }
+  html:root body header.top>.wrap>.nav>a[href]{
+    flex:0 0 auto!important;
+  }
+}
+@media(max-width:480px){
+  html:root body header.top>.wrap{
+    grid-template-columns:minmax(112px,1fr) 178px!important;
+  }
+  html:root body header.top>.wrap>a:first-child{
+    width:126px!important;
+    height:23px!important;
+  }
+  html:root body header.top>.wrap>.qily-web-translate[data-qily-header-utility="translation"]{
+    width:178px!important;
+    min-width:178px!important;
+    max-width:178px!important;
+    flex-basis:178px!important;
+  }
+  html:root body header.top>.wrap>a:first-child:is(:hover,:focus-visible)::after{
+    padding:0 6px!important;
+    font-size:15px!important;
+  }
+}
+@media(max-width:380px){
+  html:root body header.top>.wrap{
+    grid-template-columns:minmax(104px,1fr) 164px!important;
+  }
+  html:root body header.top>.wrap>.qily-web-translate[data-qily-header-utility="translation"]{
+    width:164px!important;
+    min-width:164px!important;
+    max-width:164px!important;
+    flex-basis:164px!important;
+  }
+}
