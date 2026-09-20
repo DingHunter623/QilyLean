@@ -188,7 +188,7 @@ html body.daily-single-page main article.post .closing strong{color:#ffe0a4!impo
 </div></section>
 
 <section class="module-section knowledge-brief-section" id="section-1"><div class="module-inner lean-brief-copy">
-<div class="module-heading"><span class="module-eyebrow">01 / CAPACITY TRUTH</span><h2>一、排产为什么失真：通常不是公式错，而是数据链断了</h2></div>
+<div class="module-heading"><span class="module-eyebrow">01 / 产能真值</span><h2>一、排产为什么失真：通常不是公式错，而是数据链断了</h2></div>
 <p>现场最常见的误区，是把“产能”理解成一列固定数字。例如某设备标称800 UPH，于是每天按800×工时去承诺订单。但真实制造系统至少还有产品差异、设备资格、换型、良率、维护、齐套和人员配置等约束。</p>
 <div class="lean-brief-table" role="region" aria-label="常见产能指标的正确用途" tabindex="0"><table>
 <thead><tr><th>指标</th><th>它回答什么</th><th>不能单独回答什么</th></tr></thead>
@@ -203,7 +203,7 @@ html body.daily-single-page main article.post .closing strong{color:#ffe0a4!impo
 </div></section>
 
 <section class="module-section knowledge-brief-section" id="section-2"><div class="module-inner lean-brief-copy">
-<div class="module-heading"><span class="module-eyebrow">02 / DIGITAL THREAD</span><h2>二、数字主线至少要贯通八类对象</h2></div>
+<div class="module-heading"><span class="module-eyebrow">02 / 数字主线</span><h2>二、数字主线至少要贯通八类对象</h2></div>
 <div class="capacity-layer-grid">
 <div><b>需求层</b><strong>订单 / Forecast</strong><p>产品、数量、交期、优先级、客户冻结窗口。</p></div>
 <div><b>产品层</b><strong>SKU / BOM / Route</strong><p>产品编码、BOM版本、工艺路线、关键工序。</p></div>
@@ -218,7 +218,7 @@ html body.daily-single-page main article.post .closing strong{color:#ffe0a4!impo
 </div></section>
 
 <section class="module-section knowledge-brief-section" id="section-3"><div class="module-inner lean-brief-copy">
-<div class="module-heading"><span class="module-eyebrow">03 / ONE LANGUAGE</span><h2>三、先统一四个公式，避免同一个“产能”各算各的</h2></div>
+<div class="module-heading"><span class="module-eyebrow">03 / 统一口径</span><h2>三、先统一四个公式，避免同一个“产能”各算各的</h2></div>
 <div class="capacity-formula-grid">
 <div><span>客户节拍</span><strong>Takt = 可用生产时间 ÷ 客户需求量</strong><p>用于判断需求节奏，不等于设备CT。</p></div>
 <div><span>订单负荷</span><strong>Load h = Σ[Q × CT ÷ (3600 × 穴数)] + 换型时间</strong><p>把不同SKU统一换算为设备小时。</p></div>
@@ -230,43 +230,43 @@ html body.daily-single-page main article.post .closing strong{color:#ffe0a4!impo
 </div></section>
 
 <section class="module-section knowledge-brief-section" id="section-4"><div class="module-inner lean-brief-copy">
-<div class="module-heading"><span class="module-eyebrow">04 / QUALIFICATION FIRST</span><h2>四、设备资格必须先于负荷计算：有空不代表能做</h2></div>
+<div class="module-heading"><span class="module-eyebrow">04 / 资格先行</span><h2>四、设备资格必须先于负荷计算：有空不代表能做</h2></div>
 <p>产品能否分配到某台设备，不能只看设备名称相同。应先建立“产品/工序 × 工装/模具 × 设备”的资格矩阵，再计算可用产能池。</p>
 <div class="lean-brief-table capacity-matrix" role="region" aria-label="设备资格矩阵示例" tabindex="0"><table>
-<thead><tr><th>产品/工序</th><th>关键资源</th><th>M1</th><th>M2</th><th>M3</th><th>放行依据</th></tr></thead>
+<thead><tr><th>产品/工序</th><th>关键资源</th><th>1号机</th><th>2号机</th><th>3号机</th><th>放行依据</th></tr></thead>
 <tbody>
-<tr><td>SKU-A / 成型</td><td>模具 A01</td><td><span class="ok">合格</span></td><td><span class="ok">合格</span></td><td><span class="hold">待验证</span></td><td>参数窗口＋首件＋能力验证</td></tr>
-<tr><td>SKU-B / 成型</td><td>模具 B03</td><td><span class="ok">合格</span></td><td><span class="ok">合格</span></td><td><span class="no">不适用</span></td><td>设备接口＋模具尺寸＋工艺能力</td></tr>
-<tr><td>SKU-C / 成型</td><td>模具 C02</td><td><span class="no">不适用</span></td><td><span class="ok">合格</span></td><td><span class="hold">待验证</span></td><td>设备能力＋质量基线＋批准记录</td></tr>
+<tr><td>SKU-A / 成型</td><td>模具1号</td><td><span class="ok">合格</span></td><td><span class="ok">合格</span></td><td><span class="hold">待验证</span></td><td>参数窗口＋首件＋能力验证</td></tr>
+<tr><td>SKU-B / 成型</td><td>模具3号</td><td><span class="ok">合格</span></td><td><span class="ok">合格</span></td><td><span class="no">不适用</span></td><td>设备接口＋模具尺寸＋工艺能力</td></tr>
+<tr><td>SKU-C / 成型</td><td>模具2号</td><td><span class="no">不适用</span></td><td><span class="ok">合格</span></td><td><span class="hold">待验证</span></td><td>设备能力＋质量基线＋批准记录</td></tr>
 </tbody></table></div>
 <p>不同工艺的资格字段不同。注塑可关注锁模力、射胶量、拉杆间距、模厚和温控接口；冲压可关注吨位、台面、行程和送料接口；SMT可关注板尺寸、轨宽、程序版本和炉温能力。核心不是字段越多越好，而是<strong>把“能不能做”变成明确的工程判定条件</strong>。</p>
 </div></section>
 
 <section class="module-section knowledge-brief-section" id="section-5"><div class="module-inner lean-brief-copy">
-<div class="module-heading"><span class="module-eyebrow">05 / LOAD MODEL</span><h2>五、混流案例：三种SKU如何落到两台设备</h2></div>
-<p><strong>以下仅为计算口径演示数据，不代表任何企业真实产能。</strong>假设一个月22个生产日、每台设备计划20小时/日；M1计划可用系数85%，M2为82%。SKU-B为2穴模，负荷均分到M1/M2。</p>
+<div class="module-heading"><span class="module-eyebrow">05 / 负荷模型</span><h2>五、混流案例：三种SKU如何落到两台设备</h2></div>
+<p><strong>以下仅为计算口径演示数据，不代表任何企业真实产能。</strong>假设一个月22个生产日、每台设备计划20小时/日；1号机计划可用系数85%，2号机为82%。SKU-B为2穴模，负荷均分到1号机/2号机。</p>
 <div class="lean-brief-table" role="region" aria-label="混流产能演示计算" tabindex="0"><table>
 <thead><tr><th>SKU</th><th>需求量</th><th>标准CT</th><th>穴数</th><th>分配</th><th>设备负荷</th></tr></thead>
 <tbody>
-<tr><td>A</td><td>24,000</td><td>36 s/周期</td><td>1</td><td>M1</td><td>240.0 h</td></tr>
-<tr><td>B</td><td>30,000</td><td>42 s/周期</td><td>2</td><td>M1 15,000 / M2 15,000</td><td>87.5 h / 87.5 h</td></tr>
-<tr><td>C</td><td>12,000</td><td>60 s/周期</td><td>1</td><td>M2</td><td>200.0 h</td></tr>
+<tr><td>A</td><td>24,000</td><td>36 s/周期</td><td>1</td><td>1号机</td><td>240.0 h</td></tr>
+<tr><td>B</td><td>30,000</td><td>42 s/周期</td><td>2</td><td>1号机 15,000 / 2号机 15,000</td><td>87.5 h / 87.5 h</td></tr>
+<tr><td>C</td><td>12,000</td><td>60 s/周期</td><td>1</td><td>2号机</td><td>200.0 h</td></tr>
 </tbody></table></div>
 
 <figure class="capacity-figure">
 <svg class="capacity-svg" viewBox="0 0 1160 330" role="img" aria-labelledby="loadTitle loadDesc">
-<title id="loadTitle">M1与M2月度负荷演示</title>
+<title id="loadTitle">1号机与2号机月度负荷演示</title>
 <desc id="loadDesc">M1有效能力374小时，需求与换型负荷339.5小时，负荷率90.8%；M2有效能力360.8小时，负荷303.5小时，负荷率84.1%。</desc>
 <g class="load-chart">
 <text x="35" y="45" class="chart-title">示例：先把订单换成设备小时，再判断负荷</text>
-<text x="35" y="96" class="machine">M1</text>
+<text x="35" y="96" class="machine">1号机</text>
 <rect x="125" y="70" width="820" height="38" rx="9" class="capacity-track"/>
 <rect x="125" y="70" width="744" height="38" rx="9" class="capacity-used"/>
 <line x1="863" y1="58" x2="863" y2="118" class="alert-line"/>
 <text x="875" y="96" class="load-value">339.5 / 374 h · 90.8%</text>
 <text x="125" y="132" class="chart-note">A 240h + B 87.5h + 换型 12h</text>
 
-<text x="35" y="205" class="machine">M2</text>
+<text x="35" y="205" class="machine">2号机</text>
 <rect x="125" y="179" width="820" height="38" rx="9" class="capacity-track"/>
 <rect x="125" y="179" width="690" height="38" rx="9" class="capacity-used"/>
 <line x1="863" y1="167" x2="863" y2="227" class="alert-line"/>
@@ -278,19 +278,19 @@ html body.daily-single-page main article.post .closing strong{color:#ffe0a4!impo
 <line x1="421" y1="282" x2="451" y2="282" class="alert-line"/><text x="463" y="288" class="legend">90%示例管理线（非行业统一阈值）</text>
 </g>
 </svg>
-<figcaption>图2｜总能力仍有余量，不代表每台设备都安全；M1已经成为优先评审对象。</figcaption>
+<figcaption>图2｜总能力仍有余量，不代表每台设备都安全；1号机已经成为优先评审对象。</figcaption>
 </figure>
 
 <div class="capacity-result-grid">
-<div><strong>M1有效能力</strong><span>22×20×85%=374 h</span><p>负荷339.5h，约90.8%。应评估换型、波动、插单与维护风险。</p></div>
-<div><strong>M2有效能力</strong><span>22×20×82%=360.8 h</span><p>负荷303.5h，约84.1%。存在一定缓冲，但仍受SKU-C单机资格约束。</p></div>
-<div><strong>产能池合计</strong><span>643 / 734.8 h</span><p>总体约87.5%，但“平均值”不能遮住M1局部瓶颈。</p></div>
+<div><strong>1号机有效能力</strong><span>22×20×85%=374 h</span><p>负荷339.5h，约90.8%。应评估换型、波动、插单与维护风险。</p></div>
+<div><strong>2号机有效能力</strong><span>22×20×82%=360.8 h</span><p>负荷303.5h，约84.1%。存在一定缓冲，但仍受SKU-C单机资格约束。</p></div>
+<div><strong>产能池合计</strong><span>643 / 734.8 h</span><p>总体约87.5%，但“平均值”不能遮住1号机局部瓶颈。</p></div>
 </div>
 <p>这正是时间负荷模型的价值：它能同时看见<strong>总量是否够、局部设备是否过载、单一资格资源是否成为风险点</strong>。下一步才是调整分配、改善CT、减少换型、扩充资格或增加资源。</p>
 </div></section>
 
 <section class="module-section knowledge-brief-section" id="section-6"><div class="module-inner lean-brief-copy">
-<div class="module-heading"><span class="module-eyebrow">06 / FINITE SCHEDULING</span><h2>六、从月负荷进入日排程，还必须叠加四类约束</h2></div>
+<div class="module-heading"><span class="module-eyebrow">06 / 有限排程</span><h2>六、从月负荷进入日排程，还必须叠加四类约束</h2></div>
 <div class="capacity-constraint-grid">
 <div><span>约束A</span><strong>物料齐套</strong><p>没有齐套时间，设备空档只是纸面产能；应把关键物料到料状态作为排程前置条件。</p></div>
 <div><span>约束B</span><strong>换型序列</strong><p>同模具、同物料族、相近参数可形成合理批次，减少清线、调机与首件确认损失。</p></div>
@@ -301,7 +301,7 @@ html body.daily-single-page main article.post .closing strong{color:#ffe0a4!impo
 </div></section>
 
 <section class="module-section knowledge-brief-section" id="section-7"><div class="module-inner lean-brief-copy">
-<div class="module-heading"><span class="module-eyebrow">07 / CLOSED LOOP</span><h2>七、计划不能只下发：每天都要用实绩校准模型</h2></div>
+<div class="module-heading"><span class="module-eyebrow">07 / 实绩闭环</span><h2>七、计划不能只下发：每天都要用实绩校准模型</h2></div>
 <figure class="capacity-figure">
 <svg class="capacity-svg" viewBox="0 0 1160 260" role="img" aria-labelledby="loopTitle loopDesc">
 <title id="loopTitle">产能模型日常闭环</title>
@@ -333,7 +333,7 @@ html body.daily-single-page main article.post .closing strong{color:#ffe0a4!impo
 </div></section>
 
 <section class="module-section knowledge-brief-section" id="section-8"><div class="module-inner lean-brief-copy">
-<div class="module-heading"><span class="module-eyebrow">08 / DEPLOYMENT CHECK</span><h2>八、落地检查：没有这十项，不急着上“智能排产”</h2></div>
+<div class="module-heading"><span class="module-eyebrow">08 / 落地检查</span><h2>八、落地检查：没有这十项，不急着上“智能排产”</h2></div>
 <div class="capacity-checklist">
 <div><b>01</b><span>产品编码、BOM和工艺路线是否唯一且有版本？</span></div>
 <div><b>02</b><span>标准CT/工时是否来自真实作业，并明确单位与适用条件？</span></div>
@@ -348,7 +348,7 @@ html body.daily-single-page main article.post .closing strong{color:#ffe0a4!impo
 </div>
 
 <div class="capacity-closing">
-<span>QilyLean VIEW</span>
+<span>QilyLean 观点</span>
 <h2>数智化排产的起点，不是算法，而是可信的制造事实。</h2>
 <p>当订单、工艺、标准时间、工装、设备资格和日历能够被同一套数据关系解释，Excel也可以先做出一套可验证的有限产能模型；当这些基础长期失真，再昂贵的APS也只能把错误更快地计算出来。</p>
 <p><strong>先建立“可计算、可执行、可校准”的产能主数据，再让系统把这套能力放大。</strong></p>
