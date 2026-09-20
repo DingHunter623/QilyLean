@@ -322,3 +322,20 @@ html:root body header.top>.wrap>a:first-child:active{
     flex-basis:164px!important;
   }
 }
+
+
+/* QILY-GK-NAV-TYPE-PARITY-V4 | 2026-09-20
+ * International Global Knowledge navigation uses the same primary-nav type scale as the China site.
+ * All Global Knowledge pages inherit one explicit size; local page skins must not drift.
+ */
+:root{--qily-gk-primary-nav-font-size:20px}
+html:root body header.top>.wrap>.nav>a[href]{
+  font-size:var(--qily-gk-primary-nav-font-size)!important;
+  line-height:1.22!important;
+  font-weight:900!important;
+  letter-spacing:0!important;
+  white-space:nowrap!important;
+}
+@media(max-width:620px){
+  :root{--qily-gk-primary-nav-font-size:18px}
+}
