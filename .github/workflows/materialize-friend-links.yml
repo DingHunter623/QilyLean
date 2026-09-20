@@ -47,9 +47,9 @@ jobs:
           grep -Fq '与 QilyLean | 启力精益 制造业应用价值精选' links/index.html
           grep -Fq '<strong>网址导航友情链接：</strong>QilyLean | 启力精益 已增加主流网址导航官方入口' links/index.html
           grep -q 'id="qilyChinaKnowledgeBridge"' links/index.html
-          grep -Fq '<strong>QilyLean | 启力精益 中国知识站：</strong>' links/index.html
-          grep -Fq '进入 QilyLean | 启力精益 中国知识站 ↗' links/index.html
-          grep -Fq 'qilylean.cn 为 QilyLean | 启力精益 制造知识体系' links/index.html
+          grep -Fq '<strong>精益制造经验分享（QilyLean | 启力精益中国站）：</strong>' links/index.html
+          grep -Fq '进入精益制造经验分享 ↗' links/index.html
+          grep -Fq 'qilylean.cn 网站名称为“精益制造经验分享”' links/index.html
           grep -q 'href="https://qilylean.cn/"' links/index.html
           grep -q '不作为“全球科技企业100强”的企业收录项或排名依据' links/index.html
           grep -q 'width:min(1180px,100%)' links/index.html
