@@ -40,7 +40,7 @@ const mat=read('scripts/materialize-global-language-v3.js');
 for(const t of ["const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'20260831-r7-single-responsibility-v11-safe-translation','20260831-project-grade-readability-v3','20260831-r11-semantics-v17-native-range','20260901-google-translate-single-runtime-v16','20260831-redline-no-translation-v23','20260901-google-translate-mobile-ui-v16','20260831-unified-components-v29-native-range','20260906-authority-v58-mobile-swipe-fixed-bottom','20260906-mobile-compact-fixed-r2'])must(mat,t,'V32 materializer');
 forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure materializer');
 
-const cn=read(CN);must(cn,'name="robots" content="noindex,nofollow,noarchive"','CN indexing lock');must(cn,'/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure','CN formal CSS');must(cn,'/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure','CN formal runtime');
+const cn=read(CN);must(cn,'name="robots" content="index,follow"','CN production indexing');must(cn,'/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback','CN independent VI authority');must(cn,'/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7','CN independent navigation runtime');must(cn,'/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao','CN independent translation runtime');
 const containment=read('site-responsive-containment-v1.css');must(containment,'QilyLean Responsive Containment V1','Responsive containment');forbid(containment,'width:100vw','Viewport widening');
 
 const legacyTranslation=['data-qily-translation-safety-bootstrap','site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-translation-progress-v1.css','site-global-language-v1.css','site-global-language-v3.js','20260831-safe-inpage-v7-header-utility','data-qily-translation-safe-direct="v7"','stable-diagnostic','qily_translate_debug'];
@@ -53,4 +53,4 @@ for(const file of htmlFiles()){
   if(/\/site-ui-consistency-v1\.js/.test(html)){shellPages++;must(html,'/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation',`${file} shell`);}
 }
 if(pages<460||nav<460||shellPages<460)throw new Error(`coverage regression pages=${pages} nav=${nav} shell=${shellPages}`);
-console.log(`PASS: V35 remediation closure covers ${pages} production pages, Dock V5.8, formal VI v4, CN noindex preproduction and DDZ V155/V164 isolated performance route.`);
+console.log(`PASS: V35 remediation closure covers ${pages} production pages, Dock V5.8, formal VI v4, the indexable CN site under its independent VI authority, and the DDZ V155/V164 isolated performance route.`);
