@@ -101,6 +101,37 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
   exit 1
 }
 
+# Filed-name governance: every public CN document identifies the site by the ICP filing service name.
+FILED_SITE_NAME='精益制造经验分享'
+while IFS= read -r page; do
+  grep -qi '<body' "$page" || continue
+  grep -Fq "$FILED_SITE_NAME" "$page" || {
+    echo "ERROR: CN public page is missing filed site name: $page"
+    exit 1
+  }
+  grep -Eq "<title>[^<]*${FILED_SITE_NAME}[^<]*</title>" "$page" || {
+    echo "ERROR: CN public page title must include filed site name: $page"
+    exit 1
+  }
+  if grep -Fq '个人制造业知识与实践分享' "$page"; then
+    echo "ERROR: Retired China-site name returned: $page"
+    exit 1
+  fi
+done < <(find "$ROOT_DIR" -type f -name '*.html' ! -name 'googleb7a991efbed3aa8a.html' ! -name 'baidu_verify_codeva-Bp0VGliFcp.html' -print)
+
+grep -Fq '<p class="eyebrow">精益制造经验分享</p>' "$INDEX_FILE" || {
+  echo "ERROR: CN homepage visible site name must exactly equal the filed service name."
+  exit 1
+}
+if grep -Fq 'QILYLEAN CHINA｜' "$INDEX_FILE"; then
+  echo "ERROR: Retired QILYLEAN CHINA alias returned on CN homepage."
+  exit 1
+fi
+grep -Fq '"name":"精益制造经验分享"' "$INDEX_FILE" || {
+  echo "ERROR: CN WebSite structured-data name must equal the filed service name."
+  exit 1
+}
+
 # Search-engine discovery contract: keep crawl permission, sitemap discovery and verification
 # files intact so Google, Baidu and IndexNow access cannot be accidentally broken later.
 [[ -f "$ROBOTS_FILE" ]] || { echo "ERROR: CN robots.txt is missing."; exit 1; }
