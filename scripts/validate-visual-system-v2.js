@@ -19,7 +19,7 @@ for(const token of ['data-qily-vi-version','data-qily-vi-status','retireLegacyNa
 /* qilylean.cn is a separately deployed production knowledge site with its own final VI authority. */
 const cnIndex=read('cn-site/index.html'),cnVi=read('cn-site/assets/qilylean-vi-v2.css');
 assert(cnIndex.includes('<meta name="robots" content="index,follow">'),'CN production indexing contract missing');
-assert(cnIndex.includes('/assets/qilylean-vi-v2.css?v=20260918-cn-vi-v11'),'CN production VI CSS reference missing');
+assert(cnIndex.includes('/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback'),'CN production VI CSS reference missing');
 for(const token of ['--qily-cn-axis:1180px','Boss-readable closure aligned','QilyLean China Unified VI V2'])assert(cnVi.includes(token),`CN production VI missing ${token}`);
 
 const htmlFiles=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean),ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);let pages=0,v2=0,contain=0,comp=0,dup=0,cnPages=0;
