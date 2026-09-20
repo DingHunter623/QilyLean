@@ -1,7 +1,8 @@
 /* QilyLean CN Practice & Evidence | 2026-09-18
  * Personal manufacturing practice archive. No commercial CTA or international business routing.
  */
-.practice-intro{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:stretch}
+/* QILY-CN-EQUAL-PEER-CARDS-V1 | Equal-weight sibling information cards */
+.practice-intro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch}
 .practice-principle{padding:22px;border:1px solid var(--qily-line);background:#fff}
 .practice-principle b{display:block;margin-bottom:7px;color:var(--qily-deep);font-size:22px}
 .practice-principle p{margin:0;color:var(--qily-muted)}
