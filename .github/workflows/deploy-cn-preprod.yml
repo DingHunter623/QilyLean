@@ -133,7 +133,7 @@ jobs:
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
       - name: Stage release bundle on mainland server
-        timeout-minutes: 6
+        timeout-minutes: 8
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -142,35 +142,32 @@ jobs:
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes)
-          STAGE="$(mktemp -d)"
-          trap 'rm -rf "$STAGE"' EXIT
-          cp /tmp/qilylean-cn-site.tar.gz "$STAGE/qilylean-cn-site.tar.gz"
-          cp cn-site/scripts/server-bootstrap.sh "$STAGE/bootstrap-qilylean-cn.sh"
-          cp cn-site/scripts/deploy-release.sh "$STAGE/deploy-qilylean-cn.sh"
-          cp cn-site/scripts/activate-public-http.sh "$STAGE/activate-qilylean-cn-http.sh"
-          cp cn-site/nginx/qilylean.cn.conf "$STAGE/qilylean.cn.conf"
 
-          # Always upload the release archive built from the current GitHub SHA.
-          # Bound each SSH stream so a transient mainland-network stall cannot hold the deployment indefinitely.
-          staged=0
-          for attempt in 1 2 3; do
-            echo "Stage upload attempt $attempt/3"
-            if tar -C "$STAGE" -czf - \
-              qilylean-cn-site.tar.gz \
-              bootstrap-qilylean-cn.sh \
-              deploy-qilylean-cn.sh \
-              activate-qilylean-cn-http.sh \
-              qilylean.cn.conf \
-              | timeout 90s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
-                'tar --no-same-owner --no-same-permissions -xzf - -C /tmp'; then
-              staged=1
-              break
-            fi
-            sleep 5
-          done
-          test "$staged" -eq 1
+          copy_with_retry() {
+            local src="$1"
+            local dest="$2"
+            local attempt
+            for attempt in 1 2 3; do
+              echo "SCP ${src} -> ${dest} (attempt ${attempt}/3)"
+              if timeout 120s scp -q "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$src" "$USER_NAME@$CN_PREPROD_HOST:$dest"; then
+                return 0
+              fi
+              sleep 5
+            done
+            return 1
+          }
+
+          # Copy files directly instead of piping a nested tar stream through SSH.
+          # Direct SCP isolates retries per file and avoids leaving the deployment stuck
+          # while the remote tar process waits on a broken long-lived stdin stream.
+          copy_with_retry /tmp/qilylean-cn-site.tar.gz /tmp/qilylean-cn-site.tar.gz
+          copy_with_retry cn-site/scripts/server-bootstrap.sh /tmp/bootstrap-qilylean-cn.sh
+          copy_with_retry cn-site/scripts/deploy-release.sh /tmp/deploy-qilylean-cn.sh
+          copy_with_retry cn-site/scripts/activate-public-http.sh /tmp/activate-qilylean-cn-http.sh
+          copy_with_retry cn-site/nginx/qilylean.cn.conf /tmp/qilylean.cn.conf
+
           timeout 60s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
-            'test -s /tmp/qilylean-cn-site.tar.gz && test -s /tmp/deploy-qilylean-cn.sh && echo "Release bundle staged."'
+            'test -s /tmp/qilylean-cn-site.tar.gz && test -s /tmp/deploy-qilylean-cn.sh && test -s /tmp/activate-qilylean-cn-http.sh && test -s /tmp/qilylean.cn.conf && echo "Release bundle staged."'
 
       - name: Bootstrap server when required
         shell: bash
