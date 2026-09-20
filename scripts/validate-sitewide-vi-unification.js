@@ -51,6 +51,8 @@ for(const rel of gkPages){
   const html=read(rel);
   assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260920-gk-header-v3'), rel+' must load shared Global Knowledge VI after its local skin.');
   assert(/<header class="top">[\s\S]*?<a(?: class="brand")? href="\/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge<\/a>/.test(html), rel+' Global Knowledge brand must return to site home.');
+  assert(html.includes('href="https://qilylean.cn/" rel="noopener">精益制造经验分享</a>'), rel+' must use the filed China-site name for the qilylean.cn route.');
+  assert(!html.includes('>中国知识站</a>'), rel+' must not expose the retired China-site name.');
 }
 
 /* 3) China site: same international-style rail + controlled type hierarchy */
@@ -111,12 +113,17 @@ const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*
   return /<body/i.test(html)&&/<\/body>/i.test(html);
 });
 assert(cnPages.length>=17,'Expected at least 17 CN document pages.');
+/* CN-FILED-NAME-GOVERNANCE-V1 | public China-site name must equal the ICP filing service name. */
+const cnFiledName='精益制造经验分享';
+const cnFooterName='QilyLean | 启力精益 · '+cnFiledName;
 for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback'), rel+' must use CN VI V19.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao'), rel+' must load exactly one CN translator runtime.');
+  assert(html.includes(cnFooterName), rel+' must display the filed China-site name in the footer.');
+  assert(!html.includes('QilyLean | 启力精益 · 个人制造业知识与实践分享'), rel+' must not restore the retired footer name.');
   // Filing records remain official external links after shared-footer regeneration.
   const filingLinks=[...html.matchAll(/<a\b[^>]*href=["']https:\/\/beian\.(?:miit|mps)\.gov\.cn\/[^"']*["'][^>]*>/g)];
   assert(filingLinks.length>=2, rel+' must retain both official filing links.');
@@ -126,6 +133,23 @@ for(const rel of cnPages){
     assert(/title="[^"]*新标签页打开[^"]*"/.test(link), rel+' filing query must explain its new-tab behavior.');
   }
 }
+
+const cnHome=read('cn-site/index.html');
+for(const marker of [
+  '<title>精益制造经验分享｜QilyLean | 启力精益｜制造工程、精益生产与数智工厂知识站</title>',
+  '"name":"精益制造经验分享"',
+  'QILYLEAN CHINA｜精益制造经验分享',
+  '<h2>精益制造经验分享</h2>'
+]) assert(cnHome.includes(marker),'CN home filed-name marker missing: '+marker);
+assert(!cnHome.includes('QILYLEAN CHINA｜个人制造业知识与实践分享'),'CN home retired hero name returned.');
+
+const cnAbout=read('cn-site/about/index.html');
+assert(cnAbout.includes('<h1>关于“精益制造经验分享”</h1>'),'CN About must use the filed site name.');
+
+const linksPage=read('links/index.html');
+assert(linksPage.includes('<strong>精益制造经验分享（QilyLean | 启力精益中国站）：</strong>'),'International links page must expose the filed China-site name.');
+assert(linksPage.includes('进入精益制造经验分享 ↗'),'International links page CTA must use the filed China-site name.');
+assert(linksPage.includes('qilylean.cn 网站名称为“精益制造经验分享”'),'International links page description must state the filed China-site name.');
 
 /* 4) Previous public-copy governance remains mandatory. */
 assert(fs.existsSync(path.join(root,'scripts/validate-public-copy-governance.js')), 'Previous public-copy governance gate must remain present.');
