@@ -9,6 +9,7 @@ const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)}
 const files=()=>execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>/^(?:baidu_verify_codeva-[^/]+\.html|google[^/]+\.html|zohoverify\/verifyforzoho\.html)$/i.test(f);
 const chinaSite=f=>/^cn-site\//i.test(f);
+const globalKnowledge=f=>/^global-knowledge\//i.test(f);
 
 const nav=read('site-navigation.js'),dock=read('site-dock-share-runtime-v1.js'),route=read('site-contact-route-v1.js'),header=read('site-header-axis-v1.css'),css=read('site-interaction-semantics-v1.css'),js=read('site-interaction-semantics-v1.js'),career=read('site-early-career-history-v1.js'),mat=read('scripts/materialize-global-language-v3.js'),contactMat=read('scripts/materialize-contact-route-v6.js'),safe=read('site-translation-safe-runtime-v1.js'),components=read('site-visual-components-v1.css');
 const ddzIndex=read('tools/pure-ddz/index.html'),ddzLayout=read('tools/pure-ddz/game/css/ddz-core-v155.css'),ddzComfort=ddzLayout,ddzLandscape=ddzLayout,ddzGame=read('tools/pure-ddz/game/js/ddz-core-v155.js'),ddzVisual=ddzGame;
@@ -39,9 +40,9 @@ must(cn,'name="robots" content="index,follow"','CN production indexing contract'
 must(read('cn-site/assets/qilylean-vi-v2.css'),'QILY-CN-FILING-FEEDBACK-V2','CN filing link interaction contract');
 
 const legacyTranslation=['site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-translation-progress-v1.css','site-global-language-v1.css','site-global-language-v3.js'];
-let pages=0,navPages=0,contactPages=0,owners=0,cnPages=0,fail=[];
+let pages=0,navPages=0,contactPages=0,owners=0,cnPages=0,gkPages=0,fail=[];
 for(const file of files()){
-  const html=read(file);if(ownership(file)){owners++;continue;}if(chinaSite(file)){cnPages++;continue;}if(!/<\/head>/i.test(html))continue;pages++;
+  const html=read(file);if(ownership(file)){owners++;continue;}if(chinaSite(file)){cnPages++;continue;}if(globalKnowledge(file)){gkPages++;continue;}if(!/<\/head>/i.test(html))continue;pages++;
   if(file==='tools/pure-ddz/index.html'){
     if(!html.includes('20260903-ddz-fast-knowledge-v155-v158-v159-v160-v161-v162-v163-v164-v169'))fail.push(`${file}: DDZ V155/V164 cache missing`);
     if(!html.includes('data-qily-ddz-core="v158"')||!html.includes('data-qily-ddz-fast-shell="v155"'))fail.push(`${file}: DDZ isolated fast-route owners missing`);
@@ -61,4 +62,4 @@ for(const file of files()){
 }
 if(pages<460||navPages<460||contactPages<470)fail.push(`coverage pages=${pages} nav=${navPages} contact=${contactPages}`);
 if(fail.length)throw new Error(`V34 sitewide remediation failed:\n${fail.slice(0,40).join('\n')}`);
-console.log(`PASS: V34 production remediation covers ${pages} pages; ${owners} ownership artifacts and ${cnPages} China-site files are correctly separated; international pages use V32, China production uses its independent shared VI, and DDZ V155/V164 retains its isolated fast shell.`);
+console.log(`PASS: V34 production remediation covers ${pages} primary-site pages; ${owners} ownership artifacts, ${cnPages} China-site files and ${gkPages} Global Knowledge pages are correctly separated; primary international pages use V32, Global Knowledge keeps its isolated VI, China production uses its independent shared VI, and DDZ V155/V164 retains its isolated fast shell.`);
