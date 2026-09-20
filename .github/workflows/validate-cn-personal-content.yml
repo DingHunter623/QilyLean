@@ -73,7 +73,7 @@ jobs:
           grep -Fq '精选 8 项制造实践' cn-site/index.html
           grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
-          grep -Fq '/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v18-beian' cn-site/index.html
+          grep -Fq '/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback' cn-site/index.html
           grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao' cn-site/index.html
@@ -97,7 +97,7 @@ jobs:
           grep -Fq '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2' cn-site/notes/index.html
           grep -Fq '玻璃管保险丝切口与烧口工艺改善后的成品照片' cn-site/notes/index.html
           grep -Fq '玻璃管保险丝改善后成品照片' cn-site/assets/practice/fuse-process.svg
-          grep -Fq '/assets/practice.css?v=20260918-practice-visual-v2' cn-site/notes/index.html
+          grep -Fq '/assets/practice.css?v=20260920-practice-visual-v3-equal' cn-site/notes/index.html
           grep -Fq '6S改善运行机制摘要' cn-site/notes/index.html
           grep -Fq '/assets/practice/automotive-lean.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
           grep -Fq '/assets/practice/factory-layout.svg?v=20260918-practice-map-v1' cn-site/notes/index.html

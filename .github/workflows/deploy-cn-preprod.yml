@@ -254,7 +254,7 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v18-beian' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback' not in home:
               raise SystemExit('Production China home missing unified mobile VI cache version.')
           if '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7' not in home:
               raise SystemExit('Production China home missing international-style nav rail runtime.')
@@ -328,6 +328,7 @@ jobs:
               raise SystemExit('Production China practice stylesheet still contains legacy unequal peer-card columns.')
 
           required_vi = [
+              'QILY-CN-FILING-FEEDBACK-V2',
               'QILY-CN-AIRCRAFT-CENTERED-V2',
               'QILY-CN-NAV-RAIL-V7',
               'QILY-CN-STICKY-HEADER-V1',
