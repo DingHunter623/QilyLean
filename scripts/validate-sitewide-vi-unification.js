@@ -29,6 +29,9 @@ const gkCss=read('global-knowledge/global-knowledge-vi-v2.css');
 [
   'QILY-GK-TYPE-HIERARCHY-V2',
   'QILY-GK-ROUTE-FEEDBACK-V2',
+  'QILY-GK-HEADER-ALIGN-V3',
+  'grid-template-columns:max-content minmax(0,1fr) 206px!important',
+  "content:'返回首页'!important",
   '--qily-gk-h1:clamp(30px,2.65vw,44px)',
   '--qily-gk-h1:clamp(29px,8vw,38px)',
   'a.card[href]:hover',
@@ -46,7 +49,7 @@ const gkPages=[
 ];
 for(const rel of gkPages){
   const html=read(rel);
-  assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260918-vi-v2'), rel+' must load shared Global Knowledge VI after its local skin.');
+  assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260920-gk-header-v3'), rel+' must load shared Global Knowledge VI after its local skin.');
 }
 
 /* 3) China site: same international-style rail + controlled type hierarchy */
