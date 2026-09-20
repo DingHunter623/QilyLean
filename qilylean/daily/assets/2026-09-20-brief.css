@@ -1,4 +1,4 @@
-@import url("/qilylean/daily/brief-layout-standard.css?v=20260913-unified-v2-typography");
+@import url("/qilylean/daily/brief-layout-standard.css?v=20260921-unified-v3-feedback-axis");
 
 /* 2026-09-20 brief: component-only styles.
    Content axis, hero, typography hierarchy and section spacing inherit the canonical QilyLean brief layout. */
@@ -57,13 +57,17 @@ body.capacity-digital-brief .svg-flow text,
 body.capacity-digital-brief .loop-chart text{fill:#0f4b5a;font-weight:850}
 body.capacity-digital-brief .svg-flow .sub,
 body.capacity-digital-brief .loop-chart .sub{fill:#526e6b;font-weight:650}
-body.capacity-digital-brief .svg-flow>path:not(.feedback),
-body.capacity-digital-brief .loop-chart>path:not(.feedback){fill:none;stroke:#0f4b5a;stroke-width:2.2}
-body.capacity-digital-brief .svg-flow .feedback,
-body.capacity-digital-brief .loop-chart .feedback{fill:none;stroke:#caa15f;stroke-width:2.6}
-body.capacity-digital-brief .svg-arrow-head{fill:#0f4b5a}
+/* QILY-SEP20-FLOW-VI-V4 | use the same integrated solid-arrow language as the official QilyLean VI.
+   No thin connector + detached marker combination is allowed. */
+body.capacity-digital-brief .capacity-svg{shape-rendering:geometricPrecision}
+body.capacity-digital-brief .svg-flow .vi-flow-arrow,
+body.capacity-digital-brief .loop-chart .vi-flow-arrow{fill:#0f4b5a;stroke:none}
+body.capacity-digital-brief .svg-flow .vi-feedback-return,
+body.capacity-digital-brief .loop-chart .vi-feedback-return{fill:none;stroke:#caa15f;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+body.capacity-digital-brief .svg-flow .vi-feedback-arrow,
+body.capacity-digital-brief .loop-chart .vi-feedback-arrow{fill:#caa15f;stroke:none}
 body.capacity-digital-brief .svg-flow .feedback-label-bg,
-body.capacity-digital-brief .loop-chart .feedback-label-bg{fill:#fffaf0;stroke:#caa15f;stroke-width:1.2}
+body.capacity-digital-brief .loop-chart .feedback-label-bg{fill:#fffaf0;stroke:#d8bc78;stroke-width:1.2}
 body.capacity-digital-brief .svg-flow .feedback-label,
 body.capacity-digital-brief .loop-chart .feedback-label{fill:#765713;font-weight:850}
 body.capacity-digital-brief .capacity-matrix .ok,
