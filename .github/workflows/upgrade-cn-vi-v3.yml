@@ -95,8 +95,11 @@ jobs:
               if path.as_posix() == 'cn-site/about/index.html':
                   out = out.replace('<h1>关于 QilyLean 中国知识站</h1>', '<h1>关于“精益制造经验分享”</h1>')
                   out = out.replace(f'<h1>关于 {official_brand} 中国知识站</h1>', '<h1>关于“精益制造经验分享”</h1>')
-                  out = out.replace('content="QilyLean 中国站为个人制造业知识与实践分享站', 'content="精益制造经验分享是 QilyLean | 启力精益中国站的备案服务名称，内容聚焦')
-                  out = out.replace(f'content="{official_brand}中国站为个人制造业知识与实践分享站', 'content="精益制造经验分享是 QilyLean | 启力精益中国站的备案服务名称，内容聚焦')
+                  out = re.sub(
+                      r'content="(?:QilyLean 中国站|QilyLean \| 启力精益中国站)为个人制造业知识与实践分享站，聚焦精益生产、工业工程、标准化与数智工厂。"',
+                      'content="精益制造经验分享是 QilyLean | 启力精益中国站的备案服务名称，内容聚焦精益生产、工业工程、标准化与数智工厂。"',
+                      out
+                  )
 
               nonlocal_thesis = [0]
               out = toc_pattern.sub(normalize_thesis, out)
