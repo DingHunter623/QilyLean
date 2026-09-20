@@ -59,6 +59,8 @@ const trustPage = exists('trust/index.html') ? read('trust/index.html') : '';
 const trustRuntime = exists('trust/live-status.js') ? read('trust/live-status.js') : '';
 const globalKnowledge = exists('global-knowledge/index.html') ? read('global-knowledge/index.html') : '';
 const sep20Brief = exists('qilylean/daily/2026-09-20.html') ? read('qilylean/daily/2026-09-20.html') : '';
+const sep20BriefCss = exists('qilylean/daily/assets/2026-09-20-brief.css') ? read('qilylean/daily/assets/2026-09-20-brief.css') : '';
+const cnCapacityVisualCss = exists('cn-site/assets/knowledge-visual-v1.css') ? read('cn-site/assets/knowledge-visual-v1.css') : '';
 const cnCapacityBrief = exists('cn-site/knowledge/capacity-digital-thread/index.html') ? read('cn-site/knowledge/capacity-digital-thread/index.html') : '';
 const cnHome = exists('cn-site/index.html') ? read('cn-site/index.html') : '';
 
@@ -156,18 +158,29 @@ includes(globalKnowledge, `<strong id="briefTotal">${siteData.briefs.total}</str
 includes(globalKnowledge, `<h3>${siteData.briefs.total}篇精选简报</h3>`, 'Global Knowledge asset-card count matches central metadata');
 includes(globalKnowledge, `最新更新：${siteData.briefs.latestDate}｜${siteData.briefs.latestTitle}。`, 'Global Knowledge latest brief matches central metadata');
 if (sep20Brief) {
+  includes(sep20Brief, '/qilylean/daily/assets/2026-09-20-brief.css?v=20260920-capacity-thread-v2', 'Sep 20 brief loads the closed visual revision');
   includes(sep20Brief, 'id="arr20aFeedback"', 'Sep 20 capacity thread has a dedicated feedback arrow marker');
   includes(sep20Brief, 'id="arr20bFeedback"', 'Sep 20 daily loop has a dedicated feedback arrow marker');
-  includes(sep20Brief, 'stroke="#c99935"', 'Sep 20 feedback arrowheads use the feedback-line color');
-  includes(sep20Brief, 'markerUnits="userSpaceOnUse"', 'Sep 20 arrows use consistent open-chevron geometry');
-  assert(!sep20Brief.includes('L9,3 L0,6 Z'), 'Sep 20 diagrams no longer use filled triangle arrowheads');
+  includes(sep20Brief, 'd="M0 0 L10 5 L0 10 Z" fill="#0f4b5a"', 'Sep 20 primary arrowheads use the VI deep-teal filled triangle');
+  includes(sep20Brief, 'd="M0 0 L10 5 L0 10 Z" fill="#caa15f"', 'Sep 20 feedback arrowheads use the VI gold filled triangle');
+  includes(sep20Brief, 'class="feedback-label-bg"', 'Sep 20 feedback labels use a dedicated background clearance zone');
+  includes(sep20Brief, 'C1087 262, 372 262', 'Sep 20 capacity-thread feedback line is vertically separated from its label');
+  includes(sep20Brief, 'C1042 278, 122 278', 'Sep 20 loop feedback line is vertically separated from its label');
+  includes(sep20BriefCss, 'QILY-SEP20-EQUAL-CARD-WIDTH-V2', 'Sep 20 content cards keep equal width/height');
+  includes(sep20BriefCss, 'stroke:#0f4b5a;stroke-width:2.2', 'Sep 20 primary connectors use VI deep teal');
+  includes(sep20BriefCss, 'stroke:#caa15f;stroke-width:2.6', 'Sep 20 feedback connectors use VI gold');
+  assert(!sep20Brief.includes('M1 1 L7.5 4 L1 7'), 'Sep 20 diagrams no longer use the non-VI open-chevron arrowhead');
   assert(!sep20Brief.includes('M145 96H160M290'), 'Sep 20 flow connectors are separate paths so every arrowhead renders');
 }
 if (cnCapacityBrief) {
+  includes(cnCapacityBrief, '/assets/knowledge-visual-v1.css?v=20260920-visual-brief-v2', 'CN synchronized Sep 20 brief loads the closed visual revision');
   includes(cnCapacityBrief, 'id="cnA1Feedback"', 'CN capacity thread has a dedicated feedback arrow marker');
   includes(cnCapacityBrief, 'id="cnA2Feedback"', 'CN daily loop has a dedicated feedback arrow marker');
-  includes(cnCapacityBrief, 'stroke="#c99935"', 'CN feedback arrowheads match feedback-line color');
-  assert(!cnCapacityBrief.includes('L9,3 L0,6 Z'), 'CN capacity diagrams no longer use filled triangle arrowheads');
+  includes(cnCapacityBrief, 'd="M0 0 L10 5 L0 10 Z" fill="#0f4b5a"', 'CN primary arrowheads use the VI deep-teal filled triangle');
+  includes(cnCapacityBrief, 'd="M0 0 L10 5 L0 10 Z" fill="#caa15f"', 'CN feedback arrowheads use the VI gold filled triangle');
+  includes(cnCapacityBrief, 'fill="#fffaf0" stroke="#caa15f" stroke-width="1.2"', 'CN feedback labels have a dedicated background clearance zone');
+  includes(cnCapacityVisualCss, 'QILY-CN-BRIEF-EQUAL-CARD-WIDTH-V2', 'CN synchronized brief cards keep equal width/height');
+  assert(!cnCapacityBrief.includes('M1 1 L7.5 4 L1 7'), 'CN diagrams no longer use the non-VI open-chevron arrowhead');
 }
 if (cnHome) {
   includes(cnHome, '/knowledge/capacity-digital-thread/', 'CN homepage exposes the current synchronized capacity brief');
