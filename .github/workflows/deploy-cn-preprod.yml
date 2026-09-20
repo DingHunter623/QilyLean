@@ -24,7 +24,7 @@ concurrency:
 
 jobs:
   validate-and-deploy:
-    timeout-minutes: 35
+    timeout-minutes: 50
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -121,7 +121,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          tar --exclude='scripts' --exclude='nginx' --exclude='*.md' -czf /tmp/qilylean-cn-site.tar.gz -C cn-site .
+          tar --exclude='scripts' --exclude='nginx' --exclude='*.md' --exclude='assets/qilylean-aircraft-hero-cn-20260918.png' -czf /tmp/qilylean-cn-site.tar.gz -C cn-site .
           sha256sum /tmp/qilylean-cn-site.tar.gz
 
       - name: Configure SSH
@@ -139,7 +139,7 @@ jobs:
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
       - name: Stage release bundle on mainland server
-        timeout-minutes: 8
+        timeout-minutes: 20
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
