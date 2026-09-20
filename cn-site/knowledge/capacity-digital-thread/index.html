@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>别再只用UPH排产：从订单到设备建立可执行产能链｜QilyLean</title>
+<meta name="description" content="从订单、标准周期、工装模具、设备资格、有效工时与实绩反馈出发，用设备小时建立可执行的有限产能排程基础。">
+<link rel="canonical" href="https://qilylean.cn/knowledge/capacity-digital-thread/">
+<link rel="stylesheet" href="/assets/site.css?v=20260916-cn-personal-v2">
+<link rel="stylesheet" href="/assets/portal.css?v=20260916-portal-v1">
+<link rel="stylesheet" href="/assets/knowledge-visual-v1.css?v=20260920-visual-brief-v1">
+<link id="qilyFloatingDockGoldV1" rel="stylesheet" href="/site-floating-dock-gold-v1.css?v=20260827-dock-gold-v1">
+<link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao">
+<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback">
+</head>
+<body>
+<a class="skip" href="#main">跳到主要内容</a>
+<header class="site-header"><div class="header-inner"><a class="brand" href="/" aria-label="返回QilyLean首页" title="返回首页">QilyLean | <span>启力精益</span></a><nav class="nav"><a href="/knowledge/">知识索引</a><a href="/ie/">IE</a><a href="/digital/">数智工厂</a><a href="/methods/">改善工具</a></nav></div></header>
+<main id="main">
+<section class="page-hero"><div class="content"><div class="breadcrumbs"><a href="/">首页</a> / <a href="/knowledge/">知识索引</a> / 产能数字主线</div>
+<h1>别再只用UPH排产：从订单到设备，建立可执行的产能数字主线</h1>
+<p>多品种制造真正需要的，不是一列固定产能，而是把订单需求、标准周期、工装模具、设备资格、有效工时、换型与实绩反馈连成一条可计算、可执行、可校准的数据链。</p>
+<div class="article-meta"><span>2026-09-20</span><span>工业工程 / 产能排程</span><span>精选知识</span></div>
+</div></section>
+
+<section class="section"><div class="content article-shell">
+<article class="article-body">
+<div class="brief-key-grid">
+<div><strong>先换算时间</strong><p>不同产品先统一折算为设备分钟或设备小时，才能在同一产能池里比较。</p></div>
+<div><strong>先判定资格</strong><p>设备有空不等于能做；必须先确认产品、模具/工装与设备的适配关系。</p></div>
+<div><strong>用实绩校准</strong><p>计划与实际CT、停机、换型和良率偏差，要反过来修订主数据。</p></div>
+</div>
+
+<figure class="knowledge-visual">
+<svg viewBox="0 0 1160 245" role="img" aria-labelledby="cnThreadTitle cnThreadDesc">
+<title id="cnThreadTitle">产能数字主线</title><desc id="cnThreadDesc">订单需求经过产品工艺、标准时间、工装模具、设备资格和有效工时形成负荷排程，实绩反馈用于校准标准。</desc>
+<defs><marker id="cnA1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#5a8f88"/></marker></defs>
+<g fill="#f1f8f6" stroke="#8fb9b2" stroke-width="1.5">
+<rect x="22" y="55" width="128" height="76" rx="14"/><rect x="168" y="55" width="128" height="76" rx="14"/><rect x="314" y="55" width="128" height="76" rx="14"/><rect x="460" y="55" width="128" height="76" rx="14"/><rect x="606" y="55" width="128" height="76" rx="14"/><rect x="752" y="55" width="128" height="76" rx="14"/><rect x="898" y="55" width="128" height="76" rx="14"/><rect x="1044" y="55" width="94" height="76" rx="14"/>
+</g>
+<g fill="#0f4b5a" font-weight="800" text-anchor="middle">
+<text x="86" y="91">订单需求</text><text x="232" y="91">产品工艺</text><text x="378" y="91">标准CT</text><text x="524" y="91">工装模具</text><text x="670" y="91">设备资格</text><text x="816" y="91">有效工时</text><text x="962" y="91">负荷排程</text><text x="1091" y="91">实绩</text>
+</g>
+<g stroke="#5a8f88" stroke-width="2" fill="none" marker-end="url(#cnA1)"><path d="M150 93H164"/><path d="M296 93H310"/><path d="M442 93H456"/><path d="M588 93H602"/><path d="M734 93H748"/><path d="M880 93H894"/><path d="M1026 93H1040"/></g>
+<path d="M1091 142 C1091 205,378 205,378 142" stroke="#c99935" stroke-width="2.2" fill="none" marker-end="url(#cnA1)"/>
+<text x="735" y="200" fill="#765713" font-weight="800" text-anchor="middle">实绩偏差 → 参数复核 → 版本更新 → 再排程</text>
+</svg>
+<figcaption>图1｜排产的核心不是“某设备一天能做多少件”，而是“每张订单占用哪类合格资源多少时间”。</figcaption>
+</figure>
+
+<h2 id="uph">一、UPH有用，但不能单独承担多品种排产</h2>
+<p>UPH适合描述某一产品在明确工艺条件下的小时产出。多品种共用设备时，产品CT、模具穴数、换型、设备资格、计划停机和物料齐套都不同，单一UPH无法直接相加。</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>指标</th><th>主要用途</th><th>单独使用时的盲区</th></tr></thead><tbody>
+<tr><td>UPH</td><td>描述某条件下的小时产出速度</td><td>不同SKU共用设备时无法直接汇总负荷</td></tr>
+<tr><td>CT</td><td>描述一个生产周期所需时间</td><td>不能判断该设备是否具备加工资格</td></tr>
+<tr><td>客户节拍</td><td>判断需求要求系统以多快速度产出</td><td>不等于设备实际CT</td></tr>
+<tr><td>负荷率</td><td>比较需求工时与有效资源工时</td><td>仍需叠加齐套、换型和交期顺序</td></tr>
+</tbody></table></div>
+
+<h2 id="formula">二、把“件”换成“设备小时”，才能建立共同口径</h2>
+<div class="formula">订单负荷小时 = Σ[需求数量 × 标准CT ÷ (3600 × 穴数)] + 换型时间</div>
+<div class="formula">有效能力小时 = 计划设备小时 × 计划可用系数</div>
+<div class="formula">负荷率 = 需求负荷小时 ÷ 有效能力小时 × 100%</div>
+<p>计划可用系数不能拍脑袋设定，应来自企业自己的停机、维护和运行数据。若标准CT、良率或OEE已经包含某类损失，也要避免在公式中重复扣减。</p>
+
+<h2 id="qualification">三、先做设备资格矩阵，再算产能池</h2>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>产品/工序</th><th>关键资源</th><th>1号机</th><th>2号机</th><th>3号机</th><th>放行依据</th></tr></thead><tbody>
+<tr><td>SKU-A / 成型</td><td>1号模具</td><td>合格</td><td>合格</td><td>待验证</td><td>参数窗口＋首件＋能力验证</td></tr>
+<tr><td>SKU-B / 成型</td><td>3号模具</td><td>合格</td><td>合格</td><td>不适用</td><td>设备接口＋模具尺寸＋工艺能力</td></tr>
+<tr><td>SKU-C / 成型</td><td>2号模具</td><td>不适用</td><td>合格</td><td>待验证</td><td>设备能力＋质量基线＋批准记录</td></tr>
+</tbody></table></div>
+<p>资格字段应随工艺变化。例如注塑要核对锁模力、射胶量、模厚和温控接口；冲压要核对吨位、台面、行程与送料接口；SMT则可能关注板尺寸、轨宽、程序版本和炉温能力。</p>
+
+<h2 id="example">四、一个混流负荷示例：平均有余量，不代表没有瓶颈</h2>
+<p><strong>以下为计算口径演示数据，不代表任何企业真实产能。</strong>假设每月22个生产日、每台设备计划20小时/日；1号机计划可用系数85%，2号机82%。</p>
+<div class="table-wrap"><table class="data-table"><thead><tr><th>SKU</th><th>需求量</th><th>标准CT</th><th>穴数</th><th>分配</th><th>设备负荷</th></tr></thead><tbody>
+<tr><td>A</td><td>24,000</td><td>36秒/周期</td><td>1</td><td>1号机</td><td>240.0小时</td></tr>
+<tr><td>B</td><td>30,000</td><td>42秒/周期</td><td>2</td><td>两台各15,000</td><td>各87.5小时</td></tr>
+<tr><td>C</td><td>12,000</td><td>60秒/周期</td><td>1</td><td>2号机</td><td>200.0小时</td></tr>
+</tbody></table></div>
+
+<figure class="knowledge-visual">
+<svg viewBox="0 0 1160 315" role="img" aria-labelledby="cnLoadTitle cnLoadDesc">
+<title id="cnLoadTitle">双设备月度负荷演示</title><desc id="cnLoadDesc">1号机负荷率90.8%，2号机负荷率84.1%，总体约87.5%。</desc>
+<text x="36" y="44" fill="#0f4b5a" font-weight="900">示例：把需求与换型统一折算为设备小时</text>
+<text x="36" y="100" fill="#0f4b5a" font-weight="900">1号机</text><rect x="135" y="72" width="790" height="40" rx="9" fill="#e4efed"/><rect x="135" y="72" width="717" height="40" rx="9" fill="#5f918a"/><line x1="846" y1="59" x2="846" y2="123" stroke="#c99935" stroke-width="3" stroke-dasharray="6 5"/><text x="875" y="100" fill="#274744" font-weight="800">339.5 / 374小时 · 90.8%</text>
+<text x="36" y="211" fill="#0f4b5a" font-weight="900">2号机</text><rect x="135" y="183" width="790" height="40" rx="9" fill="#e4efed"/><rect x="135" y="183" width="664" height="40" rx="9" fill="#5f918a"/><line x1="846" y1="170" x2="846" y2="234" stroke="#c99935" stroke-width="3" stroke-dasharray="6 5"/><text x="875" y="211" fill="#274744" font-weight="800">303.5 / 360.8小时 · 84.1%</text>
+<text x="135" y="275" fill="#5f7472">虚线为90%示例管理线，仅用于演示，不是行业统一阈值。</text>
+</svg>
+<figcaption>图2｜总产能池约87.5%，但1号机已接近示例管理线；平均值不能遮住局部资源风险。</figcaption>
+</figure>
+
+<div class="brief-result-grid">
+<div><strong>1号机</strong><b>339.5 / 374小时</b><p>约90.8%，应优先评估换型、插单、维护和过程波动风险。</p></div>
+<div><strong>2号机</strong><b>303.5 / 360.8小时</b><p>约84.1%，仍要关注SKU-C只有单一合格资源的约束。</p></div>
+<div><strong>产能池合计</strong><b>643 / 734.8小时</b><p>总体约87.5%，但排程必须继续按设备级和资格级拆分。</p></div>
+</div>
+
+<h2 id="schedule">五、从月负荷到日排程，还要叠加四类约束</h2>
+<ul>
+<li><strong>物料齐套：</strong>没有齐套时间，设备空档只是纸面产能。</li>
+<li><strong>换型序列：</strong>同模具、同材料族或相近参数的合理排序，可减少清线、调机和首件确认损失。</li>
+<li><strong>维护与人力：</strong>保养窗口、技能矩阵、夜班配置和共享辅助资源要占用真实日历。</li>
+<li><strong>交期与风险：</strong>冻结窗口、客户优先级、质量隔离和异常恢复决定订单顺序，不应只按负荷最小排序。</li>
+</ul>
+
+<h2 id="loop">六、计划与实绩必须形成参数闭环</h2>
+<figure class="knowledge-visual">
+<svg viewBox="0 0 1160 235" role="img" aria-labelledby="cnLoopTitle cnLoopDesc">
+<title id="cnLoopTitle">产能参数闭环</title><desc id="cnLoopDesc">冻结计划、现场执行、偏差分解、原因确认和更新改善形成循环。</desc>
+<defs><marker id="cnA2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#5a8f88"/></marker></defs>
+<g fill="#f1f8f6" stroke="#8fb9b2" stroke-width="1.5"><rect x="45" y="62" width="170" height="82" rx="15"/><rect x="270" y="62" width="170" height="82" rx="15"/><rect x="495" y="62" width="170" height="82" rx="15"/><rect x="720" y="62" width="170" height="82" rx="15"/><rect x="945" y="62" width="170" height="82" rx="15"/></g>
+<g fill="#0f4b5a" font-weight="800" text-anchor="middle"><text x="130" y="109">冻结计划</text><text x="355" y="109">现场执行</text><text x="580" y="109">偏差分解</text><text x="805" y="109">原因确认</text><text x="1030" y="109">更新/改善</text></g>
+<g stroke="#5a8f88" stroke-width="2" fill="none" marker-end="url(#cnA2)"><path d="M215 103H265"/><path d="M440 103H490"/><path d="M665 103H715"/><path d="M890 103H940"/></g>
+<path d="M1030 154 C1030 205,130 205,130 153" stroke="#c99935" stroke-width="2.2" fill="none" marker-end="url(#cnA2)"/>
+<text x="580" y="199" fill="#765713" font-weight="800" text-anchor="middle">稳定偏差更新主数据；偶发异常进入问题关闭；改善结果重新固化标准</text>
+</svg>
+<figcaption>图3｜计划准确率不是靠反复催促，而是靠不断缩小模型与现场事实之间的偏差。</figcaption>
+</figure>
+
+<h2 id="check">七、落地前的十项检查</h2>
+<div class="brief-checks">
+<div><b>01</b><span>产品编码、BOM、工艺路线是否唯一并具备版本？</span></div><div><b>02</b><span>标准CT是否明确单位、方法与适用条件？</span></div>
+<div><b>03</b><span>多穴、多件/周期的换算规则是否统一？</span></div><div><b>04</b><span>产品×工装×设备资格是否有工程放行依据？</span></div>
+<div><b>05</b><span>设备日历是否包含班次、休息、维护和计划停机？</span></div><div><b>06</b><span>换型时间是否按产品族或工装族建立标准？</span></div>
+<div><b>07</b><span>物料齐套时间是否能进入排程判断？</span></div><div><b>08</b><span>订单是否统一折算为资源小时，而不是只看件数？</span></div>
+<div><b>09</b><span>计划与实绩是否按统一原因码分析偏差？</span></div><div><b>10</b><span>主数据是否明确责任人、更新触发、生效日期和审核记录？</span></div>
+</div>
+<div class="brief-note"><strong>结论：</strong>数智化排产的起点不是算法，而是可信的制造事实。先建立可计算、可执行、可校准的产能主数据，再让ERP、MES或APS把这套能力放大。</div>
+</article>
+
+<aside class="toc" aria-label="本页主旨"><b>本页主旨</b><a href="#uph">UPH边界</a><a href="#formula">统一公式</a><a href="#qualification">设备资格</a><a href="#example">混流示例</a><a href="#schedule">排程约束</a><a href="#loop">实绩闭环</a><a href="#check">落地检查</a></aside>
+</div></section>
+</main>
+<footer class="footer"><div class="footer-inner"><span>QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" title="工信部备案查询（新标签页打开）">湘ICP备2026041143号-1</a><a class="police-record" href="https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443" target="_blank" rel="noopener noreferrer" title="公安备案查询（新标签页打开）"><img src="/assets/mps-beian.png" width="18" height="20" alt="" aria-hidden="true"><span>湘公网安备43020002000443号</span></a></span></div></footer>
+<script defer src="/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao"></script>
+<script defer src="/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7"></script>
+</body></html>
