@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-13",
+  "generatedAt": "2026-09-20",
   "schemaVersion": 1,
   "terminology": {
     "total": 193,
@@ -7,12 +7,12 @@
     "url": "/knowledge/terminology.html"
   },
   "briefs": {
-    "total": 377,
-    "latestDate": "2026-09-13",
-    "latestTheme": "制造运营体系与精益价值",
-    "latestTitle": "招聘一名精益负责人，企业究竟需要他建立什么？",
-    "latestSummary": "从系统设计、流程优化与两类标准化出发，让客户质量、制造成本与持续经营回报形成闭环。",
-    "latestUrl": "/qilylean/daily/2026-09-13.html",
+    "total": 378,
+    "latestDate": "2026-09-20",
+    "latestTheme": "产能主数据与制造排程",
+    "latestTitle": "别再只用UPH排产：从订单到设备，建立可执行的产能数字主线",
+    "latestSummary": "把订单需求、工艺路线、标准CT、工装模具、设备资格、有效工时和实绩反馈连成一条主数据链；排产先算被设备约束的工时负荷，再谈日产量与系统算法。",
+    "latestUrl": "/qilylean/daily/2026-09-20.html",
     "directoryUrl": "/qilylean/daily-insights.html",
     "cadence": "weekly_curated",
     "earliestDate": "2019-07-10",
@@ -72,11 +72,11 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 739,
-    "indexedPages": 640,
+    "indexedEntries": 740,
+    "indexedPages": 641,
     "terminologyTotal": 193,
-    "briefTotal": 377,
-    "latestBriefDate": "2026-09-13",
-    "sitemapLastmod": "2026-09-18"
+    "briefTotal": 378,
+    "latestBriefDate": "2026-09-20",
+    "sitemapLastmod": "2026-09-20"
   }
 }

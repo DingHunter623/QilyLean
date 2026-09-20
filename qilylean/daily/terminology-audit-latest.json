@@ -1,14 +1,62 @@
 {
   "schemaVersion": 1,
-  "briefDate": "2026-09-13",
-  "briefPath": "qilylean/daily/2026-09-13.html",
-  "checkedAt": "2026-09-13T00:00:00.000Z",
+  "briefDate": "2026-09-20",
+  "briefPath": "qilylean/daily/2026-09-20.html",
+  "checkedAt": "2026-09-20T00:00:00.000Z",
   "candidates": [
     {
-      "term": "KPI",
+      "term": "APS",
       "explanation": "",
       "explicit": false,
-      "source": "KPI"
+      "source": "APS"
+    },
+    {
+      "term": "BOM",
+      "explanation": "",
+      "explicit": false,
+      "source": "BOM"
+    },
+    {
+      "term": "CT",
+      "explanation": "",
+      "explicit": false,
+      "source": "CT"
+    },
+    {
+      "term": "ERP",
+      "explanation": "",
+      "explicit": false,
+      "source": "ERP"
+    },
+    {
+      "term": "IE",
+      "explanation": "",
+      "explicit": false,
+      "source": "IE"
+    },
+    {
+      "term": "ME",
+      "explanation": "",
+      "explicit": false,
+      "source": "ME"
+    },
+    {
+      "term": "MES",
+      "explanation": "",
+      "explicit": false,
+      "source": "MES"
+    },
+    {
+      "term": "OEE",
+      "explanation": "",
+      "explicit": false,
+      "source": "OEE"
+    },
+    {
+      "term": "PE",
+      "explanation": "",
+      "explicit": false,
+      "source": "PE"
     },
     {
       "term": "PMC",
@@ -17,29 +65,59 @@
       "source": "PMC"
     },
     {
-      "term": "PPH",
+      "term": "SKU",
       "explanation": "",
       "explicit": false,
-      "source": "PPH"
+      "source": "SKU"
     },
     {
-      "term": "UPPH",
+      "term": "SMED",
       "explanation": "",
       "explicit": false,
-      "source": "UPPH"
+      "source": "SMED"
+    },
+    {
+      "term": "SMT",
+      "explanation": "",
+      "explicit": false,
+      "source": "SMT"
+    },
+    {
+      "term": "TT",
+      "explanation": "",
+      "explicit": false,
+      "source": "TT"
+    },
+    {
+      "term": "UPH",
+      "explanation": "Units Per Hour，每小时产出",
+      "explicit": true,
+      "source": "UPH（Units Per Hour，每小时产出）"
     }
   ],
   "coveredTerms": [
-    "KPI",
+    "APS",
+    "BOM",
+    "CT",
+    "ERP",
+    "IE",
+    "ME",
+    "MES",
+    "OEE",
+    "PE",
     "PMC",
-    "PPH",
-    "UPPH"
+    "SKU",
+    "SMED",
+    "SMT",
+    "TT",
+    "UPH"
   ],
   "unknownTerms": [],
   "rule": "今日简报发布前必须完成新术语的中文诠释、独立课件／词典收录、搜索索引及Sitemap同步；存在未收录术语时阻断发布。",
   "linkedTerms": [],
   "featuredTerms": [
-    "一、先明确精益岗位的职责，再讨论怎样考核"
+    "UPH",
+    "APS"
   ],
   "status": "passed"
 }
