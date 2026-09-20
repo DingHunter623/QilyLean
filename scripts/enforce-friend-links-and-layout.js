@@ -7,9 +7,9 @@
  * 3) /links/ 页面保留“友情链接｜全球科技企业100强”身份，同时继续承载产业资源协同内容；
  * 4) 本页内容轴统一到全站 1180px 主内容宽度；禁止 1240/1360/1560px 回退；
  * 5) hao123 作为正式友情链接收录并由永久规则保护，避免后续发布器覆盖回退；
- * 6) 国际站 /links/ 显式关联 QilyLean | 启力精益 中国知识站 qilylean.cn，但该入口独立于“全球科技企业100强”企业收录与排名；
+ * 6) 国际站 /links/ 显式关联备案名称“精益制造经验分享”对应的 qilylean.cn 中国站，但该入口独立于“全球科技企业100强”企业收录与排名；
  * 7) /links/ 中文语境中的官网品牌统一显示完整名称“QilyLean | 启力精益”；
- * 8) 该脚本为友情链接与中国知识站关联的唯一物化入口，CI 推送后自动生成公开页面。
+ * 8) 该脚本为友情链接与“精益制造经验分享”中国站关联的唯一物化入口，CI 推送后自动生成公开页面。
  */
 const fs=require('fs');
 const path=require('path');
@@ -44,7 +44,7 @@ function patchLinks(){
     .replace('<strong>网址导航友情链接：</strong>QilyLean 已增加主流网址导航官方入口，便于访问与站点收录核验。',`<strong>网址导航友情链接：</strong>${officialBrand} 已增加主流网址导航官方入口，便于访问与站点收录核验。`);
 
   const chinaKnowledgeBlock=`<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->
-      <div class="notice" id="qilyChinaKnowledgeBridge"><strong>${officialBrand} 中国知识站：</strong> <a class="resource-action" href="https://qilylean.cn/" target="_blank" rel="noopener" aria-label="进入 ${officialBrand} 中国知识站">进入 ${officialBrand} 中国知识站 ↗</a> <span>qilylean.cn 为 ${officialBrand} 制造知识体系的中国大陆个人知识与实践分享站，聚焦精益生产、工业工程、标准化、工厂规划与数智工厂知识；该入口属于知识体系关联，不作为“全球科技企业100强”的企业收录项或排名依据。</span></div>
+      <div class="notice" id="qilyChinaKnowledgeBridge"><strong>精益制造经验分享（${officialBrand}中国站）：</strong> <a class="resource-action" href="https://qilylean.cn/" target="_blank" rel="noopener" aria-label="进入精益制造经验分享">进入精益制造经验分享 ↗</a> <span>qilylean.cn 网站名称为“精益制造经验分享”，属于 ${officialBrand} 制造知识体系，聚焦精益生产、工业工程、标准化、工厂规划与数智工厂知识；该入口属于知识体系关联，不作为“全球科技企业100强”的企业收录项或排名依据。</span></div>
       <!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->`;
   const bridgeRe=/<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->[\s\S]*?<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->/;
   if(bridgeRe.test(html)){
@@ -74,8 +74,8 @@ function patchLinks(){
   assert(html.includes(`与 ${officialBrand} 制造业应用价值精选`),'links/index.html: collection notice lost full official brand');
   assert(html.includes(`<strong>网址导航友情链接：</strong>${officialBrand} 已增加主流网址导航官方入口`),'links/index.html: navigation notice lost full official brand');
   assert(html.includes('id="qilyChinaKnowledgeBridge"'),'links/index.html: China knowledge bridge missing');
-  assert(html.includes(`<strong>${officialBrand} 中国知识站：</strong>`),'links/index.html: China knowledge bridge label lost full official brand');
-  assert(html.includes(`进入 ${officialBrand} 中国知识站 ↗`),'links/index.html: China knowledge CTA lost full official brand');
+  assert(html.includes(`<strong>精益制造经验分享（${officialBrand}中国站）：</strong>`),'links/index.html: filed China-site name is missing');
+  assert(html.includes('进入精益制造经验分享 ↗'),'links/index.html: filed China-site CTA is missing');
   assert(html.includes(`qilylean.cn 为 ${officialBrand} 制造知识体系`),'links/index.html: China knowledge description lost full official brand');
   assert(html.includes('href="https://qilylean.cn/"'),'links/index.html: qilylean.cn direct knowledge entry missing');
   assert(html.includes('不作为“全球科技企业100强”的企业收录项或排名依据'),'links/index.html: non-ranking boundary for China knowledge bridge missing');
