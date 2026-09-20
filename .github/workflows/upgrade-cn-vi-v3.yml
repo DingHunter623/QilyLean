@@ -45,7 +45,7 @@ jobs:
           translate_css_target = f'<link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v={translate_version}">'
           translate_js_target = f'<script defer src="/assets/cn-translate-baidu-v1.js?v={translate_version}"></script>'
           css_pattern = re.compile(r'\s*<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">\s*')
-          footer_target = '<footer class="footer"><div class="footer-inner"><span>QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" title="工信部备案查询（新标签页打开）">湘ICP备2026041143号-1</a><a class="police-record" href="https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443" target="_blank" rel="noopener noreferrer" title="公安备案查询（新标签页打开）"><img src="/assets/mps-beian.png" width="18" height="20" alt="" aria-hidden="true"><span>湘公网安备43020002000443号</span></a></span></div></footer>'
+          footer_target = '<footer class="footer"><div class="footer-inner"><span>QilyLean | 启力精益 · 精益制造经验分享</span><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" title="工信部备案查询（新标签页打开）">湘ICP备2026041143号-1</a><a class="police-record" href="https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443" target="_blank" rel="noopener noreferrer" title="公安备案查询（新标签页打开）"><img src="/assets/mps-beian.png" width="18" height="20" alt="" aria-hidden="true"><span>湘公网安备43020002000443号</span></a></span></div></footer>'
           toc_pattern = re.compile(r'(<aside\b[^>]*class=["\']toc["\'][^>]*>)(.*?)(</aside>)', re.I | re.S)
           brand_anchor_pattern = re.compile(r'(<a\b[^>]*class=["\']brand["\'][^>]*>)(.*?)(</a>)', re.I | re.S)
           changed = 0
@@ -93,8 +93,10 @@ jobs:
               out = brand_anchor_pattern.sub(normalize_brand_anchor, out)
 
               if path.as_posix() == 'cn-site/about/index.html':
-                  out = out.replace('<h1>关于 QilyLean 中国知识站</h1>', f'<h1>关于 {official_brand} 中国知识站</h1>')
-                  out = out.replace('content="QilyLean 中国站为个人制造业知识与实践分享站', f'content="{official_brand}中国站为个人制造业知识与实践分享站')
+                  out = out.replace('<h1>关于 QilyLean 中国知识站</h1>', '<h1>关于“精益制造经验分享”</h1>')
+                  out = out.replace(f'<h1>关于 {official_brand} 中国知识站</h1>', '<h1>关于“精益制造经验分享”</h1>')
+                  out = out.replace('content="QilyLean 中国站为个人制造业知识与实践分享站', 'content="精益制造经验分享是 QilyLean | 启力精益中国站的备案服务名称，内容聚焦')
+                  out = out.replace(f'content="{official_brand}中国站为个人制造业知识与实践分享站', 'content="精益制造经验分享是 QilyLean | 启力精益中国站的备案服务名称，内容聚焦')
 
               nonlocal_thesis = [0]
               out = toc_pattern.sub(normalize_thesis, out)
@@ -156,7 +158,7 @@ jobs:
           files = sorted(Path('cn-site').rglob('*.html'))
           css_marker = 'qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback'
           official_brand = 'QilyLean | 启力精益'
-          footer_marker = 'QilyLean | 启力精益 · 个人制造业知识与实践分享</span><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/'
+          footer_marker = 'QilyLean | 启力精益 · 精益制造经验分享</span><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
           brand_anchor_pattern = re.compile(r'<a\b[^>]*class=["\']brand["\'][^>]*>(.*?)</a>', re.I | re.S)
           bad = []
@@ -209,10 +211,10 @@ jobs:
                       bad.append((str(path), 'thesis-aria'))
 
           about = Path('cn-site/about/index.html').read_text(encoding='utf-8')
-          if f'<h1>关于 {official_brand} 中国知识站</h1>' not in about:
-              bad.append(('cn-site/about/index.html', 'official-brand-h1'))
-          if '<h1>关于 QilyLean 中国知识站</h1>' in about:
-              bad.append(('cn-site/about/index.html', 'legacy-english-only-brand-h1'))
+          if '<h1>关于“精益制造经验分享”</h1>' not in about:
+              bad.append(('cn-site/about/index.html', 'filed-site-name-h1'))
+          if '<h1>关于 QilyLean 中国知识站</h1>' in about or f'<h1>关于 {official_brand} 中国知识站</h1>' in about:
+              bad.append(('cn-site/about/index.html', 'legacy-china-knowledge-name-h1'))
 
           home = Path('cn-site/index.html').read_text(encoding='utf-8')
           if '进入 Global Knowledge →' not in home:
