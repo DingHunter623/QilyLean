@@ -133,6 +133,7 @@ jobs:
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
       - name: Stage release bundle on mainland server
+        timeout-minutes: 6
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -150,16 +151,25 @@ jobs:
           cp cn-site/nginx/qilylean.cn.conf "$STAGE/qilylean.cn.conf"
 
           # Always upload the release archive built from the current GitHub SHA.
-          # Reusing /tmp/qilylean-cn-site.tar.gz can silently redeploy an older visual bundle.
-          tar -C "$STAGE" -czf - \
-            qilylean-cn-site.tar.gz \
-            bootstrap-qilylean-cn.sh \
-            deploy-qilylean-cn.sh \
-            activate-qilylean-cn-http.sh \
-            qilylean.cn.conf \
-            | ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
-              'tar --no-same-owner --no-same-permissions -xzf - -C /tmp'
-          ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+          # Bound each SSH stream so a transient mainland-network stall cannot hold the deployment indefinitely.
+          staged=0
+          for attempt in 1 2 3; do
+            echo "Stage upload attempt $attempt/3"
+            if tar -C "$STAGE" -czf - \
+              qilylean-cn-site.tar.gz \
+              bootstrap-qilylean-cn.sh \
+              deploy-qilylean-cn.sh \
+              activate-qilylean-cn-http.sh \
+              qilylean.cn.conf \
+              | timeout 90s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+                'tar --no-same-owner --no-same-permissions -xzf - -C /tmp'; then
+              staged=1
+              break
+            fi
+            sleep 5
+          done
+          test "$staged" -eq 1
+          timeout 60s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
             'test -s /tmp/qilylean-cn-site.tar.gz && test -s /tmp/deploy-qilylean-cn.sh && echo "Release bundle staged."'
 
       - name: Bootstrap server when required
