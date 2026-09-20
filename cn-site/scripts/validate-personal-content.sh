@@ -164,7 +164,7 @@ grep -Fq '跨部门共同推进，评审、风险确认与结果复盘构成完�
 grep -Fq '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive must use the local award evidence asset."; exit 1; }
 grep -Fq '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2' "$PRACTICE_PAGE" || { echo "ERROR: CN fuse card must use the finished-product visual cache marker."; exit 1; }
 grep -Fq '玻璃管保险丝切口与烧口工艺改善后的成品照片' "$PRACTICE_PAGE" || { echo "ERROR: CN fuse card finished-product alt text is missing."; exit 1; }
-grep -Fq '/assets/practice.css?v=20260918-practice-visual-v2' "$PRACTICE_PAGE" || { echo "ERROR: CN practice visual V2 cache marker is missing."; exit 1; }
+grep -Fq '/assets/practice.css?v=20260920-practice-visual-v3-equal' "$PRACTICE_PAGE" || { echo "ERROR: CN practice visual V3 equal-layout cache marker is missing."; exit 1; }
 grep -Fq '6S改善运行机制摘要' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism summary heading is missing."; exit 1; }
 grep -Fq '6S改善机制：从稽核到激励的运行记录' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S public-facing section headline is missing."; exit 1; }
 grep -Fq '机制说明：' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism explanation is missing."; exit 1; }
@@ -179,6 +179,9 @@ grep -Fq '制造现场目视化系统设计与运行闭环' "$PRACTICE_PAGE" || 
 grep -Fq 'award-metrics-grid' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S 2x2 mechanism metric grid is missing."; exit 1; }
 grep -Fq 'award-flow' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S closure flow is missing."; exit 1; }
 grep -Fq 'QILY-CN-AWARD-MECHANISM-V2' "$PRACTICE_CSS" || { echo "ERROR: CN 6S award visualization V2 CSS contract is missing."; exit 1; }
+grep -Fq 'QILY-CN-EQUAL-PEER-CARDS-V1' "$PRACTICE_CSS" || { echo "ERROR: CN equal peer-card visual contract is missing."; exit 1; }
+grep -Fq '.practice-intro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch}' "$PRACTICE_CSS" || { echo "ERROR: CN practice intro sibling cards must be equal-width on desktop."; exit 1; }
+if grep -Fq '.practice-intro{display:grid;grid-template-columns:1.2fr .8fr' "$PRACTICE_CSS"; then echo "ERROR: CN practice intro contains legacy unequal sibling-card columns."; exit 1; fi
 grep -Fq 'grid-template-columns:repeat(2,minmax(0,1fr));' "$PRACTICE_CSS" || { echo "ERROR: CN 6S metric grid must render as 2x2 on desktop."; exit 1; }
 grep -Fq 'white-space:nowrap;' "$PRACTICE_CSS" || { echo "ERROR: CN 6S metric values must avoid vertical wrapping."; exit 1; }
 
