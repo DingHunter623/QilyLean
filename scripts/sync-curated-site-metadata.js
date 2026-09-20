@@ -10,6 +10,7 @@ const siteDataFile = path.join(root, 'qilylean', 'site-data.json');
 const homeFile = path.join(root, 'index.html');
 const knowledgeFile = path.join(root, 'knowledge', 'index.html');
 const terminologyFile = path.join(root, 'knowledge', 'terminology.html');
+const globalKnowledgeFile = path.join(root, 'global-knowledge', 'index.html');
 
 function read(file) { return fs.readFileSync(file, 'utf8'); }
 function writeIfChanged(file, value) {
@@ -106,6 +107,15 @@ function updateKnowledge(data) {
   html = html.replace(/今日简报/g, '精选简报');
   writeIfChanged(knowledgeFile, html);
 }
+function updateGlobalKnowledge(data) {
+  let html = read(globalKnowledgeFile);
+  const b = data.briefs;
+  html = html.replace(/(<strong id="briefTotal">)\d+(<\/strong>)/, `$1${b.total}$2`);
+  html = html.replace(/<h3>\d+篇精选简报<\/h3>/, `<h3>${b.total}篇精选简报</h3>`);
+  html = html.replace(/<p id="briefLatest">[\s\S]*?<\/p>/, `<p id="briefLatest">最新更新：${esc(b.latestDate)}｜${esc(b.latestTitle)}。按日期、主题与关键词检索，快速定位制造工程与管理实践主题。</p>`);
+  html = html.replace(/d\.briefs&&d\.briefs\.total\|\|\d+/, `d.briefs&&d.briefs.total||${b.total}`);
+  writeIfChanged(globalKnowledgeFile, html);
+}
 function updateTerminology(termTotal) {
   let html = read(terminologyFile);
   html = html.replace(
@@ -119,6 +129,7 @@ function validate(data) {
   const home = read(homeFile);
   const knowledge = read(knowledgeFile);
   const central = JSON.parse(read(siteDataFile));
+  const globalKnowledge = read(globalKnowledgeFile);
   const knowledgeDescription = `QilyLean知识资产：收录${data.terminology.total}项制造管理与工程术语、${data.briefs.total}篇精选制造工程简报及${data.knowledge.resourceCount}项精益工具、知识专题和程序文件／参考资料；最新精选更新至${data.briefs.latestDate}。`;
   if (!home.includes(`${data.briefs.total}篇`)) throw new Error('Homepage curated brief count is stale.');
   if (!home.includes(data.briefs.latestDate)) throw new Error('Homepage latest curated date is stale.');
@@ -128,6 +139,9 @@ function validate(data) {
   if (!knowledge.includes(`<meta name="description" content="${knowledgeDescription}">`)) throw new Error('Knowledge primary description is stale.');
   if (!knowledge.includes(`<meta property="og:description" content="${knowledgeDescription}">`)) throw new Error('Knowledge Open Graph description is stale.');
   if (!knowledge.includes(`<meta name="twitter:description" content="${knowledgeDescription}">`)) throw new Error('Knowledge Twitter description is stale.');
+  if (!globalKnowledge.includes(`<strong id="briefTotal">${data.briefs.total}</strong>`)) throw new Error('Global Knowledge brief total is stale.');
+  if (!globalKnowledge.includes(`<h3>${data.briefs.total}篇精选简报</h3>`)) throw new Error('Global Knowledge brief card total is stale.');
+  if (!globalKnowledge.includes(`最新更新：${data.briefs.latestDate}｜${data.briefs.latestTitle}。`)) throw new Error('Global Knowledge latest brief is stale.');
   const terminology = read(terminologyFile);
   if (!terminology.includes(`共收录 ${data.terminology.total} 项术语 · ${data.terminology.total} 份单点培训课件`)) throw new Error('Terminology visible count is stale.');
   if (!knowledge.includes('精选简报')) throw new Error('Knowledge page still lacks curated-brief wording.');
@@ -140,6 +154,7 @@ function main() {
   updateTerminology(terms);
   updateHome(data);
   updateKnowledge(data);
+  updateGlobalKnowledge(data);
   validate(data);
   process.stdout.write(`Curated site metadata synchronized: ${items.length} briefs, ${terms} terms, latest ${items[0].date}.\n`);
 }
