@@ -63,6 +63,7 @@ assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation worke
   'QILY-CN-STICKY-HEADER-V1',
   'position:sticky!important',
   'QILY-CN-ROUTE-FEEDBACK-V1',
+  'QILY-CN-FILING-FEEDBACK-V2',
   '--qily-nav-scroll-track:#b9d9d4',
   '--qily-nav-scroll-thumb:#0f4b5a',
   '--qily-cn-h1:clamp(30px,8.4vw,38px)',
@@ -108,10 +109,18 @@ const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*
 assert(cnPages.length>=17,'Expected at least 17 CN document pages.');
 for(const rel of cnPages){
   const html=read(rel);
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v18-beian'), rel+' must use CN VI V18.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback'), rel+' must use CN VI V19.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao'), rel+' must load exactly one CN translator runtime.');
+  // Filing records remain official external links after shared-footer regeneration.
+  const filingLinks=[...html.matchAll(/<a\b[^>]*href=["']https:\/\/beian\.(?:miit|mps)\.gov\.cn\/[^"']*["'][^>]*>/g)];
+  assert(filingLinks.length>=2, rel+' must retain both official filing links.');
+  for(const [link] of filingLinks){
+    assert(/target="_blank"/.test(link), rel+' filing query must open in a new tab.');
+    assert(/rel="noopener noreferrer"/.test(link), rel+' filing query must isolate the external tab.');
+    assert(/title="[^"]*新标签页打开[^"]*"/.test(link), rel+' filing query must explain its new-tab behavior.');
+  }
 }
 
 /* 4) Previous public-copy governance remains mandatory. */
