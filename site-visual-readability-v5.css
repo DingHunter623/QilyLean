@@ -1,7 +1,7 @@
 /* QilyLean 全站可视化清晰度 V10｜2026-09-03
  * 目标：落实“最小号字体统一放大一号、底色与字体高对比、编号清晰可读”。
  * V9：章节级 eyebrow / kicker 统一使用 QilyLean VI 金色系；静态术语/指标胶囊统一为信息态，禁止 hover/active/focus 伪交互反馈。
- * V10 / R8：以首页主 Hero 标题为全站头号字体权威尺度；公开页面任何 H1 最终渲染不得超过 52px，移动端不得超过 43px。
+ * V11 / R8.1：以首页主 Hero 标题为全站头号字体权威尺度；公开页面任何 H1 最终渲染不得超过 44px，移动端不得超过 38px。
  * 本层作为最终级联直接进入所有公开 HTML <head>，不改业务架构、正文口径与真实可点击控件的交互反馈。
  */
 
@@ -18,7 +18,7 @@
   --qily-v5-small:17px;
   --qily-v5-small-strong:18px;
   --qily-v5-section-kicker:20px;
-  --qily-r8-heading-ceiling:clamp(34px,3.25vw,52px);
+  --qily-r8-heading-ceiling:clamp(30px,2.65vw,44px);
 }
 
 /* R8-HEADING-CEILING-V1-20260903
@@ -33,7 +33,7 @@ html:root:root:root body main h1{
 }
 @media(max-width:620px){
   html:root:root:root body main h1{
-    font-size:clamp(34px,9.6vw,43px)!important;
+    font-size:clamp(30px,8.2vw,38px)!important;
   }
 }
 
