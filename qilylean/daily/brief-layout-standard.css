@@ -159,3 +159,17 @@ html body.qily-knowledge-brief-page .lean-brief-diagram img{
     max-width:100%!important;
   }
 }
+
+
+/* QILY-BRIEF-FEEDBACK-AXIS-V3 | 2026-09-21
+ * Message/discussion panels are part of the curated-brief reading surface.
+ * Their outer border must align exactly with the canonical 1180px article axis.
+ */
+html body.qily-knowledge-brief-page main[data-qily-knowledge-brief] > .brief-feedback{
+  width:min(var(--qily-brief-content-axis),calc(100% - var(--qily-brief-gutter) - var(--qily-brief-gutter)))!important;
+  max-width:var(--qily-brief-content-axis)!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
