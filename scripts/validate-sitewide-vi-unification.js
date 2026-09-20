@@ -51,7 +51,7 @@ for(const rel of gkPages){
   const html=read(rel);
   assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260920-gk-header-v3'), rel+' must load shared Global Knowledge VI after its local skin.');
   assert(/<header class="top">[\s\S]*?<a(?: class="brand")? href="\/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge<\/a>/.test(html), rel+' Global Knowledge brand must return to site home.');
-  assert(html.includes('href="https://qilylean.cn/" rel="noopener">精益制造经验分享</a>'), rel+' must use the filed China-site name for the qilylean.cn route.');
+  assert(html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>'), rel+' must expose the bilingual China Knowledge route to qilylean.cn.');
   assert(!html.includes('>中国知识站</a>'), rel+' must not expose the retired China-site name.');
 }
 
