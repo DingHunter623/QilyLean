@@ -50,6 +50,7 @@ const gkPages=[
 for(const rel of gkPages){
   const html=read(rel);
   assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260920-gk-header-v3'), rel+' must load shared Global Knowledge VI after its local skin.');
+  assert(/<header class="top">[\s\S]*?<a(?: class="brand")? href="\/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge<\/a>/.test(html), rel+' Global Knowledge brand must return to site home.');
 }
 
 /* 3) China site: same international-style rail + controlled type hierarchy */
