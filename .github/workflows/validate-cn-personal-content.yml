@@ -82,8 +82,8 @@ jobs:
           grep -Fq 'position:sticky!important' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'qily-primary-nav-scroll-thumb' cn-site/assets/cn-nav-rail-v1.js
           grep -Fq 'mousedown' cn-site/assets/cn-nav-rail-v1.js
-          grep -Fq -- '--qily-cn-h1:clamp(30px,8.4vw,38px)' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq -- '--qily-cn-h2:clamp(24px,6.8vw,29px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h1:clamp(28px,7.8vw,36px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h2:clamp(23px,6.2vw,28px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h3:clamp(19px,5.7vw,21px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq '从现场问题，到可复用的方法' cn-site/notes/index.html
           grep -Fq '8项制造实践，从现场问题走向标准化沉淀' cn-site/notes/index.html

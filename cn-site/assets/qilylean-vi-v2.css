@@ -9,8 +9,8 @@
   --qily-cn-axis:1180px;
   --qily-cn-body:18px;
   --qily-cn-small:16px;
-  --qily-cn-h1:clamp(34px,2.8vw,46px);
-  --qily-cn-h2:clamp(26px,2vw,32px);
+  --qily-cn-h1:clamp(30px,2.5vw,42px);
+  --qily-cn-h2:clamp(25px,1.85vw,30px);
   --qily-cn-h3:clamp(20px,1.4vw,23px);
   --qily-cn-fixed-footer-h:78px;
   --qily-cn-primary-nav-font-size:20px;
@@ -298,8 +298,8 @@ html:root body a[href^="https://beian."]:active{
   :root{
     --qily-cn-body:17px;
     --qily-cn-small:15px;
-    --qily-cn-h1:clamp(30px,8.4vw,38px);
-    --qily-cn-h2:clamp(24px,6.8vw,29px);
+    --qily-cn-h1:clamp(28px,7.8vw,36px);
+    --qily-cn-h2:clamp(23px,6.2vw,28px);
     --qily-cn-h3:clamp(19px,5.7vw,21px);
   }
   html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){font-size:17px!important}

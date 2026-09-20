@@ -15,8 +15,8 @@ function tracked(pattern){
 
 /* 1) International VI authority */
 const readability=read('site-visual-readability-v5.css');
-assert(readability.includes('--qily-r8-heading-ceiling:clamp(34px,3.25vw,52px)'), 'International heading ceiling must remain 52px.');
-assert(readability.includes('font-size:clamp(34px,9.6vw,43px)!important'), 'International mobile H1 ceiling must remain 43px.');
+assert(readability.includes('--qily-r8-heading-ceiling:clamp(30px,2.65vw,44px)'), 'International heading ceiling must remain 44px.');
+assert(readability.includes('font-size:clamp(30px,8.2vw,38px)!important'), 'International mobile H1 ceiling must remain 38px.');
 
 const interaction=read('site-interaction-semantics-v1.css');
 assert(interaction.includes('QILY-ROUTE-CARD-FEEDBACK-V2'), 'International route-card feedback contract is missing.');
@@ -29,8 +29,8 @@ const gkCss=read('global-knowledge/global-knowledge-vi-v2.css');
 [
   'QILY-GK-TYPE-HIERARCHY-V2',
   'QILY-GK-ROUTE-FEEDBACK-V2',
-  '--qily-gk-h1:clamp(34px,3.25vw,52px)',
-  '--qily-gk-h1:clamp(31px,9vw,43px)',
+  '--qily-gk-h1:clamp(30px,2.65vw,44px)',
+  '--qily-gk-h1:clamp(29px,8vw,38px)',
   'a.card[href]:hover',
   'a.brief[href]:hover',
   'a.card[href]:focus-visible',
@@ -66,8 +66,8 @@ assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation worke
   'QILY-CN-FILING-FEEDBACK-V2',
   '--qily-nav-scroll-track:#b9d9d4',
   '--qily-nav-scroll-thumb:#0f4b5a',
-  '--qily-cn-h1:clamp(30px,8.4vw,38px)',
-  '--qily-cn-h2:clamp(24px,6.8vw,29px)',
+  '--qily-cn-h1:clamp(28px,7.8vw,36px)',
+  '--qily-cn-h2:clamp(23px,6.2vw,28px)',
   '--qily-cn-h3:clamp(19px,5.7vw,21px)',
   'scrollbar-width:none!important',
   'background:#b9d9d4!important',

@@ -45,7 +45,7 @@ function validatePublicStyles() {
     [wide, '--qily-wide-content:1560px', 'Wide layout'],
     [wide, '.hero>.hero-grid', 'Homepage grid'],
     [type, '--qily-type-body:18.5px', 'Typography'],
-    [type, '--qily-type-h1:clamp(34px,3.25vw,52px)', 'R8 homepage heading ceiling'],
+    [type, '--qily-type-h1:clamp(30px,2.65vw,44px)', 'R8.1 homepage heading ceiling'],
     [type, 'text-wrap:wrap', 'Phrase wrapping'],
     [visual, '.qily-home-balanced .portrait-badge', 'Homepage portrait'],
     [vi, '--qily-vi-olive:#0f4b5a', 'VI palette'],

@@ -25,6 +25,7 @@ const latestDailyOnly=process.argv.includes('--latest-daily');
 
 const BASELINE_VERSION='20260831-google-translate-single-runtime-v32';
 const DDZ_FAST_PATH='tools/pure-ddz/index.html';
+const GLOBAL_KNOWLEDGE_PREFIX='global-knowledge/';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation';
 const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
@@ -102,6 +103,9 @@ function isDdzFastRoute(relative,source){
   return relative===DDZ_FAST_PATH&&source.includes("20260903-ddz-fast-knowledge-v155")&&source.includes('data-qily-ddz-fast-shell="v155"');
 }
 function materialize(source,relative){
+  /* Global Knowledge owns its own VI, shell and translation boundary; never rematerialize it with the primary-site baseline. */
+  if(relative.startsWith(GLOBAL_KNOWLEDGE_PREFIX))return source;
+
   /* DDZ V155 is intentionally isolated from the heavyweight sitewide shell. Keep only the canonical Dock cache aligned. */
   if(isDdzFastRoute(relative,source))return source.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK_SHARE);
 

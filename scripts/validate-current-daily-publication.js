@@ -53,6 +53,14 @@ const aiManufacturingBrief = exists(`qilylean/daily/${aiManufacturingBriefDate}.
 const knowledgeBriefCss = exists('qilylean/knowledge-brief.css') ? read('qilylean/knowledge-brief.css') : '';
 const aug25Brief = exists('qilylean/daily/2026-08-25.html') ? read('qilylean/daily/2026-08-25.html') : '';
 const unifiedBriefCss = exists('qilylean/daily-brief-unified-layout-v2.css') ? read('qilylean/daily-brief-unified-layout-v2.css') : '';
+const briefLayoutStandard = exists('qilylean/daily/brief-layout-standard.css') ? read('qilylean/daily/brief-layout-standard.css') : '';
+const dailyFeedback = exists('qilylean/daily-feedback.js') ? read('qilylean/daily-feedback.js') : '';
+const trustPage = exists('trust/index.html') ? read('trust/index.html') : '';
+const trustRuntime = exists('trust/live-status.js') ? read('trust/live-status.js') : '';
+const globalKnowledge = exists('global-knowledge/index.html') ? read('global-knowledge/index.html') : '';
+const sep20Brief = exists('qilylean/daily/2026-09-20.html') ? read('qilylean/daily/2026-09-20.html') : '';
+const cnCapacityBrief = exists('cn-site/knowledge/capacity-digital-thread/index.html') ? read('cn-site/knowledge/capacity-digital-thread/index.html') : '';
+const cnHome = exists('cn-site/index.html') ? read('cn-site/index.html') : '';
 
 includes(latest, `id="${sourceLatest}"`, 'Latest retained page carries its date identity');
 includes(latest, 'data-brief-message-form', 'Latest retained page contains message form');
@@ -136,6 +144,34 @@ assert(searchIndex.meta && siteData.terminology && searchIndex.meta.terminologyT
 if (audit) {
   assert(audit.status === 'passed', 'Latest terminology audit passed');
   assert(Array.isArray(audit.unknownTerms) && audit.unknownTerms.length === 0, 'Latest terminology audit has no unknown terms');
+}
+
+
+/* 2026-09-20 visual closure: keep the annotated failure modes governed. */
+includes(briefLayoutStandard, '--qily-brief-font-h1:clamp(30px,2.05vw,36px);', 'Curated brief H1 uses the restrained title scale');
+includes(dailyFeedback, 'max-width:var(--qily-brief-content-axis,1180px)', 'Injected knowledge-chain panel is capped to the canonical brief axis');
+includes(trustPage, 'white-space:nowrap!important', 'Trust curated-date cards prevent desktop date wrapping');
+includes(trustRuntime, 'white-space:nowrap!important', 'Trust live runtime preserves single-line curated dates');
+includes(globalKnowledge, `<strong id="briefTotal">${siteData.briefs.total}</strong>`, 'Global Knowledge hero brief count matches central metadata');
+includes(globalKnowledge, `<h3>${siteData.briefs.total}篇精选简报</h3>`, 'Global Knowledge asset-card count matches central metadata');
+includes(globalKnowledge, `最新更新：${siteData.briefs.latestDate}｜${siteData.briefs.latestTitle}。`, 'Global Knowledge latest brief matches central metadata');
+if (sep20Brief) {
+  includes(sep20Brief, 'id="arr20aFeedback"', 'Sep 20 capacity thread has a dedicated feedback arrow marker');
+  includes(sep20Brief, 'id="arr20bFeedback"', 'Sep 20 daily loop has a dedicated feedback arrow marker');
+  includes(sep20Brief, 'stroke="#c99935"', 'Sep 20 feedback arrowheads use the feedback-line color');
+  includes(sep20Brief, 'markerUnits="userSpaceOnUse"', 'Sep 20 arrows use consistent open-chevron geometry');
+  assert(!sep20Brief.includes('L9,3 L0,6 Z'), 'Sep 20 diagrams no longer use filled triangle arrowheads');
+  assert(!sep20Brief.includes('M145 96H160M290'), 'Sep 20 flow connectors are separate paths so every arrowhead renders');
+}
+if (cnCapacityBrief) {
+  includes(cnCapacityBrief, 'id="cnA1Feedback"', 'CN capacity thread has a dedicated feedback arrow marker');
+  includes(cnCapacityBrief, 'id="cnA2Feedback"', 'CN daily loop has a dedicated feedback arrow marker');
+  includes(cnCapacityBrief, 'stroke="#c99935"', 'CN feedback arrowheads match feedback-line color');
+  assert(!cnCapacityBrief.includes('L9,3 L0,6 Z'), 'CN capacity diagrams no longer use filled triangle arrowheads');
+}
+if (cnHome) {
+  includes(cnHome, '/knowledge/capacity-digital-thread/', 'CN homepage exposes the current synchronized capacity brief');
+  includes(cnHome, '2026-09-20｜别再只用UPH排产', 'CN homepage labels the current synchronized brief');
 }
 
 includes(cooperation, 'QILY-PRICING-PUBLIC-DISABLED', 'Public pricing remains disabled');

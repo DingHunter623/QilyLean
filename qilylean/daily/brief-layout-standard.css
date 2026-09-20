@@ -11,8 +11,8 @@
   --qily-brief-gutter:var(--qily-wide-gutter,clamp(14px,2.2vw,40px));
   --qily-brief-media-axis:1040px;
 
-  --qily-brief-font-h1:clamp(32px,2.4vw,42px);
-  --qily-brief-font-h2:clamp(24px,1.65vw,30px);
+  --qily-brief-font-h1:clamp(30px,2.05vw,36px);
+  --qily-brief-font-h2:clamp(23px,1.5vw,28px);
   --qily-brief-font-h3:clamp(19px,1.25vw,22px);
   --qily-brief-font-lead:clamp(18px,1.15vw,20px);
   --qily-brief-font-body:clamp(16px,.95vw,18px);
@@ -142,8 +142,8 @@ html body.qily-knowledge-brief-page .lean-brief-diagram img{
 @media(max-width:620px){
   :root{
     --qily-brief-gutter:15px;
-    --qily-brief-font-h1:clamp(28px,8vw,34px);
-    --qily-brief-font-h2:clamp(22px,6.2vw,27px);
+    --qily-brief-font-h1:clamp(27px,7.2vw,32px);
+    --qily-brief-font-h2:clamp(21px,5.8vw,25px);
     --qily-brief-font-h3:clamp(18px,5vw,21px);
     --qily-brief-font-lead:17px;
     --qily-brief-font-body:16px;

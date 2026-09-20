@@ -138,7 +138,7 @@ function ensureStyles(){
     '.qily-application-case p{margin:0!important;color:#3a5756!important;font-size:14px;line-height:1.7}',
     '.qily-case-metrics{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}',
     '.qily-case-metrics span{padding:4px 8px;border:1px solid #c7ddd7;border-radius:999px;background:#fff;color:#41655f!important;font-size:12px;font-weight:800}',
-    '.qily-knowledge-chain{margin:30px 0 22px;padding:22px;border:1px solid #c9ded9;border-radius:20px;background:linear-gradient(180deg,#fff,#f3f9f7);box-shadow:0 8px 24px rgba(15,75,90,.06)}',
+    '.qily-knowledge-chain{box-sizing:border-box;width:100%;max-width:var(--qily-brief-content-axis,1180px);margin:30px auto 22px;padding:22px;border:1px solid #c9ded9;border-radius:20px;background:linear-gradient(180deg,#fff,#f3f9f7);box-shadow:0 8px 24px rgba(15,75,90,.06)}',
     '.qily-knowledge-chain h3{margin:0 0 7px;color:#0f4b5a!important;font-size:22px}',
     '.qily-knowledge-chain>p{margin:0 0 15px;color:#55706d!important;line-height:1.7}',
     '.qily-knowledge-chain-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}',
