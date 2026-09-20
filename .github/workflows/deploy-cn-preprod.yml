@@ -1,6 +1,7 @@
 name: Deploy QilyLean CN knowledge site
 # QILY-CN-STICKY-V17-PRODUCTION-DEPLOY | 2026-09-18
 # QILY-CN-V7-PRODUCTION-DEPLOY-TRIGGER | 2026-09-18
+# QILY-CN-FRESH-BUNDLE-V1 | 2026-09-20 | Never reuse a stale /tmp release archive
 
 on:
   workflow_dispatch:
@@ -133,32 +134,16 @@ jobs:
           cp cn-site/scripts/activate-public-http.sh "$STAGE/activate-qilylean-cn-http.sh"
           cp cn-site/nginx/qilylean.cn.conf "$STAGE/qilylean.cn.conf"
 
-          REMOTE_READY="$(ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" '
-            set -e
-            test -s /tmp/qilylean-cn-site.tar.gz
-            test -s /tmp/bootstrap-qilylean-cn.sh
-            test -s /tmp/deploy-qilylean-cn.sh
-            test -s /tmp/activate-qilylean-cn-http.sh
-            test -s /tmp/qilylean.cn.conf
-            tar -xOf /tmp/qilylean-cn-site.tar.gz ./index.html | grep -Fq "/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v18-beian"
-            tar -xOf /tmp/qilylean-cn-site.tar.gz ./index.html | grep -Fq "/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao"
-            tar -xOf /tmp/qilylean-cn-site.tar.gz ./index.html | grep -Fq "/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3"
-            tar -tzf /tmp/qilylean-cn-site.tar.gz | grep -Fxq "./assets/qilylean-aircraft-hero-cn-v2-20260919.png"
-            tar -xOf /tmp/qilylean-cn-site.tar.gz ./assets/qilylean-vi-v2.css | grep -Fq "QILY-CN-STICKY-HEADER-V1"
-            echo ready
-          ' || true)"
-          if [ "$REMOTE_READY" = "ready" ]; then
-            echo "Reusing staged release bundle with latest 20260919 CN aircraft visual."
-          else
-            tar -C "$STAGE" -czf - \
-              qilylean-cn-site.tar.gz \
-              bootstrap-qilylean-cn.sh \
-              deploy-qilylean-cn.sh \
-              activate-qilylean-cn-http.sh \
-              qilylean.cn.conf \
-              | ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
-                'tar --no-same-owner --no-same-permissions -xzf - -C /tmp'
-          fi
+          # Always upload the release archive built from the current GitHub SHA.
+          # Reusing /tmp/qilylean-cn-site.tar.gz can silently redeploy an older visual bundle.
+          tar -C "$STAGE" -czf - \
+            qilylean-cn-site.tar.gz \
+            bootstrap-qilylean-cn.sh \
+            deploy-qilylean-cn.sh \
+            activate-qilylean-cn-http.sh \
+            qilylean.cn.conf \
+            | ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
+              'tar --no-same-owner --no-same-permissions -xzf - -C /tmp'
           ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
             'test -s /tmp/qilylean-cn-site.tar.gz && test -s /tmp/deploy-qilylean-cn.sh && echo "Release bundle staged."'
 
@@ -302,7 +287,7 @@ jobs:
               '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2',
               '/assets/practice/lean-improvement-evidence.svg?v=20260918-practice-v1',
               '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1',
-              '/assets/practice.css?v=20260918-practice-visual-v2',
+              '/assets/practice.css?v=20260920-practice-visual-v3-equal',
               '6S改善机制：从稽核到激励的运行记录',
               '6S改善运行机制摘要',
               'award-metrics-grid',
@@ -331,12 +316,16 @@ jobs:
               '.award-flow-step',
               '.boundary-note',
               'QILY-CN-AWARD-MECHANISM-V2',
+              'QILY-CN-EQUAL-PEER-CARDS-V1',
+              '.practice-intro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch}',
               'grid-template-columns:repeat(2,minmax(0,1fr));',
               'white-space:nowrap;',
           ]
           for marker in required_practice_css:
               if marker not in practice_css:
                   raise SystemExit(f'Production China practice stylesheet missing: {marker}')
+          if '.practice-intro{display:grid;grid-template-columns:1.2fr .8fr' in practice_css:
+              raise SystemExit('Production China practice stylesheet still contains legacy unequal peer-card columns.')
 
           required_vi = [
               'QILY-CN-AIRCRAFT-CENTERED-V2',
