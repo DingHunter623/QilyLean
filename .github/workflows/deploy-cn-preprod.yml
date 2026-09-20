@@ -24,7 +24,7 @@ concurrency:
 
 jobs:
   validate-and-deploy:
-    timeout-minutes: 18
+    timeout-minutes: 35
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -153,9 +153,9 @@ jobs:
             local src="$1"
             local dest="$2"
             local attempt
-            for attempt in 1 2 3; do
-              echo "SCP ${src} -> ${dest} (attempt ${attempt}/3)"
-              if timeout 120s scp -q "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$src" "$USER_NAME@$CN_PREPROD_HOST:$dest"; then
+            for attempt in 1 2; do
+              echo "SCP ${src} -> ${dest} (attempt ${attempt}/2)"
+              if timeout 600s scp -q "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$src" "$USER_NAME@$CN_PREPROD_HOST:$dest"; then
                 return 0
               fi
               sleep 5
