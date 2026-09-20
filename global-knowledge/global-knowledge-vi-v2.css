@@ -11,8 +11,8 @@
   --qily-gk-focus:rgba(202,161,95,.32);
   --qily-gk-shadow:0 8px 22px rgba(15,75,90,.10);
   --qily-gk-shadow-hover:0 16px 34px rgba(15,75,90,.18);
-  --qily-gk-h1:clamp(34px,3.25vw,52px);
-  --qily-gk-h2:clamp(28px,2.45vw,38px);
+  --qily-gk-h1:clamp(30px,2.65vw,44px);
+  --qily-gk-h2:clamp(26px,2.05vw,34px);
   --qily-gk-h3:clamp(20px,1.55vw,24px);
 }
 
