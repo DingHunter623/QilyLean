@@ -22,6 +22,8 @@ on:
       - 'sitemap*.xml'
       - 'data/search-authority-map.json'
       - 'scripts/validate-seo-indexability.js'
+      - 'scripts/validate-retired-daily-briefs.js'
+      - 'data/retired-daily-briefs-v1.json'
       - 'scripts/validate-search-authority.js'
       - 'scripts/validate-search-engine-discovery.js'
       - 'scripts/audit-google-index-coverage-readiness.js'
