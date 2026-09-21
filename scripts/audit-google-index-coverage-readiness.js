@@ -183,7 +183,7 @@ const report = {
     'retired historical daily URLs should remain retired; current pages must not link to missing retired URLs',
     'noindex pages require intent review; protected/admin/reference pages may be correct exclusions',
     'pageSubmitted means the exact page URL is in a sitemap; canonicalSubmitted means only its canonical target is in a sitemap',
-    'Search Console exclusion reasons remain the authority for the 65 reported URLs; this audit only identifies repository-side readiness risks'
+    'Search Console exclusion reasons remain authoritative for live coverage counts; this audit identifies repository-side readiness risks without forcing intentional redirects, noindex utilities, alternates or retired historical briefs into the index'
   ]
 };
 
