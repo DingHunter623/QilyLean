@@ -47,6 +47,9 @@ assert(gkReader.includes('qily-reader-link-cluster'), 'Global Knowledge reader i
 assert(gkReader.includes('column-gap:3ch!important'), 'Global Knowledge reader link clusters must preserve a three-character gap.');
 assert(gkReader.includes('data-qily-reader-source="weibo"'), 'Global Knowledge reader must visibly style approved Weibo source links.');
 assert(gkReader.includes("a.setAttribute('data-qily-reader-source','weibo')"), 'Global Knowledge reader must preserve approved Weibo source links.');
+assert(gkReader.includes('.content article[id^="lean-"]>small'), 'Global Knowledge Weibo module badge selector is missing.');
+assert(gkReader.includes('font-size:18px!important'), 'Weibo module badges must use the visible 18px hierarchy.');
+assert(gkReader.includes('.content #lean-tools-feature>ul:first-of-type>li'), 'Global Knowledge ten-tool grid visual rule is missing.');
 
 const gkBriefs=read('global-knowledge/briefs/index.html');
 assert(gkBriefs.includes('data-qily-imported-visual="normalized-v1"'), 'Global Knowledge brief reader normalized SVG visual contract is missing.');
