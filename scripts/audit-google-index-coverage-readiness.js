@@ -223,7 +223,7 @@ if (WRITE) {
 // Only direct structural contradictions are CI-fatal. A redirect/alternate page
 // whose canonical target is submitted is normal and must not be misclassified.
 const fatal = rows.filter(row => row.pageSubmitted && (row.noindex || row.redirect));
-if (brokenRetiredDailyReferences.length) {
+if (plannedSubmitMissing.length) {\n  console.error('\\nPolicy-submit pages missing from sitemap are actionable defects:');\n  plannedSubmitMissing.forEach(row => console.error(`- ${row.pageUrl}: ${row.file}`));\n  process.exitCode = 1;\n}\n// Policy-submit pages missing from sitemap are actionable defects; intentional retired/noindex/redirect/alternate pages are not.\nif (brokenRetiredDailyReferences.length) {
   console.error('\nCurrent pages still link to retired daily URLs:');
   brokenRetiredDailyReferences.forEach(row => console.error(`- ${row.source}: ${row.href}`));
   process.exitCode = 1;
