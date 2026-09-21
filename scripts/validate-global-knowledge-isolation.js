@@ -62,6 +62,9 @@ if (!reader.includes('Presentation firewall: white-listed documents contribute c
 if (!reader.includes("a.name==='class'||a.name==='style'")) {
   fail('generic knowledge reader must strip imported class/style attributes to prevent source-page VI leakage');
 }
+if (!reader.includes("a.setAttribute('data-qily-reader-source','weibo')") || !reader.includes("weibo\\.com")) {
+  fail('generic knowledge reader must preserve approved Weibo source links as isolated external references');
+}
 
 const briefs = fs.readFileSync(path.join(dir, 'briefs', 'index.html'), 'utf8');
 if (!briefs.includes('Presentation firewall: imported briefs contribute knowledge content, never their source-page visual skin.')) {
@@ -69,6 +72,12 @@ if (!briefs.includes('Presentation firewall: imported briefs contribute knowledg
 }
 if (!briefs.includes("a.name==='class'||a.name==='style'")) {
   fail('brief reader must strip imported class/style attributes to prevent source-page VI leakage');
+}
+if (!briefs.includes("data-qily-imported-visual','normalized-v1'") || !briefs.includes("el.namespaceURI==='http://www.w3.org/2000/svg'")) {
+  fail('brief reader must preserve SVG-local metadata and normalize imported diagrams instead of browser-default rendering');
+}
+if (!briefs.includes('.vi-feedback-return{fill:none;stroke:var(--gold);stroke-width:6')) {
+  fail('brief reader must explicitly normalize feedback rails to the Global Knowledge VI');
 }
 if (!briefs.includes("root.querySelectorAll('script,style,header,footer,nav,form,button,input,textarea,select,iframe')")) {
   fail('brief reader sanitizer is missing structural removal');
