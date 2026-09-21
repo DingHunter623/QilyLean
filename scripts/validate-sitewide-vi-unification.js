@@ -45,6 +45,12 @@ const gkCss=read('global-knowledge/global-knowledge-vi-v2.css');
 const gkReader=read('global-knowledge/view/index.html');
 assert(gkReader.includes('qily-reader-link-cluster'), 'Global Knowledge reader imported-link cluster normalization is missing.');
 assert(gkReader.includes('column-gap:3ch!important'), 'Global Knowledge reader link clusters must preserve a three-character gap.');
+assert(gkReader.includes('data-qily-reader-source="weibo"'), 'Global Knowledge reader must visibly style approved Weibo source links.');
+assert(gkReader.includes("a.setAttribute('data-qily-reader-source','weibo')"), 'Global Knowledge reader must preserve approved Weibo source links.');
+
+const gkBriefs=read('global-knowledge/briefs/index.html');
+assert(gkBriefs.includes('data-qily-imported-visual="normalized-v1"'), 'Global Knowledge brief reader normalized SVG visual contract is missing.');
+assert(gkBriefs.includes('.vi-feedback-return{fill:none;stroke:var(--gold);stroke-width:6'), 'Global Knowledge brief reader feedback rail VI normalization is missing.');
 
 const gkPages=[
   'global-knowledge/index.html',
