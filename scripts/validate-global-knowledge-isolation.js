@@ -52,6 +52,11 @@ for (const file of htmlFiles) {
   if (!html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>')) fail(`${rel} must expose the filed China knowledge route`);
 }
 
+const dock = fs.readFileSync(path.join(dir, 'knowledge-dock-v1.js'), 'utf8');
+if (!dock.includes("SHARED_SEARCH_SRC='/site-search.js?v=20260826-search-navigation-v2'")) fail('Global Knowledge dock must use the shared international site search runtime');
+if (!dock.includes("data-qily-gk-search-parity','international-v1'")) fail('Global Knowledge dock search parity marker is missing');
+if (!dock.includes("QilySiteSearch&&typeof w.QilySiteSearch.open==='function'")) fail('Global Knowledge dock must open the shared international site search API');
+
 const reader = fs.readFileSync(path.join(dir, 'view', 'index.html'), 'utf8');
 if (!reader.includes('var ALLOWED=[')) fail('isolated reader allowlist is missing');
 if (forbiddenRoutes.test(reader.match(/var ALLOWED=\[[\s\S]*?\];/)?.[0] || '')) fail('isolated reader allowlist contains a commercial route');
