@@ -54,3 +54,21 @@ test('Lean knowledge reader preserves visible Weibo source entry',async({page})=
   await link.scrollIntoViewIfNeeded();
   await page.screenshot({path:path.join(out,'weibo-source-entry.png'),fullPage:false});
 });
+
+test('Global Knowledge dock opens the shared international site search',async({page})=>{
+  await page.setViewportSize({width:1440,height:1000});
+  const response=await page.goto(base+'/global-knowledge/',{waitUntil:'networkidle',timeout:30000});
+  expect(response&&response.ok()).toBeTruthy();
+  const button=page.locator('#floatDock button[data-action="search"]');
+  await expect(button).toBeVisible();
+  await button.click();
+  const panel=page.locator('.qily-search-panel');
+  await expect(panel).toBeVisible({timeout:10000});
+  await expect(panel.locator('#qilySearchTitle')).toHaveText('本站搜索');
+  await expect(panel.locator('.qily-search-lead')).toContainText('搜索全站网页');
+  const input=panel.locator('.qily-search-input');
+  await input.fill('VSM');
+  await panel.locator('.qily-search-submit').click();
+  await expect(panel.locator('.qily-search-result').first()).toBeVisible({timeout:10000});
+  await page.screenshot({path:path.join(out,'global-knowledge-shared-site-search.png'),fullPage:false});
+});
