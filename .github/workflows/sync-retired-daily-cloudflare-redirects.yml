@@ -1,0 +1,45 @@
+name: Sync retired daily permanent redirects
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'data/retired-daily-briefs-v1.json'
+      - 'scripts/sync-retired-daily-cloudflare-redirects.js'
+      - '.github/workflows/sync-retired-daily-cloudflare-redirects.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'data/retired-daily-briefs-v1.json'
+      - 'scripts/sync-retired-daily-cloudflare-redirects.js'
+      - '.github/workflows/sync-retired-daily-cloudflare-redirects.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qily-retired-daily-cloudflare-redirects
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      - name: Validate redirect synchronizer
+        run: |
+          node --check scripts/sync-retired-daily-cloudflare-redirects.js
+          node scripts/validate-retired-daily-briefs.js
+
+      - name: Sync Cloudflare 301 redirects and verify live samples
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node scripts/sync-retired-daily-cloudflare-redirects.js
