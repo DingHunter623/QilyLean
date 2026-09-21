@@ -8,11 +8,12 @@ const ROOT = path.resolve(__dirname, '..');
 const API = 'https://api.cloudflare.com/client/v4';
 const LIST_NAME = 'qilylean_retired_daily_redirects_v1';
 const RULE_REF = 'qilylean_retired_daily_redirects_v1';
-const ACCOUNT_ID = String(process.env.CLOUDFLARE_ACCOUNT_ID || '').trim();
+const RAW_ACCOUNT_ID = String(process.env.CLOUDFLARE_ACCOUNT_ID || '');
+const ACCOUNT_ID = (RAW_ACCOUNT_ID.match(/[0-9a-fA-F]{32}/) || [''])[0];
 const TOKEN = String(process.env.CLOUDFLARE_API_TOKEN || '').trim();
 
-if (!/^[0-9a-fA-F]{32}$/.test(ACCOUNT_ID)) {
-  throw new Error('CLOUDFLARE_ACCOUNT_ID must be a 32-character hex ID');
+if (!ACCOUNT_ID) {
+  throw new Error('CLOUDFLARE_ACCOUNT_ID does not contain a 32-character hex ID');
 }
 if (!TOKEN) throw new Error('CLOUDFLARE_API_TOKEN is required');
 
