@@ -1,6 +1,6 @@
-/* QilyLean CN In-Page Translation V6 | 2026-09-18
+/* QilyLean CN In-Page Translation V7 | 2026-09-22
  * Front-end UI stays unchanged. Translation happens inside qilylean.cn via /translate.
- * The server-side provider is Youdao Batch Translation; credentials never reach the browser.
+ * The server-side preferred provider is Baidu Translate; credentials never reach the browser.
  */
 (function(d,w){'use strict';
 if(w.__qilyCnTranslateV3)return;w.__qilyCnTranslateV3=true;
@@ -80,7 +80,7 @@ async function apply(target){
   busy=true;control.setAttribute('data-qily-translating','true');status.textContent='翻译中…';
   restore();
   try{
-    var list=collect(),groups=batches(list),cursor=0,concurrency=3;
+    var list=collect(),groups=batches(list),cursor=0,concurrency=1;
     async function worker(){
       while(cursor<groups.length){
         var index=cursor++,group=groups[index],data=await translateBatch(target,group);
@@ -119,7 +119,7 @@ function buildPanel(){
   p.appendChild(head);p.appendChild(grid);p.appendChild(note);return p;
 }
 function build(){
-  var wrap=d.createElement('div');wrap.id=CONTROL_ID;wrap.className='qily-cn-translate';wrap.setAttribute('data-qily-header-utility','translation');wrap.setAttribute('data-qily-translation-provider','qilylean-api');wrap.setAttribute('data-qily-translation-engine','youdao');wrap.setAttribute('translate','no');wrap.setAttribute('role','group');wrap.setAttribute('aria-label','网页翻译');
+  var wrap=d.createElement('div');wrap.id=CONTROL_ID;wrap.className='qily-cn-translate';wrap.setAttribute('data-qily-header-utility','translation');wrap.setAttribute('data-qily-translation-provider','qilylean-api');wrap.setAttribute('data-qily-translation-engine','baidu');wrap.setAttribute('translate','no');wrap.setAttribute('role','group');wrap.setAttribute('aria-label','网页翻译');
   var mark=d.createElement('span');mark.className='qily-cn-translate__mark';mark.setAttribute('aria-hidden','true');mark.textContent='🌐';
   select=d.createElement('select');select.className='qily-cn-translate__select';select.setAttribute('aria-label','选择网站语言');
   option(select,'zh-CN','中文简体');option(select,'zh-TW','中文繁体');option(select,'en','English');option(select,MORE,'其他');

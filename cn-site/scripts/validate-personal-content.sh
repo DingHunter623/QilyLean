@@ -159,8 +159,8 @@ grep -Fq '玻璃管保险丝改善后成品照片' "$PRACTICE_FUSE" || { echo "E
 grep -Fq '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' "$INDEX_FILE" || { echo "ERROR: CN homepage approved CN aircraft visual is missing."; exit 1; }
 grep -Fq '/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
 grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
-grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao' "$INDEX_FILE" || { echo "ERROR: CN homepage translator stylesheet is missing."; exit 1; }
-grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao' "$INDEX_FILE" || { echo "ERROR: CN homepage translator runtime is missing."; exit 1; }
+grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' "$INDEX_FILE" || { echo "ERROR: CN homepage translator stylesheet is missing."; exit 1; }
+grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' "$INDEX_FILE" || { echo "ERROR: CN homepage translator runtime is missing."; exit 1; }
 grep -Fq 'QILY-CN-NAV-RAIL-V7' "$CN_VI_FILE" || { echo "ERROR: CN international-style primary-nav rail contract is missing."; exit 1; }
 grep -Fq 'QILY-CN-STICKY-HEADER-V1' "$CN_VI_FILE" || { echo "ERROR: CN sticky header contract is missing."; exit 1; }
 grep -Fq 'position:sticky!important' "$CN_VI_FILE" || { echo "ERROR: CN header is not sticky."; exit 1; }
@@ -173,10 +173,10 @@ grep -Fq -- '--qily-cn-primary-nav-font-size:20px' "$CN_VI_FILE" || { echo "ERRO
 grep -Fq 'grid-template-areas:"brand nav translate"' "$CN_VI_FILE" || { echo "ERROR: CN desktop header three-zone layout is missing."; exit 1; }
 grep -Fq 'grid-template-areas:"brand translate" "nav nav"' "$CN_VI_FILE" || { echo "ERROR: CN mobile header nav row is missing."; exit 1; }
 if grep -Fq 'data-qily-translation-provider' "$CN_NAV_RAIL_JS"; then echo "ERROR: CN nav rail must not own translation."; exit 1; fi
-grep -Fq 'QilyLean CN In-Page Translation V4' "$CN_TRANSLATE_JS" || { echo "ERROR: CN in-page translation V4 runtime is missing."; exit 1; }
+grep -Fq 'QilyLean CN In-Page Translation V7' "$CN_TRANSLATE_JS" || { echo "ERROR: CN in-page translation V4 runtime is missing."; exit 1; }
 grep -Fq "data-qily-translation-provider','qilylean-api'" "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator provider contract is missing."; exit 1; }
-grep -Fq "data-qily-translation-engine','youdao'" "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator must use Youdao backend."; exit 1; }
-grep -Fq 'concurrency=3' "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator concurrency optimization is missing."; exit 1; }
+grep -Fq "data-qily-translation-engine','baidu'" "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator must use Baidu-preferred backend."; exit 1; }
+grep -Fq 'concurrency=1' "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator concurrency optimization is missing."; exit 1; }
 grep -Fq 'API_BASES' "$CN_TRANSLATE_JS" || { echo "ERROR: CN in-page translation API route is missing."; exit 1; }
 grep -Fq 'target_language:target' "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator target-language request contract is missing."; exit 1; }
 grep -Fq 'QilyLean CN In-Page Translation UI V3' "$CN_TRANSLATE_CSS" || { echo "ERROR: CN translator V3 UI contract is missing."; exit 1; }

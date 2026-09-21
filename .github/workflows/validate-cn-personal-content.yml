@@ -45,11 +45,11 @@ jobs:
           grep -Fq -- '--qily-cn-primary-nav-font-size:20px' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'grid-template-areas:"brand nav translate"' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'grid-template-areas:"brand translate" "nav nav"' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq 'QilyLean CN In-Page Translation V4' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'QilyLean CN In-Page Translation V7' cn-site/assets/cn-translate-baidu-v1.js
           grep -Fq 'API_BASES' cn-site/assets/cn-translate-baidu-v1.js
           grep -Fq 'target_language:target' cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq "data-qily-translation-engine','youdao'" cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq 'concurrency=3' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq "data-qily-translation-engine','baidu'" cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'concurrency=1' cn-site/assets/cn-translate-baidu-v1.js
           grep -Fq 'QilyLean CN In-Page Translation UI V3' cn-site/assets/cn-translate-baidu-v1.css
           test -f cn-site/assets/practice.css
           test -f cn-site/assets/practice/smed-300t.svg
@@ -75,8 +75,8 @@ jobs:
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
           grep -Fq '/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback' cn-site/index.html
           grep -Fq '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7' cn-site/index.html
-          grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao' cn-site/index.html
-          grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao' cn-site/index.html
+          grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' cn-site/index.html
+          grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' cn-site/index.html
           grep -Fq 'QILY-CN-NAV-RAIL-V7' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'QILY-CN-STICKY-HEADER-V1' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'position:sticky!important' cn-site/assets/qilylean-vi-v2.css

@@ -56,11 +56,12 @@ jobs:
           grep -q "url.pathname === '/admin/brief-feedback'" cloudflare-worker/worker-social.js
           grep -q "url.pathname === '/translate'" cloudflare-worker/worker-social.js
           grep -q "TRANSLATION_SYSTEM_INSTRUCTIONS" cloudflare-worker/worker-social.js
-          grep -q "YOUDAO_TRANSLATE_URL = 'https://openapi.youdao.com/v2/api'" cloudflare-worker/worker-social.js
+          grep -q "BAIDU_TRANSLATE_URL = 'https://fanyi-api.baidu.com/api/trans/vip/translate'" cloudflare-worker/worker-social.js
+          grep -q "callBaiduTranslation" cloudflare-worker/worker-social.js
           grep -q "callYoudaoTranslation" cloudflare-worker/worker-social.js
-          grep -q "TRANSLATION_CACHE_VERSION = 'v4-youdao'" cloudflare-worker/worker-social.js
+          grep -q "TRANSLATION_CACHE_VERSION = 'v5-provider-aware'" cloudflare-worker/worker-social.js
           grep -q 'TRANSLATE_DAILY_IP_LIMIT = "600"' wrangler.toml
-          grep -q 'TRANSLATE_PROVIDER = "youdao"' wrangler.toml
+          grep -q 'TRANSLATE_PROVIDER = "baidu"' wrangler.toml
           grep -q "admin@qilylean.com" cloudflare-worker/worker.js
 
       - name: 校验 Cloudflare 账户 ID
@@ -74,6 +75,22 @@ jobs:
             exit 1
           fi
           echo "CLOUDFLARE_ACCOUNT_ID=$ACCOUNT_ID" >> "$GITHUB_ENV"
+
+      - name: 同步百度翻译密钥到 Cloudflare
+        shell: bash
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          BAIDU_TRANSLATE_APP_ID: ${{ secrets.BAIDU_TRANSLATE_APP_ID }}
+          BAIDU_TRANSLATE_APP_KEY: ${{ secrets.BAIDU_TRANSLATE_APP_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -n "$BAIDU_TRANSLATE_APP_ID" ] && [ -n "$BAIDU_TRANSLATE_APP_KEY" ]; then
+            printf '%s' "$BAIDU_TRANSLATE_APP_ID" | npx wrangler secret put BAIDU_TRANSLATE_APP_ID
+            printf '%s' "$BAIDU_TRANSLATE_APP_KEY" | npx wrangler secret put BAIDU_TRANSLATE_APP_KEY
+            echo "Baidu Translate credentials synchronized."
+          else
+            echo "Baidu Translate repository secrets are not configured; Worker will use the existing safe translation fallback."
+          fi
 
       - name: 同步有道翻译密钥到 Cloudflare
         shell: bash
@@ -136,14 +153,15 @@ jobs:
             if (healthData.build_version !== 'v1.6.0-brief-engagement') {
               throw new Error('unexpected build ' + healthData.build_version);
             }
-            if (healthData.translation_provider !== 'youdao') {
-              throw new Error('translation preference is not Youdao');
+            if (healthData.translation_provider !== 'baidu') {
+              throw new Error('translation preference is not Baidu');
             }
-            if (!healthData.youdao_available && !healthData.qwen_available && !healthData.openai_available) {
+            if (!healthData.baidu_available && !healthData.youdao_available && !healthData.qwen_available && !healthData.openai_available) {
               throw new Error('no translation backend is provisioned');
             }
             console.log('Translation health:', JSON.stringify({
               preferred: healthData.translation_provider,
+              baidu_available: healthData.baidu_available,
               youdao_available: healthData.youdao_available,
               qwen_available: healthData.qwen_available,
               openai_available: healthData.openai_available
@@ -168,9 +186,13 @@ jobs:
             if (!translation.ok || !data.ok || !Array.isArray(data.translations) || data.translations.length !== 2) {
               throw new Error('status ' + translation.status);
             }
-            if (healthSnapshot && healthSnapshot.youdao_available === true) {
+            if (healthSnapshot && healthSnapshot.baidu_available === true) {
+              if (data.provider !== 'baidu') {
+                throw new Error('Baidu is provisioned but translation provider is ' + String(data.provider || ''));
+              }
+            } else if (healthSnapshot && healthSnapshot.youdao_available === true) {
               if (data.provider !== 'youdao') {
-                throw new Error('Youdao is provisioned but translation provider is ' + String(data.provider || ''));
+                throw new Error('Baidu is unavailable and Youdao is provisioned, but translation provider is ' + String(data.provider || ''));
               }
             } else if (!['qwen','openai'].includes(String(data.provider || ''))) {
               throw new Error('translation fallback provider is unavailable: ' + String(data.provider || ''));

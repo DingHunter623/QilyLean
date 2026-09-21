@@ -72,9 +72,9 @@ jobs:
           test -f cn-site/assets/cn-translate-baidu-v1.js
           test -f cn-site/assets/cn-translate-baidu-v1.css
           ! grep -Fq 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
-          grep -Fq 'QilyLean CN In-Page Translation V4' cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq "data-qily-translation-engine','youdao'" cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq 'concurrency=3' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'QilyLean CN In-Page Translation V7' cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq "data-qily-translation-engine','baidu'" cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq 'concurrency=1' cn-site/assets/cn-translate-baidu-v1.js
           grep -Fq 'QilyLean CN In-Page Translation UI V3' cn-site/assets/cn-translate-baidu-v1.css
           test -f cn-site/assets/portal.css
           test -f cn-site/assets/qilylean-aircraft-hero-cn-v2-20260919.png
@@ -298,9 +298,9 @@ jobs:
               raise SystemExit('Production China home missing unified mobile VI cache version.')
           if '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7' not in home:
               raise SystemExit('Production China home missing international-style nav rail runtime.')
-          if '/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao' not in home:
+          if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
-          if '/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao' not in home:
+          if '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator runtime.')
           required_home_practice = [
               'PRACTICE & EVIDENCE｜实践与成果',
@@ -395,7 +395,7 @@ jobs:
           for marker in ['QilyLean CN Primary Navigation Rail V7', 'qily-cn-nav-shell', 'qily-primary-nav-scroll-thumb', 'mousedown', 'mousemove', 'touchstart', 'ResizeObserver']:
               if marker not in nav_runtime:
                   raise SystemExit(f'Production China nav runtime missing: {marker}')
-          for marker in ['QilyLean CN In-Page Translation V4', "data-qily-translation-engine','youdao'", 'concurrency=3']:
+          for marker in ['QilyLean CN In-Page Translation V7', "data-qily-translation-engine','baidu'", 'concurrency=1']:
               if marker not in translate_runtime:
                   raise SystemExit(f'Production China translation runtime missing: {marker}')
 

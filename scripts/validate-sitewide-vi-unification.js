@@ -77,9 +77,10 @@ const cnRail=read('cn-site/assets/cn-nav-rail-v1.js');
 const cnTranslate=read('cn-site/assets/cn-translate-baidu-v1.js');
 const cnTranslateCss=read('cn-site/assets/cn-translate-baidu-v1.css');
 const workerSocial=read('cloudflare-worker/worker-social.js');
-assert(workerSocial.includes("YOUDAO_TRANSLATE_URL = 'https://openapi.youdao.com/v2/api'"), 'Youdao batch API endpoint is missing from the translation worker.');
-assert(workerSocial.includes("TRANSLATION_CACHE_VERSION = 'v4-youdao'"), 'Youdao translation cache generation is missing.');
-assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation worker implementation is missing.');
+assert(workerSocial.includes("BAIDU_TRANSLATE_URL = 'https://fanyi-api.baidu.com/api/trans/vip/translate'"), 'Baidu translation API endpoint is missing from the translation worker.');
+assert(workerSocial.includes("TRANSLATION_CACHE_VERSION = 'v5-provider-aware'"), 'Provider-aware translation cache generation is missing.');
+assert(workerSocial.includes('callBaiduTranslation'), 'Baidu translation worker implementation is missing.');
+assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation fallback implementation is missing.');
 [
   'QILY-CN-NAV-RAIL-V7',
   'QILY-CN-STICKY-HEADER-V1',
@@ -111,10 +112,10 @@ assert(cnRail.includes('touchstart'), 'CN nav rail touch drag is missing.');
 assert(cnRail.includes('installNavMouseDrag'), 'CN primary nav direct mouse drag is missing.');
 assert(!cnRail.includes('pointerdown'), 'CN nav rail must not depend on PointerEvent drag.');
 assert(!cnRail.includes('data-qily-translation-provider'), 'CN nav rail must remain translation-neutral.');
-assert(cnTranslate.includes('QilyLean CN In-Page Translation V4'), 'CN in-page translator V3 runtime is missing.');
+assert(cnTranslate.includes('QilyLean CN In-Page Translation V7'), 'CN in-page translator V3 runtime is missing.');
 assert(cnTranslate.includes("data-qily-translation-provider','qilylean-api'"), 'CN translator must declare the QilyLean in-page provider.');
-assert(cnTranslate.includes("data-qily-translation-engine','youdao'"), 'CN translator must declare Youdao as its backend engine.');
-assert(cnTranslate.includes('concurrency=3'), 'CN translator batch concurrency optimization is missing.');
+assert(cnTranslate.includes("data-qily-translation-engine','baidu'"), 'CN translator must declare Baidu as its preferred backend engine.');
+assert(cnTranslate.includes('concurrency=1'), 'CN translator batch concurrency optimization is missing.');
 assert(cnTranslate.includes('API_BASES'), 'CN translator must use the in-page translation API.');
 assert(cnTranslate.includes("option(select,'zh-CN','中文简体')"), 'CN translator Simplified Chinese option is missing.');
 assert(cnTranslate.includes("option(select,'zh-TW','中文繁体')"), 'CN translator Traditional Chinese option is missing.');
@@ -136,8 +137,8 @@ for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback'), rel+' must use CN VI V19.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7'), rel+' must load the international-style nav rail runtime.');
-  assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao'), rel+' must load exactly one CN translator stylesheet.');
-  assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao'), rel+' must load exactly one CN translator runtime.');
+  assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
+  assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
   assert(html.includes(cnFooterName), rel+' must display the filed China-site name in the footer.');
   assert(!html.includes('QilyLean | 启力精益 · 个人制造业知识与实践分享'), rel+' must not restore the retired footer name.');
   assert(!html.includes('个人制造业知识与实践分享'), rel+' must not expose the retired China-site name.');

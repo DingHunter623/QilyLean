@@ -38,7 +38,7 @@ jobs:
           css_version = '20260920-cn-vi-v19-filing-feedback'
           base_version = '20260917-cn-thesis-base-v5'
           nav_script_version = '20260918-nav-rail-v7'
-          translate_version = '20260918-translate-v5-youdao'
+          translate_version = '20260922-translate-v6-baidu'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
           nav_script_target = f'<script defer src="/assets/cn-nav-rail-v1.js?v={nav_script_version}"></script>'
@@ -177,8 +177,8 @@ jobs:
               documents += 1
               css_count = text.count(css_marker)
               nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7')
-              translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260918-translate-v5-youdao')
-              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260918-translate-v5-youdao')
+              translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu')
+              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu')
               footer_count = text.count(footer_marker)
               footer_tags = len(re.findall(r'<footer class="footer">', text))
               if css_count != 1:
@@ -264,11 +264,11 @@ jobs:
           grep -q -- '--qily-nav-scroll-track:#b9d9d4' cn-site/assets/qilylean-vi-v2.css
           grep -q -- '--qily-nav-scroll-thumb:#0f4b5a' cn-site/assets/qilylean-vi-v2.css
           ! grep -q 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
-          grep -q 'QilyLean CN In-Page Translation V4' cn-site/assets/cn-translate-baidu-v1.js
+          grep -q 'QilyLean CN In-Page Translation V7' cn-site/assets/cn-translate-baidu-v1.js
           grep -q 'API_BASES' cn-site/assets/cn-translate-baidu-v1.js
           grep -q 'target_language:target' cn-site/assets/cn-translate-baidu-v1.js
-          grep -q "data-qily-translation-engine','youdao'" cn-site/assets/cn-translate-baidu-v1.js
-          grep -q 'concurrency=3' cn-site/assets/cn-translate-baidu-v1.js
+          grep -q "data-qily-translation-engine','baidu'" cn-site/assets/cn-translate-baidu-v1.js
+          grep -q 'concurrency=1' cn-site/assets/cn-translate-baidu-v1.js
           grep -q 'QilyLean CN In-Page Translation UI V3' cn-site/assets/cn-translate-baidu-v1.css
           grep -q -- '--qily-cn-h3:clamp(19px,5.7vw,21px)' cn-site/assets/qilylean-vi-v2.css
           grep -q 'CN global-knowledge CTA: VI gold + explicit interaction feedback' cn-site/assets/qilylean-vi-v2.css

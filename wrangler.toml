@@ -5,7 +5,7 @@ workers_dev = true
 
 [vars]
 TRANSLATE_DAILY_IP_LIMIT = "600"
-TRANSLATE_PROVIDER = "youdao"
+TRANSLATE_PROVIDER = "baidu"
 
 [observability]
 enabled = true
