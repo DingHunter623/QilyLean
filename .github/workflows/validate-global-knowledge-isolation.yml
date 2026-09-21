@@ -9,12 +9,14 @@ on:
       - 'global-knowledge/**'
       - 'cn-site/index.html'
       - 'scripts/validate-global-knowledge-isolation.js'
+      - 'scripts/global-knowledge-reader-visual.spec.js'
       - '.github/workflows/validate-global-knowledge-isolation.yml'
   pull_request:
     paths:
       - 'global-knowledge/**'
       - 'cn-site/index.html'
       - 'scripts/validate-global-knowledge-isolation.js'
+      - 'scripts/global-knowledge-reader-visual.spec.js'
       - '.github/workflows/validate-global-knowledge-isolation.yml'
 
 permissions:
@@ -41,3 +43,29 @@ jobs:
           set -euo pipefail
           chmod +x cn-site/scripts/validate-personal-content.sh
           cn-site/scripts/validate-personal-content.sh cn-site
+
+      - name: Install Chromium reader regression dependency
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start isolated Global Knowledge test server
+        run: |
+          python3 -m http.server 4173 >/tmp/qily-gk-http.log 2>&1 &
+          echo $! >/tmp/qily-gk-http.pid
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4173/global-knowledge/ >/dev/null
+
+      - name: Verify imported brief visuals and Weibo source entry
+        env:
+          QILY_GK_BASE: http://127.0.0.1:4173
+        run: npx playwright test scripts/global-knowledge-reader-visual.spec.js --reporter=line --workers=1
+
+      - name: Upload Global Knowledge visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qily-global-knowledge-visual-${{ github.run_id }}
+          path: global-knowledge-visual-artifacts
+          if-no-files-found: warn
+          retention-days: 14
