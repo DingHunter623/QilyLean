@@ -8,6 +8,8 @@ on:
       - 'sitemap*.xml'
       - 'data/search-authority-map.json'
       - 'scripts/validate-seo-indexability.js'
+      - 'scripts/validate-retired-daily-briefs.js'
+      - 'data/retired-daily-briefs-v1.json'
       - 'scripts/validate-search-authority.js'
       - 'scripts/validate-search-engine-discovery.js'
       - 'scripts/audit-google-index-coverage-readiness.js'
@@ -20,6 +22,8 @@ on:
       - 'sitemap*.xml'
       - 'data/search-authority-map.json'
       - 'scripts/validate-seo-indexability.js'
+      - 'scripts/validate-retired-daily-briefs.js'
+      - 'data/retired-daily-briefs-v1.json'
       - 'scripts/validate-search-authority.js'
       - 'scripts/validate-search-engine-discovery.js'
       - 'scripts/audit-google-index-coverage-readiness.js'
@@ -50,6 +54,9 @@ jobs:
 
       - name: Validate existing SEO contracts
         run: npm run test:seo
+
+      - name: Validate retired daily brief governance
+        run: node scripts/validate-retired-daily-briefs.js
 
       - name: Audit repository-side index coverage readiness
         run: node scripts/audit-google-index-coverage-readiness.js --write

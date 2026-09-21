@@ -7,8 +7,8 @@
   <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>页面未找到｜QilyLean</title>
-<meta name="robots" content="noindex">
-<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#eef7f5;color:#163c45;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}.card{width:min(88vw,620px);padding:42px;background:#fff;border:1px solid #d5e4e3;box-shadow:0 16px 44px rgba(15,75,90,.10);text-align:center}.brand{font-weight:900;color:#0f4b5a}.code{font-size:72px;font-weight:950;margin:14px 0 0}.btn{display:inline-block;margin-top:20px;padding:11px 18px;border-radius:999px;background:#0f4b5a;color:#fff;text-decoration:none;font-weight:850}</style>
+<meta name="robots" content="noindex,follow">
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#eef7f5;color:#163c45;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}.card{width:min(88vw,720px);padding:42px;background:#fff;border:1px solid #d5e4e3;border-radius:18px;box-shadow:0 16px 44px rgba(15,75,90,.10);text-align:center}.brand{font-weight:900;color:#0f4b5a}.code{font-size:72px;font-weight:950;margin:14px 0 0}.retired-note{display:none;margin:18px 0 0;padding:18px;border:1px solid #d8bc78;border-radius:12px;background:#fffaf0;text-align:left}.retired-note.show{display:block}.retired-note strong{display:block;margin-bottom:8px;color:#0f4b5a;font-size:20px}.retired-note p{margin:8px 0;color:#49615f;line-height:1.7}.btn{display:inline-block;margin-top:20px;padding:11px 18px;border-radius:999px;background:#0f4b5a;color:#fff;text-decoration:none;font-weight:850}.btn.secondary{margin-left:8px;background:#fff8e9;color:#0f4b5a;border:1px solid #caa15f}</style>
 
 
 
@@ -79,7 +79,8 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
 <link id="qilyFloatingDockGoldV1" rel="stylesheet" href="/site-floating-dock-gold-v1.css?v=20260827-dock-gold-v1">
   <link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=20260903-r8-heading-ceiling-v10">
 </head>
-<body class="qily-pro-v24"><main class="card"><div class="brand">QilyLean</div><div class="code">404</div><h1>页面暂时未找到</h1><p>该地址可能已经调整。原有主要页面和分享短链接仍会继续兼容。</p><a class="btn" href="/">返回主页</a></main>
+<body class="qily-pro-v24"><main class="card" data-qily-retired-brief-404="v1"><div class="brand">QilyLean</div><div class="code">404</div><h1 id="qily404Title">页面暂时未找到</h1><p id="qily404Lead">该地址可能已经调整。原有主要页面和分享短链接仍会继续兼容。</p><section class="retired-note" id="qilyRetiredBriefNote" aria-live="polite"><strong>该历史工程简报已按“每周一篇精选简报”策略归并</strong><p>原日更页面已永久退出索引，不再恢复为独立内容。可继续阅读本周保留的精选简报。</p><a class="btn" id="qilyRetiredBriefTarget" href="/qilylean/daily-insights.html">查看本周精选简报</a><a class="btn secondary" href="/qilylean/daily-insights.html">精选简报目录</a></section><a class="btn" id="qily404Home" href="/">返回主页</a></main>
+<script>(function(){var p=location.pathname;if(!/^\/qilylean\/daily\/\d{4}-\d{2}-\d{2}\.html$/.test(p))return;fetch("/data/retired-daily-briefs-v1.json",{cache:"force-cache"}).then(function(r){return r.ok?r.json():null}).then(function(m){var t=m&&m.routes&&m.routes[p];if(!t)return;var n=document.getElementById("qilyRetiredBriefNote"),a=document.getElementById("qilyRetiredBriefTarget"),lead=document.getElementById("qily404Lead");if(a)a.href=t;if(lead)lead.textContent="这个日期对应的历史工程简报已在周精选治理中退出，不属于当前应收录页面。";if(n)n.classList.add("show");}).catch(function(){});})();</script>
 <script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r2"></script>
 </body>
 </html>
