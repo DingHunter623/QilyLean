@@ -15,6 +15,7 @@ const { execFileSync } = require('child_process');
 const ROOT = path.resolve(__dirname, '..');
 const BASE = 'https://qilylean.com';
 const WRITE = process.argv.includes('--write');
+const AUDIT_VERSION = '2026-09-21-v2';
 
 function read(rel) {
   return fs.readFileSync(path.join(ROOT, rel), 'utf8');
@@ -166,6 +167,7 @@ const metadataReview = rows.filter(row =>
 );
 
 const report = {
+  auditVersion: AUDIT_VERSION,
   generatedAt: new Date().toISOString(),
   scope: 'tracked public HTML only; no live Google Search Console data is read',
   sitemapFiles,
@@ -187,7 +189,7 @@ const report = {
   ]
 };
 
-console.log('QilyLean Google index-coverage readiness audit');
+console.log(`QilyLean Google index-coverage readiness audit ${AUDIT_VERSION}`);
 console.log(`Public HTML: ${report.publicHtmlCount}`);
 console.log(`Unique sitemap URLs: ${report.sitemapUrlCount}`);
 for (const [key, value] of Object.entries(counts).sort()) console.log(`${key}: ${value}`);
