@@ -77,9 +77,23 @@ function isPublicHtml(html) {
 
 const sitemapFiles = ['sitemap.xml', 'sitemap-core.xml', 'sitemap-topics.xml'];
 const sitemapSet = new Set(sitemapFiles.flatMap(sitemapUrls).map(normalize));
+const coveragePolicy = exists('data/google-index-coverage-policy.json')
+  ? JSON.parse(read('data/google-index-coverage-policy.json'))
+  : { routes: [] };
+const discoverOnlySet = new Set(
+  (coveragePolicy.routes || [])
+    .filter(route => route && route.policy === 'discover_only' && route.url)
+    .map(route => normalize(route.url))
+);
+const submitPolicySet = new Set(
+  (coveragePolicy.routes || [])
+    .filter(route => route && route.policy === 'submit' && route.url)
+    .map(route => normalize(route.url))
+);
 const files = trackedHtml();
 const rows = [];
 const canonicalOwners = new Map();
+const brokenRetiredDailyReferences = [];
 
 for (const file of files) {
   const html = read(file);
@@ -100,6 +114,7 @@ for (const file of files) {
   else if (redirect) classification = 'redirect_excluded';
   else if (!canUrl) classification = 'missing_canonical';
   else if (!selfCanonical) classification = 'alternate_canonical';
+  else if (!pageSubmitted && discoverOnlySet.has(pageUrl)) classification = 'intentional_discover_only';
   else if (!pageSubmitted) classification = 'self_canonical_not_in_sitemap';
   else classification = 'self_canonical_in_sitemap';
 
@@ -123,6 +138,12 @@ for (const file of files) {
     if (!canonicalOwners.has(canUrl)) canonicalOwners.set(canUrl, []);
     canonicalOwners.get(canUrl).push(file);
   }
+
+  for (const match of html.matchAll(/href=["'](\/qilylean\/daily\/(\d{4}-\d{2}-\d{2})\.html)(?:[?#][^"']*)?["']/gi)) {
+    const href = match[1];
+    const target = href.replace(/^\//, '');
+    if (!exists(target)) brokenRetiredDailyReferences.push({ source: file, href });
+  }
 }
 
 const duplicateCanonicalGroups = Array.from(canonicalOwners.entries())
@@ -137,6 +158,9 @@ const counts = rows.reduce((acc, row) => {
 const highPriorityReview = rows.filter(row =>
   ['missing_canonical', 'self_canonical_not_in_sitemap'].includes(row.classification)
 );
+const plannedSubmitMissing = rows.filter(row =>
+  row.classification === 'self_canonical_not_in_sitemap' && submitPolicySet.has(row.pageUrl)
+);
 const metadataReview = rows.filter(row =>
   !row.noindex && !row.redirect && row.selfCanonical && (row.title.length < 8 || row.descriptionLength < 50)
 );
@@ -149,10 +173,14 @@ const report = {
   sitemapUrlCount: sitemapSet.size,
   counts,
   highPriorityReview,
+  plannedSubmitMissing,
   metadataReview,
   duplicateCanonicalGroups,
+  brokenRetiredDailyReferences,
   notes: [
     'alternate_canonical and redirect exclusions can be legitimate and should not be forced into the index',
+    'intentional_discover_only pages are explicitly excluded from sitemap submission by the indexing policy and are not defects',
+    'retired historical daily URLs should remain retired; current pages must not link to missing retired URLs',
     'noindex pages require intent review; protected/admin/reference pages may be correct exclusions',
     'pageSubmitted means the exact page URL is in a sitemap; canonicalSubmitted means only its canonical target is in a sitemap',
     'Search Console exclusion reasons remain the authority for the 65 reported URLs; this audit only identifies repository-side readiness risks'
@@ -166,6 +194,14 @@ for (const [key, value] of Object.entries(counts).sort()) console.log(`${key}: $
 console.log(`High-priority repository review candidates: ${highPriorityReview.length}`);
 for (const row of highPriorityReview) {
   console.log(`  REVIEW\t${row.classification}\t${row.pageUrl}\t${row.file}`);
+}
+console.log(`Policy submit routes waiting for sitemap materialization: ${plannedSubmitMissing.length}`);
+for (const row of plannedSubmitMissing) {
+  console.log(`  PLANNED_SUBMIT\t${row.pageUrl}\t${row.file}`);
+}
+console.log(`Broken links to retired daily URLs: ${brokenRetiredDailyReferences.length}`);
+for (const row of brokenRetiredDailyReferences) {
+  console.log(`  RETIRED_LINK\t${row.source}\t${row.href}`);
 }
 console.log(`Metadata review candidates: ${metadataReview.length}`);
 for (const row of metadataReview) {
@@ -187,6 +223,11 @@ if (WRITE) {
 // Only direct structural contradictions are CI-fatal. A redirect/alternate page
 // whose canonical target is submitted is normal and must not be misclassified.
 const fatal = rows.filter(row => row.pageSubmitted && (row.noindex || row.redirect));
+if (brokenRetiredDailyReferences.length) {
+  console.error('\nCurrent pages still link to retired daily URLs:');
+  brokenRetiredDailyReferences.forEach(row => console.error(`- ${row.source}: ${row.href}`));
+  process.exitCode = 1;
+}
 if (fatal.length) {
   console.error('\nFatal sitemap/indexability contradictions:');
   fatal.forEach(row => console.error(`- ${row.pageUrl}: ${row.noindex ? 'noindex' : 'redirect'} but exact URL is submitted in sitemap`));
