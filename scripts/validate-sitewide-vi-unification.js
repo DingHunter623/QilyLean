@@ -47,6 +47,9 @@ assert(gkReader.includes('qily-reader-link-cluster'), 'Global Knowledge reader i
 assert(gkReader.includes('column-gap:3ch!important'), 'Global Knowledge reader link clusters must preserve a three-character gap.');
 assert(gkReader.includes('data-qily-reader-source="weibo"'), 'Global Knowledge reader must visibly style approved Weibo source links.');
 assert(gkReader.includes("a.setAttribute('data-qily-reader-source','weibo')"), 'Global Knowledge reader must preserve approved Weibo source links.');
+assert(gkReader.includes('.content article[id^="lean-"]>small'), 'Global Knowledge Weibo module badge selector is missing.');
+assert(gkReader.includes('font-size:18px!important'), 'Weibo module badges must use the visible 18px hierarchy.');
+assert(gkReader.includes('.content #lean-tools-feature>ul:first-of-type>li'), 'Global Knowledge ten-tool grid visual rule is missing.');
 
 const gkBriefs=read('global-knowledge/briefs/index.html');
 assert(gkBriefs.includes('data-qily-imported-visual="normalized-v1"'), 'Global Knowledge brief reader normalized SVG visual contract is missing.');
@@ -61,6 +64,7 @@ const gkPages=[
 ];
 for(const rel of gkPages){
   const html=read(rel);
+  assert(html.includes('/global-knowledge/knowledge-dock-v1.js?v=20260921-site-search-parity-v2'), rel+' must load the Global Knowledge dock search-parity revision.');
   assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260920-gk-vi-v4'), rel+' must load shared Global Knowledge VI after its local skin.');
   assert(/<header class="top">[\s\S]*?<a(?: class="brand")? href="https:\/\/qilylean\.com\/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge<\/a>/.test(html), rel+' Global Knowledge brand must return to the canonical qilylean.com home.');
   assert(html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>'), rel+' must expose China Knowledge with the exact filed China-site name for the qilylean.cn route.');

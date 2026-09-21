@@ -52,6 +52,14 @@ for (const file of htmlFiles) {
   if (!html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>')) fail(`${rel} must expose the filed China knowledge route`);
 }
 
+const dock = fs.readFileSync(path.join(dir, 'knowledge-dock-v1.js'), 'utf8');
+if (!dock.includes("SHARED_SEARCH_SRC='/site-search.js?v=20260826-search-navigation-v2'")) fail('Global Knowledge dock must use the shared international site search runtime');
+if (!dock.includes("data-qily-gk-search-parity','international-v1'")) fail('Global Knowledge dock search parity marker is missing');
+if (!dock.includes("QilySiteSearch&&typeof w.QilySiteSearch.open==='function'")) fail('Global Knowledge dock must open the shared international site search API');
+
+const leanKnowledge = fs.readFileSync(path.join(root, 'qilylean', 'lean-knowledge.html'), 'utf8');
+if ((leanKnowledge.match(/<article class="article" id="lean-tools-feature">[\s\S]*?<ul class="tag-row">([\s\S]*?)<\/ul>/)||[])[1]?.match(/<li>/g)?.length !== 10) fail('lean knowledge ten-tool source list must contain exactly 10 visible tools');
+
 const reader = fs.readFileSync(path.join(dir, 'view', 'index.html'), 'utf8');
 if (!reader.includes('var ALLOWED=[')) fail('isolated reader allowlist is missing');
 if (forbiddenRoutes.test(reader.match(/var ALLOWED=\[[\s\S]*?\];/)?.[0] || '')) fail('isolated reader allowlist contains a commercial route');
@@ -65,6 +73,8 @@ if (!reader.includes("a.name==='class'||a.name==='style'")) {
 if (!reader.includes("a.setAttribute('data-qily-reader-source','weibo')") || !reader.includes("weibo\\.com")) {
   fail('generic knowledge reader must preserve approved Weibo source links as isolated external references');
 }
+if (!reader.includes('.content article[id^="lean-"]>small') || !reader.includes('font-size:18px!important')) fail('Weibo module badge visual hierarchy is missing');
+if (!reader.includes('.content #lean-tools-feature>ul:first-of-type>li')) fail('ten-tool reader visual grid is missing');
 
 const briefs = fs.readFileSync(path.join(dir, 'briefs', 'index.html'), 'utf8');
 if (!briefs.includes('Presentation firewall: imported briefs contribute knowledge content, never their source-page visual skin.')) {

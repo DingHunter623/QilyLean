@@ -39,6 +39,6 @@
 <script>
 fetch('/qilylean/site-data.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(d){if(!d)return;document.getElementById('termTotal').textContent=d.terminology&&d.terminology.total||193;document.getElementById('briefTotal').textContent=d.briefs&&d.briefs.total||378;var latest=document.getElementById('briefLatest');if(latest&&d.briefs){latest.textContent='最新更新：'+(d.briefs.latestDate||'2026-09-20')+'｜'+(d.briefs.latestTitle||'别再只用UPH排产：从订单到设备，建立可执行的产能数字主线')+'。按日期、主题与关键词检索，快速定位制造工程与管理实践主题。'}document.getElementById('resourceTotal').textContent=d.knowledge&&d.knowledge.resourceCount||18}).catch(function(){});
 </script>
-<script defer src="/global-knowledge/knowledge-dock-v1.js?v=20260916-fixed-bottom-v1"></script>
+<script defer src="/global-knowledge/knowledge-dock-v1.js?v=20260921-site-search-parity-v2"></script>
 </body>
 </html>

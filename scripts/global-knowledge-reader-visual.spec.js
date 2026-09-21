@@ -54,3 +54,46 @@ test('Lean knowledge reader preserves visible Weibo source entry',async({page})=
   await link.scrollIntoViewIfNeeded();
   await page.screenshot({path:path.join(out,'weibo-source-entry.png'),fullPage:false});
 });
+
+test('Global Knowledge dock opens the shared international site search',async({page})=>{
+  await page.setViewportSize({width:1440,height:1000});
+  const response=await page.goto(base+'/global-knowledge/',{waitUntil:'networkidle',timeout:30000});
+  expect(response&&response.ok()).toBeTruthy();
+  const button=page.locator('#floatDock button[data-action="search"]');
+  await expect(button).toBeVisible();
+  await button.click();
+  const panel=page.locator('.qily-search-panel');
+  await expect(panel).toBeVisible({timeout:10000});
+  await expect(panel.locator('#qilySearchTitle')).toHaveText('本站搜索');
+  await expect(panel.locator('.qily-search-lead')).toContainText('搜索全站网页');
+  const input=panel.locator('.qily-search-input');
+  await input.fill('VSM');
+  await panel.locator('.qily-search-submit').click();
+  await expect(panel.locator('.qily-search-result').first()).toBeVisible({timeout:10000});
+  await page.screenshot({path:path.join(out,'global-knowledge-shared-site-search.png'),fullPage:false});
+});
+
+test('Lean reader shows ten tools and clear Weibo module boundaries',async({page})=>{
+  await page.setViewportSize({width:1440,height:1000});
+  const response=await page.goto(base+'/global-knowledge/view/?src=%2Fqilylean%2Flean-knowledge.html%23lean-tools-feature',{waitUntil:'networkidle',timeout:30000});
+  expect(response&&response.ok()).toBeTruthy();
+  const tools=page.locator('#content #lean-tools-feature > ul').first().locator('li');
+  await expect(tools).toHaveCount(10);
+  await expect(tools.nth(0)).toContainText('VSM');
+  await expect(tools.nth(9)).toContainText('数字化精益');
+  const weibo=page.locator('#content article#lean-01');
+  await expect(weibo).toBeVisible();
+  const badge=weibo.locator(':scope > small');
+  await expect(badge).toContainText('微博精选 01');
+  const visual=await weibo.evaluate(el=>{
+    const badge=el.querySelector(':scope > small');
+    const ec=getComputedStyle(el),bc=getComputedStyle(badge);
+    return {articleBorderTop:parseFloat(ec.borderTopWidth),articleBg:ec.backgroundColor,badgeFont:parseFloat(bc.fontSize),badgeBg:bc.backgroundColor};
+  });
+  expect(visual.articleBorderTop).toBeGreaterThanOrEqual(4);
+  expect(visual.articleBg).not.toBe('rgba(0, 0, 0, 0)');
+  expect(visual.badgeFont).toBeGreaterThanOrEqual(18);
+  expect(visual.badgeBg).not.toBe('rgba(0, 0, 0, 0)');
+  await weibo.scrollIntoViewIfNeeded();
+  await page.screenshot({path:path.join(out,'lean-weibo-module-boundary.png'),fullPage:false});
+});
