@@ -162,7 +162,7 @@ const plannedSubmitMissing = rows.filter(row =>
   row.classification === 'self_canonical_not_in_sitemap' && submitPolicySet.has(row.pageUrl)
 );
 const metadataReview = rows.filter(row =>
-  !row.noindex && !row.redirect && row.selfCanonical && (row.title.length < 8 || row.descriptionLength < 50)
+  row.classification === 'self_canonical_in_sitemap' && (row.title.length < 8 || row.descriptionLength < 50)
 );
 
 const report = {
