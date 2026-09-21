@@ -9,7 +9,9 @@ on:
       - 'sitemap*.xml'
       - 'site-navigation.js'
       - 'data/search-authority-map.json'
-      - 'scripts/validate-seo-indexability.js'\n      - 'scripts/validate-retired-daily-briefs.js'\n      - 'data/retired-daily-briefs-v1.json'
+      - 'scripts/validate-seo-indexability.js'
+      - 'scripts/validate-retired-daily-briefs.js'
+      - 'data/retired-daily-briefs-v1.json'
       - 'scripts/validate-search-authority.js'
       - 'scripts/validate-search-engine-discovery.js'
       - 'package.json'
@@ -22,6 +24,8 @@ on:
       - 'site-navigation.js'
       - 'data/search-authority-map.json'
       - 'scripts/validate-seo-indexability.js'
+      - 'scripts/validate-retired-daily-briefs.js'
+      - 'data/retired-daily-briefs-v1.json'
       - 'scripts/validate-search-authority.js'
       - 'scripts/validate-search-engine-discovery.js'
       - 'package.json'
@@ -43,7 +47,9 @@ jobs:
           node-version: '22'
       - name: Validate sitemap and robots directives
         run: node scripts/validate-seo-indexability.js
-      - name: Validate retired daily brief governance\n        run: node scripts/validate-retired-daily-briefs.js\n      - name: Validate search authority contracts
+      - name: Validate retired daily brief governance
+        run: node scripts/validate-retired-daily-briefs.js
+      - name: Validate search authority contracts
         run: node scripts/validate-search-authority.js
       - name: Validate search engine discovery contracts
         run: node scripts/validate-search-engine-discovery.js
