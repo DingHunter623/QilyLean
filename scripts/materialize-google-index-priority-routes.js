@@ -3,7 +3,7 @@
 
 /**
  * QilyLean Google index-priority route materializer.
- * Scope is intentionally narrow: only sitemap.xml / sitemap-core.xml may be
+ * Scope is intentionally narrow: only sitemap.xml / sitemap-core.xml / sitemap-topics.xml may be
  * written. No HTML, content, images, canonical, robots, translation or Dock is
  * modified by this script.
  */
@@ -60,7 +60,7 @@ if (!Array.isArray(policy.routes) || !policy.routes.length) {
   throw new Error('google-index-coverage-policy.json has no routes');
 }
 
-const supportedSitemaps = new Set(['sitemap.xml', 'sitemap-core.xml']);
+const supportedSitemaps = new Set(['sitemap.xml', 'sitemap-core.xml', 'sitemap-topics.xml']);
 const sitemapText = new Map();
 for (const sitemap of supportedSitemaps) {
   const full = path.join(ROOT, sitemap);

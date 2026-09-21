@@ -57,7 +57,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          unexpected="$(git diff --name-only | grep -Ev '^(sitemap\.xml|sitemap-core\.xml|reports/|maintenance/)' || true)"
+          unexpected="$(git diff --name-only | grep -Ev '^(sitemap\.xml|sitemap-core\.xml|sitemap-topics\.xml|reports/|maintenance/)' || true)"
           if [ -n "$unexpected" ]; then
             echo 'Unexpected files changed by sitemap materialization:' >&2
             echo "$unexpected" >&2
@@ -72,7 +72,7 @@ jobs:
           set -euo pipefail
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
-          git add sitemap.xml sitemap-core.xml
+          git add sitemap.xml sitemap-core.xml sitemap-topics.xml
           if git diff --cached --quiet; then
             echo 'Priority routes already materialized.'
             exit 0
