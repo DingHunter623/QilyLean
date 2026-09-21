@@ -48,6 +48,8 @@ jobs:
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         run: |
           node scripts/materialize-google-index-priority-routes.js --write --check
+          node scripts/sync-search-brief-metadata.js
+          node scripts/sync-search-brief-metadata.js --check
           npm run test:seo
           node scripts/audit-google-index-coverage-readiness.js --write
           git diff --check
@@ -72,7 +74,7 @@ jobs:
           set -euo pipefail
           git config user.name 'QilyLean Automation'
           git config user.email 'actions@users.noreply.github.com'
-          git add sitemap.xml sitemap-core.xml sitemap-topics.xml
+          git add sitemap.xml sitemap-core.xml sitemap-topics.xml qilylean/site-search-index.json qilylean/site-data.json
           if git diff --cached --quiet; then
             echo 'Priority routes already materialized.'
             exit 0
