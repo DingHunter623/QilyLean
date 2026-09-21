@@ -1,6 +1,6 @@
 {
-  "version": "2026-09-04-v2",
-  "purpose": "QilyLean Google 索引覆盖率治理决策 SSOT。仅治理 Sitemap 提交策略，不改正文、图片、页面结构、canonical、robots、翻译或 Dock。",
+  "version": "2026-09-21-v3",
+  "purpose": "QilyLean Google 索引覆盖率治理决策 SSOT。治理 Sitemap 提交策略与索引优先级，不改变 intentionally-retired 历史简报、工具页功能或页面视觉。",
   "rules": {
     "submit": "页面具有独立商业、方法论、知识或项目证据价值，且当前为 index/follow + self-canonical，可进入指定 Sitemap。",
     "discover_only": "页面仍可通过内链自然发现，但不主动进入 Sitemap；不得据此自动 noindex、重定向或删除页面。"
@@ -10,7 +10,11 @@
       "url": "https://qilylean.com/capabilities/",
       "source": "capabilities/index.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml", "sitemap-topics.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml",
+        "sitemap-topics.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.9",
       "role": "authority_hub",
@@ -20,7 +24,11 @@
       "url": "https://qilylean.com/experience/",
       "source": "experience/index.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml", "sitemap-topics.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml",
+        "sitemap-topics.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.8",
       "role": "authority_hub",
@@ -30,7 +38,11 @@
       "url": "https://qilylean.com/projects/",
       "source": "projects/index.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml", "sitemap-topics.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml",
+        "sitemap-topics.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.9",
       "role": "authority_hub",
@@ -40,7 +52,11 @@
       "url": "https://qilylean.com/cooperation/",
       "source": "cooperation/index.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml", "sitemap-topics.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml",
+        "sitemap-topics.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.9",
       "role": "commercial_hub",
@@ -50,7 +66,11 @@
       "url": "https://qilylean.com/knowledge/",
       "source": "knowledge/index.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml", "sitemap-topics.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml",
+        "sitemap-topics.xml"
+      ],
       "changefreq": "weekly",
       "priority": "0.9",
       "role": "knowledge_hub",
@@ -60,7 +80,10 @@
       "url": "https://qilylean.com/contact/",
       "source": "contact/index.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.8",
       "role": "conversion",
@@ -70,7 +93,10 @@
       "url": "https://qilylean.com/cooperation/factory-planning/",
       "source": "cooperation/factory-planning/index.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.9",
       "role": "commercial",
@@ -80,7 +106,10 @@
       "url": "https://qilylean.com/cooperation/lean-improvement/",
       "source": "cooperation/lean-improvement/index.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.9",
       "role": "commercial",
@@ -90,7 +119,10 @@
       "url": "https://qilylean.com/cooperation/visual-management/",
       "source": "cooperation/visual-management/index.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.9",
       "role": "commercial",
@@ -100,7 +132,10 @@
       "url": "https://qilylean.com/improvements/lean-operating-system/",
       "source": "improvements/lean-operating-system/index.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.9",
       "role": "pillar",
@@ -110,7 +145,10 @@
       "url": "https://qilylean.com/knowledge/pdca-gantt-milestone-opl.html",
       "source": "knowledge/pdca-gantt-milestone-opl.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.8",
       "role": "knowledge",
@@ -120,7 +158,10 @@
       "url": "https://qilylean.com/projects/lean-improvement-evidence/",
       "source": "projects/lean-improvement-evidence/index.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml", "sitemap-core.xml"],
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.9",
       "role": "evidence",
@@ -130,7 +171,9 @@
       "url": "https://qilylean.com/qilylean/training/2026-08-08.html",
       "source": "qilylean/training/2026-08-08.html",
       "policy": "submit",
-      "sitemaps": ["sitemap.xml"],
+      "sitemaps": [
+        "sitemap.xml"
+      ],
       "changefreq": "monthly",
       "priority": "0.7",
       "role": "knowledge",
@@ -159,6 +202,58 @@
       "sitemaps": [],
       "role": "utility",
       "reason": "官网分享工具页以扫码/复制为主，搜索独立价值低；保留正常功能，但不主动进入 Sitemap。"
+    },
+    {
+      "url": "https://qilylean.com/global-knowledge/",
+      "source": "global-knowledge/index.html",
+      "policy": "submit",
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml"
+      ],
+      "changefreq": "weekly",
+      "priority": "0.9",
+      "role": "knowledge_hub",
+      "reason": "Global Knowledge 制造知识网络总入口，具备独立主题、静态索引内容与跨模块导航价值。"
+    },
+    {
+      "url": "https://qilylean.com/global-knowledge/terminology/",
+      "source": "global-knowledge/terminology/index.html",
+      "policy": "submit",
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml"
+      ],
+      "changefreq": "weekly",
+      "priority": "0.8",
+      "role": "knowledge",
+      "reason": "Global Knowledge 术语词典为独立可检索知识资产入口，不应只依赖内链自然发现。"
+    },
+    {
+      "url": "https://qilylean.com/global-knowledge/briefs/",
+      "source": "global-knowledge/briefs/index.html",
+      "policy": "submit",
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml"
+      ],
+      "changefreq": "weekly",
+      "priority": "0.8",
+      "role": "knowledge",
+      "reason": "精选制造工程简报目录与阅读入口具备独立搜索价值，应主动进入主 Sitemap。"
+    },
+    {
+      "url": "https://qilylean.com/global-knowledge/library/",
+      "source": "global-knowledge/library/index.html",
+      "policy": "submit",
+      "sitemaps": [
+        "sitemap.xml",
+        "sitemap-core.xml"
+      ],
+      "changefreq": "monthly",
+      "priority": "0.8",
+      "role": "knowledge",
+      "reason": "工具、专题、程序文件与参考资料聚合入口具备独立检索和知识导航价值。"
     }
   ]
 }
