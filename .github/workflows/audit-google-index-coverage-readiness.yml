@@ -7,7 +7,7 @@ on:
       - 'robots.txt'
       - 'sitemap*.xml'
       - 'data/search-authority-map.json'
-      - 'scripts/validate-seo-indexability.js'
+      - 'scripts/validate-seo-indexability.js'\n      - 'scripts/validate-retired-daily-briefs.js'\n      - 'data/retired-daily-briefs-v1.json'
       - 'scripts/validate-search-authority.js'
       - 'scripts/validate-search-engine-discovery.js'
       - 'scripts/audit-google-index-coverage-readiness.js'
@@ -51,7 +51,7 @@ jobs:
       - name: Validate existing SEO contracts
         run: npm run test:seo
 
-      - name: Audit repository-side index coverage readiness
+      - name: Validate retired daily brief governance\n        run: node scripts/validate-retired-daily-briefs.js\n\n      - name: Audit repository-side index coverage readiness
         run: node scripts/audit-google-index-coverage-readiness.js --write
 
       - name: Upload index coverage audit report
