@@ -76,6 +76,11 @@ grep -Fq '<meta name="robots" content="index,follow">' "$INDEX_FILE" || {
   exit 1
 }
 
+grep -Fq '<meta name="360-site-verification" content="42760a600d8679c79148d470325347ac" />' "$INDEX_FILE" || {
+  echo "ERROR: 360 site verification meta tag is missing or changed."
+  exit 1
+}
+
 grep -Fq '<link rel="canonical" href="https://qilylean.cn/">' "$INDEX_FILE" || {
   echo "ERROR: CN homepage canonical must remain https://qilylean.cn/."
   exit 1
@@ -271,5 +276,5 @@ INDEXNOW_VALUE="$(tr -d '\r\n' < "$INDEXNOW_FILE")"
 
 echo "CN personal-site non-commercial content gate passed."
 echo "CN dual-site knowledge-only association contract passed."
-echo "CN search-engine discovery and verification contract passed for Google, Baidu and IndexNow."
+echo "CN search-engine discovery and verification contract passed for Google, Baidu, 360 and IndexNow."
 echo "CN practice/evidence archive boundary and local asset contract passed."
