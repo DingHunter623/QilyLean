@@ -118,12 +118,13 @@ forbid(mat,'const PUBLIC_UI_JS=','Retired picker injection');
 const cn=read('cn-site/index.html');
 const cnVi=read('cn-site/assets/qilylean-vi-v2.css');
 must(cn,'name="robots" content="index,follow"','CN production indexing contract');
-must(cn,'/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback','CN independent VI CSS');
+must(cn,'/assets/qilylean-vi-v2.css?v=20260922-cn-vi-v20-current-module','CN independent VI CSS');
 must(cnVi,'--qily-cn-axis:1180px','CN 1180px content axis');
 must(cnVi,'QILY-CN-TYPE-HIERARCHY-V3','CN boss-readable typography');
 must(cnVi,'--qily-cn-primary-nav-font-size:20px','CN primary nav international-size type');
 must(cnVi,'QILY-CN-NAV-RAIL-V7','CN nav rail V7');
 must(cnVi,'QILY-CN-STICKY-HEADER-V1','CN sticky header');
+must(cnVi,'QILY-CN-CURRENT-MODULE-V1','CN current-module international-style active state');
 must(cnVi,'position:sticky!important','CN sticky header behavior');
 must(cnVi,'grid-template-areas:"brand nav translate"','CN desktop header grid');
 

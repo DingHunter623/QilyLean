@@ -296,10 +296,10 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback' not in home:
-              raise SystemExit('Production China home missing unified mobile VI cache version.')
-          if '/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7' not in home:
-              raise SystemExit('Production China home missing international-style nav rail runtime.')
+          if '/assets/qilylean-vi-v2.css?v=20260922-cn-vi-v20-current-module' not in home:
+              raise SystemExit('Production China home missing current-module VI cache revision.')
+          if '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' not in home:
+              raise SystemExit('Production China home missing current-module nav rail runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
           if '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' not in home:

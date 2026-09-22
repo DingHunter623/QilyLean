@@ -104,6 +104,12 @@ assert(cnRail.includes('qily-primary-nav-scroll-thumb'), 'CN custom nav thumb ru
 assert(cnRail.includes("qily-primary-nav-scroll-rail"), 'CN nav rail runtime class is missing.');
 assert(cnRail.includes('qily-cn-nav-shell'), 'CN desktop/mobile nav shell is missing.');
 assert(cnCss.includes('--qily-cn-primary-nav-font-size:20px'), 'CN primary nav type must match international 20px.');
+assert(cnCss.includes('QILY-CN-CURRENT-MODULE-V1'), 'CN current-module VI contract is missing.');
+assert(cnCss.includes('--qily-cn-primary-nav-active:#0f4b5a'), 'CN current-module fill must match international deep teal.');
+assert(cnCss.includes('--qily-cn-primary-nav-active-border:#ffe39b'), 'CN current-module boundary must match international gold.');
+assert(cnCss.includes('a[href][aria-current="page"]'), 'CN current-module aria-current selector is missing.');
+assert(cnRail.includes('QILY-CN-CURRENT-MODULE-RUNTIME-V1'), 'CN current-module route runtime is missing.');
+assert(cnRail.includes("best.setAttribute('aria-current','page')"), 'CN current-module route runtime must set aria-current.');
 assert(cnCss.includes('grid-template-areas:"brand nav translate"'), 'CN desktop header three-zone layout is missing.');
 assert(cnCss.includes('grid-template-areas:"brand translate" "nav nav"'), 'CN mobile header nav row is missing.');
 assert(cnRail.includes('mousedown'), 'CN nav rail mouse drag is missing.');
@@ -135,8 +141,8 @@ const cnFiledName='精益制造经验分享';
 const cnFooterName='QilyLean | 启力精益 · '+cnFiledName;
 for(const rel of cnPages){
   const html=read(rel);
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260920-cn-vi-v19-filing-feedback'), rel+' must use CN VI V19.');
-  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260918-nav-rail-v7'), rel+' must load the international-style nav rail runtime.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260922-cn-vi-v20-current-module'), rel+' must use CN VI V20.');
+  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
   assert(html.includes(cnFooterName), rel+' must display the filed China-site name in the footer.');
