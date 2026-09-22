@@ -101,6 +101,7 @@ jobs:
           test -f cn-site/methods/index.html
           grep -Fq '<title>精益制造经验分享｜QilyLean | 启力精益｜制造工程、精益生产与数智工厂知识站</title>' cn-site/index.html
           grep -Fq '<p class="eyebrow">精益制造经验分享</p>' cn-site/index.html
+          grep -Fq '<meta name="360-site-verification" content="42760a600d8679c79148d470325347ac" />' cn-site/index.html
           grep -Fq '"name":"精益制造经验分享"' cn-site/index.html
           grep -Fq 'QilyLean | 启力精益 · 精益制造经验分享' cn-site/index.html
           ! grep -Fq 'QILYLEAN CHINA｜' cn-site/index.html
@@ -278,6 +279,7 @@ jobs:
 
           required_home_name = [
               '<title>精益制造经验分享｜QilyLean | 启力精益｜制造工程、精益生产与数智工厂知识站</title>',
+              '<meta name="360-site-verification" content="42760a600d8679c79148d470325347ac" />',
               '<p class="eyebrow">精益制造经验分享</p>',
               '"name":"精益制造经验分享"',
               'QilyLean | 启力精益 · 精益制造经验分享',
