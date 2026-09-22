@@ -241,3 +241,62 @@ if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:tru
 w.addEventListener('resize',resync,{passive:true});
 w.addEventListener('pageshow',function(){boot();resync();},{passive:true});
 })(document,window);
+
+/* QILY-CN-CURRENT-MODULE-RUNTIME-V1 | 2026-09-22
+ * Semantic fallback for every China-site route. It keeps aria-current correct
+ * on nested knowledge pages and brings the active item into the horizontal
+ * navigation viewport without moving the document vertically.
+ */
+(function(d,w){'use strict';
+if(w.__qilyCnCurrentModuleV1)return;w.__qilyCnCurrentModuleV1=true;
+
+function normalize(path){
+  path=(path||'/').replace(/\/index\.html$/i,'/').replace(/\/{2,}/g,'/');
+  if(path.length>1)path=path.replace(/\/+$/,'');
+  return path||'/';
+}
+function mark(nav){
+  if(!nav)return null;
+  var current=normalize(w.location.pathname);
+  var links=Array.prototype.slice.call(nav.querySelectorAll('a[href]'));
+  var best=null,bestLength=-1;
+  links.forEach(function(link){
+    link.removeAttribute('aria-current');
+    var url;
+    try{url=new URL(link.getAttribute('href'),w.location.href);}catch(error){return;}
+    if(url.origin!==w.location.origin)return;
+    var target=normalize(url.pathname);
+    if(target==='/'||target.length<2)return;
+    if(current===target||current.indexOf(target+'/')===0){
+      if(target.length>bestLength){best=link;bestLength=target.length;}
+    }
+  });
+  if(best){
+    best.setAttribute('aria-current','page');
+    nav.setAttribute('data-qily-current-module',normalize(new URL(best.href,w.location.href).pathname));
+  }else{
+    nav.removeAttribute('data-qily-current-module');
+  }
+  return best;
+}
+function reveal(nav,active){
+  if(!nav||!active)return;
+  w.requestAnimationFrame(function(){
+    var left=active.offsetLeft;
+    var right=left+active.offsetWidth;
+    var viewLeft=nav.scrollLeft;
+    var viewRight=viewLeft+nav.clientWidth;
+    if(left>=viewLeft+8&&right<=viewRight-8)return;
+    var target=Math.max(0,left-(nav.clientWidth-active.offsetWidth)/2);
+    nav.scrollLeft=target;
+    nav.dispatchEvent(new Event('scroll'));
+  });
+}
+function boot(){
+  Array.prototype.slice.call(d.querySelectorAll('header.site-header nav.nav,header nav[aria-label="主导航"]')).forEach(function(nav){
+    reveal(nav,mark(nav));
+  });
+}
+if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+w.addEventListener('pageshow',boot,{passive:true});
+})(document,window);
