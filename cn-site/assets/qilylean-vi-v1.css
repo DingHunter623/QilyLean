@@ -19,7 +19,7 @@
   --qily-cn-axis:1180px;
   --qily-cn-radius:12px;
   --qily-cn-shadow:0 10px 28px rgba(15,75,90,.10);
-  --qily-cn-h1:clamp(34px,3.25vw,52px);
+  --qily-cn-h1:clamp(28px,2.25vw,38px);
 }
 
 /* 01 | Same public content axis as the international site. */
@@ -98,7 +98,7 @@ html:root body header.site-header .brand:is(:hover,:focus-visible)::after{
 }
 
 /* 03 | International-site header and navigation typography. */
-html:root body{font-size:20px!important;line-height:1.75!important;color:var(--qily-cn-ink)!important;background:var(--qily-cn-page)!important}
+html:root body{font-size:18px!important;line-height:1.72!important;color:var(--qily-cn-ink)!important;background:var(--qily-cn-page)!important}
 html:root body .site-header{background:rgba(255,255,255,.97)!important;border-bottom:1px solid var(--qily-cn-line)!important}
 html:root body .header-inner{min-height:76px!important;gap:24px!important}
 html:root body .nav{gap:8px!important}
@@ -126,7 +126,7 @@ html:root body .nav>a[href]:focus-visible{
   outline-offset:1px!important;
 }
 
-/* 04 | Heading ceiling and readable body hierarchy match the international site. */
+/* 04 | Restrained China-site hierarchy: page title > section > subheading > body. */
 html:root body main :is(.hero h1,.page-hero h1,h1){
   font-size:var(--qily-cn-h1)!important;
   line-height:1.08!important;
@@ -134,9 +134,9 @@ html:root body main :is(.hero h1,.page-hero h1,h1){
   font-weight:950!important;
   max-width:none!important;
 }
-html:root body main :is(.hero .lead,.page-hero p){font-size:clamp(20px,1.55vw,22px)!important;line-height:1.75!important}
+html:root body main :is(.hero .lead,.page-hero p){font-size:clamp(18px,1.15vw,19px)!important;line-height:1.68!important}
 html:root body main :is(.eyebrow,.section-head small,.portal-card small){
-  font-size:20px!important;
+  font-size:16px!important;
   line-height:1.5!important;
   color:#b88b45!important;
   -webkit-text-fill-color:#b88b45!important;
@@ -145,21 +145,21 @@ html:root body main :is(.eyebrow,.section-head small,.portal-card small){
   opacity:1!important;
 }
 html:root body main :is(.hero,.page-hero) :is(.eyebrow,small){color:var(--qily-cn-gold-soft)!important;-webkit-text-fill-color:var(--qily-cn-gold-soft)!important}
-html:root body main :is(.section-head h2,.article-body h2){font-size:clamp(32px,3vw,48px)!important;line-height:1.16!important;font-weight:950!important}
-html:root body main :is(.portal-card h3,.article-link h3,.trust-box h3,.article-body h3){font-size:24px!important;line-height:1.35!important;font-weight:900!important}
+html:root body main :is(.section-head h2,.article-body h2){font-size:clamp(22px,1.45vw,25px)!important;line-height:1.22!important;font-weight:900!important}
+html:root body main :is(.portal-card h3,.article-link h3,.trust-box h3,.article-body h3){font-size:clamp(18px,1.05vw,20px)!important;line-height:1.3!important;font-weight:900!important}
 html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p,.callout,.formula){
-  font-size:20px!important;
-  line-height:1.75!important;
+  font-size:18px!important;
+  line-height:1.72!important;
   color:var(--qily-cn-copy)!important;
   -webkit-text-fill-color:var(--qily-cn-copy)!important;
 }
 html:root body main :is(.meta,.article-meta,.toc :is(a,span),.notice,.status,.logic span,.portal-card .meta){
-  font-size:17px!important;
-  line-height:1.62!important;
+  font-size:16px!important;
+  line-height:1.58!important;
   opacity:1!important;
 }
-html:root body main :is(.logic b,.toc b){font-size:19px!important;line-height:1.45!important}
-html:root body :is(th,td,label,input,select,textarea,button,option){font-size:20px!important}
+html:root body main :is(.logic b,.toc b){font-size:17px!important;line-height:1.45!important}
+html:root body :is(th,td,label,input,select,textarea,button,option){font-size:17px!important}
 
 /* 05 | Same card/surface system as international QilyLean. */
 html:root body main :is(.portal-card,.card,.trust-box,.article-link,.knowledge-bridge,.toc,.formula){
@@ -176,7 +176,7 @@ html:root body :is(a.btn,button.btn){
   min-height:48px!important;
   padding:10px 18px!important;
   border-radius:var(--qily-cn-radius)!important;
-  font-size:20px!important;
+  font-size:17px!important;
   line-height:1.35!important;
   font-weight:900!important;
   box-sizing:border-box!important;
@@ -195,26 +195,26 @@ html:root body main .hero .btn:not(.primary){color:#fff!important;-webkit-text-f
   html:root body .nav>a[href]{flex:0 0 auto!important;min-height:44px!important;font-size:20px!important}
 }
 @media(max-width:620px){
-  html:root body main :is(.hero h1,.page-hero h1,h1){font-size:clamp(34px,9.6vw,43px)!important}
-  html:root body main :is(.eyebrow,.section-head small,.portal-card small){font-size:18px!important}
-  html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p){font-size:19px!important}
+  html:root body main :is(.hero h1,.page-hero h1,h1){font-size:clamp(27px,7.2vw,33px)!important}
+  html:root body main :is(.eyebrow,.section-head small,.portal-card small){font-size:15px!important}
+  html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p){font-size:17px!important}
   html:root body header.site-header .brand{width:126px!important;height:23px!important}
   html:root body header.site-header .brand:is(:hover,:focus-visible)::after{padding:0 6px!important;font-size:15px!important}
 }
 
-/* 08 | Boss-readable typography floor: readability outranks density. */
-html:root body{font-size:21px!important;line-height:1.78!important}
-html:root body main :is(.hero .lead,.page-hero p){font-size:clamp(21px,1.6vw,23px)!important;line-height:1.78!important}
-html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p,.callout,.formula){font-size:21px!important;line-height:1.8!important}
-html:root body main :is(.meta,.article-meta,.toc :is(a,span),.notice,.status,.logic span,.portal-card .meta){font-size:19px!important;line-height:1.68!important}
-html:root body main :is(.logic b,.toc b){font-size:20px!important;line-height:1.5!important}
-html:root body :is(.breadcrumbs,.tag,.subnav a,figcaption,time){font-size:18px!important;line-height:1.6!important}
-html:root body :is(th,td,label,input,select,textarea,button,option){font-size:20px!important;line-height:1.55!important}
-html:root body main .brand-domain{margin:3px 0 10px!important;color:var(--qily-cn-forest)!important;-webkit-text-fill-color:var(--qily-cn-forest)!important;font-size:20px!important;line-height:1.45!important;font-weight:850!important;letter-spacing:.01em!important}
+/* 08 | Readable typography floor without oversized section headings. */
+html:root body{font-size:18px!important;line-height:1.72!important}
+html:root body main :is(.hero .lead,.page-hero p){font-size:clamp(18px,1.15vw,19px)!important;line-height:1.68!important}
+html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p,.callout,.formula){font-size:18px!important;line-height:1.72!important}
+html:root body main :is(.meta,.article-meta,.toc :is(a,span),.notice,.status,.logic span,.portal-card .meta){font-size:16px!important;line-height:1.58!important}
+html:root body main :is(.logic b,.toc b){font-size:17px!important;line-height:1.45!important}
+html:root body :is(.breadcrumbs,.tag,.subnav a,figcaption,time){font-size:15px!important;line-height:1.55!important}
+html:root body :is(th,td,label,input,select,textarea,button,option){font-size:17px!important;line-height:1.5!important}
+html:root body main .brand-domain{margin:3px 0 10px!important;color:var(--qily-cn-forest)!important;-webkit-text-fill-color:var(--qily-cn-forest)!important;font-size:17px!important;line-height:1.45!important;font-weight:850!important;letter-spacing:.01em!important}
 @media(max-width:620px){
-  html:root body{font-size:20px!important}
-  html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p,.callout,.formula){font-size:20px!important}
-  html:root body main :is(.meta,.article-meta,.toc :is(a,span),.notice,.status,.logic span,.portal-card .meta,.breadcrumbs,.tag,.subnav a,figcaption,time){font-size:18px!important}
+  html:root body{font-size:17px!important}
+  html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p,.callout,.formula){font-size:17px!important}
+  html:root body main :is(.meta,.article-meta,.toc :is(a,span),.notice,.status,.logic span,.portal-card .meta,.breadcrumbs,.tag,.subnav a,figcaption,time){font-size:15px!important}
 }
 
 @media(prefers-reduced-motion:reduce){

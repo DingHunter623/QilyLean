@@ -21,7 +21,7 @@ forbid(type,'--qily-type-h1:clamp(43px,4.25vw,66px);','COM legacy oversized H1')
 must(home,'font-size:clamp(30px,2.65vw,44px)!important;','Homepage head-title authority');
 forbid(home,'font-size:clamp(34px,3.25vw,62px)!important;','Homepage oversized regression');
 
-must(cn,'--qily-cn-h1:clamp(30px,2.5vw,42px);','CN final VI heading sync');
+must(cn,'--qily-cn-h1:clamp(28px,2.25vw,38px);','CN final VI page-heading sync');
 forbid(cn,'--qily-cn-h1:clamp(34px,2.8vw,46px);','CN retired oversized hero');
 
-process.stdout.write('PASS: R8.1 heading hierarchy locked — international primary titles are capped at 44px; CN final VI stays independently governed.\n');
+process.stdout.write('PASS: R8.1 heading hierarchy locked — international primary titles are capped at 44px; CN final VI stays independently governed with a restrained 38px page-title ceiling.\n');

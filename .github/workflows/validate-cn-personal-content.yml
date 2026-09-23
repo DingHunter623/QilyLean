@@ -73,7 +73,7 @@ jobs:
           grep -Fq '精选 8 项制造实践' cn-site/index.html
           grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
-          grep -Fq '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v21-heading-scale' cn-site/index.html
+          grep -Fq '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v22-sitewide-type' cn-site/index.html
           grep -Fq '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' cn-site/index.html
@@ -81,12 +81,15 @@ jobs:
           grep -Fq 'QILY-CN-CURRENT-MODULE-V1' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'QILY-CN-CURRENT-MODULE-RUNTIME-V1' cn-site/assets/cn-nav-rail-v1.js
           grep -Fq 'QILY-CN-STICKY-HEADER-V1' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'QILY-CN-TYPE-HIERARCHY-V4' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h2:clamp(22px,1.45vw,25px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h3:clamp(18px,1.05vw,20px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'position:sticky!important' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'qily-primary-nav-scroll-thumb' cn-site/assets/cn-nav-rail-v1.js
           grep -Fq 'mousedown' cn-site/assets/cn-nav-rail-v1.js
-          grep -Fq -- '--qily-cn-h1:clamp(28px,7.8vw,36px)' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq -- '--qily-cn-h2:clamp(22px,5.8vw,26px)' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq -- '--qily-cn-h3:clamp(19px,5.7vw,21px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h1:clamp(27px,7.2vw,33px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h2:clamp(21px,5.4vw,24px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h3:clamp(18px,4.8vw,20px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq '从现场问题，到可复用的方法' cn-site/notes/index.html
           grep -Fq '8项制造实践，从现场问题走向标准化沉淀' cn-site/notes/index.html
           grep -Fq '6S改善机制：从稽核到激励的运行记录' cn-site/notes/index.html
