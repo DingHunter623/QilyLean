@@ -1,6 +1,6 @@
 name: Publish sitewide visual readability V5
 
-# Trigger refresh: 2026-09-03 V10/R8 homepage-heading ceiling + V9 VI/static semantics
+# Trigger refresh: 2026-09-23 R8.2 page/module hierarchy + restrained content headings
 on:
   push:
     branches: [main]
@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: 24
 
-      - name: Materialize and verify V10/R8 heading authority across public pages
+      - name: Materialize and verify R8.2 heading hierarchy across public pages
         run: |
           node --check scripts/publish-visual-readability-v5.js
           node scripts/publish-visual-readability-v5.js
@@ -47,7 +47,7 @@ jobs:
           grep -Fq 'R8-HEADING-CEILING-V1-20260903' site-visual-readability-v5.css
           grep -Fq 'html:root:root:root body main h1' site-visual-readability-v5.css
           grep -Fq 'font-size:clamp(30px,8.2vw,38px)!important' site-visual-readability-v5.css
-          grep -Fq "const VERSION = '20260903-r8-heading-ceiling-v10';" scripts/publish-visual-readability-v5.js
+          grep -Fq "const VERSION = '20260923-r82-heading-hierarchy-v1';" scripts/publish-visual-readability-v5.js
 
       - name: Commit sitewide R8 visual hierarchy
         shell: bash
@@ -57,9 +57,9 @@ jobs:
           git config user.email 'DingHunter623@gmail.com'
           git add -A
           if git diff --cached --quiet; then
-            echo 'V10/R8 visual hierarchy already materialized.'
+            echo 'R8.2 visual hierarchy already materialized.'
             exit 0
           fi
-          git commit -m 'fix: materialize R8 homepage heading ceiling sitewide [skip ci]'
+          git commit -m 'style: materialize R8.2 heading hierarchy sitewide [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main

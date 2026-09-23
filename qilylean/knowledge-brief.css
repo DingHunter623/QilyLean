@@ -47,7 +47,7 @@ body.qily-knowledge-brief-page {
 .knowledge-brief-hero .module-inner { position: relative; z-index: 1; }
 html body.qily-knowledge-brief-page .knowledge-brief-hero h1 {
   max-width: 1180px;
-  font-size: clamp(34px, 3.05vw, 46px) !important;
+  font-size: clamp(28px, 2.15vw, 34px) !important;
   line-height: 1.12 !important;
   letter-spacing: -.02em !important;
 }
@@ -389,7 +389,7 @@ html:root body.qily-knowledge-brief-page .brief-adjacent > a:active {
 
 @media (max-width: 620px) {
   html body.qily-knowledge-brief-page .knowledge-brief-hero h1 {
-    font-size: clamp(31px, 8.4vw, 40px) !important;
+    font-size: clamp(27px, 7vw, 32px) !important;
     line-height: 1.14 !important;
   }
   html body.qily-knowledge-brief-page .knowledge-brief-hero .module-eyebrow {
@@ -523,12 +523,13 @@ html body.qily-knowledge-brief-page .knowledge-brief-hero .module-eyebrow{
   font-weight:900!important;
   letter-spacing:.04em!important;
 }
+/* 2026-09-23: article title is a content-level heading, two visual steps below the module banner. */
 html body.qily-knowledge-brief-page .knowledge-brief-hero h1{
   max-width:none!important;
   margin:18px 0 14px!important;
   color:var(--brief-forest)!important;
   -webkit-text-fill-color:var(--brief-forest)!important;
-  font-size:clamp(32px,3.05vw,46px)!important;
+  font-size:clamp(28px,2.15vw,34px)!important;
   line-height:1.18!important;
   letter-spacing:-.02em!important;
 }

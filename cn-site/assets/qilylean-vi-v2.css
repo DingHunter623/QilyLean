@@ -10,8 +10,8 @@
   --qily-cn-body:18px;
   --qily-cn-small:16px;
   --qily-cn-h1:clamp(30px,2.5vw,42px);
-  --qily-cn-h2:clamp(25px,1.85vw,30px);
-  --qily-cn-h3:clamp(20px,1.4vw,23px);
+  --qily-cn-h2:clamp(23px,1.6vw,27px);
+  --qily-cn-h3:clamp(19px,1.2vw,21px);
   --qily-cn-fixed-footer-h:78px;
   --qily-cn-primary-nav-font-size:20px;
   --qily-nav-scroll-track:#b9d9d4;
@@ -39,6 +39,7 @@ html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,
 html:root body .nav>a[href]{font-size:var(--qily-cn-primary-nav-font-size)!important}
 html:root body :is(a.btn,button.btn,.logic b,.toc b){font-size:17px!important}
 
+/* 2026-09-23: body/section headings reduced two visual steps below page/module H1. */
 /* Restrained heading hierarchy: strong enough for executives, not visually exhausting. */
 html:root body main :is(.hero h1,.page-hero h1,h1){
   font-size:var(--qily-cn-h1)!important;
@@ -299,7 +300,7 @@ html:root body a[href^="https://beian."]:active{
     --qily-cn-body:17px;
     --qily-cn-small:15px;
     --qily-cn-h1:clamp(28px,7.8vw,36px);
-    --qily-cn-h2:clamp(23px,6.2vw,28px);
+    --qily-cn-h2:clamp(22px,5.8vw,26px);
     --qily-cn-h3:clamp(19px,5.7vw,21px);
   }
   html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){font-size:17px!important}

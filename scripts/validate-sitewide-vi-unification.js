@@ -90,7 +90,7 @@ assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation fallb
   '--qily-nav-scroll-track:#b9d9d4',
   '--qily-nav-scroll-thumb:#0f4b5a',
   '--qily-cn-h1:clamp(28px,7.8vw,36px)',
-  '--qily-cn-h2:clamp(23px,6.2vw,28px)',
+  '--qily-cn-h2:clamp(22px,5.8vw,26px)',
   '--qily-cn-h3:clamp(19px,5.7vw,21px)',
   'scrollbar-width:none!important',
   'background:#b9d9d4!important',
@@ -141,7 +141,7 @@ const cnFiledName='精益制造经验分享';
 const cnFooterName='QilyLean | 启力精益 · '+cnFiledName;
 for(const rel of cnPages){
   const html=read(rel);
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260922-cn-vi-v20-current-module'), rel+' must use CN VI V20.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v21-heading-scale'), rel+' must use CN VI V20.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
