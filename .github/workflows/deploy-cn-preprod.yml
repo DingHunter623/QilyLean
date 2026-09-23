@@ -148,7 +148,7 @@ jobs:
         run: |
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
-          SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes)
+          SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes)
 
           copy_with_retry() {
             local src="$1"
@@ -156,25 +156,32 @@ jobs:
             local attempt
             for attempt in 1 2; do
               echo "SCP ${src} -> ${dest} (attempt ${attempt}/2)"
-              if timeout 600s scp -q "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$src" "$USER_NAME@$CN_PREPROD_HOST:$dest"; then
+              if timeout 180s scp -q "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$src" "$USER_NAME@$CN_PREPROD_HOST:$dest"; then
                 return 0
               fi
-              sleep 5
+              sleep 3
             done
             return 1
           }
 
-          # Copy files directly instead of piping a nested tar stream through SSH.
-          # Direct SCP isolates retries per file and avoids leaving the deployment stuck
-          # while the remote tar process waits on a broken long-lived stdin stream.
-          copy_with_retry /tmp/qilylean-cn-site.tar.gz /tmp/qilylean-cn-site.tar.gz
+          # The mainland route can stall on one long SCP stream. Upload the release
+          # archive in small independently retryable chunks, reconstruct it remotely,
+          # then verify SHA-256 before the atomic release switch.
+          ARCHIVE_SHA="$(sha256sum /tmp/qilylean-cn-site.tar.gz | awk '{print $1}')"
+          rm -f /tmp/qilylean-cn-site.part.*
+          split -b 512k -d -a 3 /tmp/qilylean-cn-site.tar.gz /tmp/qilylean-cn-site.part.
+
+          timeout 60s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             'rm -f /tmp/qilylean-cn-site.part.* /tmp/qilylean-cn-site.tar.gz'
+
+          for part in /tmp/qilylean-cn-site.part.*; do
+            copy_with_retry "$part" "/tmp/$(basename "$part")"
+          done
           copy_with_retry cn-site/scripts/server-bootstrap.sh /tmp/bootstrap-qilylean-cn.sh
           copy_with_retry cn-site/scripts/deploy-release.sh /tmp/deploy-qilylean-cn.sh
           copy_with_retry cn-site/scripts/activate-public-http.sh /tmp/activate-qilylean-cn-http.sh
           copy_with_retry cn-site/nginx/qilylean.cn.conf /tmp/qilylean.cn.conf
 
-          timeout 60s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
-            'test -s /tmp/qilylean-cn-site.tar.gz && test -s /tmp/deploy-qilylean-cn.sh && test -s /tmp/activate-qilylean-cn-http.sh && test -s /tmp/qilylean.cn.conf && echo "Release bundle staged."'
+          timeout 90s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             "cat /tmp/qilylean-cn-site.part.* > /tmp/qilylean-cn-site.tar.gz &&              test '\$(sha256sum /tmp/qilylean-cn-site.tar.gz | awk '{print \$1}')' = '$ARCHIVE_SHA' &&              rm -f /tmp/qilylean-cn-site.part.* &&              test -s /tmp/deploy-qilylean-cn.sh && test -s /tmp/activate-qilylean-cn-http.sh && test -s /tmp/qilylean.cn.conf &&              echo 'Release bundle staged and checksum verified.'"
 
       - name: Bootstrap server when required
         shell: bash
