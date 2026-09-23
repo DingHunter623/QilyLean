@@ -14,6 +14,7 @@ const pages=[
   ['ai','/ai.html'],
   ['cooperation','/cooperation/']
 ];
+// Dock V5.8 is the current sitewide fixed-bottom authority; VI v4 must not regress it to absolute overlay.
 const viewports=[
   ['desktop',{width:1440,height:1000}],
   ['tablet',{width:1024,height:900}],
@@ -63,7 +64,7 @@ for(const [name,url] of pages){
       expect(result.headers,`${url} ${device} visible Header count`).toBe(1);
       expect(result.headerFormal).toBeTruthy();
       expect(result.docks,`${url} ${device} visible Dock count`).toBeLessThanOrEqual(1);
-      expect(result.dockPositions.every(p=>p!=='fixed'&&p!=='absolute'),`${url} ${device} Dock must not overlay content`).toBeTruthy();
+      expect(result.dockPositions.every(p=>p!=='absolute'),`${url} ${device} Dock must use canonical flow/fixed-bottom positioning, never absolute overlay`).toBeTruthy();
       expect(result.rails,`${url} ${device} legacy navigation slider`).toBe(0);
       expect(result.translatorOutsideHeader,`${url} ${device} translator must live in Header`).toBe(0);
       expect(result.badHero,`${url} ${device} non-118deg Hero: ${result.badHero.join(' | ')}`).toEqual([]);
