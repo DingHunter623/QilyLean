@@ -5,6 +5,10 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/publish-cn-tripod-brief-20260923.yml'
+      - 'cn-site/index.html'
+      - 'cn-site/knowledge/index.html'
+      - 'cn-site/knowledge/production-engineering-quality-tripod/index.html'
+      - 'cn-site/sitemap.xml'
   workflow_dispatch:
 
 permissions:
