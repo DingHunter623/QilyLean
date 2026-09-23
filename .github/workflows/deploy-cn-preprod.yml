@@ -303,7 +303,7 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v22-sitewide-type' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale' not in home:
               raise SystemExit('Production China home missing current-module VI cache revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' not in home:
               raise SystemExit('Production China home missing current-module nav rail runtime.')
@@ -336,7 +336,7 @@ jobs:
               '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2',
               '/assets/practice/lean-improvement-evidence.svg?v=20260918-practice-v1',
               '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1',
-              '/assets/practice.css?v=20260920-practice-visual-v3-equal',
+              '/assets/practice.css?v=20260923-practice-visual-v4-reading',
               '6S改善机制：从稽核到激励的运行记录',
               '6S改善运行机制摘要',
               'award-metrics-grid',
@@ -387,8 +387,8 @@ jobs:
               'min-width:104px!important',
               '--qily-cn-primary-nav-font-size:20px',
               '--qily-cn-h1:clamp(27px,7.2vw,33px)',
-              '--qily-cn-h2:clamp(21px,5.4vw,24px)',
-              '--qily-cn-h3:clamp(18px,4.8vw,20px)',
+              '--qily-cn-h2:clamp(19px,5vw,21px)',
+              '--qily-cn-h3:clamp(17px,4.5vw,19px)',
               'grid-template-areas:"brand nav translate"',
               'grid-template-areas:"brand translate" "nav nav"',
               'object-position:50% 50%!important',
@@ -396,10 +396,10 @@ jobs:
               'background:var(--qily-gold)!important',
               'html:root body .knowledge-bridge>a:active',
               'QILY-CN-THESIS-NONINTERACTIVE-V1',
-              'QILY-CN-TYPE-HIERARCHY-V4',
+              'QILY-CN-TYPE-HIERARCHY-V5',
               '--qily-cn-h1:clamp(28px,2.25vw,38px)',
-              '--qily-cn-h2:clamp(22px,1.45vw,25px)',
-              '--qily-cn-h3:clamp(18px,1.05vw,20px)',
+              '--qily-cn-h2:clamp(20px,1.25vw,22px)',
+              '--qily-cn-h3:clamp(17px,1vw,19px)',
               'pointer-events:none!important',
           ]
           for marker in required_vi:
