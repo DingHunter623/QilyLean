@@ -1,4 +1,4 @@
-@import url('/assets/qilylean-vi-v1.css?v=20260923-cn-typography-base-v6');
+@import url('/assets/qilylean-vi-v1.css?v=20260923-cn-typography-base-v7');
 
 /* QilyLean China Unified VI V2 | 2026-09-16
  * Boss-readable closure aligned to the international-site visual rhythm.
@@ -10,9 +10,9 @@
   --qily-cn-body:18px;
   --qily-cn-small:15px;
   --qily-cn-h1:clamp(28px,2.25vw,38px);
-  --qily-cn-h2:clamp(22px,1.45vw,25px);
-  --qily-cn-h3:clamp(18px,1.05vw,20px);
-  --qily-cn-h4:18px;
+  --qily-cn-h2:clamp(20px,1.25vw,22px);
+  --qily-cn-h3:clamp(17px,1vw,19px);
+  --qily-cn-h4:17px;
   --qily-cn-fixed-footer-h:78px;
   --qily-cn-primary-nav-font-size:20px;
   --qily-nav-scroll-track:#b9d9d4;
@@ -301,8 +301,8 @@ html:root body a[href^="https://beian."]:active{
     --qily-cn-body:17px;
     --qily-cn-small:15px;
     --qily-cn-h1:clamp(27px,7.2vw,33px);
-    --qily-cn-h2:clamp(21px,5.4vw,24px);
-    --qily-cn-h3:clamp(18px,4.8vw,20px);
+    --qily-cn-h2:clamp(19px,5vw,21px);
+    --qily-cn-h3:clamp(17px,4.5vw,19px);
     --qily-cn-h4:17px;
   }
   html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){font-size:17px!important}
@@ -859,3 +859,61 @@ html:root body .site-header .nav>a[href][aria-current="page"]:focus-visible{
 @media(prefers-reduced-motion:reduce){
   html:root body .site-header .nav>a[href][aria-current="page"]{transition:none!important}
 }
+
+
+/* QILY-CN-TYPE-HIERARCHY-V5 | 2026-09-23
+ * Final reading-scale authority. Keep page/module H1 as the visual anchor;
+ * body section headings stay deliberately compact on dense content pages.
+ */
+html:root:root:root body main h2,
+html:root:root:root body main .section-head h2,
+html:root:root:root body main .article-body h2{
+  font-size:clamp(20px,1.25vw,22px)!important;
+  line-height:1.28!important;
+  letter-spacing:-.004em!important;
+  font-weight:850!important;
+}
+html:root:root:root body main h3,
+html:root:root:root body main .portal-card h3,
+html:root:root:root body main .article-link h3,
+html:root:root:root body main .trust-box h3,
+html:root:root:root body main .article-body h3,
+html:root:root:root body main .practice-copy h3,
+html:root:root:root body main .award-summary-head h3{
+  font-size:clamp(17px,1vw,19px)!important;
+  line-height:1.34!important;
+  letter-spacing:0!important;
+  font-weight:850!important;
+}
+html:root:root:root body main h4,
+html:root:root:root body main .article-body h4,
+html:root:root:root body main .card h4{
+  font-size:17px!important;
+  line-height:1.38!important;
+  font-weight:800!important;
+}
+html:root:root:root body main .article-body h2{
+  margin-top:24px!important;
+  margin-bottom:8px!important;
+}
+html:root:root:root body main .section-head h2{
+  margin-top:5px!important;
+  margin-bottom:7px!important;
+}
+@media(max-width:620px){
+  html:root:root:root body main h2,
+  html:root:root:root body main .section-head h2,
+  html:root:root:root body main .article-body h2{
+    font-size:clamp(19px,5vw,21px)!important;
+  }
+  html:root:root:root body main h3,
+  html:root:root:root body main .portal-card h3,
+  html:root:root:root body main .article-link h3,
+  html:root:root:root body main .trust-box h3,
+  html:root:root:root body main .article-body h3,
+  html:root:root:root body main .practice-copy h3,
+  html:root:root:root body main .award-summary-head h3{
+    font-size:clamp(17px,4.5vw,19px)!important;
+  }
+}
+/* QILY-CN-TYPE-HIERARCHY-V5:END */
