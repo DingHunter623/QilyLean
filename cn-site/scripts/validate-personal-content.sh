@@ -158,7 +158,8 @@ grep -Fq '玻璃管保险丝改善后成品照片' "$PRACTICE_FUSE" || { echo "E
 [[ -f "$PRACTICE_EVIDENCE" ]] || { echo "ERROR: CN improvement-evidence visual is missing."; exit 1; }
 [[ -f "$PRACTICE_AUTOMOTIVE" ]] || { echo "ERROR: CN automotive-lean practice visual is missing."; exit 1; }
 [[ -f "$PRACTICE_FACTORY" ]] || { echo "ERROR: CN factory-layout practice visual is missing."; exit 1; }
-grep -Fq 'data-warehouse-label-sequence="01-02-03-04-05"' "$PRACTICE_FACTORY" || { echo "ERROR: CN factory-layout mold warehouse labels must remain 01-02-03-04-05."; exit 1; }
+grep -Fq 'data-public-visual-scope="factory-layout-only-v3"' "$PRACTICE_FACTORY" || { echo "ERROR: CN factory-layout public visual must use the clean factory-only crop."; exit 1; }
+if grep -Fq 'qily-warehouse-label-sequence-v1' "$PRACTICE_FACTORY"; then echo "ERROR: Retired patched warehouse-number overlay returned."; exit 1; fi
 [[ -f "$PRACTICE_DIGITAL" ]] || { echo "ERROR: CN digital-factory practice visual is missing."; exit 1; }
 [[ -f "$PRACTICE_VISUAL" ]] || { echo "ERROR: CN visual-management practice visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
@@ -208,7 +209,7 @@ grep -Fq '6S改善运行机制摘要' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S m
 grep -Fq '6S改善机制：从稽核到激励的运行记录' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S public-facing section headline is missing."; exit 1; }
 grep -Fq '机制说明：' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism explanation is missing."; exit 1; }
 grep -Fq '/assets/practice/automotive-lean.svg?v=20260918-practice-map-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN automotive lean representative practice is missing."; exit 1; }
-grep -Fq '/assets/practice/factory-layout.svg?v=20260923-practice-map-v2' "$PRACTICE_PAGE" || { echo "ERROR: CN factory planning representative practice is missing."; exit 1; }
+grep -Fq '/assets/practice/factory-layout.svg?v=20260923-practice-map-v3-clean' "$PRACTICE_PAGE" || { echo "ERROR: CN factory planning representative practice is missing."; exit 1; }
 grep -Fq '/assets/practice/digital-factory.svg?v=20260918-practice-map-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN digital factory representative practice is missing."; exit 1; }
 grep -Fq '/assets/practice/visual-management.svg?v=20260918-practice-map-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN visual management representative practice is missing."; exit 1; }
 grep -Fq '汽车电子精益体系、VSM、单件流与SMED标准化' "$PRACTICE_PAGE" || { echo "ERROR: CN automotive lean practice title is missing."; exit 1; }
