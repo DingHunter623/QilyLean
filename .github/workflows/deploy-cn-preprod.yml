@@ -296,7 +296,7 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v21-heading-scale' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v22-sitewide-type' not in home:
               raise SystemExit('Production China home missing current-module VI cache revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' not in home:
               raise SystemExit('Production China home missing current-module nav rail runtime.')
@@ -379,9 +379,9 @@ jobs:
               'background:#0f4b5a!important',
               'min-width:104px!important',
               '--qily-cn-primary-nav-font-size:20px',
-              '--qily-cn-h1:clamp(28px,7.8vw,36px)',
-              '--qily-cn-h2:clamp(22px,5.8vw,26px)',
-              '--qily-cn-h3:clamp(19px,5.7vw,21px)',
+              '--qily-cn-h1:clamp(27px,7.2vw,33px)',
+              '--qily-cn-h2:clamp(21px,5.4vw,24px)',
+              '--qily-cn-h3:clamp(18px,4.8vw,20px)',
               'grid-template-areas:"brand nav translate"',
               'grid-template-areas:"brand translate" "nav nav"',
               'object-position:50% 50%!important',
@@ -389,6 +389,10 @@ jobs:
               'background:var(--qily-gold)!important',
               'html:root body .knowledge-bridge>a:active',
               'QILY-CN-THESIS-NONINTERACTIVE-V1',
+              'QILY-CN-TYPE-HIERARCHY-V4',
+              '--qily-cn-h1:clamp(28px,2.25vw,38px)',
+              '--qily-cn-h2:clamp(22px,1.45vw,25px)',
+              '--qily-cn-h3:clamp(18px,1.05vw,20px)',
               'pointer-events:none!important',
           ]
           for marker in required_vi:
