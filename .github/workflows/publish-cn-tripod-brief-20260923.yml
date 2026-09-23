@@ -1,0 +1,106 @@
+name: Publish CN tripod brief incremental closure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-cn-tripod-brief-20260923.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify source bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq '生产现场管理铁三脚' cn-site/index.html
+          grep -Fq '生产现场管理铁三脚' cn-site/knowledge/index.html
+          grep -Fq '生产现场管理铁三脚' cn-site/knowledge/production-engineering-quality-tripod/index.html
+          grep -Fq 'Energy 能/源' cn-site/knowledge/production-engineering-quality-tripod/index.html
+          grep -Fq 'production-engineering-quality-tripod' cn-site/sitemap.xml
+
+      - name: Configure SSH
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$CN_PREPROD_HOST"
+          test -n "$CN_PREPROD_SSH_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
+          chmod 600 ~/.ssh/qilylean_cn
+          ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+
+      - name: Upload changed public files
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes)
+          timeout 90s scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/index.html "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-home-20260923.html"
+          timeout 90s scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/knowledge/index.html "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-knowledge-20260923.html"
+          timeout 90s scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/knowledge/production-engineering-quality-tripod/index.html "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-tripod-20260923.html"
+          timeout 90s scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/sitemap.xml "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-sitemap-20260923.xml"
+
+      - name: Install increment and verify production
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes)
+          timeout 90s ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'bash -se' <<'REMOTE'
+          set -euo pipefail
+          ROOT=/var/www/qilylean-cn/current
+          test -d "$ROOT"
+          sudo install -m 0644 /tmp/qily-cn-home-20260923.html "$ROOT/index.html"
+          sudo install -m 0644 /tmp/qily-cn-knowledge-20260923.html "$ROOT/knowledge/index.html"
+          sudo install -d -m 0755 "$ROOT/knowledge/production-engineering-quality-tripod"
+          sudo install -m 0644 /tmp/qily-cn-tripod-20260923.html "$ROOT/knowledge/production-engineering-quality-tripod/index.html"
+          sudo install -m 0644 /tmp/qily-cn-sitemap-20260923.xml "$ROOT/sitemap.xml"
+          sudo nginx -t
+          sudo systemctl reload nginx
+          grep -Fq '生产现场管理铁三脚' "$ROOT/index.html"
+          grep -Fq '生产现场管理铁三脚' "$ROOT/knowledge/index.html"
+          grep -Fq 'Energy 能/源' "$ROOT/knowledge/production-engineering-quality-tripod/index.html"
+          grep -Fq 'production-engineering-quality-tripod' "$ROOT/sitemap.xml"
+          rm -f /tmp/qily-cn-home-20260923.html /tmp/qily-cn-knowledge-20260923.html /tmp/qily-cn-tripod-20260923.html /tmp/qily-cn-sitemap-20260923.xml
+          REMOTE
+          python3 - <<'PY'
+          import urllib.request
+          urls = {
+              'home':'https://qilylean.cn/?closure=20260923-tripod',
+              'knowledge':'https://qilylean.cn/knowledge/?closure=20260923-tripod',
+              'brief':'https://qilylean.cn/knowledge/production-engineering-quality-tripod/?closure=20260923-tripod',
+              'sitemap':'https://qilylean.cn/sitemap.xml?closure=20260923-tripod',
+          }
+          for name,url in urls.items():
+              req=urllib.request.Request(url,headers={'User-Agent':'QilyLean-CN-Tripod-Closure/1.0','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=20) as r:
+                  body=r.read().decode('utf-8','ignore')
+                  if r.status != 200:
+                      raise SystemExit(f'{name}: HTTP {r.status}')
+              if name in ('home','knowledge','brief') and '生产现场管理铁三脚' not in body:
+                  raise SystemExit(f'{name}: new brief marker missing')
+              if name=='brief' and 'Energy 能/源' not in body:
+                  raise SystemExit('brief: 5M2E Energy marker missing')
+              if name=='sitemap' and 'production-engineering-quality-tripod' not in body:
+                  raise SystemExit('sitemap: new URL missing')
+              print(f'PASS {name}: {len(body)} bytes')
+          PY
