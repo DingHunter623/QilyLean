@@ -181,7 +181,7 @@ jobs:
           copy_with_retry cn-site/scripts/activate-public-http.sh /tmp/activate-qilylean-cn-http.sh
           copy_with_retry cn-site/nginx/qilylean.cn.conf /tmp/qilylean.cn.conf
 
-          timeout 90s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             "cat /tmp/qilylean-cn-site.part.* > /tmp/qilylean-cn-site.tar.gz &&              test '\$(sha256sum /tmp/qilylean-cn-site.tar.gz | awk '{print \$1}')' = '$ARCHIVE_SHA' &&              rm -f /tmp/qilylean-cn-site.part.* &&              test -s /tmp/deploy-qilylean-cn.sh && test -s /tmp/activate-qilylean-cn-http.sh && test -s /tmp/qilylean.cn.conf &&              echo 'Release bundle staged and checksum verified.'"
+          timeout 90s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             "cat /tmp/qilylean-cn-site.part.* > /tmp/qilylean-cn-site.tar.gz &&              REMOTE_SHA=\$(sha256sum /tmp/qilylean-cn-site.tar.gz | cut -d' ' -f1) &&              test \"\$REMOTE_SHA\" = \"$ARCHIVE_SHA\" &&              rm -f /tmp/qilylean-cn-site.part.* &&              test -s /tmp/deploy-qilylean-cn.sh && test -s /tmp/activate-qilylean-cn-http.sh && test -s /tmp/qilylean.cn.conf &&              echo 'Release bundle staged and checksum verified.'"
 
       - name: Bootstrap server when required
         shell: bash
