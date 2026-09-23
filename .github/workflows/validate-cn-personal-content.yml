@@ -102,9 +102,11 @@ jobs:
           grep -Fq '/assets/practice.css?v=20260920-practice-visual-v3-equal' cn-site/notes/index.html
           grep -Fq '6S改善运行机制摘要' cn-site/notes/index.html
           grep -Fq '/assets/practice/automotive-lean.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
-          grep -Fq '/assets/practice/factory-layout.svg?v=20260923-practice-map-v3-clean' cn-site/notes/index.html
-          grep -Fq 'data-public-visual-scope="factory-layout-only-v3"' cn-site/assets/practice/factory-layout.svg
+          grep -Fq '/assets/practice/factory-layout.svg?v=20260923-practice-map-v4-system' cn-site/notes/index.html
+          grep -Fq 'data-public-visual-scope="factory-layout-system-v4"' cn-site/assets/practice/factory-layout.svg
           ! grep -Fq 'qily-warehouse-label-sequence-v1' cn-site/assets/practice/factory-layout.svg
+          grep -Fq 'qily-factory-layout-system-v4' cn-site/assets/practice/factory-layout.svg
+          grep -Fq 'viewBox="0 0 1400 788"' cn-site/assets/practice/factory-layout.svg
           grep -Fq '/assets/practice/digital-factory.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
           grep -Fq '/assets/practice/visual-management.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
           grep -Fq '汽车电子精益体系、VSM、单件流与SMED标准化' cn-site/notes/index.html
