@@ -20,7 +20,7 @@ const HOME_JS_VERSION='20260901-home-first-paint-v6';
 const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
 const HOME_VISUAL_FIX_VERSION='20260902-card-bottom-rail-v5';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
-const VISUAL_READABILITY_VERSION='20260903-r8-heading-ceiling-v10';
+const VISUAL_READABILITY_VERSION='20260923-r82-heading-hierarchy-v1';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
 function gitBlobSha(buffer){return crypto.createHash('sha1').update(Buffer.from(`blob ${buffer.length}\0`)).update(buffer).digest('hex')}
 const png=fs.readFileSync(pngPath),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
