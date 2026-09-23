@@ -12,7 +12,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const VERSION = '20260903-r8-heading-ceiling-v10';
+const VERSION = '20260923-r82-heading-hierarchy-v1';
 const HREF = `/site-visual-readability-v5.css?v=${VERSION}`;
 const TAG = `<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="${HREF}">`;
 const DAILY_STYLE_ID = 'qilyDailyReadabilityClosureV8';
@@ -161,6 +161,8 @@ function verifyCss() {
     '--qily-v5-section-kicker:20px',
     '--qily-v5-gold-text:#b88b45',
     '--qily-r8-heading-ceiling:clamp(30px,2.65vw,44px)',
+    '--qily-r8-section-heading-ceiling:clamp(24px,1.85vw,30px)',
+    '--qily-r8-subheading-ceiling:clamp(20px,1.35vw,24px)',
     'R8-HEADING-CEILING-V1-20260903',
     'html:root:root:root body main h1',
     'font-size:clamp(30px,8.2vw,38px)!important',
@@ -222,7 +224,7 @@ function main() {
   const result = materialize();
   const verified = verifyPages();
   verifyBusinessHierarchyUntouched();
-  process.stdout.write(`Visual readability V11 materialized: checked ${verified.publicCount}, dated briefs ${verified.dailyCount}, refreshed ${result.changed} public pages with V10/R8 heading authority.\n`);
+  process.stdout.write(`Visual readability R8.2 materialized: checked ${verified.publicCount}, dated briefs ${verified.dailyCount}, refreshed ${result.changed} public pages with R8.2 heading hierarchy authority.\n`);
 }
 
 main();
