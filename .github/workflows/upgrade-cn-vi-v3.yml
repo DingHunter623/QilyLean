@@ -1,4 +1,4 @@
-name: Upgrade QilyLean CN VI V11 Current Module Closure
+name: Upgrade QilyLean CN VI V12 Heading Scale Closure
 
 on:
   push:
@@ -35,7 +35,7 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260922-cn-vi-v20-current-module'
+          css_version = '20260923-cn-vi-v21-heading-scale'
           base_version = '20260917-cn-thesis-base-v5'
           nav_script_version = '20260922-nav-rail-v8-current-module'
           translate_version = '20260922-translate-v6-baidu'
@@ -159,7 +159,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260922-cn-vi-v20-current-module'
+          css_marker = 'qilylean-vi-v2.css?v=20260923-cn-vi-v21-heading-scale'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = 'QilyLean | 启力精益 · 精益制造经验分享</span><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
@@ -281,7 +281,7 @@ jobs:
           grep -q "content:'工业工程'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'标准体系'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'改善工具'" cn-site/assets/qilylean-vi-v2.css
-          echo 'CN V11 closure passed: QilyLean | 启力精益 + non-clickable 本页主旨 + gold interactive global CTA + shared VI.'
+          echo 'CN V12 heading-scale closure passed: QilyLean | 启力精益 + non-clickable 本页主旨 + gold interactive global CTA + shared VI.'
 
       - name: Commit rollout safely
         shell: bash
