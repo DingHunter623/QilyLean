@@ -147,6 +147,8 @@ const cnFiledName='精益制造经验分享';
 const cnFooterName='QilyLean | 启力精益 · '+cnFiledName;
 for(const rel of cnPages){
   const html=read(rel);
+  assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
+  assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
   assert(html.includes('/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale'), rel+' must use CN VI V23.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
