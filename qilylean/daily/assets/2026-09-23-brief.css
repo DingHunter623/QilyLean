@@ -1,0 +1,94 @@
+@import url("/qilylean/daily/brief-layout-standard.css?v=20260921-unified-v3-feedback-axis");
+
+/* 2026-09-23 production / engineering / quality tripod brief.
+   Component-only styles; canonical 1180px axis and typography remain owned by shared brief VI. */
+body.site-tripod-brief .lean-brief-toc{display:flex;gap:10px;flex-wrap:wrap}
+body.site-tripod-brief :is(.tripod-principle-grid,.tripod-question-grid,.m2e-grid,.trigger-grid,.response-grid){
+  display:grid;gap:14px;margin:22px 0;align-items:stretch
+}
+body.site-tripod-brief .tripod-principle-grid,
+body.site-tripod-brief .tripod-question-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+body.site-tripod-brief .m2e-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+body.site-tripod-brief .trigger-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+body.site-tripod-brief .response-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+body.site-tripod-brief :is(.tripod-principle-grid,.tripod-question-grid,.m2e-grid,.trigger-grid,.response-grid)>div{
+  min-width:0;height:100%;box-sizing:border-box;border:1px solid #c9ddd8;border-radius:16px;background:#f7fbfa;padding:18px
+}
+body.site-tripod-brief .tripod-principle-grid span,
+body.site-tripod-brief .trigger-grid span{
+  display:inline-flex;align-items:center;justify-content:center;min-width:46px;height:28px;padding:0 10px;border-radius:999px;background:#0f4b5a;color:#fff;font-weight:850
+}
+body.site-tripod-brief :is(.tripod-principle-grid,.tripod-question-grid,.m2e-grid,.trigger-grid,.response-grid) :is(strong,b){
+  display:block;color:#0f4b5a;line-height:1.38;margin:8px 0 6px
+}
+body.site-tripod-brief :is(.tripod-principle-grid,.tripod-question-grid,.m2e-grid,.trigger-grid,.response-grid) p{
+  margin:0;color:#3a5756;line-height:1.72
+}
+body.site-tripod-brief .tripod-question-grid b{color:#765713;margin-top:0}
+body.site-tripod-brief .tripod-callout,
+body.site-tripod-brief .tripod-warning{
+  margin:18px 0;padding:16px 18px;border-radius:0 12px 12px 0;line-height:1.75
+}
+body.site-tripod-brief .tripod-callout{border-left:4px solid #0f4b5a;background:#eef7f5;color:#365653}
+body.site-tripod-brief .tripod-warning{border-left:4px solid #caa15f;background:#fff8e8;color:#4b514c}
+body.site-tripod-brief .tripod-callout strong{color:#0f4b5a}
+body.site-tripod-brief .tripod-warning strong{color:#765713}
+body.site-tripod-brief .tripod-figure{margin:24px 0}
+body.site-tripod-brief .tripod-svg{display:block;width:100%;height:auto;border:1px solid #c9ddd8;border-radius:18px;background:#fff;shape-rendering:geometricPrecision}
+body.site-tripod-brief .tripod-figure figcaption{margin-top:8px;color:#647d7b;line-height:1.55}
+body.site-tripod-brief .tripod-svg .top-beam{fill:#0f4b5a}
+body.site-tripod-brief .tripod-svg .beam-title{fill:#fff;font-weight:900}
+body.site-tripod-brief .tripod-svg .beam-sub{fill:#ffe0a4;font-weight:750}
+body.site-tripod-brief .tripod-svg .leg{fill:#dcece8;stroke:#78a69f;stroke-width:1.5}
+body.site-tripod-brief .tripod-svg .leg.engineering{fill:#fff4d8;stroke:#caa15f}
+body.site-tripod-brief .tripod-svg .base-rail{fill:#caa15f}
+body.site-tripod-brief .tripod-svg .leg-title{fill:#0f4b5a;font-weight:900}
+body.site-tripod-brief .tripod-svg .leg-sub{fill:#4d6b67;font-weight:700}
+body.site-tripod-brief .tripod-svg .figure-note{fill:#647d7b;font-weight:700}
+body.site-tripod-brief .cause-node rect,
+body.site-tripod-brief .flow-box rect{fill:#f1f8f6;stroke:#8fb9b2;stroke-width:1.5}
+body.site-tripod-brief .cause-node text,
+body.site-tripod-brief .flow-box text{fill:#0f4b5a;font-weight:850;text-anchor:middle}
+body.site-tripod-brief .cause-node .sub,
+body.site-tripod-brief .flow-box .sub{fill:#526e6b;font-weight:650}
+body.site-tripod-brief .cause-core{fill:#0f4b5a}
+body.site-tripod-brief .core-title{fill:#fff;font-weight:900}
+body.site-tripod-brief .core-sub{fill:#ffe0a4;font-weight:700}
+body.site-tripod-brief .cause-rail{fill:none;stroke:#8fb9b2;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+body.site-tripod-brief .verify-box{fill:#fffaf0;stroke:#d8bc78;stroke-width:1.3}
+body.site-tripod-brief .verify-title{fill:#765713;font-weight:900}
+body.site-tripod-brief .verify-sub{fill:#6e654d;font-weight:650}
+body.site-tripod-brief .tripod-svg .vi-flow-arrow{fill:#0f4b5a;stroke:none}
+body.site-tripod-brief .tripod-svg .feedback-arrow{fill:#caa15f;stroke:none}
+body.site-tripod-brief .response-return,
+body.site-tripod-brief .closure-return{fill:none;stroke:#caa15f;stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+body.site-tripod-brief .feedback-label-bg{fill:#fffaf0;stroke:#d8bc78;stroke-width:1.2}
+body.site-tripod-brief .feedback-label{fill:#765713;font-weight:850}
+body.site-tripod-brief .priority-strip{
+  display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:22px 0;padding:18px;border:1px solid #c9ddd8;border-radius:16px;background:#f7fbfa
+}
+body.site-tripod-brief .priority-strip span{display:inline-flex;align-items:center;gap:8px;color:#0f4b5a;font-weight:850}
+body.site-tripod-brief .priority-strip span b{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#0f4b5a;color:#fff}
+body.site-tripod-brief .priority-strip i{color:#caa15f;font-style:normal;font-size:20px;font-weight:900}
+body.site-tripod-brief .tripod-checklist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:22px 0}
+body.site-tripod-brief .tripod-checklist>div{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start;border-bottom:1px solid #d9e6e3;padding:11px 4px}
+body.site-tripod-brief .tripod-checklist b{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:#0f4b5a;color:#fff}
+body.site-tripod-brief .tripod-checklist span{color:#345350;line-height:1.6}
+body.site-tripod-brief .tripod-closing{margin:28px 0 8px;padding:26px;border-radius:18px;background:#0f4b5a;color:#fff}
+body.site-tripod-brief .tripod-closing>span{color:#ffe0a4;font-weight:900;letter-spacing:.08em}
+body.site-tripod-brief .tripod-closing h2{color:#fff!important;margin:8px 0 12px}
+body.site-tripod-brief .tripod-closing p{color:#edf9f6!important;margin:8px 0}
+body.site-tripod-brief .tripod-closing strong{color:#ffe0a4!important}
+@media(max-width:900px){
+  body.site-tripod-brief .tripod-principle-grid,
+  body.site-tripod-brief .tripod-question-grid,
+  body.site-tripod-brief .trigger-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.site-tripod-brief .m2e-grid,
+  body.site-tripod-brief .response-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:680px){
+  body.site-tripod-brief :is(.tripod-principle-grid,.tripod-question-grid,.m2e-grid,.trigger-grid,.response-grid,.tripod-checklist){grid-template-columns:1fr}
+  body.site-tripod-brief .tripod-svg{min-width:720px}
+  body.site-tripod-brief .tripod-figure{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  body.site-tripod-brief .tripod-closing{padding:20px}
+}
