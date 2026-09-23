@@ -118,7 +118,7 @@ forbid(mat,'const PUBLIC_UI_JS=','Retired picker injection');
 const cn=read('cn-site/index.html');
 const cnVi=read('cn-site/assets/qilylean-vi-v2.css');
 must(cn,'name="robots" content="index,follow"','CN production indexing contract');
-must(cn,'/assets/qilylean-vi-v2.css?v=20260922-cn-vi-v20-current-module','CN independent VI CSS');
+must(cn,'/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v21-heading-scale','CN independent VI CSS');
 must(cnVi,'--qily-cn-axis:1180px','CN 1180px content axis');
 must(cnVi,'QILY-CN-TYPE-HIERARCHY-V3','CN boss-readable typography');
 must(cnVi,'--qily-cn-primary-nav-font-size:20px','CN primary nav international-size type');
