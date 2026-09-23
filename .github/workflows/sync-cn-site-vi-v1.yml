@@ -27,13 +27,13 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -Fq "@import url('/assets/qilylean-vi-v1.css?v=20260923-cn-typography-base-v6');" cn-site/assets/qilylean-vi-v2.css
-          grep -Fq 'QILY-CN-TYPE-HIERARCHY-V4' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq "@import url('/assets/qilylean-vi-v1.css?v=20260923-cn-typography-base-v7');" cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'QILY-CN-TYPE-HIERARCHY-V5' cn-site/assets/qilylean-vi-v2.css
           ! grep -Fq 'clamp(32px,3vw,48px)!important' cn-site/assets/qilylean-vi-v1.css
           python3 - <<'PY'
           from pathlib import Path
 
-          expected = '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v22-sitewide-type'
+          expected = '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale'
           bad = []
           docs = 0
           for path in sorted(Path('cn-site').rglob('*.html')):
