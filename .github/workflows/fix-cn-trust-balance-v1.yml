@@ -37,7 +37,7 @@ jobs:
           css_path.write_text(css, encoding='utf-8')
 
           old_ver = '/assets/site.css?v=20260916-cn-personal-v1'
-          new_ver = '/assets/site.css?v=20260916-cn-personal-v2'
+          new_ver = '/assets/site.css?v=20260923-cn-personal-v3-reading'
           changed = 0
           for path in Path('cn-site').rglob('*.html'):
               text = path.read_text(encoding='utf-8')
@@ -55,8 +55,8 @@ jobs:
         run: |
           set -euo pipefail
           grep -q 'grid-template-columns:repeat(2,minmax(0,1fr))' cn-site/assets/site.css
-          grep -q '/assets/site.css?v=20260916-cn-personal-v2' cn-site/index.html
-          grep -q '/assets/site.css?v=20260916-cn-personal-v2' cn-site/about/index.html
+          grep -q '/assets/site.css?v=20260923-cn-personal-v3-reading' cn-site/index.html
+          grep -q '/assets/site.css?v=20260923-cn-personal-v3-reading' cn-site/about/index.html
 
       - name: Commit visual fix
         shell: bash

@@ -5,12 +5,14 @@ on:
     paths:
       - 'cn-site/**'
       - '.github/workflows/validate-cn-personal-content.yml'
+      - 'scripts/cn-typography-v23.spec.js'
   push:
     branches:
       - main
     paths:
       - 'cn-site/**'
       - '.github/workflows/validate-cn-personal-content.yml'
+      - 'scripts/cn-typography-v23.spec.js'
   workflow_dispatch:
 
 permissions:
@@ -19,6 +21,7 @@ permissions:
 jobs:
   validate-cn-boundary:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -73,7 +76,7 @@ jobs:
           grep -Fq '精选 8 项制造实践' cn-site/index.html
           grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
-          grep -Fq '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v22-sitewide-type' cn-site/index.html
+          grep -Fq '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale' cn-site/index.html
           grep -Fq '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' cn-site/index.html
@@ -81,15 +84,15 @@ jobs:
           grep -Fq 'QILY-CN-CURRENT-MODULE-V1' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'QILY-CN-CURRENT-MODULE-RUNTIME-V1' cn-site/assets/cn-nav-rail-v1.js
           grep -Fq 'QILY-CN-STICKY-HEADER-V1' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq 'QILY-CN-TYPE-HIERARCHY-V4' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq -- '--qily-cn-h2:clamp(22px,1.45vw,25px)' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq -- '--qily-cn-h3:clamp(18px,1.05vw,20px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'QILY-CN-TYPE-HIERARCHY-V5' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h2:clamp(20px,1.25vw,22px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h3:clamp(17px,1vw,19px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'position:sticky!important' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'qily-primary-nav-scroll-thumb' cn-site/assets/cn-nav-rail-v1.js
           grep -Fq 'mousedown' cn-site/assets/cn-nav-rail-v1.js
           grep -Fq -- '--qily-cn-h1:clamp(27px,7.2vw,33px)' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq -- '--qily-cn-h2:clamp(21px,5.4vw,24px)' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq -- '--qily-cn-h3:clamp(18px,4.8vw,20px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h2:clamp(19px,5vw,21px)' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-h3:clamp(17px,4.5vw,19px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq '从现场问题，到可复用的方法' cn-site/notes/index.html
           grep -Fq '8项制造实践，从现场问题走向标准化沉淀' cn-site/notes/index.html
           grep -Fq '6S改善机制：从稽核到激励的运行记录' cn-site/notes/index.html
@@ -102,7 +105,7 @@ jobs:
           grep -Fq '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2' cn-site/notes/index.html
           grep -Fq '玻璃管保险丝切口与烧口工艺改善后的成品照片' cn-site/notes/index.html
           grep -Fq '玻璃管保险丝改善后成品照片' cn-site/assets/practice/fuse-process.svg
-          grep -Fq '/assets/practice.css?v=20260920-practice-visual-v3-equal' cn-site/notes/index.html
+          grep -Fq '/assets/practice.css?v=20260923-practice-visual-v4-reading' cn-site/notes/index.html
           grep -Fq '6S改善运行机制摘要' cn-site/notes/index.html
           grep -Fq '/assets/practice/automotive-lean.svg?v=20260918-practice-map-v1' cn-site/notes/index.html
           grep -Fq '/assets/practice/factory-layout.svg?v=20260923-practice-map-v4-system' cn-site/notes/index.html
@@ -122,6 +125,32 @@ jobs:
           grep -Fq 'grid-template-columns:repeat(2,minmax(0,1fr));' cn-site/assets/practice.css
           ! grep -Fq 'evidence-strip' cn-site/notes/index.html
           ! grep -Fq 'raw.githubusercontent.com' cn-site/notes/index.html
+
+      - name: Install Chromium typography audit dependency
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start local CN production-root server
+        run: |
+          python3 -m http.server 4174 --directory cn-site >/tmp/qily-cn-type-v23-http.log 2>&1 &
+          echo $! >/tmp/qily-cn-type-v23-http.pid
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4174/factory/ >/dev/null
+
+      - name: Browser-computed typography audit across all CN public pages
+        env:
+          QILY_CN_BASE: http://127.0.0.1:4174
+        run: npx playwright test scripts/cn-typography-v23.spec.js --reporter=line --workers=1
+
+      - name: Upload CN typography visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qily-cn-typography-v23-${{ github.run_id }}
+          path: visual-cn-typography-v23
+          if-no-files-found: warn
+          retention-days: 30
 
       - name: Verify clean patch formatting
         run: git diff --check

@@ -4,7 +4,7 @@
 /* QILY-CN-EQUAL-PEER-CARDS-V1 | Equal-weight sibling information cards */
 .practice-intro{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch}
 .practice-principle{padding:22px;border:1px solid var(--qily-line);background:#fff}
-.practice-principle b{display:block;margin-bottom:7px;color:var(--qily-deep);font-size:20px}
+.practice-principle b{display:block;margin-bottom:7px;color:var(--qily-deep);font-size:18px}
 .practice-principle p{margin:0;color:var(--qily-muted)}
 .practice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
 .practice-card{min-width:0;overflow:hidden;border:1px solid var(--qily-line);border-radius:14px;background:#fff;box-shadow:var(--qily-shadow)}
@@ -13,7 +13,7 @@
 .practice-card.is-portrait .practice-visual img{object-fit:contain;aspect-ratio:4/3}
 .practice-copy{padding:22px}
 .practice-copy small{display:block;color:#9e4a34;font-weight:950;letter-spacing:.06em}
-.practice-copy h3{margin:7px 0 11px;color:var(--qily-deep);font-size:clamp(19px,1.15vw,21px);line-height:1.28}
+.practice-copy h3{margin:7px 0 11px;color:var(--qily-deep);font-size:clamp(17px,1vw,19px);line-height:1.28}
 .practice-copy p{margin:0 0 12px;color:var(--qily-muted)}
 .practice-facts{display:grid;gap:8px;margin:15px 0 0;padding:0;list-style:none}
 .practice-facts li{padding:10px 12px;border-left:3px solid var(--qily-gold);background:#f7fbfa;color:#405c59}
@@ -73,7 +73,7 @@
 .award-summary-head h3{
   margin:0 0 9px;
   color:var(--qily-deep);
-  font-size:clamp(20px,1.35vw,23px);
+  font-size:clamp(17px,1vw,19px);
   line-height:1.2;
   font-weight:950;
   letter-spacing:-.012em;

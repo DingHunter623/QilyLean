@@ -91,8 +91,8 @@ assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation fallb
   '--qily-nav-scroll-track:#b9d9d4',
   '--qily-nav-scroll-thumb:#0f4b5a',
   '--qily-cn-h1:clamp(27px,7.2vw,33px)',
-  '--qily-cn-h2:clamp(21px,5.4vw,24px)',
-  '--qily-cn-h3:clamp(18px,4.8vw,20px)',
+  '--qily-cn-h2:clamp(19px,5vw,21px)',
+  '--qily-cn-h3:clamp(17px,4.5vw,19px)',
   'scrollbar-width:none!important',
   'background:#b9d9d4!important',
   'background:#0f4b5a!important',
@@ -105,10 +105,10 @@ assert(cnRail.includes('qily-primary-nav-scroll-thumb'), 'CN custom nav thumb ru
 assert(cnRail.includes("qily-primary-nav-scroll-rail"), 'CN nav rail runtime class is missing.');
 assert(cnRail.includes('qily-cn-nav-shell'), 'CN desktop/mobile nav shell is missing.');
 assert(cnCss.includes('--qily-cn-primary-nav-font-size:20px'), 'CN primary nav type must match international 20px.');
-assert(cnCss.includes('QILY-CN-TYPE-HIERARCHY-V4'), 'CN final typography authority V4 missing.');
-assert(cnCss.includes('--qily-cn-h2:clamp(22px,1.45vw,25px)'), 'CN desktop H2 must be capped at 25px.');
-assert(cnCss.includes('--qily-cn-h3:clamp(18px,1.05vw,20px)'), 'CN desktop H3 must be capped at 20px.');
-assert(cnBaseCss.includes('clamp(22px,1.45vw,25px)!important'), 'CN base VI must use the restrained section H2 fallback.');
+assert(cnCss.includes('QILY-CN-TYPE-HIERARCHY-V5'), 'CN final typography authority V5 missing.');
+assert(cnCss.includes('--qily-cn-h2:clamp(20px,1.25vw,22px)'), 'CN desktop H2 must be capped at 22px.');
+assert(cnCss.includes('--qily-cn-h3:clamp(17px,1vw,19px)'), 'CN desktop H3 must be capped at 19px.');
+assert(cnBaseCss.includes('clamp(20px,1.25vw,22px)!important'), 'CN base VI must use the restrained 22px section H2 fallback.');
 assert(!cnBaseCss.includes('clamp(32px,3vw,48px)!important'), 'CN legacy 48px section H2 regression detected.');
 assert(cnCss.includes('QILY-CN-CURRENT-MODULE-V1'), 'CN current-module VI contract is missing.');
 assert(cnCss.includes('--qily-cn-primary-nav-active:#0f4b5a'), 'CN current-module fill must match international deep teal.');
@@ -147,7 +147,9 @@ const cnFiledName='精益制造经验分享';
 const cnFooterName='QilyLean | 启力精益 · '+cnFiledName;
 for(const rel of cnPages){
   const html=read(rel);
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v22-sitewide-type'), rel+' must use CN VI V22.');
+  assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
+  assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale'), rel+' must use CN VI V23.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');

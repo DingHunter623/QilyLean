@@ -260,6 +260,53 @@ jobs:
           nav_runtime = fetch(f'https://qilylean.cn/assets/cn-nav-rail-v1.js?closure={sha}')
           translate_runtime = fetch(f'https://qilylean.cn/assets/cn-translate-baidu-v1.js?closure={sha}')
           links = fetch(f'https://qilylean.com/links/?closure={sha}')
+          vi_base = fetch(f'https://qilylean.cn/assets/qilylean-vi-v1.css?closure={sha}')
+          site_css = fetch(f'https://qilylean.cn/assets/site.css?closure={sha}')
+          portal_css = fetch(f'https://qilylean.cn/assets/portal.css?closure={sha}')
+
+          production_routes = [
+              '/', '/about/', '/ie/', '/factory/', '/lean/', '/digital/', '/methods/',
+              '/knowledge/', '/notes/', '/standardization/',
+              '/knowledge/vsm-time-structure/',
+              '/knowledge/standard-time-capacity/',
+              '/knowledge/line-balance-bottleneck/',
+              '/knowledge/factory-layout-logistics/',
+              '/knowledge/master-data-digitalization/',
+              '/knowledge/standard-work-three-elements/',
+              '/knowledge/capacity-digital-thread/',
+              '/knowledge/production-engineering-quality-tripod/',
+              '/404.html',
+          ]
+          for route in production_routes:
+              doc = fetch(f'https://qilylean.cn{route}?closure={sha}')
+              for marker in [
+                  '/assets/site.css?v=20260923-cn-personal-v3-reading',
+                  '/assets/portal.css?v=20260923-portal-v2-reading',
+                  '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale',
+              ]:
+                  if marker not in doc:
+                      raise SystemExit(f'Production {route} missing V23 typography asset: {marker}')
+
+          typography_contract = [
+              (vi, 'QILY-CN-TYPE-HIERARCHY-V5', 'final V5 authority'),
+              (vi, '--qily-cn-h2:clamp(20px,1.25vw,22px)', 'desktop H2 22px ceiling'),
+              (vi, '--qily-cn-h3:clamp(17px,1vw,19px)', 'desktop H3 19px ceiling'),
+              (vi, '--qily-cn-h2:clamp(19px,5vw,21px)', 'mobile H2 21px ceiling'),
+              (vi, '--qily-cn-h3:clamp(17px,4.5vw,19px)', 'mobile H3 19px ceiling'),
+              (vi_base, 'clamp(20px,1.25vw,22px)!important', 'base H2 22px fallback'),
+              (site_css, 'font-size:clamp(20px,1.25vw,22px)', 'site H2 22px fallback'),
+              (portal_css, 'font-size:clamp(20px,1.25vw,22px)', 'portal/article H2 22px fallback'),
+          ]
+          for source, marker, label in typography_contract:
+              if marker not in source:
+                  raise SystemExit(f'Production typography contract missing {label}: {marker}')
+          for retired in [
+              'clamp(32px,3vw,48px)!important',
+              'font-size:clamp(22px,1.45vw,25px)',
+              '--qily-cn-h2:clamp(22px,1.45vw,25px)',
+          ]:
+              if retired in vi or retired in vi_base or retired in site_css or retired in portal_css:
+                  raise SystemExit(f'Retired oversized China heading rule returned in production: {retired}')
 
           required_about = [
               '关于“精益制造经验分享”',
@@ -303,7 +350,7 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v22-sitewide-type' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale' not in home:
               raise SystemExit('Production China home missing current-module VI cache revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' not in home:
               raise SystemExit('Production China home missing current-module nav rail runtime.')
@@ -336,7 +383,7 @@ jobs:
               '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2',
               '/assets/practice/lean-improvement-evidence.svg?v=20260918-practice-v1',
               '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1',
-              '/assets/practice.css?v=20260920-practice-visual-v3-equal',
+              '/assets/practice.css?v=20260923-practice-visual-v4-reading',
               '6S改善机制：从稽核到激励的运行记录',
               '6S改善运行机制摘要',
               'award-metrics-grid',
@@ -387,8 +434,8 @@ jobs:
               'min-width:104px!important',
               '--qily-cn-primary-nav-font-size:20px',
               '--qily-cn-h1:clamp(27px,7.2vw,33px)',
-              '--qily-cn-h2:clamp(21px,5.4vw,24px)',
-              '--qily-cn-h3:clamp(18px,4.8vw,20px)',
+              '--qily-cn-h2:clamp(19px,5vw,21px)',
+              '--qily-cn-h3:clamp(17px,4.5vw,19px)',
               'grid-template-areas:"brand nav translate"',
               'grid-template-areas:"brand translate" "nav nav"',
               'object-position:50% 50%!important',
@@ -396,10 +443,10 @@ jobs:
               'background:var(--qily-gold)!important',
               'html:root body .knowledge-bridge>a:active',
               'QILY-CN-THESIS-NONINTERACTIVE-V1',
-              'QILY-CN-TYPE-HIERARCHY-V4',
+              'QILY-CN-TYPE-HIERARCHY-V5',
               '--qily-cn-h1:clamp(28px,2.25vw,38px)',
-              '--qily-cn-h2:clamp(22px,1.45vw,25px)',
-              '--qily-cn-h3:clamp(18px,1.05vw,20px)',
+              '--qily-cn-h2:clamp(20px,1.25vw,22px)',
+              '--qily-cn-h3:clamp(17px,1vw,19px)',
               'pointer-events:none!important',
           ]
           for marker in required_vi:
