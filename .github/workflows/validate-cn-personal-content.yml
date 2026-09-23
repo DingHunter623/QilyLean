@@ -5,12 +5,14 @@ on:
     paths:
       - 'cn-site/**'
       - '.github/workflows/validate-cn-personal-content.yml'
+      - 'scripts/cn-typography-v23.spec.js'
   push:
     branches:
       - main
     paths:
       - 'cn-site/**'
       - '.github/workflows/validate-cn-personal-content.yml'
+      - 'scripts/cn-typography-v23.spec.js'
   workflow_dispatch:
 
 permissions:
@@ -19,6 +21,7 @@ permissions:
 jobs:
   validate-cn-boundary:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -122,6 +125,32 @@ jobs:
           grep -Fq 'grid-template-columns:repeat(2,minmax(0,1fr));' cn-site/assets/practice.css
           ! grep -Fq 'evidence-strip' cn-site/notes/index.html
           ! grep -Fq 'raw.githubusercontent.com' cn-site/notes/index.html
+
+      - name: Install Chromium typography audit dependency
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Start local CN production-root server
+        run: |
+          python3 -m http.server 4174 --directory cn-site >/tmp/qily-cn-type-v23-http.log 2>&1 &
+          echo $! >/tmp/qily-cn-type-v23-http.pid
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4174/factory/ >/dev/null
+
+      - name: Browser-computed typography audit across all CN public pages
+        env:
+          QILY_CN_BASE: http://127.0.0.1:4174
+        run: npx playwright test scripts/cn-typography-v23.spec.js --reporter=line --workers=1
+
+      - name: Upload CN typography visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qily-cn-typography-v23-${{ github.run_id }}
+          path: visual-cn-typography-v23
+          if-no-files-found: warn
+          retention-days: 30
 
       - name: Verify clean patch formatting
         run: git diff --check
