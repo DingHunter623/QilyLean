@@ -166,7 +166,7 @@ grep -Fq 'viewBox="0 0 1400 788"' "$PRACTICE_FACTORY" || { echo "ERROR: CN facto
 [[ -f "$PRACTICE_VISUAL" ]] || { echo "ERROR: CN visual-management practice visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' "$INDEX_FILE" || { echo "ERROR: CN homepage approved CN aircraft visual is missing."; exit 1; }
-grep -Fq '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v22-sitewide-type' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
+grep -Fq '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
 grep -Fq '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-V1' "$CN_VI_FILE" || { echo "ERROR: CN current-module VI contract is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-RUNTIME-V1' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN current-module route runtime is missing."; exit 1; }
@@ -191,13 +191,13 @@ grep -Fq 'concurrency=1' "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator conc
 grep -Fq 'API_BASES' "$CN_TRANSLATE_JS" || { echo "ERROR: CN in-page translation API route is missing."; exit 1; }
 grep -Fq 'target_language:target' "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator target-language request contract is missing."; exit 1; }
 grep -Fq 'QilyLean CN In-Page Translation UI V3' "$CN_TRANSLATE_CSS" || { echo "ERROR: CN translator V3 UI contract is missing."; exit 1; }
-grep -Fq 'QILY-CN-TYPE-HIERARCHY-V4' "$CN_VI_FILE" || { echo "ERROR: CN final typography authority V4 is missing."; exit 1; }
+grep -Fq 'QILY-CN-TYPE-HIERARCHY-V5' "$CN_VI_FILE" || { echo "ERROR: CN final typography authority V5 is missing."; exit 1; }
 grep -Fq -- '--qily-cn-h1:clamp(28px,2.25vw,38px)' "$CN_VI_FILE" || { echo "ERROR: CN desktop H1 ceiling is not restrained."; exit 1; }
-grep -Fq -- '--qily-cn-h2:clamp(22px,1.45vw,25px)' "$CN_VI_FILE" || { echo "ERROR: CN desktop H2 ceiling is not restrained."; exit 1; }
-grep -Fq -- '--qily-cn-h3:clamp(18px,1.05vw,20px)' "$CN_VI_FILE" || { echo "ERROR: CN desktop H3 ceiling is not restrained."; exit 1; }
+grep -Fq -- '--qily-cn-h2:clamp(20px,1.25vw,22px)' "$CN_VI_FILE" || { echo "ERROR: CN desktop H2 ceiling is not restrained."; exit 1; }
+grep -Fq -- '--qily-cn-h3:clamp(17px,1vw,19px)' "$CN_VI_FILE" || { echo "ERROR: CN desktop H3 ceiling is not restrained."; exit 1; }
 grep -Fq -- '--qily-cn-h1:clamp(27px,7.2vw,33px)' "$CN_VI_FILE" || { echo "ERROR: CN mobile H1 ceiling is not normalized."; exit 1; }
-grep -Fq -- '--qily-cn-h2:clamp(21px,5.4vw,24px)' "$CN_VI_FILE" || { echo "ERROR: CN mobile H2 ceiling is not normalized."; exit 1; }
-grep -Fq -- '--qily-cn-h3:clamp(18px,4.8vw,20px)' "$CN_VI_FILE" || { echo "ERROR: CN mobile H3 ceiling is not normalized."; exit 1; }
+grep -Fq -- '--qily-cn-h2:clamp(19px,5vw,21px)' "$CN_VI_FILE" || { echo "ERROR: CN mobile H2 ceiling is not normalized."; exit 1; }
+grep -Fq -- '--qily-cn-h3:clamp(17px,4.5vw,19px)' "$CN_VI_FILE" || { echo "ERROR: CN mobile H3 ceiling is not normalized."; exit 1; }
 if grep -Fq 'clamp(32px,3vw,48px)!important' "$ROOT_DIR/assets/qilylean-vi-v1.css"; then echo "ERROR: legacy 48px CN H2 fallback returned."; exit 1; fi
 grep -Fq 'QILY-CN-AIRCRAFT-CENTERED-V2' "$CN_VI_FILE" || { echo "ERROR: CN aircraft centered layout contract is missing."; exit 1; }
 grep -Fq 'object-position:50% 50%!important' "$CN_VI_FILE" || { echo "ERROR: CN aircraft image is not center-positioned."; exit 1; }
@@ -213,7 +213,7 @@ grep -Fq '跨部门共同推进，评审、风险确认与结果复盘构成完�
 grep -Fq '/assets/practice/award-6s-page-01.jpg?v=20260918-practice-award-v1' "$PRACTICE_PAGE" || { echo "ERROR: CN practice archive must use the local award evidence asset."; exit 1; }
 grep -Fq '/assets/practice/fuse-process.svg?v=20260918-fuse-finished-v2' "$PRACTICE_PAGE" || { echo "ERROR: CN fuse card must use the finished-product visual cache marker."; exit 1; }
 grep -Fq '玻璃管保险丝切口与烧口工艺改善后的成品照片' "$PRACTICE_PAGE" || { echo "ERROR: CN fuse card finished-product alt text is missing."; exit 1; }
-grep -Fq '/assets/practice.css?v=20260920-practice-visual-v3-equal' "$PRACTICE_PAGE" || { echo "ERROR: CN practice visual V3 equal-layout cache marker is missing."; exit 1; }
+grep -Fq '/assets/practice.css?v=20260923-practice-visual-v4-reading' "$PRACTICE_PAGE" || { echo "ERROR: CN practice visual V3 equal-layout cache marker is missing."; exit 1; }
 grep -Fq '6S改善运行机制摘要' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism summary heading is missing."; exit 1; }
 grep -Fq '6S改善机制：从稽核到激励的运行记录' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S public-facing section headline is missing."; exit 1; }
 grep -Fq '机制说明：' "$PRACTICE_PAGE" || { echo "ERROR: CN 6S mechanism explanation is missing."; exit 1; }
