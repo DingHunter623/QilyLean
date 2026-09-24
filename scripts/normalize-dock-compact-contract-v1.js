@@ -39,7 +39,10 @@ function normalizeDockUrl(source){
 
 for(const file of tracked('*.html'))write(file,normalizeDockUrl(read(file)));
 for(const file of tracked('scripts/*.js')){
-  if(file==='scripts/normalize-dock-compact-contract-v1.js')continue;
+  if([
+    'scripts/normalize-dock-compact-contract-v1.js',
+    'scripts/remediate-mobile-dock-first-paint-v1.js'
+  ].includes(file))continue;
   write(file,normalizeDockUrl(read(file)));
 }
 
