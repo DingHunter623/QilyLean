@@ -94,7 +94,7 @@ body.site-tripod-brief .tripod-closing strong{color:#ffe0a4!important}
 }
 
 
-/* QILY-TRIPOD-MOBILE-VI-V2 | 2026-09-24
+/* QILY-TRIPOD-MOBILE-VI-V3 | 2026-09-24
    Harden inline SVG against late global visual rules and provide a true mobile composition
    instead of shrinking 1160px engineering diagrams into unreadable thumbnails. */
 body.site-tripod-brief .tripod-svg .top-beam{fill:#0f4b5a!important}
