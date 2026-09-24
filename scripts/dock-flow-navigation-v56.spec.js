@@ -10,13 +10,12 @@ const cases=[
   ['daily-desktop','/qilylean/daily/2026-09-04.html',{width:1440,height:1000},false],
   ['daily-mobile','/qilylean/daily/2026-09-04.html',{width:390,height:844},true]
 ];
-const desktopExpected=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
-const mobileExpected=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
+const expected=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
 const out=path.join(process.cwd(),'dock-v58-artifacts');
 fs.mkdirSync(out,{recursive:true});
 
 for(const [name,url,viewport,mobile] of cases){
-  test(`${name} Dock V5.8 compact fixed-bottom navigation`,async({page})=>{
+  test(`${name} Dock V5.8 China-style footer navigation`,async({page})=>{
     await page.setViewportSize(viewport);
     const response=await page.goto(base+url,{waitUntil:'networkidle',timeout:30000});
     expect(response&&response.ok(),`${url} should resolve`).toBeTruthy();
@@ -30,17 +29,19 @@ for(const [name,url,viewport,mobile] of cases){
       return {
         position:ds.position,
         display:ds.display,
+        flexWrap:ds.flexWrap,
+        justifyContent:ds.justifyContent,
         gridColumns:ds.gridTemplateColumns,
         overflowX:ds.overflowX,
-        overflowY:ds.overflowY,
-        scrollSnapType:ds.scrollSnapType,
         bottomGap:Math.round(innerHeight-dr.bottom),
-        dockLeft:dr.left,
-        dockRight:dr.right,
+        dockLeft:Math.round(dr.left),
+        dockRight:Math.round(dr.right),
         dockWidth:dr.width,
-        viewportWidth:innerWidth,
+        viewportWidth:document.documentElement.clientWidth,
         scrollWidth:dock.scrollWidth,
         clientWidth:dock.clientWidth,
+        borderTop:parseFloat(ds.borderTopWidth)||0,
+        background:ds.backgroundColor,
         layout:dock.getAttribute('data-qily-dock-layout'),
         unified:dock.getAttribute('data-qily-unified-public-module'),
         labels:buttons.map(b=>b.getAttribute('aria-label')),
@@ -48,65 +49,75 @@ for(const [name,url,viewport,mobile] of cases){
         actions:buttons.map(b=>b.getAttribute('data-action')),
         spacerHeight:spacer?spacer.getBoundingClientRect().height:0,
         buttons:buttons.map(b=>{const s=getComputedStyle(b),r=b.getBoundingClientRect();return {
-          action:b.getAttribute('data-action'),w:r.width,h:r.height,left:r.left,right:r.right,
+          action:b.getAttribute('data-action'),w:r.width,h:r.height,left:r.left,right:r.right,top:r.top,
           borderLeft:parseFloat(s.borderLeftWidth)||0,borderRight:parseFloat(s.borderRightWidth)||0,
-          radius:parseFloat(s.borderTopLeftRadius)||0
+          radius:parseFloat(s.borderTopLeftRadius)||0,color:s.color,background:s.backgroundColor
         };})
       };
     });
 
     expect(result.position).toBe('fixed');
-    expect(result.labels).toEqual(mobile?mobileExpected:desktopExpected);
+    expect(result.labels).toEqual(expected);
     expect(result.actions).toEqual(['home','top','back','previous','search','current','contact']);
     expect(result.buttons).toHaveLength(7);
-    expect(result.spacerHeight,'fixed navigation must reserve scroll clearance').toBeGreaterThanOrEqual(70);
+    expect(result.bottomGap,'footer must touch viewport bottom').toBeLessThanOrEqual(1);
+    expect(result.dockWidth/result.viewportWidth,'footer must span the layout viewport').toBeGreaterThanOrEqual(.995);
+    expect(result.dockLeft,'footer must start at viewport left').toBeGreaterThanOrEqual(-1);
+    expect(result.dockLeft,'footer must start at viewport left').toBeLessThanOrEqual(1);
+    expect(result.dockRight,'footer must end at viewport right').toBeGreaterThanOrEqual(result.viewportWidth-1);
+    expect(result.dockRight,'footer must not overflow viewport').toBeLessThanOrEqual(result.viewportWidth+1);
+    expect(result.borderTop,'China-style gold footer rule').toBeGreaterThanOrEqual(3);
+    expect(result.background,'deep-teal footer fill').toMatch(/rgb\(15, 75, 90\)|rgba\(15, 75, 90/);
+    expect(result.scrollWidth,'footer must not need horizontal scrolling').toBeLessThanOrEqual(result.clientWidth+1);
+    expect(result.lineCounts).toEqual([1,1,1,1,1,1,1]);
+
     for(const item of result.buttons){
-      expect(item.radius,'buttons must remain rectangular').toBeLessThanOrEqual(12);
-      expect(item.h,'tap target height').toBeGreaterThanOrEqual(48);
+      expect(item.radius,'controls must remain compact rectangles').toBeLessThanOrEqual(10);
+      expect(item.radius).toBeGreaterThanOrEqual(6);
       expect(item.borderLeft,'left border must render').toBeGreaterThanOrEqual(1);
       expect(item.borderRight,'right border must render').toBeGreaterThanOrEqual(1);
     }
 
     if(mobile){
-      expect(result.display).toBe('grid');
-      expect(result.gridColumns.split(' ').length).toBe(7);
-      expect(result.bottomGap,'mobile dock must touch viewport bottom').toBeLessThanOrEqual(1);
-      expect(result.layout).toBe('mobile-fixed-bottom-compact-navigation');
-      expect(result.lineCounts).toEqual([1,1,2,2,2,2,2]);
-      expect(result.scrollWidth,'mobile dock must not need horizontal scrolling').toBeLessThanOrEqual(result.clientWidth+1);
-      expect(result.dockWidth/result.viewportWidth,'mobile dock should cover the viewport width').toBeGreaterThanOrEqual(.99);
-      expect(result.dockLeft,'mobile dock must start at viewport left edge').toBeGreaterThanOrEqual(-1);
-      expect(result.dockLeft,'mobile dock must start at viewport left edge').toBeLessThanOrEqual(1);
-      expect(result.dockRight,'mobile dock must end at viewport right edge').toBeGreaterThanOrEqual(result.viewportWidth-1);
-      expect(result.dockRight,'mobile dock must not overflow viewport').toBeLessThanOrEqual(result.viewportWidth+1);
+      expect(result.display).toBe('flex');
+      expect(result.flexWrap).toBe('wrap');
+      expect(result.justifyContent).toBe('center');
+      expect(result.layout).toBe('mobile-fixed-bottom-footer-navigation');
+      expect(result.unified).toBe('v5.8-fixed-bottom-footer-navigation');
+      expect(result.spacerHeight,'mobile fixed footer must reserve two-row clearance').toBeGreaterThanOrEqual(90);
       for(const item of result.buttons){
-        expect(item.w,'compact mobile control must retain minimum touch width').toBeGreaterThanOrEqual(44);
-        expect(item.left,'no mobile button may clip past the left viewport edge').toBeGreaterThanOrEqual(0);
-        expect(item.right,'no mobile button may clip past the right viewport edge').toBeLessThanOrEqual(result.viewportWidth);
+        expect(item.h,'mobile tap target height').toBeGreaterThanOrEqual(38);
+        expect(item.w,'mobile control remains tappable').toBeGreaterThanOrEqual(80);
+        expect(item.left,'mobile button must not clip left').toBeGreaterThanOrEqual(0);
+        expect(item.right,'mobile button must not clip right').toBeLessThanOrEqual(result.viewportWidth+1);
       }
-
-      await page.locator('#floatDock .qily-float-btn[data-action="home"]').focus();
-      const focus=await page.evaluate(()=>{
-        const b=document.querySelector('#floatDock .qily-float-btn[data-action="home"]');
-        const s=getComputedStyle(b),r=b.getBoundingClientRect();
-        return {outline:s.outlineStyle,outlineWidth:s.outlineWidth,boxShadow:s.boxShadow,left:r.left,borderLeft:parseFloat(s.borderLeftWidth)||0};
-      });
-      expect(focus.left,'focused first button must remain fully inside the viewport').toBeGreaterThanOrEqual(0);
-      expect(focus.borderLeft,'focused first button left border must remain complete').toBeGreaterThanOrEqual(1);
-      expect(focus.outline==='none'||focus.outlineWidth==='0px','mobile focus must not use a clipped outer outline').toBeTruthy();
-      expect(focus.boxShadow,'mobile focus must use an internal visible ring').toContain('inset');
+      const firstRowTop=result.buttons[0].top;
+      expect(result.buttons[3].top,'four controls should occupy first row').toBeCloseTo(firstRowTop,1);
+      expect(result.buttons[4].top,'fifth control should begin centered second row').toBeGreaterThan(firstRowTop+20);
+      expect(result.buttons[4].left,'second row should be centered rather than left-packed').toBeGreaterThan(20);
+      expect(result.buttons[6].right,'second row should be centered rather than right-packed').toBeLessThan(result.viewportWidth-20);
     }else{
       expect(result.display).toBe('grid');
       expect(result.gridColumns.split(' ').length).toBe(7);
-      expect(result.bottomGap,'desktop dock should remain pinned near viewport bottom').toBeGreaterThanOrEqual(8);
-      expect(result.bottomGap).toBeLessThanOrEqual(16);
-      expect(result.layout).toBe('fixed-bottom-navigation');
-      for(const item of result.buttons)expect(item.w,'desktop navigation modules should be wider than tall').toBeGreaterThan(item.h*1.35);
-      await page.locator('#floatDock .qily-float-btn[data-action="home"]').focus();
-      const focus=await page.evaluate(()=>{const b=document.querySelector('#floatDock .qily-float-btn[data-action="home"]');const s=getComputedStyle(b),r=b.getBoundingClientRect();return {boxShadow:s.boxShadow,left:r.left,borderLeft:parseFloat(s.borderLeftWidth)||0};});
-      expect(focus.borderLeft,'desktop first button left border must remain complete').toBeGreaterThanOrEqual(1);
-      expect(focus.boxShadow,'desktop first button focus must stay internal').toContain('inset');
+      expect(result.layout).toBe('fixed-bottom-footer-navigation');
+      expect(result.unified).toBe('v5.8-fixed-bottom-footer-navigation');
+      expect(result.spacerHeight,'desktop fixed footer must reserve clearance').toBeGreaterThanOrEqual(56);
+      for(const item of result.buttons){
+        expect(item.h,'desktop compact control height').toBeGreaterThanOrEqual(40);
+        expect(item.w,'desktop module should be much wider than tall').toBeGreaterThan(item.h*2);
+      }
     }
+
+    await page.locator('#floatDock .qily-float-btn[data-action="home"]').focus();
+    const focus=await page.evaluate(()=>{
+      const b=document.querySelector('#floatDock .qily-float-btn[data-action="home"]');
+      const s=getComputedStyle(b),r=b.getBoundingClientRect();
+      return {boxShadow:s.boxShadow,color:s.color,background:s.backgroundColor,left:r.left};
+    });
+    expect(focus.boxShadow,'focus feedback must remain internal and visible').toContain('inset');
+    expect(focus.background,'focus should use gold fill').toMatch(/rgb\(255, 227, 155\)|rgba\(255, 227, 155/);
+    expect(focus.color,'focus text should switch to deep teal').toMatch(/rgb\(15, 75, 90\)|rgba\(15, 75, 90/);
+    expect(focus.left,'focused control must remain on-screen').toBeGreaterThanOrEqual(0);
 
     await page.screenshot({path:path.join(out,`${name}.png`),fullPage:true});
   });
