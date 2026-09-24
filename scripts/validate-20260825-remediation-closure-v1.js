@@ -8,7 +8,7 @@ const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)}
 const htmlFiles=()=>execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
 const DDZ='tools/pure-ddz/index.html',CN='cn-site/index.html';
-const DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260906-mobile-compact-fixed-r2';
+const DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1';
 
 must(read('qilylean/daily/2026-08-25.html'),'八大浪费','Eight wastes');
 
@@ -37,7 +37,7 @@ for(const t of ["loadStyle('css/ddz-core-v155.css')",'qilyPureDdzR8ClosureV128',
 must(ddzCss,'overflow-x:clip!important','DDZ containment');must(ddzCss,'var(--ddz-mobile-vh,390px)','DDZ viewport sizing');must(ddzJs,"version:'1.2.4-mobile-landscape-adaptive'",'DDZ adaptive landscape runtime');must(ddzJs,'screen.orientation?.lock','DDZ landscape lock');
 
 const mat=read('scripts/materialize-global-language-v3.js');
-for(const t of ["const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'20260831-r7-single-responsibility-v11-safe-translation','20260831-project-grade-readability-v3','20260831-r11-semantics-v17-native-range','20260901-google-translate-single-runtime-v16','20260831-redline-no-translation-v23','20260901-google-translate-mobile-ui-v16','20260831-unified-components-v29-native-range','20260906-authority-v58-mobile-swipe-fixed-bottom','20260906-mobile-compact-fixed-r2'])must(mat,t,'V32 materializer');
+for(const t of ["const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'20260831-r7-single-responsibility-v11-safe-translation','20260831-project-grade-readability-v3','20260831-r11-semantics-v17-native-range','20260901-google-translate-single-runtime-v16','20260831-redline-no-translation-v23','20260901-google-translate-mobile-ui-v16','20260831-unified-components-v29-native-range','20260906-authority-v58-mobile-swipe-fixed-bottom','20260924-footer-like-fixed-r1'])must(mat,t,'V32 materializer');
 forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure materializer');
 
 const cn=read(CN);must(cn,'name="robots" content="index,follow"','CN production indexing');must(cn,'/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale','CN independent VI authority');must(cn,'/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module','CN independent navigation runtime');must(cn,'/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu','CN independent translation runtime');must(read('cn-site/assets/qilylean-vi-v2.css'),'QILY-CN-CURRENT-MODULE-V1','CN current-module VI contract');
