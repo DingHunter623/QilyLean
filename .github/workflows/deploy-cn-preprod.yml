@@ -300,14 +300,27 @@ jobs:
           footer_actions_contract = [
               (footer_actions_css, 'QilyLean CN Footer Quick Actions V1', 'footer action stylesheet marker'),
               (footer_actions_css, '.footer-actions>button', 'footer action button visual contract'),
+              (footer_actions_css, '.footer-actions>button.is-copied', 'copied-state visual feedback'),
+              (footer_actions_css, 'border-radius:999px!important', 'international-style pill toast'),
+              (footer_actions_css, 'background:#073c47!important', 'international-style toast background'),
               (footer_actions_runtime, 'QilyLean CN Footer Quick Actions V1', 'footer action runtime marker'),
               (footer_actions_runtime, 'w.history.back()', 'previous-page browser history behavior'),
               (footer_actions_runtime, 'navigator.share', 'system share behavior'),
               (footer_actions_runtime, "behavior:reduce?'auto':'smooth'", 'top smooth-scroll behavior'),
+              (footer_actions_runtime, '标题与网址已复制，正在打开系统分享', 'copy-before-share feedback'),
+              (footer_actions_runtime, '已复制，可直接粘贴分享', 'cancelled-share copied feedback'),
+              (footer_actions_runtime, '已复制，可粘贴到微信、微博等应用', 'share fallback feedback'),
           ]
           for source, marker, label in footer_actions_contract:
               if marker not in source:
                   raise SystemExit(f'Production footer action contract missing {label}: {marker}')
+
+          copy_marker = 'copyText(text).then(function(){'
+          share_marker = 'navigator.share({title:title,text:title,url:url})'
+          copy_at = footer_actions_runtime.find(copy_marker)
+          share_at = footer_actions_runtime.find(share_marker)
+          if copy_at < 0 or share_at < 0 or copy_at > share_at:
+              raise SystemExit('Production share parity failed: title + URL must be copied before system share opens.')
 
           typography_contract = [
               (vi, 'QILY-CN-TYPE-HIERARCHY-V5', 'final V5 authority'),
