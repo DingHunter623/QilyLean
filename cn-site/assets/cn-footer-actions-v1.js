@@ -2,7 +2,7 @@
  * Functional parity with the international-site actions:
  * Top => smooth scroll to top
  * Previous page => browser history.back(), then parent-route fallback
- * Share current => Web Share API, then title + URL copy fallback
+ * Share current => copy title + URL first, then open Web Share API; copied content remains usable after cancel
  */
 (function(d,w){'use strict';
 if(w.__qilyCnFooterActionsV1)return;w.__qilyCnFooterActionsV1=true;
