@@ -1,4 +1,4 @@
-@import url("/qilylean/daily/brief-layout-standard.css?v=20260921-unified-v3-feedback-axis");
+@import url("/qilylean/daily/brief-layout-standard.css?v=20260924-mobile-visual-type-v4");
 
 /* 2026-09-23 production / engineering / quality tripod brief.
    Component-only styles; canonical 1180px axis and typography remain owned by shared brief VI. */
@@ -69,7 +69,7 @@ body.site-tripod-brief .priority-strip{
 }
 body.site-tripod-brief .priority-strip span{display:inline-flex;align-items:center;gap:8px;color:#0f4b5a;font-weight:850}
 body.site-tripod-brief .priority-strip span b{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#0f4b5a;color:#fff}
-body.site-tripod-brief .priority-strip i{color:#caa15f;font-style:normal;font-size:20px;font-weight:900}
+body.site-tripod-brief .priority-strip i{color:#caa15f;font-style:normal;font-weight:900}
 body.site-tripod-brief .tripod-checklist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:22px 0}
 body.site-tripod-brief .tripod-checklist>div{display:grid;grid-template-columns:42px 1fr;gap:12px;align-items:start;border-bottom:1px solid #d9e6e3;padding:11px 4px}
 body.site-tripod-brief .tripod-checklist b{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:10px;background:#0f4b5a;color:#fff}
@@ -103,25 +103,25 @@ body.site-tripod-brief .tripod-svg .leg.engineering{fill:#fff4d8!important;strok
 body.site-tripod-brief .tripod-svg .base-rail{fill:#caa15f!important}
 body.site-tripod-brief .tripod-svg .vi-flow-arrow{fill:#0f4b5a!important;stroke:none!important}
 body.site-tripod-brief .tripod-svg .feedback-arrow{fill:#caa15f!important;stroke:none!important}
-body.site-tripod-brief .tripod-svg .beam-title{fill:#fff!important;font-size:28px!important;font-weight:900!important}
-body.site-tripod-brief .tripod-svg .beam-sub{fill:#ffe39b!important;font-size:18px!important;font-weight:760!important}
-body.site-tripod-brief .tripod-svg .leg-title{fill:#0f4b5a!important;font-size:27px!important;font-weight:900!important}
-body.site-tripod-brief .tripod-svg .leg-sub{fill:#3f6561!important;font-size:17px!important;font-weight:760!important}
-body.site-tripod-brief .tripod-svg .figure-note{fill:#536f6c!important;font-size:15px!important;font-weight:720!important}
+body.site-tripod-brief .tripod-svg .beam-title{fill:#fff!important;font-weight:900!important}
+body.site-tripod-brief .tripod-svg .beam-sub{fill:#ffe39b!important;font-weight:760!important}
+body.site-tripod-brief .tripod-svg .leg-title{fill:#0f4b5a!important;font-weight:900!important}
+body.site-tripod-brief .tripod-svg .leg-sub{fill:#3f6561!important;font-weight:760!important}
+body.site-tripod-brief .tripod-svg .figure-note{fill:#536f6c!important;font-weight:720!important}
 body.site-tripod-brief .cause-node rect,
 body.site-tripod-brief .flow-box rect{fill:#f1f8f6!important;stroke:#8fb9b2!important}
 body.site-tripod-brief .cause-node text,
-body.site-tripod-brief .flow-box text{fill:#0f4b5a!important;font-size:19px!important;font-weight:850!important}
+body.site-tripod-brief .flow-box text{fill:#0f4b5a!important;font-weight:850!important}
 body.site-tripod-brief .cause-node .sub,
-body.site-tripod-brief .flow-box .sub{fill:#526e6b!important;font-size:13px!important;font-weight:680!important}
+body.site-tripod-brief .flow-box .sub{fill:#526e6b!important;font-weight:680!important}
 body.site-tripod-brief .cause-core{fill:#0f4b5a!important}
-body.site-tripod-brief .core-title{fill:#fff!important;font-size:28px!important;font-weight:900!important}
-body.site-tripod-brief .core-sub{fill:#ffe39b!important;font-size:16px!important}
+body.site-tripod-brief .core-title{fill:#fff!important;font-weight:900!important}
+body.site-tripod-brief .core-sub{fill:#ffe39b!important;}
 body.site-tripod-brief .verify-box,
 body.site-tripod-brief .feedback-label-bg{fill:#fffaf0!important;stroke:#d8bc78!important}
-body.site-tripod-brief .verify-title{fill:#765713!important;font-size:20px!important}
-body.site-tripod-brief .verify-sub{fill:#6e654d!important;font-size:14px!important}
-body.site-tripod-brief .feedback-label{fill:#765713!important;font-size:16px!important}
+body.site-tripod-brief .verify-title{fill:#765713!important;}
+body.site-tripod-brief .verify-sub{fill:#6e654d!important;}
+body.site-tripod-brief .feedback-label{fill:#765713!important;}
 body.site-tripod-brief .tripod-mobile-visual{display:none}
 
 @media(max-width:680px){
@@ -156,14 +156,12 @@ body.site-tripod-brief .tripod-mobile-visual{display:none}
     margin:0!important;
     color:#fff!important;
     -webkit-text-fill-color:#fff!important;
-    font-size:18px!important;
     line-height:1.35!important;
     font-weight:900!important;
   }
   body.site-tripod-brief .mobile-visual-head span{
     color:#ffe39b!important;
     -webkit-text-fill-color:#ffe39b!important;
-    font-size:13px!important;
     line-height:1.5!important;
     font-weight:750!important;
   }
@@ -198,7 +196,6 @@ body.site-tripod-brief .tripod-mobile-visual{display:none}
     background:#0f4b5a!important;
     color:#fff!important;
     -webkit-text-fill-color:#fff!important;
-    font-size:16px!important;
     font-weight:900!important;
   }
   body.site-tripod-brief .mobile-role-card.is-engineering b{
@@ -210,14 +207,12 @@ body.site-tripod-brief .tripod-mobile-visual{display:none}
     margin:0!important;
     color:#0f4b5a!important;
     -webkit-text-fill-color:#0f4b5a!important;
-    font-size:16px!important;
     line-height:1.35!important;
     font-weight:900!important;
   }
   body.site-tripod-brief .mobile-role-card span{
     color:#526e6b!important;
     -webkit-text-fill-color:#526e6b!important;
-    font-size:13px!important;
     line-height:1.45!important;
   }
   body.site-tripod-brief .mobile-visual-base{
@@ -227,7 +222,6 @@ body.site-tripod-brief .tripod-mobile-visual{display:none}
     background:#fff4d8!important;
     color:#765713!important;
     -webkit-text-fill-color:#765713!important;
-    font-size:13px!important;
     line-height:1.55!important;
     font-weight:800!important;
     text-align:center!important;
@@ -251,7 +245,6 @@ body.site-tripod-brief .tripod-mobile-visual{display:none}
     margin:0 0 3px!important;
     color:#0f4b5a!important;
     -webkit-text-fill-color:#0f4b5a!important;
-    font-size:14px!important;
     line-height:1.35!important;
     font-weight:900!important;
   }
@@ -259,14 +252,12 @@ body.site-tripod-brief .tripod-mobile-visual{display:none}
     display:block!important;
     color:#526e6b!important;
     -webkit-text-fill-color:#526e6b!important;
-    font-size:12px!important;
     line-height:1.45!important;
   }
   body.site-tripod-brief .mobile-down-arrow{
     margin:5px 0!important;
     color:#caa15f!important;
     -webkit-text-fill-color:#caa15f!important;
-    font-size:24px!important;
     line-height:1!important;
     font-weight:950!important;
     text-align:center!important;
@@ -283,13 +274,11 @@ body.site-tripod-brief .tripod-mobile-visual{display:none}
     margin:0 0 3px!important;
     color:#765713!important;
     -webkit-text-fill-color:#765713!important;
-    font-size:15px!important;
     line-height:1.4!important;
   }
   body.site-tripod-brief .mobile-verify-box span{
     color:#6e654d!important;
     -webkit-text-fill-color:#6e654d!important;
-    font-size:12px!important;
     line-height:1.5!important;
   }
   body.site-tripod-brief .mobile-flow-stack{
@@ -319,28 +308,24 @@ body.site-tripod-brief .tripod-mobile-visual{display:none}
     background:#0f4b5a!important;
     color:#fff!important;
     -webkit-text-fill-color:#fff!important;
-    font-size:13px!important;
     font-weight:900!important;
   }
   body.site-tripod-brief .mobile-flow-stack>div>strong{
     margin:0!important;
     color:#0f4b5a!important;
     -webkit-text-fill-color:#0f4b5a!important;
-    font-size:15px!important;
     line-height:1.3!important;
     font-weight:900!important;
   }
   body.site-tripod-brief .mobile-flow-stack>div>span{
     color:#526e6b!important;
     -webkit-text-fill-color:#526e6b!important;
-    font-size:12px!important;
     line-height:1.4!important;
   }
   body.site-tripod-brief .mobile-flow-stack>i{
     display:block!important;
     color:#caa15f!important;
     -webkit-text-fill-color:#caa15f!important;
-    font-size:19px!important;
     line-height:1!important;
     font-style:normal!important;
     font-weight:950!important;
@@ -354,7 +339,6 @@ body.site-tripod-brief .tripod-mobile-visual{display:none}
     background:#fffaf0!important;
     color:#765713!important;
     -webkit-text-fill-color:#765713!important;
-    font-size:12px!important;
     line-height:1.55!important;
     font-weight:800!important;
   }
@@ -362,7 +346,6 @@ body.site-tripod-brief .tripod-mobile-visual{display:none}
     margin-top:9px!important;
     color:#536f6c!important;
     -webkit-text-fill-color:#536f6c!important;
-    font-size:13px!important;
     line-height:1.55!important;
   }
 }
