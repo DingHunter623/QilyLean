@@ -33,7 +33,11 @@ async function measure(page,url,kind){
         headerPaddingTop:getComputedStyle(header).paddingTop,
         headerPaddingBottom:getComputedStyle(header).paddingBottom,
         navPaddingTop:nav?getComputedStyle(nav).paddingTop:null,
-        navPaddingBottom:nav?getComputedStyle(nav).paddingBottom:null
+        navPaddingBottom:nav?getComputedStyle(nav).paddingBottom:null,
+        navFontFamily:first?getComputedStyle(first).fontFamily:null,
+        navFontSize:first?getComputedStyle(first).fontSize:null,
+        navFontWeight:first?getComputedStyle(first).fontWeight:null,
+        navLineHeight:first?getComputedStyle(first).lineHeight:null
       }
     };
   },kind);
@@ -54,5 +58,10 @@ test('international and CN desktop header geometry probe',async({browser})=>{
   near(intl.translator.topGap,cn.translator.topGap,2,'translator top gap');
   expect(cn.rail.bottomGap,'CN rail bottom breathing room').toBeGreaterThanOrEqual(8);
   expect(cn.rail.bottomGap,'CN rail bottom breathing room').toBeLessThanOrEqual(14);
+  expect(intl.css.navFontWeight,'international primary nav weight').toBe('900');
+  expect(cn.css.navFontWeight,'CN primary nav weight').toBe('900');
+  expect(intl.css.navFontWeight,'primary nav weight parity').toBe(cn.css.navFontWeight);
+  expect(intl.css.navFontFamily,'primary nav font family parity').toBe(cn.css.navFontFamily);
+  expect(intl.css.navLineHeight,'primary nav line-height parity').toBe(cn.css.navLineHeight);
   await page.close();
 });

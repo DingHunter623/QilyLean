@@ -1450,7 +1450,7 @@ header.topbar .nav>a,
 header.top .nav>a{
   font-family:var(--qily-font-sans)!important;
   font-size:var(--qily-type-nav-1)!important;
-  font-weight:850!important;
+  font-weight:900!important;
   line-height:1.2!important;
   white-space:nowrap!important;
 }
@@ -1971,7 +1971,7 @@ html body :is(.section,.qily-ia-section,.module-section) :is(.head,.qily-ia-head
 /* 顶部导航：一级业务导视优先；当前模块用金色基准线而不是大面积色块。 */
 html body .qily-global-header{border-bottom:1px solid var(--qily-line)!important;box-shadow:0 5px 18px rgba(7,60,71,.065)!important;}
 html body .qily-global-header>.qily-global-nav{gap:4px!important;}
-html body .qily-global-header>.qily-global-nav a{position:relative;border-radius:var(--qily-radius-sm)!important;font-weight:850!important;}
+html body .qily-global-header>.qily-global-nav a{position:relative;border-radius:var(--qily-radius-sm)!important;font-weight:900!important;}
 html body .qily-global-header>.qily-global-nav a[aria-current="page"]{color:var(--qily-vi-olive)!important;background:#f2f8f7!important;border-color:var(--qily-line-strong)!important;}
 html body .qily-global-header>.qily-global-nav a[aria-current="page"]::after{content:"";position:absolute;left:10px;right:10px;bottom:3px;height:2px;background:var(--qily-vi-gold);}
 

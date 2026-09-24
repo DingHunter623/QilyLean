@@ -48,7 +48,7 @@ header.topbar .nav>a,
 header.top .nav>a{
   font-family:var(--qily-font-sans)!important;
   font-size:var(--qily-type-nav-1)!important;
-  font-weight:850!important;
+  font-weight:900!important;
   line-height:1.2!important;
   white-space:nowrap!important;
 }
