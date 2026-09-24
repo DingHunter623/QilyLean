@@ -40,6 +40,64 @@ test('Sep 20 brief SVG is normalized to readable QilyLean VI',async({page})=>{
   await page.screenshot({path:path.join(out,'brief-2026-09-20-normalized.png'),fullPage:false});
 });
 
+test('Sep 23 desktop reader uses 4 plus 3 5M2E matrix with no clipping',async({page})=>{
+  await page.setViewportSize({width:1440,height:1000});
+  const response=await page.goto(base+'/global-knowledge/briefs/?date=2026-09-23',{waitUntil:'networkidle',timeout:30000});
+  expect(response&&response.ok()).toBeTruthy();
+
+  const article=page.locator('#article');
+  await expect(article).toBeVisible();
+
+  const pairedDesktop=article.locator('figure[data-qily-mobile-pair="true"] > svg[data-qily-imported-visual="normalized-v1"]');
+  await expect(pairedDesktop).toHaveCount(4);
+  for(let i=0;i<4;i+=1) await expect(pairedDesktop.nth(i)).toBeHidden();
+
+  const cause=article.locator('[data-mobile-visual="causeTitle"]');
+  await expect(cause).toBeVisible();
+  const factors=cause.locator(':scope > div:nth-child(2) > div');
+  await expect(factors).toHaveCount(7);
+
+  const layout=await cause.evaluate(el=>{
+    const grid=el.querySelector(':scope > div:nth-child(2)');
+    const cards=[...grid.children].filter(n=>n.tagName==='DIV');
+    const rows=new Map();
+    cards.forEach((card,index)=>{
+      const r=card.getBoundingClientRect();
+      const y=Math.round(r.top);
+      if(!rows.has(y))rows.set(y,[]);
+      rows.get(y).push(index+1);
+    });
+    const overflow=cards.map(card=>({
+      card:card.scrollWidth-card.clientWidth,
+      title:(()=>{const b=card.querySelector('b');return b?b.scrollWidth-b.clientWidth:0})()
+    }));
+    const r=el.getBoundingClientRect();
+    const article=el.closest('#article');
+    return {
+      rows:[...rows.values()],
+      overflow,
+      width:r.width,
+      articleWidth:article?article.getBoundingClientRect().width:0,
+      selfOverflow:el.scrollWidth-el.clientWidth
+    };
+  });
+
+  expect(layout.rows).toEqual([[1,2,3,4],[5,6,7]]);
+  expect(layout.width).toBeLessThanOrEqual(layout.articleWidth+1);
+  expect(layout.selfOverflow).toBeLessThanOrEqual(1);
+  for(const item of layout.overflow){
+    expect(item.card).toBeLessThanOrEqual(1);
+    expect(item.title).toBeLessThanOrEqual(1);
+  }
+
+  for(const id of ['tripodTitle','responseTitle','closureTitle']){
+    await expect(article.locator('[data-mobile-visual="'+id+'"]')).toBeVisible();
+  }
+
+  await cause.scrollIntoViewIfNeeded();
+  await page.screenshot({path:path.join(out,'brief-2026-09-23-desktop-reader-vi.png'),fullPage:false});
+});
+
 test('Sep 23 brief uses mobile-native VI instead of compressed desktop SVGs',async({page})=>{
   await page.setViewportSize({width:412,height:915});
   const response=await page.goto(base+'/global-knowledge/briefs/?date=2026-09-23',{waitUntil:'networkidle',timeout:30000});
