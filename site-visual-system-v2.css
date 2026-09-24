@@ -494,7 +494,28 @@ html:root:root:root:root body #floatDock.qily-float-dock.qily-page-action-nav{
 html:root:root:root:root body #floatDock.qily-float-dock .qily-float-btn.qily-float-btn{
   border-radius:8px!important;
 }
-html:root:root:root:root body #floatDock.qily-float-dock .qily-float-btn.qily-float-btn:is(:hover,:focus,:focus-visible){
+html:root:root:root:root body #floatDock.qily-float-dock.qily-page-action-nav
+.qily-float-btn.qily-float-btn:not(#qily-footer-state-priority):not(#qily-footer-state-override):is(:hover:hover,:focus:focus,:focus-visible:focus-visible){
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  background:#ffe39b!important;
+  background-color:#ffe39b!important;
+  background-image:none!important;
+  border-color:#ffe39b!important;
+  box-shadow:inset 0 0 0 2px rgba(255,227,155,.24)!important,0 4px 12px rgba(4,32,39,.18)!important;
+  outline:none!important;
+  outline-offset:0!important;
+  transform:translateY(-1px)!important;
+}
+html:root:root:root:root body #floatDock.qily-float-dock.qily-page-action-nav
+.qily-float-btn.qily-float-btn:not(#qily-footer-state-priority):not(#qily-footer-state-override):is(:active:active,[data-qily-pressed="true"]){
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  background:#073c47!important;
+  background-color:#073c47!important;
+  background-image:none!important;
+  border-color:#ffe39b!important;
+  box-shadow:inset 0 2px 4px rgba(4,32,39,.28)!important;
   outline:none!important;
   outline-offset:0!important;
 }
@@ -524,6 +545,10 @@ html:root:root:root:root body #floatDock.qily-float-dock .qily-float-btn.qily-fl
   }
   html:root:root:root:root body #floatDock.qily-float-dock.qily-page-action-nav .qily-dock-label>span{
     display:inline!important;
+  }
+  html:root:root:root:root body #floatDock.qily-float-dock.qily-page-action-nav
+  .qily-float-btn.qily-float-btn:not(#qily-footer-state-priority):not(#qily-footer-state-override):is(:hover:hover,:focus:focus,:focus-visible:focus-visible){
+    transform:none!important;
   }
 }
 @media (max-width:390px){
