@@ -21,10 +21,10 @@
 .article svg[data-qily-imported-visual="normalized-v1"] .load-chart .load-value{fill:#274744;font-weight:850}
 .article svg[data-qily-imported-visual="normalized-v1"] .load-chart :is(.chart-note,.legend){fill:#5f7472;font-weight:650}
 
-/* QILY-GK-BRIEF-MOBILE-VI-V1 | 2026-09-24
-   Global Knowledge reader owns its presentation layer. Imported engineering SVGs
-   keep semantic classes, while approved data-mobile-visual blocks provide the
-   narrow-screen composition instead of shrinking a 1160px diagram into a thumbnail. */
+/* QILY-GK-BRIEF-MOBILE-VI-V2 | 2026-09-24
+   Strict presentation firewall: imported non-SVG class/style attributes are removed.
+   Mobile layouts are reconstructed only from approved data-mobile-visual markers
+   and stable element order, so source-page visual skin never crosses into Global Knowledge. */
 .article figure{margin:20px 0}
 .article [data-mobile-visual]{display:none}
 
@@ -59,59 +59,75 @@
     display:block!important;width:100%;max-width:none;margin:0;padding:13px;
     border:1px solid var(--line);border-radius:15px;background:#fff;color:var(--ink)
   }
-  .article [data-mobile-visual] .mobile-visual-head{
+
+  /* Every approved mobile visual uses its first child as the VI header. */
+  .article [data-mobile-visual]>div:first-child{
     display:flex;flex-direction:column;gap:3px;padding:12px 13px;
     border-radius:11px;background:var(--deep);text-align:left
   }
-  .article [data-mobile-visual] .mobile-visual-head strong{color:#fff;font-size:18px;line-height:1.35;font-weight:900}
-  .article [data-mobile-visual] .mobile-visual-head span{color:#ffe39b;font-size:13px;line-height:1.5;font-weight:750}
-  .article [data-mobile-visual] .mobile-tripod-stack{display:grid;grid-template-columns:1fr;gap:8px;margin-top:9px}
-  .article [data-mobile-visual] .mobile-role-card{
+  .article [data-mobile-visual]>div:first-child>strong{color:#fff;font-size:18px;line-height:1.35;font-weight:900}
+  .article [data-mobile-visual]>div:first-child>span{color:#ffe39b;font-size:13px;line-height:1.5;font-weight:750}
+
+  /* Figure 1: production / engineering / quality tripod. */
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2){
+    display:grid;grid-template-columns:1fr;gap:8px;margin-top:9px
+  }
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div{
     display:grid;grid-template-columns:50px minmax(0,1fr);gap:3px 10px;align-items:center;
     padding:11px;border:1px solid #c9ddd8;border-radius:11px;background:#f4faf8
   }
-  .article [data-mobile-visual] .mobile-role-card.is-engineering{border-color:#d8bc78;background:#fff9e9}
-  .article [data-mobile-visual] .mobile-role-card b{
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div:nth-child(2){border-color:#d8bc78;background:#fff9e9}
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>b{
     grid-row:1/span 2;display:grid;width:46px;height:46px;place-items:center;margin:0;
     border-radius:11px;background:var(--deep);color:#fff;font-size:16px;font-weight:900
   }
-  .article [data-mobile-visual] .mobile-role-card.is-engineering b{background:var(--gold);color:#173b42}
-  .article [data-mobile-visual] .mobile-role-card strong{margin:0;color:var(--deep);font-size:16px;line-height:1.35;font-weight:900}
-  .article [data-mobile-visual] .mobile-role-card span{color:var(--muted);font-size:13px;line-height:1.45}
-  .article [data-mobile-visual] .mobile-visual-base{
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div:nth-child(2)>b{background:var(--gold);color:#173b42}
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>strong{margin:0;color:var(--deep);font-size:16px;line-height:1.35;font-weight:900}
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>span{color:var(--muted);font-size:13px;line-height:1.45}
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(3){
     margin-top:9px;padding:9px 11px;border-radius:9px;background:#fff4d8;color:#765713;
     font-size:13px;line-height:1.55;font-weight:800;text-align:center
   }
-  .article [data-mobile-visual] .mobile-factor-grid{
+
+  /* Figure 2: seven 5M2E factors + evidence verification. */
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(2){
     display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:9px
   }
-  .article [data-mobile-visual] .mobile-factor-grid>div{
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div{
     min-width:0;padding:9px;border:1px solid #c9ddd8;border-radius:9px;background:#f7fbfa
   }
-  .article [data-mobile-visual] .mobile-factor-grid>div.is-wide{grid-column:1/-1}
-  .article [data-mobile-visual] .mobile-factor-grid b{display:block;margin:0 0 2px;color:var(--deep);font-size:14px;line-height:1.35;font-weight:900}
-  .article [data-mobile-visual] .mobile-factor-grid span{display:block;color:var(--muted);font-size:12px;line-height:1.45}
-  .article [data-mobile-visual] .mobile-down-arrow{margin:4px 0;color:var(--gold);font-size:23px;line-height:1;font-weight:950;text-align:center}
-  .article [data-mobile-visual] .mobile-verify-box{
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div:last-child{grid-column:1/-1}
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div>b{display:block;margin:0 0 2px;color:var(--deep);font-size:14px;line-height:1.35;font-weight:900}
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div>span{display:block;color:var(--muted);font-size:12px;line-height:1.45}
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(3){margin:4px 0;color:var(--gold);font-size:23px;line-height:1;font-weight:950;text-align:center}
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(4){
     padding:10px 11px;border:1px solid #d8bc78;border-radius:10px;background:#fffaf0;text-align:center
   }
-  .article [data-mobile-visual] .mobile-verify-box strong{display:block;margin:0 0 3px;color:#765713;font-size:15px;line-height:1.4}
-  .article [data-mobile-visual] .mobile-verify-box span{color:#6e654d;font-size:12px;line-height:1.5}
-  .article [data-mobile-visual] .mobile-flow-stack{display:grid;grid-template-columns:1fr;gap:4px;margin-top:9px}
-  .article [data-mobile-visual] .mobile-flow-stack>div{
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(4)>strong{display:block;margin:0 0 3px;color:#765713;font-size:15px;line-height:1.4}
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(4)>span{color:#6e654d;font-size:12px;line-height:1.5}
+
+  /* Figures 3 / 4: vertical response and closure flows. */
+  .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2){
+    display:grid;grid-template-columns:1fr;gap:4px;margin-top:9px
+  }
+  .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div{
     display:grid;grid-template-columns:38px minmax(0,1fr);gap:2px 9px;align-items:center;
     padding:9px 10px;border:1px solid #c9ddd8;border-radius:10px;background:#f7fbfa
   }
-  .article [data-mobile-visual] .mobile-flow-stack>div>b{
+  .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div>b{
     grid-row:1/span 2;display:grid;width:34px;height:34px;place-items:center;margin:0;
     border-radius:9px;background:var(--deep);color:#fff;font-size:13px;font-weight:900
   }
-  .article [data-mobile-visual] .mobile-flow-stack>div>strong{margin:0;color:var(--deep);font-size:15px;line-height:1.3;font-weight:900}
-  .article [data-mobile-visual] .mobile-flow-stack>div>span{color:var(--muted);font-size:12px;line-height:1.4}
-  .article [data-mobile-visual] .mobile-flow-stack>i{
+  .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div>strong{
+    margin:0;color:var(--deep);font-size:15px;line-height:1.3;font-weight:900
+  }
+  .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div>span{
+    color:var(--muted);font-size:12px;line-height:1.4
+  }
+  .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>i{
     display:block;color:var(--gold);font-size:19px;line-height:1;font-style:normal;font-weight:950;text-align:center
   }
-  .article [data-mobile-visual] .mobile-feedback-strip{
+  .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(3){
     margin-top:9px;padding:9px 11px;border-left:4px solid var(--gold);
     border-radius:0 9px 9px 0;background:#fffaf0;color:#765713;font-size:12px;line-height:1.55;font-weight:800
   }
@@ -138,21 +154,19 @@ root.querySelectorAll('script,style,header,footer,nav,form,button,input,textarea
 root.querySelectorAll('a').forEach(function(a){var href=a.getAttribute('href')||'';if(/^#/.test(href))return;var m=href.match(/\/knowledge\/terminology\.html\?(?:[^#]*&)?(?:opl|term)=([^&#]+)/i);if(m){a.href='/global-knowledge/terminology/?opl='+m[1];return;}var d=href.match(/\/qilylean\/daily\/(\d{4}-\d{2}-\d{2})\.html/i);if(d){a.href='/global-knowledge/briefs/?date='+d[1];return;}var span=document.createElement('span');span.innerHTML=a.innerHTML;a.replaceWith(span)});
 root.querySelectorAll('.module-actions,.actions,.card-actions,.hero-actions').forEach(function(n){if(!(n.textContent||'').trim())n.remove()});
 /* Presentation firewall: imported briefs contribute knowledge content, never their source-page visual skin.
-   SVG semantic classes are retained so the reader can normalize diagrams. For narrow-screen
-   layouts, only explicitly approved [data-mobile-visual] blocks may retain source class names;
-   inline style and event attributes are still stripped. */
-root.querySelectorAll('*').forEach(function(el){
-  var inSvg=el.namespaceURI==='http://www.w3.org/2000/svg'||(el.closest&&!!el.closest('svg'));
-  var inApprovedMobile=!!(el.closest&&el.closest('[data-mobile-visual]'));
-  Array.from(el.attributes||[]).forEach(function(a){
-    if(/^on/i.test(a.name)||(a.name==='style'&&!inSvg)||(a.name==='class'&&!inSvg&&!inApprovedMobile))el.removeAttribute(a.name);
-  });
-});
-root.querySelectorAll('svg').forEach(function(svg){svg.setAttribute('data-qily-imported-visual','normalized-v1')});
+   SVG class/style metadata is retained only inside the SVG namespace so the reader can normalize diagrams.
+   Approved mobile alternatives are detected by data-mobile-visual before all non-SVG class/style attributes are stripped. */
 root.querySelectorAll('[data-mobile-visual]').forEach(function(mobile){
   var figure=mobile.closest&&mobile.closest('figure');
   if(figure)figure.setAttribute('data-qily-mobile-pair','true');
 });
+root.querySelectorAll('*').forEach(function(el){
+  var inSvg=el.namespaceURI==='http://www.w3.org/2000/svg'||(el.closest&&!!el.closest('svg'));
+  Array.from(el.attributes||[]).forEach(function(a){
+    if(/^on/i.test(a.name)||((a.name==='class'||a.name==='style')&&!inSvg))el.removeAttribute(a.name);
+  });
+});
+root.querySelectorAll('svg').forEach(function(svg){svg.setAttribute('data-qily-imported-visual','normalized-v1')});
 return root;}
 function loadReader(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d||''))return;fetch('/qilylean/daily/'+d+'.html',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('brief');return r.text()}).then(function(html){var doc=new DOMParser().parseFromString(html,'text/html');var src=doc.querySelector('article.knowledge-brief-article,article.post');if(!src)throw new Error('article');var clone=sanitize(src.cloneNode(true));var title=src.getAttribute('data-brief-title')||doc.querySelector('h1')&&doc.querySelector('h1').textContent||d;var summary=src.getAttribute('data-brief-summary')||doc.querySelector('meta[name="description"]')&&doc.querySelector('meta[name="description"]').content||'';var theme=src.getAttribute('data-brief-theme')||'';document.getElementById('readerHead').innerHTML='<small>'+esc(d)+(theme?'｜'+esc(theme):'')+'</small><h1>'+esc(title)+'</h1><p>'+esc(summary)+'</p>';var article=document.getElementById('article');article.innerHTML='';while(clone.firstChild)article.appendChild(clone.firstChild);document.getElementById('reader').classList.add('active');document.title=title+'｜QilyLean Global Knowledge';}).catch(function(){document.getElementById('reader').classList.add('active');document.getElementById('readerHead').innerHTML='<h1>简报暂时无法读取</h1><p>请返回目录后稍后重试。</p>';});}
 fetch('/qilylean/daily/index.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(data){items=Array.isArray(data)?data:[];search.value=initialQ;render(initialQ);if(date)loadReader(date)}).catch(function(){meta.textContent='精选简报目录暂时无法读取。'});search.addEventListener('input',function(){render(search.value)});
