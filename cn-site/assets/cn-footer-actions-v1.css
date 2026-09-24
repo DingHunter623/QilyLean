@@ -60,32 +60,27 @@ html:root body .footer-actions>button.is-copied{
   box-shadow:0 0 0 3px rgba(255,227,155,.22)!important,0 8px 18px rgba(4,32,39,.16)!important;
   transform:translateY(-1px)!important;
 }
-html:root body .qily-cn-footer-toast{
+
+/* Same share feedback authority as the international site. */
+html body #qilyDockShareCopyToastV2{
   position:fixed!important;
   left:50%!important;
-  bottom:calc(var(--qily-cn-fixed-footer-h,78px) + 14px + env(safe-area-inset-bottom))!important;
-  z-index:2400!important;
+  bottom:24px!important;
+  z-index:2147483600!important;
+  transform:translateX(-50%)!important;
   max-width:min(88vw,640px)!important;
   padding:10px 16px!important;
-  border:0!important;
   border-radius:999px!important;
-  background:#073c47!important;
   color:#fff!important;
+  background:#073c47!important;
+  box-shadow:0 9px 24px rgba(0,0,0,.24)!important;
   font-size:14px!important;
   line-height:1.4!important;
   font-weight:800!important;
   text-align:center!important;
-  box-shadow:0 9px 24px rgba(0,0,0,.24)!important;
-  opacity:0!important;
   pointer-events:none!important;
-  transform:translate(-50%,8px)!important;
-  transition:opacity .18s ease,transform .18s ease!important;
+  white-space:normal!important;
 }
-html:root body .qily-cn-footer-toast.is-visible{
-  opacity:1!important;
-  transform:translate(-50%,0)!important;
-}
-
 @media(max-width:1040px){
   :root{--qily-cn-fixed-footer-h:158px}
   html:root body .footer-actions{
@@ -152,12 +147,12 @@ html:root body .qily-cn-footer-toast.is-visible{
 }
 @media(prefers-reduced-motion:reduce){
   html:root body .footer-actions>button,
-  html:root body .qily-cn-footer-toast{
+  html body #qilyDockShareCopyToastV2{
     transition:none!important;
   }
   html:root body .footer-actions>button:is(:hover,:active){transform:none!important}
 }
 @media print{
   html:root body .footer-actions{display:none!important}
-  html:root body .qily-cn-footer-toast{display:none!important}
+  html body #qilyDockShareCopyToastV2{display:none!important}
 }
