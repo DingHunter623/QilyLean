@@ -1,5 +1,5 @@
-name: Validate Dock V5.8 Compact Fixed Bottom Navigation
-# Final closure trigger: concise labels, two-row phone labels, true viewport width and complete first/last borders, 2026-09-06.
+name: Validate Dock V5.8 Footer-style Fixed Navigation
+# Footer-style closure: China-site visual language, 4+3 phone wrapping and full viewport width, 2026-09-24.
 
 on:
   push:
@@ -25,11 +25,11 @@ permissions:
   contents: read
 
 concurrency:
-  group: dock-v58-compact-fixed-bottom-${{ github.ref }}
+  group: dock-v58-footer-style-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  dock-compact-fixed-bottom-navigation:
+  dock-footer-style-navigation:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -41,7 +41,7 @@ jobs:
         with:
           node-version: 24
 
-      - name: Static Dock V5.8 compact contract
+      - name: Static Dock V5.8 footer-style contract
         run: |
           node --check site-dock-share-runtime-v1.js
           node --check scripts/validate-dock-flow-navigation-v56.js
@@ -61,7 +61,7 @@ jobs:
           sleep 2
           curl --fail --silent http://127.0.0.1:4173/ >/dev/null
 
-      - name: Desktop and mobile compact fixed-bottom regression
+      - name: Desktop and mobile footer-style regression
         env:
           QILY_DOCK_V58_BASE: http://127.0.0.1:4173
         run: npx playwright test scripts/dock-flow-navigation-v56.spec.js --reporter=line --workers=1
@@ -70,7 +70,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: qily-dock-v58-compact-${{ github.run_id }}
+          name: qily-dock-v58-footer-${{ github.run_id }}
           path: dock-v58-artifacts
           if-no-files-found: warn
           retention-days: 30
