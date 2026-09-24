@@ -521,16 +521,34 @@ html:root body .qily-primary-nav-scroll-rail[aria-disabled="true"]{
   filter:none!important;
 }
 
-/* QILY-CN-HEADER-HEIGHT-PARITY-V1 | 2026-09-24
- * Desktop header vertical rhythm mirrors the international site.
- * Preserve CN nav/translation behavior; restore equivalent top/bottom breathing room only.
+/* QILY-CN-HEADER-SHELL-PARITY-V2 | 2026-09-24
+ * International header is the SSOT for desktop geometry.
+ * Target measured at 1600px: header≈83.4, brand top≈25.2, nav top=13, translator top≈9.2.
  */
 @media(min-width:721px){
-  html:root body .site-header .header-inner{
-    min-height:88px!important;
-    padding-top:6px!important;
-    padding-bottom:6px!important;
+  html:root body .site-header{
+    padding-top:8px!important;
+    padding-bottom:8px!important;
     box-sizing:border-box!important;
+  }
+  html:root body .site-header .header-inner{
+    min-height:66.4px!important;
+    padding-top:0!important;
+    padding-bottom:0!important;
+    box-sizing:border-box!important;
+  }
+  html:root body .site-header .qily-cn-nav-shell{
+    padding-bottom:0!important;
+  }
+  html:root body .site-header .qily-cn-nav-shell .nav{
+    padding-top:4px!important;
+    padding-bottom:18px!important;
+  }
+  html:root body .site-header .qily-cn-translate{
+    height:64px!important;
+    min-height:64px!important;
+    align-content:center!important;
+    align-self:center!important;
   }
 }
 

@@ -47,5 +47,12 @@ test('international and CN desktop header geometry probe',async({browser})=>{
   console.log('HEADER_PARITY_CN='+JSON.stringify(cn));
   expect(intl.header.height).toBeGreaterThan(60);
   expect(cn.header.height).toBeGreaterThan(60);
+  const near=(a,b,t,label)=>expect(Math.abs(a-b),label+' delta').toBeLessThanOrEqual(t);
+  near(intl.header.height,cn.header.height,1.5,'header height');
+  near(intl.brand.topGap,cn.brand.topGap,2,'brand top gap');
+  near(intl.nav.topGap,cn.nav.topGap,1.5,'nav top gap');
+  near(intl.translator.topGap,cn.translator.topGap,2,'translator top gap');
+  expect(cn.rail.bottomGap,'CN rail bottom breathing room').toBeGreaterThanOrEqual(8);
+  expect(cn.rail.bottomGap,'CN rail bottom breathing room').toBeLessThanOrEqual(14);
   await page.close();
 });
