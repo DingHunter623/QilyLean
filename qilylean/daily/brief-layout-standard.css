@@ -173,3 +173,56 @@ html body.qily-knowledge-brief-page main[data-qily-knowledge-brief] > .brief-fee
   margin-right:auto!important;
   box-sizing:border-box!important;
 }
+
+
+/* QILY-BRIEF-MOBILE-VISUAL-TYPE-V4 | 2026-09-24
+ * Shared typography authority for mobile-first curated-brief diagrams/cards.
+ * Per-issue CSS owns composition and color only; type scale remains global.
+ */
+html body.qily-knowledge-brief-page .tripod-svg .beam-title{
+  font-size:var(--qily-brief-font-h2)!important;
+}
+html body.qily-knowledge-brief-page .tripod-svg :is(.leg-title,.core-title){
+  font-size:var(--qily-brief-font-h3)!important;
+}
+html body.qily-knowledge-brief-page .tripod-svg :is(.beam-sub,.verify-title){
+  font-size:var(--qily-brief-font-body)!important;
+}
+html body.qily-knowledge-brief-page .tripod-svg :is(
+  .leg-sub,.figure-note,.cause-node .sub,.flow-box .sub,.core-sub,.verify-sub,.feedback-label
+){
+  font-size:var(--qily-brief-font-small)!important;
+}
+html body.qily-knowledge-brief-page .tripod-svg :is(.cause-node text,.flow-box text){
+  font-size:var(--qily-brief-font-body)!important;
+}
+html body.qily-knowledge-brief-page .priority-strip i{
+  font-size:var(--qily-brief-font-h3)!important;
+}
+
+@media(max-width:680px){
+  html body.qily-knowledge-brief-page .tripod-mobile-visual .mobile-visual-head strong{
+    font-size:var(--qily-brief-font-h3)!important;
+  }
+  html body.qily-knowledge-brief-page .tripod-mobile-visual .mobile-visual-head span,
+  html body.qily-knowledge-brief-page .tripod-mobile-visual :is(.mobile-visual-base,.mobile-role-card span,.mobile-factor-grid b,.tripod-figure figcaption){
+    font-size:var(--qily-brief-font-small)!important;
+  }
+  html body.qily-knowledge-brief-page .tripod-mobile-visual .mobile-role-card strong,
+  html body.qily-knowledge-brief-page .tripod-mobile-visual .mobile-role-card b,
+  html body.qily-knowledge-brief-page .tripod-mobile-visual .mobile-verify-box strong,
+  html body.qily-knowledge-brief-page .tripod-mobile-visual .mobile-flow-stack>div>strong{
+    font-size:var(--qily-brief-font-body)!important;
+  }
+  html body.qily-knowledge-brief-page .tripod-mobile-visual :is(
+    .mobile-factor-grid span,.mobile-verify-box span,.mobile-flow-stack>div>span,.mobile-feedback-strip
+  ){
+    font-size:var(--qily-brief-font-small)!important;
+  }
+  html body.qily-knowledge-brief-page .tripod-mobile-visual .mobile-flow-stack>div>b{
+    font-size:var(--qily-brief-font-small)!important;
+  }
+  html body.qily-knowledge-brief-page .tripod-mobile-visual :is(.mobile-down-arrow,.mobile-flow-stack>i){
+    font-size:var(--qily-brief-font-h2)!important;
+  }
+}
