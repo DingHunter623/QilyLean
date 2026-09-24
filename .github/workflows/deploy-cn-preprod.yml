@@ -288,8 +288,8 @@ jobs:
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
                   '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale',
-                  '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v2-share-parity',
-                  '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v2-share-parity',
+                  '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v3-single-click',
+                  '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v3-single-click',
                   'data-qily-footer-action="top"',
                   'data-qily-footer-action="previous"',
                   'data-qily-footer-action="share"',
@@ -310,6 +310,10 @@ jobs:
               (footer_actions_runtime, '标题与网址已复制，正在打开系统分享', 'copy-before-share feedback'),
               (footer_actions_runtime, '已复制，可直接粘贴分享', 'cancelled-share copied feedback'),
               (footer_actions_runtime, '已复制，可粘贴到微信、微博等应用', 'share fallback feedback'),
+              (footer_actions_runtime, "d.addEventListener('click',shareClickCapture,true)", 'capture-phase single-click binding'),
+              (footer_actions_runtime, 'event.stopImmediatePropagation()', 'single-click event authority'),
+              (footer_actions_runtime, '.footer-actions button[data-qily-footer-action="share"]', 'CN footer share target selector'),
+              (footer_actions_runtime, "node.id='qilyDockShareCopyToastV2'", 'international toast DOM id'),
           ]
           for source, marker, label in footer_actions_contract:
               if marker not in source:
@@ -321,6 +325,15 @@ jobs:
           share_at = footer_actions_runtime.find(share_marker)
           if copy_at < 0 or share_at < 0 or copy_at > share_at:
               raise SystemExit('Production share parity failed: title + URL must be copied before system share opens.')
+
+          capture_marker = "d.addEventListener('click',shareClickCapture,true)"
+          share_target_marker = '.footer-actions button[data-qily-footer-action="share"]'
+          if capture_marker not in footer_actions_runtime or share_target_marker not in footer_actions_runtime:
+              raise SystemExit('Production single-click share failed: CN share must bind on capture phase to the footer share button.')
+          if "group.addEventListener('click'" not in footer_actions_runtime:
+              raise SystemExit('Production footer action group binding missing.')
+          if "if(action==='share')return;" not in footer_actions_runtime:
+              raise SystemExit('Production single-click share failed: bubble handler must not re-run share.')
 
           typography_contract = [
               (vi, 'QILY-CN-TYPE-HIERARCHY-V5', 'final V5 authority'),
@@ -389,9 +402,9 @@ jobs:
               raise SystemExit('Production China home missing current-module VI cache revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' not in home:
               raise SystemExit('Production China home missing current-module nav rail runtime.')
-          if '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v2-share-parity' not in home:
+          if '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v3-single-click' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
-          if '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v2-share-parity' not in home:
+          if '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v3-single-click' not in home:
               raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
