@@ -2,7 +2,7 @@
  * Functional parity with the international-site actions:
  * Top => smooth scroll to top
  * Previous page => browser history.back(), then parent-route fallback
- * Share current => Web Share API, then title + URL copy fallback
+ * Share current => copy title + URL first, then open Web Share API; copied content remains usable after cancel
  */
 (function(d,w){'use strict';
 if(w.__qilyCnFooterActionsV1)return;w.__qilyCnFooterActionsV1=true;
@@ -75,24 +75,53 @@ function goPreviousPage(){
   w.location.href=parentRoute(w.location.pathname);
 }
 
-function shareCurrent(){
+var lastShareAt=0;
+function shareCurrent(button){
+  if(Date.now()-lastShareAt<350)return;
+  lastShareAt=Date.now();
   var title=d.title||'QilyLean';
   var url=w.location.href;
   var text=title+'\n'+url;
-  if(navigator.share){
-    navigator.share({title:title,text:title,url:url}).catch(function(error){
-      if(error&&error.name==='AbortError')return;
-      copyText(text).then(function(){toast('网页标题及网址已复制');}).catch(function(){toast('分享未完成，请复制浏览器地址栏网址');});
-    });
-    return;
+
+  function setCopiedVisual(){
+    if(!button)return;
+    button.classList.add('is-copied');
+    button.setAttribute('aria-label','已复制当前网页标题与网址');
+    w.setTimeout(function(){
+      button.classList.remove('is-copied');
+      button.setAttribute('aria-label','分享当前');
+    },1500);
   }
-  copyText(text).then(function(){toast('网页标题及网址已复制');}).catch(function(){toast('请复制浏览器地址栏网址进行分享');});
+
+  copyText(text).then(function(){
+    setCopiedVisual();
+    if(navigator.share){
+      toast('标题与网址已复制，正在打开系统分享');
+      return navigator.share({title:title,text:title,url:url}).catch(function(error){
+        if(error&&error.name==='AbortError'){
+          toast('已复制，可直接粘贴分享');
+          return;
+        }
+        toast('已复制，可粘贴到微信、微博等应用');
+      });
+    }
+    toast('标题与网址已复制，可粘贴到微信、微博等应用');
+  }).catch(function(){
+    if(navigator.share){
+      navigator.share({title:title,text:title,url:url}).catch(function(error){
+        if(error&&error.name==='AbortError')return;
+        toast('分享未完成，请复制浏览器地址栏网址');
+      });
+      return;
+    }
+    toast('复制失败，请复制浏览器地址栏网址进行分享');
+  });
 }
 
-function run(action){
+function run(action,button){
   if(action==='top'){goTop();return;}
   if(action==='previous'){goPreviousPage();return;}
-  if(action==='share'){shareCurrent();}
+  if(action==='share'){shareCurrent(button);}
 }
 
 function bind(){
@@ -103,7 +132,7 @@ function bind(){
     var button=event.target&&event.target.closest?event.target.closest('button[data-qily-footer-action]'):null;
     if(!button||!group.contains(button))return;
     event.preventDefault();
-    run(button.getAttribute('data-qily-footer-action')||'');
+    run(button.getAttribute('data-qily-footer-action')||'',button);
   });
 }
 

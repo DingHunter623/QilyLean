@@ -41,7 +41,7 @@ jobs:
           base_version = '20260923-cn-typography-base-v7'
           nav_script_version = '20260922-nav-rail-v8-current-module'
           translate_version = '20260922-translate-v6-baidu'
-          footer_actions_version = '20260924-footer-actions-v1'
+          footer_actions_version = '20260924-footer-actions-v2-share-parity'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
           nav_script_target = f'<script defer src="/assets/cn-nav-rail-v1.js?v={nav_script_version}"></script>'
