@@ -21,117 +21,166 @@
 .article svg[data-qily-imported-visual="normalized-v1"] .load-chart .load-value{fill:#274744;font-weight:850}
 .article svg[data-qily-imported-visual="normalized-v1"] .load-chart :is(.chart-note,.legend){fill:#5f7472;font-weight:650}
 
-/* QILY-GK-BRIEF-MOBILE-VI-V2 | 2026-09-24
-   Strict presentation firewall: imported non-SVG class/style attributes are removed.
-   Mobile layouts are reconstructed only from approved data-mobile-visual markers
-   and stable element order, so source-page visual skin never crosses into Global Knowledge. */
-.article figure{margin:20px 0}
-.article [data-mobile-visual]{display:none}
+/* QILY-GK-BRIEF-READER-VI-V3 | 2026-09-24
+   Reader-native visualization for imported briefs.
+   Source brief content remains unchanged; Global Knowledge rebuilds approved visuals
+   from data-mobile-visual markers so desktop and mobile both follow the reader VI. */
+.article figure{margin:22px 0}
+.article figure[data-qily-mobile-pair="true"]>svg[data-qily-imported-visual="normalized-v1"]{display:none!important}
+.article [data-mobile-visual]{
+  display:block!important;width:100%;max-width:none;margin:0;padding:18px;
+  border:1px solid var(--line);border-radius:16px;background:#fff;color:var(--ink)
+}
 
-/* Imported tripod / 5M2E / response diagrams: explicit VI protection prevents
-   unstyled SVG path elements from falling back to browser black. */
-.article svg[data-qily-imported-visual="normalized-v1"] .top-beam{fill:#0f4b5a!important}
-.article svg[data-qily-imported-visual="normalized-v1"] .leg{fill:#dcece8!important;stroke:#78a69f!important;stroke-width:1.5!important}
-.article svg[data-qily-imported-visual="normalized-v1"] .leg.engineering{fill:#fff4d8!important;stroke:#caa15f!important}
-.article svg[data-qily-imported-visual="normalized-v1"] .base-rail{fill:#caa15f!important}
-.article svg[data-qily-imported-visual="normalized-v1"] :is(.beam-title,.core-title){fill:#fff!important;font-weight:900!important}
-.article svg[data-qily-imported-visual="normalized-v1"] :is(.beam-sub,.core-sub){fill:#ffe39b!important;font-weight:750!important}
-.article svg[data-qily-imported-visual="normalized-v1"] :is(.leg-title,.cause-node text,.flow-box text){fill:#0f4b5a!important;font-weight:850!important}
-.article svg[data-qily-imported-visual="normalized-v1"] :is(.leg-sub,.figure-note,.cause-node .sub,.flow-box .sub){fill:#526e6b!important}
-.article svg[data-qily-imported-visual="normalized-v1"] .cause-node rect,
-.article svg[data-qily-imported-visual="normalized-v1"] .flow-box rect{fill:#f1f8f6!important;stroke:#8fb9b2!important;stroke-width:1.5!important}
-.article svg[data-qily-imported-visual="normalized-v1"] .cause-core{fill:#0f4b5a!important}
-.article svg[data-qily-imported-visual="normalized-v1"] .cause-rail{fill:none!important;stroke:#8fb9b2!important}
-.article svg[data-qily-imported-visual="normalized-v1"] :is(.verify-box,.feedback-label-bg){fill:#fffaf0!important;stroke:#d8bc78!important}
-.article svg[data-qily-imported-visual="normalized-v1"] :is(.verify-title,.feedback-label){fill:#765713!important;font-weight:850!important}
-.article svg[data-qily-imported-visual="normalized-v1"] .verify-sub{fill:#6e654d!important}
-.article svg[data-qily-imported-visual="normalized-v1"] .vi-flow-arrow{fill:#0f4b5a!important;stroke:none!important}
-.article svg[data-qily-imported-visual="normalized-v1"] .feedback-arrow{fill:#caa15f!important;stroke:none!important}
-.article svg[data-qily-imported-visual="normalized-v1"] :is(.response-return,.closure-return){fill:none!important;stroke:#caa15f!important;stroke-width:6!important;stroke-linecap:round!important;stroke-linejoin:round!important}
+/* Shared reader-native header */
+.article [data-mobile-visual]>div:first-child{
+  display:flex;flex-direction:column;gap:4px;padding:14px 16px;
+  border-radius:12px;background:var(--deep);text-align:left
+}
+.article [data-mobile-visual]>div:first-child>strong{color:#fff;font-size:20px;line-height:1.3;font-weight:900}
+.article [data-mobile-visual]>div:first-child>span{color:#ffe39b;font-size:14px;line-height:1.5;font-weight:760}
+
+/* Figure 1 — tripod: 3 equal responsibility cards */
+.article [data-mobile-visual="tripodTitle"]>div:nth-child(2){
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:12px
+}
+.article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div{
+  display:grid;grid-template-columns:56px minmax(0,1fr);gap:4px 12px;align-items:center;
+  min-height:104px;padding:16px;border:1px solid #c9ddd8;border-radius:12px;background:#f4faf8
+}
+.article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div:nth-child(2){
+  border-color:#d8bc78;background:#fff9e9
+}
+.article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>b{
+  grid-row:1/span 2;display:grid;width:52px;height:52px;place-items:center;margin:0;
+  border-radius:12px;background:var(--deep);color:#fff;font-size:17px;font-weight:900
+}
+.article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div:nth-child(2)>b{background:var(--gold);color:#173b42}
+.article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>strong{
+  margin:0;color:var(--deep);font-size:17px;line-height:1.35;font-weight:900
+}
+.article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>span{color:var(--muted);font-size:14px;line-height:1.5}
+.article [data-mobile-visual="tripodTitle"]>div:nth-child(3){
+  margin-top:12px;padding:11px 14px;border-radius:10px;background:#fff4d8;color:#765713;
+  font-size:14px;line-height:1.55;font-weight:850;text-align:center
+}
+
+/* Figure 2 — 5M2E: 4 + 3 matrix. No seven-item single-row compression. */
+.article [data-mobile-visual="causeTitle"]>div:nth-child(2){
+  display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:10px;margin-top:12px
+}
+.article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div{
+  min-width:0;min-height:92px;padding:14px 12px;border:1px solid #c9ddd8;
+  border-radius:11px;background:#f7fbfa;text-align:center
+}
+.article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div:nth-child(-n+4){grid-column:span 3}
+.article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div:nth-child(n+5){grid-column:span 4}
+.article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div>b{
+  display:block;margin:0 0 5px;color:var(--deep);font-size:15px;line-height:1.35;font-weight:900
+}
+.article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div>span{
+  display:block;color:var(--muted);font-size:13px;line-height:1.45
+}
+.article [data-mobile-visual="causeTitle"]>div:nth-child(3){
+  margin:7px 0;color:var(--gold);font-size:25px;line-height:1;font-weight:950;text-align:center
+}
+.article [data-mobile-visual="causeTitle"]>div:nth-child(4){
+  width:min(720px,100%);margin:0 auto;padding:12px 16px;border:1px solid #d8bc78;
+  border-radius:11px;background:#fffaf0;text-align:center
+}
+.article [data-mobile-visual="causeTitle"]>div:nth-child(4)>strong{
+  display:block;margin:0 0 4px;color:#765713;font-size:16px;line-height:1.4;font-weight:900
+}
+.article [data-mobile-visual="causeTitle"]>div:nth-child(4)>span{color:#6e654d;font-size:13px;line-height:1.5}
+
+/* Figures 3 / 4 — reader-native process cards */
+.article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2){
+  display:grid;gap:10px;margin-top:12px
+}
+.article [data-mobile-visual="responseTitle"]>div:nth-child(2){grid-template-columns:repeat(3,minmax(0,1fr))}
+.article [data-mobile-visual="closureTitle"]>div:nth-child(2){grid-template-columns:repeat(12,minmax(0,1fr))}
+.article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>i{display:none}
+.article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div{
+  display:grid;grid-template-columns:40px minmax(0,1fr);gap:3px 10px;align-items:center;
+  min-height:86px;padding:13px 14px;border:1px solid #c9ddd8;border-radius:11px;background:#f7fbfa
+}
+.article [data-mobile-visual="closureTitle"]>div:nth-child(2)>div:nth-of-type(-n+4){grid-column:span 3}
+.article [data-mobile-visual="closureTitle"]>div:nth-child(2)>div:nth-of-type(n+5){grid-column:span 4}
+.article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div>b{
+  grid-row:1/span 2;display:grid;width:36px;height:36px;place-items:center;margin:0;
+  border-radius:9px;background:var(--deep);color:#fff;font-size:13px;font-weight:900
+}
+.article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div>strong{
+  margin:0;color:var(--deep);font-size:15px;line-height:1.3;font-weight:900
+}
+.article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div>span{
+  color:var(--muted);font-size:13px;line-height:1.45
+}
+.article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(3){
+  margin-top:11px;padding:11px 14px;border-left:4px solid var(--gold);
+  border-radius:0 10px 10px 0;background:#fffaf0;color:#765713;
+  font-size:13px;line-height:1.55;font-weight:850
+}
+.article figure[data-qily-mobile-pair="true"] figcaption{
+  margin-top:9px;color:var(--muted);font-size:13px;line-height:1.55
+}
+
+/* Other imported briefs still use normalized source SVGs. */
+.article svg[data-qily-imported-visual="normalized-v1"]{display:block;width:100%;height:auto;max-width:100%;margin:18px auto;border:1px solid var(--line);border-radius:14px;background:#fff;overflow:visible}
+.article svg[data-qily-imported-visual="normalized-v1"] rect:not([fill]){fill:#f1f8f6;stroke:#8fb9b2;stroke-width:1.5}
+.article svg[data-qily-imported-visual="normalized-v1"] text:not([fill]){fill:var(--deep)}
+.article svg[data-qily-imported-visual="normalized-v1"] :is(.svg-flow,.loop-chart) text{fill:var(--deep);font-weight:850}
+.article svg[data-qily-imported-visual="normalized-v1"] :is(.svg-flow,.loop-chart) .sub{fill:#526e6b;font-weight:650}
+.article svg[data-qily-imported-visual="normalized-v1"] :is(.svg-flow,.loop-chart) rect{fill:#f1f8f6;stroke:#8fb9b2;stroke-width:1.5}
+.article svg[data-qily-imported-visual="normalized-v1"] :is(.svg-flow,.loop-chart) .vi-flow-arrow{fill:var(--deep);stroke:none}
+.article svg[data-qily-imported-visual="normalized-v1"] :is(.svg-flow,.loop-chart) .vi-feedback-return{fill:none;stroke:var(--gold);stroke-width:6;stroke-linecap:round;stroke-linejoin:round}
+.article svg[data-qily-imported-visual="normalized-v1"] :is(.svg-flow,.loop-chart) .vi-feedback-arrow{fill:var(--gold);stroke:none}
+.article svg[data-qily-imported-visual="normalized-v1"] :is(.svg-flow,.loop-chart) .feedback-label-bg{fill:#fffaf0;stroke:#d8bc78;stroke-width:1.2}
+.article svg[data-qily-imported-visual="normalized-v1"] :is(.svg-flow,.loop-chart) .feedback-label{fill:#765713;font-weight:850}
+.article svg[data-qily-imported-visual="normalized-v1"] .capacity-track{fill:#e4efed;stroke:none}
+.article svg[data-qily-imported-visual="normalized-v1"] .capacity-used{fill:#5f918a;stroke:none}
+.article svg[data-qily-imported-visual="normalized-v1"] .load-chart :is(.chart-title,.machine){fill:var(--deep);font-weight:900}
+.article svg[data-qily-imported-visual="normalized-v1"] .load-chart .alert-line{stroke:#c99935;stroke-width:3;stroke-dasharray:6 5}
+.article svg[data-qily-imported-visual="normalized-v1"] .load-chart .load-value{fill:#274744;font-weight:850}
+.article svg[data-qily-imported-visual="normalized-v1"] .load-chart :is(.chart-note,.legend){fill:#5f7472;font-weight:650}
 
 @media(max-width:800px){
   .grid{grid-template-columns:1fr}
   .top .wrap{flex-direction:column}
   .article{padding:16px}
   .article figure{margin:16px 0}
-  .article figure[data-qily-mobile-pair="true"]>svg[data-qily-imported-visual="normalized-v1"]{display:none!important}
-  .article [data-mobile-visual]{
-    display:block!important;width:100%;max-width:none;margin:0;padding:13px;
-    border:1px solid var(--line);border-radius:15px;background:#fff;color:var(--ink)
-  }
+  .article [data-mobile-visual]{padding:13px}
+  .article [data-mobile-visual]>div:first-child{padding:12px 13px}
+  .article [data-mobile-visual]>div:first-child>strong{font-size:18px}
+  .article [data-mobile-visual]>div:first-child>span{font-size:13px}
 
-  /* Every approved mobile visual uses its first child as the VI header. */
-  .article [data-mobile-visual]>div:first-child{
-    display:flex;flex-direction:column;gap:3px;padding:12px 13px;
-    border-radius:11px;background:var(--deep);text-align:left
-  }
-  .article [data-mobile-visual]>div:first-child>strong{color:#fff;font-size:18px;line-height:1.35;font-weight:900}
-  .article [data-mobile-visual]>div:first-child>span{color:#ffe39b;font-size:13px;line-height:1.5;font-weight:750}
-
-  /* Figure 1: production / engineering / quality tripod. */
-  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2){
-    display:grid;grid-template-columns:1fr;gap:8px;margin-top:9px
-  }
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2){grid-template-columns:1fr;gap:8px;margin-top:9px}
   .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div{
-    display:grid;grid-template-columns:50px minmax(0,1fr);gap:3px 10px;align-items:center;
-    padding:11px;border:1px solid #c9ddd8;border-radius:11px;background:#f4faf8
+    grid-template-columns:50px minmax(0,1fr);min-height:0;padding:11px
   }
-  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div:nth-child(2){border-color:#d8bc78;background:#fff9e9}
-  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>b{
-    grid-row:1/span 2;display:grid;width:46px;height:46px;place-items:center;margin:0;
-    border-radius:11px;background:var(--deep);color:#fff;font-size:16px;font-weight:900
-  }
-  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div:nth-child(2)>b{background:var(--gold);color:#173b42}
-  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>strong{margin:0;color:var(--deep);font-size:16px;line-height:1.35;font-weight:900}
-  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>span{color:var(--muted);font-size:13px;line-height:1.45}
-  .article [data-mobile-visual="tripodTitle"]>div:nth-child(3){
-    margin-top:9px;padding:9px 11px;border-radius:9px;background:#fff4d8;color:#765713;
-    font-size:13px;line-height:1.55;font-weight:800;text-align:center
-  }
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>b{width:46px;height:46px;font-size:16px}
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>strong{font-size:16px}
+  .article [data-mobile-visual="tripodTitle"]>div:nth-child(2)>div>span{font-size:13px}
 
-  /* Figure 2: seven 5M2E factors + evidence verification. */
   .article [data-mobile-visual="causeTitle"]>div:nth-child(2){
-    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:9px
+    grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:9px
   }
   .article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div{
-    min-width:0;padding:9px;border:1px solid #c9ddd8;border-radius:9px;background:#f7fbfa
+    grid-column:auto!important;min-height:0;padding:9px;text-align:left
   }
-  .article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div:last-child{grid-column:1/-1}
-  .article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div>b{display:block;margin:0 0 2px;color:var(--deep);font-size:14px;line-height:1.35;font-weight:900}
-  .article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div>span{display:block;color:var(--muted);font-size:12px;line-height:1.45}
-  .article [data-mobile-visual="causeTitle"]>div:nth-child(3){margin:4px 0;color:var(--gold);font-size:23px;line-height:1;font-weight:950;text-align:center}
-  .article [data-mobile-visual="causeTitle"]>div:nth-child(4){
-    padding:10px 11px;border:1px solid #d8bc78;border-radius:10px;background:#fffaf0;text-align:center
-  }
-  .article [data-mobile-visual="causeTitle"]>div:nth-child(4)>strong{display:block;margin:0 0 3px;color:#765713;font-size:15px;line-height:1.4}
-  .article [data-mobile-visual="causeTitle"]>div:nth-child(4)>span{color:#6e654d;font-size:12px;line-height:1.5}
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div:last-child{grid-column:1/-1!important}
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div>b{font-size:14px}
+  .article [data-mobile-visual="causeTitle"]>div:nth-child(2)>div>span{font-size:12px}
 
-  /* Figures 3 / 4: vertical response and closure flows. */
   .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2){
-    display:grid;grid-template-columns:1fr;gap:4px;margin-top:9px
+    grid-template-columns:1fr!important;gap:4px;margin-top:9px
   }
   .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div{
-    display:grid;grid-template-columns:38px minmax(0,1fr);gap:2px 9px;align-items:center;
-    padding:9px 10px;border:1px solid #c9ddd8;border-radius:10px;background:#f7fbfa
-  }
-  .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div>b{
-    grid-row:1/span 2;display:grid;width:34px;height:34px;place-items:center;margin:0;
-    border-radius:9px;background:var(--deep);color:#fff;font-size:13px;font-weight:900
-  }
-  .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div>strong{
-    margin:0;color:var(--deep);font-size:15px;line-height:1.3;font-weight:900
-  }
-  .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>div>span{
-    color:var(--muted);font-size:12px;line-height:1.4
+    grid-column:auto!important;min-height:0;padding:9px 10px
   }
   .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(2)>i{
     display:block;color:var(--gold);font-size:19px;line-height:1;font-style:normal;font-weight:950;text-align:center
   }
-  .article :is([data-mobile-visual="responseTitle"],[data-mobile-visual="closureTitle"])>div:nth-child(3){
-    margin-top:9px;padding:9px 11px;border-left:4px solid var(--gold);
-    border-radius:0 9px 9px 0;background:#fffaf0;color:#765713;font-size:12px;line-height:1.55;font-weight:800
-  }
-  .article figure[data-qily-mobile-pair="true"] figcaption{margin-top:8px;color:var(--muted);font-size:13px;line-height:1.55}
 }
 .footer{padding:24px 0;background:#101916;color:#d9e9e5}.footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}.footer nav{display:flex;gap:14px;flex-wrap:wrap}.footer a{color:#ffe39b}</style>
 <link id="qilyTranslationPublicUiV1" rel="stylesheet" href="/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16" data-qily-translation-public-ui="google-v1">
