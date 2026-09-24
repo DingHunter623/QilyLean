@@ -4,7 +4,7 @@
 开发者：丁启利（QilyLean｜启力精益）  
 包名：`com.qilylean.times26001`  
 支持邮箱：`admin@qilylean.com`  
-产品官方网址：`https://qilylean.com/tools/times26001`
+产品官方网址：`https://qilylean.cn`
 
 ## 0. 统一产品定义
 
@@ -135,13 +135,13 @@ QilyLean 网站用于品牌延伸、工程内容、产品介绍与技术支持�
 - 网络：天气/城市查询，以及用户主动访问官方网址、隐私政策、协议或支持页面。
 
 ### 隐私政策网址
-`https://qilylean.com/legal/times26001/privacy`
+`https://qilylean.cn/legal/times26001/privacy`
 
 ### 用户协议网址
-`https://qilylean.com/legal/times26001/terms`
+`https://qilylean.cn/legal/times26001/terms`
 
 ### 技术支持网址
-`https://qilylean.com/app-support`
+`https://qilylean.cn/app-support`
 
 ## 7. Google Play v1.1.14 封闭测试硬性校验
 
