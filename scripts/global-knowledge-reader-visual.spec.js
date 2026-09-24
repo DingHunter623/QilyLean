@@ -40,6 +40,64 @@ test('Sep 20 brief SVG is normalized to readable QilyLean VI',async({page})=>{
   await page.screenshot({path:path.join(out,'brief-2026-09-20-normalized.png'),fullPage:false});
 });
 
+test('Sep 23 brief uses mobile-native VI instead of compressed desktop SVGs',async({page})=>{
+  await page.setViewportSize({width:412,height:915});
+  const response=await page.goto(base+'/global-knowledge/briefs/?date=2026-09-23',{waitUntil:'networkidle',timeout:30000});
+  expect(response&&response.ok()).toBeTruthy();
+
+  const article=page.locator('#article');
+  await expect(article).toBeVisible();
+  const mobileVisuals=article.locator('[data-mobile-visual]');
+  await expect(mobileVisuals).toHaveCount(4);
+
+  const tripod=article.locator('[data-mobile-visual="tripodTitle"]');
+  await expect(tripod).toBeVisible();
+  const roleCards=tripod.locator(':scope > div:nth-child(2) > div');
+  await expect(roleCards).toHaveCount(3);
+
+  const pairedDesktop=article.locator('figure[data-qily-mobile-pair="true"] > svg[data-qily-imported-visual="normalized-v1"]');
+  await expect(pairedDesktop).toHaveCount(4);
+  for(let i=0;i<4;i+=1){
+    await expect(pairedDesktop.nth(i)).toBeHidden();
+  }
+
+  const visual=await tripod.evaluate(el=>{
+    const cs=n=>getComputedStyle(n);
+    const header=el.querySelector(':scope > div:first-child');
+    const roles=el.querySelectorAll(':scope > div:nth-child(2) > div');
+    const prodBadge=roles[0]&&roles[0].querySelector('b');
+    const eng=roles[1];
+    const rect=el.getBoundingClientRect();
+    const article=el.closest('#article');
+    return {
+      display:cs(el).display,
+      width:rect.width,
+      articleWidth:article?article.getBoundingClientRect().width:0,
+      overflow:el.scrollWidth-el.clientWidth,
+      headerBg:header?cs(header).backgroundColor:'',
+      prodBadgeBg:prodBadge?cs(prodBadge).backgroundColor:'',
+      prodBadgeColor:prodBadge?cs(prodBadge).color:'',
+      engBg:eng?cs(eng).backgroundColor:'',
+      roleFont:roles[0]?parseFloat(cs(roles[0].querySelector('strong')).fontSize):0
+    };
+  });
+  expect(visual.display).not.toBe('none');
+  expect(visual.width).toBeLessThanOrEqual(visual.articleWidth+1);
+  expect(visual.overflow).toBeLessThanOrEqual(1);
+  expect(visual.headerBg).toBe('rgb(15, 75, 90)');
+  expect(visual.prodBadgeBg).toBe('rgb(15, 75, 90)');
+  expect(visual.prodBadgeColor).toBe('rgb(255, 255, 255)');
+  expect(visual.engBg).toBe('rgb(255, 249, 233)');
+  expect(visual.roleFont).toBeGreaterThanOrEqual(16);
+
+  for(const id of ['causeTitle','responseTitle','closureTitle']){
+    await expect(article.locator('[data-mobile-visual="'+id+'"]')).toBeVisible();
+  }
+
+  await tripod.scrollIntoViewIfNeeded();
+  await page.screenshot({path:path.join(out,'brief-2026-09-23-mobile-vi.png'),fullPage:false});
+});
+
 test('Lean knowledge reader preserves visible Weibo source entry',async({page})=>{
   await page.setViewportSize({width:1440,height:1000});
   const response=await page.goto(base+'/global-knowledge/view/?src=%2Fqilylean%2Flean-knowledge.html%23lean-01',{waitUntil:'networkidle',timeout:30000});
