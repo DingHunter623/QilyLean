@@ -16,8 +16,9 @@ const cp=require('child_process');
 const ROOT=path.resolve(__dirname,'..');
 const APPLY=process.argv.includes('--apply');
 const DOCK_PATCH='20260924-footer-like-fixed-r1';
-const NAV_PATCH='20260906-primary-first-paint-v1';
-const CORE_VERSION='20260906-primary-first-paint-core-v31';
+const NAV_PATCH='20260924-primary-nav-type-parity-v2';
+const NAV_VERSION='20260924-r7-navigation-v47';
+const CORE_VERSION='20260924-primary-nav-type-parity-core-v33';
 const LEGACY_VERSION='20260906-primary-first-paint-legacy-v24';
 const CANONICAL_ROUTES=[
   ['首页','/'],['履历主线','/experience/'],['能力体系','/capabilities/'],['改善工具','/improvements/'],
@@ -77,7 +78,7 @@ function patchPersistentDockReferences(){
   return changed;
 }
 function patchHtmlCacheRefs(){
-  let changed=0;for(const rel of trackedHtml())if(patchFile(rel,html=>html.replace(/\/site-dock-share-runtime-v1\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-dock-share-runtime-v1.js?v=$1&patch=${DOCK_PATCH}`).replace(/\/site-navigation\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-navigation.js?v=$1&patch=${NAV_PATCH}`)))changed++;return changed;
+  let changed=0;for(const rel of trackedHtml())if(patchFile(rel,html=>html.replace(/\/site-dock-share-runtime-v1\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-dock-share-runtime-v1.js?v=$1&patch=${DOCK_PATCH}`).replace(/\/site-navigation\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-navigation.js?v=${NAV_VERSION}&patch=${NAV_PATCH}`)))changed++;return changed;
 }
 
 function validatePrimaryNavigation(){

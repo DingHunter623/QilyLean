@@ -27,7 +27,7 @@ const BASELINE_VERSION='20260831-google-translate-single-runtime-v32';
 const DDZ_FAST_PATH='tools/pure-ddz/index.html';
 const GLOBAL_KNOWLEDGE_PREFIX='global-knowledge/';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation';
-const NAVIGATION='/site-navigation.js?v=20260828-r7-navigation-v45';
+const NAVIGATION='/site-navigation.js?v=20260924-r7-navigation-v47&patch=20260924-primary-nav-type-parity-v2';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
 const DOCK_SHARE='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1';
 const CORE_SERVICE_DOCK='/site-core-service-dock-closure-v1.js?v=20260828-r7-alignment-v105';

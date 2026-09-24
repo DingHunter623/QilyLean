@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 async function visibleNav(page,kind){
   const sel=kind==='int'
     ? 'header.qily-site-header nav.qily-global-nav a[href],header.qily-global-header nav.qily-global-nav a[href]'
-    : 'header.site-header nav.nav a[href]';
+    : 'header nav a[href],nav[aria-label="主导航"] a[href],.nav a[href]';
   const all=page.locator(sel);
   const n=await all.count();
   for(let i=0;i<n;i++){
@@ -18,8 +18,9 @@ async function visibleNav(page,kind){
 }
 
 async function inspect(page,url,kind){
-  await page.goto(url,{waitUntil:'networkidle',timeout:60000});
-  await page.waitForTimeout(1200);
+  const response=await page.goto(url,{waitUntil:'domcontentloaded',timeout:60000});
+  console.log('LIVE_PAGE_'+kind.toUpperCase()+'='+JSON.stringify({status:response&&response.status(),url:page.url(),title:await page.title()}));
+  await page.waitForTimeout(1800);
   const link=await visibleNav(page,kind);
   const text=await link.textContent();
   const css=await link.evaluate(el=>{
@@ -59,9 +60,9 @@ async function inspect(page,url,kind){
 
 test('live international and CN nav typography diagnostic',async({browser})=>{
   const page=await browser.newPage({viewport:{width:1600,height:1000}});
-  const intl=await inspect(page,'https://qilylean.com/?fontdiag=20260924','int');
-  const cn=await inspect(page,'https://qilylean.cn/lean/?fontdiag=20260924','cn');
+  const intl=await inspect(page,'https://qilylean.com/?fontdiag=20260924-v2','int');
   console.log('LIVE_FONT_INT='+JSON.stringify(intl));
+  const cn=await inspect(page,'https://qilylean.cn/lean/?fontdiag=20260924-v2','cn');
   console.log('LIVE_FONT_CN='+JSON.stringify(cn));
   expect(intl.css.fontWeight).toBe('900');
   expect(cn.css.fontWeight).toBe('900');
