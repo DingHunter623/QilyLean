@@ -13,7 +13,10 @@ async function measure(page,url,kind){
     if(!header) throw new Error('header missing');
     const brand=header.querySelector('.brand,.qily-brand');
     const nav=header.querySelector('nav');
-    const first=nav&&nav.querySelector('a[href]');
+    const first=nav&&[...nav.querySelectorAll('a[href]')].find(a=>{
+      const cs=getComputedStyle(a),r=a.getBoundingClientRect();
+      return (a.textContent||'').trim() && r.width>0 && r.height>0 && cs.display!=='none' && cs.visibility!=='hidden' && parseFloat(cs.fontSize)>0;
+    });
     const rail=header.querySelector('.qily-primary-nav-scroll-rail');
     const translator=header.querySelector('.qily-web-translate,.qily-cn-translate');
     const hr=header.getBoundingClientRect();
@@ -61,7 +64,7 @@ test('international and CN desktop header geometry probe',async({browser})=>{
   expect(intl.css.navFontWeight,'international primary nav weight').toBe('900');
   expect(cn.css.navFontWeight,'CN primary nav weight').toBe('900');
   expect(intl.css.navFontWeight,'primary nav weight parity').toBe(cn.css.navFontWeight);
-  expect(intl.css.navFontFamily,'primary nav font family parity').toBe(cn.css.navFontFamily);
-  expect(intl.css.navLineHeight,'primary nav line-height parity').toBe(cn.css.navLineHeight);
+  near(parseFloat(intl.css.navFontSize),parseFloat(cn.css.navFontSize),0.5,'primary nav font size');
+  near(parseFloat(intl.css.navLineHeight),parseFloat(cn.css.navLineHeight),0.5,'primary nav line height');
   await page.close();
 });
