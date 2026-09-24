@@ -1,0 +1,25 @@
+name: Diagnose live international-CN navigation fonts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/header-live-font-diagnostic.spec.js'
+      - '.github/workflows/diagnose-live-header-fonts.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Inspect live rendered navigation fonts
+        run: npx playwright test scripts/header-live-font-diagnostic.spec.js --reporter=line --workers=1
