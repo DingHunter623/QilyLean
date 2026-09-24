@@ -165,6 +165,18 @@
     document.head.appendChild(style);
   }
 
+  function enforcePrimaryNavRenderParity() {
+    document.querySelectorAll('header.qily-site-header.qily-global-header>.qily-global-nav>a[href]').forEach(function(link){
+      link.style.setProperty('font-family','-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif','important');
+      link.style.setProperty('font-size',innerWidth>900?'20px':'17.5px','important');
+      link.style.setProperty('font-weight','900','important');
+      link.style.setProperty('line-height',innerWidth>900?'1.22':'1.2','important');
+      link.style.setProperty('letter-spacing','0','important');
+      link.style.setProperty('-webkit-font-smoothing','auto','important');
+      link.style.setProperty('text-rendering','auto','important');
+    });
+  }
+
   function buildNavigation() {
     var header = document.querySelector('header.qily-site-header,header.topbar,header.top');
     if (!header) {
@@ -646,6 +658,7 @@
       // install the final Header/Nav typography parity layer after cached legacy CSS.
       addGlobalHeaderStyles();
       if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();
+      enforcePrimaryNavRenderParity();
       syncPrimaryNavCurrentState();
       // R2: no repeated global contact footer on ordinary pages.
       // R2: no repeated document contact/email tail.

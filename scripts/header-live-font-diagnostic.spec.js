@@ -68,8 +68,8 @@ test('live international navigation renders with CN-equivalent typography',async
   }));
   console.log('LIVE_FONT_INT='+JSON.stringify(intl));
   console.log('LIVE_RUNTIME_INT='+JSON.stringify(runtime));
-  expect(runtime.navScript).toContain('20260924-r7-navigation-v48');
-  expect(runtime.coreScript).toContain('20260924-primary-nav-render-parity-core-v34');
+  expect(runtime.navScript).toContain('20260924-r7-navigation-v49');
+  expect(runtime.coreScript).toContain('20260924-primary-nav-render-parity-core-v35');
   expect(runtime.coreStyle).toBeTruthy();
   expect(intl.css.fontSize).toBe('20px');
   expect(intl.css.fontWeight).toBe('900');

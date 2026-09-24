@@ -81,7 +81,7 @@ jobs:
           grep -q "\['精益生产', '/lean-production/'\]" site-navigation-core.js
           grep -q "\['资源协同', '/links/'\]" site-navigation-core.js
           ! grep -q "\['友情链接', '/links/'\]" site-navigation-core.js
-          grep -q '20260924-primary-nav-render-parity-core-v34' site-navigation.js
+          grep -q '20260924-primary-nav-render-parity-core-v35' site-navigation.js
           grep -q '20260906-primary-first-paint-legacy-v24' site-navigation.js
           grep -q '资源协同' index.html
           grep -q '精益生产' index.html
