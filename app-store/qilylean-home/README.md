@@ -1,6 +1,6 @@
 # QilyLean Home 应用商店提交资料
 
-更新时间：2026-08-14  
+更新时间：2026-09-24  
 开发者：丁启利（QilyLean｜启力精益）  
 包名：`com.qilylean.home`  
 支持邮箱：`admin@qilylean.com`  
@@ -9,7 +9,7 @@
 ## 0. 官网与应用市场版本关联
 
 - 当前官网安装包 / 最新构建：`2.3.3` / versionCode `11` / Android API 36
-- 应用市场候选版：`2.3.2` / versionCode `10` / Android API 36
+- 应用市场候选版：`2.3.3` / versionCode `11` / Android API 36（腾讯应用宝首发候选）
 - 包名：`com.qilylean.home`
 - 开发者支持官方网址：`https://qilylean.com`
 - 官网邮箱：`admin@qilylean.com`
@@ -55,7 +55,7 @@ QilyLean Home是一款面向精益制造、工业工程与日常效率场景的A
 
 ### 当前构建说明
 - 当前官网安装包 / 最新构建：v2.3.3 / versionCode 11 / API 36；
-- 应用市场候选版：v2.3.2 / versionCode 10 / API 36；
+- 应用市场候选版：v2.3.3 / versionCode 11 / API 36（腾讯应用宝首发候选）；
 - 官网最新导航布局、官方网址与官网邮箱口径已同步；
 - 双APP统一QilyLean Q图标；
 - 提交应用市场前继续以对应候选包的固定Release签名与平台资料为准。
@@ -124,7 +124,7 @@ QilyLean Home是一款面向精益制造、工业工程与日常效率场景的A
 
 - [ ] `compileSdk`和`targetSdk`为36；
 - [ ] 官网安装包 / 最新构建为`versionCode 11`、`versionName 2.3.3`；
-- [ ] 应用市场候选版为`versionCode 10`、`versionName 2.3.2`；
+- [ ] 应用市场候选版为`versionCode 11`、`versionName 2.3.3`；
 - [ ] Manifest包含LAUNCHER、HOME、DEFAULT及必要的`queries`声明；
 - [ ] 不申请`QUERY_ALL_PACKAGES`；
 - [ ] 正式商店AAB使用固定Release签名；
