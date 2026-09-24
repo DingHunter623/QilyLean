@@ -168,7 +168,7 @@ jobs:
           files = sorted(Path('cn-site').rglob('*.html'))
           css_marker = 'qilylean-vi-v2.css?v=20260924-cn-vi-v24-header-height-parity'
           official_brand = 'QilyLean | 启力精益'
-          footer_marker = 'QilyLean | 启力精益 · 精益制造经验分享</span><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/'
+          footer_marker = 'QilyLean | 启力精益 · 精益制造经验分享</span><nav class="footer-actions" aria-label="页脚快捷操作">'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
           brand_anchor_pattern = re.compile(r'<a\b[^>]*class=["\']brand["\'][^>]*>(.*?)</a>', re.I | re.S)
           bad = []
