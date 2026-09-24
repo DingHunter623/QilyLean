@@ -521,6 +521,19 @@ html:root body .qily-primary-nav-scroll-rail[aria-disabled="true"]{
   filter:none!important;
 }
 
+/* QILY-CN-HEADER-HEIGHT-PARITY-V1 | 2026-09-24
+ * Desktop header vertical rhythm mirrors the international site.
+ * Preserve CN nav/translation behavior; restore equivalent top/bottom breathing room only.
+ */
+@media(min-width:721px){
+  html:root body .site-header .header-inner{
+    min-height:88px!important;
+    padding-top:6px!important;
+    padding-bottom:6px!important;
+    box-sizing:border-box!important;
+  }
+}
+
 html:root body .table-wrap table :is(th,td){word-break:normal!important;overflow-wrap:break-word!important}
 html:root body .table-wrap table :is(th,td):first-child{
   min-width:7.5em!important;

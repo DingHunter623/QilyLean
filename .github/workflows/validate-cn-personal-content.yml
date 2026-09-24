@@ -76,7 +76,7 @@ jobs:
           grep -Fq '精选 8 项制造实践' cn-site/index.html
           grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
-          grep -Fq '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale' cn-site/index.html
+          grep -Fq '/assets/qilylean-vi-v2.css?v=20260924-cn-vi-v24-header-height-parity' cn-site/index.html
           grep -Fq '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' cn-site/index.html
@@ -84,6 +84,8 @@ jobs:
           grep -Fq 'QILY-CN-CURRENT-MODULE-V1' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'QILY-CN-CURRENT-MODULE-RUNTIME-V1' cn-site/assets/cn-nav-rail-v1.js
           grep -Fq 'QILY-CN-STICKY-HEADER-V1' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'QILY-CN-HEADER-HEIGHT-PARITY-V1' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'min-height:88px!important' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'QILY-CN-TYPE-HIERARCHY-V5' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h2:clamp(20px,1.25vw,22px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h3:clamp(17px,1vw,19px)' cn-site/assets/qilylean-vi-v2.css

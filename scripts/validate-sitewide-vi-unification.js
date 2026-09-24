@@ -118,6 +118,8 @@ assert(cnRail.includes('QILY-CN-CURRENT-MODULE-RUNTIME-V1'), 'CN current-module 
 assert(cnRail.includes("best.setAttribute('aria-current','page')"), 'CN current-module route runtime must set aria-current.');
 assert(cnCss.includes('grid-template-areas:"brand nav translate"'), 'CN desktop header three-zone layout is missing.');
 assert(cnCss.includes('grid-template-areas:"brand translate" "nav nav"'), 'CN mobile header nav row is missing.');
+assert(cnCss.includes('QILY-CN-HEADER-HEIGHT-PARITY-V1'), 'CN desktop header height parity marker is missing.');
+assert(cnCss.includes('min-height:88px!important'), 'CN desktop header must match the international vertical rhythm.');
 assert(cnRail.includes('mousedown'), 'CN nav rail mouse drag is missing.');
 assert(cnRail.includes('mousemove'), 'CN nav rail mouse move runtime is missing.');
 assert(cnRail.includes('touchstart'), 'CN nav rail touch drag is missing.');
@@ -149,7 +151,7 @@ for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
   assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale'), rel+' must use CN VI V23.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260924-cn-vi-v24-header-height-parity'), rel+' must use CN VI V23.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');

@@ -43,14 +43,29 @@ async function auditPage(page, route, limits, label){
       h2:read('main h2'),
       h3:read('main h3'),
       body:read('main .article-body p, main .section-head p').slice(0,12),
-      href:[...document.querySelectorAll('link[rel="stylesheet"]')].map(x=>x.getAttribute('href')||'')
+      href:[...document.querySelectorAll('link[rel="stylesheet"]')].map(x=>x.getAttribute('href')||''),
+      header:(()=>{
+        const inner=document.querySelector('.site-header .header-inner');
+        const firstNav=document.querySelector('.site-header .nav>a[href]');
+        if(!inner)return null;
+        const ir=inner.getBoundingClientRect();
+        if(!firstNav)return {height:ir.height,hasNav:false,visualTopGap:null};
+        const nr=firstNav.getBoundingClientRect();
+        const pad=parseFloat(getComputedStyle(firstNav).paddingTop)||0;
+        return {height:ir.height,hasNav:true,visualTopGap:(nr.top-ir.top)+pad};
+      })()
     };
   });
-  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale')), route+' must load V23 VI').toBeTruthy();
+  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260924-cn-vi-v24-header-height-parity')), route+' must load V23 VI').toBeTruthy();
   for(const x of data.h1) expect(x.px, route+' H1 '+x.text).toBeLessThanOrEqual(limits.h1);
   for(const x of data.h2) expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(limits.h2);
   for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
   for(const x of data.body) expect(x.px, route+' body '+x.text).toBeLessThanOrEqual(limits.body);
+  if(label==='desktop' && data.header && data.header.hasNav){
+    expect(data.header.height, route+' desktop header height parity').toBeGreaterThanOrEqual(87);
+    expect(data.header.height, route+' desktop header height parity').toBeLessThanOrEqual(96);
+    expect(data.header.visualTopGap, route+' desktop nav visual top breathing room').toBeGreaterThanOrEqual(14);
+  }
   if(reps.has(route)){
     fs.mkdirSync('visual-cn-typography-v23',{recursive:true});
     const slug=route==='/'?'home':route.replace(/^\/+|\/+$/g,'').replace(/\//g,'-');

@@ -166,7 +166,7 @@ grep -Fq 'viewBox="0 0 1400 788"' "$PRACTICE_FACTORY" || { echo "ERROR: CN facto
 [[ -f "$PRACTICE_VISUAL" ]] || { echo "ERROR: CN visual-management practice visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' "$INDEX_FILE" || { echo "ERROR: CN homepage approved CN aircraft visual is missing."; exit 1; }
-grep -Fq '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
+grep -Fq '/assets/qilylean-vi-v2.css?v=20260924-cn-vi-v24-header-height-parity' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
 grep -Fq '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-V1' "$CN_VI_FILE" || { echo "ERROR: CN current-module VI contract is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-RUNTIME-V1' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN current-module route runtime is missing."; exit 1; }
