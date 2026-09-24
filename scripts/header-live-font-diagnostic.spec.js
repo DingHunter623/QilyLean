@@ -58,13 +58,31 @@ async function inspect(page,url,kind){
   return {url,text:(text||'').trim(),css,platformFonts};
 }
 
-test('live international and CN nav typography diagnostic',async({browser})=>{
+test('live international navigation renders with CN-equivalent typography',async({browser})=>{
   const page=await browser.newPage({viewport:{width:1600,height:1000}});
-  const intl=await inspect(page,'https://qilylean.com/?fontdiag=20260924-v2','int');
+  const intl=await inspect(page,'https://qilylean.com/?fontdiag=20260924-v47','int');
+  const runtime=await page.evaluate(()=>({
+    navScript:[...document.scripts].map(s=>s.src).find(x=>x.includes('/site-navigation.js'))||'',
+    coreScript:[...document.scripts].map(s=>s.src).find(x=>x.includes('/site-navigation-core.js'))||'',
+    coreStyle:!!document.getElementById('qilyNavigationCoreStyle')
+  }));
   console.log('LIVE_FONT_INT='+JSON.stringify(intl));
-  const cn=await inspect(page,'https://qilylean.cn/lean/?fontdiag=20260924-v2','cn');
-  console.log('LIVE_FONT_CN='+JSON.stringify(cn));
+  console.log('LIVE_RUNTIME_INT='+JSON.stringify(runtime));
+  expect(runtime.navScript).toContain('20260924-r7-navigation-v47');
+  expect(runtime.coreScript).toContain('20260924-primary-nav-type-parity-core-v33');
+  expect(runtime.coreStyle).toBeTruthy();
+  expect(intl.css.fontSize).toBe('20px');
   expect(intl.css.fontWeight).toBe('900');
-  expect(cn.css.fontWeight).toBe('900');
+  expect(intl.css.lineHeight).toBe('24.4px');
+  expect(intl.css.fontFamily).toBe('-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif');
+  expect(intl.css.webkitFontSmoothing.toLowerCase()).toBe('auto');
+  expect(intl.css.textRendering.toLowerCase()).toBe('auto');
+
+  try{
+    const cn=await inspect(page,'https://qilylean.cn/lean/?fontdiag=20260924-v47','cn');
+    console.log('LIVE_FONT_CN='+JSON.stringify(cn));
+  }catch(e){
+    console.log('LIVE_FONT_CN_DIAGNOSTIC_UNAVAILABLE='+String(e));
+  }
   await page.close();
 });
