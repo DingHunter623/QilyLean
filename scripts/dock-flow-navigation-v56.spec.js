@@ -37,7 +37,7 @@ for(const [name,url,viewport,mobile] of cases){
         dockLeft:Math.round(dr.left),
         dockRight:Math.round(dr.right),
         dockWidth:dr.width,
-        viewportWidth:innerWidth,
+        viewportWidth:document.documentElement.clientWidth,
         scrollWidth:dock.scrollWidth,
         clientWidth:dock.clientWidth,
         borderTop:parseFloat(ds.borderTopWidth)||0,
@@ -61,7 +61,7 @@ for(const [name,url,viewport,mobile] of cases){
     expect(result.actions).toEqual(['home','top','back','previous','search','current','contact']);
     expect(result.buttons).toHaveLength(7);
     expect(result.bottomGap,'footer must touch viewport bottom').toBeLessThanOrEqual(1);
-    expect(result.dockWidth/result.viewportWidth,'footer must span the viewport').toBeGreaterThanOrEqual(.99);
+    expect(result.dockWidth/result.viewportWidth,'footer must span the layout viewport').toBeGreaterThanOrEqual(.995);
     expect(result.dockLeft,'footer must start at viewport left').toBeGreaterThanOrEqual(-1);
     expect(result.dockLeft,'footer must start at viewport left').toBeLessThanOrEqual(1);
     expect(result.dockRight,'footer must end at viewport right').toBeGreaterThanOrEqual(result.viewportWidth-1);
