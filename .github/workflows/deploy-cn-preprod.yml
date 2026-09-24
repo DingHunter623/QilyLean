@@ -288,8 +288,8 @@ jobs:
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
                   '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale',
-                  '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v1',
-                  '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v1',
+                  '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v2-share-parity',
+                  '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v2-share-parity',
                   'data-qily-footer-action="top"',
                   'data-qily-footer-action="previous"',
                   'data-qily-footer-action="share"',
@@ -376,9 +376,9 @@ jobs:
               raise SystemExit('Production China home missing current-module VI cache revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' not in home:
               raise SystemExit('Production China home missing current-module nav rail runtime.')
-          if '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v1' not in home:
+          if '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v2-share-parity' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
-          if '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v1' not in home:
+          if '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v2-share-parity' not in home:
               raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
