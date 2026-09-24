@@ -69,6 +69,10 @@ jobs:
           test -f cn-site/assets/qilylean-vi-v2.css
           test -s cn-site/assets/mps-beian.png
           test -f cn-site/assets/cn-nav-rail-v1.js
+          test -f cn-site/assets/cn-footer-actions-v1.css
+          test -f cn-site/assets/cn-footer-actions-v1.js
+          grep -Fq 'QilyLean CN Footer Quick Actions V1' cn-site/assets/cn-footer-actions-v1.js
+          grep -Fq 'data-qily-footer-action' cn-site/index.html
           test -f cn-site/assets/cn-translate-baidu-v1.js
           test -f cn-site/assets/cn-translate-baidu-v1.css
           ! grep -Fq 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
@@ -258,6 +262,8 @@ jobs:
           practice_css = fetch(f'https://qilylean.cn/assets/practice.css?closure={sha}')
           vi = fetch(f'https://qilylean.cn/assets/qilylean-vi-v2.css?closure={sha}')
           nav_runtime = fetch(f'https://qilylean.cn/assets/cn-nav-rail-v1.js?closure={sha}')
+          footer_actions_css = fetch(f'https://qilylean.cn/assets/cn-footer-actions-v1.css?closure={sha}')
+          footer_actions_runtime = fetch(f'https://qilylean.cn/assets/cn-footer-actions-v1.js?closure={sha}')
           translate_runtime = fetch(f'https://qilylean.cn/assets/cn-translate-baidu-v1.js?closure={sha}')
           links = fetch(f'https://qilylean.com/links/?closure={sha}')
           vi_base = fetch(f'https://qilylean.cn/assets/qilylean-vi-v1.css?closure={sha}')
@@ -282,9 +288,26 @@ jobs:
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
                   '/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale',
+                  '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v1',
+                  '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v1',
+                  'data-qily-footer-action="top"',
+                  'data-qily-footer-action="previous"',
+                  'data-qily-footer-action="share"',
               ]:
                   if marker not in doc:
                       raise SystemExit(f'Production {route} missing V23 typography asset: {marker}')
+
+          footer_actions_contract = [
+              (footer_actions_css, 'QilyLean CN Footer Quick Actions V1', 'footer action stylesheet marker'),
+              (footer_actions_css, '.footer-actions>button', 'footer action button visual contract'),
+              (footer_actions_runtime, 'QilyLean CN Footer Quick Actions V1', 'footer action runtime marker'),
+              (footer_actions_runtime, 'w.history.back()', 'previous-page browser history behavior'),
+              (footer_actions_runtime, 'navigator.share', 'system share behavior'),
+              (footer_actions_runtime, "behavior:reduce?'auto':'smooth'", 'top smooth-scroll behavior'),
+          ]
+          for source, marker, label in footer_actions_contract:
+              if marker not in source:
+                  raise SystemExit(f'Production footer action contract missing {label}: {marker}')
 
           typography_contract = [
               (vi, 'QILY-CN-TYPE-HIERARCHY-V5', 'final V5 authority'),
@@ -353,6 +376,10 @@ jobs:
               raise SystemExit('Production China home missing current-module VI cache revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' not in home:
               raise SystemExit('Production China home missing current-module nav rail runtime.')
+          if '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v1' not in home:
+              raise SystemExit('Production China home missing footer quick-action stylesheet.')
+          if '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v1' not in home:
+              raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
           if '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' not in home:
