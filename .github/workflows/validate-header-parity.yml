@@ -1,0 +1,37 @@
+name: Validate international-CN header parity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/header-shell-parity.spec.js'
+      - 'cn-site/assets/qilylean-vi-v2.css'
+      - 'cn-site/**/*.html'
+      - '.github/workflows/validate-header-parity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Chromium
+        run: |
+          npm install --no-save --package-lock=false @playwright/test@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Start international and CN local servers
+        run: |
+          python3 -m http.server 4173 --directory . >/tmp/qily-int-parity.log 2>&1 &
+          python3 -m http.server 4174 --directory cn-site >/tmp/qily-cn-parity.log 2>&1 &
+          sleep 2
+          curl --fail --silent http://127.0.0.1:4173/ >/dev/null
+          curl --fail --silent http://127.0.0.1:4174/ >/dev/null
+      - name: Probe header geometry
+        env:
+          QILY_INT_BASE: http://127.0.0.1:4173
+          QILY_CN_BASE: http://127.0.0.1:4174
+        run: npx playwright test scripts/header-shell-parity.spec.js --reporter=line --workers=1
