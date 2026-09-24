@@ -1,0 +1,119 @@
+name: Publish CN header parity incremental closure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-cn-header-parity-20260924.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify V24 source state
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Fq 'QILY-CN-HEADER-HEIGHT-PARITY-V1' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'min-height:88px!important' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq '20260924-cn-vi-v24-header-height-parity' cn-site/index.html
+          python3 - <<'PY'
+          from pathlib import Path
+          token='20260924-cn-vi-v24-header-height-parity'
+          bad=[]
+          count=0
+          for p in Path('cn-site').rglob('*.html'):
+              t=p.read_text(encoding='utf-8')
+              if '<body' not in t.lower():
+                  continue
+              count+=1
+              if token not in t:
+                  bad.append(str(p))
+          if bad:
+              raise SystemExit(f'V24 missing from: {bad}')
+          print(f'PASS: {count} CN document pages reference V24.')
+          PY
+
+      - name: Build incremental archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd cn-site
+          {
+            find . -type f -name '*.html' -print
+            printf './assets/qilylean-vi-v2.css\n'
+          } | sort -u > /tmp/qily-cn-header-parity-files.txt
+          tar -czf /tmp/qily-cn-header-parity-20260924.tar.gz -T /tmp/qily-cn-header-parity-files.txt
+          ls -lh /tmp/qily-cn-header-parity-20260924.tar.gz
+
+      - name: Configure SSH
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$CN_PREPROD_HOST"
+          test -n "$CN_PREPROD_SSH_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
+          chmod 600 ~/.ssh/qilylean_cn
+          ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+
+      - name: Upload incremental archive
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes)
+          timeout 90s scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn /tmp/qily-cn-header-parity-20260924.tar.gz "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-header-parity-20260924.tar.gz"
+
+      - name: Install increment and verify production
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes)
+          timeout 90s ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'bash -se' <<'REMOTE'
+          set -euo pipefail
+          ROOT=/var/www/qilylean-cn/current
+          test -d "$ROOT"
+          sudo tar -xzf /tmp/qily-cn-header-parity-20260924.tar.gz -C "$ROOT"
+          sudo nginx -t
+          sudo systemctl reload nginx
+          grep -Fq '20260924-cn-vi-v24-header-height-parity' "$ROOT/index.html"
+          grep -Fq 'QILY-CN-HEADER-HEIGHT-PARITY-V1' "$ROOT/assets/qilylean-vi-v2.css"
+          grep -Fq 'min-height:88px!important' "$ROOT/assets/qilylean-vi-v2.css"
+          rm -f /tmp/qily-cn-header-parity-20260924.tar.gz
+          REMOTE
+
+          python3 - <<'PY'
+          import urllib.request, time
+          checks=[
+            ('home','https://qilylean.cn/?closure=20260924-header-parity','20260924-cn-vi-v24-header-height-parity'),
+            ('css','https://qilylean.cn/assets/qilylean-vi-v2.css?v=20260924-cn-vi-v24-header-height-parity','QILY-CN-HEADER-HEIGHT-PARITY-V1'),
+          ]
+          for name,url,marker in checks:
+              req=urllib.request.Request(url,headers={'User-Agent':'QilyLean-CN-Header-Parity-Closure/1.0','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=20) as r:
+                  body=r.read().decode('utf-8','ignore')
+                  if r.status != 200:
+                      raise SystemExit(f'{name}: HTTP {r.status}')
+              if marker not in body:
+                  raise SystemExit(f'{name}: marker missing')
+              print(f'PASS {name}: {marker}')
+          PY
