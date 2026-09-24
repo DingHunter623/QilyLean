@@ -64,12 +64,12 @@ test('live international navigation renders with CN-equivalent typography',async
   const runtime=await page.evaluate(()=>({
     navScript:[...document.scripts].map(s=>s.src).find(x=>x.includes('/site-navigation.js'))||'',
     coreScript:[...document.scripts].map(s=>s.src).find(x=>x.includes('/site-navigation-core.js'))||'',
-    coreStyle:!!document.getElementById('qilyNavigationCoreStyle')
+    coreStyle:!!document.getElementById('qilyGlobalHeaderStandard')
   }));
   console.log('LIVE_FONT_INT='+JSON.stringify(intl));
   console.log('LIVE_RUNTIME_INT='+JSON.stringify(runtime));
-  expect(runtime.navScript).toContain('20260924-r7-navigation-v47');
-  expect(runtime.coreScript).toContain('20260924-primary-nav-type-parity-core-v33');
+  expect(runtime.navScript).toContain('20260924-r7-navigation-v48');
+  expect(runtime.coreScript).toContain('20260924-primary-nav-render-parity-core-v34');
   expect(runtime.coreStyle).toBeTruthy();
   expect(intl.css.fontSize).toBe('20px');
   expect(intl.css.fontWeight).toBe('900');

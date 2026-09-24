@@ -642,11 +642,9 @@
 
   function boot() {
     try {
-      // R2 static-first: shell CSS already materialized.
-      // R2 static-first: visual scale already materialized.
-      // R2 static-first: wide layout already materialized.
-      // R2 static-first: header styles already materialized.
-      // R2 static-first: typography already materialized.
+      // Static-first supplies base geometry, but the authoritative runtime must still
+      // install the final Header/Nav typography parity layer after cached legacy CSS.
+      addGlobalHeaderStyles();
       if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();
       syncPrimaryNavCurrentState();
       // R2: no repeated global contact footer on ordinary pages.

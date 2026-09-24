@@ -16,9 +16,9 @@ const cp=require('child_process');
 const ROOT=path.resolve(__dirname,'..');
 const APPLY=process.argv.includes('--apply');
 const DOCK_PATCH='20260924-footer-like-fixed-r1';
-const NAV_PATCH='20260924-primary-nav-type-parity-v2';
-const NAV_VERSION='20260924-r7-navigation-v47';
-const CORE_VERSION='20260924-primary-nav-type-parity-core-v33';
+const NAV_PATCH='20260924-primary-nav-render-parity-v3';
+const NAV_VERSION='20260924-r7-navigation-v48';
+const CORE_VERSION='20260924-primary-nav-render-parity-core-v34';
 const LEGACY_VERSION='20260906-primary-first-paint-legacy-v24';
 const CANONICAL_ROUTES=[
   ['首页','/'],['履历主线','/experience/'],['能力体系','/capabilities/'],['改善工具','/improvements/'],
