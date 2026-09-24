@@ -89,7 +89,7 @@ for(const [t,m] of [
   ['data-qily-ddz-virtual-landscape="v154"','DDZ iOS landscape fallback'],
   ['id="v120-landscape-toggle"','DDZ landscape toolbar'],
   ['id="welcome-landscape"','DDZ landscape welcome'],
-  ['/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom','DDZ canonical Dock']
+  ['/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1','DDZ canonical Dock']
 ])must(ddzIndex,t,m);
 for(const t of ["loadStyle('css/ddz-core-v155.css')",'/site-navigation.js?','qilyPureDdzR8ClosureV128','ddz-site-shell-v140.js','name="screen-orientation"','name="x5-orientation"'])forbid(ddzIndex,t,'DDZ retired shell');
 must(ddzCoreCss,'--ddz-game-max:var(--qily-content-axis,1560px)','DDZ content axis compatibility');

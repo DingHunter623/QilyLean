@@ -19,7 +19,7 @@ must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'"
 const ready=tokens=>tokens.some(token=>home.includes(token)||mat.includes(token));
 const resources=[
   [['/site-navigation.js?v=20260924-r7-navigation-v47&patch=20260924-primary-nav-type-parity-v2'],'Navigation'],
-  [['/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom'],'Dock'],
+  [['/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1'],'Dock'],
   [['/site-contact-route-v1.js?v=20260829-dock-functional-public-v134'],'Contact'],
   [['/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8'],'Header'],
   [['/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'],'Safe translation'],
