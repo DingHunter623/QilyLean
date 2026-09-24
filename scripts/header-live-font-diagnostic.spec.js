@@ -88,3 +88,5 @@ test('live international navigation renders with CN-equivalent typography',async
 });
 
 // QILY-LIVE-NAV-RENDER-PARITY-V48-CLOSURE | production verification trigger.
+
+// QILY-LIVE-NAV-RENDER-PARITY-V49-CLOSURE | production verification trigger.
