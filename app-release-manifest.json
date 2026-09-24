@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-08-27",
+  "updatedAt": "2026-09-24",
   "officialWebsite": "https://qilylean.com/",
   "supportEmail": "admin@qilylean.com",
   "apps": {
@@ -64,11 +64,11 @@
         "versionCode": 11
       },
       "storeCandidate": {
-        "versionName": "2.3.2",
-        "versionCode": 10,
+        "versionName": "2.3.3",
+        "versionCode": 11,
         "targetSdk": 36,
-        "label": "应用市场候选版",
-        "status": "生产签名待启用；签名完成后进入稳定发布链"
+        "label": "腾讯应用宝首发候选版",
+        "status": "固定Release签名流水线已统一至v2.3.3；正式提交以签名APK校验、软著证书与APP备案资料齐备为准"
       },
       "productPage": "https://qilylean.com/capabilities/#digital-tools",
       "privacy": "https://qilylean.com/legal/qilylean-home/privacy/",
