@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify V24 source state
+      - name: Verify V25 source state
         shell: bash
         run: |
           set -euo pipefail
@@ -38,8 +38,8 @@ jobs:
               if token not in t:
                   bad.append(str(p))
           if bad:
-              raise SystemExit(f'V24 missing from: {bad}')
-          print(f'PASS: {count} CN document pages reference V24.')
+              raise SystemExit(f'V25 missing from: {bad}')
+          print(f'PASS: {count} CN document pages reference V25.')
           PY
 
       - name: Build incremental archive
@@ -117,3 +117,5 @@ jobs:
                   raise SystemExit(f'{name}: marker missing')
               print(f'PASS {name}: {marker}')
           PY
+
+# QILY-V25-PRODUCTION-RETRY-V1 | stable-state V25 production closure trigger.
