@@ -1,4 +1,4 @@
-name: Remediate mobile Dock and first-paint navigation
+name: Remediate footer Dock and first-paint navigation
 
 on:
   push:
@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: 24
 
-      - name: Materialize first-paint navigation and compact Dock
+      - name: Materialize first-paint navigation and footer-style Dock
         run: |
           set -euo pipefail
           node --check scripts/remediate-mobile-dock-first-paint-v1.js
@@ -63,7 +63,7 @@ jobs:
           node scripts/normalize-dock-compact-contract-v1.js
           git diff --check
 
-      - name: Verify compact Dock and compatibility gates
+      - name: Verify footer-style Dock and compatibility gates
         run: |
           set -euo pipefail
           node scripts/validate-dock-flow-navigation-v56.js
@@ -73,9 +73,11 @@ jobs:
           node scripts/validate-r7-authoritative-runtime-20260828.js
           node scripts/validate-home-hero-dock-snapback-v1.js
           grep -q "home:\['首页'\],top:\['顶部'\]" site-dock-share-runtime-v1.js
-          grep -q "mobile-fixed-bottom-compact-navigation" site-dock-share-runtime-v1.js
+          grep -q "mobile-fixed-bottom-footer-navigation" site-dock-share-runtime-v1.js
+          ! grep -q "mobile-fixed-bottom-compact-navigation" site-dock-share-runtime-v1.js
           ! grep -q "mobile-fixed-bottom-swipe-navigation" site-dock-share-runtime-v1.js
-          grep -q "grid-template-columns','repeat(7,minmax(0,1fr))" site-dock-share-runtime-v1.js
+          grep -q "setImportant(dock,'flex-wrap','wrap')" site-dock-share-runtime-v1.js
+          grep -q 'border-top:3px solid #c8a25a!important' site-dock-share-runtime-v1.js
           grep -q "\['精益生产', '/lean-production/'\]" site-navigation-core.js
           grep -q "\['资源协同', '/links/'\]" site-navigation-core.js
           ! grep -q "\['友情链接', '/links/'\]" site-navigation-core.js
@@ -93,9 +95,9 @@ jobs:
           git config user.email 'DingHunter623@gmail.com'
           git add -A
           if git diff --cached --quiet; then
-            echo 'Mobile Dock and first-paint navigation are already closed.'
+            echo 'Footer-style Dock and first-paint navigation are already closed.'
             exit 0
           fi
-          git commit -m 'fix: enforce compact Dock and first-paint navigation [skip ci]'
+          git commit -m 'fix: enforce footer-style Dock and first-paint navigation [skip ci]'
           git pull --rebase origin main
           git push origin HEAD:main
