@@ -53,10 +53,25 @@ async function auditPage(page, route, limits, label){
         const nr=firstNav.getBoundingClientRect();
         const pad=parseFloat(getComputedStyle(firstNav).paddingTop)||0;
         return {height:ir.height,hasNav:true,navBoxTopGap:(nr.top-ir.top),visualTopGap:(nr.top-ir.top)+pad};
+      })(),
+      footer:(()=>{
+        const footer=document.querySelector('footer.footer');
+        const group=document.querySelector('.footer-actions');
+        if(!footer||!group)return null;
+        const fr=footer.getBoundingClientRect();
+        return {
+          position:getComputedStyle(footer).position,
+          bottom:innerHeight-fr.bottom,
+          actions:[...group.querySelectorAll('button[data-qily-footer-action]')].map(b=>({
+            action:b.getAttribute('data-qily-footer-action'),
+            text:(b.textContent||'').trim(),
+            height:b.getBoundingClientRect().height
+          }))
+        };
       })()
     };
   });
-  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260926-cn-vi-v27-axis-footer-dock')), route+' must load V25 VI').toBeTruthy();
+  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260926-cn-vi-v28-footer-visual-parity')), route+' must load V28 VI').toBeTruthy();
   for(const x of data.h1) expect(x.px, route+' H1 '+x.text).toBeLessThanOrEqual(limits.h1);
   for(const x of data.h2) expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(limits.h2);
   for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
@@ -66,6 +81,16 @@ async function auditPage(page, route, limits, label){
     expect(data.header.height, route+' desktop header height parity').toBeLessThanOrEqual(85);
     expect(data.header.navBoxTopGap, route+' desktop nav box top parity').toBeGreaterThanOrEqual(12);
     expect(data.header.navBoxTopGap, route+' desktop nav box top parity').toBeLessThanOrEqual(14.5);
+  }
+  if(label==='desktop' && data.footer){
+    expect(data.footer.position, route+' China footer fixed visual parity').toBe('fixed');
+    expect(Math.abs(data.footer.bottom), route+' footer bottom alignment').toBeLessThanOrEqual(1);
+    expect(data.footer.actions.map(x=>x.action), route+' footer action semantics').toEqual(['top','previous','share']);
+    expect(data.footer.actions.map(x=>x.text), route+' footer action labels').toEqual(['顶部','上一网页','分享当前']);
+    for(const action of data.footer.actions){
+      expect(action.height, route+' footer button '+action.text).toBeGreaterThanOrEqual(39);
+      expect(action.height, route+' footer button '+action.text).toBeLessThanOrEqual(41);
+    }
   }
   if(reps.has(route)){
     fs.mkdirSync('visual-cn-typography-v23',{recursive:true});
