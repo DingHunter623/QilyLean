@@ -39,7 +39,7 @@ jobs:
           files = sorted(root.rglob('*.html'))
           css_version = '20260924-cn-vi-v25-header-shell-parity'
           base_version = '20260923-cn-typography-base-v7'
-          nav_script_version = '20260922-nav-rail-v8-current-module'
+          nav_script_version = '20260925-nav-rail-v9-resource-collab'
           translate_version = '20260922-translate-v6-baidu'
           footer_actions_version = '20260924-footer-actions-v3-single-click'
           official_brand = 'QilyLean | 启力精益'
@@ -183,7 +183,7 @@ jobs:
                   continue
               documents += 1
               css_count = text.count(css_marker)
-              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module')
+              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260925-nav-rail-v9-resource-collab')
               translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu')
               translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu')
               footer_count = text.count(footer_marker)

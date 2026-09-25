@@ -95,7 +95,7 @@ if (!briefs.includes("root.querySelectorAll('script,style,header,footer,nav,form
 
 const cn = fs.readFileSync(path.join(root, 'cn-site', 'index.html'), 'utf8');
 if (!cn.includes('https://qilylean.com/global-knowledge/')) fail('CN homepage no longer points to the isolated Global Knowledge bridge');
-if (/https:\/\/qilylean\.com\/(?!global-knowledge\/)/i.test(cn)) fail('CN homepage contains a non-isolated qilylean.com route');
+if (/https:\/\/qilylean\.com\/(?!global-knowledge\/|links\/cn-public\/)/i.test(cn)) fail('CN homepage contains a non-isolated qilylean.com route');
 
 if (process.exitCode) process.exit(process.exitCode);
 console.log(`Global Knowledge isolation gate passed: ${htmlFiles.length} HTML pages checked.`);

@@ -43,18 +43,21 @@ if grep -RniE --include='*.html' --include='*.htm' --include='*.xml' --include='
   exit 1
 fi
 
-# The CN personal site may reference exactly one curated, non-commercial bridge on the
-# international domain. Any other qilylean.com URL is treated as a commercial-routing risk.
-ALLOWED_GLOBAL_KNOWLEDGE_URL='https://qilylean.com/global-knowledge/'
+# The CN personal site may reference the isolated Global Knowledge subtree and one
+# exact public resource-collaboration bridge on the international domain. All other
+# qilylean.com URLs remain blocked as commercial-routing risks.
+ALLOWED_GLOBAL_KNOWLEDGE_PREFIX='https://qilylean.com/global-knowledge/'
+ALLOWED_RESOURCE_COLLAB_URL='https://qilylean.com/links/cn-public/'
 COM_LINKS="$(grep -RhoE --include='*.html' --include='*.htm' --include='*.xml' --include='*.json' --include='*.js' --include='*.svg' \
-  --exclude-dir='scripts' 'https?://(www\.)?qilylean\.com[^\"'"'"'<>[:space:]]*' "$ROOT_DIR" || true)"
+  --exclude-dir='scripts' 'https?://(www\.)?qilylean\.com[^"'"'"'<>[:space:]]*' "$ROOT_DIR" || true)"
 if [[ -n "$COM_LINKS" ]]; then
   while IFS= read -r url; do
     [[ -z "$url" ]] && continue
-    if [[ "$url" != "$ALLOWED_GLOBAL_KNOWLEDGE_URL" ]]; then
-      echo "ERROR: Mainland personal site contains a non-whitelisted QilyLean international URL: $url"
-      exit 1
+    if [[ "$url" == "$ALLOWED_RESOURCE_COLLAB_URL" || "$url" == "$ALLOWED_GLOBAL_KNOWLEDGE_PREFIX"* ]]; then
+      continue
     fi
+    echo "ERROR: Mainland personal site contains a non-whitelisted QilyLean international URL: $url"
+    exit 1
   done <<< "$COM_LINKS"
 fi
 
@@ -103,6 +106,28 @@ grep -Fq '"@type":"WebSite"' "$INDEX_FILE" || {
 
 grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || {
   echo "ERROR: CN structured-data association must point only to Global Knowledge."
+  exit 1
+}
+
+# Primary-navigation dual-site boundary: two explicit isolated external entries only.
+grep -Fq 'href="https://qilylean.com/global-knowledge/briefs/"' "$INDEX_FILE" || {
+  echo "ERROR: CN primary navigation is missing the isolated international brief entry."
+  exit 1
+}
+grep -Fq '>精选简报</a>' "$INDEX_FILE" || {
+  echo "ERROR: CN primary navigation lost the 精选简报 label."
+  exit 1
+}
+grep -Fq 'href="https://qilylean.com/links/cn-public/"' "$INDEX_FILE" || {
+  echo "ERROR: CN primary navigation is missing the public resource-collaboration bridge."
+  exit 1
+}
+grep -Fq '>资源协同 ↗</a>' "$INDEX_FILE" || {
+  echo "ERROR: CN primary navigation lost the 资源协同 ↗ label."
+  exit 1
+}
+grep -Fq 'data-qily-cn-nav-contract="20260925-v1"' "$INDEX_FILE" || {
+  echo "ERROR: CN homepage primary-navigation contract marker is missing."
   exit 1
 }
 
@@ -167,7 +192,7 @@ grep -Fq 'viewBox="0 0 1400 788"' "$PRACTICE_FACTORY" || { echo "ERROR: CN facto
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' "$INDEX_FILE" || { echo "ERROR: CN homepage approved CN aircraft visual is missing."; exit 1; }
 grep -Fq '/assets/qilylean-vi-v2.css?v=20260924-cn-vi-v25-header-shell-parity' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
-grep -Fq '/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
+grep -Fq '/assets/cn-nav-rail-v1.js?v=20260925-nav-rail-v9-resource-collab' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-V1' "$CN_VI_FILE" || { echo "ERROR: CN current-module VI contract is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-RUNTIME-V1' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN current-module route runtime is missing."; exit 1; }
 grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' "$INDEX_FILE" || { echo "ERROR: CN homepage translator stylesheet is missing."; exit 1; }
@@ -288,6 +313,6 @@ INDEXNOW_VALUE="$(tr -d '\r\n' < "$INDEXNOW_FILE")"
 }
 
 echo "CN personal-site non-commercial content gate passed."
-echo "CN dual-site knowledge-only association contract passed."
+echo "CN dual-site isolated association contract passed."
 echo "CN search-engine discovery and verification contract passed for Google, Baidu, 360 and IndexNow."
 echo "CN practice/evidence archive boundary and local asset contract passed."
