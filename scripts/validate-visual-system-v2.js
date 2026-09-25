@@ -20,7 +20,7 @@ for(const token of ['data-qily-vi-version','data-qily-vi-status','retireLegacyNa
 /* qilylean.cn is a separately deployed production knowledge site with its own final VI authority. */
 const cnIndex=read('cn-site/index.html'),cnVi=read('cn-site/assets/qilylean-vi-v2.css');
 assert(cnIndex.includes('<meta name="robots" content="index,follow">'),'CN production indexing contract missing');
-assert(cnIndex.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header'),'CN production VI CSS reference missing');
+assert(cnIndex.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v27-axis-footer-dock'),'CN production VI CSS reference missing');
 for(const token of ['--qily-cn-axis:1180px','Boss-readable closure aligned','QilyLean China Unified VI V2'])assert(cnVi.includes(token),`CN production VI missing ${token}`);
 assert(cnVi.includes('QILY-CN-CURRENT-MODULE-V1'),'CN current-module VI contract missing');
 
