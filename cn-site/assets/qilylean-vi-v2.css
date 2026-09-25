@@ -1014,3 +1014,21 @@ html:root:root:root body main .section-head h2{
 /* QILY-CN-TYPE-HIERARCHY-V5:END */
 
 /* QILY-CN-HEADER-PARITY-DEPLOY-CHECK-V1 | V24 stable-state validation trigger. */
+
+
+/* QILY-CN-ABOUT-CLEANUP-V1 | 2026-09-26
+ * User-directed CN cleanup: remove the right-side page-thesis rail from public modules.
+ * Keep the reading body on the canonical 1180px axis; no dead sidebar reservation.
+ */
+html:root body .article-shell{
+  display:block!important;
+}
+html:root body .article-shell>.article-body{
+  width:100%!important;
+  max-width:none!important;
+  min-width:0!important;
+}
+html:root body .article-shell>aside.toc{
+  display:none!important;
+}
+/* QILY-CN-ABOUT-CLEANUP-V1:END */
