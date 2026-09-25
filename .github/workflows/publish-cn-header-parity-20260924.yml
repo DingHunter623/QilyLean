@@ -22,12 +22,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -Fq 'QILY-CN-HEADER-SHELL-PARITY-V2' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq 'min-height:66.4px!important' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq '20260924-cn-vi-v25-header-shell-parity' cn-site/index.html
+          grep -Fq 'QILY-CN-HEADER-SHELL-PARITY-V3' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'min-height:83.4px!important' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq '20260926-cn-vi-v26-unified-axis-header' cn-site/index.html
           python3 - <<'PY'
           from pathlib import Path
-          token='20260924-cn-vi-v25-header-shell-parity'
+          token='20260926-cn-vi-v26-unified-axis-header'
           bad=[]
           count=0
           for p in Path('cn-site').rglob('*.html'):
@@ -95,17 +95,17 @@ jobs:
           sudo tar -xzf /tmp/qily-cn-header-parity-20260924.tar.gz -C "$ROOT"
           sudo nginx -t
           sudo systemctl reload nginx
-          grep -Fq '20260924-cn-vi-v25-header-shell-parity' "$ROOT/index.html"
-          grep -Fq 'QILY-CN-HEADER-SHELL-PARITY-V2' "$ROOT/assets/qilylean-vi-v2.css"
-          grep -Fq 'min-height:66.4px!important' "$ROOT/assets/qilylean-vi-v2.css"
+          grep -Fq '20260926-cn-vi-v26-unified-axis-header' "$ROOT/index.html"
+          grep -Fq 'QILY-CN-HEADER-SHELL-PARITY-V3' "$ROOT/assets/qilylean-vi-v2.css"
+          grep -Fq 'min-height:83.4px!important' "$ROOT/assets/qilylean-vi-v2.css"
           rm -f /tmp/qily-cn-header-parity-20260924.tar.gz
           REMOTE
 
           python3 - <<'PY'
           import urllib.request, time
           checks=[
-            ('home','https://qilylean.cn/?closure=20260924-header-parity','20260924-cn-vi-v25-header-shell-parity'),
-            ('css','https://qilylean.cn/assets/qilylean-vi-v2.css?v=20260924-cn-vi-v25-header-shell-parity','QILY-CN-HEADER-SHELL-PARITY-V2'),
+            ('home','https://qilylean.cn/?closure=20260924-header-parity','20260926-cn-vi-v26-unified-axis-header'),
+            ('css','https://qilylean.cn/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header','QILY-CN-HEADER-SHELL-PARITY-V3'),
           ]
           for name,url,marker in checks:
               req=urllib.request.Request(url,headers={'User-Agent':'QilyLean-CN-Header-Parity-Closure/1.0','Cache-Control':'no-cache'})
