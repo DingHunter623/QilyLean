@@ -16,7 +16,7 @@ var CANONICAL_NAV_ITEMS=[
   {key:'knowledge',href:'/knowledge/',label:'知识分享'},
   {key:'briefs',href:'https://qilylean.com/global-knowledge/briefs/',label:'精选简报',external:true,title:'进入 QilyLean 国际站精选简报（新标签页）'},
   {key:'resources',href:'https://qilylean.com/links/cn-public/',label:'资源协同 ↗',external:true,title:'进入 QilyLean 国际站资源协同公开入口（新标签页）'},
-  {key:'about',href:'/about/',label:'关于'}
+  {key:'about',href:'/about/',label:'关于我们'}
 ];
 
 function ensureCanonicalNavigation(nav){
@@ -36,7 +36,7 @@ function ensureCanonicalNavigation(nav){
   var current=Array.prototype.slice.call(nav.children).filter(function(node){
     return node.tagName==='A'&&node.hasAttribute('data-qily-nav-key');
   });
-  var same=nav.getAttribute('data-qily-cn-nav-contract')==='20260925-v1'&&
+  var same=nav.getAttribute('data-qily-cn-nav-contract')==='20260926-v2'&&
     current.length===expected.length&&current.every(function(a,i){
       return a.getAttribute('data-qily-nav-key')===expected[i].getAttribute('data-qily-nav-key')&&
         a.textContent===expected[i].textContent&&a.href===expected[i].href;
@@ -44,7 +44,7 @@ function ensureCanonicalNavigation(nav){
   if(same)return false;
   nav.textContent='';
   expected.forEach(function(a){nav.appendChild(a);});
-  nav.setAttribute('data-qily-cn-nav-contract','20260925-v1');
+  nav.setAttribute('data-qily-cn-nav-contract','20260926-v2');
   return true;
 }
 
