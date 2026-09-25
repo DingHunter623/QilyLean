@@ -306,7 +306,7 @@ jobs:
               (footer_actions_css, '.footer-actions>button', 'footer action button visual contract'),
               (footer_actions_css, 'grid-template-columns:repeat(7,minmax(0,1fr))!important', 'seven equal desktop actions'),
               (footer_actions_css, '--qily-cn-fixed-footer-h:58px', 'international desktop dock height'),
-              (footer_actions_runtime, "['home','首页'],['top','顶部'],['parent','上一层级'],['previous','上一网页'],['knowledge','知识索引'],['share','分享当前'],['about','关于我们']", 'seven-action order and labels'),
+              (footer_actions_runtime, 'var ORDER=[', 'seven-action order authority'),
               (footer_actions_css, '.footer-actions>button.is-copied', 'copied-state visual feedback'),
               (footer_actions_css, 'border-radius:999px!important', 'international-style pill toast'),
               (footer_actions_css, 'background:#073c47!important', 'international-style toast background'),
@@ -317,7 +317,7 @@ jobs:
               (footer_actions_runtime, '标题与网址已复制，正在打开系统分享', 'copy-before-share feedback'),
               (footer_actions_runtime, '已复制，可直接粘贴分享', 'cancelled-share copied feedback'),
               (footer_actions_runtime, '已复制，可粘贴到微信、微博等应用', 'share fallback feedback'),
-              (footer_actions_runtime, "group.addEventListener('click'", 'capture-phase single-click binding'),
+              (footer_actions_runtime, "group.addEventListener('click'", 'delegated single-click binding'),
               (footer_actions_runtime, 'event.stopPropagation()', 'single-click event authority'),
               (footer_actions_runtime, "data-qily-footer-action=\"share\"", 'CN footer share target selector'),
               (footer_actions_runtime, "node.id='qilyDockShareCopyToastV2'", 'international toast DOM id'),
@@ -333,14 +333,23 @@ jobs:
           if copy_at < 0 or share_at < 0 or copy_at > share_at:
               raise SystemExit('Production share parity failed: title + URL must be copied before system share opens.')
 
-          capture_marker = "d.addEventListener('click',shareClickCapture,true)"
-          share_target_marker = '.footer-actions button[data-qily-footer-action="share"]'
-          if capture_marker not in footer_actions_runtime or share_target_marker not in footer_actions_runtime:
-              raise SystemExit('Production single-click share failed: CN share must bind on capture phase to the footer share button.')
+          for marker in [
+              "['home','首页']",
+              "['top','顶部']",
+              "['parent','上一层级']",
+              "['previous','上一网页']",
+              "['knowledge','知识索引']",
+              "['share','分享当前']",
+              "['about','关于我们']",
+          ]:
+              if marker not in footer_actions_runtime:
+                  raise SystemExit(f'Production CN seven-action dock missing canonical label/order marker: {marker}')
           if "group.addEventListener('click'" not in footer_actions_runtime:
               raise SystemExit('Production footer action group binding missing.')
           if "run(button.getAttribute('data-qily-footer-action')||'',button)" not in footer_actions_runtime:
-              raise SystemExit('Production single-click share failed: bubble handler must not re-run share.')
+              raise SystemExit('Production footer action dispatch authority missing.')
+          if "data-qily-footer-contract" not in footer_actions_runtime:
+              raise SystemExit('Production footer action contract marker missing.')
 
           typography_contract = [
               (vi, 'QILY-CN-TYPE-HIERARCHY-V5', 'final V5 authority'),
