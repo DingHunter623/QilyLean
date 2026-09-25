@@ -287,7 +287,7 @@ jobs:
               for marker in [
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
-                  '/assets/qilylean-vi-v2.css?v=20260924-cn-vi-v25-header-shell-parity',
+                  '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header',
                   '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v3-single-click',
                   '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v3-single-click',
                   'data-qily-footer-action="top"',
@@ -398,9 +398,9 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260924-cn-vi-v25-header-shell-parity' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header' not in home:
               raise SystemExit('Production China home missing current-module VI cache revision.')
-          if '/assets/cn-nav-rail-v1.js?v=20260925-nav-rail-v9-resource-collab' not in home:
+          if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v10-about-us' not in home:
               raise SystemExit('Production China home missing current-module nav rail runtime.')
           if '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v3-single-click' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
