@@ -186,6 +186,9 @@ for(const rel of cnPages){
     assert(/title="[^"]*新标签页打开[^"]*"/.test(link), rel+' filing query must explain its new-tab behavior.');
   }
 }
+  const footerActions=[...html.matchAll(/data-qily-footer-action="([^"]+)"/g)].map(m=>m[1]);
+  assert(JSON.stringify(footerActions)===JSON.stringify(['top','previous','share']), rel+' China footer must keep only 顶部 / 上一网页 / 分享当前.');
+
 
 const cnFooterCss=read('cn-site/assets/cn-footer-actions-v1.css');
 const cnFooterJs=read('cn-site/assets/cn-footer-actions-v1.js');
@@ -212,6 +215,8 @@ assert(cnAbout.includes('<h1>关于“精益制造经验分享”</h1>'),'CN Abo
 const resourcePublic=read('links/cn-public/index.html');
 assert(resourcePublic.includes('.wrap{width:min(1180px,calc(100% - 36px));max-width:1180px;margin:auto}'), 'Resource collaboration public entry must use the canonical 1180px content axis.');
 assert(resourcePublic.includes('/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5'), 'Resource collaboration public entry must load the sitewide 1180px axis authority.');
+assert(resourcePublic.includes('id="qilyResourcePublicTypeAuthorityV2"'), 'Resource collaboration public entry final typography authority is missing.');
+assert(resourcePublic.includes('data-qily-resource-public="v2"'), 'Resource collaboration public entry body authority marker is missing.');
 assert(resourcePublic.includes('font-size:clamp(28px,2vw,34px)!important'), 'Resource collaboration public entry H1 must use the reduced restrained hierarchy.');
 assert(resourcePublic.includes('.hero p{width:100%;max-width:none'), 'Resource collaboration hero copy must use the same content-frame width as the body.');
 assert(resourcePublic.includes('font-size:clamp(18px,1.15vw,21px)!important'), 'Resource collaboration card headings must remain at or below 21px.');
