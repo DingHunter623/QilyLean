@@ -392,7 +392,7 @@ jobs:
           if 'QILYLEAN CHINA｜' in home or '个人制造业知识与实践分享' in home:
               raise SystemExit('Production China home exposed a retired site name.')
 
-          if '进入 Global Knowledge →' not in home:
+          if '进入 Global Knowledge ↗' not in home:
               raise SystemExit('Production China home missing global-knowledge CTA.')
           if 'QilyLean | <span>启力精益</span>' not in home:
               raise SystemExit('Production China home lost full brand in header.')
@@ -400,8 +400,17 @@ jobs:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
           if '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header' not in home:
               raise SystemExit('Production China home missing current-module VI cache revision.')
-          if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v10-about-us' not in home:
+          if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v11-external-arrows' not in home:
               raise SystemExit('Production China home missing current-module nav rail runtime.')
+          required_external_nav = [
+              'data-qily-nav-key="briefs" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站精选简报（新标签页）" data-qily-external="international">精选简报 ↗</a>',
+              'data-qily-nav-key="resources" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站资源协同公开入口（新标签页）" data-qily-external="international">资源协同 ↗</a>',
+          ]
+          for marker in required_external_nav:
+              if marker not in home:
+                  raise SystemExit(f'Production China primary nav missing external arrow/semantics: {marker}')
+          if '进入 Global Knowledge ↗' not in home or 'data-qily-external="international"' not in home:
+              raise SystemExit('Production China Global Knowledge CTA lost external-link semantics.')
           if '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v3-single-click' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
           if '/assets/cn-footer-actions-v1.js?v=20260924-footer-actions-v3-single-click' not in home:
