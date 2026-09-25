@@ -185,9 +185,9 @@ for(const rel of cnPages){
     assert(/rel="noopener noreferrer"/.test(link), rel+' filing query must isolate the external tab.');
     assert(/title="[^"]*新标签页打开[^"]*"/.test(link), rel+' filing query must explain its new-tab behavior.');
   }
-}
   const footerActions=[...html.matchAll(/data-qily-footer-action="([^"]+)"/g)].map(m=>m[1]);
   assert(JSON.stringify(footerActions)===JSON.stringify(['top','previous','share']), rel+' China footer must keep only 顶部 / 上一网页 / 分享当前.');
+}
 
 
 const cnFooterCss=read('cn-site/assets/cn-footer-actions-v1.css');
