@@ -119,7 +119,9 @@ assert(cnRail.includes("best.setAttribute('aria-current','page')"), 'CN current-
 assert(cnCss.includes('grid-template-areas:"brand nav translate"'), 'CN desktop header three-zone layout is missing.');
 assert(cnCss.includes('grid-template-areas:"brand translate" "nav nav"'), 'CN mobile header nav row is missing.');
 assert(cnCss.includes('QILY-CN-HEADER-SHELL-PARITY-V3'), 'CN desktop header shell parity marker is missing.');
-assert(cnCss.includes('QILY-CN-CONTENT-AXIS-PARITY-V1'), 'CN content-axis parity marker is missing.');
+assert(cnCss.includes('QILY-CN-CONTENT-AXIS-PARITY-V2'), 'CN content-axis parity V2 marker is missing.');
+assert(cnCss.includes('QILY-CN-LEGAL-FOOTER-V3'), 'CN legal footer must remain in document flow above the dock.');
+assert(cnCss.includes('--qily-cn-fixed-footer-h:58px'), 'CN desktop fixed dock height must match the international 58px rhythm.');
 assert(cnCss.includes('min-height:83.4px!important'), 'CN desktop header shell must match the international measured geometry.');
 assert(cnRail.includes('mousedown'), 'CN nav rail mouse drag is missing.');
 assert(cnRail.includes('mousemove'), 'CN nav rail mouse move runtime is missing.');
@@ -156,7 +158,7 @@ for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
   assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header'), rel+' must use CN VI V26.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v27-axis-footer-dock'), rel+' must use CN VI V26.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v11-external-arrows'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
@@ -182,6 +184,13 @@ for(const rel of cnPages){
     assert(/title="[^"]*新标签页打开[^"]*"/.test(link), rel+' filing query must explain its new-tab behavior.');
   }
 }
+
+const cnFooterCss=read('cn-site/assets/cn-footer-actions-v1.css');
+const cnFooterJs=read('cn-site/assets/cn-footer-actions-v1.js');
+assert(cnFooterCss.includes('QilyLean CN Footer Navigation V2'), 'CN seven-action dock stylesheet marker is missing.');
+assert(cnFooterCss.includes('grid-template-columns:repeat(7,minmax(0,1fr))'), 'CN desktop dock must use seven equal actions.');
+for (const marker of ["['home','首页']","['top','顶部']","['parent','上一层级']","['previous','上一网页']","['knowledge','知识索引']","['share','分享当前']","['about','关于我们']"]) assert(cnFooterJs.includes(marker), 'CN seven-action dock label/order marker missing: '+marker);
+assert(cnFooterJs.includes("home,top,parent,previous,knowledge,share,about") || cnFooterJs.includes("ORDER=["), 'CN footer runtime must own the seven-action contract.');
 
 const cnHome=read('cn-site/index.html');
 for(const marker of [

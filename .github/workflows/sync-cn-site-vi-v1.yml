@@ -38,7 +38,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
 
-          expected = '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header'
+          expected = '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v27-axis-footer-dock'
           bad = []
           docs = 0
           for path in sorted(Path('cn-site').rglob('*.html')):

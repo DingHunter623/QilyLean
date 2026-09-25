@@ -139,6 +139,14 @@ grep -Fq 'data-qily-cn-nav-contract="20260926-v3"' "$INDEX_FILE" || {
   exit 1
 }
 
+# Seven-action footer navigation contract.
+for action in home top parent previous knowledge share about; do
+  grep -Fq "data-qily-footer-action=\"$action\"" "$INDEX_FILE" || {
+    echo "ERROR: CN footer navigation missing action: $action"
+    exit 1
+  }
+done
+
 # Filed-name governance: every public CN document identifies the site by the ICP filing service name.
 FILED_SITE_NAME='精益制造经验分享'
 while IFS= read -r page; do
@@ -199,7 +207,7 @@ grep -Fq 'viewBox="0 0 1400 788"' "$PRACTICE_FACTORY" || { echo "ERROR: CN facto
 [[ -f "$PRACTICE_VISUAL" ]] || { echo "ERROR: CN visual-management practice visual is missing."; exit 1; }
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' "$INDEX_FILE" || { echo "ERROR: CN homepage approved CN aircraft visual is missing."; exit 1; }
-grep -Fq '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
+grep -Fq '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v27-axis-footer-dock' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
 grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v11-external-arrows' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-V1' "$CN_VI_FILE" || { echo "ERROR: CN current-module VI contract is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-RUNTIME-V1' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN current-module route runtime is missing."; exit 1; }
