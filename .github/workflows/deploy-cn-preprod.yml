@@ -409,7 +409,7 @@ jobs:
           for marker in required_external_nav:
               if marker not in home:
                   raise SystemExit(f'Production China primary nav missing external arrow/semantics: {marker}')
-          if '进入 Global Knowledge ↗' not in home or 'data-qily-external="international"' not in home:
+          if '<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>' not in home:
               raise SystemExit('Production China Global Knowledge CTA lost external-link semantics.')
           if '/assets/cn-footer-actions-v1.css?v=20260924-footer-actions-v3-single-click' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
