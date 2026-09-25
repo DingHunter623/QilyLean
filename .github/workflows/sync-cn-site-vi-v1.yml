@@ -29,8 +29,8 @@ jobs:
           set -euo pipefail
           grep -Fq "@import url('/assets/qilylean-vi-v1.css?v=20260923-cn-typography-base-v7');" cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'QILY-CN-TYPE-HIERARCHY-V5' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq 'QILY-CN-HEADER-SHELL-PARITY-V2' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq 'min-height:66.4px!important' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'QILY-CN-HEADER-SHELL-PARITY-V3' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'min-height:83.4px!important' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h2:clamp(20px,1.25vw,22px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h3:clamp(17px,1vw,19px)' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'clamp(20px,1.25vw,22px)!important' cn-site/assets/qilylean-vi-v1.css
@@ -38,7 +38,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
 
-          expected = '/assets/qilylean-vi-v2.css?v=20260924-cn-vi-v25-header-shell-parity'
+          expected = '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header'
           bad = []
           docs = 0
           for path in sorted(Path('cn-site').rglob('*.html')):
