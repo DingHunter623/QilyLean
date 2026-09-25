@@ -53,10 +53,32 @@ async function auditPage(page, route, limits, label){
         const nr=firstNav.getBoundingClientRect();
         const pad=parseFloat(getComputedStyle(firstNav).paddingTop)||0;
         return {height:ir.height,hasNav:true,navBoxTopGap:(nr.top-ir.top),visualTopGap:(nr.top-ir.top)+pad};
+      })(),
+      axis:(()=>{
+        const sels=['.hero>.hero-inner','.page-hero>.content','.section>.content','.cn-aircraft-showcase>.content'];
+        return sels.map(sel=>{
+          const el=document.querySelector(sel);if(!el)return null;
+          const r=el.getBoundingClientRect();return {sel,left:r.left,right:r.right,width:r.width};
+        }).filter(Boolean);
+      })(),
+      footer:(()=>{
+        const legal=document.querySelector('footer.footer');
+        const dock=document.querySelector('.footer-actions');
+        if(!dock)return null;
+        const dr=dock.getBoundingClientRect();
+        const buttons=[...dock.querySelectorAll('button[data-qily-footer-action]')].map(b=>{
+          const r=b.getBoundingClientRect();
+          return {action:b.getAttribute('data-qily-footer-action'),text:(b.textContent||'').trim(),width:r.width,height:r.height};
+        });
+        return {
+          dock:{left:dr.left,right:dr.right,bottom:innerHeight-dr.bottom,height:dr.height,position:getComputedStyle(dock).position,background:getComputedStyle(dock).backgroundColor},
+          legal:legal?{position:getComputedStyle(legal).position}:null,
+          buttons
+        };
       })()
     };
   });
-  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260926-cn-vi-v27-axis-footer-dock')), route+' must load V25 VI').toBeTruthy();
+  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260926-cn-vi-v27-axis-footer-dock')), route+' must load V27 VI').toBeTruthy();
   for(const x of data.h1) expect(x.px, route+' H1 '+x.text).toBeLessThanOrEqual(limits.h1);
   for(const x of data.h2) expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(limits.h2);
   for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
@@ -66,6 +88,30 @@ async function auditPage(page, route, limits, label){
     expect(data.header.height, route+' desktop header height parity').toBeLessThanOrEqual(85);
     expect(data.header.navBoxTopGap, route+' desktop nav box top parity').toBeGreaterThanOrEqual(12);
     expect(data.header.navBoxTopGap, route+' desktop nav box top parity').toBeLessThanOrEqual(14.5);
+  }
+  if(label==='desktop'){
+    for(const box of data.axis){
+      expect(box.width, route+' '+box.sel+' canonical content width').toBeGreaterThanOrEqual(1178);
+      expect(box.width, route+' '+box.sel+' canonical content width').toBeLessThanOrEqual(1181);
+      expect(Math.abs(box.left-(1440-box.width)/2), route+' '+box.sel+' centered on 1180 axis').toBeLessThanOrEqual(1.5);
+    }
+    if(data.footer){
+      expect(data.footer.dock.position, route+' footer dock position').toBe('fixed');
+      expect(data.footer.dock.bottom, route+' footer dock bottom').toBeLessThanOrEqual(0.5);
+      expect(data.footer.dock.height, route+' footer dock international height').toBeGreaterThanOrEqual(56);
+      expect(data.footer.dock.height, route+' footer dock international height').toBeLessThanOrEqual(60);
+      expect(data.footer.dock.background, route+' footer dock deep-teal background').toBe('rgb(15, 75, 90)');
+      expect(data.footer.buttons.length, route+' footer dock seven actions').toBe(7);
+      expect(data.footer.buttons.map(x=>x.action)).toEqual(['home','top','parent','previous','knowledge','share','about']);
+      expect(data.footer.buttons.map(x=>x.text)).toEqual(['首页','顶部','上一层级','上一网页','知识索引','分享当前','关于我们']);
+      const widths=data.footer.buttons.map(x=>x.width);
+      expect(Math.max(...widths)-Math.min(...widths), route+' footer buttons equal width').toBeLessThanOrEqual(1.5);
+      for(const button of data.footer.buttons){
+        expect(button.height, route+' footer button height '+button.text).toBeGreaterThanOrEqual(39);
+        expect(button.height, route+' footer button height '+button.text).toBeLessThanOrEqual(41);
+      }
+      if(data.footer.legal) expect(data.footer.legal.position, route+' legal filing footer must not be viewport-fixed').not.toBe('fixed');
+    }
   }
   if(reps.has(route)){
     fs.mkdirSync('visual-cn-typography-v23',{recursive:true});
