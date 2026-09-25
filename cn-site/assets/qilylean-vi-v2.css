@@ -1032,3 +1032,20 @@ html:root body .article-shell>aside.toc{
   display:none!important;
 }
 /* QILY-CN-ABOUT-CLEANUP-V1:END */
+
+/* QILY-CN-MOBILE-FOOTER-LEFT-ALIGN-V1 | 2026-09-26
+ * Mobile filing rows share one left-aligned content axis; external icon remains at the far right.
+ */
+@media(max-width:760px){
+  html:root body .footer-records a[href^="https://beian."]{
+    justify-content:flex-start!important;
+    text-align:left!important;
+  }
+  html:root body .footer-records .police-record>span{
+    text-align:left!important;
+  }
+  html:root body .footer-records a[href^="https://beian."]::after{
+    margin-left:auto!important;
+  }
+}
+/* QILY-CN-MOBILE-FOOTER-LEFT-ALIGN-V1:END */
