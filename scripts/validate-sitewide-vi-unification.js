@@ -120,8 +120,10 @@ assert(cnCss.includes('grid-template-areas:"brand nav translate"'), 'CN desktop 
 assert(cnCss.includes('grid-template-areas:"brand translate" "nav nav"'), 'CN mobile header nav row is missing.');
 assert(cnCss.includes('QILY-CN-HEADER-SHELL-PARITY-V3'), 'CN desktop header shell parity marker is missing.');
 assert(cnCss.includes('QILY-CN-CONTENT-AXIS-PARITY-V2'), 'CN content-axis parity V2 marker is missing.');
-assert(cnCss.includes('QILY-CN-LEGAL-FOOTER-V3'), 'CN legal footer must remain in document flow above the dock.');
-assert(cnCss.includes('--qily-cn-fixed-footer-h:58px'), 'CN desktop fixed dock height must match the international 58px rhythm.');
+assert(cnCss.includes('QILY-CN-FOOTER-VISUAL-PARITY-V4'), 'CN footer must preserve fixed-bottom international-style visual parity without changing China actions.');
+assert(cnCss.includes('--qily-cn-fixed-footer-h:58px'), 'CN fixed footer height must match the international 58px rhythm.');
+assert(cnCss.includes('grid-template-columns:max-content max-content minmax(0,1fr)!important'), 'CN footer desktop layout must keep brand + 3 actions + filing records on one row.');
+assert(cnCss.includes('position:fixed!important'), 'CN footer visual parity requires a fixed-bottom footer bar.');
 assert(cnCss.includes('min-height:83.4px!important'), 'CN desktop header shell must match the international measured geometry.');
 assert(cnRail.includes('mousedown'), 'CN nav rail mouse drag is missing.');
 assert(cnRail.includes('mousemove'), 'CN nav rail mouse move runtime is missing.');
@@ -158,7 +160,7 @@ for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
   assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v27-axis-footer-dock'), rel+' must use CN VI V26.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v28-footer-visual-parity'), rel+' must use CN VI V26.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v11-external-arrows'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
@@ -187,10 +189,11 @@ for(const rel of cnPages){
 
 const cnFooterCss=read('cn-site/assets/cn-footer-actions-v1.css');
 const cnFooterJs=read('cn-site/assets/cn-footer-actions-v1.js');
-assert(cnFooterCss.includes('QilyLean CN Footer Navigation V2'), 'CN seven-action dock stylesheet marker is missing.');
-assert(cnFooterCss.includes('grid-template-columns:repeat(7,minmax(0,1fr))'), 'CN desktop dock must use seven equal actions.');
-for (const marker of ["['home','首页']","['top','顶部']","['parent','上一层级']","['previous','上一网页']","['knowledge','知识索引']","['share','分享当前']","['about','关于我们']"]) assert(cnFooterJs.includes(marker), 'CN seven-action dock label/order marker missing: '+marker);
-assert(cnFooterJs.includes("home,top,parent,previous,knowledge,share,about") || cnFooterJs.includes("ORDER=["), 'CN footer runtime must own the seven-action contract.');
+assert(cnFooterCss.includes('QilyLean CN Footer Actions V3'), 'CN three-action footer stylesheet marker is missing.');
+assert(cnFooterCss.includes('grid-template-columns:repeat(3,max-content)'), 'CN desktop footer must keep exactly three action buttons.');
+for (const marker of ["['top','顶部']","['previous','上一网页']","['share','分享当前']"]) assert(cnFooterJs.includes(marker), 'CN footer action marker missing: '+marker);
+for (const forbidden of ["['home','首页']","['parent','上一层级']","['knowledge','知识索引']","['about','关于我们']"]) assert(!cnFooterJs.includes(forbidden), 'CN footer must not copy international-only action: '+forbidden);
+assert(cnFooterJs.includes("top,previous,share"), 'CN footer runtime must own the original three-action contract.');
 
 const cnHome=read('cn-site/index.html');
 for(const marker of [
@@ -209,9 +212,9 @@ assert(cnAbout.includes('<h1>关于“精益制造经验分享”</h1>'),'CN Abo
 const resourcePublic=read('links/cn-public/index.html');
 assert(resourcePublic.includes('.wrap{width:min(1180px,calc(100% - 36px));max-width:1180px;margin:auto}'), 'Resource collaboration public entry must use the canonical 1180px content axis.');
 assert(resourcePublic.includes('/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5'), 'Resource collaboration public entry must load the sitewide 1180px axis authority.');
-assert(resourcePublic.includes('font-size:clamp(30px,3vw,40px)'), 'Resource collaboration public entry heading ceiling must remain restrained.');
+assert(resourcePublic.includes('font-size:clamp(28px,2vw,34px)!important'), 'Resource collaboration public entry H1 must use the reduced restrained hierarchy.');
 assert(resourcePublic.includes('.hero p{width:100%;max-width:none'), 'Resource collaboration hero copy must use the same content-frame width as the body.');
-assert(resourcePublic.includes('font-size:clamp(20px,1.5vw,24px)!important'), 'Resource collaboration card headings must stay within the standard hierarchy.');
+assert(resourcePublic.includes('font-size:clamp(18px,1.15vw,21px)!important'), 'Resource collaboration card headings must remain at or below 21px.');
 assert(!resourcePublic.includes('font-size:clamp(30px,5vw,52px)'), 'Resource collaboration oversized H1 regression detected.');
 
 const linksPage=read('links/index.html');
