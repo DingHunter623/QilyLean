@@ -9,6 +9,7 @@
 - 网站备案号：`湘ICP备2026041143号-1`。
 - 中国站严禁项目合作、业务承接、报价、收费、咨询预约、交易、营销转化、直接联络入口以及潜藏商业导流。
 - 中国站允许两个经过隔离的国际延伸入口：`https://qilylean.com/global-knowledge/`（含其知识子路径）与 `https://qilylean.com/links/cn-public/`（资源协同公开说明）；两者均不得在中国站承载报价、收费、支付、合同、资源入驻申请或销售线索收集。\n- `资源协同 ↗` 只允许指向上述公开说明页，不直接指向 `/links/network/`、`/links/onboarding/`、`/cooperation/` 等国际站经营页面。
+- 国际外链视觉语义统一：主导航中的 `精选简报 ↗` 与 `资源协同 ↗` 均以 `↗` 标识跨域；中国站首页 `进入 Global Knowledge ↗` 同样使用 `↗`。三者必须使用 `target="_blank"`、`rel="noopener noreferrer"` 与 `data-qily-external="international"`，不得出现一个有箭头、一个无箭头的差异。
 - 公网主域统一为 `https://qilylean.cn/`；HTTP 与 `www` 统一 301 到 HTTPS 根域。
 
 ## 服务器基线

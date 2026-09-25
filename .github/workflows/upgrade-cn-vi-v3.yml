@@ -39,7 +39,7 @@ jobs:
           files = sorted(root.rglob('*.html'))
           css_version = '20260926-cn-vi-v26-unified-axis-header'
           base_version = '20260923-cn-typography-base-v7'
-          nav_script_version = '20260926-nav-rail-v10-about-us'
+          nav_script_version = '20260926-nav-rail-v11-external-arrows'
           translate_version = '20260922-translate-v6-baidu'
           footer_actions_version = '20260924-footer-actions-v3-single-click'
           official_brand = 'QilyLean | 启力精益'
@@ -183,7 +183,7 @@ jobs:
                   continue
               documents += 1
               css_count = text.count(css_marker)
-              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v10-about-us')
+              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v11-external-arrows')
               translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu')
               translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu')
               footer_count = text.count(footer_marker)
@@ -227,8 +227,10 @@ jobs:
               bad.append(('cn-site/about/index.html', 'legacy-china-knowledge-name-h1'))
 
           home = Path('cn-site/index.html').read_text(encoding='utf-8')
-          if '进入 Global Knowledge →' not in home:
+          if '进入 Global Knowledge ↗' not in home:
               bad.append(('cn-site/index.html', 'global-knowledge-cta-label'))
+          if '<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>' not in home:
+              bad.append(('cn-site/index.html', 'global-knowledge-cta-external-semantics'))
 
           if thesis_panels < 1:
               bad.append(('cn-site', 'no-thesis-panels-found'))

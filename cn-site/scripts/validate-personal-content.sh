@@ -114,7 +114,7 @@ grep -Fq 'href="https://qilylean.com/global-knowledge/briefs/"' "$INDEX_FILE" ||
   echo "ERROR: CN primary navigation is missing the isolated international brief entry."
   exit 1
 }
-grep -Fq '>精选简报</a>' "$INDEX_FILE" || {
+grep -Fq '>精选简报 ↗</a>' "$INDEX_FILE" || {
   echo "ERROR: CN primary navigation lost the 精选简报 label."
   exit 1
 }
@@ -126,7 +126,15 @@ grep -Fq '>资源协同 ↗</a>' "$INDEX_FILE" || {
   echo "ERROR: CN primary navigation lost the 资源协同 ↗ label."
   exit 1
 }
-grep -Fq 'data-qily-cn-nav-contract="20260926-v2"' "$INDEX_FILE" || {
+grep -Fq 'data-qily-nav-key="briefs" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站精选简报（新标签页）" data-qily-external="international">精选简报 ↗</a>' "$INDEX_FILE" || {
+  echo "ERROR: CN primary navigation 精选简报 external-link semantics are inconsistent."
+  exit 1
+}
+grep -Fq 'data-qily-nav-key="resources" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站资源协同公开入口（新标签页）" data-qily-external="international">资源协同 ↗</a>' "$INDEX_FILE" || {
+  echo "ERROR: CN primary navigation 资源协同 external-link semantics are inconsistent."
+  exit 1
+}
+grep -Fq 'data-qily-cn-nav-contract="20260926-v3"' "$INDEX_FILE" || {
   echo "ERROR: CN homepage primary-navigation contract marker is missing."
   exit 1
 }
@@ -192,7 +200,7 @@ grep -Fq 'viewBox="0 0 1400 788"' "$PRACTICE_FACTORY" || { echo "ERROR: CN facto
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' "$INDEX_FILE" || { echo "ERROR: CN homepage approved CN aircraft visual is missing."; exit 1; }
 grep -Fq '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
-grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v10-about-us' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
+grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v11-external-arrows' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-V1' "$CN_VI_FILE" || { echo "ERROR: CN current-module VI contract is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-RUNTIME-V1' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN current-module route runtime is missing."; exit 1; }
 grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' "$INDEX_FILE" || { echo "ERROR: CN homepage translator stylesheet is missing."; exit 1; }
