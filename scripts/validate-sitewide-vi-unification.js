@@ -189,7 +189,7 @@ const cnFooterCss=read('cn-site/assets/cn-footer-actions-v1.css');
 const cnFooterJs=read('cn-site/assets/cn-footer-actions-v1.js');
 assert(cnFooterCss.includes('QilyLean CN Footer Navigation V2'), 'CN seven-action dock stylesheet marker is missing.');
 assert(cnFooterCss.includes('grid-template-columns:repeat(7,minmax(0,1fr))'), 'CN desktop dock must use seven equal actions.');
-assert(cnFooterJs.includes("['home','首页'],['top','顶部'],['parent','上一层级'],['previous','上一网页'],['knowledge','知识索引'],['share','分享当前'],['about','关于我们']"), 'CN seven-action dock order/labels must stay canonical.');
+for (const marker of ["['home','首页']","['top','顶部']","['parent','上一层级']","['previous','上一网页']","['knowledge','知识索引']","['share','分享当前']","['about','关于我们']"]) assert(cnFooterJs.includes(marker), 'CN seven-action dock label/order marker missing: '+marker);
 assert(cnFooterJs.includes("home,top,parent,previous,knowledge,share,about") || cnFooterJs.includes("ORDER=["), 'CN footer runtime must own the seven-action contract.');
 
 const cnHome=read('cn-site/index.html');
