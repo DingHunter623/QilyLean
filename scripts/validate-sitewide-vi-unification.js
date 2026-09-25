@@ -191,7 +191,8 @@ const cnAbout=read('cn-site/about/index.html');
 assert(cnAbout.includes('<h1>关于“精益制造经验分享”</h1>'),'CN About must use the filed site name.');
 
 const resourcePublic=read('links/cn-public/index.html');
-assert(resourcePublic.includes('.wrap{width:min(1240px,calc(100% - 36px));margin:auto}'), 'Resource collaboration public entry must use the formal 1240px content axis.');
+assert(resourcePublic.includes('.wrap{width:min(1180px,calc(100% - 36px));max-width:1180px;margin:auto}'), 'Resource collaboration public entry must use the canonical 1180px content axis.');
+assert(resourcePublic.includes('/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5'), 'Resource collaboration public entry must load the sitewide 1180px axis authority.');
 assert(resourcePublic.includes('font-size:clamp(30px,3vw,40px)'), 'Resource collaboration public entry heading ceiling must remain restrained.');
 assert(resourcePublic.includes('.hero p{width:100%;max-width:none'), 'Resource collaboration hero copy must use the same content-frame width as the body.');
 assert(resourcePublic.includes('font-size:clamp(20px,1.5vw,24px)!important'), 'Resource collaboration card headings must stay within the standard hierarchy.');
