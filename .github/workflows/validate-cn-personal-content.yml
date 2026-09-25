@@ -77,7 +77,7 @@ jobs:
           grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
           grep -Fq '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header' cn-site/index.html
-          grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v10-about-us' cn-site/index.html
+          grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v11-external-arrows' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' cn-site/index.html
           grep -Fq 'QILY-CN-NAV-RAIL-V7' cn-site/assets/qilylean-vi-v2.css
