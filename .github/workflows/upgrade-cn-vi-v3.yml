@@ -229,6 +229,8 @@ jobs:
           home = Path('cn-site/index.html').read_text(encoding='utf-8')
           if '进入 Global Knowledge ↗' not in home:
               bad.append(('cn-site/index.html', 'global-knowledge-cta-label'))
+          if '<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>' not in home:
+              bad.append(('cn-site/index.html', 'global-knowledge-cta-external-semantics'))
 
           if thesis_panels < 1:
               bad.append(('cn-site', 'no-thesis-panels-found'))
