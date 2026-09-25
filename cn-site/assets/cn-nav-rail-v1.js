@@ -9,6 +9,46 @@ if(w.__qilyCnNavRailV7)return;w.__qilyCnNavRailV7=true;
 
 var NAV_SELECTOR='header.site-header nav.nav,header nav[aria-label="主导航"]';
 
+var CANONICAL_NAV_ITEMS=[
+  {key:'home',href:'/',label:'首页'},
+  {key:'lean',href:'/lean/',label:'精益制造'},
+  {key:'projects',href:'/notes/',label:'代表项目'},
+  {key:'knowledge',href:'/knowledge/',label:'知识分享'},
+  {key:'briefs',href:'https://qilylean.com/global-knowledge/briefs/',label:'精选简报',external:true,title:'进入 QilyLean 国际站精选简报（新标签页）'},
+  {key:'resources',href:'https://qilylean.com/links/cn-public/',label:'资源协同 ↗',external:true,title:'进入 QilyLean 国际站资源协同公开入口（新标签页）'},
+  {key:'about',href:'/about/',label:'关于'}
+];
+
+function ensureCanonicalNavigation(nav){
+  if(!nav||nav.getAttribute('aria-label')!=='主导航')return false;
+  var expected=CANONICAL_NAV_ITEMS.map(function(item){
+    var a=d.createElement('a');
+    a.href=item.href;
+    a.textContent=item.label;
+    a.setAttribute('data-qily-nav-key',item.key);
+    if(item.external){
+      a.target='_blank';
+      a.rel='noopener noreferrer';
+      if(item.title)a.title=item.title;
+    }
+    return a;
+  });
+  var current=Array.prototype.slice.call(nav.children).filter(function(node){
+    return node.tagName==='A'&&node.hasAttribute('data-qily-nav-key');
+  });
+  var same=nav.getAttribute('data-qily-cn-nav-contract')==='20260925-v1'&&
+    current.length===expected.length&&current.every(function(a,i){
+      return a.getAttribute('data-qily-nav-key')===expected[i].getAttribute('data-qily-nav-key')&&
+        a.textContent===expected[i].textContent&&a.href===expected[i].href;
+    });
+  if(same)return false;
+  nav.textContent='';
+  expected.forEach(function(a){nav.appendChild(a);});
+  nav.setAttribute('data-qily-cn-nav-contract','20260925-v1');
+  return true;
+}
+
+
 function navs(){return Array.prototype.slice.call(d.querySelectorAll(NAV_SELECTOR));}
 
 function ensureShell(nav){
@@ -224,6 +264,7 @@ function installNavMouseDrag(nav){
 
 function boot(){
   navs().forEach(function(nav){
+    ensureCanonicalNavigation(nav);
     if(nav.dataset.qilyCnNavRail!=='v7')installRail(nav);
     installNavMouseDrag(nav);
   });
@@ -255,13 +296,26 @@ function normalize(path){
   if(path.length>1)path=path.replace(/\/+$/,'');
   return path||'/';
 }
+function routeKey(path){
+  path=normalize(path);
+  if(path==='/')return 'home';
+  if(/^\/(?:lean|ie|standardization|factory|digital|methods)(?:\/|$)/.test(path))return 'lean';
+  if(/^\/notes(?:\/|$)/.test(path))return 'projects';
+  if(/^\/knowledge(?:\/|$)/.test(path))return 'knowledge';
+  if(/^\/about(?:\/|$)/.test(path))return 'about';
+  return '';
+}
 function mark(nav){
   if(!nav)return null;
   var current=normalize(w.location.pathname);
+  var key=routeKey(current);
   var links=Array.prototype.slice.call(nav.querySelectorAll('a[href]'));
   var best=null,bestLength=-1;
   links.forEach(function(link){
     link.removeAttribute('aria-current');
+    if(key&&link.getAttribute('data-qily-nav-key')===key){
+      best=link;bestLength=999;return;
+    }
     var url;
     try{url=new URL(link.getAttribute('href'),w.location.href);}catch(error){return;}
     if(url.origin!==w.location.origin)return;
@@ -273,7 +327,7 @@ function mark(nav){
   });
   if(best){
     best.setAttribute('aria-current','page');
-    nav.setAttribute('data-qily-current-module',normalize(new URL(best.href,w.location.href).pathname));
+    nav.setAttribute('data-qily-current-module',best.getAttribute('data-qily-nav-key')||normalize(new URL(best.href,w.location.href).pathname));
   }else{
     nav.removeAttribute('data-qily-current-module');
   }
