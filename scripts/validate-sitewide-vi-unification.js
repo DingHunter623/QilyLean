@@ -153,13 +153,18 @@ for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
   assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header'), rel+' must use CN VI V23.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header'), rel+' must use CN VI V26.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v10-about-us'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
   assert(html.includes(cnFooterName), rel+' must display the filed China-site name in the footer.');
   assert(!html.includes('QilyLean | 启力精益 · 个人制造业知识与实践分享'), rel+' must not restore the retired footer name.');
   assert(!html.includes('个人制造业知识与实践分享'), rel+' must not expose the retired China-site name.');
+  if(html.includes('aria-label="主导航"')){
+    assert(html.includes('data-qily-cn-nav-contract="20260926-v2"'), rel+' must use the current CN navigation contract.');
+    assert(/<a href="\/about\/" data-qily-nav-key="about"[^>]*>关于我们<\/a>/.test(html), rel+' CN primary-nav static label must use 关于我们.');
+    assert(!/>关于<\/a>/.test(html), rel+' must not retain the retired 关于 navigation label.');
+  }
   const title=(html.match(/<title>([^<]*)<\/title>/i)||[])[1]||'';
   assert(title.includes(cnFiledName), rel+' title must include the filed China-site name.');
   // Filing records remain official external links after shared-footer regeneration.
@@ -184,6 +189,13 @@ assert(!cnHome.includes('个人制造业知识与实践分享'),'CN home retired
 
 const cnAbout=read('cn-site/about/index.html');
 assert(cnAbout.includes('<h1>关于“精益制造经验分享”</h1>'),'CN About must use the filed site name.');
+
+const resourcePublic=read('links/cn-public/index.html');
+assert(resourcePublic.includes('.wrap{width:min(1240px,calc(100% - 36px));margin:auto}'), 'Resource collaboration public entry must use the formal 1240px content axis.');
+assert(resourcePublic.includes('font-size:clamp(30px,3vw,40px)'), 'Resource collaboration public entry heading ceiling must remain restrained.');
+assert(resourcePublic.includes('.hero p{width:100%;max-width:none'), 'Resource collaboration hero copy must use the same content-frame width as the body.');
+assert(resourcePublic.includes('font-size:clamp(20px,1.5vw,24px)!important'), 'Resource collaboration card headings must stay within the standard hierarchy.');
+assert(!resourcePublic.includes('font-size:clamp(30px,5vw,52px)'), 'Resource collaboration oversized H1 regression detected.');
 
 const linksPage=read('links/index.html');
 assert(linksPage.includes('<strong>精益制造经验分享（QilyLean | 启力精益中国站）：</strong>'),'International links page must expose the filed China-site name.');
