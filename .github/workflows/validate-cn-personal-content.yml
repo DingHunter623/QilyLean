@@ -76,7 +76,7 @@ jobs:
           grep -Fq '精选 8 项制造实践' cn-site/index.html
           grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
-          grep -Fq '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v27-axis-footer-dock' cn-site/index.html
+          grep -Fq '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v28-footer-visual-parity' cn-site/index.html
           grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v11-external-arrows' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' cn-site/index.html
