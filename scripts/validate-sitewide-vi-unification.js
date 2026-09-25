@@ -118,11 +118,13 @@ assert(cnRail.includes('QILY-CN-CURRENT-MODULE-RUNTIME-V1'), 'CN current-module 
 assert(cnRail.includes("best.setAttribute('aria-current','page')"), 'CN current-module route runtime must set aria-current.');
 assert(cnCss.includes('grid-template-areas:"brand nav translate"'), 'CN desktop header three-zone layout is missing.');
 assert(cnCss.includes('grid-template-areas:"brand translate" "nav nav"'), 'CN mobile header nav row is missing.');
-assert(cnCss.includes('QILY-CN-HEADER-SHELL-PARITY-V2'), 'CN desktop header shell parity marker is missing.');
-assert(cnCss.includes('min-height:66.4px!important'), 'CN desktop header shell must match the international measured geometry.');
+assert(cnCss.includes('QILY-CN-HEADER-SHELL-PARITY-V3'), 'CN desktop header shell parity marker is missing.');
+assert(cnCss.includes('QILY-CN-CONTENT-AXIS-PARITY-V1'), 'CN content-axis parity marker is missing.');
+assert(cnCss.includes('min-height:83.4px!important'), 'CN desktop header shell must match the international measured geometry.');
 assert(cnRail.includes('mousedown'), 'CN nav rail mouse drag is missing.');
 assert(cnRail.includes('mousemove'), 'CN nav rail mouse move runtime is missing.');
 assert(cnRail.includes('touchstart'), 'CN nav rail touch drag is missing.');
+assert(cnRail.includes("label:'关于我们'"), 'CN primary navigation must use 关于我们.');
 assert(cnRail.includes('installNavMouseDrag'), 'CN primary nav direct mouse drag is missing.');
 assert(!cnRail.includes('pointerdown'), 'CN nav rail must not depend on PointerEvent drag.');
 assert(!cnRail.includes('data-qily-translation-provider'), 'CN nav rail must remain translation-neutral.');
@@ -151,8 +153,8 @@ for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
   assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260924-cn-vi-v25-header-shell-parity'), rel+' must use CN VI V23.');
-  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260925-nav-rail-v9-resource-collab'), rel+' must load the international-style nav rail runtime.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v26-unified-axis-header'), rel+' must use CN VI V23.');
+  assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v10-about-us'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
   assert(html.includes(cnFooterName), rel+' must display the filed China-site name in the footer.');
