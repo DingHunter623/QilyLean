@@ -493,6 +493,7 @@ jobs:
               'background:var(--qily-gold)!important',
               'html:root body .knowledge-bridge>a:active',
               'QILY-CN-FINAL-PRODUCTION-V42',
+              'QILY-CN-EXTERNAL-ARROW-SINGLE-V43',
               'QILY-CN-EXTERNAL-MARK-V36',
               'QILY-CN-TYPE-HIERARCHY-V5',
               '--qily-cn-h1:clamp(28px,2.25vw,38px)',
