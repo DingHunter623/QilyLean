@@ -255,3 +255,9 @@ html body main :is(.hero,.module-hero,.section,.module-section) :is(.hero-action
 html body main :is(.section,.module-section,.daily-single-section) :is(.inner,.module-inner,.daily-inner) :is(.section-head,.module-heading,.module-head) p{font-size:19.5px!important;line-height:1.72!important}
 html body :is(.qily-phone-copy-prompt,.qily-wechat-copy-prompt) span{font-size:18px!important;line-height:1.48!important}
 html body :is(.qily-phone-copy-prompt,.qily-wechat-copy-prompt) button{font-size:18px!important;min-height:38px!important}
+
+/* QILY-SITEWIDE-BILINGUAL-LABEL-GOLD-V1 | 2026-09-26 */
+html:root body main :is(.hero,.module-hero,.daily-hero,.page-hero,[data-qily-hero]) :is(.eyebrow,.module-eyebrow,.hero-eyebrow,.bridge-hero-eyebrow){color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;font-weight:950!important;text-shadow:none!important;opacity:1!important}
+html:root body main :is(.section,.module-section,.daily-single-section) :is(.section-kicker,.module-kicker,.qily-ia-kicker,.section-head>small,.module-heading>.module-eyebrow){color:#caa15f!important;-webkit-text-fill-color:#caa15f!important;font-weight:950!important;opacity:1!important}
+html:root body #qilyChinaKnowledgeBridge a.resource-action.qily-cross-site-primary{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:42px!important;padding:8px 15px!important;border:1px solid #caa15f!important;border-radius:999px!important;color:#17322d!important;-webkit-text-fill-color:#17322d!important;background:#ffe39b!important;font-weight:900!important;text-decoration:none!important;box-shadow:none!important}
+html:root body #qilyChinaKnowledgeBridge a.resource-action.qily-cross-site-primary:is(:hover,:focus-visible){background:#f6d879!important;border-color:#caa15f!important;color:#17322d!important;-webkit-text-fill-color:#17322d!important;box-shadow:0 8px 20px rgba(7,60,71,.18)!important;transform:translateY(-1px)!important}
