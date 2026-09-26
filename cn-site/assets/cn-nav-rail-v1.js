@@ -5,7 +5,7 @@
  * Track and thumb are real DOM elements and directly map movement to nav.scrollLeft.
  */
 (function(d,w){'use strict';
-if(w.__qilyCnNavRailV17)return;w.__qilyCnNavRailV17=true;
+if(w.__qilyCnNavRailV19)return;w.__qilyCnNavRailV19=true;
 
 var NAV_SELECTOR='header.site-header nav.nav,header nav[aria-label="主导航"]';
 
@@ -38,7 +38,7 @@ function ensureCanonicalNavigation(nav){
   var current=Array.prototype.slice.call(nav.children).filter(function(node){
     return node.tagName==='A'&&node.hasAttribute('data-qily-nav-key');
   });
-  var same=nav.getAttribute('data-qily-cn-nav-contract')==='20260926-v5'&&
+  var same=nav.getAttribute('data-qily-cn-nav-contract')==='20260926-v6'&&
     current.length===expected.length&&current.every(function(a,i){
       return a.getAttribute('data-qily-nav-key')===expected[i].getAttribute('data-qily-nav-key')&&
         a.href===expected[i].href&&
@@ -47,7 +47,7 @@ function ensureCanonicalNavigation(nav){
   if(same)return false;
   nav.textContent='';
   expected.forEach(function(a){nav.appendChild(a);});
-  nav.setAttribute('data-qily-cn-nav-contract','20260926-v5');
+  nav.setAttribute('data-qily-cn-nav-contract','20260926-v6');
   return true;
 }
 
@@ -360,4 +360,4 @@ w.addEventListener('pageshow',boot,{passive:true});
 
 /* QILY-CN-NAV-ARROW-CLOSURE-V12: labels above are canonical and include external arrows. */
 
-/* QILY-CN-NAV-FINAL-CLOSURE-V17 | canonical external-resource arrow integrity */
+/* QILY-CN-NAV-FINAL-PRODUCTION-V19 | canonical external-resource arrow integrity */
