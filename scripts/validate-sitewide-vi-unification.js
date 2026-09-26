@@ -160,7 +160,7 @@ for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
   assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v40-hero-eyebrow'), rel+' must use current CN VI resource version.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v41-international-hero'), rel+' must use current CN VI resource version.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v18-hero-eyebrow'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
