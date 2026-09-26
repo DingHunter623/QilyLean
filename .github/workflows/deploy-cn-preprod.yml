@@ -393,13 +393,24 @@ jobs:
               raise SystemExit('Production China home missing V42 final production VI revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' not in home:
               raise SystemExit('Production China home missing V20 CN bridge nav runtime.')
-          required_external_nav = [
-              'data-qily-nav-key="briefs" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站精选简报（新标签页）" data-qily-external="international">精选简报<span class="qily-external-mark" aria-hidden="true">↗</span></a>',
-              'data-qily-nav-key="resources" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站资源协同公开入口（新标签页）" data-qily-external="international">资源协同<span class="qily-external-mark" aria-hidden="true">↗</span></a>',
+          required_internal_nav = [
+              'href="/briefs/" data-qily-nav-key="briefs">精选简报</a>',
+              'href="/resources/" data-qily-nav-key="resources">资源协同</a>',
+              'data-qily-cn-nav-contract="20260926-v7-bridge"',
           ]
-          for marker in required_external_nav:
+          for marker in required_internal_nav:
               if marker not in home:
-                  raise SystemExit(f'Production China primary nav missing external arrow/semantics: {marker}')
+                  raise SystemExit(f'Production China primary nav missing internal bridge semantics: {marker}')
+          if 'data-qily-nav-key="briefs" target="_blank"' in home or 'data-qily-nav-key="resources" target="_blank"' in home:
+              raise SystemExit('Production China primary nav still jumps directly to the international site.')
+          if 'href="https://qilylean.com/global-knowledge/briefs/"' not in briefs_bridge:
+              raise SystemExit('Production CN briefs bridge lost its international destination.')
+          if 'target="_blank" rel="noopener noreferrer"' not in briefs_bridge:
+              raise SystemExit('Production CN briefs bridge lost safe external-link behavior.')
+          if 'href="https://qilylean.com/links/cn-public/"' not in resources_bridge:
+              raise SystemExit('Production CN resources bridge lost its international destination.')
+          if 'target="_blank" rel="noopener noreferrer"' not in resources_bridge:
+              raise SystemExit('Production CN resources bridge lost safe external-link behavior.')
           if '<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>' not in home:
               raise SystemExit('Production China Global Knowledge CTA lost external-link semantics.')
           if '/assets/cn-footer-actions-v1.css?v=20260926-footer-actions-v5-three-actions-vi-parity' not in home:
@@ -523,7 +534,7 @@ jobs:
               if marker not in links:
                   raise SystemExit(f'Production international links page missing full-brand context: {marker}')
 
-          print('PASS: production closure verified on qilylean.cn About/home/practice/VI and qilylean.com /links/.')
+          print('PASS: production closure verified on qilylean.cn with internal briefs/resources bridge navigation.')
           PY
 
       - name: Verify local practice award evidence is public
