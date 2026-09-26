@@ -1,18 +1,6 @@
-name: Upgrade QilyLean CN VI V17 Sitewide Closure
+name: Upgrade QilyLean CN VI — manual maintenance only
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'cn-site/**/*.html'
-      - 'cn-site/assets/qilylean-vi-v1.css'
-      - 'cn-site/assets/qilylean-vi-v2.css'
-      - 'cn-site/assets/cn-nav-rail-v1.js'
-      - 'cn-site/assets/cn-footer-actions-v1.css'
-      - 'cn-site/assets/cn-footer-actions-v1.js'
-      - 'cn-site/assets/cn-translate-baidu-v1.js'
-      - 'cn-site/assets/cn-translate-baidu-v1.css'
-      - '.github/workflows/upgrade-cn-vi-v3.yml'
   workflow_dispatch:
 
 permissions:
