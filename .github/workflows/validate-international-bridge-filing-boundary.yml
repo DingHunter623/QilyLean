@@ -1,0 +1,19 @@
+name: Validate international bridge filing boundary
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'global-knowledge/briefs/index.html'
+      - 'links/cn-public/index.html'
+      - 'global-knowledge/cn-bridge-shell-v1.css'
+      - 'global-knowledge/cn-bridge-shell-v1.js'
+      - 'scripts/validate-international-bridge-filing-boundary.js'
+      - '.github/workflows/validate-international-bridge-filing-boundary.yml'
+  workflow_dispatch:
+jobs:
+  filing-boundary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify qilylean.com bridge pages do not expose China filing numbers
+        run: node scripts/validate-international-bridge-filing-boundary.js
