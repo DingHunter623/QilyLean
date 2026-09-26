@@ -37,14 +37,14 @@ function patchLinks(){
   html=html
     .replace(/<title>产业资源目录｜全球科技企业与跨行业协同资源｜QilyLean<\/title>/,'<title>友情链接｜全球科技企业100强官网入口｜QilyLean</title>')
     .replace(/<meta property="og:title" content="产业资源目录｜QilyLean">/,'<meta property="og:title" content="友情链接｜全球科技企业100强官网入口｜QilyLean">')
-    .replace(/<span class="eyebrow">GLOBAL TECHNOLOGY & INDUSTRY RESOURCE DIRECTORY<\/span><h1>产业资源目录｜全球科技企业与跨行业资源<\/h1><p class="lead">[\s\S]*?<\/p>/,'<span class="eyebrow">GLOBAL TECHNOLOGY DIRECTORY</span><h1>友情链接｜全球科技企业100强</h1><p class="lead">汇集人工智能、云计算、半导体、工业自动化、智能硬件、商业航天、新能源、中国硬科技及优质网址导航入口，为技术研究、行业洞察、项目对标与供应链学习提供高效入口。</p>')
+    .replace(/<span class="eyebrow">GLOBAL TECHNOLOGY & INDUSTRY RESOURCE DIRECTORY(?: \\| [^<]+)?<\/span><h1>产业资源目录｜全球科技企业与跨行业资源<\/h1><p class="lead">[\s\S]*?<\/p>/,'<span class="eyebrow">GLOBAL TECHNOLOGY DIRECTORY | 全球科技目录</span><h1>友情链接｜全球科技企业100强</h1><p class="lead">汇集人工智能、云计算、半导体、工业自动化、智能硬件、商业航天、新能源、中国硬科技及优质网址导航入口，为技术研究、行业洞察、项目对标与供应链学习提供高效入口。</p>')
     .replace(/width:min\((?:1240|1360|1560)px,100%\)/g,'width:min(1180px,100%)')
     .replace('与QilyLean制造业应用价值精选',`与 ${officialBrand} 制造业应用价值精选`)
     .replace('与 QilyLean 制造业应用价值精选',`与 ${officialBrand} 制造业应用价值精选`)
     .replace('<strong>网址导航友情链接：</strong>QilyLean 已增加主流网址导航官方入口，便于访问与站点收录核验。',`<strong>网址导航友情链接：</strong>${officialBrand} 已增加主流网址导航官方入口，便于访问与站点收录核验。`);
 
   const chinaKnowledgeBlock=`<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->
-      <div class="notice" id="qilyChinaKnowledgeBridge"><strong>精益制造经验分享（${officialBrand}中国站）：</strong> <a class="resource-action" href="https://qilylean.cn/" target="_blank" rel="noopener" aria-label="进入精益制造经验分享">进入精益制造经验分享 ↗</a> <span>qilylean.cn 网站名称为“精益制造经验分享”，属于 ${officialBrand} 制造知识体系，聚焦精益生产、工业工程、标准化、工厂规划与数智工厂知识；该入口属于知识体系关联，不作为“全球科技企业100强”的企业收录项或排名依据。</span></div>
+      <div class="notice" id="qilyChinaKnowledgeBridge"><strong>精益制造经验分享（${officialBrand}中国站）：</strong> <a class="resource-action qily-cross-site-primary" href="https://qilylean.cn/" target="_blank" rel="noopener" aria-label="进入精益制造经验分享">进入精益制造经验分享 ↗</a> <span>qilylean.cn 网站名称为“精益制造经验分享”，属于 ${officialBrand} 制造知识体系，聚焦精益生产、工业工程、标准化、工厂规划与数智工厂知识；该入口属于知识体系关联，不作为“全球科技企业100强”的企业收录项或排名依据。</span></div>
       <!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->`;
   const bridgeRe=/<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:START -->[\s\S]*?<!-- QILY-CHINA-KNOWLEDGE-BRIDGE:END -->/;
   if(bridgeRe.test(html)){
