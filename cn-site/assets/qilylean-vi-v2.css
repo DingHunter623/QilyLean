@@ -1347,3 +1347,9 @@ html:root:root body .site-header nav.nav>a[data-qily-external="international"]::
   display:none!important;
 }
 /* QILY-CN-EXTERNAL-ARROW-SINGLE-V43:END */
+
+/* QILY-CN-BILINGUAL-LABEL-GOLD-V44 | 2026-09-26 */
+html:root body main :is(.hero,.page-hero,.module-hero) :is(.eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow){color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;font-weight:950!important;text-shadow:none!important;opacity:1!important}
+html:root body main :is(.section,.article-body,.content) :is(.section-kicker,.module-kicker,.section-head>small,.portal-card>small){color:#caa15f!important;-webkit-text-fill-color:#caa15f!important;font-weight:950!important;opacity:1!important}
+html:root body main a.btn.primary[data-qily-external="international"],html:root body main .article-body a.btn.primary{background:#ffe39b!important;border-color:#caa15f!important;color:#17322d!important;-webkit-text-fill-color:#17322d!important;font-weight:900!important}
+html:root body main a.btn.primary[data-qily-external="international"]:is(:hover,:focus-visible),html:root body main .article-body a.btn.primary:is(:hover,:focus-visible){background:#f6d879!important;border-color:#caa15f!important;color:#17322d!important;-webkit-text-fill-color:#17322d!important}
