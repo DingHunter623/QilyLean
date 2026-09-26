@@ -104,7 +104,7 @@ jobs:
           test -f cn-site/digital/index.html
           test -f cn-site/methods/index.html
           grep -Fq '<title>精益制造经验分享｜QilyLean | 启力精益｜制造工程、精益生产与数智工厂知识站</title>' cn-site/index.html
-          grep -Fq '<p class="eyebrow">精益制造经验分享</p>' cn-site/index.html
+          grep -Fq '<p class="eyebrow">LEAN MANUFACTURING EXPERIENCE | 精益制造经验分享</p>' cn-site/index.html
           grep -Fq '<meta name="360-site-verification" content="42760a600d8679c79148d470325347ac" />' cn-site/index.html
           grep -Fq '"name":"精益制造经验分享"' cn-site/index.html
           grep -Fq 'QilyLean | 启力精益 · 精益制造经验分享' cn-site/index.html
@@ -289,7 +289,7 @@ jobs:
               for marker in [
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
-                  '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v43-single-external-arrow',
+                  '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v44-bilingual-label-gold',
                   '/assets/cn-footer-actions-v1.css?v=20260926-footer-actions-v5-three-actions-vi-parity',
                   '/assets/cn-footer-actions-v1.js?v=20260926-footer-actions-v5-three-actions-vi-parity',
                   'data-qily-footer-action="top"',
@@ -389,7 +389,7 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v43-single-external-arrow' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v44-bilingual-label-gold' not in home:
               raise SystemExit('Production China home missing V42 final production VI revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' not in home:
               raise SystemExit('Production China home missing V20 CN bridge nav runtime.')
