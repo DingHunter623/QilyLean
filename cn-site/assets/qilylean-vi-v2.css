@@ -1176,3 +1176,14 @@ html:root body button.qily-copy-action{
 html:root body button.qily-copy-action:hover{color:#8a671f!important;-webkit-text-fill-color:#8a671f!important}
 html:root body button.qily-copy-action:focus-visible{outline:3px solid rgba(202,161,95,.34)!important;outline-offset:3px!important;border-radius:4px!important}
 /* QILY-CN-COPY-ACTION-V36:END */
+
+/* QILY-CN-SITEWIDE-CLOSURE-V37 | 2026-09-26 */
+html:root body .article-shell{display:block!important}
+html:root body .article-shell>.article-body{width:100%!important;max-width:none!important;min-width:0!important}
+html:root body .article-shell>aside.toc{display:none!important}
+html:root body .qily-copy-feedback,
+html:root body .qily-about-copy-feedback{display:inline-block!important;margin-left:10px!important;padding:3px 8px!important;border-radius:999px!important;background:#fff4d6!important;color:#755414!important;-webkit-text-fill-color:#755414!important;font-size:.82em!important;font-weight:850!important;opacity:0!important;transform:translateY(2px)!important;transition:opacity .16s ease,transform .16s ease!important}
+html:root body .qily-copy-feedback.is-visible,
+html:root body .qily-about-copy-feedback.is-visible{opacity:1!important;transform:translateY(0)!important}
+html:root body button.qily-copy-action{appearance:none!important;-webkit-appearance:none!important;border:0!important;background:transparent!important;padding:0!important;font:inherit!important;font-weight:900!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:5px!important;cursor:pointer!important}
+/* QILY-CN-SITEWIDE-CLOSURE-V37:END */
