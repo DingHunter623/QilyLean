@@ -1187,3 +1187,17 @@ html:root body .qily-copy-feedback.is-visible,
 html:root body .qily-about-copy-feedback.is-visible{opacity:1!important;transform:translateY(0)!important}
 html:root body button.qily-copy-action{appearance:none!important;-webkit-appearance:none!important;border:0!important;background:transparent!important;padding:0!important;font:inherit!important;font-weight:900!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:5px!important;cursor:pointer!important}
 /* QILY-CN-SITEWIDE-CLOSURE-V37:END */
+
+
+/* QILY-CN-FINAL-CLOSURE-V38 | 2026-09-26
+ * Final authority: full-width reading body, consistent external marks, and filing-style copy actions.
+ */
+html:root body .article-shell{display:block!important}
+html:root body .article-shell>.article-body{width:100%!important;max-width:none!important;min-width:0!important}
+html:root body .article-shell>aside.toc{display:none!important}
+html:root body .site-header .nav>a[data-qily-external="international"] .qily-external-mark{display:inline-block!important;margin-left:3px!important;position:relative!important;top:-.42em!important;font-size:.58em!important;line-height:1!important;font-weight:950!important;color:currentColor!important;-webkit-text-fill-color:currentColor!important;opacity:1!important}
+html:root body button.qily-copy-action{display:inline-flex!important;align-items:center!important;justify-content:center!important;width:auto!important;min-height:38px!important;padding:6px 12px!important;border:1px solid #b9d9d4!important;border-radius:8px!important;background:#f7fbfa!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;font:inherit!important;font-weight:850!important;line-height:1.2!important;text-decoration:none!important;cursor:pointer!important;box-shadow:none!important}
+html:root body button.qily-copy-action:hover{border-color:#caa15f!important;background:#fff8e7!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}
+html:root body button.qily-copy-action:focus-visible{outline:3px solid rgba(202,161,95,.34)!important;outline-offset:3px!important}
+html:root body .brand-domain{margin:6px 0 10px!important}
+/* QILY-CN-FINAL-CLOSURE-V38:END */
