@@ -1107,3 +1107,41 @@ html:root body .qily-about-copy-feedback.is-visible{
   transform:translateY(0)!important;
 }
 /* QILY-CN-ABOUT-CONTACT-ACTION-V1:END */
+
+/* QILY-CN-INTERACTION-VISUAL-CLOSURE-V35 | 2026-09-26
+ * Sitewide action affordance: obvious underline/copy feedback for About actions.
+ * International external navigation uses a stable superscript arrow glyph independent of label text/cache.
+ */
+html:root:root body main a.qily-about-action[data-qily-copy]{
+  display:inline!important;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  font-weight:900!important;
+  text-decoration:underline!important;
+  text-decoration-line:underline!important;
+  text-decoration-color:#0f4b5a!important;
+  text-decoration-thickness:2px!important;
+  text-underline-offset:5px!important;
+  border-bottom:0!important;
+}
+html:root:root body .site-header nav.nav>a[data-qily-external="international"]{
+  position:relative!important;
+  padding-right:1.18em!important;
+}
+html:root:root body .site-header nav.nav>a[data-qily-external="international"]::after{
+  content:"↗"!important;
+  position:absolute!important;
+  top:.16em!important;
+  right:.18em!important;
+  display:block!important;
+  font-size:.62em!important;
+  line-height:1!important;
+  font-weight:950!important;
+  color:currentColor!important;
+  -webkit-text-fill-color:currentColor!important;
+  opacity:1!important;
+  transform:none!important;
+  pointer-events:none!important;
+}
+html:root:root body .site-header nav.nav>a[data-qily-external="international"]::before{content:none!important}
+/* QILY-CN-INTERACTION-VISUAL-CLOSURE-V35:END */
