@@ -242,7 +242,7 @@ function materializeHome() {
   html = upsertScript(html, 'qilyStaticCoreInteractions', STATIC_INTERACTIONS);
   html = addBodyClasses(html, ['qily-ia-ready', 'qily-home-commercial-focus']);
 
-  html = html.replace(/<span class="eyebrow">[\s\S]*?<\/span>/, '<span class="eyebrow">制造运营资产化｜六类核心能力｜问题到组织复制</span>');
+  html = html.replace(/<span class="eyebrow">[\s\S]*?<\/span>/, '<span class="eyebrow">MANUFACTURING OPERATING ASSETS | 制造运营资产化 · 六类核心能力 · 问题到组织复制</span>');
   html = html.replace(/<h1>[\s\S]*?<\/h1>\s*<p class="lead">[\s\S]*?<\/p>/, `<h1>把复杂制造问题，转化为可验证的交付结果</h1>
           <p class="qily-founder-line">丁启利｜制造工程、工业工程与精益改善项目实践者</p>
           <p class="lead">QilyLean｜启力精益由丁启利发起，依托20年制造工程与精益改善实践，形成六类核心能力，合计六类项目合作能力。项目以现场诊断、范围确认、方案设计、Pilot验证、标准固化和验收闭环推进；具体交付物、周期、费用、分阶段付款比例与验收条件以对应合同及正式约定为准。</p>
