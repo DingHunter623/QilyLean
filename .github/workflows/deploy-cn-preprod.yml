@@ -287,7 +287,7 @@ jobs:
               for marker in [
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
-                  '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v28-footer-visual-parity',
+                  '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v37-sitewide-closure',
                   '/assets/cn-footer-actions-v1.css?v=20260926-footer-actions-v5-three-actions-vi-parity',
                   '/assets/cn-footer-actions-v1.js?v=20260926-footer-actions-v5-three-actions-vi-parity',
                   'data-qily-footer-action="top"',
@@ -358,21 +358,15 @@ jobs:
               '湘公网安备43020002000443号',
               'https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443',
               '/assets/mps-beian.png',
-              'aria-label="本页主旨"',
-              '<b>本页主旨</b>',
           ]
           for marker in required_about:
               if marker not in about:
                   raise SystemExit(f'Production About page missing: {marker}')
 
-          toc_match = re.search(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', about, re.I | re.S)
-          if not toc_match:
-              raise SystemExit('Production About page missing 本页主旨 panel.')
-          toc_inner = toc_match.group(1).lower()
-          if '<a' in toc_inner or 'href=' in toc_inner:
-              raise SystemExit('Production 本页主旨 panel is still clickable.')
-          if '本页目录' in about:
-              raise SystemExit('Legacy 本页目录 label returned in production.')
+          if re.search(r'<aside\b[^>]*class=["\']toc["\']', about, re.I):
+              raise SystemExit('Production About page still exposes retired 本页主旨 panel.')
+          if '本页目录' in about or '<b>本页主旨</b>' in about:
+              raise SystemExit('Retired page-thesis label returned in production.')
 
           required_home_name = [
               '<title>精益制造经验分享｜QilyLean | 启力精益｜制造工程、精益生产与数智工厂知识站</title>',
@@ -393,10 +387,10 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v28-footer-visual-parity' not in home:
-              raise SystemExit('Production China home missing current-module VI cache revision.')
-          if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v11-external-arrows' not in home:
-              raise SystemExit('Production China home missing current-module nav rail runtime.')
+          if '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v37-sitewide-closure' not in home:
+              raise SystemExit('Production China home missing V37 sitewide VI cache revision.')
+          if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v16-arrow-integrity' not in home:
+              raise SystemExit('Production China home missing V16 arrow-integrity nav runtime.')
           required_external_nav = [
               'data-qily-nav-key="briefs" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站精选简报（新标签页）" data-qily-external="international">精选简报 ↗</a>',
               'data-qily-nav-key="resources" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站资源协同公开入口（新标签页）" data-qily-external="international">资源协同 ↗</a>',
@@ -498,17 +492,17 @@ jobs:
               'CN global-knowledge CTA: VI gold + explicit interaction feedback.',
               'background:var(--qily-gold)!important',
               'html:root body .knowledge-bridge>a:active',
-              'QILY-CN-THESIS-NONINTERACTIVE-V1',
+              'QILY-CN-SITEWIDE-CLOSURE-V37',
+              'QILY-CN-EXTERNAL-MARK-V36',
               'QILY-CN-TYPE-HIERARCHY-V5',
               '--qily-cn-h1:clamp(28px,2.25vw,38px)',
               '--qily-cn-h2:clamp(20px,1.25vw,22px)',
               '--qily-cn-h3:clamp(17px,1vw,19px)',
-              'pointer-events:none!important',
           ]
           for marker in required_vi:
               if marker not in vi:
                   raise SystemExit(f'Production China VI missing: {marker}')
-          for marker in ['QilyLean CN Primary Navigation Rail V7', 'qily-cn-nav-shell', 'qily-primary-nav-scroll-thumb', 'mousedown', 'mousemove', 'touchstart', 'ResizeObserver']:
+          for marker in ['QilyLean CN Primary Navigation Rail V7', 'qily-external-mark', "data-qily-cn-nav-contract','20260926-v5'", 'qily-cn-nav-shell', 'qily-primary-nav-scroll-thumb', 'mousedown', 'mousemove', 'touchstart', 'ResizeObserver']:
               if marker not in nav_runtime:
                   raise SystemExit(f'Production China nav runtime missing: {marker}')
           for marker in ['QilyLean CN In-Page Translation V7', "data-qily-translation-engine','baidu'", 'concurrency=1']:
