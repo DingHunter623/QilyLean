@@ -1333,3 +1333,17 @@ html:root body main .trust-box a[href^="https://beian."]:active{
   box-shadow:inset 0 2px 5px rgba(7,60,71,.25)!important;transform:translateY(1px) scale(.985)!important
 }
 /* QILY-CN-FINAL-PRODUCTION-V42:END */
+
+
+/* QILY-CN-EXTERNAL-ARROW-SINGLE-V43 | 2026-09-26
+ * Retire the legacy pseudo-element arrow. Keep only the canonical inline qily-external-mark.
+ */
+html:root:root body .site-header nav.nav>a[data-qily-external="international"]::after{
+  content:none!important;
+  display:none!important;
+}
+html:root:root body .site-header nav.nav>a[data-qily-external="international"]::before{
+  content:none!important;
+  display:none!important;
+}
+/* QILY-CN-EXTERNAL-ARROW-SINGLE-V43:END */
