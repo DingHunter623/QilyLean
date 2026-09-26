@@ -1,0 +1,116 @@
+/* QilyLean CN-bridge shell for international public modules | 2026-09-26
+ * Header navigation mirrors qilylean.cn. Brand alone returns to qilylean.com.
+ * Footer actions mirror qilylean.cn: 顶部 / 上一网页 / 分享当前.
+ */
+:root{--qily-bridge-axis:1180px;--qily-bridge-forest:#0f4b5a;--qily-bridge-deep:#073c47;--qily-bridge-gold:#caa15f;--qily-bridge-gold-soft:#ffe39b;--qily-bridge-line:#bfd6d2;--qily-bridge-footer-h:58px}
+html body{padding-bottom:var(--qily-bridge-footer-h)!important}
+html body .cn-bridge-header{
+  position:sticky!important;top:0!important;z-index:2147481000!important;
+  width:100%!important;margin:0!important;padding:0!important;background:#fff!important;
+  border-bottom:1px solid #d5e4e3!important;box-shadow:none!important
+}
+html body .cn-bridge-header-inner{
+  width:min(var(--qily-bridge-axis),calc(100% - 36px))!important;min-height:82px!important;margin:0 auto!important;
+  display:grid!important;grid-template-columns:max-content minmax(0,1fr) max-content!important;
+  grid-template-areas:"brand nav translate"!important;align-items:center!important;gap:8px 14px!important
+}
+html body .cn-bridge-brand{
+  grid-area:brand!important;display:inline-flex!important;align-items:center!important;white-space:nowrap!important;
+  color:var(--qily-bridge-forest)!important;-webkit-text-fill-color:var(--qily-bridge-forest)!important;
+  text-decoration:none!important;font:950 20px/1.1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important
+}
+html body .cn-bridge-brand span{font-weight:850!important}
+html body .cn-bridge-nav{
+  grid-area:nav!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;
+  gap:4px!important;min-width:0!important;width:100%!important;padding:4px 0 15px!important;margin:0!important;
+  overflow-x:auto!important;overflow-y:hidden!important;overscroll-behavior-x:contain!important;
+  -webkit-overflow-scrolling:touch!important;touch-action:pan-x pan-y!important;white-space:nowrap!important;
+  scrollbar-width:thin!important;scrollbar-color:var(--qily-bridge-forest) #b9d9d4!important
+}
+html body .cn-bridge-nav::-webkit-scrollbar{display:block!important;height:5px!important}
+html body .cn-bridge-nav::-webkit-scrollbar-track{background:#b9d9d4!important;border-radius:999px!important}
+html body .cn-bridge-nav::-webkit-scrollbar-thumb{background:var(--qily-bridge-forest)!important;border-radius:999px!important}
+html body .cn-bridge-nav>a{
+  flex:0 0 auto!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  min-height:42px!important;padding:7px 10px!important;border:1px solid transparent!important;border-radius:10px!important;
+  color:#182420!important;-webkit-text-fill-color:#182420!important;background:transparent!important;
+  text-decoration:none!important;font:900 20px/1.2 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:nowrap!important
+}
+html body .cn-bridge-nav>a:is(:hover,:focus-visible),
+html body .cn-bridge-nav>a[aria-current="page"]{
+  color:#fff!important;-webkit-text-fill-color:#fff!important;background:var(--qily-bridge-forest)!important;
+  border-color:var(--qily-bridge-gold)!important;outline:none!important
+}
+html body .cn-bridge-header .qily-web-translate{grid-area:translate!important;justify-self:end!important;align-self:center!important}
+
+html body .cn-bridge-footer{
+  position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:2147481800!important;
+  width:100%!important;margin:0!important;padding-bottom:env(safe-area-inset-bottom)!important;
+  background:var(--qily-bridge-forest)!important;color:#fff!important;border-top:3px solid #c8a25a!important;
+  box-shadow:0 -8px 24px rgba(4,32,39,.16)!important
+}
+html body .cn-bridge-footer-inner{
+  width:min(var(--qily-bridge-axis),calc(100% - 44px))!important;min-height:55px!important;margin:0 auto!important;
+  display:grid!important;grid-template-columns:max-content max-content minmax(0,1fr)!important;
+  align-items:center!important;gap:14px 18px!important;padding:6px 0!important
+}
+html body .cn-bridge-footer-brand{font-size:14px!important;line-height:1.25!important;font-weight:800!important;white-space:nowrap!important}
+html body .cn-bridge-footer-actions{
+  display:inline-grid!important;grid-template-columns:repeat(3,max-content)!important;align-items:center!important;gap:5px!important;margin:0!important;padding:0!important
+}
+html body .cn-bridge-footer-actions>button{
+  box-sizing:border-box!important;appearance:none!important;-webkit-appearance:none!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;min-width:92px!important;min-height:40px!important;
+  padding:7px 11px!important;border:1px solid rgba(255,227,155,.52)!important;border-radius:8px!important;
+  background:rgba(255,255,255,.055)!important;color:var(--qily-bridge-gold-soft)!important;-webkit-text-fill-color:var(--qily-bridge-gold-soft)!important;
+  font:850 15px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:nowrap!important;cursor:pointer!important
+}
+html body .cn-bridge-footer-actions>button:is(:hover,:focus-visible),html body .cn-bridge-footer-actions>button.is-copied{
+  background:var(--qily-bridge-gold-soft)!important;border-color:var(--qily-bridge-gold-soft)!important;
+  color:var(--qily-bridge-forest)!important;-webkit-text-fill-color:var(--qily-bridge-forest)!important;outline:none!important
+}
+html body .cn-bridge-footer-actions>button:active{background:var(--qily-bridge-deep)!important;color:var(--qily-bridge-gold-soft)!important;-webkit-text-fill-color:var(--qily-bridge-gold-soft)!important}
+html body .cn-bridge-footer-records{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:6px!important;min-width:0!important;justify-self:end!important
+}
+html body .cn-bridge-footer-records>a{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-height:40px!important;
+  padding:7px 9px!important;border:1px solid rgba(255,227,155,.52)!important;border-radius:8px!important;
+  background:rgba(255,255,255,.055)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font:850 14px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;text-decoration:underline!important;text-underline-offset:3px!important;white-space:nowrap!important
+}
+html body .cn-bridge-footer-records img{display:block!important;width:18px!important;height:20px!important;object-fit:contain!important}
+html body #qilyCnBridgeShareToast{
+  position:fixed!important;left:50%!important;bottom:calc(var(--qily-bridge-footer-h) + 14px + env(safe-area-inset-bottom))!important;
+  z-index:2147483600!important;transform:translateX(-50%)!important;max-width:min(88vw,640px)!important;padding:10px 16px!important;
+  border-radius:999px!important;color:#fff!important;background:var(--qily-bridge-deep)!important;box-shadow:0 9px 24px rgba(0,0,0,.24)!important;
+  font:800 14px/1.4 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;text-align:center!important;pointer-events:none!important
+}
+@media(max-width:1040px){
+  :root{--qily-bridge-footer-h:104px}
+  html body .cn-bridge-footer-inner{width:min(var(--qily-bridge-axis),calc(100% - 32px))!important;min-height:101px!important;grid-template-columns:minmax(0,1fr) max-content!important;gap:6px 12px!important}
+  html body .cn-bridge-footer-records{grid-column:1/-1!important;justify-self:stretch!important}
+}
+@media(max-width:900px){
+  html body .cn-bridge-header-inner{
+    width:calc(100% - 28px)!important;min-height:auto!important;grid-template-columns:minmax(0,1fr) max-content!important;
+    grid-template-areas:"brand translate" "nav nav"!important;gap:5px 8px!important;padding:9px 0 0!important
+  }
+  html body .cn-bridge-nav{padding:3px 0 14px!important;gap:5px!important}
+  html body .cn-bridge-nav>a{font-size:18px!important;padding:8px 11px!important}
+}
+@media(max-width:760px){
+  :root{--qily-bridge-footer-h:132px}
+  html body .cn-bridge-footer-inner{width:calc(100% - 24px)!important;min-height:129px!important;grid-template-columns:1fr!important;gap:5px!important;padding:5px 0!important}
+  html body .cn-bridge-footer-brand{font-size:13px!important;white-space:normal!important}
+  html body .cn-bridge-footer-actions{width:100%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  html body .cn-bridge-footer-actions>button{width:100%!important;min-width:0!important;min-height:36px!important;padding:6px 5px!important;font-size:13px!important}
+  html body .cn-bridge-footer-records{grid-column:auto!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;gap:5px!important}
+  html body .cn-bridge-footer-records>a{width:100%!important;min-width:0!important;min-height:34px!important;padding:5px!important;font-size:12px!important;white-space:normal!important}
+}
+@media(max-width:480px){
+  :root{--qily-bridge-footer-h:168px}
+  html body .cn-bridge-footer-inner{min-height:165px!important}
+  html body .cn-bridge-footer-records{grid-template-columns:1fr!important}
+}
+@media print{html body{padding-bottom:0!important}html body .cn-bridge-footer{position:static!important;box-shadow:none!important}}
