@@ -186,13 +186,29 @@
 <link id="qilyTranslationPublicUiV1" rel="stylesheet" href="/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16" data-qily-translation-public-ui="google-v1">
 <link rel="stylesheet" href="/global-knowledge/global-knowledge-vi-v2.css?v=20260920-gk-vi-v4">
 <script defer data-qily-public-redline-v2-direct="annotated-v2" src="/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23"></script>
-<script defer data-qily-translation-safe-direct="google-v1" src="/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16&fast=20260902-stable-fast-path-v2"></script></head><body>
-<header class="top"><div class="wrap"><a class="brand" href="https://qilylean.com/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge</a><nav class="nav"><a href="/global-knowledge/terminology/">术语词典</a><a href="/global-knowledge/library/">工具·专题·资料</a><a href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a></nav></div></header>
+<script defer data-qily-translation-safe-direct="google-v1" src="/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16&fast=20260902-stable-fast-path-v2"></script>
+<link id="qilyCoreVisualBundleV1" rel="stylesheet" href="/site-core-visual-bundle-v1.css?v=20260815-core-visual-v1">
+<link id="qilyHeaderAxisV1" rel="stylesheet" href="/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8">
+<link id="qilyVisualSystemV2" rel="stylesheet" href="/site-visual-system-v2.css?v=20260830-visual-system-v2-r7">
+<link id="qilyResponsiveContainmentV1" rel="stylesheet" href="/site-responsive-containment-v1.css?v=20260830-header-integrity-v2">
+<link id="qilyVisualComponentsV1" rel="stylesheet" href="/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range">
+<link id="qilyHeaderProjectIntegrityV2" rel="stylesheet" href="/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3">
+<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=20260923-r82-heading-hierarchy-v1">
+<link id="qilyFloatingDockStandardV1" rel="stylesheet" href="/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3">
+<style id="qilyGlobalPublicShellFinalV1">
+html body>.qily-site-header{position:sticky!important;top:0!important;z-index:2147481000!important}
+html body>.qily-site-header .qily-brand{white-space:nowrap!important}
+html body{padding-bottom:64px!important}
+</style>
+<script defer src="/site-navigation.js?v=20260924-r7-navigation-v49&patch=20260924-primary-nav-render-parity-v4"></script>
+
+</head><body data-parent-route="/global-knowledge/">
+<header class="qily-site-header qily-global-header"><a class="qily-brand" href="/">QilyLean｜启力精益</a><nav class="site-nav qily-global-nav" aria-label="QilyLean核心导视"><a href="/">首页</a><a href="/experience/">履历主线</a><a href="/capabilities/">能力体系</a><a href="/improvements/">改善工具</a><a href="/lean-production/">精益生产</a><a href="/projects/">代表项目</a><a href="/trust/">信任中心</a><a href="/cooperation/">项目合作</a><a href="/knowledge/" aria-current="page">知识资产</a><a href="/links/">资源协同</a></nav></header>
 <section class="hero"><div class="wrap"><small>CURATED ENGINEERING BRIEFS｜精选简报</small><h1>精选制造工程简报</h1><p>按日期、主题和关键词浏览制造工程、精益、工业工程、质量与数智工厂内容。</p></div></section>
 <main>
 <section id="reader" class="section alt reader"><div class="wrap"><div class="reader-actions"><a href="/global-knowledge/briefs/">← 返回简报目录</a></div><div id="readerHead" class="reader-head"></div><article id="article" class="article"></article></div></section>
 <section class="section"><div class="wrap"><input id="search" class="search" type="search" placeholder="搜索标题、主题或摘要，例如 IE、标准化、数智、OEE"><div id="meta" class="meta">正在读取精选简报……</div><div id="grid" class="grid"></div></div></section>
-</main><footer class="footer"><div class="wrap"><span>QilyLean Global Knowledge · Manufacturing Knowledge</span><nav aria-label="底部知识导航"><a href="/global-knowledge/">知识首页</a><a href="/global-knowledge/terminology/">术语词典</a><a href="/global-knowledge/library/">知识目录</a><a href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a></nav></div></footer>
+</main>
 <script>
 (function(){
 var params=new URLSearchParams(location.search),date=params.get('date'),initialQ=params.get('q')||'',items=[],grid=document.getElementById('grid'),search=document.getElementById('search'),meta=document.getElementById('meta');
@@ -221,5 +237,6 @@ function loadReader(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d||''))return;fetch('/qily
 fetch('/qilylean/daily/index.json',{cache:'no-store'}).then(function(r){return r.json()}).then(function(data){items=Array.isArray(data)?data:[];search.value=initialQ;render(initialQ);if(date)loadReader(date)}).catch(function(){meta.textContent='精选简报目录暂时无法读取。'});search.addEventListener('input',function(){render(search.value)});
 })();
 </script>
-<script defer src="/global-knowledge/knowledge-dock-v1.js?v=20260921-site-search-parity-v2"></script>
+
+<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1"></script>
 </body></html>
