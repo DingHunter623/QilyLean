@@ -110,7 +110,7 @@ function patchLinks() {
   html = upsertMeta(html, 'name', 'description', 'QilyLean产业资源目录：保留全球科技企业官网入口，并逐步连接制造业、专业机构与跨行业资源，为可信展示、需求匹配、项目转介和协同交付提供入口。');
   html = upsertMeta(html, 'property', 'og:title', '产业资源目录｜QilyLean');
   html = upsertMeta(html, 'property', 'og:description', '从全球科技企业官网目录延伸至经过核验的企业、专业机构和跨行业协同资源。');
-  html = html.replace('GLOBAL TECHNOLOGY DIRECTORY', 'GLOBAL TECHNOLOGY & INDUSTRY RESOURCE DIRECTORY');
+  html = html.replace(/GLOBAL TECHNOLOGY DIRECTORY(?: \\| 全球科技目录)?/, 'GLOBAL TECHNOLOGY & INDUSTRY RESOURCE DIRECTORY | 全球科技与产业资源目录');
   html = html.replace('友情链接｜全球科技企业100强', '产业资源目录｜全球科技企业与跨行业资源');
   html = html.replace('汇集人工智能、云计算、半导体、工业自动化、智能硬件、商业航天、新能源及中国硬科技代表企业的官方网址，为技术研究、行业洞察、项目对标与供应链学习提供高效入口。', '保留全球科技企业官方网址，为技术研究、行业洞察与项目对标提供入口；同时逐步建设经过核验的企业、专业机构和跨行业资源目录，为真实需求匹配与协同交付建立连接。');
   html = upsertMarker(html, 'QILY-RESOURCE-NETWORK:LINKS:START', 'QILY-RESOURCE-NETWORK:LINKS:END', linksBlock(), '<section class="resource-service"', 'before');
