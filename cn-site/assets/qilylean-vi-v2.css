@@ -1216,3 +1216,65 @@ html:root body main .brand-domain>a.qily-record-link::after{content:"↗"!import
 html:root body main .brand-domain>a.qily-record-link:hover{border-color:#caa15f!important;background:#fff8e7!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}
 html:root body main .brand-domain>a.qily-record-link:focus-visible{outline:3px solid rgba(202,161,95,.34)!important;outline-offset:3px!important}
 /* QILY-CN-DOMAIN-RECORD-LINK-V39:END */
+
+
+/* QILY-CN-HERO-EYEBROW-V41 | 2026-09-26
+ * China-site module heroes follow the international-site module-eyebrow language.
+ * Breadcrumb navigation is retired from hero presentation.
+ */
+html:root body main :is(.hero,.page-hero,.module-hero) .breadcrumbs{
+  display:block!important;
+  margin:0 0 8px!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  font-size:18px!important;
+  line-height:1.5!important;
+  font-weight:950!important;
+  letter-spacing:.035em!important;
+  text-decoration:none!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html:root body main :is(.hero,.page-hero,.module-hero) .breadcrumbs :is(a,span){
+  color:inherit!important;
+  -webkit-text-fill-color:inherit!important;
+  font:inherit!important;
+  letter-spacing:inherit!important;
+  text-decoration:none!important;
+}
+html:root body .article-shell>aside.toc,
+html:root body aside.toc[aria-label="本页主旨"]{display:none!important}
+html:root body .article-shell{display:block!important}
+html:root body .article-shell>.article-body{width:100%!important;max-width:none!important;min-width:0!important}
+
+/* Domain record link: exact same interaction/visual contract as filing links. */
+html:root body main .brand-domain>a.qily-record-link{
+  box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:6px!important;min-height:44px!important;max-width:100%!important;padding:8px 10px!important;
+  border:1px solid var(--qily-cn-line,#bfd6d2)!important;border-radius:9px!important;
+  background:var(--qily-cn-alt,#f4faf8)!important;color:var(--qily-cn-forest,#0f4b5a)!important;
+  -webkit-text-fill-color:currentColor!important;font-weight:750!important;line-height:1.45!important;
+  text-decoration:underline!important;text-underline-offset:4px!important;text-decoration-thickness:1px!important;
+  white-space:normal!important;overflow-wrap:anywhere!important;cursor:pointer!important;
+  transition:background-color .2s ease,color .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease!important;
+}
+html:root body main .brand-domain>a.qily-record-link::after{
+  content:""!important;display:block!important;flex:0 0 14px!important;width:14px!important;height:14px!important;background:currentColor!important;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14 3h7v7M21 3 10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat!important;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14 3h7v7M21 3 10 14M10 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat!important;
+}
+html:root body main .brand-domain>a.qily-record-link:hover,
+html:root body main .brand-domain>a.qily-record-link:focus-visible{
+  color:var(--qily-cn-forest,#0f4b5a)!important;-webkit-text-fill-color:currentColor!important;
+  background:var(--qily-cn-gold-soft,#ffe39b)!important;border-color:var(--qily-cn-gold,#caa15f)!important;
+  box-shadow:0 6px 16px rgba(7,60,71,.2)!important;transform:translateY(-2px)!important;
+}
+html:root body main .brand-domain>a.qily-record-link:focus-visible{outline:3px solid var(--qily-cn-gold,#caa15f)!important;outline-offset:3px!important}
+html:root body main .brand-domain>a.qily-record-link:active{
+  background:var(--qily-cn-gold,#caa15f)!important;border-color:var(--qily-cn-gold,#caa15f)!important;
+  box-shadow:inset 0 2px 5px rgba(7,60,71,.25)!important;transform:translateY(1px) scale(.985)!important;
+}
+/* QILY-CN-HERO-EYEBROW-V41:END */
