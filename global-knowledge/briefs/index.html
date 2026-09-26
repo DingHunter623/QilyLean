@@ -202,6 +202,53 @@ html body{padding-bottom:64px!important}
 </style>
 <script defer src="/site-navigation.js?v=20260924-r7-navigation-v49&patch=20260924-primary-nav-render-parity-v4"></script>
 
+
+<style id="qilyGkBriefsMobileClosureV2">
+/* Global Knowledge briefs: mobile header/footer parity with the international site. */
+@media(max-width:900px){
+  html,body{max-width:100%;overflow-x:hidden}
+  html body>.qily-site-header.qily-global-header{
+    box-sizing:border-box!important;
+    width:auto!important;max-width:none!important;
+    margin:0 18px!important;padding:10px 0 0!important;
+    display:flex!important;flex-direction:column!important;align-items:stretch!important;
+    gap:4px!important;overflow:visible!important
+  }
+  html body>.qily-site-header.qily-global-header>.qily-brand{
+    align-self:flex-start!important;margin:0 0 4px!important;white-space:nowrap!important
+  }
+  html body>.qily-site-header.qily-global-header>nav.qily-global-nav{
+    box-sizing:border-box!important;width:100%!important;min-width:0!important;max-width:100%!important;
+    margin:0!important;padding:3px 0 14px!important;display:flex!important;flex-wrap:nowrap!important;
+    gap:5px!important;overflow-x:auto!important;overflow-y:hidden!important;
+    overscroll-behavior-x:contain!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-x pan-y!important
+  }
+  html body>.qily-site-header.qily-global-header>nav.qily-global-nav>a{
+    flex:0 0 auto!important;min-width:max-content!important;white-space:nowrap!important
+  }
+  html body #floatDock.qily-page-action-nav{
+    position:fixed!important;left:0!important;right:0!important;bottom:0!important;top:auto!important;
+    z-index:2147482000!important;display:grid!important;
+    grid-template-columns:repeat(7,minmax(0,1fr))!important;
+    width:100vw!important;max-width:100vw!important;height:auto!important;
+    gap:4px!important;margin:0!important;
+    padding:5px 6px calc(5px + env(safe-area-inset-bottom))!important;
+    border:0!important;border-top:3px solid #c8a25a!important;border-radius:0!important;
+    background:#0f4b5a!important;box-shadow:0 -6px 22px rgba(15,75,90,.18)!important;
+    overflow:visible!important;transform:none!important
+  }
+  html body #floatDock.qily-page-action-nav .qily-float-btn{
+    box-sizing:border-box!important;width:100%!important;min-width:0!important;max-width:none!important;
+    min-height:52px!important;height:auto!important;margin:0!important;padding:6px 2px!important;
+    border:1px solid #0f4b5a!important;border-radius:7px!important;
+    background:#0f4b5a!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+    font:850 11.5px/1.12 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+    white-space:normal!important
+  }
+  html body #floatDock .qily-dock-label>span{display:block!important}
+  html body{padding-bottom:calc(78px + env(safe-area-inset-bottom))!important}
+}
+</style>
 </head><body data-parent-route="/global-knowledge/">
 <header class="qily-site-header qily-global-header"><a class="qily-brand" href="/">QilyLean｜启力精益</a><nav class="site-nav qily-global-nav" aria-label="QilyLean核心导视"><a href="/">首页</a><a href="/experience/">履历主线</a><a href="/capabilities/">能力体系</a><a href="/improvements/">改善工具</a><a href="/lean-production/">精益生产</a><a href="/projects/">代表项目</a><a href="/trust/">信任中心</a><a href="/cooperation/">项目合作</a><a href="/knowledge/" aria-current="page">知识资产</a><a href="/links/">资源协同</a></nav></header>
 <section class="hero"><div class="wrap"><small>CURATED ENGINEERING BRIEFS｜精选简报</small><h1>精选制造工程简报</h1><p>按日期、主题和关键词浏览制造工程、精益、工业工程、质量与数智工厂内容。</p></div></section>
@@ -238,5 +285,6 @@ fetch('/qilylean/daily/index.json',{cache:'no-store'}).then(function(r){return r
 })();
 </script>
 
-<script defer data-qily-dock-share-runtime="v1" src="/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1"></script>
+<script>window.__qilyFloatingDockUnifiedV58=true;</script>
+<script defer src="/global-knowledge/knowledge-dock-v1.js?v=20260926-mobile-footer-closure-v2"></script>
 </body></html>
