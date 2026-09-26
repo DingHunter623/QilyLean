@@ -5,7 +5,7 @@
  * Track and thumb are real DOM elements and directly map movement to nav.scrollLeft.
  */
 (function(d,w){'use strict';
-if(w.__qilyCnNavRailV10)return;w.__qilyCnNavRailV10=true;
+if(w.__qilyCnNavRailV17)return;w.__qilyCnNavRailV17=true;
 
 var NAV_SELECTOR='header.site-header nav.nav,header nav[aria-label="主导航"]';
 
@@ -359,3 +359,5 @@ w.addEventListener('pageshow',boot,{passive:true});
 })(document,window);
 
 /* QILY-CN-NAV-ARROW-CLOSURE-V12: labels above are canonical and include external arrows. */
+
+/* QILY-CN-NAV-FINAL-CLOSURE-V17 | canonical external-resource arrow integrity */
