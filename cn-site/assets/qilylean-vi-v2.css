@@ -1201,3 +1201,18 @@ html:root body button.qily-copy-action:hover{border-color:#caa15f!important;back
 html:root body button.qily-copy-action:focus-visible{outline:3px solid rgba(202,161,95,.34)!important;outline-offset:3px!important}
 html:root body .brand-domain{margin:6px 0 10px!important}
 /* QILY-CN-FINAL-CLOSURE-V38:END */
+
+
+/* QILY-CN-DOMAIN-RECORD-LINK-V39 | 2026-09-26
+ * About domain uses the exact filing-link visual language and opens the site in a new tab.
+ */
+html:root body main .brand-domain>a.qily-record-link{
+  display:inline-flex!important;align-items:center!important;gap:6px!important;width:auto!important;
+  min-height:38px!important;padding:6px 12px!important;border:1px solid #b9d9d4!important;border-radius:8px!important;
+  background:#f7fbfa!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;
+  font:inherit!important;font-weight:850!important;line-height:1.2!important;text-decoration:none!important;box-shadow:none!important;
+}
+html:root body main .brand-domain>a.qily-record-link::after{content:"↗"!important;font-size:.72em!important;font-weight:950!important;line-height:1!important;color:currentColor!important;-webkit-text-fill-color:currentColor!important}
+html:root body main .brand-domain>a.qily-record-link:hover{border-color:#caa15f!important;background:#fff8e7!important;color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important}
+html:root body main .brand-domain>a.qily-record-link:focus-visible{outline:3px solid rgba(202,161,95,.34)!important;outline-offset:3px!important}
+/* QILY-CN-DOMAIN-RECORD-LINK-V39:END */
