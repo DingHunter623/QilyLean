@@ -492,7 +492,7 @@ jobs:
               'CN global-knowledge CTA: VI gold + explicit interaction feedback.',
               'background:var(--qily-gold)!important',
               'html:root body .knowledge-bridge>a:active',
-              'QILY-CN-FINAL-CLOSURE-V38',
+              'QILY-CN-FINAL-PRODUCTION-V42',
               'QILY-CN-EXTERNAL-MARK-V36',
               'QILY-CN-TYPE-HIERARCHY-V5',
               '--qily-cn-h1:clamp(28px,2.25vw,38px)',
@@ -502,7 +502,7 @@ jobs:
           for marker in required_vi:
               if marker not in vi:
                   raise SystemExit(f'Production China VI missing: {marker}')
-          for marker in ['QilyLean CN Primary Navigation Rail V7', 'QILY-CN-NAV-FINAL-CLOSURE-V17', 'qily-external-mark', "data-qily-cn-nav-contract','20260926-v5'", 'qily-cn-nav-shell', 'qily-primary-nav-scroll-thumb', 'mousedown', 'mousemove', 'touchstart', 'ResizeObserver']:
+          for marker in ['QilyLean CN Primary Navigation Rail V7', 'QILY-CN-NAV-FINAL-PRODUCTION-V19', 'qily-external-mark', "data-qily-cn-nav-contract','20260926-v6'", 'qily-cn-nav-shell', 'qily-primary-nav-scroll-thumb', 'mousedown', 'mousemove', 'touchstart', 'ResizeObserver']:
               if marker not in nav_runtime:
                   raise SystemExit(f'Production China nav runtime missing: {marker}')
           for marker in ['QilyLean CN In-Page Translation V7', "data-qily-translation-engine','baidu'", 'concurrency=1']:
