@@ -180,7 +180,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
           <article class="phone-card"><strong>宁波</strong><a href="tel:15168120722" data-contact-phone="15168120722">151 6812 0722</a></article>
           <article class="phone-card"><strong>乐清</strong><a href="tel:17681788259" data-contact-phone="17681788259">176 8178 8259</a></article>
         </div>
-        <div class="email-row"><strong>官网邮箱</strong><a href="mailto:admin@qilylean.com">admin@qilylean.com</a></div>
+        <div class="email-row"><strong>官网邮箱</strong><a href="mailto:admin@qilylean.com" data-qily-copy-open="email" data-qily-copy-value="admin@qilylean.com">admin@qilylean.com</a></div>
         <p class="contact-note">点击电话号码：自动复制号码 → 选择是否拨打电话</p>
       </div>
     </section>
@@ -308,5 +308,13 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
     },false);
   })(document,window);
   </script>
+<script id="qilyContactEmailCopyOpenV1">
+/* QILY-CONTACT-EMAIL-COPY-OPEN-V1 */
+(function(){
+ var link=document.querySelector('.email-row a[data-qily-copy-open="email"]');if(!link)return;
+ function copy(v){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(v);var t=document.createElement('textarea');t.value=v;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');}finally{t.remove();}return Promise.resolve();}
+ link.addEventListener('click',function(e){e.preventDefault();var v=link.getAttribute('data-qily-copy-value')||link.textContent.trim();copy(v).then(function(){if(window.confirm('官方邮箱 '+v+' 已复制。是否现在打开写邮件界面？'))window.location.href='mailto:'+v;}).catch(function(){window.location.href='mailto:'+v;});});
+})();
+</script>
 </body>
 </html>
