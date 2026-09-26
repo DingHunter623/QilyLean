@@ -49,12 +49,13 @@ for (const file of htmlFiles) {
 
   if (/\b(?:mailto:|tel:|weixin:|whatsapp:)/i.test(html)) fail(`${rel} contains a direct contact scheme`);
   if (rel === 'global-knowledge/briefs/index.html') {
-    if (!html.includes('<a class="cn-bridge-brand" href="https://qilylean.com/" aria-label="返回QilyLean国际站首页" title="返回QilyLean国际站首页">QilyLean | <span>启力精益</span></a>')) fail(`${rel} bridge logo must return to the canonical qilylean.com homepage`);
+    if (!html.includes('<a class="cn-bridge-brand" href="https://qilylean.com/" aria-label="返回QilyLean国际站首页" title="返回QilyLean国际站首页"><img src="/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5" alt="QilyLean｜启力精益"></a>')) fail(`${rel} bridge must use the canonical international logo and return it to qilylean.com`);
     for (const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) {
       if (!html.includes(`href="${route}"`)) fail(`${rel} China-parity header missing: ${route}`);
     }
-    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260926-cn-parity-shell-v1')) fail(`${rel} China-parity bridge shell stylesheet missing`);
-    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260926-cn-parity-shell-v1')) fail(`${rel} China-parity bridge footer runtime missing`);
+    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260926-cn-parity-shell-v2')) fail(`${rel} China-parity bridge shell stylesheet missing`);
+    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260926-cn-parity-shell-v2')) fail(`${rel} China-parity bridge footer runtime missing`);
+    if (!html.includes('bridge-hero-eyebrow')) fail(`${rel} bridge hero eyebrow must use the shared gold VI class`);
     if (html.includes('/global-knowledge/knowledge-dock-v1.js')) fail(`${rel} retired seven-action knowledge dock returned`);
   } else {
     if (!html.includes('<a class="brand" href="https://qilylean.com/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge</a>')) fail(`${rel} brand must return to the canonical qilylean.com homepage`);
