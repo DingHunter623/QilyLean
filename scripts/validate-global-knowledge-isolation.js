@@ -36,7 +36,7 @@ for (const file of htmlFiles) {
     if (forbiddenRoutes.test(href)) fail(`${rel} links to a commercial/main-site route: ${href}`);
 
     if (/^https?:\/\//i.test(href)) {
-      if (href === 'https://qilylean.com/' || /^https:\/\/qilylean\.cn\/(?:|lean\/|notes\/|knowledge\/|briefs\/|resources\/|about\/)$/i.test(href) || /^https:\/\/qilylean\.com\/global-knowledge\//i.test(href)) continue;
+      if (href === 'https://qilylean.com/' || /^https:\/\/qilylean\.cn\/(?:|lean\/|notes\/|knowledge\/|briefs\/|resources\/|about\/)$/i.test(href) || /^https:\/\/qilylean\.com\/global-knowledge\//i.test(href) || href === 'https://beian.miit.gov.cn/' || /^https:\/\/beian\.mps\.gov\.cn\/#\/query\/webSearch\?code=43020002000443$/i.test(href)) continue;
       fail(`${rel} contains non-isolated external link: ${href}`);
       continue;
     }
