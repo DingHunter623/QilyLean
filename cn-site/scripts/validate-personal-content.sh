@@ -338,3 +338,7 @@ echo "CN personal-site non-commercial content gate passed."
 echo "CN dual-site isolated association contract passed."
 echo "CN search-engine discovery and verification contract passed for Google, Baidu, 360 and IndexNow."
 echo "CN practice/evidence archive boundary and local asset contract passed."
+
+# External-link arrow integrity: exactly one rendered arrow source (inline mark); legacy pseudo arrow is retired.
+grep -Fq 'QILY-CN-EXTERNAL-ARROW-SINGLE-V43' "$CN_VI_FILE" || { echo "ERROR: CN single external-arrow closure marker is missing."; exit 1; }
+grep -Fq 'html:root:root body .site-header nav.nav>a[data-qily-external="international"]::after' "$CN_VI_FILE" || { echo "ERROR: CN legacy pseudo-arrow override is missing."; exit 1; }
