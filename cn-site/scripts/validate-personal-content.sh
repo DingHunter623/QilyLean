@@ -14,6 +14,8 @@ CN_NAV_RAIL_JS="$ROOT_DIR/assets/cn-nav-rail-v1.js"
 CN_TRANSLATE_JS="$ROOT_DIR/assets/cn-translate-baidu-v1.js"
 CN_TRANSLATE_CSS="$ROOT_DIR/assets/cn-translate-baidu-v1.css"
 PRACTICE_PAGE="$ROOT_DIR/notes/index.html"
+BRIEFS_PAGE="$ROOT_DIR/briefs/index.html"
+RESOURCES_PAGE="$ROOT_DIR/resources/index.html"
 PRACTICE_CSS="$ROOT_DIR/assets/practice.css"
 PRACTICE_SMED="$ROOT_DIR/assets/practice/smed-300t.svg"
 PRACTICE_MOLD="$ROOT_DIR/assets/practice/mold-warehouse.svg"
@@ -109,35 +111,29 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
   exit 1
 }
 
-# Primary-navigation dual-site boundary: two explicit isolated external entries only.
-grep -Fq 'href="https://qilylean.com/global-knowledge/briefs/"' "$INDEX_FILE" || {
-  echo "ERROR: CN primary navigation is missing the isolated international brief entry."
+# Primary-navigation boundary: CN navigation stays on qilylean.cn; international access is explicit on bridge pages.
+grep -Fq 'href="/briefs/" data-qily-nav-key="briefs">精选简报</a>' "$INDEX_FILE" || {
+  echo "ERROR: CN primary navigation briefs entry must stay on qilylean.cn."
   exit 1
 }
-grep -Fq '>精选简报<span class="qily-external-mark" aria-hidden="true">↗</span></a>' "$INDEX_FILE" || {
-  echo "ERROR: CN primary navigation lost the 精选简报 label."
+grep -Fq 'href="/resources/" data-qily-nav-key="resources">资源协同</a>' "$INDEX_FILE" || {
+  echo "ERROR: CN primary navigation resources entry must stay on qilylean.cn."
   exit 1
 }
-grep -Fq 'href="https://qilylean.com/links/cn-public/"' "$INDEX_FILE" || {
-  echo "ERROR: CN primary navigation is missing the public resource-collaboration bridge."
+if grep -Fq 'data-qily-nav-key="briefs" target="_blank"' "$INDEX_FILE" || grep -Fq 'data-qily-nav-key="resources" target="_blank"' "$INDEX_FILE"; then
+  echo "ERROR: CN primary navigation must not jump directly to the international site."
+  exit 1
+fi
+grep -Fq 'data-qily-cn-nav-contract="20260926-v7-bridge"' "$INDEX_FILE" || {
+  echo "ERROR: CN homepage bridge-navigation contract marker is missing."
   exit 1
 }
-grep -Fq '>资源协同<span class="qily-external-mark" aria-hidden="true">↗</span></a>' "$INDEX_FILE" || {
-  echo "ERROR: CN primary navigation lost the 资源协同 ↗ label."
-  exit 1
-}
-grep -Fq 'data-qily-nav-key="briefs" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站精选简报（新标签页）" data-qily-external="international">精选简报<span class="qily-external-mark" aria-hidden="true">↗</span></a>' "$INDEX_FILE" || {
-  echo "ERROR: CN primary navigation 精选简报 external-link semantics are inconsistent."
-  exit 1
-}
-grep -Fq 'data-qily-nav-key="resources" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站资源协同公开入口（新标签页）" data-qily-external="international">资源协同<span class="qily-external-mark" aria-hidden="true">↗</span></a>' "$INDEX_FILE" || {
-  echo "ERROR: CN primary navigation 资源协同 external-link semantics are inconsistent."
-  exit 1
-}
-grep -Fq 'data-qily-cn-nav-contract="20260926-v6"' "$INDEX_FILE" || {
-  echo "ERROR: CN homepage primary-navigation contract marker is missing."
-  exit 1
-}
+[[ -f "$BRIEFS_PAGE" ]] || { echo "ERROR: CN briefs bridge page is missing."; exit 1; }
+[[ -f "$RESOURCES_PAGE" ]] || { echo "ERROR: CN resources bridge page is missing."; exit 1; }
+grep -Fq 'href="https://qilylean.com/global-knowledge/briefs/"' "$BRIEFS_PAGE" || { echo "ERROR: CN briefs bridge lost its explicit international destination."; exit 1; }
+grep -Fq 'target="_blank" rel="noopener noreferrer"' "$BRIEFS_PAGE" || { echo "ERROR: CN briefs bridge external-link safety attributes are missing."; exit 1; }
+grep -Fq 'href="https://qilylean.com/links/cn-public/"' "$RESOURCES_PAGE" || { echo "ERROR: CN resources bridge lost its explicit international destination."; exit 1; }
+grep -Fq 'target="_blank" rel="noopener noreferrer"' "$RESOURCES_PAGE" || { echo "ERROR: CN resources bridge external-link safety attributes are missing."; exit 1; }
 
 # China footer semantics stay unchanged: only Top / Previous page / Share current.
 for action in top previous share; do
@@ -214,7 +210,7 @@ grep -Fq 'viewBox="0 0 1400 788"' "$PRACTICE_FACTORY" || { echo "ERROR: CN facto
 [[ -s "$PRACTICE_AWARD" ]] || { echo "ERROR: CN local award evidence image is missing or empty."; exit 1; }
 grep -Fq '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' "$INDEX_FILE" || { echo "ERROR: CN homepage approved CN aircraft visual is missing."; exit 1; }
 grep -Fq '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v43-single-external-arrow' "$INDEX_FILE" || { echo "ERROR: CN homepage unified VI cache version is missing."; exit 1; }
-grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v19-final-production' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
+grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' "$INDEX_FILE" || { echo "ERROR: CN homepage primary-nav rail runtime is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-V1' "$CN_VI_FILE" || { echo "ERROR: CN current-module VI contract is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-RUNTIME-V1' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN current-module route runtime is missing."; exit 1; }
 grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' "$INDEX_FILE" || { echo "ERROR: CN homepage translator stylesheet is missing."; exit 1; }
@@ -339,6 +335,3 @@ echo "CN dual-site isolated association contract passed."
 echo "CN search-engine discovery and verification contract passed for Google, Baidu, 360 and IndexNow."
 echo "CN practice/evidence archive boundary and local asset contract passed."
 
-# External-link arrow integrity: exactly one rendered arrow source (inline mark); legacy pseudo arrow is retired.
-grep -Fq 'QILY-CN-EXTERNAL-ARROW-SINGLE-V43' "$CN_VI_FILE" || { echo "ERROR: CN single external-arrow closure marker is missing."; exit 1; }
-grep -Fq 'html:root:root body .site-header nav.nav>a[data-qily-external="international"]::after' "$CN_VI_FILE" || { echo "ERROR: CN legacy pseudo-arrow override is missing."; exit 1; }
