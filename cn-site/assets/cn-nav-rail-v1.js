@@ -5,7 +5,7 @@
  * Track and thumb are real DOM elements and directly map movement to nav.scrollLeft.
  */
 (function(d,w){'use strict';
-if(w.__qilyCnNavRailV8)return;w.__qilyCnNavRailV8=true;
+if(w.__qilyCnNavRailV9)return;w.__qilyCnNavRailV9=true;
 
 var NAV_SELECTOR='header.site-header nav.nav,header nav[aria-label="主导航"]';
 
