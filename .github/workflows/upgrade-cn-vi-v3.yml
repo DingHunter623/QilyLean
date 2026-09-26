@@ -141,7 +141,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260926-cn-vi-v43-single-external-arrow'
+          css_marker = 'qilylean-vi-v2.css?v=20260926-cn-vi-v44-bilingual-label-gold'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = 'QilyLean | 启力精益 · 精益制造经验分享</span><nav class="footer-actions" aria-label="页脚快捷操作">'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
