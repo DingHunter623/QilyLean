@@ -1145,3 +1145,22 @@ html:root:root body .site-header nav.nav>a[data-qily-external="international"]::
 }
 html:root:root body .site-header nav.nav>a[data-qily-external="international"]::before{content:none!important}
 /* QILY-CN-INTERACTION-VISUAL-CLOSURE-V35:END */
+
+/* QILY-CN-EXTERNAL-MARK-V36 | 2026-09-26
+ * One external-resource mark across every CN primary navigation instance.
+ */
+html:root body .site-header .nav>a[data-qily-external="international"] .qily-external-mark{
+  display:inline-block!important;
+  margin-left:3px!important;
+  position:relative!important;
+  top:-.42em!important;
+  font-size:.58em!important;
+  line-height:1!important;
+  font-weight:950!important;
+  color:currentColor!important;
+  -webkit-text-fill-color:currentColor!important;
+  opacity:1!important;
+  pointer-events:none!important;
+}
+html:root body .site-header .nav>a[data-qily-external="international"]::after{content:none!important}
+/* QILY-CN-EXTERNAL-MARK-V36:END */
