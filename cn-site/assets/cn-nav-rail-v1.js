@@ -5,7 +5,7 @@
  * Track and thumb are real DOM elements and directly map movement to nav.scrollLeft.
  */
 (function(d,w){'use strict';
-if(w.__qilyCnNavRailV19)return;w.__qilyCnNavRailV19=true;
+if(w.__qilyCnNavRailV20)return;w.__qilyCnNavRailV20=true;
 
 var NAV_SELECTOR='header.site-header nav.nav,header nav[aria-label="主导航"]';
 
@@ -14,8 +14,8 @@ var CANONICAL_NAV_ITEMS=[
   {key:'lean',href:'/lean/',label:'精益制造'},
   {key:'projects',href:'/notes/',label:'代表项目'},
   {key:'knowledge',href:'/knowledge/',label:'知识分享'},
-  {key:'briefs',href:'https://qilylean.com/global-knowledge/briefs/',label:'精选简报',external:true,title:'进入 QilyLean 国际站精选简报（新标签页）'},
-  {key:'resources',href:'https://qilylean.com/links/cn-public/',label:'资源协同',external:true,title:'进入 QilyLean 国际站资源协同公开入口（新标签页）'},
+  {key:'briefs',href:'/briefs/',label:'精选简报'},
+  {key:'resources',href:'/resources/',label:'资源协同'},
   {key:'about',href:'/about/',label:'关于我们'}
 ];
 
@@ -38,7 +38,7 @@ function ensureCanonicalNavigation(nav){
   var current=Array.prototype.slice.call(nav.children).filter(function(node){
     return node.tagName==='A'&&node.hasAttribute('data-qily-nav-key');
   });
-  var same=nav.getAttribute('data-qily-cn-nav-contract')==='20260926-v6'&&
+  var same=nav.getAttribute('data-qily-cn-nav-contract')==='20260926-v7-bridge'&&
     current.length===expected.length&&current.every(function(a,i){
       return a.getAttribute('data-qily-nav-key')===expected[i].getAttribute('data-qily-nav-key')&&
         a.href===expected[i].href&&
@@ -47,7 +47,7 @@ function ensureCanonicalNavigation(nav){
   if(same)return false;
   nav.textContent='';
   expected.forEach(function(a){nav.appendChild(a);});
-  nav.setAttribute('data-qily-cn-nav-contract','20260926-v6');
+  nav.setAttribute('data-qily-cn-nav-contract','20260926-v7-bridge');
   return true;
 }
 
@@ -360,4 +360,4 @@ w.addEventListener('pageshow',boot,{passive:true});
 
 /* QILY-CN-NAV-ARROW-CLOSURE-V12: labels above are canonical and include external arrows. */
 
-/* QILY-CN-NAV-FINAL-PRODUCTION-V19 | canonical external-resource arrow integrity */
+/* QILY-CN-NAV-FINAL-PRODUCTION-V20 | canonical external-resource arrow integrity */
