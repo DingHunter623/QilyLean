@@ -5,7 +5,7 @@
  * Track and thumb are real DOM elements and directly map movement to nav.scrollLeft.
  */
 (function(d,w){'use strict';
-if(w.__qilyCnNavRailV7)return;w.__qilyCnNavRailV7=true;
+if(w.__qilyCnNavRailV8)return;w.__qilyCnNavRailV8=true;
 
 var NAV_SELECTOR='header.site-header nav.nav,header nav[aria-label="主导航"]';
 
@@ -25,6 +25,7 @@ function ensureCanonicalNavigation(nav){
     var a=d.createElement('a');
     a.href=item.href;
     a.textContent=item.label;
+    if(item.external){var mark=d.createElement('span');mark.className='qily-external-mark';mark.setAttribute('aria-hidden','true');mark.textContent='↗';a.appendChild(mark);}
     a.setAttribute('data-qily-nav-key',item.key);
     if(item.external)a.setAttribute('data-qily-external','international');
     if(item.external){
@@ -40,7 +41,7 @@ function ensureCanonicalNavigation(nav){
   var same=nav.getAttribute('data-qily-cn-nav-contract')==='20260926-v4'&&
     current.length===expected.length&&current.every(function(a,i){
       return a.getAttribute('data-qily-nav-key')===expected[i].getAttribute('data-qily-nav-key')&&
-        a.textContent===expected[i].textContent&&a.href===expected[i].href;
+        a.getAttribute('data-qily-nav-key')===expected[i].getAttribute('data-qily-nav-key')&&a.href===expected[i].href;
     });
   if(same)return false;
   nav.textContent='';
