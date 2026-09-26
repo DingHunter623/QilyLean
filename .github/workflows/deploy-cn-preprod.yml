@@ -287,7 +287,7 @@ jobs:
               for marker in [
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
-                  '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v39-domain-record-link',
+                  '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v42-final-production',
                   '/assets/cn-footer-actions-v1.css?v=20260926-footer-actions-v5-three-actions-vi-parity',
                   '/assets/cn-footer-actions-v1.js?v=20260926-footer-actions-v5-three-actions-vi-parity',
                   'data-qily-footer-action="top"',
@@ -387,13 +387,13 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v39-domain-record-link' not in home:
-              raise SystemExit('Production China home missing V37 sitewide VI cache revision.')
-          if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v17-final-closure' not in home:
-              raise SystemExit('Production China home missing V16 arrow-integrity nav runtime.')
+          if '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v42-final-production' not in home:
+              raise SystemExit('Production China home missing V42 final production VI revision.')
+          if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v19-final-production' not in home:
+              raise SystemExit('Production China home missing V19 final production nav runtime.')
           required_external_nav = [
-              'data-qily-nav-key="briefs" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站精选简报（新标签页）" data-qily-external="international">精选简报 ↗</a>',
-              'data-qily-nav-key="resources" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站资源协同公开入口（新标签页）" data-qily-external="international">资源协同 ↗</a>',
+              'data-qily-nav-key="briefs" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站精选简报（新标签页）" data-qily-external="international">精选简报<span class="qily-external-mark" aria-hidden="true">↗</span></a>',
+              'data-qily-nav-key="resources" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站资源协同公开入口（新标签页）" data-qily-external="international">资源协同<span class="qily-external-mark" aria-hidden="true">↗</span></a>',
           ]
           for marker in required_external_nav:
               if marker not in home:
