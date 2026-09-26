@@ -168,7 +168,7 @@ for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
   assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v41-international-hero'), rel+' must use current CN VI resource version.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v44-bilingual-label-gold'), rel+' must use current CN VI resource version.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v18-hero-eyebrow'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
@@ -210,7 +210,7 @@ const cnHome=read('cn-site/index.html');
 for(const marker of [
   '<title>精益制造经验分享｜QilyLean | 启力精益｜制造工程、精益生产与数智工厂知识站</title>',
   '"name":"精益制造经验分享"',
-  '<p class="eyebrow">精益制造经验分享</p>',
+  '<p class="eyebrow">LEAN MANUFACTURING EXPERIENCE | 精益制造经验分享</p>',
   '<h2>精益制造经验分享</h2>'
 ]) assert(cnHome.includes(marker),'CN home filed-name marker missing: '+marker);
 assert(!cnHome.includes('QILYLEAN CHINA｜'),'CN home must not prefix the filed site name with a retired alias.');
