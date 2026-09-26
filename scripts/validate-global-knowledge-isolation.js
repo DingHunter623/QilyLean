@@ -36,7 +36,7 @@ for (const file of htmlFiles) {
     if (forbiddenRoutes.test(href)) fail(`${rel} links to a commercial/main-site route: ${href}`);
 
     if (/^https?:\/\//i.test(href)) {
-      if (href === 'https://qilylean.com/' || href === 'https://qilylean.cn/' || /^https:\/\/qilylean\.com\/global-knowledge\//i.test(href)) continue;
+      if (href === 'https://qilylean.com/' || /^https:\/\/qilylean\.cn\/(?:|lean\/|notes\/|knowledge\/|briefs\/|resources\/|about\/)$/i.test(href) || /^https:\/\/qilylean\.com\/global-knowledge\//i.test(href)) continue;
       fail(`${rel} contains non-isolated external link: ${href}`);
       continue;
     }
@@ -48,8 +48,18 @@ for (const file of htmlFiles) {
   }
 
   if (/\b(?:mailto:|tel:|weixin:|whatsapp:)/i.test(html)) fail(`${rel} contains a direct contact scheme`);
-  if (!html.includes('<a class="brand" href="https://qilylean.com/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge</a>')) fail(`${rel} brand must return to the canonical qilylean.com homepage`);
-  if (!html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>')) fail(`${rel} must expose the filed China knowledge route`);
+  if (rel === 'global-knowledge/briefs/index.html') {
+    if (!html.includes('<a class="cn-bridge-brand" href="https://qilylean.com/" aria-label="返回QilyLean国际站首页" title="返回QilyLean国际站首页">QilyLean | <span>启力精益</span></a>')) fail(`${rel} bridge logo must return to the canonical qilylean.com homepage`);
+    for (const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) {
+      if (!html.includes(`href="${route}"`)) fail(`${rel} China-parity header missing: ${route}`);
+    }
+    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260926-cn-parity-shell-v1')) fail(`${rel} China-parity bridge shell stylesheet missing`);
+    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260926-cn-parity-shell-v1')) fail(`${rel} China-parity bridge footer runtime missing`);
+    if (html.includes('/global-knowledge/knowledge-dock-v1.js')) fail(`${rel} retired seven-action knowledge dock returned`);
+  } else {
+    if (!html.includes('<a class="brand" href="https://qilylean.com/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge</a>')) fail(`${rel} brand must return to the canonical qilylean.com homepage`);
+    if (!html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>')) fail(`${rel} must expose the filed China knowledge route`);
+  }
 }
 
 const dock = fs.readFileSync(path.join(dir, 'knowledge-dock-v1.js'), 'utf8');
