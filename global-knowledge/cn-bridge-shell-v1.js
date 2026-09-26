@@ -1,0 +1,11 @@
+/* QilyLean CN-bridge footer actions | 2026-09-26 */
+(function(d,w){'use strict';
+if(w.__qilyCnBridgeShellV1)return;w.__qilyCnBridgeShellV1=true;
+function copyText(text){if(navigator.clipboard&&w.isSecureContext)return navigator.clipboard.writeText(text);var a=d.createElement('textarea');a.value=text;a.setAttribute('readonly','');a.style.position='fixed';a.style.left='-9999px';(d.body||d.documentElement).appendChild(a);a.select();try{d.execCommand('copy')}catch(e){}a.remove();return Promise.resolve();}
+function toast(msg){var n=d.getElementById('qilyCnBridgeShareToast');if(!n){n=d.createElement('div');n.id='qilyCnBridgeShareToast';n.setAttribute('role','status');n.setAttribute('aria-live','polite');(d.body||d.documentElement).appendChild(n);}n.textContent=msg;n.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(function(){n.hidden=true;},2300);}
+function top(){d.documentElement.scrollTop=0;if(d.body)d.body.scrollTop=0;try{w.scrollTo({top:0,left:0,behavior:'smooth'});}catch(e){w.scrollTo(0,0);}}
+function previous(){try{if(w.history&&w.history.length>1){w.history.back();return;}}catch(e){}w.location.href=(d.body&&d.body.getAttribute('data-cn-bridge-fallback'))||'https://qilylean.cn/';}
+function share(b){var title=d.title||'QilyLean',url=w.location.href,text=title+'\n'+url;copyText(text).then(function(){b&&b.classList.add('is-copied');setTimeout(function(){b&&b.classList.remove('is-copied');},1500);if(navigator.share){toast('标题与网址已复制，正在打开系统分享');return navigator.share({title:title,text:title,url:url}).catch(function(e){if(e&&e.name==='AbortError')toast('已复制，可直接粘贴分享');});}toast('标题与网址已复制，可直接粘贴分享');});}
+function bind(){var g=d.querySelector('.cn-bridge-footer-actions');if(!g||g.dataset.bound==='v1')return;g.dataset.bound='v1';g.addEventListener('click',function(e){var b=e.target.closest('button[data-action]');if(!b)return;e.preventDefault();var a=b.dataset.action;if(a==='top')top();else if(a==='previous')previous();else if(a==='share')share(b);});}
+if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',bind,{once:true});else bind();w.addEventListener('pageshow',bind,{passive:true});
+})(document,window);
