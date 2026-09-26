@@ -355,3 +355,5 @@ function boot(){
 if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 w.addEventListener('pageshow',boot,{passive:true});
 })(document,window);
+
+/* QILY-CN-NAV-ARROW-CLOSURE-V12: labels above are canonical and include external arrows. */
