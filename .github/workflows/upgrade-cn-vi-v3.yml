@@ -1,4 +1,4 @@
-name: Upgrade QilyLean CN VI V14 Reading Scale Closure
+name: Upgrade QilyLean CN VI V15 Interaction Visual Closure
 
 on:
   push:
@@ -37,9 +37,9 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260926-cn-vi-v34-interaction-closure'
+          css_version = '20260926-cn-vi-v35-interaction-visual-closure'
           base_version = '20260923-cn-typography-base-v7'
-          nav_script_version = '20260926-nav-rail-v11-external-arrows'
+          nav_script_version = '20260926-nav-rail-v13-glyph-arrow'
           translate_version = '20260922-translate-v6-baidu'
           footer_actions_version = '20260926-footer-actions-v5-three-actions-vi-parity'
           official_brand = 'QilyLean | 启力精益'
@@ -166,7 +166,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260926-cn-vi-v34-interaction-closure'
+          css_marker = 'qilylean-vi-v2.css?v=20260926-cn-vi-v35-interaction-visual-closure'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = 'QilyLean | 启力精益 · 精益制造经验分享</span><nav class="footer-actions" aria-label="页脚快捷操作">'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
@@ -183,7 +183,7 @@ jobs:
                   continue
               documents += 1
               css_count = text.count(css_marker)
-              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v11-external-arrows')
+              nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v13-glyph-arrow')
               translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu')
               translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu')
               footer_count = text.count(footer_marker)
@@ -297,7 +297,7 @@ jobs:
           grep -q "content:'工业工程'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'标准体系'" cn-site/assets/qilylean-vi-v2.css
           grep -q "content:'改善工具'" cn-site/assets/qilylean-vi-v2.css
-          echo 'CN V14 reading-scale closure passed: QilyLean | 启力精益 + non-clickable 本页主旨 + gold interactive global CTA + shared VI.'
+          echo 'CN V15 interaction-visual closure passed: QilyLean | 启力精益 + non-clickable 本页主旨 + gold interactive global CTA + shared VI.'
 
       - name: Commit rollout safely
         shell: bash
