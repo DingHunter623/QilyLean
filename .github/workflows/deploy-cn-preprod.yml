@@ -257,6 +257,8 @@ jobs:
               raise RuntimeError(f'Failed to fetch {url}: {error}')
 
           about = fetch(f'https://qilylean.cn/about/?closure={sha}')
+          briefs_bridge = fetch(f'https://qilylean.cn/briefs/?closure={sha}')
+          resources_bridge = fetch(f'https://qilylean.cn/resources/?closure={sha}')
           home = fetch(f'https://qilylean.cn/?closure={sha}')
           practice = fetch(f'https://qilylean.cn/notes/?closure={sha}')
           practice_css = fetch(f'https://qilylean.cn/assets/practice.css?closure={sha}')
@@ -271,7 +273,7 @@ jobs:
           portal_css = fetch(f'https://qilylean.cn/assets/portal.css?closure={sha}')
 
           production_routes = [
-              '/', '/about/', '/ie/', '/factory/', '/lean/', '/digital/', '/methods/',
+              '/', '/about/', '/briefs/', '/resources/', '/ie/', '/factory/', '/lean/', '/digital/', '/methods/',
               '/knowledge/', '/notes/', '/standardization/',
               '/knowledge/vsm-time-structure/',
               '/knowledge/standard-time-capacity/',
@@ -389,8 +391,8 @@ jobs:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
           if '/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v43-single-external-arrow' not in home:
               raise SystemExit('Production China home missing V42 final production VI revision.')
-          if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v19-final-production' not in home:
-              raise SystemExit('Production China home missing V19 final production nav runtime.')
+          if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' not in home:
+              raise SystemExit('Production China home missing V20 CN bridge nav runtime.')
           required_external_nav = [
               'data-qily-nav-key="briefs" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站精选简报（新标签页）" data-qily-external="international">精选简报<span class="qily-external-mark" aria-hidden="true">↗</span></a>',
               'data-qily-nav-key="resources" target="_blank" rel="noopener noreferrer" title="进入 QilyLean 国际站资源协同公开入口（新标签页）" data-qily-external="international">资源协同<span class="qily-external-mark" aria-hidden="true">↗</span></a>',
@@ -503,7 +505,7 @@ jobs:
           for marker in required_vi:
               if marker not in vi:
                   raise SystemExit(f'Production China VI missing: {marker}')
-          for marker in ['QilyLean CN Primary Navigation Rail V7', 'QILY-CN-NAV-FINAL-PRODUCTION-V19', 'qily-external-mark', "data-qily-cn-nav-contract','20260926-v6'", 'qily-cn-nav-shell', 'qily-primary-nav-scroll-thumb', 'mousedown', 'mousemove', 'touchstart', 'ResizeObserver']:
+          for marker in ['QilyLean CN Primary Navigation Rail V7', 'QILY-CN-NAV-FINAL-PRODUCTION-V20', 'qily-external-mark', "data-qily-cn-nav-contract','20260926-v7-bridge'", 'qily-cn-nav-shell', 'qily-primary-nav-scroll-thumb', 'mousedown', 'mousemove', 'touchstart', 'ResizeObserver']:
               if marker not in nav_runtime:
                   raise SystemExit(f'Production China nav runtime missing: {marker}')
           for marker in ['QilyLean CN In-Page Translation V7', "data-qily-translation-engine','baidu'", 'concurrency=1']:
