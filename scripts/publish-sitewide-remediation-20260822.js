@@ -13,7 +13,7 @@ const checkOnly = process.argv.includes('--check');
  * remediation publisher must not rewrite them back to pre-language versions.
  */
 const versions = {
-  governance: '/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7',
+  governance: '/site-visual-governance-v2.css?v=20260926-bilingual-label-gold-v1',
   firstPaintBuild: '20260824-readable-floor-plus2-v4',
   contentAxis: '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5'
 };
