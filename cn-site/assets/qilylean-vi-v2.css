@@ -1450,3 +1450,20 @@ html:root:root:root body main :is(
 }
 /* QILY-CN-CLASS-WRAPPER-TYPE-FLOOR-V46:END */
 /* QILY-CN-ALL-SMALL-COPY-FLOOR-V46:END */
+
+
+/* QILY-CN-FOOTER-PRIMARY-NAV-TYPE-AUTHORITY-V2 | 2026-09-27 */
+html:root:root:root:root body .footer .footer-actions>button,
+html:root:root:root:root body .footer .footer-records>a,
+html:root:root:root:root body .footer .footer-records>a>span{
+  font-size:var(--qily-cn-primary-nav-font-size,20px)!important;
+  line-height:1.2!important;
+}
+@media(max-width:760px){
+  html:root:root:root:root body .footer .footer-actions>button,
+  html:root:root:root:root body .footer .footer-records>a,
+  html:root:root:root:root body .footer .footer-records>a>span{
+    font-size:var(--qily-cn-primary-nav-font-size,20px)!important;
+  }
+}
+/* QILY-CN-FOOTER-PRIMARY-NAV-TYPE-AUTHORITY-V2:END */
