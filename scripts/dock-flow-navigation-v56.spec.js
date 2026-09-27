@@ -51,7 +51,7 @@ for(const [name,url,viewport,mobile] of cases){
         buttons:buttons.map(b=>{const s=getComputedStyle(b),r=b.getBoundingClientRect();return {
           action:b.getAttribute('data-action'),w:r.width,h:r.height,left:r.left,right:r.right,top:r.top,
           borderLeft:parseFloat(s.borderLeftWidth)||0,borderRight:parseFloat(s.borderRightWidth)||0,
-          radius:parseFloat(s.borderTopLeftRadius)||0,color:s.color,background:s.backgroundColor
+          radius:parseFloat(s.borderTopLeftRadius)||0,color:s.color,background:s.backgroundColor,fontSize:parseFloat(s.fontSize)||0
         };})
       };
     });
@@ -71,7 +71,9 @@ for(const [name,url,viewport,mobile] of cases){
     expect(result.scrollWidth,'footer must not need horizontal scrolling').toBeLessThanOrEqual(result.clientWidth+1);
     expect(result.lineCounts).toEqual([1,1,1,1,1,1,1]);
 
+    const expectedFont=viewport.width<=390?17:viewport.width<1440?18:20;
     for(const item of result.buttons){
+      expect(item.fontSize,'footer action text must match the primary-navigation scale').toBeCloseTo(expectedFont,1);
       expect(item.radius,'controls must remain compact rectangles').toBeLessThanOrEqual(10);
       expect(item.radius).toBeGreaterThanOrEqual(6);
       expect(item.borderLeft,'left border must render').toBeGreaterThanOrEqual(1);
@@ -122,3 +124,34 @@ for(const [name,url,viewport,mobile] of cases){
     await page.screenshot({path:path.join(out,`${name}.png`),fullPage:true});
   });
 }
+
+
+test('knowledge stats jump labels use the readable 20px floor',async({page})=>{
+  await page.setViewportSize({width:1440,height:1000});
+  const response=await page.goto(base+'/knowledge/',{waitUntil:'domcontentloaded',timeout:30000});
+  expect(response&&response.ok()).toBeTruthy();
+  await page.waitForSelector('#knowledge-stats .knowledge-stat-jump',{state:'visible'});
+  const sizes=await page.locator('#knowledge-stats .knowledge-stat-jump').evaluateAll(nodes=>nodes.map(n=>parseFloat(getComputedStyle(n).fontSize)||0));
+  expect(sizes.length).toBeGreaterThanOrEqual(4);
+  sizes.forEach(size=>expect(size,'knowledge-card CTA text').toBeGreaterThanOrEqual(20));
+});
+
+test('international current primary module is automatically visible',async({page})=>{
+  await page.setViewportSize({width:1280,height:900});
+  const response=await page.goto(base+'/links/',{waitUntil:'domcontentloaded',timeout:30000});
+  expect(response&&response.ok()).toBeTruthy();
+  await page.waitForSelector('header nav a[href="/links/"]',{state:'visible'});
+  await page.waitForTimeout(1100);
+  const state=await page.evaluate(()=>{
+    const nav=document.querySelector('.qily-global-nav,header nav.site-nav,header nav.nav');
+    const active=nav&&nav.querySelector('a[href="/links/"]');
+    if(!nav||!active)return null;
+    const nr=nav.getBoundingClientRect(),ar=active.getBoundingClientRect();
+    return {current:active.getAttribute('aria-current'),label:(active.textContent||'').trim(),left:ar.left,right:ar.right,navLeft:nr.left,navRight:nr.right,scrollLeft:nav.scrollLeft,overflow:nav.scrollWidth-nav.clientWidth};
+  });
+  expect(state).not.toBeNull();
+  expect(state.current).toBe('page');
+  expect(state.label).toContain('资源协同');
+  expect(state.left).toBeGreaterThanOrEqual(state.navLeft-2);
+  expect(state.right).toBeLessThanOrEqual(state.navRight+2);
+});
