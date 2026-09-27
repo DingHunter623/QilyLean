@@ -71,7 +71,7 @@ jobs:
           test -f cn-site/assets/cn-nav-rail-v1.js
           test -f cn-site/assets/cn-footer-actions-v1.css
           test -f cn-site/assets/cn-footer-actions-v1.js
-          grep -Fq 'QilyLean CN Footer Actions V3' cn-site/assets/cn-footer-actions-v1.js
+          grep -Fq 'QilyLean CN Footer Actions V4' cn-site/assets/cn-footer-actions-v1.js
           grep -Fq 'data-qily-footer-action' cn-site/index.html
           test -f cn-site/assets/cn-translate-baidu-v1.js
           test -f cn-site/assets/cn-translate-baidu-v1.css
