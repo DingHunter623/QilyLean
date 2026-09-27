@@ -3,6 +3,12 @@
 const fs=require('fs');
 const pages=['global-knowledge/briefs/index.html','links/cn-public/index.html'];
 let failed=false,footers=[];
+const bridgeCss=fs.readFileSync('global-knowledge/cn-bridge-shell-v1.css','utf8');
+if(!bridgeCss.includes('QILY-CN-BRIDGE-FOOTER-ACTION-EQUAL-WIDTH-V6')||!bridgeCss.includes('width:calc(4em + 24px)!important')){
+  console.error('ERROR: shared CN-bridge footer must keep 顶部 / 分享当前 at one canonical width.');
+  failed=true;
+}
+
 for(const rel of pages){
   const html=fs.readFileSync(rel,'utf8');
   const banned=['湘ICP备','湘公网安备','beian.miit.gov.cn','beian.mps.gov.cn','cn-bridge-footer-records'];

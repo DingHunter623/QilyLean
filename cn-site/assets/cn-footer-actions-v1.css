@@ -294,4 +294,14 @@ html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-ac
   html:root:root:root:root body .footer .footer-actions{display:none!important}
   html body #qilyDockShareCopyToastV2{display:none!important}
 }
+
+
+/* QILY-CN-FOOTER-ACTION-EQUAL-WIDTH-V13 | 2026-09-27 | top/share equal width; five desktop modules keep intrinsic widths + equal inter-module distribution. */
+html:root:root:root:root body .footer .footer-actions>button{
+  box-sizing:border-box!important;
+  width:calc(4em + 24px)!important;
+  min-width:calc(4em + 24px)!important;
+  max-width:calc(4em + 24px)!important;
+}
+
 /* QILY-CN-FOOTER-CONTENT-FIT-V4-NAV-PARITY:END */

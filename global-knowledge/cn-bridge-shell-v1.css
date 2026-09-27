@@ -164,3 +164,13 @@ html:root:root body .cn-bridge-footer-records>a{font-size:20px!important}
   html:root:root body .cn-bridge-footer-records>a{font-size:18px!important}
 }
 /* QILY-CN-BRIDGE-TYPE-FLOOR-V4:END */
+
+
+/* QILY-CN-BRIDGE-FOOTER-ACTION-EQUAL-WIDTH-V6 | 2026-09-27 | shared reference footer action parity */
+html:root:root body .cn-bridge-footer-actions>button{
+  box-sizing:border-box!important;
+  width:calc(4em + 24px)!important;
+  min-width:calc(4em + 24px)!important;
+  max-width:calc(4em + 24px)!important;
+}
+/* QILY-CN-BRIDGE-FOOTER-ACTION-EQUAL-WIDTH-V6:END */
