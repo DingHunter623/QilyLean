@@ -210,29 +210,40 @@ for(const rel of cnPages){
   }
   const title=(html.match(/<title>([^<]*)<\/title>/i)||[])[1]||'';
   assert(title.includes(cnFiledName), rel+' title must include the filed China-site name.');
-  // Filing records remain official external links after shared-footer regeneration.
-  const filingLinks=[...html.matchAll(/<a\b[^>]*href=["']https:\/\/beian\.(?:miit|mps)\.gov\.cn\/[^"']*["'][^>]*>/g)];
-  assert(filingLinks.length>=2, rel+' must retain both official filing links.');
-  for(const [link] of filingLinks){
-    assert(/target="_blank"/.test(link), rel+' filing query must open in a new tab.');
-    assert(/rel="noopener noreferrer"/.test(link), rel+' filing query must isolate the external tab.');
-    assert(/title="[^"]*新标签页打开[^"]*"/.test(link), rel+' filing query must explain its new-tab behavior.');
-  }
-  const footerActions=[...html.matchAll(/data-qily-footer-action="([^"]+)"/g)].map(m=>m[1]);
+  const footerBlock=(html.match(/<footer class="footer"(?: data-qily-footer-filing="none")?>[\s\S]*?<\/footer>/)||[])[0]||'';
+  assert(footerBlock, rel+' must keep the shared China footer component.');
+  const footerActions=[...footerBlock.matchAll(/data-qily-footer-action="([^"]+)"/g)].map(m=>m[1]);
   assert(JSON.stringify(footerActions)===JSON.stringify(['top','share']), rel+' China footer must keep only 顶部 / 分享当前.');
+  const isReferenceFooter=rel==='cn-site/briefs/index.html'||rel==='cn-site/resources/index.html';
+  const filingLinks=[...footerBlock.matchAll(/<a\b[^>]*href=["']https:\/\/beian\.(?:miit|mps)\.gov\.cn\/[^"']*["'][^>]*>/g)];
+  if(isReferenceFooter){
+    assert(footerBlock.includes('data-qily-footer-filing="none"'), rel+' reference route must declare the filing-free footer state.');
+    assert(filingLinks.length===0, rel+' reference route must not expose China filing links in the footer.');
+    assert(!footerBlock.includes('footer-records'), rel+' reference route must not render a filing-record container.');
+  }else{
+    assert(!footerBlock.includes('data-qily-footer-filing="none"'), rel+' standard route must not use the filing-free footer state.');
+    assert(filingLinks.length===2, rel+' standard route must retain exactly two official filing links in the footer.');
+    for(const [link] of filingLinks){
+      assert(/target="_blank"/.test(link), rel+' filing query must open in a new tab.');
+      assert(/rel="noopener noreferrer"/.test(link), rel+' filing query must isolate the external tab.');
+      assert(/title="[^"]*新标签页打开[^"]*"/.test(link), rel+' filing query must explain its new-tab behavior.');
+    }
+  }
 }
 
 
 const cnFooterCss=read('cn-site/assets/cn-footer-actions-v1.css');
 const cnFooterJs=read('cn-site/assets/cn-footer-actions-v1.js');
-assert(cnFooterCss.includes('QilyLean CN Footer Actions V6'), 'CN two-action footer stylesheet marker is missing.');
+assert(cnFooterCss.includes('QilyLean CN Footer Actions V8'), 'CN canonical public footer stylesheet marker is missing.');
+assert(cnFooterCss.includes('QILY-CN-FOOTER-CANONICAL-PUBLIC-V1:END'), 'CN canonical footer authority marker is missing.');
 assert(cnFooterCss.includes('grid-template-columns:repeat(2,minmax(0,1fr))'), 'CN footer action group must keep exactly two buttons.');
-assert(cnFooterCss.includes('QILY-CN-FOOTER-EVEN-SPACING-V1'), 'CN footer even-spacing authority is missing.');
-assert(cnFooterCss.includes('grid-template-columns:minmax(0,1.45fr) minmax(0,.55fr) minmax(0,.84fr) minmax(0,1.90fr) minmax(0,3.15fr)!important'), 'CN desktop footer must use the five-slot content-weighted grid.');
-assert(cnFooterCss.includes('gap:8px!important'), 'CN desktop footer visible-item gap must stay uniform.');
+assert(cnFooterCss.includes('grid-template-columns:minmax(160px,.72fr) minmax(250px,1.18fr) minmax(520px,2.10fr)!important'), 'CN desktop footer must keep the shared three-group geometry.');
+assert(cnFooterCss.includes('data-qily-footer-filing="none"'), 'CN canonical footer CSS must preserve the filing-free reference state.');
+assert(cnFooterCss.includes('gap:8px!important'), 'CN desktop footer visual gap must stay uniform.');
 for (const marker of ["['top','顶部']","['share','分享当前']"]) assert(cnFooterJs.includes(marker), 'CN footer action marker missing: '+marker);
 assert(!cnFooterJs.includes("['previous','上一网页']"), 'CN footer must not restore 上一网页.');
 for (const forbidden of ["['home','首页']","['parent','上一层级']","['knowledge','知识索引']","['about','关于我们']"]) assert(!cnFooterJs.includes(forbidden), 'CN footer must not copy international-only action: '+forbidden);
+assert(cnFooterJs.includes('QilyLean CN Footer Actions V6'), 'CN canonical two-action runtime marker is missing.');
 assert(cnFooterJs.includes("top,share"), 'CN footer runtime must own the two-action contract.');
 
 const cnHome=read('cn-site/index.html');
