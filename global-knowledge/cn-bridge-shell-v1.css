@@ -54,7 +54,7 @@ html body .cn-bridge-footer-inner{
   display:grid!important;grid-template-columns:max-content max-content minmax(0,1fr)!important;
   align-items:center!important;gap:14px 18px!important;padding:6px 0!important
 }
-html body .cn-bridge-footer-brand{font-size:14px!important;line-height:1.25!important;font-weight:800!important;white-space:nowrap!important}
+html body .cn-bridge-footer-brand{font-size:16px!important;line-height:1.25!important;font-weight:800!important;white-space:nowrap!important}
 html body .cn-bridge-footer-actions{
   display:inline-grid!important;grid-template-columns:repeat(3,max-content)!important;align-items:center!important;gap:5px!important;margin:0!important;padding:0!important
 }
@@ -63,7 +63,7 @@ html body .cn-bridge-footer-actions>button{
   display:flex!important;align-items:center!important;justify-content:center!important;min-width:92px!important;min-height:40px!important;
   padding:7px 11px!important;border:1px solid rgba(255,227,155,.52)!important;border-radius:8px!important;
   background:rgba(255,255,255,.055)!important;color:var(--qily-bridge-gold-soft)!important;-webkit-text-fill-color:var(--qily-bridge-gold-soft)!important;
-  font:850 15px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:nowrap!important;cursor:pointer!important
+  font:850 17px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:nowrap!important;cursor:pointer!important
 }
 html body .cn-bridge-footer-actions>button:is(:hover,:focus-visible),html body .cn-bridge-footer-actions>button.is-copied{
   background:var(--qily-bridge-gold-soft)!important;border-color:var(--qily-bridge-gold-soft)!important;
@@ -77,14 +77,14 @@ html body .cn-bridge-footer-records>a{
   display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-height:40px!important;
   padding:7px 9px!important;border:1px solid rgba(255,227,155,.52)!important;border-radius:8px!important;
   background:rgba(255,255,255,.055)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
-  font:850 14px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;text-decoration:underline!important;text-underline-offset:3px!important;white-space:nowrap!important
+  font:850 16px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;text-decoration:underline!important;text-underline-offset:3px!important;white-space:nowrap!important
 }
 html body .cn-bridge-footer-records img{display:block!important;width:18px!important;height:20px!important;object-fit:contain!important}
 html body #qilyCnBridgeShareToast{
   position:fixed!important;left:50%!important;bottom:calc(var(--qily-bridge-footer-h) + 14px + env(safe-area-inset-bottom))!important;
   z-index:2147483600!important;transform:translateX(-50%)!important;max-width:min(88vw,640px)!important;padding:10px 16px!important;
   border-radius:999px!important;color:#fff!important;background:var(--qily-bridge-deep)!important;box-shadow:0 9px 24px rgba(0,0,0,.24)!important;
-  font:800 14px/1.4 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;text-align:center!important;pointer-events:none!important
+  font:800 16px/1.4 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;text-align:center!important;pointer-events:none!important
 }
 @media(max-width:1040px){
   :root{--qily-bridge-footer-h:104px}
@@ -102,11 +102,11 @@ html body #qilyCnBridgeShareToast{
 @media(max-width:760px){
   :root{--qily-bridge-footer-h:132px}
   html body .cn-bridge-footer-inner{width:calc(100% - 24px)!important;min-height:129px!important;grid-template-columns:1fr!important;gap:5px!important;padding:5px 0!important}
-  html body .cn-bridge-footer-brand{font-size:13px!important;white-space:normal!important}
+  html body .cn-bridge-footer-brand{font-size:15px!important;white-space:normal!important}
   html body .cn-bridge-footer-actions{width:100%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
-  html body .cn-bridge-footer-actions>button{width:100%!important;min-width:0!important;min-height:36px!important;padding:6px 5px!important;font-size:13px!important}
+  html body .cn-bridge-footer-actions>button{width:100%!important;min-width:0!important;min-height:36px!important;padding:6px 5px!important;font-size:15px!important}
   html body .cn-bridge-footer-records{grid-column:auto!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;gap:5px!important}
-  html body .cn-bridge-footer-records>a{width:100%!important;min-width:0!important;min-height:34px!important;padding:5px!important;font-size:12px!important;white-space:normal!important}
+  html body .cn-bridge-footer-records>a{width:100%!important;min-width:0!important;min-height:34px!important;padding:5px!important;font-size:14px!important;white-space:normal!important}
 }
 @media(max-width:480px){
   :root{--qily-bridge-footer-h:168px}
@@ -133,7 +133,7 @@ html body .cn-bridge-brand:is(:hover,:focus-visible){
 html body .bridge-hero-eyebrow{
   display:inline-block!important;margin:0!important;
   color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
-  font-size:13px!important;font-weight:900!important;letter-spacing:.08em!important;line-height:1.35!important
+  font-size:21px!important;font-weight:900!important;letter-spacing:.08em!important;line-height:1.35!important
 }
 html body .cn-bridge-footer-inner{
   grid-template-columns:max-content max-content minmax(0,1fr)!important
@@ -143,3 +143,23 @@ html body .cn-bridge-footer-inner{
   html body .cn-bridge-brand>img{max-height:38px!important}
 }
 /* QILY-CN-BRIDGE-V2:END */
+
+
+/* QILY-CN-BRIDGE-TYPE-FLOOR-V3 | 2026-09-27 */
+html:root:root body main :is(
+  p,li,dt,dd,a,button,label,small,figcaption,summary,time,th,td,span,strong,b,em
+){font-size:max(20px,1em)!important}
+html:root:root body .bridge-hero-eyebrow{
+  font-size:21px!important;
+  color:#b88b45!important;
+  -webkit-text-fill-color:#b88b45!important;
+}
+html:root:root body .cn-bridge-footer-brand{font-size:16px!important}
+html:root:root body .cn-bridge-footer-actions>button{font-size:17px!important}
+html:root:root body .cn-bridge-footer-records>a{font-size:16px!important}
+@media(max-width:760px){
+  html:root:root body .cn-bridge-footer-brand{font-size:15px!important}
+  html:root:root body .cn-bridge-footer-actions>button{font-size:15px!important}
+  html:root:root body .cn-bridge-footer-records>a{font-size:14px!important}
+}
+/* QILY-CN-BRIDGE-TYPE-FLOOR-V3:END */
