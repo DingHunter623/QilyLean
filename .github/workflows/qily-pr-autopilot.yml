@@ -88,7 +88,8 @@ jobs:
 
             if [[ "$mergeable_state" == "dirty" ]]; then
               gh pr comment "$PR_NUMBER" --repo "$REPO" --body "QilyLean PR Autopilot：检测到代码冲突，已停止自动合并并保留PR，等待冲突修复。"
-              exit 1
+              echo "Conflict detected; this is an expected guarded stop, not a workflow failure."
+              exit 0
             fi
 
             if [[ "$mergeable_state" == "behind" ]]; then
@@ -116,7 +117,8 @@ jobs:
             if (( failed > 0 )); then
               failed_names="$(jq -r '[.[] | select(.status == "completed") | select(.conclusion == "failure" or .conclusion == "timed_out" or .conclusion == "action_required" or .conclusion == "startup_failure") | .name] | join("、")' <<<"$latest_checks")"
               gh pr comment "$PR_NUMBER" --repo "$REPO" --body "QilyLean PR Autopilot：检查未通过（${failed_names}），已停止自动合并并保留PR，供后续自动诊断修复。"
-              exit 1
+              echo "Required checks already report the failure; autopilot exits cleanly to avoid duplicate red noise."
+              exit 0
             fi
 
             if (( check_count == 0 && attempt < 7 )); then
@@ -152,4 +154,5 @@ jobs:
           done
 
           gh pr comment "$PR_NUMBER" --repo "$REPO" --body "QilyLean PR Autopilot：等待检查或基线稳定超过25分钟，已保留PR并停止本次自动合并。"
-          exit 1
+          echo "Timed guard stop completed without creating a duplicate workflow failure."
+          exit 0
