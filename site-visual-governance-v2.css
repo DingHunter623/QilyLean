@@ -1,4 +1,4 @@
-/* QilyLean 全站可读性治理层 V5｜2026-08-24
+/* QilyLean 全站可读性治理层 V6｜2026-09-27
  * 目的：永久落实“全站最小字号统一再放大一至两号”，重点保护手机端、老板/高层/股东浏览场景。
  * V4：同时把 1560px 统一内容窗口轴纳入最终视觉治理级联，消除上下模块 1240/1560px 混用。
  * 原则：保持标题层级差异；抬高最小可读基线，并覆盖历史页面、局部样式、导航、制造运营轴、六项竞争力卡片、状态说明、Dock、表格、表单与数字产品等小字号盲区。
@@ -261,3 +261,64 @@ html:root body main :is(.hero,.module-hero,.daily-hero,.page-hero,[data-qily-her
 html:root body main :is(.section,.module-section,.daily-single-section) :is(.section-kicker,.module-kicker,.qily-ia-kicker,.section-head>small,.module-heading>.module-eyebrow){color:#caa15f!important;-webkit-text-fill-color:#caa15f!important;font-weight:950!important;opacity:1!important}
 html:root body #qilyChinaKnowledgeBridge a.resource-action.qily-cross-site-primary{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:42px!important;padding:8px 15px!important;border:1px solid #caa15f!important;border-radius:999px!important;color:#17322d!important;-webkit-text-fill-color:#17322d!important;background:#ffe39b!important;font-weight:900!important;text-decoration:none!important;box-shadow:none!important}
 html:root body #qilyChinaKnowledgeBridge a.resource-action.qily-cross-site-primary:is(:hover,:focus-visible){background:#f6d879!important;border-color:#caa15f!important;color:#17322d!important;-webkit-text-fill-color:#17322d!important;box-shadow:0 8px 20px rgba(7,60,71,.18)!important;transform:translateY(-1px)!important}
+
+
+/* QILY-SITEWIDE-ABSOLUTE-TEXT-FLOOR-V6 | 2026-09-27
+ * Final catch-all: every visible text-bearing control/copy element in public content
+ * must preserve the larger 20px readable floor. 1em preserves legitimate heading scale.
+ * Header translation vendor internals are intentionally excluded from this catch-all.
+ */
+:root{
+  --qily-readable-floor:20px;
+  --qily-readable-small:20px;
+  --qily-readable-label:21px;
+  --qily-readable-label-gold:#b88b45;
+}
+html:root:root body :is(main,footer,.site-footer,.qily-site-footer) :is(
+  p,li,dt,dd,a,button,label,small,figcaption,summary,time,th,td,
+  input,select,textarea,option,span,strong,b,em,code,kbd,samp
+){
+  font-size:max(var(--qily-readable-floor),1em)!important;
+}
+html:root:root body main :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+  .kicker,.section-kicker,.module-kicker,.qily-ia-kicker,
+  .resource-kicker,.qily-resource-network__kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker,
+  .section-head>small,.module-heading>.module-eyebrow,.engineering-kicker
+){
+  font-size:max(var(--qily-readable-label),1em)!important;
+  line-height:1.45!important;
+  color:var(--qily-readable-label-gold)!important;
+  -webkit-text-fill-color:var(--qily-readable-label-gold)!important;
+  font-weight:950!important;
+  letter-spacing:.035em!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html:root:root body main :is(
+  .hero,.module-hero,.daily-hero,.page-hero,.project-hero,.cooperation-hero,
+  [data-qily-hero],[data-qily-dark-surface="true"],.qily-dark,.dark-bg
+) :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+  .kicker,.section-kicker,.module-kicker,.qily-ia-kicker,
+  .resource-kicker,.qily-resource-network__kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker,.engineering-kicker
+){
+  color:var(--qily-readable-label-gold)!important;
+  -webkit-text-fill-color:var(--qily-readable-label-gold)!important;
+}
+@media(max-width:620px){
+  html:root:root body :is(main,footer,.site-footer,.qily-site-footer) :is(
+    p,li,dt,dd,a,button,label,small,figcaption,summary,time,th,td,
+    input,select,textarea,option,span,strong,b,em,code,kbd,samp
+  ){font-size:max(20px,1em)!important}
+  html:root:root body main :is(
+    .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+    .kicker,.section-kicker,.module-kicker,.qily-ia-kicker,
+    .resource-kicker,.qily-resource-network__kicker,
+    .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker,
+    .section-head>small,.module-heading>.module-eyebrow,.engineering-kicker
+  ){font-size:max(21px,1em)!important}
+}
+/* QILY-SITEWIDE-ABSOLUTE-TEXT-FLOOR-V6:END */
