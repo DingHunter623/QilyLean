@@ -65,12 +65,15 @@ test('resource collaboration CTAs inherit shared global VI and have visible feed
     const s=getComputedStyle(document.querySelector('.actions .button:not(.primary)'));
     return {primaryBg:p.backgroundColor,secondaryBg:s.backgroundColor,primaryRadius:parseFloat(p.borderRadius)||0,secondaryRadius:parseFloat(s.borderRadius)||0};
   });
-  expect(before.primaryBg).not.toBe(before.secondaryBg);
   expect(before.primaryRadius).toBeLessThanOrEqual(10);
   expect(before.secondaryRadius).toBeLessThanOrEqual(10);
+  await primary.hover();
+  const primaryHover=await primary.evaluate(el=>getComputedStyle(el).backgroundColor);
+  expect(primaryHover).not.toBe(before.primaryBg);
   await secondary.hover();
-  const after=await secondary.evaluate(el=>getComputedStyle(el).backgroundColor);
-  expect(after).not.toBe(before.secondaryBg);
+  const secondaryHover=await secondary.evaluate(el=>getComputedStyle(el).backgroundColor);
+  expect(secondaryHover).not.toBe(before.secondaryBg);
+  expect(primaryHover).not.toBe(secondaryHover);
 });
 
 async function navState(page,navSelector,activeSelector,footerSelector){
