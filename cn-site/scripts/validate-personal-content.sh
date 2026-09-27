@@ -153,8 +153,6 @@ for path in sorted(root.rglob('*.html')):
     footer=m.group(0)
     rel=path.relative_to(root).as_posix()
     actions=re.findall(r'data-qily-footer-action="([^"]+)"',footer)
-    if 'class="footer-home" href="/"' not in footer or '>精益制造经验分享</a>' not in footer:
-        errors.append(f'{rel}: footer filed-name link must return to the China-site homepage')
     if actions!=['top','share']:
         errors.append(f'{rel}: footer actions must be exactly top/share, got {actions}')
     if '上一网页' in footer or 'data-qily-footer-action="previous"' in footer:

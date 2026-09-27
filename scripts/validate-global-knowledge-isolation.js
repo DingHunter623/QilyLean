@@ -53,13 +53,10 @@ for (const file of htmlFiles) {
     for (const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) {
       if (!html.includes(`href="${route}"`)) fail(`${rel} China-parity header missing: ${route}`);
     }
-    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v4-footer-content-fit')) fail(`${rel} China-parity bridge shell stylesheet missing`);
-    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v4-footer-content-fit')) fail(`${rel} China-parity bridge footer runtime missing`);
+    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v3-type-floor')) fail(`${rel} China-parity bridge shell stylesheet missing`);
+    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v3-type-floor')) fail(`${rel} China-parity bridge footer runtime missing`);
     if (!html.includes('bridge-hero-eyebrow')) fail(`${rel} bridge hero eyebrow must use the shared gold VI class`);
     if (html.includes('/global-knowledge/knowledge-dock-v1.js')) fail(`${rel} retired seven-action knowledge dock returned`);
-    const bridgeFooter=(html.match(/<footer class="cn-bridge-footer">[\s\S]*?<\/footer>/)||[])[0]||'';
-    if (!bridgeFooter.includes('<a class="cn-bridge-footer-brand" href="https://qilylean.cn/"')) fail(`${rel} footer must enter the China homepage`);
-    if (bridgeFooter.includes('data-action="previous"')) fail(`${rel} retired previous-page footer action returned`);
   } else {
     if (!html.includes('<a class="brand" href="https://qilylean.com/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge</a>')) fail(`${rel} brand must return to the canonical qilylean.com homepage`);
     if (!html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>')) fail(`${rel} must expose the filed China knowledge route`);

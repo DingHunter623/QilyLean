@@ -29,7 +29,7 @@ html:root:root:root:root body .footer .footer-inner{
   flex-wrap:nowrap!important;
   gap:8px!important;
 }
-html:root:root:root:root body .footer .footer-home{
+html:root:root:root:root body .footer .footer-inner>span:first-child{
   box-sizing:border-box!important;
   display:inline-flex!important;
   align-items:center!important;
@@ -140,7 +140,6 @@ html:root:root:root:root body .footer .police-record img{
   object-fit:contain!important;
 }
 @media(hover:hover) and (pointer:fine){
-  html:root:root:root:root body .footer .footer-home:hover,
   html:root:root:root:root body .footer .footer-actions>button:hover,
   html:root:root:root:root body .footer .footer-records>a:hover{
     background:#ffe39b!important;
@@ -151,7 +150,6 @@ html:root:root:root:root body .footer .police-record img{
     transform:translateY(-1px)!important;
   }
 }
-html:root:root:root:root body .footer .footer-home:focus-visible,
 html:root:root:root:root body .footer .footer-actions>button:focus-visible,
 html:root:root:root:root body .footer .footer-records>a:focus-visible{
   background:#ffe39b!important;
@@ -233,7 +231,7 @@ html body #qilyDockShareCopyToastV2{
     gap:5px!important;
     padding:5px 0!important;
   }
-  html:root:root:root:root body .footer .footer-home{
+  html:root:root:root:root body .footer .footer-inner>span:first-child{
     min-height:34px!important;
     padding:5px 8px!important;
     font-size:17px!important;
@@ -277,4 +275,4 @@ html body #qilyDockShareCopyToastV2{
   html:root:root:root:root body .footer .footer-actions{display:none!important}
   html body #qilyDockShareCopyToastV2{display:none!important}
 }
-/* QILY-CN-FOOTER-CONTENT-FIT-V2:END */
+/* QILY-CN-FOOTER-CONTENT-FIT-V3-SCOPE-CORRECTED:END */
