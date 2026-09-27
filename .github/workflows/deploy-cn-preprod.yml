@@ -289,7 +289,7 @@ jobs:
               for marker in [
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
-                  '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v45-small-type-gold-parity',
+                  '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v46-full-small-type-parity',
                   '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v6-small-type-parity',
                   '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v6-small-type-parity',
                   'data-qily-footer-action="top"',
@@ -334,8 +334,8 @@ jobs:
               raise SystemExit('Production share parity failed: title + URL must be copied before system share opens.')
           typography_contract = [
               (vi, 'QILY-CN-TYPE-HIERARCHY-V5', 'final V5 authority'),
-              (vi, 'QILY-CN-SMALL-TYPE-GOLD-PARITY-V45', 'small-type and gold-label parity authority'),
-              (vi, '--qily-cn-small:18px', '18px smallest content floor'),
+              (vi, 'QILY-CN-ALL-SMALL-COPY-FLOOR-V46', 'small-type and gold-label parity authority'),
+              (vi, '--qily-cn-small:20px', '18px smallest content floor'),
               (vi, '--qily-cn-section-kicker:21px', '21px chapter/module label size'),
               (vi, '--qily-cn-label-gold:#b88b45', 'canonical light-gold label color'),
               (footer_actions_css, 'font:850 16px/1', 'desktop footer action label enlarged one step'),
@@ -395,7 +395,7 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v45-small-type-gold-parity' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v46-full-small-type-parity' not in home:
               raise SystemExit('Production China home missing V42 final production VI revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' not in home:
               raise SystemExit('Production China home missing V20 CN bridge nav runtime.')
@@ -515,8 +515,8 @@ jobs:
               'QILY-CN-EXTERNAL-ARROW-SINGLE-V43',
               'QILY-CN-EXTERNAL-MARK-V36',
               'QILY-CN-TYPE-HIERARCHY-V5',
-              'QILY-CN-SMALL-TYPE-GOLD-PARITY-V45',
-              '--qily-cn-small:18px',
+              'QILY-CN-ALL-SMALL-COPY-FLOOR-V46',
+              '--qily-cn-small:20px',
               '--qily-cn-section-kicker:21px',
               '--qily-cn-label-gold:#b88b45',
               '--qily-cn-h1:clamp(28px,2.25vw,38px)',
