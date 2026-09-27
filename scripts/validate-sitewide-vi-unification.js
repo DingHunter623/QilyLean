@@ -79,6 +79,13 @@ for(const rel of gkPages){
   assert(!html.includes('>中国知识站</a>'), rel+' must not expose the retired China-site name.');
 }
 
+const intlReadability=read('site-visual-readability-v5.css');
+assert(intlReadability.includes('QILY-SITEWIDE-SMALL-TYPE-GOLD-PARITY-V1'), 'International small-type and gold-label parity authority missing.');
+assert(intlReadability.includes('--qily-v5-small:18px'), 'International smallest content floor must be 18px.');
+assert(intlReadability.includes('--qily-v5-small-strong:19px'), 'International emphasized small text must be 19px.');
+assert(intlReadability.includes('--qily-v5-section-kicker:21px'), 'International chapter/module labels must be 21px.');
+assert(intlReadability.includes('--qily-v5-gold-label:#b88b45'), 'International chapter/module labels must use the canonical light gold.');
+
 /* 3) China site: same international-style rail + controlled type hierarchy */
 const cnCss=read('cn-site/assets/qilylean-vi-v2.css');
 const cnBaseCss=read('cn-site/assets/qilylean-vi-v1.css');
@@ -114,6 +121,10 @@ assert(cnRail.includes("qily-primary-nav-scroll-rail"), 'CN nav rail runtime cla
 assert(cnRail.includes('qily-cn-nav-shell'), 'CN desktop/mobile nav shell is missing.');
 assert(cnCss.includes('--qily-cn-primary-nav-font-size:20px'), 'CN primary nav type must match international 20px.');
 assert(cnCss.includes('QILY-CN-TYPE-HIERARCHY-V5'), 'CN final typography authority V5 missing.');
+assert(cnCss.includes('QILY-CN-SMALL-TYPE-GOLD-PARITY-V45'), 'CN V45 small-type and gold-label parity authority missing.');
+assert(cnCss.includes('--qily-cn-small:18px'), 'CN smallest content floor must be 18px.');
+assert(cnCss.includes('--qily-cn-section-kicker:21px'), 'CN chapter/module labels must be 21px.');
+assert(cnCss.includes('--qily-cn-label-gold:#b88b45'), 'CN chapter/module labels must use the canonical light gold.');
 assert(cnCss.includes('--qily-cn-h2:clamp(20px,1.25vw,22px)'), 'CN desktop H2 must be capped at 22px.');
 assert(cnCss.includes('--qily-cn-h3:clamp(17px,1vw,19px)'), 'CN desktop H3 must be capped at 19px.');
 assert(cnBaseCss.includes('clamp(20px,1.25vw,22px)!important'), 'CN base VI must use the restrained 22px section H2 fallback.');
@@ -168,7 +179,7 @@ for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
   assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260926-cn-vi-v44-bilingual-label-gold'), rel+' must use current CN VI resource version.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v45-small-type-gold-parity'), rel+' must use current CN VI resource version.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v18-hero-eyebrow'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
