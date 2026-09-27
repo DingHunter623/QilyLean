@@ -135,13 +135,18 @@ grep -Fq 'target="_blank" rel="noopener noreferrer"' "$BRIEFS_PAGE" || { echo "E
 grep -Fq 'href="https://qilylean.com/links/cn-public/"' "$RESOURCES_PAGE" || { echo "ERROR: CN resources bridge lost its explicit international destination."; exit 1; }
 grep -Fq 'target="_blank" rel="noopener noreferrer"' "$RESOURCES_PAGE" || { echo "ERROR: CN resources bridge external-link safety attributes are missing."; exit 1; }
 
-# China footer semantics stay unchanged: only Top / Previous page / Share current.
-for action in top previous share; do
+# China footer semantics: only Top / Share current; Previous page is retired.
+for action in top share; do
   grep -Fq "data-qily-footer-action=\"$action\"" "$INDEX_FILE" || {
     echo "ERROR: CN footer navigation missing original action: $action"
     exit 1
   }
 done
+! grep -Fq 'data-qily-footer-action="previous"' "$INDEX_FILE" || {
+  echo "ERROR: CN footer must not restore retired previous-page action"
+  exit 1
+}
+
 for action in home parent knowledge about; do
   if grep -Fq "data-qily-footer-action=\"$action\"" "$INDEX_FILE"; then
     echo "ERROR: CN footer must not copy international-only action: $action"
