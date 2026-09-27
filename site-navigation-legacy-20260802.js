@@ -197,25 +197,25 @@
   }
 
   function ensurePricingStyles() {
-    if (document.getElementById('qilyPublicPricingStyleV4')) return;
+    if (document.getElementById('qilyPublicPricingStyleV5')) return;
     var style = document.createElement('style');
-    style.id = 'qilyPublicPricingStyleV4';
+    style.id = 'qilyPublicPricingStyleV5';
     style.textContent = [
       '#entry .qily-pricing-overview{display:block!important}',
       '.qily-pricing-group{margin-top:22px;padding:22px;border:1px solid #d5e4e3;background:#f7fbfa}',
       '.qily-pricing-family{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin:28px 0 12px;padding:14px 16px;border-left:5px solid #0f6570;background:#eaf6f3}',
       '.qily-pricing-family:first-child{margin-top:0}',
-      '.qily-pricing-family strong{color:#073c47;font-size:18px}',
-      '.qily-pricing-family span{color:#5f7474;font-size:14px;text-align:right}',
+      '.qily-pricing-family strong{color:#073c47;font-size:20px}',
+      '.qily-pricing-family span{color:#5f7474;font-size:20px;text-align:right}',
       '.qily-pricing-group:first-child{margin-top:0}',
       '.qily-pricing-group-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:16px}',
       '.qily-pricing-group-head h3{margin:0;color:#0f4b5a;font-size:clamp(24px,2.4vw,34px)}',
-      '.qily-pricing-group-head p{max-width:760px;margin:0;color:#5f7474;font-size:15px;text-align:right}',
+      '.qily-pricing-group-head p{max-width:760px;margin:0;color:#5f7474;font-size:20px;text-align:right}',
       '.qily-pricing-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}',
       '.qily-pricing-grid .price-card{display:flex;flex-direction:column;min-height:286px}',
       '.qily-pricing-grid .price-card p{margin-bottom:0}',
-      '.qily-price-basis{margin-top:auto;padding-top:13px;color:#8d6a32;font-size:13.5px;font-weight:850;line-height:1.65}',
-      '#entry .fine-print,.qily-pricing-note{margin-top:18px;padding:16px 18px;border-left:4px solid #caa15f;background:#eef8f6;color:#315f64;font-size:15px;line-height:1.75}',
+      '.qily-price-basis{margin-top:auto;padding-top:13px;color:#8d6a32;font-size:20px;font-weight:850;line-height:1.6}',
+      '#entry .fine-print,.qily-pricing-note{margin-top:18px;padding:16px 18px;border-left:4px solid #caa15f;background:#eef8f6;color:#315f64;font-size:20px;line-height:1.65}',
       '.core-business-pricing{margin:26px 0;padding:clamp(20px,3vw,30px);border:1px solid #c8dad8;border-top:4px solid #caa15f;background:#f7fbfa}',
       '.core-business-pricing h2{margin:0;color:#0f4b5a;font-size:clamp(27px,3vw,40px)}',
       '.core-business-pricing>.qily-pricing-lead{margin:8px 0 18px;color:#5f7474}',
@@ -226,7 +226,7 @@
       '.qily-pricing-lock-copy h3{margin:7px 0;color:#0f4b5a;font-size:clamp(26px,3vw,38px)}',
       '.qily-pricing-lock-copy p{margin:0 0 18px;color:#5f7474}',
       '.qily-pricing-lock-form{display:flex;align-items:flex-end;gap:10px;max-width:620px}',
-      '.qily-pricing-lock-form label{display:grid;flex:1;gap:6px;color:#0f4b5a;font-size:14px;font-weight:900}',
+      '.qily-pricing-lock-form label{display:grid;flex:1;gap:6px;color:#0f4b5a;font-size:20px;font-weight:900}',
       '.qily-pricing-lock-form input{width:100%;min-height:48px;padding:10px 13px;border:1px solid #b8cfcc;background:#fff;font:inherit}',
       '.qily-pricing-lock-form input:focus{border-color:#178b94;box-shadow:0 0 0 3px rgba(23,139,148,.12);outline:none}',
       '.qily-pricing-lock-form button{min-height:48px;padding:10px 18px;border:1px solid #0f4b5a;color:#fff;background:#0f4b5a;cursor:pointer;font:inherit;font-weight:900;white-space:nowrap}',

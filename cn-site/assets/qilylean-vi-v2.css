@@ -150,7 +150,7 @@ html:root body .tag{
 }
 html:root body .subnav a{padding:7px 11px!important;font-size:18px!important}
 
-/* QILY-CN-FOOTER-VISUAL-PARITY-V4 | 2026-09-26
+/* QILY-CN-FOOTER-VISUAL-PARITY-V5 | 2026-09-27
  * User intent: China footer keeps its own three actions + filing records.
  * Only geometry/visual rhythm mirrors the international fixed-bottom footer.
  */
@@ -173,17 +173,23 @@ html:root body .footer-inner{
   min-height:55px!important;
   margin:0 auto!important;
   display:grid!important;
-  grid-template-columns:max-content max-content minmax(0,1fr)!important;
+  grid-template-columns:minmax(0,1fr) minmax(0,3fr) minmax(0,2fr)!important;
   align-items:center!important;
-  gap:14px 18px!important;
+  gap:6px!important;
   padding:6px 0!important;
 }
 html:root body .footer-inner>span:first-child{
   min-width:0!important;
-  font-size:15px!important;
-  line-height:1.25!important;
-  font-weight:800!important;
+  font-size:20px!important;
+  line-height:1.2!important;
+  font-weight:850!important;
   white-space:nowrap!important;
+  text-align:center!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:40px!important;
+  padding:7px 9px!important;
 }
 html:root body .footer-inner a{
   color:#fff!important;
@@ -196,14 +202,14 @@ html:root body .footer-inner a{
 }
 /* QILY-CN-FILING-V1 | ICP and approved public-security filing, 2026-09-20. */
 html:root body .footer-records{
-  display:flex!important;
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
   align-items:center!important;
-  justify-content:flex-end!important;
-  flex-wrap:nowrap!important;
   gap:6px!important;
+  width:100%!important;
   min-width:0!important;
   max-width:100%!important;
-  justify-self:end!important;
+  justify-self:stretch!important;
 }
 html:root body .footer-records>a{
   display:inline-flex!important;
@@ -214,6 +220,9 @@ html:root body .footer-records>a{
   padding:7px 9px!important;
   border-radius:8px!important;
   white-space:nowrap!important;
+  width:100%!important;
+  min-width:0!important;
+  box-sizing:border-box!important;
 }
 html:root body .police-record img{
   display:block!important;
@@ -1453,6 +1462,7 @@ html:root:root:root body main :is(
 
 
 /* QILY-CN-FOOTER-PRIMARY-NAV-TYPE-AUTHORITY-V2 | 2026-09-27 */
+html:root:root:root:root body .footer .footer-inner>span:first-child,
 html:root:root:root:root body .footer .footer-actions>button,
 html:root:root:root:root body .footer .footer-records>a,
 html:root:root:root:root body .footer .footer-records>a>span{
@@ -1460,6 +1470,7 @@ html:root:root:root:root body .footer .footer-records>a>span{
   line-height:1.2!important;
 }
 @media(max-width:760px){
+  html:root:root:root:root body .footer .footer-inner>span:first-child,
   html:root:root:root:root body .footer .footer-actions>button,
   html:root:root:root:root body .footer .footer-records>a,
   html:root:root:root:root body .footer .footer-records>a>span{

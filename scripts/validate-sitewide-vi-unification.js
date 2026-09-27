@@ -86,6 +86,19 @@ assert(intlReadability.includes('--qily-v5-small-strong:21px'), 'International e
 assert(intlReadability.includes('--qily-v5-section-kicker:21px'), 'International chapter/module labels must be 21px.');
 assert(intlReadability.includes('--qily-v5-gold-label:#b88b45'), 'International chapter/module labels must use the canonical light gold.');
 
+const pricingLegacy=read('site-navigation-legacy-20260802.js');
+const pricingBootstrap=read('site-navigation.js');
+assert(pricingLegacy.includes('qilyPublicPricingStyleV5'), 'International pricing runtime V5 style authority missing.');
+for(const marker of [
+  '.qily-pricing-family strong{color:#073c47;font-size:20px}',
+  '.qily-pricing-family span{color:#5f7474;font-size:20px;text-align:right}',
+  '.qily-pricing-group-head p{max-width:760px;margin:0;color:#5f7474;font-size:20px;text-align:right}',
+  '.qily-price-basis{margin-top:auto;padding-top:13px;color:#8d6a32;font-size:20px',
+  '#entry .fine-print,.qily-pricing-note{margin-top:18px;padding:16px 18px;border-left:4px solid #caa15f;background:#eef8f6;color:#315f64;font-size:20px',
+  '.qily-pricing-lock-form label{display:grid;flex:1;gap:6px;color:#0f4b5a;font-size:20px'
+]) assert(pricingLegacy.includes(marker), 'International pricing small-type VI floor missing: '+marker);
+assert(pricingBootstrap.includes('20260927-pricing-type-floor-v25'), 'International pricing runtime cache-bust missing.');
+
 /* 3) China site: same international-style rail + controlled type hierarchy */
 const cnCss=read('cn-site/assets/qilylean-vi-v2.css');
 const cnBaseCss=read('cn-site/assets/qilylean-vi-v1.css');
@@ -139,9 +152,9 @@ assert(cnCss.includes('grid-template-areas:"brand nav translate"'), 'CN desktop 
 assert(cnCss.includes('grid-template-areas:"brand translate" "nav nav"'), 'CN mobile header nav row is missing.');
 assert(cnCss.includes('QILY-CN-HEADER-SHELL-PARITY-V3'), 'CN desktop header shell parity marker is missing.');
 assert(cnCss.includes('QILY-CN-CONTENT-AXIS-PARITY-V2'), 'CN content-axis parity V2 marker is missing.');
-assert(cnCss.includes('QILY-CN-FOOTER-VISUAL-PARITY-V4'), 'CN footer must preserve fixed-bottom international-style visual parity without changing China actions.');
+assert(cnCss.includes('QILY-CN-FOOTER-VISUAL-PARITY-V5'), 'CN footer must preserve fixed-bottom international-style visual parity without changing China actions.');
 assert(cnCss.includes('--qily-cn-fixed-footer-h:58px'), 'CN fixed footer height must match the international 58px rhythm.');
-assert(cnCss.includes('grid-template-columns:max-content max-content minmax(0,1fr)!important'), 'CN footer desktop layout must keep brand + 3 actions + filing records on one row.');
+assert(cnCss.includes('grid-template-columns:minmax(0,1fr) minmax(0,3fr) minmax(0,2fr)!important'), 'CN footer desktop layout must keep brand + 3 actions + filing records on one row.');
 assert(cnCss.includes('position:fixed!important'), 'CN footer visual parity requires a fixed-bottom footer bar.');
 assert(cnCss.includes('min-height:83.4px!important'), 'CN desktop header shell must match the international measured geometry.');
 assert(cnRail.includes('mousedown'), 'CN nav rail mouse drag is missing.');
@@ -174,16 +187,18 @@ const cnPages=[...new Set([...tracked('cn-site/*.html'),...tracked('cn-site/**/*
 assert(cnPages.length>=17,'Expected at least 17 CN document pages.');
 /* CN-FILED-NAME-GOVERNANCE-V1 | public China-site name must equal the ICP filing service name. */
 const cnFiledName='精益制造经验分享';
-const cnFooterName='QilyLean | 启力精益 · '+cnFiledName;
+const cnFooterName=cnFiledName;
+const cnFooterLegacyName='QilyLean | 启力精益 · '+cnFiledName;
 for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
   assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v46-full-small-type-parity'), rel+' must use current CN VI resource version.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform'), rel+' must use current CN VI resource version.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
-  assert(html.includes(cnFooterName), rel+' must display the filed China-site name in the footer.');
+  assert(html.includes('<div class="footer-inner"><span>'+cnFooterName+'</span>'), rel+' footer must start with the filed China-site name only.');
+  assert(!html.includes('<div class="footer-inner"><span>'+cnFooterLegacyName+'</span>'), rel+' footer must not repeat the QilyLean brand prefix.');
   assert(!html.includes('QilyLean | 启力精益 · 个人制造业知识与实践分享'), rel+' must not restore the retired footer name.');
   assert(!html.includes('个人制造业知识与实践分享'), rel+' must not expose the retired China-site name.');
   if(html.includes('aria-label="主导航"')){
@@ -211,8 +226,8 @@ for(const rel of cnPages){
 
 const cnFooterCss=read('cn-site/assets/cn-footer-actions-v1.css');
 const cnFooterJs=read('cn-site/assets/cn-footer-actions-v1.js');
-assert(cnFooterCss.includes('QilyLean CN Footer Actions V4'), 'CN three-action footer stylesheet marker is missing.');
-assert(cnFooterCss.includes('grid-template-columns:repeat(3,max-content)'), 'CN desktop footer must keep exactly three action buttons.');
+assert(cnFooterCss.includes('QilyLean CN Footer Actions V5'), 'CN three-action footer stylesheet marker is missing.');
+assert(cnFooterCss.includes('grid-template-columns:repeat(3,minmax(0,1fr))'), 'CN desktop footer must keep exactly three action buttons.');
 for (const marker of ["['top','顶部']","['previous','上一网页']","['share','分享当前']"]) assert(cnFooterJs.includes(marker), 'CN footer action marker missing: '+marker);
 for (const forbidden of ["['home','首页']","['parent','上一层级']","['knowledge','知识索引']","['about','关于我们']"]) assert(!cnFooterJs.includes(forbidden), 'CN footer must not copy international-only action: '+forbidden);
 assert(cnFooterJs.includes("top,previous,share"), 'CN footer runtime must own the original three-action contract.');
