@@ -7,6 +7,7 @@ const css=fs.readFileSync(path.join(root,'styles','qily-aircraft-brand-hero-v1.c
 const homeCss=fs.readFileSync(path.join(root,'styles','qily-home-conversion-v1.css'),'utf8');
 const homeVisualFix=fs.readFileSync(path.join(root,'styles','qily-home-conversion-visual-fix-v2.css'),'utf8');
 const readabilityCss=fs.readFileSync(path.join(root,'site-visual-readability-v5.css'),'utf8');
+const readabilityPublisher=fs.readFileSync(path.join(root,'scripts','publish-visual-readability-v5.js'),'utf8');
 const homeJs=fs.readFileSync(path.join(root,'site-home-conversion-v1.js'),'utf8');
 const homeMaterializer=fs.readFileSync(path.join(root,'scripts','enforce-aircraft-home-hero.js'),'utf8');
 const ownerProfileCss=fs.readFileSync(path.join(root,'styles','qily-home-owner-profile-v1.css'),'utf8');
@@ -20,7 +21,8 @@ const HOME_JS_VERSION='20260901-home-first-paint-v6';
 const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
 const HOME_VISUAL_FIX_VERSION='20260902-card-bottom-rail-v5';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
-const VISUAL_READABILITY_VERSION='20260923-r82-heading-hierarchy-v1';
+const VISUAL_READABILITY_VERSION='20260927-small-type-gold-parity-v2';
+const VISUAL_READABILITY_PREVIOUS='20260927-small-type-gold-parity-v1';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
 function gitBlobSha(buffer){return crypto.createHash('sha1').update(Buffer.from(`blob ${buffer.length}\0`)).update(buffer).digest('hex')}
 const png=fs.readFileSync(pngPath),block=(html.match(/<!-- QILY-AIRCRAFT-BRAND-HERO-V1:START -->[\s\S]*?<!-- QILY-AIRCRAFT-BRAND-HERO-V1:END -->/)||[''])[0];
@@ -54,7 +56,11 @@ assert(staticHero.includes('qily-home-project-visual'),'Static first-paint proje
 assert(staticHero.includes('免费60分钟沟通诊断'),'Static first-paint diagnosis entry missing');
 assert(!between.includes('现场问题，可计算'),'Retired homepage Hero copy is still present in first-paint HTML');
 assert(!html.includes('id="qilyAircraftHeroPreloadV1"'),'Aircraft preload must stay removed after first-screen demotion');
-assert(html.includes(`<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=${VISUAL_READABILITY_VERSION}">`),'Sitewide V10 VI/readability stylesheet is not materialized on homepage');
+const readabilityHrefCurrent=`<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=${VISUAL_READABILITY_VERSION}">`;
+const readabilityHrefPrevious=`<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="/site-visual-readability-v5.css?v=${VISUAL_READABILITY_PREVIOUS}">`;
+assert(html.includes(readabilityHrefCurrent)||html.includes(readabilityHrefPrevious),'Sitewide V12 VI/readability stylesheet rollout is missing from homepage');
+assert(readabilityPublisher.includes(`const VERSION = '${VISUAL_READABILITY_VERSION}'`),'Readability publisher must own the V12 full-site type-floor cache version');
+assert(readabilityCss.includes('QILY-READABILITY-ALL-SMALL-COPY-FLOOR-V2'),'Full-site small-copy floor V2 is missing');
 assert(html.includes(`<link id="qilyHomeConversionV1Stylesheet" rel="stylesheet" href="/styles/qily-home-conversion-v1.css?v=${HOME_VERSION}">`),'Conversion homepage stylesheet is not directly materialized');
 assert(html.includes(`<link id="qilyHomeConversionVisualFixV2" rel="stylesheet" href="/styles/qily-home-conversion-visual-fix-v2.css?v=${HOME_VISUAL_FIX_VERSION}">`),'Homepage VI/readability stylesheet is not directly materialized with cache-busting');
 assert(html.includes(`<link id="qilyHomeOwnerProfileV1Stylesheet" rel="stylesheet" href="/styles/qily-home-owner-profile-v1.css?v=${OWNER_PROFILE_VERSION}">`),'Homepage owner-profile stylesheet is not directly materialized');
