@@ -9,7 +9,9 @@ const fs=require('fs');
 const path=require('path');
 const root=path.resolve(__dirname,'..');
 const source=fs.readFileSync(path.join(root,'site-dock-share-runtime-v1.js'),'utf8');
+const visual=fs.readFileSync(path.join(root,'site-visual-system-v2.css'),'utf8');
 const must=(token,label)=>{if(!source.includes(token))throw new Error(`Dock V5.8 footer-style: ${label} missing: ${token}`);};
+const mustVisual=(token,label)=>{if(!visual.includes(token))throw new Error(`Dock V5.8 footer-style CSS: ${label} missing: ${token}`);};
 const forbid=(token,label)=>{if(source.includes(token))throw new Error(`Dock V5.8 footer-style: ${label} forbidden: ${token}`);};
 
 must('Floating Dock Authoritative Runtime V5.8','runtime version');
@@ -40,6 +42,14 @@ must("setImportant(dock,'justify-content','center')",'mobile second-row centerin
 must("setImportant(button,'flex','0 0 calc((100% - 12px)/4)')",'mobile four-column control width');
 must('qilyDockBottomSpacerV58','bottom content clearance spacer');
 
+must('font:850 20px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important','desktop primary-nav font parity');
+must("navFont=w.innerWidth<=390?'17px':w.innerWidth<1440?'18px':'20px'",'responsive primary-nav font scale');
+must("setImportant(button,'font-size',navFont)",'inline typography ownership');
+mustVisual('QILY-DOCK-NAV-FONT-PARITY-V1','fallback typography parity marker');
+mustVisual('font-size:20px!important','wide desktop 20px navigation parity');
+mustVisual('font-size:18px!important','compact/tablet/mobile 18px navigation parity');
+mustVisual('font-size:17px!important','narrow mobile 17px navigation parity');
+
 must('min-height:40px!important','desktop compact control height');
 must('min-height:38px!important','mobile compact control height');
 must('border-radius:8px!important','compact rectangular controls');
@@ -57,4 +67,4 @@ forbid('border-radius:50%!important','circular buttons');
 forbid('--qily-dock-shell:rgba(255,255,255,.98)','retired white shell');
 if(/new\s+MutationObserver\s*\(/.test(source))throw new Error('Dock V5.8 footer-style: MutationObserver rebuilding is forbidden');
 
-console.log('PASS: Dock V5.8 uses the China-style deep-teal/gold fixed footer, seven retained actions, compact desktop modules and centered 4+3 mobile wrapping.');
+console.log('PASS: Dock V5.8 keeps all seven actions, China-style footer geometry, 4+3 mobile wrapping, and primary-navigation font parity (20/18/17px).');
