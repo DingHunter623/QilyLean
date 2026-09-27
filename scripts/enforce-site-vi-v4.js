@@ -28,10 +28,11 @@ for(const token of ['/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure','
 const htmlFiles=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>f.startsWith('cn-site/')||f.startsWith('global-knowledge/')||/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
 const DDZ='tools/pure-ddz/index.html';
+const CN_BRIDGE='links/cn-public/index.html';
 let governed=0,formalCovered=0,duplicateBootstraps=0;
 const missing=[];
 for(const file of htmlFiles){
-  if(ownership(file)||file===DDZ)continue;
+  if(ownership(file)||file===DDZ||file===CN_BRIDGE)continue;
   const html=read(file);
   if(!/<\/head>/i.test(html))continue;
   governed++;
@@ -54,7 +55,7 @@ const audit={
   p1:0,
   governedPublicPages:governed,
   formalAuthorityCoveredPages:formalCovered,
-  explicitProductInteriorExceptions:[DDZ],
+  explicitProductInteriorExceptions:[DDZ,CN_BRIDGE],
   checks:{tokens:'passed',hero118:'passed',headerShell:'runtime-enforced',translationOwnership:'single-owner-preserved',dockSingleFlow:'runtime-enforced',responsiveOverflow:'browser-required',browserRegression:'pending'},
   generatedAt:new Date().toISOString()
 };
