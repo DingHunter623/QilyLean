@@ -43,6 +43,8 @@ async function auditPage(page, route, limits, label){
       h2:read('main h2'),
       h3:read('main h3'),
       body:read('main .article-body p, main .section-head p').slice(0,12),
+      small:read('main small, main .breadcrumbs, main .meta, main .article-meta').slice(0,24),
+      labels:read('main .eyebrow, main .hero-eyebrow, main .module-eyebrow, main .section-kicker, main .module-kicker, main .section-head>small').slice(0,24),
       href:[...document.querySelectorAll('link[rel="stylesheet"]')].map(x=>x.getAttribute('href')||''),
       header:(()=>{
         const inner=document.querySelector('.site-header .header-inner');
@@ -71,11 +73,16 @@ async function auditPage(page, route, limits, label){
       })()
     };
   });
-  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260926-cn-vi-v28-footer-visual-parity')), route+' must load V28 VI').toBeTruthy();
+  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260927-cn-vi-v45-small-type-gold-parity')), route+' must load V28 VI').toBeTruthy();
   for(const x of data.h1) expect(x.px, route+' H1 '+x.text).toBeLessThanOrEqual(limits.h1);
   for(const x of data.h2) expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(limits.h2);
   for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
   for(const x of data.body) expect(x.px, route+' body '+x.text).toBeLessThanOrEqual(limits.body);
+  for(const x of data.small) expect(x.px, route+' small '+x.text).toBeGreaterThanOrEqual(17.9);
+  for(const x of data.labels){
+    expect(x.px, route+' module label floor '+x.text).toBeGreaterThanOrEqual(20.5);
+    expect(x.px, route+' module label ceiling '+x.text).toBeLessThanOrEqual(21.5);
+  }
   if(label==='desktop' && data.header && data.header.hasNav){
     expect(data.header.height, route+' desktop header height parity').toBeGreaterThanOrEqual(82);
     expect(data.header.height, route+' desktop header height parity').toBeLessThanOrEqual(85);
@@ -100,7 +107,7 @@ async function auditPage(page, route, limits, label){
   return data;
 }
 
-test('CN V23 desktop typography ceiling across every public page', async ({browser})=>{
+test('CN V45 desktop typography parity across every public page', async ({browser})=>{
   expect(pages.length).toBeGreaterThanOrEqual(19);
   const page=await browser.newPage({viewport:{width:1440,height:900}});
   for(const route of pages){
@@ -109,10 +116,10 @@ test('CN V23 desktop typography ceiling across every public page', async ({brows
   await page.close();
 });
 
-test('CN V23 mobile typography ceiling across every public page', async ({browser})=>{
+test('CN V45 mobile typography parity across every public page', async ({browser})=>{
   const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true});
   for(const route of pages){
-    await auditPage(page,route,{h1:33.5,h2:21.5,h3:19.5,body:17.5},'mobile');
+    await auditPage(page,route,{h1:33.5,h2:21.5,h3:19.5,body:18.5},'mobile');
   }
   await page.close();
 });
