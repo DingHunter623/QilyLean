@@ -128,5 +128,7 @@ must(materializer,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.
 must(materializer,"const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16'",'materializer native UI cache');
 must(materializer,"const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23'",'materializer redline cache');
 must(materializer,"const DDZ_FAST_PATH='tools/pure-ddz/index.html'",'DDZ fast-route isolation');
+must(materializer,"const CN_SITE_PREFIX='cn-site/'",'materializer CN-site isolation');
+must(materializer,"relative.startsWith(CN_SITE_PREFIX)",'materializer must preserve independent CN production');
 
 console.log(`PASS: ${audited} international governed pages retain one Google Translate V1.4 authority; ${cnIndependent} qilylean.cn production pages are independently governed; DDZ V155 remains deferred until idle/user intent.`);
