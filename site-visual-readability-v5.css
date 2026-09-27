@@ -16,8 +16,8 @@
   --qily-v5-white:#ffffff;
   --qily-v5-soft:#f4faf8;
   --qily-v5-line:#bfd6d2;
-  --qily-v5-small:18px;
-  --qily-v5-small-strong:19px;
+  --qily-v5-small:20px;
+  --qily-v5-small-strong:21px;
   --qily-v5-section-kicker:21px;
   --qily-r8-heading-ceiling:clamp(30px,2.65vw,44px);
   --qily-r8-content-title-ceiling:clamp(28px,2.15vw,34px);
@@ -95,8 +95,8 @@ html body main :is(
 ){
   font-size:var(--qily-v5-section-kicker)!important;
   line-height:1.5!important;
-  color:var(--qily-v5-gold-label)!important;
-  -webkit-text-fill-color:var(--qily-v5-gold-label)!important;
+  color:var(--qily-v5-gold-text)!important;
+  -webkit-text-fill-color:var(--qily-v5-gold-text)!important;
   font-weight:950!important;
   letter-spacing:.035em!important;
   opacity:1!important;
@@ -167,8 +167,8 @@ html body main :is(.hero,.module-hero,.daily-hero,.project-hero,.cooperation-her
   .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
   .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
 ){
-  color:var(--qily-v5-gold-label)!important;
-  -webkit-text-fill-color:var(--qily-v5-gold-label)!important;
+  color:var(--qily-v5-gold-text)!important;
+  -webkit-text-fill-color:var(--qily-v5-gold-text)!important;
 }
 html body main :is(.hero,.module-hero,.daily-hero,.project-hero,.cooperation-hero,.qily-home-launch-section,.qily-ia-dark) small:not(.eyebrow):not(.module-eyebrow):not(.qily-ia-kicker):not(.kicker):not(.section-kicker){
   color:#edf9f6!important;
@@ -190,7 +190,7 @@ html body main .service-number{
   -webkit-text-fill-color:var(--qily-v5-white)!important;
   background:var(--qily-v5-green-deep)!important;
   box-shadow:0 0 0 3px var(--qily-v5-gold),0 6px 14px rgba(7,60,71,.24)!important;
-  font-size:18px!important;
+  font-size:20px!important;
   font-weight:950!important;
   line-height:1!important;
   opacity:1!important;
@@ -233,7 +233,7 @@ html body main :is(.qily-ia-card,.module-card.service-card) p,
 html body main :is(.qily-ia-card,.module-card.service-card) li{
   color:var(--qily-v5-copy)!important;
   -webkit-text-fill-color:var(--qily-v5-copy)!important;
-  font-size:18px!important;
+  font-size:20px!important;
   line-height:1.72!important;
 }
 html body main :is(.qily-ia-result,.module-result,.module-note,.career-result,.project-result,.result,.output,.note,.notice,.status-detail,.upload-note){
@@ -261,7 +261,7 @@ html body main :is(
   .scope-list span,.project-card-brief,.project-fact small,.qily-card-link-hint,
   .qily-evidence-grade-badge span,.qily-evidence-level-panel span,.record,.status-detail
 ){
-  font-size:18px!important;
+  font-size:20px!important;
   line-height:1.62!important;
   color:#36585a!important;
   -webkit-text-fill-color:#36585a!important;
@@ -270,7 +270,7 @@ html body main :is(
 /* 05｜移动端不缩回小字号；只调整布局。 */
 @media(max-width:620px){
   html body main :is(small,figcaption,.caption,.meta,.fine,.eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,.tag,.project-meta,.article-meta){
-    font-size:18px!important;
+    font-size:20px!important;
   }
   html body main :is(
     .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
@@ -285,7 +285,7 @@ html body main :is(
     height:46px!important;
     min-width:46px!important;
     min-height:46px!important;
-    font-size:18px!important;
+    font-size:20px!important;
   }
 }
 
@@ -506,12 +506,12 @@ html:root:root body main :is(
   .gallery-tip,.empty,.project-card-brief,.project-fact small,.module-card>small,
   .paper-card>small,.career-full-card>small,.qily-system-axis__title,.privacy-note,
   .service-contract-meta span,.qily-secondary-link span,.qily-ia-secondary-link span
-){font-size:18px!important}
+ ){font-size:20px!important}
 html:root:root body main :is(
   .qily-ia-card>small,.module-card.service-card .service-heading-link>small,
   .module-card.service-card>small,#engineering-enablers .module-card small,
   #qily-digital-enablers .qily-ia-card small
-){font-size:19px!important}
+ ){font-size:21px!important}
 html:root:root body main :is(
   .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
   .resource-kicker,.qily-resource-network__kicker,
@@ -519,22 +519,44 @@ html:root:root body main :is(
 ){
   font-size:21px!important;
   line-height:1.45!important;
-  color:var(--qily-v5-gold-label)!important;
-  -webkit-text-fill-color:var(--qily-v5-gold-label)!important;
+  color:var(--qily-v5-gold-text)!important;
+  -webkit-text-fill-color:var(--qily-v5-gold-text)!important;
   font-weight:950!important;
   letter-spacing:.035em!important;
   opacity:1!important;
   text-shadow:none!important;
 }
-html:root:root body #floatDock.qily-float-dock :is(.qily-dock-label,[data-action="share"] .qily-share-label-url){font-size:16px!important}
+html:root:root body #floatDock.qily-float-dock :is(.qily-dock-label,[data-action="share"] .qily-share-label-url){font-size:18px!important}
 @media(max-width:620px){
   html:root:root body main :is(
     small,figcaption,.caption,.meta,.fine,.tag,.project-meta,.article-meta
-  ){font-size:18px!important}
+  ){font-size:20px!important}
   html:root:root body main :is(
     .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
     .resource-kicker,.qily-resource-network__kicker,
     .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
   ){font-size:21px!important}
-  html:root:root body #floatDock.qily-float-dock :is(.qily-dock-label,[data-action="share"] .qily-share-label-url){font-size:15px!important}
+  html:root:root body #floatDock.qily-float-dock :is(.qily-dock-label,[data-action="share"] .qily-share-label-url){font-size:18px!important}
 }
+
+
+/* QILY-READABILITY-ALL-SMALL-COPY-FLOOR-V2 | 2026-09-27
+ * Covers generic links and inline controls that historical selector lists missed.
+ * max(20px,1em) raises only the small layer while preserving heading descendants.
+ */
+html:root:root:root body main :is(
+  p,li,dt,dd,a,button,label,small,figcaption,summary,time,th,td,
+  input,select,textarea,option,span,strong,b,em,code,kbd,samp
+){font-size:max(20px,1em)!important}
+html:root:root:root body main :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+  .kicker,.section-kicker,.module-kicker,.qily-ia-kicker,
+  .resource-kicker,.qily-resource-network__kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker,
+  .section-head>small,.module-heading>.module-eyebrow,.engineering-kicker
+){
+  font-size:max(21px,1em)!important;
+  color:var(--qily-v5-gold-text)!important;
+  -webkit-text-fill-color:var(--qily-v5-gold-text)!important;
+}
+/* QILY-READABILITY-ALL-SMALL-COPY-FLOOR-V2:END */
