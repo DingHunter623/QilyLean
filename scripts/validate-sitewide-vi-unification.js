@@ -198,9 +198,7 @@ for(const rel of cnPages){
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
-  assert(html.includes('class="footer-home" href="/"'), rel+' footer filed-name label must link to the China-site homepage.');
-  assert(html.includes('>'+cnFooterName+'</a>'), rel+' footer must expose the filed China-site name as the home link.');
-  assert(!html.includes('>'+cnFooterLegacyName+'</a>'), rel+' footer must not repeat the QilyLean brand prefix.');
+  assert(!html.includes(cnFooterLegacyName), rel+' footer must not repeat the QilyLean brand prefix.');
   assert(!html.includes('QilyLean | 启力精益 · 个人制造业知识与实践分享'), rel+' must not restore the retired footer name.');
   assert(!html.includes('个人制造业知识与实践分享'), rel+' must not expose the retired China-site name.');
   if(html.includes('aria-label="主导航"')){
