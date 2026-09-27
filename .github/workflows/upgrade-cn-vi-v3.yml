@@ -38,8 +38,8 @@ jobs:
           footer_actions_css_target = f'<link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v={footer_actions_version}">'
           footer_actions_js_target = f'<script defer src="/assets/cn-footer-actions-v1.js?v={footer_actions_version}"></script>'
           css_pattern = re.compile(r'\s*<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">\s*')
-          footer_target = '<footer class="footer"><div class="footer-inner"><span>精益制造经验分享</span><nav class="footer-actions" aria-label="页脚快捷操作"><button type="button" data-qily-footer-action="top">顶部</button><button type="button" data-qily-footer-action="share">分享当前</button></nav><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" title="工信部备案查询（新标签页打开）">湘ICP备2026041143号-1</a><a class="police-record" href="https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443" target="_blank" rel="noopener noreferrer" title="公安备案查询（新标签页打开）"><img src="/assets/mps-beian.png" width="18" height="20" alt="" aria-hidden="true"><span>湘公网安备43020002000443号</span></a></span></div></footer>'
-          reference_footer_target = '<footer class="footer" data-qily-footer-filing="none"><div class="footer-inner"><span>精益制造经验分享</span><nav class="footer-actions" aria-label="页脚快捷操作"><button type="button" data-qily-footer-action="top">顶部</button><button type="button" data-qily-footer-action="share">分享当前</button></nav></div></footer>'
+          footer_target = '<footer class="footer"><div class="footer-inner"><a class="footer-home" href="/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页">精益制造经验分享</a><nav class="footer-actions" aria-label="页脚快捷操作"><button type="button" data-qily-footer-action="top">顶部</button><button type="button" data-qily-footer-action="share">分享当前</button></nav><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" title="工信部备案查询（新标签页打开）">湘ICP备2026041143号-1</a><a class="police-record" href="https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443" target="_blank" rel="noopener noreferrer" title="公安备案查询（新标签页打开）"><img src="/assets/mps-beian.png" width="18" height="20" alt="" aria-hidden="true"><span>湘公网安备43020002000443号</span></a></span></div></footer>'
+          reference_footer_target = '<footer class="footer" data-qily-footer-filing="none"><div class="footer-inner"><a class="footer-home" href="/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页">精益制造经验分享</a><nav class="footer-actions" aria-label="页脚快捷操作"><button type="button" data-qily-footer-action="top">顶部</button><button type="button" data-qily-footer-action="share">分享当前</button></nav></div></footer>'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>.*?</aside>', re.I | re.S)
           brand_anchor_pattern = re.compile(r'(<a\b[^>]*class=["\']brand["\'][^>]*>)(.*?)(</a>)', re.I | re.S)
           changed = 0
@@ -145,7 +145,7 @@ jobs:
           files = sorted(Path('cn-site').rglob('*.html'))
           css_marker = 'qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform'
           official_brand = 'QilyLean | 启力精益'
-          footer_marker = '精益制造经验分享</span><nav class="footer-actions" aria-label="页脚快捷操作">'
+          footer_marker = '<a class="footer-home" href="/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页">精益制造经验分享</a><nav class="footer-actions" aria-label="页脚快捷操作">'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
           brand_anchor_pattern = re.compile(r'<a\b[^>]*class=["\']brand["\'][^>]*>(.*?)</a>', re.I | re.S)
           bad = []
