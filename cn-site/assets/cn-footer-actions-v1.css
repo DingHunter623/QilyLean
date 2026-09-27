@@ -1,13 +1,15 @@
-/* QilyLean CN Footer Actions V4 | 2026-09-27 | primary-nav type parity
+/* QilyLean CN Footer Actions V5 | 2026-09-27 | primary-nav type parity
  * Keep CN semantics: 顶部 / 上一网页 / 分享当前.
  * Match international footer button geometry and interaction only.
  */
 html:root body .footer-actions{
-  display:inline-grid!important;
-  grid-template-columns:repeat(3,max-content)!important;
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
   align-items:center!important;
-  gap:5px!important;
+  gap:6px!important;
+  width:100%!important;
   min-width:0!important;
+  justify-self:stretch!important;
   margin:0!important;
   padding:0!important;
 }
@@ -18,7 +20,8 @@ html:root body .footer-actions>button{
   display:flex!important;
   align-items:center!important;
   justify-content:center!important;
-  min-width:92px!important;
+  width:100%!important;
+  min-width:0!important;
   min-height:40px!important;
   margin:0!important;
   padding:7px 11px!important;
@@ -89,7 +92,7 @@ html body #qilyDockShareCopyToastV2{
   pointer-events:none!important;
 }
 @media(max-width:1040px){
-  html:root body .footer-actions{justify-self:end!important}
+  html:root body .footer-actions{justify-self:stretch!important}
 }
 @media(max-width:760px){
   html:root body .footer-actions{
