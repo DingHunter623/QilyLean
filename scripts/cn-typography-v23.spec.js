@@ -60,7 +60,7 @@ async function auditPage(page, route, limits, label){
         const footer=document.querySelector('footer.footer');
         const group=document.querySelector('.footer-actions');
         if(!footer||!group)return null;
-        const site=footer.querySelector('.footer-home');
+        const site=footer.querySelector('.footer-inner>span:first-child');
         const records=[...footer.querySelectorAll('.footer-records>a')];
         const fr=footer.getBoundingClientRect();
         const actionEls=[...group.querySelectorAll('button[data-qily-footer-action]')];
@@ -73,7 +73,6 @@ async function auditPage(page, route, limits, label){
           position:getComputedStyle(footer).position,
           bottom:innerHeight-fr.bottom,
           siteText:site?(site.textContent||'').trim():'',
-          siteHref:site?site.getAttribute('href')||'':'',
           siteFont:site?parseFloat(getComputedStyle(site).fontSize):0,
           filingState:footer.getAttribute('data-qily-footer-filing')||'standard',
           groups,
@@ -116,23 +115,22 @@ async function auditPage(page, route, limits, label){
     expect(data.footer.position, route+' China footer fixed visual parity').toBe('fixed');
     expect(Math.abs(data.footer.bottom), route+' footer bottom alignment').toBeLessThanOrEqual(1);
     expect(data.footer.siteText, route+' footer filed-site label').toBe('精益制造经验分享');
-    expect(data.footer.siteHref, route+' footer filed-site label must link home').toBe('/');
-    expect(data.footer.siteFont, route+' footer site-label type').toBeGreaterThanOrEqual(17.5);
-    expect(data.footer.siteFont, route+' footer site-label type').toBeLessThanOrEqual(18.5);
+    expect(data.footer.siteFont, route+' footer site-label type').toBeGreaterThanOrEqual(19.5);
+    expect(data.footer.siteFont, route+' footer site-label type').toBeLessThanOrEqual(20.5);
     expect(data.footer.actions.map(x=>x.action), route+' footer action semantics').toEqual(['top','share']);
     expect(data.footer.actions.map(x=>x.text), route+' footer action labels').toEqual(['顶部','分享当前']);
     for(const action of data.footer.actions){
       expect(action.height, route+' footer button '+action.text).toBeGreaterThanOrEqual(39);
       expect(action.height, route+' footer button '+action.text).toBeLessThanOrEqual(41);
-      expect(action.font, route+' footer button '+action.text+' type').toBeGreaterThanOrEqual(17.5);
-      expect(action.font, route+' footer button '+action.text+' type').toBeLessThanOrEqual(18.5);
+      expect(action.font, route+' footer button '+action.text+' type').toBeGreaterThanOrEqual(19.5);
+      expect(action.font, route+' footer button '+action.text+' type').toBeLessThanOrEqual(20.5);
     }
     const isReference=route==='/briefs/'||route==='/resources/';
     expect(data.footer.filingState, route+' footer filing state').toBe(isReference?'none':'standard');
     expect(data.footer.records.length, route+' footer filing record count').toBe(isReference?0:2);
     for(const record of data.footer.records){
-      expect(record.font, route+' footer filing type '+record.text).toBeGreaterThanOrEqual(15.5);
-      expect(record.font, route+' footer filing type '+record.text).toBeLessThanOrEqual(16.5);
+      expect(record.font, route+' footer filing type '+record.text).toBeGreaterThanOrEqual(19.5);
+      expect(record.font, route+' footer filing type '+record.text).toBeLessThanOrEqual(20.5);
     }
     expect(data.footer.documentWidth, route+' must not create horizontal page overflow').toBeLessThanOrEqual(data.footer.viewport+1);
     for(let i=1;i<data.footer.groups.length;i++){

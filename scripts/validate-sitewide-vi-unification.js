@@ -66,8 +66,8 @@ for(const rel of gkPages){
   const html=read(rel);
   assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260927-gk-vi-v5-small-type-parity'), rel+' must load shared Global Knowledge VI after its local skin.');
   if(rel==='global-knowledge/briefs/index.html'){
-    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v4-footer-content-fit'), rel+' must load the China-parity bridge shell.');
-    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v4-footer-content-fit'), rel+' must load the China-parity footer runtime.');
+    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v4-footer-unified'), rel+' must load the China-parity bridge shell.');
+    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v4-footer-unified'), rel+' must load the China-parity footer runtime.');
     assert(!html.includes('/global-knowledge/knowledge-dock-v1.js'), rel+' retired seven-action Global Knowledge dock returned.');
     assert(html.includes('<a class="cn-bridge-footer-brand" href="https://qilylean.cn/"'), rel+' bridge footer brand must enter the China homepage.');
     assert(!html.includes('data-action="previous"'), rel+' bridge footer must not restore the previous-page action.');
@@ -215,6 +215,7 @@ for(const rel of cnPages){
   assert(title.includes(cnFiledName), rel+' title must include the filed China-site name.');
   const footerBlock=(html.match(/<footer class="footer"(?: data-qily-footer-filing="none")?>[\s\S]*?<\/footer>/)||[])[0]||'';
   assert(footerBlock, rel+' must keep the shared China footer component.');
+  assert(footerBlock.includes('<span>精益制造经验分享</span>'), rel+' footer site label must keep the shared China visual without a special variant.');
   const footerActions=[...footerBlock.matchAll(/data-qily-footer-action="([^"]+)"/g)].map(m=>m[1]);
   assert(JSON.stringify(footerActions)===JSON.stringify(['top','share']), rel+' China footer must keep only 顶部 / 分享当前.');
   const isReferenceFooter=rel==='cn-site/briefs/index.html'||rel==='cn-site/resources/index.html';
@@ -237,14 +238,14 @@ for(const rel of cnPages){
 
 const cnFooterCss=read('cn-site/assets/cn-footer-actions-v1.css');
 const cnFooterJs=read('cn-site/assets/cn-footer-actions-v1.js');
-assert(cnFooterCss.includes('QilyLean CN Footer Actions V9'), 'CN content-fit public footer stylesheet marker is missing.');
-assert(cnFooterCss.includes('QILY-CN-FOOTER-CONTENT-FIT-V2:END'), 'CN content-fit footer authority marker is missing.');
-assert(cnFooterCss.includes('.footer-home'), 'CN footer homepage-link visual owner is missing.');
+assert(cnFooterCss.includes('QilyLean CN Footer Actions V10'), 'CN content-fit public footer stylesheet marker is missing.');
+assert(cnFooterCss.includes('QILY-CN-FOOTER-CONTENT-FIT-V4-NAV-PARITY:END'), 'CN content-fit footer authority marker is missing.');
 assert(cnFooterCss.includes('display:inline-flex!important'), 'CN footer modules must use intrinsic inline-flex sizing.');
 assert(cnFooterCss.includes('width:auto!important'), 'CN footer modules must size to content instead of filing-width columns.');
 assert(!cnFooterCss.includes('grid-template-columns:repeat(2,minmax(0,1fr))'), 'CN footer actions must not be forced into equal-width grid columns.');
 assert(!cnFooterCss.includes('grid-template-columns:minmax(160px,.72fr) minmax(250px,1.18fr) minmax(520px,2.10fr)!important'), 'CN footer must not restore filing-driven desktop column widths.');
 assert(cnFooterCss.includes('gap:8px!important'), 'CN desktop footer visual gap must stay uniformly 8px.');
+assert((cnFooterCss.match(/var\(--qily-cn-primary-nav-font-size,20px\)/g)||[]).length>=3, 'CN footer type must inherit the primary-nav 20px token for label, actions and filing records.');
 assert(cnFooterCss.includes('data-qily-footer-filing="none"'), 'CN canonical footer CSS must preserve the filing-free reference state.');
 for (const marker of ["['top','顶部']","['share','分享当前']"]) assert(cnFooterJs.includes(marker), 'CN footer action marker missing: '+marker);
 assert(!cnFooterJs.includes("['previous','上一网页']"), 'CN footer must not restore 上一网页.');
@@ -275,8 +276,8 @@ assert(resourcePublic.includes('font-size:clamp(28px,2vw,34px)!important'), 'Res
 assert(resourcePublic.includes('.hero p{width:100%;max-width:none'), 'Resource collaboration hero copy must use the same content-frame width as the body.');
 assert(resourcePublic.includes('font-size:clamp(18px,1.15vw,21px)!important'), 'Resource collaboration card headings must remain at or below 21px.');
 assert(!resourcePublic.includes('font-size:clamp(30px,5vw,52px)'), 'Resource collaboration oversized H1 regression detected.');
-assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v4-footer-content-fit'), 'Resource collaboration public entry must load the China-parity bridge shell.');
-assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v4-footer-content-fit'), 'Resource collaboration public entry must load the China-parity footer runtime.');
+assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v4-footer-unified'), 'Resource collaboration public entry must load the China-parity bridge shell.');
+assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v4-footer-unified'), 'Resource collaboration public entry must load the China-parity footer runtime.');
 assert(resourcePublic.includes('<a class="cn-bridge-footer-brand" href="https://qilylean.cn/"'), 'Resource collaboration footer brand must enter the China homepage.');
 assert(!resourcePublic.includes('data-action="previous"'), 'Resource collaboration footer must not restore the previous-page action.');
 assert(/<a class="cn-bridge-brand" href="https:\/\/qilylean\.com\/" aria-label="返回QilyLean国际站首页" title="返回QilyLean国际站首页">[\s\S]*?<\/a>/.test(resourcePublic), 'Resource collaboration bridge logo must return to the international homepage.');
