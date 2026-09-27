@@ -1368,7 +1368,7 @@ html:root body main a.btn.primary[data-qily-external="international"]:is(:hover,
   --qily-cn-section-kicker:21px;
 }
 html:root:root body :is(
-  .breadcrumbs,.meta,.article-meta,.status,.tag,.subnav a,.toc :is(a,span),.logic span,figcaption,time
+  small,.breadcrumbs,.meta,.article-meta,.status,.tag,.subnav a,.toc :is(a,span),.logic span,figcaption,time
 ){font-size:18px!important}
 html:root:root body main :is(
   .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
@@ -1392,7 +1392,7 @@ html:root:root body .footer-inner a{font-size:15px!important}
 }
 @media(max-width:620px){
   :root{--qily-cn-small:18px;--qily-cn-section-kicker:21px}
-  html:root:root body :is(.breadcrumbs,.meta,.article-meta,.status,.tag,.subnav a,figcaption,time){font-size:18px!important}
+  html:root:root body :is(small,.breadcrumbs,.meta,.article-meta,.status,.tag,.subnav a,figcaption,time){font-size:18px!important}
   html:root:root body main :is(
     .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
     .section-kicker,.module-kicker,.section-head>small,.portal-card>small,
