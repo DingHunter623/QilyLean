@@ -8,12 +8,11 @@ const { execFileSync } = require('child_process');
 const root = path.resolve(__dirname, '..');
 const checkOnly = process.argv.includes('--check');
 /*
- * Ownership note (2026-08-25): navigation / UI consistency / Dock runtime cache keys
- * are now owned by scripts/materialize-global-language-v3.js so this older visual
- * remediation publisher must not rewrite them back to pre-language versions.
+ * Ownership note (2026-09-27): navigation / UI consistency / Dock and visual-governance
+ * cache keys are owned by their current materializers/runtimes. This legacy publisher
+ * only preserves first-paint and content-axis contracts; it must not normalize VI cache keys.
  */
 const versions = {
-  governance: '/site-visual-governance-v2.css?v=20260824-readable-floor-plus2-v7',
   firstPaintBuild: '20260824-readable-floor-plus2-v4',
   contentAxis: '/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5'
 };
@@ -28,7 +27,6 @@ function trackedHtml() {
 
 function publish(source) {
   let next = source;
-  next = next.replace(/\/site-visual-governance-v2\.css(?:\?v=[^"']*)?/g, versions.governance);
   next = next.replace(/(data-qily-r2-first-paint[^>]*>\s*\(function\([^)]*\)\{[\s\S]{0,180}?\bBUILD=)'[^']+'/gi, `$1'${versions.firstPaintBuild}'`);
   next = next.replace(/\/site-content-axis-v1\.css(?:\?v=[^"']*)?/g, versions.contentAxis);
   next = next.replace(/\s*<script\b[^>]*data-qily-dock-firstpaint-lock=["'][^"']+["'][^>]*>[\s\S]*?<\/script>\s*/gi, '\n');
