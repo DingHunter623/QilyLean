@@ -133,12 +133,17 @@ async function auditPage(page, route, limits, label){
       expect(record.font, route+' footer filing type '+record.text).toBeLessThanOrEqual(20.5);
     }
     expect(data.footer.documentWidth, route+' must not create horizontal page overflow').toBeLessThanOrEqual(data.footer.viewport+1);
-    for(let i=1;i<data.footer.groups.length;i++){
-      const gap=data.footer.groups[i].left-data.footer.groups[i-1].right;
-      expect(gap, route+' footer visible-module gap lower bound').toBeGreaterThanOrEqual(7);
-      expect(gap, route+' footer visible-module gap upper bound').toBeLessThanOrEqual(9);
-    }
-    if(!isReference){
+    const gaps=[];
+    for(let i=1;i<data.footer.groups.length;i++) gaps.push(data.footer.groups[i].left-data.footer.groups[i-1].right);
+    expect(Math.abs(data.footer.actions[0].width-data.footer.actions[1].width), route+' top/share must use the same width').toBeLessThanOrEqual(1);
+    if(isReference){
+      for(const gap of gaps){
+        expect(gap, route+' reference-footer shared gap lower bound').toBeGreaterThanOrEqual(23);
+        expect(gap, route+' reference-footer shared gap upper bound').toBeLessThanOrEqual(25);
+      }
+    }else{
+      expect(Math.min(...gaps), route+' distributed footer gap lower bound').toBeGreaterThan(8);
+      expect(Math.max(...gaps)-Math.min(...gaps), route+' five footer modules must be evenly distributed').toBeLessThanOrEqual(1);
       expect(Math.max(...data.footer.actions.map(x=>x.width)), route+' action buttons must stay content-fit').toBeLessThan(Math.min(...data.footer.records.map(x=>x.width)));
     }
   }
