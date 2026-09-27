@@ -18,6 +18,7 @@ async function navState(page,navSelector,activeSelector,footerSelector){
       current:active.getAttribute('aria-current'),
       navFont:parseFloat(getComputedStyle(active).fontSize)||0,
       footerFont:parseFloat(getComputedStyle(footer).fontSize)||0,
+      recordFont:(()=>{const r=document.querySelector('.footer-records>a');return r?parseFloat(getComputedStyle(r).fontSize)||0:0;})(),
       activeLeft:ar.left,activeRight:ar.right,navLeft:nr.left,navRight:nr.right,
       footerLeft:fr.left,footerRight:fr.right,viewport:document.documentElement.clientWidth,
       scrollLeft:nav.scrollLeft,overflow:nav.scrollWidth-nav.clientWidth
@@ -37,6 +38,7 @@ test('China-site current Resources module is visible and footer type matches 20p
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
   expect(s.navFont).toBeCloseTo(20,1);
   expect(s.footerFont).toBeCloseTo(s.navFont,1);
+  expect(s.recordFont).toBeCloseTo(s.navFont,1);
 });
 
 test('China-site mobile footer preserves the same 20px navigation font',async({page})=>{
@@ -50,6 +52,7 @@ test('China-site mobile footer preserves the same 20px navigation font',async({p
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
   expect(s.navFont).toBeCloseTo(20,1);
   expect(s.footerFont).toBeCloseTo(20,1);
+  expect(s.recordFont).toBeCloseTo(20,1);
   expect(s.footerLeft).toBeGreaterThanOrEqual(0);
   expect(s.footerRight).toBeLessThanOrEqual(s.viewport+1);
 });
