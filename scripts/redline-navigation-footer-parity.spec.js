@@ -68,9 +68,11 @@ test('resource collaboration CTAs inherit shared global VI and have visible feed
   expect(before.primaryRadius).toBeLessThanOrEqual(10);
   expect(before.secondaryRadius).toBeLessThanOrEqual(10);
   await primary.hover();
+  await page.waitForTimeout(220);
   const primaryHover=await primary.evaluate(el=>getComputedStyle(el).backgroundColor);
   expect(primaryHover).not.toBe(before.primaryBg);
   await secondary.hover();
+  await page.waitForTimeout(220);
   const secondaryHover=await secondary.evaluate(el=>getComputedStyle(el).backgroundColor);
   expect(secondaryHover).not.toBe(before.secondaryBg);
   expect(primaryHover).not.toBe(secondaryHover);
