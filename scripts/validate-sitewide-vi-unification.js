@@ -154,7 +154,6 @@ assert(cnCss.includes('QILY-CN-HEADER-SHELL-PARITY-V3'), 'CN desktop header shel
 assert(cnCss.includes('QILY-CN-CONTENT-AXIS-PARITY-V2'), 'CN content-axis parity V2 marker is missing.');
 assert(cnCss.includes('QILY-CN-FOOTER-VISUAL-PARITY-V5'), 'CN footer must preserve fixed-bottom international-style visual parity without changing China actions.');
 assert(cnCss.includes('--qily-cn-fixed-footer-h:58px'), 'CN fixed footer height must match the international 58px rhythm.');
-assert(cnCss.includes('grid-template-columns:minmax(0,1fr) minmax(0,3fr) minmax(0,2fr)!important'), 'CN footer desktop layout must keep brand + 3 actions + filing records on one row.');
 assert(cnCss.includes('position:fixed!important'), 'CN footer visual parity requires a fixed-bottom footer bar.');
 assert(cnCss.includes('min-height:83.4px!important'), 'CN desktop header shell must match the international measured geometry.');
 assert(cnRail.includes('mousedown'), 'CN nav rail mouse drag is missing.');
@@ -220,17 +219,21 @@ for(const rel of cnPages){
     assert(/title="[^"]*新标签页打开[^"]*"/.test(link), rel+' filing query must explain its new-tab behavior.');
   }
   const footerActions=[...html.matchAll(/data-qily-footer-action="([^"]+)"/g)].map(m=>m[1]);
-  assert(JSON.stringify(footerActions)===JSON.stringify(['top','previous','share']), rel+' China footer must keep only 顶部 / 上一网页 / 分享当前.');
+  assert(JSON.stringify(footerActions)===JSON.stringify(['top','share']), rel+' China footer must keep only 顶部 / 分享当前.');
 }
 
 
 const cnFooterCss=read('cn-site/assets/cn-footer-actions-v1.css');
 const cnFooterJs=read('cn-site/assets/cn-footer-actions-v1.js');
-assert(cnFooterCss.includes('QilyLean CN Footer Actions V5'), 'CN three-action footer stylesheet marker is missing.');
-assert(cnFooterCss.includes('grid-template-columns:repeat(3,minmax(0,1fr))'), 'CN desktop footer must keep exactly three action buttons.');
-for (const marker of ["['top','顶部']","['previous','上一网页']","['share','分享当前']"]) assert(cnFooterJs.includes(marker), 'CN footer action marker missing: '+marker);
+assert(cnFooterCss.includes('QilyLean CN Footer Actions V6'), 'CN two-action footer stylesheet marker is missing.');
+assert(cnFooterCss.includes('grid-template-columns:repeat(2,minmax(0,1fr))'), 'CN footer action group must keep exactly two buttons.');
+assert(cnFooterCss.includes('QILY-CN-FOOTER-EVEN-SPACING-V1'), 'CN footer even-spacing authority is missing.');
+assert(cnFooterCss.includes('grid-template-columns:minmax(0,1.45fr) minmax(0,.55fr) minmax(0,.84fr) minmax(0,1.90fr) minmax(0,3.15fr)!important'), 'CN desktop footer must use the five-slot content-weighted grid.');
+assert(cnFooterCss.includes('gap:8px!important'), 'CN desktop footer visible-item gap must stay uniform.');
+for (const marker of ["['top','顶部']","['share','分享当前']"]) assert(cnFooterJs.includes(marker), 'CN footer action marker missing: '+marker);
+assert(!cnFooterJs.includes("['previous','上一网页']"), 'CN footer must not restore 上一网页.');
 for (const forbidden of ["['home','首页']","['parent','上一层级']","['knowledge','知识索引']","['about','关于我们']"]) assert(!cnFooterJs.includes(forbidden), 'CN footer must not copy international-only action: '+forbidden);
-assert(cnFooterJs.includes("top,previous,share"), 'CN footer runtime must own the original three-action contract.');
+assert(cnFooterJs.includes("top,share"), 'CN footer runtime must own the two-action contract.');
 
 const cnHome=read('cn-site/index.html');
 for(const marker of [
