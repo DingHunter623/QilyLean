@@ -291,8 +291,8 @@ jobs:
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
                   '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform',
-                  '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v10-content-fit',
-                  '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v10-content-fit',
+                  '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v11-nav-font-parity',
+                  '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v11-nav-font-parity',
                   'data-qily-footer-action="top"',
                   'data-qily-footer-action="share"',
                   'class="footer-home" href="/"',
@@ -312,8 +312,8 @@ jobs:
                       raise SystemExit(f'Production {route} standard footer must contain exactly both filing links.')
 
           footer_actions_contract = [
-              (footer_actions_css, 'QilyLean CN Footer Actions V9', 'content-fit public footer stylesheet marker'),
-              (footer_actions_css, 'QILY-CN-FOOTER-CONTENT-FIT-V2:END', 'content-fit footer authority'),
+              (footer_actions_css, 'QilyLean CN Footer Actions V10', 'content-fit public footer stylesheet marker'),
+              (footer_actions_css, 'QILY-CN-FOOTER-CONTENT-FIT-V3-NAV-FONT-PARITY:END', 'content-fit footer authority'),
               (footer_actions_css, '.footer-actions>button', 'footer action button visual contract'),
               (footer_actions_css, 'display:inline-flex!important', 'intrinsic footer module layout'),
               (footer_actions_css, 'width:auto!important', 'content-fit footer module width'),
@@ -356,8 +356,8 @@ jobs:
               (vi, '--qily-cn-small:20px', '18px smallest content floor'),
               (vi, '--qily-cn-section-kicker:21px', '21px chapter/module label size'),
               (vi, '--qily-cn-label-gold:#b88b45', 'canonical light-gold label color'),
-              (footer_actions_css, 'font:850 18px/1', 'desktop footer action type'),
-              (footer_actions_css, 'font-size:17px!important', 'mobile footer action type'),
+              (footer_actions_css, 'font:850 var(--qily-cn-primary-nav-font-size,20px)/1', 'desktop footer action type equals primary navigation'),
+              (footer_actions_css, 'font-size:var(--qily-cn-primary-nav-font-size,20px)!important', 'mobile footer action type equals primary navigation'),
               (vi, '--qily-cn-h2:clamp(20px,1.25vw,22px)', 'desktop H2 22px ceiling'),
               (vi, '--qily-cn-h3:clamp(17px,1vw,19px)', 'desktop H3 19px ceiling'),
               (vi, '--qily-cn-h2:clamp(19px,5vw,21px)', 'mobile H2 21px ceiling'),
@@ -441,9 +441,9 @@ jobs:
                   raise SystemExit(f'Production CN {label} reference footer filing exception is incorrect.')
           if '<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>' not in home:
               raise SystemExit('Production China Global Knowledge CTA lost external-link semantics.')
-          if '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v10-content-fit' not in home:
+          if '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v11-nav-font-parity' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
-          if '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v10-content-fit' not in home:
+          if '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v11-nav-font-parity' not in home:
               raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
