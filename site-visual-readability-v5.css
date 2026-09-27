@@ -560,3 +560,25 @@ html:root:root:root body main :is(
   -webkit-text-fill-color:var(--qily-v5-gold-text)!important;
 }
 /* QILY-READABILITY-ALL-SMALL-COPY-FLOOR-V2:END */
+
+/* QILY-READABILITY-HEADER-OVERFLOW-V2 | 2026-09-27
+ * Larger type must never widen the page at tablet widths.
+ */
+@media(max-width:1180px){
+  html:root:root:root body header :is(nav.site-nav,nav.qily-global-nav,nav.nav){
+    min-width:0!important;
+    width:100%!important;
+    max-width:100%!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    white-space:nowrap!important;
+    flex-wrap:nowrap!important;
+    scrollbar-width:thin!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-x:contain!important;
+  }
+  html:root:root:root body header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
+    flex:0 0 auto!important;
+  }
+}
+/* QILY-READABILITY-HEADER-OVERFLOW-V2:END */
