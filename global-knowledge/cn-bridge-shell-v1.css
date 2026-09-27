@@ -58,7 +58,7 @@ html body .cn-bridge-footer-brand{
   box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;
   width:auto!important;min-height:40px!important;margin:0!important;padding:7px 10px!important;border:1px solid transparent!important;border-radius:8px!important;
   color:#fff!important;-webkit-text-fill-color:#fff!important;background:transparent!important;text-decoration:none!important;
-  font:850 18px/1.2 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:nowrap!important
+  font:850 20px/1.2 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:nowrap!important
 }
 html body .cn-bridge-footer-actions{
   display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;
@@ -69,7 +69,7 @@ html body .cn-bridge-footer-actions>button{
   display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;width:auto!important;min-width:0!important;min-height:40px!important;
   padding:7px 12px!important;border:1px solid rgba(255,227,155,.52)!important;border-radius:8px!important;
   background:rgba(255,255,255,.055)!important;color:var(--qily-bridge-gold-soft)!important;-webkit-text-fill-color:var(--qily-bridge-gold-soft)!important;
-  font:850 18px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:nowrap!important;cursor:pointer!important
+  font:850 20px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:nowrap!important;cursor:pointer!important
 }
 html body .cn-bridge-footer-brand:is(:hover,:focus-visible),html body .cn-bridge-footer-actions>button:is(:hover,:focus-visible),html body .cn-bridge-footer-actions>button.is-copied{
   background:var(--qily-bridge-gold-soft)!important;border-color:var(--qily-bridge-gold-soft)!important;
@@ -107,9 +107,9 @@ html body #qilyCnBridgeShareToast{
 @media(max-width:760px){
   :root{--qily-bridge-footer-h:86px}
   html body .cn-bridge-footer-inner{width:calc(100% - 20px)!important;min-height:83px!important;flex-direction:column!important;gap:5px!important;padding:5px 0!important}
-  html body .cn-bridge-footer-brand{min-height:34px!important;padding:5px 8px!important;font-size:17px!important;white-space:nowrap!important}
+  html body .cn-bridge-footer-brand{min-height:34px!important;padding:5px 8px!important;font-size:18px!important;white-space:nowrap!important}
   html body .cn-bridge-footer-actions{width:auto!important;gap:8px!important}
-  html body .cn-bridge-footer-actions>button{width:auto!important;min-width:0!important;min-height:36px!important;padding:6px 10px!important;font-size:17px!important}
+  html body .cn-bridge-footer-actions>button{width:auto!important;min-width:0!important;min-height:36px!important;padding:6px 10px!important;font-size:18px!important}
 }
 @media print{html body{padding-bottom:0!important}html body .cn-bridge-footer{position:static!important;box-shadow:none!important}}
 
@@ -140,7 +140,7 @@ html body .bridge-hero-eyebrow{
 /* QILY-CN-BRIDGE-V2:END */
 
 
-/* QILY-CN-BRIDGE-TYPE-FLOOR-V4 | 2026-09-27 | shared reference-footer closure */
+/* QILY-CN-BRIDGE-TYPE-FLOOR-V5 | 2026-09-27 | nav/footer type parity closure */
 html:root:root body main :is(
   p,li,dt,dd,a,button,label,small,figcaption,summary,time,th,td,span,strong,b,em
 ){font-size:max(20px,1em)!important}
@@ -157,4 +157,4 @@ html:root:root body .cn-bridge-footer-records>a{font-size:20px!important}
   html:root:root body .cn-bridge-footer-actions>button{font-size:17px!important}
   html:root:root body .cn-bridge-footer-records>a{font-size:18px!important}
 }
-/* QILY-CN-BRIDGE-TYPE-FLOOR-V4:END */
+/* QILY-CN-BRIDGE-TYPE-FLOOR-V5:END */
