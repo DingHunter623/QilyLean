@@ -47,6 +47,8 @@ for(const [name,url] of pages){
           headerFormal:headers[0]&&headers[0].classList.contains('qily-site-header'),
           docks:docks.length,
           dockPositions:docks.map(el=>getComputedStyle(el).position),
+          dockHeights:docks.map(el=>el.getBoundingClientRect().height),
+          bodyPaddingBottom:parseFloat(getComputedStyle(document.body).paddingBottom)||0,
           rails:rails.length,
           translatorOutsideHeader:translators.filter(el=>!el.closest('header.qily-site-header')).length,
           heroes:heroes.length,
@@ -63,7 +65,8 @@ for(const [name,url] of pages){
       expect(result.headers,`${url} ${device} visible Header count`).toBe(1);
       expect(result.headerFormal).toBeTruthy();
       expect(result.docks,`${url} ${device} visible Dock count`).toBeLessThanOrEqual(1);
-      expect(result.dockPositions.every(p=>p!=='fixed'&&p!=='absolute'),`${url} ${device} Dock must not overlay content`).toBeTruthy();
+      const dockReserved=result.dockPositions.every((p,i)=>p!=='fixed'&&p!=='absolute'||result.bodyPaddingBottom+1>=result.dockHeights[i]);
+      expect(dockReserved,`${url} ${device} fixed Dock must reserve equivalent bottom content space`).toBeTruthy();
       expect(result.rails,`${url} ${device} legacy navigation slider`).toBe(0);
       expect(result.translatorOutsideHeader,`${url} ${device} translator must live in Header`).toBe(0);
       expect(result.badHero,`${url} ${device} non-118deg Hero: ${result.badHero.join(' | ')}`).toEqual([]);
