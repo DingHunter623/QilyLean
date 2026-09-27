@@ -165,10 +165,14 @@ html body main :is(
 /* 深色表面的小标签维持高亮金色，不被通用浅色章节规则误覆盖。 */
 html body main :is(.hero,.module-hero,.daily-hero,.project-hero,.cooperation-hero,.qily-home-launch-section,.qily-ia-dark) :is(
   .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
-  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker,small
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
 ){
   color:var(--qily-v5-gold-label)!important;
   -webkit-text-fill-color:var(--qily-v5-gold-label)!important;
+}
+html body main :is(.hero,.module-hero,.daily-hero,.project-hero,.cooperation-hero,.qily-home-launch-section,.qily-ia-dark) small:not(.eyebrow):not(.module-eyebrow):not(.qily-ia-kicker):not(.kicker):not(.section-kicker){
+  color:#edf9f6!important;
+  -webkit-text-fill-color:#edf9f6!important;
 }
 
 /* 02｜04/05/06 等编号：白字、深色实底、白内圈、金外圈，并同步放大。 */
