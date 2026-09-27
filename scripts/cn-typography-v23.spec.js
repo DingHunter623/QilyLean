@@ -60,10 +60,12 @@ async function auditPage(page, route, limits, label){
         const footer=document.querySelector('footer.footer');
         const group=document.querySelector('.footer-actions');
         if(!footer||!group)return null;
-        const site=footer.querySelector('.footer-inner>span:first-child');
+        const site=footer.querySelector('.footer-home');
         const records=[...footer.querySelectorAll('.footer-records>a')];
         const fr=footer.getBoundingClientRect();
-        const groups=[site,group,footer.querySelector('.footer-records')].filter(Boolean).map(el=>{
+        const actionEls=[...group.querySelectorAll('button[data-qily-footer-action]')];
+        const itemEls=[site,...actionEls,...records].filter(Boolean);
+        const groups=itemEls.map(el=>{
           const r=el.getBoundingClientRect();
           return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};
         });
@@ -71,19 +73,22 @@ async function auditPage(page, route, limits, label){
           position:getComputedStyle(footer).position,
           bottom:innerHeight-fr.bottom,
           siteText:site?(site.textContent||'').trim():'',
+          siteHref:site?site.getAttribute('href')||'':'',
           siteFont:site?parseFloat(getComputedStyle(site).fontSize):0,
           filingState:footer.getAttribute('data-qily-footer-filing')||'standard',
           groups,
           viewport:document.documentElement.clientWidth,
           documentWidth:document.documentElement.scrollWidth,
-          actions:[...group.querySelectorAll('button[data-qily-footer-action]')].map(b=>({
+          actions:actionEls.map(b=>({
             action:b.getAttribute('data-qily-footer-action'),
             text:(b.textContent||'').trim(),
+            width:b.getBoundingClientRect().width,
             height:b.getBoundingClientRect().height,
             font:parseFloat(getComputedStyle(b).fontSize)
           })),
           records:records.map(a=>({
             text:(a.textContent||'').trim(),
+            width:a.getBoundingClientRect().width,
             height:a.getBoundingClientRect().height,
             font:parseFloat(getComputedStyle(a).fontSize)
           }))
@@ -111,6 +116,7 @@ async function auditPage(page, route, limits, label){
     expect(data.footer.position, route+' China footer fixed visual parity').toBe('fixed');
     expect(Math.abs(data.footer.bottom), route+' footer bottom alignment').toBeLessThanOrEqual(1);
     expect(data.footer.siteText, route+' footer filed-site label').toBe('精益制造经验分享');
+    expect(data.footer.siteHref, route+' footer filed-site label must link home').toBe('/');
     expect(data.footer.siteFont, route+' footer site-label type').toBeGreaterThanOrEqual(17.5);
     expect(data.footer.siteFont, route+' footer site-label type').toBeLessThanOrEqual(18.5);
     expect(data.footer.actions.map(x=>x.action), route+' footer action semantics').toEqual(['top','share']);
@@ -130,7 +136,12 @@ async function auditPage(page, route, limits, label){
     }
     expect(data.footer.documentWidth, route+' must not create horizontal page overflow').toBeLessThanOrEqual(data.footer.viewport+1);
     for(let i=1;i<data.footer.groups.length;i++){
-      expect(data.footer.groups[i].left-data.footer.groups[i-1].right, route+' footer visible groups must not overlap').toBeGreaterThanOrEqual(5);
+      const gap=data.footer.groups[i].left-data.footer.groups[i-1].right;
+      expect(gap, route+' footer visible-module gap lower bound').toBeGreaterThanOrEqual(7);
+      expect(gap, route+' footer visible-module gap upper bound').toBeLessThanOrEqual(9);
+    }
+    if(!isReference){
+      expect(Math.max(...data.footer.actions.map(x=>x.width)), route+' action buttons must stay content-fit').toBeLessThan(Math.min(...data.footer.records.map(x=>x.width)));
     }
   }
   if(reps.has(route)){
