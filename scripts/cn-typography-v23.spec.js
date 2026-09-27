@@ -60,20 +60,30 @@ async function auditPage(page, route, limits, label){
         const footer=document.querySelector('footer.footer');
         const group=document.querySelector('.footer-actions');
         if(!footer||!group)return null;
+        const site=footer.querySelector('.footer-inner>span:first-child');
+        const records=[...footer.querySelectorAll('.footer-records>a')];
         const fr=footer.getBoundingClientRect();
         return {
           position:getComputedStyle(footer).position,
           bottom:innerHeight-fr.bottom,
+          siteText:site?(site.textContent||'').trim():'',
+          siteFont:site?parseFloat(getComputedStyle(site).fontSize):0,
           actions:[...group.querySelectorAll('button[data-qily-footer-action]')].map(b=>({
             action:b.getAttribute('data-qily-footer-action'),
             text:(b.textContent||'').trim(),
-            height:b.getBoundingClientRect().height
+            height:b.getBoundingClientRect().height,
+            font:parseFloat(getComputedStyle(b).fontSize)
+          })),
+          records:records.map(a=>({
+            text:(a.textContent||'').trim(),
+            height:a.getBoundingClientRect().height,
+            font:parseFloat(getComputedStyle(a).fontSize)
           }))
         };
       })()
     };
   });
-  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform')), route+' must load V46 VI').toBeTruthy();
+  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform')), route+' must load V47 VI').toBeTruthy();
   for(const x of data.h1) expect(x.px, route+' H1 '+x.text).toBeLessThanOrEqual(limits.h1);
   for(const x of data.h2) expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(limits.h2);
   for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
@@ -92,11 +102,21 @@ async function auditPage(page, route, limits, label){
   if(label==='desktop' && data.footer){
     expect(data.footer.position, route+' China footer fixed visual parity').toBe('fixed');
     expect(Math.abs(data.footer.bottom), route+' footer bottom alignment').toBeLessThanOrEqual(1);
+    expect(data.footer.siteText, route+' footer filed-site label').toBe('精益制造经验分享');
+    expect(data.footer.siteFont, route+' footer filed-site label type parity').toBeGreaterThanOrEqual(19.9);
+    expect(data.footer.siteFont, route+' footer filed-site label type parity').toBeLessThanOrEqual(20.5);
     expect(data.footer.actions.map(x=>x.action), route+' footer action semantics').toEqual(['top','previous','share']);
     expect(data.footer.actions.map(x=>x.text), route+' footer action labels').toEqual(['顶部','上一网页','分享当前']);
     for(const action of data.footer.actions){
       expect(action.height, route+' footer button '+action.text).toBeGreaterThanOrEqual(39);
       expect(action.height, route+' footer button '+action.text).toBeLessThanOrEqual(41);
+      expect(action.font, route+' footer button '+action.text+' type parity').toBeGreaterThanOrEqual(19.9);
+      expect(action.font, route+' footer button '+action.text+' type parity').toBeLessThanOrEqual(20.5);
+    }
+    expect(data.footer.records.length, route+' footer filing record count').toBe(2);
+    for(const record of data.footer.records){
+      expect(record.font, route+' footer filing type parity '+record.text).toBeGreaterThanOrEqual(19.9);
+      expect(record.font, route+' footer filing type parity '+record.text).toBeLessThanOrEqual(20.5);
     }
   }
   if(reps.has(route)){
@@ -107,7 +127,7 @@ async function auditPage(page, route, limits, label){
   return data;
 }
 
-test('CN V46 desktop typography parity across every public page', async ({browser})=>{
+test('CN V47 desktop typography parity across every public page', async ({browser})=>{
   expect(pages.length).toBeGreaterThanOrEqual(19);
   const page=await browser.newPage({viewport:{width:1440,height:900}});
   for(const route of pages){
@@ -116,7 +136,7 @@ test('CN V46 desktop typography parity across every public page', async ({browse
   await page.close();
 });
 
-test('CN V46 mobile typography parity across every public page', async ({browser})=>{
+test('CN V47 mobile typography parity across every public page', async ({browser})=>{
   const page=await browser.newPage({viewport:{width:390,height:844},isMobile:true});
   for(const route of pages){
     await auditPage(page,route,{h1:33.5,h2:21.5,h3:19.5,body:20.5},'mobile');
