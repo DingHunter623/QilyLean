@@ -73,7 +73,7 @@ async function auditPage(page, route, limits, label){
       })()
     };
   });
-  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260927-cn-vi-v46-full-small-type-parity')), route+' must load V46 VI').toBeTruthy();
+  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform')), route+' must load V46 VI').toBeTruthy();
   for(const x of data.h1) expect(x.px, route+' H1 '+x.text).toBeLessThanOrEqual(limits.h1);
   for(const x of data.h2) expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(limits.h2);
   for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
