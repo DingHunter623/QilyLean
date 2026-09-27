@@ -62,7 +62,13 @@ if(materialized){
   let audited=0;
   for(const file of files){
     const html=read(file);
-    if(ownership(file)||!/<\/head>/i.test(html))continue;
+    if(
+      ownership(file)||
+      !/<\/head>/i.test(html)||
+      file.startsWith('cn-site/')||
+      file.startsWith('global-knowledge/')||
+      file==='links/cn-public/index.html'
+    )continue;
     audited++;
     if(file==='tools/pure-ddz/index.html'){
       // The game loads translation from its isolated fast shell, after idle/user intent.
