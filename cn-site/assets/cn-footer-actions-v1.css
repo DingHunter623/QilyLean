@@ -1,10 +1,10 @@
-/* QilyLean CN Footer Actions V6 | 2026-09-27 | two-action even-spacing closure
- * Keep CN semantics: 顶部 / 分享当前.
+/* QilyLean CN Footer Actions V7 | 2026-09-27 | unified public footer
+ * Keep CN semantics: 顶部 / 上一网页 / 分享当前.
  * Match international footer button geometry and interaction only.
  */
 html:root body .footer-actions{
   display:grid!important;
-  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
   align-items:center!important;
   gap:6px!important;
   width:100%!important;
@@ -97,7 +97,7 @@ html body #qilyDockShareCopyToastV2{
 @media(max-width:760px){
   html:root body .footer-actions{
     width:100%!important;
-    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    grid-template-columns:repeat(3,minmax(0,1fr))!important;
     justify-self:stretch!important;
   }
   html:root body .footer-actions>button{
@@ -131,18 +131,22 @@ html:root:root body .footer-records>a>span{
 /* QILY-CN-FOOTER-NAV-TYPE-PARITY-V1:END */
 
 
-/* QILY-CN-FOOTER-EVEN-SPACING-V1 | 2026-09-27 */
-/* Desktop: five visible footer items share one grid with a single uniform gap.
- * Width is content-weighted so both filing records stay inside their slots at 20px type.
- */
+/* QILY-CN-FOOTER-REFERENCE-V1 | Same public footer VI; filing records intentionally omitted only on international-reference routes. */
 @media(min-width:1041px){
-  html:root body .footer .footer-inner{
-    grid-template-columns:minmax(0,1.45fr) minmax(0,.55fr) minmax(0,.84fr) minmax(0,1.90fr) minmax(0,3.15fr)!important;
-    gap:8px!important;
-  }
-  html:root body .footer .footer-actions,
-  html:root body .footer .footer-records{
-    display:contents!important;
+  html:root body .footer.footer-reference .footer-inner{
+    grid-template-columns:minmax(0,1fr) minmax(0,3fr)!important;
+    gap:6px!important;
   }
 }
-/* QILY-CN-FOOTER-EVEN-SPACING-V1:END */
+@media(min-width:761px) and (max-width:1040px){
+  html:root body .footer.footer-reference .footer-inner{
+    grid-template-columns:minmax(0,1fr) minmax(0,2fr)!important;
+    gap:6px 12px!important;
+  }
+}
+html:root body .footer.footer-reference .footer-actions{
+  width:100%!important;
+  min-width:0!important;
+  justify-self:stretch!important;
+}
+/* QILY-CN-FOOTER-REFERENCE-V1:END */
