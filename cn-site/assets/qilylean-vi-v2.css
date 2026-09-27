@@ -150,7 +150,7 @@ html:root body .tag{
 }
 html:root body .subnav a{padding:7px 11px!important;font-size:18px!important}
 
-/* QILY-CN-FOOTER-VISUAL-PARITY-V5 | 2026-09-26
+/* QILY-CN-FOOTER-VISUAL-PARITY-V5 | 2026-09-27
  * User intent: China footer keeps its own three actions + filing records.
  * Only geometry/visual rhythm mirrors the international fixed-bottom footer.
  */
@@ -1462,6 +1462,7 @@ html:root:root:root body main :is(
 
 
 /* QILY-CN-FOOTER-PRIMARY-NAV-TYPE-AUTHORITY-V2 | 2026-09-27 */
+html:root:root:root:root body .footer .footer-inner>span:first-child,
 html:root:root:root:root body .footer .footer-actions>button,
 html:root:root:root:root body .footer .footer-records>a,
 html:root:root:root:root body .footer .footer-records>a>span{
@@ -1469,6 +1470,7 @@ html:root:root:root:root body .footer .footer-records>a>span{
   line-height:1.2!important;
 }
 @media(max-width:760px){
+  html:root:root:root:root body .footer .footer-inner>span:first-child,
   html:root:root:root:root body .footer .footer-actions>button,
   html:root:root:root:root body .footer .footer-records>a,
   html:root:root:root:root body .footer .footer-records>a>span{
