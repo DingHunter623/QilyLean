@@ -107,7 +107,7 @@ jobs:
           grep -Fq '<p class="eyebrow">LEAN MANUFACTURING EXPERIENCE | 精益制造经验分享</p>' cn-site/index.html
           grep -Fq '<meta name="360-site-verification" content="42760a600d8679c79148d470325347ac" />' cn-site/index.html
           grep -Fq '"name":"精益制造经验分享"' cn-site/index.html
-          grep -Fq '<div class="footer-inner"><span>精益制造经验分享</span>' cn-site/index.html
+          grep -Fq '<div class="footer-inner"><a class="footer-home" href="/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页">精益制造经验分享</a>' cn-site/index.html
           ! grep -RniF --include='*.html' '<div class="footer-inner"><span>QilyLean | 启力精益 · 精益制造经验分享</span>' cn-site
           ! grep -Fq 'QILYLEAN CHINA｜' cn-site/index.html
           ! grep -RniF --include='*.html' '个人制造业知识与实践分享' cn-site
@@ -291,8 +291,8 @@ jobs:
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
                   '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform',
-                  '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v11-nav-parity',
-                  '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v11-nav-parity',
+                  '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v12-redline-closure',
+                  '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v12-redline-closure',
                   'data-qily-footer-action="top"',
                   'data-qily-footer-action="share"',
               ]:
@@ -303,6 +303,8 @@ jobs:
               if not footer_match:
                   raise SystemExit(f'Production {route} missing shared footer component.')
               footer_block = footer_match.group(0)
+              if '<a class="footer-home" href="/"' not in footer_block:
+                  raise SystemExit(f'Production {route} footer home link is missing.')
               if route in ['/briefs/','/resources/']:
                   if 'data-qily-footer-filing="none"' not in footer_block or '湘ICP备' in footer_block or '湘公网安备' in footer_block or 'footer-records' in footer_block:
                       raise SystemExit(f'Production {route} reference footer must be filing-free.')
@@ -317,7 +319,8 @@ jobs:
               (footer_actions_css, 'display:inline-flex!important', 'intrinsic footer module layout'),
               (footer_actions_css, 'width:auto!important', 'content-fit footer module width'),
               (footer_actions_css, 'data-qily-footer-filing="none"', 'filing-free reference state styling'),
-              (footer_actions_css, 'gap:8px!important', 'uniform visual gap'),
+              (footer_actions_css, 'justify-content:space-between!important', 'distributed desktop controls'),
+              (footer_actions_css, 'QILY-CN-FOOTER-REDLINE-V12', 'annotated footer alignment'),
               (footer_actions_css, 'min-height:40px!important', 'canonical button height'),
               (footer_actions_css, 'border-radius:8px!important', 'canonical button radius'),
               (footer_actions_css, 'background:#073c47!important', 'share feedback background'),
@@ -440,9 +443,9 @@ jobs:
                   raise SystemExit(f'Production CN {label} reference footer filing exception is incorrect.')
           if '<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>' not in home:
               raise SystemExit('Production China Global Knowledge CTA lost external-link semantics.')
-          if '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v11-nav-parity' not in home:
+          if '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v12-redline-closure' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
-          if '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v11-nav-parity' not in home:
+          if '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v12-redline-closure' not in home:
               raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')

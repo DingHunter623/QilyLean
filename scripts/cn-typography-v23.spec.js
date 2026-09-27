@@ -60,7 +60,7 @@ async function auditPage(page, route, limits, label){
         const footer=document.querySelector('footer.footer');
         const group=document.querySelector('.footer-actions');
         if(!footer||!group)return null;
-        const site=footer.querySelector('.footer-inner>span:first-child');
+        const site=footer.querySelector('.footer-home');
         const records=[...footer.querySelectorAll('.footer-records>a')];
         const fr=footer.getBoundingClientRect();
         const actionEls=[...group.querySelectorAll('button[data-qily-footer-action]')];

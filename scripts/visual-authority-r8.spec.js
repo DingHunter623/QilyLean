@@ -99,6 +99,7 @@ test('R8 nine-width visual geometry and screenshot audit',async({browser})=>{
           viewportWidth:width,
           docScrollWidth:document.documentElement.scrollWidth,
           bodyScrollWidth:document.body?document.body.scrollWidth:0,
+          overflowElements:qa('main *').filter(visible).filter(el=>{const r=el.getBoundingClientRect();return r.right>width+3||r.left<-3;}).slice(0,12).map(el=>({tag:el.tagName,id:el.id,className:String(el.className.baseVal||el.className),...rect(el)})),
           overflowState:document.documentElement.getAttribute('data-qily-r8-overflow')||'',
           headerRect,
           headerChildren,
@@ -114,7 +115,7 @@ test('R8 nine-width visual geometry and screenshot audit',async({browser})=>{
       });
 
       const issues=[];
-      if(data.docScrollWidth>vp.width+3||data.bodyScrollWidth>vp.width+3)issues.push(`page overflow doc=${data.docScrollWidth} body=${data.bodyScrollWidth} viewport=${vp.width}`);
+      if(data.docScrollWidth>vp.width+3||data.bodyScrollWidth>vp.width+3)issues.push(`page overflow doc=${data.docScrollWidth} body=${data.bodyScrollWidth} viewport=${vp.width}; elements=${JSON.stringify(data.overflowElements)}`);
       if(data.unwrappedTables)issues.push(`unwrapped tables=${data.unwrappedTables}`);
       if(data.mediaOverflow.length)issues.push(`media outside owner=${data.mediaOverflow.length}`);
       if(data.badArrows)issues.push(`invalid unified arrows=${data.badArrows}`);

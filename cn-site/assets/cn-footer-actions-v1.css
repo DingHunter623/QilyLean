@@ -25,11 +25,11 @@ html:root:root:root:root body .footer .footer-inner{
   padding:6px 0!important;
   display:flex!important;
   align-items:center!important;
-  justify-content:center!important;
+  justify-content:space-between!important;
   flex-wrap:nowrap!important;
   gap:8px!important;
 }
-html:root:root:root:root body .footer .footer-inner>span:first-child{
+html:root:root:root:root body .footer .footer-home{
   box-sizing:border-box!important;
   display:inline-flex!important;
   align-items:center!important;
@@ -40,11 +40,11 @@ html:root:root:root:root body .footer .footer-inner>span:first-child{
   min-height:40px!important;
   margin:0!important;
   padding:7px 10px!important;
-  border:1px solid transparent!important;
+  border:1px solid rgba(255,227,155,.52)!important;
   border-radius:8px!important;
-  color:#fff!important;
-  -webkit-text-fill-color:#fff!important;
-  background:transparent!important;
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  background:rgba(255,255,255,.055)!important;
   font:850 var(--qily-cn-primary-nav-font-size,20px)/1.2 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
   text-decoration:none!important;
   white-space:nowrap!important;
@@ -140,6 +140,7 @@ html:root:root:root:root body .footer .police-record img{
   object-fit:contain!important;
 }
 @media(hover:hover) and (pointer:fine){
+  html:root:root:root:root body .footer .footer-home:hover,
   html:root:root:root:root body .footer .footer-actions>button:hover,
   html:root:root:root:root body .footer .footer-records>a:hover{
     background:#ffe39b!important;
@@ -150,6 +151,7 @@ html:root:root:root:root body .footer .police-record img{
     transform:translateY(-1px)!important;
   }
 }
+html:root:root:root:root body .footer .footer-home:focus-visible,
 html:root:root:root:root body .footer .footer-actions>button:focus-visible,
 html:root:root:root:root body .footer .footer-records>a:focus-visible{
   background:#ffe39b!important;
@@ -159,6 +161,7 @@ html:root:root:root:root body .footer .footer-records>a:focus-visible{
   outline:2px solid rgba(255,227,155,.55)!important;
   outline-offset:1px!important;
 }
+html:root:root:root:root body .footer .footer-home:active,
 html:root:root:root:root body .footer .footer-actions>button:active,
 html:root:root:root:root body .footer .footer-records>a:active,
 html:root:root:root:root body .footer .footer-actions>button[data-qily-pressed="true"]{
@@ -195,13 +198,27 @@ html body #qilyDockShareCopyToastV2{
   pointer-events:none!important;
 }
 
-/* Tablet: preserve the same content-fit modules and equal 8px visual gaps. */
+/* QILY-CN-FOOTER-REDLINE-V12: distribute five intrinsic-width controls on the content axis. */
+@media(min-width:1041px){
+  html:root:root:root:root body .footer:not([data-qily-footer-filing="none"]) :is(.footer-actions,.footer-records){
+    display:contents!important;
+  }
+}
+html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-inner{
+  justify-content:flex-start!important;
+  align-items:center!important;
+  gap:24px!important;
+}
+html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-actions{gap:24px!important}
+
+/* Tablet: retain the existing two-row layout for filing records. */
 @media(max-width:1040px){
   :root{--qily-cn-fixed-footer-h:104px!important}
   html:root:root:root:root body .footer .footer-inner{
     width:min(var(--qily-cn-axis,1180px),calc(100% - 28px))!important;
     min-height:101px!important;
     flex-wrap:wrap!important;
+    justify-content:center!important;
     gap:6px 8px!important;
     padding:6px 0!important;
   }
@@ -231,7 +248,7 @@ html body #qilyDockShareCopyToastV2{
     gap:5px!important;
     padding:5px 0!important;
   }
-  html:root:root:root:root body .footer .footer-inner>span:first-child{
+  html:root:root:root:root body .footer .footer-home{
     min-height:34px!important;
     padding:5px 8px!important;
     font-size:var(--qily-cn-primary-nav-font-size,20px)!important;
@@ -264,6 +281,8 @@ html body #qilyDockShareCopyToastV2{
   }
   html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-inner{
     min-height:83px!important;
+    align-items:flex-start!important;
+    gap:5px!important;
   }
 }
 @media(prefers-reduced-motion:reduce){
