@@ -1,4 +1,4 @@
-/* QilyLean CN Footer Actions V9 | 2026-09-27 | content-fit public footer
+/* QilyLean CN Footer Actions V10 | 2026-09-27 | nav-size content-fit public footer
  * One shared public footer across qilylean.cn.
  * Visual rhythm is uniform by gap/height, never by forcing unlike content to equal widths.
  * /briefs/ and /resources/ use the same component without filing records.
@@ -45,7 +45,7 @@ html:root:root:root:root body .footer .footer-inner>span:first-child{
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
   background:transparent!important;
-  font:850 18px/1.2 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  font:850 var(--qily-cn-primary-nav-font-size,20px)/1.2 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
   text-decoration:none!important;
   white-space:nowrap!important;
   text-align:center!important;
@@ -81,7 +81,7 @@ html:root:root:root:root body .footer .footer-actions>button{
   color:#ffe39b!important;
   -webkit-text-fill-color:#ffe39b!important;
   box-shadow:none!important;
-  font:850 18px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  font:850 var(--qily-cn-primary-nav-font-size,20px)/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
   letter-spacing:.01em!important;
   white-space:nowrap!important;
   cursor:pointer!important;
@@ -119,7 +119,7 @@ html:root:root:root:root body .footer .footer-records>a{
   background:rgba(255,255,255,.055)!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
-  font:850 16px/1.1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  font:850 var(--qily-cn-primary-nav-font-size,20px)/1.1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
   text-decoration:underline!important;
   text-underline-offset:3px!important;
   text-decoration-thickness:1px!important;
@@ -234,7 +234,7 @@ html body #qilyDockShareCopyToastV2{
   html:root:root:root:root body .footer .footer-inner>span:first-child{
     min-height:34px!important;
     padding:5px 8px!important;
-    font-size:17px!important;
+    font-size:var(--qily-cn-primary-nav-font-size,20px)!important;
   }
   html:root:root:root:root body .footer .footer-actions{
     width:auto!important;
@@ -244,7 +244,7 @@ html body #qilyDockShareCopyToastV2{
     width:auto!important;
     min-height:36px!important;
     padding:6px 10px!important;
-    font-size:17px!important;
+    font-size:var(--qily-cn-primary-nav-font-size,20px)!important;
   }
   html:root:root:root:root body .footer .footer-records{
     flex:0 0 auto!important;
@@ -257,7 +257,7 @@ html body #qilyDockShareCopyToastV2{
     max-width:calc(100vw - 28px)!important;
     min-height:34px!important;
     padding:5px 8px!important;
-    font-size:15px!important;
+    font-size:var(--qily-cn-primary-nav-font-size,20px)!important;
   }
   html:root:root:root:root body .footer[data-qily-footer-filing="none"]{
     --qily-cn-fixed-footer-h:86px!important;
@@ -275,4 +275,4 @@ html body #qilyDockShareCopyToastV2{
   html:root:root:root:root body .footer .footer-actions{display:none!important}
   html body #qilyDockShareCopyToastV2{display:none!important}
 }
-/* QILY-CN-FOOTER-CONTENT-FIT-V3-SCOPE-CORRECTED:END */
+/* QILY-CN-FOOTER-CONTENT-FIT-V4-NAV-PARITY:END */
