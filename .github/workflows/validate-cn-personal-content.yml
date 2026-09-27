@@ -76,7 +76,7 @@ jobs:
           grep -Fq '精选 8 项制造实践' cn-site/index.html
           grep -Fq '从实践中提炼可复用方法' cn-site/index.html
           grep -Fq 'PRACTICE & EVIDENCE｜实践与成果' cn-site/index.html
-          grep -Fq '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v45-small-type-gold-parity' cn-site/index.html
+          grep -Fq '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v46-full-small-type-parity' cn-site/index.html
           grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' cn-site/index.html
@@ -87,8 +87,8 @@ jobs:
           grep -Fq 'QILY-CN-HEADER-SHELL-PARITY-V3' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'min-height:83.4px!important' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'QILY-CN-TYPE-HIERARCHY-V5' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq 'QILY-CN-SMALL-TYPE-GOLD-PARITY-V45' cn-site/assets/qilylean-vi-v2.css
-          grep -Fq -- '--qily-cn-small:18px' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq 'QILY-CN-ALL-SMALL-COPY-FLOOR-V46' cn-site/assets/qilylean-vi-v2.css
+          grep -Fq -- '--qily-cn-small:20px' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-section-kicker:21px' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-label-gold:#b88b45' cn-site/assets/qilylean-vi-v2.css
           grep -Fq -- '--qily-cn-h2:clamp(20px,1.25vw,22px)' cn-site/assets/qilylean-vi-v2.css
