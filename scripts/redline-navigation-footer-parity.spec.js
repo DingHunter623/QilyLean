@@ -26,7 +26,7 @@ async function navState(page,navSelector,activeSelector,footerSelector){
   },{navSelector,activeSelector,footerSelector});
 }
 
-test('China-site current Resources module is visible and footer type matches 20px nav',async({page})=>{
+test('China-site Resources keeps the shared filing-free footer visual',async({page})=>{
   await page.setViewportSize({width:1180,height:850});
   const response=await page.goto(cnBase+'/resources/',{waitUntil:'domcontentloaded',timeout:30000});
   expect(response&&response.ok()).toBeTruthy();
@@ -37,11 +37,11 @@ test('China-site current Resources module is visible and footer type matches 20p
   expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
   expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(s.navFont,1);
-  expect(s.recordFont).toBeCloseTo(s.navFont,1);
+  expect(s.footerFont).toBeCloseTo(18,1);
+  expect(s.recordFont).toBe(0);
 });
 
-test('China-site mobile footer preserves the same 20px navigation font',async({page})=>{
+test('China-site mobile footer keeps canonical readable sizing without overflow',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   const response=await page.goto(cnBase+'/knowledge/',{waitUntil:'domcontentloaded',timeout:30000});
   expect(response&&response.ok()).toBeTruthy();
@@ -51,8 +51,8 @@ test('China-site mobile footer preserves the same 20px navigation font',async({p
   expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
   expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(20,1);
-  expect(s.recordFont).toBeCloseTo(20,1);
+  expect(s.footerFont).toBeCloseTo(17,1);
+  expect(s.recordFont).toBeCloseTo(15,1);
   expect(s.footerLeft).toBeGreaterThanOrEqual(0);
   expect(s.footerRight).toBeLessThanOrEqual(s.viewport+1);
 });
