@@ -1434,4 +1434,19 @@ html:root:root:root body footer :is(a,button,span,strong,small){
     .resource-kicker,.qily-resource-network__kicker,.engineering-kicker
   ){font-size:max(21px,1em)!important}
 }
+/* QILY-CN-CLASS-WRAPPER-TYPE-FLOOR-V46 | non-semantic div/span wrappers also belong to the small-text floor */
+html:root:root:root body main :is(
+  .breadcrumb,.breadcrumbs,.meta,.article-meta,.project-meta,.status,.tag,.caption,.fine,
+  .subnav,.toc,.logic,.notice,.hint,.helper,.helper-text,.record,.summary-note,
+  .source-note,.source-meta,.resource-meta,.resource-note,.date,.time,.count,
+  .term-jump-hint,.article-link-hint,.practice-links,.portal-card .meta
+){font-size:max(20px,1em)!important}
+html:root:root:root body main :is(
+  .breadcrumb,.breadcrumbs,.meta,.article-meta,.project-meta,.status,.tag,.caption,.fine,
+  .subnav,.toc,.logic,.notice,.hint,.helper,.helper-text,.record,.summary-note,
+  .source-note,.source-meta,.resource-meta,.resource-note,.date,.time,.count
+) :is(a,span,strong,b,small,time){
+  font-size:max(20px,1em)!important
+}
+/* QILY-CN-CLASS-WRAPPER-TYPE-FLOOR-V46:END */
 /* QILY-CN-ALL-SMALL-COPY-FLOOR-V46:END */
