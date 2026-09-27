@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 'use strict';
 
-/* QilyLean visual readability publisher｜2026-09-03 V11
+/* QilyLean visual readability publisher｜2026-09-27 V12
  * Scope: visual only. Do not rewrite business taxonomy, navigation labels, page copy or navigation cache contracts.
- * V11 publishes the V10/R8 VI/readability contract across every public page: chapter-level eyebrow/kicker labels use
- * the shared QilyLean gold family; non-routing vocabulary chips remain static information; and homepage H1 establishes
- * the protected sitewide primary-heading ceiling (52px desktop / 43px mobile). Existing Daily Brief contrast closure remains intact.
+ * V12 publishes the V12/R8 VI/readability contract across every public page: smallest content copy is 18px,
+ * emphasized small labels are 19px, and chapter/module eyebrow/kicker labels are 21px using one canonical
+ * light-gold token. Non-routing vocabulary chips remain static information and the protected heading ceiling is unchanged.
  */
 const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const VERSION = '20260923-r82-heading-hierarchy-v1';
+const VERSION = '20260927-small-type-gold-parity-v1';
 const HREF = `/site-visual-readability-v5.css?v=${VERSION}`;
 const TAG = `<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="${HREF}">`;
 const DAILY_STYLE_ID = 'qilyDailyReadabilityClosureV8';
@@ -30,7 +30,7 @@ html body.daily-single-page main article.post .section-head>.section-no{
 }
 html body.daily-single-page main article.post .section-head>.section-no::before{content:none!important}
 html body.daily-single-page main article.post .hero .kicker{
-  color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;background:rgba(7,60,71,.38)!important;border-color:rgba(255,227,155,.72)!important;opacity:1!important;text-shadow:none!important;
+  color:#b88b45!important;-webkit-text-fill-color:#b88b45!important;background:rgba(7,60,71,.38)!important;border-color:rgba(255,227,155,.72)!important;opacity:1!important;text-shadow:none!important;
 }
 html body.daily-single-page main article.post .hero>p{
   color:#edf9f6!important;-webkit-text-fill-color:#edf9f6!important;opacity:1!important;text-shadow:none!important;
@@ -156,17 +156,19 @@ function materialize() {
 function verifyCss() {
   const css = read('site-visual-readability-v5.css');
   [
-    '--qily-v5-small:17px',
-    '--qily-v5-small-strong:18px',
-    '--qily-v5-section-kicker:20px',
+    '--qily-v5-small:18px',
+    '--qily-v5-small-strong:19px',
+    '--qily-v5-section-kicker:21px',
     '--qily-v5-gold-text:#b88b45',
+    '--qily-v5-gold-label:#b88b45',
     '--qily-r8-heading-ceiling:clamp(30px,2.65vw,44px)',
     '--qily-r8-section-heading-ceiling:clamp(24px,1.85vw,30px)',
     '--qily-r8-subheading-ceiling:clamp(20px,1.35vw,24px)',
     'R8-HEADING-CEILING-V1-20260903',
     'html:root:root:root body main h1',
     'font-size:clamp(30px,8.2vw,38px)!important',
-    'color:var(--qily-v5-gold-text)!important',
+    'color:var(--qily-v5-gold-label)!important',
+    'QILY-SITEWIDE-SMALL-TYPE-GOLD-PARITY-V1',
     'QILY-STATIC-VOCABULARY-NO-FEEDBACK-V9',
     '.qily-home-conversion-kicker',
     '.qily-home-conversion-hero__kicker',
@@ -181,7 +183,7 @@ function verifyCss() {
     '.qily-ia-card>small',
     'QILY-DAILY-SURFACE-CONTRAST-V7-20260825',
     '.term-opl-num'
-  ].forEach(token => assert(css.includes(token), `V10 CSS contract missing: ${token}`));
+  ].forEach(token => assert(css.includes(token), `V12 CSS contract missing: ${token}`));
   assert(!css.includes('--qily-v5-red:#9e4a34'), 'Retired deep-red section kicker token returned');
 }
 
@@ -224,7 +226,7 @@ function main() {
   const result = materialize();
   const verified = verifyPages();
   verifyBusinessHierarchyUntouched();
-  process.stdout.write(`Visual readability R8.2 materialized: checked ${verified.publicCount}, dated briefs ${verified.dailyCount}, refreshed ${result.changed} public pages with R8.2 heading hierarchy authority.\n`);
+  process.stdout.write(`Visual readability V12 materialized: checked ${verified.publicCount}, dated briefs ${verified.dailyCount}, refreshed ${result.changed} public pages with small-type and gold-label parity authority.\n`);
 }
 
 main();

@@ -8,7 +8,9 @@
 :root{
   --qily-cn-axis:1180px;
   --qily-cn-body:18px;
-  --qily-cn-small:15px;
+  --qily-cn-small:18px;
+  --qily-cn-label-gold:#b88b45;
+  --qily-cn-section-kicker:21px;
   --qily-cn-h1:clamp(28px,2.25vw,38px);
   --qily-cn-h2:clamp(20px,1.25vw,22px);
   --qily-cn-h3:clamp(17px,1vw,19px);
@@ -38,7 +40,7 @@ html:root body :is(.breadcrumbs,.eyebrow,.section-head small,.portal-card small,
   line-height:1.55!important;
 }
 html:root body .nav>a[href]{font-size:var(--qily-cn-primary-nav-font-size)!important}
-html:root body :is(a.btn,button.btn,.logic b,.toc b){font-size:17px!important}
+html:root body :is(a.btn,button.btn,.logic b,.toc b){font-size:18px!important}
 
 /* 2026-09-23: body/section headings reduced two visual steps below page/module H1. */
 /* Restrained heading hierarchy: strong enough for executives, not visually exhausting. */
@@ -116,7 +118,7 @@ html:root body table.data-table{width:100%!important;border-collapse:separate!im
 html:root body table.data-table th,
 html:root body table.data-table td{
   padding:16px 18px!important;
-  font-size:17px!important;
+  font-size:18px!important;
   line-height:1.62!important;
   border-right:1px solid #cfe0dd!important;
   border-bottom:1px solid #cfe0dd!important;
@@ -128,7 +130,7 @@ html:root body table.data-table thead th{
   background:#0f4b5a!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
-  font-size:18px!important;
+  font-size:19px!important;
   font-weight:900!important;
   text-align:center!important;
   border-top:1px solid #0f4b5a!important;
@@ -142,11 +144,11 @@ html:root body table.data-table tbody td:first-child{font-weight:850!important;c
 html:root body .tag{
   min-height:34px!important;
   padding:6px 11px!important;
-  font-size:16px!important;
+  font-size:18px!important;
   font-weight:850!important;
   align-items:center!important;
 }
-html:root body .subnav a{padding:7px 11px!important;font-size:16px!important}
+html:root body .subnav a{padding:7px 11px!important;font-size:18px!important}
 
 /* QILY-CN-FOOTER-VISUAL-PARITY-V4 | 2026-09-26
  * User intent: China footer keeps its own three actions + filing records.
@@ -178,14 +180,14 @@ html:root body .footer-inner{
 }
 html:root body .footer-inner>span:first-child{
   min-width:0!important;
-  font-size:14px!important;
+  font-size:15px!important;
   line-height:1.25!important;
   font-weight:800!important;
   white-space:nowrap!important;
 }
 html:root body .footer-inner a{
   color:#fff!important;
-  font-size:14px!important;
+  font-size:15px!important;
   line-height:1.25!important;
   font-weight:850!important;
   text-decoration:underline!important;
@@ -268,7 +270,7 @@ html:root body .footer-records a[href^="https://beian."]{
   background:rgba(255,255,255,.055)!important;
   border-color:rgba(255,227,155,.52)!important;
   border-radius:8px!important;
-  font-size:14px!important;
+  font-size:15px!important;
   line-height:1!important;
   font-weight:850!important;
   white-space:nowrap!important;
@@ -336,7 +338,7 @@ html:root body a[href^="https://beian."]:active{
     padding:5px 0!important;
   }
   html:root body .footer-inner>span:first-child{
-    font-size:13px!important;
+    font-size:14px!important;
     white-space:normal!important;
   }
   html:root body .footer-records{
@@ -351,7 +353,7 @@ html:root body a[href^="https://beian."]:active{
     min-width:0!important;
     min-height:34px!important;
     padding:5px!important;
-    font-size:12px!important;
+    font-size:13px!important;
     white-space:normal!important;
   }
 }
@@ -362,17 +364,17 @@ html:root body a[href^="https://beian."]:active{
 }
 @media(max-width:620px){
   :root{
-    --qily-cn-body:17px;
-    --qily-cn-small:15px;
+    --qily-cn-body:18px;
+    --qily-cn-small:18px;
     --qily-cn-h1:clamp(27px,7.2vw,33px);
     --qily-cn-h2:clamp(19px,5vw,21px);
     --qily-cn-h3:clamp(17px,4.5vw,19px);
     --qily-cn-h4:17px;
   }
-  html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){font-size:17px!important}
+  html:root body main :is(p,li,dd,dt,.lead,.callout,.formula,.notice,.knowledge-bridge p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li){font-size:18px!important}
   html:root body table.data-table th,
-  html:root body table.data-table td{font-size:16px!important;padding:13px 14px!important}
-  html:root body table.data-table thead th{font-size:17px!important}
+  html:root body table.data-table td{font-size:17px!important;padding:13px 14px!important}
+  html:root body table.data-table thead th{font-size:18px!important}
   html:root body .hero-inner{padding:34px 0!important}
   html:root body .section{padding:28px 0!important}
 }
@@ -710,7 +712,7 @@ html:root body .knowledge-bridge>a:active{
   box-shadow:inset 0 2px 5px rgba(23,50,45,.22)!important;
 }
 @media(max-width:620px){
-  html:root body .knowledge-bridge>a{font-size:17px!important}
+  html:root body .knowledge-bridge>a{font-size:18px!important}
 }
 @media(prefers-reduced-motion:reduce){
   html:root body .knowledge-bridge>a{transition:none!important}
@@ -891,7 +893,7 @@ html:root body main .section-head h2{
 @media(max-width:620px){
   html:root body main :is(.hero .lead,.page-hero p,.section-head p),
   html:root body main :is(.article-body p,.article-body li,.portal-card p,.article-link p,.trust-box p,.knowledge-bridge p,.callout,.formula){
-    font-size:17px!important;
+    font-size:18px!important;
   }
   html:root body main .article-body h2{
     margin-top:22px!important;
@@ -1096,7 +1098,7 @@ html:root body .qily-about-copy-feedback{
   display:inline-block!important;
   margin-left:10px!important;
   color:#8a671f!important;
-  font-size:14px!important;
+  font-size:15px!important;
   font-weight:800!important;
   opacity:0!important;
   transform:translateY(2px)!important;
@@ -1353,3 +1355,48 @@ html:root body main :is(.hero,.page-hero,.module-hero) :is(.eyebrow,.hero-eyebro
 html:root body main :is(.section,.article-body,.content) :is(.section-kicker,.module-kicker,.section-head>small,.portal-card>small){color:#caa15f!important;-webkit-text-fill-color:#caa15f!important;font-weight:950!important;opacity:1!important}
 html:root body main a.btn.primary[data-qily-external="international"],html:root body main .article-body a.btn.primary{background:#ffe39b!important;border-color:#caa15f!important;color:#17322d!important;-webkit-text-fill-color:#17322d!important;font-weight:900!important}
 html:root body main a.btn.primary[data-qily-external="international"]:is(:hover,:focus-visible),html:root body main .article-body a.btn.primary:is(:hover,:focus-visible){background:#f6d879!important;border-color:#caa15f!important;color:#17322d!important;-webkit-text-fill-color:#17322d!important}
+
+
+/* QILY-CN-SMALL-TYPE-GOLD-PARITY-V45 | 2026-09-27
+ * Cross-site parity with qilylean.com: raise the China site's smallest readable copy
+ * to the international large-side baseline + one step, and make every semantic
+ * chapter/module label the same 21px canonical light gold.
+ */
+:root{
+  --qily-cn-small:18px;
+  --qily-cn-label-gold:#b88b45;
+  --qily-cn-section-kicker:21px;
+}
+html:root:root body :is(
+  small,.breadcrumbs,.meta,.article-meta,.status,.tag,.subnav a,.toc :is(a,span),.logic span,figcaption,time
+){font-size:18px!important}
+html:root:root body main :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+  .section-kicker,.module-kicker,.section-head>small,.portal-card>small,
+  .resource-kicker,.qily-resource-network__kicker
+){
+  font-size:var(--qily-cn-section-kicker)!important;
+  line-height:1.45!important;
+  color:var(--qily-cn-label-gold)!important;
+  -webkit-text-fill-color:var(--qily-cn-label-gold)!important;
+  font-weight:950!important;
+  letter-spacing:.035em!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html:root:root body .footer-inner>span:first-child,
+html:root:root body .footer-inner a{font-size:15px!important}
+@media(max-width:760px){
+  html:root:root body .footer-inner>span:first-child{font-size:14px!important}
+  html:root:root body .footer-records a[href^="https://beian."]{font-size:13px!important}
+}
+@media(max-width:620px){
+  :root{--qily-cn-small:18px;--qily-cn-section-kicker:21px}
+  html:root:root body :is(small,.breadcrumbs,.meta,.article-meta,.status,.tag,.subnav a,figcaption,time){font-size:18px!important}
+  html:root:root body main :is(
+    .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+    .section-kicker,.module-kicker,.section-head>small,.portal-card>small,
+    .resource-kicker,.qily-resource-network__kicker
+  ){font-size:21px!important}
+}
+/* QILY-CN-SMALL-TYPE-GOLD-PARITY-V45:END */
