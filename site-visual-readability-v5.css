@@ -1,4 +1,4 @@
-/* QilyLean 全站可视化清晰度 V10｜2026-09-03
+/* QilyLean 全站可视化清晰度 V12｜2026-09-27
  * 目标：落实“最小号字体统一放大一号、底色与字体高对比、编号清晰可读”。
  * V9：章节级 eyebrow / kicker 统一使用 QilyLean VI 金色系；静态术语/指标胶囊统一为信息态，禁止 hover/active/focus 伪交互反馈。
  * V11 / R8.1：以首页主 Hero 标题为全站头号字体权威尺度；公开页面任何 H1 最终渲染不得超过 44px，移动端不得超过 38px。
@@ -12,12 +12,13 @@
   --qily-v5-copy:#3f5e5d;
   --qily-v5-gold:#caa15f;
   --qily-v5-gold-text:#b88b45;
+  --qily-v5-gold-label:#b88b45;
   --qily-v5-white:#ffffff;
   --qily-v5-soft:#f4faf8;
   --qily-v5-line:#bfd6d2;
-  --qily-v5-small:17px;
-  --qily-v5-small-strong:18px;
-  --qily-v5-section-kicker:20px;
+  --qily-v5-small:18px;
+  --qily-v5-small-strong:19px;
+  --qily-v5-section-kicker:21px;
   --qily-r8-heading-ceiling:clamp(30px,2.65vw,44px);
   --qily-r8-content-title-ceiling:clamp(28px,2.15vw,34px);
   --qily-r8-section-heading-ceiling:clamp(24px,1.85vw,30px);
@@ -94,8 +95,8 @@ html body main :is(
 ){
   font-size:var(--qily-v5-section-kicker)!important;
   line-height:1.5!important;
-  color:var(--qily-v5-gold-text)!important;
-  -webkit-text-fill-color:var(--qily-v5-gold-text)!important;
+  color:var(--qily-v5-gold-label)!important;
+  -webkit-text-fill-color:var(--qily-v5-gold-label)!important;
   font-weight:950!important;
   letter-spacing:.035em!important;
   opacity:1!important;
@@ -166,8 +167,8 @@ html body main :is(.hero,.module-hero,.daily-hero,.project-hero,.cooperation-her
   .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
   .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker,small
 ){
-  color:#ffe39b!important;
-  -webkit-text-fill-color:#ffe39b!important;
+  color:var(--qily-v5-gold-label)!important;
+  -webkit-text-fill-color:var(--qily-v5-gold-label)!important;
 }
 
 /* 02｜04/05/06 等编号：白字、深色实底、白内圈、金外圈，并同步放大。 */
@@ -265,14 +266,14 @@ html body main :is(
 /* 05｜移动端不缩回小字号；只调整布局。 */
 @media(max-width:620px){
   html body main :is(small,figcaption,.caption,.meta,.fine,.eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,.tag,.project-meta,.article-meta){
-    font-size:17px!important;
+    font-size:18px!important;
   }
   html body main :is(
     .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
     .resource-kicker,.qily-resource-network__kicker,
     .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
   ){
-    font-size:18px!important;
+    font-size:21px!important;
     line-height:1.5!important;
   }
   html body main .service-number{
@@ -488,4 +489,48 @@ html body.daily-single-page main :is(
     line-height:1.35!important;
   }
   html body:has(.qily-term-pdf-action) .objective{break-inside:avoid!important;page-break-inside:avoid!important}
+}
+
+
+/* QILY-SITEWIDE-SMALL-TYPE-GOLD-PARITY-V1 | 2026-09-27
+ * One cross-site readable floor: international small copy starts at 18px,
+ * emphasized micro labels at 19px, section/module labels at 21px.
+ * Every semantic gold section/module label uses one canonical light-gold token.
+ */
+html:root:root body main :is(
+  small,figcaption,.caption,.meta,.fine,.tag,.tag-row li,.project-meta,.article-meta,.moment-count,
+  .gallery-tip,.empty,.project-card-brief,.project-fact small,.module-card>small,
+  .paper-card>small,.career-full-card>small,.qily-system-axis__title,.privacy-note,
+  .service-contract-meta span,.qily-secondary-link span,.qily-ia-secondary-link span
+){font-size:18px!important}
+html:root:root body main :is(
+  .qily-ia-card>small,.module-card.service-card .service-heading-link>small,
+  .module-card.service-card>small,#engineering-enablers .module-card small,
+  #qily-digital-enablers .qily-ia-card small
+){font-size:19px!important}
+html:root:root body main :is(
+  .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
+  .resource-kicker,.qily-resource-network__kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
+){
+  font-size:21px!important;
+  line-height:1.45!important;
+  color:var(--qily-v5-gold-label)!important;
+  -webkit-text-fill-color:var(--qily-v5-gold-label)!important;
+  font-weight:950!important;
+  letter-spacing:.035em!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html:root:root body #floatDock.qily-float-dock :is(.qily-dock-label,[data-action="share"] .qily-share-label-url){font-size:16px!important}
+@media(max-width:620px){
+  html:root:root body main :is(
+    small,figcaption,.caption,.meta,.fine,.tag,.project-meta,.article-meta
+  ){font-size:18px!important}
+  html:root:root body main :is(
+    .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
+    .resource-kicker,.qily-resource-network__kicker,
+    .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
+  ){font-size:21px!important}
+  html:root:root body #floatDock.qily-float-dock :is(.qily-dock-label,[data-action="share"] .qily-share-label-url){font-size:15px!important}
 }
