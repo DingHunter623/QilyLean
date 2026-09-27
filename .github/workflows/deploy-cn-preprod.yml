@@ -107,7 +107,8 @@ jobs:
           grep -Fq '<p class="eyebrow">LEAN MANUFACTURING EXPERIENCE | 精益制造经验分享</p>' cn-site/index.html
           grep -Fq '<meta name="360-site-verification" content="42760a600d8679c79148d470325347ac" />' cn-site/index.html
           grep -Fq '"name":"精益制造经验分享"' cn-site/index.html
-          grep -Fq '精益制造经验分享' cn-site/index.html
+          grep -Fq '<div class="footer-inner"><span>精益制造经验分享</span>' cn-site/index.html
+          ! grep -RniF --include='*.html' '<div class="footer-inner"><span>QilyLean | 启力精益 · 精益制造经验分享</span>' cn-site
           ! grep -Fq 'QILYLEAN CHINA｜' cn-site/index.html
           ! grep -RniF --include='*.html' '个人制造业知识与实践分享' cn-site
           grep -q '湘ICP备2026041143号-1' cn-site/index.html
