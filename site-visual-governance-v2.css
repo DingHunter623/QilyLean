@@ -322,3 +322,23 @@ html:root:root body main :is(
   ){font-size:max(21px,1em)!important}
 }
 /* QILY-SITEWIDE-ABSOLUTE-TEXT-FLOOR-V6:END */
+
+/* QILY-HEADER-OVERFLOW-CONTAINMENT-V6 | protect 1024px/tablet after type enlargement */
+@media(max-width:1180px){
+  html:root:root body header :is(nav.site-nav,nav.qily-global-nav,nav.nav){
+    min-width:0!important;
+    width:100%!important;
+    max-width:100%!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    white-space:nowrap!important;
+    flex-wrap:nowrap!important;
+    scrollbar-width:thin!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior-x:contain!important;
+  }
+  html:root:root body header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]{
+    flex:0 0 auto!important;
+  }
+}
+/* QILY-HEADER-OVERFLOW-CONTAINMENT-V6:END */
