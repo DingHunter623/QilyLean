@@ -244,6 +244,8 @@ assert(!cnFooterCss.includes('grid-template-columns:repeat(2,minmax(0,1fr))'), '
 assert(!cnFooterCss.includes('grid-template-columns:minmax(160px,.72fr) minmax(250px,1.18fr) minmax(520px,2.10fr)!important'), 'CN footer must not restore filing-driven desktop column widths.');
 assert(cnFooterCss.includes('justify-content:space-between!important'), 'CN desktop footer must distribute intrinsic-width controls across the content axis.');
 assert(cnFooterCss.includes('QILY-CN-FOOTER-REDLINE-V12'), 'CN annotated footer alignment authority is missing.');
+assert(cnFooterCss.includes('QILY-CN-FOOTER-ACTION-EQUAL-WIDTH-V13'), 'CN top/share equal-width authority is missing.');
+assert(cnFooterCss.includes('width:calc(4em + 24px)!important'), 'CN top/share controls must share one canonical width.');
 assert((cnFooterCss.match(/var\(--qily-cn-primary-nav-font-size,20px\)/g)||[]).length>=3, 'CN footer type must inherit the primary-nav 20px token for label, actions and filing records.');
 assert(cnFooterCss.includes('data-qily-footer-filing="none"'), 'CN canonical footer CSS must preserve the filing-free reference state.');
 for (const marker of ["['top','顶部']","['share','分享当前']"]) assert(cnFooterJs.includes(marker), 'CN footer action marker missing: '+marker);
@@ -269,6 +271,8 @@ assert(cnAbout.includes('<h1>关于“精益制造经验分享”</h1>'),'CN Abo
 const resourcePublic=read('links/cn-public/index.html');
 assert(resourcePublic.includes('.wrap{width:min(1180px,calc(100% - 36px));max-width:1180px;margin:auto}'), 'Resource collaboration public entry must use the canonical 1180px content axis.');
 assert(resourcePublic.includes('/site-content-axis-v1.css?v=20260822-sitewide-visual-axis-v5'), 'Resource collaboration public entry must load the sitewide 1180px axis authority.');
+assert(resourcePublic.includes('/site-link-standard-v2.css?v=20260803-nav-four-border-v6'), 'Resource collaboration cross-site actions must inherit the shared global link/VI standard.');
+assert(!resourcePublic.includes('.button.primary{background:#0f4b5a;color:#fff}'), 'Resource collaboration must not restore a page-specific primary-button visual.');
 assert(resourcePublic.includes('id="qilyResourcePublicTypeAuthorityV2"'), 'Resource collaboration public entry final typography authority is missing.');
 assert(resourcePublic.includes('data-qily-resource-public="v2"'), 'Resource collaboration public entry body authority marker is missing.');
 assert(resourcePublic.includes('font-size:clamp(28px,2vw,34px)!important'), 'Resource collaboration public entry H1 must use the reduced restrained hierarchy.');
