@@ -135,24 +135,43 @@ grep -Fq 'target="_blank" rel="noopener noreferrer"' "$BRIEFS_PAGE" || { echo "E
 grep -Fq 'href="https://qilylean.com/links/cn-public/"' "$RESOURCES_PAGE" || { echo "ERROR: CN resources bridge lost its explicit international destination."; exit 1; }
 grep -Fq 'target="_blank" rel="noopener noreferrer"' "$RESOURCES_PAGE" || { echo "ERROR: CN resources bridge external-link safety attributes are missing."; exit 1; }
 
-# China footer semantics: only Top / Share current; Previous page is retired.
-for action in top share; do
-  grep -Fq "data-qily-footer-action=\"$action\"" "$INDEX_FILE" || {
-    echo "ERROR: CN footer navigation missing original action: $action"
-    exit 1
-  }
-done
-! grep -Fq 'data-qily-footer-action="previous"' "$INDEX_FILE" || {
-  echo "ERROR: CN footer must not restore retired previous-page action"
-  exit 1
-}
-
-for action in home parent knowledge about; do
-  if grep -Fq "data-qily-footer-action=\"$action\"" "$INDEX_FILE"; then
-    echo "ERROR: CN footer must not copy international-only action: $action"
-    exit 1
-  fi
-done
+# China footer is one public component across the whole site.
+# Only /briefs/ and /resources/ are filing-free because they are explicit international-reference entries.
+python3 - "$ROOT_DIR" <<'PY'
+from pathlib import Path
+import re, sys
+root=Path(sys.argv[1])
+reference={'briefs/index.html','resources/index.html'}
+errors=[]
+for path in sorted(root.rglob('*.html')):
+    text=path.read_text(encoding='utf-8')
+    if '<body' not in text.lower():
+        continue
+    m=re.search(r'<footer class="footer"(?: data-qily-footer-filing="none")?>.*?</footer>',text,re.S)
+    if not m:
+        continue
+    footer=m.group(0)
+    rel=path.relative_to(root).as_posix()
+    actions=re.findall(r'data-qily-footer-action="([^"]+)"',footer)
+    if actions!=['top','share']:
+        errors.append(f'{rel}: footer actions must be exactly top/share, got {actions}')
+    if '上一网页' in footer or 'data-qily-footer-action="previous"' in footer:
+        errors.append(f'{rel}: retired previous-page action returned')
+    filings=re.findall(r'https://beian\.(?:miit|mps)\.gov\.cn/',footer)
+    if rel in reference:
+        if 'data-qily-footer-filing="none"' not in footer:
+            errors.append(f'{rel}: filing-free state marker missing')
+        if filings or 'footer-records' in footer or '湘ICP备' in footer or '湘公网安备' in footer:
+            errors.append(f'{rel}: international-reference footer must not expose filing records')
+    else:
+        if 'data-qily-footer-filing="none"' in footer:
+            errors.append(f'{rel}: standard China page incorrectly marked filing-free')
+        if len(filings)!=2 or '湘ICP备2026041143号-1' not in footer or '湘公网安备43020002000443号' not in footer:
+            errors.append(f'{rel}: standard China footer must contain exactly both filing records')
+if errors:
+    raise SystemExit('ERROR: canonical CN footer contract failed:\n'+'\n'.join(errors))
+print('PASS: canonical CN footer contract verified; briefs/resources filing-free exception preserved.')
+PY
 
 # Filed-name governance: every public CN document identifies the site by the ICP filing service name.
 FILED_SITE_NAME='精益制造经验分享'
