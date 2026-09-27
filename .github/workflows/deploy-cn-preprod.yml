@@ -107,7 +107,7 @@ jobs:
           grep -Fq '<p class="eyebrow">LEAN MANUFACTURING EXPERIENCE | 精益制造经验分享</p>' cn-site/index.html
           grep -Fq '<meta name="360-site-verification" content="42760a600d8679c79148d470325347ac" />' cn-site/index.html
           grep -Fq '"name":"精益制造经验分享"' cn-site/index.html
-          grep -Fq 'QilyLean | 启力精益 · 精益制造经验分享' cn-site/index.html
+          grep -Fq '精益制造经验分享' cn-site/index.html
           ! grep -Fq 'QILYLEAN CHINA｜' cn-site/index.html
           ! grep -RniF --include='*.html' '个人制造业知识与实践分享' cn-site
           grep -q '湘ICP备2026041143号-1' cn-site/index.html
@@ -289,9 +289,9 @@ jobs:
               for marker in [
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
-                  '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v46-full-small-type-parity',
-                  '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v6-small-type-parity',
-                  '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v6-small-type-parity',
+                  '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform',
+                  '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v7-uniform-slots',
+                  '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v7-uniform-slots',
                   'data-qily-footer-action="top"',
                   'data-qily-footer-action="previous"',
                   'data-qily-footer-action="share"',
@@ -300,9 +300,9 @@ jobs:
                       raise SystemExit(f'Production {route} missing V23 typography asset: {marker}')
 
           footer_actions_contract = [
-              (footer_actions_css, 'QilyLean CN Footer Actions V4', 'three-action footer stylesheet marker'),
+              (footer_actions_css, 'QilyLean CN Footer Actions V5', 'three-action footer stylesheet marker'),
               (footer_actions_css, '.footer-actions>button', 'footer action button visual contract'),
-              (footer_actions_css, 'grid-template-columns:repeat(3,max-content)!important', 'three-action desktop layout'),
+              (footer_actions_css, 'grid-template-columns:repeat(3,minmax(0,1fr))!important', 'three-action desktop layout'),
               (footer_actions_css, 'min-height:40px!important', 'international-style button height'),
               (footer_actions_css, 'border-radius:8px!important', 'international-style button radius'),
               (footer_actions_css, 'background:#073c47!important', 'international-style share feedback background'),
@@ -362,7 +362,7 @@ jobs:
           required_about = [
               '关于“精益制造经验分享”',
               'QilyLean | <span>启力精益</span>',
-              'QilyLean | 启力精益 · 精益制造经验分享',
+              '精益制造经验分享',
               '湘公网安备43020002000443号',
               'https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443',
               '/assets/mps-beian.png',
@@ -381,7 +381,7 @@ jobs:
               '<meta name="360-site-verification" content="42760a600d8679c79148d470325347ac" />',
               '<p class="eyebrow">LEAN MANUFACTURING EXPERIENCE | 精益制造经验分享</p>',
               '"name":"精益制造经验分享"',
-              'QilyLean | 启力精益 · 精益制造经验分享',
+              '精益制造经验分享',
           ]
           for marker in required_home_name:
               if marker not in home:
@@ -395,7 +395,7 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v46-full-small-type-parity' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform' not in home:
               raise SystemExit('Production China home missing V42 final production VI revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' not in home:
               raise SystemExit('Production China home missing V20 CN bridge nav runtime.')
@@ -419,9 +419,9 @@ jobs:
               raise SystemExit('Production CN resources bridge lost safe external-link behavior.')
           if '<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>' not in home:
               raise SystemExit('Production China Global Knowledge CTA lost external-link semantics.')
-          if '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v6-small-type-parity' not in home:
+          if '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v7-uniform-slots' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
-          if '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v6-small-type-parity' not in home:
+          if '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v7-uniform-slots' not in home:
               raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
