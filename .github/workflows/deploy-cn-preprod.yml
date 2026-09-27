@@ -291,26 +291,27 @@ jobs:
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
                   '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform',
-                  '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v7-uniform-slots',
-                  '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v7-uniform-slots',
+                  '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v8-two-action-even-spacing',
+                  '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v8-two-action-even-spacing',
                   'data-qily-footer-action="top"',
-                  'data-qily-footer-action="previous"',
                   'data-qily-footer-action="share"',
               ]:
                   if marker not in doc:
                       raise SystemExit(f'Production {route} missing V23 typography asset: {marker}')
 
           footer_actions_contract = [
-              (footer_actions_css, 'QilyLean CN Footer Actions V5', 'three-action footer stylesheet marker'),
+              (footer_actions_css, 'QilyLean CN Footer Actions V6', 'two-action footer stylesheet marker'),
               (footer_actions_css, '.footer-actions>button', 'footer action button visual contract'),
-              (footer_actions_css, 'grid-template-columns:repeat(3,minmax(0,1fr))!important', 'three-action desktop layout'),
+              (footer_actions_css, 'grid-template-columns:repeat(2,minmax(0,1fr))!important', 'two-action button layout'),
+              (footer_actions_css, 'QILY-CN-FOOTER-EVEN-SPACING-V1', 'even-spacing desktop authority'),
+              (footer_actions_css, 'grid-template-columns:minmax(0,1.45fr) minmax(0,.55fr) minmax(0,.84fr) minmax(0,1.90fr) minmax(0,3.15fr)!important', 'five-slot content-weighted desktop footer layout'),
+              (footer_actions_css, 'gap:8px!important', 'uniform visible-item gap'),
               (footer_actions_css, 'min-height:40px!important', 'international-style button height'),
               (footer_actions_css, 'border-radius:8px!important', 'international-style button radius'),
               (footer_actions_css, 'background:#073c47!important', 'international-style share feedback background'),
-              (footer_actions_runtime, 'QilyLean CN Footer Actions V3', 'three-action footer runtime marker'),
-              (footer_actions_runtime, "var ORDER=[['top','顶部'],['previous','上一网页'],['share','分享当前']]", 'canonical China footer actions'),
-              (footer_actions_runtime, "data-qily-footer-contract','top,previous,share'", 'three-action runtime contract'),
-              (footer_actions_runtime, 'w.history.back()', 'previous-page browser history behavior'),
+              (footer_actions_runtime, 'QilyLean CN Footer Actions V4', 'two-action footer runtime marker'),
+              (footer_actions_runtime, "var ORDER=[['top','顶部'],['share','分享当前']]", 'canonical China footer actions'),
+              (footer_actions_runtime, "data-qily-footer-contract','top,share'", 'two-action runtime contract'),
               (footer_actions_runtime, 'navigator.share', 'system share behavior'),
               (footer_actions_runtime, "behavior:reduce?'auto':'smooth'", 'top smooth-scroll behavior'),
               (footer_actions_runtime, '标题与网址已复制，正在打开系统分享', 'copy-before-share feedback'),
@@ -322,6 +323,9 @@ jobs:
           for source, marker, label in footer_actions_contract:
               if marker not in source:
                   raise SystemExit(f'Production footer action contract missing {label}: {marker}')
+
+          if 'data-qily-footer-action="previous"' in home or "['previous','上一网页']" in footer_actions_runtime:
+              raise SystemExit('Production China footer restored the retired 上一网页 action.')
 
           for retired in ["['home','首页']", "['parent','上一层级']", "['knowledge','知识索引']", "['about','关于我们']"]:
               if retired in footer_actions_runtime:
@@ -339,8 +343,8 @@ jobs:
               (vi, '--qily-cn-small:20px', '18px smallest content floor'),
               (vi, '--qily-cn-section-kicker:21px', '21px chapter/module label size'),
               (vi, '--qily-cn-label-gold:#b88b45', 'canonical light-gold label color'),
-              (footer_actions_css, 'font:850 16px/1', 'desktop footer action label enlarged one step'),
-              (footer_actions_css, 'font-size:14px!important', 'mobile footer action label enlarged one step'),
+              (footer_actions_css, 'font:850 20px/1', 'desktop footer action type parity'),
+              (footer_actions_css, 'font-size:20px!important', 'mobile footer action type parity'),
               (vi, '--qily-cn-h2:clamp(20px,1.25vw,22px)', 'desktop H2 22px ceiling'),
               (vi, '--qily-cn-h3:clamp(17px,1vw,19px)', 'desktop H3 19px ceiling'),
               (vi, '--qily-cn-h2:clamp(19px,5vw,21px)', 'mobile H2 21px ceiling'),
@@ -420,9 +424,9 @@ jobs:
               raise SystemExit('Production CN resources bridge lost safe external-link behavior.')
           if '<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>' not in home:
               raise SystemExit('Production China Global Knowledge CTA lost external-link semantics.')
-          if '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v7-uniform-slots' not in home:
+          if '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v8-two-action-even-spacing' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
-          if '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v7-uniform-slots' not in home:
+          if '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v8-two-action-even-spacing' not in home:
               raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
