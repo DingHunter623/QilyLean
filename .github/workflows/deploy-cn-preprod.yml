@@ -321,6 +321,7 @@ jobs:
               (footer_actions_css, 'data-qily-footer-filing="none"', 'filing-free reference state styling'),
               (footer_actions_css, 'justify-content:space-between!important', 'distributed desktop controls'),
               (footer_actions_css, 'QILY-CN-FOOTER-REDLINE-V12', 'annotated footer alignment'),
+              (footer_actions_css, 'QILY-CN-FOOTER-ACTION-EQUAL-WIDTH-V13', 'equal-width top/share actions'),
               (footer_actions_css, 'min-height:40px!important', 'canonical button height'),
               (footer_actions_css, 'border-radius:8px!important', 'canonical button radius'),
               (footer_actions_css, 'background:#073c47!important', 'share feedback background'),
