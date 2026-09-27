@@ -37,7 +37,7 @@ test('China-site Resources keeps the shared filing-free footer visual',async({pa
   expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
   expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(18,1);
+  expect(s.footerFont).toBeCloseTo(s.navFont,1);
   expect(s.recordFont).toBe(0);
 });
 
@@ -51,8 +51,8 @@ test('China-site mobile footer keeps canonical readable sizing without overflow'
   expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
   expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(17,1);
-  expect(s.recordFont).toBeCloseTo(15,1);
+  expect(s.footerFont).toBeCloseTo(s.navFont,1);
+  expect(s.recordFont).toBeCloseTo(s.navFont,1);
   expect(s.footerLeft).toBeGreaterThanOrEqual(0);
   expect(s.footerRight).toBeLessThanOrEqual(s.viewport+1);
 });
