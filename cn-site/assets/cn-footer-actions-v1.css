@@ -113,3 +113,16 @@ html body #qilyDockShareCopyToastV2{
   html:root body .footer-actions,
   html body #qilyDockShareCopyToastV2{display:none!important}
 }
+
+
+/* QILY-CN-FOOTER-NAV-TYPE-PARITY-V1 | 2026-09-27 */
+html:root:root body .footer-records>a,
+html:root:root body .footer-records>a>span{
+  font-size:20px!important;
+  line-height:1.2!important;
+}
+@media(max-width:760px){
+  html:root:root body .footer-records>a,
+  html:root:root body .footer-records>a>span{font-size:20px!important}
+}
+/* QILY-CN-FOOTER-NAV-TYPE-PARITY-V1:END */
