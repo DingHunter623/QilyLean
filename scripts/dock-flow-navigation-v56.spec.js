@@ -37,7 +37,7 @@ for(const [name,url,viewport,mobile] of cases){
         dockLeft:Math.round(dr.left),
         dockRight:Math.round(dr.right),
         dockWidth:dr.width,
-        viewportWidth:document.documentElement.clientWidth,
+        viewportWidth:Math.min(document.documentElement.clientWidth||innerWidth,document.body?document.body.clientWidth||innerWidth:innerWidth),
         scrollWidth:dock.scrollWidth,
         clientWidth:dock.clientWidth,
         borderTop:parseFloat(ds.borderTopWidth)||0,
