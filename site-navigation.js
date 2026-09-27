@@ -85,7 +85,28 @@
     return changed;
   }
 
-  function reconcileNavigation(){ensureSearchAuthorityNavigation();normalizeResourceCollaborationLabel();}
+  /* QILY-PRIMARY-NAV-ACTIVE-REVEAL-V1 | 2026-09-27
+   * Keep the current primary module inside the horizontal navigation viewport.
+   * Uses scrollLeft only, so revealing the active item never changes document Y position.
+   */
+  function revealActivePrimaryNavigation(){
+    var selector='.qily-global-nav,header nav.site-nav,header nav.nav,header nav[aria-label="网站导航"],header nav[aria-label="QilyLean核心导视"]';
+    d.querySelectorAll(selector).forEach(function(nav){
+      var active=nav.querySelector('a[aria-current="page"],a[data-qily-page-current="true"],a[data-qily-primary-current="true"]');
+      if(!active)return;
+      w.requestAnimationFrame(function(){
+        var left=active.offsetLeft,right=left+active.offsetWidth,viewLeft=nav.scrollLeft,viewRight=viewLeft+nav.clientWidth;
+        if(left>=viewLeft+8&&right<=viewRight-8)return;
+        var max=Math.max(0,nav.scrollWidth-nav.clientWidth);
+        var target=Math.max(0,left-(nav.clientWidth-active.offsetWidth)/2);
+        nav.scrollLeft=Math.min(max,target);
+      });
+    });
+  }
+  function schedulePrimaryNavigationReveal(){
+    [0,80,250,700].forEach(function(delay){w.setTimeout(revealActivePrimaryNavigation,delay);});
+  }
+  function reconcileNavigation(){ensureSearchAuthorityNavigation();normalizeResourceCollaborationLabel();schedulePrimaryNavigationReveal();}
   function needsLegacyRuntime(){var p=currentPath();return p.indexOf('/cooperation/')===0||p.indexOf('/links/')===0;}
   function installCapabilitySelfHeal(){
     if(currentPath()!=='/capabilities/')return;
@@ -114,5 +135,5 @@
 })(document,window);
 
 window.__qilyLayeredNavigationBuildContract=Object.freeze({
-  mode:'atomic-first-paint-v46',staticHtmlAuthority:true,runtimeDependencyWaterfall:false,routeScopedLegacy:true,ordinaryPagesDirectCore:true,homepageHeroTune:true,unifiedContentAxis:true,unifiedHeaderAxis:true,headerAxisWidth:1180,headerDesktopNoClip:true,primaryNavigationUnifiedVisualContract:true,primaryNavigationFontSize:20,primaryNavigationFontWeight:900,mobilePrimaryNavigationMayShrinkTypography:false,publicIntegrityHotfix:true,siteSearchDirectNavigation:true,siteSearchRuntimeVersion:'20260826-search-navigation-v2',r6RankedSearchTerminologyVisualGuard:true,r6RankedSearchTerminologyVisualVersion:'20260826-r6-search-terminology-visual-v1',capabilitySelfHeal:true,capabilityQHomeCompleteActions:true,capabilityDdzReadableLightPalette:true,terminologyLiveSource:'/qilylean/site-data.json',terminologySingleCanonicalStrip:true,certificateVerificationBoundary:true,dockUniformVisualContract:true,dockUniformSize:62,dockFreeDragXY:false,dockPositionPersistence:false,dockAutoHome:'bottom-right',dockViewportBoundaryClamp:true,dockMobileDesktopParity:true,dockOrder:['home','top','back','search','current','contact'],dockUniformFontSize:true,resourceCollaborationPrimaryLabel:true,friendLinksPageIdentityPreserved:true,unifiedOnePieceArrows:true,searchAuthorityRoute:'/lean-production/',searchAuthorityLabel:'精益生产',searchAuthoritySitewide:true,translationAwareSelfHeal:true,r7DockSingleAuthority:true,r7NoNavigationDockMutation:true,version:'20260916-r7-navigation-v46-1180-axis'
+  mode:'atomic-first-paint-v46',staticHtmlAuthority:true,runtimeDependencyWaterfall:false,routeScopedLegacy:true,ordinaryPagesDirectCore:true,homepageHeroTune:true,unifiedContentAxis:true,unifiedHeaderAxis:true,headerAxisWidth:1180,headerDesktopNoClip:true,primaryNavigationUnifiedVisualContract:true,primaryNavigationFontSize:20,primaryNavigationFontWeight:900,primaryNavigationActiveReveal:true,mobilePrimaryNavigationMayShrinkTypography:false,publicIntegrityHotfix:true,siteSearchDirectNavigation:true,siteSearchRuntimeVersion:'20260826-search-navigation-v2',r6RankedSearchTerminologyVisualGuard:true,r6RankedSearchTerminologyVisualVersion:'20260826-r6-search-terminology-visual-v1',capabilitySelfHeal:true,capabilityQHomeCompleteActions:true,capabilityDdzReadableLightPalette:true,terminologyLiveSource:'/qilylean/site-data.json',terminologySingleCanonicalStrip:true,certificateVerificationBoundary:true,dockUniformVisualContract:true,dockUniformSize:62,dockFreeDragXY:false,dockPositionPersistence:false,dockAutoHome:'bottom-right',dockViewportBoundaryClamp:true,dockMobileDesktopParity:true,dockOrder:['home','top','back','search','current','contact'],dockUniformFontSize:true,resourceCollaborationPrimaryLabel:true,friendLinksPageIdentityPreserved:true,unifiedOnePieceArrows:true,searchAuthorityRoute:'/lean-production/',searchAuthorityLabel:'精益生产',searchAuthoritySitewide:true,translationAwareSelfHeal:true,r7DockSingleAuthority:true,r7NoNavigationDockMutation:true,version:'20260916-r7-navigation-v46-1180-axis'
 });

@@ -1,4 +1,4 @@
-/* QilyLean CN Footer Actions V4 | 2026-09-27
+/* QilyLean CN Footer Actions V4 | 2026-09-27 | primary-nav type parity
  * Keep CN semantics: 顶部 / 上一网页 / 分享当前.
  * Match international footer button geometry and interaction only.
  */
@@ -28,7 +28,7 @@ html:root body .footer-actions>button{
   color:#ffe39b!important;
   -webkit-text-fill-color:#ffe39b!important;
   box-shadow:none!important;
-  font:850 16px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  font:850 20px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
   letter-spacing:.01em!important;
   white-space:nowrap!important;
   cursor:pointer!important;
@@ -102,7 +102,7 @@ html body #qilyDockShareCopyToastV2{
     min-width:0!important;
     min-height:36px!important;
     padding:6px 5px!important;
-    font-size:14px!important;
+    font-size:20px!important;
   }
 }
 @media(prefers-reduced-motion:reduce){
@@ -113,3 +113,16 @@ html body #qilyDockShareCopyToastV2{
   html:root body .footer-actions,
   html body #qilyDockShareCopyToastV2{display:none!important}
 }
+
+
+/* QILY-CN-FOOTER-NAV-TYPE-PARITY-V1 | 2026-09-27 */
+html:root:root body .footer-records>a,
+html:root:root body .footer-records>a>span{
+  font-size:20px!important;
+  line-height:1.2!important;
+}
+@media(max-width:760px){
+  html:root:root body .footer-records>a,
+  html:root:root body .footer-records>a>span{font-size:20px!important}
+}
+/* QILY-CN-FOOTER-NAV-TYPE-PARITY-V1:END */

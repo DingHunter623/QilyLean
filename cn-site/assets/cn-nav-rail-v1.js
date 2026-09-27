@@ -97,7 +97,7 @@ function installRail(nav){
 
   nav.dataset.qilyCnNavRail='v7';
   if(!nav.id)nav.id='qilyCnPrimaryNavigation';
-  nav.scrollLeft=0;
+  if(!nav.querySelector('a[aria-current="page"]'))nav.scrollLeft=0;
 
   var rail=d.createElement('div');
   rail.className='qily-primary-nav-scroll-rail';
@@ -305,6 +305,8 @@ function routeKey(path){
   if(/^\/(?:lean|ie|standardization|factory|digital|methods)(?:\/|$)/.test(path))return 'lean';
   if(/^\/notes(?:\/|$)/.test(path))return 'projects';
   if(/^\/knowledge(?:\/|$)/.test(path))return 'knowledge';
+  if(/^\/briefs(?:\/|$)/.test(path))return 'briefs';
+  if(/^\/resources(?:\/|$)/.test(path))return 'resources';
   if(/^\/about(?:\/|$)/.test(path))return 'about';
   return '';
 }
@@ -354,10 +356,16 @@ function boot(){
     reveal(nav,mark(nav));
   });
 }
-if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-w.addEventListener('pageshow',boot,{passive:true});
+function scheduleBoot(){
+  boot();
+  [80,250,700].forEach(function(delay){w.setTimeout(boot,delay);});
+}
+if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',scheduleBoot,{once:true});else scheduleBoot();
+w.addEventListener('pageshow',scheduleBoot,{passive:true});
+w.addEventListener('resize',function(){w.setTimeout(boot,80);},{passive:true});
 })(document,window);
 
+/* QILY-CN-CURRENT-MODULE-RUNTIME-V2 | delayed active-item reveal across canonical routes. */
 /* QILY-CN-NAV-ARROW-CLOSURE-V12: labels above are canonical and include external arrows. */
 
 /* QILY-CN-NAV-FINAL-PRODUCTION-V20 | canonical external-resource arrow integrity */
