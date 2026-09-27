@@ -235,7 +235,7 @@ html body main :is(.qily-ia-card,.module-card.service-card) li{
 html body main :is(.qily-ia-result,.module-result,.module-note,.career-result,.project-result,.result,.output,.note,.notice,.status-detail,.upload-note){
   color:#244c4e!important;
   -webkit-text-fill-color:#244c4e!important;
-  font-size:17.5px!important;
+  font-size:18.5px!important;
   line-height:1.7!important;
   opacity:1!important;
 }
@@ -257,7 +257,7 @@ html body main :is(
   .scope-list span,.project-card-brief,.project-fact small,.qily-card-link-hint,
   .qily-evidence-grade-badge span,.qily-evidence-level-panel span,.record,.status-detail
 ){
-  font-size:17px!important;
+  font-size:18px!important;
   line-height:1.62!important;
   color:#36585a!important;
   -webkit-text-fill-color:#36585a!important;
