@@ -558,3 +558,19 @@ html:root:root:root:root body #floatDock.qily-float-dock.qily-page-action-nav
     font-size:12px!important;
   }
 }
+
+
+/* QILY-DOCK-NAV-FONT-PARITY-V1 | 2026-09-27
+ * Footer-style page actions deliberately use the same type scale as primary navigation:
+ * >=1440:20px, 391-1439:18px, <=390:17px.
+ */
+html:root:root:root:root body #floatDock.qily-float-dock.qily-page-action-nav .qily-float-btn.qily-float-btn{
+  font-size:20px!important;
+}
+@media (max-width:1439px){
+  html:root:root:root:root body #floatDock.qily-float-dock.qily-page-action-nav .qily-float-btn.qily-float-btn{font-size:18px!important}
+}
+@media (max-width:390px){
+  html:root:root:root:root body #floatDock.qily-float-dock.qily-page-action-nav .qily-float-btn.qily-float-btn{font-size:17px!important}
+}
+/* QILY-DOCK-NAV-FONT-PARITY-V1:END */
