@@ -64,10 +64,10 @@ const gkPages=[
 ];
 for(const rel of gkPages){
   const html=read(rel);
-  assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260920-gk-vi-v4'), rel+' must load shared Global Knowledge VI after its local skin.');
+  assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260927-gk-vi-v5-small-type-parity'), rel+' must load shared Global Knowledge VI after its local skin.');
   if(rel==='global-knowledge/briefs/index.html'){
-    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260926-cn-parity-shell-v2'), rel+' must load the China-parity bridge shell.');
-    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260926-cn-parity-shell-v2'), rel+' must load the China-parity footer runtime.');
+    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v3-type-floor'), rel+' must load the China-parity bridge shell.');
+    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v3-type-floor'), rel+' must load the China-parity footer runtime.');
     assert(!html.includes('/global-knowledge/knowledge-dock-v1.js'), rel+' retired seven-action Global Knowledge dock returned.');
     assert(/<a class="cn-bridge-brand" href="https:\/\/qilylean\.com\/" aria-label="返回QilyLean国际站首页" title="返回QilyLean国际站首页">[\s\S]*?<\/a>/.test(html), rel+' bridge logo must return to the canonical qilylean.com home.');
     for(const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) assert(html.includes('href="'+route+'"'), rel+' bridge navigation missing '+route);
@@ -81,8 +81,8 @@ for(const rel of gkPages){
 
 const intlReadability=read('site-visual-readability-v5.css');
 assert(intlReadability.includes('QILY-SITEWIDE-SMALL-TYPE-GOLD-PARITY-V1'), 'International small-type and gold-label parity authority missing.');
-assert(intlReadability.includes('--qily-v5-small:18px'), 'International smallest content floor must be 18px.');
-assert(intlReadability.includes('--qily-v5-small-strong:19px'), 'International emphasized small text must be 19px.');
+assert(intlReadability.includes('--qily-v5-small:20px'), 'International smallest content floor must be 18px.');
+assert(intlReadability.includes('--qily-v5-small-strong:21px'), 'International emphasized small text must be 19px.');
 assert(intlReadability.includes('--qily-v5-section-kicker:21px'), 'International chapter/module labels must be 21px.');
 assert(intlReadability.includes('--qily-v5-gold-label:#b88b45'), 'International chapter/module labels must use the canonical light gold.');
 
@@ -121,8 +121,8 @@ assert(cnRail.includes("qily-primary-nav-scroll-rail"), 'CN nav rail runtime cla
 assert(cnRail.includes('qily-cn-nav-shell'), 'CN desktop/mobile nav shell is missing.');
 assert(cnCss.includes('--qily-cn-primary-nav-font-size:20px'), 'CN primary nav type must match international 20px.');
 assert(cnCss.includes('QILY-CN-TYPE-HIERARCHY-V5'), 'CN final typography authority V5 missing.');
-assert(cnCss.includes('QILY-CN-SMALL-TYPE-GOLD-PARITY-V45'), 'CN V45 small-type and gold-label parity authority missing.');
-assert(cnCss.includes('--qily-cn-small:18px'), 'CN smallest content floor must be 18px.');
+assert(cnCss.includes('QILY-CN-ALL-SMALL-COPY-FLOOR-V46'), 'CN V46 small-type and gold-label parity authority missing.');
+assert(cnCss.includes('--qily-cn-small:20px'), 'CN smallest content floor must be 18px.');
 assert(cnCss.includes('--qily-cn-section-kicker:21px'), 'CN chapter/module labels must be 21px.');
 assert(cnCss.includes('--qily-cn-label-gold:#b88b45'), 'CN chapter/module labels must use the canonical light gold.');
 assert(cnCss.includes('--qily-cn-h2:clamp(20px,1.25vw,22px)'), 'CN desktop H2 must be capped at 22px.');
@@ -179,7 +179,7 @@ for(const rel of cnPages){
   const html=read(rel);
   assert(html.includes('/assets/site.css?v=20260923-cn-personal-v3-reading'), rel+' must use fresh CN base typography CSS.');
   assert(html.includes('/assets/portal.css?v=20260923-portal-v2-reading'), rel+' must use fresh CN portal typography CSS.');
-  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v45-small-type-gold-parity'), rel+' must use current CN VI resource version.');
+  assert(html.includes('/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v46-full-small-type-parity'), rel+' must use current CN VI resource version.');
   assert(html.includes('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge'), rel+' must load the international-style nav rail runtime.');
   assert(html.includes('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator stylesheet.');
   assert(html.includes('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu'), rel+' must load exactly one CN translator runtime.');
@@ -240,8 +240,8 @@ assert(resourcePublic.includes('font-size:clamp(28px,2vw,34px)!important'), 'Res
 assert(resourcePublic.includes('.hero p{width:100%;max-width:none'), 'Resource collaboration hero copy must use the same content-frame width as the body.');
 assert(resourcePublic.includes('font-size:clamp(18px,1.15vw,21px)!important'), 'Resource collaboration card headings must remain at or below 21px.');
 assert(!resourcePublic.includes('font-size:clamp(30px,5vw,52px)'), 'Resource collaboration oversized H1 regression detected.');
-assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260926-cn-parity-shell-v2'), 'Resource collaboration public entry must load the China-parity bridge shell.');
-assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260926-cn-parity-shell-v2'), 'Resource collaboration public entry must load the China-parity footer runtime.');
+assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v3-type-floor'), 'Resource collaboration public entry must load the China-parity bridge shell.');
+assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v3-type-floor'), 'Resource collaboration public entry must load the China-parity footer runtime.');
 assert(/<a class="cn-bridge-brand" href="https:\/\/qilylean\.com\/" aria-label="返回QilyLean国际站首页" title="返回QilyLean国际站首页">[\s\S]*?<\/a>/.test(resourcePublic), 'Resource collaboration bridge logo must return to the international homepage.');
 assert(!resourcePublic.includes('/site-dock-share-runtime-v1.js'), 'Resource collaboration retired international seven-action Dock returned.');
 for(const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) assert(resourcePublic.includes('href="'+route+'"'), 'Resource collaboration China-parity navigation missing '+route);

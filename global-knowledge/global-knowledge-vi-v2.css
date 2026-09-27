@@ -1,4 +1,4 @@
-/* QilyLean Global Knowledge VI V2 | 2026-09-18
+/* QilyLean Global Knowledge VI V3 | 2026-09-27
  * Authority: international-site QilyLean VI.
  * Unifies typography hierarchy and explicit interaction feedback for every route-capable card/link.
  */
@@ -34,7 +34,7 @@ html:root body .brief h2{
   line-height:1.32!important;
   letter-spacing:-.008em!important;
 }
-html:root body :is(.hero,.head) p{font-size:18px!important;line-height:1.7!important}
+html:root body :is(.hero,.head) p{font-size:20px!important;line-height:1.7!important}
 
 /* QILY-GK-ROUTE-FEEDBACK-V2
  * Any element that jumps to another URL must visibly acknowledge hover/focus/press.
@@ -146,7 +146,7 @@ html:root body .content a[href]:is(:hover,:focus-visible){
     --qily-gk-h2:clamp(24px,6.5vw,30px);
     --qily-gk-h3:clamp(20px,5.4vw,23px);
   }
-  html:root body :is(.hero,.head) p{font-size:17px!important}
+  html:root body :is(.hero,.head) p{font-size:20px!important}
   html:root body a.card[href],
   html:root body a.brief[href]{box-shadow:0 6px 16px rgba(15,75,90,.09)!important}
 }
@@ -337,5 +337,25 @@ html:root body header.top>.wrap>.nav>a[href]{
   white-space:nowrap!important;
 }
 @media(max-width:620px){
-  :root{--qily-gk-primary-nav-font-size:18px}
+  :root{--qily-gk-primary-nav-font-size:20px}
 }
+
+
+/* QILY-GK-ALL-SMALL-COPY-FLOOR-V3 | 2026-09-27 */
+:root{--qily-gk-small-floor:20px;--qily-gk-label-size:21px;--qily-gk-label-gold:#b88b45}
+html:root:root body main :is(
+  p,li,dt,dd,a,button,label,small,figcaption,summary,time,th,td,
+  input,select,textarea,option,span,strong,b,em,code,kbd,samp
+){font-size:max(var(--qily-gk-small-floor),1em)!important}
+html:root:root body main :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+  .kicker,.section-kicker,.module-kicker,.section-head>small,.head>small
+){
+  font-size:max(var(--qily-gk-label-size),1em)!important;
+  color:var(--qily-gk-label-gold)!important;
+  -webkit-text-fill-color:var(--qily-gk-label-gold)!important;
+  font-weight:950!important;
+  letter-spacing:.035em!important;
+}
+html:root:root body footer :is(a,button,span,strong,small){font-size:max(16px,1em)!important}
+/* QILY-GK-ALL-SMALL-COPY-FLOOR-V3:END */

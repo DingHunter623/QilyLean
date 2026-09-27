@@ -8,7 +8,7 @@
 :root{
   --qily-cn-axis:1180px;
   --qily-cn-body:18px;
-  --qily-cn-small:18px;
+  --qily-cn-small:20px;
   --qily-cn-label-gold:#b88b45;
   --qily-cn-section-kicker:21px;
   --qily-cn-h1:clamp(28px,2.25vw,38px);
@@ -365,7 +365,7 @@ html:root body a[href^="https://beian."]:active{
 @media(max-width:620px){
   :root{
     --qily-cn-body:18px;
-    --qily-cn-small:18px;
+    --qily-cn-small:20px;
     --qily-cn-h1:clamp(27px,7.2vw,33px);
     --qily-cn-h2:clamp(19px,5vw,21px);
     --qily-cn-h3:clamp(17px,4.5vw,19px);
@@ -1363,7 +1363,7 @@ html:root body main a.btn.primary[data-qily-external="international"]:is(:hover,
  * chapter/module label the same 21px canonical light gold.
  */
 :root{
-  --qily-cn-small:18px;
+  --qily-cn-small:20px;
   --qily-cn-label-gold:#b88b45;
   --qily-cn-section-kicker:21px;
 }
@@ -1391,7 +1391,7 @@ html:root:root body .footer-inner a{font-size:15px!important}
   html:root:root body .footer-records a[href^="https://beian."]{font-size:13px!important}
 }
 @media(max-width:620px){
-  :root{--qily-cn-small:18px;--qily-cn-section-kicker:21px}
+  :root{--qily-cn-small:20px;--qily-cn-section-kicker:21px}
   html:root:root body :is(small,.breadcrumbs,.meta,.article-meta,.status,.tag,.subnav a,figcaption,time){font-size:18px!important}
   html:root:root body main :is(
     .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
@@ -1400,3 +1400,53 @@ html:root:root body .footer-inner a{font-size:15px!important}
   ){font-size:21px!important}
 }
 /* QILY-CN-SMALL-TYPE-GOLD-PARITY-V45:END */
+
+
+/* QILY-CN-ALL-SMALL-COPY-FLOOR-V46 | 2026-09-27
+ * China-site final typography catch-all: use the same larger small-text baseline
+ * as the international site, including generic card links such as “进入知识架构”.
+ */
+:root{--qily-cn-small:20px;--qily-cn-section-kicker:21px;--qily-cn-label-gold:#b88b45}
+html:root:root:root body main :is(
+  p,li,dt,dd,a,button,label,small,figcaption,summary,time,th,td,
+  input,select,textarea,option,span,strong,b,em,code,kbd,samp
+){font-size:max(20px,1em)!important}
+html:root:root:root body main :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+  .section-kicker,.module-kicker,.section-head>small,.portal-card>small,
+  .resource-kicker,.qily-resource-network__kicker,.engineering-kicker
+){
+  font-size:max(21px,1em)!important;
+  color:var(--qily-cn-label-gold)!important;
+  -webkit-text-fill-color:var(--qily-cn-label-gold)!important;
+}
+html:root:root:root body footer :is(a,button,span,strong,small){
+  font-size:max(16px,1em)!important;
+}
+@media(max-width:620px){
+  html:root:root:root body main :is(
+    p,li,dt,dd,a,button,label,small,figcaption,summary,time,th,td,
+    input,select,textarea,option,span,strong,b,em,code,kbd,samp
+  ){font-size:max(20px,1em)!important}
+  html:root:root:root body main :is(
+    .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+    .section-kicker,.module-kicker,.section-head>small,.portal-card>small,
+    .resource-kicker,.qily-resource-network__kicker,.engineering-kicker
+  ){font-size:max(21px,1em)!important}
+}
+/* QILY-CN-CLASS-WRAPPER-TYPE-FLOOR-V46 | non-semantic div/span wrappers also belong to the small-text floor */
+html:root:root:root body main :is(
+  .breadcrumb,.breadcrumbs,.meta,.article-meta,.project-meta,.status,.tag,.caption,.fine,
+  .subnav,.toc,.logic,.notice,.hint,.helper,.helper-text,.record,.summary-note,
+  .source-note,.source-meta,.resource-meta,.resource-note,.date,.time,.count,
+  .term-jump-hint,.article-link-hint,.practice-links,.portal-card .meta
+){font-size:max(20px,1em)!important}
+html:root:root:root body main :is(
+  .breadcrumb,.breadcrumbs,.meta,.article-meta,.project-meta,.status,.tag,.caption,.fine,
+  .subnav,.toc,.logic,.notice,.hint,.helper,.helper-text,.record,.summary-note,
+  .source-note,.source-meta,.resource-meta,.resource-note,.date,.time,.count
+) :is(a,span,strong,b,small,time){
+  font-size:max(20px,1em)!important
+}
+/* QILY-CN-CLASS-WRAPPER-TYPE-FLOOR-V46:END */
+/* QILY-CN-ALL-SMALL-COPY-FLOOR-V46:END */

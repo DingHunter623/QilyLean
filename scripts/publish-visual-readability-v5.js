@@ -12,7 +12,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const VERSION = '20260927-small-type-gold-parity-v1';
+const VERSION = '20260927-small-type-gold-parity-v2';
 const HREF = `/site-visual-readability-v5.css?v=${VERSION}`;
 const TAG = `<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="${HREF}">`;
 const DAILY_STYLE_ID = 'qilyDailyReadabilityClosureV8';
@@ -156,8 +156,8 @@ function materialize() {
 function verifyCss() {
   const css = read('site-visual-readability-v5.css');
   [
-    '--qily-v5-small:18px',
-    '--qily-v5-small-strong:19px',
+    '--qily-v5-small:20px',
+    '--qily-v5-small-strong:21px',
     '--qily-v5-section-kicker:21px',
     '--qily-v5-gold-text:#b88b45',
     '--qily-v5-gold-label:#b88b45',
@@ -169,6 +169,7 @@ function verifyCss() {
     'font-size:clamp(30px,8.2vw,38px)!important',
     'color:var(--qily-v5-gold-label)!important',
     'QILY-SITEWIDE-SMALL-TYPE-GOLD-PARITY-V1',
+    'QILY-READABILITY-ALL-SMALL-COPY-FLOOR-V2',
     'QILY-STATIC-VOCABULARY-NO-FEEDBACK-V9',
     '.qily-home-conversion-kicker',
     '.qily-home-conversion-hero__kicker',

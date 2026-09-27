@@ -7,7 +7,7 @@ const must=(s,t,m)=>{if(!s.includes(t))throw new Error(`${m}: missing ${t}`)};
 const forbid=(s,t,m)=>{if(s.includes(t))throw new Error(`${m}: forbidden ${t}`)};
 const htmlFiles=()=>execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
-const DDZ='tools/pure-ddz/index.html',CN='cn-site/index.html';
+const DDZ='tools/pure-ddz/index.html',CN='cn-site/index.html',CN_PREFIX='cn-site/',CN_BRIDGE='links/cn-public/index.html';
 const DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1';
 
 must(read('qilylean/daily/2026-08-25.html'),'八大浪费','Eight wastes');
@@ -40,13 +40,13 @@ const mat=read('scripts/materialize-global-language-v3.js');
 for(const t of ["const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'20260831-r7-single-responsibility-v11-safe-translation','20260831-project-grade-readability-v3','20260831-r11-semantics-v17-native-range','20260901-google-translate-single-runtime-v16','20260831-redline-no-translation-v23','20260901-google-translate-mobile-ui-v16','20260831-unified-components-v29-native-range','20260906-authority-v58-mobile-swipe-fixed-bottom','20260924-footer-like-fixed-r1'])must(mat,t,'V32 materializer');
 forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure materializer');
 
-const cn=read(CN);must(cn,'name="robots" content="index,follow"','CN production indexing');must(cn,'/assets/qilylean-vi-v2.css?v=20260923-cn-vi-v23-reading-scale','CN independent VI authority');must(cn,'/assets/cn-nav-rail-v1.js?v=20260922-nav-rail-v8-current-module','CN independent navigation runtime');must(cn,'/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu','CN independent translation runtime');must(read('cn-site/assets/qilylean-vi-v2.css'),'QILY-CN-CURRENT-MODULE-V1','CN current-module VI contract');
+const cn=read(CN);must(cn,'name="robots" content="index,follow"','CN production indexing');must(cn,'/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v46-full-small-type-parity','CN independent VI authority');must(cn,'/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge','CN independent navigation runtime');must(cn,'/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu','CN independent translation runtime');must(read('cn-site/assets/qilylean-vi-v2.css'),'QILY-CN-CURRENT-MODULE-V1','CN current-module VI contract');
 const containment=read('site-responsive-containment-v1.css');must(containment,'QilyLean Responsive Containment V1','Responsive containment');forbid(containment,'width:100vw','Viewport widening');
 
 const legacyTranslation=['data-qily-translation-safety-bootstrap','site-translation-public-ui-v1.js','site-translation-progress-v1.js','site-translation-progress-v1.css','site-global-language-v1.css','site-global-language-v3.js','20260831-safe-inpage-v7-header-utility','data-qily-translation-safe-direct="v7"','stable-diagnostic','qily_translate_debug'];
 let pages=0,nav=0,shellPages=0;
 for(const file of htmlFiles()){
-  const html=read(file);if(!/<\/head>/i.test(html)||ownership(file)||file===DDZ||file===CN||file.startsWith('global-knowledge/'))continue;pages++;
+  const html=read(file);if(!/<\/head>/i.test(html)||ownership(file)||file===DDZ||file===CN_BRIDGE||file.startsWith(CN_PREFIX)||file.startsWith('global-knowledge/'))continue;pages++;
   for(const [t,m] of [['/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8','header'],['/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3','project integrity'],['/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal','semantics css'],['/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range','semantics js'],['data-qily-interaction-semantics-direct="v1.7"','semantics marker'],['/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range','components'],['/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16','translation UI'],['/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16','translation runtime'],['data-qily-translation-safe-direct="google-v1"','translation marker'],['/site-contact-route-v1.js?v=20260829-dock-functional-public-v134','contact'],['/site-responsive-containment-v1.css?v=20260830-header-integrity-v2','containment']])must(html,t,`${file} ${m}`);
   for(const token of legacyTranslation)forbid(html,token,`${file} legacy translation`);
   if(/\/site-navigation\.js/.test(html))nav++;

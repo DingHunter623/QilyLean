@@ -16,8 +16,8 @@ for(const rel of pages){
     if(!html.includes(marker)){console.error('ERROR: '+rel+' missing China-parity footer action '+marker);failed=true;}
   }
   if(/data-action="home"|>首页<\/button>/.test(html)){console.error('ERROR: '+rel+' footer must not expose an international-home button.');failed=true;}
-  if(!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260926-cn-parity-shell-v2')){console.error('ERROR: '+rel+' must load bridge shell V2.');failed=true;}
-  if(!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260926-cn-parity-shell-v2')){console.error('ERROR: '+rel+' must load bridge footer runtime V2.');failed=true;}
+  if(!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v3-type-floor')){console.error('ERROR: '+rel+' must load bridge shell V2.');failed=true;}
+  if(!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v3-type-floor')){console.error('ERROR: '+rel+' must load bridge footer runtime V2.');failed=true;}
   const footer=(html.match(/<footer class="cn-bridge-footer">[\s\S]*?<\/footer>/)||[])[0]||'';
   if(!footer){console.error('ERROR: '+rel+' missing China-parity fixed footer.');failed=true;}
   footers.push(footer);
