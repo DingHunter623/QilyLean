@@ -110,7 +110,6 @@ html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-in
   html:root:root:root:root body .footer[data-qily-footer-filing="none"]{--qily-cn-fixed-footer-h:86px!important}
   html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-inner{min-height:83px!important;grid-template-columns:1fr!important}
 }
-@media(max-width:420px){html:root:root:root:root body .footer .footer-records>a{font-size:14px!important}}
 @media(prefers-reduced-motion:reduce){
   html:root:root:root:root body .footer :is(button,a){transition:none!important}
   html:root:root:root:root body .footer :is(button,a):is(:hover,:active){transform:none!important}
