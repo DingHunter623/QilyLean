@@ -3,6 +3,48 @@ const {test,expect}=require('@playwright/test');
 const intBase=process.env.QILY_INT_BASE||'http://127.0.0.1:4173';
 const cnBase=process.env.QILY_CN_BASE||'http://127.0.0.1:4174';
 
+test('China desktop footer distributes controls and its site name returns home',async({page})=>{
+  await page.setViewportSize({width:1600,height:1000});
+  await page.goto(cnBase+'/knowledge/',{waitUntil:'domcontentloaded'});
+  const home=page.locator('.footer-home');
+  await expect(home).toBeVisible();
+  await expect(home).toHaveAttribute('href','/');
+  const geometry=await page.locator('.footer-inner').evaluate(el=>{
+    const shell=el.getBoundingClientRect();
+    const items=[...el.querySelectorAll('a,button')].map(e=>e.getBoundingClientRect());
+    return {left:items[0].left-shell.left,right:shell.right-items.at(-1).right,gaps:items.slice(1).map((r,i)=>r.left-items[i].right)};
+  });
+  expect(Math.abs(geometry.left)).toBeLessThanOrEqual(1);
+  expect(Math.abs(geometry.right)).toBeLessThanOrEqual(1);
+  expect(Math.max(...geometry.gaps)-Math.min(...geometry.gaps)).toBeLessThanOrEqual(1);
+  expect(Math.min(...geometry.gaps)).toBeGreaterThan(8);
+  await home.click();
+  await expect(page).toHaveURL(cnBase+'/');
+});
+
+for(const route of ['/global-knowledge/briefs/','/links/cn-public/']){
+  test(`reference footer is visible, left aligned and filing-free: ${route}`,async({page})=>{
+    await page.setViewportSize({width:1600,height:1000});
+    await page.goto(intBase+route,{waitUntil:'domcontentloaded'});
+    const footer=page.locator('.cn-bridge-footer');
+    await expect(footer).toBeVisible();
+    await expect(footer.locator('button')).toHaveText(['顶部','分享当前']);
+    await expect(footer.locator('a')).toHaveCount(1);
+    await expect(footer.locator('a')).toHaveAttribute('href','https://qilylean.cn/');
+    const g=await footer.evaluate(el=>{
+      const inner=el.querySelector('.cn-bridge-footer-inner').getBoundingClientRect();
+      const home=el.querySelector('a').getBoundingClientRect();
+      const buttons=[...el.querySelectorAll('button')].map(e=>e.getBoundingClientRect());
+      return {left:home.left-inner.left,blank:inner.right-buttons[1].right,gaps:[buttons[0].left-home.right,buttons[1].left-buttons[0].right],height:el.getBoundingClientRect().height};
+    });
+    expect(Math.abs(g.left)).toBeLessThanOrEqual(1);
+    expect(g.blank).toBeGreaterThan(500);
+    expect(g.gaps[0]).toBeCloseTo(g.gaps[1],0);
+    expect(g.height).toBeGreaterThanOrEqual(55);
+    await page.screenshot({path:require('path').join('test-results',route.includes('briefs')?'briefs-footer-desktop.png':'resources-footer-desktop.png')});
+  });
+}
+
 async function navState(page,navSelector,activeSelector,footerSelector){
   await page.waitForSelector(navSelector,{state:'visible'});
   await page.waitForSelector(activeSelector,{state:'visible'});

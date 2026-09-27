@@ -152,6 +152,8 @@ for path in sorted(root.rglob('*.html')):
         continue
     footer=m.group(0)
     rel=path.relative_to(root).as_posix()
+    if '<a class="footer-home" href="/"' not in footer or '>精益制造经验分享</a>' not in footer:
+        errors.append(f'{rel}: footer site name must link to the China homepage')
     actions=re.findall(r'data-qily-footer-action="([^"]+)"',footer)
     if actions!=['top','share']:
         errors.append(f'{rel}: footer actions must be exactly top/share, got {actions}')
@@ -358,4 +360,3 @@ echo "CN personal-site non-commercial content gate passed."
 echo "CN dual-site isolated association contract passed."
 echo "CN search-engine discovery and verification contract passed for Google, Baidu, 360 and IndexNow."
 echo "CN practice/evidence archive boundary and local asset contract passed."
-

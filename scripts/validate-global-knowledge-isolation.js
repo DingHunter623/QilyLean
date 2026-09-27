@@ -53,8 +53,8 @@ for (const file of htmlFiles) {
     for (const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) {
       if (!html.includes(`href="${route}"`)) fail(`${rel} China-parity header missing: ${route}`);
     }
-    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v4-footer-unified')) fail(`${rel} China-parity bridge shell stylesheet missing`);
-    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v4-footer-unified')) fail(`${rel} China-parity bridge footer runtime missing`);
+    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v5-left-aligned')) fail(`${rel} China-parity bridge shell stylesheet missing`);
+    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v5-left-aligned')) fail(`${rel} China-parity bridge footer runtime missing`);
     if (!html.includes('bridge-hero-eyebrow')) fail(`${rel} bridge hero eyebrow must use the shared gold VI class`);
     if (html.includes('/global-knowledge/knowledge-dock-v1.js')) fail(`${rel} retired seven-action knowledge dock returned`);
   } else {

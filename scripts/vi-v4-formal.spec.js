@@ -49,6 +49,7 @@ for(const [name,url] of pages){
           dockPositions:docks.map(el=>getComputedStyle(el).position),
           dockHeights:docks.map(el=>el.getBoundingClientRect().height),
           bodyPaddingBottom:parseFloat(getComputedStyle(document.body).paddingBottom)||0,
+          dockSpacerHeight:(()=>{const el=document.getElementById('qilyDockBottomSpacerV58');if(!el||el.parentElement!==document.body)return 0;const style=getComputedStyle(el);return style.display!=='none'&&!['fixed','absolute'].includes(style.position)?el.getBoundingClientRect().height:0;})(),
           rails:rails.length,
           translatorOutsideHeader:translators.filter(el=>!el.closest('header.qily-site-header')).length,
           heroes:heroes.length,
@@ -65,7 +66,7 @@ for(const [name,url] of pages){
       expect(result.headers,`${url} ${device} visible Header count`).toBe(1);
       expect(result.headerFormal).toBeTruthy();
       expect(result.docks,`${url} ${device} visible Dock count`).toBeLessThanOrEqual(1);
-      const dockReserved=result.dockPositions.every((p,i)=>p!=='fixed'&&p!=='absolute'||result.bodyPaddingBottom+1>=result.dockHeights[i]);
+      const dockReserved=result.dockPositions.every((p,i)=>p!=='fixed'&&p!=='absolute'||result.bodyPaddingBottom+result.dockSpacerHeight+1>=result.dockHeights[i]);
       expect(dockReserved,`${url} ${device} fixed Dock must reserve equivalent bottom content space`).toBeTruthy();
       expect(result.rails,`${url} ${device} legacy navigation slider`).toBe(0);
       expect(result.translatorOutsideHeader,`${url} ${device} translator must live in Header`).toBe(0);
