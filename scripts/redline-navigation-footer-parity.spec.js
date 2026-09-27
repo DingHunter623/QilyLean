@@ -16,7 +16,7 @@ async function navState(page,navSelector,activeSelector,footerSelector){
     return {
       label:(active.textContent||'').trim(),
       current:active.getAttribute('aria-current'),
-      navFont:parseFloat(getComputedStyle(active).fontSize)||0,
+      navFont:(()=>{const base=parseFloat(getComputedStyle(active).fontSize)||0;const pseudo=parseFloat(getComputedStyle(active,'::before').fontSize)||0;return Math.max(base,pseudo);})(),
       footerFont:parseFloat(getComputedStyle(footer).fontSize)||0,
       recordFont:(()=>{const r=document.querySelector('.footer-records>a');return r?parseFloat(getComputedStyle(r).fontSize)||0:0;})(),
       activeLeft:ar.left,activeRight:ar.right,navLeft:nr.left,navRight:nr.right,
