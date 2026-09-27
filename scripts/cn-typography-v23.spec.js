@@ -105,8 +105,8 @@ async function auditPage(page, route, limits, label){
     expect(data.footer.siteText, route+' footer filed-site label').toBe('精益制造经验分享');
     expect(data.footer.siteFont, route+' footer filed-site label type parity').toBeGreaterThanOrEqual(19.9);
     expect(data.footer.siteFont, route+' footer filed-site label type parity').toBeLessThanOrEqual(20.5);
-    expect(data.footer.actions.map(x=>x.action), route+' footer action semantics').toEqual(['top','previous','share']);
-    expect(data.footer.actions.map(x=>x.text), route+' footer action labels').toEqual(['顶部','上一网页','分享当前']);
+    expect(data.footer.actions.map(x=>x.action), route+' footer action semantics').toEqual(['top','share']);
+    expect(data.footer.actions.map(x=>x.text), route+' footer action labels').toEqual(['顶部','分享当前']);
     for(const action of data.footer.actions){
       expect(action.height, route+' footer button '+action.text).toBeGreaterThanOrEqual(39);
       expect(action.height, route+' footer button '+action.text).toBeLessThanOrEqual(41);
