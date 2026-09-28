@@ -6,6 +6,7 @@
 <!-- QILY-R2-FIRST-PAINT:END -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="/openai-ads-conversions-v1.js?v=20260928" data-openai-ads-pixel-id="OPENAI_ADS_PIXEL_ID" data-openai-ads-page-view="true"></script>
   <title>项目合作｜QilyLean三大核心业务与数智化增强</title>
   <meta name="description" content="QilyLean项目合作聚焦新工厂／新产线规划、精益改善项目交付、目视化项目设计与交付三大核心业务；数字化工厂、APP软件开发与官网建设作为数智化增强与数字产品能力按需合作。">
   <meta name="robots" content="index,follow,max-image-preview:large">
@@ -394,6 +395,7 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="false"],html:roo
           saved=true;id=result.id||'';emailSent=Boolean(result.email_sent);showBrief(data,id);
           if(!emailSent){try{emailSent=await sendEmail(data,id);}catch(emailError){console.warn('Email fallback unavailable',emailError);}}
           setStatus(emailSent?'咨询需求卡已提交成功，后台已保存并发送邮件通知。':'咨询需求卡已提交成功，后台已保存；邮件通知暂未确认，请保留咨询编号。','success');
+          if(window.QilyOpenAIAds&&window.QilyOpenAIAds.leadCreated)window.QilyOpenAIAds.leadCreated(id?('consultation_'+id):'');
           output.scrollIntoView({behavior:'smooth',block:'nearest'});
         }catch(error){
           try{emailSent=await sendEmail(data,id);}catch(emailError){console.warn('Consultation email unavailable',emailError);}
