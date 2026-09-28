@@ -31,7 +31,7 @@ must(materializer,'qilyUnifiedVisualGovernanceV1Stylesheet','Unified visual styl
 must(materializer,"'site-unified-visual-governance-v1.css'",'Unified visual de-duplication');
 
 if(materialized){
-  const html=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
+  const html=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean).filter(file=>!file.startsWith('cn-site/')&&!file.startsWith('global-knowledge/')&&file!=='tools/pure-ddz/index.html');
   const missing=[];
   const duplicates=[];
   for(const file of html){
@@ -45,4 +45,4 @@ if(materialized){
   if(duplicates.length)throw new Error(`Unified visual stylesheet duplicated in ${duplicates.length} HTML file(s): ${duplicates.slice(0,20).join(', ')}`);
 }
 
-process.stdout.write(`PASS: unified visual governance keeps navigation typography, action geometry, colour roles, surfaces and readable floors consistent${materialized?' across every tracked HTML page':''}, independent of the resilient translation V4 runtime.\n`);
+process.stdout.write(`PASS: unified visual governance keeps navigation typography, action geometry, colour roles, surfaces and readable floors consistent${materialized?' across every governed international HTML page':''}, while CN, Global Knowledge and DDZ retain their independent visual authorities.\n`);
