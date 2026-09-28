@@ -31,6 +31,14 @@ for(const route of ['/global-knowledge/briefs/','/links/cn-public/']){
     await page.goto(intBase+route,{waitUntil:'domcontentloaded'});
     const footer=page.locator('.cn-bridge-footer');
     await expect(footer).toBeVisible();
+    await expect(page.locator('#floatDock')).toHaveCount(0);
+    for(const action of ['top','share']){
+      await expect(footer.locator(`[data-action="${action}"]`)).toHaveCSS('color','rgb(255, 227, 155)');
+      await expect(footer.locator(`[data-action="${action}"]`)).toHaveCSS('border-top-color','rgba(255, 227, 155, 0.52)');
+    }
+    // Visibility alone passes when another fixed Dock covers the correct footer.
+    await footer.locator('[data-action="top"]').click({trial:true});
+    await footer.locator('[data-action="share"]').click({trial:true});
     await expect(footer.locator('button')).toHaveText(['顶部','分享当前']);
     await expect(footer.locator('a')).toHaveCount(1);
     await expect(footer.locator('a')).toHaveAttribute('href','https://qilylean.cn/');
