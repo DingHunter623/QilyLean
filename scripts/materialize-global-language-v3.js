@@ -27,6 +27,7 @@ const BASELINE_VERSION='20260831-google-translate-single-runtime-v32';
 const DDZ_FAST_PATH='tools/pure-ddz/index.html';
 const GLOBAL_KNOWLEDGE_PREFIX='global-knowledge/';
 const CN_SITE_PREFIX='cn-site/';
+const CN_RESOURCE_BRIDGE='links/cn-public/index.html';
 const CONSISTENCY='/site-ui-consistency-v1.js?v=20260831-r7-single-responsibility-v11-safe-translation';
 const NAVIGATION='/site-navigation.js?v=20260924-r7-navigation-v49&patch=20260924-primary-nav-render-parity-v4';
 const PARENT_NAV='/site-parent-navigation-v3.js?v=20260825-language-runtime-compat-v42';
@@ -105,7 +106,7 @@ function isDdzFastRoute(relative,source){
 }
 function materialize(source,relative){
   /* Independently governed surfaces must never be rematerialized with the primary international baseline. */
-  if(relative.startsWith(GLOBAL_KNOWLEDGE_PREFIX)||relative.startsWith(CN_SITE_PREFIX))return source;
+  if(relative.startsWith(GLOBAL_KNOWLEDGE_PREFIX)||relative.startsWith(CN_SITE_PREFIX)||relative===CN_RESOURCE_BRIDGE)return source;
 
   /* DDZ V155 is intentionally isolated from the heavyweight sitewide shell. Keep only the canonical Dock cache aligned. */
   if(isDdzFastRoute(relative,source))return source.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK_SHARE);

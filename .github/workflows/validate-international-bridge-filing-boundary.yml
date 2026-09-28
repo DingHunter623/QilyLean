@@ -8,6 +8,7 @@ on:
       - 'global-knowledge/cn-bridge-shell-v1.css'
       - 'global-knowledge/cn-bridge-shell-v1.js'
       - 'scripts/validate-international-bridge-filing-boundary.js'
+      - 'scripts/materialize-global-language-v3.js'
       - '.github/workflows/validate-international-bridge-filing-boundary.yml'
   workflow_dispatch:
 jobs:

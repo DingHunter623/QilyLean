@@ -67,7 +67,7 @@ html body .cn-bridge-footer-actions{
   display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;
   width:auto!important;gap:24px!important;margin:0!important;padding:0!important
 }
-html body .cn-bridge-footer-actions>button{
+html:root:root body .cn-bridge-footer-actions>button{
   box-sizing:border-box!important;appearance:none!important;-webkit-appearance:none!important;
   display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;
   width:auto!important;min-width:0!important;min-height:40px!important;
@@ -75,11 +75,11 @@ html body .cn-bridge-footer-actions>button{
   background:rgba(255,255,255,.055)!important;color:var(--qily-bridge-gold-soft)!important;-webkit-text-fill-color:var(--qily-bridge-gold-soft)!important;
   font:850 20px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:nowrap!important;cursor:pointer!important
 }
-html body .cn-bridge-footer-brand:is(:hover,:focus-visible),html body .cn-bridge-footer-actions>button:is(:hover,:focus-visible),html body .cn-bridge-footer-actions>button.is-copied{
+html body .cn-bridge-footer-brand:is(:hover,:focus-visible),html:root:root body .cn-bridge-footer-actions>button:is(:hover,:focus-visible),html:root:root body .cn-bridge-footer-actions>button.is-copied{
   background:var(--qily-bridge-gold-soft)!important;border-color:var(--qily-bridge-gold-soft)!important;
   color:var(--qily-bridge-forest)!important;-webkit-text-fill-color:var(--qily-bridge-forest)!important;outline:none!important
 }
-html body .cn-bridge-footer-brand:active,html body .cn-bridge-footer-actions>button:active{background:var(--qily-bridge-deep)!important;color:var(--qily-bridge-gold-soft)!important;-webkit-text-fill-color:var(--qily-bridge-gold-soft)!important}
+html body .cn-bridge-footer-brand:active,html:root:root body .cn-bridge-footer-actions>button:active{background:var(--qily-bridge-deep)!important;color:var(--qily-bridge-gold-soft)!important;-webkit-text-fill-color:var(--qily-bridge-gold-soft)!important}
 html body .cn-bridge-footer-records{
   display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:6px!important;min-width:0!important;justify-self:end!important
 }
@@ -115,7 +115,7 @@ html body #qilyCnBridgeShareToast{
   }
   html body .cn-bridge-footer-brand{min-height:34px!important;padding:5px 8px!important;font-size:18px!important;white-space:nowrap!important}
   html body .cn-bridge-footer-actions{width:auto!important;gap:24px!important}
-  html body .cn-bridge-footer-actions>button{width:auto!important;min-width:0!important;min-height:36px!important;padding:6px 10px!important;font-size:18px!important}
+  html:root:root body .cn-bridge-footer-actions>button{width:auto!important;min-width:0!important;min-height:36px!important;padding:6px 10px!important;font-size:18px!important}
 }
 @media print{html body{padding-bottom:0!important}html body .cn-bridge-footer{position:static!important;box-shadow:none!important}}
 
