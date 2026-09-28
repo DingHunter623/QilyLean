@@ -25,7 +25,7 @@ for(const rel of pages){
   if(html.includes('data-action="previous"')||html.includes('>上一网页</button>')){console.error('ERROR: '+rel+' must not restore the retired previous-page footer action.');failed=true;}
   if(/data-action="home"|>首页<\/button>/.test(html)){console.error('ERROR: '+rel+' footer must not expose an international-home button.');failed=true;}
   if(!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v5-left-aligned')){console.error('ERROR: '+rel+' must load bridge shell V2.');failed=true;}
-  if(!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v5-left-aligned')){console.error('ERROR: '+rel+' must load bridge footer runtime V2.');failed=true;}
+  if(!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6')){console.error('ERROR: '+rel+' must load China-home-locked bridge shell V3.');failed=true;}
   const footer=(html.match(/<footer class="cn-bridge-footer">[\s\S]*?<\/footer>/)||[])[0]||'';
   if(!footer){console.error('ERROR: '+rel+' missing China-parity fixed footer.');failed=true;}
   if(!footer.includes('<a class="cn-bridge-footer-brand" href="https://qilylean.cn/"')){console.error('ERROR: '+rel+' footer brand must link to the China-site homepage.');failed=true;}
