@@ -115,7 +115,7 @@ function validateMetadata(route, html) {
 function validateGbt2828() {
   const html = read('/qilylean/gbt2828.html');
   if (!html.includes('QilyLean | 启力精益')) throw new Error('GB/T 2828 brand is not unified');
-  const labels = ['首页', '履历主线', '能力体系', '改善方法', '代表项目', '信任中心', '项目合作', '知识资产', '友情链接'];
+  const labels = ['首页', '履历主线', '能力体系', '改善工具', '代表项目', '信任中心', '项目合作', '知识资产', '资源协同'];
   labels.forEach((label) => {
     if (!html.includes(`>${label}<`)) throw new Error(`GB/T 2828 navigation label missing: ${label}`);
   });
