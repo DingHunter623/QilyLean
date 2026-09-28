@@ -15,8 +15,9 @@ for(const rel of pages){
   for(const marker of banned){
     if(html.includes(marker)){console.error('ERROR: '+rel+' must not expose China filing records on qilylean.com: '+marker);failed=true;}
   }
-  const logo='<a class="cn-bridge-brand" href="https://qilylean.com/" aria-label="返回QilyLean国际站首页" title="返回QilyLean国际站首页"><img src="/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5" alt="QilyLean｜启力精益"></a>';
-  if(!html.includes(logo)){console.error('ERROR: '+rel+' must use the canonical international logo and return it to qilylean.com.');failed=true;}
+  const logo='<a class="cn-bridge-brand" href="https://qilylean.cn/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页"><img src="/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5" alt="QilyLean｜启力精益"></a>';
+  if(!html.includes(logo)){console.error('ERROR: '+rel+' China-parity bridge logo must return to qilylean.cn.');failed=true;}
+  if(html.includes('href="https://qilylean.com/" aria-label="返回QilyLean国际站首页"')){console.error('ERROR: '+rel+' must not expose an international-home shortcut in the China-parity shell.');failed=true;}
   if(!html.includes('class="bridge-hero-eyebrow"')&&!html.includes('bridge-hero-eyebrow')){console.error('ERROR: '+rel+' hero eyebrow must use the shared gold VI class.');failed=true;}
   for(const marker of ['data-action="top"','data-action="share"']){
     if(!html.includes(marker)){console.error('ERROR: '+rel+' missing China-parity footer action '+marker);failed=true;}
@@ -24,7 +25,7 @@ for(const rel of pages){
   if(html.includes('data-action="previous"')||html.includes('>上一网页</button>')){console.error('ERROR: '+rel+' must not restore the retired previous-page footer action.');failed=true;}
   if(/data-action="home"|>首页<\/button>/.test(html)){console.error('ERROR: '+rel+' footer must not expose an international-home button.');failed=true;}
   if(!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v5-left-aligned')){console.error('ERROR: '+rel+' must load bridge shell V2.');failed=true;}
-  if(!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v5-left-aligned')){console.error('ERROR: '+rel+' must load bridge footer runtime V2.');failed=true;}
+  if(!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6')){console.error('ERROR: '+rel+' must load China-home-locked bridge shell V3.');failed=true;}
   const footer=(html.match(/<footer class="cn-bridge-footer">[\s\S]*?<\/footer>/)||[])[0]||'';
   if(!footer){console.error('ERROR: '+rel+' missing China-parity fixed footer.');failed=true;}
   if(!footer.includes('<a class="cn-bridge-footer-brand" href="https://qilylean.cn/"')){console.error('ERROR: '+rel+' footer brand must link to the China-site homepage.');failed=true;}
