@@ -67,7 +67,7 @@ for(const rel of gkPages){
   assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260927-gk-vi-v5-small-type-parity'), rel+' must load shared Global Knowledge VI after its local skin.');
   if(rel==='global-knowledge/briefs/index.html'){
     assert(html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v5-left-aligned'), rel+' must load the China-parity bridge shell.');
-    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v5-left-aligned'), rel+' must load the China-parity footer runtime.');
+    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6'), rel+' must load the China-parity footer runtime.');
     assert(!html.includes('/global-knowledge/knowledge-dock-v1.js'), rel+' retired seven-action Global Knowledge dock returned.');
     assert(html.includes('<a class="cn-bridge-footer-brand" href="https://qilylean.cn/"'), rel+' bridge footer brand must enter the China homepage.');
     assert(!html.includes('data-action="previous"'), rel+' bridge footer must not restore the previous-page action.');
@@ -280,7 +280,7 @@ assert(resourcePublic.includes('.hero p{width:100%;max-width:none'), 'Resource c
 assert(resourcePublic.includes('font-size:clamp(18px,1.15vw,21px)!important'), 'Resource collaboration card headings must remain at or below 21px.');
 assert(!resourcePublic.includes('font-size:clamp(30px,5vw,52px)'), 'Resource collaboration oversized H1 regression detected.');
 assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260927-cn-parity-shell-v5-left-aligned'), 'Resource collaboration public entry must load the China-parity bridge shell.');
-assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260927-cn-parity-shell-v5-left-aligned'), 'Resource collaboration public entry must load the China-parity footer runtime.');
+assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6'), 'Resource collaboration public entry must load the China-parity footer runtime.');
 assert(resourcePublic.includes('<a class="cn-bridge-footer-brand" href="https://qilylean.cn/"'), 'Resource collaboration footer brand must enter the China homepage.');
 assert(!resourcePublic.includes('data-action="previous"'), 'Resource collaboration footer must not restore the previous-page action.');
 assert(!resourcePublic.includes('href="https://qilylean.com/" aria-label="返回QilyLean国际站首页"'), 'Resource collaboration must not expose an international-home shortcut in the China-parity shell.');
