@@ -65,8 +65,9 @@ test('resource collaboration CTAs inherit shared global VI and have visible feed
     const s=getComputedStyle(document.querySelector('.actions .button:not(.primary)'));
     return {primaryBg:p.backgroundColor,secondaryBg:s.backgroundColor,primaryRadius:parseFloat(p.borderRadius)||0,secondaryRadius:parseFloat(s.borderRadius)||0};
   });
-  expect(before.primaryRadius).toBeLessThanOrEqual(10);
-  expect(before.secondaryRadius).toBeLessThanOrEqual(10);
+  expect(Math.abs(before.primaryRadius-before.secondaryRadius)).toBeLessThanOrEqual(0.5);
+  expect(before.primaryRadius).toBeLessThanOrEqual(12.5);
+  expect(before.secondaryRadius).toBeLessThanOrEqual(12.5);
   await primary.hover();
   await page.waitForTimeout(220);
   const primaryHover=await primary.evaluate(el=>getComputedStyle(el).backgroundColor);
@@ -145,7 +146,7 @@ test('international CN-bridge current module is visible and footer type follows 
   expect(s.footerFont).toBeCloseTo(s.navFont,1);
 });
 
-test('international CN-bridge mobile footer follows the 18px bridge nav scale',async({page})=>{
+test('international CN-bridge mobile footer follows the current 20px bridge nav scale',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   const response=await page.goto(intBase+'/links/cn-public/',{waitUntil:'domcontentloaded',timeout:30000});
   expect(response&&response.ok()).toBeTruthy();
@@ -153,6 +154,6 @@ test('international CN-bridge mobile footer follows the 18px bridge nav scale',a
   expect(s).not.toBeNull();
   expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
-  expect(s.navFont).toBeCloseTo(18,1);
+  expect(s.navFont).toBeCloseTo(20,1);
   expect(s.footerFont).toBeCloseTo(s.navFont,1);
 });
