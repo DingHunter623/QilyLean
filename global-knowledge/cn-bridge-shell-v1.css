@@ -159,11 +159,11 @@ html:root:root body .cn-bridge-footer-brand{font-size:20px!important}
 html:root:root body .cn-bridge-footer-actions>button{font-size:20px!important}
 html:root:root body .cn-bridge-footer-records>a{font-size:20px!important}
 @media(max-width:900px){
-  html:root:root body .cn-bridge-footer-brand{font-size:18px!important}
-  html:root:root body .cn-bridge-footer-actions>button{font-size:18px!important}
-  html:root:root body .cn-bridge-footer-records>a{font-size:18px!important}
+  html:root:root body .cn-bridge-footer-brand{font-size:20px!important}
+  html:root:root body .cn-bridge-footer-actions>button{font-size:20px!important}
+  html:root:root body .cn-bridge-footer-records>a{font-size:20px!important}
 }
-/* QILY-CN-BRIDGE-TYPE-FLOOR-V4:END */
+/* QILY-CN-BRIDGE-TYPE-FLOOR-V5-NAV-PARITY:END */
 
 
 /* QILY-CN-BRIDGE-FOOTER-ACTION-EQUAL-WIDTH-V6 | 2026-09-27 | shared reference footer action parity */
