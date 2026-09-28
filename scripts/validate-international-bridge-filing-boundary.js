@@ -15,8 +15,9 @@ for(const rel of pages){
   for(const marker of banned){
     if(html.includes(marker)){console.error('ERROR: '+rel+' must not expose China filing records on qilylean.com: '+marker);failed=true;}
   }
-  const logo='<a class="cn-bridge-brand" href="https://qilylean.com/" aria-label="返回QilyLean国际站首页" title="返回QilyLean国际站首页"><img src="/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5" alt="QilyLean｜启力精益"></a>';
-  if(!html.includes(logo)){console.error('ERROR: '+rel+' must use the canonical international logo and return it to qilylean.com.');failed=true;}
+  const logo='<a class="cn-bridge-brand" href="https://qilylean.cn/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页"><img src="/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5" alt="QilyLean｜启力精益"></a>';
+  if(!html.includes(logo)){console.error('ERROR: '+rel+' China-parity bridge logo must return to qilylean.cn.');failed=true;}
+  if(html.includes('href="https://qilylean.com/" aria-label="返回QilyLean国际站首页"')){console.error('ERROR: '+rel+' must not expose an international-home shortcut in the China-parity shell.');failed=true;}
   if(!html.includes('class="bridge-hero-eyebrow"')&&!html.includes('bridge-hero-eyebrow')){console.error('ERROR: '+rel+' hero eyebrow must use the shared gold VI class.');failed=true;}
   for(const marker of ['data-action="top"','data-action="share"']){
     if(!html.includes(marker)){console.error('ERROR: '+rel+' missing China-parity footer action '+marker);failed=true;}
