@@ -56,8 +56,12 @@ jobs:
           node --check knowledge/knowledge-asset-v2-opl-header.js
           node --check homepage-music.js
 
-      - name: Verify SSOT search-index materialization
-        run: node scripts/build-trust-search-sync.js --search-only --check
+      - name: Materialize and verify SSOT search-index in validation worktree
+        run: |
+          # V4 Build is the only publisher, but validation must derive the same SSOT first
+          # so source changes do not fail merely because the generated commit runs later.
+          node scripts/build-trust-search-sync.js --search-only
+          node scripts/build-trust-search-sync.js --search-only --check
 
       - name: G1 source and SSOT validation
         run: node scripts/site-system-v4-validate.js
