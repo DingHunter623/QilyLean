@@ -48,12 +48,24 @@ jobs:
       - name: Commit sitemap updates
         shell: bash
         run: |
-          if git diff --quiet; then
-            echo "Sitemap and public modules are already current."
-            exit 0
-          fi
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add sitemap.xml
-          git commit -m "build: index independent project pages [skip ci]"
-          git push
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            node scripts/sync-public-modules.js
+            if git diff --quiet; then
+              echo "Sitemap and public modules are already current."
+              exit 0
+            fi
+            git add sitemap.xml
+            git commit -m "build: index independent project pages [skip ci]"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "main advanced during sitemap publish; recomputing from latest main."
+            sleep $((attempt * 2))
+          done
+          echo "Unable to publish sitemap after retries."
+          exit 1
