@@ -25,7 +25,7 @@ test('China desktop footer distributes controls and its site name returns home',
   await expect(page).toHaveURL(cnBase+'/');
 });
 
-for(const route of ['/global-knowledge/briefs/','/links/cn-public/']){
+for(const route of ['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/']){
   test(`reference footer is visible, left aligned and filing-free: ${route}`,async({page})=>{
     await page.setViewportSize({width:1600,height:1000});
     await page.goto(intBase+route,{waitUntil:'domcontentloaded'});

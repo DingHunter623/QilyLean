@@ -24,11 +24,16 @@ if (!fs.existsSync(dir)) {
 }
 
 const htmlFiles = walk(dir).filter((f) => /\.html?$/i.test(f));
+const referenceFooter=fs.readFileSync(path.join(dir,'briefs/index.html'),'utf8').match(/<footer class="cn-bridge-footer">[\s\S]*?<\/footer>/)[0];
 if (htmlFiles.length < 4) fail('Global Knowledge isolation pages are incomplete');
 
 for (const file of htmlFiles) {
   const rel = path.relative(root, file);
   const html = fs.readFileSync(file, 'utf8');
+  if (!html.includes(referenceFooter)) fail(`${rel} must use the exact selected-briefs footer`);
+  if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6')) fail(`${rel} shared footer actions are missing`);
+  if (/knowledge-dock-v1\.js|site-dock-share-runtime-v1\.js|site-contact-route-v1\.js|湘ICP备|湘公网安备/.test(html)) fail(`${rel} must not restore old Dock actions or China filing records`);
+  if (rel!=='global-knowledge/briefs/index.html'&&!html.includes('/global-knowledge/cn-bridge-footer-v1.css?v=20260929-shared-v1')) fail(`${rel} shared reference footer stylesheet missing`);
   const hrefs = [...html.matchAll(/\bhref\s*=\s*["']([^"']+)["']/gi)].map((m) => m[1]);
 
   for (const href of hrefs) {
@@ -63,11 +68,6 @@ for (const file of htmlFiles) {
     if (!html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>')) fail(`${rel} must expose the filed China knowledge route`);
   }
 }
-
-const dock = fs.readFileSync(path.join(dir, 'knowledge-dock-v1.js'), 'utf8');
-if (!dock.includes("SHARED_SEARCH_SRC='/site-search.js?v=20260826-search-navigation-v2'")) fail('Global Knowledge dock must use the shared international site search runtime');
-if (!dock.includes("data-qily-gk-search-parity','international-v1'")) fail('Global Knowledge dock search parity marker is missing');
-if (!dock.includes("QilySiteSearch&&typeof w.QilySiteSearch.open==='function'")) fail('Global Knowledge dock must open the shared international site search API');
 
 const leanKnowledge = fs.readFileSync(path.join(root, 'qilylean', 'lean-knowledge.html'), 'utf8');
 if ((leanKnowledge.match(/<article class="article" id="lean-tools-feature">[\s\S]*?<ul class="tag-row">([\s\S]*?)<\/ul>/)||[])[1]?.match(/<li>/g)?.length !== 10) fail('lean knowledge ten-tool source list must contain exactly 10 visible tools');

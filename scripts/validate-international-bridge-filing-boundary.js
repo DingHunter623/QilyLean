@@ -6,7 +6,7 @@ const path=require('path');
 const {execFileSync}=require('child_process');
 const pages=['global-knowledge/briefs/index.html','links/cn-public/index.html'];
 let failed=false,footers=[];
-const bridgeCss=fs.readFileSync('global-knowledge/cn-bridge-shell-v1.css','utf8');
+const bridgeCss=fs.readFileSync('global-knowledge/cn-bridge-footer-v1.css','utf8');
 if(!bridgeCss.includes('QILY-CN-BRIDGE-FOOTER-ACTION-EQUAL-WIDTH-V6')||!bridgeCss.includes('width:calc(4em + 24px)!important')){
   console.error('ERROR: shared CN-bridge footer must keep 顶部 / 分享当前 at one canonical width.');
   failed=true;
