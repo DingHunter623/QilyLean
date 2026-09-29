@@ -1,0 +1,89 @@
+/* Shared reference footer for China-facing international knowledge pages. */
+:root{--qily-bridge-axis:1180px;--qily-bridge-forest:#0f4b5a;--qily-bridge-deep:#073c47;--qily-bridge-gold:#caa15f;--qily-bridge-gold-soft:#ffe39b;--qily-bridge-line:#bfd6d2;--qily-bridge-footer-h:58px}
+/* The independent fixed footer must keep its scroll clearance over sitewide tail-gap resets. */
+html:root body[data-cn-bridge-fallback]{padding-bottom:var(--qily-bridge-footer-space,calc(var(--qily-bridge-footer-h) + env(safe-area-inset-bottom)))!important}
+html body .cn-bridge-footer{
+  display:block!important;visibility:visible!important;height:auto!important;max-height:none!important;overflow:visible!important;
+  position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:2147481800!important;
+  width:100%!important;margin:0!important;padding-bottom:env(safe-area-inset-bottom)!important;
+  background:var(--qily-bridge-forest)!important;color:#fff!important;border-top:3px solid #c8a25a!important;
+  box-shadow:0 -8px 24px rgba(4,32,39,.16)!important
+}
+html body .cn-bridge-footer-inner{
+  box-sizing:border-box!important;
+  width:min(var(--qily-bridge-axis),calc(100% - 32px))!important;min-height:55px!important;margin:0 auto!important;
+  display:flex!important;align-items:center!important;justify-content:flex-start!important;flex-wrap:nowrap!important;
+  gap:24px!important;padding:6px 0!important
+}
+html body .cn-bridge-footer-brand{
+  box-sizing:border-box!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  flex:0 0 auto!important;width:auto!important;min-height:40px!important;margin:0!important;padding:7px 10px!important;
+  border:1px solid rgba(255,227,155,.52)!important;border-radius:8px!important;background:rgba(255,255,255,.055)!important;
+  color:var(--qily-bridge-gold-soft)!important;-webkit-text-fill-color:var(--qily-bridge-gold-soft)!important;text-decoration:none!important;
+  font:850 20px/1.2 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:nowrap!important
+}
+html body .cn-bridge-footer-actions{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;
+  width:auto!important;gap:24px!important;margin:0!important;padding:0!important
+}
+html:root:root body .cn-bridge-footer-actions>button{
+  box-sizing:border-box!important;appearance:none!important;-webkit-appearance:none!important;
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;flex:0 0 auto!important;
+  width:auto!important;min-width:0!important;min-height:40px!important;
+  padding:7px 12px!important;border:1px solid rgba(255,227,155,.52)!important;border-radius:8px!important;
+  background:rgba(255,255,255,.055)!important;color:var(--qily-bridge-gold-soft)!important;-webkit-text-fill-color:var(--qily-bridge-gold-soft)!important;
+  font:850 20px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;white-space:nowrap!important;cursor:pointer!important
+}
+html body .cn-bridge-footer-brand:is(:hover,:focus-visible),html:root:root body .cn-bridge-footer-actions>button:is(:hover,:focus-visible),html:root:root body .cn-bridge-footer-actions>button.is-copied{
+  background:var(--qily-bridge-gold-soft)!important;border-color:var(--qily-bridge-gold-soft)!important;
+  color:var(--qily-bridge-forest)!important;-webkit-text-fill-color:var(--qily-bridge-forest)!important;outline:none!important
+}
+html body .cn-bridge-footer-brand:active,html:root:root body .cn-bridge-footer-actions>button:active{background:var(--qily-bridge-deep)!important;color:var(--qily-bridge-gold-soft)!important;-webkit-text-fill-color:var(--qily-bridge-gold-soft)!important}
+html body .cn-bridge-footer-records{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:6px!important;min-width:0!important;justify-self:end!important
+}
+html body .cn-bridge-footer-records>a{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-height:40px!important;
+  padding:7px 9px!important;border:1px solid rgba(255,227,155,.52)!important;border-radius:8px!important;
+  background:rgba(255,255,255,.055)!important;color:#fff!important;-webkit-text-fill-color:#fff!important;
+  font:850 20px/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;text-decoration:underline!important;text-underline-offset:3px!important;white-space:nowrap!important
+}
+html body .cn-bridge-footer-records img{display:block!important;width:18px!important;height:20px!important;object-fit:contain!important}
+html body #qilyCnBridgeShareToast{
+  position:fixed!important;left:50%!important;bottom:calc(var(--qily-bridge-footer-h) + 14px + env(safe-area-inset-bottom))!important;
+  z-index:2147483600!important;transform:translateX(-50%)!important;max-width:min(88vw,640px)!important;padding:10px 16px!important;
+  border-radius:999px!important;color:#fff!important;background:var(--qily-bridge-deep)!important;box-shadow:0 9px 24px rgba(0,0,0,.24)!important;
+  font:800 16px/1.4 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;text-align:center!important;pointer-events:none!important
+}
+@media(max-width:1040px){
+  :root{--qily-bridge-footer-h:58px}
+  html body .cn-bridge-footer-inner{width:min(var(--qily-bridge-axis),calc(100% - 28px))!important;min-height:55px!important;gap:24px!important}
+}
+@media(max-width:760px){
+  :root{--qily-bridge-footer-h:86px}
+  html body .cn-bridge-footer-inner{
+    width:calc(100% - 20px)!important;min-height:83px!important;flex-direction:column!important;align-items:flex-start!important;gap:5px!important;padding:5px 0!important
+  }
+  html body .cn-bridge-footer-brand{min-height:34px!important;padding:5px 8px!important;font-size:18px!important;white-space:nowrap!important}
+  html body .cn-bridge-footer-actions{width:auto!important;gap:24px!important}
+  html:root:root body .cn-bridge-footer-actions>button{width:auto!important;min-width:0!important;min-height:36px!important;padding:6px 10px!important;font-size:18px!important}
+}
+@media print{html:root body[data-cn-bridge-fallback]{padding-bottom:0!important}html body .cn-bridge-footer{position:static!important;box-shadow:none!important}}
+
+
+html:root:root body .cn-bridge-footer-brand{font-size:20px!important}
+html:root:root body .cn-bridge-footer-actions>button{font-size:20px!important}
+html:root:root body .cn-bridge-footer-records>a{font-size:20px!important}
+@media(max-width:900px){
+  html:root:root body .cn-bridge-footer-brand{font-size:20px!important}
+  html:root:root body .cn-bridge-footer-actions>button{font-size:20px!important}
+  html:root:root body .cn-bridge-footer-records>a{font-size:20px!important}
+}
+/* QILY-CN-BRIDGE-FOOTER-ACTION-EQUAL-WIDTH-V6 | 2026-09-27 | shared reference footer action parity */
+html:root:root body .cn-bridge-footer-actions>button{
+  box-sizing:border-box!important;
+  width:calc(4em + 24px)!important;
+  min-width:calc(4em + 24px)!important;
+  max-width:calc(4em + 24px)!important;
+}
+/* QILY-CN-BRIDGE-FOOTER-ACTION-EQUAL-WIDTH-V6:END */

@@ -6,6 +6,7 @@ on:
       - 'global-knowledge/briefs/index.html'
       - 'links/cn-public/index.html'
       - 'global-knowledge/cn-bridge-shell-v1.css'
+      - 'global-knowledge/cn-bridge-footer-v1.css'
       - 'global-knowledge/cn-bridge-shell-v1.js'
       - 'scripts/validate-international-bridge-filing-boundary.js'
       - 'scripts/materialize-global-language-v3.js'

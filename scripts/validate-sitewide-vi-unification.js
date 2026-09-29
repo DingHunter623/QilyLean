@@ -74,7 +74,9 @@ for(const rel of gkPages){
     assert(/<a class="cn-bridge-brand" href="https:\/\/qilylean\.cn\/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页">[\s\S]*?<\/a>/.test(html), rel+' bridge logo must return to the China homepage.');
     for(const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) assert(html.includes('href="'+route+'"'), rel+' bridge navigation missing '+route);
   }else{
-    assert(html.includes('/global-knowledge/knowledge-dock-v1.js?v=20260921-site-search-parity-v2'), rel+' must load the Global Knowledge dock search-parity revision.');
+    assert(!html.includes('/global-knowledge/knowledge-dock-v1.js'), rel+' retired seven-action Global Knowledge dock returned.');
+    assert(html.includes('/global-knowledge/cn-bridge-footer-v1.css?v=20260929-shared-v1'), rel+' must load the shared selected-briefs footer stylesheet.');
+    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6'), rel+' must load the shared top/share runtime.');
     assert(/<header class="top">[\s\S]*?<a(?: class="brand")? href="https:\/\/qilylean\.com\/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge<\/a>/.test(html), rel+' Global Knowledge brand must return to the canonical qilylean.com home.');
     assert(html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>'), rel+' must expose China Knowledge with the exact filed China-site name for the qilylean.cn route.');
   }

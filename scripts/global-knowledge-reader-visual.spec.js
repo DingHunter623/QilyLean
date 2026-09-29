@@ -171,23 +171,27 @@ test('Lean knowledge reader preserves visible Weibo source entry',async({page})=
   await page.screenshot({path:path.join(out,'weibo-source-entry.png'),fullPage:false});
 });
 
-test('Global Knowledge dock opens the shared international site search',async({page})=>{
-  await page.setViewportSize({width:1440,height:1000});
-  const response=await page.goto(base+'/global-knowledge/',{waitUntil:'networkidle',timeout:30000});
-  expect(response&&response.ok()).toBeTruthy();
-  const button=page.locator('#floatDock button[data-action="search"]');
-  await expect(button).toBeVisible();
-  await button.click();
-  const panel=page.locator('.qily-search-panel');
-  await expect(panel).toBeVisible({timeout:10000});
-  await expect(panel.locator('#qilySearchTitle')).toHaveText('本站搜索');
-  await expect(panel.locator('.qily-search-lead')).toContainText('搜索全站网页');
-  const input=panel.locator('.qily-search-input');
-  await input.fill('VSM');
-  await panel.locator('.qily-search-submit').click();
-  await expect(panel.locator('.qily-search-result').first()).toBeVisible({timeout:10000});
-  await page.screenshot({path:path.join(out,'global-knowledge-shared-site-search.png'),fullPage:false});
-});
+for(const route of ['/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/']){
+  test(`Global Knowledge uses the selected-briefs mobile footer: ${route}`,async({page})=>{
+    await page.setViewportSize({width:390,height:664});
+    await page.addInitScript(()=>{
+      Object.defineProperty(navigator,'clipboard',{value:{writeText:async text=>{window.__footerCopy=text;}}});
+      Object.defineProperty(navigator,'share',{value:undefined});
+    });
+    await page.goto(base+route,{waitUntil:'load'});
+    const footer=page.locator('.cn-bridge-footer');
+    await expect(footer.locator('a')).toHaveText('精益制造经验分享');
+    await expect(footer.locator('a')).toHaveAttribute('href','https://qilylean.cn/');
+    await expect(footer.locator('button')).toHaveText(['顶部','分享当前']);
+    await expect(page.locator('#floatDock,.cn-bridge-footer-records')).toHaveCount(0);
+    await expect.poll(()=>footer.evaluate(el=>parseFloat(getComputedStyle(document.body).paddingBottom)-el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(0);
+    await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
+    await footer.locator('[data-action="top"]').click();
+    await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(0);
+    await footer.locator('[data-action="share"]').click();
+    await expect.poll(()=>page.evaluate(()=>window.__footerCopy)).toBe((await page.title())+'\n'+base+route);
+  });
+}
 
 test('Lean reader shows ten tools and clear Weibo module boundaries',async({page})=>{
   await page.setViewportSize({width:1440,height:1000});
