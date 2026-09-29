@@ -37,6 +37,13 @@ function enforceChinaParityShell(){
   d.documentElement.setAttribute('data-qily-cn-bridge-home','qilylean.cn');
 }
 function bind(){var g=d.querySelector('.cn-bridge-footer-actions');if(!g||g.dataset.bound==='v1')return;g.dataset.bound='v1';g.addEventListener('click',function(e){var b=e.target.closest('button[data-action]');if(!b)return;e.preventDefault();var a=b.dataset.action;if(a==='top')top();else if(a==='share')share(b);});}
-function boot(){enforceChinaParityShell();bind();scheduleCurrentNavReveal();}
+var footerResizeObserver;
+function reserveFooterSpace(){
+  var footer=d.querySelector('.cn-bridge-footer');if(!footer)return;
+  d.documentElement.style.setProperty('--qily-bridge-footer-space',Math.ceil(footer.getBoundingClientRect().height)+'px');
+  if(!footerResizeObserver&&w.ResizeObserver){footerResizeObserver=new w.ResizeObserver(reserveFooterSpace);footerResizeObserver.observe(footer,{box:'border-box'});}
+}
+function boot(){enforceChinaParityShell();bind();scheduleCurrentNavReveal();reserveFooterSpace();}
 if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();w.addEventListener('pageshow',boot,{passive:true});
+w.addEventListener('resize',reserveFooterSpace,{passive:true});
 })(document,window);
