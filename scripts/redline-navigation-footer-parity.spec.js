@@ -60,6 +60,25 @@ for(const route of ['/global-knowledge/briefs/','/links/cn-public/']){
 
 
 
+for(const viewport of [{width:360,height:640},{width:390,height:664},{width:412,height:780}]){
+  test(`resource final CTA clears the fixed footer on mobile ${viewport.width}`,async({page})=>{
+    await page.setViewportSize(viewport);
+    await page.goto(intBase+'/links/cn-public/',{waitUntil:'load'});
+    const footer=page.locator('.cn-bridge-footer');
+    // Simulate an extra bottom safe area; the reservation must follow the real footer height.
+    await footer.evaluate(el=>el.style.setProperty('padding-bottom','34px','important'));
+    await expect.poll(()=>footer.evaluate(el=>parseFloat(getComputedStyle(document.body).paddingBottom)-el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(0);
+    await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
+    const last=page.locator('.actions .button').last();
+    const gap=await last.evaluate(el=>document.querySelector('.cn-bridge-footer').getBoundingClientRect().top-el.getBoundingClientRect().bottom);
+    expect(gap).toBeGreaterThanOrEqual(8);
+    await expect(last).toHaveAttribute('href','https://qilylean.com/global-knowledge/');
+    await page.route('https://qilylean.com/global-knowledge/',route=>route.fulfill({status:200,contentType:'text/html',body:'Global Knowledge destination'}));
+    await last.click();
+    await expect(page).toHaveURL('https://qilylean.com/global-knowledge/');
+  });
+}
+
 test('resource collaboration CTAs inherit shared global VI and have visible feedback',async({page})=>{
   await page.setViewportSize({width:1600,height:1000});
   const response=await page.goto(intBase+'/links/cn-public/',{waitUntil:'domcontentloaded',timeout:30000});

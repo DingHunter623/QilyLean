@@ -3,7 +3,8 @@
  * Footer mirrors the China reference-page pattern: 精益制造经验分享 / 顶部 / 分享当前.
  */
 :root{--qily-bridge-axis:1180px;--qily-bridge-forest:#0f4b5a;--qily-bridge-deep:#073c47;--qily-bridge-gold:#caa15f;--qily-bridge-gold-soft:#ffe39b;--qily-bridge-line:#bfd6d2;--qily-bridge-footer-h:58px}
-html body{padding-bottom:var(--qily-bridge-footer-h)!important}
+/* The independent fixed footer must keep its scroll clearance over sitewide tail-gap resets. */
+html:root body[data-cn-bridge-fallback]{padding-bottom:var(--qily-bridge-footer-space,calc(var(--qily-bridge-footer-h) + env(safe-area-inset-bottom)))!important}
 html body .cn-bridge-header{
   position:sticky!important;top:0!important;z-index:2147481000!important;
   width:100%!important;margin:0!important;padding:0!important;background:#fff!important;
@@ -117,7 +118,7 @@ html body #qilyCnBridgeShareToast{
   html body .cn-bridge-footer-actions{width:auto!important;gap:24px!important}
   html:root:root body .cn-bridge-footer-actions>button{width:auto!important;min-width:0!important;min-height:36px!important;padding:6px 10px!important;font-size:18px!important}
 }
-@media print{html body{padding-bottom:0!important}html body .cn-bridge-footer{position:static!important;box-shadow:none!important}}
+@media print{html:root body[data-cn-bridge-fallback]{padding-bottom:0!important}html body .cn-bridge-footer{position:static!important;box-shadow:none!important}}
 
 
 /* QILY-CN-BRIDGE-V2 | international logo + gold eyebrow + footer parity */
