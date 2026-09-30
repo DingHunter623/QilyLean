@@ -26,7 +26,7 @@
   var CONTINUITY_HREF='/site-interaction-continuity-v1.css?v=20260818-visual-governance-v3';
   var GOVERNANCE_HREF='/site-visual-governance-v2.css?v=20260926-bilingual-label-gold-v1';
   var CONTENT_AXIS_HREF='/site-content-axis-v1.css?v=20260916-unified-1180-axis-v7';
-  var HEADER_AXIS_HREF='/site-header-axis-v1.css?v=20260829-primary-navigation-safe-scroll-v7';
+  var HEADER_AXIS_HREF='/site-header-axis-v1.css?v=20260831-r8-vi-rail-v1';
   var HOME_HERO_HREF='/site-home-hero-tune-v1.css?v=20260819-home-hero-align-v3';
   var DOCK_HREF='/site-floating-dock-standard-v1.css?v=20260819-dock-snapback-v3';
   var GEOMETRY_SRC='/site-visual-geometry-v1.js?v=20260819-arrow-geometry-v4';

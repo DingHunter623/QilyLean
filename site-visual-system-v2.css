@@ -55,7 +55,7 @@
   --qv2-density-data:14px;
 }
 
-html,body{max-width:100%;overflow-x:clip}
+html,body{max-width:100%}
 html body{font-family:var(--qv2-font);color:var(--qv2-ink);background:var(--qv2-paper)}
 
 /* 01 | Layout axis and section rhythm */

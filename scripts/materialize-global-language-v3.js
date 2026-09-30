@@ -43,10 +43,10 @@ const UNIFIED_VISUAL_CSS='/site-unified-visual-governance-v1.css?v=20260826-cont
 const REGRESSION_CLOSURE_CSS='/site-visual-regression-closure-v1.css?v=20260826-screenshot-closure-v2';
 const STABILITY_RECOVERY_CSS='/site-stability-recovery-v1.css?v=20260828-vi-surface-v3';
 const PUBLIC_REDLINE_CSS='/site-public-redline-closure-v1.css?v=20260828-home-dock-v2';
-const PUBLIC_REDLINE_V2_CSS='/site-public-redline-closure-v2.css?v=20260830-annotated-v2';
+const PUBLIC_REDLINE_V2_CSS='/site-public-redline-closure-v2.css?v=20260831-r8-fallback-aligned-v1';
 const PUBLIC_REDLINE_V2_JS='/site-public-redline-closure-v2.js?v=20260831-redline-no-translation-v23';
-const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260830-visual-system-v2-r7';
-const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260830-header-integrity-v2';
+const VISUAL_SYSTEM_V2='/site-visual-system-v2.css?v=20260831-r8-observable-overflow-v1';
+const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260831-r8-containment-only-v1';
 const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3';
 const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range';
 const BRAND_HOME_FEEDBACK_CSS='/site-brand-home-feedback-v1.css?v=20260831-brand-home-overlay-v1';

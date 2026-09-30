@@ -25,7 +25,7 @@
     interactionJs:'/site-interaction-contrast-guard-v1.js?v=20260825-sitewide-contrast-v2',
     contentCss:'/site-content-contrast-guard-v1.css?v=20260826-sitewide-content-contrast-v6',
     contentJs:'/site-content-contrast-guard-v1.js?v=20260826-sitewide-content-contrast-v6',
-    headerCss:'/site-header-axis-v1.css?v=20260829-primary-navigation-safe-scroll-v7'
+    headerCss:'/site-header-axis-v1.css?v=20260831-r8-vi-rail-v1'
   };
 
   d.documentElement.classList.remove('qily-shell-pending','qily-r2-first-paint-pending');

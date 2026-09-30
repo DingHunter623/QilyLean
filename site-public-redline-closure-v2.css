@@ -5,10 +5,10 @@
   display:inline-flex;
   align-items:center;
   gap:7px;
-  flex:0 0 clamp(260px,17vw,300px)!important;
-  width:clamp(260px,17vw,300px)!important;
-  min-width:260px!important;
-  max-width:300px!important;
+  flex:0 0 clamp(198px,13vw,224px)!important;
+  width:clamp(198px,13vw,224px)!important;
+  min-width:198px!important;
+  max-width:224px!important;
   min-height:42px;
   margin-left:10px!important;
   margin-right:0!important;
@@ -56,7 +56,7 @@
 
 /* QILY-0830-PUBLIC-REDLINE-CLOSURE-V2.4:START */
 :root{
-  --ql-redline-header-offset:86px;
+  --ql-redline-header-offset:var(--qily-header-live-height,86px);
   --ql-redline-rail-track:#b9d9d4;
   --ql-redline-rail-thumb:#0f4b5a;
   --ql-redline-rail-hover:#12606f;
