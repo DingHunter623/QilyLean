@@ -51,7 +51,7 @@ jobs:
           grep -Fq 'QilyLean CN In-Page Translation V7' cn-site/assets/cn-translate-baidu-v1.js
           grep -Fq 'API_BASES' cn-site/assets/cn-translate-baidu-v1.js
           grep -Fq 'target_language:target' cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq "data-qily-translation-engine','baidu'" cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq "data-qily-translation-engine','youdao'" cn-site/assets/cn-translate-baidu-v1.js
           grep -Fq 'concurrency=1' cn-site/assets/cn-translate-baidu-v1.js
           grep -Fq 'QilyLean CN In-Page Translation UI V3' cn-site/assets/cn-translate-baidu-v1.css
           test -f cn-site/assets/practice.css

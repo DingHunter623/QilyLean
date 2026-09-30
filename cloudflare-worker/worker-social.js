@@ -220,7 +220,7 @@ function isAdmin(request, env) {
 }
 
 function translationProviderCandidates(env, targetLanguage) {
-  const requested = String(env.TRANSLATE_PROVIDER || 'baidu').toLowerCase();
+  const requested = String(env.TRANSLATE_PROVIDER || 'youdao').toLowerCase();
   const normalized = requested === 'dashscope' ? 'qwen' : requested;
   const available = {
     baidu: Boolean(env.BAIDU_TRANSLATE_APP_ID && env.BAIDU_TRANSLATE_APP_KEY && BAIDU_LANGUAGE_MAP[targetLanguage]),
@@ -236,7 +236,7 @@ function translationProviderCandidates(env, targetLanguage) {
         ? ['qwen', 'baidu', 'youdao', 'openai']
         : normalized === 'openai'
           ? ['openai', 'baidu', 'youdao', 'qwen']
-          : ['baidu', 'youdao', 'qwen', 'openai'];
+          : ['youdao', 'baidu', 'qwen', 'openai'];
   return order.filter((provider, index) => available[provider] && order.indexOf(provider) === index);
 }
 

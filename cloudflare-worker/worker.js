@@ -771,7 +771,7 @@ export default {
         qwen_available: Boolean(env.DASHSCOPE_API_KEY),
         baidu_available: Boolean(env.BAIDU_TRANSLATE_APP_ID && env.BAIDU_TRANSLATE_APP_KEY),
         youdao_available: Boolean(env.YOUDAO_APP_KEY && env.YOUDAO_APP_SECRET),
-        translation_provider: String(env.TRANSLATE_PROVIDER || 'baidu'),
+        translation_provider: String(env.TRANSLATE_PROVIDER || 'youdao'),
         statistics: env.QILY_STATS ? 'enabled' : 'not_bound',
         consultation_storage: env.QILY_STATS ? 'enabled' : 'not_bound',
         consultation_email_binding: Boolean(env.CONSULTATION_EMAIL)

@@ -61,7 +61,7 @@ jobs:
           grep -q "callYoudaoTranslation" cloudflare-worker/worker-social.js
           grep -q "TRANSLATION_CACHE_VERSION = 'v5-provider-aware'" cloudflare-worker/worker-social.js
           grep -q 'TRANSLATE_DAILY_IP_LIMIT = "600"' wrangler.toml
-          grep -q 'TRANSLATE_PROVIDER = "baidu"' wrangler.toml
+          grep -q 'TRANSLATE_PROVIDER = "youdao"' wrangler.toml
           grep -q "admin@qilylean.com" cloudflare-worker/worker.js
 
       - name: 校验 Cloudflare 账户 ID
@@ -153,8 +153,8 @@ jobs:
             if (healthData.build_version !== 'v1.6.0-brief-engagement') {
               throw new Error('unexpected build ' + healthData.build_version);
             }
-            if (healthData.translation_provider !== 'baidu') {
-              throw new Error('translation preference is not Baidu');
+            if (healthData.translation_provider !== 'youdao') {
+              throw new Error('translation preference is not Youdao');
             }
             if (!healthData.baidu_available && !healthData.youdao_available && !healthData.qwen_available && !healthData.openai_available) {
               throw new Error('no translation backend is provisioned');
@@ -186,13 +186,13 @@ jobs:
             if (!translation.ok || !data.ok || !Array.isArray(data.translations) || data.translations.length !== 2) {
               throw new Error('status ' + translation.status);
             }
-            if (healthSnapshot && healthSnapshot.baidu_available === true) {
-              if (data.provider !== 'baidu') {
-                throw new Error('Baidu is provisioned but translation provider is ' + String(data.provider || ''));
-              }
-            } else if (healthSnapshot && healthSnapshot.youdao_available === true) {
+            if (healthSnapshot && healthSnapshot.youdao_available === true) {
               if (data.provider !== 'youdao') {
-                throw new Error('Baidu is unavailable and Youdao is provisioned, but translation provider is ' + String(data.provider || ''));
+                throw new Error('Youdao is provisioned but translation provider is ' + String(data.provider || ''));
+              }
+            } else if (healthSnapshot && healthSnapshot.baidu_available === true) {
+              if (data.provider !== 'baidu') {
+                throw new Error('Youdao is unavailable and Baidu is provisioned, but translation provider is ' + String(data.provider || ''));
               }
             } else if (!['qwen','openai'].includes(String(data.provider || ''))) {
               throw new Error('translation fallback provider is unavailable: ' + String(data.provider || ''));

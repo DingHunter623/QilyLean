@@ -249,7 +249,7 @@ grep -Fq 'grid-template-areas:"brand translate" "nav nav"' "$CN_VI_FILE" || { ec
 if grep -Fq 'data-qily-translation-provider' "$CN_NAV_RAIL_JS"; then echo "ERROR: CN nav rail must not own translation."; exit 1; fi
 grep -Fq 'QilyLean CN In-Page Translation V7' "$CN_TRANSLATE_JS" || { echo "ERROR: CN in-page translation V4 runtime is missing."; exit 1; }
 grep -Fq "data-qily-translation-provider','qilylean-api'" "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator provider contract is missing."; exit 1; }
-grep -Fq "data-qily-translation-engine','baidu'" "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator must use Baidu-preferred backend."; exit 1; }
+grep -Fq "data-qily-translation-engine','youdao'" "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator must use Youdao-preferred backend."; exit 1; }
 grep -Fq 'concurrency=1' "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator concurrency optimization is missing."; exit 1; }
 grep -Fq 'API_BASES' "$CN_TRANSLATE_JS" || { echo "ERROR: CN in-page translation API route is missing."; exit 1; }
 grep -Fq 'target_language:target' "$CN_TRANSLATE_JS" || { echo "ERROR: CN translator target-language request contract is missing."; exit 1; }
