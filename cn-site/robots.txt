@@ -2,4 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://qilylean.cn/sitemap.xml
-# Search discovery refresh: 20260921-indexing-hardening-v1
+Sitemap: https://qilylean.cn/sitemap-baidu.xml
+# Search discovery refresh: 20260930-cn-baidu-discovery-v1
