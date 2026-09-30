@@ -117,8 +117,16 @@ html body :is(.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.projec
 
 /* Legacy page-local Hero rules can carry two class selectors plus !important.
  * Once v4 has explicitly classified a Hero, the formal marker is the final visual authority. */
-html:root:root body [data-qily-vi-v4-hero="118deg"]:not(.qily-aircraft-brand-hero){
+html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] [data-qily-vi-v4-hero="118deg"]:not(.qily-aircraft-brand-hero){
+  color:#fff!important;
+  -webkit-text-fill-color:#fff!important;
+  background-color:var(--qily-vi-olive-deep)!important;
   background-image:var(--qily-hero-formal)!important;
+}
+html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] [data-qily-vi-v4-hero="118deg"]:not(.qily-aircraft-brand-hero)
+:is(h1,h2,h3,p,.lead,.eyebrow,.meta,.subtitle){
+  color:inherit!important;
+  -webkit-text-fill-color:currentColor!important;
 }
 
 /* 04 | Typography hierarchy. */
