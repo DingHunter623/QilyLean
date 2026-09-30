@@ -1,7 +1,7 @@
 /* QilyLean CN Footer Actions V10 | 2026-09-27 | nav-size content-fit public footer
  * One shared public footer across qilylean.cn.
- * Visual rhythm is uniform by gap/height, never by forcing unlike content to equal widths.
- * /briefs/ and /resources/ use the same component without filing records.
+ * Top/share have equal widths; the five desktop controls have equal gaps.
+ * All China-domain pages, including /briefs/ and /resources/, retain both filings.
  */
 html:root:root:root:root body .footer{
   position:fixed!important;
@@ -199,20 +199,14 @@ html body #qilyDockShareCopyToastV2{
 }
 
 /* QILY-CN-FOOTER-REDLINE-V12: distribute five intrinsic-width controls on the content axis. */
-@media(min-width:1041px){
-  html:root:root:root:root body .footer:not([data-qily-footer-filing="none"]) :is(.footer-actions,.footer-records){
+@media(min-width:1101px){
+  html:root:root:root:root body .footer :is(.footer-actions,.footer-records){
     display:contents!important;
   }
 }
-html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-inner{
-  justify-content:flex-start!important;
-  align-items:center!important;
-  gap:24px!important;
-}
-html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-actions{gap:24px!important}
 
 /* Tablet: retain the existing two-row layout for filing records. */
-@media(max-width:1040px){
+@media(max-width:1100px){
   :root{--qily-cn-fixed-footer-h:104px!important}
   html:root:root:root:root body .footer .footer-inner{
     width:min(var(--qily-cn-axis,1180px),calc(100% - 28px))!important;
@@ -226,13 +220,6 @@ html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-ac
     flex:1 0 100%!important;
     justify-content:center!important;
     gap:8px!important;
-  }
-  html:root:root:root:root body .footer[data-qily-footer-filing="none"]{
-    --qily-cn-fixed-footer-h:58px!important;
-  }
-  html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-inner{
-    min-height:55px!important;
-    flex-wrap:nowrap!important;
   }
 }
 
@@ -276,14 +263,6 @@ html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-ac
     padding:5px 8px!important;
     font-size:var(--qily-cn-primary-nav-font-size,20px)!important;
   }
-  html:root:root:root:root body .footer[data-qily-footer-filing="none"]{
-    --qily-cn-fixed-footer-h:86px!important;
-  }
-  html:root:root:root:root body .footer[data-qily-footer-filing="none"] .footer-inner{
-    min-height:83px!important;
-    align-items:flex-start!important;
-    gap:5px!important;
-  }
 }
 @media(prefers-reduced-motion:reduce){
   html:root:root:root:root body .footer :is(button,a){transition:none!important}
@@ -305,3 +284,16 @@ html:root:root:root:root body .footer .footer-actions>button{
 }
 
 /* QILY-CN-FOOTER-CONTENT-FIT-V4-NAV-PARITY:END */
+
+/* QILY-CN-FOOTER-DOMAIN-V14: reserve the measured footer, including wrapped filings and safe areas. */
+html:root:root:root:root body{
+  padding-bottom:var(--qily-cn-footer-space,calc(var(--qily-cn-fixed-footer-h) + 3px + env(safe-area-inset-bottom)))!important;
+}
+@media(max-width:375px){
+  html:root:root:root:root body .footer .footer-records>a,
+  html:root:root:root:root body .footer .footer-records>a>span{
+    white-space:normal!important;
+    overflow-wrap:anywhere!important;
+  }
+}
+@media print{html:root:root:root:root body{padding-bottom:0!important}}

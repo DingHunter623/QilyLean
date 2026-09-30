@@ -125,9 +125,8 @@ async function auditPage(page, route, limits, label){
       expect(action.font, route+' footer button '+action.text+' type').toBeGreaterThanOrEqual(19.5);
       expect(action.font, route+' footer button '+action.text+' type').toBeLessThanOrEqual(20.5);
     }
-    const isReference=route==='/briefs/'||route==='/resources/';
-    expect(data.footer.filingState, route+' footer filing state').toBe(isReference?'none':'standard');
-    expect(data.footer.records.length, route+' footer filing record count').toBe(isReference?0:2);
+    expect(data.footer.filingState, route+' footer filing state').toBe('standard');
+    expect(data.footer.records.length, route+' footer filing record count').toBe(2);
     for(const record of data.footer.records){
       expect(record.font, route+' footer filing type '+record.text).toBeGreaterThanOrEqual(19.5);
       expect(record.font, route+' footer filing type '+record.text).toBeLessThanOrEqual(20.5);
@@ -136,16 +135,9 @@ async function auditPage(page, route, limits, label){
     const gaps=[];
     for(let i=1;i<data.footer.groups.length;i++) gaps.push(data.footer.groups[i].left-data.footer.groups[i-1].right);
     expect(Math.abs(data.footer.actions[0].width-data.footer.actions[1].width), route+' top/share must use the same width').toBeLessThanOrEqual(1);
-    if(isReference){
-      for(const gap of gaps){
-        expect(gap, route+' reference-footer shared gap lower bound').toBeGreaterThanOrEqual(23);
-        expect(gap, route+' reference-footer shared gap upper bound').toBeLessThanOrEqual(25);
-      }
-    }else{
-      expect(Math.min(...gaps), route+' distributed footer gap lower bound').toBeGreaterThan(8);
-      expect(Math.max(...gaps)-Math.min(...gaps), route+' five footer modules must be evenly distributed').toBeLessThanOrEqual(1);
-      expect(Math.max(...data.footer.actions.map(x=>x.width)), route+' action buttons must stay content-fit').toBeLessThan(Math.min(...data.footer.records.map(x=>x.width)));
-    }
+    expect(Math.min(...gaps), route+' distributed footer gap lower bound').toBeGreaterThan(8);
+    expect(Math.max(...gaps)-Math.min(...gaps), route+' five footer modules must be evenly distributed').toBeLessThanOrEqual(1);
+    expect(Math.max(...data.footer.actions.map(x=>x.width)), route+' action buttons stay compact').toBeLessThan(Math.min(...data.footer.records.map(x=>x.width)));
   }
   if(reps.has(route)){
     fs.mkdirSync('visual-cn-typography-v23',{recursive:true});

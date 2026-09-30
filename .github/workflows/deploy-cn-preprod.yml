@@ -291,8 +291,8 @@ jobs:
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
                   '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform',
-                  '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v12-redline-closure',
-                  '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v12-redline-closure',
+                  '/assets/cn-footer-actions-v1.css?v=20260930-footer-domain-v14',
+                  '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v14',
                   'data-qily-footer-action="top"',
                   'data-qily-footer-action="share"',
               ]:
@@ -305,12 +305,8 @@ jobs:
               footer_block = footer_match.group(0)
               if '<a class="footer-home" href="/"' not in footer_block:
                   raise SystemExit(f'Production {route} footer home link is missing.')
-              if route in ['/briefs/','/resources/']:
-                  if 'data-qily-footer-filing="none"' not in footer_block or '湘ICP备' in footer_block or '湘公网安备' in footer_block or 'footer-records' in footer_block:
-                      raise SystemExit(f'Production {route} reference footer must be filing-free.')
-              else:
-                  if 'data-qily-footer-filing="none"' in footer_block or footer_block.count('beian.miit.gov.cn') != 1 or footer_block.count('beian.mps.gov.cn') != 1:
-                      raise SystemExit(f'Production {route} standard footer must contain exactly both filing links.')
+              if 'data-qily-footer-filing="none"' in footer_block or footer_block.count('beian.miit.gov.cn') != 1 or footer_block.count('beian.mps.gov.cn') != 1:
+                  raise SystemExit(f'Production {route} on qilylean.cn must contain exactly both filing links.')
 
           footer_actions_contract = [
               (footer_actions_css, 'QilyLean CN Footer Actions V10', 'content-fit public footer stylesheet marker'),
@@ -318,7 +314,6 @@ jobs:
               (footer_actions_css, '.footer-actions>button', 'footer action button visual contract'),
               (footer_actions_css, 'display:inline-flex!important', 'intrinsic footer module layout'),
               (footer_actions_css, 'width:auto!important', 'content-fit footer module width'),
-              (footer_actions_css, 'data-qily-footer-filing="none"', 'filing-free reference state styling'),
               (footer_actions_css, 'justify-content:space-between!important', 'distributed desktop controls'),
               (footer_actions_css, 'QILY-CN-FOOTER-REDLINE-V12', 'annotated footer alignment'),
               (footer_actions_css, 'QILY-CN-FOOTER-ACTION-EQUAL-WIDTH-V13', 'equal-width top/share actions'),
@@ -439,14 +434,14 @@ jobs:
           if 'target="_blank" rel="noopener noreferrer"' not in resources_bridge:
               raise SystemExit('Production CN resources bridge lost safe external-link behavior.')
           for label,doc in [('briefs',briefs_bridge),('resources',resources_bridge)]:
-              footer_match = re.search(r'<footer class="footer" data-qily-footer-filing="none">.*?</footer>', doc, re.S)
-              if not footer_match or '湘ICP备' in footer_match.group(0) or '湘公网安备' in footer_match.group(0) or 'footer-records' in footer_match.group(0):
-                  raise SystemExit(f'Production CN {label} reference footer filing exception is incorrect.')
+              footer_match = re.search(r'<footer class="footer">.*?</footer>', doc, re.S)
+              if not footer_match or '湘ICP备2026041143号-1' not in footer_match.group(0) or '湘公网安备43020002000443号' not in footer_match.group(0):
+                  raise SystemExit(f'Production CN {label} must retain both China-domain filing records.')
           if '<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>' not in home:
               raise SystemExit('Production China Global Knowledge CTA lost external-link semantics.')
-          if '/assets/cn-footer-actions-v1.css?v=20260927-footer-actions-v12-redline-closure' not in home:
+          if '/assets/cn-footer-actions-v1.css?v=20260930-footer-domain-v14' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
-          if '/assets/cn-footer-actions-v1.js?v=20260927-footer-actions-v12-redline-closure' not in home:
+          if '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v14' not in home:
               raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')

@@ -129,7 +129,7 @@ async function navState(page,navSelector,activeSelector,footerSelector){
   },{navSelector,activeSelector,footerSelector});
 }
 
-test('China-site Resources keeps the shared filing-free footer visual',async({page})=>{
+test('China-site Resources retains both filings with the shared footer visual',async({page})=>{
   await page.setViewportSize({width:1180,height:850});
   const response=await page.goto(cnBase+'/resources/',{waitUntil:'domcontentloaded',timeout:30000});
   expect(response&&response.ok()).toBeTruthy();
@@ -141,7 +141,7 @@ test('China-site Resources keeps the shared filing-free footer visual',async({pa
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
   expect(s.navFont).toBeCloseTo(20,1);
   expect(s.footerFont).toBeCloseTo(s.navFont,1);
-  expect(s.recordFont).toBe(0);
+  expect(s.recordFont).toBeCloseTo(s.navFont,1);
 });
 
 test('China-site mobile footer keeps canonical readable sizing without overflow',async({page})=>{
@@ -184,3 +184,35 @@ test('international CN-bridge mobile footer follows the current 20px bridge nav 
   expect(s.navFont).toBeCloseTo(20,1);
   expect(s.footerFont).toBeCloseTo(s.navFont,1);
 });
+
+for(const width of [320,360,390,1041,1100,1600]){
+  test(`China bridge footer retains readable filings and clear content at ${width}px`,async({page})=>{
+    await page.setViewportSize({width,height:844});
+    for(const route of ['/briefs/','/resources/']){
+      await page.goto(cnBase+route,{waitUntil:'domcontentloaded'});
+      const footer=page.locator('.footer');
+      await expect(footer.locator('.footer-records>a')).toHaveCount(2);
+      await expect(footer).toContainText('湘ICP备2026041143号-1');
+      await expect(footer).toContainText('湘公网安备43020002000443号');
+      await footer.evaluate(el=>el.style.setProperty('padding-bottom','34px','important'));
+      await expect.poll(()=>footer.evaluate(el=>parseFloat(getComputedStyle(document.body).paddingBottom)-el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(0);
+      const g=await footer.evaluate(el=>{
+        const controls=[...el.querySelectorAll('a,button')].map(e=>{const r=e.getBoundingClientRect();return{left:r.left,right:r.right,width:r.width,overflow:e.scrollWidth-e.clientWidth};});
+        return{viewport:innerWidth,controls,buttons:[...el.querySelectorAll('button')].map(e=>e.getBoundingClientRect().width)};
+      });
+      for(const c of g.controls){
+        expect(c.left).toBeGreaterThanOrEqual(0);
+        expect(c.right).toBeLessThanOrEqual(g.viewport);
+        expect(c.overflow).toBeLessThanOrEqual(1);
+      }
+      expect(g.buttons[0]).toBeCloseTo(g.buttons[1],0);
+      await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
+      const link=page.locator('main a[data-qily-external="international"]');
+      await link.click({trial:true});
+      const clearance=await link.evaluate(el=>document.querySelector('.footer').getBoundingClientRect().top-el.getBoundingClientRect().bottom);
+      expect(clearance).toBeGreaterThanOrEqual(8);
+      await footer.locator('[data-qily-footer-action="top"]').click();
+      await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(0);
+    }
+  });
+}

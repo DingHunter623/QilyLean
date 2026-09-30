@@ -13,6 +13,11 @@ function tracked(pattern){
     .split(/\r?\n/).filter(Boolean);
 }
 
+// Filing follows the document's serving site, never the destination of its links.
+for(const rel of tracked('*.html').filter(rel=>!rel.startsWith('cn-site/'))){
+  assert(!/湘ICP备|湘公网安备|beian\.(?:miit|mps)\.gov\.cn/.test(read(rel)), rel+' international page must not expose China filing records.');
+}
+
 /* 1) International VI authority */
 const readability=read('site-visual-readability-v5.css');
 assert(readability.includes('--qily-r8-heading-ceiling:clamp(30px,2.65vw,44px)'), 'International heading ceiling must remain 44px.');
@@ -218,20 +223,13 @@ for(const rel of cnPages){
   assert(footerBlock.includes('<a class="footer-home" href="/"')&&footerBlock.includes('>精益制造经验分享</a>'), rel+' footer site label must link to the China homepage.');
   const footerActions=[...footerBlock.matchAll(/data-qily-footer-action="([^"]+)"/g)].map(m=>m[1]);
   assert(JSON.stringify(footerActions)===JSON.stringify(['top','share']), rel+' China footer must keep only 顶部 / 分享当前.');
-  const isReferenceFooter=rel==='cn-site/briefs/index.html'||rel==='cn-site/resources/index.html';
   const filingLinks=[...footerBlock.matchAll(/<a\b[^>]*href=["']https:\/\/beian\.(?:miit|mps)\.gov\.cn\/[^"']*["'][^>]*>/g)];
-  if(isReferenceFooter){
-    assert(footerBlock.includes('data-qily-footer-filing="none"'), rel+' reference route must declare the filing-free footer state.');
-    assert(filingLinks.length===0, rel+' reference route must not expose China filing links in the footer.');
-    assert(!footerBlock.includes('footer-records'), rel+' reference route must not render a filing-record container.');
-  }else{
-    assert(!footerBlock.includes('data-qily-footer-filing="none"'), rel+' standard route must not use the filing-free footer state.');
-    assert(filingLinks.length===2, rel+' standard route must retain exactly two official filing links in the footer.');
-    for(const [link] of filingLinks){
-      assert(/target="_blank"/.test(link), rel+' filing query must open in a new tab.');
-      assert(/rel="noopener noreferrer"/.test(link), rel+' filing query must isolate the external tab.');
-      assert(/title="[^"]*新标签页打开[^"]*"/.test(link), rel+' filing query must explain its new-tab behavior.');
-    }
+  assert(!footerBlock.includes('data-qily-footer-filing="none"'), rel+' China-domain pages must not use a filing-free footer.');
+  assert(filingLinks.length===2, rel+' must retain exactly two official filing links in the footer.');
+  for(const [link] of filingLinks){
+    assert(/target="_blank"/.test(link), rel+' filing query must open in a new tab.');
+    assert(/rel="noopener noreferrer"/.test(link), rel+' filing query must isolate the external tab.');
+    assert(/title="[^"]*新标签页打开[^"]*"/.test(link), rel+' filing query must explain its new-tab behavior.');
   }
 }
 
@@ -249,7 +247,6 @@ assert(cnFooterCss.includes('QILY-CN-FOOTER-REDLINE-V12'), 'CN annotated footer 
 assert(cnFooterCss.includes('QILY-CN-FOOTER-ACTION-EQUAL-WIDTH-V13'), 'CN top/share equal-width authority is missing.');
 assert(cnFooterCss.includes('width:calc(4em + 24px)!important'), 'CN top/share controls must share one canonical width.');
 assert((cnFooterCss.match(/var\(--qily-cn-primary-nav-font-size,20px\)/g)||[]).length>=3, 'CN footer type must inherit the primary-nav 20px token for label, actions and filing records.');
-assert(cnFooterCss.includes('data-qily-footer-filing="none"'), 'CN canonical footer CSS must preserve the filing-free reference state.');
 for (const marker of ["['top','顶部']","['share','分享当前']"]) assert(cnFooterJs.includes(marker), 'CN footer action marker missing: '+marker);
 assert(!cnFooterJs.includes("['previous','上一网页']"), 'CN footer must not restore 上一网页.');
 for (const forbidden of ["['home','首页']","['parent','上一层级']","['knowledge','知识索引']","['about','关于我们']"]) assert(!cnFooterJs.includes(forbidden), 'CN footer must not copy international-only action: '+forbidden);
