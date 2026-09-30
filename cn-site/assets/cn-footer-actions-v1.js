@@ -51,7 +51,18 @@ function runShare(button){
     shareToast('标题与网址已复制，可粘贴到微信、微博等应用');
   }).catch(function(){if(navigator.share)navigator.share({title:title,text:title,url:url}).catch(function(){});});
 }
+var footerObserver;
+function reserveFooterSpace(){
+  var footer=d.querySelector('.footer');if(!footer)return;
+  var height=Math.ceil(footer.getBoundingClientRect().height)+3;
+  d.documentElement.style.setProperty('--qily-cn-footer-space',height+'px');
+  if(w.ResizeObserver&&!footerObserver){
+    footerObserver=new ResizeObserver(reserveFooterSpace);
+    footerObserver.observe(footer,{box:'border-box'});
+  }
+}
 function bind(){
+  reserveFooterSpace();
   var group=ensureButtons();if(!group)return;
   if(group.getAttribute('data-qily-bound')==='v6')return;group.setAttribute('data-qily-bound','v6');
   group.addEventListener('click',function(event){
@@ -64,4 +75,5 @@ function bind(){
 }
 if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
 w.addEventListener('pageshow',bind,{passive:true});
+w.addEventListener('resize',reserveFooterSpace,{passive:true});
 })(document,window);

@@ -136,12 +136,11 @@ grep -Fq 'href="https://qilylean.com/links/cn-public/"' "$RESOURCES_PAGE" || { e
 grep -Fq 'target="_blank" rel="noopener noreferrer"' "$RESOURCES_PAGE" || { echo "ERROR: CN resources bridge external-link safety attributes are missing."; exit 1; }
 
 # China footer is one public component across the whole site.
-# Only /briefs/ and /resources/ are filing-free because they are explicit international-reference entries.
+# Filing follows the current domain: all China-site documents retain both records.
 python3 - "$ROOT_DIR" <<'PY'
 from pathlib import Path
 import re, sys
 root=Path(sys.argv[1])
-reference={'briefs/index.html','resources/index.html'}
 errors=[]
 for path in sorted(root.rglob('*.html')):
     text=path.read_text(encoding='utf-8')
@@ -149,6 +148,7 @@ for path in sorted(root.rglob('*.html')):
         continue
     m=re.search(r'<footer class="footer"(?: data-qily-footer-filing="none")?>.*?</footer>',text,re.S)
     if not m:
+        errors.append(f'{path.relative_to(root)}: China-domain footer missing')
         continue
     footer=m.group(0)
     rel=path.relative_to(root).as_posix()
@@ -160,19 +160,13 @@ for path in sorted(root.rglob('*.html')):
     if '上一网页' in footer or 'data-qily-footer-action="previous"' in footer:
         errors.append(f'{rel}: retired previous-page action returned')
     filings=re.findall(r'https://beian\.(?:miit|mps)\.gov\.cn/',footer)
-    if rel in reference:
-        if 'data-qily-footer-filing="none"' not in footer:
-            errors.append(f'{rel}: filing-free state marker missing')
-        if filings or 'footer-records' in footer or '湘ICP备' in footer or '湘公网安备' in footer:
-            errors.append(f'{rel}: international-reference footer must not expose filing records')
-    else:
-        if 'data-qily-footer-filing="none"' in footer:
-            errors.append(f'{rel}: standard China page incorrectly marked filing-free')
-        if len(filings)!=2 or '湘ICP备2026041143号-1' not in footer or '湘公网安备43020002000443号' not in footer:
-            errors.append(f'{rel}: standard China footer must contain exactly both filing records')
+    if 'data-qily-footer-filing="none"' in footer:
+        errors.append(f'{rel}: China-domain page incorrectly marked filing-free')
+    if len(filings)!=2 or '湘ICP备2026041143号-1' not in footer or '湘公网安备43020002000443号' not in footer:
+        errors.append(f'{rel}: China-domain footer must contain exactly both filing records')
 if errors:
     raise SystemExit('ERROR: canonical CN footer contract failed:\n'+'\n'.join(errors))
-print('PASS: canonical CN footer contract verified; briefs/resources filing-free exception preserved.')
+print('PASS: canonical CN footer contract verified; all China-domain pages retain both filing records.')
 PY
 
 # Filed-name governance: every public CN document identifies the site by the ICP filing service name.

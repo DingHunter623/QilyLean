@@ -29,7 +29,7 @@ jobs:
           base_version = '20260923-cn-typography-base-v7'
           nav_script_version = '20260926-nav-rail-v20-cn-bridge'
           translate_version = '20260922-translate-v6-baidu'
-          footer_actions_version = '20260927-footer-actions-v12-redline-closure'
+          footer_actions_version = '20260930-footer-domain-v14'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
           nav_script_target = f'<script defer src="/assets/cn-nav-rail-v1.js?v={nav_script_version}"></script>'
@@ -39,7 +39,6 @@ jobs:
           footer_actions_js_target = f'<script defer src="/assets/cn-footer-actions-v1.js?v={footer_actions_version}"></script>'
           css_pattern = re.compile(r'\s*<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">\s*')
           footer_target = '<footer class="footer"><div class="footer-inner"><a class="footer-home" href="/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页">精益制造经验分享</a><nav class="footer-actions" aria-label="页脚快捷操作"><button type="button" data-qily-footer-action="top">顶部</button><button type="button" data-qily-footer-action="share">分享当前</button></nav><span class="footer-records notranslate" translate="no"><a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" title="工信部备案查询（新标签页打开）">湘ICP备2026041143号-1</a><a class="police-record" href="https://beian.mps.gov.cn/#/query/webSearch?code=43020002000443" target="_blank" rel="noopener noreferrer" title="公安备案查询（新标签页打开）"><img src="/assets/mps-beian.png" width="18" height="20" alt="" aria-hidden="true"><span>湘公网安备43020002000443号</span></a></span></div></footer>'
-          reference_footer_target = '<footer class="footer" data-qily-footer-filing="none"><div class="footer-inner"><a class="footer-home" href="/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页">精益制造经验分享</a><nav class="footer-actions" aria-label="页脚快捷操作"><button type="button" data-qily-footer-action="top">顶部</button><button type="button" data-qily-footer-action="share">分享当前</button></nav></div></footer>'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>.*?</aside>', re.I | re.S)
           brand_anchor_pattern = re.compile(r'(<a\b[^>]*class=["\']brand["\'][^>]*>)(.*?)(</a>)', re.I | re.S)
           changed = 0
@@ -89,7 +88,7 @@ jobs:
               thesis_count += removed_toc
 
               if re.search(r'<footer class="footer"(?: data-qily-footer-filing="none")?>.*?</footer>', out, flags=re.S):
-                  target_footer = reference_footer_target if path.as_posix() in {'cn-site/briefs/index.html','cn-site/resources/index.html'} else footer_target
+                  target_footer = footer_target
                   out = re.sub(r'<footer class="footer"(?: data-qily-footer-filing="none")?>.*?</footer>', target_footer, out, count=1, flags=re.S)
                   footer_count += 1
 
@@ -179,14 +178,9 @@ jobs:
                   footered += 1
                   if footer_count != 1 or footer_tags != 1 or 'footer-links' in text:
                       bad.append((str(path), 'footer', footer_count, footer_tags))
-                  is_reference = path.as_posix() in {'cn-site/briefs/index.html','cn-site/resources/index.html'}
                   footer_block = (re.search(r'<footer class="footer"(?: data-qily-footer-filing="none")?>.*?</footer>', text, re.S) or [None])[0] or ''
-                  if is_reference:
-                      if 'data-qily-footer-filing="none"' not in footer_block or '湘ICP备' in footer_block or '湘公网安备' in footer_block or 'footer-records' in footer_block:
-                          bad.append((str(path), 'reference-footer-must-be-filing-free'))
-                  else:
-                      if '湘ICP备2026041143号-1' not in footer_block or '湘公网安备43020002000443号' not in footer_block:
-                          bad.append((str(path), 'standard-footer-filing-missing'))
+                  if 'data-qily-footer-filing="none"' in footer_block or '湘ICP备2026041143号-1' not in footer_block or '湘公网安备43020002000443号' not in footer_block:
+                      bad.append((str(path), 'china-domain-footer-filing-missing'))
 
               for match in brand_anchor_pattern.finditer(text):
                   brand_anchors += 1
