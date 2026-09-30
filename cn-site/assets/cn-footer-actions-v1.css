@@ -45,7 +45,8 @@ html:root:root:root:root body .footer .footer-home{
   color:#ffe39b!important;
   -webkit-text-fill-color:#ffe39b!important;
   background:rgba(255,255,255,.055)!important;
-  font:850 var(--qily-cn-primary-nav-font-size,20px)/1.2 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  font:850 var(--qily-cn-primary-nav-font-size,20px)/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  letter-spacing:0!important;
   text-decoration:none!important;
   white-space:nowrap!important;
   text-align:center!important;
@@ -82,7 +83,7 @@ html:root:root:root:root body .footer .footer-actions>button{
   -webkit-text-fill-color:#ffe39b!important;
   box-shadow:none!important;
   font:850 var(--qily-cn-primary-nav-font-size,20px)/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
-  letter-spacing:.01em!important;
+  letter-spacing:0!important;
   white-space:nowrap!important;
   cursor:pointer!important;
   touch-action:manipulation!important;
@@ -119,7 +120,8 @@ html:root:root:root:root body .footer .footer-records>a{
   background:rgba(255,255,255,.055)!important;
   color:#fff!important;
   -webkit-text-fill-color:#fff!important;
-  font:850 var(--qily-cn-primary-nav-font-size,20px)/1.1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  font:850 var(--qily-cn-primary-nav-font-size,20px)/1 "Microsoft YaHei","PingFang SC",Arial,sans-serif!important;
+  letter-spacing:0!important;
   text-decoration:underline!important;
   text-underline-offset:3px!important;
   text-decoration-thickness:1px!important;
