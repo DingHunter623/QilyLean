@@ -170,6 +170,7 @@ assert(cnRail.includes('mousemove'), 'CN nav rail mouse move runtime is missing.
 assert(cnRail.includes('touchstart'), 'CN nav rail touch drag is missing.');
 assert(cnRail.includes("label:'关于我们'"), 'CN primary navigation must use 关于我们.');
 assert(cnRail.includes("key:'briefs',href:'/briefs/',label:'精选简报'"), 'CN brief entry must stay on the China-site bridge route.');
+assert(cnRail.includes("key:'knowledge',href:'/knowledge/',label:'知识索引'"), 'CN knowledge entry must use 知识索引.');
 assert(cnRail.includes("key:'resources',href:'/resources/',label:'资源协同'"), 'CN resource entry must stay on the China-site bridge route.');
 assert(cnRail.includes("data-qily-cn-nav-contract','20260926-v7-bridge'"), 'CN bridge navigation contract runtime is missing.');
 assert(cnRail.includes('installNavMouseDrag'), 'CN primary nav direct mouse drag is missing.');
@@ -177,7 +178,7 @@ assert(!cnRail.includes('pointerdown'), 'CN nav rail must not depend on PointerE
 assert(!cnRail.includes('data-qily-translation-provider'), 'CN nav rail must remain translation-neutral.');
 assert(cnTranslate.includes('QilyLean CN In-Page Translation V7'), 'CN in-page translator V3 runtime is missing.');
 assert(cnTranslate.includes("data-qily-translation-provider','qilylean-api'"), 'CN translator must declare the QilyLean in-page provider.');
-assert(cnTranslate.includes("data-qily-translation-engine','youdao'"), 'CN translator must declare Baidu as its preferred backend engine.');
+assert(cnTranslate.includes("data-qily-translation-engine','youdao'"), 'CN translator must declare Youdao as its preferred backend engine.');
 assert(cnTranslate.includes('concurrency=1'), 'CN translator batch concurrency optimization is missing.');
 assert(cnTranslate.includes('API_BASES'), 'CN translator must use the in-page translation API.');
 assert(cnTranslate.includes("option(select,'zh-CN','中文简体')"), 'CN translator Simplified Chinese option is missing.');
@@ -212,6 +213,8 @@ for(const rel of cnPages){
     assert(html.includes('data-qily-cn-nav-contract="20260926-v7-bridge"'), rel+' must use the current CN navigation contract.');
     assert(/<a href="\/about\/" data-qily-nav-key="about"[^>]*>关于我们<\/a>/.test(html), rel+' CN primary-nav static label must use 关于我们.');
     assert(!/>关于<\/a>/.test(html), rel+' must not retain the retired 关于 navigation label.');
+    assert(/<a href="\/knowledge\/" data-qily-nav-key="knowledge"[^>]*>知识索引<\/a>/.test(html), rel+' CN primary-nav static label must use 知识索引.');
+    assert(!/<a href="\/knowledge\/" data-qily-nav-key="knowledge"[^>]*>知识分享<\/a>/.test(html), rel+' must not retain the retired 知识分享 navigation label.');
     assert(/<a href="\/briefs\/" data-qily-nav-key="briefs"[^>]*>精选简报<\/a>/.test(html), rel+' CN brief entry must use the internal bridge route.');
     assert(/<a href="\/resources\/" data-qily-nav-key="resources"[^>]*>资源协同<\/a>/.test(html), rel+' CN resource entry must use the internal bridge route.');
     assert(!/data-qily-nav-key="(?:briefs|resources)"[^>]*data-qily-external="international"/.test(html), rel+' CN primary navigation must not bypass its internal bridge pages.');
