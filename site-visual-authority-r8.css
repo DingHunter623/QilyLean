@@ -116,6 +116,7 @@ html body main :is(code,.url,.qily-url,[data-qily-wrap="technical"]){overflow-wr
 /* 04 | Header: one geometry, complete labels, deep-teal movement rail. */
 html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header){
   box-sizing:border-box!important;
+  width:auto!important;
   max-width:var(--qily-r8-axis)!important;
   margin-left:max(var(--qily-r8-gutter),calc((100vw - var(--qily-r8-axis))/2))!important;
   margin-right:max(var(--qily-r8-gutter),calc((100vw - var(--qily-r8-axis))/2))!important;
