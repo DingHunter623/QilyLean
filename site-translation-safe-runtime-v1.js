@@ -160,6 +160,15 @@
       header.setAttribute('data-qily-google-translate-slot','ready');
       return;
     }
+    /* English/landing shells may intentionally omit a primary nav. Keep translation
+     * inside their visible Header instead of falling back to a body-level orphan. */
+    header=d.querySelector('header.qily-site-header,header.qily-global-header,header.topbar,header.top,body>header');
+    if(header){
+      var host=header.querySelector('.en-shell,.header-inner')||header;
+      if(control.parentNode!==host)host.appendChild(control);
+      header.setAttribute('data-qily-google-translate-slot','ready');
+      return;
+    }
     if(d.body&&!control.isConnected)d.body.insertBefore(control,d.body.firstChild);
   }
 

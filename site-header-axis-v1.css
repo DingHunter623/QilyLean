@@ -162,6 +162,15 @@ html body .qily-web-translate__select option{font-size:16px!important}
 @media (max-width:1180px){
   html body header.qily-site-header,
   html body header.qily-global-header{margin-left:var(--qily-header-gutter)!important;margin-right:var(--qily-header-gutter)!important}
+  /* The full-bleed header surface must use the document content box, not 100vw,
+   * because 100vw includes the vertical scrollbar and can create page-level overflow. */
+  html body header.qily-site-header::before,
+  html body header.qily-global-header::before{
+    left:calc(-1 * var(--qily-header-gutter))!important;
+    right:calc(-1 * var(--qily-header-gutter))!important;
+    width:auto!important;
+    transform:none!important;
+  }
 }
 
 @media (max-width:900px){

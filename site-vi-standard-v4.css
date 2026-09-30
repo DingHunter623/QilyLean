@@ -115,6 +115,12 @@ html body :is(.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.projec
   box-shadow:none!important;
 }
 
+/* Legacy page-local Hero rules can carry two class selectors plus !important.
+ * Once v4 has explicitly classified a Hero, the formal marker is the final visual authority. */
+html:root body [data-qily-vi-v4-hero="118deg"]:not(.qily-aircraft-brand-hero){
+  background-image:var(--qily-hero-formal)!important;
+}
+
 /* 04 | Typography hierarchy. */
 html body main :is(h1,.hero-title,.module-title){line-height:1.08!important;font-weight:900!important;}
 html body main :is(h2,.section-title,.section-heading h2,.section-head h2,.module-heading h2){line-height:1.18!important;font-weight:850!important;}
