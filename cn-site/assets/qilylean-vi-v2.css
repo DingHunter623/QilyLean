@@ -404,12 +404,20 @@ html:root body .nav>a[href="/ie/"],
 html:root body .nav>a[href="/standardization/"],
 html:root body .nav>a[href="/factory/"],
 html:root body .nav>a[href="/digital/"],
-html:root body .nav>a[href="/methods/"],
-html:root body .nav>a[href="/knowledge/"]{
+html:root body .nav>a[href="/methods/"]{
   min-width:96px!important;
   padding-left:12px!important;
   padding-right:12px!important;
   font-size:0!important;
+  white-space:nowrap!important;
+  word-break:keep-all!important;
+  overflow-wrap:normal!important;
+}
+html:root body .nav>a[href="/knowledge/"]{
+  min-width:96px!important;
+  padding-left:12px!important;
+  padding-right:12px!important;
+  font-size:var(--qily-cn-primary-nav-font-size)!important;
   white-space:nowrap!important;
   word-break:keep-all!important;
   overflow-wrap:normal!important;
@@ -420,14 +428,12 @@ html:root body .nav>a[href="/standardization/"]::before{content:'标准体系'}
 html:root body .nav>a[href="/factory/"]::before{content:'工厂规划'}
 html:root body .nav>a[href="/digital/"]::before{content:'数智工厂'}
 html:root body .nav>a[href="/methods/"]::before{content:'改善工具'}
-html:root body .nav>a[href="/knowledge/"]::before{content:'知识索引'}
 html:root body .nav>a[href="/lean/"]::before,
 html:root body .nav>a[href="/ie/"]::before,
 html:root body .nav>a[href="/standardization/"]::before,
 html:root body .nav>a[href="/factory/"]::before,
 html:root body .nav>a[href="/digital/"]::before,
-html:root body .nav>a[href="/methods/"]::before,
-html:root body .nav>a[href="/knowledge/"]::before{
+html:root body .nav>a[href="/methods/"]::before{
   display:inline-block!important;
   font-size:var(--qily-cn-primary-nav-font-size)!important;
   line-height:1.22!important;
@@ -446,8 +452,7 @@ html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"
 html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/standardization/"],
 html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/factory/"],
 html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/digital/"],
-html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/methods/"],
-html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/knowledge/"]{
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/methods/"]{
   font-size:var(--qily-cn-primary-nav-font-size)!important;
 }
 html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/lean/"]::before,
@@ -455,8 +460,7 @@ html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"
 html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/standardization/"]::before,
 html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/factory/"]::before,
 html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/digital/"]::before,
-html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/methods/"]::before,
-html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/knowledge/"]::before{
+html[data-qily-translation-language]:not([data-qily-translation-language="zh-CN"]) body .nav>a[href="/methods/"]::before{
   content:none!important;
   display:none!important;
 }

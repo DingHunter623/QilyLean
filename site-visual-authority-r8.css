@@ -213,9 +213,11 @@ html body .qily-web-translate__select{
 
 /* 06 | Qily Table: content drives height; scroll belongs to the wrapper, never to the table element. */
 html body main .qily-table-scroll{
+  box-sizing:border-box!important;
   width:100%!important;
   max-width:100%!important;
   min-width:0!important;
+  margin-inline:0!important;
   overflow-x:auto!important;
   overflow-y:hidden!important;
   overscroll-behavior-inline:contain!important;

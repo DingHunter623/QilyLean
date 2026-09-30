@@ -115,6 +115,12 @@ html body :is(.hero,.module-hero,.daily-hero,.article-hub,.document-hero,.projec
   box-shadow:none!important;
 }
 
+/* Legacy page-local Hero rules can carry two class selectors plus !important.
+ * Once v4 has explicitly classified a Hero, the formal marker is the final visual authority. */
+html:root:root body [data-qily-vi-v4-hero="118deg"]:not(.qily-aircraft-brand-hero){
+  background-image:var(--qily-hero-formal)!important;
+}
+
 /* 04 | Typography hierarchy. */
 html body main :is(h1,.hero-title,.module-title){line-height:1.08!important;font-weight:900!important;}
 html body main :is(h2,.section-title,.section-heading h2,.section-head h2,.module-heading h2){line-height:1.18!important;font-weight:850!important;}
@@ -187,6 +193,14 @@ html body header.qily-site-header .qily-web-translate{
   box-shadow:none!important;
 }
 html body header.qily-site-header .qily-web-translate__select{min-height:34px!important;min-width:0!important;max-width:100%!important;}
+
+/* English landing Header has no primary nav; when the retained translator is mounted
+ * into its existing shell, allow the utility to wrap instead of widening the page. */
+html body header.en-header.qily-site-header .en-shell{
+  min-width:0!important;
+  max-width:100%!important;
+  flex-wrap:wrap!important;
+}
 
 /* 09 | Shared Dock: one instance, in document flow, no content overlay. */
 html body #floatDock.qily-float-dock,

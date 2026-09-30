@@ -13,7 +13,7 @@ var CANONICAL_NAV_ITEMS=[
   {key:'home',href:'/',label:'首页'},
   {key:'lean',href:'/lean/',label:'精益制造'},
   {key:'projects',href:'/notes/',label:'代表项目'},
-  {key:'knowledge',href:'/knowledge/',label:'知识分享'},
+  {key:'knowledge',href:'/knowledge/',label:'知识索引'},
   {key:'briefs',href:'/briefs/',label:'精选简报'},
   {key:'resources',href:'/resources/',label:'资源协同'},
   {key:'about',href:'/about/',label:'关于我们'}
@@ -42,6 +42,7 @@ function ensureCanonicalNavigation(nav){
     current.length===expected.length&&current.every(function(a,i){
       return a.getAttribute('data-qily-nav-key')===expected[i].getAttribute('data-qily-nav-key')&&
         a.href===expected[i].href&&
+        a.textContent.trim()===CANONICAL_NAV_ITEMS[i].label&&
         (!CANONICAL_NAV_ITEMS[i].external||!!a.querySelector('.qily-external-mark'));
     });
   if(same)return false;

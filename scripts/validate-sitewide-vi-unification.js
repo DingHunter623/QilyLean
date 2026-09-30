@@ -117,8 +117,8 @@ const cnTranslateCss=read('cn-site/assets/cn-translate-baidu-v1.css');
 const workerSocial=read('cloudflare-worker/worker-social.js');
 assert(workerSocial.includes("BAIDU_TRANSLATE_URL = 'https://fanyi-api.baidu.com/api/trans/vip/translate'"), 'Baidu translation API endpoint is missing from the translation worker.');
 assert(workerSocial.includes("TRANSLATION_CACHE_VERSION = 'v5-provider-aware'"), 'Provider-aware translation cache generation is missing.');
-assert(workerSocial.includes('callBaiduTranslation'), 'Baidu translation worker implementation is missing.');
-assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation fallback implementation is missing.');
+assert(workerSocial.includes('callBaiduTranslation'), 'Baidu translation fallback implementation is missing.');
+assert(workerSocial.includes('callYoudaoTranslation'), 'Youdao translation preferred implementation is missing.');
 [
   'QILY-CN-NAV-RAIL-V7',
   'QILY-CN-STICKY-HEADER-V1',
@@ -177,7 +177,7 @@ assert(!cnRail.includes('pointerdown'), 'CN nav rail must not depend on PointerE
 assert(!cnRail.includes('data-qily-translation-provider'), 'CN nav rail must remain translation-neutral.');
 assert(cnTranslate.includes('QilyLean CN In-Page Translation V7'), 'CN in-page translator V3 runtime is missing.');
 assert(cnTranslate.includes("data-qily-translation-provider','qilylean-api'"), 'CN translator must declare the QilyLean in-page provider.');
-assert(cnTranslate.includes("data-qily-translation-engine','baidu'"), 'CN translator must declare Baidu as its preferred backend engine.');
+assert(cnTranslate.includes("data-qily-translation-engine','youdao'"), 'CN translator must declare Baidu as its preferred backend engine.');
 assert(cnTranslate.includes('concurrency=1'), 'CN translator batch concurrency optimization is missing.');
 assert(cnTranslate.includes('API_BASES'), 'CN translator must use the in-page translation API.');
 assert(cnTranslate.includes("option(select,'zh-CN','中文简体')"), 'CN translator Simplified Chinese option is missing.');

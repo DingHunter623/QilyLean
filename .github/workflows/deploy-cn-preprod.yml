@@ -77,7 +77,7 @@ jobs:
           test -f cn-site/assets/cn-translate-baidu-v1.css
           ! grep -Fq 'data-qily-translation-provider' cn-site/assets/cn-nav-rail-v1.js
           grep -Fq 'QilyLean CN In-Page Translation V7' cn-site/assets/cn-translate-baidu-v1.js
-          grep -Fq "data-qily-translation-engine','baidu'" cn-site/assets/cn-translate-baidu-v1.js
+          grep -Fq "data-qily-translation-engine','youdao'" cn-site/assets/cn-translate-baidu-v1.js
           grep -Fq 'concurrency=1' cn-site/assets/cn-translate-baidu-v1.js
           grep -Fq 'QilyLean CN In-Page Translation UI V3' cn-site/assets/cn-translate-baidu-v1.css
           test -f cn-site/assets/portal.css
@@ -549,7 +549,7 @@ jobs:
           for marker in ['QilyLean CN Primary Navigation Rail V7', 'QILY-CN-NAV-FINAL-PRODUCTION-V20', 'qily-external-mark', "data-qily-cn-nav-contract','20260926-v7-bridge'", 'qily-cn-nav-shell', 'qily-primary-nav-scroll-thumb', 'mousedown', 'mousemove', 'touchstart', 'ResizeObserver']:
               if marker not in nav_runtime:
                   raise SystemExit(f'Production China nav runtime missing: {marker}')
-          for marker in ['QilyLean CN In-Page Translation V7', "data-qily-translation-engine','baidu'", 'concurrency=1']:
+          for marker in ['QilyLean CN In-Page Translation V7', "data-qily-translation-engine','youdao'", 'concurrency=1']:
               if marker not in translate_runtime:
                   raise SystemExit(f'Production China translation runtime missing: {marker}')
 
