@@ -140,8 +140,8 @@ test('China-site Resources retains both filings with the shared footer visual',a
   expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
   expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(s.navFont,1);
-  expect(s.recordFont).toBeCloseTo(s.navFont,1);
+  expect(s.footerFont).toBeCloseTo(18,1);
+  expect(s.recordFont).toBeCloseTo(18,1);
 });
 
 test('China-site mobile footer keeps canonical readable sizing without overflow',async({page})=>{
@@ -154,8 +154,8 @@ test('China-site mobile footer keeps canonical readable sizing without overflow'
   expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
   expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(s.navFont,1);
-  expect(s.recordFont).toBeCloseTo(s.navFont,1);
+  expect(s.footerFont).toBeCloseTo(17,1);
+  expect(s.recordFont).toBeCloseTo(17,1);
   expect(s.footerLeft).toBeGreaterThanOrEqual(0);
   expect(s.footerRight).toBeLessThanOrEqual(s.viewport+1);
 });
@@ -214,5 +214,22 @@ for(const width of [320,360,390,1041,1100,1600]){
       await footer.locator('[data-qily-footer-action="top"]').click();
       await expect.poll(()=>page.evaluate(()=>scrollY)).toBe(0);
     }
+  });
+}
+
+for(const width of [320,390,412,1180,1600]){
+  test(`China public footer typography matches international actions at ${width}px`,async({page,context})=>{
+    await page.setViewportSize({width,height:900});
+    await page.goto(intBase+'/',{waitUntil:'domcontentloaded'});
+    const reference=page.locator('#floatDock button').first();
+    await expect(reference).toBeVisible();
+    const typography=await reference.evaluate(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight};});
+    const china=await context.newPage();
+    await china.setViewportSize({width,height:900});
+    await china.goto(cnBase+'/resources/',{waitUntil:'domcontentloaded'});
+    const actual=await china.locator('.footer .footer-home,.footer .footer-actions>button,.footer .footer-records>a').evaluateAll(els=>els.map(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight};}));
+    expect(actual).toHaveLength(5);
+    for(const item of actual) expect(item).toEqual(typography);
+    await china.close();
   });
 }
