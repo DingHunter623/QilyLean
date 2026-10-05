@@ -3,6 +3,10 @@ const path = require('path');
 
 const root = path.resolve(__dirname, '..');
 const dir = path.join(root, 'global-knowledge');
+const publicStylesheets = new Set([
+  '/site-visual-authority-r8.css?v=20260831-r8-authority-v2-redline-closure',
+  '/site-public-footer-type-v1.css?v=20261005-public-footer-v1',
+]);
 const forbiddenSchemes = /^(?:mailto:|tel:|weixin:|whatsapp:)/i;
 const forbiddenRoutes = /\/(?:cooperation|links|projects|contact|trust|capabilities|experience|improvements|lean-production)(?:\/|$)/i;
 
@@ -46,6 +50,8 @@ for (const file of htmlFiles) {
       continue;
     }
 
+    // Shared presentation assets are allowed as stylesheets, never as navigation links.
+    if (publicStylesheets.has(href) && [...html.matchAll(/<link\b[^>]*>/gi)].some(m=>/\brel=[\"']stylesheet[\"']/i.test(m[0]) && m[0].includes('href=\"'+href+'\"'))) continue;
     if (href.startsWith('#')) continue;
     if (href.startsWith('/global-knowledge/')) continue;
     if (href === '/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16') continue;
