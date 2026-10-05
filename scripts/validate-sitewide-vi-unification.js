@@ -306,15 +306,19 @@ console.log('Sitewide VI governance passed: international interaction/type autho
 // Public footers share one typography source across the international and CN deployments.
 const publicFooterType=read('site-public-footer-type-v1.css');
 assert(publicFooterType===read('cn-site/site-public-footer-type-v1.css'), 'CN public footer deployment copy must equal the canonical stylesheet.');
-const publicFooterLink='/site-public-footer-type-v1.css?v=20261005-public-footer-v1';
+assert(publicFooterType.includes('-webkit-font-smoothing:antialiased!important'), 'Public footer must use international menu antialiasing.');
+assert(publicFooterType.includes('text-rendering:auto!important'), 'Public footer must use international menu text rendering.');
+const publicFooterLink='/site-public-footer-type-v1.css?v=20261005-public-footer-v2';
 function checkPublicFooterLinks(dir){
   for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
     const rel=path.join(dir,entry.name);
     if(entry.isDirectory()) checkPublicFooterLinks(rel);
     else if(entry.name.endsWith('.html')){
       const html=read(rel);
-      if(html.includes('<footer class="footer">')||html.includes('<footer class="cn-bridge-footer">'))
+      if(html.includes('<footer class="footer">')||html.includes('<footer class="cn-bridge-footer">')){
         assert(html.includes(publicFooterLink), rel+' must load the shared public footer typography version.');
+        assert((html.match(/id="qilyPublicFooterTypeV1"/g)||[]).length===1, rel+' must load the public footer stylesheet exactly once.');
+      }
     }
   }
 }

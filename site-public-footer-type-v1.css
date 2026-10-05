@@ -8,6 +8,8 @@ html:root:root:root:root:root body :is(.footer,.cn-bridge-footer) :is(a,button,s
   font-weight:850!important;
   line-height:1!important;
   letter-spacing:0!important;
+  -webkit-font-smoothing:antialiased!important;
+  text-rendering:auto!important;
 }
 html:root:root:root:root:root body :is(.footer,.cn-bridge-footer) :is(.footer-home,.cn-bridge-footer-brand,button),
 html:root:root:root:root:root body :is(.footer,.cn-bridge-footer) :is(.footer-home,.cn-bridge-footer-brand,button) *{
