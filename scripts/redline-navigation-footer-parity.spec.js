@@ -257,7 +257,7 @@ for(const width of [320,390,412,1180,1600]){
       await publicPage.evaluate(()=>document.fonts.ready);
       const footer=publicPage.locator(target.shell);
       await expect(footer,label+' shared footer').toBeVisible();
-      await expect(publicPage.locator('link[href="/site-public-footer-type-v1.css?v=20261005-public-footer-v2"]'),label+' must request the shared versioned type authority').toHaveCount(1);
+      await expect(publicPage.locator('link[href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3"]'),label+' must request the shared versioned type authority').toHaveCount(1);
       const controls=footer.locator(target.controls);
       await expect(controls,label+' public controls and filing text').toHaveCount(target.count);
       const actual=await controls.evaluateAll(els=>els.map(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing==='normal'?'0px':s.letterSpacing,smoothing:s.getPropertyValue('-webkit-font-smoothing'),rendering:s.textRendering};}));
