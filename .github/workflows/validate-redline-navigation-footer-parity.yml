@@ -4,6 +4,8 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'site-public-footer-type-v1.css'
+      - 'cn-site/site-public-footer-type-v1.css'
       - 'site-navigation.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-visual-system-v2.css'
@@ -19,6 +21,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'site-public-footer-type-v1.css'
+      - 'cn-site/site-public-footer-type-v1.css'
       - 'site-navigation.js'
       - 'site-dock-share-runtime-v1.js'
       - 'site-visual-system-v2.css'

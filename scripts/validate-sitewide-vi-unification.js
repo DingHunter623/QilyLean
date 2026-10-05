@@ -302,3 +302,22 @@ assert(fs.existsSync(path.join(root,'.github/workflows/validate-public-copy-gove
 
 if(process.exitCode) process.exit(process.exitCode);
 console.log('Sitewide VI governance passed: international interaction/type authority, Global Knowledge shared VI, and CN deep-teal rail and single-owner in-page translation header are aligned.');
+
+// Public footers share one typography source across the international and CN deployments.
+const publicFooterType=read('site-public-footer-type-v1.css');
+assert(publicFooterType===read('cn-site/site-public-footer-type-v1.css'), 'CN public footer deployment copy must equal the canonical stylesheet.');
+const publicFooterLink='/site-public-footer-type-v1.css?v=20261005-public-footer-v1';
+function checkPublicFooterLinks(dir){
+  for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
+    const rel=path.join(dir,entry.name);
+    if(entry.isDirectory()) checkPublicFooterLinks(rel);
+    else if(entry.name.endsWith('.html')){
+      const html=read(rel);
+      if(html.includes('<footer class="footer">')||html.includes('<footer class="cn-bridge-footer">'))
+        assert(html.includes(publicFooterLink), rel+' must load the shared public footer typography version.');
+    }
+  }
+}
+checkPublicFooterLinks('cn-site');
+checkPublicFooterLinks('global-knowledge');
+checkPublicFooterLinks('links/cn-public');
