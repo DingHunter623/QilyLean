@@ -308,7 +308,7 @@ const publicFooterType=read('site-public-footer-type-v1.css');
 assert(publicFooterType===read('cn-site/site-public-footer-type-v1.css'), 'CN public footer deployment copy must equal the canonical stylesheet.');
 assert(publicFooterType.includes('-webkit-font-smoothing:antialiased!important'), 'Public footer must use international menu antialiasing.');
 assert(publicFooterType.includes('text-rendering:auto!important'), 'Public footer must use international menu text rendering.');
-const publicFooterLink='/site-public-footer-type-v1.css?v=20261005-public-footer-v2';
+const publicFooterLink='/site-public-footer-type-v1.css?v=20261005-public-footer-v3';
 function checkPublicFooterLinks(dir){
   for(const entry of fs.readdirSync(dir,{withFileTypes:true})){
     const rel=path.join(dir,entry.name);

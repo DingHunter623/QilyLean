@@ -31,6 +31,7 @@ jobs:
           grep -Fq '生产现场管理铁三脚' cn-site/knowledge/production-engineering-quality-tripod/index.html
           grep -Fq 'Energy 能/源' cn-site/knowledge/production-engineering-quality-tripod/index.html
           grep -Fq 'production-engineering-quality-tripod' cn-site/sitemap.xml
+          cmp site-public-footer-type-v1.css cn-site/site-public-footer-type-v1.css
 
       - name: Configure SSH
         shell: bash
@@ -55,6 +56,7 @@ jobs:
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes)
+          timeout 90s scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/site-public-footer-type-v1.css "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-public-footer.css"
           timeout 90s scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/index.html "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-home-20260923.html"
           timeout 90s scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/knowledge/index.html "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-knowledge-20260923.html"
           timeout 90s scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/knowledge/production-engineering-quality-tripod/index.html "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-tripod-20260923.html"
@@ -73,6 +75,9 @@ jobs:
           set -euo pipefail
           ROOT=/var/www/qilylean-cn/current
           test -d "$ROOT"
+          # Install the shared dependency before HTML can request its new immutable version.
+          sudo install -m 0644 /tmp/qily-cn-public-footer.css "$ROOT/site-public-footer-type-v1.css"
+          cmp /tmp/qily-cn-public-footer.css "$ROOT/site-public-footer-type-v1.css"
           sudo install -m 0644 /tmp/qily-cn-home-20260923.html "$ROOT/index.html"
           sudo install -m 0644 /tmp/qily-cn-knowledge-20260923.html "$ROOT/knowledge/index.html"
           sudo install -d -m 0755 "$ROOT/knowledge/production-engineering-quality-tripod"
@@ -84,10 +89,10 @@ jobs:
           grep -Fq '生产现场管理铁三脚' "$ROOT/knowledge/index.html"
           grep -Fq 'Energy 能/源' "$ROOT/knowledge/production-engineering-quality-tripod/index.html"
           grep -Fq 'production-engineering-quality-tripod' "$ROOT/sitemap.xml"
-          rm -f /tmp/qily-cn-home-20260923.html /tmp/qily-cn-knowledge-20260923.html /tmp/qily-cn-tripod-20260923.html /tmp/qily-cn-sitemap-20260923.xml
+          rm -f /tmp/qily-cn-public-footer.css /tmp/qily-cn-home-20260923.html /tmp/qily-cn-knowledge-20260923.html /tmp/qily-cn-tripod-20260923.html /tmp/qily-cn-sitemap-20260923.xml
           REMOTE
           python3 - <<'PY'
-          import urllib.request
+          import pathlib, re, urllib.parse, urllib.request
           urls = {
               'home':'https://qilylean.cn/?closure=20260923-tripod',
               'knowledge':'https://qilylean.cn/knowledge/?closure=20260923-tripod',
@@ -100,6 +105,15 @@ jobs:
                   body=r.read().decode('utf-8','ignore')
                   if r.status != 200:
                       raise SystemExit(f'{name}: HTTP {r.status}')
+              if name=='home':
+                  asset=re.search(r'<link id="qilyPublicFooterTypeV1"[^>]*href="([^"]+)"', body)
+                  if not asset:
+                      raise SystemExit('home: shared public footer stylesheet missing')
+                  asset_url=urllib.parse.urljoin('https://qilylean.cn/', asset.group(1))
+                  with urllib.request.urlopen(asset_url,timeout=20) as response:
+                      live_css=response.read()
+                  if live_css != pathlib.Path('cn-site/site-public-footer-type-v1.css').read_bytes():
+                      raise SystemExit('home: public footer CSS does not match the published HTML release')
               if name in ('home','knowledge','brief') and '生产现场管理铁三脚' not in body:
                   raise SystemExit(f'{name}: new brief marker missing')
               if name=='brief' and 'Energy 能/源' not in body:
