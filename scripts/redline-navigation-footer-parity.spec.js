@@ -233,12 +233,14 @@ for(const width of [320,360,390,1041,1100,1600]){
 
 for(const width of [320,390,412,1180,1600]){
   test(`China public footer typography matches international actions across ${width===390||width===1600?'all public pages':'responsive entries'} at ${width}px`,async({page,context})=>{
-    test.setTimeout(120000);
+    test.setTimeout(180000);
     await page.setViewportSize({width,height:900});
-    await page.goto(intBase+'/',{waitUntil:'domcontentloaded'});
+    await page.goto(intBase+'/',{waitUntil:'load'});
+    await page.waitForTimeout(1600);
+    await page.evaluate(()=>document.fonts.ready);
     const reference=page.locator('#floatDock button').first();
     await expect(reference).toBeVisible();
-    const typography=await reference.evaluate(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing==='normal'?'0px':s.letterSpacing};});
+    const typography=await reference.evaluate(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing==='normal'?'0px':s.letterSpacing,smoothing:s.getPropertyValue('-webkit-font-smoothing'),rendering:s.textRendering};});
     const allPages=width===390||width===1600;
     expect(chinaRoutes.length).toBeGreaterThanOrEqual(24);
     const targets=[
@@ -249,14 +251,16 @@ for(const width of [320,390,412,1180,1600]){
     await publicPage.setViewportSize({width,height:900});
     for(const target of targets){
       const label=target.base+target.route;
-      const response=await publicPage.goto(label,{waitUntil:'domcontentloaded'});
+      const response=await publicPage.goto(label,{waitUntil:'load'});
       expect(response&&response.ok(),label+' must load').toBeTruthy();
+      await publicPage.waitForTimeout(1600);
+      await publicPage.evaluate(()=>document.fonts.ready);
       const footer=publicPage.locator(target.shell);
       await expect(footer,label+' shared footer').toBeVisible();
-      await expect(publicPage.locator('link[href="/site-public-footer-type-v1.css?v=20261005-public-footer-v1"]'),label+' must request the shared versioned type authority').toHaveCount(1);
+      await expect(publicPage.locator('link[href="/site-public-footer-type-v1.css?v=20261005-public-footer-v2"]'),label+' must request the shared versioned type authority').toHaveCount(1);
       const controls=footer.locator(target.controls);
       await expect(controls,label+' public controls and filing text').toHaveCount(target.count);
-      const actual=await controls.evaluateAll(els=>els.map(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing==='normal'?'0px':s.letterSpacing};}));
+      const actual=await controls.evaluateAll(els=>els.map(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing==='normal'?'0px':s.letterSpacing,smoothing:s.getPropertyValue('-webkit-font-smoothing'),rendering:s.textRendering};}));
       for(const item of actual)expect(item,label+' public footer type').toEqual(typography);
       const home=footer.locator(target.home);
       await expect(home,label+' normal site label').toHaveCSS('text-decoration-line','none');
