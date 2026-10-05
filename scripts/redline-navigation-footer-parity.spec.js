@@ -1,7 +1,21 @@
 const {test,expect}=require('@playwright/test');
+const fs=require('fs');
+const path=require('path');
 
 const intBase=process.env.QILY_INT_BASE||'http://127.0.0.1:4173';
 const cnBase=process.env.QILY_CN_BASE||'http://127.0.0.1:4174';
+const bridgeRoutes=['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/'];
+
+function chinaFooterRoutes(dir=path.join(process.cwd(),'cn-site')){
+  return fs.readdirSync(dir,{withFileTypes:true}).flatMap(entry=>{
+    const file=path.join(dir,entry.name);
+    if(entry.isDirectory())return chinaFooterRoutes(file);
+    if(!entry.name.endsWith('.html')||!fs.readFileSync(file,'utf8').includes('class="footer-home"'))return [];
+    const relative=path.relative(path.join(process.cwd(),'cn-site'),file).replace(/\\/g,'/');
+    return ['/'+relative.replace(/index\.html$/,'')];
+  }).sort();
+}
+const chinaRoutes=chinaFooterRoutes();
 
 test('China desktop footer distributes controls and its site name returns home',async({page})=>{
   await page.setViewportSize({width:1600,height:1000});
@@ -25,7 +39,7 @@ test('China desktop footer distributes controls and its site name returns home',
   await expect(page).toHaveURL(cnBase+'/');
 });
 
-for(const route of ['/global-knowledge/briefs/','/links/cn-public/','/global-knowledge/','/global-knowledge/terminology/','/global-knowledge/library/','/global-knowledge/view/']){
+for(const route of bridgeRoutes){
   test(`reference footer is visible, left aligned and filing-free: ${route}`,async({page})=>{
     await page.setViewportSize({width:1600,height:1000});
     await page.goto(intBase+route,{waitUntil:'domcontentloaded'});
@@ -160,7 +174,7 @@ test('China-site mobile footer keeps canonical readable sizing without overflow'
   expect(s.footerRight).toBeLessThanOrEqual(s.viewport+1);
 });
 
-test('international CN-bridge current module is visible and footer type follows bridge nav',async({page})=>{
+test('international CN-bridge current module is visible and footer uses shared 18px sizing',async({page})=>{
   await page.setViewportSize({width:1180,height:850});
   const response=await page.goto(intBase+'/links/cn-public/',{waitUntil:'domcontentloaded',timeout:30000});
   expect(response&&response.ok()).toBeTruthy();
@@ -170,10 +184,10 @@ test('international CN-bridge current module is visible and footer type follows 
   expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
   expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(s.navFont,1);
+  expect(s.footerFont).toBeCloseTo(18,1);
 });
 
-test('international CN-bridge mobile footer follows the current 20px bridge nav scale',async({page})=>{
+test('international CN-bridge mobile footer uses shared 17px sizing',async({page})=>{
   await page.setViewportSize({width:390,height:844});
   const response=await page.goto(intBase+'/links/cn-public/',{waitUntil:'domcontentloaded',timeout:30000});
   expect(response&&response.ok()).toBeTruthy();
@@ -182,7 +196,7 @@ test('international CN-bridge mobile footer follows the current 20px bridge nav 
   expect(s.activeLeft).toBeGreaterThanOrEqual(s.navLeft-2);
   expect(s.activeRight).toBeLessThanOrEqual(s.navRight+2);
   expect(s.navFont).toBeCloseTo(20,1);
-  expect(s.footerFont).toBeCloseTo(s.navFont,1);
+  expect(s.footerFont).toBeCloseTo(17,1);
 });
 
 for(const width of [320,360,390,1041,1100,1600]){
@@ -218,18 +232,43 @@ for(const width of [320,360,390,1041,1100,1600]){
 }
 
 for(const width of [320,390,412,1180,1600]){
-  test(`China public footer typography matches international actions at ${width}px`,async({page,context})=>{
+  test(`China public footer typography matches international actions across ${width===390||width===1600?'all public pages':'responsive entries'} at ${width}px`,async({page,context})=>{
+    test.setTimeout(120000);
     await page.setViewportSize({width,height:900});
     await page.goto(intBase+'/',{waitUntil:'domcontentloaded'});
     const reference=page.locator('#floatDock button').first();
     await expect(reference).toBeVisible();
-    const typography=await reference.evaluate(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight};});
-    const china=await context.newPage();
-    await china.setViewportSize({width,height:900});
-    await china.goto(cnBase+'/resources/',{waitUntil:'domcontentloaded'});
-    const actual=await china.locator('.footer .footer-home,.footer .footer-actions>button,.footer .footer-records>a').evaluateAll(els=>els.map(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight};}));
-    expect(actual).toHaveLength(5);
-    for(const item of actual) expect(item).toEqual(typography);
-    await china.close();
+    const typography=await reference.evaluate(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing==='normal'?'0px':s.letterSpacing};});
+    const allPages=width===390||width===1600;
+    expect(chinaRoutes.length).toBeGreaterThanOrEqual(24);
+    const targets=[
+      ...(allPages?chinaRoutes:['/resources/']).map(route=>({base:cnBase,route,shell:'.footer',home:'.footer-home',controls:'.footer-home,.footer-actions>button,.footer-records>a,.footer-records>a>span',count:6})),
+      ...(allPages?bridgeRoutes:['/links/cn-public/']).map(route=>({base:intBase,route,shell:'.cn-bridge-footer',home:'.cn-bridge-footer-brand',controls:'.cn-bridge-footer-brand,.cn-bridge-footer-actions>button',count:3}))
+    ];
+    const publicPage=await context.newPage();
+    await publicPage.setViewportSize({width,height:900});
+    for(const target of targets){
+      const label=target.base+target.route;
+      const response=await publicPage.goto(label,{waitUntil:'domcontentloaded'});
+      expect(response&&response.ok(),label+' must load').toBeTruthy();
+      const footer=publicPage.locator(target.shell);
+      await expect(footer,label+' shared footer').toBeVisible();
+      await expect(publicPage.locator('link[href="/site-public-footer-type-v1.css?v=20261005-public-footer-v1"]'),label+' must request the shared versioned type authority').toHaveCount(1);
+      const controls=footer.locator(target.controls);
+      await expect(controls,label+' public controls and filing text').toHaveCount(target.count);
+      const actual=await controls.evaluateAll(els=>els.map(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing==='normal'?'0px':s.letterSpacing};}));
+      for(const item of actual)expect(item,label+' public footer type').toEqual(typography);
+      const home=footer.locator(target.home);
+      await expect(home,label+' normal site label').toHaveCSS('text-decoration-line','none');
+      await home.hover();
+      await expect(home,label+' hovered site label').toHaveCSS('text-decoration-line','none');
+      await home.focus();
+      await expect(home,label+' focused site label').toHaveCSS('text-decoration-line','none');
+      if(target.shell==='.footer'){
+        await expect(footer.locator('.footer-records>a'),label+' retains both filing links').toHaveCount(2);
+        for(const record of await footer.locator('.footer-records>a').all())await expect(record,label+' filing link retains its underline').toHaveCSS('text-decoration-line','underline');
+      }
+    }
+    await publicPage.close();
   });
 }

@@ -69,6 +69,7 @@ jobs:
           test -f cn-site/assets/qilylean-vi-v2.css
           test -s cn-site/assets/mps-beian.png
           test -f cn-site/assets/cn-nav-rail-v1.js
+          cmp site-public-footer-type-v1.css cn-site/site-public-footer-type-v1.css
           test -f cn-site/assets/cn-footer-actions-v1.css
           test -f cn-site/assets/cn-footer-actions-v1.js
           grep -Fq 'QilyLean CN Footer Actions V6' cn-site/assets/cn-footer-actions-v1.js
@@ -292,6 +293,7 @@ jobs:
                   '/assets/portal.css?v=20260923-portal-v2-reading',
                   '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform',
                   '/assets/cn-footer-actions-v1.css?v=20260930-footer-domain-v15',
+                  '/site-public-footer-type-v1.css?v=20261005-public-footer-v1',
                   '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15',
                   'data-qily-footer-action="top"',
                   'data-qily-footer-action="share"',
@@ -439,6 +441,8 @@ jobs:
                   raise SystemExit(f'Production CN {label} must retain both China-domain filing records.')
           if '<a href="https://qilylean.com/global-knowledge/" target="_blank" rel="noopener noreferrer" data-qily-external="international" title="进入 QilyLean 国际站 Global Knowledge（新标签页）">进入 Global Knowledge ↗</a>' not in home:
               raise SystemExit('Production China Global Knowledge CTA lost external-link semantics.')
+          if '/site-public-footer-type-v1.css?v=20261005-public-footer-v1' not in home:
+              raise SystemExit('Production China home missing shared public footer typography.')
           if '/assets/cn-footer-actions-v1.css?v=20260930-footer-domain-v15' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
           if '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15' not in home:
