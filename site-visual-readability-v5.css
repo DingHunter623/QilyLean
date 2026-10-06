@@ -13,6 +13,7 @@
   --qily-v5-gold:#caa15f;
   --qily-v5-gold-text:#b88b45;
   --qily-v5-gold-label:#b88b45;
+  --qily-v5-gold-light:#ffe39b;
   --qily-v5-white:#ffffff;
   --qily-v5-soft:#f4faf8;
   --qily-v5-line:#bfd6d2;
@@ -89,15 +90,16 @@ html body main :is(
 
 /* 01A｜章节级小标题：同语义同字号，浅色面统一使用 VI 金色系。 */
 html body main :is(
-  .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
-  .resource-kicker,.qily-resource-network__kicker,
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,.module-kicker,
+  .resource-kicker,.qily-resource-network__kicker,.engineering-kicker,
   .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
 ){
   font-size:var(--qily-v5-section-kicker)!important;
   line-height:1.5!important;
   color:var(--qily-v5-gold-text)!important;
   -webkit-text-fill-color:var(--qily-v5-gold-text)!important;
-  font-weight:950!important;
+  font-weight:400!important;
+  font-style:normal!important;
   letter-spacing:.035em!important;
   opacity:1!important;
   text-shadow:none!important;
@@ -162,13 +164,16 @@ html body main :is(
   opacity:1!important;
 }
 
-/* 深色表面的小标签维持高亮金色，不被通用浅色章节规则误覆盖。 */
-html body main :is(.hero,.module-hero,.daily-hero,.project-hero,.cooperation-hero,.qily-home-launch-section,.qily-ia-dark) :is(
-  .eyebrow,.module-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,
+/* QILY-FULL-SITE-HERO-LABEL-VI-V1 | dark Hero semantic labels: light gold + regular weight. */
+html body main :is(.hero,.module-hero,.daily-hero,.project-hero,.projects-hero,.cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,.qily-home-launch-section,.qily-ia-dark,[data-qily-hero]) :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,.qily-ia-kicker,.kicker,.section-kicker,.module-kicker,
+  .resource-kicker,.qily-resource-network__kicker,.engineering-kicker,
   .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
 ){
-  color:var(--qily-v5-gold-text)!important;
-  -webkit-text-fill-color:var(--qily-v5-gold-text)!important;
+  color:var(--qily-v5-gold-light)!important;
+  -webkit-text-fill-color:var(--qily-v5-gold-light)!important;
+  font-weight:400!important;
+  font-style:normal!important;
 }
 html body main :is(.hero,.module-hero,.daily-hero,.project-hero,.cooperation-hero,.qily-home-launch-section,.qily-ia-dark) small:not(.eyebrow):not(.module-eyebrow):not(.qily-ia-kicker):not(.kicker):not(.section-kicker){
   color:#edf9f6!important;
