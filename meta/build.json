@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "site": "QilyLean",
-  "build": "20261006-9f5a4d2dc7cd",
-  "sourceCommit": "9f5a4d2dc7cd357746f8bfe92ae8a5950611fbd1",
-  "materializedAt": "2026-10-06T16:26:21.335Z",
+  "build": "20261006-d33b193a2069",
+  "sourceCommit": "d33b193a206961cbc8103fa6e8839db905bf9ca7",
+  "materializedAt": "2026-10-06T16:31:58.334Z",
   "publishedAt": null,
   "state": "CI_PASS",
   "standard": "QL-WEB-STD-001/R6",
