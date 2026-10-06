@@ -27,8 +27,10 @@ must(css,'data-qily-nav-overflow="true"','formal CSS overflow rail');
 must(css,'max-width:100%!important','formal mobile rail frame containment');
 must(css,'.qily-home-conversion-hero__kicker','formal homepage semantic label');
 must(css,'var(--qily-vi-gold-light)!important','formal dark-Hero semantic label gold');
+must(css,'QILY-FULL-SITE-HERO-LABEL-VI-V1','formal sitewide Hero semantic-label parity');
+must(css,'font-weight:400!important','formal semantic labels use regular weight');
 forbid(runtime,"setProperty('display','none'",'formal runtime rail suppression');
-for(const token of ['/site-vi-standard-v4.css?v=20261006-vi-v4-gold-label-nav-rail-v3','/site-vi-runtime-v4.js?v=20261006-vi-v4-nav-rail-parity-v1','ensureFormalVi','data-qily-vi-loader'])must(bootstrap,token,'sitewide bootstrap');
+for(const token of ['/site-vi-standard-v4.css?v=20261006-vi-v4-hero-label-regular-gold-v4','/site-vi-runtime-v4.js?v=20261006-vi-v4-nav-rail-parity-v1','ensureFormalVi','data-qily-vi-loader'])must(bootstrap,token,'sitewide bootstrap');
 
 const htmlFiles=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>f.startsWith('cn-site/')||f.startsWith('global-knowledge/')||/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
@@ -42,7 +44,7 @@ for(const file of htmlFiles){
   if(!/<\/head>/i.test(html))continue;
   governed++;
   const bootstrapRefs=(html.match(/site-brand-home-feedback-v1\.js/g)||[]).length;
-  const directCss=html.includes('/site-vi-standard-v4.css?v=20261006-vi-v4-gold-label-nav-rail-v3');
+  const directCss=html.includes('/site-vi-standard-v4.css?v=20261006-vi-v4-hero-label-regular-gold-v4');
   const directJs=html.includes('/site-vi-runtime-v4.js?v=20261006-vi-v4-nav-rail-parity-v1');
   if(bootstrapRefs===1||(directCss&&directJs))formalCovered++;
   else missing.push(file);
