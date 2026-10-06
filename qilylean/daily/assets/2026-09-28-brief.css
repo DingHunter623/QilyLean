@@ -66,8 +66,8 @@ body.plan-closure-brief .net-demand-visual>div:not(:last-child)::after{
 body.plan-closure-brief .net-demand-visual>div:first-child::after{content:"−"}
 body.plan-closure-brief .net-demand-visual small{display:block;color:#647d7b;font-weight:800}
 body.plan-closure-brief :is(.net-demand-visual,.teaching-case,.feedback-example) strong{display:block;margin-top:5px;color:#0f4b5a;}
-body.plan-closure-brief :is(.net-demand-visual,.teaching-case,.feedback-example) .result{background:#0f4b5a;border-color:#0f4b5a}
-body.plan-closure-brief :is(.net-demand-visual,.teaching-case,.feedback-example) .result :is(small,span,strong){color:#fff!important}
+body.plan-closure-brief :is(.net-demand-visual,.teaching-case,.feedback-example) .plan-result{background:#0f4b5a;border-color:#0f4b5a}
+html body.plan-closure-brief main article.post :is(.net-demand-visual,.teaching-case,.feedback-example)>.plan-result{color:#fff!important;-webkit-text-fill-color:#fff!important}\nhtml body.plan-closure-brief main article.post :is(.net-demand-visual,.teaching-case,.feedback-example)>.plan-result :is(small,span,strong){color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important}
 
 body.plan-closure-brief .case-boundary{display:flex;gap:10px;align-items:center;margin:18px 0 10px;padding:12px 14px;border-left:4px solid #c99935;background:#fff8e8;border-radius:0 12px 12px 0}
 body.plan-closure-brief .case-boundary strong{color:#765713}
