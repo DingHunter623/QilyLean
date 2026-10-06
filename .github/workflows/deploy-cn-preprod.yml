@@ -58,10 +58,10 @@ jobs:
           command -v python3
           systemctl --version | head -n 1
           echo 'Mainland server -> Worker health (TLS verification enabled):'
-          if ! curl --fail --silent --show-error --connect-timeout 8 --max-time 25 https://qilylean-ai.dinghunter623.workers.dev/health; then echo 'Worker is unreachable from this mainland server.'; fi
+          if ! curl --noproxy '*' --fail --silent --show-error --connect-timeout 8 --max-time 25 https://qilylean-ai.dinghunter623.workers.dev/health; then echo 'Worker is unreachable from this mainland server.'; fi
           echo
           echo 'Mainland server -> Youdao HTTPS API (unsigned public connectivity probe):'
-          curl --fail --silent --show-error --connect-timeout 8 --max-time 25 -X POST https://openapi.youdao.com/v2/api --data 'q=connectivity&from=zh-CHS&to=en'
+          curl --noproxy '*' --fail --silent --show-error --connect-timeout 8 --max-time 25 -X POST https://openapi.youdao.com/v2/api --data 'q=connectivity&from=zh-CHS&to=en'
           echo
           echo 'Current same-origin translation HTTP status:'
           curl --silent --show-error --max-time 15 -o /dev/null -w '%{http_code}\n' --resolve qilylean.cn:443:127.0.0.1 https://qilylean.cn/translate
