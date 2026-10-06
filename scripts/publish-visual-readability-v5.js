@@ -12,7 +12,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
-const VERSION = '20261006-hero-label-light-gold-regular-v3';
+const VERSION = '20261007-hero-label-light-gold-regular-v4';
 const HREF = `/site-visual-readability-v5.css?v=${VERSION}`;
 const TAG = `<link id="qilyVisualReadabilityV5Stylesheet" rel="stylesheet" href="${HREF}">`;
 const DAILY_STYLE_ID = 'qilyDailyReadabilityClosureV8';
