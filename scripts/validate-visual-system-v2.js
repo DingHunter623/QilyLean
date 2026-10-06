@@ -16,7 +16,8 @@ assert(matrix.schemaVersion===1,'visual regression matrix schema must be 1');ass
 /* Formal VI v4 remains the international-site presentation authority. */
 const formalCss=read('site-vi-standard-v4.css'),formalRuntime=read('site-vi-runtime-v4.js');
 for(const token of ['--qily-container:1240px','--qily-copy:920px','--qily-radius-sm:8px','--qily-radius:12px','--qily-radius-lg:18px','linear-gradient(118deg'])assert(formalCss.includes(token),`formal VI missing ${token}`);
-for(const token of ['data-qily-vi-version','data-qily-vi-status','retireLegacyNavRail','normalizeHeroes','normalizeDock'])assert(formalRuntime.includes(token),`formal runtime missing ${token}`);
+for(const token of ['data-qily-vi-version','data-qily-vi-status','normalizeNavRail','normalizeHeroes','normalizeDock'])assert(formalRuntime.includes(token),`formal runtime missing ${token}`);
+assert(formalCss.includes('data-qily-nav-overflow="true"'),'formal VI missing overflow-only rail visibility');
 
 /* qilylean.cn is a separately deployed production knowledge site with its own final VI authority. */
 const cnIndex=read('cn-site/index.html'),cnVi=read('cn-site/assets/qilylean-vi-v2.css');
