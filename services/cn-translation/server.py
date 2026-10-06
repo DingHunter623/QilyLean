@@ -37,7 +37,14 @@ def credentials():
         data = {name: os.environ.get(name, '') for name in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')}
     if not all(isinstance(data.get(key), str) and data[key].strip() for key in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')):
         raise TranslationError('Youdao credentials are not configured', 503)
-    return {key: data[key].strip() for key in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')}
+    result = {}
+    for key in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET'):
+        value = data[key].strip()
+        # Accept only unambiguous copied assignment/quote wrappers around a hex credential.
+        # Other credential formats remain intact; do not guess or repurpose credentials.
+        copied = re.fullmatch(r'(?:' + key + r'\s*=\s*)?([\x22\x27`]?)([a-fA-F0-9]{32})\1', value)
+        result[key] = copied.group(2) if copied else value
+    return result
 
 
 def youdao(texts, target, keys, timeout=18):

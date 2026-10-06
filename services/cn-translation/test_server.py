@@ -126,6 +126,13 @@ class TranslationTests(unittest.TestCase):
             with self.assertRaises(server.TranslationError):
                 server.credentials()
 
+    def test_unambiguous_copied_credentials_are_normalized(self):
+        app, secret = 'a' * 32, 'b' * 32
+        with patch.dict(server.os.environ, {'YOUDAO_APP_KEY': f' YOUDAO_APP_KEY="{app}" ', 'YOUDAO_APP_SECRET': f'`{secret}`'}, clear=True):
+            self.assertEqual(server.credentials(), {'YOUDAO_APP_KEY': app, 'YOUDAO_APP_SECRET': secret})
+        with patch.dict(server.os.environ, KEYS, clear=True):
+            self.assertEqual(server.credentials(), KEYS, 'unrecognized credential formats must remain unchanged')
+
     def test_real_loopback_http_contract(self):
         http = server.Server(('127.0.0.1', 0), server.Handler)
         http.translator = server.Translator(KEYS, lambda texts, *args, **kwargs: ['Site improvement' for text in texts])
