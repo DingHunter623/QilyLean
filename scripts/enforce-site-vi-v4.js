@@ -24,8 +24,9 @@ for(const banned of ['#ef4e47','#c93836','#4d6f30','#b86f1b','color-scheme:dark'
 
 for(const token of ['__qilyViRuntimeV4','data-qily-vi-version','4.0','data-qily-vi-v4-hero','118deg','normalizeNavRail','normalizeDock','single-flow','normalizeHeader','data-qily-vi-v4-overflow','Translation lifecycle and translator DOM remain exclusively owned'])must(runtime,token,'formal runtime');
 must(css,'data-qily-nav-overflow="true"','formal CSS overflow rail');
+must(css,'max-width:100%!important','formal mobile rail frame containment');
 forbid(runtime,"setProperty('display','none'",'formal runtime rail suppression');
-for(const token of ['/site-vi-standard-v4.css?v=20261006-vi-v4-nav-rail-parity-v1','/site-vi-runtime-v4.js?v=20261006-vi-v4-nav-rail-parity-v1','ensureFormalVi','data-qily-vi-loader'])must(bootstrap,token,'sitewide bootstrap');
+for(const token of ['/site-vi-standard-v4.css?v=20261006-vi-v4-nav-rail-parity-v2','/site-vi-runtime-v4.js?v=20261006-vi-v4-nav-rail-parity-v1','ensureFormalVi','data-qily-vi-loader'])must(bootstrap,token,'sitewide bootstrap');
 
 const htmlFiles=execFileSync('git',['ls-files','*.html'],{cwd:root,encoding:'utf8',maxBuffer:64*1024*1024}).split(/\r?\n/).filter(Boolean);
 const ownership=f=>f.startsWith('cn-site/')||f.startsWith('global-knowledge/')||/^(?:baidu_verify_|google[^/]*\.html$|zohoverify\/)/i.test(f);
@@ -39,7 +40,7 @@ for(const file of htmlFiles){
   if(!/<\/head>/i.test(html))continue;
   governed++;
   const bootstrapRefs=(html.match(/site-brand-home-feedback-v1\.js/g)||[]).length;
-  const directCss=html.includes('/site-vi-standard-v4.css?v=20261006-vi-v4-nav-rail-parity-v1');
+  const directCss=html.includes('/site-vi-standard-v4.css?v=20261006-vi-v4-nav-rail-parity-v2');
   const directJs=html.includes('/site-vi-runtime-v4.js?v=20261006-vi-v4-nav-rail-parity-v1');
   if(bootstrapRefs===1||(directCss&&directJs))formalCovered++;
   else missing.push(file);
