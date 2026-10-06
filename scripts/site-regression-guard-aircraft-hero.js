@@ -21,7 +21,7 @@ const HOME_JS_VERSION='20260901-home-first-paint-v6';
 const HOME_JS='/site-home-conversion-v1.js?v='+HOME_JS_VERSION;
 const HOME_VISUAL_FIX_VERSION='20260902-card-bottom-rail-v5';
 const OWNER_PROFILE_VERSION='20260901-owner-profile-v3';
-const VISUAL_READABILITY_VERSION='20260927-small-type-gold-parity-v2';
+const VISUAL_READABILITY_VERSION='20261006-hero-label-light-gold-regular-v3';
 const VISUAL_READABILITY_PREVIOUS='20260927-small-type-gold-parity-v1';
 function assert(ok,msg){if(!ok)throw new Error(msg)}
 function gitBlobSha(buffer){return crypto.createHash('sha1').update(Buffer.from(`blob ${buffer.length}\0`)).update(buffer).digest('hex')}

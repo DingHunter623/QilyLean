@@ -33,7 +33,7 @@ must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'"
 
 /* China production has its own shared VI and translation runtime; the international V32 materializer must not overwrite it. */
 const cn=read('cn-site/index.html');
-must(cn,'/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform','CN production shared VI');
+must(cn,'/assets/qilylean-vi-v2.css?v=20261006-cn-vi-v48-hero-label-parity','CN production shared VI');
 must(cn,'/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge','CN production navigation runtime');
 must(cn,'/assets/cn-translate-baidu-v1.js?v=20261006-youdao-nmt-closure-v1','CN production translation runtime');
 must(cn,'name="robots" content="index,follow"','CN production indexing contract');

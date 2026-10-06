@@ -25,7 +25,7 @@ jobs:
 
           root = Path('cn-site')
           files = sorted(root.rglob('*.html'))
-          css_version = '20260927-cn-vi-v47-footer-uniform'
+          css_version = '20261006-cn-vi-v48-hero-label-parity'
           base_version = '20260923-cn-typography-base-v7'
           nav_script_version = '20260926-nav-rail-v20-cn-bridge'
           translate_version = '20260922-translate-v6-baidu'
@@ -143,7 +143,7 @@ jobs:
           import re
 
           files = sorted(Path('cn-site').rglob('*.html'))
-          css_marker = 'qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform'
+          css_marker = 'qilylean-vi-v2.css?v=20261006-cn-vi-v48-hero-label-parity'
           official_brand = 'QilyLean | 启力精益'
           footer_marker = '<a class="footer-home" href="/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页">精益制造经验分享</a><nav class="footer-actions" aria-label="页脚快捷操作">'
           toc_pattern = re.compile(r'<aside\b[^>]*class=["\']toc["\'][^>]*>(.*?)</aside>', re.I | re.S)
