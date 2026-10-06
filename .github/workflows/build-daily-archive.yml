@@ -133,6 +133,7 @@ jobs:
             index.html \
             experience/index.html \
             knowledge/index.html \
+            global-knowledge/index.html \
             knowledge/terminology.html \
             trust/index.html \
             sitemap.xml \
