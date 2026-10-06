@@ -19,16 +19,23 @@ keys = json.loads(Path('/etc/qilylean-cn/translate.json').read_text()) if args.p
 if not args.production:
     print(json.dumps({'credential_format': {'app_id_ascii': keys['YOUDAO_APP_KEY'].isascii(), 'app_id_expected_shape': len(keys['YOUDAO_APP_KEY']) == 32 and all(c in '0123456789abcdefABCDEF' for c in keys['YOUDAO_APP_KEY']), 'secret_has_inner_whitespace': any(c.isspace() for c in keys['YOUDAO_APP_SECRET'])}}))
 opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
+interfaces = json.loads(subprocess.check_output(['ip', '-j', 'link']))
+tunnels = [item['ifname'] for item in interfaces if item.get('link_type') in ('wireguard', 'tun', 'gre', 'ipip') or item['ifname'].startswith(('tun', 'wg', 'tailscale'))]
+assert not tunnels, 'VPN/tunnel interface detected; cannot assert direct mainland verification'
 nonce = uuid.uuid4().hex[:12]
 samples = [
     ('en', '从现场事实出发，把制造经验沉淀为可复用的知识资产。验收编号：' + nonce),
     ('zh-CN', 'Use engineering data to improve quality and delivery. Verification: ' + nonce),
 ]
-evidence = {'provider': 'youdao', 'endpoint': server.URL, 'proxy': 'explicit ProxyHandler({}); direct TLS', 'tests': []}
+evidence = {'requested_provider': 'youdao', 'endpoint': server.URL, 'proxy': 'explicit ProxyHandler({}); direct TLS', 'vpn_interfaces': tunnels, 'tests': []}
 for target, source in samples:
-    translated = server.youdao([source], target, keys, timeout=55)[0]
+    try:
+        translated = server.youdao([source], target, keys, timeout=55)[0]
+    except server.TranslationError as error:
+        evidence['tests'].append({'target': target, 'text': source, 'translation': None, 'error': str(error)})
+        continue
     assert translated != source and translated.strip(), 'NMT did not translate actual text'
-    sample = {'target': target, 'text': source, 'translation': translated}
+    sample = {'target': target, 'text': source, 'translation': translated, 'provider': 'youdao'}
     if args.production:
         request = urllib.request.Request('https://qilylean.cn/translate', data=json.dumps({
             'target_language': target, 'texts': [source],
@@ -39,6 +46,10 @@ for target, source in samples:
         assert result['translations'] == [translated], 'Production result differs from actual Youdao NMT'
         sample['production_result'] = result
     evidence['tests'].append(sample)
+
+if any(test.get('error') for test in evidence['tests']):
+    print(json.dumps(evidence, ensure_ascii=False))
+    raise SystemExit('FAIL: actual mainland NMT translation did not pass; no publication allowed')
 
 if args.production:
     installed = Path('/opt/qilylean-cn-translation/server.py')
@@ -65,11 +76,6 @@ if args.production:
     assert (Path('/etc/qilylean-cn').stat().st_mode & 0o777) == 0o700
     environment = subprocess.check_output(['systemctl', 'show', 'qilylean-cn-translation', '-p', 'Environment'])
     assert safe(environment)
-    # No VPN/tunnel interface is used by the server's normal outbound route.
-    interfaces = json.loads(subprocess.check_output(['ip', '-j', 'link']))
-    tunnels = [item['ifname'] for item in interfaces if item.get('link_type') in ('wireguard', 'tun', 'gre', 'ipip') or item['ifname'].startswith(('tun', 'wg', 'tailscale'))]
-    assert not tunnels, 'VPN/tunnel interface detected; cannot assert direct mainland verification'
     evidence['secret_audit'] = {'webroot_files': len(files), 'service_journal': 'PASS', 'nginx_logs': 'PASS', 'systemd_environment': 'PASS', 'credential_mode': '0600 in 0700 directory', 'findings': 0}
-    evidence['vpn_interfaces'] = tunnels
     evidence['release'] = root.name
 print(json.dumps(evidence, ensure_ascii=False))
