@@ -104,8 +104,8 @@ if (!briefs.includes("a.name==='style'||(a.name==='class'&&!preserveVi)")) {
 if (!briefs.includes("doc.body.classList.contains('plan-closure-brief')") || !briefs.includes("data-qily-imported-brief-css")) {
   fail('Sep 28 bridge reader must load the approved issue stylesheet under an explicit VI scope');
 }
-if (!briefs.includes('font-size:clamp(30px,2.05vw,36px)')) {
-  fail('brief reader H1 must use the restrained curated-brief title scale');
+if (!briefs.includes('qilyBridgeBriefReaderTypeGuardV1') || !briefs.includes('html body main #readerHead.reader-head h1{font-size:clamp(30px,2.05vw,36px)!important')) {
+  fail('brief reader H1 must override the sitewide R8 scale with the restrained curated-brief title scale');
 }
 if (!briefs.includes('.reader[data-source-vi="true"] .article{padding:0;border:0;background:transparent}')) {
   fail('governed bridge reader must remove the duplicate outer article card');
