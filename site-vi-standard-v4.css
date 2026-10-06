@@ -97,6 +97,19 @@ html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="true"]{display:b
 html body .qily-primary-nav-scroll-rail:not([data-qily-nav-overflow="true"]){display:none!important;}
 html body .qily-primary-nav-scroll-thumb{display:block!important;}
 
+/* On tablet/phone the primary nav is the full header inline axis. Keep the
+ * auxiliary range rail locked to that same frame even while late header
+ * utilities settle, so a stale runtime width can never protrude past Header. */
+@media (max-width:900px){
+  html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header)>input.qily-primary-nav-scroll-rail[type="range"]{
+    box-sizing:border-box!important;
+    left:0!important;
+    right:auto!important;
+    width:100%!important;
+    max-width:100%!important;
+  }
+}
+
 /* 03 | Formal 118-degree Hero. Content may differ; the public brand shell may not. */
 html body :is(
   .hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,
