@@ -587,3 +587,35 @@ html:root:root:root body main :is(
   }
 }
 /* QILY-READABILITY-HEADER-OVERFLOW-V2:END */
+
+/* QILY-FULL-SITE-HERO-LABEL-VI-V1:FINAL | 2026-10-06
+ * Final cascade authority for semantic eyebrow/kicker typography.
+ * All semantic labels use regular weight; dark Hero labels use light gold. */
+html:root:root:root body main :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+  .kicker,.section-kicker,.module-kicker,.qily-ia-kicker,
+  .resource-kicker,.qily-resource-network__kicker,.engineering-kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker,
+  .section-head>small,.module-heading>.module-eyebrow
+){
+  font-weight:400!important;
+  font-style:normal!important;
+}
+html:root:root:root body main :is(
+  .hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,
+  .qily-home-launch-section,.qily-ia-dark,[data-qily-hero],[data-qily-vi-v4-hero="118deg"]
+) :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+  .kicker,.section-kicker,.module-kicker,.qily-ia-kicker,
+  .resource-kicker,.qily-resource-network__kicker,.engineering-kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
+){
+  color:var(--qily-v5-gold-light)!important;
+  -webkit-text-fill-color:var(--qily-v5-gold-light)!important;
+  font-weight:400!important;
+  font-style:normal!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+
