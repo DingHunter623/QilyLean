@@ -16,6 +16,7 @@ LANGUAGES = {code: code for code in 'en ja ko fr de es ru pt it ar th vi id ms t
 LANGUAGES.update({'zh-CN': 'zh-CHS', 'zh-TW': 'zh-CHT'})
 TOKENS = sorted(json.loads(Path(__file__).with_name('protected-tokens.json').read_text()), key=len, reverse=True)
 URL = 'https://openapi.youdao.com/v2/api'
+BUILD_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 
 class TranslationError(Exception):
@@ -161,7 +162,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == '/health':
-            self.answer({'ok': True, 'translation_provider': 'youdao', 'youdao_available': True})
+            self.answer({'ok': True, 'translation_provider': 'youdao', 'youdao_available': True, 'build_sha256': BUILD_SHA256})
         else:
             self.answer({'ok': False, 'error': 'Not found'}, 404)
 
