@@ -140,11 +140,13 @@ html:root body main :is(.eyebrow,.section-head small,.portal-card small){
   line-height:1.5!important;
   color:#b88b45!important;
   -webkit-text-fill-color:#b88b45!important;
-  font-weight:950!important;
+  font-weight:400!important;
+  font-style:normal!important;
   letter-spacing:.035em!important;
   opacity:1!important;
 }
-html:root body main :is(.hero,.page-hero) :is(.eyebrow,small){color:var(--qily-cn-gold-soft)!important;-webkit-text-fill-color:var(--qily-cn-gold-soft)!important}
+/* QILY-FULL-SITE-HERO-LABEL-VI-V1 | dark Hero = light gold + regular weight. */
+html:root body main :is(.hero,.page-hero) :is(.eyebrow,small){color:var(--qily-cn-gold-soft)!important;-webkit-text-fill-color:var(--qily-cn-gold-soft)!important;font-weight:400!important;font-style:normal!important}
 html:root body main :is(.section-head h2,.article-body h2){font-size:clamp(20px,1.25vw,22px)!important;line-height:1.22!important;font-weight:900!important}
 html:root body main :is(.portal-card h3,.article-link h3,.trust-box h3,.article-body h3){font-size:clamp(17px,1vw,19px)!important;line-height:1.3!important;font-weight:900!important}
 html:root body main :is(.section-head p,.portal-card p,.article-link p,.trust-box p,.article-body p,.article-body li,.knowledge-bridge p,.callout,.formula){

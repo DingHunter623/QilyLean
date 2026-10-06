@@ -1,4 +1,4 @@
-@import url('/assets/qilylean-vi-v1.css?v=20260923-cn-typography-base-v7');
+@import url('/assets/qilylean-vi-v1.css?v=20261006-cn-typography-hero-label-v8');
 
 /* QilyLean China Unified VI V2 | 2026-09-16
  * Boss-readable closure aligned to the international-site visual rhythm.
@@ -1482,3 +1482,22 @@ html:root:root:root:root body .footer .footer-records>a>span{
   }
 }
 /* QILY-CN-FOOTER-PRIMARY-NAV-TYPE-AUTHORITY-V2:END */
+
+/* QILY-FULL-SITE-HERO-LABEL-VI-V1 | 2026-10-06
+ * Full-site VI parity: dark Hero semantic labels use the same light-gold token
+ * and regular weight as the international site. Content/layout are untouched. */
+html:root:root body main :is(.hero,.page-hero,.module-hero,[data-qily-hero]) :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,.kicker,.section-kicker,.module-kicker,
+  .resource-kicker,.qily-resource-network__kicker,.engineering-kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
+),
+html:root:root body main :is(.hero,.page-hero,.module-hero,[data-qily-hero]) > :is(.hero-inner,.content) > small{
+  color:var(--qily-cn-gold-soft)!important;
+  -webkit-text-fill-color:var(--qily-cn-gold-soft)!important;
+  font-weight:400!important;
+  font-style:normal!important;
+  letter-spacing:.035em!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+

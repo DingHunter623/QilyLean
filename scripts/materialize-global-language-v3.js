@@ -50,7 +50,7 @@ const RESPONSIVE_CONTAINMENT_CSS='/site-responsive-containment-v1.css?v=20260831
 const FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=20260831-project-grade-readability-v3';
 const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range';
 const BRAND_HOME_FEEDBACK_CSS='/site-brand-home-feedback-v1.css?v=20260831-brand-home-overlay-v1';
-const BRAND_HOME_FEEDBACK_JS='/site-brand-home-feedback-v1.js?v=20261006-sitewide-gold-label-nav-rail-v3';
+const BRAND_HOME_FEEDBACK_JS='/site-brand-home-feedback-v1.js?v=20261006-sitewide-hero-label-regular-gold-v4';
 const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16';
 const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16';
 const TRANSLATION_FAST_REV='20260902-stable-fast-path-v2';
