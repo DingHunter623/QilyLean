@@ -91,9 +91,11 @@ html body header.qily-site-header :is(.site-nav,.qily-global-nav,.nav)>a[href][a
   background:var(--qily-vi-olive)!important;
   border-color:var(--qily-vi-gold)!important;
 }
-/* The historical visible range/slider rail is retired; native horizontal navigation remains available. */
-html body .qily-primary-nav-scroll-rail,
-html body .qily-primary-nav-scroll-thumb{display:none!important;}
+/* The persistent primary-navigation rail is part of the governed VI.
+ * Render it only when the navigation actually overflows; native horizontal scrolling remains the fallback. */
+html body .qily-primary-nav-scroll-rail[data-qily-nav-overflow="true"]{display:block!important;}
+html body .qily-primary-nav-scroll-rail:not([data-qily-nav-overflow="true"]){display:none!important;}
+html body .qily-primary-nav-scroll-thumb{display:block!important;}
 
 /* 03 | Formal 118-degree Hero. Content may differ; the public brand shell may not. */
 html body :is(

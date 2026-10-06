@@ -10,8 +10,8 @@
   w.__qilyBrandHomeFeedbackV11=true;
   w.__qilyBrandHomeFeedbackV1=true;
 
-  var VI_CSS='/site-vi-standard-v4.css?v=20260906-vi-v4-formal-closure';
-  var VI_JS='/site-vi-runtime-v4.js?v=20260906-vi-v4-formal-closure';
+  var VI_CSS='/site-vi-standard-v4.css?v=20261006-vi-v4-nav-rail-parity-v1';
+  var VI_JS='/site-vi-runtime-v4.js?v=20261006-vi-v4-nav-rail-parity-v1';
 
   function ensureFormalVi(){
     if(d.head&&!d.getElementById('qilyViV4Formal')){

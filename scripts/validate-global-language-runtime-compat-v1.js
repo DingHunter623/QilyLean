@@ -71,10 +71,11 @@ const viCss=read('site-vi-standard-v4.css');
 const viRuntime=read('site-vi-runtime-v4.js');
 must(viCss,'--qily-container:1240px','Formal compatibility axis token');
 must(viCss,'linear-gradient(118deg','Formal 118-degree Hero');
-must(viCss,'.qily-primary-nav-scroll-rail','Formal retired rail rule');
-must(viRuntime,'retireLegacyNavRail','Formal rail retirement');
+must(viCss,'data-qily-nav-overflow="true"','Formal overflow rail visibility');
+must(viRuntime,'normalizeNavRail','Formal rail normalization');
 must(viRuntime,'Translation lifecycle and translator DOM remain exclusively owned','Translation single-owner boundary');
 forbid(viRuntime,'.qily-web-translate','Formal VI must not own translator DOM');
+forbid(viRuntime,"setProperty('display','none'",'Formal VI must not suppress the primary navigation rail');
 
 /* DDZ is the explicit performance-route exception. Its interior is bundled; the canonical Dock remains shared. */
 const ddzIndex=read('tools/pure-ddz/index.html');

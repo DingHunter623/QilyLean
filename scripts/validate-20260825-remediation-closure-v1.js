@@ -25,9 +25,9 @@ const route=read('site-contact-route-v1.js');must(route,'Contact Route V13.4','C
 const semanticCss=read('site-interaction-semantics-v1.css'),semanticJs=read('site-interaction-semantics-v1.js'),components=read('site-visual-components-v1.css');
 must(semanticCss,'Interaction Semantics V1.4','Semantics CSS');must(semanticJs,'Interaction Semantics Runtime V1.7','Semantics V1.7');must(semanticJs,"rail.type='range'",'Pre-v4 range compatibility');must(semanticJs,'PROJECT_EVIDENCE','Evidence map');must(components,'qily-project-evidence-grade','Evidence component');must(components,'input.qily-primary-nav-scroll-rail[type="range"]','Range compatibility visual');
 
-/* Formal VI v4 supersedes the visible auxiliary range rail while native nav scrolling remains. */
+/* Formal VI v4 governs the auxiliary rail: visible only when primary navigation actually overflows. */
 const viCss=read('site-vi-standard-v4.css'),viRuntime=read('site-vi-runtime-v4.js');
-must(viCss,'--qily-container:1240px','Formal content axis');must(viCss,'linear-gradient(118deg','Formal Hero');must(viRuntime,'retireLegacyNavRail','Formal rail retirement');must(viRuntime,'normalizeDock','Formal Dock flow normalization');
+must(viCss,'--qily-container:1240px','Formal content axis');must(viCss,'linear-gradient(118deg','Formal Hero');must(viCss,'data-qily-nav-overflow="true"','Formal overflow rail visibility');must(viRuntime,'normalizeNavRail','Formal rail governance');must(viRuntime,'normalizeDock','Formal Dock flow normalization');
 
 /* Current isolated DDZ V155/V164 contract. */
 const ddzIndex=read(DDZ),ddzCss=read('tools/pure-ddz/game/css/ddz-core-v155.css'),ddzJs=read('tools/pure-ddz/game/js/ddz-core-v155.js');

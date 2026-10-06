@@ -1,6 +1,6 @@
 /* QilyLean | Formal Visual Identity Runtime v4.0 | 2026-09-06
  * Presentation governance only: shell normalization, formal Hero marker,
- * retired legacy nav rail, single in-flow shared Dock, and cross-device overflow telemetry.
+ * persistent overflow navigation rail, single in-flow shared Dock, and cross-device overflow telemetry.
  * Translation lifecycle and translator DOM remain exclusively owned by site-translation-safe-runtime-v1.js.
  */
 (function(d,w){
@@ -29,26 +29,24 @@
     if(nav){nav.classList.add('site-nav','qily-global-nav');nav.setAttribute('data-qily-vi-v4-nav','formal');}
   }
 
-  function retireLegacyNavRail(rootNode){
+  function normalizeNavRail(rootNode){
     var scope=rootNode&&rootNode.querySelectorAll?rootNode:d;
     var rails=[];
     if(rootNode&&rootNode.nodeType===1&&rootNode.matches('.qily-primary-nav-scroll-rail,.qily-primary-nav-scroll-thumb'))rails.push(rootNode);
     scope.querySelectorAll('.qily-primary-nav-scroll-rail,.qily-primary-nav-scroll-thumb').forEach(function(rail){rails.push(rail);});
     rails.forEach(function(rail){
-      rail.hidden=true;
-      rail.disabled=true;
-      rail.tabIndex=-1;
-      rail.setAttribute('aria-hidden','true');
-      rail.setAttribute('data-qily-vi-v4-nav-rail','retired');
-      rail.style.setProperty('display','none','important');
-      rail.style.setProperty('pointer-events','none','important');
+      rail.hidden=false;
+      rail.removeAttribute('aria-hidden');
+      rail.style.removeProperty('display');
+      rail.style.removeProperty('pointer-events');
+      rail.setAttribute('data-qily-vi-v4-nav-rail','governed');
     });
   }
 
-  function observeLegacyNavRail(){
+  function observeNavRail(){
     if(railObserver||!w.MutationObserver||!d.documentElement)return;
     railObserver=new MutationObserver(function(records){
-      records.forEach(function(record){record.addedNodes&&record.addedNodes.forEach(function(node){if(node&&node.nodeType===1)retireLegacyNavRail(node);});});
+      records.forEach(function(record){record.addedNodes&&record.addedNodes.forEach(function(node){if(node&&node.nodeType===1)normalizeNavRail(node);});});
     });
     railObserver.observe(d.documentElement,{childList:true,subtree:true});
   }
@@ -115,7 +113,7 @@
   function apply(){
     markShell();
     normalizeHeader();
-    retireLegacyNavRail();
+    normalizeNavRail();
     normalizeHeroes();
     normalizeDock();
     w.requestAnimationFrame(auditOverflow);
@@ -127,7 +125,7 @@
   }
 
   function init(){
-    observeLegacyNavRail();
+    observeNavRail();
     apply();
     w.setTimeout(apply,120);
     w.setTimeout(apply,700);
