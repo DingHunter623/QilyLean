@@ -29,12 +29,13 @@ jobs:
           base_version = '20260923-cn-typography-base-v7'
           nav_script_version = '20260926-nav-rail-v20-cn-bridge'
           translate_version = '20260922-translate-v6-baidu'
+          translate_js_version = '20261006-translate-same-origin-v1'
           footer_actions_version = '20260930-footer-domain-v15'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
           nav_script_target = f'<script defer src="/assets/cn-nav-rail-v1.js?v={nav_script_version}"></script>'
           translate_css_target = f'<link id="qilyCnDomesticTranslateV1Stylesheet" rel="stylesheet" href="/assets/cn-translate-baidu-v1.css?v={translate_version}">'
-          translate_js_target = f'<script defer src="/assets/cn-translate-baidu-v1.js?v={translate_version}"></script>'
+          translate_js_target = f'<script defer src="/assets/cn-translate-baidu-v1.js?v={translate_js_version}"></script>'
           footer_actions_css_target = f'<link id="qilyCnFooterActionsV1Stylesheet" rel="stylesheet" href="/assets/cn-footer-actions-v1.css?v={footer_actions_version}">'
           footer_actions_js_target = f'<script defer src="/assets/cn-footer-actions-v1.js?v={footer_actions_version}"></script>'
           css_pattern = re.compile(r'\s*<link id="qilyCnUnifiedViV[12]" rel="stylesheet" href="/assets/qilylean-vi-v[12]\.css\?v=[^"]+">\s*')
@@ -161,7 +162,7 @@ jobs:
               css_count = text.count(css_marker)
               nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge')
               translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu')
-              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu')
+              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20261006-translate-same-origin-v1')
               footer_count = text.count(footer_marker)
               footer_tags = len(re.findall(r'<footer class="footer"(?: data-qily-footer-filing="none")?>', text))
               if css_count != 1:

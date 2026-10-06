@@ -5,7 +5,8 @@
 (function(d,w){'use strict';
 if(w.__qilyCnTranslateV3)return;w.__qilyCnTranslateV3=true;
 var CONTROL_ID='qilyCnTranslateV3',MORE='__more__';
-var API_BASES=['https://qilylean-ai.dinghunter623.workers.dev','https://api.qilylean.com','https://ai-api.qilylean.com'];
+// Browser requests stay on the mainland site; the server owns the upstream route.
+var API_BASES=[''];
 var LANGS=[
  ['ja','日本語 / Japanese'],['ko','한국어 / Korean'],['fr','Français / French'],['de','Deutsch / German'],
  ['es','Español / Spanish'],['ru','Русский / Russian'],['pt','Português / Portuguese'],['it','Italiano / Italian'],
@@ -50,7 +51,7 @@ function batches(items){
   return out;
 }
 async function post(base,target,texts){
-  var controller=new AbortController(),timer=w.setTimeout(function(){controller.abort()},22000);
+  var controller=new AbortController(),timer=w.setTimeout(function(){controller.abort()},65000);
   try{
     var response=await fetch(base+'/translate',{
       method:'POST',

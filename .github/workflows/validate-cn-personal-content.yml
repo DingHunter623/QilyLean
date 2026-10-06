@@ -4,15 +4,19 @@ on:
   pull_request:
     paths:
       - 'cn-site/**'
+      - 'services/cn-translation/**'
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
+      - 'scripts/test-cn-translation-gateway.js'
   push:
     branches:
       - main
     paths:
       - 'cn-site/**'
+      - 'services/cn-translation/**'
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
+      - 'scripts/test-cn-translation-gateway.js'
   workflow_dispatch:
 
 permissions:
@@ -25,6 +29,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Test direct Youdao adapter
+        run: python3 services/cn-translation/test_server.py
+
+      - name: Test same-origin translation transport
+        run: node scripts/test-cn-translation-gateway.js
 
       - name: Materialize approved CN practice evidence assets
         shell: bash
@@ -79,7 +89,7 @@ jobs:
           grep -Fq '/assets/qilylean-vi-v2.css?v=20260927-cn-vi-v47-footer-uniform' cn-site/index.html
           grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' cn-site/index.html
           grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' cn-site/index.html
-          grep -Fq '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' cn-site/index.html
+          grep -Fq '/assets/cn-translate-baidu-v1.js?v=20261006-translate-same-origin-v1' cn-site/index.html
           grep -Fq 'QILY-CN-NAV-RAIL-V7' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'QILY-CN-CURRENT-MODULE-V1' cn-site/assets/qilylean-vi-v2.css
           grep -Fq 'QILY-CN-CURRENT-MODULE-RUNTIME-V1' cn-site/assets/cn-nav-rail-v1.js
