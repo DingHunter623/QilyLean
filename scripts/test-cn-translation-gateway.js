@@ -14,7 +14,7 @@ async function main() {
   const source = fs.readFileSync('cn-site/assets/cn-translate-baidu-v1.js', 'utf8');
   // Expose the real transport only inside the isolated test context.
   vm.runInNewContext(source.replace('function label(target)',
-    'w.testTransport=translateBatch;function label(target)'), {
+    'w.testTransport=translateBatch;w.testBatches=batches;function label(target)'), {
     document: { readyState: 'loading', addEventListener() {} },
     window,
     AbortController,
@@ -37,6 +37,13 @@ async function main() {
   status = 503;
   await assert.rejects(window.testTransport('en', [{ core: '精益生产' }]));
   assert.equal(requests.length, 3, 'failed requests must not retry overseas domains');
+  const long = '🙂制造' .repeat(2500);
+  const groups = window.testBatches([{core:long}]);
+  assert.ok(groups.length > 1);
+  assert.equal(groups.flat().map(part => part.core).join(''), long);
+  assert.ok(groups.every(group => group.length <= 20 && group.reduce((sum, part) => sum + Array.from(part.core).length, 0) <= 4600));
+  reply = {ok:true,translations:[null]};status=200;
+  await assert.rejects(window.testTransport('en', [{core:'质量'}]));
   console.log('PASS: same-origin requests, JSON contract, timeout, malformed result and failure handling');
 }
 

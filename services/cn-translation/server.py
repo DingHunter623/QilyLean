@@ -1,21 +1,25 @@
 #!/usr/bin/env python3
 """Loopback-only mainland translation endpoint. Uses Python standard library."""
 import collections
+import concurrent.futures
 import hashlib
 import json
 import os
 from pathlib import Path
 import threading
+import socket
+import re
 import time
 import urllib.parse
 import urllib.request
+import urllib.error
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 LANGUAGES = {code: code for code in 'en ja ko fr de es ru pt it ar th vi id ms tr pl nl'.split()}
 LANGUAGES.update({'zh-CN': 'zh-CHS', 'zh-TW': 'zh-CHT'})
 TOKENS = sorted(json.loads(Path(__file__).with_name('protected-tokens.json').read_text()), key=len, reverse=True)
-URL = 'https://openapi.youdao.com/v2/api'
+URL = 'https://openapi.youdao.com/api'  # Text translation NMT application, not batch-service credentials.
 BUILD_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 
@@ -37,29 +41,49 @@ def credentials():
 
 
 def youdao(texts, target, keys, timeout=18):
-    joined = ''.join(texts)
+    # Parallel individual NMT calls preserve the browser's text-node boundaries.
+    deadline = time.monotonic() + timeout
+    def invoke(text):
+        remaining = deadline - time.monotonic()
+        if remaining < 1:
+            raise TranslationError('Translation timed out', 504)
+        return nmt(text, target, keys, remaining)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
+        return list(pool.map(invoke, texts))
+
+
+def nmt(joined, target, keys, timeout=18):
     value = joined if len(joined) <= 20 else joined[:10] + str(len(joined)) + joined[-10:]
     salt, stamp = uuid.uuid4().hex, str(int(time.time()))
     sign = hashlib.sha256((keys['YOUDAO_APP_KEY'] + value + salt + stamp + keys['YOUDAO_APP_SECRET']).encode()).hexdigest()
-    fields = [('q', text) for text in texts] + [
+    fields = [('q', joined)] + [
         ('from', 'auto'), ('to', LANGUAGES[target]), ('appKey', keys['YOUDAO_APP_KEY']),
         ('salt', salt), ('curtime', stamp), ('sign', sign), ('signType', 'v3'),
-        ('detectLevel', '1'), ('detectFilter', 'false'),
+        ('strict', 'true'),
     ]
     request = urllib.request.Request(URL, data=urllib.parse.urlencode(fields).encode(), headers={
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 'Accept': 'application/json',
     })
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        # Explicitly bypass all proxy environment settings on the mainland host.
+        with urllib.request.build_opener(urllib.request.ProxyHandler({})).open(request, timeout=min(18, timeout)) as response:
             data = json.loads(response.read(262144))
+    except (TimeoutError, socket.timeout):
+        raise TranslationError('Translation timed out', 504) from None
+    except urllib.error.URLError as error:
+        raise TranslationError('Translation timed out' if isinstance(error.reason, TimeoutError) else 'Youdao connection unavailable', 504 if isinstance(error.reason, TimeoutError) else 502) from None
     except (ValueError, UnicodeError):
         raise TranslationError('Youdao returned an invalid response') from None
     if not isinstance(data, dict):
         raise TranslationError('Youdao returned an invalid response')
-    results = data.get('translateResults', [])
-    if str(data.get('errorCode')) != '0' or not isinstance(results, list) or len(results) != len(texts) or any(not isinstance(item, dict) or not isinstance(item.get('translation'), str) or not item['translation'].strip() for item in results):
-        raise TranslationError('Youdao translation failed or returned an invalid result')
-    return [item['translation'] for item in results]
+    code = str(data.get('errorCode'))
+    if code != '0':
+        # Numeric diagnostics only; never expose upstream bodies, query URLs or signatures.
+        raise TranslationError('Youdao NMT error ' + (code if code.isdigit() else 'unknown'))
+    results = data.get('translation')
+    if not isinstance(results, list) or not results or any(not isinstance(text, str) or not text.strip() for text in results):
+        raise TranslationError('Youdao returned an invalid translation')
+    return results[0]
 
 
 class Translator:
@@ -76,8 +100,6 @@ class Translator:
             raise TranslationError('Invalid target language or text batch', 400)
         if sum(len(text) for text in texts) > 5000:
             raise TranslationError('Translation batch is too large', 413)
-        if target == 'zh-CN':
-            return {'ok': True, 'provider': 'source', 'cached': True, 'translations': texts}
         now = time.time()
         output, missing = [], []
         with self.lock:
@@ -109,15 +131,22 @@ class Translator:
                 prepared.append(masked)
                 replacements.append(pairs)
             # Placeholders may expand the batch beyond Youdao's 5000-char limit.
-            groups, group, size = [], [], 0
+            groups, group, size, owners, units = [], [], 0, [], []
             for index, text in enumerate(prepared):
-                if len(text) > 5000:
-                    raise TranslationError('Protected translation text is too large', 413)
-                if group and size + len(text) > 5000:
-                    groups.append(group)
-                    group, size = [], 0
-                group.append(index)
-                size += len(text)
+                while text:
+                    end = min(5000, len(text))
+                    for marker in re.finditer(r'__QILY_TOKEN_\d+_\d+__', text):
+                        if marker.start() < end < marker.end():
+                            end = marker.start()
+                            break
+                    part, text = text[:end], text[end:]
+                    if group and size + len(part) > 5000:
+                        groups.append(group)
+                        group, size = [], 0
+                    group.append(len(units))
+                    units.append(part)
+                    owners.append(index)
+                    size += len(part)
             if group:
                 groups.append(group)
             translated = []
@@ -126,11 +155,16 @@ class Translator:
                 remaining = deadline - time.monotonic()
                 if remaining < 1:
                     raise TranslationError('Translation timed out', 504)
-                translated.extend(self.upstream([prepared[index] for index in group], target, self.keys, timeout=min(18, remaining)))
-            if len(translated) != len(missing):
+                translated.extend(self.upstream([units[index] for index in group], target, self.keys, timeout=remaining))
+            if len(translated) != len(units):
                 raise TranslationError('Translation count mismatch')
+            joined_results = [''] * len(missing)
+            for owner, text in zip(owners, translated):
+                if not isinstance(text, str) or not text.strip():
+                    raise TranslationError('Invalid translation text')
+                joined_results[owner] += text
             restored = {}
-            for source, text, pairs in zip(missing, translated, replacements):
+            for source, text, pairs in zip(missing, joined_results, replacements):
                 for placeholder, token in pairs:
                     if placeholder not in text:
                         raise TranslationError('Protected translation token changed')

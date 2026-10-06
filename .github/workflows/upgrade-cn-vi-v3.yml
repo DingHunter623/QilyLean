@@ -29,7 +29,7 @@ jobs:
           base_version = '20260923-cn-typography-base-v7'
           nav_script_version = '20260926-nav-rail-v20-cn-bridge'
           translate_version = '20260922-translate-v6-baidu'
-          translate_js_version = '20261006-translate-same-origin-v1'
+          translate_js_version = '20261006-youdao-nmt-closure-v1'
           footer_actions_version = '20260930-footer-domain-v15'
           official_brand = 'QilyLean | 启力精益'
           css_target = f'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="/assets/qilylean-vi-v2.css?v={css_version}">'
@@ -162,7 +162,7 @@ jobs:
               css_count = text.count(css_marker)
               nav_script_count = text.count('/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge')
               translate_css_count = text.count('/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu')
-              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20261006-translate-same-origin-v1')
+              translate_js_count = text.count('/assets/cn-translate-baidu-v1.js?v=20261006-youdao-nmt-closure-v1')
               footer_count = text.count(footer_marker)
               footer_tags = len(re.findall(r'<footer class="footer"(?: data-qily-footer-filing="none")?>', text))
               if css_count != 1:

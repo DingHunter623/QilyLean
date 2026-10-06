@@ -2,6 +2,8 @@ import hashlib
 import io
 import json
 import threading
+import socket
+from types import SimpleNamespace
 import unittest
 import urllib.error
 import urllib.parse
@@ -15,16 +17,15 @@ KEYS = {'YOUDAO_APP_KEY': 'test-app', 'YOUDAO_APP_SECRET': 'test-secret'}
 class TranslationTests(unittest.TestCase):
     def test_signed_batch_contract(self):
         def upstream(request, timeout):
-            self.assertEqual(request.full_url, 'https://openapi.youdao.com/v2/api')
+            self.assertEqual(request.full_url, 'https://openapi.youdao.com/api')
             form = urllib.parse.parse_qs(request.data.decode())
-            self.assertEqual(form['q'], ['现场问题', '工程改善'])
+            self.assertIn(form['q'][0], ['现场问题', '工程改善'])
+            self.assertEqual(form['strict'], ['true'])
             self.assertEqual(form['to'], ['en'])
-            signed = 'test-app' + '现场问题工程改善' + form['salt'][0] + form['curtime'][0] + 'test-secret'
+            signed = 'test-app' + form['q'][0] + form['salt'][0] + form['curtime'][0] + 'test-secret'
             self.assertEqual(form['sign'][0], hashlib.sha256(signed.encode()).hexdigest())
-            return io.BytesIO(json.dumps({'errorCode': '0', 'translateResults': [
-                {'translation': 'Site issue'}, {'translation': 'Engineering improvement'},
-            ]}).encode())
-        with patch.object(server.urllib.request, 'urlopen', upstream):
+            return io.BytesIO(json.dumps({'errorCode': '0', 'translation': [{'现场问题': 'Site issue', '工程改善': 'Engineering improvement'}[form['q'][0]]]}).encode())
+        with patch.object(server.urllib.request, 'build_opener', lambda handler: SimpleNamespace(open=upstream)):
             self.assertEqual(server.youdao(['现场问题', '工程改善'], 'en', KEYS), ['Site issue', 'Engineering improvement'])
 
     def test_long_batch_signature_and_upstream_failures(self):
@@ -32,14 +33,15 @@ class TranslationTests(unittest.TestCase):
         joined = ''.join(texts)
         def upstream(request, timeout):
             form = urllib.parse.parse_qs(request.data.decode())
-            value = joined[:10] + str(len(joined)) + joined[-10:]
+            query = form['q'][0]
+            value = query[:10] + str(len(query)) + query[-10:] if len(query) > 20 else query
             signed = KEYS['YOUDAO_APP_KEY'] + value + form['salt'][0] + form['curtime'][0] + KEYS['YOUDAO_APP_SECRET']
             self.assertEqual(form['sign'][0], hashlib.sha256(signed.encode()).hexdigest())
             return io.BytesIO(b'{"errorCode":"108"}')
-        with patch.object(server.urllib.request, 'urlopen', upstream):
+        with patch.object(server.urllib.request, 'build_opener', lambda handler: SimpleNamespace(open=upstream)):
             with self.assertRaises(server.TranslationError):
                 server.youdao(texts, 'en', KEYS)
-        with patch.object(server.urllib.request, 'urlopen', lambda *args, **kwargs: io.BytesIO(b'not-json')):
+        with patch.object(server.urllib.request, 'build_opener', lambda handler: SimpleNamespace(open=lambda *args, **kwargs: io.BytesIO(b'not-json'))):
             with self.assertRaises(server.TranslationError) as caught:
                 server.youdao(texts, 'en', KEYS)
             self.assertEqual(caught.exception.status, 502)
@@ -82,6 +84,42 @@ class TranslationTests(unittest.TestCase):
             adapter.translate({'target_language': 'en', 'texts': ['现场问题']}, 'ip-a')
         self.assertEqual(caught.exception.status, 429)
         self.assertTrue(adapter.translate({'target_language': 'en', 'texts': ['现场问题']}, 'ip-b')['ok'])
+
+    def test_timeout_and_network_error_are_sanitized(self):
+        for failure, code in [(socket.timeout('private upstream'), 504), (urllib.error.URLError('private upstream'), 502)]:
+            def fail(*args, **kwargs):
+                raise failure
+            with patch.object(server.urllib.request, 'build_opener', lambda handler: SimpleNamespace(open=fail)):
+                with self.assertRaises(server.TranslationError) as caught:
+                    server.youdao(['真实文本'], 'en', KEYS)
+                self.assertEqual(caught.exception.status, code)
+                self.assertNotIn('private upstream', str(caught.exception))
+
+    def test_mask_expansion_splits_without_damaging_tokens(self):
+        calls = []
+        def upstream(texts, *args, **kwargs):
+            calls.append(texts)
+            self.assertLessEqual(sum(map(len, texts)), 5000)
+            return texts
+        adapter = server.Translator(KEYS, upstream)
+        source = '现场 IE ' * 800
+        result = adapter.translate({'target_language': 'en', 'texts': [source]}, 'ip')
+        self.assertEqual(result['translations'], [source])
+        self.assertGreater(len(calls), 1)
+        boundary = '中' * 5000
+        self.assertTrue(adapter.translate({'target_language': 'en', 'texts': [boundary]}, 'ip')['ok'])
+
+    def test_partial_failure_never_commits_cache(self):
+        calls = []
+        def upstream(texts, *args, **kwargs):
+            calls.append(texts)
+            if len(calls) == 2:
+                raise server.TranslationError('Youdao NMT error 401')
+            return texts
+        adapter = server.Translator(KEYS, upstream)
+        with self.assertRaises(server.TranslationError):
+            adapter.translate({'target_language': 'en', 'texts': ['现场 IE ' * 800]}, 'ip')
+        self.assertFalse(adapter.cache)
 
     def test_missing_credentials(self):
         with patch.dict(server.os.environ, {}, clear=True):

@@ -79,7 +79,7 @@
 <script id="qilyHomeCopyActionV1">
 (function(){function cp(v){if(navigator.clipboard&&window.isSecureContext)return navigator.clipboard.writeText(v);return new Promise(function(r,j){var t=document.createElement('textarea');t.value=v;t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();try{document.execCommand('copy');r();}catch(e){j(e);}finally{t.remove();}});}document.querySelectorAll('.qily-copy-action[data-qily-copy]').forEach(function(b){b.addEventListener('click',function(){var v=b.dataset.qilyCopy,l=b.dataset.qilyCopyLabel||'内容',f=b.nextElementSibling;cp(v).then(function(){if(f){f.textContent='已复制'+l;f.classList.add('is-visible');setTimeout(function(){f.classList.remove('is-visible');},1800);}if(confirm(l+' '+v+' 已复制。是否现在打开网页？'))window.open(v,'_blank','noopener,noreferrer');});});});})();
 </script>
-<script defer src="/assets/cn-translate-baidu-v1.js?v=20261006-translate-same-origin-v1"></script>
+<script defer src="/assets/cn-translate-baidu-v1.js?v=20261006-youdao-nmt-closure-v1"></script>
 <script defer src="/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15"></script>
 <script defer src="/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge"></script>
 </body></html>

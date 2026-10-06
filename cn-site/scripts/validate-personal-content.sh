@@ -234,7 +234,7 @@ grep -Fq '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' "$INDEX_F
 grep -Fq 'QILY-CN-CURRENT-MODULE-V1' "$CN_VI_FILE" || { echo "ERROR: CN current-module VI contract is missing."; exit 1; }
 grep -Fq 'QILY-CN-CURRENT-MODULE-RUNTIME-V1' "$CN_NAV_RAIL_JS" || { echo "ERROR: CN current-module route runtime is missing."; exit 1; }
 grep -Fq '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' "$INDEX_FILE" || { echo "ERROR: CN homepage translator stylesheet is missing."; exit 1; }
-grep -Fq '/assets/cn-translate-baidu-v1.js?v=20261006-translate-same-origin-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage translator runtime is missing."; exit 1; }
+grep -Fq '/assets/cn-translate-baidu-v1.js?v=20261006-youdao-nmt-closure-v1' "$INDEX_FILE" || { echo "ERROR: CN homepage translator runtime is missing."; exit 1; }
 grep -Fq 'QILY-CN-NAV-RAIL-V7' "$CN_VI_FILE" || { echo "ERROR: CN international-style primary-nav rail contract is missing."; exit 1; }
 grep -Fq 'QILY-CN-STICKY-HEADER-V1' "$CN_VI_FILE" || { echo "ERROR: CN sticky header contract is missing."; exit 1; }
 grep -Fq 'position:sticky!important' "$CN_VI_FILE" || { echo "ERROR: CN header is not sticky."; exit 1; }
