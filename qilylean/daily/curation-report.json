@@ -1,8 +1,8 @@
 {
   "policy_version": "2026-08-28-r6.0-knowledge-asset-2.0",
-  "generated_at": "2026-09-20T00:00:00.000Z",
-  "total_before": 378,
-  "total_after": 378,
+  "generated_at": "2026-09-28T00:00:00.000Z",
+  "total_before": 380,
+  "total_after": 380,
   "removed": 0,
   "protected_dates": [
     "2026-07-29",
@@ -4908,6 +4908,32 @@
           "date": "2026-09-20",
           "title": "别再只用UPH排产：从订单到设备，建立可执行的产能数字主线",
           "score": 269,
+          "protected": false
+        }
+      ],
+      "removed_count": 0
+    },
+    {
+      "week": "2026-09-21",
+      "candidates": 1,
+      "kept": [
+        {
+          "date": "2026-09-23",
+          "title": "生产现场管理铁三脚：生产、工程、品质如何把异常关在现场",
+          "score": 200,
+          "protected": false
+        }
+      ],
+      "removed_count": 0
+    },
+    {
+      "week": "2026-09-28",
+      "candidates": 1,
+      "kept": [
+        {
+          "date": "2026-09-28",
+          "title": "计划不是排出来的，而是算出来的：制造业排产闭环的7个关键节点",
+          "score": 141,
           "protected": false
         }
       ],
