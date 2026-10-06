@@ -15,6 +15,7 @@ on:
       - main
     paths:
       - 'cn-site/**'
+      - 'services/cn-translation/**'
       - '.github/workflows/deploy-cn-preprod.yml'
       - 'scripts/cn-search-discovery.py'
       - 'scripts/test-cn-search-discovery.py'
@@ -54,8 +55,10 @@ jobs:
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'bash -se' <<'REMOTE'
           set -euo pipefail
+          command -v python3
+          systemctl --version | head -n 1
           echo 'Mainland server -> Worker health (TLS verification enabled):'
-          curl --fail --silent --show-error --connect-timeout 8 --max-time 25 https://qilylean-ai.dinghunter623.workers.dev/health
+          if ! curl --fail --silent --show-error --connect-timeout 8 --max-time 25 https://qilylean-ai.dinghunter623.workers.dev/health; then echo 'Worker is unreachable from this mainland server.'; fi
           echo
           echo 'Mainland server -> Youdao HTTPS API (unsigned public connectivity probe):'
           curl --fail --silent --show-error --connect-timeout 8 --max-time 25 -X POST https://openapi.youdao.com/v2/api --data 'q=connectivity&from=zh-CHS&to=en'
@@ -85,6 +88,9 @@ jobs:
               description: 'Deployment and production verification in progress',
               target_url: `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`
             })
+
+      - name: Test direct Youdao adapter
+        run: python3 services/cn-translation/test_server.py
 
       - name: Test CN search submission failure handling
         run: python3 scripts/test-cn-search-discovery.py
@@ -173,6 +179,17 @@ jobs:
           tar --exclude='scripts' --exclude='nginx' --exclude='*.md' --exclude='assets/qilylean-aircraft-hero-cn-20260918.png' -czf /tmp/qilylean-cn-site.tar.gz -C cn-site .
           sha256sum /tmp/qilylean-cn-site.tar.gz
 
+      - name: Require configured Youdao application before any production change
+        env:
+          YOUDAO_APP_KEY: ${{ secrets.YOUDAO_APP_KEY }}
+          YOUDAO_APP_SECRET: ${{ secrets.YOUDAO_APP_SECRET }}
+        run: |
+          set -euo pipefail
+          if [ -z "$YOUDAO_APP_KEY" ] || [ -z "$YOUDAO_APP_SECRET" ]; then
+            echo 'Missing YOUDAO_APP_KEY / YOUDAO_APP_SECRET; no production change is allowed.' >&2
+            exit 1
+          fi
+
       - name: Configure SSH
         shell: bash
         env:
@@ -186,34 +203,6 @@ jobs:
           printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
           chmod 600 ~/.ssh/qilylean_cn
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
-
-      - name: Require real Youdao translation from the mainland server before publishing
-        shell: bash
-        env:
-          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
-          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
-        run: |
-          set -euo pipefail
-          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
-          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'python3 -' <<'PY'
-          import json, urllib.request, uuid
-          base = 'https://qilylean-ai.dinghunter623.workers.dev'
-          with urllib.request.urlopen(base + '/health', timeout=25) as response:
-              health = json.load(response)
-          if health.get('translation_provider') != 'youdao' or health.get('youdao_available') is not True:
-              raise SystemExit('Youdao is not provisioned; stop before publishing CN translation changes.')
-          source = '制造现场翻译验收 ' + uuid.uuid4().hex
-          payload = json.dumps({'source_language': 'zh-CN', 'target_language': 'en', 'texts': [source, 'QilyLean｜启力精益']}).encode()
-          request = urllib.request.Request(base + '/translate', data=payload, headers={'Content-Type': 'application/json', 'Origin': 'https://qilylean.cn'})
-          with urllib.request.urlopen(request, timeout=65) as response:
-              result = json.load(response)
-          if result.get('ok') is not True or result.get('provider') != 'youdao' or result.get('cached') is not False:
-              raise SystemExit('Mainland upstream must return a fresh translation from Youdao.')
-          translations = result.get('translations', [])
-          if len(translations) != 2 or not translations[0].strip() or translations[0] == source or translations[1] != 'QilyLean｜启力精益':
-              raise SystemExit('Translation result or protected brand contract failed.')
-          print('PASS: mainland server TLS, real Youdao call, no cached result, protected brand preserved.')
-          PY
 
       - name: Stage release bundle on mainland server
         timeout-minutes: 20
@@ -247,7 +236,7 @@ jobs:
           rm -f /tmp/qilylean-cn-site.part.*
           split -b 512k -d -a 3 /tmp/qilylean-cn-site.tar.gz /tmp/qilylean-cn-site.part.
 
-          timeout 60s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             'rm -f /tmp/qilylean-cn-site.part.* /tmp/qilylean-cn-site.tar.gz'
+          timeout 60s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             'rm -f /tmp/qilylean-cn-site.part.* /tmp/qilylean-cn-site.tar.gz; mkdir -p /tmp/qilylean-cn-translation'
 
           for part in /tmp/qilylean-cn-site.part.*; do
             copy_with_retry "$part" "/tmp/$(basename "$part")"
@@ -256,6 +245,9 @@ jobs:
           copy_with_retry cn-site/scripts/deploy-release.sh /tmp/deploy-qilylean-cn.sh
           copy_with_retry cn-site/scripts/activate-public-http.sh /tmp/activate-qilylean-cn-http.sh
           copy_with_retry cn-site/nginx/qilylean.cn.conf /tmp/qilylean.cn.conf
+          for service_file in server.py protected-tokens.json qilylean-cn-translation.service install.sh; do
+            copy_with_retry "services/cn-translation/$service_file" "/tmp/qilylean-cn-translation/$service_file"
+          done
 
           timeout 90s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             "cat /tmp/qilylean-cn-site.part.* > /tmp/qilylean-cn-site.tar.gz &&              REMOTE_SHA=\$(sha256sum /tmp/qilylean-cn-site.tar.gz | cut -d' ' -f1) &&              test \"\$REMOTE_SHA\" = \"$ARCHIVE_SHA\" &&              rm -f /tmp/qilylean-cn-site.part.* &&              test -s /tmp/deploy-qilylean-cn.sh && test -s /tmp/activate-qilylean-cn-http.sh && test -s /tmp/qilylean.cn.conf &&              echo 'Release bundle staged and checksum verified.'"
 
@@ -269,6 +261,21 @@ jobs:
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           ssh -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
             "if [ ! -f /etc/nginx/sites-available/qilylean-cn-preprod ]; then chmod +x /tmp/bootstrap-qilylean-cn.sh && /tmp/bootstrap-qilylean-cn.sh; else echo 'Server bootstrap already present'; fi"
+
+      - name: Provision and verify direct mainland Youdao service
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          YOUDAO_APP_KEY: ${{ secrets.YOUDAO_APP_KEY }}
+          YOUDAO_APP_SECRET: ${{ secrets.YOUDAO_APP_SECRET }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes)
+          # Credentials travel only over encrypted SSH stdin, never command arguments/logs.
+          python3 -c 'import os,json,sys; json.dump({key:os.environ[key] for key in ("YOUDAO_APP_KEY","YOUDAO_APP_SECRET")},sys.stdout)' | ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "sudo python3 -c 'import json,sys,pathlib,os; data=json.load(sys.stdin); assert all(isinstance(data.get(k),str) and data[k].strip() for k in (\"YOUDAO_APP_KEY\",\"YOUDAO_APP_SECRET\")); path=pathlib.Path(\"/tmp/qilylean-cn-youdao\"); path.mkdir(mode=0o700,exist_ok=True); os.chmod(path,0o700); dest=path/\"youdao\"; dest.write_text(json.dumps(data)); os.chmod(dest,0o600)'"
+          ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'sudo bash /tmp/qilylean-cn-translation/install.sh'
 
       - name: Deploy release on mainland server
         shell: bash

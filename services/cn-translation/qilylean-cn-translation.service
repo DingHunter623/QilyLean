@@ -1,0 +1,23 @@
+[Unit]
+Description=QilyLean CN direct Youdao translation
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+LoadCredential=youdao:/etc/qilylean-cn/translate.json
+ExecStart=/usr/bin/python3 /opt/qilylean-cn-translation/server.py
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+UMask=0077
+MemoryMax=128M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

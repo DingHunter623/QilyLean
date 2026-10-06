@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'cn-site/**'
+      - 'services/cn-translation/**'
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
       - 'scripts/test-cn-translation-gateway.js'
@@ -12,6 +13,7 @@ on:
       - main
     paths:
       - 'cn-site/**'
+      - 'services/cn-translation/**'
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
       - 'scripts/test-cn-translation-gateway.js'
@@ -27,6 +29,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Test direct Youdao adapter
+        run: python3 services/cn-translation/test_server.py
 
       - name: Test same-origin translation transport
         run: node scripts/test-cn-translation-gateway.js
