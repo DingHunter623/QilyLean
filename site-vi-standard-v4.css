@@ -144,9 +144,9 @@ html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] 
   -webkit-text-fill-color:currentColor!important;
 }
 
-/* Canonical semantic label color: the China and international sites use the same
- * gold-family hierarchy. Section/module labels are gold on light surfaces and
- * light-gold on formal dark Heroes. This includes the homepage conversion kicker. */
+/* QILY-FULL-SITE-HERO-LABEL-VI-V1 | 2026-10-06
+ * Canonical semantic-label contract across international + China public surfaces:
+ * deep backgrounds use light gold; light surfaces use VI gold; labels use regular weight. */
 html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] main :is(
   .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
   .kicker,.section-kicker,.module-kicker,.qily-ia-kicker,
@@ -156,7 +156,8 @@ html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] 
 ){
   color:var(--qily-vi-gold)!important;
   -webkit-text-fill-color:var(--qily-vi-gold)!important;
-  font-weight:950!important;
+  font-weight:400!important;
+  font-style:normal!important;
   letter-spacing:.035em!important;
   opacity:1!important;
   text-shadow:none!important;
@@ -175,6 +176,8 @@ html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] 
 ){
   color:var(--qily-vi-gold-light)!important;
   -webkit-text-fill-color:var(--qily-vi-gold-light)!important;
+  font-weight:400!important;
+  font-style:normal!important;
 }
 
 /* 04 | Typography hierarchy. */
