@@ -6,6 +6,66 @@ const base=process.env.QILY_GK_BASE||'http://127.0.0.1:4173';
 const out=path.join(process.cwd(),'global-knowledge-visual-artifacts');
 fs.mkdirSync(out,{recursive:true});
 
+test('Sep 28 China-bridge reader preserves the governed curated-brief VI',async({page})=>{
+  await page.setViewportSize({width:1440,height:1000});
+  const response=await page.goto(base+'/global-knowledge/briefs/?date=2026-09-28',{waitUntil:'networkidle',timeout:30000});
+  expect(response&&response.ok()).toBeTruthy();
+
+  const title=page.locator('#readerHead h1');
+  await expect(title).toBeVisible();
+  const titleSize=await title.evaluate(el=>parseFloat(getComputedStyle(el).fontSize));
+  expect(titleSize).toBeGreaterThanOrEqual(30);
+  expect(titleSize).toBeLessThanOrEqual(36.5);
+
+  await expect(page.locator('body')).toHaveClass(/plan-closure-brief/);
+  await expect(page.locator('link[data-qily-imported-brief-css="2026-09-28"]')).toHaveCount(1);
+
+  const article=page.locator('#article');
+  await expect(article).toHaveClass(/knowledge-brief-article/);
+  const shell=await article.evaluate(el=>({
+    border:parseFloat(getComputedStyle(el).borderTopWidth),
+    padding:parseFloat(getComputedStyle(el).paddingTop)
+  }));
+  expect(shell.border).toBe(0);
+  expect(shell.padding).toBe(0);
+
+  const result=article.locator('.net-demand-visual > .plan-result');
+  await expect(result).toBeVisible();
+  const resultVi=await result.evaluate(el=>{
+    const label=el.querySelector('small');
+    const value=el.querySelector('strong');
+    const cs=n=>getComputedStyle(n);
+    return {
+      bg:cs(el).backgroundColor,
+      label:cs(label).color,
+      labelFill:cs(label).webkitTextFillColor,
+      value:cs(value).color,
+      valueFill:cs(value).webkitTextFillColor
+    };
+  });
+  expect(resultVi.bg).toBe('rgb(15, 75, 90)');
+  expect(resultVi.label).toBe('rgb(255, 224, 164)');
+  expect(resultVi.labelFill).toBe('rgb(255, 224, 164)');
+  expect(resultVi.value).toBe('rgb(255, 255, 255)');
+  expect(resultVi.valueFill).toBe('rgb(255, 255, 255)');
+
+  const formula=article.locator('.formula-grid').first();
+  await expect(formula).toBeVisible();
+  const formulaCols=await formula.evaluate(el=>getComputedStyle(el).gridTemplateColumns.split(' ').filter(Boolean).length);
+  expect(formulaCols).toBe(2);
+
+  const constraints=article.locator('.constraint-grid');
+  await expect(constraints).toBeVisible();
+  const rows=await constraints.evaluate(el=>{
+    const ys=[...el.children].map(card=>Math.round(card.getBoundingClientRect().top));
+    return new Set(ys).size;
+  });
+  expect(rows).toBe(1);
+
+  await result.scrollIntoViewIfNeeded();
+  await page.screenshot({path:path.join(out,'brief-2026-09-28-cn-bridge-vi.png'),fullPage:false});
+});
+
 test('Sep 20 brief SVG is normalized to readable QilyLean VI',async({page})=>{
   await page.setViewportSize({width:1440,height:1000});
   const response=await page.goto(base+'/global-knowledge/briefs/?date=2026-09-20',{waitUntil:'networkidle',timeout:30000});

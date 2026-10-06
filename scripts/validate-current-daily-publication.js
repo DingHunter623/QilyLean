@@ -178,6 +178,7 @@ if (sep28Brief) {
   assert((sep28Brief.match(/class="plan-result"/g) || []).length === 3, 'Sep 28 brief keeps exactly three dedicated dark result cards');
   assert(!/class="result"/.test(sep28Brief), 'Sep 28 brief does not reuse the global generic result class');
   includes(sep28BriefCss, '>.plan-result :is(small,span,strong){color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important}', 'Sep 28 dark result-card text explicitly locks white text fill');
+  includes(sep28BriefCss, 'color:#ffe0a4!important;', 'Sep 28 result labels use the governed gold accent on dark cards');
   assert(!/\\nhtml body\.plan-closure-brief/.test(sep28BriefCss), 'Sep 28 contrast CSS contains no literal escaped selector separator');
 }
 if (cnCapacityBrief) {
@@ -191,8 +192,9 @@ if (cnCapacityBrief) {
   assert(!/<marker\b|marker-end=/.test(cnCapacityBrief), 'CN synchronized diagrams no longer use detached SVG marker arrowheads');
 }
 if (cnHome) {
-  includes(cnHome, '/knowledge/capacity-digital-thread/', 'CN homepage exposes the current synchronized capacity brief');
-  includes(cnHome, '2026-09-20｜别再只用UPH排产', 'CN homepage labels the current synchronized brief');
+  includes(cnHome, '/knowledge/capacity-digital-thread/', 'CN homepage exposes the capacity deep-dive article');
+  includes(cnHome, '别再只用UPH排产：从订单到设备，建立可执行的产能数字主线', 'CN homepage keeps the capacity deep-dive title');
+  assert(!cnHome.includes('2026-09-20｜别再只用UPH排产'), 'CN homepage deep-dive title no longer mixes brief chronology');
 }
 
 includes(cooperation, 'QILY-PRICING-PUBLIC-DISABLED', 'Public pricing remains disabled');

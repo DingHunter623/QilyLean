@@ -95,11 +95,20 @@ if (!reader.includes('.content article[id^="lean-"]>small') || !reader.includes(
 if (!reader.includes('.content #lean-tools-feature>ul:first-of-type>li')) fail('ten-tool reader visual grid is missing');
 
 const briefs = fs.readFileSync(path.join(dir, 'briefs', 'index.html'), 'utf8');
-if (!briefs.includes('Presentation firewall: imported briefs contribute knowledge content, never their source-page visual skin.')) {
+if (!briefs.includes('Presentation firewall: legacy imported briefs contribute knowledge content without source-page skin.')) {
   fail('brief reader presentation firewall marker is missing');
 }
-if (!briefs.includes("a.name==='class'||a.name==='style'")) {
-  fail('brief reader must strip imported class/style attributes to prevent source-page VI leakage');
+if (!briefs.includes("a.name==='style'||(a.name==='class'&&!preserveVi)")) {
+  fail('brief reader must keep legacy class stripping while allowing the governed VI-parity exception');
+}
+if (!briefs.includes("doc.body.classList.contains('plan-closure-brief')") || !briefs.includes("data-qily-imported-brief-css")) {
+  fail('Sep 28 bridge reader must load the approved issue stylesheet under an explicit VI scope');
+}
+if (!briefs.includes('qilyBridgeBriefReaderTypeGuardV1') || !briefs.includes('html body main #readerHead.reader-head h1{font-size:clamp(30px,2.05vw,36px)!important')) {
+  fail('brief reader H1 must override the sitewide R8 scale with the restrained curated-brief title scale');
+}
+if (!briefs.includes('.reader[data-source-vi="true"] .article{padding:0;border:0;background:transparent}')) {
+  fail('governed bridge reader must remove the duplicate outer article card');
 }
 if (!briefs.includes("data-qily-imported-visual','normalized-v1'") || !briefs.includes("el.namespaceURI==='http://www.w3.org/2000/svg'")) {
   fail('brief reader must preserve SVG-local metadata and normalize imported diagrams instead of browser-default rendering');
@@ -114,6 +123,10 @@ if (!briefs.includes("root.querySelectorAll('script,style,header,footer,nav,form
 const cn = fs.readFileSync(path.join(root, 'cn-site', 'index.html'), 'utf8');
 if (!cn.includes('https://qilylean.com/global-knowledge/')) fail('CN homepage no longer points to the isolated Global Knowledge bridge');
 if (/https:\/\/qilylean\.com\/(?!global-knowledge\/|links\/cn-public\/)/i.test(cn)) fail('CN homepage contains a non-isolated qilylean.com route');
+const deepDiveSection = (cn.match(/<section class="section alt"><div class="content"><div class="section-head"><small>DEEP DIVES｜专题文章<\/small>[\s\S]*?<\/div><\/div><\/section>/) || [])[0] || '';
+if (!deepDiveSection) fail('CN homepage deep-dive module is missing');
+if (/\d{4}-\d{2}-\d{2}｜/.test(deepDiveSection)) fail('CN deep-dive module must remain evergreen and must not mix brief dates into article titles');
+if (/最新精选知识/.test(deepDiveSection)) fail('CN deep-dive module must not masquerade as the latest-brief feed');
 
 if (process.exitCode) process.exit(process.exitCode);
 console.log(`Global Knowledge isolation gate passed: ${htmlFiles.length} HTML pages checked.`);
