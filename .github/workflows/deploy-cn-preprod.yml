@@ -5,6 +5,11 @@ name: Deploy QilyLean CN knowledge site
 
 on:
   workflow_dispatch:
+    inputs:
+      inspect_translation_only:
+        description: 'Read-only translation connectivity check from the mainland server'
+        type: boolean
+        default: false
   push:
     branches:
       - main
@@ -19,11 +24,48 @@ permissions:
   statuses: write
 
 concurrency:
-  group: qilylean-cn-production-v12
+  group: ${{ inputs.inspect_translation_only && 'qilylean-cn-translation-inspection' || 'qilylean-cn-production-v12' }}
   cancel-in-progress: true
 
 jobs:
+  inspect-translation:
+    if: github.event_name == 'workflow_dispatch' && inputs.inspect_translation_only
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Configure SSH for read-only inspection
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$CN_PREPROD_HOST"
+          test -n "$CN_PREPROD_SSH_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
+          chmod 600 ~/.ssh/qilylean_cn
+          ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+      - name: Inspect mainland server translation reachability without publishing
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'bash -se' <<'REMOTE'
+          set -euo pipefail
+          echo 'Mainland server -> Worker health (TLS verification enabled):'
+          curl --fail --silent --show-error --connect-timeout 8 --max-time 25 https://qilylean-ai.dinghunter623.workers.dev/health
+          echo
+          echo 'Mainland server -> Youdao HTTPS API (unsigned public connectivity probe):'
+          curl --fail --silent --show-error --connect-timeout 8 --max-time 25 -X POST https://openapi.youdao.com/v2/api --data 'q=connectivity&from=zh-CHS&to=en'
+          echo
+          echo 'Current same-origin translation HTTP status:'
+          curl --silent --show-error --max-time 15 -o /dev/null -w '%{http_code}\n' --resolve qilylean.cn:443:127.0.0.1 https://qilylean.cn/translate
+          REMOTE
+
   validate-and-deploy:
+    if: github.event_name != 'workflow_dispatch' || !inputs.inspect_translation_only
     timeout-minutes: 50
     runs-on: ubuntu-latest
     steps:
@@ -145,6 +187,34 @@ jobs:
           chmod 600 ~/.ssh/qilylean_cn
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
+      - name: Require real Youdao translation from the mainland server before publishing
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'python3 -' <<'PY'
+          import json, urllib.request, uuid
+          base = 'https://qilylean-ai.dinghunter623.workers.dev'
+          with urllib.request.urlopen(base + '/health', timeout=25) as response:
+              health = json.load(response)
+          if health.get('translation_provider') != 'youdao' or health.get('youdao_available') is not True:
+              raise SystemExit('Youdao is not provisioned; stop before publishing CN translation changes.')
+          source = '制造现场翻译验收 ' + uuid.uuid4().hex
+          payload = json.dumps({'source_language': 'zh-CN', 'target_language': 'en', 'texts': [source, 'QilyLean｜启力精益']}).encode()
+          request = urllib.request.Request(base + '/translate', data=payload, headers={'Content-Type': 'application/json', 'Origin': 'https://qilylean.cn'})
+          with urllib.request.urlopen(request, timeout=65) as response:
+              result = json.load(response)
+          if result.get('ok') is not True or result.get('provider') != 'youdao' or result.get('cached') is not False:
+              raise SystemExit('Mainland upstream must return a fresh translation from Youdao.')
+          translations = result.get('translations', [])
+          if len(translations) != 2 or not translations[0].strip() or translations[0] == source or translations[1] != 'QilyLean｜启力精益':
+              raise SystemExit('Translation result or protected brand contract failed.')
+          print('PASS: mainland server TLS, real Youdao call, no cached result, protected brand preserved.')
+          PY
+
       - name: Stage release bundle on mainland server
         timeout-minutes: 20
         shell: bash
@@ -222,6 +292,21 @@ jobs:
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
           ssh -o ConnectTimeout=20 -o ServerAliveInterval=15 -o ServerAliveCountMax=3 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" \
             "chmod +x /tmp/activate-qilylean-cn-http.sh && /tmp/activate-qilylean-cn-http.sh /tmp/qilylean.cn.conf"
+
+      - name: Verify fresh Youdao translation through the production CN origin
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request, uuid
+          source = '同源翻译验收 ' + uuid.uuid4().hex
+          payload = json.dumps({'source_language': 'zh-CN', 'target_language': 'en', 'texts': [source]}).encode()
+          request = urllib.request.Request('https://qilylean.cn/translate', data=payload, headers={'Content-Type': 'application/json'})
+          with urllib.request.urlopen(request, timeout=65) as response:
+              result = json.load(response)
+          translations = result.get('translations', [])
+          if result.get('ok') is not True or result.get('provider') != 'youdao' or result.get('cached') is not False or len(translations) != 1 or not translations[0].strip() or translations[0] == source:
+              raise SystemExit('Production same-origin translation did not complete a fresh Youdao call.')
+          print('PASS: qilylean.cn/translate returned a fresh Youdao translation.')
+          PY
 
       - name: Verify production brand and interaction closure
         shell: bash
@@ -449,7 +534,7 @@ jobs:
               raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
-          if '/assets/cn-translate-baidu-v1.js?v=20260922-translate-v6-baidu' not in home:
+          if '/assets/cn-translate-baidu-v1.js?v=20261006-translate-same-origin-v1' not in home:
               raise SystemExit('Production China home missing in-page translator runtime.')
           required_home_practice = [
               'PRACTICE & EVIDENCE｜实践与成果',
