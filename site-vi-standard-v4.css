@@ -131,6 +131,39 @@ html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] 
   -webkit-text-fill-color:currentColor!important;
 }
 
+/* Canonical semantic label color: the China and international sites use the same
+ * gold-family hierarchy. Section/module labels are gold on light surfaces and
+ * light-gold on formal dark Heroes. This includes the homepage conversion kicker. */
+html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] main :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+  .kicker,.section-kicker,.module-kicker,.qily-ia-kicker,
+  .resource-kicker,.qily-resource-network__kicker,.engineering-kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker,
+  .section-head>small,.module-heading>.module-eyebrow
+){
+  color:var(--qily-vi-gold)!important;
+  -webkit-text-fill-color:var(--qily-vi-gold)!important;
+  font-weight:950!important;
+  letter-spacing:.035em!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
+html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] main
+:is(
+  .hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,
+  [data-qily-hero],[data-qily-vi-v4-hero="118deg"]
+):not(.qily-aircraft-brand-hero)
+:is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+  .kicker,.section-kicker,.module-kicker,.qily-ia-kicker,
+  .resource-kicker,.qily-resource-network__kicker,.engineering-kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
+){
+  color:var(--qily-vi-gold-light)!important;
+  -webkit-text-fill-color:var(--qily-vi-gold-light)!important;
+}
+
 /* 04 | Typography hierarchy. */
 html body main :is(h1,.hero-title,.module-title){line-height:1.08!important;font-weight:900!important;}
 html body main :is(h2,.section-title,.section-heading h2,.section-head h2,.module-heading h2){line-height:1.18!important;font-weight:850!important;}
