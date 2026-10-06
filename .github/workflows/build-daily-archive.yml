@@ -147,6 +147,6 @@ jobs:
             qilylean/daily/terminology-audit-latest.json \
             qilylean/site-data.json \
             qilylean/site-search-index.json
-          git commit -m 'build: publish curated weekly engineering archive [skip ci]'
+          git commit -m 'build: publish curated weekly engineering archive'
           git pull --rebase origin main
           git push origin HEAD:main
