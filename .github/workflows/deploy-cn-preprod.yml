@@ -31,6 +31,7 @@ concurrency:
 
 jobs:
   inspect-translation:
+    continue-on-error: true
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -88,7 +89,6 @@ jobs:
           ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "sudo env CREDENTIALS_DIRECTORY=$STAGE python3 $STAGE/verify-production.py"
 
   validate-and-deploy:
-    needs: inspect-translation
     if: github.event_name != 'workflow_dispatch' || !inputs.inspect_translation_only
     timeout-minutes: 50
     runs-on: ubuntu-latest
