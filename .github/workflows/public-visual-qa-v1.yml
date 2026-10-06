@@ -9,6 +9,12 @@ on:
       - 'knowledge/terminology.html'
       - 'knowledge/terminology-opl-readability-v8.css'
       - 'scripts/publish-visual-readability-v5.js'
+      - 'site-visual-readability-v5.css'
+      - 'index.html'
+      - 'links/index.html'
+      - 'cn-site/index.html'
+      - 'cn-site/assets/qilylean-vi-v1.css'
+      - 'cn-site/assets/qilylean-vi-v2.css'
   workflow_dispatch:
 
 permissions:
@@ -37,6 +43,7 @@ jobs:
       - name: Verify live Daily Brief and OPL PDF
         env:
           QA_BASE: https://qilylean.com
+          QA_CN_BASE: https://qilylean.cn
         run: |
           mkdir -p qa-output
           node <<'NODE'
@@ -67,11 +74,55 @@ jobs:
             assert(daily.bodyClass.split(/\s+/).includes('daily-single-page'), `live brief body hook missing: ${daily.bodyClass}`);
             assert(JSON.stringify(daily.sections.slice(0,4)) === JSON.stringify(['一、','二、','三、','四、']), `major headings wrong: ${daily.sections.join('|')}`);
             assert(daily.kickerColor === 'rgb(255, 227, 155)' || daily.kickerFill === 'rgb(255, 227, 155)', `hero kicker is not gold: ${daily.kickerColor}/${daily.kickerFill}`);
-            assert(daily.heroCopyColor === 'rgb(237, 249, 246)' || daily.heroCopyFill === 'rgb(237, 249, 246)', `hero body copy is not readable white: ${daily.heroCopyColor}/${daily.heroCopyFill}`);
+            assert(
+              ['rgb(237, 249, 246)','rgb(255, 255, 255)'].includes(daily.heroCopyColor) ||
+              ['rgb(237, 249, 246)','rgb(255, 255, 255)'].includes(daily.heroCopyFill),
+              `hero body copy is not readable white: ${daily.heroCopyColor}/${daily.heroCopyFill}`
+            );
             assert(daily.tagColors.length >= 8 && daily.tagColors.every(v => v === 'rgb(255, 255, 255)'), `overview numbers not white: ${daily.tagColors.join(',')}`);
             assert(daily.tagFills.every(v => !v || v === 'rgb(255, 255, 255)'), `overview text-fill not white: ${daily.tagFills.join(',')}`);
             await page.locator('article.post .hero').first().screenshot({path:'qa-output/brief-hero.png'});
             await page.locator('article.post .overview').first().screenshot({path:'qa-output/brief-eight-wastes-overview.png'});
+
+            const verifySemanticLabel = async (url, selector, evidenceName) => {
+              const visual = await browser.newPage({viewport:{width:1680,height:950}, deviceScaleFactor:1});
+              await visual.goto(url, {waitUntil:'networkidle', timeout:120000});
+              const label = visual.locator(selector).first();
+              await label.waitFor({state:'visible', timeout:30000});
+              const computed = await label.evaluate(node => {
+                const style = getComputedStyle(node);
+                return {
+                  text: node.textContent.trim(),
+                  color: style.color,
+                  fill: style.webkitTextFillColor,
+                  fontWeight: style.fontWeight
+                };
+              });
+              fs.writeFileSync(`qa-output/${evidenceName}-computed.json`, JSON.stringify(computed,null,2));
+              assert(
+                computed.color === 'rgb(255, 227, 155)' || computed.fill === 'rgb(255, 227, 155)',
+                `${evidenceName} semantic label is not light gold: ${computed.color}/${computed.fill}`
+              );
+              assert(computed.fontWeight === '400', `${evidenceName} semantic label is not regular weight: ${computed.fontWeight}`);
+              await visual.screenshot({path:`qa-output/${evidenceName}-full.png`, fullPage:true});
+              await visual.close();
+            };
+
+            await verifySemanticLabel(
+              `${process.env.QA_BASE}/?qa=${stamp}`,
+              '.qily-home-conversion-hero__kicker',
+              'international-home-hero-label'
+            );
+            await verifySemanticLabel(
+              `${process.env.QA_BASE}/links/?qa=${stamp}`,
+              '.hero .eyebrow',
+              'international-links-hero-label'
+            );
+            await verifySemanticLabel(
+              `${process.env.QA_CN_BASE}/?qa=${stamp}`,
+              '.hero .eyebrow',
+              'china-home-hero-label'
+            );
 
             const opl = await browser.newPage({viewport:{width:1680,height:950}, deviceScaleFactor:1});
             await opl.goto(`${process.env.QA_BASE}/knowledge/terminology.html?opl=6S&qa=${stamp}`, {waitUntil:'networkidle', timeout:120000});

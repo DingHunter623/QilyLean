@@ -47,7 +47,7 @@ jobs:
           grep -Fq 'R8-HEADING-CEILING-V1-20260903' site-visual-readability-v5.css
           grep -Fq 'html:root:root:root body main h1' site-visual-readability-v5.css
           grep -Fq 'font-size:clamp(30px,8.2vw,38px)!important' site-visual-readability-v5.css
-          grep -Fq "const VERSION = '20261006-hero-label-light-gold-regular-v3';" scripts/publish-visual-readability-v5.js
+          grep -Fq "const VERSION = '20261007-hero-label-light-gold-regular-v4';" scripts/publish-visual-readability-v5.js
           grep -Fq 'QILY-SITEWIDE-SMALL-TYPE-GOLD-PARITY-V1' site-visual-readability-v5.css
           grep -Fq 'QILY-READABILITY-ALL-SMALL-COPY-FLOOR-V2' site-visual-readability-v5.css
           grep -Fq -- '--qily-v5-small:20px' site-visual-readability-v5.css
