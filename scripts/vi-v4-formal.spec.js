@@ -35,7 +35,10 @@ for(const [name,url] of pages){
         const visible=el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&Number(s.opacity||1)!==0&&r.width>0&&r.height>0;};
         const headers=[...document.querySelectorAll('header.qily-site-header,header.qily-global-header,header.topbar,header.top')].filter(visible);
         const docks=[...document.querySelectorAll('#floatDock.qily-float-dock,.qily-float-dock')].filter(visible);
-        const rails=[...document.querySelectorAll('.qily-primary-nav-scroll-rail,.qily-primary-nav-scroll-thumb')].filter(visible);
+        const primaryNav=document.querySelector('header.qily-site-header nav.site-nav,header.qily-site-header nav.qily-global-nav,header.qily-global-header nav.site-nav,header.qily-global-header nav.qily-global-nav');
+        const navOverflow=!!primaryNav&&primaryNav.scrollWidth>primaryNav.clientWidth+1;
+        const rails=[...document.querySelectorAll('input.qily-primary-nav-scroll-rail[type="range"]')].filter(visible);
+        const syntheticThumbs=[...document.querySelectorAll('.qily-primary-nav-scroll-thumb')].filter(visible);
         const translators=[...document.querySelectorAll('.qily-web-translate')].filter(visible);
         const heroes=[...document.querySelectorAll(heroSelector)].filter(el=>visible(el)&&!el.classList.contains('qily-aircraft-brand-hero')&&el.getAttribute('data-qily-vi-v4-surface')!=='secondary-content');
         const secondaryBrief=document.querySelector('body.qily-knowledge-brief-page main[data-qily-knowledge-brief] > .knowledge-brief-hero.module-hero');
@@ -50,7 +53,9 @@ for(const [name,url] of pages){
           dockHeights:docks.map(el=>el.getBoundingClientRect().height),
           bodyPaddingBottom:parseFloat(getComputedStyle(document.body).paddingBottom)||0,
           dockSpacerHeight:(()=>{const el=document.getElementById('qilyDockBottomSpacerV58');if(!el||el.parentElement!==document.body)return 0;const style=getComputedStyle(el);return style.display!=='none'&&!['fixed','absolute'].includes(style.position)?el.getBoundingClientRect().height:0;})(),
+          navOverflow,
           rails:rails.length,
+          syntheticThumbs:syntheticThumbs.length,
           translatorOutsideHeader:translators.filter(el=>!el.closest('header.qily-site-header')).length,
           heroes:heroes.length,
           badHero:heroes.filter(el=>!getComputedStyle(el).backgroundImage.includes('118deg')).map(el=>el.className),
@@ -68,7 +73,8 @@ for(const [name,url] of pages){
       expect(result.docks,`${url} ${device} visible Dock count`).toBeLessThanOrEqual(1);
       const dockReserved=result.dockPositions.every((p,i)=>p!=='fixed'&&p!=='absolute'||result.bodyPaddingBottom+result.dockSpacerHeight+1>=result.dockHeights[i]);
       expect(dockReserved,`${url} ${device} fixed Dock must reserve equivalent bottom content space`).toBeTruthy();
-      expect(result.rails,`${url} ${device} legacy navigation slider`).toBe(0);
+      expect(result.syntheticThumbs,`${url} ${device} synthetic legacy navigation thumb`).toBe(0);
+      expect(result.rails,`${url} ${device} overflow navigation rail parity`).toBe(result.navOverflow?1:0);
       expect(result.translatorOutsideHeader,`${url} ${device} translator must live in Header`).toBe(0);
       expect(result.badHero,`${url} ${device} non-118deg Hero: ${result.badHero.join(' | ')}`).toEqual([]);
       expect(result.heroMarkers,`${url} ${device} Hero formal markers`).toBe(result.heroes);
