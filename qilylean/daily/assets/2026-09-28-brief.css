@@ -1,0 +1,149 @@
+@import url("/qilylean/daily/brief-layout-standard.css?v=20260921-unified-v3-feedback-axis");
+
+/* 2026-09-28 brief: component-only styles.
+   All global axes, hero, typography hierarchy, feedback width and site VI are inherited. */
+body.plan-closure-brief .lean-brief-toc{display:flex;gap:10px;flex-wrap:wrap}
+body.plan-closure-brief .plan-principle{margin:22px 0;padding:22px;border:1px solid #c9ddd8;border-radius:18px;background:#f7fbfa}
+body.plan-closure-brief .plan-principle>span{display:block;color:#765713;font-size:14px;font-weight:900;letter-spacing:.08em}
+body.plan-closure-brief .plan-principle>strong{display:block;margin:8px 0 6px;color:#0f4b5a;font-size:20px;line-height:1.5}
+body.plan-closure-brief .plan-principle p{margin:0;color:#3a5756}
+body.plan-closure-brief .plan-chain,
+body.plan-closure-brief .resource-map,
+body.plan-closure-brief .priority-rail,
+body.plan-closure-brief .feedback-loop{
+  display:flex;align-items:stretch;gap:8px;margin:22px 0;
+}
+body.plan-closure-brief .plan-chain>div,
+body.plan-closure-brief .resource-map>div{
+  flex:1 1 0;min-width:0;border:1px solid #c9ddd8;border-radius:14px;background:#fff;padding:14px 10px;text-align:center;
+}
+body.plan-closure-brief .plan-chain b{display:inline-flex;align-items:center;justify-content:center;width:34px;height:26px;border-radius:999px;background:#0f4b5a;color:#fff}
+body.plan-closure-brief .plan-chain strong,
+body.plan-closure-brief .resource-map b{display:block;margin:8px 0 4px;color:#0f4b5a;font-size:19px}
+body.plan-closure-brief .plan-chain span,
+body.plan-closure-brief .resource-map span{display:block;color:#5f7472;font-size:14px;line-height:1.45}
+body.plan-closure-brief .plan-chain>i,
+body.plan-closure-brief .resource-map>i{align-self:center;color:#b88b45;font-size:24px;font-style:normal;font-weight:900}
+
+body.plan-closure-brief .formula-grid,
+body.plan-closure-brief .two-column-cards,
+body.plan-closure-brief .constraint-grid,
+body.plan-closure-brief .metric-grid,
+body.plan-closure-brief .cockpit-grid{
+  display:grid;gap:14px;margin:22px 0;
+}
+body.plan-closure-brief .formula-grid,
+body.plan-closure-brief .two-column-cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.plan-closure-brief .constraint-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+body.plan-closure-brief .metric-grid,
+body.plan-closure-brief .cockpit-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+body.plan-closure-brief :is(.formula-grid,.two-column-cards,.constraint-grid,.metric-grid,.cockpit-grid)>div{
+  min-width:0;border:1px solid #c9ddd8;border-radius:16px;background:#f7fbfa;padding:18px;
+}
+body.plan-closure-brief .formula-grid span{display:block;color:#647d7b;font-weight:850}
+body.plan-closure-brief .formula-grid strong{display:block;margin:8px 0;color:#0f4b5a;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:19px;line-height:1.45}
+body.plan-closure-brief :is(.formula-grid,.two-column-cards,.constraint-grid,.metric-grid,.cockpit-grid) p{margin:0;color:#3a5756;line-height:1.7}
+body.plan-closure-brief .two-column-cards strong,
+body.plan-closure-brief .constraint-grid strong,
+body.plan-closure-brief .metric-grid strong,
+body.plan-closure-brief .cockpit-grid strong{display:block;color:#0f4b5a;margin:0 0 6px;font-size:19px}
+body.plan-closure-brief .constraint-grid b,
+body.plan-closure-brief .cockpit-grid b{display:inline-flex;align-items:center;justify-content:center;width:36px;height:28px;border-radius:999px;background:#0f4b5a;color:#fff;margin-bottom:10px}
+body.plan-closure-brief .cockpit-grid span{color:#526e6b;line-height:1.55}
+
+body.plan-closure-brief .net-demand-visual,
+body.plan-closure-brief .teaching-case,
+body.plan-closure-brief .feedback-example{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:22px 0;
+}
+body.plan-closure-brief :is(.net-demand-visual,.teaching-case,.feedback-example)>div{
+  position:relative;min-width:0;border:1px solid #c9ddd8;border-radius:16px;background:#fff;padding:18px;text-align:center;
+}
+body.plan-closure-brief .net-demand-visual>div:not(:last-child)::after{
+  content:"−";position:absolute;right:-18px;top:50%;transform:translateY(-50%);z-index:2;width:24px;height:24px;border-radius:50%;
+  background:#fff8e8;color:#765713;font-weight:900;line-height:24px;
+}
+body.plan-closure-brief .net-demand-visual>div:first-child::after{content:"−"}
+body.plan-closure-brief .net-demand-visual small{display:block;color:#647d7b;font-weight:800}
+body.plan-closure-brief :is(.net-demand-visual,.teaching-case,.feedback-example) strong{display:block;margin-top:5px;color:#0f4b5a;font-size:20px}
+body.plan-closure-brief :is(.net-demand-visual,.teaching-case,.feedback-example) .result{background:#0f4b5a;border-color:#0f4b5a}
+body.plan-closure-brief :is(.net-demand-visual,.teaching-case,.feedback-example) .result :is(small,span,strong){color:#fff!important}
+
+body.plan-closure-brief .case-boundary{display:flex;gap:10px;align-items:center;margin:18px 0 10px;padding:12px 14px;border-left:4px solid #c99935;background:#fff8e8;border-radius:0 12px 12px 0}
+body.plan-closure-brief .case-boundary strong{color:#765713}
+body.plan-closure-brief .case-boundary span{color:#5d5b4c}
+body.plan-closure-brief .brief-note{margin:16px 0;padding:14px 16px;border-left:4px solid #0f4b5a;background:#f2f8f6;border-radius:0 12px 12px 0}
+body.plan-closure-brief .brief-note strong{color:#0f4b5a}
+
+body.plan-closure-brief .load-formula{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:18px 0;padding:15px 18px;border-radius:14px;background:#0f4b5a}
+body.plan-closure-brief .load-formula span{color:#ffe0a4;font-weight:900}
+body.plan-closure-brief .load-formula strong{color:#fff;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body.plan-closure-brief .load-table-wrap{margin:20px 0;overflow-x:auto}
+body.plan-closure-brief .load-table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #c9ddd8;border-radius:16px;overflow:hidden;background:#fff}
+body.plan-closure-brief .load-table th,
+body.plan-closure-brief .load-table td{padding:13px 14px;border-bottom:1px solid #d9e6e3;text-align:right}
+body.plan-closure-brief .load-table th{background:#edf6f3;color:#0f4b5a;font-size:15px}
+body.plan-closure-brief .load-table th:first-child,
+body.plan-closure-brief .load-table td:first-child{text-align:left}
+body.plan-closure-brief .load-table tr:last-child td{border-bottom:0}
+body.plan-closure-brief .status{display:inline-flex;align-items:center;justify-content:center;min-width:82px;padding:5px 9px;border-radius:999px;font-weight:850}
+body.plan-closure-brief .status.ok{background:#eaf5f0;color:#245f54}
+body.plan-closure-brief .status.warn{background:#fff5dc;color:#765713}
+body.plan-closure-brief .status.risk{background:#f8eaea;color:#8a3f3f}
+body.plan-closure-brief .case-caption{margin-top:-10px;color:#647d7b;font-size:14px;line-height:1.6}
+
+body.plan-closure-brief .priority-rail>span{
+  flex:1 1 0;min-width:0;border:1px solid #c9ddd8;border-radius:14px;background:#fff;padding:14px 10px;text-align:center;color:#0f4b5a;font-weight:850;
+}
+body.plan-closure-brief .priority-rail>i{align-self:center;color:#b88b45;font-size:24px;font-style:normal;font-weight:900}
+
+body.plan-closure-brief .feedback-loop{position:relative;padding-bottom:42px}
+body.plan-closure-brief .feedback-loop>div{flex:1 1 0;min-width:0;border:1px solid #c9ddd8;border-radius:16px;background:#f7fbfa;padding:16px;text-align:center}
+body.plan-closure-brief .feedback-loop>div b{display:block;color:#0f4b5a;font-size:19px}
+body.plan-closure-brief .feedback-loop>div span{display:block;color:#5f7472;margin-top:5px}
+body.plan-closure-brief .feedback-loop>i{align-self:center;color:#0f4b5a;font-style:normal;font-size:24px;font-weight:900}
+body.plan-closure-brief .feedback-loop>em{position:absolute;left:8%;right:8%;bottom:0;text-align:center;color:#c99935;font-style:normal;font-size:30px;font-weight:900;letter-spacing:.3em;border-top:4px solid #c99935;line-height:22px}
+
+body.plan-closure-brief .plan-closing{margin:30px 0 8px;padding:28px;border-radius:18px;background:#0f4b5a;color:#fff}
+body.plan-closure-brief .plan-closing>span{color:#ffe0a4;font-weight:900;letter-spacing:.06em}
+body.plan-closure-brief .plan-closing h2{color:#fff!important;margin:8px 0 14px}
+body.plan-closure-brief .plan-closing p{color:#edf9f6!important;margin:9px 0}
+body.plan-closure-brief .plan-closing strong{color:#ffe0a4!important}
+
+@media(max-width:900px){
+  body.plan-closure-brief .constraint-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.plan-closure-brief .metric-grid,
+  body.plan-closure-brief .cockpit-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.plan-closure-brief :is(.plan-chain,.resource-map,.priority-rail){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  body.plan-closure-brief :is(.plan-chain,.resource-map,.priority-rail)>i{display:none}
+}
+@media(max-width:680px){
+  body.plan-closure-brief .formula-grid,
+  body.plan-closure-brief .two-column-cards,
+  body.plan-closure-brief .constraint-grid,
+  body.plan-closure-brief .metric-grid,
+  body.plan-closure-brief .cockpit-grid,
+  body.plan-closure-brief .net-demand-visual,
+  body.plan-closure-brief .teaching-case,
+  body.plan-closure-brief .feedback-example,
+  body.plan-closure-brief :is(.plan-chain,.resource-map,.priority-rail){grid-template-columns:1fr}
+  body.plan-closure-brief .net-demand-visual>div:not(:last-child)::after{content:"↓";right:50%;top:auto;bottom:-19px;transform:translateX(50%)}
+  body.plan-closure-brief .case-boundary,
+  body.plan-closure-brief .load-formula{align-items:flex-start;flex-direction:column}
+  body.plan-closure-brief .load-table-wrap{overflow:visible}
+  body.plan-closure-brief .load-table,
+  body.plan-closure-brief .load-table tbody,
+  body.plan-closure-brief .load-table tr,
+  body.plan-closure-brief .load-table td{display:block;width:100%}
+  body.plan-closure-brief .load-table thead{display:none}
+  body.plan-closure-brief .load-table{border:0;background:transparent}
+  body.plan-closure-brief .load-table tr{margin:0 0 12px;border:1px solid #c9ddd8;border-radius:14px;background:#fff;padding:10px}
+  body.plan-closure-brief .load-table td{display:flex;justify-content:space-between;gap:14px;text-align:right;border-bottom:1px solid #e2ece9;padding:9px 6px}
+  body.plan-closure-brief .load-table td:first-child{text-align:right}
+  body.plan-closure-brief .load-table td:last-child{border-bottom:0}
+  body.plan-closure-brief .load-table td::before{content:attr(data-label);color:#647d7b;font-weight:800;text-align:left}
+  body.plan-closure-brief .feedback-loop{display:grid;grid-template-columns:1fr;padding-bottom:52px}
+  body.plan-closure-brief .feedback-loop>i{transform:rotate(90deg);text-align:center}
+  body.plan-closure-brief .feedback-loop>em{left:12%;right:12%}
+  body.plan-closure-brief .plan-closing{padding:20px}
+}
