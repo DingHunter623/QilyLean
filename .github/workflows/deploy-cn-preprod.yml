@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
   statuses: write
 
 concurrency:
@@ -33,13 +34,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Checkout only the Nginx configuration for inspection
+      - name: Checkout source for secret audit and NMT verification
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            /cn-site/nginx/qilylean.cn.conf
-            /services/cn-translation/
-          sparse-checkout-cone-mode: false
+      - name: Audit repository and completed Actions logs without exposing credentials
+        env:
+          YOUDAO_APP_KEY: ${{ secrets.YOUDAO_APP_KEY }}
+          YOUDAO_APP_SECRET: ${{ secrets.YOUDAO_APP_SECRET }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 services/cn-translation/audit-secrets.py
+
       - name: Configure SSH for read-only inspection
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
