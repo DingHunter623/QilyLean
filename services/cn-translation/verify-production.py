@@ -59,7 +59,7 @@ if args.production:
     evidence['build_sha256'] = health['build_sha256']
     # Compare real values only inside this root process. Never print values, matches or lines.
     variants = set()
-    for value in keys.values():
+    for value in list(keys.values()) + list(server.normalize_credentials(keys).values()):
         variants.update([value.encode(), urllib.parse.quote(value, safe='').encode(), base64.b64encode(value.encode())])
     def safe(content):
         return not any(value in content for value in variants)

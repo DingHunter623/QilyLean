@@ -35,6 +35,10 @@ def credentials():
         data = json.loads((Path(directory) / 'youdao').read_text())
     else:
         data = {name: os.environ.get(name, '') for name in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')}
+    return normalize_credentials(data)
+
+
+def normalize_credentials(data):
     if not all(isinstance(data.get(key), str) and data[key].strip() for key in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')):
         raise TranslationError('Youdao credentials are not configured', 503)
     result = {}
@@ -49,6 +53,7 @@ def credentials():
 
 def youdao(texts, target, keys, timeout=18):
     # Parallel individual NMT calls preserve the browser's text-node boundaries.
+    keys = normalize_credentials(keys)
     deadline = time.monotonic() + timeout
     def invoke(text):
         remaining = deadline - time.monotonic()

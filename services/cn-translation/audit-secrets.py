@@ -9,8 +9,10 @@ import urllib.parse
 import urllib.request
 import urllib.error
 import zipfile
+import server
 
 values = [os.environ[name].encode() for name in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')]
+values.extend(value.encode() for value in server.credentials().values())
 assert all(values)
 patterns = set(values)
 for value in values:
