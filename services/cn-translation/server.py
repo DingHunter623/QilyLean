@@ -37,7 +37,7 @@ def credentials():
         data = {name: os.environ.get(name, '') for name in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')}
     if not all(isinstance(data.get(key), str) and data[key].strip() for key in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')):
         raise TranslationError('Youdao credentials are not configured', 503)
-    return data
+    return {key: data[key].strip() for key in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')}
 
 
 def youdao(texts, target, keys, timeout=18):

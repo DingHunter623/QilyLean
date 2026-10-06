@@ -16,6 +16,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--production', action='store_true')
 args = parser.parse_args()
 keys = json.loads(Path('/etc/qilylean-cn/translate.json').read_text()) if args.production else server.credentials()
+if not args.production:
+    print(json.dumps({'credential_format': {'app_id_ascii': keys['YOUDAO_APP_KEY'].isascii(), 'app_id_expected_shape': len(keys['YOUDAO_APP_KEY']) == 32 and all(c in '0123456789abcdefABCDEF' for c in keys['YOUDAO_APP_KEY']), 'secret_has_inner_whitespace': any(c.isspace() for c in keys['YOUDAO_APP_SECRET'])}}))
 opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 nonce = uuid.uuid4().hex[:12]
 samples = [
