@@ -60,6 +60,8 @@ const trustRuntime = exists('trust/live-status.js') ? read('trust/live-status.js
 const globalKnowledge = exists('global-knowledge/index.html') ? read('global-knowledge/index.html') : '';
 const sep20Brief = exists('qilylean/daily/2026-09-20.html') ? read('qilylean/daily/2026-09-20.html') : '';
 const sep20BriefCss = exists('qilylean/daily/assets/2026-09-20-brief.css') ? read('qilylean/daily/assets/2026-09-20-brief.css') : '';
+const sep28Brief = exists('qilylean/daily/2026-09-28.html') ? read('qilylean/daily/2026-09-28.html') : '';
+const sep28BriefCss = exists('qilylean/daily/assets/2026-09-28-brief.css') ? read('qilylean/daily/assets/2026-09-28-brief.css') : '';
 const cnCapacityVisualCss = exists('cn-site/assets/knowledge-visual-v1.css') ? read('cn-site/assets/knowledge-visual-v1.css') : '';
 const cnCapacityBrief = exists('cn-site/knowledge/capacity-digital-thread/index.html') ? read('cn-site/knowledge/capacity-digital-thread/index.html') : '';
 const cnHome = exists('cn-site/index.html') ? read('cn-site/index.html') : '';
@@ -171,6 +173,12 @@ if (sep20Brief) {
   includes(sep20BriefCss, 'stroke-width:6;stroke-linecap:round;stroke-linejoin:round', 'Sep 20 feedback rail uses the VI rounded heavy-line treatment');
   includes(sep20BriefCss, 'QILY-SEP20-EQUAL-CARD-WIDTH-V2', 'Sep 20 content cards keep equal width/height');
   assert(!/<marker\b|marker-end=/.test(sep20Brief), 'Sep 20 diagrams no longer use detached SVG marker arrowheads');
+}
+if (sep28Brief) {
+  assert((sep28Brief.match(/class="plan-result"/g) || []).length === 3, 'Sep 28 brief keeps exactly three dedicated dark result cards');
+  assert(!/class="result"/.test(sep28Brief), 'Sep 28 brief does not reuse the global generic result class');
+  includes(sep28BriefCss, '>.plan-result :is(small,span,strong){color:#fff!important;-webkit-text-fill-color:#fff!important;opacity:1!important}', 'Sep 28 dark result-card text explicitly locks white text fill');
+  assert(!/\\nhtml body\.plan-closure-brief/.test(sep28BriefCss), 'Sep 28 contrast CSS contains no literal escaped selector separator');
 }
 if (cnCapacityBrief) {
   includes(cnCapacityBrief, '/assets/knowledge-visual-v1.css?v=20260921-visual-brief-v3', 'CN synchronized Sep 20 brief loads the VI-v4 flow revision');
