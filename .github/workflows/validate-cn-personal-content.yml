@@ -8,6 +8,7 @@ on:
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
       - 'scripts/test-cn-translation-gateway.js'
+      - 'scripts/test-cn-translation-state.js'
   push:
     branches:
       - main
@@ -17,6 +18,7 @@ on:
       - '.github/workflows/validate-cn-personal-content.yml'
       - 'scripts/cn-typography-v23.spec.js'
       - 'scripts/test-cn-translation-gateway.js'
+      - 'scripts/test-cn-translation-state.js'
   workflow_dispatch:
 
 permissions:
@@ -34,7 +36,9 @@ jobs:
         run: python3 services/cn-translation/test_server.py
 
       - name: Test same-origin translation transport
-        run: node scripts/test-cn-translation-gateway.js
+        run: |
+          node scripts/test-cn-translation-gateway.js
+          node scripts/test-cn-translation-state.js
 
       - name: Materialize approved CN practice evidence assets
         shell: bash
