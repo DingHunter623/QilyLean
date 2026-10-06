@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       inspect_translation_only:
-        description: 'Read-only translation connectivity check from the mainland server'
+        description: 'Real NMT preflight on mainland server; no publication'
         type: boolean
         default: false
   push:
@@ -37,7 +37,9 @@ jobs:
       - name: Checkout only the Nginx configuration for inspection
         uses: actions/checkout@v4
         with:
-          sparse-checkout: /cn-site/nginx/qilylean.cn.conf
+          sparse-checkout: |
+            /cn-site/nginx/qilylean.cn.conf
+            /services/cn-translation/
           sparse-checkout-cone-mode: false
       - name: Configure SSH for read-only inspection
         env:
@@ -66,26 +68,22 @@ jobs:
           printf '%s\n' 'events {}' 'http { include /etc/nginx/mime.types; include /tmp/qily-cn-nginx-translation-check-site.conf; }' > /tmp/qily-cn-nginx-translation-check-main.conf
           sudo nginx -t -c /tmp/qily-cn-nginx-translation-check-main.conf
           REMOTE
-      - name: Inspect mainland server translation reachability without publishing
+      - name: Real Youdao NMT translation from mainland without publishing
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
           CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          YOUDAO_APP_KEY: ${{ secrets.YOUDAO_APP_KEY }}
+          YOUDAO_APP_SECRET: ${{ secrets.YOUDAO_APP_SECRET }}
         run: |
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
-          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'bash -se' <<'REMOTE'
-          set -euo pipefail
-          command -v python3
-          systemctl --version | head -n 1
-          echo 'Mainland server -> Worker health (TLS verification enabled):'
-          if ! curl --noproxy '*' --fail --silent --show-error --connect-timeout 8 --max-time 25 https://qilylean-ai.dinghunter623.workers.dev/health; then echo 'Worker is unreachable from this mainland server.'; fi
-          echo
-          echo 'Mainland server -> Youdao HTTPS API (unsigned public connectivity probe):'
-          curl --noproxy '*' --fail --silent --show-error --connect-timeout 8 --max-time 25 -X POST https://openapi.youdao.com/v2/api --data 'q=connectivity&from=zh-CHS&to=en'
-          echo
-          echo 'Current same-origin translation HTTP status:'
-          curl --silent --show-error --max-time 15 -o /dev/null -w '%{http_code}\n' --resolve qilylean.cn:443:127.0.0.1 https://qilylean.cn/translate
-          REMOTE
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes)
+          STAGE="/tmp/qily-nmt-preflight-${GITHUB_RUN_ID}"
+          trap 'ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "sudo rm -rf $STAGE"' EXIT
+          ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "mkdir -m 700 $STAGE"
+          scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn services/cn-translation/{server.py,protected-tokens.json,verify-production.py} "$USER_NAME@$CN_PREPROD_HOST:$STAGE/"
+          python3 -c 'import os,json,sys; json.dump({key:os.environ[key] for key in ("YOUDAO_APP_KEY","YOUDAO_APP_SECRET")},sys.stdout)' | ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "sudo python3 -c 'import sys,json,pathlib,os; data=json.load(sys.stdin); dest=pathlib.Path(\"$STAGE/youdao\"); dest.write_text(json.dumps(data)); os.chmod(dest,0o600)'"
+          ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "sudo env CREDENTIALS_DIRECTORY=$STAGE python3 $STAGE/verify-production.py"
 
   validate-and-deploy:
     if: github.event_name != 'workflow_dispatch' || !inputs.inspect_translation_only
@@ -265,7 +263,7 @@ jobs:
           copy_with_retry cn-site/scripts/deploy-release.sh /tmp/deploy-qilylean-cn.sh
           copy_with_retry cn-site/scripts/activate-public-http.sh /tmp/activate-qilylean-cn-http.sh
           copy_with_retry cn-site/nginx/qilylean.cn.conf /tmp/qilylean.cn.conf
-          for service_file in server.py protected-tokens.json qilylean-cn-translation.service install.sh; do
+          for service_file in server.py protected-tokens.json qilylean-cn-translation.service install.sh verify-production.py; do
             copy_with_retry "services/cn-translation/$service_file" "/tmp/qilylean-cn-translation/$service_file"
           done
 
@@ -334,6 +332,15 @@ jobs:
               raise SystemExit('Production same-origin translation did not complete a fresh Youdao call.')
           print('PASS: qilylean.cn/translate returned a fresh Youdao translation.')
           PY
+
+      - name: Mainland production NMT comparison and secret audit
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          ssh -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'sudo python3 /tmp/qilylean-cn-translation/verify-production.py --production'
 
       - name: Verify production brand and interaction closure
         shell: bash
@@ -561,7 +568,7 @@ jobs:
               raise SystemExit('Production China home missing footer quick-action runtime.')
           if '/assets/cn-translate-baidu-v1.css?v=20260922-translate-v6-baidu' not in home:
               raise SystemExit('Production China home missing in-page translator stylesheet.')
-          if '/assets/cn-translate-baidu-v1.js?v=20261006-translate-same-origin-v1' not in home:
+          if '/assets/cn-translate-baidu-v1.js?v=20261006-youdao-nmt-closure-v1' not in home:
               raise SystemExit('Production China home missing in-page translator runtime.')
           required_home_practice = [
               'PRACTICE & EVIDENCE｜实践与成果',

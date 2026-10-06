@@ -13,7 +13,7 @@ var LANGS=[
  ['ar','العربية / Arabic'],['th','ไทย / Thai'],['vi','Tiếng Việt / Vietnamese'],['id','Bahasa Indonesia'],
  ['ms','Bahasa Melayu'],['tr','Türkçe / Turkish'],['pl','Polski / Polish'],['nl','Nederlands / Dutch']
 ];
-var control=null,select=null,panel=null,status=null,records=null,activeLanguage='zh-CN',busy=false;
+var control=null,select=null,panel=null,status=null,records=null,activeLanguage='zh-CN',generation=0,controllers=[];
 function option(s,v,t){var o=d.createElement('option');o.value=v;o.textContent=t;s.appendChild(o)}
 function shouldSkip(node){
   var p=node.parentElement;if(!p)return true;
@@ -43,15 +43,19 @@ function restore(){
 function batches(items){
   var out=[],batch=[],chars=0;
   items.forEach(function(item){
-    var len=item.core.length;
-    if(batch.length>=20||chars+len>4600){out.push(batch);batch=[];chars=0}
-    batch.push(item);chars+=len;
+    var points=Array.from(item.core);item.parts=[];
+    for(var start=0;start<points.length;start+=4000){
+      var core=points.slice(start,start+4000).join(''),len=Array.from(core).length;
+      if(batch.length&&(batch.length>=20||chars+len>4600)){out.push(batch);batch=[];chars=0}
+      batch.push({core:core,record:item,part:item.parts.length});item.parts.push('');chars+=len;
+    }
   });
   if(batch.length)out.push(batch);
   return out;
 }
 async function post(base,target,texts){
   var controller=new AbortController(),timer=w.setTimeout(function(){controller.abort()},65000);
+  controllers.push(controller);
   try{
     var response=await fetch(base+'/translate',{
       method:'POST',
@@ -62,9 +66,9 @@ async function post(base,target,texts){
       signal:controller.signal
     });
     var data=await response.json().catch(function(){return {}});
-    if(!response.ok||!data.ok||!Array.isArray(data.translations)||data.translations.length!==texts.length)throw new Error(data.error||('HTTP '+response.status));
+    if(!response.ok||!data.ok||!Array.isArray(data.translations)||data.translations.length!==texts.length||data.translations.some(function(text){return typeof text!=='string'||!text.trim()}))throw new Error(data.error||('HTTP '+response.status));
     return data;
-  }finally{w.clearTimeout(timer)}
+  }finally{w.clearTimeout(timer);controllers=controllers.filter(function(item){return item!==controller})}
 }
 async function translateBatch(target,batch){
   var last;
@@ -76,30 +80,35 @@ async function translateBatch(target,batch){
 }
 function label(target){return target==='zh-TW'?'中文繁体':target==='en'?'English':target}
 async function apply(target){
-  if(busy)return;
-  if(target==='zh-CN'){restore();status.textContent='原文';select.value='zh-CN';return}
-  busy=true;control.setAttribute('data-qily-translating','true');status.textContent='翻译中…';
+  var run=++generation;
+  controllers.forEach(function(controller){controller.abort()});controllers=[];
+  if(target==='zh-CN'){restore();status.textContent='原文';select.value='zh-CN';control.removeAttribute('data-qily-translating');return}
+  control.setAttribute('data-qily-translating','true');status.textContent='翻译中…';
   restore();
   try{
     var list=collect(),groups=batches(list),cursor=0,concurrency=1;
     async function worker(){
       while(cursor<groups.length){
         var index=cursor++,group=groups[index],data=await translateBatch(target,group);
+        if(run!==generation)return;
         data.translations.forEach(function(text,translationIndex){
-          var r=group[translationIndex];if(r.node&&r.node.isConnected)r.node.nodeValue=r.prefix+text+r.suffix;
+          var part=group[translationIndex];part.record.parts[part.part]=text;
         });
       }
     }
     var runners=[];for(var k=0;k<Math.min(concurrency,groups.length);k++)runners.push(worker());
     await Promise.all(runners);
+    if(run!==generation)return;
+    list.forEach(function(r){if(r.node&&r.node.isConnected)r.node.nodeValue=r.prefix+r.parts.join('')+r.suffix});
     activeLanguage=target;
     d.documentElement.setAttribute('data-qily-translation-language',target);
     d.documentElement.lang=target;
     status.textContent=label(target);
   }catch(error){
+    if(run!==generation)return;
     restore();status.textContent='翻译暂不可用';select.value='zh-CN';
   }finally{
-    busy=false;control.removeAttribute('data-qily-translating');
+    if(run===generation)control.removeAttribute('data-qily-translating');
   }
 }
 function closePanel(){if(!panel)return;panel.hidden=true;control.removeAttribute('data-more-languages-open');if(select.value===MORE)select.value=activeLanguage}
