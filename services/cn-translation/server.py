@@ -48,10 +48,15 @@ def youdao(texts, target, keys, timeout=18):
     request = urllib.request.Request(URL, data=urllib.parse.urlencode(fields).encode(), headers={
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8', 'Accept': 'application/json',
     })
-    with urllib.request.urlopen(request, timeout=timeout) as response:
-        data = json.loads(response.read(262144))
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            data = json.loads(response.read(262144))
+    except (ValueError, UnicodeError):
+        raise TranslationError('Youdao returned an invalid response') from None
+    if not isinstance(data, dict):
+        raise TranslationError('Youdao returned an invalid response')
     results = data.get('translateResults', [])
-    if str(data.get('errorCode')) != '0' or len(results) != len(texts) or any(not isinstance(item.get('translation'), str) or not item['translation'].strip() for item in results):
+    if str(data.get('errorCode')) != '0' or not isinstance(results, list) or len(results) != len(texts) or any(not isinstance(item, dict) or not isinstance(item.get('translation'), str) or not item['translation'].strip() for item in results):
         raise TranslationError('Youdao translation failed or returned an invalid result')
     return [item['translation'] for item in results]
 

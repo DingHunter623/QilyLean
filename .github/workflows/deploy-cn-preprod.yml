@@ -34,6 +34,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Checkout only the Nginx configuration for inspection
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: /cn-site/nginx/qilylean.cn.conf
+          sparse-checkout-cone-mode: false
       - name: Configure SSH for read-only inspection
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -46,6 +51,21 @@ jobs:
           printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
           chmod 600 ~/.ssh/qilylean_cn
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+      - name: Validate proposed Nginx configuration without reload or publication
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+        run: |
+          set -euo pipefail
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes)
+          scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/nginx/qilylean.cn.conf "$USER_NAME@$CN_PREPROD_HOST:/tmp/qily-cn-nginx-translation-check-site.conf"
+          ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" 'bash -se' <<'REMOTE'
+          set -euo pipefail
+          trap 'rm -f /tmp/qily-cn-nginx-translation-check-site.conf /tmp/qily-cn-nginx-translation-check-main.conf' EXIT
+          printf '%s\n' 'events {}' 'http { include /etc/nginx/mime.types; include /tmp/qily-cn-nginx-translation-check-site.conf; }' > /tmp/qily-cn-nginx-translation-check-main.conf
+          sudo nginx -t -c /tmp/qily-cn-nginx-translation-check-main.conf
+          REMOTE
       - name: Inspect mainland server translation reachability without publishing
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}

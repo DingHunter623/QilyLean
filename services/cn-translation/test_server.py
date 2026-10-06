@@ -27,6 +27,23 @@ class TranslationTests(unittest.TestCase):
         with patch.object(server.urllib.request, 'urlopen', upstream):
             self.assertEqual(server.youdao(['现场问题', '工程改善'], 'en', KEYS), ['Site issue', 'Engineering improvement'])
 
+    def test_long_batch_signature_and_upstream_failures(self):
+        texts = ['制造现场的数据验证' * 3, '🙂质量工程']
+        joined = ''.join(texts)
+        def upstream(request, timeout):
+            form = urllib.parse.parse_qs(request.data.decode())
+            value = joined[:10] + str(len(joined)) + joined[-10:]
+            signed = KEYS['YOUDAO_APP_KEY'] + value + form['salt'][0] + form['curtime'][0] + KEYS['YOUDAO_APP_SECRET']
+            self.assertEqual(form['sign'][0], hashlib.sha256(signed.encode()).hexdigest())
+            return io.BytesIO(b'{"errorCode":"108"}')
+        with patch.object(server.urllib.request, 'urlopen', upstream):
+            with self.assertRaises(server.TranslationError):
+                server.youdao(texts, 'en', KEYS)
+        with patch.object(server.urllib.request, 'urlopen', lambda *args, **kwargs: io.BytesIO(b'not-json')):
+            with self.assertRaises(server.TranslationError) as caught:
+                server.youdao(texts, 'en', KEYS)
+            self.assertEqual(caught.exception.status, 502)
+
     def test_order_deduplication_protection_and_cache(self):
         calls = []
         def upstream(texts, target, keys, **kwargs):
