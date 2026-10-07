@@ -20,7 +20,7 @@
   --qily-r8-alt:#f4faf8;
 
   /* Axis / rhythm */
-  --qily-r8-axis:1560px;
+  --qily-r8-axis:1180px;
   --qily-r8-gutter:clamp(18px,2.35vw,56px);
   --qily-r8-section-y:clamp(52px,5.2vw,84px);
   --qily-r8-gap-xs:8px;
@@ -55,7 +55,7 @@ html,body{max-width:100%;}
 html{scroll-padding-top:calc(var(--qily-r8-header-height) + 16px)!important;}
 html body main :is(section[id],article[id],div[id]){scroll-margin-top:calc(var(--qily-r8-header-height) + 18px)!important;}
 
-/* 02 | One 1560px content axis. Narrow reading measures are component decisions, not page shells. */
+/* 02 | One 1180px content axis shared by the international and China sites. */
 html body main>section{
   box-sizing:border-box!important;
   padding-left:var(--qily-r8-gutter)!important;

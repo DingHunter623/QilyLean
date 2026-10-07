@@ -86,3 +86,35 @@ html:root:root body .bridge-hero-eyebrow{
   -webkit-text-fill-color:#b88b45!important;
 }
 /* QILY-CN-BRIDGE-TYPE-FLOOR-V5-NAV-PARITY:END */
+
+/* QILY-CN-BRIDGE-CONTENT-AXIS-V1 | 2026-10-07
+ * The bridge is a public site shell, including its directory and every historical
+ * reader. Use the same 1180px axis for header, hero, content and footer. Apply the
+ * gutter once: imported brief sections already sit inside this content frame.
+ */
+html:root body[data-cn-bridge-fallback]{
+  --qily-bridge-axis:1180px;
+  --qily-bridge-gutter:18px;
+  --qily-r8-axis:var(--qily-bridge-axis);
+}
+html:root body[data-cn-bridge-fallback] main>section{
+  padding-left:0!important;
+  padding-right:0!important;
+}
+html:root body[data-cn-bridge-fallback] :is(
+  .cn-bridge-header-inner,.cn-bridge-footer-inner,
+  .hero>.wrap,main>section>.wrap
+){
+  width:min(var(--qily-bridge-axis),calc(100% - var(--qily-bridge-gutter)*2))!important;
+  max-width:var(--qily-bridge-axis)!important;
+  min-width:0!important;
+  margin-inline:auto!important;
+  box-sizing:border-box!important;
+}
+html:root body[data-cn-bridge-fallback] #reader[data-source-vi="true"] #article .knowledge-brief-section{
+  padding-left:0!important;
+  padding-right:0!important;
+}
+@media(max-width:900px){
+  html:root body[data-cn-bridge-fallback]{--qily-bridge-gutter:14px;}
+}
