@@ -69,7 +69,7 @@ const gkPages=[
 ];
 for(const rel of gkPages){
   const html=read(rel);
-  assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20260927-gk-vi-v5-small-type-parity'), rel+' must load shared Global Knowledge VI after its local skin.');
+  assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20261007-gk-hero-gold-regular-v6'), rel+' must load shared Global Knowledge VI after its local skin.');
   if(rel==='global-knowledge/briefs/index.html'){
     assert(html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260928-cn-parity-shell-v6-footer-nav-parity'), rel+' must load the China-parity bridge shell.');
     assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6'), rel+' must load the China-parity footer runtime.');
