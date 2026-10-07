@@ -619,3 +619,26 @@ html:root:root:root body main :is(
   text-shadow:none!important;
 }
 
+/* QILY-FULL-SITE-HERO-LABEL-OUTSIDE-MAIN-V2 | 2026-10-07
+ * Hero components are not always children of <main> (GB/T 2828 training is a direct <body> section).
+ * Extend the EXISTING V5 hero-label tokens to direct-body heroes, without changing layouts or content. */
+html:root:root:root body > :is(
+  .hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,
+  .cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,
+  [data-qily-hero]
+) :is(
+  .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
+  .kicker,.section-kicker,.module-kicker,.qily-ia-kicker,
+  .resource-kicker,.qily-resource-network__kicker,.engineering-kicker,
+  .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
+){
+  font-size:var(--qily-v5-section-kicker)!important;
+  line-height:1.5!important;
+  color:var(--qily-v5-gold-light)!important;
+  -webkit-text-fill-color:var(--qily-v5-gold-light)!important;
+  font-weight:400!important;
+  font-style:normal!important;
+  letter-spacing:.035em!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
