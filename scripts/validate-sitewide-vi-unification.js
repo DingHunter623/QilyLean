@@ -38,7 +38,7 @@ const gkCss=read('global-knowledge/global-knowledge-vi-v2.css');
   'QILY-GK-NAV-TYPE-PARITY-V4',
   '--qily-gk-primary-nav-font-size:20px',
   'grid-template-columns:max-content minmax(0,1fr) 206px!important',
-  "content:'返回首页'!important",
+  "content:'返回国际站'!important",
   '--qily-gk-h1:clamp(30px,2.65vw,44px)',
   '--qily-gk-h1:clamp(29px,8vw,38px)',
   'a.card[href]:hover',

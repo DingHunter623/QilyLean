@@ -160,7 +160,7 @@ html:root body .content a[href]:is(:hover,:focus-visible){
 /* QILY-GK-HEADER-ALIGN-V3 | 2026-09-20
  * Global Knowledge header closure:
  * 1) keep the canonical QilyLean logo at the left;
- * 2) make the logo behave like the China-site home control (hover/focus -> 返回首页);
+ * 2) make the logo behave like the China-site home control (hover/focus -> 返回国际站);
  * 3) reserve the translator column and right-align the knowledge navigation beside it;
  * 4) keep the mobile header stable with brand + translator above a horizontally scrollable nav row.
  */
@@ -235,7 +235,7 @@ html:root body header.top>.wrap>a:first-child:focus-visible{
   transform:none!important;
 }
 html:root body header.top>.wrap>a:first-child:is(:hover,:focus-visible)::after{
-  content:'返回首页'!important;
+  content:'返回国际站'!important;
   position:absolute!important;
   inset:0!important;
   z-index:2!important;

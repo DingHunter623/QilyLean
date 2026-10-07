@@ -144,3 +144,56 @@ html:root:root:root:root body[data-cn-bridge-fallback] header.cn-bridge-header{
     grid-template-areas:"brand" "translate" "nav"!important;
   }
 }
+
+/* International return control: China-site VI feedback, international destination. */
+html:root:root:root body .cn-bridge-brand[aria-label="返回国际站"]{
+  position:relative!important;
+  box-sizing:border-box!important;
+  border:1.5px solid transparent!important;
+  border-radius:8px!important;
+}
+@media(hover:hover) and (pointer:fine){
+  html:root:root:root body .cn-bridge-brand[aria-label="返回国际站"]:hover{
+    background:#fff6df!important;
+    border-color:#caa15f!important;
+    box-shadow:0 7px 18px rgba(15,75,90,.14)!important;
+    outline:none!important;
+    filter:none!important;
+    transform:none!important;
+  }
+}
+html:root:root:root body .cn-bridge-brand[aria-label="返回国际站"]:focus-visible{
+  background:#fff6df!important;
+  border-color:#caa15f!important;
+  box-shadow:0 0 0 3px rgba(202,161,95,.24),0 7px 18px rgba(15,75,90,.14)!important;
+  outline:none!important;
+  filter:none!important;
+  transform:none!important;
+}
+html:root:root:root body .cn-bridge-brand[aria-label="返回国际站"]:is(:hover,:focus-visible)>img{
+  opacity:0!important;
+}
+html:root:root:root body .cn-bridge-brand[aria-label="返回国际站"]:is(:hover,:focus-visible)::after{
+  content:attr(aria-label)!important;
+  position:absolute!important;
+  inset:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:0 10px!important;
+  color:#0f4b5a!important;
+  -webkit-text-fill-color:#0f4b5a!important;
+  font-size:clamp(16px,1.05vw,19px)!important;
+  font-weight:950!important;
+  line-height:1!important;
+  letter-spacing:.06em!important;
+  text-indent:0!important;
+  white-space:nowrap!important;
+  pointer-events:none!important;
+}
+@media(max-width:620px){
+  html:root:root:root body .cn-bridge-brand[aria-label="返回国际站"]:is(:hover,:focus-visible)::after{
+    padding:0 6px!important;
+    font-size:15px!important;
+  }
+}
