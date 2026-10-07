@@ -84,17 +84,17 @@ for(const rel of gkPages){
   assert(html.includes('/global-knowledge/global-knowledge-vi-v2.css?v=20261007-gk-hero-gold-regular-v6'), rel+' must load shared Global Knowledge VI after its local skin.');
   if(rel==='global-knowledge/briefs/index.html'){
     assert(html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260928-cn-parity-shell-v6-footer-nav-parity'), rel+' must load the China-parity bridge shell.');
-    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6'), rel+' must load the China-parity footer runtime.');
+    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20261007-international-home-v7'), rel+' must load the China-parity footer runtime.');
     assert(!html.includes('/global-knowledge/knowledge-dock-v1.js'), rel+' retired seven-action Global Knowledge dock returned.');
-    assert(html.includes('<a class="cn-bridge-footer-brand" href="https://qilylean.cn/"'), rel+' bridge footer brand must enter the China homepage.');
+    assert(!html.includes('cn-bridge-footer-brand'), rel+' international bridge footer must not show the CN filing-name button.');
     assert(!html.includes('data-action="previous"'), rel+' bridge footer must not restore the previous-page action.');
-    assert(/<a class="cn-bridge-brand" href="https:\/\/qilylean\.cn\/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页">[\s\S]*?<\/a>/.test(html), rel+' bridge logo must return to the China homepage.');
+    assert(/<a class="cn-bridge-brand" href="https:\/\/qilylean\.com\/" aria-label="返回国际站" title="返回国际站">[\s\S]*?<\/a>/.test(html), rel+' bridge logo must return to the international homepage.');
     for(const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) assert(html.includes('href="'+route+'"'), rel+' bridge navigation missing '+route);
   }else{
     assert(!html.includes('/global-knowledge/knowledge-dock-v1.js'), rel+' retired seven-action Global Knowledge dock returned.');
-    assert(html.includes('/global-knowledge/cn-bridge-footer-v1.css?v=20260929-shared-v1'), rel+' must load the shared selected-briefs footer stylesheet.');
-    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6'), rel+' must load the shared top/share runtime.');
-    assert(/<header class="top">[\s\S]*?<a(?: class="brand")? href="https:\/\/qilylean\.com\/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge<\/a>/.test(html), rel+' Global Knowledge brand must return to the canonical qilylean.com home.');
+    assert(html.includes('/global-knowledge/cn-bridge-footer-v1.css?v=20261007-two-actions-no-filing-v4'), rel+' must load the shared selected-briefs footer stylesheet.');
+    assert(html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20261007-international-home-v7'), rel+' must load the shared top/share runtime.');
+    assert(/<header class="top">[\s\S]*?<a(?: class="brand")? href="https:\/\/qilylean\.com\/" aria-label="返回国际站" title="返回国际站">QilyLean Global Knowledge<\/a>/.test(html), rel+' Global Knowledge brand must return to the canonical qilylean.com home.');
     assert(html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>'), rel+' must expose China Knowledge with the exact filed China-site name for the qilylean.cn route.');
   }
   assert(!html.includes('>中国知识站</a>'), rel+' must not expose the retired China-site name.');
@@ -294,12 +294,12 @@ assert(resourcePublic.includes('.hero p{width:100%;max-width:none'), 'Resource c
 assert(resourcePublic.includes('font-size:clamp(18px,1.15vw,21px)!important'), 'Resource collaboration card headings must remain at or below 21px.');
 assert(!resourcePublic.includes('font-size:clamp(30px,5vw,52px)'), 'Resource collaboration oversized H1 regression detected.');
 assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260928-cn-parity-shell-v6-footer-nav-parity'), 'Resource collaboration public entry must load the China-parity bridge shell.');
-assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6'), 'Resource collaboration public entry must load the China-parity footer runtime.');
-assert(resourcePublic.includes('<a class="cn-bridge-footer-brand" href="https://qilylean.cn/"'), 'Resource collaboration footer brand must enter the China homepage.');
+assert(resourcePublic.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20261007-international-home-v7'), 'Resource collaboration public entry must load the China-parity footer runtime.');
+assert(!resourcePublic.includes('cn-bridge-footer-brand'), 'Resource collaboration public footer must not show China filing name.');
 assert(!resourcePublic.includes('data-action="previous"'), 'Resource collaboration footer must not restore the previous-page action.');
-assert(!resourcePublic.includes('href="https://qilylean.com/" aria-label="返回QilyLean国际站首页"'), 'Resource collaboration must not expose an international-home shortcut in the China-parity shell.');
+assert(!resourcePublic.includes('class="cn-bridge-brand" href="https://qilylean.cn/"'), 'Resource collaboration logo must not jump to China site.');
 assert(!resourcePublic.includes('data-action="home"'), 'Resource collaboration footer must not restore an international Home dock action.');
-assert(/<a class="cn-bridge-brand" href="https:\/\/qilylean\.cn\/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页">[\s\S]*?<\/a>/.test(resourcePublic), 'Resource collaboration bridge logo must return to the China homepage.');
+assert(/<a class="cn-bridge-brand" href="https:\/\/qilylean\.com\/" aria-label="返回国际站" title="返回国际站">[\s\S]*?<\/a>/.test(resourcePublic), 'Resource collaboration bridge logo must return to the international homepage.');
 assert(!resourcePublic.includes('/site-dock-share-runtime-v1.js'), 'Resource collaboration retired international seven-action Dock returned.');
 for(const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) assert(resourcePublic.includes('href="'+route+'"'), 'Resource collaboration China-parity navigation missing '+route);
 
