@@ -416,7 +416,7 @@ jobs:
               for marker in [
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
-                  '/assets/qilylean-vi-v2.css?v=20261006-cn-vi-v48-hero-label-parity',
+                  '/assets/qilylean-vi-v2.css?v=20261007-cn-vi-v49-light-gold-parity',
                   '/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16',
                   '/site-public-footer-type-v1.css?v=20261005-public-footer-v3',
                   '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15',
@@ -538,7 +538,7 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20261006-cn-vi-v48-hero-label-parity' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20261007-cn-vi-v49-light-gold-parity' not in home:
               raise SystemExit('Production China home missing V42 final production VI revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' not in home:
               raise SystemExit('Production China home missing V20 CN bridge nav runtime.')
