@@ -87,3 +87,14 @@ html:root:root body .cn-bridge-footer-actions>button{
   max-width:calc(4em + 24px)!important;
 }
 /* QILY-CN-BRIDGE-FOOTER-ACTION-EQUAL-WIDTH-V6:END */
+
+/* QILY-BRIDGE-INTL-FOOTER-TWO-ACTIONS-V4 | 2026-10-07 */
+/* Only two functional buttons on .com bridge pages; no China filing badge/label. */
+html:root:root body[data-cn-bridge-fallback] :is(.cn-bridge-footer-brand,.cn-bridge-footer-records){display:none!important}
+html:root:root body[data-cn-bridge-fallback] .cn-bridge-footer-inner{min-height:55px!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;padding:6px 0!important}
+html:root:root body[data-cn-bridge-fallback] .cn-bridge-footer-actions{display:inline-flex!important;align-items:center!important;justify-content:flex-start!important;gap:12px!important;flex-wrap:nowrap!important}
+@media(max-width:760px){
+  :root{--qily-bridge-footer-h:58px}
+  html:root:root body[data-cn-bridge-fallback] .cn-bridge-footer-inner{min-height:55px!important;flex-direction:row!important;align-items:center!important;gap:12px!important;padding:6px 0!important}
+  html:root:root body[data-cn-bridge-fallback] .cn-bridge-footer-actions{gap:12px!important}
+}
