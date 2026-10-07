@@ -417,7 +417,7 @@ jobs:
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
                   '/assets/qilylean-vi-v2.css?v=20261006-cn-vi-v48-hero-label-parity',
-                  '/assets/cn-footer-actions-v1.css?v=20260930-footer-domain-v15',
+                  '/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16',
                   '/site-public-footer-type-v1.css?v=20261005-public-footer-v3',
                   '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15',
                   'data-qily-footer-action="top"',
@@ -568,7 +568,7 @@ jobs:
               raise SystemExit('Production China Global Knowledge CTA lost external-link semantics.')
           if '/site-public-footer-type-v1.css?v=20261005-public-footer-v3' not in home:
               raise SystemExit('Production China home missing shared public footer typography.')
-          if '/assets/cn-footer-actions-v1.css?v=20260930-footer-domain-v15' not in home:
+          if '/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16' not in home:
               raise SystemExit('Production China home missing footer quick-action stylesheet.')
           if '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15' not in home:
               raise SystemExit('Production China home missing footer quick-action runtime.')
