@@ -178,6 +178,11 @@ html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"]
   -webkit-text-fill-color:var(--qily-vi-gold-light)!important;
   font-weight:400!important;
   font-style:normal!important;
+  border:0!important;
+  border-radius:0!important;
+  padding:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
 }
 
 /* 04 | Typography hierarchy. */
