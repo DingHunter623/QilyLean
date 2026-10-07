@@ -363,7 +363,7 @@ html:root:root body footer :is(a,button,span,strong,small){font-size:max(16px,1e
 /* QILY-GK-DARK-HERO-SEMANTIC-LABEL-V6 | 2026-10-07
  * Global Knowledge's Hero is outside <main> on several routes.
  * Match both sites' dark-Hero labels: 21px, light gold, regular weight. */
-html:root:root:root body > .hero > :is(.wrap,.inner) > :is(
+html:root:root:root body .hero > :is(.wrap,.inner) > :is(
   small,.eyebrow,.hero-eyebrow,.bridge-hero-eyebrow,.module-eyebrow,.kicker,.section-kicker
 ){
   font-size:var(--qily-gk-label-size,21px)!important;

@@ -162,7 +162,7 @@ html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] 
   opacity:1!important;
   text-shadow:none!important;
 }
-html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] main
+html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"]
 :is(
   .hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,
   .cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,
