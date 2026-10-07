@@ -245,7 +245,7 @@ for(const width of [320,390,412,1180,1600]){
     expect(chinaRoutes.length).toBeGreaterThanOrEqual(24);
     const targets=[
       ...(allPages?chinaRoutes:['/resources/']).map(route=>({base:cnBase,route,shell:'.footer',home:'.footer-home',controls:'.footer-home,.footer-actions>button,.footer-records>a,.footer-records>a>span',count:6})),
-      ...(allPages?bridgeRoutes:['/links/cn-public/']).map(route=>({base:intBase,route,shell:'.cn-bridge-footer',home:'.cn-bridge-footer-brand',controls:'.cn-bridge-footer-brand,.cn-bridge-footer-actions>button',count:3}))
+      ...(allPages?bridgeRoutes:['/links/cn-public/']).map(route=>({base:intBase,route,shell:'.cn-bridge-footer',home:null,controls:'.cn-bridge-footer-actions>button',count:2}))
     ];
     const publicPage=await context.newPage();
     await publicPage.setViewportSize({width,height:900});
@@ -259,15 +259,21 @@ for(const width of [320,390,412,1180,1600]){
       await expect(footer,label+' shared footer').toBeVisible();
       await expect(publicPage.locator('link[href="/site-public-footer-type-v1.css?v=20261005-public-footer-v3"]'),label+' must request the shared versioned type authority').toHaveCount(1);
       const controls=footer.locator(target.controls);
-      await expect(controls,label+' public controls and filing text').toHaveCount(target.count);
+      await expect(controls,label+' visible footer controls').toHaveCount(target.count);
       const actual=await controls.evaluateAll(els=>els.map(el=>{const s=getComputedStyle(el);return {family:s.fontFamily,size:s.fontSize,weight:s.fontWeight,lineHeight:s.lineHeight,letterSpacing:s.letterSpacing==='normal'?'0px':s.letterSpacing,smoothing:s.getPropertyValue('-webkit-font-smoothing'),rendering:s.textRendering};}));
       for(const item of actual)expect(item,label+' public footer type').toEqual(typography);
-      const home=footer.locator(target.home);
-      await expect(home,label+' normal site label').toHaveCSS('text-decoration-line','none');
-      await home.hover();
-      await expect(home,label+' hovered site label').toHaveCSS('text-decoration-line','none');
-      await home.focus();
-      await expect(home,label+' focused site label').toHaveCSS('text-decoration-line','none');
+      if(target.home){
+        const home=footer.locator(target.home);
+        await expect(home,label+' normal site label').toHaveCSS('text-decoration-line','none');
+        await home.hover();
+        await expect(home,label+' hovered site label').toHaveCSS('text-decoration-line','none');
+        await home.focus();
+        await expect(home,label+' focused site label').toHaveCSS('text-decoration-line','none');
+      }else{
+        await expect(footer.locator('.cn-bridge-footer-brand,.cn-bridge-footer-records')).toHaveCount(0);
+        await expect(footer.locator('.cn-bridge-footer-actions>button[data-action="top"]')).toHaveCount(1);
+        await expect(footer.locator('.cn-bridge-footer-actions>button[data-action="share"]')).toHaveCount(1);
+      }
       if(target.shell==='.footer'){
         await expect(footer.locator('.footer-records>a'),label+' retains both filing links').toHaveCount(2);
         for(const record of await footer.locator('.footer-records>a').all())await expect(record,label+' filing link retains its underline').toHaveCSS('text-decoration-line','underline');
@@ -276,3 +282,17 @@ for(const width of [320,390,412,1180,1600]){
     await publicPage.close();
   });
 }
+
+
+test('International bridge logo and filing-free footer on China-origin reference routes',async({page})=>{
+  for(const route of ['/links/cn-public/','/global-knowledge/briefs/']){
+    await page.goto(intBase+route,{waitUntil:'domcontentloaded'});
+    const logo=page.locator('.cn-bridge-brand');
+    await expect(logo).toHaveAttribute('href','https://qilylean.com/');
+    await expect(logo).toHaveAttribute('title','返回国际站');
+    await expect(logo).toHaveAttribute('aria-label','返回国际站');
+    const footer=page.locator('.cn-bridge-footer');
+    await expect(footer.locator('.cn-bridge-footer-brand,.cn-bridge-footer-records')).toHaveCount(0);
+    await expect(footer.locator('button[data-action]')).toHaveCount(2);
+  }
+});
