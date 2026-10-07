@@ -1487,13 +1487,15 @@ html:root:root:root:root body .footer .footer-records>a>span{
 
 /* QILY-FULL-SITE-HERO-LABEL-VI-V1 | 2026-10-06
  * Full-site VI parity: dark Hero semantic labels use the same light-gold token
- * and regular weight as the international site. Content/layout are untouched. */
-html:root:root body main :is(.hero,.page-hero,.module-hero,[data-qily-hero]) :is(
+ * and regular weight as the international site. Content/layout are untouched.
+ * Match the V46 small-copy authority before adding Hero specificity; otherwise
+ * its important deep-gold text and text-fill declarations win the cascade. */
+html:root:root:root body :is(.hero,.page-hero,.module-hero,[data-qily-hero]) :is(
   .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,.kicker,.section-kicker,.module-kicker,
   .resource-kicker,.qily-resource-network__kicker,.engineering-kicker,
   .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
 ),
-html:root:root body main :is(.hero,.page-hero,.module-hero,[data-qily-hero]) > :is(.hero-inner,.content) > small{
+html:root:root:root body :is(.hero,.page-hero,.module-hero,[data-qily-hero]) > :is(.hero-inner,.content) > small{
   color:var(--qily-cn-gold-soft,#ffe39b)!important;
   -webkit-text-fill-color:var(--qily-cn-gold-soft,#ffe39b)!important;
   font-weight:400!important;
