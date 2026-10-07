@@ -299,3 +299,58 @@ html:root:root:root:root body{
   }
 }
 @media print{html:root:root:root:root body{padding-bottom:0!important}}
+
+
+/* QILY-CN-MOBILE-FOOTER-ROW-MERGE-V1-20261007
+ * Responsive-only layout adjustment. Keep the existing font families, font sizes and weights.
+ * Row 1 = filing-service site label + Top + Share; subsequent lines retain both filing records.
+ * Footer content height is observed by cn-footer-actions-v1.js, so no hard-coded fixed height.
+ */
+@media(max-width:760px){
+  html:root:root:root:root body .footer .footer-inner{
+    display:grid!important;
+    grid-template-columns:max-content max-content max-content!important;
+    align-items:center!important;
+    align-content:center!important;
+    justify-content:center!important;
+    gap:5px clamp(2px,1.2vw,8px)!important;
+    min-height:0!important;
+    width:calc(100% - 16px)!important;
+    padding:6px 0!important;
+  }
+  html:root:root:root:root body .footer .footer-actions{
+    display:contents!important;
+  }
+  html:root:root:root:root body .footer .footer-home{
+    grid-column:1!important;
+    grid-row:1!important;
+    min-height:36px!important;
+    padding:5px 6px!important;
+  }
+  html:root:root:root:root body .footer .footer-actions>button{
+    grid-row:1!important;
+    width:max-content!important;
+    min-width:max-content!important;
+    max-width:none!important;
+    min-height:36px!important;
+    padding:5px 6px!important;
+  }
+  html:root:root:root:root body .footer .footer-records{
+    grid-column:1 / -1!important;
+    grid-row:2!important;
+    width:auto!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    align-items:center!important;
+    gap:5px!important;
+  }
+}
+@media(max-width:360px){
+  html:root:root:root:root body .footer .footer-inner{
+    width:calc(100% - 8px)!important;
+    column-gap:2px!important;
+  }
+  html:root:root:root:root body .footer :is(.footer-home,.footer-actions>button){
+    padding-inline:3px!important;
+  }
+}
