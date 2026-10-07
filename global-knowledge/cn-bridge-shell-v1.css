@@ -118,3 +118,25 @@ html:root body[data-cn-bridge-fallback] #reader[data-source-vi="true"] #article 
 @media(max-width:900px){
   html:root body[data-cn-bridge-fallback]{--qily-bridge-gutter:14px;}
 }
+
+/* QILY-CN-BRIDGE-HEADER-FIT-V1 | Shared directory, historical reader and resource header.
+ * Reserve the complete logo; let the translator use the remaining grid track.
+ * The shell owns its gutter, so the general R8 header margin must not apply twice.
+ */
+@media(max-width:900px){
+  html:root body[data-cn-bridge-fallback] header.cn-bridge-header{
+    width:100%!important;max-width:none!important;margin-inline:0!important;
+  }
+  html:root body[data-cn-bridge-fallback] .cn-bridge-header-inner{
+    grid-template-columns:max-content minmax(0,1fr)!important;
+  }
+  html:root body[data-cn-bridge-fallback] .cn-bridge-header .qily-web-translate{
+    width:min(224px,100%)!important;min-width:0!important;max-width:100%!important;
+  }
+}
+@media(max-width:360px){
+  html:root body[data-cn-bridge-fallback] .cn-bridge-header-inner{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-areas:"brand" "translate" "nav"!important;
+  }
+}

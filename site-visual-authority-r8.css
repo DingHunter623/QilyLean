@@ -350,9 +350,9 @@ html body :is(a[href],button,[role="button"],[role="link"]):focus-visible{
   }
   html body .qily-web-translate{
     flex:0 0 auto!important;
-    width:min(224px,calc(100vw - (var(--qily-r8-gutter) * 2)))!important;
+    width:min(224px,100%)!important;
     min-width:0!important;
-    max-width:calc(100vw - (var(--qily-r8-gutter) * 2))!important;
+    max-width:100%!important;
     margin-left:0!important;
   }
 }
