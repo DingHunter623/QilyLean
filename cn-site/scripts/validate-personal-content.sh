@@ -63,10 +63,19 @@ if [[ -n "$COM_LINKS" ]]; then
   done <<< "$COM_LINKS"
 fi
 
-if grep -RniE --include='*.html' --include='*.htm' --include='*.xml' --include='*.json' --include='*.js' --include='*.svg' \
-  --exclude-dir='scripts' '(tel:|mailto:|weixin:|weChat|whatsapp:)' "$ROOT_DIR"; then
-  echo "ERROR: Mainland personal site contains direct contact/conversion hooks."
-  exit 1
+CONTACT_HOOKS="$(grep -RniE --include='*.html' --include='*.htm' --include='*.xml' --include='*.json' --include='*.js' --include='*.svg' \
+  --exclude-dir='scripts' '(tel:|mailto:|weixin:|weChat|whatsapp:)' "$ROOT_DIR" || true)"
+if [[ -n "$CONTACT_HOOKS" ]]; then
+  while IFS= read -r hook; do
+    [[ -z "$hook" ]] && continue
+    # Approved non-commercial contact on the CN About page: one public telephone link only.
+    if [[ "$hook" == "$ROOT_DIR/about/index.html:"*'href="tel:15168120722"'* ]]; then
+      continue
+    fi
+    echo "$hook"
+    echo "ERROR: Mainland personal site contains direct contact/conversion hooks."
+    exit 1
+  done <<< "$CONTACT_HOOKS"
 fi
 
 # Dual-site relationship contract: the CN homepage must remain self-canonical and may
