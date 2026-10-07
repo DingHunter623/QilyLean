@@ -35,9 +35,11 @@ for (const file of htmlFiles) {
   const rel = path.relative(root, file);
   const html = fs.readFileSync(file, 'utf8');
   if (!html.includes(referenceFooter)) fail(`${rel} must use the exact selected-briefs footer`);
-  if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6')) fail(`${rel} shared footer actions are missing`);
+  if (html.includes('cn-bridge-footer-brand')) fail(`${rel} international bridge footer must not display mainland filing site name`);
+
+  if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20261007-international-home-v7')) fail(`${rel} shared footer actions are missing`);
   if (/knowledge-dock-v1\.js|site-dock-share-runtime-v1\.js|site-contact-route-v1\.js|湘ICP备|湘公网安备/.test(html)) fail(`${rel} must not restore old Dock actions or China filing records`);
-  if (rel!=='global-knowledge/briefs/index.html'&&!html.includes('/global-knowledge/cn-bridge-footer-v1.css?v=20260929-shared-v1')) fail(`${rel} shared reference footer stylesheet missing`);
+  if (rel!=='global-knowledge/briefs/index.html'&&!html.includes('/global-knowledge/cn-bridge-footer-v1.css?v=20261007-two-actions-no-filing-v4')) fail(`${rel} shared reference footer stylesheet missing`);
   const hrefs = [...html.matchAll(/\bhref\s*=\s*["']([^"']+)["']/gi)].map((m) => m[1]);
 
   for (const href of hrefs) {
@@ -60,17 +62,17 @@ for (const file of htmlFiles) {
 
   if (/\b(?:mailto:|tel:|weixin:|whatsapp:)/i.test(html)) fail(`${rel} contains a direct contact scheme`);
   if (rel === 'global-knowledge/briefs/index.html') {
-    if (!html.includes('<a class="cn-bridge-brand" href="https://qilylean.cn/" aria-label="返回精益制造经验分享中国站首页" title="返回中国站首页"><img src="/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5" alt="QilyLean｜启力精益"></a>')) fail(`${rel} China-parity bridge logo must return to qilylean.cn`);
-    if (html.includes('href="https://qilylean.com/" aria-label="返回QilyLean国际站首页"')) fail(`${rel} must not expose an international-home shortcut in the China-parity shell`);
+    if (!html.includes('<a class="cn-bridge-brand" href="https://qilylean.com/" aria-label="返回国际站" title="返回国际站"><img src="/assets/brand/qilylean-logo.svg?v=20260724-logo-red-dot-v5" alt="QilyLean｜启力精益"></a>')) fail(`${rel} bridge logo must return to international homepage`);
+    if (html.includes('class="cn-bridge-brand" href="https://qilylean.cn/"')) fail(`${rel} bridge logo must not return to China site`);
     for (const route of ['https://qilylean.cn/','https://qilylean.cn/lean/','https://qilylean.cn/notes/','https://qilylean.cn/knowledge/','https://qilylean.cn/briefs/','https://qilylean.cn/resources/','https://qilylean.cn/about/']) {
       if (!html.includes(`href="${route}"`)) fail(`${rel} China-parity header missing: ${route}`);
     }
     if (!html.includes('/global-knowledge/cn-bridge-shell-v1.css?v=20260928-cn-parity-shell-v6-footer-nav-parity')) fail(`${rel} China-parity bridge shell stylesheet missing`);
-    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20260928-cn-home-locked-v6')) fail(`${rel} China-parity bridge footer runtime missing`);
+    if (!html.includes('/global-knowledge/cn-bridge-shell-v1.js?v=20261007-international-home-v7')) fail(`${rel} China-parity bridge footer runtime missing`);
     if (!html.includes('bridge-hero-eyebrow')) fail(`${rel} bridge hero eyebrow must use the shared gold VI class`);
     if (html.includes('/global-knowledge/knowledge-dock-v1.js')) fail(`${rel} retired seven-action knowledge dock returned`);
   } else {
-    if (!html.includes('<a class="brand" href="https://qilylean.com/" aria-label="返回QilyLean首页" title="返回首页">QilyLean Global Knowledge</a>')) fail(`${rel} brand must return to the canonical qilylean.com homepage`);
+    if (!html.includes('<a class="brand" href="https://qilylean.com/" aria-label="返回国际站" title="返回国际站">QilyLean Global Knowledge</a>')) fail(`${rel} brand must return to the canonical qilylean.com homepage`);
     if (!html.includes('href="https://qilylean.cn/" rel="noopener">China Knowledge / 精益制造经验分享</a>')) fail(`${rel} must expose the filed China knowledge route`);
   }
 }
