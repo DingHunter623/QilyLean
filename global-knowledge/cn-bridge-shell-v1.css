@@ -1,7 +1,7 @@
-@import url("/global-knowledge/cn-bridge-footer-v1.css?v=20260929-shared-v1");
+@import url("/global-knowledge/cn-bridge-footer-v1.css?v=20261007-two-actions-no-filing-v4");
 /* QilyLean CN-bridge shell for international public modules | 2026-09-26
  * Header navigation mirrors qilylean.cn. Brand alone returns to qilylean.com.
- * Footer mirrors the China reference-page pattern: 精益制造经验分享 / 顶部 / 分享当前.
+ * Footer on international host: 顶部 / 分享当前 only; no mainland filing information.
  */
 html body .cn-bridge-header{
   position:sticky!important;top:0!important;z-index:2147481000!important;
