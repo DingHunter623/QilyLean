@@ -250,9 +250,9 @@ html body .qily-language-more__empty{
   html:root:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)>
   .qily-web-translate[data-qily-header-utility="translation"]{
     flex:0 0 auto!important;
-    width:min(206px,calc(100vw - 36px))!important;
+    width:min(206px,100%)!important;
     min-width:0!important;
-    max-width:calc(100vw - 36px)!important;
+    max-width:100%!important;
   }
   html body .qily-language-more{right:0!important;width:min(520px,calc(100vw - 24px))!important}
   html body .qily-language-more__grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}

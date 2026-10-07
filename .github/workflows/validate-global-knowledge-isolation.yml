@@ -13,6 +13,7 @@ on:
       - 'scripts/bridge-content-axis.spec.js'
       - 'scripts/public-header-fit.spec.js'
       - 'site-visual-authority-r8.css'
+      - 'site-translation-public-ui-v1.css'
       - '.github/workflows/validate-global-knowledge-isolation.yml'
   pull_request:
     paths:
@@ -23,6 +24,7 @@ on:
       - 'scripts/bridge-content-axis.spec.js'
       - 'scripts/public-header-fit.spec.js'
       - 'site-visual-authority-r8.css'
+      - 'site-translation-public-ui-v1.css'
       - '.github/workflows/validate-global-knowledge-isolation.yml'
 
 permissions:
@@ -50,10 +52,10 @@ jobs:
           chmod +x cn-site/scripts/validate-personal-content.sh
           cn-site/scripts/validate-personal-content.sh cn-site
 
-      - name: Install Chromium reader regression dependency
+      - name: Install Chromium and WebKit regression dependencies
         run: |
           npm install --no-save --package-lock=false @playwright/test@1.55.0
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium webkit
 
       - name: Start isolated Global Knowledge test server
         run: |
@@ -66,6 +68,11 @@ jobs:
         env:
           QILY_GK_BASE: http://127.0.0.1:4173
         run: npx playwright test scripts/global-knowledge-reader-visual.spec.js scripts/bridge-content-axis.spec.js scripts/public-logo-visibility.spec.js scripts/public-header-fit.spec.js --reporter=line --workers=1
+
+      - name: Verify Safari engine phone logo clearance
+        env:
+          QILY_GK_BASE: http://127.0.0.1:4173
+        run: npx playwright test scripts/public-header-fit.spec.js --browser=webkit --grep 'obstruction (320|375|390|428) ' --reporter=line --workers=1
 
       - name: Upload Global Knowledge visual evidence
         if: always()
