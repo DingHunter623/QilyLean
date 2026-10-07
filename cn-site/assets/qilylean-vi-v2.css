@@ -1,6 +1,6 @@
 @import url('/assets/qilylean-vi-v1.css?v=20261006-cn-typography-hero-label-v8');
 
-/* QILY-CN-HERO-LABEL-DEPLOY-REFRESH-V48 | 2026-10-06 */
+/* QILY-CN-HERO-LABEL-DEPLOY-REFRESH-V49 | 2026-10-07 */
 /* QilyLean China Unified VI V2 | 2026-09-16
  * Boss-readable closure aligned to the international-site visual rhythm.
  * Priorities: readable type, compact information rhythm, restrained headings,
@@ -11,6 +11,7 @@
   --qily-cn-body:18px;
   --qily-cn-small:20px;
   --qily-cn-label-gold:#b88b45;
+  --qily-cn-gold-soft:#ffe39b;
   --qily-cn-section-kicker:21px;
   --qily-cn-h1:clamp(28px,2.25vw,38px);
   --qily-cn-h2:clamp(20px,1.25vw,22px);
@@ -1493,8 +1494,8 @@ html:root:root body main :is(.hero,.page-hero,.module-hero,[data-qily-hero]) :is
   .qily-home-conversion-kicker,.qily-home-conversion-hero__kicker
 ),
 html:root:root body main :is(.hero,.page-hero,.module-hero,[data-qily-hero]) > :is(.hero-inner,.content) > small{
-  color:var(--qily-cn-gold-soft)!important;
-  -webkit-text-fill-color:var(--qily-cn-gold-soft)!important;
+  color:var(--qily-cn-gold-soft,#ffe39b)!important;
+  -webkit-text-fill-color:var(--qily-cn-gold-soft,#ffe39b)!important;
   font-weight:400!important;
   font-style:normal!important;
   letter-spacing:.035em!important;

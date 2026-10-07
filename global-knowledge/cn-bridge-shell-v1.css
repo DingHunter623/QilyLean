@@ -67,7 +67,7 @@ html body .cn-bridge-brand:is(:hover,:focus-visible){
 html body .bridge-hero-eyebrow{
   display:inline-block!important;margin:0!important;
   color:#ffe39b!important;-webkit-text-fill-color:#ffe39b!important;
-  font-size:21px!important;font-weight:900!important;letter-spacing:.08em!important;line-height:1.35!important
+  font-size:21px!important;font-weight:400!important;letter-spacing:.08em!important;line-height:1.35!important
 }
 @media(max-width:900px){
   html body .cn-bridge-brand{width:clamp(158px,40vw,185px)!important;min-height:38px!important}
@@ -82,8 +82,9 @@ html:root:root body main :is(
 ){font-size:max(20px,1em)!important}
 html:root:root body .bridge-hero-eyebrow{
   font-size:21px!important;
-  color:#b88b45!important;
-  -webkit-text-fill-color:#b88b45!important;
+  color:#ffe39b!important;
+  -webkit-text-fill-color:#ffe39b!important;
+  font-weight:400!important;
 }
 /* QILY-CN-BRIDGE-TYPE-FLOOR-V5-NAV-PARITY:END */
 
