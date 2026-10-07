@@ -10,6 +10,8 @@ on:
       - 'cn-site/index.html'
       - 'scripts/validate-global-knowledge-isolation.js'
       - 'scripts/global-knowledge-reader-visual.spec.js'
+      - 'scripts/bridge-content-axis.spec.js'
+      - 'site-visual-authority-r8.css'
       - '.github/workflows/validate-global-knowledge-isolation.yml'
   pull_request:
     paths:
@@ -17,6 +19,8 @@ on:
       - 'cn-site/index.html'
       - 'scripts/validate-global-knowledge-isolation.js'
       - 'scripts/global-knowledge-reader-visual.spec.js'
+      - 'scripts/bridge-content-axis.spec.js'
+      - 'site-visual-authority-r8.css'
       - '.github/workflows/validate-global-knowledge-isolation.yml'
 
 permissions:
@@ -59,7 +63,7 @@ jobs:
       - name: Verify imported brief visuals and Weibo source entry
         env:
           QILY_GK_BASE: http://127.0.0.1:4173
-        run: npx playwright test scripts/global-knowledge-reader-visual.spec.js --reporter=line --workers=1
+        run: npx playwright test scripts/global-knowledge-reader-visual.spec.js scripts/bridge-content-axis.spec.js scripts/public-logo-visibility.spec.js --reporter=line --workers=1
 
       - name: Upload Global Knowledge visual evidence
         if: always()

@@ -21,7 +21,7 @@ const semantics=read('site-interaction-semantics-v1.css');
 const redline=read('site-public-redline-closure-v2.css');
 
 must(authority,'QilyLean Visual Authority R8','R8 CSS');
-must(authority,'--qily-r8-axis:1560px','R8 axis');
+must(authority,'--qily-r8-axis:1180px','R8 axis');
 must(authority,'--qily-r8-nav-thumb:#0f4b5a','R8 VI rail');
 must(authority,'.qily-table-scroll','Qily Table');
 must(authority,'.qily-flow-frame','Qily Flow');
@@ -84,4 +84,4 @@ if(covered!==pages)throw new Error(`R8 public coverage regression: covered=${cov
 if(isolated!==1)throw new Error(`DDZ V155 fast-route isolation regression: ${isolated}`);
 if(duplicates)throw new Error(`R8 duplicate authority references detected: ${duplicates}`);
 
-console.log(`PASS: R8 single visual authority covers ${covered}/${pages} standard public pages; DDZ V155/V158 remains one explicitly isolated bundled fast route with deterministic current first paint; 1560 axis, measured header anchors, VI deep-teal navigation rail, wrapper-owned tables, card/flow/diagram contracts and observable overflow are protected.`);
+console.log(`PASS: R8 single visual authority covers ${covered}/${pages} standard public pages; DDZ V155/V158 remains one explicitly isolated bundled fast route with deterministic current first paint; 1180 axis, measured header anchors, VI deep-teal navigation rail, wrapper-owned tables, card/flow/diagram contracts and observable overflow are protected.`);
