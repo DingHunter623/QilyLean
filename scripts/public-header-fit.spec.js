@@ -23,7 +23,7 @@ for(const width of [320,360,375,390,393,412,428,480,768,900,901,1440]){
         const a=rect(brand),b=rect(control);
         const overlap=Math.max(0,Math.min(a.right,b.right)-Math.max(a.left,b.left))*Math.max(0,Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top));
         const points=[.15,.5,.85].map(f=>document.elementFromPoint(a.left+a.width*f,a.top+a.height/2));
-        return {brand:a,control:b,overlap,unobscured:points.every(el=>el&&(el===brand||brand.contains(el))),overflow:header.scrollWidth-header.clientWidth};
+        return {brand:a,control:b,overlap,unobscured:points.every(el=>el&&(el===brand||brand.contains(el))),imageLoaded:brand.querySelector("img")?brand.querySelector("img").naturalWidth>0:getComputedStyle(brand).backgroundImage.includes("/assets/brand/qilylean-logo.svg"),translationOverflow:control.scrollWidth-control.clientWidth};
       });
       expect(geometry.overlap).toBe(0);
       expect(geometry.unobscured).toBe(true);
@@ -32,7 +32,8 @@ for(const width of [320,360,375,390,393,412,428,480,768,900,901,1440]){
         expect(box.left).toBeGreaterThanOrEqual(0);
         expect(box.right).toBeLessThanOrEqual(width+1);
       }
-      expect(geometry.overflow).toBeLessThanOrEqual(1);
+      expect(geometry.imageLoaded).toBe(true);
+      expect(geometry.translationOverflow).toBeLessThanOrEqual(1);
       await expect(control.locator('select.qily-web-translate__select')).toBeEnabled();
     });
   }
