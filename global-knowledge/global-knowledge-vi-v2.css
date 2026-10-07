@@ -359,3 +359,20 @@ html:root:root body main :is(
 }
 html:root:root body footer :is(a,button,span,strong,small){font-size:max(16px,1em)!important}
 /* QILY-GK-ALL-SMALL-COPY-FLOOR-V3:END */
+
+/* QILY-GK-DARK-HERO-SEMANTIC-LABEL-V6 | 2026-10-07
+ * Global Knowledge's Hero is outside <main> on several routes.
+ * Match both sites' dark-Hero labels: 21px, light gold, regular weight. */
+html:root:root:root body > .hero > :is(.wrap,.inner) > :is(
+  small,.eyebrow,.hero-eyebrow,.bridge-hero-eyebrow,.module-eyebrow,.kicker,.section-kicker
+){
+  font-size:var(--qily-gk-label-size,21px)!important;
+  line-height:1.5!important;
+  color:var(--qily-gk-gold-soft,#ffe39b)!important;
+  -webkit-text-fill-color:var(--qily-gk-gold-soft,#ffe39b)!important;
+  font-weight:400!important;
+  font-style:normal!important;
+  letter-spacing:.035em!important;
+  opacity:1!important;
+  text-shadow:none!important;
+}
