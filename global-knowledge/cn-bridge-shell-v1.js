@@ -1,4 +1,4 @@
-/* QilyLean CN-bridge shell V3 | 2026-09-28 | China-home locked + top/share only */
+/* QilyLean international bridge V4 | 2026-10-07 | logo to international home; footer only top/share */
 (function(d,w){'use strict';
 if(w.__qilyCnBridgeShellV1)return;w.__qilyCnBridgeShellV1=true;
 function copyText(text){if(navigator.clipboard&&w.isSecureContext)return navigator.clipboard.writeText(text);var a=d.createElement('textarea');a.value=text;a.setAttribute('readonly','');a.style.position='fixed';a.style.left='-9999px';(d.body||d.documentElement).appendChild(a);a.select();try{d.execCommand('copy')}catch(e){}a.remove();return Promise.resolve();}
@@ -8,21 +8,14 @@ function share(b){var title=d.title||'QilyLean',url=w.location.href,text=title+'
 function revealCurrentNav(){var nav=d.querySelector('.cn-bridge-nav');if(!nav)return;var active=nav.querySelector('a[aria-current="page"]');if(!active)return;w.requestAnimationFrame(function(){var left=active.offsetLeft,right=left+active.offsetWidth,viewLeft=nav.scrollLeft,viewRight=viewLeft+nav.clientWidth;if(left>=viewLeft+8&&right<=viewRight-8)return;var max=Math.max(0,nav.scrollWidth-nav.clientWidth);nav.scrollLeft=Math.min(max,Math.max(0,left-(nav.clientWidth-active.offsetWidth)/2));});}
 function scheduleCurrentNavReveal(){revealCurrentNav();[80,250,700].forEach(function(delay){w.setTimeout(revealCurrentNav,delay);});}
 function enforceChinaParityShell(){
-  var chinaHome='https://qilylean.cn/';
+  var internationalHome='https://qilylean.com/';
   var brand=d.querySelector('.cn-bridge-brand');
   if(brand){
-    brand.setAttribute('href',chinaHome);
-    brand.setAttribute('aria-label','返回精益制造经验分享中国站首页');
-    brand.setAttribute('title','返回中国站首页');
+    brand.setAttribute('href',internationalHome);
+    brand.setAttribute('aria-label','返回国际站');
+    brand.setAttribute('title','返回国际站');
   }
-  var footerBrand=d.querySelector('.cn-bridge-footer-brand');
-  if(footerBrand){
-    footerBrand.setAttribute('href',chinaHome);
-    footerBrand.setAttribute('aria-label','进入精益制造经验分享中国站首页');
-    footerBrand.setAttribute('title','进入中国站首页');
-    footerBrand.textContent='精益制造经验分享';
-  }
-  d.querySelectorAll('.cn-bridge-footer-records,[data-action="home"],[data-action="previous"]').forEach(function(node){node.remove();});
+  d.querySelectorAll('.cn-bridge-footer-brand,.cn-bridge-footer-records,[data-action="home"],[data-action="previous"]').forEach(function(node){node.remove();});
   var g=d.querySelector('.cn-bridge-footer-actions');
   if(g){
     var expected=[['top','顶部'],['share','分享当前']];
@@ -32,9 +25,9 @@ function enforceChinaParityShell(){
       g.textContent='';
       expected.forEach(function(item){var b=d.createElement('button');b.type='button';b.setAttribute('data-action',item[0]);b.textContent=item[1];g.appendChild(b);});
     }
-    g.setAttribute('data-qily-cn-bridge-footer-contract','china-home,top,share');
+    g.setAttribute('data-qily-cn-bridge-footer-contract','top,share,no-filing');
   }
-  d.documentElement.setAttribute('data-qily-cn-bridge-home','qilylean.cn');
+  d.documentElement.setAttribute('data-qily-cn-bridge-home','qilylean.com');
 }
 function bind(){var g=d.querySelector('.cn-bridge-footer-actions');if(!g||g.dataset.bound==='v1')return;g.dataset.bound='v1';g.addEventListener('click',function(e){var b=e.target.closest('button[data-action]');if(!b)return;e.preventDefault();var a=b.dataset.action;if(a==='top')top();else if(a==='share')share(b);});}
 var footerResizeObserver;
