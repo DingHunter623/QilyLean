@@ -40,7 +40,7 @@ if(footers.length===2&&footers[0]!==footers[1]){console.error('ERROR: briefs/res
 const fixture=fs.mkdtempSync(path.join(os.tmpdir(),'qily-bridge-footer-'));
 try{
   const materializer='scripts/materialize-global-language-v3.js';
-  for(const rel of [materializer,...pages]){
+  for(const rel of [materializer,'scripts/materialize-public-shell-first-paint-v1.js','site-dock-share-runtime-v1.js',...pages]){
     const target=path.join(fixture,rel);
     fs.mkdirSync(path.dirname(target),{recursive:true});
     fs.copyFileSync(rel,target);

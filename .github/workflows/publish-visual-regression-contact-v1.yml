@@ -111,7 +111,7 @@ jobs:
           grep -Fq "const TRANSLATION_FAST_REV='20260902-stable-fast-path-v2'" scripts/materialize-global-language-v3.js
           grep -Fq "const NATIVE_PREFETCH='/site-native-prefetch-v1.js?v=20260902-intent-prefetch-v2'" scripts/materialize-global-language-v3.js
           grep -Fq "const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16'" scripts/materialize-global-language-v3.js
-          grep -Fq "const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'" scripts/materialize-global-language-v3.js
+          grep -Fq "const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range&rail=20261008-nav-gap-v1'" scripts/materialize-global-language-v3.js
           grep -Fq "const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'" scripts/materialize-global-language-v3.js
           grep -Fq "data-qily-translation-safe-direct=\"google-v1\"" scripts/materialize-global-language-v3.js
           grep -Fq "rail.type='range'" site-interaction-semantics-v1.js

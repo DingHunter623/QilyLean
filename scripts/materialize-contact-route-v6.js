@@ -9,6 +9,7 @@
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
+const {materialize:materializeFirstPaint}=require('./materialize-public-shell-first-paint-v1');
 const root=path.resolve(__dirname,'..');
 const ROUTE='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const DOCK='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1';
@@ -61,7 +62,7 @@ for(const relative of trackedHtml()){
   const file=path.join(root,relative),source=fs.readFileSync(file,'utf8');if(!/site-contact-route-v1\.js(?:\?v=[^"']*)?/.test(source))continue;covered+=1;
   let next=source.replace(/\/site-contact-route-v1\.js(?:\?v=[^"']*)?/g,ROUTE).replace(/data-qily-contact-route-direct=["'][^"']*["']/g,'data-qily-contact-route-direct="v13.4"');
   if(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/.test(next)){next=next.replace(/\/site-dock-share-runtime-v1\.js(?:\?v=[^"']*)?/g,DOCK);dockCovered+=1;}
-  next=ensureRedlineStylesheet(next);if(relative===CONTACT_PATH)next=cleanContactNavigation(next);if(next!==source){if(!checkOnly)fs.writeFileSync(file,next);changed+=1;}
+  next=ensureRedlineStylesheet(next);if(relative===CONTACT_PATH)next=cleanContactNavigation(next);next=materializeFirstPaint(next,relative);if(next!==source){if(!checkOnly)fs.writeFileSync(file,next);changed+=1;}
 }
 if(checkOnly){
   if(changed)throw new Error(`R12.2 contact materialization stale on ${changed} HTML file(s).`);if(covered<470)throw new Error(`Contact route coverage unexpectedly low: ${covered}.`);

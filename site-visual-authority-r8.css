@@ -178,6 +178,13 @@ html body .qily-primary-nav-scroll-thumb{
 }
 html body .qily-primary-nav-scroll-rail:hover .qily-primary-nav-scroll-thumb,
 html body .qily-primary-nav-scroll-thumb:active{background:var(--qily-r8-nav-thumb-hover)!important;}
+/* The public native range rail follows its own navigation row. A header-bottom
+ * anchor adds a larger gap on pages with taller header or translator boxes. */
+html body :is(header.qily-site-header,header.qily-global-header,header.topbar.qily-site-header,header.top.qily-site-header)>
+input.qily-primary-nav-scroll-rail[type="range"]{
+  top:var(--qily-nav-rail-top,calc(100% - 15px))!important;
+  bottom:auto!important;
+}
 
 /* 05 | Translator: fixed semantic width on desktop, contained width on small screens. */
 html body .qily-web-translate{

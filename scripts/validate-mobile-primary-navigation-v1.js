@@ -69,7 +69,7 @@ if(/new\s+MutationObserver\s*\(/.test(safe))throw new Error('Translation Mutatio
 
 must(mat,"const BASELINE_VERSION='20260831-google-translate-single-runtime-v32'",'V32 baseline');
 must(mat,"const HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8'",'Native mobile scroll cache');
-must(mat,"const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'V17 cache');
+must(mat,"const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range&rail=20261008-nav-gap-v1'",'V17 measured rail cache');
 must(mat,"const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'Google translation cache');
 must(mat,"const TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16'",'Google native UI cache');
 must(mat,"const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Native range visual cache');

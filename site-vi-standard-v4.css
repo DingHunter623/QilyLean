@@ -146,8 +146,9 @@ html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] 
 
 /* QILY-FULL-SITE-HERO-LABEL-VI-V1 | 2026-10-06
  * Canonical semantic-label contract across international + China public surfaces:
- * deep backgrounds use light gold; light surfaces use VI gold; labels use regular weight. */
-html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] main :is(
+ * deep backgrounds use light gold; light surfaces use VI gold; labels use regular weight.
+ * This paint contract must work before the runtime adds its shell markers. */
+html:root:root:root:root body main :is(
   .eyebrow,.hero-eyebrow,.module-eyebrow,.bridge-hero-eyebrow,
   .kicker,.section-kicker,.module-kicker,.qily-ia-kicker,
   .resource-kicker,.qily-resource-network__kicker,.engineering-kicker,
@@ -162,7 +163,7 @@ html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"] 
   opacity:1!important;
   text-shadow:none!important;
 }
-html[data-qily-vi-version="4.0"]:root:root body[data-qily-vi-shell="v4-formal"]
+html:root:root:root:root body
 :is(
   .hero,.module-hero,.daily-hero,.article-hub,.document-hero,.project-hero,.projects-hero,
   .cooperation-hero,.capability-hero,.experience-hero,.improvement-hero,.knowledge-hero,.trust-hero,

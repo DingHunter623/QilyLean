@@ -41,7 +41,7 @@ must(materializer,"FINAL_INTEGRITY_CSS='/site-header-project-integrity-v2.css?v=
 must(materializer,"VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Unified visual components cache');
 must(materializer,"TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'Google Translate cache');
 must(materializer,"TRANSLATION_PUBLIC_CSS='/site-translation-public-ui-v1.css?v=20260901-google-translate-mobile-ui-v16'",'Google translation UI cache');
-must(materializer,"INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'Interaction Semantics V1.7 cache');
+must(materializer,"INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range&rail=20261008-nav-gap-v1'",'Interaction Semantics V1.7 measured rail cache');
 
 const dockRuntime=read('site-dock-share-runtime-v1.js');
 must(dockRuntime,'__qilyFloatingDockUnifiedV58','Dock V5.8 runtime');

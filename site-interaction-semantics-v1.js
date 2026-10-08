@@ -99,6 +99,15 @@
     var nr=nav.getBoundingClientRect(),hr=header.getBoundingClientRect();
     rail.style.left=Math.max(0,nr.left-hr.left)+'px';
     rail.style.width=Math.max(0,nr.width)+'px';
+    // Match the CN desktop rhythm: the rail follows the rendered navigation
+    // row, rather than the header bottom which varies with the translator.
+    var linkBottom=0;
+    nav.querySelectorAll('a[href]').forEach(function(link){
+      var rect=link.getBoundingClientRect();
+      if(rect.width>0&&rect.height>0)linkBottom=Math.max(linkBottom,rect.bottom);
+    });
+    if(!linkBottom)linkBottom=nr.bottom-parseFloat(w.getComputedStyle(nav).paddingBottom||0);
+    rail.style.setProperty('--qily-nav-rail-top',Math.max(0,linkBottom-hr.top+8)+'px');
   }
   function syncRail(nav,rail){
     railGeometry(nav,rail);
@@ -133,6 +142,7 @@
     rail.addEventListener('pointermove',function(event){if(activePointer!==event.pointerId)return;setFromPointer(event);event.preventDefault();event.stopPropagation();},{passive:false});
     function finishPointer(event){if(activePointer!==event.pointerId)return;try{rail.releasePointerCapture(activePointer);}catch(error){}activePointer=null;sync();}
     rail.addEventListener('pointerup',finishPointer);rail.addEventListener('pointercancel',finishPointer);
+    if(w.ResizeObserver){var observer=new w.ResizeObserver(sync);observer.observe(header);observer.observe(nav);}
     sync();setTimeout(sync,120);setTimeout(sync,700);
   }
   function installPrimaryNavDragGuard(nav){
