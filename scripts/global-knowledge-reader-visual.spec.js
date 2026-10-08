@@ -240,8 +240,8 @@ for(const route of ['/global-knowledge/','/global-knowledge/terminology/','/glob
     });
     await page.goto(base+route,{waitUntil:'load'});
     const footer=page.locator('.cn-bridge-footer');
-    await expect(footer.locator('a')).toHaveText('精益制造经验分享');
-    await expect(footer.locator('a')).toHaveAttribute('href','https://qilylean.cn/');
+    await expect(footer.locator('a,.cn-bridge-footer-brand')).toHaveCount(0);
+    await expect(footer.locator('.cn-bridge-footer-actions')).toHaveAttribute('data-qily-cn-bridge-footer-contract','top,share,no-filing');
     await expect(footer.locator('button')).toHaveText(['顶部','分享当前']);
     await expect(page.locator('#floatDock,.cn-bridge-footer-records')).toHaveCount(0);
     await expect.poll(()=>footer.evaluate(el=>parseFloat(getComputedStyle(document.body).paddingBottom)-el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(0);
