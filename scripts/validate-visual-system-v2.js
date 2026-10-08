@@ -22,7 +22,7 @@ assert(formalCss.includes('data-qily-nav-overflow="true"'),'formal VI missing ov
 /* qilylean.cn is a separately deployed production knowledge site with its own final VI authority. */
 const cnIndex=read('cn-site/index.html'),cnVi=read('cn-site/assets/qilylean-vi-v2.css');
 assert(cnIndex.includes('<meta name="robots" content="index,follow">'),'CN production indexing contract missing');
-assert(cnIndex.includes('/assets/qilylean-vi-v2.css?v=20261006-cn-vi-v48-hero-label-parity'),'CN production VI CSS reference missing');
+assert(cnIndex.includes('/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation'),'CN production VI CSS reference missing');
 for(const token of ['--qily-cn-axis:1180px','Boss-readable closure aligned','QilyLean China Unified VI V2'])assert(cnVi.includes(token),`CN production VI missing ${token}`);
 assert(cnVi.includes('QILY-CN-CURRENT-MODULE-V1'),'CN current-module VI contract missing');
 

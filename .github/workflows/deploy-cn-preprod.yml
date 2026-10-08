@@ -362,7 +362,7 @@ jobs:
 
           sha = os.environ['VERIFY_SHA']
 
-          def fetch(url, attempts=12):
+          def fetch(url, attempts=12, capture_headers=False):
               error = None
               for attempt in range(1, attempts + 1):
                   request = urllib.request.Request(
@@ -376,7 +376,8 @@ jobs:
                       with urllib.request.urlopen(request, timeout=20) as response:
                           if response.status != 200:
                               raise RuntimeError(f'HTTP {response.status}')
-                          return response.read().decode('utf-8')
+                          body = response.read().decode('utf-8')
+                          return (body, response.headers) if capture_headers else body
                   except Exception as exc:
                       error = exc
                       if attempt < attempts:
@@ -386,10 +387,21 @@ jobs:
           about = fetch(f'https://qilylean.cn/about/?closure={sha}')
           briefs_bridge = fetch(f'https://qilylean.cn/briefs/?closure={sha}')
           resources_bridge = fetch(f'https://qilylean.cn/resources/?closure={sha}')
-          home = fetch(f'https://qilylean.cn/?closure={sha}')
+          home = fetch('https://qilylean.cn/')
           practice = fetch(f'https://qilylean.cn/notes/?closure={sha}')
           practice_css = fetch(f'https://qilylean.cn/assets/practice.css?closure={sha}')
-          vi = fetch(f'https://qilylean.cn/assets/qilylean-vi-v2.css?closure={sha}')
+          vi_match = re.search(r'<link id="qilyCnUnifiedViV2" rel="stylesheet" href="([^"]+)">', home)
+          expected_vi = '/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation'
+          if not vi_match or vi_match.group(1) != expected_vi:
+              raise SystemExit('Production homepage must use the exact current VI cache address.')
+          vi, vi_headers = fetch('https://qilylean.cn' + expected_vi, capture_headers=True)
+          vi_cache = vi_headers.get('Cache-Control', '')
+          if 'immutable' in vi_cache or 'no-cache' not in vi_cache or 'must-revalidate' not in vi_cache:
+              raise SystemExit(f'Production shared VI must revalidate, got Cache-Control: {vi_cache}')
+          from pathlib import Path
+          if vi != Path('cn-site/assets/qilylean-vi-v2.css').read_text(encoding='utf-8'):
+              raise SystemExit('The exact stylesheet loaded by the homepage differs from the release source.')
+          print(f'PASS: homepage loads {expected_vi}; shared VI cache policy is {vi_cache}')
           nav_runtime = fetch(f'https://qilylean.cn/assets/cn-nav-rail-v1.js?closure={sha}')
           footer_actions_css = fetch(f'https://qilylean.cn/assets/cn-footer-actions-v1.css?closure={sha}')
           footer_actions_runtime = fetch(f'https://qilylean.cn/assets/cn-footer-actions-v1.js?closure={sha}')
@@ -416,7 +428,7 @@ jobs:
               for marker in [
                   '/assets/site.css?v=20260923-cn-personal-v3-reading',
                   '/assets/portal.css?v=20260923-portal-v2-reading',
-                  '/assets/qilylean-vi-v2.css?v=20261007-cn-vi-v49-light-gold-parity',
+                  '/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation',
                   '/assets/cn-footer-actions-v1.css?v=20261007-mobile-footer-row-merge-v16',
                   '/site-public-footer-type-v1.css?v=20261005-public-footer-v3',
                   '/assets/cn-footer-actions-v1.js?v=20260930-footer-domain-v15',
@@ -538,7 +550,7 @@ jobs:
               raise SystemExit('Production China home lost full brand in header.')
           if '/assets/qilylean-aircraft-hero-cn-v2-20260919.png?v=20260919-cn-aircraft-v3' not in home:
               raise SystemExit('Production China home missing approved CN aircraft visual.')
-          if '/assets/qilylean-vi-v2.css?v=20261007-cn-vi-v49-light-gold-parity' not in home:
+          if '/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation' not in home:
               raise SystemExit('Production China home missing V42 final production VI revision.')
           if '/assets/cn-nav-rail-v1.js?v=20260926-nav-rail-v20-cn-bridge' not in home:
               raise SystemExit('Production China home missing V20 CN bridge nav runtime.')

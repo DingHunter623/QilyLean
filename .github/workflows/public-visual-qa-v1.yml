@@ -89,18 +89,20 @@ jobs:
               await visual.goto(url, {waitUntil:'networkidle', timeout:120000});
               const label = visual.locator(selector).first();
               await label.waitFor({state:'visible', timeout:30000});
+              await visual.reload({waitUntil:'networkidle',timeout:120000});
               const computed = await label.evaluate(node => {
                 const style = getComputedStyle(node);
                 return {
                   text: node.textContent.trim(),
                   color: style.color,
                   fill: style.webkitTextFillColor,
-                  fontWeight: style.fontWeight
+                  fontWeight: style.fontWeight,
+                  viHref:document.querySelector('#qilyCnUnifiedViV2')?.href || ''
                 };
               });
               fs.writeFileSync(`qa-output/${evidenceName}-computed.json`, JSON.stringify(computed,null,2));
               assert(
-                computed.color === 'rgb(255, 227, 155)' || computed.fill === 'rgb(255, 227, 155)',
+                computed.color === 'rgb(255, 227, 155)' && computed.fill === 'rgb(255, 227, 155)',
                 `${evidenceName} semantic label is not light gold: ${computed.color}/${computed.fill}`
               );
               assert(computed.fontWeight === '400', `${evidenceName} semantic label is not regular weight: ${computed.fontWeight}`);
@@ -119,7 +121,7 @@ jobs:
               'international-links-hero-label'
             );
             await verifySemanticLabel(
-              `${process.env.QA_CN_BASE}/?qa=${stamp}`,
+              `${process.env.QA_CN_BASE}/`,
               '.hero .eyebrow',
               'china-home-hero-label'
             );
