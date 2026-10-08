@@ -1,0 +1,69 @@
+name: Publish CN mobile footer spacing
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qilylean-cn-production-v12
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify shared mobile spacing rule
+        run: |
+          git diff --check
+          grep -Fq 'QILY-CN-MOBILE-FOOTER-EQUAL-GAPS-V1' cn-site/assets/qilylean-vi-v2.css
+
+      - name: Publish only the shared VI stylesheet
+        shell: bash
+        env:
+          CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
+          CN_PREPROD_USER: ${{ secrets.CN_PREPROD_USER }}
+          CN_PREPROD_SSH_KEY: ${{ secrets.CN_PREPROD_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$CN_PREPROD_HOST"
+          test -n "$CN_PREPROD_SSH_KEY"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
+          chmod 600 ~/.ssh/qilylean_cn
+          ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+          USER_NAME="${CN_PREPROD_USER:-ubuntu}"
+          OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=2 -o BatchMode=yes)
+          CSS_SHA=$(sha256sum cn-site/assets/qilylean-vi-v2.css | cut -d' ' -f1)
+          STAGE="/tmp/qily-cn-footer-spacing-${GITHUB_RUN_ID}.css"
+          timeout 90s scp -q "${OPTS[@]}" -i ~/.ssh/qilylean_cn cn-site/assets/qilylean-vi-v2.css "$USER_NAME@$CN_PREPROD_HOST:$STAGE"
+          timeout 90s ssh "${OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST" "bash -s -- '$CSS_SHA' '$GITHUB_RUN_ID'" <<'REMOTE'
+          set -euo pipefail
+          EXPECTED_SHA="$1"
+          RUN_ID="$2"
+          ROOT=/var/www/qilylean-cn/current
+          STAGE="/tmp/qily-cn-footer-spacing-${RUN_ID}.css"
+          trap 'rm -f "$STAGE"' EXIT
+          test -f "$ROOT/assets/qilylean-vi-v2.css"
+          test "$(sha256sum "$STAGE" | cut -d' ' -f1)" = "$EXPECTED_SHA"
+          BACKUP="/var/www/qilylean-cn/footer-spacing-backups/$RUN_ID.css"
+          sudo install -d -m 755 /var/www/qilylean-cn/footer-spacing-backups
+          sudo cp -p "$ROOT/assets/qilylean-vi-v2.css" "$BACKUP"
+          sudo install -m 644 "$STAGE" "$ROOT/assets/.qilylean-vi-v2.css.$RUN_ID"
+          sudo mv "$ROOT/assets/.qilylean-vi-v2.css.$RUN_ID" "$ROOT/assets/qilylean-vi-v2.css"
+          test "$(sha256sum "$ROOT/assets/qilylean-vi-v2.css" | cut -d' ' -f1)" = "$EXPECTED_SHA"
+          echo 'Shared VI stylesheet installed; previous stylesheet retained outside the web root.'
+          REMOTE
+
+      - name: Verify production bytes and browser cache revalidation
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error --retry 3 -D /tmp/qily-footer-headers -o /tmp/qily-footer-live.css "https://qilylean.cn/assets/qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation"
+          cmp cn-site/assets/qilylean-vi-v2.css /tmp/qily-footer-live.css
+          grep -Fiq 'must-revalidate' /tmp/qily-footer-headers
+          echo "Production shared VI bytes match commit $GITHUB_SHA; existing browser caches revalidate."
