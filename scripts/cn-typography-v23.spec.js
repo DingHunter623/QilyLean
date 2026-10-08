@@ -39,6 +39,10 @@ async function auditPage(page, route, limits, label){
       px:parseFloat(getComputedStyle(el).fontSize)
     }));
     return {
+      heroLabels:[...document.querySelectorAll('.hero .eyebrow,.page-hero .hero-eyebrow,.module-hero .module-eyebrow')].map(el=>{
+        const style=getComputedStyle(el);
+        return {text:el.textContent.trim(),color:style.color,fill:style.webkitTextFillColor,weight:style.fontWeight};
+      }),
       h1:read('main h1'),
       h2:read('main h2'),
       h3:read('main h3'),
@@ -95,7 +99,12 @@ async function auditPage(page, route, limits, label){
       })()
     };
   });
-  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20261007-cn-vi-v49-light-gold-parity')), route+' must load V47 VI').toBeTruthy();
+  expect(data.href.some(x=>x.includes('qilylean-vi-v2.css?v=20261008-cn-vi-v50-cache-revalidation')), route+' must load the current VI cache version').toBeTruthy();
+  for(const x of data.heroLabels){
+    expect(x.color, route+' hero label color '+x.text).toBe('rgb(255, 227, 155)');
+    expect(x.fill, route+' hero label text fill '+x.text).toBe('rgb(255, 227, 155)');
+    expect(x.weight, route+' hero label weight '+x.text).toBe('400');
+  }
   for(const x of data.h1) expect(x.px, route+' H1 '+x.text).toBeLessThanOrEqual(limits.h1);
   for(const x of data.h2) expect(x.px, route+' H2 '+x.text).toBeLessThanOrEqual(limits.h2);
   for(const x of data.h3) expect(x.px, route+' H3 '+x.text).toBeLessThanOrEqual(limits.h3);
