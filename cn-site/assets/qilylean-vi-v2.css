@@ -1505,3 +1505,9 @@ html:root:root:root body :is(.hero,.page-hero,.module-hero,[data-qily-hero]) > :
   text-shadow:none!important;
 }
 
+/* QILY-CN-MOBILE-FOOTER-EQUAL-GAPS-V1 | center each menu within the filing-expanded grid tracks. */
+@media(max-width:760px){
+  html:root:root:root:root body .footer .footer-inner{
+    justify-items:center!important;
+  }
+}
