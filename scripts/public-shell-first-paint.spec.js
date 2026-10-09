@@ -210,7 +210,10 @@ test('navigation core adopts published navigation before presentation runtimes l
       const url=new URL(route.request().url());
       if(url.origin!==new URL(base).origin)return route.abort();
       if(url.pathname==='/site-navigation-core.js')await coreGate;
-      if(['/site-vi-runtime-v4.js','/site-visual-runtime-r8.js'].includes(url.pathname))await presentationGate;
+      // The parser-deferred R8 script must not hold DOMContentLoaded while the
+      // independently loaded VI/core requests are deliberately delayed.
+      if(url.pathname==='/site-visual-runtime-r8.js')return route.abort();
+      if(url.pathname==='/site-vi-runtime-v4.js')await presentationGate;
       return route.continue();
     });
     const page=await context.newPage();
