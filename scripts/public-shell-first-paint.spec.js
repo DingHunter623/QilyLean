@@ -164,6 +164,9 @@ for(const [name,url,labelSelector] of pages){
           const hydrated=await paintState(page,labelSelector);
           expectPaint(hydrated,`${name} ${device} JavaScript enabled`);
           expect(hydrated.dock.height,`${name} ${device}: loading runtime must not resize the menu`).toBeCloseTo(first.dock.height,0);
+          // A visitor may use the rail before a slow core finishes loading.
+          // Subsequent active-link reveal timers must retain that choice.
+          await expectNavigationRail(page);
           const focusedAction=page.locator('#floatDock [data-action="home"]');
           await focusedAction.focus();
           releaseCore();
@@ -174,6 +177,11 @@ for(const [name,url,labelSelector] of pages){
           const afterCore=await paintState(page,labelSelector);
           expectPaint(afterCore,`${name} ${device} delayed navigation core`);
           expect(afterCore.dock.height,`${name} ${device}: delayed navigation core must not resize the menu`).toBeCloseTo(first.dock.height,0);
+          await page.waitForTimeout(800); // Includes the last 700ms reveal timer.
+          await expect.poll(()=>page.locator('input.qily-primary-nav-scroll-rail').first().evaluate(element=>{
+            const nav=document.getElementById(element.getAttribute('aria-controls'));
+            return Math.abs(nav.scrollWidth-nav.clientWidth-nav.scrollLeft);
+          }),{message:'late core initialization retains the visitor navigation position'}).toBeLessThanOrEqual(1);
           await expectNavigationRail(page);
           await page.screenshot({path:path.join(artifacts,`first-paint-${name}-${device}-with-js.png`)});
           await page.evaluate(()=>window.scrollTo(0,600));

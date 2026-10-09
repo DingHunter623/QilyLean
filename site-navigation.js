@@ -89,12 +89,29 @@
    * Keep the current primary module inside the horizontal navigation viewport.
    * Uses scrollLeft only, so revealing the active item never changes document Y position.
    */
+  var PRIMARY_NAV_SELECTOR='.qily-global-nav,header nav.site-nav,header nav.nav,header nav[aria-label="网站导航"],header nav[aria-label="QilyLean核心导视"]';
+  var userControlledPrimaryNavigation=new WeakSet();
+  function retainPrimaryNavigationInput(event){
+    var target=event.target;if(!target||!target.closest)return;
+    var nav=target.closest(PRIMARY_NAV_SELECTOR);
+    if(!nav&&target.matches('input.qily-primary-nav-scroll-rail[aria-controls]')){
+      nav=d.getElementById(target.getAttribute('aria-controls'));
+      if(nav&&!nav.matches(PRIMARY_NAV_SELECTOR))nav=null;
+    }
+    if(nav)userControlledPrimaryNavigation.add(nav);
+  }
+  ['pointerdown','keydown','wheel','input'].forEach(function(type){
+    d.addEventListener(type,retainPrimaryNavigationInput,{capture:true,passive:true});
+  });
   function revealActivePrimaryNavigation(){
-    var selector='.qily-global-nav,header nav.site-nav,header nav.nav,header nav[aria-label="网站导航"],header nav[aria-label="QilyLean核心导视"]';
-    d.querySelectorAll(selector).forEach(function(nav){
+    d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(function(nav){
+      if(userControlledPrimaryNavigation.has(nav))return;
       var active=nav.querySelector('a[aria-current="page"],a[data-qily-page-current="true"],a[data-qily-primary-current="true"]');
       if(!active)return;
       w.requestAnimationFrame(function(){
+        // Delayed initialization may reveal the current page until the visitor
+        // takes over. Never undo their rail, keyboard, drag or wheel movement.
+        if(userControlledPrimaryNavigation.has(nav))return;
         var left=active.offsetLeft,right=left+active.offsetWidth,viewLeft=nav.scrollLeft,viewRight=viewLeft+nav.clientWidth;
         if(left>=viewLeft+8&&right<=viewRight-8)return;
         var max=Math.max(0,nav.scrollWidth-nav.clientWidth);
