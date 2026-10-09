@@ -72,7 +72,7 @@ jobs:
           a.status='passed';
           a.checks.responsiveOverflow='passed';
           a.checks.browserRegression='passed';
-          a.checks.sharedShellFirstPaint='passed without JavaScript at desktop-1680 and mobile-390; runtime adoption and Top/Search passed';
+          a.checks.sharedShellFirstPaint='passed without JavaScript at 1680, 1024, 820 and 390px; runtime adoption in both loading orders and Top/Search passed';
           a.checks.viewports=['desktop-1440','desktop-1680','tablet-1024','tablet-820','mobile-390'];
           a.checks.menuLoadingOrder=['core-before-dock','dock-before-core'];
           a.checks.releaseGate='P0=0; P1=0; VI audit=passed; cross-device visual regression=passed';

@@ -111,6 +111,9 @@ for(const [name,url,viewport,mobile] of cases){
     }
 
     await page.locator('#floatDock .qily-float-btn[data-action="home"]').focus();
+    // The shared owner animates background/color over 160ms. Assert the final
+    // visible state before sampling geometry instead of the transition's first frame.
+    await expect(page.locator('#floatDock .qily-float-btn[data-action="home"]')).toHaveCSS('background-color','rgb(255, 227, 155)');
     const focus=await page.evaluate(()=>{
       const b=document.querySelector('#floatDock .qily-float-btn[data-action="home"]');
       const s=getComputedStyle(b),r=b.getBoundingClientRect();

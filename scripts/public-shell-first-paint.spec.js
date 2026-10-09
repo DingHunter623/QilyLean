@@ -15,7 +15,7 @@ fs.mkdirSync(artifacts,{recursive:true});
 async function observeStaticMenu(context){
   await context.addInitScript(()=>{
     // This observer is only a regression probe. Production keeps one Dock owner.
-    const probe={initial:null,replaced:false,invalidMenus:[]};
+    const probe={initial:null,replaced:false,invalidMenus:[],coreReady:false};
     window.__qilyStaticMenuProbe=probe;
     const actions=node=>[...node.querySelectorAll('[data-action]')].map(button=>button.getAttribute('data-action'));
     const inspect=records=>{
@@ -36,6 +36,11 @@ async function observeStaticMenu(context){
     };
     new MutationObserver(inspect).observe(document,{childList:true,subtree:true});
     document.addEventListener('DOMContentLoaded',()=>inspect([]),{once:true});
+    document.addEventListener('qily:shell-ready',()=>{
+      // The navigation core announces readiness after buildDock(), rather than
+      // at its entry guard. A failed core boot must not satisfy this test.
+      if(window.__qilyLeanSiteNavigationPublicV8===true)probe.coreReady=true;
+    });
   });
 }
 
@@ -48,6 +53,7 @@ async function expectStaticMenuPreserved(page){
   expect(probe.sameNode,'the original static menu survives shared runtime/core loading').toBeTruthy();
   expect(probe.replaced,'the static menu must never be replaced').toBe(false);
   expect(probe.invalidMenus,'loading must never introduce a menu with missing actions').toEqual([]);
+  await expect(page.locator('script[src*="/site-dock-share-runtime-v1.js"]'),'pending first-paint runtime must suppress the legacy fallback loader').toHaveCount(1);
 }
 
 async function expectNavigationRail(page){
@@ -93,7 +99,7 @@ async function paintState(page,labelSelector){
       actions:dock?[...dock.querySelectorAll('[data-action]')].filter(visible).map(element=>element.getAttribute('data-action')):[],
       spacerHeight:spacer?spacer.getBoundingClientRect().height:0,
       bodyPadding:parseFloat(getComputedStyle(document.body).paddingBottom)||0,
-      viewport:{width:window.innerWidth,height:window.innerHeight},
+      viewport:{width:window.innerWidth,contentWidth:Math.min(document.documentElement.clientWidth,document.body.clientWidth),height:window.innerHeight},
       pageOverflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-window.innerWidth
     };
   },labelSelector);
@@ -116,7 +122,7 @@ function expectPaint(state,name){
   expect(state.dock.border).toBe('3px');
   expect(state.dock.borderColor).toBe('rgb(200, 162, 90)');
   expect(state.dock.x).toBeCloseTo(0,0);
-  expect(state.dock.width).toBeCloseTo(state.viewport.width,0);
+  expect(state.dock.width,'menu fills the content viewport including pages with a reserved scrollbar gutter').toBeCloseTo(state.viewport.contentWidth,0);
   expect(state.dock.bottom).toBeCloseTo(state.viewport.height,0);
   expect(state.spacerHeight+state.bodyPadding+1,`${name}: fixed menu reserves bottom content space`).toBeGreaterThanOrEqual(state.dock.height);
   expect(state.pageOverflow,`${name}: no page-level horizontal overflow`).toBeLessThanOrEqual(1);
@@ -158,9 +164,13 @@ for(const [name,url,labelSelector] of pages){
           const hydrated=await paintState(page,labelSelector);
           expectPaint(hydrated,`${name} ${device} JavaScript enabled`);
           expect(hydrated.dock.height,`${name} ${device}: loading runtime must not resize the menu`).toBeCloseTo(first.dock.height,0);
+          const focusedAction=page.locator('#floatDock [data-action="home"]');
+          await focusedAction.focus();
           releaseCore();
-          await page.waitForFunction(()=>window.__qilyLeanSiteNavigationPublicV8===true);
+          await page.waitForFunction(()=>window.__qilyStaticMenuProbe&&window.__qilyStaticMenuProbe.coreReady===true);
           await expectStaticMenuPreserved(page);
+          await expect(focusedAction,'delayed initialization keeps the existing keyboard focus').toBeFocused();
+          await expect(focusedAction).toHaveCSS('background-color','rgb(255, 227, 155)');
           const afterCore=await paintState(page,labelSelector);
           expectPaint(afterCore,`${name} ${device} delayed navigation core`);
           expect(afterCore.dock.height,`${name} ${device}: delayed navigation core must not resize the menu`).toBeCloseTo(first.dock.height,0);
@@ -195,7 +205,7 @@ test('navigation core preserves the static menu while its action runtime is dela
     });
     const page=await context.newPage();
     await page.goto(base+'/lean-production/',{waitUntil:'commit'});
-    await page.waitForFunction(()=>window.__qilyLeanSiteNavigationPublicV8===true);
+    await page.waitForFunction(()=>window.__qilyStaticMenuProbe&&window.__qilyStaticMenuProbe.coreReady===true);
     expect(await page.evaluate(()=>!!window.__qilyFloatingDockUnifiedV58),'the delayed Dock runtime has not executed').toBe(false);
     await expectStaticMenuPreserved(page);
     expectPaint(await paintState(page,'.hero .eyebrow'),'navigation core before Dock runtime');

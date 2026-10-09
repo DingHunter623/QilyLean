@@ -53,7 +53,7 @@ for(const relative of files){
     assert(tag.includes(`rail=${NAV_RAIL_REV}`),`${relative}: changed navigation source has stale cache URL`);
     cacheCovered++;
   }
-  for(const tag of source.match(/<script\b[^>]*(?:site-navigation\.js|site-brand-home-feedback-v1\.js)[^>]*>/gi)||[]){
+  for(const tag of source.match(/<script\b[^>]*(?:site-navigation\.js|site-brand-home-feedback-v1\.js|site-contact-route-v1\.js)[^>]*>/gi)||[]){
     assert(tag.includes(`firstpaint=${FIRST_PAINT_REV}`),`${relative}: shared shell bootstrap has stale cache URL`);
   }
 }

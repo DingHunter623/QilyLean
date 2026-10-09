@@ -74,6 +74,9 @@
     docks.forEach(function(el){
       if(el!==primary){el.hidden=true;el.setAttribute('aria-hidden','true');el.setAttribute('data-qily-vi-v4-duplicate','suppressed');}
     });
+    // The published fixed menu already belongs to the action runtime. Moving
+    // its ancestor during presentation passes would discard keyboard focus.
+    if(primary.getAttribute('data-qily-first-paint-dock')==='v1')return;
     primary.classList.add('qily-vi-v4-flow-dock');
     primary.setAttribute('data-qily-vi-v4-dock','single-flow');
     ['position','top','right','bottom','left','inset','transform','width','height'].forEach(function(name){primary.style.removeProperty(name);});
