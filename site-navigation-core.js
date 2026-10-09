@@ -451,6 +451,11 @@
   }
 
   function buildDock() {
+    // The shared static shell and its V5.8 runtime own the existing menu.
+    // Keep the legacy fallback from replacing it during asynchronous core loading.
+    var existingDock = document.getElementById('floatDock');
+    if (window.__qilyFloatingDockUnifiedV58 ||
+        (existingDock && existingDock.getAttribute('data-qily-first-paint-dock') === 'v1')) return;
     ['floatDock', 'wxMask', 'qilySearchMask', 'qilyDockToast'].forEach(function (id) {
       var old = document.getElementById(id);
       if (old) old.remove();

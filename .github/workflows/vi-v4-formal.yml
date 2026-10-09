@@ -9,6 +9,9 @@ on:
       - 'site-brand-home-feedback-v1.js'
       - 'scripts/enforce-site-vi-v4.js'
       - 'scripts/vi-v4-formal.spec.js'
+      - 'scripts/materialize-public-shell-first-paint-v1.js'
+      - 'scripts/validate-public-shell-first-paint-v1.js'
+      - 'scripts/public-shell-first-paint.spec.js'
       - '.github/workflows/vi-v4-formal.yml'
       - '**/*.html'
   pull_request:
@@ -38,6 +41,8 @@ jobs:
           node --check site-brand-home-feedback-v1.js
           node --check scripts/enforce-site-vi-v4.js
           node --check scripts/vi-v4-formal.spec.js
+          node --check scripts/public-shell-first-paint.spec.js
+          node scripts/validate-public-shell-first-paint-v1.js
           node scripts/enforce-site-vi-v4.js --write
           git diff --check
 
@@ -56,7 +61,7 @@ jobs:
       - name: Desktop tablet mobile formal regression
         env:
           QILY_VI_V4_BASE: http://127.0.0.1:4173
-        run: npx playwright test scripts/vi-v4-formal.spec.js --reporter=line --workers=1
+        run: npx playwright test scripts/vi-v4-formal.spec.js scripts/public-shell-first-paint.spec.js --reporter=line --workers=1
 
       - name: Finalize machine-readable audit
         run: |
@@ -67,7 +72,9 @@ jobs:
           a.status='passed';
           a.checks.responsiveOverflow='passed';
           a.checks.browserRegression='passed';
-          a.checks.viewports=['desktop-1440','tablet-1024','mobile-390'];
+          a.checks.sharedShellFirstPaint='passed without JavaScript at desktop-1680 and mobile-390; runtime adoption and Top/Search passed';
+          a.checks.viewports=['desktop-1440','desktop-1680','tablet-1024','tablet-820','mobile-390'];
+          a.checks.menuLoadingOrder=['core-before-dock','dock-before-core'];
           a.checks.releaseGate='P0=0; P1=0; VI audit=passed; cross-device visual regression=passed';
           a.completedAt=new Date().toISOString();
           fs.writeFileSync(p,JSON.stringify(a,null,2)+'\n');

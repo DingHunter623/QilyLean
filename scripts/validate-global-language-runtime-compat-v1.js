@@ -110,7 +110,7 @@ for(const [t,m] of [
   ["const HEADER_AXIS='/site-header-axis-v1.css?v=20260901-primary-navigation-native-scroll-v8'",'Header native-scroll materializer'],
   ["const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-google-translate-single-runtime-v16'",'Translation materializer'],
   ["const VISUAL_COMPONENTS_CSS='/site-visual-components-v1.css?v=20260831-unified-components-v29-native-range'",'Visual components materializer'],
-  ["const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range'",'Semantics materializer']
+  ["const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range&rail=20261008-nav-gap-v1'",'Semantics measured rail materializer']
 ])must(mat,t,m);
 forbid(mat,'DDZ_CLOSURE_CSS','Retired DDZ closure materialization');
 forbid(mat,'const PUBLIC_UI_JS=','Retired picker injection');

@@ -3,10 +3,11 @@
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
+const {materialize:materializePublicFirstPaint}=require('./materialize-public-shell-first-paint-v1.js');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 
-const CSS='/site-visual-authority-r8.css?v=20260831-r8-authority-v2-redline-closure';
+const CSS='/site-visual-authority-r8.css?v=20260831-r8-authority-v2-redline-closure&rail=20261008-nav-gap-v1';
 const JS='/site-visual-runtime-r8.js?v=20260831-r8-runtime-v3-translation-neutral';
 const LINK=`<link id="qilyVisualAuthorityR8" data-qily-visual-authority="r8" rel="stylesheet" href="${CSS}">`;
 const SCRIPT=`<script defer id="qilyVisualRuntimeR8" data-qily-visual-runtime="r8" src="${JS}"></script>`;
@@ -36,7 +37,7 @@ function materializeHtml(html,file){
   if(isDdzFastRoute(file,next))return next;
   if(!/<\/head>/i.test(next))return next;
   next=next.replace(/\s*<\/head>/i,`\n${LINK}\n${SCRIPT}\n</head>`);
-  return next;
+  return materializePublicFirstPaint(next,file);
 }
 function replaceLiteral(file,from,to,required=false){
   const text=read(file);

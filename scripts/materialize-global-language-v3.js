@@ -19,6 +19,7 @@
 const fs=require('fs');
 const path=require('path');
 const {execFileSync}=require('child_process');
+const {materialize:materializeFirstPaint}=require('./materialize-public-shell-first-paint-v1');
 const root=path.resolve(__dirname,'..');
 const checkOnly=process.argv.includes('--check');
 const latestDailyOnly=process.argv.includes('--latest-daily');
@@ -56,7 +57,7 @@ const TRANSLATION_SAFE_JS='/site-translation-safe-runtime-v1.js?v=20260901-googl
 const TRANSLATION_FAST_REV='20260902-stable-fast-path-v2';
 const CONTACT_ROUTE_JS='/site-contact-route-v1.js?v=20260829-dock-functional-public-v134';
 const INTERACTION_SEMANTICS_CSS='/site-interaction-semantics-v1.css?v=20260830-r11-semantics-v14-visual-v3-vi-teal';
-const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range';
+const INTERACTION_SEMANTICS_JS='/site-interaction-semantics-v1.js?v=20260831-r11-semantics-v17-native-range&rail=20261008-nav-gap-v1';
 const WECHAT_CONTACT_ASSET='/assets/contact/wechat-contact-card.svg?v=20260826-official-restored-v2';
 const NAV_RAIL_VI_CRITICAL=`<style id="qilyNavRailViCriticalV1">
 :root{--qily-nav-rail-track:#b9d9d4;--qily-nav-rail-thumb:#0f4b5a;--qily-nav-rail-thumb-hover:#12606f}
@@ -150,7 +151,7 @@ function materialize(source,relative){
   const aircraftStylesheetAnchor=/<link\b[^>]*id=["']qilyAircraftHeroStylesheetV1["'][^>]*>/i;
   if(aircraftStylesheetAnchor.test(next))next=next.replace(aircraftStylesheetAnchor,`${tags}\n$&`);
   else if(/<\/head>/i.test(next))next=next.replace(/<\/head>/i,`${tags}\n</head>`);
-  return next;
+  return materializeFirstPaint(next,relative);
 }
 const changed=[];
 for(const relative of trackedHtml()){const target=path.join(root,relative),source=fs.readFileSync(target,'utf8'),next=materialize(source,relative);if(next===source)continue;changed.push(relative);if(!checkOnly)fs.writeFileSync(target,next,'utf8');}
