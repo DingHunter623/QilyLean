@@ -177,6 +177,27 @@
     });
   }
 
+  function adoptPublishedPrimaryNavigation() {
+    if (!document.querySelector('#floatDock[data-qily-first-paint-dock="v1"]')) return false;
+    var header = document.querySelector('header.qily-site-header,header.topbar,header.top');
+    var nav = header && header.querySelector('nav.site-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"]');
+    var brand = header && header.querySelector('a.qily-brand,a.brand');
+    if (!nav || !brand) return false;
+    var links = Array.from(nav.children).filter(function (node) { return node.matches('a[href]'); });
+    // A complete published menu already has the authoritative routes. Adopt it
+    // in place even when its presentation runtime has not added modern classes.
+    if (links.length !== routes.length || !routes.every(function (route, index) {
+      return primaryRouteForLink(links[index]) === route[1];
+    })) return false;
+    header.classList.add('qily-site-header', 'qily-global-header');
+    nav.classList.add('site-nav', 'qily-global-nav');
+    brand.classList.add('qily-brand');
+    brand.href = '/';
+    brand.setAttribute('aria-label', '返回QilyLean首页');
+    brand.setAttribute('title', '返回首页');
+    return true;
+  }
+
   function buildNavigation() {
     var header = document.querySelector('header.qily-site-header,header.topbar,header.top');
     if (!header) {
@@ -662,7 +683,7 @@
       // Static-first supplies base geometry, but the authoritative runtime must still
       // install the final Header/Nav typography parity layer after cached legacy CSS.
       addGlobalHeaderStyles();
-      if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav')) buildNavigation();
+      if (!document.querySelector('header.qily-site-header .qily-global-nav,header.qily-global-header .qily-global-nav') && !adoptPublishedPrimaryNavigation()) buildNavigation();
       enforcePrimaryNavRenderParity();
       syncPrimaryNavCurrentState();
       // R2: no repeated global contact footer on ordinary pages.

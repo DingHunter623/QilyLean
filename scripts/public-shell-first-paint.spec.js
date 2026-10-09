@@ -199,6 +199,47 @@ for(const [name,url,labelSelector] of pages){
   }
 }
 
+test('navigation core adopts published navigation before presentation runtimes load',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:1680,height:1000}});
+  let releaseCore,releasePresentation;
+  const coreGate=new Promise(resolve=>{releaseCore=resolve;});
+  const presentationGate=new Promise(resolve=>{releasePresentation=resolve;});
+  try{
+    await observeStaticMenu(context);
+    await context.route('**/*',async route=>{
+      const url=new URL(route.request().url());
+      if(url.origin!==new URL(base).origin)return route.abort();
+      if(url.pathname==='/site-navigation-core.js')await coreGate;
+      if(['/site-vi-runtime-v4.js','/site-visual-runtime-r8.js'].includes(url.pathname))await presentationGate;
+      return route.continue();
+    });
+    const page=await context.newPage();
+    await page.goto(base+'/lean-production/',{waitUntil:'domcontentloaded'});
+    await page.waitForFunction(()=>window.__qilyInteractionSemanticsV17===true);
+    await expect(page.locator('header.topbar')).not.toHaveClass(/qily-site-header/);
+    await page.evaluate(()=>{
+      window.__qilyPublishedNavigation=document.querySelector('header nav');
+      window.__qilyPublishedRail=document.querySelector('input.qily-primary-nav-scroll-rail');
+      window.__qilyPublishedBrand=document.querySelector('header a.brand');
+    });
+    const focusedLink=page.locator('header nav a[href="/links/"]');
+    await focusedLink.focus();
+    releaseCore();
+    await page.waitForFunction(()=>window.__qilyStaticMenuProbe.coreReady===true);
+    expect(await page.evaluate(()=>({
+      nav:window.__qilyPublishedNavigation===document.querySelector('header nav'),
+      rail:window.__qilyPublishedRail===document.querySelector('input.qily-primary-nav-scroll-rail'),
+      brand:window.__qilyPublishedBrand===document.querySelector('header a.qily-brand')
+    }))).toEqual({nav:true,rail:true,brand:true});
+    await expect(focusedLink).toBeFocused();
+    await expect(page.locator('header nav a[href]')).toHaveCount(10);
+    releasePresentation();
+    await page.waitForFunction(()=>document.documentElement.getAttribute('data-qily-vi-status')==='formal');
+    await expectNavigationRail(page);
+    await expectStaticMenuPreserved(page);
+  }finally{releaseCore();releasePresentation();await context.close();}
+});
+
 test('navigation core preserves the static menu while its action runtime is delayed',async({browser})=>{
   const context=await browser.newContext({viewport:{width:1680,height:1000}});
   let releaseDock;

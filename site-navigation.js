@@ -17,7 +17,7 @@
   w.__qilyStaticFirstNavigationV43=true;
   w.__qilyStaticFirstNavigationV42=true;
 
-  var CORE_SRC='/site-navigation-core.js?v=20260924-primary-nav-render-parity-core-v35&firstpaint=20261008-shell-v1';
+  var CORE_SRC='/site-navigation-core.js?v=20260924-primary-nav-render-parity-core-v35&firstpaint=20261008-shell-v1&input=20261009-user-nav-v1';
   var LEGACY_SRC='/site-navigation-legacy-20260802.js?v=20260927-pricing-type-floor-v25';
   var CONSISTENCY_SRC='/site-ui-consistency-v1.js?v=20260830-r7-single-responsibility-v8-stable-picker';
   var SEARCH_RUNTIME_SRC='/site-search.js?v=20260826-search-navigation-v2';
