@@ -15,7 +15,7 @@ const FORMAL_CSS_HREF='/site-vi-standard-v4.css?v=20261006-vi-v4-hero-label-regu
 const DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1&firstpaint=20261009-preserve-focus-v1';
 const NAV_RAIL_REV='20261008-nav-gap-v1';
 const FIRST_PAINT_REV='20261009-shell-v2';
-const NAVIGATION_INPUT_REV='20261009-user-nav-v1';
+const NAVIGATION_INPUT_REV='20261009-user-nav-v2';
 const ORDER=['home','top','back','previous','search','current','contact'];
 const LABELS=['首页','顶部','上一层级','上一网页','本站搜索','分享当前','联系我们'];
 const DOCK_STYLE_ID='qilyDockUnifiedV58Style';
@@ -46,6 +46,7 @@ function materialize(source,relative){
   let next=source;
   next=next.replace(/\/site-navigation\.js\?[^"'\s<>]*/g,url=>url.replace(/&(?:firstpaint|input)=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV+'&input='+NAVIGATION_INPUT_REV);
   next=next.replace(/\/site-(?:interaction-semantics-v1\.js|visual-authority-r8\.css)\?[^"'\s<>]*/g,url=>url.replace(/&rail=[^&"'\s<>]*/g,'')+'&rail='+NAV_RAIL_REV);
+  next=next.replace(/\/site-interaction-semantics-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&input=[^&"'\s<>]*/g,'')+'&input='+NAVIGATION_INPUT_REV);
   next=next.replace(/\/site-brand-home-feedback-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&firstpaint=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV);
   next=next.replace(/\/site-contact-route-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&firstpaint=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV);
   // Replace only the nodes owned by this shared first-paint contract.
