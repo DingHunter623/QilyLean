@@ -12,7 +12,7 @@ const vm=require('vm');
 const {execFileSync}=require('child_process');
 const ROOT=path.resolve(__dirname,'..');
 const FORMAL_CSS_HREF='/site-vi-standard-v4.css?v=20261006-vi-v4-hero-label-regular-gold-v4&hero=20261007-plain-label-v3&firstpaint=20261008-shell-v1';
-const DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1&firstpaint=20261009-preserve-focus-v1';
+const DOCK_RUNTIME_SRC='/site-dock-share-runtime-v1.js?v=20260906-authority-v58-mobile-swipe-fixed-bottom&patch=20260924-footer-like-fixed-r1';
 const NAV_RAIL_REV='20261008-nav-gap-v1';
 const FIRST_PAINT_REV='20261009-shell-v2';
 const NAVIGATION_INPUT_REV='20261009-user-nav-v2';
