@@ -164,6 +164,9 @@ for(const [name,url,labelSelector] of pages){
           const hydrated=await paintState(page,labelSelector);
           expectPaint(hydrated,`${name} ${device} JavaScript enabled`);
           expect(hydrated.dock.height,`${name} ${device}: loading runtime must not resize the menu`).toBeCloseTo(first.dock.height,0);
+          // A visitor may use the rail before a slow core finishes loading.
+          // Subsequent active-link reveal timers must retain that choice.
+          await expectNavigationRail(page);
           const focusedAction=page.locator('#floatDock [data-action="home"]');
           await focusedAction.focus();
           releaseCore();
@@ -174,6 +177,11 @@ for(const [name,url,labelSelector] of pages){
           const afterCore=await paintState(page,labelSelector);
           expectPaint(afterCore,`${name} ${device} delayed navigation core`);
           expect(afterCore.dock.height,`${name} ${device}: delayed navigation core must not resize the menu`).toBeCloseTo(first.dock.height,0);
+          await page.waitForTimeout(800); // Includes the last 700ms reveal timer.
+          await expect.poll(()=>page.locator('input.qily-primary-nav-scroll-rail').first().evaluate(element=>{
+            const nav=document.getElementById(element.getAttribute('aria-controls'));
+            return Math.abs(nav.scrollWidth-nav.clientWidth-nav.scrollLeft);
+          }),{message:'late core initialization retains the visitor navigation position'}).toBeLessThanOrEqual(1);
           await expectNavigationRail(page);
           await page.screenshot({path:path.join(artifacts,`first-paint-${name}-${device}-with-js.png`)});
           await page.evaluate(()=>window.scrollTo(0,600));
@@ -190,6 +198,50 @@ for(const [name,url,labelSelector] of pages){
     });
   }
 }
+
+test('navigation core adopts published navigation before presentation runtimes load',async({browser})=>{
+  const context=await browser.newContext({viewport:{width:1680,height:1000}});
+  let releaseCore,releasePresentation;
+  const coreGate=new Promise(resolve=>{releaseCore=resolve;});
+  const presentationGate=new Promise(resolve=>{releasePresentation=resolve;});
+  try{
+    await observeStaticMenu(context);
+    await context.route('**/*',async route=>{
+      const url=new URL(route.request().url());
+      if(url.origin!==new URL(base).origin)return route.abort();
+      if(url.pathname==='/site-navigation-core.js')await coreGate;
+      // The parser-deferred R8 script must not hold DOMContentLoaded while the
+      // independently loaded VI/core requests are deliberately delayed.
+      if(url.pathname==='/site-visual-runtime-r8.js')return route.abort();
+      if(url.pathname==='/site-vi-runtime-v4.js')await presentationGate;
+      return route.continue();
+    });
+    const page=await context.newPage();
+    await page.goto(base+'/lean-production/',{waitUntil:'domcontentloaded'});
+    await page.waitForFunction(()=>window.__qilyInteractionSemanticsV17===true);
+    await expect(page.locator('header.topbar')).not.toHaveClass(/qily-site-header/);
+    await page.evaluate(()=>{
+      window.__qilyPublishedNavigation=document.querySelector('header nav');
+      window.__qilyPublishedRail=document.querySelector('input.qily-primary-nav-scroll-rail');
+      window.__qilyPublishedBrand=document.querySelector('header a.brand');
+    });
+    const focusedLink=page.locator('header nav a[href="/links/"]');
+    await focusedLink.focus();
+    releaseCore();
+    await page.waitForFunction(()=>window.__qilyStaticMenuProbe.coreReady===true);
+    expect(await page.evaluate(()=>({
+      nav:window.__qilyPublishedNavigation===document.querySelector('header nav'),
+      rail:window.__qilyPublishedRail===document.querySelector('input.qily-primary-nav-scroll-rail'),
+      brand:window.__qilyPublishedBrand===document.querySelector('header a.qily-brand')
+    }))).toEqual({nav:true,rail:true,brand:true});
+    await expect(focusedLink).toBeFocused();
+    await expect(page.locator('header nav a[href]')).toHaveCount(10);
+    releasePresentation();
+    await page.waitForFunction(()=>document.documentElement.getAttribute('data-qily-vi-status')==='formal');
+    await expectNavigationRail(page);
+    await expectStaticMenuPreserved(page);
+  }finally{releaseCore();releasePresentation();await context.close();}
+});
 
 test('navigation core preserves the static menu while its action runtime is delayed',async({browser})=>{
   const context=await browser.newContext({viewport:{width:1680,height:1000}});

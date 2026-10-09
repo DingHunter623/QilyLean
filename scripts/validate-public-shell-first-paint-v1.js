@@ -7,7 +7,7 @@ const path=require('path');
 const {execFileSync}=require('child_process');
 const {
   ROOT,FORMAL_CSS_HREF,DOCK_RUNTIME_SRC,ORDER,LABELS,DOCK_STYLE_ID,
-  DOCK_SPACER_ID,criticalDockCss,isEligible,materialize,NAV_RAIL_REV,FIRST_PAINT_REV
+  DOCK_SPACER_ID,criticalDockCss,isEligible,materialize,NAV_RAIL_REV,FIRST_PAINT_REV,NAVIGATION_INPUT_REV
 }=require('./materialize-public-shell-first-paint-v1.js');
 const assert=(ok,message)=>{if(!ok)throw new Error(`Public first paint: ${message}`);};
 const read=relative=>fs.readFileSync(path.join(ROOT,relative),'utf8');
@@ -51,10 +51,12 @@ for(const relative of files){
   assert(/\bdefer\b/i.test(dockRuntime[0][0]),`${relative}: menu runtime must not delay parsing`);
   for(const tag of source.match(/<(?:script|link)\b[^>]*(?:site-interaction-semantics-v1\.js|site-visual-authority-r8\.css)[^>]*>/gi)||[]){
     assert(tag.includes(`rail=${NAV_RAIL_REV}`),`${relative}: changed navigation source has stale cache URL`);
+    if(tag.includes('/site-interaction-semantics-v1.js?'))assert(tag.includes(`input=${NAVIGATION_INPUT_REV}`),`${relative}: rail input guard has stale cache URL`);
     cacheCovered++;
   }
   for(const tag of source.match(/<script\b[^>]*(?:site-navigation\.js|site-brand-home-feedback-v1\.js|site-contact-route-v1\.js)[^>]*>/gi)||[]){
     assert(tag.includes(`firstpaint=${FIRST_PAINT_REV}`),`${relative}: shared shell bootstrap has stale cache URL`);
+    if(tag.includes('/site-navigation.js?'))assert(tag.includes(`input=${NAVIGATION_INPUT_REV}`),`${relative}: navigation input guard has stale cache URL`);
   }
 }
 

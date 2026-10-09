@@ -109,9 +109,20 @@
     if(!linkBottom)linkBottom=nr.bottom-parseFloat(w.getComputedStyle(nav).paddingBottom||0);
     rail.style.setProperty('--qily-nav-rail-top',Math.max(0,linkBottom-hr.top+8)+'px');
   }
+  var primaryRailState=new WeakMap();
   function syncRail(nav,rail){
     railGeometry(nav,rail);
     var track=Math.max(0,rail.clientWidth),scrollWidth=Math.max(nav.scrollWidth,nav.clientWidth),maxScroll=Math.max(0,scrollWidth-nav.clientWidth),value=maxScroll>0?(nav.scrollLeft/maxScroll)*100:0;
+    var state=primaryRailState.get(rail);
+    if(state){
+      // Loading final typography can change scrollWidth after an End/drag
+      // choice. Preserve that rail position against the new content width.
+      if(state.maxScroll!==null&&state.maxScroll!==maxScroll&&state.requestedRatio!==null){
+        nav.scrollLeft=state.requestedRatio*maxScroll;
+        value=maxScroll>0?(nav.scrollLeft/maxScroll)*100:0;
+      }
+      state.maxScroll=maxScroll;
+    }
     var thumbWidth=maxScroll>0?Math.max(58,track*(nav.clientWidth/scrollWidth)):track;thumbWidth=Math.min(track,thumbWidth);
     rail.value=String(Math.max(0,Math.min(100,value)));
     rail.style.setProperty('--qily-nav-range-thumb-width',thumbWidth+'px');
@@ -125,15 +136,17 @@
     var previous=header.querySelector('.qily-primary-nav-scroll-rail');if(previous)previous.remove();
     nav.dataset.qilyNavScrollRail='v1.7';
     var rail=d.createElement('input');rail.type='range';rail.className='qily-primary-nav-scroll-rail';rail.min='0';rail.max='100';rail.step='.1';rail.value='0';rail.setAttribute('aria-label','一级导航左右滑动条');rail.setAttribute('aria-controls',nav.id||(nav.id='qilyPrimaryNavigation'));
+    var state={maxScroll:null,requestedRatio:null};primaryRailState.set(rail,state);
     header.appendChild(rail);
     var sync=function(){w.requestAnimationFrame(function(){syncRail(nav,rail);});};
     nav.addEventListener('scroll',sync,{passive:true});
-    rail.addEventListener('input',function(){var maxScroll=Math.max(0,nav.scrollWidth-nav.clientWidth);nav.scrollLeft=(Number(rail.value)||0)*maxScroll/100},{passive:true});
+    rail.addEventListener('input',function(){var maxScroll=Math.max(0,nav.scrollWidth-nav.clientWidth);state.requestedRatio=(Number(rail.value)||0)/100;nav.scrollLeft=state.requestedRatio*maxScroll},{passive:true});
+    ['pointerdown','wheel','keydown'].forEach(function(type){nav.addEventListener(type,function(){state.requestedRatio=null;},{passive:true});});
     rail.addEventListener('change',sync,{passive:true});
     var activePointer=null;
     function setFromPointer(event){
       var rect=rail.getBoundingClientRect(),width=Math.max(1,rect.width),ratio=Math.max(0,Math.min(1,(event.clientX-rect.left)/width)),maxScroll=Math.max(0,nav.scrollWidth-nav.clientWidth);
-      rail.value=String(ratio*100);nav.scrollLeft=ratio*maxScroll;rail.setAttribute('aria-valuetext',String(Math.round(ratio*100))+'%');
+      state.requestedRatio=ratio;rail.value=String(ratio*100);nav.scrollLeft=ratio*maxScroll;rail.setAttribute('aria-valuetext',String(Math.round(ratio*100))+'%');
     }
     rail.addEventListener('pointerdown',function(event){
       if(event.button!==0||event.isPrimary===false||rail.disabled)return;
