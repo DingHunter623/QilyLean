@@ -52,10 +52,13 @@ function materialize(source,relative){
   next=next.replace(/\n?<nav\b[^>]*id=["']floatDock["'][^>]*data-qily-first-paint-dock=["']v1["'][^>]*>[\s\S]*?<\/nav>\n?/gi,'\n');
   next=next.replace(/\n?<div\b[^>]*id=["']qilyDockBottomSpacerV58["'][^>]*>\s*<\/div>\n?/gi,'\n');
   if(/\bid=["']floatDock["']/.test(next))throw new Error(relative+': a non-materialized Dock already exists.');
+  // Regional generators can introduce this owned runtime on their first pass.
+  // Reinsert it at the same head position when another materializer rebuilds its tags.
+  next=next.replace(/\s*<script\b[^>]*data-qily-dock-share-runtime=["']v1["'][^>]*>[\s\S]*?<\/script>\s*/gi,'\n');
   const extraRuntime=/<script\b[^>]*\bsrc=["'][^"']*\/site-dock-share-runtime-v1\.js(?:\?[^"']*)?["'][^>]*>/i.test(next)?'':runtimeTag+'\n';
   next=next.replace(/<\/head\s*>/i,extraRuntime+formalTag+'\n'+styleTag+'\n'+'</head>');
   next=next.replace(/(<body\b[^>]*>)\n?/i,'$1\n'+dockTag+'\n');
-  next=next.replace(/<\/body\s*>/i,spacerTag+'\n</body>');
+  next=next.replace(/\s*<\/body\s*>/i,'\n'+spacerTag+'\n</body>');
   return next;
 }
 
