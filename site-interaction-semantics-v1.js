@@ -110,14 +110,14 @@
     rail.style.setProperty('--qily-nav-rail-top',Math.max(0,linkBottom-hr.top+8)+'px');
   }
   var primaryRailState=new WeakMap();
-  function syncRail(nav,rail){
+  function syncRail(nav,rail,retainRequested){
     railGeometry(nav,rail);
     var track=Math.max(0,rail.clientWidth),scrollWidth=Math.max(nav.scrollWidth,nav.clientWidth),maxScroll=Math.max(0,scrollWidth-nav.clientWidth),value=maxScroll>0?(nav.scrollLeft/maxScroll)*100:0;
     var state=primaryRailState.get(rail);
     if(state){
       // Loading final typography can change scrollWidth after an End/drag
       // choice. Preserve that rail position against the new content width.
-      if(state.maxScroll!==null&&state.maxScroll!==maxScroll&&state.requestedRatio!==null){
+      if(state.requestedRatio!==null&&(retainRequested||(state.maxScroll!==null&&state.maxScroll!==maxScroll))){
         nav.scrollLeft=state.requestedRatio*maxScroll;
         value=maxScroll>0?(nav.scrollLeft/maxScroll)*100:0;
       }
@@ -186,7 +186,7 @@
     },true);
   }
   function installPrimaryNavRails(){d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(function(nav){installPrimaryNavRail(nav);installPrimaryNavDragGuard(nav);});}
-  function syncPrimaryNavRails(){d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(function(nav){var header=nav.closest('header'),rail=header&&header.querySelector('.qily-primary-nav-scroll-rail');if(rail)syncRail(nav,rail);});}
+  function syncPrimaryNavRails(retainRequested){d.querySelectorAll(PRIMARY_NAV_SELECTOR).forEach(function(nav){var header=nav.closest('header'),rail=header&&header.querySelector('.qily-primary-nav-scroll-rail');if(rail)syncRail(nav,rail,retainRequested===true);});}
   if(!w.__qilyPrimaryNavRailResizeV1){w.__qilyPrimaryNavRailResizeV1=true;w.addEventListener('resize',syncPrimaryNavRails,{passive:true});}
 
   function evidenceMarkup(meta,compact){
@@ -243,7 +243,7 @@
     section.dataset.qilyEvidenceLinks='v1';
   }
 
-  function boot(){scan(d);installPrimaryNavRails();injectProjectDetailGrade();injectProjectListGrades();addTrustLinks();setTimeout(syncPrimaryNavRails,30);}
+  function boot(event){var retainRequested=!!(event&&event.type==='qily:shell-ready');scan(d);installPrimaryNavRails();injectProjectDetailGrade();injectProjectListGrades();addTrustLinks();syncPrimaryNavRails(retainRequested);setTimeout(function(){syncPrimaryNavRails(retainRequested);},30);}
   if(d.readyState==='loading')d.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
   d.addEventListener('qily:shell-ready',boot);
   d.addEventListener('qily:softnavigate',boot);
