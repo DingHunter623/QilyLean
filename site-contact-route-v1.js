@@ -68,6 +68,9 @@
 
   function ensureDockRuntime(){
     if(w.__qilyFloatingDockUnifiedV54)return;
+    // A published first-paint owner may still be downloading. Let that exact
+    // runtime finish rather than racing it with a cached legacy fallback.
+    if(d.querySelector('script[data-qily-dock-share-runtime="v1"][src*="/site-dock-share-runtime-v1.js"]'))return;
     var existing=d.getElementById('qilyDockUnifiedRuntimeV54Script');
     if(existing)return;
     ['qilyDockUnifiedRuntimeV53Script','qilyDockUnifiedRuntimeV52Script','qilyDockUnifiedRuntimeV51Script','qilyDockUnifiedRuntimeV5Script','qilyDockUnifiedRuntimeV4Script','qilyDockUnifiedRuntimeV3Script'].forEach(function(id){var legacy=d.getElementById(id);if(legacy)legacy.remove();});

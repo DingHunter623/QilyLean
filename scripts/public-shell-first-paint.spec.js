@@ -53,6 +53,7 @@ async function expectStaticMenuPreserved(page){
   expect(probe.sameNode,'the original static menu survives shared runtime/core loading').toBeTruthy();
   expect(probe.replaced,'the static menu must never be replaced').toBe(false);
   expect(probe.invalidMenus,'loading must never introduce a menu with missing actions').toEqual([]);
+  await expect(page.locator('script[src*="/site-dock-share-runtime-v1.js"]'),'pending first-paint runtime must suppress the legacy fallback loader').toHaveCount(1);
 }
 
 async function expectNavigationRail(page){

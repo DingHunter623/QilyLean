@@ -46,6 +46,7 @@ function materialize(source,relative){
   next=next.replace(/\/site-navigation\.js\?[^"'\s<>]*/g,url=>url.replace(/&firstpaint=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV);
   next=next.replace(/\/site-(?:interaction-semantics-v1\.js|visual-authority-r8\.css)\?[^"'\s<>]*/g,url=>url.replace(/&rail=[^&"'\s<>]*/g,'')+'&rail='+NAV_RAIL_REV);
   next=next.replace(/\/site-brand-home-feedback-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&firstpaint=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV);
+  next=next.replace(/\/site-contact-route-v1\.js\?[^"'\s<>]*/g,url=>url.replace(/&firstpaint=[^&"'\s<>]*/g,'')+'&firstpaint='+FIRST_PAINT_REV);
   // Replace only the nodes owned by this shared first-paint contract.
   next=next.replace(/\n?<link\b[^>]*id=["']qilyViV4Formal["'][^>]*>\n?/gi,'\n');
   next=next.replace(/\n?<style\b[^>]*id=["']qilyDockUnifiedV58Style["'][^>]*>[\s\S]*?<\/style>\n?/gi,'\n');
