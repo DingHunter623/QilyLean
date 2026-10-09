@@ -11,7 +11,7 @@
   w.__qilyBrandHomeFeedbackV1=true;
 
   var VI_CSS='/site-vi-standard-v4.css?v=20261006-vi-v4-hero-label-regular-gold-v4&hero=20261007-plain-label-v3&firstpaint=20261008-shell-v1';
-  var VI_JS='/site-vi-runtime-v4.js?v=20261006-vi-v4-nav-rail-parity-v1';
+  var VI_JS='/site-vi-runtime-v4.js?v=20261006-vi-v4-nav-rail-parity-v1&dock=20261009-preserve-focus-v1';
 
   function ensureFormalVi(){
     if(d.head&&!d.getElementById('qilyViV4Formal')){

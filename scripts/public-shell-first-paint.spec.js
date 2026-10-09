@@ -98,7 +98,7 @@ async function paintState(page,labelSelector){
       actions:dock?[...dock.querySelectorAll('[data-action]')].filter(visible).map(element=>element.getAttribute('data-action')):[],
       spacerHeight:spacer?spacer.getBoundingClientRect().height:0,
       bodyPadding:parseFloat(getComputedStyle(document.body).paddingBottom)||0,
-      viewport:{width:window.innerWidth,contentWidth:document.documentElement.clientWidth,height:window.innerHeight},
+      viewport:{width:window.innerWidth,contentWidth:Math.min(document.documentElement.clientWidth,document.body.clientWidth),height:window.innerHeight},
       pageOverflow:Math.max(document.documentElement.scrollWidth,document.body.scrollWidth)-window.innerWidth
     };
   },labelSelector);
@@ -163,9 +163,13 @@ for(const [name,url,labelSelector] of pages){
           const hydrated=await paintState(page,labelSelector);
           expectPaint(hydrated,`${name} ${device} JavaScript enabled`);
           expect(hydrated.dock.height,`${name} ${device}: loading runtime must not resize the menu`).toBeCloseTo(first.dock.height,0);
+          const focusedAction=page.locator('#floatDock [data-action="home"]');
+          await focusedAction.focus();
           releaseCore();
           await page.waitForFunction(()=>window.__qilyStaticMenuProbe&&window.__qilyStaticMenuProbe.coreReady===true);
           await expectStaticMenuPreserved(page);
+          await expect(focusedAction,'delayed initialization keeps the existing keyboard focus').toBeFocused();
+          await expect(focusedAction).toHaveCSS('background-color','rgb(255, 227, 155)');
           const afterCore=await paintState(page,labelSelector);
           expectPaint(afterCore,`${name} ${device} delayed navigation core`);
           expect(afterCore.dock.height,`${name} ${device}: delayed navigation core must not resize the menu`).toBeCloseTo(first.dock.height,0);

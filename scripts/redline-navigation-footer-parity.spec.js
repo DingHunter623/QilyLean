@@ -40,12 +40,16 @@ test('China desktop footer distributes controls and its site name returns home',
 });
 
 for(const route of bridgeRoutes){
-  test(`reference footer is visible, left aligned and filing-free: ${route}`,async({page})=>{
+  test(`reference footer is visible, left aligned, top/share-only and filing-free: ${route}`,async({page})=>{
     await page.setViewportSize({width:1600,height:1000});
     await page.goto(intBase+route,{waitUntil:'domcontentloaded'});
     const footer=page.locator('.cn-bridge-footer');
     await expect(footer).toBeVisible();
     await expect(page.locator('#floatDock')).toHaveCount(0);
+    const home=page.locator('header a[aria-label="返回国际站"]');
+    await expect(home).toHaveCount(1);
+    await expect(home).toHaveAttribute('href','https://qilylean.com/');
+    await expect(home).toHaveAttribute('title','返回国际站');
     for(const action of ['top','share']){
       await expect(footer.locator(`[data-action="${action}"]`)).toHaveCSS('color','rgb(255, 227, 155)');
       await expect(footer.locator(`[data-action="${action}"]`)).toHaveCSS('border-top-color','rgba(255, 227, 155, 0.52)');
@@ -54,17 +58,17 @@ for(const route of bridgeRoutes){
     await footer.locator('[data-action="top"]').click({trial:true});
     await footer.locator('[data-action="share"]').click({trial:true});
     await expect(footer.locator('button')).toHaveText(['顶部','分享当前']);
-    await expect(footer.locator('a')).toHaveCount(1);
-    await expect(footer.locator('a')).toHaveAttribute('href','https://qilylean.cn/');
+    await expect(footer.locator('a')).toHaveCount(0);
+    await expect(footer.locator('.cn-bridge-footer-brand,.cn-bridge-footer-records')).toHaveCount(0);
+    await expect(footer).not.toContainText(/湘ICP备|湘公网安备/);
     const g=await footer.evaluate(el=>{
       const inner=el.querySelector('.cn-bridge-footer-inner').getBoundingClientRect();
-      const home=el.querySelector('a').getBoundingClientRect();
       const buttons=[...el.querySelectorAll('button')].map(e=>e.getBoundingClientRect());
-      return {left:home.left-inner.left,blank:inner.right-buttons[1].right,gaps:[buttons[0].left-home.right,buttons[1].left-buttons[0].right],buttonWidths:buttons.map(r=>r.width),height:el.getBoundingClientRect().height};
+      return {left:buttons[0].left-inner.left,blank:inner.right-buttons[1].right,gap:buttons[1].left-buttons[0].right,buttonWidths:buttons.map(r=>r.width),height:el.getBoundingClientRect().height};
     });
     expect(Math.abs(g.left)).toBeLessThanOrEqual(1);
     expect(g.blank).toBeGreaterThan(500);
-    expect(g.gaps[0]).toBeCloseTo(g.gaps[1],0);
+    expect(g.gap).toBeCloseTo(12,0);
     expect(g.buttonWidths).toHaveLength(2);
     expect(Math.abs(g.buttonWidths[0]-g.buttonWidths[1])).toBeLessThanOrEqual(1);
     expect(g.height).toBeGreaterThanOrEqual(55);
@@ -212,14 +216,23 @@ for(const width of [320,360,390,1041,1100,1600]){
       await expect.poll(()=>footer.evaluate(el=>parseFloat(getComputedStyle(document.body).paddingBottom)-el.getBoundingClientRect().height)).toBeGreaterThanOrEqual(0);
       const g=await footer.evaluate(el=>{
         const controls=[...el.querySelectorAll('a,button')].map(e=>{const r=e.getBoundingClientRect();return{left:r.left,right:r.right,width:r.width,overflow:e.scrollWidth-e.clientWidth};});
-        return{viewport:innerWidth,controls,buttons:[...el.querySelectorAll('button')].map(e=>e.getBoundingClientRect().width)};
+        const buttons=[...el.querySelectorAll('button')].map(e=>e.getBoundingClientRect());
+        return{viewport:innerWidth,controls,buttons:buttons.map(r=>r.width),buttonTops:buttons.map(r=>r.top),homeTop:el.querySelector('.footer-home').getBoundingClientRect().top};
       });
       for(const c of g.controls){
         expect(c.left).toBeGreaterThanOrEqual(0);
         expect(c.right).toBeLessThanOrEqual(g.viewport);
         expect(c.overflow).toBeLessThanOrEqual(1);
       }
-      expect(g.buttons[0]).toBeCloseTo(g.buttons[1],0);
+      expect(g.buttons).toHaveLength(2);
+      if(width<=760){
+        // #576 keeps all three controls on the first mobile row. Intrinsic
+        // widths fit their 17px labels, so 分享当前 is two glyphs wider than 顶部.
+        expect(g.buttons[1]-g.buttons[0]).toBeCloseTo(34,0);
+        for(const top of g.buttonTops)expect(Math.abs(top-g.homeTop),'mobile controls share a row, including the 1px hover lift').toBeLessThanOrEqual(1.5);
+      }else{
+        expect(g.buttons[0]).toBeCloseTo(g.buttons[1],0);
+      }
       await page.evaluate(()=>window.scrollTo(0,document.documentElement.scrollHeight));
       const link=page.locator('main a[data-qily-external="international"]');
       await link.click({trial:true});
