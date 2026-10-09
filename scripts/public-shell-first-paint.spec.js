@@ -92,6 +92,13 @@ async function paintState(page,labelSelector){
     const visible=element=>{const style=getComputedStyle(element),box=element.getBoundingClientRect();return style.display!=='none'&&style.visibility!=='hidden'&&box.width>0&&box.height>0;};
     return {
       label:labelStyle&&{color:labelStyle.color,fill:labelStyle.getPropertyValue('-webkit-text-fill-color'),weight:labelStyle.fontWeight,borders:[labelStyle.borderTopWidth,labelStyle.borderRightWidth,labelStyle.borderBottomWidth,labelStyle.borderLeftWidth],radius:labelStyle.borderRadius},
+      decorativeOrbits:[...document.querySelectorAll('.hero,.qily-home-conversion-hero,.daily-hero')].flatMap(hero=>['::before','::after'].flatMap(pseudo=>{
+        const style=getComputedStyle(hero,pseudo);
+        const drawn=style.content!=='none'&&style.content!=='normal'&&style.display!=='none';
+        const circle=parseFloat(style.width)>=180&&parseFloat(style.height)>=180&&style.borderRadius==='50%';
+        const outlined=parseFloat(style.borderTopWidth)>0&&style.borderTopStyle!=='none';
+        return drawn&&circle&&outlined?[hero.className+pseudo]:[];
+      })),
       dock:dockStyle&&{position:dockStyle.position,color:dockStyle.backgroundColor,border:dockStyle.borderTopWidth,borderColor:dockStyle.borderTopColor,x:rect.x,width:rect.width,height:rect.height,bottom:rect.bottom,visible:visible(dock)},
       docks:document.querySelectorAll('#floatDock').length,
       styles:document.querySelectorAll('#qilyDockUnifiedV58Style').length,
@@ -112,6 +119,7 @@ function expectPaint(state,name){
   expect(state.label.weight).toBe('400');
   expect(state.label.borders).toEqual(['0px','0px','0px','0px']);
   expect(state.label.radius).toBe('0px');
+  expect(state.decorativeOrbits,`${name}: no decorative circle appears before a runtime hides it`).toEqual([]);
   expect(state.docks).toBe(1);
   expect(state.styles).toBe(1);
   expect(state.spacers).toBe(1);
