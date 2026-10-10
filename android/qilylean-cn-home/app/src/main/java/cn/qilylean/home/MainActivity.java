@@ -132,8 +132,18 @@ public class MainActivity extends Activity {
         content.addView(logo, new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, dp(108)));
 
-        TextView tagline = text("精益生产 · 工程改善 · 数智工厂", 15, GOLD, Gravity.CENTER);
-        tagline.setPadding(0, dp(4), 0, dp(14));
+        TextView brand = text("QilyLean｜启力精益", 22, WHITE, Gravity.CENTER);
+        brand.setTypeface(Typeface.DEFAULT_BOLD);
+        brand.setPadding(0, dp(2), 0, dp(4));
+        content.addView(brand);
+
+        TextView appName = text("精益制造经验分享", 16, GOLD, Gravity.CENTER);
+        appName.setTypeface(Typeface.DEFAULT_BOLD);
+        appName.setPadding(0, 0, 0, dp(4));
+        content.addView(appName);
+
+        TextView tagline = text("精益生产 · 工业工程 · 标准化 · 数智工厂", 14, MUTED, Gravity.CENTER);
+        tagline.setPadding(0, 0, 0, dp(14));
         content.addView(tagline);
 
         clockView = text("", 44, WHITE, Gravity.CENTER);
@@ -154,14 +164,14 @@ public class MainActivity extends Activity {
         clockHandler.removeCallbacks(clockTask);
         clockHandler.post(clockTask);
 
-        TextView version = pill("QilyLean｜启力精益 v1.0.0 · 中国站桌面");
+        TextView version = pill("精益制造经验分享 v1.0.0 · QilyLean｜启力精益");
         LinearLayout.LayoutParams versionLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         versionLp.setMargins(0, dp(14), 0, dp(20));
         content.addView(version, versionLp);
 
-        addSectionTitle(content, "中国站首页 / 总入口");
+        addSectionTitle(content, "中国站 / 总入口");
         addCardRow(content,
                 webCard("中国站首页", "QilyLean｜启力精益中国站总入口", "https://qilylean.cn/"),
                 webCard("精益制造", "价值、流动、拉动、节拍与持续改善", "https://qilylean.cn/lean/"));
@@ -213,12 +223,15 @@ public class MainActivity extends Activity {
                     @Override public void onClick(View v) { openSettings(Settings.ACTION_INPUT_METHOD_SETTINGS); }
                 }));
 
-        addSectionTitle(content, "数字工具直达");
+        addSectionTitle(content, "制造工具 / 功能入口");
         addCardRow(content,
-                card("Times26001", "工业工程时间研究、IE现场测时与提醒", new View.OnClickListener() {
+                card("Times26001", "时间管理、IE分段测时、闹钟与倒计时", new View.OnClickListener() {
                     @Override public void onClick(View v) { openTimeManager(); }
                 }),
-                webCard("Times26001说明", "工业工程时间研究与IE现场测时工具", "https://qilylean.cn/app-support/"));
+                webCard("IE / 精益工具", "标准工时、UPPH、ECRS与改善方法", "https://qilylean.cn/ie/"));
+        addCardRow(content,
+                webCard("PMC / 排产", "订单、产能、主数据与有限产能逻辑", "https://qilylean.cn/knowledge/capacity-digital-thread/"),
+                webCard("OEE / UPPH / 线平衡", "效率、瓶颈与线平衡分析入口", "https://qilylean.cn/knowledge/line-balance-bottleneck/"));
 
         addSectionTitle(content, "系统入口");
         addCardRow(content,
@@ -248,7 +261,7 @@ public class MainActivity extends Activity {
                 webCard("联系邮箱", "admin@qilylean.com", "mailto:admin@qilylean.com"));
 
         TextView footer = text(
-                "QilyLean｜启力精益中国站专属桌面。\n免Root，不读取、不展示手机品牌或型号；可随时切回系统桌面。",
+                "精益制造经验分享｜QilyLean｜启力精益\n中国站专属免Root桌面，不读取、不展示手机品牌或型号；可随时切回系统桌面。",
                 14, MUTED, Gravity.CENTER);
         footer.setLineSpacing(dp(4), 1.08f);
         footer.setPadding(dp(8), 0, dp(8), dp(20));
@@ -320,7 +333,7 @@ public class MainActivity extends Activity {
         root.setBackgroundColor(BG);
         root.setPadding(dp(16), dp(18), dp(16), dp(10));
 
-        TextView back = text("‹  返回 QilyLean｜启力精益", 18, GOLD,
+        TextView back = text("‹  返回 精益制造经验分享", 18, GOLD,
                 Gravity.LEFT | Gravity.CENTER_VERTICAL);
         back.setTypeface(Typeface.DEFAULT_BOLD);
         back.setPadding(dp(8), dp(10), dp(8), dp(16));
@@ -474,8 +487,8 @@ public class MainActivity extends Activity {
             }
         }
 
-        Toast.makeText(this, "未检测到Times26001，正在打开官网安装与使用页", Toast.LENGTH_SHORT).show();
-        openUrl("https://qilylean.com/tools/times26001");
+        Toast.makeText(this, "未检测到Times26001，正在打开中国站技术支持页", Toast.LENGTH_SHORT).show();
+        openUrl("https://qilylean.cn/app-support/");
     }
 
     private void openUrl(String url) {
