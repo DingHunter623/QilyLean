@@ -175,6 +175,11 @@ jobs:
           test -f cn-site/scripts/activate-public-http.sh
           test -f cn-site/nginx/qilylean.cn.conf
           test -f cn-site/knowledge/index.html
+          test -f cn-site/archive/content-catalog.json
+          grep -Fq 'QILY-CN-KNOWLEDGE-ASSET-SUMMARY' cn-site/index.html
+          grep -Fq 'QILY-CN-KNOWLEDGE-ASSET-CATALOG' cn-site/knowledge/index.html
+          grep -Fq 'data-qily-knowledge-discovery="v1"' cn-site/briefs/index.html
+          grep -Fq '完整知识库' cn-site/archive/index.html
           test -f cn-site/lean/index.html
           test -f cn-site/ie/index.html
           test -f cn-site/standardization/index.html
@@ -780,6 +785,46 @@ jobs:
                   raise SystemExit(f'Production international links page missing full-brand context: {marker}')
 
           print('PASS: production closure verified on qilylean.cn with internal briefs/resources bridge navigation.')
+          PY
+
+      - name: Verify CN knowledge discovery closure
+        shell: bash
+        env:
+          VERIFY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, re, time, urllib.request
+          sha=os.environ["VERIFY_SHA"]
+          catalog=json.loads(pathlib.Path("cn-site/archive/content-catalog.json").read_text(encoding="utf-8"))
+          total=int(catalog["generated"]); briefs=int(catalog["briefs"])
+          def fetch(path):
+              url="https://qilylean.cn"+path+("?closure="+sha if "?" not in path else "&closure="+sha)
+              err=None
+              for _ in range(12):
+                  try:
+                      req=urllib.request.Request(url,headers={"User-Agent":"QilyLean-Knowledge-Discovery/1.0","Cache-Control":"no-cache"})
+                      with urllib.request.urlopen(req,timeout=20) as resp:
+                          return resp.read().decode("utf-8")
+                  except Exception as exc:
+                      err=exc; time.sleep(5)
+              raise SystemExit(f"Failed to fetch {path}: {err}")
+          home=fetch("/")
+          knowledge=fetch("/knowledge/")
+          brief_page=fetch("/briefs/")
+          archive=fetch("/archive/")
+          manufacturing=fetch("/archive/categories/manufacturing-engineering-ie/")
+          checks=[
+              ('data-qily-generated-total="'+str(total)+'"',home,"homepage total"),
+              ("QILY-CN-KNOWLEDGE-ASSET-CATALOG",knowledge,"knowledge catalog"),
+              ('data-qily-brief-total="'+str(briefs)+'"',brief_page,"brief total"),
+              ('data-qily-generated-total="'+str(total)+'"',archive,"archive total"),
+              ("制造工程与 IE",manufacturing,"manufacturing category"),
+          ]
+          for needle,body,label in checks:
+              if needle not in body:
+                  raise SystemExit(f"CN knowledge discovery closure failed: {label} missing {needle}")
+          print(f"PASS: CN knowledge discovery is live: {total} pages / {briefs} briefs.")
           PY
 
       - name: Verify local practice award evidence is public

@@ -28,10 +28,12 @@ echo "CN practice award asset materialized locally."
 
 # Materialize the China-site local copy of eligible international public content.
 python3 "$CN_ROOT/scripts/materialize-public-content-mirror.py"
+python3 "$CN_ROOT/scripts/build-content-discovery.py"
 python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
 test -f "$CN_ROOT/archive/index.html"
 test -f "$CN_ROOT/briefs/archive/index.html"
 test -f "$CN_ROOT/archive/content-manifest.json"
+test -f "$CN_ROOT/archive/content-catalog.json"
 test -f "$CN_ROOT/assets/content-mirror.css"
 
 python3 - "$CN_ROOT/archive/content-manifest.json" <<'PY'
@@ -45,4 +47,19 @@ if total < 400:
 if briefs < 350:
     raise SystemExit(f'CN selected-brief mirror unexpectedly small: {briefs}')
 print(f'CN full public-content mirror materialized: {total} pages / {briefs} selected briefs.')
+PY
+
+
+python3 - "$CN_ROOT/archive/content-catalog.json" "$CN_ROOT/index.html" "$CN_ROOT/knowledge/index.html" "$CN_ROOT/briefs/index.html" <<'PY'
+import json, pathlib, sys
+catalog=json.loads(pathlib.Path(sys.argv[1]).read_text(encoding='utf-8'))
+home=pathlib.Path(sys.argv[2]).read_text(encoding='utf-8')
+knowledge=pathlib.Path(sys.argv[3]).read_text(encoding='utf-8')
+briefs=pathlib.Path(sys.argv[4]).read_text(encoding='utf-8')
+assert catalog["generated"] >= 400
+assert catalog["briefs"] >= 350
+assert "QILY-CN-KNOWLEDGE-ASSET-SUMMARY" in home
+assert "QILY-CN-KNOWLEDGE-ASSET-CATALOG" in knowledge
+assert 'data-qily-knowledge-discovery="v1"' in briefs
+print(f'CN front discovery verified: {catalog["generated"]} pages / {catalog["briefs"]} briefs.')
 PY
