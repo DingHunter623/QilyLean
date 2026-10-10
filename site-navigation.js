@@ -123,7 +123,17 @@
   function schedulePrimaryNavigationReveal(){
     [0,80,250,700].forEach(function(delay){w.setTimeout(revealActivePrimaryNavigation,delay);});
   }
-  function reconcileNavigation(){ensureSearchAuthorityNavigation();normalizeResourceCollaborationLabel();schedulePrimaryNavigationReveal();}
+  // Primary-navigation text is NEVER underlined: the CN-approved active state
+  // uses its existing teal fill and gold border as the sole current indicator.
+  // Explicit inline-important stops legacy all-link CSS and cached stylesheet
+  // cascade order from restoring a gold underline beneath the current label.
+  function enforcePrimaryNavigationNoUnderline(){
+    d.querySelectorAll('header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]').forEach(function(link){
+      link.style.setProperty('text-decoration','none','important');
+      link.style.setProperty('text-decoration-line','none','important');
+    });
+  }
+  function reconcileNavigation(){ensureSearchAuthorityNavigation();normalizeResourceCollaborationLabel();enforcePrimaryNavigationNoUnderline();schedulePrimaryNavigationReveal();}
   function needsLegacyRuntime(){var p=currentPath();return p.indexOf('/cooperation/')===0||p.indexOf('/links/')===0;}
   function installCapabilitySelfHeal(){
     if(currentPath()!=='/capabilities/')return;
