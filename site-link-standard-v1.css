@@ -105,7 +105,7 @@ html body :where(
   text-decoration-color: var(--qily-link-gold) !important;
 }
 
-/* 主导航：常态深色文字清晰可见；悬停／聚焦时深青底＋白字＋白色下横线。 */
+/* 主导航：底色与文字标示交互，导航文字不使用下划线。正文普通链接依旧保留下划线。 */
 html body .qily-site-header .site-nav a[href],
 html body .qily-site-header .qily-global-nav a[href],
 html body .qily-global-header .site-nav a[href],
@@ -114,7 +114,7 @@ html body header.topbar .nav a[href],
 html body header.top .nav a[href] {
   color: #182420 !important;
   background-color: transparent !important;
-  text-decoration-line: underline !important;
+  text-decoration-line: none !important;
   text-decoration-color: var(--qily-link-ink) !important;
   text-decoration-thickness: 1.7px !important;
   text-underline-offset: .24em !important;
