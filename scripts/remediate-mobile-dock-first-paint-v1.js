@@ -80,7 +80,17 @@ function patchPersistentDockReferences(){
   return changed;
 }
 function patchHtmlCacheRefs(){
-  let changed=0;for(const rel of trackedHtml())if(patchFile(rel,html=>html.replace(/\/site-dock-share-runtime-v1\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-dock-share-runtime-v1.js?v=$1&patch=${DOCK_PATCH}`).replace(/\/site-navigation\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-navigation.js?v=${NAV_VERSION}&patch=${NAV_PATCH}&nav=${NAV_VISUAL_REV}`)))changed++;return changed;
+  let changed=0;
+  for(const rel of trackedHtml())if(patchFile(rel,html=>html
+    .replace(/\/site-dock-share-runtime-v1\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-dock-share-runtime-v1.js?v=$1&patch=${DOCK_PATCH}`)
+    .replace(/\/site-navigation\.js\?[^"'\s>]+/g,url=>{
+      // Updating the visual revision must retain the first-paint/input
+      // revisions owned by the shared-shell materializer.
+      const params=new URLSearchParams(url.slice(url.indexOf('?')+1));
+      params.set('v',NAV_VERSION);params.set('patch',NAV_PATCH);params.set('nav',NAV_VISUAL_REV);
+      return '/site-navigation.js?'+params.toString();
+    })))changed++;
+  return changed;
 }
 
 function validatePrimaryNavigation(){
