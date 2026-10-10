@@ -42,7 +42,7 @@ def recover_relative_media(markup:str, path:Path)->str:
     return re.sub(r"""((?:\bsrc|\bposter)=["'])([^"']+)(["'])""", replace, markup, flags=re.I)
 
 def main()->None:
-    eligible=[s for s in source.SOURCES if not source.is_date_brief(s.path)]
+    eligible=[s for s in source.SOURCES if not source.is_date_brief(s.path) and s.out.is_file()]
     if len(eligible)<40:raise SystemExit("Non-brief mirror inventory unexpectedly small")
     evidence=[]
     for page in eligible:
