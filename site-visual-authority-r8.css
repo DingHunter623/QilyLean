@@ -34,7 +34,8 @@
   --qily-r8-h3:clamp(22px,1.55vw,27px);
   --qily-r8-body:18.5px;
   --qily-r8-lead:clamp(20px,1.3vw,23px);
-  --qily-r8-note:16px;
+  /* 2026-10-10 | lift the smallest common descriptive type one step (16 -> 17px). */
+  --qily-r8-note:17px;
   --qily-r8-data:17px;
   --qily-r8-nav:20px;
 
