@@ -17,6 +17,9 @@ if ! sudo test -f "$CERT_DIR/fullchain.pem" || ! sudo test -f "$CERT_DIR/privkey
 fi
 
 sudo install -m 0644 "$CONF_SRC" "$CONF_DST"
+sudo mkdir -p /var/cache/nginx/qilylean-media
+sudo chown -R www-data:www-data /var/cache/nginx/qilylean-media
+sudo chmod 0755 /var/cache/nginx/qilylean-media
 
 # This server is dedicated to the QilyLean CN site. Remove legacy QilyLean listeners
 # (including the old pre-production/public symlinks and Certbot-modified site file)
