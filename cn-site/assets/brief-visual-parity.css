@@ -1,0 +1,31 @@
+/* QILY-CN-BRIEF-VISUAL-PARITY-V1 | 2026-10-11
+ * Late China-only guard for the international curated-brief semantic layout.
+ * The source's original cards, flowcharts, formulas, headings and responsive
+ * visual structures are retained. CN navigation/footer/legal remain CN-owned.
+ */
+body[data-qily-brief-parity="v1"]{--qily-forest:#0f4b5a;--qily-deep:#073c47;--qily-teal:#178b94;--qily-paper:#eef7f5;--qily-ink:#182420;--qily-line:#d5e4e3;--qily-gold:#ffe39b}
+body[data-qily-brief-parity="v1"] main.qily-cn-brief-parity,
+body[data-qily-brief-parity="v1"] main[data-qily-knowledge-brief]{width:100%;max-width:100%;margin:0;padding:0;box-sizing:border-box}
+body[data-qily-brief-parity="v1"] main :is(.module-inner,.daily-inner){width:min(1180px,calc(100% - 30px));max-width:1180px;min-width:0;margin-inline:auto;box-sizing:border-box}
+body[data-qily-brief-parity="v1"] main .module-hero{padding:36px clamp(18px,4vw,58px);color:#fff;background:linear-gradient(125deg,#0f4b5a,#177f87)}
+body[data-qily-brief-parity="v1"] main .module-hero h1{margin:8px 0;line-height:1.14}
+body[data-qily-brief-parity="v1"] main .module-eyebrow{color:#ffe39b;font-size:18px;font-weight:400}
+body[data-qily-brief-parity="v1"] main .module-lead{margin:0;color:#e8f6f3;line-height:1.7}
+body[data-qily-brief-parity="v1"] main .module-section{padding:clamp(42px,6vw,78px) clamp(18px,4vw,58px);background:#fff;border-bottom:1px solid #d5e4e3;scroll-margin-top:84px}
+body[data-qily-brief-parity="v1"] main .module-section.alt{background:#eef5f2}
+body[data-qily-brief-parity="v1"] main .module-heading{max-width:none;margin-bottom:28px}
+body[data-qily-brief-parity="v1"] main .module-heading h2{color:#0f4b5a;line-height:1.2}
+body[data-qily-brief-parity="v1"] main .daily-hero{padding:clamp(34px,5vw,62px) clamp(18px,4vw,58px);color:#fff;background:linear-gradient(125deg,#0f4b5a,#177f87)}
+body[data-qily-brief-parity="v1"] main .daily-single-section{padding:clamp(38px,6vw,72px) clamp(18px,4vw,58px);background:#eef7f5}
+body[data-qily-brief-parity="v1"] main :is(img,svg){max-width:100%;height:auto}
+body[data-qily-brief-parity="v1"] main :is(.table-scroll,.matrix-scroll,.data-table-scroll,.load-table-wrap){max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+body[data-qily-brief-parity="v1"] main :is(.formula-grid,.plan-chain,.resource-map,.brief-one-point-grid,.owner-grid,.brief-learning-grid)>*{min-width:0}
+body[data-qily-brief-parity="v1"] main :is(.plan-chain,.resource-map,.formula-grid,.net-demand-visual,.engineering-flow){max-width:100%;overflow-x:auto}
+body[data-qily-brief-parity="v1"] main a{overflow-wrap:anywhere}
+body[data-qily-brief-parity="v1"] .site-header,body[data-qily-brief-parity="v1"] .footer{font-family:inherit}
+@media(max-width:760px){
+body[data-qily-brief-parity="v1"] main .module-section{padding:30px 15px}
+body[data-qily-brief-parity="v1"] main :is(.module-inner,.daily-inner){width:100%;max-width:100%}
+body[data-qily-brief-parity="v1"] main :is(.plan-chain,.resource-map){flex-wrap:wrap}
+body[data-qily-brief-parity="v1"] main :is(.plan-chain,.resource-map)>div{flex:1 1 43%}
+}

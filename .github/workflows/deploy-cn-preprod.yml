@@ -177,6 +177,10 @@ jobs:
           test -f cn-site/nginx/qilylean.cn.conf
           test -f cn-site/knowledge/index.html
           test -f cn-site/archive/content-catalog.json
+          test -f cn-site/archive/brief-visual-parity.json
+          test -f cn-site/assets/brief-visual-parity.css
+          grep -Fq 'data-qily-brief-parity="v1"' cn-site/briefs/archive/2026-09-28/index.html
+          grep -Fq 'data-qily-brief-parity="v1"' cn-site/briefs/archive/2020-01-09/index.html
           grep -Fq 'QILY-CN-KNOWLEDGE-ASSET-SUMMARY' cn-site/index.html
           grep -Fq 'QILY-CN-KNOWLEDGE-ASSET-CATALOG' cn-site/knowledge/index.html
           grep -Fq 'data-qily-knowledge-discovery="v1"' cn-site/briefs/index.html

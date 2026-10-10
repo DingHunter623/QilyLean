@@ -28,11 +28,13 @@ echo "CN practice award asset materialized locally."
 
 # Materialize the China-site local copy of eligible international public content.
 python3 "$CN_ROOT/scripts/materialize-public-content-mirror.py"
+python3 "$CN_ROOT/scripts/materialize-brief-visual-parity.py"
 python3 "$CN_ROOT/scripts/build-content-discovery.py"
 python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
 test -f "$CN_ROOT/archive/index.html"
 test -f "$CN_ROOT/briefs/archive/index.html"
 test -f "$CN_ROOT/archive/content-manifest.json"
+test -f "$CN_ROOT/archive/brief-visual-parity.json"
 test -f "$CN_ROOT/archive/content-catalog.json"
 test -f "$CN_ROOT/assets/content-mirror.css"
 
