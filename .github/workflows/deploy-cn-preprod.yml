@@ -178,6 +178,9 @@ jobs:
           test -f cn-site/knowledge/index.html
           test -f cn-site/archive/content-catalog.json
           test -f cn-site/archive/brief-visual-parity.json
+          test -f cn-site/archive/nonbrief-visual-parity.json
+          test -f cn-site/assets/nonbrief-visual-parity.css
+          grep -Fq 'data-qily-original-visual="v1"' cn-site/archive/practice/mold-warehouse/index.html
           test -f cn-site/assets/brief-visual-parity.css
           grep -Fq 'data-qily-brief-parity="v1"' cn-site/briefs/archive/2026-09-28/index.html
           grep -Fq 'data-qily-brief-parity="v1"' cn-site/briefs/archive/2020-01-09/index.html
