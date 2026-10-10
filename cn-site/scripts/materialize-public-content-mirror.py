@@ -10,6 +10,11 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlparse
 
+try:
+    from PIL import Image
+except ImportError:
+    Image = None
+
 ROOT = Path(__file__).resolve().parents[2]
 CN = ROOT / "cn-site"
 
@@ -312,6 +317,25 @@ def materialize_image(src: str) -> str:
     source = ROOT / rel
     if not source.is_file():
         return ""
+
+    # The international site contains many multi-megabyte originals. Re-using those
+    # byte-for-byte made the CN release exceed 100 MB and unreliable over the mainland
+    # deployment route. Preserve the visual content, but materialize a web-optimized
+    # local copy for the China site.
+    if source.stat().st_size > 256 * 1024 and ext != ".gif":
+        if Image is None:
+            raise RuntimeError("Pillow is required to optimize CN mirror images")
+        rel_path = Path(rel)
+        optimized_rel = Path("assets/mirror-media") / rel_path.with_suffix(".webp")
+        dest = CN / optimized_rel
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        if not dest.exists() or source.stat().st_mtime_ns > dest.stat().st_mtime_ns:
+            with Image.open(source) as img:
+                img = img.convert("RGB")
+                img.thumbnail((1400, 1800), Image.Resampling.LANCZOS)
+                img.save(dest, "WEBP", quality=72, method=6, optimize=True)
+        return "/" + optimized_rel.as_posix()
+
     dest = CN / rel
     dest.parent.mkdir(parents=True, exist_ok=True)
     if not dest.exists() or source.stat().st_mtime_ns > dest.stat().st_mtime_ns:
