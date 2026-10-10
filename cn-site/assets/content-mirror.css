@@ -1,0 +1,17 @@
+/* QilyLean CN full-content mirror | 2026-10-10 */
+.mirror-shell{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:34px;align-items:start}
+.mirror-article{min-width:0;overflow-wrap:anywhere}
+.mirror-article>h1:first-child{display:none}
+.mirror-article img{display:block;max-width:100%;height:auto;margin:18px auto;border-radius:10px}
+.mirror-article figure{margin:22px 0}
+.mirror-article figcaption{margin-top:8px;color:var(--qily-muted);font-size:14px;text-align:center}
+.mirror-article table{width:100%;border-collapse:collapse;margin:22px 0;background:#fff}
+.mirror-article th,.mirror-article td{border:1px solid var(--qily-line);padding:10px 12px;text-align:left;vertical-align:top}
+.mirror-article th{background:#eef7f5;color:var(--qily-deep)}
+.mirror-article pre{max-width:100%;overflow:auto;padding:16px;border:1px solid var(--qily-line);background:#f7fbfa}
+.mirror-article code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.mirror-article blockquote{margin:20px 0;padding:14px 18px;border-left:4px solid var(--qily-gold);background:#fffaf0}
+.mirror-article a{color:var(--qily-deep);text-underline-offset:3px}
+.mirror-meta p{margin:0 0 12px;color:var(--qily-muted);font-size:14px}
+.mirror-index{grid-template-columns:1fr}
+@media(max-width:980px){.mirror-shell{grid-template-columns:1fr}.mirror-meta{position:static}}
