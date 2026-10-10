@@ -139,6 +139,10 @@
     var state={maxScroll:null,requestedRatio:null};primaryRailState.set(rail,state);
     header.appendChild(rail);
     var sync=function(){w.requestAnimationFrame(function(){syncRail(nav,rail);});};
+    // Link typography can change scrollWidth without resizing the nav box.
+    // Restore the selected ratio after layout, while ordinary scroll updates
+    // remain observational so native gestures and smooth scrolling can finish.
+    var layoutSync=function(){w.requestAnimationFrame(function(){syncRail(nav,rail,true);});};
     nav.addEventListener('scroll',sync,{passive:true});
     rail.addEventListener('input',function(){var maxScroll=Math.max(0,nav.scrollWidth-nav.clientWidth);state.requestedRatio=(Number(rail.value)||0)/100;nav.scrollLeft=state.requestedRatio*maxScroll},{passive:true});
     ['pointerdown','wheel','keydown'].forEach(function(type){nav.addEventListener(type,function(){state.requestedRatio=null;},{passive:true});});
@@ -155,7 +159,7 @@
     rail.addEventListener('pointermove',function(event){if(activePointer!==event.pointerId)return;setFromPointer(event);event.preventDefault();event.stopPropagation();},{passive:false});
     function finishPointer(event){if(activePointer!==event.pointerId)return;try{rail.releasePointerCapture(activePointer);}catch(error){}activePointer=null;sync();}
     rail.addEventListener('pointerup',finishPointer);rail.addEventListener('pointercancel',finishPointer);
-    if(w.ResizeObserver){var observer=new w.ResizeObserver(sync);observer.observe(header);observer.observe(nav);}
+    if(w.ResizeObserver){var observer=new w.ResizeObserver(layoutSync);observer.observe(header);observer.observe(nav);nav.querySelectorAll('a[href]').forEach(function(link){observer.observe(link,{box:'border-box'});});}
     sync();setTimeout(sync,120);setTimeout(sync,700);
   }
   function installPrimaryNavDragGuard(nav){
