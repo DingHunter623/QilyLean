@@ -247,6 +247,20 @@ html:root:root body :is(header.qily-site-header,header.qily-global-header,header
   }
 }
 
+/* QILY-PRIMARY-NAV-DECORATION-PARITY-20261010
+ * Sitewide public-header exception to legacy "all links underlined" styling.
+ * Match the accepted China-site navigation: indicate current page by its
+ * existing deep-teal background and gold border, not an underline.
+ * The selector targets PRIMARY navigation links only; editorial links, footer,
+ * module-subnavs and other interactive components retain their own styling. */
+html:root:root:root body
+:is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
+:is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href]{
+  text-decoration:none!important;
+  text-decoration-line:none!important;
+  -webkit-text-decoration-line:none!important;
+}
+
 /* Interaction Semantics V1.7 native range rail. */
 html:root:root body input.qily-primary-nav-scroll-rail[type="range"]{
   -webkit-appearance:none!important;
