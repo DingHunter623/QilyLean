@@ -60,7 +60,7 @@ def main()->None:
             # Preserve the previously compliance-sanitized static article
             # instead of failing all 432 pages or republishing unsafe UI.
             existing=page.out.read_text(encoding="utf-8")
-            m=re.search(r'<article class="article-body mirror-article">([\\s\\S]*?)</article>',existing,re.I)
+            m=re.search(r'<article class="article-body mirror-article">(.+?)</article>',existing,re.I|re.S)
             if not m or len(source.clean_text(m.group(1)))<50:
                 raise RuntimeError("Empty original visual and unusable safe fallback: "+str(page.path)) from exc
             body=m.group(1)
