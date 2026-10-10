@@ -46,7 +46,7 @@ def normalize_credentials(data):
         value = data[key].strip()
         # Accept only unambiguous copied assignment/quote wrappers around a hex credential.
         # Other credential formats remain intact; do not guess or repurpose credentials.
-        copied = re.fullmatch(r'(?:' + key + r'\s*=\s*)?([\x22\x27`]?)([a-fA-F0-9]{32})\1', value)
+        copied = re.fullmatch(r'(?:' + key + r'\s*=\s*)?([\x22\x27`]?)([a-fA-F0-9]{16}|[a-fA-F0-9]{32})\1', value)
         result[key] = copied.group(2) if copied else value
     return result
 

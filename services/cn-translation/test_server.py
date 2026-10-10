@@ -130,6 +130,11 @@ class TranslationTests(unittest.TestCase):
         app, secret = 'a' * 32, 'b' * 32
         with patch.dict(server.os.environ, {'YOUDAO_APP_KEY': f' YOUDAO_APP_KEY="{app}" ', 'YOUDAO_APP_SECRET': f'`{secret}`'}, clear=True):
             self.assertEqual(server.credentials(), {'YOUDAO_APP_KEY': app, 'YOUDAO_APP_SECRET': secret})
+        for length in (16, 32):
+            app = 'a' * length
+            for wrapped in (f'"{app}"', f"'{app}'", f'`{app}`', f'YOUDAO_APP_KEY={app}', f'YOUDAO_APP_KEY="{app}"'):
+                with patch.dict(server.os.environ, {'YOUDAO_APP_KEY': wrapped, 'YOUDAO_APP_SECRET': secret}, clear=True):
+                    self.assertEqual(server.credentials()['YOUDAO_APP_KEY'], app)
         with patch.dict(server.os.environ, KEYS, clear=True):
             self.assertEqual(server.credentials(), KEYS, 'unrecognized credential formats must remain unchanged')
 

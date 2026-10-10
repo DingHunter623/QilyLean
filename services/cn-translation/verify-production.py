@@ -17,7 +17,14 @@ parser.add_argument('--production', action='store_true')
 args = parser.parse_args()
 keys = json.loads(Path('/etc/qilylean-cn/translate.json').read_text()) if args.production else server.credentials()
 if not args.production:
-    print(json.dumps({'credential_format': {'app_id_ascii': keys['YOUDAO_APP_KEY'].isascii(), 'app_id_expected_shape': len(keys['YOUDAO_APP_KEY']) == 32 and all(c in '0123456789abcdefABCDEF' for c in keys['YOUDAO_APP_KEY']), 'secret_has_inner_whitespace': any(c.isspace() for c in keys['YOUDAO_APP_SECRET'])}}))
+    directory = os.environ.get('CREDENTIALS_DIRECTORY')
+    raw_keys = json.loads((Path(directory) / 'youdao').read_text()) if directory else {name: os.environ.get(name, '') for name in ('YOUDAO_APP_KEY', 'YOUDAO_APP_SECRET')}
+    def copied_format(name):
+        value = raw_keys[name].strip()
+        return {'assignment_wrapper': value.startswith(name + '=') or value.startswith(name + ' ='),
+                'quote_wrapper': len(value) > 1 and value[0] in '\x22\x27`' and value[-1] == value[0],
+                'normalized_changed': value != keys[name]}
+    print(json.dumps({'credential_format': {name: copied_format(name) for name in raw_keys}}))
 opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
 interfaces = json.loads(subprocess.check_output(['ip', '-j', 'link']))
 tunnels = [item['ifname'] for item in interfaces if item.get('link_type') in ('wireguard', 'tun', 'gre', 'ipip') or item['ifname'].startswith(('tun', 'wg', 'tailscale'))]
