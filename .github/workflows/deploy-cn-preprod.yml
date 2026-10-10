@@ -875,6 +875,50 @@ jobs:
           print("PASS: legacy and rich CN briefs keep original visual structures and local source styles")
           PY
 
+      - name: Verify non-brief mirrored visual fidelity on production
+        shell: bash
+        env:
+          VERIFY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,pathlib,time,urllib.request
+          sha=os.environ['VERIFY_SHA']
+          data=json.loads(pathlib.Path('cn-site/archive/nonbrief-visual-parity.json').read_text())
+          assert data['checked']>=40,'Non-brief mirrored page coverage too small'
+          cases=[
+              ('/archive/practice/mold-warehouse/','data-qily-original-visual="v1"'),
+              ('/archive/knowledge/seat-switch-one-piece-flow/','data-qily-original-visual="v1"'),
+              ('/briefs/archive/2026-04-29/','npi-gantt-table'),
+          ]
+          def fetch(path):
+              url='https://qilylean.cn'+path+'?visual='+sha
+              last=None
+              for _ in range(12):
+                  try:
+                      req=urllib.request.Request(url,headers={'Cache-Control':'no-cache','User-Agent':'QilyLean-CN-Visual-Fidelity/1.0'})
+                      with urllib.request.urlopen(req,timeout=20) as response:
+                          if response.status==200:return response.read().decode('utf-8')
+                  except Exception as exc:last=exc
+                  time.sleep(5)
+              raise SystemExit(f'Production visual page unavailable: {path}: {last}')
+          for path,required in cases:
+              page=fetch(path)
+              if required not in page:
+                  raise SystemExit(f'Production original visual layout missing: {path} -> {required}')
+              if '湘ICP备2026041143号-1' not in page:
+                  raise SystemExit(f'Production China legal footer missing: {path}')
+              if '/site-content-axis-v1.css' not in page:
+                  raise SystemExit(f'Production canonical content-axis CSS missing: {path}')
+          styles=fetch('/assets/nonbrief-visual-parity.css')
+          if 'QILY-CN-NONBRIEF-VISUAL-PARITY-V1' not in styles:
+              raise SystemExit('Production non-brief visual parity CSS missing')
+          styles=fetch('/assets/brief-visual-parity.css')
+          if 'QILY-NPI-HIGH-CONTRAST-20261011' not in styles:
+              raise SystemExit('Production NPI high-contrast correction missing')
+          print(f'PASS non-brief mirrored visual fidelity: {data["checked"]} pages and NPI contrast.')
+          PY
+
       - name: Verify local practice award evidence is public
         shell: bash
         run: |

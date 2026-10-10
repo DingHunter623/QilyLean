@@ -29,3 +29,26 @@ body[data-qily-brief-parity="v1"] main :is(.module-inner,.daily-inner){width:100
 body[data-qily-brief-parity="v1"] main :is(.plan-chain,.resource-map){flex-wrap:wrap}
 body[data-qily-brief-parity="v1"] main :is(.plan-chain,.resource-map)>div{flex:1 1 43%}
 }
+
+/* QILY-NPI-HIGH-CONTRAST-20261011 | screenshot-driven visual QA.
+ * Retain 20-week engineering detail rather than crushing cells to fit.
+ * Fix translucent tags, weak navigation buttons and low-contrast chips.
+ */
+body[data-qily-brief-parity="v1"] main .npi-series{max-width:100%;min-width:0}
+body[data-qily-brief-parity="v1"] main .npi-stage-roadmap,
+body[data-qily-brief-parity="v1"] main .npi-gate-grid,
+body[data-qily-brief-parity="v1"] main .npi-kpi{max-width:100%;min-width:0}
+body[data-qily-brief-parity="v1"] main .npi-series-nav{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:20px 0}
+body[data-qily-brief-parity="v1"] main .npi-series-nav a{color:#0f4b5a!important;-webkit-text-fill-color:#0f4b5a!important;background:#fff!important;border:1px solid #8caeaa!important;border-radius:999px;text-decoration:none!important;font-weight:600!important;opacity:1!important;box-shadow:none!important}
+body[data-qily-brief-parity="v1"] main .npi-series-nav a[aria-current="page"]{color:#fff!important;-webkit-text-fill-color:#fff!important;background:#0f4b5a!important;border-color:#0f4b5a!important}
+body[data-qily-brief-parity="v1"] main .tags{display:flex;flex-wrap:wrap;gap:8px;margin:20px 0;align-items:center}
+body[data-qily-brief-parity="v1"] main .tags .tag{display:inline-flex;align-items:center;padding:7px 12px;border-radius:999px;border:1px solid #b2ccc7!important;background:#f0f7f4!important;color:#254a49!important;-webkit-text-fill-color:#254a49!important;opacity:1!important;font-weight:500!important;text-shadow:none!important;box-shadow:none!important}
+body[data-qily-brief-parity="v1"] main .npi-gantt{max-width:100%;width:100%;min-width:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable;box-sizing:border-box}
+body[data-qily-brief-parity="v1"] main .npi-gantt-table{width:max-content;min-width:1150px}
+body[data-qily-brief-parity="v1"] main .npi-gantt::after{content:"← 横向滚动查看完整 20 周甘特图 →";display:block;padding-top:10px;color:#486664;font-size:14px;line-height:1.5;letter-spacing:.01em}
+body[data-qily-brief-parity="v1"] main .npi-standard-map{color:#304a48!important;background:#f3f8f5!important;border-color:#a8c1bc!important}
+body[data-qily-brief-parity="v1"] main .npi-standard-map strong{color:#0f4b5a!important}
+@media(max-width:760px){
+body[data-qily-brief-parity="v1"] main .npi-series-nav a{min-height:38px;display:inline-flex;align-items:center}
+body[data-qily-brief-parity="v1"] main .npi-gantt{padding:12px}
+}
