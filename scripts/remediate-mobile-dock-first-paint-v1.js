@@ -18,6 +18,8 @@ const APPLY=process.argv.includes('--apply');
 const DOCK_PATCH='20260924-footer-like-fixed-r1';
 const NAV_PATCH='20260924-primary-nav-render-parity-v4';
 const NAV_VERSION='20260924-r7-navigation-v49';
+// Canonical cache revision for the approved underline-free international header.
+const NAV_VISUAL_REV='20261010-no-underline-v1';
 const CORE_VERSION='20260924-primary-nav-render-parity-core-v35';
 const LEGACY_VERSION='20260927-pricing-type-floor-v25';
 const CANONICAL_ROUTES=[
@@ -78,7 +80,7 @@ function patchPersistentDockReferences(){
   return changed;
 }
 function patchHtmlCacheRefs(){
-  let changed=0;for(const rel of trackedHtml())if(patchFile(rel,html=>html.replace(/\/site-dock-share-runtime-v1\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-dock-share-runtime-v1.js?v=$1&patch=${DOCK_PATCH}`).replace(/\/site-navigation\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-navigation.js?v=${NAV_VERSION}&patch=${NAV_PATCH}`)))changed++;return changed;
+  let changed=0;for(const rel of trackedHtml())if(patchFile(rel,html=>html.replace(/\/site-dock-share-runtime-v1\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-dock-share-runtime-v1.js?v=$1&patch=${DOCK_PATCH}`).replace(/\/site-navigation\.js\?v=([^"'&\s>]+)(?:&patch=[^"'\s>]*)?/g,`/site-navigation.js?v=${NAV_VERSION}&patch=${NAV_PATCH}&nav=${NAV_VISUAL_REV}`)))changed++;return changed;
 }
 
 function validatePrimaryNavigation(){
