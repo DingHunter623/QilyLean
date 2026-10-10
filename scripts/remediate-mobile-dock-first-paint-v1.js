@@ -19,7 +19,7 @@ const DOCK_PATCH='20260924-footer-like-fixed-r1';
 const NAV_PATCH='20260924-primary-nav-render-parity-v4';
 const NAV_VERSION='20260924-r7-navigation-v49';
 // Canonical cache revision for the approved underline-free international header.
-const NAV_VISUAL_REV='20261010-no-underline-v1';
+const NAV_VISUAL_REV='20261010-no-pseudo-underline-v2';
 const CORE_VERSION='20260924-primary-nav-render-parity-core-v35';
 const LEGACY_VERSION='20260927-pricing-type-floor-v25';
 const CANONICAL_ROUTES=[
