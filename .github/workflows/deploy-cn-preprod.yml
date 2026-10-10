@@ -56,6 +56,10 @@ jobs:
           printf '%s\n' "$CN_PREPROD_SSH_KEY" > ~/.ssh/qilylean_cn
           chmod 600 ~/.ssh/qilylean_cn
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
+          CONTROL_PATH="$HOME/.ssh/qilylean-cn-%r@%h:%p"
+          ssh -MNf -o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 \
+            -o BatchMode=yes -o ControlMaster=yes -o ControlPersist=30m -o ControlPath="$CONTROL_PATH" \
+            -i ~/.ssh/qilylean_cn "${CN_PREPROD_USER:-ubuntu}@$CN_PREPROD_HOST"
       - name: Validate proposed Nginx configuration without reload or publication
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -226,7 +230,7 @@ jobs:
           ssh-keyscan -H "$CN_PREPROD_HOST" >> ~/.ssh/known_hosts
 
       - name: Stage release bundle on mainland server
-        timeout-minutes: 20
+        timeout-minutes: 35
         shell: bash
         env:
           CN_PREPROD_HOST: ${{ secrets.CN_PREPROD_HOST }}
@@ -234,7 +238,8 @@ jobs:
         run: |
           set -euo pipefail
           USER_NAME="${CN_PREPROD_USER:-ubuntu}"
-          SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes)
+          CONTROL_PATH="$HOME/.ssh/qilylean-cn-%r@%h:%p"
+          SSH_OPTS=(-o ConnectTimeout=20 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 -o BatchMode=yes -o ControlMaster=auto -o ControlPersist=30m -o ControlPath="$CONTROL_PATH")
 
           copy_with_retry() {
             local src="$1"
@@ -255,7 +260,9 @@ jobs:
           # then verify SHA-256 before the atomic release switch.
           ARCHIVE_SHA="$(sha256sum /tmp/qilylean-cn-site.tar.gz | awk '{print $1}')"
           rm -f /tmp/qilylean-cn-site.part.*
-          split -b 512k -d -a 3 /tmp/qilylean-cn-site.tar.gz /tmp/qilylean-cn-site.part.
+          ARCHIVE_BYTES="$(stat -c '%s' /tmp/qilylean-cn-site.tar.gz)"
+          echo "Release archive size: ${ARCHIVE_BYTES} bytes"
+          split -b 2m -d -a 3 /tmp/qilylean-cn-site.tar.gz /tmp/qilylean-cn-site.part.
 
           timeout 60s ssh "${SSH_OPTS[@]}" -i ~/.ssh/qilylean_cn "$USER_NAME@$CN_PREPROD_HOST"             'rm -f /tmp/qilylean-cn-site.part.* /tmp/qilylean-cn-site.tar.gz; mkdir -p /tmp/qilylean-cn-translation'
 
