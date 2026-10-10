@@ -19,3 +19,24 @@ fi
 test -s "$TARGET"
 cmp -s "$SOURCE" "$TARGET"
 echo "CN practice award asset materialized locally."
+
+
+# Materialize the China-site local copy of eligible international public content.
+python3 "$CN_ROOT/scripts/materialize-public-content-mirror.py"
+test -f "$CN_ROOT/archive/index.html"
+test -f "$CN_ROOT/briefs/archive/index.html"
+test -f "$CN_ROOT/archive/content-manifest.json"
+test -f "$CN_ROOT/assets/content-mirror.css"
+
+python3 - "$CN_ROOT/archive/content-manifest.json" <<'PY'
+import json, pathlib, sys
+path=pathlib.Path(sys.argv[1])
+data=json.loads(path.read_text(encoding='utf-8'))
+total=int(data.get('generated',0))
+briefs=int(data.get('categories',{}).get('精选简报',0))
+if total < 400:
+    raise SystemExit(f'CN content mirror unexpectedly small: {total}')
+if briefs < 350:
+    raise SystemExit(f'CN selected-brief mirror unexpectedly small: {briefs}')
+print(f'CN full public-content mirror materialized: {total} pages / {briefs} selected briefs.')
+PY
