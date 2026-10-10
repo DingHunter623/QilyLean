@@ -12,6 +12,8 @@
   --qv2-axis:1180px!important;
   --qily-redline-axis:1180px!important;
   --qily-content-axis-gutter:clamp(18px,2.2vw,56px);
+  --qily-cn-axis:var(--qily-content-axis)!important;
+  --qily-gutter:var(--qily-content-axis-gutter)!important;
   --qily-content-surface:#ffffff;
   --qily-content-surface-alt:#f3f8f7;
   --qily-content-heading:#0f4b5a;
@@ -362,3 +364,31 @@ html body .opl-shell{
 }
 @media(max-width:900px){html body .opl-shell{width:100%!important;max-width:100%!important}}
 /* QILY-OPL-AXIS-CLOSURE-20260828:END */
+
+
+/* QILY-FULLSITE-AXIS-PARITY-V10 | 2026-10-10
+ * One visible content-frame contract for BOTH qilylean.com and qilylean.cn.
+ * CN release pages receive data-qily-site="cn" during materialization.
+ * The rule is deliberately late and narrow: only public shell geometry is governed.
+ */
+html:root:root body[data-qily-site="cn"] :is(
+  .header-inner,.hero-inner,.content,.footer-inner
+){
+  width:min(
+    var(--qily-content-axis,1180px),
+    calc(100% - (var(--qily-content-axis-gutter,clamp(18px,2.2vw,56px))*2))
+  )!important;
+  max-width:var(--qily-content-axis,1180px)!important;
+  min-width:0!important;
+  margin-left:auto!important;
+  margin-right:auto!important;
+  box-sizing:border-box!important;
+}
+@media(max-width:620px){
+  html:root:root body[data-qily-site="cn"] :is(
+    .header-inner,.hero-inner,.content,.footer-inner
+  ){
+    width:calc(100% - 30px)!important;
+    max-width:calc(100% - 30px)!important;
+  }
+}

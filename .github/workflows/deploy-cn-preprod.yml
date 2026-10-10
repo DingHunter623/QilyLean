@@ -140,6 +140,10 @@ jobs:
           test -f cn-site/b47ed759da519bd90586a7877122d7be.txt
           test -f cn-site/assets/site.css
           test -f cn-site/assets/qilylean-vi-v2.css
+          test -f cn-site/site-content-axis-v1.css
+          cmp site-content-axis-v1.css cn-site/site-content-axis-v1.css
+          grep -Fq '/site-content-axis-v1.css?v=20261010-fullsite-axis-parity-v10' cn-site/index.html
+          grep -Fq 'data-qily-site="cn"' cn-site/index.html
           test -s cn-site/assets/mps-beian.png
           test -f cn-site/assets/cn-nav-rail-v1.js
           cmp site-public-footer-type-v1.css cn-site/site-public-footer-type-v1.css

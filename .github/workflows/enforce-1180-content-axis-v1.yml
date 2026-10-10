@@ -36,6 +36,10 @@ jobs:
           grep -Fq '全站 1180px 主内容宽度' scripts/enforce-friend-links-and-layout.js
           grep -Fq "width:min(1180px,100%)" scripts/enforce-friend-links-and-layout.js
           grep -Fq -- '--qily-content-axis:1180px' cn-site/assets/site.css
+          grep -Fq 'QILY-FULLSITE-AXIS-PARITY-V10' site-content-axis-v1.css
+          grep -Fq -- '--qily-cn-axis:var(--qily-content-axis)!important' site-content-axis-v1.css
+          grep -Fq 'enforce-fullsite-axis.py' cn-site/scripts/materialize-practice-assets.sh
+          python3 -m py_compile cn-site/scripts/enforce-fullsite-axis.py
 
       - name: Validate problem pages inherit late 1180px authority
         run: |

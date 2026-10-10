@@ -5,6 +5,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CN_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 REPO_ROOT="$(cd "$CN_ROOT/.." && pwd)"
 
+# Full-site content-axis SSOT: China production ships the exact same canonical
+# width authority as the international site.
+cp "$REPO_ROOT/site-content-axis-v1.css" "$CN_ROOT/site-content-axis-v1.css"
+cmp -s "$REPO_ROOT/site-content-axis-v1.css" "$CN_ROOT/site-content-axis-v1.css"
+
 SOURCE="$REPO_ROOT/assets/projects/lean-improvement-evidence/award/page-01.jpg"
 TARGET="$CN_ROOT/assets/practice/award-6s-page-01.jpg"
 
@@ -23,6 +28,7 @@ echo "CN practice award asset materialized locally."
 
 # Materialize the China-site local copy of eligible international public content.
 python3 "$CN_ROOT/scripts/materialize-public-content-mirror.py"
+python3 "$CN_ROOT/scripts/enforce-fullsite-axis.py"
 test -f "$CN_ROOT/archive/index.html"
 test -f "$CN_ROOT/briefs/archive/index.html"
 test -f "$CN_ROOT/archive/content-manifest.json"
