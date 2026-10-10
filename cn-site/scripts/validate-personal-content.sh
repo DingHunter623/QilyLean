@@ -120,7 +120,7 @@ grep -Fq '"sameAs":["https://qilylean.com/global-knowledge/"]' "$INDEX_FILE" || 
   exit 1
 }
 
-# Primary-navigation boundary: CN navigation stays on qilylean.cn; international access is explicit on bridge pages.
+# Primary-navigation boundary: CN navigation stays on qilylean.cn; briefs are local-first and resource collaboration remains an explicit international bridge.
 grep -Fq 'href="/briefs/" data-qily-nav-key="briefs">精选简报</a>' "$INDEX_FILE" || {
   echo "ERROR: CN primary navigation briefs entry must stay on qilylean.cn."
   exit 1
@@ -139,8 +139,11 @@ grep -Fq 'data-qily-cn-nav-contract="20260926-v7-bridge"' "$INDEX_FILE" || {
 }
 [[ -f "$BRIEFS_PAGE" ]] || { echo "ERROR: CN briefs bridge page is missing."; exit 1; }
 [[ -f "$RESOURCES_PAGE" ]] || { echo "ERROR: CN resources bridge page is missing."; exit 1; }
-grep -Fq 'href="https://qilylean.com/global-knowledge/briefs/"' "$BRIEFS_PAGE" || { echo "ERROR: CN briefs bridge lost its explicit international destination."; exit 1; }
-grep -Fq 'target="_blank" rel="noopener noreferrer"' "$BRIEFS_PAGE" || { echo "ERROR: CN briefs bridge external-link safety attributes are missing."; exit 1; }
+grep -Fq 'href="/briefs/archive/"' "$BRIEFS_PAGE" || { echo "ERROR: CN briefs page must point to the local full archive."; exit 1; }
+if grep -Fq 'href="https://qilylean.com/global-knowledge/briefs/"' "$BRIEFS_PAGE"; then
+  echo "ERROR: CN briefs primary entry must no longer depend on the international site."
+  exit 1
+fi
 grep -Fq 'href="https://qilylean.com/links/cn-public/"' "$RESOURCES_PAGE" || { echo "ERROR: CN resources bridge lost its explicit international destination."; exit 1; }
 grep -Fq 'target="_blank" rel="noopener noreferrer"' "$RESOURCES_PAGE" || { echo "ERROR: CN resources bridge external-link safety attributes are missing."; exit 1; }
 
