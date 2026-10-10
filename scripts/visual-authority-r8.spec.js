@@ -148,3 +148,34 @@ test('R8 nine-width visual geometry and screenshot audit',async({browser})=>{
   flush();
   expect(failures,failures.join('\n')).toEqual([]);
 });
+
+/* QILY-NAV-SURFACE-NO-UNDERLINE-V1 | public VI regression.
+ * Cover both navigation components, several shared pages, desktop and phone.
+ * Do not test ordinary article/footnote link decorations here. */
+test('navigation surface links retain background feedback without underlines',async({browser})=>{
+  const routes=['/trust/','/experience/','/capabilities/','/cooperation/'];
+  const selectors=['main .module-subnav > a[href]','main a.qily-system-axis__step[href]'];
+  for(const width of [1440,390]){
+    const context=await browser.newContext({viewport:{width,height:900},reducedMotion:'reduce'});
+    await context.route('**/*',route=>{
+      const url=route.request().url();
+      return url.startsWith(BASE_ORIGIN)||url.startsWith('data:')||url.startsWith('blob:')?route.continue():route.abort();
+    });
+    const page=await context.newPage();
+    for(const route of routes){
+      const response=await page.goto(BASE+route,{waitUntil:'load',timeout:30000});
+      expect(response&&response.status(),`HTTP ${route}`).toBe(200);
+      for(const selector of selectors){
+        const target=page.locator(selector).first();
+        await expect(target,`${width} ${route} ${selector} visible`).toBeVisible();
+        const decoration=()=>target.evaluate(el=>getComputedStyle(el).textDecorationLine);
+        expect(await decoration(),`${width} ${route} ${selector} default`).toBe('none');
+        await target.hover();
+        expect(await decoration(),`${width} ${route} ${selector} hover`).toBe('none');
+        await target.focus();
+        expect(await decoration(),`${width} ${route} ${selector} focus`).toBe('none');
+      }
+    }
+    await context.close();
+  }
+});
