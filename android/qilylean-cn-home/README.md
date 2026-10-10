@@ -1,11 +1,12 @@
-# QilyLean｜启力精益 中国站桌面 v1.0.0
+# 精益制造经验分享｜QilyLean｜启力精益 中国站桌面 v1.0.0
 
 专门面向 **QilyLean｜启力精益中国站（qilylean.cn）** 的 Android 免 Root 桌面 APP。  
 它与国际站 `QilyLean Home` 独立存在，不修改、不替代国际站桌面。
 
 ## 应用标识
 
-- 显示名称：`QilyLean｜启力精益`
+- APP显示名称：`精益制造经验分享`
+- 个人品牌：`QilyLean｜启力精益`
 - 工程名称：`QilyLean CN Home`
 - 包名：`cn.qilylean.home`
 - 版本：`1.0.0 (1)`
@@ -34,5 +35,5 @@
 ## 与国际站桌面的关系
 
 - 国际站桌面：`com.qilylean.home` / QilyLean Home；
-- 中国站桌面：`cn.qilylean.home` / QilyLean｜启力精益；
+- 中国站桌面：`cn.qilylean.home` / 精益制造经验分享（品牌：QilyLean｜启力精益）；
 - 两者包名、链接体系、法律页面、发布节奏相互独立。
