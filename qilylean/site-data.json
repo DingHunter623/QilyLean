@@ -72,11 +72,11 @@
     "trustCenterUrl": "/trust/"
   },
   "search": {
-    "indexedEntries": 747,
-    "indexedPages": 648,
+    "indexedEntries": 748,
+    "indexedPages": 649,
     "terminologyTotal": 193,
-    "briefTotal": 380,
-    "latestBriefDate": "2026-09-28",
-    "sitemapLastmod": "2026-10-10"
+    "briefTotal": 381,
+    "latestBriefDate": "2026-10-11",
+    "sitemapLastmod": "2026-10-11"
   }
 }
