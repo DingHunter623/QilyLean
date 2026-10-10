@@ -27,7 +27,8 @@ permissions:
 
 concurrency:
   group: ${{ inputs.inspect_translation_only && 'qilylean-cn-translation-inspection' || 'qilylean-cn-production-v12' }}
-  cancel-in-progress: true
+  # Production uploads and live verification must finish atomically; newer CN commits queue instead of cancelling an active release.
+  cancel-in-progress: false
 
 jobs:
   inspect-translation:
