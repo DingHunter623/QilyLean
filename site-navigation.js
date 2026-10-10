@@ -128,6 +128,13 @@
   // Explicit inline-important stops legacy all-link CSS and cached stylesheet
   // cascade order from restoring a gold underline beneath the current label.
   function enforcePrimaryNavigationNoUnderline(){
+    // text-decoration alone cannot remove the pseudo-element drawn by VI V1.
+    if(!d.getElementById('qilyPrimaryNavPseudoUnderlineClosureV1')){
+      var pseudoGuard=d.createElement('style');
+      pseudoGuard.id='qilyPrimaryNavPseudoUnderlineClosureV1';
+      pseudoGuard.textContent='html:root:root:root body :is(header.qily-site-header,header.qily-global-header,header.topbar,header.top) :is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href][aria-current="page"]::after{content:none!important;display:none!important;background:none!important}';
+      (d.head||d.documentElement).appendChild(pseudoGuard);
+    }
     d.querySelectorAll('header.qily-site-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href],header.qily-global-header :is(nav.site-nav,nav.qily-global-nav,nav.nav)>a[href]').forEach(function(link){
       link.style.setProperty('text-decoration','none','important');
       link.style.setProperty('text-decoration-line','none','important');

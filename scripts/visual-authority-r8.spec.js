@@ -172,8 +172,19 @@ test('primary navigation current text has no underline even with legacy styles',
       await expect.poll(()=>active.evaluate(el=>getComputedStyle(el).textDecorationLine),{timeout:10000}).toBe('none');
       const before=await active.evaluate(el=>({decoration:getComputedStyle(el).textDecorationLine,style:el.style.getPropertyValue('text-decoration-line')}));
       expect(before.decoration,`${width} ${route} current item`).toBe('none');
-      await active.hover(); expect(await active.evaluate(el=>getComputedStyle(el).textDecorationLine)).toBe('none');
-      await active.focus(); expect(await active.evaluate(el=>getComputedStyle(el).textDecorationLine)).toBe('none');
+      // VI v1 and its bundled copy used a GOLD ::after bar, not text-decoration.
+      // This is the pixel-visible line reported on /trust/: detect the actual cause.
+      const pseudoGone=()=>active.evaluate(el=>{
+        const pseudo=getComputedStyle(el,'::after');
+        return pseudo.content==='none'||pseudo.display==='none';
+      });
+      await expect.poll(pseudoGone,{timeout:10000,message:`${width} ${route} gold pseudo underline must not render`}).toBe(true);
+      await active.hover();
+      expect(await active.evaluate(el=>getComputedStyle(el).textDecorationLine)).toBe('none');
+      expect(await pseudoGone(),`${width} ${route} hover pseudo`).toBe(true);
+      await active.focus();
+      expect(await active.evaluate(el=>getComputedStyle(el).textDecorationLine)).toBe('none');
+      expect(await pseudoGone(),`${width} ${route} focus pseudo`).toBe(true);
     }
     await context.close();
   }

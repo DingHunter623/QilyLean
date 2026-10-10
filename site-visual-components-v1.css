@@ -261,6 +261,18 @@ html:root:root:root body
   -webkit-text-decoration-line:none!important;
 }
 
+/* QILY-NAV-ACTIVE-PSEUDO-UNDERLINE-CLOSURE-V1 | 2026-10-10
+ * Legacy site-vi-standard-v1 also draws a separate gold bar using ::after.
+ * text-decoration:none cannot remove pseudo-element artwork.
+ * Keep the approved teal fill and full gold border of the current tab. */
+html:root:root:root body
+:is(header.qily-site-header,header.qily-global-header,header.topbar,header.top)
+:is(nav.site-nav,nav.qily-global-nav,nav.nav,nav[aria-label="网站导航"],nav[aria-label="QilyLean核心导视"])>a[href][aria-current="page"]::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+}
+
 /* QILY-NAV-SURFACE-NO-UNDERLINE-V1 | 2026-10-10
  * The accepted CN VI uses filled / bordered navigation surfaces instead of
  * text underlines. These international-site shared components are NAVIGATION
