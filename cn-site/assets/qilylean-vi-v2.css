@@ -1526,7 +1526,7 @@ html:root:root:root body :is(.hero,.page-hero,.module-hero,[data-qily-hero]) > :
     min-width:clamp(168px,14vw,226px)!important;
     max-width:226px!important;
     height:40px!important;
-    background-size:auto 40px!important;
+    background-size:contain!important;
     background-position:left center!important;
     background-repeat:no-repeat!important;
   }
