@@ -261,6 +261,23 @@ html:root:root:root body
   -webkit-text-decoration-line:none!important;
 }
 
+/* QILY-NAV-SURFACE-NO-UNDERLINE-V1 | 2026-10-10
+ * The accepted CN VI uses filled / bordered navigation surfaces instead of
+ * text underlines. These international-site shared components are NAVIGATION
+ * SURFACES, not inline content links:
+ *  - module-hero section jump pills (e.g. Trust's eight chips)
+ *  - six-step operating logic route cards (all relevant pages)
+ * Remove only their underline in normal/current/hover/focus/active states.
+ * Keep every background, border, font, size, link destination and animation.
+ * Do not affect narrative/article/footnote/filing links or China-site CSS.
+ */
+html:root:root:root body main .module-subnav > a[href],
+html:root:root:root body main a.qily-system-axis__step[href]{
+  text-decoration:none!important;
+  text-decoration-line:none!important;
+  -webkit-text-decoration-line:none!important;
+}
+
 /* Interaction Semantics V1.7 native range rail. */
 html:root:root body input.qily-primary-nav-scroll-rail[type="range"]{
   -webkit-appearance:none!important;
