@@ -167,6 +167,12 @@ test('navigation surface links retain background feedback without underlines',as
       expect(response&&response.status(),`HTTP ${route}`).toBe(200);
       for(const selector of selectors){
         const target=page.locator(selector).first();
+        if(await target.count()===0){
+          // Not every module has jump pills; the trust & capabilities pages do.
+          if(selector.includes('module-subnav')&&(route==='/trust/'||route==='/capabilities/'))throw Error(`Missing module pills on ${route}`);
+          if(selector.includes('qily-system-axis'))throw Error(`Missing operating-axis links on ${route}`);
+          continue;
+        }
         await expect(target,`${width} ${route} ${selector} visible`).toBeVisible();
         const decoration=()=>target.evaluate(el=>getComputedStyle(el).textDecorationLine);
         expect(await decoration(),`${width} ${route} ${selector} default`).toBe('none');
